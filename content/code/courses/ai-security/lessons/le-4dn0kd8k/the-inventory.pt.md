@@ -1,6 +1,6 @@
 ---
 title: Um inventário dos pontos de entrada
-version: 1
+version: 2
 ---
 
 Um modelo de ameaças começa como uma lista. Para o assistente da Tarefa ela é o `data/surface.json`,

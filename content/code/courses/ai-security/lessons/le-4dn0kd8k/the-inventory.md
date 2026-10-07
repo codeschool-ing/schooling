@@ -1,6 +1,6 @@
 ---
 title: An inventory of the entry points
-version: 1
+version: 2
 ---
 
 A threat model starts as a list. For Tarefa's assistant it is `data/surface.json`, written by the

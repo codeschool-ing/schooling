@@ -1,6 +1,6 @@
 ---
 title: Usar o mapa para decidir o que vem a seguir
-version: 1
+version: 2
 ---
 
 Um inventário se paga mostrando o que falta. O `--gaps` imprime só as entradas sem controle:

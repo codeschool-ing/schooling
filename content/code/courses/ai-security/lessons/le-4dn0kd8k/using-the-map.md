@@ -1,6 +1,6 @@
 ---
 title: Using the map to decide what comes next
-version: 1
+version: 2
 ---
 
 An inventory earns its keep by showing what is missing. `--gaps` prints only the entries with no
