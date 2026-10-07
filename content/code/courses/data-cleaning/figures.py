@@ -779,6 +779,78 @@ def l08_three_levels(lang):
                  'e da categoria ao departamento a que ela pertence.'}
     return fig, cap[lang]
 
+
+# ------------------------------------------------------------------ lesson 9
+
+@figure('l09-rules-and-truth', 9)
+def l09_rules(lang):
+    seen, totals = set(), {}
+    for r in rows('raw/orders.csv'):
+        if r['order_id'] not in seen:
+            seen.add(r['order_id'])
+            totals[r['order_id']] = float(r['total'])
+    marks = {}
+    for r in rows('truth/orders.csv'):
+        if r['what'] in ('typo-x10', 'corporate'):
+            marks[r['order_id']] = r['what']
+    vals = sorted(v for v in totals.values() if v > 0)
+    n = len(totals)
+    mean = sum(totals.values()) / n
+    sd = math.sqrt(sum((v - mean) ** 2 for v in totals.values()) / (n - 1))
+    allv = sorted(totals.values())
+    def q(p):
+        k = (len(allv) - 1) * p
+        f = math.floor(k)
+        return allv[f] + (allv[min(f + 1, len(allv) - 1)] - allv[f]) * (k - f)
+    fence = q(0.75) + 1.5 * (q(0.75) - q(0.25))
+    zline = mean + 3 * sd
+    lo, hi = 1, 5  # log10 of R$ 10 .. R$ 100,000
+    edges = [10 ** (lo + (hi - lo) * i / 40) for i in range(41)]
+    counts = histogram(vals, edges)
+    fig = Fig('l09-rules-and-truth', 720, 340, {
+        'en': f'A histogram of order totals on a logarithmic scale from R$ 10 to R$ 100,000, most of them '
+              f'between R$ 20 and R$ 300. Two vertical lines mark where the IQR fence ({fence:.2f}) and the '
+              f'z-score of 3 ({zline:.2f}) begin. Below the axis, the seven typed totals and the sixteen '
+              'corporate orders are marked: the corporate orders sit far right, beyond both lines, and the '
+              'typos are scattered, some beyond the lines and some well inside them.',
+        'pt': f'Um histograma dos totais de pedido em escala logarítmica de R$ 10 a R$ 100.000, a maioria '
+              f'entre R$ 20 e R$ 300. Duas linhas verticais marcam onde começam a cerca do IQR '
+              f'({num(lang, fence, 2)}) e o escore z de 3 ({num(lang, zline, 2)}). Abaixo do eixo, os sete '
+              'totais digitados e os dezesseis pedidos corporativos estão marcados: os corporativos ficam '
+              'bem à direita, além das duas linhas, e os erros se espalham, alguns além das linhas e alguns '
+              'bem dentro delas.'}[lang])
+    p = Plot(fig, 200, 40, 690, 220, lo, hi, 0, max(counts) * 1.1)
+    p.yaxis([0, 1000, 2000, 3000], label={'en': 'orders', 'pt': 'pedidos'}[lang])
+    for i, c in enumerate(counts):
+        if c:
+            x0, x1 = p.sx(math.log10(edges[i])), p.sx(math.log10(edges[i + 1]))
+            fig.rect(x0, p.sy(c), x1 - x0, p.sy(0) - p.sy(c), stroke='--phosphor', fill='--phosphor-dim', rx=0, width=0.6)
+    fig.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim', width=1.2)
+    for e in range(lo, hi + 1):
+        x = p.sx(e)
+        fig.line(x, p.y1, x, p.y1 + 4, stroke='--paper-dim', width=1)
+        fig.text(x, p.y1 + 14, 'R$ ' + num(lang, 10 ** e, 0), size=9.5, fill='--paper-dim')
+    for v, label, anchor in ((fence, {'en': 'IQR fence', 'pt': 'cerca do IQR'}[lang], 'end'), (zline, 'z = 3', 'start')):
+        x = p.sx(math.log10(v))
+        fig.line(x, p.y1 + 22, x, 292, stroke='--paper-dim', width=1.4, dash='4 3')
+        fig.text(x + (-4 if anchor == 'end' else 4), 302, label, size=10, anchor=anchor, fill='--paper-dim')
+    for oid, what in marks.items():
+        v = totals[oid]
+        y = 258 if what == 'typo-x10' else 280
+        fill = '--amber' if what == 'typo-x10' else '--phosphor'
+        fig.circle(p.sx(math.log10(v)), y, 4, fill=fill)
+    fig.text(190, 258, {'en': 'typed with a zero too many', 'pt': 'digitado com um zero a mais'}[lang], size=10,
+             anchor='end', fill='--amber')
+    fig.text(190, 280, {'en': 'corporate orders', 'pt': 'pedidos corporativos'}[lang], size=10, anchor='end',
+             fill='--phosphor')
+    fig.text(445, 326, {'en': 'order total, logarithmic scale', 'pt': 'total do pedido, escala logarítmica'}[lang],
+             size=10, weight='600')
+    cap = {'en': 'Marked from the lab\'s truth file. Both rules flag every corporate order, which is real, and '
+                 'miss some of the typos, which are not.',
+           'pt': 'Marcado a partir do arquivo de verdade do laboratório. As duas regras marcam todo pedido '
+                 'corporativo, que é real, e deixam passar alguns erros, que não são.'}
+    return fig, cap[lang]
+
 # @@FIGURES@@
 
 
