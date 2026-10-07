@@ -1,6 +1,6 @@
 ---
 title: Objectives that lie
-version: 1
+version: 2
 ---
 
 An SLO is a number that a team, and often its managers, will trust without looking underneath it.
@@ -25,3 +25,10 @@ That makes the ways it can be wrong worth knowing by name:
 threshold, excluding a route or relabelling a failure as the customer's fault, has a green dashboard
 and the same unhappy customers. The SLO is only useful while it agrees with what customers say. When
 the two disagree, it is the SLO that is wrong.
+
+Before the next lesson, take the objective's rules away; lesson 16 writes its own:
+
+```sh
+rm prometheus/rules/slo.yml
+curl -s -X POST localhost:9090/-/reload
+```

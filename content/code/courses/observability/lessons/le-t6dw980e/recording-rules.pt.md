@@ -1,12 +1,12 @@
 ---
 title: O objetivo, escrito como regras
-version: 1
+version: 2
 ---
 
 Um SLI calculado à mão é uma consulta. Um objetivo com que uma equipe convive é **um conjunto de
 regras de gravação**, avaliadas a cada poucos segundos e guardadas como séries. Assim painéis e
 alertas leem os mesmos números e ninguém redigite a expressão com outra janela. As da loja, em
-`prometheus/rules/slo.yml`:
+`prometheus/rules/slo.yml`, um arquivo a salvar do jeito que o `cat` abaixo o imprime:
 
 ```
 ana@obs:~/shop$ cat prometheus/rules/slo.yml
