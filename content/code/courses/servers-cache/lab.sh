@@ -361,6 +361,11 @@ install() { # on the server itself, as root: what lesson 1 tells the student to 
     printf '127.0.0.1\tipelivros.example www.ipelivros.example static.ipelivros.example\n' >> /etc/hosts
   write_files "" "$home/work"
   chown -R shop: /var/lib/shop
+  # The cache code of lessons 10 and 11 writes prices through catalogue.py, as
+  # you: the group can write the database, and new files in its directory
+  # (SQLite's journal) stay in the group.
+  chmod 2775 /var/lib/shop && chmod 664 /var/lib/shop/catalogue.db
+  usermod -aG shop "$user"
   chown -R "$user": "$home/work"
   # Ubuntu starts every server it installs, and they cannot all have port 80.
   # Stop them all; each lesson starts the ones it uses.

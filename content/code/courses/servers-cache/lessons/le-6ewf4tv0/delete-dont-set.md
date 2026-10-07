@@ -1,0 +1,60 @@
+---
+title: Delete, don't set
+version: 1
+---
+
+If the writer knows the new price, why not write it into the cache instead of deleting the key, and
+spare the next reader the miss? Because **two writers can finish in a different order from the one they
+started in**. This program runs two of them, each in its own thread, once setting the cache and once
+deleting it:
+
+```python
+import json
+import threading
+import time
+
+import catalogue
+from bookcache import get_book, r
+
+base = catalogue.get_book(2)
+
+
+def set_on_write(price, before_db, before_cache):
+    time.sleep(before_db)
+    catalogue.set_price(2, price)
+    time.sleep(before_cache)
+    r.set("book:2", json.dumps(dict(base, price_cents=price)), ex=300)
+
+
+def delete_on_write(price, before_db, before_cache):
+    time.sleep(before_db)
+    catalogue.set_price(2, price)
+    time.sleep(before_cache)
+    r.delete("book:2")
+
+
+for name, write in (("set on write", set_on_write), ("delete on write", delete_on_write)):
+    a = threading.Thread(target=write, args=(7990, 0.0, 0.2))
+    b = threading.Thread(target=write, args=(6990, 0.1, 0.0))
+    a.start(); b.start(); a.join(); b.join()
+    print(f"{name:>15}: database {catalogue.get_book(2)['price_cents']}, cache {get_book(2)['price_cents']}")
+```
+
+The sleeps arrange what a busy server does by accident: writer A updates the database first and its
+cache write is slow, writer B comes second and is quick.
+
+```
+ana@web:~/work$ python3 writers.py
+   set on write: database 6990, cache 7990
+delete on write: database 6990, cache 6990
+```
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 700 260\" role=\"img\" aria-label=\"Four columns: writer A, the database, the cache and writer B, with time going down. At 0 ms A writes 7,990 to the database. At 100 ms B writes 6,990 to the database and then 6,990 to the cache. At 200 ms A writes 7,990 to the cache. The database ends at 6,990 and the cache at 7,990.\"><defs><marker id=\"ftw-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><rect x=\"20\" y=\"10\" width=\"140\" height=\"34\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"90.0\" y=\"27.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">writer A</text><rect x=\"210\" y=\"10\" width=\"120\" height=\"34\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.4\"></rect><text x=\"270.0\" y=\"27.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">database</text><rect x=\"370\" y=\"10\" width=\"120\" height=\"34\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.4\"></rect><text x=\"430.0\" y=\"27.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">cache</text><rect x=\"540\" y=\"10\" width=\"140\" height=\"34\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"610.0\" y=\"27.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">writer B</text><line x1=\"90\" y1=\"44\" x2=\"90\" y2=\"215\" stroke=\"var(--wire)\" stroke-width=\"1.4\" stroke-dasharray=\"4 3\"></line><line x1=\"270\" y1=\"44\" x2=\"270\" y2=\"215\" stroke=\"var(--wire)\" stroke-width=\"1.4\" stroke-dasharray=\"4 3\"></line><line x1=\"430\" y1=\"44\" x2=\"430\" y2=\"215\" stroke=\"var(--wire)\" stroke-width=\"1.4\" stroke-dasharray=\"4 3\"></line><line x1=\"610\" y1=\"44\" x2=\"610\" y2=\"215\" stroke=\"var(--wire)\" stroke-width=\"1.4\" stroke-dasharray=\"4 3\"></line><line x1=\"90\" y1=\"75\" x2=\"267\" y2=\"75\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" marker-end=\"url(#ftw-ah)\"></line><text x=\"180.0\" y=\"66\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">0 ms: 7,990</text><line x1=\"610\" y1=\"115\" x2=\"273\" y2=\"115\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" marker-end=\"url(#ftw-ah)\"></line><text x=\"440.0\" y=\"106\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">100 ms: 6,990</text><line x1=\"610\" y1=\"150\" x2=\"433\" y2=\"150\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" marker-end=\"url(#ftw-ah)\"></line><text x=\"520.0\" y=\"141\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper)\">100 ms: 6,990</text><line x1=\"90\" y1=\"190\" x2=\"427\" y2=\"190\" stroke=\"var(--amber)\" stroke-width=\"1.4\" marker-end=\"url(#ftw-ah)\"></line><text x=\"180\" y=\"181\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">200 ms: 7,990</text><text x=\"270\" y=\"240\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">ends at 6,990</text><text x=\"430\" y=\"240\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">ends at 7,990</text></svg>", "caption": "Each writer sets the cache to its own price. The one that finishes last wins the cache, and it is not the one that wrote the database last."}
+```
+
+**With set on write, the database says 6,990 and the cache 7,990**, and it will say so for five
+minutes: the last database write was B's, the last cache write was A's. With delete on write, the order
+of the two deletes does not matter, because both leave the same thing behind, nothing, and the next read
+fetches whatever the database holds. **A delete is the same whichever order it arrives in; a set is
+not.** That is the whole argument, and it is why invalidation deletes.
