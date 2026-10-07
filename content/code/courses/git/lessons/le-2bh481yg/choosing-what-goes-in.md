@@ -1,11 +1,15 @@
 ---
 title: Choosing what goes into a commit
-version: 1
+version: 2
 ---
 
-Two changes are waiting. The opening hours in `index.html` were edited, and `style.css` is new:
+Two changes are waiting. The opening hours in `index.html` were edited, and `style.css` is new.
+`sed -i 's/old/new/' file` replaces `old` with `new` inside the file, the edit you would otherwise
+make in nano:
 
 ```
+ana@vm:~/site$ sed -i 's/six in the morning/half past five/' index.html
+ana@vm:~/site$ printf 'h1 { color: darkorange; }\n' > style.css
 ana@vm:~/site$ git status
 On branch main
 Changes not staged for commit:
@@ -48,6 +52,7 @@ committing:
 
 ```
 ana@vm:~/site$ git add index.html
+ana@vm:~/site$ sed -i 's/half past five/half past five, every day/' index.html
 ana@vm:~/site$ git status
 On branch main
 Changes to be committed:
@@ -106,6 +111,7 @@ commit, which catches this every time.
 it has one blind spot:
 
 ```
+ana@vm:~/site$ printf '<h1>Menu</h1>\n<p>French bread, 0.80</p>\n' > menu.html
 ana@vm:~/site$ git status --short
  M index.html
 ?? menu.html

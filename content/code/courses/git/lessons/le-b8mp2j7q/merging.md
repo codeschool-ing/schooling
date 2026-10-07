@@ -1,6 +1,6 @@
 ---
 title: Merging: fast-forward, or a commit with two parents
-version: 1
+version: 2
 ---
 
 Work on a branch is finished when it joins `main`. **`git merge name` brings the named branch into
@@ -35,9 +35,11 @@ about paragraph spacing:
 ```
 ana@vm:~/site$ git switch -c menu-prices
 Switched to a new branch 'menu-prices'
+ana@vm:~/site$ sed -i 's/0.90/0.95/' menu.html
 ana@vm:~/site$ git commit -qam "Charge 0.95 for French bread"
 ana@vm:~/site$ git switch main
 Switched to branch 'main'
+ana@vm:~/site$ printf 'h1 { color: darkorange; }\np { line-height: 1.5; }\n' > style.css
 ana@vm:~/site$ git commit -qam "Give paragraphs more room"
 ana@vm:~/site$ git log --oneline --graph --all -4
 * 68491c4 Give paragraphs more room

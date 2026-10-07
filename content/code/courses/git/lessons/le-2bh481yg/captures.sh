@@ -12,10 +12,12 @@
 # directories it builds before it starts, which is why it wants a throwaway
 # account. `block NAME` marks where a transcript in the prose begins.
 #
-# What is STAGED rather than typed, and not shown in the lesson:
-# the files of the bakery's site, written with heredocs and sed between the
-# commands shown, and the date of each commit, set with GIT_AUTHOR_DATE and
-# GIT_COMMITTER_DATE so that a morning's work is not one second.
+# The files of the bakery's site are written by commands typed in the
+# transcripts, printf and sed, where a person could equally use an editor.
+#
+# What is STAGED rather than typed: the date of each commit, set with
+# GIT_AUTHOR_DATE and GIT_COMMITTER_DATE so that a morning's work is not one
+# second.
 # Every line after a prompt is what the command printed.
 #
 # Recorded with git 2.43.0 on Ubuntu 24.04, TZ=America/Sao_Paulo.
@@ -42,10 +44,7 @@ at '2026-09-14T09:05:00-03:00'
 block init
 show 'mkdir site && cd site'
 show 'git init'
-cat > index.html <<'T'
-<h1>Padaria Sol</h1>
-<p>Bread from six in the morning.</p>
-T
+show "printf '<h1>Padaria Sol</h1>\\n<p>Bread from six in the morning.</p>\\n' > index.html"
 show 'ls -a'
 show 'ls .git'
 
@@ -62,11 +61,9 @@ show 'git status'
 
 # two unrelated changes in the working tree
 at '2026-09-14T10:20:00-03:00'
-sed -i 's/six in the morning/half past five/' index.html
-cat > style.css <<'T'
-h1 { color: darkorange; }
-T
 block two-changes
+show "sed -i 's/six in the morning/half past five/' index.html"
+show "printf 'h1 { color: darkorange; }\\n' > style.css"
 show 'git status'
 show 'git add style.css'
 show 'git status'
@@ -75,7 +72,7 @@ show 'git commit -m "Give the heading its colour"'
 block edit-after-add
 at '2026-09-14T11:40:00-03:00'
 show 'git add index.html'
-sed -i 's/half past five/half past five, every day/' index.html
+show "sed -i 's/half past five/half past five, every day/' index.html"
 show 'git status'
 show 'git diff'
 show 'git diff --staged'
@@ -84,17 +81,14 @@ show 'git status'
 
 block commit-a
 at '2026-09-14T14:10:00-03:00'
-cat > menu.html <<'T'
-<h1>Menu</h1>
-<p>French bread, 0.80</p>
-T
+show "printf '<h1>Menu</h1>\\n<p>French bread, 0.80</p>\\n' > menu.html"
 show 'git status --short'
 show 'git commit -am "Open every day"'
 show 'git status --short'
 
 block rm-mv
 at '2026-09-15T09:30:00-03:00'
-printf 'Ask the supplier about rye flour\n' > todo.txt
+show "printf 'Ask the supplier about rye flour\\n' > todo.txt"
 show 'git add menu.html todo.txt && git commit -q -m "Add the menu and a to-do list"'
 show 'mv style.css site.css'
 show 'git status --short'

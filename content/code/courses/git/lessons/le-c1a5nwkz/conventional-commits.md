@@ -1,6 +1,6 @@
 ---
 title: Conventional Commits
-version: 1
+version: 2
 ---
 
 **Conventional Commits** is a published convention, currently at version 1.0.0, for the first line
@@ -19,7 +19,24 @@ readable to a person:
 - **The description** follows the colon, in the imperative, as in the last section.
 - **The footer** `BREAKING CHANGE:` states what breaks, for anybody who needs to adapt.
 
-Here is the site after four such commits since `v1.0`:
+Here is the site after four such commits since `v1.0`. The tag goes first, on the commit you just
+made, then three commits that fit on one line each, and the files of the fourth:
+
+```bash
+git tag -a v1.0 -m 'The site as it went live'
+sed -i 's/2.50/2.60/' menu.html
+git commit -qam 'fix(menu): show the new price of cheese rolls'
+printf '<p>Carrot cake, 3.00</p>\n' >> menu.html
+git commit -qam 'feat(menu): add carrot cake'
+printf 'How to add an item: one line per item in menu.html.\n' > README.md
+git add README.md && git commit -qm 'docs: explain how to add a menu item'
+printf '<form><label>Pickup time <input name="pickup" required></label></form>\n' > order.html
+git add order.html
+```
+
+The fourth has a body and a footer, so it is written in the editor, like the last section's: run
+`git commit`, and type the message that the last command below prints.
+
 
 ```
 ana@vm:~/site$ git log --oneline v1.0..HEAD

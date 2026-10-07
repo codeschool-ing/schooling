@@ -1,6 +1,6 @@
 ---
 title: Listando e apagando branches
-version: 1
+version: 2
 ---
 
 Um branch que já passou pelo merge cumpriu o seu papel. Os commits dele agora fazem parte do `main`, e
@@ -9,6 +9,7 @@ o nome só atrapalha. Antes de apagar qualquer coisa, dois jeitos de olhar:
 ```
 ana@vm:~/site$ git switch -c experiment
 Switched to a new branch 'experiment'
+ana@vm:~/site$ sed -i 's/darkorange/purple/' style.css
 ana@vm:~/site$ git commit -qam "Try purple"
 ana@vm:~/site$ git switch main
 Switched to branch 'main'

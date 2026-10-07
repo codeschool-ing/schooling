@@ -1,6 +1,6 @@
 ---
 title: Diretório de trabalho, área de preparo e repositório
-version: 1
+version: 2
 ---
 
 Um repositório começa como uma pasta comum. O `git init` a transforma em um:
@@ -9,6 +9,7 @@ Um repositório começa como uma pasta comum. O `git init` a transforma em um:
 ana@vm:~$ mkdir site && cd site
 ana@vm:~/site$ git init
 Initialized empty Git repository in /home/ana/site/.git/
+ana@vm:~/site$ printf '<h1>Padaria Sol</h1>\n<p>Bread from six in the morning.</p>\n' > index.html
 ana@vm:~/site$ ls -a
 .
 ..
@@ -25,8 +26,12 @@ objects
 refs
 ```
 
-Nada no `index.html` mudou. O que mudou foi o diretório novo ao lado dele, `.git`, que o `ls` só
-mostra quando você pede os arquivos ocultos com `-a`. **Esse diretório é o repositório.** Todo
+A linha do `printf` escreveu a página inicial da padaria, duas linhas de HTML, no `index.html`: tudo
+entre as aspas vai para o arquivo, `\n` termina uma linha, e `>` dá o nome do arquivo. Digitar as
+mesmas duas linhas no `nano index.html` faz exatamente o mesmo, e este curso usa `printf` porque uma
+transcrição consegue mostrá-lo. De um jeito ou de outro é um arquivo comum, e o Git não foi avisado
+dele. O que o `git init` acrescentou foi o diretório novo ao lado dele, `.git`, que o `ls` só mostra
+quando você pede os arquivos ocultos com `-a`. **Esse diretório é o repositório.** Todo
 commit, todo branch e toda configuração deste projeto moram dentro dele, e em nenhum outro lugar.
 Copie a pasta e você copia o histórico; apague o `.git` e o histórico se vai, enquanto os arquivos
 ficam exatamente como estão. Você nunca vai precisar editar nada ali à mão, e a aula 1 já mostrou a

@@ -1,6 +1,6 @@
 ---
 title: Um pull request é um branch pedindo para entrar
-version: 1
+version: 2
 ---
 
 **Um pull request é um pedido para fazer merge de um branch em outro**, com uma página na web para
@@ -8,8 +8,29 @@ discutir isso antes. GitHub e Bitbucket o chamam de pull request; o GitLab o cha
 é o nome mais preciso. Nada novo é guardado no Git: o branch é um branch comum que você enviou, e a
 página é o serviço de hospedagem lendo esse branch.
 
-A Ana enviou o `sunday-hours`, com três commits, e abriu um pull request para o `main`. A página tem
-uma aba que lista os commits dele. Essa aba é isto:
+A Ana enviou o `sunday-hours`, com três commits, e abriu um pull request para o `main`. Enquanto isso,
+a mudança do Bruno nos parágrafos chegou ao `main`. O branch e o commit ao lado dele, feitos a partir
+de uma semana nova, são estes:
+
+```bash
+cd ~ && rm -rf ~/site && bash ~/make-site.sh && cd ~/site
+git switch -q -c sunday-hours
+sed -i 's/half past five/half past five; Sundays from seven/' index.html
+git commit -qam 'Add Sunday hours to the home page'
+sed -i 's/Sundays from seven/Sundays from 7:00/' index.html
+git commit -qam 'Write the Sunday time the way the rest of the page does'
+printf '<p>Open on Sundays too.</p>\n' >> menu.html
+git commit -qam 'Mention Sundays on the menu page'
+git switch -q main
+printf 'h1 { color: darkorange; }\np { line-height: 1.5; }\n' > style.css
+git -c user.name='Bruno Lima' -c user.email=bruno@example.com commit -qam 'Give paragraphs more room'
+```
+
+Esta aula os lê num terminal, o que não precisa de conta em lugar nenhum. Se você tiver uma num
+serviço de hospedagem, enviar o branch para lá e abrir um pull request de verdade mostra os mesmos
+commits na mesma ordem; nada neste curso depende disso.
+
+A página tem uma aba que lista os commits do pull request. Essa aba é isto:
 
 ```
 ana@vm:~/site$ git log --oneline main..sunday-hours

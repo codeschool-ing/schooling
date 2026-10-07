@@ -1,11 +1,16 @@
 ---
 title: O que é um branch: um nome para um commit
-version: 1
+version: 2
 ---
 
 **A imagem de sempre de um branch é uma cópia do projeto**, uma pasta paralela em que você trabalha
 sem atrapalhar o original. Essa imagem prevê que criar um branch demora, ocupa espaço e duplica os
-arquivos. Nada disso acontece:
+arquivos. Nada disso acontece, como mostra uma cópia nova da semana da aula 3:
+
+```bash
+cd ~ && rm -rf ~/site && bash ~/make-site.sh && cd ~/site
+```
+
 
 ```
 ana@vm:~/site$ git branch

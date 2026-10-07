@@ -1,6 +1,6 @@
 ---
 title: Submodules: another project, pinned to one commit
-version: 1
+version: 2
 ---
 
 Sometimes a project needs another project inside it. The bakery's site and the bakery's ordering app
@@ -8,8 +8,24 @@ should use the same brand colours, kept in a repository of their own, `shared-st
 files into each project would give two copies that drift apart. **A submodule puts one repository
 inside another, pinned to an exact commit.**
 
+First the other project, with one commit, and a shared copy of the site to push to later. Both are
+folders on your machine, like every remote in this course:
+
+```bash
+git init -q --bare ~/remotes/shared-styles.git
+git clone -q ~/remotes/shared-styles.git ~/shared-styles && cd ~/shared-styles
+printf ':root { --brand: darkorange; }\n' > brand.css
+git add brand.css && git commit -qm 'Add the brand colour' && git push -q origin HEAD:main
+cd ~ && rm -rf ~/shared-styles
+git init -q --bare ~/remotes/site.git
+cd ~/site && git remote add origin ~/remotes/site.git
 ```
-ana@vm:~/site$ git submodule add ~/remotes/shared-styles.git styles
+
+`git clone` warns that the repository it copied is empty, which is true: it has no commit until the
+next line makes one. Now the submodule:
+
+```
+ana@vm:~/site$ git -c protocol.file.allow=always submodule add ~/remotes/shared-styles.git styles
 Cloning into '/home/ana/site/styles'...
 done.
 ana@vm:~/site$ cat .gitmodules
@@ -24,9 +40,10 @@ ana@vm:~/site$ git submodule status
  d874c59046ca2f86c55a3ff9aaa882624f8973a5 styles (heads/main)
 ```
 
-(`shared-styles` lives in a local folder here, like every remote in this course, and Git refuses a
-local address for a submodule unless `protocol.file.allow` is set, which the capture script does. With
-a real server's address none of that is needed.)
+**`-c protocol.file.allow=always` is there because the address is a local folder.** Git refuses a
+submodule from a local path unless told otherwise, since a repository you clone could otherwise
+point a submodule at any folder on your disk. `-c` allows it for that one command. With a real
+server's address none of that is needed, and it is better not to allow it for every command.
 
 Three things happened:
 
@@ -41,10 +58,17 @@ New colours in `shared-styles` never reach the site by surprise.
 
 ## Cloning a project with submodules
 
+The site goes to its shared copy first, submodule and all:
+
+```bash
+git push -q -u origin main
+```
+
+
 ```
 ana@vm:~$ git clone -q ~/remotes/site.git copy && cd copy
 ana@vm:~/copy$ ls styles
-ana@vm:~/copy$ git submodule update --init
+ana@vm:~/copy$ git -c protocol.file.allow=always submodule update --init
 Submodule 'styles' (/home/ana/remotes/shared-styles.git) registered for path 'styles'
 Cloning into '/home/ana/copy/styles'...
 done.

@@ -1,6 +1,6 @@
 ---
 title: Review, merge and release
-version: 1
+version: 2
 ---
 
 ## Review is a conversation
@@ -11,8 +11,14 @@ sides of that conversation, what to comment on and how to take a comment. For th
 matters is that the loop can go round several times, and that each round is more commits on the branch.
 
 When Bruno approves and the checks are green, the pull request is merged with the button, and two things
-happen on the server: the merge commit lands on `main`, and ticket 23 closes. Ana's laptop knows about
-neither yet:
+happen on the server: the merge commit lands on `main`, and ticket 23 closes. On your machine the
+button is the program from the first section:
+
+```bash
+bash ~/merge-button.sh 23-holiday-notice 24 ana 'Say the bakery closes on public holidays'
+```
+
+Ana's laptop knows about neither yet:
 
 ```
 ana@vm:~/site$ git switch main

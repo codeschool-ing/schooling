@@ -1,6 +1,6 @@
 ---
 title: Antes do código: o ticket
-version: 1
+version: 2
 ---
 
 **Toda mudança que uma equipe faz começa em algum lugar fora do código.** Um cliente reclama, um gestor
@@ -42,3 +42,55 @@ e ainda está lá na release:
 Nada disso é imposto pelo Git. É um hábito, e ele se paga no dia em que alguém roda `git blame` no aviso
 de feriado (aula 3), acha o commit, lê `Refs #23` e chega ao ticket com a história do Bruno sobre a porta
 fechada. Sem o número, a pessoa acha uma linha de HTML e tem de adivinhar por que ela está ali.
+
+## A mesma tarefa na sua máquina
+
+O resto desta aula acompanha o terminal da Ana, e três coisas nele ainda não estão na sua máquina:
+uma cópia compartilhada com a `v1.0` marcada, a tarefa #21 do Bruno já integrada, e um serviço de
+hospedagem para fazer o merge dos pull requests. A primeira é o arranjo da aula 7, a partir de uma
+semana nova:
+
+```bash
+cd ~ && rm -rf ~/site ~/remotes ~/platform && bash ~/make-site.sh && cd ~/site
+git tag -a v1.0 -m 'The site as it went live'
+git init -q --bare ~/remotes/site.git
+git remote add origin ~/remotes/site.git
+git push -q -u origin main v1.0
+```
+
+O serviço de hospedagem é um site, e o que ele faz quando alguém aperta *Merge pull request* é Git
+comum, rodado numa cópia própria. Este programa curto faz o mesmo, para você fazer o papel do botão
+num terminal. Salve-o como `~/merge-button.sh`:
+
+```bash
+#!/usr/bin/env bash
+# merge-button.sh BRANCH NUMBER AUTHOR TITLE: what a hosting service does when
+# somebody presses "Merge pull request", played by its own copy of the project.
+set -e
+[ -d ~/platform/site ] || git clone -q ~/remotes/site.git ~/platform/site
+cd ~/platform/site
+git fetch -q origin
+git merge -q --ff-only origin/main
+git -c user.name=GitHub -c user.email=noreply@github.com merge -q --no-ff "origin/$1" \
+  -m "Merge pull request #$2 from $3/$1" -m "$4"
+git push -q origin main
+git push -q origin --delete "$1"
+```
+
+Ele faz o commit de merge com o nome que o GitHub usa e a mensagem que o GitHub escreve, e depois apaga
+o branch da cópia compartilhada, que é a outra metade do botão. Agora a tarefa do Bruno, feita no dia
+anterior: você faz o papel dele, na sua cópia, e envia o branch dele:
+
+```bash
+git switch -q -c 21-rye-bread-back
+printf '<p>Rye bread, 1.35</p>\n' >> menu.html
+git -c user.name='Bruno Lima' -c user.email=bruno@example.com commit -qam 'Put rye bread back on the menu' -m 'Refs #21'
+git push -q origin 21-rye-bread-back
+git switch -q main && git branch -q -D 21-rye-bread-back
+```
+
+E o pull request dele, o #22, integrado naquela tarde:
+
+```bash
+bash ~/merge-button.sh 21-rye-bread-back 22 bruno 'Put rye bread back on the menu'
+```

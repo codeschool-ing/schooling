@@ -1,6 +1,6 @@
 ---
 title: Do branch ao pull request
-version: 1
+version: 2
 ---
 
 ## Comece do main mais novo
@@ -39,6 +39,15 @@ todo mundo fazer igual, e a aula 9 disse onde escrever isso.
 ## Faça commits, e aponte de volta
 
 A Ana faz a mudança em dois commits, e cada mensagem termina com uma linha dizendo para qual ticket ela é:
+
+```bash
+printf '<p>Closed on public holidays.</p>\n' >> index.html
+git commit -qam 'Say the bakery closes on public holidays' -m 'Refs #23'
+printf '.closed { font-weight: bold; }\n' >> style.css
+sed -i 's|<p>Closed on public holidays.</p>|<p class="closed">Closed on public holidays.</p>|' index.html
+git commit -qam 'Make the holiday notice stand out' -m 'Refs #23'
+```
+
 
 ```
 ana@vm:~/site$ git log --oneline main..

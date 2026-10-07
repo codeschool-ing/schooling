@@ -1,6 +1,6 @@
 ---
 title: Removendo e renomeando, para o Git saber
-version: 1
+version: 2
 ---
 
 Apagar ou renomear um arquivo é uma mudança como qualquer outra, e precisa ser preparada como
@@ -12,6 +12,7 @@ que o Git tem dois comandos próprios.
 Renomeie a folha de estilo com o comando comum do shell, e o Git vê dois eventos sem relação:
 
 ```
+ana@vm:~/site$ printf 'Ask the supplier about rye flour\n' > todo.txt
 ana@vm:~/site$ git add menu.html todo.txt && git commit -q -m "Add the menu and a to-do list"
 ana@vm:~/site$ mv style.css site.css
 ana@vm:~/site$ git status --short

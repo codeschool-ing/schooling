@@ -1,11 +1,27 @@
 ---
 title: Quando os dois lados mudaram as mesmas linhas
-version: 1
+version: 2
 ---
 
 A aula 5 fez o merge de dois branches que tinham mudado arquivos diferentes, e o Git os combinou sem
 perguntar. Aqui o branch `sunday` da Ana e o commit do Bruno no `main` mudaram os dois a segunda linha
-do `index.html`:
+do `index.html`. Para ter os mesmos dois lados na sua máquina, comece de uma semana nova e faça os
+dois:
+
+```bash
+cd ~ && rm -rf ~/site && bash ~/make-site.sh && cd ~/site
+git switch -q -c sunday
+sed -i 's/half past five/half past five; Sundays from seven/' index.html
+git commit -qam 'Open on Sundays from seven'
+git switch -q main
+sed -i 's/half past five/half past six/' index.html
+git -c user.name='Bruno Lima' -c user.email=bruno@example.com commit -qam 'Open at half past six in winter'
+```
+
+O `-q` deixa cada comando quieto, já que você viu o que eles imprimem. A última linha é o commit do
+Bruno. Numa equipe ele chegaria ao `main` da Ana por um pull, que é a aula 7; aqui você mesmo o faz,
+no nome dele. **`git -c nome=valor` muda uma configuração num comando só e em nenhum outro lugar**,
+então o commit diz Bruno e as suas configurações ficam intocadas. Agora o merge:
 
 ```
 ana@vm:~/site$ git merge sunday

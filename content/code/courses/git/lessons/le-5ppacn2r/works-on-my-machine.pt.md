@@ -1,10 +1,36 @@
 ---
 title: Na minha máquina funciona
-version: 1
+version: 2
 ---
 
 O ticket #34 pede para o cardápio mostrar quais itens têm alergênicos. A Ana põe uma imagem na página e
-abre no navegador. A imagem aparece. Aqui está o que ela digitou no caminho:
+abre no navegador. A imagem aparece.
+
+Para estar onde ela está, comece de uma semana nova:
+
+```bash
+cd ~ && rm -rf ~/site ~/remotes /tmp/fresh && bash ~/make-site.sh && cd ~/site
+```
+
+O Bruno já fez commit de um check para links que apontam para arquivos que não existem, o
+`check-links.sh`. A próxima seção o lê linha por linha; o botão de copiar de lá entrega o script
+inteiro, então salve-o agora como `~/site/check-links.sh` com o nano. Depois torne-o executável e faça
+o commit no nome dele, monte a cópia compartilhada da aula 7, e faça a mudança da Ana num branch para
+o ticket. A imagem é uma substituta de três bytes, porque o que importa aqui é se o arquivo está lá,
+não o que ele mostra:
+
+```bash
+chmod +x check-links.sh && git add check-links.sh
+git -c user.name='Bruno Lima' -c user.email=bruno@example.com commit -qm 'Add a check for links to missing files'
+git init -q --bare ~/remotes/site.git
+git remote add origin ~/remotes/site.git
+git push -q -u origin main
+git switch -q -c 34-allergens
+mkdir -p images && printf 'PNG' > images/allergens.png
+printf '<p><img src="images/allergens.png" alt="Allergens: gluten, milk, eggs"></p>\n' >> menu.html
+```
+
+Aqui está o que ela digitou no caminho:
 
 ```
 ana@vm:~/site$ git status --short

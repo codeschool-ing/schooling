@@ -1,6 +1,6 @@
 ---
 title: From a branch to a pull request
-version: 1
+version: 2
 ---
 
 ## Start from the newest main
@@ -39,6 +39,15 @@ that everybody does the same thing, and lesson 9 said where to write that down.
 ## Commit, and point back
 
 Ana makes the change in two commits, and each message ends with a line saying which ticket it is for:
+
+```bash
+printf '<p>Closed on public holidays.</p>\n' >> index.html
+git commit -qam 'Say the bakery closes on public holidays' -m 'Refs #23'
+printf '.closed { font-weight: bold; }\n' >> style.css
+sed -i 's|<p>Closed on public holidays.</p>|<p class="closed">Closed on public holidays.</p>|' index.html
+git commit -qam 'Make the holiday notice stand out' -m 'Refs #23'
+```
+
 
 ```
 ana@vm:~/site$ git log --oneline main..
