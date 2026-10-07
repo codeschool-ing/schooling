@@ -26,6 +26,12 @@ qualquer linha fica íngreme ou plana pelo próprio eixo.
 O matplotlib, quando se pede um segundo eixo com `twinx`, ajusta cada eixo à sua série. As duas
 linhas passam então a ocupar a altura inteira do gráfico:
 
+Este é o programa, `dual.py`:
+
+```schooling-example
+{"language": "python", "file": "dual.py", "parts": [{"code": "import csv\nimport matplotlib.pyplot as plt\n"}, {"code": "series = {}\nwith open(\"monthly.csv\") as f:\n    for row in csv.DictReader(f):\n        series.setdefault(row[\"region\"], []).append(int(row[\"orders\"]))\n", "note": "Uma lista de 24 valores mensais por região."}, {"code": "fig, left = plt.subplots(figsize=(7, 3.5))\nright = left.twinx()\nleft.plot(series[\"Southeast\"], color=\"#2b52c9\")\nright.plot(series[\"North\"], color=\"#d40f28\", linestyle=\"--\")\nprint(\"left axis: \", [round(v) for v in left.get_ylim()])\nprint(\"right axis:\", [round(v) for v in right.get_ylim()])\nfig.savefig(\"dual.png\", dpi=150, bbox_inches=\"tight\")\n", "note": "`twinx` acrescenta um segundo eixo vertical que divide o mesmo eixo horizontal. O Sudeste vai à esquerda, o Norte à direita, e o programa imprime a faixa que o matplotlib escolheu para cada um."}]}
+```
+
 ```
 ana@vm:~/viz$ .venv/bin/python dual.py
 left axis:  [5016, 8354]

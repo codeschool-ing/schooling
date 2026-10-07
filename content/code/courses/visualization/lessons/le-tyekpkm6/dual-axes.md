@@ -26,6 +26,12 @@ line can be made steep or flat by its own axis.
 matplotlib, asked for a second axis with `twinx`, fits each axis to its own series. Both lines
 then fill the full height of the chart:
 
+Here is the program, `dual.py`:
+
+```schooling-example
+{"language": "python", "file": "dual.py", "parts": [{"code": "import csv\nimport matplotlib.pyplot as plt\n"}, {"code": "series = {}\nwith open(\"monthly.csv\") as f:\n    for row in csv.DictReader(f):\n        series.setdefault(row[\"region\"], []).append(int(row[\"orders\"]))\n", "note": "One list of 24 monthly values per region."}, {"code": "fig, left = plt.subplots(figsize=(7, 3.5))\nright = left.twinx()\nleft.plot(series[\"Southeast\"], color=\"#2b52c9\")\nright.plot(series[\"North\"], color=\"#d40f28\", linestyle=\"--\")\nprint(\"left axis: \", [round(v) for v in left.get_ylim()])\nprint(\"right axis:\", [round(v) for v in right.get_ylim()])\nfig.savefig(\"dual.png\", dpi=150, bbox_inches=\"tight\")\n", "note": "`twinx` adds a second vertical axis sharing the same horizontal one. Southeast goes on the left, North on the right, and the program prints the range matplotlib chose for each."}]}
+```
+
 ```
 ana@vm:~/viz$ .venv/bin/python dual.py
 left axis:  [5016, 8354]

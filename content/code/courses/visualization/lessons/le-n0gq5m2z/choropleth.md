@@ -22,6 +22,12 @@ produces nearly the same picture.
 On the right each state is shaded by **orders per thousand people**. Now the map says something
 about Horta:
 
+The numbers come from `rates.py`, which reads `states.csv`:
+
+```schooling-example
+{"language": "python", "file": "rates.py", "parts": [{"code": "import csv\nimport numpy as np\n"}, {"code": "with open(\"states.csv\") as f:\n    rows = list(csv.DictReader(f))\nfor r in rows:\n    r[\"rate\"] = int(r[\"orders\"]) / (float(r[\"population\"]) * 1000)\n", "note": "Read the 27 states and give each one its rate: orders divided by the population in thousands, since the file gives population in millions."}, {"code": "by_orders = sorted(rows, key=lambda r: int(r[\"orders\"]), reverse=True)\nby_rate = sorted(rows, key=lambda r: r[\"rate\"], reverse=True)\nprint(\"most orders:\", \", \".join(r[\"state\"] for r in by_orders[:5]))\nprint(\"best rate:  \", \", \".join(f'{r[\"state\"]} {r[\"rate\"]:.2f}' for r in by_rate[:5]))\nprint(\"worst rate: \", \", \".join(f'{r[\"state\"]} {r[\"rate\"]:.2f}' for r in by_rate[-3:]))\n", "note": "Sort the states twice, by orders and by rate, and print the top five of each and the bottom three by rate."}, {"code": "rates = np.array([r[\"rate\"] for r in rows])\nprint(\"equal intervals:\", np.round(np.linspace(rates.min(), rates.max(), 5), 2))\nprint(\"quantiles:      \", np.round(np.percentile(rates, [0, 25, 50, 75, 100]), 2))\n", "note": "Two ways of cutting the rates into classes: five equally spaced breaks, and the quartiles. `linspace` and `percentile` are numpy's."}]}
+```
+
 ```
 ana@vm:~/viz$ .venv/bin/python rates.py
 most orders: SP, RJ, MG, PR, RS

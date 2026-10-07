@@ -6,6 +6,12 @@ version: 1
 Algumas quantidades cobrem uma faixa tão larga que um eixo normal não consegue mostrá-las. O dado
 dos estados da Horta é uma delas.
 
+O `states.py` mede quão larga:
+
+```schooling-example
+{"language": "python", "file": "states.py", "parts": [{"code": "import csv\n"}, {"code": "with open(\"states.csv\") as f:\n    rows = list(csv.DictReader(f))\norders = sorted(int(r[\"orders\"]) for r in rows)\npeople = sorted(float(r[\"population\"]) for r in rows)\nprint(f\"orders:     {orders[0]:6} to {orders[-1]:6}, ratio {orders[-1] / orders[0]:.0f}\")\nprint(f\"population: {people[0]:6} to {people[-1]:6}, ratio {people[-1] / people[0]:.0f}\")\nbelow = sum(1 for o in orders if o < orders[-1] / 10)\nprint(f\"{below} of {len(orders)} states have under a tenth of the largest\")\n", "note": "Ordena os pedidos e as populações, imprime o menor e o maior de cada com a razão entre eles, e conta os estados com menos de um décimo do maior."}]}
+```
+
 ```
 ana@vm:~/viz$ .venv/bin/python states.py
 orders:        140 to  61040, ratio 436

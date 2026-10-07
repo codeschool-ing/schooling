@@ -5,7 +5,8 @@ version: 1
 
 O argumento mais forte para desenhar gráficos com código é que o mesmo programa desenha o mesmo
 gráfico. Vale conferir quão ao pé da letra isso é verdade. Aqui está um programa parecido com o da
-aula 1, salvo como `plain.py`, gravando um SVG. Ele roda duas vezes, e o `sha256sum` imprime uma
+aula 1, salvo como `plain.py`, gravando um SVG: é o `chart.py` mostrado abaixo sem a linha do
+`hashsalt` e sem o argumento `metadata`. Ele roda duas vezes, e o `sha256sum` imprime uma
 impressão digital do arquivo depois de cada vez:
 
 ```

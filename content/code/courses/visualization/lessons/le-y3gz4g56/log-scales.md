@@ -5,6 +5,12 @@ version: 1
 
 Some quantities span a range so wide that a normal axis cannot show them. Horta's state data is one.
 
+`states.py` measures how wide:
+
+```schooling-example
+{"language": "python", "file": "states.py", "parts": [{"code": "import csv\n"}, {"code": "with open(\"states.csv\") as f:\n    rows = list(csv.DictReader(f))\norders = sorted(int(r[\"orders\"]) for r in rows)\npeople = sorted(float(r[\"population\"]) for r in rows)\nprint(f\"orders:     {orders[0]:6} to {orders[-1]:6}, ratio {orders[-1] / orders[0]:.0f}\")\nprint(f\"population: {people[0]:6} to {people[-1]:6}, ratio {people[-1] / people[0]:.0f}\")\nbelow = sum(1 for o in orders if o < orders[-1] / 10)\nprint(f\"{below} of {len(orders)} states have under a tenth of the largest\")\n", "note": "Sort the orders and the populations, print the smallest and largest of each with their ratio, and count the states with under a tenth of the largest."}]}
+```
+
 ```
 ana@vm:~/viz$ .venv/bin/python states.py
 orders:        140 to  61040, ratio 436

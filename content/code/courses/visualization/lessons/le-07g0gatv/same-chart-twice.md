@@ -5,7 +5,8 @@ version: 1
 
 The strongest argument for drawing charts with code is that the same program draws the same chart.
 It is worth checking how literally that is true. Here is a program like lesson 1's, saved as
-`plain.py`, writing an SVG. It is run twice, and `sha256sum` prints a fingerprint of the file after
+`plain.py`, writing an SVG: it is the `chart.py` shown below without the `hashsalt` line and
+without the `metadata` argument. It is run twice, and `sha256sum` prints a fingerprint of the file after
 each run:
 
 ```

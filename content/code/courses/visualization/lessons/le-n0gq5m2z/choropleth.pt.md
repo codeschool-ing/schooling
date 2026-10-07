@@ -23,6 +23,12 @@ crimes, médicos, produz quase a mesma figura.
 À direita cada estado é pintado pelos **pedidos por mil habitantes**. Agora o mapa diz algo sobre a
 Horta:
 
+Os números vêm do `rates.py`, que lê o `states.csv`:
+
+```schooling-example
+{"language": "python", "file": "rates.py", "parts": [{"code": "import csv\nimport numpy as np\n"}, {"code": "with open(\"states.csv\") as f:\n    rows = list(csv.DictReader(f))\nfor r in rows:\n    r[\"rate\"] = int(r[\"orders\"]) / (float(r[\"population\"]) * 1000)\n", "note": "Lê os 27 estados e dá a cada um a sua taxa: pedidos divididos pela população em milhares, já que o arquivo traz a população em milhões."}, {"code": "by_orders = sorted(rows, key=lambda r: int(r[\"orders\"]), reverse=True)\nby_rate = sorted(rows, key=lambda r: r[\"rate\"], reverse=True)\nprint(\"most orders:\", \", \".join(r[\"state\"] for r in by_orders[:5]))\nprint(\"best rate:  \", \", \".join(f'{r[\"state\"]} {r[\"rate\"]:.2f}' for r in by_rate[:5]))\nprint(\"worst rate: \", \", \".join(f'{r[\"state\"]} {r[\"rate\"]:.2f}' for r in by_rate[-3:]))\n", "note": "Ordena os estados duas vezes, por pedidos e por taxa, e imprime os cinco primeiros de cada e os três últimos por taxa."}, {"code": "rates = np.array([r[\"rate\"] for r in rows])\nprint(\"equal intervals:\", np.round(np.linspace(rates.min(), rates.max(), 5), 2))\nprint(\"quantiles:      \", np.round(np.percentile(rates, [0, 25, 50, 75, 100]), 2))\n", "note": "Dois jeitos de cortar as taxas em classes: cinco limites igualmente espaçados, e os quartis. `linspace` e `percentile` são do numpy."}]}
+```
+
 ```
 ana@vm:~/viz$ .venv/bin/python rates.py
 most orders: SP, RJ, MG, PR, RS

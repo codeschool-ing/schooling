@@ -73,6 +73,9 @@ ana@vm:~/viz$ .venv/bin/python -c "import matplotlib; print(matplotlib.__version
 3.11.2
 ```
 
+The machine these lessons were recorded on has Python 3.13; Ubuntu 24.04 ships 3.12, and either
+works.
+
 **`--quiet` hides pip's progress, and silence means it worked.** The last line asks the new Python
 which matplotlib it has, and `3.11.2` is the answer that matters. The version is pinned so that
 your charts come out like the lessons' do; a newer one will work too, with small differences in
