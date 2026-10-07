@@ -37,7 +37,7 @@ um namespace: negar tudo, e depois permitir o que for preciso, um caminho de cad
 
 ## Aplicada, e ignorada
 
-O cluster de laboratório de sempre roda o plugin de rede do próprio kind, o kindnet:
+O cluster de sempre, do `./up.sh`, roda o plugin de rede do próprio kind, o kindnet:
 
 ```
 ana@laptop:~/shop$ kubectl get pods -n kube-system -l app=kindnet -o name

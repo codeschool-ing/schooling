@@ -37,7 +37,7 @@ dev-56757b7b5d-vhjmr   1/1     Running   0          1s
 `describe` line says why: the image is not on the node, so the node asked Docker Hub for
 `docker.io/library/shop:dev`. **The end of that line depends on the machine.** The recording machine's
 nodes cannot reach Docker Hub at all, so it ends in a certificate error; on yours the nodes reach it and
-are told there is no such image, `pull access denied`. Both mean the same thing: nobody copied the image
+are told there is no such image. Both mean the same thing: nobody copied the image
 into the cluster. `kind load docker-image` does that, and deleting the pod makes the Deployment start a
 new one at once instead of waiting out the back-off.
 

@@ -115,9 +115,10 @@ Events:
 ```
 
 **The events tell the whole story in order**: scheduled, pulling, failed, back-off. The failure
-message names the reference it tried, `docker.io/library/shop:1.O`. In this lab the nodes cannot reach
-any registry at all, so the request fails before the registry could answer that the tag does not
-exist; on a connected node the message would say `not found`. Either way the fix is the same, and the
+message names the reference it tried, `docker.io/library/shop:1.O`. The nodes of the machine this course
+was recorded on cannot reach any registry at all, so the request fails before the registry could
+answer; on your nodes, which do reach Docker Hub, the end of the line says instead that there is no
+such image. Either way the fix is the same, and the
 reference in the message is where the typo shows.
 
 `ImagePullBackOff` means the kubelet is waiting longer between attempts, up to five minutes. It keeps

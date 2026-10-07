@@ -24,7 +24,7 @@ spec:
 ```
 
 `Cluster` is the default, written out here because the next step changes it. Before the requests, the
-shop was scaled down to one copy, so that two of the three nodes have no pod of their own:
+shop was scaled down to one copy, with `kubectl scale deployment shop --replicas=1`, so that two of the three nodes have no pod of their own:
 
 ```
 ana@laptop:~/shop$ kubectl apply -f shop-public.yaml

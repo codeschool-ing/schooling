@@ -20,22 +20,7 @@
 shown "$COURSE/lessons/le-nf7qt63y/the-manifest.md" ports.yaml >/tmp/ports.yaml || exit 1
 fresh /tmp/ports.yaml
 quiet 'kubectl run probe --image=busybox:1.37 --restart=Never --command -- sleep 3600'
-cat >/tmp/shop.yaml <<'CODE'
-apiVersion: apps/v1
-kind: Deployment
-metadata: {name: shop}
-spec:
-  replicas: 3
-  selector: {matchLabels: {app: shop}}
-  template:
-    metadata: {labels: {app: shop}}
-    spec: {containers: [{name: shop, image: "shop:1.0"}]}
----
-apiVersion: v1
-kind: Service
-metadata: {name: shop}
-spec: {selector: {app: shop}, ports: [{port: 80, targetPort: 8080}]}
-CODE
+shown "$COURSE/lessons/le-6fshj7gc/inside.md" shop.yaml >/tmp/shop.yaml || exit 1
 quiet 'kubectl apply -f /tmp/shop.yaml'
 quiet 'kubectl rollout status deployment/shop --timeout=120s'
 quiet 'kubectl wait --for=condition=Ready pod/probe --timeout=60s'

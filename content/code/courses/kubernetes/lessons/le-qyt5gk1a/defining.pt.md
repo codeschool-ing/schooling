@@ -40,5 +40,5 @@ mostra o quanto dele é feito assim:
 kubectl get crds
 ```
 
-O cluster de laboratório desta lição só tem o que acabou de ser criado, então esse comando não foi
+O cluster desta lição só tem o que acabou de ser criado, então esse comando não foi
 capturado aqui.

@@ -26,19 +26,7 @@ quiet 'kubectl apply -f /opt/k8s/manifests/gateway-api-v1.4.0/'
 shown "$COURSE/lessons/le-zkm2ah4c/ingress.md" traefik.yaml >/tmp/traefik.yaml || exit 1
 quiet 'kubectl apply -f /tmp/traefik.yaml'
 quiet 'kubectl -n traefik rollout status deployment/traefik --timeout=120s'
-cat >/tmp/gateway.yaml <<'CODE'
-apiVersion: gateway.networking.k8s.io/v1
-kind: GatewayClass
-metadata: {name: traefik}
-spec: {controllerName: traefik.io/gateway-controller}
----
-apiVersion: gateway.networking.k8s.io/v1
-kind: Gateway
-metadata: {name: public}
-spec:
-  gatewayClassName: traefik
-  listeners: [{name: web, protocol: HTTP, port: 8000, allowedRoutes: {namespaces: {from: Same}}}]
-CODE
+shown "$COURSE/lessons/le-q1yfxxn3/canary.md" gateway.yaml >/tmp/gateway.yaml || exit 1
 quiet 'kubectl apply -f /tmp/gateway.yaml'
 
 block versions
@@ -224,15 +212,7 @@ spec:
   - port: 80
     targetPort: 8080
 CODE
-cat >/tmp/plain-route.yaml <<'CODE'
-apiVersion: gateway.networking.k8s.io/v1
-kind: HTTPRoute
-metadata: {name: shop}
-spec:
-  parentRefs: [{name: public}]
-  hostnames: [shop.example.test]
-  rules: [{backendRefs: [{name: shop, port: 80}]}]
-CODE
+shown "$COURSE/lessons/le-q1yfxxn3/blue-green.md" plain-route.yaml >/tmp/plain-route.yaml || exit 1
 quiet 'kubectl apply -f /tmp/plain-route.yaml'
 run 'kubectl apply -f blue-green.yaml'
 quiet 'kubectl rollout status deployment/shop-blue --timeout=120s'

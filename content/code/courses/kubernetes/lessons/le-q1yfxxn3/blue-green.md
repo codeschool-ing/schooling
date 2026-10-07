@@ -64,7 +64,22 @@ spec:
     targetPort: 8080
 ```
 
-The route from the previous section now sends everything to this Service.
+The canary's objects go first, with `kubectl delete -f versions.yaml -f route-header.yaml`, and a
+plain route takes their place, sending everything for the host to this Service.
+
+`plain-route.yaml`:
+
+```yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata: {name: shop}
+spec:
+  parentRefs: [{name: public}]
+  hostnames: [shop.example.test]
+  rules: [{backendRefs: [{name: shop, port: 80}]}]
+```
+
+Then `kubectl apply -f plain-route.yaml`, and the two versions:
 
 ```
 ana@laptop:~/shop$ kubectl apply -f blue-green.yaml

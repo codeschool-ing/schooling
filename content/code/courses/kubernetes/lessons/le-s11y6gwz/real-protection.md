@@ -21,7 +21,7 @@ plane, a snapshot shared to debug something else. That is the case encryption at
 ## Encryption at rest
 
 The API server can encrypt chosen types before it writes them, with keys from a file it is given.
-On this lab's control plane the file looks like this, with the key itself left out of the transcript:
+On this cluster's control plane the file looks like this, with the key itself left out of the transcript:
 
 ```
 ana@laptop:~/shop$ docker exec shop-control-plane sed "s/secret: .*/secret: (32 random bytes, not shown)/" /etc/kubernetes/pki/encryption.yaml

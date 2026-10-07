@@ -7,6 +7,14 @@ version: 1
 and a port, and two things keep it true: a controller that keeps a list of the pods matching the
 selector, and kube-proxy on every node, which turns the address into a route to one of them.
 
+This lesson starts on lesson 8's cluster, with your machine's port 8080 on the nodes' port 30080, and
+a busybox pod called `probe` to ask questions from inside:
+
+```sh
+./up.sh ports.yaml
+kubectl run probe --image=busybox:1.37 --restart=Never --command -- sleep 3600
+```
+
 ```yaml
 apiVersion: apps/v1
 kind: Deployment

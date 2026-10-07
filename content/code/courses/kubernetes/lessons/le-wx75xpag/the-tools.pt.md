@@ -6,7 +6,7 @@ version: 1
 Tudo nas duas seções anteriores foi uma pessoa rodando dois comandos. **O Argo CD e o Flux são esses
 dois comandos rodando dentro do cluster, para sempre**: cada um observa um ou mais repositórios,
 renderiza o que está lá (manifestos simples, Kustomize ou Helm), compara com o cluster, e aplica a
-diferença. Nenhum dos dois foi instalado neste laboratório, então o que segue os descreve e não foi
+diferença. Nenhum dos dois foi instalado para este curso, então o que segue os descreve e não foi
 rodado.
 
 ::: track devops

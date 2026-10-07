@@ -37,7 +37,7 @@ dev-56757b7b5d-vhjmr   1/1     Running   0          1s
 tentativas. A linha do `describe` diz por quê: a imagem não está no nó, então o nó pediu
 `docker.io/library/shop:dev` ao Docker Hub. **O fim dessa linha depende da máquina.** Os nós da máquina
 de gravação não alcançam o Docker Hub, então lá ela termina num erro de certificado; na sua os nós o
-alcançam e ouvem que essa imagem não existe, `pull access denied`. Os dois querem dizer a mesma coisa:
+alcançam e ouvem que essa imagem não existe. Os dois querem dizer a mesma coisa:
 ninguém copiou a imagem para o cluster. O `kind load docker-image` faz isso, e apagar o pod faz o
 Deployment criar um novo na hora em vez de esperar o back-off acabar.
 

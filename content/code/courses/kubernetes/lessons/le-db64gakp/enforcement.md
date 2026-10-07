@@ -37,7 +37,7 @@ for a namespace: deny everything, then allow what is needed, one path at a time.
 
 ## Applied, and ignored
 
-The usual lab cluster runs kind's own network plugin, kindnet:
+The usual cluster, from `./up.sh`, runs kind's own network plugin, kindnet:
 
 ```
 ana@laptop:~/shop$ kubectl get pods -n kube-system -l app=kindnet -o name

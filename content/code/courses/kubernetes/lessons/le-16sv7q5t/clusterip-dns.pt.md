@@ -7,6 +7,14 @@ version: 1
 porta, e duas coisas o mantêm verdadeiro: um controlador que mantém uma lista dos pods que batem com o
 seletor, e o kube-proxy em cada nó, que transforma o endereço numa rota até um deles.
 
+
+Esta aula começa no cluster da aula 8, com a porta 8080 da sua máquina na porta 30080 dos nós, e um
+pod busybox chamado `probe` para fazer perguntas de dentro:
+
+```sh
+./up.sh ports.yaml
+kubectl run probe --image=busybox:1.37 --restart=Never --command -- sleep 3600
+```
 ```yaml
 apiVersion: apps/v1
 kind: Deployment

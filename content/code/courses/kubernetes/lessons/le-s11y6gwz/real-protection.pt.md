@@ -22,7 +22,7 @@ criptografia em repouso.
 ## Criptografia em repouso
 
 O API server pode criptografar tipos escolhidos antes de escrevê-los, com chaves de um arquivo que ele
-recebe. No plano de controle deste laboratório o arquivo é assim, com a própria chave fora da
+recebe. No plano de controle deste cluster o arquivo é assim, com a própria chave fora da
 transcrição:
 
 ```
