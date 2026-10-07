@@ -46,4 +46,4 @@ The same arithmetic runs the other way when you are paying. A vision API charges
 
 ## Where the numbers came from
 
-The invoice was drawn by the lab at 150 dots per inch from a specification, so `media/truth/invoice-0931.txt` holds exactly what is printed on it, row by row. The **character error rate** (CER) in these transcripts is the number of characters you would have to change, delete or insert to turn the reading into the truth, divided by the length of the truth. `jiwer.cer` computes it. 0.4% of the 492 characters on the page is two characters, and the next section finds them.
+The invoice was drawn by `make_media.py` at 150 dots per inch from a specification, so `media/truth/invoice-0931.txt` holds exactly what is printed on it, row by row. The **character error rate** (CER) in these transcripts is the number of characters you would have to change, delete or insert to turn the reading into the truth, divided by the length of the truth. `jiwer.cer` computes it. 0.4% of the 492 characters on the page is two characters, and the next section finds them.

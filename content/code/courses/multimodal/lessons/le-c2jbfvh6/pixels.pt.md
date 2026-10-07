@@ -46,4 +46,4 @@ A mesma conta vale ao contrário quando você está pagando. Uma API de visão c
 
 ## De onde vieram os números
 
-A nota foi desenhada pelo laboratório a 150 pontos por polegada a partir de uma especificação, então `media/truth/invoice-0931.txt` guarda exatamente o que está impresso nela, linha por linha. A **taxa de erro de caracteres** (CER, na sigla em inglês) destas transcrições é o número de caracteres que você teria de trocar, apagar ou inserir para transformar a leitura na verdade, dividido pelo tamanho da verdade. O `jiwer.cer` calcula isso. 0,4% dos 492 caracteres da página são dois caracteres, e a próxima seção os encontra.
+A nota foi desenhada pelo `make_media.py` a 150 pontos por polegada a partir de uma especificação, então `media/truth/invoice-0931.txt` guarda exatamente o que está impresso nela, linha por linha. A **taxa de erro de caracteres** (CER, na sigla em inglês) destas transcrições é o número de caracteres que você teria de trocar, apagar ou inserir para transformar a leitura na verdade, dividido pelo tamanho da verdade. O `jiwer.cer` calcula isso. 0,4% dos 492 caracteres da página são dois caracteres, e a próxima seção os encontra.

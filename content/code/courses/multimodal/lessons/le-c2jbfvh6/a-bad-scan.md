@@ -3,7 +3,7 @@ title: A bad scan, and what helps
 version: 1
 ---
 
-The second copy of the invoice is the first one after a cheap scanner: turned 1.8 degrees, blurred, sprinkled with noise, reduced to 100 dots per inch and saved as a JPEG at low quality. Every one of those steps is written in the lab's `build_media.py`, so the damage is known exactly. Read with the default mode, the table comes apart:
+The second copy of the invoice is the first one after a cheap scanner: turned 1.8 degrees, blurred, sprinkled with noise, reduced to 100 dots per inch and saved as a JPEG at low quality. Every one of those steps is written in `make_media.py` from lesson 1, so the damage is known exactly. Read with the default mode, the table comes apart:
 
 ```
 ana@lab:~/mm$ tesseract media/invoice-0931-scan.jpg - 2>/dev/null | sed -n "/Qty/,/Total/p"
@@ -63,7 +63,30 @@ The accents are back and the `15.90` is right. Only the comma in `713,50` and a 
 
 ## The cures people reach for
 
-Two fixes are suggested for every bad scan: make it bigger, and turn it straight. Both were measured, with the setting that read best:
+Two fixes are suggested for every bad scan: make it bigger, and turn it straight. Both were measured, with the setting that read best.
+
+`tidy.py`:
+
+```python
+"""Two cures people reach for on a bad scan: make it bigger, and turn it straight."""
+import subprocess
+
+import jiwer
+from PIL import Image
+
+TRUTH = " ".join(open("media/truth/invoice-0931.txt").read().split())
+scan = Image.open("media/invoice-0931-scan.jpg")
+tries = {
+    "as scanned": scan,
+    "twice the size": scan.resize((scan.width * 2, scan.height * 2), Image.LANCZOS),
+    "turned 1.8 degrees back": scan.rotate(-1.8, resample=Image.BICUBIC, fillcolor=255),
+}
+for name, img in tries.items():
+    img.save("/tmp/try.png")
+    out = subprocess.run(["tesseract", "/tmp/try.png", "-", "--psm", "6", "-l", "eng+por"],
+                         capture_output=True, text=True, check=True).stdout
+    print(f"{name:24} CER {jiwer.cer(TRUTH, ' '.join(out.split())):6.1%}")
+```
 
 ```
 ana@lab:~/mm$ python tidy.py

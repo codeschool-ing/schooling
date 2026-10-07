@@ -56,6 +56,6 @@ That is the most useful habit in this whole course: **wherever the truth has a s
 
 ## What the arithmetic cannot catch
 
-The checks passed on the clean page even though the title came back as *Bras Cubas*, because no sum depends on a title. A misread title is caught by a different structure: Marginalia's own catalogue. The title on the invoice should match a book in `data/books.jsonl`, and the closest match by edit distance is almost always the right one. A quantity of 2 that should be 12, read in the default mode, would also have failed: 2 × 18.50 is not 222.00.
+The checks passed on the clean page even though the title came back as *Bras Cubas*, because no sum depends on a title. A misread title is caught by a different structure: Marginalia's own catalogue. The title on the invoice should match a book the shop sells, and the closest match by spelling is almost always the right one; lesson 7 builds exactly that check against a small catalogue. A quantity of 2 that should be 12, read in the default mode, would also have failed: 2 × 18.50 is not 222.00.
 
 When no check is possible, a field the system cannot verify is a field a person confirms. That is not a failure of automation. It is the design, and lesson 8 builds the same safety into a vision model's structured output.

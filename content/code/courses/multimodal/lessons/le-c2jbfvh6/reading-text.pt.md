@@ -79,6 +79,6 @@ Três achados, em ordem de tamanho.
 
 **Escolher o modo de página moveu o erro de 24,0% para 0,4%** na página limpa e de 57,1% para 1,2% no escaneado. Quase todo o "erro" do modo 3 é texto na ordem errada, que uma pessoa ignora ao ler e um programa que separa linhas não ignora.
 
-**Os dados de idioma importam para os caracteres que eles conhecem.** O `eng` não tem *ã* nem *á*, então *São Paulo* e *Brás Cubas* saíram como *Sao* e *Bras*. Acrescentar o português (`-l eng+por`, o pacote `tesseract-ocr-por`, que o laboratório instala) consertou os dois no escaneado. Uma nota de um fornecedor brasileiro com títulos em inglês precisa dos dois idiomas.
+**Os dados de idioma importam para os caracteres que eles conhecem.** O `eng` não tem *ã* nem *á*, então *São Paulo* e *Brás Cubas* saíram como *Sao* e *Bras*. Acrescentar o português (`-l eng+por`, o pacote `tesseract-ocr-por`, que o `setup.sh` instala) consertou os dois no escaneado. Uma nota de um fornecedor brasileiro com títulos em inglês precisa dos dois idiomas.
 
 **A página limpa não é o escaneado.** A próxima seção trata da diferença.

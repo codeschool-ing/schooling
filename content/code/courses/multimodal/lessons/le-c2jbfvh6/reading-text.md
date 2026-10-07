@@ -79,6 +79,6 @@ Three findings, in order of size.
 
 **Choosing the page mode moved the error from 24.0% to 0.4%** on the clean page and from 57.1% to 1.2% on the scan. Most of the "error" in mode 3 is text in the wrong order, which a person reads past and a program that parses rows does not.
 
-**The language data matters for the characters it knows.** `eng` has no *ã* or *á*, so *São Paulo* and *Brás Cubas* came out as *Sao* and *Bras*. Adding Portuguese (`-l eng+por`, the package `tesseract-ocr-por`, which the lab installs) fixed both on the scan. An invoice from a Brazilian supplier with English titles needs both languages.
+**The language data matters for the characters it knows.** `eng` has no *ã* or *á*, so *São Paulo* and *Brás Cubas* came out as *Sao* and *Bras*. Adding Portuguese (`-l eng+por`, the package `tesseract-ocr-por`, which `setup.sh` installs) fixed both on the scan. An invoice from a Brazilian supplier with English titles needs both languages.
 
 **The clean page is not the scan.** The next section is about the difference.

@@ -8,7 +8,7 @@ The three tools in this lesson are not rungs on one ladder, where the VLM is sim
 | the picture, and the question | the tool | why |
 |---|---|---|
 | a PDF with a text layer: *what does it say?* | no model; read the text layer | exact and free (lesson 1) |
-| a printed scan with a known layout: *what are the fields?* | OCR, then rules, then checks | 0.4% CER on this lab's scan, in milliseconds, on the machine |
+| a printed scan with a known layout: *what are the fields?* | OCR, then rules, then checks | 0.4% CER on this course's scan, in milliseconds, on the machine |
 | a photo: *is there a person, a car, a dog, and where?* | a detector | geometry, speed and no per-call cost, if the class is in its list |
 | a photo or a page with an open question: *what is this, is anything wrong?* | a vision-language model | open vocabulary, layout, reasoning |
 | handwriting, a crumpled receipt, a layout that changes every time | a vision-language model, checked | OCR's row assumption no longer holds |

@@ -56,6 +56,6 @@ Esse é o hábito mais útil de todo este curso: **onde a verdade tem uma estrut
 
 ## O que a aritmética não pega
 
-As conferências passaram na página limpa mesmo com o título voltando como *Bras Cubas*, porque nenhuma soma depende de um título. Um título mal lido se pega com outra estrutura: o próprio catálogo da Marginalia. O título da nota deveria bater com um livro de `data/books.jsonl`, e a correspondência mais próxima por distância de edição quase sempre é a certa. Uma quantidade 2 que deveria ser 12, lida no modo padrão, também teria falhado: 2 × 18,50 não dá 222,00.
+As conferências passaram na página limpa mesmo com o título voltando como *Bras Cubas*, porque nenhuma soma depende de um título. Um título mal lido se pega com outra estrutura: o próprio catálogo da Marginalia. O título da nota deve corresponder a um livro que a loja vende, e o mais parecido na grafia quase sempre é o certo; a aula 7 monta exatamente essa conferência contra um catálogo pequeno. Uma quantidade 2 que deveria ser 12, lida no modo padrão, também teria falhado: 2 × 18,50 não dá 222,00.
 
 Quando nenhuma conferência é possível, um campo que o sistema não consegue verificar é um campo que uma pessoa confirma. Isso não é uma falha da automação. É o desenho, e a aula 8 constrói a mesma segurança na saída estruturada de um modelo de visão.

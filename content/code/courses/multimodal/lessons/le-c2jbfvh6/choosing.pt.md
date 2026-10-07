@@ -8,7 +8,7 @@ As três ferramentas desta aula não são degraus de uma escada em que o VLM é 
 | a imagem, e a pergunta | a ferramenta | por quê |
 |---|---|---|
 | um PDF com camada de texto: *o que ele diz?* | nenhum modelo; leia a camada de texto | exato e de graça (aula 1) |
-| um escaneado impresso de layout conhecido: *quais são os campos?* | OCR, depois regras, depois conferências | 0,4% de CER no escaneado deste laboratório, em milissegundos, na máquina |
+| um escaneado impresso de layout conhecido: *quais são os campos?* | OCR, depois regras, depois conferências | 0,4% de CER no escaneado deste curso, em milissegundos, na máquina |
 | uma foto: *há uma pessoa, um carro, um cachorro, e onde?* | um detector | geometria, velocidade e nenhum custo por chamada, se a classe está na lista |
 | uma foto ou página com pergunta aberta: *o que é isto, há algo errado?* | um modelo de visão e linguagem | vocabulário aberto, layout, raciocínio |
 | letra à mão, um recibo amassado, um layout que muda toda vez | um modelo de visão e linguagem, conferido | a suposição de linhas do OCR deixa de valer |
