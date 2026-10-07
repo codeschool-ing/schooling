@@ -3,10 +3,11 @@ title: Pegando o endereço de volta, e entregando-o
 version: 1
 ---
 
-Quando o cabo de `hq` volta, `hq2` é o master e tudo funciona. Se `hq` deve agora pegar o endereço de volta
+Quando o cabo de `hq` volta, `sudo ip -n wire link set hq-hq up` na máquina virtual, `hq2` é o master e
+tudo funciona. Se `hq` deve agora pegar o endereço de volta
 é uma escolha, chamada **preempção**, e o padrão do VRRP é sim: um roteador de prioridade maior que volta
-assume de novo. O keepalived segue o padrão, e o laptop pegou o que `hq` manda quando faz isso. O filtro
-guarda só o ARP vindo do endereço de hardware de `hq`:
+assume de novo. O keepalived segue o padrão, e o laptop pegou o que `hq` manda quando faz isso, com a captura
+iniciada antes de o cabo voltar. O filtro guarda só o ARP vindo do endereço de hardware de `hq`:
 
 ```
 ana@laptop:~$ sudo tcpdump -n -t -e -i eth0 -c 2 arp and ether src 52:54:00:a8:0a:02
@@ -58,7 +59,8 @@ pelo menos teria sido substituído.
 
 É para isso que serve o `track_interface` da configuração: `eth1` é o enlace de `hq` com o provedor, e se
 ele cair, o keepalived põe a instância em `FAULT` e abre mão do endereço. O enlace do provedor foi
-derrubado enquanto `hq` era master:
+derrubado enquanto `hq` era master, do mesmo jeito que o cabo da LAN:
+`sudo ip -n wire link set hqwan-hq down` na máquina virtual, e cinco segundos de espera:
 
 ```
 ana@hq:~$ grep -E "eth1|FAULT|Entering" /run/keepalived.log | tail -n 3
@@ -79,8 +81,8 @@ rtt min/avg/max/mdev = 0.118/0.166/0.214/0.048 ms
 
 No mesmo segundo, pelo relógio do log, em que `hq` voltou a ser master, ele informou `eth1` fora do ar e
 foi para `FAULT`. **`hq2` tem `192.168.10.1` de novo, e o ping do laptop passa por ele sem perda**, embora
-`hq` esteja rodando e o cabo dele na LAN esteja bom. Quando o enlace do provedor voltou, `hq` passou pelos
-mesmos passos de antes:
+`hq` esteja rodando e o cabo dele na LAN esteja bom. Quando o enlace do provedor voltou,
+`sudo ip -n wire link set hqwan-hq up`, `hq` passou pelos mesmos passos de antes:
 
 ```
 ana@hq:~$ grep -E "eth1|FAULT|Entering" /run/keepalived.log | tail -n 3
