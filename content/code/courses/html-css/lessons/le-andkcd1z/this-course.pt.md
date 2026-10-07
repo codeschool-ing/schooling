@@ -26,7 +26,7 @@ title: "Andorinha Books"
 - paragraph: Second-hand books in Pinheiros, São Paulo.
 ```
 
-**O `probe` é o instrumento de medida do curso, não algo que você instala.** São algumas centenas de linhas de JavaScript que dirigem o Chromium pelo Playwright, uma biblioteca de testes de navegador, e ele existe para que os números destas aulas sejam números que um navegador imprimiu, e não números que alguém esperava. Você não digita as linhas que começam com `probe`: o que importa é a saída. Tudo o que ele imprime você lê no DevTools, na sua própria página, clicando no elemento e olhando a aba **Computed** e o diagrama de caixa ao lado, e o curso diz onde olhar a cada vez. As linhas que não começam com `probe`, o validador da seção 13 e o Tailwind da aula 13, são comandos que você mesmo roda.
+**O `probe` é o instrumento de medida do curso, não algo que você instala.** São algumas centenas de linhas de JavaScript que dirigem o Chromium pelo Playwright, uma biblioteca de testes de navegador. Ele existe para que os números destas aulas sejam números que um navegador imprimiu, e não números que alguém esperava. Você não digita as linhas que começam com `probe`: o que importa é a saída. Tudo o que ele imprime você lê no DevTools, na sua própria página, clicando no elemento e olhando a aba **Computed** e o diagrama de caixa ao lado, e o curso diz onde olhar a cada vez. As linhas que não começam com `probe`, o validador da seção 13 e o Tailwind da aula 13, são comandos que você mesmo roda.
 
 ## As perguntas são sobre prever o navegador
 

@@ -21,7 +21,7 @@ Este curso se pratica escrevendo páginas e abrindo-as, e **a plataforma não lh
 
 A máquina virtual é para quem quer exatamente a máquina em que estas aulas foram gravadas, o Ubuntu 24.04. É a edição **Desktop**, e não a Server, porque este curso precisa de uma janela com um navegador dentro. O Ubuntu Desktop vem com o Firefox; o Chromium está a um comando de distância, `sudo snap install chromium`. O Node.js entra do mesmo jeito que em qualquer Linux, logo abaixo.
 
-Os editores online funcionam de um computador emprestado, e servem bem para as aulas 2 a 12, em que tudo é HTML e CSS. O curso não depende de nenhum deles: o que oferecem de graça é decidido pela empresa que os mantém, e as duas sessões de terminal, na seção 13 e na aula 13, precisam de um Node.js que eles podem não dar.
+Os editores online funcionam de um computador emprestado, e servem bem para as aulas 2 a 12, em que tudo é HTML e CSS. O curso não depende de nenhum deles, porque o que oferecem de graça é decidido pela empresa que os mantém. E as duas sessões de terminal, na seção 13 e na aula 13, precisam de um Node.js que eles podem não dar.
 
 ## Monte
 

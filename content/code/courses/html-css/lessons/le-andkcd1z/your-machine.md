@@ -21,7 +21,7 @@ This course is practised by writing pages and opening them, and **the platform g
 
 The virtual machine is for anybody who wants the machine these lessons were recorded on, Ubuntu 24.04, exactly. It is the **Desktop** edition, not Server, because this course needs a window with a browser in it. Ubuntu Desktop comes with Firefox; Chromium is one command away, `sudo snap install chromium`. Node.js goes in the same way as on any Linux, below.
 
-The online editors work from a borrowed computer, and they are fine for lessons 2 to 12, where everything is HTML and CSS. The course does not depend on any of them: what they offer for free is decided by the company that runs them, and the two terminal sessions, in section 13 and in lesson 13, need a Node.js they may not give you.
+The online editors work from a borrowed computer, and they are fine for lessons 2 to 12, where everything is HTML and CSS. The course does not depend on any of them, because what they offer for free is decided by the company that runs them. And the two terminal sessions, in section 13 and in lesson 13, need a Node.js they may not give you.
 
 ## Build it
 

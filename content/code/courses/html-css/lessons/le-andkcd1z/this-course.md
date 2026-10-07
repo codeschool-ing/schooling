@@ -26,7 +26,7 @@ title: "Andorinha Books"
 - paragraph: Second-hand books in Pinheiros, São Paulo.
 ```
 
-**`probe` is the course's measuring instrument, not something you install.** It is a few hundred lines of JavaScript that drive Chromium through Playwright, a browser-testing library, and it exists so that the numbers in these lessons are numbers a browser printed rather than numbers somebody expected. You do not type the lines that start with `probe`: the output is the point. Everything it prints, you can read in DevTools on your own page, by clicking on the element and looking at the **Computed** tab and the box diagram beside it, and the course tells you where to look each time. The lines that do not start with `probe`, the validator in section 13 and Tailwind in lesson 13, are commands you run yourself.
+**`probe` is the course's measuring instrument, not something you install.** It is a few hundred lines of JavaScript that drive Chromium through Playwright, a browser-testing library. It exists so that the numbers in these lessons are numbers a browser printed rather than numbers somebody expected. You do not type the lines that start with `probe`: the output is the point. Everything it prints, you can read in DevTools on your own page, by clicking on the element and looking at the **Computed** tab and the box diagram beside it, and the course tells you where to look each time. The lines that do not start with `probe`, the validator in section 13 and Tailwind in lesson 13, are commands you run yourself.
 
 ## The questions are about predicting the browser
 
