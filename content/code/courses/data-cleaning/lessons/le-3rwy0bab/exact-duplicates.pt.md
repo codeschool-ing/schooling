@@ -20,8 +20,8 @@ ana@lab:~/clean$ psql -c 'SELECT count(*) AS rows, count(DISTINCT c) AS distinct
 (1 row)
 ```
 
-`duplicated()` marca toda linha que repete uma anterior, então a soma é o número de cópias a mais:
-37. As mesmas 37 linhas repetem o `customer_id`, o que confirma que as cópias são linhas inteiras e
+`duplicated()` marca toda linha que repete uma anterior, então a soma é o número de cópias a
+mais: 37. As mesmas 37 linhas repetem o `customer_id`, o que confirma que as cópias são linhas inteiras e
 não dois clientes dividindo um id. Em SQL, `count(DISTINCT c)` conta linhas inteiras distintas,
 porque `c` é a própria linha; 2.413 linhas e 2.376 distintas.
 

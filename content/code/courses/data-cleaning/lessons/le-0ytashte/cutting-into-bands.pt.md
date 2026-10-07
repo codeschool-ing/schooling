@@ -17,8 +17,8 @@ age
 ```
 
 35 clientes nasceram em 2000 e completam 25 anos em 2025, e o `pd.cut` com bordas 18, 25 e 35 põe todos eles na
-**primeira** faixa. Por padrão um intervalo é fechado à direita, `(18, 25]`: exclui o 18 e inclui o
-25. Rotule essa faixa como "18-24", como a maioria dos relatórios faria, e 35 pessoas ficam numa
+**primeira** faixa. Por padrão um intervalo é fechado à direita, `(18, 25]`: exclui o 18 e inclui
+o 25. Rotule essa faixa como "18-24", como a maioria dos relatórios faria, e 35 pessoas ficam numa
 faixa que não contém a idade delas.
 
 ```schooling-figure
