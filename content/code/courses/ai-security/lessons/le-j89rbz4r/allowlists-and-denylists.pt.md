@@ -1,26 +1,38 @@
 ---
 title: Nomeie o que é permitido, e não o que é proibido
-version: 1
+version: 2
 ---
 
 Dois tipos de lista atravessam este curso. Uma **lista de bloqueio** nomeia o que é recusado: a lista de
 palavras da moderação da aula 6, a lista de frases da aula 8. Uma **lista permitida** nomeia o que é
 aceito e recusa todo o resto: as categorias e os campos da aula 9, os hosts, o snapshot de registro da
-aula 2. Elas falham em direções opostas, e a diferença aparece em dois comandos:
+aula 2. Elas falham em direções opostas. O lado da lista de bloqueio é o `guard moderate`, que imprime os scores
+do substituto para um texto. Salve-o como `~/guard/tools/moderate.py`; a aula 6 também o usa:
+
+```python
+# moderate.py: the stand-in moderation endpoint's scores for one text.
+#
+#   guard moderate TEXT
+import json
+import sys
+
+from moderation import moderate
+
+print(json.dumps(moderate(sys.argv[1])))
+```
 
 ```
 ana@lab:~/guard$ guard moderate 'Shut up, you clown'
 {"harassment": 0.84, "threat": 0.0, "spam": 0.0}
 ana@lab:~/guard$ guard moderate 'Shut up, you cl0wn'
 {"harassment": 0.6, "threat": 0.0, "spam": 0.0}
-ana@lab:~/guard$ guard check-in data/inputs.jsonl | grep in-4
-in-4   REJECT  category: 'photography' is not one of design, development, writing, translation, marketing
 ```
 
 A lista de bloqueio perdeu boa parte de uma palavra para um zero: *clown* deixou de contar e o score caiu
-de 0.84 para 0.60. **Uma lista de bloqueio falha aberta**: o que ela não previu passa. A lista permitida
-recusou `photography`, que ninguém escreveu como proibido. **Uma lista permitida falha fechada**: o que ela
-não previu é barrado, e o custo é um valor legítimo recusado até alguém acrescentá-lo.
+de 0.84 para 0.60. **Uma lista de bloqueio falha aberta**: o que ela não previu passa. A lista de hosts da
+cadeia fez o contrário com a `r5`: recusou `pay-tarefa.example`, que ninguém escreveu como proibido, só
+porque ele não é um dos dois hosts permitidos. **Uma lista permitida falha fechada**: o que ela não
+previu é barrado, e o custo é um valor legítimo recusado até alguém acrescentá-lo.
 
 Essa assimetria dá a regra prática:
 
