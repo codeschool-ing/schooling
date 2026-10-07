@@ -50,5 +50,5 @@ incident is without reading the text.
   promise Lívia can keep; "fixed in 15 minutes" is one she cannot.
 - **Internal names, systems and blame.** "A background job overloading a database" is accurate,
   complete and names nobody.
-- **"Some customers", when it is most.** Understating the impact is noticed by every customer who is
-  affected, and they are the ones reading.
+- **"Some customers", when it is most.** Every affected customer notices when the impact is
+  understated, and they are the ones reading.

@@ -19,7 +19,7 @@ seção anterior muitas vezes era mais longa que a vaga. É tirar o que não tra
    "tomar uma decisão sobre". O verbo está escondido dentro de um substantivo: analisar,
    implementar, decidir.
 4. **Voz passiva que esconde quem agiu.** "O deploy foi aprovado" convida a pergunta "por quem?",
-   que em geral é o ponto da frase. "Bruna aprovou o deploy" responde. A passiva vai bem quando quem
+   que em geral é justamente o que a frase deveria dizer. "Bruna aprovou o deploy" responde. A passiva vai bem quando quem
    agiu de fato não importa: "a tabela é copiada toda noite".
 5. **Repetição do que o leitor acabou de ler.** "Como mencionado acima", um resumo do parágrafo
    anterior, ou uma linha final que diz a mesma coisa de novo num tom mais firme.
@@ -47,7 +47,7 @@ E a versão que ela manteve, com 40:
 
 Nada verdadeiro se perdeu, e duas coisas foram ganhas: o tamanho do problema e a data da decisão,
 que a versão longa nunca dizia. **Cortar abriu espaço para os fatos que o enchimento estava
-ocupando.** É o resultado de costume. O enchimento raramente é um acréscimo a um parágrafo
+ocupando.** É o que costuma acontecer. O enchimento raramente é um acréscimo a um parágrafo
 completo; é o que quem escreve produz quando a frase precisa ainda não está clara para ele.
 
 ## O que não cortar

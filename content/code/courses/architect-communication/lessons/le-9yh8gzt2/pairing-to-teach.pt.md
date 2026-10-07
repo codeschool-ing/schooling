@@ -38,5 +38,4 @@ lista; quatro dos itens viraram pull requests pequenos na semana seguinte.
   está fazendo ou o que acha que vem a seguir, ou encerre a sessão.
 
 **Uma sessão de pareamento que deixa o júnior capaz de fazer a próxima sozinho deu certo, mesmo que
-tenha sido mais lenta do que o sênior trabalhando sozinho.** Essa é a troca de que a aula inteira
-trata.
+tenha sido mais lenta do que o sênior trabalhando sozinho.**

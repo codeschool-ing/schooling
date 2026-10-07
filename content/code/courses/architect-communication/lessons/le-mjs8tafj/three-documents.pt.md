@@ -38,8 +38,8 @@ ganha de uma reunião em três pontos que importam para decisões que vão durar
   ano que vem e se pergunta por que o planejador de rotas lê de uma réplica.
 - **Ele é lido antes de qualquer discussão.** A Amazon conduz suas reuniões de liderança assim desde
   que Jeff Bezos proibiu apresentações de slides nelas, em 2004: um memorando narrativo de até seis
-  páginas é entregue no começo e lido em silêncio por todos antes da discussão. Pense o que quiser
-  do ritual, ele acaba com a reunião em que metade da sala lê o documento pela primeira vez enquanto
+  páginas é entregue no começo e lido em silêncio por todos antes da discussão. Seja qual for a
+  opinião sobre o ritual, ele acaba com a reunião em que metade da sala lê o documento pela primeira vez enquanto
   o autor apresenta.
 
 ## O custo do tamanho errado
@@ -51,5 +51,5 @@ resultado, a decisão precisava de um documento que essa pessoa pudesse ter lido
 
 Grande demais é a falha comum de quem acabou de descobrir os documentos de design. Toda mudança
 ganha um modelo com catorze títulos, quase todos respondidos com "N/A", e os times passam a fugir do
-processo mantendo as mudanças abaixo do tamanho que o dispara. O objetivo dos formatos é caber na
+processo mantendo as mudanças abaixo do tamanho que o dispara. Os formatos existem para se ajustar à
 decisão, e as próximas três seções tratam de cada um deles.

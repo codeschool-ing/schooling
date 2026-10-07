@@ -4,7 +4,7 @@ version: 1
 ---
 
 **Depois de uma conversa sobre uma necessidade, mande à outra pessoa um resumo curto por escrito e
-peça que ela o corrija.** A memória de uma conversa se desloca em poucos dias, e se desloca de um
+peça que ela o corrija.** A memória de uma conversa muda em poucos dias, e muda de um
 jeito diferente para cada pessoa que estava nela. Um resumo enviado no mesmo dia fixa uma versão com
 que os dois lados concordaram, e é a essa versão que os dois vão recorrer quando o trabalho for
 entregue.

@@ -48,6 +48,6 @@ backfill; the runbook does not mention peak hours" states both facts and leaves 
 the problem is. **Describe what people did and what they could see; leave the evaluation to the
 analysis, where it is about the system.**
 
-Hindsight makes everything look obvious. Every timeline should be read once with the question: *at
+Hindsight makes everything look obvious. Read every timeline once with the question: *at
 that minute, without knowing how it ended, would I have known better?* Where the honest answer is no,
 the lesson is about the system.

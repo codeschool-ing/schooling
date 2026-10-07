@@ -4,7 +4,7 @@ version: 1
 ---
 
 **Most teams say code review is for catching bugs, and the best study of what it actually does found
-that it mostly does something else: it spreads knowledge.** That is not a disappointment. It means
+that it mostly does something else: it spreads knowledge.** That means
 the review is the place where a team teaches itself, every day, at no extra cost, if the people
 writing the comments treat it that way.
 
@@ -18,7 +18,7 @@ readability, alternative solutions, and understanding what the change did. The a
 that **knowledge transfer and team awareness** were among the most important outcomes of review,
 whether anybody intended them or not.
 
-Many teams have since found the same in their own data, and it matches what Lívia sees at Marola. In
+It matches what Lívia sees at Marola. In
 checkout's reviews from June, about one comment in seven pointed at something that would have been a
 bug. The rest were questions, explanations, suggestions about naming and structure, and links to how
 something had been done elsewhere.

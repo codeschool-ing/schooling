@@ -6,7 +6,7 @@ version: 1
 **Uma engenheira que diz "isso é arriscado" e um diretor que ouve "essa engenheira quer reescrever
 alguma coisa" estão tendo duas conversas diferentes, e quem costuma perder é a engenheira.** Não
 porque o diretor enxerga pouco, mas porque nada na frase está numa forma que um diretor consiga
-pesar contra as outras coisas que disputam o mesmo dinheiro.
+comparar com as outras coisas que disputam o mesmo dinheiro.
 
 Toda semana Otávio ouve que algo é urgente. Vendas diz que um cliente vai embora sem uma
 funcionalidade. Marketing diz que uma campanha precisa de uma landing page até sexta. Engenharia diz

@@ -45,5 +45,5 @@ nome é provocativo de propósito; o conteúdo são fatos simples. O de Lívia t
 > **Março.** Escrevi a RFC de conexões depois do incidente de 6 de março; os sete times adotaram cotas
 > até 1º de maio; nenhum incidente de limite de conexões desde então.
 
-É a fonte para a avaliação de desempenho dela, para a palestra de uma seção mais adiante nesta aula e
+É a fonte para a avaliação de desempenho dela, para a palestra da seção desta aula sobre palestras e
 para lembrar, numa semana ruim, que as boas aconteceram.

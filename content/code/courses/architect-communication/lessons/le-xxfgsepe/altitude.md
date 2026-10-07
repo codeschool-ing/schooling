@@ -4,7 +4,7 @@ version: 1
 ---
 
 **Every fact can be stated at several altitudes, from the effect on the business down to the line
-of configuration, and a message goes wrong when it is written at the writer's altitude instead of
+of configuration. A message goes wrong when it is written at the writer's altitude instead of
 the reader's.** The writer usually lives near the ground, among the details they have just been
 working with. That is the altitude that feels natural, and it is almost never the one the reader
 needs.

@@ -40,7 +40,7 @@ fazer" já é uma boa primeira resposta, porque um não pensado vale mais do que
 - **A necessidade** primeiro, devolvida nos termos dele (a paráfrase da aula 6). Ela mostra a Otávio
   que ele foi ouvido antes de ouvir a palavra não, e isso torna o não mais fácil de ouvir.
 - **O não** numa frase, cedo, sem "infelizmente", "receio que" ou "talvez seja difícil". Palavras
-  que amaciam não deixam um não mais gentil; deixam ele confuso, e um não confuso é ouvido como sim.
+  que amaciam não deixam um não mais gentil; o deixam confuso, e um não confuso é ouvido como sim.
 - **O motivo** na unidade dele: risco para a Black Friday e a lembrança de uma queda que ele viveu.
   Não "a lógica de reserva precisa de lock distribuído".
 - **A alternativa** que atende à necessidade, e não um prêmio de consolação. O banner de Lívia dá aos

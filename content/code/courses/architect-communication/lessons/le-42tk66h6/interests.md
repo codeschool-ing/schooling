@@ -32,7 +32,7 @@ nobody needed checkout's connections at 05:00.
 
 With the interests on the table, the option nobody had proposed was obvious: **a quota that changes
 with the time of day**. Logistics keeps 40 connections between 02:00 and 06:00, when checkout is
-nearly idle, and drops to 15 between 06:00 and 02:00. Checkout gains headroom at peak, logistics
+nearly idle, and drops to 15 between 06:00 and 02:00. Checkout gains headroom at peak; logistics
 keeps its batch window. The platform team confirmed it could set the quota by schedule in a day.
 
 Fisher and Ury's four principles are worth having in mind during any such conversation:

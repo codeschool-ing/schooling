@@ -47,7 +47,7 @@ each:
 
 Three of the four mentioned the shared table without being asked about it. Two said, in different
 words, that changing it "needs the zone service people to agree, and they're always busy", so
-changes were made quietly and hoped for the best. Paulo, the most senior engineer, said the broker
+people made changes quietly and hoped for the best. Paulo, the most senior engineer, said the broker
 idea had come up because "with a broker each service would have its own copy of the data and
 nobody could break anybody else".
 

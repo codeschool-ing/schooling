@@ -6,7 +6,7 @@ version: 1
 **Um cliente lê cada frase como um compromisso, então uma mensagem para um cliente diz só aquilo de que você
 tem certeza, o que isso significa para ele e o que acontece em seguida.** Dentro da Marola, um
 palpite errado numa thread de chat é corrigido na mensagem seguinte. Enviado à Boa Praça, o mesmo
-palpite pode ser citado de volta numa revisão de contrato seis meses depois.
+palpite pode reaparecer como citação numa revisão de contrato seis meses depois.
 
 ## O que muda quando o leitor está do lado de fora
 
@@ -14,7 +14,7 @@ Quatro coisas são diferentes quando o leitor é um cliente:
 
 1. **Compromissos obrigam.** "Vai estar corrigido até segunda" é uma promessa com data. Se você não
    tem certeza, diga o que vai fazer até segunda, e não o que vai ser verdade até lá.
-2. **Não se especula sobre causas.** "Achamos que pode ser o banco de dados" vira, na caixa de
+2. **Não especule sobre causas.** "Achamos que pode ser o banco de dados" vira, na caixa de
    entrada de Tânia, "a Marola nos disse que foi o banco de dados". Diga o que você sabe: o que
    aconteceu, e quando vai saber mais.
 3. **Nada de nomes internos, nada de culpa.** Tânia não sabe quem é Paulo e não deveria descobrir

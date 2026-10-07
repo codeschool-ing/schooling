@@ -48,15 +48,15 @@ The reflex is to defend. The better move is to **find the concern underneath**, 
 of three things: the cost, the risk of the change itself, or something the objector cares about
 that the proposal touches.
 
-Renata's objection on 19 March was "April is when we promised the substitution flow". Under it was
-not the replica at all; it was a promise she had made to the stores and would now have to move.
-Lívia did not argue the replica's merits again. She asked what the stores had been told, offered to
-join the call where Renata would tell them, and the objection was resolved in the meeting.
+Renata's objection on 19 March was "April is when we promised the substitution flow". The concern
+under it had nothing to do with the replica: it was a promise she had made to the stores and would
+now have to move. Lívia did not argue the replica's merits again. She asked what the stores had
+been told, offered to join the call where Renata would tell them, and the objection was resolved in the meeting.
 
 ## What not to do with a question
 
 - **Do not argue with the person deciding.** If the decider disagrees after hearing the answer, say
   what you would need to change their mind, offer to come back with it, and stop.
-- **Do not answer a different question** because you prepared for that one. It is noticed.
+- **Do not answer a different question** because you prepared for that one. The room notices.
 - **Do not let one person's detailed question take the meeting.** "That's a good one for the design
   review; can I send you the detail this afternoon?" keeps the meeting about the decision.

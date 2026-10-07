@@ -25,8 +25,8 @@ um jeito de responder.
 - **A tarefa é difícil ou arriscada.** Uma mudança em como o checkout reserva estoque (as ofertas
   relâmpago da aula 8) é onde uma segunda pessoa pegando um erro vale uma hora do tempo dela.
 - **O conhecimento precisa se espalhar.** Só uma pessoa entende o leitor do outbox; parear a próxima
-  mudança nele com outra pessoa melhora o *bus factor* (quantas pessoas precisariam sumir para ninguém
-  mais entender o código) em uma semana.
+  mudança nele com outra pessoa leva o *bus factor* (quantas pessoas precisariam sumir para ninguém
+  mais entender o código) de um para dois em uma semana.
 - **Alguém é novo**, no time, no código ou na linguagem. Parear é o onboarding mais rápido que
   existe; a tarefa de crescimento da aula 10 andou mais rápido porque Diego pareou na primeira parte.
 - **Duas pessoas discordam sobre um design.** Escrever a primeira versão juntas muitas vezes resolve

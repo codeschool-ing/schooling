@@ -36,7 +36,7 @@ o time de dados resolveu o assunto ao dizer que não precisaria de eventos por p
 
 ## A pontuação, e os limites dela
 
-Pontuado contra a tabela, o outbox saiu na frente em operabilidade e custo, o broker em
+Pela tabela, o outbox saiu na frente em operabilidade e custo, o broker em
 consumidores futuros. Com os pesos combinados, o outbox ganhou, e Paulo concordou que ganhava, dados
 os pesos.
 

@@ -43,7 +43,7 @@ evita o comentário mais comum numa revisão, "e os feriados?", porque responde 
 ## Revise a sua própria mudança primeiro
 
 Antes de pedir a alguém, leia o seu próprio diff na ferramenta de revisão, do jeito que o revisor vai
-ver. É surpreendente com que frequência o autor encontra a linha de depuração esquecida, o bloco
+ver. Muitas vezes o autor encontra ali a linha de depuração esquecida, o bloco
 comentado ou o teste que era para ter sido escrito. **Cada problema que o autor pega é um em que o
 revisor não gasta um comentário**, e esse comentário pode ir para o design.
 

@@ -46,5 +46,5 @@ problem.** The rest of this lesson is about catching that second sentence.
   solution, and it makes disagreement later much easier, because she knows you heard her.
 - **Not silence.** A listener who says nothing gives the speaker no evidence of being understood.
   The next two sections are about what to say.
-- **Not a technique to manage people.** Nodding at intervals and repeating the last three words
-  is noticed within a minute and is worse than plain inattention.
+- **Not a technique to manage people.** Nodding at intervals and repeating the last three words:
+  the speaker notices within a minute, and it is worse than plain inattention.

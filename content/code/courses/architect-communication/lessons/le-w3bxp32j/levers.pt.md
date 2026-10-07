@@ -46,7 +46,7 @@ decisão de outubro.
 
 Por isso a regra da aula 4 vale aqui: **um custo escondido é um risco que outra pessoa carrega sem
 ter concordado.** Se o time vai aceitar um atalho, diga isso em voz alta, ponha um preço nele e
-registre-o como dívida (a quarta seção desta aula). Se ninguém concordaria com o atalho em voz alta,
+registre-o como dívida (a seção desta aula sobre dívida). Se ninguém concordaria com o atalho em voz alta,
 o time não deveria tomá-lo em silêncio.
 
 ## Quem mexe em qual alavanca

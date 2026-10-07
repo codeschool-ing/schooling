@@ -64,4 +64,4 @@ precisa fazer (nada) e para quem ligar.**
 Toda versão que dá um número dá o mesmo: 180 falhas por semana, seis semanas-engenheiro, R$ 4.000
 por mês, abril. **Os fatos são fixos, e tudo em volta deles se adapta.** Se uma das quatro tivesse
 dito "algumas falhas" e outra "180", um leitor com as duas na mão teria motivo para se perguntar
-qual dos dois estava sendo administrado.
+qual dos dois estava sendo manobrado.

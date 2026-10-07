@@ -18,7 +18,7 @@ elas:
    mais rápido.
 3. **Transferir**: fazer outra pessoa carregá-lo. Um seguro, uma cláusula de contrato, um serviço
    gerenciado com multa por indisponibilidade.
-4. **Aceitar**: decidir, sabendo o que faz, carregá-lo.
+4. **Aceitar**: decidir, de forma consciente, carregá-lo.
 
 A quarta é a que engenheiros esquecem que é legítima. **Aceitar um risco é a decisão certa quando
 reduzi-lo custa mais do que vale**, e só quem é dono do orçamento pode tomá-la. O que não é legítimo
@@ -40,8 +40,8 @@ A proposta de Lívia pôs as quatro alternativas da aula 2 numa linha cada, nas 
 | réplica de leitura | cerca de R$ 96.000 (seis semanas-engenheiro, R$ 4.000 por mês) | as duas eliminadas para o crescimento previsível |
 
 A semana-engenheiro é calculada a R$ 8.000, o valor que o financeiro usa no planejamento, e o
-documento diz isso. **Diante de uma perda esperada de R$ 560.000 por ano em receita, toda opção
-menos não fazer nada se paga**, e a comparação entre elas é sobre quanto tempo a correção dura.
+documento diz isso. **Diante de uma perda esperada de R$ 560.000 por ano em receita, toda opção,
+exceto não fazer nada, se paga**, e a comparação entre elas é sobre quanto tempo a correção dura.
 
 Isso muda a conversa. Caio não precisa mais decidir se acredita que o banco está frágil. Ele decide
 entre quatro opções com preço, uma delas a de graça, e pode escolher a de graça de olhos abertos.
@@ -62,6 +62,6 @@ registro dizia que estava reaberta.
 ## A falha oposta
 
 Dar alarme falso o tempo todo é o outro jeito de perder. O engenheiro que escala todo risco como crítico ensina os
-diretores a descontar todos, e o risco de verdade chega numa voz que ninguém escuta mais. **Guarde o
+diretores a dar pouco peso a todos, e o risco de verdade chega numa voz que ninguém escuta mais. **Guarde o
 alarme para o risco cuja perda esperada o justifica**, diga com clareza quando um risco é pequeno, e
 os grandes serão ouvidos.

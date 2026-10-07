@@ -20,7 +20,7 @@ starting. The contributions maintainers value most are often small:
 
 After 6 March, Lucas found that the connection pooler Marola uses documented its per-client limit in a
 way that had misled two teams. He sent a two-paragraph correction to its documentation. It was merged in
-a week, and it is the kind of contribution that gets remembered by the people who maintain a project.
+a week, and it is the kind of contribution the people who maintain a project remember.
 
 ## Check before contributing
 
@@ -32,7 +32,7 @@ before contributing code.
 
 ## Credit, given generously
 
-Reputation in a community is damaged fastest by taking credit for other people's work. Lívia's article
+Nothing damages a reputation in a community faster than taking credit for other people's work. Lívia's article
 and talk named the people who did the work: Bruna's team built the quotas, Lucas wrote the alert, Paulo
 fixed the job. **"We" when the team did it, "I" only for what you did yourself**, and names wherever the
 people involved are happy to be named. Credit given is noticed, by the people named and by everybody

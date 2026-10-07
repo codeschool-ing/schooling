@@ -33,7 +33,7 @@ sexta, e ninguém precisava das conexões do checkout às 05:00.
 
 Com os interesses na mesa, a opção que ninguém tinha proposto ficou óbvia: **uma cota que muda com
 a hora do dia**. A logística fica com 40 conexões entre 02:00 e 06:00, quando o checkout está quase
-parado, e cai para 15 entre 06:00 e 02:00. O checkout ganha folga no pico, a logística mantém a
+parado, e cai para 15 entre 06:00 e 02:00. O checkout ganha folga no pico; a logística mantém a
 janela do lote. O time de plataforma confirmou que conseguia programar a cota por horário em um dia.
 
 Vale ter em mente os quatro princípios de Fisher e Ury em qualquer conversa desse tipo:

@@ -47,8 +47,8 @@ and the request becomes one candidate among several.
 
 ## When the stated request is right
 
-Sometimes the person asking has done the diagnosis and the solution is correct. The test is not to
-reject every request; it is to understand the need well enough to know. If Lívia had found that
+Sometimes the person asking has done the diagnosis and the solution is correct. The aim is to
+understand the need well enough to tell. If Lívia had found that
 returning customers were opening the list and still buying less, a recommendations service might
 have been exactly right, and she would have proposed it with a measure attached: the basket back to
 R$ 150. **Listening for the real need is how you find out whether the requested solution is the

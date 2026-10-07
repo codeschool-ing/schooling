@@ -41,8 +41,8 @@ one prevents the most common review comment, "what about holidays?", by answerin
 
 ## Review your own change first
 
-Before asking anybody, read your own diff in the review tool, as the reviewer will see it. It is
-surprising how often the author finds the debugging line left in, the commented-out block, or the
+Before asking anybody, read your own diff in the review tool, as the reviewer will see it. The author
+often finds the debugging line left in, the commented-out block, or the
 test that was meant to be written. **Every problem the author catches is one the reviewer does not
 spend a comment on**, and that comment can go to the design instead.
 

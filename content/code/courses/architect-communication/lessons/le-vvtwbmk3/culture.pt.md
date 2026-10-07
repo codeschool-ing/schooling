@@ -22,8 +22,8 @@ forma como tratam a informação:
 O programa de pesquisa sobre DevOps descrito em *Accelerate*, de Nicole Forsgren, Jez Humble e Gene
 Kim, usou a tipologia de Westrum nos seus questionários e descobriu que culturas generativas estavam
 associadas a uma entrega de software melhor e a um desempenho melhor da organização. A causalidade é
-difícil de provar com questionários, e os autores dizem isso. A direção bate com o que todo engenheiro
-que já trabalhou nos dois tipos de time já acredita.
+difícil de provar com questionários, e os autores dizem isso. A direção bate com aquilo em que já
+acredita todo engenheiro que trabalhou nos dois tipos de time.
 
 ## O que leva um time para o lado generativo
 

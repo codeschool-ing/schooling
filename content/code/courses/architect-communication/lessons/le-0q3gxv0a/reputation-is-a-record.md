@@ -45,5 +45,5 @@ content is plain facts. Lívia's has one line per piece of work:
 > **March.** Wrote the connections RFC after the 6 March incident; all seven teams adopted quotas by 1
 > May; no connection-limit incident since.
 
-It is the source for her performance review, for the talk in a later section of this lesson, and for
+It is the source for her performance review, for the talk in this lesson's section on talks, and for
 remembering, in a bad week, that the good ones happened.

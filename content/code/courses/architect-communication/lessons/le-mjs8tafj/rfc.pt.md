@@ -41,7 +41,7 @@ restringia os sete times, e cada um deles sabia coisas sobre o próprio tráfego
 5. **Registro.** A RFC guarda o status final (*aceita*, *rejeitada* e, mais tarde, *substituída*
    por uma mais nova) e fica onde as pessoas conseguem encontrá-la.
 
-## RFCs rejeitadas valem a pena guardar
+## Vale a pena guardar as RFCs rejeitadas
 
 Uma RFC rejeitada é a documentação mais barata que uma empresa tem. **Ela responde "por que a gente
 não simplesmente…?" antes que alguém gaste uma semana descobrindo.** A lista da Marola tem uma RFC

@@ -5,8 +5,7 @@ version: 1
 
 **A technical disagreement is usually three conflicts tangled together: about the work, about how
 the decision is made, and about the people.** Mediating it starts by separating them, because each
-one is resolved differently, and the one that is talked about is rarely the one that is doing the
-damage.
+one is resolved differently, and the one people talk about is rarely the one doing the damage.
 
 On 1 May, the connections RFC from lesson 2 came into force: every service got a fixed quota of
 connections to the orders database. Three weeks later Bruna, tech lead of checkout, wrote in the

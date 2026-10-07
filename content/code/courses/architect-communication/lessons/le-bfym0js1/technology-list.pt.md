@@ -3,7 +3,7 @@ title: A armadilha da lista de tecnologias
 version: 1
 ---
 
-**Um público de quem decide não decide tecnologias, então uma apresentação organizada em torno de
+**Quem toma decisões não decide tecnologias, então uma apresentação organizada em torno de
 tecnologias não lhe dá nada para decidir.** É o formato mais comum da apresentação de um arquiteto,
 e o motivo mais comum para a reunião terminar com "vamos falar disso depois".
 
@@ -29,7 +29,7 @@ reunião teria terminado sem ninguém ser chamado a decidir nada.
 A lista tem o formato do trabalho. Lívia passou duas semanas com modos de replicação e pools de
 conexões, então eles parecem a substância da proposta. **Para o público, eles são o método, e
 ninguém aprova um método; aprova-se um resultado por um preço.** É a maldição do conhecimento da
-aula 3 outra vez: os detalhes com que quem apresenta brigou parecem essenciais justamente porque ela
+aula 3 outra vez: os detalhes com que a apresentadora brigou parecem essenciais justamente porque ela
 brigou com eles.
 
 Há também um motivo menos confortável. Um slide de tecnologia é seguro. Ninguém consegue discordar

@@ -24,8 +24,8 @@ What works is naming the people and their roles at the top of the document, befo
 | consulted | support, data team | invited to comment; no answer needed from them |
 | informed | all engineering | told of the outcome |
 
-The structure is the same as the RACI and DACI charts that project managers use. The point is not
-the acronym; **it is that each person knows whether their silence matters.** A *must review* who
+The structure is the same as the RACI and DACI charts that project managers use. **Whatever the
+acronym, each person knows whether their silence matters.** A *must review* who
 has not replied by the halfway point gets a direct message, not another broadcast.
 
 ## A date, and a meeting only to close

@@ -4,7 +4,7 @@ version: 1
 ---
 
 **Uma estimativa de risco é um julgamento, não uma medição, e o leitor tem direito ao número e a
-quanto confiar nele.** Engenheiros costumam errar aqui em uma de duas direções: recusam dar um
+quanto confiar nele.** Engenheiros costumam errar aqui em uma de duas direções: recusam-se a dar um
 número porque não têm certeza, ou dão um único número confiante que não conseguem defender.
 
 ## Dê uma faixa e diga em que ela se apoia
@@ -33,7 +33,7 @@ Nas tabelas de Lívia, cada linha é de um de dois tipos, e o documento diz qual
 | 2% falham | cerca de trinta minutos até alguém intervir |
 | 60% dos clientes que falharam voltam | que a réplica elimina o problema "para o crescimento previsível" |
 
-**Misturar os dois sem rótulo é como uma estimativa cuidadosa acaba descartada.** Um leitor que
+**Misturar os dois sem rótulo é o que faz uma estimativa cuidadosa ser descartada.** Um leitor que
 encontra um julgamento apresentado como fato vai tratar todo número do documento como julgamento.
 
 ## Diga o que mudaria sua opinião, e quanto custa descobrir

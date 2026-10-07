@@ -8,9 +8,9 @@ que deve ser feito a respeito.** O público acompanha uma história sem esforço
 antes do próximo slide. A maioria das apresentações técnicas é uma lista, porque quem apresenta
 organizou a fala do jeito que o trabalho foi organizado.
 
-Em 19 de março, Lívia tem dez minutos na reunião de liderança para aprovar o trabalho da réplica.
-Otávio, Caio e Renata vão estar na sala; leram o documento de uma página, ou disseram que leram. Os
-dez minutos não são para repeti-lo. São para fazer a decisão parecer óbvia e segura.
+Em 19 de março, Lívia tem dez minutos na reunião de liderança para conseguir a aprovação do
+trabalho da réplica. Otávio, Caio e Renata vão estar na sala; leram o documento de uma página, ou
+disseram que leram. Os dez minutos não são para repeti-lo. São para fazer a decisão parecer óbvia e segura.
 
 ## Situação, complicação, resolução
 

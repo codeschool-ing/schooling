@@ -42,7 +42,7 @@ passagem que engenheiros fazem cedo demais.
 
 ## Nomear o que não é dito
 
-Às vezes, o mais importante da conversa é um sentimento ou uma pressão que ninguém nomeou. "Todo
+Às vezes, o que mais pesa na conversa é um sentimento ou uma pressão que ninguém nomeou. "Todo
 mundo lá em cima me pergunta por quê" não é um requisito, e é a frase mais importante que Renata
 disse: ela está sob pressão e precisa de uma resposta que possa dar. **Refletir isso com cuidado,
 como observação e não como diagnóstico**, mostra que você ouviu: "Parece que você precisa de algo

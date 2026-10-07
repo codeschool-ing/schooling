@@ -32,8 +32,8 @@ guarda no fim do caderno:
    em voz alta. Para Renata: a cesta de quem volta a comprar de volta a R$ 150.
 4. **"O que já foi tentado?"** Evita propor o que falhou no ano passado, e revela algo sobre as
    restrições que ninguém mencionou.
-5. **"Quem mais é afetado?"** As lojas, o suporte, o time de dados. As pessoas de quem esse problema
-   também é, e que podem descrevê-lo de outro jeito.
+5. **"Quem mais é afetado?"** As lojas, o suporte, o time de dados. As pessoas que também têm esse
+   problema, e que podem descrevê-lo de outro jeito.
 
 ## Por que o "por quê" é arriscado
 

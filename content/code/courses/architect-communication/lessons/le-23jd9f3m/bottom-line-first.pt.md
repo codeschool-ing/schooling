@@ -9,7 +9,7 @@ contrário de como o trabalho aconteceu, e é exatamente por isso que precisa se
 O padrão é contar a história da investigação. "Na segunda notamos timeouts. Olhamos os logs da
 aplicação, que não mostravam nada fora do normal. Depois conferimos o banco de dados…" Quatro
 parágrafos adiante, o leitor descobre o que está errado e o que se espera dele. Quem escreve está
-revivendo o trabalho; quem lê está esperando o ponto, e um leitor ocupado para antes de chegar lá.
+revivendo o trabalho; quem lê está esperando chegar ao que interessa, e um leitor ocupado para antes de chegar lá.
 
 ## Bottom line up front
 
@@ -53,14 +53,14 @@ Duas regras fazem a pirâmide funcionar, e as duas são fáceis de quebrar:
   agrupamento que você pulou.
 
 Três argumentos é um número comum, não uma regra. Dois fortes valem mais que três em que o terceiro
-é enchimento, e sete é sinal de que alguns deles pertencem a outros.
+é enchimento, e sete é sinal de que alguns deles deveriam ficar sob outros.
 
 ## O assunto e o título são a primeira frase
 
 O assunto de um e-mail, o título de um ticket ou o de um documento é lido por muito mais gente do
 que o corpo. "Checkout de sexta" diz do que a mensagem trata. "**Decisão necessária até 19 de
 março: separar a carga do planejador de rotas no banco de dados (6 semanas-engenheiro)**" diz para
-que ela serve, até quando e a que custo. O segundo é mais longo e muito mais rápido de agir, porque
+que ela serve, até quando e a que custo. O segundo é mais longo e permite agir muito mais rápido, porque
 o leitor nunca precisa abrir a mensagem para saber se ela é com ele.
 
 ## Quando a resposta não pode vir primeiro

@@ -35,10 +35,10 @@ de tecnologias da aula 5, em outra forma.
 ## Ensaio
 
 **Ensaie em voz alta, com relógio, pelo menos três vezes**, e uma delas na frente de alguém que vá ser
-honesto. A primeira passada de Lívia pela palestra de quinze minutos levou vinte e três; o corte foi uma
+honesto. O primeiro ensaio de Lívia da palestra de quinze minutos levou vinte e três minutos; o corte foi uma
 seção sobre como o PostgreSQL conta conexões, que interessava a ela e a ninguém na plateia.
 
-Dois hábitos de palestrantes experientes valem a cópia:
+Vale copiar dois hábitos de palestrantes experientes:
 
 - **Saiba os dois primeiros minutos de cor.** O nervosismo é pior no começo, e uma abertura decorada
   leva quem fala para além dele.

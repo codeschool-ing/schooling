@@ -4,8 +4,8 @@ version: 1
 ---
 
 **A maioria dos times diz que a revisão de código serve para pegar bugs, e o melhor estudo sobre o que
-ela realmente faz concluiu que ela faz principalmente outra coisa: espalha conhecimento.** Isso não é
-uma decepção. Quer dizer que a revisão é o lugar onde um time ensina a si mesmo, todo dia, sem custo
+ela realmente faz concluiu que ela faz principalmente outra coisa: espalha conhecimento.** Isso quer
+dizer que a revisão é o lugar onde um time ensina a si mesmo, todo dia, sem custo
 extra, se quem escreve os comentários a tratar assim.
 
 ## O estudo da Microsoft
@@ -18,8 +18,7 @@ os defeitos eram minoria; a maior parte tratava de legibilidade, soluções alte
 que a mudança fazia. Os autores concluíram que **a transferência de conhecimento e a consciência do
 time** estavam entre os resultados mais importantes da revisão, quisesse alguém isso ou não.
 
-Muitos times encontraram o mesmo nos próprios dados desde então, e isso bate com o que Lívia vê na
-Marola. Nas revisões do checkout em junho, cerca de um comentário em sete apontava algo que teria
+Isso bate com o que Lívia vê na Marola. Nas revisões do checkout em junho, cerca de um comentário em sete apontava algo que teria
 virado um bug. O resto eram perguntas, explicações, sugestões sobre nomes e estrutura, e links para
 como algo tinha sido feito em outro lugar.
 

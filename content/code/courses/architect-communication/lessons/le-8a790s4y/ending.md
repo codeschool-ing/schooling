@@ -28,8 +28,8 @@ team's code than anybody, become his mentor for the next phase. Lívia stayed in
 **sponsor rather than mentor**, putting his name forward when design reviews needed a second
 reviewer.
 
-That transition is the natural one. **Mentoring ends; sponsorship can last a career**, and it costs the
-sponsor only the willingness to say a name in a room.
+**Mentoring ends; sponsorship can last a career**, and what it costs the
+sponsor is a little of their own standing, staked each time they say a name in a room.
 
 ## What the mentor gets
 

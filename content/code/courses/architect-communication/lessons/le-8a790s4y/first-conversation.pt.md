@@ -20,7 +20,7 @@ opções e vontade. Não é um roteiro; é uma ordem que impede a conversa de pu
 
 **Objetivo: o que você quer?** Lívia perguntou a Diego onde ele queria estar dali a um ano. A
 primeira resposta foi "sênior", que é um cargo, não um objetivo. A pergunta seguinte foi a da aula 6
-com outra roupa: "O que você estaria fazendo então que não faz hoje?" A segunda resposta já era um
+com outra roupagem: "O que você estaria fazendo então que não faz hoje?" A segunda resposta já era um
 objetivo: "Levar uma funcionalidade da ideia até a produção sozinho, sem a Bruna precisar conferir
 cada passo."
 
@@ -42,7 +42,7 @@ horas, a partir do dia seguinte.
 ## O mentor fala menos da metade do tempo
 
 Numa boa conversa GROW, quem recebe a mentoria fala a maior parte do tempo, e o trabalho do mentor é
-quase todo perguntas e resumos (a paráfrase da aula 6). A conferência aproximada de Lívia: se ela
+quase todo perguntas e resumos (a paráfrase da aula 6). A regra prática de Lívia: se ela
 falou mais de um terço da hora, estava dando mentoria quando queria fazer coaching.
 
 ## O que combinar no fim

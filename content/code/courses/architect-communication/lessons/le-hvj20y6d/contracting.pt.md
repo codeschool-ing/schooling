@@ -57,5 +57,5 @@ Cada linha está ali por causa de um jeito como esse tipo de trabalho falha:
 ## "Avaliar o desempenho do time" fica de fora de propósito
 
 Henrique não pediu isso, nem precisava pedir. Sempre que um time pede ajuda de fora, alguns dos
-seus membros se perguntam se quem ajuda também está avaliando eles. **Dizer em voz alta que não
+seus membros se perguntam se quem ajuda também os está avaliando. **Dizer em voz alta que não
 está** é o que torna as entrevistas honestas. Lívia repetiu isso no começo de cada uma.

@@ -52,5 +52,5 @@ incidente está sem que ele precise ler o texto.
   atualização até 19:45" é uma promessa que Lívia consegue cumprir; "resolvido em 15 minutos" não é.
 - **Nomes internos, sistemas e culpados.** "Uma tarefa em segundo plano sobrecarregando um banco de
   dados" é exato, completo e não aponta para ninguém.
-- **"Alguns clientes", quando é a maioria.** Diminuir o impacto é percebido por todo cliente afetado,
-  e são eles que estão lendo.
+- **"Alguns clientes", quando é a maioria.** Todo cliente afetado percebe quando o impacto é
+  minimizado, e são eles que estão lendo.

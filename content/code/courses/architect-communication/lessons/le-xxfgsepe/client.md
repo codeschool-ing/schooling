@@ -14,7 +14,7 @@ Four things are different when the reader is a client:
 
 1. **Commitments are binding.** "It will be fixed by Monday" is a promise with a date. If you are
    not sure, say what you will do by Monday, not what will be true by then.
-2. **Causes are not speculated about.** "We think it might be the database" becomes, in Tânia's
+2. **Do not speculate about causes.** "We think it might be the database" becomes, in Tânia's
    inbox, "Marola told us it was the database". Say what you know: what happened, and when you will
    know more.
 3. **No internal names, no blame.** Tânia does not know who Paulo is and should not learn it from an

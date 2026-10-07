@@ -37,7 +37,7 @@ separada" em vez de absorver os requisitos deles.
 **Um não objetivo não é uma coisa sem importância.** É uma coisa importante que não está sendo
 decidida aqui.
 
-## Alternativas consideradas é onde se ganha confiança
+## É nas alternativas consideradas que se ganha confiança
 
 Uma proposta com uma opção só soa como uma decisão já tomada, e os revisores respondem atacando-a.
 Uma proposta que mostra duas ou três alternativas, cada uma com um motivo honesto para ter perdido,
@@ -63,7 +63,7 @@ justa.
 ## Escreva para ser revisado
 
 Numere as questões em aberto para que os comentários possam se referir a elas ("sobre a Q2: …").
-Ponha o diagrama antes do texto que o explica. Date o documento e dê a ele um status no topo
+Ponha o diagrama antes do texto que o explica. Ponha data no documento e dê a ele um status no topo
 (*rascunho*, *em revisão*, *aprovado*). E mantenha-o curto o bastante para ser lido: uma proposta
 com mais de dez páginas costuma ser duas propostas, ou uma proposta com as notas de pesquisa ainda
 grudadas.

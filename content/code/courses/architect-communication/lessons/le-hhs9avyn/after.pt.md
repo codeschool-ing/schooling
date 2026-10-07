@@ -3,7 +3,7 @@ title: "Depois: o resumo e a carta"
 version: 1
 ---
 
-**Quando um incidente acaba, dois documentos ficam devendo: um resumo curto em até um dia, para todo
+**Quando um incidente acaba, há dois documentos a entregar: um resumo curto em até um dia, para todo
 mundo que foi afetado ou avisado, e depois o postmortem completo, que é o assunto da aula 15.** O
 resumo fecha o ciclo aberto pelas atualizações. Sem ele, a última coisa que as pessoas ouviram foi
 "resolvido", e as perguntas que vêm em seguida ("o que aconteceu?", "vai acontecer de novo?") são

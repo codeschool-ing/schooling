@@ -5,8 +5,8 @@ version: 1
 
 **Mob programming, hoje muitas vezes chamado de *ensemble programming*, é um time inteiro trabalhando
 numa tarefa, diante de uma tela, com uma pessoa digitando e todas as outras navegando, num rodízio a
-cada poucos minutos.** Parece o arranjo menos eficiente possível, e para a tarefa certa é o mais
-eficiente que um time tem.
+cada poucos minutos.** Parece o arranjo menos eficiente possível, e para a tarefa certa não custa mais do que trabalhar
+separado e deixa o time inteiro conhecendo o código.
 
 ## De onde veio
 
@@ -31,7 +31,7 @@ time continuou assim por anos e escreveu bastante sobre isso.
 
 ## Quando a Marola usa
 
-O time da Bruna faz mob por algumas horas num número pequeno de tarefas, e o padrão é claro:
+O time da Bruna faz mob por algumas horas num número pequeno de tarefas:
 
 - **a primeira versão de algo novo**, que o time inteiro vai ter de manter e em que cada decisão de
   design vale ser tomada em conjunto: o leitor do outbox da aula 9 foi feito em mob por dois dias;

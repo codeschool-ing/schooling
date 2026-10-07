@@ -3,8 +3,8 @@ title: Por que sem culpados, e o que isso não quer dizer
 version: 1
 ---
 
-**Um postmortem que procura um culpado encontra um, e não aprende mais nada, porque todo o resto das
-pessoas para de dizer a verdade.** Um postmortem sem culpados parte do princípio de que as pessoas
+**Um postmortem que procura um culpado encontra um, e não aprende mais nada, porque todas as outras
+pessoas param de dizer a verdade.** Um postmortem sem culpados parte do princípio de que as pessoas
 envolvidas fizeram o que fazia sentido para elas com o que sabiam naquele momento, e pergunta por que
 fazia sentido. As respostas mostram onde o sistema é fraco.
 

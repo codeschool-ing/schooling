@@ -27,7 +27,7 @@ cima.
    documento, de outra pessoa.
 5. **Custo e risco.** O que é preciso, o que pode dar errado e o que seria feito se desse.
 6. **O que acontece se não fizermos nada.** É o bloco que mais falta, e é ele que transforma o
-   pedido numa decisão, e não num pedido de aprovação.
+   pedido numa decisão, e não numa simples solicitação de aprovação.
 
 ## O documento de uma página de Lívia
 

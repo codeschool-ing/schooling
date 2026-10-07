@@ -6,7 +6,7 @@ version: 1
 **A maioria das propostas não fracassa por ser rejeitada. Fracassa por nunca ser decidida.** O
 documento sai, quatro pessoas comentam a formatação, ninguém com autoridade diz nada, e três semanas
 depois o autor não sabe se o silêncio quer dizer sim, não ou "ainda não li". As três coisas são
-comuns, e cada uma leva a um próximo passo oposto.
+comuns, e levam a próximos passos opostos.
 
 ## Silêncio não é consentimento
 
@@ -23,8 +23,8 @@ O que funciona é nomear as pessoas e os papéis delas no topo do documento, ant
 | consultados | suporte, time de dados | convidados a comentar; nenhuma resposta é exigida deles |
 | informados | toda a engenharia | recebem o resultado |
 
-A estrutura é a mesma das matrizes RACI e DACI que gerentes de projeto usam. O que importa não é a
-sigla; **é que cada pessoa saiba se o silêncio dela conta.** Alguém de *revisão obrigatória* que não
+A estrutura é a mesma das matrizes RACI e DACI que gerentes de projeto usam. **Seja qual for a
+sigla, cada pessoa sabe se o silêncio dela conta.** Alguém de *revisão obrigatória* que não
 respondeu até a metade do prazo recebe uma mensagem direta, não mais um aviso geral.
 
 ## Uma data, e uma reunião só para fechar
@@ -34,7 +34,7 @@ revisor mais hesitante quiser. Duas semanas servem para a maioria das propostas;
 dizer três dias, se disser por quê.
 
 Quando os comentários param de convergir (uma discussão de trinta respostas entre duas pessoas é o
-sinal), **leve a divergência para uma chamada e escreva o resultado de volta no documento.** A
+sinal), **leve a divergência para uma chamada e registre o resultado no documento.** A
 chamada não é onde a decisão é tomada; é onde uma divergência é entendida rápido o bastante para que
 quem decide possa decidir.
 

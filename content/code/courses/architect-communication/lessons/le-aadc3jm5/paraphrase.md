@@ -42,7 +42,7 @@ which is the move engineers make too early.
 
 ## Naming what is not said
 
-Sometimes the most important thing in the conversation is a feeling or a pressure nobody named.
+Sometimes what matters most in the conversation is a feeling or a pressure nobody named.
 "Everybody upstairs is asking me why" is not a requirement, and it is the most important sentence
 Renata said: she is under pressure and needs an answer she can give. **Reflecting it carefully,
 as an observation and not a diagnosis**, shows you heard it: "It sounds like you need something

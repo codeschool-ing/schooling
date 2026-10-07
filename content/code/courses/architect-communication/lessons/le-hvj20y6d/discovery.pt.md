@@ -47,7 +47,7 @@ perguntas abertas a todas:
 
 Três das quatro mencionaram a tabela compartilhada sem que ninguém perguntasse. Duas disseram, com
 outras palavras, que mudá-la "precisa que o pessoal do serviço de zonas concorde, e eles estão
-sempre ocupados", então as mudanças eram feitas em silêncio, torcendo para dar certo. Paulo, o
+sempre ocupados", então as pessoas faziam mudanças em silêncio, torcendo para dar certo. Paulo, o
 engenheiro mais experiente, disse que a ideia do broker tinha surgido porque "com um broker cada
 serviço teria a sua própria cópia dos dados e ninguém conseguiria quebrar ninguém".
 

@@ -53,8 +53,8 @@ Lívia's note on 29 May followed lesson 2's shape for a proposal, at one page:
 Henrique's first reaction, at the halfway check-in, was "but the zone service team will never agree
 to an owner". That was not a rejection of the diagnosis; it was the people problem stating itself.
 Lívia did not argue. She asked what would make the zone service team agree, and Henrique said "if
-the question didn't come from us". So the request for an owner went to both teams' leads together,
-with the incident count attached, from Lívia. Lesson 9 is about the kind of conversation that
+the question didn't come from us". So Lívia sent the request for an owner to both teams' leads together,
+with the incident count attached. Lesson 9 is about the kind of conversation that
 follows when two teams disagree over who owns something.
 
 **A consultant who wins the argument with the client has usually lost the engagement.** If the

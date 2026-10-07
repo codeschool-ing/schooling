@@ -49,7 +49,7 @@ the word. The orders database becomes "the main DB", then "Postgres", then "the 
 
 **Pick one name, define it the first time, and use it every time.** If two names are genuinely
 needed, say so: "the orders database (the PostgreSQL primary that checkout writes to)". This is
-the prose version of a rule this codebase applies to its own data: a thing is called by one stable
+the prose version of a rule this platform applies to its own data: a thing is called by one stable
 name, and a second name is a second thing.
 
 ## Words that sound precise and are not

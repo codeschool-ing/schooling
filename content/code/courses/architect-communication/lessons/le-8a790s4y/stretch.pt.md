@@ -3,8 +3,8 @@ title: Desafio, com rede de proteção
 version: 1
 ---
 
-**As pessoas crescem com trabalho um pouco além do que conseguem fazer sozinhas, com ajuda perto o
-bastante para alcançar.** Fácil demais, e nada se aprende; longe demais, e a pessoa falha em público
+**As pessoas crescem com trabalho um pouco além do que conseguem fazer sozinhas, com ajuda ao
+alcance da mão.** Fácil demais, e nada se aprende; longe demais, e a pessoa falha em público
 e aprende a evitar o próximo desafio. A habilidade do mentor é escolher a distância e continuar ao
 alcance.
 
@@ -23,10 +23,10 @@ Liderar a mudança de horários de entrega estava na zona de Diego. Escrever o c
 dela: isso ele já sabia fazer. Desenhar a mudança nas cotas do banco de pedidos, que afeta todos os
 times, estaria acima: havia incógnitas demais para uma pergunta só destravar.
 
-## Quanto entregar
+## Quanto delegar
 
-Dentro de uma tarefa de crescimento, o mentor decide quanto da decisão entregar, e isso pode mudar
-passo a passo. Uma escada útil, do que entrega menos ao que entrega mais:
+Dentro de uma tarefa de crescimento, o mentor decide quanto da decisão delegar, e isso pode mudar
+passo a passo. Uma escada útil, do que delega menos ao que delega mais:
 
 1. **"Faça isto, deste jeito."** Para as partes em que um erro sai caro e o aprendizado é pequeno.
 2. **"Investigue e me diga o que você faria; eu decido."**

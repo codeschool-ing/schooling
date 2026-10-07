@@ -3,8 +3,8 @@ title: Altitude, jargão e a maldição do conhecimento
 version: 1
 ---
 
-**Todo fato pode ser dito em várias altitudes, do efeito no negócio até a linha de configuração, e
-uma mensagem dá errado quando é escrita na altitude de quem escreve, e não na de quem lê.** Quem
+**Todo fato pode ser dito em várias altitudes, do efeito no negócio até a linha de configuração.
+Uma mensagem dá errado quando é escrita na altitude de quem escreve, e não na de quem lê.** Quem
 escreve costuma viver perto do chão, entre os detalhes com que acabou de trabalhar. É a altitude que
 parece natural, e quase nunca é a de que o leitor precisa.
 
@@ -52,12 +52,12 @@ palavras simples para quem as usa todo dia. Três hábitos ajudam:
 
 ## Analogias, e onde elas quebram
 
-Uma analogia deixa o leitor emprestar a intuição de algo que ele já conhece. "O banco de dados é uma
+Uma analogia permite ao leitor aproveitar a intuição de algo que ele já conhece. "O banco de dados é uma
 loja com um caixa só; nas noites de sexta, o planejador de rotas entra na fila com um carrinho de
 duzentos itens" deixa o problema claro para qualquer um que já foi a um supermercado.
 
 **Toda analogia quebra em algum ponto, e o leitor vai raciocinar a partir da parte quebrada.**
-Estenda a loja e a correção óbvia é "abrir outro caixa", o que em termos de banco de dados soa como
+Leve a imagem da loja adiante e a correção óbvia é "abrir outro caixa", o que em termos de banco de dados soa como
 o servidor maior, a alternativa que a proposta de Lívia rejeitou. Uma boa analogia é usada para um
 ponto e depois abandonada, ou tem o limite declarado: "a analogia para aqui: a réplica não é um
 segundo caixa, é uma segunda loja com uma cópia das prateleiras, alguns segundos desatualizada".

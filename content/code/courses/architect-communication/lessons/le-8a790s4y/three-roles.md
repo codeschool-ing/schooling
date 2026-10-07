@@ -60,7 +60,6 @@ ends well.
 :::
 
 ::: track *
-This lesson is the mentor's side of growing somebody: one person, helping another grow, usually
-without managing them. Career levels and promotion cases are a manager's subject and belong to a
+This lesson is the mentor's side: one person, helping another grow, usually without managing them. Career levels and promotion cases are a manager's subject and belong to a
 course on leading people.
 :::

@@ -26,7 +26,7 @@ se diz **o resultado em reais ou clientes, o risco em palavras simples e a decis
 eles**, nessa ordem. Tudo o que é sobre o *como* é sinal de que quem escreveu ainda não decidiu a
 qual das perguntas deles está respondendo.
 
-## Produto decide entre coisas que importam todas
+## Produto escolhe entre coisas que são todas importantes
 
 Renata, a diretora de produto, é dona da ordem em que as coisas são construídas. Cada
 semana-engenheiro que Lívia pede é uma semana-engenheiro tirada de algo que Renata tinha prometido a

@@ -44,7 +44,7 @@ A nota de Lívia em 29 de maio seguiu o formato de proposta da aula 2, em uma p�
 - **Nenhum nome ligado a incidentes.** A nota não diz de quem foi a mudança que quebrou o quê. O
   contrato dizia que aquilo não era uma avaliação, e o padrão estava no sistema, não numa pessoa: a
   lei de Weinberg, mas sobre como as pessoas trabalham juntas e não sobre quem falhou.
-- **A solução pedida é tratada com justiça.** A opção 3 é o broker, pelo motivo em que ele de fato
+- **A solução pedida é tratada com justiça.** A opção 3 é o broker, pelo motivo pelo qual ele de fato
   ajudaria. O instinto de Henrique não estava errado; estava apontado para um sintoma. **Dizer onde
   a ideia do cliente se encaixa é o que permite a ele aceitar um diagnóstico que começou em outro
   lugar.**
@@ -56,8 +56,8 @@ A nota de Lívia em 29 de maio seguiu o formato de proposta da aula 2, em uma p�
 A primeira reação de Henrique, na conversa do meio do caminho, foi "mas o time do serviço de zonas
 nunca vai aceitar um dono". Aquilo não era uma rejeição do diagnóstico; era o problema de pessoas
 se apresentando. Lívia não discutiu. Perguntou o que faria o time do serviço de zonas concordar, e
-Henrique disse "se a pergunta não viesse da gente". Então o pedido de um dono foi para os líderes
-dos dois times ao mesmo tempo, com a contagem de incidentes anexada, vindo de Lívia. A aula 9 trata
+Henrique disse "se a pergunta não viesse da gente". Então Lívia mandou o pedido de um dono para os
+líderes dos dois times ao mesmo tempo, com a contagem de incidentes anexada. A aula 9 trata
 do tipo de conversa que vem depois, quando dois times discordam sobre quem é dono de alguma coisa.
 
 **Uma consultora que ganha a discussão com o cliente quase sempre perdeu o trabalho.** Se o dono,

@@ -31,7 +31,7 @@ ao longo de cinco anos, e toda mudança no checkout ou na logística agora preci
 
 As três semanas de desembaraço não faziam parte da funcionalidade. Eram **dívida sendo paga dentro
 da funcionalidade**, porque fazê-la sem isso levaria mais tempo e quebraria mais coisas. Isso muda a
-conversa, e a quarta seção volta a esse ponto.
+conversa, e a seção desta aula sobre dívida volta a esse ponto.
 
 ## BATNA
 

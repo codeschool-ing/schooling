@@ -20,14 +20,14 @@ apagar.
    sozinho carrega o argumento? Se a afirmação de um parágrafo está na quarta frase, suba-a.
 3. **O corte.** Vá parágrafo por parágrafo perguntando o que o leitor perderia se ele sumisse.
    Depois frase por frase, depois os cinco tipos de palavra vazia da seção anterior.
-4. **Os fatos.** Confira cada número, nome, data e link contra a fonte. É a passada que o leitor vai
+4. **Os fatos.** Confira cada número, nome, data e link com a fonte. É a passada que o leitor vai
    cobrar de você: um número errado num documento de resto excelente é o que ele lembra, e faz com
    que ele duvide do resto.
 5. **Em voz alta.** Leia em voz alta, ou pelo menos mexa os lábios. Uma frase em que falta o fôlego é
    longa demais; uma frase em que você tropeça é ambígua. O ouvido pega o que o olho perdoa.
 6. **Um leitor de verdade.** Entregue o texto a uma pessoa parecida com o leitor pretendido e faça uma
    única pergunta: "O que você acha que eu estou pedindo para você fazer?" Se a resposta não for a
-   sua frase da passada 1, o documento falhou, por melhor que se leia.
+   sua frase da passada 1, o documento falhou, por melhor que pareça.
 
 ## Quanto tempo leva
 

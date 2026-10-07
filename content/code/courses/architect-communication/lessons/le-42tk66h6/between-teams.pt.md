@@ -3,7 +3,7 @@ title: Conflito entre times costuma ser sobre uma fronteira
 version: 1
 ---
 
-**Quando dois times vivem brigando, procure algo que eles compartilham e que ninguém é dono.**
+**Quando dois times vivem brigando, procure algo que eles compartilham e de que ninguém é dono.**
 Discordâncias entre pessoas vêm e vão. Discordâncias entre times se repetem, com pessoas diferentes,
 porque a causa é estrutural: uma tabela em que os dois escrevem, um serviço de que os dois dependem,
 um release que os dois precisam coordenar. Mediar cada discussão quando ela aparece é necessário;
@@ -11,7 +11,7 @@ consertar a fronteira é o que impede a próxima.
 
 ## As três fronteiras da Marola
 
-Todos os conflitos deste curso até aqui ficaram sobre uma de três coisas compartilhadas:
+Todos os conflitos deste curso até aqui giraram em torno de uma de três coisas compartilhadas:
 
 1. **As conexões do banco de pedidos**, divididas entre checkout e logística até a cota.
 2. **A tabela** que o planejador de rotas e o serviço de zonas leem e escrevem, que a aula 7

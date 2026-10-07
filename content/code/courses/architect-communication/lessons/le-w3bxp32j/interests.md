@@ -9,7 +9,7 @@ and a feature, and the move is the same.
 
 ## Behind "1 December"
 
-Lívia, who was asked by Henrique to help, asked Renata the lesson 6 question: "What happens if it
+Lívia, whom Henrique had asked to help, put the lesson 6 question to Renata: "What happens if it
 launches on the 14th instead?" The answer had two parts:
 
 - **Boa Praça's Christmas campaign** starts on 1 December, and its stores will be telling customers
@@ -24,12 +24,12 @@ than the whole feature: **customers ordering ahead for delivery within the week,
 
 Henrique's team broke the estimate down: four weeks for the ordering flow itself, two for
 recurring orders, one for editing an order after confirmation, and **three for untangling the order
-state machine**, the code that decides what state an order is in, which had grown over five years
-and which every change to checkout or logistics now had to work around.
+state machine**, the code that decides what state an order is in. It had grown over five years, and
+every change to checkout or logistics now had to work around it.
 
 The three weeks of untangling were not part of the feature. They were **debt being paid inside the
 feature**, because doing the feature without it would take longer and break more. That changes the
-conversation, and the fourth section returns to it.
+conversation, and this lesson's section on debt returns to it.
 
 ## BATNA
 

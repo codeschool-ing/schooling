@@ -61,7 +61,6 @@ relação que termina bem.
 :::
 
 ::: track *
-Esta aula é o lado do mentor em fazer alguém crescer: uma pessoa ajudando outra a crescer, em geral
-sem ser gestora dela. Níveis de carreira e casos de promoção são assunto de gestor e pertencem a um
+Esta aula é o lado do mentor: uma pessoa ajudando outra a crescer, em geral sem ser gestora dela. Níveis de carreira e casos de promoção são assunto de gestor e pertencem a um
 curso sobre liderança de pessoas.
 :::

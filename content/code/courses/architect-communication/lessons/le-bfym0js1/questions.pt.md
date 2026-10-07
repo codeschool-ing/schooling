@@ -48,9 +48,9 @@ reflexo é se defender. O melhor movimento é **encontrar a preocupação que es
 geral é uma de três coisas: o custo, o risco da própria mudança, ou algo que importa para quem
 objeta e que a proposta afeta.
 
-A objeção de Renata em 19 de março foi "abril é quando prometemos o fluxo de substituição". Por
-baixo dela não estava a réplica; estava uma promessa que ela tinha feito às lojas e agora teria de
-adiar. Lívia não voltou a defender os méritos da réplica. Perguntou o que tinha sido dito às lojas,
+A objeção de Renata em 19 de março foi "abril é quando prometemos o fluxo de substituição". A
+preocupação por baixo dela não tinha nada a ver com a réplica: era uma promessa que ela tinha feito
+às lojas e agora teria de adiar. Lívia não voltou a defender os méritos da réplica. Perguntou o que tinha sido dito às lojas,
 se ofereceu para entrar na ligação em que Renata daria a notícia, e a objeção se resolveu na
 própria reunião.
 
@@ -58,6 +58,6 @@ própria reunião.
 
 - **Não discuta com quem decide.** Se a pessoa que decide discorda depois de ouvir a resposta, diga
   o que você precisaria para mudar a opinião dela, ofereça-se para voltar com isso, e pare.
-- **Não responda a uma pergunta diferente** só porque se preparou para aquela. Isso é percebido.
+- **Não responda a uma pergunta diferente** só porque se preparou para aquela. A sala percebe.
 - **Não deixe a pergunta detalhada de uma pessoa tomar a reunião.** "Essa é boa para a revisão de
   design; posso te mandar o detalhe hoje à tarde?" mantém a reunião sobre a decisão.

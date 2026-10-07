@@ -5,7 +5,7 @@ version: 1
 
 **Before any investigation, agree in writing what question you are answering, who will decide what
 to do with the answer, what you will deliver and by when, and what you will not do.** It feels
-bureaucratic between colleagues. It is the single cheapest protection an internal consultant has,
+bureaucratic between colleagues. It is the cheapest protection an internal consultant has,
 because every later disagreement turns out to be a disagreement about one of those four things.
 
 ## Rewrite the question before accepting it

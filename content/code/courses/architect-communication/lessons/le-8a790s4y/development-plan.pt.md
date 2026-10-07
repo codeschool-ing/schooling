@@ -4,7 +4,7 @@ version: 1
 ---
 
 **Um plano de desenvolvimento é um objetivo, a evidência que mostraria que ele foi alcançado e
-algumas atividades que produzem essa evidência, revisados num calendário fixo.** A maioria dos planos
+algumas atividades que produzem essa evidência, revisados em datas marcadas.** A maioria dos planos
 falha por ser uma lista de cursos para fazer e livros para ler, escrita uma vez numa reunião e aberta
 de novo um ano depois, na avaliação de desempenho.
 

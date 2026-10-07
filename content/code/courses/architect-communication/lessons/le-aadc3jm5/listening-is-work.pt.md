@@ -48,4 +48,4 @@ desta aula trata de não deixar escapar essa segunda frase.
 - **Não é silêncio.** Quem escuta sem dizer nada não dá a quem fala nenhuma prova de que foi
   entendido. As duas próximas seções tratam do que dizer.
 - **Não é uma técnica para manejar pessoas.** Balançar a cabeça a intervalos e repetir as três
-  últimas palavras é percebido em menos de um minuto, e é pior do que a simples desatenção.
+  últimas palavras: quem fala percebe em menos de um minuto, e é pior do que a simples desatenção.

@@ -37,10 +37,10 @@ parte" e ouvir o raciocínio do autor, que uma revisão escrita nunca mostra. A 
 programação em par: **certos conhecimentos só se transferem quando duas pessoas olham para a mesma
 coisa ao mesmo tempo.**
 
-## O tom, que é lido mais alto do que se pretendia
+## O tom, que soa mais alto do que se pretendia
 
-Comentários escritos perdem o tom de voz, e um comentário curto de uma pessoa sênior para uma júnior é
-lido como mais duro do que foi escrito. "Por quê?" é lido como "isto está errado". Três hábitos
+Comentários escritos perdem o tom de voz, e um comentário curto de uma pessoa sênior para uma júnior soa
+mais duro do que quem escreveu pretendia. "Por quê?" soa como "isto está errado". Três hábitos
 ajudam: **escreva frases completas, diga do que gostou e use "nós" para o código** ("nós costumamos
 colocar isso na configuração") em vez de "você" para a pessoa. E quando uma thread de revisão começa a
 ir e voltar, leve-a para uma chamada, a mesma regra da aula 9 para qualquer desacordo.

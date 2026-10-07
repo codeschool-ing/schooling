@@ -39,7 +39,7 @@ resposta a uma pergunta que ele não achava ter feito.
 
 ## É sempre um problema de pessoas
 
-Gerald Weinberg, que escreveu sobre consultoria a partir de décadas fazendo consultoria, formulou
+Gerald Weinberg, que escreveu sobre consultoria a partir de décadas de prática, formulou
 sua segunda lei sem rodeios: *não importa como pareça no começo, é sempre um problema de pessoas*.
 Ele não queria dizer que a tecnologia nunca falha. Queria dizer que o motivo de um problema técnico
 persistir, e o motivo de a correção óbvia não ter sido aplicada, quase sempre tem a ver com quem é

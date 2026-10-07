@@ -50,6 +50,6 @@ importava. "Paulo inicia o backfill das zonas; o runbook não fala de horário d
 fatos e deixa o leitor ver onde está o problema. **Descreva o que as pessoas fizeram e o que conseguiam
 ver; deixe a avaliação para a análise, onde ela é sobre o sistema.**
 
-Em retrospecto, tudo parece óbvio. Toda linha do tempo deveria ser lida uma vez com esta pergunta:
+Em retrospecto, tudo parece óbvio. Leia toda linha do tempo uma vez com esta pergunta:
 *naquele minuto, sem saber como terminou, eu teria feito melhor?* Onde a resposta honesta é não, a
 lição é sobre o sistema.

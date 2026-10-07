@@ -51,7 +51,7 @@ mais fraco do documento, e está identificado como tal.
 Então, na sexta, 6 de março, o evento aconteceu: o checkout ficou fora por 32 minutos, e 1.350
 checkouts falharam. O risco de cauda tinha virado medição. A estimativa de 1.500 checkouts afetados
 por cerca de trinta minutos chegou perto, que é o melhor que pode acontecer com uma estimativa
-depois do fato, e isso tornou a proposta seguinte mais fácil de acreditar.
+quando o fato chega, e isso tornou a proposta seguinte mais fácil de levar a sério.
 
 ## Uma linha para o topo da página
 

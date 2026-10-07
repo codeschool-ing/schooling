@@ -48,8 +48,8 @@ contratada**, e o pedido vira um candidato entre vários.
 
 ## Quando o pedido declarado está certo
 
-Às vezes quem pede já fez o diagnóstico, e a solução está correta. O teste não é rejeitar todo
-pedido; é entender a necessidade bem o bastante para saber. Se Lívia tivesse descoberto que os
+Às vezes quem pede já fez o diagnóstico, e a solução está correta. O objetivo é entender a
+necessidade bem o bastante para saber. Se Lívia tivesse descoberto que os
 clientes recorrentes abriam a lista e mesmo assim compravam menos, um serviço de recomendações
 poderia ter sido exatamente o certo, e ela o teria proposto com uma medida junto: a cesta de volta a
 R$ 150. **Escutar a necessidade real é como você descobre se a solução pedida é a certa, não uma

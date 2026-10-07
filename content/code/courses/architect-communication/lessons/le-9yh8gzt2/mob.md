@@ -5,8 +5,8 @@ version: 1
 
 **Mob programming, now often called ensemble programming, is a whole team working on one task, at one
 screen, with one person typing and everybody else navigating, rotating every few minutes.** It sounds
-like the least efficient arrangement possible, and for the right task it is the most efficient one a
-team has.
+like the least efficient arrangement possible, and for the right task it costs no more than working apart
+and leaves the whole team knowing the code.
 
 ## Where it came from
 
@@ -31,7 +31,7 @@ doing it for years and wrote about it widely.
 
 ## When Marola uses it
 
-Bruna's team mobs for a few hours on a small number of tasks, and the pattern is clear:
+Bruna's team mobs for a few hours on a small number of tasks:
 
 - **the first version of something new**, where the whole team will have to maintain it and every
   design decision is worth making together: the outbox reader from lesson 9 was mobbed for two days;

@@ -3,9 +3,9 @@ title: Pôr o acordo por escrito
 version: 1
 ---
 
-**Uma negociação termina com um acordo curto e escrito para o qual os dois lados possam apontar em
-dezembro, ou ela não termina de verdade.** A lembrança de um acordo deriva para o que cada lado
-queria, e quando o prazo chega as duas lembranças já se afastaram. A nota leva dez minutos e poupa a
+**Uma negociação termina com um acordo curto, por escrito, que os dois lados possam mostrar em
+dezembro, ou ela não termina de verdade.** A lembrança de um acordo vai se desviando para o que cada
+lado queria, e quando o prazo chega as duas lembranças já se afastaram. A nota leva dez minutos e poupa a
 discussão sobre o que foi combinado.
 
 ## A nota

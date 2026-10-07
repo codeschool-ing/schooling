@@ -38,4 +38,4 @@ items became small pull requests the following week.
   or what you think is next, or stop the session.
 
 **A pairing session that leaves the junior able to do the next one alone succeeded, even if it was
-slower than the senior working by themselves.** That is the trade the whole lesson is about.
+slower than the senior working by themselves.**

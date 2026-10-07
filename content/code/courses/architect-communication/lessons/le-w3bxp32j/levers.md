@@ -26,9 +26,9 @@ December holds about **eight**.
 | **quality** | doing it less carefully | skipping tests, skipping the load test, no rollback plan |
 
 Each of the first three has a real cost that somebody can weigh. **Scope** costs features; **time** costs
-two weeks of the Christmas season; **people** costs whatever the other team was going to do, and less
-than it seems, because adding people to a late project makes it later before it makes it sooner, which
-Fred Brooks observed in *The Mythical Man-Month* in 1975 and every team has observed since.
+two weeks of the Christmas season; **people** costs whatever the other team was going to do, and buys
+less than it seems, because adding people to a late project makes it later before it makes it sooner.
+Fred Brooks observed that in *The Mythical Man-Month* in 1975, and every team has observed it since.
 
 ## Quality is not a lever
 
@@ -43,7 +43,7 @@ is needed. By then nobody connects it to the decision in October.
 
 That is why lesson 4's rule applies here: **a hidden cost is a risk somebody else carries without
 having agreed to.** If the team is going to accept a shortcut, say so out loud, price it, and write
-it down as debt (the fourth section of this lesson). If nobody would agree to the shortcut out loud,
+it down as debt (this lesson's section on debt). If nobody would agree to the shortcut out loud,
 the team should not take it quietly.
 
 ## Who moves which lever

@@ -29,8 +29,8 @@ do time do que qualquer outra pessoa, passasse a ser a mentora dele na fase segu
 papel mais leve: **patrocinadora em vez de mentora**, indicando o nome dele quando uma revisão de
 design precisava de um segundo revisor.
 
-Essa transição é a natural. **A mentoria termina; o patrocínio pode durar uma carreira**, e custa ao
-patrocinador apenas a disposição de dizer um nome numa sala.
+**A mentoria termina; o patrocínio pode durar uma carreira**, e o que custa ao
+patrocinador é um pouco da própria reputação, apostada cada vez que diz um nome numa sala.
 
 ## O que o mentor ganha
 
