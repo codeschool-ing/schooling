@@ -14,9 +14,12 @@ card. What it does need is a Linux terminal, and this section is about where tha
   name and machine instead of `ana@lab`, and nothing else in the output should differ.
 - **About 2 GB of disk** for Python's libraries, the model and the data. The next section measures
   it.
-- **@@MEMORY@@**
+- **About 4 GB of memory free.** The largest program in the course, lesson 11's search over a
+  million vectors, reached 3 GB on the machine the course was recorded on, and nothing else went
+  past 1.4 GB.
 - **An internet connection during the setup**, to download the libraries and the model. After
-  that, lesson 7's price sheet is the one thing that reaches the network, once.
+  that, three things reach the network once each: in lesson 7 the tokeniser table `tiktoken` reads
+  and the price sheet, and in lesson 12 Chroma's own copy of the model.
 
 Any computer from the last ten years has that. What differs is the way you get Ubuntu onto it, and
 there are three.
@@ -32,8 +35,9 @@ Ubuntu's own files, and it takes memory from Windows only while it runs.
 
 **A virtual machine**, for a Mac, or for anybody who would rather keep the course apart from their
 own system. Install **Ubuntu Server 24.04 LTS** as a guest: in VirtualBox on Windows or Linux, and
-in UTM on a Mac. Give it 2 processors, 4 GB of memory and 25 GB of disk. Those 4 GB are taken from
-your computer for as long as the machine runs, so it wants a computer with 8 GB or more. Lesson 4
+in UTM on a Mac. Give it 2 processors, 25 GB of disk and at least 4 GB of memory, 5 if your computer
+can spare them. That memory is taken from your computer for as long as the machine runs, so it
+wants a computer with 8 GB or more. Lesson 4
 of the course `virtualization` creates a machine in VirtualBox step by step, if you have not done
 it before.
 
