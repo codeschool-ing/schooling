@@ -1,6 +1,6 @@
 ---
 title: Descriptions kept in the database
-version: 1
+version: 2
 ---
 
 A dictionary kept in a separate document, a wiki page or a spreadsheet, starts out right and drifts. Columns are
@@ -28,6 +28,6 @@ same system view that lists the columns. It costs nothing at query time and need
 been explained, by whoever happened to care.
 
 Keeping descriptions in the database has a limit worth knowing. A comment is attached to a column, so it survives a
-`SELECT` but not a rebuild: Ana's warehouse is rebuilt from SQL files by `lab.sh warehouse`, and a rebuilt table comes
+`SELECT` but not a rebuild: Ana's warehouse is rebuilt from SQL files by lesson 2's `build.sh`, and a rebuilt table comes
 back with no comments. **The comments have to be in a file the build runs**, under version control with the SQL that
 creates the tables. That file is section 6.
