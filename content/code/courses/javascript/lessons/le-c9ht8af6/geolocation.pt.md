@@ -1,6 +1,6 @@
 ---
 title: Geolocalização: perguntando onde o usuário está
-version: 1
+version: 2
 ---
 
 **`navigator.geolocation.getCurrentPosition(sucesso, falha)` pede ao navegador a posição do
@@ -36,12 +36,13 @@ ana@dev:~/js$ page where.html --fresh --geo -23.5503,-46.6339 --do 'click #where
 at -23.5503 -46.6339 within 0 m
 ```
 
-As duas execuções foram encenadas, como diz o cabeçalho do script. Na primeira, o navegador do
-laboratório respondeu ao pedido como um usuário que clicou em **Bloquear**: **o callback de falha rodou
+As duas execuções foram encenadas pelo `page`, porque um navegador sem janela não tem ninguém para
+clicar. Na primeira, sem `--geo`, o navegador respondeu ao pedido como um usuário que clicou em
+**Bloquear**: **o callback de falha rodou
 com o código 1, `PERMISSION_DENIED`**. Na segunda, o `page --geo` concedeu a permissão e forneceu uma
-posição, as coordenadas da Praça da Sé em São Paulo, então o callback de sucesso rodou com elas. Um
+posição, as coordenadas aproximadas da Praça da Sé em São Paulo, então o callback de sucesso rodou com elas. Um
 aparelho de verdade informa uma `accuracy` em metros, maior em ambiente fechado e pelo Wi-Fi de um
-notebook do que pelo GPS de um celular; a posição encenada do laboratório alega 0.
+notebook do que pelo GPS de um celular; uma posição fornecida pelo `--geo` alega 0.
 
 ## Escrevendo para funcionar para todo mundo
 

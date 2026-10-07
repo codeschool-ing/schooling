@@ -1,6 +1,6 @@
 ---
 title: Notifications and the Permissions API
-version: 1
+version: 2
 ---
 
 A notification is a message the operating system shows **outside the page**, even when its tab is in
@@ -38,8 +38,8 @@ Each permission is in one of three states:
 
 Showing a notification is two steps: `await Notification.requestPermission()`, which shows the
 question if the state is `prompt` and returns the answer, and then `new Notification("Iracema is
-ready to collect", { body: "Shelf A, until Friday" })`. **This was not captured**: the lab's browser
-runs without a screen and cannot display a notification, so a transcript would show only its failure,
+ready to collect", { body: "Shelf A, until Friday" })`. **This was not captured**: the browser `page`
+drives runs without a screen and cannot display a notification, so a transcript would show only its failure,
 which is not what a real browser does.
 
 The rules are the ones geolocation taught, for the same reason:

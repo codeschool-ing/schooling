@@ -1,6 +1,6 @@
 ---
 title: A zona morta temporal
-version: 1
+version: 2
 ---
 
 **A zona morta temporal é a parte de um bloco entre a chave de abertura e uma declaração `let` ou
@@ -12,6 +12,13 @@ linha roda, não de onde ela fica:
 ```
 
 ## Dois erros diferentes
+
+O `tdz-read.js` lê o nome uma linha cedo demais:
+
+```javascript
+console.log(title);
+let title = "Iracema";
+```
 
 ```
 ana@dev:~/js$ node tdz-read.js 2>&1 | grep Error
