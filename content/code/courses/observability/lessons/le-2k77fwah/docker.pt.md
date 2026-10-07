@@ -1,6 +1,6 @@
 ---
 title: O healthcheck do Docker, e o que ele não faz
-version: 1
+version: 2
 ---
 
 O Docker consegue rodar um comando dentro de um contêiner num horário e registrar se ele passou. Um
@@ -21,7 +21,14 @@ services:
 
 `interval` é a frequência, `timeout` quanto uma verificação pode levar, e `retries` quantas falhas
 seguidas deixam o contêiner *unhealthy*. `start_period` é um tempo de tolerância depois de um início
-em que as falhas não contam, a versão do Docker de uma sonda de startup. Com o banco no ar:
+em que as falhas não contam, a versão do Docker de uma sonda de startup. Salve-o como
+`~/shop/compose.override.yaml` e recrie o `orders` com ele:
+
+```sh
+docker compose up -d orders
+```
+
+Com o banco no ar, ele fica saudável em um quarto de minuto:
 
 ```
 ana@obs:~/shop$ docker compose ps orders --format '{{.Name}}  {{.Status}}'
