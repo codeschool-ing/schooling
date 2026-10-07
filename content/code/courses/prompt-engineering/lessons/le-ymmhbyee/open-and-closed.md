@@ -1,6 +1,6 @@
 ---
 title: Open weights and closed models
-version: 1
+version: 2
 ---
 
 "Open" is used loosely about models, and the loose use hides the question that matters: **can you
@@ -41,6 +41,18 @@ uses, require the model's name to appear in your product, or limit using its out
 other models. **Read the licence of the exact model you download**, not a summary of the family:
 two releases from one provider can carry different terms.
 
+You downloaded one in lesson 1, and Ollama keeps its licence beside the weights:
+
+```
+ana@lab:~/pe$ ollama show --license llama3.2:3b | head -2; ollama show --license llama3.2:3b | wc -l
+LLAMA 3.2 COMMUNITY LICENSE AGREEMENT
+Llama 3.2 Version Release Date: September 25, 2024
+163
+```
+
+A company's own licence, 163 lines long, and the one that decides what you may build on
+`llama3.2:3b`. Reading it is the step this section is about, and it is one command away.
+
 ## Where your data goes
 
 With an API, every prompt and every reply passes through the provider. What happens to it next is
@@ -54,4 +66,5 @@ reviewer will ask about. Questions to answer from the provider's own documents:
 
 **Never answer these from memory or from a blog post.** Terms change, and differ between plans of
 the same provider. A model you run yourself answers all four by construction, which is one of the
-main reasons organisations choose open weights despite the hardware.
+main reasons organisations choose open weights despite the hardware. Every prompt you have sent
+with `ask` so far went to `localhost` and nowhere else.
