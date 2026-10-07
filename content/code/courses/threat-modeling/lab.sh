@@ -87,6 +87,9 @@ reset() {
   commit '2026-09-24 15:00' 'Simulate the ranges, and compare with a matrix'
   add controls.csv prioritise.py
   commit '2026-09-29 11:00' 'Rank the controls by what they save'
+  add decisions/DR-001-second-factor.md decisions/RA-001-crafted-pdf.md \
+    decisions/RA-002-cancellation-record.md acceptances.py
+  commit '2026-10-01 17:30' 'Record the first decisions'
 }
 
 case ${1:-} in
