@@ -12,11 +12,11 @@
 # directories it builds before it starts, which is why it wants a throwaway
 # account. `block NAME` marks where a transcript in the prose begins.
 #
-# What is STAGED rather than typed, and not shown in the lesson:
-# lesson 3's week of the bakery's site, rebuilt by the helper `c` with dates
-# and authors set through GIT_AUTHOR_* and GIT_COMMITTER_*; a bare
-# repository standing in for the hosting service; Bruno's branch for ticket
-# #30, committed in a second clone and pushed; colour switched off.
+# The shared copy and Bruno's branch for ticket #30, committed in his own clone
+# and pushed, are the ```bash block reading-the-change prints, run by `given`.
+#
+# What is STAGED rather than typed: the date of each commit, so that the ids in
+# the prose are reproducible; colour switched off.
 # Every line after a prompt is what the command printed.
 #
 # Recorded with git 2.43.0 on Ubuntu 24.04, TZ=America/Sao_Paulo.
@@ -80,10 +80,8 @@ bruno() { as 'Bruno Lima' 'bruno@example.com'; }
 c() { git add -A && git commit -q -m "$1"; }
 # Lesson 3's week, made by the program lesson 3 prints, read out of its page.
 fence "$lessons/le-5gv65sh1/the-week.md" 1 > ~/make-site.sh
-cd ~ && rm -rf ~/site && bash ~/make-site.sh && cd ~/site
 me; at '2026-09-18T15:30:00-03:00'
 
-cd ~ && rm -rf ~/remotes ~/bruno
 git config --global color.ui never
 git config --global color.advice never
 git config --global color.remote never
@@ -91,22 +89,7 @@ tty() {
   printf 'ana@vm:%s$ %s\n' "$(pwd | sed "s|^$HOME|~|")" "$*"
   script -qec "$*" /dev/null || true
 }
-cd ~/site
-git init -q --bare ~/remotes/site.git
-git remote add origin ~/remotes/site.git
-git push -q -u origin main 2>/dev/null
-
-# Bruno's pull request #31 for ticket #30, made in his own clone.
-git clone -q ~/remotes/site.git ~/bruno/site 2>/dev/null
-( cd ~/bruno/site && bruno && git switch -q -c 30-pickup-times &&
-  at '2026-09-24T10:10:00-03:00' &&
-  printf '<h1>Order ahead</h1>\n<form class="order">\n  <label>Pickup time <input name="pickup" type="time"></label>\n  <button>Order</button>\n</form>\n' > order.html &&
-  printf '<p><a href="order.html">Order ahead</a></p>\n' >> index.html &&
-  git add -A && git commit -qm 'Let customers choose a pickup time' -m 'Refs #30' &&
-  at '2026-09-24T10:40:00-03:00' &&
-  sed -i 's/darkorange/saddlebrown/' style.css && printf '.order label { display: block; }\n' >> style.css &&
-  git commit -qam 'Style the order form' -m 'Refs #30' &&
-  git push -q -u origin 30-pickup-times 2>/dev/null )
+cd ~ && given reading-the-change 1 '2026-09-24T10:10:00-03:00' '2026-09-24T10:40:00-03:00'
 me
 
 block fetch
