@@ -1918,6 +1918,91 @@ def l11_driver_tree(lang):
                 'A primeira caixa é uma folha pequena num galho curto e íngreme: decide se o cliente '
                 'fica vinte e oito meses ou menos de dois.')
 
+# ------------------------------------------------------------------ lesson 12
+
+REASONS_PT = {'price': 'preço', 'the pet refused the food': 'o animal recusou a ração',
+              'delivery': 'entrega', 'moved to a shop': 'passou a comprar em loja', 'other': 'outro'}
+
+
+@figure('l12-survey', 12)
+def l12_survey(lang):
+    total, ans = S.EARLY_CANCELLERS, S.SURVEY_ANSWERS
+    f = Fig('l12-survey', 680, 300, T(
+        lang,
+        f'A bar of all {total:,} early cancellers: {ans} answered the exit survey, 23%, and {total - ans:,} '
+        'did not. Below, the answers of the 304: price 116, the pet refused the food 58, delivery 52, '
+        'moved to a shop 43, other 35. The people who did not answer are the larger part, and nothing '
+        'is known about their reasons.',
+        f'Uma barra de todos os {num(lang, total, 0)} que cancelaram cedo: {ans} responderam à pesquisa de '
+        f'saída, 23%, e {num(lang, total - ans, 0)} não. Abaixo, as respostas dos 304: preço 116, o animal '
+        'recusou a ração 58, entrega 52, passou a comprar em loja 43, outro 35. Quem não respondeu é a '
+        'parte maior, e nada se sabe dos motivos dessas pessoas.'))
+    x0, x1 = 30, 650
+    W = x1 - x0
+    f.text(x0, 18, T(lang, f'everyone who cancelled within 90 days, {num(lang, total, 0)}',
+                     f'todos que cancelaram em 90 dias, {num(lang, total, 0)}'), size=11, anchor='start',
+           weight='600')
+    wa = W * ans / total
+    f.bar(x0, 32, wa, 30, fill='--phosphor-dim', stroke='--phosphor')
+    f.bar(x0 + wa, 32, W - wa, 30, fill='--panel', stroke='--paper-dim')
+    f.text(x0 + wa / 2, 47, T(lang, f'answered, {ans}', f'responderam, {ans}'), size=10, fill='--paper')
+    f.text(x0 + wa + (W - wa) / 2, 47, T(lang, f'did not answer, {num(lang, total - ans, 0)}',
+                                         f'não responderam, {num(lang, total - ans, 0)}'), size=10)
+    f.text(x0, 106, T(lang, f'what the {ans} said', f'o que os {ans} disseram'), size=11, anchor='start',
+           weight='600')
+    rows = [(T(lang, r, REASONS_PT[r]), n) for r, n in S.SURVEY_REASONS]
+    maxn = max(n for _, n in rows)
+    for i, (lab, n) in enumerate(rows):
+        y = 120 + i * 32
+        f.text(x0 + 190, y + 11, lab, size=10, anchor='end')
+        w = 330 * n / maxn
+        hl = lab in ('delivery', 'entrega')
+        f.bar(x0 + 200, y, w, 22, fill='--scan' if hl else '--panel', stroke='--amber' if hl else '--paper-dim',
+              width=1.3)
+        f.text(x0 + 206 + w, y + 11, f'{n}  ({pct(lang, n / ans)})', size=9.5, anchor='start')
+    return f, T(lang,
+                'The survey describes the 23% who chose to answer. The cancellation rates describe all '
+                '6,113 subscribers, which is why behaviour outweighs what the survey says.',
+                'A pesquisa descreve os 23% que escolheram responder. As taxas de cancelamento descrevem '
+                'todos os 6.113 assinantes, e é por isso que o comportamento pesa mais que a pesquisa.')
+
+
+@figure('l12-goodhart', 12)
+def l12_goodhart(lang):
+    f = Fig('l12-goodhart', 680, 280, T(
+        lang,
+        'Bars of the working days first boxes took to arrive: 31.2% in one day, 51.5% in two, 13.1% in '
+        'three, 3.0% in four and 1.2% in five. A dashed line after day two marks today’s promise, with '
+        '82.7% on time. A second dashed line after day three marks a three-day promise, with 95.8% on '
+        'time. The bars are the same under both lines.',
+        'Barras dos dias úteis que as primeiras caixas levaram para chegar: 31,2% em um dia, 51,5% em '
+        'dois, 13,1% em três, 3,0% em quatro e 1,2% em cinco. Uma linha tracejada depois do dia dois '
+        'marca a promessa de hoje, com 82,7% no prazo. Uma segunda linha tracejada depois do dia três '
+        'marca uma promessa de três dias, com 95,8% no prazo. As barras são as mesmas sob as duas '
+        'linhas.'))
+    p = Plot(f, 60, 60, 620, 220, 0.5, 5.5, 0, 0.6)
+    p.yaxis([0.1, 0.2, 0.3, 0.4, 0.5], fmt=lambda v: pct(lang, v, 0), size=9)
+    for d, v in S.FIRST_ARRIVAL_DAYS:
+        xa, xb = p.sx(d - 0.35), p.sx(d + 0.35)
+        f.bar(xa, p.sy(v), xb - xa, p.sy(0) - p.sy(v), fill='--panel', stroke='--paper-dim', width=1.2)
+        f.text((xa + xb) / 2, p.sy(v) - 9, pct(lang, v), size=9.5)
+        f.text((xa + xb) / 2, p.y1 + 13, str(d), size=9.5, fill='--paper-dim')
+    p.baseline()
+    f.text((p.x0 + p.x1) / 2, p.y1 + 32, T(lang, 'working days until the first box arrived',
+                                           'dias úteis até a primeira caixa chegar'), size=10, weight='600')
+    for day, col, lab in [(2, '--amber', T(lang, f'promise 2 days: {pct(lang, S.FIRST_ON_TIME)} on time',
+                                             f'promessa de 2 dias: {pct(lang, S.FIRST_ON_TIME)} no prazo')),
+                          (3, '--phosphor', T(lang, f'promise 3 days: {pct(lang, S.ON_TIME_IF_THREE_DAYS)} on time',
+                                                f'promessa de 3 dias: {pct(lang, S.ON_TIME_IF_THREE_DAYS)} no prazo'))]:
+        x = p.sx(day + 0.5)
+        f.line(x, 50, x, p.y1, stroke=col, width=1.6, dash='5 3')
+        f.text(x + 6, 30 if day == 2 else 46, lab, size=9.5, anchor='start', fill=col)
+    return f, T(lang,
+                'Moving the promise from two days to three lifts the on-time rate from 82.7% to 95.8% '
+                'without moving a single box. The measure improves; the customer waits as long as before.',
+                'Mudar a promessa de dois para três dias leva a taxa no prazo de 82,7% para 95,8% sem mexer '
+                'numa única caixa. A medida melhora; o cliente espera o mesmo tanto.')
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():

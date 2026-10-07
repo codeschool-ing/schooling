@@ -139,13 +139,22 @@ GAIN_HIGH = GAIN_PER_YEAR
 # The alternative lesson 9 prices: every first box by express, for a year.
 EXPRESS_PER_YEAR = 2 * NEW * EXPRESS_EXTRA_CENTS           # cents
 
+# How many working days first boxes took to arrive, as shares of all first boxes.
+# Invented like the rest, and held to the count above: everything after day 2 is
+# late against Faro's two-day promise, so the tail must add up to LATE_SHARE_ALL.
+FIRST_ARRIVAL_DAYS = [(1, 0.312), (2, 0.515), (3, 0.131), (4, 0.030), (5, 0.012)]
+assert abs(sum(v for d, v in FIRST_ARRIVAL_DAYS if d > 2) - round(LATE_SHARE_ALL, 3)) < 1e-9
+ON_TIME_IF_THREE_DAYS = sum(v for d, v in FIRST_ARRIVAL_DAYS if d <= 3)
+MEAN_DAYS = sum(d * v for d, v in FIRST_ARRIVAL_DAYS)
+
 # ---------------------------------------------------------- the exit survey
 
 EARLY_CANCELLERS = CANCELLED
 SURVEY_ANSWERS = round(EARLY_CANCELLERS * SURVEY_RESPONSE)
-# What the answers said, as shares of those who answered.
-SURVEY_REASONS = [('price', 0.38), ('the pet refused the food', 0.19),
-                  ('delivery', 0.17), ('moved to a shop', 0.14), ('other', 0.12)]
+# What the answers said, as counts of those who answered; they add up to SURVEY_ANSWERS.
+SURVEY_REASONS = [('price', 116), ('the pet refused the food', 58),
+                  ('delivery', 52), ('moved to a shop', 43), ('other', 35)]
+assert sum(n for _, n in SURVEY_REASONS) == SURVEY_ANSWERS
 
 
 def weekly_first_on_time():
@@ -205,7 +214,10 @@ def main():
     p(f'CAC wasted per year           {brl(CAC_WASTED_PER_YEAR)}')
     p(f'pilot: avoided per year       {AVOIDED_PER_YEAR}  gain {brl(GAIN_LOW)} to {brl(GAIN_HIGH)}')
     p(f'express for every first box, a year: {brl(EXPRESS_PER_YEAR)}')
+    p(f'first boxes on time if the promise were 3 days: {pct(ON_TIME_IF_THREE_DAYS)}%  mean days {MEAN_DAYS:.2f}')
     p(f'survey: cancellers {EARLY_CANCELLERS}  answers {SURVEY_ANSWERS}')
+    for r, n in SURVEY_REASONS:
+        p(f'  {r:26} {n:4}  {pct(n / SURVEY_ANSWERS)}%')
     p(f'weekly first on-time          {WEEKLY_FIRST}')
     p(f'  min {min(WEEKLY_FIRST)} max {max(WEEKLY_FIRST)}')
     p(f'weekly all on-time            {WEEKLY_ALL}')
