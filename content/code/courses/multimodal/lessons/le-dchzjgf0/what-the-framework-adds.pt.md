@@ -3,7 +3,7 @@ title: O que um framework acrescenta, e o que esconde
 version: 1
 ---
 
-Quatro programas nesta aula, dois frameworks, e uma capa enviada três vezes. Como ficou cada lado da troca, neste laboratório:
+Quatro programas nesta aula, dois frameworks, e uma capa enviada três vezes. Como ficou cada lado da troca, nesta aula:
 
 | um framework deu | um framework escondeu |
 |---|---|
@@ -15,7 +15,7 @@ Quatro programas nesta aula, dois frameworks, e uma capa enviada três vezes. Co
 
 Nada da coluna da direita é motivo para não usar um framework. É uma lista de coisas a conferir **porque** você usa um. Três hábitos cobrem quase tudo:
 
-- **Conte os tokens de uma imagem com e sem o framework.** Aqui deu 765 todas as vezes. Um framework que redimensionasse, recodificasse ou mandasse `detail: high` por padrão apareceria como outro número, e na conta.
+- **Conte os tokens de uma imagem com e sem o framework.** Aqui deu 1.105 todas as vezes. Um framework que redimensionasse, recodificasse ou mandasse `detail: high` por padrão apareceria como outro número, e na conta.
 - **Fixe as versões**, como o `setup.sh` da aula 1 faz. Blocos de conteúdo são recentes nos dois pacotes e ainda mudam; o `langchain-core` 1.x mudou a grafia deles, e uma versão menor de uma integração pode mudar o que é enviado.
 - **Mantenha o SDK do provedor ao alcance.** A cadeia acima já o usa para transcrever, porque é lá que o endpoint está. Um passo que o framework não cobre é uma função, não um motivo para esperar.
 

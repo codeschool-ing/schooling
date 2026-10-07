@@ -38,11 +38,14 @@ A chain is worth having when several steps run in order and each needs the last 
 ```
 
 ```
-@@ticket@@
+ana@lab:~/mm$ python ticket.py media/call-1042.wav
+order='Order M1042' title='Dominik Kazmuro' problem='Cover torn and pages folded' refund_cents=3480
+order  in transcript: True
+title  in transcript: False
 ```
 
-The log shows the two requests the chain made: a transcription by Whisper base, which is real, and a chat request answered by `l12-ticket`, **a rule the course wrote**. The ticket says what a model might say about this call; no model said it.
+Two models ran: Whisper base, through lesson 10's `audio_server.py`, wrote the transcript, and `llama3.2:3b` turned it into the ticket.
 
-Then the check, and it found something. The order passes: `M-1042` and the transcript's `M1042` are the same letters and digits. **The title fails**, because lesson 7's Whisper base heard "Dom Kazmuro" and "Dom Casmorrow", never "Dom Casmurro". Here the ticket is right and the transcript is wrong, and the check cannot know that. It can only say that the ticket states something nobody was heard saying, which is exactly when a person should look.
+Then the check, and it found something. The order passes, though the ticket wrote it as `Order M1042`: the check compares letters and digits only, and the transcript's `M1042` is inside them. **The title fails**, and for a reason worth reading twice. Whisper heard "Dom Kazmuro"; the model took that and made a name of it, *Dominik Kazmuro*. A garbled title came in, and a confident wrong one came out, with nothing in the ticket to say it was ever in doubt. The check cannot say what the title should be. It can only say that the ticket states something nobody was heard saying, which is exactly when a person should look, and lesson 7's lexicon is the step that would have fixed the title before the model saw it.
 
 Two things the chain did not do. It did not **send audio to a chat model**: LangChain's blocks can carry audio, for the few chat models that take it, and this chain transcribes first instead, so the text can be kept, searched and checked. And it did not **check anything**: the comparison at the end is plain Python, outside the chain, because no framework knows which fields of your ticket must come from the recording.

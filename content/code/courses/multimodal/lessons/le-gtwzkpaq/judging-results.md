@@ -66,7 +66,6 @@ output_cost_per_image_token                3e-05
 source                                     https://ai.google.dev/gemini-api/docs/pricing
 ana@lab:~/mm$ python -c "print(round(0.039 * 4, 3), round(0.039 * 12, 3))"
 0.156 0.468
-exit 0
 ```
 
 **0.039 dollars a picture**, and a **deprecation date of 2 October 2026**, five days before this lesson was recorded. Both are facts about one day of one provider, read from a third party's copy of Google's pricing page, and both will be different when you read this. Lesson 9 looks at what that date means for code that names the model.

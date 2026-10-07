@@ -39,7 +39,6 @@ ana@lab:~/mm$ python ask.py media/cover-b39.png "List every piece of text on the
 DOM CASMURRO
 Machado de Assis
 Marginalia Classics
-exit 0
 ```
 
 Tudo nessa descrição pode ser conferido contra o que foi desenhado, porque a função `cover()` do `make_media.py` diz exatamente o que há na capa, forma por forma. O título, o autor e a linha da editora estão lá, e a segunda pergunta copiou os três exatamente, que é o trabalho mais fácil. A primeira resposta se saiu pior de três jeitos, e cada um é um tipo de erro a procurar:

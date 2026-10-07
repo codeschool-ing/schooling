@@ -66,7 +66,6 @@ output_cost_per_image_token                3e-05
 source                                     https://ai.google.dev/gemini-api/docs/pricing
 ana@lab:~/mm$ python -c "print(round(0.039 * 4, 3), round(0.039 * 12, 3))"
 0.156 0.468
-exit 0
 ```
 
 **0,039 dólar por imagem**, e uma **data de descontinuação em 2 de outubro de 2026**, cinco dias antes de esta aula ser gravada. As duas coisas são fatos de um dia de um provedor, lidos da cópia que um terceiro faz da página de preços do Google, e as duas vão estar diferentes quando você ler isto. A aula 9 vê o que essa data significa para um código que cita o modelo.

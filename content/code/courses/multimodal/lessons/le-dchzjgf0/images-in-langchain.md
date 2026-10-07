@@ -28,11 +28,13 @@ for name, block in (("openai", openai_block), ("standard", standard_block)):
 The first block is OpenAI's own format, the `image_url` with a data URL that lesson 8 built by hand. The second is **LangChain's standard block**: `type`, the base64 data and the `mime_type`, with no provider's name in it. `_get_request_payload` is a private method of `ChatOpenAI`, used here only to look at what would go on the wire:
 
 ```
-@@langchain@@
+ana@lab:~/mm$ python lc_cover.py
+openai -> image_url data:image/png;base64,iVBORw0K
+    1105 tokens in: The cover of the book "Dom Casmurro" by Machado de Assis fea
+standard -> image_url data:image/png;base64,iVBORw0K
+    1105 tokens in: The cover of the book "Dom Casmurro" by Machado de Assis fea
 ```
 
-**Both spellings left as the same request.** `ChatOpenAI` converted the standard block into an `image_url` with a data URL, and labmm's log shows the same image (`88a80dab896d`) costing the same 765 tokens both times, lesson 8's tile rule for a 600 by 900 picture. The 772 tokens in the reply's `usage_metadata` are those 765 plus the text and the message's overhead.
-
-The reply is not a model's. labmm matched the image and the words "Describe this cover" to the rule `l08-cover-describe`, which the course wrote for lesson 8, and the log names that rule beside each request.
+**Both spellings left as the same request.** `ChatOpenAI` converted the standard block into an `image_url` with a data URL, and the model was charged the same 1,105 tokens for each, the picture and the short question beside it. The reply is `qwen2.5vl:3b`'s, through the same Ollama address lesson 8 used, because `ChatOpenAI` reads `OPENAI_BASE_URL` as the OpenAI SDK does.
 
 What the standard block buys is **one message for several providers**. The same `HumanMessage` given to `ChatGoogleGenerativeAI` or `ChatAnthropic` is converted into their formats by their integration packages, which is the job a framework does well. What it costs is a layer between you and the request: the conversion happens in a package with its own version, and the only way to know what was sent is to look, as this program did.

@@ -39,16 +39,13 @@ Uma cadeia vale a pena quando vários passos rodam em ordem e cada um precisa da
 
 ```
 ana@lab:~/mm$ python ticket.py media/call-1042.wav
-order='M-1042' title='Dom Casmurro' problem='Cover torn and about ten pages folded at the corner' refund_cents=3480
+order='Order M1042' title='Dominik Kazmuro' problem='Cover torn and pages folded' refund_cents=3480
 order  in transcript: True
 title  in transcript: False
-ana@lab:~/mm$ tail -n 2 /var/log/labmm/requests.jsonl | python -c "import json, sys; [print(r[\"path\"], r.get(\"model\"), r.get(\"rule\", \"-\")) for r in map(json.loads, sys.stdin)]"
-/v1/audio/transcriptions lab-whisper-base -
-/v1/chat/completions lab-vision-1 l12-ticket
 ```
 
-O log mostra os dois pedidos que a cadeia fez: uma transcrição pelo Whisper base, que é real, e um pedido de chat respondido por `l12-ticket`, **uma regra que o curso escreveu**. O chamado diz o que um modelo poderia dizer sobre esta ligação; nenhum modelo disse.
+Dois modelos rodaram: o Whisper base, pelo `audio_server.py` da aula 10, escreveu a transcrição, e o `llama3.2:3b` a transformou no chamado.
 
-Depois a conferência, e ela achou algo. O pedido passa: `M-1042` e o `M1042` da transcrição são as mesmas letras e dígitos. **O título falha**, porque o Whisper base da aula 7 ouviu "Dom Kazmuro" e "Dom Casmorrow", nunca "Dom Casmurro". Aqui o chamado está certo e a transcrição errada, e a conferência não tem como saber disso. Ela só pode dizer que o chamado afirma algo que ninguém foi ouvido dizendo, e é exatamente aí que uma pessoa deve olhar.
+Depois a conferência, e ela achou algo. O pedido passa, embora o chamado o tenha escrito como `Order M1042`: a conferência compara só letras e dígitos, e o `M1042` da transcrição está dentro deles. **O título falha**, e por um motivo que vale ler duas vezes. O Whisper ouviu "Dom Kazmuro"; o modelo pegou isso e fez dele um nome, *Dominik Kazmuro*. Um título truncado entrou, e um errado e confiante saiu, sem nada no chamado dizendo que ele esteve em dúvida. A conferência não sabe dizer qual deveria ser o título. Ela só diz que o chamado afirma algo que ninguém foi ouvido dizendo, que é exatamente quando uma pessoa deveria olhar, e o léxico da aula 7 é o passo que teria corrigido o título antes de o modelo o ver.
 
 Duas coisas que a cadeia não fez. Ela não **mandou áudio para um modelo de chat**: os blocos do LangChain podem carregar áudio, para os poucos modelos de chat que o aceitam, e esta cadeia transcreve antes, para o texto poder ser guardado, buscado e conferido. E ela não **conferiu nada**: a comparação no fim é Python comum, fora da cadeia, porque nenhum framework sabe que campos do seu chamado precisam vir da gravação.

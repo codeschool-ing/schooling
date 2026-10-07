@@ -30,16 +30,11 @@ O primeiro bloco é o formato da própria OpenAI, o `image_url` com uma URL de d
 ```
 ana@lab:~/mm$ python lc_cover.py
 openai -> image_url data:image/png;base64,iVBORw0K
-    772 tokens in: A book cover on a dark navy background. At the top right is 
+    1105 tokens in: The cover of the book "Dom Casmurro" by Machado de Assis fea
 standard -> image_url data:image/png;base64,iVBORw0K
-    772 tokens in: A book cover on a dark navy background. At the top right is 
-ana@lab:~/mm$ tail -n 2 /var/log/labmm/requests.jsonl | python -c "import json, sys; [print(r[\"images\"][0][\"sha256\"], r[\"images\"][0][\"tokens\"], r[\"rule\"]) for r in map(json.loads, sys.stdin)]"
-88a80dab896d 765 l08-cover-describe
-88a80dab896d 765 l08-cover-describe
+    1105 tokens in: The cover of the book "Dom Casmurro" by Machado de Assis fea
 ```
 
-**As duas grafias saíram como o mesmo pedido.** O `ChatOpenAI` converteu o bloco padrão num `image_url` com URL de dados, e o log do labmm mostra a mesma imagem (`88a80dab896d`) custando os mesmos 765 tokens nas duas vezes, a regra de blocos da aula 8 para uma figura de 600 por 900. Os 772 tokens do `usage_metadata` da resposta são esses 765 mais o texto e o custo fixo da mensagem.
-
-A resposta não é de um modelo. O labmm casou a imagem e as palavras "Describe this cover" com a regra `l08-cover-describe`, que o curso escreveu para a aula 8, e o log dá o nome dessa regra ao lado de cada pedido.
+**As duas grafias saíram como o mesmo pedido.** O `ChatOpenAI` converteu o bloco padrão num `image_url` com URL de dados, e o modelo cobrou os mesmos 1.105 tokens por cada um, a imagem e a pergunta curta ao lado dela. A resposta é do `qwen2.5vl:3b`, pelo mesmo endereço do Ollama que a aula 8 usou, porque o `ChatOpenAI` lê o `OPENAI_BASE_URL` como o SDK da OpenAI lê.
 
 O que o bloco padrão compra é **uma mensagem para vários provedores**. O mesmo `HumanMessage` entregue ao `ChatGoogleGenerativeAI` ou ao `ChatAnthropic` é convertido para os formatos deles pelos pacotes de integração, e esse é um trabalho que um framework faz bem. O que ele custa é uma camada entre você e o pedido: a conversão acontece num pacote com versão própria, e o único jeito de saber o que foi enviado é olhar, como este programa fez.

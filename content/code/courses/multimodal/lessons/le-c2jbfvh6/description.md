@@ -39,7 +39,6 @@ ana@lab:~/mm$ python ask.py media/cover-b39.png "List every piece of text on the
 DOM CASMURRO
 Machado de Assis
 Marginalia Classics
-exit 0
 ```
 
 Everything in that description can be checked against what was drawn, because `make_media.py`'s `cover()` says exactly what is on the cover, shape by shape. The title, the author and the publisher's line are there, and the second question copied all three exactly, which is the easier job. The first answer did worse in three ways, and each is a kind of mistake to look for:
