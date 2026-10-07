@@ -1,9 +1,15 @@
 ---
 title: Chamado: "o site caiu"
-version: 1
+version: 2
 ---
 
-O último chamado sobe a escada inteira:
+O último chamado sobe a escada inteira. O defeito, no seu laboratório:
+
+```sh
+sudo bash ~/netlab/netlab exec www root 'nginx -s stop'
+```
+
+Depois:
 
 ```
 ana@laptop:~$ curl -sS https://www.example.com/
