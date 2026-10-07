@@ -54,9 +54,9 @@ reset() {
   rm -rf "$TM/portal-model"
   git init -q -b main "$TM/portal-model"
   cd "$TM/portal-model"
-  printf '__pycache__/\nfindings.json\n' > .gitignore
+  printf '__pycache__/\nmodel.json\n' > .gitignore
   git add .gitignore
-  add model.py
+  add model.py flows.py
   commit '2026-09-01 10:00' 'Draw the portal as a data flow diagram'
   add findings.py
   commit '2026-09-03 15:20' 'Summarise what pytm finds'

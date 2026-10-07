@@ -17,19 +17,24 @@ vendors = Boundary("Vendors")
 # External entities: people and systems outside Vereda's control.
 patient = Actor("Patient")
 patient.inBoundary = internet
+patient.protocol = "HTTPS"
 staff = Actor("Clinic staff")
 staff.inBoundary = clinic
 sms = ExternalEntity("SMS provider")
 sms.inBoundary = vendors
+sms.protocol = "HTTPS"
 payments = ExternalEntity("Payment gateway")
 payments.inBoundary = vendors
+payments.protocol = "HTTPS"
 
 # Processes: code Vereda runs.
 portal = Server("Portal")
 portal.inBoundary = cloud
+portal.protocol = "HTTPS"
 portal.usesSessionTokens = True
 console = Server("Staff console")
 console.inBoundary = cloud
+console.protocol = "HTTPS"
 console.usesSessionTokens = True
 worker = Process("Reminder worker")
 worker.inBoundary = private
@@ -40,24 +45,27 @@ db.inBoundary = private
 db.storesPII = True
 db.storesSensitiveData = True
 db.isSQL = True
+db.protocol = "PostgreSQL"
 files = Datastore("Exam files")
 files.inBoundary = private
 files.storesPII = True
 files.storesSensitiveData = True
+files.protocol = "HTTPS"
 
-# Data flows, in the order a booking happens.
-Dataflow(patient, portal, "Sign in and book").protocol = "HTTPS"
-Dataflow(portal, patient, "Pages and booking status").protocol = "HTTPS"
-Dataflow(patient, portal, "Upload exam PDF").protocol = "HTTPS"
+# Data flows, in the order a booking happens. A flow takes its protocol
+# from the element it arrives at.
+Dataflow(patient, portal, "Sign in and book")
+Dataflow(portal, patient, "Pages and booking status")
+Dataflow(patient, portal, "Upload exam PDF")
 Dataflow(portal, files, "Store exam PDF")
-Dataflow(portal, db, "Read and write bookings").protocol = "PostgreSQL"
-Dataflow(portal, payments, "Charge for a session").protocol = "HTTPS"
-Dataflow(payments, portal, "Payment webhook").protocol = "HTTPS"
-Dataflow(staff, console, "Manage the agenda").protocol = "HTTPS"
-Dataflow(console, db, "Read and write records").protocol = "PostgreSQL"
+Dataflow(portal, db, "Read and write bookings")
+Dataflow(portal, payments, "Charge for a session")
+Dataflow(payments, portal, "Payment webhook")
+Dataflow(staff, console, "Manage the agenda")
+Dataflow(console, db, "Read and write records")
 Dataflow(console, files, "Open exam PDF")
-Dataflow(worker, db, "Read tomorrow's bookings").protocol = "PostgreSQL"
-Dataflow(worker, sms, "Send reminder").protocol = "HTTPS"
+Dataflow(worker, db, "Read tomorrow's bookings")
+Dataflow(worker, sms, "Send reminder")
 
 if __name__ == "__main__":
     tm.process()
