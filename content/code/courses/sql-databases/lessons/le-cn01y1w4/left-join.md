@@ -12,20 +12,18 @@ Most of the time that is wrong, because the questions people actually ask are ab
 - *Show every order with its shipment* — orders not yet shipped are the ones somebody is looking
   for.
 
-```sql
-SELECT c.name, o.id, o.total
-FROM   customers c
-LEFT JOIN orders o ON o.customer_id = c.id;
 ```
-
-```
- name       | id   | total
+joins=# SELECT c.name, o.id, o.total
+joins-# FROM   customers c
+joins-# LEFT JOIN orders o ON o.customer_id = c.id;
+    name    |  id  | total 
 ------------+------+-------
  Ana Lopes  | 1001 | 34.90
+ Bruno Sá   | 1002 | 69.80
  Ana Lopes  | 1003 | 51.00
  Ana Lopes  | 1004 | 34.90
- Bruno Sá   | 1002 | 69.80
- Célia Reis | NULL | NULL
+ Célia Reis | NULL |  NULL
+(5 rows)
 ```
 
 Five rows. **Every row of the left table appears at least once**; where there is no partner, the

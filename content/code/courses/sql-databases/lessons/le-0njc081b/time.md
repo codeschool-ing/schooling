@@ -40,29 +40,59 @@ stored becomes ambiguous retroactively, because nothing recorded which zone it m
 Despite the name, **it does not store a timezone**. It stores an absolute moment — internally UTC
 — and converts on the way in and out using the session's timezone:
 
-```sql
-SET TIME ZONE 'Europe/Lisbon';
-INSERT INTO invoices (paid_at) VALUES ('2026-10-25 01:30:00');
-
-SET TIME ZONE 'UTC';
-SELECT paid_at FROM invoices;
 ```
+shop=# CREATE TABLE payments (paid_at timestamptz NOT NULL);
+CREATE TABLE
 
-```
-        paid_at
+shop=# SET TIME ZONE 'Europe/Lisbon';
+SET
+
+shop=# INSERT INTO payments (paid_at) VALUES ('2026-10-24 01:30:00');
+INSERT 0 1
+
+shop=# SET TIME ZONE 'UTC';
+SET
+
+shop=# SELECT paid_at FROM payments;
+        paid_at         
 ------------------------
- 2026-10-25 00:30:00+00
+ 2026-10-24 00:30:00+00
+(1 row)
 ```
 
+Half past one on the 24th in Lisbon, written in Lisbon, read back in UTC as half past midnight.
 The same instant, written the way the reader asked for. That is the whole feature: **the moment is
 stored once, and every reader sees it in their own terms.** Comparisons, sorting and arithmetic
 are all correct because they happen on the absolute value.
 
-The cost is that you have to know what the session's timezone is when a bare string comes in. Say
-it explicitly and the ambiguity disappears:
+The cost is that a bare string is read in the session's timezone, and the next night is the one
+from the picture above, when Lisbon's `01:30` happens twice:
+
+```
+shop=# SET TIME ZONE 'Europe/Lisbon';
+SET
+
+shop=# INSERT INTO payments (paid_at) VALUES ('2026-10-25 01:30:00');
+INSERT 0 1
+
+shop=# SET TIME ZONE 'UTC';
+SET
+
+shop=# SELECT paid_at FROM payments ORDER BY paid_at;
+        paid_at         
+------------------------
+ 2026-10-24 00:30:00+00
+ 2026-10-25 01:30:00+00
+(2 rows)
+```
+
+It did not refuse and it did not warn. Of the two moments that string could mean, it took the
+second: `01:30` UTC, the `01:30` that comes after the clocks go back. The only sign is a gap of
+twenty-five hours between two rows written one day apart. Say the offset and the ambiguity
+disappears:
 
 ```sql
-INSERT INTO invoices (paid_at) VALUES ('2026-10-25 01:30:00+01');
+INSERT INTO payments (paid_at) VALUES ('2026-10-25 01:30:00+01');
 ```
 
 ## When `date` is right, and when it is a mistake
