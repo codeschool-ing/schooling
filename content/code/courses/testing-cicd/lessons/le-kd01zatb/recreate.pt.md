@@ -1,13 +1,19 @@
 ---
 title: Parar o antigo, subir o novo
-version: 1
+version: 2
 ---
 
 Todo deploy da aula 7 fez a mesma coisa: parar o processo que estava rodando, subir o release novo,
 conferir se ele responde. Essa estratégia tem nome, **recreate**, e tem uma propriedade que todas as
 outras estratégias desta aula existem para eliminar. Entre a parada e o início, nada responde.
 
-Aqui a produção roda o 1.5.0 na porta 8300. Um laço pergunta ao `/health` a cada 50 milissegundos e
+Aqui a produção roda o 1.5.0 na porta 8300, implantado como a aula 7 implantava:
+
+```sh
+ops/deploy.sh production dist/shipquote-1.5.0.tar.gz
+```
+
+Um laço pergunta ao `/health` a cada 50 milissegundos e
 imprime o código de status; meio segundo depois, o `restart.sh` para o processo e sobe de novo.
 
 ```
@@ -40,4 +46,5 @@ mais simples, e para uma ferramenta interna usada em horário comercial um deplo
 custa nada a ninguém.
 
 O que ele não deveria ser é a estratégia que ninguém escolheu. O resto desta aula são as
-alternativas, cada uma comprando alguma coisa com outra.
+alternativas, cada uma comprando alguma coisa com outra. Pare esta produção agora,
+`kill $(cat ~/envs/production/pid)`: da seção 06 em diante, a porta 8300 é do roteador.

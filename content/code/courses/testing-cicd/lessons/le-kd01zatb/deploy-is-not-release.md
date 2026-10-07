@@ -1,6 +1,6 @@
 ---
 title: Deploying is not releasing
-version: 1
+version: 2
 ---
 
 Everything so far tied two things together: putting new code in production and showing it to
@@ -68,4 +68,4 @@ code is in production and running, and **no customer has seen it**. This is some
   that merges the day a change is written, as lesson 5 asked, copes with a change that takes weeks.
 
 The price is that the code now contains both paths, the old behaviour and the new, until somebody
-removes one. Section 11 is about that price.
+removes one. Section 13 is about that price.
