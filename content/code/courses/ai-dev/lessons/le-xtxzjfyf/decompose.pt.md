@@ -1,6 +1,6 @@
 ---
 title: Um passo por vez
-version: 1
+version: 2
 ---
 
 "Acrescente suporte a vírgula no parser de preço" é uma tarefa de três partes: decidir o que ela
@@ -15,30 +15,58 @@ antes de o próximo ser construído em cima dele.**
 
 ## Um plano, e nenhum código
 
-A ana recomeça do `parse_price` original e pede só os passos:
+A ana devolve o `parse_price` ao que era e pede só os passos:
 
 ```
 ana@dev:~/shop$ git checkout -q shop/money.py && git status --short
 ?? comma.diff
 ?? error.txt
-?? lab/
 ?? prompts/
-ana@dev:~/shop$ assist ask "We need parse_price to accept a decimal comma. Do not write code yet: list the steps, with the tests first." --open shop/money.py CONVENTIONS.md 2>/dev/null
-1. Write the tests first, from what the change must do: '12,90' and '12,9' parse like '12.90' and '12.9', the existing dot keeps working, and '1.234,56' is refused, because a dot and a comma in one price leave no way to tell which is the decimal separator.
-2. Change parse_price to read a comma as the decimal separator, keeping the arithmetic in integers as CONVENTIONS.md requires.
-3. Run the whole suite, not only the new tests.
-
+?? scratch/
+ana@dev:~/shop$ python scratch/assist.py ask "We need parse_price to accept a decimal comma. Do not write code yet: list the steps, with the tests first." --open shop/money.py CONVENTIONS.md > /dev/null
+context sent (511 of 3000 tokens):
+    137  shop/money.py
+    374  CONVENTIONS.md
+---
+ana@dev:~/shop$ cat -n scratch/reply.txt
+     1	Here are the steps to update the `parse_price` function to accept a decimal comma:
+     2	
+     3	### Step 1: Write a test that fails without the change
+     4	
+     5	* Name: `test_parse_price_with_comma`
+     6	* Description: A price with a decimal comma should still be parsed correctly.
+     7	* Expected outcome: The test should fail because the `parse_price` function doesn't currently accept a decimal comma.
+     8	
+     9	### Step 2: Update the test to verify the correct behavior
+    10	
+    11	* Name: `test_parse_price_with_comma`
+    12	* Description: A price with a decimal comma should be parsed correctly.
+    13	* Expected outcome: The test should pass, verifying that the updated `parse_price` function correctly handles decimal commas.
+    14	
+    15	### Step 3: Update the `parse_price` function to accept a decimal comma
+    16	
+    17	* The updated function should check if the input string contains a comma, and if so, replace it with a dot before parsing the price.
+    18	* The updated function should also handle the case where the input string has a comma but no decimal part.
+    19	
+    20	### Step 4: Review the updated code and ensure it follows the convention rules
+    21	
+    22	* Verify that the updated `parse_price` function meets the rule that errors are exceptions with a name, and that no function is longer than about 40 lines.
+    23	* Verify that the updated code still follows the rule about text being produced by `shop.money.format_price` and parsed by `shop.money.parse_price`.
 ```
 
-O plano, escrito pelo curso, põe os testes primeiro e nomeia o caso de que ninguém tinha falado:
-`1.234,56`, em que um ponto e uma vírgula no mesmo preço não deixam saber qual é o separador
-decimal. **Um plano é barato de ler e barato de corrigir.** Se ele tivesse dito "converta para
-float", seria uma frase a riscar em vez de um diff a desfazer.
+**Um plano é barato de ler e barato de corrigir**, e este precisa de correção. Ele põe um teste
+primeiro, e o passo 3 é a ideia certa: trocar a vírgula por um ponto antes de interpretar. Mas os
+passos 1 e 2 são o mesmo teste escrito duas vezes, o teste tem nome e nenhum caso, e o passo 4 é o
+`CONVENTIONS.md` lido de volta. Nada nele diz que entradas decidem se a mudança funcionou. Isso levou
+dez segundos para ler e custa uma frase para consertar; a mesma lacuna achada num diff seria um diff
+para desfazer.
 
-## Os testes, a partir do plano, à mão
+## Os testes, à mão
 
-A ana escreve ela mesma os testes, a partir da lista de casos do plano, decidindo os valores
-esperados:
+Os casos são a parte do plano que importa, então a ana os escreve ela mesma e decide os valores
+esperados. Ela acrescenta um que o plano nunca mencionou, porque sabe como um brasileiro escreve mil:
+`1.234,56` tem um ponto e uma vírgula, e nenhuma regra diz qual dos dois é o separador decimal, então
+ele precisa ser recusado em vez de adivinhado:
 
 ```python
 import pytest
@@ -56,37 +84,34 @@ def test_a_price_with_both_a_dot_and_a_comma_is_refused():
         parse_price("1.234,56")
 ```
 
-Rodados antes da mudança, eles deviam falhar, e falham (a última regra da aula 5 seção 05):
+Rodados antes da mudança, eles devem falhar, e falham (a última regra da aula 5, seção 05). O que
+passa é o `12.90`, que a função antiga já lia:
 
 ```
-ana@dev:~/shop$ python -m pytest -q tests/test_comma.py 2>&1 | tail -3
+ana@dev:~/shop$ python -m pytest -q tests/test_comma.py | tail -n 3
 FAILED tests/test_comma.py::test_a_comma_or_a_dot_is_the_decimal_separator[ 12,90 ]
 FAILED tests/test_comma.py::test_a_price_with_both_a_dot_and_a_comma_is_refused
-4 failed, 1 passed in 0.54s
+4 failed, 1 passed in 0.73s
 ```
 
 ## A mudança
 
-O diff da aula 5 seção 03, aplicado:
+A função da aula 5, seção 05, ainda está em `scratch/parse_price.py`. Trocada, contra os testes
+novos:
 
 ```
-ana@dev:~/shop$ git apply comma.diff && python -m pytest -q tests/test_comma.py
-....F                                                                    [100%]
-=================================== FAILURES ===================================
-_____________ test_a_price_with_both_a_dot_and_a_comma_is_refused ______________
-
-    def test_a_price_with_both_a_dot_and_a_comma_is_refused():
->       with pytest.raises(ValueError):
-E       Failed: DID NOT RAISE ValueError
-
-tests/test_comma.py:12: Failed
+ana@dev:~/shop$ python scratch/swap.py shop/money.py scratch/parse_price.py && python -m pytest -q tests/test_comma.py | tail -n 3
+swap: parse_price replaced in shop/money.py
 =========================== short test summary info ============================
-FAILED tests/test_comma.py::test_a_price_with_both_a_dot_and_a_comma_is_refused
-1 failed, 4 passed in 0.52s
+FAILED tests/test_comma.py::test_a_comma_or_a_dot_is_the_decimal_separator[12.90]
+1 failed, 4 passed in 0.71s
 ```
 
-Quatro de cinco. A vírgula funciona, o ponto continua funcionando, e `1.234,56` é aceito quando o
-plano dizia que devia ser recusado. O diff de uma linha troca a vírgula por ponto e divide no
-primeiro ponto, então lê `1.234,56` como uma unidade e vinte e três centavos, em silêncio. **O teste
-escrito a partir do plano pegou o que o diff escrito a partir do erro não considerou.** É esse o valor
-da ordem: o requisito existia, como teste, antes do código que tinha de cumpri-lo.
+Quatro de cinco, e o que falha é o ponto, como o teste do próprio projeto já dizia. **Um dos quatro
+passa pelo motivo errado.** O `1.234,56` é recusado, como o teste exige, mas só porque a função o
+divide na vírgula e `int("1.234")` por acaso falha; nada nela decidiu que um preço com os dois
+separadores é ambíguo. Um teste confere o que acontece, não por quê, o que é mais um motivo para ler
+uma mudança que passa.
+
+Os testes agora existem antes do código que precisa atendê-los, e dizem exatamente o que está errado.
+A aula 5, seção 06, manda isso de volta.

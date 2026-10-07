@@ -1,6 +1,6 @@
 ---
 title: What a task prompt is made of
-version: 1
+version: 2
 ---
 
 The same request, asked two ways, gets two different kinds of answer. The difference is rarely
@@ -11,24 +11,35 @@ know it is done, and in what form you want the answer.
 ## The short version
 
 ana's shop rejects `12,90`, which is how a Brazilian customer types a price. The quickest request
-is one line. The reply was written by the course, as every model reply in this lesson is:
+is one line, sent with `assist` from lesson 3 and the file open. The reply goes to
+`scratch/reply.txt`, and `cat -n` numbers its lines:
 
 ```
-ana@dev:~/shop$ assist ask "Fix parse_price so it accepts commas." --open shop/money.py
+ana@dev:~/shop$ python scratch/assist.py ask "Fix parse_price so it accepts commas." --open shop/money.py > /dev/null
 context sent (137 of 3000 tokens):
     137  shop/money.py
 ---
-Here is a version that handles both separators:
-
-def parse_price(text: str) -> int:
-    return round(float(text.strip().replace(",", ".")) * 100)
-
+ana@dev:~/shop$ cat -n scratch/reply.txt
+     1	You can use Python's built-in `replace` method to remove commas from the input string, and then proceed with the existing logic. Here's the updated `parse_price` function:
+     2	
+     3	```python
+     4	def parse_price(text: str) -> int:
+     5	    """Turn a price as people write it into cents: '12.90' -> 1290."""
+     6	    text = text.replace(",", "")  # Remove commas
+     7	    units, _, cents = text.strip().partition(".")
+     8	    cents = (cents + "00")[:2]
+     9	    return int(units) * 100 + int(cents)
+    10	```
+    11	
+    12	Now the function should correctly parse prices with commas, such as "12,90".
 ```
 
-It works, for most inputs, and it breaks a rule. `CONVENTIONS.md` says a float never holds money,
-not even briefly, and this reply goes through `float` on its way to cents. The assistant could not
-know: the conventions were not in the context, and the one line did not say. **Nothing about the
-answer is wrong for the question it was asked.** The question was missing the project.
+Line 6 deletes every comma. `12,90` becomes `1290`, which the function reads as one thousand two
+hundred and ninety units, so the price comes out as 129000 cents: a mug at 12,90 charged
+1290.00. The model read the comma the way English writes `1,290`, as a separator between
+thousands, and for that reading the answer is correct. **Nothing about the answer is wrong for the
+question it was asked.** The question never said the comma was a decimal separator, or who types
+it, and it carried none of the project's rules.
 
 ## The five parts
 
@@ -64,8 +75,9 @@ ana@dev:~/shop$ wc -w prompts/comma.md
 ```
 
 Eighty-one words. **The extra words are not politeness**, and most of them are things ana would
-write in the ticket anyway. A prompt that reads like a good ticket is a good prompt, and the habit
-pays twice: the same text tells the next person what the change was for.
+write in the ticket anyway. The goal alone would have prevented the reply above: it says the comma
+is decimal, and gives `12,90` as the case. A prompt that reads like a good ticket is a good prompt,
+and the habit pays twice, because the same text tells the next person what the change was for.
 
 ## What does not need to be there
 

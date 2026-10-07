@@ -1,6 +1,6 @@
 ---
 title: Prompts são código
-version: 1
+version: 2
 ---
 
 Um prompt que uma funcionalidade manda a um modelo faz parte do programa. Ele decide o que a
@@ -11,8 +11,8 @@ testes.
 
 ## Um modelo e um montador
 
-A ana transforma o prompt da vírgula da aula 5 seção 02 num modelo, com campos `$` para o que muda
-de uma tarefa para outra:
+A ana transforma o prompt da vírgula da aula 5, seção 02, com a última linha que ele ganhou na seção
+05, num modelo, com campos `$` para o que muda de uma tarefa para outra:
 
 ```
 Goal: $goal
@@ -26,7 +26,7 @@ Constraints: change only what the goal needs. Do not change any existing test.
 
 Done when: $done
 
-Answer with: a unified diff, and nothing else.
+Answer with: only the function you changed, in one block of code, and nothing else.
 ```
 
 e um montador que o preenche, sempre acrescenta o `CONVENTIONS.md` e recusa um prompt acima do
@@ -49,7 +49,7 @@ orçamento:
       "note": "**As convenções entram toda vez**, primeiro, quaisquer que sejam os arquivos pedidos. Uma regra que depende de todo chamador lembrar dela é uma regra que às vezes falta."
     },
     {
-      "code": "    prompt = Template(Path(\"prompts\", template).read_text()).substitute(files=body, **fields)\n    if len(ENC.encode(prompt)) > BUDGET:\n        raise ValueError(f\"{template}: over the budget of {BUDGET} tokens\")\n    return prompt",
+      "code": "    prompt = Template(Path(\"prompts\", template).read_text()).substitute(files=body, **fields)\n    if len(ENC.encode(prompt)) > BUDGET:\n        raise ValueError(f\"{template}: over the budget of {BUDGET} tokens\")\n    return prompt\n",
       "note": "**Preencha o modelo com rigor, depois confira o tamanho.** Um prompt acima do orçamento é recusado aqui, antes de custar alguma coisa."
     }
   ]
@@ -91,7 +91,7 @@ def test_the_prompt_fits_the_budget():
 ```
 ana@dev:~/shop$ touch prompts/__init__.py && python -m pytest -q tests/test_prompts.py
 ....                                                                     [100%]
-4 passed in 0.82s
+4 passed in 1.87s
 ```
 
 **O `Template.substitute` levanta `KeyError` para um campo que falta**, onde a alternativa,

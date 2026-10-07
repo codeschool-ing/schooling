@@ -1,6 +1,6 @@
 ---
 title: One step at a time
-version: 1
+version: 2
 ---
 
 "Add comma support to the price parser" is a task with three parts: decide what it must do, write
@@ -15,29 +15,58 @@ one is built on it.**
 
 ## A plan, and no code
 
-ana starts again from the original `parse_price` and asks for the steps only:
+ana puts `parse_price` back as it was and asks for the steps only:
 
 ```
 ana@dev:~/shop$ git checkout -q shop/money.py && git status --short
 ?? comma.diff
 ?? error.txt
-?? lab/
 ?? prompts/
-ana@dev:~/shop$ assist ask "We need parse_price to accept a decimal comma. Do not write code yet: list the steps, with the tests first." --open shop/money.py CONVENTIONS.md 2>/dev/null
-1. Write the tests first, from what the change must do: '12,90' and '12,9' parse like '12.90' and '12.9', the existing dot keeps working, and '1.234,56' is refused, because a dot and a comma in one price leave no way to tell which is the decimal separator.
-2. Change parse_price to read a comma as the decimal separator, keeping the arithmetic in integers as CONVENTIONS.md requires.
-3. Run the whole suite, not only the new tests.
-
+?? scratch/
+ana@dev:~/shop$ python scratch/assist.py ask "We need parse_price to accept a decimal comma. Do not write code yet: list the steps, with the tests first." --open shop/money.py CONVENTIONS.md > /dev/null
+context sent (511 of 3000 tokens):
+    137  shop/money.py
+    374  CONVENTIONS.md
+---
+ana@dev:~/shop$ cat -n scratch/reply.txt
+     1	Here are the steps to update the `parse_price` function to accept a decimal comma:
+     2	
+     3	### Step 1: Write a test that fails without the change
+     4	
+     5	* Name: `test_parse_price_with_comma`
+     6	* Description: A price with a decimal comma should still be parsed correctly.
+     7	* Expected outcome: The test should fail because the `parse_price` function doesn't currently accept a decimal comma.
+     8	
+     9	### Step 2: Update the test to verify the correct behavior
+    10	
+    11	* Name: `test_parse_price_with_comma`
+    12	* Description: A price with a decimal comma should be parsed correctly.
+    13	* Expected outcome: The test should pass, verifying that the updated `parse_price` function correctly handles decimal commas.
+    14	
+    15	### Step 3: Update the `parse_price` function to accept a decimal comma
+    16	
+    17	* The updated function should check if the input string contains a comma, and if so, replace it with a dot before parsing the price.
+    18	* The updated function should also handle the case where the input string has a comma but no decimal part.
+    19	
+    20	### Step 4: Review the updated code and ensure it follows the convention rules
+    21	
+    22	* Verify that the updated `parse_price` function meets the rule that errors are exceptions with a name, and that no function is longer than about 40 lines.
+    23	* Verify that the updated code still follows the rule about text being produced by `shop.money.format_price` and parsed by `shop.money.parse_price`.
 ```
 
-The plan, written by the course, puts the tests first and names the case nobody had mentioned:
-`1.234,56`, where a dot and a comma in one price leave no way to tell which is the decimal separator.
-**A plan is cheap to read and cheap to correct.** If it had said "convert to float", that would have
-been one sentence to strike out rather than a diff to unpick.
+**A plan is cheap to read and cheap to correct**, and this one needs correcting. It does put a test
+first, and its step 3 is the right idea: replace the comma with a dot before parsing. But steps 1
+and 2 are the same test written twice, the test has a name and no cases, and step 4 is
+`CONVENTIONS.md` read back. Nothing in it says which inputs decide whether the change worked. That
+took ten seconds to read and costs one sentence to fix; the same gap found in a diff would have been
+a diff to unpick.
 
-## The tests, from the plan, by hand
+## The tests, by hand
 
-ana writes the tests herself, from the plan's list of cases, deciding the expected values:
+The cases are the part of the plan that matters, so ana writes them herself and decides the expected
+values. She adds one the plan never mentioned, because she knows how Brazilians write a thousand:
+`1.234,56` has a dot and a comma, and no rule can tell which of the two is the decimal separator, so
+it must be refused rather than guessed:
 
 ```python
 import pytest
@@ -55,37 +84,34 @@ def test_a_price_with_both_a_dot_and_a_comma_is_refused():
         parse_price("1.234,56")
 ```
 
-Run before the change, they should fail, and they do (lesson 5 section 05's last rule):
+Run before the change, they should fail, and they do (lesson 5 section 05's last rule). The one that
+passes is `12.90`, which the old function already read:
 
 ```
-ana@dev:~/shop$ python -m pytest -q tests/test_comma.py 2>&1 | tail -3
+ana@dev:~/shop$ python -m pytest -q tests/test_comma.py | tail -n 3
 FAILED tests/test_comma.py::test_a_comma_or_a_dot_is_the_decimal_separator[ 12,90 ]
 FAILED tests/test_comma.py::test_a_price_with_both_a_dot_and_a_comma_is_refused
-4 failed, 1 passed in 0.54s
+4 failed, 1 passed in 0.73s
 ```
 
 ## The change
 
-The diff from lesson 5 section 03, applied:
+The function from lesson 5 section 05 is still in `scratch/parse_price.py`. Swapped in, against the
+new tests:
 
 ```
-ana@dev:~/shop$ git apply comma.diff && python -m pytest -q tests/test_comma.py
-....F                                                                    [100%]
-=================================== FAILURES ===================================
-_____________ test_a_price_with_both_a_dot_and_a_comma_is_refused ______________
-
-    def test_a_price_with_both_a_dot_and_a_comma_is_refused():
->       with pytest.raises(ValueError):
-E       Failed: DID NOT RAISE ValueError
-
-tests/test_comma.py:12: Failed
+ana@dev:~/shop$ python scratch/swap.py shop/money.py scratch/parse_price.py && python -m pytest -q tests/test_comma.py | tail -n 3
+swap: parse_price replaced in shop/money.py
 =========================== short test summary info ============================
-FAILED tests/test_comma.py::test_a_price_with_both_a_dot_and_a_comma_is_refused
-1 failed, 4 passed in 0.52s
+FAILED tests/test_comma.py::test_a_comma_or_a_dot_is_the_decimal_separator[12.90]
+1 failed, 4 passed in 0.71s
 ```
 
-Four of five. The comma works, the dot still works, and `1.234,56` is accepted when the plan said it
-must be refused. The one-line diff turns the comma into a dot and splits on the first dot, so it
-reads `1.234,56` as one unit and twenty-three cents, quietly. **The test written from the plan caught
-what the diff written from the error did not consider.** That is the value of the order: the
-requirement existed, as a test, before the code that had to meet it.
+Four of five, and the one that fails is the dot, as the project's own test already said. **One of
+the four passes for the wrong reason.** `1.234,56` is refused, as the test requires, but only because
+the function splits it at the comma and `int("1.234")` happens to fail; nothing in it decided that a
+price with both separators is ambiguous. A test checks what happens, not why, which is one more
+reason to read a change that passes.
+
+The tests now exist before the code that has to meet them, and they say exactly what is wrong.
+Lesson 5 section 06 sends that back.

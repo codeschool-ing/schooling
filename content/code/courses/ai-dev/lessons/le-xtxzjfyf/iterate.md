@@ -1,6 +1,6 @@
 ---
 title: Feeding back the evidence
-version: 1
+version: 2
 ---
 
 The first answer is rarely the last one, and the useful question is what to send back. "That's
@@ -10,65 +10,133 @@ printed them. It is the same rule as lesson 5 section 03, applied to the second 
 
 ## The failure, verbatim
 
-```
-ana@dev:~/shop$ python -m pytest -q tests/test_comma.py 2>&1 | grep -A3 "def test_a_price_with_both" | head -4; python -m pytest -q tests/test_comma.py 2>&1 | tail -2 > failure.txt
-    def test_a_price_with_both_a_dot_and_a_comma_is_refused():
->       with pytest.raises(ValueError):
-E       Failed: DID NOT RAISE ValueError
+`--tb=line` makes pytest print each failure as one line, which is short enough to send:
 
 ```
+ana@dev:~/shop$ python -m pytest -q --tb=line tests/test_comma.py > failure.txt; cat failure.txt
+.F...                                                                    [100%]
+=================================== FAILURES ===================================
+E   ValueError: invalid literal for int() with base 10: '12.90'
+/home/ana/shop/shop/money.py:8: ValueError: invalid literal for int() with base 10: '12.90'
+=========================== short test summary info ============================
+FAILED tests/test_comma.py::test_a_comma_or_a_dot_is_the_decimal_separator[12.90]
+1 failed, 4 passed in 0.72s
+```
 
-ana sends the failure back with the requirement it breaks, stated once, and asks for a diff against
-the file as it is now, since the first diff has been applied:
+## Three rounds
+
+Each round sends the prompt, the failure and the current code, swaps the reply in and runs the
+whole suite, writing the new failures to `failure.txt` for the next round. ana gives it three
+rounds and stops at the first that passes:
 
 ```
-ana@dev:~/shop$ assist ask "Your change to parse_price fails this test, which must pass: parse_price(\"1.234,56\") must raise ValueError. pytest says: $(cat failure.txt). Reply with a unified diff against the current shop/money.py." --open shop/money.py tests/test_comma.py > second.diff
-context sent (238 of 3000 tokens):
-    141  shop/money.py
+ana@dev:~/shop$ python scratch/assist.py ask "$(cat prompts/comma.md) The parse_price in shop/money.py below fails these tests, which must pass: $(cat failure.txt)" --open shop/money.py tests/test_comma.py CONVENTIONS.md --write scratch/parse_price.py > /dev/null
+context sent (608 of 3000 tokens):
+    137  shop/money.py
      97  tests/test_comma.py
+    374  CONVENTIONS.md
 ---
-ana@dev:~/shop$ cat second.diff
-diff --git a/shop/money.py b/shop/money.py
-index 3eb6322..b9a7ed0 100644
---- a/shop/money.py
-+++ b/shop/money.py
-@@ -2,8 +2,11 @@
- 
- 
- def parse_price(text: str) -> int:
--    """Turn a price as people write it into cents: '12.90' -> 1290."""
--    units, _, cents = text.strip().replace(",", ".").partition(".")
-+    """Turn a price as people write it into cents: '12.90' or '12,90' -> 1290."""
-+    text = text.strip().replace(",", ".")
-+    units, _, cents = text.partition(".")
-+    if not units.lstrip("-").isdigit() or not (cents == "" or cents.isdigit()) or len(cents) > 2:
-+        raise ValueError(f"not a price: {text!r}")
-     cents = (cents + "00")[:2]
-     return int(units) * 100 + int(cents)
- 
-
+ana@dev:~/shop$ cat scratch/parse_price.py
+def parse_price(text: str) -> int:
+    """Turn a price as people write it into cents: '12,90' -> 1290."""
+    if ',' in text and '.' in text:
+        raise ValueError("Invalid decimal separator")
+    units, _, cents = text.strip().partition(",")
+    cents = (cents + "00")[:2]
+    return int(units) * 100 + int(cents)
+ana@dev:~/shop$ python scratch/swap.py shop/money.py scratch/parse_price.py && python -m pytest -q --tb=line > failure.txt; tail -n 3 failure.txt
+swap: parse_price replaced in shop/money.py
+FAILED tests/test_comma.py::test_a_comma_or_a_dot_is_the_decimal_separator[12.90]
+FAILED tests/test_money.py::test_parse_price - ValueError: invalid literal fo...
+2 failed, 11 passed in 0.70s
 ```
 
-The second diff, written by the course, keeps the comma handling and adds the check the plan
-asked for: units of digits only, cents of at most two digits, otherwise `ValueError`. Applied, with
-the whole suite run, not just the new file:
+The first round added something real: a price with both a comma and a dot now raises `ValueError`
+on purpose, which is what the test of `1.234,56` meant. It still splits at the comma, so `12.90`
+fails as before, in the new test and in the old one. Rounds two and three:
 
 ```
-ana@dev:~/shop$ git apply second.diff && python -m pytest -q
+ana@dev:~/shop$ python scratch/assist.py ask "$(cat prompts/comma.md) The parse_price in shop/money.py below fails these tests, which must pass: $(cat failure.txt)" --open shop/money.py tests/test_comma.py CONVENTIONS.md --write scratch/parse_price.py > /dev/null
+context sent (627 of 3000 tokens):
+    156  shop/money.py
+     97  tests/test_comma.py
+    374  CONVENTIONS.md
+---
+ana@dev:~/shop$ cat scratch/parse_price.py
+def parse_price(text: str) -> int:
+    """Turn a price as people write it into cents: '12,90' -> 1290."""
+    if ',' in text and '.' in text:
+        raise ValueError("Invalid decimal separator")
+    units, _, cents = text.strip().partition(",")
+    cents = (cents + "00")[:2]
+    return int(units) * 100 + int(cents)
+ana@dev:~/shop$ python scratch/swap.py shop/money.py scratch/parse_price.py && python -m pytest -q --tb=line > failure.txt; tail -n 3 failure.txt
+swap: parse_price replaced in shop/money.py
+FAILED tests/test_comma.py::test_a_comma_or_a_dot_is_the_decimal_separator[12.90]
+FAILED tests/test_money.py::test_parse_price - ValueError: invalid literal fo...
+2 failed, 11 passed in 0.73s
+ana@dev:~/shop$ python scratch/assist.py ask "$(cat prompts/comma.md) The parse_price in shop/money.py below fails these tests, which must pass: $(cat failure.txt)" --open shop/money.py tests/test_comma.py CONVENTIONS.md --write scratch/parse_price.py > /dev/null
+context sent (627 of 3000 tokens):
+    156  shop/money.py
+     97  tests/test_comma.py
+    374  CONVENTIONS.md
+---
+ana@dev:~/shop$ cat scratch/parse_price.py
+def parse_price(text: str) -> int:
+    """Turn a price as people write it into cents: '12,90' -> 1290."""
+    if ',' in text and '.' in text:
+        raise ValueError("Invalid decimal separator")
+    units, _, cents = text.strip().partition(",")
+    cents = (cents + "00")[:2]
+    return int(units) * 100 + int(cents)
+ana@dev:~/shop$ python scratch/swap.py shop/money.py scratch/parse_price.py && python -m pytest -q --tb=line > failure.txt; tail -n 3 failure.txt
+swap: parse_price replaced in shop/money.py
+FAILED tests/test_comma.py::test_a_comma_or_a_dot_is_the_decimal_separator[12.90]
+FAILED tests/test_money.py::test_parse_price - ValueError: invalid literal fo...
+2 failed, 11 passed in 0.71s
+```
+
+**The same function, character for character, three times.** Given the code it had written and the
+two tests it broke, the model returned its own code unchanged. More rounds would not have helped.
+The evidence was all in the request, and the model did not act on it. A model of three billion
+parameters gives out at this kind of step sooner than a large one, and when it does, the next move
+is yours rather than another round.
+
+## By hand
+
+ana stops, as the first rule below says, and writes the function herself. It is eight lines, and the
+first round's idea of refusing a price with both separators is worth keeping:
+
+```python
+def parse_price(text: str) -> int:
+    """Turn a price as people write it into cents: '12.90' or '12,90' -> 1290."""
+    text = text.strip()
+    if "." in text and "," in text:
+        raise ValueError(f"a dot and a comma in one price: {text!r}")
+    units, _, cents = text.replace(",", ".").partition(".")
+    cents = (cents + "00")[:2]
+    return int(units) * 100 + int(cents)
+```
+
+```
+ana@dev:~/shop$ git checkout -q shop/money.py && python scratch/swap.py shop/money.py scratch/parse_price.py && python -m pytest -q
+swap: parse_price replaced in shop/money.py
 .............                                                            [100%]
-13 passed in 0.55s
+13 passed in 0.69s
 ```
 
-Thirteen tests: the eight the project had and the five new ones.
+Thirteen tests: the eight the project had and the five new ones. The tests she wrote in lesson 5
+section 06 judged her code the same way they judged the model's, which is what makes them worth
+writing first: they do not care who wrote the change.
 
 ## When to stop iterating
 
 - **When the tests pass**, which is why they were written first. Without them, "done" is a feeling.
 - **When the same failure comes back twice.** A model that cannot fix something on the second try,
-  given the evidence, rarely fixes it on the fifth. The problem is usually missing context (a file it
-  has not seen) or a requirement that contradicts another. Read the code yourself, or change what
+  given the evidence, rarely fixes it on the fifth; above, it did not even change its answer. The problem
+  is usually missing context (a file it has not seen) or a requirement that contradicts another. Read the code yourself, or change what
   you send.
-- **When the diffs grow.** A fix that touches more on each round is drifting away from the problem.
+- **When the changes grow.** A fix that touches more on each round is drifting away from the problem.
   Revert to the last good state and ask a narrower question.
 
 Each round is a request, and lesson 2 section 06 applies: a conversation that carries every
