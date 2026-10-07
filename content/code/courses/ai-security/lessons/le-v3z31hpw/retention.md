@@ -1,6 +1,6 @@
 ---
 title: A retention limit is a job that runs
-version: 1
+version: 2
 ---
 
 Tarefa's policy is in `retention.json`: the raw text for 30 days, the redacted text for 180, the
@@ -10,8 +10,77 @@ number. Thirty days for the raw text is a bet that a client who received a bad a
 within a month. A company whose disputes take ninety days to arrive needs a longer raw tier and a
 stronger reason to keep it.
 
-A limit written in a document does nothing on its own. Here is what `~/guard` looks like when the
-policy has been written down and nothing has ever applied it:
+A limit written in a document does nothing on its own. The job that applies it reads the policy and a
+second file, `holds.json`, which the end of this section explains; paste it now:
+
+```sh
+cat > ~/guard/holds.json <<'EOF'
+[
+ {"file": "raw/2026-08-14.jsonl", "case": "INC-2208", "until": "2026-12-31",
+  "reason": "a client asking for a freelancer's address and phone; kept for the safety team's investigation"}
+]
+EOF
+```
+
+And save the job as `~/guard/tools/sweep.py`:
+
+```python
+# sweep.py: the retention policy, applied to logs/.
+#
+#   guard sweep [--now YYYY-MM-DD] [--dry-run | --check]
+#
+# Every file older than its tier's limit in retention.json is deleted, unless
+# holds.json keeps it until a date that has not passed. --dry-run prints what
+# would go; --check prints what is overdue and exits 1 if anything is.
+import argparse
+import datetime as dt
+import json
+import os
+import sys
+
+HOME = os.path.expanduser("~/guard/")
+p = argparse.ArgumentParser(prog="guard sweep")
+p.add_argument("--now")
+g = p.add_mutually_exclusive_group()
+g.add_argument("--dry-run", action="store_true")
+g.add_argument("--check", action="store_true")
+a = p.parse_args()
+
+with open(HOME + "retention.json") as f:
+    policy = json.load(f)
+with open(HOME + "holds.json") as f:
+    holds = {h["file"]: h for h in json.load(f)}
+now = dt.date.fromisoformat(a.now) if a.now else dt.date.today()
+
+print("policy: " + ", ".join("%s %d days" % (t, policy[t]["days"]) for t in policy))
+gone = kept = late = 0
+for tier, rule in policy.items():
+    folder = HOME + "logs/" + tier
+    for name in sorted(os.listdir(folder)):
+        rel = tier + "/" + name
+        age = (now - dt.date.fromisoformat(name.split(".")[0])).days
+        if age <= rule["days"]:
+            continue
+        hold = holds.get(rel)
+        if hold and dt.date.fromisoformat(hold["until"]) >= now:
+            print("%-27s %4d days  KEEP    hold %s until %s" % (rel, age, hold["case"], hold["until"]))
+            kept += 1
+        elif a.check:
+            print("%-27s %4d days  OVERDUE limit %d" % (rel, age, rule["days"]))
+            late += 1
+        else:
+            print("%-27s %4d days  %s" % (rel, age, "would delete" if a.dry_run else "deleted"))
+            if not a.dry_run:
+                os.remove(os.path.join(folder, name))
+            gone += 1
+if a.check:
+    print("%d file(s) past their limit, %d kept by a hold" % (late, kept))
+    sys.exit(1 if late else 0)
+print("%s%d file(s) %s, %d kept by a hold" % ("dry run: " if a.dry_run else "", gone,
+                                            "would be deleted" if a.dry_run else "deleted", kept))
+```
+
+Here is what the logs look like when the policy has been written down and nothing has ever applied it:
 
 ```
 ana@lab:~/guard$ guard sweep --now 2026-09-30 --check; echo "exit $?"

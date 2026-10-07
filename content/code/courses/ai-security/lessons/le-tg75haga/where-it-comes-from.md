@@ -1,6 +1,6 @@
 ---
 title: Bias arrives with the data, and leaving out a column does not stop it
-version: 1
+version: 2
 ---
 
 The first fix most teams reach for is to delete the sensitive column: if the system never sees
@@ -9,8 +9,29 @@ gender, race or where somebody comes from, the reasoning goes, it cannot discrim
 correlates with something. This section shows it happening in three numbers.
 
 Tarefa's shortlist feature ranks the freelancers who apply to a job and puts the best at the top of
-what the client sees. The lab's version reads four fields from each profile. The profiles were
-written by the course:
+what the client sees. The version in this lesson reads four fields from each profile. Sixteen
+profiles, written by the course for people it invented:
+
+```sh
+cat > ~/guard/data/profiles.jsonl <<'EOF'
+{"applicant": "fr-0101", "region": "Sudeste", "cep": "04538-133", "rating": 4.6, "jobs": 22}
+{"applicant": "fr-0102", "region": "Sudeste", "cep": "20040-020", "rating": 4.2, "jobs": 10}
+{"applicant": "fr-0103", "region": "Sudeste", "cep": "30130-010", "rating": 4.9, "jobs": 5}
+{"applicant": "fr-0104", "region": "Sudeste", "cep": "01310-100", "rating": 3.8, "jobs": 30}
+{"applicant": "fr-0105", "region": "Sudeste", "cep": "22071-900", "rating": 4.4, "jobs": 2}
+{"applicant": "fr-0106", "region": "Sudeste", "cep": "13010-111", "rating": 4.0, "jobs": 12}
+{"applicant": "fr-0107", "region": "Sudeste", "cep": "29010-120", "rating": 3.9, "jobs": 8}
+{"applicant": "fr-0108", "region": "Sudeste", "cep": "05407-002", "rating": 4.7, "jobs": 40}
+{"applicant": "fr-0201", "region": "Nordeste", "cep": "50010-000", "rating": 4.8, "jobs": 15}
+{"applicant": "fr-0202", "region": "Nordeste", "cep": "40020-000", "rating": 4.3, "jobs": 12}
+{"applicant": "fr-0203", "region": "Nordeste", "cep": "60060-440", "rating": 4.9, "jobs": 25}
+{"applicant": "fr-0204", "region": "Nordeste", "cep": "57020-050", "rating": 4.5, "jobs": 20}
+{"applicant": "fr-0205", "region": "Nordeste", "cep": "59012-300", "rating": 3.9, "jobs": 6}
+{"applicant": "fr-0206", "region": "Nordeste", "cep": "64000-020", "rating": 4.6, "jobs": 9}
+{"applicant": "fr-0207", "region": "Nordeste", "cep": "49010-030", "rating": 4.1, "jobs": 30}
+{"applicant": "fr-0208", "region": "Nordeste", "cep": "58013-420", "rating": 4.7, "jobs": 44}
+EOF
+```
 
 ```
 ana@lab:~/guard$ head -4 data/profiles.jsonl
@@ -20,10 +41,17 @@ ana@lab:~/guard$ head -4 data/profiles.jsonl
 {"applicant": "fr-0104", "region": "Sudeste", "cep": "01310-100", "rating": 3.8, "jobs": 30}
 ```
 
-The `region` field is in the file so that this lesson can measure by it. The scorer never reads it:
+The `region` field is in the file so that this lesson can measure by it. The scorer never reads it.
+Save it as `~/guard/tools/standin.py`:
 
-```
-ana@lab:~/guard$ sed -n '/^THRESHOLD/,$p' guardlab/standin.py
+```python
+# standin.py: THE STAND-IN SCORER. It is not a model and it learned nothing.
+#
+# Four lines of arithmetic, written by the course to behave the way a model
+# trained on Tarefa's past hires plausibly would: a bonus for a CEP that
+# starts with 0, 1, 2 or 3, the postcodes of São Paulo, Rio de Janeiro,
+# Espírito Santo and Minas Gerais. It never reads the `region` field. score.py
+# and counterfactual.py import it; it prints nothing on its own.
 THRESHOLD = 6.0
 
 
@@ -41,6 +69,33 @@ The stand-in states the result in one line: a bonus for a CEP that starts with 0
 covers São Paulo, Rio de Janeiro, Espírito Santo and Minas Gerais. A real model would not write it
 down where anybody could read it, which is why the rest of this lesson measures instead of reading
 code.
+
+The program that runs it over a file of profiles is `~/guard/tools/score.py`:
+
+```python
+# score.py: the stand-in scorer over a file of profiles.
+#
+#   guard score FILE
+#
+# FILE has one profile per line, as JSON. Every profile scoring at least the
+# threshold is shortlisted.
+import json
+import sys
+
+from standin import THRESHOLD, score
+
+with open(sys.argv[1], encoding="utf-8") as f:
+    profiles = [json.loads(line) for line in f if line.strip()]
+
+print("%-8s %-9s %-10s %6s %4s  %5s  %s" % (
+    "who", "region", "cep", "rating", "jobs", "score", "shortlisted"))
+for p in profiles:
+    s = score(p)
+    print("%-8s %-9s %-10s %6.1f %4d  %5.2f  %s" % (
+        p["applicant"], p["region"], p["cep"], p["rating"], p["jobs"], s,
+        "yes" if s >= THRESHOLD else "no"))
+print("threshold %.1f" % THRESHOLD)
+```
 
 ```
 ana@lab:~/guard$ guard score data/profiles.jsonl

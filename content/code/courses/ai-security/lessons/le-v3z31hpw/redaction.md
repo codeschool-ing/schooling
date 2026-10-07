@@ -1,16 +1,73 @@
 ---
 title: Redacting before the record is written
-version: 1
+version: 2
 ---
 
 **Redaction belongs on the way in, before the record reaches any store.** Redacting a log after it
 has been written leaves a window in which the unredacted copy exists, and in that window it is
 backed up, shipped to a log vendor, indexed for search and read by whoever was debugging. Each of
-those is a copy the later redaction never reaches. In `~/guard`, the redacted tier is made by the
-same function `guard redact` calls, at the moment the record is written.
+those is a copy the later redaction never reaches. In `~/guard`, `tiers.py` makes the redacted tier
+with the same function `guard redact` calls, and in a real application that call happens at the moment
+the record is written.
 
-Before redacting anything, measure what is there. `guard scan` runs five detectors over the text
-of every record, both the prompt and the output:
+Before redacting anything, measure what is there. `guard scan` runs the five detectors of
+`detect.py` over the text of every record, both the prompt and the output. Save it as
+`~/guard/tools/scan.py`:
+
+```python
+# scan.py: how many records in a log hold personal data or a secret, by kind.
+#
+#   guard scan [--show] [--strict] PATH...
+#
+# PATH is a log file or a directory of them. Both the prompt and the output
+# of every record are read. --show lists every match and what was decided:
+# redact, or LEAVE for a shape whose check digits are wrong.
+import argparse
+import json
+import os
+from collections import Counter
+
+from detect import KINDS, find
+
+p = argparse.ArgumentParser(prog="guard scan")
+p.add_argument("paths", nargs="+")
+p.add_argument("--show", action="store_true")
+p.add_argument("--strict", action="store_true")
+a = p.parse_args()
+
+files = []
+for path in a.paths:
+    if os.path.isdir(path):
+        files += sorted(os.path.join(path, n) for n in os.listdir(path) if n.endswith(".jsonl"))
+    else:
+        files.append(path)
+
+held, shaped, total, hit = Counter(), Counter(), 0, 0
+for name in files:
+    with open(name, encoding="utf-8") as f:
+        for rec in map(json.loads, f):
+            total += 1
+            kinds, rejected = set(), set()
+            for field in ("prompt", "output"):
+                for kind, x, y, ok in find(rec[field], a.strict):
+                    (kinds if ok else rejected).add(kind)
+                    if a.show:
+                        print("%s  %-6s  %-6s  %-8s %s" % (rec["request"], field, kind,
+                                                          "redact" if ok else "LEAVE", rec[field][x:y]))
+            held.update(kinds)
+            shaped.update(rejected)
+            hit += bool(kinds)
+if a.show:
+    print()
+print("%d records in %d files" % (total, len(files)))
+for kind in KINDS:
+    line = "  %-7s %2d records" % (kind, held[kind])
+    if shaped[kind]:
+        line += "   (%d more %s-shaped, check digits wrong)" % (
+            shaped[kind], kind.upper() if kind == "cpf" else kind)
+    print(line)
+print("%d of %d records hold at least one" % (hit, total))
+```
 
 ```
 ana@lab:~/guard$ guard scan logs/raw

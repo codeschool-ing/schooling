@@ -1,14 +1,15 @@
 ---
 title: Consertar uma diferença abre outra
-version: 1
+version: 2
 ---
 
 O conserto óbvio para uma razão de seleção de 0.62 é pré-selecionar mais candidatos do Nordeste até as
 taxas baterem. O `data/shortlist-v2.csv` é a lista da Tarefa depois dessa mudança: um limiar mais baixo
 para o Nordeste, escolhido para que a mesma parcela de cada região seja pré-selecionada. Como antes,
-as contagens foram escritas pelo curso.
+as contagens foram escritas pelo curso, e o `shortlist.py` escreve a tabela.
 
 ```
+ana@lab:~/guard$ guard shortlist v2 > data/shortlist-v2.csv
 ana@lab:~/guard$ guard fairness data/shortlist-v2.csv --group region
 region        n   base  selected    TPR    FPR  precision
 Sudeste     200   0.60      0.56   0.80   0.20       0.86

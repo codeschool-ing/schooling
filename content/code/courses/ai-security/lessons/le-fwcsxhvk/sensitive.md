@@ -1,6 +1,6 @@
 ---
 title: Sensitive data, and why the tool stops instead of guessing
-version: 1
+version: 2
 ---
 
 Art. 5, II of the LGPD names a short list of personal data that is **sensitive**: racial or ethnic
@@ -37,12 +37,31 @@ With `--sensitive remove`, the sentence is replaced and the rest of the message 
 
 The marker is deliberate. Deleting the sentence without a trace would leave the model reading a
 freelancer who is late and offers no reason, and the summary would be unfair to her. The marker
-tells the model that a reason was given, and the reply the course wrote for this lesson says *"a
-health matter stopped the work"*, which is all the agent needs.
+tells the model that a reason was given. **Whether the model uses it is another matter**: the summary
+`llama3.2:3b` wrote in the previous section says only that she *"failed to deliver the work on
+time"*, which is exactly the unfair summary the marker was there to prevent. The marker makes a fair
+summary possible, and a person still reads what the model made of it.
 
 ## The word list sees words
 
-The check behind the hold is a list of words per category, and it is exactly as good as the list:
+The check behind the hold is a list of words per category, in `minimise.py`, and it is exactly as good
+as the list. `guard sensitive` shows what it sees in one text. Save it as
+`~/guard/tools/sensitive.py`:
+
+```python
+# sensitive.py: what the sensitive-data word list of minimise.py sees in a text.
+#
+#   guard sensitive TEXT
+import sys
+
+from minimise import sensitive_terms
+
+found = sensitive_terms(sys.argv[1])
+if not found:
+    print("nothing found")
+for cat, words in found.items():
+    print("%s: %s" % (cat, ", ".join(words)))
+```
 
 ```
 ana@lab:~/guard$ guard sensitive 'I was in hospital for a week with a kidney infection'
