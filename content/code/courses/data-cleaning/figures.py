@@ -1160,6 +1160,133 @@ def l14_calendar(lang):
     return fig, cap[lang]
 
 
+# ----------------------------------------------------------------- lesson 15
+
+def delivered_orders():
+    """The delivered orders as lesson 15 reads them: times in São Paulo, decided totals."""
+    truth = rows('truth/orders.csv')
+    fixed = {r['order_id']: int(r['value']) for r in truth if r['what'] == 'typo-x10'}
+    corporate = {r['order_id'] for r in truth if r['what'] == 'corporate'}
+    out, seen = [], set()
+    for r in rows('raw/orders.csv'):
+        key = tuple(r.values())
+        if key in seen or r['status'] != 'delivered':
+            continue
+        seen.add(key)
+        if r['channel'] == 'site':
+            placed = dt.datetime.strptime(r['ordered_at'], '%Y-%m-%dT%H:%M:%SZ') - dt.timedelta(hours=3)
+        else:
+            placed = dt.datetime.strptime(r['ordered_at'], '%Y-%m-%d %H:%M:%S')
+        cents = max(fixed.get(r['order_id'], round(float(r['total']) * 100)), 0)
+        out.append({'id': r['order_id'], 'placed': placed, 'cents': cents,
+                    'corporate': r['order_id'] in corporate})
+    return out
+
+
+@figure('l15-hours', 15)
+def l15_hours(lang):
+    c = collections.Counter(o['placed'].hour for o in delivered_orders())
+    hours = sorted(c)
+    fig = Fig('l15-hours', 720, 290, {
+        'en': 'A bar chart of delivered orders by the hour they were placed, from 7 to 22 o\'clock. The bars rise '
+              'to a plateau at 10 and 11, dip after lunch, and rise again to the tallest bar at 19 with '
+              f'{c[19]:,} orders. The mean hour, 15, falls in the dip between the two waves.',
+        'pt': 'Um gráfico de barras dos pedidos entregues pela hora em que foram feitos, das 7 às 22 horas. As '
+              'barras sobem até um platô às 10 e 11, caem depois do almoço e sobem de novo até a barra mais alta, '
+              f'às 19, com {num(lang, c[19], 0)} pedidos. A hora média, 15, cai no vale entre as duas ondas.'}[lang])
+    p = Plot(fig, 70, 40, 690, 230, hours[0] - 0.5, hours[-1] + 0.5, 0, max(c.values()) * 1.1)
+    p.bars([h - 0.5 for h in hours] + [hours[-1] + 0.5], [c[h] for h in hours])
+    p.xaxis(hours, fmt=str, label={'en': 'hour of the day', 'pt': 'hora do dia'}[lang])
+    p.yaxis([0, 1000, 2000], fmt=lambda v: num(lang, v, 0), label={'en': 'orders', 'pt': 'pedidos'}[lang])
+    p.vline(15, label={'en': 'mean hour', 'pt': 'hora média'}[lang], top=52)
+    cap = {'en': 'Two waves, before lunch and after dinner. The average hour is arithmetically right and describes '
+                 'neither of them.',
+           'pt': 'Duas ondas, antes do almoço e depois do jantar. A hora média está certa na aritmética e não '
+                 'descreve nenhuma das duas.'}
+    return fig, cap[lang]
+
+
+@figure('l15-months', 15)
+def l15_months(lang):
+    hh, corp = collections.Counter(), collections.Counter()
+    for o in delivered_orders():
+        m = o['placed'].month
+        (corp if o['corporate'] else hh)[m] += o['cents'] / 100
+    months = list(range(1, 13))
+    names = {'en': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+             'pt': ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']}[lang]
+    top = max(hh[m] + corp[m] for m in months)
+    fig = Fig('l15-months', 720, 300, {
+        'en': 'A stacked bar chart of revenue from delivered orders by month in 2025. Household revenue grows from '
+              f'about R$ {hh[1] / 1000:.0f} thousand in January to R$ {hh[11] / 1000:.0f} thousand in November and '
+              f'R$ {hh[12] / 1000:.0f} thousand in December; the corporate orders, only in December, add about '
+              f'R$ {corp[12] / 1000:.0f} thousand on top.',
+        'pt': 'Um gráfico de barras empilhadas da receita dos pedidos entregues por mês em 2025. A receita das '
+              f'famílias cresce de uns R$ {hh[1] / 1000:.0f} mil em janeiro para R$ {hh[11] / 1000:.0f} mil em '
+              f'novembro e R$ {hh[12] / 1000:.0f} mil em dezembro; os pedidos corporativos, só em dezembro, somam '
+              f'uns R$ {corp[12] / 1000:.0f} mil por cima.'}[lang])
+    p = Plot(fig, 80, 40, 690, 230, 0.5, 12.5, 0, top * 1.08)
+    for m in months:
+        x0, x1 = p.sx(m - 0.36), p.sx(m + 0.36)
+        fig.rect(x0, p.sy(hh[m]), x1 - x0, p.y1 - p.sy(hh[m]), stroke='--phosphor', fill='--phosphor-dim', rx=0,
+                 width=1)
+        if corp[m]:
+            fig.rect(x0, p.sy(hh[m] + corp[m]), x1 - x0, p.sy(hh[m]) - p.sy(hh[m] + corp[m]), stroke='--amber',
+                     fill='--panel', rx=0, width=1.4)
+    p.yaxis([0, 100000, 200000, 300000, 400000], fmt=lambda v: num(lang, v / 1000, 0) + 'k',
+            label={'en': 'revenue, R$', 'pt': 'receita, R$'}[lang], grid=False)
+    fig.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim', width=1.2)
+    for m in months:
+        fig.text(p.sx(m), p.y1 + 14, names[m - 1], size=9.5, fill='--paper-dim')
+    ly = 278
+    fig.rect(90, ly - 6, 12, 12, stroke='--phosphor', fill='--phosphor-dim', rx=0, width=1)
+    fig.text(108, ly, {'en': 'households', 'pt': 'famílias'}[lang], size=10.5, anchor='start')
+    fig.rect(220, ly - 6, 12, 12, stroke='--amber', fill='--panel', rx=0, width=1.4)
+    fig.text(238, ly, {'en': 'corporate', 'pt': 'corporativos'}[lang], size=10.5, anchor='start')
+    cap = {'en': 'December is two stories, and the flag from lesson 9 is what keeps them apart.',
+           'pt': 'Dezembro são duas histórias, e a marca da aula 9 é o que as mantém separadas.'}
+    return fig, cap[lang]
+
+
+@figure('l15-sugar', 15)
+def l15_sugar(lang):
+    month = {o['id']: o['placed'].month for o in delivered_orders()}
+    prices = collections.defaultdict(set)
+    for r in rows('raw/order_items.csv'):
+        if r['product_code'].zfill(5) == '00343' and r['order_id'] in month:
+            prices[month[r['order_id']]].add(float(r['unit_price']))
+    months = list(range(1, 13))
+    level = {m: max(prices[m]) for m in months}
+    names = {'en': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+             'pt': ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']}[lang]
+    fig = Fig('l15-sugar', 720, 260, {
+        'en': f'A step chart of the price charged for a bag of sugar each month of 2025: R$ {level[1]:.2f} from '
+              f'January to June, then R$ {level[7]:.2f} from July to December, with no month in between.',
+        'pt': f'Um gráfico em degrau do preço cobrado por um pacote de açúcar em cada mês de 2025: R$ '
+              f'{num(lang, level[1], 2)} de janeiro a junho, depois R$ {num(lang, level[7], 2)} de julho a dezembro, '
+              'sem nenhum mês no meio.'}[lang])
+    p = Plot(fig, 80, 40, 690, 200, 0.5, 12.5, 0, 150)
+    d = ''
+    for m in months:
+        y = p.sy(level[m])
+        d += (f'M{p.sx(m - 0.5):.1f} {y:.1f}' if m == 1 else f' L{p.sx(m - 0.5):.1f} {y:.1f}') + \
+             f' L{p.sx(m + 0.5):.1f} {y:.1f}'
+    fig.path(d, stroke='--amber', width=2.4)
+    for m in months:
+        fig.circle(p.sx(m), p.sy(level[m]), 3.5, fill='--amber')
+    p.yaxis([0, 50, 100, 150], fmt=lambda v: str(int(v)), label={'en': 'price, R$', 'pt': 'preço, R$'}[lang])
+    fig.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim', width=1.2)
+    for m in months:
+        fig.text(p.sx(m), p.y1 + 14, names[m - 1], size=9.5, fill='--paper-dim')
+    fig.text(p.sx(3.5), p.sy(level[1]) - 14, num(lang, level[1], 2), size=10.5, mono=True)
+    fig.text(p.sx(9.5), p.sy(level[7]) + 16, num(lang, level[7], 2), size=10.5, mono=True)
+    cap = {'en': 'The catalogue typo of lesson 9, as a business user would first meet it: a product whose price '
+                 'jumped overnight.',
+           'pt': 'O erro de catálogo da aula 9, como alguém do negócio o encontraria primeiro: um produto cujo preço '
+                 'saltou da noite para o dia.'}
+    return fig, cap[lang]
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
