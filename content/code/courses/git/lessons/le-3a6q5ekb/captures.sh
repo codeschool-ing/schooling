@@ -12,11 +12,12 @@
 # directories it builds before it starts, which is why it wants a throwaway
 # account. `block NAME` marks where a transcript in the prose begins.
 #
-# What is STAGED rather than typed, and not shown in the lesson:
-# lesson 3's week of the bakery's site, rebuilt by the helper `c` with dates
-# and authors set through GIT_AUTHOR_* and GIT_COMMITTER_*; the edits that the
-# undo commands then undo, made with sed between the commands shown; and two
-# commits trying out colours, made the same way, for reset to take back.
+# Nothing the student types is staged any more. Lesson 3's week is the program
+# lesson 3 prints, and the edits the undo commands undo and the two colour
+# commits are the ```bash blocks this lesson prints, run by `given`.
+#
+# What is STAGED rather than typed: the date of each commit, and the author of
+# the revert, Bruno, so that the ids printed in the prose are reproducible.
 # Every line after a prompt is what the command printed.
 #
 # Recorded with git 2.43.0 on Ubuntu 24.04, TZ=America/Sao_Paulo.
@@ -71,24 +72,23 @@ bruno() { as 'Bruno Lima' 'bruno@example.com'; }
 c() { git add -A && git commit -q -m "$1"; }
 # Lesson 3's week, made by the program lesson 3 prints, read out of its page.
 fence "$lessons/le-5gv65sh1/the-week.md" 1 > ~/make-site.sh
-cd ~ && rm -rf ~/site && bash ~/make-site.sh && cd ~/site
 me; at '2026-09-18T15:30:00-03:00'
 
 
+cd ~ && given restore 1
 block restore-worktree
 at '2026-09-21T09:00:00-03:00'
-sed -i 's/0.90/9.00/' menu.html
+given restore 2
 show 'git diff --stat'
 show 'git restore menu.html'
 show 'git status --short'
 
 block restore-staged
-sed -i 's/2.50/2.60/' menu.html
+given restore 3
 show 'git add menu.html'
 show 'git status --short'
 show 'git restore --staged menu.html'
 show 'git status --short'
-git restore menu.html
 
 block restore-source
 show 'git restore --source=HEAD~3 menu.html'
@@ -104,17 +104,13 @@ show 'cat menu.html'
 
 block amend
 me; at '2026-09-21T11:05:00-03:00'
-sed -i 's/half past five/half past five, Monday to Saturday/' index.html
-git add index.html
+given reset-and-amend 1
 show 'git commit -m "Close on Sundys"'
 show 'git commit --amend -m "Close on Sundays"'
 show 'git log --oneline -2'
 
 block reset-soft
-at '2026-09-21T14:00:00-03:00'
-sed -i 's/darkorange/chocolate/' style.css; git add style.css; git commit -q -m 'Try a darker orange'
-at '2026-09-21T14:20:00-03:00'
-sed -i 's/chocolate/firebrick/' style.css; git add style.css; git commit -q -m 'Try red'
+given reset-and-amend 2 '2026-09-21T14:00:00-03:00' '2026-09-21T14:20:00-03:00'
 show 'git log --oneline -3'
 show 'git reset --soft HEAD~1'
 show 'git status --short'
