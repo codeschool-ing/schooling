@@ -1,6 +1,6 @@
 ---
 title: Memory in a table
-version: 1
+version: 2
 ---
 
 Recalling a turn needs the turns to be somewhere a search can reach. `memory.py` keeps them in a
@@ -9,7 +9,6 @@ table in the same database as the documents, one row per turn, embedded with the
 ```schooling-example
 {
   "language": "python",
-  "file": "memory.py",
   "parts": [
     {
       "code": "SCHEMA = \"\"\"\nCREATE TABLE IF NOT EXISTS memories (\n    id           bigserial PRIMARY KEY,\n    account      text NOT NULL,\n    conversation text NOT NULL,\n    turn         int NOT NULL,\n    text         text NOT NULL,\n    embedding    vector(384) NOT NULL,\n    created      timestamptz NOT NULL DEFAULT now()\n);\nCREATE INDEX IF NOT EXISTS memories_account ON memories (account);\n\"\"\"\nORDER = re.compile(r\"\\bMG-\\d{8}\\b\")\nconn.execute(SCHEMA)",

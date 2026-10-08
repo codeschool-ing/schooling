@@ -1,6 +1,6 @@
 ---
 title: One account at a time
-version: 1
+version: 2
 ---
 
 A memory table holds every customer's words in one place, and the only thing that keeps Rafael's
@@ -8,23 +8,37 @@ assistant from reading Beatriz's turns is a `WHERE account = %s` in each query. 
 function written once without it, the way it might be written in a hurry, or by a test that worked
 because the database only held one customer:
 
-```
-ana@lab:~/rag$ python careless.py "Rafael Lima"
-You are Rafael Lima. Your order number is MG-31770254 and MG-20481937.
+```schooling-example
+{
+  "language": "python",
+  "file": "careless.py",
+  "parts": [
+    {
+      "code": "import sys\n\nfrom memory import ORDER\nfrom search import conn\n\n# memory.state, written without the account.\nsaid = \" \".join(t for (t,) in conn.execute(\"SELECT text FROM memories ORDER BY turn\"))\norders = list(dict.fromkeys(ORDER.findall(said)))\nprint(f\"The customer is {sys.argv[1]}. The customer's order number is {' and '.join(orders)}.\")",
+      "note": "`memory.state` written the way it is easy to write it: every turn in the table, whoever said it."
+    }
+  ]
+}
 ```
 
-**Rafael is told that his order number is MG-31770254 and MG-20481937**, and the second one is
-Beatriz's. Nothing failed. The query returned rows, the sentence is well formed, a reply would quote
-it and cite it, and lesson 7's check would pass it, because the state says exactly that. The only
-symptom is a customer reading a stranger's order number, and on a platform where that number opens a
-page with an address on it, that is a personal data breach.
+```
+ana@vm:~/rag$ python careless.py "Rafael Lima"
+The customer is Rafael Lima. The customer's order number is MG-31770254 and MG-20481937.
+```
+
+**The state says Rafael's order number is MG-31770254 and MG-20481937**, and the second one is
+Beatriz's. Nothing failed. The query returned rows, the sentence is well formed, and it goes into
+every prompt of Rafael's conversation as source [1]: the model quoted the state unasked in Beatriz's
+turn 10, and a reply that quoted this one would cite it, and lesson 7's check would pass it, because
+the state says exactly that. The only symptom is a customer reading a stranger's order number, and
+on a platform where that number opens a page with an address on it, that is a personal data breach.
 
 With the account in the query, Rafael's own recall finds only his own turns:
 
 ```
-ana@lab:~/rag$ python recalled.py chat-b A-1002 4
+ana@vm:~/rag$ python recalled.py chat-b A-1002 4
 turn 4: Could you remind me of my order number?
-   0.495  turn 1: Hello, this is Rafael Lima. My order MG-31770254 has not arrived.
+   0.494  turn 1: Hello, this is Rafael Lima. My order MG-31770254 has not arrived.
    0.290  turn 3: I would prefer a refund rather than waiting for a new parcel.
 ```
 
