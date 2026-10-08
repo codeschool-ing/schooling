@@ -1,6 +1,6 @@
 ---
 title: What gets embedded
-version: 1
+version: 2
 ---
 
 Lesson 4 chose where to cut. Before a chunk becomes a vector there is one more choice, and it is
@@ -21,8 +21,25 @@ exactly the missing context, and it costs a dozen words. `header.py` embeds the 
 lesson 4 twice, once as text alone and once with the path on the line above, and runs the 26
 answerable questions against each:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "header.py",
+  "parts": [
+    {
+      "code": "import json\n\nfrom chunking import load, structured\nfrom vectors import embed\n\nquestions = [q for q in map(json.loads, open(\"data/eval.jsonl\")) if q[\"facts\"]]\nnorm = lambda t: \" \".join(t.split())\nqv = embed([q[\"question\"] for q in questions])",
+      "note": "The 26 answerable questions, embedded once, as in lesson 4's `compare.py`."
+    },
+    {
+      "code": "for size in (60, 120):\n    chunks = [(path, text) for _, body in load().values() for path, text in structured(body, size)]\n    for label, inputs in ((\"text only\", [t for _, t in chunks]),\n                          (\"path + text\", [p + \"\\n\" + t for p, t in chunks])):\n        scores = qv @ embed(inputs).T\n        found = sum(any(f in norm(chunks[i][1]) for i in s.argsort()[::-1][:3] for f in q[\"facts\"])\n                    for q, s in zip(questions, scores))\n        print(f\"structured {size:3}, {label:12} found {found}/{len(questions)}\")",
+      "note": "Each size embedded twice, as text alone and with the heading path on the line above. The facts are looked for in the text alone either way, so the path cannot be what is found."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python header.py
+
+```
+ana@vm:~/rag$ python header.py
 structured  60, text only    found 24/26
 structured  60, path + text  found 26/26
 structured 120, text only    found 25/26
@@ -50,8 +67,8 @@ print the path as a source header, once, instead of repeating it inside every ch
 chunk. The two are compared as they are, which works because the path is a few words beside a much
 longer text and moves the chunk's vector towards its topic rather than towards a format.
 
-**The same model, always.** A chunk embedded with `lab-minilm` can only be compared with a question
-embedded with `lab-minilm`. Vectors from two models live in different spaces, and comparing them
+**The same model, always.** A chunk embedded with `all-minilm` can only be compared with a question
+embedded with `all-minilm`. Vectors from two models live in different spaces, and comparing them
 produces numbers that look like similarities and mean nothing. The table in this lesson records the
 model beside every vector, and the check at the end of the lesson refuses an index with more than
 one.
@@ -62,6 +79,6 @@ The heading path is the cheapest form of what is sometimes called **contextual c
 more elaborate versions exist. One puts the document's title and a one-line summary of the document
 in front of every chunk. Another, which Anthropic published as *contextual retrieval*, has a language
 model write a sentence or two for each chunk explaining where it sits in the whole document, and
-embeds that with the chunk. Both need a model call per chunk at indexing time, which extract-1 cannot
-do usefully, and neither was run here. The measurement above is the argument for trying the cheap
+embeds that with the chunk. Both need a model call per chunk at indexing time, 137 of them for this corpus,
+and neither was run here. The measurement above is the argument for trying the cheap
 version first: on this corpus it closed the gap entirely.

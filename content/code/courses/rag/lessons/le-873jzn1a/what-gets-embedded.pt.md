@@ -1,6 +1,6 @@
 ---
 title: O que vira embedding
-version: 1
+version: 2
 ---
 
 A aula 4 escolheu onde cortar. Antes de um pedaço virar vetor há mais uma escolha, e é fácil fazê-la
@@ -20,8 +20,25 @@ exatamente o contexto que falta, e custa uma dúzia de palavras. O `header.py` g
 pedaços estruturados da aula 4 duas vezes, uma só com o texto e outra com o caminho na linha de cima, e
 roda as 26 perguntas com resposta contra cada um:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "header.py",
+  "parts": [
+    {
+      "code": "import json\n\nfrom chunking import load, structured\nfrom vectors import embed\n\nquestions = [q for q in map(json.loads, open(\"data/eval.jsonl\")) if q[\"facts\"]]\nnorm = lambda t: \" \".join(t.split())\nqv = embed([q[\"question\"] for q in questions])",
+      "note": "As 26 perguntas que têm resposta, com embedding gerado uma vez, como no `compare.py` da aula 4."
+    },
+    {
+      "code": "for size in (60, 120):\n    chunks = [(path, text) for _, body in load().values() for path, text in structured(body, size)]\n    for label, inputs in ((\"text only\", [t for _, t in chunks]),\n                          (\"path + text\", [p + \"\\n\" + t for p, t in chunks])):\n        scores = qv @ embed(inputs).T\n        found = sum(any(f in norm(chunks[i][1]) for i in s.argsort()[::-1][:3] for f in q[\"facts\"])\n                    for q, s in zip(questions, scores))\n        print(f\"structured {size:3}, {label:12} found {found}/{len(questions)}\")",
+      "note": "Cada tamanho vira embedding duas vezes, como texto sozinho e com o caminho de títulos na linha de cima. Os fatos são procurados só no texto nos dois casos, então não é o caminho que é achado."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python header.py
+
+```
+ana@vm:~/rag$ python header.py
 structured  60, text only    found 24/26
 structured  60, path + text  found 26/26
 structured 120, text only    found 25/26
@@ -49,8 +66,8 @@ imprimir o caminho como cabeçalho da fonte, uma vez, em vez de repeti-lo dentro
 duas são comparadas como são, o que funciona porque o caminho são algumas palavras ao lado de um texto
 bem mais longo, e move o vetor do pedaço na direção do assunto, não de um formato.
 
-**O mesmo modelo, sempre.** Um pedaço com embedding do `lab-minilm` só pode ser comparado com uma
-pergunta com embedding do `lab-minilm`. Vetores de dois modelos vivem em espaços diferentes, e
+**O mesmo modelo, sempre.** Um pedaço com embedding do `all-minilm` só pode ser comparado com uma
+pergunta com embedding do `all-minilm`. Vetores de dois modelos vivem em espaços diferentes, e
 compará-los produz números que parecem similaridades e não significam nada. A tabela desta aula registra
 o modelo ao lado de cada vetor, e a verificação no fim da aula recusa um índice com mais de um.
 
@@ -61,6 +78,5 @@ pedaço**. Existem duas versões mais elaboradas. Uma põe o título do document
 do documento na frente de cada pedaço. Outra, que a Anthropic publicou como *contextual retrieval*, faz
 um modelo de linguagem escrever uma ou duas frases para cada pedaço explicando onde ele fica no
 documento inteiro, e gera o embedding disso junto com o pedaço. As duas precisam de uma chamada de
-modelo por pedaço na indexação, que o extract-1 não consegue fazer de modo útil, e nenhuma foi rodada
-aqui. A medição acima é o argumento para tentar primeiro a versão barata: neste corpus ela fechou a
+modelo por pedaço na indexação, 137 delas para este corpus, e nenhuma foi rodada aqui. A medição acima é o argumento para tentar primeiro a versão barata: neste corpus ela fechou a
 diferença inteira.

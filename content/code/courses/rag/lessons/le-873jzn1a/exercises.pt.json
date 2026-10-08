@@ -76,24 +76,24 @@
     "unit": "requisições"
   },
   "ex-hvksd1ag": {
-    "prompt": "O labembed recusou a primeira requisição duas vezes com 429. Por que o ingest.py ainda gerou os 137 embeddings?",
-    "hint": "Quem tentou de novo?",
+    "prompt": "Apontado para uma porta em que nada escuta, o ingest.py imprimiu cinco linhas \"Retrying request\" e depois falhou. Quem escreveu essas linhas, e por que cinco?",
+    "hint": "Veja como o cliente é criado.",
     "choices": [
       {
-        "text": "O ingest.py captura o 429 e dorme um segundo",
+        "text": "O ingest.py, que captura todo erro e tenta cinco vezes",
         "why": "O ingest.py não tem tratamento de erro próprio."
       },
       {
-        "text": "O lote recusado foi pulado e gerado depois",
-        "why": "Nada foi pulado; a mesma requisição deu certo na nova tentativa."
+        "text": "O SDK, tentando de novo sozinho até max_retries=5",
+        "why": "Certo: seis tentativas ao todo, com as esperas quase dobrando, e um 429 de um provedor passa pelo mesmo laço."
       },
       {
-        "text": "O labgen guardou em cache os vetores da execução anterior",
-        "why": "O labgen repassa pedidos de embedding; não guarda nada em cache."
+        "text": "O Ollama, que repetiu a requisição internamente",
+        "why": "Nada escutava naquela porta; nenhum Ollama viu a requisição."
       },
       {
-        "text": "O SDK tentou de novo sozinho, dentro do max_retries",
-        "why": "Certo: três tentativas, e o programa nunca soube."
+        "text": "O PostgreSQL, repetindo a transação",
+        "why": "A falha foi na chamada de embedding, antes de qualquer coisa ser escrita."
       }
     ]
   },

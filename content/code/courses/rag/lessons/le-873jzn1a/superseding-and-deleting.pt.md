@@ -1,6 +1,6 @@
 ---
 title: Substituir e apagar
-version: 1
+version: 2
 ---
 
 As aulas 1 e 3 esbarraram o tempo todo no `returns-policy-2025`: o regulamento substituído, recuperado
@@ -14,10 +14,10 @@ O primeiro mantém o documento e registra que ele não vale mais. O cabeçalho d
 antigos:
 
 ```
-ana@lab:~/rag$ sed -i "s/^status: current$/status: superseded/" data/docs/gift-cards.md
-ana@lab:~/rag$ python ingest.py
+ana@vm:~/rag$ sed -i "s/^status: current$/status: superseded/" data/docs/gift-cards.md
+ana@vm:~/rag$ python ingest.py
 chunks: 137  embedded: 0  removed: 0  kept: 137
-ana@lab:~/rag$ psql -c "SELECT status, count(*) FROM chunks GROUP BY status"
+ana@vm:~/rag$ psql -c "SELECT status, count(*) FROM chunks GROUP BY status"
    status   | count 
 ------------+-------
  superseded |    12
@@ -42,10 +42,10 @@ O segundo remove o documento de vez. Quando um documento está errado, foi retir
 pessoais cuja exclusão alguém pediu, ele não deveria ser encontrável por ninguém:
 
 ```
-ana@lab:~/rag$ rm data/docs/returns-policy-2025.md
-ana@lab:~/rag$ python ingest.py
+ana@vm:~/rag$ rm data/docs/returns-policy-2025.md
+ana@vm:~/rag$ python ingest.py
 chunks: 130  embedded: 0  removed: 7  kept: 130
-ana@lab:~/rag$ psql -tc "SELECT count(*) FROM chunks WHERE doc_id = 'returns-policy-2025'"
+ana@vm:~/rag$ psql -tc "SELECT count(*) FROM chunks WHERE doc_id = 'returns-policy-2025'"
      0
 ```
 

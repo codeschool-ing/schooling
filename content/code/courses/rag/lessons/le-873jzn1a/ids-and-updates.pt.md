@@ -1,6 +1,6 @@
 ---
 title: Ids que barateiam a reindexação
-version: 1
+version: 2
 ---
 
 Documentos mudam um parágrafo de cada vez. Um pipeline que refaz o embedding do corpus inteiro sempre
@@ -32,7 +32,7 @@ SHA-256 do caminho e do texto do pedaço. Mesmo texto, mesmo id; uma palavra dif
 ## Rodando duas vezes
 
 ```
-ana@lab:~/rag$ python ingest.py
+ana@vm:~/rag$ python ingest.py
 chunks: 137  embedded: 0  removed: 0  kept: 137
 ```
 
@@ -46,8 +46,8 @@ Suponha que o financeiro encurte o prazo de reembolso. A frase do regulamento so
 cópia de trabalho do corpus da ana:
 
 ```
-ana@lab:~/rag$ sed -i "s/We refund within three working days/We refund within two working days/" data/docs/returns-policy.md
-ana@lab:~/rag$ python ingest.py
+ana@vm:~/rag$ sed -i "s/We refund within three working days/We refund within two working days/" data/docs/returns-policy.md
+ana@vm:~/rag$ python ingest.py
 chunks: 137  embedded: 1  removed: 1  kept: 136
 ```
 
