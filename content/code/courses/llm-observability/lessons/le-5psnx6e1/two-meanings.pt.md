@@ -1,6 +1,6 @@
 ---
 title: Dois sentidos de precisão e revocação
-version: 1
+version: 2
 ---
 
 **Precisão** e **revocação** (*precision* e *recall*) aparecem em dois lugares na avaliação de um
@@ -15,7 +15,7 @@ acrescenta a versão que os frameworks de avaliação relatam com os nomes **con
 **Sobre um detector.** Qualquer coisa que marca respostas como ruins é um detector: uma regra da aula
 8, um juiz da aula 9, um alerta da aula 16. Das respostas que ele marcou, quantas eram ruins: precisão.
 Das respostas que eram ruins, quantas ele marcou: revocação. A aula 10 deu a este curso o seu primeiro
-conjunto de respostas cuja qualidade se conhece, as sessenta com rótulos combinados, então agora dá
+conjunto de respostas cuja qualidade se conhece, as quarenta e oito com rótulos combinados, então agora dá
 para dar nota a um detector.
 
 Os dois sentidos têm a mesma forma: um conjunto escolhido, um conjunto que deveria ter sido escolhido,

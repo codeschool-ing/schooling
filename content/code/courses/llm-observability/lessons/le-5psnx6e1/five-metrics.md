@@ -1,6 +1,6 @@
 ---
 title: Five metrics, each with its definition
-version: 1
+version: 2
 ---
 
 Evaluation frameworks for retrieval-augmented generation report a family of metrics with similar names.
@@ -21,9 +21,7 @@ The two that need none, faithfulness and relevance, can run on production traffi
 
 `metrics.py` computes all five for a run, each in a function a few lines long whose docstring is its
 definition. The reference for context precision and recall is the evaluation set's `gold`: for each
-question, the sections of the documents that hold its answer, written by `rag` when the set was made.
-A chunk belongs to a gold section when it comes from the same document and its path ends with that
-section's heading:
+question, the ids of the chunks that hold its answer, which lesson 8 wrote down beside the facts:
 
 ```python
 """metrics.py: five numbers for each run of the evaluation set, each defined in its function.
@@ -101,6 +99,7 @@ Three of the definitions are choices worth noticing:
 - **A refusal with no chunks has no context precision**, rather than a precision of zero or one. Nothing
   was given, so nothing can be right or wrong about it. It still has a context recall of zero when the
   question had an answer, because the answer was not given to the model.
-- **Relevance passes the refusal by rule.** That is lesson 10's rubric. A framework that scores a refusal
-  as irrelevant measures something else under the same name, and the last section of this lesson finds
+- **Relevance decides the refusal by rule**, from the answer key, as lesson 10 did: a refusal passes
+  when the question has no facts and fails when it has some. A framework that scores every refusal as
+  irrelevant measures something else under the same name, and the last section of this lesson finds
   one that does.
