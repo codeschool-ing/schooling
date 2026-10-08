@@ -1,31 +1,16 @@
 ---
 title: The environment is a list
-version: 1
+version: 2
 ---
 
-Lesson 12 found that one host handed its servers the whole environment, API keys included. `mcp_host.py` hands each server exactly what `ENV` names. The first version of that list had `PATH` and `HOME` only. Run again with that list, which is what `host_minimal.py` is:
+Lesson 12 found that one host handed its servers the whole environment, API keys included. `mcp_host.py` hands each server exactly what `ENV` names, and the list is two entries long: `PATH`, with the virtual environment's `bin` first, and `HOME`. `PATH` is there for a reason that is easy to miss: the command is `python`, and the server's process looks that name up in the `PATH` it is given, not in yours. Without the virtual environment in it, `python` is whatever the system has, if anything, and that Python has no `mcp`. Nothing else is needed, because nothing in `shop.py` reads a variable: `search_help` reaches Ollama at a fixed address.
+
+A question for the help centre, and then the servers' standard error:
 
 ```
-ana@lab:~/agents$ grep -v MINILM_DIR mcp_host.py | sed 's/"HOME": "\/home\/ana",   # all/"HOME": "\/home\/ana"}   # all/' > host_minimal.py; python host_minimal.py 'How do I send a book back?' 2> host.err; tail -1 host.err
-step 1: shop__search_help {"query": "send a book back"}
-  error: Error executing tool search_help
-step 2: read_help {"uri": "help://h14"}
-  result: # How to return a book  You have 30 days from delivery to return a printed book in the condition you received 
-answer: You have 30 days from delivery to return a printed book. Start the return from the order in your account, print the prepaid label and drop the parcel at any post office; returns are free.
-mcp.server.mcpserver.exceptions.UnexpectedToolError: Error executing tool search_help
+{block("help")}
 ```
 
-`search_help` failed with *"Error executing tool search_help"*. `host.err` is where the servers' standard error ended up, and its last line shows the server logged a crash, with the traceback above it. The cause was not in the message the model got: `search_help` embeds the query with the MiniLM model of `embeddings-vectors`, and the module that loads it finds the model's directory through `MINILM_DIR`. Without the variable it looked in a default directory that does not exist in this lab. The model then went on to read `help://h14` anyway, because the course's rules scripted that next step; a real model might not have.
+The search worked, and the model then answered from the titles alone: it sent the customer to a "Help" tab and to the article on damaged books, for a question about returns. It could have read `help://h14` with `read_help`; this model, as lesson 1 found, does not call a second tool after a tool result. The host is not what went wrong there, and the next section gives the host's half of reading an article.
 
-With `MINILM_DIR` in the list:
-
-```
-ana@lab:~/agents$ python mcp_host.py "How do I send a book back?" 2> host.err
-step 1: shop__search_help {"query": "send a book back"}
-  result: {"result": [{"title": "How to return a book", "uri": "help://h14"}, {"title": "Damaged books on arrival", "uri
-step 2: read_help {"uri": "help://h14"}
-  result: # How to return a book  You have 30 days from delivery to return a printed book in the condition you received 
-answer: You have 30 days from delivery to return a printed book. Start the return from the order in your account, print the prepaid label and drop the parcel at any post office; returns are free.
-```
-
-Two lessons from one failure. **A minimal environment has to be complete**: list what each server needs, and test the tools that need it. And **a server's crash is told to its log, not to the client**, as lesson 14 explained; a host that throws its servers' standard error away (lessons 11 and 12 did, with `2> /dev/null`) has thrown away the only place the reason was.
+`host.err` is empty. That is where the two servers' standard error goes, because `2> host.err` covers the host's children too, and when a server crashes its traceback lands there and nowhere else: the client gets *"Error executing tool …"*, as lesson 14 showed. Two rules follow. **A minimal environment has to be complete**: list what each server needs, and test the tools that need it. And **keep the servers' standard error**: a host that throws it away (lessons 11 and 12 did, with `2> /dev/null`) has thrown away the only place a crash explains itself.

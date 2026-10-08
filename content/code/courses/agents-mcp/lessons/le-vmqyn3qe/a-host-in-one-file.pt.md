@@ -1,9 +1,9 @@
 ---
 title: Um hospedeiro num arquivo
-version: 1
+version: 2
 ---
 
-O suporte a MCP de uma biblioteca toma as decisões do hospedeiro por você, e a aula 12 mostrou três bibliotecas tomando-as de três jeitos. O `mcp_host.py` as toma ele mesmo, em código: o laço da aula 7, agora com servidores MCP no lugar de funções locais, e o `Client` do SDK `mcp` para cada conexão. Ele fala com o modelo pela API de Messages da Anthropic, que o labllm responde.
+O suporte a MCP de uma biblioteca toma as decisões do hospedeiro por você, e a aula 12 mostrou três bibliotecas tomando-as de três jeitos. O `mcp_host.py` as toma ele mesmo, em código: o laço da aula 7, agora com servidores MCP no lugar de funções locais, e o `Client` do SDK `mcp` para cada conexão. Ele fala com o modelo pela API de Messages da Anthropic, que o Ollama responde.
 
 ```schooling-example
 {

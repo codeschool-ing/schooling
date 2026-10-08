@@ -1,9 +1,9 @@
 ---
 title: A host in one file
-version: 1
+version: 2
 ---
 
-A library's MCP support makes the host's decisions for you, and lesson 12 showed three libraries making them three ways. `mcp_host.py` makes them itself, in code: lesson 7's loop, now with MCP servers instead of local functions, and the `mcp` SDK's `Client` for each connection. It talks to the model through the Anthropic Messages API, which labllm answers.
+A library's MCP support makes the host's decisions for you, and lesson 12 showed three libraries making them three ways. `mcp_host.py` makes them itself, in code: lesson 7's loop, now with MCP servers instead of local functions, and the `mcp` SDK's `Client` for each connection. It talks to the model through the Anthropic Messages API, which Ollama answers.
 
 ```schooling-example
 {
