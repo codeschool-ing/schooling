@@ -144,8 +144,9 @@ normalised 16/24 right
 documents:
 
 - **Five are the refusal to a question the documents answer**: the signed copy, the downloaded e-book,
-  the Kindle, the instalments and the right of withdrawal. The release in force raised the floor, and
-  lesson 5 showed what that does to questions whose best chunk scores just under it.
+  the Kindle, the instalments and the right of withdrawal. Lesson 11 finds where each went: for
+  two, no chunk cleared the higher floor; for the other three the model was given the right chunk and
+  refused anyway.
 - **e02 contradicts its source.** The chunk it cites says returns are free and the label prepaid, and
   the reply says the customer pays. It is the same reply lesson 1 read in a trace.
 - **e16 and e18 are right.** "As soon as it ships" says what the document's "when the order ships"

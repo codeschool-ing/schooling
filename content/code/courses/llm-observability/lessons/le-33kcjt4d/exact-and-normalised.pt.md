@@ -146,8 +146,9 @@ normalised 16/24 right
 contra os documentos:
 
 - **Cinco são a recusa a uma pergunta que os documentos respondem**: o exemplar autografado, o e-book
-  baixado, o Kindle, o parcelamento e o direito de arrependimento. A versão em vigor subiu o piso, e a
-  aula 5 mostrou o que isso faz com perguntas cujo melhor trecho pontua logo abaixo dele.
+  baixado, o Kindle, o parcelamento e o direito de arrependimento. A aula 11 acha para onde cada uma
+  foi: para duas, nenhum trecho passou o piso mais alto; para as outras três o modelo recebeu o trecho
+  certo e recusou mesmo assim.
 - **A e02 contradiz a fonte.** O trecho que ela cita diz que a devolução é grátis e a etiqueta
   pré-paga, e a resposta diz que o cliente paga. É a mesma resposta que a aula 1 leu num trace.
 - **A e16 e a e18 estão certas.** "As soon as it ships" diz o que o "when the order ships" do documento
