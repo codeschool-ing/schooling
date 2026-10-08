@@ -1,6 +1,6 @@
 ---
 title: Why the order questions were refused
-version: 1
+version: 2
 ---
 
 A rate says that something is wrong with a feature. A trace says what. Take one of the week's order
@@ -8,19 +8,19 @@ messages and the same question with the customer's details taken out, and look a
 each:
 
 ```
-ana@lab:~/obs$ python assistant.py --feature order "Hi, I am Joana Prado (joana.prado@example.com). My order MG-20481937 has not arrived after 12 working days. Is it lost?" > /dev/null; python tree.py --attrs | grep -E "top_score|kept"
+ana@dev:~/obs$ python assistant.py --feature order "Hi, I am Joana Prado (joana.prado@example.com). My order MG-20481937 has not arrived after 12 working days. Is it lost?" > /dev/null; python tree.py --attrs | grep -E "top_score|kept"
                        app.search.kept = 0
-                       app.search.top_score = 0.539
-ana@lab:~/obs$ python assistant.py "My order has not arrived after 12 working days. Is it lost?" > /dev/null; python tree.py --attrs | grep -E "top_score|kept"
-                       app.search.kept = 0
-                       app.search.top_score = 0.605
+                       app.search.top_score = 0.537
+ana@dev:~/obs$ python assistant.py "My order has not arrived after 12 working days. Is it lost?" > /dev/null; python tree.py --attrs | grep -E "top_score|kept"
+                       app.search.kept = 1
+                       app.search.top_score = 0.635
 ```
 
-The same question, **0.539 with the name, the address and the order number in it, 0.605 without**.
+The same question, **0.537 with the name, the address and the order number in it, 0.635 without**.
 The embedding of a message is the embedding of all of it, and a name, an e-mail address and an order
-number pull it away from the documents, which contain none of those. Both scores are now below the
-floor of 0.62, which is why both were refused. Under the old floor of 0.5, the first would have
-squeaked past and the second comfortably.
+number pull it away from the documents, which contain none of those. With them, the best chunk falls
+below the floor of 0.55 and the customer is refused; without them, it clears it. Under the old floor
+of 0.4, both would have passed.
 
 That is a finding a dashboard could not have made and a trace made in two commands. It also points at
 the fix, and it is not in the floor: **the search should be given the question, not the message**. A

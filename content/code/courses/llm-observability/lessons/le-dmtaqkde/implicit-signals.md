@@ -1,6 +1,6 @@
 ---
 title: What customers do, as well as what they say
-version: 1
+version: 2
 ---
 
 Most customers never click a thumb. All of them do something next, and some of what they do is a
@@ -15,16 +15,16 @@ most:
 Both are in the same `signals.py` table, as rates per hundred requests:
 
 ```
-ana@lab:~/obs$ python signals.py
+ana@dev:~/obs$ python signals.py
 release    requests  rated  down  down % rephrased  person  per 100 requests
-2026.09.4       789    123    44     36%      15.7     4.4
-2026.10.1       432     68    35     51%      21.8     9.0
+2026.09.4       134     32     5     16%       6.7     0.0
+2026.10.1       141     26     4     15%      12.8     2.8
 ```
 
-**Rephrasing went from 15.7 to 21.8 per hundred, and asking for a person doubled, from 4.4 to 9.0.**
-These are counted over every request, not over the 15% who rated, so they move on far less noise than
-thumbs do. They are also harder to game: no screen design changes how often a customer whose answer was
-a refusal asks again.
+**Rephrasing nearly doubled, from 6.7 to 12.8 per hundred, and asking for a person went from none at
+all to 2.8.** These are counted over every request, not over the quarter who rated, so they move on
+far less noise than thumbs do, and here they saw what the thumbs missed. They are also harder to
+game: no screen design changes how often a customer whose answer was a refusal asks again.
 
 ## Detecting them in real traffic
 

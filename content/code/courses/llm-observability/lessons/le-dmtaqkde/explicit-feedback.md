@@ -1,6 +1,6 @@
 ---
 title: Thumbs up and thumbs down
-version: 1
+version: 2
 ---
 
 The most direct quality signal there is: ask the customer. A thumb under every reply, up or down,
@@ -9,8 +9,8 @@ each one does after a reply is decided by rules `replay.py` states at its top:
 
 ```
   - A reply is RIGHT if it contains one of its topic's facts, or, for a topic
-    the documents do not answer, if it is the refusal.
-  - 18% of customers rate a reply. A wrong reply gets a thumbs down 85% of the
+    the documents do not answer, if it contains the refusal.
+  - 25% of customers rate a reply. A wrong reply gets a thumbs down 85% of the
     time; a right one gets a thumbs up 92% of the time.
   - After a wrong reply, 45% ask again in other words, 40 to 120 seconds
     later, in the same session. If that is wrong too, 60% ask for a person.
@@ -26,10 +26,10 @@ Each click is one line in `feedback.jsonl`, and it carries **the trace id of the
 which the screen received with the reply:
 
 ```
-ana@lab:~/obs$ head -3 feedback.jsonl
-{"trace": "65c96d256fe5e0df9f7b25467de00a60", "request": "r0012", "at": "2026-09-28T06:29:39", "kind": "thumbs", "value": "down"}
-{"trace": "731748f8ee9c32611a7403e01688fd78", "request": "r0025", "at": "2026-09-28T08:35:26", "kind": "rephrase", "value": "Who pays for the return postage?"}
-{"trace": "d7409c1f4b1d04d3e047ea703eca81fd", "request": "r0021", "at": "2026-09-28T08:02:28", "kind": "thumbs", "value": "down"}
+ana@dev:~/obs$ head -3 feedback.jsonl
+{"trace": "a97ca428c676540ebab912432abec13c", "request": "r009", "at": "2026-09-28T09:29:35", "kind": "thumbs", "value": "up"}
+{"trace": "9d3fe5c38cadad8bdb8f799e9374929c", "request": "r010", "at": "2026-09-28T09:40:12", "kind": "thumbs", "value": "up"}
+{"trace": "2f467df1fd3622649fbdc311f53d6ddf", "request": "r011", "at": "2026-09-28T10:10:13", "kind": "thumbs", "value": "down"}
 ```
 
 The join is exact, by id, as lesson 1 said it had to be: a customer who asked twice in a minute
@@ -56,27 +56,28 @@ for rel, c in sorted(seen.items()):
 ```
 
 ```
-ana@lab:~/obs$ python signals.py
+ana@dev:~/obs$ python signals.py
 release    requests  rated  down  down % rephrased  person  per 100 requests
-2026.09.4       789    123    44     36%      15.7     4.4
-2026.10.1       432     68    35     51%      21.8     9.0
+2026.09.4       134     32     5     16%       6.7     0.0
+2026.10.1       141     26     4     15%      12.8     2.8
 ```
 
-Under the old release, **36% of the thumbs were down**; under the new one, **51%**. That would be the
-headline, and it is worth being careful with.
+Under the old release, **16% of the thumbs were down**; under the new one, **15%**. On the thumbs
+alone, the release that refused nearly twice as many help questions changed nothing, and that is
+worth being careful with.
 
 ## What a thumb measures, and what it does not
 
-**Few people rate.** 123 ratings under one release and 68 under the other, out of 789 and 432 requests.
-At these sizes a difference of fifteen points is probably real, but a dashboard showing a day's
-thumbs-down rate over twenty ratings will jump about on noise alone. Lesson 9 puts a margin of error on
-a rate like this.
+**Few people rate.** 32 ratings under one release and 26 under the other, out of 134 and 141
+requests: nine thumbs down in the whole week. At these sizes a difference of two or three thumbs is
+noise, in either direction, and a dashboard showing a day's thumbs-down rate over five ratings will
+jump about on noise alone. Lesson 9 puts a margin of error on a rate like this.
 
-**The people who rate are not the people who ask.** Here they are a random 18%, because the rule says
-so. In real products, people rate more when they are annoyed, or more when they are delighted, and the
-mix moves with the screen: a thumb that is always visible gets a different crowd from one that appears
-after a pause. A thumbs-down rate is a measure of the raters' experience, and it is safe to compare
-between two releases of the same screen, not between two products.
+**The people who rate are not the people who ask.** Here they are a random quarter, because the rule
+says so. In real products, people rate more when they are annoyed, or more when they are delighted,
+and the mix moves with the screen: a thumb that is always visible gets a different crowd from one
+that appears after a pause. A thumbs-down rate is a measure of the raters' experience, and it is
+safe to compare between two releases of the same screen, not between two products.
 
 **A thumb says something was wrong, not what.** A thumbs down on a refusal, on a wrong fact and on a
 slow answer look the same. Its value is that it points at traces worth reading, and that it is

@@ -1,6 +1,6 @@
 ---
 title: As falhas que são respostas
-version: 1
+version: 2
 ---
 
 A aula 4 contou erros: pedidos que o fornecedor recusou e pedidos que o cliente viu falhar. Nesta
@@ -35,26 +35,27 @@ for (feature, release), c in sorted(by.items()):
 ```
 
 ```
-ana@lab:~/obs$ python outcomes.py
+ana@dev:~/obs$ python outcomes.py
 feature  release    requests  answered  refused refused % dangling
-help     2026.09.4       595       481      114       19%        0
-help     2026.10.1       331       232       99       30%        0
-order    2026.09.4       194       123       71       37%        0
-order    2026.10.1       101        37       64       63%        0
-summary  2026.09.4        90        90        0        0%        0
-summary  2026.10.1        34        34        0        0%        0
+help     2026.09.4       102        80       22       22%        0
+help     2026.10.1       105        62       43       41%        0
+order    2026.09.4        32        23        9       28%        0
+order    2026.10.1        36        22       14       39%        0
+summary  2026.09.4        16        16        0        0%        0
+summary  2026.10.1        20        20        0        0%        0
 ```
 
-**Nenhuma citação solta a semana toda.** Isso é o extract-1: ele só cita as fontes que recebeu, por
-construção. Um modelo de verdade inventa um `[4]` quando recebe três fontes vezes o bastante para valer
-manter essa coluna.
+**Nenhuma citação solta a semana toda.** O `llama3.2:3b` só citou fontes que recebeu, em cada uma
+das suas 265 respostas. Vale saber, e vale conferir de novo depois de toda troca de modelo ou de
+prompt: um modelo que recebe três fontes e inventa um `[4]` é uma falha conhecida, e esta coluna é o
+único lugar onde ela apareceria.
 
-**A taxa de recusa subiu com a versão, nas duas funcionalidades.** Help foi de 19% recusados para 30%.
-Order foi de 37% para **63%**: sob o piso novo, quase dois em cada três clientes perguntando sobre o
-próprio pedido ouviram que os documentos não tinham nada para eles. Uma recusa é a resposta certa para
-uma pergunta que os documentos não respondem, e quatro tópicos do tráfego desta semana são assim. É a
-resposta errada para o resto. Uma taxa não está certa ou errada por si só, mas uma taxa que pula no dia
+**A taxa de recusa subiu com a versão, nas duas funcionalidades.** Help foi de 22% recusados para
+**41%**: sob o piso novo, dois em cada cinco clientes fazendo uma pergunta ouviram que os documentos
+não tinham nada para eles. Order foi de 28% para 39%. Uma recusa é a resposta certa para uma
+pergunta que os documentos não respondem, e quatro assuntos do tráfego desta semana são assim. É a
+resposta errada para o resto. Uma taxa não é certa nem errada sozinha, mas uma taxa que pula no dia
 de uma versão é uma versão que mudou o que os clientes recebem.
 
-**E a funcionalidade de pedidos recusava mais que a de ajuda já antes.** 37% sob o piso antigo, contra
-19%. A próxima seção descobre por quê, a partir de dois traces.
+**E a funcionalidade de pedidos recusava mais que a de ajuda já antes.** 28% sob o piso antigo,
+contra 22%. A próxima seção descobre por quê, a partir de dois traces.

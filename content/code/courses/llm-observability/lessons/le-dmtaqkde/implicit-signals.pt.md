@@ -1,6 +1,6 @@
 ---
 title: O que os clientes fazem, além do que dizem
-version: 1
+version: 2
 ---
 
 A maioria dos clientes nunca clica num polegar. Todos fazem alguma coisa em seguida, e parte do que
@@ -15,16 +15,17 @@ equipes de atendimento mais acompanham:
 Os dois estão na mesma tabela do `signals.py`, como taxas por cem pedidos:
 
 ```
-ana@lab:~/obs$ python signals.py
+ana@dev:~/obs$ python signals.py
 release    requests  rated  down  down % rephrased  person  per 100 requests
-2026.09.4       789    123    44     36%      15.7     4.4
-2026.10.1       432     68    35     51%      21.8     9.0
+2026.09.4       134     32     5     16%       6.7     0.0
+2026.10.1       141     26     4     15%      12.8     2.8
 ```
 
-**As reformulações foram de 15,7 para 21,8 por cem, e os pedidos de uma pessoa dobraram, de 4,4 para
-9,0.** Elas são contadas sobre todo pedido, não sobre os 15% que avaliaram, então se mexem com muito
-menos ruído que os polegares. Também são mais difíceis de manipular: nenhum desenho de tela muda quantas
-vezes um cliente que recebeu uma recusa pergunta de novo.
+**As reformulações quase dobraram, de 6,7 para 12,8 por cem, e os pedidos de uma pessoa foram de
+nenhum para 2,8.** Eles são contados sobre todo pedido, não sobre o quarto que avaliou, então se
+mexem com muito menos ruído que os polegares, e aqui viram o que os polegares não viram. Também são
+mais difíceis de manipular: nenhum desenho de tela muda quantas vezes um cliente cuja resposta foi
+uma recusa pergunta de novo.
 
 ## Detectando-os em tráfego real
 
