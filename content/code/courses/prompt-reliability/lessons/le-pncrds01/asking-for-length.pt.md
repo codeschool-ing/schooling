@@ -1,10 +1,23 @@
 ---
-title: Pedir uma resposta mais curta
-version: 1
+title: Pedindo uma resposta mais curta
+version: 2
 ---
 
-O jeito de conseguir uma resposta mais curta é pedi-la no prompt, onde o modelo lê.
-`prompts/v4-words.txt` é o `v4-only-json.txt` com uma linha trocada:
+O jeito de ter uma resposta mais curta é pedi-la no prompt, onde o modelo a lê. Este é o
+`v4-only-json.txt` com uma linha trocada. Salve-o como `prompts/v4-words.txt`:
+
+```
+You sort customer messages for Folio, an online bookshop.
+
+Read the message and answer in JSON with three fields:
+- "category": one of billing, delivery, returns, account, other
+- "urgency": one of low, normal, high
+- "summary": what the customer needs, in under 12 words
+
+Reply with only the JSON object: no code fence and no other text.
+
+Message: {{message}}
+```
 
 ```
 ana@lab:~/triage$ diff prompts/v4-only-json.txt prompts/v4-words.txt
@@ -13,73 +26,77 @@ ana@lab:~/triage$ diff prompts/v4-only-json.txt prompts/v4-words.txt
 ---
 > - "summary": what the customer needs, in under 12 words
 ana@lab:~/triage$ pl run prompts/v4-words.txt cases/dev.jsonl --out runs/words.jsonl
-40 calls, prompt d6ee7191, written to runs/words.jsonl
+40 calls, prompt d6ee7191, llama3.2:3b, written to runs/words.jsonl
 ana@lab:~/triage$ pl show runs/v4.jsonl t37
-│ {
-│   "category": "delivery",
-│   "urgency": "normal",
-│   "summary": "The book they ordered says 'in stock' but their order still says 'awaiting dispatch' after a week."
-│ }
-stop: end, tokens in 101, out 46
+│ {"category": "delivery", "urgency": "high", "summary": "Order status discrepancy for awaiting dispatch book"}
+stop: stop, tokens in 130, out 26, 3.2 s
 ana@lab:~/triage$ pl show runs/words.jsonl t37
-│ {
-│   "category": "delivery",
-│   "urgency": "normal",
-│   "summary": "The book they ordered says 'in stock' but their order still says…"
-│ }
-stop: end, tokens in 103, out 39
+│ {"category": "delivery", "urgency": "high", "summary": "Order status discrepancy after a week"}
+stop: stop, tokens in 133, out 25, 3.1 s
 ```
 
-No substituto a regra é tosca: ele acha o número e corta o resumo nessa quantidade de palavras, com
-reticências. Conte e verá que ficaram doze, quando *under 12* permitia onze, porque ele lê o número e
-não a palavra antes dele. Um modelo de linguagem escreveria mais vezes uma frase diferente e mais curta
-do que cortaria uma longa, e também erraria um limite de palavras de vez em quando. **Um tamanho que
-você pede é um tamanho que você confere**, do mesmo jeito que confere um rótulo.
-
-Só que a resposta continua sendo JSON. O pedido mudou o que
-foi escrito, e a chave de fechamento fazia parte do que foi escrito. **Pedir dá forma à resposta; o
-limite só a corta.**
+O modelo escreveu um resumo mais curto em vez de picotar o longo: *Order status discrepancy after a
+week*, uma frase diferente. Um pedido é lido; um limite não. **Um tamanho que você pede é um
+tamanho que você confere**, porém, do mesmo jeito que confere um rótulo, porque nada obriga um
+modelo a contar palavras direito.
 
 ## Quanto mais curta
 
 ```
-ana@lab:~/triage$ pl latency runs/v4.jsonl
-calls 40
-p50 1170 ms   p95 1324 ms   max 1473 ms
-output tokens: mean 38.0, max 50
-ana@lab:~/triage$ pl latency runs/words.jsonl
-calls 40
-p50 1136 ms   p95 1255 ms   max 1323 ms
-output tokens: mean 36.8, max 48
+ana@lab:~/triage$ python3 stats.py runs/v4.jsonl runs/words.jsonl
+runs/v4.jsonl, 40 calls
+  tokens in    mean  121.2   total   4846
+  tokens out   mean   28.8   total   1153   max 38
+  seconds      p50   3.5   p95   4.4   total  143.1
+runs/words.jsonl, 40 calls
+  tokens in    mean  124.2   total   4966
+  tokens out   mean   25.3   total   1013   max 31
+  seconds      p50   3.0   p95   3.5   total  122.2
+ana@lab:~/triage$ pl check runs/words.jsonl
+check      pass  fail
+json         40     0
+fields       40     0
+labels       40     0
+category     32     8
+urgency      21    19
+all          21    19
 ana@lab:~/triage$ pl compare runs/v4.jsonl runs/words.jsonl --answers
-40 cases, same answer 40, different answer 0
+40 cases, same answer 36, different answer 4
+  t10    account -> other
+  t26    returns -> account
+  t38    None -> returns
+  t39    account -> delivery
 ```
 
-O `pl latency` mostra os tempos de resposta que o substituto calcula e, na última linha, os tokens de
-saída da execução. A média foi de 38,0 para 36,8, pouco mais de um token por resposta, e a resposta
-mais longa de 50 para 48. É pouco, e a figura de *Tokens, não palavras* diz por quê: o resumo é a
-única parte da resposta que pode encolher, e muitos resumos já tinham menos de doze palavras.
-`--answers` compara o que cada resposta disse, e não se ela passou: as quarenta categorias saíram
-iguais, então a mudança mexeu no tamanho e em mais nada.
+A resposta média foi de 28,8 tokens para 25,3 e a mais longa de 38 para 31, e toda resposta
+continua sendo JSON. O pedido mudou o que foi escrito, e a chave de fechamento fazia parte do que foi
+escrito. **Pedir molda a resposta; o limite só a corta.**
+
+Ele mudou outra coisa também. A única resposta que não era JSON válido com o `v4-only-json.txt`, o
+`t38`, agora é: pedido para usar menos palavras, o modelo escreveu um resumo do ebook que não
+precisava de *won't*, e o apóstrofo que quebrou o objeto na aula 3 nem apareceu. E o `--answers`
+mostra que o pedido mexeu em quatro categorias, nas duas direções. **Uma linha sobre tamanho
+continua sendo uma linha**, e muda o que mais o modelo escreve; meça-a como qualquer outra mudança.
 
 ## Você precisa dos dois
 
-Um pedido não substitui o limite. Este é o prompt mais curto sob o mesmo limite de trinta:
+Um pedido não substitui o limite. Aqui está o prompt mais curto com o mesmo limite de 25:
 
 ```
-ana@lab:~/triage$ pl run prompts/v4-words.txt cases/dev.jsonl --set max_tokens=30 --out runs/words30.jsonl
-40 calls, prompt d6ee7191, written to runs/words30.jsonl
-ana@lab:~/triage$ pl check runs/words30.jsonl
+ana@lab:~/triage$ pl run prompts/v4-words.txt cases/dev.jsonl --set num_predict=25 --out runs/words25.jsonl
+40 calls, prompt d6ee7191, llama3.2:3b, written to runs/words25.jsonl
+ana@lab:~/triage$ pl check runs/words25.jsonl
 check      pass  fail
-json          1    39
-fields        1    39
-labels        1    39
-category      1    39
-urgency       1    39
-all           1    39
+json         31     9
+fields       31     9
+labels       31     9
+category     26    14
+urgency      16    24
+all          16    24
 ```
 
-Uma aprovação em quarenta, igual a antes. Doze palavras de resumo dentro da moldura ainda passam de
-trinta tokens, e uma resposta que obedece ao pedido à risca continua sendo cortada por um limite
-abaixo dele. **Peça o tamanho que você quer e ponha o limite bem acima.** O pedido decide o tamanho
-da resposta; o limite existe para a resposta que ignora o pedido.
+Nove respostas continuam cortadas, porque um resumo de menos de doze palavras dentro da moldura
+ainda passa de 25 tokens em algumas mensagens, e uma resposta que obedece exatamente ao pedido ainda
+é cortada por um limite posto abaixo dele. **Peça o tamanho que você quer, e ponha o limite bem
+acima dele.** O pedido decide o tamanho da resposta; o limite existe para a resposta que ignora o
+pedido.

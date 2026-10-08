@@ -64,6 +64,17 @@ if upto >= 5:
         for part in ("cases/dev.jsonl", "cases/holdout.jsonl"):
             out.write(open(os.path.join(lab, part), encoding="utf-8").read())
     written["cases/all.jsonl"] = "cat cases/dev.jsonl cases/holdout.jsonl > cases/all.jsonl"
+# And the one edit a lesson has the student make to pl.py rather than save it
+# again: lesson 6, setting-the-cap.md, lets the contract allow a fourth
+# field, with this sed, when the prompt starts asking for one.
+if upto >= 6:
+    p = os.path.join(lab, "pl.py")
+    src = open(p, encoding="utf-8").read()
+    old = 'and k != "summary"'
+    if src.count(old) != 1:
+        sys.exit("lab.sh: pl.py no longer has the line setting-the-cap.md edits")
+    open(p, "w", encoding="utf-8").write(src.replace(old, 'and k not in ("summary", "confidence")'))
+    written["pl.py"] += ", then the sed in setting-the-cap"
 for path in sorted(written):
     print("%-28s from %s" % (path, written[path]), file=sys.stderr)
 PY
