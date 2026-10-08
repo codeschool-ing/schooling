@@ -266,7 +266,12 @@ block refunds-refund
 on 'printf "y\ny\n" | python role_host.py refunds "One copy of M-1047 arrived damaged; please refund it." 2> host.err'
 
 block canary
-on 'mkdir -p canary/data; cp data/help.jsonl canary/data/; cat canary/t01.json >> canary/data/help.jsonl; cd canary && python ../role_host.py support "What does gift wrapping cost? It is in help://t01." 2> ../host.err'
+on 'mkdir -p canary/data; cp data/help.jsonl canary/data/; cat canary/t01.json >> canary/data/help.jsonl'
+on 'cd canary && python ../role_host.py support "What does gift wrapping cost? It is in help://t01." 2> ../host.err'
+
+block canary-five
+on 'cd canary && for i in 1 2 3 4 5; do python ../role_host.py support "What does gift wrapping cost? It is in help://t01." 2>> ../host.err | tail -1; done'
+on 'grep -c held canary/role-audit.jsonl'
 
 block audit
-on 'cat canary/role-audit.jsonl role-audit.jsonl | cut -c1-215'
+on 'grep -h held canary/role-audit.jsonl | head -1 | cut -c1-215; cat role-audit.jsonl | cut -c1-215'

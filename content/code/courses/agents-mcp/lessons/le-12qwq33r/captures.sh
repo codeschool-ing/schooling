@@ -155,9 +155,15 @@ LIMIT = 5000  # cents; above this a refund is refused in code and no person is a
 
 
 def limit_refunds(tool, args, tool_context):
-    if tool.name == "refund" and int(args["cents"]) > LIMIT:   # the model's arguments, unvalidated: "7780" is a string
-        return {"error": f"Refunds above {LIMIT} cents need a manager."}  # returned instead of running the tool
-    return None                                                          # None: carry on
+    if tool.name != "refund":
+        return None                                                      # None: carry on
+    try:
+        cents = int(args["cents"])   # the model's arguments arrive unchecked: "7780", or not a number at all
+    except (KeyError, ValueError):
+        return {"error": "cents must be a whole number of cents"}        # returned instead of running the tool
+    if cents > LIMIT:
+        return {"error": f"Refunds above {LIMIT} cents need a manager."}
+    return None
 
 
 agent = Agent(name="refunds", model=MODEL,
