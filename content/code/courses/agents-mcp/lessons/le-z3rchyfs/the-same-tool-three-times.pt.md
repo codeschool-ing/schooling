@@ -3,7 +3,7 @@ title: A mesma ferramenta, três vezes
 version: 2
 ---
 
-As aulas 8, 9 e 10 deram a três agentes o mesmo `get_order`. A cada vez ele foi escrito de novo para a biblioteca: uma função decorada, um `@tool` devolvendo conteúdo MCP, uma função simples. E cada biblioteca o descreveu ao seu modelo no formato do próprio fornecedor. Aqui está o primeiro pedido que cada hospedeiro mandou nesta aula, cortado até a ferramenta:
+As aulas 8, 9 e 10 deram a três agentes o mesmo `get_order`. A cada vez ele foi escrito de novo para a biblioteca: uma função decorada, um `@tool` devolvendo conteúdo MCP, uma função simples. E cada biblioteca o descreveu ao seu modelo no formato do próprio fornecedor. Aqui está o primeiro pedido com ferramentas que cada hospedeiro mandou, cortado até a ferramenta:
 
 O `wire.py` lê o log do gravador da aula 1 e imprime as ferramentas do primeiro pedido, como o hospedeiro as escreveu:
 
@@ -51,7 +51,7 @@ ana@lab:~/agents$ python hosts.py google > /dev/null 2>&1; python wire.py
   "get_orderArguments"}}}
 ```
 
-Três formatos para uma ferramenta. A Chat Completions da OpenAI a embrulha como `{"type": "function", "function": {...}}` com `parameters`; a API de Messages da Anthropic chama o esquema de `input_schema`; a declaração da API do Gemini tem `parameters_json_schema` e, aqui, também um `response_json_schema`. Os nomes diferem (`mcp__shop__get_order` num deles), e também detalhes como `"strict": false`.
+Três formatos para uma ferramenta, em três caminhos do mesmo Ollama. O hospedeiro da OpenAI usou a Responses API, `/v1/responses`, em que uma ferramenta de função é um objeto plano com `parameters` e `"strict": false`. A CLI do hospedeiro Claude usou a API de Messages da Anthropic, que chama o esquema de `input_schema`. O hospedeiro do Google passou pelo LiteLLM até o `/api/chat` do próprio Ollama, que aninha a ferramenta como `{"type": "function", "function": {...}}` e não tem onde pôr o esquema de saída da ferramenta; por isso o ADK o escreveu na descrição, como uma frase. Os nomes também diferem (`mcp__shop__get_order` num deles).
 
 Nada disso é problema enquanto uma equipe escreve um agente com uma biblioteca. Vira problema quando uma empresa tem vários assistentes (o de um editor, o de um app de chat, o de um agente de suporte) e vários sistemas para oferecer a eles como ferramentas (pedidos, a central de ajuda, a fila de chamados). Sem um formato comum, **cada par precisa de um adaptador próprio**: três hospedeiros e dois fornecedores de ferramentas são seis peças de cola, cada uma mantida por alguém, cada uma um lugar onde uma mudança na ferramenta é esquecida.
 
