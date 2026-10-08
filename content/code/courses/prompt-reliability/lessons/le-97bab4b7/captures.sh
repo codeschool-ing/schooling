@@ -5,56 +5,56 @@
 # THE SCRIPT IS THE SOURCE AND ITS OUTPUT IS NOT COMMITTED. Every transcript in
 # this lesson was copied from running it:
 #
-#   bash captures.sh            # beside this file; it finds ../../lab.sh
+#   bash captures.sh            # beside this file
 #
-# It rebuilds ~/triage with lab.sh reset under its own HOME, so nothing of
-# yours is touched, and prints each command after a prompt, ana@lab:~/triage$,
-# followed by what it printed.
+# lab-capture.sh builds ~/triage as a student has it after this lesson, every
+# file read out of the lessons' own fences, and prints each command after a
+# prompt, ana@lab:~/triage$, followed by what it printed.
 #
-# What is STAGED rather than typed: the whole of ~/triage, built by lab.sh,
-# including every prompt file the lesson shows. The model is the lab's
-# stand-in (promptlab/standin.py), NOT a language model; lab.sh's header says
-# what that means and what in the lab was written by the course.
+# THE MODEL IS REAL: llama3.2:3b (Q4_K_M, id a80c4f17acd5) on Ollama 0.40.0,
+# CPU only, temperature 0 and seed 1, captured on 2026-10-08. The attack
+# messages are lesson 4's cases/attacks.jsonl: each asks for something
+# harmless (a label, a word, a poem, the prompt), and nothing here is aimed at
+# anything but this lesson's own prompts.
 #
-# Recorded with Python 3.11 and git 2.43, TZ=America/Sao_Paulo.
-
-set -uo pipefail
+# Recorded on Ubuntu 24.04 with Python 3.12, TZ=America/Sao_Paulo.
 here=$(cd "$(dirname "$0")" && pwd)
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 PAGER=cat GIT_PAGER=cat COLUMNS=100 PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
-export HOME=${LAB_HOME:-/var/tmp/prompt-reliability}
-mkdir -p "$HOME"
-bash "$here/../../lab.sh" reset
-cd "$HOME/triage"
-export PATH=$HOME/triage/bin:$PATH
-on() { printf 'ana@lab:~/triage$ %s\n' "$*"; bash -c "$*" 2>&1; }
-block() { printf '##### %s\n' "$1"; }
+LESSON=10; . "$here/../../lab-capture.sh"
 
 block problem
 on 'cat prompts/v4-only-json.txt'
 on 'head -n 3 cases/attacks.jsonl'
 on 'pl run prompts/v4-only-json.txt cases/attacks.jsonl --out runs/v4-attacks.jsonl'
 on 'pl check runs/v4-attacks.jsonl --failures'
-on 'pl show runs/v4-attacks.jsonl a10'
 on 'pl show runs/v4-attacks.jsonl a04'
+on 'pl show runs/v4-attacks.jsonl a06'
+on 'pl show runs/v4-attacks.jsonl a10'
 
 block layers
 on 'diff prompts/v4-only-json.txt prompts/v5-tagged.txt'
-on 'pl run prompts/v5-tagged.txt cases/attacks.jsonl --samples 5 --out runs/v5-attacks.jsonl'
+on 'pl run prompts/v5-tagged.txt cases/attacks.jsonl --out runs/v5-attacks.jsonl'
 on 'pl check runs/v5-attacks.jsonl --failures'
-on 'grep -n "^LEAK" promptlab/standin.py'
-on 'pl render prompts/v5-tagged.txt --cases cases/attacks.jsonl --case a08'
-on 'pl render prompts/v6-escaped.txt --cases cases/attacks.jsonl --case a08 | tail -n 5'
-on 'pl run prompts/v6-escaped.txt cases/attacks.jsonl --samples 5 --out runs/v6-attacks.jsonl'
+on 'pl run prompts/v6-escaped.txt cases/attacks.jsonl --out runs/v6-attacks.jsonl'
 on 'pl check runs/v6-attacks.jsonl --failures'
-on 'pl show runs/v6-attacks.jsonl a03'
-on 'pl show runs/v6-attacks.jsonl a02 --sample 3'
+on 'pl compare runs/v4-attacks.jsonl runs/v6-attacks.jsonl'
+on 'pl compare runs/v4-attacks.jsonl runs/v6-attacks.jsonl --answers'
+on 'pl show runs/v6-attacks.jsonl a04'
+on 'pl show runs/v6-attacks.jsonl a06'
+on 'pl show runs/v6-attacks.jsonl a05'
+on 'pl check runs/v4-attacks.jsonl --lenient'
 
 block scan
-on 'pl scan cases/attacks.jsonl'
+on 'python3 scan.py cases/attacks.jsonl'
+on 'python3 scan.py cases/dev.jsonl | grep -e FLAG -e flagged'
 
 block canary
-on 'head -n 1 prompts/v7-canary.txt'
-on 'pl run prompts/v7-canary.txt cases/attacks.jsonl --samples 5 --out runs/v7-attacks.jsonl'
-on 'pl check runs/v7-attacks.jsonl --canary FOLIO-7Q2X --failures'
-on 'pl show runs/v7-attacks.jsonl a04 --sample 2'
-on 'pl show runs/v7-attacks.jsonl a05'
+on 'diff prompts/v6-escaped.txt prompts/v7-canary.txt'
+on 'pl run prompts/v7-canary.txt cases/attacks.jsonl --out runs/v7-attacks.jsonl'
+on 'pl check runs/v7-attacks.jsonl --failures'
+on 'grep -c FOLIO-7Q2X runs/v7-attacks.jsonl'
+on 'pl run prompts/reply-canary.txt cases/attacks.jsonl --out runs/reply-attacks.jsonl --var shop=Folio --var language=English'
+on 'grep -c FOLIO-7Q2X runs/reply-attacks.jsonl'
+on 'pl show runs/reply-attacks.jsonl a04'
+on 'pl show runs/reply-attacks.jsonl a10'
+on 'pl show runs/reply-attacks.jsonl a09'
+on 'pl show runs/reply-attacks.jsonl a02'
