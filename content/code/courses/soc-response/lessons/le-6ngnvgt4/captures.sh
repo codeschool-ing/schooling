@@ -5,7 +5,7 @@
 #
 #   sudo bash captures.sh OUTDIR
 #
-# Everything here runs as ana, in a folder called week in her home folder, on
+# Everything here runs as ana, in a folder called week in ana's home folder, on
 # the machine lesson 1 prepares. No lab machine is involved: the week of logs
 # is written by week.py.
 #
