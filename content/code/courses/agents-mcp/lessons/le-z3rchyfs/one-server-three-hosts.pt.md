@@ -89,12 +89,22 @@ asyncio.run({"openai": openai_host, "claude": claude_host, "google": google_host
 Cada biblioteca tem o próprio jeito de nomear um servidor: `MCPServerStdio` no SDK da OpenAI, uma entrada em `mcp_servers` no Claude Agent SDK, `McpToolset` no ADK. Nenhum deles precisou de uma linha do próprio `get_order`. O `server()` inicia o programa por `sh -c "tee … | python shop_mcp.py"`: o `tee` copia num arquivo tudo o que o cliente do hospedeiro escreve para o servidor, para a seção 04 poder ler.
 
 ```
+ana@lab:~/agents$ python recorder.py &
+ana@lab:~/agents$ export ANTHROPIC_BASE_URL=http://127.0.0.1:11435 OPENAI_BASE_URL=http://127.0.0.1:11435/v1 OLLAMA_API_BASE=http://127.0.0.1:11435 LITELLM_LOCAL_MODEL_COST_MAP=True CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
 ana@lab:~/agents$ python hosts.py openai 2> /dev/null
-Order M-1043 has shipped; its tracking code is BR5512340003, and the link in your shipping email follows it.
+The status of your order M-1043 is that it has been shipped. Your order number is BR5512340003. You can track the status of your order by following this tracking number.
 ana@lab:~/agents$ python hosts.py claude 2> /dev/null
-Order M-1043 has shipped; its tracking code is BR5512340003, and the link in your shipping email follows it.
+Your order M-1043 has been shipped. Here are the details:
+
+- **Book 1 (Book ID: b13)**: Quantity: 1, Price: 24.90
+- **Book 2 (Book ID: b14)**: Quantity: 1, Price: 25.90
+- **Book 3 (Book ID: b26)**: Quantity: 1, Price: 59.90
+
+The total amount for the order is 110.70 cents. 
+
+Your order's tracking number is BR5512340003. Please keep this information for reference. If you need any further assistance, feel free to ask.
 ana@lab:~/agents$ python hosts.py google 2> /dev/null
-Order M-1043 has shipped; its tracking code is BR5512340003, and the link in your shipping email follows it.
+Your order M-1043 was shipped on 2026-09-28 and has a tracking number BR5512340003. The total cost of the order is 11070 cents, and it includes books with IDs b13, b14, and b26. If you have any questions or concerns about your order, I recommend contacting our customer support team.
 ```
 
 **A chamada e a resposta do modelo foram escritas pelo curso**, a mesma regra para os três hospedeiros; os três clientes, o servidor e cada mensagem entre eles são reais. A saída de erro foi descartada (`2> /dev/null`) por causa dos avisos que as aulas anteriores já mostraram.

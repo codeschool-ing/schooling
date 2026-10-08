@@ -1,23 +1,26 @@
 ---
 title: Um modelo menor
-version: 1
+version: 2
 ---
 
-O labllm tem dois modelos, e o segundo, `scripted-mini`, escreve quatro vezes mais rápido: 10 ms por token em vez de 40. A mesma execução, sem mais nenhuma mudança:
+A aula 1 baixou um segundo modelo, o `llama3.2:1b`: a mesma família com um terço dos parâmetros, 1,3 GB em disco em vez de 2,0. A mesma execução, sem mais nenhuma mudança:
 
 ```
-ana@lab:~/agents$ python cost_run.py scripted-mini
+ana@lab:~/agents$ python cost_run.py llama3.2:1b
 step   input  c.write  c.read  output     ms  stop
-   1    2359        0       0      10    335  tool_use
-       tool get_order: 1 ms
-   2    2520        0       0       8    330  tool_use
-       tool search_help: 317 ms
-   3    2561        0       0      75    957  end_turn
-total    7440        0       0      93   1939
+   1     994        0      15      34   5588  tool_use
+       tool get_order {"function": "get_order", "parameters": {"properties": {"order_id": "M-1043"}, "required": ["order_id"], "type": "object"}, "type": "function"}Traceback (most recent call last):
+  File "/home/ana/agents/cost_run.py", line 57, in <module>
+    out = json.dumps(RUN[call.name](call.input))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ana/agents/cost_run.py", line 29, in <lambda>
+    RUN = {"get_order": lambda a: shop.get_order(a["order_id"]),
+                                                 ~^^^^^^^^^^^^
+KeyError: 'order_id'
 ```
 
-**1.939 ms em vez de 4.768.** Os tokens são idênticos, porque o mesmo texto entrou e a mesma resposta, escrita pelo curso, saiu; a diferença está toda na escrita. O pedido da resposta caiu de 3.208 ms para 957.
+O primeiro pedido **levou 5.588 ms em vez de 10.447**, para os mesmos 994 tokens lidos: um modelo menor lê e escreve mais rápido. E aí o programa quebrou. O modelo pediu o `get_order` e, como argumentos, devolveu a própria descrição da ferramenta, `{"function": "get_order", "parameters": {...}}`, com o id do pedido enterrado um nível abaixo de onde o `order_id` deveria estar. O `cost_run.py` confiou nos argumentos, coisa contra a qual a aula 4 alertou, e `a["order_id"]` levantou `KeyError`.
 
-Com fornecedores de verdade, o modelo menor de uma família é mais rápido e mais barato por token, e menos capaz. Quais tarefas ele aguenta é uma pergunta a responder testando, não supondo. O padrão de roteamento da aula 2 é onde a resposta rende: mande as perguntas fáceis (*onde está meu pedido?*) para o modelo pequeno e as difíceis para o grande, e decida qual é qual com algo barato. Um roteador que manda noventa por cento do tráfego para um modelo quatro vezes mais rápido deixou o agente mais rápido para noventa por cento dos clientes.
+É isso que um modelo menor troca. Ele é mais rápido e, num fornecedor, mais barato por token, e é menos capaz de fazer o que o maior fez neste mesmo pedido. **Quais tarefas ele aguenta é uma pergunta a responder testando**, não supondo, e o teste são execuções como esta, muitas delas, lidas pela chamada e não só pelo tempo. O padrão de roteamento da aula 2 é onde a resposta rende: mande as perguntas fáceis para o modelo pequeno e as difíceis para o grande, decida qual é qual com algo barato, e confira as chamadas de ferramenta do modelo pequeno antes de executá-las, porque uma checagem de schema teria transformado essa quebra num resultado de erro que o laço saberia tratar.
 
-O que um modelo menor não muda é a forma da conta. Ele ainda lê 7.440 tokens para escrever 93. Essa parte é o assunto da próxima seção.
+O que um modelo menor não muda é a forma da conta. Ele ainda lê o prompt inteiro a cada pedido. Essa parte é o assunto da próxima seção.

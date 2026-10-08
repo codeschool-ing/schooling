@@ -24,27 +24,31 @@ for line in open("requests.jsonl"):
 ```
 
 ```
+ana@lab:~/agents$ rm -f requests.jsonl
 ana@lab:~/agents$ python hosts.py openai > /dev/null 2>&1; python wire.py
-/v1/chat/completions
-  {"type": "function", "function": {"name": "get_order", "description": "Look up one Marginalia
-  order by its id, M- and four digits. Returns status, dates, lines and amounts in cents.",
-  "parameters": {"type": "object", "properties": {"order_id": {"title": "Order Id", "type":
-  "string"}}, "required": ["order_id"], "title": "get_orderArguments"}, "strict": false}}
+/v1/responses
+  {"name": "get_order", "parameters": {"type": "object", "properties": {"order_id": {"title": "Order
+  Id", "type": "string"}}, "required": ["order_id"], "title": "get_orderArguments"}, "strict":
+  false, "type": "function", "description": "Look up one Marginalia order by its id, M- and four
+  digits. Returns status, dates, lines and amounts in cents."}
+ana@lab:~/agents$ rm -f requests.jsonl
 ana@lab:~/agents$ python hosts.py claude > /dev/null 2>&1; python wire.py
-/v1/messages
+/v1/messages?beta=true
   {"name": "mcp__shop__get_order", "description": "Look up one Marginalia order by its id, M- and
   four digits. Returns status, dates, lines and amounts in cents.", "input_schema": {"type":
   "object", "properties": {"order_id": {"title": "Order Id", "type": "string"}}, "required":
   ["order_id"], "title": "get_orderArguments"}}
+ana@lab:~/agents$ rm -f requests.jsonl
 ana@lab:~/agents$ python hosts.py google > /dev/null 2>&1; python wire.py
-/v1beta/models/scripted-1:generateContent
-  {"description": "<<<BEGIN_UNTRUSTED_TOOL_DESCRIPTION>>>\nLook up one Marginalia order by its id,
-  M- and four digits. Returns status, dates, lines and amounts in
-  cents.\n<<<END_UNTRUSTED_TOOL_DESCRIPTION>>>", "name": "get_order", "parameters_json_schema":
-  {"properties": {"order_id": {"title": "Order Id", "type": "string"}}, "required": ["order_id"],
-  "type": "object", "title": "get_orderArguments"}, "response_json_schema": {"properties":
-  {"result": {"title": "Result", "type": "string"}}, "required": ["result"], "type": "object",
-  "title": "get_orderOutput"}}
+/api/chat
+  {"type": "function", "function": {"name": "get_order", "description":
+  "<<<BEGIN_UNTRUSTED_TOOL_DESCRIPTION>>>\nLook up one Marginalia order by its id, M- and four
+  digits. Returns status, dates, lines and amounts in
+  cents.\n<<<END_UNTRUSTED_TOOL_DESCRIPTION>>>\nReturns a JSON object conforming to this schema: {\"
+  properties\":{\"result\":{\"title\":\"Result\",\"type\":\"string\"}},\"required\":[\"result\"],\"t
+  itle\":\"get_orderOutput\",\"type\":\"object\"}", "parameters": {"properties": {"order_id":
+  {"title": "Order Id", "type": "string"}}, "required": ["order_id"], "type": "object", "title":
+  "get_orderArguments"}}}
 ```
 
 Três formatos para uma ferramenta. A Chat Completions da OpenAI a embrulha como `{"type": "function", "function": {...}}` com `parameters`; a API de Messages da Anthropic chama o esquema de `input_schema`; a declaração da API do Gemini tem `parameters_json_schema` e, aqui, também um `response_json_schema`. Os nomes diferem (`mcp__shop__get_order` num deles), e também detalhes como `"strict": false`.

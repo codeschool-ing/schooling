@@ -1,44 +1,38 @@
 ---
 title: Pondo o prefixo em cache
-version: 1
+version: 2
 ---
 
-A maior parte de cada pedido era texto que o fornecedor tinha acabado de ler. Os fornecedores oferecem **cache de prompt** exatamente para isso: marque o fim de um prefixo que não muda (`cache_control` na API da Anthropic), e o fornecedor o guarda por pouco tempo, de modo que os pedidos seguintes que começam pelo mesmo prefixo o leem do cache. Leituras do cache são cobradas bem abaixo da entrada comum, e a primeira escrita um pouco acima; os multiplicadores exatos estão na página do fornecedor. O labllm segue a mesma regra: um prefixo marcado de 1.024 tokens ou mais é escrito uma vez e lido por 300 segundos.
+A maior parte de cada pedido era texto que o modelo tinha acabado de ler. Os fornecedores hospedados oferecem **cache de prompt** exatamente para isso: marque o fim de um prefixo que não muda (`cache_control` na API da Anthropic), e o fornecedor o guarda por pouco tempo, de modo que os pedidos seguintes que começam pelo mesmo prefixo o leem do cache. Leituras do cache são cobradas bem abaixo da entrada comum, e a primeira escrita um pouco acima; os multiplicadores exatos, e por quanto tempo um prefixo fica guardado, estão na página do fornecedor.
 
-O `--cache` marca o fim do bloco de políticas. Duas execuções, uma depois da outra:
+O Ollama faz algo parecido por conta própria. Enquanto um modelo continua carregado, ele guarda o que calculou para os últimos prompts que leu, e um pedido novo que começa pelos mesmos tokens pula essa parte. Esse era o 847 da seção 02. Rode a mesma pergunta de novo, e depois mais uma vez com `--cache`, que marca o fim do bloco de políticas do jeito da Anthropic:
 
 ```
-ana@lab:~/agents$ python cost_run.py scripted-1 --cache
+ana@lab:~/agents$ python cost_run.py llama3.2:3b
 step   input  c.write  c.read  output     ms  stop
-   1      12     2347       0      10    632  tool_use
-       tool get_order: 1 ms
-   2     173        0    2347       8    570  tool_use
-       tool search_help: 314 ms
-   3     214        0    2347      75   3209  end_turn
-total     399     2347    4694      93   4726
-ana@lab:~/agents$ python cost_run.py scripted-1 --cache
+   1     162        0     847      18   3955  tool_use
+       tool search_help {"query": "Order status M-1043"}: 155 ms
+   2      73        0     847      35   4893  end_turn
+total     235        0    1694      53   9003
+ana@lab:~/agents$ python cost_run.py llama3.2:3b --cache
 step   input  c.write  c.read  output     ms  stop
-   1      12        0    2347      10    634  tool_use
-       tool get_order: 1 ms
-   2     173        0    2347       8    570  tool_use
-       tool search_help: 332 ms
-   3     214        0    2347      75   3209  end_turn
-total     399        0    7041      93   4747
+   1     162        0     847      17   3473  tool_use
+       tool get_order {"order_id": "M-1043"}: 1 ms
+   2     184        0     847      62   8801  end_turn
+total     346        0    1694      79  12275
 ```
 
-Na primeira execução, o pedido 1 **escreveu** 2.347 tokens no cache e os pedidos 2 e 3 os **leram**, então só 399 tokens da execução inteira foram entrada comum. A segunda execução, dentro dos 300 segundos, leu o prefixo já no primeiro pedido: **nenhuma escrita**, 7.041 tokens lidos. O total é o mesmo, 7.440 tokens, nos dois casos; o que muda é como eles são cobrados.
+As duas execuções reaproveitaram os 847 tokens em **todos** os pedidos, o primeiro inclusive, porque a execução anterior os tinha deixado lá. O `--cache` não mudou nada: o Ollama aceita `cache_control` e o ignora, já que reaproveita o que coincidir de qualquer jeito. Repare também no modelo: uma execução buscou na central de ajuda, a outra consultou o pedido. Mesma pergunta, mesmo prompt, dois caminhos diferentes; a aula 1 disse que as palavras iam variar, e aqui variou a escolha da ferramenta.
 
-O cache se guia pelo **prefixo exato**, desde o primeiro byte. A ordem é ferramentas, depois prompt de sistema, depois mensagens, então qualquer coisa que mude perto da frente o quebra para tudo o que vem depois. O `--stamp` põe a hora do pedido bem no topo do prompt de sistema, o que parece inofensivo:
+O reaproveitamento se guia pelo **prefixo exato**, desde o primeiro token, no Ollama como no cache de um fornecedor. Qualquer coisa que mude perto da frente o quebra para tudo o que vem depois. O `--stamp` põe a hora do pedido bem no topo do prompt de sistema, o que parece inofensivo:
 
 ```
-ana@lab:~/agents$ python cost_run.py scripted-1 --cache --stamp
+ana@lab:~/agents$ python cost_run.py llama3.2:3b --cache --stamp
 step   input  c.write  c.read  output     ms  stop
-   1      12     2358       0      10    637  tool_use
-       tool get_order: 1 ms
-   2     173     2358       0       8    577  tool_use
-       tool search_help: 381 ms
-   3     214     2358       0      75   3210  end_turn
-total     399     7074       0      93   4806
+   1    1004        0      15      17  11039  tool_use
+       tool search_help {"query": "order M-1043"}: 164 ms
+   2     905        0      21     245  36714  end_turn
+total    1909        0      36     262  47917
 ```
 
-Todo pedido escreveu o prefixo de novo, **7.074 tokens escritos e nenhum lido**: mais caro que não usar cache nenhum, já que escritas custam mais que entrada comum. Uma data, um id de pedido, o nome de um usuário no topo de um prompt de sistema: cada um transforma um cache num custo. Ponha o que muda **depois** do que não muda, e mantenha a lista de ferramentas numa ordem fixa (a revisão 2026-07-28 do MCP pede aos servidores que devolvam as ferramentas numa ordem determinística por esse motivo). O ADK da aula 10 avisou do mesmo efeito pelo outro lado: toda transferência entre agentes muda o prompt de sistema e as ferramentas, então o prefixo começa do zero.
+O reaproveitamento caiu para 15 e 21 tokens, e os dois pedidos leram o prompt inteiro de novo: **1.909 tokens lidos**, contra 235 e 346 nas execuções acima, e 47.917 ms, a execução mais lenta desta aula. Com um fornecedor hospedado o mesmo erro se paga também em dinheiro: todo pedido escreve o prefixo de novo e não lê nada dele, o que custa mais do que não usar cache nenhum. Uma data, um id de pedido, o nome de um usuário no topo de um prompt de sistema: cada um transforma um cache num custo. Ponha o que muda **depois** do que não muda, e mantenha a lista de ferramentas numa ordem fixa (a revisão 2026-07-28 do MCP pede aos servidores que devolvam as ferramentas numa ordem determinística por esse motivo). O ADK da aula 10 avisou do mesmo efeito pelo outro lado: toda transferência entre agentes muda o prompt de sistema e as ferramentas, então o prefixo começa do zero.

@@ -1,6 +1,6 @@
 ---
 title: What a server sees
-version: 1
+version: 2
 ---
 
 The other half of the principle is what a server receives. The `orders` server was started through `tee` (lesson 11's trick, `orders:tee` in `hosts.py`) while each host answered *"Where is my order M-1043?"*. `said.py` prints each message's method and what the client declared, and for the tool call, its arguments and any `_meta` beyond the protocol's own fields:
@@ -36,7 +36,7 @@ Claude
   tools/list                 
   prompts/list               
   resources/list             
-  tools/call                 {"arguments": {"order_id": "M-1043"}, "_meta": {"claudecode/toolUseId": "toolu_lab_0014_1", "progressToken": 4}}
+  tools/call                 {"arguments": {"order_id": "M-1043"}, "_meta": {"claudecode/toolUseId": "call_r5k7x8tt", "progressToken": 4}}
 Google
   initialize                 {}
   notifications/initialized  

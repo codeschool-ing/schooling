@@ -1,47 +1,47 @@
 {
   "ex-xn90sd1x": {
-    "prompt": "Quantos tokens de entrada os três pedidos da execução sem cache levaram ao todo?",
+    "prompt": "Na primeira execução com o llama3.2:3b, quantos tokens o pedido 1 leu do zero, a coluna input?",
     "unit": "tokens"
   },
   "ex-18v15b38": {
-    "prompt": "Por que cada pedido levou cerca de 2.350 tokens antes de qualquer parte da conversa?",
+    "prompt": "Na tabela do cost_run.py, o que a coluna c.write conta, e por que ela fica em zero em todas as execuções aqui?",
     "choices": [
       {
-        "text": "Porque o labllm enche todo pedido",
-        "why": "O labllm conta o que recebe."
+        "text": "Os tokens da resposta; o modelo não escreveu nenhum",
+        "why": "Isso é saída: 16 e 67 tokens na primeira execução."
       },
       {
-        "text": "As ferramentas e o prompt de sistema com as políticas vão toda vez",
-        "why": "Certo. A API não guarda nada entre pedidos."
+        "text": "Entrada reaproveitada do pedido anterior; nada foi reaproveitado",
+        "why": "Isso é o c.read, e ele foi 15 e 847."
       },
       {
-        "text": "Porque a resposta do modelo conta como entrada",
-        "why": "A resposta é saída, 93 tokens ao todo."
+        "text": "Um prefixo que um fornecedor guarda a pedido; o Ollama nunca informa um",
+        "why": "Certo. O Ollama reaproveita o que coincide por conta própria e só informa isso como c.read."
       },
       {
-        "text": "Por causa do cache",
-        "why": "Esta execução não tinha cache."
+        "text": "Resultados de ferramenta devolvidos; nenhuma ferramenta devolveu nada",
+        "why": "O search_help devolveu títulos; um resultado de ferramenta viaja como entrada no pedido seguinte."
       }
     ]
   },
   "ex-1vr5f0ry": {
-    "prompt": "Por que o pedido 3 levou cerca de 3.200 ms quando os pedidos 1 e 2 levaram cerca de 600?",
+    "prompt": "O pedido 1 da primeira execução levou 10.447 ms para escrever 16 tokens. Para onde foi a maior parte desse tempo?",
     "choices": [
       {
-        "text": "Ele levou mais tokens de entrada",
-        "why": "O labllm não gasta tempo com entrada; a diferença foi de 41 tokens."
+        "text": "Para escrever esses 16 tokens, um por vez",
+        "why": "A escrita dominou o pedido 2, com a resposta de 67 tokens; o pedido 1 quase não escreveu."
       },
       {
-        "text": "Porque o search_help rodou durante ele",
-        "why": "Ferramentas rodam entre pedidos, não durante."
+        "text": "Para ler os 994 tokens de ferramentas, políticas e pergunta",
+        "why": "Certo. Uma CPU percorre o prompt antes de escrever qualquer coisa."
       },
       {
-        "text": "Porque o fornecedor estava sobrecarregado e o repetiu uma vez, sem o programa notar",
-        "why": "Nenhuma nova tentativa aconteceu nesta execução."
+        "text": "Para rodar o search_help, dentro do pedido",
+        "why": "Ferramentas rodam entre pedidos, e o search_help levou 166 ms."
       },
       {
-        "text": "Ele escreveu a resposta de 75 tokens",
-        "why": "Certo. 200 ms mais 75 × 40 ms."
+        "text": "Para duas novas tentativas depois de o servidor ficar sobrecarregado",
+        "why": "Nenhuma nova tentativa aconteceu nesta execução; o SDK só repete em erros como o 529."
       }
     ]
   },
@@ -67,79 +67,79 @@
     ]
   },
   "ex-dtt9j5yz": {
-    "prompt": "Quantos milissegundos a execução inteira levou com o scripted-mini?",
+    "prompt": "Quantos milissegundos o primeiro pedido levou com o llama3.2:1b?",
     "unit": "ms"
   },
   "ex-vsvcm4hh": {
-    "prompt": "O que a troca para o scripted-mini não mudou?",
+    "prompt": "Um roteador manda as perguntas fáceis para o llama3.2:1b. Depois da execução desta aula, o que o laço deve fazer com as chamadas de ferramenta do modelo pequeno?",
     "choices": [
       {
-        "text": "O tempo para escrever a resposta",
-        "why": "Caiu de 3.208 ms para 957."
+        "text": "Aumentar o max_tokens para os argumentos não saírem cortados",
+        "why": "A resposta não foi cortada; os argumentos vieram no formato errado."
       },
       {
-        "text": "O tempo total",
-        "why": "Caiu para 1.939 ms."
+        "text": "Nada: modelos da mesma família chamam ferramentas igual",
+        "why": "O 3b mandou order_id; o 1b devolveu a descrição da ferramenta."
       },
       {
-        "text": "Os tokens: 7.440 de entrada e 93 de saída",
-        "why": "Certo. A velocidade mudou; a forma da conta não."
+        "text": "Conferir os argumentos contra o schema antes",
+        "why": "Certo. Uma checagem que falha vira um resultado de erro que o laço sabe tratar, não uma quebra."
       },
       {
-        "text": "O tempo por token de saída, que fica em 40 ms para todo modelo do laboratório",
-        "why": "É 10 ms para o scripted-mini."
+        "text": "Rodar a ferramenta e deixar a exceção encerrar a execução",
+        "why": "Foi o que o cost_run.py fez, e ele quebrou com KeyError."
       }
     ]
   },
   "ex-ve0xd5gq": {
-    "prompt": "Na segunda execução com cache, o que aconteceu com o prefixo no pedido 1?",
+    "prompt": "Nas duas execuções da seção 05 sem --stamp, por que até o pedido 1 mostrou 847 no c.read?",
     "choices": [
       {
-        "text": "Foi lido do cache, dentro dos 300 segundos",
-        "why": "Certo. Nenhuma escrita naquela execução."
+        "text": "A execução anterior tinha deixado esses tokens no Ollama",
+        "why": "Certo. O Ollama reaproveita o que calculou enquanto o modelo continua carregado."
       },
       {
-        "text": "Foi escrito de novo",
-        "why": "Isso foi na primeira execução."
+        "text": "O --cache mandou o Ollama guardar as políticas",
+        "why": "Só uma das duas execuções tinha --cache, e o Ollama ignora a marca."
       },
       {
-        "text": "Ficou fora do pedido",
-        "why": "O pedido ainda o leva; o fornecedor o cobra como leitura."
+        "text": "O pedido 1 mandou só a parte nova do prompt",
+        "why": "Todo pedido leva o prompt inteiro; o reaproveitamento acontece no servidor."
       },
       {
-        "text": "Foi ignorado",
-        "why": "Foi lido, 2.347 tokens."
+        "text": "Uma execução anterior tinha pago uma escrita de cache por eles",
+        "why": "O c.write é zero em todas as execuções; o Ollama nunca informa um."
       }
     ]
   },
   "ex-tvzfch6w": {
-    "prompt": "Por que o --stamp deixou o cache pior que nenhum cache?",
+    "prompt": "Por que a execução com --cache --stamp leu 1.909 tokens, quando as execuções antes dela leram 235 e 346?",
     "choices": [
       {
-        "text": "Porque carimbos de hora não são permitidos em prompts de sistema",
-        "why": "São permitidos; eles mudam o prefixo."
+        "text": "O carimbo de hora passou o prompt da janela",
+        "why": "Ele acrescentou poucos tokens; a janela é de 8.192."
       },
       {
-        "text": "Porque deixou o prompt muito mais longo, passando da janela de contexto",
-        "why": "Ele acrescentou poucos tokens."
+        "text": "O Ollama esquece o que calculou quando uma execução termina",
+        "why": "As execuções antes dela reaproveitaram 847 tokens deixados por uma execução anterior."
       },
       {
-        "text": "Porque o labllm esquece o cache quando uma execução termina",
-        "why": "A segunda execução com cache o leu da primeira."
+        "text": "O --cache e o --stamp juntos desligam o reaproveitamento",
+        "why": "O --cache não muda nada no Ollama; foi só o carimbo."
       },
       {
-        "text": "A frente do prefixo mudou, então todo pedido o escreveu de novo",
-        "why": "Certo. 7.074 tokens escritos e nenhum lido; escritas custam mais que entrada comum."
+        "text": "A frente do prompt mudou a cada pedido",
+        "why": "Certo. O reaproveitamento se guia pelo prefixo exato, então nada depois do carimbo coincidiu."
       }
     ]
   },
   "ex-k3dnd4nf": {
-    "prompt": "Ponha as partes de um pedido na ordem em que o cache de um fornecedor as lê, da primeira à última.",
-    "hint": "Uma mudança perto da frente quebra tudo o que vem depois.",
+    "prompt": "Com --stamp, ponha as partes do prompt de sistema do cost_run.py na ordem em que são enviadas, da primeira à última.",
+    "hint": "Um valor que muda foi posto onde faz mais estrago.",
     "items": [
-      "as ferramentas",
-      "o prompt de sistema",
-      "as mensagens"
+      "a hora do pedido",
+      "a instrução de usar as ferramentas",
+      "as políticas da Marginalia"
     ]
   },
   "ex-1514y2d9": {
@@ -150,8 +150,8 @@
         "why": "O pedido deu certo."
       },
       {
-        "text": "Meia frase, com stop_reason max_tokens",
-        "why": "Certo. Um programa tem de conferir o stop_reason."
+        "text": "Uma resposta comum cujo stop_reason foi max_tokens",
+        "why": "Certo. Um programa tem de conferir o stop_reason, ou entrega texto cortado."
       },
       {
         "text": "A resposta inteira, já que o limite só vale para chamadas de ferramenta e não para texto",
@@ -164,11 +164,12 @@
     ]
   },
   "ex-18f19s2b": {
-    "prompt": "Um prompt mais longo que a janela do modelo recebeu o status HTTP ___ antes de qualquer trabalho.",
+    "prompt": "Com um modelo local, o único sinal de que um prompt foi cortado para caber na janela é o ___ da resposta, comparado com o que foi enviado.",
     "blanks": [
       {
         "accept": [
-          "400"
+          "input_tokens",
+          "usage.input_tokens"
         ]
       }
     ]
@@ -177,19 +178,19 @@
     "prompt": "Por que a chamada com duas falhas 529 deu certo?",
     "choices": [
       {
-        "text": "Porque o labllm ignorou a configuração",
-        "why": "O log mostra 529 529 200."
+        "text": "O flaky.py só fez falhar o primeiro pedido",
+        "why": "O log mostra 529 529 200: duas falhas, depois uma resposta."
       },
       {
         "text": "Porque 529 não é um erro",
-        "why": "É o status de um fornecedor sobrecarregado."
+        "why": "É o status de um servidor sobrecarregado."
       },
       {
         "text": "O SDK repetiu duas vezes sozinho",
         "why": "Certo. Com três falhas ele desistiu e levantou OverloadedError."
       },
       {
-        "text": "Porque o limits.py captura o erro e chama de novo até o fornecedor responder, sem limite",
+        "text": "Porque o limits.py captura o erro e chama de novo até o servidor responder, sem limite",
         "why": "O limits.py faz uma chamada; as novas tentativas foram do SDK."
       }
     ]
@@ -241,11 +242,11 @@
     "pairs": [
       {
         "left": "max_tokens=8",
-        "right": "meia frase, stop_reason max_tokens"
+        "right": "uma resposta que terminou cedo, sem erro"
       },
       {
-        "left": "um prompt além da janela",
-        "right": "HTTP 400 antes de qualquer trabalho"
+        "left": "um prompt além da janela do Ollama",
+        "right": "input_tokens bem abaixo do que foi enviado"
       },
       {
         "left": "três respostas 529 seguidas",
@@ -253,11 +254,11 @@
       }
     ],
     "right_distractors": [
-      "uma resposta vazia com status 200"
+      "HTTP 400 antes de qualquer trabalho"
     ]
   },
   "ex-26yrytk8": {
-    "prompt": "Quantos tokens a segunda execução com cache leu do cache, nos três pedidos?",
+    "prompt": "Na execução com --cache --stamp, quantos tokens os dois pedidos dela leram ao todo, a coluna input?",
     "unit": "tokens"
   }
 }

@@ -1,6 +1,6 @@
 ---
 title: O hospedeiro decide
-version: 1
+version: 2
 ---
 
 A especificação dá ao hospedeiro uma lista de trabalhos: criar e gerenciar clientes, controlar as permissões e o ciclo de vida deles, impor políticas de segurança e consentimento, tratar as decisões de autorização da pessoa, coordenar o modelo, e juntar contexto entre clientes. Cada achado desta aula está nessa lista:
@@ -8,7 +8,7 @@ A especificação dá ao hospedeiro uma lista de trabalhos: criar e gerenciar cl
 | o que foi visto | de quem é a decisão |
 |---|---|
 | o servidor rodou como ana, com os arquivos dela | o hospedeiro inicia o servidor; a pessoa o instala |
-| ele recebeu 4 variáveis de ambiente, ou 35 com três chaves de API | o cliente do hospedeiro, e a configuração que ele aceita |
+| ele recebeu 4 variáveis de ambiente, ou 31 com duas chaves de API | o cliente do hospedeiro, e a configuração que ele aceita |
 | ele viu só os argumentos da chamada | o hospedeiro, que decide o que vai num pedido |
 | os clientes declararam capacidades diferentes | cada hospedeiro, pelo que consegue fazer em nome de um servidor |
 | duas ferramentas com um nome: recusadas, renomeadas ou encobertas em silêncio | o hospedeiro |

@@ -1,75 +1,75 @@
 [
   {
     "id": "ex-xn90sd1x",
-    "version": 1,
+    "version": 2,
     "section": "what-a-run-costs",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "How many input tokens did the three requests of the uncached run carry in total?",
-    "value": 7440,
+    "prompt": "In the first run with llama3.2:3b, how many tokens did request 1 read fresh, the input column?",
+    "value": 994,
     "tolerance": 0,
     "unit": "tokens"
   },
   {
     "id": "ex-18v15b38",
-    "version": 1,
+    "version": 2,
     "section": "what-a-run-costs",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why did each request carry about 2,350 tokens before any of the conversation?",
+    "prompt": "In cost_run.py's table, what does the c.write column count, and why is it zero in every run here?",
     "choices": [
       {
-        "text": "Because labllm pads every request",
+        "text": "The tokens of the answer; the model wrote none",
         "correct": false,
-        "why": "labllm counts what it receives."
+        "why": "That is output: 16 and 67 tokens in the first run."
       },
       {
-        "text": "The tools and the system prompt with the policies are sent every time",
+        "text": "Input reused from the request before; nothing was reused",
+        "correct": false,
+        "why": "That is c.read, and it was 15 and 847."
+      },
+      {
+        "text": "A prefix a provider stores when asked; Ollama never reports one",
         "correct": true,
-        "why": "Right. The API keeps nothing between requests."
+        "why": "Right. Ollama reuses what matches on its own and reports it only as c.read."
       },
       {
-        "text": "Because the model's answer is counted as input",
+        "text": "Tool results sent back; neither tool returned anything",
         "correct": false,
-        "why": "The answer is output, 93 tokens in all."
-      },
-      {
-        "text": "Because of the cache",
-        "correct": false,
-        "why": "This run had no cache."
+        "why": "search_help returned titles; a tool result travels as input in the next request."
       }
     ]
   },
   {
     "id": "ex-1vr5f0ry",
-    "version": 1,
+    "version": 2,
     "section": "where-the-time-goes",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why did request 3 take about 3,200 ms when requests 1 and 2 took about 600?",
+    "prompt": "Request 1 of the first run took 10,447 ms to write 16 tokens. Where did most of that time go?",
     "choices": [
       {
-        "text": "It carried the most input tokens",
+        "text": "Writing those 16 tokens, one at a time",
         "correct": false,
-        "why": "labllm spends no time on input; the difference was 41 tokens."
+        "why": "Writing dominated request 2, with its 67-token answer; request 1 wrote almost nothing."
       },
       {
-        "text": "Because search_help ran during it",
-        "correct": false,
-        "why": "Tools run between requests, not during them."
-      },
-      {
-        "text": "Because the provider was overloaded and retried it once, without the program noticing",
-        "correct": false,
-        "why": "No retry happened in this run."
-      },
-      {
-        "text": "It wrote the 75-token answer",
+        "text": "Reading the 994 tokens of tools, policies and question",
         "correct": true,
-        "why": "Right. 200 ms plus 75 × 40 ms."
+        "why": "Right. A CPU works through the prompt before it writes anything."
+      },
+      {
+        "text": "Running search_help, inside the request",
+        "correct": false,
+        "why": "Tools run between requests, and search_help took 166 ms."
+      },
+      {
+        "text": "Two retries after the server was overloaded",
+        "correct": false,
+        "why": "No retry happened in this run; the SDK retries only on errors like 529."
       }
     ]
   },
@@ -106,127 +106,127 @@
   },
   {
     "id": "ex-dtt9j5yz",
-    "version": 1,
+    "version": 2,
     "section": "a-smaller-model",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "How many milliseconds did the whole run take with scripted-mini?",
-    "value": 1939,
+    "prompt": "How many milliseconds did the first request take with llama3.2:1b?",
+    "value": 5588,
     "tolerance": 60,
     "unit": "ms"
   },
   {
     "id": "ex-vsvcm4hh",
-    "version": 1,
+    "version": 2,
     "section": "a-smaller-model",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "What did switching to scripted-mini not change?",
+    "prompt": "A router sends the easy questions to llama3.2:1b. After this lesson's run, what should the loop do with the small model's tool calls?",
     "choices": [
       {
-        "text": "The time to write the answer",
+        "text": "Raise max_tokens so the arguments are not cut off",
         "correct": false,
-        "why": "It fell from 3,208 ms to 957."
+        "why": "The reply was not cut; its arguments had the wrong shape."
       },
       {
-        "text": "The total time",
+        "text": "Nothing: models of one family call tools alike",
         "correct": false,
-        "why": "It fell to 1,939 ms."
+        "why": "The 3b sent order_id; the 1b sent the tool's description back."
       },
       {
-        "text": "The tokens: 7,440 in and 93 out",
+        "text": "Check the arguments against the schema first",
         "correct": true,
-        "why": "Right. Speed changed; the shape of the bill did not."
+        "why": "Right. A failed check becomes an error result the loop can handle, not a crash."
       },
       {
-        "text": "The time per output token, which stays at 40 ms for every model of the lab",
+        "text": "Run the tool and let the exception end the run",
         "correct": false,
-        "why": "It is 10 ms for scripted-mini."
+        "why": "That is what cost_run.py did, and it crashed with KeyError."
       }
     ]
   },
   {
     "id": "ex-ve0xd5gq",
-    "version": 1,
+    "version": 2,
     "section": "caching-the-prefix",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "In the second cached run, what happened to the prefix on request 1?",
+    "prompt": "In section 05's two runs without --stamp, why did even request 1 show 847 in c.read?",
     "choices": [
       {
-        "text": "It was read from the cache, within its 300 seconds",
+        "text": "The previous run had left those tokens in Ollama",
         "correct": true,
-        "why": "Right. No write at all in that run."
+        "why": "Right. Ollama reuses what it computed while the model stays loaded."
       },
       {
-        "text": "It was written again",
+        "text": "--cache told Ollama to store the policies",
         "correct": false,
-        "why": "That was the first run."
+        "why": "Only one of the two runs had --cache, and Ollama ignores the mark."
       },
       {
-        "text": "It was left out of the request",
+        "text": "Request 1 sent only the new part of the prompt",
         "correct": false,
-        "why": "The request still carries it; the provider bills it as a read."
+        "why": "Every request carries the whole prompt; the reuse happens on the server."
       },
       {
-        "text": "It was ignored",
+        "text": "An earlier run had paid a cache write for them",
         "correct": false,
-        "why": "It was read, 2,347 tokens."
+        "why": "c.write is zero in every run; Ollama never reports one."
       }
     ]
   },
   {
     "id": "ex-tvzfch6w",
-    "version": 1,
+    "version": 2,
     "section": "caching-the-prefix",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "Why did --stamp make caching worse than no caching?",
+    "prompt": "Why did the run with --cache --stamp read 1,909 tokens, when the runs before it read 235 and 346?",
     "choices": [
       {
-        "text": "Because timestamps are not allowed in system prompts",
+        "text": "The timestamp pushed the prompt past the window",
         "correct": false,
-        "why": "They are allowed; they change the prefix."
+        "why": "It added a few tokens; the window is 8,192."
       },
       {
-        "text": "Because it made the prompt much longer, pushing it past the context window",
+        "text": "Ollama forgets what it computed when a run ends",
         "correct": false,
-        "why": "It added a few tokens."
+        "why": "The runs before it reused 847 tokens an earlier run had left."
       },
       {
-        "text": "Because labllm forgets the cache when a run ends",
+        "text": "--cache and --stamp together switch reuse off",
         "correct": false,
-        "why": "The second cached run read it from the first."
+        "why": "--cache changes nothing in Ollama; the stamp alone did it."
       },
       {
-        "text": "The front of the prefix changed, so every request wrote it again",
+        "text": "The front of the prompt changed on every request",
         "correct": true,
-        "why": "Right. 7,074 tokens written and none read; writes cost more than plain input."
+        "why": "Right. Reuse keys on the exact prefix, so nothing after the stamp matched."
       }
     ]
   },
   {
     "id": "ex-k3dnd4nf",
-    "version": 1,
+    "version": 2,
     "section": "caching-the-prefix",
     "type": "ordering",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Put the parts of a request in the order a provider's cache reads them, first to last.",
-    "hint": "A change near the front breaks everything after it.",
+    "prompt": "With --stamp, put the parts of cost_run.py's system prompt in the order they are sent, first to last.",
+    "hint": "A value that changes was put where it does the most damage.",
     "items": [
-      "the tools",
-      "the system prompt",
-      "the messages"
+      "the time of the request",
+      "the instruction to use the tools",
+      "Marginalia's policies"
     ]
   },
   {
     "id": "ex-1514y2d9",
-    "version": 1,
+    "version": 2,
     "section": "limits",
     "type": "quiz",
     "difficulty": "medium",
@@ -239,9 +239,9 @@
         "why": "The request succeeded."
       },
       {
-        "text": "Half a sentence, with stop_reason max_tokens",
+        "text": "A normal reply whose stop_reason was max_tokens",
         "correct": true,
-        "why": "Right. A program must check stop_reason."
+        "why": "Right. A program must check stop_reason, or it hands over cut text."
       },
       {
         "text": "The full answer, since the limit only applies to tool calls and not to text",
@@ -257,16 +257,17 @@
   },
   {
     "id": "ex-18f19s2b",
-    "version": 1,
+    "version": 2,
     "section": "limits",
     "type": "cloze",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "A prompt longer than the model's window got HTTP status ___ before any work was done.",
+    "prompt": "With a local model, the only sign that a prompt was cut to fit the window is the reply's ___, compared with what was sent.",
     "blanks": [
       {
         "accept": [
-          "400"
+          "input_tokens",
+          "usage.input_tokens"
         ],
         "ignore_case": true,
         "ignore_accents": true
@@ -275,7 +276,7 @@
   },
   {
     "id": "ex-14gvw2w6",
-    "version": 1,
+    "version": 2,
     "section": "limits",
     "type": "quiz",
     "difficulty": "hard",
@@ -283,14 +284,14 @@
     "prompt": "Why did the call with two 529 failures succeed?",
     "choices": [
       {
-        "text": "Because labllm ignored the configuration",
+        "text": "flaky.py failed only the first request",
         "correct": false,
-        "why": "The log shows 529 529 200."
+        "why": "The log shows 529 529 200: two failures, then an answer."
       },
       {
         "text": "Because 529 is not an error",
         "correct": false,
-        "why": "It is the status for an overloaded provider."
+        "why": "It is the status for an overloaded server."
       },
       {
         "text": "The SDK retried twice on its own",
@@ -298,7 +299,7 @@
         "why": "Right. With three failures it gave up and raised OverloadedError."
       },
       {
-        "text": "Because limits.py catches the error and calls again until the provider answers, without a limit",
+        "text": "Because limits.py catches the error and calls again until the server answers, without a limit",
         "correct": false,
         "why": "limits.py makes one call; the retries were the SDK's."
       }
@@ -368,7 +369,7 @@
   },
   {
     "id": "ex-5r5akwjp",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "matching",
     "difficulty": "medium",
@@ -377,11 +378,11 @@
     "pairs": [
       {
         "left": "max_tokens=8",
-        "right": "half a sentence, stop_reason max_tokens"
+        "right": "a reply that ended early, without an error"
       },
       {
-        "left": "a prompt past the window",
-        "right": "HTTP 400 before any work"
+        "left": "a prompt past Ollama's window",
+        "right": "input_tokens far below what was sent"
       },
       {
         "left": "three 529 answers in a row",
@@ -389,18 +390,18 @@
       }
     ],
     "right_distractors": [
-      "an empty reply with status 200"
+      "HTTP 400 before any work"
     ]
   },
   {
     "id": "ex-26yrytk8",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "How many tokens did the second cached run read from the cache, across its three requests?",
-    "value": 7041,
+    "prompt": "In the run with --cache --stamp, how many tokens did its two requests read in total, the input column?",
+    "value": 1909,
     "tolerance": 0,
     "unit": "tokens"
   }
