@@ -14,7 +14,7 @@ said X; we now know Y, because Z." A correction slipped in silently makes every 
 Two rules about the channel:
 
 - **Out of band.** Lesson 12 asked for a channel outside systems that may be compromised. On Thursday the company's
-  e-mail was never in scope, but the response cannot know that on the first morning, so updates go by phone and a
+  e-mail was never in scope, but the response cannot know that on the first morning. So updates go by phone and a
   messaging group set up for the incident, and only move back to e-mail once it is known to be safe.
 - **Written as if it will be read later by somebody hostile**, because it may be: in a dispute, by a regulator, or in
   court. That is not a reason to write less; it is a reason to write facts, with their sources, and to keep

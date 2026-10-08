@@ -34,7 +34,7 @@ and then an `EventData` section whose fields depend on the id. Event Viewer show
 `Get-WinEvent` returns it as objects, and `.ToXml()` shows the raw fields.
 
 Two details catch people. The Security channel has a **maximum size** and, by default, overwrites the
-oldest events when full; on a busy domain controller that can be hours, which is why Windows logs are
+oldest events when full. On a busy domain controller that can be hours, which is why Windows logs are
 forwarded off the machine (Windows Event Forwarding, or an agent) rather than read in place. And the event
 **time is stored in UTC** and displayed in the viewer's local zone, so two analysts in two cities reading
 the same event see two different clocks.

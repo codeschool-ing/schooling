@@ -18,6 +18,6 @@ Repare na forma: **"se isto aconteceu, então isto estaria nos dados."** A segun
 hipótese testável, porque diz exatamente o que procurar e onde. Ela também diz o que a ausência significa:
 se os dados da H2 não mostram nenhuma origem além do `gw`, a H2 é falsa nesta semana, e você pode dizer isso.
 
-Hipóteses vêm da inteligência (a aula 8 disse que campanhas de adivinhação atingem o setor), do ATT&CK
-(escolha uma técnica e pergunte o que ela deixaria nos seus logs), do próprio desenho do ambiente (o que nunca
-deveria acontecer aqui?) e do último incidente (como a mesma coisa pareceria da próxima vez?).
+Hipóteses vêm de quatro lugares. Inteligência: a aula 8 disse que campanhas de adivinhação atingem o setor.
+ATT&CK: escolha uma técnica e pergunte o que ela deixaria nos seus logs. O próprio desenho do ambiente: o que
+nunca deveria acontecer aqui? E o último incidente: como a mesma coisa pareceria da próxima vez?

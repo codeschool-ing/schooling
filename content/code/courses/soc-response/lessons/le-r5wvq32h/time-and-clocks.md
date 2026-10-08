@@ -38,6 +38,6 @@ a window, not to a point.
 
 The rule that follows is simple to state. **Store and compare in UTC; show in local time; never accept a
 record without its offset if you can configure it to carry one.** Windows already stores UTC. Ubuntu
-24.04's rsyslog already writes the offset. Network equipment is where the old format survives longest,
-and a line saying `Sep 17 02:33:07` is a line somebody has to annotate by hand with the zone of the
-device that wrote it, which is exactly the kind of step that is skipped at three in the morning.
+24.04's rsyslog already writes the offset. Network equipment is where the old format survives longest.
+A line saying `Sep 17 02:33:07` has to be annotated by hand with the zone of the device that wrote it,
+and that is exactly the kind of step that is skipped at three in the morning.

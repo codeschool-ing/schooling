@@ -18,6 +18,6 @@ Notice the shape: **"if this happened, then this would be in the data."** The se
 hypothesis testable, because it names exactly what to look for and where. It also tells you what absence
 means: if H2's data show no source but `gw`, H2 is false for this week, and you can say so.
 
-Hypotheses come from intelligence (lesson 8 said guessing campaigns hit the sector), from ATT&CK (pick a
-technique and ask what it would leave in your logs), from the environment's own design (what should
-never happen here?), and from the last incident (what would the same thing look like next time?).
+Hypotheses come from four places. Intelligence: lesson 8 said guessing campaigns hit the sector. ATT&CK: pick a
+technique and ask what it would leave in your logs. The environment's own design: what should never happen
+here? And the last incident: what would the same thing look like next time?
