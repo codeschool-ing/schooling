@@ -1,6 +1,6 @@
 ---
 title: The test set
-version: 1
+version: 2
 ---
 
 Every lesson since the fourth has measured something against `data/eval.jsonl`, and every
@@ -10,11 +10,11 @@ the thing that says whether a change made the system better, before any customer
 ## What is in it
 
 ```
-ana@lab:~/rag$ head -n 3 data/eval.jsonl
+ana@vm:~/rag$ head -n 3 data/eval.jsonl
 {"id": "e01", "question": "How many days do I have to return a printed book?", "gold": [["returns-policy", "The return window"]], "facts": ["30 days from delivery"]}
 {"id": "e02", "question": "Who pays for the return postage?", "gold": [["returns-policy", "How to start a return"]], "facts": ["Returns are free"]}
 {"id": "e03", "question": "How long after my return arrives will I get the refund?", "gold": [["returns-policy", "Refunds"]], "facts": ["within three working days"]}
-ana@lab:~/rag$ tail -n 2 data/eval.jsonl
+ana@vm:~/rag$ tail -n 2 data/eval.jsonl
 {"id": "e29", "question": "Which carrier do you use in Portugal?", "gold": [], "facts": []}
 {"id": "e30", "question": "Is there a student discount?", "gold": [], "facts": []}
 ```
@@ -24,9 +24,10 @@ answer it, and **facts**: a few words the passage that answers it contains, exac
 questions, 26 with an answer in the documents and four with none, which must be refused. All of them
 were written for the course, by reading the documents and asking what someone would want from them.
 
-A fact is a deliberately blunt instrument. It works here because extract-1 copies sentences, so a
-right reply contains the fact word for word. A real model paraphrases, and *a month* will not match
-*30 days*; the section on model judges says what replaces it then. Even so, a fact is worth writing
+A fact is a deliberately blunt instrument. It works when the reply quotes its source, and
+llama3.2:3b often does: *30 days from delivery* comes back as it was written. When the model
+paraphrases, *10 days* does not match *waits there for ten days*, and the section on model judges says
+what can replace it. Even so, a fact is worth writing
 for every question: it is what turns "does the reply look right" into a check a program can run on
 every commit.
 
@@ -55,7 +56,7 @@ set aside** and look at it only to confirm a decision already made. `evaluate.py
 third question by id:
 
 ```
-ana@lab:~/rag$ python -c "import json; qs = [json.loads(l) for l in open(\"data/eval.jsonl\")]; print(\" \".join(q[\"id\"] for q in qs if int(q[\"id\"][1:]) % 3 == 0))"
+ana@vm:~/rag$ python -c "import json; qs = [json.loads(l) for l in open(\"data/eval.jsonl\")]; print(\" \".join(q[\"id\"] for q in qs if int(q[\"id\"][1:]) % 3 == 0))"
 e03 e06 e09 e12 e15 e18 e21 e24 e27 e30
 ```
 

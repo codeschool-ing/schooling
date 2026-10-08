@@ -1,6 +1,6 @@
 ---
 title: O conjunto de teste
-version: 1
+version: 2
 ---
 
 Toda aula desde a quarta mediu alguma coisa contra o `data/eval.jsonl`, e cada medição foi só tão boa
@@ -10,11 +10,11 @@ deixou o sistema melhor, antes de algum cliente descobrir.
 ## O que tem nele
 
 ```
-ana@lab:~/rag$ head -n 3 data/eval.jsonl
+ana@vm:~/rag$ head -n 3 data/eval.jsonl
 {"id": "e01", "question": "How many days do I have to return a printed book?", "gold": [["returns-policy", "The return window"]], "facts": ["30 days from delivery"]}
 {"id": "e02", "question": "Who pays for the return postage?", "gold": [["returns-policy", "How to start a return"]], "facts": ["Returns are free"]}
 {"id": "e03", "question": "How long after my return arrives will I get the refund?", "gold": [["returns-policy", "Refunds"]], "facts": ["within three working days"]}
-ana@lab:~/rag$ tail -n 2 data/eval.jsonl
+ana@vm:~/rag$ tail -n 2 data/eval.jsonl
 {"id": "e29", "question": "Which carrier do you use in Portugal?", "gold": [], "facts": []}
 {"id": "e30", "question": "Is there a student discount?", "gold": [], "facts": []}
 ```
@@ -24,9 +24,10 @@ respondem, e **fatos**: algumas palavras que o trecho que responde contém, exat
 26 com resposta nos documentos e quatro sem nenhuma, que têm de ser recusadas. Todas foram escritas
 para o curso, lendo os documentos e perguntando o que alguém ia querer deles.
 
-Um fato é um instrumento propositalmente grosseiro. Funciona aqui porque o extract-1 copia frases,
-então uma resposta certa contém o fato palavra por palavra. Um modelo real parafraseia, e *a month* não
-vai bater com *30 days*; a seção sobre juízes que são modelos diz o que o substitui então. Mesmo assim,
+Um fato é um instrumento propositalmente grosseiro. Funciona quando a resposta cita a fonte, e o
+llama3.2:3b muitas vezes cita: *30 days from delivery* volta como foi escrito. Quando o modelo
+parafraseia, *10 days* não bate com *waits there for ten days*, e a seção sobre juízes que são modelos
+diz o que pode substituí-lo. Mesmo assim,
 vale escrever um fato para cada pergunta: é o que transforma "a resposta parece certa" numa verificação
 que um programa roda em todo commit.
 
@@ -55,7 +56,7 @@ de teste** e olhar para ela só para confirmar uma decisão já tomada. O `evalu
 três perguntas pelo id:
 
 ```
-ana@lab:~/rag$ python -c "import json; qs = [json.loads(l) for l in open(\"data/eval.jsonl\")]; print(\" \".join(q[\"id\"] for q in qs if int(q[\"id\"][1:]) % 3 == 0))"
+ana@vm:~/rag$ python -c "import json; qs = [json.loads(l) for l in open(\"data/eval.jsonl\")]; print(\" \".join(q[\"id\"] for q in qs if int(q[\"id\"][1:]) % 3 == 0))"
 e03 e06 e09 e12 e15 e18 e21 e24 e27 e30
 ```
 
