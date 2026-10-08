@@ -18,7 +18,7 @@ O servidor que a ana implantou é a ideia da aula 14 com três acréscimos: TLS,
       "note": "**A URL canônica do servidor**, que é também o recurso que todo token tem de nomear."
     },
     {
-      "code": "class TokenTable:\n    \"\"\"Checks a bearer token against the table the authorization server keeps (the lab writes it).\"\"\"\n\n    async def verify_token(self, token: str) -> AccessToken | None:\n        entry = json.load(open(\"tokens.json\")).get(hashlib.sha256(token.encode()).hexdigest())\n",
+      "code": "class TokenTable:\n    \"\"\"Checks a bearer token against the table the authorization server keeps (second_machine.sh writes it).\"\"\"\n\n    async def verify_token(self, token: str) -> AccessToken | None:\n        entry = json.load(open(\"tokens.json\")).get(hashlib.sha256(token.encode()).hexdigest())\n",
       "note": "**Como um token é conferido.** Uma implantação de verdade verifica um token assinado ou pergunta sobre ele ao servidor de autorização; aqui o laboratório faz o papel do servidor de autorização e guarda uma tabela do que cada token concede, com o SHA-256 do token como chave, para a tabela não guardar token nenhum."
     },
     {

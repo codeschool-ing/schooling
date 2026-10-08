@@ -6,37 +6,28 @@ version: 1
 Every provider enforces limits, and each one comes back to the program differently. `limits.py` meets four:
 
 ```python
-"""Four limits a provider enforces, met one at a time."""
-import json
+"""Three limits, met one at a time: the reply's length, the context window, and a server too busy to answer."""
 import sys
 import time
-import urllib.request
 
 import anthropic
 
 client = anthropic.Anthropic()
+SYSTEM = "You answer Marginalia's customers in the cost lesson."
 ASK = [{"role": "user", "content": "Say hello to a customer."}]
-
-
-def lab_config(**settings):
-    """labllm's own switch for simulated failures (lab only; a real provider has no such thing)."""
-    req = urllib.request.Request("http://127.0.0.1:8600/lab/config", data=json.dumps(settings).encode(),
-                                 headers={"Content-Type": "application/json"})
-    urllib.request.urlopen(req).read()
-
 
 what = sys.argv[1]
 t0 = time.perf_counter()
 try:
     if what == "max-tokens":
-        r = client.messages.create(model="scripted-1", max_tokens=8, system="You answer Marginalia's customers in the cost lesson.", messages=ASK)
+        r = client.messages.create(model="llama3.2:3b", max_tokens=8, system=SYSTEM, messages=ASK)
         print(r.stop_reason, repr(r.content[0].text))
-    if what == "window":
-        huge = "word " * 210_000
-        client.messages.create(model="scripted-1", max_tokens=1024, messages=[{"role": "user", "content": huge}])
-    if what in ("overloaded", "overloaded-3"):
-        lab_config(fail_next=529, fail_count=2 if what == "overloaded" else 3)
-        r = client.messages.create(model="scripted-1", max_tokens=64, system="You answer Marginalia's customers in the cost lesson.", messages=ASK)
+    if what == "window":                      # about six times the 8192 tokens Ollama was given
+        huge = "word " * 50_000 + "\nWhat is the last line of this message?"
+        r = client.messages.create(model="llama3.2:3b", max_tokens=32, messages=[{"role": "user", "content": huge}])
+        print(r.stop_reason, "input_tokens:", r.usage.input_tokens, repr(r.content[0].text))
+    if what == "overloaded":                  # run with ANTHROPIC_BASE_URL at lesson 7's flaky.py
+        r = client.messages.create(model="llama3.2:3b", max_tokens=64, system=SYSTEM, messages=ASK)
         print("answered:", r.content[0].text)
 except anthropic.APIStatusError as e:
     print(f"{type(e).__name__} {e.status_code}: {e.message[:120]}")

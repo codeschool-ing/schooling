@@ -18,6 +18,9 @@ The replacement is `Workflow`, a graph of nodes joined by edges, and a node can 
   "file": "adk_pipeline.py",
   "parts": [
     {
+      "code": "\"\"\"A fixed two-step workflow: plain code finds the facts, then an agent writes the reply from them.\"\"\"\nimport asyncio\nimport json\nimport re\n\nfrom google.adk.agents import Agent\nfrom google.adk.models.lite_llm import LiteLlm\nfrom google.adk.runners import InMemoryRunner\nfrom google.adk.workflow import START, Workflow\nfrom google.genai.types import Content, Part\n\nimport shop\nfrom adk_show import show\n\nMODEL = LiteLlm(model=\"ollama_chat/llama3.2:3b\")\n\n\n"
+    },
+    {
       "code": "def find_facts(node_input: str) -> str:\n    \"\"\"No model: the order id is a pattern, and the facts are a lookup.\"\"\"\n",
       "note": "**A node that is a function.** It receives the previous node's output, here the customer's message."
     },
@@ -32,6 +35,9 @@ The replacement is `Workflow`, a graph of nodes joined by edges, and a node can 
     {
       "code": "pipeline = Workflow(name=\"pipeline\", edges=[(START, find_facts, writer)])",
       "note": "**The graph**: from the start to the function, from the function to the agent."
+    },
+    {
+      "code": "\n\n\nasync def main():\n    runner = InMemoryRunner(agent=pipeline, app_name=\"marginalia\")\n    session = await runner.session_service.create_session(app_name=\"marginalia\", user_id=\"bia\")\n    async for event in runner.run_async(user_id=\"bia\", session_id=session.id,\n                                        new_message=Content(role=\"user\", parts=[Part(text=\"When was M-1042 delivered?\")])):\n        show(event)\n\n\nasyncio.run(main())"
     }
   ]
 }

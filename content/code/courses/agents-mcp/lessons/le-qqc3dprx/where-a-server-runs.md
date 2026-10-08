@@ -30,11 +30,11 @@ if __name__ == "__main__":
 `probed.py` finds that report in labllm's log, inside whichever provider's format the host used:
 
 ```python
-"""Print what where_am_i reported, from the tool result in labllm's log, wherever each provider's format put it."""
+"""Print what where_am_i reported, from the tool result in the recorder's log, wherever each API's format put it."""
 import json
 import re
 
-log = open("/var/log/labllm/requests.jsonl").read()
+log = open("requests.jsonl").read()
 found = re.search(r'parent[\\"]+: [\\"]+(.*?)[\\"]+, [\\"]+uid[\\"]+: (\d+), [\\"]+cwd[\\"]+: [\\"]+(.*?)[\\"]+,.*?env[\\"]+: \[(.*?)\]', log)
 parent, uid, cwd, env = found.groups()
 names = [n for n in re.split(r'[\\", ]+', env) if n]

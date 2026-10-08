@@ -9,36 +9,27 @@
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab
 # (lab.sh reset); the files ana wrote (put below), which the lesson shows in
-# full; emptying labllm's log before the runs whose requests are read, done as
-# root because the log belongs to the labllm user; and the answers a person
-# typed at the approval prompts, fed on standard input.
+# full, each checked by lab/shown.py; and the answers a person typed at the
+# approval prompts, fed on standard input.
 #
 # PYTHONWARNINGS=ignore::UserWarning is set for every command except the
 # first refund run: ADK announces each feature it marks experimental with a
 # Python warning on every run, and the lesson shows those warnings once,
 # there, and says so.
 #
-# THE MODEL'S WORDS AND DECISIONS IN THIS LESSON WERE WRITTEN BY THE COURSE,
-# as rules in lab/scripted/10-adk.json. Google's Agent Development Kit
-# (google-adk 2.11.0), what it sent on the wire in the Gemini API's format,
-# its events, its error handling, tool confirmation, callbacks, transfers,
-# agents as tools, workflow agents, session state and its deploy command's
-# help are real. Nothing was deployed: Agent Engine and Cloud Run need a
-# Google Cloud project, and this lab reaches no cloud.
+# THE MODEL IS REAL: llama3.2:3b (a80c4f17acd5) in Ollama 0.40.0, with an
+# 8192-token context, captured on 2026-10-08, reached by Google's Agent
+# Development Kit (google-adk 2.11.0) through LiteLLM (litellm 1.83.0) and
+# Ollama's own /api/chat. What the agents decided and wrote is what the model
+# wrote that day. Nothing was deployed: Agent Engine and Cloud Run need a
+# Google Cloud project, and the Gemini API needs a Google account.
 #
-# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo, with LAB_TODAY=2026-10-06.
-set -uo pipefail
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
+# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "export PYTHONWARNINGS=ignore::UserWarning; $*" 2>&1 || true; }
-loud() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-block() { printf '##### %s\n' "$1"; }
-fresh_log() { : > /var/log/labllm/requests.jsonl; }
-exec 9>/var/tmp/agents-capture.lock; flock 9
-lab reset >/dev/null
+. ../../lab/capture.sh
+on() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "$SHELL_STATE export PYTHONWARNINGS=ignore::UserWarning; $*" < /dev/null 2>&1 || true; }
+loud() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "$SHELL_STATE $*" < /dev/null 2>&1 || true; }
+lab exec 'ollama run llama3.2:3b hello' < /dev/null >/dev/null 2>&1
 lab exec 'python -c "import shop; shop.search_help(\"warm up\")"' >/dev/null
 
 put adk_tools.py <<'PY'
@@ -85,20 +76,20 @@ def show(event):
 PY
 
 put adk_run.py <<'PY'
-"""A first agent with the Google ADK, pointed at the lab's stand-in through the Gemini API's wire format."""
+"""A first agent with the Google ADK, pointed at Ollama through LiteLLM."""
 import asyncio
 import sys
 
 from google.adk.agents import Agent
 from google.adk.agents.run_config import RunConfig
-from google.adk.models.google_llm import Gemini
+from google.adk.models.lite_llm import LiteLlm
 from google.adk.runners import InMemoryRunner
 from google.genai.types import Content, Part
 
 from adk_show import show
 from adk_tools import get_order, search_help
 
-MODEL = Gemini(model="scripted-1", base_url="http://127.0.0.1:8600")  # labllm speaks the Gemini API too
+MODEL = LiteLlm(model="ollama_chat/llama3.2:3b")  # ADK reaches Ollama through LiteLLM
 
 
 def say_what_failed(tool, args, tool_context, error):
@@ -128,18 +119,18 @@ asyncio.run(main(sys.argv[1], sys.argv[2]))
 PY
 
 put wire.py <<'PY'
-"""What each request in labllm's log carried, in the Gemini API's format."""
+"""What each request in the recorder's log carried, in the format of Ollama's own API."""
 import json
 
-for n, line in enumerate(open("/var/log/labllm/requests.jsonl"), 1):
-    q = json.loads(line)["request"]
-    print(f"request {n}:")
-    print("  systemInstruction:", json.dumps(q["systemInstruction"]["parts"][0]["text"]))
+for n, line in enumerate(open("requests.jsonl"), 1):
+    r = json.loads(line)
+    q = r["request"]
+    print(f"request {n}: {r['path']}")
     for tool in q.get("tools", []):
-        for f in tool["functionDeclarations"]:
-            print(f"  tool {f['name']}:", json.dumps(f["parameters_json_schema"]))
-    for c in q["contents"]:
-        print(f"  {c['role']}:", json.dumps(c["parts"][0], ensure_ascii=False)[:150])
+        f = tool["function"]
+        print(f"  tool {f['name']}:", json.dumps(f["parameters"]))
+    for m in q["messages"]:
+        print(f"  {m['role']}:", json.dumps(m.get("content") or m.get("tool_calls"), ensure_ascii=False)[:150])
 PY
 
 put adk_refund.py <<'PY'
@@ -148,7 +139,7 @@ import asyncio
 import sys
 
 from google.adk.agents import Agent
-from google.adk.models.google_llm import Gemini
+from google.adk.models.lite_llm import LiteLlm
 from google.adk.runners import InMemoryRunner
 from google.adk.tools import FunctionTool
 from google.genai.types import Content, FunctionResponse, Part
@@ -156,7 +147,7 @@ from google.genai.types import Content, FunctionResponse, Part
 from adk_show import show
 from adk_tools import get_order, refund
 
-MODEL = Gemini(model="scripted-1", base_url="http://127.0.0.1:8600")
+MODEL = LiteLlm(model="ollama_chat/llama3.2:3b")
 LIMIT = 5000  # cents; above this a refund is refused in code and no person is asked
 
 
@@ -205,7 +196,7 @@ import asyncio
 import sys
 
 from google.adk.agents import Agent
-from google.adk.models.google_llm import Gemini
+from google.adk.models.lite_llm import LiteLlm
 from google.adk.runners import InMemoryRunner
 from google.adk.tools.agent_tool import AgentTool
 from google.genai.types import Content, Part
@@ -213,7 +204,7 @@ from google.genai.types import Content, Part
 from adk_show import show
 from adk_tools import get_order
 
-MODEL = Gemini(model="scripted-1", base_url="http://127.0.0.1:8600")
+MODEL = LiteLlm(model="ollama_chat/llama3.2:3b")
 
 
 def specialist():
@@ -247,7 +238,7 @@ import json
 import re
 
 from google.adk.agents import Agent
-from google.adk.models.google_llm import Gemini
+from google.adk.models.lite_llm import LiteLlm
 from google.adk.runners import InMemoryRunner
 from google.adk.workflow import START, Workflow
 from google.genai.types import Content, Part
@@ -255,7 +246,7 @@ from google.genai.types import Content, Part
 import shop
 from adk_show import show
 
-MODEL = Gemini(model="scripted-1", base_url="http://127.0.0.1:8600")
+MODEL = LiteLlm(model="ollama_chat/llama3.2:3b")
 
 
 def find_facts(node_input: str) -> str:
@@ -280,13 +271,14 @@ async def main():
 asyncio.run(main())
 PY
 
-SPECIALIST_SAW="python -c 'import json; r = [json.loads(l)[\"request\"] for l in open(\"/var/log/labllm/requests.jsonl\")]; q = [x for x in r if \"orders specialist\" in x[\"systemInstruction\"][\"parts\"][0][\"text\"]][0]; [print(c[\"role\"] + \":\", json.dumps(p, ensure_ascii=False)[:160]) for c in q[\"contents\"] for p in c[\"parts\"]]'"
+SPECIALIST_SAW="python -c 'import json; r = [json.loads(l)[\"request\"] for l in open(\"requests.jsonl\")]; q = [x for x in r if \"orders specialist\" in x[\"messages\"][0][\"content\"]][0]; [print(m[\"role\"] + \":\", json.dumps(m.get(\"content\") or m.get(\"tool_calls\"), ensure_ascii=False)[:160]) for m in q[\"messages\"]]'"
 
 block deploy-help
 on 'adk deploy --help'
 
 block first-run
-fresh_log
+recorder
+say 'export OLLAMA_API_BASE=http://127.0.0.1:11435'
 on 'python adk_run.py default "Where is my order M-1043?"'
 
 block first-wire
@@ -302,9 +294,9 @@ block one-call
 on 'python adk_run.py one-call "Where is my order M-1043?" 2> stderr.txt; wc -l < stderr.txt'
 
 block confirm-no
-fresh_log
+on 'rm -f requests.jsonl'
 loud 'echo n | python adk_refund.py "One copy of M-1047 arrived damaged; please refund it."'
-on 'wc -l < /var/log/labllm/requests.jsonl'
+on 'wc -l < requests.jsonl'
 
 block confirm-yes
 on 'echo y | python adk_refund.py "One copy of M-1047 arrived damaged; please refund it."'
@@ -314,12 +306,12 @@ block limit
 on 'echo y | python adk_refund.py "Please refund the whole order M-1047."'
 
 block transfer
-fresh_log
+on 'rm -f requests.jsonl'
 on 'python adk_team.py transfer'
 on "$SPECIALIST_SAW"
 
 block as-tool
-fresh_log
+on 'rm -f requests.jsonl'
 on 'python adk_team.py tool'
 on "$SPECIALIST_SAW"
 
@@ -327,6 +319,6 @@ block sequential
 on "python -c 'from google.adk.agents import SequentialAgent; SequentialAgent(name=\"pipeline\", sub_agents=[])'"
 
 block pipeline
-fresh_log
+on 'rm -f requests.jsonl'
 on 'python adk_pipeline.py 2> /dev/null'
-on "python -c 'import json; [print(json.dumps(c, ensure_ascii=False)) for l in open(\"/var/log/labllm/requests.jsonl\") for c in json.loads(l)[\"request\"][\"contents\"]]'"
+on "python -c 'import json; [print(m[\"role\"] + \":\", json.dumps(m.get(\"content\"), ensure_ascii=False)[:200]) for l in open(\"requests.jsonl\") for m in json.loads(l)[\"request\"][\"messages\"]]'"

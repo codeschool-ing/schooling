@@ -1,9 +1,25 @@
 ---
 title: The same tool, three times
-version: 1
+version: 2
 ---
 
 Lessons 8, 9 and 10 gave three agents the same `get_order`. Each time it was written again for the library: a decorated function, an `@tool` returning MCP content, a plain function. And each library described it to its model in that provider's own format. Here is the first request each host sent in this lesson, cut down to the tool:
+
+`wire.py` reads the recorder's log from lesson 1 and prints the first request's tools, as the host wrote them:
+
+```python
+"""For the first request in the recorder's log: which API it went to, and get_order as the host described it."""
+import json
+import textwrap
+
+for line in open("requests.jsonl"):
+    r = json.loads(line)
+    tools = r["request"].get("tools", [])
+    for t in tools:
+        print(r["path"])
+        print(textwrap.fill(json.dumps(t, ensure_ascii=False), 100, initial_indent="  ", subsequent_indent="  "))
+    break
+```
 
 ```
 ana@lab:~/agents$ python hosts.py openai > /dev/null 2>&1; python wire.py

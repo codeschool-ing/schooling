@@ -10,11 +10,11 @@ Um `CLAUDE.md` apareceu em `~/agents`, com uma instrução inofensiva:
 ```
 ana@lab:~/agents$ cat CLAUDE.md
 Sign every reply as "The Marginalia team".
-ana@lab:~/agents$ python cs_run.py no-builtins "Where is my order M-1043?" > /dev/null; python wire.py; grep -c "The Marginalia team" /var/log/labllm/requests.jsonl
+ana@lab:~/agents$ python cs_run.py no-builtins "Where is my order M-1043?" > /dev/null; python wire.py; grep -c "The Marginalia team" requests.jsonl
 request 1:  3 tools,    478 tokens in  mcp__shop__get_order, mcp__shop__refund, mcp__shop__search_help
 request 2:  3 tools,    660 tokens in  mcp__shop__get_order, mcp__shop__refund, mcp__shop__search_help
 2
-ana@lab:~/agents$ python cs_run.py isolated "Where is my order M-1043?" > /dev/null; python wire.py; grep -c "The Marginalia team" /var/log/labllm/requests.jsonl
+ana@lab:~/agents$ python cs_run.py isolated "Where is my order M-1043?" > /dev/null; python wire.py; grep -c "The Marginalia team" requests.jsonl
 request 1:  3 tools,    399 tokens in  mcp__shop__get_order, mcp__shop__refund, mcp__shop__search_help
 request 2:  3 tools,    581 tokens in  mcp__shop__get_order, mcp__shop__refund, mcp__shop__search_help
 0

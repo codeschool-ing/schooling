@@ -1,9 +1,25 @@
 ---
 title: A mesma ferramenta, três vezes
-version: 1
+version: 2
 ---
 
 As aulas 8, 9 e 10 deram a três agentes o mesmo `get_order`. A cada vez ele foi escrito de novo para a biblioteca: uma função decorada, um `@tool` devolvendo conteúdo MCP, uma função simples. E cada biblioteca o descreveu ao seu modelo no formato do próprio fornecedor. Aqui está o primeiro pedido que cada hospedeiro mandou nesta aula, cortado até a ferramenta:
+
+O `wire.py` lê o log do gravador da aula 1 e imprime as ferramentas do primeiro pedido, como o hospedeiro as escreveu:
+
+```python
+"""For the first request in the recorder's log: which API it went to, and get_order as the host described it."""
+import json
+import textwrap
+
+for line in open("requests.jsonl"):
+    r = json.loads(line)
+    tools = r["request"].get("tools", [])
+    for t in tools:
+        print(r["path"])
+        print(textwrap.fill(json.dumps(t, ensure_ascii=False), 100, initial_indent="  ", subsequent_indent="  "))
+    break
+```
 
 ```
 ana@lab:~/agents$ python hosts.py openai > /dev/null 2>&1; python wire.py

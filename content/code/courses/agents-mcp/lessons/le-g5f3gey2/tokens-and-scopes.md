@@ -7,7 +7,7 @@ version: 1
 
 ```bash
 # call.sh TOKEN-NAME TOOL ARGUMENTS: one tools/call to the remote server, by hand, with curl.
-curl -s --cacert /opt/agents/share/marginalia-ca.crt https://mcp.marginalia.test:8443/mcp \
+curl -s --cacert marginalia-ca.crt https://mcp.marginalia.test:8443/mcp \
   -H "Authorization: Bearer $(cat tokens/$1)" \
   -H "Content-Type: application/json" -H "Accept: application/json, text/event-stream" \
   -H "MCP-Protocol-Version: 2026-07-28" -H "Mcp-Method: tools/call" -H "Mcp-Name: $2" \

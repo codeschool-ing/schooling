@@ -6,14 +6,13 @@ version: 1
 The first run used the defaults, and the answer took two requests. `wire.py` reads labllm's log and prints, for each request, how many tools it offered, their first names and the tokens it carried in:
 
 ```python
-"""What each request in labllm's log carried: tools offered, their names, and tokens in."""
+"""What each request in the recorder's log carried: tools offered, their names, and tokens in."""
 import json
 
-for n, line in enumerate(open("/var/log/labllm/requests.jsonl"), 1):
+for n, line in enumerate(open("requests.jsonl"), 1):
     r = json.loads(line)
     tools = [t["name"] for t in r["request"].get("tools", [])]
-    u = r["usage"]
-    tokens_in = u["input_tokens"] + u.get("cache_creation_input_tokens", 0) + u.get("cache_read_input_tokens", 0)
+    tokens_in = r["usage"].get("input_tokens", 0)
     print(f"request {n}: {len(tools):2} tools, {tokens_in:6} tokens in  {', '.join(tools[:6])}"
           + (", ..." if len(tools) > 6 else ""))
 ```

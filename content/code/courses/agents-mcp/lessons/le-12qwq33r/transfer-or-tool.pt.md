@@ -11,7 +11,7 @@ import asyncio
 import sys
 
 from google.adk.agents import Agent
-from google.adk.models.google_llm import Gemini
+from google.adk.models.lite_llm import LiteLlm
 from google.adk.runners import InMemoryRunner
 from google.adk.tools.agent_tool import AgentTool
 from google.genai.types import Content, Part
@@ -19,7 +19,7 @@ from google.genai.types import Content, Part
 from adk_show import show
 from adk_tools import get_order
 
-MODEL = Gemini(model="scripted-1", base_url="http://127.0.0.1:8600")
+MODEL = LiteLlm(model="ollama_chat/llama3.2:3b")
 
 
 def specialist():

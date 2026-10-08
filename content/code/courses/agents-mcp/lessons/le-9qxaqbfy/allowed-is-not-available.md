@@ -22,7 +22,7 @@ Three options decide what a tool call may do, and their names are close enough t
       "code": "async def main(how, task):\n"
     },
     {
-      "code": "    o = ClaudeAgentOptions(model=\"scripted-1\", system_prompt=SYSTEM, mcp_servers={\"shop\": shop_server},\n                           tools=[], setting_sources=[], allowed_tools=[\"mcp__shop__get_order\"])\n    if how == \"dont-ask\":\n",
+      "code": "    o = ClaudeAgentOptions(model=\"qwen2.5:3b\", system_prompt=SYSTEM, mcp_servers={\"shop\": shop_server},\n                           tools=[], setting_sources=[], allowed_tools=[\"mcp__shop__get_order\"])\n    if how == \"dont-ask\":\n",
       "note": "**The same base in every mode**: no built-in tools, no settings files, and only `get_order` allowed."
     },
     {
@@ -48,7 +48,7 @@ system     permission_denied
 user       tool_result (error) Auto mode could not evaluate this action and is blocking it for safety — run with --debug 
 assistant  I could not issue this refund myself; a colleague will review order M-1047 and reply to you by email.
 result     success turns=2 9723 ms cost_usd=0.0048 session=23322038
-ana@lab:~/agents$ python -c 'import json; [print(r["status"], r["request"]["model"], r["request"]["system"][1]["text"].splitlines()[0]) for r in map(json.loads, open("/var/log/labllm/requests.jsonl"))]' | sort | uniq -c
+ana@lab:~/agents$ python -c 'import json; [print(r["status"], r["request"]["model"], r["request"]["system"][1]["text"].splitlines()[0]) for r in map(json.loads, open("requests.jsonl"))]' | sort | uniq -c
       2 200 scripted-1 You are a Claude agent, built on Anthropic's Claude Agent SDK.
      10 200 scripted-1 You are a security monitor for autonomous AI coding agents.
       1 404 claude-sonnet-5 You are a security monitor for autonomous AI coding agents.
@@ -68,7 +68,7 @@ system     permission_denied
 user       tool_result (error) Permission to use mcp__shop__refund has been denied because Claude Code is running in don'
 assistant  I could not issue this refund myself; a colleague will review order M-1047 and reply to you by email.
 result     success turns=2 1755 ms cost_usd=0.0050 session=25efd6c3
-ana@lab:~/agents$ python -c 'import json; [print(b["content"]) for r in map(json.loads, open("/var/log/labllm/requests.jsonl")) for m in r["request"]["messages"] if isinstance(m["content"], list) for b in m["content"] if b.get("type") == "tool_result"]' | head -1
+ana@lab:~/agents$ python -c 'import json; [print(b["content"]) for r in map(json.loads, open("requests.jsonl")) for m in r["request"]["messages"] if isinstance(m["content"], list) for b in m["content"] if b.get("type") == "tool_result"]' | head -1
 Permission to use mcp__shop__refund has been denied because Claude Code is running in don't ask mode. IMPORTANT: You *may* attempt to accomplish this action using other tools that might naturally be used to accomplish this goal, e.g. using head instead of cat. But you *should not* attempt to work around this denial in malicious ways, e.g. do not use your ability to run tests to execute non-test actions. You should only try to work around this restriction in reasonable ways that do not attempt to bypass the intent behind this denial. If you believe this capability is essential to complete the user's request, STOP and explain to the user what you were trying to do and why you need this permission. Let the user decide how to proceed.
 ```
 

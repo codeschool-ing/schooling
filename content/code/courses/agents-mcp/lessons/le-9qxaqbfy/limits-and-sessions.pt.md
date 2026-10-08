@@ -35,7 +35,7 @@ SYSTEM = "You answer Marginalia's customers in the Claude Agent SDK lesson."
 
 
 async def turn(text, resume=None):
-    o = ClaudeAgentOptions(model="scripted-1", system_prompt=SYSTEM, mcp_servers={"shop": shop_server},
+    o = ClaudeAgentOptions(model="qwen2.5:3b", system_prompt=SYSTEM, mcp_servers={"shop": shop_server},
                            tools=[], setting_sources=[], resume=resume,
                            allowed_tools=["mcp__shop__get_order", "mcp__shop__search_help"])
     session = None

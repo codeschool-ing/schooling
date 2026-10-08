@@ -1,6 +1,6 @@
 ---
 title: Hooks run before every call
-version: 1
+version: 2
 ---
 
 A **hook** is a function the CLI calls at a fixed point of the loop: before a tool runs, after it, when a session starts, when the agent stops, and at others. A `PreToolUse` hook sees every tool call, including the allowed ones, and can deny it before any permission rule is consulted.
@@ -10,6 +10,10 @@ A **hook** is a function the CLI calls at a fixed point of the loop: before a to
   "language": "python",
   "file": "cs_refund.py",
   "parts": [
+    {
+      "code": "\"\"\"A refund under four permission arrangements.\"\"\"\nimport json\nimport sys\n\nimport anyio\nfrom claude_agent_sdk import ClaudeAgentOptions, HookMatcher, PermissionResultAllow, PermissionResultDeny, query\n\nfrom cs_show import show\nfrom cs_tools import shop_server\n\nSYSTEM = \"You handle refunds for Marginalia's customers in the Claude Agent SDK lesson.\"\n",
+      "note": "**The whole of `cs_refund.py`**: the shop's tools from `cs_tools.py`, the printer from `cs_show.py`, and the system prompt."
+    },
     {
       "code": "LIMIT = 5000  # cents; above this a refund is refused in code and no person is asked\n\n\nasync def ask_a_person(tool_name, tool_input, context):\n    print(f\"approve?   {tool_name} {tool_input} [y/n] \", end=\"\", flush=True)\n    answer = sys.stdin.readline().strip()\n    print(answer)\n    if answer == \"y\":\n        return PermissionResultAllow()\n    return PermissionResultDeny(message=\"Not approved by staff. A colleague will review this refund.\")\n\n\n",
       "note": "**A rule with a right answer**, kept in code: a refund above 50.00 is never this agent's decision."
@@ -27,8 +31,12 @@ A **hook** is a function the CLI calls at a fixed point of the loop: before a to
       "note": "**Over the limit, the call is denied here**, with a reason the model reads."
     },
     {
-      "code": "    return {}",
+      "code": "    return {}\n\n\n",
       "note": "**An empty answer means no opinion**: the call continues to the permission rules."
+    },
+    {
+      "code": "async def main(how, task):\n    o = ClaudeAgentOptions(model=\"qwen2.5:3b\", system_prompt=SYSTEM, mcp_servers={\"shop\": shop_server},\n                           tools=[], setting_sources=[], allowed_tools=[\"mcp__shop__get_order\"])\n    if how == \"dont-ask\":\n        o.permission_mode = \"dontAsk\"\n    if how in (\"ask\", \"hooked\"):\n        o.permission_mode = \"default\"\n        o.can_use_tool = ask_a_person\n    if how == \"hooked\":\n        o.hooks = {\"PreToolUse\": [HookMatcher(matcher=\"mcp__shop__.*\", hooks=[audit_and_limit])]}\n    async for message in query(prompt=task, options=o):\n        show(message)\n\n\nanyio.run(main, sys.argv[1], sys.argv[2])",
+      "note": "**The four arrangements**, chosen by the first argument; section 06 read them."
     }
   ]
 }

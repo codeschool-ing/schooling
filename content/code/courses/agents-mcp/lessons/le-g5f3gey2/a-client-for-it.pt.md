@@ -11,10 +11,10 @@ Um hospedeiro alcança um servidor remoto com o mesmo `Client` de antes, receben
   "file": "remote_client.py",
   "parts": [
     {
-      "code": "\"\"\"Call the remote server: TLS checked against the lab's CA, and a bearer token from a file.\"\"\"\nimport asyncio\nimport json\nimport ssl\nimport sys\n\nimport httpx2\nfrom mcp import Client\nfrom mcp.client.streamable_http import streamable_http_client\n\nURL = \"https://mcp.marginalia.test:8443/mcp\"\n"
+      "code": "\"\"\"Call the remote server: TLS checked against the second machine's CA, and a bearer token from a file.\"\"\"\nimport asyncio\nimport json\nimport ssl\nimport sys\n\nimport httpx2\nfrom mcp import Client\nfrom mcp.client.streamable_http import streamable_http_client\n\nURL = \"https://mcp.marginalia.test:8443/mcp\"\n"
     },
     {
-      "code": "CA = \"/opt/agents/share/marginalia-ca.crt\"   # the lab's authority, and the only one this client trusts\n\n\nasync def main(token_name, tool, arguments):\n    token = open(f\"tokens/{token_name}\").read()\n",
+      "code": "CA = \"marginalia-ca.crt\"   # the second machine's authority, and the only one this client trusts\n\n\nasync def main(token_name, tool, arguments):\n    token = open(f\"tokens/{token_name}\").read()\n",
       "note": "**A única autoridade em que este cliente confia**, por arquivo. Não a lista do sistema, e nunca checagem nenhuma."
     },
     {

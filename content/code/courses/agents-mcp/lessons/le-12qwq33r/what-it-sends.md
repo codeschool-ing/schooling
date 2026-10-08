@@ -6,18 +6,18 @@ version: 1
 `wire.py` prints each request in labllm's log in the Gemini API's own terms: the system instruction, the parameter schema of each tool, and the contents.
 
 ```python
-"""What each request in labllm's log carried, in the Gemini API's format."""
+"""What each request in the recorder's log carried, in the format of Ollama's own API."""
 import json
 
-for n, line in enumerate(open("/var/log/labllm/requests.jsonl"), 1):
-    q = json.loads(line)["request"]
-    print(f"request {n}:")
-    print("  systemInstruction:", json.dumps(q["systemInstruction"]["parts"][0]["text"]))
+for n, line in enumerate(open("requests.jsonl"), 1):
+    r = json.loads(line)
+    q = r["request"]
+    print(f"request {n}: {r['path']}")
     for tool in q.get("tools", []):
-        for f in tool["functionDeclarations"]:
-            print(f"  tool {f['name']}:", json.dumps(f["parameters_json_schema"]))
-    for c in q["contents"]:
-        print(f"  {c['role']}:", json.dumps(c["parts"][0], ensure_ascii=False)[:150])
+        f = tool["function"]
+        print(f"  tool {f['name']}:", json.dumps(f["parameters"]))
+    for m in q["messages"]:
+        print(f"  {m['role']}:", json.dumps(m.get("content") or m.get("tool_calls"), ensure_ascii=False)[:150])
 ```
 
 ```

@@ -31,10 +31,10 @@ def refund(order_id: str, cents: int, reason: str) -> dict:
   "file": "adk_run.py",
   "parts": [
     {
-      "code": "\"\"\"A first agent with the Google ADK, pointed at the lab's stand-in through the Gemini API's wire format.\"\"\"\nimport asyncio\nimport sys\n\nfrom google.adk.agents import Agent\nfrom google.adk.agents.run_config import RunConfig\nfrom google.adk.models.google_llm import Gemini\nfrom google.adk.runners import InMemoryRunner\nfrom google.genai.types import Content, Part\n\nfrom adk_show import show\nfrom adk_tools import get_order, search_help\n\n"
+      "code": "\"\"\"A first agent with the Google ADK, pointed at Ollama through LiteLLM.\"\"\"\nimport asyncio\nimport sys\n\nfrom google.adk.agents import Agent\nfrom google.adk.agents.run_config import RunConfig\nfrom google.adk.models.lite_llm import LiteLlm\nfrom google.adk.runners import InMemoryRunner\nfrom google.genai.types import Content, Part\n\nfrom adk_show import show\nfrom adk_tools import get_order, search_help\n\n"
     },
     {
-      "code": "MODEL = Gemini(model=\"scripted-1\", base_url=\"http://127.0.0.1:8600\")  # labllm speaks the Gemini API too\n\n\n",
+      "code": "MODEL = LiteLlm(model=\"ollama_chat/llama3.2:3b\")  # ADK reaches Ollama through LiteLLM\n\n\n",
       "note": "**O modelo, com o endereço do laboratório.** O labllm também fala o formato da API do Gemini, então a própria classe Gemini do ADK chega até ele sem modificação; com uma chave real você daria só o nome do modelo."
     },
     {

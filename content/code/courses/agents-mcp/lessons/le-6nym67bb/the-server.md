@@ -1,6 +1,6 @@
 ---
 title: The server
-version: 1
+version: 2
 ---
 
 `ai-dev` lesson 7 section 06 built a first server: functions become tools through a decorator, type hints become the input schema, docstrings become descriptions, `readOnlyHint` marks a tool that changes nothing, and `ToolError` carries a message the model may see. This lesson starts from there and builds the server the rest of this course uses, with all three primitives and the decisions that make it safe to connect.
@@ -19,7 +19,7 @@ version: 1
     },
     {
       "code": "HELP = {a[\"id\"]: a for a in map(json.loads, open(\"data/help.jsonl\"))}\n\n",
-      "note": "**The help centre's forty articles**, the same `help.jsonl` the course's lab copies from `embeddings-vectors`."
+      "note": "**The help centre's fourteen articles**, the `help.jsonl` that lesson 1's `make_shop.py` writes."
     },
     {
       "code": "OrderId = Annotated[str, Field(pattern=r\"^M-[0-9]{4}$\", description=\"M- and four digits, such as M-1043\")]\n\n\nclass Line(BaseModel):\n    book_id: str\n    quantity: int\n    cents: int\n\n\n",
@@ -46,7 +46,7 @@ version: 1
       "note": "**A resource template**: every article is addressable as `help://h01` to `help://h40`. Section 06."
     },
     {
-      "code": "        raise ResourceNotFoundError(f\"no help article {article_id}\")\n    a = HELP[article_id]\n    return f\"# {a['title']}\\n\\n{a['body']}\\n\\n(updated {a['updated']})\"\n\n\n",
+      "code": "        raise ResourceNotFoundError(f\"no help article {article_id}\")\n    a = HELP[article_id]\n    return f\"# {a['title']}\\n\\n{a['body']}\"\n\n\n",
       "note": "**An unknown article is an error with its reason**, not an empty page."
     },
     {

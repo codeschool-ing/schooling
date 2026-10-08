@@ -8,30 +8,24 @@
 #   sudo bash captures.sh
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab
-# (lab.sh reset); the files ana wrote (put below), which the lesson shows in
-# full; and emptying labllm's log before the runs whose requests are read,
-# done as root because the log belongs to the labllm user.
+# (lab.sh reset), and the files ana wrote (put below), which the lesson shows
+# in full, each checked by lab/shown.py.
 #
-# THE MODEL'S WORDS AND DECISIONS IN THIS LESSON WERE WRITTEN BY THE COURSE,
-# as rules in lab/scripted/11-mcp-problem.json. The MCP server (mcp 2.3.0),
-# the three hosts and their MCP clients (openai-agents 0.23.1, claude-agent-sdk
-# 0.2.163 with the Claude Code CLI 2.1.286, google-adk 2.11.0), every message
-# each client sent the server, and every request each host sent labllm are
-# real. Python's UserWarnings and the Claude Code CLI's warning about the model
-# name go to standard error, which these commands drop; the lesson says so.
+# THE MODELS ARE REAL, in Ollama 0.40.0 with an 8192-token context, captured
+# on 2026-10-08: llama3.2:3b (a80c4f17acd5) for the OpenAI and Google hosts,
+# and qwen2.5:3b (357c53fb659c) for the Claude host, for the reason lesson 9
+# gives. The MCP server (mcp 2.3.0), the three hosts and their MCP clients
+# (openai-agents 0.23.1, claude-agent-sdk 0.2.163, google-adk 2.11.0 through
+# LiteLLM), every message each client sent the server and every request each
+# host sent the model are real. Python's UserWarnings and the Claude Code
+# CLI's warning about the model name go to standard error, which these
+# commands drop; the lesson says so.
 #
-# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo, with LAB_TODAY=2026-10-06.
-set -uo pipefail
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
+# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1; $*" 2>&1 || true; }
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-block() { printf '##### %s\n' "$1"; }
-fresh_log() { : > /var/log/labllm/requests.jsonl; }
-exec 9>/var/tmp/agents-capture.lock; flock 9
-lab reset >/dev/null
+. ../../lab/capture.sh
+on() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "$SHELL_STATE export PYTHONUNBUFFERED=1; $*" < /dev/null 2>&1 || true; }
+lab exec 'ollama run llama3.2:3b hello' < /dev/null >/dev/null 2>&1
 lab exec 'python -c "import shop; shop.search_help(\"warm up\")"' >/dev/null
 
 put shop_mcp.py <<'PY'
@@ -69,19 +63,18 @@ def server(host):
 
 
 async def openai_host():
-    from agents import Agent, Runner, set_default_openai_api, set_tracing_disabled
+    from agents import Agent, Runner, set_tracing_disabled
     from agents.mcp import MCPServerStdio
-    set_default_openai_api("chat_completions")
     set_tracing_disabled(True)
     async with MCPServerStdio(params=server("openai"), name="shop") as shop:
-        agent = Agent(name="support", model="scripted-1", mcp_servers=[shop],
+        agent = Agent(name="support", model="llama3.2:3b", mcp_servers=[shop],
                       instructions="You are the OpenAI host of the MCP lesson.")
         print((await Runner.run(agent, TASK)).final_output)
 
 
 async def claude_host():
     from claude_agent_sdk import ClaudeAgentOptions, ResultMessage, query
-    options = ClaudeAgentOptions(model="scripted-1", system_prompt="You are the Claude host of the MCP lesson.",
+    options = ClaudeAgentOptions(model="qwen2.5:3b", system_prompt="You are the Claude host of the MCP lesson.",
                                  tools=[], setting_sources=[], allowed_tools=["mcp__shop__get_order"],
                                  mcp_servers={"shop": {"type": "stdio", **server("claude")}})
     async for message in query(prompt=TASK, options=options):
@@ -91,13 +84,13 @@ async def claude_host():
 
 async def google_host():
     from google.adk.agents import Agent
-    from google.adk.models.google_llm import Gemini
+    from google.adk.models.lite_llm import LiteLlm
     from google.adk.runners import InMemoryRunner
     from google.adk.tools.mcp_tool import McpToolset, StdioConnectionParams
     from google.genai.types import Content, Part
     from mcp import StdioServerParameters
     shop = McpToolset(connection_params=StdioConnectionParams(server_params=StdioServerParameters(**server("google"))))
-    agent = Agent(name="support", model=Gemini(model="scripted-1", base_url="http://127.0.0.1:8600"),
+    agent = Agent(name="support", model=LiteLlm(model="ollama_chat/llama3.2:3b"),
                   instruction="You are the Google host of the MCP lesson.", tools=[shop])
     runner = InMemoryRunner(agent=agent, app_name="marginalia")
     session = await runner.session_service.create_session(app_name="marginalia", user_id="bia")
@@ -113,16 +106,13 @@ asyncio.run({"openai": openai_host, "claude": claude_host, "google": google_host
 PY
 
 put wire.py <<'PY'
-"""For the first request in labllm's log: which provider's format, and get_order as the host described it."""
+"""For the first request in the recorder's log: which API it went to, and get_order as the host described it."""
 import json
 import textwrap
 
-for line in open("/var/log/labllm/requests.jsonl"):
+for line in open("requests.jsonl"):
     r = json.loads(line)
-    q = r["request"]
-    tools = q.get("tools", [])
-    if "functionDeclarations" in json.dumps(tools):
-        tools = [f for t in tools for f in t["functionDeclarations"]]
+    tools = r["request"].get("tools", [])
     for t in tools:
         print(r["path"])
         print(textwrap.fill(json.dumps(t, ensure_ascii=False), 100, initial_indent="  ", subsequent_indent="  "))
@@ -144,13 +134,15 @@ for host in sys.argv[1:]:
 PY
 
 block one-server
+recorder
+say 'export ANTHROPIC_BASE_URL=http://127.0.0.1:11435 OPENAI_BASE_URL=http://127.0.0.1:11435/v1 OLLAMA_API_BASE=http://127.0.0.1:11435 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1'
 for h in openai claude google; do
   on "python hosts.py $h 2> /dev/null"
 done
 
 block wire
 for h in openai claude google; do
-  fresh_log
+  on 'rm -f requests.jsonl'
   on "python hosts.py $h > /dev/null 2>&1; python wire.py"
 done
 

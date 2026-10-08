@@ -1,6 +1,6 @@
 ---
 title: Três papéis, achados nesta máquina
-version: 1
+version: 2
 ---
 
 A especificação descreve o MCP como uma arquitetura **cliente-hospedeiro-servidor**. A aula 7 de `ai-dev` deu nome aos três papéis; esta aula acha cada um deles num sistema rodando e pergunta o que cada um consegue ver e fazer.
@@ -15,7 +15,30 @@ A especificação descreve o MCP como uma arquitetura **cliente-hospedeiro-servi
 
 Entre os princípios de desenho que a especificação lista, um está escrito como negação: **servidores não devem conseguir ler a conversa inteira, nem "enxergar dentro" de outros servidores.** O histórico completo fica com o hospedeiro, cada servidor recebe só o que precisa, e tudo o que passa de um servidor para outro passa pelo hospedeiro, porque nada mais os liga.
 
-O resto desta aula testa esse princípio, e as partes dele que dependem do hospedeiro. Ela usa três servidores: um escrito para se descrever, o servidor de pedidos da aula 11 com o nome `orders`, e `archive`, um segundo servidor de outra equipe, que o curso escreveu para isso. O `hosts.py` são os três hospedeiros da aula 11, agora informados na linha de comando de quais servidores iniciar:
+O resto desta aula testa esse princípio, e as partes dele que dependem do hospedeiro. Ela usa três servidores: um escrito para se descrever, `archive`, um segundo servidor de outra equipe, que o curso escreveu para isso, e o servidor de pedidos da aula 11, salvo de novo como `orders_mcp.py` com o nome `orders`:
+
+```python
+"""The live order lookup, as a server called "orders"."""
+import json
+
+from mcp.server.mcpserver import MCPServer
+
+import shop
+
+server = MCPServer("orders")
+
+
+@server.tool()
+def get_order(order_id: str) -> str:
+    """Look up one Marginalia order by its id, M- and four digits. Returns status, dates, lines and amounts in cents."""
+    return json.dumps(shop.get_order(order_id))
+
+
+if __name__ == "__main__":
+    server.run()
+```
+
+O `hosts.py` são os três hospedeiros da aula 11, agora informados na linha de comando de quais servidores iniciar:
 
 ```python
 """Three hosts, each given a set of MCP servers to start: python hosts.py HOST TASK SERVER..."""
@@ -24,7 +47,7 @@ import sys
 
 host, task, names = sys.argv[1], sys.argv[2], sys.argv[3:]
 WRAP = {"tee": lambda n: ["sh", "-c", f"tee {n}.in.jsonl | python {n}_mcp.py"],   # keep a copy of what the client sent
-        "clean": lambda n: ["env", "-i", "PATH=/opt/agents/bin:/usr/bin:/bin", "HOME=/home/ana", "python", f"{n}_mcp.py"]}
+        "clean": lambda n: ["env", "-i", "PATH=/home/ana/agents/.venv/bin:/usr/bin:/bin", "HOME=/home/ana", "python", f"{n}_mcp.py"]}
 
 
 def command(entry):
@@ -43,13 +66,12 @@ SYSTEM = f"You are the {host} host of the components lesson."
 
 async def openai_host():
     from contextlib import AsyncExitStack
-    from agents import Agent, Runner, set_default_openai_api, set_tracing_disabled
+    from agents import Agent, Runner, set_tracing_disabled
     from agents.mcp import MCPServerStdio
-    set_default_openai_api("chat_completions")
     set_tracing_disabled(True)
     async with AsyncExitStack() as stack:
         servers = [await stack.enter_async_context(MCPServerStdio(params=p, name=n)) for n, p in SERVERS.items()]
-        agent = Agent(name="support", model="scripted-1", instructions=SYSTEM, mcp_servers=servers)
+        agent = Agent(name="support", model="llama3.2:3b", instructions=SYSTEM, mcp_servers=servers)
         try:
             print((await Runner.run(agent, task)).final_output)
         except Exception as e:
@@ -58,7 +80,7 @@ async def openai_host():
 
 async def claude_host():
     from claude_agent_sdk import ClaudeAgentOptions, ResultMessage, query
-    options = ClaudeAgentOptions(model="scripted-1", system_prompt=SYSTEM, tools=[], setting_sources=[],
+    options = ClaudeAgentOptions(model="qwen2.5:3b", system_prompt=SYSTEM, tools=[], setting_sources=[],
                                  allowed_tools=[f"mcp__{n}" for n in SERVERS],
                                  mcp_servers={n: {"type": "stdio", **p} for n, p in SERVERS.items()})
     async for message in query(prompt=task, options=options):
@@ -68,14 +90,14 @@ async def claude_host():
 
 async def google_host():
     from google.adk.agents import Agent
-    from google.adk.models.google_llm import Gemini
+    from google.adk.models.lite_llm import LiteLlm
     from google.adk.runners import InMemoryRunner
     from google.adk.tools.mcp_tool import McpToolset, StdioConnectionParams
     from google.genai.types import Content, Part
     from mcp import StdioServerParameters
     toolsets = [McpToolset(connection_params=StdioConnectionParams(server_params=StdioServerParameters(**p)))
                 for p in SERVERS.values()]
-    agent = Agent(name="support", model=Gemini(model="scripted-1", base_url="http://127.0.0.1:8600"),
+    agent = Agent(name="support", model=LiteLlm(model="ollama_chat/llama3.2:3b"),
                   instruction=SYSTEM, tools=toolsets)
     runner = InMemoryRunner(agent=agent, app_name="marginalia")
     session = await runner.session_service.create_session(app_name="marginalia", user_id="bia")

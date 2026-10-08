@@ -32,10 +32,10 @@ Um namespace separa redes, e o usuário e os diretórios separados separam arqui
 ```
 ana@lab:~/agents$ curl -s -o /dev/null https://mcp.marginalia.test:8443/mcp; echo "curl exit code: $?"
 curl exit code: 60
-ana@lab:~/agents$ openssl s_client -connect mcp.marginalia.test:8443 -servername mcp.marginalia.test -CAfile /opt/agents/share/marginalia-ca.crt < /dev/null 2>/dev/null | grep -E "^subject=|^issuer=|Verify return code"
+ana@lab:~/agents$ openssl s_client -connect mcp.marginalia.test:8443 -servername mcp.marginalia.test -CAfile marginalia-ca.crt < /dev/null 2>/dev/null | grep -E "^subject=|^issuer=|Verify return code"
 subject=CN = mcp.marginalia.test
 issuer=CN = Marginalia lab CA
 Verify return code: 0 (ok)
 ```
 
-Sem a CA do laboratório, o `curl` recusou a conexão com o código de saída `60`, que é o código do curl para um certificado que ele não conseguiu verificar. Com o `-CAfile` apontando para `/opt/agents/share/marginalia-ca.crt`, o mesmo certificado foi verificado: assunto `mcp.marginalia.test`, emissor `Marginalia lab CA`, código de retorno `0`. Esse arquivo é a única mudança do lado do cliente. **Nada nesta aula desliga a verificação**: um cliente que pula a checagem conversaria igualmente feliz com qualquer um que respondesse naquele endereço, que é exatamente o que o TLS existe para impedir.
+Sem a CA do laboratório, o `curl` recusou a conexão com o código de saída `60`, que é o código do curl para um certificado que ele não conseguiu verificar. Com o `-CAfile` apontando para `marginalia-ca.crt`, o mesmo certificado foi verificado: assunto `mcp.marginalia.test`, emissor `Marginalia lab CA`, código de retorno `0`. Esse arquivo é a única mudança do lado do cliente. **Nada nesta aula desliga a verificação**: um cliente que pula a checagem conversaria igualmente feliz com qualquer um que respondesse naquele endereço, que é exatamente o que o TLS existe para impedir.

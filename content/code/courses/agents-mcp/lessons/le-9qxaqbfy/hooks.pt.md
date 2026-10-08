@@ -1,6 +1,6 @@
 ---
 title: Hooks rodam antes de toda chamada
-version: 1
+version: 2
 ---
 
 Um **hook** é uma função que o CLI chama num ponto fixo do laço: antes de uma ferramenta rodar, depois, quando uma sessão começa, quando o agente para, e em outros. Um hook `PreToolUse` vê toda chamada de ferramenta, inclusive as permitidas, e pode negá-la antes de qualquer regra de permissão ser consultada.
@@ -10,6 +10,10 @@ Um **hook** é uma função que o CLI chama num ponto fixo do laço: antes de um
   "language": "python",
   "file": "cs_refund.py",
   "parts": [
+    {
+      "code": "\"\"\"A refund under four permission arrangements.\"\"\"\nimport json\nimport sys\n\nimport anyio\nfrom claude_agent_sdk import ClaudeAgentOptions, HookMatcher, PermissionResultAllow, PermissionResultDeny, query\n\nfrom cs_show import show\nfrom cs_tools import shop_server\n\nSYSTEM = \"You handle refunds for Marginalia's customers in the Claude Agent SDK lesson.\"\n",
+      "note": "**O `cs_refund.py` inteiro**: as ferramentas da loja vindas do `cs_tools.py`, a impressão do `cs_show.py` e o prompt de sistema."
+    },
     {
       "code": "LIMIT = 5000  # cents; above this a refund is refused in code and no person is asked\n\n\nasync def ask_a_person(tool_name, tool_input, context):\n    print(f\"approve?   {tool_name} {tool_input} [y/n] \", end=\"\", flush=True)\n    answer = sys.stdin.readline().strip()\n    print(answer)\n    if answer == \"y\":\n        return PermissionResultAllow()\n    return PermissionResultDeny(message=\"Not approved by staff. A colleague will review this refund.\")\n\n\n",
       "note": "**Uma regra com resposta certa**, guardada no código: um reembolso acima de 50,00 nunca é decisão deste agente."
@@ -27,8 +31,12 @@ Um **hook** é uma função que o CLI chama num ponto fixo do laço: antes de um
       "note": "**Acima do limite, a chamada é negada aqui**, com um motivo que o modelo lê."
     },
     {
-      "code": "    return {}",
+      "code": "    return {}\n\n\n",
       "note": "**Uma resposta vazia quer dizer sem opinião**: a chamada segue para as regras de permissão."
+    },
+    {
+      "code": "async def main(how, task):\n    o = ClaudeAgentOptions(model=\"qwen2.5:3b\", system_prompt=SYSTEM, mcp_servers={\"shop\": shop_server},\n                           tools=[], setting_sources=[], allowed_tools=[\"mcp__shop__get_order\"])\n    if how == \"dont-ask\":\n        o.permission_mode = \"dontAsk\"\n    if how in (\"ask\", \"hooked\"):\n        o.permission_mode = \"default\"\n        o.can_use_tool = ask_a_person\n    if how == \"hooked\":\n        o.hooks = {\"PreToolUse\": [HookMatcher(matcher=\"mcp__shop__.*\", hooks=[audit_and_limit])]}\n    async for message in query(prompt=task, options=o):\n        show(message)\n\n\nanyio.run(main, sys.argv[1], sys.argv[2])",
+      "note": "**Os quatro arranjos**, escolhidos pelo primeiro argumento; a seção 06 os leu."
     }
   ]
 }

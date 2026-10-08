@@ -18,7 +18,7 @@ The server ana deployed is lesson 14's idea with three additions: TLS, a token c
       "note": "**The server's canonical URL**, which is also the resource every token must name."
     },
     {
-      "code": "class TokenTable:\n    \"\"\"Checks a bearer token against the table the authorization server keeps (the lab writes it).\"\"\"\n\n    async def verify_token(self, token: str) -> AccessToken | None:\n        entry = json.load(open(\"tokens.json\")).get(hashlib.sha256(token.encode()).hexdigest())\n",
+      "code": "class TokenTable:\n    \"\"\"Checks a bearer token against the table the authorization server keeps (second_machine.sh writes it).\"\"\"\n\n    async def verify_token(self, token: str) -> AccessToken | None:\n        entry = json.load(open(\"tokens.json\")).get(hashlib.sha256(token.encode()).hexdigest())\n",
       "note": "**How a token is checked.** A real deployment verifies a signed token or asks the authorization server about it; here the lab plays the authorization server and keeps a table of what each token grants, keyed by the token's SHA-256 so the table holds no token itself."
     },
     {

@@ -6,7 +6,7 @@ version: 1
 Um pedido com uma conexão válida e sem token:
 
 ```
-ana@lab:~/agents$ curl -s -i --cacert /opt/agents/share/marginalia-ca.crt https://mcp.marginalia.test:8443/mcp | grep -v "^date:"
+ana@lab:~/agents$ curl -s -i --cacert marginalia-ca.crt https://mcp.marginalia.test:8443/mcp | grep -v "^date:"
 HTTP/1.1 401 Unauthorized
 server: uvicorn
 content-type: application/json
@@ -19,7 +19,7 @@ www-authenticate: Bearer error="invalid_token", error_description="Authenticatio
 `401 Unauthorized`, e um cabeçalho **`WWW-Authenticate`**. Além do erro, o cabeçalho leva `resource_metadata`, uma URL. A especificação exige que um servidor MCP protegido publique metadados sobre si mesmo, e este cabeçalho é como um cliente que só conhece o endereço do servidor os acha, e a partir deles, como obter um token. Seguindo a URL:
 
 ```
-ana@lab:~/agents$ curl -s --cacert /opt/agents/share/marginalia-ca.crt https://mcp.marginalia.test:8443/.well-known/oauth-protected-resource/mcp | python -m json.tool
+ana@lab:~/agents$ curl -s --cacert marginalia-ca.crt https://mcp.marginalia.test:8443/.well-known/oauth-protected-resource/mcp | python -m json.tool
 {
     "resource": "https://mcp.marginalia.test:8443/mcp",
     "authorization_servers": [
@@ -32,7 +32,7 @@ ana@lab:~/agents$ curl -s --cacert /opt/agents/share/marginalia-ca.crt https://m
         "header"
     ]
 }
-ana@lab:~/agents$ curl -s --cacert /opt/agents/share/marginalia-ca.crt https://auth.marginalia.test:9443/.well-known/oauth-authorization-server; echo
+ana@lab:~/agents$ curl -s --cacert marginalia-ca.crt https://auth.marginalia.test:9443/.well-known/oauth-authorization-server; echo
 {
  "issuer": "https://auth.marginalia.test:9443",
  "authorization_endpoint": "https://auth.marginalia.test:9443/authorize",
@@ -52,7 +52,7 @@ ana@lab:~/agents$ curl -s --cacert /opt/agents/share/marginalia-ca.crt https://a
   "orders:refund"
  ]
 }
-ana@lab:~/agents$ curl -s --cacert /opt/agents/share/marginalia-ca.crt -X POST https://auth.marginalia.test:9443/token; echo
+ana@lab:~/agents$ curl -s --cacert marginalia-ca.crt -X POST https://auth.marginalia.test:9443/token; echo
 {
  "error": "not_implemented",
  "error_description": "this lab issues its tokens by file; see lab.sh"

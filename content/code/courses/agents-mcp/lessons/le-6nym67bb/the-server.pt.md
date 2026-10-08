@@ -1,6 +1,6 @@
 ---
 title: O servidor
-version: 1
+version: 2
 ---
 
 A seção 06 da aula 7 de `ai-dev` construiu um primeiro servidor: funções viram ferramentas por um decorador, anotações de tipo viram o esquema de entrada, docstrings viram descrições, o `readOnlyHint` marca uma ferramenta que não muda nada, e o `ToolError` leva uma mensagem que o modelo pode ver. Esta aula parte daí e constrói o servidor que o resto do curso usa, com as três primitivas e as decisões que tornam seguro conectá-lo.
@@ -19,7 +19,7 @@ A seção 06 da aula 7 de `ai-dev` construiu um primeiro servidor: funções vir
     },
     {
       "code": "HELP = {a[\"id\"]: a for a in map(json.loads, open(\"data/help.jsonl\"))}\n\n",
-      "note": "**Os quarenta artigos da central de ajuda**, o mesmo `help.jsonl` que o laboratório do curso copia de `embeddings-vectors`."
+      "note": "**Os catorze artigos da central de ajuda**, o `help.jsonl` que o `make_shop.py` da aula 1 escreve."
     },
     {
       "code": "OrderId = Annotated[str, Field(pattern=r\"^M-[0-9]{4}$\", description=\"M- and four digits, such as M-1043\")]\n\n\nclass Line(BaseModel):\n    book_id: str\n    quantity: int\n    cents: int\n\n\n",
@@ -46,7 +46,7 @@ A seção 06 da aula 7 de `ai-dev` construiu um primeiro servidor: funções vir
       "note": "**Um modelo de recurso**: todo artigo é endereçável como `help://h01` a `help://h40`. Seção 06."
     },
     {
-      "code": "        raise ResourceNotFoundError(f\"no help article {article_id}\")\n    a = HELP[article_id]\n    return f\"# {a['title']}\\n\\n{a['body']}\\n\\n(updated {a['updated']})\"\n\n\n",
+      "code": "        raise ResourceNotFoundError(f\"no help article {article_id}\")\n    a = HELP[article_id]\n    return f\"# {a['title']}\\n\\n{a['body']}\"\n\n\n",
       "note": "**Um artigo desconhecido é um erro com o motivo**, não uma página vazia."
     },
     {
