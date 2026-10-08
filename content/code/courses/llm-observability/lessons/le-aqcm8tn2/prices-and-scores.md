@@ -35,20 +35,7 @@ definition under another name, matching the same pattern, with a later start dat
 
 Then Friday is replayed, with `spans.jsonl` emptied first so that it holds Friday alone:
 
-```
-ana@lab:~/obs$ python lf_prices.py
-model extract-1 from 2026-01-01T03:00:00.000Z input 2e-06 output 8e-06
-model extract-1 from 2026-10-01 from 2026-10-01T03:00:00.000Z input 1.5e-06 output 6e-06
-ana@lab:~/obs$ export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=$LANGFUSE_HOST/api/public/otel/v1/traces OTEL_EXPORTER_OTLP_TRACES_HEADERS="Authorization=Basic $(printf %s $LANGFUSE_PUBLIC_KEY:$LANGFUSE_SECRET_KEY | base64 -w0)"; rm spans.jsonl; python replay.py --from 2026-10-02 --to 2026-10-03 --processor lf_names:LangfuseNames
-replayed 176 requests from data/traffic.jsonl: 224 asked, 0 failed, 97 feedback events
-ana@lab:~/obs$ python lf.py daily
-2026-10-05   13 traces cost 0
-2026-10-04  145 traces cost 0
-2026-10-03  160 traces cost 0.010296
-2026-10-02  202 traces cost 0.091432
-ana@lab:~/obs$ python -c "import costs; print(sum(r[\"cost\"] for r in costs.requests()))"
-0.10177554
-```
+CAPTURE:prices
 
 Three things to read in that.
 
@@ -91,12 +78,7 @@ langfuse.flush()
 print(sent, "scores sent")
 ```
 
-```
-ana@lab:~/obs$ python lf_scores.py
-72 scores sent
-ana@lab:~/obs$ python lf.py scores thumbs
-72 scores named thumbs: 34 of value 1, 38 of value 0
-```
+CAPTURE:scores
 
 From here a screen can filter traces by score, chart the share of thumbs down per day, or list the
 traces with a thumbs down and no judge score yet. Lesson 9 adds a judge's verdicts as a second score

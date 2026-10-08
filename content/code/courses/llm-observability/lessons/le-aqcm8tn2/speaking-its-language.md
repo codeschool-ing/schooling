@@ -30,12 +30,7 @@ class LangfuseNames(SpanProcessor):
 `replay.py` takes `--processor MODULE:CLASS` and adds each to the provider before the exporters. The
 replay of Saturday, with it:
 
-```
-ana@lab:~/obs$ export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=$LANGFUSE_HOST/api/public/otel/v1/traces OTEL_EXPORTER_OTLP_TRACES_HEADERS="Authorization=Basic $(printf %s $LANGFUSE_PUBLIC_KEY:$LANGFUSE_SECRET_KEY | base64 -w0)"; python replay.py --from 2026-10-03 --to 2026-10-04 --processor lf_names:LangfuseNames
-replayed 120 requests from data/traffic.jsonl: 153 asked, 0 failed, 70 feedback events
-ana@lab:~/obs$ python lf.py traces 2026-10-03 1
-2026-10-03T03:01:53 e1a355f5 ask user 845c4ccdf2b1e0d8 session s0890 cost 0 input 'how long do I have to return a book'
-```
+CAPTURE:names
 
 The user is the pseudonym, under a name Langfuse reads, and the trace has its question as input.
 The root is no longer a generation. Nothing in `assistant.py` changed, and the file the same spans

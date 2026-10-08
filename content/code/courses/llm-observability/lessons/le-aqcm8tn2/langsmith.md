@@ -162,24 +162,7 @@ for request in map(json.loads, open("recorder/requests.jsonl")):
             print(f"        {field[0]}: {json.dumps(body, ensure_ascii=False)[:110]}")
 ```
 
-```
-ana@lab:~/obs$ LANGSMITH_TRACING=true LANGSMITH_ENDPOINT=http://127.0.0.1:8700 LANGSMITH_API_KEY=lab-langsmith-key-0001 LANGSMITH_PROJECT=marginalia-assistant LANGSMITH_DISABLE_RUN_COMPRESSION=true python ls_ask.py
-Marginalia gift cards are valid for one year from purchase.
-ana@lab:~/obs$ python sent.py
-post  run 01a11042 ask (chain)
-        inputs: {"question": "Hi, I'm Joana Prado (joana.prado@example.com). How long is a gift card valid?"}
-        extra: {"metadata": {"ls_method": "traceable", "LANGSMITH_PROJECT": "marginalia-assistant", "LANGSMITH_TRACING": "tru
-post  run 01a11042 ChatOpenAI (llm)
-        inputs: {"messages": [{"role": "user", "content": "Hi, I'm Joana Prado (joana.prado@example.com). How long is a gift c
-        extra: {"metadata": {"ls_method": "traceable", "ls_provider": "openai", "ls_model_type": "chat", "ls_model_name": "ex
-        serialized: {"name": "ChatOpenAI"}
-patch run 01a11042 ask (chain)
-        outputs: {"output": "Marginalia gift cards are valid for one year from purchase."}
-        extra: {"metadata": {"ls_method": "traceable", "LANGSMITH_PROJECT": "marginalia-assistant", "LANGSMITH_TRACING": "tru
-patch run 01a11042 ChatOpenAI (llm)
-        outputs: {"id": "chatcmpl-lab0867", "choices": [{"finish_reason": "stop", "index": 0, "logprobs": null, "message": {"co
-        extra: {"metadata": {"ls_method": "traceable", "ls_provider": "openai", "ls_model_type": "chat", "ls_model_name": "ex
-```
+CAPTURE:langsmith
 
 LangSmith's word for a span is a **run**, and each run is sent twice: a `post` when it starts, with its
 inputs, and a `patch` when it ends, with its outputs. The function is a run of type `chain`, the model
@@ -198,24 +181,7 @@ The LangSmith client takes functions that see the inputs and outputs before they
 `hide_inputs`, `hide_outputs`, and an `anonymizer` for patterns; and `omit_traced_runtime_info` leaves
 the runtime details out. The `--redact` run passes lesson 2's `redact()` to the first two:
 
-```
-ana@lab:~/obs$ LANGSMITH_TRACING=true LANGSMITH_ENDPOINT=http://127.0.0.1:8700 LANGSMITH_API_KEY=lab-langsmith-key-0001 LANGSMITH_PROJECT=marginalia-assistant LANGSMITH_DISABLE_RUN_COMPRESSION=true python ls_ask.py --redact
-Marginalia gift cards are valid for one year from purchase.
-ana@lab:~/obs$ python sent.py
-post  run 01a11042 ask (chain)
-        inputs: {"question": "Hi, I'm Joana Prado ([email]). How long is a gift card valid?"}
-        extra: {"metadata": {"ls_method": "traceable"}}
-post  run 01a11042 ChatOpenAI (llm)
-        inputs: {"messages": "[{'role': 'user', 'content': \"Hi, I'm Joana Prado ([email]). How long is a gift card valid?\"}]
-        extra: {"metadata": {"ls_method": "traceable", "ls_provider": "openai", "ls_model_type": "chat", "ls_model_name": "ex
-        serialized: {"name": "ChatOpenAI"}
-patch run 01a11042 ask (chain)
-        outputs: {"output": "Marginalia gift cards are valid for one year from purchase."}
-        extra: {"metadata": {"ls_method": "traceable"}}
-patch run 01a11042 ChatOpenAI (llm)
-        outputs: {"id": "chatcmpl-lab0868", "choices": "[{'finish_reason': 'stop', 'index': 0, 'logprobs': None, 'message': {'c
-        extra: {"metadata": {"ls_method": "traceable", "ls_provider": "openai", "ls_model_type": "chat", "ls_model_name": "ex
-```
+CAPTURE:redact
 
 The address is gone from the inputs, and the environment variables and runtime details from `extra`. Two things are worth
 noticing. The hooks receive the inputs as a dictionary, and the simple `str(v)` in `ls_ask.py` turned
