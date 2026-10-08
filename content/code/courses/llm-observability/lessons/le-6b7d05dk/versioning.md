@@ -22,7 +22,7 @@ cases = [json.loads(line) for line in v1.decode().splitlines()]
 cases += [json.loads(line) for line in open("data/eval-additions.jsonl")]
 ids = [c["id"] for c in cases]
 assert len(ids) == len(set(ids)), "an id is used twice"
-for c in cases:   # every third question is held out, decided by its id and nothing else, as in rag
+for c in cases:   # every third question is held out, decided by its id and nothing else
     c["split"] = "held-out" if int(c["id"][1:]) % 3 == 0 else "dev"
 body = "".join(json.dumps(c, ensure_ascii=False) + "\n" for c in cases).encode()
 open("data/eval-v2.jsonl", "wb").write(body)
@@ -30,7 +30,7 @@ shop = docs.load()
 manifest = {"set": "marginalia-help", "version": 2, "cases": len(cases),
             "sha256": hashlib.sha256(body).hexdigest(), "parent": hashlib.sha256(v1).hexdigest(),
             "splits": {s: sum(c["split"] == s for c in cases) for s in ("dev", "held-out")},
-            "documents": {d: shop[d][0]["version"] for d in sorted({g[0] for c in cases for g in c["gold"]})}}
+            "documents": {d: shop[d][0]["updated"] for d in sorted({g.split(":")[0] for c in cases for g in c["gold"]})}}
 json.dump(manifest, open("data/eval-v2.manifest.json", "w"), indent=1)
 print(json.dumps(manifest, indent=1))
 ```
@@ -39,27 +39,27 @@ print(json.dumps(manifest, indent=1))
 under each of its headings:
 
 ```python
-"""docs.py: the shop's documents as the evaluation set sees them: front matter, and the text under each heading."""
+"""docs.py: the shop's documents as the evaluation set sees them: front matter, and each chunk's text by id.
+
+The ids are the ones index.py gives: the document's name, a colon, and the heading in lower case with
+dashes for spaces.
+"""
 import glob
 import os
-import re
 
 
 def load(folder="data/docs"):
-    """{doc id: (front matter, {heading: text})} for every document in the folder."""
+    """{document: (front matter, {chunk id: text})} for every document in the folder."""
     docs = {}
     for path in sorted(glob.glob(os.path.join(folder, "*.md"))):
-        _, front, body = open(path).read().split("---\n", 2)
-        meta = dict(line.split(": ", 1) for line in front.strip().splitlines())
-        sections, current = {}, None
-        for line in body.splitlines():
-            m = re.match(r"#{2,}\s+(.*)", line)
-            if m:
-                current = m.group(1).strip()
-                sections[current] = ""
-            elif current:
-                sections[current] += line + "\n"
-        docs[meta["id"]] = (meta, sections)
+        head, body = open(path).read().split("---\n")[1:3]
+        meta = dict(line.split(": ", 1) for line in head.strip().splitlines())
+        doc = os.path.basename(path)[:-3]
+        chunks = {}
+        for part in body.split("\n## ")[1:]:
+            heading, text = part.split("\n", 1)
+            chunks[f"{doc}:{heading.lower().replace(' ', '-')}"] = " ".join(text.split())
+        docs[doc] = (meta, chunks)
     return docs
 ```
 
