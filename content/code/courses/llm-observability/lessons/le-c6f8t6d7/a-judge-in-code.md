@@ -1,6 +1,6 @@
 ---
 title: A judge, in code
-version: 1
+version: 2
 ---
 
 Lesson 8 ended where rules stop: whether a reply answers the question, and whether what it says is true
@@ -72,13 +72,15 @@ def grade(criterion, question, reply, sources=(), expected=None):
     return {"criterion": criterion, **verdict}
 ```
 
-**The model behind the prompt is judge-1, the lab's stand-in.** It does not read: it measures the
-similarity of embeddings, by rules written at the top of `lab/labobs.py`, and answers in the shape the
-prompt asks for. The prompt is the one a team would send a real model. Every number this lesson draws
-from it (how many replies were graded, what that cost, how sure a sample can be) is a property of
-sampling and of the bill, not of how clever the judge is.
+**The judge is `llama3.2:3b`, the model that wrote the replies.** That is the judge a team has when
+it has one model, and it is the weakest arrangement there is: a model grading itself shares its own
+blind spots, and a small model reads a rubric less carefully than a large one. The lesson uses it
+anyway, for two reasons. It runs on your machine, so every number below is one you can reproduce. And
+the questions this lesson asks, how many replies to grade, how sure the result is and what it costs,
+are about sampling and the bill, and they have the same answers with a better judge. Lesson 10 measures
+how often this judge agrees with people.
 
-The week's replies come from the spans: `traffic.py` rebuilds each one as a record with its question,
+The week's replies come from the spans: `week.py` rebuilds each one as a record with its question,
 its reply, its sources (from the chunk ids, as in lesson 8) and the thumb, if there was one:
 
 ```python
@@ -119,17 +121,6 @@ for criterion in ("relevance", "faithfulness"):
     print(criterion, judge.grade(criterion, r["question"], r["reply"], r["sources"]))
 ```
 
-```
-ana@lab:~/obs$ python one.py
-Above what order value is standard delivery free? -> Express delivery is not free at any order value. [1] standard three to five working days 4.90, free on orders over 40 [2] pickup point three to five working days 2.90, free on orders over 40 [2]
-relevance {'criterion': 'relevance', 'score': 0.64, 'verdict': 'pass', 'reason': 'similarity of question and reply 0.64, threshold 0.4'}
-faithfulness {'criterion': 'faithfulness', 'score': 1.0, 'verdict': 'pass', 'reason': '1 of 1 sentences supported'}
-```
+CAPTURE:one
 
-The reply is the one lesson 1 explained from its trace, and lesson 8 could not fault: the customer asked
-about standard delivery and the reply starts with express. **judge-1 passes it on both criteria.** It is
-relevant, with a similarity of 0.64 to the question, because it shares the question's words; and it is
-faithful, because every sentence is in a source. Both verdicts are exactly what judge-1's rules say,
-and both describe a blind spot a real judge has too, less crudely: a reply that echoes the question's
-vocabulary reads as relevant. Lesson 10 measures how often judge-1 and people disagree, and this reply
-is the kind they disagree about.
+PROSE:one
