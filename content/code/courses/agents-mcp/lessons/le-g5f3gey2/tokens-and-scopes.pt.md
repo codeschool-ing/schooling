@@ -1,6 +1,6 @@
 ---
 title: Tokens e escopos
-version: 1
+version: 2
 ---
 
 O `call.sh` manda um `tools/call` com um token nomeado, os cabeçalhos da aula 13 e a CA do laboratório:

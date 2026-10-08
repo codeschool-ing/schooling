@@ -1,6 +1,6 @@
 ---
 title: Who is asking
-version: 1
+version: 2
 ---
 
 A request with a valid connection and no token:
@@ -55,7 +55,7 @@ ana@lab:~/agents$ curl -s --cacert marginalia-ca.crt https://auth.marginalia.tes
 ana@lab:~/agents$ curl -s --cacert marginalia-ca.crt -X POST https://auth.marginalia.test:9443/token; echo
 {
  "error": "not_implemented",
- "error_description": "this lab issues its tokens by file; see lab.sh"
+ "error_description": "this machine issues its tokens by file; see second_machine.sh"
 }
 ```
 
@@ -121,4 +121,4 @@ httpd.socket = context.wrap_socket(httpd.socket, server_side=True)
 httpd.serve_forever()
 ```
 
-The third response is the honest one. This lab's authorization server **publishes metadata and nothing else**: its token endpoint answers `501` and says the lab issues tokens by file. Running a real authorization server, with logins and consent screens, is a course of its own; what matters here is that the chain is real and that a client can walk it, and section 08 describes the steps at the end of it that the lab skips.
+The third response is the honest one. This lab's authorization server **publishes metadata and nothing else**: its token endpoint answers `501` and says this machine issues its tokens by file, naming the script that wrote them. Running a real authorization server, with logins and consent screens, is a course of its own; what matters here is that the chain is real and that a client can walk it, and section 08 describes the steps at the end of it that the lab skips.

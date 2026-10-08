@@ -1,6 +1,6 @@
 ---
 title: A client for it
-version: 1
+version: 2
 ---
 
 A host reaches a remote server with the same `Client` as before, given a URL transport instead of a command. `remote_client.py` adds the two things the network needs:

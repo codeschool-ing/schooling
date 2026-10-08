@@ -1,6 +1,6 @@
 ---
 title: Um cliente para ele
-version: 1
+version: 2
 ---
 
 Um hospedeiro alcança um servidor remoto com o mesmo `Client` de antes, recebendo um transporte de URL em vez de um comando. O `remote_client.py` acrescenta as duas coisas de que a rede precisa:

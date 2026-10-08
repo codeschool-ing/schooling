@@ -1,6 +1,6 @@
 ---
 title: Quem está pedindo
-version: 1
+version: 2
 ---
 
 Um pedido com uma conexão válida e sem token:
@@ -55,7 +55,7 @@ ana@lab:~/agents$ curl -s --cacert marginalia-ca.crt https://auth.marginalia.tes
 ana@lab:~/agents$ curl -s --cacert marginalia-ca.crt -X POST https://auth.marginalia.test:9443/token; echo
 {
  "error": "not_implemented",
- "error_description": "this lab issues its tokens by file; see lab.sh"
+ "error_description": "this machine issues its tokens by file; see second_machine.sh"
 }
 ```
 
@@ -65,4 +65,60 @@ O primeiro documento são os **metadados do recurso protegido** do servidor (RFC
 {"svg": "<svg viewBox=\"0 0 720 170\" role=\"img\" aria-label=\"A cadeia de descoberta que um cliente consegue seguir a partir só do endereço do servidor. Um pedido sem token recebe 401 e um cabeçalho WWW-Authenticate que nomeia os metadados do recurso protegido. Esse documento nomeia o servidor de autorização. Os metadados do próprio servidor de autorização nomeiam os endpoints, os escopos e o S256 do PKCE. Só então um cliente consegue pedir um token.\"><defs><marker id=\"l16chain-ah-amber\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker><marker id=\"l16chain-ah-phosphor\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker></defs><rect x=\"20\" y=\"50\" width=\"150\" height=\"60\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"30\" y=\"72.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">POST /mcp</text><text x=\"30\" y=\"88.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">sem token: 401</text><rect x=\"200\" y=\"50\" width=\"160\" height=\"60\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"210\" y=\"72.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">WWW-Authenticate</text><text x=\"210\" y=\"88.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">resource_metadata=…</text><rect x=\"390\" y=\"50\" width=\"150\" height=\"60\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"400\" y=\"72.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">metadados do recurso</text><text x=\"400\" y=\"88.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">authorization_servers</text><rect x=\"570\" y=\"50\" width=\"130\" height=\"60\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"580\" y=\"72.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">metadados do AS</text><text x=\"580\" y=\"88.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">endpoints, S256</text><path d=\"M170 80 L200 80\" fill=\"none\" stroke=\"var(--amber)\" stroke-width=\"1.4\" marker-end=\"url(#l16chain-ah-amber)\"></path><path d=\"M360 80 L390 80\" fill=\"none\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" marker-end=\"url(#l16chain-ah-phosphor)\"></path><path d=\"M540 80 L570 80\" fill=\"none\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" marker-end=\"url(#l16chain-ah-phosphor)\"></path></svg>", "caption": "Cada passo nomeia o próximo. Nada precisa ser configurado antes, além da URL do servidor.", "same": ["resource_metadata=…", "authorization_servers", "endpoints, S256"]}
 ```
 
-A terceira resposta é a honesta. O servidor de autorização deste laboratório **publica metadados e mais nada**: o endpoint de token responde `501` e diz que o laboratório emite tokens por arquivo. Rodar um servidor de autorização de verdade, com logins e telas de consentimento, é um curso à parte; o que importa aqui é que a cadeia é real e que um cliente consegue percorrê-la, e a seção 08 descreve os passos do fim dela que o laboratório pula.
+O servidor de autorização aqui é o `auth_metadata.py`, que o `second_machine.sh` iniciou ao lado do servidor MCP:
+
+```python
+"""The authorization server's metadata, and nothing behind it.
+
+remote_mcp.py names https://auth.marginalia.test:9443 as the authorization
+server its tokens come from. This program publishes that server's metadata
+(RFC 8414), so a client can follow the discovery chain to the end. It issues
+no tokens: the endpoints it names answer 501 and say so. second_machine.sh
+writes the tokens itself, and remote_mcp.py checks them against a table.
+"""
+import json
+import ssl
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+ISSUER = "https://auth.marginalia.test:9443"
+METADATA = {
+    "issuer": ISSUER,
+    "authorization_endpoint": f"{ISSUER}/authorize",
+    "token_endpoint": f"{ISSUER}/token",
+    "response_types_supported": ["code"],
+    "grant_types_supported": ["authorization_code", "refresh_token"],
+    "code_challenge_methods_supported": ["S256"],
+    "scopes_supported": ["orders:read", "orders:refund"],
+}
+
+
+class Handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == "/.well-known/oauth-authorization-server":
+            self.reply(200, METADATA)
+        else:
+            self.reply(501, {"error": "not_implemented",
+                             "error_description": "this machine issues its tokens by file; see second_machine.sh"})
+
+    do_POST = do_GET
+
+    def reply(self, status, body):
+        data = json.dumps(body, indent=1).encode()
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(data)))
+        self.end_headers()
+        self.wfile.write(data)
+
+    def log_message(self, *args):
+        pass
+
+
+httpd = ThreadingHTTPServer(("203.0.113.10", 9443), Handler)
+context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+context.load_cert_chain("tls/server.crt", "tls/server.key")
+httpd.socket = context.wrap_socket(httpd.socket, server_side=True)
+httpd.serve_forever()
+```
+
+A terceira resposta é a honesta. O servidor de autorização deste laboratório **publica metadados e mais nada**: o endpoint de token responde `501` e diz que esta máquina emite os tokens por arquivo, nomeando o script que os escreveu. Rodar um servidor de autorização de verdade, com logins e telas de consentimento, é um curso à parte; o que importa aqui é que a cadeia é real e que um cliente consegue percorrê-la, e a seção 08 descreve os passos do fim dela que o laboratório pula.

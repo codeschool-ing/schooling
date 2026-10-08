@@ -1,6 +1,6 @@
 ---
 title: Tokens and scopes
-version: 1
+version: 2
 ---
 
 `call.sh` sends one `tools/call` with a named token, the headers of lesson 13 and the lab's CA:
