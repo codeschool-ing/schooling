@@ -35,7 +35,7 @@ ana@lab:~/agents$ grep -c held canary/role-audit.jsonl
 4
 ```
 
-Four held of six, counting the first. One run answered *"The gift wrapping cost is $3.00 per book"*, having read the article and ignored its last sentence, and one never got as far as an answer: the model wrote its tool call as text, the template leak lesson 1 showed, and the host printed it as a reply. The test's result is the count, not any single run, and the count is what to compare when the model, the prompt or the article changes.
+Four held of six, counting the first. One run answered *"The gift wrapping cost is $3.00 per book"*, having read the article and ignored its last sentence. One never got as far as an answer: the model wrote its tool call as text, the template leak lesson 1 showed, and the host printed it as a reply. The test's result is the count, not any single run, and the count is what to compare when the model, the prompt or the article changes.
 
 What makes this a fair test, and a safe one:
 

@@ -42,7 +42,7 @@ request 8: /api/chat
   tool: "{\"id\": \"M-1043\", \"customer_id\": \"c-102\", \"placed_on\": \"2026-09-28\", \"status\": \"shipped\", \"delivered_on\": null, \"shipping\": 0, \"t
 ```
 
-**Eight requests for one answer, and two of them were the conversation.** The other six are LiteLLM asking Ollama about the model, `/api/show`, before and between the two chats, and one of them went to `/api/chat/api/show`, a path Ollama does not have: LiteLLM built that address itself, and Ollama answered it with a `404`. None of this is in `adk_run.py`. It is what a library one step removed from your code does on your behalf, and the recorder is the only reason it is visible.
+**Eight requests for one answer, and two of them were the conversation.** The other six are LiteLLM asking Ollama about the model, `/api/show`, before and between the two chats. One of them went to `/api/chat/api/show`, a path Ollama does not have: LiteLLM built that address itself, and Ollama answered it with a `404`. None of this is in `adk_run.py`. It is what a library one step removed from your code does on your behalf, and the recorder is the only reason it is visible.
 
 Three more things are the library's choices.
 
