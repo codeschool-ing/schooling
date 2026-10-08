@@ -1,6 +1,6 @@
 ---
 title: Narrowing never widens
-version: 1
+version: 2
 ---
 
 Not every filter is a permission. A seller may want to search only their agreement, a developer only
@@ -9,10 +9,23 @@ a search box with a drop-down of sections is a perfectly good feature. The rule 
 with permissions is one line of `access.search`: the reader's choice is intersected with what the
 role allows.
 
+```schooling-example
+{
+  "language": "python",
+  "file": "narrow.py",
+  "parts": [
+    {
+      "code": "import sys\n\nimport access\n\nrole, only, question = sys.argv[1], sys.argv[2].split(\",\"), sys.argv[3]\nfound = access.search(access.connect(), role, question, only=only)\nprint(f\"{role}, asking for {only}: {[p for _, p, _, _, _ in found] or 'nothing'}\")",
+      "note": "A role asking for some audiences only: the filter can make the list shorter and never longer."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python narrow.py customer finance "How many refunds can I get before my account is flagged?"
+
+```
+ana@vm:~/rag$ python narrow.py customer finance "How many refunds can I get before my account is flagged?"
 customer, asking for ['finance']: nothing
-ana@lab:~/rag$ python narrow.py seller sellers "How long do I have to dispatch an order?"
+ana@vm:~/rag$ python narrow.py seller sellers "How long do I have to dispatch an order?"
 seller, asking for ['sellers']: ['Marketplace seller agreement > 3. Dispatch', 'Marketplace seller agreement > 5. Returns', 'Marketplace seller agreement > 4. Payouts']
 ```
 

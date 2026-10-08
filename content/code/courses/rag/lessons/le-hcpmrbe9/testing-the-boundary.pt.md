@@ -1,6 +1,6 @@
 ---
 title: Testando a fronteira
-version: 1
+version: 2
 ---
 
 Uma permissão que não é testada é uma permissão que funcionou no dia em que foi escrita. O teste desta
@@ -8,10 +8,22 @@ Uma permissão que não é testada é uma permissão que funcionou no dia em que
 de um público que o papel não pode ler**. O `audit.py` o roda sobre as 36 perguntas do `eval.jsonl` e do
 `identifiers.jsonl`, cinco linhas por pergunta, para cada um dos cinco papéis:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "audit.py",
+  "parts": [
+    {
+      "code": "import json\nimport sys\n\nimport access\nfrom vectors import embed\nfrom search import conn as loader\n\n\ndef careless(conn, role, question, k):\n    \"\"\"A search written without the role, through a connection the policy does not limit.\"\"\"\n    q = embed(question)[0]\n    return loader.execute(\"SELECT id, path, text, audience, 1 - (embedding <=> %s) FROM chunks\"\n                          \" ORDER BY embedding <=> %s LIMIT %s\", (q, q, k)).fetchall()\n\n\nsearch = careless if \"--careless\" in sys.argv else access.search\nassistant = access.connect()\nquestions = [q[\"question\"] for q in map(json.loads, open(\"data/eval.jsonl\"))]\nquestions += [q[\"question\"] for q in map(json.loads, open(\"data/identifiers.jsonl\"))]\nleaks, seen = 0, 0\nfor role in access.ROLES:\n    for question in questions:\n        for row in search(assistant, role, question, 5):\n            seen += 1\n            leaks += row[3] not in access.audiences(role)\nprint(f\"{len(access.ROLES)} roles x {len(questions)} questions, {seen} rows returned, {leaks} outside the role\")",
+      "note": "Todo papel faz toda pergunta dos dois conjuntos de teste, e cada linha devolvida é conferida contra o que o papel pode ler; o `--careless` roda a mesma auditoria contra uma busca escrita sem o papel, pela conexão do carregador."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python audit.py
+```
+ana@vm:~/rag$ python audit.py
 5 roles x 36 questions, 900 rows returned, 0 outside the role
-ana@lab:~/rag$ python audit.py --careless
+ana@vm:~/rag$ python audit.py --careless
 5 roles x 36 questions, 900 rows returned, 210 outside the role
 ```
 

@@ -1,6 +1,6 @@
 ---
 title: What a customer must not learn
-version: 1
+version: 2
 ---
 
 The finance document's warning was about agents, but the strongest case for permissions is a
@@ -8,12 +8,12 @@ customer. A refund rule that exists to catch abuse stops working the moment the 
 catch can read it:
 
 ```
-ana@lab:~/rag$ python roles.py "How many refunds can I get before my account is flagged?" customer finance
+ana@vm:~/rag$ python roles.py "How many refunds can I get before my account is flagged?" customer finance
 How many refunds can I get before my account is flagged?
 customer  nothing above the floor
           I could not find that in our documents.
-finance   Refund controls and chargebacks > Automatic holds (finance, 0.670)
-          A customer who has received more than three refunds in 90 days is flagged, and every further refund on that account goes to finance review regardless of the amount. [1]
+finance   Refund controls and chargebacks > Automatic holds (finance, 0.669)
+          According to [1], a customer can receive up to three refunds in 90 days before their account is flagged.
 ```
 
 The finance team gets the rule word for word, which is what the document is for: **more than three
