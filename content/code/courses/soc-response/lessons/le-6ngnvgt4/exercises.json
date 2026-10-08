@@ -1,0 +1,552 @@
+[
+  {
+    "id": "ex-y0wcrnpt",
+    "version": 1,
+    "section": "what-a-siem-does",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order the stages an event passes through in a SIEM.",
+    "hint": "A rule reads what was stored.",
+    "items": [
+      "collection",
+      "normalisation",
+      "enrichment",
+      "storage",
+      "correlation"
+    ]
+  },
+  {
+    "id": "ex-axtaryvr",
+    "version": 1,
+    "section": "what-a-siem-does",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A rule should count distinct accounts per address, but the parser for one source never extracted the account. What happens?",
+    "hint": "A stage can only use what an earlier one produced.",
+    "choices": [
+      {
+        "text": "Enrichment fills the missing account in from the asset list, which knows who uses each address",
+        "correct": false,
+        "why": "Enrichment adds facts about an address or a machine, not the account a line named."
+      },
+      {
+        "text": "The rule raises an error the first time it runs, naming the missing field so somebody fixes the parser",
+        "correct": false,
+        "why": "Most rules treat a missing field as a non-match, which is why the gap is quiet."
+      },
+      {
+        "text": "The SIEM reads the account from the raw line at query time",
+        "correct": false,
+        "why": "Only if somebody writes a parser for it; the raw line is kept for exactly that day, but nothing reads it automatically."
+      },
+      {
+        "text": "The rule cannot count accounts for that source, and says nothing",
+        "correct": true,
+        "why": "Right. The field does not exist, so the question cannot be asked, and nothing errors."
+      }
+    ]
+  },
+  {
+    "id": "ex-h6jp1wqn",
+    "version": 1,
+    "section": "what-a-siem-does",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is enrichment?",
+    "hint": "Something the line itself did not know.",
+    "choices": [
+      {
+        "text": "Renaming SRC= to src_ip in every firewall row",
+        "correct": false,
+        "why": "Normalisation again: one name for the same thing."
+      },
+      {
+        "text": "Keeping the raw line next to the fields",
+        "correct": false,
+        "why": "That is good storage practice, not added knowledge."
+      },
+      {
+        "text": "Converting the firewall's local time to UTC",
+        "correct": false,
+        "why": "That is normalisation: the line had the time, in another form."
+      },
+      {
+        "text": "Adding the owner of 192.168.20.10",
+        "correct": true,
+        "why": "Right. No log line says that; an asset list does."
+      }
+    ]
+  },
+  {
+    "id": "ex-jcpysyxb",
+    "version": 1,
+    "section": "the-week",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many lines did week.py write across its three files, header included?",
+    "hint": "wc -l prints the total.",
+    "value": 383,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-6xw0yp1w",
+    "version": 1,
+    "section": "the-week",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every night at 01:00, flows.csv shows files sending 330 to 380 MB to 203.0.113.150. What is that, according to the generator?",
+    "hint": "Read the comment beside it.",
+    "choices": [
+      {
+        "text": "Staff downloading their files to work from home",
+        "correct": false,
+        "why": "Staff log in at eight through gw; this is files sending at one in the morning."
+      },
+      {
+        "text": "Data leaving for an address nobody recognises, every night",
+        "correct": false,
+        "why": "The address is the company's backup provider, the same every night."
+      },
+      {
+        "text": "The nightly backup",
+        "correct": true,
+        "why": "Right. It is the normal against which a large transfer elsewhere stands out."
+      },
+      {
+        "text": "The firewall's own log being shipped to soc",
+        "correct": false,
+        "why": "Shipping goes to soc on 192.168.99.10, not to the internet."
+      }
+    ]
+  },
+  {
+    "id": "ex-qdmt8cnc",
+    "version": 1,
+    "section": "the-week",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the week produced by a program with a fixed seed rather than recorded from the lab?",
+    "hint": "Every reader, every run.",
+    "choices": [
+      {
+        "text": "So every reader gets the same lines",
+        "correct": true,
+        "why": "Right. random.seed(7) makes each run identical."
+      },
+      {
+        "text": "To make the week longer than the lab could run",
+        "correct": false,
+        "why": "Length is not the reason; reproducibility is."
+      },
+      {
+        "text": "Because real logs are illegal to store",
+        "correct": false,
+        "why": "Storing your own logs is ordinary; lesson 3 set the limits."
+      },
+      {
+        "text": "Because the lab's SSH servers cannot log failed logins",
+        "correct": false,
+        "why": "Lesson 3 recorded one."
+      }
+    ]
+  },
+  {
+    "id": "ex-cepeyz0x",
+    "version": 1,
+    "section": "normalising",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does load.py keep the raw line in every row?",
+    "hint": "Parsers are code.",
+    "choices": [
+      {
+        "text": "Because Sigma rules match against the raw text of the line rather than the named fields",
+        "correct": false,
+        "why": "The converted rule asked for named fields."
+      },
+      {
+        "text": "To make the database smaller",
+        "correct": false,
+        "why": "It makes it larger."
+      },
+      {
+        "text": "Because SQLite requires a text column",
+        "correct": false,
+        "why": "It requires nothing of the kind."
+      },
+      {
+        "text": "So the events are parsed again when a field turns out wrong",
+        "correct": true,
+        "why": "Right. The parser can have bugs; the original cannot."
+      }
+    ]
+  },
+  {
+    "id": "ex-f7y94j1n",
+    "version": 1,
+    "section": "normalising",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the table, what does detail = unknown_user say about a failed login?",
+    "hint": "Compare 'Invalid user' with 'Failed password'.",
+    "choices": [
+      {
+        "text": "The parser could not read the user name",
+        "correct": false,
+        "why": "It read it: the user column holds the name tried."
+      },
+      {
+        "text": "The account named does not exist on that machine",
+        "correct": true,
+        "why": "Right. It came from an `Invalid user` line; `Failed password` becomes wrong_password."
+      },
+      {
+        "text": "The address the attempt came from is not in the company's asset list",
+        "correct": false,
+        "why": "That would be enrichment, which load.py does not do."
+      },
+      {
+        "text": "The password was right but the account was locked",
+        "correct": false,
+        "why": "Nothing in the week locks an account."
+      }
+    ]
+  },
+  {
+    "id": "ex-swh8nrmb",
+    "version": 1,
+    "section": "normalising",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The firewall writes `Sep 14 01:00:00`, São Paulo time. What hour does the table store, in UTC?",
+    "hint": "Three hours ahead.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-fbcf8ex4",
+    "version": 1,
+    "section": "normalising",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Suppose load.py had assumed UTC for the firewall instead of -03:00. What would a question like 'what crossed fw within a minute of bruno's 02:33 login?' find?",
+    "hint": "SSH lines carry their offset; the firewall's do not.",
+    "choices": [
+      {
+        "text": "An error from sqlite3 about mixed time zones",
+        "correct": false,
+        "why": "The table holds text; nothing checks zones."
+      },
+      {
+        "text": "The same events, because UTC and -03:00 are the same day",
+        "correct": false,
+        "why": "Same day, different hours."
+      },
+      {
+        "text": "Nothing, because SSH has no firewall line for that login",
+        "correct": false,
+        "why": "login() writes both a firewall line and an SSH line."
+      },
+      {
+        "text": "Firewall events from three hours away, and none of the right ones",
+        "correct": true,
+        "why": "Right. Every firewall row would be shifted by three hours relative to SSH, with no error anywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-gxv8qdj3",
+    "version": 1,
+    "section": "rules-in-sigma",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does sigma-cli do with a rule?",
+    "hint": "-t sqlite.",
+    "choices": [
+      {
+        "text": "Converts it into a target's query language",
+        "correct": true,
+        "why": "Right. Here, SQL for SQLite."
+      },
+      {
+        "text": "Checks the rule against the MITRE ATT&CK catalogue",
+        "correct": false,
+        "why": "That is not what convert does."
+      },
+      {
+        "text": "Downloads the latest version of the rule",
+        "correct": false,
+        "why": "It reads the file it is given."
+      },
+      {
+        "text": "Runs it against the logs directly",
+        "correct": false,
+        "why": "It produces a query; alerts.sh runs it."
+      }
+    ]
+  },
+  {
+    "id": "ex-f2z4wwdx",
+    "version": 1,
+    "section": "rules-in-sigma",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague downloads a Sigma rule, converts it for your SIEM, and it never matches anything. What is the most common cause, according to the lesson?",
+    "hint": "Names.",
+    "choices": [
+      {
+        "text": "It asks for a field your SIEM calls something else",
+        "correct": true,
+        "why": "Right. Processing pipelines map field names; without the mapping the query asks for a column that is not there."
+      },
+      {
+        "text": "Sigma rules expire after a year and stop matching",
+        "correct": false,
+        "why": "Rules carry no expiry."
+      },
+      {
+        "text": "The level was set too low for the SIEM to show it",
+        "correct": false,
+        "why": "Level affects priority; a match still matches."
+      },
+      {
+        "text": "The rule's UUID collides with one already loaded in the SIEM",
+        "correct": false,
+        "why": "A duplicate id is a bookkeeping problem, not a reason for zero matches."
+      }
+    ]
+  },
+  {
+    "id": "ex-81smckhm",
+    "version": 1,
+    "section": "rules-in-sigma",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "failures.yml converted to: SELECT * FROM logs ___ product='sshd' AND `action`='failure'",
+    "hint": "The SQL keyword that filters rows.",
+    "blanks": [
+      {
+        "accept": [
+          "WHERE"
+        ],
+        "ignore_case": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5cap4vc3",
+    "version": 1,
+    "section": "rules-in-sigma",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a Sigma rule carry a UUID as well as a title?",
+    "hint": "Titles are rewritten.",
+    "choices": [
+      {
+        "text": "So the level can be derived from it",
+        "correct": false,
+        "why": "Level is its own field."
+      },
+      {
+        "text": "So it can be renamed and still be tracked as the same rule",
+        "correct": true,
+        "why": "Right. The same reason this course gives everything an opaque id."
+      },
+      {
+        "text": "Because SQLite needs a unique primary key for every rule that is converted into it",
+        "correct": false,
+        "why": "The converter does not store rules in SQLite."
+      },
+      {
+        "text": "To encrypt the rule's contents",
+        "correct": false,
+        "why": "A UUID encrypts nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-83557ah8",
+    "version": 1,
+    "section": "correlation",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many alerts did rules-v1.yml raise over the week?",
+    "hint": "Count the rows alerts.sh printed.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-emdv8v38",
+    "version": 1,
+    "section": "correlation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did v1 flag Carla?",
+    "hint": "Read her rows.",
+    "choices": [
+      {
+        "text": "She failed once and succeeded seconds later, which is all v1 asked for",
+        "correct": true,
+        "why": "Right. One failure then one success describes a typo as well as a guess."
+      },
+      {
+        "text": "She logged in from an address nobody had seen before",
+        "correct": false,
+        "why": "203.0.113.23 is her address every day."
+      },
+      {
+        "text": "Her account was among the nineteen tried from 203.0.113.66 on Thursday night, so every later login of hers is suspect",
+        "correct": false,
+        "why": "It was, but her alerts are on Tuesday and Wednesday, from her own address."
+      },
+      {
+        "text": "She used a key instead of a password",
+        "correct": false,
+        "why": "She logs in with a password."
+      }
+    ]
+  },
+  {
+    "id": "ex-xnepdzqh",
+    "version": 1,
+    "section": "correlation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What did v2 say that v1 did not?",
+    "hint": "What was different about Thursday?",
+    "choices": [
+      {
+        "text": "That the account that got in was bruno's",
+        "correct": false,
+        "why": "No account is named in the rule."
+      },
+      {
+        "text": "That the success came between midnight and six in the morning",
+        "correct": false,
+        "why": "v2 says nothing about the hour; it caught the 03:05 login and would catch one at noon."
+      },
+      {
+        "text": "That one address tried at least ten accounts, and then one login worked",
+        "correct": true,
+        "why": "Right. The behaviour, many accounts from one source, is what a typo never looks like."
+      },
+      {
+        "text": "That the address belongs to a list of known bad addresses",
+        "correct": false,
+        "why": "No list is consulted."
+      }
+    ]
+  },
+  {
+    "id": "ex-zx09jgbv",
+    "version": 1,
+    "section": "correlation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What showed that v1 was wrong?",
+    "hint": "Not reading it.",
+    "choices": [
+      {
+        "text": "sigma-cli refusing to convert it",
+        "correct": false,
+        "why": "It converted without complaint."
+      },
+      {
+        "text": "A colleague reviewing the YAML",
+        "correct": false,
+        "why": "The YAML was valid; the idea was the problem."
+      },
+      {
+        "text": "Its level being set to high",
+        "correct": false,
+        "why": "Level does not make a rule right or wrong."
+      },
+      {
+        "text": "Running it against a known week",
+        "correct": true,
+        "why": "Right. It read well and was wrong three times in five; only the data showed it."
+      }
+    ]
+  },
+  {
+    "id": "ex-td3p9gsw",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of a Sigma rule to what it does.",
+    "hint": "Four keys of the YAML.",
+    "pairs": [
+      {
+        "left": "logsource",
+        "right": "which kind of log the rule is about"
+      },
+      {
+        "left": "detection",
+        "right": "the field values to select"
+      },
+      {
+        "left": "correlation",
+        "right": "a rule about several events and their timing"
+      },
+      {
+        "left": "level",
+        "right": "how much attention a match deserves"
+      }
+    ]
+  },
+  {
+    "id": "ex-ndy598fz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "v2 raised a second alert at 03:05 local, for a key login. Why did a rule about guessing catch it?",
+    "hint": "timespan: 1h, grouped by address.",
+    "choices": [
+      {
+        "text": "It came from the same address within an hour of the window in which many accounts were tried",
+        "correct": true,
+        "why": "Right. The rule follows the address, not the method, so any success from it in that hour matches."
+      },
+      {
+        "text": "Bruno never uses a key, and the rule knows each user's habits",
+        "correct": false,
+        "why": "True of bruno, but the rule knows nothing about habits; lesson 10 hunts for that."
+      },
+      {
+        "text": "Key logins are always treated as critical by Sigma",
+        "correct": false,
+        "why": "Sigma has no such rule."
+      },
+      {
+        "text": "A second guessing run happened at 03:00",
+        "correct": false,
+        "why": "There was one run, from 02:10."
+      }
+    ]
+  }
+]

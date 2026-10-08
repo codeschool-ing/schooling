@@ -1,0 +1,383 @@
+{
+  "ex-3zgs6jtd": {
+    "prompt": "Qual destas coisas define o TETO de uma política de retenção de logs, e não o piso?",
+    "hint": "Dado pessoal não pode ser guardado além da finalidade.",
+    "choices": [
+      {
+        "text": "O tamanho do disco",
+        "why": "O disco é uma restrição, mas a aula o põe por último, e não é um limite legal."
+      },
+      {
+        "text": "O princípio da necessidade da LGPD",
+        "why": "Isso. É o motivo de uma política dizer quando os logs são apagados, não só por quanto tempo são guardados."
+      },
+      {
+        "text": "Os doze meses que o PCI DSS pede quando a empresa lida com cartões de pagamento",
+        "why": "Também um mínimo, posto por um padrão contratual."
+      },
+      {
+        "text": "O artigo 15 do Marco Civil da Internet",
+        "why": "Ele fixa um mínimo de seis meses para provedores de aplicação: um piso."
+      }
+    ]
+  },
+  "ex-pnd5762r": {
+    "prompt": "Pelo artigo 15 do Marco Civil da Internet, por quantos meses um provedor de aplicação guarda os registros de acesso?",
+    "hint": "Metade do que um provedor de conexão guarda."
+  },
+  "ex-r5w2mnyh": {
+    "prompt": "Uma empresa guarda logs por 60 dias. Em março descobre-se um comprometimento que começou em novembro. O que se perdeu?",
+    "hint": "Conte para trás a partir de março.",
+    "choices": [
+      {
+        "text": "Os registros de fluxo, embora os logs de autenticação sobrevivam",
+        "why": "Os dois são guardados pelos mesmos 60 dias nesta política."
+      },
+      {
+        "text": "Nada, já que o SIEM guarda os alertas para sempre",
+        "why": "Alertas são tão antigos quanto os eventos de que vieram, e a maioria dos eventos nunca virou alerta."
+      },
+      {
+        "text": "Os registros de como começou",
+        "why": "Isso. Novembro fica fora de uma janela de 60 dias aberta em março."
+      },
+      {
+        "text": "Só as capturas de pacotes de março",
+        "why": "Março está dentro da janela; novembro é a lacuna."
+      }
+    ]
+  },
+  "ex-511dah2r": {
+    "prompt": "O que separa o armazenamento morno do quente no plano da aula?",
+    "hint": "Os dois guardam logs; a diferença é velocidade e preço.",
+    "choices": [
+      {
+        "text": "O morno é comprimido e mais barato, e precisa ser carregado de volta antes de ser pesquisado",
+        "why": "Isso. O quente é o próprio SIEM, pesquisável na hora e caro por gigabyte."
+      },
+      {
+        "text": "O morno guarda só os logs que dispararam alertas, porque ninguém precisa pesquisar de novo os que ficaram quietos",
+        "why": "Ele guarda as mesmas fontes, mais antigas."
+      },
+      {
+        "text": "O morno é apagado depois de três meses",
+        "why": "O quente é a faixa de três meses; o morno vai até treze."
+      },
+      {
+        "text": "O morno guarda os logs sem criptografia, por velocidade",
+        "why": "Criptografia não é o que separa as faixas."
+      }
+    ]
+  },
+  "ex-s472g6s2": {
+    "prompt": "Contra o que mandar cada linha ao soc assim que ela é escrita protege?",
+    "hint": "Pense no que acontece com o gw num dia ruim.",
+    "choices": [
+      {
+        "text": "Faltar espaço em disco no gw, já que as linhas saem assim que são escritas e nada se acumula",
+        "why": "O arquivo local no gw cresce do mesmo jeito; despachar acrescenta uma cópia, não move o original."
+      },
+      {
+        "text": "Alguém no soc ler as linhas sem ter as permissões que o gw exigiria",
+        "why": "Permissões no soc são uma decisão à parte, posta na regra."
+      },
+      {
+        "text": "Perder o registro junto com a máquina que o escreveu",
+        "why": "Isso. Um disco que falha ou uma conta comprometida no gw já não alcança a cópia no soc."
+      },
+      {
+        "text": "Linhas chegando fora de ordem",
+        "why": "Encaminhar acrescenta um segundo carimbo; não reordena nada."
+      }
+    ]
+  },
+  "ex-h86235tp": {
+    "prompt": "Sem fileCreateMode, fileOwner e fileGroup na regra remota, as cópias no soc saíam com modo 644. Por que isso importa?",
+    "hint": "Quem lê um arquivo 644?",
+    "choices": [
+      {
+        "text": "O rsyslog não conseguiria mais escrever neles, e cada linha nova do gw seria descartada em silêncio",
+        "why": "O dono escreve num arquivo 644."
+      },
+      {
+        "text": "Todo usuário do soc leria logs cheios de nomes de conta e endereços",
+        "why": "Isso. 644 é legível por todos; logs com dados pessoais pertencem ao root e ao adm."
+      },
+      {
+        "text": "O logrotate se recusa a rotacionar arquivos legíveis por todos",
+        "why": "Ele os rotaciona; o problema é quem os lê."
+      },
+      {
+        "text": "O hash do arquivo muda com o modo",
+        "why": "Um hash cobre o conteúdo, não as permissões."
+      }
+    ]
+  },
+  "ex-8s712xd9": {
+    "prompt": "Uma linha em /var/log/remote/gw.log traz dois carimbos de hora com minutos de diferença. Qual é a explicação mais provável?",
+    "hint": "Um carimbo é de quando o sshd escreveu; o outro, de quando o rsyslog do gw leu e enviou.",
+    "choices": [
+      {
+        "text": "O gw e o soc estão em fusos diferentes, então os dois relógios imprimem horas diferentes para o mesmo momento",
+        "why": "Os dois são escritos com o deslocamento; diferença de fuso aparece em horas, e no deslocamento."
+      },
+      {
+        "text": "Alguém abriu o arquivo no soc e editou a linha depois, à mão",
+        "why": "Uma edição não acrescentaria um segundo carimbo; o formato põe os dois ali."
+      },
+      {
+        "text": "O soc ficou fora e a fila do gw segurou as linhas",
+        "why": "Isso. A fila atrasa, não perde, e a diferença mostra a queda."
+      },
+      {
+        "text": "O ts arredonda cada carimbo para o minuto mais próximo antes de escrever",
+        "why": "Ele escreve os segundos."
+      }
+    ]
+  },
+  "ex-xt8g4kdk": {
+    "prompt": "O gw encaminha com o template RSYSLOG_SyslogProtocol23Format, que é o formato de mensagem da RFC ___ e leva o fuso junto com a hora.",
+    "hint": "A mesma RFC que a aula 1 citou para mensagens de syslog.",
+    "blanks": [
+      {
+        "accept": [
+          "5424"
+        ]
+      }
+    ]
+  },
+  "ex-z8fd2br5": {
+    "prompt": "O `sha256sum -c` imprime `FAILED` para uma cópia de log. O que isso diz à analista?",
+    "hint": "Ele responde sim ou não.",
+    "choices": [
+      {
+        "text": "Qual linha da cópia foi alterada, para a analista restaurar só aquela",
+        "why": "É isso que a corrente de hashes acrescenta."
+      },
+      {
+        "text": "Quem alterou o arquivo",
+        "why": "Um hash não sabe nada de pessoas; o registro de custódia sabe."
+      },
+      {
+        "text": "Que a cópia difere do arquivo que teve o hash calculado, sem dizer onde",
+        "why": "Isso. Um hash de arquivo diz que algo mudou; não diz o quê."
+      },
+      {
+        "text": "Que o disco onde está a cópia está falhando e começou a corromper os arquivos gravados nele",
+        "why": "Essa seria uma causa entre muitas; a conferência não diz."
+      }
+    ]
+  },
+  "ex-pbexctvq": {
+    "prompt": "Onde o hash do dia deve ficar guardado?",
+    "hint": "Um hash trocado junto com o arquivo não prova nada.",
+    "choices": [
+      {
+        "text": "Longe do arquivo, onde as pessoas que manuseiam o arquivo não escrevem",
+        "why": "Isso. Senão, o arquivo e o hash podem ser trocados juntos."
+      },
+      {
+        "text": "Na mesma pasta do arquivo, para os dois nunca se separarem quando o arquivo for movido",
+        "why": "Juntos, podem ser trocados juntos."
+      },
+      {
+        "text": "Dentro do próprio log, como a última linha",
+        "why": "Acrescentar uma linha muda o arquivo que o hash descreve."
+      },
+      {
+        "text": "Em lugar nenhum em especial: dá para recalcular a partir do arquivo a qualquer momento",
+        "why": "Recalcular descreve o arquivo como ele está agora, que é justamente o que está em dúvida."
+      }
+    ]
+  },
+  "ex-bkgps2zf": {
+    "prompt": "Na corrente da aula, apagar a linha 2 deixou o primeiro hash, f32a8cbd8f4539cc, igual. Por quê?",
+    "hint": "O que o hash de uma linha cobre?",
+    "choices": [
+      {
+        "text": "O sed restaurou a linha 1 de uma cópia que ele guarda",
+        "why": "O sed -i não guarda cópia a menos que se peça."
+      },
+      {
+        "text": "Ele cobre só o valor inicial e a linha 1, que não mudaram",
+        "why": "Isso. Um elo depende do que vem antes dele, não do que vem depois."
+      },
+      {
+        "text": "Os hashes só são recalculados para as linhas alteradas",
+        "why": "Todo hash é recalculado a cada execução; a maioria só sai diferente."
+      },
+      {
+        "text": "O script pula a primeira linha",
+        "why": "Ele calcula o hash de todas as linhas, a primeira inclusive."
+      }
+    ]
+  },
+  "ex-a9enbnh8": {
+    "prompt": "O que `chattr +a` faz com um arquivo de log?",
+    "hint": "a de append, acrescentar.",
+    "choices": [
+      {
+        "text": "Manda uma cópia do arquivo ao coletor remoto toda vez que uma linha nova é acrescentada",
+        "why": "Isso é o omfwd do rsyslog."
+      },
+      {
+        "text": "Linhas entram, mas só são reescritas depois de tirar o atributo",
+        "why": "Isso. Até o root precisa tirar o atributo antes de reescrevê-lo."
+      },
+      {
+        "text": "Calcula o hash do arquivo a cada minuto",
+        "why": "Ele põe um atributo; nada é calculado."
+      },
+      {
+        "text": "Comprime o arquivo a cada linha que chega, para ocupar menos espaço no disco",
+        "why": "Compressão é trabalho do logrotate."
+      }
+    ]
+  },
+  "ex-17ph7mzs": {
+    "prompt": "Com `daily` e `rotate 400`, por quantos dias os arquivos antigos são guardados antes de o mais antigo ser apagado?",
+    "hint": "Um arquivo por dia."
+  },
+  "ex-j0xmm8jm": {
+    "prompt": "Qual é o preço do `copytruncate` em comparação com `create` e um sinal ao rsyslog?",
+    "hint": "Algo acontece entre dois passos.",
+    "choices": [
+      {
+        "text": "O rsyslog precisa ser reiniciado toda noite",
+        "why": "O copytruncate é justamente a opção que dispensa sinal e reinício."
+      },
+      {
+        "text": "O arquivo rotacionado não pode ser comprimido",
+        "why": "Pode; o compress vale nos dois casos."
+      },
+      {
+        "text": "Uma linha escrita entre a cópia e o esvaziamento se perde",
+        "why": "Isso. Quem escreve mantém o arquivo aberto, e essa janela curta é o custo."
+      },
+      {
+        "text": "O arquivo antigo perde o dono e o grupo",
+        "why": "A listagem mostra syslog e adm nos dois arquivos."
+      }
+    ]
+  },
+  "ex-rm21f2px": {
+    "prompt": "Por que a configuração da aula usa `dateext`?",
+    "hint": "Compare gw.log-20261007 com gw.log.1.",
+    "choices": [
+      {
+        "text": "Porque o logrotate se recusa a comprimir arquivos numerados",
+        "why": "Ele comprime os dois tipos."
+      },
+      {
+        "text": "Para o rsyslog passar a escrever a data completa em cada linha que recebe daqui em diante",
+        "why": "As linhas já trazem os próprios carimbos."
+      },
+      {
+        "text": "Para manter o arquivo rotacionado na faixa quente, onde o SIEM ainda o pesquisa diretamente",
+        "why": "Faixas são sobre onde os arquivos ficam, não sobre o nome."
+      },
+      {
+        "text": "Para o nome dizer que dia ele guarda",
+        "why": "Isso. Um arquivo numerado muda toda noite; um datado, não."
+      }
+    ]
+  },
+  "ex-6p1gmkx0": {
+    "prompt": "Qual texto brasileiro define a cadeia de custódia etapa por etapa, para vestígios em processos criminais?",
+    "hint": "Artigos 158-A a 158-F.",
+    "choices": [
+      {
+        "text": "O Código de Processo Penal, alterado pela Lei 13.964/2019",
+        "why": "Isso. Artigos 158-A a 158-F, do reconhecimento do vestígio ao descarte."
+      },
+      {
+        "text": "O Marco Civil da Internet",
+        "why": "Ele fixa prazos de guarda para provedores."
+      },
+      {
+        "text": "A ISO/IEC 27037",
+        "why": "Uma diretriz internacional, não lei brasileira."
+      },
+      {
+        "text": "A LGPD",
+        "why": "A LGPD trata de dados pessoais; custódia de vestígios é lei processual."
+      }
+    ]
+  },
+  "ex-az6swbfx": {
+    "prompt": "Uma analista quer pesquisar no log coletado. O que a aula manda fazer antes?",
+    "hint": "O arquivo coletado fica intocado.",
+    "choices": [
+      {
+        "text": "Abrir o arquivo coletado só para leitura e pesquisar ali",
+        "why": "Acesso só de leitura ainda arrisca o original; a regra é trabalhar em cópias."
+      },
+      {
+        "text": "Anotar a transferência no fim da semana",
+        "why": "Transferências são registradas na hora em que acontecem."
+      },
+      {
+        "text": "Comprimi-lo antes, para que não seja editado por acidente durante a pesquisa",
+        "why": "Comprimir muda o arquivo e o hash."
+      },
+      {
+        "text": "Fazer uma cópia e conferir o hash dela contra o registro",
+        "why": "Isso. Trabalhe em cópias, e confirme que cada uma bate antes de confiar nela."
+      }
+    ]
+  },
+  "ex-tq2138ya": {
+    "prompt": "Associe cada técnica à pergunta que ela responde.",
+    "hint": "Disponibilidade, mudança, lugar da mudança, pessoas.",
+    "pairs": [
+      {
+        "left": "despachar para um coletor",
+        "right": "ainda existe uma cópia se o gw se perder?"
+      },
+      {
+        "left": "um SHA-256 do arquivo do dia",
+        "right": "este é o arquivo que foi coletado?"
+      },
+      {
+        "left": "uma corrente de hashes",
+        "right": "a partir de qual linha mudou?"
+      },
+      {
+        "left": "um registro de custódia",
+        "right": "quem ficou com ele, e quando?"
+      }
+    ]
+  },
+  "ex-ywef7p3a": {
+    "prompt": "Ordene a vida do log de um dia no soc, da primeira linha ao último registro.",
+    "hint": "Ele é escrito, fechado, selado, depois entregue.",
+    "items": [
+      "as linhas chegam do gw por TCP",
+      "o logrotate fecha o dia como gw.log-20261007",
+      "a analista calcula o hash do arquivo fechado e guarda o hash à parte",
+      "uma transferência para o investigador é escrita no registro de custódia"
+    ]
+  },
+  "ex-smf6h6nj": {
+    "prompt": "Um colega entrega a você um log e o SHA-256 dele no mesmo pen drive, e o hash bate. O que dá para concluir?",
+    "hint": "Como seria uma troca dos dois?",
+    "choices": [
+      {
+        "text": "Que o log é o coletado, já que o SHA-256 não pode ser forjado",
+        "why": "Ninguém forjou o hash; ele pode ter sido recalculado sobre um arquivo alterado."
+      },
+      {
+        "text": "Só que arquivo e hash concordam; nada impede que tenham sido trocados juntos",
+        "why": "Isso. O hash precisa de um registro de custódia, e de uma cópia guardada à parte, para valer mais."
+      },
+      {
+        "text": "Que o log está completo e em ordem, sem nenhuma linha faltando do dia que ele cobre",
+        "why": "Um hash que bate diz que o arquivo é o mesmo que teve o hash calculado, não que nada faltava naquela hora."
+      },
+      {
+        "text": "Nada: hashes em pen drive não valem",
+        "why": "O meio não importa; importa quem podia mudá-lo."
+      }
+    ]
+  }
+}

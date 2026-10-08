@@ -1,0 +1,33 @@
+---
+title: O que um SIEM faz
+version: 1
+---
+
+Uma imagem comum de um SIEM é um produto que se compra e se liga. **Um SIEM é uma esteira**, e todo
+produto vendido com esse nome é uma implementação das mesmas cinco etapas. O nome, *security information
+and event management*, diz pouco; as etapas dizem tudo:
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 200\" role=\"img\" aria-label=\"O caminho de um evento por um SIEM, da esquerda para a direita: as fontes mandam linhas cruas para a coleta; o parsing e a normalização as transformam em campos com nome; o enriquecimento acrescenta o que a linha não sabia, como o dono de um endereço; o armazenamento as mantém pesquisáveis; regras de correlação leem os eventos guardados e geram alertas para um analista.\"><rect x=\"10\" y=\"40\" width=\"118\" height=\"58\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"69.0\" y=\"61.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">coletar</text><text x=\"69.0\" y=\"77.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">syslog, agentes, APIs</text><path d=\"M128 69 L148 69\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M148 69 L140.0 65.0 L140.0 73.0 Z\" fill=\"var(--paper-dim)\" stroke=\"none\"></path><rect x=\"148\" y=\"40\" width=\"118\" height=\"58\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"207.0\" y=\"61.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">normalizar</text><text x=\"207.0\" y=\"77.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">campos com nome, UTC</text><path d=\"M266 69 L286 69\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M286 69 L278.0 65.0 L278.0 73.0 Z\" fill=\"var(--paper-dim)\" stroke=\"none\"></path><rect x=\"286\" y=\"40\" width=\"118\" height=\"58\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"345.0\" y=\"61.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">enriquecer</text><text x=\"345.0\" y=\"77.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">dono, ativo, inteligência</text><path d=\"M404 69 L424 69\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M424 69 L416.0 65.0 L416.0 73.0 Z\" fill=\"var(--paper-dim)\" stroke=\"none\"></path><rect x=\"424\" y=\"40\" width=\"118\" height=\"58\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"483.0\" y=\"61.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">guardar</text><text x=\"483.0\" y=\"77.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">indexado, retido</text><path d=\"M542 69 L562 69\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M562 69 L554.0 65.0 L554.0 73.0 Z\" fill=\"var(--paper-dim)\" stroke=\"none\"></path><rect x=\"562\" y=\"40\" width=\"118\" height=\"58\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"621.0\" y=\"61.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">correlacionar</text><text x=\"621.0\" y=\"77.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">regras sobre eventos</text><path d=\"M621 98 L621 140\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M621 140 L625.0 132.0 L617.0 132.0 Z\" fill=\"var(--paper-dim)\" stroke=\"none\"></path><rect x=\"542\" y=\"140\" width=\"158\" height=\"44\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"621.0\" y=\"162.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">alerta, para uma pessoa</text><text x=\"10\" y=\"22\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">linhas cruas entrando, de toda fonte</text></svg>", "caption": "Cada etapa muda o que a seguinte pode perguntar. Um campo que ninguém extraiu não pode ser correlacionado."}
+```
+
+A **coleta** recebe o que a aula 3 despachou: syslog, agentes em máquinas Windows, chamadas de API a
+serviços de nuvem. A **normalização** transforma o jeito de escrever de cada fonte num mesmo conjunto de
+campos com nome, para que o `SRC=` do firewall e o `from` do SSH virem os dois `src_ip`. O
+**enriquecimento** acrescenta o que nenhuma linha sabia: qual departamento é dono de um endereço, se um
+servidor guarda dados pessoais, se um endereço aparece numa lista de endereços maliciosos conhecidos. O
+**armazenamento** guarda o resultado indexado pela retenção que a política definiu. E a **correlação** roda
+regras sobre os eventos guardados e gera **alertas** para uma pessoa ler.
+
+Duas coisas decorrem do desenho. **Só dá para perguntar sobre um campo que uma etapa anterior produziu**:
+se o parser nunca extraiu o nome da conta, nenhuma regra consegue contar contas. E **toda etapa pode
+perder informação em silêncio**: uma linha que o parser não reconhece, um carimbo de hora lido no fuso
+errado, uma lista de enriquecimento desatualizada. Um SIEM que diz quantas linhas não conseguiu
+interpretar está dizendo a verdade sobre si mesmo; um que não diz nada não está necessariamente
+interpretando tudo.
+
+Os produtos diferem em escala, interface e preço, e mudam todo ano. Este curso não cita nenhum. Ele
+monta a esteira em miniatura, em arquivos que você consegue ler: um script Python para a normalização,
+uma tabela SQLite para o armazenamento e o **Sigma** para as regras, um formato aberto de regras que se
+converte para a linguagem de consulta da maioria dos SIEMs. O que você aprende sobre cada etapa vale para
+qualquer produto que encontrar.
