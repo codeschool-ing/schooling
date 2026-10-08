@@ -51,8 +51,7 @@ def load(name):
     if name == "judge":
         return {(r["case"], r["release"]): r["label"] for r in map(json.loads, open("runs/judged.jsonl"))}
     rubric, rater = name.split("/")
-    return {(r["case"], r["release"]): r["label"] for r in map(json.loads, open("data/labels.jsonl"))
-            if r["rubric"] == rubric and r["rater"] == rater}
+    return {(r["case"], r["release"]): r[rubric][rater] for r in map(json.loads, open("data/labels.jsonl"))}
 
 
 replies = {(r["id"], r["release"]): r["reply"] for run in ("old", "new") for r in map(json.loads, open(f"runs/{run}.jsonl"))}
@@ -71,26 +70,12 @@ apart = [key for key in keys if left[key] != right[key]]
 refusals = [key for key in apart if checks.is_refusal(replies[key])]
 print(f"apart on {len(apart)}: {len(refusals)} refusals, {len(apart) - len(refusals)} other replies")
 for key in apart:
-    if key not in refusals:
-        print(f"  {key[0]} {key[1]}  {left[key]} / {right[key]}  {replies[key][:58]}")
+    print(f"  {key[0]} {key[1]}  {left[key]} / {right[key]}  {replies[key][:58]}")
 ```
 
 ## Version 1
 
-```
-ana@lab:~/obs$ python agree.py relevance-v1/ana relevance-v1/bruno
-60 replies; rows relevance-v1/ana, columns relevance-v1/bruno
-          pass  fail
-  pass      27    29
-  fail       0     4
-agreement 51.7%   by chance 45.7%   kappa 0.11
-apart on 29: 24 refusals, 5 other replies
-  e02 2026.09.4  pass / fail  Keep the receipt the post office gives you until the refun
-  e05 2026.09.4  pass / fail  An e-book can be refunded within 14 days of purchase if yo
-  e05 2026.10.1  pass / fail  An e-book can be refunded within 14 days of purchase if yo
-  e06 2026.09.4  pass / fail  Express delivery is not free at any order value. [1]
-  e06 2026.10.1  pass / fail  Express delivery is not free at any order value. [1]
-```
+CAPTURE:v1
 
 **They agree on 31 of the 60 replies, 51.7%, and chance alone would give 45.7%.** Kappa is 0.11: two
 people reading the same replies against the same sentence agreed barely more than if one of them had

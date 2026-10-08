@@ -8,12 +8,14 @@ With a reference that two people agree on, the judge can be measured the same wa
 `agree.py` reads them:
 
 ```python
-"""judge_runs.py: judge-1's relevance verdict on every reply of the two runs, written where agree.py reads it.
+"""judge_runs.py: the judge's relevance verdict on every reply of the two runs, written where agree.py reads it.
 
-    python judge_runs.py [--refusals-pass]
+    python judge_runs.py [--refusals-by-key] [--rubric data/rubrics/relevance-v2.md]
 
-With --refusals-pass the agreed refusal is passed by rule, as the rubric says,
-and never sent to the judge.
+--refusals-by-key decides the agreed refusal without the judge, as version 2
+of the rubric says: it passes when the evaluation set has no facts for the
+question, so the documents do not answer it, and fails when it has some.
+--rubric gives the judge that file in place of judge.py's own sentence.
 """
 import argparse
 import json
@@ -23,41 +25,28 @@ import judge
 import telemetry
 
 p = argparse.ArgumentParser()
-p.add_argument("--refusals-pass", action="store_true")
+p.add_argument("--refusals-by-key", action="store_true")
+p.add_argument("--rubric")
 a = p.parse_args()
+if a.rubric:
+    judge.RUBRIC["relevance"] = open(a.rubric).read()
+facts = {c["id"]: c["facts"] for c in map(json.loads, open("data/eval.jsonl"))}
 telemetry.setup("judge-spans.jsonl", service="judge")
 asked = total = 0
 with open("runs/judged.jsonl", "w") as out:
     for run in ("old", "new"):
         for r in map(json.loads, open(f"runs/{run}.jsonl")):
-            if a.refusals_pass and checks.is_refusal(r["reply"]):
-                label = "pass"
+            if a.refusals_by_key and checks.is_refusal(r["reply"]):
+                label = "fail" if facts[r["id"]] else "pass"
             else:
                 label = judge.grade("relevance", r["question"], r["reply"], r["sources"])["verdict"]
                 asked += 1
             out.write(json.dumps({"case": r["id"], "release": r["release"], "label": label}) + "\n")
             total += 1
-print(f"runs/judged.jsonl: {total} replies, {asked} sent to judge-1, {total - asked} passed by rule")
+print(f"runs/judged.jsonl: {total} replies, {asked} sent to the judge, {total - asked} decided by the key")
 ```
 
-```
-ana@lab:~/obs$ python judge_runs.py
-runs/judged.jsonl: 60 replies, 60 sent to judge-1, 0 passed by rule
-ana@lab:~/obs$ python agree.py relevance-v2/agreed judge
-60 replies; rows relevance-v2/agreed, columns judge
-          pass  fail
-  pass      29    24
-  fail       7     0
-agreement 48.3%   by chance 57.7%   kappa -0.22
-apart on 31: 24 refusals, 7 other replies
-  e02 2026.09.4  fail / pass  Keep the receipt the post office gives you until the refun
-  e04 2026.09.4  fail / pass  We replace damaged books at no cost and you do not need to
-  e06 2026.09.4  fail / pass  Express delivery is not free at any order value. [1]
-  e06 2026.10.1  fail / pass  Express delivery is not free at any order value. [1]
-  e07 2026.10.1  fail / pass  Express delivery is not free at any order value. [1]
-  e19 2026.09.4  fail / pass  Marginalia is an online bookshop operated at marginalia.ex
-  e19 2026.10.1  fail / pass  Marginalia is an online bookshop operated at marginalia.ex
-```
+CAPTURE:judge
 
 **Kappa is −0.22: the judge agrees with people less often than chance would.** Not because it is
 random, but because it is systematically opposite on one kind of reply. Every one of the twenty-four
@@ -77,24 +66,7 @@ the number means.
 The rubric settles refusals without reading anything: the agreed refusal passes. A rule can apply that
 before the judge is called, and `--refusals-pass` does:
 
-```
-ana@lab:~/obs$ python judge_runs.py --refusals-pass
-runs/judged.jsonl: 60 replies, 36 sent to judge-1, 24 passed by rule
-ana@lab:~/obs$ python agree.py relevance-v2/agreed judge
-60 replies; rows relevance-v2/agreed, columns judge
-          pass  fail
-  pass      53     0
-  fail       7     0
-agreement 88.3%   by chance 88.3%   kappa 0.00
-apart on 7: 0 refusals, 7 other replies
-  e02 2026.09.4  fail / pass  Keep the receipt the post office gives you until the refun
-  e04 2026.09.4  fail / pass  We replace damaged books at no cost and you do not need to
-  e06 2026.09.4  fail / pass  Express delivery is not free at any order value. [1]
-  e06 2026.10.1  fail / pass  Express delivery is not free at any order value. [1]
-  e07 2026.10.1  fail / pass  Express delivery is not free at any order value. [1]
-  e19 2026.09.4  fail / pass  Marginalia is an online bookshop operated at marginalia.ex
-  e19 2026.10.1  fail / pass  Marginalia is an online bookshop operated at marginalia.ex
-```
+CAPTURE:rule
 
 **Agreement 88.3%, and kappa 0.00.** The judge now agrees with people on 53 replies of 60, and it
 agrees exactly as often as a judge that passed everything without reading. Because that is what it

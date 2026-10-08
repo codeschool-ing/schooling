@@ -6,34 +6,30 @@ version: 1
 The disagreements in version 1 were not mistakes to correct; they were questions the rubric had not
 answered. Ana and Bruno went through them together and wrote the answers into version 2:
 
-```
-ana@lab:~/obs$ cat data/rubrics/relevance-v2.md
+```sh
+cat > data/rubrics/relevance-v2.md <<'EOF'
 # Relevance, version 2
 
-Read the customer's question and the assistant's reply. Relevance asks only
-whether the reply is about what was asked. Whether it is true is faithfulness,
-and whether it is the right answer is correctness: grade neither here.
+Read the customer's question, the assistant's reply and the sources it was
+given. Relevance asks whether the reply gives the customer what they asked
+for. Whether what it says is true is faithfulness: grade that apart.
 
 - pass: the reply gives what the question asks for, even among other
-  sentences.
-  e.g. "Above what order value is standard delivery free?" answered with a
-  sentence on express delivery and then "standard ... free on orders over 40".
+  sentences, and even if it is wrong.
+  e.g. "Who pays for the return postage?" answered with "the customer pays
+  for the return postage" passes here, and fails faithfulness.
 - pass: the reply is the agreed refusal, "I could not find that in our
-  documents." It answers the question by saying there is no answer here.
-  Whether it should have refused is correctness.
-- fail: the reply is about the question's subject and does not give what was
-  asked for.
-  e.g. "How much is express delivery?" answered with "Express delivery is not
-  free at any order value."
+  documents.", and the shop's documents do not answer the question.
+  e.g. "Can I place an order by phone?"
+- fail: the reply is the agreed refusal, and the shop's documents do answer
+  the question. The customer asked something the shop has written down and
+  was told it had not.
+  e.g. "Can I pay in instalments?" answered with the refusal.
 - fail: the reply answers a different question, even one that shares the
   question's words.
-  e.g. "Above what order value is standard delivery free?" answered with
-  "Express delivery is not free at any order value."
-
-When the reply gives a condition from which the answer follows, and the customer
-would have to work it out, write that down beside the label: it is the case this
-version does not settle.
+EOF
 ```
+
 
 Three things changed, and each is a technique worth reusing.
 
@@ -49,17 +45,7 @@ Three things changed, and each is a technique worth reusing.
 
 The same sixty replies, labelled again against version 2:
 
-```
-ana@lab:~/obs$ python agree.py relevance-v2/ana relevance-v2/bruno
-60 replies; rows relevance-v2/ana, columns relevance-v2/bruno
-          pass  fail
-  pass      51     2
-  fail       0     7
-agreement 96.7%   by chance 76.8%   kappa 0.86
-apart on 2: 0 refusals, 2 other replies
-  e05 2026.09.4  pass / fail  An e-book can be refunded within 14 days of purchase if yo
-  e05 2026.10.1  pass / fail  An e-book can be refunded within 14 days of purchase if yo
-```
+CAPTURE:v2
 
 **Kappa 0.86, and two disagreements left**, both the same reply: e05, the e-book downloaded yesterday,
 under each release. It is the case the last paragraph of the rubric describes. Ana passed it, because
