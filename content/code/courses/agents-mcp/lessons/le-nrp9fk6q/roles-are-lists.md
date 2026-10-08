@@ -1,6 +1,6 @@
 ---
 title: A role is a list of tools
-version: 1
+version: 2
 ---
 
 `role_host.py` is lesson 15's host with one change of shape: the agent has a **role**, and the role is written down as the servers and tools it may use.
@@ -49,35 +49,44 @@ version: 1
 }
 ```
 
-The support agent was asked for a refund. The course's rule had the model ask for `refunds__refund` anyway, the way a model might after reading a convincing message:
+The support agent was asked for a refund, with `llama3.2:3b` behind it:
 
 ```
 ana@lab:~/agents$ python role_host.py support "One copy of M-1047 arrived damaged; please refund it." 2> host.err
 role support: offered shop__get_order, shop__search_help, read_help
-step 1: refunds__refund {"order_id": "M-1047", "cents": 3890, "reason": "one copy arrived damaged"}
-  refused: refunds__refund is not available to the support agent
-answer: I cannot issue refunds myself; a colleague will review order M-1047 and reply to you by email.
+step 1: shop__get_order {"order_id": "M-1047"}
+  result: {"id": "M-1047", "status": "delivered", "placed_on": "2026-09-15", "delivered_on": "2026-09-18", "tr
+answer: Unfortunately, I'm a permissions lesson support agent and do not have the capability to process refunds. I can direct you to the relevant customer service department for assistance with your refund request. Would you like me to provide you with their contact information?
 ```
 
-The tool did not exist for this agent. The host refused the call before any server was involved (the refunds server was not even running), and the model told the customer a colleague would look. **Nobody had to notice in time**: the boundary held because of what the agent was given, not because of anything the model decided.
-
-The refunds agent, asked the same thing:
-
-```
-ana@lab:~/agents$ printf "y\ny\n" | python role_host.py refunds "One copy of M-1047 arrived damaged; please refund it." 2> host.err
-role refunds: offered shop__get_order, refunds__refund, read_help
-step 1: refunds__refund {"order_id": "M-1047", "cents": 3890, "reason": "one copy arrived damaged"}
-  ? run refunds__refund {"order_id": "M-1047", "cents": 3890, "reason": "one copy arrived damaged"}? [y/n] y
-  ? the server asks: Refund 3890 cents on M-1047? [y/n] y
-  result: {"result": "{\"order_id\": \"M-1047\", \"refunded\": 3890, \"left\": 3890}"}
-answer: Done: 38.90 has been refunded to your original payment for the damaged copy in order M-1047.
-```
-
-The refund ran, after two approvals (section 05). Two agents, two lists, and the difference between them is three lines of data that can be reviewed like any other change.
-
-standin17.json:
+The model looked the order up and then told the customer it could not process refunds, which is true, and offered to pass them to customer service. It never asked for `refunds__refund`, so this run says nothing about the boundary: a model that does not try a door does not test the lock. A model that does try, after reading a convincing message, is what the test needs, and lesson 3's `standin.py` plays one, replying from this file:
 
 ```json
 {"arrived damaged": [{"tool": "refunds__refund", "input": {"order_id": "M-1047", "cents": 3890, "reason": "one copy arrived damaged"}},
                      {"text": "I cannot issue refunds myself; a colleague will review order M-1047."}]}
 ```
+
+```
+ana@lab:~/agents$ python standin.py standin17.json &
+ana@lab:~/agents$ ANTHROPIC_BASE_URL=http://127.0.0.1:11436 python role_host.py support "One copy of M-1047 arrived damaged; please refund it." 2> host.err
+role support: offered shop__get_order, shop__search_help, read_help
+step 1: refunds__refund {"order_id": "M-1047", "cents": 3890, "reason": "one copy arrived damaged"}
+  refused: refunds__refund is not available to the support agent
+answer: I cannot issue refunds myself; a colleague will review order M-1047.
+```
+
+The tool did not exist for this agent. The host refused the call before any server was involved (the refunds server was not even running), and the stand-in's written reply told the customer a colleague would look. **Nobody had to notice in time**: the boundary held because of what the agent was given, not because of anything the model decided, and that is why it holds the same for a real model that does try.
+
+The refunds agent, asked the same thing by the real model:
+
+```
+ana@lab:~/agents$ printf "y\ny\n" | python role_host.py refunds "One copy of M-1047 arrived damaged; please refund it." 2> host.err
+role refunds: offered shop__get_order, refunds__refund, read_help
+step 1: refunds__refund {"order_id": "M-1047", "cents": "0", "reason": "damaged item arrived"}
+  ? run refunds__refund {"order_id": "M-1047", "cents": "0", "reason": "damaged item arrived"}? [y/n] y
+  ? the server asks: Refund 0 cents on M-1047? [y/n] y
+  refused: Error executing tool refund
+answer: Sorry to hear that you received a damaged copy of M-1047. Unfortunately, I don't have the exact information about your order, including the order number, to process a refund. Could you please provide me with the order number or any other relevant details so I can assist you further?
+```
+
+The model asked for `"0"` cents, as a string. The person approved it twice, once for the host and once for the server, and only the server's own rule stopped it: `shop.refund` will not refund 0 cents, so the call failed, and the model then asked the customer for the order number it had just used. Two agents, two lists, and the difference between them is three lines of data that can be reviewed like any other change. What the refunds agent did with its list is the next section's subject.
