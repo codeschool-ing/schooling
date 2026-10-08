@@ -1,6 +1,6 @@
 ---
 title: When a request fails
-version: 1
+version: 2
 ---
 
 MCP has two ways to report a failure, and they mean different things. A **protocol error** is a JSON-RPC `error`: the request itself could not be handled. A **tool execution error** is an ordinary result with `isError: true`: the request was fine, and the tool failed. The second kind is meant for the model to read and act on.
@@ -29,6 +29,12 @@ ana@lab:~/agents$ python raw.py shop_mcp.py 330 < errors.jsonl
 
 Now the envelope itself. A version the server does not support:
 
+The file, `old-version.jsonl`:
+
+```json
+{"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {"_meta": {"io.modelcontextprotocol/protocolVersion": "1999-01-01", "io.modelcontextprotocol/clientCapabilities": {}}}}
+```
+
 ```
 ana@lab:~/agents$ python raw.py shop_mcp.py < old-version.jsonl
 > {"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {"_meta": {"io.modelcontextprotocol/protocolVersion": "1999-01-01", "io.modelcontextprotocol/clientCapabilities": {}}}}
@@ -36,6 +42,13 @@ ana@lab:~/agents$ python raw.py shop_mcp.py < old-version.jsonl
 ```
 
 `-32022`, **Unsupported protocol version**, with the versions the server does support. The specification says a client should pick one of those and retry. And a request with no `_meta` at all, followed by a correct one on the same connection:
+
+The file, `no-meta.jsonl`:
+
+```json
+{"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}}
+{"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {"_meta": {"io.modelcontextprotocol/protocolVersion": "2026-07-28", "io.modelcontextprotocol/clientCapabilities": {}}}}
+```
 
 ```
 ana@lab:~/agents$ python raw.py shop_mcp.py 260 < no-meta.jsonl

@@ -83,7 +83,7 @@ print(json.dumps(second.get("result", second))[:200])
 ana@lab:~/agents$ echo y | python mrtr.py
 resultType:   input_required
 asks:         __main__:ask_staff elicitation/create "Refund 3890 cents on M-1047?"
-requestState: v1.JfQ2jp335h2SsMV9nh7vL... (347 characters)
+requestState: v1.E4jv2LAT0yU788X3y8xkQ... (347 characters)
 approve? [y/n] y
 {"content": [{"text": "{\"order_id\": \"M-1047\", \"refunded\": 3890, \"left\": 3890}", "type": "text"}], "isError": false, "resultType": "complete", "structuredContent": {"result": "{\"order_id\": \"
 ana@lab:~/agents$ python -c 'import sqlite3; print(sqlite3.connect("data/shop.db").execute("SELECT order_id, cents, approved_by FROM refunds").fetchall())'
@@ -104,7 +104,7 @@ It also means the state travels through the client, which the server cannot trus
 ana@lab:~/agents$ echo y | python mrtr.py tamper
 resultType:   input_required
 asks:         __main__:ask_staff elicitation/create "Refund 3890 cents on M-1047?"
-requestState: v1.GWCRIvuBtQoJqlp9NsDoD... (347 characters)
+requestState: v1.TinBZ-M_OEUPyOnxQ0NzC... (347 characters)
 approve? [y/n] y
 {"jsonrpc": "2.0", "id": 2, "error": {"code": -32602, "message": "Invalid or expired requestState", "data": {"reason": "invalid_request_state"}}}
 ```
