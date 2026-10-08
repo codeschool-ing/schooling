@@ -1,6 +1,6 @@
 ---
 title: Checking citations
-version: 1
+version: 2
 ---
 
 A citation is a claim: *this sentence comes from that source.* Like any claim a model makes, it can
@@ -13,12 +13,12 @@ has. `verify.py` checks every sentence of a reply against the source it cites:
   "file": "verify.py",
   "parts": [
     {
-      "code": "import re\n\nfrom minilm import embed\n\nCLOSE = 0.75\nnorm = lambda t: \" \".join(t.split())",
-      "note": "`CLOSE` is the similarity above which a sentence counts as a fair rendering of a source sentence. It is a judgement, and 0.75 is this lab's."
+      "code": "import re\n\nfrom vectors import embed\n\nCLOSE = 0.75\nnorm = lambda t: \" \".join(t.split())",
+      "note": "`CLOSE` is the similarity above which a sentence counts as a fair rendering of a source sentence. It is a judgement, and 0.75 is this course's."
     },
     {
-      "code": "def claims(reply):\n    \"\"\"(sentence, source number or None) for every sentence of a reply.\"\"\"\n    out = []\n    for sentence in re.split(r\"(?<=[.!?\\]])\\s+(?=[A-Z])\", reply.strip()):\n        m = re.match(r\"(.*?)\\s*\\[(\\d+)\\]$\", sentence)\n        out.append((m.group(1), int(m.group(2))) if m else (sentence, None))\n    return out",
-      "note": "A reply split into sentences, each with the number at its end, or `None` when it has none."
+      "code": "def claims(reply):\n    \"\"\"(sentence, source number or None) for every sentence of a reply. A model told to cite like\n    [1] may put the number anywhere: \"... [1]\", \"According to [1], ...\", \"[2] states that ...\".\"\"\"\n    out = []\n    for sentence in re.split(r\"(?<=[.!?\\]])\\s+(?=[A-Z])\", reply.strip()):\n        numbers = re.findall(r\"\\[(\\d+)\\]\", sentence)\n        if not numbers:\n            out.append((sentence, None))\n            continue\n        text = re.sub(r\"^According to (source )?\\[\\d+\\],?\\s*\", \"\", sentence)\n        text = norm(re.sub(r\"\\s*\\[\\d+\\]\", \"\", text))\n        out.append((text[:1].upper() + text[1:], int(numbers[0])))\n    return out",
+      "note": "A reply split into sentences, each with the number of the source it cites, or `None` when it cites none. The instruction shows the number at the end, *like [1]*, and llama3.2:3b puts it wherever it likes: first, *According to [1], ...*, or in the middle, *[2] states that ...*. So the number is looked for anywhere in the sentence, the first one wins, and the numbers and the *According to* are taken out, with a capital put back, so that what is left can be looked for in the source."
     },
     {
       "code": "def check(reply, sources):\n    \"\"\"A verdict for every sentence: quoted, close, unsupported, uncited, no such source, or quoted\n    in another source than the one cited.\"\"\"\n    verdicts = []\n    for sentence, n in claims(reply):\n        if n is None:\n            verdicts.append((sentence, n, \"uncited\"))\n            continue\n        if not 0 < n <= len(sources):\n            verdicts.append((sentence, n, \"no such source\"))\n            continue\n        text = norm(sources[n - 1][\"text\"])\n        if norm(sentence) in text:\n            verdicts.append((sentence, n, \"quoted\"))\n            continue\n        elsewhere = [m for m, other in enumerate(sources, 1) if norm(sentence) in norm(other[\"text\"])]\n        if elsewhere:\n            verdicts.append((sentence, n, f\"in [{elsewhere[0]}], not [{n}]\"))\n            continue\n        parts = [p for p in re.split(r\"(?<=[.!?])\\s+\", text) if p]\n        best = float((embed(parts) @ embed(sentence)[0]).max())\n        verdicts.append((sentence, n, f\"close ({best:.2f})\" if best >= CLOSE else f\"unsupported ({best:.2f})\"))\n    return verdicts",
@@ -30,13 +30,29 @@ has. `verify.py` checks every sentence of a reply against the source it cites:
 
 ## A reply with two mistakes in it
 
-extract-1 cannot make a citation mistake: it copies a sentence and appends the number of the source
-it copied it from. So to see the checker catch something, the reply below **was written by the
-course, not by any model**, to imitate two mistakes real models make. It is checked against the real
-sources the search returned for the refund question:
+A checker has to be seen giving each of its verdicts before it is trusted with a model's reply. So
+the reply below **was written by the course, not by any model**, to make two mistakes models make in
+one place. It is checked against the real sources the search returned for the refund question:
+
+```schooling-example
+{
+  "language": "python",
+  "file": "made_up.py",
+  "parts": [
+    {
+      "code": "from answer import sources_for\nfrom verify import check\n\n# A reply WRITTEN BY THE COURSE, not by any model, imitating two mistakes real\n# models make: a true sentence cited to the wrong source, and a sentence no\n# source says.\nreply = (\"We refund within three working days of the return reaching our warehouse. [2] \"\n         \"Your bank may take another five to ten days to show it. [1] \"\n         \"Refunds are always paid as store credit. [1]\")",
+      "note": "The reply is written out by hand, so that every verdict the checker can give appears in one run."
+    },
+    {
+      "code": "sources = sources_for(\"How long after my return arrives will I get the refund?\")\nfor n, s in enumerate(sources, 1):\n    print(f\"[{n}] {s['path']}\")\nfor sentence, n, verdict in check(reply, sources):\n    print(f\"{verdict:20} [{n}] {sentence}\")",
+      "note": "The real sources the search returns for the refund question, and the checker's verdict on each sentence."
+    }
+  ]
+}
+```
 
 ```
-ana@lab:~/rag$ python made_up.py
+ana@vm:~/rag$ python made_up.py
 [1] Returns and refunds policy > Refunds
 [2] Returns and refunds policy > The return window
 [3] Returns and refunds policy > Items sold by marketplace sellers
@@ -61,17 +77,43 @@ source is 0.50, and the checker marks it unsupported.
 
 ## The same check on a real reply
 
-```
-ana@lab:~/rag$ python check_reply.py "How long after my return arrives will I get the refund?"
-We refund within three working days of the return reaching our warehouse. [1] Every seller must accept returns for at least 14 days from delivery, and many accept them for longer. [3] If a seller does not answer a return request within two working days, open a claim from the order and we decide it. [3]
-  quoted             [1] We refund within three working days of the return reaching o
-  quoted             [3] Every seller must accept returns for at least 14 days from d
-  quoted             [3] If a seller does not answer a return request within two work
+```schooling-example
+{
+  "language": "python",
+  "file": "check_reply.py",
+  "parts": [
+    {
+      "code": "import sys\n\nfrom answer import answer\nfrom verify import check\n\nreply, sources = answer(sys.argv[1])\nprint(reply)\nfor sentence, n, verdict in check(reply, sources):\n    print(f\"  {verdict:18} [{n}] {sentence[:60]}\")",
+      "note": "The model's own reply for a question, and the verdict on each of its sentences."
+    }
+  ]
+}
 ```
 
-All three of extract-1's sentences are quoted, which is what copying sentences guarantees. Run on a
-real model's replies, the same program finds the cases above at a rate worth measuring; lesson 8 calls
-that rate **faithfulness** and measures it over the test set.
+```
+ana@vm:~/rag$ python check_reply.py "How long after my return arrives will I get the refund?"
+According to [1], the money goes back to the card or account you paid with, and your bank may take another five to ten days to show it. This means that the refund processing time is at least 5-10 days after the return reaches the warehouse.
+
+However, [2] states that the return window starts on the day the carrier records the parcel as delivered, not on the day you placed the order. This implies that the refund processing time may be shorter than 5-10 days, as it depends on when the carrier records the parcel as delivered.
+
+To clarify, I would recommend checking the seller's policy, as mentioned in [3], as they may have a different return window and refund processing time.
+  quoted             [1] The money goes back to the card or account you paid with, an
+  uncited            [None] This means that the refund processing time is at least 5-10 
+  unsupported (0.70) [2] However, states that the return window starts on the day the
+  uncited            [None] This implies that the refund processing time may be shorter 
+  unsupported (0.73) [3] To clarify, I would recommend checking the seller's policy, 
+```
+
+**One sentence is quoted and the other four fail**, which is the reply the last section read by eye,
+now read by a program. The quote is the bank's five to ten days. The two conclusions the model drew,
+*at least 5-10 days* and *may be shorter*, cite nothing. The return window, cited to `[2]` in the
+middle of its sentence, scores 0.70 against the sentences of `[2]`, close to the line and under it: it
+is a fair account of the source with the model's *However, states that* in front, and the checker
+cannot see past the words. The advice to check the seller's policy scores 0.73 against `[3]`, which
+says nothing of the kind.
+
+Run over many replies, the same program gives a rate worth measuring. Lesson 8 calls that rate
+**faithfulness** and measures it over the test set.
 
 ## What to do with a failed check
 

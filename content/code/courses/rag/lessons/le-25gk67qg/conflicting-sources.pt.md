@@ -1,13 +1,13 @@
 ---
 title: Quando as fontes discordam
-version: 1
+version: 2
 ---
 
 Dois documentos podem ser relevantes e dizer coisas diferentes. Às vezes um substituiu o outro, como o
 regulamento de devoluções de 2025 foi substituído. Às vezes os dois estão em vigor e valem para casos
 diferentes: o regulamento de devoluções dá trinta dias e os termos de venda dão sete, porque um é a
 promessa da loja e o outro é a lei. Um gerador que recebe os dois tem de decidir o que fazer, e a pior
-decisão é a que o extract-1 toma.
+decisão é citar os dois e deixar quem lê escolher.
 
 ## Com o regulamento substituído nas fontes
 
@@ -15,30 +15,31 @@ O filtro de status é o que manteve o regulamento de 2025 de fora. Aqui ele é a
 e o regulamento substituído volta a ser permitido:
 
 ```
-ana@lab:~/rag$ python -c "from answer import answer; print(answer(\"How many days do I have to return a printed book?\", where=\"audience = %s\", params=(\"public\",))[0])"
-You have 30 days from delivery to return a printed book in the condition you received it. [2] You may return a printed book within 14 days of delivery if it is unread and in the condition in which you received it. [1] A printed book with a fault from the printer, such as pages bound upside down or missing, can be returned for a refund or a replacement within 30 days, like any other return. [3]
+ana@vm:~/rag$ python -c "from answer import answer; print(answer(\"How many days do I have to return a printed book?\", where=\"audience = %s\", params=(\"public\",))[0])"
+According to [1], you have 14 days to return a printed book, but this is only if it is unread and in the condition in which you received it. However, [2] states that you have 30 days from delivery to return a printed book in the condition you received it. 
+
+Since [2] is the more recent update, I prefer it. Therefore, you have 30 days from delivery to return a printed book.
 ```
 
-**Trinta dias por `[2]` e catorze por `[1]`, lado a lado, cada um citado.** O prompt mandava preferir a
-fonte atualizada mais recentemente e dizer isso; os cabeçalhos levavam as datas, 2026-02-02 e
-2025-03-01. O extract-1 não tem noção de data e citou as duas. Um modelo real em geral seguiria a
-instrução aqui, com as datas na mão, e é exatamente por isso que as datas têm de estar no prompt: sem
-elas a instrução é inútil.
+**Catorze dias por `[1]`, trinta por `[2]`, e uma escolha, dita em voz alta.** O prompt mandava
+preferir a fonte atualizada mais recentemente e dizer isso, e os cabeçalhos levavam as datas,
+2025-03-01 e 2026-02-02. O modelo fez as duas coisas. Sem as datas no prompt ele não teria como: a
+instrução é inútil quando nada na frente do modelo diz qual fonte é a mais nova. E é uma instrução,
+então é seguida na maior parte das vezes, por este modelo, nesta pergunta.
 
 ## Com o filtro de volta
 
 ```
-ana@lab:~/rag$ python answer.py "How many days do I have to return a printed book?"
-You have 30 days from delivery to return a printed book in the condition you received it. [1] Our returns and refunds policy extends this period to 30 days for printed books. [3] A printed book with a fault from the printer, such as pages bound upside down or missing, can be returned for a refund or a replacement within 30 days, like any other return. [2]
+ana@vm:~/rag$ python answer.py "How many days do I have to return a printed book?"
+According to [1], you have 30 days from delivery to return a printed book. This is the most recent and updated policy, as stated in the source date (2026-02-02).
   [1] Returns and refunds policy > The return window, updated 2026-02-02
-  [3] Terms of sale > 6. The right of withdrawal, updated 2026-01-05
-  [2] Returns and refunds policy > Damaged, faulty and wrong items, updated 2026-02-02
 ```
 
-**Trinta dias, do regulamento atual, e uma segunda fonte que concorda.** O `[3]` é a cláusula dos termos de
-venda sobre arrependimento, *Our returns and refunds policy extends this period to 30 days*, que é outro
-documento dizendo a mesma coisa. Esse é o tipo de desacordo que não é desacordo: os termos dizem o mínimo
-legal de sete dias e remetem ao regulamento para os trinta.
+**Trinta dias, do regulamento atual, sem conflito nenhum para resolver.** O filtro tirou o regulamento
+de 2025 antes de o modelo vê-lo, então não havia entre o que escolher. O modelo ainda disse que o
+regulamento era o mais recente, uma instrução aplicada onde não tinha o que fazer, o que aqui é
+inofensivo e é o motivo de um prompt não carregar instrução para um caso que o código consegue
+resolver.
 
 ## Resolva conflitos no código quando der
 

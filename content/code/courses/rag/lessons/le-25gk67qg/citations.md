@@ -1,6 +1,6 @@
 ---
 title: Citations
-version: 1
+version: 2
 ---
 
 A reply with `[1]` and `[3]` in it is half a citation. The other half is what a reader sees: a link
@@ -13,7 +13,7 @@ that is the program's job, because the model only knows the numbers it was given
   "file": "answer.py",
   "parts": [
     {
-      "code": "def ask(question, sources):\n    reply = client.chat.completions.create(model=\"extract-1\", messages=[\n        {\"role\": \"system\", \"content\": SYSTEM},\n        {\"role\": \"user\", \"content\": prompt(question, sources)}])\n    return reply.choices[0].message.content",
+      "code": "def ask(question, sources):\n    reply = client.chat.completions.create(model=\"llama3.2:3b\", temperature=0, messages=[\n        {\"role\": \"system\", \"content\": SYSTEM},\n        {\"role\": \"user\", \"content\": prompt(question, sources)}])\n    return reply.choices[0].message.content",
       "note": "One call, the system message and the numbered sources. Any OpenAI-compatible model can be swapped in by name."
     },
     {
@@ -32,20 +32,31 @@ that is the program's job, because the model only knows the numbers it was given
 }
 ```
 
-## Two replies, with their sources
+## A reply, with its sources
 
 ```
-ana@lab:~/rag$ python answer.py "How long after my return arrives will I get the refund?"
-We refund within three working days of the return reaching our warehouse. [1] Every seller must accept returns for at least 14 days from delivery, and many accept them for longer. [3] If a seller does not answer a return request within two working days, open a claim from the order and we decide it. [3]
+ana@vm:~/rag$ python answer.py "How long after my return arrives will I get the refund?"
+According to [1], the money goes back to the card or account you paid with, and your bank may take another five to ten days to show it. This means that the refund processing time is at least 5-10 days after the return reaches the warehouse.
+
+However, [2] states that the return window starts on the day the carrier records the parcel as delivered, not on the day you placed the order. This implies that the refund processing time may be shorter than 5-10 days, as it depends on when the carrier records the parcel as delivered.
+
+To clarify, I would recommend checking the seller's policy, as mentioned in [3], as they may have a different return window and refund processing time.
   [1] Returns and refunds policy > Refunds, updated 2026-02-02
+  [2] Returns and refunds policy > The return window, updated 2026-02-02
   [3] Returns and refunds policy > Items sold by marketplace sellers, updated 2026-02-02
 ```
 
-**The answer is the first sentence, from `[1]`, the refund section.** The next two sentences are
-about marketplace sellers, from `[3]`: true, cited, and nothing to do with the question. extract-1
-picked them because they mention returns and timescales, and a real model given the same three
-sources would be more likely to leave them out. The citations make the problem visible: a reader sees
-that two thirds of the reply came from a section about marketplace sellers and can judge it.
+**The reply cites all three sources, and the answer is in none of its sentences.** The refund
+section, `[1]`, says two things: Marginalia refunds within three working days of the return reaching
+the warehouse, and the bank may take another five to ten days. The model quoted the second and left
+out the first, which is the one the customer asked about. Then it drew a conclusion of its own, *at
+least 5-10 days after the return reaches the warehouse*, which no source says and which is wrong.
+Then it brought in the return window from `[2]` and the marketplace sellers from `[3]`, true and
+nothing to do with a refund.
+
+The citations are what make this visible. A reader sees which sentences came from where, and the
+sentences that cite nothing are the ones to doubt first. The next section turns that reading into a
+program.
 
 The printed footnotes are what a support assistant would render as links. They carry the path and
 the date, so a customer reading *updated 2026-02-02* knows the rule is this year's, and a support lead
