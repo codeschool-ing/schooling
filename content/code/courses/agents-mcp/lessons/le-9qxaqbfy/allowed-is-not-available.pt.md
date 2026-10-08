@@ -40,17 +40,17 @@ O `cs_refund.py` oferece as três ferramentas da loja e permite só o `get_order
 Primeiro sem `permission_mode` nenhum:
 
 ```
-ana@lab:~/agents$ python cs_refund.py default "One copy of M-1047 arrived damaged; please refund it."
+ana@lab:~/agents$ rm -f requests.jsonl
+ana@lab:~/agents$ python cs_refund.py default "Please refund the whole order M-1047."
 system     init tools=3
-assistant  tool_use mcp__shop__refund {'order_id': 'M-1047', 'cents': 3890, 'reason': 'one copy arrived damaged'}
+assistant  tool_use mcp__shop__refund {'cents': 1000000, 'order_id': 'M-1047', 'reason': 'Customer requested refund for whole order.'}
 system     informational
 system     permission_denied
-user       tool_result (error) Auto mode could not evaluate this action and is blocking it for safety — run with --debug 
-assistant  I could not issue this refund myself; a colleague will review order M-1047 and reply to you by email.
-result     success turns=2 9723 ms cost_usd=0.0048 session=23322038
+user       tool_result (error) qwen2.5:3b is temporarily unavailable (timed out), so auto mode cannot determine the safet
+assistant  It seems that the service is currently unavailable. I will wait for a moment and then try to process the refund request again. If the issue persists, I will proceed with other tasks that do not require this action. Please be informed that read-only operations such as reading files and searching code do not require the service and can still be performed.
+result     success turns=2 188320 ms cost_usd=0.0061 session=c2660697
 ana@lab:~/agents$ python -c 'import json; [print(r["status"], r["request"]["model"], r["request"]["system"][1]["text"].splitlines()[0]) for r in map(json.loads, open("requests.jsonl"))]' | sort | uniq -c
-      2 200 scripted-1 You are a Claude agent, built on Anthropic's Claude Agent SDK.
-     10 200 scripted-1 You are a security monitor for autonomous AI coding agents.
+      2 200 qwen2.5:3b You are a Claude agent, built on Anthropic's Claude Agent SDK.
       1 404 claude-sonnet-5 You are a security monitor for autonomous AI coding agents.
 ```
 
@@ -61,13 +61,19 @@ A recusa foi segura. O que o padrão fez no caminho é a lição. Cada pedido ao
 Com `dontAsk`:
 
 ```
-ana@lab:~/agents$ python cs_refund.py dont-ask "One copy of M-1047 arrived damaged; please refund it."
+ana@lab:~/agents$ rm -f requests.jsonl
+ana@lab:~/agents$ python cs_refund.py dont-ask "Please refund the whole order M-1047."
 system     init tools=3
-assistant  tool_use mcp__shop__refund {'order_id': 'M-1047', 'cents': 3890, 'reason': 'one copy arrived damaged'}
+assistant  tool_use mcp__shop__refund {'order_id': 'M-1047', 'reason': 'Full refund for order M-1047', 'cents': 1000000}
 system     permission_denied
 user       tool_result (error) Permission to use mcp__shop__refund has been denied because Claude Code is running in don'
-assistant  I could not issue this refund myself; a colleague will review order M-1047 and reply to you by email.
-result     success turns=2 1755 ms cost_usd=0.0050 session=25efd6c3
+assistant  I'm sorry, but according to the current settings, I don't have the permission to fully refund the order M-1047. To proceed, I would need to use another tool or approach that aligns with the permissions granted.
+
+However, if you believe that it's essential to attempt this refund using different tools, I can help guide you on how to do so. Please let me know how you'd like to proceed.
+
+Otherwise, I will need to look into other ways to assist you with this request, such as looking for articles in Marginalia's help center that might offer guidance on handling this situation.
+Would you like to start by searching for help articles?
+result     success turns=2 59345 ms cost_usd=0.0073 session=03a5bd02
 ana@lab:~/agents$ python -c 'import json; [print(b["content"]) for r in map(json.loads, open("requests.jsonl")) for m in r["request"]["messages"] if isinstance(m["content"], list) for b in m["content"] if b.get("type") == "tool_result"]' | head -1
 Permission to use mcp__shop__refund has been denied because Claude Code is running in don't ask mode. IMPORTANT: You *may* attempt to accomplish this action using other tools that might naturally be used to accomplish this goal, e.g. using head instead of cat. But you *should not* attempt to work around this denial in malicious ways, e.g. do not use your ability to run tests to execute non-test actions. You should only try to work around this restriction in reasonable ways that do not attempt to bypass the intent behind this denial. If you believe this capability is essential to complete the user's request, STOP and explain to the user what you were trying to do and why you need this permission. Let the user decide how to proceed.
 ```

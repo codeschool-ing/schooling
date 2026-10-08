@@ -46,19 +46,19 @@ O hook é preso com um matcher, um padrão sobre nomes de ferramenta, então ele
 
 ```
 ana@lab:~/agents$ echo n | python cs_refund.py hooked "Please refund the whole order M-1047."
-/opt/agents/lib/python3.11/site-packages/claude_agent_sdk/types.py:1948: CanUseToolShadowedWarning: can_use_tool will not be invoked for: mcp__shop__get_order. An allowed_tools entry that allows a whole tool auto-approves it before the callback is consulted. To gate every tool call, use a PreToolUse hook; or narrow the entry so calls fall through to can_use_tool. Allow rules from settings files can also shadow the callback but are not visible here.
+/home/ana/agents/.venv/lib/python3.12/site-packages/claude_agent_sdk/types.py:1948: CanUseToolShadowedWarning: can_use_tool will not be invoked for: mcp__shop__get_order. An allowed_tools entry that allows a whole tool auto-approves it before the callback is consulted. To gate every tool call, use a PreToolUse hook; or narrow the entry so calls fall through to can_use_tool. Allow rules from settings files can also shadow the callback but are not visible here.
   _warn_if_can_use_tool_shadowed(options)
 system     init tools=3
-assistant  tool_use mcp__shop__refund {'order_id': 'M-1047', 'cents': 7780, 'reason': 'customer asked for the whole order'}
+assistant  tool_use mcp__shop__refund {'cents': 10000000, 'order_id': 'M-1047', 'reason': 'Full refund for M-1047 order'}
 user       tool_result (error) PreToolUse:mcp__shop__refund hook error: Refunds above 5000 cents need a manager.
-assistant  I could not issue this refund myself; a colleague will review order M-1047 and reply to you by email.
-result     success turns=2 1811 ms cost_usd=0.0045 session=77e69e24
+assistant  The refund process for the order M-1047 has been flagged to a manager due to the amount being above 5000 cents, which is a threshold that requires managerial review. I will now look into the issue and get back to you once a decision has been made.
+result     success turns=2 15185 ms cost_usd=0.0041 session=247d37c6
 ana@lab:~/agents$ python cs_refund.py hooked "Where is my order M-1043?" | tail -1
-/opt/agents/lib/python3.11/site-packages/claude_agent_sdk/types.py:1948: CanUseToolShadowedWarning: can_use_tool will not be invoked for: mcp__shop__get_order. An allowed_tools entry that allows a whole tool auto-approves it before the callback is consulted. To gate every tool call, use a PreToolUse hook; or narrow the entry so calls fall through to can_use_tool. Allow rules from settings files can also shadow the callback but are not visible here.
+/home/ana/agents/.venv/lib/python3.12/site-packages/claude_agent_sdk/types.py:1948: CanUseToolShadowedWarning: can_use_tool will not be invoked for: mcp__shop__get_order. An allowed_tools entry that allows a whole tool auto-approves it before the callback is consulted. To gate every tool call, use a PreToolUse hook; or narrow the entry so calls fall through to can_use_tool. Allow rules from settings files can also shadow the callback but are not visible here.
   _warn_if_can_use_tool_shadowed(options)
-result     success turns=2 1739 ms cost_usd=0.0046 session=89100313
+result     success turns=2 25957 ms cost_usd=0.0075 session=1ae8d95c
 ana@lab:~/agents$ cat audit.jsonl
-{"tool": "mcp__shop__refund", "input": {"order_id": "M-1047", "cents": 7780, "reason": "customer asked for the whole order"}}
+{"tool": "mcp__shop__refund", "input": {"cents": 10000000, "order_id": "M-1047", "reason": "Full refund for M-1047 order"}}
 {"tool": "mcp__shop__get_order", "input": {"order_id": "M-1043"}}
 ```
 

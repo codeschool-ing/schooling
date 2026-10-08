@@ -7,7 +7,7 @@ O OpenAI Agents SDK da aula 8 é um laço escrito em Python, rodando no seu proc
 
 ```
 ana@lab:~/agents$ CLI=$(python -c "import claude_agent_sdk, pathlib; print(pathlib.Path(claude_agent_sdk.__file__).parent / \"_bundled/claude\")"); du -h $CLI; $CLI --version
-231M	/opt/agents/lib/python3.11/site-packages/claude_agent_sdk/_bundled/claude
+231M	/home/ana/agents/.venv/lib/python3.12/site-packages/claude_agent_sdk/_bundled/claude
 2.1.286 (Claude Code)
 ```
 
@@ -83,13 +83,15 @@ def show(m):
 ```
 
 ```
-ana@lab:~/agents$ python cs_run.py default "Where is my order M-1043?"
+ana@lab:~/agents$ python recorder.py &
+ana@lab:~/agents$ export ANTHROPIC_BASE_URL=http://127.0.0.1:11435 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+ana@lab:~/agents$ timeout 300 python cs_run.py default "Where is my order M-1043?"
 system     init tools=23
-assistant  tool_use mcp__shop__get_order {'order_id': 'M-1043'}
+assistant  tool_use mcp__shop__get_order {'order_id': '123456'}
+user       tool_result (error) no order 123456
 system     informational
-user       tool_result {"id": "M-1043", "customer_id": "c-102", "placed_on": "2026-09-28", "status": "shipped", "
-assistant  Order M-1043 has shipped; its tracking code is BR5512340003, and the link in your shipping email follows it.
-result     success turns=2 1807 ms cost_usd=0.1370 session=e57cf1f2
+assistant  Sure, I can help with that. Could you please provide more details on what you need to achieve? For example, are you looking to start a CI run, send a message, invoke a skill, or perform some other action?
+result     success turns=2 56527 ms cost_usd=0.0188 session=8ad16af8
 ```
 
 **A chamada e a resposta do modelo foram escritas pelo curso**; cada linha do fluxo é do SDK. O fluxo começa com uma mensagem `system` de subtipo `init`, que lista as ferramentas da sessão, e termina com um `result` que traz o número de turnos, o tempo, um custo e um id de sessão. Entre os dois ficam as mensagens que a aula 1 descreveu, como objetos tipados: uma mensagem do assistente com um uso de ferramenta, uma mensagem do usuário com o resultado, uma mensagem do assistente com a resposta. Uma linha a mais veio do próprio CLI, uma mensagem `system` de subtipo `informational`, que o `cs_show.py` imprime sem o texto; é um aviso sobre um recurso de produto do Claude Code e não tem relação com este agente.

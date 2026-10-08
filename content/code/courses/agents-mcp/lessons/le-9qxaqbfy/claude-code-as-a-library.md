@@ -1,13 +1,13 @@
 ---
 title: A loop in a subprocess
-version: 1
+version: 2
 ---
 
 The OpenAI Agents SDK of lesson 8 is a loop written in Python, running in your process. The **Claude Agent SDK** (`claude-agent-sdk` on PyPI, imported as `claude_agent_sdk`; this lab pins 0.2.163) is built differently. It ships a copy of **Claude Code**, Anthropic's command-line agent, and runs it:
 
 ```
 ana@lab:~/agents$ CLI=$(python -c "import claude_agent_sdk, pathlib; print(pathlib.Path(claude_agent_sdk.__file__).parent / \"_bundled/claude\")"); du -h $CLI; $CLI --version
-231M	/opt/agents/lib/python3.11/site-packages/claude_agent_sdk/_bundled/claude
+231M	/home/ana/agents/.venv/lib/python3.12/site-packages/claude_agent_sdk/_bundled/claude
 2.1.286 (Claude Code)
 ```
 
@@ -54,7 +54,9 @@ async def main(how, task):
 anyio.run(main, sys.argv[1], sys.argv[2])
 ```
 
-`ClaudeAgentOptions` holds the configuration that lesson 8 split between `Agent` and `Runner`; `query()` is an async iterator over messages. Section 04 explains the three configurations; this run uses the first, the defaults. `cs_show.py` prints one line per message:
+`ClaudeAgentOptions` holds the configuration that lesson 8 split between `Agent` and `Runner`; `query()` is an async iterator over messages. Section 04 explains the three configurations; this run uses the first, the defaults. `cs_show.py` prints one line per message.
+
+The model here is `qwen2.5:3b`, the third model lesson 1 pulled. Through the Claude Code CLI, `llama3.2:3b` never called a tool in the runs made for this course, and an agent lesson needs one that does. The recorder of lesson 1 runs in the background, and the CLI is pointed at it with `ANTHROPIC_BASE_URL`; `CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1` stops the CLI's own calls home, which have nothing to do with the agent. `timeout 300` stops the run after five minutes, because with the defaults this agent can loop: in one run made while writing this lesson it was still calling tools when the five minutes ran out.
 
 ```python
 """Print the SDK's message stream one line per message, shortened for reading."""
@@ -83,18 +85,22 @@ def show(m):
 ```
 
 ```
-ana@lab:~/agents$ python cs_run.py default "Where is my order M-1043?"
+ana@lab:~/agents$ python recorder.py &
+ana@lab:~/agents$ export ANTHROPIC_BASE_URL=http://127.0.0.1:11435 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1
+ana@lab:~/agents$ timeout 300 python cs_run.py default "Where is my order M-1043?"
 system     init tools=23
-assistant  tool_use mcp__shop__get_order {'order_id': 'M-1043'}
+assistant  tool_use mcp__shop__get_order {'order_id': '123456'}
+user       tool_result (error) no order 123456
 system     informational
-user       tool_result {"id": "M-1043", "customer_id": "c-102", "placed_on": "2026-09-28", "status": "shipped", "
-assistant  Order M-1043 has shipped; its tracking code is BR5512340003, and the link in your shipping email follows it.
-result     success turns=2 1807 ms cost_usd=0.1370 session=e57cf1f2
+assistant  Sure, I can help with that. Could you please provide more details on what you need to achieve? For example, are you looking to start a CI run, send a message, invoke a skill, or perform some other action?
+result     success turns=2 56527 ms cost_usd=0.0188 session=8ad16af8
 ```
 
-**The model's call and answer were written by the course**; every line of the stream is the SDK's. The stream begins with a `system` message of subtype `init`, which lists the tools the session has, and ends with a `result` that carries the number of turns, the time, a cost and a session id. Between them sit the messages lesson 1 described, as typed objects: an assistant message holding a tool use, a user message holding its result, an assistant message holding the answer. One more line came from the CLI itself, a `system` message of subtype `informational`, which `cs_show.py` prints without its text; it is a notice about a Claude Code product feature and has nothing to do with this agent.
+Every line of the stream is the SDK's. The stream begins with a `system` message of subtype `init`, which lists the tools the session has, and ends with a `result` that carries the number of turns, the time, a cost and a session id. Between them sit the messages lesson 1 described, as typed objects: an assistant message holding a tool use, a user message holding its result, an assistant message holding the answer.
 
-Two other things come out of the CLI that are not in the capture. Each run writes one warning to standard error, that it does not recognise the model name `scripted-1`; `captures.sh` drops it and says so. And `cost_usd=0.1370` is not a bill: the CLI estimates a cost from its own price table, and for a model it does not recognise it guesses. Section 04 shows why the number was that size anyway.
+Read what they say, though. The model looked up an order called `123456`, which does not exist, and then asked what it was supposed to do: *start a CI run, send a message, invoke a skill*. None of those words were in the question. Section 04 finds where they came from. One more line came from the CLI itself, a `system` message of subtype `informational`, which `cs_show.py` prints without its text; it is a notice about a Claude Code product feature and has nothing to do with this agent.
+
+Two other things come out of the CLI. Each run writes one warning to standard error, that it does not recognise the model name; it is left out of the captures in this lesson. And `cost_usd=0.0188` is not a bill: Ollama charges nothing, and the CLI estimates a cost from its own price table, guessing for a name it does not know. As a measure of how much was sent it is still useful, and section 04 uses it that way.
 
 | lesson 8 (Agents SDK) | Claude Agent SDK |
 |---|---|
