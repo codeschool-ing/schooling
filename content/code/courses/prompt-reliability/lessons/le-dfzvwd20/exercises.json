@@ -1,203 +1,223 @@
 [
   {
     "id": "ex-yfjt737p",
-    "version": 1,
+    "version": 2,
     "section": "what-length-buys",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "Why does a line added to a prompt's instructions cost money on every call rather than once?",
-    "hint": "Think about what is sent with each message.",
+    "prompt": "Why does a line added to a prompt's instructions cost something on every call rather than once?",
+    "hint": "What is sent with each message?",
     "choices": [
       {
-        "text": "The whole prompt is sent again with each message",
+        "text": "The model caches the prompt and charges again each time the cache expires",
+        "correct": false,
+        "why": "Nothing in this lesson is cached; lesson 17 is about caches."
+      },
+      {
+        "text": "The prompt is sent whole with every message",
         "correct": true,
-        "why": "Right: forty messages, forty copies of the instructions."
+        "why": "Right: the instructions are input to every call."
       },
       {
-        "text": "The provider retrains the model on the prompt each day and bills for the training",
+        "text": "Longer prompts make the model write longer replies, and output is what costs",
         "correct": false,
-        "why": "Nothing is trained; the prompt is read on each call."
+        "why": "Output moved by three tokens; the input moved by 97."
       },
       {
-        "text": "Providers bill a fee per line",
+        "text": "Each line is checked by the harness before the call",
         "correct": false,
-        "why": "The lab bills tokens, not lines."
-      },
-      {
-        "text": "The reply repeats it",
-        "correct": false,
-        "why": "The reply is output; the extra line is input."
+        "why": "The harness renders the prompt; it does not check its lines."
       }
     ]
   },
   {
     "id": "ex-nvrjg99v",
-    "version": 1,
+    "version": 2,
     "section": "what-length-buys",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "`pl tokens` counts `v2-json.txt` at 69 tokens and `v2-long.txt` at 167. How many extra tokens of instructions does each call with the long prompt carry?",
+    "prompt": "`stats.py` reports a mean of 106.2 tokens in for `v2-json.txt` and 203.2 for `v2-long.txt`. How many extra input tokens does each call with the long prompt carry?",
     "hint": "Subtract.",
-    "value": 98,
-    "tolerance": 0,
-    "unit": "tokens"
+    "value": 97,
+    "tolerance": 0
   },
   {
     "id": "ex-myr9jbs6",
-    "version": 1,
-    "section": "what-length-buys",
-    "type": "numeric",
-    "difficulty": "medium",
-    "drillable": true,
-    "prompt": "A million calls cost 83,355 cents with the short prompt and 117,030 with the long one. Roughly how many percent more does the long one cost? Answer to the nearest whole number.",
-    "hint": "Divide the long by the short.",
-    "value": 40,
-    "tolerance": 1,
-    "unit": "%"
-  },
-  {
-    "id": "ex-sypnx11x",
-    "version": 1,
+    "version": 2,
     "section": "what-length-buys",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Over the forty calls, did the long prompt add more input tokens or more output tokens than the short one?",
-    "hint": "Compare 3,139 with 7,059, and 1,595 with 1,709.",
+    "prompt": "The total seconds were 287.4 for the short prompt and 157.0 for the long one, but the medians were 3.3 and 3.8. Which comparison should you trust, and why?",
+    "hint": "What did the first run pay for that the second did not?",
     "choices": [
       {
-        "text": "Input, by far",
+        "text": "The totals, because they include every call",
+        "correct": false,
+        "why": "They include the model loading on the first run's first call, a cost of the order the runs were made in."
+      },
+      {
+        "text": "The medians: one total includes loading the model",
         "correct": true,
-        "why": "Right: 3,920 more input tokens against 114 more output."
+        "why": "Right: a one-off cost in one total makes the totals compare the order, not the prompts."
       },
       {
-        "text": "Output, because the model writes longer summaries",
+        "text": "Neither, because seconds are not a cost on a local model",
         "correct": false,
-        "why": "The summaries did grow, but by 114 tokens over forty calls."
+        "why": "On your machine time is exactly what a token costs."
       },
       {
-        "text": "The same amount of each",
+        "text": "The totals, because a median hides the slow calls that matter",
         "correct": false,
-        "why": "3,920 against 114 is not the same."
+        "why": "A median does hide the tail, but the tail here is one call loading the model."
+      }
+    ]
+  },
+  {
+    "id": "ex-sypnx11x",
+    "version": 2,
+    "section": "what-length-buys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Between the two prompts, which grew more per call: tokens in or tokens out?",
+    "hint": "Compare the two means of each.",
+    "choices": [
+      {
+        "text": "Tokens out, because the long prompt asks for full detail",
+        "correct": false,
+        "why": "Out grew from 30.6 to 33.6, three tokens."
       },
       {
-        "text": "Neither; the totals were identical",
+        "text": "Tokens in, by 97, against 3 for tokens out",
+        "correct": true,
+        "why": "Right: the instructions are paid as input on every call."
+      },
+      {
+        "text": "Both grew by the same amount",
         "correct": false,
-        "why": "`pl cost` shows different totals for both."
+        "why": "In grew by 97 and out by 3."
+      },
+      {
+        "text": "Neither: the means are within noise of each other",
+        "correct": false,
+        "why": "97 tokens of input is the length of the extra instructions, the same on every call."
       }
     ]
   },
   {
     "id": "ex-6wmydez5",
-    "version": 1,
+    "version": 2,
     "section": "contradictions",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "Line 4 of `v2-long.txt` asks for a brief summary and line 16 asks for full detail. Which one does the stand-in obey?",
-    "hint": "Its opening comment states the rule.",
+    "prompt": "Line 4 of `v2-long.txt` asks for a brief summary and line 16 for full detail. Which one did `llama3.2:3b` obey?",
+    "hint": "Look at `t23` and at the mean.",
     "choices": [
       {
-        "text": "Whichever is in capital letters, since the stand-in ranks shouting above everything else",
+        "text": "Line 16, always, because it comes last",
         "correct": false,
-        "why": "Neither line is in capitals, and the stand-in has no such rule."
+        "why": "`t23` came back shorter under the long prompt."
       },
       {
-        "text": "Neither: it averages them into a medium summary",
+        "text": "Line 4, always, because it comes first",
         "correct": false,
-        "why": "It picks one; it does not blend them."
+        "why": "The mean reply grew, so on some messages line 16 won."
       },
       {
-        "text": "The one written last, line 16",
+        "text": "Neither consistently: it depends on the message",
         "correct": true,
-        "why": "Right: between brief and thorough, the last one wins."
+        "why": "Right: `t23` went brief, the mean went longer."
       },
       {
-        "text": "Line 4, the first",
+        "text": "Both: it wrote a brief summary followed by a detailed one",
         "correct": false,
-        "why": "Order matters, but the other way round."
+        "why": "Each reply had one summary of one sentence."
       }
     ]
   },
   {
     "id": "ex-jk9r707t",
-    "version": 1,
+    "version": 2,
     "section": "contradictions",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "What happened to the summary of `t17` under the long prompt?",
-    "hint": "Compare the two `pl show` outputs.",
+    "prompt": "What happened to the summary of `t23`, the soaked parcel, under the long prompt?",
+    "hint": "Read both replies.",
     "choices": [
       {
-        "text": "It became the whole message, both sentences, moved into the third person",
+        "text": "It got shorter, under the prompt that asks for detail",
         "correct": true,
-        "why": "Right: full detail won, so the summary is the message."
+        "why": "Right: on that message the brief line won."
       },
       {
-        "text": "It was cut to five words",
+        "text": "It became the whole message, moved into the third person",
         "correct": false,
-        "why": "Nothing in either prompt sets a word limit."
+        "why": "That is what the detail line asks for; it is not what came back."
       },
       {
-        "text": "It disappeared from the JSON",
+        "text": "It disappeared, because the model ran out of tokens",
         "correct": false,
-        "why": "All three fields were there."
+        "why": "The reply ended on its own with all three fields."
       },
       {
-        "text": "It stayed one sentence",
+        "text": "It was the same, word for word",
         "correct": false,
-        "why": "That is what the short prompt produced."
+        "why": "That was `t17`, almost; `t23` changed."
       }
     ]
   },
   {
     "id": "ex-8chd2c66",
-    "version": 1,
+    "version": 2,
     "section": "contradictions",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "What does the lesson say about which of two conflicting instructions a real model follows?",
-    "hint": "It is offered as a practitioner's observation, not a rate.",
+    "prompt": "Why can one reply not tell you which of two conflicting instructions a model follows?",
+    "hint": "Compare `t23` with the mean.",
     "choices": [
       {
-        "text": "The first one, as the vendors' guides document",
+        "text": "Because replies at temperature 0 are random",
         "correct": false,
-        "why": "The guides recommend clarity; they document no such rule."
+        "why": "At temperature 0 they repeat on one machine."
       },
       {
-        "text": "The later one, as in the stand-in, because every model reads from the top down and keeps the last word it saw",
-        "correct": false,
-        "why": "That is the stand-in's written rule, not a property of real models."
-      },
-      {
-        "text": "It depends on the model, the wording and where each sits, and shifts between versions",
+        "text": "Which instruction wins differs from message to message",
         "correct": true,
-        "why": "Right, which is why a contradiction leaves the choice to the model."
+        "why": "Right: `t23` says brevity won, the mean says detail did."
       },
       {
-        "text": "Whichever is in capitals",
+        "text": "Because the model reads only the first instruction it sees",
         "correct": false,
-        "why": "The lesson makes no such claim."
+        "why": "Then line 4 would have won everywhere."
+      },
+      {
+        "text": "Because a contradiction makes the model refuse",
+        "correct": false,
+        "why": "Every reply came back."
       }
     ]
   },
   {
     "id": "ex-knv4yktd",
-    "version": 1,
+    "version": 2,
     "section": "contradictions",
     "type": "cloze",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "Between an instruction to be brief and one to be thorough, the stand-in obeys the one written ___.",
-    "hint": "Line 16 beat line 4.",
+    "prompt": "The lesson's fix for two instructions that disagree is not a third line saying which one wins. It is to decide, and ___ the other.",
+    "hint": "One verb.",
     "blanks": [
       {
         "accept": [
-          "last"
+          "delete",
+          "remove",
+          "cut"
         ],
         "ignore_case": true,
         "ignore_accents": true
@@ -206,308 +226,307 @@
   },
   {
     "id": "ex-qvf42ef1",
-    "version": 1,
+    "version": 2,
     "section": "contradictions",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
     "prompt": "You find two instructions in a prompt that disagree. What does the lesson recommend?",
-    "hint": "Not a third line.",
+    "hint": "Not a third instruction.",
     "choices": [
       {
-        "text": "Add a third line saying which of the two wins",
+        "text": "Add a line saying which one wins",
         "correct": false,
-        "why": "That leaves both in place, and the reader still has to work out which applies."
+        "why": "That is a third instruction about the same decision."
       },
       {
-        "text": "Put the one you prefer in capitals so the model notices it",
+        "text": "Put the more important one in capitals",
         "correct": false,
-        "why": "Capitals rank rules without settling the disagreement."
+        "why": "Capitals rank rules; they do not remove the conflict."
       },
       {
-        "text": "Move the preferred one to the end of the prompt and keep both",
-        "correct": false,
-        "why": "That relies on the stand-in's rule, which real models do not share."
-      },
-      {
-        "text": "Decide, and delete one",
+        "text": "Decide what you want and delete the other",
         "correct": true,
         "why": "Right: one instruction per decision."
+      },
+      {
+        "text": "Leave both and let the model choose per message",
+        "correct": false,
+        "why": "That is the situation you found, and it gives you no rule."
       }
     ]
   },
   {
     "id": "ex-t113xhsa",
-    "version": 1,
+    "version": 2,
     "section": "finding-them",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "`pl lint` prints `nothing found` for a prompt. What do you know?",
-    "hint": "It is a set of word lists.",
+    "prompt": "`lint.py` prints `nothing found` for a prompt. What do you know?",
+    "hint": "What is the linter made of?",
     "choices": [
       {
-        "text": "The prompt has no contradictions, repeats or shouting of any kind",
+        "text": "The prompt has no contradictions",
         "correct": false,
-        "why": "A contradiction in other words passes it, as the `printf` example showed."
+        "why": "It missed *one line* against *leave nothing out*."
       },
       {
-        "text": "The prompt is clear",
-        "correct": false,
-        "why": "The linter cannot judge clarity."
-      },
-      {
-        "text": "No pattern on its lists matched",
+        "text": "That none of its patterns matched",
         "correct": true,
-        "why": "Right, and that is all it means."
+        "why": "Right, which is weaker than saying the prompt is clear."
       },
       {
-        "text": "The model will follow every rule the prompt contains",
+        "text": "The prompt will pass every check",
         "correct": false,
-        "why": "The linter never calls a model."
+        "why": "The linter reads the prompt, not the replies."
+      },
+      {
+        "text": "The prompt is shorter than eight rules",
+        "correct": false,
+        "why": "Length is one of several things it looks at."
       }
     ]
   },
   {
     "id": "ex-af3zx4by",
-    "version": 1,
+    "version": 2,
     "section": "finding-them",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
     "prompt": "Why did the linter count line 13, which opens with *Never include the customer's name*, as a line that shouts?",
-    "hint": "Look at how the pattern treats upper and lower case.",
+    "hint": "How does `where()` search?",
     "choices": [
-      {
-        "text": "Its pattern ignores case, so an ordinary capitalised word at the start of a sentence matched",
-        "correct": true,
-        "why": "Right: a false positive, and a reason to read findings as lines to look at."
-      },
       {
         "text": "Line 13 is written in capitals",
         "correct": false,
         "why": "Only its first letter is."
       },
       {
-        "text": "It repeats line 11",
-        "correct": false,
-        "why": "Line 14 repeats line 11."
+        "text": "`where()` matches without regard to case, so *Never* counts",
+        "correct": true,
+        "why": "Right: a finding is a line to look at, not a verdict."
       },
       {
-        "text": "It contradicts line 4",
+        "text": "Any rule about personal data counts as shouting",
         "correct": false,
-        "why": "The contradiction is between lines 4 and 16."
+        "why": "The pattern is about words, not topics."
+      },
+      {
+        "text": "Line 13 repeats line 11",
+        "correct": false,
+        "why": "That finding is about line 14."
       }
     ]
   },
   {
     "id": "ex-g9f9cs25",
-    "version": 1,
+    "version": 2,
     "section": "finding-them",
     "type": "multiple-choice",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Which of these would `pl lint` report? Choose all that apply.",
-    "hint": "It reads words, not meaning.",
+    "prompt": "Which of these would `lint.py` report? Choose all that apply.",
+    "hint": "Read its lists.",
     "choices": [
       {
-        "text": "The same instruction pasted on two lines",
+        "text": "A prompt with *be brief* on one line and *in full detail* on another",
         "correct": true,
-        "why": "Yes: `repeats line N`."
+        "why": "Yes: a length contradiction."
       },
       {
-        "text": "IMPORTANT at the start of two lines",
+        "text": "The same instruction of four or more words written twice",
         "correct": true,
-        "why": "Yes: two lines shouting is enough."
-      },
-      {
-        "text": "*brief* in one line and *in full detail* in another",
-        "correct": true,
-        "why": "Yes: both are on its lists."
+        "why": "Yes: a repeated line."
       },
       {
         "text": "*Keep it to one line* and *leave nothing out*",
         "correct": false,
-        "why": "They disagree, but neither phrase is on its lists."
+        "why": "No: none of those words are on its lists."
+      },
+      {
+        "text": "Two lines starting with IMPORTANT",
+        "correct": true,
+        "why": "Yes: lines that shout."
       }
     ]
   },
   {
     "id": "ex-55m9bncp",
-    "version": 1,
+    "version": 2,
     "section": "finding-them",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
     "prompt": "Why is a linter that misses contradictions written in other words still worth running?",
-    "hint": "What kind of mistake creeps in unnoticed?",
+    "hint": "What kind of mistake does it catch?",
     "choices": [
       {
-        "text": "It catches the slips that creep in on each edit, like a pasted repeat or a hurried capital",
+        "text": "Because it eventually learns the other words",
+        "correct": false,
+        "why": "It is a list of patterns; it learns nothing."
+      },
+      {
+        "text": "It catches mistakes that creep in unnoticed",
         "correct": true,
-        "why": "Right: cheap, and run every time."
+        "why": "Right: cheap, and run before every change."
       },
       {
-        "text": "It proves the prompt is correct before a model sees it",
+        "text": "Because it replaces the test set",
         "correct": false,
-        "why": "It proves nothing of the kind; it matches patterns."
+        "why": "It reads the prompt; only a test set measures replies."
       },
       {
-        "text": "It replaces the test set",
+        "text": "Because a model reads prompts the way the linter does",
         "correct": false,
-        "why": "It never looks at a reply."
-      },
-      {
-        "text": "Because the model reads the linter's output and adjusts its answers to it before replying to the customer",
-        "correct": false,
-        "why": "The model never sees the linter's output."
+        "why": "Nothing suggests that."
       }
     ]
   },
   {
     "id": "ex-kdfa9srf",
-    "version": 1,
+    "version": 2,
     "section": "cutting",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "After the cut, `pl compare --answers` printed `same answer 40, different answer 0`. What does that tell you?",
-    "hint": "It compares one field, read without the wrapping.",
+    "prompt": "`pl compare --answers` printed `same answer 37, different answer 3` after the cut. What does that tell you, together with `fixed 0, broken 0`?",
+    "hint": "One compares categories, the other verdicts.",
     "choices": [
       {
-        "text": "The cut prompt passes all forty messages on every check, wrapping included",
+        "text": "The cut changed three verdicts",
         "correct": false,
-        "why": "It passed 24 of 40; `--answers` ignores the wrapping."
+        "why": "`fixed 0, broken 0`: no verdict changed."
       },
       {
-        "text": "The forty replies are byte for byte the replies the long prompt gave",
-        "correct": false,
-        "why": "The summaries and the wrapping differ."
-      },
-      {
-        "text": "The sign test found the difference significant",
-        "correct": false,
-        "why": "The sign test gave p = 0.359."
-      },
-      {
-        "text": "Every category stayed the same",
+        "text": "Three categories moved, but not one verdict changed",
         "correct": true,
-        "why": "Right: the content of the answers did not move."
+        "why": "Right: `t38` had no answer, `t36` and `t39` were wrong both ways."
+      },
+      {
+        "text": "The long prompt was better on three messages",
+        "correct": false,
+        "why": "Both prompts passed the same twenty-one."
+      },
+      {
+        "text": "The run is not deterministic",
+        "correct": false,
+        "why": "The two runs used different prompts; their answers may differ."
       }
     ]
   },
   {
     "id": "ex-1bht56kd",
-    "version": 1,
+    "version": 2,
     "section": "cutting",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "The short prompt passed 24 of 40 and the long one 19, with `p = 0.359` on the 19 that changed. What is the right reading?",
-    "hint": "How often does chance produce a split like that?",
+    "prompt": "Both prompts passed 21 of 40, the same 21. What is the right reading of the cut?",
+    "hint": "What did the 97 tokens buy?",
     "choices": [
       {
-        "text": "A split this uneven turns up about one time in three by chance, so the move is noise",
+        "text": "The cut made the prompt worse, because the long one parsed every reply",
+        "correct": false,
+        "why": "Parsing more did not pass more: the same 21 pass."
+      },
+      {
+        "text": "The 97 extra tokens bought nothing any check measured",
         "correct": true,
-        "why": "Right: the cut lost nothing and did not win either."
+        "why": "Right, and the section then asks what the checks cannot see."
       },
       {
-        "text": "The short prompt is better",
+        "text": "The test is too small to say anything",
         "correct": false,
-        "why": "The count went up, but not by more than chance would."
+        "why": "It says one thing clearly: not one result moved."
       },
       {
-        "text": "The long prompt is better",
+        "text": "The sign test proves the prompts are equal",
         "correct": false,
-        "why": "It passed fewer."
-      },
-      {
-        "text": "The test set is broken",
-        "correct": false,
-        "why": "Nothing points to that."
+        "why": "p = 1.000 says there is no evidence of a difference, which is not proof of none."
       }
     ]
   },
   {
     "id": "ex-b53fy9ea",
-    "version": 1,
+    "version": 2,
     "section": "cutting",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
     "prompt": "Why can `cases/dev.jsonl` not tell you whether dropping the rule about customers' names was safe?",
-    "hint": "What would a case have to contain?",
+    "hint": "Look for a name in the test set.",
     "choices": [
       {
-        "text": "The harness strips names out before the call is made",
-        "correct": false,
-        "why": "The harness sends the message as it is."
-      },
-      {
-        "text": "The stand-in cannot read names because it only looks at its keyword lists",
-        "correct": false,
-        "why": "Even so, a name in the message would reach the summary."
-      },
-      {
-        "text": "None of its messages has a name in it",
+        "text": "Because no message in it contains a name",
         "correct": true,
-        "why": "Right: the count is the same with the rule or without it."
+        "why": "Right: the count would be the same with the rule or without it."
       },
       {
-        "text": "It is too small",
+        "text": "Because names are removed before the messages are sent",
         "correct": false,
-        "why": "Size is not the problem; coverage is."
+        "why": "Nothing removes them; there are none."
+      },
+      {
+        "text": "Because the checks only look at `category` and `urgency`",
+        "correct": false,
+        "why": "`summary` is not checked either, but the deeper reason is that no case could show it."
+      },
+      {
+        "text": "Because a rule about names never affects a model",
+        "correct": false,
+        "why": "It might; this test set cannot say."
       }
     ]
   },
   {
     "id": "ex-22dwnctk",
-    "version": 1,
+    "version": 2,
     "section": "cutting",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "How many tokens per call did cutting `v2-long.txt` down to `v2-json.txt` save?",
-    "hint": "Input per call was 176.5 and became 78.5.",
-    "value": 98,
-    "tolerance": 0,
-    "unit": "tokens"
+    "prompt": "How many tokens per call did cutting `v2-long.txt` down to `v2-json.txt` save, by the means `stats.py` printed?",
+    "hint": "203.2 against 106.2.",
+    "value": 97,
+    "tolerance": 0
   },
   {
     "id": "ex-dbnmtf99",
-    "version": 1,
+    "version": 2,
     "section": "cutting",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "`t08` passed under the long prompt and failed under the short one. Why?",
-    "hint": "Look at what came before the JSON.",
+    "prompt": "Under the long prompt every reply parsed; under the short one `t38` did not, yet the same twenty-one passed. How can both be true?",
+    "hint": "Where did `t38` fail under the long prompt?",
     "choices": [
       {
-        "text": "The long prompt's rule against extra fields also told the model to drop any sentence before the JSON",
-        "correct": false,
-        "why": "That rule is about fields, and the stand-in has no such reading of it."
-      },
-      {
-        "text": "A sentence landed before its JSON, and in the stand-in an edit reshuffles which replies get a habit",
+        "text": "`t38` failed both times, at different checks",
         "correct": true,
-        "why": "Right: noise, not a property of the shorter prompt."
+        "why": "Right: a verdict only changes when a reply crosses from fail to pass or back."
       },
       {
-        "text": "The short prompt picked the wrong category",
+        "text": "The short prompt passed a different message to make up for it",
         "correct": false,
-        "why": "The category was returns in both."
+        "why": "`fixed 0, broken 0`: no message moved either way."
       },
       {
-        "text": "`t08` is not in the test set",
+        "text": "`pl check` ignores replies that do not parse",
         "correct": false,
-        "why": "It is one of the forty."
+        "why": "It counts them as `json` failures."
+      },
+      {
+        "text": "The long prompt's extra rules fixed the apostrophe",
+        "correct": false,
+        "why": "Whatever it fixed, `t38` still failed a later check."
       }
     ]
   },
   {
     "id": "ex-mc6jkcr8",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "ordering",
     "difficulty": "medium",
@@ -515,68 +534,72 @@
     "prompt": "Put the steps of cutting a prompt safely in order.",
     "hint": "Measure last.",
     "items": [
-      "Find the decision each line makes",
-      "Keep one instruction per decision and delete repeats",
-      "Run both prompts over the same test set",
-      "Compare them message by message"
+      "Find the lines that make the same decision",
+      "Decide what each decision should be, and keep one line for it",
+      "Check the test set has a case for each rule you delete",
+      "Run both prompts and compare them case by case"
     ]
   },
   {
     "id": "ex-4ymrj24j",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "matching",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Match each `pl lint` finding to what it means.",
+    "prompt": "Match each `lint.py` finding to what it means.",
     "hint": "One meaning each.",
     "pairs": [
       {
-        "left": "`contradiction (length)`",
-        "right": "A line asking for brevity and another asking for detail"
+        "left": "contradiction (length)",
+        "right": "A line asking for brevity and one asking for detail"
       },
       {
-        "left": "`repeats line 11`",
+        "left": "lines shout",
+        "right": "Several lines with IMPORTANT, NEVER or ALWAYS"
+      },
+      {
+        "left": "repeats line 11",
         "right": "The same instruction twice, word for word"
       },
       {
-        "left": "`3 lines shout`",
-        "right": "Capital words ranking some rules above the rest"
+        "left": "rules say only what not to do",
+        "right": "Three or more lines starting with *do not* or *never*"
       }
     ],
     "right_distractors": [
-      "A rule the test set never exercises"
+      "A placeholder with no value"
     ]
   },
   {
     "id": "ex-yvqq85jj",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "Summaries under `v2-long.txt` are too long, and a colleague wants to add `IMPORTANT: keep the summary under 10 words` at the bottom. What do you do?",
-    "hint": "Where does the length problem come from?",
+    "prompt": "Summaries under `v2-long.txt` vary in length, and a colleague wants to add `IMPORTANT: keep the summary under 10 words` at the bottom. What do you suggest?",
+    "hint": "Count the decisions about length.",
     "choices": [
       {
-        "text": "Add it; capitals make the model take it seriously",
+        "text": "Add it: the last instruction always wins",
         "correct": false,
-        "why": "Capitals add shouting and leave line 16 in place."
+        "why": "In this lesson neither line won consistently."
       },
       {
-        "text": "Add it at the top, so it is read first and beats line 16",
+        "text": "Add it in capitals, since IMPORTANT makes a model obey",
         "correct": false,
-        "why": "In the stand-in the last instruction wins, and a third line about length leaves the conflict standing."
+        "why": "Capitals rank one rule above the others; the conflict stays."
       },
       {
-        "text": "Add it twice so the model cannot miss it",
-        "correct": false,
-        "why": "A repeat is one of the linter's findings, not a fix."
-      },
-      {
-        "text": "Delete line 16, then measure",
+        "text": "Replace lines 4 and 16 with one instruction",
         "correct": true,
-        "why": "Right: remove the cause and count the effect."
+        "why": "Right: one line per decision, then measure it."
+      },
+      {
+        "text": "Raise `num_predict` so the long summaries are not cut off",
+        "correct": false,
+        "why": "No summary was cut off."
       }
     ]
   }

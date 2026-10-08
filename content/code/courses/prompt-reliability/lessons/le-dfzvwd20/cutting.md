@@ -1,6 +1,6 @@
 ---
 title: Cutting a prompt down
-version: 1
+version: 2
 ---
 
 Cutting a prompt feels riskier than adding to it, because every line was put there by somebody
@@ -16,20 +16,8 @@ measurement.
 Applied to `v2-long.txt`, the persona goes, since being helpful and friendly decides nothing about
 a JSON object. The summary becomes one sentence, because the team scans the queue. The repeated
 rule goes, and so does the rule against extra fields: the field list already names three, and in
-lesson 1 every reply to `v2-json.txt` that parsed had exactly those three. What is left is the
-prompt lesson 1 started from:
-
-```
-ana@lab:~/triage$ cat prompts/v2-json.txt
-You sort customer messages for Folio, an online bookshop.
-
-Read the message and answer in JSON with three fields:
-- "category": one of billing, delivery, returns, account, other
-- "urgency": one of low, normal, high
-- "summary": one sentence saying what the customer needs
-
-Message: {{message}}
-```
+lesson 1 every reply to `v2-json.txt` that parsed had exactly those three. What is left is
+`v2-json.txt`, the prompt lesson 1 started from.
 
 ## Measuring that it lost nothing
 
@@ -38,63 +26,45 @@ A cut is a change, so it is measured like one. Both runs are on disk from the fi
 ```
 ana@lab:~/triage$ pl check runs/long.jsonl
 check      pass  fail
-json         21    19
-fields       21    19
-labels       21    19
-category     21    19
-urgency      19    21
-all          19    21
+json         40     0
+fields       40     0
+labels       40     0
+category     33     7
+urgency      21    19
+all          21    19
 ana@lab:~/triage$ pl check runs/v2.jsonl
 check      pass  fail
-json         27    13
-fields       27    13
-labels       27    13
-category     27    13
-urgency      24    16
-all          24    16
+json         39     1
+fields       39     1
+labels       39     1
+category     31     9
+urgency      21    19
+all          21    19
 ana@lab:~/triage$ pl compare runs/long.jsonl runs/v2.jsonl
-runs/long.jsonl          passes 19/40
-runs/v2.jsonl            passes 24/40
-fixed 12, broken 7, still passing 12, still failing 9
-broken: t08 t09 t15 t16 t20 t27 t39
-sign test on the 19 that changed: p = 0.359
+runs/long.jsonl          passes 21/40
+runs/v2.jsonl            passes 21/40
+fixed 0, broken 0
+sign test on the 0 that changed: p = 1.000
+```
+
+Twenty-one against twenty-one, and **not one message changed its result**: the same twenty-one pass
+under both prompts. The long prompt's 97 extra tokens a call bought nothing a check can see. The
+checks fail at different places, though. Under the long prompt every reply parsed and seven failed
+on category; under the short one, one did not parse and nine failed on category. `--answers`
+compares the category each reply gave, read without the wrapping:
+
+```
 ana@lab:~/triage$ pl compare runs/long.jsonl runs/v2.jsonl --answers
-40 cases, same answer 40, different answer 0
+40 cases, same answer 37, different answer 3
+  t36    billing -> account
+  t38    delivery -> None
+  t39    account -> delivery
 ```
 
-The short prompt passes 24 of 40 against 19. **That is not a win, and the sign test says so.**
-Nineteen messages changed, twelve one way and seven the other. A fair coin splits nineteen
-tosses at least that unevenly about one time in three (p = 0.359). What `--answers` adds is the
-content. It compares the category each reply gave, read without the wrapping, and all forty are
-the same. The cut kept every answer and saved 98 tokens a call.
-
-The changes that did happen are the formatting habits from lesson 1, landing on different
-messages:
-
-```
-ana@lab:~/triage$ pl show runs/v2.jsonl t08
-│ Here is the JSON you asked for:
-│
-│ {
-│   "category": "returns",
-│   "urgency": "normal",
-│   "summary": "They ordered the hardback and you sent the paperback."
-│ }
-stop: end, tokens in 82, out 42
-ana@lab:~/triage$ pl show runs/long.jsonl t08
-│ {
-│   "category": "returns",
-│   "urgency": "normal",
-│   "summary": "They ordered the hardback and you sent the paperback. They'd like to exchange it."
-│ }
-stop: end, tokens in 180, out 42
-```
-
-The short prompt put a sentence in front of `t08` and the long one did not. In the stand-in,
-which replies pick up a habit depends on the exact text of the prompt, so any edit reshuffles
-them while the rate stays about the same. **That reshuffling is what noise looks like in this
-lab**, and it is why the count went up without the prompt getting better. Lesson 3 deals with the
-wrapping itself.
+Three answers moved, and none of them changed a verdict. `t38` is the reply from lesson 1 whose
+summary broke on an apostrophe, so it has no answer to compare; `t36` and `t39` were wrong under
+one prompt and wrong in another way under the other. **The cut kept every pass and saved 97 tokens a
+call.**
 
 ## What the test set cannot tell you
 

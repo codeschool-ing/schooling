@@ -1,389 +1,410 @@
 {
   "ex-yfjt737p": {
-    "prompt": "Por que uma linha acrescentada às instruções de um prompt custa dinheiro em cada chamada, e não uma vez só?",
-    "hint": "Pense no que vai junto com cada mensagem.",
+    "prompt": "Por que uma linha acrescentada às instruções de um prompt custa algo em toda chamada, e não uma vez só?",
+    "hint": "O que vai junto com cada mensagem?",
     "choices": [
       {
-        "text": "O prompt inteiro vai de novo com cada mensagem",
-        "why": "Certo: quarenta mensagens, quarenta cópias das instruções."
+        "text": "O modelo guarda o prompt em cache e cobra de novo toda vez que o cache expira",
+        "why": "Nada nesta aula usa cache; a aula 17 trata de caches."
       },
       {
-        "text": "O fornecedor retreina o modelo com o prompt todo dia e cobra pelo treino",
-        "why": "Nada é treinado; o prompt é lido em cada chamada."
+        "text": "O prompt vai inteiro com cada mensagem",
+        "why": "Certo: as instruções são entrada de toda chamada."
       },
       {
-        "text": "Fornecedores cobram por linha",
-        "why": "O laboratório cobra tokens, não linhas."
+        "text": "Prompts mais longos fazem o modelo escrever respostas mais longas, e é a saída que custa",
+        "why": "A saída mudou três tokens; a entrada mudou 97."
       },
       {
-        "text": "A resposta repete a linha",
-        "why": "A resposta é saída; a linha extra é entrada."
+        "text": "Cada linha é conferida pelo harness antes da chamada",
+        "why": "O harness renderiza o prompt; não confere as linhas dele."
       }
     ]
   },
   "ex-nvrjg99v": {
-    "prompt": "O `pl tokens` conta 69 tokens no `v2-json.txt` e 167 no `v2-long.txt`. Quantos tokens de instruções a mais cada chamada com o prompt longo carrega?",
-    "hint": "Subtraia.",
-    "unit": "tokens"
+    "prompt": "O `stats.py` mostra uma média de 106,2 tokens de entrada para o `v2-json.txt` e 203,2 para o `v2-long.txt`. Quantos tokens de entrada a mais leva cada chamada com o prompt longo?",
+    "hint": "Subtraia."
   },
   "ex-myr9jbs6": {
-    "prompt": "Um milhão de chamadas custa 83.355 centavos com o prompt curto e 117.030 com o longo. Quantos por cento a mais, aproximadamente, custa o longo? Responda com o inteiro mais próximo.",
-    "hint": "Divida o longo pelo curto.",
-    "unit": "%"
-  },
-  "ex-sypnx11x": {
-    "prompt": "Nas quarenta chamadas, o prompt longo acrescentou mais tokens de entrada ou de saída do que o curto?",
-    "hint": "Compare 3.139 com 7.059, e 1.595 com 1.709.",
+    "prompt": "Os segundos totais foram 287,4 para o prompt curto e 157,0 para o longo, mas as medianas foram 3,3 e 3,8. Em qual comparação confiar, e por quê?",
+    "hint": "O que a primeira execução pagou que a segunda não pagou?",
     "choices": [
       {
-        "text": "Entrada, de longe",
-        "why": "Certo: 3.920 tokens de entrada a mais contra 114 de saída."
+        "text": "Nos totais, porque incluem todas as chamadas",
+        "why": "Incluem o carregamento do modelo na primeira chamada da primeira execução, um custo da ordem em que as execuções foram feitas."
       },
       {
-        "text": "Saída, porque o modelo escreve resumos mais longos",
-        "why": "Os resumos cresceram, mas 114 tokens em quarenta chamadas."
+        "text": "Em 3,3 contra 3,8, porque o 287,4 traz o carregamento do modelo",
+        "why": "Certo: um custo de uma vez num dos totais faz os totais compararem a ordem, não os prompts."
       },
       {
-        "text": "A mesma quantidade de cada",
-        "why": "3.920 contra 114 não é a mesma coisa."
+        "text": "Em nenhuma, porque segundos não são custo num modelo local",
+        "why": "Na sua máquina, tempo é exatamente o que um token custa."
       },
       {
-        "text": "Nenhuma; os totais eram iguais",
-        "why": "O `pl cost` mostra totais diferentes para as duas."
+        "text": "Nos totais, porque a mediana esconde as chamadas lentas que importam",
+        "why": "A mediana esconde a cauda, sim, mas a cauda aqui é uma chamada carregando o modelo."
+      }
+    ]
+  },
+  "ex-sypnx11x": {
+    "prompt": "Entre os dois prompts, o que cresceu mais por chamada: tokens de entrada ou de saída?",
+    "hint": "Compare as duas médias de cada um.",
+    "choices": [
+      {
+        "text": "Os de saída, porque o prompt longo pede todos os detalhes",
+        "why": "A saída cresceu de 30,6 para 33,6, três tokens."
+      },
+      {
+        "text": "Os de entrada, 97, contra 3 dos de saída",
+        "why": "Certo: as instruções são pagas como entrada em toda chamada."
+      },
+      {
+        "text": "Os dois cresceram a mesma coisa",
+        "why": "A entrada cresceu 97 e a saída 3."
+      },
+      {
+        "text": "Nenhum: as médias estão dentro do ruído uma da outra",
+        "why": "97 tokens de entrada é o tamanho das instruções a mais, o mesmo em toda chamada."
       }
     ]
   },
   "ex-6wmydez5": {
-    "prompt": "A linha 4 do `v2-long.txt` pede um resumo breve e a linha 16 pede detalhe completo. A qual delas o substituto obedece?",
-    "hint": "O comentário de abertura dele diz a regra.",
+    "prompt": "A linha 4 do `v2-long.txt` pede um resumo breve e a linha 16 todos os detalhes. A qual delas o `llama3.2:3b` obedeceu?",
+    "hint": "Olhe o `t23` e a média.",
     "choices": [
       {
-        "text": "A que estiver em maiúsculas, já que o substituto põe a gritaria acima de tudo",
-        "why": "Nenhuma das duas está em maiúsculas, e o substituto não tem essa regra."
+        "text": "À linha 16, sempre, porque vem por último",
+        "why": "O `t23` voltou mais curto com o prompt longo."
       },
       {
-        "text": "Nenhuma: ele faz a média e escreve um resumo médio",
-        "why": "Ele escolhe uma; não mistura as duas."
+        "text": "À linha 4, sempre, porque vem primeiro",
+        "why": "A resposta média cresceu, então em algumas mensagens a linha 16 venceu."
       },
       {
-        "text": "A escrita por último, a linha 16",
-        "why": "Certo: entre breve e minucioso, vence a última."
+        "text": "A nenhuma de forma consistente: depende da mensagem",
+        "why": "Certo: o `t23` foi breve, a média foi mais longa."
       },
       {
-        "text": "A linha 4, a primeira",
-        "why": "A ordem importa, mas ao contrário."
+        "text": "Às duas: escreveu um resumo breve seguido de um detalhado",
+        "why": "Cada resposta tinha um resumo de uma frase."
       }
     ]
   },
   "ex-jk9r707t": {
-    "prompt": "O que aconteceu com o resumo de `t17` com o prompt longo?",
-    "hint": "Compare as duas saídas do `pl show`.",
+    "prompt": "O que aconteceu com o resumo do `t23`, o pacote encharcado, com o prompt longo?",
+    "hint": "Leia as duas respostas.",
     "choices": [
       {
-        "text": "Virou a mensagem inteira, as duas frases, passada para a terceira pessoa",
-        "why": "Certo: o detalhe completo venceu, então o resumo é a mensagem."
+        "text": "Ficou mais curto, com o prompt que pede detalhe",
+        "why": "Certo: nessa mensagem a linha da brevidade venceu."
       },
       {
-        "text": "Foi cortado em cinco palavras",
-        "why": "Nenhum dos prompts põe limite de palavras."
+        "text": "Virou a mensagem inteira, passada para a terceira pessoa",
+        "why": "É o que a linha do detalhe pede; não foi o que voltou."
       },
       {
-        "text": "Sumiu do JSON",
-        "why": "Os três campos estavam lá."
+        "text": "Sumiu, porque o modelo ficou sem tokens",
+        "why": "A resposta terminou sozinha com os três campos."
       },
       {
-        "text": "Continuou com uma frase",
-        "why": "Isso é o que o prompt curto produziu."
+        "text": "Ficou igual, palavra por palavra",
+        "why": "Esse foi o `t17`, quase; o `t23` mudou."
       }
     ]
   },
   "ex-8chd2c66": {
-    "prompt": "O que a aula diz sobre qual de duas instruções em conflito um modelo real segue?",
-    "hint": "É apresentado como observação prática, não como taxa.",
+    "prompt": "Por que uma resposta só não consegue dizer qual de duas instruções em conflito um modelo segue?",
+    "hint": "Compare o `t23` com a média.",
     "choices": [
       {
-        "text": "A primeira, como os guias dos fornecedores documentam",
-        "why": "Os guias recomendam clareza; não documentam regra assim."
+        "text": "Porque as respostas com temperatura 0 são aleatórias",
+        "why": "Com temperatura 0 elas se repetem numa mesma máquina."
       },
       {
-        "text": "A última, como no substituto, porque todo modelo lê de cima para baixo e guarda a última palavra que viu",
-        "why": "Essa é a regra escrita do substituto, não uma propriedade dos modelos reais."
+        "text": "Qual instrução vence muda de mensagem para mensagem",
+        "why": "Certo: o `t23` diz que a brevidade venceu, a média diz que o detalhe venceu."
       },
       {
-        "text": "Depende do modelo, das palavras e de onde cada uma está, e muda entre versões",
-        "why": "Certo, e é por isso que uma contradição deixa a escolha com o modelo."
+        "text": "Porque o modelo lê só a primeira instrução que vê",
+        "why": "Então a linha 4 teria vencido em todas."
       },
       {
-        "text": "A que estiver em maiúsculas",
-        "why": "A aula não afirma isso."
+        "text": "Porque uma contradição faz o modelo se recusar a responder",
+        "why": "Toda resposta voltou."
       }
     ]
   },
   "ex-knv4yktd": {
-    "prompt": "Entre uma instrução para ser breve e outra para ser minucioso, o substituto obedece à que vem escrita por ___.",
-    "hint": "A linha 16 venceu a linha 4.",
+    "prompt": "A correção da aula para duas instruções que discordam não é uma terceira linha dizendo qual vence. É decidir e ___ a outra.",
+    "hint": "Um verbo.",
     "blanks": [
       {
         "accept": [
-          "último",
-          "ultimo"
+          "apagar",
+          "remover",
+          "cortar",
+          "tirar"
         ]
       }
     ]
   },
   "ex-qvf42ef1": {
-    "prompt": "Você encontra duas instruções que discordam num prompt. O que a aula recomenda?",
-    "hint": "Não uma terceira linha.",
+    "prompt": "Você encontra duas instruções num prompt que discordam. O que a aula recomenda?",
+    "hint": "Não uma terceira instrução.",
     "choices": [
       {
-        "text": "Acrescentar uma terceira linha dizendo qual das duas vence",
-        "why": "Isso mantém as duas, e quem lê ainda precisa descobrir qual vale."
+        "text": "Acrescentar uma linha dizendo qual vence",
+        "why": "Isso é uma terceira instrução sobre a mesma decisão."
       },
       {
-        "text": "Pôr a preferida em maiúsculas para o modelo reparar nela",
-        "why": "Maiúsculas hierarquizam regras sem resolver a discordância."
+        "text": "Pôr a mais importante em maiúsculas",
+        "why": "Maiúsculas ordenam regras; não tiram o conflito."
       },
       {
-        "text": "Mover a preferida para o fim do prompt e manter as duas",
-        "why": "Isso depende da regra do substituto, que modelos reais não têm."
-      },
-      {
-        "text": "Decidir, e apagar uma",
+        "text": "Decidir o que você quer e apagar a outra",
         "why": "Certo: uma instrução por decisão."
+      },
+      {
+        "text": "Deixar as duas e o modelo escolher em cada mensagem",
+        "why": "Essa é a situação que você encontrou, e ela não dá regra nenhuma."
       }
     ]
   },
   "ex-t113xhsa": {
-    "prompt": "O `pl lint` imprime `nothing found` para um prompt. O que você sabe?",
-    "hint": "Ele é um conjunto de listas de palavras.",
+    "prompt": "O `lint.py` imprime `nothing found` para um prompt. O que você sabe?",
+    "hint": "Do que o linter é feito?",
     "choices": [
       {
-        "text": "O prompt não tem contradições, repetições nem gritaria de tipo nenhum",
-        "why": "Uma contradição com outras palavras passa, como o exemplo do `printf` mostrou."
+        "text": "Que o prompt não tem contradições",
+        "why": "Ele deixou passar *one line* contra *leave nothing out*."
       },
       {
-        "text": "O prompt é claro",
-        "why": "O linter não sabe julgar clareza."
+        "text": "Que nenhum dos padrões dele casou",
+        "why": "Certo, o que é mais fraco do que dizer que o prompt está claro."
       },
       {
-        "text": "Nenhum padrão das listas casou",
-        "why": "Certo, e é só isso que significa."
+        "text": "Que o prompt vai passar em todas as verificações",
+        "why": "O linter lê o prompt, não as respostas."
       },
       {
-        "text": "O modelo vai seguir todas as regras do prompt",
-        "why": "O linter nunca chama um modelo."
+        "text": "Que o prompt tem menos de oito regras",
+        "why": "O comprimento é uma de várias coisas que ele olha."
       }
     ]
   },
   "ex-af3zx4by": {
     "prompt": "Por que o linter contou a linha 13, que começa com *Never include the customer's name*, como uma linha que grita?",
-    "hint": "Veja como o padrão trata maiúsculas e minúsculas.",
+    "hint": "Como a `where()` busca?",
     "choices": [
       {
-        "text": "O padrão ignora maiúsculas e minúsculas, então uma palavra comum com inicial maiúscula no começo da frase casou",
-        "why": "Certo: um falso positivo, e um motivo para ler os achados como linhas a olhar."
-      },
-      {
-        "text": "A linha 13 está em maiúsculas",
+        "text": "A linha 13 está escrita em maiúsculas",
         "why": "Só a primeira letra está."
       },
       {
-        "text": "Ela repete a linha 11",
-        "why": "Quem repete a linha 11 é a 14."
+        "text": "A `where()` casa sem ligar para maiúsculas, então *Never* conta",
+        "why": "Certo: um achado é uma linha para olhar, não um veredicto."
       },
       {
-        "text": "Ela contradiz a linha 4",
-        "why": "A contradição é entre as linhas 4 e 16."
+        "text": "Qualquer regra sobre dados pessoais conta como grito",
+        "why": "O padrão é sobre palavras, não sobre assuntos."
+      },
+      {
+        "text": "A linha 13 repete a linha 11",
+        "why": "Esse achado é sobre a linha 14."
       }
     ]
   },
   "ex-g9f9cs25": {
-    "prompt": "Quais destes o `pl lint` apontaria? Marque todos que se aplicam.",
-    "hint": "Ele lê palavras, não significado.",
+    "prompt": "Quais destes o `lint.py` apontaria? Marque todos os que se aplicam.",
+    "hint": "Leia as listas dele.",
     "choices": [
       {
-        "text": "A mesma instrução colada em duas linhas",
-        "why": "Sim: `repeats line N`."
+        "text": "Um prompt com *be brief* numa linha e *in full detail* em outra",
+        "why": "Sim: uma contradição de tamanho."
       },
       {
-        "text": "IMPORTANT no começo de duas linhas",
-        "why": "Sim: duas linhas gritando bastam."
-      },
-      {
-        "text": "*brief* numa linha e *in full detail* em outra",
-        "why": "Sim: as duas estão nas listas dele."
+        "text": "A mesma instrução de quatro ou mais palavras escrita duas vezes",
+        "why": "Sim: uma linha repetida."
       },
       {
         "text": "*Keep it to one line* e *leave nothing out*",
-        "why": "Elas discordam, mas nenhuma das expressões está nas listas."
+        "why": "Não: nenhuma dessas palavras está nas listas dele."
+      },
+      {
+        "text": "Duas linhas começando com IMPORTANT",
+        "why": "Sim: linhas que gritam."
       }
     ]
   },
   "ex-55m9bncp": {
-    "prompt": "Por que vale rodar um linter que deixa passar contradições escritas com outras palavras?",
-    "hint": "Que tipo de erro entra sem ninguém perceber?",
+    "prompt": "Por que um linter que deixa passar contradições escritas com outras palavras ainda vale a pena rodar?",
+    "hint": "Que tipo de erro ele pega?",
     "choices": [
       {
-        "text": "Ele pega os deslizes que entram a cada edição, como uma repetição colada ou uma maiúscula apressada",
-        "why": "Certo: barato, e roda toda vez."
+        "text": "Porque um dia ele aprende as outras palavras",
+        "why": "Ele é uma lista de padrões; não aprende nada."
       },
       {
-        "text": "Ele prova que o prompt está certo antes de um modelo vê-lo",
-        "why": "Ele não prova nada disso; ele casa padrões."
+        "text": "Ele pega erros que entram sem ninguém notar",
+        "why": "Certo: barato, e rodado antes de cada mudança."
       },
       {
-        "text": "Ele substitui o conjunto de teste",
-        "why": "Ele nunca olha uma resposta."
+        "text": "Porque ele substitui o conjunto de teste",
+        "why": "Ele lê o prompt; só um conjunto de teste mede respostas."
       },
       {
-        "text": "Porque o modelo lê a saída do linter e ajusta as respostas a ela antes de responder ao cliente",
-        "why": "O modelo nunca vê a saída do linter."
+        "text": "Porque um modelo lê prompts do jeito que o linter lê",
+        "why": "Nada sugere isso."
       }
     ]
   },
   "ex-kdfa9srf": {
-    "prompt": "Depois do corte, o `pl compare --answers` imprimiu `same answer 40, different answer 0`. O que isso diz?",
-    "hint": "Ele compara um campo, lido sem o embrulho.",
+    "prompt": "O `pl compare --answers` imprimiu `same answer 37, different answer 3` depois do corte. O que isso diz, junto com `fixed 0, broken 0`?",
+    "hint": "Um compara categorias, o outro veredictos.",
     "choices": [
       {
-        "text": "O prompt cortado passa nas quarenta mensagens em todas as verificações, embrulho incluído",
-        "why": "Ele passou em 24 de 40; o `--answers` ignora o embrulho."
+        "text": "O corte mudou três veredictos",
+        "why": "`fixed 0, broken 0`: nenhum veredicto mudou."
       },
       {
-        "text": "As quarenta respostas são, byte a byte, as que o prompt longo deu",
-        "why": "Os resumos e o embrulho são diferentes."
+        "text": "Três categorias mudaram, mas nenhum veredicto mudou",
+        "why": "Certo: o `t38` não tinha resposta, `t36` e `t39` estavam errados dos dois jeitos."
       },
       {
-        "text": "O teste do sinal achou a diferença significativa",
-        "why": "O teste do sinal deu p = 0.359."
+        "text": "O prompt longo era melhor em três mensagens",
+        "why": "Os dois prompts aprovaram as mesmas vinte e uma."
       },
       {
-        "text": "Toda categoria ficou igual",
-        "why": "Certo: o conteúdo das respostas não mudou."
+        "text": "A execução não é determinística",
+        "why": "As duas execuções usaram prompts diferentes; as respostas podem diferir."
       }
     ]
   },
   "ex-1bht56kd": {
-    "prompt": "O prompt curto passou em 24 de 40 e o longo em 19, com `p = 0.359` nas 19 que mudaram. Qual é a leitura certa?",
-    "hint": "Com que frequência o acaso produz uma divisão assim?",
+    "prompt": "Os dois prompts passaram 21 de 40, as mesmas 21. Qual é a leitura certa do corte?",
+    "hint": "O que os 97 tokens compraram?",
     "choices": [
       {
-        "text": "Uma divisão tão desigual aparece cerca de uma vez em três por acaso, então a mudança é ruído",
-        "why": "Certo: o corte não perdeu nada e também não ganhou."
+        "text": "O corte piorou o prompt, porque o longo deixava toda resposta JSON válido",
+        "why": "Ser JSON válido em mais respostas não aprovou mais: as mesmas 21 passam."
       },
       {
-        "text": "O prompt curto é melhor",
-        "why": "A contagem subiu, mas não mais do que o acaso faria."
+        "text": "Os 97 tokens a mais não compraram nada que uma verificação veja",
+        "why": "Certo, e a seção então pergunta o que as verificações não veem."
       },
       {
-        "text": "O prompt longo é melhor",
-        "why": "Ele passou em menos."
+        "text": "O teste é pequeno demais para dizer qualquer coisa",
+        "why": "Ele diz uma coisa com clareza: nenhum resultado mudou."
       },
       {
-        "text": "O conjunto de teste está quebrado",
-        "why": "Nada aponta para isso."
+        "text": "O teste do sinal prova que os prompts são iguais",
+        "why": "p = 1.000 diz que não há evidência de diferença, o que não é prova de que não há nenhuma."
       }
     ]
   },
   "ex-b53fy9ea": {
-    "prompt": "Por que o `cases/dev.jsonl` não diz se largar a regra sobre nomes de clientes foi seguro?",
-    "hint": "O que um caso teria de conter?",
+    "prompt": "Por que o `cases/dev.jsonl` não consegue dizer se tirar a regra sobre nomes de clientes foi seguro?",
+    "hint": "Procure um nome no conjunto de teste.",
     "choices": [
       {
-        "text": "A bancada tira os nomes antes de fazer a chamada",
-        "why": "A bancada manda a mensagem como ela é."
+        "text": "Porque nenhuma mensagem dele contém um nome",
+        "why": "Certo: a contagem seria a mesma com a regra ou sem ela."
       },
       {
-        "text": "O substituto não lê nomes porque só olha as listas de palavras-chave",
-        "why": "Mesmo assim, um nome na mensagem chegaria ao resumo."
+        "text": "Porque os nomes são removidos antes de as mensagens serem enviadas",
+        "why": "Nada os remove; não há nenhum."
       },
       {
-        "text": "Nenhuma das mensagens tem um nome",
-        "why": "Certo: a contagem é a mesma com a regra ou sem ela."
+        "text": "Porque as verificações só olham `category` e `urgency`",
+        "why": "O `summary` também não é conferido, mas o motivo mais fundo é que nenhum caso poderia mostrar isso."
       },
       {
-        "text": "Ele é pequeno demais",
-        "why": "O problema não é tamanho, é cobertura."
+        "text": "Porque uma regra sobre nomes nunca afeta um modelo",
+        "why": "Pode afetar; este conjunto de teste não consegue dizer."
       }
     ]
   },
   "ex-22dwnctk": {
-    "prompt": "Quantos tokens por chamada o corte do `v2-long.txt` até o `v2-json.txt` economizou?",
-    "hint": "A entrada por chamada era 176,5 e virou 78,5.",
-    "unit": "tokens"
+    "prompt": "Quantos tokens por chamada o corte do `v2-long.txt` para o `v2-json.txt` economizou, pelas médias que o `stats.py` imprimiu?",
+    "hint": "203,2 contra 106,2."
   },
   "ex-dbnmtf99": {
-    "prompt": "`t08` passou com o prompt longo e falhou com o curto. Por quê?",
-    "hint": "Veja o que veio antes do JSON.",
+    "prompt": "Com o prompt longo toda resposta era JSON válido; com o curto o `t38` não era, e mesmo assim as mesmas vinte e uma passaram. Como as duas coisas podem ser verdade?",
+    "hint": "Onde o `t38` falhou com o prompt longo?",
     "choices": [
       {
-        "text": "A regra do prompt longo contra campos extras também mandava o modelo largar qualquer frase antes do JSON",
-        "why": "Essa regra é sobre campos, e o substituto não a lê assim."
+        "text": "O `t38` falhou nas duas vezes, em verificações diferentes",
+        "why": "Certo: um veredicto só muda quando uma resposta passa de reprovada para aprovada ou o contrário."
       },
       {
-        "text": "Uma frase caiu antes do JSON, e no substituto uma edição embaralha quais respostas pegam um hábito",
-        "why": "Certo: ruído, não uma propriedade do prompt mais curto."
+        "text": "O prompt curto aprovou outra mensagem para compensar",
+        "why": "`fixed 0, broken 0`: nenhuma mensagem mudou em nenhuma direção."
       },
       {
-        "text": "O prompt curto escolheu a categoria errada",
-        "why": "A categoria foi returns nas duas."
+        "text": "O `pl check` ignora respostas que não são JSON válido",
+        "why": "Ele as conta como falhas de `json`."
       },
       {
-        "text": "`t08` não está no conjunto de teste",
-        "why": "Ela é uma das quarenta."
+        "text": "As regras a mais do prompt longo consertaram o apóstrofo",
+        "why": "O que quer que tenham consertado, o `t38` ainda falhou numa verificação seguinte."
       }
     ]
   },
   "ex-mc6jkcr8": {
-    "prompt": "Ponha em ordem os passos de enxugar um prompt com segurança.",
+    "prompt": "Ponha em ordem os passos para cortar um prompt com segurança.",
     "hint": "Medir por último.",
     "items": [
-      "Achar a decisão que cada linha toma",
-      "Manter uma instrução por decisão e apagar as repetições",
-      "Rodar os dois prompts no mesmo conjunto de teste",
-      "Comparar os dois mensagem por mensagem"
+      "Encontrar as linhas que tomam a mesma decisão",
+      "Decidir o que cada decisão deve ser, e manter uma linha para ela",
+      "Conferir se o conjunto de teste tem um caso para cada regra que você apaga",
+      "Rodar os dois prompts e compará-los caso a caso"
     ]
   },
   "ex-4ymrj24j": {
-    "prompt": "Associe cada achado do `pl lint` ao que ele significa.",
-    "hint": "Um significado cada.",
+    "prompt": "Ligue cada achado do `lint.py` ao que ele significa.",
+    "hint": "Um significado para cada.",
     "pairs": [
       {
-        "left": "`contradiction (length)`",
+        "left": "contradiction (length)",
         "right": "Uma linha pedindo brevidade e outra pedindo detalhe"
       },
       {
-        "left": "`repeats line 11`",
+        "left": "lines shout",
+        "right": "Várias linhas com IMPORTANT, NEVER ou ALWAYS"
+      },
+      {
+        "left": "repeats line 11",
         "right": "A mesma instrução duas vezes, palavra por palavra"
       },
       {
-        "left": "`3 lines shout`",
-        "right": "Palavras em maiúsculas pondo algumas regras acima das outras"
+        "left": "rules say only what not to do",
+        "right": "Três ou mais linhas começando com *do not* ou *never*"
       }
     ],
     "right_distractors": [
-      "Uma regra que o conjunto de teste nunca exercita"
+      "Um marcador sem valor"
     ]
   },
   "ex-yvqq85jj": {
-    "prompt": "Os resumos com o `v2-long.txt` estão longos demais, e um colega quer acrescentar `IMPORTANT: keep the summary under 10 words` no fim. O que você faz?",
-    "hint": "De onde vem o problema de tamanho?",
+    "prompt": "Os resumos com o `v2-long.txt` variam de tamanho, e um colega quer acrescentar `IMPORTANT: keep the summary under 10 words` no fim. O que você sugere?",
+    "hint": "Conte as decisões sobre tamanho.",
     "choices": [
       {
-        "text": "Acrescentar; maiúsculas fazem o modelo levar a sério",
-        "why": "Maiúsculas acrescentam gritaria e deixam a linha 16 no lugar."
+        "text": "Acrescentar: a última instrução sempre vence",
+        "why": "Nesta aula nenhuma das linhas venceu de forma consistente."
       },
       {
-        "text": "Acrescentar no topo, para ser lida primeiro e vencer a linha 16",
-        "why": "No substituto vence a última instrução, e uma terceira linha sobre tamanho mantém o conflito."
+        "text": "Acrescentar em maiúsculas, já que IMPORTANT faz um modelo obedecer",
+        "why": "Maiúsculas põem uma regra acima das outras; o conflito continua."
       },
       {
-        "text": "Acrescentar duas vezes para o modelo não deixar passar",
-        "why": "Repetir é um dos achados do linter, não uma correção."
+        "text": "Trocar as linhas 4 e 16 por uma instrução só",
+        "why": "Certo: uma linha por decisão, e depois medir."
       },
       {
-        "text": "Apagar a linha 16, e medir",
-        "why": "Certo: tirar a causa e contar o efeito."
+        "text": "Aumentar o `num_predict` para os resumos longos não serem cortados",
+        "why": "Nenhum resumo foi cortado."
       }
     ]
   }
