@@ -1,9 +1,9 @@
 ---
 title: Quando um agente basta
-version: 1
+version: 2
 ---
 
-A seção 05 mediu a divisão em três vezes os pedidos para a mesma resposta. A seção 08 mostrou um fato perdido na fronteira. Nenhum dos dois resultados quer dizer que sistemas multiagentes estão errados; quer dizer que uma divisão tem de se pagar. Uma lista curta, na ordem em que as perguntas costumam decidir:
+A seção 05 mediu a divisão em três vezes os pedidos para uma resposta pior. As seções 04 e 08 mostraram o que se perde numa fronteira. Nenhum dos dois resultados quer dizer que sistemas multiagentes estão errados; quer dizer que uma divisão tem de se pagar. Uma lista curta, na ordem em que as perguntas costumam decidir:
 
 **O contexto de um agente fica grande demais?** Se a conversa de um agente único fica bem dentro da janela e o custo por pedido é aceitável, o primeiro motivo para dividir não existe. Se subtarefas longas inundam a conversa com resultados de que os passos seguintes não precisam, especialistas com conversas próprias são o remédio.
 
