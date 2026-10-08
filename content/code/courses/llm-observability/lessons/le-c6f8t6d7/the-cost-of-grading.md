@@ -7,6 +7,19 @@ Every judge call in this lesson went through `judge.py`, which wraps it in a spa
 with the model and the tokens on it, exactly as the assistant's own calls are. So the price of grading
 comes from the same place as the price of serving, by the same `costs.py` that lesson 3 wrote:
 
+```python
+"""judge_cost.py: what the grading cost, from the judge's own spans, beside what the assistant cost."""
+import costs
+
+judged = costs.requests("judge-spans.jsonl")
+served = costs.requests("spans.jsonl")
+cost = lambda rs: sum(r["cost"] for r in rs)
+print(f"judge calls  {len(judged):5}   input {sum(r['input'] for r in judged):7}   output {sum(r['output'] for r in judged):6}"
+      f"   US$ {cost(judged):.6f}   per call {cost(judged) / len(judged):.8f}")
+print(f"assistant    {len(served):5}   input {sum(r['input'] for r in served):7}   output {sum(r['output'] for r in served):6}"
+      f"   US$ {cost(served):.6f}   per request {cost(served) / len(served):.8f}")
+```
+
 ```
 ana@lab:~/obs$ python judge_cost.py
 judge calls   1865   input  459293   output  82050   US$ 0.314997   per call 0.00016890

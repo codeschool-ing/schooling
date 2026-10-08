@@ -20,11 +20,13 @@ Those two are what a judge can do on production.
 """judge.py: a model asked to grade one reply on one criterion, with the call traced and priced like any other.
 
     import judge
-    verdict = judge.grade("relevance", question, reply, sources)   # {"score", "verdict", "reason"}
+    verdict = judge.grade("relevance", question, reply, sources)   # {"criterion", "score", "verdict", "reason"}
 
-The judge here is judge-1, the lab's stand-in, which grades by embedding
-similarity by rules written at the top of lab/labobs.py. The prompt is the one
-a team would send a real model; only the model behind it is the lab's.
+The judge is llama3.2:3b, the same model that writes the replies, through the
+same Ollama: the judge a team has when it has one model. It is asked at
+temperature 0, so that the same reply is graded the same way twice as far as
+the model allows. A reply it grades in a shape this file cannot read comes back
+with the verdict "unreadable", never as a pass or a fail.
 """
 import json
 
@@ -32,7 +34,7 @@ from openai import OpenAI
 
 from telemetry import span
 
-MODEL = "judge-1"
+MODEL = "llama3.2:3b"
 SYSTEM = """You grade replies written by Marginalia's help assistant to its customers.
 Criterion: {criterion}
 {rubric}
@@ -42,7 +44,7 @@ RUBRIC = {
     "relevance": "Does the reply address the question the customer asked?",
     "correctness": "Does the reply give the same answer as the expected one?",
 }
-client = OpenAI(max_retries=2, timeout=20)
+client = OpenAI(max_retries=2, timeout=120)
 
 
 def grade(criterion, question, reply, sources=(), expected=None):
@@ -51,16 +53,23 @@ def grade(criterion, question, reply, sources=(), expected=None):
     if expected is not None:
         user += f"\n<expected>{expected}</expected>"
     with span(f"chat {MODEL}", **{"gen_ai.operation.name": "chat", "gen_ai.request.model": MODEL,
-                                   "app.criterion": criterion}) as s:
-        r = client.chat.completions.create(model=MODEL, response_format={"type": "json_object"}, messages=[
-            {"role": "system", "content": SYSTEM.format(criterion=criterion, rubric=RUBRIC[criterion])},
-            {"role": "user", "content": user}])
+                                   "gen_ai.request.temperature": 0, "app.criterion": criterion}) as s:
+        r = client.chat.completions.create(model=MODEL, temperature=0, response_format={"type": "json_object"},
+                                           messages=[{"role": "system", "content": SYSTEM.format(
+                                                         criterion=criterion, rubric=RUBRIC[criterion])},
+                                                     {"role": "user", "content": user}])
         s.set_attribute("gen_ai.response.model", r.model)
         s.set_attribute("gen_ai.usage.input_tokens", r.usage.prompt_tokens)
         s.set_attribute("gen_ai.usage.output_tokens", r.usage.completion_tokens)
-        verdict = json.loads(r.choices[0].message.content)
+        text = r.choices[0].message.content
+        try:
+            verdict = json.loads(text)
+            if verdict.get("verdict") not in ("pass", "fail"):
+                raise ValueError
+        except (ValueError, AttributeError):
+            verdict = {"score": None, "verdict": "unreadable", "reason": text[:120]}
         s.set_attribute("app.verdict", verdict["verdict"])
-    return verdict
+    return {"criterion": criterion, **verdict}
 ```
 
 **The model behind the prompt is judge-1, the lab's stand-in.** It does not read: it measures the
@@ -73,13 +82,11 @@ The week's replies come from the spans: `traffic.py` rebuilds each one as a reco
 its reply, its sources (from the chunk ids, as in lesson 8) and the thumb, if there was one:
 
 ```python
-"""traffic.py: the week's replies as records to grade: question, reply, sources, release, and the thumb if any."""
+"""week.py: the week's replies as records to grade: question, reply, sources, release, and the thumb if any."""
 import json
 from collections import defaultdict
 
-import psycopg
-
-text = dict(psycopg.connect().execute("SELECT id, text FROM chunks").fetchall())
+text = {c["id"]: c["text"] for c in json.load(open("data/index.json"))["chunks"]}
 thumbs = {f["trace"]: f["value"] for f in map(json.loads, open("feedback.jsonl")) if f["kind"] == "thumbs"}
 
 
@@ -93,20 +100,20 @@ def replies(path="spans.jsonl"):
             continue
         yield {"trace": trace, "release": a["app.release"], "feature": a["app.feature"],
                "question": a["app.question"], "reply": a["app.reply"], "outcome": a["app.outcome"],
-               "sources": [{"id": c, "text": text[c]} for c in spans["search"]["attributes"]["app.search.chunks"]],
+               "sources": [{"id": c, "text": text[c]} for c in spans["search"]["attributes"].get("app.search.chunks", [])],
                "thumb": thumbs.get(trace)}
 ```
 
 One reply, two criteria:
 
 ```python
-"""one.py: one reply of the week, graded on two criteria by judge-1."""
+"""one.py: one reply of the week, graded on two criteria by the judge."""
 import judge
 import telemetry
-import traffic
+import week
 
 telemetry.setup("judge-spans.jsonl", service="judge")
-r = next(r for r in traffic.replies() if r["question"].startswith("Above what order value"))
+r = next(r for r in week.replies() if r["question"] == "Who pays for the return postage?")
 print(r["question"], "->", r["reply"])
 for criterion in ("relevance", "faithfulness"):
     print(criterion, judge.grade(criterion, r["question"], r["reply"], r["sources"]))

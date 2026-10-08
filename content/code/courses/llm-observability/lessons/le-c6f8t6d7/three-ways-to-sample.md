@@ -44,17 +44,17 @@ refusal.
 interval:
 
 ```python
-"""grade_sample.py: judge-1 on a sample of the week, pass rates per release with how sure they are."""
+"""grade_sample.py: the judge on a sample of the week, pass rates per release with how sure they are."""
 import argparse
 import json
 import math
-from collections import defaultdict
-from concurrent.futures import ThreadPoolExecutor
+import time
+from collections import Counter
 
 import judge
 import sample
 import telemetry
-import traffic
+import week
 
 p = argparse.ArgumentParser()
 p.add_argument("how", choices=["uniform", "stratified", "targeted"])
@@ -73,20 +73,24 @@ def wilson(passed, n, z=1.96):
     return centre - half, centre + half
 
 
-replies = list(traffic.replies())
+replies = list(week.replies())
 chosen = {"uniform": lambda: sample.uniform(replies, a.share),
           "stratified": lambda: sample.stratified(replies, a.per_group),
           "targeted": lambda: sample.targeted(replies)}[a.how]()
 telemetry.setup("judge-spans.jsonl", service="judge")
-with ThreadPoolExecutor(8) as pool:   # eight at a time, as replay.py does
-    verdicts = list(pool.map(lambda r: judge.grade("relevance", r["question"], r["reply"], r["sources"]), chosen))
-passed, seen = defaultdict(int), defaultdict(int)
+started = time.monotonic()
+passed, seen, unreadable = Counter(), Counter(), Counter()
 with open("verdicts.jsonl", "a") as out:
-    for r, v in zip(chosen, verdicts):
-        out.write(json.dumps({"trace": r["trace"], "criterion": "relevance", "sample": a.how, **v}) + "\n")
+    for r in chosen:   # one at a time: a judge on the same machine as the assistant competes with it
+        v = judge.grade("relevance", r["question"], r["reply"], r["sources"])
+        out.write(json.dumps({"trace": r["trace"], "sample": a.how, **v}) + "\n")
+        if v["verdict"] == "unreadable":
+            unreadable[r["release"]] += 1
+            continue
         seen[r["release"]] += 1
         passed[r["release"]] += v["verdict"] == "pass"
-print(f"{a.how}: {len(chosen)} of {len(replies)} replies graded for relevance")
+print(f"{a.how}: {len(chosen)} of {len(replies)} replies graded for relevance in "
+      f"{(time.monotonic() - started) / 60:.1f} min, {sum(unreadable.values())} verdicts unreadable")
 for rel in sorted(seen):
     lo, hi = wilson(passed[rel], seen[rel])
     print(f"  {rel}  {passed[rel]:4}/{seen[rel]:<4} pass  {passed[rel] / seen[rel]:5.1%}   95% between {lo:5.1%} and {hi:5.1%}")
