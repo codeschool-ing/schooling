@@ -1,6 +1,6 @@
 ---
 title: Regras para a forma de uma resposta
-version: 1
+version: 2
 ---
 
 Um fato precisa de uma resposta esperada. Uma **regra** não: ela é uma propriedade que toda boa resposta
@@ -10,6 +10,20 @@ consegue olhar uma resposta para a qual ninguém escreveu gabarito.
 O `checks.py` tem seis:
 
 ```python
+"""checks.py: rules a reply can be held to without a model, each a function that says pass or fail.
+
+    import checks
+    for name, ok, why in checks.run(reply, sources):
+        ...
+
+Every check is deterministic: the same reply and sources give the same verdict
+on every run, in microseconds, at no cost. Which is why they can run on every
+reply in production, and why lesson 15 can make a build fail on them.
+"""
+import re
+
+import redact
+
 REFUSAL = "I could not find that in our documents."
 CITE = re.compile(r"\[(\d+)\]")
 NUMBER = re.compile(r"\d+(?:[.,]\d+)?")
@@ -86,18 +100,20 @@ atendimento:
   escape como resposta;
 - **uma resposta fica abaixo de 80 palavras**.
 
-O modelo substituto passa nelas por construção, então, para ver cada uma disparar, o `broken.py` passa
-cinco respostas **escritas pelo curso** pelas seis, contra uma fonte sobre preços de entrega:
+Para ver cada uma disparar quando se quer, o `broken.py` passa cinco respostas **escritas pelo curso**
+pelas seis, contra o trecho sobre a entrega padrão, que diz que ela custa R$ 12,90 e é grátis acima de
+R$ 40:
 
 ```python
 """broken.py: five replies the course wrote, each breaking one rule, through every check."""
+import json
+
 import checks
 
-source = [{"id": "shipping-and-delivery:ca3796df6832",
-           "text": "standard three to five working days 4.90, free on orders over 40 express next working day 9.90"}]
-for reply in ["Standard delivery is free on orders over 40.",
-              "Standard delivery is free on orders over 40. [2]",
-              "Express delivery costs 12.90. [1]",
+source = [c for c in json.load(open("data/index.json"))["chunks"] if c["id"] == "shipping-and-delivery:standard-delivery"]
+for reply in ["Standard delivery is free on orders over R$ 40.",
+              "Standard delivery is free on orders over R$ 40. [2]",
+              "Standard delivery costs R$ 9.90. [1]",
               "Joana, we sent the details to joana.prado@example.com. [1]",
               "Sorry, I could not find anything about that."]:
     failed = [f"{name}: {why}" for name, ok, why in checks.run(reply, source) if not ok]
@@ -105,13 +121,13 @@ for reply in ["Standard delivery is free on orders over 40.",
 ```
 
 ```
-ana@lab:~/obs$ python broken.py
-Standard delivery is free on orders over 40.
+ana@dev:~/obs$ python broken.py
+Standard delivery is free on orders over R$ 40.
     cites_every_sentence: 1 sentence(s) with no citation
-Standard delivery is free on orders over 40. [2]
+Standard delivery is free on orders over R$ 40. [2]
     citations_exist: no source [2]
-Express delivery costs 12.90. [1]
-    numbers_in_sources: not in any source: ['12.90']
+Standard delivery costs R$ 9.90. [1]
+    numbers_in_sources: not in any source: ['9.90']
 Joana, we sent the details to joana.prado@example.com. [1]
     no_personal_data: repeats {'email': 1}
 Sorry, I could not find anything about that.
@@ -122,8 +138,8 @@ Cada resposta quebra a regra que foi escrita para quebrar, e a última quebra du
 palavras próprias não cita nada e não é a frase combinada, então escaparia de toda contagem de recusas
 da aula 5.
 
-Repare no que a regra dos números pegou: **12.90 é um preço que os documentos não contêm**. Um modelo de
-verdade que "lembra" um preço antigo, ou soma dois números que não devia, produz exatamente isso, e
-nenhum cliente consegue perceber. É o único tipo de fidelidade que um programa confere com certeza, e
-para uma loja cujas respostas são quase sempre preços, dias e limites, ele cobre uma boa parte do que
-importa.
+Repare no que a regra dos números pegou: **R$ 9,90 é um preço que a fonte não contém**. Um modelo
+que "lembra" um preço de outro lugar, ou calcula um número que devia ter copiado, produz exatamente
+isso, e nenhum cliente consegue perceber. A próxima seção pega o `llama3.2:3b` fazendo a segunda
+coisa. É o único tipo de fidelidade que um programa confere com certeza, e para uma loja cujas
+respostas são quase sempre preços, dias e limites, ele cobre uma boa parte do que importa.

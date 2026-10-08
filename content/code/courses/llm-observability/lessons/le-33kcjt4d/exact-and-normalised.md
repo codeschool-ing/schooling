@@ -1,6 +1,6 @@
 ---
 title: Comparing with an expected answer
-version: 1
+version: 2
 ---
 
 An evaluation needs an **answer key**: questions, and for each one what a right reply contains. The
@@ -82,14 +82,14 @@ print(f"runs/{a.name}.jsonl: {n} questions, release {release}")
 ```
 
 A run is kept so that it can be graded again, by another method, without asking the model twice;
-lessons 9 to 12 grade this same file. `--at` picks which release answers, by the moment it would have
-been in force, and the default is Monday 5 October, under the release that raised the floor:
+lessons 9 to 12 grade runs like this one. `--at` picks which release answers, by the moment it would
+have been in force, and the default is Monday 5 October, under the release that raised the floor:
 
 ```
-ana@lab:~/obs$ python evalrun.py current
-runs/current.jsonl: 30 questions, release 2026.10.1
-ana@lab:~/obs$ head -c 600 runs/current.jsonl; echo
-{"id": "e01", "question": "How many days do I have to return a printed book?", "reply": "You have 30 days from delivery to return a printed book in the condition you received it. [1] Our returns and refunds policy extends this period to 30 days for printed books. [3] A printed book with a fault from the printer, such as pages bound upside down or missing, can be returned for a refund or a replacement within 30 days, like any other return. [2]", "release": "2026.10.1", "sources": [{"id": "returns-policy:fbe325d9ffef", "text": "You have 30 days from delivery to return a printed book in the condi
+ana@dev:~/obs$ python evalrun.py current
+runs/current.jsonl: 24 questions, release 2026.10.1
+ana@dev:~/obs$ head -c 700 runs/current.jsonl; echo
+{"id": "e01", "question": "How many days do I have to return a printed book?", "reply": "You have 30 days from the date of delivery to return a printed book. [1]", "release": "2026.10.1", "sources": [{"id": "returns-policy:the-return-window", "text": "Returns and refunds: The return window\nYou can return a printed book within 30 days from delivery, for any reason. The book has to come back in the condition it left: no writing in it and no broken spine."}, {"id": "returns-policy:items-that-cannot-be-returned", "text": "Returns and refunds: Items that cannot be returned\nSigned copies, books printed on demand, and e-books or audiobooks once they have been downloaded."}], "trace": "37af0bbea40
 ```
 
 ## The comparison, and how loose it is
@@ -127,31 +127,35 @@ if __name__ == "__main__":
 ```
 
 ```
-ana@lab:~/obs$ python facts.py current
-exact      16/30 right
-normalised 16/30 right
-  e02  Who pays for the return postage?                      I could not find that in our documents.
+ana@dev:~/obs$ python facts.py current
+exact      16/24 right
+normalised 16/24 right
+  e02  Who pays for the return postage?                      According to [1], the customer pays for the return postage.
   e04  Can I return a signed copy?                           I could not find that in our documents.
-  e05  My e-book was downloaded yesterday, can I still get   An e-book can be refunded within 14 days of purchase if you 
-  e06  How much is express delivery?                         Express delivery is not free at any order value. [1]
-  e07  Above what order value is standard delivery free?     Express delivery is not free at any order value. [1]
+  e05  I downloaded an e-book yesterday. Can I still return  I could not find that in our documents.
+  e12  Will my e-books open on a Kindle?                     I could not find that in our documents.
   e14  Can I pay in instalments?                             I could not find that in our documents.
-  e17  When is the contract of sale formed?                  I could not find that in our documents.
-  e19  What commission does Marginalia take from a marketpl  Marginalia is an online bookshop operated at marginalia.exam
-  e20  How often are sellers paid?                           I could not find that in our documents.
-  e21  What does error E-4102 mean in the affiliate API?     I could not find that in our documents.
-  e22  What commission do affiliates earn on e-books?        I could not find that in our documents.
-  e24  Do you store my IP address?                           I could not find that in our documents.
-  e25  What is the most a support agent can refund without   I could not find that in our documents.
-  e26  What must I check before changing a customer's order  I could not find that in our documents.
+  e16  When do I get the invoice for my order?               You will receive the electronic invoice for your order as so
+  e18  What happens if my order costs more than my gift car  If your order costs more than your gift card holds, you pay 
+  e19  How long is the statutory right of withdrawal?        I could not find that in our documents.
 ```
 
-**Sixteen of thirty**, either way. Under this release, ten of the fourteen wrong replies are the refusal
-to a question the documents answer, which lesson 5 would have predicted. Two are the express delivery sentence from lesson 1, now answering the question about the price of express delivery too.
+**Sixteen of twenty-four**, either way, and the eight below are not all wrong. Read them against the
+documents:
 
-The two comparisons agree here because extract-1 copies sentences, so a right reply contains the fact
-as the document wrote it. The difference shows on replies that are worded differently. `normalise.py`
-takes three, **written by the course for this purpose**, against the fact *30 days from delivery*:
+- **Five are the refusal to a question the documents answer**: the signed copy, the downloaded e-book,
+  the Kindle, the instalments and the right of withdrawal. The release in force raised the floor, and
+  lesson 5 showed what that does to questions whose best chunk scores just under it.
+- **e02 contradicts its source.** The chunk it cites says returns are free and the label prepaid, and
+  the reply says the customer pays. It is the same reply lesson 1 read in a trace.
+- **e16 and e18 are right.** "As soon as it ships" says what the document's "when the order ships"
+  says, and "the remaining amount" is "the rest" in other words. The comparison failed them because
+  the model did not copy the document's words.
+
+So the true score is eighteen, and the program says sixteen.
+
+`normalise.py` takes three replies, **written by the course for this purpose**, against the fact
+*30 days from delivery*, to show what normalising can and cannot reach:
 
 ```python
 """normalise.py: three replies the course wrote, against one fact, compared two ways."""
@@ -165,17 +169,18 @@ for reply in ["You have 30 days from delivery to return a printed book. [1]",
 ```
 
 ```
-ana@lab:~/obs$ python normalise.py
+ana@dev:~/obs$ python normalise.py
 exact True   normalised True   You have 30 days from delivery to return a printed book. [1]
 exact False  normalised True   You have 30 days  from Delivery to return it. [1]
 exact False  normalised False  You have thirty days after delivery to return it. [1]
 ```
 
 The second reply, with a double space and a capital, fails the exact comparison and passes the
-normalised one. The third says the same thing in other words and fails both. **No normalisation
-reaches a paraphrase.** A comparison can be loosened only by things that do not change the meaning:
-case, spacing, punctuation, perhaps number words. Each loosening is a decision, made for this set and
-written in the code where a reviewer can see it, exactly as a cloze declares `ignore_case`.
+normalised one. The third says the same thing in other words and fails both, exactly as e16 and e18
+did. **No normalisation reaches a paraphrase.** A comparison can be loosened only by things that do
+not change the meaning: case, spacing, punctuation, perhaps number words. Each loosening is a
+decision, made for this set and written in the code where a reviewer can see it, exactly as a cloze
+declares `ignore_case`.
 
 That makes deterministic comparison right for the facts that have one form: a price, a number of days,
 an error code, an order status, a word from a fixed list. And wrong for anything a person would say
