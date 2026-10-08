@@ -11,13 +11,15 @@ passed, so the checks this course already has can run inside DeepEval as they ar
 `FactCheck` is lesson 8's normalised fact check, reading the facts from the test case's metadata:
 
 ```python
-"""deepeval_run.py: the sixty replies of lesson 10 as DeepEval test cases, graded by two metrics written here."""
+"""deepeval_run.py: the forty-eight replies of lesson 10 as DeepEval test cases, under two metrics
+written here and one of DeepEval's own."""
 import json
 from collections import defaultdict
 
 from deepeval import evaluate
 from deepeval.evaluate.configs import AsyncConfig, DisplayConfig
-from deepeval.metrics import BaseMetric
+from deepeval.metrics import BaseMetric, FaithfulnessMetric
+from deepeval.models import LocalModel
 from deepeval.test_case import LLMTestCase
 
 import checks
@@ -28,12 +30,13 @@ cases = {c["id"]: c for c in map(json.loads, open("data/eval.jsonl"))}
 
 
 class JudgeRelevance(BaseMetric):
-    """judge-1's relevance verdict, the agreed refusal passed by rule as lesson 10 decided."""
+    """The judge's relevance verdict, with the refusal decided by the answer key as lesson 10 did."""
     threshold = 0.5
 
     def measure(self, case, *args, **kwargs):
         if checks.is_refusal(case.actual_output):
-            self.score, self.reason = 1.0, "the agreed refusal, passed by rule"
+            self.score = 0.0 if case.metadata["facts"] else 1.0
+            self.reason = "the agreed refusal, decided by the answer key"
         else:
             v = judge.grade("relevance", case.input, case.actual_output,
                             [{"id": "", "text": t} for t in case.retrieval_context])
@@ -49,7 +52,7 @@ class JudgeRelevance(BaseMetric):
 
     @property
     def __name__(self):
-        return "judge-1 relevance"
+        return "judge relevance"
 
 
 class FactCheck(BaseMetric):
@@ -57,8 +60,7 @@ class FactCheck(BaseMetric):
     threshold = 0.5
 
     def measure(self, case, *args, **kwargs):
-        facts = case.metadata["facts"]
-        self.score = float(normalised(case.actual_output, facts))
+        self.score = float(normalised(case.actual_output, case.metadata["facts"]))
         self.reason = "fact found" if self.score else "fact missing"
         self.success = self.score >= self.threshold
         return self.score
@@ -74,31 +76,31 @@ class FactCheck(BaseMetric):
         return "fact check"
 
 
+model = LocalModel(model="llama3.2:3b", base_url="http://127.0.0.1:11434/v1", api_key="ollama", temperature=0)
 tests = []
 for run in ("old", "new"):
     for r in map(json.loads, open(f"runs/{run}.jsonl")):
         tests.append(LLMTestCase(name=f"{r['id']} {r['release']}", input=r["question"], actual_output=r["reply"],
-                                 retrieval_context=[s["text"] for s in r["sources"]],
+                                 retrieval_context=[s["text"] for s in r["sources"]] or ["(nothing was retrieved)"],
                                  metadata={"facts": cases[r["id"]]["facts"], "release": r["release"]}))
-result = evaluate(tests, [JudgeRelevance(), FactCheck()], async_config=AsyncConfig(run_async=False),
+metrics = [JudgeRelevance(), FactCheck(), FaithfulnessMetric(model=model, async_mode=False)]
+result = evaluate(tests, metrics, async_config=AsyncConfig(run_async=False),
                   display_config=DisplayConfig(print_results=False, show_indicator=False))
 passed = defaultdict(int)
 for t in result.test_results:
     for m in t.metrics_data:
         passed[t.metadata["release"], m.name] += m.success
+        if m.name == "Faithfulness" and not m.success:
+            print(f"  faithfulness failed {t.name}: {t.actual_output[:60]}")
 for release in ("2026.09.4", "2026.10.1"):
-    print(release, "  ".join(f"{name} {passed[release, name]}/30" for name in ("judge-1 relevance", "fact check")))
+    print(release, "  ".join(f"{name} {passed[release, name]}/24"
+                             for name in ("judge relevance", "fact check", "Faithfulness")))
 ```
 
 DeepEval prints a banner, a warning and a summary of its own, with a few emoji the page cannot draw; the
 `grep` keeps the summary's pass rate and the script's two lines:
 
-```
-ana@lab:~/obs$ python deepeval_run.py | grep -E "Pass Rate|^2026"
-   » Pass Rate: 58.33% | Passed: 35 | Failed: 25
-2026.09.4 judge-1 relevance 30/30  fact check 19/30
-2026.10.1 judge-1 relevance 30/30  fact check 16/30
-```
+CAPTURE:deepeval
 
 The two lines at the bottom are the script's own counts, from the results DeepEval returns, and they agree with
 what this course measured without a framework: judge-1 passes every reply, as lesson 10 found, and the
@@ -119,14 +121,7 @@ are the report.
   run.
 - **A record.** The `.deepeval` folder holds the last run in full.
 
-```
-ana@lab:~/obs$ ls -a .deepeval
-.
-..
-.deepeval-cache.json
-.latest_run_full.json
-.latest_test_run.json
-```
+CAPTURE:ls
 
 The record is useful and, as the first section said, it is customers' text: those files need the same
 care as a trace.
