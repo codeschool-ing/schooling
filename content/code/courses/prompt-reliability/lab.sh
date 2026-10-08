@@ -75,6 +75,15 @@ if upto >= 6:
         sys.exit("lab.sh: pl.py no longer has the line setting-the-cap.md edits")
     open(p, "w", encoding="utf-8").write(src.replace(old, 'and k not in ("summary", "confidence")'))
     written["pl.py"] += ", then the sed in setting-the-cap"
+# And the one prompt a page cannot hold in a fence, because a line of three
+# backticks would end the fence: lesson 9, backticks.md, makes
+# prompts/v5-backticks.txt from v5-tagged.txt with a sed, which this repeats.
+if upto >= 9:
+    src = open(os.path.join(lab, "prompts/v5-tagged.txt"), encoding="utf-8").read()
+    out = src.replace("between <message> tags", "between triple backticks")
+    out = re.sub(r"^</?message>$", "```", out, flags=re.M)
+    open(os.path.join(lab, "prompts/v5-backticks.txt"), "w", encoding="utf-8").write(out)
+    written["prompts/v5-backticks.txt"] = "the sed in backticks.md"
 for path in sorted(written):
     print("%-28s from %s" % (path, written[path]), file=sys.stderr)
 PY

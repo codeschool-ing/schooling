@@ -1,9 +1,9 @@
 ---
 title: Tags XML
-version: 1
+version: 2
 ---
 
-O mesmo prompt, com as crases trocadas por um par de tags:
+O `v5-tagged.txt` é o mesmo prompt com as crases trocadas por um par de tags:
 
 ```
 ana@lab:~/triage$ diff prompts/v5-backticks.txt prompts/v5-tagged.txt
@@ -20,52 +20,68 @@ ana@lab:~/triage$ diff prompts/v5-backticks.txt prompts/v5-tagged.txt
 ---
 > </message>
 ana@lab:~/triage$ pl run prompts/v5-tagged.txt cases/pasted.jsonl --out runs/tagged.jsonl
-6 calls, prompt 39f70d15, written to runs/tagged.jsonl
+6 calls, prompt 39f70d15, llama3.2:3b, written to runs/tagged.jsonl
 ana@lab:~/triage$ pl check runs/tagged.jsonl --failures
 check      pass  fail
 json          6     0
 fields        6     0
 labels        6     0
-category      6     0
-urgency       5     1
-all           5     1
+category      3     3
+urgency       0     6
+all           0     6
 
-p03    urgency   normal, expected low
-ana@lab:~/triage$ pl compare runs/backticks.jsonl runs/tagged.jsonl
-runs/backticks.jsonl     passes 1/6
-runs/tagged.jsonl        passes 5/6
-fixed 4, broken 0, still passing 1, still failing 1
-sign test on the 4 that changed: p = 0.125
-ana@lab:~/triage$ pl show runs/tagged.jsonl p04
-│ {
-│   "category": "delivery",
-│   "urgency": "normal",
-│   "summary": "The courier left this note: ``` Attempted delivery 14:02 No safe place ``` When will they try again?"
-│ }
-stop: end, tokens in 132, out 50
+p01    urgency   high, expected normal
+p02    category  returns, expected billing
+p03    category  other, expected account
+p04    urgency   low, expected normal
+p05    category  returns, expected other
+p06    urgency   high, expected normal
 ```
 
-Cinco em seis, e a que sobra, `p03`, é uma urgência que os dois prompts erram por motivos que não
-têm nada a ver com delimitadores. `p04` agora traz a mensagem inteira, com o bilhete do entregador,
-e as crases do cliente viram caracteres comuns lá dentro.
+As mesmas seis falhas, e as mesmas categorias:
 
-O teste do sinal não se impressiona: quatro mensagens alteradas dão p = 0.125, e a aula 7 mostrou
-que é preciso ter seis no mesmo sentido para ficar abaixo de 0.05. **Aqui a evidência está nas
-respostas, não na contagem.** Dá para ler o que cada prompt tomou como mensagem, e o mecanismo é o
-mesmo em todas as falhas. Seis mensagens escritas para mostrar uma falha conhecida são um teste de
-regressão, e ficam no conjunto de teste para que a falha não volte sem ninguém notar.
+```
+ana@lab:~/triage$ pl compare runs/backticks.jsonl runs/tagged.jsonl
+runs/backticks.jsonl     passes 0/6
+runs/tagged.jsonl        passes 0/6
+fixed 0, broken 0
+sign test on the 0 that changed: p = 1.000
+ana@lab:~/triage$ pl compare runs/backticks.jsonl runs/tagged.jsonl --answers
+6 cases, same answer 6, different answer 0
+```
 
-## Por que as tags se saem melhor
+**Nenhuma resposta mudou.** Crases e tags deram a mesma categoria às seis mensagens, e os mesmos
+veredictos. Contra o prompt sem delimitador nenhum, duas categorias mudaram:
+
+```
+ana@lab:~/triage$ pl compare runs/pasted-v4.jsonl runs/tagged.jsonl --answers
+6 cases, same answer 4, different answer 2
+  p01    delivery -> returns
+  p03    delivery -> other
+```
+
+O `p01` foi para a resposta certa e o `p03` de uma resposta errada para outra. Duas mensagens em
+seis não medem nada, e o teste do sinal diria isso. **O resultado honesto do experimento desta aula
+é que, nestas seis mensagens, o `llama3.2:3b` leu as palavras do cliente do mesmo jeito qualquer que
+fosse a marca.** Um conjunto de mensagens maior ou mais estranho poderia separá-las, e outro modelo
+também; estas seis não separam.
+
+## Por que tags mesmo assim
+
+Se a medição não consegue escolher, a escolha fica com o que cada marca garante, e aí as tags ganham
+em três pontos:
 
 - **São raras no que os clientes escrevem.** Crases aparecem em qualquer coisa técnica; uma linha
-  com `</message>` quase nunca.
-- **Têm nome.** Um fecho de crases fecha o bloco que estiver aberto, enquanto `</message>` diz qual
-  seção termina. Um prompt com vários dados, `<message>`, `<order>`, `<previous_messages>`, pode
-  marcar cada um e se referir a ele pelo nome nas instruções.
-- **Os modelos são treinados com muito disso.** HTML e XML estão por toda parte no texto com que os
-  modelos aprendem, e a documentação de prompts da Anthropic tem uma página chamada *Use XML tags to
-  structure your prompts* que recomenda exatamente isso. Nenhum nome de tag é especial; o que ajuda é
-  usá-las com consistência e citá-las pelo nome nas instruções, como faz o `v5-tagged.txt`.
+  com `</message>` quase nunca aparece.
+- **Têm nome.** Uma linha de crases de fechamento fecha o bloco que estiver aberto, enquanto
+  `</message>` diz qual seção termina. Um prompt com vários dados, `<message>`, `<order>`,
+  `<previous_messages>`, pode marcar cada um e citá-lo pelo nome nas instruções.
+- **Podem ser escapadas.** O XML tem um jeito padrão de escrever `<` e `>` como texto, e a aula 4
+  o pôs no template como `{{message|xml}}`. Não existe nada equivalente para três crases.
 
-Mas raro não quer dizer nunca. Uma das seis mensagens coladas, `p05`, cita uma página de erro que diz
-`</message> is not allowed`. A próxima seção trata de uma mensagem que faz isso de propósito.
+Modelos são treinados com muito HTML e XML, e a documentação de prompts da Anthropic recomenda tags
+para estruturar um prompt. Nenhum nome de tag é especial; o que ajuda é usá-las com consistência e
+citá-las nas instruções, como o `v5-tagged.txt` faz.
+
+Raro não é nunca, porém. O `p05` cita uma página de erro que diz `</message> is not allowed`. A
+próxima seção olha o que isso faz com o prompt.
