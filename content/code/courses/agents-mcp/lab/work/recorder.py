@@ -3,7 +3,8 @@
 Point a program at http://127.0.0.1:11435 instead of 11434 and it works as
 before, while each request lands in requests.jsonl as one JSON line: the path,
 the body the program sent, the status, how long the reply took, and the tokens
-the reply says it used.
+the reply says it used. A line is written when the reply is complete, so a
+request the program gave up on still appears, marked client_left.
 """
 import http.client
 import json
@@ -46,15 +47,21 @@ class Recorder(BaseHTTPRequestHandler):
         self.send_header("Content-Type", reply.getheader("Content-Type", "application/json"))
         self.send_header("Connection", "close")
         self.end_headers()
-        raw = b""
+        raw, client_left = b"", False
         while chunk := reply.read1(65536):
             raw += chunk
-            self.wfile.write(chunk)
-            self.wfile.flush()
+            if not client_left:
+                try:
+                    self.wfile.write(chunk)
+                    self.wfile.flush()
+                except (BrokenPipeError, ConnectionResetError):
+                    client_left = True   # the program gave up on this request; it was still sent
+        record = {"path": self.path, "request": json.loads(body or b"{}"), "status": reply.status,
+                  "ms": round(1000 * (time.monotonic() - started)), "usage": usage_in(raw)}
+        if client_left:
+            record["client_left"] = True
         with open(LOG, "a") as log:
-            log.write(json.dumps({"path": self.path, "request": json.loads(body or b"{}"),
-                                  "status": reply.status, "ms": round(1000 * (time.monotonic() - started)),
-                                  "usage": usage_in(raw)}) + "\n")
+            log.write(json.dumps(record) + "\n")
 
     do_GET = do_POST
 
