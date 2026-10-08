@@ -1,9 +1,9 @@
 ---
 title: An orchestrator and two specialists
-version: 1
+version: 2
 ---
 
-`multi.py` builds all three designs this lesson compares from one function, `loop`, which is lesson 4's agent loop made reusable: a name, a system prompt, a set of tools and a conversation. **The agents' decisions and words were written by the course** as rules for the stand-in; the delegation, the separate loops, the tools and their results are real.
+`multi.py` builds all three designs this lesson compares from one function, `loop`, which is lesson 4's agent loop made reusable: a name, a system prompt, a set of tools and a conversation. Every agent in it is `llama3.2:3b` with a different system prompt and different tools; nothing tells them apart but those two things.
 
 ```schooling-example
 {
@@ -22,7 +22,7 @@ version: 1
       "note": "**A switch for section 08.**"
     },
     {
-      "code": "def loop(name, system, tools, messages, run, depth=0):\n    \"\"\"One agent: its own system prompt, its own tools, its own conversation. Returns (answer, evidence).\"\"\"\n    pad, evidence = \"    \" * depth, []\n    for step in range(1, 6):\n        reply = client.messages.create(model=\"scripted-1\", max_tokens=1024, system=system,\n                                       tools=tools, messages=messages)\n        messages.append({\"role\": \"assistant\", \"content\": reply.content})\n        calls = [b for b in reply.content if b.type == \"tool_use\"]\n        if not calls:\n            answer = \" \".join(b.text for b in reply.content if b.type == \"text\")\n            print(f\"{pad}{name}: {answer}\")\n            return answer, evidence\n        results = []\n        for b in calls:\n            print(f\"{pad}{name} -> {b.name}({json.dumps(b.input)})\")\n            text, is_error = run(b.name, b.input, depth)\n",
+      "code": "def loop(name, system, tools, messages, run, depth=0):\n    \"\"\"One agent: its own system prompt, its own tools, its own conversation. Returns (answer, evidence).\"\"\"\n    pad, evidence = \"    \" * depth, []\n    for step in range(1, 6):\n        reply = client.messages.create(model=\"llama3.2:3b\", max_tokens=1024, system=system,\n                                       tools=tools, messages=messages)\n        messages.append({\"role\": \"assistant\", \"content\": reply.content})\n        calls = [b for b in reply.content if b.type == \"tool_use\"]\n        if not calls:\n            answer = \" \".join(b.text for b in reply.content if b.type == \"text\")\n            print(f\"{pad}{name}: {answer}\")\n            return answer, evidence\n        results = []\n        for b in calls:\n            print(f\"{pad}{name} -> {b.name}({json.dumps(b.input)})\")\n            text, is_error = run(b.name, b.input, depth)\n",
       "note": "**One agent.** Its own system prompt, its own tools, its own `messages`. The `depth` only indents the printout, so you can see who is talking."
     },
     {
@@ -42,7 +42,7 @@ version: 1
       "note": "**The orchestrator's tools are the specialists**: `ask_orders` and `ask_catalogue`, each taking one question."
     },
     {
-      "code": "def triage(task):\n    \"\"\"Handoff: the triage agent transfers control, and the specialist answers the customer itself.\"\"\"\n    messages = [{\"role\": \"user\", \"content\": task}]\n    tools = [{\"name\": f\"transfer_to_{s}\", \"description\": f\"Hand this conversation to the {s} specialist.\",\n              \"input_schema\": {\"type\": \"object\", \"properties\": {}}} for s in SPECIALISTS]\n    reply = client.messages.create(model=\"scripted-1\", max_tokens=200, tools=tools, messages=messages,\n                                   system=\"You are Marginalia's triage agent. Transfer the conversation to the right specialist.\")\n    call = next(b for b in reply.content if b.type == \"tool_use\")\n    target = call.name.removeprefix(\"transfer_to_\")\n    print(f\"triage hands the conversation to {target}\")\n    system, specialist_tools = SPECIALISTS[target]\n    loop(target, system, specialist_tools, [{\"role\": \"user\", \"content\": task}], lambda n, a, d: shop_tool(n, a))\n\n\n",
+      "code": "def triage(task):\n    \"\"\"Handoff: the triage agent transfers control, and the specialist answers the customer itself.\"\"\"\n    messages = [{\"role\": \"user\", \"content\": task}]\n    tools = [{\"name\": f\"transfer_to_{s}\", \"description\": f\"Hand this conversation to the {s} specialist.\",\n              \"input_schema\": {\"type\": \"object\", \"properties\": {}}} for s in SPECIALISTS]\n    reply = client.messages.create(model=\"llama3.2:3b\", max_tokens=200, tools=tools, messages=messages,\n                                   system=\"You are Marginalia's triage agent. Transfer the conversation to the right specialist.\")\n    call = next(b for b in reply.content if b.type == \"tool_use\")\n    target = call.name.removeprefix(\"transfer_to_\")\n    print(f\"triage hands the conversation to {target}\")\n    system, specialist_tools = SPECIALISTS[target]\n    loop(target, system, specialist_tools, [{\"role\": \"user\", \"content\": task}], lambda n, a, d: shop_tool(n, a))\n\n\n",
       "note": "**Handoff**: one request to decide, then the specialist's loop runs on the customer's message and answers it."
     },
     {
@@ -56,16 +56,20 @@ version: 1
 A customer asks two unrelated things at once:
 
 ```
+ana@lab:~/agents$ python recorder.py &
+ana@lab:~/agents$ export ANTHROPIC_BASE_URL=http://127.0.0.1:11435
 ana@lab:~/agents$ python multi.py "Did my order M-1043 ship yet? Also, can you suggest a science fiction book you have in stock?"
-orchestrator -> ask_orders({"question": "Has order M-1043 shipped?"})
+orchestrator -> ask_orders({"question": "Did my order M-1043 ship yet?"})
     orders -> get_order({"order_id": "M-1043"})
-    orders: Yes, M-1043 has shipped and is not delivered yet. Its tracking code is BR5512340003.
-orchestrator -> ask_catalogue({"question": "Which science fiction books are in stock?"})
+    orders: Your order M-1043 has shipped. You can track the status of your order with the tracking number BR5512340003.
+orchestrator -> ask_catalogue({"question": "Can you suggest a science fiction book you have in stock?"})
     catalogue -> find_books({"genre": "science fiction"})
-    catalogue: In stock: The Time Machine by H. G. Wells at 24.90 and The War of the Worlds by H. G. Wells at 25.90.
-orchestrator: Yes, order M-1043 has shipped; its tracking code is BR5512340003. For science fiction, we have The Time Machine (24.90) and The War of the Worlds (25.90), both by H. G. Wells, in stock.
+    catalogue: I can suggest "The Time Machine" by H. G. Wells, which is a classic science fiction novel that explores the concept of time travel and its consequences. It's available in stock for $2,490.
+orchestrator: I've checked on the status of your order M-1043. You can track the status of your order with the tracking number BR5512340003.
 ```
 
-The indentation is the delegation. The orchestrator asked both specialists in one reply, the way lesson 4's agent asked for two orders at once. Each specialist ran its own loop: one tool call, one answer. The orchestrator read both answers as tool results and wrote the reply.
+The recorder from lesson 1 is in front of everything, because section 05 counts what each agent cost. The indentation is the delegation. The orchestrator asked both specialists in one reply, the way lesson 4's agent asked for two orders at once; the host ran them one after the other, so their lines come out in turn. Each specialist ran its own loop: one tool call, one answer. The orchestrator read both answers as tool results and wrote the reply.
 
-Look at what each specialist was asked: *"Has order M-1043 shipped?"* and *"Which science fiction books are in stock?"* Neither saw the customer's message. **The orchestrator rewrote the task into two questions**, and each specialist's whole knowledge of the conversation is that one sentence. Section 07 is about that boundary.
+**And the reply leaves the book out.** The catalogue specialist found *The Time Machine* in stock (and gave its price as "$2,490", reading cents as dollars); the orchestrator read that answer and wrote only about the order. Nothing failed: every agent did its part, and half of what the customer asked for was lost in the last step, where the parts are put together. A single agent has no such step.
+
+Look also at what each specialist was asked: *"Did my order M-1043 ship yet?"* and *"Can you suggest a science fiction book you have in stock?"* Neither saw the customer's message. **The orchestrator rewrote the task into two questions**, and each specialist's whole knowledge of the conversation is that one sentence. Section 07 is about that boundary.

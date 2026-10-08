@@ -9,29 +9,18 @@
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab
 # (lab.sh reset); tools.py, which is lesson 4's, written again unchanged; and
-# emptying labllm's log before each measured run, done as root because the
-# log belongs to the labllm user.
+# the files ana wrote (put below), which the lesson shows in full, each
+# checked by lab/shown.py.
 #
-# THE MODELS' WORDS AND DECISIONS IN THIS LESSON WERE WRITTEN BY THE COURSE,
-# as rules in lab/scripted/06-*.json: which specialist the orchestrator asks,
-# what each specialist calls and answers, and the triage agent's transfer.
-# That includes the orders specialist's lossy summary in the last two runs,
-# which the course wrote to show what a summary can lose. The agents' loops,
-# the delegation, the handoff, the evidence the host attaches, the tools,
-# their results and the token counts are real.
+# THE MODEL IS REAL: llama3.2:3b (a80c4f17acd5) in Ollama 0.40.0, with an
+# 8192-token context, captured on 2026-10-08. Every agent in this lesson is
+# that one model with a different system prompt and different tools; their
+# delegations, transfers, summaries and answers are what it wrote that day.
 #
-# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo, with LAB_TODAY=2026-10-06.
-set -uo pipefail
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
+# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-block() { printf '##### %s\n' "$1"; }
-fresh_log() { : > /var/log/labllm/requests.jsonl; }
-exec 9>/var/tmp/agents-capture.lock; flock 9
-lab reset >/dev/null
+. ../../lab/capture.sh
+lab exec 'ollama run llama3.2:3b hello' < /dev/null >/dev/null 2>&1
 sed -n "/^put tools.py <<'PY'$/,/^PY$/p" ../le-77t9tmfy/captures.sh | sed '1d;$d' | put tools.py
 lab exec 'python -c "import shop; shop.search_help(\"warm up\")"' >/dev/null
 
@@ -65,7 +54,7 @@ def loop(name, system, tools, messages, run, depth=0):
     """One agent: its own system prompt, its own tools, its own conversation. Returns (answer, evidence)."""
     pad, evidence = "    " * depth, []
     for step in range(1, 6):
-        reply = client.messages.create(model="scripted-1", max_tokens=1024, system=system,
+        reply = client.messages.create(model="llama3.2:3b", max_tokens=1024, system=system,
                                        tools=tools, messages=messages)
         messages.append({"role": "assistant", "content": reply.content})
         calls = [b for b in reply.content if b.type == "tool_use"]
@@ -117,7 +106,7 @@ def triage(task):
     messages = [{"role": "user", "content": task}]
     tools = [{"name": f"transfer_to_{s}", "description": f"Hand this conversation to the {s} specialist.",
               "input_schema": {"type": "object", "properties": {}}} for s in SPECIALISTS]
-    reply = client.messages.create(model="scripted-1", max_tokens=200, tools=tools, messages=messages,
+    reply = client.messages.create(model="llama3.2:3b", max_tokens=200, tools=tools, messages=messages,
                                    system="You are Marginalia's triage agent. Transfer the conversation to the right specialist.")
     call = next(b for b in reply.content if b.type == "tool_use")
     target = call.name.removeprefix("transfer_to_")
@@ -138,14 +127,14 @@ if __name__ == "__main__":
 PY
 
 put tally.py <<'PY'
-"""Requests and tokens since the log was emptied, per agent, told apart by their system prompts."""
+"""Requests and tokens since requests.jsonl was emptied, per agent, told apart by their system prompts."""
 import json
 from collections import defaultdict
 
 WHO = {"orchestrator": "orchestrator", "orders specialist": "orders", "catalogue specialist": "catalogue",
        "triage agent": "triage", "working alone": "agent"}
 rows = defaultdict(lambda: [0, 0, 0])
-for line in open("/var/log/labllm/requests.jsonl"):
+for line in open("requests.jsonl"):
     r = json.loads(line)
     who = next(name for key, name in WHO.items() if key in (r["request"].get("system") or ""))
     rows[who][0] += 1
@@ -159,20 +148,22 @@ PY
 
 Q="Did my order M-1043 ship yet? Also, can you suggest a science fiction book you have in stock?"
 block orchestrator
-fresh_log
+recorder
+say 'export ANTHROPIC_BASE_URL=http://127.0.0.1:11435'
 on "python multi.py \"$Q\""
 block orchestrator-cost
 on 'python tally.py'
 block single
-fresh_log
+on 'rm requests.jsonl'
 on "python multi.py \"$Q\" --single"
 on 'python tally.py'
 block handoff
-fresh_log
+on 'rm requests.jsonl'
 on 'python multi.py "My order M-1046 still has not shipped. What can I do?" --handoff'
 on 'python tally.py'
 block telephone
 on 'python multi.py "Are both of my orders, M-1043 and M-1048, on their way?"'
 block evidence
+on 'rm requests.jsonl'
 on 'python multi.py "Are both of my orders, M-1043 and M-1048, on their way?" --evidence'
-on "grep -h l06-tel-orch-2 /var/log/labllm/requests.jsonl | tail -n 1 | python -c 'import json, sys; r = json.loads(sys.stdin.read()); print(r[\"request\"][\"messages\"][-1][\"content\"][0][\"content\"])'"
+on "python -c 'import json; r = [json.loads(l)[\"request\"] for l in open(\"requests.jsonl\")]; o = [x for x in r if \"orchestrator\" in x[\"system\"]][-1]; [print(b[\"content\"]) for b in o[\"messages\"][-1][\"content\"]]'"
