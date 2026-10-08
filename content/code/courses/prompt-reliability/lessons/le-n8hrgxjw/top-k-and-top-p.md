@@ -1,86 +1,76 @@
 ---
 title: Top-k and top-p
-version: 1
+version: 2
 ---
 
 Temperature reshapes the whole distribution. **Top-k and top-p cut its tail off**, then share the
-probability that is left among the candidates that remain. Both act after temperature:
+probability that is left among the candidates that remain. In `next.py`, as in most samplers, both
+act after temperature:
 
 ```
-ana@lab:~/triage$ pl sample --top-k 3
-Your parcel is ___   temperature 1, top-k 3, top-p 1, 1000 draws
-  on         52.4%    570  #####################
-  delayed    31.8%    277  #############
-  here       15.8%    153  ######
-  lost        0.0%      0  
-  ready       0.0%      0  
-  wet         0.0%      0  
-  singing     0.0%      0  
-  purple      0.0%      0  
-ana@lab:~/triage$ pl sample --top-p 0.9
-Your parcel is ___   temperature 1, top-k off, top-p 0.9, 1000 draws
-  on         48.6%    523  ###################
-  delayed    29.5%    259  ############
-  here       14.6%    139  ######
-  lost        7.3%     79  ###
-  ready       0.0%      0  
-  wet         0.0%      0  
-  singing     0.0%      0  
-  purple      0.0%      0  
+ana@lab:~/triage$ python3 next.py prompts/v6-escaped.txt cases/dev.jsonl t22 --top-k 3
+t22, temperature 1, top-k 3, top-p 1, 1000 draws
+  'other'      -0.49   64.5%   626  ##########################
+  'billing'    -1.50   23.3%   241  #########
+  'account'    -2.15   12.2%   133  #####
+  ' billing'   -3.84    0.0%     0  
+  'delivery'   -5.18    0.0%     0  
+  ' Billing'   -5.81    0.0%     0  
+  'Billing'    -6.15    0.0%     0  
+  'shipping'   -6.30    0.0%     0  
+  'payment'    -6.65    0.0%     0  
+  'accounts'   -6.68    0.0%     0  
+ana@lab:~/triage$ python3 next.py prompts/v6-escaped.txt cases/dev.jsonl t22 --top-p 0.9
+t22, temperature 1, top-k off, top-p 0.9, 1000 draws
+  'other'      -0.49   64.5%   626  ##########################
+  'billing'    -1.50   23.3%   241  #########
+  'account'    -2.15   12.2%   133  #####
+  ' billing'   -3.84    0.0%     0  
+  'delivery'   -5.18    0.0%     0  
+  ' Billing'   -5.81    0.0%     0  
+  'Billing'    -6.15    0.0%     0  
+  'shipping'   -6.30    0.0%     0  
+  'payment'    -6.65    0.0%     0  
+  'accounts'   -6.68    0.0%     0  
 ```
 
-**Top-k keeps a fixed number of candidates**, here the three most probable. They had 86.1% of the
-probability between them, and each one's share is now divided by that: `on` goes from 45.1% to
-52.4%.
+**Top-k keeps a fixed number of candidates**, here the three most probable. They had 96.3% of the
+probability between them, and each one's share is now divided by that: `other` goes from 62.1% to
+64.5%, and the four tokens that would fail the label check get nothing.
 
 **Top-p keeps the smallest set of top candidates whose probabilities add up to at least p.** The
-first three add up to 86.1%, which is short of 90%, so `lost` joins them and the total reaches
-92.8%. Four words stay. Top-k is a count and top-p is a share. The difference shows when the distribution
-changes shape: k keeps three words whether the top one has 99% or 40%, while p keeps
-fewer words when one dominates and more when the probability is spread out.
+first three add up to 96.3%, which already reaches 90%, so top-p 0.9 keeps exactly the same three
+words here and the two tables are identical. Top-k is a count and top-p is a share, and the
+difference shows when the distribution changes shape: k keeps three words whether the top one has
+99% or 40%, while p keeps fewer words when one dominates and more when the probability is spread out.
 
 ## The order of the steps
 
-The lab's sampler applies them in a fixed order, and its source says so:
+`distribution()` applies them in a fixed order: softmax with the temperature first, then top-k, then
+top-p, then the survivors share the total. The order matters:
 
 ```
-ana@lab:~/triage$ sed -n '/^def distribution/,/return \[/p' promptlab/sample.py
-def distribution(scores, temperature=1.0, top_k=0, top_p=1.0):
-    """The probability of each candidate after temperature, then top-k, then
-    top-p. A candidate cut by k or p gets exactly zero."""
-    probs = softmax(scores, temperature)
-    order = sorted(range(len(probs)), key=lambda i: -probs[i])
-    keep = set(order[:top_k] if top_k else order)
-    if top_p < 1.0:
-        kept, acc = set(), 0.0
-        for i in order:
-            if i not in keep:
-                continue
-            kept.add(i)
-            acc += probs[i]
-            if acc >= top_p:
-                break
-        keep = kept
-    total = sum(probs[i] for i in keep)
-    return [probs[i] / total if i in keep else 0.0 for i in range(len(probs))]
-ana@lab:~/triage$ pl sample --temperature 1.5 --top-p 0.9
-Your parcel is ___   temperature 1.5, top-k off, top-p 0.9, 1000 draws
-  on         37.1%    405  ###############
-  delayed    26.6%    255  ###########
-  here       16.7%    140  #######
-  lost       10.5%    101  ####
-  ready       9.2%     99  ####
-  wet         0.0%      0  
-  singing     0.0%      0  
-  purple      0.0%      0  
+ana@lab:~/triage$ python3 next.py prompts/v6-escaped.txt cases/dev.jsonl t22 --temperature 1.5 --top-p 0.9
+t22, temperature 1.5, top-k off, top-p 0.9, 1000 draws
+  'other'      -0.49   51.4%   493  #####################
+  'billing'    -1.50   26.1%   259  ##########
+  'account'    -2.15   16.9%   186  #######
+  ' billing'   -3.84    5.5%    62  ##
+  'delivery'   -5.18    0.0%     0  
+  ' Billing'   -5.81    0.0%     0  
+  'Billing'    -6.15    0.0%     0  
+  'shipping'   -6.30    0.0%     0  
+  'payment'    -6.65    0.0%     0  
+  'accounts'   -6.68    0.0%     0  
 ```
 
-Softmax with the temperature first, then top-k, then top-p, then the survivors are renormalised. The
-order matters: at temperature 1.5 the distribution is flatter before top-p looks at it, so 0.9 now
-keeps five words where at temperature 1 it kept four. **A setting's effect depends on the settings
-applied before it.**
+At temperature 1.5 the distribution is flatter before top-p looks at it. The first three now add up
+to only 87.8%, short of 90%, so top-p keeps a fourth token, and the fourth is `' billing'`, the one
+with a space that fails the label check: 62 draws in a thousand. **A setting's effect depends on the
+settings applied before it.**
 
 Providers differ in which of these they expose and in the details of how they combine them.
-Anthropic's Messages API accepts `temperature`, `top_k` and `top_p`; OpenAI's Chat Completions API
-accepts `temperature` and `top_p` and has no `top_k`. Read the documentation of the one you call,
-and change one setting at a time, for the reason lesson 7 gave.
+Ollama's options include `temperature`, `top_k` and `top_p`. Anthropic's Messages API accepts
+`temperature`, `top_k` and `top_p`; OpenAI's Chat Completions API accepts `temperature` and `top_p`
+and has no `top_k`. Read the documentation of the one you call, and change one setting at a time,
+for the reason lesson 7 gave.
