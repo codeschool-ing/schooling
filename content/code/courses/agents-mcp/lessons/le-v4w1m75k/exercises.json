@@ -75,7 +75,7 @@
   },
   {
     "id": "ex-jm1gkzg3",
-    "version": 1,
+    "version": 2,
     "section": "a-written-plan",
     "type": "quiz",
     "difficulty": "medium",
@@ -98,15 +98,15 @@
         "why": "Right. Without a finish call the reply is an answer, a question back, or a model that gave up, and the host cannot tell which."
       },
       {
-        "text": "Because labllm cannot return text",
+        "text": "Because the stand-in cannot return text",
         "correct": false,
-        "why": "labllm returns text in many lessons."
+        "why": "standin.py returns text whenever its file says so."
       }
     ]
   },
   {
     "id": "ex-kk21k27k",
-    "version": 1,
+    "version": 2,
     "section": "a-written-plan",
     "type": "quiz",
     "difficulty": "medium",
@@ -124,9 +124,9 @@
         "why": "Right. It names what the answer rests on, so checking the claim needs no full read of the conversation."
       },
       {
-        "text": "To tell labllm which rule to apply next",
+        "text": "To tell the stand-in which reply to send next",
         "correct": false,
-        "why": "labllm chooses rules from the conversation, not from finish's arguments."
+        "why": "standin.py picks its reply by the phrase and the step, never from finish's arguments."
       },
       {
         "text": "To make the answer longer and more convincing for the customer to read",
@@ -163,30 +163,30 @@
   },
   {
     "id": "ex-pv10rg3w",
-    "version": 1,
+    "version": 2,
     "section": "four-budgets",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "The token run reported `1895 of 1500 used`. Why was the budget overrun?",
+    "prompt": "With a 2-second budget, the time run's first request took 119835 ms before the host stopped it. Why so late?",
     "choices": [
       {
-        "text": "Because the token counter in agent.py is wrong and counts some tokens twice",
+        "text": "Because the clock in agent.py starts only after the first reply",
         "correct": false,
-        "why": "The counter adds input and output per request; the totals are consistent."
+        "why": "started is set before the loop; the first check simply comes after the first request."
       },
       {
-        "text": "The check runs before each request, and a request's size is unknown until it returns",
+        "text": "The check runs before each request, and a request's length is unknown until it returns",
         "correct": true,
-        "why": "Right. Under 1500 before step 3, 1895 after it; the check before step 4 stopped the run."
+        "why": "Right. The first request ran for two minutes; the check before the second was the first chance to stop."
       },
       {
-        "text": "Because labllm ignores the budget the host set",
+        "text": "Because Ollama ignores the budget the host set",
         "correct": false,
-        "why": "labllm never sees the budget; it lives in the host."
+        "why": "Ollama never sees the budget; it lives in the host."
       },
       {
-        "text": "Because the model asked for more tokens",
+        "text": "Because the model asked for more time",
         "correct": false,
         "why": "The model has no say in the budget."
       }
@@ -194,12 +194,12 @@
   },
   {
     "id": "ex-znzyhmxs",
-    "version": 1,
+    "version": 2,
     "section": "four-budgets",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "How can a host stop a run before a request crosses the token budget, rather than after?",
+    "prompt": "How can a host keep one request from running far past a budget, rather than finding out after it returns?",
     "choices": [
       {
         "text": "By asking the model to keep its replies short",
@@ -212,14 +212,14 @@
         "why": "A request with no room to reply produces nothing useful."
       },
       {
-        "text": "By counting the next request's tokens first and refusing it if it would cross",
+        "text": "By bounding the request itself: a smaller max_tokens, or a timeout",
         "correct": true,
-        "why": "Right. Anthropic's API has a token-counting endpoint for this, and labllm implements it."
+        "why": "Right. A request that cannot write more than a few hundred tokens, or run past a deadline, cannot overrun by two minutes."
       },
       {
         "text": "By checking after each request",
         "correct": false,
-        "why": "That is what produced 1895 of 1500."
+        "why": "That is what agent.py does, and it found out 118 seconds late."
       }
     ]
   },
@@ -599,15 +599,15 @@
   },
   {
     "id": "ex-qw1as2te",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "In the time-budget run, the first request wrote 52 output tokens. Under labllm's rule of 200 ms plus 40 ms per output token, how many milliseconds should it have taken, at the least?",
-    "hint": "Multiply first, then add.",
-    "value": 2280,
-    "tolerance": 0,
+    "prompt": "In the time-budget run, the first request wrote 1024 output tokens in 119835 ms. To the nearest millisecond, about how many milliseconds did each output token take on average?",
+    "hint": "Divide the time by the tokens; the time includes reading the prompt, so this is an upper bound.",
+    "value": 117,
+    "tolerance": 1,
     "unit": "ms"
   }
 ]

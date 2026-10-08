@@ -61,8 +61,8 @@
         "why": "Certo. Sem a chamada de finish, a resposta é uma resposta, uma pergunta de volta ou um modelo que desistiu, e o hospedeiro não distingue."
       },
       {
-        "text": "Porque o labllm não devolve texto",
-        "why": "O labllm devolve texto em muitas aulas."
+        "text": "Porque o dublê não sabe devolver texto",
+        "why": "O standin.py devolve texto sempre que o arquivo dele manda."
       }
     ]
   },
@@ -78,8 +78,8 @@
         "why": "Certo. Ele nomeia em que a resposta se apoia, para conferir a afirmação sem ler a conversa inteira."
       },
       {
-        "text": "Para dizer ao labllm qual regra aplicar em seguida",
-        "why": "O labllm escolhe regras pela conversa, não pelos argumentos do finish."
+        "text": "Para dizer ao dublê que resposta mandar em seguida",
+        "why": "O standin.py escolhe a resposta pela frase e pelo passo, nunca pelos argumentos do finish."
       },
       {
         "text": "Para deixar a resposta mais longa e mais convincente para o cliente ler",
@@ -108,28 +108,28 @@
     ]
   },
   "ex-pv10rg3w": {
-    "prompt": "A execução com orçamento de tokens informou `1895 of 1500 used`. Por que o orçamento estourou?",
+    "prompt": "Com um orçamento de 2 segundos, o primeiro pedido da execução de tempo levou 119835 ms antes de o hospedeiro pará-la. Por que tão tarde?",
     "choices": [
       {
-        "text": "Porque o contador de tokens do agent.py está errado e conta alguns tokens duas vezes",
-        "why": "O contador soma entrada e saída por pedido; os totais são consistentes."
+        "text": "Porque o relógio do agent.py só começa depois da primeira resposta",
+        "why": "O started é marcado antes do laço; a primeira conferência simplesmente vem depois do primeiro pedido."
       },
       {
-        "text": "A conferência roda antes de cada pedido, e o tamanho de um pedido só se sabe quando ele volta",
-        "why": "Certo. Abaixo de 1500 antes do passo 3, 1895 depois; a conferência antes do passo 4 parou a execução."
+        "text": "A conferência roda antes de cada pedido, e a duração de um pedido só se sabe quando ele volta",
+        "why": "Certo. O primeiro pedido rodou por dois minutos; a conferência antes do segundo foi a primeira chance de parar."
       },
       {
-        "text": "Porque o labllm ignora o orçamento que o hospedeiro definiu",
-        "why": "O labllm nunca vê o orçamento; ele mora no hospedeiro."
+        "text": "Porque o Ollama ignora o orçamento que o hospedeiro definiu",
+        "why": "O Ollama nunca vê o orçamento; ele mora no hospedeiro."
       },
       {
-        "text": "Porque o modelo pediu mais tokens",
+        "text": "Porque o modelo pediu mais tempo",
         "why": "O modelo não tem voz no orçamento."
       }
     ]
   },
   "ex-znzyhmxs": {
-    "prompt": "Como um hospedeiro consegue parar uma execução antes que um pedido cruze o orçamento de tokens, e não depois?",
+    "prompt": "Como um hospedeiro impede que um pedido passe muito do orçamento, em vez de descobrir depois que ele volta?",
     "choices": [
       {
         "text": "Pedindo ao modelo que mantenha as respostas curtas",
@@ -140,12 +140,12 @@
         "why": "Um pedido sem espaço para responder não produz nada útil."
       },
       {
-        "text": "Contando primeiro os tokens do próximo pedido e recusando-o se ele for cruzar",
-        "why": "Certo. A API da Anthropic tem um endpoint de contagem de tokens para isso, e o labllm o implementa."
+        "text": "Limitando o próprio pedido: um max_tokens menor, ou um tempo máximo",
+        "why": "Certo. Um pedido que não pode escrever mais que algumas centenas de tokens, nem passar de um prazo, não estoura por dois minutos."
       },
       {
         "text": "Conferindo depois de cada pedido",
-        "why": "Foi isso que produziu 1895 de 1500."
+        "why": "É o que o agent.py faz, e ele descobriu 118 segundos tarde."
       }
     ]
   },
@@ -400,8 +400,8 @@
     ]
   },
   "ex-qw1as2te": {
-    "prompt": "Na execução com orçamento de tempo, o primeiro pedido escreveu 52 tokens de saída. Pela regra do labllm, 200 ms mais 40 ms por token de saída, quantos milissegundos ele deveria ter levado, no mínimo?",
-    "hint": "Multiplique primeiro, depois some.",
+    "prompt": "Na execução com orçamento de tempo, o primeiro pedido escreveu 1024 tokens de saída em 119835 ms. Arredondando, quantos milissegundos cada token de saída levou em média?",
+    "hint": "Divida o tempo pelos tokens; o tempo inclui a leitura do prompt, então isso é um limite superior.",
     "unit": "ms"
   }
 }

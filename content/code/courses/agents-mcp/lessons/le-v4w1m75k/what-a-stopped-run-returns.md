@@ -1,22 +1,50 @@
 ---
 title: What a stopped run hands over
-version: 1
+version: 2
 ---
 
 A run that stops without an answer still owes somebody one. The worst thing it can return is nothing, and the second worst is a confident answer built from half the work. `agent.py` returns a third thing: an honest account of how far it got, in a form a person can pick up.
 
-Look again at the end of the step-limit run in section 04. `reason` says which limit fired. `done` and `not_done` come from the plan. `handoff` is a sentence a support queue can show to the person who takes the case over. **The customer never sees a made-up answer**; they wait for a person, and the person starts from where the agent stopped.
+Section 04's runs stopped before any plan existed, so their handoff can only say *No plan was written*. Here is the stand-in from section 03, which plans, stopped by a step limit of 3:
+
+```
+ana@lab:~/agents$ python agent.py "I need a gift for my nephew, who loves adventure stories. And is my order M-1045 on its way?" --max-steps 3
+[1] plan
+      [ ] Look up order M-1045
+      [ ] Find adventure books in stock
+      [ ] Answer both questions
+[2] get_order({"order_id": "M-1045"}) -> {"id": "M-1045", "customer_id": "c-104", "placed_on": "2026-
+[3] plan
+      [x] Look up order M-1045
+      [ ] Find adventure books in stock
+      [ ] Answer both questions
+[3] find_books({"genre": "adventure"}) -> [{"id": "b31", "title": "Moby-Dick", "author": "Herman Melvi
+{
+ "status": "stopped",
+ "reason": "step limit: 3",
+ "done": [
+  "Look up order M-1045"
+ ],
+ "not_done": [
+  "Find adventure books in stock",
+  "Answer both questions"
+ ],
+ "handoff": "Passed to a person. Done: Look up order M-1045. Not done: Find adventure books in stock; Answer both questions."
+}
+```
+
+`reason` says which limit fired. `done` and `not_done` come from the plan. `handoff` is a sentence a support queue can show to the person who takes the case over. **The customer never sees a made-up answer**; they wait for a person, and the person starts from where the agent stopped.
 
 ## The plan lagged behind the work
 
-Read that outcome against the steps printed above it in section 04 and something is wrong. `not_done` lists *Find adventure books in stock*, yet step 3 called `find_books` and got two books back. The plan was written in the same reply as the search, before the search ran, so it still said `todo`.
+Read that outcome against the steps printed above it and something is wrong. `not_done` lists *Find adventure books in stock*, yet step 3 called `find_books` and got two books back. The plan was written in the same reply as the search, before the search ran, so it still said `todo`.
 
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 720 220\" role=\"img\" aria-label=\"The plan against the work in the run stopped at three steps. Step 1 wrote the plan. Step 2 looked up M-1045. Step 3, in one reply, marked the lookup done and called find_books, which returned two books. The run then stopped. The plan still says finding books is not done, because the model wrote the plan before the search ran.\"><defs></defs><text x=\"20\" y=\"24\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">step</text><text x=\"90\" y=\"24\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">what the plan said</text><text x=\"420\" y=\"24\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">what the tools returned</text><text x=\"28\" y=\"58\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">1</text><rect x=\"80\" y=\"40\" width=\"300\" height=\"36\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"92\" y=\"58\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">plan written, 3 steps to do</text><rect x=\"410\" y=\"40\" width=\"290\" height=\"36\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"422\" y=\"58\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">nothing yet</text><text x=\"28\" y=\"110\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">2</text><rect x=\"80\" y=\"92\" width=\"300\" height=\"36\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"92\" y=\"110\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">unchanged</text><rect x=\"410\" y=\"92\" width=\"290\" height=\"36\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"422\" y=\"110\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">M-1045: packed</text><text x=\"28\" y=\"162\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">3</text><rect x=\"80\" y=\"144\" width=\"300\" height=\"36\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"92\" y=\"162\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">lookup done; books: not done</text><rect x=\"410\" y=\"144\" width=\"290\" height=\"36\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"422\" y=\"162\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">two books in stock</text></svg>", "caption": "The plan is the model's account of the work. The tool results are the work."}
 ```
 
-This is the general shape of the problem, not a quirk of the script: **a plan is the model's account of the work, and it is always at least one step behind.** A handoff built only from the plan tells the person to redo work that is already done, or, worse, omits a result that matters. A better handoff includes the tool results the run collected, in a form a person can read, alongside the plan. `agent.py` does not, to keep it short; lesson 7's agent records every call and result in its trace, and its handoff points at that.
+The stand-in's replies were written to do this, and a model that plans does the same thing on its own whenever it updates the plan and acts in one reply: **a plan is the model's account of the work, and it is always at least one step behind.** A handoff built only from the plan tells the person to redo work that is already done, or, worse, omits a result that matters. A better handoff includes the tool results the run collected, in a form a person can read, alongside the plan. `agent.py` does not, to keep it short; lesson 7's agent records every call and result in its trace, and its handoff points at that.
 
 ## Partial answers
 
-A stopped run sometimes has enough for part of the request: here, the order's status was known after step 2. Whether to send that part is a product decision. Sending it is kinder to the customer; not sending it avoids the confusion of an answer that ignores half the question. Either way, it should be the host's decision, written in code, and not a model's improvisation under a limit it cannot see.
+A stopped run sometimes has enough for part of the request: here, the order's status was known after step 2, and in section 04's runs, which wrote no plan at all, both lookups had come back before the limit fired and the handoff still said nothing about them. Whether to send that part is a product decision. Sending it is kinder to the customer; not sending it avoids the confusion of an answer that ignores half the question. Either way, it should be the host's decision, written in code, and not a model's improvisation under a limit it cannot see.
