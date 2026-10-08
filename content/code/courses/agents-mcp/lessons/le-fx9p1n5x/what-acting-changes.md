@@ -1,6 +1,6 @@
 ---
 title: What changes when the program acts
-version: 1
+version: 2
 ---
 
 Handing the path to a model is not free, and the costs are easy to state now that `agent.py` has run.
@@ -17,4 +17,4 @@ Handing the path to a model is not free, and the costs are easy to state now tha
 
 ## Testing changes too
 
-A test that runs Bia's question once and compares the answer proves that one path works. In this lab that is exactly what it proves, because the stand-in model always answers the same way. **A real model can choose another path on the next run**, so an agent is tested over many inputs and many runs, against properties rather than exact strings: the answer cites the order's real date; no refund was issued; the run stopped within its limit. Lesson 7 writes such tests, and lesson 18 measures a success rate.
+A test that runs Bia's question once and compares the answer proves that one run went one way. Bia's question was asked twice in this lesson, once in section 05 and once through the recorder, and the two answers disagree: the first did not know the return window, the second said delivered orders cannot be returned at all. Both are wrong, in different words. **A model can choose another path, or the same path with another conclusion, on the next run**, so an agent is tested over many inputs and many runs, against properties rather than exact strings: the answer cites the order's real date; no refund was issued; the run stopped within its limit. Lesson 7 writes such tests, and lesson 18 measures a success rate.

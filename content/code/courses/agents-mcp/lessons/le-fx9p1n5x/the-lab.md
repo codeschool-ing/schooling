@@ -9,7 +9,7 @@ Everything this course runs, it runs on your computer: Python, a language model 
 
 | path | what it costs your computer | |
 |---|---|---|
-| **installed**, on the computer in front of you | about 5 GB of disk and 4 GB of free memory while a model answers | **recommended** |
+| **installed**, on the computer in front of you | about 6 GB of disk and 4 GB of free memory while a model answers | **recommended** |
 | in a virtual machine, Ubuntu Server 24.04 LTS | the same, plus the guest's own: give it 8 GB of memory, 4 processors and 30 GB of disk | when you would rather keep your own system clean |
 | online, a rented Linux machine with root | nothing locally; a machine with 8 GB of memory, billed by the hour | when your computer cannot run a model at all |
 
@@ -310,9 +310,34 @@ def refund(order_id, cents, reason, approved_by):
 Run the shop's program once, then check each piece. The `ollama run` line asks the model one question with nothing around it; `ollama ps` straight after shows what the model costs while it is loaded.
 
 ```
-@@CHECK@@
+ana@lab:~/agents$ python --version
+Python 3.12.3
+ana@lab:~/agents$ ollama --version
+ollama version is 0.40.0
+ana@lab:~/agents$ ollama list
+NAME                 ID              SIZE      MODIFIED       
+all-minilm:latest    1b226e2802db    45 MB     15 minutes ago    
+qwen2.5:3b           357c53fb659c    1.9 GB    15 minutes ago    
+llama3.2:1b          baf6a787fdff    1.3 GB    15 minutes ago    
+llama3.2:3b          a80c4f17acd5    2.0 GB    15 minutes ago    
+ana@lab:~/agents$ python make_shop.py
+8 orders, 17 books and 14 help articles in /home/ana/agents/data
+ana@lab:~/agents$ ls data
+books.jsonl
+help.jsonl
+shop.db
+ana@lab:~/agents$ python -c "import shop; print(shop.get_order(\"M-1042\"))"
+{'id': 'M-1042', 'customer_id': 'c-101', 'placed_on': '2026-09-20', 'status': 'delivered', 'delivered_on': '2026-09-24', 'shipping': 490, 'tracking': 'BR5512340002', 'lines': [{'book_id': 'b39', 'quantity': 1, 'cents': 2990}], 'total': 3480, 'refunded': 0}
+ana@lab:~/agents$ ollama run llama3.2:3b "Say hello in five words."
+Hello, how are you doing?
+ana@lab:~/agents$ ollama ps
+NAME                 ID              SIZE      PROCESSOR          CONTEXT    RUNNER      UNTIL              
+llama3.2:3b          a80c4f17acd5    3.5 GB    41%/59% CPU/GPU    8192       llamacpp    4 minutes from now    
+all-minilm:latest    1b226e2802db    48 MB     56%/44% CPU/GPU    256        llamacpp    4 minutes from now    
+ana@lab:~/agents$ du -sh .venv
+572M	.venv
 ```
 
-Read the sizes off your own screen rather than this one if your computer differs, but these are the numbers to plan for: `llama3.2:3b` is a 2.0 GB download and takes @@MEM@@ of memory while it answers, and the libraries take @@VENV@@. The model stays in memory for five minutes after its last answer and then leaves on its own. On a computer with less than 8 GB in total, use `llama3.2:1b` wherever a lesson says `llama3.2:3b`: it is 1.3 GB, and its mistakes are more frequent and of the same kinds.
+Read the sizes off your own screen rather than this one if your computer differs, but these are the numbers to plan for: `llama3.2:3b` is a 2.0 GB download and takes 3.5 GB of memory while it answers, and the libraries take 572 MB. The model stays in memory for five minutes after its last answer and then leaves on its own. On a computer with less than 8 GB in total, use `llama3.2:1b` wherever a lesson says `llama3.2:3b`: it is 1.3 GB, and its mistakes are more frequent and of the same kinds.
 
 **Every time you come back to the course**, open a terminal and type `cd ~/agents && . .venv/bin/activate`. Ollama keeps running as a service; the environment does not.

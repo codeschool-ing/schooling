@@ -1,9 +1,9 @@
 ---
 title: One customer message, three programs
-version: 1
+version: 2
 ---
 
-Bia, a customer of Marginalia, writes: *"Hi, I am Bia. My order M-1042 arrived on 24 September. Can I still send it back?"* Here are three programs answering that message in the lab, each doing the job the way its kind does it. **The model's words in this section were written by the course**, as section 07 explains; the programs, the data and the search are real.
+Bia, a customer of Marginalia, writes: *"Hi, I am Bia. My order M-1042 arrived on 24 September. Can I still send it back?"* Here are three programs answering that message on the machine section 03 built, each doing the job the way its kind does it. The model is `llama3.2:3b`, and its words below are what it said on the day this lesson was captured. **Yours will be worded differently**, and now and then it will take a different path; that is the nature of the thing, and the end of this section comes back to it.
 
 ## Automation
 
@@ -70,14 +70,23 @@ reply = client.messages.create(
 print(reply.content[0].text)
 ```
 
-One request. The program pastes all forty help-centre articles into the system prompt, sends Bia's message and prints what comes back:
+One request. The program pastes all fourteen help-centre articles into the system prompt, sends Bia's message and prints what comes back:
 
 ```
 ana@lab:~/agents$ python assistant.py "Hi, I am Bia. My order M-1042 arrived on 24 September. Can I still send it back?"
-Draft reply: Hi Bia, printed books can be returned within 30 days of delivery, free of charge: start the return from the order in your account, print the prepaid label and drop the parcel at any post office. If M-1042 arrived on 24 September, you have until 24 October. [For the support team: I cannot see orders. Check the delivery date before sending this.]
+Hi Bia,
+
+According to our help centre, you have 30 days from delivery to return a printed book. Since your order arrived on 24 September, that means you have until 24 October to return it.
+
+Please go to the order in your account and follow the instructions for returning the book. Print the prepaid label and drop the parcel at any post office. Returns are free.
+
+If you have any issues or concerns with the return process, feel free to reach out to us and we'll be happy to assist you.
+
+Best,
+[Your Support Team]
 ```
 
-The draft is good, and it is careful about the one thing it could not know. **It took the delivery date on Bia's word**, because it cannot see orders, and it says so to the person who will send it. That person is the check: they open the order, see `delivered_on` and decide. The model wrote; a human acts.
+The draft is good: thirty days from delivery, so until 24 October, and how to send the parcel. **It took the delivery date on Bia's word**, because it cannot see orders, and nothing in the draft says so. That is the job of the person who sends it: they open the order, see `delivered_on` and decide. The model wrote; a human acts.
 
 ## Agent
 
@@ -120,25 +129,31 @@ The draft is good, and it is careful about the one thing it could not know. **It
 ```
 ana@lab:~/agents$ python agent.py "Hi, I am Bia. My order M-1042 arrived on 24 September. Can I still send it back?"
 [1] get_order({"order_id": "M-1042"})
-[2] search_help({"query": "return a book"})
-[3] answer: Yes, Bia. Order M-1042 was delivered on 24 September 2026, and printed books can be returned within 30 days of delivery, so you have until 24 October. Start the return from the order in your account, print the prepaid label and drop the parcel at any post office. Returns are free.
+[2] answer: Hello Bia,
+
+According to the information provided, your order M-1042 was delivered on September 24, 2026. However, I don't have the exact date range during which returns are accepted.
+
+I recommend checking the website of the seller or the delivery company that brought your order to see if they have any specific return windows. If you're still unsure, you can also reach out to their customer service for assistance.
+
+Please note that even if you're able to return your order, it's always a good idea to contact the seller first to confirm their return policy and any potential restocking fees.
 ```
 
-Three requests to the model. In the first, it asked for the order; in the second, with `delivered` and the date in front of it, it asked for the returns article; in the third, it answered. **The date in the answer came from the database, not from Bia**, which is the difference from the assistant's draft.
+Two requests to the model. In the first, it asked for the order; in the second, with `delivered` and the date in front of it, it answered, and **the answer is wrong**. It says it does not know the return window and sends Bia to "the seller", when the window is thirty days and the help centre says so. It never searched the help centre. The date it quotes came from the database rather than from Bia, which is the one thing it did better than the assistant; everything after the date it made up.
+
+Section 07 shows why this model stopped after one tool, and it is not a lack of intelligence: by the second request, the model could no longer see the tools. Hold on to the shape of the failure for now. **An agent that acts on facts it never looked up is worse than an assistant whose draft a person reads**, because nobody reads the agent's answer before Bia does.
 
 Give the same program two other messages and it takes two other paths:
 
 ```
 ana@lab:~/agents$ python agent.py "My order M-1043 has not arrived yet. Where is it?"
 [1] get_order({"order_id": "M-1043"})
-[2] search_help({"query": "tracking a parcel"})
-[3] answer: Order M-1043 is on its way: it has shipped and has not been delivered yet. The carrier's tracking code is BR5512340003, and the tracking link in your shipping email updates at each step of the journey.
+[2] answer: Thank you for providing the order details. According to the tracking information, your order M-1043 was shipped on 2026-09-28, but it has not been delivered yet. The tracking number is BR5512340003. I recommend checking the tracking status periodically for updates on the delivery location and estimated arrival time. If you have any further concerns, please don't hesitate to contact us.
 ```
 
 ```
 ana@lab:~/agents$ python agent.py "Which ways can I pay?"
-[1] search_help({"query": "payment methods"})
-[2] answer: We accept Visa, Mastercard and American Express, PayPal, Pix and Marginalia gift cards. A card payment can be split into up to three instalments with no interest on orders over 120. We do not accept cash on delivery.
+[1] search_help({"query": "Payment methods"})
+[2] answer: We accept Visa, Mastercard, and American Express, PayPal, Pix, and Marginalia gift cards. If you have a gift card, enter the 16-digit code at checkout to use it towards your order. Please note that gift cards can be used to pay for part of an order and the rest can be paid with a card, with no interest on orders over $120. Gift cards are valid for two years from purchase and cannot be exchanged for cash. If you experience any issues with your payment being charged twice, please contact us with your order number and a bank statement to resolve the issue.
 ```
 
-**Nothing in `agent.py` mentions tracking, returns or payments.** For M-1043 the order came back `shipped`, and the next step became a search for tracking; for the payment question no order was involved, so there was no lookup at all, and two requests were enough. The path was decided at run time, by the model, one step after another, and neither of the other two programs could do that.
+**Nothing in `agent.py` mentions tracking, returns or payments.** For M-1043 the next step was the order, because the message named one; for the payment question no order was involved, so the step was a search, and the answer came from the article it found, with two slips of its own: a dollar sign the article does not have, and a sentence about double charges nobody asked about. The path was decided at run time, by the model, and neither of the other two programs could do that. Whether it decided well is the question the rest of this course keeps asking.

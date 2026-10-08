@@ -159,8 +159,12 @@ on 'ANTHROPIC_BASE_URL=http://127.0.0.1:11435 python agent.py "Hi, I am Bia. My 
 on "python -c 'import json; [print(n, r[\"usage\"][\"input_tokens\"], r[\"usage\"][\"cached_tokens\"], r[\"usage\"][\"output_tokens\"], r[\"ms\"]) for n, r in enumerate(map(json.loads, open(\"requests.jsonl\")), 1)]'"
 lab exec 'pkill -u ana -f "python recorder.py"' || true
 
+block template
+on 'ollama show llama3.2:3b --template | grep -n Tools'
+
 block failures
 on 'ANTHROPIC_BASE_URL=http://127.0.0.1:11435 python agent.py "Which ways can I pay?" 2>&1 | tail -n 1'
+on 'env -u ANTHROPIC_API_KEY -u ANTHROPIC_BASE_URL python agent.py "Which ways can I pay?" 2>&1 | tail -n 1'
 on 'python3.11 -c "import shop; print(shop.search_help(\"returns\"))" 2>&1 | tail -n 1'
 on_tty 'ollama run llama3.2:3x "Hello"'
 on 'ollama ps'

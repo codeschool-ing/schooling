@@ -1,6 +1,6 @@
 ---
 title: What an agent is made of
-version: 1
+version: 2
 ---
 
 Take `agent.py` apart and there are five pieces. Every agent in this course, and every agent SDK in lessons 8 to 10, is the same five pieces with more code around them.
@@ -17,7 +17,7 @@ Take `agent.py` apart and there are five pieces. Every agent in this course, and
 
 ## The model never acts
 
-The picture to get rid of is a model reaching into a database. In the run for Bia, `scripted-1` sent back a block that said, in effect, *"call get_order with order_id M-1042"*. `agent.py` read that block, looked `get_order` up in `RUN`, called `shop.get_order("M-1042")` on ana's machine and put the result in the conversation. **The model asked; the host acted.** Every permission an agent has is therefore a permission its host grants, which is why lesson 17 is about the host and not about the model.
+The picture to get rid of is a model reaching into a database. In the run for Bia, `llama3.2:3b` sent back a block that said, in effect, *"call get_order with order_id M-1042"*. `agent.py` read that block, looked `get_order` up in `RUN`, called `shop.get_order("M-1042")` on ana's machine and put the result in the conversation. **The model asked; the host acted.** Every permission an agent has is therefore a permission its host grants, which is why lesson 17 is about the host and not about the model.
 
 ## The conversation travels in full
 
@@ -94,7 +94,32 @@ ThreadingHTTPServer(("127.0.0.1", 11435), Recorder).serve_forever()
 Start it in the background, and run Bia's question again with `ANTHROPIC_BASE_URL` pointed at the recorder for that one command:
 
 ```
-@@REQ@@
+ana@lab:~/agents$ python recorder.py &
+ana@lab:~/agents$ ANTHROPIC_BASE_URL=http://127.0.0.1:11435 python agent.py "Hi, I am Bia. My order M-1042 arrived on 24 September. Can I still send it back?"
+[1] get_order({"order_id": "M-1042"})
+[2] answer: Hi Bia, 
+
+Unfortunately, since your order M-1042 was delivered on September 24th, you will not be able to return it. Our return policy typically applies to orders that have not been shipped or are still in the processing stage. 
+
+However, I recommend contacting our customer service team to see if there are any exceptions or alternatives we can offer. We're here to help and would like to ensure you're satisfied with your purchase.
+ana@lab:~/agents$ python -c 'import json; [print(n, r["usage"]["input_tokens"], r["usage"]["cached_tokens"], r["usage"]["output_tokens"], r["ms"]) for n, r in enumerate(map(json.loads, open("requests.jsonl")), 1)]'
+1 270 239 18 2451
+2 239 238 92 9552
 ```
 
-@@REQPROSE@@
+The columns are the request number, its input tokens, how many of those Ollama already had in its cache from an earlier request, the output tokens and the milliseconds it took. The second request carried everything the first did plus the model's call and the order it got back, so it should be the larger of the two. **It is smaller: 239 tokens against 270.** Something the program sent did not reach the model.
+
+The model never reads JSON. Ollama turns each request into one long text in the format the model was trained on, using a template that ships with the model, and the template decides what goes in:
+
+```
+ana@lab:~/agents$ ollama show llama3.2:3b --template | grep -n Tools
+7:{{- if .Tools }}When you receive a tool call response, use the output to format an answer to the orginal user question.
+14:{{- if and $.Tools $last }}
+20:{{ range $.Tools }}
+```
+
+Line 14 is the whole story. The tool descriptions are written into the conversation only **inside the last message, when that message is the user's**. In the first request it was Bia's, so the model saw both tools and asked for one. In the second, the last message was a tool result, so the tools were left out, and a model that cannot see a tool cannot ask for it. That is why Bia's agent made one call and then had to answer from what it had, and it will happen to every agent in this course that runs on `llama3.2:3b`: **one tool call per turn of the user's, and never two in a row.**
+
+Two lessons come out of it, and neither is about this model. A model only knows what the request carries after the provider has turned it into text, so "I sent the tools" and "the model saw the tools" are different claims, and only a measurement like the one above tells them apart. And the template is part of the model you chose: a paid API's model, or a bigger local one, takes several steps without blinking, and this one cannot. Where a lesson needs an agent to take several steps in a row to show a mechanism, it uses a stand-in model whose replies are written out in the lesson, and it says so where it does.
+
+Neither the assistant nor the agent is cheaper as a rule: the assistant carried the whole help centre in one request, and the agent carries a little more in each step. Lesson 18 measures when each wins, and it starts from this growth.
