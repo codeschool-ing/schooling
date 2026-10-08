@@ -22,7 +22,10 @@ def search_help(query: str) -> list[dict]:
 
 def refund(order_id: str, cents: int, reason: str) -> dict:
     """Refund part or all of an order to the customer's original payment, in cents."""
-    return shop.refund(order_id, cents, reason, approved_by="ana")
+    try:
+        return shop.refund(order_id, int(cents), reason, approved_by="ana")  # the hint is not a check: "0" arrives as a string
+    except ValueError as e:
+        return {"error": str(e)}  # the model reads why, and the run goes on
 ```
 
 ```schooling-example
