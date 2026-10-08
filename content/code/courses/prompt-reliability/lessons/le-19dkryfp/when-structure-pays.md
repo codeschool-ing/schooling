@@ -1,6 +1,6 @@
 ---
 title: When structure pays
-version: 1
+version: 2
 ---
 
 `prompt-engineering` introduced structured output in its lesson 18 and schemas in lesson 19. This
@@ -14,53 +14,59 @@ message, sorted by the bare prompt and by the one that asks for JSON:
 
 ```
 ana@lab:~/triage$ pl run prompts/v1-bare.txt cases/dev.jsonl --out runs/v1.jsonl
-40 calls, prompt a4ffc4b1, written to runs/v1.jsonl
+40 calls, prompt a4ffc4b1, llama3.2:3b, written to runs/v1.jsonl
 ana@lab:~/triage$ pl run prompts/v2-json.txt cases/dev.jsonl --out runs/v2.jsonl
-40 calls, prompt 9c365e2d, written to runs/v2.jsonl
+40 calls, prompt 9c365e2d, llama3.2:3b, written to runs/v2.jsonl
 ana@lab:~/triage$ pl show runs/v1.jsonl t17
-│ Type: Shipping
-│ Priority: urgent
-│ Summary: Their order was dispatched ten days ago and still hasn't arrived.
-stop: end, tokens in 45, out 22
+│ Here is the sorted customer message:
+│
+│ **Message:** My order was dispatched ten days ago and still hasn't arrived. I need it for a birthday on Saturday.
+│
+│ **Category:** Missing Order
+│
+│ **Urgency:** High
+│
+│ **Reason:** The customer is concerned about receiving their order in time for a birthday on Saturday, which suggests that the order is time-sensitive and requires prompt attention from the support team.
+stop: stop, tokens in 69, out 82, 9.3 s
 ana@lab:~/triage$ pl show runs/v2.jsonl t17
-│ {
-│   "category": "delivery",
-│   "urgency": "high",
-│   "summary": "Their order was dispatched ten days ago and still hasn't arrived."
-│ }
-stop: end, tokens in 87, out 38
+│ {"category": "delivery", "urgency": "high", "summary": "Order has not arrived ten days after dispatch and is needed for a birthday on Saturday"}
+stop: stop, tokens in 114, out 35, 4.3 s
 ```
 
-A person on the support team reads the first reply in a second and knows what to do. `Shipping`
-and `urgent` are not the shop's words, and a person does not care. A program routing the message to
-the warehouse queue cares about nothing else: it needs a field it can find by name and a value it
-can compare with `delivery`. **If a person reads the answer, the bare prompt was finished.** Lesson
-1 failed it on every check because the reader in this course is a program, and the checks are that
-program's needs written down.
+A person on the support team reads the first reply in a few seconds and knows what to do. *Missing
+Order* and *High* are not the shop's words, and a person does not care. A program routing the
+message to the warehouse queue cares about nothing else: it needs a field it can find by name and a
+value it can compare with `delivery`. **If a person reads the answer, the bare prompt was nearly
+finished.** Lesson 1 failed it on every check because the reader in this course is a program, and
+the checks are that program's needs written down.
 
-## What structure costs
+## What structure costs, and what it saves
 
-Asking for JSON is more instructions, and JSON is more output, because the quotes, braces and key
-names are tokens the model writes:
+Asking for JSON is more instructions, so the prompt is longer. The reply is a different matter:
 
 ```
-ana@lab:~/triage$ pl tokens prompts/v1-bare.txt
-27 tokens, 20 words, 114 characters
-ana@lab:~/triage$ pl tokens prompts/v2-json.txt
-69 tokens, 46 words, 295 characters
-ana@lab:~/triage$ pl latency runs/v1.jsonl
-calls 40
-p50 840 ms   p95 1015 ms   max 1072 ms
-output tokens: mean 22.7, max 36
-ana@lab:~/triage$ pl latency runs/v2.jsonl
-calls 40
-p50 1186 ms   p95 1397 ms   max 1468 ms
-output tokens: mean 39.9, max 50
+ana@lab:~/triage$ python3 stats.py runs/v1.jsonl runs/v2.jsonl
+runs/v1.jsonl, 40 calls
+  tokens in    mean   61.1   total   2446
+  tokens out   mean  107.5   total   4298   max 164
+  seconds      p50  12.7   p95  17.9   total  495.1
+runs/v2.jsonl, 40 calls
+  tokens in    mean  106.2   total   4246
+  tokens out   mean   30.6   total   1225   max 38
+  seconds      p50   3.7   p95   4.6   total  146.8
 ```
 
-The prompt went from 27 tokens to 69, and the mean reply from 22.7 tokens to 39.9. The median call
-took 1,186 ms instead of 840, in the lab's computed latencies, because written tokens are the slow
-ones. For a router that is a fair price. For a note a person reads, it is paid for nothing.
+The prompt went from 61.1 tokens a call to 106.2. **The reply went from 107.5 tokens to 30.6**, and
+the median call from 12.7 seconds to 3.7. The bare prompt left the shape of the answer open, and
+`llama3.2:3b` filled the space with a heading, the message copied back, bold labels and a paragraph
+of reasoning nobody asked for. Every one of those tokens is written one at a time, and on a
+processor written tokens are the slow ones.
+
+So the usual worry about structure, that braces and key names are tokens too, is real and small.
+The larger effect is the one in the other direction: **a format is a limit on what the model may
+write**, and a model given no limit spends it. That is worth knowing before blaming JSON for a
+slow pipeline, and it is a result about this model, on this task; lesson 6 measures the length of
+replies properly.
 
 ## What structure constrains
 
