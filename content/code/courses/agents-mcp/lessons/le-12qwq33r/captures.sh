@@ -129,7 +129,7 @@ for n, line in enumerate(open("requests.jsonl"), 1):
     for tool in q.get("tools", []):
         f = tool["function"]
         print(f"  tool {f['name']}:", json.dumps(f["parameters"]))
-    for m in q["messages"]:
+    for m in q.get("messages", []):   # LiteLLM's first request, /api/show, asks about the model and carries none
         print(f"  {m['role']}:", json.dumps(m.get("content") or m.get("tool_calls"), ensure_ascii=False)[:150])
 PY
 
@@ -152,7 +152,7 @@ LIMIT = 5000  # cents; above this a refund is refused in code and no person is a
 
 
 def limit_refunds(tool, args, tool_context):
-    if tool.name == "refund" and args["cents"] > LIMIT:
+    if tool.name == "refund" and int(args["cents"]) > LIMIT:   # the model's arguments, unvalidated: "7780" is a string
         return {"error": f"Refunds above {LIMIT} cents need a manager."}  # returned instead of running the tool
     return None                                                          # None: carry on
 
@@ -271,14 +271,14 @@ async def main():
 asyncio.run(main())
 PY
 
-SPECIALIST_SAW="python -c 'import json; r = [json.loads(l)[\"request\"] for l in open(\"requests.jsonl\")]; q = [x for x in r if \"orders specialist\" in x[\"messages\"][0][\"content\"]][0]; [print(m[\"role\"] + \":\", json.dumps(m.get(\"content\") or m.get(\"tool_calls\"), ensure_ascii=False)[:160]) for m in q[\"messages\"]]'"
+SPECIALIST_SAW="python -c 'import json; r = [x for x in (json.loads(l)[\"request\"] for l in open(\"requests.jsonl\")) if \"messages\" in x]; q = [x for x in r if \"orders specialist\" in x[\"messages\"][0][\"content\"]][0]; [print(m[\"role\"] + \":\", json.dumps(m.get(\"content\") or m.get(\"tool_calls\"), ensure_ascii=False)[:160]) for m in q[\"messages\"]]'"
 
 block deploy-help
 on 'adk deploy --help'
 
 block first-run
 recorder
-say 'export OLLAMA_API_BASE=http://127.0.0.1:11435'
+say 'export OLLAMA_API_BASE=http://127.0.0.1:11435 LITELLM_LOCAL_MODEL_COST_MAP=True'
 on 'python adk_run.py default "Where is my order M-1043?"'
 
 block first-wire
@@ -321,4 +321,4 @@ on "python -c 'from google.adk.agents import SequentialAgent; SequentialAgent(na
 block pipeline
 on 'rm -f requests.jsonl'
 on 'python adk_pipeline.py 2> /dev/null'
-on "python -c 'import json; [print(m[\"role\"] + \":\", json.dumps(m.get(\"content\"), ensure_ascii=False)[:200]) for l in open(\"requests.jsonl\") for m in json.loads(l)[\"request\"][\"messages\"]]'"
+on "python -c 'import json; [print(m[\"role\"] + \":\", json.dumps(m.get(\"content\"), ensure_ascii=False)[:200]) for l in open(\"requests.jsonl\") for m in json.loads(l)[\"request\"].get(\"messages\", [])]'"

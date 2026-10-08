@@ -16,7 +16,7 @@ for n, line in enumerate(open("requests.jsonl"), 1):
     for tool in q.get("tools", []):
         f = tool["function"]
         print(f"  tool {f['name']}:", json.dumps(f["parameters"]))
-    for m in q["messages"]:
+    for m in q.get("messages", []):   # LiteLLM's first request, /api/show, asks about the model and carries none
         print(f"  {m['role']}:", json.dumps(m.get("content") or m.get("tool_calls"), ensure_ascii=False)[:150])
 ```
 

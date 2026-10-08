@@ -24,7 +24,7 @@ LIMIT = 5000  # cents; above this a refund is refused in code and no person is a
 
 
 def limit_refunds(tool, args, tool_context):
-    if tool.name == "refund" and args["cents"] > LIMIT:
+    if tool.name == "refund" and int(args["cents"]) > LIMIT:   # the model's arguments, unvalidated: "7780" is a string
         return {"error": f"Refunds above {LIMIT} cents need a manager."}  # returned instead of running the tool
     return None                                                          # None: carry on
 
