@@ -1,6 +1,6 @@
 ---
 title: Errors compound
-version: 1
+version: 2
 ---
 
 An agent's run is a chain of decisions, and a chain is only as good as all of its links together. If each step is right with probability *p*, and the steps fail independently, a run of *n* steps is right throughout with probability *p* to the power *n*. Three lines of Python print the table:
@@ -26,6 +26,6 @@ A step that is right 95 times in 100 sounds reliable. **Ten such steps in a row 
 
 **Measure the whole run.** Per-step accuracy is easy to estimate and misleading; what a user experiences is the run. Lesson 18 measures success over many runs of the same task, which is the number this table says to watch.
 
-## Why the stand-in hides this, and why that is fine
+## The runs in this course already show it
 
-In this lab every run of the same question takes the same path, because the stand-in's replies are rules. A real model's per-step accuracy is below 1, and the table is what that does to a chain. The lab is built to show the code that limits the damage, which works the same whatever the accuracy is.
+Lesson 1 asked about M-1043 and the agent looked the order up. Section 05 asked the same question of the same program, and the agent searched the help centre for the order's id instead. Every agent run on Bia's question so far has answered it wrongly, and not always with the same mistake. Those are per-step accuracies below 1, seen from the outside, and an agent with twenty steps would meet them twenty times per run. The code that limits the damage, which the next lessons write, works the same whatever the accuracy is.
