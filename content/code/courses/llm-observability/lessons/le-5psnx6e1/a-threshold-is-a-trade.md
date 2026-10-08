@@ -11,28 +11,25 @@ question is fair: **at which threshold would it be a useful detector?**
 `sweep.py` scores the 36 replies the judge reads; the refusals are passed by rule, as lesson 10 decided. It counts, at six thresholds, how many it would flag and how many of those people failed:
 
 ```python
-"""sweep.py: judge-1's relevance score used to flag irrelevant replies, at six thresholds,
+"""sweep.py: the judge's relevance score used to flag the replies people failed, at several thresholds,
 against the agreed labels of lesson 10. A flag is a score below the threshold."""
 import json
 
-import checks
 import judge
 import telemetry
 
 telemetry.setup("judge-spans.jsonl", service="judge")
-agreed = {(r["case"], r["release"]): r["label"] for r in map(json.loads, open("data/labels.jsonl"))
-          if r["rubric"] == "relevance-v2" and r["rater"] == "agreed"}
+agreed = {(r["case"], r["release"]): r["relevance-v2"]["agreed"] for r in map(json.loads, open("data/labels.jsonl"))}
 scored = []
 for run in ("old", "new"):
     for r in map(json.loads, open(f"runs/{run}.jsonl")):
-        if checks.is_refusal(r["reply"]):
-            continue   # passed by rule, as in lesson 10
         score = judge.grade("relevance", r["question"], r["reply"], r["sources"])["score"]
         scored.append((score, agreed[r["id"], r["release"]] == "fail"))
 bad = sum(b for _, b in scored)
-print(f"{len(scored)} replies read by the judge, {bad} of them irrelevant by the agreed labels")
+print(f"{len(scored)} replies scored by the judge, {bad} of them failed by the agreed labels")
+print("scores given:", sorted(set(s for s, _ in scored)))
 print("threshold  flagged  caught  precision  recall")
-for t in (0.40, 0.55, 0.60, 0.65, 0.70, 0.75):
+for t in (0.1, 0.3, 0.5, 0.7, 0.9, 1.0):
     flagged = [b for s, b in scored if s < t]
     caught = sum(flagged)
     precision = f"{caught / len(flagged):9.0%}" if flagged else "        -"
