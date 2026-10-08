@@ -1,6 +1,6 @@
 ---
 title: Esquecer e apagar
-version: 1
+version: 2
 ---
 
 Cedo ou tarde um sistema tem de deixar de saber alguma coisa. Uma política é retirada. Um documento
@@ -18,22 +18,31 @@ lá. O `sections.py` lê uma variável de ambiente com os documentos a deixar de
 feita em memória:
 
 ```
-ana@lab:~/rag$ python sections.py "How much does the return label cost?"
-[1] 0.547  returns-policy-2025 > Return postage
+ana@vm:~/rag$ python sections.py "How much does the return label cost?"
+[1] 0.546  returns-policy-2025 > Return postage
 [2] 0.446  returns-policy > How to start a return
 [3] 0.407  warehouse-runbook > The label printer has stopped
-You do not pay for the label, whatever the reason for the return. [2] You can use our returns label, which costs 4.50 and is deducted from your refund, or send the parcel by any tracked service at your own cost. [1]
-ana@lab:~/rag$ WITHOUT=returns-policy-2025 python sections.py "How much does the return label cost?"
+According to [1], the return postage label costs 4.50 and is deducted from the refund.
+ana@vm:~/rag$ WITHOUT=returns-policy-2025 python sections.py "How much does the return label cost?"
 [1] 0.446  returns-policy > How to start a return
 [2] 0.407  warehouse-runbook > The label printer has stopped
 [3] 0.367  seller-agreement > 2. Fees
-You do not pay for the label, whatever the reason for the return. [1]
+Unfortunately, the provided sources do not mention the cost of the return label. However, based on general knowledge, it is common for return labels to be free for the customer, as stated in source [1].
+
+If you're looking for a specific answer, I couldn't find it in the provided sources. However, I can suggest that you contact the company's customer support or check their website for more information on return labels and their costs.
 ```
 
-**Com o regulamento de 2025 no índice, a resposta se contradiz**: grátis por `[2]`, 4.50 por `[1]`. Sem
-ele, a resposta é a regra atual e nada mais. A mudança valeu na pergunta seguinte e não precisou mudar
-modelo nenhum. Num banco de dados é um `DELETE` das linhas do documento, que a aula 5 prepara para que um
-comando remova todos os pedaços de um documento e nada mais.
+**Com o regulamento de 2025 no índice, a resposta é o preço de 2025**, 4,50 descontados do reembolso,
+citando `[1]`, por uma etiqueta que é grátis desde fevereiro. Sem ele, os 4,50 somem: nada que sobrou
+no índice diz isso, então nada pode ser citado. A mudança valeu na pergunta seguinte e não precisou
+mudar modelo nenhum. Num banco de dados é um `DELETE` das linhas do documento, que a aula 5 prepara para
+que um comando remova todos os pedaços de um documento e nada mais.
+
+A segunda resposta não é boa, e isso também vale notar. O *How to start a return* do regulamento atual
+diz que a etiqueta não custa nada, e o modelo primeiro diz que as fontes não falam do custo, depois que
+etiquetas costumam ser grátis "for the customer", citando `[1]` para isso, e fecha sugerindo que o
+cliente pergunte à empresa. Apagar o documento errado tirou a resposta errada; não fez o modelo ler bem
+o certo. Essa é a metade do trabalho que cabe à geração, e à aula 7.
 
 Essa exclusão também é **verificável**: depois dela, uma consulta pelo texto apagado não devolve nada, e
 um teste pode afirmar isso. A aula 14 escreve esse teste para documentos que um usuário não pode ver, e o

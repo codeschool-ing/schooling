@@ -1,6 +1,6 @@
 ---
 title: Traceability
-version: 1
+version: 2
 ---
 
 A support lead reads a reply the assistant sent a customer yesterday and needs to know one thing:
@@ -10,21 +10,24 @@ answer, and that difference matters more in practice than freshness or price.
 ## A citation is a pointer you can follow
 
 ```
-ana@lab:~/rag$ python sections.py "How long do I have to return a printed book?"
+ana@vm:~/rag$ python sections.py "How long do I have to return a printed book?"
 [1] 0.807  returns-policy-2025 > Returning a book
-[2] 0.798  returns-policy > The return window
+[2] 0.797  returns-policy > The return window
 [3] 0.765  returns-policy > Damaged, faulty and wrong items
-You may return a printed book within 14 days of delivery if it is unread and in the condition in which you received it. [1] You have 30 days from delivery to return a printed book in the condition you received it. [2] A printed book with a fault from the printer, such as pages bound upside down or missing, can be returned for a refund or a replacement within 30 days, like any other return. [3]
-ana@lab:~/rag$ grep -n "30 days from delivery" data/docs/returns-policy.md
+According to the provided sources, you have 30 days from delivery to return a printed book in the condition you received it.
+ana@vm:~/rag$ grep -n "30 days from delivery" data/docs/returns-policy.md
 21:You have 30 days from delivery to return a printed book in the condition you received it. The 30
 ```
 
-This phrasing of the question put the 2025 policy first, at 0.807, against 0.798 for the current one,
-and the reply leads with fourteen days. It is the same failure lesson 1 found. What is different here
-is how quickly it can be diagnosed: **the reply says `[1]`, the score line says `[1]` is
-`returns-policy-2025`, and the fix is visible in the same screen** — that document should not have
-been searchable for a customer's question. Following `[2]` to line 21 of the current policy confirms
-the right sentence exists and where.
+This phrasing of the question put the 2025 policy first, at 0.807, against 0.797 for the current one.
+The reply is right anyway, thirty days, and it cites nothing, although the system message asked it to
+cite by number. So a support lead reading it yesterday has the right answer and no way to know it was
+taken from the right source and not the wrong one; the next phrasing could take the fourteen days of
+`[1]` with the same confidence. What makes the diagnosis possible is the line above the reply: **the
+score line says `[1]` is `returns-policy-2025`, and the fix is visible on the same screen** — that
+document should not have been searchable for a customer's question. Following the sentence to line 21
+of the current policy confirms it exists and where. Lesson 7 makes the citation a requirement that is
+checked, rather than a request the model may ignore.
 
 Three things become possible because of that pointer:
 
