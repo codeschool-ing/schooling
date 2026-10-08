@@ -1,6 +1,6 @@
 ---
 title: The model behind one method
-version: 1
+version: 2
 ---
 
 The loop needs four things from a model call: the text, the tool calls, why it stopped and how many tokens it took. Everything else about the provider (the SDK, the request format, the response classes) is a detail the loop should not know. `minagent` puts it all behind one method.
@@ -30,11 +30,11 @@ The loop needs four things from a model call: the text, the tool calls, why it s
       "note": "**The only class that imports a provider's SDK.** An OpenAI or Gemini adapter would be another class with the same method."
     },
     {
-      "code": "    def __init__(self, model=\"scripted-1\", max_tokens=1024, max_retries=2):\n        import anthropic\n        self.client = anthropic.Anthropic(max_retries=max_retries)\n        self.model, self.max_tokens = model, max_tokens\n\n",
+      "code": "    def __init__(self, model=\"llama3.2:3b\", max_tokens=1024, max_retries=2):\n        import anthropic\n        self.client = anthropic.Anthropic(max_retries=max_retries)\n        self.model, self.max_tokens = model, max_tokens\n\n",
       "note": "**`max_retries` is passed straight to the SDK**; section 07 is about what that means."
     },
     {
-      "code": "    def complete(self, system, messages, tools):\n        r = self.client.messages.create(model=self.model, max_tokens=self.max_tokens, system=system,\n                                        tools=tools, messages=messages)\n        return Reply(text=\"\".join(b.text for b in r.content if b.type == \"text\"),\n                     calls=[Call(b.id, b.name, b.input) for b in r.content if b.type == \"tool_use\"],\n                     stop=r.stop_reason, tokens_in=r.usage.input_tokens, tokens_out=r.usage.output_tokens,\n                     content=[b.model_dump(exclude_none=True) for b in r.content])\n\n",
+      "code": "    def complete(self, system, messages, tools):\n        r = self.client.messages.create(model=self.model, max_tokens=self.max_tokens, system=system,\n                                        tools=tools, messages=messages)\n        return Reply(text=\"\".join(b.text for b in r.content if b.type == \"text\"),\n                     calls=[Call(b.id, b.name, b.input) for b in r.content if b.type == \"tool_use\"],\n                     stop=r.stop_reason, tokens_out=r.usage.output_tokens,\n                     tokens_in=r.usage.input_tokens + (r.usage.cache_read_input_tokens or 0),\n                     content=[b.model_dump(exclude_none=True) for b in r.content])\n\n",
       "note": "**One request, translated into a `Reply`.** Text blocks are joined, `tool_use` blocks become `Call`s."
     }
   ]
@@ -49,4 +49,4 @@ The loop needs four things from a model call: the text, the tool calls, why it s
 
 **Cost and routing.** A second adapter on a cheaper model, chosen per task, is how lesson 18 cuts cost without touching the loop.
 
-The seam is not perfectly clean: the conversation format inside `Agent.run` is Anthropic's (`tool_use` and `tool_result` blocks), so an OpenAI adapter would translate the conversation on the way in as well as the reply on the way out. labllm does exactly that translation for its three wires, and it is about forty lines; a production adapter would keep its own neutral message type instead. `minagent` keeps Anthropic's to stay short, and says so here.
+The seam is not perfectly clean: the conversation format inside `Agent.run` is Anthropic's (`tool_use` and `tool_result` blocks), so an OpenAI adapter would translate the conversation on the way in as well as the reply on the way out. Ollama does that translation inside itself, which is how one model answered three wires in lesson 4; a production adapter would keep its own neutral message type instead. `minagent` keeps Anthropic's to stay short, and says so here.

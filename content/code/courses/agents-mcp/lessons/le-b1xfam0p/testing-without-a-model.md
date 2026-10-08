@@ -1,6 +1,6 @@
 ---
 title: Tests that need no model
-version: 1
+version: 2
 ---
 
 An agent's behaviour depends on a model, but most of the code in `minagent` does not: validation, refusals, limits, the trace and the outcome are ordinary Python, and they can be tested like ordinary Python. The adapter seam from section 04 is what makes that possible: a test hands the agent a model that replies with exactly what the test wants.
@@ -66,10 +66,10 @@ test_minagent.py::test_a_repeated_call_is_refused_with_its_reason PASSED [ 57%]
 test_minagent.py::test_the_step_limit_stops_the_run_and_says_what_was_found PASSED [ 71%]
 test_minagent.py::test_a_write_without_confirmation_never_runs PASSED    [ 85%]
 test_minagent.py::test_three_steps_of_only_errors_stop_the_run PASSED    [100%]
-============================== 7 passed in 0.05s ===============================
+============================== 7 passed in 0.06s ===============================
 ```
 
-Seven tests, a twentieth of a second, no network and no labllm. **They test the host, which is the part this course says is yours**, and they fail the moment a change to the loop breaks a guard: drop the `writes` check, and `test_a_write_without_confirmation_never_runs` fails, naming the guarantee that was lost.
+Seven tests, a twentieth of a second, no network and no model. **They test the host, which is the part this course says is yours**, and they fail the moment a change to the loop breaks a guard: drop the `writes` check, and `test_a_write_without_confirmation_never_runs` fails, naming the guarantee that was lost.
 
 ## What these tests do not cover
 
