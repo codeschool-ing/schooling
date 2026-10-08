@@ -1,96 +1,246 @@
 ---
 title: Measuring it, honestly
-version: 1
+version: 2
 ---
 
-Both prompts, over all seventy cases, the forty of the development set and the thirty harder ones
-held out:
+Forty messages are a small sample for a change that is supposed to help with the hard cases, so
+this measurement uses thirty more: messages held back from everything so far, written to be harder,
+with the labels a person gave them. Save them as `cases/holdout.jsonl`:
 
 ```
+{"id": "h01", "message": "I returned the paperback but you refunded the wrong card.", "expect": {"category": "billing", "urgency": "normal"}}
+{"id": "h02", "message": "The delivery driver left my parcel with a neighbour I don't know. Can you find out who has it?", "expect": {"category": "delivery", "urgency": "normal"}}
+{"id": "h03", "message": "My account shows an order I never placed and my card has been charged for it.", "expect": {"category": "billing", "urgency": "high"}}
+{"id": "h04", "message": "I'd like to return the atlas, but the courier you use doesn't collect from my area.", "expect": {"category": "returns", "urgency": "normal"}}
+{"id": "h05", "message": "Can you send the invoice to my work email instead of my personal one?", "expect": {"category": "billing", "urgency": "low"}}
+{"id": "h06", "message": "The box arrived empty. The packing slip says three books.", "expect": {"category": "delivery", "urgency": "high"}}
+{"id": "h07", "message": "How do I update the card saved in my account?", "expect": {"category": "billing", "urgency": "low"}}
+{"id": "h08", "message": "I was sent a refund for the wrong amount after my return.", "expect": {"category": "returns", "urgency": "normal"}}
+{"id": "h09", "message": "Your password rules won't let me use a space. Is that deliberate?", "expect": {"category": "account", "urgency": "low"}}
+{"id": "h10", "message": "I placed an order as a guest. Can I attach it to my account now?", "expect": {"category": "account", "urgency": "low"}}
+{"id": "h11", "message": "The tracking page shows my full home address to anyone with the link. That worries me.", "expect": {"category": "account", "urgency": "high"}}
+{"id": "h12", "message": "I paid for gift wrapping and the book came unwrapped.", "expect": {"category": "billing", "urgency": "normal"}}
+{"id": "h13", "message": "The second volume in the set is the wrong edition. Everything else is fine.", "expect": {"category": "returns", "urgency": "normal"}}
+{"id": "h14", "message": "Is the price of the boxed set going down in the sale next week?", "expect": {"category": "other", "urgency": "low"}}
+{"id": "h15", "message": "I can't see my order history since the website changed.", "expect": {"category": "account", "urgency": "normal"}}
+{"id": "h16", "message": "My order arrived but one book was signed and the other wasn't, though both were listed as signed.", "expect": {"category": "returns", "urgency": "normal"}}
+{"id": "h17", "message": "The courier damaged my gate getting the parcel through.", "expect": {"category": "delivery", "urgency": "normal"}}
+{"id": "h18", "message": "I want a refund for my subscription box: the last two arrived damaged.", "expect": {"category": "returns", "urgency": "normal"}}
+{"id": "h19", "message": "Please stop sending me catalogues by post.", "expect": {"category": "account", "urgency": "low"}}
+{"id": "h20", "message": "Do you deliver to Portugal, and how much does it cost?", "expect": {"category": "delivery", "urgency": "low"}}
+{"id": "h21", "message": "I bought the wrong book by mistake. It hasn't been dispatched yet. Can you cancel it?", "expect": {"category": "delivery", "urgency": "normal"}}
+{"id": "h22", "message": "My payment failed three times and now the order has disappeared from my account.", "expect": {"category": "billing", "urgency": "high"}}
+{"id": "h23", "message": "The ebook download link says it has expired.", "expect": {"category": "returns", "urgency": "normal"}}
+{"id": "h24", "message": "A book I pre-ordered in March still hasn't been dispatched and the release date was last month.", "expect": {"category": "delivery", "urgency": "high"}}
+{"id": "h25", "message": "I've been charged in euros instead of pounds.", "expect": {"category": "billing", "urgency": "normal"}}
+{"id": "h26", "message": "Can I reserve a book in the shop and pay when I collect it?", "expect": {"category": "other", "urgency": "low"}}
+{"id": "h27", "message": "Someone used my gift card balance before I did.", "expect": {"category": "account", "urgency": "high"}}
+{"id": "h28", "message": "The reading group discount wasn't applied to my order.", "expect": {"category": "billing", "urgency": "normal"}}
+{"id": "h29", "message": "I sent the book back with the return label but the label had someone else's address.", "expect": {"category": "returns", "urgency": "normal"}}
+{"id": "h30", "message": "Thank you for sorting out the refund so quickly last week.", "expect": {"category": "other", "urgency": "low"}}
+```
+
+Join the two sets into one file, which later lessons use too, and run both prompts over all
+seventy:
+
+```
+ana@lab:~/triage$ cat cases/dev.jsonl cases/holdout.jsonl > cases/all.jsonl
 ana@lab:~/triage$ wc -l cases/all.jsonl
 70 cases/all.jsonl
 ana@lab:~/triage$ pl run prompts/v8-rules.txt cases/all.jsonl --out runs/rules.jsonl
-70 calls, prompt 65da61bb, written to runs/rules.jsonl
+70 calls, prompt 65da61bb, llama3.2:3b, written to runs/rules.jsonl
 ana@lab:~/triage$ pl run prompts/v8-guide.txt cases/all.jsonl --out runs/guide.jsonl
-70 calls, prompt d0591569, written to runs/guide.jsonl
+70 calls, prompt d0591569, llama3.2:3b, written to runs/guide.jsonl
 ana@lab:~/triage$ pl check runs/rules.jsonl
 check      pass  fail
-json         65     5
-fields       65     5
-labels       65     5
-category     54    16
-urgency      45    25
-all          45    25
+json         70     0
+fields       70     0
+labels       70     0
+category     52    18
+urgency      27    43
+all          27    43
 ana@lab:~/triage$ pl check runs/guide.jsonl
 check      pass  fail
-json         64     6
-fields       64     6
-labels       64     6
-category     53    17
-urgency      43    27
-all          43    27
+json         68     2
+fields       68     2
+labels       68     2
+category     54    16
+urgency      31    39
+all          31    39
+```
+
+The rules pass 27 and the guide 31. Before reading anything into four messages, compare them case by
+case:
+
+```
 ana@lab:~/triage$ pl compare runs/rules.jsonl runs/guide.jsonl
-runs/rules.jsonl         passes 45/70
-runs/guide.jsonl         passes 43/70
-fixed 3, broken 5, still passing 40, still failing 22
-broken: t05 t06 t21 t32 t36
-sign test on the 8 that changed: p = 0.727
+runs/rules.jsonl         passes 27/70
+runs/guide.jsonl         passes 31/70
+fixed 6, broken 2
+broken: t22 h24
+sign test on the 8 that changed: p = 0.289
+```
+
+Eight messages changed, six one way and two the other. A fair coin splits eight tosses at least
+that unevenly about three times in ten (p = 0.289). **That is not a difference this test set can
+detect.** The guide may be better; seventy messages cannot say so.
+
+## What the totals hide
+
+The two prompts are not the same prompt, though. Compare the categories, read without the
+verdicts, and eleven differ:
+
+```
 ana@lab:~/triage$ pl compare runs/rules.jsonl runs/guide.jsonl --answers
-70 cases, same answer 70, different answer 0
+70 cases, same answer 59, different answer 11
+  t22    billing -> other
+  t25    delivery -> account
+  t26    account -> returns
+  t35    account -> other
+  t38    delivery -> None
+  t39    delivery -> account
+  t40    account -> other
+  h19    delivery -> other
+  h24    delivery -> None
+  h26    account -> other
+  h28    billing -> returns
 ```
 
-The rules pass 45 and the guide 43. Eight messages changed, three one way and five the other, and
-the sign test says a split like that turns up about three times in four by chance (p = 0.727). The
-categories are identical on all seventy. **By every number here, the two prompts are the same
-prompt**, and the two-message gap is the wrapping habits, reshuffled onto different replies as lesson 2
-showed.
+And the urgency failures point in opposite directions. Under the rules, 15 messages came back with
+an urgency lower than the person's and 10 higher; under the guide, 8 lower and 15 higher. Count them
+in the two lists:
 
-```schooling-figure
-{"svg": "<svg viewBox=\"0 0 720 190\" role=\"img\" aria-label=\"Seventy messages, one square each, compared between the prompt with thirteen rules and the prompt that explains its categories. 40 pass under both and 22 fail under both, and those 62 say nothing about which prompt is better. 3 pass only under the explained prompt and 5 only under the rules. Only those 8 are evidence, and they split 3 to 5.\"><text x=\"20\" y=\"20\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">70 messages, rules against guide</text><rect x=\"20\" y=\"40\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"46\" y=\"40\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"72\" y=\"40\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"98\" y=\"40\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"124\" y=\"40\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"150\" y=\"40\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"176\" y=\"40\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"202\" y=\"40\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"228\" y=\"40\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"254\" y=\"40\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"280\" y=\"40\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"306\" y=\"40\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"332\" y=\"40\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"358\" y=\"40\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"20\" y=\"66\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"46\" y=\"66\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"72\" y=\"66\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"98\" y=\"66\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"124\" y=\"66\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"150\" y=\"66\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"176\" y=\"66\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"202\" y=\"66\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"228\" y=\"66\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"254\" y=\"66\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"280\" y=\"66\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"306\" y=\"66\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"332\" y=\"66\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"358\" y=\"66\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"20\" y=\"92\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"46\" y=\"92\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"72\" y=\"92\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"98\" y=\"92\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"124\" y=\"92\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"150\" y=\"92\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"176\" y=\"92\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"202\" y=\"92\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"228\" y=\"92\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"254\" y=\"92\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"280\" y=\"92\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"306\" y=\"92\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><rect x=\"332\" y=\"92\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><rect x=\"358\" y=\"92\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><rect x=\"20\" y=\"118\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><rect x=\"46\" y=\"118\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><rect x=\"72\" y=\"118\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><rect x=\"98\" y=\"118\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><rect x=\"124\" y=\"118\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><rect x=\"150\" y=\"118\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><rect x=\"176\" y=\"118\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><rect x=\"202\" y=\"118\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><rect x=\"228\" y=\"118\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><rect x=\"254\" y=\"118\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><rect x=\"280\" y=\"118\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><rect x=\"306\" y=\"118\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><rect x=\"332\" y=\"118\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><rect x=\"358\" y=\"118\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><rect x=\"20\" y=\"144\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><rect x=\"46\" y=\"144\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><rect x=\"72\" y=\"144\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><rect x=\"98\" y=\"144\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><rect x=\"124\" y=\"144\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><rect x=\"150\" y=\"144\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><rect x=\"176\" y=\"144\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor)\"></rect><rect x=\"202\" y=\"144\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor)\"></rect><rect x=\"228\" y=\"144\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--phosphor)\"></rect><rect x=\"254\" y=\"144\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--amber)\"></rect><rect x=\"280\" y=\"144\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--amber)\"></rect><rect x=\"306\" y=\"144\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--amber)\"></rect><rect x=\"332\" y=\"144\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--amber)\"></rect><rect x=\"358\" y=\"144\" width=\"22\" height=\"22\" rx=\"2\" fill=\"var(--amber)\"></rect><rect x=\"408\" y=\"46\" width=\"12\" height=\"12\" rx=\"2\" fill=\"var(--phosphor-dim)\"></rect><text x=\"428\" y=\"52\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">pass under both</text><rect x=\"408\" y=\"74\" width=\"12\" height=\"12\" rx=\"2\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"428\" y=\"80\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">fail under both</text><rect x=\"408\" y=\"102\" width=\"12\" height=\"12\" rx=\"2\" fill=\"var(--phosphor)\"></rect><text x=\"428\" y=\"108\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">pass only with the guide</text><rect x=\"408\" y=\"130\" width=\"12\" height=\"12\" rx=\"2\" fill=\"var(--amber)\"></rect><text x=\"428\" y=\"136\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">pass only with the rules</text><text x=\"408\" y=\"168\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">evidence: 8 of 70</text></svg>", "caption": "Sixty-two messages came out the same under both prompts and carry no evidence either way. The eight that changed split three to five, which a fair coin does about three times in four."}
+```
+ana@lab:~/triage$ pl check runs/rules.jsonl --failures
+check      pass  fail
+json         70     0
+fields       70     0
+labels       70     0
+category     52    18
+urgency      27    43
+all          27    43
+
+t02    urgency   low, expected normal
+t03    urgency   low, expected normal
+t04    urgency   low, expected high
+t07    urgency   low, expected normal
+t08    urgency   high, expected normal
+t09    urgency   high, expected normal
+t12    urgency   low, expected high
+t16    urgency   high, expected normal
+t18    urgency   low, expected normal
+t19    category  delivery, expected account
+t24    urgency   low, expected normal
+t25    category  delivery, expected account
+t26    category  account, expected billing
+t32    urgency   low, expected normal
+t33    urgency   low, expected normal
+t35    category  account, expected other
+t37    urgency   low, expected normal
+t38    category  delivery, expected returns
+t39    category  delivery, expected account
+t40    category  account, expected other
+h01    category  returns, expected billing
+h02    urgency   low, expected normal
+h04    urgency   low, expected normal
+h05    urgency   high, expected low
+h06    category  returns, expected delivery
+h07    category  account, expected billing
+h08    urgency   high, expected normal
+h11    category  delivery, expected account
+h12    category  returns, expected billing
+h13    urgency   low, expected normal
+h15    urgency   low, expected normal
+h16    urgency   low, expected normal
+h17    urgency   high, expected normal
+h18    urgency   high, expected normal
+h19    category  delivery, expected account
+h21    category  returns, expected delivery
+h23    category  delivery, expected returns
+h25    urgency   high, expected normal
+h26    category  account, expected other
+h27    category  billing, expected account
+h28    urgency   high, expected normal
+h29    urgency   high, expected normal
+h30    category  returns, expected other
+ana@lab:~/triage$ pl check runs/guide.jsonl --failures
+check      pass  fail
+json         68     2
+fields       68     2
+labels       68     2
+category     54    16
+urgency      31    39
+all          31    39
+
+t02    urgency   high, expected normal
+t03    urgency   low, expected normal
+t07    urgency   high, expected normal
+t08    urgency   high, expected normal
+t09    urgency   high, expected normal
+t16    urgency   high, expected normal
+t18    urgency   high, expected normal
+t19    category  delivery, expected account
+t22    category  other, expected billing
+t24    urgency   high, expected normal
+t25    urgency   low, expected normal
+t26    category  returns, expected billing
+t32    urgency   high, expected normal
+t33    urgency   low, expected normal
+t37    urgency   high, expected normal
+t38    json      not a JSON object
+t39    urgency   low, expected normal
+h01    category  returns, expected billing
+h02    urgency   high, expected normal
+h04    urgency   low, expected normal
+h06    category  returns, expected delivery
+h07    category  account, expected billing
+h08    urgency   high, expected normal
+h11    category  delivery, expected account
+h12    category  returns, expected billing
+h13    urgency   low, expected normal
+h15    urgency   low, expected normal
+h16    urgency   low, expected normal
+h17    urgency   high, expected normal
+h18    urgency   high, expected normal
+h19    category  other, expected account
+h21    category  returns, expected delivery
+h23    category  delivery, expected returns
+h24    json      not a JSON object
+h25    urgency   high, expected normal
+h27    category  billing, expected account
+h28    category  returns, expected billing
+h29    urgency   high, expected normal
+h30    category  returns, expected other
 ```
 
-## Why the stand-in cannot tell them apart
+Line 12 of the rules, *NEVER mark a question as high urgency*, pulls answers down: `t04`, somebody
+who cannot log in, and `t12`, a parcel marked delivered that never came, both went to `low` where a
+person said `high`. The guide's *a customer out of pocket ... is high however politely they ask*
+pulls them up: `t02`, `t07` and a run of others that a person called `normal` came back `high`.
+**Each prompt has a direction it leans in**, and the total of each is the sum of a different set of
+mistakes. Two prompts can score within four of each other and be wrong about different customers.
 
-That result says more about the stand-in than about explanations. **The stand-in does not read
-meaning.** It sorts by keywords, judges urgency from a short list of phrases, and takes from a prompt
-only a handful of words it scans for, such as the label lists, JSON, or an instruction to be brief
-or thorough. A reason is not among them. Neither, for that matter, are these rules:
+## The case two rules fought over
 
 ```
 ana@lab:~/triage$ pl show runs/rules.jsonl t22
-│ {
-│   "category": "billing",
-│   "urgency": "low",
-│   "summary": "Asks: can I pay with a gift card and a credit card on the same order?"
-│ }
-stop: end, tokens in 208, out 42
+│ {"category": "billing", "urgency": "low", "summary": "Inquiring about payment options for an order."}
+stop: stop, tokens in 233, out 28, 3.5 s
+ana@lab:~/triage$ pl show runs/guide.jsonl t22
+│ {"category": "other", "urgency": "low", "summary": "Customer wants to know if they can use a gift card and a credit card together on an order."}
+stop: stop, tokens in 287, out 39, 4.9 s
 ```
 
-`t22` came back low under the rules, which is right, and it is not because the stand-in weighed line
-12 against line 13. It answers low to messages that open with *Can I*, from a list of openings it treats as
-questions that can wait. The holdout has the messages
-the guide's urgency sentence was written for, and the stand-in misses them under both prompts:
-
-```
-ana@lab:~/triage$ grep h03 cases/all.jsonl
-{"id": "h03", "message": "My account shows an order I never placed and my card has been charged for it.", "expect": {"category": "billing", "urgency": "high"}}
-ana@lab:~/triage$ pl check runs/guide.jsonl --failures | grep -e h03 -e h22
-h03    urgency   normal, expected high
-h22    urgency   normal, expected high
-```
-
-Charged for an order never placed is a customer out of pocket, which the guide says is high. The
-stand-in has no phrase for it, so it said normal, under the guide as under the rules.
+`t22` came back right under the rules, `billing` and `low`, and wrong under the guide, which called
+it `other`. So on the very message the principle was written to settle, the rule list won. That is
+one message, and it is the kind of result to report rather than explain away: the argument for the
+guide made a prediction about `t22`, and on this model the prediction failed.
 
 ## What the measurement is for
 
-On a real model, this comparison is the experiment that answers the question: the same seventy
-cases, both prompts, compared message by message, with `h03` and `h22` among the messages to read
-first. **This course has no number for how it comes out**, and nobody has one for your model and
-your messages until they run it. A claim that explanations beat rules by some percentage, made
-without the run, is a claim about somebody else's model and somebody else's test set.
-
-What the lab can show is the discipline. A change you believe in measured as noise here, and the
-right report of that is *no difference detected on seventy cases*, not *the guide is better* and not
-*the guide does not work*. Lesson 11 is about building a test set big enough, and pointed enough, to
-detect the differences you care about.
+So the honest report of this section is **no difference detected on seventy cases**, with two notes
+attached: the prompts err in opposite directions on urgency, and the guide lost the case it was
+argued from. Not *the guide is better*, and not *the guide does not work*. A claim that explanations
+beat rules by some percentage, made without a run like this one, is a claim about somebody else's
+model and somebody else's test set, and on yours it is a hypothesis until you run it. Lesson 11 is
+about building a test set big enough, and pointed enough, to detect the differences you care about.

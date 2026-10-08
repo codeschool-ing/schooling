@@ -1,41 +1,44 @@
 ---
 title: A pile of rules
-version: 1
+version: 2
 ---
 
 A prompt in production collects rules the way lesson 2's prompt collected lines. A summary comes
 back with a name in it, so somebody adds *Do not put the customer's name in the summary*. An urgent
 refund is marked normal, so somebody adds a rule about money. **Each rule fixes the answer that
-prompted it**, and nobody reads the list again as a whole. Here is what thirteen of them look like:
+prompted it**, and nobody reads the list again as a whole. Here is what thirteen of them look like.
+Save it as `prompts/v8-rules.txt`:
 
 ```
-ana@lab:~/triage$ cat -n prompts/v8-rules.txt
-     1	You sort customer messages for Folio, an online bookshop.
-     2	
-     3	Answer with only a JSON object with three fields:
-     4	- "category": one of billing, delivery, returns, account, other
-     5	- "urgency": one of low, normal, high
-     6	- "summary": one sentence saying what the customer needs
-     7	
-     8	Rules:
-     9	- Keep the summary short.
-    10	- Do not use the category other unless you have to.
-    11	- Do not guess.
-    12	- NEVER mark a question as high urgency.
-    13	- ALWAYS mark a message about money as high urgency.
-    14	- Do not put the customer's name in the summary.
-    15	- Do not repeat the message word for word.
-    16	- Do not mention refunds unless the customer does.
-    17	- A refund is billing.
-    18	- A refund for a returned book is returns.
-    19	- Do not use the word "customer" in the summary.
-    20	- Include every detail the customer gives in the summary.
-    21	- Do not add fields.
-    22	
-    23	<message>
-    24	{{message|xml}}
-    25	</message>
+You sort customer messages for Folio, an online bookshop.
+
+Answer with only a JSON object with three fields:
+- "category": one of billing, delivery, returns, account, other
+- "urgency": one of low, normal, high
+- "summary": one sentence saying what the customer needs
+
+Rules:
+- Keep the summary short.
+- Do not use the category other unless you have to.
+- Do not guess.
+- NEVER mark a question as high urgency.
+- ALWAYS mark a message about money as high urgency.
+- Do not put the customer's name in the summary.
+- Do not repeat the message word for word.
+- Do not mention refunds unless the customer does.
+- A refund is billing.
+- A refund for a returned book is returns.
+- Do not use the word "customer" in the summary.
+- Include every detail the customer gives in the summary.
+- Do not add fields.
+
+<message>
+{{message|xml}}
+</message>
 ```
+
+`cat -n prompts/v8-rules.txt` prints it with its lines numbered, and the rest of this lesson
+refers to them by number.
 
 Read it as the model would, top to bottom, with a message in hand, and see how much of it helps you
 decide anything. Eight of the thirteen say only what not to do. Two are in capitals. Line 9 wants
@@ -43,12 +46,10 @@ the summary short and line 20 wants every detail in it. The linter from lesson 2
 that:
 
 ```
-ana@lab:~/triage$ pl lint prompts/v8-rules.txt
-prompts/v8-rules.txt:6: contradiction (length): lines 6,9 against lines 20
-prompts/v8-rules.txt:9: 13 separate rules; the reader keeps fewer
+ana@lab:~/triage$ python3 lint.py prompts/v8-rules.txt
+prompts/v8-rules.txt:9: 13 separate rules; a reader keeps fewer
 prompts/v8-rules.txt:10: 8 rules say only what not to do: lines 10,11,12,14,15,16,19,21
 prompts/v8-rules.txt:12: 2 lines shout: 12,13
-199 tokens
 ```
 
 ## What a "do not" leaves open
@@ -56,7 +57,8 @@ prompts/v8-rules.txt:12: 2 lines shout: 12,13
 A prohibition tells the reader one thing that is wrong, and nothing about what is right. *Do not use
 the category other unless you have to* says that `other` is suspect. It does not say when you have
 to, or which category to use instead. *Do not guess* forbids something every answer to an ambiguous
-message has to do. **Eight rules of that kind mark out what to avoid and leave the target unstated**, and the reader — model or person — fills the gap with whatever seems reasonable.
+message has to do. **Eight rules of that kind mark out what to avoid and leave the target
+unstated**, and the reader, model or person, fills the gap with whatever seems reasonable.
 
 ## The contradiction the linter did not see
 
@@ -64,7 +66,7 @@ Lines 12 and 13 are both rules about urgency, and the linter reported them only 
 a message they both apply to:
 
 ```
-ana@lab:~/triage$ grep t22 cases/all.jsonl
+ana@lab:~/triage$ grep t22 cases/dev.jsonl
 {"id": "t22", "message": "Can I pay with a gift card and a credit card on the same order?", "expect": {"category": "billing", "urgency": "low"}}
 ```
 

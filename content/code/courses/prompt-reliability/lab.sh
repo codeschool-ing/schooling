@@ -56,6 +56,14 @@ for lid in lessons:
             written[path] = "%s/%s" % (lid, s["slug"])
 if not written:
     sys.exit("lab.sh: lessons 1 to %d save no file" % upto)
+# The one file a lesson has the student MAKE rather than save: lesson 5,
+# measuring-it.md, joins the two test sets with this command, and every
+# lesson after it reads cases/all.jsonl.
+if upto >= 5:
+    with open(os.path.join(lab, "cases/all.jsonl"), "w", encoding="utf-8") as out:
+        for part in ("cases/dev.jsonl", "cases/holdout.jsonl"):
+            out.write(open(os.path.join(lab, part), encoding="utf-8").read())
+    written["cases/all.jsonl"] = "cat cases/dev.jsonl cases/holdout.jsonl > cases/all.jsonl"
 for path in sorted(written):
     print("%-28s from %s" % (path, written[path]), file=sys.stderr)
 PY
