@@ -1,6 +1,6 @@
 ---
 title: Custo por funcionalidade
-version: 1
+version: 2
 ---
 
 Uma conta com um número só diz quanto e nunca por quê. O primeiro corte que explica alguma coisa é por
@@ -39,25 +39,25 @@ print(f"{'total':18} {len(rows):8} {sum(r['input'] for r in rows):8} {sum(r['out
 ```
 
 ```
-ana@lab:~/obs$ python bill.py --by feature
+ana@dev:~/obs$ python bill.py --by feature
 feature            requests    input  output  cost US$  per 1k  share  features
-help                    926   205752   30907    0.5776    0.62  70.2%  help
-order                   295    66232    9514    0.1851    0.63  22.5%  order
-summary                 124     9088    6242    0.0602    0.49   7.3%  summary
-total                  1345   281072   46663    0.8228    0.61
+help                    207    36359    4192    0.0896    0.43  62.5%  help
+order                    68    13491    2262    0.0378    0.56  26.4%  order
+summary                  36     3390    1551    0.0160    0.44  11.1%  summary
+total                   311    53240    8005    0.1434    0.46
 ```
 
-A funcionalidade `help` é 70% do custo e 69% dos pedidos: nenhuma surpresa. As três funcionalidades
-custam mais ou menos o mesmo por pedido, entre 0,49 e 0,63 dólar por mil, o que também não é o que
-alguém teria adivinhado. Esperava-se que os resumos da equipe de atendimento fossem os caros, porque
-mandam uma conversa inteira, e eles são os mais baratos: as conversas desta semana têm quatro linhas e
-os resumos têm no máximo quarenta palavras. O palpite era sobre conversas em geral, a medição sobre
-estas.
+A funcionalidade `help` é 62% do custo e 67% dos pedidos: nenhuma surpresa. Por pedido, `order` é a
+mais cara, 0,56 dólar por mil contra 0,43 e 0,44, porque um cliente escrevendo sobre o próprio
+pedido escreve mais, e cada palavra dele vai para o prompt. Esperava-se que os resumos da equipe de
+atendimento fossem os caros, porque mandam uma conversa inteira, e eles custam mais ou menos o mesmo
+que uma pergunta de help: as conversas desta semana têm três ou quatro linhas e os resumos têm no
+máximo quarenta palavras. O palpite era sobre conversas em geral, a medição sobre estas.
 
-**Um custo por funcionalidade é o número com que se toma uma decisão de produto.** "O assistente custa
-0,82 por semana" não convida a nada. "Perguntas sobre pedido custam cada uma tanto quanto perguntas
-de ajuda e são recusadas duas vezes mais" convida a uma conversa sobre se a funcionalidade de pedidos
-deve existir nesta forma, que as próximas aulas vão ter.
+**Um custo por funcionalidade é o número com que se toma uma decisão de produto.** "O assistente
+custa 0,14 por semana" não convida a nada. "Perguntas sobre pedido custam um terço a mais cada uma
+que perguntas de ajuda" convida a uma conversa sobre se a funcionalidade de pedidos deve existir
+nesta forma, que as próximas aulas vão ter.
 
 ## Uma média esconde uma dispersão
 
@@ -82,20 +82,20 @@ for feature, c in by.items():
 ```
 
 ```
-ana@lab:~/obs$ python spread.py
+ana@dev:~/obs$ python spread.py
 feature  requests no model call   cost of one request in millionths of a dollar
                                      min median    p95    max
-help          926           175        0    610   1360   1400
-summary       124             0      382    510    594    594
-order         295            62        0    592   1249   1378
+summary        36             0      374    436    582    582
+order          68             8        1    563    940   1172
+help          207            38        0    428    939   1268
 ```
 
-**O mínimo é zero** em duas funcionalidades por causa das recusas que a aula 1 achou: quando nada
-passa do piso, o assistente responde sem chamar o modelo, e o pedido custa só o embedding, uma fração
-de milionésimo. 175 dos 926 pedidos de help e 62 dos 295 de order não custaram nada em tokens de
-modelo. Um resumo sempre chama o modelo, então o mínimo dele é 382.
+**O mínimo é zero, ou um,** em duas funcionalidades por causa das recusas que a aula 1 achou: quando
+nada passa do piso, o assistente responde sem chamar o modelo, e o pedido custa só o embedding, uma
+fração de milionésimo. 38 dos 207 pedidos de help e 8 dos 68 de order não custaram nada em tokens de
+modelo. Um resumo sempre chama o modelo, então o mínimo dele é 374.
 
-**O percentil 95 é mais que o dobro da mediana** em `help` e `order`, e não é a resposta que faz isso.
-Um pedido com três fontes no prompt paga por três trechos de texto; um pedido com uma paga por um. O
-custo de um pedido é definido principalmente por **quanto foi recuperado**, que é o `k` e o piso,
-configurações do `releases.json` que ninguém pensaria como decisão de custo.
+**O percentil 95 é o dobro da mediana** em `help`, e bem acima dela em `order`, e não é a resposta
+que faz isso. Um pedido com três fontes no prompt paga por três trechos de texto; um pedido com uma
+paga por um. O custo de um pedido é definido principalmente por **quanto foi recuperado**, que é o
+`k` e o piso, configurações do `releases.json` que ninguém pensaria como decisão de custo.

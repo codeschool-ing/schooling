@@ -1,6 +1,6 @@
 ---
 title: Three clocks on one call
-version: 1
+version: 2
 ---
 
 A web request has one latency: from the request to the response. A streamed model call has three,
@@ -17,7 +17,7 @@ from openai import OpenAI
 
 client = OpenAI()
 start = time.monotonic()
-stream = client.chat.completions.create(model="extract-1", stream=True, messages=[
+stream = client.chat.completions.create(model="llama3.2:3b", temperature=0, stream=True, messages=[
     {"role": "user", "content": "[1] gift-cards.md\nGift cards are valid for two years from purchase "
      "and cannot be exchanged for cash.\n\nQuestion: How long is a gift card valid?"}])
 last = None

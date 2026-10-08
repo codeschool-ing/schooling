@@ -1,6 +1,6 @@
 ---
 title: O que uma conta feita de traces deixa de fora
-version: 1
+version: 2
 ---
 
 O `bill.py` soma o que os spans registraram. A fatura do fornecedor soma o que o fornecedor cobrou. As
@@ -13,12 +13,12 @@ A correção não é mais cuidado; é **uma chave por serviço**, para que a pá
 fornecedor divida a conta do mesmo jeito que os traces, e uma chave com gasto e sem spans salte aos
 olhos.
 
-**Tentativas que falharam depois de o trabalho ter sido feito.** O labobs recusa um pedido que falha
-antes de fazer qualquer coisa, e uma recusa antes de qualquer trabalho em geral sai de graça num
-fornecedor real também. Uma resposta cortada no meio é outra história: os tokens já gerados foram
-produzidos, e um fornecedor pode cobrá-los. O assistente registra uma tentativa cortada como um span
-de erro com o número de pedaços recebidos (`app.partial_pieces`), mas o uso dela nunca chega, porque o
-último pedaço, que o carrega, foi justamente o que se perdeu. A aula 4 faz isso acontecer.
+**Tentativas que falharam depois de o trabalho ter sido feito.** Um fornecedor que recusa um pedido
+antes de fazer qualquer coisa em geral não cobra nada por isso. Uma resposta cortada no meio é outra
+história: os tokens já gerados foram produzidos, e um fornecedor pode cobrá-los. O assistente
+registra uma tentativa cortada como um span de erro com o número de pedaços recebidos
+(`app.partial_pieces`), mas o uso dela nunca chega, porque o último pedaço, que o carrega, foi
+justamente o que se perdeu. A aula 4 faz isso acontecer.
 
 **Avaliação.** As aulas 9 a 12 mandam respostas para um modelo juiz, e cada uma dessas chamadas é
 cobrada. Elas pertencem à mesma contabilidade, com o próprio nome de funcionalidade, para que "quanto

@@ -1,6 +1,6 @@
 ---
 title: Failures, and the retries that hide them
-version: 1
+version: 2
 ---
 
 A provider refuses requests. It is overloaded (503, or Anthropic's 529), it is rate limiting this key
@@ -8,23 +8,120 @@ A provider refuses requests. It is overloaded (503, or Anthropic's 529), it is r
 retries them, and why a failure to the provider is usually not a failure to the customer. The
 question for monitoring is whether anybody can still see it.
 
-labobs can be told to refuse a share of requests at random. With 30% refused:
+Ollama on your own computer does none of that unless something is badly wrong, and a lesson cannot
+wait for a provider's bad afternoon. So `flaky.py` stands between the assistant and Ollama and fails
+on purpose, when told to. It is a small proxy, written with nothing but Python's standard library:
+every request it receives it forwards to Ollama and hands back the answer, unless it has been told to
+refuse it or to cut its stream short. Save it in `~/obs`:
 
+```python
+"""flaky.py: a proxy in front of Ollama that fails on purpose, for lesson 4.
+
+    python flaky.py                      # listens on 127.0.0.1:11435, forwards to 127.0.0.1:11434
+    curl -s -X POST 127.0.0.1:11435/flaky -d '{"fail_rate": 0.3}'
+
+A real provider refuses requests and drops streams on days nobody chooses.
+This one does it when told to, so the assistant's retries can be watched.
+Only requests for a chat completion are touched; embeddings go straight through.
+POST /flaky sets any of: fail_rate (share of chat requests refused at random),
+fail (refuse the next N), status (what a refusal answers, 503 by default),
+cut_after (end the next stream after N pieces, without a finish), seed.
+Every request it forwards or refuses is one line in flaky.log.
+"""
+import json
+import random
+import urllib.error
+import urllib.request
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+UPSTREAM = "http://127.0.0.1:11434"
+config = {"fail_rate": 0.0, "fail": 0, "status": 503, "cut_after": None, "seed": 7}
+rng = random.Random(config["seed"])
+count = 0
+
+
+class Proxy(BaseHTTPRequestHandler):
+    def log_message(self, *args):
+        pass
+
+    def log(self, status):
+        with open("flaky.log", "a") as f:
+            f.write(json.dumps({"n": count, "path": self.path, "status": status}) + "\n")
+
+    def answer(self, status, body):
+        data = json.dumps(body).encode()
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(data)))
+        self.end_headers()
+        self.wfile.write(data)
+
+    def do_POST(self):
+        global count, rng
+        body = self.rfile.read(int(self.headers.get("Content-Length", 0)))
+        if self.path == "/flaky":
+            config.update(json.loads(body or b"{}"))
+            rng = random.Random(config["seed"])
+            return self.answer(200, config)
+        count += 1
+        chat = self.path.endswith("/chat/completions")
+        if chat and (config["fail"] > 0 or rng.random() < config["fail_rate"]):
+            config["fail"] = max(0, config["fail"] - 1)
+            self.log(config["status"])
+            return self.answer(config["status"], {"error": {
+                "message": "flaky.py refused this request on purpose", "type": "overloaded_error"}})
+        request = urllib.request.Request(UPSTREAM + self.path, body, {"Content-Type": "application/json"})
+        try:
+            upstream = urllib.request.urlopen(request)
+        except urllib.error.HTTPError as e:
+            self.log(e.code)
+            return self.answer(e.code, json.loads(e.read() or b"{}"))
+        self.log(upstream.status)
+        self.send_response(upstream.status)
+        self.send_header("Content-Type", upstream.headers["Content-Type"])
+        self.send_header("Connection", "close")
+        self.end_headers()
+        cut, pieces = config["cut_after"], 0
+        for line in upstream:
+            if cut is not None and line.startswith(b"data: {"):
+                pieces += 1
+                if pieces > cut:
+                    config["cut_after"] = None
+                    break
+            self.wfile.write(line)
+            self.wfile.flush()
+        self.close_connection = True
+
+
+ThreadingHTTPServer(("127.0.0.1", 11435), Proxy).serve_forever()
 ```
-ana@lab:~/obs$ curl -s -X POST http://127.0.0.1:8600/lab/config -d "{\"fail_rate\": 0.3}"; echo
-{"fail": 0, "status": 429, "seed": 7, "slow_rate": 0.01, "fail_rate": 0.3, "fail_status": 503, "cut_after": null}
-ana@lab:~/obs$ rm -f spans.jsonl; python ten.py
-4115d849  ok      You have 30 days from delivery to return a printed book in t
-6baa11fa  ok      Express delivery is not free at any order value. [1]
-6f924a7e  ok      We refund within three working days of the return reaching o
-959c4df5  ok      Express delivery is not free at any order value. [1]
-d91cac9c  ok      You can use the same account on up to six devices at a time.
-6436fc01  ok      A gift card is valid for two years from the day it was bough
-331a29ae  ok      Kindle readers cannot open our e-books, because Amazon's dev
-90c747d8  ok      I could not find that in our documents.
-3111c5fa  ok      A standard parcel whose tracking has not changed for 10 work
-9ff6b156  ok      I could not find that in our documents.
+
+Start it in a second terminal, with the environment active, and leave it running:
+
+```sh
+python flaky.py
 ```
+
+Back in the first terminal, point the SDK at it rather than at Ollama, and tell it to refuse three
+chat requests in ten, at random. `ten.py` then asks ten of the week's questions, one line each:
+
+```python
+"""ten.py: ten questions through the assistant, one line each."""
+import json
+
+import assistant
+import telemetry
+
+telemetry.setup()
+for q in [x["phrasings"][0] for x in json.load(open("data/topics.json"))[:10]]:
+    try:
+        reply, _, trace = assistant.ask(q)
+        print(f"{trace[:8]}  ok      {reply[:60]}")
+    except Exception as e:
+        print(f"{'':8}  FAILED  {type(e).__name__}: {e}")
+```
+
+CAPTURE:failures[0:15]
 
 Ten questions, ten answers. Nothing the customer saw failed. `errors.py` reads the spans:
 
@@ -99,8 +196,8 @@ import telemetry
 
 telemetry.setup()
 client = OpenAI(max_retries=2)
-with telemetry.span("chat extract-1", **{"gen_ai.request.model": "extract-1"}):
-    client.chat.completions.create(model="extract-1", messages=[{"role": "user", "content": "How long is a gift card valid?"}])
+with telemetry.span("chat llama3.2:3b", **{"gen_ai.request.model": "llama3.2:3b"}):
+    client.chat.completions.create(model="llama3.2:3b", messages=[{"role": "user", "content": "How long is a gift card valid?"}])
 ```
 
 ```

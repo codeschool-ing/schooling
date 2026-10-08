@@ -33,6 +33,10 @@
 #   sudo bash lab.sh STEP            one step of up, for lesson 1's capture:
 #                                    user, system, models, small, venv, project
 #   sudo bash lab.sh serve|unserve   start or stop Ollama's server
+#   sudo bash lab.sh week            ~/obs's spans.jsonl and feedback.jsonl as
+#                                    lesson 3's replay left them, replayed again
+#                                    if anything that decides them has changed
+#   sudo bash lab.sh keep-week       keep ~/obs's as that week (lesson 3)
 #   sudo bash lab.sh exec 'command'  as ana, in ~/obs with the environment
 #                                    active; IN_HOME=1 runs it in ~, BARE=1
 #                                    without the environment, as a new
@@ -111,6 +115,30 @@ build_project() {
   } | as_ana /home/ana
 }
 
+# The week lesson 3 replays, kept so that the lessons after it read the same
+# week rather than each replaying their own: 18 minutes on this machine, and
+# a replay is the same week only as far as the model repeats itself. The key
+# is everything that decides what the replay produces; a week kept under
+# another key is replayed again, never reused.
+WEEK=/var/lib/llmobs-week
+week_key() {
+  (cd /home/ana/obs && cat assistant.py telemetry.py redact.py replay.py releases.json \
+    data/traffic.jsonl data/index.json | sha256sum | cut -c1-16)
+}
+keep_week() {
+  install -d $WEEK
+  cp /home/ana/obs/spans.jsonl /home/ana/obs/feedback.jsonl $WEEK/
+  week_key > $WEEK/key
+}
+week() {
+  if [ -f $WEEK/key ] && [ "$(cat $WEEK/key)" = "$(week_key)" ]; then
+    install -o ana -g ana -m 0644 $WEEK/spans.jsonl $WEEK/feedback.jsonl /home/ana/obs/
+  else
+    exec_as 'rm -f spans.jsonl feedback.jsonl; python replay.py > /dev/null'
+    keep_week
+  fi
+}
+
 # The smaller model lesson 1 names for a weaker computer, pulled the way it says.
 pull_small() {
   serve
@@ -155,6 +183,8 @@ exec_as() {  # exec_as COMMAND: as ana, in ~/obs (or ~), with the environment un
 case ${1:-} in
   up) build_user; install_system; install_models; pull_small; build_venv; build_project ;;
   purge) purge ;;
+  week) week ;;
+  keep-week) keep_week ;;
   small) pull_small ;;
   reset) serve; build_project ;;
   user) build_user ;;

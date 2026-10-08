@@ -1,6 +1,6 @@
 ---
 title: Timeouts, and choosing one
-version: 1
+version: 2
 ---
 
 A retry helps with a refusal. It does not help with a request that never comes back. For that the
@@ -12,7 +12,7 @@ long for a customer waiting at a help box.
 answer:
 
 ```python
-"""timeout.py: one call with a two-second timeout, to a provider that is about to take four."""
+"""timeout.py: one call with a two-second timeout, to a model that has to be loaded first."""
 import time
 
 from openai import APITimeoutError, OpenAI
@@ -20,7 +20,7 @@ from openai import APITimeoutError, OpenAI
 client = OpenAI(timeout=2.0, max_retries=0)
 start = time.monotonic()
 try:
-    client.chat.completions.create(model="extract-1", messages=[{"role": "user", "content": "How long is a gift card valid?"}])
+    client.chat.completions.create(model="llama3.2:3b", messages=[{"role": "user", "content": "How long is a gift card valid?"}])
     print(f"answered after {time.monotonic() - start:.1f} s")
 except APITimeoutError as e:
     print(f"{type(e).__name__} after {time.monotonic() - start:.1f} s: {e}")
