@@ -1,27 +1,31 @@
 ---
 title: Por que avaliar uma amostra
-version: 1
+version: 2
 ---
 
-Uma regra não custa nada, então a aula 8 rodou-a em toda resposta. Um juiz é uma chamada de modelo por
+Uma regra não custa nada, então a aula 8 a rodou em toda resposta. Um juiz é uma chamada de modelo por
 resposta por critério, com a resposta, a pergunta e todas as fontes no prompt. Rodá-lo em tudo é
-possível, e esta aula faz isso uma vez, para ter a verdade contra a qual comparar as amostras:
+possível, e esta aula faz isso uma vez, para ter a semana inteira contra a qual comparar as amostras:
 
 ```
-ana@lab:~/obs$ python grade_sample.py uniform --share 1.0
-uniform: 1221 of 1221 replies graded for relevance
-  2026.09.4   604/789  pass  76.6%   95% between 73.5% and 79.4%
-  2026.10.1   269/432  pass  62.3%   95% between 57.6% and 66.7%
+ana@dev:~/obs$ python grade_sample.py uniform --share 1.0
+uniform: 275 of 275 replies graded for relevance in 25.6 min, 0 verdicts unreadable
+  2026.09.4    58/134  pass  43.3%   95% between 35.2% and 51.7%
+  2026.10.1    48/141  pass  34.0%   95% between 26.7% and 42.2%
 ```
 
-Na semana inteira, **o judge-1 aprovou 76,6% das respostas em relevância na versão antiga, e 62,3% na
-nova**. É o número que uma equipe quer, e os intervalos ao lado são estreitos porque quase oitocentas e
-quatrocentas respostas entraram neles.
+Na semana inteira, **o juiz aprovou 43,3% das respostas em relevância na versão antiga, e 34,0% na
+nova.** São números baixos, e parte do motivo é o juiz, não as respostas. Ele reprovou cada uma das 88
+recusas, inclusive as que respondem a perguntas que os documentos não respondem, em que a recusa é a
+resposta certa: a rubrica pergunta se uma resposta trata da pergunta, e não diz nada sobre o que uma
+recusa faz. E reprovou respostas claramente certas, como "shipping is free on orders over R$ 40" para a
+pergunta "when is shipping free". A aula 10 põe números em quanto se pode confiar neste juiz. Aqui a
+pergunta é quanto custa avaliar e quanto disso é preciso, e essas respostas não dependem de o juiz ser
+bom.
 
-Foram precisas 1.221 chamadas ao juiz para obtê-lo. A última seção desta aula põe preço nelas; a versão
-curta é que avaliar toda resposta num critério custa cerca de um quarto do que custou servi-la, e cada
-critério acrescenta outro quarto. Uma equipe que avalia tudo em três critérios quase dobra a conta do
-seu assistente.
+Levou **25,6 minutos** do processador desta máquina para avaliar 275 respostas num critério, uns cinco
+segundos e meio cada, uma de cada vez. A última seção põe preço nisso; a versão curta é que cada
+julgamento custou mais que a resposta que julgou.
 
 Então a pergunta passa a ser: **quão poucas respostas dá para avaliar e ainda ter um número que valha a
 pena?** Duas coisas decidem. Quais respostas são escolhidas decide se o número é **não enviesado**, uma

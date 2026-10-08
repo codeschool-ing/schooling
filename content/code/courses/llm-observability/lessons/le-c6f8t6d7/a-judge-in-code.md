@@ -121,6 +121,23 @@ for criterion in ("relevance", "faithfulness"):
     print(criterion, judge.grade(criterion, r["question"], r["reply"], r["sources"]))
 ```
 
-CAPTURE:one
+```
+ana@dev:~/obs$ python one.py
+Order [order] - I want to return it. Who pays for the return postage? Rafael Lima, [phone] -> According to [1], "Returns are free: we e-mail you a prepaid label, and you drop the parcel at any post office." This indicates that the customer pays for the return postage.
 
-PROSE:one
+I could not find any information in [2] that contradicts this statement, as it only mentions the right of withdrawal under Brazil's Consumer Protection Code, which does not specify who pays for return postage.
+relevance {'criterion': 'relevance', 'score': 0, 'verdict': 'fail', 'reason': 'The reply does not directly address the question of who pays for the return postage, but rather cites the general return policy and the right of withdrawal, which is not directly relevant to the question.'}
+faithfulness {'criterion': 'faithfulness', 'score': 0.5, 'verdict': 'fail', 'reason': 'The reply partially contradicts the statement, as it does not explicitly state that the customer pays for the return postage, but rather that the company emails a prepaid label.'}
+```
+
+The reply is the one lesson 8 found in the week: the customer asks who pays for the return postage,
+and the reply quotes the document saying returns are free and then concludes that the customer pays.
+**The judge fails it on both criteria, and both reasons are wrong.** For relevance it says the reply
+does not address who pays, when the reply does nothing else. For faithfulness it says the reply
+"does not explicitly state that the customer pays", when that is exactly what it states, falsely. The
+verdict is the right one for faithfulness and the reason would mislead whoever read it.
+
+And it is not even the same reason twice. Run `one.py` again and the faithfulness reason may come back
+in other words, at temperature 0, because the server batches and rounds differently from one call to
+the next; lesson 1 said the same of the assistant's replies. A judge's verdict is a measurement with
+an error of its own, and the rest of this lesson and the next treat it that way.
