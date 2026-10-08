@@ -198,15 +198,16 @@ for name in sys.argv[1:]:
 PY
 
 put names.py <<'PY'
-"""The tool names the host offered its model in the first request, or that it sent none."""
+"""The tool names the host offered its model, in the first request that offered any."""
 import json
+import os
 
-lines = open("requests.jsonl").readlines()
-if not lines:
-    print("offered: no request was sent")
+lines = open("requests.jsonl").readlines() if os.path.exists("requests.jsonl") else []
+offered = [r["request"]["tools"] for r in map(json.loads, lines) if r["request"].get("tools")]
+if not offered:
+    print("offered: no tools were sent" if lines else "offered: no request was sent")
 else:
-    tools = json.loads(lines[0])["request"].get("tools", [])
-    print("offered:", ", ".join(t.get("name") or t["function"]["name"] for t in tools))
+    print("offered:", ", ".join(t.get("name") or t["function"]["name"] for t in offered[0]))
 PY
 
 recorder
