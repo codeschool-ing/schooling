@@ -14,7 +14,7 @@ advice:
 
 The check in this lesson is a substring match, which suits identifiers and pinned sentences kept
 verbatim. A language model's summary paraphrases: "I want my money back" came back as "a refund", and
-"write to me by email only" may come back as "prefers email contact", so the check needs to be looser
+"write to me by email only" may come back as "prefers email contact". So the check needs to be looser
 where the fact allows it and strict where it does not. **Identifiers stay strict**: an order number either appears
 exactly or it is lost. Preferences and decisions can be checked by a short list of acceptable phrasings,
 or by a second model asked a yes-or-no question per essential, with lesson 8's caution about using a

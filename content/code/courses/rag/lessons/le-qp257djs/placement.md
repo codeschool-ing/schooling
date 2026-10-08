@@ -6,7 +6,7 @@ version: 2
 Once the sources are chosen, they still have to be written in some order, and so do the instructions
 and the question around them. Lesson 7's prompt wrote the sources best first, which is the order the
 search returned and the one nobody has to think about. Whether it is the best order is a property of
-the model, not of the pipeline, and **this course does not measure it**: with three sources, most
+the model, not of the pipeline, and **this course does not measure it**. With three sources, most
 of the time, there is hardly a middle for a source to be lost in, and thirty questions could not
 tell a small effect from chance.
 

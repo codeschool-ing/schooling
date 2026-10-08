@@ -107,8 +107,8 @@ To clarify, I would recommend checking the seller's policy, as mentioned in [3],
 **One sentence is quoted and the other four fail**, which is the reply the last section read by eye,
 now read by a program. The quote is the bank's five to ten days. The two conclusions the model drew,
 *at least 5-10 days* and *may be shorter*, cite nothing. The return window, cited to `[2]` in the
-middle of its sentence, scores 0.70 against the sentences of `[2]`, close to the line and under it: it
-is a fair account of the source with the model's *However, states that* in front, and the checker
+middle of its sentence, scores 0.70 against the sentences of `[2]`, close to the line and under it.
+It is a fair account of the source with the model's *However, states that* in front, and the checker
 cannot see past the words. The advice to check the seller's policy scores 0.73 against `[3]`, which
 says nothing of the kind.
 

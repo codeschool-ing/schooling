@@ -23,8 +23,8 @@ ana@vm:~/rag$ python -c "import answer; answer.FLOOR = 0.44; print(answer.answer
 According to [1] 4.1, instalments are offered by your card issuer under its own terms, but it does not specify the maximum amount for instalments. However, [2] 1 states that a card payment can be split into up to three instalments with no interest on orders over 120. Since [2] is updated more recently than [1], I prefer [2] as the more up-to-date source. Therefore, yes, you can pay in instalments, but the maximum amount is 120.
 ```
 
-**One more correct, 16 of 20, and both unanswerable questions still refused.** e14 changed: at 0.5 it
-was refused, and at 0.44 it was answered from the payments document, *a card payment can be split
+**One more correct, 16 of 20, and both unanswerable questions still refused.** At 0.5, e14 was
+refused. At 0.44 it was answered from the payments document, *a card payment can be split
 into up to three instalments with no interest on orders over 120*, after a sentence about card
 issuers from another source. And the phone question, now past the floor, reached the model, which refused
 it, following lesson 7's instruction.

@@ -28,7 +28,7 @@ The customer is Rafael Lima. The customer's order number is MG-31770254 and MG-2
 
 **The state says Rafael's order number is MG-31770254 and MG-20481937**, and the second one is
 Beatriz's. Nothing failed. The query returned rows, the sentence is well formed, and it goes into
-every prompt of Rafael's conversation as source [1]: the model quoted the state unasked in Beatriz's
+every prompt of Rafael's conversation as source [1]. The model quoted the state unasked in Beatriz's
 turn 10, and a reply that quoted this one would cite it, and lesson 7's check would pass it, because
 the state says exactly that. The only symptom is a customer reading a stranger's order number, and
 on a platform where that number opens a page with an address on it, that is a personal data breach.

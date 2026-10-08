@@ -42,7 +42,7 @@ the system message, left by an earlier request. Nothing was written to the cache
 says, `None`, because Ollama keeps its cache without being asked and charges nothing for it; the
 `cache_control` mark was accepted and changed nothing. With a provider that bills, a cache read costs
 a fraction of the normal input price and a cache write a premium, so the saving starts with the second
-request inside the cache's lifetime; check the provider's current price list and its minimum prefix
+request inside the cache's lifetime. Check the provider's current price list and its minimum prefix
 before relying on the ratio.
 
 Three conditions decide whether it applies:

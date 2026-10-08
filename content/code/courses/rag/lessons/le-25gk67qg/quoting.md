@@ -43,7 +43,7 @@ rather than guess. Both cite the terms of sale's section on changes to the terms
 the answer is.
 
 The program works when the reply quotes. It looks at the source text before the quoted sentence and
-takes the last clause number it finds there, and it works because the documents number their clauses
+takes the last clause number it finds there. That works because the documents number their clauses
 consistently; on documents that do not, the number has to be added to the chunk's metadata when the
 document is cut, the way lesson 5 adds the path. And a reply that paraphrases a clause, as this one
 did, has failed before any number is looked for.
