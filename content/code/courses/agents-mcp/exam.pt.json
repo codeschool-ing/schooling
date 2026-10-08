@@ -896,12 +896,12 @@
         "why": "O reembolso não rodou; a chamada foi recusada."
       },
       {
-        "text": "A conversa foi, onze vezes, para um modelo que o código nunca nomeou",
-        "why": "Certo. Cada pedido ao classificador levou a mensagem do cliente e os argumentos do reembolso."
+        "text": "A conversa foi mandada a um modelo que o código nunca nomeou",
+        "why": "Certo. O pedido do classificador levou a mensagem do cliente e os argumentos do reembolso, para o claude-sonnet-5."
       },
       {
         "text": "O CLI trocou em silêncio os pedidos do próprio agente para `claude-sonnet-5`",
-        "why": "Os dois pedidos do agente foram para o scripted-1; um pedido do classificador pediu claude-sonnet-5."
+        "why": "Os dois pedidos do agente foram para o qwen2.5:3b; o pedido do classificador pediu claude-sonnet-5."
       },
       {
         "text": "Esse modo grava reembolsos numa tabela que ninguém lê",
@@ -962,8 +962,8 @@
         "why": "Certo. Vinte delas eram do próprio Claude Code."
       },
       {
-        "text": "O primeiro pedido levou 13.531 tokens de entrada",
-        "why": "Certo. A maioria eram definições de ferramentas."
+        "text": "O modelo leu 4.098 tokens do primeiro pedido",
+        "why": "Certo. O Ollama cortou um prompt de 12.247 tokens para caber, e a pergunta se perdeu."
       },
       {
         "text": "Passar `system_prompt` tirou as ferramentas embutidas do Claude Code",
@@ -980,20 +980,20 @@
     ]
   },
   "ex-ewm9cbam": {
-    "prompt": "Na sessão retomada do Claude Agent SDK no curso, a estimativa de custo da segunda rodada foi 0,0106, mais que o dobro dos 0,0043 da primeira. Por quê?",
+    "prompt": "Na sessão retomada do Claude Agent SDK no curso, a estimativa de custo da segunda rodada foi 0,0046, mais que o triplo dos 0,0013 da primeira. Por quê?",
     "hint": "Aula 9.",
     "choices": [
       {
         "text": "Retomar abre uma sessão nova, que o CLI cobra a uma taxa mais alta",
-        "why": "Ela ficou na mesma sessão, 09b2f915 nos dois resultados."
+        "why": "Ela ficou na mesma sessão, 2ff7ac48 nos dois resultados."
       },
       {
-        "text": "Levou a primeira rodada e mais um resultado de busca",
-        "why": "Certo. O pedido retomado levou o histórico e um resultado do search_help."
+        "text": "Levou a primeira rodada junto",
+        "why": "Certo. O pedido retomado levou o histórico da primeira rodada."
       },
       {
-        "text": "O CLI reconheceu o `scripted-1` na segunda rodada e cobrou mais caro por ele",
-        "why": "O CLI não reconhece o scripted-1; ele chuta um preço."
+        "text": "O CLI reconheceu o `qwen2.5:3b` na segunda rodada e cobrou mais caro por ele",
+        "why": "O CLI não reconhece o nome; ele chuta um preço."
       },
       {
         "text": "O modelo escreveu uma resposta bem mais longa",
@@ -1650,13 +1650,13 @@
     ]
   },
   "ex-9hscee78": {
-    "prompt": "Uma primeira versão do ENV do mcp_host.py tinha só PATH e HOME, e o search_help falhou: o módulo dele acha o diretório do modelo de embeddings pela variável ___.",
+    "prompt": "O mcp_host.py inicia cada servidor com o comando python, que o processo do servidor procura no ___ que o ENV lhe dá, então essa lista põe o bin do ambiente virtual primeiro.",
     "hint": "Aula 15.",
     "blanks": [
       {
         "accept": [
-          "MINILM_DIR",
-          "$MINILM_DIR"
+          "PATH",
+          "$PATH"
         ]
       }
     ]
@@ -1881,34 +1881,34 @@
     ]
   },
   "ex-aqnzqbnj": {
-    "prompt": "O labllm guarda em cache um prefixo de prompt como um fornecedor faz: um prefixo marcado de 1.024 tokens ou mais é escrito uma vez e depois pode ser lido por quantos segundos?",
+    "prompt": "Na segunda execução da mesma pergunta, na aula de custo, quantos tokens do primeiro pedido o Ollama reaproveitou da execução anterior?",
     "hint": "Aula 18.",
-    "unit": "segundos"
+    "unit": "tokens"
   },
   "ex-69trt6eq": {
-    "prompt": "O cost_run.py scripted-1 --cache --stamp pôs a hora de cada pedido no topo do prompt de sistema. Quantos tokens essa execução escreveu no cache somando os três pedidos?",
+    "prompt": "O cost_run.py llama3.2:3b --cache --stamp pôs a hora de cada pedido no topo do prompt de sistema. Quantos tokens de entrada essa execução leu do zero somando os dois pedidos?",
     "hint": "Aula 18.",
     "unit": "tokens"
   },
   "ex-jkkdfeg4": {
-    "prompt": "No labllm, tokens de entrada não custam tempo: ele só os conta. O que a aula de custo diz que um fornecedor de verdade faz de diferente?",
+    "prompt": "O primeiro pedido da mesma pergunta levou 10.447 ms numa execução e 3.955 ms na seguinte. O que a aula de custo diz que fez a diferença?",
     "hint": "Aula 18.",
     "choices": [
       {
-        "text": "Cobra tokens de entrada só quando eles são lidos de volta do cache do fornecedor",
-        "why": "A entrada é cobrada pelo preço dela; o cache muda como ela é cobrada."
+        "text": "A resposta da segunda execução foi mais curta",
+        "why": "Os dois primeiros pedidos escreveram uma chamada de ferramenta de menos de 20 tokens."
       },
       {
-        "text": "Escreve a saída mais rápido conforme o prompt cresce",
+        "text": "O Ollama escreveu a saída mais rápido da segunda vez",
         "why": "A saída é produzida um token por vez de qualquer jeito."
       },
       {
-        "text": "Recusa prompts de mais de 1.024 tokens que não estão em cache",
-        "why": "1.024 é o mínimo do labllm para um prefixo guardável em cache, não um limite de prompt."
+        "text": "A segunda execução usou o modelo menor",
+        "why": "As duas execuções usaram o llama3.2:3b."
       },
       {
-        "text": "Gasta tempo lendo um prompt longo, então o primeiro token chega mais tarde",
-        "why": "Certo. Esse é um dos pontos em que o labllm é mais simples do que aquilo que representa."
+        "text": "Reaproveitou 847 tokens em vez de ler 994",
+        "why": "Certo. Ler um prompt longo é a maior parte da espera numa CPU."
       }
     ]
   },
@@ -1944,7 +1944,7 @@
     ]
   },
   "ex-257hqyb3": {
-    "prompt": "O scripted-mini do labllm escreve quatro vezes mais rápido que o scripted-1. Como a aula diz para decidir que tarefas um modelo menor consegue levar?",
+    "prompt": "O llama3.2:1b leu o mesmo prompt em cerca de metade do tempo do llama3.2:3b, e depois mandou uma chamada de ferramenta quebrada. Como a aula diz para decidir que tarefas um modelo menor consegue levar?",
     "hint": "Aula 18.",
     "choices": [
       {
