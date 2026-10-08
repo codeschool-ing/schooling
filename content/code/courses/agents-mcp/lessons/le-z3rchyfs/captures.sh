@@ -106,13 +106,15 @@ asyncio.run({"openai": openai_host, "claude": claude_host, "google": google_host
 PY
 
 put wire.py <<'PY'
-"""For the first request in the recorder's log: which API it went to, and get_order as the host described it."""
+"""For the first request in the recorder's log that offered tools: which API it went to, and get_order as the host described it."""
 import json
 import textwrap
 
 for line in open("requests.jsonl"):
     r = json.loads(line)
     tools = r["request"].get("tools", [])
+    if not tools:
+        continue   # LiteLLM's first request, /api/show, asks about the model and offers no tools
     for t in tools:
         print(r["path"])
         print(textwrap.fill(json.dumps(t, ensure_ascii=False), 100, initial_indent="  ", subsequent_indent="  "))
@@ -135,7 +137,7 @@ PY
 
 block one-server
 recorder
-say 'export ANTHROPIC_BASE_URL=http://127.0.0.1:11435 OPENAI_BASE_URL=http://127.0.0.1:11435/v1 OLLAMA_API_BASE=http://127.0.0.1:11435 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1'
+say 'export ANTHROPIC_BASE_URL=http://127.0.0.1:11435 OPENAI_BASE_URL=http://127.0.0.1:11435/v1 OLLAMA_API_BASE=http://127.0.0.1:11435 LITELLM_LOCAL_MODEL_COST_MAP=True CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1'
 for h in openai claude google; do
   on "python hosts.py $h 2> /dev/null"
 done

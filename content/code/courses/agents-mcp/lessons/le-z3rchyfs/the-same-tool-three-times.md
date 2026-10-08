@@ -8,13 +8,15 @@ Lessons 8, 9 and 10 gave three agents the same `get_order`. Each time it was wri
 `wire.py` reads the recorder's log from lesson 1 and prints the first request's tools, as the host wrote them:
 
 ```python
-"""For the first request in the recorder's log: which API it went to, and get_order as the host described it."""
+"""For the first request in the recorder's log that offered tools: which API it went to, and get_order as the host described it."""
 import json
 import textwrap
 
 for line in open("requests.jsonl"):
     r = json.loads(line)
     tools = r["request"].get("tools", [])
+    if not tools:
+        continue   # LiteLLM's first request, /api/show, asks about the model and offers no tools
     for t in tools:
         print(r["path"])
         print(textwrap.fill(json.dumps(t, ensure_ascii=False), 100, initial_indent="  ", subsequent_indent="  "))
