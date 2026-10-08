@@ -17,7 +17,7 @@ import json
 from collections import defaultdict
 
 from deepeval import evaluate
-from deepeval.evaluate.configs import AsyncConfig, DisplayConfig
+from deepeval.evaluate.configs import AsyncConfig, DisplayConfig, ErrorConfig
 from deepeval.metrics import BaseMetric, FaithfulnessMetric
 from deepeval.models import LocalModel
 from deepeval.test_case import LLMTestCase
@@ -84,16 +84,22 @@ for run in ("old", "new"):
                                  retrieval_context=[s["text"] for s in r["sources"]] or ["(nothing was retrieved)"],
                                  metadata={"facts": cases[r["id"]]["facts"], "release": r["release"]}))
 metrics = [JudgeRelevance(), FactCheck(), FaithfulnessMetric(model=model, async_mode=False)]
+# ignore_errors: a metric that fails on one case is recorded as an error, and the run goes on
 result = evaluate(tests, metrics, async_config=AsyncConfig(run_async=False),
-                  display_config=DisplayConfig(print_results=False, show_indicator=False))
-passed = defaultdict(int)
+                  display_config=DisplayConfig(print_results=False, show_indicator=False),
+                  error_config=ErrorConfig(ignore_errors=True))
+passed, errors = defaultdict(int), defaultdict(int)
 for t in result.test_results:
     for m in t.metrics_data:
+        if m.error:
+            errors[t.metadata["release"], m.name] += 1
+            continue
         passed[t.metadata["release"], m.name] += m.success
         if m.name == "Faithfulness" and not m.success:
             print(f"  faithfulness failed {t.name}: {t.actual_output[:60]}")
 for release in ("2026.09.4", "2026.10.1"):
     print(release, "  ".join(f"{name} {passed[release, name]}/24"
+                             + (f" ({errors[release, name]} errors)" if errors[release, name] else "")
                              for name in ("judge relevance", "fact check", "Faithfulness")))
 ```
 
