@@ -113,7 +113,7 @@ import telemetry
 import week
 
 telemetry.setup("judge-spans.jsonl", service="judge")
-r = next(r for r in week.replies() if r["question"] == "Who pays for the return postage?")
+r = next(r for r in week.replies() if "the customer pays" in r["reply"])   # the reply lesson 8 found
 print(r["question"], "->", r["reply"])
 for criterion in ("relevance", "faithfulness"):
     print(criterion, judge.grade(criterion, r["question"], r["reply"], r["sources"]))
