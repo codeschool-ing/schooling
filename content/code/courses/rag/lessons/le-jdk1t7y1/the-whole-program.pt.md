@@ -1,6 +1,6 @@
 ---
 title: O programa inteiro
-version: 1
+version: 2
 ---
 
 As aulas 4 a 8 construíram o pipeline em pedaços, cada um no seu módulo, cada um medido. Um serviço em
@@ -18,7 +18,7 @@ banco, a resposta é gerada pelo provedor, e há uma linha de registro para cada
       "note": "Duas bibliotecas fazem o trabalho: o SDK do provedor para os dois modelos, e o psycopg para o índice. Nenhum framework, nenhum módulo das aulas anteriores."
     },
     {
-      "code": "EMBED_MODEL, CHAT_MODEL = \"lab-minilm\", \"extract-1\"\nK, FLOOR = 3, 0.5\nREFUSAL = \"I could not find that in our documents.\"\nSYSTEM = \"\"\"You answer questions from Marginalia's customers, using only the numbered sources.\nCite every sentence with the number of the source it comes from, like [1].\nIf the sources do not answer the question, reply: \"I could not find that in our documents.\"\nIf two sources disagree, prefer the one updated most recently, and say so.\"\"\"\n\nclient = OpenAI(max_retries=3, timeout=20)\ndb = psycopg.connect(autocommit=True)\nregister_vector(db)",
+      "code": "EMBED_MODEL, CHAT_MODEL = \"all-minilm\", \"llama3.2:3b\"\nK, FLOOR = 3, 0.5\nREFUSAL = \"I could not find that in our documents.\"\nSYSTEM = \"\"\"You answer questions from Marginalia's customers, using only the numbered sources.\nCite every sentence with the number of the source it comes from, like [1].\nIf the sources do not answer the question, reply: \"I could not find that in our documents.\"\nIf two sources disagree, prefer the one updated most recently, and say so.\"\"\"\n\nclient = OpenAI(max_retries=3, timeout=20)\ndb = psycopg.connect(autocommit=True)\nregister_vector(db)",
       "note": "Toda decisão que as aulas anteriores mediram é uma constante no topo: os dois modelos, o k, o piso, a recusa e as instruções. O cliente é criado uma vez com um orçamento de tentativas e um tempo limite, porque os dois têm padrões que ninguém escolheu."
     },
     {
@@ -26,7 +26,7 @@ banco, a resposta é gerada pelo provedor, e há uma linha de registro para cada
       "note": "A pergunta vira embedding pelo provedor, pelo mesmo SDK, e o banco faz o resto: o filtro, a ordenação pela distância de cosseno, o limite. O piso é aplicado em Python, então uma pergunta sem nada acima dele recebe uma lista vazia."
     },
     {
-      "code": "def generate(question, sources):\n    numbered = \"\\n\\n\".join(f\"[{n}] {path} (updated {updated})\\n{text}\"\n                           for n, (_, path, text, updated, _) in enumerate(sources, 1))\n    reply = client.chat.completions.create(model=CHAT_MODEL, max_tokens=300, messages=[\n        {\"role\": \"system\", \"content\": SYSTEM},\n        {\"role\": \"user\", \"content\": f\"{numbered}\\n\\nQuestion: {question}\"}])\n    return reply.choices[0].message.content, reply.usage",
+      "code": "def generate(question, sources):\n    numbered = \"\\n\\n\".join(f\"[{n}] {path} (updated {updated})\\n{text}\"\n                           for n, (_, path, text, updated, _) in enumerate(sources, 1))\n    reply = client.chat.completions.create(model=CHAT_MODEL, max_tokens=300, temperature=0, messages=[\n        {\"role\": \"system\", \"content\": SYSTEM},\n        {\"role\": \"user\", \"content\": f\"{numbered}\\n\\nQuestion: {question}\"}])\n    return reply.choices[0].message.content, reply.usage",
       "note": "O prompt da aula 7, montado ali mesmo. O `max_tokens` limita a resposta, para uma resposta desembestada não custar mais que 300 tokens."
     },
     {
@@ -50,24 +50,31 @@ decisão para a qual alguém pode apontar uma medição.**
 ## Rodando
 
 ```
-ana@lab:~/rag$ python rag.py "How long after my return arrives will I get the refund?"
-We refund within three working days of the return reaching our warehouse. [1] Every seller must accept returns for at least 14 days from delivery, and many accept them for longer. [3] If a seller does not answer a return request within two working days, open a claim from the order and we decide it. [3]
+ana@vm:~/rag$ python rag.py "How long after my return arrives will I get the refund?"
+According to [1], the money goes back to the card or account you paid with, and your bank may take another five to ten days to show it. This means that the refund processing time is at least 5-10 days after the return reaches the warehouse.
+
+However, [2] states that the return window starts on the day the carrier records the parcel as delivered, not on the day you placed the order. This implies that the refund processing time may be shorter than 5-10 days, as it depends on when the carrier records the parcel as delivered.
+
+To clarify, I would recommend checking the seller's policy, as mentioned in [3], as they may have a different return window and refund processing time.
   [1] Returns and refunds policy > Refunds, updated 2026-02-02
+  [2] Returns and refunds policy > The return window, updated 2026-02-02
   [3] Returns and refunds policy > Items sold by marketplace sellers, updated 2026-02-02
-ana@lab:~/rag$ python rag.py "Can I place an order by phone?"
+ana@vm:~/rag$ python rag.py "Can I place an order by phone?"
 I could not find that in our documents.
 ```
 
-A mesma resposta do `answer.py` da aula 7, a primeira frase certa e duas fora do assunto sobre
-vendedores do marketplace, e a mesma recusa, decidida antes de o modelo ser chamado. A única diferença
-está por baixo: o vetor da pergunta agora vem do endpoint de embeddings do provedor em vez de uma cópia
-local do modelo, que é o que uma implantação real faz, e o que faz o programa inteiro depender de um SDK e
-de um driver de banco.
+A mesma resposta do `answer.py` da aula 7, palavra por palavra, com os mesmos defeitos: o prazo do banco
+citado, os três dias úteis deixados de fora, uma conclusão que nenhuma fonte tira, e duas fontes citadas
+que não têm nada a ver com um reembolso. E a mesma recusa, decidida antes de o modelo ser chamado. Por
+baixo também nada mudou, o mesmo modelo de embeddings e o mesmo gerador pelo mesmo endpoint. O que mudou
+foi a forma: um arquivo que depende de um SDK e de um driver de banco, e que qualquer pessoa lê de cima a
+baixo.
 
 ## O que ele não faz, de propósito
 
-**Nenhuma reordenação**, porque a aula 6 a mediu como empate com o reordenador que este laboratório
-consegue rodar.
+**Nenhuma reordenação**, porque a aula 6 mediu a que esta máquina consegue rodar, o próprio modelo dando
+nota a cada pedaço: uma posição ganha nas perguntas de clientes, todos os primeiros lugares perdidos nos
+identificadores, e vinte chamadas por pergunta.
 
 **Nenhuma busca híbrida**, porque estas perguntas são de clientes e a aula 6 mediu que a busca lexical só
 ajuda perguntas de identificador. Um assistente para desenvolvedores sobre a referência da API a
@@ -82,8 +89,8 @@ ele vira um sistema que ninguém consegue explicar e ninguém se atreve a mudar.
 
 ## Trocando o provedor
 
-A `OPENAI_BASE_URL`, a chave e os dois nomes de modelo são as únicas coisas que prendem o `rag.py` a este
-laboratório. Apontado para um provedor real, ele roda sem mudança: o modelo de embeddings tem de ser o
+A `OPENAI_BASE_URL`, a chave e os dois nomes de modelo são as únicas coisas que prendem o `rag.py` ao
+Ollama. Apontado para um provedor real, ele roda sem mudança: o modelo de embeddings tem de ser o
 que construiu o índice, e o modelo de chat pode ser qualquer um que o provedor ofereça. A maioria dos
 provedores e muitos servidores de código aberto falam esse mesmo formato Chat Completions, e por isso é o
 formato contra o qual escrever quando nada obriga a outro. A próxima seção usa um que é diferente de um

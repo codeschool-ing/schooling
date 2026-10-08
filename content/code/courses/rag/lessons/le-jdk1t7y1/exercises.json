@@ -1,13 +1,13 @@
 [
   {
     "id": "ex-d8cvcmrw",
-    "version": 1,
+    "version": 2,
     "section": "the-whole-program",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
     "prompt": "In rag.py, where does the question's vector come from?",
-    "hint": "Not a local copy of the model.",
+    "hint": "The same SDK, a different model.",
     "choices": [
       {
         "text": "The chat model's reply",
@@ -20,20 +20,20 @@
         "why": "pgvector stores and compares vectors; it embeds nothing."
       },
       {
-        "text": "A local MiniLM loaded by the program",
+        "text": "A copy of the index's vectors kept in the program",
         "correct": false,
-        "why": "That was search.py; rag.py asks the provider."
+        "why": "The question is new; its vector has to be made for it."
       },
       {
-        "text": "The provider's embedding endpoint",
+        "text": "Ollama's embedding endpoint, from all-minilm",
         "correct": true,
-        "why": "Right: the same SDK serves both models."
+        "why": "Right: the same SDK and the same server serve both models."
       }
     ]
   },
   {
     "id": "ex-gz4jyxch",
-    "version": 1,
+    "version": 2,
     "section": "the-whole-program",
     "type": "quiz",
     "difficulty": "medium",
@@ -52,9 +52,9 @@
         "why": "It already calls two."
       },
       {
-        "text": "The lab's reranker measured as a wash",
+        "text": "The reranker this machine can run lost every identifier",
         "correct": true,
-        "why": "Right: a step is added when a measurement asks for it."
+        "why": "Right: a step is added when a measurement asks for it, and this one asked against it."
       },
       {
         "text": "Reranking would break the citations",
@@ -97,65 +97,65 @@
   },
   {
     "id": "ex-wj1dpc2q",
-    "version": 1,
+    "version": 2,
     "section": "the-anthropic-sdk",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "What does a text block's citation carry in the Anthropic reply?",
-    "hint": "Read the printed line.",
+    "prompt": "What did Ollama answer when documents.py asked for document citations?",
+    "hint": "The first run.",
     "choices": [
       {
-        "text": "The document, its title and a character range",
+        "text": "A 400 error naming the citations field",
         "correct": true,
-        "why": "Right: char_location."
+        "why": "Right: its Messages API has no document citations, and it says so."
       },
       {
-        "text": "A confidence score",
+        "text": "A reply with character ranges",
         "correct": false,
-        "why": "No score is returned."
+        "why": "That is what Anthropic's own API returns; Ollama refused."
       },
       {
-        "text": "A number the reader looks up in the numbered prompt",
+        "text": "A reply with [n] numbers in the text",
         "correct": false,
-        "why": "That is the Chat Completions approach."
+        "why": "That was rag_claude.py, which sends numbered text."
       },
       {
-        "text": "The embedding of the cited sentence",
+        "text": "A reply that ignored the documents",
         "correct": false,
-        "why": "No vectors in citations."
+        "why": "That was the second run, without the citations field."
       }
     ]
   },
   {
     "id": "ex-rzrmdn54",
-    "version": 1,
+    "version": 2,
     "section": "the-anthropic-sdk",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why did the Anthropic request use 187 input tokens against 314 through rag.py?",
-    "hint": "Who asks for the citations?",
+    "prompt": "Without the citations field, the request with document blocks was accepted and read 42 tokens in all. What does that say?",
+    "hint": "How long are three sources?",
     "choices": [
       {
-        "text": "Anthropic counts tokens with a different encoding",
-        "correct": false,
-        "why": "labgen counts both the same way."
-      },
-      {
-        "text": "Streaming was used",
-        "correct": false,
-        "why": "Neither request streamed."
-      },
-      {
-        "text": "The API asks for citations itself",
+        "text": "Ollama dropped the document blocks without saying so",
         "correct": true,
-        "why": "Right: the instruction to cite by number is gone."
+        "why": "Right: 42 tokens is the system message and the question, and the reply knew nothing of Marginalia."
       },
       {
-        "text": "Fewer sources were retrieved",
+        "text": "The documents were cached and cost nothing",
         "correct": false,
-        "why": "The same retrieve() ran."
+        "why": "A cached token is still counted, as cache_read_input_tokens."
+      },
+      {
+        "text": "The model summarised the documents first",
+        "correct": false,
+        "why": "Input tokens count what was read; three sources are hundreds."
+      },
+      {
+        "text": "Anthropic's encoding is ten times denser",
+        "correct": false,
+        "why": "The same sources as plain text came to 336."
       }
     ]
   },
@@ -193,14 +193,14 @@
   },
   {
     "id": "ex-hms9r7sw",
-    "version": 1,
+    "version": 2,
     "section": "streaming",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
     "prompt": "In how many pieces did the streamed reply arrive?",
     "hint": "stream.py's last line.",
-    "value": 37,
+    "value": 41,
     "tolerance": 0,
     "unit": "pieces"
   },
@@ -290,65 +290,65 @@
   },
   {
     "id": "ex-z1wwknw8",
-    "version": 1,
+    "version": 2,
     "section": "errors-and-retries",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "With two refusals injected, why did rag.py still answer?",
-    "hint": "max_retries=3.",
+    "prompt": "fragile.py gives the client one second. What did the SDK do when the chat request took longer?",
+    "hint": "max_retries=2.",
     "choices": [
       {
-        "text": "The search ran without a vector",
+        "text": "Raised APITimeoutError at once",
         "correct": false,
-        "why": "No vector, no search."
+        "why": "It retried first: the log shows two retries."
       },
       {
-        "text": "rag.py caught the error and used a cached vector",
+        "text": "Waited for the reply however long it took",
         "correct": false,
-        "why": "There is no cache in rag.py."
+        "why": "The timeout is one second per attempt."
       },
       {
-        "text": "The SDK retried within its budget",
+        "text": "Retried twice with a growing wait, then raised APITimeoutError",
         "correct": true,
-        "why": "Right: refused twice, succeeded on the third attempt."
+        "why": "Right: three attempts in all, each starting the generation again."
       },
       {
-        "text": "labgen ignored the injected failures for chat",
+        "text": "Retried the embedding request instead",
         "correct": false,
-        "why": "The failures landed on the embedding call."
+        "why": "The embedding answered 200 OK within the second."
       }
     ]
   },
   {
     "id": "ex-dhtkkq1h",
-    "version": 1,
+    "version": 2,
     "section": "errors-and-retries",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "With five refusals and max_retries=2, why was the chat endpoint never called?",
-    "hint": "What failed first?",
+    "prompt": "Why is a timeout that is too short worse than a failure?",
+    "hint": "What does each retry start again?",
     "choices": [
       {
-        "text": "fragile.py only embeds",
+        "text": "It hides the error from the log",
         "correct": false,
-        "why": "It calls rag.ask, which does both."
+        "why": "OPENAI_LOG showed every retry."
       },
       {
-        "text": "labgen refuses chat requests during a rate limit",
-        "correct": false,
-        "why": "It never got that far."
-      },
-      {
-        "text": "The floor refused the question",
-        "correct": false,
-        "why": "There was no score to compare."
-      },
-      {
-        "text": "The embedding call gave up first",
+        "text": "Each retry starts the generation again, for an answer nobody receives",
         "correct": true,
-        "why": "Right: no vector, nothing to search with."
+        "why": "Right: three generations' worth of the machine, and the customer still waits."
+      },
+      {
+        "text": "The SDK disables retries after one timeout",
+        "correct": false,
+        "why": "It retried twice."
+      },
+      {
+        "text": "The floor refuses the question",
+        "correct": false,
+        "why": "The search succeeded; the floor was passed."
       }
     ]
   },
@@ -459,18 +459,18 @@
   },
   {
     "id": "ex-v947hjp5",
-    "version": 1,
+    "version": 2,
     "section": "the-token-budget",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "budget.py counted 358 tokens with all three sources, while the provider reports 314 prompt tokens for the same question through rag.py. What does the lesson conclude?",
+    "prompt": "budget.py counts with tiktoken's cl100k_base, and Ollama reports its own count, which includes the template it wraps around every message. What does the lesson conclude?",
     "hint": "Close enough for what?",
     "choices": [
       {
-        "text": "The provider overcharges",
+        "text": "Ollama overcounts",
         "correct": false,
-        "why": "The provider's count was lower."
+        "why": "It counts with llama3.2's own tokenizer, which is the count that fills the window."
       },
       {
         "text": "The local count is wrong and should not be used",
@@ -485,7 +485,7 @@
       {
         "text": "Budget with a margin, never to the last token",
         "correct": true,
-        "why": "Right: overheads differ between a local count and the provider's."
+        "why": "Right: a count by one tokenizer is an estimate of another's."
       }
     ]
   },
@@ -686,7 +686,7 @@
   },
   {
     "id": "ex-5dde3xks",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "multiple-choice",
     "difficulty": "hard",
@@ -695,9 +695,9 @@
     "hint": "Check each against a capture.",
     "choices": [
       {
-        "text": "Anthropic citations with character ranges",
+        "text": "Document blocks dropped without an error",
         "correct": true,
-        "why": "Yes: characters 0-62."
+        "why": "Yes: 42 tokens read, and a reply about gift cards in general."
       },
       {
         "text": "A budget of 250 keeping one source of three",
@@ -710,14 +710,14 @@
         "why": "No timing was quoted."
       },
       {
-        "text": "Two refused embedding requests absorbed by the SDK",
+        "text": "A chat request retried twice after a timeout",
         "correct": true,
-        "why": "Yes."
+        "why": "Yes: fragile.py's log."
       },
       {
-        "text": "A real Claude model writing its own sentences",
+        "text": "Anthropic citations with character ranges",
         "correct": false,
-        "why": "No: the replies are extract-1's."
+        "why": "No: Ollama refused the request, and Anthropic's own API was not run."
       }
     ]
   }
