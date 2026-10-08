@@ -1,6 +1,6 @@
 ---
 title: A metric of your own
-version: 1
+version: 2
 ---
 
 What a framework gives without a model is its **structure**: test cases, a runner, a report, a
@@ -8,7 +8,10 @@ cache, a pytest integration. A metric is any class that can say a score, a reaso
 passed, so the checks this course already has can run inside DeepEval as they are.
 
 `deepeval_run.py` writes two. `JudgeRelevance` is lesson 10's judge with its refusal rule.
-`FactCheck` is lesson 8's normalised fact check, reading the facts from the test case's metadata:
+`FactCheck` is lesson 8's normalised fact check, reading the facts from the test case's metadata. And
+beside them it runs one of DeepEval's own, faithfulness, with the local model as its judge, on all
+forty-eight replies. A refusal retrieved nothing, and faithfulness refuses an empty context, so those
+cases carry a placeholder saying so:
 
 ```python
 """deepeval_run.py: the forty-eight replies of lesson 10 as DeepEval test cases, under two metrics
@@ -108,23 +111,39 @@ DeepEval prints a banner, a warning and a summary of its own, with a few emoji t
 
 CAPTURE:deepeval
 
-The two lines at the bottom are the script's own counts, from the results DeepEval returns, and they agree with
-what this course measured without a framework: judge-1 passes every reply, as lesson 10 found, and the
-facts are in 19 and 16 replies of 30, as lesson 8 found. Wrapping a check in a framework adds no
-knowledge; it adds the machinery around the check.
+The `grep` keeps the script's own lines and drops DeepEval's banner and summary. Read the two counts at
+the bottom first, then the list above them.
 
-DeepEval's own summary says **35 passed and 25 failed**. A test case passes in DeepEval only when
-every metric on it passes, so the 25 are exactly the replies the fact check failed. That is a reasonable
-rule for a test and a poor one for a report, because it hides which metric failed; the per-metric counts
-are the report.
+**The checks this course wrote come through unchanged.** The fact check passes 22 and 18 replies of
+24, lesson 8's arithmetic inside DeepEval's runner. The judge's relevance passes 15 and 16, with the
+refusals decided by the answer key as lesson 10 did. Wrapping a check in a framework adds no knowledge;
+it adds the machinery around it.
+
+**DeepEval's faithfulness gave a number for twenty replies of forty-eight.** For the other 28 the
+local model's answer at one of its steps was not the JSON the metric asked for, and the metric stopped
+with DeepEval's own advice: *"Evaluation LLM outputted an invalid JSON. Please use a better evaluation
+model."* Without `ignore_errors` the first of those stops the whole run, which is what happened the
+first time this script ran. With it, each failure is an error on its case, counted beside the score.
+
+**And of the eleven replies it failed, one is unfaithful.** e02 under the new release, the reply that
+contradicts its source, is in the list, rightly. So are the return window, the price of express
+delivery, the delivery time, the free-delivery threshold, the invoice and the Kindle, each of which says
+what its source says, and a refusal, which says nothing at all. A metric that scores fewer than half the replies, and is wrong on ten of its eleven
+failures, is not measuring faithfulness with this judge, whatever its name. That is the advice in the
+error message, and lesson 10's method would have said the same before the number reached a report.
+
+One more thing the list shows: e12 under the new release is not the refusal it was in lesson 10. The
+runs were made again for this capture, and this time the model answered the Kindle question. Replies
+move from one run to the next, at temperature 0, which is why every lesson that grades replies keeps
+the run it graded.
 
 ## What the machinery is worth
 
 - **One shape for every check.** The judge, the facts and a framework metric take the same test case
   and return the same score, reason and success, so adding a metric is one line in a list.
-- **A runner.** `evaluate()` ran 60 cases and two metrics, and with `run_async=True` it would have run
-  them concurrently. Here it runs one at a time, so the order of calls to judge-1 is the same on every
-  run.
+- **A runner.** `evaluate()` ran 48 cases and three metrics, recording an error per case instead of
+  stopping when asked to. With `run_async=True` it would run them concurrently; here it runs one at a
+  time, because the judge shares one processor with everything else.
 - **A record.** The `.deepeval` folder holds the last run in full.
 
 CAPTURE:ls
