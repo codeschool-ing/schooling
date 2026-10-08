@@ -45,28 +45,30 @@ sources from the chunk ids on its search span, which find their text in the data
 import json
 from collections import Counter, defaultdict
 
-import psycopg
-
 import checks
 
-text = dict(psycopg.connect().execute("SELECT id, text FROM chunks").fetchall())
+text = {c["id"]: c["text"] for c in json.load(open("data/index.json"))["chunks"]}
 by_trace = defaultdict(dict)
 for s in map(json.loads, open("spans.jsonl")):
     by_trace[s["trace"]][s["name"]] = s["attributes"]
-seen, failed = Counter(), defaultdict(Counter)
+seen, failed, example = Counter(), defaultdict(Counter), {}
 for spans in by_trace.values():
     root = spans["ask"]
     if root["app.feature"] == "summary":
         continue
-    sources = [{"id": c, "text": text[c]} for c in spans["search"]["app.search.chunks"]]
+    sources = [{"id": c, "text": text[c]} for c in spans["search"].get("app.search.chunks", [])]
     release = root["app.release"]
     seen[release] += 1
-    for name, ok, _ in checks.run(root["app.reply"], sources):
+    for name, ok, why in checks.run(root["app.reply"], sources):
         failed[release][name] += not ok
+        if not ok:
+            example.setdefault(name, f"{why}: {root['app.reply'][:70]}")
 print(f"{'check':22}" + "".join(f"{r:>12}" for r in sorted(seen)))
 for c in checks.CHECKS:
     print(f"{c.__name__:22}" + "".join(f"{failed[r][c.__name__]:6} fail" for r in sorted(seen)))
 print(f"{'replies':22}" + "".join(f"{seen[r]:12}" for r in sorted(seen)))
+for name, e in example.items():
+    print(f"  {name}: {e}")
 ```
 
 ```

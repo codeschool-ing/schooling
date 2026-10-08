@@ -3,9 +3,39 @@ title: Comparing with an expected answer
 version: 1
 ---
 
-`rag` lesson 8 built `data/eval.jsonl`: thirty questions, each with the **facts** a right reply
-contains, and four with no facts, whose right reply is the refusal. That is an answer key, and this
-course grades against it.
+An evaluation needs an **answer key**: questions, and for each one what a right reply contains. The
+course writes one for the assistant here, twenty-four questions. Nineteen have **facts**, the words a
+right reply must contain, one of them at least, and **gold** chunks, the ids of the chunks that hold
+the answer, which lesson 11 uses. Five have neither, and their right reply is the refusal: four ask
+about things the documents never mention, and `e20` asks about something only an internal document
+answers, which the assistant must not show a customer. Save it as `data/eval.jsonl`:
+
+```json
+{"id": "e01", "question": "How many days do I have to return a printed book?", "gold": ["returns-policy:the-return-window"], "facts": ["30 days"]}
+{"id": "e02", "question": "Who pays for the return postage?", "gold": ["returns-policy:how-to-start-a-return"], "facts": ["are free", "prepaid label"]}
+{"id": "e03", "question": "How long after my return arrives will I get the refund?", "gold": ["returns-policy:refunds"], "facts": ["three working days", "3 working days"]}
+{"id": "e04", "question": "Can I return a signed copy?", "gold": ["returns-policy:items-that-cannot-be-returned"], "facts": ["signed copies cannot", "cannot be returned", "can't be returned", "not be returned"]}
+{"id": "e05", "question": "I downloaded an e-book yesterday. Can I still return it?", "gold": ["returns-policy:items-that-cannot-be-returned"], "facts": ["cannot be returned", "can't be returned", "not be returned", "cannot return"]}
+{"id": "e06", "question": "How long does standard delivery take?", "gold": ["shipping-and-delivery:standard-delivery"], "facts": ["three to six working days", "3 to 6 working days"]}
+{"id": "e07", "question": "Above what order value is standard delivery free?", "gold": ["shipping-and-delivery:standard-delivery"], "facts": ["R$ 40"]}
+{"id": "e08", "question": "How much is express delivery?", "gold": ["shipping-and-delivery:express-delivery"], "facts": ["29.90"]}
+{"id": "e09", "question": "When is a standard parcel considered lost?", "gold": ["shipping-and-delivery:lost-parcels"], "facts": ["10 working days", "ten working days"]}
+{"id": "e10", "question": "How long does a pickup point keep my parcel?", "gold": ["shipping-and-delivery:pickup-points"], "facts": ["ten days", "10 days"]}
+{"id": "e11", "question": "On how many devices can I read my e-books?", "gold": ["ebooks-and-audiobooks:devices"], "facts": ["six devices", "6 devices"]}
+{"id": "e12", "question": "Will my e-books open on a Kindle?", "gold": ["ebooks-and-audiobooks:formats"], "facts": ["cannot open", "cannot be opened", "can't open"]}
+{"id": "e13", "question": "Can I listen to an audiobook without an internet connection?", "gold": ["ebooks-and-audiobooks:audiobooks"], "facts": ["offline"]}
+{"id": "e14", "question": "Can I pay in instalments?", "gold": ["payments-and-invoices:instalments"], "facts": ["three instalments", "3 instalments"]}
+{"id": "e15", "question": "When does an order paid by bank slip ship?", "gold": ["payments-and-invoices:how-you-can-pay"], "facts": ["two working days", "2 working days"]}
+{"id": "e16", "question": "When do I get the invoice for my order?", "gold": ["payments-and-invoices:invoices"], "facts": ["when the order ships", "when your order ships", "when it ships"]}
+{"id": "e17", "question": "How long is a gift card valid?", "gold": ["gift-cards:validity"], "facts": ["two years", "2 years"]}
+{"id": "e18", "question": "What happens if my order costs more than my gift card holds?", "gold": ["gift-cards:using-a-gift-card"], "facts": ["the rest"]}
+{"id": "e19", "question": "How long is the statutory right of withdrawal?", "gold": ["returns-policy:the-right-of-withdrawal"], "facts": ["seven days", "7 days"]}
+{"id": "e20", "question": "What is the largest refund that can be paid without anybody approving it?", "gold": [], "facts": []}
+{"id": "e21", "question": "Do you have a shop in Porto Alegre where I can pick up books?", "gold": [], "facts": []}
+{"id": "e22", "question": "Can I place an order by phone?", "gold": [], "facts": []}
+{"id": "e23", "question": "Which carrier do you use in Portugal?", "gold": [], "facts": []}
+{"id": "e24", "question": "Is there a student discount?", "gold": [], "facts": []}
+```
 
 Grading needs replies to grade. `evalrun.py` sends every question of the set through the assistant and
 keeps what came back as a **run**, with the sources each reply was given:
@@ -39,14 +69,13 @@ if a.release:   # a release not yet in force: answer as if it were
     assistant.RELEASES = {a.release: dict(assistant.RELEASES[a.release], **{"from": "0000"})}
 telemetry.setup("eval-spans.jsonl", service="evalrun")
 os.makedirs("runs", exist_ok=True)
-text = dict(assistant.db.execute("SELECT id, text FROM chunks").fetchall())
+release, _ = assistant.release_at(a.at)
 n = 0
 with open(f"runs/{a.name}.jsonl", "w") as out:
     for case in map(json.loads, open(a.set)):
         reply, sources, trace = assistant.ask(case["question"], user="evalrun", feature="help", at=a.at)
-        release, _ = assistant.release_at(a.at)
         out.write(json.dumps({"id": case["id"], "question": case["question"], "reply": reply, "release": release,
-                              "sources": [{"id": s[0], "text": text[s[0]]} for s in sources],
+                              "sources": [{"id": c["id"], "text": c["text"]} for c, _ in sources],
                               "trace": trace}, ensure_ascii=False) + "\n")
         n += 1
 print(f"runs/{a.name}.jsonl: {n} questions, release {release}")

@@ -10,6 +10,20 @@ reply nobody wrote an answer key for.
 `checks.py` has six:
 
 ```python
+"""checks.py: rules a reply can be held to without a model, each a function that says pass or fail.
+
+    import checks
+    for name, ok, why in checks.run(reply, sources):
+        ...
+
+Every check is deterministic: the same reply and sources give the same verdict
+on every run, in microseconds, at no cost. Which is why they can run on every
+reply in production, and why lesson 15 can make a build fail on them.
+"""
+import re
+
+import redact
+
 REFUSAL = "I could not find that in our documents."
 CITE = re.compile(r"\[(\d+)\]")
 NUMBER = re.compile(r"\d+(?:[.,]\d+)?")
@@ -90,13 +104,14 @@ The stand-in model passes them by construction, so to see each fire, `broken.py`
 
 ```python
 """broken.py: five replies the course wrote, each breaking one rule, through every check."""
+import json
+
 import checks
 
-source = [{"id": "shipping-and-delivery:ca3796df6832",
-           "text": "standard three to five working days 4.90, free on orders over 40 express next working day 9.90"}]
-for reply in ["Standard delivery is free on orders over 40.",
-              "Standard delivery is free on orders over 40. [2]",
-              "Express delivery costs 12.90. [1]",
+source = [c for c in json.load(open("data/index.json"))["chunks"] if c["id"] == "shipping-and-delivery:standard-delivery"]
+for reply in ["Standard delivery is free on orders over R$ 40.",
+              "Standard delivery is free on orders over R$ 40. [2]",
+              "Standard delivery costs R$ 9.90. [1]",
               "Joana, we sent the details to joana.prado@example.com. [1]",
               "Sorry, I could not find anything about that."]:
     failed = [f"{name}: {why}" for name, ok, why in checks.run(reply, source) if not ok]
