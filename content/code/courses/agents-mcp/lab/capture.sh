@@ -34,7 +34,7 @@ put() {
 block() { printf '##### %s\n' "$1"; }
 # The recorder, started in the background as lesson 1 shows; stopped by `quiet`.
 recorder() { on 'python recorder.py &'; sleep 1; }
-quiet() { lab exec 'pkill -u ana -f "python recorder[.]py"' || true; }
+quiet() { lab exec 'pkill -u ana -f "python (recorder|standin)[.]py"' || true; }
 exec 9>/var/tmp/agents-capture.lock; flock 9
 trap quiet EXIT
 lab reset >/dev/null

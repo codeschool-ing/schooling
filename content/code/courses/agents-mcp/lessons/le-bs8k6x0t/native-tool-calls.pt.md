@@ -1,9 +1,9 @@
 ---
 title: O mesmo laço com chamadas nativas
-version: 1
+version: 2
 ---
 
-O `react_native.py` responde à mesma pergunta com a chamada de ferramentas do próprio fornecedor. O prompt de sistema pede uma frase de raciocínio antes de cada chamada, então todo passo traz um pensamento e uma ação, como no ReAct; o que muda é a forma em que eles chegam. **As respostas dele foram escritas pelo curso como regras para o substituto**; tudo o que o programa faz com elas é real.
+O `react_native.py` responde à mesma pergunta com a chamada de ferramentas do próprio fornecedor. O prompt de sistema pede uma frase de raciocínio antes de cada chamada, então todo passo traz um pensamento e uma ação, como no ReAct; o que muda é a forma em que eles chegam. Ele também registra cada passo no `trace.jsonl`, que a seção 06 lê, e recusa uma chamada que já fez, coisa de que a seção 08 precisa.
 
 ```schooling-example
 {
@@ -26,11 +26,11 @@ O `react_native.py` responde à mesma pergunta com a chamada de ferramentas do p
       "note": "**Chamadas já feitas**, como nome e argumentos canônicos. A seção 08 usa isto."
     },
     {
-      "code": "with open(\"trace.jsonl\", \"w\") as trace:\n    for step in range(1, 7):\n        reply = client.messages.create(model=\"scripted-1\", max_tokens=1024, system=SYSTEM,\n                                       tools=TOOLS, messages=messages)\n        messages.append({\"role\": \"assistant\", \"content\": reply.content})\n",
+      "code": "with open(\"trace.jsonl\", \"w\") as trace:\n    for step in range(1, 7):\n        reply = client.messages.create(model=\"llama3.2:3b\", max_tokens=1024, system=SYSTEM,\n                                       tools=TOOLS, messages=messages)\n        messages.append({\"role\": \"assistant\", \"content\": reply.content})\n",
       "note": "**Um arquivo de rastro, uma linha JSON por passo**, escrito durante a execução. A seção 06 o lê."
     },
     {
-      "code": "        record = {\"step\": step, \"stop_reason\": reply.stop_reason, \"input_tokens\": reply.usage.input_tokens,\n                  \"text\": \" \".join(b.text for b in reply.content if b.type == \"text\"), \"calls\": []}\n        results = []\n        for block in reply.content:\n            if block.type != \"tool_use\":\n                continue\n",
+      "code": "        record = {\"step\": step, \"stop_reason\": reply.stop_reason, \"input_tokens\": reply.usage.input_tokens + (reply.usage.cache_read_input_tokens or 0),\n                  \"text\": \" \".join(b.text for b in reply.content if b.type == \"text\"), \"calls\": []}\n        results = []\n        for block in reply.content:\n            if block.type != \"tool_use\":\n                continue\n",
       "note": "**O que vale registrar de um passo**: por que parou, o tamanho do pedido, o que o modelo disse e o que chamou."
     },
     {
@@ -47,10 +47,10 @@ O `react_native.py` responde à mesma pergunta com a chamada de ferramentas do p
 
 ```
 ana@lab:~/agents$ python react_native.py "Can I still return the books in order M-1047, and how would the refund work?"
-Yes. Order M-1047 was delivered on 18 September 2026, so both copies can be returned until 18 October. The refund would be 77.80, back to the card or account you paid with, within three working days of the return reaching our warehouse.
+To return the books in order M-1047, you have 30 days from delivery to return the printed books in the condition they were received. To initiate the return, start by going to the order in your account, print the prepaid label, and then drop the parcel at any post office. Refunds for returned printed books will be issued in the original payment method. If you have any issues or concerns about the return process, please contact our customer service team for assistance.
 ```
 
-A resposta bate com o terceiro passo do ReAct em texto, e chegou sem expressão regular nenhuma. Compare um passo de cada:
+Nenhuma expressão regular, nenhuma observação inventada, nenhum argumento na forma errada: a chamada chegou como um bloco `tool_use` com os argumentos em campos, e o programa a rodou. A resposta fala de devoluções em geral e está certa até onde vai. Ela não diz se o próprio M-1047 ainda pode voltar, porque o modelo buscou na central de ajuda e nunca consultou o pedido. É de novo o limite da aula 1, uma ferramenta e depois uma resposta, e a seção 06 o lê no rastro. Compare um passo de cada estilo:
 
 | | ReAct em texto | chamadas nativas |
 |---|---|---|
@@ -66,4 +66,4 @@ A resposta bate com o terceiro passo do ReAct em texto, e chegou sem expressão 
 
 A última linha importa mais do que parece. Uma resposta pode trazer vários blocos `tool_use` de uma vez, e os resultados voltam como vários blocos `tool_result` numa mensagem. **É o id que os emparelha, não a posição**; a API recusa uma conversa em que uma chamada não tem resultado com o seu id, o que a aula 4 mostra acontecendo.
 
-Chamadas nativas não dispensam o pensamento. Um modelo a quem se pede para dizer o que sabe antes de agir tende a escolher passos melhores, que é o resultado do artigo; a diferença é que o pensamento agora é um enfeite opcional numa chamada estruturada, e não o texto de que um parser depende.
+Chamadas nativas não dispensam o pensamento. Um modelo a quem se pede para dizer o que sabe antes de agir tende a escolher passos melhores, que é o resultado do artigo; a diferença é que o pensamento agora é um enfeite opcional numa chamada estruturada, e não o texto de que um parser depende. Opcional é a palavra: pediram ao `llama3.2:3b` uma frase antes de cada chamada, ele não escreveu nenhuma, e a chamada veio mesmo assim.

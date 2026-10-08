@@ -48,25 +48,25 @@ LINES = [
     ("M-1044", "b36", 1, 4590), ("M-1045", "b41", 1, 2290), ("M-1046", "b31", 1, 4990),
     ("M-1046", "b33", 1, 5490), ("M-1047", "b19", 2, 3890), ("M-1048", "b40", 1, 3290),
 ]
-# id, title, author, year, price in cents, copies in stock
+# id, title, author, year, genre, price in cents, copies in stock
 BOOKS = [
-    ("b01", "Pride and Prejudice", "Jane Austen", 1813, 3490, 12),
-    ("b03", "Jane Eyre", "Charlotte Brontë", 1847, 3990, 4),
-    ("b06", "Persuasion", "Jane Austen", 1817, 2990, 7),
-    ("b07", "The Hound of the Baskervilles", "Arthur Conan Doyle", 1902, 2790, 0),
-    ("b11", "The Mysterious Affair at Styles", "Agatha Christie", 1920, 3190, 9),
-    ("b13", "The Time Machine", "H. G. Wells", 1895, 2490, 15),
-    ("b14", "The War of the Worlds", "H. G. Wells", 1898, 2590, 3),
-    ("b19", "Dracula", "Bram Stoker", 1897, 3890, 6),
-    ("b26", "The Count of Monte Cristo", "Alexandre Dumas", 1844, 5990, 2),
-    ("b31", "Moby-Dick", "Herman Melville", 1851, 4990, 5),
-    ("b33", "Middlemarch", "George Eliot", 1871, 5490, 1),
-    ("b36", "Crime and Punishment", "Fyodor Dostoevsky", 1866, 4590, 8),
-    ("b39", "Dom Casmurro", "Machado de Assis", 1899, 2990, 20),
-    ("b40", "The Posthumous Memoirs of Brás Cubas", "Machado de Assis", 1881, 3290, 11),
-    ("b41", "Alice's Adventures in Wonderland", "Lewis Carroll", 1865, 2290, 14),
-    ("b55", "The Adventures of Sherlock Holmes", "Arthur Conan Doyle", 1892, 3590, 0),
-    ("b59", "Sense and Sensibility", "Jane Austen", 1811, 2990, 6),
+    ("b01", "Pride and Prejudice", "Jane Austen", 1813, "romance", 3490, 12),
+    ("b03", "Jane Eyre", "Charlotte Brontë", 1847, "romance", 3990, 4),
+    ("b06", "Persuasion", "Jane Austen", 1817, "romance", 2990, 7),
+    ("b07", "The Hound of the Baskervilles", "Arthur Conan Doyle", 1902, "mystery", 2790, 0),
+    ("b11", "The Mysterious Affair at Styles", "Agatha Christie", 1920, "mystery", 3190, 9),
+    ("b13", "The Time Machine", "H. G. Wells", 1895, "science fiction", 2490, 15),
+    ("b14", "The War of the Worlds", "H. G. Wells", 1898, "science fiction", 2590, 3),
+    ("b19", "Dracula", "Bram Stoker", 1897, "horror", 3890, 6),
+    ("b26", "The Count of Monte Cristo", "Alexandre Dumas", 1844, "adventure", 5990, 2),
+    ("b31", "Moby-Dick", "Herman Melville", 1851, "adventure", 4990, 5),
+    ("b33", "Middlemarch", "George Eliot", 1871, "literary", 5490, 1),
+    ("b36", "Crime and Punishment", "Fyodor Dostoevsky", 1866, "literary", 4590, 8),
+    ("b39", "Dom Casmurro", "Machado de Assis", 1899, "literary", 2990, 20),
+    ("b40", "The Posthumous Memoirs of Brás Cubas", "Machado de Assis", 1881, "literary", 3290, 11),
+    ("b41", "Alice's Adventures in Wonderland", "Lewis Carroll", 1865, "children", 2290, 14),
+    ("b55", "The Adventures of Sherlock Holmes", "Arthur Conan Doyle", 1892, "mystery", 3590, 0),
+    ("b59", "Sense and Sensibility", "Jane Austen", 1811, "romance", 2990, 6),
 ]
 # id, title, body
 HELP = [
@@ -107,11 +107,12 @@ db.executescript(SCHEMA)
 db.executemany("INSERT INTO customers VALUES (?, ?, ?, ?)", CUSTOMERS)
 db.executemany("INSERT INTO orders VALUES (?, ?, ?, ?, ?, ?, ?)", ORDERS)
 db.executemany("INSERT INTO order_lines VALUES (?, ?, ?, ?)", LINES)
-db.executemany("INSERT INTO prices VALUES (?, ?, ?)", [(b[0], b[4], b[5]) for b in BOOKS])
+db.executemany("INSERT INTO prices VALUES (?, ?, ?)", [(b[0], b[5], b[6]) for b in BOOKS])
 db.commit()
 with open(DATA / "books.jsonl", "w") as f:
-    for id, title, author, year, *_ in BOOKS:
-        f.write(json.dumps({"id": id, "title": title, "author": author, "year": year}, ensure_ascii=False) + "\n")
+    for id, title, author, year, genre, *_ in BOOKS:
+        f.write(json.dumps({"id": id, "title": title, "author": author, "year": year, "genre": genre},
+                           ensure_ascii=False) + "\n")
 with open(DATA / "help.jsonl", "w") as f:
     for id, title, body in HELP:
         f.write(json.dumps({"id": id, "title": title, "body": body}) + "\n")

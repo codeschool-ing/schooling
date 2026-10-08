@@ -1,9 +1,9 @@
 ---
 title: The same loop with native tool calls
-version: 1
+version: 2
 ---
 
-`react_native.py` answers the same question with the provider's own tool calling. The system prompt asks for one sentence of reasoning before each call, so every step carries a thought and an action, as ReAct does; what differs is the shape they arrive in. **Its replies were written by the course as rules for the stand-in**; everything the program does with them is real.
+`react_native.py` answers the same question with the provider's own tool calling. The system prompt asks for one sentence of reasoning before each call, so every step carries a thought and an action, as ReAct does; what differs is the shape they arrive in. It also records each step in `trace.jsonl`, which section 06 reads, and refuses a call it has already made, which section 08 needs.
 
 ```schooling-example
 {
@@ -26,11 +26,11 @@ version: 1
       "note": "**Calls already made**, as a name and canonical arguments. Section 08 uses it."
     },
     {
-      "code": "with open(\"trace.jsonl\", \"w\") as trace:\n    for step in range(1, 7):\n        reply = client.messages.create(model=\"scripted-1\", max_tokens=1024, system=SYSTEM,\n                                       tools=TOOLS, messages=messages)\n        messages.append({\"role\": \"assistant\", \"content\": reply.content})\n",
+      "code": "with open(\"trace.jsonl\", \"w\") as trace:\n    for step in range(1, 7):\n        reply = client.messages.create(model=\"llama3.2:3b\", max_tokens=1024, system=SYSTEM,\n                                       tools=TOOLS, messages=messages)\n        messages.append({\"role\": \"assistant\", \"content\": reply.content})\n",
       "note": "**A trace file, one JSON line per step**, written as the run goes. Section 06 reads it."
     },
     {
-      "code": "        record = {\"step\": step, \"stop_reason\": reply.stop_reason, \"input_tokens\": reply.usage.input_tokens,\n                  \"text\": \" \".join(b.text for b in reply.content if b.type == \"text\"), \"calls\": []}\n        results = []\n        for block in reply.content:\n            if block.type != \"tool_use\":\n                continue\n",
+      "code": "        record = {\"step\": step, \"stop_reason\": reply.stop_reason, \"input_tokens\": reply.usage.input_tokens + (reply.usage.cache_read_input_tokens or 0),\n                  \"text\": \" \".join(b.text for b in reply.content if b.type == \"text\"), \"calls\": []}\n        results = []\n        for block in reply.content:\n            if block.type != \"tool_use\":\n                continue\n",
       "note": "**What a step is worth recording**: why it stopped, how large the request was, what the model said and what it called."
     },
     {
@@ -47,10 +47,10 @@ version: 1
 
 ```
 ana@lab:~/agents$ python react_native.py "Can I still return the books in order M-1047, and how would the refund work?"
-Yes. Order M-1047 was delivered on 18 September 2026, so both copies can be returned until 18 October. The refund would be 77.80, back to the card or account you paid with, within three working days of the return reaching our warehouse.
+To return the books in order M-1047, you have 30 days from delivery to return the printed books in the condition they were received. To initiate the return, start by going to the order in your account, print the prepaid label, and then drop the parcel at any post office. Refunds for returned printed books will be issued in the original payment method. If you have any issues or concerns about the return process, please contact our customer service team for assistance.
 ```
 
-The answer matches text ReAct's third step, and it arrived without a regular expression. Compare one step of each:
+No regular expression, no invented observation, no argument in the wrong shape: the call arrived as a `tool_use` block with its arguments in fields, and the program ran it. The answer is about returns in general and is right as far as it goes. It does not say whether M-1047 itself can still go back, because the model searched the help centre and never looked the order up. That is lesson 1's limit again, one tool and then an answer, and section 06 reads it in the trace. Compare one step of each style:
 
 | | text ReAct | native calls |
 |---|---|---|
@@ -66,4 +66,4 @@ The answer matches text ReAct's third step, and it arrived without a regular exp
 
 The last row matters more than it looks. A reply can hold several `tool_use` blocks at once, and their results come back as several `tool_result` blocks in one message. **The id is what pairs them, and position is not**; the API refuses a conversation in which a call has no result with its id, which lesson 4 shows happening.
 
-Native calls do not remove the need for the thought. A model that is asked to state what it knows before acting tends to choose better next steps, which is the paper's result; the difference is that the thought is now optional decoration on a structured call, rather than the text a parser depends on.
+Native calls do not remove the need for the thought. A model that is asked to state what it knows before acting tends to choose better next steps, which is the paper's result; the difference is that the thought is now optional decoration on a structured call, rather than the text a parser depends on. Optional is the word: `llama3.2:3b` was asked for one sentence before each call and wrote none, and the call came anyway.
