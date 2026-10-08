@@ -8,7 +8,7 @@ Uma ferramenta é algo que o modelo pede para rodar. Um **recurso** é um dado q
 ```
 ana@lab:~/agents$ python try_server.py resources 2> server.log
 template: help://{article_id} text/markdown
-search_help: {"result": [{"title": "How to return a book", "uri": "help://h14"}, {"title": "Damaged books on arrival", "uri": "help://h12"}, {"title": "Wrong book in the par
+search_help: {"result": [{"title": "How to return a book", "uri": "help://h14"}, {"title": "Damaged books on arrival", "uri": "help://h12"}, {"title": "Refunds for e-books",
 help://h14 -> # How to return a book  You have 30 days from delivery to return a printed book in the condition you received it. Start 
 help://h99 -> MCPError no help article h99
 ```
