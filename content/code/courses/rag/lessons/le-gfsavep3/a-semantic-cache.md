@@ -1,6 +1,6 @@
 ---
 title: A semantic cache
-version: 1
+version: 2
 ---
 
 A semantic cache matches questions by meaning: it embeds each new question, finds the nearest stored
@@ -10,8 +10,21 @@ one, and serves that answer if the similarity is above a threshold. "how long do
 `semantic.py` replays the week through a semantic cache at six thresholds, and uses the topic each
 question was generated from to count the hits that served an answer to a different question:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "semantic.py",
+  "parts": [
+    {
+      "code": "import json\n\nimport numpy as np\nfrom vectors import embed\n\nLOG = [json.loads(line) for line in open(\"data/querylog.jsonl\")]\ntexts = sorted({q[\"text\"] for q in LOG})\nvectors = dict(zip(texts, embed(texts)))\ntopic = {q[\"text\"]: q[\"topic\"] for q in LOG}\nprint(f\"{'threshold':>9} {'misses':>7} {'hits':>5} {'wrong':>6}\")\nfor threshold in (0.95, 0.9, 0.85, 0.8, 0.75, 0.7):\n    stored, hits, wrong = [], 0, 0\n    for q in LOG:\n        v = vectors[q[\"text\"]]\n        best = max(stored, key=lambda s: float(v @ vectors[s]), default=None)\n        if best is not None and float(v @ vectors[best]) >= threshold:\n            hits += 1\n            wrong += topic[best] != q[\"topic\"]\n        else:\n            stored.append(q[\"text\"])\n    print(f\"{threshold:9.2f} {len(stored):7} {hits:5} {wrong:6}\")",
+      "note": "A semantic cache replayed over the week at six thresholds: a question close enough to one already answered is a hit, and a hit on a question about a different topic is a wrong answer served from the cache."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python semantic.py
+
+```
+ana@vm:~/rag$ python semantic.py
 threshold  misses  hits  wrong
      0.95      38   462      0
      0.90      35   465      0
@@ -29,10 +42,23 @@ From 0.95 down to 0.80, **the misses fall from 38 to 27 with no wrong answers**:
 saved over the exact cache. At **0.75, three more calls are saved and 25 answers are wrong**, all of
 them a customer asking about one kind of cancellation and served the answer about the other:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "near.py",
+  "parts": [
+    {
+      "code": "from vectors import embed\n\npairs = [(\"Can I cancel a pre-order?\", \"Can I cancel my order?\"),\n         (\"how do I cancel a pre-order\", \"how do I cancel an order\"),\n         (\"how long does a refund take\", \"refund timing after return\")]\nfor a, b in pairs:\n    v = embed([a, b])\n    print(f\"{float(v[0] @ v[1]):.3f}  {a!r}  {b!r}\")",
+      "note": "Three pairs of questions, and how similar the embedding model finds each pair."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python near.py
+
+```
+ana@vm:~/rag$ python near.py
 0.867  'Can I cancel a pre-order?'  'Can I cancel my order?'
-0.872  'how do I cancel a pre-order'  'how do I cancel an order'
+0.871  'how do I cancel a pre-order'  'how do I cancel an order'
 0.774  'how long does a refund take'  'refund timing after return'
 ```
 

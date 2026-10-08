@@ -1,6 +1,6 @@
 ---
 title: When the documents change
-version: 1
+version: 2
 ---
 
 A cached answer is a copy of what the pipeline said about the documents as they were. When a document
@@ -12,11 +12,11 @@ The exact cache's key carries the index version, a hash of every chunk id. Here 
 edit to the gift card terms and lesson 5's loader, then the version again:
 
 ```
-ana@lab:~/rag$ python -c "import exact; print(exact.version())"
+ana@vm:~/rag$ python -c "import exact; print(exact.version())"
 0acfdfa0d064
-ana@lab:~/rag$ sed -i "s/valid for two years from the day it was bought/valid for three years from the day it was bought/" data/docs/gift-cards.md && python ingest.py
+ana@vm:~/rag$ sed -i "s/valid for two years from the day it was bought/valid for three years from the day it was bought/" data/docs/gift-cards.md && python ingest.py
 chunks: 137  embedded: 1  removed: 1  kept: 136
-ana@lab:~/rag$ python -c "import exact; print(exact.version())"
+ana@vm:~/rag$ python -c "import exact; print(exact.version())"
 de4849f90b4a
 ```
 

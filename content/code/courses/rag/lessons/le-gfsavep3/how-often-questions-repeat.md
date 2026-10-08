@@ -1,13 +1,26 @@
 ---
 title: How often questions repeat
-version: 1
+version: 2
 ---
 
 Lesson 9 called a semantic cache added before measuring repeated questions premature. Here is the
 measurement:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "repeats.py",
+  "parts": [
+    {
+      "code": "import collections\nimport json\nimport re\n\nLOG = [json.loads(line) for line in open(\"data/querylog.jsonl\")]\nnorm = lambda t: re.sub(r\"[^a-z0-9 ]\", \"\", t.lower()).strip()\nprint(f\"{len(LOG)} questions, {len({q['text'] for q in LOG})} distinct as typed, \"\n      f\"{len({norm(q['text']) for q in LOG})} after lower-casing and dropping punctuation, \"\n      f\"{len({q['topic'] for q in LOG})} topics\")\nfor text, n in collections.Counter(q[\"text\"] for q in LOG).most_common(5):\n    print(f\"{n:4}  {text}\")",
+      "note": "How many of the 500 questions are different, as typed and after the lightest normalisation, and the five asked most often."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python repeats.py
+
+```
+ana@vm:~/rag$ python repeats.py
 500 questions, 40 distinct as typed, 38 after lower-casing and dropping punctuation, 12 topics
   41  how many days do I have to return a printed book?
   34  how long do I have to return a book
