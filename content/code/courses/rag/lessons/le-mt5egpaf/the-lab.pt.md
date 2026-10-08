@@ -24,8 +24,10 @@ documentos da própria loja.
 
 **Toda resposta deste curso veio do llama3.2:3b nessa máquina, e a sua vai ter outras palavras.** Um
 modelo escolhe cada palavra com alguma aleatoriedade. Os programas aqui pedem `temperature=0`, que
-tira quase toda ela, então o mesmo programa rodado duas vezes na mesma máquina imprime a mesma
-resposta. Outro processador, outra versão do Ollama ou outro modelo ainda mudam as palavras. O que uma
+tira quase toda ela, então o mesmo programa rodado duas vezes na mesma máquina em geral imprime a
+mesma resposta. Nem sempre: o Ollama reaproveita o trabalho de uma requisição anterior que começou do
+mesmo jeito, e uma conta que segue outro caminho pode mudar uma palavra, e todas as palavras depois
+dela. Outro processador, outra versão do Ollama ou outro modelo mudam mais. O que uma
 aula tira de uma resposta é um padrão: uma citação que está lá ou falta, um número citado ou um
 número inventado. É o padrão que você procura na sua.
 

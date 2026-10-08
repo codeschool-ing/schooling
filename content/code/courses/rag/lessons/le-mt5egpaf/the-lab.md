@@ -24,8 +24,10 @@ shop's own documents.
 
 **Every reply in this course came from llama3.2:3b on that machine, and yours will differ in
 wording.** A model picks each word with some randomness. The programs here ask for `temperature=0`,
-which removes most of it, so the same program run twice on one machine prints the same reply. A
-different processor, a different version of Ollama or a different model still changes the words.
+which removes most of it, so the same program run twice on one machine usually prints the same reply.
+Not always: Ollama reuses the work of an earlier request that began the same way, and arithmetic that
+takes a different path can change a word, and every word after it. A different processor, a
+different version of Ollama or a different model changes more.
 What a lesson draws from a reply is a pattern: a citation that is there or missing, a number quoted
 or a number invented. The pattern is what to look for in yours.
 
