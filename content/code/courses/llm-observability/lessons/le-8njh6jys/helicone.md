@@ -18,9 +18,29 @@ SDK at its port instead of Ollama's:
 python flaky.py &
 ```
 
-CAPTURE:gateway
+```
+ana@dev:~/obs$ OPENAI_BASE_URL=http://127.0.0.1:11435/v1 python assistant.py "How long is a gift card valid?"
+According to [1], a gift card is valid for two years from the day it was bought.
+trace f8a3280bafe8212c496c197fd05c6bd3
+ana@dev:~/obs$ cat flaky.log
+{"n": 1, "path": "/v1/embeddings", "status": 200}
+{"n": 2, "path": "/v1/chat/completions", "status": 200}
+ana@dev:~/obs$ python tree.py f8a3280b
+trace f8a3280bafe8212c496c197fd05c6bd3   start(ms) took(ms)
+      0   2,536 ms  ask
+      0      46 ms    embed
+     46       0 ms    search
+     47   2,489 ms    generate
+     47   2,489 ms      chat llama3.2:3b
+  2,536       0 ms    check_citations
+```
 
-PROSE:gateway
+Two lines, an embedding and a chat completion: everything that crossed the wire. `flaky.py` writes
+only the path and the status, and a real gateway keeps the bodies too, so it would have the question
+in the first and the prompt and the reply in the second. What no gateway can have is in `tree.py`'s
+lines between them: the search, with the score that decided which chunks went into the prompt, and the
+citation check. Nor does it know who asked. Without headers, the two calls carry no user, no session
+and no feature.
 
 ## What Helicone adds to that
 

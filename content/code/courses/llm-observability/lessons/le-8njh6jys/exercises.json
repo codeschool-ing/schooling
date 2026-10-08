@@ -155,39 +155,39 @@
   },
   {
     "id": "ex-80d92n2y",
-    "version": 1,
-    "section": "helicone-in-the-lab",
+    "version": 2,
+    "section": "helicone",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "Why did Helicone refuse to forward the lab's request?",
+    "prompt": "flaky.py, standing in as a gateway, logged two requests for one question. Which two?",
     "choices": [
       {
-        "text": "The request had no Helicone key",
+        "text": "The search and the chat completion",
         "correct": false,
-        "why": "The message names the API base, not the key."
+        "why": "The search runs inside the assistant and never crosses the wire."
       },
       {
-        "text": "extract-1 is not a model it knows",
-        "correct": false,
-        "why": "It refused before reading the model."
-      },
-      {
-        "text": "Its domain is not allowed",
+        "text": "An embedding and a chat completion",
         "correct": true,
-        "why": "Right. The gateway forwards only to providers on its list."
+        "why": "Right: the only two calls that leave the application."
       },
       {
-        "text": "The gateway was still starting",
+        "text": "The chat completion and the citation check",
         "correct": false,
-        "why": "Its health check had just answered healthy."
+        "why": "The citation check is the assistant's own code."
+      },
+      {
+        "text": "The question, then the reply",
+        "correct": false,
+        "why": "Both travel inside the chat completion: one request, one response."
       }
     ]
   },
   {
     "id": "ex-b1ktwsye",
     "version": 1,
-    "section": "helicone-in-the-lab",
+    "section": "helicone",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
@@ -217,24 +217,24 @@
   },
   {
     "id": "ex-04t0mkpa",
-    "version": 1,
-    "section": "helicone-in-the-lab",
+    "version": 2,
+    "section": "helicone",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "On which port did Helicone's gateway answer in the lab?",
-    "value": 8585,
+    "prompt": "On which port does flaky.py listen, in front of Ollama, when it stands in as a gateway?",
+    "value": 11435,
     "tolerance": 0,
     "unit": "port"
   },
   {
     "id": "ex-vgxh069r",
-    "version": 1,
+    "version": 2,
     "section": "phoenix",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "What does the lab need to run Phoenix?",
+    "prompt": "What does your machine need to run Phoenix?",
     "choices": [
       {
         "text": "Six containers, like Langfuse",
@@ -249,12 +249,43 @@
       {
         "text": "An Arize account",
         "correct": false,
-        "why": "That is for AX, which was not run."
+        "why": "That is for AX, which is not run."
       },
       {
         "text": "A ClickHouse server and a queue to feed it",
         "correct": false,
         "why": "That is Langfuse's design, not Phoenix's."
+      }
+    ]
+  },
+  {
+    "id": "ex-5sg2k639",
+    "version": 1,
+    "section": "phoenix",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson start Phoenix with PHOENIX_HOST=127.0.0.1?",
+    "choices": [
+      {
+        "text": "Otherwise it cannot reach Ollama",
+        "correct": false,
+        "why": "Phoenix never calls Ollama; the assistant sends it spans."
+      },
+      {
+        "text": "By default it listens on every interface",
+        "correct": true,
+        "why": "Right: 0.0.0.0, so anybody on the same network could open it, traces and all."
+      },
+      {
+        "text": "Otherwise its port clashes with Langfuse's",
+        "correct": false,
+        "why": "Langfuse is on 3000 and Phoenix on 6006."
+      },
+      {
+        "text": "Otherwise it sends the traces to Arize",
+        "correct": false,
+        "why": "The address it listens on decides who can reach it, not where data goes."
       }
     ]
   },
@@ -433,13 +464,13 @@
   },
   {
     "id": "ex-tmrj20fb",
-    "version": 1,
+    "version": 2,
     "section": "annotations",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
     "prompt": "How many thumbs from Sunday were sent to Phoenix as annotations?",
-    "value": 20,
+    "value": 4,
     "tolerance": 0,
     "unit": "thumbs"
   },
@@ -569,12 +600,12 @@
   },
   {
     "id": "ex-xdg5bggw",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "matching",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Match each tool to how spans or requests reach it in this lab.",
+    "prompt": "Match each tool to how spans or requests reach it.",
     "pairs": [
       {
         "left": "Phoenix",
@@ -595,7 +626,7 @@
   },
   {
     "id": "ex-j8nmykn2",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "quiz",
     "difficulty": "medium",
@@ -603,9 +634,9 @@
     "prompt": "Why did Phoenix's prompt-token total include the embeddings?",
     "choices": [
       {
-        "text": "The embeddings were sent to extract-1",
+        "text": "The embeddings were sent to llama3.2:3b",
         "correct": false,
-        "why": "They went to lab-minilm."
+        "why": "They went to all-minilm."
       },
       {
         "text": "A bug in px_spans.py",

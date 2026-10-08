@@ -108,23 +108,23 @@
     ]
   },
   "ex-80d92n2y": {
-    "prompt": "Por que o Helicone se recusou a repassar o pedido do laboratório?",
+    "prompt": "O flaky.py, fazendo papel de gateway, registrou dois pedidos para uma pergunta. Quais?",
     "choices": [
       {
-        "text": "O pedido não tinha chave do Helicone",
-        "why": "A mensagem cita a base da API, não a chave."
+        "text": "A busca e o chat completion",
+        "why": "A busca roda dentro do assistente e nunca passa pelo fio."
       },
       {
-        "text": "O extract-1 não é um modelo que ele conhece",
-        "why": "Ele recusou antes de ler o modelo."
+        "text": "Um embedding e um chat completion",
+        "why": "Certo: as duas únicas chamadas que saem da aplicação."
       },
       {
-        "text": "O domínio não é permitido",
-        "why": "Certo. O gateway só repassa a fornecedores da sua lista."
+        "text": "O chat completion e a verificação de citações",
+        "why": "A verificação de citações é código do próprio assistente."
       },
       {
-        "text": "O gateway ainda estava iniciando",
-        "why": "A verificação de saúde tinha acabado de responder que estava saudável."
+        "text": "A pergunta, depois a resposta",
+        "why": "As duas viajam dentro do chat completion: um pedido, uma resposta."
       }
     ]
   },
@@ -150,11 +150,11 @@
     ]
   },
   "ex-04t0mkpa": {
-    "prompt": "Em qual porta o gateway do Helicone respondeu no laboratório?",
+    "prompt": "Em qual porta o flaky.py escuta, na frente do Ollama, quando faz papel de gateway?",
     "unit": "porta"
   },
   "ex-vgxh069r": {
-    "prompt": "Do que o laboratório precisa para rodar o Phoenix?",
+    "prompt": "Do que a sua máquina precisa para rodar o Phoenix?",
     "choices": [
       {
         "text": "Seis contêineres, como o Langfuse",
@@ -166,11 +166,32 @@
       },
       {
         "text": "Uma conta na Arize",
-        "why": "Isso é para o AX, que não foi rodado."
+        "why": "Isso é para o AX, que não é rodado."
       },
       {
         "text": "Um servidor ClickHouse e uma fila para alimentá-lo",
         "why": "Esse é o desenho do Langfuse, não do Phoenix."
+      }
+    ]
+  },
+  "ex-5sg2k639": {
+    "prompt": "Por que a aula inicia o Phoenix com PHOENIX_HOST=127.0.0.1?",
+    "choices": [
+      {
+        "text": "Senão ele não alcança o Ollama",
+        "why": "O Phoenix nunca chama o Ollama; é o assistente que lhe manda spans."
+      },
+      {
+        "text": "Por padrão ele escuta em todas as interfaces",
+        "why": "Certo: 0.0.0.0, e qualquer pessoa na mesma rede poderia abri-lo, traces e tudo."
+      },
+      {
+        "text": "Senão a porta dele colide com a do Langfuse",
+        "why": "O Langfuse está na 3000 e o Phoenix na 6006."
+      },
+      {
+        "text": "Senão ele manda os traces para a Arize",
+        "why": "O endereço em que ele escuta decide quem o alcança, não para onde os dados vão."
       }
     ]
   },
@@ -378,7 +399,7 @@
     ]
   },
   "ex-xdg5bggw": {
-    "prompt": "Associe cada ferramenta a como spans ou pedidos chegam a ela neste laboratório.",
+    "prompt": "Associe cada ferramenta a como spans ou pedidos chegam a ela.",
     "pairs": [
       {
         "left": "Phoenix",
@@ -401,8 +422,8 @@
     "prompt": "Por que o total de tokens de prompt do Phoenix incluiu os embeddings?",
     "choices": [
       {
-        "text": "Os embeddings foram mandados ao extract-1",
-        "why": "Eles foram ao lab-minilm."
+        "text": "Os embeddings foram mandados ao llama3.2:3b",
+        "why": "Eles foram ao all-minilm."
       },
       {
         "text": "Um defeito no px_spans.py",
