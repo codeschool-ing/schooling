@@ -19,7 +19,7 @@ bare() {
 use() {
   local f
   for f in "$@"; do
-    python3 "$COURSE/lab/shown.py" "$COURSE" "$f" > "/home/ana/rag/$f" || exit 1
+    python3 "$COURSE/lab/shown.py" "$COURSE" "$f" "${L:-}" > "/home/ana/rag/$f" || exit 1
   done
 }
 block() { printf '##### %s\n' "$1"; }

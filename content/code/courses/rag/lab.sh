@@ -117,7 +117,7 @@ reset() {
   for l in $(python3 -c "import json; print(' '.join(json.load(open('$HERE/course.json'))['lessons']))"); do
     [ "$l" = "$lesson" ] && break
     for name in $DATA; do
-      $SHOWN "$name" "$l" > /tmp/rag-data.$$ 2>/dev/null || continue
+      $SHOWN "$name" "$l" --only > /tmp/rag-data.$$ 2>/dev/null || continue
       install -m 0644 /tmp/rag-data.$$ "$RAG/$name"
       exec_as "$( [ "${name##*.}" = py ] && echo python || echo sh ) $name" >/dev/null
     done

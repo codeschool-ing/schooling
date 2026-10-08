@@ -1,19 +1,25 @@
 ---
 title: Pedaços de tamanho fixo
-version: 1
+version: 2
 ---
 
 O jeito mais simples de cortar é por contagem: a cada tantas palavras, caracteres ou tokens, comece um
 pedaço novo. Não precisa saber nada do documento, e é por isso que é o padrão da maioria das
 bibliotecas e também por isso que faz estrago.
 
-```python
-def fixed(text, size, overlap=0):
-    """Every SIZE words, starting again OVERLAP words before the last cut."""
-    words = text.split()
-    step = size - overlap
-    return [" ".join(words[i:i + size]) for i in range(0, max(len(words) - overlap, 1), step)]
+```schooling-example
+{
+  "language": "python",
+  "file": "chunking.py",
+  "parts": [
+    {
+      "code": "def fixed(text, size, overlap=0):\n    \"\"\"Every SIZE words, starting again OVERLAP words before the last cut.\"\"\"\n    words = text.split()\n    step = size - overlap\n    return [\" \".join(words[i:i + size]) for i in range(0, max(len(words) - overlap, 1), step)]",
+      "note": "A segunda função do `chunking.py`: acrescente depois de `load`."
+    }
+  ]
+}
 ```
+
 
 O `fixed` conta palavras, o que é fácil de ler e bem próximo para prosa em inglês. As bibliotecas
 costumam contar caracteres, e as cuidadosas contam os tokens do próprio modelo de embeddings, que é a
@@ -25,8 +31,25 @@ conta mandar, seja o que for que estiver ali.
 O `boundaries.py` corta o regulamento de devoluções em pedaços de 60 palavras e imprime as bordas de
 três deles, contando a partir de 0:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "boundaries.py",
+  "parts": [
+    {
+      "code": "import sys\n\nfrom chunking import fixed, load\n\nsize, overlap = int(sys.argv[1]), int(sys.argv[2])\nmeta, body = load()[\"returns-policy\"]\nchunks = fixed(body, size, overlap)\nprint(f\"{len(chunks)} chunks of {size} words, {overlap} overlapping\")",
+      "note": "O tamanho e a sobreposição vêm da linha de comando, para que a próxima seção possa rodá-lo de novo com sobreposição."
+    },
+    {
+      "code": "for i in (3, 4, 5):\n    words = chunks[i].split()\n    print(f\"chunk {i} starts: {' '.join(words[:9])} ...\")\n    print(f\"chunk {i} ends:   ... {' '.join(words[-9:])}\")",
+      "note": "As primeiras e as últimas nove palavras dos pedaços 3, 4 e 5, que é onde ficam os cortes."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python boundaries.py 60 0
+
+```
+ana@vm:~/rag$ python boundaries.py 60 0
 15 chunks of 60 words, 0 overlapping
 chunk 3 starts: to you at our cost with an email explaining ...
 chunk 3 ends:   ... choose Return items. 2. Select the books you are
