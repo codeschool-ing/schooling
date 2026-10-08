@@ -1,6 +1,6 @@
 ---
 title: Compressing sources
-version: 1
+version: 2
 ---
 
 A chunk of 60 words was chosen in lesson 4 because it usually holds an answer whole. It also usually
@@ -11,7 +11,6 @@ drops the rest, so the source the model reads is shorter and still the document'
 ```schooling-example
 {
   "language": "python",
-  "file": "context.py",
   "parts": [
     {
       "code": "def sentences(text):\n    return [s for s in re.split(r\"(?<=[.!?])\\s+(?=[A-Z0-9])|\\n(?=- )|\\n\\n\", text) if s.strip()]",
@@ -25,8 +24,21 @@ drops the rest, so the source the model reads is shorter and still the document'
 }
 ```
 
+```schooling-example
+{
+  "language": "python",
+  "file": "squeezed.py",
+  "parts": [
+    {
+      "code": "import sys\n\nfrom context import candidates, compress\n\nquestion = sys.argv[1]\nsource = candidates(question, 1)[0]\nprint(source[\"path\"])\nprint(\" \".join(source[\"text\"].split()))\nprint(\"kept:\")\nprint(compress(question, source)[\"text\"])",
+      "note": "One source before and after `compress`, to read what it kept."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python squeezed.py "How long after my return arrives will I get the refund?"
+
+```
+ana@vm:~/rag$ python squeezed.py "How long after my return arrives will I get the refund?"
 Returns and refunds policy > Refunds
 We refund within three working days of the return reaching our warehouse. The money goes back to the card or account you paid with, and your bank may take another five to ten days to show it. Delivery costs are refunded when you return the whole order; when you return part of it, they are not.
 kept:
@@ -42,8 +54,21 @@ about delivery costs went. The source is a third shorter and holds the same answ
 questions, then checked once on the held-out ones. For each value, the three sources lesson 7 would
 send are compressed, and the table counts the answers still inside them and the tokens left:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "squeeze.py",
+  "parts": [
+    {
+      "code": "import json\nimport sys\n\nfrom context import candidates, compress, tokens\n\nsplit = sys.argv[1]\nquestions = [q for q in map(json.loads, open(\"data/eval.jsonl\"))\n             if q[\"facts\"] and (int(q[\"id\"][1:]) % 3 == 0) == (split == \"held-out\")]\nnorm = lambda t: \" \".join(t.replace(\"|\", \" \").split())\nfound = {q[\"id\"]: candidates(q[\"question\"], 3, \"status = %s\", (\"current\",)) for q in questions}\nprint(f\"{split}: {len(questions)} answerable questions\")\nprint(f\"{'keep':>5} {'found':>6} {'tokens':>7}\")\nfor keep in (0.0, 0.35, 0.45, 0.5, 0.6, 1.0):\n    hits, used = 0, 0\n    for q in questions:\n        cut = [compress(q[\"question\"], s, keep) for s in found[q[\"id\"]]]\n        hits += any(f in norm(s[\"text\"]) for s in cut for f in q[\"facts\"])\n        used += sum(tokens(s[\"text\"]) for s in cut)\n    print(f\"{keep:5.2f} {hits:3}/{len(questions)} {used / len(questions):7.0f}\")",
+      "note": "`compress` at six settings of how much of each source to keep, on one split of the test set at a time, with how many answers survived and how many tokens were left."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python squeeze.py dev
+
+```
+ana@vm:~/rag$ python squeeze.py dev
 dev: 18 answerable questions
  keep  found  tokens
  0.00  17/18     134
@@ -52,7 +77,7 @@ dev: 18 answerable questions
  0.50  15/18      73
  0.60  15/18      71
  1.00  15/18      69
-ana@lab:~/rag$ python squeeze.py held-out
+ana@vm:~/rag$ python squeeze.py held-out
 held-out: 8 answerable questions
  keep  found  tokens
  0.00   8/8     167
@@ -72,7 +97,7 @@ a threshold fitted to eighteen questions.
 ## What compression cannot fix
 
 ```
-ana@lab:~/rag$ python squeezed.py "Can I return a signed copy?"
+ana@vm:~/rag$ python squeezed.py "Can I return a signed copy?"
 Returns and refunds policy > Damaged, faulty and wrong items
 If a book arrives with a torn cover, bent corners or water damage, photograph it next to the packaging and send the pictures within 14 days of delivery. We replace damaged books at no cost and you do not need to send the damaged copy back.
 kept:
