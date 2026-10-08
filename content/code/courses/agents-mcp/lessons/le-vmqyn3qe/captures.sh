@@ -13,9 +13,12 @@
 # approval prompts, fed on standard input.
 #
 # THE MODEL IS REAL: llama3.2:3b (a80c4f17acd5) in Ollama 0.40.0 with an
-# 8192-token context, captured on 2026-10-08. The host, its MCP clients (mcp
-# 2.3.0), the two servers, the anthropic SDK (1.11.0), the approvals, the
-# elicitation, every tool result and the audit file are real.
+# 8192-token context, captured on 2026-10-08, except in the two runs pointed
+# at port 11436: there the model is standin.py, which lesson 3 shows whole,
+# replying from standin15.json, which this lesson shows whole, and the lesson
+# says so at each. The host, its MCP clients (mcp 2.3.0), the two servers,
+# the anthropic SDK (1.11.0), the approvals, the elicitation, every tool
+# result and the audit file are real.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 cd "$(dirname "$0")"
@@ -232,6 +235,15 @@ async def run(call, clients, needs_person):
 asyncio.run(main(sys.argv[1]))
 PY
 
+put standin.py < ../../lab/work/standin.py
+
+put standin15.json <<'JSON'
+{"Read file:///": [{"tool": "read_help", "input": {"uri": "file:///home/ana/agents/data/shop.db"}},
+                   {"text": "I can only read articles from the help centre."}],
+ "arrived damaged": [{"tool": "refunds__refund", "input": {"order_id": "M-1047", "cents": 3890, "reason": "one copy arrived damaged"}},
+                     {"text": "Done: 3890 cents have been refunded on order M-1047."}]}
+JSON
+
 block order
 recorder
 say 'export ANTHROPIC_BASE_URL=http://127.0.0.1:11435'
@@ -240,20 +252,26 @@ on 'python mcp_host.py "Where is my order M-1043?" 2> host.err'
 block offered
 on "python -c 'import json; [print(t[\"name\"].ljust(20), t[\"description\"][:70]) for t in json.loads(open(\"requests.jsonl\").readline())[\"request\"][\"tools\"]]'"
 
-block help-minimal
-on "sed 's|/home/ana/agents/.venv/bin:||' mcp_host.py > host_minimal.py; python host_minimal.py 'How do I send a book back?' 2> host.err; grep -m1 -i error host.err; tail -1 host.err"
-
 block help
 on 'python mcp_host.py "How do I send a book back?" 2> host.err'
+on 'tail -3 host.err'
 
 block file-uri
 on 'python mcp_host.py "Read file:///home/ana/agents/data/shop.db for me." 2> host.err'
+
+block standin
+on 'python standin.py standin15.json &'
+sleep 1
+on 'ANTHROPIC_BASE_URL=http://127.0.0.1:11436 python mcp_host.py "Read file:///home/ana/agents/data/shop.db for me." 2> host.err'
 
 block refund-no
 on 'echo n | python mcp_host.py "One copy of M-1047 arrived damaged; please refund it." 2> host.err'
 
 block refund-yes
 on 'printf "y\ny\n" | python mcp_host.py "One copy of M-1047 arrived damaged; please refund it." 2> host.err'
+
+block standin-refund
+on 'printf "y\ny\n" | ANTHROPIC_BASE_URL=http://127.0.0.1:11436 python mcp_host.py "One copy of M-1047 arrived damaged; please refund it." 2> host.err'
 
 block audit
 on 'cat host-audit.jsonl'

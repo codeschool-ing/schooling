@@ -74,3 +74,10 @@ answer: Done: 38.90 has been refunded to your original payment for the damaged c
 ```
 
 The refund ran, after two approvals (section 05). Two agents, two lists, and the difference between them is three lines of data that can be reviewed like any other change.
+
+standin17.json:
+
+```json
+{"arrived damaged": [{"tool": "refunds__refund", "input": {"order_id": "M-1047", "cents": 3890, "reason": "one copy arrived damaged"}},
+                     {"text": "I cannot issue refunds myself; a colleague will review order M-1047."}]}
+```
