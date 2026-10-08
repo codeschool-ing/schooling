@@ -11,18 +11,18 @@ providers' models and none for extract-1. `lf_prices.py` creates them from the c
 `prices.json`, both of extract-1's prices with their dates:
 
 ```python
-"""lf_prices.py: extract-1's two prices from prices.json, as model definitions in Langfuse."""
+"""lf_prices.py: llama3.2:3b's two prices from prices.json, as model definitions in Langfuse."""
 import base64
 import json
 import os
 import urllib.request
 
 KEY = f"{os.environ['LANGFUSE_PUBLIC_KEY']}:{os.environ['LANGFUSE_SECRET_KEY']}"
-for i, p in enumerate(json.load(open("prices.json"))["models"]["extract-1"]):
-    name = "extract-1" if i == 0 else f"extract-1 from {p['from']}"   # a model's name is unique in a project
-    body = {"modelName": name, "matchPattern": "(?i)^extract-1$", "startDate": p["from"] + "T00:00:00-03:00",
+for i, p in enumerate(json.load(open("prices.json"))["models"]["llama3.2:3b"]):
+    name = "llama3.2:3b" if i == 0 else f"llama3.2:3b from {p['from']}"   # a model's name is unique in a project
+    body = {"modelName": name, "matchPattern": r"(?i)^llama3\.2:3b$", "startDate": p["from"] + "T00:00:00-03:00",
             "unit": "TOKENS", "inputPrice": float(p["input"]) / 1e6, "outputPrice": float(p["output"]) / 1e6}
-    request = urllib.request.Request(os.environ["LANGFUSE_HOST"] + "/api/public/models", data=json.dumps(body).encode(),
+    request = urllib.request.Request(os.environ["LANGFUSE_BASE_URL"] + "/api/public/models", data=json.dumps(body).encode(),
                                      headers={"Content-Type": "application/json",
                                               "Authorization": "Basic " + base64.b64encode(KEY.encode()).decode()})
     m = json.load(urllib.request.urlopen(request))

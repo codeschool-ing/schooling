@@ -30,7 +30,7 @@ AUTH = {"Authorization": "Basic " + base64.b64encode(KEY.encode()).decode()}
 
 
 def get(path):
-    request = urllib.request.Request(os.environ["LANGFUSE_HOST"] + path, headers=AUTH)
+    request = urllib.request.Request(os.environ["LANGFUSE_BASE_URL"] + path, headers=AUTH)
     return json.load(urllib.request.urlopen(request))
 
 
