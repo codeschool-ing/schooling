@@ -32,7 +32,7 @@ ana@lab:~/agents$ tail -n 1 requests.jsonl | python -c 'import json, sys; r = js
 ['user', 'function_call', 'function_call_output']
 ```
 
-The path is `/v1/responses`, and the shape is the Responses API's: the tool's fields sit at the top level (`name`, `parameters`, `description`) rather than inside a `function` object as in lesson 4's Chat Completions, and the conversation is a list called `input` of typed items, `user`, `function_call` and `function_call_output`, rather than of messages with roles. Three more things in that output are the SDK's decisions, not yours.
+The path is `/v1/responses`, and the shape is the Responses API's. The tool's fields sit at the top level (`name`, `parameters`, `description`) rather than inside a `function` object as in lesson 4's Chat Completions, and the conversation is a list called `input` of typed items, `user`, `function_call` and `function_call_output`, rather than of messages with roles. Three more things in that output are the SDK's decisions, not yours.
 
 **`"strict": true`.** The SDK asks the provider to constrain the model's arguments to the schema exactly, which is the strict mode lesson 4 section 04 mentioned. For that to work the schema has to follow the provider's strict rules, so the SDK adds `"additionalProperties": false` and makes every property required. The decorator's `strict_mode=True` is the default. Whether Ollama constrains `llama3.2:3b` by it, the request cannot tell you; the validation you see in section 05 is the SDK's own, done after the reply arrives.
 
