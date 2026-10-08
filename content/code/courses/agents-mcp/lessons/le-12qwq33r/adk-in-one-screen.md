@@ -1,6 +1,6 @@
 ---
 title: The ADK in one screen
-version: 1
+version: 2
 ---
 
 In the ADK a tool is a **plain Python function**. There is no decorator: the library reads the name, the type hints and the docstring when the function is placed in an agent's `tools`.
@@ -38,7 +38,7 @@ def refund(order_id: str, cents: int, reason: str) -> dict:
     },
     {
       "code": "MODEL = LiteLlm(model=\"ollama_chat/llama3.2:3b\")  # ADK reaches Ollama through LiteLLM\n\n\n",
-      "note": "**The model, with the lab's address.** labllm also speaks the Gemini API's format, so the ADK's own Gemini class reaches it unmodified; with a real key you would give only the model's name."
+      "note": "**The model, through LiteLLM.** The ADK speaks Gemini's API itself and hands any other model to LiteLLM, which here talks to Ollama's own API at the address in `OLLAMA_API_BASE`. With a Gemini key you would give the model's name instead."
     },
     {
       "code": "def say_what_failed(tool, args, tool_context, error):\n    return {\"error\": f\"{type(error).__name__}: {error}\"}\n\n\ndef agent(how):\n",
@@ -94,10 +94,12 @@ def show(event):
 ```
 
 ```
+ana@lab:~/agents$ python recorder.py &
+ana@lab:~/agents$ export OLLAMA_API_BASE=http://127.0.0.1:11435 LITELLM_LOCAL_MODEL_COST_MAP=True
 ana@lab:~/agents$ python adk_run.py default "Where is my order M-1043?"
 support  call    get_order {"order_id": "M-1043"}
 support  result  get_order {"id": "M-1043", "customer_id": "c-102", "placed_on": "2026-09-28", "status": "s
-support  text    Order M-1043 has shipped; its tracking code is BR5512340003, and the link in your shipping email follows it.
+support  text    Your order M-1043 was placed on 2026-09-28 and has been shipped. The tracking number is BR5512340003. You can track the status of your order by visiting the website of the shipping carrier mentioned in the tracking number. Your order includes items with order numbers b13, b14, and b26, totaling 11070 cents.
 ```
 
-**The model's call and answer were written by the course**; the events are the ADK's. Each event has an **author**, the agent that produced it, and content made of parts: a function call, a function response, or text. The function response is attributed to the agent as well, because the ADK ran the tool on its behalf. The same events are what the session stores, so the history of a conversation is the list of events, not a list of chat messages.
+The model is `llama3.2:3b`, reached through the recorder of lesson 1, and the events are the ADK's. `LITELLM_LOCAL_MODEL_COST_MAP=True` is there because LiteLLM, when imported, fetches a table of model prices from GitHub; with the variable it uses the copy it ships with, and a program that never meant to reach the internet does not. Each event has an **author**, the agent that produced it, and content made of parts: a function call, a function response, or text. The function response is attributed to the agent as well, because the ADK ran the tool on its behalf. The same events are what the session stores, so the history of a conversation is the list of events, not a list of chat messages.

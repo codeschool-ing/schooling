@@ -65,4 +65,4 @@ Two details in that table cause real bugs. **OpenAI's arguments arrive as a stri
 
 ## Why the course writes most loops for one wire
 
-Lessons 5 to 7 use Anthropic's shape, because the course's examples need one shape and this one keeps the call and its result in two clearly named blocks. Nothing they teach depends on it: the validation gate, the errors, the limits and the trace work the same on all three. Lessons 8 and 10 use OpenAI's and Google's wires through their agent SDKs, and lesson 13 shows MCP's own shape for a tool, which is closest to Anthropic's: `name`, `description`, `inputSchema`.
+Lessons 5 to 7 use Anthropic's shape, because the course's examples need one shape and this one keeps the call and its result in two clearly named blocks. Nothing they teach depends on it: the validation gate, the errors, the limits and the trace work the same on all three. Lesson 8's SDK uses OpenAI's Responses API, lesson 10's reaches Ollama's own `/api/chat` through LiteLLM, and lesson 13 shows MCP's own shape for a tool, which is closest to Anthropic's: `name`, `description`, `inputSchema`.
