@@ -1,40 +1,136 @@
 [
   {
     "id": "ex-0ybmry57",
-    "version": 1,
+    "version": 2,
     "section": "the-lab",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
     "prompt": "In this course's lab, what writes the replies that `pl check` counts?",
-    "hint": "Read the section's warning about the model.",
+    "hint": "Read what the lab is made of.",
     "choices": [
       {
-        "text": "A Python stand-in written for the course",
+        "text": "The person who labelled the test set, writing each reply by hand beside its message",
+        "correct": false,
+        "why": "That person wrote the expected answers in `expect`, not the replies."
+      },
+      {
+        "text": "`llama3.2:3b`, a small open model, run by Ollama on your computer",
         "correct": true,
-        "why": "Right. The arithmetic is real; the behaviour is the course's."
+        "why": "Right. Every reply in a transcript was written by that model."
       },
       {
-        "text": "A small open language model that `lab.sh` downloads the first time it runs",
+        "text": "A Python program written for the course that imitates a model by following fixed keyword rules",
         "correct": false,
-        "why": "The lab needs no network and downloads nothing."
+        "why": "Nothing in the lab imitates a model: the replies come from a real one."
       },
       {
-        "text": "Recordings of a commercial model's answers",
+        "text": "A commercial model reached with the course's API key",
         "correct": false,
-        "why": "No model produced any reply in this lab."
+        "why": "The course hands out no key. The paid API is an option, with your own."
+      }
+    ]
+  },
+  {
+    "id": "ex-zxtc97st",
+    "version": 2,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the course recommend running the model on your own computer rather than through a paid API?",
+    "hint": "Think about how many calls a lesson makes.",
+    "choices": [
+      {
+        "text": "Locally the many calls a lesson makes cost nothing and need no card",
+        "correct": true,
+        "why": "Right, and no lesson then depends on a provider's free allowance."
       },
       {
-        "text": "The person who labelled the test set",
+        "text": "A local model answers better than any commercial one",
         "correct": false,
-        "why": "That person wrote the expected answers, not the replies."
+        "why": "The section says the opposite: a commercial model is much stronger than `llama3.2:3b`."
+      },
+      {
+        "text": "The harness cannot speak to an API over the internet",
+        "correct": false,
+        "why": "It can: the section shows a `call()` for an OpenAI-compatible API."
+      },
+      {
+        "text": "A local model gives the same reply on every computer, so the numbers in each lesson always match yours exactly",
+        "correct": false,
+        "why": "Replies can differ between machines and versions; the section warns about exactly that."
       }
     ]
   },
   {
     "id": "ex-47ehrjev",
-    "version": 1,
+    "version": 2,
     "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A friend's computer has 4 GB of memory, and a one-line reply from `llama3.2:3b` takes over a minute. What does the lesson suggest?",
+    "hint": "Two things were measured about the smaller model.",
+    "choices": [
+      {
+        "text": "Keep the 3b model and wait, because the smaller one changes nothing",
+        "correct": false,
+        "why": "The smaller model needs less memory: 2.0 GB loaded against 2.9."
+      },
+      {
+        "text": "Switch to `llama3.2:1b`, and expect lower counts",
+        "correct": true,
+        "why": "Right: it passed 9 of 40 where the 3b model passed 28, and the checks work the same way."
+      },
+      {
+        "text": "Run the 3b model in a virtual machine instead, which gives the model a larger and separate share of memory",
+        "correct": false,
+        "why": "A virtual machine takes memory from the same computer and gets no graphics card."
+      },
+      {
+        "text": "Raise `num_predict` so the reply is written in fewer steps",
+        "correct": false,
+        "why": "`num_predict` caps how many tokens a reply may have; it does not make each one faster."
+      }
+    ]
+  },
+  {
+    "id": "ex-0z495928",
+    "version": 1,
+    "section": "the-harness",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which function in `pl.py` is the only one that knows the model is served by Ollama?",
+    "hint": "The one you replace to use a paid API instead.",
+    "choices": [
+      {
+        "text": "`render()`",
+        "correct": false,
+        "why": "`render()` fills placeholders; it never sends anything."
+      },
+      {
+        "text": "`judge()`",
+        "correct": false,
+        "why": "`judge()` reads a reply that already exists."
+      },
+      {
+        "text": "`call()`",
+        "correct": true,
+        "why": "Right. Everything else works on text and files."
+      },
+      {
+        "text": "`cmd_run()`",
+        "correct": false,
+        "why": "`cmd_run()` calls `call()` once per case; it does not know who answers."
+      }
+    ]
+  },
+  {
+    "id": "ex-fd6angnf",
+    "version": 1,
+    "section": "the-harness",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
@@ -47,159 +143,242 @@
         "why": "The harness cannot read fields out of text it could not parse."
       },
       {
-        "text": "None",
+        "text": "None: the first failure ends them",
         "correct": true,
-        "why": "Right: a reply that fails one check fails every check after it."
+        "why": "Right. A reply that is not JSON has no fields to check."
       },
       {
-        "text": "Only `category` and `urgency`",
+        "text": "Only `category` and `urgency`, which read the content rather than the format",
         "correct": false,
-        "why": "Those come last and need the parsed object."
+        "why": "Those read fields from the parsed object, and there is none."
       },
       {
-        "text": "Only `fields`",
+        "text": "It depends on whether `--failures` is given",
         "correct": false,
-        "why": "`fields` needs the JSON parsed first."
+        "why": "`--failures` only lists the failures; it does not change the checks."
       }
     ]
   },
   {
-    "id": "ex-zxtc97st",
+    "id": "ex-s9ew2z2e",
     "version": 1,
-    "section": "the-lab",
+    "section": "the-harness",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why does the lab use a stand-in rather than calling a real model?",
-    "hint": "Three reasons are given.",
+    "prompt": "Why does `pl.py` set temperature 0 and a fixed seed by default?",
+    "hint": "What should a difference between two runs mean?",
     "choices": [
       {
-        "text": "Because a real model would score too well for the lessons to have anything to show",
+        "text": "So that the model writes shorter replies",
         "correct": false,
-        "why": "Real models fail too; that is not the reason given."
+        "why": "Temperature and seed decide which tokens are chosen, not how many."
       },
       {
-        "text": "It costs nothing, answers the same way every run, and fails on purpose",
+        "text": "So that a difference between two runs comes from the prompt",
         "correct": true,
-        "why": "Right: free, repeatable, and with something to find."
+        "why": "Right, on one machine. Lesson 8 is about when to change them."
       },
       {
-        "text": "Because the harness cannot talk to a real one",
+        "text": "So that every computer, whatever its processor and version of Ollama, prints exactly the numbers in the lessons",
         "correct": false,
-        "why": "`model.py` is the one place to change to point it at one."
+        "why": "Another machine or Ollama version can still word a reply differently."
       },
       {
-        "text": "To keep the course's numbers secret",
+        "text": "Because Ollama refuses a request without them",
         "correct": false,
-        "why": "Everything is in `lab.sh`, in the open."
+        "why": "Ollama has defaults of its own; the harness sets these on purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-n0jew0pp",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`pl run` stops with `Connection refused`. What is the most likely cause?",
+    "hint": "Who should be listening at 127.0.0.1:11434?",
+    "choices": [
+      {
+        "text": "The model was never pulled",
+        "correct": false,
+        "why": "A missing model gets an answer, a 404 naming the model; this got no answer at all."
+      },
+      {
+        "text": "The Ollama server is not running",
+        "correct": true,
+        "why": "Right. Start the service, or `ollama serve`, or the Ollama application."
+      },
+      {
+        "text": "The test set has a line that is not JSON",
+        "correct": false,
+        "why": "`pl` would fail reading the file, before it ever tried to connect."
+      },
+      {
+        "text": "Python is older than 3.8 and cannot open a network connection",
+        "correct": false,
+        "why": "An old Python fails with a syntax or import error, not a refused connection."
+      }
+    ]
+  },
+  {
+    "id": "ex-c0170fze",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You pulled `llama3.2:3b` through the Linux service yesterday. Today, after starting `ollama serve` yourself, `ollama list` is empty. What happened?",
+    "hint": "Where does a server look for its models?",
+    "choices": [
+      {
+        "text": "The model was deleted when the computer restarted",
+        "correct": false,
+        "why": "Models are files on disk; a restart does not remove them."
+      },
+      {
+        "text": "The download was incomplete, so Ollama discarded the partial files when it started again",
+        "correct": false,
+        "why": "Then `ollama list` would not have shown it yesterday."
+      },
+      {
+        "text": "Two servers: each reads models from the home of the user who started it",
+        "correct": true,
+        "why": "Right: two servers, two model directories. Use the service, or pull again into yours."
+      },
+      {
+        "text": "`ollama list` only shows models used in the last five minutes",
+        "correct": false,
+        "why": "That is `ollama ps`, which shows what is loaded in memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-y8gq5y7p",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On this machine the first reply took 34.8 seconds and the second 12.7, because the first call after the server starts has to ___ the model into memory.",
+    "hint": "One word for what `ollama ps` then shows.",
+    "blanks": [
+      {
+        "accept": [
+          "load"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
       }
     ]
   },
   {
     "id": "ex-qv37q6v8",
-    "version": 1,
+    "version": 2,
     "section": "what-examples-fix",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "The bare prompt's reply to `t01` said `Type: Payment`. What was wrong with it?",
-    "hint": "Was the category itself wrong?",
+    "prompt": "The bare prompt's reply to `t01` said `**Category:** Refund Request`. What was wrong with it?",
+    "hint": "Read what the prompt asked for.",
     "choices": [
       {
-        "text": "The model misread the message and sorted a payment problem as something else",
+        "text": "Nothing: a person reads it happily, and a program that reads it can find the category and the urgency just as well",
         "correct": false,
-        "why": "It is about a payment; the content was right."
+        "why": "A program needs JSON with known fields and known labels."
       },
       {
-        "text": "Nothing a program could parse: its own fields and its own words",
+        "text": "The model misunderstood the customer",
+        "correct": false,
+        "why": "The reply is a fair reading of the message."
+      },
+      {
+        "text": "It is not JSON and the label is its own word: the prompt asked for neither",
         "correct": true,
-        "why": "Right. The prompt left all three to the model."
+        "why": "Right: it is a gap in the prompt, filled with something plausible."
       },
       {
-        "text": "It was too long",
+        "text": "The reply was cut off by `num_predict`",
         "correct": false,
-        "why": "Length was not the problem here."
-      },
-      {
-        "text": "It was cut off by `max_tokens`",
-        "correct": false,
-        "why": "`stop: end` says it finished on its own."
+        "why": "`pl show` reports `stop: stop`, a reply that ended on its own."
       }
     ]
   },
   {
     "id": "ex-r03wsb3s",
-    "version": 1,
+    "version": 2,
     "section": "what-examples-fix",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "Asking for JSON in words, how many of the forty replies failed the `json` check?",
-    "hint": "The `fail` column of `pl check runs/v2.jsonl`.",
-    "value": 13,
+    "prompt": "Asking for JSON in words, how many of the forty replies passed every check?",
+    "hint": "The `all` line of `pl check runs/v2.jsonl`.",
+    "value": 22,
     "tolerance": 0
   },
   {
     "id": "ex-tf1cstr3",
-    "version": 1,
+    "version": 2,
     "section": "what-examples-fix",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Most of the thirteen `json` failures under `v2-json.txt` had the right content. What was wrong with them?",
-    "hint": "Look at `t03` and `t06`.",
+    "prompt": "Under `v2-json.txt` thirty-nine replies parsed. What was most of the remaining failures about?",
+    "hint": "Read the list `--failures` printed.",
     "choices": [
       {
-        "text": "Something around the JSON: a code fence or a sentence before it",
+        "text": "Text around the JSON, such as a code fence or a sentence before the object",
+        "correct": false,
+        "why": "Only one reply failed to parse, and it was not wrapped."
+      },
+      {
+        "text": "Labels: urgency or category",
         "correct": true,
-        "why": "Right. The description never said what may come around the object."
+        "why": "Right, and seven of them were `normal` messages the model called `high`."
       },
       {
-        "text": "Single quotes instead of double",
+        "text": "Extra fields nobody asked for",
         "correct": false,
-        "why": "Neither reply used single quotes."
+        "why": "`fields` failed only where `json` had already failed."
       },
       {
-        "text": "A missing field",
+        "text": "Replies cut off before the closing brace",
         "correct": false,
-        "why": "All three fields were there."
-      },
-      {
-        "text": "Labels in capital letters",
-        "correct": false,
-        "why": "The labels matched the lists."
+        "why": "Every reply ended on its own."
       }
     ]
   },
   {
     "id": "ex-p35r310t",
-    "version": 1,
+    "version": 2,
     "section": "what-examples-fix",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "`pl compare` reports `fixed 13, broken 1` between v2 and v3. Which messages carry evidence about whether the examples helped?",
-    "hint": "A message that passed both times says nothing about the difference.",
+    "prompt": "`pl compare` reports `fixed 7, broken 1` between v2 and v3. Which messages carry evidence about whether the examples helped?",
+    "hint": "The rest gave the same result both times.",
     "choices": [
       {
         "text": "All forty",
         "correct": false,
-        "why": "The 23 that passed both times and the 3 that failed both times cannot tell the prompts apart."
+        "why": "A message that passed both times, or failed both times, says nothing about the change."
       },
       {
-        "text": "The fourteen whose result changed",
-        "correct": true,
-        "why": "Right. That is what the sign test is computed on."
-      },
-      {
-        "text": "Only the thirteen it fixed",
-        "correct": false,
-        "why": "The one it broke counts against it, and belongs in the test."
-      },
-      {
-        "text": "The 36 that pass under v3",
+        "text": "The twenty-eight that pass under v3, since those are the ones the examples got right",
         "correct": false,
         "why": "Most of those passed under v2 as well."
+      },
+      {
+        "text": "The eight that changed",
+        "correct": true,
+        "why": "Right: the sign test is computed on those eight."
+      },
+      {
+        "text": "Only the one that broke",
+        "correct": false,
+        "why": "The seven fixed ones are evidence too, in the other direction."
       }
     ]
   },
@@ -223,6 +402,38 @@
     ]
   },
   {
+    "id": "ex-9kng8ztd",
+    "version": 1,
+    "section": "what-examples-fix",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The sign test gave p = 0.070 for seven fixed and one broken. What is the fair way to report the change?",
+    "hint": "Five in a hundred is the usual bar.",
+    "choices": [
+      {
+        "text": "The examples are proved to help, since seven is far more than one",
+        "correct": false,
+        "why": "Eight changes are few, and a fair coin splits them that unevenly seven times in a hundred."
+      },
+      {
+        "text": "The examples made no difference at all, since the result is not significant at the usual bar of five in a hundred",
+        "correct": false,
+        "why": "Not significant is not the same as no effect: the evidence points one way, weakly."
+      },
+      {
+        "text": "Suggestive, not proof: more messages are needed",
+        "correct": true,
+        "why": "Right. On forty messages a change needs more than seven fixes to carry itself."
+      },
+      {
+        "text": "The test cannot be used, because the replies are deterministic",
+        "correct": false,
+        "why": "The test is about the messages, not about sampling."
+      }
+    ]
+  },
+  {
     "id": "ex-3zdjx8yv",
     "version": 1,
     "section": "what-examples-fix",
@@ -230,59 +441,59 @@
     "difficulty": "hard",
     "drillable": true,
     "prompt": "A study found few-shot gains survived even when the example labels were wrong. What does that suggest the examples were mostly teaching?",
-    "hint": "If the labels were wrong, the gain did not come from the labels being right.",
+    "hint": "Format and label set.",
     "choices": [
       {
-        "text": "The right answer for each kind of message",
+        "text": "The correct answer for each message",
         "correct": false,
-        "why": "Wrong labels would then have hurt much more."
+        "why": "Then wrong labels would have hurt much more."
       },
       {
-        "text": "Nothing; the gain was noise",
-        "correct": false,
-        "why": "It was measured across many tasks."
-      },
-      {
-        "text": "The format and the labels",
+        "text": "The answer's shape and its possible labels",
         "correct": true,
-        "why": "Right. Shape and vocabulary carried much of the effect."
+        "why": "Right. That is the part an example shows and a description only says."
       },
       {
-        "text": "How to reason step by step",
+        "text": "Nothing: the gains were noise",
         "correct": false,
-        "why": "The examples showed only inputs and answers."
+        "why": "The gains were measured; the question is what produced them."
+      },
+      {
+        "text": "That models ignore examples",
+        "correct": false,
+        "why": "They did not ignore them; they learnt something other than the labels."
       }
     ]
   },
   {
     "id": "ex-g7vbtcqa",
-    "version": 1,
+    "version": 2,
     "section": "choosing-examples",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why did adding examples move `t37`, a late order, from delivery to billing?",
-    "hint": "Compare `t37` with the first example.",
+    "prompt": "Why did adding examples move `t01`, a customer charged twice, from `high` to `normal`?",
+    "hint": "Look at the first example.",
     "choices": [
       {
-        "text": "The examples changed the list of labels the model was allowed to use",
+        "text": "The examples told the model to prefer `normal`",
         "correct": false,
-        "why": "The list was the same in both prompts."
+        "why": "No line says that; the pull came from what the examples are."
       },
       {
-        "text": "It looks like the first one, so it took that one's label",
+        "text": "The model became less careful with a longer prompt",
+        "correct": false,
+        "why": "It answered every other billing message as before; the pull has a source."
+      },
+      {
+        "text": "It resembles the first example, a billing refund that is `normal`",
         "correct": true,
-        "why": "Right: likeness to an example moves a message towards that example's label."
+        "why": "Right: an example pulls the messages that look like it towards its labels."
       },
       {
-        "text": "Billing is first in the list",
+        "text": "The message was mislabelled in the test set",
         "correct": false,
-        "why": "It was first in v2 as well, where `t37` was right."
-      },
-      {
-        "text": "The message mentions money",
-        "correct": false,
-        "why": "It does not."
+        "why": "A double charge is urgent, and the model agreed until the examples arrived."
       }
     ]
   },
@@ -294,27 +505,27 @@
     "difficulty": "medium",
     "drillable": true,
     "prompt": "Which example teaches the model the most, for its tokens?",
-    "hint": "Where would the model go wrong without help?",
+    "hint": "Where do two labels meet?",
     "choices": [
       {
-        "text": "*I can't log in*, labelled account, since it is the commonest message",
+        "text": "An obvious case it would have got right anyway",
         "correct": false,
-        "why": "The model sorts that correctly without an example."
+        "why": "That one teaches the format and little else."
       },
       {
-        "text": "A refund for a returned book",
+        "text": "A boundary case",
         "correct": true,
-        "why": "Right: it sits where billing and returns meet."
+        "why": "Right: that is where the model would otherwise guess."
       },
       {
-        "text": "Any message, provided it is short",
+        "text": "The longest message in the inbox",
         "correct": false,
-        "why": "Length is not what makes an example useful."
+        "why": "Length is not what makes an example informative."
       },
       {
-        "text": "A copy of a message from the test set",
+        "text": "A message copied from the test set, so that the example is known to be labelled correctly",
         "correct": false,
-        "why": "That inflates the score instead of teaching."
+        "why": "That one inflates the score by being answered by copying."
       }
     ]
   },
@@ -326,42 +537,41 @@
     "difficulty": "easy",
     "drillable": true,
     "prompt": "Why should an example never also be a test case?",
-    "hint": "What does the model do with a message it has just been shown the answer to?",
+    "hint": "What does the model do with an example?",
     "choices": [
       {
-        "text": "The harness refuses a message that appears in two files and stops the run",
-        "correct": false,
-        "why": "It does not; nothing would stop you."
-      },
-      {
-        "text": "It costs twice the tokens",
-        "correct": false,
-        "why": "The cost is not the problem."
-      },
-      {
-        "text": "It is answered by copying, so the score flatters the prompt",
+        "text": "It is answered by copying, inflating the score",
         "correct": true,
-        "why": "Right. Lesson 11 measures how far that inflates a score."
+        "why": "Right. Lesson 11 measures how far."
       },
       {
-        "text": "Examples have to be invented rather than taken from real messages",
+        "text": "The harness refuses to run a test set in which a case also appears as an example in the prompt",
         "correct": false,
-        "why": "The section recommends real traffic, cleaned."
+        "why": "`pl` checks no such thing."
+      },
+      {
+        "text": "Test cases are longer than examples",
+        "correct": false,
+        "why": "Length has nothing to do with it."
+      },
+      {
+        "text": "An example has no `expect` field",
+        "correct": false,
+        "why": "That is a detail of the file, not the reason."
       }
     ]
   },
   {
     "id": "ex-509wx7tx",
-    "version": 1,
+    "version": 2,
     "section": "choosing-examples",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "The prompt went from 69 tokens to 229 with three examples. How many tokens does each call now pay for the examples and their tags?",
+    "prompt": "`t01` went in as 108 tokens without the examples and 250 with them. How many tokens does every call now pay for the three examples and their tags?",
     "hint": "Subtract.",
-    "value": 160,
-    "tolerance": 0,
-    "unit": "tokens"
+    "value": 142,
+    "tolerance": 0
   },
   {
     "id": "ex-v9zsh6fs",
@@ -374,7 +584,7 @@
     "hint": "Four rules.",
     "choices": [
       {
-        "text": "Every example pulls answers towards its own label",
+        "text": "Every example pulls answers towards its own labels",
         "correct": true,
         "why": "Yes: balance matters."
       },
@@ -397,33 +607,33 @@
   },
   {
     "id": "ex-d1n9k9mv",
-    "version": 1,
+    "version": 2,
     "section": "what-examples-leak",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
     "prompt": "One example carried `\"order\": \"4471\"`. What happened to the forty replies?",
-    "hint": "Look at `t04`, a customer who cannot log in.",
+    "hint": "Count the `fields` failures.",
     "choices": [
       {
-        "text": "Only the replies about orders gained the field",
+        "text": "None of them changed",
         "correct": false,
-        "why": "`t04` has no order and gained it too."
+        "why": "`fields` failed five replies for a field nobody asked for."
       },
       {
-        "text": "All forty carried the same order number",
+        "text": "Every reply copied the field, whatever the message was about",
+        "correct": false,
+        "why": "Thirty-five did not; the ones that did looked like the example."
+      },
+      {
+        "text": "Five carried it, four wrongly",
         "correct": true,
-        "why": "Right. The model had no value of its own, so it copied the one it was shown."
+        "why": "Right: messages about an order or a payment, and four of them were given order 4471 wrongly."
       },
       {
-        "text": "The model ignored the field",
+        "text": "The model refused to answer",
         "correct": false,
-        "why": "`fields` failed on all forty."
-      },
-      {
-        "text": "They stopped being valid JSON",
-        "correct": false,
-        "why": "`json` passed on all forty."
+        "why": "Every reply came back."
       }
     ]
   },
@@ -435,27 +645,27 @@
     "difficulty": "medium",
     "drillable": true,
     "prompt": "Which check caught the copied order number, and why only that one?",
-    "hint": "Which check looks for fields nobody asked for?",
+    "hint": "The checks are in order.",
     "choices": [
       {
-        "text": "`json`, because the extra field broke the syntax",
+        "text": "`json`, because the extra field broke the JSON",
         "correct": false,
-        "why": "The JSON was valid."
+        "why": "The replies parsed: an extra field is still valid JSON."
       },
       {
-        "text": "`category`, because the order number replaced the category",
-        "correct": false,
-        "why": "The category was still there."
-      },
-      {
-        "text": "`fields`: it refuses fields nobody asked for",
+        "text": "`fields`: it fails extra fields",
         "correct": true,
-        "why": "Right. A check that only looked for the fields it needed would have passed all forty."
+        "why": "Right. A check that only looked for the fields it needed would have passed them."
       },
       {
-        "text": "None; it was found by reading",
+        "text": "`labels`, because 4471 is not a label",
         "correct": false,
-        "why": "The check reported 0 passes."
+        "why": "`labels` only reads `category` and `urgency`."
+      },
+      {
+        "text": "`category`, because carrying an order number changed the category the model chose for each message",
+        "correct": false,
+        "why": "The category was not what changed."
       }
     ]
   },
@@ -467,25 +677,25 @@
     "difficulty": "hard",
     "drillable": true,
     "prompt": "Why is a defect in an example easy to miss in a demo and loud in a test set?",
-    "hint": "How many replies does it touch?",
+    "hint": "Which messages showed it?",
     "choices": [
       {
-        "text": "Demos use a different model",
+        "text": "A demo uses a different model",
         "correct": false,
         "why": "Same model, same prompt."
       },
       {
-        "text": "It is copied into every answer, and one answer read alone looks deliberate",
+        "text": "It shows only in messages that resemble the example",
         "correct": true,
-        "why": "Right: forty out of forty is loud; one out of one looks like a feature."
+        "why": "Right: `t04`, the login problem, came back clean."
       },
       {
-        "text": "Test sets use stricter models",
+        "text": "Test sets are checked by a person, who reads every reply and notices what a demo does not",
         "correct": false,
-        "why": "The checks are stricter, not the model."
+        "why": "They are checked by `pl check`."
       },
       {
-        "text": "It only appears at high temperature",
+        "text": "The defect only appears at high temperature",
         "correct": false,
         "why": "These runs were at temperature 0."
       }
@@ -502,36 +712,36 @@
     "hint": "Four habits.",
     "choices": [
       {
-        "text": "Vary whatever should vary between answers",
+        "text": "Vary whatever should vary",
         "correct": true,
-        "why": "Yes, or every summary starts the same way."
+        "why": "Yes: the model copies a pattern you did not mean."
       },
       {
-        "text": "Remove names, order numbers and dates",
+        "text": "Remove names, order numbers, dates and amounts",
         "correct": true,
-        "why": "Yes: what belongs to one customer leaks into the rest."
+        "why": "Yes: those turn up in other answers."
       },
       {
-        "text": "Check strictly for unexpected fields",
-        "correct": true,
-        "why": "Yes: that is what caught the order number."
-      },
-      {
-        "text": "Write the examples in a different format from the description, for variety",
+        "text": "Use as many examples as the prompt can hold",
         "correct": false,
-        "why": "The opposite: an example that disagrees with the description wins."
+        "why": "Each one costs tokens on every call and pulls answers towards it."
+      },
+      {
+        "text": "Check strictly, so a leak fails a test",
+        "correct": true,
+        "why": "Yes: that is how the order number was caught."
       }
     ]
   },
   {
     "id": "ex-gjeghbn6",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "ordering",
     "difficulty": "medium",
     "drillable": true,
     "prompt": "Put the three prompts of this lesson in order of how many replies passed every check, fewest first.",
-    "hint": "0, 24 and 36.",
+    "hint": "0, 22 and 28.",
     "items": [
       "The bare prompt",
       "The prompt that asks for JSON",
@@ -540,7 +750,7 @@
   },
   {
     "id": "ex-etyprt46",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "matching",
     "difficulty": "medium",
@@ -554,15 +764,15 @@
       },
       {
         "left": "Adding three examples",
-        "right": "The code fences and sentences around the JSON"
+        "right": "Several `normal` messages no longer called `high`"
       },
       {
         "left": "An order number left in one example",
-        "right": "An extra field in every reply"
+        "right": "An extra field in five replies"
       },
       {
-        "left": "A billing example about delivery",
-        "right": "A late order sorted as billing"
+        "left": "A billing example labelled `normal`",
+        "right": "A double charge downgraded from `high`"
       }
     ],
     "right_distractors": [
@@ -571,33 +781,33 @@
   },
   {
     "id": "ex-067xaa0r",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "A colleague adds a fourth example and the score goes from 36 to 37 of 40. What would you want to see before keeping it?",
-    "hint": "One message is very little evidence, and an example has a cost.",
+    "prompt": "A colleague adds a fourth example and the score goes from 28 to 29 of 40. What would you want to see before keeping it?",
+    "hint": "One more pass is one message.",
     "choices": [
       {
-        "text": "Nothing: a higher score is better",
+        "text": "Nothing: any gain is worth keeping",
         "correct": false,
-        "why": "One message can move for reasons unrelated to the change."
+        "why": "One message can move for reasons that have nothing to do with the example."
       },
       {
-        "text": "Which messages changed, whether any broke, and what the extra tokens cost on every call",
+        "text": "Which messages changed, the sign test on them, and the token cost on every call",
         "correct": true,
-        "why": "Right: `pl compare`, and `pl tokens`."
+        "why": "Right: which messages changed, whether the change could be chance, and what it costs."
       },
       {
-        "text": "A longer example",
+        "text": "A second run of the same prompt, to see whether 29 repeats or goes back to 28",
         "correct": false,
-        "why": "Length is not evidence."
+        "why": "At temperature 0 it will repeat on that machine; that says nothing about the example."
       },
       {
-        "text": "The same run again at temperature 0",
+        "text": "A longer prompt, to check the example is not too short",
         "correct": false,
-        "why": "At temperature 0 the stand-in gives the same answers again; that proves nothing new."
+        "why": "Length is not the question."
       }
     ]
   }

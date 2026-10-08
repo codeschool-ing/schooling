@@ -28,7 +28,7 @@ Save this as `pl.py`:
 ```
 
 You do not need to follow every line of it today. Each lesson says what a command counts, and
-that is enough to argue with the number. But it is all here, nothing in it is hidden, and when a
+that is enough to argue with the number. **But it is all here**, nothing in it is hidden, and when a
 number surprises you the answer is in a few lines of this file.
 
 Typing `python3 ~/triage/pl.py` every time gets old, so give it a short name. This line at the end
@@ -93,7 +93,22 @@ These are forty of its messages, each with the labels a person gave it. Save the
 {"id": "t40", "message": "What is your policy on reviewing self-published books?", "expect": {"category": "other", "urgency": "low"}}
 ```
 
-TODO-LAYOUT
+Check that everything is where `pl` expects it, and look at the first prompt as the model will
+receive it, with `t01` filled in:
+
+```
+ana@lab:~/triage$ ls
+cases
+pl.py
+prompts
+runs
+ana@lab:~/triage$ wc -l cases/dev.jsonl
+40 cases/dev.jsonl
+ana@lab:~/triage$ pl render prompts/v1-bare.txt --cases cases/dev.jsonl --case t01
+Sort this customer message for the support team. Say what it is about and how urgent it is.
+
+Message: I was charged twice for order 4471. Please refund the second payment.
+```
 
 `{{message}}` in a prompt is replaced by the case's `message`. `expect` never reaches the model:
 it is what `pl check` compares the reply with.

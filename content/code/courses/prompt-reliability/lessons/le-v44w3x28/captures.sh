@@ -58,10 +58,13 @@ serve() {
   fi
 }
 
+ollama rm llama3.2:1b >/dev/null 2>&1
+
 block versions
 on 'python3 --version'
 on 'ollama --version'
 on 'ollama list'
+on 'du -sh /usr/local/lib/ollama'
 
 block layout
 on 'ls'
@@ -81,7 +84,6 @@ serve up
 rm -rf "$HOME/.ollama"
 
 block nomodel
-ollama rm llama3.2:1b >/dev/null 2>&1
 on 'pl run prompts/v1-bare.txt cases/dev.jsonl --out runs/v1.jsonl --set model=llama3.2:1b'
 ollama pull llama3.2:1b >/dev/null 2>&1
 on 'ollama list'
@@ -115,3 +117,8 @@ on 'pl run prompts/v3-leaky.txt cases/dev.jsonl --out runs/leaky.jsonl'
 on 'pl check runs/leaky.jsonl --failures'
 on 'grep -c 4471 runs/leaky.jsonl'
 on 'pl show runs/leaky.jsonl t16'
+
+block small
+on 'pl run prompts/v3-examples.txt cases/dev.jsonl --out runs/v3-1b.jsonl --set model=llama3.2:1b'
+on 'ollama ps'
+on 'pl check runs/v3-1b.jsonl'

@@ -1,6 +1,6 @@
 ---
-title: The lab, and what in it is real
-version: 1
+title: Your lab, and three ways to build it
+version: 2
 ---
 
 A prompt that worked when you tried it has been tested once. **This course is about testing it the
@@ -8,73 +8,165 @@ other thirty-nine times**: writing down what a good answer is, running the promp
 has not seen, and counting. Everything after this section is a way of making that count more
 honest, cheaper or harder to fool.
 
-The whole course follows one prompt. Folio is an online bookshop, invented for the course. Its
-support inbox needs every message sorted before a person reads it: a category (billing,
-delivery, returns, account or other), an urgency (low, normal or high) and a one-sentence
-summary. The answer is JSON, because a program reads it next.
+Counting needs a model you can call hundreds of times without thinking about it. A lesson here
+makes anything from forty calls to a few hundred. So the course recommends a model that runs on
+your own computer: **Ollama**, a free program that downloads open models and answers requests on
+your machine, with **`llama3.2:3b`**, a small model from Meta. No account, no card, no API key, and
+the same model in every AI course of this school, so if you set it up once you have it for all of
+them.
 
-## The harness
+The lab is three things:
 
-The lab is a directory, `~/triage`, built by `lab.sh` beside this course's `course.json`. It
-needs Python and git, and nothing else:
+- **Ollama and `llama3.2:3b`**, installed in this section;
+- **Python 3**, which runs the harness and needs nothing beyond its standard library;
+- **`~/triage`**, a directory with the harness, the test set and the prompts, built in the next
+  section.
+
+## Three ways to have one
+
+| path | what you get | what it costs | the transcripts |
+|---|---|---|---|
+| **installed** (recommended) | Ollama on the computer you already use | 2.0 GB of disk for the model, plus Ollama itself, and 2.9 GB of memory while it answers | close; your replies may differ in wording |
+| **a virtual machine** | Ubuntu Server 24.04 LTS with Ollama inside it | the same, plus the virtual machine's own disk and memory; no graphics card, so slower | close, as installed |
+| **online** | a paid model behind an API, reached with your own key | money per token, and the course's numbers will not be yours | different |
+
+**Installed is the recommended path.** Ollama is one program and a directory of models; it
+changes nothing else on your system, and it uses your graphics card when it finds one it can use,
+which a virtual machine cannot give it. The model needs memory more than anything: loaded, it took 2.9 GB on the machine these lessons
+were captured on, which a computer with 8 GB has to spare. One with less should take the smaller
+model described below.
+
+Every capture in this course was taken on Ubuntu 24.04 with Ollama 0.40.0, on a machine with
+four processor cores and no graphics card. **A language model is not a calculator**: with the
+settings the harness uses, the same prompt gives the same reply every time on one machine. A
+different machine, a different version of Ollama or a different build of the model can word a reply
+differently, and now and then label it differently. So your counts may be a few away from the
+ones printed here. What each lesson shows should still hold: if a change fixed thirteen replies
+here and two on your machine, the lesson is about why it moved at all.
+
+## Installed
+
+On Linux, Ollama's own script installs it and sets it up as a service that starts with the
+computer:
+
+```sh
+curl -fsSL https://ollama.com/install.sh | sh
+```
+
+On macOS and Windows, download the installer from ollama.com and run it. **Those two were not run
+for this course.** On Windows, the commands in this course are typed in a Linux terminal: install
+WSL with Ubuntu 24.04 (`wsl --install -d Ubuntu-24.04` in PowerShell), and install Ollama inside
+it with the Linux line above, so the model and the harness live in the same place.
+
+Then download the model. It is a single command, and the first time it fetches about two
+gigabytes:
+
+```sh
+ollama pull llama3.2:3b
+```
+
+Check what you have:
 
 ```
-ana@lab:~/triage$ ls
-bin
-cases
-checks
-prices.json
-promptlab
-prompts
-runs
-ana@lab:~/triage$ head -n 2 cases/dev.jsonl
-{"id": "t01", "message": "I was charged twice for order 4471. Please refund the second payment.", "expect": {"category": "billing", "urgency": "high"}}
-{"id": "t02", "message": "My parcel was meant to arrive on Monday and the tracking hasn't moved since Friday.", "expect": {"category": "delivery", "urgency": "normal"}}
-ana@lab:~/triage$ wc -l cases/dev.jsonl
-40 cases/dev.jsonl
+ana@lab:~/triage$ python3 --version
+Python 3.12.3
+ana@lab:~/triage$ ollama --version
+ollama version is 0.40.0
+ana@lab:~/triage$ ollama list
+NAME           ID              SIZE      MODIFIED       
+llama3.2:3b    a80c4f17acd5    2.0 GB    57 minutes ago    
+ana@lab:~/triage$ du -sh /usr/local/lib/ollama
+2.1G	/usr/local/lib/ollama
 ```
 
-`cases/dev.jsonl` is the **test set**: forty messages, one per line, each with the answer a person
-decided was right. `prompts/` holds the prompts. `pl` is the command that joins them, and three of
-its subcommands do most of the work in this course:
+`ollama list` shows what is on the disk, and `du` what Ollama itself took: 2.1 GB, most of it
+libraries for graphics cards. Python 3 is already on Ubuntu and macOS; on another system, install it
+from python.org. Version 3.8 or later is enough.
 
-| command | what it does |
-|---|---|
-| `pl run PROMPT CASES --out RUN` | fills the prompt with each message, calls the model, and writes every reply to a file |
-| `pl check RUN` | holds every reply to five checks and counts the passes |
-| `pl show RUN ID` | prints one reply exactly as the model wrote it |
+### A weaker computer
 
-The checks run in order, and a reply that fails one fails every check after it: `json` (does it
-parse), `fields` (does it have the fields and no others), `labels` (are the values from the
-lists), `category` and `urgency` (do they match the person's answer). `all` counts the replies
-that passed everything.
+If your computer has less than 8 GB of memory, or a reply takes more than half a minute, use
+**`llama3.2:1b`**, the same family at a third of the size:
 
-## The model is a stand-in
+```sh
+ollama pull llama3.2:1b
+```
 
-**The model in this lab is not a language model.** It is `promptlab/standin.py`, about four
-hundred lines of Python written for the course. Its opening comment lists every rule it
-answers by: it sorts a message by keywords, leans towards the labels its examples show, writes the
-shape its first example has, and has a handful of formatting habits at fixed rates.
+It is 1.3 GB on disk. Every command in the course takes `--set model=llama3.2:1b`, or you can
+change the model in `DEFAULTS` at the top of `pl.py` once. Here is the best prompt of this lesson
+run with it, and what both models took in memory once they had answered:
 
-It is there for three reasons. It needs no API key and costs nothing. It answers the same way every
-time, so the numbers in these lessons are the numbers you get when you run them. And its failures
-were put there on purpose, so the harness always has something to find.
+```
+ana@lab:~/triage$ pl run prompts/v3-examples.txt cases/dev.jsonl --out runs/v3-1b.jsonl --set model=llama3.2:1b
+40 calls, prompt 1d9c6ec4, llama3.2:1b, written to runs/v3-1b.jsonl
+ana@lab:~/triage$ ollama ps
+NAME           ID              SIZE      PROCESSOR          CONTEXT    RUNNER      UNTIL              
+llama3.2:1b    baf6a787fdff    2.0 GB    25%/75% CPU/GPU    4096       llamacpp    4 minutes from now    
+llama3.2:3b    a80c4f17acd5    2.9 GB    30%/70% CPU/GPU    4096       llamacpp    3 minutes from now    
+ana@lab:~/triage$ pl check runs/v3-1b.jsonl
+check      pass  fail
+json         36     4
+fields       36     4
+labels       36     4
+category     14    26
+urgency       9    31
+all           9    31
+```
 
-What that means for what you read: **every number in a transcript was computed by the harness,
-and every reply was written by the stand-in.** The numbers are real arithmetic about made-up
-behaviour. When a lesson says something about real models, it says so in the prose, and says
-where the claim comes from. The harness does not care which is which; `promptlab/model.py` is the
-one function that calls a model, and pointing it at a real one changes nothing else.
+2.0 GB of memory against 2.9, and **9 replies of 40 passing where `llama3.2:3b` passes 28**. It
+runs, and it is a much weaker model: expect the counts in these lessons to be far lower on it. The
+checks are what this course is about, and they work the same way.
 
-::: track ai
-You wrote Python in `python`, so read `promptlab/cli.py` when a number surprises you: each check
-is a few lines, and knowing exactly what it counts is half of trusting it.
-:::
+## In a virtual machine
 
-::: track *
-You do not need to read the harness's code to use it. Each lesson says what a command counts, and
-that is enough to argue with the number.
-:::
+If you would rather keep everything apart from your own system, build a virtual machine with
+**Ubuntu Server 24.04 LTS**: VirtualBox on Windows and Linux, UTM on a Mac. Give it at least 8 GB
+of memory and 20 GB of disk, and inside it follow the Linux steps above. `virtualization` lesson 4
+builds one in VirtualBox step by step.
+
+A virtual machine gets no graphics card, so every reply is computed on the processor. That is how
+this course was captured, and a run of forty messages took a few minutes; it works, and it is
+slower than it would be on the computer underneath.
+
+## Online, with your own key
+
+The last path is a commercial model behind an API: you create an account with a provider, add a
+payment method, and get a key. The harness talks to a model through one function, `call()`, and
+this version of it speaks the OpenAI-compatible chat API that most providers offer:
+
+```python
+def call(prompt, params):
+    """One request to an OpenAI-compatible API, paid for with your own key."""
+    body = {"model": params["model"], "temperature": float(params["temperature"]),
+            "seed": int(params["seed"]), "max_tokens": int(params["num_predict"]),
+            "messages": [{"role": "user", "content": prompt}]}
+    req = urllib.request.Request(os.environ["PL_BASE"] + "/chat/completions",
+                                 json.dumps(body).encode(),
+                                 {"Content-Type": "application/json",
+                                  "Authorization": "Bearer " + os.environ["PL_KEY"]})
+    start = time.time()
+    try:
+        with urllib.request.urlopen(req, timeout=600) as r:
+            reply = json.load(r)
+    except urllib.error.HTTPError as e:
+        die("the API answered %d: %s" % (e.code, e.read().decode().strip()))
+    choice, usage = reply["choices"][0], reply.get("usage", {})
+    return {"text": choice["message"]["content"], "stop": choice["finish_reason"],
+            "tokens_in": usage.get("prompt_tokens", 0),
+            "tokens_out": usage.get("completion_tokens", 0),
+            "seconds": round(time.time() - start, 2)}
+```
+
+Replace the `call()` in `pl.py` with it, set `PL_BASE` to the provider's address and `PL_KEY` to
+your key, and pass the provider's model name with `--set model=...`. It was tested against Ollama's
+own OpenAI-compatible address, `http://127.0.0.1:11434/v1`, and not against any provider; check
+the address, the model names and the prices in your provider's documentation.
+
+**This path costs money on every call**, and a lesson that runs a prompt over forty messages ten
+times is four hundred calls. Some providers offer a free allowance; the course never depends on one,
+because a free allowance is a term somebody else can change. A commercial model is also much
+stronger than `llama3.2:3b`, so some of the failures these lessons count will not happen to you,
+which is good news for your prompt and less good for the lesson.
 
 ## Where this course starts
 

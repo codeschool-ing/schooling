@@ -1,143 +1,264 @@
 {
   "ex-0ybmry57": {
     "prompt": "No laboratório deste curso, o que escreve as respostas que o `pl check` conta?",
-    "hint": "Releia o aviso da seção sobre o modelo.",
+    "hint": "Releia de que o laboratório é feito.",
     "choices": [
       {
-        "text": "Um substituto em Python escrito para o curso",
-        "why": "Certo. A aritmética é real; o comportamento é do curso."
+        "text": "A pessoa que rotulou o conjunto de teste, escrevendo cada resposta à mão ao lado da mensagem",
+        "why": "Essa pessoa escreveu as respostas esperadas em `expect`, não as respostas."
       },
       {
-        "text": "Um pequeno modelo de linguagem aberto que o `lab.sh` baixa na primeira vez que roda",
-        "why": "O laboratório não precisa de rede e não baixa nada."
+        "text": "O `llama3.2:3b`, um modelo aberto pequeno, rodado pelo Ollama no seu computador",
+        "why": "Certo. Toda resposta numa transcrição foi escrita por esse modelo."
       },
       {
-        "text": "Gravações das respostas de um modelo comercial",
-        "why": "Nenhum modelo produziu respostas neste laboratório."
+        "text": "Um programa em Python escrito para o curso que imita um modelo seguindo regras fixas de palavras-chave",
+        "why": "Nada no laboratório imita um modelo: as respostas vêm de um modelo de verdade."
       },
       {
-        "text": "A pessoa que rotulou o conjunto de teste",
-        "why": "Essa pessoa escreveu as respostas esperadas, não as respostas do modelo."
-      }
-    ]
-  },
-  "ex-47ehrjev": {
-    "prompt": "Uma resposta não é JSON válido. Em quantas verificações depois de `json` ela pode passar?",
-    "hint": "As verificações rodam em ordem.",
-    "choices": [
-      {
-        "text": "Todas, se o conteúdo estiver certo",
-        "why": "A bancada não consegue ler campos de um texto que não analisou."
-      },
-      {
-        "text": "Nenhuma",
-        "why": "Certo: uma resposta que falha numa verificação falha em todas as seguintes."
-      },
-      {
-        "text": "Só `category` e `urgency`",
-        "why": "Essas vêm por último e precisam do objeto analisado."
-      },
-      {
-        "text": "Só `fields`",
-        "why": "`fields` precisa do JSON já analisado."
+        "text": "Um modelo comercial acessado com a chave de API do curso",
+        "why": "O curso não distribui chave nenhuma. A API paga é uma opção, com a sua."
       }
     ]
   },
   "ex-zxtc97st": {
-    "prompt": "Por que o laboratório usa um substituto em vez de chamar um modelo real?",
-    "hint": "A seção dá três motivos.",
+    "prompt": "Por que o curso recomenda rodar o modelo no seu próprio computador em vez de usar uma API paga?",
+    "hint": "Pense em quantas chamadas uma aula faz.",
     "choices": [
       {
-        "text": "Porque um modelo real acertaria demais e as aulas não teriam o que mostrar",
-        "why": "Modelos reais também falham; não é esse o motivo dado."
+        "text": "Localmente, as muitas chamadas de uma aula não custam nada nem pedem cartão",
+        "why": "Certo, e assim nenhuma aula depende da cota gratuita de um provedor."
       },
       {
-        "text": "Não custa nada, responde igual a cada execução e falha de propósito",
-        "why": "Certo: de graça, repetível e com algo para encontrar."
+        "text": "Um modelo local responde melhor que qualquer modelo comercial",
+        "why": "A seção diz o contrário: um modelo comercial é muito mais forte que o `llama3.2:3b`."
       },
       {
-        "text": "Porque a bancada não consegue falar com um modelo real",
-        "why": "`model.py` é o único lugar a mudar para apontá-la para um."
+        "text": "O harness não consegue falar com uma API pela internet",
+        "why": "Consegue: a seção mostra uma `call()` para uma API compatível com a da OpenAI."
       },
       {
-        "text": "Para manter os números do curso em segredo",
-        "why": "Está tudo no `lab.sh`, à vista."
+        "text": "Um modelo local dá a mesma resposta em qualquer computador, então os números de cada aula sempre batem exatamente com os seus",
+        "why": "As respostas podem variar entre máquinas e versões; a seção avisa exatamente isso."
+      }
+    ]
+  },
+  "ex-47ehrjev": {
+    "prompt": "O computador de uma amiga tem 4 GB de memória, e uma resposta de uma linha do `llama3.2:3b` leva mais de um minuto. O que a aula sugere?",
+    "hint": "Duas coisas foram medidas sobre o modelo menor.",
+    "choices": [
+      {
+        "text": "Manter o modelo 3b e esperar, porque o menor não muda nada",
+        "why": "O modelo menor precisa de menos memória: 2,0 GB carregado contra 2,9."
+      },
+      {
+        "text": "Trocar para o `llama3.2:1b`, esperando contagens mais baixas",
+        "why": "Certo: ele passou 9 de 40 onde o 3b passou 28, e as verificações funcionam do mesmo jeito."
+      },
+      {
+        "text": "Rodar o modelo 3b numa máquina virtual, que dá ao modelo uma fatia de memória maior e separada",
+        "why": "Uma máquina virtual tira memória do mesmo computador e não ganha placa de vídeo."
+      },
+      {
+        "text": "Aumentar o `num_predict` para a resposta ser escrita em menos passos",
+        "why": "O `num_predict` limita quantos tokens uma resposta pode ter; não deixa cada um mais rápido."
+      }
+    ]
+  },
+  "ex-0z495928": {
+    "prompt": "Qual função do `pl.py` é a única que sabe que o modelo é servido pelo Ollama?",
+    "hint": "A que você troca para usar uma API paga.",
+    "choices": [
+      {
+        "text": "`render()`",
+        "why": "A `render()` preenche marcadores; ela nunca envia nada."
+      },
+      {
+        "text": "`judge()`",
+        "why": "A `judge()` lê uma resposta que já existe."
+      },
+      {
+        "text": "`call()`",
+        "why": "Certo. Todo o resto trabalha com texto e arquivos."
+      },
+      {
+        "text": "`cmd_run()`",
+        "why": "A `cmd_run()` chama a `call()` uma vez por caso; não sabe quem responde."
+      }
+    ]
+  },
+  "ex-fd6angnf": {
+    "prompt": "Uma resposta não é JSON válido. Em quantas das verificações depois de `json` ela pode passar?",
+    "hint": "As verificações rodam em ordem.",
+    "choices": [
+      {
+        "text": "Em todas, se o conteúdo estiver certo",
+        "why": "O harness não consegue ler campos de um texto que não conseguiu interpretar."
+      },
+      {
+        "text": "Em nenhuma: a primeira falha encerra tudo",
+        "why": "Certo. Uma resposta que não é JSON não tem campos para conferir."
+      },
+      {
+        "text": "Só em `category` e `urgency`, que leem o conteúdo e não o formato",
+        "why": "Essas leem campos do objeto interpretado, e não há objeto."
+      },
+      {
+        "text": "Depende de passar `--failures`",
+        "why": "O `--failures` só lista as falhas; não muda as verificações."
+      }
+    ]
+  },
+  "ex-s9ew2z2e": {
+    "prompt": "Por que o `pl.py` usa temperatura 0 e uma semente fixa por padrão?",
+    "hint": "O que uma diferença entre duas execuções deveria significar?",
+    "choices": [
+      {
+        "text": "Para o modelo escrever respostas mais curtas",
+        "why": "Temperatura e semente decidem quais tokens são escolhidos, não quantos."
+      },
+      {
+        "text": "Para que uma diferença entre duas execuções venha do prompt",
+        "why": "Certo, numa mesma máquina. A aula 8 trata de quando mudá-las."
+      },
+      {
+        "text": "Para que todo computador, seja qual for o processador e a versão do Ollama, imprima exatamente os números das aulas",
+        "why": "Outra máquina ou versão do Ollama ainda pode redigir uma resposta de outro jeito."
+      },
+      {
+        "text": "Porque o Ollama recusa um pedido sem elas",
+        "why": "O Ollama tem padrões próprios; o harness define estes de propósito."
+      }
+    ]
+  },
+  "ex-n0jew0pp": {
+    "prompt": "O `pl run` para com `Connection refused`. Qual é a causa mais provável?",
+    "hint": "Quem deveria estar escutando em 127.0.0.1:11434?",
+    "choices": [
+      {
+        "text": "O modelo nunca foi baixado",
+        "why": "Um modelo ausente recebe uma resposta, um 404 com o nome do modelo; esta não recebeu resposta nenhuma."
+      },
+      {
+        "text": "O servidor do Ollama não está rodando",
+        "why": "Certo. Suba o serviço, ou o `ollama serve`, ou o aplicativo do Ollama."
+      },
+      {
+        "text": "O conjunto de teste tem uma linha que não é JSON",
+        "why": "O `pl` falharia lendo o arquivo, antes de tentar conectar."
+      },
+      {
+        "text": "O Python é mais velho que o 3.8 e não consegue abrir uma conexão de rede",
+        "why": "Um Python antigo falha com erro de sintaxe ou de import, não com conexão recusada."
+      }
+    ]
+  },
+  "ex-c0170fze": {
+    "prompt": "Você baixou o `llama3.2:3b` pelo serviço do Linux ontem. Hoje, depois de subir o `ollama serve` você mesmo, o `ollama list` está vazio. O que aconteceu?",
+    "hint": "Onde um servidor procura os seus modelos?",
+    "choices": [
+      {
+        "text": "O modelo foi apagado quando o computador reiniciou",
+        "why": "Modelos são arquivos no disco; reiniciar não os remove."
+      },
+      {
+        "text": "O download ficou incompleto, e o Ollama descartou os arquivos parciais quando subiu de novo",
+        "why": "Então o `ollama list` não o teria mostrado ontem."
+      },
+      {
+        "text": "Dois servidores: cada um lê os modelos da home de quem o subiu",
+        "why": "Certo: dois servidores, dois diretórios de modelos. Use o serviço, ou baixe de novo no seu."
+      },
+      {
+        "text": "O `ollama list` só mostra modelos usados nos últimos cinco minutos",
+        "why": "Esse é o `ollama ps`, que mostra o que está carregado na memória."
+      }
+    ]
+  },
+  "ex-y8gq5y7p": {
+    "prompt": "Nesta máquina a primeira resposta levou 34,8 segundos e a segunda 12,7, porque a primeira chamada depois que o servidor sobe precisa ___ o modelo na memória.",
+    "hint": "Uma palavra para o que o `ollama ps` mostra depois.",
+    "blanks": [
+      {
+        "accept": [
+          "carregar"
+        ]
       }
     ]
   },
   "ex-qv37q6v8": {
-    "prompt": "A resposta do prompt nu para `t01` dizia `Type: Payment`. O que havia de errado?",
-    "hint": "A categoria em si estava errada?",
+    "prompt": "A resposta do prompt sem nada para o `t01` dizia `**Category:** Refund Request`. O que havia de errado com ela?",
+    "hint": "Releia o que o prompt pediu.",
     "choices": [
       {
-        "text": "O modelo entendeu mal a mensagem e classificou um problema de pagamento como outra coisa",
-        "why": "Ela trata de um pagamento; o conteúdo estava certo."
+        "text": "Nada: uma pessoa a lê sem problema, e um programa que a leia acha a categoria e a urgência do mesmo jeito",
+        "why": "Um programa precisa de JSON com campos conhecidos e rótulos conhecidos."
       },
       {
-        "text": "Nada que um programa analise: campos e palavras do próprio modelo",
-        "why": "Certo. O prompt deixou as três coisas para o modelo."
+        "text": "O modelo entendeu errado o cliente",
+        "why": "A resposta é uma leitura justa da mensagem."
       },
       {
-        "text": "Era longa demais",
-        "why": "O tamanho não era o problema aqui."
+        "text": "Não é JSON e o rótulo é palavra dele: o prompt não pediu nenhum dos dois",
+        "why": "Certo: é uma lacuna do prompt, preenchida com algo plausível."
       },
       {
-        "text": "Foi cortada pelo `max_tokens`",
-        "why": "`stop: end` diz que ela terminou sozinha."
+        "text": "A resposta foi cortada pelo `num_predict`",
+        "why": "O `pl show` informa `stop: stop`, uma resposta que terminou sozinha."
       }
     ]
   },
   "ex-r03wsb3s": {
-    "prompt": "Pedindo JSON em palavras, quantas das quarenta respostas falharam na verificação `json`?",
-    "hint": "A coluna `fail` de `pl check runs/v2.jsonl`."
+    "prompt": "Pedindo JSON em palavras, quantas das quarenta respostas passaram em todas as verificações?",
+    "hint": "A linha `all` do `pl check runs/v2.jsonl`."
   },
   "ex-tf1cstr3": {
-    "prompt": "A maioria das treze falhas de `json` com `v2-json.txt` tinha o conteúdo certo. O que havia de errado?",
-    "hint": "Veja `t03` e `t06`.",
+    "prompt": "Com o `v2-json.txt`, trinta e nove respostas eram JSON válido. Sobre o que era a maior parte das falhas restantes?",
+    "hint": "Releia a lista que o `--failures` imprimiu.",
     "choices": [
       {
-        "text": "Algo em volta do JSON: um bloco de código ou uma frase antes dele",
-        "why": "Certo. A descrição nunca disse o que pode vir em volta do objeto."
+        "text": "Texto em volta do JSON, como um bloco de código ou uma frase antes do objeto",
+        "why": "Só uma resposta não era JSON válido, e não estava embrulhada."
       },
       {
-        "text": "Aspas simples em vez de duplas",
-        "why": "Nenhuma das duas usou aspas simples."
+        "text": "Rótulos: urgência ou categoria",
+        "why": "Certo, e sete delas eram mensagens `normal` que o modelo chamou de `high`."
       },
       {
-        "text": "Um campo faltando",
-        "why": "Os três campos estavam lá."
+        "text": "Campos extras que ninguém pediu",
+        "why": "`fields` só falhou onde `json` já tinha falhado."
       },
       {
-        "text": "Rótulos em maiúsculas",
-        "why": "Os rótulos batiam com as listas."
+        "text": "Respostas cortadas antes da chave de fechamento",
+        "why": "Toda resposta terminou sozinha."
       }
     ]
   },
   "ex-p35r310t": {
-    "prompt": "O `pl compare` informa `fixed 13, broken 1` entre a v2 e a v3. Quais mensagens trazem evidência de que os exemplos ajudaram?",
-    "hint": "Uma mensagem que passou nas duas vezes não diz nada sobre a diferença.",
+    "prompt": "O `pl compare` informa `fixed 7, broken 1` entre a v2 e a v3. Quais mensagens trazem evidência sobre se os exemplos ajudaram?",
+    "hint": "As outras deram o mesmo resultado nas duas vezes.",
     "choices": [
       {
-        "text": "As quarenta",
-        "why": "As 23 que passaram nas duas e as 3 que falharam nas duas não distinguem os prompts."
+        "text": "Todas as quarenta",
+        "why": "Uma mensagem que passou nas duas vezes, ou falhou nas duas, não diz nada sobre a mudança."
       },
       {
-        "text": "As catorze cujo resultado mudou",
-        "why": "Certo. É sobre elas que o teste do sinal é calculado."
+        "text": "As vinte e oito que passam com a v3, já que são as que os exemplos acertaram",
+        "why": "A maioria delas já passava com a v2."
       },
       {
-        "text": "Só as treze que ela corrigiu",
-        "why": "A que ela quebrou conta contra, e entra no teste."
+        "text": "As oito que mudaram",
+        "why": "Certo: o teste do sinal é calculado sobre essas oito."
       },
       {
-        "text": "As 36 que passam na v3",
-        "why": "A maioria delas já passava na v2."
+        "text": "Só a que quebrou",
+        "why": "As sete consertadas também são evidência, na outra direção."
       }
     ]
   },
   "ex-rn9s5xbt": {
-    "prompt": "O teste que pergunta com que frequência uma moeda honesta dividiria os resultados que mudaram de forma ao menos tão desigual é o teste do ___.",
-    "hint": "O nome fala do sentido em que cada uma mudou.",
+    "prompt": "O teste que pergunta com que frequência uma moeda honesta dividiria os resultados que mudaram de forma pelo menos tão desigual é o teste do ___.",
+    "hint": "O nome dele é sobre para que lado cada um se moveu.",
     "blanks": [
       {
         "accept": [
@@ -146,113 +267,134 @@
       }
     ]
   },
-  "ex-3zdjx8yv": {
-    "prompt": "Um estudo viu que o ganho do few-shot sobrevivia mesmo com rótulos errados nos exemplos. O que isso sugere que os exemplos ensinavam, sobretudo?",
-    "hint": "Se os rótulos estavam errados, o ganho não vinha de estarem certos.",
+  "ex-9kng8ztd": {
+    "prompt": "O teste do sinal deu p = 0.070 para sete consertadas e uma quebrada. Qual é o jeito justo de relatar a mudança?",
+    "hint": "Cinco em cem é o critério habitual.",
     "choices": [
       {
-        "text": "A resposta certa para cada tipo de mensagem",
-        "why": "Rótulos errados teriam prejudicado muito mais."
+        "text": "Está provado que os exemplos ajudam, já que sete é muito mais que um",
+        "why": "Oito mudanças são poucas, e uma moeda honesta as divide assim sete vezes em cem."
       },
       {
-        "text": "Nada; o ganho era ruído",
-        "why": "Foi medido em muitas tarefas."
+        "text": "Os exemplos não fizeram diferença nenhuma, já que o resultado não é significativo pelo critério habitual de cinco em cem",
+        "why": "Não significativo não é o mesmo que sem efeito: a evidência aponta para um lado, fraca."
       },
       {
-        "text": "O formato e os rótulos",
-        "why": "Certo. Forma e vocabulário carregavam boa parte do efeito."
+        "text": "Sugere, não prova: faltam mensagens",
+        "why": "Certo. Em quarenta mensagens uma mudança precisa de mais de sete consertos para se sustentar."
       },
       {
-        "text": "Como raciocinar passo a passo",
-        "why": "Os exemplos mostravam só entradas e respostas."
+        "text": "O teste não pode ser usado, porque as respostas são determinísticas",
+        "why": "O teste é sobre as mensagens, não sobre amostragem."
+      }
+    ]
+  },
+  "ex-3zdjx8yv": {
+    "prompt": "Um estudo descobriu que os ganhos do few-shot sobreviviam mesmo com os rótulos dos exemplos errados. O que isso sugere que os exemplos ensinavam, principalmente?",
+    "hint": "Formato e conjunto de rótulos.",
+    "choices": [
+      {
+        "text": "A resposta correta de cada mensagem",
+        "why": "Então rótulos errados teriam atrapalhado muito mais."
+      },
+      {
+        "text": "A forma da resposta e os rótulos possíveis",
+        "why": "Certo. É a parte que um exemplo mostra e uma descrição só diz."
+      },
+      {
+        "text": "Nada: os ganhos eram ruído",
+        "why": "Os ganhos foram medidos; a pergunta é o que os produziu."
+      },
+      {
+        "text": "Que os modelos ignoram exemplos",
+        "why": "Não ignoraram; aprenderam outra coisa que não os rótulos."
       }
     ]
   },
   "ex-g7vbtcqa": {
-    "prompt": "Por que acrescentar exemplos levou `t37`, um pedido atrasado, de delivery para billing?",
-    "hint": "Compare `t37` com o primeiro exemplo.",
+    "prompt": "Por que acrescentar exemplos levou o `t01`, um cliente cobrado duas vezes, de `high` para `normal`?",
+    "hint": "Olhe o primeiro exemplo.",
     "choices": [
       {
-        "text": "Os exemplos mudaram a lista de rótulos que o modelo tinha para usar",
-        "why": "A lista era a mesma nos dois prompts."
+        "text": "Os exemplos mandaram o modelo preferir `normal`",
+        "why": "Nenhuma linha diz isso; o puxão veio do que os exemplos são."
       },
       {
-        "text": "Ela se parece com o primeiro, e ficou com o rótulo dele",
-        "why": "Certo: a semelhança com um exemplo leva a mensagem para o rótulo desse exemplo."
+        "text": "O modelo ficou menos cuidadoso com um prompt mais longo",
+        "why": "Ele respondeu as outras mensagens de billing como antes; o puxão tem uma origem."
       },
       {
-        "text": "Billing é o primeiro da lista",
-        "why": "Também era na v2, onde `t37` acertava."
+        "text": "Ela se parece com o primeiro exemplo, um reembolso de billing que é `normal`",
+        "why": "Certo: um exemplo puxa as mensagens parecidas com ele para os seus rótulos."
       },
       {
-        "text": "A mensagem fala de dinheiro",
-        "why": "Não fala."
+        "text": "A mensagem estava rotulada errado no conjunto de teste",
+        "why": "Uma cobrança em dobro é urgente, e o modelo concordava até os exemplos chegarem."
       }
     ]
   },
   "ex-wtgy8w29": {
-    "prompt": "Qual exemplo ensina mais ao modelo pelo que custa em tokens?",
-    "hint": "Onde o modelo erraria sem ajuda?",
+    "prompt": "Qual exemplo ensina mais ao modelo, pelos tokens que custa?",
+    "hint": "Onde dois rótulos se encontram?",
     "choices": [
       {
-        "text": "*I can't log in*, rotulada account, já que é a mensagem mais comum",
-        "why": "O modelo classifica essa certo sem exemplo."
+        "text": "Um caso óbvio que ele acertaria de qualquer jeito",
+        "why": "Esse ensina o formato e pouco mais."
       },
       {
-        "text": "O reembolso de um livro devolvido",
-        "why": "Certo: fica onde billing e returns se encontram."
+        "text": "Um caso de fronteira",
+        "why": "Certo: é ali que o modelo, sem ele, chutaria."
       },
       {
-        "text": "Qualquer mensagem, desde que curta",
-        "why": "O tamanho não é o que torna um exemplo útil."
+        "text": "A mensagem mais longa da caixa de entrada",
+        "why": "O comprimento não é o que torna um exemplo informativo."
       },
       {
-        "text": "A cópia de uma mensagem do conjunto de teste",
-        "why": "Isso infla a nota em vez de ensinar."
+        "text": "Uma mensagem copiada do conjunto de teste, para ter certeza de que o exemplo está bem rotulado",
+        "why": "Essa infla a nota por ser respondida por cópia."
       }
     ]
   },
   "ex-yrt3e3y8": {
     "prompt": "Por que um exemplo nunca deve ser também um caso de teste?",
-    "hint": "O que o modelo faz com uma mensagem cuja resposta acabou de ver?",
+    "hint": "O que o modelo faz com um exemplo?",
     "choices": [
       {
-        "text": "A bancada recusa uma mensagem que aparece em dois arquivos e interrompe a execução",
-        "why": "Não recusa; nada impediria."
+        "text": "É respondido por cópia, inflando a nota",
+        "why": "Certo. A aula 11 mede o quanto."
       },
       {
-        "text": "Custa o dobro de tokens",
-        "why": "O custo não é o problema."
+        "text": "O harness se recusa a rodar um conjunto de teste em que um caso também aparece como exemplo no prompt",
+        "why": "O `pl` não confere nada disso."
       },
       {
-        "text": "Ela é respondida por cópia, e a nota exagera o prompt",
-        "why": "Certo. A aula 11 mede quanto isso infla uma nota."
+        "text": "Casos de teste são mais longos que exemplos",
+        "why": "O comprimento não tem nada a ver."
       },
       {
-        "text": "Exemplos precisam ser inventados, e não tirados de mensagens reais",
-        "why": "A seção recomenda tráfego real, limpo."
+        "text": "Um exemplo não tem o campo `expect`",
+        "why": "Isso é um detalhe do arquivo, não o motivo."
       }
     ]
   },
   "ex-509wx7tx": {
-    "prompt": "O prompt foi de 69 para 229 tokens com três exemplos. Quantos tokens cada chamada passa a pagar pelos exemplos e suas tags?",
-    "hint": "Subtraia.",
-    "unit": "tokens"
+    "prompt": "O `t01` entrou com 108 tokens sem os exemplos e 250 com eles. Quantos tokens toda chamada agora paga pelos três exemplos e suas tags?",
+    "hint": "Subtraia."
   },
   "ex-v9zsh6fs": {
-    "prompt": "Quais destes são motivos que a seção dá para escolher exemplos com cuidado? Marque todos que se aplicam.",
+    "prompt": "Quais destes são motivos que a seção dá para escolher os exemplos com cuidado? Marque todos os que se aplicam.",
     "hint": "Quatro regras.",
     "choices": [
       {
-        "text": "Todo exemplo puxa as respostas para o próprio rótulo",
+        "text": "Todo exemplo puxa as respostas para os próprios rótulos",
         "why": "Sim: o equilíbrio importa."
       },
       {
-        "text": "Exemplos são pagos em cada chamada",
+        "text": "Os exemplos são pagos em toda chamada",
         "why": "Sim: fazem parte de todo prompt."
       },
       {
-        "text": "O modelo ignora exemplos depois do terceiro",
+        "text": "Um modelo ignora exemplos depois do terceiro",
         "why": "Nada na aula diz isso."
       },
       {
@@ -263,120 +405,120 @@
   },
   "ex-d1n9k9mv": {
     "prompt": "Um exemplo trazia `\"order\": \"4471\"`. O que aconteceu com as quarenta respostas?",
-    "hint": "Veja `t04`, um cliente que não consegue entrar.",
+    "hint": "Conte as falhas de `fields`.",
     "choices": [
       {
-        "text": "Só as respostas sobre pedidos ganharam o campo",
-        "why": "`t04` não tem pedido e ganhou também."
+        "text": "Nenhuma mudou",
+        "why": "`fields` reprovou cinco respostas por um campo que ninguém pediu."
       },
       {
-        "text": "As quarenta traziam o mesmo número de pedido",
-        "why": "Certo. Sem valor próprio, o modelo copiou o que viu."
+        "text": "Todas copiaram o campo, fosse qual fosse o assunto da mensagem",
+        "why": "Trinta e cinco não copiaram; as que copiaram se pareciam com o exemplo."
       },
       {
-        "text": "O modelo ignorou o campo",
-        "why": "`fields` falhou nas quarenta."
+        "text": "Cinco o trouxeram, quatro sem razão",
+        "why": "Certo: mensagens sobre um pedido ou um pagamento, e quatro delas ganharam o pedido 4471 sem razão."
       },
       {
-        "text": "Deixaram de ser JSON válido",
-        "why": "`json` passou nas quarenta."
+        "text": "O modelo se recusou a responder",
+        "why": "Toda resposta voltou."
       }
     ]
   },
   "ex-drdekm3h": {
     "prompt": "Qual verificação pegou o número de pedido copiado, e por que só ela?",
-    "hint": "Qual verificação procura campos que ninguém pediu?",
+    "hint": "As verificações estão em ordem.",
     "choices": [
       {
-        "text": "`json`, porque o campo extra quebrou a sintaxe",
-        "why": "O JSON era válido."
+        "text": "`json`, porque o campo extra quebrou o JSON",
+        "why": "As respostas eram JSON válido: um campo extra continua sendo JSON válido."
       },
       {
-        "text": "`category`, porque o número substituiu a categoria",
-        "why": "A categoria continuava lá."
+        "text": "`fields`: ela reprova campos extras",
+        "why": "Certo. Uma verificação que só procurasse os campos de que precisa as teria aprovado."
       },
       {
-        "text": "`fields`: recusa campos que ninguém pediu",
-        "why": "Certo. Uma verificação que só procurasse os campos necessários passaria as quarenta."
+        "text": "`labels`, porque 4471 não é um rótulo",
+        "why": "`labels` só lê `category` e `urgency`."
       },
       {
-        "text": "Nenhuma; foi encontrado lendo",
-        "why": "A verificação mostrou 0 aprovações."
+        "text": "`category`, porque carregar um número de pedido mudou a categoria que o modelo escolheu para cada mensagem",
+        "why": "Não foi a categoria que mudou."
       }
     ]
   },
   "ex-9d62p6a7": {
-    "prompt": "Por que um defeito num exemplo passa despercebido numa demonstração e aparece alto num conjunto de teste?",
-    "hint": "Quantas respostas ele atinge?",
+    "prompt": "Por que um defeito num exemplo passa fácil numa demonstração e aparece alto num conjunto de teste?",
+    "hint": "Quais mensagens o mostraram?",
     "choices": [
       {
-        "text": "Demonstrações usam outro modelo",
+        "text": "Uma demonstração usa outro modelo",
         "why": "Mesmo modelo, mesmo prompt."
       },
       {
-        "text": "Ele é copiado em todas as respostas, e uma resposta lida sozinha parece intencional",
-        "why": "Certo: quarenta de quarenta faz barulho; uma de uma parece recurso."
+        "text": "Ele só aparece em mensagens parecidas com o exemplo",
+        "why": "Certo: o `t04`, o problema de login, voltou limpo."
       },
       {
-        "text": "Conjuntos de teste usam modelos mais rígidos",
-        "why": "As verificações são mais rígidas, não o modelo."
+        "text": "Conjuntos de teste são conferidos por uma pessoa, que lê cada resposta e nota o que uma demonstração não nota",
+        "why": "São conferidos pelo `pl check`."
       },
       {
-        "text": "Só aparece com temperatura alta",
+        "text": "O defeito só aparece com temperatura alta",
         "why": "Estas execuções foram com temperatura 0."
       }
     ]
   },
   "ex-66918gny": {
-    "prompt": "O que a seção recomenda para que os exemplos não ensinem a coisa errada? Marque todos que se aplicam.",
+    "prompt": "O que a seção recomenda para impedir os exemplos de ensinar a coisa errada? Marque todos os que se aplicam.",
     "hint": "Quatro hábitos.",
     "choices": [
       {
-        "text": "Variar o que deve variar entre as respostas",
-        "why": "Sim, ou todo resumo começa igual."
+        "text": "Variar o que deve variar",
+        "why": "Sim: o modelo copia um padrão que você não quis."
       },
       {
-        "text": "Tirar nomes, números de pedido e datas",
-        "why": "Sim: o que é de um cliente vaza para os outros."
+        "text": "Tirar nomes, números de pedido, datas e valores",
+        "why": "Sim: eles aparecem em outras respostas."
       },
       {
-        "text": "Verificar com rigor campos inesperados",
-        "why": "Sim: foi isso que pegou o número de pedido."
+        "text": "Usar tantos exemplos quanto o prompt comportar",
+        "why": "Cada um custa tokens em toda chamada e puxa respostas para si."
       },
       {
-        "text": "Escrever os exemplos em formato diferente da descrição, para variar",
-        "why": "O contrário: um exemplo que discorda da descrição vence."
+        "text": "Conferir de forma estrita, para que um vazamento reprove um teste",
+        "why": "Sim: foi assim que o número de pedido foi pego."
       }
     ]
   },
   "ex-gjeghbn6": {
-    "prompt": "Ponha os três prompts desta aula em ordem de quantas respostas passaram em tudo, da menor para a maior.",
-    "hint": "0, 24 e 36.",
+    "prompt": "Ponha os três prompts desta aula em ordem de quantas respostas passaram em todas as verificações, do menor para o maior.",
+    "hint": "0, 22 e 28.",
     "items": [
-      "O prompt nu",
+      "O prompt sem nada",
       "O prompt que pede JSON",
       "O prompt com três exemplos"
     ]
   },
   "ex-etyprt46": {
-    "prompt": "Associe cada mudança ao que ela corrigiu ou causou nesta aula.",
-    "hint": "Um efeito cada.",
+    "prompt": "Ligue cada mudança ao que ela consertou ou causou nesta aula.",
+    "hint": "Um efeito para cada uma.",
     "pairs": [
       {
         "left": "Pedir JSON e listar os rótulos",
-        "right": "Os nomes de campo e palavras do próprio modelo"
+        "right": "Os nomes de campo e as palavras do próprio modelo"
       },
       {
         "left": "Acrescentar três exemplos",
-        "right": "Os blocos de código e frases em volta do JSON"
+        "right": "Várias mensagens `normal` deixaram de ser chamadas de `high`"
       },
       {
         "left": "Um número de pedido esquecido num exemplo",
-        "right": "Um campo extra em toda resposta"
+        "right": "Um campo extra em cinco respostas"
       },
       {
-        "left": "Um exemplo de billing que fala de entrega",
-        "right": "Um pedido atrasado classificado como billing"
+        "left": "Um exemplo de billing rotulado `normal`",
+        "right": "Uma cobrança em dobro rebaixada de `high`"
       }
     ],
     "right_distractors": [
@@ -384,24 +526,24 @@
     ]
   },
   "ex-067xaa0r": {
-    "prompt": "Um colega acrescenta um quarto exemplo e a nota vai de 36 para 37 de 40. O que você quer ver antes de mantê-lo?",
-    "hint": "Uma mensagem é pouquíssima evidência, e um exemplo tem custo.",
+    "prompt": "Um colega acrescenta um quarto exemplo e a nota vai de 28 para 29 de 40. O que você gostaria de ver antes de mantê-lo?",
+    "hint": "Uma aprovação a mais é uma mensagem.",
     "choices": [
       {
-        "text": "Nada: nota maior é melhor",
-        "why": "Uma mensagem pode mudar por motivos alheios à mudança."
+        "text": "Nada: qualquer ganho vale a pena manter",
+        "why": "Uma mensagem pode mudar por motivos que nada têm a ver com o exemplo."
       },
       {
-        "text": "Quais mensagens mudaram, se alguma quebrou, e quanto os tokens a mais custam em cada chamada",
-        "why": "Certo: `pl compare` e `pl tokens`."
+        "text": "Quais mensagens mudaram, o teste do sinal sobre elas e o custo em tokens em toda chamada",
+        "why": "Certo: quais mensagens mudaram, se a mudança pode ser acaso e quanto custa."
       },
       {
-        "text": "Um exemplo maior",
-        "why": "Tamanho não é evidência."
+        "text": "Uma segunda execução do mesmo prompt, para ver se o 29 se repete ou volta para 28",
+        "why": "Com temperatura 0 ele se repete naquela máquina; isso não diz nada sobre o exemplo."
       },
       {
-        "text": "A mesma execução de novo com temperatura 0",
-        "why": "Com temperatura 0 o substituto repete as respostas; isso não prova nada novo."
+        "text": "Um prompt mais longo, para conferir se o exemplo não é curto demais",
+        "why": "Comprimento não é a questão."
       }
     ]
   }
