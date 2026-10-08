@@ -5,7 +5,13 @@ version: 1
 
 Claude Code reads instructions from files: settings in `~/.claude/` and in the project's `.claude/`, and a `CLAUDE.md` in the working directory. The SDK's option for this is `setting_sources`, and when it is not given, **all of them are loaded**, as the CLI would. A file nobody passed in can change the agent.
 
-A `CLAUDE.md` appeared in `~/agents`, with one harmless instruction:
+Put a `CLAUDE.md` in `~/agents`, with one harmless instruction:
+
+```
+Sign every reply as "The Marginalia team".
+```
+
+Then run the agent twice, once without `setting_sources` and once with it:
 
 ```
 ana@lab:~/agents$ cat CLAUDE.md
