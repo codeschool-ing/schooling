@@ -45,8 +45,11 @@ stage errors.py le-9gey5ayh/failures.md
 stage sdk_retry.py le-9gey5ayh/failures.md
 stage timeout.py le-9gey5ayh/timeouts.md
 quiet lab exec 'python traffic.py data/traffic.jsonl'
+# A question the search refuses never reaches the model; this one does, so
+# that the model is in memory before the lesson's first timing. Its spans go
+# nowhere, so that the week stays the week.
+quiet lab exec 'SPANS=/dev/null python assistant.py "How long is a gift card valid?" >/dev/null'
 quiet lab week
-quiet lab exec 'python assistant.py "warm up" >/dev/null'
 
 block three-clocks
 on 'python stream.py'
@@ -79,5 +82,5 @@ onf 'python tree.py --attrs | grep -E " ms |ERROR|partial|attempts"'
 quiet lab exec 'pkill -f "python flaky.py"'
 
 block timeout
-on 'ollama stop llama3.2:3b'
+onq 'ollama stop llama3.2:3b'
 on 'python timeout.py'

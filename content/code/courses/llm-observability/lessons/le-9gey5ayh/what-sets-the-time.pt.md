@@ -1,6 +1,6 @@
 ---
 title: O que define o tempo
-version: 1
+version: 2
 ---
 
 Um percentil diz quão lento; não diz por quê. Numa chamada a modelo, duas coisas valem ser conferidas
@@ -34,34 +34,40 @@ print(f"first token over 3 s: {len(cold)} of {len(chats)} calls")
 ```
 
 ```
-ana@lab:~/obs$ python drivers.py
+ana@dev:~/obs$ python drivers.py
 whole call, by output tokens
-     0 to   19    361 calls  median    555 ms
-    20 to   39    154 calls  median    997 ms
-    40 to   59    318 calls  median   1603 ms
-    60 to   79    128 calls  median   2146 ms
-    80 to   99    147 calls  median   2498 ms
+     0 to   19    112 calls  median   2095 ms
+    20 to   39     63 calls  median   3250 ms
+    40 to   59     72 calls  median   4929 ms
+    60 to   79      3 calls  median   8068 ms
+    80 to   99     15 calls  median   9482 ms
 first token, by input tokens
-     0 to   99    124 calls  median    236 ms
-   100 to  199    214 calls  median    247 ms
-   200 to  299    304 calls  median    288 ms
-   300 to  399    466 calls  median    329 ms
-first token over 3 s: 16 of 1108 calls
+     0 to   99     21 calls  median    237 ms
+   100 to  199    109 calls  median    744 ms
+   200 to  299    125 calls  median    829 ms
+   300 to  399     10 calls  median   1358 ms
+first token over 3 s: 0 of 265 calls
 ```
 
-**A chamada inteira acompanha a saída.** De menos de 20 tokens a 80 ou mais, a mediana vai de 555 ms a
-2.498, uma linha quase reta de uns 25 ms por token. É o segundo relógio, multiplicado. Uma resposta
-longa é uma resposta lenta, seja o que for que mais seja verdade.
+**A chamada inteira acompanha a saída.** De menos de 20 tokens a 80 ou mais, a mediana vai de 2.095
+ms a 9.482, uma linha quase reta de uns 100 ms por token. É o segundo relógio, multiplicado. Uma
+resposta longa é uma resposta lenta, seja o que for que mais seja verdade.
 
-**O primeiro token acompanha a entrada, devagar.** De menos de 100 tokens de entrada a mais de 300, o
-primeiro token mediano vai de 236 a 329 ms. Ler é muito mais rápido que escrever, então um prompt três
-vezes mais longo custa um décimo de segundo, não três vezes mais. Com prompts de dezenas de milhares de
-tokens, como num agente que carrega um histórico longo, a mesma inclinação soma segundos.
+**O primeiro token acompanha a entrada.** De 100 tokens de entrada a mais de 300, o primeiro token
+mediano vai de 744 ms a 1.358. Ler é mais rápido que escrever, mas em quatro núcleos não tanto
+quanto no hardware de um fornecedor: um prompt três vezes mais longo custa mais de meio segundo. Os
+prompts menores, abaixo de 100 tokens, são os resumos da equipe de atendimento, e eles voltam mais
+rápido por um segundo motivo além do tamanho. Só duas conversas se repetem a semana toda, e o Ollama
+guarda o que calculou para o começo do último prompt e o reaproveita quando o próximo começa do
+mesmo jeito; é o `cached_tokens` que o span instrumentado da aula 1 informou. Com prompts de dezenas
+de milhares de tokens, como num agente que carrega um histórico longo, a mesma inclinação soma
+minutos numa máquina como esta.
 
-E **dezesseis chamadas em 1.108 esperaram mais de três segundos** pelo primeiro token, em todos os
-grupos. A lentidão delas não tem nada a ver com o tamanho, que é a assinatura de uma causa fora do
-pedido: o fornecedor, a rede, uma fila. Elas são a cauda da seção anterior, e nenhuma mudança no prompt
-vai removê-las.
+E **nenhuma chamada em 265 esperou mais de três segundos** pelo primeiro token. Em produção essa
+linha raramente fica vazia: algumas chamadas esperam muito mais do que o tamanho delas explica, em
+todo grupo, que é a assinatura de uma causa fora do pedido, o fornecedor, a rede, uma fila. Aqui o
+modelo tinha a máquina só para ele e nunca saiu da memória, então não houve nenhuma. Quando houver,
+nenhuma mudança no prompt vai removê-las.
 
 ## O que isso decide
 
@@ -73,7 +79,7 @@ está respondendo:
 |---|---|---|
 | mais barato | a entrada: menos fontes, um prompt de sistema mais curto | tokens de entrada são a maior parte da conta |
 | com cara de mais rápido | o tempo até o primeiro token: prompt mais curto, uma região mais perto, streaming na tela | é a espera de tela vazia |
-| terminando antes | a saída: pedir respostas mais curtas, limitar `max_tokens` | cada token soma os seus 25 ms |
+| terminando antes | a saída: pedir respostas mais curtas, limitar `max_tokens` | cada token soma os seus 100 ms |
 | doendo menos na cauda | timeouts e uma nova tentativa, as últimas seções | a cauda não é causada pelo pedido |
 
 A aula 16 do `prompt-reliability` e a aula 18 do `agents-mcp` puxam essas alavancas nos próprios

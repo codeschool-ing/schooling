@@ -56,9 +56,11 @@ for raw in sys.stdin.read().split("\n"):
     lines.append("".join(out).rstrip())
 while lines and not lines[-1]:
     lines.pop()
-print("\n".join(lines))
+if lines:
+    print("\n".join(lines))
 '
 }
 homeq() { printf 'ana@dev:~$ %s\n' "$*"; IN_HOME=1 run_as "$*" 2>/dev/null < /dev/null | screen || true; }
+onq() { printf 'ana@dev:~/obs$ %s\n' "$*"; run_as "$*" 2>/dev/null < /dev/null | screen || true; }
 block() { printf '##### %s\n' "$1"; }
 quiet() { "$@" > /tmp/llmobs-capture-step.log 2>&1 || { cat /tmp/llmobs-capture-step.log; exit 1; }; }

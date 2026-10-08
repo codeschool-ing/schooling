@@ -27,13 +27,13 @@
   },
   {
     "id": "ex-k84xa62t",
-    "version": 1,
+    "version": 2,
     "section": "three-clocks",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
     "prompt": "In stream.py's run, how many milliseconds passed before the first piece arrived?",
-    "value": 244,
+    "value": 720,
     "tolerance": 0,
     "unit": "ms"
   },
@@ -101,17 +101,17 @@
   },
   {
     "id": "ex-r28ddn9k",
-    "version": 1,
+    "version": 2,
     "section": "percentiles",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "The week's first-token mean was 353 ms, median 290, p99 4,257. Why is the mean a poor summary?",
+    "prompt": "The week's model calls had a mean of 3,721 ms, a median of 3,099 and a p95 of 8,996. Why is the mean a poor summary?",
     "choices": [
       {
         "text": "It was computed on too few calls",
         "correct": false,
-        "why": "1,108 calls is plenty; the problem is the shape."
+        "why": "265 calls is enough; the problem is the shape."
       },
       {
         "text": "Means cannot be computed on milliseconds",
@@ -126,13 +126,13 @@
       {
         "text": "It describes nobody",
         "correct": true,
-        "why": "Right: too high for the typical call, far too low for the slow one. A tight body and a long tail are two populations a mean blends."
+        "why": "Right: too high for the typical call, far too low for the slow one. A body and a long tail are two populations a mean blends."
       }
     ]
   },
   {
     "id": "ex-8t4gfwg5",
-    "version": 1,
+    "version": 2,
     "section": "percentiles",
     "type": "quiz",
     "difficulty": "medium",
@@ -152,12 +152,12 @@
       {
         "text": "Because the slow calls are all from one user",
         "correct": false,
-        "why": "The cold starts fall at random, on anybody."
+        "why": "The slow calls are the long answers, and anybody can ask for one."
       },
       {
         "text": "Because p99 is the same as the median under load",
         "correct": false,
-        "why": "Here it was nearly fifteen times the median."
+        "why": "Here it was three times the median."
       }
     ]
   },
@@ -175,7 +175,7 @@
   },
   {
     "id": "ex-0x7xtkcf",
-    "version": 1,
+    "version": 2,
     "section": "what-sets-the-time",
     "type": "quiz",
     "difficulty": "medium",
@@ -185,17 +185,17 @@
       {
         "text": "The number of output tokens",
         "correct": true,
-        "why": "Right. From under 20 to over 80 tokens, the median went from 555 to 2,498 ms."
+        "why": "Right. From under 20 to over 80 tokens, the median went from 2,095 to 9,482 ms."
       },
       {
         "text": "The number of input tokens",
         "correct": false,
-        "why": "Input moved the first token by about a tenth of a second across all groups."
+        "why": "Input moved the first token by about half a second, and the first token is a fraction of the call."
       },
       {
         "text": "The hour of the day",
         "correct": false,
-        "why": "labobs' timing does not depend on the hour."
+        "why": "Nothing in this week depends on the hour; the replay ran it in seventeen minutes."
       },
       {
         "text": "The feature that made the request",
@@ -206,15 +206,15 @@
   },
   {
     "id": "ex-v4hpwvpe",
-    "version": 1,
+    "version": 2,
     "section": "what-sets-the-time",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "Sixteen calls waited over 3 s for a first token, in every input-size group. What does that suggest?",
+    "prompt": "In a production week, a few calls wait over 3 s for a first token, in every input-size group. What does that suggest?",
     "choices": [
       {
-        "text": "Long prompts cause cold starts",
+        "text": "Long prompts cause the slow starts",
         "correct": false,
         "why": "They appeared at every prompt size, short ones included."
       },
@@ -226,7 +226,7 @@
       {
         "text": "A bug in drivers.py that grouped them wrongly",
         "correct": false,
-        "why": "The grouping is by the span's own token count; the 16 are counted separately anyway."
+        "why": "The grouping is by the span's own token count; the slow ones are in every group whatever the grouping."
       },
       {
         "text": "A cause outside the request",
@@ -325,22 +325,22 @@
   },
   {
     "id": "ex-nc7m0bp6",
-    "version": 1,
+    "version": 2,
     "section": "failures",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "With the SDK's own retries, the trace showed one 1,835 ms span and no error. What did labobs' log show?",
+    "prompt": "With the SDK's own retries, the trace showed one 8,096 ms span and no error. What did flaky.py's log show?",
     "choices": [
       {
-        "text": "One request that took 1,835 ms",
+        "text": "One request that took 8,096 ms",
         "correct": false,
         "why": "There were three requests."
       },
       {
         "text": "Three successes",
         "correct": false,
-        "why": "Requests 2362 and 2363 were refused."
+        "why": "Requests 28 and 29 were refused."
       },
       {
         "text": "Two refusals with 503 and then a success",
@@ -467,12 +467,12 @@
   },
   {
     "id": "ex-xx428kyx",
-    "version": 1,
+    "version": 2,
     "section": "timeouts",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why is a 1 s timeout on the whole call a bad choice for this assistant?",
+    "prompt": "Why is a 3 s timeout on the whole call a bad choice for this assistant?",
     "choices": [
       {
         "text": "It is longer than the SDK default",
@@ -487,7 +487,7 @@
       {
         "text": "It cuts long answers too",
         "correct": true,
-        "why": "Right. More than half the week took over a second because it had more to say."
+        "why": "Right. More than half the week took over three seconds because it had more to say."
       },
       {
         "text": "Timeouts cannot be set on streams",
@@ -498,12 +498,12 @@
   },
   {
     "id": "ex-6rymdzcg",
-    "version": 1,
+    "version": 2,
     "section": "timeouts",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "timeout.py's two-second timeout fired on a call that was about to take four. What does the SDK's timeout actually bound?",
+    "prompt": "timeout.py's two-second timeout fired while Ollama was still loading the model. What does the SDK's timeout actually bound?",
     "choices": [
       {
         "text": "The whole call from start to finish",
@@ -587,7 +587,7 @@
   },
   {
     "id": "ex-nvyx2xcg",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "quiz",
     "difficulty": "medium",
@@ -597,7 +597,7 @@
       {
         "text": "The time",
         "correct": true,
-        "why": "Right. Every output token adds its 25 ms or so."
+        "why": "Right. Every output token adds its 100 ms or so on this machine."
       },
       {
         "text": "The cost as well, once the price of output is counted properly",
@@ -618,7 +618,7 @@
   },
   {
     "id": "ex-2ct0tg4w",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "quiz",
     "difficulty": "easy",
@@ -636,9 +636,9 @@
         "why": "Right."
       },
       {
-        "text": "The rate of cold starts in the week, as labobs' rules set it",
+        "text": "The rate of slow starts in the week, from a model being loaded",
         "correct": false,
-        "why": "Cold starts are slow, not failed."
+        "why": "A slow start is slow, not failed."
       },
       {
         "text": "The share of refusals by the floor",

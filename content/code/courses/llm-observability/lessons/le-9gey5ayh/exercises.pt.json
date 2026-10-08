@@ -66,11 +66,11 @@
     ]
   },
   "ex-r28ddn9k": {
-    "prompt": "A média do primeiro token na semana foi 353 ms, a mediana 290, o p99 4.257. Por que a média resume mal?",
+    "prompt": "As chamadas a modelo da semana tiveram média de 3.721 ms, mediana de 3.099 e p95 de 8.996. Por que a média resume mal?",
     "choices": [
       {
         "text": "Foi calculada com poucas chamadas",
-        "why": "1.108 chamadas bastam; o problema é a forma."
+        "why": "265 chamadas bastam; o problema é a forma."
       },
       {
         "text": "Médias não podem ser calculadas em milissegundos",
@@ -82,7 +82,7 @@
       },
       {
         "text": "Não descreve ninguém",
-        "why": "Certo: alta demais para a chamada típica, baixa demais para a lenta. Um corpo apertado e uma cauda longa são duas populações que a média mistura."
+        "why": "Certo: alta demais para a chamada típica, baixa demais para a lenta. Um corpo e uma cauda longa são duas populações que a média mistura."
       }
     ]
   },
@@ -99,11 +99,11 @@
       },
       {
         "text": "Porque as chamadas lentas são todas de um usuário",
-        "why": "As partidas a frio caem ao acaso, em qualquer um."
+        "why": "As chamadas lentas são as respostas longas, e qualquer um pode pedir uma."
       },
       {
         "text": "Porque sob carga o p99 é igual à mediana",
-        "why": "Aqui ele foi quase quinze vezes a mediana."
+        "why": "Aqui ele foi três vezes a mediana."
       }
     ]
   },
@@ -116,15 +116,15 @@
     "choices": [
       {
         "text": "O número de tokens de saída",
-        "why": "Certo. De menos de 20 a mais de 80 tokens, a mediana foi de 555 a 2.498 ms."
+        "why": "Certo. De menos de 20 a mais de 80 tokens, a mediana foi de 2.095 a 9.482 ms."
       },
       {
         "text": "O número de tokens de entrada",
-        "why": "A entrada moveu o primeiro token em cerca de um décimo de segundo entre todos os grupos."
+        "why": "A entrada moveu o primeiro token em cerca de meio segundo, e o primeiro token é uma fração da chamada."
       },
       {
         "text": "A hora do dia",
-        "why": "Os tempos do labobs não dependem da hora."
+        "why": "Nada nesta semana depende da hora; a reprodução a rodou em dezessete minutos."
       },
       {
         "text": "A funcionalidade que fez o pedido",
@@ -133,10 +133,10 @@
     ]
   },
   "ex-v4hpwvpe": {
-    "prompt": "Dezesseis chamadas esperaram mais de 3 s pelo primeiro token, em todos os grupos de tamanho de entrada. O que isso sugere?",
+    "prompt": "Numa semana de produção, algumas chamadas esperam mais de 3 s pelo primeiro token, em todos os grupos de tamanho de entrada. O que isso sugere?",
     "choices": [
       {
-        "text": "Prompts longos causam partidas a frio",
+        "text": "Prompts longos causam os começos lentos",
         "why": "Elas apareceram em todo tamanho de prompt, os curtos inclusive."
       },
       {
@@ -145,7 +145,7 @@
       },
       {
         "text": "Um defeito no drivers.py que os agrupou errado",
-        "why": "O agrupamento é pela contagem do próprio span; os 16 são contados à parte de qualquer forma."
+        "why": "O agrupamento é pela contagem do próprio span; as lentas estão em todo grupo, seja qual for o agrupamento."
       },
       {
         "text": "Uma causa fora do pedido",
@@ -216,15 +216,15 @@
     ]
   },
   "ex-nc7m0bp6": {
-    "prompt": "Com as novas tentativas do próprio SDK, o trace mostrou um span de 1.835 ms e nenhum erro. O que o log do labobs mostrou?",
+    "prompt": "Com as novas tentativas do próprio SDK, o trace mostrou um span de 8.096 ms e nenhum erro. O que o log do flaky.py mostrou?",
     "choices": [
       {
-        "text": "Um pedido que levou 1.835 ms",
+        "text": "Um pedido que levou 8.096 ms",
         "why": "Foram três pedidos."
       },
       {
         "text": "Três sucessos",
-        "why": "Os pedidos 2362 e 2363 foram recusados."
+        "why": "Os pedidos 28 e 29 foram recusados."
       },
       {
         "text": "Duas recusas com 503 e depois um sucesso",
@@ -310,7 +310,7 @@
     ]
   },
   "ex-xx428kyx": {
-    "prompt": "Por que um timeout de 1 s na chamada inteira é uma má escolha para este assistente?",
+    "prompt": "Por que um timeout de 3 s na chamada inteira é uma má escolha para este assistente?",
     "choices": [
       {
         "text": "É mais longo que o padrão do SDK",
@@ -322,7 +322,7 @@
       },
       {
         "text": "Corta as respostas longas também",
-        "why": "Certo. Mais da metade da semana passou de um segundo porque tinha mais a dizer."
+        "why": "Certo. Mais da metade da semana passou de três segundos porque tinha mais a dizer."
       },
       {
         "text": "Não dá para definir timeout em streams",
@@ -331,7 +331,7 @@
     ]
   },
   "ex-6rymdzcg": {
-    "prompt": "O timeout de dois segundos do timeout.py disparou numa chamada que ia levar quatro. O que o timeout do SDK de fato limita?",
+    "prompt": "O timeout de dois segundos do timeout.py disparou enquanto o Ollama ainda carregava o modelo. O que o timeout do SDK de fato limita?",
     "choices": [
       {
         "text": "A chamada inteira, do começo ao fim",
@@ -390,7 +390,7 @@
     "choices": [
       {
         "text": "Do tempo",
-        "why": "Certo. Cada token de saída soma os seus 25 ms ou por aí."
+        "why": "Certo. Cada token de saída soma os seus 100 ms ou por aí nesta máquina."
       },
       {
         "text": "Do custo também, quando o preço da saída é contado direito",
@@ -418,8 +418,8 @@
         "why": "Certo."
       },
       {
-        "text": "A taxa de partidas a frio na semana, como as regras do labobs a definem",
-        "why": "Partidas a frio são lentas, não falhas."
+        "text": "A taxa de começos lentos na semana, de um modelo sendo carregado",
+        "why": "Um começo lento é lento, não uma falha."
       },
       {
         "text": "A parcela de recusas pelo piso",

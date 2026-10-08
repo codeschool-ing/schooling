@@ -121,7 +121,22 @@ for q in [x["phrasings"][0] for x in json.load(open("data/topics.json"))[:10]]:
         print(f"{'':8}  FAILED  {type(e).__name__}: {e}")
 ```
 
-CAPTURE:failures[0:15]
+```
+ana@dev:~/obs$ export OPENAI_BASE_URL=http://127.0.0.1:11435/v1
+ana@dev:~/obs$ curl -s -X POST 127.0.0.1:11435/flaky -d '{"fail_rate": 0.3}'; echo
+{"fail_rate": 0.3, "fail": 0, "status": 503, "cut_after": null, "seed": 7}
+ana@dev:~/obs$ rm -f spans.jsonl; python ten.py
+4b9557ba  ok      You have 30 days from the date of delivery to return a print
+81c6bd42  ok      According to source [1], express delivery costs R$ 29.90.
+a13fa2e0  ok      According to [1], we refund within three working days of the
+e5f2bca5  ok      According to [1], standard delivery is free on orders over R
+42a9eacc  ok      You can read your e-books on up to six devices at the same t
+b60268f5  ok      According to [1], a gift card is valid for two years from th
+6219b0fe  ok      I could not find that in our documents.
+1f352d57  ok      I could not find that in our documents.
+d6617692  ok      According to [1], a standard parcel is considered lost when 
+11aa7cdf  ok      According to [1], the customer pays for the return postage.
+```
 
 Ten questions, ten answers. Nothing the customer saw failed. `errors.py` reads the spans:
 
@@ -140,42 +155,43 @@ print(f"requests {len(asks)}, failed {sum(s['status'] == 'ERROR' for s in asks)}
 ```
 
 ```
-ana@lab:~/obs$ python errors.py
-attempts 10, failed 2
-requests by attempts needed: {1: 6, 2: 2}
+ana@dev:~/obs$ python errors.py
+attempts 17, failed 8
+requests by attempts needed: {1: 3, 2: 4, 3: 2}
 requests 10, failed 0
 ```
 
-**Two of the ten attempts failed, and none of the ten requests did.** Six requests needed one attempt,
-two needed two, and two refused before any model call. One of the retried traces:
+**Eight of the seventeen attempts failed, and none of the ten requests did.** Three requests needed
+one attempt, four needed two, two needed three, and one was refused by the search before any model
+call. One of the retried traces:
 
 ```
-ana@lab:~/obs$ python tree.py 6baa11fa
-trace 6baa11fae7dec0ff4b543047a8106bf2   start(ms) took(ms)
-      0   1,185 ms  ask
-      0      47 ms    embed
-     48       3 ms    search
-     51   1,134 ms    generate
-     51      48 ms      chat extract-1  ERROR InternalServerError: Error code: 503 - {'error': {'message': 'The server is overloaded', 'type': 'overloaded_error', 'code': None}}
-    599     585 ms      chat extract-1
-  1,185       0 ms    check_citations
-ana@lab:~/obs$ python tree.py --attrs 6baa11fa | grep -E "ERROR|attempts"
+ana@dev:~/obs$ python tree.py 81c6bd42
+trace 81c6bd425c703c9d91087c4a37d4f72e   start(ms) took(ms)
+      0   3,807 ms  ask
+      0     175 ms    embed
+    175       0 ms    search
+    175   3,631 ms    generate
+    175       9 ms      chat llama3.2:3b  ERROR InternalServerError: Error code: 503 - {'error': {'message': 'flaky.py refused this request on purpose', 'type': 'overloaded_error'}}
+    685   3,121 ms      chat llama3.2:3b
+  3,807       0 ms    check_citations
+ana@dev:~/obs$ python tree.py --attrs 81c6bd42 | grep -E "ERROR|attempts"
                        app.attempts = 2
-     51      48 ms      chat extract-1  ERROR InternalServerError: Error code: 503 - {'error': {'message': 'The server is overloaded', 'type': 'overloaded_error', 'code': None}}
+    175       9 ms      chat llama3.2:3b  ERROR InternalServerError: Error code: 503 - {'error': {'message': 'flaky.py refused this request on purpose', 'type': 'overloaded_error'}}
 ```
 
-The first attempt was refused with a 503 in 48 ms. The assistant waited half a second, its first
-backoff, and asked again; the second attempt answered. The request took 1,185 ms, half a second of it
-spent waiting to retry, and the customer saw only a slower answer.
+The first attempt was refused with a 503 in 9 ms. The assistant waited half a second, its first
+backoff, and asked again; the second attempt answered. The request took 3,807 ms, half a second of
+it spent waiting to retry, and the customer saw only a slower answer.
 
 ## Two error rates
 
 The week needs both, and they mean different things:
 
-- **The attempt error rate**, failed model calls over all model calls: 2 in 10 here. It is the
-  provider's health. When it rises, the provider is having a bad day, and the retries are absorbing it.
-- **The request error rate**, requests that reached the customer as an error: 0 in 10. It is the
-  customer's experience. When it rises, the retries have run out.
+- **The attempt error rate**, failed model calls over all model calls: 8 in 17 here, more than the
+three in ten flaky.py was asked for, as a small sample drawn at random often is. It is the
+provider's health. When it rises, the provider is having a bad day, and the retries are absorbing
+it.
 
 An alert on the second alone fires only when it is already too late. An alert on the first alone
 fires on every provider hiccup that the retries absorbed and nobody noticed. **A rising attempt
@@ -184,9 +200,9 @@ that into rules.
 
 ## A retry the trace cannot see
 
-The assistant retries in its own code so that each attempt is a span. Most code leaves it to the SDK,
-whose default is two retries. `sdk_retry.py` makes one call that way, with a span around it, while
-labobs refuses the next two requests:
+The assistant retries in its own code so that each attempt is a span. Most code leaves it to the
+SDK, whose default is two retries. `sdk_retry.py` makes one call that way, with a span around it,
+while flaky.py refuses the next two requests:
 
 ```python
 """sdk_retry.py: the SDK retrying inside one span, where the trace cannot see it."""
@@ -197,24 +213,25 @@ import telemetry
 telemetry.setup()
 client = OpenAI(max_retries=2)
 with telemetry.span("chat llama3.2:3b", **{"gen_ai.request.model": "llama3.2:3b"}):
-    client.chat.completions.create(model="llama3.2:3b", messages=[{"role": "user", "content": "How long is a gift card valid?"}])
+    client.chat.completions.create(model="llama3.2:3b", temperature=0, max_tokens=60,
+                                   messages=[{"role": "user", "content": "How long is a gift card valid?"}])
 ```
 
 ```
-ana@lab:~/obs$ rm -f spans.jsonl; python sdk_retry.py; python tree.py
-trace d1ed988996915d550df75b7bf41c8866   start(ms) took(ms)
-      0   1,835 ms  chat extract-1
-ana@lab:~/obs$ tail -3 /var/log/labgen/requests.jsonl | python -c "import json, sys; [print(json.loads(l)[\"n\"], json.loads(l)[\"status\"]) for l in sys.stdin]"
-2362 503
-2363 503
-2364 200
+ana@dev:~/obs$ rm -f spans.jsonl; python sdk_retry.py; python tree.py
+trace d0a37dc5e36ef0ffd41382477b17df5a   start(ms) took(ms)
+      0   8,096 ms  chat llama3.2:3b
+ana@dev:~/obs$ tail -3 flaky.log
+{"n": 28, "path": "/v1/chat/completions", "status": 503}
+{"n": 29, "path": "/v1/chat/completions", "status": 503}
+{"n": 30, "path": "/v1/chat/completions", "status": 200}
 ```
 
-The trace shows **one span of 1,835 ms, and no error**. labobs' log shows what happened: requests
-2362 and 2363 were refused with 503, and 2364 answered. The SDK waited, retried twice, and returned
-success, and from inside the application none of that is visible. The span is not wrong, the call did
-succeed, but a week of these would show a provider getting slower when it was in fact failing a third
-of the time.
+The trace shows **one span of 8,096 ms, and no error**. flaky.py's log shows what happened: requests
+28 and 29 were refused with 503, and 30 answered. The SDK waited, retried twice, and returned
+success, and from inside the application none of that is visible. The span is not wrong, the call
+did succeed, but a week of these would show a provider getting slower when it was in fact failing a
+third of the time.
 
 Two ways out. Retry in your own code, as `assistant.py` does, with `max_retries=0` on the client. Or
 keep the SDK's retries and instrument underneath them: an HTTP-level instrumentation sees each request
