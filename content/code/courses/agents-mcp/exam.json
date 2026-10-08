@@ -1,12 +1,12 @@
 [
   {
     "id": "ex-9j3vzwmv",
-    "version": 1,
+    "version": 2,
     "type": "numeric",
     "difficulty": "easy",
-    "prompt": "In the course's lab, labllm logs every request with its token counts. For Bia's question about order M-1042, how many input tokens did `assistant.py`'s single request carry?",
+    "prompt": "`agent.py` answered Bia's question through `recorder.py`, and the log showed two requests. How many input tokens did the second request carry?",
     "hint": "Lesson 1.",
-    "value": 2250,
+    "value": 239,
     "tolerance": 0,
     "unit": "tokens"
   },
@@ -59,7 +59,7 @@
   },
   {
     "id": "ex-scs91468",
-    "version": 1,
+    "version": 2,
     "type": "quiz",
     "difficulty": "medium",
     "prompt": "Where does the course's `agent.py` keep what it knows about a run between one step and the next?",
@@ -81,7 +81,7 @@
         "why": "No. `shop.py` holds plain functions; nothing is remembered outside the conversation."
       },
       {
-        "text": "In labllm's request log, which the loop reads back at every step",
+        "text": "In the recorder's `requests.jsonl`, which the loop reads back at every step",
         "correct": false,
         "why": "No. That log is for people inspecting runs; `agent.py` never reads it."
       }
@@ -89,61 +89,61 @@
   },
   {
     "id": "ex-t98hzy29",
-    "version": 1,
+    "version": 2,
     "type": "quiz",
     "difficulty": "easy",
-    "prompt": "A program in the course's lab prints `[scripted-1 has no reply written for this conversation]`. What does that tell you?",
+    "prompt": "With `ANTHROPIC_BASE_URL` pointed at port 11435, `agent.py` ends with `anthropic.APIConnectionError: Connection error.` What does that tell you?",
     "hint": "Lesson 1.",
     "choices": [
       {
-        "text": "labllm did not start, because another process holds port 8600",
+        "text": "`ollama.env` never reached this shell, so the library found no key",
         "correct": false,
-        "why": "No. That failure reads `labllm did not start; see /run/labllm.out`; here labllm answered."
+        "why": "No. A missing key reads `Could not resolve authentication method`; here a key was found and nothing answered."
       },
       {
-        "text": "The lab works; the course wrote no rule for that question",
+        "text": "Nothing answered at that address: the recorder was not running",
         "correct": true,
-        "why": "Right. labllm answers only the conversations the lessons script, and its request log shows what it got."
+        "why": "Right. The same line appears when Ollama itself is stopped, and `ollama --version` then warns too."
       },
       {
-        "text": "The embedding model's checksum did not match the course's file",
+        "text": "The Python in use is older than 3.12, which `shop.py` needs",
         "correct": false,
-        "why": "No. That stops the build with a `sha256sum` warning; it produces no reply."
+        "why": "No. That fails with `module 'math' has no attribute 'sumprod'`."
       },
       {
-        "text": "The provider's API key is missing or has expired",
+        "text": "The model's name was mistyped, so Ollama has no model by it",
         "correct": false,
-        "why": "No. The lab uses no provider at all; labllm answers by the course's rules."
+        "why": "No. Ollama answers that with `pull model manifest: file does not exist`."
       }
     ]
   },
   {
     "id": "ex-jxddj8dm",
-    "version": 1,
+    "version": 2,
     "type": "quiz",
     "difficulty": "medium",
-    "prompt": "During `sudo bash lab.sh up`, `sha256sum` warns that the embedding model downloaded from Chroma's bucket does not match. What does the course say to do?",
+    "prompt": "After the context setting was written, `ollama ps` still shows 4096 in its CONTEXT column. What does the course say is wrong?",
     "hint": "Lesson 1.",
     "choices": [
       {
-        "text": "Edit the checksum in the script so that the build passes",
+        "text": "The model was pulled before the setting existed and must be pulled again",
         "correct": false,
-        "why": "No. The lesson says not to: the search scores would then differ from the transcripts."
+        "why": "No. The setting is Ollama's, not the model's; pulling again changes nothing."
       },
       {
-        "text": "Pin `js-tiktoken@1.0.21` and rebuild the tokenizer",
-        "correct": false,
-        "why": "No. That pin answers a `ValueError` from tiktoken, not a model download."
-      },
-      {
-        "text": "Delete the half-downloaded copy and run `up` again",
+        "text": "The service needs a restart, with the setting in its own environment",
         "correct": true,
-        "why": "Right. If it still differs, the bucket now serves another file and the search scores will not match."
+        "why": "Right. On Linux it belongs in the service's environment, not your shell's, and Ollama reads it only when it starts."
       },
       {
-        "text": "Install Node.js 22 from NodeSource or with `nvm`",
+        "text": "4096 is the most `llama3.2:3b` accepts, so the setting is capped",
         "correct": false,
-        "why": "No. That fixes a Node.js version problem, not a model file that differs."
+        "why": "No. The course runs the model at 8192, and `ollama ps` shows that once the setting takes."
+      },
+      {
+        "text": "The setting only applies to a conversation once it passes 4096 tokens",
+        "correct": false,
+        "why": "No. The column shows the context Ollama gave the model; 4096 means the setting did not take."
       }
     ]
   },
@@ -359,7 +359,7 @@
   },
   {
     "id": "ex-6266n6xn",
-    "version": 1,
+    "version": 2,
     "type": "quiz",
     "difficulty": "hard",
     "prompt": "The course trims order M-1047's observation to `status`, `delivered_on` and `total`, then warns that leaving out `customer_id` has a cost. What is it?",
@@ -371,7 +371,7 @@
         "why": "No. Nothing in the API asks for that field."
       },
       {
-        "text": "Without it, the 27-token object would no longer parse as JSON",
+        "text": "Without it, the 28-token object would no longer parse as JSON",
         "correct": false,
         "why": "No. The trimmed object is valid JSON either way."
       },
@@ -383,7 +383,7 @@
       {
         "text": "The refund amount is worked out from the customer's own record in the shop",
         "correct": false,
-        "why": "No. The refund came from the order's `total`, 7780 cents."
+        "why": "No. A refund's amount comes from the order's `total`, 7780 cents, which the trimmed object keeps."
       }
     ]
   },
@@ -449,7 +449,7 @@
   },
   {
     "id": "ex-xhjs5bsj",
-    "version": 1,
+    "version": 2,
     "type": "multiple-choice",
     "difficulty": "hard",
     "prompt": "A text-ReAct program already stops generation at `Observation:`. Which jobs does the course say are still the parser's? Choose all that apply.",
@@ -473,7 +473,7 @@
       {
         "text": "Look for `Answer:` before looking for an action",
         "correct": false,
-        "why": "No. That is the order that believed the invented answer; looking for an action first is safer."
+        "why": "No. That order is why step 3 of the first run ended before its search ran; looking for an action first is safer."
       },
       {
         "text": "Return a short error as the observation when an action does not parse",
@@ -484,10 +484,10 @@
   },
   {
     "id": "ex-wsy4apw5",
-    "version": 1,
+    "version": 2,
     "type": "matching",
     "difficulty": "medium",
-    "prompt": "In the course's `wires.py`, one tool call came back from three providers' SDKs. Match each API to the field that told the program why the reply stopped.",
+    "prompt": "In the course's `wires.py`, one question went to `llama3.2:3b` over three wire formats, and each reply carried the same tool call. Match each API to the field that said why the reply stopped.",
     "hint": "Lesson 4.",
     "pairs": [
       {
@@ -499,12 +499,12 @@
         "right": "`finish_reason: \"tool_calls\"`"
       },
       {
-        "left": "Google Gemini",
-        "right": "`finishReason: \"STOP\"`, with the call in the parts"
+        "left": "Ollama `/api/chat`",
+        "right": "`done_reason: \"stop\"`, with the call in the message"
       }
     ],
     "right_distractors": [
-      "`stop_reason: \"stop_sequence\"`"
+      "`finishReason: \"STOP\"`, with the call in the parts"
     ]
   },
   {
@@ -586,7 +586,7 @@
   },
   {
     "id": "ex-nhs7xdxk",
-    "version": 1,
+    "version": 2,
     "type": "quiz",
     "difficulty": "hard",
     "prompt": "A model's reply asks for two tools, and the host cannot run one of them. What does the course say the host sends back for that one?",
@@ -595,12 +595,12 @@
       {
         "text": "Nothing; the model will notice the missing result on its own and ask for the tool again",
         "correct": false,
-        "why": "No. labllm, like Anthropic's API, refuses a conversation in which a call has no result."
+        "why": "No. Anthropic's API refuses a conversation in which a call has no result, with a `400` naming the call."
       },
       {
         "text": "The other call's result alone, so that the model is not confused",
         "correct": false,
-        "why": "No. That is the `--drop-one` bug, and it ends in a 400."
+        "why": "No. That is the `--drop-one` bug: Anthropic's API refuses it, and where nothing refuses, the model must guess."
       },
       {
         "text": "A result with that call's id, marked as an error, saying why it did not run",
@@ -646,14 +646,14 @@
   },
   {
     "id": "ex-fqh9dnmt",
-    "version": 1,
+    "version": 2,
     "type": "numeric",
     "difficulty": "easy",
-    "prompt": "In the course's lab, `agent.py --max-tokens 1500` stopped with `token budget: 1895 of 1500 used`. By how many tokens was the budget overrun?",
+    "prompt": "In the course, `agent.py --max-seconds 2` stopped with `time budget: 2.0 s`, but its first request alone had taken 119835 ms. By the lesson's count, how many seconds late did the check come?",
     "hint": "Lesson 5.",
-    "value": 395,
-    "tolerance": 0,
-    "unit": "tokens"
+    "value": 118,
+    "tolerance": 0.5,
+    "unit": "seconds"
   },
   {
     "id": "ex-5seqsazk",
@@ -687,31 +687,31 @@
   },
   {
     "id": "ex-4mha1py9",
-    "version": 1,
+    "version": 2,
     "type": "quiz",
     "difficulty": "medium",
-    "prompt": "The course ran the gift-and-order question with `--max-seconds 1`. How far had the run got when it stopped?",
+    "prompt": "The course ran the gift-and-order question on `llama3.2:3b` with `--max-seconds 2`. How far had the run got when it stopped?",
     "hint": "Lesson 5.",
     "choices": [
       {
-        "text": "It had looked up M-1045 but not searched for books",
+        "text": "It had sent no request: the clock had run out before the first one",
         "correct": false,
-        "why": "No. That is what the step and token runs listed as done; this run never reached `get_order`."
+        "why": "No. The budget is checked before each request, and the first went out at once; the recorder logged it."
       },
       {
-        "text": "It had answered the order half and dropped the gift",
+        "text": "It had written a plan and stopped before acting on it",
         "correct": false,
-        "why": "No. It returned `stopped`, with every plan step in `not_done`."
+        "why": "No. No plan was written: `done` and `not_done` are empty, and the handoff says so."
       },
       {
-        "text": "It had sent no request to the model at all",
-        "correct": false,
-        "why": "No. One request ran: 52 output tokens in 2282 ms, the plan."
-      },
-      {
-        "text": "It had written its plan, and nothing more",
+        "text": "One reply had run, with two tool calls in it and no plan",
         "correct": true,
-        "why": "Right. The check before the second request stopped the run, so `done` was empty."
+        "why": "Right. The check before the second request stopped the run, 118 seconds late."
+      },
+      {
+        "text": "It had answered through `finish`, and the time check threw the answer away",
+        "correct": false,
+        "why": "No. That reply called no `finish`; the run that did was the token run, which ended `answered`."
       }
     ]
   },
@@ -777,16 +777,15 @@
   },
   {
     "id": "ex-p9mrk1jd",
-    "version": 1,
+    "version": 2,
     "type": "ordering",
     "difficulty": "medium",
     "prompt": "Put the course's handoff run for order M-1046 (`multi.py --handoff`) in order.",
     "hint": "Lesson 6.",
     "items": [
       "The triage agent makes one request and calls `transfer_to_orders`",
-      "The host runs the orders specialist on the customer's message",
-      "The specialist calls `get_order` and sees the order is `received`",
-      "The specialist searches the help centre for what can change before packing",
+      "The host starts the orders specialist on the customer's message",
+      "The specialist searches the help centre, without looking the order up",
       "The specialist answers the customer itself"
     ]
   },
@@ -822,7 +821,7 @@
   },
   {
     "id": "ex-ajbwn1ng",
-    "version": 1,
+    "version": 2,
     "type": "quiz",
     "difficulty": "easy",
     "prompt": "A team argues that its multi-agent design is better because each specialist is an expert at its job. What does the course answer?",
@@ -841,7 +840,7 @@
       {
         "text": "The same model is behind every agent, so none knows more",
         "correct": true,
-        "why": "Right. The orders specialist calls the same `scripted-1`; a split changes what each agent sees and is allowed to do."
+        "why": "Right. Every agent in `multi.py` is `llama3.2:3b`; a split changes what each agent sees and is allowed to do."
       },
       {
         "text": "Expertise is real, but it shows only in the handoff shape",
@@ -852,7 +851,7 @@
   },
   {
     "id": "ex-sccd9y8n",
-    "version": 1,
+    "version": 2,
     "type": "quiz",
     "difficulty": "hard",
     "prompt": "The course answered one question about order M-1043 and a science-fiction book twice: with an orchestrator and two specialists, and with a single agent. Where did the orchestrated run's extra tokens come from?",
@@ -871,7 +870,7 @@
       {
         "text": "The orchestrator's final answer was a longer text",
         "correct": false,
-        "why": "No. The two answers are word for word the same."
+        "why": "No. Its answer was the shorter one: it left the book out."
       },
       {
         "text": "Retries after the catalogue specialist's call failed",
@@ -972,7 +971,7 @@
   },
   {
     "id": "ex-3r8stjk8",
-    "version": 1,
+    "version": 2,
     "type": "quiz",
     "difficulty": "easy",
     "prompt": "Why does `minagent`'s `record` append each step to the trace file as the run goes, instead of writing the trace once at the end?",
@@ -994,39 +993,39 @@
         "why": "The model reads the conversation, not the trace file."
       },
       {
-        "text": "Because labllm refuses requests bigger than one step of trace",
+        "text": "Because Ollama refuses requests bigger than one step of trace",
         "correct": false,
-        "why": "labllm never sees the trace file."
+        "why": "Ollama never sees the trace file."
       }
     ]
   },
   {
     "id": "ex-pgh3h1em",
-    "version": 1,
+    "version": 2,
     "type": "quiz",
     "difficulty": "hard",
-    "prompt": "In the course's traced Dracula return run, `search_help` took 1053 ms; in the refund run after it, the same kind of search took 331 ms. What explanation does the lesson give?",
+    "prompt": "In the course's run where the customer typed `M1047`, step 1 carried 434 input tokens and step 2 only 166, although step 2's request held everything step 1's did. Why?",
     "hint": "Lesson 7.",
     "choices": [
       {
-        "text": "The second query was shorter and compared fewer words",
+        "text": "Ollama had cached step 1's prompt, and cached tokens go uncounted",
         "correct": false,
-        "why": "Query length is not the reason the lesson gives."
+        "why": "No. The adapter adds the cached tokens back into `tokens_in`, so they are counted."
       },
       {
-        "text": "labllm was less busy during the second run",
+        "text": "The loop drops earlier steps from the conversation once a call fails",
         "correct": false,
-        "why": "labllm's timing could only affect the model's half of a step; search_help is a tool."
+        "why": "No. `Agent.run` appends to `messages` and never removes anything."
       },
       {
-        "text": "The first loaded the embedding model into a fresh process; later its files were most likely cached",
+        "text": "The template leaves the tools out when a tool result comes last",
         "correct": true,
-        "why": "Right. Most of the 1053 ms was loading the model; by the next run the operating system had most likely cached its files."
+        "why": "Right. Lesson 1 found it: the tool definitions are written in only when the last message is the user's."
       },
       {
-        "text": "The SDK retried the first search once after a timeout",
+        "text": "The schema refusal replaced the call's arguments with an error",
         "correct": false,
-        "why": "The SDK retries model requests, not tool calls, and no retry appears in this run."
+        "why": "No. The error went back as a tool result; the call stayed in the conversation as it was."
       }
     ]
   },
@@ -1087,7 +1086,7 @@
   },
   {
     "id": "ex-58rctqt8",
-    "version": 1,
+    "version": 2,
     "type": "quiz",
     "difficulty": "easy",
     "prompt": "Where does the OpenAI Agents SDK send its traces when nothing about tracing is configured?",
@@ -1104,9 +1103,9 @@
         "why": "Tracing is on by default."
       },
       {
-        "text": "To labllm, together with each model request",
+        "text": "To Ollama, together with each model request",
         "correct": false,
-        "why": "labllm receives model requests; the default exporter points elsewhere."
+        "why": "Ollama receives model requests; the default exporter points elsewhere."
       },
       {
         "text": "To OpenAI's servers",

@@ -1,9 +1,9 @@
 ---
 title: Por que dividir o trabalho
-version: 1
+version: 2
 ---
 
-A imagem comum é a de uma equipe: um agente gerente e uma fileira de agentes especialistas, cada um melhor no seu trabalho do que um generalista seria, então um sistema multiagente seria o desenho mais capaz. **Nada no modelo torna um especialista mais especialista.** O especialista de pedidos desta aula chama o mesmo `scripted-1` que todo mundo. O que uma divisão muda é o que cada agente vê e o que cada um tem permissão de fazer, e esses são motivos reais, com custos reais.
+A imagem comum é a de uma equipe: um agente gerente e uma fileira de agentes especialistas, cada um melhor no seu trabalho do que um generalista seria, então um sistema multiagente seria o desenho mais capaz. **Nada no modelo torna um especialista mais especialista.** O especialista de pedidos desta aula chama o mesmo `llama3.2:3b` que todo mundo. O que uma divisão muda é o que cada agente vê e o que cada um tem permissão de fazer, e esses são motivos reais, com custos reais.
 
 Os motivos que se sustentam:
 
