@@ -1,6 +1,6 @@
 ---
 title: Um nome para o usuário que não é o id dele
-version: 1
+version: 2
 ---
 
 As aulas 3 e 5 contam por usuário: os usuários que mais usam, as pessoas que deram polegar para baixo
@@ -28,9 +28,9 @@ print(f"keyed   {keyed}: the same {len(guesses)} guesses find {back}")
 ```
 
 ```
-ana@lab:~/obs$ python pseudo.py
-unkeyed cc5487e17071feac: 1000 guesses in 0.5 ms find ['u021']
-keyed   d6aad8d0fb204820: the same 1000 guesses find []
+ana@dev:~/obs$ python pseudo.py
+unkeyed cc5487e17071feac: 1000 guesses in 0.6 ms find ['u021']
+keyed   5735c1a8554810c6: the same 1000 guesses find []
 ```
 
 **Um hash de algo adivinhável é a própria coisa, com um passo no meio.** Ids de usuário têm forma, `u`
@@ -61,7 +61,7 @@ que é uma configuração, decidida uma vez, e não uma propriedade de todo trac
 E sem chave, sem pseudônimo:
 
 ```
-ana@lab:~/obs$ PSEUDONYM_KEY= python assistant.py --user u021 "How long is a gift card valid?"
+ana@dev:~/obs$ PSEUDONYM_KEY= python assistant.py --user u021 "How long is a gift card valid?"
 Traceback (most recent call last):
   File "/home/ana/obs/assistant.py", line 149, in <module>
     reply, sources, trace_id = ask(a.question, user=a.user, feature=a.feature)

@@ -1,17 +1,17 @@
 ---
 title: Why the text is worth keeping
-version: 1
+version: 2
 ---
 
 `observability` lesson 10 ends with a rule for ordinary services: the body of a request does not go
 in a log, because sooner or later it carries everything that must never be there. A model call is
 the case where that rule is hardest to follow, because **the body is the thing being observed**.
 
-Look at what lesson 1 could and could not explain. The delivery answer was wrong, and the trace
-said why: one chunk kept, about the wrong kind of delivery. That worked because the question was on
-the root span. Take the question away, and the trace says that a request in the `help` feature kept
-one chunk and got a 13-token reply. Nobody can tell whether that is a good answer to a good
-question or a good answer to the wrong one.
+Look at what lesson 1 could and could not explain. The answer about return postage was wrong, and
+the trace said where: the one chunk kept was the right one, and the model contradicted it. That
+worked because the question and the reply were on the root span. Take them away, and the trace says
+that a request in the `help` feature kept one chunk and got a 14-token reply. Nobody can tell
+whether that is a good answer to a good question or a wrong answer to the right one.
 
 The text is needed for three jobs, and each needs a different amount of it:
 

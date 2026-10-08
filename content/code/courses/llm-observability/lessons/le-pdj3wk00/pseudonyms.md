@@ -1,6 +1,6 @@
 ---
 title: A name for the user that is not their id
-version: 1
+version: 2
 ---
 
 Lessons 3 and 5 count per user: the heaviest users, the people who gave a thumbs down twice. That
@@ -28,9 +28,9 @@ print(f"keyed   {keyed}: the same {len(guesses)} guesses find {back}")
 ```
 
 ```
-ana@lab:~/obs$ python pseudo.py
-unkeyed cc5487e17071feac: 1000 guesses in 0.5 ms find ['u021']
-keyed   d6aad8d0fb204820: the same 1000 guesses find []
+ana@dev:~/obs$ python pseudo.py
+unkeyed cc5487e17071feac: 1000 guesses in 0.6 ms find ['u021']
+keyed   5735c1a8554810c6: the same 1000 guesses find []
 ```
 
 **A hash of something guessable is the thing itself, with one step in between.** User ids have a
@@ -61,7 +61,7 @@ setting, decided once, rather than a property of every trace ever written.
 And no key, no pseudonym:
 
 ```
-ana@lab:~/obs$ PSEUDONYM_KEY= python assistant.py --user u021 "How long is a gift card valid?"
+ana@dev:~/obs$ PSEUDONYM_KEY= python assistant.py --user u021 "How long is a gift card valid?"
 Traceback (most recent call last):
   File "/home/ana/obs/assistant.py", line 149, in <module>
     reply, sources, trace_id = ask(a.question, user=a.user, feature=a.feature)
