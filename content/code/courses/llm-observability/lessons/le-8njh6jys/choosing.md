@@ -1,6 +1,6 @@
 ---
 title: An SDK, a proxy, or both
-version: 1
+version: 2
 ---
 
 Lessons 6 and 7 have now put four tools in front of the same assistant. The differences between
@@ -12,7 +12,7 @@ them that matter are fewer than their feature lists suggest.
 | sees the steps between model calls | yes | yes | no | yes |
 | sees calls nobody instrumented | no | no | yes, if every call goes through it | no |
 | can act on requests: cache, limit, retry | no | no | yes | no |
-| where it runs, in this lab | self-hosted, six containers | not run | self-hosted, one image, refused to forward | a Python package |
+| where it ran in this course | your machine, six containers | not run; its SDK against a recorder | not run; one image, 3.5 GB to download | your machine, a Python package |
 | licence | open source | proprietary service | open source | open source |
 
 **An SDK and a proxy answer different questions**, and a large system often has both: a gateway in

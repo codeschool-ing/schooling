@@ -1,6 +1,6 @@
 ---
 title: A proxy, not an SDK
-version: 1
+version: 2
 ---
 
 Every tool so far was fed from inside the application: spans written by the assistant, or by a library
@@ -12,7 +12,7 @@ nothing else in the program changes.
 That is its whole appeal, and its whole limit:
 
 ```schooling-figure
-{"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"The assistant's four steps, embed, search, generate and check citations, inside the application. Spans written in the application see all four. A gateway sits outside, between the application and the provider, and sees only the two calls that cross it: the embedding request and the model request.\"><rect x=\"10\" y=\"10\" width=\"430\" height=\"230\" rx=\"6\" fill=\"none\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\" stroke-dasharray=\"5 4\"></rect><text x=\"24\" y=\"28\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--phosphor)\">inside the application: what spans can see</text><rect x=\"40\" y=\"50\" width=\"170\" height=\"30\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"125\" y=\"65\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">embed</text><rect x=\"40\" y=\"100\" width=\"170\" height=\"30\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"125\" y=\"115\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">search</text><rect x=\"40\" y=\"150\" width=\"170\" height=\"30\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"125\" y=\"165\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">generate</text><rect x=\"40\" y=\"200\" width=\"170\" height=\"30\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"125\" y=\"215\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">check_citations</text><rect x=\"300\" y=\"95\" width=\"110\" height=\"40\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"355\" y=\"115\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">PostgreSQL</text><path d=\"M210 115 L300 115\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><rect x=\"470\" y=\"40\" width=\"90\" height=\"160\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"515\" y=\"120\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--amber)\">gateway</text><rect x=\"610\" y=\"40\" width=\"100\" height=\"160\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"660\" y=\"120\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">provider</text><path d=\"M210 65 L470 65\" stroke=\"var(--amber)\" stroke-width=\"1.8\" fill=\"none\"></path><path d=\"M210 165 L470 165\" stroke=\"var(--amber)\" stroke-width=\"1.8\" fill=\"none\"></path><path d=\"M560 65 L610 65\" stroke=\"var(--amber)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M560 165 L610 165\" stroke=\"var(--amber)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"515\" y=\"222\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">a gateway sees only these</text></svg>", "caption": "A gateway is on the wire to the provider. It sees every model call, from any program, and nothing that happens between them."}
+{"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"The assistant's four steps, embed, search, generate and check citations, inside the application. Spans written in the application see all four. A gateway sits outside, between the application and the provider, and sees only the two calls that cross it: the embedding request and the model request.\"><rect x=\"10\" y=\"10\" width=\"430\" height=\"230\" rx=\"6\" fill=\"none\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\" stroke-dasharray=\"5 4\"></rect><text x=\"24\" y=\"28\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--phosphor)\">inside the application: what spans can see</text><rect x=\"40\" y=\"50\" width=\"170\" height=\"30\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"125\" y=\"65\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">embed</text><rect x=\"40\" y=\"100\" width=\"170\" height=\"30\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"125\" y=\"115\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">search</text><rect x=\"40\" y=\"150\" width=\"170\" height=\"30\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"125\" y=\"165\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">generate</text><rect x=\"40\" y=\"200\" width=\"170\" height=\"30\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"125\" y=\"215\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">check_citations</text><rect x=\"300\" y=\"95\" width=\"110\" height=\"40\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"355\" y=\"115\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">index.json</text><path d=\"M210 115 L300 115\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><rect x=\"470\" y=\"40\" width=\"90\" height=\"160\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"515\" y=\"120\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--amber)\">gateway</text><rect x=\"610\" y=\"40\" width=\"100\" height=\"160\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"660\" y=\"120\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">provider</text><path d=\"M210 65 L470 65\" stroke=\"var(--amber)\" stroke-width=\"1.8\" fill=\"none\"></path><path d=\"M210 165 L470 165\" stroke=\"var(--amber)\" stroke-width=\"1.8\" fill=\"none\"></path><path d=\"M560 65 L610 65\" stroke=\"var(--amber)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M560 165 L610 165\" stroke=\"var(--amber)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"515\" y=\"222\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">a gateway sees only these</text></svg>", "caption": "A gateway is on the wire to the provider. It sees every model call, from any program, and nothing that happens between them."}
 ```
 
 **What a gateway gets for free.** Every model call from every program that uses the key, in any
@@ -26,28 +26,9 @@ citation check. Lesson 5 found the cause of the order refusals in the search spa
 gateway would have shown a fall in model calls and nothing about why. It also cannot see which calls
 belong together, unless the application tells it with a header on every request.
 
-So a gateway takes **headers** where an SDK takes attributes. Helicone reads `Helicone-User-Id` for
-the user, `Helicone-Session-Id` for a chain of calls, and any `Helicone-Property-<Name>` as a custom
-property to filter by, such as the feature. `via_gateway.py` sends the assistant's kind of request with
-two of them, the pseudonym and the feature:
-
-```python
-"""via_gateway.py: one call through Helicone's gateway, asking it to forward to the lab's provider."""
-from openai import OpenAI
-
-client = OpenAI(base_url="http://127.0.0.1:8585/v1/gateway/oai/v1", default_headers={
-    "Helicone-Target-Url": "http://127.0.0.1:8600",   # where the gateway should forward the request
-    "Helicone-User-Id": "d89d2eeb16257c0f",           # what Helicone files the request under
-    "Helicone-Property-Feature": "help",
-})
-try:
-    client.chat.completions.create(model="extract-1", messages=[{"role": "user", "content": "How long is a gift card valid?"}])
-except Exception as e:
-    print(f"{type(e).__name__}: {e}")
-```
-
-The `Helicone-Target-Url` header asks the gateway to forward somewhere other than OpenAI, which is
-what the lab needs, since its provider is labobs. The next section runs it.
+So a gateway takes **headers** where an SDK takes attributes: the user, the session and the feature
+travel with each request, because the gateway has no other way to learn them. The next section shows
+what one sees without them.
 
 ## What a gateway can do that a tracer cannot
 

@@ -1,27 +1,39 @@
 ---
 title: Arize Phoenix
-version: 1
+version: 2
 ---
 
 Arize is a company with two products for this. **Arize AX** is its hosted platform, for monitoring and
 evaluating models in production, machine learning ones as well as language models. **Phoenix** is its
 open-source tracer and evaluation tool, built on OpenTelemetry and on OpenInference, the convention
-lesson 1 met. AX is a hosted service and was not run. Phoenix runs as a Python package, with no
-other service needed, and the lab starts it with `sudo bash lab.sh phoenix`, keeping its data in
-SQLite on the disk:
+lesson 1 met. AX is a hosted service and is not run here. Phoenix is a Python package with no other
+service behind it, so it installs into the course's environment like any library:
 
+```sh
+pip install arize-phoenix==20.18.0
 ```
-ana@lab:~/obs$ curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:6006/
-200
+
+PROSE:pip
+
+Then start it in the background, with two settings that are not its defaults:
+
+```sh
+PHOENIX_HOST=127.0.0.1 PHOENIX_TELEMETRY_ENABLED=false phoenix serve > ~/phoenix.log 2>&1 &
 ```
+
+**Left to itself, Phoenix listens on every network interface**, `0.0.0.0`, so anybody on the same
+network as your computer can open it, traces and all. `PHOENIX_HOST` keeps it to your own machine.
+And its screens report how they are used to two analytics services, FullStory and Scarf, unless
+`PHOENIX_TELEMETRY_ENABLED` is false. Neither default is unusual for a tool meant to be shared by a
+team; both are worth knowing about before customers' questions go into it. It keeps its data in a
+SQLite file under `~/.phoenix`, and stops when you kill it, `kill %1` in the same terminal.
+
+CAPTURE:health
 
 It receives OTLP on port 6006, so the assistant needs, again, only an environment variable. The replay
 of Sunday, sent to it:
 
-```
-ana@lab:~/obs$ OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://127.0.0.1:6006/v1/traces python replay.py --from 2026-10-04 --to 2026-10-05
-replayed 118 requests from data/traffic.jsonl: 143 asked, 0 failed, 54 feedback events
-```
+CAPTURE:replay
 
 Phoenix has a Python client, and `px_spans.py` reads the spans back from it as a table, grouped by
 name, the way its screens group them:
@@ -39,22 +51,7 @@ table = spans.groupby("name").agg(spans=("name", "size"), kind=("span_kind", "fi
 print(table.round(0).to_string())
 ```
 
-```
-ana@lab:~/obs$ python px_spans.py
-747 spans; 143 traces
-span_kind
-UNKNOWN      367
-LLM          250
-EMBEDDING    130
-                 spans       kind  median_ms  prompt_tokens
-name                                                       
-ask                143        LLM      760.0            0.0
-chat extract-1     107        LLM     1185.0        21815.0
-check_citations    130    UNKNOWN        0.0            0.0
-embed              130  EMBEDDING       58.0         1325.0
-generate           107    UNKNOWN     1185.0            0.0
-search             130    UNKNOWN        3.0            0.0
-```
+CAPTURE:spans
 
 ## What it made of the spans
 

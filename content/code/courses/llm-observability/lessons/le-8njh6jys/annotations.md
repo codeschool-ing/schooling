@@ -29,10 +29,7 @@ got = client.spans.get_span_annotations_dataframe(span_ids=rows["span_id"], proj
 print(len(rows), "sent;", len(got), "read back:", got["result.label"].value_counts().to_dict())
 ```
 
-```
-ana@lab:~/obs$ python px_thumbs.py
-20 sent; 20 read back: {'up': 11, 'down': 9}
-```
+CAPTURE:annotations
 
 Twenty thumbs from Sunday, eleven up and nine down, now on the spans they judge. In Phoenix's screens
 they appear beside each trace, and a filter can list the traces with a thumbs down.
