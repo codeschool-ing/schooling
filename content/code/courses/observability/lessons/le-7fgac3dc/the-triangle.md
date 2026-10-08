@@ -1,6 +1,6 @@
 ---
 title: Three views, and what joins them
-version: 1
+version: 2
 ---
 
 The slow checkout was found in an order, and the order is the lesson. **The metric said that
@@ -37,3 +37,9 @@ be sampled.
 about forty lines in the shop's code, the JSON lines are a log formatter, and the spans are an SDK
 set up at start-up plus a few names chosen by hand. Lesson 2 opens the storefront and writes its
 spans from the beginning.
+
+Before you leave the lesson, put payments back to normal:
+
+```sh
+rm ~/shop/faults/payments.json
+```

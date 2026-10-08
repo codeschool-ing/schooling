@@ -1,6 +1,6 @@
 ---
 title: Model cards, and the licence that lives somewhere else
-version: 1
+version: 2
 ---
 
 A **model card** is the document published with a model: what it was trained on, what it is for, its known limits, and its licence. It is the first thing to read before a model goes into a product, and the lab's own models show why reading it is not a formality. The three Piper voices carry their cards with them:
@@ -34,4 +34,4 @@ The speaker segmentation model is simpler: its folder holds an MIT licence, copy
 
 **A converted model inherits the original's terms.** Every model in this lab is a conversion: sherpa-onnx turned Whisper, pyannote and the speaker models into ONNX files, and Piper's voices were trained and exported by their own project. The terms that matter are the original's, so the chain is: the converted file → the original model's card → the dataset it was trained on. Each link can add a restriction, and a model that is open to download is not thereby open to sell.
 
-A practical rule for a product: **keep a table of every model you ship**, with its source, its licence, the dataset licence where the card names one, and the date you read them. The lab's `lab.sh` header is a short version of that table, and it is what a reviewer asks for.
+A practical rule for a product: **keep a table of every model you ship**, with its source, its licence, the dataset licence where the card names one, and the date you read them. The model list in lesson 1's `setup.sh`, every file with the address it came from and its SHA-256, is the start of one, and it is what a reviewer asks for.

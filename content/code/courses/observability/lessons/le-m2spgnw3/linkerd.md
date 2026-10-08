@@ -1,6 +1,6 @@
 ---
 title: Linkerd, compared by design
-version: 1
+version: 2
 ---
 
 **Linkerd** is the other mesh in this lesson's title, and the oldest: it named the category in 2016.
@@ -58,3 +58,10 @@ The differences that matter when choosing, stated from each project's design rat
 **Neither choice changes the observability argument of this lesson.** Both give request counts,
 latencies and success rates per pair of services with no code, both secure traffic with workload
 identity, and both stop at the same place: they see requests, not what the requests were for.
+
+When you are done with the cluster, delete the two namespaces and then the cluster:
+
+```sh
+kubectl delete namespace shop-mesh outside
+kind delete cluster --name lab
+```

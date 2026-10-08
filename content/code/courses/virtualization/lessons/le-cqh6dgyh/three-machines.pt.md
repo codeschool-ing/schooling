@@ -1,10 +1,12 @@
 ---
 title: Três máquinas, e os nomes delas
-version: 1
+version: 2
 ---
 
-Os três convidados foram feitos com o `lab.sh vm`, um comando cada, a partir do disco base do
-laboratório, aula 10. O DHCP do libvirt deu um endereço a cada um, e o host os anotou:
+Os três convidados foram feitos com o `newvm.sh` da aula 1, um comando cada, com a rede como
+segundo argumento: `bash newvm.sh client labnet`, e o mesmo para `server` e `target`. Cada um é uma
+camada fina sobre o disco base do laboratório, aula 10. O DHCP do libvirt deu um endereço a cada um, e o
+`newvm.sh` os anotou:
 
 ```
 ana@host:~$ virsh list; virsh net-dhcp-leases labnet | grep -c ipv4

@@ -3,8 +3,8 @@ title: A CronJob makes Jobs on a schedule
 version: 1
 ---
 
-The schedule is the five fields of `cron`, and this one fires every minute so that the lab does not
-have to wait for night:
+The schedule is the five fields of `cron`, and this one fires every minute so that nobody has
+to wait for night:
 
 ```yaml
 apiVersion: batch/v1

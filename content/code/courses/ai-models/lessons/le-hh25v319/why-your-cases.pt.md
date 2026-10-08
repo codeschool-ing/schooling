@@ -32,10 +32,14 @@ Um **caso** são três coisas anotadas juntas:
    uma verificação que um programa consegue fazer.
 
 Quarenta deles, passados por cada candidato e pontuados do mesmo jeito, dão um número por modelo que
-significa alguma coisa para a Lantern Books. Isso é uma **avaliação**, e o resto desta aula monta uma:
-o conjunto (seção 03), a pontuação (04), o harness (05), e como ler o que sai (06 a 10).
+significa alguma coisa para a Lantern Books. Isso é uma **avaliação**, e o resto desta aula monta
+uma: o conjunto (seção 03), a pontuação (04), o harness (05), e como ler o que sai (06 a 10).
 
-**O substituto interpreta os candidatos.** A aula 4 seção 08 avisou: os três modelos que respondem
-aqui são do substituto, e o curso escreveu as respostas deles para estes casos, erros incluídos. Toda
-nota, intervalo e comparação abaixo é calculada de verdade a partir dessas respostas. O que vale para
-modelos reais é o método, e ele vale sem mudança nenhuma.
+**Os candidatos são três modelos abertos pequenos na sua própria máquina.** O `llama3.2:3b` é o
+modelo do curso; o `llama3.2:1b` é o menor que a aula 1 apontou para um computador mais fraco; e o
+`qwen2.5:3b`, de outra família no mesmo tamanho, está aqui porque uma avaliação precisa de
+candidatos para comparar, e só esta aula o usa. Baixe-o antes da seção 05 com `ollama pull
+qwen2.5:3b`; com menos memória, rode os outros dois. Eles fazem o papel das linhas hospedadas da
+matriz da aula 4, que pedem chave, e **as respostas deles são reais**: toda nota abaixo é o que eles
+escreveram, na máquina em que o curso foi gravado. Com uma chave, o mesmo harness roda nos
+candidatos hospedados sem mudança.

@@ -9,16 +9,22 @@ could reach them and from LiteLLM's sheet where it could not. Every name, price 
 change. What should not change is how to read them, which lessons 2 to 5 taught and these lessons
 apply.
 
-Anthropic publishes a comparison table of its current models. `lab/card.py` reads it from the page,
-cached by `sources` with the date it was read, and prints one block per model:
+Anthropic publishes a comparison table of its current models. `card.py` reads it from the page,
+says the date it read it on, and prints one block per model:
 
 ```python
-import subprocess
+import datetime
+import html
+import re
 import sys
+import urllib.request
 
-page = subprocess.run(["sources", "lines", "claude-models", "1", "300"], capture_output=True, text=True).stdout
-print(page.splitlines()[0])
-lines = [line.split("| ", 1)[1] if "| " in line else "" for line in page.splitlines()[1:]]
+URL = "https://platform.claude.com/docs/en/about-claude/models/overview"
+raw = urllib.request.urlopen(urllib.request.Request(URL, headers={"User-Agent": "curl/8.5.0"})).read().decode()
+raw = re.sub(r"<script.*?</script>|<style.*?</style>", "", raw, flags=re.S)
+# one line per piece of visible text, the way a reader meets it on the page
+lines = [t.strip() for t in html.unescape(re.sub(r"<[^>]+>", "\n", raw)).splitlines() if t.strip()]
+print(f"# {URL}, read {datetime.date.today()}")
 table = lines.index("Feature")  # the comparison table starts here
 names = [lines[table + 1 + 2 * k] for k in range(4)]
 
@@ -39,8 +45,8 @@ for k, name in enumerate(names):
 ```
 
 ```
-ana@desk:~/desk$ python lab/card.py all "Claude API ID" "Comparative latency" Pricing
-# https://platform.claude.com/docs/en/about-claude/models/overview, read 2026-10-05
+ana@desk:~/desk$ python card.py all "Claude API ID" "Comparative latency" Pricing
+# https://platform.claude.com/docs/en/about-claude/models/overview, read 2026-10-07
 Claude Fable 5.1
   Claude API ID               claude-fable-5-1
   Comparative latency         Slower
@@ -67,7 +73,7 @@ on both input and output.
 The sheet sees more than the page shows:
 
 ```
-ana@desk:~/desk$ sheet provider anthropic | grep -v -- "-20[0-9]*  "
+ana@desk:~/desk$ python sheet.py provider anthropic | grep -v -- "-20[0-9]*  "
 # LiteLLM model sheet at 21881c57, 4472 entries
 model                                            window  max out   in $/M  out $/M  VFSCRP
 claude-fable-5                                1,000,000   128000       10       50  VFSCRP

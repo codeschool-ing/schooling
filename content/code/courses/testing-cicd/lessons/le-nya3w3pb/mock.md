@@ -1,6 +1,6 @@
 ---
 title: Mock
-version: 1
+version: 2
 ---
 
 A **mock** is a double that carries expectations about how it will be called, and checks them. In
@@ -20,7 +20,34 @@ An order of R$ 199,00 ships free, so `price` should not spend a paid API call as
 The return value alone cannot tell you that: 0 comes back either way. Only a double that records
 calls can, and `assert_not_called` is the check.
 
-The second asserts that something happened exactly once, with exactly these arguments:
+The second asserts that something happened exactly once, with exactly these arguments. It needs
+the real mailer, which the project has not had until now: since lesson 1, `place` has sent its
+e-mail through whatever `mailer` it was handed. The real one speaks SMTP. Save it as
+`shipquote/mailer.py`:
+
+```python
+"""E-mail through an SMTP server."""
+import smtplib
+from email.message import EmailMessage
+
+
+class SmtpMailer:
+    def __init__(self, host, port=25):
+        self.host = host
+        self.port = port
+
+    def send(self, to, subject, body):
+        msg = EmailMessage()
+        msg["From"] = "pedidos@livraria.example"
+        msg["To"] = to
+        msg["Subject"] = subject
+        msg.set_content(body)
+        with smtplib.SMTP(self.host, self.port, timeout=5) as smtp:
+            smtp.send_message(msg)
+```
+
+and commit it, `git add shipquote/mailer.py && git commit -m "Send e-mail over SMTP"`, because the
+experiment below changes it and git is what puts it back. The test:
 
 ```python
 def test_placing_an_order_sends_exactly_one_confirmation():
@@ -77,9 +104,38 @@ AttributeError: Mock object has no attribute 'sned'
 ## What happens when the real class changes
 
 This is where it stops being about typos. Suppose somebody renames `SmtpMailer.send` to `deliver`
-and forgets `orders.place`, which still calls `send`. Production now fails on every order. Here is
-the rename, then the test as it was at step 5 of the project, with a plain `mock.Mock()`, then the
-test as it is now, with `create_autospec`:
+and forgets `orders.place`, which still calls `send`. Production now fails on every order. Make
+that rename yourself, `def send` to `def deliver` in `shipquote/mailer.py`. Then run
+`tests/test_orders.py` twice: first as lesson 1 wrote it, with a plain `mock.Mock()`, and then with
+the two lines this section changes, so that the file reads, whole, as below. Save it as
+`tests/test_orders.py`:
+
+```python
+from unittest import mock
+
+import pytest
+
+from shipquote.mailer import SmtpMailer
+from shipquote.orders import place
+from tests.fakes import FakeOrders
+
+
+def test_placing_an_order_sends_exactly_one_confirmation():
+    mailer = mock.create_autospec(SmtpMailer, instance=True)
+    order_id = place(FakeOrders(), mailer, "bia@example.org", 8990)
+    mailer.send.assert_called_once_with(
+        to="bia@example.org", subject=f"Order {order_id} confirmed",
+        body="Total: R$ 89,90")
+
+
+def test_an_order_of_nothing_is_refused_before_anything_is_written():
+    orders = FakeOrders()
+    with pytest.raises(ValueError, match="must cost something"):
+        place(orders, mailer=None, email="bia@example.org", cents=0)
+    assert orders.rows == []
+```
+
+The rename, the old test, and the new one:
 
 ```
 ana@laptop:~/shipquote$ git diff --stat
@@ -99,9 +155,10 @@ FAILED tests/test_orders.py::test_placing_an_order_sends_exactly_one_confirmatio
 ```
 
 **The plain mock passed. The autospec mock failed**, with `Mock object has no attribute 'send'`,
-which is the same error production would raise. That is why step 6 of the project changed the test
-from one to the other. A mock that does not know the shape of what it replaces checks the code
-against an imaginary collaborator, and the imaginary one never changes.
+which is the same error production would raise. That is why the project keeps the second version.
+A mock that does not know the shape of what it replaces checks the code against an imaginary
+collaborator, and the imaginary one never changes. Put `send` back with
+`git checkout shipquote/mailer.py`, and commit the new test.
 
 The rule of thumb: **mock by spec, from the real class**, and use a mock only where the call is the
 thing you need to check. For everything else, a stub or a fake keeps the test about results.

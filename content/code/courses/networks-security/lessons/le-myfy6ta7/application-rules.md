@@ -25,7 +25,9 @@ Read the first one piece by piece:
 | `sid:1000001; rev:1` | the rule's number and revision; local rules take numbers from a million up |
 
 The second rule looks for TLS going to any port **other than** 443. `suricata -T` checks that both
-load before anything runs. Then the SSH attempt and a normal page fetch again:
+load before anything runs. Empty the logs of the first run with
+`rm -f /var/log/suricata/*.json /var/log/suricata/*.log`, start Suricata with the same command as
+before, and give it a few seconds. Then the SSH attempt and a normal page fetch again:
 
 ```
 ana@laptop:~$ ssh -p 443 -o BatchMode=yes 203.0.113.50 true; echo "exit $?"

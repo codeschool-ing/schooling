@@ -1,6 +1,6 @@
 ---
 title: Hybrid, the shape real networks have
-version: 1
+version: 2
 ---
 
 Ask what topology a company's network has and the honest answer is **all of them, each in its own
@@ -29,7 +29,7 @@ Read that table from the desks inwards and a typical company network draws itsel
 ## The lab is already a hybrid
 
 This course's `office` scenario looks like a star, and the switch sw1 is one. But follow the
-drawing at the top of `lab.sh` out of the office: sw1 hangs off r1, r1 is cabled to the provider
+drawing at the top of `office.sh`, from lesson 1, out of the office: sw1 hangs off r1, r1 is cabled to the provider
 `isp`, `isp` to a load balancer `lb`, and `lb` is the centre of a second, small star with the two
 web servers `web1` and `web2` on it.
 

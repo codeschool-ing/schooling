@@ -1,6 +1,6 @@
 ---
 title: Being called back
-version: 1
+version: 2
 ---
 
 Lesson 4 turned polling round for telemetry: the device sends values to a collector that
@@ -24,8 +24,8 @@ other APIs. This lesson builds the second, and has it drive the first.
 
 The lab's routers send webhooks from their API, the one lesson 2 used: a subscription names a URL,
 a list of events and a shared secret, and from then on every change of an interface's operational
-state is POSTed to that URL. The ticketing system is `tickets`, a small service desk written for the
-lab; ServiceNow, Jira Service Management and the open-source desks people run have the same
+state is POSTed to that URL. The ticketing system is `tickets`, the service desk the previous section
+started; ServiceNow, Jira Service Management and the open-source desks people run have the same
 shape, tickets with numbers, statuses and comments behind a token-authenticated JSON API.
 
 **A webhook receiver is a server**, and that changes who has to be reachable: the device has to be

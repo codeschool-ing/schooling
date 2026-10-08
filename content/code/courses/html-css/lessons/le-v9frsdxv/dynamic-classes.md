@@ -1,9 +1,9 @@
 ---
 title: A class the build cannot see
-version: 1
+version: 2
 ---
 
-The build finds class names by **reading the files as text**. It does not run JavaScript. So a class name built by joining strings does not exist as far as the build is concerned:
+The build finds class names by **reading the files as text**. It does not run JavaScript. So a class name built by joining strings does not exist as far as the build is concerned. Here is `dynamic/index.html`, with the one-line `input.css` beside it:
 
 ```html
 <!doctype html>

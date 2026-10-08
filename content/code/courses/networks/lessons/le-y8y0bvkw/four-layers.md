@@ -1,6 +1,6 @@
 ---
 title: Four layers instead of seven
-version: 1
+version: 2
 ---
 
 The protocols that carry the internet, TCP and IP, were designed in the 1970s with a model of their
@@ -15,7 +15,7 @@ own, written down in **RFC 1122** in 1989. It has four layers, and each one is a
   and the reason the whole thing is called an *internet*: a network of networks.
 - **Transport**: getting data to a program, reliably with TCP or as it comes with UDP. OSI's layer 4.
 - **Application**: everything the program does. OSI's layers 5, 6 and 7 together, because in practice
-  one program does all three, as lesson 1 section 06 showed with `curl`.
+  one program does all three, as lesson 1 section 13 showed with `curl`.
 
 Some books split the link layer into two and count five layers. They describe the same protocols;
 the argument is only about where to draw one line.

@@ -5,8 +5,8 @@ version: 1
 
 An embedding model takes text in and gives a fixed number of numbers out. The model this course
 runs most of the time is **all-MiniLM-L6-v2**, a small open model published by the
-sentence-transformers project. It runs on the laptop and needs no account. Lesson 9 opens it up; for now it is a function called `embed` in `minilm.py`, which
-`lab.sh` installed.
+sentence-transformers project. It runs on your own computer and needs no account. Lesson 9 opens it up; for now it is a function called `embed` in
+`minilm.py`, the file you saved in *Setting up*.
 
 Here is the title of the refund article going through it:
 

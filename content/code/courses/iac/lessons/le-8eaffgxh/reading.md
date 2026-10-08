@@ -1,6 +1,6 @@
 ---
 title: A block that only asks
-version: 1
+version: 2
 ---
 
 Everything in lesson 2's configuration was something to create. A `resource` block says "this
@@ -11,7 +11,8 @@ creates nothing, changes nothing and destroys nothing, whatever you write in it.
 The common wrong picture is that a data source is a lighter kind of resource, one Terraform
 "manages a little". It does not manage it at all. A data source is a query sent through the same
 provider, and its result is a set of attributes you can reference like any other. Here are the two
-smallest questions the AWS provider can answer, who am I and where am I:
+smallest questions the AWS provider can answer, who am I and where am I, in the `main.tf` of a new
+directory, `~/shop/app`:
 
 ```hcl
 terraform {

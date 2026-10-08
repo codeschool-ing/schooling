@@ -37,7 +37,25 @@ chave vazou.
 ## A troca nova
 
 Com uma troca **efêmera**, os dois lados geram um par X25519 novo só para esta sessão, combinam um
-segredo, derivam chaves e descartam as metades privadas:
+segredo, derivam chaves e descartam as metades privadas. O `vcrypt ephemeral` faz exatamente isso,
+com chaves aleatórias novas em vez de rótulos, então mostra só o que é igual em toda execução:
+
+```py
+# ~/lab/tools/ephemeral.py
+"""vcrypt ephemeral: two X25519 key pairs made in memory for one exchange,
+used once, and dropped. Fresh random keys every run, so it prints only what
+does not change."""
+from cryptography.hazmat.primitives.asymmetric import x25519
+
+ana, bruno = x25519.X25519PrivateKey.generate(), x25519.X25519PrivateKey.generate()
+s1 = ana.exchange(bruno.public_key())
+s2 = bruno.exchange(ana.public_key())
+print("ephemeral pairs generated for this exchange: 2, written to disk: 0")
+print(f"both sides derived the same {len(s1)}-byte secret: {'yes' if s1 == s2 else 'no'}")
+del ana, bruno
+print("private halves discarded; nothing left that could rebuild this secret")
+```
+
 
 ```
 ana@lab:~/lab$ vcrypt ephemeral

@@ -1,11 +1,11 @@
 ---
 title: O postmortem do incidente da aula 17
-version: 1
+version: 2
 ---
 
 Um postmortem tem uma forma, e mantê-la deixa as revisões de uma equipe comparáveis e rápidas de ler. Eis
-o incidente da aula 17 escrito do jeito que uma equipe escreveria, com todo horário e número tirado da
-captura daquela aula.
+o incidente da aula 17 escrito do jeito que uma equipe escreveria, com todo horário e número tirado das
+transcrições daquela aula.
 
 **Resumo.** Em 2 de outubro, uma versão do payments fez uma cobrança em oito falhar. Os checkouts falharam
 por uns quatro minutos até a versão ser revertida. O alerta de queima rápida acionou o plantão três

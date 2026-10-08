@@ -5,7 +5,8 @@ version: 1
 
 O firewall da aula 1 julga **cabeçalhos**: endereços, protocolo, portas. A regra que todo escritório
 escreve primeiro é alguma versão de "os funcionários podem navegar na web", e em termos de cabeçalho
-isso quer dizer TCP para as portas 80 e 443:
+isso quer dizer TCP para as portas 80 e 443. No seu laboratório esta aula começa com
+`sudo bash nslab.sh reset`, e o conjunto de regras abaixo é o `edge.nft` no `fw`:
 
 ```
 root@fw:~# cat edge.nft

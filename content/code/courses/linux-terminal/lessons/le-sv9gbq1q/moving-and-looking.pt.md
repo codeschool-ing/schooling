@@ -1,6 +1,6 @@
 ---
 title: Andar e olhar: `pwd`, `cd`, `ls`
-version: 2
+version: 3
 ---
 
 Três comandos, e você vai digitá-los mais do que todo o resto deste curso somado. `pwd` diz onde
@@ -107,13 +107,28 @@ a última linha impressa em vez de algo perdido no meio da rolagem.
 
 ## `-a` e `-A`, e o ponto que esconde
 
+Crie um diretório com dois arquivos escondidos e dois diretórios escondidos dentro, para olhar:
+
+```sh
+mkdir -p ~/hid/.cache ~/hid/.config
+touch ~/hid/visible.txt ~/hid/.hidden.txt
+```
+
 ```
 ana@vm:~/hid$ ls
 visible.txt
 ana@vm:~/hid$ ls -a
-.  ..  .cache  .config  .hidden.txt  visible.txt
+.
+..
+.cache
+.config
+.hidden.txt
+visible.txt
 ana@vm:~/hid$ ls -A
-.cache  .config  .hidden.txt  visible.txt
+.cache
+.config
+.hidden.txt
+visible.txt
 ```
 
 Um diretório, três respostas. **Um nome que começa com ponto está oculto**, e esse é o mecanismo

@@ -4,8 +4,21 @@ version: 1
 ---
 
 The Responses API lives beside Chat Completions at the same address, with the same key and the same
-SDK, and lesson 8 section 05 left the choice between them open. `lab/resp_sort.py` sorts one of
-ana's cases with it:
+SDK, and lesson 8 section 05 left the choice between them open. api.openai.com was refused by the
+network of the machine this course was recorded on, and Ollama answers in this shape too, so the
+answers in this lesson are llama3.2:3b's. What the lesson is about is the shape, and what OpenAI's
+own library documents; where Ollama does something else, the lesson says so, and that difference is
+worth knowing for its own sake.
+
+Every program in this lesson runs through the relay from lesson 9 section 03, so that what the
+library sends can be read back. Start the relay in a second terminal, and in the one you work in,
+send both libraries to it:
+
+```
+ana@desk:~/desk$ export OPENAI_BASE_URL=http://127.0.0.1:8500/v1 ANTHROPIC_BASE_URL=http://127.0.0.1:8500
+```
+
+`resp_sort.py` sorts one of ana's cases with the Responses API:
 
 ```python
 import json
@@ -16,7 +29,7 @@ client = OpenAI()
 prompt = open("prompts/triage.txt").read()
 case = [json.loads(line) for line in open("cases/triage.jsonl")][4]
 
-r = client.responses.create(model="standin-small", instructions=prompt, input=case["text"])
+r = client.responses.create(model="llama3.2:3b", instructions=prompt, input=case["text"])
 print(r.output_text)
 print([item.type for item in r.output], [part.type for part in r.output[0].content])
 print(r.usage.input_tokens, "in,", r.usage.output_tokens, "out, of which reasoning:",
@@ -24,23 +37,19 @@ print(r.usage.input_tokens, "in,", r.usage.output_tokens, "out, of which reasoni
 ```
 
 ```
-ana@desk:~/desk$ python lab/resp_sort.py
-other
+ana@desk:~/desk$ python resp_sort.py
+other.
 ['message'] ['output_text']
-51 in, 1 out, of which reasoning: 0
-```
-
-```
-ana@desk:~/desk$ wire --body
+75 in, 3 out, of which reasoning: 0
+ana@desk:~/desk$ python relay.py show --body
 {
-  "model": "standin-small",
+  "model": "llama3.2:3b",
   "input": "Do you have a physical shop I can visit in Curitiba?",
   "instructions": "You sort the e-mail of Lantern Books, an online bookshop.\nAnswer with exactly one label and nothing else:\norder-status, refund, address-change, product-question, other.\n"
 }
 ```
 
-api.openai.com could not be reached from the machine this course was recorded on, so the answers
-are the lab's stand-in's. The request is what the real library sent, and the shape is the point:
+The request is what the real library sent, and the shape is the point:
 
 | | Chat Completions | Responses |
 |---|---|---|

@@ -1,6 +1,6 @@
 ---
 title: Block, inline e inline-block
-version: 1
+version: 2
 ---
 
 Se width, height e margens fazem alguma coisa num elemento depende do **`display`** dele. Dois valores vieram antes de todo o resto, e o navegador dá um deles a cada elemento por padrão:
@@ -72,6 +72,8 @@ span.tag.as-block         x 20     y 224    width 216    height 68
   </body>
 </html>
 ```
+
+Salve-a como `gap.html`, com qualquer imagem pequena ao lado como `cover.png`; os atributos fixam o tamanho dela.
 
 ```
 ana@laptop:~/site$ probe gap.html box .frame

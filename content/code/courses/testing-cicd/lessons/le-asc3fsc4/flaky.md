@@ -1,6 +1,6 @@
 ---
 title: Flaky tests in the pipeline
-version: 1
+version: 2
 ---
 
 Lesson 3 section 09 defined a flaky test: one that passes and fails with no change in between. In a
@@ -14,7 +14,8 @@ any red test.
 
 ## A flaky test, measured
 
-This test, written for the section, checks the zones of two CEPs by turning a set into a list:
+This test, written for the section, checks the zones of two CEPs by turning a set into a list.
+Delete it when the section is done. Save it as `tests/test_zones_seen.py`:
 
 ```python
 from shipquote.quote import zone_of

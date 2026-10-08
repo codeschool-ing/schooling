@@ -1,6 +1,6 @@
 ---
 title: Asking for a replacement
-version: 1
+version: 2
 ---
 
 The last two sections were about stopping Terraform from doing something. This one is the
@@ -117,7 +117,7 @@ wants: a new release should be a new machine.
 `replace_triggered_by` says that. It is a list of resources, or attributes of them, and when any of
 them is updated or replaced, this resource is replaced too. The release is not a resource, so Ana
 wraps it in `terraform_data`, a resource built into Terraform that stores a value and does nothing
-else, so that the value has something that can change:
+else, so that the value has something that can change. She applies that and commits it:
 
 ```
 ana@laptop:~/shop/app$ git show --format= -U0

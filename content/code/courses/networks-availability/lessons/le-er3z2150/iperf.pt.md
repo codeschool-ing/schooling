@@ -6,8 +6,9 @@ version: 1
 Um ping diz que um caminho existe; não diz nada sobre quanto ele leva. **O iperf3 mede vazão entre duas
 máquinas que você controla**: um servidor que escuta, na porta 5201 a menos que se diga outra, e um
 cliente que manda o mais rápido que o caminho permite durante um tempo definido. Para estas rodadas o
-enlace de `hq` para o provedor foi moldado em 20 Mbit/s, do jeito que as aulas 18 e 20 fizeram, e o web1
-foi o servidor:
+enlace de `hq` para o provedor foi moldado em 20 Mbit/s, do jeito que as aulas 18 e 20 fizeram,
+`sudo tc qdisc add dev eth1 root tbf rate 20mbit burst 32kb latency 50ms` em `hq`, e o web1 foi o
+servidor, o `iperf3 -s` que o `netlab.sh` inicia em todo servidor web:
 
 ```
 ana@web1:~$ ss -tlnp | grep 5201

@@ -1,10 +1,35 @@
 ---
 title: It works on my machine
-version: 1
+version: 2
 ---
 
 Ticket #34 asks for the menu to show which items contain allergens. Ana adds a picture to the page and
-opens it in her browser. The picture appears. Here is what she typed on the way:
+opens it in her browser. The picture appears.
+
+To be where she is, start from a fresh week:
+
+```bash
+cd ~ && rm -rf ~/site ~/remotes /tmp/fresh && bash ~/make-site.sh && cd ~/site
+```
+
+Bruno has already committed a check for links to files that do not exist, `check-links.sh`. The next
+section reads it line by line; its copy button gives the whole script, so save it now as
+`~/site/check-links.sh` with nano. Then make it runnable and commit it under his name, set up the
+shared copy of lesson 7, and make Ana's change on a branch for the ticket. The picture is a three-byte
+stand-in, because what matters here is whether the file is there, not what it shows:
+
+```bash
+chmod +x check-links.sh && git add check-links.sh
+git -c user.name='Bruno Lima' -c user.email=bruno@example.com commit -qm 'Add a check for links to missing files'
+git init -q --bare ~/remotes/site.git
+git remote add origin ~/remotes/site.git
+git push -q -u origin main
+git switch -q -c 34-allergens
+mkdir -p images && printf 'PNG' > images/allergens.png
+printf '<p><img src="images/allergens.png" alt="Allergens: gluten, milk, eggs"></p>\n' >> menu.html
+```
+
+Here is what she typed on the way:
 
 ```
 ana@vm:~/site$ git status --short

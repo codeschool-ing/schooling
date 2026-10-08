@@ -1,6 +1,6 @@
 ---
 title: The flow, from a pull request to an applied plan
-version: 1
+version: 2
 ---
 
 A pipeline for Terraform has two lanes, and most of its design is deciding what happens in each.
@@ -31,7 +31,22 @@ touches the state, so a pull request that cannot even format itself never reache
 
 Here is the scan doing its job. A pull request opens SSH on the `web` group to the whole internet,
 the change that lesson 1 watched a colleague make by hand. This time it arrives as a file in a
-branch, and the pipeline runs on it:
+branch, `ssh.tf`:
+
+```hcl
+resource "aws_security_group_rule" "ssh" {
+  type              = "ingress"
+  description       = "SSH"
+  security_group_id = aws_security_group.web.id
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+```
+
+The pipeline runs on that branch. This run was recorded near the end of the lesson, and section 08
+ends with the commands that put the same branch in your remote:
 
 ```
 ana@laptop:~$ git clone -q -b ssh git/shop.git ci/pr-ssh

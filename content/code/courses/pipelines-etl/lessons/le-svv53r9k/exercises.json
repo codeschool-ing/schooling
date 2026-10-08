@@ -1,0 +1,561 @@
+[
+  {
+    "id": "ex-tvtqm7vh",
+    "version": 1,
+    "section": "the-nightly-load",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each table to how `nightly.sh` loads it.",
+    "hint": "Three tables, three loads.",
+    "pairs": [
+      {
+        "left": "dim_book",
+        "right": "Upsert: insert new, overwrite changed"
+      },
+      {
+        "left": "dim_customer",
+        "right": "Type 2: close the old version, open a new one"
+      },
+      {
+        "left": "fact_sales",
+        "right": "Delete the day, insert it again"
+      }
+    ],
+    "right_distractors": [
+      "Append only"
+    ]
+  },
+  {
+    "id": "ex-46cv1ecx",
+    "version": 1,
+    "section": "the-nightly-load",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `nightly.sh` load `dim_customer` before `fact_sales`?",
+    "hint": "What does the fact load look up?",
+    "choices": [
+      {
+        "text": "Alphabetical order",
+        "correct": false,
+        "why": "The order is a dependency, not a spelling."
+      },
+      {
+        "text": "Facts look up the customer's version",
+        "correct": true,
+        "why": "Right. A sale needs the version that was current when it happened."
+      },
+      {
+        "text": "`dim_customer` is smaller and finishes faster, which frees memory for the facts",
+        "correct": false,
+        "why": "Size has nothing to do with it; the facts depend on the dimension."
+      },
+      {
+        "text": "PostgreSQL loads dimensions first by default",
+        "correct": false,
+        "why": "PostgreSQL knows nothing about dimensions; the script decides."
+      }
+    ]
+  },
+  {
+    "id": "ex-30ak1nmn",
+    "version": 1,
+    "section": "append",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After 2 March was appended twice to `marts.sales_log`, it held 830 rows. How many distinct order lines did they describe?",
+    "hint": "Each line twice.",
+    "value": 415,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-bsa2c5sy",
+    "version": 1,
+    "section": "append",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is a plain append safe?",
+    "hint": "Two conditions, and only one holds up.",
+    "choices": [
+      {
+        "text": "When the target tells a repeat from a new row",
+        "correct": true,
+        "why": "Right. A key and a load that refuses or ignores what it already has."
+      },
+      {
+        "text": "When the table is small",
+        "correct": false,
+        "why": "A small table doubles as easily as a large one."
+      },
+      {
+        "text": "When the pipeline runs at night",
+        "correct": false,
+        "why": "Night runs are retried like any other."
+      },
+      {
+        "text": "When the source has an `updated_at` column",
+        "correct": false,
+        "why": "A watermark helps choose rows, but cannot stop a rerun repeating them."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ff2e3fr",
+    "version": 1,
+    "section": "replace-a-day",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do the `DELETE` and the `INSERT` in `fact_sales.sql` sit inside one transaction?",
+    "hint": "What would a reader see between them otherwise?",
+    "choices": [
+      {
+        "text": "PostgreSQL forbids a `DELETE` outside a transaction",
+        "correct": false,
+        "why": "Every statement runs in some transaction; the point is grouping two."
+      },
+      {
+        "text": "So readers never see the day missing",
+        "correct": true,
+        "why": "Right. Old rows until the commit, new rows after."
+      },
+      {
+        "text": "To make the insert faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "To lock the shop's tables during the load",
+        "correct": false,
+        "why": "The transaction is in the warehouse; the shop is untouched."
+      }
+    ]
+  },
+  {
+    "id": "ex-tba896x1",
+    "version": 1,
+    "section": "replace-a-day",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A refund on 9 March cancels an order from 2 March. With `fact_sales.sql`, how does that reach the fact table?",
+    "hint": "The load rebuilds a period from staging.",
+    "choices": [
+      {
+        "text": "The 9 March load updates the old fact row",
+        "correct": false,
+        "why": "The load deletes and inserts only the day it is given."
+      },
+      {
+        "text": "It never does: facts are written once",
+        "correct": false,
+        "why": "They can be rebuilt; that is what replacing a period allows."
+      },
+      {
+        "text": "Rerunning the load for 2 March rebuilds the day without the order",
+        "correct": true,
+        "why": "Right. The day is rebuilt from what the shop says now."
+      },
+      {
+        "text": "A trigger in the warehouse deletes the fact when the order changes",
+        "correct": false,
+        "why": "There is no such trigger; the warehouse learns by reloading."
+      }
+    ]
+  },
+  {
+    "id": "ex-5qf632sv",
+    "version": 1,
+    "section": "replace-a-day",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `fact_sales.sql`, `:'day'` is replaced by a value given to psql on the command line with the option ___.",
+    "hint": "A single letter after a hyphen, or its long form.",
+    "blanks": [
+      {
+        "accept": [
+          "-v",
+          "--set",
+          "--variable"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-10z7hd9x",
+    "version": 1,
+    "section": "upsert",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the `WHERE ... IS DISTINCT FROM` on the update in `dim_book.sql` prevent?",
+    "hint": "What would happen to the 1,199 unchanged books?",
+    "choices": [
+      {
+        "text": "Inserting a duplicate book",
+        "correct": false,
+        "why": "`ON CONFLICT` already prevents that."
+      },
+      {
+        "text": "Rewriting unchanged books every night",
+        "correct": true,
+        "why": "Right. Only the changed rows are written."
+      },
+      {
+        "text": "Updating a book whose price went down",
+        "correct": false,
+        "why": "A lower price is distinct, so it is updated."
+      },
+      {
+        "text": "A conflict on the ISBN when two books share one",
+        "correct": false,
+        "why": "The conflict target is `book_id`; ISBNs are unique in the shop."
+      }
+    ]
+  },
+  {
+    "id": "ex-83b9f1py",
+    "version": 1,
+    "section": "upsert",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A report needs the list price each book had on the day it sold. Why should it not read `dim_book`?",
+    "hint": "Type 1 keeps only the present.",
+    "choices": [
+      {
+        "text": "It holds only today's price",
+        "correct": true,
+        "why": "Right. Old prices are overwritten; the price paid is on the order line."
+      },
+      {
+        "text": "It is updated only once a month",
+        "correct": false,
+        "why": "It is loaded every night."
+      },
+      {
+        "text": "It holds prices in a different currency from the facts",
+        "correct": false,
+        "why": "Everything is in cents of reais."
+      },
+      {
+        "text": "It has no `book_id` to join on",
+        "correct": false,
+        "why": "`book_id` is its primary key."
+      }
+    ]
+  },
+  {
+    "id": "ex-f4ahsjse",
+    "version": 1,
+    "section": "upsert",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague writes `ON CONFLICT (isbn)` against a table with no unique index on `isbn`. What happens?",
+    "hint": "What does \"the existing row\" mean without one?",
+    "choices": [
+      {
+        "text": "Every row is inserted, duplicates included",
+        "correct": false,
+        "why": "PostgreSQL does not guess; it refuses."
+      },
+      {
+        "text": "PostgreSQL creates the index",
+        "correct": false,
+        "why": "Nothing is created for you."
+      },
+      {
+        "text": "The statement fails with an error",
+        "correct": true,
+        "why": "Right. The conflict target must be a unique constraint or index."
+      },
+      {
+        "text": "It falls back to the primary key",
+        "correct": false,
+        "why": "It does not fall back; it errors."
+      }
+    ]
+  },
+  {
+    "id": "ex-2pbbdtaf",
+    "version": 1,
+    "section": "scd2",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `dim_customer.sql` compare with `IS DISTINCT FROM` rather than `<>`?",
+    "hint": "What is `NULL <> 'SP'`?",
+    "choices": [
+      {
+        "text": "`<>` does not work on tuples",
+        "correct": false,
+        "why": "It does; the problem is `NULL`."
+      },
+      {
+        "text": "`IS DISTINCT FROM` is faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "A change from `NULL` still counts",
+        "correct": true,
+        "why": "Right. `<>` with a `NULL` gives `NULL`, and the change is skipped."
+      },
+      {
+        "text": "It ignores case differences in city names",
+        "correct": false,
+        "why": "It compares exactly."
+      }
+    ]
+  },
+  {
+    "id": "ex-4tmey1e2",
+    "version": 1,
+    "section": "scd2",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After fifteen nights `dim_customer` held 5,413 versions of 5,366 customers. How many versions were closed?",
+    "hint": "One current version per customer.",
+    "value": 47,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-9w8jj5g8",
+    "version": 1,
+    "section": "scd2",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A customer moves to Curitiba at 10:00 and to Londrina at 16:00 on the same day. What does the nightly type 2 load record?",
+    "hint": "It reads the shop once a night.",
+    "choices": [
+      {
+        "text": "Two new versions, Curitiba and Londrina",
+        "correct": false,
+        "why": "Only CDC sees both changes."
+      },
+      {
+        "text": "One new version, Londrina",
+        "correct": true,
+        "why": "Right. Curitiba was never seen by the nightly read."
+      },
+      {
+        "text": "No change until the next night",
+        "correct": false,
+        "why": "That night's read sees Londrina."
+      },
+      {
+        "text": "An error, because two changes have the same date",
+        "correct": false,
+        "why": "Only one change is ever seen."
+      }
+    ]
+  },
+  {
+    "id": "ex-wsprz9a8",
+    "version": 1,
+    "section": "surrogate-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the fact load join on `valid_from` and `valid_to` instead of `is_current`?",
+    "hint": "Think of reloading an old day.",
+    "choices": [
+      {
+        "text": "So a reload finds the version true at the sale",
+        "correct": true,
+        "why": "Right. `is_current` would attach old sales to today's city."
+      },
+      {
+        "text": "`is_current` is not indexed",
+        "correct": false,
+        "why": "Indexing is not the reason."
+      },
+      {
+        "text": "`is_current` can be `NULL`",
+        "correct": false,
+        "why": "It is declared `NOT NULL`."
+      },
+      {
+        "text": "A join on a boolean column is not allowed in PostgreSQL",
+        "correct": false,
+        "why": "It is allowed; it would be wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-bwr2cjtr",
+    "version": 1,
+    "section": "surrogate-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are facts with no customer given `customer_key = -1` instead of `NULL`?",
+    "hint": "What does an inner join do with a `NULL` key?",
+    "choices": [
+      {
+        "text": "`-1` takes less space than `NULL`",
+        "correct": false,
+        "why": "Space is not the argument."
+      },
+      {
+        "text": "PostgreSQL does not allow `NULL` in a bigint column",
+        "correct": false,
+        "why": "It does; the column is declared `NOT NULL` on purpose."
+      },
+      {
+        "text": "An inner join keeps the sale",
+        "correct": true,
+        "why": "Right. With `NULL` it would drop a third of the revenue."
+      },
+      {
+        "text": "`-1` marks the customer for deletion",
+        "correct": false,
+        "why": "It marks an unknown customer, not a deletion."
+      }
+    ]
+  },
+  {
+    "id": "ex-n8cvaq60",
+    "version": 1,
+    "section": "surrogate-keys",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Customer 1880 asked to be erased. What does the warehouse keep of them after the nightly load?",
+    "hint": "The person goes; the sales stay.",
+    "choices": [
+      {
+        "text": "Their old versions in `dim_customer`, as history",
+        "correct": false,
+        "why": "History is not a reason to keep a person the law says to delete."
+      },
+      {
+        "text": "Nothing at all, sales included",
+        "correct": false,
+        "why": "The sales stay, with no customer."
+      },
+      {
+        "text": "Their sales, under customer key -1",
+        "correct": true,
+        "why": "Right. Every version is deleted; the sales point at nobody."
+      },
+      {
+        "text": "Their current version only, with the city blanked",
+        "correct": false,
+        "why": "Every version goes."
+      }
+    ]
+  },
+  {
+    "id": "ex-7zfjbbrt",
+    "version": 1,
+    "section": "publishing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A reader with `lock_timeout = '2s'` queried `marts.dim_shop` during a slow `TRUNCATE` load and failed. Why?",
+    "hint": "Which lock does TRUNCATE take?",
+    "choices": [
+      {
+        "text": "The table was empty",
+        "correct": false,
+        "why": "The reader never got far enough to see it."
+      },
+      {
+        "text": "The strongest lock blocks even readers",
+        "correct": true,
+        "why": "Right. The reader waited two seconds and gave up."
+      },
+      {
+        "text": "`pg_sleep` blocks every session in the database",
+        "correct": false,
+        "why": "It only sleeps its own session."
+      },
+      {
+        "text": "Readers need a different role during loads",
+        "correct": false,
+        "why": "Roles were not involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-06tmph9j",
+    "version": 1,
+    "section": "publishing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way of replacing a table's contents to what a reader sees during the load.",
+    "hint": "Two waits, one sees the old rows, one barely notices.",
+    "pairs": [
+      {
+        "left": "TRUNCATE and insert, in one transaction",
+        "right": "Waits for the whole load, or fails"
+      },
+      {
+        "left": "DELETE and insert, in one transaction",
+        "right": "The old rows"
+      },
+      {
+        "left": "Build a new table, then swap names",
+        "right": "Waits milliseconds for the swap"
+      }
+    ]
+  },
+  {
+    "id": "ex-2rrbzyxg",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the three statements of the type 2 load in `dim_customer.sql`.",
+    "hint": "Close, open, erase.",
+    "items": [
+      "Close the current version of customers who moved",
+      "Open a version for customers with none current",
+      "Delete every version of customers the shop no longer has"
+    ]
+  },
+  {
+    "id": "ex-maymzn1q",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team loads facts by appending each night's new orders, and their scheduler sometimes reruns a night. What is the smallest change that makes reruns harmless?",
+    "hint": "Make the load know which rows it replaces.",
+    "choices": [
+      {
+        "text": "Run the scheduler less often",
+        "correct": false,
+        "why": "A rerun can still happen."
+      },
+      {
+        "text": "Add `SELECT DISTINCT` to every report",
+        "correct": false,
+        "why": "That hides duplicates in some reports and merges real lines in others."
+      },
+      {
+        "text": "Delete the night's period before inserting it, in one transaction",
+        "correct": true,
+        "why": "Right. A rerun then replaces the period instead of adding it twice."
+      },
+      {
+        "text": "Switch to a full reload of the whole fact table",
+        "correct": false,
+        "why": "That also works, at the cost of reloading all history every night."
+      }
+    ]
+  }
+]

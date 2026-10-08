@@ -180,12 +180,12 @@
   },
   {
     "id": "ex-kmkxnbwv",
-    "version": 1,
+    "version": 2,
     "section": "explain",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "cost=0.00..19966.00 on a Seq Scan. What are the two numbers?",
+    "prompt": "cost=0.00..19969.00 on a Seq Scan. What are the two numbers?",
     "hint": "Neither is a time, and they are read as a start and an end.",
     "choices": [
       {
@@ -308,13 +308,13 @@
   },
   {
     "id": "ex-ftctf85c",
-    "version": 1,
+    "version": 2,
     "section": "explain",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
     "prompt": "A one-customer join shows Seq Scan on orders with rows=1000000 under a Hash Join. What does the plan tell you that the SQL did not?",
-    "hint": "Thirteen orders were wanted. Ask how many were read to find them.",
+    "hint": "Seven orders were wanted. Ask how many were read to find them.",
     "choices": [
       {
         "text": "The foreign key is not indexed",
@@ -551,7 +551,7 @@
   },
   {
     "id": "ex-jz8zb672",
-    "version": 1,
+    "version": 2,
     "section": "the-scans",
     "type": "quiz",
     "difficulty": "medium",
@@ -567,7 +567,7 @@
       {
         "text": "The table is empty",
         "correct": false,
-        "why": "Thirteen rows came back; the table was simply not consulted for them."
+        "why": "Seven rows came back; the table was simply not consulted for them."
       },
       {
         "text": "The index is being rebuilt just now",
@@ -903,12 +903,12 @@
   },
   {
     "id": "ex-26k1mzc7",
-    "version": 1,
+    "version": 2,
     "section": "estimates-against-actuals",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "WHERE date(placed_at) = DATE '2025-03-01' estimated 5000 rows and returned 1834. Why 5000?",
+    "prompt": "WHERE date(placed_at) = DATE '2025-03-01' estimated 5000 rows and returned 1558. Why 5000?",
     "hint": "Ask what the planner has statistics about, and what it does not.",
     "choices": [
       {
@@ -935,12 +935,12 @@
   },
   {
     "id": "ex-hgk8x5e9",
-    "version": 1,
+    "version": 2,
     "section": "estimates-against-actuals",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "A table that has never been analysed: after loading 200 000 rows, EXPLAIN says rows=754 for a condition that matches a quarter of them. What fixes the estimate?",
+    "prompt": "A table that has never been analysed: after loading 200 000 rows, EXPLAIN says rows=737 for a condition that matches a quarter of them. What fixes the estimate?",
     "hint": "One statement, and the planner goes from guessing to knowing.",
     "choices": [
       {
@@ -1114,12 +1114,12 @@
   },
   {
     "id": "ex-avq44m6h",
-    "version": 1,
+    "version": 2,
     "section": "sorts-and-aggregates",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Sort Method: external merge  Disk: 38576kB. Which word matters, and what does it say?",
+    "prompt": "Sort Method: external merge  Disk: 38584kB. Which word matters, and what does it say?",
     "hint": "One word in that line is the finding.",
     "choices": [
       {
@@ -1138,7 +1138,7 @@
         "why": "External means outside memory; the database did the sorting, on its own temporary files."
       },
       {
-        "text": "38576kB: the size of the result that was sent back to the client",
+        "text": "38584kB: the size of the result that was sent back to the client",
         "correct": false,
         "why": "It is the temporary space the sort used, and ANALYZE sends no result at all."
       }
@@ -1580,12 +1580,12 @@
   },
   {
     "id": "ex-67xkgm59",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "A plan shows a `BitmapAnd` over two index scans: one returned 2 984 entries and the other 194 554, and building the second bitmap took most of the time. What finds those rows directly?",
+    "prompt": "A plan shows a `BitmapAnd` over two index scans: one returned 2 923 entries and the other 51 127, and building the second bitmap took most of the time. What finds those rows directly?",
     "hint": "One structure instead of two, with the columns in a particular order.",
     "choices": [
       {
@@ -1644,12 +1644,12 @@
   },
   {
     "id": "ex-k4jwfp5g",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "A bitmap heap scan on a table of 7 466 pages reports `Heap Blocks: exact=7466`. What does that tell you about the rows it wanted?",
+    "prompt": "A bitmap heap scan on a table of 7 469 pages reports `Heap Blocks: exact=7469`. What does that tell you about the rows it wanted?",
     "hint": "Count how many pages it had to visit against how many there are.",
     "choices": [
       {
@@ -1836,12 +1836,12 @@
   },
   {
     "id": "ex-2a95rhat",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "A node reports `rows=13` and, beneath it, `Rows Removed by Filter: 999987`. What is the finding?",
+    "prompt": "A node reports `rows=7` and, beneath it, `Rows Removed by Filter: 999993`. What is the finding?",
     "hint": "Compare what it kept with what it read.",
     "choices": [
       {
@@ -1850,7 +1850,7 @@
         "why": "Discarding nearly everything is what a selective condition does; that is the point of it."
       },
       {
-        "text": "A million rows were read to keep thirteen",
+        "text": "A million rows were read to keep seven",
         "correct": true,
         "why": "The condition is selective and nothing narrowed the reading, which is the case for an index in one line."
       },

@@ -1,11 +1,30 @@
 ---
 title: Deciding at the head
-version: 1
+version: 2
 ---
 
 **Head sampling decides when the trace begins**, in the service that starts it, and every service
 after it does what it was told. The SDK makes the decision with a *sampler*, and the usual one keeps
-a fixed fraction. A script in the sandbox starts eight checkouts under a sampler that keeps half:
+a fixed fraction. A script in the sandbox starts eight checkouts under a sampler that keeps half. Save it as
+`~/shop/scratch/flags.py`:
+
+```python
+"""Eight checkouts under a sampler that keeps half of all traces."""
+from opentelemetry import propagate, trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.sampling import ParentBased, TraceIdRatioBased
+
+trace.set_tracer_provider(TracerProvider(sampler=ParentBased(TraceIdRatioBased(0.5))))
+tracer = trace.get_tracer("flags")
+
+for _ in range(8):
+    with tracer.start_as_current_span("POST /checkout") as span:
+        headers = {}
+        propagate.inject(headers)
+        print(headers["traceparent"], "recorded" if span.is_recording() else "dropped")
+```
+
+And run it:
 
 ```
 ana@obs:~/shop$ docker compose run --rm sandbox python flags.py
@@ -30,7 +49,16 @@ that number falls below the fraction. Two services given the same id and the sam
 same answer without talking to each other.
 
 The shop needs no code for this. The SDK reads its sampler from the environment, so the storefront,
-where every checkout's trace begins, is given one in an override, keeping one trace in ten:
+where every checkout's trace begins, is given one in an override, keeping one trace in ten. Save the lines the `cat` below prints as
+`~/shop/compose.override.yaml`, recreate the storefront with them, and give the change a minute and
+a quarter to show in the numbers:
+
+```sh
+docker compose up -d storefront
+sleep 75
+```
+
+Then:
 
 ```
 ana@obs:~/shop$ cat compose.override.yaml

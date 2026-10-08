@@ -1,6 +1,6 @@
 ---
 title: macOS, and the three side by side
-version: 1
+version: 2
 ---
 
 **macOS uses both models.** Underneath it is Unix: every file has an owner, a group and the nine letters
@@ -36,3 +36,16 @@ some files" on a Mac usually needs **Full Disk Access** there, whatever `ls -l` 
 The habit that carries across all three: **grant to groups, not to people**. A group named for a job,
 *accounts*, survives the day somebody changes job; a permission granted to a person has to be found and
 removed by hand.
+
+## Tidying up
+
+Your server still has `bruno` and `carla`, the group `accounts` and two folders in `/srv`. Lesson 10
+creates `carla` again from nothing, so remove them all now. `userdel` may add that it found no mail
+spool for each of them; these accounts never received mail, and there was nothing to remove.
+
+```sh
+cd ~
+sudo rm -rf /srv/accounts /srv/office
+for u in bruno carla; do sudo userdel -r $u; done
+sudo groupdel accounts
+```

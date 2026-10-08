@@ -6,7 +6,9 @@ version: 1
 A failover is only as good as the gap it leaves, and a gap can be measured. The laptop pings `web1` in
 the data centre, beyond the gateway, five times a second: `-i 0.2`. `-D` puts a timestamp in front of each line, in seconds since 1970. `-O` prints a line for every reply that has not come back by the time the
 next ping goes out, so a missing reply shows up as a line rather than as nothing. A little over two seconds in, `hq`'s
-cable to the LAN was pulled:
+cable to the LAN was pulled. The cable is the pair `netlab.sh` named `hq-hq`, `hq`'s port on the
+head-office switch, and pulling it is setting that end down, on the virtual machine:
+`sudo ip -n wire link set hq-hq down`. Start the ping on `laptop`, then pull the cable:
 
 ```
 ana@laptop:~$ ping -D -O -i 0.2 -c 40 -W 1 192.0.2.21
@@ -62,7 +64,7 @@ pings in a row, 14 to 28, get no answer. Reply 29 arrives at `1790629869.916964`
 reply before the failure to the first one after it is 3.264 seconds**, and ping's own summary agrees
 from the other side: 40 sent, 25 received, 37.5% lost, which is those fifteen.
 
-The two timestamps are 18:11:06.65 and 18:11:09.92 on the lab's clock, São Paulo time, and the two
+The two timestamps are 18:11:06.65 and 18:11:09.92 on the network's clock, São Paulo time, and the two
 routers' logs put their own lines inside that window:
 
 ```

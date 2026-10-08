@@ -1,11 +1,11 @@
 ---
 title: Como um controle se chama
-version: 1
+version: 2
 ---
 
 Todo link, botão e campo de formulário tem um **nome acessível**: as palavras que um leitor de tela diz quando chega nele, e as palavras que quem usa controle por voz diz para ativá-lo. A árvore os imprimiu entre aspas: `link "Events"`, `button "Reserve (button)"`. O navegador calcula o nome a partir da marcação, e na maior parte das vezes é só o texto dentro do elemento.
 
-É por isso que o texto dentro de um link importa tanto. Aqui estão três links e duas imagens dentro de links:
+É por isso que o texto dentro de um link importa tanto. Aqui estão três links e duas imagens dentro de links, em `names.html`. Qualquer imagem pequena salva ao lado como `shelf.png` serve:
 
 ```html
 <!doctype html>

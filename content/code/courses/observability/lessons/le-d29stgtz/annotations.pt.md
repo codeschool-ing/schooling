@@ -1,24 +1,41 @@
 ---
 title: Anotações: marcando o que as pessoas fizeram
-version: 1
+version: 2
 ---
 
 Um gráfico mostra o que o sistema fez. **Uma anotação marca o que as pessoas fizeram**: um deploy,
 uma mudança de configuração, o começo de um incidente. Sem elas, a primeira pergunta sobre qualquer
 calombo em qualquer gráfico é *alguém mudou alguma coisa?*, e a resposta mora num histórico de chat.
-O robô da esteira de deploy, com o seu token, marca uma versão do payments:
+O robô da esteira de deploy, com o seu token, marca uma versão do payments. Anote a hora antes,
+porque o fim desta seção pede os minutos em volta dela:
+
+```sh
+T0=$(date +%s)
+```
 
 ```
 ana@obs:~/shop$ curl -s -H "Authorization: Bearer $(cat .grafana-token)" -H 'Content-Type: application/json' -d '{"dashboardUID": "shop", "tags": ["deploy"], "text": "payments 1.4.1"}' localhost:3000/api/annotations | jq -c .
 {"id":1,"message":"Annotation added"}
 ```
 
-A versão deixa toda cobrança 600 milissegundos mais lenta, o arquivo de falhas do laboratório fazendo
-o papel de uma versão ruim. Dois minutos depois ela é revertida, e a reversão também é marcada:
+A versão deixa toda cobrança 600 milissegundos mais lenta, o arquivo de falhas fazendo o papel de
+uma versão ruim. Dois minutos depois ela é revertida, e a reversão também é marcada:
+
+```sh
+echo '{"latency_ms": 600}' > faults/payments.json
+sleep 120
+```
 
 ```
 ana@obs:~/shop$ curl -s -H "Authorization: Bearer $(cat .grafana-token)" -H 'Content-Type: application/json' -d '{"dashboardUID": "shop", "tags": ["deploy", "rollback"], "text": "payments back to 1.4.0"}' localhost:3000/api/annotations | jq -c .
 {"id":2,"message":"Annotation added"}
+```
+
+Depois, a reversão em si, e mais dois minutos para o gráfico voltar a descer:
+
+```sh
+rm faults/payments.json
+sleep 120
 ```
 
 As duas ficam guardadas com hora e tags, e todo painel que desenha anotações `deploy`, como o da
@@ -32,7 +49,11 @@ ana@obs:~/shop$ curl -s -H "Authorization: Bearer $(cat .grafana-token)" 'localh
 
 O percentil 99 do checkout nos mesmos minutos foi então pedido ao Prometheus como uma **consulta de
 intervalo** (range query), um valor a cada quinze segundos, de dois minutos antes do deploy a quatro
-depois:
+depois, que estas duas marcas dão:
+
+```sh
+START=$((T0 - 120)) END=$(date +%s)
+```
 
 ```sh
 curl -sG localhost:9090/api/v1/query_range \

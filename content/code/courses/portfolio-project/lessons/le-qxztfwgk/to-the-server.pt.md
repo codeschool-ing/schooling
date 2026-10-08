@@ -1,21 +1,25 @@
 ---
 title: Levando o código até lá, e empacotando
-version: 1
+version: 2
 ---
 
 O servidor recebe o código do mesmo jeito que qualquer outra pessoa receberia: pelo git. Um **repositório
 nu** (*bare*) no srv, sem arquivos de trabalho, recebe o push, e um clone ao lado dele é o que é construído:
 
 ```
-ana@srv:~$ git init -q --bare loanbook.git
+ana@srv:~$ git init -q --bare -b main loanbook.git
 ana@laptop:~/loanbook$ git remote add srv srv:loanbook.git
 ana@laptop:~/loanbook$ git push -q srv main --tags
 ana@srv:~$ git clone -q loanbook.git && git -C loanbook log --oneline -1
 c40ef55 License under MIT
+ana@laptop:~/loanbook$ git log --oneline -1
+c40ef55 License under MIT
 ```
 
-O clone no srv está em `c40ef55`, o mesmo commit do `main` do laptop. Vale conferir essa linha toda vez:
-**o bug de deploy mais comum é implantar algo diferente do que você acha.**
+`-b main` dá nome ao primeiro branch do repositório bare: o git do srv nunca foi informado do padrão, e um
+repositório cujo `HEAD` aponta para um branch que ninguém enviou gera um clone vazio. O clone no srv está
+em `c40ef55`, o mesmo commit do `main` do laptop. Vale conferir essa linha toda vez: **o bug de deploy mais
+comum é implantar algo diferente do que você acha.**
 
 Depois o pacote. Uma imagem de container guarda o código, o runtime e as configurações, então o servidor
 precisa do Podman e de mais nada: nenhuma versão de Python para acertar, nenhum pacote para instalar. A
@@ -34,22 +38,22 @@ CMD ["python3", "app.py"]
 ana@srv:~/loanbook$ sudo podman build -t loanbook .
 STEP 1/8: FROM docker.io/library/python:3.12-slim
 STEP 2/8: WORKDIR /app
---> 11b84a05aa2d
+--> 50bdc62e40b6
 STEP 3/8: COPY app.py seed.py ./
---> 8e9e00825132
+--> 7e8f4e13c7d5
 STEP 4/8: COPY static ./static
---> d5b796ae90c0
+--> 071206b037d8
 STEP 5/8: ENV LOANBOOK_DB=/data/loanbook.db LOANBOOK_PORT=8000
---> 2547024878a9
+--> 3addbf254a5b
 STEP 6/8: USER 1000
---> d01df2f679eb
+--> d8e1a05e372d
 STEP 7/8: EXPOSE 8000
---> 56ef2325ffeb
+--> 82452a065492
 STEP 8/8: CMD ["python3", "app.py"]
 COMMIT loanbook
---> 71956914b85a
+--> 008db3c598f0
 Successfully tagged localhost/loanbook:latest
-71956914b85a60f1af2cdc3e488c4bff0c1ade5d8d6138f0d37dbeac60f763e0
+008db3c598f02dd8375e025d2997af35d65697f8ef4415e5a570434fc60a7059
 ```
 
 Leia a receita de cima para baixo. Começa da imagem slim oficial do Python, copia só o que roda, `app.py`,

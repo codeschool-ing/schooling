@@ -1,6 +1,6 @@
 ---
 title: Revisão, merge e release
-version: 1
+version: 2
 ---
 
 ## A revisão é uma conversa
@@ -11,8 +11,14 @@ dois lados dessa conversa, o que comentar e como receber um comentário. Para a 
 é que a volta pode acontecer várias vezes, e cada volta é mais commits no branch.
 
 Quando o Bruno aprova e os checks estão verdes, o pull request entra pelo botão, e duas coisas acontecem
-no servidor: o commit de merge chega ao `main`, e o ticket 23 fecha. O notebook da Ana ainda não sabe de
-nenhuma das duas:
+no servidor: o commit de merge chega ao `main`, e o ticket 23 fecha. Na sua máquina o botão é o
+programa da primeira seção:
+
+```bash
+bash ~/merge-button.sh 23-holiday-notice 24 ana 'Say the bakery closes on public holidays'
+```
+
+O notebook da Ana ainda não sabe de nenhuma das duas:
 
 ```
 ana@vm:~/site$ git switch main

@@ -34,7 +34,7 @@ failed, but a matrix puts numbers like that side by side where somebody can noti
 |---|---|
 | cells run one after another | run them in parallel, as hosted runners do: the run then takes as long as its slowest cell |
 | installing dependencies | cache them under a key on the lock file (section 08) |
-| slow tests run first | order jobs so the fast layer reports first (lesson 1 section 11) |
+| slow tests run first | order jobs so the fast layer reports first (lesson 1 section 14) |
 | everything runs for every change | skip what a change cannot affect, without skipping silently (section 04) |
 | one slow suite | split it across several machines, and measure the slowest split |
 

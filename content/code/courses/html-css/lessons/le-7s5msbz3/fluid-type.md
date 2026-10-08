@@ -1,6 +1,6 @@
 ---
 title: Fluid type with clamp()
-version: 1
+version: 2
 ---
 
 A heading that suits a laptop is too big on a phone, and the usual fix was a media query that changes `font-size` at a breakpoint: one size, then suddenly another. **`clamp()`**, from lesson 10 section 07, makes the size change **smoothly** with the window, between a minimum and a maximum:
@@ -9,7 +9,27 @@ A heading that suits a laptop is too big on a phone, and the usual fix was a med
 h1 { font-size: clamp(1.5rem, 1rem + 2.5vw, 2.5rem); }
 ```
 
-The three arguments are the **minimum**, the **preferred** value and the **maximum**. The preferred value grows with the window: `2.5vw` is 2.5% of its width. The browser uses it whenever it lies between the other two, and the nearest limit otherwise:
+The three arguments are the **minimum**, the **preferred** value and the **maximum**. The preferred value grows with the window: `2.5vw` is 2.5% of its width. The browser uses it whenever it lies between the other two, and the nearest limit otherwise.
+
+The page, `fluid.html`, is a heading with that rule:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Andorinha Books</title>
+    <style>
+      body { margin: 0; padding: 0 1rem; font-family: system-ui, sans-serif; }
+      h1 { font-size: clamp(1.5rem, 1rem + 2.5vw, 2.5rem); }
+    </style>
+  </head>
+  <body>
+    <h1>Andorinha Books</h1>
+  </body>
+</html>
+```
 
 ```
 ana@laptop:~/site$ probe --width 320 fluid.html style h1 font-size width 768 style h1 font-size width 1280 style h1 font-size

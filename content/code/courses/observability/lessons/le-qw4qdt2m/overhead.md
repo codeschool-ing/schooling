@@ -1,10 +1,10 @@
 ---
 title: What it costs
-version: 1
+version: 2
 ---
 
 Wrapping every database call and every HTTP request in a span is work, and "it is cheap" is a claim
-to measure rather than repeat. `bench.py` sends 300 orders straight to `orders`, one after the
+to measure rather than repeat. `bench.py`, in `~/shop/scratch` like every script, sends 300 orders straight to `orders`, one after the
 other, and reports how long each took. Each order is a real one: a database insert, a call to
 payments, an update and a message on the queue.
 
@@ -25,7 +25,8 @@ print(f"300 orders: median {statistics.median(times):.1f} ms, mean {statistics.m
 
 Run once against `orders` as the lab runs it, then again with the launcher taken away. Compose
 reads `compose.override.yaml` on top of `compose.yaml` when it exists, which is how the command is
-replaced without editing the main file:
+replaced without editing the main file. Between the two runs, save the three lines the `cat` below
+prints as `~/shop/compose.override.yaml`:
 
 ```
 ana@obs:~/shop$ docker compose run --rm sandbox python bench.py 2>/dev/null

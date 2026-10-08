@@ -1,6 +1,6 @@
 ---
 title: Reset e amend: reescrevendo o que você não compartilhou
-version: 1
+version: 2
 ---
 
 O revert mantém o histórico e acrescenta a ele. Os outros dois comandos desta seção **mudam o próprio
@@ -11,7 +11,13 @@ sua máquina.
 ## Amend: corrigir o commit que você acabou de fazer
 
 Um erro de digitação na mensagem, um arquivo que você esqueceu de adicionar. O `--amend` substitui o
-último commit por um corrigido:
+último commit por um corrigido. A mudança que vai para o commit diz em que dias a padaria abre:
+
+```bash
+sed -i 's/half past five/half past five, Monday to Saturday/' index.html
+git add index.html
+```
+
 
 ```
 ana@vm:~/site$ git commit -m "Close on Sundys"
@@ -35,7 +41,12 @@ o revert evitou quando alguém tem.
 
 A Ana testou duas cores para o título, fez commit das duas, e não gosta de nenhuma. O `git reset` leva
 o branch de volta a um commit anterior, e os três modos dele decidem o que acontece com o trabalho
-dos commits que ele deixa para trás.
+dos commits que ele deixa para trás. As duas tentativas, uma depois da outra:
+
+```bash
+sed -i 's/darkorange/chocolate/' style.css && git commit -qam 'Try a darker orange'
+sed -i 's/chocolate/firebrick/' style.css && git commit -qam 'Try red'
+```
 
 ```
 ana@vm:~/site$ git log --oneline -3

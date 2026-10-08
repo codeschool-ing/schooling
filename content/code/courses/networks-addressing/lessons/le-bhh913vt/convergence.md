@@ -1,6 +1,6 @@
 ---
 title: Convergence: the failure with the light still on
-version: 1
+version: 2
 ---
 
 **Convergence** is the time between something changing and every router agreeing on the new paths. Until
@@ -9,8 +9,20 @@ it finishes, some packets go towards a path that no longer works, and they are l
 The easy failure is a pulled cable. The interface loses its signal, the router sees it at once, as r1 did
 in lesson 15, and OSPF recalculates within moments. **The hard failure is the one that leaves the signal
 up**: a media converter, or a switch between two routers, dies while still powering its port, and the
-cable looks perfect from both ends. The lab staged that between r1 and r4, with a rule on r1 that drops
-every frame on `eth4` in both directions. The interface stays up; nothing gets through.
+cable looks perfect from both ends. The lab staged that between r1 and r4, with rules on r1 that drop
+every frame on `eth4` in both directions. The interface stays up; nothing gets through. These are the
+rules, typed at a root prompt on r1, and `nft delete table netdev cut; nft delete table inet cutout`
+removes them:
+
+```sh
+nft add table netdev cut
+nft add chain netdev cut in "{ type filter hook ingress device eth4 priority 0; policy drop; }"
+nft add table inet cutout
+nft add chain inet cutout out "{ type filter hook output priority 0; }"
+nft add rule inet cutout out oifname eth4 drop
+nft add chain inet cutout fwd "{ type filter hook forward priority 0; }"
+nft add rule inet cutout fwd oifname eth4 drop
+```
 
 A ping from pc1 to pc2 was started first, one packet a second for 70 seconds, and the cut came two
 seconds into it. Twenty seconds after the cut, r1 still believed in r4:

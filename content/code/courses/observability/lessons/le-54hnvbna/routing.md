@@ -1,11 +1,11 @@
 ---
 title: Routing: pages, tickets, and inhibition
-version: 1
+version: 2
 ---
 
 Prometheus decides that an alert is firing. **Alertmanager decides who hears about it**, how often,
-and together with what. Lesson 5's configuration sent everything to the pager. The lab's new one,
-`alertmanager/routes.yml`, separates the two severities:
+and together with what. Lesson 5's configuration sent everything to the pager. The new one,
+`alertmanager/routes.yml`, saved as the `cat` below prints it, separates the two severities:
 
 ```
 ana@obs:~/shop$ cat alertmanager/routes.yml
@@ -48,6 +48,16 @@ Three parts, each with a job:
   slowly.
 
 An override points Alertmanager at the new file:
+
+`~/shop/compose.override.yaml`
+
+```yaml
+services:
+  alertmanager:
+    command: [--config.file=/etc/alertmanager/routes.yml]
+```
+
+And Alertmanager is recreated with it:
 
 ```
 ana@obs:~/shop$ docker compose up -d alertmanager 2>&1 | tail -1

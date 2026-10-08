@@ -10,15 +10,31 @@ Exchange, aqui na versão 2, na porta UDP 500.
 
 ## A configuração
 
-`hq` roda o strongSwan, cuja configuração de IPsec é um arquivo, `/etc/swanctl/swanctl.conf`. O `sudo
-cat` o imprimiu, e aqui está ele cortado em pedaços:
+`hq` roda o strongSwan, cuja configuração de IPsec é um arquivo, `/etc/swanctl/swanctl.conf`. Aqui está
+ele, cortado em pedaços. Em `hq`, abra o arquivo com `sudo nano /etc/swanctl/swanctl.conf` e cole-o
+inteiro com o botão da listagem:
 
 ```schooling-example
 {"language": "conf", "file": "swanctl.conf", "parts": [{"code": "connections {\n  offices {\n    version = 2\n    local_addrs = 203.0.113.2\n    remote_addrs = 198.51.100.2\n    mobike = no", "note": "Uma conexão, `offices`, em IKEv2, entre os endereços públicos dos dois roteadores. `mobike = no` desliga a extensão que deixa um par trocar de endereço no meio da conexão. Ligada, ela faz o strongSwan passar o IKE para a porta 4500 assim que a primeira troca termina, mesmo sem NAT no caminho. Esta aula quer que a porta 500 continue sendo a 500 até a seção sobre NAT."}, {"code": "    proposals = aes256-sha256-modp2048", "note": "Os algoritmos da própria conexão IKE, não do tráfego: AES com chave de 256 bits para cifrar, SHA-256 para integridade e para derivar chaves, e o grupo Diffie-Hellman MODP 2048 para combinar um segredo. O outro lado precisa aceitar pelo menos uma proposta, ou nada começa."}, {"code": "    local {\n      auth = psk\n      id = hq.example.com\n    }\n    remote {\n      auth = psk\n      id = branch.example.com\n    }", "note": "Quem cada lado é e como prova isso. `auth = psk` quer dizer com chave pré-compartilhada; os valores de `id` são nomes, e cada lado confere se o outro apresentou o nome que ele espera. Eles não precisam existir no DNS."}, {"code": "    children {\n      lans {\n        local_ts = 192.168.10.0/24\n        remote_ts = 192.168.20.0/24\n        esp_proposals = aes256gcm16\n        start_action = trap\n      }\n    }", "note": "O túnel em si, uma CHILD SA chamada `lans`. As duas linhas `_ts` são os seletores de tráfego, as redes que ele une, e precisam espelhar as do outro lado. `esp_proposals` diz o algoritmo do tráfego, AES-GCM com chave de 256 bits. `start_action = trap` espera o primeiro pacote que precise do túnel."}, {"code": "  }\n}", "note": "O fim da conexão. O que vem depois é um bloco separado, que o `swanctl` carrega no depósito de segredos do daemon."}, {"code": "secrets {\n  ike-offices {\n    id-1 = hq.example.com\n    id-2 = branch.example.com\n    secret = \"Tide-Lantern-Orbit-7294-Quill\"\n  }\n}", "note": "A chave pré-compartilhada e as duas identidades entre as quais ela vale. O segredo do laboratório aparece aqui porque é do laboratório; num roteador de verdade, este bloco é a única parte do arquivo que ninguém cola num chamado."}]}
 ```
 
-`branch` tem a imagem espelhada. `swanctl --load-all` entrega o arquivo ao daemon que está rodando, o
-`charon`, e `--list-conns` mostra o que o daemon entendeu:
+`branch` tem a imagem espelhada: o mesmo arquivo, escrito do mesmo jeito, com seis valores trocados. O
+bloco `secrets` fica exatamente como está, porque as duas pontas guardam a mesma chave sob os mesmos dois
+nomes.
+
+| linha | em `hq` | em `branch` |
+|---|---|---|
+| `local_addrs` | `203.0.113.2` | `198.51.100.2` |
+| `remote_addrs` | `198.51.100.2` | `203.0.113.2` |
+| `id` dentro de `local` | `hq.example.com` | `branch.example.com` |
+| `id` dentro de `remote` | `branch.example.com` | `hq.example.com` |
+| `local_ts` | `192.168.10.0/24` | `192.168.20.0/24` |
+| `remote_ts` | `192.168.20.0/24` | `192.168.10.0/24` |
+
+Quem lê o arquivo é o daemon do strongSwan, o `charon`, que precisa estar rodando antes. Inicie-o nos dois
+roteadores, no shell de cada um, com `sudo setsid /usr/lib/ipsec/charon >/dev/null 2>&1 &`, e em `branch`
+carregue o arquivo com `sudo swanctl --load-all`. Em `hq`, o mesmo comando entrega o arquivo ao daemon, e
+`--list-conns` mostra o que o daemon entendeu:
 
 ```
 ana@hq:~$ sudo swanctl --load-all
@@ -77,8 +93,8 @@ resposta, depois um `ikev2_auth` e a resposta. Uma verificação de saúde que m
 em armadilha como fora do ar toda vez que ele sobe.
 
 O `tshark`, o motor do Wireshark na linha de comando, que a aula 11 usa bastante, dá nome às mensagens.
-Esta é uma segunda rodada, depois de a conexão ser derrubada, e ela perdeu o primeiro ping do mesmo
-jeito:
+Esta é uma segunda rodada: em `hq`, `sudo swanctl --terminate --ike offices` derrubou a conexão, e o ping
+perdeu o primeiro pacote do mesmo jeito:
 
 ```
 ana@laptop:~$ ping -c 2 192.168.20.30

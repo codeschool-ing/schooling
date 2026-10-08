@@ -1,6 +1,6 @@
 ---
 title: Equal subnets, unequal needs
-version: 1
+version: 2
 ---
 
 Lesson 12 cut a block into subnets with one mask, so every piece came out the same size. That works
@@ -18,8 +18,9 @@ The company in this lesson's lab has one block, 10.20.32.0/24, and four networks
 | the link between the routers r1 and r2 | 2 |
 
 The tempting first move is the one lesson 12 taught: four networks, so cut the /24 into four equal
-pieces. Two bits of the host part go to the subnet number, which leaves a /26. This is what one of
-those pieces holds:
+pieces. Two bits of the host part go to the subnet number, which leaves a /26. This lesson runs on lesson 12's
+network, `plan.sh`, built with `sudo bash ~/netlab/netlab.sh up plan`, and on hq1 `ipcalc` shows what
+one of those pieces holds:
 
 ```
 ana@hq1:~$ ipcalc -b 10.20.32.0/26

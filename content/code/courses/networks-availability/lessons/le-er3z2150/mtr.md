@@ -6,7 +6,8 @@ version: 1
 mtr is traceroute that keeps going. It sends probes to every hop, round after round, and keeps a table
 of what came back: `-r` prints the table as a report at the end, `-c` says how many rounds, and `-i`
 sets the gap between them. Two runs from the laptop. For the first, the random drop towards web2 from
-the ping section was still in place; before the second it was removed:
+the ping section was still in place; before the second it was removed, with
+`sudo nft flush chain ip faults loss` on `isp`:
 
 ```
 ana@laptop:~$ sudo mtr -n -r -c 20 192.0.2.22

@@ -7,7 +7,9 @@ A firewall's rule set is a program that runs on every packet, and it is edited b
 Two properties of `nft` make editing it safer, and both are worth using on purpose.
 
 **Check before loading.** `nft -c` parses the file and checks it against the running kernel without
-changing anything. A copy of the baseline with one word misspelt, `acept` where `accept` belongs:
+changing anything. A copy of the baseline with one word misspelt, `acept` where `accept` belongs, made
+on `fw` with
+`sed "s/ct state new accept comment \"staff browse\"/ct state new acept comment \"staff browse\"/" baseline.nft > typo.nft`:
 
 ```
 root@fw:~# nft -c -f typo.nft; echo "exit $?"

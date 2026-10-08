@@ -3,14 +3,17 @@ title: Four generations in one file
 version: 1
 ---
 
-Llama is the first family in this directory that is **open-weight from the start**: the
-previous lessons' providers sold access, while Meta publishes the weights, and most people who use
-a Llama reach it on somebody else's machine. So the source here is not a price page but Meta's own repository, which describes every release
-in one Python file, `models/sku_list.py`. Lesson 3 read the architecture numbers out of it. Its
-descriptions list every model Meta has published there:
+Llama is the first family in this directory that is **open-weight from the start**: the previous
+lessons' providers sold access, while Meta publishes the weights, and most people who use a Llama
+reach it on somebody else's machine. So the source here is not a price page but Meta's own
+repository, which describes every release in one Python file, `models/sku_list.py`. Lesson 3 read
+the architecture numbers out of it. Its descriptions list every model Meta has published there.
+`LLAMA` holds the address of the repository at the commit this course reads, and `curl` fetches the
+file for three filters to read:
 
 ```
-ana@desk:~/desk$ sources quote llama-skus 'description="Llama' | grep -o 'Llama [0-9.]* [^"]*' | sort -u
+ana@desk:~/desk$ LLAMA=https://raw.githubusercontent.com/meta-llama/llama-models/0e0b8c519242d5833d8c11bffc1232b77ad7f301
+ana@desk:~/desk$ curl -s $LLAMA/models/sku_list.py | grep 'description="Llama' | grep -o 'Llama [0-9.]* [^"]*' | sort -u
 Llama 2 13b chat model
 Llama 2 13b model
 Llama 2 70b chat model
@@ -54,7 +57,7 @@ Llama 4 Scout (17b 16 experts model)
 Read it as four generations, each answering a different question:
 
 - **Llama 2 and Llama 3**: two sizes or three, each as a base `model` and a tuned `chat` or
-  `instruct` model, lesson 1 section 03's two kinds side by side.
+  `instruct` model, lesson 1 section 07's two kinds side by side.
 - **Llama 3.1**: 8B, 70B and 405B, the sizes lesson 3 computed memory for, and the 405B published
   three ways: BF16 weights for two machine layouts, and **FP8 quantized**, lesson 3 section 04's
   smaller precision released by the makers themselves.
@@ -65,6 +68,6 @@ Read it as four generations, each answering a different question:
   which section 03 explains.
 
 Two things this list teaches about open families in general. **The base model is not always
-published**, so fine-tuning from a base (lesson 1 section 07) depends on the release. And **the
+published**, so fine-tuning from a base (lesson 1 section 11) depends on the release. And **the
 same model can ship in several precisions**: "Llama 3.1 405B" is three different downloads, and an
 evaluation has to name which one it ran.

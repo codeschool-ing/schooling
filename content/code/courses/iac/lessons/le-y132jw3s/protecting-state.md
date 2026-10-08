@@ -1,6 +1,6 @@
 ---
 title: Encrypting the state before it leaves the laptop
-version: 1
+version: 2
 ---
 
 The last three sections keep secrets out of the state where a provider allows it. Something always
@@ -21,13 +21,27 @@ of your own (`kms_key_id` in the backend) adds a second permission a reader need
 
 **Terraform has no way to encrypt the state before it writes it.** OpenTofu, the fork lesson 1
 introduced, does: the state is encrypted inside the program, and the backend, local or S3, only
-ever stores ciphertext. This is the feature lesson 1 promised, and the lab has `tofu` to show it.
+ever stores ciphertext. This is the feature lesson 1 promised.
+
+**Installing OpenTofu.** The project publishes an installer script that adds its package repository
+to Ubuntu and installs `tofu` from it. Download it, read it if you like, and run it:
+
+```sh
+curl -fsSLo install-opentofu.sh https://get.opentofu.org/install-opentofu.sh
+sh install-opentofu.sh --install-method deb
+```
+
+It asks for your password where it needs `sudo`. The transcripts below were made with OpenTofu
+1.13.1, and `tofu version` says which one you have; lesson 17 uses it again.
 
 ## Turning it on
 
-A small configuration with one generated password, run with `tofu`. The provider is named by its
-full address because the lab's offline mirror files providers under Terraform's registry, while
-OpenTofu defaults to its own; lesson 17 says more about the two registries.
+A small configuration with one generated password, in `~/shop/tofu/main.tf`, run with `tofu`. The
+provider is named by its full address because the machine these lessons were recorded on had no
+internet, and kept its providers in a local copy filed under Terraform's registry. On your machine
+`tofu` downloads from its own registry, `registry.opentofu.org`, and plain `hashicorp/random` would
+do; the full address is harmless, and lesson 17 says more about the two registries. Run `tofu init`
+in the directory first, as you would `terraform init`.
 
 ```hcl
 terraform {
@@ -52,7 +66,7 @@ ana@laptop:~/shop/tofu$ jq -r ".resources[0].instances[0].attributes.result" ter
 ```
 
 A plain state, password readable, the starting point of every existing configuration. Ana adds the
-encryption in a file of its own:
+encryption in a file of its own, `encryption.tf`:
 
 ```hcl
 variable "state_passphrase" {
@@ -89,8 +103,15 @@ that method. And the **fallback** lets this one run read the state that is still
 it, OpenTofu would try to decrypt a file that was never encrypted, and stop.
 
 The passphrase is a variable on purpose. Written into the file, it would be one more secret in git;
-here it was exported in the shell beforehand as `TF_VAR_state_passphrase`, which is how a pipeline
-would hand it over from its own secret store. Then the apply, and the file it wrote:
+here it is exported in the shell as `TF_VAR_state_passphrase`, which is how a pipeline would hand it
+over from its own secret store. Ana's, made up for the lesson like the database password, goes into
+the terminal she runs `tofu` in:
+
+```sh
+export TF_VAR_state_passphrase='lantern-orbit-velvet-quarry-2026'
+```
+
+Then the apply, and the file it wrote:
 
 ```
 ana@laptop:~/shop/tofu$ tofu apply -auto-approve -no-color | grep -E "^Apply"
@@ -130,8 +151,33 @@ No changes. Your infrastructure matches the configuration.
 ## After the migration
 
 The fallback has done its job, and left in place it would also accept a plain state that somebody
-put back in the bucket. Ana removes it and the `unencrypted` method with it, so that the `state`
-block is just the method, and plans once more:
+put back in the bucket. Ana removes it, and the `unencrypted` method with it, so that
+`encryption.tf` is now:
+
+```hcl
+variable "state_passphrase" {
+  type      = string
+  sensitive = true
+}
+
+terraform {
+  encryption {
+    key_provider "pbkdf2" "passphrase" {
+      passphrase = var.state_passphrase
+    }
+
+    method "aes_gcm" "state" {
+      keys = key_provider.pbkdf2.passphrase
+    }
+
+    state {
+      method = method.aes_gcm.state
+    }
+  }
+}
+```
+
+The `state` block is just the method. She prints it and plans once more:
 
 ```
 ana@laptop:~/shop/tofu$ sed -n "/state {/,/^    }/p" encryption.tf
@@ -166,7 +212,8 @@ Acquiring state lock. This may take a few moments...
 The message arrives wrapped in a locking error, because the first thing the local backend does is
 back the state up, and it cannot read what it should copy. The line that matters is `message
 authentication failed`: AES-GCM does not decrypt to garbage, it refuses. And Terraform, asked to
-work in the same directory and then to read a copy of the same file:
+work in the same directory and then to read a copy of the same file, in a new directory beside it,
+`~/shop/tofu-copy`:
 
 ```
 ana@laptop:~/shop/tofu$ terraform init

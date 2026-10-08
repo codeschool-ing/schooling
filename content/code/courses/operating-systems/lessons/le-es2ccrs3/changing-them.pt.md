@@ -1,12 +1,18 @@
 ---
 title: Mudando permissões e donos
-version: 1
+version: 2
 ---
 
 O **`chmod`** muda permissões, e as aceita de dois jeitos.
 
 **Por letra**, que muda só o que você nomeia: `u`, `g`, `o` para dono (*user*), grupo e outros, `+` ou
-`-`, e as letras. É o que conserta um script que não roda:
+`-`, e as letras. É o que conserta um script que não roda. Escreva o script antes, em `/srv/office`:
+
+```sh
+printf '#!/bin/sh\necho backup done\n' > backup.sh
+```
+
+Depois tente rodá-lo:
 
 ```
 ana@server:/srv/office$ cat backup.sh

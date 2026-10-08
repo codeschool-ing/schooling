@@ -1,6 +1,6 @@
 ---
 title: Pesos abertos e modelos fechados
-version: 1
+version: 2
 ---
 
 "Aberto" é usado sem muito cuidado quando se fala de modelos, e esse uso esconde a pergunta que
@@ -42,6 +42,18 @@ proibir alguns usos, exigir que o nome do modelo apareça no seu produto ou limi
 dele para treinar outros modelos. **Leia a licença do modelo exato que você baixa**, não um resumo
 da família: dois lançamentos do mesmo provedor podem ter condições diferentes.
 
+Você baixou um na lição 1, e o Ollama guarda a licença ao lado dos pesos:
+
+```
+ana@lab:~/pe$ ollama show --license llama3.2:3b | head -2; ollama show --license llama3.2:3b | wc -l
+LLAMA 3.2 COMMUNITY LICENSE AGREEMENT
+Llama 3.2 Version Release Date: September 25, 2024
+163
+```
+
+Uma licença da própria empresa, com 163 linhas, e é ela que decide o que você pode construir em cima
+do `llama3.2:3b`. Lê-la é o passo de que esta seção trata, e ele está a um comando de distância.
+
 ## Para onde vão os seus dados
 
 Com uma API, cada prompt e cada resposta passam pelo provedor. O que acontece com eles depois está
@@ -56,4 +68,4 @@ ou do jurídico vai perguntar. Perguntas a responder a partir dos documentos do 
 **Nunca responda a essas perguntas de memória ou com base num post de blog.** Os termos mudam, e
 diferem entre planos do mesmo provedor. Um modelo que você mesmo roda responde às quatro por
 construção, e esse é um dos principais motivos de organizações escolherem pesos abertos apesar do
-hardware.
+hardware. Todo prompt que você mandou com o `ask` até aqui foi para `localhost` e para mais lugar nenhum, a não ser que você tenha apontado o `ASK_URL` para um provedor.

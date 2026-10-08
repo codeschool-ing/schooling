@@ -1,0 +1,379 @@
+{
+  "ex-tvtqm7vh": {
+    "prompt": "Ligue cada tabela a como o `nightly.sh` a carrega.",
+    "hint": "Três tabelas, três cargas.",
+    "pairs": [
+      {
+        "left": "dim_book",
+        "right": "Upsert: inserir novos, sobrescrever alterados"
+      },
+      {
+        "left": "dim_customer",
+        "right": "Tipo 2: fechar a versão antiga, abrir uma nova"
+      },
+      {
+        "left": "fact_sales",
+        "right": "Apagar o dia, inseri-lo de novo"
+      }
+    ],
+    "right_distractors": [
+      "Só acrescentar"
+    ]
+  },
+  "ex-46cv1ecx": {
+    "prompt": "Por que o `nightly.sh` carrega a `dim_customer` antes da `fact_sales`?",
+    "hint": "O que a carga de fatos procura?",
+    "choices": [
+      {
+        "text": "Ordem alfabética",
+        "why": "A ordem é uma dependência, não uma grafia."
+      },
+      {
+        "text": "Os fatos procuram a versão do cliente",
+        "why": "Isso. Uma venda precisa da versão que valia quando aconteceu."
+      },
+      {
+        "text": "A `dim_customer` é menor e termina antes, o que libera memória para os fatos",
+        "why": "Tamanho não tem nada a ver; os fatos dependem da dimensão."
+      },
+      {
+        "text": "O PostgreSQL carrega dimensões primeiro por padrão",
+        "why": "O PostgreSQL não sabe nada de dimensões; o script decide."
+      }
+    ]
+  },
+  "ex-30ak1nmn": {
+    "prompt": "Depois que o dia 2 de março foi acrescentado duas vezes à `marts.sales_log`, ela tinha 830 linhas. Quantas linhas de pedido distintas elas descreviam?",
+    "hint": "Cada linha duas vezes."
+  },
+  "ex-bsa2c5sy": {
+    "prompt": "Quando um acréscimo simples é seguro?",
+    "hint": "Duas condições, e só uma se sustenta.",
+    "choices": [
+      {
+        "text": "Quando o destino distingue uma repetição de uma linha nova",
+        "why": "Isso. Uma chave e uma carga que recusa ou ignora o que já tem."
+      },
+      {
+        "text": "Quando a tabela é pequena",
+        "why": "Uma tabela pequena dobra tão fácil quanto uma grande."
+      },
+      {
+        "text": "Quando o pipeline roda à noite",
+        "why": "Execuções noturnas são repetidas como quaisquer outras."
+      },
+      {
+        "text": "Quando a origem tem uma coluna `updated_at`",
+        "why": "Uma marca d'água ajuda a escolher linhas, mas não impede uma repetição de repeti-las."
+      }
+    ]
+  },
+  "ex-8ff2e3fr": {
+    "prompt": "Por que o `DELETE` e o `INSERT` do `fact_sales.sql` ficam dentro de uma transação só?",
+    "hint": "O que um leitor veria entre os dois, senão?",
+    "choices": [
+      {
+        "text": "O PostgreSQL proíbe um `DELETE` fora de uma transação",
+        "why": "Todo comando roda em alguma transação; o ponto é agrupar dois."
+      },
+      {
+        "text": "Para os leitores nunca verem o dia faltando",
+        "why": "Isso. Linhas antigas até o commit, novas depois."
+      },
+      {
+        "text": "Para deixar a inserção mais rápida",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "Para travar as tabelas da loja durante a carga",
+        "why": "A transação é no warehouse; a loja não é tocada."
+      }
+    ]
+  },
+  "ex-tba896x1": {
+    "prompt": "Um estorno em 9 de março cancela um pedido de 2 de março. Com o `fact_sales.sql`, como isso chega à tabela fato?",
+    "hint": "A carga refaz um período a partir do staging.",
+    "choices": [
+      {
+        "text": "A carga de 9 de março atualiza a linha fato antiga",
+        "why": "A carga só apaga e insere o dia que recebe."
+      },
+      {
+        "text": "Nunca chega: fatos são escritos uma vez",
+        "why": "Eles podem ser refeitos; é isso que substituir um período permite."
+      },
+      {
+        "text": "Rodar de novo a carga de 2 de março refaz o dia sem o pedido",
+        "why": "Isso. O dia é refeito a partir do que a loja diz agora."
+      },
+      {
+        "text": "Um gatilho no warehouse apaga o fato quando o pedido muda",
+        "why": "Não há gatilho assim; o warehouse fica sabendo recarregando."
+      }
+    ]
+  },
+  "ex-5qf632sv": {
+    "prompt": "No `fact_sales.sql`, o `:'day'` é trocado por um valor dado ao psql na linha de comando com a opção ___.",
+    "hint": "Uma letra só depois de um hífen, ou a forma longa.",
+    "blanks": [
+      {
+        "accept": [
+          "-v",
+          "--set",
+          "--variable"
+        ]
+      }
+    ]
+  },
+  "ex-10z7hd9x": {
+    "prompt": "O que o `WHERE ... IS DISTINCT FROM` na atualização do `dim_book.sql` evita?",
+    "hint": "O que aconteceria com os 1.199 livros sem mudança?",
+    "choices": [
+      {
+        "text": "Inserir um livro duplicado",
+        "why": "O `ON CONFLICT` já evita isso."
+      },
+      {
+        "text": "Reescrever livros sem mudança toda noite",
+        "why": "Isso. Só as linhas alteradas são escritas."
+      },
+      {
+        "text": "Atualizar um livro cujo preço caiu",
+        "why": "Um preço menor é diferente, então é atualizado."
+      },
+      {
+        "text": "Um conflito no ISBN quando dois livros compartilham um",
+        "why": "O alvo do conflito é o `book_id`; os ISBNs são únicos na loja."
+      }
+    ]
+  },
+  "ex-83b9f1py": {
+    "prompt": "Um relatório precisa do preço de tabela que cada livro tinha no dia em que foi vendido. Por que ele não deve ler a `dim_book`?",
+    "hint": "O tipo 1 guarda só o presente.",
+    "choices": [
+      {
+        "text": "Ela guarda só o preço de hoje",
+        "why": "Isso. Preços antigos são sobrescritos; o preço pago está na linha do pedido."
+      },
+      {
+        "text": "Ela é atualizada só uma vez por mês",
+        "why": "Ela é carregada toda noite."
+      },
+      {
+        "text": "Ela guarda preços numa moeda diferente da dos fatos",
+        "why": "Tudo está em centavos de real."
+      },
+      {
+        "text": "Ela não tem `book_id` para o join",
+        "why": "O `book_id` é a chave primária dela."
+      }
+    ]
+  },
+  "ex-f4ahsjse": {
+    "prompt": "Um colega escreve `ON CONFLICT (isbn)` numa tabela sem índice único em `isbn`. O que acontece?",
+    "hint": "O que significa \"a linha existente\" sem um?",
+    "choices": [
+      {
+        "text": "Toda linha é inserida, duplicatas incluídas",
+        "why": "O PostgreSQL não adivinha; ele recusa."
+      },
+      {
+        "text": "O PostgreSQL cria o índice",
+        "why": "Nada é criado por você."
+      },
+      {
+        "text": "O comando falha com um erro",
+        "why": "Isso. O alvo do conflito precisa ser uma restrição ou índice único."
+      },
+      {
+        "text": "Ele recorre à chave primária",
+        "why": "Ele não recorre a nada; dá erro."
+      }
+    ]
+  },
+  "ex-2pbbdtaf": {
+    "prompt": "Por que o `dim_customer.sql` compara com `IS DISTINCT FROM` em vez de `<>`?",
+    "hint": "Quanto vale `NULL <> 'SP'`?",
+    "choices": [
+      {
+        "text": "O `<>` não funciona com tuplas",
+        "why": "Funciona; o problema é o `NULL`."
+      },
+      {
+        "text": "O `IS DISTINCT FROM` é mais rápido",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "Uma mudança de `NULL` ainda conta",
+        "why": "Isso. O `<>` com um `NULL` dá `NULL`, e a mudança é pulada."
+      },
+      {
+        "text": "Ele ignora diferenças de maiúsculas nos nomes de cidades",
+        "why": "Ele compara exatamente."
+      }
+    ]
+  },
+  "ex-4tmey1e2": {
+    "prompt": "Depois de quinze noites a `dim_customer` tinha 5.413 versões de 5.366 clientes. Quantas versões estavam fechadas?",
+    "hint": "Uma versão atual por cliente."
+  },
+  "ex-9w8jj5g8": {
+    "prompt": "Um cliente se muda para Curitiba às 10:00 e para Londrina às 16:00 no mesmo dia. O que a carga noturna de tipo 2 registra?",
+    "hint": "Ela lê a loja uma vez por noite.",
+    "choices": [
+      {
+        "text": "Duas versões novas, Curitiba e Londrina",
+        "why": "Só a captura de mudanças vê as duas."
+      },
+      {
+        "text": "Uma versão nova, Londrina",
+        "why": "Isso. Curitiba nunca foi vista pela leitura noturna."
+      },
+      {
+        "text": "Nenhuma mudança até a próxima noite",
+        "why": "A leitura daquela noite vê Londrina."
+      },
+      {
+        "text": "Um erro, porque duas mudanças têm a mesma data",
+        "why": "Só uma mudança é vista."
+      }
+    ]
+  },
+  "ex-wsprz9a8": {
+    "prompt": "Por que a carga de fatos faz o join por `valid_from` e `valid_to` em vez de `is_current`?",
+    "hint": "Pense em recarregar um dia antigo.",
+    "choices": [
+      {
+        "text": "Para uma recarga achar a versão vigente na venda",
+        "why": "Isso. O `is_current` ligaria vendas antigas à cidade de hoje."
+      },
+      {
+        "text": "O `is_current` não tem índice",
+        "why": "Índice não é o motivo."
+      },
+      {
+        "text": "O `is_current` pode ser `NULL`",
+        "why": "Ele é declarado `NOT NULL`."
+      },
+      {
+        "text": "Um join numa coluna booleana não é permitido no PostgreSQL",
+        "why": "É permitido; seria errado."
+      }
+    ]
+  },
+  "ex-bwr2cjtr": {
+    "prompt": "Por que fatos sem cliente recebem `customer_key = -1` em vez de `NULL`?",
+    "hint": "O que um inner join faz com uma chave `NULL`?",
+    "choices": [
+      {
+        "text": "O `-1` ocupa menos espaço que o `NULL`",
+        "why": "Espaço não é o argumento."
+      },
+      {
+        "text": "O PostgreSQL não aceita `NULL` numa coluna bigint",
+        "why": "Aceita; a coluna é declarada `NOT NULL` de propósito."
+      },
+      {
+        "text": "Um inner join mantém a venda",
+        "why": "Isso. Com `NULL` ele descartaria um terço da receita."
+      },
+      {
+        "text": "O `-1` marca o cliente para exclusão",
+        "why": "Ele marca um cliente desconhecido, não uma exclusão."
+      }
+    ]
+  },
+  "ex-n8cvaq60": {
+    "prompt": "O cliente 1880 pediu para ser apagado. O que o warehouse guarda dele depois da carga noturna?",
+    "hint": "A pessoa vai; as vendas ficam.",
+    "choices": [
+      {
+        "text": "As versões antigas dele na `dim_customer`, como histórico",
+        "why": "Histórico não é motivo para guardar uma pessoa que a lei manda apagar."
+      },
+      {
+        "text": "Nada, vendas incluídas",
+        "why": "As vendas ficam, sem cliente."
+      },
+      {
+        "text": "As vendas dele, com chave de cliente -1",
+        "why": "Isso. Toda versão é apagada; as vendas apontam para ninguém."
+      },
+      {
+        "text": "Só a versão atual, com a cidade em branco",
+        "why": "Toda versão vai embora."
+      }
+    ]
+  },
+  "ex-7zfjbbrt": {
+    "prompt": "Um leitor com `lock_timeout = '2s'` consultou a `marts.dim_shop` durante uma carga lenta com `TRUNCATE` e falhou. Por quê?",
+    "hint": "Que trava o TRUNCATE pega?",
+    "choices": [
+      {
+        "text": "A tabela estava vazia",
+        "why": "O leitor nem chegou a ver."
+      },
+      {
+        "text": "A trava mais forte bloqueia até leitores",
+        "why": "Isso. O leitor esperou dois segundos e desistiu."
+      },
+      {
+        "text": "O `pg_sleep` bloqueia toda sessão do banco",
+        "why": "Ele só faz a própria sessão dormir."
+      },
+      {
+        "text": "Leitores precisam de outro papel durante cargas",
+        "why": "Papéis não entraram nisso."
+      }
+    ]
+  },
+  "ex-06tmph9j": {
+    "prompt": "Ligue cada jeito de substituir o conteúdo de uma tabela ao que um leitor vê durante a carga.",
+    "hint": "Dois esperam, um vê as linhas antigas, um quase não percebe.",
+    "pairs": [
+      {
+        "left": "TRUNCATE e insert, numa transação",
+        "right": "Espera a carga inteira, ou falha"
+      },
+      {
+        "left": "DELETE e insert, numa transação",
+        "right": "As linhas antigas"
+      },
+      {
+        "left": "Montar uma tabela nova, depois trocar os nomes",
+        "right": "Espera milissegundos pela troca"
+      }
+    ]
+  },
+  "ex-2rrbzyxg": {
+    "prompt": "Ordene os três comandos da carga tipo 2 em `dim_customer.sql`.",
+    "hint": "Fechar, abrir, apagar.",
+    "items": [
+      "Fechar a versão atual dos clientes que se mudaram",
+      "Abrir uma versão para clientes sem nenhuma atual",
+      "Apagar toda versão de clientes que a loja não tem mais"
+    ]
+  },
+  "ex-maymzn1q": {
+    "prompt": "Uma equipe carrega fatos acrescentando os pedidos novos de cada noite, e o agendador dela às vezes roda uma noite de novo. Qual é a menor mudança que torna as repetições inofensivas?",
+    "hint": "Faça a carga saber quais linhas está substituindo.",
+    "choices": [
+      {
+        "text": "Rodar o agendador menos vezes",
+        "why": "Uma repetição ainda pode acontecer."
+      },
+      {
+        "text": "Acrescentar `SELECT DISTINCT` a todo relatório",
+        "why": "Isso esconde duplicatas em alguns relatórios e junta linhas reais em outros."
+      },
+      {
+        "text": "Apagar o período da noite antes de inseri-lo, numa transação",
+        "why": "Isso. Uma repetição então substitui o período em vez de somá-lo duas vezes."
+      },
+      {
+        "text": "Trocar por uma recarga completa da tabela fato inteira",
+        "why": "Também funciona, ao custo de recarregar todo o histórico toda noite."
+      }
+    ]
+  }
+}

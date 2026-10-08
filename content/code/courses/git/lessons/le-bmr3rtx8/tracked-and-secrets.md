@@ -1,6 +1,6 @@
 ---
 title: Ignoring is not untracking, and a secret stays in the history
-version: 1
+version: 2
 ---
 
 Two mistakes with `.gitignore` are common enough to have their own section, and the second is
@@ -9,6 +9,15 @@ expensive.
 ## Adding a file to .gitignore after it was committed
 
 `settings.local` was committed, then added to `.gitignore`. Somebody edits it:
+
+```bash
+printf 'preview = on\n' > settings.local
+git add settings.local && git commit -qm 'Add local settings'
+printf 'settings.local\n' >> .gitignore
+git commit -qam 'Ignore local settings'
+printf 'preview = off\n' > settings.local
+```
+
 
 ```
 ana@vm:~/site$ git status --short
@@ -33,6 +42,16 @@ message.
 ## A secret committed by mistake
 
 A payment key was committed, and the next commit removed it:
+
+```bash
+printf 'PAYMENT_KEY=sk_live_example_not_a_real_key\n' > .env
+git add .env && git commit -qm 'Configure payments'
+git rm -q --cached .env && printf '.env\n' >> .gitignore && git add .gitignore && git commit -qm 'Remove the payment key'
+```
+
+The key is made up, and so is every key in this course. Never put a real one in a practice
+repository either.
+
 
 ```
 ana@vm:~/site$ git log --oneline -2

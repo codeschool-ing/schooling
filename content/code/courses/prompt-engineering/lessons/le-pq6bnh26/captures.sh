@@ -16,6 +16,9 @@
 # tok counts tokens with a real tokenizer, and the prices passed to tok cost
 # are illustrative, given on the command line, not any provider's.
 #
+# THE MODEL'S REPLIES in ask-sort are llama3.2:3b served by Ollama 0.40.0, at
+# temperature 0, captured on 7 October 2026. Nothing is fine-tuned here.
+#
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
@@ -37,7 +40,7 @@ put train.jsonl <<'TXT'
 {"messages": [{"role": "user", "content": "My latte was cold and I want my money back."}, {"role": "assistant", "content": "refunds"}]}
 TXT
 on 'wc -l train.jsonl'
-on 'head -1 train.jsonl'
+on 'cat train.jsonl'
 
 block the-cost
 put few-shot.txt <<'TXT'
@@ -80,3 +83,6 @@ on 'tok count few-shot.txt short.txt'
 on 'tok cost few-shot.txt -o 2 -i 2.50 -p 10.00'
 on 'tok cost short.txt -o 2 -i 2.50 -p 10.00'
 on "awk 'BEGIN { print (4.33 - 0.53) * 1000 }'"
+block ask-sort
+on 'ask - --temperature 0 < few-shot.txt'
+on 'ask - --temperature 0 < short.txt'

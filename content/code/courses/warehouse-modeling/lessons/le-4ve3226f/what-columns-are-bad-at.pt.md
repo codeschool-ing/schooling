@@ -1,6 +1,6 @@
 ---
 title: No que um banco por colunas é ruim
-version: 1
+version: 2
 ---
 
 Toda vantagem desta lição veio de manter cada coluna junta, comprimida, em blocos grandes. A mesma escolha
@@ -34,7 +34,19 @@ reescrever o bloco. Bancos por colunas resolvem marcando linhas como apagadas e 
 outro lugar, e limpando depois. Isso funciona, e é lento para muitas mudanças pequenas.
 
 **Buscar uma linha pela chave.** Os onze valores da linha estão em onze lugares. Com os dados ordenados por
-essa chave, os zone maps a encontram rápido:
+essa chave, os zone maps a encontram rápido. O `lookup.sql` dá ao PostgreSQL o índice de que ele
+precisa e pergunta; o `duck-lookup.sql` pergunta ao DuckDB, que não tem índice a construir:
+
+```sql
+\timing on
+CREATE INDEX ON fact_sales (order_id);
+SELECT line_no, net_cents FROM fact_sales WHERE order_id = 112406;
+```
+
+```sql
+.timer on
+SELECT line_no, net_cents FROM fact_sales WHERE order_id = 112406;
+```
 
 ```
 ana@lab:~/wh$ psql -f lookup.sql

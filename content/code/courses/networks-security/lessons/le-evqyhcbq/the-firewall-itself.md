@@ -51,6 +51,10 @@ all ICMP is a common mistake with real costs:
 Errors about the firewall's own connections already pass as `related`. For the rest, a rule that
 allows the three types that matter, with a rate limit so they cannot be used to flood:
 
+```sh
+nft add rule ip filter input icmp type { echo-request, destination-unreachable, time-exceeded } limit rate 10/second accept comment \"ping and the errors path discovery needs\"
+```
+
 ```
 root@fw:~# nft list chain ip filter input | grep icmp
 		icmp type { destination-unreachable, echo-request, time-exceeded } limit rate 10/second burst 5 packets accept comment "ping and the errors path discovery needs"

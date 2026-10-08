@@ -7,30 +7,34 @@
 #
 #   bash captures.sh            # beside this file; it finds ../../lab.sh
 #
-# It rebuilds ~/guard with lab.sh reset under its own HOME, so nothing of yours
-# is touched, and prints each command after a prompt, ana@lab:~/guard$,
-# followed by what it printed.
+# It rebuilds ~/guard with lab.sh reset under its own HOME (/home/ana), which
+# builds it from the fences of the lessons themselves: enduser.py (from its
+# annotated example), emails.py, reverse.py, traffic.py, ratelimit.py and the
+# two keys are exactly what the lesson prints. It prints each command after a
+# prompt, ana@lab:~/guard$, followed by what it printed.
 #
-# What is STAGED rather than typed: the whole of ~/guard, built by lab.sh. The
-# keys in keys/ are FIXED so that the ids repeat from run to run; a real key is
-# random and lives in a secret store. The addresses in data/emails.txt and the
-# requests in data/api-requests.jsonl were written by the lab from tables in
-# guardlab/cli.py and guardlab/ratelimit.py. No provider was called.
+# WRITTEN BY THE COURSE: the guessing list (invented names at
+# example.com.br), the table traffic.py writes the requests from, and the two
+# keys, which are FIXED so that the ids repeat; a real key is random. No model
+# is called in this lesson.
 #
-# Recorded with Python 3.11, TZ=America/Sao_Paulo.
+# Recorded with Python 3.12.3 (Ubuntu 24.04's), TZ=America/Sao_Paulo.
 
 set -uo pipefail
 here=$(cd "$(dirname "$0")" && pwd)
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 COLUMNS=100 PYTHONDONTWRITEBYTECODE=1
-export HOME=${LAB_HOME:-/var/tmp/ai-security}
-mkdir -p "$HOME"
-bash "$here/../../lab.sh" reset >/dev/null
+export HOME=${LAB_HOME:-/home/ana}
+mkdir -p "$HOME/.py"
+ln -sf "$(command -v python3.12)" "$HOME/.py/python3"
+export PATH=$HOME/.py:$PATH
+GUARD_HOME=$HOME bash "$here/../../lab.sh" reset >/dev/null || exit 1
 cd "$HOME/guard"
 export PATH=$HOME/guard/bin:$PATH
 on() { printf 'ana@lab:~/guard$ %s\n' "$*"; bash -c "$*" 2>&1; }
 block() { printf '##### %s\n' "$1"; }
 
 block naive
+on 'guard emails > data/emails.txt'
 on 'guard enduser --naive marcos.teixeira@example.com.br'
 on 'head -3 data/emails.txt; wc -l data/emails.txt'
 on 'guard reverse e99036a63befa4e2995bd6ba388d0586cfbc78dd4eb31af863f558d7fd630894 --list data/emails.txt'
@@ -42,6 +46,9 @@ on 'guard enduser ac-7Q2M --provider provider-b'
 on 'guard reverse eu-fe47aa8e7cd5e1b6f8bc --list data/emails.txt; echo "exit $?"'
 
 block limits
+on 'guard traffic > data/api-requests.jsonl'
 on 'head -3 data/api-requests.jsonl'
 on 'guard ratelimit data/api-requests.jsonl --per-key 60'
+
+block peruser
 on 'guard ratelimit data/api-requests.jsonl --per-key 60 --per-user 20'

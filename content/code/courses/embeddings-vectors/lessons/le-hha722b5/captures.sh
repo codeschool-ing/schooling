@@ -202,14 +202,13 @@ try:
 except openai.BadRequestError as e:
     print("not retried:", type(e).__name__, e.status_code)
 EOF_FILE
-put prices.py < "$(dirname "$LAB_SH")/prices.py"
 
 block env
 on 'env | grep ^OPENAI'
 
 block first
 on 'python first.py'
-on 'tail -n 1 /var/log/labembed/requests.jsonl'
+on 'tail -n 1 labembed.jsonl'
 
 block curl
 on 'curl -s $OPENAI_BASE_URL/embeddings -H "Authorization: Bearer $OPENAI_API_KEY" -H "Content-Type: application/json" -d @request.json | cut -c 1-150'
@@ -226,7 +225,7 @@ on 'curl -s $OPENAI_BASE_URL/embeddings -H "Authorization: Bearer $OPENAI_API_KE
 
 block batch
 on 'python batch.py'
-on "jq -c '{inputs, tokens, encoding_format}' /var/log/labembed/requests.jsonl | tail -n 3"
+on "jq -c '{inputs, tokens, encoding_format}' labembed.jsonl | tail -n 3"
 
 block limits
 on 'python limits.py'
@@ -243,4 +242,4 @@ on 'python cost.py'
 
 block retry
 on 'python retry.py'
-on "jq -c '{at, status}' /var/log/labembed/requests.jsonl | tail -n 7"
+on "jq -c '{at, status}' labembed.jsonl | tail -n 7"

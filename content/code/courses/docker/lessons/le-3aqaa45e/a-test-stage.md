@@ -1,10 +1,24 @@
 ---
 title: A test stage in the Dockerfile
-version: 1
+version: 2
 ---
 
 **A multi-stage Dockerfile (lesson 13) can carry its tests as one more stage.** The stage starts
-from the build stage, so it has the source, the modules and the compiler, and runs the checks:
+from the build stage, so it has the source, the modules and the compiler, and runs the checks. The
+build context first loses every Compose file, since this lesson adds a second one, and every
+`.env`. This is Ana's `.dockerignore` from here on:
+
+```
+.git
+.env
+*.env
+compose*.yaml
+testdata/
+Dockerfile*
+.dockerignore
+```
+
+And the Dockerfile:
 
 ```dockerfile
 FROM golang:1.25 AS build

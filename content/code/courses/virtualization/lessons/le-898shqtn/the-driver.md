@@ -1,6 +1,6 @@
 ---
 title: VirtualBox, and the part in the kernel
-version: 1
+version: 2
 ---
 
 VirtualBox is a type 2 hypervisor, lesson 2, and it runs on Windows, macOS and Linux. It is free.
@@ -8,8 +8,8 @@ Oracle publishes it, with an optional *Extension Pack* under a different licence
 features, such as remote display, and which businesses may have to pay for.
 
 It is an application, and it also installs a **driver in the host's kernel**, called `vboxdrv` on Linux,
-to use the processor's virtualisation features. Here is VirtualBox 7.0.16 on this
-course's host:
+to use the processor's virtualisation features. On Ubuntu it is one package, `sudo apt install
+virtualbox`, which is what put VirtualBox 7.0.16 on this course's host:
 
 ```
 ana@host:~$ VBoxManage --version

@@ -1,6 +1,6 @@
 ---
 title: dynamic blocks, for what repeats inside a resource
-version: 1
+version: 2
 ---
 
 `count` and `for_each` repeat whole resources. Some repetition happens one level down, inside a
@@ -8,7 +8,8 @@ single resource: a security group has one `ingress` block per rule, written as n
 rather than as arguments. **A nested block cannot take `count` or `for_each` itself**, and writing
 out one per port is the copy-and-edit problem again. A `dynamic` block generates them.
 
-Ana's web servers need ports 80 and 443 open, and she expects the list to grow:
+Ana's web servers need ports 80 and 443 open, and she expects the list to grow. In a new file,
+`security.tf`:
 
 ```hcl
 variable "web_ports" {

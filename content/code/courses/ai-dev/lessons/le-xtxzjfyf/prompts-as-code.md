@@ -1,6 +1,6 @@
 ---
 title: Prompts are code
-version: 1
+version: 2
 ---
 
 A prompt that a feature sends to a model is part of the program. It decides what the feature does
@@ -10,8 +10,8 @@ in pull requests, built by a function, covered by tests.
 
 ## A template and a builder
 
-ana turns the comma prompt of lesson 5 section 02 into a template, with `$` fields for what changes
-from one task to the next:
+ana turns the comma prompt of lesson 5 section 02, with the last line it ended up with in section
+05, into a template, with `$` fields for what changes from one task to the next:
 
 ```
 Goal: $goal
@@ -25,7 +25,7 @@ Constraints: change only what the goal needs. Do not change any existing test.
 
 Done when: $done
 
-Answer with: a unified diff, and nothing else.
+Answer with: only the function you changed, in one block of code, and nothing else.
 ```
 
 and a builder that fills it, always adds `CONVENTIONS.md`, and refuses a prompt over budget:
@@ -47,7 +47,7 @@ and a builder that fills it, always adds `CONVENTIONS.md`, and refuses a prompt 
       "note": "**The conventions go in every time**, first, whatever the caller names. A rule that depends on every caller remembering it is a rule that is sometimes missing."
     },
     {
-      "code": "    prompt = Template(Path(\"prompts\", template).read_text()).substitute(files=body, **fields)\n    if len(ENC.encode(prompt)) > BUDGET:\n        raise ValueError(f\"{template}: over the budget of {BUDGET} tokens\")\n    return prompt",
+      "code": "    prompt = Template(Path(\"prompts\", template).read_text()).substitute(files=body, **fields)\n    if len(ENC.encode(prompt)) > BUDGET:\n        raise ValueError(f\"{template}: over the budget of {BUDGET} tokens\")\n    return prompt\n",
       "note": "**Fill the template strictly, then check the size.** A prompt over budget is refused here, before it costs anything."
     }
   ]
@@ -89,7 +89,7 @@ def test_the_prompt_fits_the_budget():
 ```
 ana@dev:~/shop$ touch prompts/__init__.py && python -m pytest -q tests/test_prompts.py
 ....                                                                     [100%]
-4 passed in 0.82s
+4 passed in 1.87s
 ```
 
 **`Template.substitute` raises `KeyError` for a missing field**, where the alternative,

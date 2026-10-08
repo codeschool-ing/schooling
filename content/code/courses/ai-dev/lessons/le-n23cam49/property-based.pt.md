@@ -1,6 +1,6 @@
 ---
 title: Propriedades em vez de exemplos
-version: 1
+version: 2
 ---
 
 Um teste baseado em exemplos confere as entradas em que você pensou. Um **teste baseado em
@@ -80,31 +80,31 @@ FAILED tests/test_money_properties.py::test_a_negative_price_reads_as_minus_the_
 ```
 
 **A ida e volta passou.** A propriedade de simetria falhou na hora, encolhida até `n = -1`: menos um
-centavo vira `'-1.99'`. Então o `format_price` está errado para todo número negativo, e a ida e volta
+centavo vira `'-1.99'`. Então o `format_price` está errado para um valor negativo que não é um número inteiro de unidades, e a ida e volta
 não percebeu, porque o `parse_price` está errado do jeito correspondente: `'-1.99'` volta a ser menos
 um. **Dois bugs que se anulam passam numa ida e volta.** Vale saber isso sobre propriedades de ida e
 volta em geral: elas testam que duas funções concordam, não que alguma delas esteja certa.
 
 ## Corrigindo um lado
 
-A ana corrige o `format_price` para tratar o sinal:
+A ana corrige o `format_price` para tratar o sinal. Este é o `shop/money.py` agora:
 
-```
-ana@dev:~/shop$ git diff shop/money.py
-diff --git a/shop/money.py b/shop/money.py
-index 9af0e26..9d4ce02 100644
---- a/shop/money.py
-+++ b/shop/money.py
-@@ -9,5 +9,7 @@ def parse_price(text: str) -> int:
- 
- 
- def format_price(cents: int) -> str:
--    """Turn cents into a price as people read it: 1290 -> '12.90'."""
--    return f"{cents // 100}.{cents % 100:02d}"
-+    """Turn cents into a price as people read it: 1290 -> '12.90', -5 -> '-0.05'."""
-+    sign = "-" if cents < 0 else ""
-+    cents = abs(cents)
-+    return f"{sign}{cents // 100}.{cents % 100:02d}"
+```python
+"""Money is an integer number of cents. Never a float."""
+
+
+def parse_price(text: str) -> int:
+    """Turn a price as people write it into cents: '12.90' -> 1290."""
+    units, _, cents = text.strip().partition(".")
+    cents = (cents + "00")[:2]
+    return int(units) * 100 + int(cents)
+
+
+def format_price(cents: int) -> str:
+    """Turn cents into a price as people read it: 1290 -> '12.90', -5 -> '-0.05'."""
+    sign = "-" if cents < 0 else ""
+    cents = abs(cents)
+    return f"{sign}{cents // 100}.{cents % 100:02d}"
 ```
 
 ```
@@ -135,13 +135,34 @@ E       )
 tests/test_money_properties.py:11: AssertionError
 =========================== short test summary info ============================
 FAILED tests/test_money_properties.py::test_a_price_survives_a_round_trip_through_text
-1 failed, 1 passed in 0.14s
+1 failed, 1 passed in 0.21s
 ```
 
 Agora a simetria vale e a ida e volta falha, na mesma entrada mais simples: `'-0.01'` vira `1`. A
 outra metade do par que se anulava aparece, o `parse_price` lendo `-0` como `0` e somando os
-centavos. Ela corrige isso também, para o sinal ser lido primeiro e aplicado ao valor inteiro, e
-roda tudo:
+centavos. Ela corrige isso também, para o sinal ser lido primeiro e aplicado ao valor inteiro:
+
+```python
+"""Money is an integer number of cents. Never a float."""
+
+
+def parse_price(text: str) -> int:
+    """Turn a price as people write it into cents: '12.90' -> 1290, '-0.05' -> -5."""
+    text = text.strip()
+    sign = -1 if text.startswith("-") else 1
+    units, _, cents = text.lstrip("-").partition(".")
+    cents = (cents + "00")[:2]
+    return sign * (int(units) * 100 + int(cents))
+
+
+def format_price(cents: int) -> str:
+    """Turn cents into a price as people read it: 1290 -> '12.90', -5 -> '-0.05'."""
+    sign = "-" if cents < 0 else ""
+    cents = abs(cents)
+    return f"{sign}{cents // 100}.{cents % 100:02d}"
+```
+
+E roda tudo:
 
 ```
 ana@dev:~/shop$ python -m pytest -q -p no:cacheprovider --hypothesis-seed=0

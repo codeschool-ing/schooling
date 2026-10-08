@@ -1,6 +1,6 @@
 ---
 title: CSV, and the comma inside a field
-version: 1
+version: 2
 ---
 
 CSV looks like the simplest format of the four: one row per line, the fields separated by commas,
@@ -10,9 +10,9 @@ fields, and the comma is also an ordinary character that fields contain.
 
 ## A reply that parses and is wrong
 
-Here the café asked for its menu as CSV with three columns, and this is the kind of reply that
-comes back. The course wrote it into a file on the workbench, and it was read with Python's `csv` module, which
-prints how many fields it found on each line and what they were:
+Here is a menu as CSV with three columns, with the mistake a writer of CSV makes most. The course
+wrote this one, and it is read with Python's `csv` module, which prints how many fields it found on
+each line and what they were:
 
 ```
 ana@lab:~/pe$ cat replies/menu.csv
@@ -59,26 +59,66 @@ has a rule too: the quote is written twice, `"the ""house"" blend"`. A model tha
 CSV knows these rules, and it **applies them less reliably than a CSV library does**, because it
 is writing likely text and not running the rule.
 
-So a prompt that wants CSV says the rules out loud, and the course wrote this one as an
-illustration:
+## What the model wrote
 
-```localised
+Ask the local model for the same menu, written the way the café writes its prices:
+
+```
+ana@lab:~/pe$ cat prompts/menu.txt
+Return Café Aurora's menu as CSV with three columns: item,price,notes.
+The menu: flat white, R$ 12,00, oat milk at no extra cost; soup of the day,
+R$ 18,50, tomato; cinnamon bun, R$ 9,00, contains nuts, eggs and milk.
+ana@lab:~/pe$ ask - --temperature 0 --plain < prompts/menu.txt > replies/menu-model.csv
+ana@lab:~/pe$ cat replies/menu-model.csv
+Here is Café Aurora's menu in CSV format with three columns: item, price, and notes:
+
+"item","price","notes"
+"flat white","12,00","oat milk at no extra cost"
+"soup of the day","18,50","tomato"
+"cinnamon bun","9,00","contains nuts, eggs and milk"
+ana@lab:~/pe$ python3 -c "import csv, sys; [print(len(row), row) for row in csv.reader(open(sys.argv[1]))]" replies/menu-model.csv
+3 ["Here is Café Aurora's menu in CSV format with three columns: item", ' price', ' and notes:']
+0 []
+3 ['item', 'price', 'notes']
+3 ['flat white', '12,00', 'oat milk at no extra cost']
+3 ['soup of the day', '18,50', 'tomato']
+3 ['cinnamon bun', '9,00', 'contains nuts, eggs and milk']
+```
+
+It quoted every field, so the decimal commas are safe, and it put a sentence in front. **The
+sentence is a valid row of three fields**, `Here is ... item`, ` price` and ` and notes:`, cut at
+its own commas, so a check that counts fields passes it. The real header arrives on the third line.
+
+So a prompt that wants CSV says the rules out loud:
+
+```
+ana@lab:~/pe$ cat prompts/menu-rules.txt
 Return the menu as CSV with exactly three columns: item,price,notes.
 Write the header line first. Put every field that contains a comma
 or a double quote inside double quotes, and write a double quote
 inside a field as two double quotes. Write prices with a full stop
 as the decimal separator: 18.50, not 18,50. No other text.
+
+The menu: flat white, R$ 12,00, oat milk at no extra cost; soup of the day,
+R$ 18,50, tomato; cinnamon bun, R$ 9,00, contains nuts, eggs and milk.
+ana@lab:~/pe$ ask - --temperature 0 < prompts/menu-rules.txt
+"item","price","notes"
+"flat white","R$ 12,00","oat milk at no extra cost"
+"soup of the day","R$ 18,50","tomato"
+"cinnamon bun","R$ 9,00","contains nuts, eggs and milk"
+-- llama3.2:3b, finish: stop, prompt 155 tokens, output 61 tokens
 ```
 
-The last rule removes the commonest cause of the problem instead of quoting around it. That is
-worth doing wherever you control the format, and Brazilian decimal commas are a case where you do.
+The sentence is gone and the quoting is right, and **the prices kept their decimal commas and their
+`R$`**, the one rule the prompt gave with an example. The decimal rule removes the commonest cause of the problem instead of quoting around it, which is worth asking for wherever you control the format, and it is still a request: the check is what tells you it was ignored.
 
 ## Checking a CSV reply
 
-Because the reader will not complain, **the check is yours to write**, and it is short: every row
-has as many fields as the header. The first capture would have failed it on two rows. Count the
-fields per row before using a single one, and treat a mismatch the way the first reading section
-treats a JSON reply that does not parse.
+Because the reader will not complain, **the check is yours to write**, and it is short: the first
+row is exactly the header you asked for, and every row after it has as many fields as the header.
+The first menu fails the second half on two rows, and the model's first reply fails the first half
+on its first line. Check both before using a single field, and treat a failure the way the first
+reading section treats a JSON reply that does not parse.
 
 When the data has nesting, optional fields or long free text, that check is a warning sign about
 the choice of format. JSON quotes every string by rule and refuses what it cannot read, so it is

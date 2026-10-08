@@ -839,5 +839,165 @@
         "why": "Slowness is not a failure of the change."
       }
     ]
+  },
+  {
+    "id": "ex-ves76snf",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What lets nine devices of the lab run on one Linux machine?",
+    "hint": "Each device has its own interfaces, addresses and routes.",
+    "choices": [
+      {
+        "text": "Each is a network namespace, joined to the others by virtual cables",
+        "correct": true,
+        "why": "Right. A namespace is a copy of the network stack, and veth pairs plugged into bridges are the cables."
+      },
+      {
+        "text": "Each device is a small virtual machine of its own, started by the script",
+        "correct": false,
+        "why": "Only the lab as a whole is a virtual machine; nine of them would need far more memory."
+      },
+      {
+        "text": "Each device is a different port of one FRR process shared by all of them",
+        "correct": false,
+        "why": "Each router runs its own FRR, inside its own namespace."
+      },
+      {
+        "text": "The devices are only simulated, and no packet ever really travels between them",
+        "correct": false,
+        "why": "The packets really travel between namespaces; only the hardware is missing."
+      }
+    ]
+  },
+  {
+    "id": "ex-fzewsp1j",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the course recommend a virtual machine over installing the lab on the computer you use every day?",
+    "hint": "Think about what is left behind when you are done.",
+    "choices": [
+      {
+        "text": "What the lab installs stays installed, and a VM is deleted in one command",
+        "correct": true,
+        "why": "Right. Routing software, a database and a switch are better kept in a machine you can throw away."
+      },
+      {
+        "text": "The lab's commands work only inside a hypervisor, never on an installed Ubuntu",
+        "correct": false,
+        "why": "They work on any Ubuntu 24.04, installed or rented."
+      },
+      {
+        "text": "A virtual machine makes the three routers forward packets noticeably faster",
+        "correct": false,
+        "why": "Speed has nothing to do with the choice."
+      },
+      {
+        "text": "The transcripts match as printed only inside Multipass and nowhere else",
+        "correct": false,
+        "why": "The table says all three paths match as printed."
+      }
+    ]
+  },
+  {
+    "id": "ex-ndk2zzpj",
+    "version": 1,
+    "section": "building-it",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You start a new lesson. What do you run first, and why?",
+    "hint": "Every lesson's transcripts were made the same way.",
+    "choices": [
+      {
+        "text": "`sudo ~/netlab/netlab.sh reset`, to bring the routers back to how they boot",
+        "correct": true,
+        "why": "Right. A change left on a router by the lesson before would show up in this one's output."
+      },
+      {
+        "text": "`sudo ~/netlab/netlab.sh up`, because it rebuilds the whole lab every time it runs",
+        "correct": false,
+        "why": "`up` does nothing to a lab that is already up; it says so and stops."
+      },
+      {
+        "text": "Nothing at all: the routers forget every change the moment you leave `ctl`",
+        "correct": false,
+        "why": "Leaving a shell changes nothing on the routers."
+      },
+      {
+        "text": "Delete `ana`'s home directory, so the files from the last lesson are all gone",
+        "correct": false,
+        "why": "Her home survives a reset on purpose, so your work stays."
+      }
+    ]
+  },
+  {
+    "id": "ex-0hd94wfv",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After restarting the virtual machine, `sudo ~/netlab/netlab.sh enter ctl` answers `Cannot open network namespace \"ctl\"`. What happened?",
+    "hint": "Where do network namespaces live?",
+    "choices": [
+      {
+        "text": "The namespaces lived in the kernel's memory and went with it; `up` rebuilds them",
+        "correct": true,
+        "why": "Right. Nothing is broken, and `ana`'s files are still in her home."
+      },
+      {
+        "text": "The restart deleted `netlab.sh` from disk, and it has to be saved all over again",
+        "correct": false,
+        "why": "The script is a file on disk and survives a restart."
+      },
+      {
+        "text": "The restart uninstalled FRR, so the `apt-get` line has to be run once more",
+        "correct": false,
+        "why": "Packages survive a restart; only the namespaces are gone."
+      },
+      {
+        "text": "`ctl` is renamed on every restart, and the new name is in the script's output",
+        "correct": false,
+        "why": "The names are fixed in the script."
+      }
+    ]
+  },
+  {
+    "id": "ex-5hycz0k3",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Running the script prints `/usr/bin/env: ‘bash\\r’: No such file or directory`. What is wrong with it?",
+    "hint": "Look at what follows `bash` in the message.",
+    "choices": [
+      {
+        "text": "It was saved with Windows line endings, a carriage return on every line",
+        "correct": true,
+        "why": "Right. `file` says `with CRLF line terminators`, and `sed -i 's/\\r$//'` takes the extra character off."
+      },
+      {
+        "text": "bash is not installed on the virtual machine, and `apt-get` has to add it",
+        "correct": false,
+        "why": "It is; the program being looked for is `bash` followed by a carriage return."
+      },
+      {
+        "text": "The script was started without `sudo`, and the shell refused to find bash",
+        "correct": false,
+        "why": "That gives `run it with sudo`."
+      },
+      {
+        "text": "The virtual environment in `/opt/netauto` is missing, so nothing can start",
+        "correct": false,
+        "why": "That has its own message, and the script never got that far."
+      }
+    ]
   }
 ]

@@ -1,6 +1,6 @@
 ---
 title: Um schema diz o que é uma resposta válida
-version: 1
+version: 2
 ---
 
 A lição 18 parou numa pergunta: a resposta é lida pelo parser? Isso é necessário e está longe de
@@ -10,7 +10,7 @@ confere a sintaxe; um schema confere a forma.**
 
 Um **JSON Schema** é um documento JSON que descreve os objetos que você aceita: quais campos, de
 quais tipos, com quais valores, e quais deles são obrigatórios. É um padrão publicado, e há
-bibliotecas que conferem dados contra ele em todas as linguagens comuns. Na bancada, o `validate`
+bibliotecas que conferem dados contra ele em todas as linguagens comuns. O `validate`, da lição 15,
 usa a biblioteca `jsonschema` do Python.
 
 ## Um schema para triar reclamações
@@ -45,6 +45,9 @@ cinco filas que o café tem. Os 80 caracteres são o que cabe numa linha da list
 `refund_amount` é opcional, porque uma reclamação sem reembolso não tem valor a devolver.
 
 ## Uma resposta válida
+
+As três respostas desta seção foram escritas pelo curso, cada uma para mostrar uma coisa que o
+validador diz. Salve o esquema como `~/pe/schema.json`; as duas próximas seções também o usam.
 
 ```
 ana@lab:~/pe$ cat triage/good.json

@@ -15,7 +15,9 @@ db:22                  open
 `app` alcança o banco de dados e o SSH em `db` livremente. Nada em `baseline.nft` permitiu isso e
 nada poderia ter impedido: as regras estão numa máquina por onde esses pacotes nunca passam. O mesmo
 vale na LAN da equipe. `desk` compartilha uma pasta na porta 445, a que o compartilhamento de
-arquivos do Windows usa:
+arquivos do Windows usa. No laboratório, um processo escutando faz as vezes do compartilhamento;
+suba-o no `desk`, como root, com
+`setsid socat TCP-LISTEN:445,bind=192.168.10.21,fork,reuseaddr SYSTEM:"echo desk share" </dev/null >/dev/null 2>&1 &`:
 
 ```
 ana@laptop:~$ probe desk:22

@@ -1,6 +1,6 @@
 ---
 title: Dotfiles, and the files that are not files
-version: 1
+version: 2
 ---
 
 Two kinds of thing in the tree are not what they look like. The first is hidden by a convention so
@@ -8,11 +8,37 @@ thin it is almost a joke. The second is not on a disk at all.
 
 ## A dot at the front, and that is the whole mechanism
 
+A home directory with some history is the best place to see it, and yours is still new. So make a
+second account with a few of the hidden files a working one collects. Lesson 5 is about accounts;
+for now, `useradd` makes one, `sudo -iu bruno` followed by a command runs that command as him, in
+his home directory, and `sudo -iu bruno` on its own opens a shell as him, with a prompt that says so:
+
+```sh
+sudo useradd -m -s /bin/bash bruno
+sudo -iu bruno mkdir -p projects .ssh .config .local .cache
+sudo -iu bruno git config --global user.name Bruno
+sudo -iu bruno git config --global user.email bruno@example.com
+printf 'Host db\n  HostName 192.0.2.1\n  User bruno\n' | sudo -iu bruno tee .ssh/config > /dev/null
+sudo -iu bruno chmod 700 .ssh
+sudo -iu bruno chmod 600 .ssh/config
 ```
+
+```
+ana@vm:~$ sudo -iu bruno
 bruno@vm:~$ ls
 projects
 bruno@vm:~$ ls -a
-.  ..  .bash_logout  .bashrc  .cache  .config  .gitconfig  .local  .profile  .ssh  projects
+.
+..
+.bash_logout
+.bashrc
+.cache
+.config
+.gitconfig
+.local
+.profile
+.ssh
+projects
 ```
 
 One directory, two answers. **There is no hidden attribute.** `ls` skips names beginning with `.`
@@ -48,12 +74,12 @@ Plain text, like everything else. That is the point section 02 made about `/etc`
 
 ```
 bruno@vm:~$ ls -ld .ssh
-drwx------ 2 bruno bruno 4096 Sep 14 22:27 .ssh
+drwx------ 2 bruno bruno 4096 Oct  7 11:31 .ssh
 bruno@vm:~$ ls -la .ssh
 total 12
-drwx------ 2 bruno bruno 4096 Sep 14 22:27 .
-drwxr-x--- 7 bruno bruno 4096 Sep 14 22:27 ..
--rw------- 1 bruno bruno   42 Sep 14 22:27 config
+drwx------ 2 bruno bruno 4096 Oct  7 11:31 .
+drwxr-x--- 7 bruno bruno 4096 Oct  7 11:31 ..
+-rw------- 1 bruno bruno   42 Oct  7 11:31 config
 ```
 
 `drwx------` on the directory, `-rw-------` on what is inside: nobody but the owner, at all.
@@ -68,9 +94,11 @@ bruno@vm:~$ du -sh .cache
 8.0K    .cache
 ```
 
-Eight kilobytes on a new account, and gigabytes on a working one. When section 13's hunt leads
+Next to nothing on a new account, and gigabytes on a working one. When section 13's hunt leads
 into a home directory, `~/.cache` is usually the answer, and deleting it costs nothing but the
 time to rebuild what was in it.
+
+`exit` closes bruno's shell and you are `ana` again. He stays, and lesson 4 uses him.
 
 ## `/proc` is the kernel, pretending to be files
 

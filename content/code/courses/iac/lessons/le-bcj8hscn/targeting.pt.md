@@ -1,6 +1,6 @@
 ---
 title: Mirar num recurso só, e por que isso não é hábito
-version: 1
+version: 2
 ---
 
 O `-target` limita um plano a um endereço e àquilo de que ele depende. Parece precisão, um jeito de aplicar
@@ -45,7 +45,7 @@ index 15f2e65..ef2de0f 100644
 +}
 ```
 
-Ela pede só a sub-rede:
+Ela pede só a sub-rede, com `terraform plan -target=aws_subnet.d`. O fim do plano:
 
 ```
   # aws_vpc.shop will be updated in-place
@@ -83,8 +83,8 @@ junto com o que estiver pendente nelas. O resize da instância, de que nada na s
 de fora. Então o plano com target não é "só o que eu nomeei" nem "tudo o que está no arquivo": é uma
 fatia do grafo, e a fatia é decidida por referências que talvez você não tenha em mente.
 
-Ela aplica mesmo assim, já que uma tag é inofensiva, e o Terraform acrescenta um segundo aviso no
-fim:
+Ela aplica mesmo assim, já que uma tag é inofensiva, com `terraform apply -target=aws_subnet.d
+-auto-approve`, e o Terraform acrescenta um segundo aviso no fim:
 
 ```
 aws_vpc.shop: Modifying... [id=vpc-bf1e4c53969619f51]

@@ -1,12 +1,14 @@
 ---
 title: Guardando em cache o que não muda
-version: 1
+version: 2
 ---
 
 Toda execução de CI começa limpa, e começar limpo é caro: cada dependência baixada de novo, cada
 pacote desempacotado, cada cache de compilador frio. **Um cache** guarda uma cópia de algo lento de
 produzir entre execuções, sob uma chave que diz quando a cópia ainda vale. Eis a diferença, medida
-criando o mesmo ambiente virtual duas vezes com o `uv`, a partir de um cache vazio:
+criando o mesmo ambiente virtual duas vezes com o `uv`, a partir de um cache vazio.
+`export UV_CACHE_DIR=/tmp/uv-cold` aponta o uv para um diretório novo e vazio, só neste terminal, e
+`unset UV_CACHE_DIR` o devolve depois:
 
 ```
 ana@laptop:~/shipquote$ time (uv venv -q -p 3.13 /tmp/v1 && VIRTUAL_ENV=/tmp/v1 uv pip install -q -r requirements-dev.txt)

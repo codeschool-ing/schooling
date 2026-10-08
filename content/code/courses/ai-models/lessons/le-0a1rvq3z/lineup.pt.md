@@ -8,16 +8,22 @@ ela estava no dia em que o curso foi gravado, lida nas páginas do próprio prov
 conseguiu alcançá-las, e na tabela do LiteLLM onde não conseguiu. Todo nome, preço e data abaixo vai
 mudar. O que não deve mudar é como lê-los, que as aulas 2 a 5 ensinaram e estas aulas aplicam.
 
-A Anthropic publica uma tabela comparativa dos modelos atuais. O `lab/card.py` a lê da página,
-guardada pelo `sources` com a data em que foi lida, e imprime um bloco por modelo:
+A Anthropic publica uma tabela comparativa dos modelos atuais. O `card.py` a lê da página, diz a
+data em que a leu, e imprime um bloco por modelo:
 
 ```python
-import subprocess
+import datetime
+import html
+import re
 import sys
+import urllib.request
 
-page = subprocess.run(["sources", "lines", "claude-models", "1", "300"], capture_output=True, text=True).stdout
-print(page.splitlines()[0])
-lines = [line.split("| ", 1)[1] if "| " in line else "" for line in page.splitlines()[1:]]
+URL = "https://platform.claude.com/docs/en/about-claude/models/overview"
+raw = urllib.request.urlopen(urllib.request.Request(URL, headers={"User-Agent": "curl/8.5.0"})).read().decode()
+raw = re.sub(r"<script.*?</script>|<style.*?</style>", "", raw, flags=re.S)
+# one line per piece of visible text, the way a reader meets it on the page
+lines = [t.strip() for t in html.unescape(re.sub(r"<[^>]+>", "\n", raw)).splitlines() if t.strip()]
+print(f"# {URL}, read {datetime.date.today()}")
 table = lines.index("Feature")  # the comparison table starts here
 names = [lines[table + 1 + 2 * k] for k in range(4)]
 
@@ -38,8 +44,8 @@ for k, name in enumerate(names):
 ```
 
 ```
-ana@desk:~/desk$ python lab/card.py all "Claude API ID" "Comparative latency" Pricing
-# https://platform.claude.com/docs/en/about-claude/models/overview, read 2026-10-05
+ana@desk:~/desk$ python card.py all "Claude API ID" "Comparative latency" Pricing
+# https://platform.claude.com/docs/en/about-claude/models/overview, read 2026-10-07
 Claude Fable 5.1
   Claude API ID               claude-fable-5-1
   Comparative latency         Slower
@@ -66,7 +72,7 @@ entrada e na saída.
 A tabela enxerga mais do que a página mostra:
 
 ```
-ana@desk:~/desk$ sheet provider anthropic | grep -v -- "-20[0-9]*  "
+ana@desk:~/desk$ python sheet.py provider anthropic | grep -v -- "-20[0-9]*  "
 # LiteLLM model sheet at 21881c57, 4472 entries
 model                                            window  max out   in $/M  out $/M  VFSCRP
 claude-fable-5                                1,000,000   128000       10       50  VFSCRP

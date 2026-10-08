@@ -1,6 +1,6 @@
 ---
 title: O rastro que atravessa uma fila
-version: 1
+version: 2
 ---
 
 A aula 4 levou o contexto pelo RabbitMQ e viu uma mensagem esperar 22,8 segundos. Um rastro mostra que
@@ -17,7 +17,15 @@ ana@obs:~/shop$ docker compose start mailer 2>&1 | tail -1
 
 Vinte segundos depois, cinco das confirmações que o mailer mandou no último minuto são escolhidas em
 passos iguais pelo log dele. Cada rastro responde a uma pergunta: quanto tempo entre o `UPDATE`,
-depois do qual o `orders` publica, e o mailer tirar a mensagem?
+depois do qual o `orders` publica, e o mailer tirar a mensagem? O laço abaixo faz as duas coisas; o
+`awk` fica com um id de rastro a cada trinta, e a transcrição mostra cada `curl` que ele rodou:
+
+```sh
+for t in $(docker compose logs --no-log-prefix --since 60s mailer | grep 'confirmation sent' | jq -r .trace_id | awk 'NR % 30 == 1' | head -5); do
+  curl -s localhost:16686/api/traces/$t | jq -r '.data[0].spans as $s | ($s[] | select(.operationName == "UPDATE") | .startTime + .duration) as $published | ($s[] | select(.operationName == "orders.placed process") | .startTime) as $taken | "waited in the queue: \(($taken - $published) / 1000 | floor) ms"'
+done
+```
+
 
 ```
 ana@obs:~/shop$ curl -s localhost:16686/api/traces/30062f0fab08e70ae9b00866cb0d05e4 | jq -r '.data[0].spans as $s | ($s[] | select(.operationName == "UPDATE") | .startTime + .duration) as $published | ($s[] | select(.operationName == "orders.placed process") | .startTime) as $taken | "waited in the queue: \(($taken - $published) / 1000 | floor) ms"'

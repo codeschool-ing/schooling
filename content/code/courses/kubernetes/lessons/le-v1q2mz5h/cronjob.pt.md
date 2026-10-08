@@ -3,7 +3,7 @@ title: Um CronJob cria Jobs num horário
 version: 1
 ---
 
-O horário são os cinco campos do `cron`, e este dispara a cada minuto para o laboratório não precisar
+O horário são os cinco campos do `cron`, e este dispara a cada minuto para ninguém precisar
 esperar a noite:
 
 ```yaml

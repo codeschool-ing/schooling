@@ -28,9 +28,15 @@ on the company's side for exactly that reason.
 ## Two networks with the same numbers
 
 The home LAN here is `192.168.1.0/24`, a very common default on home routers. Suppose the head office
-had kept the same default, as many small offices do. To stage it, a third range, `192.168.1.0/24`, was
-added to Ana's `AllowedIPs` to stand for that office network, with the tunnel down first, as root and
-not shown:
+had kept the same default, as many small offices do. To stage it, add a third range, `192.168.1.0/24`,
+to Ana's `AllowedIPs` to stand for that office network, with the tunnel down first. On `remote`:
+
+```sh
+sudo wg-quick down wg0
+sudo sed -i 's|^AllowedIPs = .*|AllowedIPs = 10.20.0.0/24, 192.168.10.0/24, 192.168.1.0/24|' /etc/wireguard/wg0.conf
+```
+
+Then look at her routes, and try:
 
 ```
 ana@remote:~$ ip route | grep 192.168.1.0
@@ -61,6 +67,8 @@ RTNETLINK answers: File exists
 The laptop already has a route for `192.168.1.0/24`, on `eth0`: its own home LAN. `wg-quick` tries to
 add the same prefix through `wg0`, and the kernel refuses, `RTNETLINK answers: File exists`. **`wg-quick`
 treats any failed step as fatal and deletes `wg0`**, so the whole tunnel is gone, not just the one range.
+The same `sed` with the list it had before, `10.20.0.0/24, 192.168.10.0/24`, and `sudo wg-quick up wg0`
+bring her back.
 
 Here the failure is loud, which is the good case. A client that installs its routes differently can let
 one of the two win without a word, and then either the home printer or the office server stops
@@ -70,7 +78,7 @@ the laptop can reach only one of them.
 | fix | what it costs |
 |---|---|
 | number company networks away from home-router defaults | a renumbering, cheap only before the network grows |
-| translate the office range, on the concentrator, into one nothing uses (NAT, lesson 11 of `networks-addressing`) | internal names have to point at the translated addresses |
+| translate the office range, on the concentrator, into one nothing uses (NAT, covered in `networks-addressing`) | internal names have to point at the translated addresses |
 | route only the few hosts the user needs, as `/32` | fine for three servers, not for a network |
 | give access per application instead of per network | a different product, in the section on choosing |
 

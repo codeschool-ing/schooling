@@ -1,11 +1,12 @@
 ---
 title: Mantendo a busca honesta
-version: 1
+version: 2
 ---
 
 Uma busca que testa muitos prompts e fica com a nota mais alta sempre vai achar uma nota mais alta.
 **O que a nota sozinha não diz é se o vencedor é bom, ou só o que por acaso se encaixou nestes
-poucos exemplos.** Quatro hábitos mantêm o método honesto, e a bancada mostra três deles.
+poucos exemplos.** Quatro hábitos mantêm o método honesto, e as transcrições daqui mostram três
+deles.
 
 ## Dê nota ao vencedor em exemplos que não o escolheram
 
@@ -54,7 +55,9 @@ duas, então `sweet` é uma resposta verdadeira que o rótulo não listou. **A m
 uma resposta correta**, e uma busca guiada por essa métrica empurraria para prompts que dizem
 `gone`, quer você quisesse isso ou não.
 
-Toda métrica tem uma versão disso. A correspondência exata pune uma resposta certa dita com outras
+A execução no modelo local da seção de leitura anterior é a mesma falha em tamanho real: quatro
+descrições de uma palavra, justas, com nota 0/4 contra rótulos que ninguém escreveu para ele. Toda
+métrica tem uma versão disso. A correspondência exata pune uma resposta certa dita com outras
 palavras; uma métrica que premia tamanho acha prompts prolixos; um modelo a quem se pede para dar
 nota às respostas tem preferências próprias. Escolher a métrica é escolher o que a busca vai
 otimizar, então escreva-a e confira-a em algumas respostas à mão antes de confiar numa classificação

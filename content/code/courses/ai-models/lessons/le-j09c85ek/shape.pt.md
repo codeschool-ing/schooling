@@ -4,8 +4,21 @@ version: 1
 ---
 
 A Responses API mora ao lado da Chat Completions no mesmo endereço, com a mesma chave e o mesmo SDK,
-e a seção 05 da aula 8 deixou a escolha entre as duas em aberto. O `lab/resp_sort.py` classifica um
-dos casos da ana com ela:
+e a seção 05 da aula 8 deixou a escolha entre as duas em aberto. O api.openai.com foi recusado pela
+rede da máquina em que este curso foi gravado, e o Ollama também responde nesse formato, então as
+respostas desta aula são do llama3.2:3b. Esta aula é sobre o formato, e sobre o que a própria
+biblioteca da OpenAI documenta; onde o Ollama faz outra coisa, a aula diz, e essa diferença vale
+saber por si só.
+
+Todo programa desta aula passa pelo relay da seção 03 da aula 9, para que o que a biblioteca manda
+possa ser lido de volta. Suba o relay num segundo terminal e, no terminal em que você trabalha,
+mande as duas bibliotecas para ele:
+
+```
+ana@desk:~/desk$ export OPENAI_BASE_URL=http://127.0.0.1:8500/v1 ANTHROPIC_BASE_URL=http://127.0.0.1:8500
+```
+
+O `resp_sort.py` classifica um dos casos da ana com a Responses API:
 
 ```python
 import json
@@ -16,7 +29,7 @@ client = OpenAI()
 prompt = open("prompts/triage.txt").read()
 case = [json.loads(line) for line in open("cases/triage.jsonl")][4]
 
-r = client.responses.create(model="standin-small", instructions=prompt, input=case["text"])
+r = client.responses.create(model="llama3.2:3b", instructions=prompt, input=case["text"])
 print(r.output_text)
 print([item.type for item in r.output], [part.type for part in r.output[0].content])
 print(r.usage.input_tokens, "in,", r.usage.output_tokens, "out, of which reasoning:",
@@ -24,24 +37,19 @@ print(r.usage.input_tokens, "in,", r.usage.output_tokens, "out, of which reasoni
 ```
 
 ```
-ana@desk:~/desk$ python lab/resp_sort.py
-other
+ana@desk:~/desk$ python resp_sort.py
+other.
 ['message'] ['output_text']
-51 in, 1 out, of which reasoning: 0
-```
-
-```
-ana@desk:~/desk$ wire --body
+75 in, 3 out, of which reasoning: 0
+ana@desk:~/desk$ python relay.py show --body
 {
-  "model": "standin-small",
+  "model": "llama3.2:3b",
   "input": "Do you have a physical shop I can visit in Curitiba?",
   "instructions": "You sort the e-mail of Lantern Books, an online bookshop.\nAnswer with exactly one label and nothing else:\norder-status, refund, address-change, product-question, other.\n"
 }
 ```
 
-O api.openai.com estava fora de alcance na máquina em que este curso foi gravado, então as respostas
-são do substituto do lab. A requisição é o que a biblioteca de verdade mandou, e o formato é o que
-importa:
+A requisição é o que a biblioteca de verdade mandou, e o formato é o que interessa:
 
 | | Chat Completions | Responses |
 |---|---|---|

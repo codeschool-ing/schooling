@@ -3,11 +3,10 @@ title: Um cartão é metadado e texto
 version: 1
 ---
 
-A aula 1 seção 05 leu um cartão de modelo como documento. No Hub ele também é **dado**, e a documentação
-do Hub diz como:
+A aula 1 seção 09 leu um cartão de modelo como documento. No Hub ele também é **dado**, e a
+documentação do Hub diz como:
 
 ```
-ana@desk:~/desk$ sources quote hub-model-cards "simple Markdown files with additional metadata|YAML.*section at the top"
 # huggingface/hub-docs@08175d0f docs/hub/model-cards.md
    6: Model cards are files that accompany the models and provide handy information. Under the
       hood, model cards are simple Markdown files with additional metadata. Model cards are
@@ -20,7 +19,7 @@ ana@desk:~/desk$ sources quote hub-model-cards "simple Markdown files with addit
 ```
 
 O YAML no topo é por onde o Hub filtra e liga: a licença, os idiomas, a tarefa, o modelo de onde ele
-partiu. O `lab/cards.py` escreve os metadados que um fine-tuning da ana teria, se ela um dia publicasse
+partiu. O `cards.py` escreve os metadados que um fine-tuning da ana teria, se ela um dia publicasse
 um, com as classes da própria `huggingface_hub`, e lê de volta:
 
 ```python
@@ -36,7 +35,7 @@ print("read back:", card.data.license, card.data.base_model, card.data.language)
 ```
 
 ```
-ana@desk:~/desk$ python lab/cards.py
+ana@desk:~/desk$ python cards.py
 ---
 base_model: Qwen/Qwen3-8B
 language:
@@ -60,7 +59,7 @@ Cinco campos trazem quase tudo o que um comprador precisa antes de baixar qualqu
 | campo | responde | aula |
 |---|---|---|
 | `license` | posso usar, e como | 2 |
-| `language` | foi testado no meu idioma | 1, seção 05 |
+| `language` | foi testado no meu idioma | 1 |
 | `pipeline_tag` | para que tarefa foi feito | 12, seção 02 |
 | `base_model` | de onde partiu, e portanto que licença herda | 2, seção 04 |
 | `tags` | qualquer outra coisa que o autor quis tornar buscável | |

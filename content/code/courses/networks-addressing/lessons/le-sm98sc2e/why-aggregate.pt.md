@@ -1,6 +1,6 @@
 ---
 title: Dois cabos que funcionam como um
-version: 1
+version: 2
 ---
 
 O enlace entre dois switches carrega o tráfego de todo mundo ao mesmo tempo: cada PC de um lado
@@ -31,7 +31,25 @@ LACP**, o assunto da próxima seção.
 
 O laboratório desta lição são dois switches, `sw1` e `sw2`, ligados por dois cabos, `e1` e `e2` em
 cada ponta. O `pc1` está no `sw1`; `pc2`, `pc3` e `pc4` estão no `sw2`, com os endereços
-`10.20.10.21` a `10.20.10.24`. No começo os dois cabos estão conectados e ativos, mas nenhum foi
+`10.20.10.21` a `10.20.10.24`. Salve-o como `~/netlab/lag.sh` e monte com
+`sudo bash ~/netlab/netlab.sh up lag`:
+
+```bash
+# ~/netlab/lag.sh: two switches joined by two cables, e1 and e2, that are not
+# yet part of either switch. pc1 is on sw1; pc2, pc3 and pc4 on sw2.
+#
+#   pc1 -- sw1 ==(e1, e2)== sw2 -- pc2, pc3, pc4
+local n
+for n in sw1 sw2 pc1 pc2 pc3 pc4; do node $n; done
+link sw1 e1 sw2 e1; link sw1 e2 sw2 e2
+link pc1 eth0 sw1 p1; link pc2 eth0 sw2 p1; link pc3 eth0 sw2 p2; link pc4 eth0 sw2 p3
+switch sw1 "p1"; switch sw2 "p1 p2 p3"
+addr pc1 eth0 10.20.10.21/24; addr pc2 eth0 10.20.10.22/24
+addr pc3 eth0 10.20.10.23/24; addr pc4 eth0 10.20.10.24/24
+```
+
+As duas linhas `link sw1 e… sw2 e…` lançam os cabos, e nem `e1` nem `e2` está na lista de portas de
+nenhuma das linhas `switch`. Então, no começo, os dois cabos estão conectados e ativos, mas nenhum foi
 posto em nenhum dos switches:
 
 ```

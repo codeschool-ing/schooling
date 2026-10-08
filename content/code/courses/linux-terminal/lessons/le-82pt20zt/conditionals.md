@@ -1,7 +1,27 @@
 ---
 title: `if`, and the fact that `[` is a program
-version: 1
+version: 2
 ---
+
+The script this section runs, made in `~/work/scripts` the way section 02 described, and a second
+scratch directory, `/tmp/q2`, that this section and the next ones use:
+
+```sh
+mkdir -p /tmp/q2
+cd ~/work/scripts
+cat > grade.sh <<'END'
+#!/bin/bash
+n=$1
+if [ "$n" -ge 90 ]; then
+  echo "excellent"
+elif [ "$n" -ge 60 ]; then
+  echo "pass"
+else
+  echo "fail"
+fi
+END
+chmod +x grade.sh
+```
 
 ```
 ana@vm:~/work/scripts$ cat grade.sh

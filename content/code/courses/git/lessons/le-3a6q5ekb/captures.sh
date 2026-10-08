@@ -12,11 +12,12 @@
 # directories it builds before it starts, which is why it wants a throwaway
 # account. `block NAME` marks where a transcript in the prose begins.
 #
-# What is STAGED rather than typed, and not shown in the lesson:
-# lesson 3's week of the bakery's site, rebuilt by the helper `c` with dates
-# and authors set through GIT_AUTHOR_* and GIT_COMMITTER_*; the edits that the
-# undo commands then undo, made with sed between the commands shown; and two
-# commits trying out colours, made the same way, for reset to take back.
+# Nothing the student types is staged any more. Lesson 3's week is the program
+# lesson 3 prints, and the edits the undo commands undo and the two colour
+# commits are the ```bash blocks this lesson prints, run by `given`.
+#
+# What is STAGED rather than typed: the date of each commit, and the author of
+# the revert, Bruno, so that the ids printed in the prose are reproducible.
 # Every line after a prompt is what the command printed.
 #
 # Recorded with git 2.43.0 on Ubuntu 24.04, TZ=America/Sao_Paulo.
@@ -31,50 +32,72 @@ block() { printf '##### %s\n' "$1"; }
 at() { export GIT_AUTHOR_DATE="$1" GIT_COMMITTER_DATE="$1"; }
 as() { export GIT_AUTHOR_NAME="$1" GIT_AUTHOR_EMAIL="$2" GIT_COMMITTER_NAME="$1" GIT_COMMITTER_EMAIL="$2"; }
 me() { as 'Ana Souza' 'ana@example.com'; }
+
+# Where the lessons are, so that a block can be read out of the page that prints
+# it: what the capture runs and what the student is shown cannot then drift.
+lessons=$(cd "$(dirname "$0")/.." && pwd)
+self=$(basename "$(cd "$(dirname "$0")" && pwd)")
+# fence FILE N: the Nth ```bash block of FILE, exactly as the lesson prints it.
+fence() {
+  local body
+  body=$(awk -v n="$2" '/^```bash$/ { if (++c == n) { f = 1; next } } f && /^```$/ { exit } f' "$1")
+  [ -n "$body" ] || { echo "no bash block $2 in $1" >&2; exit 1; }
+  printf '%s\n' "$body"
+}
+# given SECTION N [DATE...]: run the Nth ```bash block of this lesson's SECTION,
+# as somebody pasting it would. Each git command in it that makes a commit or a
+# tag is dated with the next DATE, the one thing a capture adds, and a DATE left
+# over is an error: the block and the dates have stopped agreeing. Names come
+# from the settings and from the block's own `-c user.name=…`, so the exported
+# identity is set aside while it runs and put back afterwards.
+given() {
+  local section=$1 md="$lessons/$self/$1.md" n=$2 name=${GIT_AUTHOR_NAME-} email=${GIT_AUTHOR_EMAIL-}
+  shift 2
+  dates=("$@")
+  unset GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
+  git() {
+    local a skip= sub=
+    for a in "$@"; do
+      if [ -n "$skip" ]; then skip=; continue; fi
+      case $a in -c|-C) skip=1 ;; -*) ;; *) sub=$a; break ;; esac
+    done
+    case $sub in commit|merge|revert|rebase|cherry-pick|pull|tag)
+      if [ ${#dates[@]} -gt 0 ]; then at "${dates[0]}"; dates=("${dates[@]:1}"); fi ;;
+    esac
+    command git "$@"
+  }
+  eval "$(fence "$md" "$n")"
+  unset -f git
+  [ ${#dates[@]} -eq 0 ] || { echo "given $section $n: ${#dates[@]} date(s) left over" >&2; exit 1; }
+  [ -z "$name" ] || as "$name" "$email"
+}
 git config --global user.name 'Ana Souza'
 git config --global user.email 'ana@example.com'
 git config --global init.defaultBranch main
 git config --global core.editor nano
 
 # The week of lesson 3, rebuilt: nine commits by Ana and Bruno.
-cd ~ && rm -rf ~/site
-mkdir ~/site && cd ~/site && git init -q
 bruno() { as 'Bruno Lima' 'bruno@example.com'; }
 c() { git add -A && git commit -q -m "$1"; }
-me; at '2026-09-14T09:05:00-03:00'
-printf '<h1>Padaria Sol</h1>\n<p>Bread from six in the morning.</p>\n' > index.html; c 'Add the home page'
-at '2026-09-14T10:20:00-03:00'
-printf 'h1 { color: darkorange; }\n' > style.css; c 'Give the heading its colour'
-at '2026-09-14T14:10:00-03:00'
-printf '<h1>Menu</h1>\n<p>French bread, 0.80</p>\n' > menu.html; c 'Add the menu'
-bruno; at '2026-09-15T11:02:00-03:00'
-printf '<p>Rye bread, 1.20</p>\n' >> menu.html; c 'Add rye bread to the menu'
-me; at '2026-09-16T09:40:00-03:00'
-sed -i 's/six in the morning/half past five/' index.html; c 'Open at half past five'
-bruno; at '2026-09-16T16:25:00-03:00'
-sed -i 's/0.80/0.90/; s/1.20/1.35/' menu.html; c 'Put the prices up for September'
-me; at '2026-09-17T10:15:00-03:00'
-printf '<p>Cheese roll, 2.50</p>\n' >> menu.html; c 'Add cheese rolls'
-bruno; at '2026-09-18T08:50:00-03:00'
-sed -i '/Rye bread/d' menu.html; c 'Take rye bread off until the flour arrives'
+# Lesson 3's week, made by the program lesson 3 prints, read out of its page.
+fence "$lessons/le-5gv65sh1/the-week.md" 1 > ~/make-site.sh
 me; at '2026-09-18T15:30:00-03:00'
-printf '<p><a href="menu.html">See the menu</a></p>\n' >> index.html; c 'Link the menu from the home page'
 
 
+cd ~ && given restore 1
 block restore-worktree
 at '2026-09-21T09:00:00-03:00'
-sed -i 's/0.90/9.00/' menu.html
+given restore 2
 show 'git diff --stat'
 show 'git restore menu.html'
 show 'git status --short'
 
 block restore-staged
-sed -i 's/2.50/2.60/' menu.html
+given restore 3
 show 'git add menu.html'
 show 'git status --short'
 show 'git restore --staged menu.html'
 show 'git status --short'
-git restore menu.html
 
 block restore-source
 show 'git restore --source=HEAD~3 menu.html'
@@ -90,17 +113,13 @@ show 'cat menu.html'
 
 block amend
 me; at '2026-09-21T11:05:00-03:00'
-sed -i 's/half past five/half past five, Monday to Saturday/' index.html
-git add index.html
+given reset-and-amend 1
 show 'git commit -m "Close on Sundys"'
 show 'git commit --amend -m "Close on Sundays"'
 show 'git log --oneline -2'
 
 block reset-soft
-at '2026-09-21T14:00:00-03:00'
-sed -i 's/darkorange/chocolate/' style.css; git add style.css; git commit -q -m 'Try a darker orange'
-at '2026-09-21T14:20:00-03:00'
-sed -i 's/chocolate/firebrick/' style.css; git add style.css; git commit -q -m 'Try red'
+given reset-and-amend 2 '2026-09-21T14:00:00-03:00' '2026-09-21T14:20:00-03:00'
 show 'git log --oneline -3'
 show 'git reset --soft HEAD~1'
 show 'git status --short'

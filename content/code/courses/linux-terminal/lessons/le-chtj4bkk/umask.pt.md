@@ -1,10 +1,15 @@
 ---
 title: `umask`, que decide com o que um arquivo novo nasce
-version: 1
+version: 2
 ---
 
 Ninguém te perguntou que permissões o `report.txt` deveria ter. Algo decidiu, e decidiu a mesma
-coisa toda vez:
+coisa toda vez. Veja-o decidir, num diretório só dele:
+
+```sh
+mkdir -p ~/um
+cd ~/um
+```
 
 ```
 ana@vm:~/um$ umask
@@ -76,9 +81,11 @@ ana@vm:~/um$ ls -l c.txt
 `664` — o grupo escreve. É a umask de quem trabalha num diretório compartilhado, e é com o que o
 bit setgid da seção 10 normalmente anda junto.
 
-O `-S` imprime ao contrário, como o que é *permitido* em vez do que é removido:
+O `-S` imprime ao contrário, como o que é *permitido* em vez do que é removido. Primeiro, de volta
+ao padrão, porque uma umask dura o tanto que dura o shell em que foi definida:
 
 ```
+ana@vm:~/um$ umask 022
 ana@vm:~/um$ umask -S
 u=rwx,g=rx,o=rx
 ```
@@ -126,7 +133,13 @@ conseguisse criar à mão.
 *criação*, e o `chmod` não é criação.
 
 Há uma exceção que vale nomear, porque parece contradição: **`chmod +x` sem `u`, `g` ou `o` é
-filtrado pela umask.**
+filtrado pela umask.** Dois arquivos vazios, em outro diretório:
+
+```sh
+mkdir -p ~/uq
+cd ~/uq
+touch t1.txt t2.txt
+```
 
 ```
 ana@vm:~/uq$ umask 077
@@ -141,3 +154,9 @@ total 0
 
 A mesma intenção, dois resultados diferentes. O `+x` pelado foi filtrado e deu só o dono; o `a+x`
 disse quem, e não foi filtrado. **Escreva o público** e isso nunca aparece.
+
+E ponha a umask de volta antes de seguir, ou abra um terminal novo, que começa com o padrão:
+
+```
+ana@vm:~/uq$ umask 022
+```

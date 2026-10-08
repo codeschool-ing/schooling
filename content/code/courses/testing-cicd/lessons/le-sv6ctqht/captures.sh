@@ -8,6 +8,11 @@
 #
 #   bash captures.sh
 #
+# EVERY COMMAND STAGED HERE IS ONE THE LESSON GIVES THE STUDENT: the throwaway
+# branch of "history", the sleeping process of "args", the carrier restarted
+# with a new token and the sed on config.env in "rotation"; only the dates on
+# the two commits are fixed, so the hashes stay the same.
+#
 # EVERY SECRET IN THIS LESSON IS A VALUE THE LAB MADE UP. lab-live-token and
 # its successor open the lab's carrier stand-in on 127.0.0.1 and nothing
 # else. The lesson treats them as real on purpose, and shows how a leak is
@@ -64,9 +69,9 @@ git switch -q -c add-deploy-config
 mkdir -p deploy
 printf 'SHIPQUOTE_CARRIER_URL=http://127.0.0.1:9092\nSHIPQUOTE_CARRIER_TOKEN=lab-live-token\n' > deploy/production.env
 git add deploy
-GIT_AUTHOR_DATE=2026-09-30T10:00:00-03:00 GIT_COMMITTER_DATE=2026-09-30T10:00:00-03:00 git commit -qm 'Keep the production settings with the code'
+GIT_AUTHOR_DATE=2026-09-30T10:00:00-03:00 GIT_COMMITTER_DATE=2026-09-30T10:00:00-03:00 git commit -qm "Keep the production settings with the code"
 git rm -q deploy/production.env
-GIT_AUTHOR_DATE=2026-09-30T10:20:00-03:00 GIT_COMMITTER_DATE=2026-09-30T10:20:00-03:00 git commit -qm 'Remove the production settings again'
+GIT_AUTHOR_DATE=2026-09-30T10:20:00-03:00 GIT_COMMITTER_DATE=2026-09-30T10:20:00-03:00 git commit -qm "Remove the production settings again"
 run 'git log --oneline -3'
 run 'ls deploy/production.env'
 run 'git log --oneline -S lab-live-token'

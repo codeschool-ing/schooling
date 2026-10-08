@@ -3,6 +3,34 @@ title: Dentro do cluster, uma moeda com pesos
 version: 1
 ---
 
+Esta aula começa onde a aula 15 começou: o cluster da aula 8, três cópias da loja atrás de um Service,
+e o pod `probe` para perguntar de dentro.
+
+`shop.yaml`:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: shop}
+spec:
+  replicas: 3
+  selector: {matchLabels: {app: shop}}
+  template:
+    metadata: {labels: {app: shop}}
+    spec: {containers: [{name: shop, image: "shop:1.0"}]}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: shop}
+spec: {selector: {app: shop}, ports: [{port: 80, targetPort: 8080}]}
+```
+
+```sh
+./up.sh ports.yaml
+kubectl apply -f shop.yaml
+kubectl run probe --image=busybox:1.37 --restart=Never --command -- sleep 3600
+```
+
 A lição 15 mostrou que o endereço de um Service não pertence a nenhuma máquina, e que o kube-proxy o
 transforma no endereço de um pod em todo nó. **Como ele escolhe o pod depende do modo do kube-proxy**,
 e este cluster roda o padrão, que escreve regras de iptables:
@@ -74,4 +102,4 @@ ler, um banco ou um cache, elimina a necessidade de afinidade. O patch no fim de
 
 O kube-proxy também tem um modo `nftables`, que faz o mesmo sorteio pela interface mais nova do kernel.
 Uma escolha mais esperta, como o pod com menos conexões, vem de substituir o kube-proxy por inteiro, o
-que alguns plugins de rede fazem, o Cilium entre eles. Este laboratório não rodou nenhum dos dois.
+que alguns plugins de rede fazem, o Cilium entre eles. Este curso não rodou nenhum dos dois.

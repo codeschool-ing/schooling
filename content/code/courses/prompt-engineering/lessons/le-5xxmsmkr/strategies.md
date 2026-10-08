@@ -1,6 +1,6 @@
 ---
 title: Working inside the limit
-version: 1
+version: 2
 ---
 
 The obvious answer to a full window is a bigger one, and windows have grown enormously. It helps
@@ -20,12 +20,12 @@ system prompt itself.
 
 Dropping old turns loses whatever was said in them. The fix is to **keep what mattered in a form
 that costs less than the turns did**: a short note, written when the turns are about to go, that
-travels in the part that is never cut. Here is the same conversation with one sentence added to
-the system prompt, "Noted earlier in this conversation: the customer is Bruno and he is allergic to
-nuts.", cut to the same budget of 120:
+travels in the part that is never cut. One `sed` adds a sentence to the end of the system prompt,
+and the rest of the conversation stays as it was:
 
 ```
-ana@lab:~/pe$ tok fit chat-noted.json -b 120
+ana@lab:~/pe$ sed "s/The kitchen uses nuts.\"}/The kitchen uses nuts. Noted earlier in this conversation: the customer is Bruno and he is allergic to nuts.\"}/" chat.json > chat-noted.json
+ana@lab:~/pe$ tok fit chat-noted.json -b 120 -w sent-noted.json
 budget 120, system prompt 71
   dropped  1 user        21  Hi, I'm Bruno. I'm allergic to nuts, s
   dropped  2 assistant   20  Thanks, Bruno. I'll keep your nut alle
@@ -35,27 +35,97 @@ budget 120, system prompt 71
   kept     6 assistant   21  Public holidays follow the Sunday hour
   kept     7 user        14  Great. Which cake would you recommend 
 sent: 116 tokens, 3 of 7 turns
+ana@lab:~/pe$ ask --chat sent-noted.json --temperature 0
+I'd be happy to recommend our Lemon Lavender Pound Cake, it's a popular choice and nut-free.
+-- llama3.2:3b, finish: stop, prompt 135 tokens, output 23 tokens
 ```
 
 The same four turns were dropped, the system prompt grew from 53 tokens to 71, and **the allergy
 survived**, because it is no longer in a turn. The note cost 18 tokens on each request; the four
 turns it replaced cost 75.
 
-In a real application the note is written by a second, cheaper request to a model: summarise the
-turns about to be dropped, keeping anything the user said about themselves. A summary can leave
-out the one detail that mattered as easily as truncation can, so the summarising prompt has to say
-what must survive. This one was written by the course as an illustration:
+What the model did with it is another matter. It used the allergy, and made the same promise as
+the reply with every turn: a nut-free cake, from a kitchen the same system prompt says uses nuts.
+**A note keeps information in the window; what the model does with it is decided by the
+instructions**, and these say nothing about allergies.
 
-```localised
+In a real application the note is written by a second, cheaper request to a model, given the
+turns about to be dropped and a prompt that says what must survive. A summary can leave out the
+one detail that mattered as easily as truncation can, so the prompt has to name it:
+
+```
+ana@lab:~/pe$ cat summarise.txt old-turns.txt
 These turns are about to be removed from the conversation. In at most
 two sentences, write down anything the customer said about themselves
 (name, allergies, preferences) and any promise the assistant made.
 Write nothing else.
+user: Hi, I'm Bruno. I'm allergic to nuts, so please keep that in mind.
+assistant: Thanks, Bruno. I'll keep your nut allergy in mind in everything I suggest.
+user: Are you open on Sunday morning?
+assistant: Yes, on Sundays we open at 08:00 and close at 12:00.
+ana@lab:~/pe$ ask - --system "$(cat summarise.txt)" --temperature 0 < old-turns.txt
+Bruno is allergic to nuts. I promised to keep his nut allergy in mind in everything I suggest.
+-- llama3.2:3b, finish: stop, prompt 139 tokens, output 22 tokens
 ```
+
+Two sentences, the allergy and the promise, and nothing about Sunday hours, which the system
+prompt already carries.
 
 ## Send what the question needs, not everything you have
 
-The café's staff handbook is six short files:
+The café's staff handbook is six short files. Later lessons search it, quote it and pass it to the
+model, so make it now, by pasting this block into the terminal:
+
+```sh
+mkdir -p ~/pe/handbook
+cat > ~/pe/handbook/allergens.md <<'EOF'
+# Allergens
+
+Every cake label lists the 14 major allergens it contains.
+The kitchen uses nuts, so no item can be guaranteed nut-free.
+Oat, soya and lactose-free milk are available for every coffee at no extra cost.
+If a customer asks about an ingredient that is not on the label, ask the kitchen; never guess.
+EOF
+cat > ~/pe/handbook/deliveries.md <<'EOF'
+# Deliveries
+
+Bread arrives at 06:15 and milk at 06:30, at the side door.
+The person opening checks the delivery note against what arrived and signs it.
+A missing item is reported to the supplier the same morning, by e-mail, with the note's number.
+EOF
+cat > ~/pe/handbook/hours.md <<'EOF'
+# Opening hours
+
+Café Aurora opens at 07:00 and closes at 18:00 from Monday to Saturday.
+On Sundays it opens at 08:00 and closes at 12:00.
+The kitchen stops taking hot food orders 30 minutes before closing.
+On public holidays the café follows the Sunday hours.
+EOF
+cat > ~/pe/handbook/loyalty.md <<'EOF'
+# Loyalty card
+
+The tenth coffee is free; stamps are counted per card, not per person.
+A lost card can be replaced at the counter, and its balance is moved to the new card if the customer knows the card number.
+Stamps cannot be exchanged for cash or for food.
+EOF
+cat > ~/pe/handbook/refunds.md <<'EOF'
+# Refunds
+
+A drink or a dish that is wrong or not as described is replaced or refunded on the spot.
+Refunds are made to the card or method used to pay, never in cash for a card payment.
+Money loaded onto a loyalty card is not refundable, but it never expires.
+A refund above R$ 100 needs the shift manager's approval.
+EOF
+cat > ~/pe/handbook/wifi.md <<'EOF'
+# Wi-Fi
+
+The guest network is called aurora-guests and needs no password.
+Sessions end after 2 hours and can be started again at once.
+Staff devices use the network aurora-staff, which guests are never given.
+EOF
+```
+
+Then count them:
 
 ```
 ana@lab:~/pe$ tok count handbook/*.md

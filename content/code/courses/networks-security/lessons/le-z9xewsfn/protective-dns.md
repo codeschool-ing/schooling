@@ -10,7 +10,10 @@ tells the defender who clicked.
 
 This is **protective DNS**. The company's name server gets a list of names it will not resolve: here,
 two lookalikes of the company's own domain that were reported in phishing messages. Names under
-`.test` are reserved and can never belong to anybody real:
+`.test` are reserved and can never belong to anybody real. In your lab this lesson starts from
+`sudo bash nslab.sh reset`, with the company's policy loaded on `fw` by `nft -f baseline.nft`. Add the
+four lines printed below to the end of `/etc/dnsmasq.d/lab.conf` on `dns`, and restart the name server
+there with `kill $(cat /var/log/lab/dnsmasq.pid); sleep 0.5; dnsmasq --conf-dir=/etc/dnsmasq.d --pid-file=/var/log/lab/dnsmasq.pid --user=root`:
 
 ```
 root@dns:~# grep -A3 "^# names the company" /etc/dnsmasq.d/lab.conf

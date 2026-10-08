@@ -7,7 +7,7 @@ OpenAI's pages could not be reached from the machine this course was recorded on
 Gemini, the family is read from the sheet. A selection of its current chat entries:
 
 ```
-ana@desk:~/desk$ sheet compare gpt-5.4-nano gpt-5.4-mini gpt-5.4 gpt-5.5 gpt-6-luna gpt-6-sol gpt-6-astra
+ana@desk:~/desk$ python sheet.py compare gpt-5.4-nano gpt-5.4-mini gpt-5.4 gpt-5.5 gpt-6-luna gpt-6-sol gpt-6-astra
 # LiteLLM model sheet at 21881c57, 4472 entries
 model                                            window  max out   in $/M  out $/M  VFSCRP
 gpt-5.4-nano                                    272,000   128000      0.2     1.25  VFSCRP

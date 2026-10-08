@@ -1,6 +1,6 @@
 ---
 title: Funções que conferem os próprios argumentos
-version: 1
+version: 2
 ---
 
 ```
@@ -169,7 +169,20 @@ versão anexados.
 
 **Um arquivo de script não precisa de shebang no Windows** e precisa no Linux —
 `#!/usr/bin/env pwsh`, exatamente como a aula 9 seção 02 descreveu — e então ele é um
-arquivo executável comum, a partir de um prompt de bash comum:
+arquivo executável comum, a partir de um prompt de bash comum. Saia do
+PowerShell com `exit` e crie um:
+
+```sh
+cd ~/work/ps
+cat > bigfiles.ps1 <<'END'
+#!/usr/bin/env pwsh
+param([Parameter(Mandatory)][string]$Path, [int]$MinBytes = 1000)
+Get-ChildItem $Path |
+  Where-Object Length -gt $MinBytes |
+  Select-Object Name, Length
+END
+chmod +x bigfiles.ps1
+```
 
 ```
 ana@vm:~/work/ps$ cat bigfiles.ps1
@@ -182,7 +195,8 @@ ana@vm:~/work/ps$ ./bigfiles.ps1 -Path .
 
 Name       Length
 ----       ------
-access.log 148233
+access.log 153934
+
 ```
 
 Repare que o `param()` funciona no topo de um arquivo de script e não só numa

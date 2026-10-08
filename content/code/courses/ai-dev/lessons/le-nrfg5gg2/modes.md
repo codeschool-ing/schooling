@@ -1,6 +1,6 @@
 ---
 title: Completion, chat and agent
-version: 1
+version: 2
 ---
 
 Editor assistants come in three modes, and the useful way to tell them apart is not what they can
@@ -24,10 +24,11 @@ the editor gathered, and that is all.
 
 ## Chat
 
-A panel where you ask questions and get answers, code and diffs, as in lesson 3 sections 06 and
-07. You choose the context (the selection, the open files, the files you name), and **nothing
+A panel where you ask questions and get answers, code and diffs, as in lesson 3 sections
+06 and 07. You choose the context (the selection, the open files, the files you name), and **nothing
 changes in the project until you apply it**. The unit of review is a reply, and the habit that
-matters is the one from lesson 3 section 06: ask for a diff, read it as a change.
+matters is the one from lesson 3 section 06: read the change as a diff, against the code it
+replaces.
 
 Chat is also where an assistant is most useful without writing anything: explaining an unfamiliar
 module, reading a stack trace with you, listing the cases a function does not handle. An answer to

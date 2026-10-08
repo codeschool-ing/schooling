@@ -1,12 +1,13 @@
 ---
 title: Um pacote, desmontado
-version: 1
+version: 2
 ---
 
 Cada camada embrulha o que recebe da camada de cima num cabeçalho seu, e a camada de baixo trata o
 conjunto todo como dados. Isso é **encapsulamento**, e um pacote mostra. O laptop buscou
 `http://www.example.com/` enquanto o `tcpdump -XX` imprimia o quadro que levava o pedido, byte a
-byte:
+byte. Para ver isso você mesmo, inicie este `tcpdump` no laptop e, de um segundo shell no laptop,
+rode `curl -s -o /dev/null http://www.example.com/`:
 
 ```
 ana@laptop:~$ sudo tcpdump -n -e -XX -c 1 "tcp dst port 80 and tcp[tcpflags] & tcp-push != 0"
@@ -38,7 +39,7 @@ camadas, fica assim:
 Três coisas se leem direto dos bytes:
 
 - O quadro começa com **`5254 00a8 0a01`, o MAC de destino, e ele é do roteador**, não do servidor
-  web. O laptop manda tudo o que está fora do escritório para o gateway, a rota padrão da seção 04
+  web. O laptop manda tudo o que está fora do escritório para o gateway, a rota padrão da seção 11
   funcionando. O
   destino IP, `c000 0250`, é `192.0.2.80`, o servidor web. A camada 2 diz o próximo salto; a camada 3
   diz o destino final.

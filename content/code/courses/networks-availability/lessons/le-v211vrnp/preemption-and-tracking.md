@@ -3,10 +3,12 @@ title: Taking the address back, and giving it away
 version: 1
 ---
 
-When `hq`'s cable goes back in, `hq2` is master and everything works. Whether `hq` should now take the
+When `hq`'s cable goes back in, `sudo ip -n wire link set hq-hq up` on the virtual machine, `hq2` is
+master and everything works. Whether `hq` should now take the
 address back is a choice, called **preemption**, and VRRP's default is yes: a router with a higher
 priority that comes back takes over again. keepalived follows the default, and the laptop caught what
-`hq` sends when it does. The filter keeps only ARP from `hq`'s hardware address:
+`hq` sends when it does, with the capture started before the cable went back. The filter keeps only ARP
+from `hq`'s hardware address:
 
 ```
 ana@laptop:~$ sudo tcpdump -n -t -e -i eth0 -c 2 arp and ether src 52:54:00:a8:0a:02
@@ -58,7 +60,8 @@ have been replaced.
 
 That is what `track_interface` in the configuration is for: `eth1` is `hq`'s link to the ISP, and if it
 goes down, keepalived puts the instance into `FAULT` and gives up the address. The ISP link was taken
-down while `hq` was master:
+down while `hq` was master, the same way as the LAN cable: `sudo ip -n wire link set hqwan-hq down` on
+the virtual machine, and five seconds' wait:
 
 ```
 ana@hq:~$ grep -E "eth1|FAULT|Entering" /run/keepalived.log | tail -n 3
@@ -79,8 +82,8 @@ rtt min/avg/max/mdev = 0.118/0.166/0.214/0.048 ms
 
 In the same second by the log's clock that `hq` became master again, it reported `eth1` down and went to
 `FAULT`. **`hq2` holds `192.168.10.1` again, and the laptop's ping goes through it with no loss**, even
-though `hq` is running and its LAN cable is fine. When the ISP link came back, `hq` went through the same
-steps as before:
+though `hq` is running and its LAN cable is fine. When the ISP link came back, `sudo ip -n wire link set hqwan-hq up`, `hq` went through the same steps as
+before:
 
 ```
 ana@hq:~$ grep -E "eth1|FAULT|Entering" /run/keepalived.log | tail -n 3

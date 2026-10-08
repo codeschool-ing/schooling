@@ -17,7 +17,7 @@ ana@pc1:~$ bash /tmp/inventory.sh
 
 A laptop from a shop would say its maker's name, the model and a serial number printed on its label.
 This one says **`QEMU`** and **`Not Specified`**: it is a virtual machine, and nobody gave it a serial.
-That is worth knowing as a fact rather than a lab quirk, because **virtual machines are assets too**, on
+That is worth knowing as a fact rather than a quirk of this course's office, because **virtual machines are assets too**, on
 paper, and they have no label to read. The organisation gives them an identifier of its own.
 
 The script behind that last line collects the rest:

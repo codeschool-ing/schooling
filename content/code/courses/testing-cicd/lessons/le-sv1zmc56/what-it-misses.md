@@ -1,13 +1,13 @@
 ---
 title: Covered is not checked
-version: 1
+version: 2
 ---
 
 A line counts as covered when it **ran**. Nothing in the measurement asks whether a test looked at
 what it did. That gap is easy to state and easy to forget, so here it is made concrete.
 
-This test file was written for this section. It calls every function in `money.py` and asserts
-nothing:
+This test file was written for this section, and you delete it at the end of it. It calls every
+function in `money.py` and asserts nothing. Save it as `tests/test_money_runs.py`:
 
 ```python
 from shipquote.money import brl, split
@@ -46,7 +46,8 @@ ana@laptop:~/shipquote$ python -m pytest -q tests/test_money_runs.py
 **100% of `money.py`, branches included**, which is more than the real test suite reached in
 section 02, where line 14 was missing. Then `brl` is broken the same way lesson 1 broke it, losing
 the zero that pads the cents, and the same two tests run again: still green. A file can be fully
-covered by tests that would not notice it returning nonsense.
+covered by tests that would not notice it returning nonsense. Put `brl` back with
+`git checkout shipquote/money.py` and delete `tests/test_money_runs.py`.
 
 Nobody writes a test file like that on purpose, but every suite contains parts of one: a test that
 checks the status code and not the body, a test whose assertion is `is not None`, a call made in

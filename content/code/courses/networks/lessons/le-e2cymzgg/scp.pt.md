@@ -1,11 +1,21 @@
 ---
 title: scp: um arquivo por SSH
-version: 1
+version: 2
 ---
 
 Entre máquinas que rodam SSH, e isso é todo servidor Linux, não é preciso servidor FTP nenhum. O `scp`
 copia arquivos por uma conexão SSH, com a mesma chave, o mesmo agente e o mesmo `~/.ssh/config` da aula
-7:
+7. Se o seu laboratório foi reiniciado depois da aula 7, prepare-os de novo no laptop; são as seções 03
+a 06 da aula 7 em quatro linhas, com a frase-senha `blue kettle on the roof` e a senha `office-2026`:
+
+```sh
+ssh-keygen -t ed25519 -C ana@laptop -f ~/.ssh/id_ed25519
+ssh-copy-id -i ~/.ssh/id_ed25519.pub 192.168.10.10
+eval $(ssh-agent); ssh-add
+printf "Host office\n    HostName 192.168.10.10\n    User ana\n" > ~/.ssh/config
+```
+
+Depois:
 
 ```
 ana@laptop:~$ ls -l licences.tar.gz

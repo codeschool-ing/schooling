@@ -6,15 +6,16 @@ version: 1
 Llama 4's card gives each model two parameter counts:
 
 ```
-ana@desk:~/desk$ sources lines llama4-card 23 42 | grep -E "Llama 4|Activated|Total|>[0-9]+M<"
-  23|     <td>Llama 4 Scout (17Bx16E) </td>
-  26|     <td>17B (Activated)
-  27|         109B (Total)
-  31|     <td>10M</td>
-  36|     <td>Llama 4 Maverick (17Bx128E)</td>
-  37|     <td>17B (Activated)
-  38|         400B (Total)
-  42|     <td>1M</td>
+ana@desk:~/desk$ LLAMA=https://raw.githubusercontent.com/meta-llama/llama-models/0e0b8c519242d5833d8c11bffc1232b77ad7f301
+ana@desk:~/desk$ curl -s $LLAMA/models/llama4/MODEL_CARD.md | sed -n 23,42p | grep -E "Llama 4|Activated|Total|>[0-9]+M<"
+    <td>Llama 4 Scout (17Bx16E) </td>
+    <td>17B (Activated)
+        109B (Total)
+    <td>10M</td>
+    <td>Llama 4 Maverick (17Bx128E)</td>
+    <td>17B (Activated)
+        400B (Total)
+    <td>1M</td>
 ```
 
 **Scout: 17 billion activated, 109 billion in total. Maverick: 17 billion activated, 400 billion in
@@ -29,7 +30,7 @@ So a mixture-of-experts model has **two sizes that answer two of lesson 3's ques
 - **the active part decides how fast it generates**: section 05 of lesson 3 said speed is bandwidth
   divided by the bytes read per token, and only the active experts are read.
 
-`lab/moe.py` applies lesson 3's arithmetic to both, at 4 bits and with the same assumed 1,000 GB/s:
+`moe.py` applies lesson 3's arithmetic to both, at 4 bits and with the same assumed 1,000 GB/s:
 
 ```python
 # Llama 4's two models, from the card: billions of parameters in all, and the
@@ -44,7 +45,7 @@ for name, (total, active) in MODELS.items():
 ```
 
 ```
-ana@desk:~/desk$ python lab/moe.py
+ana@desk:~/desk$ python moe.py
 Llama 4 Scout     holds  54.5 GB, reads  8.5 GB a token, ceiling about 118 tokens a second
 Llama 4 Maverick  holds 200.0 GB, reads  8.5 GB a token, ceiling about 118 tokens a second
 ```

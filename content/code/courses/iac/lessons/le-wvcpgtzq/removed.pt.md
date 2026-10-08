@@ -1,12 +1,13 @@
 ---
 title: Soltando um recurso sem destruí-lo
-version: 1
+version: 2
 ---
 
 Às vezes um recurso deveria sair de uma configuração e continuar existindo. O time de dados vai
 assumir os logs da loja: eles vão gerir o `shop-logs-dev` a partir da configuração deles, e a aula 8
 mostra como vão importá-lo lá. A configuração da Ana precisa parar de gerir o bucket **sem
-apagá-lo**, e apagar o bloco é o movimento óbvio e o errado:
+apagá-lo**, e apagar o bloco é o movimento óbvio e o errado. A Ana restaura o bloco `assets` com
+`git checkout main.tf`, apaga o bloco `logs` no lugar dele e roda o plan:
 
 ```
 ana@laptop:~/shop/assets$ terraform plan | grep -E "will|because|Plan:"

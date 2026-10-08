@@ -7,7 +7,15 @@ O kubectl não sabe de clusters. Ele lê um **kubeconfig**, o `~/.kube/config` a
 contrário, que guarda três listas e um ponteiro: clusters (um endereço e uma CA), usuários (uma
 credencial), contextos (um cluster, um usuário e um namespace opcional, sob um nome só), e o
 `current-context`, o usado quando você não diz nada. A lição 7 usou um contexto. Aqui há dois clusters,
-criados um depois do outro, e o kind acrescentou cada um ao mesmo arquivo:
+criados um depois do outro: `shop` pelo `./up.sh`, e `eu` pelo mesmo script com o outro nome escrito
+nele, para ter os mesmos três nós e as imagens da loja:
+
+```sh
+./up.sh
+sed 's/--name shop/--name eu/' up.sh > up-eu.sh && sh up-eu.sh
+```
+
+O kind acrescentou cada um ao mesmo arquivo:
 
 ```
 ana@laptop:~/shop$ kubectl config get-contexts

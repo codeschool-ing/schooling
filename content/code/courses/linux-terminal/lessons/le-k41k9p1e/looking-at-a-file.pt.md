@@ -1,6 +1,6 @@
 ---
 title: Olhar um arquivo antes de processá-lo
-version: 1
+version: 2
 ---
 
 Todo pipeline desta aula começa do mesmo jeito: olhe uma linha e descubra quais são os campos. Pular
@@ -8,7 +8,7 @@ esse passo é como se escreve um `cut -f9` que pega a coluna errada.
 
 ```
 ana@vm:~/work$ head -1 logs/access.log
-10.0.1.6 - - [14/Sep/2026:06:01:23 +0000] "GET /static/app.js HTTP/1.1" 200 3484 "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" 87
+198.51.100.10 - - [14/Sep/2026:06:01:15 +0000] "GET / HTTP/1.1" 200 23295 "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/131.0 Safari/537.36" 27
 ```
 
 Conte os campos separados por espaço e você tem o mapa que o resto da aula usa: o endereço é o `$1`,
@@ -46,7 +46,7 @@ O `head -c 40` conta bytes em vez de linhas:
 
 ```
 ana@vm:~/work$ head -c 40 logs/access.log; echo
-10.0.1.6 - - [14/Sep/2026:06:01:23 +0000
+198.51.100.10 - - [14/Sep/2026:06:01:15
 ```
 
 Útil para olhar o começo de algo que talvez nem tenha linhas.

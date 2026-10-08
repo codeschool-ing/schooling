@@ -5,8 +5,9 @@ version: 1
 
 TLS has had four versions, and SSL two before it. **SSL 2 and 3, TLS 1.0 and TLS 1.1 are all
 deprecated**, the last two formally since 2021. Each has known weaknesses, and a server that still
-accepts them lets a client, or somebody pretending to be one, choose them. The shop's proxy
-allows two:
+accepts them lets a client, or somebody pretending to be one, choose them. In your lab this lesson
+starts from `sudo bash nslab.sh reset` with no policy loaded on `fw`, so that every question here is
+about TLS and none about the firewall. The shop's proxy allows two:
 
 ```
 root@www:~# grep -n ssl_protocols /etc/nginx/sites-enabled/shop

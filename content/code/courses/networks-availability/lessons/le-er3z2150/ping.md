@@ -59,7 +59,15 @@ bytes cross. `-q` prints only the summary and `-i 0.2` sends five a second inste
 ## How much is lost
 
 The next run was staged. A rule on the ISP router drops **two packets in ten, at random**, of those it
-forwards towards web2, `192.0.2.22`. Fifty pings, ten a second:
+forwards towards web2, `192.0.2.22`. On `isp`:
+
+```sh
+sudo nft add table ip faults
+sudo nft add chain ip faults loss '{ type filter hook forward priority 0; }'
+sudo nft add rule ip faults loss 'ip daddr 192.0.2.22 numgen random mod 10 < 2 drop'
+```
+
+Fifty pings, ten a second:
 
 ```
 ana@laptop:~$ ping -c 50 -i 0.1 -q 192.0.2.22

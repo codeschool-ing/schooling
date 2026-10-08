@@ -1,6 +1,6 @@
 ---
 title: LACP, the two ends agreeing
-version: 1
+version: 2
 ---
 
 A LAG can be configured with no protocol at all: tell each switch which ports belong together and
@@ -37,7 +37,7 @@ for a LACPDU every second** rather than every 30, so a dead member is noticed in
 makes the bond check each member's link every 100 milliseconds. `xmit_hash_policy layer2+3` decides
 how traffic is spread, which the next section shows. The cables are taken down before they join, which is
 why each member's `Link Failure Count` reads 1 further down. The same four commands ran on `sw2`, out of view, because
-LACP needs both ends.
+LACP needs both ends: type them at sw2's root prompt too, and give the two ends ten seconds to agree.
 
 Ten seconds later, the bond is one interface with two members:
 

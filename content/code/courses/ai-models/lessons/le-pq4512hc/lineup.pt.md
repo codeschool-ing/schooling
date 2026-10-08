@@ -8,7 +8,7 @@ então esta aula lê a família inteira na tabela do LiteLLM. Toda entrada do Ge
 de preços do Google como fonte:
 
 ```
-ana@desk:~/desk$ sheet show gemini/gemini-3.5-flash | grep -E "^(source|rpm|tpm)"
+ana@desk:~/desk$ python sheet.py show gemini/gemini-3.5-flash | grep -E "^(source|rpm|tpm)"
 rpm                                        2000
 source                                     https://ai.google.dev/gemini-api/docs/pricing
 tpm                                        800000
@@ -21,7 +21,7 @@ aula 21 trata de limites como esses, e os de uma conta nova costumam ser menores
 A linha atual, como a tabela a tem:
 
 ```
-ana@desk:~/desk$ sheet compare gemini/gemini-3.5-flash-lite gemini/gemini-3.5-flash gemini/gemini-3.1-pro-preview gemini/gemini-flash-latest gemini/gemini-pro-latest
+ana@desk:~/desk$ python sheet.py compare gemini/gemini-3.5-flash-lite gemini/gemini-3.5-flash gemini/gemini-3.1-pro-preview gemini/gemini-flash-latest gemini/gemini-pro-latest
 # LiteLLM model sheet at 21881c57, 4472 entries
 model                                            window  max out   in $/M  out $/M  VFSCRP
 gemini/gemini-3.5-flash-lite                  1,048,576    65536      0.3      2.5  VFSCRP

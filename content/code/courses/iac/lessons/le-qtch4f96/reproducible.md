@@ -1,6 +1,6 @@
 ---
 title: Reproducible, and immutable in practice
-version: 1
+version: 2
 ---
 
 A version number says *which* image runs. It does not say that building the same template again
@@ -34,6 +34,10 @@ nginx:
         500 http://archive.ubuntu.com/ubuntu noble/main amd64 Packages
 ```
 
+Ana writes both pins into the template. Yours takes the digest and the version your own two
+commands printed, because your `ubuntu:24.04` was pulled on another day and may be another image.
+Her diff:
+
 ```
 ana@laptop:~/shop/image$ git diff
 diff --git a/web.pkr.hcl b/web.pkr.hcl
@@ -59,6 +63,9 @@ index 554e9e1..5ea1fd9 100644
        "echo 'shop web ${var.version}' > /var/www/html/index.html",
      ]
 ```
+
+She commits it, `git add -A && git commit -qm 'pin the base image and nginx'`, and builds the next
+version:
 
 ```
 ana@laptop:~/shop/image$ packer build -var version=1.2.0 -var commit=$(git rev-parse --short HEAD) . 2>&1 | grep -E "Run command|Image ID|finished"

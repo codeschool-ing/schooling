@@ -6,7 +6,7 @@
 # what moved.
 #
 #   sudo useradd -m -s /bin/bash -G sudo ana     # once, on a throwaway machine
-#   sudo cp ../../lab.sh /var/tmp/lab.sh          # the lab, beside course.json
+#   sudo cp -r ../.. /var/tmp/virtualization      # the course: lab.sh, and the lessons it reads
 #   sudo -u ana -i bash /path/to/captures.sh
 #
 # EVERY MACHINE IN THE LESSON IS PART OF ONE LAB. The computer is called host
@@ -33,7 +33,7 @@
 
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 PAGER=cat SYSTEMD_PAGER=cat COLUMNS=100
-LAB_SH=${LAB_SH:-/var/tmp/lab.sh}
+LAB_SH=${LAB_SH:-/var/tmp/virtualization/lab.sh}
 lab() { sudo bash "$LAB_SH" "$@"; }
 # on MACHINE 'command': what ana typed at her prompt, on host itself or inside
 # one of its guests (reached with ssh), and everything it printed.
@@ -63,21 +63,10 @@ quiet server 'systemctl enable --now nginx; echo "lab server: ok" > /var/www/htm
 mkdir -p ~/notes && echo "renew the office printer's toner" > ~/notes/todo.txt
 setsid python3 -m http.server 8000 --directory ~/notes >/dev/null 2>&1 < /dev/null &
 notes_server=$!
-cat > ~/check.sh <<'CHECK'
-#!/usr/bin/env bash
-# Run inside a lab guest, with the host's address on the lab network.
-host=${1:?usage: check.sh HOST_ADDRESS}
-
-check() {
-  if "${@:2}" >/dev/null 2>&1; then echo "$1: OPEN"; else echo "$1: closed"; fi
-}
-
-check "a route out of the lab"  ip route get 10.0.0.50
-check "the host's ssh"          nc -z -w 3 "$host" 22
-check "the host's port 8000"    nc -z -w 3 "$host" 8000
-check "a shared folder"         grep -qE " (9p|virtiofs) " /proc/mounts
-check "a clipboard agent"       pgrep -x "spice-vdagent|VBoxClient"
-CHECK
+# check.sh is taken out of a-check-from-inside.md, as its copy button gives it,
+# so the script the lesson shows is the script that ran
+awk '/^```schooling-example$/{f=1; next} /^```$/{f=0} f' "${LESSON:-$(dirname "$0")}/a-check-from-inside.md" |
+  jq -r '[.parts[].code] | join("\n")' > ~/check.sh
 cat > ~/labguard.nft <<'GUARD'
 table inet labguard {
   chain input {

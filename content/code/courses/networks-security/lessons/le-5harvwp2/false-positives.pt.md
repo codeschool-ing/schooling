@@ -3,7 +3,8 @@ title: Um falso positivo, e uma exclusão que continua estreita
 version: 1
 ---
 
-Um cliente escreve no formulário de suporte. É um desenvolvedor, e cola a consulta que executou:
+Um cliente escreve no formulário de suporte. É um desenvolvedor, e cola a consulta que executou. O
+log de auditoria foi esvaziado antes, então guarda só este pedido:
 
 ```
 ana@remote:~$ curl -s -o /dev/null -w "%{http_code}\n" -d "comment=select id from orders where total > 100" https://www.example.com/support
@@ -24,7 +25,7 @@ que viu. Essa combinação é um **falso positivo** (*false positive*), e todo W
 As correções erradas são as tentadoras: voltar o motor para o modo somente detecção, ou remover a
 regra 942100 de todo lugar. Qualquer uma enfraquece o site inteiro para salvar um
 formulário. A correção certa é **tão estreita quanto o problema**: esta regra, este campo, este
-location.
+location. No arquivo do site, é um location novo, escrito logo acima de `location /admin/`:
 
 ```
 root@www:~# sed -n "/location \/support/,/}/p" /etc/nginx/sites-enabled/shop

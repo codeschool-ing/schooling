@@ -554,39 +554,39 @@
  },
  {
   "id": "ex-e5spe0ey",
-  "version": 1,
+  "version": 2,
   "section": "the-lab",
   "type": "quiz",
   "difficulty": "easy",
   "drillable": true,
-  "prompt": "In this lab, which of these answers with a real model running on the machine?",
+  "prompt": "Which of the course's three Ollama models do the lessons send a picture to?",
   "choices": [
    {
-    "text": "labmm's lab-whisper-base",
+    "text": "qwen2.5vl:3b",
     "correct": true,
-    "why": "Right. labmm runs the real Whisper behind its audio routes."
+    "why": "Right. It reads pictures, which llama3.2:3b cannot, and the lessons that send an image use it."
    },
    {
-    "text": "labmm's lab-vision-1",
+    "text": "llama3.2:3b",
     "correct": false,
-    "why": "Its replies about images are rules the course wrote."
+    "why": "It reads and writes text only. The course uses it where the input is words."
    },
    {
-    "text": "labmm's lab-image-1",
+    "text": "all-minilm",
     "correct": false,
-    "why": "It returns a card saying no model drew it."
+    "why": "It turns text into vectors for lesson 12's search; it neither reads pictures nor writes."
    },
    {
-    "text": "None of them; labmm is a stand-in throughout",
+    "text": "None; pictures go to Whisper",
     "correct": false,
-    "why": "The audio routes are real models; only vision and image generation are not."
+    "why": "Whisper listens. It takes audio and gives text."
    }
   ]
  },
  {
   "id": "ex-gysdqh2x",
-  "version": 1,
-  "section": "the-lab",
+  "version": 2,
+  "section": "the-media",
   "type": "quiz",
   "difficulty": "easy",
   "drillable": true,
@@ -605,55 +605,55 @@
    {
     "text": "To store the SHA-256 of every model",
     "correct": false,
-    "why": "Those are written in lab.sh."
+    "why": "Those are written in setup.sh, beside each model's address."
    },
    {
     "text": "To keep a backup copy of the media in case somebody deletes it",
     "correct": false,
-    "why": "The media is rebuilt by reset; truth holds text and numbers, not copies."
+    "why": "make_media.py makes the media again whenever it is run; truth holds text and numbers, not copies."
    }
   ]
  },
  {
   "id": "ex-0qqpnv28",
-  "version": 1,
+  "version": 2,
   "section": "the-lab",
   "type": "numeric",
   "difficulty": "easy",
   "drillable": true,
-  "prompt": "According to `du`, how many megabytes of libraries does /opt/multimodal/lib hold?",
-  "value": 933,
+  "prompt": "According to `du`, how many gigabytes do Ollama's three models take in ~/.ollama/models?",
+  "value": 5.0,
   "tolerance": 0,
-  "unit": "MB"
+  "unit": "GB"
  },
  {
   "id": "ex-30bwvqvc",
-  "version": 1,
+  "version": 2,
   "section": "when-setup-fails",
   "type": "quiz",
   "difficulty": "easy",
   "drillable": true,
-  "prompt": "curl answers `Couldn't connect to server` on port 8700. What does it mean?",
+  "prompt": "`ollama list` answers `could not connect to ollama server`. What does it mean?",
   "choices": [
    {
-    "text": "labmm is not running",
+    "text": "No process is answering on port 11434",
     "correct": true,
-    "why": "Right. Nothing is listening on the port; lab.sh reset starts it again."
+    "why": "Right. Nothing is listening there, and starting `ollama serve` fixes it."
    },
    {
-    "text": "An image was too large",
+    "text": "A model was never downloaded",
     "correct": false,
-    "why": "No request reached anything; that error comes before any image."
+    "why": "A missing model gets an answer from the server, naming the model. Here nothing answered."
    },
    {
     "text": "The API key in the environment is wrong",
     "correct": false,
-    "why": "A wrong key gets an answer, a 401. Here nothing answered."
+    "why": "Ollama takes no key, and a wrong key would still get an answer."
    },
    {
     "text": "A model file failed its SHA-256",
     "correct": false,
-    "why": "That is checked when the lab is built, and says FAILED."
+    "why": "That is checked by setup.sh when it downloads, and says FAILED."
    }
   ]
  },

@@ -1,6 +1,6 @@
 ---
 title: 755 and 644, and where the numbers come from
-version: 1
+version: 2
 ---
 
 Nine bits. Three per audience. **A three-bit number runs from 0 to 7**, which is why permissions
@@ -40,7 +40,18 @@ drwxr-xr-x   755
 hundred and forty-four" — they are three separate digits, and pronouncing them as one number is
 how people end up thinking 700 is bigger than 644 in some meaningful way.
 
-`stat` will do the conversion for you, in both directions:
+`stat` will do the conversion for you, in both directions. Three files and a directory of your
+own to try it on:
+
+```sh
+mkdir -p ~/perm/locked
+cd ~/perm
+printf 'hello\n' > public.txt
+printf 'secret\n' > private.txt
+printf '#!/bin/sh\n' > script.sh
+chmod 600 private.txt
+chmod 755 script.sh
+```
 
 ```
 ana@vm:~/perm$ stat -c '%a %A %n' public.txt private.txt script.sh locked

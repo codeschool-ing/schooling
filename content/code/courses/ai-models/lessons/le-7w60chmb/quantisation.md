@@ -21,7 +21,7 @@ The pattern reported across many models, by the people who build the formats, is
 - **4 bits** loses a little: a point or two on benchmarks, more on some tasks than others;
 - **below 4 bits** the losses grow quickly, and small models suffer more than large ones.
 
-"A little on benchmarks" is the sentence lesson 1 section 05 warned about: somebody else's task.
+"A little on benchmarks" is the sentence lesson 1 section 09 warned about: somebody else's task.
 The loss is uneven, and the tasks that suffer first are the precise ones: arithmetic, following a
 strict output format, a language that was a small share of the training text. **Ana's extraction
 task asks for exact JSON**, which is precisely the kind of thing to check rather than assume.

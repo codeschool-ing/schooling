@@ -1,6 +1,6 @@
 ---
 title: JSON, the format a program wants
-version: 1
+version: 2
 ---
 
 It is tempting to think that a model which writes good prose will write good data if you ask it
@@ -29,9 +29,10 @@ arrives**, instead of three steps later when a report is wrong.
 ## Asking for it in the prompt
 
 The prompt says what the object looks like, field by field, and says that nothing else may come
-with it. The course wrote this prompt as an illustration; no model was called:
+with it. Save it as `~/pe/prompts/classify.txt`:
 
-```localised
+```
+ana@lab:~/pe$ cat prompts/classify.txt
 Classify the café review between the <review> tags.
 
 Reply with one JSON object and nothing else: no sentence before
@@ -56,47 +57,56 @@ reply against. Here the description is in prose, and the check is only whether t
 
 ## Three replies, and what a parser says to each
 
-These are three replies of the kind models send back, written by the course into files on the
-workbench. The
-first is what was asked for:
+The first is the model's reply to that prompt, saved to a file:
 
 ```
+ana@lab:~/pe$ ask - --temperature 0 --plain < prompts/classify.txt > replies/good.json
 ana@lab:~/pe$ cat replies/good.json
-{
-  "review": 3,
-  "sentiment": "negative",
-  "topics": ["wait", "tea"],
-  "staff_praised": true
-}
+{"review":3,"sentiment":"mixed","topics":["waited","tea","staff","kind"],"staff_praised":true}
 ana@lab:~/pe$ python3 -m json.tool replies/good.json > /dev/null; echo "exit $?"
 exit 0
 ```
 
 `python3 -m json.tool` is Python's own JSON reader, run from the command line. It reads the file
 and prints it back neatly; here the print is thrown away and only the **exit status** is kept,
-because that is what a program checks. `0` means it parsed.
+because that is what a program checks. `0` means it parsed. The object has every field, with the
+types asked for, and `mixed` from the list.
 
-The second reply has the right object in it and a friendly sentence in front:
+The second is what came back from a shorter prompt, the one most people write first:
 
 ```
-ana@lab:~/pe$ cat replies/chatty.json
-Sure! Here is the JSON for review 3:
-{
-  "review": 3,
-  "sentiment": "negative",
-  "topics": ["wait", "tea"],
-  "staff_praised": true
-}
+ana@lab:~/pe$ cat prompts/classify-short.txt
+Classify this café review as JSON with the fields review, sentiment, topics and staff_praised.
+
+Review 3: Waited fifteen minutes for a tea at noon. The staff were kind about it.
+ana@lab:~/pe$ ask - --temperature 0 --plain < prompts/classify-short.txt > replies/chatty.json
+ana@lab:~/pe$ cat -n replies/chatty.json
+     1	Here is the classification of the café review as JSON:
+     2	
+     3	```
+     4	{
+     5	  "review": "Waited fifteen minutes for a tea at noon. The staff were kind about it.",
+     6	  "sentiment": "NEUTRAL",
+     7	  "topics": ["wait time", "customer service"],
+     8	  "staff_praised": true
+     9	}
+    10	```
+    11	
+    12	Note: The sentiment is classified as NEUTRAL because the reviewer mentions a wait time, but also mentions that the staff were kind about it, which suggests a positive aspect of their experience.
 ana@lab:~/pe$ python3 -m json.tool replies/chatty.json > /dev/null; echo "exit $?"
 Expecting value: line 1 column 1 (char 0)
 exit 1
 ```
 
-**The parser gave up on the very first character.** JSON has to start with a value, and `S` is not
-one. A person sees an object that is perfectly fine; the program sees a failure, and it never
-learns the object was there. Lesson 19 recovers this one with a small repair step.
+**The parser gave up on the very first character.** JSON has to start with a value, and `H` is not
+one. A person sees an object in there; the program sees a failure, and it never learns the object
+was there. Look at the object anyway: `review` holds the review's text instead of its number, and
+`sentiment` is `NEUTRAL`, in capitals, a value nobody listed because nobody listed any. Every one
+of those is something the longer prompt had a line against. Lesson 19 recovers an object from a
+reply like this with a small repair step.
 
-The third has no sentence, and every line of it looks like data:
+The third shape is common enough to know on sight. This reply was written by the course, so the
+parser's message can be read on its own:
 
 ```
 ana@lab:~/pe$ cat replies/python.json

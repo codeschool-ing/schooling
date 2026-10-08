@@ -1,11 +1,23 @@
 ---
 title: Páginas pequenas carregam, grandes travam
-version: 1
+version: 2
 ---
 
 A descoberta do MTU do caminho depende de uma mensagem ICMP conseguir voltar. Muitos firewalls
 descartam ICMP por costume, com a teoria de que `ping` é só coisa de atacante. Aqui o roteador do
-provedor ganha esse costume, e os caches de rota são limpos para ninguém lembrar do MTU menor:
+provedor ganha esse costume, e os caches de rota são limpos para ninguém lembrar do MTU menor. No seu
+laboratório, o MTU da seção 06 precisa estar no lugar (depois de um `reset`, ajuste de novo), e o
+servidor web precisa de uma página grande o bastante para encher pacotes de tamanho máximo: uma lista
+de preços de 2000 linhas. Da sua máquina virtual:
+
+```sh
+sudo bash ~/netlab/netlab exec www root 'for i in $(seq 1 2000); do echo "line $i of the price list, padded to a hundred characters so the file is large enough ....."; done > /var/www/example/prices.txt'
+sudo bash ~/netlab/netlab exec isp root 'nft add table inet f; nft add chain inet f out "{ type filter hook output priority 0; }"; nft add rule inet f out icmp type destination-unreachable drop'
+sudo bash ~/netlab/netlab exec laptop root 'ip route flush cache'
+sudo bash ~/netlab/netlab exec www root 'ip route flush cache'
+```
+
+Depois, no laptop:
 
 ```
 ana@laptop:~$ curl -sS -m 5 -o /dev/null -w '%{http_code} %{size_download} bytes\n' https://www.example.com/

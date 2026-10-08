@@ -1,11 +1,21 @@
 ---
 title: HTTP à mão
-version: 1
+version: 2
 ---
 
 O HTTP/1.1 é texto, e uma pessoa consegue falar HTTP. O `nc` abre uma conexão TCP com a porta 80 e
 manda o que receber; o `printf` dá a ele um pedido, cada linha terminada com `\r\n` e o pedido
-inteiro terminado com uma linha vazia:
+inteiro terminado com uma linha vazia.
+
+O servidor web desta aula tem duas coisas que a aula 1 não pôs lá: a lista de preços da aula 2 e uma
+pasta vazia, `/private/`. Acrescente as duas da sua máquina virtual antes de começar, e de novo depois
+de qualquer `reset`:
+
+```sh
+sudo bash ~/netlab/netlab exec www root 'for i in $(seq 1 2000); do echo "line $i of the price list, padded to a hundred characters so the file is large enough ....."; done > /var/www/example/prices.txt; mkdir /var/www/example/private'
+```
+
+Depois, no laptop:
 
 ```
 ana@laptop:~$ printf 'GET / HTTP/1.1\r\nHost: www.example.com\r\nConnection: close\r\n\r\n' | nc -w 3 192.0.2.80 80

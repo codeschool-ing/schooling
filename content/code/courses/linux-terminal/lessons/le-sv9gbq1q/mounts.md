@@ -1,6 +1,6 @@
 ---
 title: Mounting: a disk arrives as a directory
-version: 2
+version: 3
 ---
 
 Lesson 1 section 10 said it: there are no drive letters, there is one tree, and every disk appears
@@ -10,7 +10,7 @@ what that actually looks like.
 ```
 ana@vm:~$ df -h /
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/vda        252G   11G   27G  28% /
+/dev/vda        252G  9.6G   30G  25% /
 ```
 
 Read the two ends together. `/dev/vda` is a **device** — an entry in `/dev`, a disk. `/` is the
@@ -24,7 +24,7 @@ Three commands, increasingly specific:
 ```
 ana@vm:~$ df -h /
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/vda        252G   11G   27G  28% /
+/dev/vda        252G  9.6G   30G  25% /
 ```
 
 `df` — *disk free* — is the one you will type. It takes a path and answers about the filesystem
@@ -39,16 +39,15 @@ ana@vm:~$ findmnt -no SOURCE,FSTYPE /
 the header, `-o` picks the columns.
 
 ```
-root@vm:/root# lsblk -o NAME,SIZE,TYPE,MOUNTPOINTS /dev/vda /dev/loop0
-NAME   SIZE TYPE MOUNTPOINTS
-loop0   64M loop /mnt/backups
-vda    256G disk /
+ana@vm:~$ lsblk -o NAME,SIZE,TYPE,MOUNTPOINTS /dev/vda
+NAME  SIZE TYPE MOUNTPOINTS
+vda   256G disk /
 ```
 
 `lsblk` lists **block devices** — the hardware side — whether or not they are mounted. That last
 part is what makes it the right tool when a disk is *missing*: `df` cannot show you a disk that is
 not mounted, and `lsblk` can. With no arguments it lists every device on the machine; here it was
-given two.
+given one.
 
 This machine is a virtual one, which is why its disk is `vda`. On a laptop you would see `sda` or
 `nvme0n1` with two or three `part` rows under it — the partitions — and mount points beside them.
@@ -59,26 +58,38 @@ disks. That is why `/etc/fstab` prefers a UUID, below.
 
 ## What mounting actually does to a directory
 
+To try this you need a second disk, and a file can stand in for one. Mounting needs root, so the
+rest of this section works in a root shell: `sudo -i` opens one, its prompt ends in `#`, and lesson
+4 is about what that means. Then make a directory to mount on, a 64 MB file of zeros, and an empty
+filesystem inside the file, labelled `backups`:
+
+```
+ana@vm:~$ sudo -i
+root@vm:~# mkdir -p /root/img /mnt/backups
+root@vm:~# dd if=/dev/zero of=/root/img/disk.img bs=1M count=64 status=none
+root@vm:~# mkfs.ext4 -q -L backups /root/img/disk.img
+```
+
 Here is the whole idea in one session. A directory, with something in it:
 
 ```
-root@vm:/root# echo 'this is on the main disk' > /mnt/backups/oops.txt
-root@vm:/root# df -h /mnt/backups
+root@vm:~# echo 'this is on the main disk' > /mnt/backups/oops.txt
+root@vm:~# df -h /mnt/backups
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/vda        252G   11G   27G  28% /
+/dev/vda        252G  9.6G   30G  25% /
 ```
 
 Nothing is mounted there yet, so `/mnt/backups` is an ordinary directory on the main disk. Now
 mount something onto it:
 
 ```
-root@vm:/root# mount -o loop /root/img/disk.img /mnt/backups
-root@vm:/root# ls -la /mnt/backups
+root@vm:~# mount -o loop /root/img/disk.img /mnt/backups
+root@vm:~# ls -la /mnt/backups
 total 24
-drwxr-xr-x 3 root root  4096 Sep 14 22:22 .
-drwxr-xr-x 7 root root  4096 Sep 14 22:22 ..
-drwx------ 2 root root 16384 Sep 14 22:22 lost+found
-root@vm:/root# df -h /mnt/backups
+drwxr-xr-x 3 root root  4096 Oct  7 11:10 .
+drwxr-xr-x 7 root root  4096 Oct  7 11:10 ..
+drwx------ 2 root root 16384 Oct  7 11:10 lost+found
+root@vm:~# df -h /mnt/backups
 Filesystem      Size  Used Avail Use% Mounted on
 /dev/loop0       56M   24K   52M   1% /mnt/backups
 ```
@@ -90,11 +101,14 @@ moment ago there were 252 GB.
 Work in it normally:
 
 ```
-root@vm:/root# mkdir /mnt/backups/nightly
-root@vm:/root# touch /mnt/backups/nightly/2026-09-14.tar.gz
-root@vm:/root# ls -R /mnt/backups
+root@vm:~# mkdir /mnt/backups/nightly
+root@vm:~# touch /mnt/backups/nightly/2026-09-14.tar.gz
+root@vm:~# ls -R /mnt/backups
 /mnt/backups:
-lost+found  nightly
+lost+found
+nightly
+
+/mnt/backups/lost+found:
 
 /mnt/backups/nightly:
 2026-09-14.tar.gz
@@ -103,13 +117,13 @@ lost+found  nightly
 And unmount:
 
 ```
-root@vm:/root# umount /mnt/backups
-root@vm:/root# ls -la /mnt/backups
+root@vm:~# umount /mnt/backups
+root@vm:~# ls -la /mnt/backups
 total 12
-drwxr-xr-x 2 root root 4096 Sep 14 22:22 .
-drwxr-xr-x 7 root root 4096 Sep 14 22:22 ..
--rw-r--r-- 1 root root   25 Sep 14 22:22 oops.txt
-root@vm:/root# cat /mnt/backups/oops.txt
+drwxr-xr-x 2 root root 4096 Oct  7 11:10 .
+drwxr-xr-x 7 root root 4096 Oct  7 11:10 ..
+-rw-r--r-- 1 root root   25 Oct  7 11:10 oops.txt
+root@vm:~# cat /mnt/backups/oops.txt
 this is on the main disk
 ```
 
@@ -142,6 +156,8 @@ how the demo above worked and how you mount an ISO image.
 The error you will actually hit is this one:
 
 ```
+root@vm:~# mount -o loop /root/img/disk.img /mnt/backups
+root@vm:~# cd /mnt/backups
 root@vm:/mnt/backups# umount /mnt/backups
 umount: /mnt/backups: target is busy.
 root@vm:/mnt/backups# cd /
@@ -160,12 +176,13 @@ where those become familiar.
 ## `/etc/fstab` is the list of what to mount at boot
 
 ```
-root@vm:/root# cat /etc/fstab
+root@vm:~# cat /etc/fstab
 # UNCONFIGURED FSTAB FOR BASE SYSTEM
 ```
 
-Empty, on this machine, because it is a virtual machine whose root filesystem was mounted by the
-thing that started it rather than from a table. On a normal installation it has a line per
+Empty, on the machine these transcripts were captured on, because its root filesystem was mounted
+by the thing that started it rather than from a table. On the machine you installed in lesson 1 it
+has a line for each filesystem the installer made. On a normal installation it has a line per
 filesystem, six fields each:
 
 | field | is | example |
@@ -179,11 +196,11 @@ filesystem, six fields each:
 
 **Field 1 is usually a UUID rather than `/dev/sdb1`**, and that is the important detail: device
 letters change when you add a disk, and a UUID belongs to the filesystem itself. `blkid` prints
-them:
+them, and it reads a filesystem in a file as happily as one on a disk:
 
 ```
-root@vm:/root# blkid /dev/loop0
-/dev/loop0: LABEL="backups" UUID="c26bf719-319e-4ab2-9b16-e641c60ab92e" BLOCK_SIZE="4096" TYPE="ext4"
+root@vm:~# blkid /root/img/disk.img
+/root/img/disk.img: LABEL="backups" UUID="00826b00-4138-4b93-9ff5-ced97fdda026" BLOCK_SIZE="4096" TYPE="ext4"
 ```
 
 That UUID was written into the filesystem when it was created and travels with it — into another
@@ -204,3 +221,5 @@ is silent *before* you reboot. `mount -a` is the free rehearsal.
 | Windows, inside WSL | `/mnt/c` — the same mechanism, and why it is slower |
 | a container | its whole filesystem is mounts, and `-v` on `docker run` adds one |
 | `/proc`, `/sys`, `/dev` | mounted, and not on any disk at all — section 14 |
+
+When you are done, `exit` leaves the root shell, and the prompt is yours again.

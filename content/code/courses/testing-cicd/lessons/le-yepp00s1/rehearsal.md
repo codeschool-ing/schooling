@@ -1,6 +1,6 @@
 ---
 title: A rollback nobody has run does not work
-version: 1
+version: 2
 ---
 
 The way back is used on bad days only, which means it is the least exercised path in the whole
@@ -24,6 +24,13 @@ each run it once, put the bug back in front of customers. The script only rememb
 and it has no idea which of the two releases was the good one.
 
 ## There is nothing to roll back to the first time
+
+Staging, made again from nothing for the purpose, gets its first deploy:
+
+```sh
+mkdir ~/envs/staging
+echo SHIPQUOTE_PORT=8200 > ~/envs/staging/config.env
+```
 
 ```
 ana@laptop:~/shipquote$ ops/deploy.sh staging dist/shipquote-1.6.1.tar.gz

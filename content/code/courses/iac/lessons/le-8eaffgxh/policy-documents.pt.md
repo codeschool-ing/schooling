@@ -1,6 +1,6 @@
 ---
 title: Documentos montados por uma data source
-version: 1
+version: 2
 ---
 
 Nem toda data source pergunta algo a uma nuvem. Algumas calculam a resposta no notebook, a partir do
@@ -14,12 +14,14 @@ acompanha o bucket quando ele é renomeado.
 funções e as próprias verificações de sintaxe do Terraform valem para ele. O bucket da Ana para as
 imagens da loja ganha duas declarações (statements). A primeira recusa todo pedido que não use TLS,
 uma base comum para buckets. A segunda deixa a conta ler objetos, mas só a partir dos endereços do
-escritório, que o time de segurança mantém num arquivo do repositório:
+escritório, que o time de segurança mantém num arquivo do repositório, o `office-cidrs.txt`:
 
 ```
 203.0.113.0/28
 198.51.100.32/29
 ```
+
+O bucket, o documento e a policy que junta os dois vão no `bucket.tf`:
 
 ```hcl
 resource "aws_s3_bucket" "assets" {
@@ -74,7 +76,9 @@ ao bucket um nome único da conta e cita a conta na segunda declaração. **`dat
 lista do escritório; ela vem do provider `hashicorp/local`, e lê um arquivo da máquina que roda o
 Terraform, não algo na AWS. E o documento de policy transforma as declarações em JSON.
 
-O plano mostra de novo dois momentos diferentes:
+O `local` é um provider que este diretório ainda não usou, então a Ana roda `terraform init` de
+novo, e ele instala o `hashicorp/local` ao lado do `aws`. Depois disso, o plano mostra de novo dois
+momentos diferentes:
 
 ```
 ana@laptop:~/shop/app$ terraform plan

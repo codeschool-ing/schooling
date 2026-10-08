@@ -1,6 +1,6 @@
 ---
 title: Reading and editing the state with terraform state
-version: 1
+version: 2
 ---
 
 Back in Ana's own directory, with the state that knows the three resources. The JSON can be read
@@ -149,3 +149,6 @@ and found no differences, so no changes are needed.
 directory**, which is the same reason it would be gone with the laptop. Two sections on, the backend puts the
 state where its history survives, and lesson 8 shows `terraform import`, which brings a real
 resource back under management with no backup at all.
+
+Ana commits `main.tf` with the block renamed, so that the file in Git says `public_a` too; the next
+sections clone it.

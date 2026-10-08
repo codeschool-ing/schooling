@@ -1,6 +1,6 @@
 ---
 title: FTPS: FTP dentro do TLS
-version: 1
+version: 2
 ---
 
 O mesmo servidor sabe falar **FTPS**, o FTP embrulhado no TLS das aulas 5 e 6, com o mesmo certificado
@@ -26,7 +26,16 @@ um handshake TLS 1.3, e só então o `USER`. Na máquina do ISP, só dava para l
 linhas. Tudo depois delas, senha inclusive, vai cifrado.
 
 Oferecer cifragem não é o mesmo que exigir: um cliente que não pede ainda entra do jeito antigo. O
-servidor pode recusar isso:
+servidor pode recusar isso, com duas configurações no `vsftpd.conf` e um reinício. No seu laboratório,
+da sua máquina virtual:
+
+```sh
+sudo sed -i "s/^force_local_logins_ssl=NO/force_local_logins_ssl=YES/; s/^force_local_data_ssl=NO/force_local_data_ssl=YES/" /lab/www/etc/vsftpd.conf
+sudo pkill -x vsftpd
+sudo bash ~/netlab/netlab exec www root 'vsftpd /etc/vsftpd.conf </dev/null >/dev/null 2>&1 &'
+```
+
+Depois:
 
 ```
 ana@www:~$ grep -E "^(ssl_enable|force_local)" /etc/vsftpd.conf

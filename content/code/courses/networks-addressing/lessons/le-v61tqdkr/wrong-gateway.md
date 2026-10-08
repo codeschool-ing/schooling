@@ -1,11 +1,12 @@
 ---
 title: A gateway nobody has
-version: 1
+version: 2
 ---
 
 The commonest way to misconfigure a host by hand is to type the gateway wrong. The symptom is easy
-to misread, because half the network goes on working. In this block the lab gave pc2 a default
-route through 10.20.10.254, an address inside the office network that no machine has:
+to misread, because half the network goes on working. In this block pc2's default route was
+replaced, at a root prompt on pc2, with `ip route replace default via 10.20.10.254`: an address
+inside the office network that no machine has.
 
 ```
 ana@pc2:~$ ip route

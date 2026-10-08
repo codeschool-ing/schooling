@@ -11,7 +11,6 @@ followed by more questions. That is a **base model**.
 Meta's prompt-format document shows one, with an input it wrote and the reply its base model gave:
 
 ```
-ana@desk:~/desk$ sources quote llama3.1-prompt-format '^<.begin_of_text.>Color|^ red, orange'
 # meta-llama/llama-models@0e0b8c51 models/llama3_1/prompt_format.md
   31: <|begin_of_text|>Color of sky is blue but sometimes can also be
   36: red, orange, yellow, green, purple, pink, brown, gray, black, white, and even rainbow
@@ -31,7 +30,6 @@ give. After that it treats your text as a turn in a dialogue, answers, and **sto
 learnt too, and the document says how each kind ends:
 
 ```
-ana@desk:~/desk$ sources quote llama3.1-prompt-format 'end_of_text...: Model|End of turn'
 # meta-llama/llama-models@0e0b8c51 models/llama3_1/prompt_format.md
    7: - `<|end_of_text|>`: Model will cease to generate more tokens. This token is generated
       only by the base models.
@@ -56,7 +54,7 @@ tuned model that spends more tokens, and more time, on each answer.
   model hub, a name without *Instruct*, *chat* or *it* is usually the base, and downloading the
   wrong one is a common first mistake: it loads, it runs, and it answers a support e-mail by
   writing another support e-mail.
-- **A base model is what you fine-tune**, when you fine-tune at all (section 07). The tuning a
+- **A base model is what you fine-tune**, when you fine-tune at all (section 11). The tuning a
   provider did is a choice made for the general case; starting from the base means making that
   choice yourself.
 

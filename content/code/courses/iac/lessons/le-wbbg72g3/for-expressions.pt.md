@@ -1,6 +1,6 @@
 ---
 title: Expressões for e splats
-version: 1
+version: 2
 ---
 
 Uma expressão `for` monta uma coleção a partir de outra. É o mais perto de um laço que a HCL tem,
@@ -91,7 +91,7 @@ console leu as faixas delas do state. Splats aparecem mais em recursos criados c
 ## Uma expressão for num output
 
 A mesma expressão funciona em qualquer lugar onde cabe uma expressão. A Ana acrescenta um output
-que diz que faixa cada sub-rede recebeu:
+que diz que faixa cada sub-rede recebeu, no `outputs.tf`:
 
 ```hcl
 output "subnet_cidrs" {

@@ -1,9 +1,9 @@
 ---
 title: Five jobs at Marginalia
-version: 1
+version: 2
 ---
 
-The shop this course works for is Marginalia, the online bookshop whose help centre was searched by meaning in `embeddings-vectors`, answered from in `rag` and handed to an agent in `agents-mcp`. It does not exist, and its media was made by the lab. It has five jobs that a person does today and that a multimodal model could take over, and they are the course's thread.
+The shop this course works for is Marginalia, the online bookshop whose help centre was searched by meaning in `embeddings-vectors`, answered from in `rag` and handed to an agent in `agents-mcp`. It does not exist, and its media is made by a program in this lesson. It has five jobs that a person does today and that a multimodal model could take over, and they are the course's thread.
 
 | the job | today | the lessons |
 |---|---|---|
@@ -13,7 +13,9 @@ The shop this course works for is Marginalia, the online bookshop whose help cen
 | make banners for the weekly newsletter | a freelancer, when there is budget | 3 and 9 |
 | answer the phone with order status | the same person who answers the e-mail | 6 |
 
-Here is a first taste of three of them, each from a real model running in the lab. The first eight seconds of a support call, through Whisper; the invoice, through Tesseract; and a photograph and the invoice, through MediaPipe's object detector:
+Here is a first taste of three of them, each from a real model running on your machine. The first eight seconds of a support call, through Whisper; the invoice, through Tesseract; and a photograph and the invoice, through MediaPipe's object detector. Two short programs, and the third reader is the `tesseract` command itself.
+
+`listen.py`, Whisper:
 
 ```python
 """The first eight seconds of the support call, through Whisper base."""
@@ -22,6 +24,22 @@ import mmlab
 samples = mmlab.read_audio("media/call-1042.wav")
 text, lang = mmlab.transcribe(mmlab.whisper("base"), samples[: 8 * mmlab.RATE])
 print(lang, "|", text)
+```
+
+`look.py`, the detector:
+
+```python
+"""What MediaPipe's object detector finds in each picture named on the command line."""
+import sys
+
+import mediapipe as mp
+
+import mmlab
+
+with mmlab.detector() as det:
+    for path in sys.argv[1:]:
+        found = det.detect(mp.Image.create_from_file(path)).detections
+        print(path, [(d.categories[0].category_name, round(d.categories[0].score, 2)) for d in found] or "nothing")
 ```
 
 ```

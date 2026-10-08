@@ -1,6 +1,6 @@
 ---
 title: Uma cópia menor do mesmo modelo
-version: 1
+version: 2
 ---
 
 A **quantização** guarda os pesos de um modelo com menos bits. Um modelo em precisão completa guarda cada peso como número de ponto flutuante de 32 bits (**fp32**); uma cópia **int8** guarda a maioria deles como inteiros de 8 bits mais uma escala, mais ou menos um quarto do espaço nas partes quantizadas. A pergunta é sempre a mesma: quanto a cópia menor custa em precisão?
@@ -15,7 +15,7 @@ ana@lab:~/mm$ cd /opt/multimodal/share && ls -l sherpa-onnx-whisper-base/*.onnx 
 95087154 sherpa-onnx-whisper-base/base-encoder.onnx
 ```
 
-Então a pergunta pode ser medida em vez de discutida:
+Então a pergunta pode ser medida em vez de discutida, com o `measure.py` da aula 5 para a taxa de erro de palavras:
 
 ```python
 """The same Whisper at full precision and at int8: size on disk, time to load, time to transcribe, words wrong."""
@@ -44,13 +44,13 @@ for size in ("tiny", "base"):
 
 ```
 ana@lab:~/mm$ python precision.py
-tiny fp32   152.2 MB  load  1.2 s  transcribe   7.5 s  WER  17.2%
-tiny int8   102.8 MB  load  0.5 s  transcribe   7.1 s  WER  16.6%
-base fp32   291.6 MB  load  2.6 s  transcribe  13.9 s  WER  11.9%
-base int8   159.8 MB  load  1.1 s  transcribe  11.2 s  WER  12.6%
+tiny fp32   152.2 MB  load  1.2 s  transcribe   4.9 s  WER  17.2%
+tiny int8   102.8 MB  load  0.4 s  transcribe   4.1 s  WER  16.6%
+base fp32   291.6 MB  load  2.4 s  transcribe   8.5 s  WER  11.9%
+base int8   159.8 MB  load  0.8 s  transcribe   6.8 s  WER  12.6%
 ```
 
-**Nesta ligação, o int8 não custou nada mensurável.** O tiny int8 fez 16,6% contra 17,2% do fp32, e o base int8 12,6% contra 11,9%. Um subiu e outro desceu, menos de uma palavra em cem, em 151 palavras de fala: isso é o ruído de uma gravação só, não uma diferença entre as cópias. O que o int8 comprou é claro: **o base com 160 MB em vez de 292**, carregado em 1,1 segundo em vez de 2,6, e transcrevendo em 11,2 segundos em vez de 13,9.
+**Nesta ligação, o int8 não custou nada mensurável.** O tiny int8 fez 16,6% contra 17,2% do fp32, e o base int8 12,6% contra 11,9%. Um subiu e outro desceu, menos de uma palavra em cem, em 151 palavras de fala: isso é o ruído de uma gravação só, não uma diferença entre as cópias. O que o int8 comprou é claro: **o base com 160 MB em vez de 292**, carregado em 0,8 segundo em vez de 2,4, e transcrevendo em 6,8 segundos em vez de 8,5.
 
 Os tamanhos não caíram bem a um quarto, porque nem toda parte de um modelo é quantizada. Os codificadores encolheram umas três vezes; os decodificadores bem menos, já que uma grande parte de um decodificador do Whisper é a tabela de vocabulário, que esta exportação mantém com mais precisão.
 

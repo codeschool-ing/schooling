@@ -1,6 +1,6 @@
 ---
 title: O `crontab`, e a flag que apaga tudo
-version: 1
+version: 2
 ---
 
 Todo usuário pode ter um crontab. Ele é um arquivo, ele não fica no seu diretório
@@ -13,6 +13,32 @@ pessoal, e você nunca o edita onde ele mora.
 | `crontab -r` | **apaga** o seu. Sem confirmação |
 | `crontab arquivo` | substitui o seu pelo conteúdo do arquivo |
 | `crontab -u ana -l` | o de outra pessoa, como root |
+
+Os jobs que esta seção e as três seguintes usam: dois scripts pequenos, e um
+crontab escrito como um arquivo comum e instalado com `crontab ARQUIVO`.
+
+```sh
+mkdir -p ~/work/cron ~/bin && cd ~/work/cron
+cat > heartbeat.sh <<'END'
+#!/bin/bash
+# One line a minute: the job ran, when, and as which process.
+echo "$(date '+%F %T') heartbeat, pid $$" >> /home/ana/work/cron/beat.log
+END
+cat > ~/bin/report.sh <<'END'
+#!/bin/bash
+echo "report ran"
+END
+chmod +x heartbeat.sh ~/bin/report.sh
+cat > jobs.cron <<'END'
+* * * * * /home/ana/work/cron/heartbeat.sh
+* * * * * report.sh
+* * * * * echo "ran at $(date +%H:%M)" >> /home/ana/work/cron/pct.log
+END
+crontab jobs.cron
+# Ubuntu's ~/.profile puts ~/bin on your PATH when you log in, if it exists.
+# It did not exist when this shell started, so add it here too:
+PATH="$HOME/bin:$PATH"
+```
 
 ```
 ana@vm:~/work/cron$ crontab -l
@@ -62,14 +88,14 @@ O hábito que não custa nada, e o que ele compra:
 
 ```
 ana@vm:~/work/cron$ crontab -l > ~/crontab.backup; wc -l ~/crontab.backup
-4 /home/ana/crontab.backup
+3 /home/ana/crontab.backup
 ana@vm:~/work/cron$ crontab -r
 ana@vm:~/work/cron$ crontab -l; echo "exit $?"
 no crontab for ana
 exit 1
 ana@vm:~/work/cron$ crontab ~/crontab.backup && crontab -l | tail -2
-* * * * * echo "CRON_TZ=[$CRON_TZ]  ran at $(date -u +\%H:\%M) UTC" >> /home/ana/work/cron/tzenv2.log
-30 8 * * * echo "08:30 New York?" >> /home/ana/work/cron/tz830.log
+* * * * * report.sh
+* * * * * echo "ran at $(date +%H:%M)" >> /home/ana/work/cron/pct.log
 ```
 
 **O `crontab -r` não imprimiu absolutamente nada** — sem prompt, sem resumo, sem
@@ -106,7 +132,13 @@ no lugar pode deixar o arquivo mudado e o diretório intocado.
 terminal não fazer nada às três da manhã.
 
 **Um arquivo de crontab precisa de uma quebra de linha final**, e um arquivo
-gerado muitas vezes não tem:
+gerado muitas vezes não tem. O `printf` escreve exatamente o que recebe, então
+este arquivo termina sem uma:
+
+```sh
+cd ~/work/cron
+printf '* * * * * echo hello\n* * * * * echo goodbye' > nonl.cron
+```
 
 ```
 ana@vm:~/work/cron$ od -c nonl.cron | tail -2

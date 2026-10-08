@@ -1,6 +1,6 @@
 ---
 title: The same measurement in other languages
-version: 1
+version: 2
 ---
 
 Every mainstream language has a coverage tool, and they all measure the same thing in the same
@@ -19,7 +19,9 @@ the name of the command.
 
 The Go side of the repository that publishes this course has coverage built into its test command.
 Two of its libraries, the grader every exam answer goes through and the parser of per-track
-passages, measured from a checkout:
+passages, measured from a checkout. You do not need to type this one: the repository is public and
+a clone with Go 1.25 would print the same, but nothing later in the course uses it, and the numbers
+are the point:
 
 ```
 ana@laptop:~/schooling$ go test -count=1 -cover ./internal/grade/ ./internal/trackblock/

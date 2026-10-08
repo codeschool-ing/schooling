@@ -1,6 +1,6 @@
 ---
 title: Varrer o plan, onde estão os valores
-version: 1
+version: 2
 ---
 
 Quem revisou o pull request do SSH pediu uma mudança: não escrever a faixa no arquivo, e sim
@@ -29,6 +29,8 @@ index b975fc3..bfe7bb9 100644
 +  cidr_ipv4         = var.admin_cidr
  }
 ```
+
+A Ana faz essa mudança no `ssh.tf`, faz o commit como *admin_cidr as a variable* e varre de novo:
 
 ```
 ana@laptop:~/shop$ checkov -d . --skip-download --compact --check CKV_AWS_24
@@ -65,7 +67,8 @@ no diretório diz qual vai ser o valor. Um check que não enxerga um valor não 
 duas ferramentas relatam isso como aprovado. *Passed* numa varredura da configuração quer dizer "nada
 de errado no que eu consegui ler", o que é menos do que parece.
 
-O valor chega quando alguém roda o plan, de um arquivo passado na linha de comando:
+O valor chega quando alguém roda o plan, de um arquivo passado na linha de comando, o
+`maintenance.tfvars`:
 
 ```hcl
 admin_cidr = "0.0.0.0/0"

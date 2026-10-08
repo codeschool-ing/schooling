@@ -8,8 +8,11 @@
 #
 #   sudo useradd -m -s /bin/bash ana     # once, on a throwaway machine,
 #                                        # with passwordless sudo for ana
-#   sudo cp ../../lab.sh /var/tmp/lab.sh  # the lab, beside course.json
 #   sudo -u ana -i bash /path/to/captures.sh
+#
+# lab.sh, beside course.json, extracts netlab.sh and tunnel.py from lesson 1's
+# pages and installs them where that lesson tells the student to; the captures
+# run the student's own copy.
 #
 # EVERY MACHINE IN THE LESSON IS PART OF ONE LAB, built by lab.sh: a head
 # office (hq), a branch, a home behind its own NAT, an ISP and a small data
@@ -21,17 +24,18 @@
 # of it: the capture filters and the display filters below are typed exactly
 # as they would be in the window's two filter bars.
 #
-# What is STAGED rather than typed, and not shown in the lesson: the lab
-# itself, built by lab.sh reset; the mirror port, set up with lab.sh span hq
-# files before the span block, which copies files' port to mon's; and the
-# traffic each capture catches, generated on files or laptop by the commands
-# named beside each bg line below.
+# WHAT THE STUDENT DOES THAT A TRANSCRIPT DOES NOT SHOW, and where the lesson
+# gives it: the mirror port, `sudo bash netlab.sh span hq files` typed on the
+# computer itself (where-to-capture); the request made on files while each of
+# the first two captures runs, `curl -s http://192.0.2.21/`, also given in
+# that section's prose; and the morning's traffic, the sh fence of
+# tshark-and-the-file, EXTRACTED with `lab.sh fence` and typed on files.
 # Every line after a prompt is what the command printed.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 PAGER=cat SYSTEMD_PAGER=cat COLUMNS=100
-LAB_SH=${LAB_SH:-/var/tmp/lab.sh}
+LAB_SH=${LAB_SH:-$(cd "$(dirname "$0")/../.." && pwd)/lab.sh}
 lab() { sudo bash "$LAB_SH" "$@"; }
 # on HOST 'command': what ana typed at her prompt on one machine of the lab,
 # and everything it printed.
@@ -54,8 +58,9 @@ bg() {
 }
 fg() { wait "$(cat "$BG/pid")" 2>/dev/null || true; cat "$BG/out"; }
 block() { printf '##### %s\n' "$1"; }
-traffic() {  # the mix a morning on files produces, in miniature
-  lab exec files ana 'curl -s http://192.0.2.21/ >/dev/null; dig +short www.example.com >/dev/null; dig +short nosuch.example.com >/dev/null; ping -c 2 192.0.2.22 >/dev/null; curl -s https://www.example.com/ --resolve www.example.com:443:192.0.2.21 >/dev/null; curl -s http://192.0.2.23/nothing-here >/dev/null' >/dev/null 2>&1
+HERE=$(cd "$(dirname "$0")" && pwd)
+traffic() {  # the mix a morning on files produces, in miniature: the lesson's sh fence
+  lab exec files ana "$(bash "$LAB_SH" fence "$HERE/tshark-and-the-file.md" 1)" >/dev/null 2>&1
 }
 
 lab reset
@@ -69,7 +74,7 @@ lab exec files ana 'curl -s http://192.0.2.21/' >/dev/null 2>&1
 fg
 
 block span
-lab span hq files
+( cd ~ && sudo bash netlab.sh span hq files )
 bg mon 'tshark -n -i eth0 -c 6 -f "tcp port 80"'
 lab exec files ana 'curl -s http://192.0.2.21/' >/dev/null 2>&1
 fg

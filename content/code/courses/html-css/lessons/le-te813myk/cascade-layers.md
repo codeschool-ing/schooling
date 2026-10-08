@@ -1,9 +1,9 @@
 ---
 title: Cascade layers
-version: 1
+version: 2
 ---
 
-Lesson 5 section 07 drew the cascade as four questions, and the second one, **layers**, was left for this lesson. A cascade layer is a named group of rules, and **between layers, the order of the layers decides before specificity is asked**. That makes section 09's file order something the browser enforces instead of something everybody has to remember. Here are four layers, three of them with rules, and a link that two of them style:
+Lesson 5 section 07 drew the cascade as four questions, and the second one, **layers**, was left for this lesson. A cascade layer is a named group of rules, and **between layers, the order of the layers decides before specificity is asked**. That makes section 09's file order something the browser enforces instead of something everybody has to remember. Here are four layers, three of them with rules, and a link that two of them style, in `layers.css`:
 
 ```css
 @layer reset, base, components, utilities;
@@ -21,7 +21,28 @@ Lesson 5 section 07 drew the cascade as four questions, and the second one, **la
 }
 ```
 
-The first line declares the layers' **order**: `reset` is the weakest, `utilities` the strongest. The rules then go into their layer with `@layer name { … }`. The link has the class `button` and sits inside `#events`:
+The first line declares the layers' **order**: `reset` is the weakest, `utilities` the strongest. The rules then go into their layer with `@layer name { … }`. The link has the class `button` and sits inside `#events`, in `layers.html`:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Layers · Andorinha Books</title>
+    <link rel="stylesheet" href="layers.css">
+  </head>
+  <body>
+    <main id="events">
+      <article class="event">
+        <h2>Book swap</h2>
+        <a class="button" href="swap.html">How it works</a>
+      </article>
+    </main>
+  </body>
+</html>
+```
+
+Asked which rules set its colour:
 
 ```
 ana@laptop:~/site$ probe layers.html rules .button color
@@ -39,7 +60,7 @@ computed color: rgb(255, 255, 255)
 
 ## Unlayered styles win
 
-One more rule, appended outside any layer, `a { color: #8a1c1c; }`:
+One more rule, appended outside any layer, `a { color: #8a1c1c; }`. Save `layers.css` with that line at its end as `layers-plus.css`, and a copy of `layers.html` that links it as `layers-plus.html`:
 
 ```
 ana@laptop:~/site$ probe layers-plus.html rules .button color

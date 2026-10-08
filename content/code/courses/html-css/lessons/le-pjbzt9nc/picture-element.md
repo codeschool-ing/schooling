@@ -1,6 +1,6 @@
 ---
 title: The picture element: different crops and formats
-version: 1
+version: 2
 ---
 
 `srcset` offers **the same picture** at different sizes. Sometimes a narrow screen needs **a different picture**: the wide photograph of the shelves becomes a strip of nothing on a phone, and a square crop of one shelf reads better. That is called **art direction**, and `<picture>` does it.
@@ -63,11 +63,11 @@ The other use of `<source>` is the file format. WebP and AVIF compress photograp
 ana@laptop:~/site$ probe formats.html img img
 img  chose shelves-960.webp (960×640 pixels), drawn 960 wide
 ana@laptop:~/site$ wc -c shelves-960.png shelves-960.webp
-6878 shelves-960.png
-2914 shelves-960.webp
-9792 total
+26134 shelves-960.png
+ 5078 shelves-960.webp
+31212 total
 ```
 
-Chromium reads WebP, so it took the first source. The size difference is real but the pictures in this lab are flat colour with a label on them, so the ratio, 2914 bytes against 6878, says little about photographs; on real photographs the saving is the reason the format exists. A browser that did not know `image/webp` would have skipped that `<source>` and drawn the PNG.
+Chromium reads WebP, so it took the first source. The size difference is real, but these pictures are flat colour with a label on them, so the ratio, 5078 bytes against 26134, says little about photographs; on real photographs the saving is the reason the format exists. Your two numbers will not be these, because your system draws the label in its own font, and the WebP will still be the smaller. A browser that did not know `image/webp` would have skipped that `<source>` and drawn the PNG.
 
 **Use `<picture>` when the browser needs to be told something it cannot work out**: a different crop, or a format it may not support. For the same picture at different sizes, `srcset` and `sizes` on a plain `<img>` are enough and are simpler.

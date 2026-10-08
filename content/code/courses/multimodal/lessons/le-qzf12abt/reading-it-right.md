@@ -1,6 +1,6 @@
 ---
 title: Making it read numbers, dates and names right
-version: 1
+version: 2
 ---
 
 **The cheapest test of a voice is to let a transcriber listen to it.** Speak a sentence with Piper, transcribe the audio with Whisper, and compare. Whatever comes back different is a place where a listener might hear something else too:
@@ -22,6 +22,14 @@ for line in open(sys.argv[1]):
     sf.write("/tmp/roundtrip.wav", audio.samples, audio.sample_rate)
     heard, _ = mmlab.transcribe(whisper, mmlab.read_audio("/tmp/roundtrip.wav"))
     print(f"said:  {text}\nheard: {heard}")
+```
+
+Three sentences a shop's phone line says every day, in `said.txt`:
+
+```
+Your order M-1042 arrived on 24/09/2026.
+Your refund of R$ 34,80 is on its way.
+Dom Casmurro, by Machado de Assis.
 ```
 
 ```
@@ -101,6 +109,12 @@ Real systems use a library of such rules per language rather than three regular 
 ## Names in another language
 
 The title came back as *Dom Kismuro* through the English voice, and spelling tricks will not make an English voice say Portuguese. Two honest options remain. **Use the voice of the name's language for the name**, which is what a bilingual person does. The Portuguese voice says the title like this, transcribed by Whisper in Portuguese:
+
+`titulo.txt` holds the same title the way a Brazilian says it:
+
+```
+Dom Casmurro, de Machado de Assis.
+```
 
 ```
 ana@lab:~/mm$ python roundtrip.py titulo.txt pt_BR-faber-medium

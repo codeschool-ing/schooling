@@ -12,20 +12,18 @@ todo mundo:
 - *Quais produtos nunca venderam?* — pergunta inteiramente sobre linhas sem parceiro.
 - *Mostre todo pedido com o envio dele* — pedidos ainda não enviados são o que alguém procura.
 
-```sql
-SELECT c.name, o.id, o.total
-FROM   customers c
-LEFT JOIN orders o ON o.customer_id = c.id;
 ```
-
-```
- name       | id   | total
+joins=# SELECT c.name, o.id, o.total
+joins-# FROM   customers c
+joins-# LEFT JOIN orders o ON o.customer_id = c.id;
+    name    |  id  | total 
 ------------+------+-------
  Ana Lopes  | 1001 | 34.90
+ Bruno Sá   | 1002 | 69.80
  Ana Lopes  | 1003 | 51.00
  Ana Lopes  | 1004 | 34.90
- Bruno Sá   | 1002 | 69.80
- Célia Reis | NULL | NULL
+ Célia Reis | NULL |  NULL
+(5 rows)
 ```
 
 Cinco linhas. **Toda linha da tabela da esquerda aparece pelo menos uma vez**; onde não há parceiro,

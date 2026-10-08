@@ -1,10 +1,32 @@
 ---
 title: Readiness and liveness on Kubernetes
-version: 1
+version: 2
 ---
 
-Kubernetes is where the three questions get their consequences. The lab's kind cluster runs two
-copies of a small web server whose probes can be broken on purpose:
+Kubernetes is where the three questions get their consequences, and this lesson needs a cluster of
+its own. **kind** runs one inside Docker, a whole Kubernetes in one container, which is all a probe
+needs. These lines install kind and `kubectl` from their official releases, at the versions this
+lesson was recorded with, and create the cluster. The last one copies the shop's image into it:
+the manifests below run that image, and the cluster cannot build it:
+
+```sh
+ARCH=$(dpkg --print-architecture)
+curl -Lo kind https://github.com/kubernetes-sigs/kind/releases/download/v0.33.0/kind-linux-$ARCH
+curl -Lo kubectl https://dl.k8s.io/release/v1.37.0/bin/linux/$ARCH/kubectl
+sudo install kind kubectl /usr/local/bin/
+rm kind kubectl
+kind create cluster --name lab
+kind load docker-image shop:1.4.0 --name lab
+mkdir -p ~/shop/k8s
+```
+
+The cluster is one more container on the same machine, and one command deletes it at the end of
+the lesson. The machine this course was
+recorded on is a computer nested inside another, and its cluster needed two settings that an
+ordinary Linux machine does not; on yours, these lines are the whole of it.
+
+The cluster runs two copies of a small web server whose probes can be broken on purpose. Save the
+file as `~/shop/k8s/probe-demo.yaml`, with the copy button:
 
 ```schooling-example
 {

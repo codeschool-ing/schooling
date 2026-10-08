@@ -5,10 +5,21 @@ version: 1
 
 **IP-in-IP coloca um pacote IP logo depois de outro cabeçalho IP, sem nada entre os dois.** É o
 protocolo número 4, e num roteador Linux comum um comando o cria:
-`ip link add tun0 type ipip local 203.0.113.2 remote 198.51.100.2`. Esse comando não foi executado aqui:
-o kernel em que este curso foi gravado veio sem o módulo de IP-in-IP, então o laboratório monta o mesmo
-túnel com um programa pequeno, `tunnel.py`, mostrado no fim desta seção. O que ele põe no fio é IP-in-IP
-padrão, e o `tcpdump` o decodifica como tal.
+`ip link add tun0 type ipip local 203.0.113.2 remote 198.51.100.2`. Este curso monta o mesmo túnel com
+um programa pequeno, `tunnel.py`, mostrado inteiro no fim desta seção. Ele mostra que um túnel não tem
+nada escondido, e funciona em qualquer kernel, inclusive no kernel em que estas transcrições foram
+gravadas, que veio sem o módulo de IP-in-IP. O que ele põe no fio é IP-in-IP padrão, e o `tcpdump` o
+decodifica como tal.
+
+Salve-o antes de qualquer outra coisa. Copie a listagem do fim desta seção com o botão dela e, na própria
+máquina virtual:
+
+```sh
+nano tunnel.py                                  # paste, then Ctrl+O and Ctrl+X
+sudo install -m 755 tunnel.py /usr/local/bin/
+```
+
+Todas as máquinas da rede enxergam o mesmo `/usr/local/bin`, então essa única cópia serve às duas pontas.
 
 Em `hq` o túnel é uma interface de rede como qualquer outra. Ganha um endereço em cada ponta, e uma rota
 manda a rede da filial para dentro dele:
@@ -23,9 +34,11 @@ ana@hq:~$ sudo ip route add 192.168.20.0/24 via 10.0.0.2
 `POINTOPOINT` diz que existe exatamente uma máquina do outro lado, e `NOARP` diz que ninguém precisa
 perguntar o endereço de hardware dela, porque não há hardware. Os endereços `10.0.0.x` pertencem ao
 próprio túnel, e a rota é a linha que importa: **tudo que for para `192.168.20.0/24` entra em `tun0`**.
-`branch` recebeu o espelho disso, e a tabela de rotas dele mostra o caminho de volta:
+`branch` recebe o espelho disso, digitado num shell próprio, e a tabela de rotas dele mostra o caminho de
+volta:
 
 ```
+ana@branch:~$ sudo setsid tunnel.py ipip tun0 198.51.100.2 203.0.113.2 & sleep 1; sudo ip addr add 10.0.0.2 peer 10.0.0.1 dev tun0 && sudo ip link set tun0 mtu 1480 up && sudo ip route add 192.168.10.0/24 via 10.0.0.1
 ana@branch:~$ ip route
 default via 198.51.100.1 dev eth1 
 10.0.0.1 dev tun0 proto kernel scope link src 10.0.0.2 
@@ -34,12 +47,12 @@ default via 198.51.100.1 dev eth1
 198.51.100.0/24 dev eth1 proto kernel scope link src 198.51.100.2 
 ana@laptop:~$ ping -c 2 192.168.20.30
 PING 192.168.20.30 (192.168.20.30) 56(84) bytes of data.
-64 bytes from 192.168.20.30: icmp_seq=1 ttl=62 time=1.05 ms
-64 bytes from 192.168.20.30: icmp_seq=2 ttl=62 time=0.424 ms
+64 bytes from 192.168.20.30: icmp_seq=1 ttl=62 time=2.19 ms
+64 bytes from 192.168.20.30: icmp_seq=2 ttl=62 time=0.918 ms
 
 --- 192.168.20.30 ping statistics ---
 2 packets transmitted, 2 received, 0% packet loss, time 1001ms
-rtt min/avg/max/mdev = 0.424/0.739/1.054/0.315 ms
+rtt min/avg/max/mdev = 0.918/1.556/2.194/0.638 ms
 ```
 
 O ping que falhou uma seção atrás agora funciona, e o laptop não fez nada diferente. O `ttl=62` merece

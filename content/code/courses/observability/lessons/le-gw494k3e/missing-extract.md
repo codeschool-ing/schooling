@@ -1,10 +1,17 @@
 ---
 title: One missing argument
-version: 1
+version: 2
 ---
 
 Propagation fails quietly, and the way to recognise the symptom is to cause it once. Payments'
-extract is kept, but the context it returns is no longer used to start the span:
+extract is kept, but the context it returns is no longer used to start the span. Keep a copy of
+the file first:
+
+```sh
+cp services/payments/app.py /tmp/payments.app.py
+```
+
+Then the edit:
 
 ```
 ana@obs:~/shop$ grep -n 'context=ctx' services/payments/app.py
@@ -45,5 +52,9 @@ client span with no server span under it, and a service whose traces all have a 
 
 Two habits catch it. Look at a trace of every new service and check that the first span has a
 parent from another service. And in a service instrumented by hand, **treat `extract` and the span
-that uses it as one unit**, never two lines that can drift apart in an edit. The original
-`app.py` was put back and payments restarted before the next section.
+that uses it as one unit**, never two lines that can drift apart in an edit. Put the original
+`app.py` back, and restart payments, before the next section:
+
+```sh
+cp /tmp/payments.app.py services/payments/app.py && docker compose restart payments
+```

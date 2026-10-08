@@ -8,7 +8,9 @@ outras máquinas. Quem defende faz isso o tempo todo: um sensor de detecção de
 faz outra coisa. Qualquer outro que consiga isso no mesmo segmento lê exatamente o que o sensor lê,
 então a pergunta que vale fazer é **o que há ali para ler**.
 
-O laboratório tem um sensor ligado à DMZ, sem endereço próprio:
+No seu laboratório esta aula começa com `sudo bash nslab.sh reset`, com a política da empresa
+carregada no `fw` por `nft -f baseline.nft`. O laboratório tem um sensor ligado à DMZ, sem
+endereço próprio:
 
 ```
 root@sensor:~# ip -br addr show eth0
@@ -17,7 +19,14 @@ eth0@if70        UP
 
 `UP` e nenhum endereço. Ele escuta e nunca fala, que é como um sensor deve ser conectado. Agora um
 cliente na internet pede uma página à loja por **HTTP puro**, levando um cookie de sessão, e o sensor
-registra o segmento:
+registra o segmento. Cada gravação desta aula é iniciada no `sensor`, como root, um instante antes de
+o cliente agir, e para sozinha depois de oito segundos; o filtro no fim é o tráfego que ela guarda.
+Esta é `http.pcap` com `tcp port 80`; as seguintes são `dns.pcap` com `udp port 53` e `tls.pcap` com
+`tcp port 443`:
+
+```sh
+setsid timeout 8 tcpdump -i eth0 -s0 -w /root/http.pcap tcp port 80 </dev/null >/dev/null 2>&1 &
+```
 
 ```
 ana@remote:~$ curl -s -o /dev/null -w "%{http_code}\n" -b "session=7f3a9c2e" http://www.example.com/orders

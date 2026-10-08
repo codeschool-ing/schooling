@@ -1,6 +1,6 @@
 ---
 title: Verificar à mão, e por que isso para
-version: 1
+version: 2
 ---
 
 Uma imagem comum de teste é uma pessoa clicando pela aplicação antes de um release, marcando
@@ -16,7 +16,7 @@ não quebraram, e na prática ninguém faz isso. **As verificações puladas sã
 teriam pegado a regressão.**
 
 As mesmas 31 verificações, como programa, rodam em cerca de um segundo e um quarto num notebook.
-Você vai ver esse número impresso na seção 09 desta aula. Um segundo e um quarto é curto o
+Você vai ver esse número impresso na seção 12 desta aula. Um segundo e um quarto é curto o
 bastante para rodar a cada salvamento, e isso muda quando um erro é achado: minutos depois de
 feito, por quem o fez, com a mudança ainda na cabeça.
 
@@ -25,7 +25,7 @@ feito, por quem o fez, com a mudança ainda na cabeça.
 Um teste que passa diz uma coisa: **para estas entradas, o código fez o que o teste esperava.**
 Não diz que o código está certo para entradas que ninguém tentou, e não diz que a expectativa
 estava certa. Um teste que confere o número errado passa feliz. Por isso um teste vale o
-raciocínio que escolheu suas entradas, e a seção 10 desta aula trabalha isso.
+raciocínio que escolheu suas entradas, e a seção 13 desta aula trabalha isso.
 
 O que a automação compra, então, não é certeza. Compra três coisas mais baratas:
 
@@ -48,5 +48,5 @@ está dando errado.
 **O projeto é pequeno de propósito.** O `shipquote` tem algumas centenas de linhas de Python sem
 dependência fora da biblioteca padrão. A linguagem é um detalhe: o pytest tem equivalente em todo
 ecossistema (JUnit, Jest, `go test`, XCTest), e o que este curso diz sobre testes e pipelines vale
-em todos. O script de laboratório ao lado do curso reconstrói o projeto exatamente como as aulas
-mostram, até os hashes dos commits.
+em todos. A próxima seção prepara a máquina em que você o executa, e a seguinte monta o projeto,
+arquivo por arquivo.

@@ -1,6 +1,6 @@
 ---
 title: An inventory, and variables beside it
-version: 1
+version: 2
 ---
 
 Ansible is the most widely used automation tool in networking, and it arrives at the same ideas
@@ -8,7 +8,9 @@ as lesson 8's Nornir from the other side. **Nornir is a Python library you write
 Ansible is a program you describe the desired state to**, in YAML files called playbooks, and it
 works out what to run. Both keep the list of devices as data, and both run on many devices at once.
 
-A project is a directory, and its layout is a convention Ansible reads by itself:
+A project is a directory, and its layout is a convention Ansible reads by itself. This one is
+`~/net` in `ana`'s home, and every file in it is printed in this lesson; make the directory with
+`mkdir -p ~/net` and save each file there as you meet it.
 
 ```
 ana@ctl:~$ cd net && find . -type f | sort
@@ -86,6 +88,20 @@ management_network: 192.0.2.0/24
 
 ```yaml
 router_id: 203.0.113.252
+bgp_neighbours: [203.0.113.251]
+```
+
+The other two are the same shape. `host_vars/core1.yaml`, the router every branch peers with:
+
+```yaml
+router_id: 203.0.113.251
+bgp_neighbours: [203.0.113.252, 203.0.113.253]
+```
+
+and `host_vars/edge2.yaml`:
+
+```yaml
+router_id: 203.0.113.253
 bgp_neighbours: [203.0.113.251]
 ```
 

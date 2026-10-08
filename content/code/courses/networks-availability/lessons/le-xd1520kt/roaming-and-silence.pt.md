@@ -4,9 +4,10 @@ version: 1
 ---
 
 `remote` é o laptop da Ana em casa, `192.168.1.50`, atrás de um roteador doméstico, `homegw`, que o
-traduz para `198.51.100.77`. O arquivo de `hq` não tem `Endpoint` para ela. O arquivo dela, escrito
-quando o laboratório foi montado e não impresso aqui, aponta para `hq` como `vpn.example.com:51820` e
-tem uma linha a mais, `PersistentKeepalive = 25`. Ela sobe o túnel e pinga o servidor de arquivos:
+traduz para `198.51.100.77`. O arquivo de `hq` não tem `Endpoint` para ela. O arquivo dela, o terceiro da
+primeira seção, aponta para `hq` como `vpn.example.com:51820` e tem uma linha a mais,
+`PersistentKeepalive = 25`. Ela sobe o túnel, `sudo wg-quick up wg0` em `remote`, e pinga o servidor de
+arquivos:
 
 ```
 ana@remote:~$ ping -c 1 192.168.10.10
@@ -45,8 +46,12 @@ endereços públicos fixos, e os arquivos deles não têm essa linha.
 
 ## A chave errada
 
-Para a próxima captura, o arquivo de `remote` recebeu a chave pública errada para `hq`: a de `branch`,
-uma chave real do laboratório e a errada. O provedor escutou os pacotes dela enquanto ela pingava:
+Para a próxima captura, o arquivo de `remote` recebe a chave pública errada para `hq`: a de `branch`,
+uma chave real da rede e a errada. Derrube as duas pontas e reinicie `hq`, para que ele esqueça a sessão
+dela: `sudo wg-quick down wg0` em `remote`, e `sudo wg-quick down wg0 && sudo wg-quick up wg0` em `hq`.
+Depois edite o arquivo dela com `sudo nano /etc/wireguard/wg0.conf`, ponha a chave pública de `branch`
+na linha `PublicKey` e suba o túnel dela de novo. O provedor escutou os pacotes dela enquanto ela
+pingava:
 
 ```
 ana@remote:~$ ping -c 7 -W 1 192.168.10.10
@@ -80,7 +85,7 @@ diagnosticada de uma das pontas.
 
 O `latest-handshakes` dá o diagnóstico numa linha. `0` quer dizer nunca, e a chave listada é
 `n/CGaD63…`, que o `wg show` em `hq` disse ser da filial. **O par para o qual a Ana está configurada não
-é a máquina do outro lado.**
+é a máquina do outro lado.** Derrube o túnel dela e devolva a chave de `hq` antes de seguir.
 
 | o que você vê | onde olhar |
 |---|---|

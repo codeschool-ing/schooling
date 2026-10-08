@@ -1,6 +1,6 @@
 ---
 title: Pagando menos pela parte que nunca muda
-version: 1
+version: 2
 ---
 
 A maioria das requisições a um modelo começa do mesmo jeito: o mesmo prompt de sistema, as mesmas
@@ -16,53 +16,67 @@ Anthropic é cinco minutos por padrão, renovados a cada leitura.
 
 ## Marcando o prefixo
 
-Na API da Anthropic você marca o fim da parte a guardar com `cache_control`. Tudo até esse bloco,
-inclusive, vira o prefixo em cache. O `lab/cache.py` põe o projeto inteiro, todo arquivo do git, no
-prompt de sistema, e faz duas perguntas seguidas:
+Na API da Anthropic você marca o fim da parte a guardar com `cache_control`. Tudo até aquele bloco,
+inclusive, vira o prefixo em cache. O `~/shop/scratch/cache.py` põe o projeto inteiro, cada arquivo
+do git, no prompt de sistema, marca-o, e faz duas perguntas seguidas. Ele imprime o que o `usage`
+diz de cada requisição, quanto ela demorou, e quanto a entrada dela teria custado nos preços do
+Sonnet com e sem o cache:
 
 ```python
 import subprocess
+import time
 from decimal import Decimal
 
 import anthropic
 
-# Claude Sonnet 5.5, dollars per million tokens, read on 2026-10-02 (prices.py).
-BASE, WRITE, READ = Decimal("2"), Decimal("2.50"), Decimal("0.20")
+# Claude Sonnet 5.5, dollars per million tokens, read on 2026-10-02.
+BASE, READ = Decimal("2"), Decimal("0.20")
 client = anthropic.Anthropic()
 project = subprocess.run("git ls-files | xargs tail -n +1", shell=True,
                          capture_output=True, text=True).stdout
 system = [{"type": "text", "text": "You review changes to this project.\n\n" + project,
            "cache_control": {"type": "ephemeral"}}]
 for question in ["Explain the shop's shipping rule.", "Explain the shipping rule again, shorter."]:
-    r = client.messages.create(model="scripted-1", max_tokens=300, system=system,
+    start = time.monotonic()
+    r = client.messages.create(model="llama3.2:3b", max_tokens=300, system=system,
                                messages=[{"role": "user", "content": question}])
     u = r.usage
-    print(f"input {u.input_tokens:4}  cache write {u.cache_creation_input_tokens:4}  "
-          f"cache read {u.cache_read_input_tokens:4}  output {u.output_tokens}")
-    paid = (u.input_tokens * BASE + u.cache_creation_input_tokens * WRITE
-            + u.cache_read_input_tokens * READ) / 1_000_000
-    plain = (u.input_tokens + u.cache_creation_input_tokens + u.cache_read_input_tokens) * BASE / 1_000_000
-    print(f"    input cost ${paid:.6f}, against ${plain:.6f} with no cache")
+    read = u.cache_read_input_tokens or 0
+    print(f"input {u.input_tokens:4}  cache read {read:4}  output {u.output_tokens:3}  "
+          f"{time.monotonic() - start:4.1f} s")
+    paid = (u.input_tokens * BASE + read * READ) / 1_000_000
+    plain = (u.input_tokens + read) * BASE / 1_000_000
+    print(f"    at Sonnet's prices: input ${paid:.6f}, against ${plain:.6f} with no cache")
 ```
 
 ```
-ana@dev:~/shop$ python lab/cache.py
-input    8  cache write 1398  cache read    0  output 147
-    input cost $0.003511, against $0.002812 with no cache
-input    9  cache write    0  cache read 1398  output 147
-    input cost $0.000298, against $0.002814 with no cache
+ana@dev:~/shop$ ollama stop llama3.2:3b
+ana@dev:~/shop$ python scratch/cache.py
+input 1417  cache read    0  output 107  47.9 s
+    at Sonnet's prices: input $0.002834, against $0.002834 with no cache
+input   11  cache read 1407  output  59   8.9 s
+    at Sonnet's prices: input $0.000303, against $0.002836 with no cache
 ```
 
-A primeira requisição **escreveu** 1.398 tokens no cache e pagou mais por eles do que teria pago sem
-cache: US$ 0,003511 contra US$ 0,002812. A segunda **leu** os mesmos 1.398 tokens de volta e pagou
-US$ 0,000298 pela entrada em vez de US$ 0,002814, cerca de um décimo. O `input_tokens` agora é só a
-parte depois do prefixo em cache, a própria pergunta.
+O `ollama stop` descarrega o modelo antes, o que esvazia o cache do Ollama, então a execução começa
+como começaria na sua máquina da primeira vez. A primeira requisição leu os 1.417 tokens da requisição
+e levou 47,9 segundos, com a carga do modelo incluída. A segunda **leu 1.407 deles do cache**, leu
+só os seus 11 tokens novos, e levou 8,9, a maior parte escrevendo os 59 tokens da resposta. Nada foi
+cobrado, já que o modelo roda na sua máquina, então a economia que se vê é a espera. A linha de
+preço mostra o que o mesmo `usage` teria custado na Anthropic: os tokens em cache a um décimo.
 
-**As regras do labllm aqui são dele**, escritas para se comportar como as da Anthropic: um prefixo
-com menos de 1.024 tokens não vai para o cache, e uma entrada vive cinco minutos desde o último uso.
-Os mínimos reais dependem do modelo, e a documentação do provedor para o modelo que você usa é a
-fonte. OpenAI e Google também dão desconto num prefixo repetido, e os modelos recentes deles fazem
-isso sem que se peça; a coluna `cache read` da tabela de preços é esse desconto.
+**O cache do Ollama não é o da Anthropic, e vale saber as diferenças.** O Ollama ignora o
+`cache_control`: ele guarda o prefixo da última requisição na memória, marcado ou não, e reaproveita
+a parte da próxima requisição que começa igual. Ele informa essa parte como
+`cache_read_input_tokens`, e é por isso que todo programa desde a aula 1 a soma a `input_tokens`
+para chegar ao tamanho de uma requisição. E ele nunca cobra pela escrita, então
+`cache_creation_input_tokens` volta vazio. A Anthropic cobra o adicional de escrita na primeira
+requisição: 1.417 tokens a `$2.50` em vez de `$2`, cerca de um quarto a mais que não usar cache, o
+que só compensa se o mesmo prefixo for lido de novo antes de expirar. Os mínimos reais também
+dependem do modelo: a Anthropic não guarda um prefixo abaixo de um tamanho mínimo, 1.024 tokens em
+muitos dos modelos dela, e a documentação do provedor para o modelo que você usa é a fonte. A
+OpenAI e o Google também dão desconto num prefixo repetido, e os modelos recentes deles fazem isso
+sem ninguém pedir; a coluna `cache read` da tabela de preços é esse desconto.
 
 ## Fazendo o cache acertar
 

@@ -1,0 +1,356 @@
+{
+  "ex-5jvfw05a": {
+    "prompt": "A Ana tirou a pausa do `shop_nightly` e a primeira execução do agendador deu certo. Por que a tabela fato continuou vazia?",
+    "hint": "Que dia aquela execução carregou?",
+    "choices": [
+      {
+        "text": "A execução falhou em silêncio",
+        "why": "Ela deu certo: cada tarefa saiu com 0."
+      },
+      {
+        "text": "Ela carregou um dia de outubro, e a loja vive em março",
+        "why": "Isso. Um dia vazio é um sucesso para o Airflow."
+      },
+      {
+        "text": "O agendador só cria execuções às 02:00",
+        "why": "Ele criou uma na hora, para as últimas 02:00 que perdeu."
+      },
+      {
+        "text": "O `catchup=False` pula a primeira execução",
+        "why": "Ele cria a última execução perdida e pula as anteriores."
+      }
+    ]
+  },
+  "ex-gxcna2j3": {
+    "prompt": "Depois de `airflow dags unpause shop_nightly`, a tabela impressa diz `is_paused | True`. O que isso significa?",
+    "hint": "Antes ou depois?",
+    "choices": [
+      {
+        "text": "O unpause falhou",
+        "why": "O agendador criou uma execução logo depois, então funcionou."
+      },
+      {
+        "text": "Ela mostra o estado de antes do comando",
+        "why": "Isso. Um hábito do Airflow, não um erro."
+      },
+      {
+        "text": "O DAG precisa de um segundo unpause para a mudança valer",
+        "why": "Um basta."
+      },
+      {
+        "text": "Tirar a pausa vale a partir das 02:00",
+        "why": "Vale na hora."
+      }
+    ]
+  },
+  "ex-4es9dcwc": {
+    "prompt": "Ligue cada agendamento àquilo para que serve a sua execução de 2 de março à meia-noite.",
+    "hint": "Um é um instante, o outro é um dia.",
+    "pairs": [
+      {
+        "left": "schedule=\"0 0 * * *\" no Airflow 3",
+        "right": "A meia-noite de 2 de março, um instante"
+      },
+      {
+        "left": "CronDataIntervalTimetable(\"0 0 * * *\")",
+        "right": "O dia 1º de março inteiro"
+      }
+    ],
+    "right_distractors": [
+      "O dia 2 de março inteiro"
+    ]
+  },
+  "ex-amq69mxc": {
+    "prompt": "Um DAG escrito para o Airflow 2 carrega de `{{ data_interval_start }}` até `{{ data_interval_end }}`. Ele é levado ao Airflow 3 com a mesma string cron simples. O que cada execução carrega?",
+    "hint": "Qual é o intervalo de um gatilho?",
+    "choices": [
+      {
+        "text": "O mesmo dia de antes",
+        "why": "Só com um agendamento por intervalo declarado."
+      },
+      {
+        "text": "O dia seguinte",
+        "why": "O intervalo não anda para a frente; ele encolhe."
+      },
+      {
+        "text": "Nada: começo e fim são o mesmo momento",
+        "why": "Isso. O intervalo de um gatilho é um instante, e toda execução carrega um intervalo vazio."
+      },
+      {
+        "text": "Ele se recusa a carregar até o DAG ser reescrito",
+        "why": "Ele roda e dá certo, sem carregar nada."
+      }
+    ]
+  },
+  "ex-tv05jb6f": {
+    "prompt": "Quantas execuções o agendador criou para o `catchup_demo`, de 2 de março até a manhã da gravação?",
+    "hint": "A primeira contagem."
+  },
+  "ex-wejek0xh": {
+    "prompt": "Quando o `catchup=True` é a escolha certa?",
+    "hint": "O histórico importa, e as execuções são independentes.",
+    "choices": [
+      {
+        "text": "Sempre que a data de início está no passado",
+        "why": "É exatamente quando ele inunda."
+      },
+      {
+        "text": "Para uma carga noturna que refaz tabelas compartilhadas",
+        "why": "Execuções que compartilham tabelas colidem quando rodam juntas."
+      },
+      {
+        "text": "Quando cada execução é independente e um dia que falta deve ser preenchido",
+        "why": "Isso. Uma exportação diária com um arquivo por dia, por exemplo."
+      },
+      {
+        "text": "Nunca; o Airflow 3 o removeu",
+        "why": "Ele existe; o padrão é `False`."
+      }
+    ]
+  },
+  "ex-z36qqhke": {
+    "prompt": "O `airflow backfill create ... --from-date 2026-03-03 --to-date 2026-03-08` criou cinco execuções, não seis. Qual faltou, e por quê?",
+    "hint": "Datas na linha de comando são momentos.",
+    "choices": [
+      {
+        "text": "A execução das 02:00 de 8 de março, que é depois da meia-noite",
+        "why": "Isso. O intervalo terminou à meia-noite do dia 8."
+      },
+      {
+        "text": "A execução de 3 de março, porque o from-date é exclusivo",
+        "why": "A execução de 3 de março foi criada; o from-date é inclusivo."
+      },
+      {
+        "text": "A execução agendada de outubro, que já existia",
+        "why": "Outubro está fora do intervalo."
+      },
+      {
+        "text": "Uma execução pulada porque a loja ainda não tinha dados",
+        "why": "O backfill não olha os dados."
+      }
+    ]
+  },
+  "ex-kg95cw9k": {
+    "prompt": "O primeiro backfill iniciou as execuções ao mesmo tempo, e algumas falharam com `duplicate key value violates unique constraint`. Por quê?",
+    "hint": "O que toda execução deste DAG refaz?",
+    "choices": [
+      {
+        "text": "Dois dias têm os mesmos pedidos",
+        "why": "Pedidos pertencem a um dia cada."
+      },
+      {
+        "text": "A tabela fato tem chave primária",
+        "why": "Ela não tem; o erro veio de criar tabelas de staging."
+      },
+      {
+        "text": "Execuções criando as mesmas tabelas ao mesmo tempo colidiram",
+        "why": "Isso. Estado compartilhado, em paralelo."
+      },
+      {
+        "text": "O backfill rodou cada dia duas vezes",
+        "why": "Cada dia teve uma execução."
+      }
+    ]
+  },
+  "ex-stkp2yc7": {
+    "prompt": "Quais propriedades tornam um backfill seguro? Escolha todas as que se aplicam.",
+    "hint": "Três delas.",
+    "choices": [
+      {
+        "text": "Cada execução carrega o dia para o qual existe, não hoje",
+        "why": "Sim. O `day_to_load` da lição 8."
+      },
+      {
+        "text": "Cada execução substitui o seu período",
+        "why": "Sim. Uma repetição não pode dobrar um dia."
+      },
+      {
+        "text": "Execuções que compartilham estado nunca se sobrepõem",
+        "why": "Sim. `max_active_runs=1`, no DAG e no backfill."
+      },
+      {
+        "text": "`catchup=True` no DAG",
+        "why": "O backfill funciona com o catch-up desligado; os dois são separados."
+      }
+    ]
+  },
+  "ex-dchmcbtk": {
+    "prompt": "A data lógica de uma execução é 23:30 de 2 de março, no horário de São Paulo. Qual é o `{{ ds }}` dela?",
+    "hint": "O `ds` é uma data em UTC.",
+    "choices": [
+      {
+        "text": "2026-03-02",
+        "why": "Essa é a data de São Paulo."
+      },
+      {
+        "text": "2026-03-03",
+        "why": "Isso. Em UTC já são 02:30 do dia 3."
+      },
+      {
+        "text": "2026-03-01",
+        "why": "Nada subtrai um dia."
+      },
+      {
+        "text": "Depende do fuso da máquina",
+        "why": "O `ds` é UTC, diga a máquina o que disser."
+      }
+    ]
+  },
+  "ex-mxe099pg": {
+    "prompt": "Para ter a data de São Paulo de uma execução num template, converta a data lógica primeiro: `{{ logical_date.___('America/Sao_Paulo') }}`.",
+    "hint": "Um método do pendulum.",
+    "blanks": [
+      {
+        "accept": [
+          "in_timezone",
+          "in_tz"
+        ]
+      }
+    ]
+  },
+  "ex-jd5f07s6": {
+    "prompt": "Por que o DAG de estoque espera com um `FileSensor` em vez de ser agendado mais tarde?",
+    "hint": "Quando o arquivo chega?",
+    "choices": [
+      {
+        "text": "Sensores rodam mais rápido que tarefas agendadas",
+        "why": "Velocidade não é o ponto."
+      },
+      {
+        "text": "O arquivo não chega numa hora fixa",
+        "why": "Isso. O sensor junta o agendamento à chegada."
+      },
+      {
+        "text": "Um agendamento posterior não lê arquivos",
+        "why": "Lê; só que lê quando eles podem não estar lá."
+      },
+      {
+        "text": "O Airflow proíbe agendamentos depois das 06:00",
+        "why": "Não existe essa regra."
+      }
+    ]
+  },
+  "ex-3t9tdn5c": {
+    "prompt": "Ligue cada modo de sensor ao que ele faz enquanto espera.",
+    "hint": "Quem segura o worker?",
+    "pairs": [
+      {
+        "left": "poke",
+        "right": "Segura o worker e olha a cada intervalo"
+      },
+      {
+        "left": "reschedule",
+        "right": "Solta o worker entre as olhadas"
+      },
+      {
+        "left": "deferrable",
+        "right": "Entrega a espera ao triggerer"
+      }
+    ],
+    "right_distractors": [
+      "Pula a espera e falha na hora"
+    ]
+  },
+  "ex-f48a5hcd": {
+    "prompt": "Um sensor não tem timeout, e numa manhã o arquivo nunca chega. Como a execução está ao meio-dia?",
+    "hint": "Não falhou.",
+    "choices": [
+      {
+        "text": "Falhou, e um alerta disparou",
+        "why": "Sem timeout nada falha."
+      },
+      {
+        "text": "Pulada",
+        "why": "Nada a pula."
+      },
+      {
+        "text": "Ainda rodando",
+        "why": "Isso. Rodar para sempre é um estado que nenhum alerta de falha vigia."
+      },
+      {
+        "text": "Com sucesso, com uma carga vazia",
+        "why": "A carga nunca começou; ela espera o sensor."
+      }
+    ]
+  },
+  "ex-823mnx6v": {
+    "prompt": "O `fact_sales` declara um outlet e não escreve nada na tabela. O que acontece com o `sales_report`?",
+    "hint": "Uma promessa, não uma verificação.",
+    "choices": [
+      {
+        "text": "Ele roda mesmo assim",
+        "why": "Isso. O Airflow registra a afirmação; ele não olha a tabela."
+      },
+      {
+        "text": "Ele espera até aparecerem linhas",
+        "why": "O Airflow não olha a tabela."
+      },
+      {
+        "text": "Ele falha com um erro de asset vazio",
+        "why": "Não existe esse erro."
+      },
+      {
+        "text": "O Airflow se recusa a carregar o DAG produtor",
+        "why": "O DAG é válido."
+      }
+    ]
+  },
+  "ex-0e0he7pf": {
+    "prompt": "No `shop_minute`, de onde vem o dia sendo carregado?",
+    "hint": "Não da execução.",
+    "choices": [
+      {
+        "text": "Da data lógica da execução",
+        "why": "As datas lógicas dele são de outubro."
+      },
+      {
+        "text": "Do relógio do laboratório",
+        "why": "Isso. É por isso que ele não é um modelo de produção."
+      },
+      {
+        "text": "Do `{{ ds }}`",
+        "why": "O `ds` também seria um dia de outubro."
+      },
+      {
+        "text": "De um sensor",
+        "why": "Ele não tem sensor."
+      }
+    ]
+  },
+  "ex-ezf80hdz": {
+    "prompt": "Enquanto a Ana esperava, o relógio da loja foi de 9 a 13 de março. Quantos dias o `shop_minute` tocou?",
+    "hint": "Um por execução."
+  },
+  "ex-s7vb7b0t": {
+    "prompt": "Ordene os passos que a Ana deu para carregar a primeira semana de março com um backfill que funciona.",
+    "hint": "Tocar, limitar, fazer o backfill, conferir.",
+    "items": [
+      "Tocar os dias na loja",
+      "Pôr max_active_runs=1 no DAG",
+      "Fazer o backfill até depois das 02:00 do último dia, uma execução por vez",
+      "Contar as linhas fato por dia"
+    ]
+  },
+  "ex-h2xn89qf": {
+    "prompt": "Um DAG carrega `{{ ds }}` e roda às 22:00 no horário de São Paulo com uma string cron simples. É feito um backfill de março. O que cada execução carrega?",
+    "hint": "22:00 em São Paulo é 01:00 em UTC.",
+    "choices": [
+      {
+        "text": "O mesmo dia, como pretendido",
+        "why": "O `ds` é a data UTC, que já é o dia seguinte."
+      },
+      {
+        "text": "O dia anterior",
+        "why": "Nada subtrai um dia."
+      },
+      {
+        "text": "O dia seguinte, e o último fica vazio",
+        "why": "Isso. Toda execução fica deslocada um dia para a frente."
+      },
+      {
+        "text": "Nada, porque backfills ignoram templates",
+        "why": "Templates são renderizados em toda execução."
+      }
+    ]
+  }
+}

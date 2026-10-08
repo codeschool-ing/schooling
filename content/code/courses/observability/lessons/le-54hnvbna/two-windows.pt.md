@@ -1,6 +1,6 @@
 ---
 title: Duas janelas ao mesmo tempo
-version: 1
+version: 2
 ---
 
 Uma taxa de queima precisa de uma janela, e toda janela é um meio-termo. **Uma janela longa demora a
@@ -13,8 +13,39 @@ janela longa, que diz que o estrago é grande, e numa curta, que diz que ele ain
 produção o page rápido usa uma hora e cinco minutos; o laboratório usa cinco minutos e um, para a aula
 poder vê-lo funcionar. A loja está comprando há meia hora, então toda janela tem tráfego real.
 
+Para ter a mesma meia hora, inicie o laboratório de novo do zero, ponha os clientes para rodar por
+setenta minutos e provoque uma única cobrança com falha logo de cara. A última parte desta seção diz
+por que essa importa:
+
+```sh
+docker compose run -d --rm loadgen python -m loadgen.load 5 4200
+sleep 20
+echo '{"fail_every": 50}' > faults/payments.json
+sleep 12
+rm faults/payments.json
+```
+
+Depois salve os três arquivos que esta aula escreve, que as seções seguintes explicam:
+`prometheus/rules/burn.yml`, de *Escrevendo a regra*, e `alertmanager/routes.yml` e
+`compose.override.yaml`, de *Roteamento*. Carregue-os, e deixe a loja comprar por trinta minutos:
+
+```sh
+curl -s -X POST localhost:9090/-/reload
+docker compose up -d alertmanager
+sleep 1800
+```
+
+
 Primeiro, um pico. Durante quarenta segundos, o payments falha uma cobrança em quatro. Cinco segundos
 depois de parar:
+
+```sh
+echo '{"fail_every": 4}' > faults/payments.json
+sleep 40
+rm faults/payments.json
+sleep 5
+```
+
 
 ```
 ana@obs:~/shop$ ./promq '{__name__=~"checkout:burn_rate:.*"}'
@@ -34,7 +65,15 @@ ana@obs:~/shop$ curl -s localhost:9093/api/v2/alerts | jq -c '.[] | {alertname: 
 **Nenhum alerta.** A janela curta sozinha teria acordado alguém por quarenta segundos de problema que já
 tinham acabado. A longa diz que o estrago foi pequeno, e a regra precisa das duas.
 
-Depois, uma falha real: uma cobrança em dez falha, e continua falhando. Quatro minutos e meio depois:
+Depois, dois minutos mais tarde, uma falha real: uma cobrança em dez falha, e continua falhando.
+Quatro minutos e meio depois:
+
+```sh
+sleep 120
+echo '{"fail_every": 10}' > faults/payments.json
+sleep 270
+```
+
 
 ```
 ana@obs:~/shop$ ./promq '{__name__=~"checkout:burn_rate:.*"}'
@@ -72,9 +111,9 @@ Isso é **oscilação** (flapping), e acontece sempre que a taxa real fica perto
 costume é um `for:` curto na regra rápida, um ou dois minutos. Ele atrasa o page um pouco e impede que
 uma única queda o resolva.
 
-Vale conhecer uma armadilha, porque o laboratório caiu nela enquanto esta aula era escrita. **Uma série
+Vale conhecer uma armadilha, porque esta aula caiu nela enquanto era escrita. **Uma série
 de contador que ainda não existe não pode mostrar uma taxa.** A vitrine cria o contador `code="502"` no
 primeiro checkout com falha, e o `rate()` precisa de duas amostras de uma série para vê-la crescer. Um
-pico que é a primeira falha de todas pode, então, passar quase despercebido por todas as janelas. O
-laboratório evita isso provocando uma cobrança com falha trinta minutos antes; no código, a correção é
+pico que é a primeira falha de todas pode, então, passar quase despercebido por todas as janelas. A
+montagem desta aula evita isso com a cobrança com falha que provoca trinta minutos antes; no código, a correção é
 criar as séries dos códigos esperados com valor zero, quando o serviço inicia.

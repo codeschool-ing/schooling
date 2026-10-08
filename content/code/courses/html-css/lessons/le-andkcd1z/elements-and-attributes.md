@@ -1,6 +1,6 @@
 ---
 title: Elements, tags and attributes
-version: 1
+version: 2
 ---
 
 An HTML file is text, and the text is of two kinds: **content**, which is what the reader reads, and **markup**, which says what the content is. Markup is written in tags, and the vocabulary for talking about them is worth getting exactly right, because the rest of the course uses it constantly.
@@ -29,7 +29,7 @@ This is wrong, because `<em>` is still open when `<p>` closes:
 <p>Open <em>every day.</p></em>
 ```
 
-The browser will show the second one without complaint, and section 07 shows what it builds from markup like it. That forgiveness is the reason a mistake like this survives for years in a real site.
+The browser will show the second one without complaint, and section 09 shows what it builds from markup like it. That forgiveness is the reason a mistake like this survives for years in a real site.
 
 ## Elements with nothing inside
 
@@ -37,6 +37,6 @@ Some elements cannot have content, so they have no closing tag. They are called 
 
 ## Characters that mean something
 
-Because `<` starts a tag, a page that needs to show a literal less-than sign has to write it differently: `&lt;`. These are **character references**, and four are worth knowing: `&lt;` for `<`, `&gt;` for `>`, `&amp;` for `&` and `&quot;` for a double quote inside an attribute value. A page listing *Pride & Prejudice* writes the ampersand as `&amp;` in its HTML, and the reader sees `&`. Any other character, an `ã` or a `€`, is simply typed, provided the file declares that it is UTF-8, which is section 08.
+Because `<` starts a tag, a page that needs to show a literal less-than sign has to write it differently: `&lt;`. These are **character references**, and four are worth knowing: `&lt;` for `<`, `&gt;` for `>`, `&amp;` for `&` and `&quot;` for a double quote inside an attribute value. A page listing *Pride & Prejudice* writes the ampersand as `&amp;` in its HTML, and the reader sees `&`. Any other character, an `ã` or a `€`, is simply typed, provided the file declares that it is UTF-8, which is section 10.
 
 HTML does not care about case in element names, so `<P>` and `<p>` are the same element. Write them in lower case: every style guide does, and so does the rest of this course.

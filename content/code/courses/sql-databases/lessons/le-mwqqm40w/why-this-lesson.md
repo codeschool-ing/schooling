@@ -35,8 +35,9 @@ contract.
 ## A note about this lesson, which matters
 
 Every other lesson in this course ran its examples on a server and showed you what came back. The
-transcripts in lessons 9 to 12 are real: a PostgreSQL, a MySQL, a MariaDB and a SQLite, each
-loaded with the shop from lesson 1, with their output pasted in unedited.
+transcripts are real: a PostgreSQL in every lesson, the one lesson 1 had you install, and in
+lesson 12 a MySQL, a MariaDB and a SQLite beside it, each loaded with the shop from lesson 1, with
+their output pasted in unedited.
 
 **This lesson has no Oracle to run.** There is no free, redistributable Oracle Database that can
 sit in the same place those four sat, and inventing a terminal session would be worse than

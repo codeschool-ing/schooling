@@ -1,10 +1,12 @@
 ---
 title: A backup that failed has to say so
-version: 1
+version: 2
 ---
 
 For the next run, edge2's SSH server was stopped, the way a router stops answering after a
-crash, a wrong ACL or a rotated key:
+crash, a wrong ACL or a rotated key. To do the same, stop it from the virtual machine with
+`sudo ~/netlab/netlab.sh enter edge2 root 'kill $(cat /run/sshd-edge2.pid)'`, and start it again
+afterwards with `sudo ~/netlab/netlab.sh enter edge2 root '/usr/sbin/sshd -f /etc/ssh/sshd_config'`:
 
 ```
 ana@ctl:~$ cd net && python backup.py; echo "exit status $?"
@@ -24,4 +26,5 @@ output. A job that printed the failure and exited 0 would leave it to somebody r
 morning, which is to say to nobody.
 
 The other two routers were still backed up; Nornir runs every host regardless of the others, as
-lesson 8 showed. edge2's SSH server was started again after this run.
+lesson 8 showed. edge2's SSH server was started again after this run, with the second command
+above.

@@ -1,6 +1,6 @@
 ---
 title: Four failures, four messages
-version: 1
+version: 2
 ---
 
 The model earns its keep when something breaks, because **each layer fails with its own message**.
@@ -19,6 +19,8 @@ eth0@if107       DOWN           52:54:00:a8:0a:14 <BROADCAST,MULTICAST>
 
 `Network is unreachable` came back immediately, without a packet being sent: with no link there is no
 route, and the system knows it has nowhere to send anything. `LOWER_UP` is gone from the flags.
+Bringing the link back takes two commands, because taking it down also deleted the default route
+that used it: `sudo ip link set eth0 up`, then `sudo ip route add default via 192.168.10.1`.
 
 Layer 2 and 3, the neighbour. `192.168.10.99` is inside the office's `/24`, so the laptop tries ARP,
 and nobody answers:

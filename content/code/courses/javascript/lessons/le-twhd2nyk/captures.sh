@@ -9,10 +9,10 @@
 #   sudo bash ../../lab.sh up        # once: the user, Node.js, the browser
 #   sudo bash captures.sh
 #
+# The first part needs the network, and the second runs in the lab.
+#
 # What is STAGED rather than typed: the files ana wrote (put below), whose
-# contents the lesson shows in full, and one command run with a PATH that has
-# no node on it, which is how the lab plays a computer where Node.js was never
-# installed.
+# contents the lesson shows in full.
 #
 # Recorded on Ubuntu 24.04 with Node.js 22.22.0 and Chromium 141,
 # TZ=America/Sao_Paulo.
@@ -33,6 +33,108 @@ put() {
   lab exec ana "mkdir -p \"\$(dirname '$f')\" && cat > '$f'" <<<"$body"
 }
 block() { printf '##### %s\n' "$1"; }
+# THE SETUP SECTION (your-computer, and the failures in when-setup-fails) is
+# run as a student would run it, and not in the lab: a login shell as ana,
+# with Ubuntu's own PATH and nothing of the lab's on it, so ~/.local/bin is
+# only searched once it exists and a new terminal is a new login shell. The
+# shell reads ana's ~/.profile, which is Ubuntu's, and not the recording
+# machine's /etc/profile, which puts programs of its own on the PATH. It
+# downloads Node.js from nodejs.org and Playwright from the npm registry. The
+# recording machine reaches the network through a proxy, and the proxy
+# variables are passed on unchanged, with NODE_EXTRA_CA_CERTS when it is set:
+# the proxy's certificate, which npm needs to trust it and a student does not.
+#
+# STAGED in it: page.mjs and serve.mjs are taken out of your-computer.md by
+# lab/extract.mjs, so the programs in the lesson are the ones that ran. And
+# the browser: `npx playwright install` could not reach Playwright's download
+# server from the recording machine, which already had the same build, so
+# ~/.cache/ms-playwright is linked to it. The section says so.
+STUDENT_PATH=/usr/sbin:/usr/bin:/sbin:/bin
+NET=$(env | grep -iE '^(https?_proxy|no_proxy)=' | tr '\n' ' ')
+# session 'command' ...: one terminal, opened fresh, with each command typed in it.
+session() {
+  local script="cd ~" c
+  for c in "$@"; do
+    script+=$'\n'"printf 'ana@dev:%s\$ %s\\n' \"\$(dirs +0)\" $(printf '%q' "$c")"$'\n'"$c 2>&1"
+    # A command sent to the background is given a second to start, as a
+    # person typing the next one would.
+    [[ $c == *'&' ]] && script+=$'\n'"sleep 1"
+  done
+  # shellcheck disable=SC2086
+  runuser -u ana -- env -i HOME=/home/ana USER=ana LOGNAME=ana LANG=C.UTF-8 TERM=dumb \
+    PATH=$STUDENT_PATH TZ=America/Sao_Paulo $NET ${NODE_EXTRA_CA_CERTS:+NODE_EXTRA_CA_CERTS=$NODE_EXTRA_CA_CERTS} bash --noprofile -c ". ~/.profile; $script" 2>&1 || true
+}
+student_clean() {
+  rm -rf /home/ana/.local /home/ana/js-tools /home/ana/js /home/ana/.cache/ms-playwright \
+    /home/ana/.page-profile /home/ana/node-v22.22.0-linux-* /home/ana/Downloads /home/ana/.npm
+}
+EXTRACT="node $(cd ../.. && pwd)/lab/extract.mjs"
+CHECK=$'echo \'<script>console.log("the browser works")</script>\' > check.html'
+student_clean
+
+block install
+session 'uname -m' \
+  'curl -fsSLO https://nodejs.org/dist/v22.22.0/node-v22.22.0-linux-x64.tar.xz' \
+  'mkdir -p ~/.local/node ~/.local/bin' \
+  'tar -xJf node-v22.22.0-linux-x64.tar.xz -C ~/.local/node --strip-components=1' \
+  'ln -s ~/.local/node/bin/node ~/.local/node/bin/npm ~/.local/node/bin/npx ~/.local/bin/' \
+  'node --version'
+
+block node-version
+session 'node --version' 'npm --version'
+
+block playwright
+session 'mkdir ~/js-tools ~/js' 'cd ~/js-tools' 'npm install playwright@1.56.0'
+
+block dry-run
+session 'cd ~/js-tools' 'npx playwright install --dry-run --only-shell chromium'
+
+for f in page.mjs serve.mjs; do
+  $EXTRACT your-computer.md "$f" | runuser -u ana -- tee "/home/ana/js-tools/$f" >/dev/null
+done
+WRAPPER=$(cat <<'SH'
+cat > ~/.local/bin/page <<'EOF'
+#!/bin/sh
+exec node "$HOME/js-tools/page.mjs" "$@"
+EOF
+chmod +x ~/.local/bin/page
+SH
+)
+printf '#####F wrapper\n%s\n#####E\n' "$WRAPPER"
+session "$WRAPPER" >/dev/null
+
+block no-browser
+session 'cd ~/js' "$CHECK" 'page check.html 2>&1 | head -n 13'
+
+runuser -u ana -- mkdir -p /home/ana/.cache
+runuser -u ana -- ln -s "${PLAYWRIGHT_BROWSERS_PATH:-/opt/pw-browsers}" /home/ana/.cache/ms-playwright
+
+block check
+session 'cd ~/js' "$CHECK" 'page check.html'
+
+block port-taken
+session 'cd ~/js' 'node ~/js-tools/serve.mjs &' 'page check.html 2>&1 | head -n 5' 'kill %1'
+
+# STAGED: the two programs saved in ~/Downloads as well, which is where a
+# browser puts a file somebody saved from a page.
+runuser -u ana -- mkdir -p /home/ana/Downloads
+runuser -u ana -- cp /home/ana/js-tools/page.mjs /home/ana/js-tools/serve.mjs /home/ana/Downloads/
+block no-playwright
+session 'cd ~/js' 'node ~/Downloads/page.mjs check.html 2>&1 | head -n 5'
+
+block wrong-arch
+session 'curl -fsSLO https://nodejs.org/dist/v22.22.0/node-v22.22.0-linux-arm64.tar.xz' \
+  'tar -xJf node-v22.22.0-linux-arm64.tar.xz' \
+  './node-v22.22.0-linux-arm64/bin/node --version'
+
+# STAGED: Ubuntu's package lists, refreshed as root, so that apt-cache answers
+# with what Ubuntu 24.04 offers today.
+apt-get update >/dev/null 2>&1
+block ubuntu-nodejs
+session 'apt-cache policy nodejs | head -n 3'
+
+student_clean
+
 lab reset >/dev/null
 
 block version
@@ -69,9 +171,6 @@ HTML
 block where
 on 'node where.js'
 on 'page where.html'
-
-block no-node
-on 'PATH=/usr/bin:/bin node --version'
 
 block typo
 on 'node helo.js'

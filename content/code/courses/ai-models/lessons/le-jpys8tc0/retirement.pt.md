@@ -10,11 +10,11 @@ diferente para cada tipo.
 ## Um modelo fechado é aposentado no calendário do provedor
 
 Os provedores publicam datas depois das quais um identificador de modelo para de responder. A tabela
-traz essas datas onde as conhece, como `deprecation_date`, e o `sheet retiring` lista toda entrada
-que tem uma:
+traz essas datas onde as conhece, como `deprecation_date`, e o `python sheet.py retiring` lista toda
+entrada que tem uma:
 
 ```
-ana@desk:~/desk$ sheet retiring --provider anthropic
+ana@desk:~/desk$ python sheet.py retiring --provider anthropic
 # LiteLLM model sheet at 21881c57, 4472 entries
 3 entries carry a deprecation date
 2026-06-09  claude-mythos-preview                              anthropic
@@ -27,7 +27,7 @@ responde até o fim de novembro de 2026; um produto que ainda o chame depois dis
 lugar da resposta. Os dois nomes de API da DeepSeek também tinham data:
 
 ```
-ana@desk:~/desk$ sheet retiring --provider deepseek
+ana@desk:~/desk$ python sheet.py retiring --provider deepseek
 # LiteLLM model sheet at 21881c57, 4472 entries
 4 entries carry a deprecation date
 2026-07-24  deepseek-chat                                      deepseek
@@ -39,7 +39,7 @@ ana@desk:~/desk$ sheet retiring --provider deepseek
 E a lista da OpenAI é comprida o bastante para pedir um `head`:
 
 ```
-ana@desk:~/desk$ sheet retiring --provider openai | head -6
+ana@desk:~/desk$ python sheet.py retiring --provider openai | head -6
 # LiteLLM model sheet at 21881c57, 4472 entries
 44 entries carry a deprecation date
 2026-07-23  computer-use-preview                               openai
@@ -67,9 +67,9 @@ volta a isso com um provedor que aposenta modelos em lote.
 ## Um modelo aberto muda quando você o muda
 
 Um arquivo de pesos no seu disco nunca é aposentado. Ele responde do mesmo jeito daqui a dez anos,
-que é exatamente o que a avaliação que você rodou nele supôs. O que pode sair do ar é **um host**: as
-entradas da seção 05 vêm e vão, e um host que serve um modelo antigo pode parar. Os pesos continuam
-seus; você os leva para outro lugar.
+que é exatamente o que a avaliação que você rodou nele supôs. O que pode sair do ar é **um host**:
+as entradas da seção 05 vêm e vão, e um host que serve um modelo antigo pode parar. Os pesos
+continuam seus; você os leva para outro lugar.
 
 Esse é o argumento prático mais forte a favor dos pesos abertos nesta aula. **Controle é sobretudo
 controle do tempo**: decidir quando o modelo muda, e rodar os seus casos de novo antes, não depois.

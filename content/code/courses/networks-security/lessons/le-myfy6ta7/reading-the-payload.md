@@ -23,6 +23,18 @@ Then `laptop` does three things: fetches the web page over HTTPS, tries SSH to `
 asks `app` for its page over plain HTTP on 8080. The SSH login fails because `ana` has no key on
 `remote`, and that does not matter: the conversation still happened.
 
+Two things come first on your own lab. `edge.nft` has no rule for the LAN to reach `app`, so add one;
+and tell `ssh` on `laptop` to accept a host key it has never seen without asking, because this lesson
+is about the firewall and not about SSH. Then give Suricata a few seconds to start:
+
+```sh
+# on fw, as root
+nft insert rule ip filter forward iifname "eth2" oifname "eth3" tcp dport 8080 ct state new accept
+# on laptop, as you
+mkdir -p ~/.ssh
+printf 'Host *\n  StrictHostKeyChecking accept-new\n  UserKnownHostsFile /dev/null\n  LogLevel ERROR\n' > ~/.ssh/config
+```
+
 ```
 ana@laptop:~$ curl -s -o /dev/null https://www.example.com/
 ana@laptop:~$ ssh -p 443 -o BatchMode=yes 203.0.113.50 true; echo "exit $?"
@@ -32,7 +44,8 @@ ana@laptop:~$ curl -s -o /dev/null http://192.168.20.10:8080/
 ```
 
 When Suricata stops, it writes a **flow record** for every conversation it saw, with the protocol
-it decided the conversation carried:
+it decided the conversation carried. Stop it on `fw` with `kill -INT $(cat /var/log/suricata/suricata.pid)`
+and read them:
 
 ```
 root@fw:~# jq -c "select(.event_type==\"flow\") | [.src_ip, .dest_ip, .dest_port, .app_proto]" /var/log/suricata/eve.json

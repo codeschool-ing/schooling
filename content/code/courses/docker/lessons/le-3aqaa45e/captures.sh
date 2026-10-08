@@ -18,7 +18,7 @@ export LAB_IMAGES="golang:1.25 gcr.io/distroless/static-debian12:nonroot postgre
 . "$(dirname "$0")/../../capture.sh"
 cd shelf
 mkdir -p probe
-cat > probe/main.go <<'GO'
+staged probe/main.go <<'GO'
 // probe exits 0 when a GET of its one argument answers 200, and 1 otherwise.
 // It is the health check for an image that has no shell and no curl.
 package main
@@ -37,7 +37,7 @@ func main() {
 	}
 }
 GO
-cat > .dockerignore <<'IGN'
+staged .dockerignore <<'IGN'
 .git
 .env
 *.env

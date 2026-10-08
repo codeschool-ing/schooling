@@ -1,6 +1,6 @@
 ---
 title: The half of PowerShell this machine does not have
-version: 1
+version: 2
 ---
 
 Everything so far ran on the machine these transcripts were captured on. This
@@ -30,14 +30,16 @@ Microsoft.PowerShell.Host
 Microsoft.PowerShell.Management
 Microsoft.PowerShell.PSResourceGet
 Microsoft.PowerShell.Security
+Microsoft.PowerShell.ThreadJob
 Microsoft.PowerShell.Utility
 PackageManagement
 PowerShellGet
 PSReadLine
-ThreadJob
+PS /home/ana/work/ps> (Get-Command -CommandType Cmdlet).Count
+257
 ```
 
-Ten modules, 293 commands. A Windows Server has those plus dozens more, and the
+Ten modules, 257 cmdlets. A Windows Server has those plus dozens more, and the
 count runs into the thousands once the server roles are installed.
 
 **This is the honest scope of the lesson.** What follows is described, not

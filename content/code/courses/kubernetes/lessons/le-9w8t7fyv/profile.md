@@ -26,9 +26,20 @@ name of its own:
 ```
 ```
 
-`kube-scheduler` is the same binary the control plane runs. In this lab it runs on the laptop, started
-by the capture script and not typed, as `kube-scheduler --config shop-scheduler.yaml --secure-port=0`;
-the last flag turns off its own health and metrics port, which nobody here reads. **A real one runs in
+`kube-scheduler` is the same binary the control plane runs. Here it runs on your machine beside
+`kubectl`, downloaded and checked the way lesson 1 did it, and started in a second terminal, where it
+keeps running and writing its log until `Ctrl+C`. Change the `kubeconfig` path in the file to your own
+home first, `/home/ubuntu/.kube/config` in the VM:
+
+```sh
+ARCH=$(dpkg --print-architecture)
+curl -fsSLo kube-scheduler https://dl.k8s.io/release/v1.37.1/bin/linux/$ARCH/kube-scheduler
+echo "$(curl -fsSL https://dl.k8s.io/release/v1.37.1/bin/linux/$ARCH/kube-scheduler.sha256)  kube-scheduler" | sha256sum --check
+chmod +x kube-scheduler
+./kube-scheduler --config shop-scheduler.yaml --secure-port=0
+```
+
+`--secure-port=0` turns off its own health and metrics port, which nobody here reads. **A real one runs in
 the cluster**, as a Deployment with a ServiceAccount allowed to read pods and nodes and to write
 bindings, and with leader election on so a second replica can take over.
 

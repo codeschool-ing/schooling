@@ -1,12 +1,19 @@
 ---
 title: Um remoto, e o primeiro push
-version: 1
+version: 2
 ---
 
 Um **remoto** é outra cópia do repositório cujo endereço a sua conhece. Numa equipe, é a cópia
 compartilhada no GitHub, no GitLab ou num servidor da empresa. Esta aula usa uma na mesma máquina, em
 `~/remotes`, para que todo comando possa ser mostrado funcionando sem conta e sem rede. O Git trata
 uma pasta no seu disco e uma URL na internet do mesmo jeito; só o endereço muda.
+
+Comece de uma cópia nova da semana da aula 3. A linha também apaga as duas pastas que esta aula
+cria, caso você esteja fazendo-a pela segunda vez:
+
+```bash
+cd ~ && rm -rf ~/site ~/remotes ~/bruno && bash ~/make-site.sh
+```
 
 ## Um repositório compartilhado não tem diretório de trabalho
 
@@ -23,6 +30,7 @@ também são repositórios *bare*.
 ## Dando um nome a ele, e mandando os primeiros commits
 
 ```
+ana@vm:~$ cd site
 ana@vm:~/site$ git remote add origin ~/remotes/site.git
 ana@vm:~/site$ git remote -v
 origin	/home/ana/remotes/site.git (fetch)

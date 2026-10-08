@@ -1,10 +1,58 @@
 ---
 title: The ten, beside the controls of this course
-version: 1
+version: 2
 ---
 
 `data/owasp-llm-2025.json` holds the ten categories. **The names are OWASP's; the one-line meanings and
-the mapping to the lab are the course's**, written to connect each name to something you have run:
+the mapping to this course's commands are the course's**, written to connect each name to something
+you have run or will run. Paste it:
+
+```sh
+cat > ~/guard/data/owasp-llm-2025.json <<'EOF'
+[
+{"id": "LLM01", "name": "Prompt Injection", "meaning": "text the developer did not write steers the model", "controls": ["guard check-in", "guard filter", "guard gate"], "lessons": [9, 5, 10]},
+{"id": "LLM02", "name": "Sensitive Information Disclosure", "meaning": "personal data or secrets reach a reply, a log or a provider", "controls": ["guard redact", "guard minimise", "guard filter"], "lessons": [11, 12, 5]},
+{"id": "LLM03", "name": "Supply Chain", "meaning": "a model, dataset or package from somewhere else is not what it claims", "controls": ["guard deps"], "lessons": [2]},
+{"id": "LLM04", "name": "Data and Model Poisoning", "meaning": "the data a model learns or retrieves from was tampered with", "controls": [], "lessons": []},
+{"id": "LLM05", "name": "Improper Output Handling", "meaning": "a reply is used by other code without being checked", "controls": ["guard check-out", "guard filter"], "lessons": [9, 5]},
+{"id": "LLM06", "name": "Excessive Agency", "meaning": "an agent can do more than its task needs", "controls": ["guard gate"], "lessons": [10]},
+{"id": "LLM07", "name": "System Prompt Leakage", "meaning": "the instructions, or what is hidden in them, reach a client", "controls": ["canary in guard filter"], "lessons": [5]},
+{"id": "LLM08", "name": "Vector and Embedding Weaknesses", "meaning": "the store a model retrieves from leaks or is tampered with", "controls": [], "lessons": []},
+{"id": "LLM09", "name": "Misinformation", "meaning": "a confident answer is false and somebody acts on it", "controls": ["guard ground"], "lessons": [2]},
+{"id": "LLM10", "name": "Unbounded Consumption", "meaning": "one user or one loop spends without limit", "controls": ["guard ratelimit", "guard retry", "guard gate --budget"], "lessons": [7, 9, 10]}
+]
+EOF
+```
+
+The program that prints it beside the controls is `~/guard/tools/owasp.py`:
+
+```python
+# owasp.py: the OWASP Top 10 for LLM applications, beside this course's controls.
+#
+#   guard owasp [--uncovered]
+#
+# It reads data/owasp-llm-2025.json and prints each category with the
+# commands that cover it. --uncovered prints only the ones with none.
+import argparse
+import json
+import os
+
+p = argparse.ArgumentParser(prog="guard owasp")
+p.add_argument("--uncovered", action="store_true")
+a = p.parse_args()
+
+with open(os.path.expanduser("~/guard/data/owasp-llm-2025.json"), encoding="utf-8") as f:
+    rows = json.load(f)
+
+none = 0
+for r in rows:
+    none += not r["controls"]
+    if a.uncovered and r["controls"]:
+        continue
+    print("%-5s %-34s %s" % (r["id"], r["name"],
+                             ", ".join(r["controls"]) or "NOT COVERED IN THIS LAB"))
+print("%d categories, %d with no control in this lab" % (len(rows), none))
+```
 
 ```
 ana@lab:~/guard$ python3 -c "import json; [print(r['id'], '-', r['meaning']) for r in json.load(open('data/owasp-llm-2025.json'))]"

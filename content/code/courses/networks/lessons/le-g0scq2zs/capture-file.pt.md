@@ -1,10 +1,17 @@
 ---
 title: tcpdump para um arquivo, para depois
-version: 1
+version: 2
 ---
 
 O tcpdump apareceu em quase toda aula, imprimindo pacotes conforme passam. Com o `-w` ele os grava num
-arquivo, no formato **pcap** que o Wireshark e toda outra ferramenta de pacotes sabem abrir:
+arquivo, no formato **pcap** que o Wireshark e toda outra ferramenta de pacotes sabem abrir. No seu
+laboratório, desligue antes a impressora da seção 09, da sua máquina virtual, e esvazie a tabela de
+vizinhos do laptop com `sudo ip neigh flush dev eth0`; depois, enquanto a captura roda, busque a página
+inicial de um segundo shell no laptop com `curl -s https://www.example.com/ -o /dev/null`:
+
+```sh
+sudo ip netns del printer
+```
 
 ```
 ana@laptop:~$ sudo ip neigh flush dev eth0

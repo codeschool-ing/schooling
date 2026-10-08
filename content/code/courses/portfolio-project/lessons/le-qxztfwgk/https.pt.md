@@ -1,24 +1,26 @@
 ---
 title: HTTPS na frente
-version: 1
+version: 2
 ---
 
 Um navegador, e quem avalia, esperam `https://`. O **Caddy** é um servidor web que obtém e renova
 certificados sozinho, e a configuração inteira do loanbook tem quatro linhas:
 
 ```
+ana@srv:~/loanbook$ systemctl is-active caddy
+active
 ana@srv:~/loanbook$ cat deploy/Caddyfile
 loans.lab {
-        tls internal
-        reverse_proxy 127.0.0.1:8000
+	tls internal
+	reverse_proxy 127.0.0.1:8000
 }
 ana@srv:~/loanbook$ sudo cp deploy/Caddyfile /etc/caddy/Caddyfile
-ana@srv:~/loanbook$ sudo systemctl enable --now caddy
-Created symlink /etc/systemd/system/multi-user.target.wants/caddy.service → /usr/lib/systemd/system/caddy.service.
+ana@srv:~/loanbook$ sudo systemctl reload caddy
 ```
 
-`loans.lab` é o nome a que ele responde. `reverse_proxy` entrega toda requisição ao container na porta 8000.
-E `tls internal` diz ao Caddy para emitir o certificado da **sua própria autoridade local**, porque
+O Caddy está rodando desde que o srv.yaml o instalou, servindo uma página provisória, então é o `reload`
+que o faz ler o arquivo novo; um `enable --now` o deixaria rodando o antigo. `loans.lab` é o nome a que ele
+responde. `reverse_proxy` entrega toda requisição ao container na porta 8000. E `tls internal` diz ao Caddy para emitir o certificado da **sua própria autoridade local**, porque
 `loans.lab` não é um domínio de verdade e nenhuma autoridade pública emitiria um para ele. Na internet, essa
 linha some, última seção.
 
@@ -44,7 +46,7 @@ correção é fazer o laptop confiar nessa autoridade, de propósito, instalando
 ana@laptop:~$ ssh srv sudo cat /var/lib/caddy/.local/share/caddy/pki/authorities/local/root.crt > lab-root.crt
 ana@laptop:~$ openssl x509 -in lab-root.crt -noout -subject -enddate
 subject=CN = Caddy Local Authority - 2026 ECC Root
-notAfter=Aug  5 06:59:27 2036 GMT
+notAfter=Aug 15 10:58:54 2036 GMT
 ana@laptop:~$ sudo cp lab-root.crt /usr/local/share/ca-certificates/loans-lab-root.crt
 ana@laptop:~$ sudo update-ca-certificates
 Updating certificates in /etc/ssl/certs...
@@ -66,10 +68,15 @@ ana@laptop:~$ curl -sS https://loans.lab/api/items | python3 -m json.tool | head
         "name": "Document camera",
         "loan": {
             "borrower": "Dora Okafor",
-            "lent_on": "2026-09-26",
+            "lent_on": "2026-10-06",
 ```
 
 O `openssl` mostra no que se vai confiar antes de confiar: a raiz local do Caddy, válida por dez anos. O
 `update-ca-certificates` a acrescenta à lista do sistema, e daí em diante a mesma requisição dá certo, em
-HTTPS, com os dados de exemplo. Num celular de verdade ou em outro notebook você instalaria o mesmo arquivo,
-e é isso que faz um laboratório com HTTPS se comportar como o real.
+HTTPS, com os dados de exemplo. Esses dois comandos são do Ubuntu. No macOS o mesmo arquivo vai para o
+chaveiro System, pelo Acesso às Chaves, marcado como *Sempre Confiar*; no Windows, para *Autoridades de
+Certificação Raiz Confiáveis*, pelo gerenciador de certificados, `certmgr.msc`. Um celular ou outro notebook
+recebe o mesmo arquivo, e é isso que faz um laboratório com HTTPS se comportar como o real.
+
+O `/etc/hosts` é o arquivo de nomes do Ubuntu e do macOS; no Windows ele fica em
+`C:\Windows\System32\drivers\etc\hosts`, editado como administrador, com a mesma linha.

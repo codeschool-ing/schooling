@@ -1,9 +1,9 @@
 ---
 title: Variantes: estados, larguras, escuro e movimento
-version: 1
+version: 2
 ---
 
-Um utilitário vale sempre. Uma **variante** é um prefixo que o faz valer só numa condição: `hover:bg-andorinha-900`, `md:grid-cols-2`, `dark:bg-black`. Aqui está uma página que usa várias, com build:
+Um utilitário vale sempre. Uma **variante** é um prefixo que o faz valer só numa condição: `hover:bg-andorinha-900`, `md:grid-cols-2`, `dark:bg-black`. Aqui está uma página que usa várias, `variants/index.html`, com uma cópia do `theme/input.css` ao lado, com build:
 
 ```html
 <!doctype html>

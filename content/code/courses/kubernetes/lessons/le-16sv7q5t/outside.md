@@ -51,7 +51,19 @@ normal port to it.
 That something is what a LoadBalancer Service asks for. Kubernetes does not provide the load
 balancer: **it asks the cloud for one**, through a component called the cloud controller manager, and
 writes the address it gets into the Service. On this laptop the kind project's `cloud-provider-kind`
-plays the cloud, answering each LoadBalancer Service with a small Envoy proxy on Docker's network.
+plays the cloud, answering each LoadBalancer Service with a small Envoy proxy on Docker's network. It
+is one program from the project's releases, run on your machine in a second terminal, with `sudo`
+because it creates containers and network routes; it keeps running and logging until `Ctrl+C`:
+
+```sh
+ARCH=$(dpkg --print-architecture)
+curl -fsSL https://github.com/kubernetes-sigs/cloud-provider-kind/releases/download/v0.12.0/cloud-provider-kind_0.12.0_linux_$ARCH.tar.gz | tar xz cloud-provider-kind
+sudo ./cloud-provider-kind
+```
+
+The machine this course was recorded on has no IPv6, so its copy was built from the same release's
+source with one address changed from `::` to `0.0.0.0`; on a machine with IPv6, which an Ubuntu VM has,
+the released one works as it is.
 
 ```yaml
 apiVersion: v1

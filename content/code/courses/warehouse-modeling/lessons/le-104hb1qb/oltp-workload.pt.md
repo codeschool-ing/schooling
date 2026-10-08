@@ -1,6 +1,6 @@
 ---
 title: Do que o caixa precisa
-version: 1
+version: 2
 ---
 
 O nome do lado do caixa é **OLTP**, processamento de transações online. A palavra que importa é
@@ -57,4 +57,4 @@ Tudo no esquema operacional serve a esse tipo de trabalho:
   Quando muda, o valor antigo some daquela linha.
 
 **Esse último é uma decisão de projeto, não um defeito.** Um caixa não precisa saber onde o cliente
-morava no ano passado. A seção 08 mostra quanto isso custa a quem precisa.
+morava no ano passado. A seção 11 mostra quanto isso custa a quem precisa.

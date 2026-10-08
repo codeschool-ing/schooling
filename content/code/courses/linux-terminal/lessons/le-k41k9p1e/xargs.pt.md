@@ -1,6 +1,6 @@
 ---
 title: O `xargs`, para comandos que aceitam argumentos em vez de entrada
-version: 1
+version: 2
 ---
 
 Toda ferramenta até aqui lê a entrada padrão. Muitas não leem — `rm`, `cp`, `chmod`, `git`, a saída
@@ -14,10 +14,11 @@ ana@vm:~/work$ ls logs/*.log | xargs wc -l
     30 logs/app.log
      0 logs/empty.log
      1 logs/error.log
+     0 logs/today.log
   1231 total
 ```
 
-Sem o `xargs`, o `wc -l` teria lido a *lista de nomes* como entrada dele e contado quatro linhas. Com
+Sem o `xargs`, o `wc -l` teria lido a *lista de nomes* como entrada dele e contado cinco linhas. Com
 ele, os nomes viraram argumentos.
 
 ## Ele empacota o máximo que consegue
@@ -128,7 +129,7 @@ ana@vm:~/work$ printf "" | xargs -r echo "ran with:"; echo "(nothing above means
 ana@vm:~/work$ printf "" | xargs ls | head -3
 Makefile
 README.md
-build
+both.txt
 ```
 
 **A terceira é a forma perigosa.** Nada foi encontrado, o `xargs` rodou o `ls` sem argumentos, e o

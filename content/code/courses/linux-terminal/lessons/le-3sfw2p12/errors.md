@@ -1,6 +1,6 @@
 ---
 title: Errors, and two different kinds of failure
-version: 1
+version: 2
 ---
 
 PowerShell has two error classes and they behave differently. Knowing which one
@@ -71,7 +71,13 @@ printed as usual, and the block runs on. This is the mistake behind every claim
 that PowerShell's `try`/`catch` does not work.
 
 Either `-ErrorAction Stop` on the cmdlet, or `$ErrorActionPreference = 'Stop'`
-once at the top — and the second is what most scripts should do.
+once at the top — and the second is what most scripts should do. At a prompt it
+lasts until you change it, and the rest of this section expects the default, so
+put it back:
+
+```
+PS /home/ana/work/ps> $ErrorActionPreference = 'Continue'
+```
 
 Inside `catch`, `$_` is an `ErrorRecord`:
 

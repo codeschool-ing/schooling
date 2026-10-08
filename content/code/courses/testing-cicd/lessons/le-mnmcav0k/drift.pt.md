@@ -1,6 +1,6 @@
 ---
 title: Desvio, e como ele é achado
-version: 1
+version: 2
 ---
 
 **Desvio** (*drift*) é a diferença que se acumula entre ambientes, ou entre um ambiente e a definição
@@ -11,7 +11,15 @@ outro.
 
 Eis um desvio feito de propósito. Num fim de semana de promoção, alguém edita à mão a cópia implantada
 da homologação para baixar o limite do frete grátis para R$ 190,00, querendo testar uma promoção, e a
-reinicia. Nada passa pelo pipeline. Depois os dois ambientes recebem as perguntas de sempre:
+reinicia. Nada passa pelo pipeline. Faça o mesmo, com um `sed` no arquivo implantado e o script de
+reinício:
+
+```sh
+sed -i 's/FREE_FROM = 19900 /FREE_FROM = 19000 /' ~/envs/staging/current/shipquote/quote.py
+ops/restart.sh staging
+```
+
+Depois os dois ambientes recebem as perguntas de sempre:
 
 ```
 ana@laptop:~/shipquote$ for port in 8200 8300; do curl -s http://127.0.0.1:$port/version; echo; done

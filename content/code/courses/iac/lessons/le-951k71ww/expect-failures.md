@@ -1,13 +1,13 @@
 ---
 title: Testing that a rule refuses what it should
-version: 1
+version: 2
 ---
 
 The module has two rules: `cidr` must be a range with a mask, and a subnet's zone must be one the
 region offers. Both were written for the day somebody passes the wrong value, and **a rule nobody
 has seen refuse anything is a rule nobody knows works**. A run that feeds it a bad value would
 normally fail, which is the opposite of what a test should report. `expect_failures` turns that
-round.
+round. Ana's `tests/rules.tftest.hcl`:
 
 ```hcl
 mock_provider "aws" {}
@@ -71,7 +71,11 @@ does not find it.
 
 Rules get loosened the way any code does: somebody needs a value the rule refuses and simplifies
 the condition. Here the `cidr` rule is reduced to "digits, dots and slashes", which still sounds
-like a range:
+like a range. The edit, in `variables.tf`:
+
+```sh
+sed -i 's|condition     = can(cidrnetmask(var.cidr))|condition     = can(regex("^[0-9./]+$", var.cidr))|' variables.tf
+```
 
 ```
 ana@laptop:~/shop/modules/network$ grep -n "condition" variables.tf
@@ -116,7 +120,12 @@ says something about `cidr_block` that the person calling the module never wrote
 
 **The run after a failed run is skipped**, as `zone_from_another_region` was here. Runs in a file
 go in order and share one state, and Terraform does not carry on past a failure, so one broken
-rule can hide whether the next one still works until the first is fixed.
+rule can hide whether the next one still works until the first is fixed. Ana puts the rule back
+as it was:
+
+```sh
+sed -i 's|condition     = can(regex("^\[0-9./\]+$", var.cidr))|condition     = can(cidrnetmask(var.cidr))|' variables.tf
+```
 
 ## What to test this way
 

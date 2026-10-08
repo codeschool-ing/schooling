@@ -1,6 +1,6 @@
 ---
 title: `OnCalendar`, and the command that tells you when it will fire
-version: 2
+version: 3
 ---
 
 ```localised
@@ -15,8 +15,8 @@ cron does not, and which is the best single argument for timers.
 ```
 ana@vm:~/work/cron$ systemd-analyze calendar "Mon *-*-* 03:00:00"
 Normalized form: Mon *-*-* 03:00:00
-    Next elapse: Mon 2026-09-21 03:00:00 UTC
-       From now: 5 days left
+    Next elapse: Mon 2026-10-12 03:00:00 UTC
+       From now: 4 days left
 ```
 
 **Three lines, and the middle one is the answer.** Not "this parses" — *this is
@@ -27,16 +27,16 @@ the date it will actually run*. Run it before you install the timer, every time.
 ```
 ana@vm:~/work/cron$ systemd-analyze calendar --iterations=5 "*-*-* *:00/15:00"
 Normalized form: *-*-* *:00/15:00
-    Next elapse: Tue 2026-09-15 12:45:00 UTC
-       From now: 14min left
-   Iteration #2: Tue 2026-09-15 13:00:00 UTC
-       From now: 29min left
-   Iteration #3: Tue 2026-09-15 13:15:00 UTC
-       From now: 44min left
-   Iteration #4: Tue 2026-09-15 13:30:00 UTC
-       From now: 59min left
-   Iteration #5: Tue 2026-09-15 13:45:00 UTC
-       From now: 1h 14min left
+    Next elapse: Wed 2026-10-07 14:45:00 UTC
+       From now: 5min left
+   Iteration #2: Wed 2026-10-07 15:00:00 UTC
+       From now: 20min left
+   Iteration #3: Wed 2026-10-07 15:15:00 UTC
+       From now: 35min left
+   Iteration #4: Wed 2026-10-07 15:30:00 UTC
+       From now: 50min left
+   Iteration #5: Wed 2026-10-07 15:45:00 UTC
+       From now: 1h 5min left
 ```
 
 `*:00/15:00` is "minute 0, then every 15" — four times an hour, and the five
@@ -66,18 +66,18 @@ at all.
 ana@vm:~/work/cron$ systemd-analyze calendar daily weekly monthly
   Original form: daily
 Normalized form: *-*-* 00:00:00
-    Next elapse: Wed 2026-09-16 00:00:00 UTC
-       From now: 11h left
+    Next elapse: Thu 2026-10-08 00:00:00 UTC
+       From now: 9h left
 
   Original form: weekly
 Normalized form: Mon *-*-* 00:00:00
-    Next elapse: Mon 2026-09-21 00:00:00 UTC
-       From now: 5 days left
+    Next elapse: Mon 2026-10-12 00:00:00 UTC
+       From now: 4 days left
 
   Original form: monthly
 Normalized form: *-*-01 00:00:00
-    Next elapse: Thu 2026-10-01 00:00:00 UTC
-       From now: 2 weeks 1 day left
+    Next elapse: Sun 2026-11-01 00:00:00 UTC
+       From now: 3 weeks 3 days left
 ```
 
 **`weekly` is Monday here**, where cron's `@weekly` is Sunday. They are not the
@@ -94,11 +94,11 @@ timer.
 ana@vm:~/work/cron$ systemd-analyze calendar "*-*-13 05:00:00" --iterations=3
 Normalized form: *-*-13 05:00:00
     Next elapse: Tue 2026-10-13 05:00:00 UTC
-       From now: 3 weeks 6 days left
+       From now: 5 days left
    Iteration #2: Fri 2026-11-13 05:00:00 UTC
-       From now: 1 month 28 days left
+       From now: 1 month 6 days left
    Iteration #3: Sun 2026-12-13 05:00:00 UTC
-       From now: 2 months 27 days left
+       From now: 2 months 5 days left
 ```
 
 The thirteenth of every month. Now add a weekday:
@@ -108,9 +108,9 @@ ana@vm:~/work/cron$ systemd-analyze calendar "Fri *-*-13" --iterations=2
   Original form: Fri *-*-13
 Normalized form: Fri *-*-13 00:00:00
     Next elapse: Fri 2026-11-13 00:00:00 UTC
-       From now: 1 month 28 days left
+       From now: 1 month 5 days left
    Iteration #2: Fri 2027-08-13 00:00:00 UTC
-       From now: 10 months 27 days left
+       From now: 10 months 5 days left
 ```
 
 **systemd ANDs the two day fields where cron ORs them** (section 04). `Fri

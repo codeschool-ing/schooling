@@ -14,7 +14,9 @@ Date: Mon, 28 Sep 2026 20:51:47 GMT
 ```
 
 Now the proxy is changed in two places: the plain-HTTP server does nothing but redirect, and the HTTPS
-server adds one header to every answer:
+server adds one header to every answer. In `/etc/nginx/sites-enabled/shop` on `www`, the `location /`
+block of the server listening on port 80 is replaced by the `return 301` line printed below, the
+`add_header` line goes in just under `ssl_protocols`, and `nginx -s reload` puts both in force:
 
 ```
 root@www:~# grep -nE "return 301|Strict-Transport" /etc/nginx/sites-enabled/shop

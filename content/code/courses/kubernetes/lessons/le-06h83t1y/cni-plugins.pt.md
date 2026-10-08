@@ -88,8 +88,8 @@ nuvem.
 | o da própria nuvem (AWS VPC CNI, Azure CNI, o do GKE) | os pods recebem endereços da rede da nuvem | com um complemento ou embutido | clusters gerenciados |
 
 **A coluna que decide a maioria das escolhas é a de política.** Um plugin que não aplica políticas de
-rede as aceita e as ignora, e nada avisa. A lição 24 mostra como isso fica na máquina deste
-laboratório, onde o motor do kindnet não conseguiu subir, e depois instala o Calico para torná-las
+rede as aceita e as ignora, e nada avisa. A lição 24 mostra como isso fica na máquina em que
+o curso foi gravado, onde o motor do kindnet não conseguiu subir, e depois instala o Calico para torná-las
 reais. As outras diferenças (rede sobreposta ou não, eBPF ou iptables)
 importam para desempenho e depuração, e raramente são o que faz uma equipe trocar de plugin num
 cluster já rodando, uma migração que ninguém faz por pouca coisa.

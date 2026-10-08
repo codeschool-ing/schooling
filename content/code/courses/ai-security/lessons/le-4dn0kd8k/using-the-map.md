@@ -1,6 +1,6 @@
 ---
 title: Using the map to decide what comes next
-version: 1
+version: 2
 ---
 
 An inventory earns its keep by showing what is missing. `--gaps` prints only the entries with no
@@ -8,9 +8,9 @@ control:
 
 ```
 ana@lab:~/guard$ guard surface --gaps
-entry point     goes to  trusted?           controls in the lab
+entry point     goes to  trusted?           controls
 uploaded-files  prompt   no                 NONE
-10 entry points, 1 with no control in this lab
+10 entry points, 1 with no control
 ```
 
 One entry. Clients can attach briefs and files to a job, and the assistant reads them to answer

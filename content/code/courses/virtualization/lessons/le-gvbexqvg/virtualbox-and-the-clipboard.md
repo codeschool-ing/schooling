@@ -1,10 +1,11 @@
 ---
 title: VirtualBox, VMware and the clipboard
-version: 1
+version: 2
 ---
 
 In VirtualBox the same folder is one command, and the clipboard and drag and drop are settings of the
-machine:
+machine. `lab1` is an empty machine made the way lesson 4 made one, `VBoxManage createvm --name lab1
+--ostype Ubuntu_64 --register`; none of this needs it to have a disk or to run:
 
 ```
 ana@host:~$ VBoxManage sharedfolder add lab1 --name docs --hostpath /srv/docs --readonly --automount

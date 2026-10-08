@@ -1,6 +1,6 @@
 ---
 title: 755 e 644, e de onde vêm os números
-version: 1
+version: 2
 ---
 
 Nove bits. Três por público. **Um número de três bits vai de 0 a 7**, e é por isso que permissões
@@ -40,7 +40,19 @@ drwxr-xr-x   755
 não "seiscentos e quarenta e quatro" — são três dígitos separados, e pronunciar como um número só é
 como as pessoas acabam achando que 700 é maior que 644 em algum sentido útil.
 
-O `stat` faz a conversão para você, nos dois sentidos:
+O `stat` faz a conversão para você, nos dois sentidos. Três arquivos e um diretório seus para
+experimentar:
+
+```sh
+mkdir -p ~/perm/locked
+cd ~/perm
+printf 'hello\n' > public.txt
+printf 'secret\n' > private.txt
+printf '#!/bin/sh\n' > script.sh
+chmod 600 private.txt
+chmod 755 script.sh
+```
+
 
 ```
 ana@vm:~/perm$ stat -c '%a %A %n' public.txt private.txt script.sh locked

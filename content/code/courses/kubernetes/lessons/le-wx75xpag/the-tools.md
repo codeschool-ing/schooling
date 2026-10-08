@@ -6,7 +6,7 @@ version: 1
 Everything in the previous two sections was a person running two commands. **Argo CD and Flux are
 those two commands running inside the cluster, forever**: each watches one or more repositories,
 renders what is there (plain manifests, Kustomize or Helm), compares it with the cluster, and applies
-the difference. Neither was installed in this lab, so what follows describes them and was not run.
+the difference. Neither was installed for this course, so what follows describes them and was not run.
 
 ::: track devops
 The `gitops` course, which comes later in your track, installs and runs both: Argo CD in its lesson 3

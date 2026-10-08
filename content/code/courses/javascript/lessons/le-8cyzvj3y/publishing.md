@@ -1,6 +1,6 @@
 ---
 title: Publishing a package
-version: 1
+version: 2
 ---
 
 **Publishing uploads a folder to the registry under a name and a version, and that pair can never
@@ -68,8 +68,8 @@ npm notice
 shelf-count-1.0.0.tgz
 ```
 
-`npm whoami` answers with the account npm will publish as. In the lab, ana's login is staged: the
-setup wrote her token into `~/.npmrc`, which is what `npm login` does after asking for a password.
+`npm whoami` answers with the account npm will publish as: `ana`, the one `npm adduser` created in
+the first section, whose token it reads from `~/.npmrc`.
 
 `npm pack --dry-run` builds the package without sending it and lists what is inside. Two files,
 because `files` named one and npm always adds `package.json`; the test stayed home. npm starts that
@@ -113,7 +113,7 @@ within a short window, and `npm deprecate` attaches a warning instead.
 ```
 ana@dev:~/js/first$ npm install shelf-count
 
-added 1 package in 407ms
+added 1 package in 400ms
 ```
 
 ```javascript

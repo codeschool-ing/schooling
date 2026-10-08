@@ -1,6 +1,6 @@
 ---
 title: Scanning the plan, where the values are
-version: 1
+version: 2
 ---
 
 The reviewer of the SSH pull request asked for one change: do not write the range into the file,
@@ -29,6 +29,8 @@ index b975fc3..bfe7bb9 100644
 +  cidr_ipv4         = var.admin_cidr
  }
 ```
+
+Ana makes that edit to `ssh.tf`, commits it as *admin_cidr as a variable*, and scans again:
 
 ```
 ana@laptop:~/shop$ checkov -d . --skip-download --compact --check CKV_AWS_24
@@ -65,7 +67,7 @@ the directory says what it will be. A check that cannot see a value has nothing 
 both tools report that as a pass. *Passed* in a scan of the configuration means "nothing wrong in
 what I could read", which is less than it sounds.
 
-The value arrives when somebody plans, from a file given on the command line:
+The value arrives when somebody plans, from a file given on the command line, `maintenance.tfvars`:
 
 ```hcl
 admin_cidr = "0.0.0.0/0"

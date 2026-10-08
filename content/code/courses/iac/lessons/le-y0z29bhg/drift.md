@@ -1,12 +1,19 @@
 ---
 title: Drift, and the change nobody wrote down
-version: 1
+version: 2
 ---
 
 A week later somebody needs to look at one of the shop's servers from home, and opens SSH to the
-world on the security group, from another machine, by hand. It takes one command and solves the
-problem of the day. Nobody tells Ana, and nothing tells her either. When she asks AWS what the
-group allows, there is a rule she never wrote:
+world on the security group, from another machine, by hand. It takes one command, with the
+group's id in `SG`, and it solves the problem of the day:
+
+```sh
+aws ec2 authorize-security-group-ingress --group-id "$SG" \
+  --protocol tcp --port 22 --cidr 0.0.0.0/0
+```
+
+Nobody tells Ana, and nothing tells her either. When she asks AWS what the group allows, there is a
+rule she never wrote:
 
 ```
 ana@laptop:~/shop$ aws ec2 describe-security-groups --filters Name=group-name,Values=web --query "SecurityGroups[0].IpPermissions[].[IpProtocol,FromPort,IpRanges[0].CidrIp]" --output text

@@ -1,12 +1,13 @@
 ---
 title: A network somebody else owns
-version: 1
+version: 2
 ---
 
 In most companies the network is not the application team's. At the shop, a network team owns the
 VPC and its subnets, and they built them with the AWS CLI from a script of their own, long before
-Ana wrote any Terraform. This is that script; in the lab it ran before Ana's session started, as the
-network team would have run it from their own machine:
+Ana wrote any Terraform. This is that script, and in your lab you play the network team: save it
+as `~/network-team/create-network.sh` and run it once, now, with `sh create-network.sh` from that
+directory, in a terminal that has read `iac-env.sh`. It prints nothing when it works:
 
 ```sh
 #!/bin/sh
@@ -36,7 +37,8 @@ ana@laptop:~/shop/app$ aws ec2 describe-vpcs --filters Name=tag:Name,Values=shop
 vpc-6689436bfc5f4d19d	10.20.0.0/16	network
 ```
 
-In Terraform the same question is a data source, and the tags are the query:
+In Terraform the same question is a data source, and the tags are the query. Ana writes it in
+`network.tf`, beside `main.tf`:
 
 ```hcl
 data "aws_vpc" "shop" {

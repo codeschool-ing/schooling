@@ -1,6 +1,6 @@
 ---
 title: Closing an incident
-version: 1
+version: 2
 ---
 
 An incident ends when **users are no longer affected and the system is stable**, not when the cause is
@@ -23,3 +23,11 @@ One more decision belongs at the close: **whether the fix that ended the inciden
 rollback is safe; a hand-edited configuration, a scaled-up cluster or a disabled feature is a
 temporary state that somebody has to undo or make permanent, and it needs an owner like any other
 follow-up.
+
+Before the next lesson, take lesson 16's rules and override away again:
+
+```sh
+rm prometheus/rules/burn.yml compose.override.yaml
+curl -s -X POST localhost:9090/-/reload
+docker compose up -d alertmanager
+```

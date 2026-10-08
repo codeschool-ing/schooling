@@ -1,6 +1,6 @@
 ---
 title: O que é este curso, e de onde vêm os números dele
-version: 1
+version: 2
 ---
 
 Este curso é sobre **a forma da nuvem, não sobre o console de ninguém**. Um diagrama do que um banco
@@ -16,15 +16,16 @@ numa conta. Por isso nada aqui é captura de console, conta a pagar ou resposta 
 um comando. Onde uma aula mostra configuração, como um documento de política ou um script de
 inicialização, ela foi escrita para a aula e diz isso, e o que um provedor faria com ela é descrito,
 não mostrado. Onde uma aula mostra um terminal, o comando rodou num laptop sem credenciais, e o
-prompt diz `ana@laptop`.
+prompt diz `ana@laptop`. **Cada um desses comandos é um que você roda no seu próprio computador**, e
+as três seções seguintes o preparam.
 
 ## Os preços são uma lista publicada, lida por um programa
 
 Nuvem se vende por unidade, então um curso sobre ela sem preços seria um curso sobre metade dela.
 **Todo preço destas aulas é uma linha da lista pública de preços da AWS**, que a AWS publica como
-arquivos JSON que qualquer pessoa baixa sem conta. O curso traz um programa pequeno ao lado do
-`course.json`, o `prices.py`, que lê uma versão fixa de cada arquivo e imprime as linhas que as aulas
-citam. Aqui ele imprime o cabeçalho e um bloco:
+arquivos JSON que qualquer pessoa baixa sem conta. Um programa pequeno, o `prices.py`, lê uma versão
+fixa de cada arquivo e imprime as linhas que as aulas citam. Aqui ele imprime o cabeçalho e um bloco;
+três seções adiante ele aparece inteiro, e você mesmo o roda:
 
 ```
 ana@laptop:~/cloud$ python3 prices.py lambda

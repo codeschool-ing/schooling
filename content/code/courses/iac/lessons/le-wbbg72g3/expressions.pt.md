@@ -1,6 +1,6 @@
 ---
 title: Expressões, e o console para testá-las
-version: 1
+version: 2
 ---
 
 Tudo o que está à direita de um `=` é uma expressão, e uma expressão é qualquer coisa que produz
@@ -11,7 +11,7 @@ valor, comparam dois, escolhem entre eles ou montam uma string a partir de peda�
 state ao lado dela, avalia o que você der e imprime o valor. Não cria nada nem muda nada. Nestas
 aulas a expressão chega por `echo`, então cada comando e sua resposta ficam em duas linhas;
 digitado num terminal, o console espera num prompt `>`. As variáveis que ele lê estão num arquivo
-novo, que a seção de tipos desta aula desmonta:
+novo, `variables.tf`, que a seção de tipos desta aula desmonta:
 
 ```hcl
 variable "environment" {
@@ -78,7 +78,7 @@ dentro de uma string de uma linha fica difícil de ler a partir desse tamanho, e
 condição escolhe um valor inteiro o operador condicional diz isso com mais clareza.
 
 Para texto de várias linhas existe o **heredoc**, que a Ana usa para um script curto de
-inicialização:
+inicialização, no `boot.tf`:
 
 ```hcl
 locals {

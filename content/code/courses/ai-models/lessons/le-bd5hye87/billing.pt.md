@@ -6,7 +6,6 @@ version: 1
 A página de preços do Hugging Face começa com a mesma afirmação que a do OpenRouter:
 
 ```
-ana@desk:~/desk$ sources lines hf-pricing 3 3
 # huggingface/hub-docs@08175d0f docs/inference-providers/pricing.md
    3| Access 200+ models from leading AI inference providers with centralized, transparent, pay-as-you-go pricing. No infrastructure management required—just pay for what you use, with no markup from Hugging Face.
 ```
@@ -14,7 +13,6 @@ ana@desk:~/desk$ sources lines hf-pricing 3 3
 O que a conta recebe para começar é pouco, e a página diz isso:
 
 ```
-ana@desk:~/desk$ sources lines hf-pricing 9 12
 # huggingface/hub-docs@08175d0f docs/inference-providers/pricing.md
    9| | Account Type                     | Monthly Credits          | Can be spent on                   | Extra usage (pay-as-you-go)     |
   10| | -------------------------------- | ------------------------ | --------------------------------- | ------------------------------- |
@@ -26,7 +24,6 @@ Dez centavos por mês bastam para experimentar um modelo nos quarenta casos da a
 para rodar uma mesa: daí em diante, compram-se créditos. E há dois caminhos para o dinheiro:
 
 ```
-ana@desk:~/desk$ sources lines hf-pricing 24 27
 # huggingface/hub-docs@08175d0f docs/inference-providers/pricing.md
   24| | Feature | **Routed by Hugging Face** | **Custom Provider Key** |
   25| | :--- | :--- | :--- |
@@ -37,7 +34,7 @@ ana@desk:~/desk$ sources lines hf-pricing 24 27
 **Roteado pelo Hugging Face**, o provedor é pago pela conta da ana no Hugging Face, uma conta para
 todos os provedores, com os créditos mensais aplicados primeiro. **Com uma chave própria do
 provedor**, a requisição continua passando pelo Hugging Face, mas o provedor cobra a ana direto, na
-conta e nos termos que ela tem com ele, e os créditos não valem.
+conta e nos termos que a ana tem com esse provedor, e os créditos não valem.
 
 Lado a lado com a aula 15, os dois roteadores fazem a mesma oferta com padrões diferentes:
 

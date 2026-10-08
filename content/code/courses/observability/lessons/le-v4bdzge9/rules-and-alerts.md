@@ -1,11 +1,15 @@
 ---
 title: Rules, and an alert from rule to pager
-version: 1
+version: 2
 ---
 
 Queries so far were asked by a person. **Rules are queries Prometheus asks itself**, every fifteen
-seconds, from files listed in `prometheus.yml`. There are two kinds, and the lab's rules file now
-has both:
+seconds, from files listed in `prometheus.yml`. There are two kinds, and this rules file has both.
+Keep a copy of the one lesson 1 wrote, and then replace `~/shop/prometheus/rules/shop.yml` with it:
+
+```sh
+cp prometheus/rules/shop.yml /tmp/shop.yml.orig
+```
 
 ```yaml
 groups:
@@ -94,5 +98,11 @@ ana@obs:~/shop$ docker compose logs --no-log-prefix pager | grep PAGE | jq -c '{
 
 Alertmanager holds the alert as `active`, and the pager logged the page, with the severity and the
 summary the rule gave it. **Every word in that line was written in the rule**, which is why lesson 16
-spends its time on what a rule should say and to whom. The fault file was removed at the end of the
-capture.
+spends its time on what a rule should say and to whom. Remove the fault file, and put lesson 1's
+rules back, so that later lessons do not page on failures they cause on purpose:
+
+```sh
+rm faults/payments.json
+cp /tmp/shop.yml.orig prometheus/rules/shop.yml
+curl -s -X POST localhost:9090/-/reload
+```

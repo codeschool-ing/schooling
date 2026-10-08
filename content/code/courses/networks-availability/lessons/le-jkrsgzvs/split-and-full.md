@@ -7,7 +7,8 @@ One decision shapes a remote-access user's day more than any other: **does only 
 go through the tunnel, or everything?** The first is a split tunnel and the second a full tunnel. On
 WireGuard it is one line, the laptop's `AllowedIPs`, which lesson 4 showed is also its routing table.
 
-Ana's laptop first, split:
+Ana's laptop first, split, as lesson 4 wrote her file. She brings the tunnel up with
+`sudo wg-quick up wg0` on `remote`:
 
 ```
 ana@remote:~$ sudo grep AllowedIPs /etc/wireguard/wg0.conf
@@ -31,8 +32,14 @@ kernel which way a packet would go without sending one. To `files` through `wg0`
 address `10.20.0.3`; to `web1` out of `eth0`, through the home router `192.168.1.1`. The traceroute
 agrees, home router, ISP, `web1`. **The company never sees her web traffic at all.**
 
-Then her file was changed to `AllowedIPs = 0.0.0.0/0`, with the tunnel taken down first, as root and
-not shown, and she brought it up again:
+Then her file changes to `AllowedIPs = 0.0.0.0/0`, with the tunnel taken down first. On `remote`:
+
+```sh
+sudo wg-quick down wg0
+sudo sed -i 's|^AllowedIPs = .*|AllowedIPs = 0.0.0.0/0|' /etc/wireguard/wg0.conf
+```
+
+And she brings it up again:
 
 ```
 ana@remote:~$ sudo wg-quick up wg0
@@ -87,10 +94,10 @@ ana@web1:~$ tail -n 2 /lab/web1/www/logs/access.log | cut -d" " -f1-7
 
 Now the route to `web1` is `dev wg0 table 51820`, and the traceroute goes to `hq` first, `10.20.0.1`,
 then out to the ISP from the head office. The page is the same. The last two lines of `web1`'s access
-log are the two requests, made in the same second: **the same laptop and the same page, and `web1` saw
+log, which `netlab.sh` keeps under `/lab/web1`, are the two requests, made in the same second: **the same laptop and the same page, and `web1` saw
 two different clients.** Split, the request came from `198.51.100.77`, Ana's home router. Full, it came
 from `203.0.113.2`, because `hq` forwarded her traffic to the internet and translated it to its own
-address (NAT, lesson 11 of `networks-addressing`).
+address (NAT, covered in `networks-addressing`).
 
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 760 245\" role=\"img\" aria-label=\"Five machines: remote at 192.168.1.50, homegw at 198.51.100.77, the ISP router at 203.0.113.1, web1 at 192.0.2.21, and hq at 203.0.113.2 above the ISP. The split path runs remote, homegw, ISP, web1, and web1 logs 198.51.100.77. The full path runs from remote through a dashed tunnel to hq, then from hq back through the ISP to web1, and web1 logs 203.0.113.2.\"><defs><marker id=\"pa-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><rect x=\"20\" y=\"150\" width=\"130\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></rect><text x=\"85.0\" y=\"163.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">remote</text><text x=\"85.0\" y=\"178.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">192.168.1.50</text><rect x=\"180\" y=\"150\" width=\"130\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></rect><text x=\"245.0\" y=\"163.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">homegw</text><text x=\"245.0\" y=\"178.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">198.51.100.77</text><rect x=\"370\" y=\"150\" width=\"130\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></rect><text x=\"435.0\" y=\"163.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">isp</text><text x=\"435.0\" y=\"178.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">203.0.113.1</text><rect x=\"600\" y=\"150\" width=\"130\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></rect><text x=\"665.0\" y=\"163.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">web1</text><text x=\"665.0\" y=\"178.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">192.0.2.21</text><rect x=\"370\" y=\"40\" width=\"130\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.4\"></rect><text x=\"435.0\" y=\"53.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">hq</text><text x=\"435.0\" y=\"68.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">203.0.113.2</text><path d=\"M150 170 L180 170\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M310 170 L370 170\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M500 170 L600 170\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M435 80 L435 150\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M85 196 L 85 214 L 665 214 L 665 196\" stroke=\"var(--phosphor)\" stroke-width=\"1.8\" fill=\"none\" marker-end=\"url(#pa-ah)\"></path><text x=\"375\" y=\"232\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--phosphor)\">split: web1 logs 198.51.100.77</text><path d=\"M85 150 C 85 60, 250 60, 366 60\" stroke=\"var(--amber)\" stroke-width=\"1.8\" fill=\"none\" stroke-dasharray=\"6 4\" marker-end=\"url(#pa-ah)\"></path><text x=\"150\" y=\"48\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">tunnel</text><path d=\"M455 80 L 455 146\" stroke=\"var(--amber)\" stroke-width=\"1.8\" fill=\"none\" marker-end=\"url(#pa-ah)\"></path><path d=\"M500 162 L 596 162\" stroke=\"var(--amber)\" stroke-width=\"1.8\" fill=\"none\" marker-end=\"url(#pa-ah)\"></path><text x=\"470\" y=\"112\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">full: web1 logs 203.0.113.2</text></svg>", "caption": "The same request to web1, split and full. The full tunnel's packets still cross homegw and the ISP, encrypted inside the tunnel, and then cross the ISP a second time on their way out of hq."}

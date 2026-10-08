@@ -1,6 +1,6 @@
 ---
 title: Histograms, and what a bucket cannot say
-version: 1
+version: 2
 ---
 
 Durations cannot be a counter or a gauge: the question is not *how many* but *how they were spread*.
@@ -69,4 +69,8 @@ ana@obs:~/shop$ ./promq 'sum(rate(http_server_request_duration_seconds_bucket{jo
 
 *What share of checkouts finished within half a second?* All of them, 1, with no interpolation at
 all, because 0.5 is a bucket boundary. Lesson 15 builds the shop's latency objective on that shape.
-The fault file was removed after these queries.
+Remove the fault file now:
+
+```sh
+rm faults/payments.json
+```

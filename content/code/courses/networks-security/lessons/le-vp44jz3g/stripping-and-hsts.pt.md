@@ -15,7 +15,10 @@ Date: Mon, 28 Sep 2026 20:51:47 GMT
 ```
 
 Agora o proxy é alterado em dois pontos: o servidor HTTP puro não faz nada além de redirecionar, e o
-servidor HTTPS acrescenta um cabeçalho a toda resposta:
+servidor HTTPS acrescenta um cabeçalho a toda resposta. Em `/etc/nginx/sites-enabled/shop` no `www`,
+o bloco `location /` do servidor que escuta na porta 80 é substituído pela linha `return 301`
+impressa abaixo, a linha `add_header` entra logo abaixo de `ssl_protocols`, e `nginx -s reload` põe
+as duas em vigor:
 
 ```
 root@www:~# grep -nE "return 301|Strict-Transport" /etc/nginx/sites-enabled/shop

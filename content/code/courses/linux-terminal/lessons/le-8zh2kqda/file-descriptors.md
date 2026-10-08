@@ -1,6 +1,6 @@
 ---
 title: File descriptors, and reading a process through `/proc`
-version: 1
+version: 2
 ---
 
 A process does not hold filenames. It holds **numbers**, and each number is an entry in a table the
@@ -88,7 +88,8 @@ working directory, the root directory and the executable, and `mem` rows are map
 
 ## The trick worth the whole section
 
-Delete a file that something still has open, and the space does not come back.
+Delete a file that something still has open, and the space does not come back. Make a big file to
+try it with, `fallocate -l 2G /tmp/big.bin`, which takes a second because it reserves the space without writing to it:
 
 ```
 ana@vm:~/work$ ls -lh /tmp/big.bin

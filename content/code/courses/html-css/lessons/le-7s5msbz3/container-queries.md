@@ -1,9 +1,9 @@
 ---
 title: Container queries: a component that measures its own room
-version: 1
+version: 2
 ---
 
-A media query asks about the **window**. A component often needs to ask something else: how much room has **it** been given? The same event card can be in the wide main column or in a narrow sidebar on one page, at one window width. A media query cannot tell the two apart. A **container query** can:
+A media query asks about the **window**. A component often needs to ask something else: how much room has **it** been given? The same event card can be in the wide main column or in a narrow sidebar on one page, at one window width. A media query cannot tell the two apart. A **container query** can. Here is one, in `container.css`:
 
 ```css
 *, *::before, *::after { box-sizing: border-box; }
@@ -29,7 +29,46 @@ body {
 }
 ```
 
-Two steps. **`container-type: inline-size`** on an element makes it a **query container**: its descendants can ask about its width. Then **`@container (width >= 28rem)`** works like a media query, except that `width` is the width of the nearest ancestor container, here the `.slot` around each card. The card is a single column by default, and puts the date beside the text when its container is at least 28rem wide:
+Two steps. **`container-type: inline-size`** on an element makes it a **query container**: its descendants can ask about its width. Then **`@container (width >= 28rem)`** works like a media query, except that `width` is the width of the nearest ancestor container, here the `.slot` around each card. The card is a single column by default, and puts the date beside the text when its container is at least 28rem wide.
+
+The page, `container.html`, puts one card in `main` and one in the `aside`, each in its own `.slot`:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Andorinha Books</title>
+    <link rel="stylesheet" href="container.css">
+  </head>
+  <body>
+    <main>
+      <h1>This week</h1>
+      <div class="slot">
+        <article class="event-card">
+          <p class="event-card__date">Thu 9</p>
+          <div class="event-card__body">
+            <h2 class="event-card__title">Poetry reading</h2>
+            <p>Five poets read from their first books. Free, and there is tea.</p>
+          </div>
+        </article>
+      </div>
+    </main>
+    <aside>
+      <div class="slot">
+        <article class="event-card">
+          <p class="event-card__date">Sat 11</p>
+          <div class="event-card__body">
+            <h2 class="event-card__title">Bookbinding</h2>
+            <p>Bind a notebook by hand. Places for twelve.</p>
+          </div>
+        </article>
+      </div>
+    </aside>
+  </body>
+</html>
+```
 
 ```
 ana@laptop:~/site$ probe container.html box .slot box .event-card__date box .event-card__body style .event-card__title font-size

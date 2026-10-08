@@ -1,11 +1,12 @@
 ---
 title: GitLab CI, and the plan as an artifact
-version: 1
+version: 2
 ---
 
 The same pipeline in GitLab is shorter, because GitLab says more of it with keywords. Like the
-GitHub workflow, **this file was written for the lesson and never run**: there is no GitLab here
-either.
+GitHub workflow, **this file was written for the lesson and not run by it**: that needs a GitLab
+account, which this course does not ask for either. It is `.gitlab-ci.yml`, at the top of `~/shop`,
+and GitLab's free tier is a place to try it if you have an account.
 
 ```yaml
 # Illustrative: written for lesson 15 and never run by it. Every job calls
@@ -65,8 +66,9 @@ apply:
     - ./ci.sh apply
 ```
 
-What the lab can say about the two files is that they parse, and that each has the jobs it was
-meant to have:
+What can be checked without either service is that the two files parse, and that each has the jobs
+it was meant to have. The `python3` here is the one in `~/iac-venv`, and its YAML module, PyYAML,
+came with the AWS CLI:
 
 ```
 ana@laptop:~/shop$ python3 -c 'import yaml; print(list(yaml.safe_load(open(".github/workflows/terraform.yml"))["jobs"]))'
@@ -83,7 +85,7 @@ Read both files as a precise description of the design, not as something tested.
 
 `stages` gives the order; jobs in the same stage run in parallel, so `check` and `scan` run side by
 side and `plan` waits for both. `default: image` runs every job in the `hashicorp/terraform` image
-at the same version the lab uses. Its `entrypoint` is set to nothing because that image starts
+at the same version this course uses. Its `entrypoint` is set to nothing because that image starts
 `terraform` itself, and GitLab needs a shell to run `script` lines in. `scan` uses the Trivy image
 instead, which is how a job gets a tool the default image lacks.
 

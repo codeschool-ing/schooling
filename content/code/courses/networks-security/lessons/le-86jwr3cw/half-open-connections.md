@@ -9,7 +9,8 @@ waiting. A client that sends `SYN`s and never finishes, usually from source addr
 its own, fills that memory, and real clients are turned away. That is a **SYN flood**, the classic
 protocol attack.
 
-The defence is built into Linux, and it is on by default. On `www`:
+The defence is built into Linux, and it is on by default. In your lab this lesson starts from
+`sudo bash nslab.sh reset`, with the company's policy loaded on `fw` by `nft -f baseline.nft`. On `www`:
 
 ```
 root@www:~# sysctl net.ipv4.tcp_syncookies net.ipv4.tcp_max_syn_backlog net.ipv4.tcp_synack_retries

@@ -1,6 +1,6 @@
 ---
 title: Pilha dupla, dois protocolos no mesmo cabo
-version: 1
+version: 2
 ---
 
 Migrar para o IPv6 não quer dizer desligar o IPv4 num dia marcado. **O jeito como quase toda rede roda
@@ -19,7 +19,7 @@ ana@pc1:~$ ip -br addr show eth0
 eth0@if27        UP             10.20.10.21/24 2001:db8:20:10:25:70ff:febc:29c6/64 fe80::25:70ff:febc:29c6/64 
 ```
 
-Três endereços na `eth0`. `10.20.10.21/24` é o endereço IPv4 que o lab.sh lhe deu, aquele com que a aula
+Três endereços na `eth0`. `10.20.10.21/24` é o endereço IPv4 que o `dualstack.sh` lhe deu, aquele com que a aula
 8 trabalhou. `2001:db8:20:10:25:70ff:febc:29c6/64` é o endereço IPv6 global que ele montou por SLAAC, e
 `fe80::25:70ff:febc:29c6/64` é o seu endereço link-local. **Os dois protocolos não dividem nada acima do
 cabo**: o IPv4 sai por `10.20.10.1`, o IPv6 por `fe80::1f:23ff:fee7:e9d5`, e um problema num deles não diz
@@ -39,7 +39,7 @@ ana@pc1:~$ getent ahosts web
 
 `web` tem dois endereços, `2001:db8:99::80` e `192.0.2.80`, e **o IPv6 vem primeiro**. (`STREAM`,
 `DGRAM` e `RAW` são os três tipos de socket para que cada endereço serviria; leia só os endereços.)
-Neste laboratório os nomes vêm do `/etc/hosts` de cada máquina, que o lab.sh escreveu; na internet eles
+Neste laboratório os nomes vêm do `/etc/hosts` de cada máquina, que o `dualstack.sh` escreveu; na internet eles
 vêm do DNS, onde um nome tem um registro **A** para IPv4 e um registro **AAAA** para IPv6, como o curso
 de redes mostrou. A ordem é escolha do sistema, e numa máquina com endereço IPv6 global ele põe o IPv6
 primeiro. Um programa que tenta os endereços na ordem, portanto, tenta o IPv6 primeiro.

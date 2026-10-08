@@ -1,6 +1,6 @@
 ---
 title: Objetivos que mentem
-version: 1
+version: 2
 ---
 
 Um SLO é um número em que uma equipe, e muitas vezes os gestores dela, vai confiar sem olhar por baixo.
@@ -25,3 +25,10 @@ Isso faz valer a pena conhecer pelo nome os jeitos como ele pode estar errado:
 excluindo uma rota ou rotulando uma falha como culpa do cliente, tem um painel verde e os mesmos
 clientes insatisfeitos. O SLO só é útil enquanto concorda com o que os clientes dizem. Quando os
 dois discordam, quem está errado é o SLO.
+
+Antes da próxima aula, tire as regras do objetivo; a aula 16 escreve as suas:
+
+```sh
+rm prometheus/rules/slo.yml
+curl -s -X POST localhost:9090/-/reload
+```

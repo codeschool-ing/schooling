@@ -1,16 +1,27 @@
 ---
 title: Padrões, e quem os expande
-version: 2
+version: 3
 ---
 
 **O fato mais importante desta seção:** o shell expande um padrão *antes* de o comando rodar. O
 comando nunca vê o seu `*`. Ele vê a lista de nomes de arquivo que o shell entregou.
 
+Cinco nomes para casar, um deles escondido e um num subdiretório:
+
+```sh
+mkdir -p ~/gl/sub
+cd ~/gl
+touch a.txt b.txt c.log sub/d.txt .hidden.txt
+```
+
 Prove com o `echo`, que só imprime o que recebeu:
 
 ```
 ana@vm:~/gl$ ls
-a.txt  b.txt  c.log  sub
+a.txt
+b.txt
+c.log
+sub
 ana@vm:~/gl$ echo *
 a.txt b.txt c.log sub
 ana@vm:~/gl$ echo *.txt
@@ -133,9 +144,14 @@ aprendendo.
 
 ```
 ana@vm:~/gl$ ls
-a.txt  b.txt  c.log  sub
+a.txt
+b.txt
+c.log
+sub
 ana@vm:~/gl$ ls *
-a.txt  b.txt  c.log
+a.txt
+b.txt
+c.log
 
 sub:
 d.txt

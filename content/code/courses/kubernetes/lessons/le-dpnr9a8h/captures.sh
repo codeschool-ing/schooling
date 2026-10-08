@@ -17,7 +17,7 @@
 
 . "$(dirname "$0")/../../capture.sh"
 fresh
-quiet 'kind create cluster --name study --config "$COURSE/lab/cluster.yaml" --image kindest/node:v1.37.0 -q'
+quiet 'kind create cluster --name study --config /var/tmp/lab-cluster.yaml --image kindest/node:v1.37.0 -q'
 quiet 'kubectl config use-context kind-shop'
 
 block kubeconfig

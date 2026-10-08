@@ -1,6 +1,6 @@
 ---
 title: A pasta com que todo mundo começa
-version: 1
+version: 2
 ---
 
 Todo mundo tem controle de versão antes de ouvir o nome. É uma pasta, e ela se parece com isto:
@@ -8,11 +8,11 @@ Todo mundo tem controle de versão antes de ouvir o nome. É uma pasta, e ela se
 ```
 ana@vm:~/report$ ls -l
 total 20
--rw-r--r-- 1 ana ana 109 Sep  9 08:47 report-FINAL.txt
--rw-r--r-- 1 ana ana 115 Sep  8 15:22 report-v2-final-bruno.txt
--rw-r--r-- 1 ana ana 109 Sep  8 11:05 report-v2-final.txt
--rw-r--r-- 1 ana ana  93 Sep  3 17:40 report-v2.txt
--rw-r--r-- 1 ana ana  93 Sep  1 09:12 report.txt
+-rw-rw-r-- 1 ana ana 109 Sep  9 08:47 report-FINAL.txt
+-rw-rw-r-- 1 ana ana 115 Sep  8 15:22 report-v2-final-bruno.txt
+-rw-rw-r-- 1 ana ana 109 Sep  8 11:05 report-v2-final.txt
+-rw-rw-r-- 1 ana ana  93 Sep  3 17:40 report-v2.txt
+-rw-rw-r-- 1 ana ana  93 Sep  1 09:12 report.txt
 ```
 
 Cinco cópias de um relatório, escritas ao longo de nove dias por duas pessoas. Ninguém planejou

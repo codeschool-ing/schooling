@@ -1,6 +1,6 @@
 ---
 title: "Versionamento: recuperar o que foi apagado"
-version: 1
+version: 2
 ---
 
 Com o versionamento desligado, que é como um bucket novo começa, um `PUT` numa chave existente
@@ -40,7 +40,7 @@ ana@laptop:~/cloud$ aws s3api list-object-versions --bucket ana-uploads --prefix
 notes.txt	13	False
 notes.txt	6	False
 ana@laptop:~/cloud$ aws s3api list-object-versions --bucket ana-uploads --prefix notes.txt --query 'DeleteMarkers[].[Key,VersionId,IsLatest]' --output text
-notes.txt	c5b4844b-24d5-4283-93d7-a818373c7e91	True
+notes.txt	bb803601-dec0-45f2-89d0-c8174c000a93	True
 ```
 
 As duas versões são a primeira gravação, de 6 bytes, e a segunda, de 13, e nenhuma é a mais
@@ -48,9 +48,9 @@ recente, porque o marcador é. **Apagar o marcador, pelo id de versão dele, tra
 volta:**
 
 ```
-ana@laptop:~/cloud$ aws s3api delete-object --bucket ana-uploads --key notes.txt --version-id c5b4844b-24d5-4283-93d7-a818373c7e91
+ana@laptop:~/cloud$ aws s3api delete-object --bucket ana-uploads --key notes.txt --version-id bb803601-dec0-45f2-89d0-c8174c000a93
 {
-    "VersionId": "c5b4844b-24d5-4283-93d7-a818373c7e91"
+    "VersionId": "bb803601-dec0-45f2-89d0-c8174c000a93"
 }
 ana@laptop:~/cloud$ aws s3 cp s3://ana-uploads/notes.txt -
 hello, again

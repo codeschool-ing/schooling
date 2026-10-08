@@ -1,12 +1,13 @@
 ---
 title: Correlation: the trace id in every line
-version: 1
+version: 2
 ---
 
 Lesson 1 found a slow checkout's log lines in three services by searching for its trace id. That
 works because the formatter adds the current span's ids to every line written while a span is
 current, which in a service handling requests is nearly every line. **Nearly**, and the exceptions
-are worth knowing. The mailer's first line after a reset:
+are worth knowing. The mailer's first line after the lab was started
+again from nothing:
 
 ```
 ana@obs:~/shop$ docker compose logs --no-log-prefix mailer | head -1 | jq -c .

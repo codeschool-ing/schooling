@@ -1,6 +1,6 @@
 ---
 title: From Terraform to Ansible: the inventory as the handover
-version: 1
+version: 2
 ---
 
 Lesson 1 split the work in two: Terraform creates the machines, Ansible configures what is inside
@@ -203,5 +203,6 @@ The alternatives all exist and each moves the line. Terraform can run Ansible it
 again, the weakness lesson 1 named for any script run at creation. Ansible can build its inventory
 by asking the cloud at run time, with the `aws_ec2` inventory plugin from the `amazon.aws` collection,
 which is the better choice once machines come and go faster than anybody runs `terraform apply`.
-That collection is not installed in this lab, so it is named here and not shown. And lesson 20 removes
+This lesson installed `ansible-core` alone, which does not include that collection, so it is named
+here and not shown. And lesson 20 removes
 most of the handover altogether, by configuring the image before any machine exists.

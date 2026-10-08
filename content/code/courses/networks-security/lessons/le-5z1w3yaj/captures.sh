@@ -6,7 +6,7 @@
 # what moved.
 #
 #   sudo useradd -m -s /bin/bash ana               # once, on a throwaway machine
-#   sudo cp ../../lab.sh /var/tmp/nslab.sh          # the lab, beside course.json
+#   sudo ln -sf "$(realpath ../../lab.sh)" /var/tmp/nslab.sh   # the lab, beside course.json
 #   sudo bash /path/to/captures.sh
 #
 # EVERY MACHINE IN THE LESSON IS PART OF ONE LAB, built by lab.sh; lesson 1
@@ -22,7 +22,7 @@
 # (an address of the company's server range), and laptop with 198.51.100.7
 # (an address that belongs to nobody in the lab); a recording on www with
 # tcpdump in the background, read afterwards; the DNSSEC half of the lab, which
-# lab.sh builds: BIND on dns serving example.com signed, on port 5300, and a
+# dnssec.sh builds (lab dnssec): BIND on dns serving example.com signed, on port 5300, and a
 # validating Unbound on laptop's loopback that trusts the zone's key.
 # Every line after a prompt is what the command printed.
 #
@@ -46,6 +46,7 @@ quiet() { local h=$1; shift; lab exec "$h" root "$*" >/dev/null 2>&1 || true; }
 block() { printf '##### %s\n' "$1"; }
 
 lab reset
+lab dnssec
 quiet fw 'nft -f baseline.nft; nft insert rule ip filter forward index 1 iifname "eth2" oifname "eth1" ip daddr 192.0.2.53 meta l4proto { tcp, udp } th dport 5300 ct state new accept comment \"the resolver asks the signed zone\"'
 quiet remote 'ip addr add 192.168.20.99/32 dev eth0'
 quiet laptop 'ip addr add 198.51.100.7/32 dev eth0'

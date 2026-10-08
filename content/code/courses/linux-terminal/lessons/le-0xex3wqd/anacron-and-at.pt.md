@@ -1,6 +1,6 @@
 ---
 title: A máquina que estava desligada, e o job que roda uma vez
-version: 1
+version: 2
 ---
 
 O cron tem uma suposição: **a máquina está ligada.** Um job agendado para 03:00
@@ -41,7 +41,17 @@ rodou pela última vez**, e a resposta é um arquivo:
 ```
 
 Duas execuções de um anacrontab privado, com um minuto de diferença, dizem a
-coisa inteira:
+coisa inteira. O anacrontab, e um diretório vazio para ele guardar as datas:
+
+```sh
+cd ~/work/cron
+cat > myanacrontab <<'END'
+SHELL=/bin/sh
+1       0       daily-report    echo "report for $(date +\%F)"
+7       0       weekly-report   echo "weekly report"
+END
+mkdir -p spool
+```
 
 ```
 ana@vm:~/work/cron$ cat myanacrontab
@@ -51,7 +61,7 @@ SHELL=/bin/sh
 ana@vm:~/work/cron$ anacron -T -t myanacrontab && echo "syntax ok"
 syntax ok
 ana@vm:~/work/cron$ anacron -d -n -t myanacrontab -S spool
-Anacron 2.3 started on 2026-09-15
+Anacron 2.3 started on 2026-10-07
 Will run job `daily-report'
 Will run job `weekly-report'
 Jobs will be executed sequentially
@@ -62,17 +72,17 @@ Job `weekly-report' terminated (mailing output)
 Normal exit (2 jobs run)
 ana@vm:~/work/cron$ ls -l spool; cat spool/daily-report
 total 8
--rw------- 1 ana ana 9 Sep 15 12:31 daily-report
--rw------- 1 ana ana 9 Sep 15 12:31 weekly-report
-20260915
+-rw------- 1 ana ana 9 Oct  7 14:36 daily-report
+-rw------- 1 ana ana 9 Oct  7 14:36 weekly-report
+20261007
 ana@vm:~/work/cron$ anacron -d -n -t myanacrontab -S spool
-Anacron 2.3 started on 2026-09-15
+Anacron 2.3 started on 2026-10-07
 Normal exit (0 jobs run)
 ```
 
 **A primeira execução faz os dois jobs e escreve a data. A segunda não faz nada**
 — `Normal exit (0 jobs run)` — porque os dois já rodaram hoje. Aquele arquivo,
-`20260915`, é a memória inteira do anacron.
+`20261007`, é a memória inteira do anacron.
 
 | | |
 |---|---|
@@ -117,24 +127,31 @@ importava.
 
 ## O `at`, que roda uma vez
 
+Um job, para o próximo minuto, que escreve a hora em que rodou:
+
+```sh
+cd ~/work/cron
+echo "date +%T >> at.log" | at now + 1 minute
+sleep 120
+```
+
 ```
 ana@vm:~/work/cron$ cat at.log
-12:35:00
+14:37:00
 ana@vm:~/work/cron$ atq
 ana@vm:~/work/cron$ echo "atq printed nothing: the queue is empty"
 atq printed nothing: the queue is empty
 ```
 
-Aquilo é o resultado de `echo "date +%T >> at.log" | at now + 1 minute`, um
-minuto depois: **rodou às 12:35:00 exatamente, e então sumiu.** Um job do `at` é
+**Rodou às 14:37:00 exatamente, e então sumiu.** Um job do `at` é
 consumido ao rodar.
 
 ```
 ana@vm:~/work/cron$ at 03:00 tomorrow <<< "/home/ana/bin/report.sh"
 warning: commands will be executed using /bin/sh
-job 2 at Wed Sep 16 03:00:00 2026
+job 2 at Thu Oct  8 03:00:00 2026
 ana@vm:~/work/cron$ atq
-2       Wed Sep 16 03:00:00 2026 a ana
+2       Thu Oct  8 03:00:00 2026 a ana
 ana@vm:~/work/cron$ atrm $(atq | cut -f1); atq; echo "removed, exit $?"
 removed, exit 0
 ```
@@ -156,18 +173,29 @@ e o repete. O `at -c` imprime o job que ele vai rodar, e o topo dele é o seu
 shell:
 
 ```
-ana@vm:~$ at -c 3 | head -10
+ana@vm:~$ at 03:00 tomorrow <<< "/home/ana/bin/report.sh" 2>/dev/null
+ana@vm:~$ at -c "$(atq | cut -f1)" | grep -v LS_COLORS | head -12
 #!/bin/sh
-# atrun uid=1001 gid=1002
+# atrun uid=1000 gid=1000
 # mail ana 0
 umask 2
-NVM_RC_VERSION=; export NVM_RC_VERSION
-JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64; export JAVA_HOME
-GRADLE_HOME=/opt/gradle; export GRADLE_HOME
-RBENV_SHELL=bash; export RBENV_SHELL
 PWD=/home/ana; export PWD
 LOGNAME=ana; export LOGNAME
+XDG_SESSION_TYPE=tty; export XDG_SESSION_TYPE
+HOME=/home/ana; export HOME
+LANG=C.UTF-8; export LANG
+COLUMNS=100; export COLUMNS
+SSH_CONNECTION=10.0.2.2\ 40208\ 10.0.2.15\ 22; export SSH_CONNECTION
+LESSCLOSE=/usr/bin/lesspipe\ %s\ %s; export LESSCLOSE
+ana@vm:~$ atrm "$(atq | cut -f1)"
 ```
+
+Doze linhas, e o job ainda nem apareceu. Tudo o que estava definido no shell de
+onde ele foi enfileirado — o tipo de sessão, a conexão ssh por onde ele entrou, a
+largura daquele terminal — está escrito no job, para ser definido de novo às três
+da manhã. Uma linha ficou de fora porque tem milhares de caracteres: o
+`LS_COLORS`, que diz ao `ls` de que cor pintar cada tipo de arquivo, e que o job
+também vai carregar.
 
 **Isso é mais amigável e não é mais confiável.** O job roda com o que por acaso
 estava definido no terminal em que você o digitou — incluindo um `JAVA_HOME` de

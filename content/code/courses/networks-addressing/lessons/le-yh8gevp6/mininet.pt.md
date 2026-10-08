@@ -1,6 +1,6 @@
 ---
 title: Mininet: uma rede montada com o kernel
-version: 1
+version: 2
 ---
 
 O Mininet não segue nenhum dos dois caminhos. **Ele monta a rede com o próprio kernel do Linux**: cada
@@ -9,7 +9,9 @@ switch é um switch de software no kernel. Ele nasceu em Stanford para pesquisa 
 software, por isso os switches dele são, por padrão, Open vSwitch comandados por um controlador
 OpenFlow. Para esta aula ele rodou na forma mais simples, com bridges comuns do Linux como switches
 (`--switch lxbr`) e nenhum controlador (`--controller none`), para não precisar de nada além do kernel.
-A versão é o Mininet 2.3.0, do pacote do próprio Ubuntu.
+A versão é o Mininet 2.3.0, do pacote do próprio Ubuntu: `sudo apt-get install -y mininet` na máquina
+do laboratório. Uma execução interrompida deixa interfaces para trás, e o `sudo mn -c` as limpa; ele
+rodou antes de cada comando abaixo.
 
 Um comando monta a rede, testa e desmonta de novo. `--topo linear,3` pede três switches em linha com um
 host em cada, e `--test pingall` faz cada host pingar todos os outros:

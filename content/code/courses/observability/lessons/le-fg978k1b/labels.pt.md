@@ -1,6 +1,6 @@
 ---
 title: Labels, e o experimento
-version: 1
+version: 2
 ---
 
 Um label é o que permite a uma métrica responder *por rota* ou *por código de status*, e a aula 5 se
@@ -37,7 +37,12 @@ time.sleep(3600)
 ```
 
 O Prometheus ganha mais dois jobs de coleta: ele mesmo, para que a própria memória e a contagem de
-séries virem métricas, e o experimento:
+séries virem métricas, e o experimento. Guarde uma cópia do `prometheus.yml`, acrescente no fim dele
+as seis linhas que o `tail` abaixo imprime, e salve o `logins.py` em `~/shop/scratch`:
+
+```sh
+cp prometheus/prometheus.yml /tmp/prometheus.yml.orig
+```
 
 ```
 ana@obs:~/shop$ tail -6 prometheus/prometheus.yml
@@ -84,3 +89,9 @@ __name__=prometheus_tsdb_head_series instance=localhost:9090 job=prometheus  378
 logins, porque todo counter traz o seu gauge `_created`. O resto é do próprio alvo novo: o `up`
 dele, as estatísticas de coleta e as métricas de processo que a biblioteca cliente publica. Nada a
 ver.
+
+Pare o experimento antes da próxima seção, que o sobe de novo com o mesmo nome:
+
+```sh
+docker stop logins
+```

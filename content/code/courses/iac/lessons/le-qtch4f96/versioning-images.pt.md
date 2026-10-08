@@ -1,6 +1,6 @@
 ---
 title: Versionar o que você constrói
-version: 1
+version: 2
 ---
 
 Uma imagem é algo que outras pessoas ligam, então ela precisa do mesmo que a aula 10 pediu de um
@@ -69,7 +69,10 @@ index 87b3f2a..554e9e1 100644
  }
 ```
 
-Três mudanças, cada uma respondendo a uma pergunta diferente mais tarde.
+Faça as mesmas edições no seu; o diff mostra cada linha que muda. A Ana faz o commit antes de
+construir, `git add -A && git commit -qm 'version and commit come from outside'`, para que o commit
+que uma imagem registra seja um que contém estas linhas. Três mudanças, cada uma respondendo a uma
+pergunta diferente mais tarde.
 
 **As variáveis não têm default**, então um build que não recebe a versão se recusa a começar:
 
@@ -160,7 +163,7 @@ igual. E um rollback para `latest` não é rollback nenhum, porque ela nomeia o 
 último, que é justamente o que se quer desfazer.
 
 A imagem base mostra a mesma coisa vista de fora. O Ubuntu 24.04 saiu em abril de 2024, e esta é a
-data em que foi criada a imagem por trás da tag `ubuntu:24.04` neste notebook:
+data em que foi criada a imagem por trás da tag `ubuntu:24.04` no notebook da Ana:
 
 ```
 ana@laptop:~/shop/image$ docker image inspect ubuntu:24.04 --format '{{.Created}}'

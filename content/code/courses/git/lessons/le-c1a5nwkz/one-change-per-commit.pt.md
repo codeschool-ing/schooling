@@ -1,6 +1,6 @@
 ---
 title: Uma mudança por commit
-version: 1
+version: 2
 ---
 
 Uma boa mensagem é fácil de escrever para um commit que faz uma coisa, e impossível para um que faz
@@ -12,7 +12,13 @@ que poderia ser revertido sozinho sem desfazer mais nada.
 
 A Ana tem duas mudanças esperando, por dois motivos diferentes: os dias de abertura na página inicial e
 o preço do pão francês. Ela quer um commit só para a primeira. O `git add -p`, de *patch*, mostra cada
-mudança e pergunta sobre ela:
+mudança e pergunta sobre ela. As duas mudanças:
+
+```bash
+sed -i 's/half past six/half past six, Monday to Saturday/' index.html
+sed -i 's/French bread, 0.90/French bread, 0.95/' menu.html
+```
+
 
 ```
 ana@vm:~/site$ git diff --stat
@@ -52,6 +58,12 @@ Cada bloco é um **hunk**, a palavra da aula 3, e o Git pergunta se deve prepar�
 para não. O hunk da página inicial entrou, o do cardápio não, e depois do commit o `git status` ainda
 mostra o `menu.html` modificado, esperando um commit próprio com o próprio motivo. As outras letras
 também valem conhecer: `q` para, `a` prepara o resto do arquivo, e `?` explica cada uma delas.
+
+O preço do pão francês não serve para a próxima seção, então jogue-o fora com o comando da aula 4:
+
+```bash
+git restore menu.html
+```
 
 Quando duas mudanças estão no mesmo arquivo, longe o bastante uma da outra, são hunks separados e o
 `add -p` escolhe entre elas exatamente do mesmo jeito. Essa é a ferramenta que a aula 2 prometeu para a

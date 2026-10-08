@@ -13,7 +13,7 @@ A separação acontece em cada camada, e cada camada tem a sua ferramenta:
 | camada | o que separa os visitantes | o que isso impede |
 |---|---|---|
 | rádio | um SSID próprio | nada, sozinho |
-| 2 | uma VLAN própria (aula 19 de `networks-addressing`) | visitantes no mesmo domínio de broadcast dos funcionários |
+| 2 | uma VLAN própria (veja `networks-addressing`) | visitantes no mesmo domínio de broadcast dos funcionários |
 | 2 | isolamento de clientes | um visitante alcançar outro |
 | 3 | um firewall: internet sim, faixas internas não | visitantes alcançarem qualquer coisa lá dentro |
 | uso | um limite de taxa por cliente e por SSID | o download de um visitante tomar o tempo de ar dos funcionários |

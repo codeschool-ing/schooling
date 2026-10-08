@@ -1,9 +1,9 @@
 ---
 title: Motion the reader can turn off
-version: 1
+version: 2
 ---
 
-Lesson 11 section 08 introduced **`prefers-reduced-motion`**. A site with many animations can answer it in one place, with a rule like this, loaded after the others:
+Lesson 11 section 08 introduced **`prefers-reduced-motion`**. A site with many animations can answer it in one place, with a rule like this, loaded after the others. Save it as `reduced.css`:
 
 ```css
 @media (prefers-reduced-motion: reduce) {
@@ -16,6 +16,8 @@ Lesson 11 section 08 introduced **`prefers-reduced-motion`**. A site with many a
 ```
 
 For readers who asked for less motion, every animation and transition becomes **0.01 ms** long and runs **once**. The page is the same page with the movement taken out: anything that slides in is simply there, because, as section 08 recommended, its normal styles are its final state.
+
+`reduced.html` is section 08's `keyframes.html` with one line added at the end of its head, after the `</style>`: `<link rel="stylesheet" href="reduced.css">`. Measured as a reader who asked for less motion:
 
 ```
 ana@laptop:~/site$ probe --reduced-motion reduced.html style .spinner animation-duration,animation-iteration-count style .notice opacity

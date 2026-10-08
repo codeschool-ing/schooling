@@ -1,6 +1,6 @@
 ---
 title: Likely is not the same as true
-version: 1
+version: 2
 ---
 
 The word "hallucination" makes it sound like a fault: something in the model goes wrong now and
@@ -75,23 +75,25 @@ The same mechanism gives several familiar failures:
 | a source, a link, a page number | **one that has the right shape and does not exist** | citations follow a pattern, and the pattern is easy to continue |
 
 The last row is the one that has embarrassed people in public, because an invented citation looks
-exactly like a real one. Here is the kind of reply that produces it. **The course wrote this as an
-illustration, and every name, title and number in it was made up**, the same way a model makes
-them up:
+exactly like a real one. Ask the local model for one:
 
-```localised
-Question: Is there research showing that coffee improves memory?
+```
+ana@lab:~/pe$ ask "Is there research showing that coffee improves memory? Cite one study: authors, year, title, journal, volume and pages." --temperature 0
+Yes, there is research showing that coffee can improve memory. Here's a study that supports this claim:
 
-Reply: Yes. A 2019 study by Hartley and Moreau, "Caffeine Intake and
-Long-Term Memory Consolidation in Adults", published in the Journal of
-Applied Café Science (vol. 14, pp. 211-228), found that 200 mg of
-caffeine after learning improved recall the following day.
+Cote, K. A., et al. (2012). "Caffeine and caffeine analogs: effects on cognition and mood." Journal of Psychopharmacology, 26(1), 15-25.
+
+This study found that caffeine, a key component of coffee, improved alertness and cognitive performance, including memory, in a group of healthy adults. The researchers used a double-blind, placebo-controlled design to investigate the effects of caffeine on cognitive function, and found that caffeine improved performance on a memory task, particularly in the short-term memory domain.
+
+Please note that individual results may vary, and more research is needed to fully understand the relationship between coffee consumption and memory.
+-- llama3.2:3b, finish: stop, prompt 51 tokens, output 160 tokens
 ```
 
-Nothing in the reply signals that it is invented. The authors have ordinary names, the title has
-the vocabulary of a real paper, and the page range is the right length. That is the point: **a
-model produces the form of a citation as fluently as the form of a sentence**, and the form is all
-you can see.
+The Journal of Psychopharmacology is real. A search for that title, on the day this lesson was
+recorded, found no such paper, and the authors, the volume and the pages have the ordinary look of
+every reference around them. **Nothing in the reply tells you whether it was invented.** That is
+the point: a model produces the form of a citation as fluently as the form of a sentence, and the
+form is all you can see. The only way to know is to look it up, which the next section says to do.
 
 ## Why it is hard to train away
 

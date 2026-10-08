@@ -1,6 +1,6 @@
 ---
 title: JSON, o formato que um programa quer
-version: 1
+version: 2
 ---
 
 É tentador pensar que um modelo que escreve boa prosa vai escrever bons dados se você pedir. Ele
@@ -28,76 +28,86 @@ que ela chega**, e não três passos depois, quando um relatório sai errado.
 
 ## Pedindo no prompt
 
-O prompt diz como é o objeto, campo por campo, e diz que nada mais pode vir junto. O curso escreveu
-este prompt como ilustração; nenhum modelo foi chamado:
+O prompt diz como o objeto é, campo por campo, e diz que nada mais pode vir junto. Salve-o como
+`~/pe/prompts/classify.txt`:
 
-```localised
-Classifique a avaliação do café que está entre as tags <review>.
+```
+ana@lab:~/pe$ cat prompts/classify.txt
+Classify the café review between the <review> tags.
 
-Responda com um único objeto JSON e mais nada: nenhuma frase antes
-ou depois dele, e nenhum bloco de código. Use exatamente estes campos:
-  "review"         o número da avaliação, como número
-  "sentiment"      um de "positive", "negative", "mixed"
-  "topics"         uma lista de palavras curtas em minúsculas
-  "staff_praised"  true ou false
+Reply with one JSON object and nothing else: no sentence before
+or after it, and no code fence. Use exactly these fields:
+  "review"         the review's number, as a number
+  "sentiment"      one of "positive", "negative", "mixed"
+  "topics"         a list of short lowercase words
+  "staff_praised"  true or false
 
 <review number="3">
 Waited fifteen minutes for a tea at noon. The staff were kind about it.
 </review>
 ```
 
-Três coisas nele fazem o trabalho. Os campos têm nomes exatos, então o modelo não tem motivo para
-chamar um deles de `mood` na terça-feira. Os valores que vêm de uma lista estão listados. E **o
-prompt nomeia os dois embrulhos que os modelos mais acrescentam**, uma frase de apresentação e um
-bloco de código em Markdown, porque "só JSON" sozinho não os exclui aos olhos do modelo.
+Três coisas nele fazem o trabalho. Os campos têm nome exato, então o modelo não tem motivo para
+chamar um deles de `mood` na terça. Os valores que vêm de uma lista estão listados. E **o prompt
+nomeia os dois embrulhos que os modelos mais acrescentam**, uma frase de introdução e uma cerca de
+código em Markdown, porque "só JSON" sozinho não os descarta aos olhos do modelo.
 
-A lição 19 troca a lista de campos por um **schema** formal, um documento contra o qual um programa
-consegue conferir a resposta. Aqui a descrição está em prosa, e a conferência é só se a resposta é
-lida pelo parser.
+A lição 19 troca a lista de campos por um **esquema** formal, um documento contra o qual um programa
+consegue conferir uma resposta. Aqui a descrição está em prosa, e a conferência é só se a resposta é
+lida.
 
 ## Três respostas, e o que um parser diz a cada uma
 
-Estas são três respostas do tipo que os modelos devolvem, escritas pelo curso em arquivos na
-bancada. A
-primeira é o que foi pedido:
+A primeira é a resposta do modelo a esse prompt, salva num arquivo:
 
 ```
+ana@lab:~/pe$ ask - --temperature 0 --plain < prompts/classify.txt > replies/good.json
 ana@lab:~/pe$ cat replies/good.json
-{
-  "review": 3,
-  "sentiment": "negative",
-  "topics": ["wait", "tea"],
-  "staff_praised": true
-}
+{"review":3,"sentiment":"mixed","topics":["waited","tea","staff","kind"],"staff_praised":true}
 ana@lab:~/pe$ python3 -m json.tool replies/good.json > /dev/null; echo "exit $?"
 exit 0
 ```
 
-`python3 -m json.tool` é o leitor de JSON do próprio Python, rodado pela linha de comando. Ele lê o
-arquivo e o imprime de volta arrumado; aqui a impressão é descartada e só o **código de saída** fica,
-porque é isso que um programa confere. `0` quer dizer que foi lido.
+O `python3 -m json.tool` é o leitor de JSON do próprio Python, rodado na linha de comando. Ele lê o
+arquivo e o imprime de volta, arrumado; aqui a impressão é jogada fora e só o **código de saída**
+fica, porque é isso que um programa confere. `0` quer dizer que foi lido. O objeto tem todos os
+campos, com os tipos pedidos, e `mixed`, da lista.
 
-A segunda resposta tem o objeto certo dentro e uma frase simpática na frente:
+A segunda é o que voltou de um prompt mais curto, o que a maioria das pessoas escreve primeiro:
 
 ```
-ana@lab:~/pe$ cat replies/chatty.json
-Sure! Here is the JSON for review 3:
-{
-  "review": 3,
-  "sentiment": "negative",
-  "topics": ["wait", "tea"],
-  "staff_praised": true
-}
+ana@lab:~/pe$ cat prompts/classify-short.txt
+Classify this café review as JSON with the fields review, sentiment, topics and staff_praised.
+
+Review 3: Waited fifteen minutes for a tea at noon. The staff were kind about it.
+ana@lab:~/pe$ ask - --temperature 0 --plain < prompts/classify-short.txt > replies/chatty.json
+ana@lab:~/pe$ cat -n replies/chatty.json
+     1	Here is the classification of the café review as JSON:
+     2	
+     3	```
+     4	{
+     5	  "review": "Waited fifteen minutes for a tea at noon. The staff were kind about it.",
+     6	  "sentiment": "NEUTRAL",
+     7	  "topics": ["wait time", "customer service"],
+     8	  "staff_praised": true
+     9	}
+    10	```
+    11	
+    12	Note: The sentiment is classified as NEUTRAL because the reviewer mentions a wait time, but also mentions that the staff were kind about it, which suggests a positive aspect of their experience.
 ana@lab:~/pe$ python3 -m json.tool replies/chatty.json > /dev/null; echo "exit $?"
 Expecting value: line 1 column 1 (char 0)
 exit 1
 ```
 
-**O parser desistiu logo no primeiro caractere.** Um JSON precisa começar com um valor, e `S` não é
-um. Uma pessoa vê um objeto perfeitamente bom; o programa vê uma falha, e nunca fica sabendo que o
-objeto estava ali. A lição 19 recupera esta resposta com um pequeno passo de reparo.
+**O parser desistiu no primeiro caractere.** JSON tem de começar com um valor, e `H` não é um. Uma
+pessoa vê um objeto ali dentro; o programa vê uma falha, e nunca fica sabendo que o objeto estava
+lá. Olhe o objeto mesmo assim: `review` guarda o texto da avaliação em vez do número, e `sentiment`
+é `NEUTRAL`, em maiúsculas, um valor que ninguém listou porque ninguém listou nenhum. Para cada uma
+dessas coisas o prompt mais longo tinha uma linha. A lição 19 recupera o objeto de uma resposta
+assim com um pequeno passo de conserto.
 
-A terceira não tem frase nenhuma, e cada linha dela tem cara de dado:
+O terceiro formato é comum o bastante para ser reconhecido de vista. Esta resposta foi escrita pelo
+curso, para que a mensagem do parser possa ser lida sozinha:
 
 ```
 ana@lab:~/pe$ cat replies/python.json
@@ -112,11 +122,11 @@ Expecting property name enclosed in double quotes: line 2 column 3 (char 4)
 exit 1
 ```
 
-Esse é o jeito do Python de escrever um dicionário, e ele é parecido o bastante com JSON para
-enganar o olho. O JSON exige aspas duplas, escreve o booleano `true` em minúsculas e recusa a
-vírgula depois do último campo. O erro aponta só o primeiro problema, na linha 2, coluna 3, o `'`
-de abertura. **Um parser informa onde parou, não tudo o que está errado**, então consertar as
-aspas à mão só empurraria o erro para o `True`.
+Esse é o jeito do Python de escrever um dicionário, e é parecido o bastante com JSON para enganar o
+olho. JSON exige aspas duplas, escreve o booleano `true` em minúsculas e recusa a vírgula depois do
+último campo. O erro só cita o primeiro problema, na linha 2, coluna 3, a `'` de abertura. **Um
+parser informa onde parou, não tudo o que está errado**, então consertar as aspas à mão só levaria o
+erro para o `True`.
 
 ## O que levar das três
 

@@ -1,6 +1,6 @@
 ---
 title: Contadores, taxas e médias — os três jeitos de um número mentir
-version: 1
+version: 2
 ---
 
 Todo número desta aula é uma de três coisas, e ler uma como outra é como uma
@@ -16,13 +16,16 @@ figura perfeitamente correta dá uma resposta errada.
 
 ```
 ana@vm:~$ ip -s link show eth0
-…
+4: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1400 qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
+    link/ether 02:fc:00:00:00:01 brd ff:ff:ff:ff:ff:ff
     RX:  bytes packets errors dropped  missed   mcast
-     365057734  262464      0       6       0       0
+    1003499627  214187      0       6       0       0
+    TX:  bytes packets errors dropped carrier collsns
+     333317247  179302      0       0       0       0
 ```
 
-**365 megabytes recebidos. Desde quando?** Desde que a interface subiu, quatro
-horas e meia atrás. O número não te diz nada sobre a rede estar ocupada agora, e
+**Um gigabyte recebido. Desde quando?** Desde que a interface subiu, três horas
+atrás. O número não te diz nada sobre a rede estar ocupada agora, e
 um número maior não quer dizer rede mais ocupada — quer dizer uptime maior.
 
 O mesmo vale para o `/proc/stat`, o `/proc/PID/io`, o `/proc/diskstats` e toda
@@ -34,17 +37,25 @@ distância, e subtrai. Que é exatamente o que o `vmstat 1`, o `iostat 1`, o
 
 ## E é por isso que a primeira linha está errada
 
+Com os laços ocupados rodando de novo:
+
+```sh
+cd ~/work/load
+./spin.sh &
+sleep 5
+```
+
 ```
 ana@vm:~$ vmstat 1 4
 procs -----------memory---------- ---swap-- -----io---- -system-- -------cpu-------
  r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st gu
- 4  0      0 14507736  56092 1514136    0    0    71   358  431    1  3  0 97  0  0  0
- 4  0      0 14507736  56092 1514136    0    0     0     0 1074  218 100  0  0  0  0  0
- 5  0      0 14507736  56092 1514136    0    0     0     0 1062  188 100  0  0  0  0  0
- 4  0      0 14507736  56092 1514136    0    0     0     0 1083  296 100  0  0  0  0  0
+ 5  0      0 15676488  10324 394340    0    0   137 17341 1053    2  9  2 88  1  0  0
+ 4  0      0 15676488  10324 394340    0    0     0     0 1040  134 99  0  0  0  1  0
+ 4  0      0 15676488  10324 394340    0    0     0     0 1029  112 99  0  0  0  1  0
+ 4  0      0 15676488  10324 394340    0    0     0     0 1051  216 99  0  0  0  1  0
 ```
 
-A primeira linha diz `us 1, id 97` numa máquina cravada em 100%. **Ela não tem
+A primeira linha diz `us 9, id 88` numa máquina cravada em 99%. **Ela não tem
 amostra anterior da qual subtrair, então divide o contador pelo uptime** e
 imprime a média desde o boot.
 
@@ -66,12 +77,29 @@ uma travada de dois segundos é do que o usuário reclamou.
 
 ```
 ana@vm:~$ mpstat -P ALL 1 1
-…
-11:25:36     all  100.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00
-11:25:36       0  100.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00
+Linux 6.18.44-fc-v77 (vm)       10/07/26        _x86_64_        (4 CPU)
+
+13:50:49     CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
+13:50:50     all   98.75    0.00    0.25    0.00    0.00    0.00    1.00    0.00    0.00    0.00
+13:50:50       0   97.03    0.00    0.99    0.00    0.00    0.00    1.98    0.00    0.00    0.00
+13:50:50       1   99.00    0.00    0.00    0.00    0.00    0.00    1.00    0.00    0.00    0.00
+13:50:50       2  100.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00
+13:50:50       3   99.00    0.00    0.00    0.00    0.00    0.00    1.00    0.00    0.00    0.00
+
+Average:     CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
+Average:     all   98.75    0.00    0.25    0.00    0.00    0.00    1.00    0.00    0.00    0.00
+Average:       0   97.03    0.00    0.99    0.00    0.00    0.00    1.98    0.00    0.00    0.00
+Average:       1   99.00    0.00    0.00    0.00    0.00    0.00    1.00    0.00    0.00    0.00
+Average:       2  100.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00
+Average:       3   99.00    0.00    0.00    0.00    0.00    0.00    1.00    0.00    0.00    0.00
 ```
 
-A linha `all` é uma média sobre quatro núcleos. Aqui todo núcleo está a 100%,
+```sh
+cd ~/work/load
+pkill -f spin.sh
+```
+
+A linha `all` é uma média sobre quatro núcleos. Aqui todo núcleo está entre 97 e 100%,
 então a média é honesta — mas **um núcleo a 100% e três ociosos dão média de
 25%**, e essa é a forma mais comum de um problema real: um programa sem threads,
 numa máquina com bastante capacidade sobrando.

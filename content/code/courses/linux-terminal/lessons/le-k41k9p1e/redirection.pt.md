@@ -1,6 +1,6 @@
 ---
 title: Redirecionamento, e por que a ordem do `2>&1` importa
-version: 1
+version: 2
 ---
 
 Seis operadores, e você vai usar quatro deles todo dia.
@@ -71,6 +71,7 @@ app.log
 app.log.1
 empty.log
 error.log
+today.log
 ```
 
 O `2>&1` se lê como **"faça o descritor 2 virar uma cópia do descritor 1"**, que é a frase da aula 6

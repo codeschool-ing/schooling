@@ -12,6 +12,8 @@
 # encodings OpenAI publishes; no other provider's tokenizer is in the
 # workbench, and the lesson shows no count for one.
 #
+# license reads the model lesson 1 pulled: llama3.2:3b, Ollama 0.40.0.
+#
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
@@ -31,3 +33,6 @@ on 'tok show "O café abre às oito aos domingos." -e cl100k_base'
 on 'tok show "O café abre às oito aos domingos." -e o200k_base'
 on 'tok count handbook/*.md -e cl100k_base'
 on 'tok count handbook/*.md -e o200k_base'
+
+block license
+on 'ollama show --license llama3.2:3b | head -2; ollama show --license llama3.2:3b | wc -l'

@@ -1,6 +1,6 @@
 ---
 title: What counts as a secret
-version: 1
+version: 2
 ---
 
 A **secret** is any value that grants access to something, so that whoever holds it can act as you.
@@ -12,6 +12,15 @@ its query, a cloud provider's credentials file, the session cookie of an adminis
 anybody could ask the carrier for prices on the shop's account, and with a real carrier, create
 shipments and run up a bill. In the lab it is `lab-live-token`, a value made up for the course that
 opens nothing but the stand-in on 127.0.0.1, and this lesson handles it as if it were real.
+
+The lesson works on lesson 8's production environment and the carrier on port 9092 that accepts that
+token, and both should still be running. If they are not, the first line below starts the carrier,
+in a terminal of its own, and the second deploys release 1.5.0 to production again:
+
+```sh
+CARRIER_TOKEN=lab-live-token CARRIER_PORT=9092 python3 ~/carrier/server.py
+ops/deploy.sh production dist/shipquote-1.5.0.tar.gz
+```
 
 ## Why a pipeline is where secrets leak
 

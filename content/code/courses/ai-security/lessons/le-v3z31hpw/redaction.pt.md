@@ -1,16 +1,72 @@
 ---
 title: Fazer a redação antes de o registro ser gravado
-version: 1
+version: 2
 ---
 
 **A redação acontece na entrada, antes de o registro chegar a qualquer depósito.** Redigir um log
 depois de gravado deixa uma janela em que a cópia sem redação existe, e nessa janela ela entra no
 backup, é enviada a um fornecedor de logs, é indexada para busca e é lida por quem estava depurando.
-Cada uma dessas é uma cópia que a redação posterior não alcança. No `~/guard`, a camada com redação
-é feita pela mesma função que o `guard redact` chama, no momento em que o registro é gravado.
+Cada uma dessas é uma cópia que a redação posterior não alcança. No `~/guard`, o `tiers.py` faz a
+camada com redação com a mesma função que o `guard redact` chama, e numa aplicação de verdade essa
+chamada acontece no momento em que o registro é gravado.
 
-Antes de redigir qualquer coisa, meça o que existe. O `guard scan` passa cinco detectores pelo texto
-de cada registro, o prompt e a resposta:
+Antes de redigir qualquer coisa, meça o que existe. O `guard scan` passa os cinco detectores do
+`detect.py` pelo texto de cada registro, o prompt e a resposta. Salve-o como `~/guard/tools/scan.py`:
+
+```python
+# scan.py: how many records in a log hold personal data or a secret, by kind.
+#
+#   guard scan [--show] [--strict] PATH...
+#
+# PATH is a log file or a directory of them. Both the prompt and the output
+# of every record are read. --show lists every match and what was decided:
+# redact, or LEAVE for a shape whose check digits are wrong.
+import argparse
+import json
+import os
+from collections import Counter
+
+from detect import KINDS, find
+
+p = argparse.ArgumentParser(prog="guard scan")
+p.add_argument("paths", nargs="+")
+p.add_argument("--show", action="store_true")
+p.add_argument("--strict", action="store_true")
+a = p.parse_args()
+
+files = []
+for path in a.paths:
+    if os.path.isdir(path):
+        files += sorted(os.path.join(path, n) for n in os.listdir(path) if n.endswith(".jsonl"))
+    else:
+        files.append(path)
+
+held, shaped, total, hit = Counter(), Counter(), 0, 0
+for name in files:
+    with open(name, encoding="utf-8") as f:
+        for rec in map(json.loads, f):
+            total += 1
+            kinds, rejected = set(), set()
+            for field in ("prompt", "output"):
+                for kind, x, y, ok in find(rec[field], a.strict):
+                    (kinds if ok else rejected).add(kind)
+                    if a.show:
+                        print("%s  %-6s  %-6s  %-8s %s" % (rec["request"], field, kind,
+                                                          "redact" if ok else "LEAVE", rec[field][x:y]))
+            held.update(kinds)
+            shaped.update(rejected)
+            hit += bool(kinds)
+if a.show:
+    print()
+print("%d records in %d files" % (total, len(files)))
+for kind in KINDS:
+    line = "  %-7s %2d records" % (kind, held[kind])
+    if shaped[kind]:
+        line += "   (%d more %s-shaped, check digits wrong)" % (
+            shaped[kind], kind.upper() if kind == "cpf" else kind)
+    print(line)
+print("%d of %d records hold at least one" % (hit, total))
+```
 
 ```
 ana@lab:~/guard$ guard scan logs/raw

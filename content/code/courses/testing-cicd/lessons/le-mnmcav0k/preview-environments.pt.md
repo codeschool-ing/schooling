@@ -1,6 +1,6 @@
 ---
 title: Um ambiente por pull request
-version: 1
+version: 2
 ---
 
 A homologação compartilhada tem um problema de agenda: duas equipes querem testar duas mudanças ao
@@ -9,7 +9,8 @@ mesmo tempo, e uma espera ou as duas testam uma mistura. Um **ambiente de prévi
 build daquele pull request nele e destruindo-o quando o pull request fecha.
 
 No laboratório um ambiente é um diretório e uma porta, então uma prévia para o pull request 42 é barata
-de mostrar:
+de mostrar. A configuração dela é uma linha, `mkdir ~/envs/pr-42` e
+`echo SHIPQUOTE_PORT=8442 > ~/envs/pr-42/config.env`:
 
 ```
 ana@laptop:~/shipquote$ cat ~/envs/pr-42/config.env

@@ -1,13 +1,23 @@
 ---
 title: Pull, alvos, e o que uma coleta lê
-version: 1
+version: 2
 ---
 
 As aulas 2 a 4 fizeram cada serviço **mandar** seus spans ao Collector. O Prometheus funciona ao
 contrário, e boa parte do seu desenho decorre disso. **Cada alvo publica seus números atuais num
 endereço, e o Prometheus os pede num ritmo fixo.** O pedido se chama coleta (scrape), a cada quinze
 segundos neste laboratório, e a lista de endereços vem do `prometheus.yml`. O Prometheus diz o que
-está coletando e como foi a última tentativa:
+está coletando e como foi a última tentativa.
+
+Todo número desta aula precisa de tráfego, então comece de um laboratório iniciado de novo do zero e
+ponha os clientes simulados para rodar antes: cinco requisições por segundo durante vinte e cinco
+minutos. O `-d` os deixa rodando em segundo plano, e um minuto e quinze segundos depois há o que ler:
+
+```sh
+docker compose run -d --rm loadgen python -m loadgen.load 5 1500
+```
+
+Depois, os alvos:
 
 ```
 ana@obs:~/shop$ curl -s localhost:9090/api/v1/targets | jq -r '.data.activeTargets[] | [.labels.job, .labels.instance, .health, .lastScrapeDuration] | @tsv' | sort

@@ -1,6 +1,6 @@
 ---
 title: Which one to open
-version: 1
+version: 2
 ---
 
 The tools differ less in quality than in what they answer. **Pick by the question you are asking, not
@@ -12,7 +12,7 @@ by the tool you know.**
 | GNS3 | real device software, in virtual machines and containers | free and open source; images licensed by their vendors | labs mixing vendors, rehearsing a change on real software |
 | EVE-NG | the same, served to a browser | Community free, Professional paid; images licensed by vendors | shared labs, larger topologies |
 | Mininet | the Linux kernel's network stack | free and open source | software-defined networking, topologies written as programs |
-| namespaces, as `lab.sh` | the Linux kernel's network stack | free; one shell script | the protocols themselves, captured exactly |
+| namespaces, as `netlab.sh` | the Linux kernel's network stack | free; one shell script | the protocols themselves, captured exactly |
 | real equipment | the real device | the device, the space and the power | cabling, power, radio, the final check |
 
 Four questions show how the choice falls:
@@ -31,6 +31,6 @@ Four questions show how the choice falls:
   channel — need the physical thing.
 
 This course uses the namespace lab for a reason that is about honesty as much as cost: every
-transcript in it is something a real kernel printed, and anyone with a Linux machine can run
-`lab.sh` and get the same lines. Where a lesson needs a device the lab cannot be — a modem, an access
+transcript in it is something a real kernel printed, and anyone with a Linux machine can build
+the same networks from the files these lessons show and get the same lines, timings apart. Where a lesson needs a device the lab cannot be — a modem, an access
 point, a vendor's command line — it says so and shows nothing.

@@ -70,7 +70,7 @@ fluxo é cortado no tamanho exato dos dados. Ele também é paralelo nos dois se
 
 O preço é uma regra sem exceções: **um valor de contador nunca pode ser usado duas vezes com a
 mesma chave.** Duas mensagens cifradas com a mesma chave e o mesmo valor inicial são misturadas com
-o mesmo fluxo, e isso vaza informação sobre os dois textos claros ao mesmo tempo. A seção 05 desta
+o mesmo fluxo, e isso vaza informação sobre os dois textos claros ao mesmo tempo. A seção 07 desta
 aula trata de escolher esse valor inicial, e a aula 17 trata de como os sistemas erram nisso.
 
 ## Qual modo, então

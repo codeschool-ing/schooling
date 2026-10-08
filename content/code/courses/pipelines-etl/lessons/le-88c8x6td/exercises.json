@@ -1,0 +1,540 @@
+[
+  {
+    "id": "ex-wxxpkhfn",
+    "version": 1,
+    "section": "what-airflow-is",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of Airflow to its job.",
+    "hint": "Four processes and a database.",
+    "pairs": [
+      {
+        "left": "DAG processor",
+        "right": "Reads the DAG files and stores each DAG"
+      },
+      {
+        "left": "Scheduler",
+        "right": "Decides which runs and tasks are due"
+      },
+      {
+        "left": "Triggerer",
+        "right": "Waits on behalf of waiting tasks"
+      },
+      {
+        "left": "Metadata database",
+        "right": "Holds every run and every task's state"
+      }
+    ],
+    "right_distractors": [
+      "Transforms the rows the tasks read"
+    ]
+  },
+  {
+    "id": "ex-s8bhxth8",
+    "version": 1,
+    "section": "what-airflow-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague's task reads a million orders into a Python list, sorts them, and returns the list to the next task. What is wrong with that, in Airflow?",
+    "hint": "What is Airflow not?",
+    "choices": [
+      {
+        "text": "Nothing; that is what tasks are for",
+        "correct": false,
+        "why": "Tasks run work; the data belongs in the warehouse, not in Airflow."
+      },
+      {
+        "text": "Python lists cannot hold a million items",
+        "correct": false,
+        "why": "They can; the problem is where the list ends up."
+      },
+      {
+        "text": "Airflow is not a data engine",
+        "correct": true,
+        "why": "Right. The rows go into Airflow's own database; the sort belongs in SQL."
+      },
+      {
+        "text": "Returning a value is not allowed in Airflow 3",
+        "correct": false,
+        "why": "Returning small values is how XComs work."
+      }
+    ]
+  },
+  {
+    "id": "ex-hxcafmyq",
+    "version": 1,
+    "section": "a-first-dag",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why was `shop_nightly` paused when it first appeared in `airflow dags list`?",
+    "hint": "Think of a file copied in by mistake.",
+    "choices": [
+      {
+        "text": "Every new DAG starts paused",
+        "correct": true,
+        "why": "Right. Nothing runs on its own until somebody unpauses it."
+      },
+      {
+        "text": "It had an error",
+        "correct": false,
+        "why": "An error would stop it loading; it loaded fine."
+      },
+      {
+        "text": "Its start date was in the past, so the scheduler refused it",
+        "correct": false,
+        "why": "A past start date is normal."
+      },
+      {
+        "text": "`dags test` pauses DAGs while it runs them",
+        "correct": false,
+        "why": "It was paused before any test ran."
+      }
+    ]
+  },
+  {
+    "id": "ex-34qa8n2q",
+    "version": 1,
+    "section": "a-first-dag",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many lines did one `airflow dags test` run of `shop_nightly` print before the filter?",
+    "hint": "The second command of the first run.",
+    "value": 134,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-rypa20wv",
+    "version": 1,
+    "section": "a-first-dag",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the first test run, `transform` failed. Which tasks never ran?",
+    "hint": "Everything after a failed task waits for it.",
+    "choices": [
+      {
+        "text": "`extract` and `day_to_load`",
+        "correct": false,
+        "why": "Both ran and succeeded before `transform`."
+      },
+      {
+        "text": "Only `fact_sales`",
+        "correct": false,
+        "why": "The dimension loads also wait for `transform`."
+      },
+      {
+        "text": "The three loads after it",
+        "correct": true,
+        "why": "Right. Each waits, directly or not, for `transform`."
+      },
+      {
+        "text": "All six, because the run failed",
+        "correct": false,
+        "why": "Two had already succeeded."
+      }
+    ]
+  },
+  {
+    "id": "ex-kac1mjxe",
+    "version": 1,
+    "section": "operators",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `bash_command=\"sh run_sql.sh\"` fail with `TemplateNotFound`?",
+    "hint": "Look at how the value ends.",
+    "choices": [
+      {
+        "text": "`run_sql.sh` was not executable",
+        "correct": false,
+        "why": "It is run with `sh`, and it never got that far."
+      },
+      {
+        "text": "A value ending in `.sh` is read as a template file name",
+        "correct": true,
+        "why": "Right. Airflow looked for a file called `sh run_sql.sh` in the DAG folder."
+      },
+      {
+        "text": "The `cwd` was wrong",
+        "correct": false,
+        "why": "The working directory is used only once the command runs."
+      },
+      {
+        "text": "Jinja does not allow spaces",
+        "correct": false,
+        "why": "The fix is in fact a space."
+      }
+    ]
+  },
+  {
+    "id": "ex-bnpcr6ms",
+    "version": 1,
+    "section": "operators",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson prefer `BashOperator`s that call Ana's own scripts over operators that do the work inside Airflow?",
+    "hint": "Where else can the same work be run?",
+    "choices": [
+      {
+        "text": "`BashOperator` is faster than every other operator",
+        "correct": false,
+        "why": "Speed is not the argument."
+      },
+      {
+        "text": "Other operators need a paid licence",
+        "correct": false,
+        "why": "Providers are open source."
+      },
+      {
+        "text": "Airflow 3 removed the SQL operators",
+        "correct": false,
+        "why": "`SQLExecuteQueryOperator` is there."
+      },
+      {
+        "text": "The same command reruns by hand",
+        "correct": true,
+        "why": "Right. Terminal, `nightly.sh` and Airflow all run it the same way."
+      }
+    ]
+  },
+  {
+    "id": "ex-xdpkrvz5",
+    "version": 1,
+    "section": "operators",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Airflow reads a connection from an environment variable named `AIRFLOW_CONN_` followed by the connection's id in capitals, so the connection `wh` is `AIRFLOW_CONN____`.",
+    "hint": "Two letters.",
+    "blanks": [
+      {
+        "accept": [
+          "WH"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1ywqdes5",
+    "version": 1,
+    "section": "dependencies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`fact_sales` has arrows from `day_to_load` and from `dim_customer`. When does it start?",
+    "hint": "Two arrows in.",
+    "choices": [
+      {
+        "text": "When either one succeeds",
+        "correct": false,
+        "why": "By default a task waits for all of its upstream tasks."
+      },
+      {
+        "text": "When both have succeeded",
+        "correct": true,
+        "why": "Right. All upstream tasks, by default."
+      },
+      {
+        "text": "At 02:00, whatever their state",
+        "correct": false,
+        "why": "The schedule starts the run; arrows start the tasks."
+      },
+      {
+        "text": "After `dim_book`, because it is written before it in the file",
+        "correct": false,
+        "why": "The file's order means nothing; there is no arrow from `dim_book`."
+      }
+    ]
+  },
+  {
+    "id": "ex-sfdqj843",
+    "version": 1,
+    "section": "dependencies",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague adds a task `report` that reads `marts.fact_sales`, and forgets to give it an arrow from `fact_sales`. What happens?",
+    "hint": "Missing dependencies fail silently.",
+    "choices": [
+      {
+        "text": "Airflow refuses to load the DAG",
+        "correct": false,
+        "why": "That is what a cycle does; a missing arrow is valid."
+      },
+      {
+        "text": "`report` waits for every other task",
+        "correct": false,
+        "why": "A task with no arrows waits for nothing."
+      },
+      {
+        "text": "`report` is skipped",
+        "correct": false,
+        "why": "It runs, which is the problem."
+      },
+      {
+        "text": "`report` reads whatever is there, and succeeds",
+        "correct": true,
+        "why": "Right. Nothing fails; the report is quietly a day old."
+      }
+    ]
+  },
+  {
+    "id": "ex-gtgzqz9k",
+    "version": 1,
+    "section": "dependencies",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these `shop_nightly` tasks so that each comes after every task it waits for.",
+    "hint": "Follow the arrows.",
+    "items": [
+      "extract",
+      "transform",
+      "dim_customer",
+      "fact_sales"
+    ]
+  },
+  {
+    "id": "ex-g8yavx4s",
+    "version": 1,
+    "section": "the-logical-date",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The run with logical date 02:00 on 3 March starts six months late, in September. Which day does `day_to_load` return?",
+    "hint": "It asks the run, not the clock.",
+    "choices": [
+      {
+        "text": "A day in September",
+        "correct": false,
+        "why": "That is what asking the clock would give."
+      },
+      {
+        "text": "3 March",
+        "correct": false,
+        "why": "It subtracts one day from the logical date."
+      },
+      {
+        "text": "2 March",
+        "correct": true,
+        "why": "Right. The same day, whenever the run happens."
+      },
+      {
+        "text": "Nothing: a late run is cancelled",
+        "correct": false,
+        "why": "Late runs run; that is what makes reprocessing possible."
+      }
+    ]
+  },
+  {
+    "id": "ex-n4hsf3wg",
+    "version": 1,
+    "section": "the-logical-date",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In Airflow 2, a daily DAG's run labelled 2 March executed early on 3 March. What does a plain `schedule=\"0 2 * * *\"` mean by default in Airflow 3?",
+    "hint": "A trigger, not an interval.",
+    "choices": [
+      {
+        "text": "A run at 02:00 whose logical date is 02:00 the same day",
+        "correct": true,
+        "why": "Right. No interval behind it; the DAG decides what it loads."
+      },
+      {
+        "text": "A run labelled with the previous day, as in Airflow 2",
+        "correct": false,
+        "why": "That needs a schedule declared with intervals."
+      },
+      {
+        "text": "A run every two hours",
+        "correct": false,
+        "why": "`0 2 * * *` is minute 0 of hour 2, daily."
+      },
+      {
+        "text": "A run at 02:00 UTC",
+        "correct": false,
+        "why": "The DAG's start date is in São Paulo time, and so is the schedule."
+      }
+    ]
+  },
+  {
+    "id": "ex-qhmd1dxf",
+    "version": 1,
+    "section": "running-a-dag",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`dim_book` and `dim_customer` have no arrow between them. What is different about how they run under `dags test` and under the scheduler?",
+    "hint": "One process, or several.",
+    "choices": [
+      {
+        "text": "Nothing; both run them at the same time",
+        "correct": false,
+        "why": "`dags test` runs tasks one after another in the terminal."
+      },
+      {
+        "text": "One after another, then together",
+        "correct": true,
+        "why": "Right. Which is why a missing arrow can pass a test."
+      },
+      {
+        "text": "The scheduler runs them in alphabetical order",
+        "correct": false,
+        "why": "Without an arrow, no order is promised."
+      },
+      {
+        "text": "`dags test` skips tasks with no downstream",
+        "correct": false,
+        "why": "`dim_book` ran in the test."
+      }
+    ]
+  },
+  {
+    "id": "ex-pcf4ebb5",
+    "version": 1,
+    "section": "running-a-dag",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which command runs a single task of a DAG, without its upstream tasks, to try a change?",
+    "hint": "Like `dags test`, for one task.",
+    "choices": [
+      {
+        "text": "`airflow dags test DAG DATE`",
+        "correct": false,
+        "why": "That runs every task."
+      },
+      {
+        "text": "`airflow tasks test DAG TASK DATE`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`airflow dags unpause DAG`",
+        "correct": false,
+        "why": "That lets the scheduler start runs; it runs nothing now."
+      },
+      {
+        "text": "`airflow dags reserialize`",
+        "correct": false,
+        "why": "That reads the DAG folder again; it runs no task."
+      }
+    ]
+  },
+  {
+    "id": "ex-2h6jmmhk",
+    "version": 1,
+    "section": "xcom",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is an XCom for?",
+    "hint": "Bytes, not megabytes.",
+    "choices": [
+      {
+        "text": "A small value the next task needs",
+        "correct": true,
+        "why": "Right. A date, a file name, a count."
+      },
+      {
+        "text": "Moving a day's orders between tasks",
+        "correct": false,
+        "why": "Data moves through the warehouse, not through Airflow's database."
+      },
+      {
+        "text": "Storing the DAG's code",
+        "correct": false,
+        "why": "The DAG processor stores DAGs; XComs are values from tasks."
+      },
+      {
+        "text": "Sending a message to the person on call",
+        "correct": false,
+        "why": "That is lesson 10's alerts."
+      }
+    ]
+  },
+  {
+    "id": "ex-nyvrvjzm",
+    "version": 1,
+    "section": "top-level-code",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop's database committed 14 transactions in two quiet minutes while `by_shop.py` sat in the DAG folder, one of them the query that measured it. At that rate, about how many transactions a day would the never-run DAG cause? Give a whole number.",
+    "hint": "Thirteen per two minutes, times the two-minute periods in a day.",
+    "value": 9360,
+    "tolerance": 720
+  },
+  {
+    "id": "ex-b2ycyggy",
+    "version": 1,
+    "section": "top-level-code",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does the lesson say a DAG whose shape depends on data should read that data?",
+    "hint": "Declare at the top; fetch at run time.",
+    "choices": [
+      {
+        "text": "At the top of the DAG file, cached in a global",
+        "correct": false,
+        "why": "The top of the file runs on every parse, cache or not."
+      },
+      {
+        "text": "In the scheduler's configuration",
+        "correct": false,
+        "why": "Configuration holds settings, not data."
+      },
+      {
+        "text": "In an environment variable set by the lab",
+        "correct": false,
+        "why": "That fixes the shape when the lab is built, not when data changes."
+      },
+      {
+        "text": "Inside a task, mapped at run time",
+        "correct": true,
+        "why": "Right. Dynamic task mapping exists for that."
+      }
+    ]
+  },
+  {
+    "id": "ex-h94x3mh3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A DAG passes `airflow dags test` every time, and under the scheduler it sometimes loads facts with the previous night's customers. What is the most likely cause?",
+    "hint": "What runs in sequence in a test and in parallel under the scheduler?",
+    "choices": [
+      {
+        "text": "The scheduler uses UTC",
+        "correct": false,
+        "why": "Time zones would shift days, not customers."
+      },
+      {
+        "text": "A missing arrow from the customer load to the fact load",
+        "correct": true,
+        "why": "Right. The test's sequence hid it; parallel runs expose it."
+      },
+      {
+        "text": "XComs are lost between scheduled runs",
+        "correct": false,
+        "why": "Each run keeps its own XComs."
+      },
+      {
+        "text": "The DAG is paused",
+        "correct": false,
+        "why": "A paused DAG would not run under the scheduler at all."
+      }
+    ]
+  }
+]

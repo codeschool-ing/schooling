@@ -1,10 +1,10 @@
 ---
 title: UDP: um pacote, e nenhuma promessa
-version: 1
+version: 2
 ---
 
 O UDP manda um pacote para uma porta e é só. Sem handshake, sem confirmação, sem retransmissão. Uma
-pergunta de DNS do laptop, vista no resolver:
+pergunta de DNS do laptop, `dig +short www.example.com`, vista no resolver:
 
 ```
 ana@resolver:~$ sudo tcpdump -n -i eth0 -c 2 udp port 53 and host 203.0.113.2

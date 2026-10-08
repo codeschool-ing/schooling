@@ -1,7 +1,78 @@
 ---
 title: Modo estrito, e os quatro lugares em que ele não ajuda
-version: 1
+version: 2
 ---
+
+Os scripts que esta seção roda, criados em `~/work/scripts` do jeito que a seção 02 descreveu; cada um aparece de novo onde é explicado:
+
+```sh
+cd ~/work/scripts
+cat > status.sh <<'END'
+#!/bin/bash
+echo "starting"
+exit 3
+END
+cat > noset.sh <<'END'
+#!/bin/bash
+cp /etc/nosuchfile /tmp/dest.txt
+echo "still running, and about to do damage"
+END
+cat > withset.sh <<'END'
+#!/bin/bash
+set -e
+cp /etc/nosuchfile /tmp/dest.txt
+echo "still running, and about to do damage"
+END
+cat > nounset.sh <<'END'
+#!/bin/bash
+TARGET=/tmp/scratch-dir
+echo "would remove $TARGE/old"
+echo "reached the end"
+END
+cat > unset.sh <<'END'
+#!/bin/bash
+set -u
+TARGET=/tmp/scratch-dir
+echo "would remove $TARGET/old"
+echo "would remove $TARGE/old"
+echo "reached the end"
+END
+cat > pipe.sh <<'END'
+#!/bin/bash
+set -e
+grep nothing /etc/hostname | wc -l
+echo "reached the end anyway, status of the pipeline was $?"
+END
+cat > pipefail.sh <<'END'
+#!/bin/bash
+set -eo pipefail
+grep nothing /etc/hostname | wc -l
+echo "reached the end anyway, status of the pipeline was $?"
+END
+cat > seholes.sh <<'END'
+#!/bin/bash
+set -e
+if false; then echo "no"; fi
+echo "1: a false condition did not stop the script"
+false || echo "2: the left of || may fail"
+false && echo "never"
+echo "3: even a bare false-and-something did not stop it"
+check() { false; echo "4: and inside a function used as a condition, it goes on"; }
+if check; then :; fi
+false
+echo "5: this line is never reached"
+END
+cat > handled.sh <<'END'
+#!/bin/bash
+set -euo pipefail
+if ! cp /etc/nosuchfile /tmp/dest.txt 2>/dev/null; then
+  echo "could not copy the file, carrying on without it" >&2
+fi
+grep -q nothing /etc/hostname || true
+echo "reached the end"
+END
+chmod +x status.sh noset.sh withset.sh nounset.sh unset.sh pipe.sh pipefail.sh seholes.sh handled.sh
+```
 
 A aula 6 seção 14 estabeleceu o que é um código de saída: zero para sucesso, qualquer outra coisa
 para falha, no `$?`. Um script também tem um, e é o que você deu ao `exit`:

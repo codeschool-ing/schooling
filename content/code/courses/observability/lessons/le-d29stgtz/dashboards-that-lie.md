@@ -1,13 +1,20 @@
 ---
 title: Dashboards that lie
-version: 1
+version: 2
 ---
 
 Every number on a dashboard is true, and a dashboard can still mislead. The commonest ways are few,
 and each has a fix.
 
-**The window hides what happened.** Every tenth charge was made to fail for seventy seconds, and
-thirty seconds after it stopped, the same error share was asked over two windows:
+**The window hides what happened.** Every tenth charge is made to fail for seventy seconds, and
+thirty seconds after it stopped, the same error share is asked over two windows:
+
+```sh
+echo '{"fail_every": 10}' > faults/payments.json
+sleep 70
+rm faults/payments.json
+sleep 30
+```
 
 ```
 ana@obs:~/shop$ curl -sG localhost:9090/api/v1/query --data-urlencode 'query=sum(rate(http_server_requests_total{job="payments",code=~"5.."}[1m])) / sum(rate(http_server_requests_total{job="payments"}[1m]))' | jq -r '.data.result[0].value[1]'

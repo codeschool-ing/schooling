@@ -3,6 +3,23 @@ title: Um chart é templates mais valores
 version: 1
 ---
 
+O Helm é mais um programa na sua máquina, ao lado do `kubectl`, e fala com o cluster pelo mesmo
+kubeconfig. Ele se instala do jeito que a aula 1 instalou o `kind`, a partir da release do próprio
+projeto, conferido contra o checksum publicado ao lado dela, e esta aula começa com `./up.sh` e depois
+isto:
+
+```sh
+ARCH=$(dpkg --print-architecture)
+curl -fsSLO https://get.helm.sh/helm-v4.3.0-linux-$ARCH.tar.gz
+curl -fsSL https://get.helm.sh/helm-v4.3.0-linux-$ARCH.tar.gz.sha256sum | sha256sum --check
+tar xzf helm-v4.3.0-linux-$ARCH.tar.gz linux-$ARCH/helm
+sudo install -m 0755 linux-$ARCH/helm /usr/local/bin/ && rm -r helm-v4.3.0-linux-$ARCH.tar.gz linux-$ARCH
+```
+
+**Esses comandos não foram rodados para este curso**: a máquina em que ele foi gravado não alcançava o
+`get.helm.sh`, então o `helm` dela foi compilado do código-fonte da mesma release, a v4.3.0, e informa
+essa versão. O `helm version` deve imprimir `v4.3.0` na sua também.
+
 **Um chart é um diretório com uma forma fixa**: `Chart.yaml` lhe dá nome e versão, `values.yaml` guarda
 os padrões, e `templates/` guarda manifestos com lacunas. O chart da loja, escrito do zero:
 

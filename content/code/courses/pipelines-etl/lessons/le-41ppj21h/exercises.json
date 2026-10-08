@@ -1,0 +1,528 @@
+[
+  {
+    "id": "ex-5jvfw05a",
+    "version": 1,
+    "section": "the-scheduler",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana unpaused `shop_nightly` and the scheduler's first run succeeded. Why was the fact table still empty?",
+    "hint": "Which day did that run load?",
+    "choices": [
+      {
+        "text": "The run failed silently",
+        "correct": false,
+        "why": "It succeeded: every task exited with 0."
+      },
+      {
+        "text": "It loaded an October day, and the shop lives in March",
+        "correct": true,
+        "why": "Right. An empty day is a success to Airflow."
+      },
+      {
+        "text": "The scheduler only creates runs at 02:00",
+        "correct": false,
+        "why": "It created one straight away, for the latest 02:00 it missed."
+      },
+      {
+        "text": "`catchup=False` skips the first run",
+        "correct": false,
+        "why": "It creates the latest missed run and skips the earlier ones."
+      }
+    ]
+  },
+  {
+    "id": "ex-gxcna2j3",
+    "version": 1,
+    "section": "the-scheduler",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `airflow dags unpause shop_nightly`, the table printed says `is_paused | True`. What does that mean?",
+    "hint": "Before or after?",
+    "choices": [
+      {
+        "text": "The unpause failed",
+        "correct": false,
+        "why": "The scheduler created a run straight after, so it worked."
+      },
+      {
+        "text": "It shows the state before the command",
+        "correct": true,
+        "why": "Right. A habit of Airflow's, not a mistake."
+      },
+      {
+        "text": "The DAG needs a second unpause before the change takes effect",
+        "correct": false,
+        "why": "One is enough."
+      },
+      {
+        "text": "Unpausing takes effect at 02:00",
+        "correct": false,
+        "why": "It takes effect at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-4es9dcwc",
+    "version": 1,
+    "section": "two-kinds-of-schedule",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each schedule to what its run on 2 March at midnight is for.",
+    "hint": "One is an instant, one is a day.",
+    "pairs": [
+      {
+        "left": "schedule=\"0 0 * * *\" in Airflow 3",
+        "right": "Midnight on 2 March, an instant"
+      },
+      {
+        "left": "CronDataIntervalTimetable(\"0 0 * * *\")",
+        "right": "The whole of 1 March"
+      }
+    ],
+    "right_distractors": [
+      "The whole of 2 March"
+    ]
+  },
+  {
+    "id": "ex-amq69mxc",
+    "version": 1,
+    "section": "two-kinds-of-schedule",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A DAG written for Airflow 2 loads `{{ data_interval_start }}` to `{{ data_interval_end }}`. It is moved to Airflow 3 with the same plain cron string. What does each run load?",
+    "hint": "What is the interval of a trigger?",
+    "choices": [
+      {
+        "text": "The same day as before",
+        "correct": false,
+        "why": "Only with an interval timetable declared."
+      },
+      {
+        "text": "The next day",
+        "correct": false,
+        "why": "The interval does not move forward; it collapses."
+      },
+      {
+        "text": "Nothing: start and end are the same moment",
+        "correct": true,
+        "why": "Right. A trigger's interval is an instant, and every run loads an empty range."
+      },
+      {
+        "text": "It refuses to load until the DAG is rewritten",
+        "correct": false,
+        "why": "It runs and succeeds, loading nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-tv05jb6f",
+    "version": 1,
+    "section": "catch-up",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many runs did the scheduler create for `catchup_demo`, from 2 March to the morning of the recording?",
+    "hint": "The first count.",
+    "value": 220,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-wejek0xh",
+    "version": 1,
+    "section": "catch-up",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is `catchup=True` the right choice?",
+    "hint": "History matters, and runs stand alone.",
+    "choices": [
+      {
+        "text": "Whenever the start date is in the past",
+        "correct": false,
+        "why": "That is exactly when it floods."
+      },
+      {
+        "text": "For a nightly load that rebuilds shared tables",
+        "correct": false,
+        "why": "Runs that share tables collide when they run together."
+      },
+      {
+        "text": "When each run is independent and a missing day should be filled",
+        "correct": true,
+        "why": "Right. A daily export with one file per day, for example."
+      },
+      {
+        "text": "Never; Airflow 3 removed it",
+        "correct": false,
+        "why": "It exists; it defaults to `False`."
+      }
+    ]
+  },
+  {
+    "id": "ex-z36qqhke",
+    "version": 1,
+    "section": "backfill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`airflow backfill create ... --from-date 2026-03-03 --to-date 2026-03-08` created five runs, not six. Which run was missing, and why?",
+    "hint": "Dates on the command line are moments.",
+    "choices": [
+      {
+        "text": "The 02:00 run of 8 March, which is after midnight",
+        "correct": true,
+        "why": "Right. The range ended at midnight on the 8th."
+      },
+      {
+        "text": "The run of 3 March, because from-date is exclusive",
+        "correct": false,
+        "why": "The run of 3 March was created; from-date is inclusive."
+      },
+      {
+        "text": "The scheduled run for October, which already existed",
+        "correct": false,
+        "why": "October is outside the range."
+      },
+      {
+        "text": "A run skipped because the shop had no data yet",
+        "correct": false,
+        "why": "Backfill does not look at data."
+      }
+    ]
+  },
+  {
+    "id": "ex-kg95cw9k",
+    "version": 1,
+    "section": "backfill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The first backfill started its runs at the same time, and some failed with `duplicate key value violates unique constraint`. Why?",
+    "hint": "What does every run of this DAG rebuild?",
+    "choices": [
+      {
+        "text": "Two days have the same orders",
+        "correct": false,
+        "why": "Orders belong to one day each."
+      },
+      {
+        "text": "The fact table has a primary key",
+        "correct": false,
+        "why": "It has none; the error came from creating staging tables."
+      },
+      {
+        "text": "Runs creating the same tables at once collided",
+        "correct": true,
+        "why": "Right. Shared state, in parallel."
+      },
+      {
+        "text": "The backfill ran each day twice",
+        "correct": false,
+        "why": "Each day had one run."
+      }
+    ]
+  },
+  {
+    "id": "ex-stkp2yc7",
+    "version": 1,
+    "section": "backfill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which properties make a backfill safe? Choose all that apply.",
+    "hint": "Three of them.",
+    "choices": [
+      {
+        "text": "Each run loads the day it is for, not today",
+        "correct": true,
+        "why": "Yes. Lesson 8's `day_to_load`."
+      },
+      {
+        "text": "Each run replaces its period",
+        "correct": true,
+        "why": "Yes. A rerun must not double a day."
+      },
+      {
+        "text": "Runs that share state never overlap",
+        "correct": true,
+        "why": "Yes. `max_active_runs=1`, on the DAG and the backfill."
+      },
+      {
+        "text": "`catchup=True` on the DAG",
+        "correct": false,
+        "why": "Backfill works with catch-up off; the two are separate."
+      }
+    ]
+  },
+  {
+    "id": "ex-dchmcbtk",
+    "version": 1,
+    "section": "dates-in-templates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A run's logical date is 23:30 on 2 March, São Paulo time. What is its `{{ ds }}`?",
+    "hint": "`ds` is a UTC date.",
+    "choices": [
+      {
+        "text": "2026-03-02",
+        "correct": false,
+        "why": "That is the São Paulo date."
+      },
+      {
+        "text": "2026-03-03",
+        "correct": true,
+        "why": "Right. In UTC it is already 02:30 on the 3rd."
+      },
+      {
+        "text": "2026-03-01",
+        "correct": false,
+        "why": "Nothing subtracts a day."
+      },
+      {
+        "text": "It depends on the machine's time zone",
+        "correct": false,
+        "why": "`ds` is UTC whatever the machine says."
+      }
+    ]
+  },
+  {
+    "id": "ex-mxe099pg",
+    "version": 1,
+    "section": "dates-in-templates",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To get the São Paulo date of a run in a template, convert the logical date first: `{{ logical_date.___('America/Sao_Paulo') }}`.",
+    "hint": "A pendulum method.",
+    "blanks": [
+      {
+        "accept": [
+          "in_timezone",
+          "in_tz"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jd5f07s6",
+    "version": 1,
+    "section": "sensors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the stock DAG wait with a `FileSensor` instead of being scheduled at a later time?",
+    "hint": "When does the file arrive?",
+    "choices": [
+      {
+        "text": "Sensors run faster than scheduled tasks",
+        "correct": false,
+        "why": "Speed is not the point."
+      },
+      {
+        "text": "The file arrives at no fixed time",
+        "correct": true,
+        "why": "Right. The sensor joins the schedule to the arrival."
+      },
+      {
+        "text": "A later schedule cannot read files",
+        "correct": false,
+        "why": "It can; it just reads them when they may not be there."
+      },
+      {
+        "text": "Airflow forbids schedules after 06:00",
+        "correct": false,
+        "why": "There is no such rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-3t9tdn5c",
+    "version": 1,
+    "section": "sensors",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each sensor mode to what it does while it waits.",
+    "hint": "Who holds the worker?",
+    "pairs": [
+      {
+        "left": "poke",
+        "right": "Holds its worker and checks every interval"
+      },
+      {
+        "left": "reschedule",
+        "right": "Releases its worker between checks"
+      },
+      {
+        "left": "deferrable",
+        "right": "Hands the wait to the triggerer"
+      }
+    ],
+    "right_distractors": [
+      "Skips the wait and fails at once"
+    ]
+  },
+  {
+    "id": "ex-f48a5hcd",
+    "version": 1,
+    "section": "sensors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A sensor has no timeout, and one morning the file never arrives. What does the run look like at noon?",
+    "hint": "Not failed.",
+    "choices": [
+      {
+        "text": "Failed, and an alert has fired",
+        "correct": false,
+        "why": "Without a timeout nothing fails."
+      },
+      {
+        "text": "Skipped",
+        "correct": false,
+        "why": "Nothing skips it."
+      },
+      {
+        "text": "Still running",
+        "correct": true,
+        "why": "Right. Running for ever is a state no failure alert watches."
+      },
+      {
+        "text": "Successful, with an empty load",
+        "correct": false,
+        "why": "The load never started; it waits for the sensor."
+      }
+    ]
+  },
+  {
+    "id": "ex-823mnx6v",
+    "version": 1,
+    "section": "assets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`fact_sales` declares an outlet and writes nothing to the table. What happens to `sales_report`?",
+    "hint": "A promise, not a check.",
+    "choices": [
+      {
+        "text": "It runs anyway",
+        "correct": true,
+        "why": "Right. Airflow records the claim; it does not look at the table."
+      },
+      {
+        "text": "It waits until rows appear",
+        "correct": false,
+        "why": "Airflow does not look at the table."
+      },
+      {
+        "text": "It fails with an empty-asset error",
+        "correct": false,
+        "why": "There is no such error."
+      },
+      {
+        "text": "Airflow refuses to load the producer DAG",
+        "correct": false,
+        "why": "The DAG is valid."
+      }
+    ]
+  },
+  {
+    "id": "ex-0e0he7pf",
+    "version": 1,
+    "section": "a-minute-is-a-day",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `shop_minute`, where does the day being loaded come from?",
+    "hint": "Not from the run.",
+    "choices": [
+      {
+        "text": "From the run's logical date",
+        "correct": false,
+        "why": "Its logical dates are in October."
+      },
+      {
+        "text": "From the lab's clock",
+        "correct": true,
+        "why": "Right. Which is why it is not a model of production."
+      },
+      {
+        "text": "From `{{ ds }}`",
+        "correct": false,
+        "why": "`ds` would be an October day too."
+      },
+      {
+        "text": "From a sensor",
+        "correct": false,
+        "why": "It has no sensor."
+      }
+    ]
+  },
+  {
+    "id": "ex-ezf80hdz",
+    "version": 1,
+    "section": "a-minute-is-a-day",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "While Ana waited, the shop's clock moved from 9 March to 13 March. How many days did `shop_minute` play?",
+    "hint": "One per run.",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-s7vb7b0t",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps Ana took to load the first week of March with a backfill that works.",
+    "hint": "Play, limit, backfill, check.",
+    "items": [
+      "Play the days into the shop",
+      "Set max_active_runs=1 on the DAG",
+      "Backfill to past 02:00 of the last day, one run at a time",
+      "Count the fact rows per day"
+    ]
+  },
+  {
+    "id": "ex-h2xn89qf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A DAG loads `{{ ds }}` and runs at 22:00 São Paulo time with a plain cron string. A backfill of March is run. What does each run load?",
+    "hint": "22:00 in São Paulo is 01:00 UTC.",
+    "choices": [
+      {
+        "text": "The same day, as intended",
+        "correct": false,
+        "why": "`ds` is the UTC date, which is already the next day."
+      },
+      {
+        "text": "The previous day",
+        "correct": false,
+        "why": "Nothing subtracts a day."
+      },
+      {
+        "text": "The next day, and the last one is empty",
+        "correct": true,
+        "why": "Right. Every run is shifted one day forward."
+      },
+      {
+        "text": "Nothing, because backfills ignore templates",
+        "correct": false,
+        "why": "Templates are rendered in every run."
+      }
+    ]
+  }
+]

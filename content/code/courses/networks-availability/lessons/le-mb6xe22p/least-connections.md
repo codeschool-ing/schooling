@@ -3,7 +3,7 @@ title: Least connections, for requests that are not equal
 version: 1
 ---
 
-The lab's servers also hold `slow.txt`, 3000 bytes that `nginx` is told to send at 1000 bytes a second,
+The web servers `netlab.sh` built also hold `slow.txt`, 3000 bytes that `nginx` is told to send at 1000 bytes a second,
 so a request for it keeps a server busy for about three seconds. The laptop starts downloading it in the background, waits 0.3 seconds, and
 sends four ordinary requests. The weights of the last section are still in force:
 
@@ -42,8 +42,9 @@ served by web3
 should happen to the one server with a connection still open, the slow download. The other two were
 idle between requests, so they alternated.
 
-HAProxy will show its own counts. The laptop starts one more slow download, and half a second later
-`lb1`'s statistics are read from its control socket:
+HAProxy will show its own counts. The laptop starts one more slow download in the background,
+`curl -s -o /dev/null http://www.example.com/slow.txt &`, and half a second later `lb1`'s statistics are
+read from its control socket:
 
 ```
 ana@lb1:~$ echo "show stat" | sudo socat stdio /run/haproxy.sock | cut -d, -f1,2,5 | grep -E "^web,web"

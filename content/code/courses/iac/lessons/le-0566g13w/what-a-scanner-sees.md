@@ -1,6 +1,6 @@
 ---
 title: What a scanner sees, and what it cannot
-version: 1
+version: 2
 ---
 
 A security scanner for infrastructure code sounds like something that looks at your cloud. **It
@@ -14,7 +14,8 @@ right place: as cheap as a linter, and able to answer only what the text can ans
 Ana's configuration for this lesson is the shop's network from earlier lessons, plus a bucket for
 product photos and a data volume. One difference from lesson 7 is deliberate: each security group
 rule is a resource of its own, `aws_vpc_security_group_ingress_rule`, which is the form the AWS
-provider's documentation recommends and what lets a rule arrive in a file of its own.
+provider's documentation recommends and what lets a rule arrive in a file of its own. It goes in
+`~/shop/main.tf`:
 
 ```hcl
 terraform {
@@ -69,6 +70,18 @@ resource "aws_ebs_volume" "data" {
 }
 ```
 
+Beside it, a `.gitignore` keeps the provider directory, the state and the plan files of section 07
+out of Git:
+
+```
+.terraform/
+*.tfstate*
+tfplan*
+```
+
+Ana runs `git init` and `terraform init`, commits everything as *the shop network, a bucket and a
+volume*, and applies:
+
 ```
 ana@laptop:~/shop$ terraform apply -auto-approve | tail -n 1
 Apply complete! Resources: 6 added, 0 changed, 0 destroyed.
@@ -90,6 +103,9 @@ resource "aws_vpc_security_group_ingress_rule" "ssh" {
   cidr_ipv4         = "0.0.0.0/0"
 }
 ```
+
+Save it as `ssh.tf` beside `main.tf`, and do not commit it yet. Checkov, the first of this lesson's
+three scanners, is installed at the start of section 03; install it before the command below.
 
 It is eight lines, the description says *maintenance*, and a reviewer on a busy afternoon approves
 it. **A rule does not have a busy afternoon.** Asked about this one check, Checkov names the resource
@@ -118,7 +134,15 @@ being a paragraph in a wiki and becomes a check that fails.
 {"svg": "<svg viewBox=\"0 0 720 300\" role=\"img\" aria-label=\"Inside a dashed boundary, what a configuration scan reads: the files main.tf and ssh.tf and the scanner's rules. An arrow leads to the scanner, which needs no credentials and no API, and on to a finding that names ssh.tf, lines 1 to 8. Below the boundary, three things the scan never reads: the AWS account, where a rule typed by hand lives; the state, which records what was applied; and the values given at plan time with -var-file.\"><defs><marker id=\"sv-ah-phosphor\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker></defs><rect x=\"20\" y=\"30\" width=\"330\" height=\"170\" rx=\"4\" fill=\"var(--ink)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"35.0\" y=\"46.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--phosphor)\">what a scanner reads</text><rect x=\"40\" y=\"70\" width=\"130\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"105.0\" y=\"90.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">main.tf</text><rect x=\"40\" y=\"130\" width=\"130\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"105.0\" y=\"150.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">ssh.tf</text><rect x=\"195\" y=\"70\" width=\"135\" height=\"100\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"262.0\" y=\"90.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">rules</text><text x=\"262.0\" y=\"115.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">CKV_AWS_24</text><text x=\"262.0\" y=\"133.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">AWS-0107</text><text x=\"262.0\" y=\"151.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">…</text><path d=\"M352 115 L388 115\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#sv-ah-phosphor)\"></path><rect x=\"390\" y=\"80\" width=\"130\" height=\"70\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"455.0\" y=\"99.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">scanner</text><text x=\"455.0\" y=\"115.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">no credentials</text><text x=\"455.0\" y=\"131.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">no API</text><path d=\"M522 115 L558 115\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#sv-ah-phosphor)\"></path><rect x=\"560\" y=\"80\" width=\"140\" height=\"70\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"630.0\" y=\"102.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">a finding</text><text x=\"630.0\" y=\"124.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--amber)\">ssh.tf:1-8</text><text x=\"20.0\" y=\"222.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">never read by a scan of the configuration</text><rect x=\"20\" y=\"236\" width=\"210\" height=\"52\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"125.0\" y=\"254.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">the AWS account</text><text x=\"125.0\" y=\"270.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">a rule typed by hand</text><rect x=\"255\" y=\"236\" width=\"210\" height=\"52\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"360.0\" y=\"254.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">the state</text><text x=\"360.0\" y=\"270.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">what was applied</text><rect x=\"490\" y=\"236\" width=\"210\" height=\"52\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"595.0\" y=\"252.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">values given at plan time</text><text x=\"595.0\" y=\"271.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9\" fill=\"var(--paper-dim)\">-var-file=maintenance.tfvars</text></svg>", "caption": "A scan of the configuration reads files and rules. The account, the state and the values that arrive at plan time are outside what it reads."}
 ```
 
-Take the file away and put the same rule where lesson 1 put it, typed by hand from another machine.
+Take the file away, with `mv ssh.tf ..`, and put the same rule where lesson 1 put it, typed by hand
+from another machine. These were the colleague's commands; the first finds the id of the `web` group
+and keeps it in `SG`:
+
+```sh
+SG=$(aws ec2 describe-security-groups --filters Name=group-name,Values=web --query 'SecurityGroups[0].GroupId' --output text)
+aws ec2 authorize-security-group-ingress --group-id "$SG" --protocol tcp --port 22 --cidr 0.0.0.0/0
+```
+
 AWS now has port 22 open:
 
 ```
@@ -163,3 +187,12 @@ from a `.tfvars` file or an environment variable (section 07 of this lesson clos
 cannot know whether port 22 is reachable at all, which depends on routes and subnets it may not
 see. And it cannot know whether anybody needs the rule. A finding is a fact about the text. Whether
 it matters is still a judgement, and section 08 is about making it.
+
+Before the next section, the file wins, as it did in lesson 7. Ana removes the hand-made rule, brings
+`ssh.tf` back and commits it as *ssh for maintenance*:
+
+```sh
+aws ec2 revoke-security-group-ingress --group-id "$SG" --protocol tcp --port 22 --cidr 0.0.0.0/0
+mv ../ssh.tf .
+git add ssh.tf && git commit -qm "ssh for maintenance"
+```

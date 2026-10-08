@@ -1,6 +1,6 @@
 ---
 title: Verbo-Substantivo, e como achar um comando que você não conhece
-version: 1
+version: 2
 ---
 
 Os nomes de comando do Unix são arqueologia: o `cat` concatena, o `awk` são as
@@ -86,7 +86,7 @@ PS /home/ana/work/ps> Get-Help Get-ChildItem -Parameter Recurse
     Position?                    Named
     Accept pipeline input?       false
     Parameter set name           (All)
-    Aliases                      s
+    Aliases                      s, r
     Dynamic?                     false
     Accept wildcard characters?  false
 ```
@@ -111,8 +111,6 @@ Name
 host.conf
 hostname
 hosts
-hosts.allow
-hosts.deny
 ```
 
 **Um nome de parâmetro pode ser abreviado para qualquer prefixo não ambíguo** —
@@ -135,8 +133,6 @@ Name
 host.conf
 hostname
 hosts
-hosts.allow
-hosts.deny
 ```
 
 ## Apelidos, e uma surpresa entre plataformas

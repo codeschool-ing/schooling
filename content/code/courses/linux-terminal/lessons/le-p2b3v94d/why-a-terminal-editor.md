@@ -1,6 +1,6 @@
 ---
 title: Five times you do not get to choose
-version: 1
+version: 2
 ---
 
 You have an editor you like. This lesson is not about it, because these five
@@ -76,3 +76,33 @@ were typed, the screen it drew was captured, and the text rows were **checked
 against the file on disk** — so a screen that came out wrong would have been
 caught rather than printed. Where the file is not on screen, as in nano's
 `Save modified buffer?` prompt, the screen is what nano drew and nothing else.
+
+## The files the screens open
+
+Three small files, in a directory of their own. Make them, and every screen in
+this lesson is one you can reproduce key for key:
+
+```sh
+mkdir -p ~/work/edit && cd ~/work/edit
+cat > server.conf <<'END'
+# the server configuration
+listen 8080
+workers 4
+timeout 30
+log_level info
+log_file /var/log/app.log
+END
+printf 'the first line\nthe second line\nthe third line\n' > notes.txt
+printf 'pear\napple\ncherry\nbanana\n' > list.txt
+```
+
+```
+ana@vm:~/work/edit$ wc -lc server.conf notes.txt list.txt
+  6 101 server.conf
+  3  46 notes.txt
+  4  25 list.txt
+ 13 172 total
+```
+
+Each section starts in that directory, and each one that changes a file says
+so; to start a screen from the beginning again, run the block above again.

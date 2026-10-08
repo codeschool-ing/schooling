@@ -5,10 +5,21 @@ version: 1
 
 **IP-in-IP puts an IP packet directly after another IP header, with nothing between them.** It is
 protocol number 4, and on an ordinary Linux router one command creates it:
-`ip link add tun0 type ipip local 203.0.113.2 remote 198.51.100.2`. That command was not run here: the
-kernel this course was recorded on was built without the IP-in-IP module, so the lab builds the same
-tunnel with a small program, `tunnel.py`, shown at the end of this section. What it puts on the wire is
-standard IP-in-IP, and `tcpdump` decodes it as such.
+`ip link add tun0 type ipip local 203.0.113.2 remote 198.51.100.2`. This course builds the same tunnel
+with a small program instead, `tunnel.py`, shown whole at the end of this section. It shows that a
+tunnel has nothing hidden in it, and it works on any kernel, including the one these transcripts were
+recorded on, which was built without the IP-in-IP module. What it puts on the wire is standard
+IP-in-IP, and `tcpdump` decodes it as such.
+
+Save it before anything else. Copy the listing at the end of this section with its button, and on the
+virtual machine itself:
+
+```sh
+nano tunnel.py                                  # paste, then Ctrl+O and Ctrl+X
+sudo install -m 755 tunnel.py /usr/local/bin/
+```
+
+Every machine of the network sees the same `/usr/local/bin`, so that one copy serves both ends.
 
 On `hq` the tunnel is a network interface like any other. It gets an address at each end, and a route
 sends the branch's network into it:
@@ -23,9 +34,10 @@ ana@hq:~$ sudo ip route add 192.168.20.0/24 via 10.0.0.2
 `POINTOPOINT` says there is exactly one machine at the other end, and `NOARP` says nobody needs to ask
 for its hardware address, because there is no hardware. The `10.0.0.x` addresses belong to the tunnel
 itself, and the route is the line that matters: **anything for `192.168.20.0/24` goes into `tun0`**.
-`branch` got the mirror image, and its routing table shows the way back:
+`branch` gets the mirror image, typed in a shell of its own, and its routing table shows the way back:
 
 ```
+ana@branch:~$ sudo setsid tunnel.py ipip tun0 198.51.100.2 203.0.113.2 & sleep 1; sudo ip addr add 10.0.0.2 peer 10.0.0.1 dev tun0 && sudo ip link set tun0 mtu 1480 up && sudo ip route add 192.168.10.0/24 via 10.0.0.1
 ana@branch:~$ ip route
 default via 198.51.100.1 dev eth1 
 10.0.0.1 dev tun0 proto kernel scope link src 10.0.0.2 
@@ -34,12 +46,12 @@ default via 198.51.100.1 dev eth1
 198.51.100.0/24 dev eth1 proto kernel scope link src 198.51.100.2 
 ana@laptop:~$ ping -c 2 192.168.20.30
 PING 192.168.20.30 (192.168.20.30) 56(84) bytes of data.
-64 bytes from 192.168.20.30: icmp_seq=1 ttl=62 time=1.05 ms
-64 bytes from 192.168.20.30: icmp_seq=2 ttl=62 time=0.424 ms
+64 bytes from 192.168.20.30: icmp_seq=1 ttl=62 time=2.19 ms
+64 bytes from 192.168.20.30: icmp_seq=2 ttl=62 time=0.918 ms
 
 --- 192.168.20.30 ping statistics ---
 2 packets transmitted, 2 received, 0% packet loss, time 1001ms
-rtt min/avg/max/mdev = 0.424/0.739/1.054/0.315 ms
+rtt min/avg/max/mdev = 0.918/1.556/2.194/0.638 ms
 ```
 
 The ping that failed a section ago now works, and the laptop did nothing different. The `ttl=62` is

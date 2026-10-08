@@ -36,7 +36,10 @@ reading it is your job.
 
 ## The file as data
 
-The expired case was captured once more, whole, to a file, and read back line by line:
+The expired case was captured once more, whole, to a file, and read back line by line. While the
+four-second capture ran, the laptop made the request to port 8443 again, with `-s` this time so that
+`curl` printed nothing:
+`curl -s --resolve www.example.com:8443:192.0.2.21 https://www.example.com:8443/`.
 
 ```
 ana@laptop:~$ tshark -n -q -i eth0 -a duration:4 -f "host 192.0.2.21" -w failing.pcap

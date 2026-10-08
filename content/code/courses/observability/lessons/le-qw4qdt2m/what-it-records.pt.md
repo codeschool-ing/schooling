@@ -1,9 +1,22 @@
 ---
 title: O que ela registra, e com que nomes
-version: 1
+version: 2
 ---
 
-Um checkout, e então os spans que o `orders` produziu para ele, com o tipo que cada um recebeu:
+Daqui em diante, *um checkout é enviado* quer dizer o `curl` da aula 1, e o trace que uma
+transcrição pede ao Jaeger é o último que a vitrine registrou. Duas funções de shell poupam digitar
+qualquer um dos dois de novo. Cole-as uma vez no shell em `~/shop`; elas duram até esse shell
+fechar, e `last_trace` aceita outro serviço e outra mensagem quando uma aula precisa:
+
+```sh
+checkout() { curl -s -X POST localhost:8080/checkout -H 'Content-Type: application/json' -d @checkout.json; echo; }
+last_trace() { docker compose logs --no-log-prefix "${1:-storefront}" | grep "${2:-checkout finished}" | tail -1 | jq -r .trace_id; }
+```
+
+Os spans saem de cada serviço em lotes, com alguns segundos entre eles, então espere uns cinco
+segundos depois de um checkout antes de perguntar ao Jaeger. Depois, `TRACE=$(last_trace)`, e o
+`$TRACE` vai onde uma transcrição tem um id. Um checkout, e então os spans que o `orders` produziu
+para ele, com o tipo que cada um recebeu:
 
 ```
 ana@obs:~/shop$ curl -s localhost:16686/api/traces/56414d8c2542c07251f5be873161653b | jq -r '.data[0] as $t | $t.spans | sort_by(.startTime) | .[] | select($t.processes[.processID].serviceName == "orders") | [.operationName, (.tags[] | select(.key == "span.kind") | .value)] | @tsv'

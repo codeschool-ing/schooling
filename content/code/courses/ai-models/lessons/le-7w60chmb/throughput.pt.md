@@ -19,12 +19,12 @@ dois valores abaixo são **suposições do curso**, escolhidas para mostrar o fo
 especificações de produto nenhum: 1.000 GB/s, e o triplo disso.
 
 ```
-ana@desk:~/desk$ python lab/size.py 1000 | cut -c1-17,76-
+ana@desk:~/desk$ python size.py 1000 | cut -c1-17,76-
 model            at 4-bit
 Llama-3.1-8B          249
 Llama-3.1-70B          28
 Llama-3.1-405B          5
-ana@desk:~/desk$ python lab/size.py 3000 | cut -c1-17,76-
+ana@desk:~/desk$ python size.py 3000 | cut -c1-17,76-
 model            at 4-bit
 Llama-3.1-8B          747
 Llama-3.1-70B          85

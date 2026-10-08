@@ -1,6 +1,6 @@
 ---
 title: `kill`, and why `-9` is the wrong first move
-version: 1
+version: 2
 ---
 
 Section 08 was what a signal is. This is how to aim one, and there are four ways to name a target:
@@ -17,7 +17,8 @@ kill -9 1234          # KILL
 Exact and unambiguous, and the answer when you already know the number. `pgrep` from section 05 is
 usually how you got it.
 
-**And `kill` needs permission.** You can signal processes that are yours; anything else is refused:
+**And `kill` needs permission.** You can signal processes that are yours; anything else is refused.
+`sudo sleep 600 &` gives you one that is root's to try it on, and prints its number:
 
 ```
 ana@vm:~/work$ ps -o pid,user,comm -p 2189

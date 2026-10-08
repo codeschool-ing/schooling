@@ -1,6 +1,6 @@
 ---
 title: "Workspaces: um diretório, um estado por nome"
-version: 1
+version: 2
 ---
 
 Um **workspace** é um estado com nome para uma configuração. O diretório, os arquivos e o bloco de
@@ -54,7 +54,9 @@ index e140d1e..c309bff 100644
  }
 ```
 
-Depois cada ambiente é aplicado no seu workspace, com os seus valores:
+A Ana faz o commit dessa mudança, `git commit -qam "name things after the workspace"`, para que o
+próximo `git diff` mostre só o que vier depois dela. Depois cada ambiente é aplicado no seu
+workspace, com os seus valores:
 
 ```
 ana@laptop:~/shop$ terraform workspace select dev

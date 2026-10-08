@@ -1,6 +1,6 @@
 ---
 title: `tr`, which works on characters and not words
-version: 1
+version: 2
 ---
 
 `tr` translates one set of characters into another. It has no idea what a word is, no idea what a
@@ -40,8 +40,8 @@ The two sets are matched up position by position: `tr abc xyz` turns every `a` i
 
 ```
 ana@vm:~/work$ cut -d" " -f1 logs/access.log | tr -d "." | head -2
-10016
-100111
+1985110010
+1985110015
 ```
 
 Every dot gone. That example is deliberately silly — the addresses are now meaningless — and it
@@ -78,8 +78,8 @@ for a file with stray control characters in it.
 
 ```
 ana@vm:~/work$ head -2 logs/access.log | tr -s " " | cut -d" " -f1,6,7
-10.0.1.6 "GET /static/app.js
-10.0.1.11 "GET /
+198.51.100.10 "GET /
+198.51.100.15 "GET /
 ```
 
 **This is the fix for section 08's one-character delimiter.** `tr -s " "` turns any run of spaces

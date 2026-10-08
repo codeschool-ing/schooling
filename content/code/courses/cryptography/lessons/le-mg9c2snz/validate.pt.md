@@ -30,7 +30,7 @@ pki/radius.pem: OK
 
 O laboratório tem um segundo servidor RADIUS, em 127.0.0.2, fazendo o papel de um ponto de acesso
 falso no estacionamento. O certificado dele afirma todos os nomes que o da Vereda afirma, inclusive um
-emissor chamado `Vereda Root CA`. Ele foi feito pela raiz impostora da aula 9, que qualquer um cria com
+emissor chamado `Vereda Root CA`. Ele foi feito pela raiz impostora da aula 8, que qualquer um cria com
 um comando:
 
 ```
@@ -61,7 +61,14 @@ troca MSCHAPv2 nunca saíram do notebook. Esse é o resultado a buscar, e ele n�
 que acontece. A pessoa vê uma rede que não quis conectar.
 
 Agora o mesmo notebook com um perfil descuidado, o que uma pessoa acaba tendo depois de ir clicando
-numa tela de configuração. A única diferença são as duas linhas:
+numa tela de configuração. É o mesmo arquivo sem as duas últimas linhas:
+
+```sh
+cd ~/lab
+grep -v -e ca_cert -e domain_suffix_match peap.conf > peap-lax.conf
+```
+
+A única diferença são essas duas linhas:
 
 ```
 ana@lab:~/lab$ diff peap.conf peap-lax.conf

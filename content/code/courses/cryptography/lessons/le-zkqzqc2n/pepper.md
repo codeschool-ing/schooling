@@ -11,8 +11,9 @@ Without the pepper they cannot test a single guess.
 
 ## Adding one
 
-The lab's pepper is `keys/pepper.hex`, 32 random bytes. `vcrypt store --pepper` first computes an
-HMAC of the password with the pepper as key, then hands that to Argon2id exactly as before:
+The lab's pepper is `keys/pepper.hex`, the 32 bytes made at the start of this lesson; a real one is
+32 random bytes. `vcrypt store --pepper` first computes an HMAC of the password with the pepper as
+key, which is `peppered()` in `passwords.py`, then hands that to Argon2id exactly as before:
 
 ```
 ana@lab:~/lab$ vcrypt store argon2id --pepper keys/pepper.hex data/users.csv > store-peppered.txt; head -1 store-peppered.txt
@@ -21,7 +22,40 @@ ana.lima:$argon2id$v=19$m=19456,t=2,p=1$FuRufmOK/RUsaLq6VND23g$0bKIIWlMFo4QB835p
 
 The stored string looks like any other Argon2id hash. It even has the same salt as Ana's line in the
 previous section, because the lab derives salts per user; the result differs because the input to
-Argon2id was the peppered value. With the pepper, Ana's password is accepted:
+Argon2id was the peppered value. Checking a password is the other half of the file, `verify()`, and
+`vcrypt verify` asks it what a sign-in form would:
+
+```py
+# ~/lab/tools/verify.py
+"""vcrypt verify STORE USER PASSWORD [--pepper KEYFILE]: what a sign-in form
+does with what was typed. An unknown user gets the same answer as a wrong
+password, on purpose."""
+import argparse
+import sys
+
+import passwords
+
+p = argparse.ArgumentParser(prog="vcrypt verify")
+p.add_argument("store")
+p.add_argument("user")
+p.add_argument("password")
+p.add_argument("--pepper")
+a = p.parse_args()
+
+pepper = bytes.fromhex(open(a.pepper).read().strip()) if a.pepper else None
+for line in open(a.store):
+    user, stored = line.rstrip("\n").split(":", 1)
+    if user == a.user:
+        ok, weak = passwords.verify(stored, a.password, pepper)
+        if ok:
+            print(f"{a.user}: password accepted" + (f"; rehash now: {weak}" if weak else ""))
+            sys.exit(0)
+        break
+print(f"{a.user}: wrong password")
+sys.exit(1)
+```
+
+With the pepper, Ana's password is accepted:
 
 ```
 ana@lab:~/lab$ vcrypt verify --pepper keys/pepper.hex store-peppered.txt ana.lima 'Vereda@2026'

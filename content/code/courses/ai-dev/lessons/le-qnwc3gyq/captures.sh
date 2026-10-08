@@ -6,41 +6,36 @@
 # this lesson was copied from running it, so the next person can run it and see
 # what moved.
 #
-#   sudo bash ../../lab.sh up        # once: the machine, the SDKs, labllm
+#   sudo bash ../../lab.sh up        # once: Ollama, the models, ~/shop
 #   sudo bash captures.sh
 #
 # A line that starts with ana@dev:~/shop$ is what ana typed, in her project,
-# and what it printed. What is STAGED rather than typed, and not shown in the
-# lesson: the lab itself (lab.sh reset), and the files ana wrote (put below),
-# whose contents the lesson shows in full, and a commit of llm.py and ask.py
-# before ana's fix to llm.py, so that git diff can show the fix.
+# and what it printed. What is STAGED rather than typed, and not shown: the
+# lab's own reset, the files ana wrote (put below), each of which a lesson
+# shows whole (put refuses one that no lesson shows byte for byte), the commit
+# of llm.py before its fix and the fix itself, which git diff shows whole, and
+# the restart of Ollama in retries, which the lesson says happens in another
+# terminal a second after the command starts.
 #
-# TIMES ARE MEASURED: once.py's seconds include the SDK's own backoff, which
-# has a random part, so a rerun moves them by a few tenths.
+# NO PROVIDER IS CALLED. The recording machine has no key for Anthropic,
+# OpenAI or Google, and the lesson never spends money: the Anthropic and OpenAI
+# SDKs talk to Ollama, and Google's is shown and skipped. What only a real
+# provider does (a 401, a 429 with its headers, a 529) is described from the
+# providers' documentation and never printed as if it had happened here. What
+# is real: the SDKs, their retries against a stopped server, the queue of one
+# reply at a time on this machine, the fallback past an unreachable address,
+# the class tree of the SDK's errors and every token count.
 #
-# ALL THREE PROVIDERS ARE labllm. The three SDKs are the real ones (anthropic,
-# openai, google-genai, at the versions lesson 1 lists) and they speak their
-# real wire formats, but every request in this lesson went to 127.0.0.1:8400,
-# whose replies were written by the course (lab/scripted.json). The rate limit,
-# the 529s and the 401 are labllm's, switched on with /lab/config, which the
-# lesson shows. labllm counts tokens the same way for all three; real
-# providers each count with their own tokenizer.
-#
-# The prices in cost.py were read with prices.py on 2026-10-02: Anthropic's
-# from its pricing page, OpenAI's and Google's from LiteLLM at the pinned
-# commit, as lesson 2 explains.
+#   model    llama3.2:3b (a80c4f17acd5), Ollama 0.40.0
+#   taken    2026-10-07, on 4 cores and 15 GB with no GPU
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 set -uo pipefail
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@dev:~/shop$ %s\n' "$*"; lab exec ana "$*" 2>&1 || true; }
-put() { lab exec ana "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-block() { printf '##### %s\n' "$1"; }
-lab reset >/dev/null
+. ../../lab/capture.sh
 
+quiet lab reset
 put three.py <<'PY'
 """One question, three providers, each through its own SDK."""
 import os
@@ -56,22 +51,22 @@ QUESTION = "Explain in a paragraph why the cart stores prices in cents."
 
 def ask_anthropic():
     r = anthropic.Anthropic().messages.create(
-        model="scripted-1", max_tokens=300, system=SYSTEM,
+        model="llama3.2:3b", max_tokens=300, system=SYSTEM,
         messages=[{"role": "user", "content": QUESTION}])
-    return r.content[0].text, r.usage.input_tokens, r.usage.output_tokens, r.stop_reason
+    n_in = r.usage.input_tokens + (r.usage.cache_read_input_tokens or 0)  # lesson 2 section 07
+    return r.content[0].text, n_in, r.usage.output_tokens, r.stop_reason
 
 
 def ask_openai():
     r = openai.OpenAI().chat.completions.create(
-        model="scripted-1", max_completion_tokens=300,
+        model="llama3.2:3b", max_completion_tokens=300,
         messages=[{"role": "system", "content": SYSTEM}, {"role": "user", "content": QUESTION}])
     return r.choices[0].message.content, r.usage.prompt_tokens, r.usage.completion_tokens, r.choices[0].finish_reason
 
 
 def ask_google():
-    client = genai.Client(http_options=types.HttpOptions(base_url=os.environ["GEMINI_BASE_URL"]))
-    r = client.models.generate_content(
-        model="scripted-1", contents=QUESTION,
+    r = genai.Client().models.generate_content(
+        model="gemini-3.5-flash", contents=QUESTION,
         config=types.GenerateContentConfig(
             system_instruction=SYSTEM, max_output_tokens=300,
             automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True)))
@@ -80,8 +75,11 @@ def ask_google():
 
 
 for name, ask in [("anthropic", ask_anthropic), ("openai", ask_openai), ("google", ask_google)]:
+    if name == "google" and "GEMINI_API_KEY" not in os.environ:
+        print(f"{name:9} skipped: no GEMINI_API_KEY, and Ollama has no Gemini endpoint")
+        continue
     text, n_in, n_out, why = ask()
-    print(f"{name:9} {n_in:3} in {n_out:3} out  {why!s:18} {text[:34]}…")
+    print(f"{name:9} {n_in:3} in {n_out:3} out  {why!s:18} {' '.join(text.split())[:34]}…")
 PY
 
 block three-shapes
@@ -89,29 +87,36 @@ on 'python three.py'
 
 block keys
 on "env | grep _API_KEY | cut -d= -f1"
-on "env -u ANTHROPIC_API_KEY python -c 'import anthropic; anthropic.Anthropic().messages.create(model=\"scripted-1\", max_tokens=10, messages=[{\"role\": \"user\", \"content\": \"hi\"}])' 2>&1 | tail -n 1"
-on "ANTHROPIC_API_KEY=lab-anthropic-key-9999 python -c 'import anthropic; anthropic.Anthropic().messages.create(model=\"scripted-1\", max_tokens=10, messages=[{\"role\": \"user\", \"content\": \"hi\"}])' 2>&1 | tail -n 1"
+on "env -u ANTHROPIC_API_KEY python -c 'import anthropic; anthropic.Anthropic().messages.create(model=\"llama3.2:3b\", max_tokens=10, messages=[{\"role\": \"user\", \"content\": \"hi\"}])' 2>&1 | tail -n 1"
+on "ANTHROPIC_API_KEY=not-a-real-key python -c 'import anthropic; r = anthropic.Anthropic().messages.create(model=\"llama3.2:3b\", max_tokens=10, messages=[{\"role\": \"user\", \"content\": \"hi\"}]); print(repr(r.content[0].text))'"
 on "printf '.env\n' > .gitignore; git check-ignore -v .env"
 
 put burst.py <<'PY'
-"""Five requests in a row, with the SDK's retries off, to see the limit as it is."""
+"""Five requests at the same moment, and when each one is answered."""
+import time
+from concurrent.futures import ThreadPoolExecutor
+
 import anthropic
 
-model = anthropic.Anthropic(max_retries=0)
-for n in range(1, 6):
-    try:
-        raw = model.messages.with_raw_response.create(
-            model="scripted-1", max_tokens=20, messages=[{"role": "user", "content": "Say hello in five words."}])
-        print(n, raw.http_response.status_code, "remaining:", raw.headers["anthropic-ratelimit-requests-remaining"])
-    except anthropic.RateLimitError as e:
-        print(n, e.status_code, "retry-after:", e.response.headers["retry-after"], "|", e.message)
+model = anthropic.Anthropic()
+t0 = time.monotonic()
+
+
+def ask(n):
+    model.messages.create(model="llama3.2:3b", max_tokens=20,
+                          messages=[{"role": "user", "content": "Say hello in five words."}])
+    return n, time.monotonic() - t0
+
+
+with ThreadPoolExecutor(5) as pool:
+    for n, seconds in pool.map(ask, range(1, 6)):
+        print(f"request {n}: answered after {seconds:.1f} s")
 PY
 
 block rate-limits
-on "curl -s localhost:8400/lab/config -d '{\"rpm\": 3, \"clear\": true}' >/dev/null; python burst.py"
+on 'python burst.py'
 
 block retries
-on "curl -s localhost:8400/lab/config -d '{\"rpm\": 50, \"clear\": true}' >/dev/null"
 on "python -c 'import anthropic, openai; a = anthropic.Anthropic(); o = openai.OpenAI(); print(\"anthropic:\", a.max_retries, a.timeout); print(\"openai:   \", o.max_retries, o.timeout)'"
 put once.py <<'PY'
 """One request, with the SDK's default retries, and how long it took."""
@@ -122,18 +127,19 @@ import anthropic
 t0 = time.monotonic()
 try:
     r = anthropic.Anthropic().messages.create(
-        model="scripted-1", max_tokens=20, messages=[{"role": "user", "content": "Say hello in five words."}])
+        model="llama3.2:3b", max_tokens=20, messages=[{"role": "user", "content": "Say hello in five words."}])
     print(f"{r.content[0].text!r} after {time.monotonic() - t0:.1f} s")
-except anthropic.APIStatusError as e:
-    print(f"{type(e).__name__} {e.status_code} after {time.monotonic() - t0:.1f} s")
+except anthropic.APIError as e:
+    print(f"{type(e).__name__} after {time.monotonic() - t0:.1f} s")
 PY
-on "curl -s localhost:8400/lab/config -d '{\"fail_next\": 529, \"fail_count\": 2}' >/dev/null; python once.py"
-on "tail -n 3 /var/log/labllm/requests.jsonl | python -c 'import json, sys; [print(r[\"status\"], r.get(\"error\", \"\")) for r in map(json.loads, sys.stdin)]'"
-on "curl -s localhost:8400/lab/config -d '{\"fail_next\": 529, \"fail_count\": 3}' >/dev/null; python once.py"
+on 'sudo pkill -x ollama; ANTHROPIC_LOG=info python once.py'
+( sleep 1.2; lab serve > /dev/null 2>&1 ) &
+on 'ANTHROPIC_LOG=info python once.py'
+wait
 
 put cost.py <<'PY'
 """What one workload costs a month at each model's list price."""
-# Dollars per million tokens, input and output, read with prices.py on 2026-10-02.
+# Dollars per million tokens, input and output: the list prices of lesson 2, read on 2026-10-02.
 PRICES = {
     "claude-opus-5-5": (4, 20), "claude-sonnet-5-5": (2, 10), "claude-haiku-4-5": (1, 5),
     "gpt-5.5": (5, 30), "gpt-5.4": (2.5, 15), "gpt-5.4-mini": (0.75, 4.5), "gpt-5.4-nano": (0.2, 1.25),
@@ -149,7 +155,6 @@ for model, (p_in, p_out) in PRICES.items():
 for month, model in sorted(rows):
     print(f"  {model:22} ${month:>9,.2f}")
 PY
-
 block cost
 on 'python cost.py'
 
@@ -183,7 +188,8 @@ def _anthropic(system, question, max_tokens):
                                                   system=system, messages=[{"role": "user", "content": question}])
     except (anthropic.APIConnectionError, anthropic.RateLimitError, anthropic.InternalServerError) as e:
         raise Unavailable(f"anthropic: {type(e).__name__}") from e
-    return Reply(r.content[0].text, r.usage.input_tokens, r.usage.output_tokens, "anthropic")
+    tokens_in = r.usage.input_tokens + (r.usage.cache_read_input_tokens or 0)  # Ollama reports reuse apart
+    return Reply(r.content[0].text, tokens_in, r.usage.output_tokens, "anthropic")
 
 
 def _openai(system, question, max_tokens):
@@ -197,9 +203,8 @@ def _openai(system, question, max_tokens):
 
 
 def _google(system, question, max_tokens):
-    client = genai.Client(http_options=types.HttpOptions(base_url=os.environ["GEMINI_BASE_URL"]))
     try:
-        r = client.models.generate_content(
+        r = genai.Client().models.generate_content(
             model=os.environ["LLM_MODEL_GOOGLE"], contents=question,
             config=types.GenerateContentConfig(system_instruction=system, max_output_tokens=max_tokens,
                                                automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True)))
@@ -228,16 +233,16 @@ import sys
 from llm import ask
 
 r = ask("Answer in one paragraph.", sys.argv[1])
-print(f"{r.provider}: {r.tokens_in} in, {r.tokens_out} out | {r.text[:48]}…")
+print(f"{r.provider}: {r.tokens_in} in, {r.tokens_out} out | {' '.join(r.text.split())[:48]}…")
 PY
 
 block adapter
-lab exec ana "printf 'LLM_MODEL_ANTHROPIC=scripted-1\nLLM_MODEL_OPENAI=scripted-1\nLLM_MODEL_GOOGLE=scripted-1\n' > .env"
+lab exec ana "printf 'LLM_MODEL_ANTHROPIC=llama3.2:3b\nLLM_MODEL_OPENAI=llama3.2:3b\nLLM_MODEL_GOOGLE=gemini-3.5-flash\n' > .env"
 lab exec ana 'git add .gitignore llm.py ask.py && git commit -q -m "One way to ask a model"'
 on 'cat .env'
-on 'set -a; . ./.env; for p in anthropic openai google; do LLM_PROVIDERS=$p python ask.py "Explain in a paragraph why the cart stores prices in cents."; done'
-on "curl -s localhost:8400/lab/config -d '{\"fail_next\": 529, \"fail_count\": 3}' >/dev/null; set -a; . ./.env; LLM_PROVIDERS=anthropic,openai python ask.py 'Explain in a paragraph why the cart stores prices in cents.' 2>&1 | tail -n 1"
-on "tail -n 3 /var/log/labllm/requests.jsonl | python -c 'import json, sys; [print(r[\"path\"], r[\"status\"]) for r in map(json.loads, sys.stdin)]'"
+on 'set -a; . ./.env; for p in anthropic openai; do LLM_PROVIDERS=$p python ask.py "Explain in a paragraph why the cart stores prices in cents."; done'
+on 'set -a; . ./.env; ANTHROPIC_BASE_URL=http://127.0.0.1:11400 LLM_PROVIDERS=anthropic,openai python ask.py "Explain in a paragraph why the cart stores prices in cents."'
+on "python -c 'import anthropic; print(anthropic.OverloadedError.__mro__[1].__name__, issubclass(anthropic.OverloadedError, anthropic.InternalServerError))'"
 # The fix ana makes to llm.py, applied by a script; git diff below shows all of it.
 lab exec ana "python -" <<'PY'
 from pathlib import Path
@@ -266,5 +271,5 @@ for old, new in [
 p.write_text(s)
 PY
 on 'git diff llm.py'
-on "curl -s localhost:8400/lab/config -d '{\"fail_next\": 529, \"fail_count\": 3}' >/dev/null; set -a; . ./.env; LLM_PROVIDERS=anthropic,openai python ask.py 'Explain in a paragraph why the cart stores prices in cents.'"
-on "tail -n 4 /var/log/labllm/requests.jsonl | python -c 'import json, sys; [print(r[\"path\"], r[\"status\"]) for r in map(json.loads, sys.stdin)]'"
+on 'set -a; . ./.env; ANTHROPIC_BASE_URL=http://127.0.0.1:11400 LLM_PROVIDERS=anthropic,openai python ask.py "Explain in a paragraph why the cart stores prices in cents."'
+on 'set -a; . ./.env; LLM_MODEL_ANTHROPIC=llama3.3:3b LLM_PROVIDERS=anthropic,openai python ask.py "Explain in a paragraph why the cart stores prices in cents." 2>&1 | tail -n 1'

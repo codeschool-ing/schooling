@@ -102,23 +102,23 @@
   },
   {
     "id": "ex-9dzwk0g3",
-    "version": 1,
+    "version": 2,
     "section": "checkov",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Ana runs Checkov offline with `--skip-download`. What does she lose compared with a connected run?",
+    "prompt": "Ana runs Checkov with `--skip-download`. Compared with a run that reaches Prisma Cloud's API without an account key, what does she lose?",
     "hint": "What was the download for?",
     "choices": [
       {
         "text": "Every check written for AWS",
         "correct": false,
-        "why": "The checks are in the package; 35 ran offline."
+        "why": "The checks are in the package; 35 ran with `--skip-download`."
       },
       {
-        "text": "Severities and guide links",
+        "text": "The `Guide:` link printed under each finding",
         "correct": true,
-        "why": "Right. Both come from Prisma Cloud's guidelines, and the checks carry no severity of their own."
+        "why": "Right. The public download maps each check to its documentation page; severities would need an account's API key as well."
       },
       {
         "text": "The ability to scan anything but Terraform files",
@@ -128,7 +128,7 @@
       {
         "text": "File names and line numbers in findings",
         "correct": false,
-        "why": "Every offline finding still printed `File: /ssh.tf:1-8` and the like."
+        "why": "Every finding with `--skip-download` still printed `File: /ssh.tf:1-8` and the like."
       }
     ]
   },
@@ -217,7 +217,7 @@
   },
   {
     "id": "ex-ympv0xn3",
-    "version": 1,
+    "version": 2,
     "section": "trivy",
     "type": "quiz",
     "difficulty": "medium",
@@ -243,7 +243,7 @@
       {
         "text": "Severities need the network",
         "correct": false,
-        "why": "That is Checkov. Trivy's severities ship with each check."
+        "why": "Not for Trivy: its severities ship with each check."
       }
     ]
   },
@@ -281,12 +281,12 @@
   },
   {
     "id": "ex-krxv8fg4",
-    "version": 1,
+    "version": 2,
     "section": "trivy",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why does Trivy print the `See https://avd.aquasec.com/...` link even in the lab with no network, while Checkov's `Guide:` link is missing?",
+    "prompt": "Why does Trivy print the `See https://avd.aquasec.com/...` link even with `--skip-check-update`, while Checkov's `Guide:` link is missing with `--skip-download`?",
     "hint": "Where does each link come from?",
     "choices": [
       {
@@ -566,7 +566,7 @@
   },
   {
     "id": "ex-qb9brtqe",
-    "version": 1,
+    "version": 2,
     "section": "scanning-the-plan",
     "type": "quiz",
     "difficulty": "easy",
@@ -592,18 +592,18 @@
       {
         "text": "It turns on severities offline",
         "correct": false,
-        "why": "Severities still need the download."
+        "why": "Checkov's severities need a Prisma Cloud account."
       }
     ]
   },
   {
     "id": "ex-598jpfsm",
-    "version": 1,
+    "version": 2,
     "section": "triage",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "Ana's offline Checkov gate is `--hard-fail-on HIGH`. The scan has nine failed checks. What exit code does it give, and why?",
+    "prompt": "Ana's Checkov runs with no Prisma Cloud account, and its gate is `--hard-fail-on HIGH`. The scan has nine failed checks. What exit code does it give, and why?",
     "hint": "Where do Checkov's severities come from?",
     "choices": [
       {
@@ -612,7 +612,7 @@
         "why": "With `--hard-fail-on` only matching findings fail the run, and none matched."
       },
       {
-        "text": "0, since offline no finding has a severity",
+        "text": "0, since without an account no finding has a severity",
         "correct": true,
         "why": "Yes. The gate passes everything, silently; gate on check ids instead."
       },
@@ -624,7 +624,7 @@
       {
         "text": "1, because `CKV_AWS_24` is HIGH",
         "correct": false,
-        "why": "Offline nothing is HIGH, and `CKV_AWS_24` passed at that point."
+        "why": "Without an account nothing is HIGH, and `CKV_AWS_24` passed at that point."
       }
     ]
   },
@@ -827,7 +827,7 @@
   },
   {
     "id": "ex-px1pjhzj",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "matching",
     "difficulty": "medium",
@@ -836,11 +836,11 @@
     "hint": "Four behaviours, one each.",
     "pairs": [
       {
-        "left": "Checkov prints a Python traceback, then scans",
+        "left": "On the recording machine, Checkov printed a Python traceback, then scanned",
         "right": "it could not reach Prisma Cloud"
       },
       {
-        "left": "Trivy logs `Falling back to embedded checks`",
+        "left": "On the recording machine, Trivy logged `Falling back to embedded checks`",
         "right": "no newer checks bundle was available"
       },
       {

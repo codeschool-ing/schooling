@@ -1,13 +1,20 @@
 ---
 title: Painéis que mentem
-version: 1
+version: 2
 ---
 
 Todo número num painel é verdadeiro, e um painel ainda assim pode enganar. Os jeitos mais comuns são
 poucos, e cada um tem conserto.
 
-**A janela esconde o que aconteceu.** Uma em cada dez cobranças foi forçada a falhar por setenta
-segundos, e trinta segundos depois de isso parar a mesma fração de erros foi pedida em duas janelas:
+**A janela esconde o que aconteceu.** Uma em cada dez cobranças é forçada a falhar por setenta
+segundos, e trinta segundos depois de isso parar a mesma fração de erros é pedida em duas janelas:
+
+```sh
+echo '{"fail_every": 10}' > faults/payments.json
+sleep 70
+rm faults/payments.json
+sleep 30
+```
 
 ```
 ana@obs:~/shop$ curl -sG localhost:9090/api/v1/query --data-urlencode 'query=sum(rate(http_server_requests_total{job="payments",code=~"5.."}[1m])) / sum(rate(http_server_requests_total{job="payments"}[1m]))' | jq -r '.data.result[0].value[1]'

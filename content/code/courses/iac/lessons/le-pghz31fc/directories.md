@@ -1,12 +1,24 @@
 ---
 title: One directory per environment
-version: 1
+version: 2
 ---
 
 The other common layout moves the choice of environment out of a hidden file and into the path.
 **Each environment is a directory of its own, a small root configuration with its own backend
-key, and both call the same modules.** Ana tears the workspaces down, destroying each before
-deleting it, and starts a repository laid out this way:
+key, and both call the same modules.** Ana tears the workspaces down in `~/shop`, destroying each
+before deleting it:
+
+```sh
+terraform workspace select prod
+terraform destroy -var-file=prod.tfvars -auto-approve | tail -n 1
+terraform workspace select dev
+terraform destroy -var-file=dev.tfvars -auto-approve | tail -n 1
+terraform workspace select default
+terraform workspace delete prod
+terraform workspace delete dev
+```
+
+Then she starts a repository, `~/shop-infra`, laid out this way:
 
 ```
 ana@laptop:~/shop-infra$ tree --noreport
@@ -27,8 +39,8 @@ ana@laptop:~/shop-infra$ tree --noreport
 
 The two modules hold what `main.tf` held before, split in two: `network` is the VPC and its
 subnets, and `web` is the security group. Writing modules, their inputs and outputs, is lesson 10;
-here they only need to exist. The network module is the earlier configuration with its variables
-and an output for the VPC's id:
+here they only need to exist. The network module, `modules/network/main.tf`, is the earlier
+configuration with its variables and an output for the VPC's id:
 
 ```hcl
 terraform {
@@ -75,8 +87,44 @@ output "vpc_id" {
 }
 ```
 
+The web module, `modules/web/main.tf`, is the security group, with the VPC's id as an input:
+
+```hcl
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
+  }
+}
+
+variable "environment" {
+  type = string
+}
+
+variable "vpc_id" {
+  type = string
+}
+
+resource "aws_security_group" "web" {
+  name        = "web"
+  description = "web servers"
+  vpc_id      = var.vpc_id
+  tags        = { Project = "shop", Environment = var.environment, Name = "web" }
+
+  ingress {
+    description = "HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+```
+
 An environment's directory is a backend block and a file calling the modules with that
-environment's values:
+environment's values. Prod's are `envs/prod/backend.tf`:
 
 ```hcl
 terraform {
@@ -89,6 +137,8 @@ terraform {
   }
 }
 ```
+
+and `envs/prod/main.tf`:
 
 ```hcl
 provider "aws" {
@@ -105,6 +155,41 @@ module "network" {
 module "web" {
   source      = "../../modules/web"
   environment = "prod"
+  vpc_id      = module.network.vpc_id
+}
+```
+
+Dev's two files are the same with dev's key and values, `envs/dev/backend.tf`:
+
+```hcl
+terraform {
+  backend "s3" {
+    bucket       = "shop-tfstate-123456789012"
+    key          = "envs/dev/terraform.tfstate"
+    region       = "sa-east-1"
+    encrypt      = true
+    use_lockfile = true
+  }
+}
+```
+
+and `envs/dev/main.tf`:
+
+```hcl
+provider "aws" {
+  region = "sa-east-1"
+}
+
+module "network" {
+  source      = "../../modules/network"
+  environment = "dev"
+  cidr        = "10.21.0.0/16"
+  azs         = ["sa-east-1a"]
+}
+
+module "web" {
+  source      = "../../modules/web"
+  environment = "dev"
   vpc_id      = module.network.vpc_id
 }
 ```
@@ -136,8 +221,25 @@ diff -r envs/dev/main.tf envs/prod/main.tf
 ```
 
 Four lines of values in each, and the backend key. The key has to be written out in each copy, because, as
-lesson 7 showed, a backend block cannot use variables. Each directory is initialised and applied on
-its own, with no arguments at all:
+lesson 7 showed, a backend block cannot use variables.
+
+The repository's `.gitignore` is the one from `~/shop` with one more line, for the directory
+Terragrunt works in, which the next section explains:
+
+```
+.terraform/
+*.tfstate
+*.tfstate.*
+.terragrunt-cache/
+```
+
+Ana commits the repository as it stands:
+
+```sh
+git init -q && git add . && git commit -qm "one directory per environment"
+```
+
+Each directory is initialised and applied on its own, with no arguments at all:
 
 ```
 ana@laptop:~/shop-infra/envs/dev$ terraform apply -auto-approve | tail -n 1
@@ -179,10 +281,21 @@ Dev would change two resources and prod three, from one edit. That is what you w
 not for a change you meant to try in dev for a week first. The usual way to hold prod back is to
 give it the module by version rather than by path, `?ref=v1.2.0` on a git source, and move each
 environment to the new version when it is ready. Lesson 10 covers module sources and versions.
+The tag was only an experiment, so Ana puts the module back as she committed it, with
+`git checkout modules/network/main.tf`.
 
 **The copies can also drift on purpose**, and that is sometimes the point. Prod's directory can
 carry a resource dev does not have, a backup vault for instance, without a single `count` or
 conditional in the shared code. With workspaces, every difference between environments has to be
 expressed through the values of one configuration.
+
+Before the next section builds the same two environments again with Terragrunt, Ana destroys
+these two:
+
+```sh
+cd ~/shop-infra/envs/dev && terraform destroy -auto-approve
+cd ~/shop-infra/envs/prod && terraform destroy -auto-approve
+cd ~/shop-infra
+```
 
 The repetition is what the next section is about. Terragrunt exists mainly to remove it.

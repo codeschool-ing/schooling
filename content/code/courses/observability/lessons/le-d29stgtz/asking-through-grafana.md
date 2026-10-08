@@ -1,10 +1,11 @@
 ---
 title: Asking through Grafana
-version: 1
+version: 2
 ---
 
 A panel's query is an HTTP request like any other, and it can be sent by hand. `query.json` asks for
-the storefront's total request rate, in PromQL, addressed to the data source by its `uid`:
+the storefront's total request rate, in PromQL, addressed to the data source by its `uid`. Save
+it as `~/shop/query.json`, as the `cat` below prints it:
 
 ```
 ana@obs:~/shop$ cat query.json

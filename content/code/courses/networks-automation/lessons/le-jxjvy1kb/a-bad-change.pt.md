@@ -1,7 +1,15 @@
 ---
 title: Uma mudança que passa em todas as verificações anteriores
-version: 1
+version: 2
 ---
+
+Tudo o que foi escrito até aqui entra no Git primeiro, para que esta seção tenha um último estado
+bom com que comparar e para onde voltar. As configurações renderizadas e os caches do Python ficam
+de fora:
+
+```
+ana@ctl:~$ cd net && printf "configs/\n__pycache__/\n.pytest_cache/\n" > .gitignore && git init -q && git add . && git commit -qm "lesson 10 project, with tests"
+```
 
 O uplink do edge2 é mudado de ponto a ponto para passivo, um erro que parece uma edição razoável
 numa revisão:

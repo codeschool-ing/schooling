@@ -1,6 +1,6 @@
 ---
 title: Escolher um modelo, e conferir o que você lê
-version: 1
+version: 2
 ---
 
 O jeito tentador de escolher é achar uma tabela comparativa, pegar o modelo do topo e seguir em
@@ -30,7 +30,7 @@ aposentado, o mesmo conjunto diz se o substituto é tão bom quanto ele.
 
 Os provedores cobram por milhão de tokens, e é tentador comparar esses números direto. Eles não se
 comparam, porque **os modelos de cada provedor cortam o texto em tokens do seu próprio jeito**, então
-o mesmo pedido vira um número diferente de tokens em cada um. A bancada tem dois tokenizadores,
+o mesmo pedido vira um número diferente de tokens em cada um. O `tok` tem dois tokenizadores,
 ambos da OpenAI, uma codificação mais antiga e uma mais nova, e eles discordam numa frase em
 português:
 
@@ -69,7 +69,8 @@ tokens  words  chars  file
 ```
 
 São duas codificações de um só provedor. Os tokenizadores dos outros provedores diferem de
-novo, e nenhum deles está na bancada, então este curso não mostra contagem para eles. A regra que
+novo, e o `tok` não tem nenhum deles; a contagem que o `ask` imprime embaixo de cada resposta é a do
+próprio Llama, com os marcadores da conversa incluídos, então também não se compara com estas. A regra que
 decorre disso não precisa de uma: **compare quanto custa um pedido típico inteiro em cada
 provedor**, o que os contadores de tokens deles ou um pedido de teste dizem, e não o preço por
 milhão.

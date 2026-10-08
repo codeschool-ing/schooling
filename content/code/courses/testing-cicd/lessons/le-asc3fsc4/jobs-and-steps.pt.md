@@ -56,5 +56,5 @@ depende de lembrar nada disso: ou declare o shell, ou comece os passos de vária
 Jobs rodam em paralelo, a não ser que um diga que precisa de outro. Um grafo típico: um job rápido de
 lint e os testes unitários lado a lado; testes de integração só depois que os dois passam; um deploy
 só depois de tudo. A aula 6 escreve essas arestas como `needs:` no GitHub Actions e como estágios no
-GitLab CI. O princípio é o da aula 1 seção 11: **verificações rápidas primeiro**, para um erro de
+GitLab CI. O princípio é o da aula 1 seção 14: **verificações rápidas primeiro**, para um erro de
 digitação falhar em trinta segundos e não depois de dez minutos de suíte de navegador.

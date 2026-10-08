@@ -1,6 +1,6 @@
 ---
 title: Cortando documentos em trechos
-version: 1
+version: 2
 ---
 
 A recuperação devolve trechos, não documentos, e o tamanho de um trecho é a primeira decisão.
@@ -27,7 +27,7 @@ def chunks(folder="docs/handbook"):
 ```
 
 ```
-ana@dev:~/shop$ PYTHONPATH=lab python -c 'import rag; cs = rag.chunks(); n = [len(rag.ENC.encode(c["text"])) for c in cs]; print(len(cs), "chunks, from", min(n), "to", max(n), "tokens"); [print(c["id"], "|", c["text"][:70]) for c in cs[:4]]'
+ana@dev:~/shop$ PYTHONPATH=scratch python -c 'import rag; cs = rag.chunks(); n = [len(rag.ENC.encode(c["text"])) for c in cs]; print(len(cs), "chunks, from", min(n), "to", max(n), "tokens"); [print(c["id"], "|", c["text"][:70]) for c in cs[:4]]'
 26 chunks, from 23 to 56 tokens
 account.md#1 | Accounts and passwords. A customer can check out without an account, b
 account.md#2 | Accounts and passwords. To reset a password, the customer chooses "For

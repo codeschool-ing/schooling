@@ -18,7 +18,7 @@ Everywhere else, what the offices share is what they suffer together:
 |---|---|
 | broadcasts | every ARP request and DHCP discover at one site crosses the tunnel to every other site |
 | a loop | a cable plugged back into its own switch at one site floods the other sites too |
-| spanning tree | one tree across the WAN, lesson 20 of `networks-addressing`: a topology change at one site reaches the others |
+| spanning tree | one tree across the WAN, as in `networks-addressing`: a topology change at one site reaches the others |
 | one subnet | if the WAN link fails, the subnet splits in two halves that each believe they are whole |
 | one gateway | a machine moved to the branch still sends to its gateway at head office, and back, across the WAN |
 
@@ -46,5 +46,5 @@ VXLAN is run at scale.
 
 EVPN answers the flood list of the last section. Rather than copying every broadcast and unknown frame
 to every site and learning addresses from the replies, each end announces its own MAC addresses in BGP,
-the protocol of lesson 17 of `networks-addressing`. The others know where an address lives before they
+the protocol `networks-addressing` covers. The others know where an address lives before they
 need to ask. 

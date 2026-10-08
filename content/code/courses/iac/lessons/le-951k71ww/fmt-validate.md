@@ -1,6 +1,6 @@
 ---
 title: fmt and validate, the two checks that cost nothing
-version: 1
+version: 2
 ---
 
 The first two rungs are commands you already know, and lesson 3 showed `validate` catching an
@@ -63,15 +63,20 @@ ana@laptop:~/shop/modules/network$ terraform validate
 ```
 
 So a pipeline runs `terraform init` first, and when a configuration has a remote backend, `terraform
-init -backend=false`, which installs providers and modules without touching the state. After
-that, the same command answers:
+init -backend=false`, which installs providers and modules without touching the state. Ana runs
+`terraform init`, and the same command answers:
 
 ```
 ana@laptop:~/shop/modules/network$ terraform validate
 Success! The configuration is valid.
 ```
 
-Here is what it catches. Ana mistypes one argument of the VPC:
+Here is what it catches. Ana mistypes one argument of the VPC, `cidr_blocks` for `cidr_block`. To
+make the same slip in your copy of `main.tf`:
+
+```sh
+sed -i 's/^  cidr_block           = var.cidr/  cidr_blocks          = var.cidr/' main.tf
+```
 
 ```
 ana@laptop:~/shop/modules/network$ terraform validate
@@ -88,7 +93,12 @@ ana@laptop:~/shop/modules/network$ terraform validate
 
 The provider's schema has no `cidr_blocks` on `aws_vpc`, and Terraform suggests the nearest name
 it does have. A misspelled reference, an argument of the wrong type and a block in the wrong place
-are refused the same way, with the file and the line.
+are refused the same way, with the file and the line. Ana puts the name right again before going
+on:
+
+```sh
+sed -i 's/^  cidr_blocks          = var.cidr/  cidr_block           = var.cidr/' main.tf
+```
 
 **Look at what `validate` did not ask for.** The module has three variables and none has a
 default. A plan would ask for all three, and in a pipeline, with nobody to answer, it would stop. `validate` printed `Success!`

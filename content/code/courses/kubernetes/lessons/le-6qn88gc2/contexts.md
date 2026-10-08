@@ -7,7 +7,15 @@ kubectl does not know about clusters. It reads a **kubeconfig**, `~/.kube/config
 otherwise, which holds three lists and a pointer: clusters (an address and a CA), users (a
 credential), contexts (a cluster, a user and an optional namespace, under one name), and
 `current-context`, the one used when you say nothing. Lesson 7 used one context. Here there are two
-clusters, made one after the other, and kind added each to the same file:
+clusters, made one after the other: `shop` by `./up.sh`, and `eu` by the same script with the other
+name written in, so it gets the same three nodes and the shop's images:
+
+```sh
+./up.sh
+sed 's/--name shop/--name eu/' up.sh > up-eu.sh && sh up-eu.sh
+```
+
+kind added each to the same file:
 
 ```
 ana@laptop:~/shop$ kubectl config get-contexts

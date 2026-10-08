@@ -1,12 +1,114 @@
 ---
 title: Reading a plan, symbol by symbol
-version: 1
+version: 2
 ---
 
 The plan in lesson 2 only created things, so every line began with `+` and the summary said it all.
 That is the easy case, and it builds a bad habit: reading the last line and trusting it. **A plan
 is a list of resources, each with exactly one action, and the summary is a count of those actions
 that loses the reasons.** The reasons are in the body, and a review reads the body.
+
+The shop's configuration for this lesson lives in `~/shop`, in two files. `versions.tf` names the
+providers, `random` among them:
+
+```hcl
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
+    random = {
+      source  = "hashicorp/random"
+      version = "~> 3.8.0"
+    }
+  }
+}
+```
+
+`main.tf` holds the network, `web` with its security group and two rules, and the role `web` runs
+as:
+
+```hcl
+provider "aws" {
+  region = "sa-east-1"
+}
+
+resource "aws_vpc" "shop" {
+  cidr_block = "10.20.0.0/16"
+  tags       = { Name = "shop" }
+}
+
+resource "aws_subnet" "a" {
+  vpc_id            = aws_vpc.shop.id
+  cidr_block        = "10.20.1.0/24"
+  availability_zone = "sa-east-1a"
+  tags              = { Name = "shop-a" }
+}
+
+resource "aws_subnet" "b" {
+  vpc_id            = aws_vpc.shop.id
+  cidr_block        = "10.20.2.0/24"
+  availability_zone = "sa-east-1c"
+  tags              = { Name = "shop-b" }
+}
+
+resource "aws_security_group" "web" {
+  name        = "web"
+  description = "web servers"
+  vpc_id      = aws_vpc.shop.id
+}
+
+resource "aws_vpc_security_group_ingress_rule" "https" {
+  security_group_id = aws_security_group.web.id
+  ip_protocol       = "tcp"
+  from_port         = 443
+  to_port           = 443
+  cidr_ipv4         = "0.0.0.0/0"
+}
+
+resource "aws_vpc_security_group_ingress_rule" "ssh" {
+  security_group_id = aws_security_group.web.id
+  ip_protocol       = "tcp"
+  from_port         = 22
+  to_port           = 22
+  cidr_ipv4         = "203.0.113.0/24"
+}
+
+resource "aws_instance" "web" {
+  ami                    = "ami-1e749f67"
+  instance_type          = "t3.micro"
+  subnet_id              = aws_subnet.a.id
+  vpc_security_group_ids = [aws_security_group.web.id]
+  tags                   = { Name = "web" }
+}
+
+resource "aws_iam_role" "web" {
+  name = "web"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Action    = "sts:AssumeRole"
+      Principal = { Service = "ec2.amazonaws.com" }
+    }]
+  })
+}
+```
+
+Ana applied it once and committed it. To start from the same place, run these in `~/shop`; this
+`.gitignore` keeps saved plans out of Git as well as the state:
+
+```sh
+terraform init
+terraform apply -auto-approve
+git init -q . && printf ".terraform/\n*.tfstate*\ntfplan*\n" > .gitignore
+git add -A && git commit -qm 'the shop network, web and its role'
+```
+
+The two AMI ids are sample images that moto ships, and AWS has no images with those ids. On a real
+account you would put a real image's id in their place, looked up with a data source as lesson 5
+did.
 
 To see all of them at once, Ana makes four edits in one go to the shop's configuration: she
 renames subnet `a`, moves the `web` instance to a newer image, deletes subnet `b`, and adds an

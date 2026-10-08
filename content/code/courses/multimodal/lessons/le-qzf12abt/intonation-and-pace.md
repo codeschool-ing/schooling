@@ -1,21 +1,21 @@
 ---
 title: Intonation, pace and saying it the same way twice
-version: 1
+version: 2
 ---
 
 **Intonation is how pitch moves through a sentence**, and in English it carries meaning: a statement falls at the end, a question rises. Piper takes its cue from punctuation, which espeak-ng passes on as a mark of what kind of clause it is. The same four words with a full stop and with a question mark:
 
 ```
 ana@lab:~/mm$ python say.py en_US-lessac-medium "Your order has shipped." /tmp/a.wav 1.0
-/tmp/a.wav: 1.14 s of audio at 22050 Hz, made in 0.11 s
+/tmp/a.wav: 1.14 s of audio at 22050 Hz, made in 0.09 s
 ana@lab:~/mm$ python say.py en_US-lessac-medium "Your order has shipped?" /tmp/b.wav 1.0
-/tmp/b.wav: 1.15 s of audio at 22050 Hz, made in 0.11 s
+/tmp/b.wav: 1.15 s of audio at 22050 Hz, made in 0.09 s
 ana@lab:~/mm$ python say.py en_US-lessac-medium "Your order has shipped!" /tmp/c.wav 1.0
-/tmp/c.wav: 1.14 s of audio at 22050 Hz, made in 0.12 s
+/tmp/c.wav: 1.14 s of audio at 22050 Hz, made in 0.14 s
 ana@lab:~/mm$ python say.py en_US-lessac-medium "Your order has shipped." /tmp/d.wav 0.8
-/tmp/d.wav: 1.31 s of audio at 22050 Hz, made in 0.13 s
+/tmp/d.wav: 1.31 s of audio at 22050 Hz, made in 0.11 s
 ana@lab:~/mm$ python say.py en_US-lessac-medium "Your order has shipped." /tmp/e.wav 1.25
-/tmp/e.wav: 1.00 s of audio at 22050 Hz, made in 0.09 s
+/tmp/e.wav: 1.00 s of audio at 22050 Hz, made in 0.10 s
 ```
 
 The lengths barely move, 1.14 against 1.15 seconds. The pitch does, measured by a small program that estimates the voice's fundamental frequency every 30 milliseconds:
@@ -86,8 +86,8 @@ for noise in (True, False):
 
 ```
 ana@lab:~/mm$ python twice.py
-noise on   ae68a97ed74a 1.22 s   78f3a3307264 1.24 s   different
+noise on   d811d0d463a8 1.10 s   b818cec6fb86 1.17 s   different
 noise off  8ca881e0ebb4 1.14 s   8ca881e0ebb4 1.14 s   the same
 ```
 
-With the voice's own noise (`noise_scale` 0.667 in lessac's configuration), the same sentence came out as two different files of 1.20 and 1.13 seconds. With noise switched off, the two takes are identical to the last sample. **This lab switches it off everywhere**, which is the one setting `mmlab.piper` makes: a recording that changes every time the lab is rebuilt could not be quoted by any lesson. A product might choose the other way, for a voice that sounds less mechanical over a long call.
+With the voice's own noise (`noise_scale` 0.667 in lessac's configuration), the same sentence came out as two different files of 1.10 and 1.17 seconds. With noise switched off, the two takes are identical to the last sample. **This lab switches it off everywhere**, which is the one setting `mmlab.piper` makes: a recording that changes every time the lab is rebuilt could not be quoted by any lesson. A product might choose the other way, for a voice that sounds less mechanical over a long call.

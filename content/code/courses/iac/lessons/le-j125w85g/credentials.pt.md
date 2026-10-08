@@ -1,6 +1,6 @@
 ---
 title: Credenciais sem chave no repositório
-version: 1
+version: 2
 ---
 
 O jeito óbvio de deixar um pipeline entrar na AWS é o errado: criar um usuário IAM, gerar uma
@@ -30,7 +30,8 @@ variável; o `before_script` o grava num arquivo, e o SDK da AWS dentro do provi
 ## Dois roles, e o que cada um pode fazer
 
 O lado da AWS também é Terraform, numa configuração própria que um administrador aplica uma vez.
-Ela não pode ser aplicada pelo pipeline para o qual cria os roles:
+Ela não pode ser aplicada pelo pipeline para o qual cria os roles. A Ana a guarda em
+`~/ci-roles/main.tf`, fora do repositório da loja:
 
 ```hcl
 terraform {

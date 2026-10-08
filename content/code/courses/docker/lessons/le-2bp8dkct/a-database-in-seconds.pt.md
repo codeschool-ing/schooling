@@ -1,6 +1,6 @@
 ---
 title: Um banco de dados em segundos
-version: 1
+version: 2
 ---
 
 **Um `docker run` lhe dá um PostgreSQL configurado, com o seu esquema e os seus dados de exemplo,
@@ -8,7 +8,7 @@ acessível a partir da sua própria máquina.** Quatro opções fazem isso, e um
 imagem decide se a primeira coisa que se conecta a ela funciona.
 
 A Ana quer a tabela do catálogo, com dois livros, toda vez que iniciar um banco novo. Ela escreve a
-preparação como um arquivo SQL, num diretório só dele:
+preparação como um arquivo SQL, `initdb/01-schema.sql`, num diretório só dele:
 
 ```sql
 CREATE TABLE books (
@@ -42,7 +42,7 @@ Cada opção tem um trabalho:
 ## Pronto, e não pronto
 
 A Ana espera o PostgreSQL responder dentro do container e então se conecta a partir da própria
-máquina com o `psql`, o cliente do PostgreSQL instalado no host:
+máquina com o `psql`, o cliente do PostgreSQL que a aula 5 instalou no host:
 
 ```
 ana@vm:~$ time until docker exec db pg_isready -U postgres -q; do sleep 0.2; done

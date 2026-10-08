@@ -1,6 +1,6 @@
 ---
 title: `chmod`, e o que a recursão faz com diretórios
-version: 2
+version: 3
 ---
 
 O `chmod` aceita o modo de dois jeitos. **Numérico** define os nove bits de uma vez. **Simbólico**
@@ -15,7 +15,7 @@ chmod u+x script.sh       # symbolic: add one bit, touch nothing else
 ## Simbólico, que tem três partes
 
 ```localised
-chmod  [ugoa]  [+-=]  [rwx]  arquivo
+chmod  [ugoa]  [+-=]  [rwx]  file
 ```
 
 **Quem**: `u` dono, `g` grupo, `o` outros, `a` os três. Omita e vale `a`, filtrado pelo seu umask —
@@ -24,6 +24,16 @@ que é a seção 09, e um bom motivo para ser explícito.
 **Como**: `+` acrescenta, `-` remove, `=` define exatamente isto e limpa o resto daquela linha.
 
 **O quê**: `r`, `w`, `x` — e mais dois, abaixo.
+
+Um arquivo, um script e um diretório para mudar:
+
+```sh
+mkdir -p ~/cm/sub
+cd ~/cm
+printf 'test\n' > a.txt
+printf '#!/bin/sh\necho done\n' > run.sh
+chmod 755 run.sh
+```
 
 ```
 ana@vm:~/cm$ ls -l a.txt

@@ -1,12 +1,24 @@
 ---
 title: Um diretório por ambiente
-version: 1
+version: 2
 ---
 
 O outro layout comum tira a escolha do ambiente de um arquivo escondido e a põe no caminho. **Cada
 ambiente é um diretório próprio, uma pequena configuração raiz com a sua key de backend, e os dois
-chamam os mesmos módulos.** A Ana desmonta os workspaces, destruindo cada um antes de apagá-lo, e
-começa um repositório organizado assim:
+chamam os mesmos módulos.** A Ana desmonta os workspaces em `~/shop`, destruindo cada um antes
+de apagá-lo:
+
+```sh
+terraform workspace select prod
+terraform destroy -var-file=prod.tfvars -auto-approve | tail -n 1
+terraform workspace select dev
+terraform destroy -var-file=dev.tfvars -auto-approve | tail -n 1
+terraform workspace select default
+terraform workspace delete prod
+terraform workspace delete dev
+```
+
+Depois começa um repositório, `~/shop-infra`, organizado assim:
 
 ```
 ana@laptop:~/shop-infra$ tree --noreport
@@ -27,8 +39,8 @@ ana@laptop:~/shop-infra$ tree --noreport
 
 Os dois módulos guardam o que o `main.tf` guardava antes, dividido em dois: `network` é a VPC e as
 sub-redes, e `web` é o security group. Escrever módulos, com entradas e saídas, é a aula 10; aqui eles
-só precisam existir. O módulo de rede é a configuração de antes, com as variáveis e um output para o
-id da VPC:
+só precisam existir. O módulo de rede, `modules/network/main.tf`, é a configuração de antes, com as
+variáveis e um output para o id da VPC:
 
 ```hcl
 terraform {
@@ -75,8 +87,44 @@ output "vpc_id" {
 }
 ```
 
+O módulo web, `modules/web/main.tf`, é o security group, com o id da VPC como entrada:
+
+```hcl
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
+  }
+}
+
+variable "environment" {
+  type = string
+}
+
+variable "vpc_id" {
+  type = string
+}
+
+resource "aws_security_group" "web" {
+  name        = "web"
+  description = "web servers"
+  vpc_id      = var.vpc_id
+  tags        = { Project = "shop", Environment = var.environment, Name = "web" }
+
+  ingress {
+    description = "HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+```
+
 O diretório de um ambiente é um bloco de backend e um arquivo que chama os módulos com os valores
-daquele ambiente:
+daquele ambiente. Os de prod são `envs/prod/backend.tf`:
 
 ```hcl
 terraform {
@@ -89,6 +137,8 @@ terraform {
   }
 }
 ```
+
+e `envs/prod/main.tf`:
 
 ```hcl
 provider "aws" {
@@ -105,6 +155,41 @@ module "network" {
 module "web" {
   source      = "../../modules/web"
   environment = "prod"
+  vpc_id      = module.network.vpc_id
+}
+```
+
+Os dois arquivos de dev são iguais, com a key e os valores de dev, `envs/dev/backend.tf`:
+
+```hcl
+terraform {
+  backend "s3" {
+    bucket       = "shop-tfstate-123456789012"
+    key          = "envs/dev/terraform.tfstate"
+    region       = "sa-east-1"
+    encrypt      = true
+    use_lockfile = true
+  }
+}
+```
+
+e `envs/dev/main.tf`:
+
+```hcl
+provider "aws" {
+  region = "sa-east-1"
+}
+
+module "network" {
+  source      = "../../modules/network"
+  environment = "dev"
+  cidr        = "10.21.0.0/16"
+  azs         = ["sa-east-1a"]
+}
+
+module "web" {
+  source      = "../../modules/web"
+  environment = "dev"
   vpc_id      = module.network.vpc_id
 }
 ```
@@ -136,8 +221,25 @@ diff -r envs/dev/main.tf envs/prod/main.tf
 ```
 
 Quatro linhas de valores em cada um, e a key do backend. A key precisa ser escrita em cada cópia porque, como a
-aula 7 mostrou, um bloco de backend não pode usar variáveis. Cada diretório é inicializado e aplicado
-sozinho, sem argumento nenhum:
+aula 7 mostrou, um bloco de backend não pode usar variáveis.
+
+O `.gitignore` do repositório é o de `~/shop` com uma linha a mais, para o diretório em que o
+Terragrunt trabalha, que a próxima seção explica:
+
+```
+.terraform/
+*.tfstate
+*.tfstate.*
+.terragrunt-cache/
+```
+
+A Ana faz o commit do repositório como está:
+
+```sh
+git init -q && git add . && git commit -qm "one directory per environment"
+```
+
+Cada diretório é inicializado e aplicado sozinho, sem argumento nenhum:
 
 ```
 ana@laptop:~/shop-infra/envs/dev$ terraform apply -auto-approve | tail -n 1
@@ -178,11 +280,21 @@ Plan: 0 to add, 3 to change, 0 to destroy.
 Dev mudaria dois recursos e prod três, a partir de uma edição. É o que você quer para uma correção, e
 não para uma mudança que você pretendia testar em dev por uma semana antes. O jeito usual de segurar prod é entregar o módulo a ele por versão em vez de por caminho, `?ref=v1.2.0` numa origem
 git, e mover cada ambiente para a versão nova quando ele estiver pronto. A aula 10 trata de origens e
-versões de módulos.
+versões de módulos. A tag era só um experimento, então a Ana devolve o módulo ao que estava no
+commit, com `git checkout modules/network/main.tf`.
 
 **As cópias também podem divergir de propósito**, e às vezes esse é o ponto. O diretório de prod pode
 ter um recurso que dev não tem, um cofre de backup por exemplo, sem um único `count` ou condicional no
 código compartilhado. Com workspaces, toda diferença entre ambientes precisa ser expressa pelos
 valores de uma configuração só.
+
+Antes que a próxima seção construa os mesmos dois ambientes de novo com o Terragrunt, a Ana
+destrói estes dois:
+
+```sh
+cd ~/shop-infra/envs/dev && terraform destroy -auto-approve
+cd ~/shop-infra/envs/prod && terraform destroy -auto-approve
+cd ~/shop-infra
+```
 
 A repetição é o assunto da próxima seção. O Terragrunt existe principalmente para removê-la.

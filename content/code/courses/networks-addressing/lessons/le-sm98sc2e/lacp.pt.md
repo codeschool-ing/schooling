@@ -1,6 +1,6 @@
 ---
 title: LACP, as duas pontas combinando
-version: 1
+version: 2
 ---
 
 Um LAG pode ser configurado sem protocolo nenhum: diga a cada switch quais portas andam juntas e ele
@@ -38,7 +38,8 @@ segundos. `miimon 100` faz o bond conferir o enlace de cada membro a cada 100 mi
 `xmit_hash_policy layer2+3` decide como o tráfego se espalha, o que a próxima seção mostra. Os cabos
 são desativados antes de entrar, e é por isso que o `Link Failure Count` de cada membro marca 1 mais
 abaixo. Os mesmos quatro comandos rodaram no `sw2`, fora de vista, porque o LACP precisa das duas
-pontas.
+pontas: digite-os também no prompt de root do sw2, e dê dez segundos para as duas pontas se
+entenderem.
 
 Dez segundos depois, o bond é uma interface com dois membros:
 

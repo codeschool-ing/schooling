@@ -4,8 +4,9 @@ version: 1
 ---
 
 A aula 3 subiu o OpenVPN e leu o handshake TLS dele no fio, com Client Hello e tudo. Aqui ele está
-configurado do jeito que um servidor de acesso remoto costuma estar, em `hq`, para a Ana. O arquivo do
-servidor, como o `cat /etc/openvpn/server.conf` o imprimiu:
+configurado do jeito que um servidor de acesso remoto costuma estar, em `hq`, para a Ana. Derrube o
+WireGuard em `hq` antes, `sudo wg-quick down wg0`, para que só uma VPN esteja rodando. Este é o arquivo
+do servidor, `/etc/openvpn/server.conf`, para escrever em `hq` com `sudo nano`:
 
 ```schooling-example
 {"language": "conf", "file": "server.conf", "parts": [{"code": "dev tun\nproto udp\nport 1194", "note": "Um túnel de camada 3, `tun`, sobre UDP na porta registrada do OpenVPN."}, {"code": "server 10.8.0.0 255.255.255.0\ntopology subnet", "note": "Um pool para os clientes. O servidor fica com `10.8.0.1` e distribui o resto, um endereço por conexão, todos numa sub-rede só."}, {"code": "ca ca.crt\ncert vpn-server.crt\nkey vpn-server.key", "note": "A autoridade em que os dois lados confiam, e o certificado e a chave do próprio servidor. Cada cliente tem um certificado seu, da mesma autoridade, e essa é a identidade dele."}, {"code": "dh none", "note": "Nenhum arquivo de parâmetros Diffie-Hellman: a troca de chaves é feita com curvas elípticas."}, {"code": "tls-crypt tc.key", "note": "Uma chave compartilhada pelo servidor e por todos os clientes, que criptografa e autentica o canal de controle, handshake incluído."}, {"code": "push \"route 192.168.10.0 255.255.255.0\"", "note": "Enviado a cada cliente quando ele conecta: rotear a LAN da matriz para o túnel, e mais nada. Um túnel dividido, que é o assunto da aula 5."}, {"code": "keepalive 10 60", "note": "Um ping pelo túnel a cada 10 segundos, e o cliente reinicia a conexão depois de 60 sem resposta. O servidor espera o dobro."}, {"code": "status /run/openvpn-status.log 5\nverb 3", "note": "Regravar num arquivo, a cada 5 segundos, a lista de quem está conectado, e registrar no nível de log de costume."}]}
@@ -16,8 +17,28 @@ uma pessoa por um certificado que o servidor nunca viu antes.** Qualquer cliente
 autoridade do laboratório assinou consegue conectar, e o servidor não precisa de uma linha por usuário.
 Essa é a diferença que o resto desta seção encontra várias vezes.
 
-O `tls-crypt` precisa de uma chave própria, gerada uma vez no servidor e copiada para cada cliente, aqui
-para o laptop da Ana, como root e fora da tela:
+O `/etc/openvpn/client.conf` da Ana em `remote` é o da aula 3 com uma linha a mais, `tls-crypt tc.key`,
+escrita depois da linha `key vpn-ana.key`. Os certificados são copiados como na aula 3, e o `tls-crypt`
+precisa de uma chave própria, gerada uma vez no servidor. Em `hq`:
+
+```sh
+sudo cp /lab/tls/ca.crt /lab/tls/vpn-server.crt /lab/tls/vpn-server.key /etc/openvpn/
+sudo chmod 600 /etc/openvpn/vpn-server.key
+sudo openvpn --genkey tls-crypt /etc/openvpn/tc.key
+```
+
+Depois cada cliente recebe uma cópia. Entre máquinas de verdade isso é uma cópia por SSH ou uma
+ferramenta de gerência de configuração. Aqui o `/etc/openvpn` de cada máquina mora em `/lab` na máquina
+virtual, como dizem as notas do `netlab.sh` na aula 1, então `remote` pode pegar o de `hq` direto. Em
+`remote`:
+
+```sh
+sudo cp /lab/tls/ca.crt /lab/tls/vpn-ana.crt /lab/tls/vpn-ana.key /etc/openvpn/
+sudo chmod 600 /etc/openvpn/vpn-ana.key
+sudo cp /lab/hq/etc/openvpn/tc.key /etc/openvpn/
+```
+
+O arquivo da chave começa assim:
 
 ```
 ana@hq:~$ sudo head -3 /etc/openvpn/tc.key
@@ -27,9 +48,21 @@ ana@hq:~$ sudo head -3 /etc/openvpn/tc.key
 ```
 
 Ela não é uma identidade, já que todo cliente tem o mesmo arquivo. **O trabalho dela é tornar inútil,
-antes de o TLS começar, um pacote que não a tenha.** O provedor capturou o cliente conectando, com o
-`tshark` iniciado antes e o cliente iniciado como root; depois a Ana pingou o servidor de arquivos pelo
-túnel:
+antes de o TLS começar, um pacote que não a tenha.** Inicie o servidor em `hq`, gravando o log em
+`/run/openvpn.log`, onde o fim desta seção o lê:
+
+```sh
+sudo sh -c 'setsid openvpn --cd /etc/openvpn --config server.conf > /run/openvpn.log 2>&1 &'
+```
+
+O provedor capturou o cliente conectando, com o `tshark` iniciado antes em `isp` e depois o cliente em
+`remote`, em segundo plano como o servidor:
+
+```sh
+sudo setsid openvpn --cd /etc/openvpn --config client.conf >/dev/null 2>&1 &
+```
+
+Depois a Ana pingou o servidor de arquivos pelo túnel:
 
 ```
 ana@isp:~$ tshark -n -i eth1 -c 6 -f "udp port 1194"

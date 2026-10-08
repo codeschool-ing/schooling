@@ -1,7 +1,49 @@
 ---
 title: Argumentos, e por que o `"$@"` tem aspas em volta
-version: 1
+version: 2
 ---
+
+Os scripts que esta seção roda, criados em `~/work/scripts` do jeito que a seção 02 descreveu; cada um aparece de novo onde é explicado:
+
+```sh
+cd ~/work/scripts
+cat > args.sh <<'END'
+#!/bin/bash
+echo "name:  $0"
+echo "count: $#"
+echo "first: $1   second: $2   tenth: ${10}"
+echo "all:   $@"
+END
+cat > loopargs.sh <<'END'
+#!/bin/bash
+echo "-- unquoted \$@"
+for a in $@; do echo "  [$a]"; done
+echo "-- quoted \"\$@\""
+for a in "$@"; do echo "  [$a]"; done
+echo "-- quoted \"\$*\""
+for a in "$*"; do echo "  [$a]"; done
+END
+cat > shifter.sh <<'END'
+#!/bin/bash
+while [ "$#" -gt 0 ]; do
+  echo "handling [$1], $# left"
+  shift
+done
+echo "done, \$# is $#"
+END
+cat > needsarg.sh <<'END'
+#!/bin/bash
+[ "$#" -ge 1 ] || { echo "usage: $0 LOGFILE" >&2; exit 2; }
+[ -r "$1" ]    || { echo "$0: cannot read $1" >&2; exit 1; }
+echo "would report on $1"
+END
+cat > whereami.sh <<'END'
+#!/bin/bash
+here=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+echo "the script lives in $here"
+END
+chmod +x args.sh loopargs.sh shifter.sh needsarg.sh whereami.sh
+```
 
 Um script que só funciona num arquivo é um bilhete para você mesmo. Argumentos são o que o
 transformam numa ferramenta.

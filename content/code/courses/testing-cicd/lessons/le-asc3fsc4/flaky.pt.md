@@ -1,6 +1,6 @@
 ---
 title: Testes instáveis no pipeline
-version: 1
+version: 2
 ---
 
 A aula 3 seção 09 definiu um teste instável: um que passa e falha sem mudança nenhuma entre uma vez e
@@ -13,7 +13,8 @@ a deixou visível. Distinguir as duas é o primeiro passo diante de qualquer tes
 
 ## Um teste instável, medido
 
-Este teste, escrito para a seção, confere as zonas de dois CEPs transformando um set numa lista:
+Este teste, escrito para a seção, confere as zonas de dois CEPs transformando um set numa lista.
+Apague-o quando a seção terminar. Salve como `tests/test_zones_seen.py`:
 
 ```python
 from shipquote.quote import zone_of

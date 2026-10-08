@@ -4,8 +4,8 @@ version: 1
 ---
 
 **A certificate error is the client refusing to talk to a server it cannot identify, and every one
-of them has a specific cause that can be found and fixed on the server.** The lab runs four servers
-with four different problems. `s_client` with `-verify_return_error` behaves like a browser: it
+of them has a specific cause that can be found and fixed on the server.** Section 02 started four
+servers, and three of them have a different problem each. `s_client` with `-verify_return_error` behaves like a browser: it
 stops the handshake when a check fails. Only the verdict lines are shown here.
 
 ## A working one, for comparison

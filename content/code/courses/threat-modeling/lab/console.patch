@@ -1,0 +1,21 @@
+--- a/model.py
++++ b/model.py
+@@ -26,6 +26,9 @@
+ payments = ExternalEntity("Payment gateway")
+ payments.inBoundary = vendors
+ payments.protocol = "HTTPS"
++anyone = Actor("Anyone on the internet")
++anyone.inBoundary = internet
++anyone.protocol = "HTTPS"
+ 
+ # Processes: code Vereda runs.
+ portal = Server("Portal")
+@@ -67,5 +70,8 @@
+ Dataflow(worker, db, "Read tomorrow's bookings")
+ Dataflow(worker, sms, "Send reminder")
+ 
++# Drawn in lesson 6: the console answers from the internet, not only the clinics.
++Dataflow(anyone, console, "Staff sign-in page")
++
+ if __name__ == "__main__":
+     tm.process()

@@ -1,6 +1,6 @@
 ---
 title: A ordem importa
-version: 1
+version: 2
 ---
 
 **Ponha no topo do Dockerfile o que muda raramente e embaixo o que muda com frequência.** As
@@ -166,7 +166,8 @@ comando que as instala, depois o código.
 | Node.js | `package.json`, `package-lock.json` | `npm ci` | o código |
 | Java, com Maven | `pom.xml` | `mvn dependency:go-offline` | `src/` |
 
-Esses comandos de instalação baixam da internet, que os containers do laboratório não alcançam, como o
-`lab.sh` explica; é por isso que o `shelf` mantém a dependência vendorizada e a compila. O argumento da
-ordem não muda: o passo lento fica acima do código, com a chave dependendo só dos arquivos que
+Esses comandos de instalação baixam da internet, que os containers do laboratório não alcançam, como
+mostrou a última seção da aula 5; é por isso que o `shelf` mantém a dependência em `vendor/`, como a
+aula 11 a deixou, e a compila. Na sua máquina o `go mod download` funciona, e os dois arranjos são
+corretos. O argumento da ordem não muda: o passo lento fica acima do código, com a chave dependendo só dos arquivos que
 descrevem as dependências.

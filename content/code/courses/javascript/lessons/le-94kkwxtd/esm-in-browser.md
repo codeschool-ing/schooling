@@ -1,6 +1,6 @@
 ---
 title: Modules in the browser
-version: 1
+version: 2
 ---
 
 The same `import` and `export` work in a page. **A script tag with `type="module"` loads a module**,
@@ -55,9 +55,9 @@ HTML file on your desktop does:
 
 - **a module will not load from `file://`.** The browser treats a file opened from disk as having no
   origin, and refuses to fetch modules for it. The page loaded and the script did not, with an error
-  in the console and nothing on the page to say so. In the lab, `page` serves `~/js` over
-  `http://127.0.0.1:8080` for exactly this reason; at home, any small static server does the same,
-  and editors often have one built in.
+  in the console and nothing on the page to say so. `page` serves `~/js` over
+  `http://127.0.0.1:8080` for exactly this reason, and so does `node ~/js-tools/serve.mjs` for your
+  own browser; any small static server does the same, and editors often have one built in.
 
 ## Paths in the browser
 

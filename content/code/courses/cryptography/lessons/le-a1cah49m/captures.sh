@@ -7,27 +7,28 @@
 #
 #   bash captures.sh            # beside this file; it finds ../../lab.sh
 #
-# It rebuilds ~/lab with lab.sh reset under its own HOME, so nothing of yours
-# is touched, and prints each command after a prompt, ana@lab:~/lab$,
-# followed by what it printed.
+# It rebuilds ~/lab with lab.sh reset, which builds it as the lessons do, in
+# the home of a user `ana` (LAB_HOME moves it), and prints each command after
+# a prompt, ana@lab:~/lab$, followed by what it printed.
 #
-# What is STAGED rather than typed: the whole of ~/lab, built by lab.sh,
-# including pki/, Vereda's certificate authority, which vlab/pki.py builds
-# with fixed keys and fixed dates (it lists every certificate). Every check
-# passes -attime 1781535600, the lab's present: 2026-06-15 12:00 in Sao
-# Paulo, except where a command passes another instant on purpose.
+# pki/ is what lesson 8 makes with `vcrypt pki`: Vereda's certificate
+# authority, from tools/pki.py, with fixed keys and fixed dates (pki.py lists
+# every certificate). Every check passes -attime 1781535600, the lab's
+# present: 2026-06-15 12:00 in Sao Paulo, except where a command passes
+# another instant on purpose.
 #
-# Recorded with OpenSSL 3.0.13, Python 3.13 and cryptography 50,
-# TZ=America/Sao_Paulo.
+# Recorded on Ubuntu 24.04 with OpenSSL 3.0.13, Python 3.12 and cryptography
+# 50.0.2, TZ=America/Sao_Paulo.
 
 set -uo pipefail
 here=$(cd "$(dirname "$0")" && pwd)
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 COLUMNS=100 PYTHONDONTWRITEBYTECODE=1
-export HOME=${LAB_HOME:-/var/tmp/cryptography}
-mkdir -p "$HOME"
+export LAB_HOME=${LAB_HOME:-/home/ana}
+export HOME=$LAB_HOME
 bash "$here/../../lab.sh" reset >/dev/null
 cd "$HOME/lab"
-export PATH=$HOME/lab/bin:$PATH
+# What the three lines lesson 1 adds to ~/.bashrc do.
+export PATH=$HOME/lab/venv/bin:$HOME/lab/bin:$PATH VIRTUAL_ENV=$HOME/lab/venv
 on() { printf 'ana@lab:~/lab$ %s\n' "$*"; bash -c "$*" 2>&1; }
 block() { printf '##### %s\n' "$1"; }
 

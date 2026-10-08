@@ -1,6 +1,6 @@
 ---
 title: A nota como dado, num formato que você declara
-version: 1
+version: 2
 ---
 
 Uma descrição é para uma pessoa. O sistema de estoque quer campos, e um modelo de visão pode ser pedido a devolvê-los num **formato declarado**: um JSON Schema em que a resposta precisa caber, e que a API garante quando o modelo suporta **saídas estruturadas** (structured outputs). O SDK da OpenAI monta o schema a partir de modelos Pydantic e transforma a resposta de volta neles:
@@ -22,7 +22,7 @@ Uma descrição é para uma pessoa. O sistema de estoque quer campos, e um model
       "note": "**A imagem, como data URL.** O base64 deixa o arquivo um terço maior no pedido, o preço de não precisar de uma URL pública."
     },
     {
-      "code": "client = OpenAI()\nreply = client.chat.completions.parse(\n    model=\"lab-vision-1\",\n    messages=[\n        {\"role\": \"system\", \"content\": \"Read supplier invoices. Copy every number exactly as printed; amounts in cents.\"},\n        {\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \"Read this invoice.\"},\n                                     {\"type\": \"image_url\", \"image_url\": {\"url\": url, \"detail\": \"high\"}}]},\n    ],\n    response_format=Invoice,\n)\ninv = reply.choices[0].message.parsed\n\n",
+      "code": "client = OpenAI()\nreply = client.chat.completions.parse(\n    model=\"qwen2.5vl:3b\", temperature=0, seed=1,\n    messages=[\n        {\"role\": \"system\", \"content\": \"Read supplier invoices. Copy every number exactly as printed; amounts in cents.\"},\n        {\"role\": \"user\", \"content\": [{\"type\": \"text\", \"text\": \"Read this invoice.\"},\n                                     {\"type\": \"image_url\", \"image_url\": {\"url\": url, \"detail\": \"high\"}}]},\n    ],\n    response_format=Invoice,\n)\ninv = reply.choices[0].message.parsed\n\n",
       "note": "**O `parse` manda os modelos como JSON Schema** em `response_format`, e transforma a resposta de volta num `Invoice`. Se a resposta não coubesse no schema, esta linha levantaria um erro em vez de entregar meia nota."
     },
     {
@@ -39,14 +39,14 @@ Uma descrição é para uma pessoa. O sistema de estoque quer campos, e um model
 
 ```
 ana@lab:~/mm$ python invoice.py media/invoice-0931.png
-INV-0931 from Lantern & Quill Distributors: 4 lines, total 758.50
-checks: every line and total agrees
+INVO-0931 from Lantern & Quill Distributors: 4 lines, total 7585.00
+checks: subtotal and shipping do not make the total
 ana@lab:~/mm$ python invoice.py media/invoice-0931-scan.jpg
 INV-0931 from Lantern & Quill Distributors: 4 lines, total 758.50
-checks: Bleak House: 6 x 3290 is not 16450
+checks: every line and total agrees
 ```
 
-**As duas leituras foram escritas pelo curso**, e a segunda carrega um erro de propósito: diz 6 exemplares de *Bleak House* onde a página diz 5, o tipo de dígito que um escaneado borrado convida. O schema aceitou, porque 6 é um inteiro perfeitamente válido. **A aritmética pegou**: 6 × 32,90 não dá 164,50.
+**As duas leituras são do qwen2.5vl:3b, e a página limpa é a que ele errou.** Ele escreveu o número da nota como `INVO-0931`, e o total como 758.500 centavos, dez vezes o real: um dígito fora do lugar num inteiro, onde a página tem uma vírgula decimal. O schema aceitou os dois, porque `INVO-0931` é uma string perfeitamente boa e 758500 um inteiro perfeitamente bom. **A aritmética pegou o total**: o subtotal e o frete não dão aquilo. Nada pegou o número, porque nenhuma soma depende dele. O escaneado borrado, lido pelo mesmo modelo, voltou certo em todos os campos; os erros de um modelo não seguem a dificuldade que uma pessoa enxerga.
 
 Essa é a lição inteira desta seção. **Um schema garante o formato de uma resposta, nunca a verdade dela.** Ele transforma "o modelo devolveu um parágrafo e eu preciso garimpar o total" em "o modelo devolveu um `Invoice` ou a chamada falhou". É uma grande melhora para o programa, e não diz absolutamente nada sobre os números serem os da página.
 
@@ -56,8 +56,8 @@ A aula 2 leu a mesma nota com o Tesseract e a conferiu do mesmo jeito. Com uma l
 
 | o campo | modelo de visão | Tesseract (aula 2) | veredito |
 |---|---|---|---|
-| Bleak House, quantidade | 6 | 5 | discordam: conferir |
-| Bleak House, valor | 164,50 | 164,50 | concordam |
-| total | 758,50 | 758,50 | concordam |
+| número da nota | INVO-0931 | INV-0931 | discordam: conferir |
+| subtotal | 713,50 | 713,50 | concordam |
+| total | 7585,00 | 758,50 | discordam: conferir |
 
-Dois leitores com fraquezas diferentes raramente erram o mesmo campo do mesmo jeito, então uma concordância é um indício forte e uma discordância é uma pergunta precisa para uma pessoa. Custa uma passada de OCR, que é de graça e leva um segundo. Nesta nota a aritmética já pegou o erro; a comparação diz *qual* leitor o cometeu.
+Dois leitores com fraquezas diferentes raramente erram o mesmo campo do mesmo jeito, então uma concordância é um indício forte e uma discordância é uma pergunta precisa para uma pessoa. Custa uma passada de OCR, que é de graça e leva um segundo. Nesta nota a aritmética pegou um erro e deixou passar o outro; a comparação acha os dois, e diz *qual* leitor os cometeu.

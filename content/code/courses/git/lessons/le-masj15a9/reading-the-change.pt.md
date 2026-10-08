@@ -1,11 +1,35 @@
 ---
 title: Lendo a mudança
-version: 1
+version: 2
 ---
 
 O pull request do Bruno é o #31, para o ticket #30: *os clientes querem escolher quando buscar o pedido*. O
 site de hospedagem mostra o diff, e para uma mudança pequena isso basta. Para qualquer coisa que você
-queira **rodar**, traga o branch para a sua máquina:
+queira **rodar**, traga o branch para a sua máquina.
+
+Na sua ainda não há Bruno. Este bloco faz tudo o que a revisão precisa, a partir de uma semana nova: a
+cópia compartilhada da aula 7, o clone do próprio Bruno em `~/bruno/site` com o nome dele configurado
+naquele clone, o branch dele com dois commits, e o push. A última linha traz você de volta à cópia da
+Ana:
+
+```bash
+cd ~ && rm -rf ~/site ~/remotes ~/bruno && bash ~/make-site.sh && cd ~/site
+git init -q --bare ~/remotes/site.git
+git remote add origin ~/remotes/site.git
+git push -q -u origin main
+git clone -q ~/remotes/site.git ~/bruno/site && cd ~/bruno/site
+git config user.name 'Bruno Lima' && git config user.email bruno@example.com
+git switch -q -c 30-pickup-times
+printf '<h1>Order ahead</h1>\n<form class="order">\n  <label>Pickup time <input name="pickup" type="time"></label>\n  <button>Order</button>\n</form>\n' > order.html
+printf '<p><a href="order.html">Order ahead</a></p>\n' >> index.html
+git add -A && git commit -qm 'Let customers choose a pickup time' -m 'Refs #30'
+sed -i 's/darkorange/saddlebrown/' style.css && printf '.order label { display: block; }\n' >> style.css
+git commit -qam 'Style the order form' -m 'Refs #30'
+git push -q -u origin 30-pickup-times
+cd ~/site
+```
+
+Depois, o lado da Ana:
 
 ```
 ana@vm:~/site$ git fetch

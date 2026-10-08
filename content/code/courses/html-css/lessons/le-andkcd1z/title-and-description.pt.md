@@ -1,6 +1,6 @@
 ---
 title: O título, a descrição e o que outros programas leem
-version: 1
+version: 2
 ---
 
 O resto do head é informação para programas que não são a janela do navegador: a barra de abas, o buscador, o aplicativo de mensagens que transforma um link colado numa prévia. Nada disso é desenhado na página, e tudo é lido por alguém. Aqui está o head da página de eventos do sebo:
@@ -19,7 +19,7 @@ O resto do head é informação para programas que não são a janela do navegad
 
 ## O título é o que mais importa
 
-De todos esses, **`<title>` é o único que uma página tem de ter**: um documento sem ele é HTML inválido, e o validador da seção 11 aponta isso. É a primeira coisa que um leitor de tela anuncia quando a página abre, e é como alguém com vinte abas abertas encontra a sua. O `probe` o lê do jeito que o navegador lê:
+De todos esses, **`<title>` é o único que uma página tem de ter**: um documento sem ele é HTML inválido, e o validador da seção 13 aponta isso. É a primeira coisa que um leitor de tela anuncia quando a página abre, e é como alguém com vinte abas abertas encontra a sua. O `probe` o lê do jeito que o navegador lê:
 
 ```
 ana@laptop:~/site$ probe head.html title
@@ -31,6 +31,12 @@ Um bom título é específico e curto. "Events · Andorinha Books" nomeia a pág
 ## Descrição, ícone e o resto
 
 A descrição não muda a posição de uma página na busca. É o que um resultado de busca pode mostrar embaixo do título, então ela é escrita para uma pessoa decidindo se vai clicar: o que tem na página, numa frase. O ícone é cosmético e também é como as pessoas acham a sua aba entre vinte. O link `canonical` e as propriedades Open Graph importam quando o site está público e é compartilhado, e uma página sem eles funciona do mesmo jeito.
+
+O ícone que a página cita é uma linha de SVG, um círculo verde. Salve-o ao lado da página como `icon.svg`:
+
+```xml
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="#2f6f4e"/></svg>
+```
 
 ## De onde vem o título de uma página num site grande
 

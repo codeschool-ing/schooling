@@ -1,0 +1,474 @@
+{
+  "ex-ecb7qnd0": {
+    "prompt": "No cache-aside, quem lê o banco num erro de cache?",
+    "hint": "O cache fica ao lado do caminho.",
+    "choices": [
+      {
+        "text": "O Redis, sozinho",
+        "why": "O Redis só guarda o que recebe."
+      },
+      {
+        "text": "A aplicação",
+        "why": "Certo."
+      },
+      {
+        "text": "Um job de fundo que reabastece o cache toda noite",
+        "why": "Nada roda em segundo plano."
+      },
+      {
+        "text": "O banco empurra a linha",
+        "why": "Bancos não empurram para caches aqui."
+      }
+    ]
+  },
+  "ex-2hdsz6bp": {
+    "prompt": "O `bookcache.py` leu o livro 2 três vezes começando do zero. Quantas consultas ao banco ele fez?",
+    "hint": "Só o erro de cache.",
+    "unit": "consultas"
+  },
+  "ex-qjvzp2nc": {
+    "prompt": "O Redis para de responder. O que perde uma aplicação escrita com cache-aside?",
+    "hint": "O banco ainda tem tudo.",
+    "choices": [
+      {
+        "text": "Velocidade",
+        "why": "Certo. Ela pode ler o banco toda vez."
+      },
+      {
+        "text": "Toda gravação feita desde o último snapshot",
+        "why": "As gravações foram para o banco."
+      },
+      {
+        "text": "Os preços de livros que ninguém leu ainda",
+        "why": "Esses estão no banco."
+      },
+      {
+        "text": "Respostas certas sobre estoque",
+        "why": "O banco continua certo."
+      }
+    ]
+  },
+  "ex-racn1kyj": {
+    "prompt": "O `catalogue.set_price` mudou o livro 2. Por que o cache continuou dizendo 8.990?",
+    "hint": "Quem avisou o cache?",
+    "choices": [
+      {
+        "text": "Ninguém apagou a chave",
+        "why": "Certo."
+      },
+      {
+        "text": "O Redis recusa mudar uma chave",
+        "why": "Não recusa."
+      },
+      {
+        "text": "O preço foi gravado na moeda errada",
+        "why": "Não."
+      },
+      {
+        "text": "O SQLite guarda uma cópia própria",
+        "why": "O banco tinha o preço novo."
+      }
+    ]
+  },
+  "ex-vhzjct7s": {
+    "prompt": "Por que o `update_price` grava o banco antes de apagar a chave?",
+    "hint": "Imagine um leitor entre os dois passos.",
+    "choices": [
+      {
+        "text": "Apagar primeiro é mais lento",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "O Redis precisa que o banco seja gravado antes",
+        "why": "O Redis não sabe nada do banco."
+      },
+      {
+        "text": "Senão um leitor recoloca a linha velha",
+        "why": "Certo."
+      },
+      {
+        "text": "O banco apaga chaves sozinho",
+        "why": "Não."
+      }
+    ]
+  },
+  "ex-x195fh4q": {
+    "prompt": "Dois escritores gravam no cache ao gravar. A gravou o banco primeiro e o cache por último. O que o cache guarda?",
+    "hint": "A transcrição disse.",
+    "choices": [
+      {
+        "text": "O preço do B, que o banco também tem",
+        "why": "O cache recebeu o do A por último."
+      },
+      {
+        "text": "O preço do A, que o banco não tem mais",
+        "why": "Certo."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso é apagar ao gravar."
+      },
+      {
+        "text": "Os dois preços",
+        "why": "Uma chave guarda um valor."
+      }
+    ]
+  },
+  "ex-ars33hr7": {
+    "prompt": "O que torna apagar seguro onde gravar não é, quando dois escritores correm?",
+    "hint": "Ordem.",
+    "choices": [
+      {
+        "text": "Apagar dá o mesmo em qualquer ordem",
+        "why": "Certo."
+      },
+      {
+        "text": "Apagamentos são mais rápidos que gravações",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "O Redis enfileira apagamentos e os aplica em ordem",
+        "why": "Não."
+      },
+      {
+        "text": "Um apagamento também atualiza o banco",
+        "why": "Ele só toca o cache."
+      }
+    ]
+  },
+  "ex-2x6fdwet": {
+    "prompt": "Ponha em ordem os passos que deixam o preço velho em cache depois de um apagamento correto.",
+    "hint": "O leitor guarda por último.",
+    "items": [
+      "Um leitor erra o cache",
+      "O leitor pega a linha velha do banco",
+      "Um escritor muda o banco",
+      "O escritor apaga a chave",
+      "O leitor guarda a linha velha"
+    ],
+    "trap": "O apagamento do escritor não é o último passo."
+  },
+  "ex-dmw4sysq": {
+    "prompt": "O que faz um segundo apagamento atrasado?",
+    "hint": "Estreita, não fecha.",
+    "choices": [
+      {
+        "text": "Remove a cópia de um leitor lento",
+        "why": "Certo."
+      },
+      {
+        "text": "Garante que nenhum valor velho sobrevive",
+        "why": "Um leitor mais lento que o atraso ainda ganha."
+      },
+      {
+        "text": "Apaga a linha do banco também",
+        "why": "Só a chave."
+      },
+      {
+        "text": "Trava a chave",
+        "why": "Nada é travado."
+      }
+    ]
+  },
+  "ex-mtgdcycn": {
+    "prompt": "Qual destes limita um valor velho não importa como a corrida termine?",
+    "hint": "A aula 8 insistiu nisso.",
+    "choices": [
+      {
+        "text": "Apagar a chave duas vezes",
+        "why": "Um leitor mais lento ainda ganha."
+      },
+      {
+        "text": "Um banco mais rápido",
+        "why": "Estreita a corrida, só."
+      },
+      {
+        "text": "Um tempo de vida na chave",
+        "why": "Certo."
+      },
+      {
+        "text": "Usar Memcached em vez de Redis para dados de livros",
+        "why": "A mesma corrida."
+      }
+    ]
+  },
+  "ex-ke7gdvkw": {
+    "prompt": "Depois do `books.set_price(2, 5990)`, a leitura seguinte foi um acerto. Por quê?",
+    "hint": "Write-through.",
+    "choices": [
+      {
+        "text": "A gravação guardou uma cópia fresca",
+        "why": "Certo."
+      },
+      {
+        "text": "A leitura foi ao banco sem contar",
+        "why": "A contagem fica no catalogue."
+      },
+      {
+        "text": "O Redis buscou a linha nova no SQLite",
+        "why": "O Redis nunca lê o banco."
+      },
+      {
+        "text": "A cópia velha ainda não tinha vencido",
+        "why": "A chave foi apagada antes; ela tinha 5990."
+      }
+    ]
+  },
+  "ex-8zfe5njr": {
+    "prompt": "Onde o read-through difere do cache-aside?",
+    "hint": "Compare o `get` com o `get_book`.",
+    "choices": [
+      {
+        "text": "Ele nunca erra o cache",
+        "why": "Ele erra como qualquer cache."
+      },
+      {
+        "text": "Ele grava no banco numa leitura",
+        "why": "Não."
+      },
+      {
+        "text": "Ele guarda valores sem tempo de vida",
+        "why": "Ele define ex."
+      },
+      {
+        "text": "A mesma lógica mora numa camada só",
+        "why": "Certo."
+      }
+    ]
+  },
+  "ex-yhb2nayp": {
+    "prompt": "Quando o write-through é seguro como escrito no `through.py`?",
+    "hint": "Ele termina com um set.",
+    "choices": [
+      {
+        "text": "Sempre",
+        "why": "Dois escritores ainda podem correr."
+      },
+      {
+        "text": "Com um escritor por vez",
+        "why": "Certo, ou com um lock."
+      },
+      {
+        "text": "Só quando o banco é SQLite",
+        "why": "Sem relação."
+      },
+      {
+        "text": "Quando o TTL é menor que um minuto e a chave tem prefixo",
+        "why": "Isso encurta o estrago, só."
+      }
+    ]
+  },
+  "ex-e961s3s1": {
+    "prompt": "O `behind.py` gravou três preços. Quantos estavam pendentes antes do flush?",
+    "hint": "A coluna pending.",
+    "unit": "gravações"
+  },
+  "ex-j9801xjn": {
+    "prompt": "Com write-behind, o que se perde se o Redis morre antes do flush?",
+    "hint": "Onde está o preço mais novo?",
+    "choices": [
+      {
+        "text": "Nada; o banco tem toda mudança",
+        "why": "Ele ainda não as tem."
+      },
+      {
+        "text": "As gravações que ainda estavam na fila",
+        "why": "Certo."
+      },
+      {
+        "text": "Só cópias em cache, que podem ser reconstruídas",
+        "why": "Elas são as únicas cópias."
+      },
+      {
+        "text": "O próprio banco",
+        "why": "O banco está bem."
+      }
+    ]
+  },
+  "ex-d3g1gcsd": {
+    "prompt": "Que dado combina com write-behind?",
+    "hint": "Muitas gravações, cada uma valendo pouco.",
+    "choices": [
+      {
+        "text": "Pagamentos",
+        "why": "Nunca deixe o cache guardar a única cópia de dinheiro."
+      },
+      {
+        "text": "Preços",
+        "why": "Perder um é uma mudança que ninguém fez."
+      },
+      {
+        "text": "Contadores de visualização",
+        "why": "Certo."
+      },
+      {
+        "text": "Senhas",
+        "why": "Não."
+      }
+    ]
+  },
+  "ex-cjh1vy5z": {
+    "prompt": "Sem marcador, dez leituras de um livro que não existe custam quanto?",
+    "hint": "Nada foi guardado.",
+    "choices": [
+      {
+        "text": "Uma consulta",
+        "why": "Isso é com o marcador."
+      },
+      {
+        "text": "Dez consultas",
+        "why": "Certo."
+      },
+      {
+        "text": "Nenhuma; o Redis devolve None para chaves desconhecidas sem perguntar",
+        "why": "Aí a aplicação pergunta ao banco."
+      },
+      {
+        "text": "Onze, por causa da conferência extra",
+        "why": "Uma por leitura."
+      }
+    ]
+  },
+  "ex-q0b1cav4": {
+    "prompt": "Por que o tempo de vida do marcador é mais curto que o de um livro?",
+    "hint": "O que custa errar?",
+    "choices": [
+      {
+        "text": "Marcadores usam mais memória",
+        "why": "Eles são minúsculos."
+      },
+      {
+        "text": "O Redis recusa tempos longos para chaves ausentes",
+        "why": "Não existe essa regra."
+      },
+      {
+        "text": "Um livro acrescentado depois não pode ficar invisível",
+        "why": "Certo."
+      },
+      {
+        "text": "Robôs param depois de trinta segundos",
+        "why": "Não."
+      }
+    ]
+  },
+  "ex-g920f8xj": {
+    "prompt": "Depois do `INCR catalogue:version`, o que acontece com as chaves `v1:`?",
+    "hint": "Ninguém pede por elas.",
+    "choices": [
+      {
+        "text": "São apagadas na hora",
+        "why": "Nada as apaga."
+      },
+      {
+        "text": "Viram chaves v2",
+        "why": "Chaves não são renomeadas."
+      },
+      {
+        "text": "Ficam até o tempo de vida acabar",
+        "why": "Certo."
+      },
+      {
+        "text": "Os leitores continuam a usá-las até um reinício",
+        "why": "Os leitores pedem v2 agora."
+      }
+    ]
+  },
+  "ex-tat85v2e": {
+    "prompt": "Por que `book:grande-sertao` é uma chave ruim para o livro 2?",
+    "hint": "Títulos mudam.",
+    "choices": [
+      {
+        "text": "Hífens não são permitidos em chaves",
+        "why": "São."
+      },
+      {
+        "text": "É longa demais para o Redis guardar",
+        "why": "Chaves podem ser bem maiores."
+      },
+      {
+        "text": "Títulos mudam; a chave não mudaria",
+        "why": "Certo."
+      },
+      {
+        "text": "Os acentos se perdem",
+        "why": "Não há nenhum nela."
+      }
+    ]
+  },
+  "ex-r83h8ky5": {
+    "prompt": "Todo livro em cache virou erro de cache de uma vez depois de um comando do Redis: `___ catalogue:version`.",
+    "hint": "Ele soma um.",
+    "blanks": [
+      {
+        "accept": [
+          "INCR"
+        ]
+      }
+    ]
+  },
+  "ex-9t2h1rg7": {
+    "prompt": "Ligue cada padrão a para onde uma gravação vai primeiro.",
+    "hint": "A coluna de gravação da tabela.",
+    "pairs": [
+      {
+        "left": "write-through",
+        "right": "o banco, depois um set no cache"
+      },
+      {
+        "left": "write-behind",
+        "right": "o cache, o banco depois"
+      },
+      {
+        "left": "write-around",
+        "right": "o banco, e a cópia é apagada"
+      }
+    ],
+    "right_distractors": [
+      "só o cache, nunca o banco"
+    ]
+  },
+  "ex-94kbax0v": {
+    "prompt": "Que par esta aula chama de ponto de partida certo para quase toda aplicação?",
+    "hint": "O `update_price`.",
+    "choices": [
+      {
+        "text": "Write-behind com read-through",
+        "why": "Isso arrisca perder gravações."
+      },
+      {
+        "text": "Write-through em toda chave",
+        "why": "Custa uma leitura por gravação e corre com dois escritores."
+      },
+      {
+        "text": "Cache-aside e write-around",
+        "why": "Certo."
+      },
+      {
+        "text": "Nenhum cache até o banco ficar lento e os visitantes reclamarem",
+        "why": "Não."
+      }
+    ]
+  },
+  "ex-21f1296w": {
+    "prompt": "Quais hábitos limitam quanto tempo um valor errado pode ficar no cache?",
+    "hint": "Três dos quatro.",
+    "choices": [
+      {
+        "text": "Um tempo de vida em toda chave",
+        "why": "Certo."
+      },
+      {
+        "text": "Apagar em vez de gravar ao escrever",
+        "why": "Certo."
+      },
+      {
+        "text": "Um segundo apagamento atrasado",
+        "why": "Certo."
+      },
+      {
+        "text": "Write-behind para preços",
+        "why": "Ele faz do cache a única cópia."
+      }
+    ]
+  }
+}

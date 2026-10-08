@@ -1,6 +1,6 @@
 ---
 title: O smoke test depois de cada deploy
-version: 1
+version: 2
 ---
 
 Um deploy que terminou não é um deploy que funcionou. Os arquivos podem estar no lugar e o processo
@@ -9,7 +9,7 @@ antiga porque o restart não aconteceu. Um **smoke test** é a verificação cur
 um deploy, contra o programa implantado, que faz as duas perguntas que importam primeiro: **está no
 ar, e é a versão que pretendíamos?**
 
-O smoke test do `shipquote` tem doze linhas de shell:
+O smoke test do `shipquote` tem doze linhas de shell. Salve como `ops/smoke.sh`:
 
 ```sh
 #!/usr/bin/env bash
@@ -37,7 +37,7 @@ deveria tentar ser. **Ele roda contra o ambiente de verdade**, com a configuraç
 ## Um deploy que um smoke test barra
 
 Eis um terceiro ambiente, `preview`, cuja configuração tem um erro de digitação que ninguém veria de
-relance:
+relance. Crie-o com `mkdir ~/envs/preview` e `echo SHIPQUOTE_PORT=84OO > ~/envs/preview/config.env`:
 
 ```
 ana@laptop:~/shipquote$ cat ~/envs/preview/config.env
@@ -68,6 +68,6 @@ Mantenha-o curto, rápido e seguro de rodar contra a produção:
 - **nada que grave dados** que um cliente possa ver, e nada que custe dinheiro, como uma chamada paga
   à transportadora.
 
-O teste de aceitação da aula 1 seção 08, frete grátis a partir de R$ 199,00 em todas as regiões, é
+O teste de aceitação da aula 1 seção 11, frete grátis a partir de R$ 199,00 em todas as regiões, é
 um bom candidato a rodar contra a homologação depois do smoke test: é a promessa, conferida pelo
 programa implantado.

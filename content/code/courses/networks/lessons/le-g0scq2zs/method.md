@@ -1,6 +1,6 @@
 ---
 title: A method before the tools
-version: 1
+version: 2
 ---
 
 "The internet is down" can mean a loose cable, a wrong setting on one laptop, a DNS server that stopped,
@@ -19,3 +19,7 @@ Each ticket in this lesson stops on a different step, and the step is the diagno
 Two habits make the method work. Test with **addresses** as well as names, because a name involves DNS
 and an address does not. And write down what each step printed, because the person who takes over the
 ticket, or the provider on the phone, will ask.
+
+**Each ticket starts from a fault somebody set up in the lab**, and each one gives the command that
+sets it up in yours, from your virtual machine. Run it without reading it if you want to diagnose
+blind, and `reset` the lab when the ticket is closed.

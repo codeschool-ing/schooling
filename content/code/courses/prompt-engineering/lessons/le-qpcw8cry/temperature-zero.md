@@ -1,6 +1,6 @@
 ---
 title: Temperature 0 and the same answer twice
-version: 1
+version: 2
 ---
 
 At temperature 0 there is no draw. **The word with the highest score is taken every time**, and
@@ -73,8 +73,17 @@ they do not. The reasons are in the machinery around the model, not in the idea 
 
 Some APIs also accept a seed, which makes sampled output repeatable more often. Read what the
 provider's documentation says it guarantees, and the date on that page, before you build on it.
-This course has no hosted model to measure, so it gives you no rate of how often two runs differ.
-Measure it on yours: send the same prompt several times at temperature 0 and compare.
+Measure it on yours: send the same prompt several times at temperature 0 and compare. On the local
+model, ten times:
+
+```
+ana@lab:~/pe$ for i in 1 2 3 4 5 6 7 8 9 10; do ask "In one sentence, describe the coffee at a small café." --temperature 0 --plain; done | sort | uniq -c
+     10 The café's coffee is a specialty blend of expertly roasted beans, carefully selected to bring out a rich, smooth flavor with hints of chocolate and a subtle acidity that complements the cozy, intimate atmosphere of the small café.
+```
+
+Ten replies, one text. That is one short prompt on one machine, and it is not a rate. While this
+course was recorded, the same model at temperature 0 did give two different replies to the same longer prompt on two runs, in lessons 4, 6 and 7. Each transcript there is one run, and the
+sentence under it describes that run.
 
 **The practical rule: temperature 0 makes variation rare, and your code still has to handle it.**
 A program that breaks when two answers differ by one word was going to break anyway, on the day

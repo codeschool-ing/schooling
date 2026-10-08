@@ -1,6 +1,6 @@
 ---
 title: Installing Docker Engine, and who may use it
-version: 1
+version: 2
 ---
 
 **On Linux, install Docker Engine from Docker's own package repository, not from the distribution's
@@ -29,9 +29,10 @@ plugins that provide `docker buildx` and `docker compose`. The repository line n
 server, the machine's architecture, the Ubuntu release by its code name, `noble`, and the key that
 signs the packages, so `apt` refuses anything not signed by Docker.
 
-These are the commands that set that up on Ubuntu, from Docker's installation instructions. **They
-were not run for this course**, because the lab already had the result, and Docker's documentation
-is the place to check them before you run them, since the details change:
+These are the commands that set that up on Ubuntu, from Docker's installation instructions, and the
+ones lesson 5 had you type. **They were not run for this course**, because the lab already had the
+result, and Docker's documentation is the place to check them before you run them, since the
+details change:
 
 ```sh
 sudo apt-get update
@@ -47,8 +48,7 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 On a machine that boots with systemd, which is nearly every Linux server and laptop, the package
 starts the daemon and enables it at boot; `sudo systemctl status docker` shows it running, and
 `sudo systemctl start docker` starts it if it stopped. **The lab machine is the exception**: it
-does not boot with systemd, so its daemon is started by the lab's own script, and `systemctl` says
-as much:
+does not boot with systemd, so its daemon is started by hand, and `systemctl` says as much:
 
 ```
 ana@vm:~$ systemctl status docker
@@ -69,6 +69,16 @@ ana@vm:~$ getent group docker
 docker:x:996:ana
 ```
 
+Bruno's account exists for this section, together with a directory only root may read, holding
+made-up salary figures. To repeat what follows on your own machine, make both first:
+
+```sh
+sudo useradd --create-home --shell /bin/bash bruno
+sudo install -d -m 700 -o root -g root /srv/payroll
+printf 'name,monthly_brl\nana,9800\nbruno,10400\n' | sudo tee /srv/payroll/salaries.csv > /dev/null
+sudo chmod 600 /srv/payroll/salaries.csv
+```
+
 ```
 ana@vm:~$ sudo -u bruno docker ps
 permission denied while trying to connect to the docker API at unix:///var/run/docker.sock
@@ -76,9 +86,9 @@ permission denied while trying to connect to the docker API at unix:///var/run/d
 
 The message is the socket refusing him, which is correct. **Before adding Bruno, understand what
 the group grants.** Membership lets him ask `dockerd` for anything, and `dockerd` runs as root. One
-request it accepts is "start a container with this host directory mounted inside". The lab has a
-directory only root may read, with made-up salary figures in it. Ana cannot list it as herself, and
-can read it through a container:
+request it accepts is "start a container with this host directory mounted inside". `/srv/payroll`
+is the directory made above, which only root may read. Ana cannot list it as herself, and can read
+it through a container:
 
 ```
 ana@vm:~$ ls /srv/payroll

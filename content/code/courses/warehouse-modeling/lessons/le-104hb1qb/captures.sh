@@ -8,20 +8,36 @@
 #   sudo bash ../../lab.sh up        # once
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
-# STAGED, and not typed in the lesson: the database `shop`, loaded by lab.sh
-# from the generated files; and ~/wh/wh.duckdb, the warehouse lessons 2 to 5
-# build, made here by `lab.sh warehouse` so that section 09 can ask it the
-# question section 06 asked the shop's database. The SQL files are written
-# into ~/wh by `put` and shown in the lesson as they are.
+# SECTIONS 03 TO 06 ARE THE STUDENT'S SETUP, RUN FOR REAL. `lab.sh wipe` puts
+# the machine back as apt left it, with the cluster stopped, no role, no
+# database, none of the four settings and an empty ~/wh, and the blocks up to
+# `disk` build it all again the way the lesson says to, failures included:
+# every failure section 06 quotes is one a first run meets when a step is
+# skipped or repeated, taken here by skipping or repeating it. The schema, the
+# generator and load.sh are the course's lab/ files, which lab.sh refuses to
+# run unless the lesson shows each of them whole, byte for byte.
+#
+# NOT RUN HERE: creating the virtual machine, which this machine cannot do.
+# The apt-get and pip commands of section 03 were run, the first by hand on
+# 2026-10-07 and the second by lab.sh, and are not quoted: their output is a
+# page of download progress.
+#
+# STAGED for the blocks after `disk`: the database `shop` as lab.sh loads it,
+# from the same generated files; and ~/wh/wh.duckdb, the warehouse lesson 2
+# builds, made here by `lab.sh warehouse` with lesson 2's own build.sh so that
+# section 12 can ask it the question section 09 asked the shop's database.
+# The SQL files are written into ~/wh by `put` and shown in the lesson as they
+# are.
 #
 # Timings are one run each, on a machine shared with other work, and they move
 # from run to run; the lesson says so where it quotes one.
 #
-# Recorded on Ubuntu 24.04, PostgreSQL 16, DuckDB 1.5.6, 4 cores,
-# TZ=America/Sao_Paulo, on 2026-10-06.
+# Recorded on Ubuntu 24.04, PostgreSQL 16, DuckDB 1.5.6, Python 3.12, 4 cores,
+# TZ=America/Sao_Paulo, on 2026-10-07.
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
 LAB_SH=${LAB_SH:-../../lab.sh}
+COURSE=$(cd "$(dirname "$LAB_SH")" && pwd)
 lab() { bash "$LAB_SH" "$@"; }
 # on 'command': what ana typed in ~/wh, and what it printed.
 on() { printf 'ana@lab:~/wh$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
@@ -30,18 +46,68 @@ put() { lab exec "cat > '$1'"; }
 code() { printf '##### %s\n' "$1"; lab exec "cat '$2'"; }
 block() { printf '##### %s\n' "$1"; }
 exec 9>/var/tmp/wh-capture.lock; flock 9
-lab reset >/dev/null
-lab warehouse >/dev/null
+lab check || exit 1
+lab wipe >/dev/null 2>&1
 
 block versions
 on 'psql --version'
 on 'duckdb --version'
+on 'python3 --version'
+
+block fail-down
+on 'pg_lsclusters'
+on "psql -c 'SELECT 1'"
+
+block start
+on 'sudo pg_ctlcluster 16 main start'
+on 'pg_lsclusters'
+
+block fail-role
+on "psql -c 'SELECT 1'"
+
+block role
+on 'sudo -u postgres createuser --superuser $USER'
+
+block fail-db
+on "psql -c 'SELECT 1'"
+
+block database
+on 'createdb --locale=C.UTF-8 --template=template0 shop'
+on "psql -c \"ALTER SYSTEM SET timezone = 'America/Sao_Paulo'\" -c \"ALTER SYSTEM SET shared_buffers = '512MB'\" -c \"ALTER SYSTEM SET max_parallel_workers_per_gather = 0\" -c \"ALTER SYSTEM SET jit = off\""
+
+block fail-restart
+on "psql -c 'SHOW shared_buffers'"
+
+block restart
+on 'sudo pg_ctlcluster 16 main restart'
+on "psql -c 'SHOW shared_buffers'"
+
+put oltp.sql < "$COURSE/lab/oltp.sql"
+block schema
+on 'psql -q -f oltp.sql'
+on "psql -c '\dt'"
+
+put generate.py < "$COURSE/lab/generate.py"
+block run
+on 'time python3 generate.py'
+on 'ls extracts && ls data | wc -l && du -sh data extracts'
+
+put load.sh < "$COURSE/lab/load.sh"
+block load
+on 'sh load.sh'
+on "psql -c 'SELECT count(*) AS orders, min(ordered_at) AS first, max(ordered_at) AS last FROM orders'"
+
+block fail-twice
+on 'sh load.sh'
+
+block start-over
+on 'dropdb shop && createdb --locale=C.UTF-8 --template=template0 shop && psql -q -f oltp.sql && sh load.sh'
 
 block disk
-on 'du -sh /var/lib/wh-data /var/lib/wh-pg ~/wh'
+on 'sudo du -sh /var/lib/postgresql/16/main ~/wh-env ~/wh'
 
-block tables
-on 'psql -c "\dt"'
+lab reset >/dev/null
+lab warehouse >/dev/null
 
 put sale.sql <<'EOF'
 -- One sale at the Paulista till: two books, paid by Pix.

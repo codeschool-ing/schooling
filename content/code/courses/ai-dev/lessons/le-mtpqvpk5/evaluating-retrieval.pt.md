@@ -1,6 +1,6 @@
 ---
 title: Medindo a recuperação
-version: 1
+version: 2
 ---
 
 Uma resposta só pode ser tão boa quanto os trechos que recebeu. Então a primeira coisa a medir num
@@ -38,7 +38,7 @@ for name, search in [("vector", vector_search), ("keyword", keyword_search), ("h
 ```
 
 ```
-ana@dev:~/shop$ python lab/eval_retrieval.py
+ana@dev:~/shop$ python scratch/eval_retrieval.py
 vector   recall@3 = 11/12
            missed: checkout says E1042
 keyword  recall@3 = 10/12

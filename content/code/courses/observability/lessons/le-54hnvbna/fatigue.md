@@ -1,6 +1,6 @@
 ---
 title: Noise, and the team that stops reading alerts
-version: 1
+version: 2
 ---
 
 **Alert fatigue** is what happens to a team that is paged often for things that need no action. The
@@ -29,3 +29,11 @@ suggests no more than two incidents a shift, so that each gets the attention it 
 **Actionable pages as a share of all pages** shows the noise; anything well below one half is a pager
 training its owner to ignore it. Both can come from Alertmanager's own records, and lesson 18 puts
 them into the on-call routine.
+
+Before the next lesson, take this lesson's rules and override away:
+
+```sh
+rm prometheus/rules/burn.yml compose.override.yaml
+curl -s -X POST localhost:9090/-/reload
+docker compose up -d alertmanager
+```

@@ -1,6 +1,6 @@
 ---
 title: "O endereço MAC: seis bytes e dois bits"
-version: 1
+version: 2
 ---
 
 Um endereço MAC parece um número de série, e isso está meio certo. **São seis bytes, escritos como
@@ -31,7 +31,7 @@ Nem todo endereço funciona assim, e os do laboratório são o exemplo. Todo MAC
   nomeiam fabricante algum.
 
 Então `02` se lê: uma placa, administrada localmente. O laboratório escolheu isso de propósito. O
-script dá a cada placa um endereço feito de `02` e cinco bytes calculados a partir dos nomes do
+script dele, o `netlab.sh` da aula 1, dá a cada placa um endereço feito de `02` e cinco bytes calculados a partir dos nomes do
 equipamento e da interface, para que o pc1 tenha o mesmo MAC toda vez que o laboratório é montado e
 uma transcrição gravada hoje bata com uma gravada no mês que vem. O servidor, `02:9e:43:3e:ca:ae`, e
 o roteador, `02:1f:23:e7:e9:d5`, seguem a mesma regra.

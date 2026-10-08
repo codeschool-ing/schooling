@@ -1,9 +1,9 @@
 ---
 title: Custom properties: a value with a name
-version: 1
+version: 2
 ---
 
-A **custom property** is a property whose name you choose, starting with two hyphens, and whose value you use elsewhere with **`var()`**. They are often called **CSS variables**, and the name is fair enough, with one difference from the variables of a programming language that the next sections are about. Here is the bookshop's events page, with its colours and its spacing declared once:
+A **custom property** is a property whose name you choose, starting with two hyphens, and whose value you use elsewhere with **`var()`**. They are often called **CSS variables**, and the name is fair enough, with one difference from the variables of a programming language that the next sections are about. Here is the bookshop's events page, with its colours and its spacing declared once, in `tokens.css`:
 
 ```css
 :root {
@@ -31,6 +31,32 @@ body {
 ```
 
 The declarations go on **`:root`**, a pseudo-class that matches the `<html>` element, so that every element on the page can use them. `--green` and `--red` are the raw colours. `--accent` is the role, "the colour that marks an event", and its value is another variable. Then the rules use the names: the events' border and their headings take `var(--accent)`, the padding takes `var(--space)`.
+
+The page is `events.html`, two events and a link to that stylesheet:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Events · Andorinha Books</title>
+    <link rel="stylesheet" href="tokens.css">
+  </head>
+  <body>
+    <main>
+      <h1>Events</h1>
+      <article class="event">
+        <h2>Poetry reading</h2>
+        <p>Thursday 8 October, 7 pm.</p>
+      </article>
+      <article class="event cancelled">
+        <h2>Bookbinding class</h2>
+        <p>Cancelled: the teacher is ill.</p>
+      </article>
+    </main>
+  </body>
+</html>
+```
 
 ```
 ana@laptop:~/site$ probe events.html style :root --accent,--space style '.event h2' color style .event padding-left

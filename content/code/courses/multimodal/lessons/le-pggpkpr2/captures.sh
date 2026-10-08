@@ -6,20 +6,22 @@
 # this lesson was copied from running it, so the next person can run it and see
 # what moved.
 #
-#   sudo bash ../../lab.sh up        # once: the machine, the models, labmm
+#   sudo bash ../../lab.sh up        # once: setup.sh from lesson 1, as ana
 #   sudo bash captures.sh
 #
 # A line that starts with ana@lab:~/mm$ is what ana typed and what it printed.
 # What is STAGED rather than typed, and not shown in the lesson: the lab itself
 # (lab.sh reset) and the files ana wrote (put below), whose contents the lesson
-# shows in full. returns.mp4 was made by lab/build_media.py from
-# lab/media/returns-video.json: seven slides drawn by Pillow, a narration spoken
+# shows in full. returns.mp4 was made by lesson 1's make_media.py: seven
+# slides drawn by Pillow, a narration spoken
 # by Piper's en_US-lessac-medium voice, and a 0.4-second card between slides 4
 # and 5 that the narration never mentions, put there on purpose.
 #
 # Whisper base, Silero VAD and Tesseract are real models run on this machine.
-# Image tokens are counted with labmm's gpt4o_tokens, the lab's implementation
-# of the tile rule OpenAI published for GPT-4o; no image was sent anywhere.
+# Image tokens are counted with tokens.py, the lesson's implementation of the
+# tile rule OpenAI published for GPT-4o; no image was sent anywhere. The summary
+# is llama3.2:3b's, through Ollama 0.40.0, at temperature 0 and seed 1, taken on
+# 2026-10-07.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 set -uo pipefail
@@ -28,9 +30,16 @@ cd "$(dirname "$0")"
 LAB_SH=${LAB_SH:-../../lab.sh}
 lab() { bash "$LAB_SH" "$@"; }
 # on 'command': what ana typed in ~/mm, and what it printed.
-on() { printf 'ana@lab:~/mm$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
-# put PATH: a file ana wrote in ~/mm, from stdin. Its content is shown in the lesson.
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
+on() { printf 'ana@lab:~/mm$ %s\n' "$*"; lab exec "$*" </dev/null 2>&1 || true; }
+# put PATH: a file ana wrote in ~/mm, from stdin, which a fence in this lesson
+# (or in $SHOWN, another lesson's .md) must show byte for byte.
+put() {
+  local tmp; tmp=$(mktemp)
+  cat >"$tmp"
+  python3 ../../lab/shown.py check ./*.md ${SHOWN:-} <"$tmp" || { echo "put $1: not shown" >&2; exit 1; }
+  lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'" <"$tmp"
+  rm -f "$tmp"
+}
 block() { printf '##### %s\n' "$1"; }
 # One capture at a time: every run rebuilds ~/mm from nothing.
 exec 9>/var/tmp/multimodal-capture.lock; flock 9
@@ -118,12 +127,53 @@ for (start, png), end in zip(scenes, [t for t, _ in cuts] + [LENGTH]):
 json.dump(timeline, open("timeline.json", "w"), indent=1)
 PY
 
+put tokens.py <<'PY'
+"""What a picture costs a vision model, by the rules OpenAI published for GPT-4o and Google for Gemini."""
+import math
+
+
+def gpt4o_tokens(w, h, detail="high"):
+    """85 for the picture, plus 170 for every 512-pixel tile after two resizes: (tokens, tiles)."""
+    if detail == "low":                       # one small copy of the picture, whatever its size
+        return 85, 0
+    if max(w, h) > 2048:                      # first, fit inside 2048 x 2048
+        s = 2048 / max(w, h)
+        w, h = int(w * s), int(h * s)
+    if min(w, h) > 768:                       # then shrink until the short side is 768
+        s = 768 / min(w, h)
+        w, h = int(w * s), int(h * s)
+    tiles = math.ceil(w / 512) * math.ceil(h / 512)
+    return 85 + 170 * tiles, tiles
+
+
+def gemini_tokens(w, h):
+    """258 for a picture with both sides at most 384, otherwise 258 for every 768-pixel tile."""
+    if w <= 384 and h <= 384:
+        return 258
+    return 258 * math.ceil(w / 768) * math.ceil(h / 768)
+PY
+
+put summary.py <<'PY'
+"""A summary of the returns video, written by llama3.2:3b from the timeline alone."""
+import json
+
+from openai import OpenAI
+
+timeline = json.load(open("timeline.json"))
+reply = OpenAI().chat.completions.create(
+    model="llama3.2:3b", temperature=0, seed=1,
+    messages=[{"role": "system", "content": "Summarise this video for a customer in one paragraph. "
+                                            "Use only what the timeline says was shown or said."},
+              {"role": "user", "content": json.dumps(timeline)}])
+print(reply.choices[0].message.content)
+PY
+
 put budget.py <<'PY'
 """What each way of handing this video to a model would cost, in input tokens."""
 import json
 
 import tiktoken
-from labmm import gpt4o_tokens
+from tokens import gpt4o_tokens
 
 high, _ = gpt4o_tokens(1280, 720, "high")
 low, _ = gpt4o_tokens(1280, 720, "low")
@@ -155,6 +205,9 @@ on 'python timeline.py'
 
 block budget
 on 'python budget.py'
+
+block summary
+on 'python summary.py'
 
 block truth-gaps
 on 'python -c "import json; s = json.load(open(\"media/truth/returns.json\"))[\"slides\"]; [print(x[\"slide\"], \"shown:\", x[\"shown\"], \"| said:\", x[\"said\"] or \"-\") for x in s if x[\"slide\"] in (3, 5, 7)]"'

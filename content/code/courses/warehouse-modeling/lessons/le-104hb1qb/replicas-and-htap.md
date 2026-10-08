@@ -1,6 +1,6 @@
 ---
 title: Where the line blurs
-version: 1
+version: 2
 ---
 
 The split is not absolute, and three things you will meet in practice sit across it. Each solves
@@ -12,7 +12,7 @@ PostgreSQL can keep a second copy of the database, a **replica**, that replays e
 primary makes, a fraction of a second behind. Reports run on the replica and the tills never feel
 them.
 
-**It solves the competition for memory, disk and processors** from section 07, completely. It
+**It solves the competition for memory, disk and processors** from section 10, completely. It
 solves nothing else. The replica has the same normalised schema, so the report still needs six
 tables and a `coalesce`. It has the same current-state rows, so customer 2123 is still in Paraná
 for every order they ever placed. A replica is the right first step for a small shop whose reports

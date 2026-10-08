@@ -6,7 +6,8 @@
 # what moved.
 #
 #   sudo useradd -m -s /bin/bash ana               # once, on a throwaway machine
-#   sudo cp ../../lab.sh /var/tmp/nslab.sh          # the lab, beside course.json
+#   echo 'ana ALL=(ALL) NOPASSWD:ALL' | sudo tee /etc/sudoers.d/ana   # this lesson runs sudo as ana
+#   sudo ln -sf "$(realpath ../../lab.sh)" /var/tmp/nslab.sh   # the lab, beside course.json
 #   sudo bash /path/to/captures.sh
 #
 # EVERY MACHINE IN THE LESSON IS PART OF ONE LAB. lab.sh builds a company's
@@ -39,6 +40,57 @@ root() {  # root HOST 'command': the administrator, at a root prompt
 }
 quiet() { local h=$1; shift; lab exec "$h" root "$*" >/dev/null 2>&1 || true; }
 block() { printf '##### %s\n' "$1"; }
+
+# THE SETUP SECTIONS run on the lab's own host, as ana, with nslab.sh in
+# ~/nslab exactly as the lesson shows it (lab.sh has just extracted it). The
+# prompt of the host is a bare $. A shell opened with "sh" or "root" is driven
+# through script(1), so it has a terminal, and its control sequences are
+# removed from what it printed.
+lab down >/dev/null 2>&1
+install -d -o ana -g ana /home/ana/nslab
+install -o ana -g ana -m 644 /var/tmp/nslab/nslab.sh /home/ana/nslab/nslab.sh
+host() { printf '$ %s\n' "$1"; runuser -u ana -- bash -c "cd ~/nslab && $1" 2>&1 || true; }
+shell() {  # shell 'sh laptop' 'command' ...: an interactive shell on a machine
+  local how=$1; shift
+  printf '$ sudo bash nslab.sh %s\n' "$how"
+  printf '%s\n' "$@" exit | runuser -u ana -- script -qec "cd ~/nslab && sudo bash nslab.sh $how" /dev/null \
+    | sed -e 's/\x1b\[?2004[hl]//g; s/\x1b\]0;[^\x07]*\x07//g; s/\r//g' | sed -n '/^[a-z]*@[a-z]*:~[$#] /,$p'
+}
+
+block build
+host 'sha256sum nslab.sh; wc -l nslab.sh'
+host 'time sudo bash nslab.sh up'
+host 'ip netns list | cut -d" " -f1 | sort | tr "\n" " "; echo'
+
+block shell
+shell 'sh laptop' 'hostname' 'probe db:5432 www:443' 'curl -s https://www.example.com/'
+shell 'root fw' 'nft list ruleset | wc -l'
+
+block files
+host 'ls -x /lab'
+host 'sudo ls -A /lab/laptop/home/ana'
+
+block no-sudo
+lab down >/dev/null 2>&1
+host 'bash nslab.sh up; echo "exit $?"'
+
+block crlf
+runuser -u ana -- bash -c 'cd ~/nslab && sed "s/$/\r/" nslab.sh > windows.sh'
+host 'sudo bash windows.sh up 2>&1 | cat -v | head -3; file windows.sh'
+host 'sed -i "s/\r$//" windows.sh; cmp windows.sh nslab.sh && echo same'
+runuser -u ana -- rm -f /home/ana/nslab/windows.sh
+
+block twice
+install -o ana -g ana -m 644 /var/tmp/nslab/inline.sh /home/ana/nslab/inline.sh
+host 'sudo bash nslab.sh up; sudo bash inline.sh; sudo bash inline.sh; echo "exit $?"'
+host 'sudo bash nslab.sh reset; sudo bash inline.sh; echo "exit $?"'
+runuser -u ana -- rm -f /home/ana/nslab/inline.sh
+lab down >/dev/null 2>&1
+
+block missing
+apt-get remove -y -qq aide >/dev/null 2>&1
+host 'sudo bash nslab.sh up; echo "exit $?"'
+apt-get install -y -qq aide >/dev/null 2>&1
 
 lab reset
 

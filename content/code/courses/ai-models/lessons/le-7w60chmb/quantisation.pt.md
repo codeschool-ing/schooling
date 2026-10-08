@@ -21,7 +21,7 @@ O padrão relatado em muitos modelos, por quem constrói os formatos, é mais ou
 - **4 bits** perde um pouco: um ou dois pontos em benchmarks, mais em algumas tarefas que em outras;
 - **abaixo de 4 bits** as perdas crescem rápido, e modelos pequenos sofrem mais que os grandes.
 
-"Um pouco em benchmarks" é a frase contra a qual a aula 1 seção 05 avisou: a tarefa de outra pessoa.
+"Um pouco em benchmarks" é a frase contra a qual a aula 1 seção 09 avisou: a tarefa de outra pessoa.
 A perda é desigual, e as tarefas que sofrem primeiro são as precisas: aritmética, seguir um formato
 de saída rígido, um idioma que era uma fatia pequena do texto de treino. **A tarefa de extração da
 ana pede JSON exato**, que é exatamente o tipo de coisa a conferir em vez de supor.

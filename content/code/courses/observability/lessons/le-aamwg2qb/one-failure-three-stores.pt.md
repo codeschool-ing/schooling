@@ -1,11 +1,19 @@
 ---
 title: Um checkout falho, nos três
-version: 1
+version: 2
 ---
 
 O teste que importa é o que uma investigação faz: um checkout que falhou, achado pelo id do rastro, em
 todo lugar para onde as linhas dele foram. O id do rastro da falha mais recente é tirado da própria
-saída do payments, e o script espera os lotes chegarem antes de perguntar:
+saída do payments, e depois os lotes ganham tempo para chegar, porque o exporter do Elasticsearch
+manda em lotes e as linhas mais novas demoram um pouco para chegar lá:
+
+```sh
+TRACE=$(docker compose logs --no-log-prefix payments | grep 'card network unavailable' | tail -1 | jq -r .trace_id)
+sleep 45
+```
+
+O `$TRACE` é o id em todas as consultas abaixo:
 
 ```
 ana@obs:~/shop$ curl -sG localhost:3100/loki/api/v1/query_range --data-urlencode 'query={service_name="payments"} |= "0232ecb24f137876488caaa13f510759"' | jq -r '.data.result[].values[][1]' | jq -c '{message, order_id}'
@@ -58,5 +66,10 @@ ana@obs:~/shop$ rm faults/payments.json compose.override.yaml
 mesmas linhas, alguns milhares, em armazenamentos todos configurados pequenos. A maior parte da
 memória das JVMs é um heap reservado de antemão, e nenhum desses números cresce linearmente com o
 tráfego. O que eles mostram é a forma da troca na figura desta aula: o Loki mantém a escrita barata e
-paga quando lê. Os outros dois pagam para indexar toda linha, e guardam a memória para isso. O arquivo
-de falhas e o override foram removidos no fim da captura.
+paga quando lê. Os outros dois pagam para indexar toda linha, e guardam a memória para isso. Remova o
+arquivo de falhas e o override, e devolva o Collector à primeira configuração:
+
+```sh
+rm faults/payments.json compose.override.yaml
+docker compose up -d otel-collector
+```

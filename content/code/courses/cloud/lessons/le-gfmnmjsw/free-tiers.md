@@ -1,6 +1,6 @@
 ---
 title: What "free" means on a price list
-version: 1
+version: 2
 ---
 
 "It's on the free tier" is said as if it meant the thing costs nothing. **A free tier is not a price of
@@ -11,7 +11,8 @@ passed. Three different offers are called free, and each ends differently.
 
 An allowance is a quantity each month that is not charged. Lambda's is on the sheet: 1,000,000 requests
 and 400,000 GB-seconds a month. In the raw price list it is a tier, as the section on reading the price
-list described one: a price dimension with a price of zero and an end.
+list described one: a price dimension with a price of zero and an end. `$url` is the Lambda file for
+`sa-east-1` that section set; in a new terminal, set it again with the same `url=` line.
 
 ```
 ana@laptop:~/cloud$ curl -s "$url" | jq '(.products[] | select(.attributes.usagetype == "Global-Request") | .sku) as $s | .terms.OnDemand[$s][].priceDimensions[] | {description, beginRange, endRange, pricePerUnit}'

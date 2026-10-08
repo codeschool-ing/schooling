@@ -1,6 +1,6 @@
 ---
 title: Working tree, staging area and repository
-version: 1
+version: 2
 ---
 
 A repository starts as an ordinary folder. `git init` turns it into one:
@@ -9,6 +9,7 @@ A repository starts as an ordinary folder. `git init` turns it into one:
 ana@vm:~$ mkdir site && cd site
 ana@vm:~/site$ git init
 Initialized empty Git repository in /home/ana/site/.git/
+ana@vm:~/site$ printf '<h1>Padaria Sol</h1>\n<p>Bread from six in the morning.</p>\n' > index.html
 ana@vm:~/site$ ls -a
 .
 ..
@@ -25,8 +26,12 @@ objects
 refs
 ```
 
-Nothing about `index.html` changed. What changed is the new directory beside it, `.git`, which
-`ls` only shows when asked for hidden files with `-a`. **That directory is the repository.** Every
+The `printf` line wrote the bakery's home page, two lines of HTML, into `index.html`: everything
+between the quotes goes into the file, `\n` ends a line, and `>` names the file. Typing the same
+two lines into `nano index.html` does exactly the same, and this course uses `printf` because a
+transcript can show it. Either way it is an ordinary file, and Git has not been told about it. What
+`git init` added is the new directory beside it, `.git`, which `ls` only shows when asked for hidden
+files with `-a`. **That directory is the repository.** Every
 commit, every branch and every setting of this project lives inside it, and nowhere else. Copy the
 folder and you copy the history; delete `.git` and the history is gone while the files stay exactly
 as they are. You will never need to edit anything in there by hand, and lesson 1 already showed the

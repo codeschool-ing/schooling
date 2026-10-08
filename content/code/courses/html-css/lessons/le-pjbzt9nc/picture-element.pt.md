@@ -1,6 +1,6 @@
 ---
 title: O elemento picture: recortes e formatos diferentes
-version: 1
+version: 2
 ---
 
 `srcset` oferece **a mesma imagem** em tamanhos diferentes. Às vezes uma tela estreita precisa de **outra imagem**: a foto larga das estantes vira uma faixa de nada no celular, e um recorte quadrado de uma estante se lê melhor. Isso se chama **direção de arte** (*art direction*), e `<picture>` faz isso.
@@ -63,11 +63,11 @@ O outro uso do `<source>` é o formato do arquivo. WebP e AVIF comprimem fotos m
 ana@laptop:~/site$ probe formats.html img img
 img  chose shelves-960.webp (960×640 pixels), drawn 960 wide
 ana@laptop:~/site$ wc -c shelves-960.png shelves-960.webp
-6878 shelves-960.png
-2914 shelves-960.webp
-9792 total
+26134 shelves-960.png
+ 5078 shelves-960.webp
+31212 total
 ```
 
-O Chromium lê WebP, então pegou o primeiro source. A diferença de tamanho é real, mas as imagens deste laboratório são cor chapada com um rótulo, então a proporção, 2914 bytes contra 6878, diz pouco sobre fotos; em fotos de verdade a economia é a razão de o formato existir. Um navegador que não conhecesse `image/webp` teria pulado esse `<source>` e desenhado o PNG.
+O Chromium lê WebP, então pegou o primeiro source. A diferença de tamanho é real, mas estas imagens são cor chapada com um rótulo, então a proporção, 5078 bytes contra 26134, diz pouco sobre fotos; em fotos de verdade a economia é a razão de o formato existir. Os seus dois números não serão estes, porque o seu sistema desenha o rótulo com a fonte dele, e o WebP continuará sendo o menor. Um navegador que não conhecesse `image/webp` teria pulado esse `<source>` e desenhado o PNG.
 
 **Use `<picture>` quando o navegador precisa ser informado de algo que não consegue descobrir sozinho**: um recorte diferente, ou um formato que talvez não suporte. Para a mesma imagem em tamanhos diferentes, `srcset` e `sizes` num `<img>` simples bastam e são mais simples.

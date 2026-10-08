@@ -1,7 +1,29 @@
 ---
 title: A failure that reported success
-version: 1
+version: 2
 ---
+
+The office's server writes a disk report every day, with a script and a service written the way lesson
+14 wrote the backup's. To follow this section, put the same two on your server; the script has a fault
+in it, and the section is about finding it:
+
+```sh
+sudo tee /usr/local/bin/office-report > /dev/null <<'EOF'
+#!/bin/sh
+df -h / > /srv/reports/disk-$(date +%F).txt
+echo "report written"
+EOF
+sudo chmod 755 /usr/local/bin/office-report
+sudo tee /etc/systemd/system/office-report.service > /dev/null <<'EOF'
+[Unit]
+Description=Write the daily disk report
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/office-report
+EOF
+sudo systemctl daemon-reload
+```
 
 The disk report has not appeared. The service that writes it was started by hand, to watch:
 

@@ -3,7 +3,7 @@ title: Least connections, para requisições que não são iguais
 version: 1
 ---
 
-Os servidores do laboratório também têm o `slow.txt`, 3000 bytes que o `nginx` foi configurado para enviar
+Os servidores web que o `netlab.sh` montou também têm o `slow.txt`, 3000 bytes que o `nginx` foi configurado para enviar
 a 1000 bytes por segundo, então uma requisição dele ocupa um servidor por uns três segundos. O laptop começa
 a baixá-lo em segundo plano, espera 0,3 segundo e envia quatro requisições comuns. Os pesos da seção
 anterior continuam valendo:
@@ -43,8 +43,9 @@ served by web3
 diz que deve acontecer com o único servidor que ainda tinha uma conexão aberta, o download lento. Os
 outros dois ficavam ociosos entre uma requisição e outra, então se alternaram.
 
-O HAProxy mostra as próprias contas. O laptop começa mais um download lento, e meio segundo depois as
-estatísticas de `lb1` são lidas pelo socket de controle dele:
+O HAProxy mostra as próprias contas. O laptop começa mais um download lento em segundo plano,
+`curl -s -o /dev/null http://www.example.com/slow.txt &`, e meio segundo depois as estatísticas de `lb1`
+são lidas pelo socket de controle dele:
 
 ```
 ana@lb1:~$ echo "show stat" | sudo socat stdio /run/haproxy.sock | cut -d, -f1,2,5 | grep -E "^web,web"

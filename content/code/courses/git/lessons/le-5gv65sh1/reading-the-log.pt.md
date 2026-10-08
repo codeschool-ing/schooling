@@ -1,6 +1,6 @@
 ---
 title: Lendo o log
-version: 1
+version: 2
 ---
 
 A aula 1 mostrou o log uma vez. Assim é que você o usa de fato: o formato padrão, o curto, e os
@@ -82,9 +82,10 @@ ana@vm:~/site$ git log --oneline -- index.html
 6555c9b Link the menu from the home page
 8577a83 Open at half past five
 6abda31 Add the home page
-ana@vm:~/site$ git log --oneline --since=2026-09-17
+ana@vm:~/site$ git log --oneline --since="2026-09-17 00:00"
 6555c9b Link the menu from the home page
 eadf998 Take rye bread off until the flour arrives
+31a6298 Add cheese rolls
 ana@vm:~/site$ git log --oneline --grep=price
 1b2d576 Put the prices up for September
 ```
@@ -92,8 +93,10 @@ ana@vm:~/site$ git log --oneline --grep=price
 - `--author=Bruno` fica com os commits cujo autor combina. É um padrão, então o primeiro nome basta.
 - `-- index.html` fica com os commits que mudaram esse arquivo. O `--` separa nomes de arquivo de
   todo o resto, e é um bom hábito mesmo quando o Git conseguiria adivinhar.
-- `--since=2026-09-17` fica com o que aconteceu naquela data ou depois. O `--until` é a outra ponta,
-  e os dois aceitam `"2 weeks ago"` além de uma data.
+- `--since="2026-09-17 00:00"` fica com o que aconteceu daquele momento em diante. Dê a hora também:
+  uma data sozinha quer dizer aquele dia **na hora atual do relógio**, então o mesmo comando rodado à
+  tarde deixa de fora os commits da manhã. O `--until` é a outra ponta, e os dois aceitam
+  `"2 weeks ago"` além de uma data.
 - `--grep=price` busca nas mensagens. Ele achou *prices* também, porque procura um padrão e não uma
   palavra inteira.
 

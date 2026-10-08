@@ -1,9 +1,15 @@
 ---
 title: Ticket: "the website is down"
-version: 1
+version: 2
 ---
 
-The last ticket climbs the whole ladder:
+The last ticket climbs the whole ladder. The fault, in your lab:
+
+```sh
+sudo bash ~/netlab/netlab exec www root 'nginx -s stop'
+```
+
+Then:
 
 ```
 ana@laptop:~$ curl -sS https://www.example.com/

@@ -1,6 +1,6 @@
 ---
 title: Pedaços de texto numerados
-version: 1
+version: 2
 ---
 
 É natural supor que um modelo lê como você, letra por letra ou palavra por palavra. Ele não lê de
@@ -8,9 +8,96 @@ nenhum dos dois jeitos. **Antes de o modelo ver qualquer texto, um tokenizador c
 pedaços tirados de uma lista fixa e troca cada pedaço pelo número dele nessa lista.** Os pedaços
 são os tokens, a lista é o vocabulário, e os números são tudo o que o modelo recebe.
 
-O `tok` é um tokenizador de verdade, o mesmo código que sistemas em produção rodam antes de um
-pedido chegar ao modelo. O `tok show` imprime os pedaços entre aspas, depois os números deles,
-depois a contagem:
+O `tok` é um tokenizador de verdade: os dois vocabulários que a OpenAI publica para os seus modelos,
+o `o200k_base` e o `cl100k_base`, mais antigo, pela biblioteca `gpt-tokenizer` que a lição 1
+instalou. Salve-o como `~/pe/bin/tok`, do jeito que a lição 1 salvou o `toylm`, e torne-o executável
+com `chmod +x`:
+
+```js
+#!/usr/bin/env node
+// tok: what a real tokenizer does to text, using the encodings OpenAI
+// publishes for its models (o200k_base and cl100k_base), as packaged by the
+// gpt-tokenizer library. Nothing here calls a model or the network.
+//
+//   tok show TEXT [-e ENC]            the pieces, with their ids
+//   tok count FILE... [-e ENC]        tokens, words and characters per file
+//   tok fit CHAT.json -b BUDGET [-w OUT.json]
+//                                     which turns of a conversation fit, and
+//                                     with -w, the conversation cut to fit
+//   tok cost FILE -o OUT -i PRICE_IN -p PRICE_OUT
+//                                     what a request would cost, from prices
+//                                     per million tokens given on the line
+'use strict';
+const fs = require('fs');
+const path = require('path');
+
+function args(argv) {
+  const a = { _: [], e: 'o200k_base' };
+  for (let i = 0; i < argv.length; i++) {
+    const x = argv[i];
+    if (/^-[eboipw]$/.test(x)) a[x[1]] = argv[++i];
+    else a._.push(x);
+  }
+  return a;
+}
+const a = args(process.argv.slice(2));
+const enc = require('gpt-tokenizer/encoding/' + a.e);
+const [cmd, ...rest] = a._;
+
+if (cmd === 'show') {
+  const text = rest.join(' ');
+  const ids = enc.encode(text);
+  console.log(ids.map((id) => JSON.stringify(enc.decode([id]))).join(' '));
+  console.log(ids.join(' '));
+  console.log(`${ids.length} tokens, ${[...text].length} characters (${a.e})`);
+} else if (cmd === 'count') {
+  console.log('tokens  words  chars  file');
+  for (const f of rest) {
+    const t = fs.readFileSync(f, 'utf8');
+    const n = enc.encode(t).length;
+    const w = t.split(/\s+/).filter(Boolean).length;
+    console.log(`${String(n).padStart(6)} ${String(w).padStart(6)} ${String([...t].length).padStart(6)}  ${f}`);
+  }
+} else if (cmd === 'fit') {
+  // A conversation is a list of {role, content}. The first message is the
+  // system prompt and is always kept; after it, the newest turns are kept
+  // and the oldest are dropped until the whole fits the budget.
+  const chat = JSON.parse(fs.readFileSync(rest[0], 'utf8'));
+  const budget = Number(a.b);
+  const cost = (m) => enc.encode(m.content).length + 4; // 4: the role and separators
+  const [system, ...turns] = chat;
+  let used = cost(system);
+  const kept = [];
+  for (let i = turns.length - 1; i >= 0; i--) {
+    if (used + cost(turns[i]) > budget) break;
+    used += cost(turns[i]);
+    kept.unshift(i);
+  }
+  console.log(`budget ${budget}, system prompt ${cost(system)}`);
+  turns.forEach((m, i) => {
+    const mark = kept.includes(i) ? 'kept   ' : 'dropped';
+    const head = m.content.replace(/\s+/g, ' ').slice(0, 38);
+    console.log(`  ${mark} ${String(i + 1).padStart(2)} ${m.role.padEnd(9)} ${String(cost(m)).padStart(4)}  ${head}`);
+  });
+  console.log(`sent: ${used} tokens, ${kept.length} of ${turns.length} turns`);
+  if (a.w) fs.writeFileSync(a.w, JSON.stringify([system, ...kept.map((i) => turns[i])], null, 2) + '\n');
+} else if (cmd === 'cost') {
+  const input = enc.encode(fs.readFileSync(rest[0], 'utf8')).length;
+  const output = Number(a.o);
+  const pin = Number(a.i), pout = Number(a.p);
+  const usd = (input * pin + output * pout) / 1e6;
+  console.log(`input  ${input} tokens x ${pin} per million = ${(input * pin / 1e6).toFixed(6)}`);
+  console.log(`output ${output} tokens x ${pout} per million = ${(output * pout / 1e6).toFixed(6)}`);
+  console.log(`one request: ${usd.toFixed(6)}`);
+  console.log(`10,000 requests: ${(usd * 10000).toFixed(2)}`);
+} else {
+  console.error('usage: tok show|count|fit|cost ... (see the comment at the top of ' + path.basename(__filename) + ')');
+  process.exit(2);
+}
+```
+
+Ele nunca chama um modelo nem a rede. O `tok show` imprime os pedaços entre aspas, depois os números
+deles, depois a contagem:
 
 ```
 ana@lab:~/pe$ tok show "The kitchen stops taking hot food orders thirty minutes before closing."

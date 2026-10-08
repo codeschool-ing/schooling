@@ -1,6 +1,6 @@
 ---
 title: Quando uma data source é lida
-version: 1
+version: 2
 ---
 
 Todas as data sources até aqui foram lidas no começo do plan, antes de o Terraform calcular qualquer
@@ -16,7 +16,7 @@ A Ana acrescenta uma sub-rede própria na VPC compartilhada, para a camada da ap
 o **zone id** da zona em que ela cai. Nomes de zona como `sa-east-1a` são embaralhados por conta, então
 duas contas chamam prédios diferentes pelo mesmo nome; os zone ids nomeiam o mesmo prédio em toda
 parte, e são eles que você compara entre contas. Ela também quer uma busca por tag de todas as
-sub-redes da camada `app`:
+sub-redes da camada `app`. Tudo isso vai no `subnet.tf`:
 
 ```hcl
 resource "aws_subnet" "app" {
@@ -121,10 +121,11 @@ Changes to Outputs:
     ]
 ```
 
-Essa é a armadilha de uma busca que encontra algo que a própria configuração cria. Nada falhou;
+A Ana aplica esse plano, e o output se acerta. Essa é a armadilha de uma busca que encontra algo
+que a própria configuração cria. Nada falhou;
 durante um apply o output foi uma lista vazia, segura de si e falsa, e qualquer coisa construída a
 partir dela teria sido construída sobre o nada. A correção é dizer pelo que a busca espera, com
-**`depends_on`**:
+**`depends_on`**, numa nova versão do `subnet.tf`:
 
 ```hcl
 resource "aws_subnet" "app" {
@@ -183,6 +184,8 @@ Changes to Outputs:
     ] -> (known after apply)
   ~ app_zone_id    = "sae1-az1" -> (known after apply)
 ```
+
+A Ana aplica este também, com `terraform apply -auto-approve`, antes de seguir.
 
 **Uma leitura adiada deixa desconhecido no plano tudo o que é construído a partir dela.** Para um
 output isso não custa nada. Para um argumento que força substituição, um valor desconhecido no plano

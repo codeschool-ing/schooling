@@ -8,7 +8,7 @@
 #   sudo bash ../../lab.sh tools     # once: the software the lab runs
 #   sudo bash captures.sh
 #
-# What is STAGED rather than typed: the cluster, made from lab/cluster-ports.yaml
+# What is STAGED rather than typed: the cluster, made from lesson 8's ports.yaml
 # so that the laptop's port 8080 reaches the NodePort; and the port-forward,
 # which is started in the background and stopped by its pid. The tail of each
 # pod's name, which the shop prints as its hostname, differs on every run.
@@ -16,7 +16,8 @@
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 . "$(dirname "$0")/../../capture.sh"
-fresh "$COURSE/lab/cluster-ports.yaml"
+shown "$COURSE/lessons/le-nf7qt63y/the-manifest.md" ports.yaml >/tmp/ports.yaml || exit 1
+fresh /tmp/ports.yaml
 
 block manifest
 put shop.yaml <<'CODE'

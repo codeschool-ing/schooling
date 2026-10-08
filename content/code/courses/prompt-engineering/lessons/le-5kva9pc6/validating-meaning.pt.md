@@ -1,6 +1,6 @@
 ---
 title: Um objeto válido ainda pode estar errado
-version: 1
+version: 2
 ---
 
 Quando uma resposta passa no schema, é tentador tratá-la como correta. Ela está só bem formada. **O
@@ -9,9 +9,28 @@ número, acima de zero, no campo certo, e ainda ser o número errado.
 
 ## Uma reclamação, e uma triagem que passa
 
+A reclamação 7, pelo mesmo laço:
+
 ```
 ana@lab:~/pe$ cat complaints/7.txt
 I was charged twice for my lunch today: R$ 140 on my card instead of R$ 70. Please give me back what I paid twice.
+ana@lab:~/pe$ python3 triage.py complaints/7.txt
+attempt 1
+  step 1: parsed as it is
+  step 3: valid against schema.json
+  {"category": "cold_or_late", "refund": true, "refund_amount": 70, "summary": "Charged twice for lunch"}
+```
+
+Uma tentativa, válida, e o valor está certo: o cliente foi cobrado R$ 140 em vez de R$ 70, então o
+que ele pagou duas vezes são **R$ 70**, e o modelo leu isso direito. Todo campo tem o tipo certo e um
+valor permitido. O esquema não tem mais nada a dizer, e **a categoria está errada**: uma cobrança
+dupla é `billing`, e o modelo a arquivou em `cold_or_late`, a fila do chá demorado. É uma das cinco
+palavras permitidas. O esquema só conseguia conferir que era uma delas.
+
+O valor podia ter saído errado com a mesma facilidade, já que os dois números estão na reclamação.
+Eis uma triagem que o curso escreveu com esse erro, a cobrança inteira em `refund_amount`:
+
+```
 ana@lab:~/pe$ cat triage/7.json
 {"category": "billing", "refund": true, "refund_amount": 140, "summary": "Charged twice for lunch; wants the double charge back."}
 ana@lab:~/pe$ validate schema.json triage/7.json; echo "exit $?"
@@ -19,22 +38,15 @@ valid
 exit 0
 ```
 
-Todo campo tem o tipo certo e um valor permitido. O schema não tem mais nada a dizer, e a triagem
-ainda está errada duas vezes.
-
-A primeira é uma questão de leitura. O cliente foi cobrado R$ 140 em vez de R$ 70, então o que ele
-pagou duas vezes é **R$ 70**. O modelo pôs a cobrança inteira em `refund_amount`. Os dois números
-aparecem na reclamação, e o schema não tem como saber qual deles o café deve.
-
-A segunda é uma regra do café que nunca foi dada ao modelo:
+Válida também. E esta quebra uma regra do café que o modelo nunca recebeu:
 
 ```
 ana@lab:~/pe$ grep 100 handbook/refunds.md
 A refund above R$ 100 needs the shift manager's approval.
 ```
 
-A lição 11 usou esse mesmo manual para ancorar as respostas de um modelo. Aqui ele fornece uma
-regra que o programa aplica, escreva o modelo o que escrever.
+A lição 11 usou este mesmo manual para ancorar as respostas de um modelo. Aqui ele fornece uma regra
+que o programa impõe, escreva o modelo o que escrever.
 
 ## Escrevendo as regras do café como uma conferência
 
@@ -63,12 +75,13 @@ no rule broken
 exit 0
 ```
 
-A triagem da reclamação 7 quebra a regra do manual, e a conferência diz qual regra em palavras que
+A triagem que o curso escreveu para a reclamação 7 quebra a regra do manual, e a conferência diz qual regra em palavras que
 permitem a uma pessoa agir. A triagem boa da primeira seção de leitura desta lição não quebra
 nenhuma. As outras duas regras pegam uma resposta que se contradiz: um reembolso sem valor, ou um
 valor sem reembolso.
 
-O que o `rules.py` **não** pega é o primeiro erro, 140 onde se deviam 70. Isso precisa da entrada:
+O que o `rules.py` **não** pega é o erro por baixo, 140 onde se deviam 70, nem o do modelo, uma
+cobrança dupla arquivada como atendimento lento. Os dois precisam da entrada:
 algo que leia a reclamação e a resposta lado a lado. Parte disso pode ser código, por exemplo uma
 conferência de que `refund_amount` é um dos valores que a reclamação menciona, na qual 140 passaria.
 O resto precisa de uma pessoa, ou de um segundo modelo encarregado de conferir o primeiro, e a lição
@@ -87,5 +100,5 @@ Uma resposta destinada a um programa passa por três conferências, da mais bara
 
 E uma quarta que não é programa: se a resposta é **fiel à sua entrada**. Cada camada deixa passar
 coisas que a seguinte barra. **Uma resposta que passou pelos três programas ganhou mais confiança,
-e ainda não toda**: o reembolso da reclamação 7 teria chegado ao gerente em R$ 140, marcado para
-aprovação pelo motivo certo e com o valor errado.
+e ainda não toda**: a triagem do modelo para a reclamação 7 passou pelos três e foi para a fila do chá demorado. A do curso teria chegado ao gerente em R$ 140, marcada para aprovação pelo motivo
+certo e com o valor errado.

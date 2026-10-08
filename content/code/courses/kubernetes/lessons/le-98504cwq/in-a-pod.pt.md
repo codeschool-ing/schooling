@@ -82,7 +82,7 @@ Uma ClusterRole é uma Role que não está presa a um namespace, então ela tamb
 que não têm namespace, como nós. **Até onde ela alcança depende do binding, não da role.** Ligada com
 um ClusterRoleBinding, a `edit` vale em todos os namespaces. Ligada com um RoleBinding dentro de
 `shop`, a mesma `edit` vale só em `shop`. Essa segunda forma é o jeito comum de dar a uma equipe o
-seu próprio namespace: um RoleBinding para `admin`, e nada no escopo do cluster. Este laboratório não
+seu próprio namespace: um RoleBinding para `admin`, e nada no escopo do cluster. Este curso não
 rodou isso.
 
 As outras 73 das 77 são, na maior parte, para os componentes do próprio cluster, com nomes começando

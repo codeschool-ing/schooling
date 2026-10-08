@@ -10,9 +10,15 @@ can be computed without a radio, which is what this section does.
 
 ## The key, computed
 
-`wpa_passphrase` comes with `wpa_supplicant`, the program that joins Wi-Fi networks on Linux. Given
-a network name, the SSID, and a passphrase, it prints the configuration block a client would use,
-with the derived key as `psk`. Vereda's reception network, with the lab's passphrase:
+`wpa_passphrase` comes with `wpa_supplicant`, the program that joins Wi-Fi networks on Linux, and
+Ubuntu packages it as `wpasupplicant`. It needs no Wi-Fi card for what this section does with it:
+
+```sh
+sudo apt-get install -y wpasupplicant
+```
+
+Given a network name, the SSID, and a passphrase, it prints the configuration block a client would
+use, with the derived key as `psk`. Vereda's reception network, with the lab's passphrase:
 
 ```
 ana@lab:~/lab$ wpa_passphrase Vereda-Recepcao 'sala de espera, cadeira azul 2026'
@@ -50,7 +56,8 @@ exit status 1
 ## The whole derivation, in Python
 
 There is no secret ingredient in that output. The derivation fits in one function, and running it
-reproduces both keys above byte for byte:
+reproduces both keys above byte for byte. The copy button on the block gives you the whole file;
+save it as `~/lab/wifi_pmk.py`:
 
 ```schooling-example
 {

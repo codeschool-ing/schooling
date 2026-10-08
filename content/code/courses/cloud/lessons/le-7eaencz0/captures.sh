@@ -8,7 +8,7 @@
 #
 # THERE IS NO CLOUD ACCOUNT IN THIS COURSE, and nothing below reaches one.
 #
-# - prices.py (beside course.json) reads the AWS public price list, which AWS
+# - prices.py (read out of lesson 1, which prints it) reads the AWS public price list, which AWS
 #   publishes as JSON with no account and no key, at the offer versions pinned
 #   inside it. Nothing here is a bill.
 # - The AWS CLI v2 runs with an EMPTY environment and an empty home directory, so
@@ -17,15 +17,18 @@
 #   request, and the refusal of a call it cannot sign. AWS_EC2_METADATA_DISABLED
 #   is set so that it does not even look for credentials on the local network.
 # - cloud-init is not packaged for pip. It is run from its own source tree
-#   (canonical/cloud-init, tag 26.2, commit 525e9cc) through a two-line wrapper
-#   called cloud-init on the PATH, in a virtualenv holding its dependencies. It
-#   only VALIDATES the file against its schema: nothing was booted.
+#   (canonical/cloud-init, tag 26.2), exactly as lesson 1's section
+#   "setting-up" installs it: CLOUD_INIT is that lesson's ~/.local/bin/cloud-init.
+#   It only VALIDATES the file against its schema: nothing was booted.
 # - estimate.py and web.yaml are written by this script, from the same text the
 #   lesson prints.
 #
 # What is STAGED rather than typed, and not shown in the lesson: the price cache,
-# filled by an earlier run of prices.py; the wrapper and the virtualenv above;
-# and the working directory, shown as ~/cloud.
+# filled by an earlier run of prices.py; the tools lesson 1 installs; web.yaml,
+# which the student copies from the example; and the working directory, ~/cloud.
+#
+# The block cloud-init was recorded again on 2026-10-07, as the user ana with
+# the lab of lesson 1, when the lesson began to show how typo.yaml is made.
 #
 # Recorded 2026-09-28 on Ubuntu 24.04, Python 3.11, no cloud account and no
 # credentials, TZ=America/Sao_Paulo.
@@ -34,7 +37,8 @@ set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
 COURSE=$(cd "$(dirname "$0")/../.." && pwd)
 WORK=$(mktemp -d)
-cp "$COURSE/prices.py" "$WORK/"
+. "$(cd "$(dirname "$0")/../.." && pwd)/from-lessons.sh"   # prices_py: the program as lesson 1 prints it
+prices_py "$WORK" || exit 1
 cd "$WORK" || exit 1
 BIN=$(mktemp -d)
 trap 'rm -rf "$WORK" "$BIN"' EXIT
@@ -51,6 +55,13 @@ bare() {
     AWS_EC2_METADATA_DISABLED=true bash -c "$*" 2>&1 || true
 }
 block() { printf '##### %s\n' "$1"; }
+# cloud-init as lesson 1 installs it: a script in ~/.local/bin that finds its
+# source tree and its virtual environment under the student's own home, so this
+# one keeps HOME. It reads no credentials of any kind.
+ci() {
+  printf 'ana@laptop:~/cloud$ %s\n' "$*"
+  env -i HOME="$HOME" PATH="$BIN:/usr/bin:/bin" LC_ALL=C.UTF-8 bash -c "$*" 2>&1 || true
+}
 
 cat > estimate.py <<'PY'
 HOURS_PER_MONTH = 8760 / 12        # 365 days x 24 hours, over 12 months
@@ -92,7 +103,6 @@ write_files:
 runcmd:
   - sed -i "s/HOST/$(hostname)/" /var/www/html/index.html
 YAML
-sed 's/ssh_authorized_keys/ssh_authorised_keys/' web.yaml > typo.yaml
 
 block sheet
 run 'python3 prices.py ec2 | sed -n 1,17p'
@@ -110,5 +120,6 @@ bare 'aws ec2 run-instances --generate-cli-skeleton | jq "{ImageId, InstanceType
 bare 'aws ec2 describe-instances --region sa-east-1'
 
 block cloud-init
-bare 'cloud-init schema -c web.yaml'
-bare 'cloud-init schema -c typo.yaml 2>&1 | cut -c1-120'
+run "sed 's/ssh_authorized_keys/ssh_authorised_keys/' web.yaml > typo.yaml"
+ci 'cloud-init schema -c web.yaml'
+ci 'cloud-init schema -c typo.yaml 2>&1 | cut -c1-120'

@@ -1,6 +1,6 @@
 ---
 title: O `tr`, que trabalha com caracteres e não com palavras
-version: 1
+version: 2
 ---
 
 O `tr` traduz um conjunto de caracteres em outro. Ele não faz ideia do que é uma palavra, não faz
@@ -41,8 +41,8 @@ Os dois conjuntos são pareados posição a posição: o `tr abc xyz` transforma
 
 ```
 ana@vm:~/work$ cut -d" " -f1 logs/access.log | tr -d "." | head -2
-10016
-100111
+1985110010
+1985110015
 ```
 
 Todo ponto embora. Aquele exemplo é propositalmente bobo — os endereços agora não querem dizer nada —
@@ -79,8 +79,8 @@ higienizador para um arquivo com caracteres de controle soltos.
 
 ```
 ana@vm:~/work$ head -2 logs/access.log | tr -s " " | cut -d" " -f1,6,7
-10.0.1.6 "GET /static/app.js
-10.0.1.11 "GET /
+198.51.100.10 "GET /
+198.51.100.15 "GET /
 ```
 
 **Este é o conserto para o delimitador de um caractere da seção 08.** O `tr -s " "` transforma

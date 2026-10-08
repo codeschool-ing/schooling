@@ -1,6 +1,6 @@
 ---
 title: "The MAC table: learnt from the source, used for the destination"
-version: 1
+version: 2
 ---
 
 Lessons 1 and 2 showed a switch filling its table and called it learning. This lesson is about
@@ -9,8 +9,9 @@ arrives, and uses what it learnt for the destination address of the frames that 
 never learns from a destination, and that one fact explains most of what a switch does, including
 the flooding in the next section.
 
-Every block of this lesson starts from an empty table. Here is sw1 before and after a single ping
-from pc1 to the server:
+This lesson runs on lesson 1's office, built with `sudo bash ~/netlab/netlab.sh up office`, and every
+block of it starts from an empty table: `bridge fdb flush dev br0 dynamic` on sw1, and
+`ip neigh flush all` on every other machine. Here is sw1 before and after a single ping from pc1 to the server:
 
 ```
 root@sw1:~# bridge fdb show br br0 dynamic

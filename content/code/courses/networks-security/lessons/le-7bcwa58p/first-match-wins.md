@@ -7,8 +7,10 @@ A chain is read from the top, and **the first rule whose conditions all match de
 below it is never consulted for that packet. That one fact explains most rule-set bugs: a rule can be
 perfectly written and do nothing at all, because something above it already decided.
 
-`laptop` has to be cut off while somebody investigates it. The administrator adds a rule to the
-baseline:
+In your lab this lesson starts from `sudo bash nslab.sh reset`, and every section begins by loading
+the company's policy afresh on `fw`, with `nft -f baseline.nft`, so that each mistake is made on a
+clean copy. `laptop` has to be cut off while somebody investigates it. The administrator adds a rule
+to the baseline:
 
 ```
 root@fw:~# nft add rule ip filter forward ip saddr 192.168.10.20 counter drop comment '"laptop quarantined, ticket 5120"'

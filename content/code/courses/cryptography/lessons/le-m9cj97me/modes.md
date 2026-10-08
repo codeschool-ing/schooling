@@ -69,7 +69,7 @@ encrypted or decrypted without touching block 19, which CBC cannot do when encry
 
 The price is a rule with no exceptions: **a counter value may never be used twice with the same
 key.** Two messages encrypted with the same key and the same starting value are mixed with the same
-stream, and that leaks information about both plaintexts at once. Section 05 of this lesson is
+stream, and that leaks information about both plaintexts at once. Section 07 of this lesson is
 about choosing that starting value, and lesson 17 is about how systems get it wrong.
 
 ## Which mode, then

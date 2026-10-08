@@ -1,6 +1,6 @@
 ---
 title: The project this course builds
-version: 1
+version: 2
 ---
 
 Every lesson that follows adds one piece to a project, and shows that piece on a real one: **loanbook**,
@@ -10,8 +10,13 @@ shows what is out, who has it and when it is due back.
 
 It is deliberately small: one page, one API, one SQLite file, about two hundred lines of Python with
 no framework. It has one hard part, which lesson 5 is about. It ends deployed on a server, with a
-README, tests, a licence and a two-minute presentation. Its whole history is in the course, so when
-a lesson says *commit 6 refused the second loan*, you can rebuild the repository and read commit 6.
+README, tests, a licence and a two-minute presentation. Its history is told a lesson at a time: when
+a lesson says *commit 6 refused the second loan*, the transcript of commit 6 is right there.
+
+**You read loanbook; you do not type it.** The course does not hand you its code, and its transcripts
+are not steps to repeat. Each one shows a step done properly on a real project, and the step you take
+is the same one on yours. Two things you do build by hand, because your own project needs them too:
+your computer, ready to work, in the next section, and the server you deploy to, in lesson 15.
 
 The example is a web service because that shape has the most moving parts to show. Your project will
 have the shape your track needs:

@@ -1,6 +1,6 @@
 ---
 title: `top`, `htop`, e o que a carga média de fato diz
-version: 1
+version: 2
 ---
 
 O `ps` é uma fotografia. **O `top` é um filme**, e a pergunta que ele responde é a que vão de fato
@@ -80,7 +80,7 @@ ana@vm:~/work$ cat runaway.sh
 while true; do :; done
 ```
 
-Com ele rodando:
+Com ele rodando — `./runaway.sh &` a partir de `~/work`, e `kill %1` quando terminar com ele:
 
 ```
 ana@vm:~$ top -b -n 1 -o %CPU | head -11

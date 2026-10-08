@@ -28,7 +28,6 @@ sqlite> SELECT order_id, product_id, quantity, typeof(quantity) FROM order_lines
 order_id  product_id  quantity  typeof(quantity)
 --------  ----------  --------  ----------------
 5         2           three     text            
-5         3           2         integer         
 ```
 
 O SQLite aceitou. A coluna diz `INTEGER NOT NULL`, a linha guarda a string `three`, e o
@@ -96,7 +95,7 @@ mysql> SELECT 0.1 + 0.2 = 0.3 AS exact;
 sqlite> SELECT 0.1 + 0.2 = 0.3 AS exact;
 exact
 -----
-0
+0    
 ```
 
 **O SQLite não tem tipo decimal.** Se você guarda dinheiro em SQLite, guarde como número inteiro de
@@ -188,7 +187,7 @@ Sao Paulo  Bruno Costa   1
 
 A linha de Recife diz `Ana Ribeiro` e `2`. Há dois clientes em Recife e o motor escolheu um deles —
 não o primeiro, não o maior, não documentado; a linha que a varredura por acaso tinha em mãos.
-Carla Meneses sumiu de um relatório que parece completo.
+Carla Mendes sumiu de um relatório que parece completo.
 
 Essa é a forma da seção inteira. **O motor rigoroso dá uma mensagem de erro; o permissivo dá um
 número plausível.** Qual dos dois você prefere depurar às quatro da tarde é o argumento inteiro.

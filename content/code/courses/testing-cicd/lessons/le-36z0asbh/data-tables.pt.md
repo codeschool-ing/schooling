@@ -1,11 +1,12 @@
 ---
 title: Uma tabela de casos, guardada como dado
-version: 1
+version: 2
 ---
 
 Algumas regras se conferem melhor como tabela: entradas nas colunas, a resposta esperada na última,
 uma linha por caso. A loja publica uma tabela de frete para os clientes, e o `shipquote` guarda os
-mesmos casos em `tests/data/quotes.csv`:
+mesmos casos num arquivo só deles, num diretório que ainda não existe, então antes rode
+`mkdir tests/data`. Salve como `tests/data/quotes.csv`:
 
 ```
 cep,weight_g,subtotal_cents,cents
@@ -19,7 +20,8 @@ cep,weight_g,subtotal_cents,cents
 80010-000,300,19900,0
 ```
 
-O teste lê o arquivo e transforma cada linha num caso de teste:
+O teste lê o arquivo e transforma cada linha num caso de teste. Salve como
+`tests/test_quote_table.py`:
 
 ```python
 """The price table the shop publishes, one row per case, checked as data."""
@@ -110,4 +112,4 @@ nada; registra o que o código faz hoje e chama isso de certo.
 O CSV é curto de propósito. As oito linhas incluem uma por zona que importa, um peso que cruza
 várias faixas (2600 g, cinco faixas extras), o maior peso da tabela e a borda do frete grátis. Uma
 tabela com quinhentas linhas de casos comuns acrescenta tempo de execução e de revisão e não pega
-nada que as oito não peguem; as bordas da aula 1 seção 10 é que merecem uma linha.
+nada que as oito não peguem; as bordas da aula 1 seção 13 é que merecem uma linha.

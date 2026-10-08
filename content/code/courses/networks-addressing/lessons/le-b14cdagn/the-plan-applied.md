@@ -1,10 +1,10 @@
 ---
 title: The plan, built
-version: 1
+version: 2
 ---
 
 A plan on paper becomes a network in a handful of lines: one address, with its mask, on each
-interface of the router. This lesson's lab is the plan built. r1 has one cable to each of the three
+interface of the router. This lesson's lab is the plan built, and it is lesson 12's `plan.sh`. r1 has one cable to each of the three
 LANs and one to r2, and behind r2 is hq1, a PC at head office that every test in this lesson starts
 from:
 

@@ -5,8 +5,8 @@ version: 1
 
 A router that honours a mark needs three things, and on Linux each is a separate line of `tc`. **A
 classifier decides which class a packet belongs to, each class gets a queue of its own, and a scheduler
-decides which queue sends next.** The one-queue setup is removed first, off screen, and this one is built
-in its place:
+decides which queue sends next.** The one-queue setup is removed first, with `sudo tc qdisc del dev eth1 root`
+on `hq`, and this one is built in its place:
 
 ```
 ana@hq:~$ sudo tc qdisc add dev eth1 root handle 1: htb default 20 && sudo tc class add dev eth1 parent 1: classid 1:1 htb rate 5mbit
@@ -37,7 +37,8 @@ number is offered it first and sent from first**. So a packet in `1:10` never wa
 
 ## The same two pings, again
 
-The same upload runs, and the same two pings follow it, one unmarked and one marked EF:
+The same upload runs, the same `iperf3` in a second shell, and the same two pings follow it, one
+unmarked and one marked EF:
 
 ```
 ana@laptop:~$ ping -c 5 -q 192.0.2.21 | tail -n 1

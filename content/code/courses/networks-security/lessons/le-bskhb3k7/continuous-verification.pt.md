@@ -14,7 +14,17 @@ sustentam.
 
 O laboratório mostra a lacuna com precisão. O substituto do banco de dados em `db` agora mantém uma
 sessão aberta, como um banco de dados real mantém a conexão de um cliente. O `app` abre uma, envia uma
-linha e, seis segundos depois, outra. Enquanto ele espera, a sessão está na tabela de conexões de `db`:
+linha e, seis segundos depois, outra. As duas metades sobem como root, o novo substituto no `db` e o
+cliente no `app`:
+
+```sh
+# on db: the one-line stand-in replaced by one that repeats what it is sent
+kill $(ss -Hltnp "sport = :5432" | grep -o "pid=[0-9]*" | cut -d= -f2); sleep 0.3; setsid socat TCP-LISTEN:5432,bind=192.168.20.30,fork,reuseaddr EXEC:cat </dev/null >/dev/null 2>&1 &
+# on app: the client, in the background, writing what comes back to client.out
+rm -f /root/client.out; setsid bash -c "(echo first; sleep 6; echo second; sleep 1) | nc -N -w8 192.168.20.30 5432 > /root/client.out" </dev/null >/dev/null 2>&1 &
+```
+
+Enquanto ele espera, a sessão está na tabela de conexões de `db`:
 
 ```
 root@db:~# conntrack -L -p tcp --dport 5432 2>/dev/null | grep ESTABLISHED | sed "s/ src=192.168.20.30.*//"

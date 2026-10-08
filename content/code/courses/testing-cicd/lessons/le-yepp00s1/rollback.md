@@ -1,10 +1,11 @@
 ---
 title: Going back to the release before
-version: 1
+version: 2
 ---
 
 Not every environment has two sides and a router. Lesson 7's production is one directory with a
-`current` link and a `previous` link, and `ops/rollback.sh` swaps them:
+`current` link and a `previous` link, and `ops/rollback.sh` swaps them. Lesson 7 section 06 shows
+the script whole; this is its working part:
 
 ```sh
 [ -L "$root/previous" ] || { echo "rollback: $env has no previous release" >&2; exit 1; }
@@ -16,7 +17,17 @@ set -a; . "$root/config.env"; set +a
 "$(dirname "$0")/smoke.sh" "http://127.0.0.1:$SHIPQUOTE_PORT" "${before#releases/shipquote-}"
 ```
 
-Here production has just received 1.6.0, with 1.5.0 before it:
+Here production has just received 1.6.0, with 1.5.0 before it. To get there, the router goes
+first, with Ctrl-C in its terminal, then the two sides, so that port 8300 is the single
+production's again, and then the two deploys:
+
+```sh
+kill $(cat ~/envs/production-blue/pid ~/envs/production-green/pid)
+ops/deploy.sh production dist/shipquote-1.5.0.tar.gz
+ops/deploy.sh production dist/shipquote-1.6.0.tar.gz
+```
+
+What it looks like:
 
 ```
 ana@laptop:~/shipquote$ readlink ~/envs/production/current ~/envs/production/previous

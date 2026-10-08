@@ -11,7 +11,8 @@ no código abaixo. O código está.
 
 O primeiro sistema de agendamento da Vereda veio de um prestador, que escreveu uma função para cifrar
 os registros dos pacientes antes de guardá-los. Ela usa AES com chave de 256 bits e roda sem erro.
-Ela foi revista no laboratório ao lado do modo autenticado de uma biblioteca:
+Ela foi revista no laboratório ao lado do modo autenticado de uma biblioteca. O botão de copiar dá o
+arquivo inteiro; salve-o como `~/lab/homemade.py`:
 
 ```schooling-example
 {

@@ -15,15 +15,28 @@
 # ones.
 #
 # What is STAGED rather than typed, and not shown in the lesson: the files ana
-# wrote (put below), whose contents the lesson shows where it discusses them;
-# main.tf, which is lesson 2's four resources unchanged and is not shown again;
+# wrote (put below), whose contents the lesson shows where it discusses them,
 # and the quiet `tofu destroy` that empties the account between "registries"
-# and "cloudformation".
+# and "cloudformation", which the lesson mentions in a sentence.
 #
-# The lab's provider mirror is filed under registry.terraform.io only, so tofu
-# cannot find hashicorp/aws by its short name. That failure is captured on
-# purpose ("opentofu"), and the fix the lesson explains is naming the provider
-# by its full address ("registries"). The mirror itself is not changed.
+# The licences are read where a student's installation has them: HashiCorp's
+# terraform package installs LICENSE.txt in /usr/share/doc/terraform, and
+# OpenTofu's package installs its LICENSE as /usr/share/doc/opentofu/copyright
+# (the nfpms block of the tag's .goreleaser.yaml). Here both programs came from
+# elsewhere, so the same files are copied to those places before the run: the
+# Terraform one byte for byte from the release zip, which is identical to the
+# package's, and the OpenTofu one from the tag's source. And the CDK library is
+# linked in as the project's node_modules, which is what the student's
+# `npm install aws-cdk-lib constructs` in that directory makes.
+#
+# The recording machine has no Terraform Registry, so its providers come from a
+# filesystem mirror filed under registry.terraform.io only, and tofu cannot find
+# hashicorp/aws by its short name. That failure is captured on purpose
+# ("opentofu"), and the lesson says it is the mirror's: a student's tofu init
+# downloads from registry.opentofu.org and succeeds. For this lesson the mirror
+# is reached through ~/.terraform.d/mirror and a CLI configuration in
+# ~/.terraformrc, so that what the transcripts show is a directory of the
+# recording machine rather than the lab's install path.
 #
 # NOT RUN, because it cannot be installed here: Pulumi. The lesson shows its
 # program as illustrative and prints no output for it. Also not shown, because
@@ -34,7 +47,27 @@
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
+if [ -z "${IN_LAB:-}" ]; then
+  # as root, before the lab starts: the two licence files where the packages put them
+  mkdir -p /usr/share/doc/terraform /usr/share/doc/opentofu
+  unzip -p /opt/iac/dl/terraform_1.16.4_linux_amd64.zip LICENSE.txt > /usr/share/doc/terraform/LICENSE.txt
+  cp /opt/iac/src/tofu/LICENSE /usr/share/doc/opentofu/copyright
+fi
+
 . "$(dirname "$0")/../../capture.sh"
+
+for p in /opt/iac/unpacked/registry.terraform.io/hashicorp/*/*/*; do
+  m=~/.terraform.d/mirror/${p#/opt/iac/unpacked/}
+  mkdir -p "$(dirname "$m")" && ln -s "$p" "$m"
+done
+cat > ~/.terraformrc <<'RC'
+provider_installation {
+  filesystem_mirror {
+    path = "/home/ana/.terraform.d/mirror"
+  }
+}
+RC
+export TF_CLI_CONFIG_FILE=/home/ana/.terraformrc
 
 mkdir -p shop && cd shop
 
@@ -43,8 +76,8 @@ run 'terraform version'
 run 'tofu version'
 
 block licences
-run 'unzip -p /opt/iac/dl/terraform_1.16.4_linux_amd64.zip LICENSE.txt | sed -n "6,7p;43,44p"'
-run 'sed -n "1,4p" /opt/iac/src/tofu/LICENSE'
+run 'sed -n "6,7p;43,44p" /usr/share/doc/terraform/LICENSE.txt'
+run 'sed -n "1,4p" /usr/share/doc/opentofu/copyright'
 
 mkdir -p tofu && cd tofu
 put versions.tf <<'CODE'
@@ -106,7 +139,7 @@ run 'tofu providers'
 
 block mirror
 run 'cat $TF_CLI_CONFIG_FILE'
-run 'find /opt/iac/unpacked -maxdepth 3'
+run 'find ~/.terraform.d/mirror -maxdepth 3'
 
 put ./versions.tf <<'CODE'
 terraform {
@@ -204,6 +237,7 @@ run 'aws ec2 describe-vpcs --filters Name=tag:Name,Values=shop --query "Vpcs[].V
 
 block cdk
 mkdir -p ~/shop/cdk && cd ~/shop/cdk
+quiet 'ln -s "$NODE_PATH" node_modules'
 put app.js <<'CODE'
 const { App, Stack } = require("aws-cdk-lib");
 const ec2 = require("aws-cdk-lib/aws-ec2");
@@ -274,4 +308,4 @@ run 'cdk diff --app "node app.js" --method=template'
 block cdk-diff-list
 run 'cdk diff --app "node app.js" --method=template 2>&1 | grep -F "[~] AWS"'
 block cdk-licence
-run 'head -n 2 $NODE_PATH/aws-cdk-lib/LICENSE'
+run 'head -n 2 node_modules/aws-cdk-lib/LICENSE'

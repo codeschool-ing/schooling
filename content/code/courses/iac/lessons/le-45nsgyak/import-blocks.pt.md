@@ -1,11 +1,21 @@
 ---
 title: Blocos import, e deixar o Terraform escrever o primeiro rascunho
-version: 1
+version: 2
 ---
 
 O bucket do Bruno tinha dois argumentos que valia escrever, e a Ana conseguia adivinhar os dois. Um
 security group feito à mão é outra história. Alguém criou um para o agente de monitoramento, na VPC
-da loja, com uma regra que ninguém anotou:
+da loja, com uma regra que ninguém anotou. Para criá-lo no seu moto, rode o que essa pessoa rodou;
+`VPC` guarda o id da VPC da loja e `MSG` o do grupo novo:
+
+```sh
+VPC=$(aws ec2 describe-vpcs --filters Name=tag:Name,Values=shop --query 'Vpcs[0].VpcId' --output text)
+MSG=$(aws ec2 create-security-group --vpc-id "$VPC" --group-name monitoring --description "node exporter" --query GroupId --output text)
+aws ec2 authorize-security-group-ingress --group-id $MSG --protocol tcp --port 9100 --cidr 10.20.0.0/16
+aws ec2 create-tags --resources $MSG --tags Key=Name,Value=monitoring
+```
+
+O grupo, como o CLI o encontra:
 
 ```
 ana@laptop:~/shop/app$ aws ec2 describe-security-groups --filters Name=group-name,Values=monitoring --query "SecurityGroups[].[GroupId,GroupName]" --output text
@@ -14,8 +24,8 @@ sg-9dc3670bcfa1b0d03	monitoring
 
 Para escrever o bloco à mão, a Ana teria de ler cada atributo que a AWS guarda dele, decidir quais o
 bloco precisa declarar, e planejar até parar de reclamar. **O Terraform consegue escrever esse
-primeiro rascunho sozinho.** Ela declara o import, com o id que o CLI acabou de imprimir, e não
-escreve bloco de recurso nenhum:
+primeiro rascunho sozinho.** Ela declara o import em `imports.tf`, com o id que o CLI acabou de
+imprimir (o seu é o que o seu CLI imprimiu), e não escreve bloco de recurso nenhum:
 
 ```hcl
 import {
@@ -107,7 +117,8 @@ leu, e é esse o problema. Leia como um revisor leria:
 
 O que ele acerta é tudo o que importa: o nome, a descrição, a porta, a faixa, a tag, e a regra de
 egress que a AWS acrescenta a todo grupo novo, e que o moto, no papel da AWS aqui, também
-acrescentou. A Ana fica com isso, no estilo da casa, com os dois valores que pertencem à rede lidos dos outputs dela:
+acrescentou. A Ana fica com isso, no estilo da casa, com os dois valores que pertencem à rede lidos dos outputs
+dela, em `monitoring.tf`, e apaga o rascunho:
 
 ```hcl
 resource "aws_security_group" "monitoring" {

@@ -1,6 +1,6 @@
 ---
 title: Achar um vizinho sem ARP e sem broadcast
-version: 1
+version: 2
 ---
 
 O IPv6 não tem endereço de broadcast nenhum, nem ARP. O trabalho que o ARP fazia, transformar um
@@ -8,7 +8,8 @@ endereço IP num endereço MAC no mesmo enlace, é feito pelo **Neighbour Discov
 vizinhos), um conjunto de mensagens ICMPv6 que inclui também os anúncios de roteador da seção
 anterior. O que muda é quem é interrompido pela pergunta.
 
-As duas tabelas de vizinhos foram esvaziadas antes desta captura, então o pc1 precisa perguntar. O pc1
+As duas tabelas de vizinhos foram esvaziadas antes desta captura, com `ip -6 neigh flush all` num
+prompt de root em cada um, então o pc1 precisa perguntar. O pc1
 pinga o srv e, enquanto isso, o `tcpdump` no srv imprimia o que chegava; a saída dele saiu depois que
 o ping terminou:
 

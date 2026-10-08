@@ -1,6 +1,6 @@
 ---
 title: Each with its own identity
-version: 1
+version: 2
 ---
 
 On their first boot, both clones built an identity of their own:
@@ -25,5 +25,5 @@ written again for each card. Two guests from one template, and nothing that shou
 shared.
 
 This is how every lab in the rest of this course is made, and how most clouds make machines: a sealed
-image, a thin layer per machine, and a small disk of settings read on the first boot. `lab.sh vm` has
+image, a thin layer per machine, and a small disk of settings read on the first boot. `newvm.sh` has
 done exactly this since lesson 1, with Ubuntu's own cloud image as the template.

@@ -1,11 +1,28 @@
 ---
 title: Achando as coisas
-version: 1
+version: 2
 ---
 
 **Uma máquina que rodou Docker por uma semana tem mais containers, imagens e volumes do que alguém
 lembra de ter iniciado.** Três hábitos deixam isso administrável: filtrar em vez de rolar a tela,
 formatar em vez de ler tabelas inteiras, e perguntar ao comando certo pelo campo que você quer.
+
+As transcrições desta aula leem uma máquina com um pouco de história: duas versões do `shelf`,
+construídas a partir do Dockerfile da aula 15, alguns containers, um deles encerrado, um volume que
+ninguém usa e algum cache de build. Para deixar a sua igual, rode isto antes:
+
+```sh
+cd ~/shelf
+docker build -q --build-arg VERSION=1.0.0 -t shelf:1.0.0 .
+docker build -q --build-arg VERSION=1.0.1 -t shelf:1.0.1 .
+cd ~
+docker run -d --name web -p 127.0.0.1:8080:8080 shelf:1.0.1
+docker run -d --name web-old shelf:1.0.0
+docker run --name once alpine:3.22 echo done
+docker run -d --name db -e POSTGRES_PASSWORD=lab-only -v pgdata:/var/lib/postgresql/data postgres:17
+docker volume create scratch
+sleep 4; docker rm -f db
+```
 
 ## `ps` com filtros e formato
 

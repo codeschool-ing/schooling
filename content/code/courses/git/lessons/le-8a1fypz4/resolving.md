@@ -1,15 +1,17 @@
 ---
 title: Resolving a conflict, or backing out of one
-version: 1
+version: 2
 ---
 
 Resolving is three steps, and only the first needs thought.
 
 **1. Make the file say what it should.** Open it, delete the three markers, and leave the version you
 want. That is often neither side exactly. Here both changes are right: winter hours from Bruno,
-Sunday hours from Ana. So the resolution keeps both:
+Sunday hours from Ana. So the resolution keeps both. In nano you would delete the marker lines and
+write the one line that says both; the first command below writes the same file in one go:
 
 ```
+ana@vm:~/site$ printf '<h1>Padaria Sol</h1>\n<p>Bread from half past six; Sundays from seven.</p>\n<p><a href="menu.html">See the menu</a></p>\n' > index.html
 ana@vm:~/site$ cat index.html
 <h1>Padaria Sol</h1>
 <p>Bread from half past six; Sundays from seven.</p>
@@ -56,7 +58,16 @@ the only difference is that a person decided what one line of it says.
 ## Backing out
 
 Sometimes a conflict is bigger than it looked, or it is the wrong moment. **`git merge --abort` puts
-everything back as it was before the merge started**:
+everything back as it was before the merge started**. Another branch first, made from the commit
+before the merge and changing the same line:
+
+```bash
+git switch -q -c lunch HEAD~1
+sed -i 's/half past six/seven/' index.html
+git commit -qam 'Open at seven'
+git switch -q main
+```
+
 
 ```
 ana@vm:~/site$ git merge lunch

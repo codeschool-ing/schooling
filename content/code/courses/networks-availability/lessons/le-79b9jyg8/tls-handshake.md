@@ -4,7 +4,10 @@ version: 1
 ---
 
 Lesson 5 of `networks` described the TLS handshake from the client's side. From the wire, **TLS 1.3
-shows much less than it used to, and that is the design.** Here it is working, on port 443 of `web1`:
+shows much less than it used to, and that is the design.** `web1` serves TLS on four ports, each with a
+certificate `netlab.sh` made in lesson 1. The name is `www.example.com`, which belongs to the load
+balancers, and they are not running in this lesson, so each `--resolve` sends the request for that name
+and port to `web1`'s own address instead. Here it is working, on port 443:
 
 ```
 ana@laptop:~$ curl -sS --resolve www.example.com:443:192.0.2.21 --resolve www.example.com:8443:192.0.2.21 --resolve www.example.com:9443:192.0.2.21 --resolve www.example.com:10443:192.0.2.21 https://www.example.com/
@@ -35,7 +38,7 @@ encrypted too, and from frame 9 on it is the request and the answers.
 
 ## Three certificates the laptop refused
 
-`web1` served three more certificates on three more ports: one expired, one for another name, and one
+`web1` serves three more certificates on three more ports: one expired, one for another name, and one
 signed by an authority the laptop does not trust. The first:
 
 ```

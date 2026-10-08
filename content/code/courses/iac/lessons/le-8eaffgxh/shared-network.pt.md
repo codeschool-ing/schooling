@@ -1,12 +1,13 @@
 ---
 title: Uma rede que é de outra pessoa
-version: 1
+version: 2
 ---
 
 Na maioria das empresas, a rede não é do time da aplicação. Na loja, um time de rede é dono da VPC e
 das sub-redes, e as construiu com o AWS CLI a partir de um script próprio, muito antes de a Ana
-escrever qualquer Terraform. Este é o script; no laboratório ele rodou antes de a sessão da Ana
-começar, como o time de rede o teria rodado da própria máquina:
+escrever qualquer Terraform. Este é o script, e no seu laboratório o time de rede é você: salve-o
+como `~/network-team/create-network.sh` e rode-o uma vez, agora, com `sh create-network.sh` de
+dentro desse diretório, num terminal que leu o `iac-env.sh`. Quando dá certo, ele não imprime nada:
 
 ```sh
 #!/bin/sh
@@ -36,7 +37,8 @@ ana@laptop:~/shop/app$ aws ec2 describe-vpcs --filters Name=tag:Name,Values=shop
 vpc-6689436bfc5f4d19d	10.20.0.0/16	network
 ```
 
-No Terraform a mesma pergunta é uma data source, e as tags são a consulta:
+No Terraform a mesma pergunta é uma data source, e as tags são a consulta. A Ana a escreve no
+`network.tf`, ao lado do `main.tf`:
 
 ```hcl
 data "aws_vpc" "shop" {

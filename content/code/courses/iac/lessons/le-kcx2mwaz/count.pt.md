@@ -1,6 +1,6 @@
 ---
 title: count, e cópias numeradas a partir de zero
-version: 1
+version: 2
 ---
 
 A rede da loja precisa de três sub-redes que só diferem na faixa de endereços. A primeira ideia da
@@ -9,8 +9,26 @@ que forem doze. **O `count` transforma um bloco em quantos recursos você pedir.
 **meta-argumento**: o próprio Terraform o lê, antes de o provider ver qualquer coisa, então ele
 significa o mesmo num `aws_subnet`, num `random_id` ou em qualquer outro tipo de resource.
 
-A configuração da Ana mantém os blocos `terraform` e `provider` da aula 2 em `versions.tf`. Tudo de
-que esta seção trata está em `main.tf`:
+A Ana trabalha num diretório novo, `~/shop/network`, e as outras configurações pequenas desta aula
+ficam ao lado dele, cada uma num diretório próprio dentro de `~/shop`. O `versions.tf` guarda os
+blocos `terraform` e `provider`:
+
+```hcl
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
+  }
+}
+
+provider "aws" {
+  region = "sa-east-1"
+}
+```
+
+Tudo de que esta seção trata está em `main.tf`:
 
 ```hcl
 variable "subnets" {
@@ -40,6 +58,14 @@ resource "aws_internet_gateway" "shop" {
   count = var.public ? 1 : 0
 
   vpc_id = aws_vpc.shop.id
+}
+```
+
+E o `outputs.tf` devolve o id do gateway:
+
+```hcl
+output "gateway" {
+  value = aws_internet_gateway.shop[0].id
 }
 ```
 

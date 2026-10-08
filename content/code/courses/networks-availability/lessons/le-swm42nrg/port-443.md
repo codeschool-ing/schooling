@@ -4,8 +4,17 @@ version: 1
 ---
 
 A hotel's guest network, a customer's office, some mobile carriers: plenty of networks let out web
-traffic and little else. The home router in the lab was made into one, as root and not shown, and this
-is its forwarding chain:
+traffic and little else. Make the home router one, on `homegw`:
+
+```sh
+sudo nft add table ip filter
+sudo nft add chain ip filter forward '{ type filter hook forward priority 0; policy drop; }'
+sudo nft add rule ip filter forward ct state established,related accept
+sudo nft add rule ip filter forward iifname eth0 tcp dport 443 accept
+sudo nft add rule ip filter forward iifname eth0 udp dport 53 accept
+```
+
+This is its forwarding chain:
 
 ```
 ana@homegw:~$ sudo nft list chain ip filter forward
@@ -30,8 +39,21 @@ ana@remote:~$ cd /etc/openvpn && sudo timeout 8 openvpn --config client.conf | g
 
 No error, no refusal, no `Initialization Sequence Completed`. The packets left the laptop and died at
 the home router, which is what a firewall with a `drop` policy does, and the client kept waiting for an
-answer. Both files were then changed in two lines each, also not shown: the server to `proto tcp-server`
-and `port 443`, the client to `proto tcp-client` and `remote vpn.example.com 443`.
+answer. Both files then change in two lines each: the server to `proto tcp-server` and `port 443`, the
+client to `proto tcp-client` and `remote vpn.example.com 443`. The server reads its file only when it
+starts, so stop it first, on the virtual machine, with `sudo bash netlab.sh kill hq openvpn`. Then on
+`hq`:
+
+```sh
+sudo sed -i 's/^proto udp$/proto tcp-server/; s/^port 1194$/port 443/' /etc/openvpn/server.conf
+sudo setsid openvpn --cd /etc/openvpn --config server.conf >/dev/null 2>&1 &
+```
+
+And on `remote`, before trying again:
+
+```sh
+sudo sed -i 's/^proto udp$/proto tcp-client/; s/ 1194$/ 443/' /etc/openvpn/client.conf
+```
 
 ```
 ana@remote:~$ cd /etc/openvpn && sudo timeout 6 openvpn --config client.conf | grep -E "TCP connection|Peer Connection|Initialization"

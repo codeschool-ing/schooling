@@ -36,7 +36,7 @@
 #
 #   sudo bash lab.sh tools       # once: install everything into /opt/iac
 #   sudo bash lab.sh run CMD...  # CMD inside a fresh lab, as ana, in /home/ana
-#   sudo bash lab.sh hosts up    # the containers Ansible configures (lessons 18-19)
+#   sudo bash lab.sh hosts up    # the Docker daemon (lessons 18 and 20)
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
@@ -134,7 +134,7 @@ EOF
 # environment ana's shell has. Root sets the lab up; CMD runs as ana.
 #
 # LAB_HOSTS=1 keeps the laptop's own network instead, which is what lesson 18
-# needs: the containers of `hosts up` are on a bridge of the laptop's. moto then
+# needs: the containers lesson 18 builds are on a bridge of the laptop's. moto then
 # listens on the laptop itself, so two such runs at once share it. Lesson 20's
 # Packer half does not run in here at all: ana has no access to the Docker
 # daemon, so that lesson's captures.sh runs it outside the lab and says so.
@@ -181,9 +181,11 @@ EOF
   return $status
 }
 
-# The machines Ansible, Puppet and Salt configure: Ubuntu containers with sshd,
-# on a bridge of their own, reachable from the laptop by name.
-HOSTS="web1:172.30.0.11 web2:172.30.0.12 db1:172.30.0.21"
+# hosts up: the Docker daemon, which lessons 18 and 20 need. The machines
+# Ansible configures in lesson 18 are NOT made here: that lesson's captures.sh
+# builds them with the Dockerfile and up.sh the lesson shows the student, and
+# leaves the key it made in $OPT/ssh, where `inside` finds it. hosts down
+# removes them.
 hosts() {
   case $1 in
     up)
@@ -191,32 +193,9 @@ hosts() {
         setsid dockerd >/var/log/iac-dockerd.log 2>&1 </dev/null &
         local i; for i in $(seq 60); do docker info >/dev/null 2>&1 && break; sleep 0.5; done
       fi
-      docker network inspect iac >/dev/null 2>&1 || docker network create --subnet 172.30.0.0/24 iac >/dev/null
-      if ! docker image inspect iac-host >/dev/null 2>&1; then
-        docker build -q -t iac-host - >/dev/null <<'EOF'
-FROM ubuntu:24.04
-RUN apt-get update -q && apt-get install -yq openssh-server python3 sudo && rm -rf /var/lib/apt/lists/* \
- && useradd -m -s /bin/bash deploy && echo 'deploy ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/deploy \
- && mkdir -p /run/sshd /home/deploy/.ssh && chown deploy: /home/deploy/.ssh
-CMD ["/usr/sbin/sshd", "-D", "-e"]
-EOF
-      fi
-      # ana's key lives with the lab rather than in /home/ana, because every run
-      # gets a /home/ana of its own; `inside` copies it into each one
-      mkdir -p "$OPT/ssh"
-      [ -f "$OPT/ssh/id_ed25519" ] || ssh-keygen -q -t ed25519 -N "" -C ana@laptop -f "$OPT/ssh/id_ed25519"
-      local h name addr
-      for h in $HOSTS; do
-        name=${h%%:*} addr=${h#*:}
-        docker rm -f "$name" >/dev/null 2>&1 || true
-        docker run -d --name "$name" --hostname "$name" --network iac --ip "$addr" iac-host >/dev/null
-        docker cp "$OPT/ssh/id_ed25519.pub" "$name:/home/deploy/.ssh/authorized_keys"
-        docker exec "$name" chown deploy: /home/deploy/.ssh/authorized_keys
-        grep -q " $name\$" /etc/hosts || printf '%s %s\n' "$addr" "$name" >> /etc/hosts
-      done
       ;;
     down)
-      local h; for h in $HOSTS; do docker rm -f "${h%%:*}" >/dev/null 2>&1 || true; done ;;
+      docker rm -f web1 web2 db1 >/dev/null 2>&1 || true ;;
   esac
 }
 

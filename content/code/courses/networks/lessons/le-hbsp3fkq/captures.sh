@@ -6,7 +6,8 @@
 # what moved.
 #
 #   sudo useradd -m -s /bin/bash -G sudo ana     # once, on a throwaway machine
-#   sudo cp ../../lab.sh /var/tmp/lab.sh          # the lab, beside course.json
+#   (lab.sh, beside course.json, builds the lab from the four files lesson 1
+#   shows, so the repository has to be readable by ana)
 #   sudo -u ana -i bash /path/to/captures.sh
 #
 # EVERY MACHINE IN THE LESSON IS PART OF ONE LAB. lab.sh builds an office, an
@@ -33,7 +34,7 @@
 
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 PAGER=cat SYSTEMD_PAGER=cat COLUMNS=100
-LAB_SH=${LAB_SH:-/var/tmp/lab.sh}
+LAB_SH=${LAB_SH:-$(dirname "$(readlink -f "$0")")/../../lab.sh}
 lab() { sudo bash "$LAB_SH" "$@"; }
 # on HOST 'command': what ana typed at her prompt on one machine of the lab,
 # and everything it printed.
@@ -118,7 +119,8 @@ on router 'sudo nft list chain ip nat prerouting'
 
 block from-home
 lab exec laptop ana 'cat ~/.ssh/id_ed25519.pub' > /tmp/laptop.pub
-lab exec home ana 'mkdir -p ~/.ssh; chmod 700 ~/.ssh' >/dev/null
+# The three lines section 07 prints, run as it says, from the virtual machine.
+sudo install -d -o ana -g ana -m 700 /lab/home/home/ana/.ssh
 sudo install -o ana -g ana -m 600 /lab/laptop/home/ana/.ssh/id_ed25519 /lab/home/home/ana/.ssh/id_ed25519
 sudo install -o ana -g ana -m 644 /lab/laptop/home/ana/.ssh/id_ed25519.pub /lab/home/home/ana/.ssh/id_ed25519.pub
 PAUSE=2 typed home <<'IN'
@@ -131,7 +133,7 @@ IN
 
 block jump
 # www already trusts the key: the admin put it there, as copy-id did on the server.
-lab exec www ana 'mkdir -p ~/.ssh; chmod 700 ~/.ssh' >/dev/null
+sudo install -d -o ana -g ana -m 700 /lab/www/home/ana/.ssh
 sudo install -o ana -g ana -m 600 /lab/laptop/home/ana/.ssh/id_ed25519.pub /lab/www/home/ana/.ssh/authorized_keys
 on home 'ssh -o ConnectTimeout=5 192.0.2.80 hostname'
 # ana has never logged into www; the shared login records would say otherwise.

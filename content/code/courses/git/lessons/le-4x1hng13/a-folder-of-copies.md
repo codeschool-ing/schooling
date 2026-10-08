@@ -1,6 +1,6 @@
 ---
 title: The folder everybody starts with
-version: 1
+version: 2
 ---
 
 Everybody has version control before they have heard the word. It is a folder, and it looks like
@@ -9,11 +9,11 @@ this:
 ```
 ana@vm:~/report$ ls -l
 total 20
--rw-r--r-- 1 ana ana 109 Sep  9 08:47 report-FINAL.txt
--rw-r--r-- 1 ana ana 115 Sep  8 15:22 report-v2-final-bruno.txt
--rw-r--r-- 1 ana ana 109 Sep  8 11:05 report-v2-final.txt
--rw-r--r-- 1 ana ana  93 Sep  3 17:40 report-v2.txt
--rw-r--r-- 1 ana ana  93 Sep  1 09:12 report.txt
+-rw-rw-r-- 1 ana ana 109 Sep  9 08:47 report-FINAL.txt
+-rw-rw-r-- 1 ana ana 115 Sep  8 15:22 report-v2-final-bruno.txt
+-rw-rw-r-- 1 ana ana 109 Sep  8 11:05 report-v2-final.txt
+-rw-rw-r-- 1 ana ana  93 Sep  3 17:40 report-v2.txt
+-rw-rw-r-- 1 ana ana  93 Sep  1 09:12 report.txt
 ```
 
 Five copies of one report, written over nine days by two people. Nobody planned it. Ana saved a

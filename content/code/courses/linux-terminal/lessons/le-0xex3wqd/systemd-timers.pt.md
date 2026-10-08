@@ -1,6 +1,6 @@
 ---
 title: Um timer são dois arquivos, e um deles você já conhece
-version: 1
+version: 2
 ---
 
 Um timer do systemd é um **serviço que já existe**, mais um arquivo que diz
@@ -9,7 +9,11 @@ são unidades separadas, e a primeira é o `.service` da aula 5.
 
 ## O serviço
 
-```ini
+Os dois arquivos são escritos num diretório só deles, e instalados depois:
+
+```sh
+mkdir -p ~/work/cron/units && cd ~/work/cron/units
+cat > report.service <<'END'
 [Unit]
 Description=Nightly report
 
@@ -17,6 +21,7 @@ Description=Nightly report
 Type=oneshot
 ExecStart=/home/ana/bin/report.sh
 User=ana
+END
 ```
 
 **O `Type=oneshot`** é a diferença para os serviços da aula 5: ele roda, termina,
@@ -29,7 +34,9 @@ nove vezes em dez.**
 
 ## O timer
 
-```ini
+```sh
+cd ~/work/cron/units
+cat > report.timer <<'END'
 [Unit]
 Description=Run the nightly report at 03:00
 
@@ -40,6 +47,7 @@ Persistent=true
 
 [Install]
 WantedBy=timers.target
+END
 ```
 
 Mesmo nome base, extensão diferente. **O `report.timer` inicia o
@@ -53,13 +61,63 @@ nomes diferem.
 | `Persistent=true` | se a máquina estava desligada, roda no próximo boot — seção 12 |
 | `WantedBy=timers.target` | habilite e ele inicia com o sistema |
 
+## Confira antes de instalar
+
+```
+ana@vm:~/work/cron/units$ systemd-analyze verify ./report.timer ./report.service && echo "both ok"
+both ok
+```
+
+Agora o mesmo timer com uma letra errada — `OnCalender` em vez de `OnCalendar`.
+O `sed` faz a cópia, e o serviço é copiado do jeito que está para os nomes
+formarem par:
+
+```sh
+cd ~/work/cron/units
+sed 's/OnCalendar/OnCalender/' report.timer > report-typo.timer
+cp report.service report-typo.service
+```
+
+```
+ana@vm:~/work/cron/units$ systemd-analyze verify ./report-typo.timer ./report-typo.service
+/home/ana/work/cron/units/report-typo.timer:5: Unknown key name 'OnCalender' in section 'Timer', ignoring.
+report-typo.timer: Timer unit lacks value setting. Refusing.
+Unit report-typo.timer has a bad unit file setting.
+```
+
+**Três linhas, e a segunda é a que importa.** O `Unknown key name` é um aviso
+— o systemd ignora chaves que não reconhece, que é como um `OnCalendar` mal
+escrito vira *um timer sem agenda* em vez de um erro. E um timer sem agenda é
+recusado: `Timer unit lacks value setting.`
+
+Esse é o modo de falha para lembrar. **Um erro de digitação num arquivo de
+unidade normalmente é ignorado, não relatado**, e o `systemd-analyze verify` antes
+do `daemon-reload` é como você descobre qual dos dois casos você tem. Ele lê
+arquivos por caminho e não precisa de root.
+
 ## Instalando um
 
 ```sh
+cd ~/work/cron/units
 sudo cp report.service report.timer /etc/systemd/system/
 sudo systemctl daemon-reload            # systemd re-reads the unit files
 sudo systemctl enable --now report.timer
 ```
+
+E ele está lá, esperando as três da manhã:
+
+```
+ana@vm:~$ systemctl list-timers report.timer
+NEXT                        LEFT LAST PASSED UNIT         ACTIVATES
+Thu 2026-10-08 03:01:02 UTC  12h -         - report.timer report.service
+
+1 timers listed.
+Pass --all to see loaded but inactive timers, too.
+```
+
+**O `NEXT` é 03:01:02, não 03:00:00** — o `RandomizedDelaySec=15m` já escolheu o
+atraso desta máquina, um minuto e dois segundos. **O `LAST` é um traço**, porque
+ele nunca rodou.
 
 **O `daemon-reload` é o passo que as pessoas esquecem.** Sem ele o systemd
 continua rodando a versão que leu no boot, e a sua edição não tem efeito nenhum.
@@ -71,36 +129,6 @@ Para um job que é seu em vez de ser da máquina, os mesmos arquivos vão em
 `~/.config/systemd/user/` e todo comando leva `--user` — e isso precisa de
 `loginctl enable-linger ana` para os timers rodarem enquanto você não está
 logado.
-
-## Confira antes de instalar
-
-```
-ana@vm:~/work/cron/units$ systemd-analyze verify ./report.timer ./report.service && echo "both ok"
-Binding to IPv6 address not available since kernel does not support IPv6.
-both ok
-```
-
-A linha do IPv6 é este contêiner falando, não as suas unidades.
-
-Agora o mesmo timer com uma letra errada — `OnCalender` em vez de `OnCalendar`:
-
-```
-ana@vm:~/work/cron/units$ systemd-analyze verify ./report-typo.timer ./report-typo.service
-/home/ana/work/cron/units/report-typo.timer:5: Unknown key name 'OnCalender' in section 'Timer', ignoring.
-report-typo.timer: Timer unit lacks value setting. Refusing.
-Binding to IPv6 address not available since kernel does not support IPv6.
-Unit report-typo.timer has a bad unit file setting.
-```
-
-**Duas mensagens, e a segunda é a que importa.** O `Unknown key name` é um aviso
-— o systemd ignora chaves que não reconhece, que é como um `OnCalendar` mal
-escrito vira *um timer sem agenda* em vez de um erro. E um timer sem agenda é
-recusado: `Timer unit lacks value setting.`
-
-Esse é o modo de falha para lembrar. **Um erro de digitação num arquivo de
-unidade normalmente é ignorado, não relatado**, e o `systemd-analyze verify` antes
-do `daemon-reload` é como você descobre qual dos dois casos você tem. Ele lê
-arquivos por caminho e não precisa de root.
 
 ## O que os dois arquivos te dão a mais que uma linha de crontab
 

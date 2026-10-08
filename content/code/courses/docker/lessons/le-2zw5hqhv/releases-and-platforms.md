@@ -1,11 +1,12 @@
 ---
 title: Releases, cache and platforms
-version: 1
+version: 2
 ---
 
 **A release is a Git tag, and the pipeline turns it into the tags of lesson 16.** Ana tags the commit
 and runs the pipeline as CI would for that tag. First she empties her build cache, so that the build
-has only what a fresh CI runner would have:
+has only what a fresh CI runner would have. On your machine the pipeline's line is the shorter one
+the previous section gave, with `REF_NAME=v1.8.0` in front:
 
 ```
 ana@vm:~/shelf$ git tag v1.8.0

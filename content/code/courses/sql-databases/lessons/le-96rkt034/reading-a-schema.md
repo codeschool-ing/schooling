@@ -7,9 +7,12 @@ Everything in this lesson so far has been one table at a time. A **schema** is a
 together with the references between them, and being able to read one on a screen — somebody
 else's, from a system you have just joined — is a practical skill that pays immediately.
 
-Here is the shop, complete:
+Here is the shop, complete — the four tables and a handful of rows in each, as one file:
 
 ```sql
+-- shop.sql: the shop this course queries, its tables and its rows.
+-- Load it into an empty database with:  psql shop -f shop.sql
+
 CREATE TABLE customers (
     id     integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     name   text    NOT NULL,
@@ -40,6 +43,32 @@ CREATE TABLE order_lines (
     unit_price numeric(10,2) NOT NULL CHECK (unit_price >= 0),
     PRIMARY KEY (order_id, product_id)
 );
+
+INSERT INTO customers (name, email, city) VALUES
+    ('Ana Ribeiro',  'ana@example.com',   'Recife'),
+    ('Bruno Costa',  'bruno@example.com', 'Sao Paulo'),
+    ('Carla Mendes', 'carla@example.com', 'Recife'),
+    ('Diego Alves',  'diego@example.com', 'Curitiba'),
+    ('Elisa Fontes', 'elisa@example.com', NULL);
+
+INSERT INTO products (sku, name, price) VALUES
+    ('KB-101', 'Mechanical keyboard',  349.90),
+    ('MS-204', 'Wireless mouse',       189.00),
+    ('MN-330', '27-inch monitor',     1499.00),
+    ('CB-012', 'USB-C cable',           39.90);
+
+INSERT INTO orders (customer_id, ordered_on, total) VALUES
+    (1, '2026-03-02', 1499.00),
+    (4, '2026-03-03', 2998.00),
+    (1, '2026-03-04',  268.80),
+    (1, '2026-03-09',  349.90);
+
+INSERT INTO order_lines (order_id, product_id, quantity, unit_price) VALUES
+    (1, 3, 1, 1499.00),
+    (2, 3, 2, 1499.00),
+    (3, 4, 2,   39.90),
+    (3, 2, 1,  189.00),
+    (4, 1, 1,  349.90);
 ```
 
 Four tables. Read in this order they tell a story: who buys, what is sold, what was bought, and
@@ -49,6 +78,58 @@ what was on it.
 lines and you have it. It is stored anyway, because every screen that lists orders wants it and
 none of them wants a join to get it. That is a trade rather than a mistake, and lesson 2 is where
 it gets argued properly.
+
+## Loading it
+
+This is the file the rest of the course runs against, so put it in your own database. Open an
+editor in the machine — `nano shop.sql` — paste the whole block above, save with Ctrl+O and leave
+with Ctrl+X. Then hand the file to `psql`, which runs it one statement at a time:
+
+```
+ana@vm:~$ psql shop -f shop.sql
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+CREATE TABLE
+INSERT 0 5
+INSERT 0 4
+INSERT 0 4
+INSERT 0 5
+```
+
+Four tables, then five customers, four products, four orders and five order lines — each line is
+the server saying what it just did, with the number of rows.
+
+**Run it once.** A second run is worth seeing, because of what it does not refuse:
+
+```
+ana@vm:~$ psql shop -f shop.sql
+psql:shop.sql:9: ERROR:  relation "customers" already exists
+psql:shop.sql:16: ERROR:  relation "products" already exists
+psql:shop.sql:25: ERROR:  relation "orders" already exists
+psql:shop.sql:33: ERROR:  relation "order_lines" already exists
+psql:shop.sql:40: ERROR:  duplicate key value violates unique constraint "customers_email_key"
+DETAIL:  Key (email)=(ana@example.com) already exists.
+psql:shop.sql:46: ERROR:  duplicate key value violates unique constraint "products_sku_key"
+DETAIL:  Key (sku)=(KB-101) already exists.
+INSERT 0 4
+psql:shop.sql:59: ERROR:  duplicate key value violates unique constraint "order_lines_pkey"
+DETAIL:  Key (order_id, product_id)=(1, 3) already exists.
+```
+
+The customers bounced off `UNIQUE (email)`, the products off `UNIQUE (sku)`, the lines off their
+two-column key. **The orders went in again** — `INSERT 0 4` — because nothing about an order is
+unique except the number the database gives it, and it gave four new ones. The shop now has eight
+orders, four of them copies: the spreadsheet's repeated row, back the moment a table had nothing
+to say what makes two of its rows the same. To get back to the shop as printed, start the database again:
+
+```
+ana@vm:~$ dropdb shop
+ana@vm:~$ createdb shop
+ana@vm:~$ psql shop -f shop.sql >/dev/null
+```
+
+The same three lines bring the shop back whenever a later lesson leaves it changed.
 
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 720 330\" role=\"img\" aria-label=\"An entity relationship diagram of four tables. Customers and products sit on the outside; orders sits between customers and order lines; order lines sits between orders and products. A crow's foot marks the many side of each relationship: one customer to many orders, one order to many order lines, one product to many order lines.\"><rect x=\"18\" y=\"40\" width=\"150\" height=\"96\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><rect x=\"18\" y=\"40\" width=\"150\" height=\"24\" rx=\"3\" fill=\"var(--phosphor)\" fill-opacity=\".2\"></rect><text x=\"28\" y=\"53\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11.5\" font-weight=\"600\" fill=\"var(--paper)\">customers</text><text x=\"28\" y=\"78\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--amber)\">id</text><text x=\"28\" y=\"96\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">name</text><text x=\"28\" y=\"114\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">email</text><text x=\"28\" y=\"130\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">city</text>\n<rect x=\"285\" y=\"40\" width=\"150\" height=\"116\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.5\"></rect><rect x=\"285\" y=\"40\" width=\"150\" height=\"24\" rx=\"3\" fill=\"var(--phosphor-dim)\" fill-opacity=\".2\"></rect><text x=\"295\" y=\"53\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11.5\" font-weight=\"600\" fill=\"var(--paper)\">orders</text><text x=\"295\" y=\"78\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--amber)\">id</text><text x=\"295\" y=\"96\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">customer_id</text><text x=\"295\" y=\"114\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">ordered_on</text><text x=\"295\" y=\"132\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">total</text><text x=\"295\" y=\"150\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">status</text>\n<rect x=\"285\" y=\"196\" width=\"150\" height=\"96\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><rect x=\"285\" y=\"196\" width=\"150\" height=\"24\" rx=\"3\" fill=\"var(--wire)\" fill-opacity=\".3\"></rect><text x=\"295\" y=\"209\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11.5\" font-weight=\"600\" fill=\"var(--paper)\">order_lines</text><text x=\"295\" y=\"234\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--amber)\">order_id</text><text x=\"295\" y=\"252\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--amber)\">product_id</text><text x=\"295\" y=\"270\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">quantity</text><text x=\"295\" y=\"286\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">unit_price</text>\n<rect x=\"552\" y=\"196\" width=\"150\" height=\"96\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><rect x=\"552\" y=\"196\" width=\"150\" height=\"24\" rx=\"3\" fill=\"var(--phosphor)\" fill-opacity=\".2\"></rect><text x=\"562\" y=\"209\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11.5\" font-weight=\"600\" fill=\"var(--paper)\">products</text><text x=\"562\" y=\"234\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--amber)\">id</text><text x=\"562\" y=\"252\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">sku</text><text x=\"562\" y=\"270\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">name</text><text x=\"562\" y=\"286\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">price</text>\n<path d=\"M168 88 L285 88\" stroke=\"var(--paper)\" stroke-width=\"1.4\" fill=\"none\"></path>\n<path d=\"M285 78 L271 88 L285 98\" stroke=\"var(--paper)\" stroke-width=\"1.4\" fill=\"none\"></path>\n<text x=\"226\" y=\"78\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">1 → many</text>\n<path d=\"M360 156 L360 196\" stroke=\"var(--paper)\" stroke-width=\"1.4\" fill=\"none\"></path>\n<path d=\"M350 196 L360 182 L370 196\" stroke=\"var(--paper)\" stroke-width=\"1.4\" fill=\"none\"></path>\n<text x=\"370\" y=\"168\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">1 → many</text>\n<path d=\"M552 244 L435 244\" stroke=\"var(--paper)\" stroke-width=\"1.4\" fill=\"none\"></path>\n<path d=\"M435 234 L449 244 L435 254\" stroke=\"var(--paper)\" stroke-width=\"1.4\" fill=\"none\"></path>\n<text x=\"493\" y=\"234\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">1 → many</text>\n<text x=\"360\" y=\"318\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">order_lines is the many-to-many between orders and products. The fork is the &#34;many&#34; end.</text>\n</svg>", "caption": "The same four tables as a picture. Amber names are keys; the forked end of each line is the side that may have several."}
@@ -87,7 +168,7 @@ and in `psql` the commands are short:
 
 ```
 ana@vm:~$ psql shop
-psql (16.13 (Ubuntu 16.13-0ubuntu0.24.04.1))
+psql (16.15 (Ubuntu 16.15-0ubuntu0.24.04.1))
 Type "help" for help.
 
 shop=# \dt

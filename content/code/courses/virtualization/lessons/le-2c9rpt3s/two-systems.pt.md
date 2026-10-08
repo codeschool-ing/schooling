@@ -1,9 +1,9 @@
 ---
 title: Dois sistemas, não um
-version: 1
+version: 2
 ---
 
-Com a vm1 ligada, há dois sistemas operacionais no computador, e eles são mais separados do que
+A vm1 é um convidado novo, feito com `bash newvm.sh vm1` da aula 1. Com a vm1 ligada, há dois sistemas operacionais no computador, e eles são mais separados do que
 parecem:
 
 ```

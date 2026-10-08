@@ -1,12 +1,12 @@
 ---
 title: Arranging the context in a prompt
-version: 1
+version: 2
 ---
 
 Adding facts to a prompt is half the job. **The other half is laying them out so the model can
 tell the material from the instruction**, and the instruction from the material that only looks
-like one. This is the prompt the second reply in the previous section was written for, as ana saved
-it in `with-context.txt`:
+like one. This is the prompt behind the second reply in the previous section. Save it as
+`~/pe/with-context.txt`:
 
 ```
 <handbook>
@@ -65,7 +65,7 @@ Two lines in the prompt are about the edges of the task rather than the task:
   it.
 - "If the customer asks for something it does not cover, say that a member of staff will reply."
   Without it, a gap in the handbook is a gap the model fills with the usual answer, and you are
-  back at the first reply of the previous section.
+  back at the first reply of the previous section and its 24 to 48 hours.
 
 **Naming what to ignore and what to do at the edge is context too**: it tells the model where its
 material stops.

@@ -1,6 +1,6 @@
 ---
 title: Quatro octetos, trinta e dois bits
-version: 1
+version: 2
 ---
 
 Um endereço IPv4 é um número só, de 32 bits. A forma que todo mundo escreve, `10.20.10.21`, é uma
@@ -14,8 +14,8 @@ a aula 12 faz de propósito. **Onde termina a parte de rede e começa a parte de
 máscara, não os pontos.** Neste escritório a máscara é `/24`, que por acaso cai num ponto, e é essa
 coincidência que mantém viva por tanto tempo a imagem dos quatro campos.
 
-O `ipcalc` imprime um endereço em binário ao lado do decimal. No pc1, cujo endereço é
-`10.20.10.21/24`:
+Esta aula roda no escritório da aula 1, montado com `sudo bash ~/netlab/netlab.sh up office`. O
+`ipcalc` imprime um endereço em binário ao lado do decimal. No pc1, cujo endereço é `10.20.10.21/24`:
 
 ```
 ana@pc1:~$ ipcalc 10.20.10.21/24

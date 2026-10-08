@@ -1,6 +1,6 @@
 ---
 title: Finding traces in Jaeger
-version: 1
+version: 2
 ---
 
 Reading a trace needs its id, and so far the id came from a log line. The other way in is a
@@ -8,7 +8,14 @@ Reading a trace needs its id, and so far the id came from a log line. The other 
 so you can ask for the traces that look like the problem.
 
 Jaeger's search form at `localhost:16686` takes those fields, and its documented HTTP API, version
-3, takes the same ones. Every checkout of the last three minutes that took at least 400 ms:
+3, takes the same ones. Every checkout of the last three minutes that took at least 400 ms, with the two ends of those three
+minutes written the way the API takes them:
+
+```sh
+START=$(date -u -d '-3 min' +%Y-%m-%dT%H:%M:%SZ) END=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+```
+
+`$START` and `$END` go where the transcript has two times:
 
 ```
 ana@obs:~/shop$ curl -sG localhost:16686/api/v3/traces --data-urlencode query.service_name=storefront --data-urlencode 'query.operation_name=POST /checkout' --data-urlencode query.duration_min=400ms --data-urlencode query.start_time_min=2026-10-02T16:36:11Z --data-urlencode query.start_time_max=2026-10-02T16:39:11Z --data-urlencode query.search_depth=5 | jq -r '[.result.resourceSpans[].scopeSpans[].spans[] | select(.name == "POST /checkout")] | .[] | [.traceId, ((((.endTimeUnixNano | tonumber) - (.startTimeUnixNano | tonumber)) / 1e6) | floor)] | @tsv'

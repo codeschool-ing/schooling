@@ -44,7 +44,14 @@ mede a atenção do roteador, não o caminho.
 ## Um salto calado
 
 Para a rodada seguinte o roteador do provedor recebeu ordem de descartar todo "time exceeded" que envia,
-e o traceroute pediu uma sonda por salto com `-q 1`:
+em `isp`:
+
+```sh
+sudo nft add chain ip faults quiet '{ type filter hook output priority 0; }'
+sudo nft add rule ip faults quiet icmp type time-exceeded drop
+```
+
+E o traceroute pediu uma sonda por salto com `-q 1`:
 
 ```
 ana@laptop:~$ traceroute -n -q 1 192.0.2.21
@@ -59,4 +66,5 @@ quebrado.** Toda sonda que chegou ao servidor passou pelo roteador do provedor, 
 funciona; o que falta é só a resposta do próprio roteador. Operadoras configuram roteadores assim de
 propósito, para esconder endereços internos ou poupar o processador. **O que indica problema é um trace
 que se cala e continua calado até o fim**: aí as sondas não estão indo adiante, e o último salto que
-respondeu é onde começar a perguntar.
+respondeu é onde começar a perguntar. `sudo nft flush chain ip faults quiet` em `isp` deixa o roteador
+responder de novo.

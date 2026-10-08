@@ -1,11 +1,11 @@
 ---
 title: Loading one month at a time
-version: 1
+version: 2
 ---
 
 Most sources keep no change log. What the warehouse gets instead is a **snapshot**: the whole customer
-table, as it is at the moment of the extract. The lab has three of them, taken at midnight on the first
-of October, November and December 2025. Type 2 from snapshots works by comparison: what does the
+table, as it is at the moment of the extract. Lesson 1's generator wrote three of them into `extracts/`,
+taken at midnight on the first of October, November and December 2025. Type 2 from snapshots works by comparison: what does the
 extract say, against what the dimension's current rows say?
 
 This dimension is built beside the warehouse's own, as `dim_customer_m`. The first load is everybody,

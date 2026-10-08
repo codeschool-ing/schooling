@@ -1,10 +1,10 @@
 ---
 title: Um índice de vetores
-version: 1
+version: 2
 ---
 
 Para buscar pelo significado, cada trecho vira um embedding uma vez, antes, e é guardado. Uma
-pergunta vira embedding quando chega, e é comparada com todos eles. A aula 1 seção 05 mostrou o que é
+pergunta vira embedding quando chega, e é comparada com todos eles. A aula 1 seção 09 mostrou o que é
 um embedding e o que ele não enxerga; esta seção os guarda.
 
 ## Construindo o índice
@@ -20,21 +20,21 @@ def build():
 ```
 
 ```
-ana@dev:~/shop$ time PYTHONPATH=lab python -c 'import rag; cs, v = rag.build(); print(len(cs), "chunks,", v.shape, v.dtype)'
+ana@dev:~/shop$ time PYTHONPATH=scratch python -c 'import rag; cs, v = rag.build(); print(len(cs), "chunks,", v.shape, v.dtype)'
 26 chunks, (26, 256) float32
 
-real	0m0.822s
-user	0m1.011s
-sys	0m0.197s
+real	0m1.016s
+user	0m1.020s
+sys	0m0.250s
 ana@dev:~/shop$ ls -la .rag
 total 44
-drwxr-xr-x 2 ana ana  4096 Oct  2 07:04 .
-drwxr-xr-x 8 ana ana  4096 Oct  2 07:04 ..
--rw-r--r-- 1 ana ana  5881 Oct  2 07:04 chunks.json
--rw-r--r-- 1 ana ana 26752 Oct  2 07:04 vectors.npy
+drwxr-xr-x 2 ana ana  4096 Oct  7 15:07 .
+drwxr-xr-x 8 ana ana  4096 Oct  7 15:07 ..
+-rw-r--r-- 1 ana ana  5881 Oct  7 15:07 chunks.json
+-rw-r--r-- 1 ana ana 26752 Oct  7 15:07 vectors.npy
 ```
 
-Vinte e seis vetores de 256 números, em menos de dois segundos no processador de um notebook, quase
+Vinte e seis vetores de 256 números, em cerca de um segundo no processador de um notebook, quase
 tudo para carregar o modelo. O índice são dois arquivos: os vetores, 26.752 bytes como um array do
 numpy, e os trechos com os ids. **Isso é um banco vetorial no menor tamanho possível**: uma matriz, e
 uma lista que diz que linha é que trecho.

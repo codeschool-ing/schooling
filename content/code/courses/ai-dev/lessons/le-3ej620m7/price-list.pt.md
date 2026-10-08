@@ -1,6 +1,6 @@
 ---
 title: Lendo uma tabela de preços
-version: 1
+version: 2
 ---
 
 APIs de modelos cobram **por milhão de tokens**, escrito `MTok`, com um preço diferente para cada
@@ -9,21 +9,20 @@ mais que a entrada**, porque gerar um token é uma passada pelo modelo inteiro e
 feito em bloco. A maioria das tabelas acrescenta uma terceira e uma quarta colunas para entrada em
 cache, que a aula 2 seção 07 explica.
 
-Esta é a tabela que o curso usa, impressa pelo `prices.py` ao lado dos arquivos do curso. Ela lê
-duas fontes, e a diferença entre elas importa:
+Esta é a tabela que o curso usa. Ela foi montada a partir de duas fontes, e a diferença entre elas
+importa:
 
 - **A própria página de preços da Anthropic**, lida no dia em que o script rodou. Uma página não tem
   versão, então a data faz parte de cada número.
 - **A lista de preços do LiteLLM num commit fixado**, para OpenAI e Google. O LiteLLM é um projeto
   de código aberto que guarda preços e limites de todos os provedores num arquivo só. É a cópia de
   um terceiro: as páginas da própria OpenAI e do Google não estavam ao alcance da máquina em que
-  este curso foi gravado. O script imprime os modelos da Anthropic pelas duas fontes, para você ver
+  este curso foi gravado. A tabela mostra os modelos da Anthropic pelas duas fontes, para você ver
   a cópia concordar com o original onde os dois existem.
 
-Ele rodou na máquina de gravação, não no laboratório, já que lê a rede:
+Você não precisa rodar nada nesta seção; o que importa são os números, e eles têm data:
 
 ```
-$ python3 prices.py
 anthropic: https://platform.claude.com/docs/en/about-claude/pricing, read 2026-10-02
   model                  input  output  cache write 5m  cache read
   Claude Opus 5.5           $4     $20              $5       $0.20
@@ -54,8 +53,8 @@ tabela:
 - **A unidade é dólar por milhão de tokens.** Tome o Claude Sonnet 5.5 a `$2` de entrada e `$10`
   de saída. Uma requisição com 2.000 tokens de entrada e 500 de saída custa 2.000 × 2 /
   1.000.000 mais 500 × 10 / 1.000.000: US$ 0,004 mais US$ 0,005, nove décimos de centavo.
-- **A saída custa cinco ou seis vezes a entrada aqui**: 5× nos três modelos Claude, 6× na maioria
-  dos da OpenAI, 6× no Pro do Gemini. Uma funcionalidade que escreve respostas longas custa outra
+- **A saída custa de cinco a oito vezes a entrada aqui**: 5× nos três modelos Claude, 6× na
+  maioria dos da OpenAI e no Pro e no Flash do Gemini, e mais de 8× no Flash-Lite. Uma funcionalidade que escreve respostas longas custa outra
   ordem de grandeza de dinheiro que uma que lê documentos longos e responde sim ou não.
 - **A diferença dentro de um provedor é maior que entre provedores.** O `gpt-5.4-nano` é 25 vezes
   mais barato por token de entrada que o `gpt-5.5`; o Haiku 4.5 custa um quarto do Opus 5.5. A
@@ -66,7 +65,7 @@ tabela:
 
 ## Quando os preços mudam
 
-Trate a tabela de preços no seu código como o `prices.py` a trata: **um lugar só, com uma data e
+Trate a tabela de preços no seu código como esta tabela é tratada: **um lugar só, com uma data e
 uma fonte ao lado**. A aula 2 seção 05 escreve a função de custo que a lê, e um teste que falha
 quando alguém acrescenta um modelo sem preço é um seguro barato contra um painel que mostra, em
 silêncio, um modelo novo como gratuito.

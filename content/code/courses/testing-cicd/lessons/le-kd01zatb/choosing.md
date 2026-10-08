@@ -1,6 +1,6 @@
 ---
 title: Choosing a strategy
-version: 1
+version: 2
 ---
 
 Five ways of putting a release in front of customers, and what each one buys:
@@ -15,7 +15,7 @@ Five ways of putting a release in front of customers, and what each one buys:
 
 They combine. A common arrangement is blue-green or rolling for the release, so deploys are fast and
 safe to undo, and flags for the features inside it, so each feature reaches customers on its own
-schedule. A canary sits on top when the traffic is large enough to judge, in the sense of section 08.
+schedule. A canary sits on top when the traffic is large enough to judge, in the sense of section 10.
 
 ## Questions that decide it
 

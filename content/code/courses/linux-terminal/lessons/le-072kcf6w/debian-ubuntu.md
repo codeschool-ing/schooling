@@ -1,6 +1,6 @@
 ---
 title: Debian, Ubuntu, and the file that lies to you
-version: 1
+version: 2
 ---
 
 This is the family you are most likely to be standing in. Most tutorials assume it, most cloud
@@ -70,7 +70,9 @@ new question.
 | **snaps** | a second packaging system alongside `apt`, sandboxed and self-updating. Genuinely contentious: some software ships only this way, and some people remove it on principle |
 | **an LTS worth relying on** | five years by default, ten with a subscription, which is why it is the default on every cloud |
 
-You can see the third-party repositories on a machine directly — they are files:
+You can see the third-party repositories on a machine directly — they are files. On the machine you
+installed in lesson 1 there is one, `ubuntu.sources`, which is Ubuntu's own. The machine these
+transcripts were captured on has been used for longer:
 
 ```
 ana@vm:~$ ls /etc/apt/sources.list.d/
@@ -80,7 +82,7 @@ ondrej-ubuntu-php-noble.sources
 ubuntu.sources
 ```
 
-Four entries: Ubuntu's own, Docker's, and two PPAs. **Each of those is somebody you have decided
+Four entries: Ubuntu's own, Docker's, and two PPAs, each added by somebody at some point. **Each of those is somebody you have decided
 to trust**, and the list is worth reading when you inherit a machine — section 15 of lesson 1 said
 the risk moved outside the repository, and this directory is where it moved to.
 

@@ -7,16 +7,29 @@
 # what moved.
 #
 #   sudo bash ../../lab.sh tools        # once: the software the lab runs
-#   sudo bash ../../lab.sh hosts up     # BEFORE EVERY RUN: three fresh machines
-#   sudo LAB_HOSTS=1 bash captures.sh
+#   sudo bash ../../lab.sh hosts up     # starts the Docker daemon
+#   sudo bash captures.sh
 #
-# The machines Ansible configures are web1, web2 and db1: Docker containers
-# running Ubuntu 24.04 and sshd, on a bridge of the laptop's, with a user
-# `deploy` who may sudo without a password and who has ana's public key
-# authorised. `hosts up` throws the old ones away and starts new ones, and the
-# counts in the PLAY RECAPs depend on that: a second run against machines that
-# already have nginx reports fewer changes, which is the lesson's own point.
-# The containers reach the Ubuntu archive, so apt installs the real package.
+# IT RUNS IN TWO HALVES, and the first is not inside the lab.
+#
+#   - "the-machines" runs first, OUTSIDE lab.sh's sandbox, as root, with a
+#     scratch HOME printed as ~. It builds web1, web2 and db1 with the very
+#     Dockerfile and up.sh the lesson shows: from_lesson takes both out of
+#     the-machines.md, so the machines every later transcript talks to are made
+#     by the script the student reads. It runs as root because the lab's user
+#     has no access to Docker's socket on the machine this was recorded on; the
+#     one line that shows what that looks like runs as ana. On your own computer
+#     you are in the `docker` group and the commands are the same. The key
+#     up.sh made is then handed to the lab, which copies it into every run's
+#     ~/.ssh, so ana logs in with the key the machines were given.
+#   - Everything else runs inside the lab as ana, with LAB_HOSTS=1: on the
+#     laptop's own network, where the containers' bridge and the /etc/hosts
+#     lines up.sh wrote are.
+#
+# Every run makes three new machines, and the counts in the PLAY RECAPs
+# depend on that: a second run against machines that already have nginx
+# reports fewer changes, which is the lesson's own point. The containers reach
+# the Ubuntu archive, so apt installs the real package.
 #
 # The AWS of the other lessons is moto on localhost:4566; this lesson does not
 # use it. The Terraform in "from-terraform" uses only the local provider, and
@@ -24,14 +37,47 @@
 # machine whose address Terraform could read back.
 #
 # What is STAGED rather than typed, and not shown in the lesson: the files ana
-# wrote (put and version below), whose contents the lesson shows in full; the
-# edit a colleague made by hand on web1 in "idempotency", which is the ssh
-# line marked below; ana's edit to site.yml before --check, which the lesson
-# shows with grep; and the move of the play's templates into the role in
-# "roles", the `quiet` mv lines below. The host keys she trusts are fetched by ssh-keyscan
-# in the open, in "inventory".
+# wrote (put and version below), whose contents the lesson shows in full; ana's
+# edit to site.yml before --check, which the lesson shows with grep; and the
+# move of the play's templates into the role in "roles", the `quiet` mv lines
+# below, which the lesson describes. The colleague's edit on web1 in
+# "idempotency" is shown in the lesson as the command it was. The host keys she
+# trusts are fetched by ssh-keyscan in the open, in "inventory".
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
+
+set -uo pipefail
+HERE=$(cd "$(dirname "$0")" && pwd)
+
+if [ -z "${IN_LAB:-}" ]; then
+  # ------------------------------------------------------- the-machines, outside
+  (
+  . <(sed -n '/^from_lesson()/,/^}/p' "$HERE/../../capture.sh")
+  S=$(mktemp -d /tmp/iac-le-jvvegc87-XXXXXX)
+  export HOME=$S TZ=America/Sao_Paulo LC_ALL=C.UTF-8 PAGER=cat
+  decolour() { sed -u 's/\x1b\[[0-9;]*m//g'; }
+  prompt() { printf 'ana@laptop:%s$ %s\n' "${PWD/#$S/\~}" "$1"; }
+  run() { prompt "$1"; eval "$1" 2>&1 </dev/null | decolour; return 0; }
+  block() { printf '##### %s\n' "$1"; }
+  cd "$S"
+  mkdir -p hosts
+  from_lesson "$HERE/the-machines.md" '~/hosts/Dockerfile' > hosts/Dockerfile
+  from_lesson "$HERE/the-machines.md" '~/hosts/up.sh' > hosts/up.sh
+
+  block not-in-group
+  prompt 'docker ps'
+  runuser -u ana -- env -i PATH=/usr/bin:/bin docker ps 2>&1 </dev/null
+
+  block up
+  run 'sh ~/hosts/up.sh'
+  run "docker ps --filter network=iac --format '{{.Names}}  {{.Image}}  {{.Status}}'"
+
+  mkdir -p /opt/iac/ssh
+  cp "$S/.ssh/id_ed25519" "$S/.ssh/id_ed25519.pub" /opt/iac/ssh/
+  rm -rf "$S"
+  ) || exit 1
+  export LAB_HOSTS=1
+fi
 
 . "$(dirname "$0")/../../capture.sh"
 
@@ -132,7 +178,8 @@ block idempotency
 block play-2
 run 'ansible-playbook site.yml'
 block by-hand
-# STAGED: a colleague's edit on web1, typed over ssh on another day
+# a colleague's edit on web1, typed over ssh on another day: the lesson shows
+# the command and not its (empty) output
 quiet "ssh deploy@web1 'echo \"<h1>shop (closed for stocktaking)</h1>\" | sudo tee /var/www/html/index.html'"
 run 'curl -s http://web1/'
 block play-3

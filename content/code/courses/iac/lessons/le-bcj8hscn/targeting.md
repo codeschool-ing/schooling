@@ -1,6 +1,6 @@
 ---
 title: Targeting one resource, and why it is not a habit
-version: 1
+version: 2
 ---
 
 `-target` limits a plan to one address and whatever it depends on. It sounds like precision, a way
@@ -45,7 +45,7 @@ index 15f2e65..ef2de0f 100644
 +}
 ```
 
-She asks for the subnet alone:
+She asks for the subnet alone, with `terraform plan -target=aws_subnet.d`. The end of the plan:
 
 ```
   # aws_vpc.shop will be updated in-place
@@ -84,7 +84,8 @@ the subnet depends on, is left out. So the targeted plan is neither "only what I
 "everything in the file": it is a slice of the graph, and the slice is decided by references you
 may not have in mind.
 
-She applies it anyway, since a tag is harmless, and Terraform adds a second warning at the end:
+She applies it anyway, since a tag is harmless, with `terraform apply -target=aws_subnet.d
+-auto-approve`, and Terraform adds a second warning at the end:
 
 ```
 aws_vpc.shop: Modifying... [id=vpc-bf1e4c53969619f51]

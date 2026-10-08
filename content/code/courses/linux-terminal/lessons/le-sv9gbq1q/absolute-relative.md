@@ -1,6 +1,6 @@
 ---
 title: Absolute and relative, and the slash that decides
-version: 1
+version: 2
 ---
 
 A path is an address. There are exactly two kinds, and **one character tells them apart**:
@@ -111,6 +111,9 @@ being relative — it is that the shell only searches `$PATH` for a *bare* name,
 `$PATH`. Adding `./` turns the bare name into a path, and a path is not searched for. Lesson 9's
 section on `$PATH` is the full story; the habit to build now is that `./something` means *this
 one, right here*.
+
+Your `~/work` has no `ledger` in it, because the project is never built, so on your machine that
+line answers `No such file or directory`. Read it for the `./`, not for what it would print.
 
 ### Windows says the same thing differently
 

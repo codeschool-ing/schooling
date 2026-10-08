@@ -1,6 +1,6 @@
 ---
 title: The address on every commit
-version: 1
+version: 2
 ---
 
 Every commit carries a name and an e-mail address, and pushing to a public repository publishes both,
@@ -44,6 +44,6 @@ ana@laptop:~/loanbook$ git log --format=%ad --date=format:%a | sort | uniq -c | 
       2 Tue
 ```
 
-loanbook's dates are written in `lab.sh`, lesson 7, so this pattern describes nobody. On a real project it
-describes you, and some people prefer not to publish that their project was built between two and four in
+loanbook's dates were written down by hand when its history was recorded for this course, so this pattern
+describes nobody. On a real project it describes you, and some people prefer not to publish that their project was built between two and four in
 the morning. There is no setting that hides it; knowing it is there is the point.

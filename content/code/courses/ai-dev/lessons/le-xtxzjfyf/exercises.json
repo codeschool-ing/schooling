@@ -1,33 +1,33 @@
 [
   {
     "id": "ex-5wxtznzx",
-    "version": 1,
+    "version": 2,
     "section": "anatomy",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "The one-line request got an answer that goes through `float`. Why does the section not blame the assistant?",
-    "hint": "What did the request carry?",
+    "prompt": "The one-line request got a `parse_price` that deletes every comma, so `12,90` becomes 129000 cents. Why does the section not blame the model?",
+    "hint": "How does English write one thousand two hundred and ninety?",
     "choices": [
       {
-        "text": "Because `float` is fine for money if you round afterwards",
+        "text": "Because a small model cannot handle string methods",
         "correct": false,
-        "why": "The project's rule says never, not even briefly."
+        "why": "It used `replace` correctly for what it understood."
       },
       {
-        "text": "The project's rules were not in the request",
-        "correct": true,
-        "why": "Right: the answer fits the question it was asked."
-      },
-      {
-        "text": "Because the assistant was set to a high temperature",
+        "text": "Because the temperature was set too high",
         "correct": false,
         "why": "Nothing in the request set a temperature."
       },
       {
-        "text": "Because one-line prompts are always refused by providers",
+        "text": "Nothing said the comma was decimal",
+        "correct": true,
+        "why": "Right: read as `1,290`, deleting it is correct."
+      },
+      {
+        "text": "Because 129000 is the right number of cents",
         "correct": false,
-        "why": "It was answered."
+        "why": "A mug at 12,90 is 1290 cents."
       }
     ]
   },
@@ -381,33 +381,33 @@
   },
   {
     "id": "ex-edqwd5h1",
-    "version": 1,
+    "version": 2,
     "section": "decompose",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "What did `parse_price(\"1.234,56\")` return after the first diff, in cents?",
-    "hint": "One unit and twenty-three cents.",
+    "prompt": "With the function from section 05 swapped in, the test that `1.234,56` is refused passed. Why does the section say it passed for the wrong reason?",
+    "hint": "Where does that function split the text?",
     "choices": [
       {
-        "text": "123456",
+        "text": "Because pytest skipped it",
         "correct": false,
-        "why": "That would be reading it as a thousand separator, which nothing did."
+        "why": "It ran, and it passed."
       },
       {
-        "text": "It raised ValueError",
+        "text": "Because the test expects a different exception",
         "correct": false,
-        "why": "That is what the test required, and it did not happen."
+        "why": "It expects `ValueError`, and got one."
       },
       {
-        "text": "123",
+        "text": "Because the model read the test file and special-cased it",
+        "correct": false,
+        "why": "The function has no case for that input."
+      },
+      {
+        "text": "`int(\"1.234\")` failed by accident",
         "correct": true,
-        "why": "Right: it was accepted quietly."
-      },
-      {
-        "text": "1234",
-        "correct": false,
-        "why": "The comma had become a dot and the split took the first one."
+        "why": "Right: nothing in it decided two separators are ambiguous."
       }
     ]
   },
@@ -477,12 +477,12 @@
   },
   {
     "id": "ex-d18ckek2",
-    "version": 1,
+    "version": 2,
     "section": "iterate",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "How many tests passed after the second diff, across the whole suite?",
+    "prompt": "How many tests passed across the whole suite with ana's own `parse_price`?",
     "hint": "The last line.",
     "value": 13,
     "tolerance": 0,
@@ -490,7 +490,7 @@
   },
   {
     "id": "ex-pb2p3z6y",
-    "version": 1,
+    "version": 2,
     "section": "iterate",
     "type": "multiple-choice",
     "difficulty": "medium",
@@ -514,7 +514,7 @@
         "why": "Yes: something is missing from the context."
       },
       {
-        "text": "When each diff touches more than the last",
+        "text": "When each change touches more than the last",
         "correct": true,
         "why": "Yes: it is drifting."
       }
@@ -618,46 +618,46 @@
   },
   {
     "id": "ex-yy45w1aw",
-    "version": 1,
+    "version": 2,
     "section": "evaluate",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "How many of the five commit subjects passed the checks without examples?",
-    "hint": "The first block of the output.",
-    "value": 1,
+    "prompt": "Of the fifteen subjects asked for with examples, how many passed the checks?",
+    "hint": "The last line of the output.",
+    "value": 14,
     "tolerance": 0,
     "unit": "subjects"
   },
   {
     "id": "ex-yk1d90fz",
-    "version": 1,
+    "version": 2,
     "section": "evaluate",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Which part of the evaluation in this section is a measurement and which is an illustration?",
-    "hint": "Who wrote the replies?",
+    "prompt": "Fourteen of fifteen subjects passed with examples. Why does the section not read that as fourteen good subjects?",
+    "hint": "Read the passes, not the score.",
     "choices": [
       {
-        "text": "Both are measurements of a real model",
+        "text": "Because three runs per case are too few to count",
         "correct": false,
-        "why": "No model wrote the replies."
+        "why": "The count is right; what it counts is the question."
       },
       {
-        "text": "The score is a measurement; the harness is an illustration",
-        "correct": false,
-        "why": "The other way round."
-      },
-      {
-        "text": "Neither: the whole section is made up",
-        "correct": false,
-        "why": "The harness, the cases and the checks ran for real."
-      },
-      {
-        "text": "The harness is real; the score illustrates it",
+        "text": "Five were an example, copied word for word",
         "correct": true,
-        "why": "Right: the replies were written by the course."
+        "why": "Right: form passes every check, and the content is another commit's."
+      },
+      {
+        "text": "Because the checks rejected every quoted subject",
+        "correct": false,
+        "why": "Quoted subjects passed; the checks do not look for quotes."
+      },
+      {
+        "text": "Because the model ignored the examples",
+        "correct": false,
+        "why": "It followed them too closely, if anything."
       }
     ]
   },
@@ -759,7 +759,7 @@
   },
   {
     "id": "ex-f72x8zag",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "matching",
     "difficulty": "medium",
@@ -768,20 +768,20 @@
     "hint": "One each.",
     "pairs": [
       {
-        "left": "Constraints and conventions in the prompt",
-        "right": "An answer that went through float"
+        "left": "The goal, with who types the price",
+        "right": "A comma read as a thousands separator"
       },
       {
-        "left": "A diff checked with git",
-        "right": "A quoted line that did not match the file"
+        "left": "`git apply --check`",
+        "right": "A diff whose header did not match its body"
       },
       {
-        "left": "Tests written from the plan",
-        "right": "`1.234,56` accepted quietly"
+        "left": "Tests written before the change",
+        "right": "A function that broke `12.90`"
       },
       {
         "left": "Examples of commit subjects",
-        "right": "Subjects in the wrong style"
+        "right": "Subjects in the past tense"
       }
     ],
     "right_distractors": [

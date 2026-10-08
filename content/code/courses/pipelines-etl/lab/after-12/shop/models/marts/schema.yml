@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: daily_sales
+    description: >
+      Books and revenue by day, shop and category, counting completed sales only.
+      One row per combination that sold anything. Read by the morning report.
+    columns:
+      - name: order_date
+        description: The day of the sale in São Paulo, not in UTC.
+        data_tests: [not_null]
+      - name: revenue_cents
+        description: Sum of quantity times unit price, in cents of a real.
+  - name: fact_sales
+    description: >
+      One row per order line sold. Incremental: each run replaces the newest day it
+      has and every day after it, so changes to older days need a full refresh.
+    columns:
+      - name: customer_id
+        description: Null for a sale at a till to nobody, and for a customer erased on request.

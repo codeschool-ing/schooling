@@ -1,9 +1,9 @@
 ---
 title: Dando nome a componentes para ninguém ter de adivinhar
-version: 1
+version: 2
 ---
 
-As classes são onde vive a maior parte dos seletores de uma folha de estilos, e um nome de classe é lido muito mais vezes do que é escrito. Sem uma convenção, o mesmo site acaba com `.card`, `.event-box`, `.eventCard` e `.tile` para quatro versões de uma coisa só, e um seletor como `.card .title` que pega também o título de um cartão dentro de outro cartão. Uma convenção de nomes evita as duas coisas. A que mais equipes conhecem é o **BEM**, de *block, element, modifier* (bloco, elemento, modificador):
+As classes são onde vive a maior parte dos seletores de uma folha de estilos, e um nome de classe é lido muito mais vezes do que é escrito. Sem uma convenção, o mesmo site acaba com `.card`, `.event-box`, `.eventCard` e `.tile` para quatro versões de uma coisa só, e um seletor como `.card .title` que pega também o título de um cartão dentro de outro cartão. Uma convenção de nomes evita as duas coisas. A que mais equipes conhecem é o **BEM**, de *block, element, modifier* (bloco, elemento, modificador), e o `css/components/event-card.css` da seção 09 está escrito nele:
 
 ```css
 .event-card { padding: calc(var(--space) * 2); border-left: 4px solid var(--color-accent); }

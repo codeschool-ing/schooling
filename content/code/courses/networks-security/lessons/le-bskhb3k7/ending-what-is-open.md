@@ -7,8 +7,10 @@ Withdrawing access has two halves: stop new connections, and **end the ones alre
 the rule; the second, on Linux, is removing the conntrack entries, after which the next packet of the
 session matches nothing and falls to the policy.
 
-The session is opened again, and this time the withdrawal does both, loading the rules and deleting the
-application's entries for port 5432:
+The session is opened again, after the database rule is put back on `db` with
+`nft -f /dev/stdin <<<"$(sed "s/# app withdrawn from the database, ticket 6203/ip saddr { 192.168.20.10 } tcp dport 5432 accept/" /root/segment.nft)"`
+and the client on `app` is started as before. This time the withdrawal does both, loading the rules
+and deleting the application's entries for port 5432:
 
 ```
 root@db:~# nft -f segment.nft && conntrack -D -p tcp --dport 5432 -s 192.168.20.10 -u ASSURED 2>&1 >/dev/null

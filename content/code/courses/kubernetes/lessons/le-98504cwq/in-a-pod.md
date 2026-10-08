@@ -83,7 +83,7 @@ A ClusterRole is a Role that is not tied to one namespace, so it can also cover 
 namespace, such as nodes. **How far it reaches depends on the binding, not on the role.** Bound with
 a ClusterRoleBinding, `edit` applies in every namespace. Bound with a RoleBinding inside `shop`, the
 same `edit` applies in `shop` only. That second form is the usual way to give a team its own
-namespace: one RoleBinding to `admin`, and nothing at cluster scope. This lab did not run it.
+namespace: one RoleBinding to `admin`, and nothing at cluster scope. This course did not run it.
 
 The other 73 of the 77 are mostly for the cluster's own components, with names starting `system:`.
 The scheduler and the controllers each have exactly the permissions their job needs, granted by
