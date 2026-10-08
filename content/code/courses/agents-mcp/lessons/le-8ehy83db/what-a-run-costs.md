@@ -63,8 +63,9 @@ for step in range(1, 7):
     results = []
     for call in calls:
         t0 = time.perf_counter()
+        print(f"       tool {call.name} {json.dumps(call.input)}", end="", flush=True)
         out = json.dumps(RUN[call.name](call.input))
-        print(f"       tool {call.name}: {(time.perf_counter() - t0) * 1000:.0f} ms")
+        print(f": {(time.perf_counter() - t0) * 1000:.0f} ms")
         results.append({"type": "tool_result", "tool_use_id": call.id, "content": out})
     messages.append({"role": "user", "content": results})
 print(f"total {totals['input']:7} {totals['cache_write']:8} {totals['cache_read']:7} {totals['output']:7} "
