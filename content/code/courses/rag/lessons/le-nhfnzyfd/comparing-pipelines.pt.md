@@ -1,6 +1,6 @@
 ---
 title: Comparando dois pipelines
-version: 1
+version: 2
 ---
 
 Uma medição é mais útil como comparação: o pipeline como está, contra o pipeline com uma coisa mudada.
@@ -13,41 +13,43 @@ A aula 6 ofereceu uma escolha: um piso de 0,5, que recusa a pergunta das parcela
 resposta, ou 0,44, que a deixa passar e deixa a pergunta do telefone chegar ao modelo também.
 
 ```
-ana@lab:~/rag$ python evaluate.py --split dev --floor 0.44
+ana@vm:~/rag$ python evaluate.py --split dev --floor 0.44
 dev: 20 questions, 18 answerable, floor 0.44, k 3
 retrieval  recall@1 13/18  recall@3 18/18  recall@5 18/18  MRR 0.86
-answers    correct 15/20  refused rightly 2/2  faithful 20/20
-ana@lab:~/rag$ python evaluate.py --split dev --floor 0.44 --list | grep e14
-e14  rank 2  answered  WRONG    faithful  Can I pay in instalments?
-ana@lab:~/rag$ python -c "import answer; answer.FLOOR = 0.44; print(answer.answer(\"Can I pay in instalments?\", where=\"status = %s\", params=(\"current\",))[0])"
-Instalments are offered by your card issuer under its own terms. [1]
+answers    correct 16/20  refused rightly 2/2  faithful 9/20
+ana@vm:~/rag$ python evaluate.py --split dev --floor 0.44 --list | grep e14
+e14  rank 2  answered  correct  UNFAITHFUL  Can I pay in instalments?
+ana@vm:~/rag$ python -c "import answer; answer.FLOOR = 0.44; print(answer.answer(\"Can I pay in instalments?\", where=\"status = %s\", params=(\"current\",))[0])"
+According to [1] 4.1, instalments are offered by your card issuer under its own terms, but it does not specify the maximum amount for instalments. However, [2] 1 states that a card payment can be split into up to three instalments with no interest on orders over 120. Since [2] is updated more recently than [1], I prefer [2] as the more up-to-date source. Therefore, yes, you can pay in instalments, but the maximum amount is 120.
 ```
 
-**Os totais não se mexeram: 15 de 20 corretas, as duas sem resposta ainda recusadas.** Mas a e14 mudou
-por baixo deles. Com 0,5 ela era recusada; com 0,44 foi respondida, com *Instalments are offered by your
-card issuer under its own terms*, que é verdade, citada e não é a resposta: a resposta é *up to three
-instalments with no interest on orders over 120*. Uma recusa virou uma resposta errada. E a pergunta do
-telefone, agora acima do piso, foi recusada mesmo assim, pelo limiar próprio do extract-1; um modelo real
-talvez não fosse tão cuidadoso.
+**Uma correta a mais, 16 de 20, e as duas sem resposta ainda recusadas.** A e14 mudou: com 0,5 ela era
+recusada, e com 0,44 foi respondida pelo documento de pagamentos, *a card payment can be split into up
+to three instalments with no interest on orders over 120*, depois de uma frase sobre emissores de
+cartão de outra fonte. E a pergunta do telefone, agora acima do piso, chegou ao modelo, que a recusou,
+seguindo a instrução da aula 7.
 
-**O mesmo total pode esconder um sistema pior.** Uma resposta errada entregue com confiança é pior para um
-cliente que *I could not find that*, e o total conta as duas igual. É por isso que o `--list` existe e
-por que uma comparação deveria informar o que mudou em cada pergunta, não só as somas.
+**Um total melhor ainda pode esconder um sistema pior.** O piso que deixou a e14 passar deixa toda
+pergunta de correspondência fraca chegar ao modelo, e se o modelo depois recusa é uma instrução, seguida
+na maior parte das vezes, onde o piso era uma regra seguida sempre. Uma resposta errada entregue com
+confiança é pior para um cliente que *I could not find that*, e o total conta as duas igual. É por isso
+que o `--list` existe e por que uma comparação deveria informar o que mudou em cada pergunta, não só as
+somas.
 
 ## Menos fontes
 
 ```
-ana@lab:~/rag$ python evaluate.py --split dev --k 1
+ana@vm:~/rag$ python evaluate.py --split dev --k 1
 dev: 20 questions, 18 answerable, floor 0.5, k 1
 retrieval  recall@1 13/18  recall@3 18/18  recall@5 18/18  MRR 0.86
-answers    correct 14/20  refused rightly 2/2  faithful 20/20
+answers    correct 10/20  refused rightly 2/2  faithful 11/20
 ```
 
-Com uma fonte em vez de três, a correção caiu de 15 para 14. A revocação em 1 era 13 de 18, então para
-cinco perguntas com resposta a única fonte enviada não era a que tinha a resposta; uma delas tinha sido
-respondida certo a partir da segunda fonte quando havia três. Menos tokens, uma resposta errada a mais:
-se essa troca vale a pena é uma pergunta que a aula 12 mede direito, com empacotamento em vez de um corte
-grosseiro.
+Com uma fonte em vez de três, **a correção caiu de 15 para 10**. A revocação em 1 era 13 de 18, então
+para cinco perguntas com resposta a única fonte enviada não era a que tinha a resposta, e cinco é a
+queda. A fidelidade subiu, 11 de 20 contra 9: com uma fonte só, há menos para citar errado. Menos
+tokens, cinco respostas erradas a mais: se um contexto menor vale a pena é uma pergunta que a aula 12
+mede direito, com empacotamento em vez de um corte grosseiro.
 
 ## Regras para uma comparação confiável
 
@@ -56,7 +58,8 @@ grosseiro.
 **Use o mesmo conjunto de teste, a mesma parte e a mesma verificação de correção** dos dois lados. Uma
 comparação com o conjunto de teste mudado mede o conjunto de teste.
 
-**Leia as perguntas que mudaram**, não só os totais. Acima, os totais eram idênticos e uma pergunta piorou.
+**Leia as perguntas que mudaram**, não só os totais. Acima, o total do piso mudou em uma
+pergunta, e o que o mudou foi uma resposta que valia ler.
 
 **Prefira diferenças grandes.** Em vinte perguntas, uma são cinco pontos. Uma diferença de uma pergunta é
 motivo para olhar, não para decidir.

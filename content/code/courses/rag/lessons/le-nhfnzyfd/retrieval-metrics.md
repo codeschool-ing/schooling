@@ -1,6 +1,6 @@
 ---
 title: Measuring retrieval
-version: 1
+version: 2
 ---
 
 Lesson 7 separated three properties: did the search find the passage, does each sentence come from its
@@ -35,10 +35,10 @@ in a split:
 This section is about the first property.
 
 ```
-ana@lab:~/rag$ python evaluate.py --split dev
+ana@vm:~/rag$ python evaluate.py --split dev
 dev: 20 questions, 18 answerable, floor 0.5, k 3
 retrieval  recall@1 13/18  recall@3 18/18  recall@5 18/18  MRR 0.86
-answers    correct 15/20  refused rightly 2/2  faithful 20/20
+answers    correct 15/20  refused rightly 2/2  faithful 9/20
 ```
 
 ## Recall at k
@@ -49,8 +49,8 @@ returns. On the dev split it is 13 of 18 at one, and 18 of 18 at three and at fi
 
 Two values matter more than the rest. **Recall at the k the pipeline actually uses**, here three,
 says whether the generator was ever given the answer: if it was not, nothing downstream can fix it.
-**Recall at one** says how often the answer comes first, which matters because a model, and extract-1
-especially, is more likely to use what it reads first and because lesson 12 is going to want fewer
+**Recall at one** says how often the answer comes first, which matters because a model is more likely to use
+what it reads first and because lesson 12 is going to want fewer
 sources, not more.
 
 ## Mean reciprocal rank

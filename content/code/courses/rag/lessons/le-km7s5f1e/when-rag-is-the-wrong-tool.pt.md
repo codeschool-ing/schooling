@@ -1,6 +1,6 @@
 ---
 title: Quando a recuperação é a ferramenta errada
-version: 1
+version: 2
 ---
 
 A recuperação responde a perguntas cuja resposta está escrita em algum lugar, num trecho curto o
@@ -11,12 +11,14 @@ trechos, os mais próximos que tem, e o gerador faz o que pode com eles.
 ## Uma pergunta sobre o corpus inteiro
 
 ```
-ana@lab:~/rag$ python sections.py "Which documents mention a 14-day limit?"
+ana@vm:~/rag$ python sections.py "Which documents mention a 14-day limit?"
 [1] 0.414  privacy-notice > How long we keep it
-[2] 0.410  returns-policy > The return window
+[2] 0.409  returns-policy > The return window
 [3] 0.348  terms-of-sale > 6. The right of withdrawal
-The sources do not say.
-ana@lab:~/rag$ grep -l "14 days" data/docs/*.md
+None of the documents mention a 14-day limit. 
+
+However, [3] terms-of-sale > 6. The right of withdrawal mentions a 7-day limit for withdrawal from a purchase, and [2] returns-policy > The return window mentions a 7-day limit for the statutory right of withdrawal, but also mentions a 30-day limit for printed books.
+ana@vm:~/rag$ grep -l "14 days" data/docs/*.md
 data/docs/ebooks-and-audiobooks.md
 data/docs/returns-policy-2025.md
 data/docs/returns-policy.md
@@ -27,25 +29,41 @@ O `grep` leu todos os documentos e respondeu com uma linha por ocorrência: quat
 devolveu três seções, e nenhuma delas contém a expressão, porque **uma pergunta sobre quais documentos
 dizem alguma coisa é uma pergunta sobre todos eles**, e uma busca devolve os poucos mais próximos. Nem
 uma busca perfeita com k = 3 conseguiria listar quatro documentos, e nada na saída dela diz que a lista
-foi cortada. O extract-1 recusou desta vez, porque nenhuma frase era parecida o bastante. Um modelo
-real com essas três seções talvez as citasse como a resposta, uma lista parcial e confiante, com
-citações.
+foi cortada.
+
+O modelo, lendo só essas três, fez a pior coisa disponível: respondeu a pergunta sobre o corpus inteiro
+a partir de três seções dele. *None of the documents mention a 14-day limit*, dito com confiança, é
+falso quatro vezes. Depois informou, corretamente, o prazo legal de arrependimento de sete dias e os
+trinta dias para livros impressos, que ninguém perguntou. Quem lê não tem como ver pela resposta que
+ela foi construída sobre três seções de noventa e duas.
 
 ## Uma pergunta sobre tudo
 
 ```
-ana@lab:~/rag$ python sections.py "Summarise all of our policies"
+ana@vm:~/rag$ python sections.py "Summarise all of our policies"
 [1] 0.272  support-handbook > How we write
 [2] 0.227  terms-of-sale > 10. Personal data
 [3] 0.202  privacy-notice > What we collect
-Quote the policy in your own words and link the help centre article. [1]
+Yes, you can return a book.
+
+To summarize our policies, we use your personal data as described in our privacy notice, which includes account data, order data, reading data, support data, and technical data. We store this data to provide you with a personalized experience and to improve our services.
+
+For more information on our policies, including our terms of sale, please refer to our help centre articles:
+
+* [1] How we write: This article explains our communication style and how we respond to customer inquiries.
+* [2] Terms of sale > 10. Personal data: This article describes how we use your personal data.
+* [3] Privacy notice > What we collect: This article provides a detailed overview of the types of personal data we collect and how we use it.
+
+If you have any further questions or concerns, please don't hesitate to ask. We will respond again on [insert date, if applicable].
 ```
 
-A melhor correspondência marcou 0,272, perto do piso, e a resposta é uma frase sobre como os atendentes
-escrevem. Um resumo de todas as políticas precisa de todas as políticas lidas. A ferramenta para isso é
-um processamento em lote que lê cada documento, resume, depois resume os resumos, rodado quando os
-documentos mudam e guardado como qualquer outro documento. A aula 15 constrói o passo de resumir para
-conversas, e o mesmo método serve para documentos.
+A melhor correspondência marcou 0,272, perto do piso, e a resposta é uma bagunça com cara de
+resposta. Começa respondendo uma pergunta que ninguém fez, *Yes, you can return a book*; resume as
+seções de privacidade que recebeu como se fossem todas as políticas; e termina prometendo *respond
+again on [insert date, if applicable]*. Um resumo de todas as políticas precisa de todas as políticas
+lidas. A ferramenta para isso é um processamento em lote que lê cada documento, resume, depois resume
+os resumos, rodado quando os documentos mudam e guardado como qualquer outro documento. A aula 15
+constrói o passo de resumir para conversas, e o mesmo método serve para documentos.
 
 ## Três tipos de pergunta que pertencem a outro lugar
 

@@ -1,13 +1,13 @@
 ---
 title: The token budget
-version: 1
+version: 2
 ---
 
-Every request has a size limit, and lesson 1 hit it: 9,072 tokens of documents against extract-1's
-window of 8,192, refused before a word was read. With retrieval the prompt is small, a few hundred
+Every request has a size limit, and lesson 1 hit it: about 9,000 tokens of documents against the
+4,096 Ollama serves llama3.2:3b with, cut to fit without a word of warning. With retrieval the prompt is small, a few hundred
 tokens, and the limit seems far away. It stops seeming so the day somebody raises k, adds a
 conversation history, or indexes a document with one enormous section. A program that counts before it
-sends never meets the refusal.
+sends never meets the cut, or, with a commercial provider, the refusal.
 
 ## Counting before sending
 
@@ -40,13 +40,13 @@ rank order while they fit, and drops the rest:
 ```
 
 ```
-ana@lab:~/rag$ python budget.py "How long after my return arrives will I get the refund?" 400
+ana@vm:~/rag$ python budget.py "How long after my return arrives will I get the refund?" 400
 instructions and question: 85 tokens
   keep    84 tokens  Returns and refunds policy > Refunds
   keep    85 tokens  Returns and refunds policy > The return window
   keep   104 tokens  Returns and refunds policy > Items sold by marketplace sellers
 358 of 400 tokens, 3 of 3 sources
-ana@lab:~/rag$ python budget.py "How long after my return arrives will I get the refund?" 250
+ana@vm:~/rag$ python budget.py "How long after my return arrives will I get the refund?" 250
 instructions and question: 85 tokens
   keep    84 tokens  Returns and refunds policy > Refunds
   drop    85 tokens  Returns and refunds policy > The return window
@@ -62,15 +62,17 @@ rest**, which is right when rank is a good guide, and lesson 12 is about the cas
 ## What to count
 
 **Everything that goes into the request.** The instructions, the sources with their headers, the
-question, any conversation history, and the room left for the reply: lesson 1's refusal was 9,072
-tokens plus 256 reserved for the answer. A budget that forgets the reply is a budget that fails on the
-longest answers.
+question, any conversation history, and the room left for the reply. Ollama's window holds the prompt
+and the reply together, so a prompt that fills it leaves the reply nowhere to go. A budget that
+forgets the reply is a budget that fails on the longest answers.
 
-**With the provider's encoding.** The count here is tiktoken's `cl100k_base`, which is what labgen counts
-with; the provider's usage for this question through `rag.py` says 314 prompt tokens, which includes
-the per-message overhead the provider adds and this count leaves out. Close enough to budget with a
-margin, never close enough to budget to the last token. Anthropic's API offers a token-counting
-endpoint for exactly this, and labgen does not implement it.
+**With an encoding close to the model's.** The count here is tiktoken's `cl100k_base`, OpenAI's;
+llama3.2 has a tokenizer of its own, so a count by one is an estimate of the other. The gift-card
+query logged in this lesson went out with 336 prompt tokens by
+llama3.2's count, which also includes the template Ollama wraps around every message and which no
+count made before sending can see. Close enough to budget with a margin, never close enough to
+budget to the last token.
+Anthropic's API offers a token-counting endpoint for exactly this, and Ollama does not implement it.
 
 **In rank order, whole.** A source cut in half to fit is a source whose second half is missing,
 usually the half with the exception in it. Dropping whole sources keeps every source intact.

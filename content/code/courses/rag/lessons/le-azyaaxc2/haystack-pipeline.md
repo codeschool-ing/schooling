@@ -1,6 +1,6 @@
 ---
 title: The query pipeline, with the floor as a component
-version: 1
+version: 2
 ---
 
 Lesson 10 needed an `if` after the chain to refuse without calling the model. In Haystack the
@@ -48,7 +48,7 @@ The rest of the pipeline is Haystack's own parts, with lesson 6's filter and les
       "note": "The store the indexing program saved. Lesson 6's filter written in Haystack's own syntax, a field, an operator and a value. The prompt is a Jinja template that numbers the sources the way lesson 7 does."
     },
     {
-      "code": "rag = Pipeline()\nrag.add_component(\"embed\", OpenAITextEmbedder(model=\"lab-minilm\"))\nrag.add_component(\"retrieve\", InMemoryEmbeddingRetriever(store, top_k=3, filters=public))\nrag.add_component(\"floor\", Floor(0.5))\nrag.add_component(\"prompt\", ChatPromptBuilder(template=[ChatMessage.from_system(SYSTEM),\n                                                        ChatMessage.from_user(sources)],\n                                              required_variables=[\"documents\", \"question\"]))\nrag.add_component(\"generate\", OpenAIChatGenerator(model=\"extract-1\"))\nrag.connect(\"embed.embedding\", \"retrieve.query_embedding\")\nrag.connect(\"retrieve\", \"floor\")\nrag.connect(\"floor.documents\", \"prompt.documents\")\nrag.connect(\"prompt\", \"generate\")",
+      "code": "rag = Pipeline()\nrag.add_component(\"embed\", OpenAITextEmbedder(model=\"all-minilm\"))\nrag.add_component(\"retrieve\", InMemoryEmbeddingRetriever(store, top_k=3, filters=public))\nrag.add_component(\"floor\", Floor(0.5))\nrag.add_component(\"prompt\", ChatPromptBuilder(template=[ChatMessage.from_system(SYSTEM),\n                                                        ChatMessage.from_user(sources)],\n                                              required_variables=[\"documents\", \"question\"]))\nrag.add_component(\"generate\", OpenAIChatGenerator(model=\"llama3.2:3b\", generation_kwargs={\"temperature\": 0}))\nrag.connect(\"embed.embedding\", \"retrieve.query_embedding\")\nrag.connect(\"retrieve\", \"floor\")\nrag.connect(\"floor.documents\", \"prompt.documents\")\nrag.connect(\"prompt\", \"generate\")",
       "note": "Five components and four connections. Only `floor.documents` reaches the prompt, so the refusal path ends at the floor."
     },
     {
@@ -67,11 +67,15 @@ The filter is written in Haystack's syntax rather than LangChain's dictionary: a
 each a field, an operator and a value, joined by `AND`. The scores here are **similarities, where
 higher is better**, like lesson 6's and unlike `PGVector`'s distances in lesson 10. The store
 computes a dot product by default, which equals the cosine similarity for vectors of length 1, and
-the lab's model returns vectors of length 1.
+Ollama returns all-minilm's vectors with a length of 1.
 
 ```
-ana@lab:~/rag$ python hs_ask.py "How many days do I have to return a printed book?"
-You have 30 days from delivery to return a printed book in the condition you received it. [1] You have 30 days from delivery to return a printed book in the condition you received it. [2] Our returns and refunds policy extends this period to 30 days for printed books. [3]
+ana@vm:~/rag$ python hs_ask.py "How many days do I have to return a printed book?"
+According to sources [1] and [2], you have 30 days from delivery to return a printed book in the condition you received it.
+
+However, source [3] states that you have 7 days from delivery to withdraw from a purchase without giving a reason, as the consumer protection law guarantees. This period is extended to 30 days for printed books by our returns and refunds policy, as stated in sources [1] and [2]. 
+
+Since source [3] is outdated (updated 2026-01-05) and source [1] and [2] are more recent (updated 2026-02-02), we prefer the more recent sources. Therefore, you have 30 days from delivery to return a printed book.
   0.787  returns-policy
   0.787  returns-policy
   0.733  terms-of-sale
@@ -79,13 +83,17 @@ You have 30 days from delivery to return a printed book in the condition you rec
 
 The reply is right, 30 days from the current policy, and it carries the previous section's
 duplicate. **The first two sources are the same chunk with the same score, 0.787**: the copy with
-the old owner and the copy with the new one, both current, both public, and both returned. The
-reply, from extract-1, quotes the same sentence twice and cites it as [1] and [2]. Nothing failed,
-and one of the three places in the prompt was spent on a sentence the model already had. Lesson 12
-counts what that kind of waste costs, and removes it.
+the old owner and the copy with the new one, both current, both public, and both returned. The model
+cited the one sentence to both, *sources [1] and [2]*, and one of the three places in the prompt was
+spent on a sentence it already had. Lesson 12 counts what that kind of waste costs, and removes it.
+
+The third source is the terms of sale, and the model made something of it that no source says. It
+called them *outdated* because their date is earlier, which is lesson 7's instruction applied where it
+does not belong: the terms are current, and their seven days are the legal minimum the policy extends
+to thirty. The number survived the reasoning, this time.
 
 ```
-ana@lab:~/rag$ python hs_ask.py "Can I pay with cryptocurrency?"
+ana@vm:~/rag$ python hs_ask.py "Can I pay with cryptocurrency?"
 I could not find that in our documents.
   0.306  payments-and-invoices
   0.243  terms-of-sale

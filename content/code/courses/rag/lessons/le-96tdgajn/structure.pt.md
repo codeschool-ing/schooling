@@ -1,6 +1,6 @@
 ---
 title: Seguindo a estrutura do documento
-version: 1
+version: 2
 ---
 
 Um documento escrito por uma pessoa já diz onde os assuntos começam e terminam. Títulos marcam seções,
@@ -30,8 +30,21 @@ são juntados num pedaço até que o próximo parágrafo o levaria além do limi
 }
 ```
 
+```schooling-example
+{
+  "language": "python",
+  "file": "structure.py",
+  "parts": [
+    {
+      "code": "from chunking import load, structured\n\nmeta, body = load()[\"returns-policy\"]\nchunks = structured(body, 120)\nprint(len(chunks), \"chunks\")\nfor path, text in chunks[:6]:\n    print(f\"{len(text.split()):4} words  {path}\")\nprint()\nprint(chunks[5][1])",
+      "note": "A política de devolução cortada pela estrutura, com até 120 palavras por pedaço: quantos pedaços, o tamanho e o caminho de títulos dos seis primeiros, e o texto inteiro do sexto."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python structure.py
+
+```
+ana@vm:~/rag$ python structure.py
 12 chunks
  120 words  Returns and refunds policy > The return window
   27 words  Returns and refunds policy > The return window

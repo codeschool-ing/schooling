@@ -1,17 +1,17 @@
 ---
 title: The floor decides how many
-version: 1
+version: 2
 ---
 
 Look again at the last column of the sweep:
 
 ```
-ana@lab:~/rag$ python sweep.py
+ana@vm:~/rag$ python sweep.py
   k  found  tokens  alike  above floor
   1  20/26      60      0          1.0
   2  26/26     116      3          1.8
   3  26/26     171      3          2.6
-  5  26/26     278      7          3.4
+  5  26/26     279      7          3.4
   8  26/26     441     12          4.1
  12  26/26     660     16          4.7
 ```

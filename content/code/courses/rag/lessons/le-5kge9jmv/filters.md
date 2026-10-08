@@ -1,6 +1,6 @@
 ---
 title: Filters
-version: 1
+version: 2
 ---
 
 Some questions about which chunks to return are not about meaning at all. *Is this policy still in
@@ -11,7 +11,7 @@ condition on that metadata, applied as part of the search.
 ## The replaced policy, one last time
 
 ```
-ana@lab:~/rag$ python show.py vector "Who pays for the return postage?"
+ana@vm:~/rag$ python show.py vector "Who pays for the return postage?"
 1    0.806  Returns policy > Return postage  | Return postage is paid by the customer. You can 
 2    0.537  Returns and refunds policy > How to start a return  | 1. Open the order in your account and choose Ret
 3    0.514  Returns and refunds policy > How to start a return  | Returns are free. You do not pay for the label, 
@@ -25,7 +25,7 @@ problem. The problem is that a customer should never be shown a superseded polic
 current, and that is a rule, not a score.
 
 ```
-ana@lab:~/rag$ python -c "from search import vector; [print(r[1]) for r in vector(\"Who pays for the return postage?\", 3, \"status = %s AND audience = %s\", (\"current\", \"public\"))]"
+ana@vm:~/rag$ python -c "from search import vector; [print(r[1]) for r in vector(\"Who pays for the return postage?\", 3, \"status = %s AND audience = %s\", (\"current\", \"public\"))]"
 Returns and refunds policy > How to start a return
 Returns and refunds policy > How to start a return
 Returns and refunds policy > Gifts

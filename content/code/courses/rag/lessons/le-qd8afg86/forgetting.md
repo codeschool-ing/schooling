@@ -1,6 +1,6 @@
 ---
 title: Forgetting
-version: 1
+version: 2
 ---
 
 Everything in the memory table was typed by a customer into a support chat, and customers type what
@@ -11,11 +11,24 @@ the corpus promises.
 
 The table makes both rights cheap, because every row names its account:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "remembered.py",
+  "parts": [
+    {
+      "code": "import sys\n\nfrom search import conn\n\nfor turn, text in conn.execute(\"SELECT turn, text FROM memories WHERE account = %s ORDER BY turn\",\n                               (sys.argv[1],)):\n    print(f\"{turn:2}  {text}\")",
+      "note": "Every turn the table holds for one account, in order."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ psql -Atc "SELECT account, count(*) FROM memories GROUP BY account ORDER BY account"
+
+```
+ana@vm:~/rag$ psql -Atc "SELECT account, count(*) FROM memories GROUP BY account ORDER BY account"
 A-1001|12
 A-1002|4
-ana@lab:~/rag$ python remembered.py A-1002
+ana@vm:~/rag$ python remembered.py A-1002
  1  Hello, this is Rafael Lima. My order MG-31770254 has not arrived.
  2  It was sent by standard delivery and the tracking has not changed for twelve working days.
  3  I would prefer a refund rather than waiting for a new parcel.
@@ -28,7 +41,6 @@ auditor without interpreting anything. And when he asks to be forgotten:
 ```schooling-example
 {
   "language": "python",
-  "file": "memory.py",
   "parts": [
     {
       "code": "def forget(account):\n    return conn.execute(\"DELETE FROM memories WHERE account = %s\", (account,)).rowcount",
@@ -39,9 +51,9 @@ auditor without interpreting anything. And when he asks to be forgotten:
 ```
 
 ```
-ana@lab:~/rag$ python -c "import memory; print(memory.forget(\"A-1002\"), \"rows deleted\")"
+ana@vm:~/rag$ python -c "import memory; print(memory.forget(\"A-1002\"), \"rows deleted\")"
 4 rows deleted
-ana@lab:~/rag$ psql -Atc "SELECT account, count(*) FROM memories GROUP BY account ORDER BY account"
+ana@vm:~/rag$ psql -Atc "SELECT account, count(*) FROM memories GROUP BY account ORDER BY account"
 A-1001|12
 ```
 

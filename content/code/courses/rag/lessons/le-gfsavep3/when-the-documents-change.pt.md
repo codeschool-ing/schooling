@@ -1,6 +1,6 @@
 ---
 title: Quando os documentos mudam
-version: 1
+version: 2
 ---
 
 Uma resposta em cache é uma cópia do que o pipeline disse sobre os documentos como eles eram. Quando um
@@ -12,11 +12,11 @@ A chave do cache exato leva a versão do índice, um hash de todos os ids de ped
 depois uma edição nos termos do cartão-presente e o carregador da aula 5, depois a versão de novo:
 
 ```
-ana@lab:~/rag$ python -c "import exact; print(exact.version())"
+ana@vm:~/rag$ python -c "import exact; print(exact.version())"
 0acfdfa0d064
-ana@lab:~/rag$ sed -i "s/valid for two years from the day it was bought/valid for three years from the day it was bought/" data/docs/gift-cards.md && python ingest.py
+ana@vm:~/rag$ sed -i "s/valid for two years from the day it was bought/valid for three years from the day it was bought/" data/docs/gift-cards.md && python ingest.py
 chunks: 137  embedded: 1  removed: 1  kept: 136
-ana@lab:~/rag$ python -c "import exact; print(exact.version())"
+ana@vm:~/rag$ python -c "import exact; print(exact.version())"
 de4849f90b4a
 ```
 

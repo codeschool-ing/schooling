@@ -1,6 +1,6 @@
 ---
 title: Janelas de frases e auto-merging
-version: 1
+version: 2
 ---
 
 A aula 4 terminou numa tensão que um tamanho só não resolvia: um pedaço pequeno casa com a pergunta
@@ -29,7 +29,7 @@ vale pegar emprestado.
 ```
 
 ```
-ana@lab:~/rag$ python li_window.py "How much is express delivery?"
+ana@vm:~/rag$ python li_window.py "How much is express delivery?"
 374 sentences indexed
 matched: Express delivery is not free at any order value.
 window:  --- id: shipping-and-delivery title: Shipping and delivery audience: public owner: operations updated: 2026-03-18 version: 6 status: current --- # Shipping and delivery Everything about how an order reaches you: the options at checkout, what they cost, how long they take, and what happens when a parcel goes missing. ## Delivery options and costs | option | time | cost | | --- | --- | --- | | standard | three to five working days | 4.90, free on orders over 40 | | express | next working day if ordered before 2 pm | 9.90 | | pickup point | three to five working days | 2.90, free on orders over 40 | | international | seven to fifteen working days | from 14.00, shown at checkout | The threshold of 40 is the value of the books in the order after any discount, with tax included and gift wrapping excluded. Express delivery is not free at any order value. Express orders placed after 2 pm, or on a Saturday, Sunday or public holiday, leave the warehouse on the next working day and arrive the working day after that. ## When an order leaves the warehouse Books in stock leave the warehouse within one working day. A book shown as Dispatched in 3 to 5 days is ordered from the publisher, and the whole order waits for it unless you choose Send what is ready at checkout.
@@ -67,7 +67,7 @@ Aqui uma janela pode levar o fim de um assunto para o começo de outro.
 ```
 
 ```
-ana@lab:~/rag$ python li_merge.py "On how many devices can I read my e-books?"
+ana@vm:~/rag$ python li_merge.py "On how many devices can I read my e-books?"
 146 nodes, 109 of them leaves
 leaves: 6 returned, 434 words
 merged: 1 returned, 497 words

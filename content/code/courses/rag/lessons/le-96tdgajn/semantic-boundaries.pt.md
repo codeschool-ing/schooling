@@ -1,6 +1,6 @@
 ---
 title: Cortando onde o significado muda
-version: 1
+version: 2
 ---
 
 Títulos são onde um autor disse que o assunto muda. O **corte semântico** tenta achar onde o assunto
@@ -27,8 +27,21 @@ transcrições e outros textos sem títulos.
 
 ## O que ele achou no regulamento de devoluções
 
+```schooling-example
+{
+  "language": "python",
+  "file": "boundaries_semantic.py",
+  "parts": [
+    {
+      "code": "from chunking import load, semantic\n\nmeta, body = load()[\"returns-policy\"]\nfor i, chunk in enumerate(semantic(body), 1):\n    print(f\"{i:2} {len(chunk.split()):4} words  {' '.join(chunk.split()[:9])} ...\")",
+      "note": "Todo pedaço que o `semantic` faz da política de devolução, com o tamanho e as primeiras nove palavras."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python boundaries_semantic.py
+
+```
+ana@vm:~/rag$ python boundaries_semantic.py
  1   31 words  This policy applies to every order placed on marginalia.example ...
  2   84 words  It covers printed books, gifts and items sold by ...
  3   66 words  A book is in the condition you received it ...

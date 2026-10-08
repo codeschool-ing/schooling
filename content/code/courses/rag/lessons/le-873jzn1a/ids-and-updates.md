@@ -1,6 +1,6 @@
 ---
 title: Ids that make re-indexing cheap
-version: 1
+version: 2
 ---
 
 Documents change one paragraph at a time. A pipeline that re-embeds the whole corpus whenever anything
@@ -32,7 +32,7 @@ SHA-256 hash of the chunk's path and text. Same text, same id; one word differen
 ## Running it twice
 
 ```
-ana@lab:~/rag$ python ingest.py
+ana@vm:~/rag$ python ingest.py
 chunks: 137  embedded: 0  removed: 0  kept: 137
 ```
 
@@ -46,8 +46,8 @@ Suppose finance shortens the refund time. The policy's sentence about it is edit
 copy of the corpus:
 
 ```
-ana@lab:~/rag$ sed -i "s/We refund within three working days/We refund within two working days/" data/docs/returns-policy.md
-ana@lab:~/rag$ python ingest.py
+ana@vm:~/rag$ sed -i "s/We refund within three working days/We refund within two working days/" data/docs/returns-policy.md
+ana@vm:~/rag$ python ingest.py
 chunks: 137  embedded: 1  removed: 1  kept: 136
 ```
 

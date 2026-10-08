@@ -1,6 +1,6 @@
 ---
 title: Estreitar nunca alarga
-version: 1
+version: 2
 ---
 
 Nem todo filtro é uma permissão. Um vendedor pode querer buscar só no contrato dele, um desenvolvedor
@@ -8,10 +8,22 @@ só na referência da API, um cliente só na ajuda sobre e-books. São **escopos
 uma caixa de busca com uma lista de seções é uma função perfeitamente boa. A regra para combiná-los com
 permissões é uma linha do `access.search`: a escolha do leitor é cruzada com o que o papel permite.
 
+```schooling-example
+{
+  "language": "python",
+  "file": "narrow.py",
+  "parts": [
+    {
+      "code": "import sys\n\nimport access\n\nrole, only, question = sys.argv[1], sys.argv[2].split(\",\"), sys.argv[3]\nfound = access.search(access.connect(), role, question, only=only)\nprint(f\"{role}, asking for {only}: {[p for _, p, _, _, _ in found] or 'nothing'}\")",
+      "note": "Um papel pedindo só alguns públicos: o filtro pode deixar a lista mais curta e nunca mais longa."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python narrow.py customer finance "How many refunds can I get before my account is flagged?"
+```
+ana@vm:~/rag$ python narrow.py customer finance "How many refunds can I get before my account is flagged?"
 customer, asking for ['finance']: nothing
-ana@lab:~/rag$ python narrow.py seller sellers "How long do I have to dispatch an order?"
+ana@vm:~/rag$ python narrow.py seller sellers "How long do I have to dispatch an order?"
 seller, asking for ['sellers']: ['Marketplace seller agreement > 3. Dispatch', 'Marketplace seller agreement > 5. Returns', 'Marketplace seller agreement > 4. Payouts']
 ```
 

@@ -1,6 +1,6 @@
 ---
 title: How many to keep, and when to keep none
-version: 1
+version: 2
 ---
 
 Every search in this course has returned three chunks. Three is a choice, and so is returning
@@ -21,26 +21,39 @@ chunks are needed and some are noise.
 ## A score below which nothing is returned
 
 The search always returns k chunks, even for a question the documents cannot answer. Lesson 1 saw
-three weak sections come back for *Can I place an order by phone?*, and only extract-1's own threshold
-kept it from answering. A pipeline that relies on the generator to notice is relying on the component
+three weak sections come back for *Can I place an order by phone?*, and the model, given them, invented
+a rule about phone orders. A pipeline that relies on the generator to notice is relying on the component
 least able to. The search can check first.
 
 `scores.py` prints the best score each of the 30 test questions gets, sorted, with the four that have
 no answer in the documents marked:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "scores.py",
+  "parts": [
+    {
+      "code": "import json\n\nfrom search import vector\n\nfor line in open(\"data/eval.jsonl\"):\n    q = json.loads(line)\n    best = vector(q[\"question\"], 1)[0][3]\n    print(f\"{best:.3f}  {'answerable  ' if q['facts'] else 'unanswerable'}  {q['question']}\")",
+      "note": "The best score the vector search gives each of the thirty questions, and whether the question has an answer in the documents."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python scores.py | sort -r
+
+```
+ana@vm:~/rag$ python scores.py | sort -r
 0.902  answerable    When can an audiobook be refunded?
 0.836  answerable    How many days do I have to return a printed book?
 0.835  answerable    How long is a gift card valid?
 0.806  answerable    Who pays for the return postage?
-0.780  answerable    On how many devices can I read my e-books?
+0.779  answerable    On how many devices can I read my e-books?
 0.772  answerable    How long does a pickup point keep my parcel?
 0.765  answerable    What commission does Marginalia take from a marketplace seller?
 0.758  answerable    How long after my return arrives will I get the refund?
 0.754  answerable    My e-book was downloaded yesterday, can I still get my money back?
-0.746  answerable    Can express orders go to a post office box?
-0.732  answerable    What does error E-4102 mean in the affiliate API?
+0.745  answerable    Can express orders go to a post office box?
+0.731  answerable    What does error E-4102 mean in the affiliate API?
 0.726  answerable    What commission do affiliates earn on e-books?
 0.692  answerable    How long is the statutory right of withdrawal?
 0.690  answerable    Will my e-books open on a Kindle?
@@ -50,11 +63,11 @@ ana@lab:~/rag$ python scores.py | sort -r
 0.646  answerable    Can I return a signed copy?
 0.639  answerable    How often are sellers paid?
 0.637  answerable    Above what order value is standard delivery free?
-0.624  answerable    When is a standard parcel considered lost?
+0.623  answerable    When is a standard parcel considered lost?
 0.592  answerable    Do you store my IP address?
 0.583  answerable    When is the contract of sale formed?
 0.565  answerable    What must I check before changing a customer's order?
-0.543  answerable    What is the most a support agent can refund without approval?
+0.542  answerable    What is the most a support agent can refund without approval?
 0.476  unanswerable  Can I place an order by phone?
 0.445  answerable    Can I pay in instalments?
 0.391  unanswerable  Do you have a shop in Porto Alegre where I can pick up books?

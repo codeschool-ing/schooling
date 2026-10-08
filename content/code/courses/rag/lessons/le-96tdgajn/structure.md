@@ -1,6 +1,6 @@
 ---
 title: Following the document's structure
-version: 1
+version: 2
 ---
 
 A document written by a person already says where its topics begin and end. Headings mark sections,
@@ -30,8 +30,21 @@ chunk until the next paragraph would take it over the size limit:
 }
 ```
 
+```schooling-example
+{
+  "language": "python",
+  "file": "structure.py",
+  "parts": [
+    {
+      "code": "from chunking import load, structured\n\nmeta, body = load()[\"returns-policy\"]\nchunks = structured(body, 120)\nprint(len(chunks), \"chunks\")\nfor path, text in chunks[:6]:\n    print(f\"{len(text.split()):4} words  {path}\")\nprint()\nprint(chunks[5][1])",
+      "note": "The returns policy cut by its structure, with up to 120 words a chunk: how many chunks, the size and heading path of the first six, and the whole text of the sixth."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python structure.py
+
+```
+ana@vm:~/rag$ python structure.py
 12 chunks
  120 words  Returns and refunds policy > The return window
   27 words  Returns and refunds policy > The return window

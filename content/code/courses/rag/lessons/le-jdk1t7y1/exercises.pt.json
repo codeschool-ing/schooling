@@ -1,7 +1,7 @@
 {
   "ex-d8cvcmrw": {
     "prompt": "No rag.py, de onde vem o vetor da pergunta?",
-    "hint": "Não de uma cópia local do modelo.",
+    "hint": "O mesmo SDK, outro modelo.",
     "choices": [
       {
         "text": "A resposta do modelo de chat",
@@ -12,12 +12,12 @@
         "why": "O pgvector guarda e compara vetores; não gera embedding."
       },
       {
-        "text": "Um MiniLM local carregado pelo programa",
-        "why": "Esse era o search.py; o rag.py pergunta ao provedor."
+        "text": "Uma cópia dos vetores do índice guardada no programa",
+        "why": "A pergunta é nova; o vetor dela tem de ser feito para ela."
       },
       {
-        "text": "O endpoint de embeddings do provedor",
-        "why": "Certo: o mesmo SDK serve os dois modelos."
+        "text": "O endpoint de embeddings do Ollama, do all-minilm",
+        "why": "Certo: o mesmo SDK e o mesmo servidor servem os dois modelos."
       }
     ]
   },
@@ -34,8 +34,8 @@
         "why": "Ele já chama dois."
       },
       {
-        "text": "O reordenador do laboratório deu empate",
-        "why": "Certo: um passo entra quando uma medição o pede."
+        "text": "O reordenador da aula 6 não pôs nenhum identificador em primeiro",
+        "why": "Certo: um passo entra quando uma medição o pede, e esta pediu contra."
       },
       {
         "text": "A reordenação quebraria as citações",
@@ -66,46 +66,46 @@
     ]
   },
   "ex-wj1dpc2q": {
-    "prompt": "O que a citação de um bloco de texto leva na resposta da Anthropic?",
-    "hint": "Leia a linha impressa.",
+    "prompt": "O que o Ollama respondeu quando o documents.py pediu citações de documento?",
+    "hint": "A primeira execução.",
     "choices": [
       {
-        "text": "O documento, o título e um intervalo de caracteres",
-        "why": "Certo: char_location."
+        "text": "Um erro 400 que nomeia o campo citations",
+        "why": "Certo: a API Messages dele não tem citações de documento, e ele diz isso."
       },
       {
-        "text": "Uma nota de confiança",
-        "why": "Nenhuma nota é devolvida."
+        "text": "Uma resposta com intervalos de caracteres",
+        "why": "É o que a API da própria Anthropic devolve; o Ollama recusou."
       },
       {
-        "text": "Um número que o leitor tem de procurar no prompt numerado",
-        "why": "Essa é a abordagem do Chat Completions."
+        "text": "Uma resposta com números [n] no texto",
+        "why": "Esse foi o rag_claude.py, que manda texto numerado."
       },
       {
-        "text": "O embedding da frase citada",
-        "why": "Citações não levam vetores."
+        "text": "Uma resposta que ignorou os documentos",
+        "why": "Essa foi a segunda execução, sem o campo citations."
       }
     ]
   },
   "ex-rzrmdn54": {
-    "prompt": "Por que a requisição da Anthropic usou 187 tokens de entrada contra 314 pelo rag.py?",
-    "hint": "Quem pede as citações?",
+    "prompt": "Sem o campo citations, a requisição com blocos document foi aceita e leu 42 tokens ao todo. O que isso diz?",
+    "hint": "Quanto medem três fontes?",
     "choices": [
       {
-        "text": "A Anthropic conta tokens com outra codificação",
-        "why": "O labgen conta os dois do mesmo jeito."
+        "text": "O Ollama descartou as fontes sem avisar",
+        "why": "Certo: 42 tokens são a mensagem de sistema e a pergunta, e a resposta não sabia nada da Marginalia."
       },
       {
-        "text": "Usou-se streaming",
-        "why": "Nenhuma das duas usou streaming."
+        "text": "Os documentos estavam em cache e não custaram nada",
+        "why": "Um token em cache continua contado, como cache_read_input_tokens."
       },
       {
-        "text": "A API já pede as citações por conta própria",
-        "why": "Certo: a instrução de citar por número some."
+        "text": "O modelo resumiu os documentos antes",
+        "why": "Os tokens de entrada contam o que foi lido; três fontes são centenas."
       },
       {
-        "text": "Menos fontes foram recuperadas",
-        "why": "O mesmo retrieve() rodou."
+        "text": "A codificação da Anthropic é dez vezes mais densa",
+        "why": "As mesmas fontes como texto puro deram 336."
       }
     ]
   },
@@ -193,46 +193,46 @@
     ]
   },
   "ex-z1wwknw8": {
-    "prompt": "Com duas recusas injetadas, por que o rag.py ainda respondeu?",
-    "hint": "max_retries=3.",
+    "prompt": "O fragile.py dá ao cliente um segundo. O que o SDK fez quando o pedido de chat demorou mais?",
+    "hint": "max_retries=2.",
     "choices": [
       {
-        "text": "A busca rodou sem vetor",
-        "why": "Sem vetor, sem busca."
+        "text": "Levantou APITimeoutError na hora",
+        "why": "Ele tentou de novo antes: o log mostra duas novas tentativas."
       },
       {
-        "text": "O rag.py capturou o erro e usou um vetor em cache",
-        "why": "Não há cache no rag.py."
+        "text": "Esperou a resposta pelo tempo que fosse",
+        "why": "O tempo limite é de um segundo por tentativa."
       },
       {
-        "text": "O SDK tentou de novo dentro do orçamento",
-        "why": "Certo: recusada duas vezes, deu certo na terceira tentativa."
+        "text": "Tentou de novo duas vezes com uma espera crescente, e então levantou APITimeoutError",
+        "why": "Certo: três tentativas ao todo, cada uma começando a geração de novo."
       },
       {
-        "text": "O labgen ignorou as falhas injetadas no chat",
-        "why": "As falhas caíram na chamada de embedding."
+        "text": "Tentou de novo o pedido de embedding",
+        "why": "O embedding respondeu 200 OK dentro do segundo."
       }
     ]
   },
   "ex-dhtkkq1h": {
-    "prompt": "Com cinco recusas e max_retries=2, por que o endpoint de chat nunca foi chamado?",
-    "hint": "O que falhou primeiro?",
+    "prompt": "Por que um tempo limite curto demais é pior que uma falha?",
+    "hint": "O que cada nova tentativa recomeça?",
     "choices": [
       {
-        "text": "O fragile.py só gera embedding",
-        "why": "Ele chama rag.ask, que faz as duas coisas."
+        "text": "Ele esconde o erro do log",
+        "why": "O OPENAI_LOG mostrou cada nova tentativa."
       },
       {
-        "text": "O labgen recusa chats durante um limite de taxa",
-        "why": "Nem chegou lá."
+        "text": "Cada nova tentativa recomeça a geração, para uma resposta que ninguém recebe",
+        "why": "Certo: o equivalente a três gerações da máquina, e o cliente continua esperando."
       },
       {
-        "text": "O piso recusou a pergunta",
-        "why": "Não havia nota para comparar."
+        "text": "O SDK desliga as novas tentativas depois de um tempo esgotado",
+        "why": "Ele tentou de novo duas vezes."
       },
       {
-        "text": "A chamada de embedding desistiu antes",
-        "why": "Certo: sem vetor, nada com que buscar."
+        "text": "O piso recusa a pergunta",
+        "why": "A busca deu certo; o piso foi superado."
       }
     ]
   },
@@ -308,24 +308,24 @@
     ]
   },
   "ex-v947hjp5": {
-    "prompt": "O budget.py contou 358 tokens com as três fontes, e o provedor informa 314 tokens de prompt para a mesma pergunta pelo rag.py. O que a aula conclui?",
+    "prompt": "O budget.py conta com o cl100k_base do tiktoken, e o Ollama informa a própria contagem, que inclui o modelo de texto que ele põe em volta de cada mensagem. O que a aula conclui?",
     "hint": "Perto o bastante para quê?",
     "choices": [
       {
-        "text": "O provedor cobra a mais",
-        "why": "A contagem do provedor foi menor."
+        "text": "O Ollama conta a mais",
+        "why": "Ele conta com o tokenizador do próprio llama3.2, que é a contagem que enche a janela."
       },
       {
         "text": "A contagem local está errada e não deve ser usada",
-        "why": "Ela é próxima o bastante para orçar."
+        "why": "Ela é perto o bastante para orçar."
       },
       {
-        "text": "Tokens não podem ser contados antes de mandar",
+        "text": "Não dá para contar tokens antes de mandar",
         "why": "O budget.py fez exatamente isso."
       },
       {
         "text": "Orçar com margem, nunca até o último token",
-        "why": "Certo: os acréscimos diferem entre a contagem local e a do provedor."
+        "why": "Certo: a contagem de um tokenizador é uma estimativa da de outro."
       }
     ]
   },
@@ -465,8 +465,8 @@
     "hint": "Confira cada um contra uma captura.",
     "choices": [
       {
-        "text": "Citações da Anthropic com intervalos de caracteres",
-        "why": "Sim: caracteres 0-62."
+        "text": "Blocos document descartados sem erro",
+        "why": "Sim: 42 tokens lidos, e uma resposta sobre vales-presente em geral."
       },
       {
         "text": "Um orçamento de 250 mantendo uma fonte de três",
@@ -474,15 +474,15 @@
       },
       {
         "text": "O primeiro token de uma resposta transmitida chegando em menos de 100 ms",
-        "why": "Nenhum tempo foi citado."
+        "why": "Não: nenhum tempo foi citado."
       },
       {
-        "text": "Duas requisições de embedding recusadas absorvidas pelo SDK",
-        "why": "Sim."
+        "text": "Um pedido de chat tentado de novo duas vezes depois de um tempo esgotado",
+        "why": "Sim: o log do fragile.py."
       },
       {
-        "text": "Um modelo Claude real escrevendo as próprias frases",
-        "why": "Não: as respostas são do extract-1."
+        "text": "Citações da Anthropic com intervalos de caracteres",
+        "why": "Não: o Ollama recusou a requisição, e a API da própria Anthropic não foi rodada."
       }
     ]
   }

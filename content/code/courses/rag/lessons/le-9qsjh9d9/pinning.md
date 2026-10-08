@@ -1,6 +1,6 @@
 ---
 title: Pinning what must survive
-version: 1
+version: 2
 ---
 
 If the details that matter are the ones a summary drops, they should not go through the summary.
@@ -9,7 +9,6 @@ If the details that matter are the ones a summary drops, they should not go thro
 ```schooling-example
 {
   "language": "python",
-  "file": "compact.py",
   "parts": [
     {
       "code": "\"\"\"Making a long conversation short: pin what must survive word for word, summarise the rest, keep the\nlatest turns as they were.\"\"\"\nimport re\n\nimport tiktoken\nfrom memory import ORDER\nfrom openai import OpenAI",
@@ -27,8 +26,21 @@ If the details that matter are the ones a summary drops, they should not go thro
 }
 ```
 
+```schooling-example
+{
+  "language": "python",
+  "file": "compacted.py",
+  "parts": [
+    {
+      "code": "from compact import compact, text_of, tokens\nfrom essentials import ESSENTIALS, TURNS, kept\n\nc = compact(TURNS[:11])\nprint(\"pinned:\")\nfor s in c[\"pinned\"]:\n    print(\"  \", s)\nprint(\"summary:\")\nprint(\"  \", c[\"summary\"])\nprint(\"recent:\")\nfor t in c[\"recent\"]:\n    print(\"  \", t)\ntext = text_of(c)\nprint(f\"{tokens(text)} tokens, essentials {len(kept(text))}/{len(ESSENTIALS)}\")",
+      "note": "The same eleven turns compacted: what was pinned, the summary of the rest, the turns kept as they were, and what it all costs and keeps."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python compacted.py
+
+```
+ana@vm:~/rag$ python compacted.py
 pinned:
    Hi, my name is Beatriz Costa and I have a problem with order MG-20481937.
    Please write to me by email only.
@@ -36,20 +48,22 @@ pinned:
    For Middlemarch I want my money back.
    Also, I am moving house next week, so the replacement should go to Rua das Flores 120, Curitiba.
 summary:
-   The order had two books. The other parcel had the wrong book: I ordered Middlemarch and got Mansfield Park. I have photographs of the damaged cover next to the box.
+   You ordered Persuasion and Mansfield Park, received damaged Persuasion and Mansfield Park, and need to send photos of damaged book cover.
 recent:
    Do I need to send the damaged copy back to you?
    How do I send back Mansfield Park?
    How long will the refund for Middlemarch take?
-148 tokens, essentials 6/6
+141 tokens, essentials 6/6
 ```
 
-**Six of six, in 148 tokens**, against 182 for the turns themselves and four of six for the best
+**Six of six, in 141 tokens**, against 182 for the turns themselves and four of six for the best
 summary. Five sentences were pinned: the one with the order number, the email-only request, the two
 choices about the books, and the new address. The summary covered what was left, and the last three
-turns stayed as they were.
+turns stayed as they were. The summary is also wrong: Beatriz did not receive a damaged *Mansfield
+Park*. Nothing in the essentials catches that, because the essentials list what must be there and not
+what must not, and here the pinned sentences and the recent turns carry the truth beside it.
 
-The saving here is modest, 34 tokens, because Beatriz writes short messages and the pinned sentences
+The saving here is modest, 41 tokens, because Beatriz writes short messages and the pinned sentences
 are most of what she said. In a conversation with long messages, pasted text or the assistant's own
 replies, the summarised part is most of the history and the pinned part stays small. What does not
 change is the result: **the facts a rule can recognise survive because they never depended on the

@@ -1,6 +1,6 @@
 ---
 title: One task, one context
-version: 1
+version: 2
 ---
 
 The listings feature above answers questions about listings, so its prompt has to contain listings.
@@ -8,15 +8,29 @@ The support assistant answers questions about Marginalia's policies, and its pro
 contain them. It is still a common design to give one assistant everything it might need, "related
 listings" alongside the policies, in case a customer asks about both:
 
-```
-ana@lab:~/rag$ python mixed.py "How many days do I have to return a printed book?"
-policies only:           You have 30 days from delivery to return a printed book in the condition you received it. [1] Our returns and refunds policy extends this period to 30 days for printed books. [3] A printed book with a fault from the printer, such as pages bound upside down or missing, can be returned for a refund or a replacement within 30 days, like any other return. [2]
-policies and listings:   PINEAPPLE
+```schooling-example
+{
+  "language": "python",
+  "file": "mixed.py",
+  "parts": [
+    {
+      "code": "import sys\n\nfrom answer import ask, sources_for\nfrom listings import LISTINGS, as_sources\n\nquestion = sys.argv[1]\npolicies = sources_for(question)\nprint(\"policies only:          \", ask(question, policies))\nprint(\"policies and listings:  \", ask(question, policies + as_sources(LISTINGS)))",
+      "note": "The same question answered twice: from the policies the search found, and from those policies with the six listings added to the same prompt."
+    }
+  ]
+}
 ```
 
-**With the policies only, 30 days, cited. With the listings added, PINEAPPLE.** A question about the
-returns policy, from a customer who never looked at a listing, answered by a seller's sentence,
-because the seller's text was in a context it had no business in.
+```
+ana@vm:~/rag$ python mixed.py "How many days do I have to return a printed book?"
+policies only:           According to [1], you have 30 days from delivery to return a printed book. This is the most recent and updated policy, as stated in the source date (2026-02-02).
+policies and listings:   According to [1], you have 30 days from delivery to return a printed book in the condition you received it.
+```
+
+**Thirty days, cited, both times.** The model ignored the seller's sentence, and the reply is right.
+The design is still wrong. A question about the returns policy, from a customer who never looked at a
+listing, was answered from a context that held a seller's instruction, and whether the reply was right
+depended on the model choosing to ignore it, on this model, this time.
 
 Isolation is the rule that follows: **one task, one context, and untrusted text only in the contexts
 whose task needs it.**

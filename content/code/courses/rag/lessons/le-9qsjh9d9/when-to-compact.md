@@ -1,10 +1,10 @@
 ---
 title: When to compact
-version: 1
+version: 2
 ---
 
 Lesson 13 measured what a conversation costs when every turn is sent again: Beatriz's prompt grew from
-98 tokens at her first message to 725 at her eleventh, and the twelve turns cost 4,609 tokens of
+119 tokens at her first message to 1,235 at her eleventh, and the twelve turns cost 8,070 tokens of
 prompt. That conversation is short. A support chat that goes on for forty messages, an agent working
 through a task with long tool outputs, a tutoring session that lasts an hour: each reaches the window,
 and long before it reaches the budget lesson 12 set.

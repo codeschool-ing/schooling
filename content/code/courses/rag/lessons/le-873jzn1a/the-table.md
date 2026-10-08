@@ -1,6 +1,6 @@
 ---
 title: The table
-version: 1
+version: 2
 ---
 
 The vectors go into PostgreSQL with pgvector, in the `rag` database, the same engine
@@ -28,7 +28,7 @@ lesson 14 are `WHERE` clauses.
 ## Every column has a reader
 
 ```
-ana@lab:~/rag$ psql -c "\d chunks"
+ana@vm:~/rag$ psql -c "\d chunks"
                    Table "public.chunks"
    Column    |    Type     | Collation | Nullable | Default 
 -------------+-------------+-----------+----------+---------
@@ -70,7 +70,7 @@ without them.
 ## What is in it
 
 ```
-ana@lab:~/rag$ psql -c "SELECT doc_id, count(*) AS chunks, sum(tokens) AS tokens FROM chunks GROUP BY doc_id ORDER BY doc_id"
+ana@vm:~/rag$ psql -c "SELECT doc_id, count(*) AS chunks, sum(tokens) AS tokens FROM chunks GROUP BY doc_id ORDER BY doc_id"
          doc_id          | chunks | tokens 
 -------------------------+--------+--------
  affiliate-api           |     10 |    706
@@ -87,7 +87,8 @@ ana@lab:~/rag$ psql -c "SELECT doc_id, count(*) AS chunks, sum(tokens) AS tokens
  terms-of-sale           |     14 |    674
  warehouse-runbook       |      7 |    417
 (13 rows)
-ana@lab:~/rag$ psql -c "SELECT id, path, status, audience FROM chunks WHERE doc_id = 'returns-policy' ORDER BY position LIMIT 4"
+
+ana@vm:~/rag$ psql -c "SELECT id, path, status, audience FROM chunks WHERE doc_id = 'returns-policy' ORDER BY position LIMIT 4"
              id              |                        path                        | status  | audience 
 -----------------------------+----------------------------------------------------+---------+----------
  returns-policy:fbe325d9ffef | Returns and refunds policy > The return window     | current | public

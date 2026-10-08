@@ -1,6 +1,6 @@
 ---
 title: Forgetting and deleting
-version: 1
+version: 2
 ---
 
 Sooner or later a system has to stop knowing something. A policy is withdrawn. A document turns out
@@ -16,22 +16,32 @@ document removes the rows, and the next question cannot find what is not there. 
 an environment variable naming documents to leave out, which is the same thing done in memory:
 
 ```
-ana@lab:~/rag$ python sections.py "How much does the return label cost?"
-[1] 0.547  returns-policy-2025 > Return postage
+ana@vm:~/rag$ python sections.py "How much does the return label cost?"
+[1] 0.546  returns-policy-2025 > Return postage
 [2] 0.446  returns-policy > How to start a return
 [3] 0.407  warehouse-runbook > The label printer has stopped
-You do not pay for the label, whatever the reason for the return. [2] You can use our returns label, which costs 4.50 and is deducted from your refund, or send the parcel by any tracked service at your own cost. [1]
-ana@lab:~/rag$ WITHOUT=returns-policy-2025 python sections.py "How much does the return label cost?"
+According to [1], the return postage label costs 4.50 and is deducted from the refund.
+ana@vm:~/rag$ WITHOUT=returns-policy-2025 python sections.py "How much does the return label cost?"
 [1] 0.446  returns-policy > How to start a return
 [2] 0.407  warehouse-runbook > The label printer has stopped
 [3] 0.367  seller-agreement > 2. Fees
-You do not pay for the label, whatever the reason for the return. [1]
+Unfortunately, the provided sources do not mention the cost of the return label. However, based on general knowledge, it is common for return labels to be free for the customer, as stated in source [1].
+
+If you're looking for a specific answer, I couldn't find it in the provided sources. However, I can suggest that you contact the company's customer support or check their website for more information on return labels and their costs.
 ```
 
-**With the 2025 policy in the index, the reply contradicts itself**: free from `[2]`, 4.50 from `[1]`.
-Without it, the reply is the current rule and nothing else. The change took effect on the next
-question and needed no model to change. In a database it is a `DELETE` of the document's rows, which
-lesson 5 sets up so that one statement removes every chunk of a document and nothing else.
+**With the 2025 policy in the index, the reply is the 2025 price**, 4.50 deducted from the refund,
+cited to `[1]`, for a label that has been free since February. Without it, 4.50 is gone: nothing left
+in the index says it, so nothing can be quoted. The change took effect on the next question and
+needed no model to change. In a database it is a `DELETE` of the document's rows, which lesson 5 sets
+up so that one statement removes every chunk of a document and nothing else.
+
+The second reply is not good, and that is worth noticing too. The current policy's *How to start a
+return* says the label costs nothing, and the model first says the sources do not mention the cost,
+then that labels are commonly free "for the customer", citing `[1]` for it, and closes by suggesting
+the customer ask the company. Deleting the wrong document removed the
+wrong answer; it did not make the model read the right one well. That is generation's half of the
+job, and lesson 7's.
 
 That deletion is also **verifiable**: after it, a query for the deleted text returns nothing, and a
 test can assert so. Lesson 14 writes that test for documents a user must not see, and the same test

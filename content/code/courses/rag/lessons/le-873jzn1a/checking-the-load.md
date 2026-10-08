@@ -1,6 +1,6 @@
 ---
 title: Checking what was loaded
-version: 1
+version: 2
 ---
 
 An indexing run that finishes without an error has proved that it finished. It has not proved that the
@@ -24,7 +24,7 @@ So the run ends with a check that **fails loudly**:
       "note": "Four structural checks: every document present, every vector of the right size, one model for all of them, and no chunk bigger than the prompt budget assumes. Each failure is collected rather than raised, so one run reports all of them."
     },
     {
-      "code": "    # A question whose answer is known: the chunk holding it must come first.\n    q = OpenAI().embeddings.create(model=\"lab-minilm\", input=[\"How long is a gift card valid?\"]).data[0].embedding\n    top = conn.execute(\"SELECT path FROM chunks ORDER BY embedding <=> %s::vector LIMIT 1\", (q,)).fetchone()[0]\n    if \"Validity\" not in top:\n        failures.append(f\"the gift card question found {top!r}\")",
+      "code": "    # A question whose answer is known: the chunk holding it must come first.\n    q = OpenAI().embeddings.create(model=\"all-minilm\", input=[\"How long is a gift card valid?\"]).data[0].embedding\n    top = conn.execute(\"SELECT path FROM chunks ORDER BY embedding <=> %s::vector LIMIT 1\", (q,)).fetchone()[0]\n    if \"Validity\" not in top:\n        failures.append(f\"the gift card question found {top!r}\")",
       "note": "A known answer: the gift card question must find the *Validity* section first. It goes through the provider, the operator and the index, the same path a real question takes."
     },
     {
@@ -46,7 +46,7 @@ It exercises the whole path, the model, the vectors, the operator and the index,
 Run after the first load, it passes:
 
 ```
-ana@lab:~/rag$ python check_index.py; echo "exit $?"
+ana@vm:~/rag$ python check_index.py; echo "exit $?"
 ok: 13 documents, every check passed
 exit 0
 ```
@@ -54,7 +54,7 @@ exit 0
 Run at the end of this lesson, after the 2025 policy was deleted, it fails:
 
 ```
-ana@lab:~/rag$ python check_index.py; echo "exit $?"
+ana@vm:~/rag$ python check_index.py; echo "exit $?"
 12 documents in the index, expected 13
 exit 1
 ```

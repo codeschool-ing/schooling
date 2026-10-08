@@ -1,6 +1,6 @@
 ---
 title: Buscar pequeno, devolver grande
-version: 1
+version: 2
 ---
 
 A tabela da seção anterior mostrou a tensão numa linha: pedaços pequenos são precisos para buscar e
@@ -18,7 +18,7 @@ diferentes, vão para o prompt:
   "file": "small_to_big.py",
   "parts": [
     {
-      "code": "import json\n\nimport tiktoken\nfrom chunking import load, sections, sentences\nfrom minilm import embed\n\nenc = tiktoken.get_encoding(\"cl100k_base\")\nquestions = [q for q in map(json.loads, open(\"data/eval.jsonl\")) if q[\"facts\"]]\nnorm = lambda t: \" \".join(t.split())",
+      "code": "import json\n\nimport tiktoken\nfrom chunking import load, sections, sentences\nfrom vectors import embed\n\nenc = tiktoken.get_encoding(\"cl100k_base\")\nquestions = [q for q in map(json.loads, open(\"data/eval.jsonl\")) if q[\"facts\"]]\nnorm = lambda t: \" \".join(t.split())",
       "note": "As 26 perguntas com resposta do conjunto de teste, e a codificação que conta os tokens do prompt."
     },
     {
@@ -34,7 +34,7 @@ diferentes, vão para o prompt:
 ```
 
 ```
-ana@lab:~/rag$ python small_to_big.py
+ana@vm:~/rag$ python small_to_big.py
 sentences indexed: 319, sections returned: 3 per question
 found: 24/26  tokens: 272
 ```

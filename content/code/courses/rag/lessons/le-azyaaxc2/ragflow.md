@@ -1,6 +1,6 @@
 ---
 title: RAGFlow, a pipeline you deploy
-version: 1
+version: 2
 ---
 
 The three libraries so far are code a team imports. **RAGFlow is an application a team runs.** It
@@ -10,7 +10,8 @@ API for programs, and the storage behind both. This course does not run it, and 
 of the lesson. Its README in October 2026 recommends starting with 4 CPU cores, 16 GB of memory
 and 50 GB of disk, with Docker. The stack it starts includes a search engine (Elasticsearch, or
 InfiniFlow's own Infinity), MySQL, MinIO for files, and a message queue and a cache beside them.
-That is more machine than this lab, and more machinery than a team adds without deciding to.
+That is twice the memory of the virtual machine lesson 1 recommends, and more machinery than a team
+adds without deciding to.
 
 What follows is what the project says it does, and what each claim means against the decisions
 this course has made by hand. Everything here moves faster than the rest of the course; check it
