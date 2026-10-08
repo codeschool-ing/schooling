@@ -1,6 +1,6 @@
 ---
 title: Um cache exato
-version: 1
+version: 2
 ---
 
 Um cache exato guarda cada resposta sob uma chave e a serve de novo quando a mesma chave volta. Todo o
@@ -44,13 +44,13 @@ A chave tem três partes, e cada uma fecha um buraco que uma aula anterior achou
   como a seção depois da próxima mostra, toda resposta feita sobre eles tem de deixar de ser servida.
 
 ```
-ana@lab:~/rag$ python exact.py
+ana@vm:~/rag$ python exact.py
 index version 0acfdfa0d064
-38 keys, 462 hits of 500 (92%), 35 model calls, 156581 tokens not spent
+38 keys, 462 hits of 500 (92%), 35 model calls, 170175 tokens not spent
 ```
 
 **462 de 500 perguntas foram acertos, e a semana precisou de 35 chamadas ao modelo em vez de 486**, com
-156.581 tokens não gastos. Neste registro o cache exato faz quase todo o trabalho, pelo motivo que a
+170.175 tokens não gastos. Neste registro o cache exato faz quase todo o trabalho, pelo motivo que a
 seção anterior deu: o registro se repete muito mais que um real. Num registro real a taxa de acerto é
 menor e o desenho é o mesmo.
 

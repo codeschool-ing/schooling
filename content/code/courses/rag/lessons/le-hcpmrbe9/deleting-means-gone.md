@@ -1,6 +1,6 @@
 ---
 title: Deleting means gone
-version: 1
+version: 2
 ---
 
 Lesson 2 listed deletion that works among the things internal knowledge asks of a pipeline: when a
@@ -10,13 +10,26 @@ change too, the most complete one, to nobody, and it deserves the same kind of p
 table, and how many of the agent's five nearest chunks for a question only the runbook answers come
 from it.
 
+```schooling-example
+{
+  "language": "python",
+  "file": "deleted.py",
+  "parts": [
+    {
+      "code": "import access\nfrom search import conn\n\nQUESTION = \"What is a SEV-2 incident?\"\nchunks = conn.execute(\"SELECT count(*) FROM chunks WHERE doc_id = 'warehouse-runbook'\").fetchone()[0]\nfound = [r[1] for r in access.search(access.connect(), \"agent\", QUESTION, 5)]\nfrom_it = [p for p in found if p.startswith(\"Warehouse on-call runbook\")]\nprint(f\"chunks of warehouse-runbook in the table: {chunks}\")\nprint(f\"of the agent's 5 nearest for {QUESTION!r}, from the runbook: {len(from_it)}\")",
+      "note": "How many chunks of the warehouse runbook the table holds, and how many of an agent's five nearest results for a runbook question come from it."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python deleted.py
+
+```
+ana@vm:~/rag$ python deleted.py
 chunks of warehouse-runbook in the table: 7
 of the agent's 5 nearest for 'What is a SEV-2 incident?', from the runbook: 4
-ana@lab:~/rag$ rm data/docs/warehouse-runbook.md && python ingest.py
+ana@vm:~/rag$ rm data/docs/warehouse-runbook.md && python ingest.py
 chunks: 130  embedded: 0  removed: 7  kept: 130
-ana@lab:~/rag$ python deleted.py
+ana@vm:~/rag$ python deleted.py
 chunks of warehouse-runbook in the table: 0
 of the agent's 5 nearest for 'What is a SEV-2 incident?', from the runbook: 0
 ```

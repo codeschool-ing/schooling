@@ -1,6 +1,6 @@
 ---
 title: Esquecer
-version: 1
+version: 2
 ---
 
 Tudo na tabela de memória foi digitado por um cliente num chat de atendimento, e clientes digitam
@@ -11,11 +11,23 @@ aviso de privacidade do acervo promete.
 
 A tabela torna os dois direitos baratos, porque toda linha nomeia a conta:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "remembered.py",
+  "parts": [
+    {
+      "code": "import sys\n\nfrom search import conn\n\nfor turn, text in conn.execute(\"SELECT turn, text FROM memories WHERE account = %s ORDER BY turn\",\n                               (sys.argv[1],)):\n    print(f\"{turn:2}  {text}\")",
+      "note": "Todo turno que a tabela guarda para uma conta, em ordem."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ psql -Atc "SELECT account, count(*) FROM memories GROUP BY account ORDER BY account"
+```
+ana@vm:~/rag$ psql -Atc "SELECT account, count(*) FROM memories GROUP BY account ORDER BY account"
 A-1001|12
 A-1002|4
-ana@lab:~/rag$ python remembered.py A-1002
+ana@vm:~/rag$ python remembered.py A-1002
  1  Hello, this is Rafael Lima. My order MG-31770254 has not arrived.
  2  It was sent by standard delivery and the tracking has not changed for twelve working days.
  3  I would prefer a refund rather than waiting for a new parcel.
@@ -28,7 +40,6 @@ um auditor sem interpretar nada. E quando ele pede para ser esquecido:
 ```schooling-example
 {
   "language": "python",
-  "file": "memory.py",
   "parts": [
     {
       "code": "def forget(account):\n    return conn.execute(\"DELETE FROM memories WHERE account = %s\", (account,)).rowcount",
@@ -39,9 +50,9 @@ um auditor sem interpretar nada. E quando ele pede para ser esquecido:
 ```
 
 ```
-ana@lab:~/rag$ python -c "import memory; print(memory.forget(\"A-1002\"), \"rows deleted\")"
+ana@vm:~/rag$ python -c "import memory; print(memory.forget(\"A-1002\"), \"rows deleted\")"
 4 rows deleted
-ana@lab:~/rag$ psql -Atc "SELECT account, count(*) FROM memories GROUP BY account ORDER BY account"
+ana@vm:~/rag$ psql -Atc "SELECT account, count(*) FROM memories GROUP BY account ORDER BY account"
 A-1001|12
 ```
 

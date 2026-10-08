@@ -1,6 +1,6 @@
 ---
 title: The prompt
-version: 1
+version: 2
 ---
 
 Lesson 1 built the smallest possible prompt: numbered sections and the question, under a one-line
@@ -34,8 +34,21 @@ the code around it:
 `show_prompt.py` prints exactly what `ask` sends for one question, the system message and then the
 user message:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "show_prompt.py",
+  "parts": [
+    {
+      "code": "import sys\n\nfrom answer import SYSTEM, prompt, sources_for\n\nquestion = sys.argv[1]\nprint(SYSTEM)\nprint(\"---\")\nprint(prompt(question, sources_for(question)))",
+      "note": "The system message, a line, and the user message, built by the same functions `ask` uses."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python show_prompt.py "How long after my return arrives will I get the refund?"
+
+```
+ana@vm:~/rag$ python show_prompt.py "How long after my return arrives will I get the refund?"
 You answer questions from Marginalia's customers, using only the numbered sources.
 Cite every sentence with the number of the source it comes from, like [1].
 If the sources do not answer the question, reply: "I could not find that in our documents."
@@ -82,11 +95,12 @@ thing the model reads before it writes is what it was asked. Lesson 12 comes bac
 tests: answers come from the sources, every sentence is cited, silence is admitted, and conflicts are
 resolved by date. An instruction nobody checks is a wish.
 
-## What extract-1 does with it
+## What llama3.2:3b does with it
 
-Of the four instructions, extract-1 follows two by construction: it only ever copies sentences from
-the sources, and it cites each one. It follows the third only partly, because its refusal comes from
-its own similarity threshold, though it does use the refusal sentence the prompt gives it. It ignores
-the fourth entirely; it has no notion of a date. A real model reads all four and follows them most of
-the time, which is a different statement from always. The rest of this lesson is about the code that
+The runs in this lesson show all four instructions working and none of them working every time. The
+model answers from the sources, and adds sentences of its own that no source says. It cites, and it
+puts the number wherever it likes, *According to [1], ...* far more often than the *like [1]* at the
+end that it was shown. It refuses with the exact sentence when it is given nothing. And handed two
+policies with different dates, it chose the newer and said so. A larger model follows them more
+often, which is a different statement from always. The rest of this lesson is about the code that
 checks.

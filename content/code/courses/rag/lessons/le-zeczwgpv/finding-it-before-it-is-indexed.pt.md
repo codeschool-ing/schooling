@@ -1,6 +1,6 @@
 ---
 title: Achando antes de indexar
-version: 1
+version: 2
 ---
 
 Um anúncio é escrito uma vez e lido por toda pergunta que o recupera. Isso faz da ingestão o lugar mais
@@ -24,7 +24,7 @@ barato para olhar para ele, uma vez, antes de chegar a qualquer prompt:
 ```
 
 ```
-ana@lab:~/rag$ python scan.py
+ana@vm:~/rag$ python scan.py
 L01  ok
 L02  ok
 L03  ok

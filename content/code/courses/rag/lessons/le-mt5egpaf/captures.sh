@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # The terminal sessions quoted in lesson 1 of rag, as a script that produces
-# them.
+# them. THE AUTHOR'S, NOT THE STUDENT'S: the lesson shows every command and
+# every program, and nothing here names a file the student does not have.
 #
 # THE SCRIPT IS THE SOURCE AND ITS OUTPUT IS NOT COMMITTED. Every transcript in
 # this lesson was copied from running it.
@@ -8,146 +9,78 @@
 #   sudo bash ../../lab.sh up        # once
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
-# The programs are the ones the sections show, written into ~/rag by `put`.
-# Nothing is staged. Every reply in this lesson comes from extract-1, the
-# lab's stand-in generator, which is not a language model: its rules are at
-# the top of lab/labgen.py, and its closed-book answers are sentences the
-# course wrote in lab/memory.json. Every count of tokens and every similarity
-# was computed on this machine.
+# Every program and data script comes out of the lesson's own sections through
+# lab/shown.py, so what ran is what the page shows. Every reply is
+# llama3.2:3b (Ollama tag a80c4f17acd5) at temperature 0, served by Ollama
+# 0.40.0 on four processors and no graphics card; every vector is all-minilm
+# (1b226e2802db).
 #
-# Recorded on Ubuntu 24.04, Python 3.11, PostgreSQL 16 with pgvector 0.6.0,
-# TZ=America/Sao_Paulo, on 2026-10-06.
-set -uo pipefail
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
-LAB_SH=${LAB_SH:-../../lab.sh}
-lab() { bash "$LAB_SH" "$@"; }
-# on 'command': what ana typed in ~/rag, and what it printed.
-on() { printf 'ana@lab:~/rag$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
-# put PATH: a file ana wrote in ~/rag, from stdin. Its content is shown in the lesson.
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-block() { printf '##### %s\n' "$1"; }
-# One capture at a time: every run rebuilds ~/rag from nothing.
-exec 9>/var/tmp/rag-capture.lock; flock 9
-lab reset >/dev/null
-put ask.py <<'EOF_FILE'
-import sys
-from openai import OpenAI
+# Recorded on Ubuntu 24.04, Python 3.12, PostgreSQL 16 with pgvector 0.6.0,
+# TZ=America/Sao_Paulo, on 2026-10-07.
+. "$(dirname "${LAB_SH:-../../lab.sh}")/lab/capture.sh"
+lab reset le-mt5egpaf >/dev/null
+L=le-mt5egpaf
 
-client = OpenAI()
-reply = client.chat.completions.create(
-    model="extract-1",
-    messages=[{"role": "user", "content": sys.argv[1]}],
-)
-print(reply.choices[0].message.content)
-EOF_FILE
-put with_doc.py <<'EOF_FILE'
-import sys
-from openai import OpenAI
+# The database steps of the setup, from a machine that has none of them yet.
+su postgres -c 'psql -qXc "DROP DATABASE IF EXISTS rag"' >/dev/null; su postgres -c 'dropuser --if-exists ana'
+block no-role
+on 'createdb rag'
+su postgres -c 'createuser --superuser ana' 2>/dev/null
+on 'createdb rag'
+on 'psql -d rag -c "CREATE EXTENSION vector"'
 
-client = OpenAI()
-policy = open("data/docs/returns-policy.md").read()
-reply = client.chat.completions.create(
-    model="extract-1",
-    messages=[
-        {"role": "system", "content": "Answer the question from the source below."},
-        {"role": "user", "content": f"[1] returns-policy\n{policy}\nQuestion: {sys.argv[1]}"},
-    ],
-)
-print(reply.choices[0].message.content)
-print("prompt tokens:", reply.usage.prompt_tokens)
-EOF_FILE
-put count.py <<'EOF_FILE'
-import glob
-import tiktoken
+use vectors.py
+block checks
+on 'ollama list'
+on 'ollama run --nowordwrap llama3.2:3b "In one sentence, what are you?"'
+on 'python -c "from vectors import embed; v = embed(\"hello\"); print(v.shape, round(float((v ** 2).sum()), 3))"'
+on 'psql -c "SELECT extversion FROM pg_extension WHERE extname = '"'"'vector'"'"'"'
+lab exec 'ollama run --nowordwrap llama3.2:1b "In one sentence, what are you?"' >/dev/null 2>&1
+block memory
+on 'ollama ps'
 
-enc = tiktoken.get_encoding("cl100k_base")
-total = 0
-for path in sorted(glob.glob("data/docs/*.md")):
-    n = len(enc.encode(open(path).read()))
-    total += n
-    print(f"{n:6,}  {path}")
-print(f"{total:6,}  in all")
-EOF_FILE
-put everything.py <<'EOF_FILE'
-import glob
-from openai import BadRequestError, OpenAI
+block no-model
+on 'python -c "from openai import OpenAI; OpenAI().chat.completions.create(model=\"llama3.2\", messages=[{\"role\": \"user\", \"content\": \"hi\"}])" 2>&1 | tail -1'
+block no-venv
+bare 'python3 -c "import openai"'
+pkill -f 'ollama serve'; sleep 1
+block no-server
+on 'ollama list'
+on 'python -c "from vectors import embed; embed(\"hello\")" 2>&1 | tail -1'
+(setsid nohup ollama serve >/var/log/ollama.log 2>&1 </dev/null 9>&- &); sleep 3
 
-client = OpenAI()
-sources = ""
-for i, path in enumerate(sorted(glob.glob("data/docs/*.md")), 1):
-    sources += f"[{i}] {path}\n{open(path).read()}\n"
-try:
-    reply = client.chat.completions.create(
-        model="extract-1",
-        messages=[{"role": "user", "content": sources + "Question: How much is express delivery?"}],
-    )
-    print(reply.choices[0].message.content)
-except BadRequestError as e:
-    print("refused:", e.body["message"])
-EOF_FILE
-put tiny_rag.py <<'EOF_FILE'
-import glob
-import re
-import sys
+python3 "$COURSE/lab/shown.py" "$COURSE" docs.sh $L > /home/ana/rag/docs.sh
+python3 "$COURSE/lab/shown.py" "$COURSE" questions.sh $L > /home/ana/rag/questions.sh
+block docs
+on 'sh docs.sh'
+on 'ls data/docs'
+on 'wc -w data/docs/*.md | tail -1'
+on 'grep -c "14 days" data/docs/*.md | grep -v ":0"'
+block front
+on 'head -12 data/docs/returns-policy.md'
+block questions
+on 'sh questions.sh'
+on 'wc -l data/*.jsonl'
+on 'head -1 data/eval.jsonl'
 
-from minilm import embed
-from openai import OpenAI
-
-# 1. Cut every document into its sections, at each "## " heading.
-sections = []
-for path in sorted(glob.glob("data/docs/*.md")):
-    doc = path.split("/")[-1][:-3]
-    for part in re.split(r"\n(?=## )", open(path).read())[1:]:
-        heading = part.splitlines()[0][3:]
-        sections.append((f"{doc} > {heading}", part))
-
-# 2. Embed them once, and the question every time.
-vectors = embed([text for _, text in sections])
-question = sys.argv[1]
-scores = vectors @ embed(question)[0]
-
-# 3. Keep the best three.
-best = scores.argsort()[::-1][:3]
-for rank, i in enumerate(best, 1):
-    print(f"[{rank}] {scores[i]:.3f}  {sections[i][0]}")
-
-# 4. Put only those in the prompt, numbered, and ask.
-sources = "".join(f"[{rank}] {sections[i][0]}\n{sections[i][1]}\n" for rank, i in enumerate(best, 1))
-reply = OpenAI().chat.completions.create(
-    model="extract-1",
-    messages=[
-        {"role": "system", "content": "Answer from the sources and cite them by number."},
-        {"role": "user", "content": f"{sources}Question: {question}"},
-    ],
-)
-print(reply.choices[0].message.content)
-EOF_FILE
-
+use ask.py with_doc.py count.py everything.py tiny_rag.py
 block closed-book
 on 'python ask.py "How many days do I have to return a printed book?"'
 on 'python ask.py "What is the phone number for customer service?"'
 on 'python ask.py "Can I get my money back for an e-book I downloaded yesterday?"'
-block memory
-on 'grep -c "\"q\"" /opt/rag/share/memory.json'
-block tour
-on 'ls data'
-on 'wc -l data/*.jsonl'
-on 'ls data/docs'
-on 'head -12 data/docs/returns-policy.md'
-on 'wc -w data/docs/*.md | tail -1'
-on 'grep -c "14 days" data/docs/*.md | grep -v ":0"'
-on 'du -sh /opt/emb /opt/rag 2>/dev/null'
-on 'curl -s localhost:8600/; echo'
 block with-doc
 on 'python with_doc.py "How many days do I have to return a printed book?"'
 on 'python with_doc.py "What is the phone number for customer service?"'
 block count
 on 'python count.py'
+block everything
 on 'python everything.py'
 block tiny
-on 'cat data/docs/*.md | grep -c "^## "'
 on 'python tiny_rag.py "How many days do I have to return a printed book?"'
 on 'python tiny_rag.py "How much is express delivery?"'
-block fails
+block sections
+on 'cat data/docs/*.md | grep -c "^## "'
+block postage
 on 'python tiny_rag.py "Who pays for the return postage?"'
+block phone
 on 'python tiny_rag.py "Can I place an order by phone?"'

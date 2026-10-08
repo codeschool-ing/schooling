@@ -1,6 +1,6 @@
 ---
 title: Overlap
-version: 1
+version: 2
 ---
 
 If the trouble with fixed-size chunks is that a cut lands inside a sentence, one fix is to make sure
@@ -9,7 +9,7 @@ ended, so that the text around every boundary appears twice, once at the end of 
 the start of the next.
 
 ```
-ana@lab:~/rag$ python boundaries.py 60 15
+ana@vm:~/rag$ python boundaries.py 60 15
 20 chunks of 60 words, 15 overlapping
 chunk 3 starts: has no writing, no broken spine and no missing ...
 chunk 3 ends:   ... an email explaining why. The statutory right of withdrawal
@@ -49,7 +49,7 @@ three chunks retrieved. Two lines of it belong here:
 | strategy | chunks | found |
 | --- | --- | --- |
 | fixed, 60 words | 116 | 19 of 26 |
-| fixed, 60 words, 15 overlapping | 150 | 23 of 26 |
+| fixed, 60 words, 15 overlapping | 150 | 22 of 26 |
 
 **Overlap found four more answers out of 26**, for 34 more chunks across the corpus. It is the
 cheapest improvement fixed-size chunking can get, and the usual advice is an overlap of 10 to 20 per

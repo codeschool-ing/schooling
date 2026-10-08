@@ -1,14 +1,26 @@
 ---
 title: Medindo o divisor do Haystack
-version: 1
+version: 2
 ---
 
 A medição da aula 10, as mesmas 26 perguntas com resposta, os mesmos três trechos recuperados, a
 mesma contagem de tokens, agora para o divisor do Haystack em três configurações: o padrão dele, as
 60 palavras da aula 4, e um parágrafo por pedaço.
 
+```schooling-example
+{
+  "language": "python",
+  "file": "hs_measure.py",
+  "parts": [
+    {
+      "code": "import json\n\nimport tiktoken\nfrom haystack.components.embedders import OpenAIDocumentEmbedder, OpenAITextEmbedder\nfrom haystack.components.preprocessors import DocumentSplitter\nfrom haystack.components.retrievers.in_memory import InMemoryEmbeddingRetriever\nfrom haystack.document_stores.in_memory import InMemoryDocumentStore\nfrom hs_docs import docs\nfrom search import vector\n\nenc = tiktoken.get_encoding(\"cl100k_base\")\nquestions = [q for q in map(json.loads, open(\"data/eval.jsonl\")) if q[\"facts\"]]\nnorm = lambda t: \" \".join(t.replace(\"|\", \" \").split())\nquery = OpenAITextEmbedder(model=\"all-minilm\")\n\n\ndef measure(name, retrieve):\n    found, tokens = 0, 0\n    for q in questions:\n        top = retrieve(q[\"question\"])\n        found += any(f in norm(t) for t in top for f in q[\"facts\"])\n        tokens += len(enc.encode(\"\\n\".join(top)))\n    print(f\"{name:30} {found:3}/{len(questions)} {tokens / len(questions):7.0f}\")\n\n\nprint(f\"{'pipeline':30} {'found':>6} {'tokens':>7}\")\nfor name, splitter in ((\"Haystack, defaults\", DocumentSplitter()),\n                       (\"Haystack, 60 words\", DocumentSplitter(split_by=\"word\", split_length=60)),\n                       (\"Haystack, passages\", DocumentSplitter(split_by=\"passage\", split_length=1))):\n    store = InMemoryDocumentStore()\n    chunks = splitter.run(documents=docs)[\"documents\"]\n    store.write_documents(OpenAIDocumentEmbedder(model=\"all-minilm\", progress_bar=False).run(chunks)[\"documents\"])\n    retriever = InMemoryEmbeddingRetriever(store, top_k=3)\n    measure(name, lambda q: [d.content for d in retriever.run(query.run(q)[\"embedding\"])[\"documents\"]])\nmeasure(\"lesson 5's index\", lambda q: [r[2] for r in vector(q, 3)])",
+      "note": "Três divisores do Haystack medidos do jeito que a aula 4 mediu a divisão em pedaços, com o próprio índice da aula 5 no fim para comparar."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python hs_measure.py
+```
+ana@vm:~/rag$ python hs_measure.py
 pipeline                        found  tokens
 Haystack, defaults              25/26     717
 Haystack, 60 words              22/26     244

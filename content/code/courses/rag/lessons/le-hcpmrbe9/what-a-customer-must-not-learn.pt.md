@@ -1,6 +1,6 @@
 ---
 title: O que um cliente não pode saber
-version: 1
+version: 2
 ---
 
 O aviso do documento do financeiro era sobre atendentes, mas o caso mais forte para permissões é um
@@ -8,12 +8,12 @@ cliente. Uma regra de reembolso que existe para pegar abuso para de funcionar no
 pessoas que ela deve pegar conseguem lê-la:
 
 ```
-ana@lab:~/rag$ python roles.py "How many refunds can I get before my account is flagged?" customer finance
+ana@vm:~/rag$ python roles.py "How many refunds can I get before my account is flagged?" customer finance
 How many refunds can I get before my account is flagged?
 customer  nothing above the floor
           I could not find that in our documents.
-finance   Refund controls and chargebacks > Automatic holds (finance, 0.670)
-          A customer who has received more than three refunds in 90 days is flagged, and every further refund on that account goes to finance review regardless of the amount. [1]
+finance   Refund controls and chargebacks > Automatic holds (finance, 0.669)
+          According to [1], a customer can receive up to three refunds in 90 days before their account is flagged.
 ```
 
 A equipe financeira recebe a regra palavra por palavra, que é para isso que o documento existe: **mais

@@ -1,21 +1,21 @@
 ---
 title: O que a recuperação não conserta
-version: 1
+version: 2
 ---
 
 O RAG é vendido como a cura para um modelo que inventa coisas, e ele cura uma doença específica: o
 modelo não ter o texto. Todos os outros jeitos de errar sobrevivem a ele, e alguns pioram, porque agora
-a resposta errada chega com uma citação que a faz parecer conferida. As execuções desta própria aula já
-mostraram quatro deles.
+a resposta errada chega com uma citação que a faz parecer conferida. Quatro deles importam desde o
+primeiro dia, e as execuções desta própria aula mostram três.
 
 ## Um documento que não devia ter sido encontrado
 
 ```
-ana@lab:~/rag$ python tiny_rag.py "Who pays for the return postage?"
+ana@vm:~/rag$ python tiny_rag.py "Who pays for the return postage?"
 [1] 0.798  returns-policy-2025 > Return postage
 [2] 0.530  returns-policy > How to start a return
 [3] 0.502  shipping-and-delivery > Damage in transit
-Return postage is paid by the customer. [1]
+According to [1], the customer pays for the return postage.
 ```
 
 A pergunta é sobre as regras de hoje e a resposta é a de 2025: **o frete de devolução é grátis desde
@@ -30,36 +30,43 @@ ao lado de cada pedaço, e a aula 14 faz a busca respeitá-lo.
 
 ## Duas fontes que discordam
 
-A pergunta do prazo de devolução, na seção anterior, recebeu trinta dias de `[1]` e catorze dias de
-`[2]`, numa resposta só. **Um gerador que recebe duas fontes contraditórias pode citar as duas,
-escolher uma ao acaso, ou tirar uma média que nenhuma das duas diz.** O extract-1 cita as duas porque
-sua regra copia as frases mais parecidas, digam elas o que disserem. A aula 7 mostra como um prompt diz
-a um gerador qual fonte prevalece, e por que as datas têm de estar no prompt para isso funcionar.
+Para o prazo de devolução, o regulamento atual e o substituído foram os dois recuperados, por um fio de
+diferença, e o modelo tirou a resposta do atual. Para o frete de devolução o regulamento substituído
+ficou em primeiro e o modelo tirou a resposta dele. **Um gerador que recebe duas fontes que se
+contradizem pode citar uma, citar as duas, ou misturá-las em algo que nenhuma diz, e nenhuma daquelas
+duas escolhas foi uma decisão.** Nada no prompt dizia qual fonte vale, então nada podia decidir. A aula
+7 mostra como um prompt diz a um gerador qual fonte ganha, e por que as datas têm de estar no prompt
+para isso funcionar.
 
 ## A resposta estava lá, e a resposta gerada não a pegou
 
-A pergunta da expressa recuperou a seção com o preço e respondeu com uma frase sobre a expressa nunca
-ser grátis. **A recuperação acertou e a geração errou.** Com um modelo real o mecanismo é outro, e as
-chances também, mas a categoria é a mesma: o contexto tinha a resposta e o texto gerado não a usou. É a
-falha que as pessoas mais culpam na busca, e um teste que só confere a resposta final não consegue
-separar uma coisa da outra. A aula 8 mede recuperação e geração em separado exatamente por isso.
+A recuperação pode pôr na frente do modelo a seção com a resposta e a resposta gerada ainda assim
+citar a frase errada dela, ou responder uma pergunta um pouco ao lado da que foi feita. **A
+recuperação acertou e a geração falhou.** Isso não aconteceu nas execuções desta aula, e é comum o
+bastante para que um teste só da resposta final não baste: um teste assim culpa a busca pelo erro do
+redator, ou o contrário. A aula 8 mede recuperação e geração em separado exatamente por isso.
 
 ## Resposta nenhuma
 
 ```
-ana@lab:~/rag$ python tiny_rag.py "Can I place an order by phone?"
-[1] 0.453  shipping-and-delivery > Addresses
-[2] 0.453  terms-of-sale > 2. Placing an order
+ana@vm:~/rag$ python tiny_rag.py "Can I place an order by phone?"
+[1] 0.453  terms-of-sale > 2. Placing an order
+[2] 0.453  shipping-and-delivery > Addresses
 [3] 0.358  shipping-and-delivery > Pickup points
-The sources do not say.
+According to the provided sources, the answer is:
+
+No, you cannot place an order by phone. The sources do not mention phone orders as a valid method of placing an order.
+
+There is no explicit statement that prohibits phone orders, but the provided information focuses on online ordering through the website, and the process of placing an order is described in the context of online transactions.
 ```
 
-Os documentos da Marginalia nunca falam de pedido por telefone, então esta é a resposta certa. Mas
-repare que **a busca ainda devolveu três seções**: uma busca sempre devolve as três primeiras, prestem
-elas ou não, e aqui a melhor marcou 0,453. A recusa veio do limiar do próprio extract-1, não da
-recuperação. Um modelo real com essas três seções na frente poderia muito bem escrever alguma coisa
-sobre pedidos assim mesmo. A aula 6 dá à busca seu próprio jeito de dizer que não achou nada bom, e a
-aula 7 transforma "as fontes não dizem" numa instrução em vez de um acaso.
+Os documentos da Marginalia nunca falam de pedido por telefone, então a resposta certa é que eles não
+dizem. **A busca mesmo assim devolveu três seções**: uma busca sempre devolve as suas três melhores,
+sejam elas boas ou não, e aqui a melhor marcou 0,453. E o modelo, diante de três seções que não
+respondem a pergunta, respondeu mesmo assim. A resposta dele é uma regra, *you cannot place an order
+by phone*, que ninguém na Marginalia escreveu, e duas frases depois ele admite que nada proíbe isso. Um
+cliente lê a primeira. A aula 6 dá à busca um jeito próprio de dizer que não achou nada bom, e a aula
+7 transforma "as fontes não dizem" numa instrução contra a qual o modelo é testado.
 
 ## E o que ela não alcança
 

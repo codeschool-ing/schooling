@@ -1,21 +1,21 @@
 ---
 title: What retrieval does not fix
-version: 1
+version: 2
 ---
 
 RAG is sold as the cure for a model that makes things up, and it cures a particular disease: the
 model not having the text. Every other way of being wrong survives it, and some get worse, because
-now the wrong answer arrives with a citation that makes it look checked. This lesson's own runs have
-already shown four of them.
+now the wrong answer arrives with a citation that makes it look checked. Four of them matter from the
+first day, and this lesson's own runs show three.
 
 ## A document that should not have been found
 
 ```
-ana@lab:~/rag$ python tiny_rag.py "Who pays for the return postage?"
+ana@vm:~/rag$ python tiny_rag.py "Who pays for the return postage?"
 [1] 0.798  returns-policy-2025 > Return postage
 [2] 0.530  returns-policy > How to start a return
 [3] 0.502  shipping-and-delivery > Damage in transit
-Return postage is paid by the customer. [1]
+According to [1], the customer pays for the return postage.
 ```
 
 The question is about today's rules and the answer is 2025's: **return postage has been free since
@@ -30,37 +30,45 @@ every chunk, and lesson 14 makes the search respect it.
 
 ## Two sources that disagree
 
-The return-window question in the last section got thirty days from `[1]` and fourteen days from
-`[2]`, in one reply. **A generator handed two contradicting sources may quote both, choose one at
-random, or average them into something neither says.** extract-1 quotes both because its rule copies
-the most similar sentences, whatever they say. Lesson 7 shows how a prompt tells a generator which
-source wins, and why the dates have to be in the prompt for that to work.
+For the return window, the current policy and the replaced one were both retrieved, a hair apart, and
+the model took its answer from the current one. For return postage the replaced policy ranked first
+and the model took its answer from that. **A generator handed two contradicting sources may quote
+one, quote both, or blend them into something neither says, and neither of those two choices was a
+decision.** Nothing in the prompt said which source is current, so nothing could. Lesson 7 shows how
+a prompt tells a generator which source wins, and why the dates have to be in the prompt for that to
+work.
 
 ## The answer was there, and the reply missed it
 
-The express question retrieved the section with the price in it and replied with a sentence about
-express never being free. **Retrieval succeeded and generation failed.** With a real model the
-mechanism differs, and so do the odds, but the category is the same: the context held the answer and
-the reply did not use it. It is the failure people most often blame on the search, and a test that
-only checks the final answer cannot tell the two apart. Lesson 8 measures retrieval and generation
-separately for exactly this reason.
+The retrieval can put the section with the answer in front of the model and the reply can still
+quote the wrong sentence of it, or answer a question slightly beside the one asked. **Retrieval
+succeeded and generation failed.** It did not happen in this lesson's runs, and it is common enough
+that a test of the final answer alone is not enough: such a test blames the search for the writer's
+mistake, or the other way round. Lesson 8 measures retrieval and generation separately for exactly
+this reason.
 
 ## No answer at all
 
 ```
-ana@lab:~/rag$ python tiny_rag.py "Can I place an order by phone?"
-[1] 0.453  shipping-and-delivery > Addresses
-[2] 0.453  terms-of-sale > 2. Placing an order
+ana@vm:~/rag$ python tiny_rag.py "Can I place an order by phone?"
+[1] 0.453  terms-of-sale > 2. Placing an order
+[2] 0.453  shipping-and-delivery > Addresses
 [3] 0.358  shipping-and-delivery > Pickup points
-The sources do not say.
+According to the provided sources, the answer is:
+
+No, you cannot place an order by phone. The sources do not mention phone orders as a valid method of placing an order.
+
+There is no explicit statement that prohibits phone orders, but the provided information focuses on online ordering through the website, and the process of placing an order is described in the context of online transactions.
 ```
 
-Marginalia's documents never mention ordering by phone, so this is the right reply. But notice that
-**the search still returned three sections**: a search always returns its top three, whether or not
-any of them is any good, and here the best scored 0.453. The refusal came from extract-1's own
-threshold, not from the retrieval. A real model given those three sections might well have written
-something about orders anyway. Lesson 6 gives the search its own way to say it found nothing good,
-and lesson 7 makes "the sources do not say" an instruction instead of an accident.
+Marginalia's documents never mention ordering by phone, so the right reply is that they do not say.
+**The search still returned three sections**: a search always returns its top three, whether or not
+any of them is any good, and here the best scored 0.453. And the model, handed three sections that
+do not answer the question, answered it anyway. Its answer is a rule, *you cannot place an order by
+phone*, that nobody at Marginalia wrote, and two sentences later it admits that nothing prohibits
+it. A
+customer reads the first. Lesson 6 gives the search its own way to say it found nothing good, and
+lesson 7 makes "the sources do not say" an instruction the model is tested against.
 
 ## And what it cannot reach
 

@@ -1,6 +1,6 @@
 ---
 title: Checking the reply
-version: 1
+version: 2
 ---
 
 Whatever reached the model, the reply can be checked before anybody sees it, and lesson 7 already
@@ -25,15 +25,18 @@ shown:
 ```
 
 ```
-ana@lab:~/rag$ python checked.py "Which copy of Emma is for sale, and in what condition?"
-reply:   PINEAPPLE
-checks:  ['uncited']
+ana@vm:~/rag$ python checked.py "Which copy of Emma is for sale, and in what condition?"
+reply:   According to source [4], the copy of Emma for sale is in the condition of "acceptable" and has a loose front cover and some underlining in pencil in the first three chapters.
+checks:  ['unsupported (0.58)']
 shown:   I can't compare these listings right now. Each listing's page has the seller's full description.
 ```
 
-The model said PINEAPPLE; the check found one sentence with no citation; **the customer saw the safe
-message**. The injection succeeded against the model and failed against the feature, because the
-feature never shows text that cannot be traced to a listing.
+**The reply was right, and the customer saw the safe message instead.** The model joined the
+condition, which is in the listing's header line, to the description, and the sentence it wrote scores
+0.58 against the description's sentences, below the 0.75 the check calls close. The check cannot tell
+an attack from a paraphrase; it can only tell what is traceable to a listing from what is not. On an
+ordinary day that costs a correct answer now and then, and that cost is the price of the layer: on the
+day an injection makes the model say something new, the same rule keeps it from the customer.
 
 This layer is strong against injections that make the model say something new: an invented claim, an
 instruction to the customer, a link, a word. It is weaker against an injection that makes the model

@@ -1,6 +1,6 @@
 ---
 title: Medindo a recuperação
-version: 1
+version: 2
 ---
 
 A aula 7 separou três propriedades: a busca achou o trecho, cada frase vem da sua fonte, e a resposta
@@ -34,10 +34,10 @@ responde à pergunta. O `evaluate.py` mede as três para cada pergunta de uma pa
 Esta seção trata da primeira propriedade.
 
 ```
-ana@lab:~/rag$ python evaluate.py --split dev
+ana@vm:~/rag$ python evaluate.py --split dev
 dev: 20 questions, 18 answerable, floor 0.5, k 3
 retrieval  recall@1 13/18  recall@3 18/18  recall@5 18/18  MRR 0.86
-answers    correct 15/20  refused rightly 2/2  faithful 20/20
+answers    correct 15/20  refused rightly 2/2  faithful 9/20
 ```
 
 ## Revocação em k
@@ -48,8 +48,8 @@ aula 4 era a revocação em 3 com outro nome.
 
 Dois valores importam mais que o resto. **A revocação no k que o pipeline de fato usa**, aqui três, diz
 se o gerador chegou a receber a resposta: se não recebeu, nada adiante conserta. **A revocação em um**
-diz com que frequência a resposta vem primeiro, o que importa porque um modelo, e o extract-1 em
-especial, tende a usar o que lê primeiro, e porque a aula 12 vai querer menos fontes, não mais.
+diz com que frequência a resposta vem primeiro, o que importa porque um modelo tende a usar o
+que lê primeiro, e porque a aula 12 vai querer menos fontes, não mais.
 
 ## Posição recíproca média
 

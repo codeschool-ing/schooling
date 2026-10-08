@@ -1,6 +1,6 @@
 ---
 title: The filter goes inside the search
-version: 1
+version: 2
 ---
 
 `access.search` puts the role's audiences in the query's `WHERE`, so PostgreSQL ranks only the rows
@@ -9,10 +9,9 @@ the reader may see:
 ```schooling-example
 {
   "language": "python",
-  "file": "access.py",
   "parts": [
     {
-      "code": "def connect():\n    \"\"\"The assistant's own connection: a role that can only SELECT, and only what the policy lets through.\"\"\"\n    conn = psycopg.connect(user=\"assistant\", autocommit=True)\n    register_vector(conn)\n    return conn",
+      "code": "def connect():\n    \"\"\"The assistant's own connection: a role that can only SELECT, and only what the policy lets through.\"\"\"\n    conn = psycopg.connect(host=\"localhost\", user=\"assistant\", password=\"reads-only\", autocommit=True)\n    register_vector(conn)\n    return conn",
       "note": "The assistant connects as its own database role, `assistant`, which can read the table and nothing else."
     },
     {
@@ -26,8 +25,21 @@ the reader may see:
 The tempting alternative is to search as before and remove what the reader may not see afterwards. It
 is easy to add to a pipeline that already works, and it is wrong in two ways at once:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "after.py",
+  "parts": [
+    {
+      "code": "import sys\n\nimport access\nfrom vectors import embed\nfrom search import conn\n\nrole, question = sys.argv[1], sys.argv[2]\nq = embed(question)[0]\ntop = conn.execute(\"SELECT path, audience, 1 - (embedding <=> %s) FROM chunks WHERE status = 'current'\"\n                   \" ORDER BY embedding <=> %s LIMIT 3\", (q, q)).fetchall()\nprint(\"the three nearest, for anybody:\")\nfor path, audience, score in top:\n    print(f\"  {score:.3f}  {audience:8} {path}\")\nkept = [row for row in top if row[1] in access.audiences(role)]\nprint(f\"then dropped for {role}: {len(kept)} of 3 left\")",
+      "note": "The three nearest chunks for anybody, and what is left of them once the ones a role may not read are dropped afterwards."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python after.py agent "When does an order get held for manual fraud review?"
+
+```
+ana@vm:~/rag$ python after.py agent "When does an order get held for manual fraud review?"
 the three nearest, for anybody:
   0.644  finance  Refund controls and chargebacks > Automatic holds
   0.586  staff    Customer support handbook > Suspected fraud

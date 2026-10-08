@@ -1,6 +1,6 @@
 ---
 title: Streaming
-version: 1
+version: 2
 ---
 
 Uma resposta chega mais rápido do que parece se as primeiras palavras aparecem enquanto o resto ainda está
@@ -22,7 +22,7 @@ diferença entre uma caixa em branco por dois segundos e palavras aparecendo na 
       "note": "O prompt é montado exatamente como antes."
     },
     {
-      "code": "stream = client.chat.completions.create(\n    model=\"extract-1\", stream=True, stream_options={\"include_usage\": True},\n    messages=[{\"role\": \"system\", \"content\": SYSTEM},\n              {\"role\": \"user\", \"content\": f\"{numbered}\\n\\nQuestion: {question}\"}])",
+      "code": "stream = client.chat.completions.create(\n    model=\"llama3.2:3b\", temperature=0, stream=True, stream_options={\"include_usage\": True},\n    messages=[{\"role\": \"system\", \"content\": SYSTEM},\n              {\"role\": \"user\", \"content\": f\"{numbered}\\n\\nQuestion: {question}\"}])",
       "note": "O `stream=True` transforma a resposta num iterador de pedaços, e o `include_usage` pede as contagens de tokens num último pedaço só delas."
     },
     {
@@ -34,14 +34,15 @@ diferença entre uma caixa em branco por dois segundos e palavras aparecendo na 
 ```
 
 ```
-ana@lab:~/rag$ python stream.py "How long is a gift card valid?"
-A gift card is valid for two years from the day it was bought. [1] Gift cards are valid for two years from purchase and cannot be exchanged for cash. [2]
-37 pieces; usage: 314 in, 37 out
+ana@vm:~/rag$ python stream.py "How long is a gift card valid?"
+According to [1], a gift card is valid for two years from the day it was bought. This is also confirmed by [2], which states that gift cards are valid for two years from purchase.
+41 pieces; usage: 336 in, 42 out
 ```
 
-**A mesma resposta que sem streaming, entregue em 37 pedaços**, cada um com um token de texto, e o uso
-chegou com o último pedaço porque a requisição o pediu com `include_usage`. O labgen manda os pedaços com
-uma pequena pausa entre eles, como um modelo que os estivesse gerando.
+**A resposta chegou em 41 pedaços**, cada um com mais ou menos um token de texto, impressos à medida
+que o modelo os escrevia, e o uso chegou com o último pedaço porque a requisição o pediu com
+`include_usage`. Num processador sem placa de vídeo, a diferença é a experiência inteira: as primeiras
+palavras aparecem um ou dois segundos depois da busca, e o resto vem na velocidade da leitura.
 
 ## O que o streaming muda num pipeline de recuperação
 
@@ -52,8 +53,7 @@ primeira palavra lenta.
 
 **As citações chegam no fim, ou em pedaços.** No Chat Completions os marcadores `[1]` são texto comum e
 vêm junto com o resto; transformá-los em links tem de esperar cada um estar completo. Na API da
-Anthropic, as citações chegam como eventos `citations_delta` próprios, presos ao bloco a que pertencem, e o
-labgen os implementa do mesmo jeito.
+Anthropic, as citações chegam como eventos `citations_delta` próprios, presos ao bloco a que pertencem.
 
 **As verificações rodam depois.** A verificação de citação da aula 7 e qualquer recusa decidida depois da
 geração precisam da resposta inteira. Então uma resposta transmitida é mostrada à medida que chega e
@@ -64,7 +64,7 @@ modelo ser chamado.
 
 ## A linha de uso
 
-O streaming muda como o uso chega, não o que ele é: 314 tokens de entrada, 37 de saída, o mesmo que o
-registro na última seção desta aula guarda para a mesma pergunta sem streaming. A aula 17 soma esses dois
+O streaming muda como o uso chega, não o que ele é: 336 tokens de entrada e 42 de saída, que o registro
+na última seção desta aula guarda do mesmo jeito para uma resposta sem streaming. A aula 17 soma esses dois
 números em todas as consultas, e uma resposta transmitida cujo uso nunca foi lido é uma consulta que
 custou algo que ninguém contou, e por isso o programa o pede.

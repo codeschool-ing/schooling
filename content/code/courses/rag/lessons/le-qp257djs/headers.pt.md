@@ -1,6 +1,6 @@
 ---
 title: Cabeçalhos
-version: 1
+version: 2
 ---
 
 Cada fonte no prompt da aula 7 tem uma linha acima dela: o número, o caminho de títulos de onde veio e
@@ -8,8 +8,20 @@ a data em que o documento foi atualizado. O número torna a citação possível,
 citação onde procurar, e a data foi o que deixou a aula 7 preferir a mais nova de duas fontes que
 discordavam. Os três merecem o lugar. Eles também custam tokens, e ninguém tinha contado quantos:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "headers.py",
+  "parts": [
+    {
+      "code": "import json\n\nfrom context import header, pack, tokens\n\nquestions = [q for q in map(json.loads, open(\"data/eval.jsonl\"))]\nheads, texts = 0, 0\nfor q in questions:\n    for n, s in enumerate(pack(q[\"question\"], where=\"status = %s\", params=(\"current\",)), 1):\n        heads += tokens(header(n, s))\n        texts += tokens(s[\"text\"])\nprint(f\"headers {heads}, texts {texts}: headers are {heads / (heads + texts):.0%} of the sources' tokens\")",
+      "note": "Quanto dos tokens das fontes, no conjunto de teste, é gasto com os cabeçalhos delas."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python headers.py
+```
+ana@vm:~/rag$ python headers.py
 headers 1499, texts 2380: headers are 39% of the sources' tokens
 ```
 

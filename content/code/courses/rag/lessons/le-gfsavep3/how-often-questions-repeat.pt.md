@@ -1,13 +1,25 @@
 ---
 title: Com que frequência as perguntas se repetem
-version: 1
+version: 2
 ---
 
 A aula 9 chamou de prematuro um cache semântico acrescentado antes de medir as perguntas repetidas. Aqui
 está a medição:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "repeats.py",
+  "parts": [
+    {
+      "code": "import collections\nimport json\nimport re\n\nLOG = [json.loads(line) for line in open(\"data/querylog.jsonl\")]\nnorm = lambda t: re.sub(r\"[^a-z0-9 ]\", \"\", t.lower()).strip()\nprint(f\"{len(LOG)} questions, {len({q['text'] for q in LOG})} distinct as typed, \"\n      f\"{len({norm(q['text']) for q in LOG})} after lower-casing and dropping punctuation, \"\n      f\"{len({q['topic'] for q in LOG})} topics\")\nfor text, n in collections.Counter(q[\"text\"] for q in LOG).most_common(5):\n    print(f\"{n:4}  {text}\")",
+      "note": "Quantas das 500 perguntas são diferentes, como foram digitadas e depois da normalização mais leve, e as cinco mais feitas."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python repeats.py
+```
+ana@vm:~/rag$ python repeats.py
 500 questions, 40 distinct as typed, 38 after lower-casing and dropping punctuation, 12 topics
   41  how many days do I have to return a printed book?
   34  how long do I have to return a book

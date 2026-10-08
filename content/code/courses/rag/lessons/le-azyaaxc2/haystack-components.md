@@ -1,20 +1,33 @@
 ---
 title: Haystack's components, and ids made of content
-version: 1
+version: 2
 ---
 
 **Haystack**, from deepset, takes a stricter line than the two libraries of lesson 10. Everything
 is a **component**: a class with a `run` method whose inputs and outputs are declared with their
 types. A **pipeline** is a graph of named components, and every connection between two of them is
-checked when it is made. The lab pins `haystack-ai` 3.3.0.
+checked when it is made. Lesson 1's `requirements.txt` pins `haystack-ai` 3.3.0.
 
 ## A connection that does not fit
 
 Connecting the text embedder's output straight to the chat generator is nonsense, since a vector is
 not a conversation, and Haystack says so before anything runs:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "hs_wrong.py",
+  "parts": [
+    {
+      "code": "from haystack import Pipeline\nfrom haystack.components.embedders import OpenAITextEmbedder\nfrom haystack.components.generators.chat import OpenAIChatGenerator\n\np = Pipeline()\np.add_component(\"embed\", OpenAITextEmbedder(model=\"all-minilm\"))\np.add_component(\"generate\", OpenAIChatGenerator(model=\"llama3.2:3b\"))\ntry:\n    p.connect(\"embed.embedding\", \"generate.messages\")\nexcept Exception as e:\n    print(type(e).__name__ + \":\", \" \".join(str(e).split()))",
+      "note": "Two components whose sockets do not fit, the embedder's vector into the generator's messages, connected anyway to see who objects and when."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python hs_wrong.py
+
+```
+ana@vm:~/rag$ python hs_wrong.py
 PipelineConnectError: Cannot connect 'embed.embedding' with 'generate.messages': their declared input and output types do not match. 'embed': - embedding: list[float] 'generate': - messages: list[ChatMessage] | str (available)
 ```
 
@@ -25,9 +38,24 @@ breaks when a customer uses it.
 
 ## Indexing as a pipeline
 
-Indexing is a pipeline too: split, embed, write. The program loads the corpus, loads it again, and
-then changes one field of one document's metadata, the owner of the returns policy, and loads that
-document alone:
+Indexing is a pipeline too: split, embed, write. First the documents, read the way Haystack wants
+them by `hs_docs.py`:
+
+```schooling-example
+{
+  "language": "python",
+  "file": "hs_docs.py",
+  "parts": [
+    {
+      "code": "import glob\n\nfrom haystack import Document\n\n\ndef document(path):\n    \"\"\"The text after the front matter, with the front matter as metadata.\"\"\"\n    _, head, body = open(path).read().split(\"---\\n\", 2)\n    return Document(content=body, meta=dict(line.split(\": \", 1) for line in head.splitlines()))\n\n\ndocs = [document(p) for p in sorted(glob.glob(\"data/docs/*.md\"))]",
+      "note": "Every document as a Haystack `Document`: the text after the front matter as its content, and the front matter as its metadata. The programs of this lesson import `docs` from here."
+    }
+  ]
+}
+```
+
+Then the indexing program. It loads the corpus, loads it again, and then changes one field of one
+document's metadata, the owner of the returns policy, and loads that document alone:
 
 ```schooling-example
 {
@@ -39,7 +67,7 @@ document alone:
       "note": "A pipeline, three components and a store that lives in memory. `hs_docs.py` reads the front matter into metadata, as `lc_load.py` did in lesson 10."
     },
     {
-      "code": "store = InMemoryDocumentStore()\npolicy = DuplicatePolicy.OVERWRITE if \"--overwrite\" in sys.argv else DuplicatePolicy.NONE\nindexing = Pipeline()\nindexing.add_component(\"split\", DocumentSplitter(split_by=\"word\", split_length=60))\nindexing.add_component(\"embed\", OpenAIDocumentEmbedder(model=\"lab-minilm\", progress_bar=False))\nindexing.add_component(\"write\", DocumentWriter(store, policy=policy))\nindexing.connect(\"split\", \"embed\")\nindexing.connect(\"embed\", \"write\")",
+      "code": "store = InMemoryDocumentStore()\npolicy = DuplicatePolicy.OVERWRITE if \"--overwrite\" in sys.argv else DuplicatePolicy.NONE\nindexing = Pipeline()\nindexing.add_component(\"split\", DocumentSplitter(split_by=\"word\", split_length=60))\nindexing.add_component(\"embed\", OpenAIDocumentEmbedder(model=\"all-minilm\", progress_bar=False))\nindexing.add_component(\"write\", DocumentWriter(store, policy=policy))\nindexing.connect(\"split\", \"embed\")\nindexing.connect(\"embed\", \"write\")",
       "note": "Each component is added under a name and then connected by name. `connect` checks that what one sends is what the next accepts. `DuplicatePolicy.NONE` leaves the decision to the store, which for this store means refusing a duplicate."
     },
     {
@@ -55,11 +83,11 @@ document alone:
 ```
 
 The splitter is set to 60 words, lesson 4's size; its own default is 200 words with no overlap,
-which the section on measuring comes back to. The embedder sends text, as the provider expects,
+which the section on measuring comes back to. The embedder sends text, as Ollama expects,
 and reads the provider's address from `OPENAI_BASE_URL` like the `openai` SDK it is built on.
 
 ```
-ana@lab:~/rag$ python hs_index.py
+ana@vm:~/rag$ python hs_index.py
 written: 110
 PipelineRuntimeError: Error: ID '070820b895e5fb0107bb644c997975b17ee639273fdc05bbcd34657810edd9b8' already exists.
 written: 14
@@ -78,7 +106,7 @@ text did not change but whose owner did is a different id, so it is written besi
 instead of over it. The old 14 are still there, with the old owner.
 
 ```
-ana@lab:~/rag$ python hs_index.py --overwrite
+ana@vm:~/rag$ python hs_index.py --overwrite
 written: 110
 written: 110
 written: 14

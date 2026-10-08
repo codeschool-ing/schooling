@@ -1,6 +1,6 @@
 ---
 title: O filtro vai dentro da busca
-version: 1
+version: 2
 ---
 
 O `access.search` põe os públicos do papel no `WHERE` da consulta, então o PostgreSQL só ordena as
@@ -9,10 +9,9 @@ linhas que o leitor pode ver:
 ```schooling-example
 {
   "language": "python",
-  "file": "access.py",
   "parts": [
     {
-      "code": "def connect():\n    \"\"\"The assistant's own connection: a role that can only SELECT, and only what the policy lets through.\"\"\"\n    conn = psycopg.connect(user=\"assistant\", autocommit=True)\n    register_vector(conn)\n    return conn",
+      "code": "def connect():\n    \"\"\"The assistant's own connection: a role that can only SELECT, and only what the policy lets through.\"\"\"\n    conn = psycopg.connect(host=\"localhost\", user=\"assistant\", password=\"reads-only\", autocommit=True)\n    register_vector(conn)\n    return conn",
       "note": "O assistente se conecta com um papel próprio no banco, `assistant`, que pode ler a tabela e mais nada."
     },
     {
@@ -26,8 +25,20 @@ linhas que o leitor pode ver:
 A alternativa tentadora é buscar como antes e tirar depois o que o leitor não pode ver. É fácil de
 acrescentar a um pipeline que já funciona, e está errada de dois jeitos de uma vez:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "after.py",
+  "parts": [
+    {
+      "code": "import sys\n\nimport access\nfrom vectors import embed\nfrom search import conn\n\nrole, question = sys.argv[1], sys.argv[2]\nq = embed(question)[0]\ntop = conn.execute(\"SELECT path, audience, 1 - (embedding <=> %s) FROM chunks WHERE status = 'current'\"\n                   \" ORDER BY embedding <=> %s LIMIT 3\", (q, q)).fetchall()\nprint(\"the three nearest, for anybody:\")\nfor path, audience, score in top:\n    print(f\"  {score:.3f}  {audience:8} {path}\")\nkept = [row for row in top if row[1] in access.audiences(role)]\nprint(f\"then dropped for {role}: {len(kept)} of 3 left\")",
+      "note": "Os três pedaços mais próximos para qualquer pessoa, e o que sobra deles quando os que um papel não pode ler são descartados depois."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python after.py agent "When does an order get held for manual fraud review?"
+```
+ana@vm:~/rag$ python after.py agent "When does an order get held for manual fraud review?"
 the three nearest, for anybody:
   0.644  finance  Refund controls and chargebacks > Automatic holds
   0.586  staff    Customer support handbook > Suspected fraud

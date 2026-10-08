@@ -1,6 +1,6 @@
 ---
 title: Quando o fine-tuning vence
-version: 1
+version: 2
 ---
 
 As quatro últimas seções deixam o fine-tuning com cara de ferramenta errada, e para ensinar os fatos de
@@ -42,7 +42,7 @@ fine-tuning como outro qualquer.
 ## Quando não dá tempo de recuperar
 
 A recuperação acrescenta uma busca a cada requisição: um embedding da pergunta, uma consulta ao índice e
-um prompt mais longo para o modelo ler. Neste laboratório a busca é um embedding e um produto de
+um prompt mais longo para o modelo ler. Na máquina em que este curso foi gravado, a busca é um embedding e um produto de
 matrizes, e para a maioria dos usos o tempo dela não importa. Para um assistente de voz ou um
 autocompletar, em que a resposta inteira tem um orçamento de algumas centenas de milissegundos, um modelo
 que já conhece o pequeno e estável conjunto de fatos de que precisa pode ser o único projeto que cabe.

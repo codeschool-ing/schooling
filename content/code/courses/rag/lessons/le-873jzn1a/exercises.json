@@ -123,33 +123,33 @@
   },
   {
     "id": "ex-hvksd1ag",
-    "version": 1,
+    "version": 2,
     "section": "calling-the-provider",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "labembed refused the first request twice with 429. Why did ingest.py still embed all 137 chunks?",
-    "hint": "Who retried?",
+    "prompt": "Pointed at a port where nothing listens, ingest.py printed five \"Retrying request\" lines and then failed. Who wrote those lines, and why five?",
+    "hint": "Look at how the client is built.",
     "choices": [
       {
-        "text": "ingest.py catches 429 and sleeps for one second",
+        "text": "ingest.py, which catches every error and tries five times",
         "correct": false,
         "why": "ingest.py has no error handling of its own."
       },
       {
-        "text": "The refused batch was skipped and embedded later",
-        "correct": false,
-        "why": "Nothing was skipped; the same request succeeded on retry."
-      },
-      {
-        "text": "labgen cached the vectors from the earlier run",
-        "correct": false,
-        "why": "labgen passes embedding requests on; it caches nothing."
-      },
-      {
-        "text": "The SDK retried by itself, within max_retries",
+        "text": "The SDK, retrying by itself up to max_retries=5",
         "correct": true,
-        "why": "Right: three attempts, and the program never knew."
+        "why": "Right: six attempts in all, the waits roughly doubling, and a 429 from a provider goes through the same loop."
+      },
+      {
+        "text": "Ollama, which retried the request internally",
+        "correct": false,
+        "why": "Nothing was listening on that port; no Ollama saw the request."
+      },
+      {
+        "text": "PostgreSQL, retrying the transaction",
+        "correct": false,
+        "why": "The failure was in the embedding call, before anything was written."
       }
     ]
   },

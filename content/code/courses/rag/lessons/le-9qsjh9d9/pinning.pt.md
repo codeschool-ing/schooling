@@ -1,6 +1,6 @@
 ---
 title: Fixando o que precisa sobreviver
-version: 1
+version: 2
 ---
 
 Se os detalhes que importam são os que um resumo larga, eles não deveriam passar pelo resumo. **Fixar**
@@ -9,7 +9,6 @@ mantém certas frases palavra por palavra, e resume só o que sobra:
 ```schooling-example
 {
   "language": "python",
-  "file": "compact.py",
   "parts": [
     {
       "code": "\"\"\"Making a long conversation short: pin what must survive word for word, summarise the rest, keep the\nlatest turns as they were.\"\"\"\nimport re\n\nimport tiktoken\nfrom memory import ORDER\nfrom openai import OpenAI",
@@ -27,8 +26,20 @@ mantém certas frases palavra por palavra, e resume só o que sobra:
 }
 ```
 
+```schooling-example
+{
+  "language": "python",
+  "file": "compacted.py",
+  "parts": [
+    {
+      "code": "from compact import compact, text_of, tokens\nfrom essentials import ESSENTIALS, TURNS, kept\n\nc = compact(TURNS[:11])\nprint(\"pinned:\")\nfor s in c[\"pinned\"]:\n    print(\"  \", s)\nprint(\"summary:\")\nprint(\"  \", c[\"summary\"])\nprint(\"recent:\")\nfor t in c[\"recent\"]:\n    print(\"  \", t)\ntext = text_of(c)\nprint(f\"{tokens(text)} tokens, essentials {len(kept(text))}/{len(ESSENTIALS)}\")",
+      "note": "Os mesmos onze turnos compactados: o que foi fixado, o resumo do resto, os turnos mantidos como estavam, e o quanto tudo isso custa e mantém."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python compacted.py
+```
+ana@vm:~/rag$ python compacted.py
 pinned:
    Hi, my name is Beatriz Costa and I have a problem with order MG-20481937.
    Please write to me by email only.
@@ -36,19 +47,22 @@ pinned:
    For Middlemarch I want my money back.
    Also, I am moving house next week, so the replacement should go to Rua das Flores 120, Curitiba.
 summary:
-   The order had two books. The other parcel had the wrong book: I ordered Middlemarch and got Mansfield Park. I have photographs of the damaged cover next to the box.
+   You ordered Persuasion and Mansfield Park, received damaged Persuasion and Mansfield Park, and need to send photos of damaged book cover.
 recent:
    Do I need to send the damaged copy back to you?
    How do I send back Mansfield Park?
    How long will the refund for Middlemarch take?
-148 tokens, essentials 6/6
+141 tokens, essentials 6/6
 ```
 
-**Seis de seis, em 148 tokens**, contra 182 dos próprios turnos e quatro de seis do melhor resumo.
+**Seis de seis, em 141 tokens**, contra 182 dos próprios turnos e quatro de seis do melhor resumo.
 Cinco frases foram fixadas: a do número do pedido, o pedido de só e-mail, as duas escolhas sobre os
 livros e o endereço novo. O resumo cobriu o que sobrou, e os três últimos turnos ficaram como estavam.
+O resumo também está errado: a Beatriz não recebeu um *Mansfield Park* danificado. Nada nos essenciais
+pega isso, porque os essenciais listam o que precisa estar lá e não o que não pode estar, e aqui as
+frases fixadas e os turnos recentes levam a verdade ao lado dele.
 
-A economia aqui é modesta, 34 tokens, porque a Beatriz escreve mensagens curtas e as frases fixadas são
+A economia aqui é modesta, 41 tokens, porque a Beatriz escreve mensagens curtas e as frases fixadas são
 a maior parte do que ela disse. Numa conversa com mensagens longas, texto colado ou as respostas do
 próprio assistente, a parte resumida é a maior parte do histórico e a parte fixada fica pequena. O que
 não muda é o resultado: **os fatos que uma regra reconhece sobrevivem porque nunca dependeram do
