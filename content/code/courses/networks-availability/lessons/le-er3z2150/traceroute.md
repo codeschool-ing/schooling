@@ -42,8 +42,14 @@ hop followed by a fast destination measures the router's attention, not the path
 
 ## A silent hop
 
-For the next run the ISP router was told to drop every "time exceeded" it sends, and traceroute asked
-for one probe per hop with `-q 1`:
+For the next run the ISP router was told to drop every "time exceeded" it sends, on `isp`:
+
+```sh
+sudo nft add chain ip faults quiet '{ type filter hook output priority 0; }'
+sudo nft add rule ip faults quiet icmp type time-exceeded drop
+```
+
+And traceroute asked for one probe per hop with `-q 1`:
 
 ```
 ana@laptop:~$ traceroute -n -q 1 192.0.2.21
@@ -58,4 +64,4 @@ probe that reached the server went through the ISP router, so forwarding works; 
 the router's own answer. Carriers configure routers like this on purpose, to hide their internal
 addresses or to spare the processor. **What does mean trouble is a trace that goes silent and stays
 silent to the end**: then the probes are not getting further, and the last hop that answered is where to
-start asking.
+start asking. `sudo nft flush chain ip faults quiet` on `isp` lets the router answer again.

@@ -1,6 +1,6 @@
 ---
 title: Onde os doze bits acabam
-version: 1
+version: 2
 ---
 
 O modelo desta aula tem um limite duro, e ele é fácil de enunciar: **um arquivo tem um dono e um
@@ -14,11 +14,20 @@ diferentes.
 ## ACLs: nomes extras num arquivo
 
 Uma **lista de controle de acesso** deixa um arquivo carregar permissões para usuários e grupos
-nomeados, além das três linhas.
+nomeados, além das três linhas. O Ubuntu Server tem as ferramentas para elas no pacote `acl`; se
+o `getfacl` não existir, `sudo apt install acl` o traz. Um relatório que só o dono e o grupo podem
+ler:
+
+```sh
+mkdir -p ~/acl
+cd ~/acl
+printf 'the report\n' > report.txt
+chmod 640 report.txt
+```
 
 ```
 ana@vm:~/acl$ ls -l report.txt
--rw-r----- 1 ana ana 11 Sep 14 22:46 report.txt
+-rw-r----- 1 ana ana 11 Oct  7 11:28 report.txt
 ana@vm:~/acl$ getfacl report.txt
 # file: report.txt
 # owner: ana
@@ -26,6 +35,7 @@ ana@vm:~/acl$ getfacl report.txt
 user::rw-
 group::r--
 other::---
+
 ```
 
 Sem ACL configurada, o `getfacl` imprime o modo comum noutra notação: `user::`, `group::` e
@@ -34,7 +44,7 @@ Sem ACL configurada, o `getfacl` imprime o modo comum noutra notação: `user::`
 ```
 ana@vm:~/acl$ setfacl -m u:carla:r report.txt
 ana@vm:~/acl$ ls -l report.txt
--rw-r-----+ 1 ana ana 11 Sep 14 22:46 report.txt
+-rw-r-----+ 1 ana ana 11 Oct  7 11:28 report.txt
 ana@vm:~/acl$ getfacl report.txt
 # file: report.txt
 # owner: ana
@@ -44,10 +54,18 @@ user:carla:r--
 group::r--
 mask::r--
 other::---
+
 ```
 
 Duas coisas mudaram. Há uma linha nova, `user:carla:r--`. E o `ls -l` agora termina o modo com um
 **`+`** — que é o único sinal, numa listagem comum, de que o arquivo tem ACL.
+
+Uma coisa ainda separa a carla do arquivo: o `/home/ana` é `drwxr-x---`, e a seção 05 disse que um
+diretório sem `x` não pode ser atravessado. Uma ACL a deixa passar por ele e não lhe dá mais nada ali:
+
+```
+ana@vm:~/acl$ setfacl -m u:carla:x /home/ana
+```
 
 E funciona:
 
@@ -56,11 +74,13 @@ carla@vm:~$ cat /home/ana/acl/report.txt
 the report
 ```
 
-A carla não é dona, não está no grupo, e o `other` é `---`. Ela lê porque a ACL a nomeia.
+A carla não é dona, não está no grupo, e o `other` é `---`. Ela lê porque duas ACLs a nomeiam: uma
+no diretório e uma no arquivo.
 
 `-m` modifica, `-x` remove uma entrada, `-b` remove todas:
 
 ```
+ana@vm:~/acl$ setfacl -x u:carla /home/ana
 ana@vm:~/acl$ setfacl -x u:carla report.txt
 ana@vm:~/acl$ getfacl report.txt
 # file: report.txt
@@ -70,6 +90,7 @@ user::rw-
 group::r--
 mask::r--
 other::---
+
 ```
 
 ### A linha `mask`, que é onde as pessoas se enrolam
@@ -130,16 +151,21 @@ ainda falha — é a assinatura.
 | o que foi negado? | `sudo ausearch -m avc -ts recent` | `/var/log/syslog`, `dmesg` |
 | rerrotular um arquivo | `restorecon -v caminho` | — |
 
-Nesta máquina nenhum dos dois está rodando, e as ferramentas dizem isso sem rodeios:
+Na máquina em que estas transcrições foram capturadas, nenhum dos dois está rodando, e as
+ferramentas dizem isso sem rodeios:
 
 ```
+root@vm:~# aa-status
+apparmor not present.
 root@vm:~# getenforce
-bash: line 7: getenforce: command not found
+bash: getenforce: command not found
 root@vm:~# ls -Z /etc/hosts
 ? /etc/hosts
 ```
 
-`command not found` quer dizer que o espaço de usuário do SELinux nem está instalado, e o `?` onde
+`apparmor not present` é o kernel desta máquina dizendo que não tem AppArmor nenhum; num Ubuntu
+instalado do jeito normal o AppArmor está ligado, e ali `sudo aa-status` lista cada perfil que ele
+carregou. `command not found` quer dizer que o espaço de usuário do SELinux nem está instalado, e o `?` onde
 o `ls -Z` imprimiria um rótulo quer dizer que o arquivo não carrega nenhum. **Vale saber conferir
 isso rápido**, porque metade dos conselhos que você vai ler na internet supõe que um dos dois está
 ligado.

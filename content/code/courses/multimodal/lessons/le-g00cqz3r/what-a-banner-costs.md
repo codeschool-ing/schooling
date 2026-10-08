@@ -1,9 +1,9 @@
 ---
 title: What a banner costs, and what makes it cost more
-version: 1
+version: 2
 ---
 
-Image generation is priced per picture, by size and quality, and the per-picture prices in the sheet make the comparison simple. One more number decides the real cost: **how many pictures are thrown away for each one used**. Lesson 3 measured nothing there, because no generator runs in the lab, so the program assumes one in four:
+Image generation is priced per picture, by size and quality, and the per-picture prices in the sheet make the comparison simple. One more number decides the real cost: **how many pictures are thrown away for each one used**. Lesson 3 measured nothing there, because no generator runs in this course, so the program assumes one in four:
 
 ```python
 """What one accepted banner costs, from the sheet's per-image prices, when one in four is accepted."""

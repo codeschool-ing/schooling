@@ -4,8 +4,8 @@ version: 1
 ---
 
 O `wg-quick` lê o arquivo e faz o resto: cria a interface, carrega as chaves, põe o endereço e
-transforma cada faixa de `AllowedIPs` numa rota. Neste laboratório ele também mostra o que acontece
-quando o kernel não tem WireGuard:
+transforma cada faixa de `AllowedIPs` numa rota. No kernel em que estas transcrições foram gravadas, ele
+também mostra o que acontece quando o kernel não tem WireGuard:
 
 ```
 ana@hq:~$ sudo wg-quick up wg0
@@ -34,15 +34,15 @@ autor. Visto de fora ele se comporta igual, só que mais devagar.
 
 **O aviso logo abaixo está errado sobre esta máquina.** Ele diz que o kernel tem suporte de primeira
 classe ao WireGuard, uma linha depois de o kernel se recusar a criar o dispositivo. O WireGuard faz
-parte do Linux desde a versão 5.6, e o aviso foi escrito para esse caso comum; o kernel deste
-laboratório foi compilado sem ele. Num servidor normal o primeiro comando dá certo e nada do resto
-aparece.
+parte do Linux desde a versão 5.6, e o aviso foi escrito para esse caso comum; o kernel em que
+estas transcrições foram gravadas foi compilado sem ele. Num servidor normal, e no seu Ubuntu, o
+primeiro comando dá certo e nada do resto aparece.
 
 As últimas quatro linhas são o arquivo sendo aplicado. **`mtu 1420` é 1500 menos 80**, o espaço que o
 WireGuard reserva para os próprios cabeçalhos quando o pacote externo é IPv6, o maior dos dois casos. E
 `192.168.20.0/24 dev wg0` é a LAN da filial que estava em `AllowedIPs`, agora uma rota.
 
-Nada atravessou a rede ainda. **O WireGuard não manda nada enquanto não houver o que mandar**, então o
+Suba `branch` do mesmo jeito, com `sudo wg-quick up wg0` no shell dele. Nada atravessou a rede ainda. **O WireGuard não manda nada enquanto não houver o que mandar**, então o
 handshake acontece quando o laptop pinga o caixa. O `tshark` foi iniciado antes, no enlace do provedor
 em direção à filial, e imprimiu os quatro pacotes quando parou:
 

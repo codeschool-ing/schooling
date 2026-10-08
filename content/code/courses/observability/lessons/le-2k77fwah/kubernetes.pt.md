@@ -1,10 +1,31 @@
 ---
 title: Readiness e liveness no Kubernetes
-version: 1
+version: 2
 ---
 
-O Kubernetes é onde as três perguntas ganham consequências. O cluster kind do laboratório roda duas
-cópias de um pequeno servidor web cujas sondas podem ser quebradas de propósito:
+O Kubernetes é onde as três perguntas ganham consequências, e esta aula precisa de um cluster
+próprio. O **kind** roda um dentro do Docker, um Kubernetes inteiro num contêiner, que é tudo de que
+uma sonda precisa. Estas linhas instalam o kind e o `kubectl` pelos releases oficiais, nas versões com
+que esta aula foi gravada, e criam o cluster. A última copia a imagem da loja para dentro dele: os
+manifestos abaixo rodam essa imagem, e o cluster não consegue construí-la:
+
+```sh
+ARCH=$(dpkg --print-architecture)
+curl -Lo kind https://github.com/kubernetes-sigs/kind/releases/download/v0.33.0/kind-linux-$ARCH
+curl -Lo kubectl https://dl.k8s.io/release/v1.37.0/bin/linux/$ARCH/kubectl
+sudo install kind kubectl /usr/local/bin/
+rm kind kubectl
+kind create cluster --name lab
+kind load docker-image shop:1.4.0 --name lab
+mkdir -p ~/shop/k8s
+```
+
+O cluster é mais um contêiner na mesma máquina, e um comando o apaga no fim da aula. A máquina em
+que este curso foi gravado é um computador aninhado dentro de outro, e o cluster dela precisou de duas
+configurações que uma máquina Linux comum não precisa; na sua, estas linhas são tudo.
+
+O cluster roda duas cópias de um pequeno servidor web cujas sondas podem ser quebradas de propósito.
+Salve o arquivo como `~/shop/k8s/probe-demo.yaml`, com o botão de copiar:
 
 ```schooling-example
 {

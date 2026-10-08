@@ -1,6 +1,6 @@
 ---
 title: Rolling an image out with Terraform
-version: 1
+version: 2
 ---
 
 An image on its own runs nothing. Something has to start machines from it, and replace them when
@@ -15,7 +15,18 @@ The lab's moto cannot run the Packer build that would make an AMI, so the two AM
 **staged**: made in moto from a throwaway instance, the way lesson 5 made its images, and named the
 way the `amazon-ebs` source in the section on the template would name them. There is nothing
 inside either; moto keeps a record with an id. What Terraform does with them is exactly what it
-would do on a real account.
+would do on a real account. To make the same two in your moto, run what Ana ran, in the directory
+her configuration lives in; `BASE` holds the throwaway instance's id:
+
+```sh
+mkdir -p ~/shop/app && cd ~/shop/app
+BASE=$(aws ec2 run-instances --image-id ami-1e749f67 --instance-type t3.micro --query 'Instances[0].InstanceId' --output text)
+aws ec2 create-image --instance-id $BASE --name shop-web-1.0.1
+aws ec2 create-image --instance-id $BASE --name shop-web-1.1.0
+aws ec2 terminate-instances --instance-ids $BASE
+```
+
+They list like this:
 
 ```
 ana@laptop:~/shop/app$ aws ec2 describe-images --owners self --query "sort_by(Images,&Name)[].[Name,ImageId]" --output text
@@ -24,7 +35,7 @@ shop-web-1.1.0	ami-d9628db9f20e7ed8f
 ```
 
 Ana's configuration in `~/shop/app` looks the image up by its version, with the `data "aws_ami"`
-lookup lesson 5 taught, and starts the web server from it:
+lookup lesson 5 taught, and starts the web server from it. `main.tf`:
 
 ```hcl
 terraform {
@@ -65,6 +76,8 @@ resource "aws_instance" "web" {
 }
 ```
 
+and `terraform.tfvars`:
+
 ```hcl
 web_version = "1.0.1"
 ```
@@ -73,6 +86,15 @@ Two choices in it matter here. The version is a **variable with no default**, se
 `terraform.tfvars`, so the image the shop runs is written in one line of a reviewed file and
 nowhere else. And the instance has `create_before_destroy`, from lesson 6, because changing the
 image will replace it.
+
+The configuration is a git repository of its own, which leaves out what Terraform writes, and Ana
+commits it before the first apply:
+
+```sh
+terraform init
+git init -q . && printf ".terraform/\n*.tfstate*\n" > .gitignore
+git add -A && git commit -qm 'web runs shop-web 1.0.1'
+```
 
 ```
 ana@laptop:~/shop/app$ terraform apply -auto-approve | tail -n 3
@@ -141,7 +163,8 @@ Apply complete! Resources: 1 added, 0 changed, 1 destroyed.
 
 The order is lesson 6's `+/-`: the new instance is created first, and the old one, kept for a
 moment as a *deposed object*, is destroyed after it. On a real account the new machine has nothing left to
-install when it boots, so it can start serving as soon as it is up.
+install when it boots, so it can start serving as soon as it is up. The change is committed, as a
+merged pull request would be: `git add -A && git commit -qm 'web runs shop-web 1.1.0'`.
 
 ## Rolling back is rolling forward to an older number
 

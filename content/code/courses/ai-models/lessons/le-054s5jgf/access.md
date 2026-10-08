@@ -6,7 +6,7 @@ version: 1
 The model ana priced in lesson 4, by every route the sheet knows:
 
 ```
-ana@desk:~/desk$ sheet where gpt-5.4-mini
+ana@desk:~/desk$ python sheet.py where gpt-5.4-mini
 # LiteLLM model sheet at 21881c57, 4472 entries
 entry                                                provider                     in $/M  out $/M
 aihubmix/gpt-5.4-mini                                aihubmix                       0.75      4.5
@@ -38,16 +38,16 @@ OpenAI's batch tier reached through a router, as with Gemini in lesson 7.
 ## Three APIs at one address
 
 ```
-ana@desk:~/desk$ sheet show gpt-5.4-mini | grep supported_endpoints
+ana@desk:~/desk$ python sheet.py show gpt-5.4-mini | grep supported_endpoints
 supported_endpoints                        ['/v1/chat/completions', '/v1/batch', '/v1/responses']
 ```
 
 The sheet lists three endpoints for this model. `/v1/chat/completions` is the shape most of the
 industry copied, lesson 20's subject. `/v1/responses` is OpenAI's newer API, the subject of lesson
-16, and the one OpenAI's newer features are built on. `/v1/batch` is where a file of requests is sent
-for the half-price tier.
+16, and the one OpenAI's newer features are built on. `/v1/batch` is where a file of requests is
+sent for the half-price tier.
 
 **For ana, the choice between them is mostly about portability.** Her evaluation harness in lesson 5
-already speaks Chat Completions, and so do the stand-in, Mistral, Ollama and OpenRouter. Code written
+already speaks Chat Completions, and so do Mistral, Ollama and OpenRouter. Code written
 against the Responses API gets OpenAI's newer features and loses that reach. Lesson 16 shows what
 the Responses API adds, so the trade can be made knowing both sides.

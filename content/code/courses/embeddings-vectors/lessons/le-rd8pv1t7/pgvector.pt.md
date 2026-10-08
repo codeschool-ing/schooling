@@ -10,9 +10,9 @@ num banco de vetores. Ele é uma extensão, o mesmo mecanismo que o PostGIS usa 
 geográficos, e acrescenta três coisas: um tipo de coluna chamado `vector`, operadores que medem a
 distância entre dois vetores e dois tipos de índice.
 
-A aula 2 o instalou para comparar três distâncias em dois vetores pequenos. Aqui ele guarda a
-central de ajuda. O laboratório roda o PostgreSQL 16 com o pacote do pgvector que o Ubuntu 24.04
-distribui, e o esquema são duas tabelas comuns:
+A aula 2 o acrescentou ao banco para comparar três distâncias em dois vetores pequenos. Aqui ele
+guarda a central de ajuda. É o PostgreSQL 16 com o pacote do pgvector que o Ubuntu 24.04
+distribui, os dois instalados na aula 1, e o esquema são duas tabelas comuns:
 
 ```schooling-example
 {
@@ -87,7 +87,7 @@ O PostgreSQL não sabe o que é um array do NumPy, e o driver, o psycopg, não s
     },
     {
       "code": "with psycopg.connect() as conn:\n    register_vector(conn)\n    cur = conn.cursor()\n    cur.executemany(\n        \"INSERT INTO articles (id, category, lang, title, body, embedding)\"\n        \" VALUES (%s, %s, %s, %s, %s, %s)\",\n        [(h[\"id\"], h[\"category\"], h[\"lang\"], h[\"title\"], h[\"body\"], v)\n         for h, v in zip(help, A)])\n    cur.executemany(\n        \"INSERT INTO queries (id, text, relevant, embedding) VALUES (%s, %s, %s, %s)\",\n        [(q[\"id\"], q[\"text\"], q[\"relevant\"], v) for q, v in zip(queries, Q)])",
-      "note": "Sem argumentos, `connect()` lê `PGHOST` e `PGDATABASE` do ambiente. `register_vector` ensina esta conexão a mandar um array do NumPy como `vector` e a ler um de volta como array. Sair do bloco `with` faz o commit."
+      "note": "Sem argumentos, `connect()` lê `PGDATABASE` do ambiente, que a aula 1 definiu como `shop`, e se conecta como você pelo socket local. `register_vector` ensina esta conexão a mandar um array do NumPy como `vector` e a ler um de volta como array. Sair do bloco `with` faz o commit."
     },
     {
       "code": "print(len(help), \"articles and\", len(queries), \"queries written\")",

@@ -43,7 +43,8 @@ tells a curious visitor nothing about the network behind the balancer.
 
 ## The pinned server dies
 
-Now `web3`'s `nginx` is stopped, off screen, and the client pinned to it asks again:
+Now `web3`'s `nginx` is stopped, `sudo bash netlab.sh kill web3 nginx` on the virtual machine, and the
+client pinned to it asks again:
 
 ```
 ana@laptop:~$ curl -s -b "SERVERID=w3" http://www.example.com/
@@ -60,7 +61,7 @@ outage for exactly the users who were on it, while everybody else carries on and
 fine.
 
 Two lines fix it. Here is the backend as `sed` printed it on `lb1` after the change, with what each line
-does:
+does; write it in place of the last one and restart HAProxy as before:
 
 ```schooling-example
 {"language": "conf", "file": "haproxy.cfg", "parts": [{"code": "backend web\n    balance roundrobin", "note": "New visitors are still spread by round robin. Persistence only applies to a request that already carries a cookie."}, {"code": "    option redispatch", "note": "If the server a cookie names is down, send the request to another server instead of failing it. This line is new."}, {"code": "    cookie SERVERID insert indirect nocache", "note": "`insert`: HAProxy adds the cookie to the reply itself, so the application knows nothing about it. `indirect`: a client that already has a valid one is not sent it again, and it is taken out of the request before the server sees it. `nocache`: a reply that sets it is marked so a shared cache will not store it and hand one visitor's cookie to others."}, {"code": "    server web1 192.0.2.21:80 cookie w1 check inter 1s\n    server web2 192.0.2.22:80 cookie w2 check inter 1s\n    server web3 192.0.2.23:80 cookie w3 check inter 1s", "note": "`cookie w1` is the value that means this server. `check inter 1s` is new: HAProxy tests each server every second, so it learns within seconds that one has stopped answering. Lesson 16 showed those checks marking a server DOWN."}]}

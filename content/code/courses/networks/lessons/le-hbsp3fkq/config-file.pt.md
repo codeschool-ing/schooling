@@ -1,10 +1,11 @@
 ---
 title: Nomes para as máquinas que você usa
-version: 1
+version: 2
 ---
 
 Endereços, nomes de usuário e portas são chatos de digitar e fáceis de errar. O `~/.ssh/config` dá a
-cada máquina um nome curto e lembra o resto:
+cada máquina um nome curto e lembra o resto. Escreva-o no laptop com `nano ~/.ssh/config`, como o
+`cat` abaixo o mostra, e deixe-o privado com `chmod 600 ~/.ssh/config`:
 
 ```
 ana@laptop:~$ cat ~/.ssh/config

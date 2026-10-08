@@ -1,9 +1,11 @@
 ---
 title: Um kernel ou dois
-version: 1
+version: 2
 ---
 
-A mesma pergunta, feita ao host, a uma máquina virtual, e a um contêiner ligado com o `podman`:
+A mesma pergunta, feita ao host, a uma máquina virtual, e a um contêiner ligado com o `podman`. A vm1 é
+um convidado novo do `newvm.sh`, aula 1, e o podman é um pacote no host, `sudo apt install podman`, que
+baixa as duas imagens usadas aqui, `ubuntu:24.04` e `nginx:alpine`, na primeira vez que precisa delas:
 
 ```
 ana@host:~$ uname -r

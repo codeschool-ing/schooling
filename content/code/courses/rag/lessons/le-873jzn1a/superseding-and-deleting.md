@@ -1,6 +1,6 @@
 ---
 title: Superseding and deleting
-version: 1
+version: 2
 ---
 
 Lessons 1 and 3 kept running into `returns-policy-2025`: the replaced policy, retrieved because it is
@@ -14,10 +14,10 @@ a `status`, and every chunk carries it. Suppose Marginalia replaces its gift car
 old ones:
 
 ```
-ana@lab:~/rag$ sed -i "s/^status: current$/status: superseded/" data/docs/gift-cards.md
-ana@lab:~/rag$ python ingest.py
+ana@vm:~/rag$ sed -i "s/^status: current$/status: superseded/" data/docs/gift-cards.md
+ana@vm:~/rag$ python ingest.py
 chunks: 137  embedded: 0  removed: 0  kept: 137
-ana@lab:~/rag$ psql -c "SELECT status, count(*) FROM chunks GROUP BY status"
+ana@vm:~/rag$ psql -c "SELECT status, count(*) FROM chunks GROUP BY status"
    status   | count 
 ------------+-------
  superseded |    12
@@ -42,10 +42,10 @@ The second removes the document entirely. When a document is wrong, withdrawn, o
 somebody has asked to have erased, it should not be findable by anybody:
 
 ```
-ana@lab:~/rag$ rm data/docs/returns-policy-2025.md
-ana@lab:~/rag$ python ingest.py
+ana@vm:~/rag$ rm data/docs/returns-policy-2025.md
+ana@vm:~/rag$ python ingest.py
 chunks: 130  embedded: 0  removed: 7  kept: 130
-ana@lab:~/rag$ psql -tc "SELECT count(*) FROM chunks WHERE doc_id = 'returns-policy-2025'"
+ana@vm:~/rag$ psql -tc "SELECT count(*) FROM chunks WHERE doc_id = 'returns-policy-2025'"
      0
 ```
 

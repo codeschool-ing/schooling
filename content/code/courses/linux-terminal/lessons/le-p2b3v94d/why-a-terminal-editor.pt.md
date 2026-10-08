@@ -1,6 +1,6 @@
 ---
 title: Cinco situações em que você não escolhe
-version: 1
+version: 2
 ---
 
 Você tem um editor de que gosta. Esta aula não é sobre ele, porque estas cinco
@@ -77,3 +77,33 @@ foram **conferidas contra o arquivo em disco** — então uma tela que saísse e
 teria sido pega em vez de impressa. Onde o arquivo não está na tela, como no
 prompt `Save modified buffer?` do nano, a tela é o que o nano desenhou e nada
 mais.
+
+## Os arquivos que as telas abrem
+
+Três arquivos pequenos, num diretório só deles. Crie-os, e toda tela desta aula
+é uma que você consegue reproduzir tecla por tecla:
+
+```sh
+mkdir -p ~/work/edit && cd ~/work/edit
+cat > server.conf <<'END'
+# the server configuration
+listen 8080
+workers 4
+timeout 30
+log_level info
+log_file /var/log/app.log
+END
+printf 'the first line\nthe second line\nthe third line\n' > notes.txt
+printf 'pear\napple\ncherry\nbanana\n' > list.txt
+```
+
+```
+ana@vm:~/work/edit$ wc -lc server.conf notes.txt list.txt
+  6 101 server.conf
+  3  46 notes.txt
+  4  25 list.txt
+ 13 172 total
+```
+
+Cada seção começa nesse diretório, e cada uma que muda um arquivo diz isso;
+para começar uma tela do zero de novo, rode o bloco acima outra vez.

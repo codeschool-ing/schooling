@@ -6,7 +6,10 @@ version: 1
 ## No carrier
 
 The laptop cannot reach its own gateway, the first address anybody tries. The ping says nothing useful,
-so the next two commands ask the interface instead:
+so the next two commands ask the interface instead. Each fault in this lesson can be staged on your own
+network, and each section says how before the transcript; reading the transcript first and guessing is
+the better exercise. This one is staged on the virtual machine with
+`sudo ip -n wire link set hq-laptop down`:
 
 ```
 ana@laptop:~$ ping -c 2 -W 1 192.168.10.1
@@ -29,9 +32,9 @@ signal**, which `LOWER_UP` would report and does not. `ethtool` says the same in
 detected: no`.
 
 On real hardware that is a cable pulled out or broken, a switch port disabled, or a switch with no
-power. The lab has no copper. The laptop's cable is a pair of virtual interfaces, and the fault was
+power. This network has no copper. The laptop's cable is a pair of virtual interfaces, and the fault was
 staged by setting the switch's end of the pair down, which the laptop sees as a cable that carries
-nothing. With that end set up again, off screen, the same two commands:
+nothing. With that end set up again, `sudo ip -n wire link set hq-laptop up`, the same two commands:
 
 ```
 ana@laptop:~$ ip -br link show eth0; sudo ethtool eth0 | grep "Link detected"
@@ -44,7 +47,8 @@ answers at once, and a ping that fails could be failing at any layer from the ca
 
 ## A gateway nobody has
 
-The next fault starts from a report that the web servers are down. From the laptop, to web1's address:
+The next fault starts from a report that the web servers are down. It is staged on `laptop` with
+`sudo ip route replace default via 192.168.10.99`. From the laptop, to web1's address:
 
 ```
 ana@laptop:~$ curl -sS -m 5 http://192.0.2.21/
@@ -84,7 +88,8 @@ rtt min/avg/max/mdev = 0.272/0.272/0.272/0.000 ms
 `INCOMPLETE` means an ARP request went out and no reply came back. **The last ping is the test that
 clears the rest of the laptop.** `files`, on the same network, answers in 0.272 ms, so the cable, the
 card and the laptop's own address are all fine. Only what has to go through the gateway fails, and the
-gateway is the one thing wrong. With the route put back to `192.168.10.1`, off screen, web1 answers:
+gateway is the one thing wrong. With the route put back to `192.168.10.1`, `sudo ip route replace default via 192.168.10.1`, web1
+answers:
 
 ```
 ana@laptop:~$ ping -c 1 192.0.2.21

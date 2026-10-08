@@ -9,7 +9,7 @@
 #   sudo bash captures.sh
 #
 # What is STAGED rather than typed:
-#   - the cluster, made from lab/cluster-ports.yaml so the laptop's 8080
+#   - the cluster, made from lesson 8's ports.yaml so the laptop's 8080
 #     reaches the NodePort, and a busybox pod called `probe`.
 #   - cloud-provider-kind, started on the laptop in the background. It is
 #     the kind project's stand-in for a cloud's load balancer: it watches for
@@ -23,7 +23,8 @@
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 . "$(dirname "$0")/../../capture.sh"
-fresh "$COURSE/lab/cluster-ports.yaml"
+shown "$COURSE/lessons/le-nf7qt63y/the-manifest.md" ports.yaml >/tmp/ports.yaml || exit 1
+fresh /tmp/ports.yaml
 quiet 'kubectl run probe --image=busybox:1.37 --restart=Never --command -- sleep 3600'
 
 block clusterip

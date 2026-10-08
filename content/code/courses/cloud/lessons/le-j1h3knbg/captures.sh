@@ -13,11 +13,13 @@
 # reaches it. Nothing here can reach an AWS account: with no credentials the
 # CLI refuses before it signs a request, which is the point of the capture.
 #
-# What is STAGED rather than typed, and not shown in the lesson:
-# the empty HOME itself; and, for the last block, a ~/.aws/credentials file
-# holding the example key pair that AWS prints in its own documentation
-# (AKIAIOSFODNN7EXAMPLE), which belongs to nobody. `aws configure list` only
-# reads files and prints; it sends nothing anywhere.
+# What is STAGED rather than typed, and not shown in the lesson: the empty HOME
+# itself, which the lesson has the student make with `env -i HOME="$(mktemp -d)"`.
+# The last block writes the example key pair that AWS prints in its own
+# documentation (AKIAIOSFODNN7EXAMPLE), which belongs to nobody, with
+# `aws configure set`; that block was recorded again on 2026-10-07, as the user
+# ana with the CLI lesson 1 installs, when the lesson began to show how the
+# file is made. `aws configure` only reads and writes files; it sends nothing.
 #
 # On the machine it was recorded on, the two steps of the credential chain that
 # ask the instance metadata address (169.254.169.254) were answered by the
@@ -49,7 +51,7 @@ echo '### the chain, in the order the CLI searched it'
 on "aws sts get-caller-identity --debug 2>&1 | grep -o 'Looking for credentials via: .*'"
 echo
 echo '### a long-lived key in a file'
-mkdir -p "$H/.aws"
-printf '[default]\naws_access_key_id = AKIAIOSFODNN7EXAMPLE\naws_secret_access_key = wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY\n' > "$H/.aws/credentials"
+on 'aws configure set aws_access_key_id AKIAIOSFODNN7EXAMPLE'
+on 'aws configure set aws_secret_access_key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'
 on 'cat ~/.aws/credentials'
 on 'aws configure list'

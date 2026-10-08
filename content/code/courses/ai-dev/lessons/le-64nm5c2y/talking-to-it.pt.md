@@ -1,6 +1,6 @@
 ---
 title: Falando com o servidor a partir do Python
-version: 1
+version: 2
 ---
 
 O host da aula 7 seção 03 e todo assistente que suporta MCP fazem as mesmas três coisas como
@@ -29,7 +29,7 @@ asyncio.run(main())
 ```
 
 ```
-ana@dev:~/shop$ python lab/tools.py
+ana@dev:~/shop$ python scratch/tools.py
 get_order      read-only=True   Look up an order by its number: status, dates, lines and shipping, in cents.
 read_handbook  read-only=True   Read one page of the support handbook, such as 'returns' or 'shipping'.
 issue_refund   read-only=False  Refund part or all of an order to the customer's original payment method.

@@ -1,6 +1,6 @@
 ---
 title: Mudando a raiz, e perdendo um cabo
-version: 1
+version: 2
 ---
 
 A árvore não é fixa. Ela é recalculada sempre que algo muda, e duas mudanças importam na prática:
@@ -43,7 +43,7 @@ por VLAN. A seção sobre o spanning tree rápido desta lição volta a isso.
 Para o segundo teste a raiz voltou para o `sw1` (prioridade 32768 no `sw3` de novo, e depois uma
 espera para a árvore se acomodar), o que pôs a `p3` do `sw2` de volta em `blocking`. No `pc2`, foi
 iniciado um ping para o `pc1`, um pacote por segundo durante 60 segundos. Dois segundos depois o cabo
-entre `sw1` e `sw2` foi puxado, e a `p3` do `sw2` foi lida a cada seis segundos:
+entre `sw1` e `sw2` foi puxado, `ip link set p2 down` num prompt de root no sw1, e a `p3` do `sw2` foi lida a cada seis segundos:
 
 ```
 root@sw2:~# bridge link show

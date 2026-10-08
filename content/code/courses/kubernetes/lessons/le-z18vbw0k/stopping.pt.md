@@ -46,7 +46,7 @@ deployment.apps/shop image updated
 
 **Uma falha de novo, e de novo um timeout.** Leia o erro antes da contagem. Uma conexão recusada é a
 corrida acima; um timeout é outra coisa, um pacote que não teve resposta nenhuma. Nenhuma das rodadas
-teve uma recusa, então neste laboratório a corrida não apareceu, e o timeout que sobrou tem uma causa que
+teve uma recusa, então na máquina em que isto foi gravado a corrida não apareceu, e o timeout que sobrou tem uma causa que
 esta lição não encontrou. O `preStop` continua valendo, porque a corrida é real onde quer que o
 kube-proxy seja mais lento que aqui. O que a contagem diz é mais estreito: ela não levou esta rodada a
 zero.

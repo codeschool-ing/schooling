@@ -1,7 +1,18 @@
 ---
 title: Building the image, and running it
-version: 1
+version: 2
 ---
+
+**Installing Packer.** Packer comes from the same HashiCorp package repository as Terraform, which
+lesson 1's setup script already added, at the version the transcripts were recorded with:
+
+```sh
+sudo apt-get install -y packer=1.16.1-1
+```
+
+It drives the Docker that lesson 18 installed, and runs as you, so it needs what lesson 18 set up
+for that: your user in the `docker` group. The Docker plugin is not installed by hand; the first
+command below fetches it.
 
 Three commands, in the same order as Terraform's. `packer init` installs the plugins the
 `packer` block asks for, `packer fmt` checks the layout, and `packer validate` checks the template
@@ -14,8 +25,9 @@ ana@laptop:~/shop/image$ packer validate .
 The configuration is valid.
 ```
 
-`packer init` printed nothing because the Docker plugin was already installed on this laptop; on a
-fresh machine it downloads it and says so. `fmt -check` is silent when the file is already
+`packer init` printed nothing because the Docker plugin was already installed on the machine these
+lessons were recorded on. On yours it downloads the plugin from GitHub, the newest version the
+constraint allows, and says which one it installed. `fmt -check` is silent when the file is already
 formatted. Then the build:
 
 ```
@@ -81,8 +93,10 @@ ls: cannot access '/proc/net/if_inet6': No such file or directory
 ```
 
 The second `listen` line of the default site, `[::]:80`, is the one nginx cannot open, and the
-missing `/proc/net/if_inet6` is the kernel saying there is no IPv6 here. On your laptop the image
-may well start. That is the point: the build ran on one machine and the image runs on others, and
+missing `/proc/net/if_inet6` is the kernel saying there is no IPv6 here. **On your computer the
+image probably starts**, because an ordinary Linux kernel has IPv6 even where Docker gives the
+container no address of its own: `docker run` then prints nothing and keeps nginx running until you
+press Ctrl+C, and the `ls` prints the file's name. That is the point: the build ran on one machine and the image runs on others, and
 **a provisioner's exit code says nothing about whether the result works where it is going**. Only
 starting it does, which is why an image pipeline runs the image and asks it something before
 publishing it, the same way lesson 13 runs a module before trusting it.
@@ -114,6 +128,9 @@ index 90e9556..87b3f2a 100644
    }
  }
 ```
+
+Make the same fix in yours even if `1.0.0` started; the rest of the lesson builds on `1.0.1`. Ana
+commits it, `git add -A && git commit -qm 'nginx listens on IPv4 only'`, and builds again:
 
 ```
 ana@laptop:~/shop/image$ packer build . 2>&1 | grep -E "Image ID|Repository|finished"

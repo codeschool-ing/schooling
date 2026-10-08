@@ -1,12 +1,13 @@
 ---
 title: Uma conta que só pode deixar arquivos
-version: 1
+version: 2
 ---
 
 O scanner do escritório salva as digitalizações no servidor por SFTP, coisa que muitos scanners e
 copiadoras sabem fazer. A conta dele, `scans`, precisa pôr arquivos numa pasta e mais nada: nenhum
 shell, e nenhuma visão do resto do servidor. Quatro linhas no fim do `sshd_config` do servidor fazem
-isso:
+isso. A digitalização que ele manda é um substituto: no laptop, `cp /usr/share/common-licenses/MPL-2.0
+scan-0001.pdf` cria uma, e a senha da `scans` é `scanner-2026`.
 
 ```
 ana@server:~$ tail -4 /etc/ssh/sshd_config

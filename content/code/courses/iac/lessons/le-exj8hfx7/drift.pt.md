@@ -1,11 +1,19 @@
 ---
 title: Drift, encontrado por um plan
-version: 1
+version: 2
 ---
 
 A aula 1 deixou a regra de um colega no security group `web`, a porta 22 aberta para o mundo,
 digitada à mão de outra máquina, e prometeu que o Terraform a encontraria. Aqui está ela de novo,
-acrescentada do mesmo jeito ao grupo que o Terraform agora gerencia:
+acrescentada do mesmo jeito ao grupo que o Terraform agora gerencia. A primeira linha acha o id do
+grupo, e `SG` o guarda para a segunda:
+
+```sh
+SG=$(aws ec2 describe-security-groups --filters Name=group-name,Values=web --query 'SecurityGroups[0].GroupId' --output text)
+aws ec2 authorize-security-group-ingress --group-id "$SG" --protocol tcp --port 22 --cidr 0.0.0.0/0
+```
+
+O grupo agora tem duas regras:
 
 ```
 ana@laptop:~/shop$ aws ec2 describe-security-groups --filters Name=group-name,Values=web --query "SecurityGroups[0].IpPermissions[].[IpProtocol,FromPort,IpRanges[0].CidrIp]" --output text

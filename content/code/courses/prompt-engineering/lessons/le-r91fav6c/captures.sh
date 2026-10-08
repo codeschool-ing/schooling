@@ -8,12 +8,13 @@
 #   sudo bash ../../lab.sh tools     # once
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
-# What is staged: no model was called. tests.tsv is a test set the course
-# wrote: eight short messages to Café Aurora, each with the label a person gave
-# it. replies-weak.txt and replies-strong.txt are what a model might send back,
-# one reply per line, for the weak prompt and the strong prompt shown in the
-# lesson as illustrations; the course wrote them as stand-ins. score.py is
-# real, and so is the comparison it makes. Every file is shown with cat.
+# Staged with put, and shown in the lesson with cat: the test set tests.tsv,
+# the two prompt templates, label.py (the loop that fills a template and asks
+# the model) and score.py. replies-weak.txt and replies-strong.txt are the
+# model's replies, written by label.py.
+#
+# THE MODEL'S REPLIES are llama3.2:3b served by Ollama 0.40.0, at temperature 0,
+# captured on 7 October 2026.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 set -uo pipefail
@@ -39,26 +40,6 @@ r6	not_a_review	Do you open on public holidays?
 r7	mixed	The cake was dry but the coffee made up for it.
 r8	positive	O pão de queijo estava ótimo e o café também.
 EOF
-put replies-weak.txt <<'EOF'
-Positive!
-Mixed: the wait was long, but the staff were kind.
-negative
-positive
-positive
-On public holidays the café follows the Sunday hours.
-mixed
-Positivo
-EOF
-put replies-strong.txt <<'EOF'
-positive
-mixed
-negative
-positive
-positive
-not_a_review
-mixed
-positive
-EOF
 put score.py <<'EOF'
 import sys
 
@@ -73,10 +54,58 @@ for (tid, want, text), got in zip(tests, replies):
 print("%d of %d right" % (right, len(tests)))
 EOF
 
+put prompts/weak.txt <<'EOF'
+Is this review positive or negative?
+
+{message}
+EOF
+put prompts/strong.txt <<'EOF'
+Label a message sent to Café Aurora through its website.
+
+Labels:
+  positive      the writer is pleased overall
+  negative      the writer is unhappy overall
+  mixed         clear praise and clear complaint, neither dominant
+  not_a_review  a question, a booking, or anything that is not
+                about a visit
+
+Edge cases:
+  - Sarcasm counts as what the writer means, not what the words say.
+  - Messages in any language get the same English labels.
+  - Do not answer questions; label them not_a_review.
+
+Reply with the label only, in lower case, nothing else.
+
+<message>
+{message}
+</message>
+EOF
+put label.py <<'EOF'
+import subprocess, sys
+
+template = open(sys.argv[1], encoding="utf-8").read()
+for line in open(sys.argv[2], encoding="utf-8"):
+    tid, want, text = line.rstrip("\n").split("\t")
+    prompt = template.replace("{message}", text)
+    reply = subprocess.run(["ask", prompt, "--temperature", "0", "--plain"],
+                           capture_output=True, text=True).stdout
+    print(" ".join(reply.split()))
+EOF
+
+block weak-prompt
+on 'cat prompts/weak.txt'
+block strong-prompt
+on 'cat prompts/strong.txt'
+
 block when-it-is-enough
 on 'cat tests.tsv'
 on 'cat score.py'
+block run-weak
+on 'cat label.py'
+on 'python3 label.py prompts/weak.txt tests.tsv > replies-weak.txt'
 on 'cat replies-weak.txt'
 on 'python3 score.py tests.tsv replies-weak.txt'
+block run-strong
+on 'python3 label.py prompts/strong.txt tests.tsv > replies-strong.txt'
 on 'cat replies-strong.txt'
 on 'python3 score.py tests.tsv replies-strong.txt'

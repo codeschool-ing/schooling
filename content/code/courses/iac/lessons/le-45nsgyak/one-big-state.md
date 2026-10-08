@@ -1,6 +1,6 @@
 ---
 title: The trouble with one state for everything
-version: 1
+version: 2
 ---
 
 Lesson 7 left the shop with one configuration and one state, kept in S3 under one key. Since then
@@ -66,6 +66,37 @@ resource "aws_s3_bucket" "logs" {
 }
 ```
 
+**To start where Ana is**, remember that your moto is empty at the start of every lesson. Make
+lesson 7's state bucket again, with versioning on:
+
+```sh
+aws s3api create-bucket --bucket shop-tfstate-123456789012 --create-bucket-configuration LocationConstraint=sa-east-1
+aws s3api put-bucket-versioning --bucket shop-tfstate-123456789012 --versioning-configuration Status=Enabled
+```
+
+Then, in `~/shop`, save the `main.tf` above and lesson 7's `backend.tf` beside it:
+
+```hcl
+terraform {
+  backend "s3" {
+    bucket       = "shop-tfstate-123456789012"
+    key          = "shop/terraform.tfstate"
+    region       = "sa-east-1"
+    encrypt      = true
+    use_lockfile = true
+  }
+}
+```
+
+and apply them and commit, with lesson 7's `.gitignore`:
+
+```sh
+terraform init
+terraform apply -auto-approve
+printf ".terraform/\n*.tfstate\n*.tfstate.*\n" > .gitignore
+git init -q && git add . && git commit -qm "the shop, in one state"
+```
+
 The backend is lesson 7's, unchanged, and the state holds six resources under one key:
 
 ```
@@ -117,7 +148,8 @@ Plan: 0 to add, 1 to change, 0 to destroy.
 AWS about every resource in the state, because it cannot know which ones somebody changed by hand.
 Six calls cost nothing. With six hundred, the plan for a tag on a bucket waits on every subnet,
 route and DNS record the company owns. The lock from lesson 7 is held for all of it, so nobody
-else can plan the network while Ana tags her bucket.
+else can plan the network while Ana tags her bucket. She does not apply the tag, and puts the
+file back with `git checkout main.tf`.
 
 ## The blast radius is the whole state
 

@@ -1,10 +1,17 @@
 ---
 title: Chamado: "o servidor some e volta"
-version: 1
+version: 2
 ---
 
 Uma impressora nova foi instalada hoje de manhã, e desde então o servidor do escritório fica
-inalcançável às vezes. A impressora recebeu um endereço digitado à mão, e é o do servidor:
+inalcançável às vezes. A impressora recebeu um endereço digitado à mão, e é o do servidor. No seu
+laboratório, ligue-a:
+
+```sh
+sudo bash ~/netlab/netlab plug printer office 192.168.10.10/24 52:54:00:99:00:01
+```
+
+Depois, no laptop:
 
 ```
 ana@laptop:~$ sudo ip neigh flush dev eth0; ping -c 1 192.168.10.10 >/dev/null; ip neigh show 192.168.10.10

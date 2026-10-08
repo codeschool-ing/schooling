@@ -1,6 +1,6 @@
 ---
 title: Mock providers, e um teste que não precisa de nuvem
-version: 1
+version: 2
 ---
 
 Um run com `command = plan` não cria nada, e ainda assim conversa com a AWS. O provider confere as
@@ -35,7 +35,7 @@ Desde o Terraform 1.7, um arquivo de teste pode trocar um provider por um mock. 
 mantém o schema do provider real e nunca chama a API dele**: todo atributo que um provider real
 calcularia, um id ou um ARN, ele inventa. Com o mock, um run pode até fazer `apply`, porque aplicar
 num mock não cria nada em lugar nenhum. A Ana escreve o teste que a seção anterior não conseguiu,
-com o endpoint ainda apontando para o nada:
+em `tests/unit.tftest.hcl`, com o endpoint ainda apontando para o nada:
 
 ```hcl
 mock_provider "aws" {}
@@ -84,7 +84,7 @@ sub-rede pode ser criada. O módulo está certo em recusar; o teste é que preci
 
 Um override fixa o valor de um data source ou de um recurso, para o arquivo inteiro ou dentro de um
 único `run`. A Ana dá às zonas uma resposta de verdade e à VPC um id sobre o qual ela pode fazer
-afirmações:
+afirmações, numa versão nova de `tests/unit.tftest.hcl`:
 
 ```hcl
 mock_provider "aws" {}

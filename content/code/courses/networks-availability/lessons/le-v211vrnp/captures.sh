@@ -8,28 +8,30 @@
 #
 #   sudo useradd -m -s /bin/bash ana     # once, on a throwaway machine,
 #                                        # with passwordless sudo for ana
-#   sudo cp ../../lab.sh /var/tmp/lab.sh  # the lab, beside course.json
 #   sudo -u ana -i bash /path/to/captures.sh
+#
+# lab.sh, beside course.json, extracts netlab.sh and tunnel.py from lesson 1's
+# pages and installs them where that lesson tells the student to; the captures
+# run the student's own copy.
 #
 # EVERY MACHINE IN THE LESSON IS PART OF ONE LAB, built by lab.sh: a head
 # office (hq), a branch, a home behind its own NAT, an ISP and a small data
 # centre, as network namespaces on one Linux computer.
 #
-# What is STAGED rather than typed, and not shown in the lesson: the lab
-# itself, built by lab.sh reset; hq moved from 192.168.10.1 to 192.168.10.2,
-# with the MAC address that goes with .2, so that .1 is free to become the
-# virtual address; the two keepalived.conf
-# files, written below as root (the lesson shows hq's with cat); keepalived
-# started as root on both routers, in the foreground of a setsid, logging to
-# /run/keepalived.log; and each "cable pulled" or "WAN lost", which is the
-# router's port on the lab's bridge set down (lab.sh's wire namespace) and
-# later set up again.
+# WHAT THE STUDENT DOES THAT A TRANSCRIPT DOES NOT SHOW, and where the lesson
+# gives it. Every sh fence is EXTRACTED with `lab.sh fence` and typed as ana
+# with sudo: hq moved to .2 with the MAC that goes with it (one-gateway), and
+# keepalived started on hq2 and then on hq (election). hq's keepalived.conf is
+# EXTRACTED from one-gateway's example, and hq2's is the same file with the
+# priority the prose names. Each "cable pulled" or "WAN lost" is the command
+# the prose gives, typed on the computer itself: a router's end of the pair
+# on netlab.sh's wire namespace set down, and later up.
 # Every line after a prompt is what the command printed.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 PAGER=cat SYSTEMD_PAGER=cat COLUMNS=100
-LAB_SH=${LAB_SH:-/var/tmp/lab.sh}
+LAB_SH=${LAB_SH:-$(cd "$(dirname "$0")/../.." && pwd)/lab.sh}
 lab() { sudo bash "$LAB_SH" "$@"; }
 # on HOST 'command': what ana typed at her prompt on one machine of the lab,
 # and everything it printed.
@@ -52,30 +54,16 @@ bg() {
 }
 fg() { wait "$(cat "$BG/pid")" 2>/dev/null || true; cat "$BG/out"; }
 block() { printf '##### %s\n' "$1"; }
-ka_conf() {  # ka_conf HOST PRIORITY
-  lab exec "$1" root 'cat > /etc/keepalived/keepalived.conf' <<C
-vrrp_instance office {
-    state BACKUP
-    interface eth0
-    virtual_router_id 10
-    priority $2
-    advert_int 1
-    virtual_ipaddress {
-        192.168.10.1/24
-    }
-    track_interface {
-        eth1
-    }
-}
-C
-}
-ka_start() { quiet "$1" 'setsid keepalived -n -l -f /etc/keepalived/keepalived.conf -p /run/keepalived.pid -r /run/vrrp.pid </dev/null >/run/keepalived.log 2>&1 &'; }
+HERE=$(cd "$(dirname "$0")" && pwd)
+fence() { lab exec "$1" ana "$(bash "$LAB_SH" fence "$HERE/$2" "$3")" >/dev/null 2>&1 || true; }
+ka_start() { fence "$1" election.md 1; }
 port() { sudo ip -n wire link set "$1" "$2"; }   # port hq-hq down: the cable
 
 lab reset
-quiet hq 'ip addr del 192.168.10.1/24 dev eth0; ip link set eth0 address 52:54:00:a8:0a:02; ip addr add 192.168.10.2/24 dev eth0'
-ka_conf hq 150
-ka_conf hq2 100
+fence hq one-gateway.md 1
+bash "$LAB_SH" example "$HERE/one-gateway.md" keepalived.conf | lab exec hq root 'cat > /etc/keepalived/keepalived.conf'
+bash "$LAB_SH" example "$HERE/one-gateway.md" keepalived.conf | sed 's/priority 150/priority 100/' |
+  lab exec hq2 root 'cat > /etc/keepalived/keepalived.conf'
 
 block config
 on hq 'cat /etc/keepalived/keepalived.conf'

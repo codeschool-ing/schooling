@@ -1,10 +1,14 @@
 ---
 title: GitHub Actions, and the one script it calls
-version: 1
+version: 2
 ---
 
-**This workflow was not run.** The lab has no GitHub, so the file below is written as it would be committed and checked only as far as the lab can check
-it. Every step in it calls `ci.sh`, and `ci.sh` is run for real further down.
+**This workflow was not run for this lesson.** Running it needs a GitHub account, which this course
+never asks for. So the file below, `.github/workflows/terraform.yml` in `~/shop`, is written as it
+would be committed and checked only as far as a YAML parser can check it, in section 05. Every step
+in it calls `ci.sh`, and `ci.sh` is run for real further down. If you have an account and want to
+try it, GitHub's free plan runs workflows; the AWS half then needs a real account, as lesson 1
+describes, and the roles of section 06.
 
 ```yaml
 # Illustrative: written for lesson 15 and never run by it. Every step calls
@@ -114,7 +118,7 @@ around the binary, which this pipeline does not need.
 ## The steps live in a script
 
 The workflow decides when each stage runs and with which credentials. What a stage does is written
-once, in a script the repository carries:
+once, in a script the repository carries, `ci.sh`:
 
 ```sh
 #!/bin/sh
@@ -148,8 +152,20 @@ esac
 ```
 
 That split is what lets the same steps run on a laptop, in GitHub and in GitLab without three
-copies drifting apart, and it is what lets this lesson show what each step prints. Here is the
-pipeline for the first commit, in a fresh clone that stands in for the runner:
+copies drifting apart, and it is what lets this lesson show what each step prints.
+
+Before the first run, Ana makes the script executable, initialises `~/shop` so that the lock file
+exists, and makes the first commit and pushes it. Save `.gitlab-ci.yml` from section 05 first, so
+the commit holds every file, then in `~/shop`:
+
+```sh
+chmod +x ci.sh
+terraform init -input=false
+git add -A && git commit -qm "shop: network and pipeline" && git push -q origin main
+```
+
+Here is the pipeline for that commit, in a fresh clone that stands in for the runner, made from
+your home directory:
 
 ```
 ana@laptop:~$ git clone -q git/shop.git ci/run-1

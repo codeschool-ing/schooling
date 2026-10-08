@@ -6,7 +6,8 @@
 # what moved.
 #
 #   sudo useradd -m -s /bin/bash -G sudo ana     # once, on a throwaway machine
-#   sudo cp ../../lab.sh /var/tmp/lab.sh          # the lab, beside course.json
+#   (lab.sh, beside course.json, builds the lab from the four files lesson 1
+#   shows, so the repository has to be readable by ana)
 #   sudo -u ana -i bash /path/to/captures.sh
 #
 # EVERY MACHINE IN THE LESSON IS PART OF ONE LAB. lab.sh builds an office, an
@@ -30,7 +31,7 @@
 
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 PAGER=cat SYSTEMD_PAGER=cat COLUMNS=100
-LAB_SH=${LAB_SH:-/var/tmp/lab.sh}
+LAB_SH=${LAB_SH:-$(dirname "$(readlink -f "$0")")/../../lab.sh}
 lab() { sudo bash "$LAB_SH" "$@"; }
 # on HOST 'command': what ana typed at her prompt on one machine of the lab,
 # and everything it printed.

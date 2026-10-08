@@ -1,6 +1,6 @@
 ---
 title: Quando a resposta é cortada
-version: 1
+version: 2
 ---
 
 Uma resposta termina por um entre poucos motivos, e a resposta diz qual em **`stop_reason`**. Os
@@ -11,9 +11,8 @@ tratá-la como se não estivesse.
 
 ## A mesma pergunta com espaço de menos
 
-O `lab/cutoff.py` pede ao `scripted-1` que explique a regra de frete da loja e imprime por que ele
-parou. A explicação é texto escrito pelo curso; o corte é do labllm, feito exatamente no número de
-tokens que a requisição permitiu:
+O `~/shop/scratch/cutoff.py` manda o código do carrinho como prompt de sistema, pede ao modelo que
+explique a regra de frete, e imprime por que ele parou:
 
 ```python
 import sys
@@ -21,7 +20,8 @@ import sys
 import anthropic
 
 client = anthropic.Anthropic()
-r = client.messages.create(model="scripted-1", max_tokens=int(sys.argv[1]),
+r = client.messages.create(model="llama3.2:3b", max_tokens=int(sys.argv[1]),
+                           system=open("shop/cart.py").read(),
                            messages=[{"role": "user", "content": "Explain the shop's shipping rule."}])
 print(f"stop_reason={r.stop_reason} output_tokens={r.usage.output_tokens}")
 print(r.content[0].text)
@@ -30,20 +30,33 @@ if r.stop_reason == "max_tokens":
 ```
 
 ```
-ana@dev:~/shop$ python lab/cutoff.py 40
+ana@dev:~/shop$ python scratch/cutoff.py 40
 stop_reason=max_tokens output_tokens=40
-The cart charges a flat 15.00 for shipping, and nothing at all once the order reaches 200.00. The threshold is checked after the discount, not before it: a cart of
+The shop's shipping rule is as follows:
+
+* Free shipping is available for orders with a subtotal of 20,000 cents (approximately $2 USD) or more.
+* If the order's subtotal
 !! the reply was cut off; do not use it as if it were complete
-ana@dev:~/shop$ python lab/cutoff.py 300
-stop_reason=end_turn output_tokens=147
-The cart charges a flat 15.00 for shipping, and nothing at all once the order reaches 200.00. The threshold is checked after the discount, not before it: a cart of 210.00 with a 10% coupon comes to 189.00 and pays shipping again. Every amount is held in integer cents, so 15.00 is the constant SHIPPING = 1500 and 200.00 is FREE_SHIPPING_FROM = 20000, both in shop/cart.py. The rule lives in Cart.shipping(), which Cart.total() calls after subtracting the discount. If you change the threshold, test_free_shipping_from_200 in tests/test_cart.py is the test that should change with it.
+ana@dev:~/shop$ python scratch/cutoff.py 400
+stop_reason=end_turn output_tokens=137
+The shop's shipping rule is as follows:
+
+1. If the total value of the cart's subtotal (excluding discounts) is greater than or equal to $20, the shipping cost is **FREE**.
+2. If the total value of the cart's subtotal is less than $20, the shipping cost is $1.50 per unit (cents).
+
+In the code provided, `FREE_SHIPPING_FROM` is set to 20000 cents, which represents the minimum subtotal required for free shipping. If the subtotal meets this threshold, the `shipping()` method returns 0. Otherwise, it returns $1.50 per unit, or `$1500` in this case.
 ```
 
-Quarenta tokens terminam no meio de uma frase: *a cart of*. Aqui o corte é óbvio porque uma pessoa
-consegue ler. Ele deixa de ser óbvio quando a resposta é para um programa. **JSON cortado em
-`max_tokens` não é JSON**, uma lista cortada é uma lista mais curta que parece completa, e código
-cortado ainda pode ser código válido sem o último ramo. Só o `stop_reason` separa uma coisa da
-outra.
+Quarenta tokens terminam no meio de uma frase: *If the order's subtotal*. Aqui o corte é óbvio
+porque uma pessoa consegue ler. Ele deixa de ser óbvio quando a resposta é para um programa. **JSON
+cortado no `max_tokens` não é JSON**, uma lista cortada é uma lista mais curta que parece completa,
+e código cortado ainda pode ser código válido a que falta o último ramo. Só o `stop_reason` separa
+os casos.
+
+**E leia a resposta completa antes de confiar nela.** Ela terminou sozinha, `end_turn`, e está
+errada duas vezes: 20.000 centavos são 200,00 e não "$20", e o frete é de 15,00 fixos, não "$1.50
+por unidade". O `cart.py` inteiro estava na requisição. Uma resposta completa não é uma resposta
+certa, e a aula 4 é sobre conferir.
 
 ## O que fazer com o `max_tokens`
 
@@ -57,22 +70,27 @@ Decida por ponto de chamada, e escreva a decisão:
   interprete.
 - **Continue, quando o texto é prosa.** Mande a resposta parcial de volta como começo do turno do
   assistente e peça o resto. Funciona porque o modelo continua a partir de qualquer texto que
-  receba, que a aula 1 seção 02 fez ser a definição de um modelo.
+  receba, que a aula 1 seção 06 fez ser a definição de um modelo.
 
 ## Parando de propósito
 
-O `stop_sequences` termina a resposta antes, numa sequência que você escolhe, e informa isso:
+O `stop_sequences` encerra a resposta mais cedo, numa string que você escolhe. Aqui o modelo recebe
+o pedido de uma lista de cinco e parou no número do terceiro item:
 
 ```
-ana@dev:~/shop$ python -c 'import anthropic; r = anthropic.Anthropic().messages.create(model="tiny-1", max_tokens=60, stop_sequences=["\n\n"], messages=[{"role": "user", "content": "Return the"}]); print(r.stop_reason, repr(r.stop_sequence)); print(repr(r.content[0].text))'
-stop_sequence '\n\n'
-' number of data.\nmode                Mode (most common values of data.\nstdev               Sample standard deviation.'
+ana@dev:~/shop$ python -c 'import anthropic; r = anthropic.Anthropic().messages.create(model="llama3.2:3b", max_tokens=80, stop_sequences=["3."], messages=[{"role": "user", "content": "Write a numbered list of five fruits."}]); print(r.stop_reason, repr(r.stop_sequence)); print(repr(r.content[0].text))'
+end_turn None
+'Here is a numbered list of five fruits:\n\n1. Apple\n2. Banana\n'
 ```
 
-O `stop_reason` é `stop_sequence`, o `stop_sequence` diz qual casou, e a própria sequência não está
-no texto. Uma sequência de parada é útil quando a saída tem um marcador natural de fim, como uma tag
-de fechamento que você pediu, e sai mais barato que deixar o modelo escrever além dela e cortar o
-resto.
+O texto parou onde devia, e a própria sequência não está nele. **Mas o `stop_reason` diz
+`end_turn` e o `stop_sequence` é `None`.** A API da Anthropic informaria `stop_sequence` e daria o
+nome da string que casou; a cópia do formato no Ollama para na string e informa a parada como se o
+modelo tivesse terminado sozinho. Uma API compatível é compatível até um detalhe como este, e é por
+isso que um código que se ramifica pelo `stop_reason` merece um teste contra o provedor em que vai
+rodar de verdade. Uma sequência de parada é útil quando a saída tem um marcador natural de fim,
+como uma tag de fechamento que você pediu, e sai mais barata que deixar o modelo escrever além dela
+e cortar o resto.
 
 Os outros valores de `stop_reason` pertencem a aulas seguintes: `tool_use`, quando o modelo parou
 para pedir uma ferramenta (aula 8), e `refusal`, que alguns provedores usam quando um sistema de

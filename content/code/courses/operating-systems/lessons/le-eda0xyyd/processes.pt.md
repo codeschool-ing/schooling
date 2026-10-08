@@ -1,12 +1,20 @@
 ---
 title: Programas e processos
-version: 1
+version: 2
 ---
 
 **Um programa é um arquivo no disco. Um processo é esse programa em execução.** Abra a calculadora
 duas vezes e há um programa e dois processos, cada um com a própria memória e o próprio estado.
 Quando alguém diz que o computador está lento, a pergunta quase nunca é *qual programa está
 instalado*. É *quais processos estão rodando*, e o que cada um está fazendo.
+
+Tudo nesta aula acontece numa pasta chamada `office`, dentro da sua pasta pessoal, com um arquivo
+curto. Crie as duas primeiro, no seu servidor:
+
+```sh
+mkdir ~/office && cd ~/office
+printf 'Ribeiro Contabilidade\nOpen 8:00 to 18:00\n' > notice.txt
+```
 
 No servidor Linux, a Ana inicia duas cópias do `sleep`, um programa que não faz nada por alguns
 segundos, e pede a lista:

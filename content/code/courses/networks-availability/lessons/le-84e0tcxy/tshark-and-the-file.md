@@ -3,7 +3,7 @@ title: Wireshark without a window
 version: 1
 ---
 
-**There is no screen in this lab, so every capture in this lesson is taken with `tshark`.** That
+**The machines of this course have no screen, so every capture in this lesson is taken with `tshark`.** That
 changes less than it seems. `tshark` is Wireshark with a terminal in front of it: the same
 dissectors decode each packet, the same two filter languages choose what to keep and what to show,
 and a file saved by one opens in the other. Where this lesson types `-f "tcp port 80"`, the window
@@ -33,6 +33,8 @@ ana wireshark
 ```
 
 `ana` is in the `wireshark` group, and that is why no command in this lesson starts with `sudo`.
+`netlab.sh` put you in it too; your list of groups is longer on a Multipass machine, and `wireshark` is
+in it.
 **Capturing needs a privilege, and decoding a packet does not.** So the Ubuntu package gives the
 privilege to the small helper that opens the interface, and lets the members of one group run it. The
 dissectors, the code that parses whatever a stranger chose to send, run as `ana`. Running all of
@@ -47,7 +49,12 @@ only `eth0` carries anything.
 
 The habit that pays is to **write the capture to a file and analyse the file**, rather than read a
 screen scrolling past. `mon` captured for eight seconds while `files` did a morning's work in
-miniature: a web page, two DNS lookups, a ping, an HTTPS request and a page that does not exist.
+miniature: a web page, two DNS lookups, a ping, an HTTPS request and a page that does not exist. Start
+the capture below on `mon`, and within its eight seconds paste this on `files`:
+
+```sh
+curl -s http://192.0.2.21/ >/dev/null; dig +short www.example.com >/dev/null; dig +short nosuch.example.com >/dev/null; ping -c 2 192.0.2.22 >/dev/null; curl -s https://www.example.com/ --resolve www.example.com:443:192.0.2.21 >/dev/null; curl -s http://192.0.2.23/nothing-here >/dev/null
+```
 
 ```
 ana@mon:~$ tshark -n -q -i eth0 -f "not arp" -a duration:8 -w files.pcap

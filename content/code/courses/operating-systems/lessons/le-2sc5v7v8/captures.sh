@@ -8,6 +8,11 @@
 #   sudo useradd -m -s /bin/bash -G sudo ana   # once, on a throwaway machine
 #   sudo -u ana -i bash /path/to/captures.sh    # hostname `server`
 #
+# THE BLOCKS THE STUDENT TYPES TO SET A SECTION UP ARE READ OUT OF THE LESSON.
+# stage() takes the sh fence of a section whose first line is the one given and
+# runs it as written, so what the lesson shows and what made these transcripts
+# cannot drift apart; a fence that is not there stops the script.
+#
 # ONLY LINUX IS CAPTURED HERE, and PowerShell 7 running on that same Linux.
 # What only Windows or macOS can print is shown in the lesson as commands with
 # no output, and the prose says so where it happens: a transcript nobody ran
@@ -18,7 +23,7 @@
 # three files written with sudo tee before the first block, and removed with
 # ana's crontab and the backup at the end: /usr/local/bin/office-backup, a
 # two-line script that tars /etc/apt into /var/backups, and the two unit files
-# the unit block prints; the server's own clock zone is UTC, as lesson 3's
+# the unit block prints, all three the lesson's own fence, run by stage(); the server's own clock zone is UTC, as lesson 3's
 # timedatectl showed; and sudo set to ask ana for no password, which a real
 # installation does not do.
 # Every line after a prompt is what the command printed.
@@ -43,6 +48,17 @@ psh() {
   pwsh -NoProfile -NoLogo -Command "\$ErrorView='ConciseView'; $* | Out-String -Width 100 -Stream | ForEach-Object { \$_.TrimEnd() }" 2>&1 || true
 }
 block() { printf '##### %s\n' "$1"; }
+here=$(cd "$(dirname "$0")" && pwd)
+stage() {
+  local fence
+  fence=$(first="$2" awk '
+    /^```sh$/ { inside = 1; n = 0; next }
+    /^```$/ && inside { if (keep) exit; inside = 0; next }
+    inside { n++; if (n == 1 && $0 == ENVIRON["first"]) keep = 1; if (keep) print }
+  ' "$here/$1")
+  [ -n "$fence" ] || { echo "captures.sh: no sh fence starting \"$2\" in $1" >&2; exit 1; }
+  eval "$fence"
+}
 # Lines from stdin, typed one at a time into an interactive bash in a real
 # terminal, so job numbers and "Terminated" appear exactly as a person sees them.
 session() {
@@ -57,10 +73,7 @@ cd ~
 crontab -r 2>/dev/null
 sudo systemctl disable --now office-backup.timer >/dev/null 2>&1
 sudo rm -f /etc/systemd/system/office-backup.service /etc/systemd/system/office-backup.timer /usr/local/bin/office-backup /var/backups/etc-apt.tar.gz
-printf '#!/bin/sh\ntar -czf /var/backups/etc-apt.tar.gz -C /etc apt && echo "backup written: /var/backups/etc-apt.tar.gz"\n' | sudo tee /usr/local/bin/office-backup >/dev/null
-sudo chmod 755 /usr/local/bin/office-backup
-printf '[Unit]\nDescription=Copy /etc/apt to /var/backups\n\n[Service]\nType=oneshot\nExecStart=/usr/local/bin/office-backup\n' | sudo tee /etc/systemd/system/office-backup.service >/dev/null
-printf '[Unit]\nDescription=Run office-backup every weekday at 02:00\n\n[Timer]\nOnCalendar=Mon..Fri 02:00\nPersistent=true\n\n[Install]\nWantedBy=timers.target\n' | sudo tee /etc/systemd/system/office-backup.timer >/dev/null
+stage a-timer.md "sudo tee /usr/local/bin/office-backup > /dev/null <<'EOF'"
 
 block running
 show 'systemctl list-units --type=service --state=running --no-pager --no-legend'

@@ -18,8 +18,8 @@ ana@pc1:~$ sudo journalctl _COMM=sudo --no-pager -o cat | grep "COMMAND=/usr/bin
 - `sudo` logged **every command run with it**, with who ran it and as whom.
 
 Read the second part carefully, because it records something the story above left out. **It was `ana`
-who ran Elisa's commands**, with `sudo -u elisa`, including the one that granted `ana` access. In the lab
-the technician played Elisa's part, and the record says so plainly. On a real computer, that same line
+who ran Elisa's commands**, with `sudo -u elisa`, including the one that granted `ana` access. In this
+recording the technician played Elisa's part, and the record says so plainly. On a real computer, that same line
 would be the alarm: a technician who gives herself the user's consent has not been given it.
 
 That is what logs are for in remote support: **they protect both sides**. The user can see who was on

@@ -1,6 +1,6 @@
 ---
 title: "O hub: cada quadro por todas as portas"
-version: 1
+version: 2
 ---
 
 Um hub costuma ser descrito como um switch lento. É outro tipo de equipamento. **Um hub não tem
@@ -21,7 +21,9 @@ problema.
 laboratório não roda um hub de verdade. Ele imita o que um hub faz com o tráfego. O switch esquece
 cada endereço aprendido depois de um **tempo de envelhecimento** (*ageing time*); com esse tempo em
 zero, ele esquece cada endereço no instante em que aprende. Com a tabela vazia, todo quadro sai por
-todas as portas, que é o comportamento de um hub:
+todas as portas, que é o comportamento de um hub. Num prompt de root no sw1,
+`ip link set br0 type bridge ageing_time 0` faz a mudança, e `ageing_time 30000`, o padrão de 300
+segundos contado em centésimos, a desfaz depois:
 
 ```
 root@sw1:~# ip -d link show br0 | grep -o "ageing_time [0-9]*"

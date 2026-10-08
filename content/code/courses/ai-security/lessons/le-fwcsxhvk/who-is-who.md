@@ -1,6 +1,6 @@
 ---
 title: One API call, read the way the LGPD reads it
-version: 1
+version: 2
 ---
 
 The intuition most developers bring is that a model provider is infrastructure, like a database or
@@ -10,8 +10,50 @@ much to say about. **The LGPD reads it the other way.** Sending a ticket to a pr
 transferring and communicating data among the operations it covers. It is done by another company,
 on that company's computers, and usually outside Brazil.
 
-This lesson's ticket is the kind of thing a support team would like a model to summarise. Like
-everything in `~/guard`, it was written by the course, and the people in it are invented:
+This lesson's ticket is the kind of thing a support team would like a model to summarise. It was
+written by the course, and the people in it are invented. Paste it:
+
+```sh
+cat > ~/guard/data/ticket-4471.json <<'EOF'
+{
+ "ticket": "TK-4471",
+ "opened": "2026-09-18",
+ "client": {
+  "name": "Marcos Teixeira",
+  "cpf": "529.982.247-25",
+  "email": "marcos.teixeira@example.com.br",
+  "phone": "+55 11 98765-4321",
+  "birth_date": "1984-02-11",
+  "address": "Rua Augusta 1500, ap 32, São Paulo"
+ },
+ "freelancer": {
+  "name": "Juliana Prado",
+  "cpf": "111.444.777-35",
+  "pix_key": "juliana.prado@example.com"
+ },
+ "job": {
+  "id": "4471",
+  "title": "Logo for a bakery",
+  "price_cents": 120000,
+  "due": "2026-09-10"
+ },
+ "messages": [
+  {
+   "from": "client",
+   "text": "Juliana, the logo was due on 10 September and I have nothing. I paid R$ 1.200,00."
+  },
+  {
+   "from": "freelancer",
+   "text": "Sorry, I was in hospital for a week with a kidney infection and couldn't work. I can deliver by Friday."
+  },
+  {
+   "from": "client",
+   "text": "I don't care, I want my money back. Call me on +55 11 98765-4321."
+  }
+ ]
+}
+EOF
+```
 
 ```
 ana@lab:~/guard$ cat data/ticket-4471.json

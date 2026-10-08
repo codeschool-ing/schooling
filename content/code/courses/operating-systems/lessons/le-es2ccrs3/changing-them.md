@@ -1,12 +1,19 @@
 ---
 title: Changing permissions and owners
-version: 1
+version: 2
 ---
 
 **`chmod`** changes permissions, and it takes them two ways.
 
 **By letter**, which changes only what you name: `u`, `g`, `o` for owner (*user*), group and others,
-`+` or `-`, and the letters. It is what fixes a script that will not run:
+`+` or `-`, and the letters. It is what fixes a script that will not run. Write the script first, in
+`/srv/office`:
+
+```sh
+printf '#!/bin/sh\necho backup done\n' > backup.sh
+```
+
+Then try to run it:
 
 ```
 ana@server:/srv/office$ cat backup.sh

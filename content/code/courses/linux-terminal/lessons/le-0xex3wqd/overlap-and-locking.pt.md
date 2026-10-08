@@ -1,6 +1,6 @@
 ---
 title: O job que ainda está rodando quando o próximo começa
-version: 1
+version: 2
 ---
 
 ```sh
@@ -20,17 +20,20 @@ servidor**, e nunca acontece em teste, porque em teste o job é rápido.
 
 ```
 ana@vm:~/work/cron$ flock -n job.lock -c 'sleep 8; echo "long job finished"' & sleep 1; echo started
+[1] 5038
 started
 ana@vm:~/work/cron$ flock -n job.lock -c 'echo "second job ran"'; echo "exit $?"
 exit 1
 ana@vm:~/work/cron$ flock -w 20 job.lock -c 'echo "third job waited, then ran"'; echo "exit $?"
 long job finished
 third job waited, then ran
+[1]+  Done                    flock -n job.lock -c 'sleep 8; echo "long job finished"'
 exit 0
 ```
 
-Três execuções contra uma trava, e os três comportamentos estão naquelas seis
-linhas.
+Três execuções contra uma trava, e os três comportamentos estão naquelas linhas,
+entre as notas do próprio shell sobre o job em segundo plano: `[1] 5038` quando
+ele começa e `[1]+ Done` quando termina.
 
 **A primeira segura a trava por oito segundos.** A segunda a pede com `-n` — *não
 espere* — e não a recebe: sem saída, `exit 1`, foi embora. A terceira pede com
@@ -68,6 +71,7 @@ usado quando a trava está ocupada**, então `-E 0` diz "pular não é uma falha
 
 ```
 ana@vm:~/work/cron$ flock -n job.lock -c 'sleep 6' & sleep 1; echo held
+[1] 5045
 held
 ana@vm:~/work/cron$ flock -E 0 -n job.lock -c 'echo ran'; echo "exit $?"
 exit 0

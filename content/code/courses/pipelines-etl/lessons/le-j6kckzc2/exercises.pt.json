@@ -1,0 +1,381 @@
+{
+  "ex-0z2g4c0j": {
+    "prompt": "O que separa o ETL do ELT?",
+    "hint": "As mesmas três letras.",
+    "choices": [
+      {
+        "text": "Onde a transformação roda",
+        "why": "Isso. Antes de carregar, fora do warehouse; ou depois, dentro dele."
+      },
+      {
+        "text": "Se os dados são transformados ou não",
+        "why": "Os dois transformam; diferem em onde."
+      },
+      {
+        "text": "Em qual linguagem de programação o pipeline é escrito",
+        "why": "Qualquer um pode ser Python ou SQL; o ETL desta lição é Python e o ELT é os dois."
+      },
+      {
+        "text": "Com que frequência o pipeline roda",
+        "why": "Frequência é batch contra streaming, o assunto da lição 1."
+      }
+    ]
+  },
+  "ex-hkhm91hd": {
+    "prompt": "Ligue cada passo ao que ele faz nos pipelines da Ana.",
+    "hint": "Um lê, um remodela, um escreve.",
+    "pairs": [
+      {
+        "left": "Extrair",
+        "right": "Ler os pedidos da semana do banco da loja"
+      },
+      {
+        "left": "Transformar",
+        "right": "Tirar pedidos cancelados e somar por categoria"
+      },
+      {
+        "left": "Carregar",
+        "right": "Escrever o resultado no warehouse"
+      }
+    ],
+    "right_distractors": [
+      "Agendar a execução para as 2 da manhã"
+    ]
+  },
+  "ex-2w1y3499": {
+    "prompt": "No `etl.py`, onde os pedidos cancelados são removidos?",
+    "hint": "Veja o que a consulta seleciona.",
+    "choices": [
+      {
+        "text": "Na consulta SQL enviada à loja",
+        "why": "A consulta lê todos os status; ela só filtra por data."
+      },
+      {
+        "text": "Em Python, no laço",
+        "why": "Isso. A linha `if status != \"completed\"` os pula na memória."
+      },
+      {
+        "text": "No warehouse, depois de a carga terminar",
+        "why": "Nada além da resposta chega ao warehouse no ETL."
+      },
+      {
+        "text": "Pelo `DELETE` antes da inserção",
+        "why": "Esse `DELETE` limpa os mesmos dias no warehouse, não os pedidos cancelados."
+      }
+    ]
+  },
+  "ex-0trnjj8n": {
+    "prompt": "O `etl.py` leu 3.048 linhas da loja. Quantas linhas ele escreveu no warehouse?",
+    "hint": "Catorze categorias em sete dias."
+  },
+  "ex-zwj2n1yv": {
+    "prompt": "Por que o ETL é a escolha mais forte para o e-mail de um cliente de que o warehouse não precisa?",
+    "hint": "Compare \"nunca o teve\" com \"apagou depois\".",
+    "choices": [
+      {
+        "text": "O ETL criptografa toda coluna que carrega",
+        "why": "O ETL não criptografa nada sozinho; ele decide o que é carregado."
+      },
+      {
+        "text": "Uma coluna descartada nunca esteve lá para proteger",
+        "why": "Isso. É uma afirmação mais forte que apagá-la depois."
+      },
+      {
+        "text": "Warehouses ELT não aceitam colunas de texto",
+        "why": "Aceitam; a camada crua guarda toda coluna que a origem tem."
+      },
+      {
+        "text": "O ETL roda mais rápido que o ELT quando as linhas têm texto",
+        "why": "Velocidade não é o argumento para esta coluna."
+      }
+    ]
+  },
+  "ex-n6wdwpwz": {
+    "prompt": "Por que as tabelas `raw` não têm chaves primárias nem estrangeiras?",
+    "hint": "Qual é o trabalho da camada crua?",
+    "choices": [
+      {
+        "text": "Chaves fariam o `COPY` falhar em tabelas grandes",
+        "why": "O `COPY` funciona com chaves; o motivo é o que uma chave recusaria."
+      },
+      {
+        "text": "Elas guardam o que a origem disse, mesmo o que ela errou",
+        "why": "Isso. Uma recusa ali faria o warehouse discordar da origem em silêncio."
+      },
+      {
+        "text": "O PostgreSQL proíbe chaves primárias e estrangeiras num schema chamado `raw`",
+        "why": "O nome do schema não significa nada para o PostgreSQL."
+      },
+      {
+        "text": "As chaves ficaram de fora para poupar tempo e entram na lição 6",
+        "why": "Ficaram de fora de propósito; o staging confere, o raw não."
+      }
+    ]
+  },
+  "ex-x920hf30": {
+    "prompt": "Duas consultas `EXCEPT`, uma em cada direção, devolvem ambas contagem 0. O que isso estabelece?",
+    "hint": "O `EXCEPT` devolve linhas da primeira que faltam na segunda.",
+    "choices": [
+      {
+        "text": "As duas tabelas têm o mesmo conjunto de linhas",
+        "why": "Isso. Nada numa falta na outra."
+      },
+      {
+        "text": "As duas tabelas estão vazias",
+        "why": "Tabelas vazias também dariam 0, mas estas têm 98 linhas cada."
+      },
+      {
+        "text": "Os dois programas levaram o mesmo tempo para rodar",
+        "why": "O `EXCEPT` compara linhas, não tempos."
+      },
+      {
+        "text": "A tabela do ETL foi copiada da tabela do ELT",
+        "why": "Elas foram construídas de forma independente; por isso concordar significa algo."
+      }
+    ]
+  },
+  "ex-nth05ds5": {
+    "prompt": "Para comparar duas tabelas linha a linha, a Ana roda `SELECT * FROM a ___ SELECT * FROM b` nas duas direções.",
+    "hint": "O operador de conjuntos que subtrai.",
+    "blanks": [
+      {
+        "accept": [
+          "EXCEPT"
+        ]
+      }
+    ]
+  },
+  "ex-xn9psjnt": {
+    "prompt": "Um colega troca `AT TIME ZONE 'America/Sao_Paulo'` por `::date` no `sales_by_category.sql`, e o fuso do banco é UTC. O que acontece com a comparação com o `etl.py`?",
+    "hint": "Um dia é uma opinião de um fuso horário.",
+    "choices": [
+      {
+        "text": "Nada: uma data é uma data",
+        "why": "A data de um horário depende do fuso em que é lido."
+      },
+      {
+        "text": "A consulta falha com erro de tipo",
+        "why": "`::date` num timestamptz é válido; ele usa o fuso da sessão em silêncio."
+      },
+      {
+        "text": "Pedidos feitos depois das 21h em São Paulo passam para o dia seguinte, e o `EXCEPT` acha linhas",
+        "why": "Isso. 21h em UTC-3 é meia-noite em UTC, então esses pedidos mudam de dia."
+      },
+      {
+        "text": "Só os totais mudam, não os dias",
+        "why": "Os totais mudam porque pedidos mudam de dia."
+      }
+    ]
+  },
+  "ex-3n3qjmbg": {
+    "prompt": "A versão ELT copiou 1.933 pedidos, 3.048 linhas de pedido e 1.200 livros. Quantas linhas atravessaram da loja para o warehouse?",
+    "hint": "Some as três."
+  },
+  "ex-gpkzafvn": {
+    "prompt": "Na quinta-feira o comprador pergunta quais editoras venderam mais na primeira semana. Por que o warehouse ELT responde sem tocar na loja?",
+    "hint": "Onde está a coluna da editora?",
+    "choices": [
+      {
+        "text": "A tabela de resumo dele tem uma coluna de editora",
+        "why": "O resumo é por categoria, como o do ETL."
+      },
+      {
+        "text": "O `raw.books` foi copiado inteiro, com a editora",
+        "why": "Isso. A camada crua guarda o que o ETL jogou fora."
+      },
+      {
+        "text": "O warehouse mantém uma conexão ao vivo com o banco da loja",
+        "why": "A consulta lê só tabelas `raw`."
+      },
+      {
+        "text": "O dbt reconstruiu a coluna de editora durante a noite",
+        "why": "Nenhum dbt rodou ainda; ele chega na lição 11."
+      }
+    ]
+  },
+  "ex-y3b6x808": {
+    "prompt": "Quais destas coisas o ETL ainda economiza em relação ao ELT? Escolha todas as que se aplicam.",
+    "hint": "Pense na origem, no warehouse e no que ele precisa proteger.",
+    "choices": [
+      {
+        "text": "Processamento do warehouse enquanto as pessoas o leem",
+        "why": "Sim. A transformação do ELT disputa o warehouse com quem lê."
+      },
+      {
+        "text": "Colunas que o warehouse precisa proteger e apagar",
+        "why": "Sim. O que nunca é carregado nunca fica exposto lá."
+      },
+      {
+        "text": "Visitas à origem por perguntas que ninguém planejou",
+        "why": "O contrário: cada pergunta nova no ETL significa ler a origem de novo."
+      },
+      {
+        "text": "A capacidade de reproduzir um relatório antigo",
+        "why": "Isso é o que a camada crua dá ao ELT, e falta ao ETL."
+      }
+    ]
+  },
+  "ex-vyhgsh3z": {
+    "prompt": "Rodado de novo na quinta-feira para a primeira semana, o `etl.py` relatou 26 livros a menos que o relatório de domingo. Por quê?",
+    "hint": "O passado da loja não é fixo.",
+    "choices": [
+      {
+        "text": "Alguns foram estornados desde então",
+        "why": "Isso. O `etl.py` lê o que a loja diz agora."
+      },
+      {
+        "text": "O `etl.py` tem um bug que perde linhas quando lê a mesma semana duas vezes",
+        "why": "O mesmo código deu o número de domingo no domingo."
+      },
+      {
+        "text": "O laboratório apaga pedidos com mais de uma semana quando toca um dia novo",
+        "why": "Os dias tocados atualizam status; os pedidos ficam."
+      },
+      {
+        "text": "O warehouse perdeu linhas",
+        "why": "O `etl.py` leu a loja de novo; o warehouse não perdeu nada."
+      }
+    ]
+  },
+  "ex-wxw5ev6a": {
+    "prompt": "Duas pessoas querem a receita da primeira semana. Uma quer todos os estornos posteriores contados; a outra quer exatamente o que foi informado na época. Qual origem serve a quem?",
+    "hint": "Duas perguntas legítimas, duas respostas diferentes.",
+    "choices": [
+      {
+        "text": "As duas a partir da camada crua",
+        "why": "As linhas cruas congelaram domingo; elas não sabem dos estornos de quinta."
+      },
+      {
+        "text": "A primeira da loja; a segunda das linhas cruas",
+        "why": "Isso. Um pergunta o que é verdade agora, o outro o que foi visto então."
+      },
+      {
+        "text": "As duas da loja, que é a fonte da verdade",
+        "why": "A loja não diz mais o que dizia no domingo, então não reproduz o relatório."
+      },
+      {
+        "text": "A primeira das linhas cruas; a segunda da loja",
+        "why": "É o par certo, trocado."
+      }
+    ]
+  },
+  "ex-mec94zcn": {
+    "prompt": "Uma tabela de resumo está errada há uma semana por causa de um bug, e cada linha extraída nessa semana foi guardada. O que a lição manda fazer?",
+    "hint": "Qual das metades está errada?",
+    "choices": [
+      {
+        "text": "Corrigir as linhas cruas à mão e rodar de novo",
+        "why": "Linhas cruas registram o que a origem disse; corrigi-las destrói esse registro."
+      },
+      {
+        "text": "Extrair de novo da origem",
+        "why": "A origem pode ter mudado; as linhas cruas guardam o que foi lido."
+      },
+      {
+        "text": "Consertar o bug e reconstruir a partir delas",
+        "why": "Isso. É para isso que elas são guardadas."
+      },
+      {
+        "text": "Apagar os marts e todas as tabelas cruas, e recomeçar o warehouse a partir da origem",
+        "why": "Reconstruir está certo, mas a partir das linhas cruas que você já tem."
+      }
+    ]
+  },
+  "ex-06nkvrzj": {
+    "prompt": "Ordene as camadas de onde as linhas da origem chegam até o que um relatório lê.",
+    "hint": "Cada uma lê só a de baixo.",
+    "items": [
+      "raw",
+      "staging",
+      "marts"
+    ]
+  },
+  "ex-6vvye824": {
+    "prompt": "Um painel lê `raw.orders` direto porque o staging demora a mudar. O que dá errado primeiro?",
+    "hint": "O staging já limpa essas linhas.",
+    "choices": [
+      {
+        "text": "O PostgreSQL não deixa um painel ler o schema raw",
+        "why": "Nada técnico impede; por isso a regra precisa ser mantida."
+      },
+      {
+        "text": "Ele limpa as linhas do seu jeito",
+        "why": "Isso. Duas limpezas de uma tabela se afastam no dia em que uma é consertada."
+      },
+      {
+        "text": "As linhas cruas mudam por baixo dele",
+        "why": "As linhas cruas só mudam quando a extração escreve; elas não são o problema."
+      },
+      {
+        "text": "Nada: raw é só staging sem nomes",
+        "why": "O staging também corrige tipos, remove lixo e calcula a data."
+      }
+    ]
+  },
+  "ex-1q5zs5vw": {
+    "prompt": "A Ponto Final precisa da cidade de cada cliente no warehouse, mas não do e-mail. O que a lição recomenda para a extração de `customers`?",
+    "hint": "A maioria dos pipelines é as duas coisas.",
+    "choices": [
+      {
+        "text": "Carregar cru e apagar os e-mails uma vez por mês",
+        "why": "Por um mês eles ficam num segundo lugar que precisa ser protegido."
+      },
+      {
+        "text": "Pular `customers` inteira e perder a cidade",
+        "why": "A cidade é necessária; só uma coluna é o problema."
+      },
+      {
+        "text": "Descartar ou trocar por hash o e-mail na entrada, e carregar o resto cru",
+        "why": "Isso. Um passo leve de ETL para essa coluna, ELT para todo o resto."
+      },
+      {
+        "text": "Carregar cru; o warehouse já é protegido",
+        "why": "Uma segunda cópia é um segundo lugar de onde a pessoa pode pedir para ser apagada."
+      }
+    ]
+  },
+  "ex-9qdf6c9s": {
+    "prompt": "Ligue cada situação ao motivo pelo qual ela aponta para transformar antes de carregar.",
+    "hint": "Quatro motivos, pelo nome.",
+    "pairs": [
+      {
+        "left": "Números de cartão numa exportação de pagamentos",
+        "right": "O dado não pode chegar"
+      },
+      {
+        "left": "Notas de fornecedores chegando em PDF",
+        "right": "A transformação não é SQL"
+      },
+      {
+        "left": "O destino é um banco operacional pequeno",
+        "right": "O destino é fraco"
+      },
+      {
+        "left": "Uma leitura de sensor a cada milissegundo",
+        "right": "O volume é absurdo"
+      }
+    ]
+  },
+  "ex-833pxt7w": {
+    "prompt": "Uma equipe roda ELT. O SQL de transformação tem um bug há um mês, e ela guardou cada linha crua. Uma segunda equipe roda ETL com o mesmo bug. Quem consegue produzir os números certos do mês passado, e como?",
+    "hint": "Onde mora o histórico de cada equipe?",
+    "choices": [
+      {
+        "text": "As duas, rodando de novo contra a origem",
+        "why": "A origem mudou; ela dá a visão de hoje sobre o mês passado, não o que estava lá."
+      },
+      {
+        "text": "A equipe ELT, consertando o SQL e reconstruindo a partir do raw",
+        "why": "Isso. A equipe ETL guardou só as respostas erradas."
+      },
+      {
+        "text": "A equipe ETL, porque o warehouse menor dela é mais rápido de reconstruir do zero",
+        "why": "Pequeno é o que restou: as respostas erradas e nada de onde recalculá-las."
+      },
+      {
+        "text": "Nenhuma: um mês de números errados está perdido",
+        "why": "A equipe ELT ainda tem cada linha que leu."
+      }
+    ]
+  }
+}

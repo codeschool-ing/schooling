@@ -3,15 +3,15 @@ title: Uma classe entra, um objeto sai
 version: 1
 ---
 
-Na seção 05 da aula 16, a biblioteca da OpenAI transformou uma classe num schema e a resposta de
-volta num objeto. A biblioteca do Google faz o mesmo, pela configuração. O `lab/gemini_extract.py`
-também conta os tokens de cada e-mail antes de mandá-lo:
+Na seção 05 da aula 16 a biblioteca da OpenAI transformou uma classe num schema e a resposta de
+volta num objeto. A biblioteca do Google faz o mesmo, pela configuração. O `gemini_extract.py` pede
+o número do pedido em dois casos da ana, como um `Order`:
 
 ```python
 import json
 
 from google import genai
-from google.genai import types
+from google.genai import errors, types
 from pydantic import BaseModel
 
 
@@ -24,24 +24,26 @@ prompt = open("prompts/extract.txt").read()
 cases = {c["id"]: c for c in map(json.loads, open("cases/triage.jsonl"))}
 
 for cid in ("c01", "c05"):
-    text = cases[cid]["text"]
-    n = client.models.count_tokens(model="standin-small", contents=text).total_tokens
-    r = client.models.generate_content(
-        model="standin-small", contents=text,
-        config=types.GenerateContentConfig(system_instruction=prompt, temperature=0,
-                                           response_mime_type="application/json", response_schema=Order))
-    print(cid, f"{n} tokens counted first;", repr(r.parsed), " expected:", cases[cid]["order"])
+    try:
+        r = client.models.generate_content(
+            model="gemini-3.5-flash", contents=cases[cid]["text"],
+            config=types.GenerateContentConfig(system_instruction=prompt, temperature=0,
+                                               response_mime_type="application/json", response_schema=Order))
+        print(cid, repr(r.parsed), " expected:", cases[cid]["order"])
+    except errors.APIError as e:
+        print(cid, e.code, e.status)
 ```
 
+Pelo relay, como na seção 02, o Ollama responde os dois com o 404 dele, e a requisição é a parte
+que vale ler:
+
 ```
-ana@desk:~/desk$ python lab/gemini_extract.py
+ana@desk:~/desk$ export GOOGLE_GEMINI_BASE_URL=http://127.0.0.1:8500 GOOGLE_API_KEY=ollama
+ana@desk:~/desk$ python gemini_extract.py
 Direct use of automatic function calling (AFC) in Models.generate_content is not recommended. Instead, we recommend to use AFC in Chat.send_message. Similarly, direct use of AFC in Models.generate_content_stream is not recommended. Instead, we recommend to use AFC in Chat.send_message_stream.
-c01 33 tokens counted first; Order(order='LB-20417')  expected: LB-20417
-c05 15 tokens counted first; Order(order=None)  expected: None
-```
-
-```
-ana@desk:~/desk$ wire --body | python -c "import json, sys; print(json.dumps(json.load(sys.stdin)[\"generationConfig\"], indent=2))"
+c01 404 Not Found
+c05 404 Not Found
+ana@desk:~/desk$ python relay.py show --body | python -c "import json, sys; print(json.dumps(json.load(sys.stdin)[\"generationConfig\"], indent=2))"
 {
   "temperature": 0.0,
   "responseMimeType": "application/json",
@@ -64,15 +66,36 @@ ana@desk:~/desk$ wire --body | python -c "import json, sys; print(json.dumps(jso
 
 O schema no fio é **o dialeto do próprio Google**, não o JSON Schema que a OpenAI recebeu para a
 mesma classe: `"type": "STRING"` em maiúsculas, e `"nullable": true` onde a aula 16 tinha
-`"anyOf": [{"type": "string"}, {"type": "null"}]`. A biblioteca traduziu uma classe Python para o
-formato de dois provedores, que é o trabalho que um programa faria à mão, e o motivo de um schema
-copiado da documentação de um provedor para a requisição de outro poder ser recusado.
+`"anyOf": [{"type": "string"}, {"type": "null"}]`. A descrição do campo na biblioteca diz de onde
+vem o dialeto, e o que fazer quando ele não basta:
 
-O `count_tokens` perguntou à API, antes da requisição, quantos tokens o e-mail tem. É uma chamada à
-parte, com a própria ida e volta, e útil onde o tamanho decide alguma coisa: para que modelo mandar
-uma mensagem longa, ou se ela cabe. O número é a contagem do próprio provedor, feita com o
-tokenizador do modelo, o que nenhuma biblioteca local pode prometer para um modelo fechado.
+```
+ana@desk:~/desk$ python field.py GenerateContentConfig.response_schema
+The `Schema` object allows the definition of input and output data types.
+These types can be objects, but also primitives and arrays.
+Represents a select subset of an [OpenAPI 3.0 schema
+object](https://spec.openapis.org/oas/v3.0.3#schema).
+If set, a compatible response_mime_type must also be set.
+Compatible mimetypes: `application/json`: Schema for JSON response.
 
-O `r.parsed` é de novo trabalho da biblioteca, feito do lado da ana a partir do texto que voltou. A
-mesma ressalva da aula 16 vale: o substituto ignorou o schema e respondeu pela tabela dele, e só a
-comparação com o pedido esperado diz se o valor está certo.
+If `response_schema` doesn't process your schema correctly, try using
+`response_json_schema` instead.
+```
+
+Um subconjunto do OpenAPI 3.0, que é de onde vem o `nullable`. A biblioteca traduziu uma classe
+Python para os formatos de dois provedores, que é o trabalho que um programa faria à mão, e o
+motivo de um schema copiado da documentação de um provedor para a requisição de outro poder ser
+recusado.
+
+O `r.parsed` é trabalho da biblioteca de novo, feito do lado da ana a partir do texto que volta:
+
+```
+ana@desk:~/desk$ python field.py GenerateContentResponse.parsed
+First candidate from the parsed response if response_schema is provided. Not available for streaming.
+```
+
+"O primeiro candidato", então ele tem a mesma fraqueza do texto de que é feito, que é o assunto da
+seção 04. E vale a mesma ressalva da aula 16: um schema promete o formato, e só a comparação com o
+pedido esperado diz se o valor está certo. Nesta máquina não houve valor nenhum para comparar, o
+que lembra onde essa conferência tem de morar: no harness da ana, rodando contra o provedor que a
+mesa paga.

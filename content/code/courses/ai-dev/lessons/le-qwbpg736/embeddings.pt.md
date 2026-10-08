@@ -1,6 +1,6 @@
 ---
 title: Significado como posição
-version: 1
+version: 2
 ---
 
 Antes de um modelo fazer qualquer coisa com um token, ele o transforma numa lista de números, um
@@ -16,8 +16,10 @@ números e o que eles não conseguem fazer.
 
 ## Um texto vira 256 números
 
-O modelo de embeddings do laboratório é o **WordLlama**, um modelo pequeno que roda no processador
-de um notebook em milissegundos. Ele transforma qualquer texto em 256 números:
+O modelo de embeddings que você instalou com as bibliotecas é o **WordLlama**, um modelo pequeno
+que roda no processador de um notebook em milissegundos. Na primeira vez que é carregado, ele
+baixa um arquivo pequeno, as configurações do seu tokenizador, e o guarda. Ele transforma
+qualquer texto em 256 números:
 
 ```
 ana@dev:~/shop$ python -c 'from wordllama import WordLlama; v = WordLlama.load().embed(["the cart total is wrong"]); print(v.shape, v.dtype); print(v[0][:6].round(3))'
@@ -36,12 +38,29 @@ cosseno**: 1 quando dois vetores apontam para o mesmo lado, 0 quando não têm r
 
 ## Perguntando que frases estão perto
 
-O `lab/similar.py` gera o embedding de uma consulta e de alguns textos candidatos, e lista os
-candidatos pela similaridade de cosseno com a consulta. Aqui está uma pergunta de suporte contra
-quatro frases, duas das quais são a mesma reclamação com outras palavras:
+O `~/shop/scratch/similar.py` gera o embedding de uma consulta e de alguns textos candidatos, e
+lista os candidatos pela similaridade de cosseno com a consulta:
+
+```python
+import sys
+
+import numpy as np
+from wordllama import WordLlama
+
+wl = WordLlama.load()
+query, *texts = [line.strip() for line in sys.stdin if line.strip()]
+vectors = wl.embed([query] + texts, norm=True)
+scores = vectors[1:] @ vectors[0]
+print(f"query: {query}")
+for i in np.argsort(-scores):
+    print(f"  {scores[i]:+.3f}  {texts[i]}")
+```
+
+Aqui está uma pergunta de suporte contra quatro frases, duas das quais são a mesma reclamação com
+outras palavras:
 
 ```
-ana@dev:~/shop$ printf "%s\n" "the cart total is wrong" "checkout adds up the order incorrectly" "the sum shown at checkout is too high" "the cart page loads slowly" "our office opens at nine" | python lab/similar.py
+ana@dev:~/shop$ printf "%s\n" "the cart total is wrong" "checkout adds up the order incorrectly" "the sum shown at checkout is too high" "the cart page loads slowly" "our office opens at nine" | python scratch/similar.py
 query: the cart total is wrong
   +0.529  the cart page loads slowly
   +0.347  checkout adds up the order incorrectly
@@ -59,7 +78,7 @@ Ainda cometem esse tipo de erro, com menos frequência, e nenhuma nota avisa qua
 O segundo limite aparece até em modelos bons:
 
 ```
-ana@dev:~/shop$ printf "%s\n" "the coupon was accepted" "the coupon was not accepted" "the coupon was refused" "the voucher was accepted" | python lab/similar.py
+ana@dev:~/shop$ printf "%s\n" "the coupon was accepted" "the coupon was not accepted" "the coupon was refused" "the voucher was accepted" | python scratch/similar.py
 query: the coupon was accepted
   +0.964  the coupon was not accepted
   +0.664  the coupon was refused

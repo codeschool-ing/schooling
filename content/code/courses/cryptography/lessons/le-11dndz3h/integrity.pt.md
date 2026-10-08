@@ -8,6 +8,63 @@ checksum pega um cabo que inverteu um bit. Ele não pega uma pessoa que alterou 
 essa pessoa também consegue recalcular o checksum. Esta aula trata do segundo tipo, e começa
 mostrando por que o primeiro não basta.
 
+## Os arquivos desta aula
+
+O portal da Vereda e o seu gateway de pagamento compartilham uma chave secreta, e o gateway manda
+quatro avisos de pagamento assinados com ela. Um programa cria os quatro, fazendo o papel do
+gateway; a seção 04 trata de conferir o que ele grava, e vale reler o arquivo nessa hora:
+
+```py
+# ~/lab/tools/deliveries.py
+"""vcrypt deliveries: four deliveries from Vereda's payment gateway, written
+into data/webhooks/ as a body (.json) and the header that came with it
+(.sig). They are signed the way most payment gateways sign: an HMAC-SHA256
+over "<timestamp>.<body>", sent as t=<timestamp>,v1=<hex>. The lab's
+present is 1781535600, 2026-06-15 12:00 in Sao Paulo, and each delivery is
+a different case:
+
+  evt-1  a payment, signed 42 seconds ago
+  evt-2  a payment whose amount was changed after it was signed
+  evt-3  evt-1 again, signed a day ago: a replay
+  evt-4  a refund, signed with a key that is not the gateway's
+"""
+import hashlib
+import hmac
+import os
+
+import drbg
+
+
+def sign(key: bytes, timestamp: int, body: bytes) -> str:
+    tag = hmac.new(key, str(timestamp).encode() + b"." + body, hashlib.sha256).hexdigest()
+    return f"t={timestamp},v1={tag}"
+
+
+key = drbg.stream("webhook", 32)  # the same bytes as keys/webhook.hex
+NOW = 1781535600
+paid = b'{"event":"payment.confirmed","booking":4471,"amount":12000}'
+paid2 = b'{"event":"payment.confirmed","booking":4472,"amount":15000}'
+refund = b'{"event":"refund.issued","booking":4471,"amount":12000}'
+
+os.makedirs("data/webhooks", exist_ok=True)
+for name, body, header in (
+    ("evt-1", paid, sign(key, NOW - 42, paid)),
+    ("evt-2", paid2.replace(b"15000", b"1500"), sign(key, NOW - 37, paid2)),
+    ("evt-3", paid, sign(key, NOW - 86400, paid)),
+    ("evt-4", refund, sign(b"a key that is not the gateway's", NOW - 12, refund)),
+):
+    open(f"data/webhooks/{name}.json", "wb").write(body)
+    open(f"data/webhooks/{name}.sig", "w").write(header + "\n")
+```
+
+Depois a chave, do `vcrypt derive` como todas as outras do laboratório, e as entregas:
+
+```sh
+cd ~/lab
+vcrypt derive webhook 32 > keys/webhook.hex
+vcrypt deliveries
+```
+
 ## Um aviso de pagamento, e um hash ao lado
 
 O portal da Vereda fica sabendo que um paciente pagou por uma mensagem do seu gateway de pagamento,

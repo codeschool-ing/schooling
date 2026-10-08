@@ -1,9 +1,9 @@
 ---
 title: Para onde vai a memória
-version: 1
+version: 2
 ---
 
-A aula 1 achou o processo do QEMU da vm1 usando cerca de 1,5 GiB para um convidado que recebeu 1 GiB, e
+A aula 1 achou o processo do QEMU da vm1 usando cerca de 1,6 GiB para um convidado que recebeu 1 GiB, e
 prometeu descobrir por quê. Eis o mesmo tipo de convidado, com a visão que o host tem da memória dele:
 
 ```

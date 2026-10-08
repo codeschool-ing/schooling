@@ -10,7 +10,6 @@ selo no topo da página nomeia só uma.
 O README da DeepSeek-V3 diz isso com todas as letras:
 
 ```
-ana@desk:~/desk$ sources quote deepseek-v3-readme "^This code repository is licensed"
 # deepseek-ai/DeepSeek-V3@9b4e9788 README.md
  345: This code repository is licensed under [the MIT License](LICENSE-CODE). The use of
       DeepSeek-V3 Base/Chat models is subject to [the Model License](LICENSE-MODEL).
@@ -21,7 +20,6 @@ O código é MIT, que não impõe condições. Os modelos estão sob uma **Model
 impõe. O preâmbulo dela diz de que tipo:
 
 ```
-ana@desk:~/desk$ sources quote deepseek-v3-licence "use-based restrictions not"
 # deepseek-ai/DeepSeek-V3@9b4e9788 LICENSE-MODEL
   13: In short, this license strives for both the open and responsible downstream use of the
       accompanying model. When it comes to the open character, we took inspiration from open
@@ -41,7 +39,6 @@ A mesma coisa acontece um nível abaixo. A DeepSeek também publicou modelos men
 imitar o R1, e o README tem cuidado com a origem de cada um:
 
 ```
-ana@desk:~/desk$ sources quote deepseek-r1-readme "^- DeepSeek-R1-Distill"
 # deepseek-ai/DeepSeek-R1@0cf78561 README.md
  259: - DeepSeek-R1-Distill-Qwen-1.5B, DeepSeek-R1-Distill-Qwen-7B, DeepSeek-R1-Distill-
       Qwen-14B and DeepSeek-R1-Distill-Qwen-32B are derived from [Qwen-2.5
@@ -60,7 +57,7 @@ O R1 em si é MIT (seção 02). **Estes não são**, ou não só: cada um começ
 pessoa, e mantém a licença desse modelo. O destilado de 8B é uma Llama 3.1 por baixo e carrega os
 termos da Llama da seção 03, incluindo o *Built with Llama* se você distribuí-lo. Um fine-tuning
 herda do mesmo jeito, e isso inclui um que a ana venha a fazer a partir de qualquer base da aula 1
-seção 07.
+seção 11.
 
 ## E o repositório que você consegue ler muitas vezes é só o código
 
@@ -68,7 +65,6 @@ O `mistral-inference` é o código para rodar os modelos da Mistral. O arquivo d
 todo mundo reconhece:
 
 ```
-ana@desk:~/desk$ sources quote mistral-inference-licence "Apache License$|Version 2.0, January"
 # mistralai/mistral-inference@9eaeb91c LICENSE
    1: Apache License
    2: Version 2.0, January 2004

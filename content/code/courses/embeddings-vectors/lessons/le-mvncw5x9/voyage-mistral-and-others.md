@@ -37,7 +37,7 @@ the sheet does not record their dimension, and `batch` is empty because it recor
 batch price for them. Neither means the thing is absent. A missing value on a third party's sheet is
 a question for the provider's own documentation. So is Voyage's request shape, which takes an
 `input_type` of `query` or `document` like Cohere's in lesson 8. Neither provider's SDK is installed
-in the lab and neither API was reachable, so none of their code appears here.
+by lesson 1's `setup.sh`, and neither API was reachable from the machine this course was recorded on, so none of their code appears here.
 
 ## What else the sheet holds
 

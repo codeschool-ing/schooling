@@ -1,11 +1,28 @@
 ---
 title: What a log costs
-version: 1
+version: 2
 ---
 
 The shop ran for ten minutes at five requests a second with the Collector sending to Loki and
-Elasticsearch, as in lesson 9. What the four services wrote, measured at the source, and what
-Elasticsearch holds for it:
+Elasticsearch, as in lesson 9 but without Graylog. To do the same, start the lab again from nothing
+with the `elastic` profile only, which leaves Graylog and its two stores out. Take
+Graylog out of the Collector's logs pipeline, keeping a copy of the file to put back at the end of
+the lesson; point the Collector at it with the same override as lesson 9; and run the customers:
+
+```sh
+docker compose --profile '*' down -v
+docker compose --profile elastic up -d
+cp otel/collector-logs.yaml /tmp/collector-logs.yaml.orig
+sed -i 's/, otlp_grpc\/graylog\]/]/' otel/collector-logs.yaml
+printf 'services:\n  otel-collector:\n    volumes: ["./otel/collector-logs.yaml:/etc/otelcol/config.yaml:ro"]\n' > compose.override.yaml
+docker compose up -d otel-collector
+docker compose run -d --rm loadgen python -m loadgen.load 5 600
+sleep 620
+```
+
+The `printf` writes the three lines of lesson 9's override, and `sleep 620` is the ten minutes and
+a little more. What the four services wrote, measured at the source, and what Elasticsearch holds
+for it:
 
 ```
 ana@obs:~/shop$ docker compose logs --no-log-prefix --since 10m storefront orders payments mailer | wc -c

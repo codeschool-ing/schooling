@@ -1,6 +1,6 @@
 ---
 title: O prompt
-version: 1
+version: 2
 ---
 
 A aula 1 montou o menor prompt possível: seções numeradas e a pergunta, sob uma instrução de uma linha.
@@ -34,8 +34,20 @@ em volta dele:
 O `show_prompt.py` imprime exatamente o que o `ask` manda para uma pergunta, a mensagem de sistema e
 depois a mensagem do usuário:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "show_prompt.py",
+  "parts": [
+    {
+      "code": "import sys\n\nfrom answer import SYSTEM, prompt, sources_for\n\nquestion = sys.argv[1]\nprint(SYSTEM)\nprint(\"---\")\nprint(prompt(question, sources_for(question)))",
+      "note": "A mensagem de sistema, uma linha, e a mensagem do usuário, montadas pelas mesmas funções que o `ask` usa."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python show_prompt.py "How long after my return arrives will I get the refund?"
+```
+ana@vm:~/rag$ python show_prompt.py "How long after my return arrives will I get the refund?"
 You answer questions from Marginalia's customers, using only the numbered sources.
 Cite every sentence with the number of the source it comes from, like [1].
 If the sources do not answer the question, reply: "I could not find that in our documents."
@@ -82,10 +94,11 @@ o modelo lê antes de escrever seja o que lhe perguntaram. A aula 12 volta ao po
 aula depois testa: as respostas vêm das fontes, toda frase é citada, o silêncio é admitido, e conflitos
 são resolvidos pela data. Uma instrução que ninguém confere é um desejo.
 
-## O que o extract-1 faz com ele
+## O que o llama3.2:3b faz com ele
 
-Das quatro instruções, o extract-1 segue duas por construção: ele só copia frases das fontes, e cita
-cada uma. Segue a terceira só em parte, porque a recusa dele vem do próprio limiar de similaridade,
-embora use a frase de recusa que o prompt lhe dá. Ignora a quarta por completo; não tem noção de data.
-Um modelo real lê as quatro e as segue na maior parte das vezes, que é uma afirmação diferente de
-sempre. O resto desta aula trata do código que confere.
+As execuções desta aula mostram as quatro instruções funcionando e nenhuma delas funcionando sempre. O
+modelo responde pelas fontes, e acrescenta frases próprias que nenhuma fonte diz. Ele cita, e põe o
+número onde quer, *According to [1], ...* muito mais vezes que o *like [1]* no fim que recebeu de
+exemplo. Ele recusa com a frase exata quando não recebe nada. E, diante de dois regulamentos com datas
+diferentes, escolheu o mais novo e disse isso. Um modelo maior as segue mais vezes, que é uma afirmação
+diferente de sempre. O resto desta aula trata do código que confere.

@@ -7,7 +7,6 @@ Lesson 1 read Llama 3.1's card. Three paragraphs of Llama 4's answer the same qu
 the answers have changed:
 
 ```
-ana@desk:~/desk$ sources quote llama4-card "^\*\*Overview|Data Freshness|^\*\*Supported languages"
 # meta-llama/llama-models@0e0b8c51 models/llama4/MODEL_CARD.md
   48: **Supported languages:** Arabic, English, French, German, Hindi, Indonesian, Italian,
       Portuguese, Spanish, Tagalog, Thai, and Vietnamese.

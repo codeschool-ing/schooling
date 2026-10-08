@@ -3,7 +3,7 @@ title: Consent, one step at a time
 version: 1
 ---
 
-The lab's computers have no desktop to share, so the shared screen here is a terminal one, **tmux**,
+The office's computers have no desktop to share, so the shared screen here is a terminal one, **tmux**,
 which has the same states a remote support tool has. Elisa starts a session of her own:
 
 ```

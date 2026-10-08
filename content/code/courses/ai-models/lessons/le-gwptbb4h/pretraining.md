@@ -13,11 +13,12 @@ The result is a **pretrained model**: the thing a company spent months and a ver
 producing, so that you do not have to. This course is about choosing one and using it, so it is
 worth being precise about what that thing physically is.
 
-Meta's model card for Llama 3.1 is one of the few that says it in numbers. `sources` reads the
-card from Meta's own repository, at the commit the lab pins:
+Meta's model card for Llama 3.1 is one of the few that says it in numbers. This course quotes a
+document the way it does here: the first line names the repository, the commit it was read at and
+the file, and every quoted line starts with its line number in that file. So you can open the same
+file on GitHub at that commit and read around it. Nothing in a quotation is for you to type.
 
 ```
-ana@desk:~/desk$ sources quote llama3.1-card "collection of pretrained|~15 trillion"
 # meta-llama/llama-models@0e0b8c51 models/llama3_1/MODEL_CARD.md
    3: The Meta Llama 3.1 collection of multilingual large language models (LLMs) is a
       collection of pretrained and instruction tuned generative models in 8B, 70B and 405B
@@ -32,13 +33,13 @@ ana@desk:~/desk$ sources quote llama3.1-card "collection of pretrained|~15 trill
 Three things in those two paragraphs come up again in every lesson of this course:
 
 - **"pretrained and instruction tuned"**. There are two kinds of model in the collection, and
-  section 03 of this lesson is about the difference.
+  section 07 of this lesson is about the difference.
 - **"8B, 70B and 405B"**: the number of parameters, in billions. A parameter is one number
   in the network, and this one comes in three sizes. Lesson 3 turns a parameter count into the
   memory a machine needs to run it.
 - **"~15 trillion tokens of data from publicly available sources"**: what it learnt from. Public
   text is the whole of what it knows. Lantern Books' order history was never in it and never will
-  be, which is section 06's subject.
+  be, which is section 10's subject.
 
 ## What comes in the box
 
@@ -53,8 +54,8 @@ with the weights, and each of them can stop you if it is missing:
 - **a tokenizer**, which turns text into the numbers the weights expect. The wrong tokenizer
   produces nonsense, not an error;
 - **a chat template**, the exact string a conversation has to become before the model reads it
-  (section 04);
-- **a model card**, which says what it was trained on and for, and where it fails (section 05);
+  (section 08);
+- **a model card**, which says what it was trained on and for, and where it fails (section 09);
 - **a licence**, which says what you may do with all of it. Lesson 2 reads three of them.
 
 **An open model hands you all five.** **A model behind an API hands you none of them**: the

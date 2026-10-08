@@ -1,6 +1,6 @@
 ---
 title: RAGFlow, um pipeline que se instala
-version: 1
+version: 2
 ---
 
 As três bibliotecas até aqui são código que uma equipe importa. **O RAGFlow é uma aplicação que uma
@@ -10,8 +10,8 @@ e conversam com eles, uma API para programas, e o armazenamento por trás dos do
 roda, e o motivo faz parte da aula. O README dele em outubro de 2026 recomenda começar com 4 núcleos
 de CPU, 16 GB de memória e 50 GB de disco, com Docker. A pilha que ele sobe inclui um motor de
 busca (Elasticsearch, ou o Infinity, da própria InfiniFlow), MySQL, MinIO para os arquivos, e uma fila
-de mensagens e um cache ao lado. É mais máquina do que este laboratório, e mais maquinário do que uma
-equipe acrescenta sem decidir.
+de mensagens e um cache ao lado. É o dobro da memória da máquina virtual que a aula 1 recomenda, e mais maquinário do que
+uma equipe acrescenta sem decidir.
 
 O que segue é o que o projeto diz que faz, e o que cada afirmação quer dizer diante das decisões que
 este curso tomou à mão. Tudo aqui muda mais depressa que o resto do curso; confira com a documentação

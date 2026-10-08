@@ -78,7 +78,7 @@ intervalo entre três máquinas é uma varredura (scan)**, por menor que seja.
 Os registros de fluxo (flow records) são escritos depois, e essa é a primeira coisa a saber sobre eles.
 O registro de uma conexão é escrito quando o firewall a **esquece**, não quando ela fecha: uma conexão
 TCP fechada fica na tabela por dois minutos, e o kernel percebe que ela expirou até um minuto depois
-disso. O script de captura esperou três minutos antes disto:
+disso. Então espere três minutos depois do tráfego antes de lê-los:
 
 ```
 root@fw:~# wc -l /var/log/lab/flows.json

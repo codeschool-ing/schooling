@@ -1,10 +1,16 @@
 ---
 title: Gastando o orçamento
-version: 1
+version: 2
 ---
 
 Durante quatro minutos, o payments recebe a ordem de falhar uma cobrança em vinte. Três minutos depois,
 o SLI de cinco minutos e a velocidade com que ele gasta o orçamento:
+
+```sh
+echo '{"fail_every": 20}' > faults/payments.json
+sleep 180
+```
+
 
 ```
 ana@obs:~/shop$ ./promq 'checkout:sli_availability:ratio_rate5m'
@@ -19,7 +25,14 @@ pela taxa que o objetivo permite, aqui 0,5%. Uma taxa de queima de 1 gasta o or�
 uma janela. Uma taxa de queima de 5,9 gastaria o orçamento de uma hora em uns dez minutos, e um
 orçamento de 28 dias em menos de cinco dias. A aula 16 alerta sobre ela.
 
-A falha é removida, e um minuto e meio depois a hora é lida de novo:
+A falha é removida depois do quarto minuto, e um minuto e meio depois a hora é lida de novo:
+
+```sh
+sleep 60
+rm faults/payments.json
+sleep 90
+```
+
 
 ```
 ana@obs:~/shop$ ./promq 'sum by (code) (increase(http_server_requests_total{job="storefront",route="/checkout"}[1h]))'

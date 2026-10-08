@@ -3,6 +3,33 @@ title: No shell, and a tunnel instead
 version: 1
 ---
 
+This lesson needs two things to debug after `./up.sh`: the shop, whose image has no shell, and a pod
+called `crashing` that exits the moment it starts, because `CRASH` is set.
+
+`debug-apps.yaml`:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: shop}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: shop}}
+  template:
+    metadata: {labels: {app: shop}}
+    spec: {containers: [{name: shop, image: "shop:1.0"}]}
+---
+apiVersion: v1
+kind: Pod
+metadata: {name: crashing}
+spec:
+  containers: [{name: shop, image: "shop:1.0", env: [{name: CRASH, value: "yes"}, {name: GREETING, value: "hello"}]}]
+```
+
+```sh
+kubectl apply -f debug-apps.yaml
+```
+
 The first reflex when a pod misbehaves is a shell inside it:
 
 ```

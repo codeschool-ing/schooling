@@ -1,15 +1,15 @@
 ---
 title: The document every page starts from
-version: 1
+version: 2
 ---
 
 Every HTML page you write starts from the same dozen lines. Here they are for the bookshop's first page, with what each part is for beside it:
 
 ```schooling-example
 {"language": "html", "file": "skeleton.html", "parts": [
- {"code": "<!doctype html>", "note": "Says the page is modern HTML. Without it the browser falls back to an older set of rules, section 06."},
+ {"code": "<!doctype html>", "note": "Says the page is modern HTML. Without it the browser falls back to an older set of rules, section 08."},
  {"code": "<html lang=\"en\">", "note": "The root element: everything else is inside it. `lang` names the language of the content, which decides the voice a screen reader uses and how words are hyphenated."},
- {"code": "  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>Andorinha Books</title>\n  </head>", "note": "Information about the page, none of it drawn. The character encoding, how to size the page on a phone (both section 08), and the title the browser shows on its tab."},
+ {"code": "  <head>\n    <meta charset=\"utf-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <title>Andorinha Books</title>\n  </head>", "note": "Information about the page, none of it drawn. The character encoding, how to size the page on a phone (both section 10), and the title the browser shows on its tab."},
  {"code": "  <body>\n    <h1>Andorinha Books</h1>\n    <p>Second-hand books in Pinheiros, São Paulo.</p>\n  </body>", "note": "The page itself: everything the reader sees is in here."},
  {"code": "</html>", "note": "Closes the root, and the document ends."}
 ]}

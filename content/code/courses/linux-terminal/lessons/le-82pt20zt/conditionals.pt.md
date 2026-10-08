@@ -1,7 +1,26 @@
 ---
 title: O `if`, e o fato de que o `[` é um programa
-version: 1
+version: 2
 ---
+
+O script que esta seção roda, criado em `~/work/scripts` do jeito que a seção 02 descreveu, e um segundo diretório de rascunho, `/tmp/q2`, que esta seção e as próximas usam:
+
+```sh
+mkdir -p /tmp/q2
+cd ~/work/scripts
+cat > grade.sh <<'END'
+#!/bin/bash
+n=$1
+if [ "$n" -ge 90 ]; then
+  echo "excellent"
+elif [ "$n" -ge 60 ]; then
+  echo "pass"
+else
+  echo "fail"
+fi
+END
+chmod +x grade.sh
+```
 
 ```
 ana@vm:~/work/scripts$ cat grade.sh

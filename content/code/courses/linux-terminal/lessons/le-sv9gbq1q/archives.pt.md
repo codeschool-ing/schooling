@@ -1,6 +1,6 @@
 ---
 title: Arquivos compactados: `tar`, `gzip`, `zip`
-version: 1
+version: 2
 ---
 
 `tar -xzvf` é o encantamento mais copiado da internet e um dos menos compreendidos. São quatro
@@ -43,17 +43,30 @@ O `tar` moderno também detecta a compressão sozinho, então `tar -xf project.t
 
 ## Criar e listar
 
+Algo para empacotar: uma cópia do código e das anotações de `~/work`, um rascunho, e um log grande
+o bastante para a compressão ter o que fazer. Para o log serve qualquer texto longo, e todo Ubuntu
+tem a Licença Pública Geral GNU em `/usr/share/common-licenses`; quarenta cópias dela, uma depois
+da outra:
+
+```sh
+mkdir -p ~/ar/logs
+cp -r ~/work/src ~/work/notes ~/ar/
+printf 'an idea, unfinished\n' > ~/ar/notes/draft.txt
+for i in $(seq 40); do cat /usr/share/common-licenses/GPL-3; done > ~/ar/logs/app.log
+cd ~/ar
+```
+
 ```
 ana@vm:~/ar$ tar -cf project.tar src notes
 ana@vm:~/ar$ tar -tvf project.tar
-drwxr-xr-x ana/ana           0 2026-09-14 22:29 src/
--rw-r--r-- ana/ana          29 2026-09-14 22:29 src/util.h
--rw-r--r-- ana/ana          65 2026-09-14 22:29 src/util.c
--rw-r--r-- ana/ana         194 2026-09-14 22:29 src/main.c
-drwxr-xr-x ana/ana           0 2026-09-14 22:29 notes/
--rw-r--r-- ana/ana          20 2026-09-14 22:29 notes/draft.txt
--rw-r--r-- ana/ana          34 2026-09-14 22:29 notes/2025-01-plan.md
--rw-r--r-- ana/ana          26 2026-09-14 22:29 notes/2025-02-plan.md
+drwxr-xr-x ana/ana           0 2026-10-07 11:10 src/
+-rw-r--r-- ana/ana          29 2026-10-07 11:10 src/util.h
+-rw-r--r-- ana/ana          65 2026-10-07 11:10 src/util.c
+-rw-r--r-- ana/ana         218 2026-10-07 11:10 src/main.c
+drwxr-xr-x ana/ana           0 2026-10-07 11:10 notes/
+-rw-r--r-- ana/ana          20 2026-10-07 11:10 notes/draft.txt
+-rw-r--r-- ana/ana          34 2026-10-07 11:10 notes/2025-01-plan.md
+-rw-r--r-- ana/ana          26 2026-10-07 11:10 notes/2025-02-plan.md
 ```
 
 `-t` lista, `-v` torna a listagem longa — e é a listagem da seção 06 de novo, com dono e grupo
@@ -68,10 +81,12 @@ atual. Um arquivo cujo conteúdo não está dentro de um único diretório de pr
 As defesas são as duas gratuitas:
 
 ```
+ana@vm:~/ar$ tar -czf project.tar.gz src notes
 ana@vm:~/ar$ mkdir out
 ana@vm:~/ar$ tar -xzf project.tar.gz -C out
 ana@vm:~/ar$ ls out
-notes  src
+notes
+src
 ```
 
 `-C` diz *entre neste diretório antes*. Extraia num diretório novo e vazio e um tarbomb é
@@ -83,7 +98,14 @@ inofensivo.
 ```
 ana@vm:~/ar$ tar -xzf project.tar.gz -C out --strip-components=1
 ana@vm:~/ar$ ls out
-2025-01-plan.md  2025-02-plan.md  draft.txt  main.c  notes  src  util.c  util.h
+2025-01-plan.md
+2025-02-plan.md
+draft.txt
+main.c
+notes
+src
+util.c
+util.h
 ```
 
 Esse merece um olhar demorado, porque mostra o custo também: com o primeiro componente removido, o
@@ -95,16 +117,16 @@ você precisa dela.
 
 ```
 ana@vm:~/ar$ ls -l logs/app.log
--rw-r--r-- 1 ana ana 1405960 Sep 14 22:29 logs/app.log
+-rw-r--r-- 1 ana ana 1405960 Oct  7 11:10 logs/app.log
 ana@vm:~/ar$ tar -cf logs.tar logs
 ana@vm:~/ar$ tar -czf logs.tar.gz logs
 ana@vm:~/ar$ tar -cjf logs.tar.bz2 logs
 ana@vm:~/ar$ tar -cJf logs.tar.xz logs
 ana@vm:~/ar$ ls -lh logs.tar logs.tar.gz logs.tar.bz2 logs.tar.xz
--rw-r--r-- 1 ana ana 1.4M Sep 14 22:29 logs.tar
--rw-r--r-- 1 ana ana  44K Sep 14 22:29 logs.tar.bz2
--rw-r--r-- 1 ana ana 425K Sep 14 22:29 logs.tar.gz
--rw-r--r-- 1 ana ana  12K Sep 14 22:29 logs.tar.xz
+-rw-r--r-- 1 ana ana 1.4M Oct  7 11:10 logs.tar
+-rw-r--r-- 1 ana ana  44K Oct  7 11:10 logs.tar.bz2
+-rw-r--r-- 1 ana ana 425K Oct  7 11:10 logs.tar.gz
+-rw-r--r-- 1 ana ana  12K Oct  7 11:10 logs.tar.xz
 ```
 
 Repare primeiro que **o `logs.tar` tem o mesmo tamanho do que entrou.** O `tar` não comprimiu nada;
@@ -130,19 +152,20 @@ conhecer o nome quando você encontrar um `.tar.zst`.
 ```
 ana@vm:~/ar$ gzip -k notes/draft.txt
 ana@vm:~/ar$ ls -l notes/draft.txt notes/draft.txt.gz
--rw-r--r-- 1 ana ana 20 Sep 14 22:29 notes/draft.txt
--rw-r--r-- 1 ana ana 50 Sep 14 22:29 notes/draft.txt.gz
+-rw-r--r-- 1 ana ana 20 Oct  7 11:10 notes/draft.txt
+-rw-r--r-- 1 ana ana 50 Oct  7 11:10 notes/draft.txt.gz
 ```
 
 Duas coisas ali. **`-k` mantém o original** — sem ele o `gzip` substitui o arquivo, o que surpreende
 as pessoas. E o arquivo comprimido é *maior* que o original: vinte bytes de texto mais um cabeçalho
 de gzip. Compressão tem um custo fixo, e em arquivos minúsculos ela perde.
 
-`gzip -d` descomprime, e o `gunzip` também. Ele não sobrescreve:
+`gzip -d` descomprime, e o `gunzip` também. Ele não sobrescreve sem perguntar:
 
 ```
 ana@vm:~/ar$ gzip -d notes/draft.txt.gz
-gzip: notes/draft.txt already exists;   not overwritten
+gzip: notes/draft.txt already exists; do you wish to overwrite (y or n)? n
+        not overwritten
 ```
 
 Mais educado do que o `cp` foi na seção 07, e pelo menos uma vez você está sendo consultado.
@@ -153,23 +176,25 @@ Existem também o `zcat`, o `zless` e o `zgrep`, que leem um `.gz` sem desempaco
 
 ## `zip`, e quando usar
 
+No Ubuntu Server nem o `zip` nem o `unzip` vêm instalados; `sudo apt install zip unzip` traz os dois.
+
 ```
 ana@vm:~/ar$ zip -qr project.zip src notes
 ana@vm:~/ar$ unzip -l project.zip
 Archive:  project.zip
   Length      Date    Time    Name
 ---------  ---------- -----   ----
-        0  2026-09-14 22:29   src/
-       29  2026-09-14 22:29   src/util.h
-       65  2026-09-14 22:29   src/util.c
-      194  2026-09-14 22:29   src/main.c
-        0  2026-09-14 22:29   notes/
-       20  2026-09-14 22:29   notes/draft.txt
-       50  2026-09-14 22:29   notes/draft.txt.gz
-       34  2026-09-14 22:29   notes/2025-01-plan.md
-       26  2026-09-14 22:29   notes/2025-02-plan.md
+        0  2026-10-07 11:10   src/
+       29  2026-10-07 11:10   src/util.h
+       65  2026-10-07 11:10   src/util.c
+      218  2026-10-07 11:10   src/main.c
+        0  2026-10-07 11:10   notes/
+       20  2026-10-07 11:10   notes/draft.txt
+       50  2026-10-07 11:10   notes/draft.txt.gz
+       34  2026-10-07 11:10   notes/2025-01-plan.md
+       26  2026-10-07 11:10   notes/2025-02-plan.md
 ---------                     -------
-      418                     9 files
+      442                     9 files
 ```
 
 `-r` de recursivo — **o `zip` precisa e o `tar` não**, que é a primeira coisa em que se tropeça.
@@ -186,6 +211,7 @@ sempre.
 ## O `file` encerra qualquer discussão sobre o que você tem
 
 ```
+ana@vm:~/ar$ tar -cJf project.tar.xz src notes
 ana@vm:~/ar$ file project.tar project.tar.gz project.tar.xz project.zip
 project.tar:    POSIX tar archive (GNU)
 project.tar.gz: gzip compressed data, from Unix, original size modulo 2^32 10240

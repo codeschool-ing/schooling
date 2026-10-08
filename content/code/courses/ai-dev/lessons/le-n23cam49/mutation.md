@@ -1,11 +1,12 @@
 ---
 title: Do the tests catch anything?
-version: 1
+version: 2
 ---
 
 A test suite can be green and test almost nothing. Lesson 3 section 06 showed it: eight passing
-tests, and a refactoring that changed what customers pay went straight through. Coverage, the share
-of lines the tests run, would have said 100% for `shipping()`, because every test runs it. **Running
+tests, and a change that did not do what was asked went straight through, as would the one that
+changed what customers pay, which the same request produced on another run. Coverage, the share
+of lines the tests run, would have counted every line of `shipping()` as covered, because every test runs it. **Running
 a line is not the same as checking what it does.**
 
 **Mutation testing** asks the direct question. Change the code on purpose, one small change at a
@@ -16,7 +17,7 @@ the code that no test pins.
 ## A mutation tester in forty lines
 
 There are libraries for this, and for a large project you would use one. The idea fits in a short
-script, so ana writes it, which also makes every result readable. It swaps one comparison or
+script, so ana writes it, as `~/shop/scratch/mutate.py`, which also makes every result readable. It swaps one comparison or
 arithmetic operator at a time, runs the whole suite and restores the file:
 
 ```python
@@ -66,7 +67,7 @@ Run on the shop's two files, with the tests the project had before this lesson p
 has gained:
 
 ```
-ana@dev:~/shop$ python lab/mutate.py shop/cart.py
+ana@dev:~/shop$ python scratch/mutate.py shop/cart.py
 shop/cart.py:20   < -> <=  killed
 shop/cart.py:32  // -> /   SURVIVED
 shop/cart.py:35  >= -> >   killed
@@ -74,7 +75,7 @@ shop/cart.py:40   + -> -   killed
 shop/cart.py:35   - -> +   SURVIVED
 shop/cart.py:40   - -> +   SURVIVED
 3 survived
-ana@dev:~/shop$ python lab/mutate.py shop/coupons.py
+ana@dev:~/shop$ python scratch/mutate.py shop/coupons.py
 shop/coupons.py:24   > -> >=  killed
 0 survived
 ```
@@ -86,9 +87,9 @@ rules nobody tests:
 - **line 32, `//` to `/`**: the discount could become a fraction of a cent and nothing would fail.
   Every test discount happens to divide exactly, so floor division and true division agree.
 - **line 35, `-` to `+`**: the free-shipping threshold could add the discount instead of
-  subtracting it. This is lesson 3 section 06's bug, still unguarded in this branch.
-- **line 40, `-` to `+`**: the total could add the discount instead of subtracting it. No test has
-  a discount and checks the total.
+  subtracting it. Lesson 3 section 06's test guards it, and this branch does not have that test.
+- **line 40, `-` to `+`**: the total could add the discount instead of subtracting it, the change
+  lesson 3 section 06's assistant made on another run. No test has a discount and checks the total.
 
 ## Killing them
 
@@ -116,9 +117,9 @@ def test_free_shipping_threshold_is_checked_after_the_discount():
 ```
 
 ```
-ana@dev:~/shop$ python -m pytest -q tests/test_cart_rules.py && python lab/mutate.py shop/cart.py
+ana@dev:~/shop$ python -m pytest -q tests/test_cart_rules.py && python scratch/mutate.py shop/cart.py
 ..                                                                       [100%]
-2 passed in 0.54s
+2 passed in 0.73s
 shop/cart.py:20   < -> <=  killed
 shop/cart.py:32  // -> /   killed
 shop/cart.py:35  >= -> >   killed

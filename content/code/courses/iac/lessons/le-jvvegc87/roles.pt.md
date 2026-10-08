@@ -1,6 +1,6 @@
 ---
 title: Roles, a unidade que você reaproveita
-version: 1
+version: 2
 ---
 
 O `site.yml` agora guarda as tarefas, o handler, dois templates e as variáveis de que eles precisam,
@@ -124,28 +124,28 @@ ana@laptop:~/shop/ansible$ ansible-playbook site.yml
 PLAY [Web servers] *************************************************************
 
 TASK [Gathering Facts] *********************************************************
-ok: [web1]
 ok: [web2]
+ok: [web1]
 
 TASK [web : Install nginx] *****************************************************
-ok: [web2]
 ok: [web1]
+ok: [web2]
 
 TASK [web : Create the site's directory] ***************************************
 ok: [web1]
 ok: [web2]
 
 TASK [web : Write the index page] **********************************************
-ok: [web2]
 ok: [web1]
+ok: [web2]
 
 TASK [web : Configure the shop's site] *****************************************
-ok: [web2]
 ok: [web1]
+ok: [web2]
 
 TASK [web : Start nginx] *******************************************************
-ok: [web1]
 ok: [web2]
+ok: [web1]
 
 PLAY RECAP *********************************************************************
 web1                       : ok=6    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
@@ -162,6 +162,6 @@ reescrita e o nginx recarregado; nada mudou, então a variável de grupo venceu.
 
 O mesmo comando, `ansible-galaxy`, instala roles e **coleções** (collections), os pacotes maiores de
 módulos e roles, do Ansible Galaxy ou de um repositório git, fixados num `requirements.yml`. Nada foi
-instalado do Galaxy para esta aula: o lab tem o `ansible-core` e só os módulos que vêm com ele. O
+instalado do Galaxy para esta aula, que usa o `ansible-core` e só os módulos que vêm com ele. O
 conselho da aula 10 sobre o Terraform Registry vale sem mudança: fixe uma versão, e leia um role
 antes de rodá-lo com `become`, porque cada tarefa dele roda como root nas suas máquinas.

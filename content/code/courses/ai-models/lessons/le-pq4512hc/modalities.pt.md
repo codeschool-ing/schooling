@@ -6,7 +6,7 @@ version: 1
 A outra linha que distingue a família é o que ela aceita. A entrada do Flash 3.5:
 
 ```
-ana@desk:~/desk$ sheet show gemini/gemini-3.5-flash | grep -E "^(supported_|input_cost_per_audio|search_context|google_maps)"
+ana@desk:~/desk$ python sheet.py show gemini/gemini-3.5-flash | grep -E "^(supported_|input_cost_per_audio|search_context|google_maps)"
 google_maps_grounding_cost_per_query       0.014
 input_cost_per_audio_token                 1.5e-06
 input_cost_per_audio_token_priority        2.7e-06
@@ -35,7 +35,7 @@ não por token:
 
 Uma requisição ancorada custa os tokens **mais** a consulta. A 400 requisições por dia seriam US$ 5,60
 por dia, US$ 168 por mês, só em buscas, muitas vezes os US$ 8,02 em que a aula 4 precificou toda a
-tarefa de rascunho da ana. Ancoragem é a resposta para a primeira lacuna da aula 1 seção 06, fatos
+tarefa de rascunho da ana. Ancoragem é a resposta para a primeira lacuna da aula 1 seção 10, fatos
 públicos depois do corte, e as tarefas da ana não têm essa lacuna. **Um recurso cobrado por uso é um
 recurso para ligar por tarefa**, não por conta.
 

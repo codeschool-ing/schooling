@@ -1,10 +1,36 @@
 ---
 title: Lendo todos os roteadores de uma vez
-version: 1
+version: 2
 ---
 
 O backup reaproveita o inventário Nornir da aula 8, reduzido aos três roteadores, e pede a cada um
-a sua configuração em execução pelo NAPALM. O mesmo script depois faz commit do que tiver mudado:
+a sua configuração em execução pelo NAPALM. O projeto é um diretório novo, `~/net` no `ctl`, montado
+a partir de duas aulas anteriores: o `config.yaml` da aula 8 e os dois arquivos de inventário que
+não mudam, e os dados, o template e o `render.py` da aula 10, que a seção 07 usa. O Git também
+precisa saber quem está fazendo os commits, uma vez por conta:
+
+```
+ana@ctl:~$ git config --global user.name ana && git config --global user.email ana@example.net && git config --global init.defaultBranch main
+ana@ctl:~$ mkdir -p net/inventory net/templates && cp config.yaml net/ && cp inventory/groups.yaml inventory/defaults.yaml net/inventory/ && cp -r tpl/data tpl/render.py net/ && cp tpl/templates/frr.j2 net/templates/
+```
+
+O único arquivo de inventário que muda é a lista de hosts, que aqui são os três roteadores e mais
+nada. `net/inventory/hosts.yaml`:
+
+```yaml
+---
+core1:
+  hostname: core1.example.net
+  groups: [routers]
+edge1:
+  hostname: edge1.example.net
+  groups: [routers]
+edge2:
+  hostname: edge2.example.net
+  groups: [routers]
+```
+
+O mesmo script depois faz commit do que tiver mudado:
 
 ```schooling-example
 {

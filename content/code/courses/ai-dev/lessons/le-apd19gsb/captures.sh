@@ -6,20 +6,25 @@
 # this lesson was copied from running it, so the next person can run it and see
 # what moved.
 #
-#   sudo bash ../../lab.sh up        # once: the machine, the SDKs, labllm
+#   sudo bash ../../lab.sh up        # once: Ollama, the models, ~/shop
 #   sudo bash captures.sh
 #
 # A line that starts with ana@dev:~/shop$ is what ana typed, in her project,
-# and what it printed. What is STAGED rather than typed, and not shown in the
-# lesson: the lab itself (lab.sh reset), and the files ana wrote (put below),
-# whose contents the lesson shows in full, and a commit of shop_tools.py and
-# retry.py before the change to them, so that git diff can show the change.
+# and what it printed. What is STAGED rather than typed, and not shown: the
+# lab's own reset, the files ana wrote (put below), each of which a lesson
+# shows whole (put refuses one that no lesson shows byte for byte), and a commit
+# of shop_tools.py and retry.py before the change to them, so that git diff can
+# show the change.
 #
-# THE MODEL'S REPLIES IN THIS LESSON WERE WRITTEN BY THE COURSE. Which tool
-# scripted-1 calls, with which arguments (the wrong ones included), and the
-# JSON it returns for an email are rules in lab/scripted.json. The SDKs, the
-# schema checks, the shop's own rules and every error message are real. The
-# emails, the stock and the orders were written for the course.
+# THE MODEL'S DECISIONS COME FROM llama3.2:3b AT TEMPERATURE 0: which tool it
+# calls, with which arguments (the wrong ones included), and the JSON it
+# returns for an email. A rerun mostly gives the same and not always. The SDKs,
+# the schema checks, the shop's own rules and every error message are
+# deterministic. The emails, the stock and the orders were written for the
+# course.
+#
+#   model    llama3.2:3b (a80c4f17acd5), Ollama 0.40.0
+#   taken    2026-10-07, on 4 cores and 15 GB with no GPU
 #
 # The shop's "today" is fixed at 2 October 2026 in shop_tools.py, so the
 # 30-day return window gives the same answer on every run.
@@ -28,12 +33,9 @@
 
 set -uo pipefail
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@dev:~/shop$ %s\n' "$*"; lab exec ana "$*" 2>&1 || true; }
-put() { lab exec ana "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-block() { printf '##### %s\n' "$1"; }
-lab reset >/dev/null
+. ../../lab/capture.sh
+
+quiet lab reset
 
 put data/orders.json <<'JSON'
 {
@@ -135,7 +137,7 @@ from shop_tools import FUNCTIONS, TOOLS
 model = anthropic.Anthropic()
 messages = [{"role": "user", "content": sys.argv[1]}]
 while True:
-    r = model.messages.create(model="scripted-1", max_tokens=300, tools=TOOLS, messages=messages)
+    r = model.messages.create(model="llama3.2:3b", max_tokens=300, tools=TOOLS, messages=messages, extra_body={"temperature": 0})
     print("<- stop_reason:", r.stop_reason)
     for b in r.content:
         print("  ", json.dumps(b.model_dump(exclude_none=True)))
@@ -210,7 +212,7 @@ def run(name, args):
 
 messages = [{"role": "user", "content": sys.argv[1]}]
 for step in range(1, 5):
-    r = model.messages.create(model="scripted-1", max_tokens=300, tools=TOOLS, messages=messages)
+    r = model.messages.create(model="llama3.2:3b", max_tokens=300, tools=TOOLS, messages=messages, extra_body={"temperature": 0})
     messages.append({"role": "assistant", "content": r.content})
     results = []
     for b in r.content:
@@ -243,14 +245,16 @@ from shop_tools import TOOLS
 
 model = anthropic.Anthropic()
 messages = [{"role": "user", "content": "Are MUG-01 and GLASS-03 in stock?"}]
-r = model.messages.create(model="scripted-1", max_tokens=300, tools=TOOLS, messages=messages)
+r = model.messages.create(model="llama3.2:3b", max_tokens=300, tools=TOOLS, messages=messages, extra_body={"temperature": 0})
 calls = [b for b in r.content if b.type == "tool_use"]
+print("asked for:", ", ".join(f"{c.name}({c.input['sku']})" for c in calls))
 messages += [
     {"role": "assistant", "content": r.content},
     {"role": "user", "content": [{"type": "tool_result", "tool_use_id": calls[0].id, "content": "37"}]},
 ]
 try:
-    model.messages.create(model="scripted-1", max_tokens=300, tools=TOOLS, messages=messages)
+    r = model.messages.create(model="llama3.2:3b", max_tokens=300, tools=TOOLS, messages=messages, extra_body={"temperature": 0})
+    print("accepted, and answered:", r.content[0].text)
 except anthropic.BadRequestError as e:
     print(e.status_code, e.body["error"]["message"])
 PY
@@ -302,7 +306,7 @@ def problems(text):
 def extract(email, attempts=2):
     messages = [{"role": "user", "content": email}]
     for attempt in range(1, attempts + 1):
-        r = model.messages.create(model="scripted-1", max_tokens=300, system=SYSTEM, messages=messages)
+        r = model.messages.create(model="llama3.2:3b", max_tokens=300, system=SYSTEM, messages=messages, extra_body={"temperature": 0})
         text = r.content[0].text
         ticket, found = problems(text)
         if not found:
@@ -316,14 +320,38 @@ def extract(email, attempts=2):
     return None
 
 
-ticket = extract(Path(sys.argv[1]).read_text())
-print(json.dumps(ticket) if ticket else "no valid ticket; this email goes to a person")
+if __name__ == "__main__":
+    ticket = extract(Path(sys.argv[1]).read_text())
+    print(json.dumps(ticket) if ticket else "no valid ticket; this email goes to a person")
 PY
 
 block structured-output
 on 'python extract.py data/emails/1.txt'
-on "python -c 'import anthropic.types as t; print(sorted(t.OutputConfigParam.__annotations__)); print(sorted(t.JSONOutputFormatParam.__annotations__)); print(\"strict\" in t.ToolParam.__annotations__)'"
-on "python -c 'import anthropic; anthropic.Anthropic().messages.create(model=\"scripted-1\", max_tokens=50, messages=[{\"role\": \"user\", \"content\": \"hi\"}], output_config={\"format\": {\"type\": \"json_schema\", \"schema\": {\"type\": \"object\"}}})' 2>&1 | tail -n 1"
+on "python -c 'import anthropic; r = anthropic.Anthropic().messages.create(model=\"llama3.2:3b\", max_tokens=60, messages=[{\"role\": \"user\", \"content\": \"Name a colour.\"}], output_config={\"format\": {\"type\": \"json_schema\", \"schema\": {\"type\": \"object\", \"properties\": {\"colour\": {\"type\": \"string\"}}, \"required\": [\"colour\"]}}}); print(repr(r.content[0].text))'"
+put strict.py <<'PY'
+"""The same ticket, with the schema enforced by Ollama while the model writes it."""
+import json
+import sys
+from pathlib import Path
+
+import openai
+
+from extract import TICKET, problems
+
+client = openai.OpenAI()
+email = Path(sys.argv[1]).read_text()
+r = client.chat.completions.create(
+    model="llama3.2:3b", temperature=0,
+    messages=[{"role": "user", "content": "Extract the ticket from the customer's email.\n\n" + email}],
+    response_format={"type": "json_schema", "json_schema": {"name": "ticket", "schema": TICKET, "strict": True}},
+)
+text = r.choices[0].message.content
+ticket, found = problems(text)
+print(text)
+print("schema:", "; ".join(found) if found else "every field valid")
+PY
+on 'python strict.py data/emails/1.txt'
+on 'python strict.py data/emails/2.txt'
 
 block repair
 on 'python extract.py data/emails/2.txt'
@@ -355,7 +383,7 @@ s = s.replace('''    returns = json.loads(path.read_text()) if path.exists() els
 s = s.replace('''\"quantity\": quantity, \"reason\": reason}''', '''\"quantity\": quantity, \"reason\": reason, \"key\": key}''')
 p.write_text(s)
 EOF"
-lab exec ana "sed -i 's/print(attempt, create_return(\*\*args))/print(attempt, create_return(**args, key=\"toolu_lab_0007_1\"))/' retry.py"
+lab exec ana "sed -i 's/print(attempt, create_return(\*\*args))/print(attempt, create_return(**args, key=\"call_0007\"))/' retry.py"
 on 'git diff'
 on 'rm data/returns.json; python retry.py'
 on 'cat data/returns.json'
@@ -374,7 +402,7 @@ tools = [{"type": "function", "function": {"name": t["name"], "description": t["
 client = openai.OpenAI()
 messages = [{"role": "user", "content": sys.argv[1]}]
 while True:
-    r = client.chat.completions.create(model="scripted-1", messages=messages, tools=tools)
+    r = client.chat.completions.create(model="llama3.2:3b", messages=messages, tools=tools, temperature=0)
     choice = r.choices[0]
     print("<- finish_reason:", choice.finish_reason)
     messages.append(choice.message.model_dump(exclude_none=True))

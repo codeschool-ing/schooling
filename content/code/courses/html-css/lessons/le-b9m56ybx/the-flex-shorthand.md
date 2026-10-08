@@ -1,6 +1,6 @@
 ---
 title: The flex shorthand
-version: 1
+version: 2
 ---
 
 The three properties are almost always set together, with **`flex`**, and three values of it cover nearly everything:
@@ -11,7 +11,32 @@ The three properties are almost always set together, with **`flex`**, and three 
 | `flex: auto` | `1 1 auto` | grows from its content: bigger content, bigger item |
 | `flex: none` | `0 0 auto` | stays the size of its content, neither grows nor shrinks |
 
-The first line is the one worth reading twice, and the browser confirms it:
+The first line is the one worth reading twice. Here are all three on the same three shelf names, in `shorthand.html`:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>flex · Andorinha Books</title>
+    <style>
+      body { margin: 0; font: 16px/1.5 sans-serif; }
+      .row { display: flex; width: 600px; margin-bottom: 8px; background: #f4f1ea; }
+      .row p { margin: 0; background: #2f6f4e; color: white; }
+      .one p { flex: 1; }
+      .auto p { flex: auto; }
+      .none p { flex: none; }
+    </style>
+  </head>
+  <body>
+    <div class="row one"><p>Poetry</p><p>Fiction in Portuguese</p><p>Children</p></div>
+    <div class="row auto"><p>Poetry</p><p>Fiction in Portuguese</p><p>Children</p></div>
+    <div class="row none"><p>Poetry</p><p>Fiction in Portuguese</p><p>Children</p></div>
+  </body>
+</html>
+```
+
+The browser confirms what `flex: 1` means:
 
 ```
 ana@laptop:~/site$ probe shorthand.html style '.one p:first-child' flex-grow,flex-shrink,flex-basis

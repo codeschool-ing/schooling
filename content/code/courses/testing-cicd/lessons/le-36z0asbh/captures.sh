@@ -8,7 +8,11 @@
 #
 #   bash captures.sh           # needs uv, and the network the first time
 #
-# What is STAGED rather than typed, and not shown in the lesson:
+# THE STUDENT BUILDS ALL OF THIS FROM THE LESSONS. What step 7 adds is shown
+# whole here (the factory, the rewritten store tests, the CSV, the table test
+# and the property tests), and `../../lab.sh shown` fails this script before
+# its first block if any of them is not the file ../../lab.sh wrote.
+# What is STAGED rather than typed:
 #   - the project, rebuilt by ../../lab.sh at step 7 in /home/ana/shipquote,
 #     with its virtual environment, and /tmp/pytest-of-ana emptied first;
 #   - in "scope-mismatch" and "scope-leak", the store fixture changed as the
@@ -28,6 +32,7 @@ set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 HOME=/home/ana USER=ana LOGNAME=ana
 LAB=$(cd "$(dirname "$0")/../.." && pwd)/lab.sh
 bash "$LAB" stage 7 >/dev/null && bash "$LAB" venv "$HOME/shipquote" >/dev/null 2>&1
+bash "$LAB" shown "$(dirname "$LAB")/lessons/le-36z0asbh" || exit 1
 rm -rf /tmp/pytest-of-ana
 cd "$HOME/shipquote" || exit 1
 export PATH="$HOME/shipquote/.venv/bin:$PATH"

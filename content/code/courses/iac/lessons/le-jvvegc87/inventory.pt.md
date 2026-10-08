@@ -1,6 +1,6 @@
 ---
 title: O inventário, e como o Ansible chega a uma máquina
-version: 1
+version: 2
 ---
 
 O Terraform termina onde começa o sistema operacional. A aula 1 traçou a linha: a API da nuvem
@@ -19,10 +19,9 @@ comandos dela.
 {"svg": "<svg viewBox=\"0 0 720 280\" role=\"img\" aria-label=\"O laptop da Ana guarda o Ansible, o inventário e o playbook. Dele saem três conexões SSH, uma para cada máquina: web1 e web2 no grupo web, db1 no grupo db. Cada máquina roda só o sshd e o Python; nada do Ansible fica instalado nela.\"><defs><marker id=\"ps-ah-phosphor\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker></defs><rect x=\"20\" y=\"50\" width=\"230\" height=\"180\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.2\"></rect><text x=\"135.0\" y=\"72.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">laptop da Ana</text><text x=\"135.0\" y=\"90.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">o nó de controle</text><text x=\"135.0\" y=\"125.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">ansible-playbook</text><text x=\"135.0\" y=\"155.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">inventory.ini</text><text x=\"135.0\" y=\"177.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">site.yml</text><text x=\"135.0\" y=\"207.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--phosphor)\">tudo mora aqui</text><text x=\"470.0\" y=\"38.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">[web]</text><text x=\"470.0\" y=\"203.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">[db]</text><rect x=\"470\" y=\"50\" width=\"210\" height=\"48\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"575.0\" y=\"66.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">web1</text><text x=\"575.0\" y=\"84.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">sshd e Python, mais nada</text><path d=\"M250 140 L360 140 L360 74 L468 74\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ps-ah-phosphor)\"></path><rect x=\"470\" y=\"115\" width=\"210\" height=\"48\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"575.0\" y=\"131.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">web2</text><text x=\"575.0\" y=\"149.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">sshd e Python, mais nada</text><path d=\"M250 140 L360 140 L360 139 L468 139\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ps-ah-phosphor)\"></path><rect x=\"470\" y=\"215\" width=\"210\" height=\"48\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.2\"></rect><text x=\"575.0\" y=\"231.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">db1</text><text x=\"575.0\" y=\"249.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">sshd e Python, mais nada</text><path d=\"M250 140 L360 140 L360 239 L468 239\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#ps-ah-phosphor)\"></path><text x=\"320.0\" y=\"128.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--phosphor)\">SSH</text></svg>", "caption": "O Ansible empurra: tudo de que ele precisa está no laptop, e cada máquina é alcançada por SSH quando um comando roda.", "same": ["SSH"]}
 ```
 
-As máquinas desta aula são três contêineres no laptop, `web1`, `web2` e `db1`, cada um com Ubuntu
-24.04, `sshd` e um usuário `deploy` que pode usar `sudo`. São reais o bastante para tudo o que o
-Ansible faz: os pacotes vêm do repositório do Ubuntu e o nginx serve páginas. O moto não entra aqui,
-porque o moto não roda máquina nenhuma.
+As máquinas são as três que a seção anterior construiu, `web1`, `web2` e `db1`: Ubuntu 24.04 com
+`sshd` e um usuário `deploy` que pode usar `sudo`. São reais o bastante para tudo o que o Ansible
+faz. O moto não entra aqui, porque o moto não roda máquina nenhuma.
 
 O primeiro arquivo é o **inventário**: quais máquinas existem e a quais grupos pertencem.
 
@@ -54,7 +53,9 @@ inventory = inventory.ini
 Como a conexão é SSH puro, valem as regras do SSH puro, inclusive as chaves de host. A Ana confia nas
 chaves das três máquinas uma vez, antes do primeiro comando. Em máquinas que não foi você que acabou
 de criar, compare as impressões digitais com o que o console da máquina mostra antes de confiar
-nelas.
+nelas. E depois de cada execução do `up.sh`, que cria máquinas com chaves novas, esqueça antes as
+antigas com `ssh-keygen -R web1`, e o mesmo para `web2` e `db1`; senão o SSH recusa, avisando que a
+identificação da máquina mudou.
 
 ```
 ana@laptop:~/shop/ansible$ ssh-keyscan -t ed25519 web1 web2 db1 >> ~/.ssh/known_hosts 2>/dev/null

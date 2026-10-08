@@ -1,0 +1,537 @@
+[
+  {
+    "id": "ex-0f29z779",
+    "version": 1,
+    "section": "two-ways",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each tool to how it describes the work.",
+    "hint": "Steps, things, or both.",
+    "pairs": [
+      {
+        "left": "A shell script",
+        "right": "Steps in order"
+      },
+      {
+        "left": "A dbt model",
+        "right": "What a table should contain"
+      },
+      {
+        "left": "An Airflow DAG",
+        "right": "A declared graph of imperative tasks"
+      }
+    ],
+    "right_distractors": [
+      "A list of files to delete"
+    ]
+  },
+  {
+    "id": "ex-94g90ybg",
+    "version": 1,
+    "section": "two-ways",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can't an imperative script skip a step whose work is already done?",
+    "hint": "What was it never told?",
+    "choices": [
+      {
+        "text": "It was never told what any step's work is",
+        "correct": true,
+        "why": "Right. Only what to do."
+      },
+      {
+        "text": "Shell scripts cannot test whether a file or a table exists",
+        "correct": false,
+        "why": "They can; nobody told it what to test."
+      },
+      {
+        "text": "set -e stops it from skipping",
+        "correct": false,
+        "why": "set -e only stops on failure."
+      },
+      {
+        "text": "Skipping would make it declarative, which the shell forbids",
+        "correct": false,
+        "why": "Nothing forbids it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ehxaw77d",
+    "version": 1,
+    "section": "the-script",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`nightly.sh` fails at the fact load. What does the next run do?",
+    "hint": "Does it know what finished?",
+    "choices": [
+      {
+        "text": "Starts from the fact load",
+        "correct": false,
+        "why": "It has no record of what finished."
+      },
+      {
+        "text": "Refuses to run until cleared",
+        "correct": false,
+        "why": "Nothing stops it."
+      },
+      {
+        "text": "Starts from the top",
+        "correct": true,
+        "why": "Right. Every step again."
+      },
+      {
+        "text": "Skips the steps that succeeded, using the exit codes of the night before",
+        "correct": false,
+        "why": "Exit codes are not kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-pbjn0na2",
+    "version": 1,
+    "section": "the-script",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Running `nightly.sh` twice for the same day did no harm. Why?",
+    "hint": "A property of each step.",
+    "choices": [
+      {
+        "text": "The script detects the second run",
+        "correct": false,
+        "why": "It detects nothing."
+      },
+      {
+        "text": "Each step was written to be safe to repeat",
+        "correct": true,
+        "why": "Right. That is lesson 15's subject."
+      },
+      {
+        "text": "PostgreSQL ignores repeated inserts",
+        "correct": false,
+        "why": "It inserts them."
+      },
+      {
+        "text": "set -e",
+        "correct": false,
+        "why": "That only stops on failure."
+      }
+    ]
+  },
+  {
+    "id": "ex-k2ennb41",
+    "version": 1,
+    "section": "a-makefile",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When does `make` rebuild a file?",
+    "hint": "Existence, and something else.",
+    "choices": [
+      {
+        "text": "Every time it is run",
+        "correct": false,
+        "why": "Then the second make would not say nothing to be done."
+      },
+      {
+        "text": "When a table it reads in the database has changed",
+        "correct": false,
+        "why": "make cannot see the database."
+      },
+      {
+        "text": "Only when it is missing",
+        "correct": false,
+        "why": "That is Luigi."
+      },
+      {
+        "text": "When missing, or older than one of its inputs",
+        "correct": true,
+        "why": "Right. Modification times."
+      }
+    ]
+  },
+  {
+    "id": "ex-06ma7qyf",
+    "version": 1,
+    "section": "a-makefile",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the raw rule list the lab's clock file among its inputs?",
+    "hint": "What changes when the shop lives a day?",
+    "choices": [
+      {
+        "text": "make needs the date",
+        "correct": false,
+        "why": "DAY is read separately."
+      },
+      {
+        "text": "load_raw.py reads it",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "It stops two loads from running at the same moment on one machine",
+        "correct": false,
+        "why": "It locks nothing."
+      },
+      {
+        "text": "A new day rewrites it, so raw becomes out of date",
+        "correct": true,
+        "why": "Right. It stands for new data has arrived."
+      }
+    ]
+  },
+  {
+    "id": "ex-0515jeyr",
+    "version": 1,
+    "section": "a-makefile",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many steps did `make` run the second time it was asked, with nothing changed?",
+    "hint": "Nothing to be done.",
+    "value": 0,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-5qnbhjhj",
+    "version": 1,
+    "section": "what-changed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana edits `stg_books.sql`. Which steps does `make` run?",
+    "hint": "Which stamp is now older than an input?",
+    "choices": [
+      {
+        "text": "All three",
+        "correct": false,
+        "why": "Raw's inputs did not change."
+      },
+      {
+        "text": "The models and the report",
+        "correct": true,
+        "why": "Right. Everything after the edited file."
+      },
+      {
+        "text": "Only the report, since raw and the models are current",
+        "correct": false,
+        "why": "The models stamp is older than the edit."
+      },
+      {
+        "text": "None, because comments do not count",
+        "correct": false,
+        "why": "make compares times, not contents."
+      }
+    ]
+  },
+  {
+    "id": "ex-ke8kmyf3",
+    "version": 1,
+    "section": "what-changed",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A refund changes the 14th in the shop's database. What does `make` do on the next run, with no day played?",
+    "hint": "Which file did the refund touch?",
+    "choices": [
+      {
+        "text": "Reloads raw",
+        "correct": false,
+        "why": "No input file changed."
+      },
+      {
+        "text": "Rebuilds the 14th's report",
+        "correct": false,
+        "why": "Nothing tells it to."
+      },
+      {
+        "text": "Nothing: no file it watches changed",
+        "correct": true,
+        "why": "Right. Times cannot see data."
+      },
+      {
+        "text": "Fails",
+        "correct": false,
+        "why": "It finds nothing to do."
+      }
+    ]
+  },
+  {
+    "id": "ex-861s1cge",
+    "version": 1,
+    "section": "what-changed",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To see what `make` would run without running it: `make ___`",
+    "hint": "One letter, after a dash.",
+    "blanks": [
+      {
+        "accept": [
+          "-n"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-p6jrvv1w",
+    "version": 1,
+    "section": "failing-and-resuming",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the dbt step failed, why was `.made/models` out of date?",
+    "hint": "Which touch never ran?",
+    "choices": [
+      {
+        "text": "It was the 15th's, older than the new raw stamp",
+        "correct": true,
+        "why": "Right. The touch after dbt build never ran."
+      },
+      {
+        "text": "make deleted it",
+        "correct": false,
+        "why": "It was still there."
+      },
+      {
+        "text": "dbt wrote a newer one, after the tests had failed and stopped the run",
+        "correct": false,
+        "why": "dbt knows nothing of the stamps."
+      },
+      {
+        "text": "Its contents were wrong",
+        "correct": false,
+        "why": "make never reads contents."
+      }
+    ]
+  },
+  {
+    "id": "ex-3cs777pv",
+    "version": 1,
+    "section": "failing-and-resuming",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many older days of fact_sales did the drift test find wrong on the 16th?",
+    "hint": "FAIL followed by a number.",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-0w4bbsnc",
+    "version": 1,
+    "section": "failing-and-resuming",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What did `make` do better than Luigi in the same situation?",
+    "hint": "Existence, or comparison.",
+    "choices": [
+      {
+        "text": "It retried dbt by itself",
+        "correct": false,
+        "why": "It stopped at the failure."
+      },
+      {
+        "text": "It saw that an existing stamp was older than its inputs",
+        "correct": true,
+        "why": "Right. Luigi would have called the 15th's models done."
+      },
+      {
+        "text": "It noticed the refunds",
+        "correct": false,
+        "why": "Only the drift test saw the data."
+      },
+      {
+        "text": "It ran the full refresh of the fact table without being asked to",
+        "correct": false,
+        "why": "Ana did."
+      }
+    ]
+  },
+  {
+    "id": "ex-c1ytg90g",
+    "version": 1,
+    "section": "state-in-dbt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `state:modified` compare?",
+    "hint": "Two manifests.",
+    "choices": [
+      {
+        "text": "The project with a saved manifest",
+        "correct": true,
+        "why": "Right. Each model's definition."
+      },
+      {
+        "text": "File modification times, as make compares them",
+        "correct": false,
+        "why": "That is make."
+      },
+      {
+        "text": "The data in the warehouse with the data in the shop on the evening before",
+        "correct": false,
+        "why": "It compares code, not data."
+      },
+      {
+        "text": "Git commits",
+        "correct": false,
+        "why": "It reads the manifest."
+      }
+    ]
+  },
+  {
+    "id": "ex-gx8vb2z4",
+    "version": 1,
+    "section": "state-in-dbt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After changing `stg_books`, why was `fact_sales` not rebuilt?",
+    "hint": "What does fact_sales read?",
+    "choices": [
+      {
+        "text": "It is incremental, and so it is never rebuilt by a selection",
+        "correct": false,
+        "why": "Materialisation does not matter here."
+      },
+      {
+        "text": "The drift test failed and stopped it before it could start",
+        "correct": false,
+        "why": "Nothing failed in that build."
+      },
+      {
+        "text": "Exposures block it",
+        "correct": false,
+        "why": "Exposures build nothing."
+      },
+      {
+        "text": "Nothing it reads was modified",
+        "correct": true,
+        "why": "Right. It reads int_sales, not the books."
+      }
+    ]
+  },
+  {
+    "id": "ex-97ebrs4r",
+    "version": 1,
+    "section": "where-each-fits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is sending the managers an e-mail an imperative step by nature?",
+    "hint": "What output could be compared?",
+    "choices": [
+      {
+        "text": "E-mail servers are slow",
+        "correct": false,
+        "why": "Speed is not the issue."
+      },
+      {
+        "text": "make cannot run mail commands",
+        "correct": false,
+        "why": "It can run anything."
+      },
+      {
+        "text": "No output to check; a rerun sends it again",
+        "correct": true,
+        "why": "Right. Guard it so it runs once."
+      },
+      {
+        "text": "E-mails are always the first step of a pipeline, before any load",
+        "correct": false,
+        "why": "They belong at the end."
+      }
+    ]
+  },
+  {
+    "id": "ex-tx8cdcn7",
+    "version": 1,
+    "section": "where-each-fits",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are layers of Ana's pipeline that are declarative? Choose all that apply.",
+    "hint": "What is described by what it produces?",
+    "choices": [
+      {
+        "text": "The graph of an Airflow DAG",
+        "correct": true,
+        "why": "Right. The arrows are declared."
+      },
+      {
+        "text": "A dbt model",
+        "correct": true,
+        "why": "Right. A select describing a table."
+      },
+      {
+        "text": "A BashOperator's command",
+        "correct": false,
+        "why": "That is a step."
+      },
+      {
+        "text": "Lesson 10's retry delays",
+        "correct": false,
+        "why": "A sequence in time."
+      }
+    ]
+  },
+  {
+    "id": "ex-97q2s5y0",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order what happened on the 16th, from the new day to the report.",
+    "hint": "Fail, fix, resume.",
+    "items": [
+      "The clock file was rewritten",
+      "make loaded raw and touched its stamp",
+      "dbt build failed on the drift test",
+      "Ana ran a full refresh of fact_sales+",
+      "make built the models and the report"
+    ]
+  },
+  {
+    "id": "ex-jg6tk4g0",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Makefile rule for the models lists only `.made/raw` as its input. Ana edits a model. What happens?",
+    "hint": "The rules are only as good as their inputs.",
+    "choices": [
+      {
+        "text": "Nothing, until the next day reloads raw",
+        "correct": true,
+        "why": "Right. The edit is invisible to make."
+      },
+      {
+        "text": "make rebuilds the models",
+        "correct": false,
+        "why": "It cannot see the edited file."
+      },
+      {
+        "text": "make fails",
+        "correct": false,
+        "why": "It finds nothing to do."
+      },
+      {
+        "text": "dbt notices and rebuilds by itself",
+        "correct": false,
+        "why": "dbt only runs when called."
+      }
+    ]
+  }
+]

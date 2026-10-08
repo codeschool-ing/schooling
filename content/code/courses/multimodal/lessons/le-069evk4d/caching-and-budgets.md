@@ -1,6 +1,6 @@
 ---
 title: Never pay twice, and check before the call
-version: 1
+version: 2
 ---
 
 The cheapest request is the one never sent. A shop asks the same questions of the same pictures more often than it expects: a retry after a timeout, two people opening one invoice, a batch run again after a fix elsewhere. A cache keyed by **everything that shapes the reply** answers those from disk:
@@ -18,7 +18,7 @@ The cheapest request is the one never sent. A shop asks the same questions of th
       "note": "**Replies are kept as files in one directory**, one per question asked."
     },
     {
-      "code": "def describe(path, prompt, model=\"lab-vision-1\", detail=\"high\"):\n    raw = open(path, \"rb\").read()\n    key = hashlib.sha256(json.dumps([hashlib.sha256(raw).hexdigest(), prompt, model, detail]).encode()).hexdigest()\n    hit = os.path.join(CACHE, key + \".json\")\n",
+      "code": "def describe(path, prompt, model=\"qwen2.5vl:3b\", detail=\"high\"):\n    raw = open(path, \"rb\").read()\n    key = hashlib.sha256(json.dumps([hashlib.sha256(raw).hexdigest(), prompt, model, detail]).encode()).hexdigest()\n    hit = os.path.join(CACHE, key + \".json\")\n",
       "note": "**The key is a hash of everything that shapes the reply**: the picture's own hash, the prompt, the model and the `detail`. Leave one out and two different questions share an answer."
     },
     {
@@ -43,14 +43,14 @@ The cheapest request is the one never sent. A shop asks the same questions of th
 
 ```
 ana@lab:~/mm$ python cached.py media/invoice-0931.png "What is the total?" "What is the total?" "What is the total of this invoice?"
-provider 1113 tokens  The invoice is INV-0931 from Lantern & Quill Dis
-cache    1113 tokens  The invoice is INV-0931 from Lantern & Quill Dis
-provider 1116 tokens  The invoice is INV-0931 from Lantern & Quill Dis
-ana@lab:~/mm$ grep -c chat/completions /var/log/labmm/requests.jsonl
+provider 2798 tokens  The total amount for the invoice from Lantern & 
+cache    2798 tokens  The total amount for the invoice from Lantern & 
+provider 2801 tokens  The total of the invoice is 758,50 BRL.
+ana@lab:~/mm$ ls cache | wc -l
 2
 ```
 
-Three questions, two requests in labmm's log. The second "What is the total?" came from the cache. The third question means the same thing in other words and **missed**, because the key is the exact prompt. A cache by meaning is possible, by embedding the prompt as lesson 12 embedded pieces, and then it can return an answer to a question that only looked similar. The reply itself is lesson 8's rule `l08-invoice-high`, written by the course.
+Three questions, two requests to the model: the cache holds two files. The second "What is the total?" came from disk, with the 2,798 tokens it would have cost written beside it. `cached.py` sets no temperature, so the model words its answer differently from run to run, and yours will not read like these; the cached line is the one answer guaranteed to repeat the first word for word. The third question means the same thing in other words and **missed**, because the key is the exact prompt. A cache by meaning is possible, by embedding the prompt as lesson 12 embedded pieces, and then it can return an answer to a question that only looked similar.
 
 A cache holds the provider's answers, which can hold personal data from the pictures. It needs the same retention and erasure rules as the pictures do.
 

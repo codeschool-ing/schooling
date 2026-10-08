@@ -1,6 +1,6 @@
 ---
 title: Recursos, verbos e códigos de status
-version: 1
+version: 2
 ---
 
 A aula 1 controlou os roteadores pelo CLI: texto entra, texto sai, e um script que precisa
@@ -9,10 +9,8 @@ maior parte do equipamento de rede vendido hoje tem uma ao lado do CLI, e o tipo
 API REST sobre HTTPS: o equipamento publica **recursos** em endereços, e um cliente age sobre
 eles com os **verbos** do HTTP.
 
-Os roteadores do lab têm uma em `https://<router>.example.net/api/v1`. Ela foi escrita para este
-curso, porque o FRR não tem nenhuma, e segue o padrão que o equipamento real segue; a última
-seção da aula 1 diz o que é real no lab e o que não é. Perguntando alguma coisa a ela sem dizer
-quem você é:
+Os roteadores do lab têm uma em `https://<router>.example.net/api/v1`, servida pelo `devapid`, o
+programa que a seção anterior ligou. Perguntando alguma coisa a ela sem dizer quem você é:
 
 ```
 ana@ctl:~$ curl -si --cacert lab-ca.pem https://edge1.example.net/api/v1/system
@@ -59,4 +57,4 @@ O código de status é a primeira coisa que um programa deve ler, agrupado pelo 
 
 **Um 4xx é problema seu de resolver, um 5xx é do servidor.** Essa única distinção decide se um
 script deve tentar de novo, e `429 Too Many Requests` é o único 4xx em que tentar de novo, depois
-de esperar, é exatamente o certo. A seção 07 é sobre ele.
+de esperar, é exatamente o certo. A seção 08 é sobre ele.

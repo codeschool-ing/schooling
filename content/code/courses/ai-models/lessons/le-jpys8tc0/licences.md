@@ -10,7 +10,6 @@ models, and they are the ones to read before anything else.
 ## A ceiling on how big you may grow
 
 ```
-ana@desk:~/desk$ sources quote llama3.1-licence "700 million"
 # meta-llama/llama-models@0e0b8c51 models/llama3_1/LICENSE
   33: 2. Additional Commercial Terms. If, on the Llama 3.1 version release date, the monthly
       active users of the products or services made available by or for Licensee, or
@@ -29,7 +28,6 @@ Qwen's older licence has the same shape at a lower number, and a second clause t
 to most readers:
 
 ```
-ana@desk:~/desk$ sources quote qwen-licence "100 million|improve any other large"
 # QwenLM/Qwen@2df8e8ac Tongyi Qianwen LICENSE AGREEMENT
   29: If you are commercially using the Materials, and your product or service has more than
       100 million monthly active users, You shall request a license from Us. You cannot
@@ -40,14 +38,13 @@ ana@desk:~/desk$ sources quote qwen-licence "100 million|improve any other large
 
 **One hundred million users** is still far off for a bookshop. **Clause b** is not: it forbids
 using the model's *output* to improve any other large language model. Generating training
-examples with one model to fine-tune another (lesson 1 section 07's fourth step) is a common
+examples with one model to fine-tune another (lesson 1 section 11's fourth step) is a common
 plan, and under this licence it is allowed only towards Qwen itself. Llama 3.1's card, quoted in
 lesson 1, says the opposite: its licence allows exactly that use.
 
 ## What you owe when you ship it
 
 ```
-ana@desk:~/desk$ sources quote llama3.1-licence "Built with Llama"
 # meta-llama/llama-models@0e0b8c51 models/llama3_1/LICENSE
   25: i. If you distribute or make available the Llama Materials (or any derivative works
       thereof), or a product or service (including another AI model) that contains any of

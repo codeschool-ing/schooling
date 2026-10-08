@@ -5,7 +5,7 @@ version: 1
 
 **Um erro de certificado é o cliente se recusando a conversar com um servidor que ele não consegue
 identificar, e cada um deles tem uma causa específica que pode ser achada e corrigida no
-servidor.** O laboratório roda quatro servidores com quatro problemas diferentes. O `s_client` com
+servidor.** A seção 02 subiu quatro servidores, e três deles têm um problema diferente cada. O `s_client` com
 `-verify_return_error` se comporta como um navegador: ele interrompe o handshake quando uma
 verificação falha. Só as linhas de veredito aparecem aqui.
 

@@ -1,10 +1,26 @@
 ---
 title: When both sides changed the same lines
-version: 1
+version: 2
 ---
 
 Lesson 5 merged two branches that had changed different files, and Git combined them without asking.
-Here Ana's branch `sunday` and Bruno's commit on `main` both changed the second line of `index.html`:
+Here Ana's branch `sunday` and Bruno's commit on `main` both changed the second line of `index.html`.
+To have the same two sides on your machine, start from a fresh week and make both:
+
+```bash
+cd ~ && rm -rf ~/site && bash ~/make-site.sh && cd ~/site
+git switch -q -c sunday
+sed -i 's/half past five/half past five; Sundays from seven/' index.html
+git commit -qam 'Open on Sundays from seven'
+git switch -q main
+sed -i 's/half past five/half past six/' index.html
+git -c user.name='Bruno Lima' -c user.email=bruno@example.com commit -qam 'Open at half past six in winter'
+```
+
+`-q` keeps each command quiet, since you have seen what they print. The last line is Bruno's commit.
+On a team it would reach Ana's `main` through a pull, which is lesson 7; here you make it yourself,
+under his name. **`git -c name=value` changes a setting for one command and nowhere else**, so the
+commit says Bruno and your own settings are untouched. Now the merge:
 
 ```
 ana@vm:~/site$ git merge sunday

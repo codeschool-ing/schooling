@@ -1,6 +1,6 @@
 ---
 title: O switch de camada 3, e mudar um gateway de lugar
-version: 1
+version: 2
 ---
 
 Um **switch de camada 3** é um switch que também roteia entre as próprias VLANs. A descrição de
@@ -15,7 +15,7 @@ interfaces virtuais comutadas), e um switch Cisco as escreve `interface Vlan10`.
 ```
 
 Para que o switch fosse o único roteador do laboratório, a ponta do cabo do lado do r1 foi
-desativada antes deste bloco, o que a aula não mostra. O ping do pc1 ao pc2 falha de novo, como deve
+desativada antes deste bloco: `ip link set eth0 down` num prompt de root no r1. O ping do pc1 ao pc2 falha de novo, como deve
 ser sem roteador nenhum:
 
 ```

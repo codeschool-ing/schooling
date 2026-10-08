@@ -7,40 +7,44 @@
 #
 #   bash captures.sh            # beside this file; it finds ../../lab.sh
 #
-# It rebuilds ~/guard with lab.sh reset under its own HOME, so nothing of yours
-# is touched, and prints each command after a prompt, ana@lab:~/guard$,
-# followed by what it printed.
+# It rebuilds ~/guard with lab.sh reset under its own HOME (/home/ana), which
+# builds it from the fences of the lessons themselves: standin.py, score.py,
+# shortlist.py, fairness.py, counterfactual.py and the profiles are exactly
+# what the lesson prints. It prints each command after a prompt,
+# ana@lab:~/guard$, followed by what it printed.
 #
-# What is STAGED rather than typed: the whole of ~/guard, built by lab.sh. The
-# decisions in data/shortlist-v1.csv and shortlist-v2.csv were WRITTEN BY THE
-# COURSE from the counts in guardlab/fairness.py; no model made them. The
-# scores come from guardlab/standin.py, which is NOT A MODEL: it is a rule the
-# course wrote, with a bonus for Southeastern CEPs put there on purpose, and its
-# docstring says so. The profiles in data/profiles.jsonl are invented.
+# WRITTEN BY THE COURSE: the sixteen profiles, the stand-in scorer (which is
+# not a model) and the counts shortlist.py writes the two tables from. No
+# model is called in this lesson.
 #
-# Recorded with Python 3.11, TZ=America/Sao_Paulo.
+# Recorded with Python 3.12.3 (Ubuntu 24.04's), TZ=America/Sao_Paulo.
 
 set -uo pipefail
 here=$(cd "$(dirname "$0")" && pwd)
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 COLUMNS=100 PYTHONDONTWRITEBYTECODE=1
-export HOME=${LAB_HOME:-/var/tmp/ai-security}
-mkdir -p "$HOME"
-bash "$here/../../lab.sh" reset >/dev/null
+export HOME=${LAB_HOME:-/home/ana}
+mkdir -p "$HOME/.py"
+ln -sf "$(command -v python3.12)" "$HOME/.py/python3"
+export PATH=$HOME/.py:$PATH
+GUARD_HOME=$HOME bash "$here/../../lab.sh" reset >/dev/null || exit 1
 cd "$HOME/guard"
 export PATH=$HOME/guard/bin:$PATH
 on() { printf 'ana@lab:~/guard$ %s\n' "$*"; bash -c "$*" 2>&1; }
 block() { printf '##### %s\n' "$1"; }
 
-block sources
+block profiles
 on 'head -4 data/profiles.jsonl'
+
+block score
 on 'guard score data/profiles.jsonl'
-on "sed -n '/^THRESHOLD/,\$p' guardlab/standin.py"
 
 block measuring
+on 'guard shortlist v1 > data/shortlist-v1.csv'
 on 'head -3 data/shortlist-v1.csv'
 on 'guard fairness data/shortlist-v1.csv --group region'
 
-block tradeoffs
+block v2
+on 'guard shortlist v2 > data/shortlist-v2.csv'
 on 'guard fairness data/shortlist-v2.csv --group region'
 
 block counterfactual

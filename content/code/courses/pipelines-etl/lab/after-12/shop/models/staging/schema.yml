@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: stg_orders
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+      - name: customer_id
+        data_tests:
+          - not_null:
+              config:
+                where: "shop_id = 7"            # the website: a till may sell to nobody
+                severity: warn                  # 7 erased customers: known, and lawful
+      - name: status
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [completed, cancelled, refunded]
+  - name: stg_order_lines
+    data_tests:
+      - unique:                                 # the grain is the order AND the line
+          arguments:
+            column_name: "order_id || '-' || line_no"
+    columns:
+      - name: order_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_orders')
+                field: order_id

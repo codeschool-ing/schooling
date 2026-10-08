@@ -1,12 +1,19 @@
 ---
 title: "terraform import: adopting a bucket somebody made by hand"
-version: 1
+version: 2
 ---
 
 The data team's import started from a resource that had been managed until a moment before, with a
 block ready to copy. The usual case is less tidy. Bruno, who looks after the backups, made a bucket
 by hand last week from his own machine, tagged it, and asked Ana to bring it under the shop's
-configuration. Nothing in any state knows it exists:
+configuration. These were his two commands; run them to make the same bucket in your moto:
+
+```sh
+aws s3api create-bucket --bucket shop-backups-dev --create-bucket-configuration LocationConstraint=sa-east-1
+aws s3api put-bucket-tagging --bucket shop-backups-dev --tagging "TagSet=[{Key=Owner,Value=bruno},{Key=Purpose,Value=backups}]"
+```
+
+Nothing in any state knows the bucket exists:
 
 ```
 ana@laptop:~/shop/app$ aws s3api get-bucket-tagging --bucket shop-backups-dev
@@ -41,7 +48,7 @@ resource "aws_s3_bucket" "backups" {
 ```
 
 The address has to exist in the configuration first, because the state entry has to belong to a
-block. So Ana writes the smallest block that names the bucket:
+block. So Ana writes the smallest block that names the bucket, in a new file, `backups.tf`:
 
 ```hcl
 resource "aws_s3_bucket" "backups" {

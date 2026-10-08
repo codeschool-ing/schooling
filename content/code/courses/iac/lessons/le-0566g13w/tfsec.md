@@ -1,9 +1,20 @@
 ---
 title: tfsec, a scanner that stopped learning, and Terrascan
-version: 1
+version: 2
 ---
 
-tfsec is one Go binary, made only for Terraform and its HCL. Ask it its version and it answers with a notice first:
+tfsec is one Go binary, made only for Terraform and its HCL.
+
+**Installing tfsec.** It is that one file, downloaded from the project's releases on GitHub and put
+on your `PATH`:
+
+```sh
+curl -fsSLo tfsec https://github.com/aquasecurity/tfsec/releases/download/v1.28.14/tfsec-linux-amd64
+sudo install tfsec /usr/local/bin/tfsec && rm tfsec
+```
+
+On an ARM machine the file ends in `-linux-arm64`. Ask it its version and it answers with a notice
+first:
 
 ```
 ana@laptop:~/shop$ tfsec --version
@@ -74,7 +85,7 @@ is not there.**
 tfsec did not decide port 22 was fine. Its check for public ingress was written for the shapes a
 security group rule could take when the check was written, and `aws_vpc_security_group_ingress_rule`
 is not one of them. Write the same rule in the older form, as an `ingress` block inside the group,
-and tfsec finds it at once:
+in a directory of its own, `~/legacy/main.tf`, and tfsec finds it at once:
 
 ```hcl
 resource "aws_security_group" "web" {
@@ -134,7 +145,7 @@ and knows the newer resource.
 ## Terrascan
 
 Terrascan, from Tenable, is a fourth tool of the same kind, with its policies written in Rego like
-Trivy's. It is not installed in this lab:
+Trivy's. It was not installed for this lesson, and back in `~/shop` the shell confirms it:
 
 ```
 ana@laptop:~/shop$ which terrascan; echo "exit $?"
@@ -148,7 +159,7 @@ depends on which resource types those rules know.
 ## Which one
 
 The three that ran here agree on most of the shop and disagree at the edges. A table of what each
-reported, from the captures above:
+reported, from the transcripts above:
 
 | | Checkov | Trivy | tfsec |
 |---|---|---|---|
@@ -158,5 +169,5 @@ reported, from the captures above:
 | custom rules | Python or YAML | Rego | (not shown here) |
 
 Checkov and Trivy are both maintained, and running both costs little: neither needs credentials,
-and both reported every finding in a lab with no network. tfsec belongs in this lesson because you will meet it in
+and both reported every finding here with their downloads switched off. tfsec belongs in this lesson because you will meet it in
 existing pipelines, and now you know what to check before trusting its silence.

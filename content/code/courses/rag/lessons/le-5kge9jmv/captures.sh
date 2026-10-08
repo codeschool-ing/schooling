@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # The terminal sessions quoted in lesson 6 of rag, as a script that produces
-# them.
+# them. THE AUTHOR'S, NOT THE STUDENT'S: the lesson shows every command and
+# every program, and nothing here names a file the student does not have.
 #
 # THE SCRIPT IS THE SOURCE AND ITS OUTPUT IS NOT COMMITTED. Every transcript in
 # this lesson was copied from running it.
@@ -8,101 +9,50 @@
 #   sudo bash ../../lab.sh up        # once
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
-# chunking.py, ingest.py and search.py live in ../../lab/code and `use` copies
-# them into ~/rag; ingest.py builds the index lesson 5 built, and search.py is
-# this lesson's, shown in its sections. The other programs are written by
-# `put`. data/identifiers.jsonl, six questions about exact identifiers, was
-# written for the course like the rest of data/. The follow-up question in the
-# section on rewriting is rewritten by hand, by the course: no model wrote it.
-# Every vector and every score was computed on this machine.
+# Every program comes out of the lessons through lab/shown.py. Every vector is
+# all-minilm (Ollama tag 1b226e2802db); every mark the reranker gives is
+# llama3.2:3b (a80c4f17acd5) at temperature 0, served by Ollama 0.40.0 on four
+# processors and no graphics card.
 #
-# Recorded on Ubuntu 24.04, Python 3.11, PostgreSQL 16 with pgvector 0.6.0,
-# TZ=America/Sao_Paulo, on 2026-10-06.
-set -uo pipefail
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
-LAB_SH=${LAB_SH:-../../lab.sh}
-CODE=$(cd "$(dirname "$LAB_SH")" && pwd)/lab/code
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@lab:~/rag$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-use() { for f in "$@"; do put "$f" < "$CODE/$f"; done; }
-block() { printf '##### %s\n' "$1"; }
-exec 9>/var/tmp/rag-capture.lock; flock 9
-lab reset >/dev/null
-use chunking.py ingest.py search.py
-lab exec 'python ingest.py' >/dev/null
-put show.py <<'EOF_FILE'
-import sys
+# The reset leaves ~/rag as lesson 5 began it, so the edits lesson 5 makes are
+# made here first, as a student's machine would carry them, and then undone
+# by the commands the first section shows.
+#
+# Recorded on Ubuntu 24.04, Python 3.12, PostgreSQL 16 with pgvector 0.6.0,
+# TZ=America/Sao_Paulo, on 2026-10-08.
+. "$(dirname "${LAB_SH:-../../lab.sh}")/lab/capture.sh"
+L=le-5kge9jmv
+lab reset $L >/dev/null
+use vectors.py chunking.py ingest.py search.py show.py measure.py reorder.py scores.py
+lab exec 'python ingest.py && sed -i "s/We refund within three working days/We refund within two working days/" data/docs/returns-policy.md && sed -i "s/^status: current$/status: superseded/" data/docs/gift-cards.md && rm data/docs/returns-policy-2025.md && python ingest.py' >/dev/null
+python3 "$COURSE/lab/shown.py" "$COURSE" docs.sh > /home/ana/rag/docs.sh
 
-import search
-
-method, question = sys.argv[1], sys.argv[2]
-for rank, (id, path, text, score) in enumerate(getattr(search, method)(question, 5), 1):
-    print(f"{rank}  {score:7.3f}  {path}  | {' '.join(text.split())[:48]}")
-EOF_FILE
-put measure.py <<'EOF_FILE'
-import json
-
-from search import hybrid, lexical, rerank, vector
-
-norm = lambda t: " ".join(t.split())
-found = lambda rows, q: any(f in norm(r[2]) for r in rows for f in q["facts"])
-methods = {
-    "vector": lambda q, k: vector(q, k),
-    "lexical": lambda q, k: lexical(q, k),
-    "hybrid": lambda q, k: hybrid(q, k),
-    "hybrid, reranked": lambda q, k: rerank(q, hybrid(q, 20), k),
-}
-sets = {name: [q for q in map(json.loads, open(f"data/{name}.jsonl")) if q["facts"]]
-        for name in ("eval", "identifiers")}
-print(f"{'':18}{'eval @1':>9}{'eval @3':>9}{'ids @1':>8}{'ids @3':>8}")
-for name, run in methods.items():
-    cells = [f"{sum(found(run(q['question'], k), q) for q in sets[s]):>{w - 3}}/{len(sets[s]):<2}"
-             for s, w in (("eval", 9), ("identifiers", 8)) for k in (1, 3)]
-    print(f"{name:18}" + "".join(cells[:2]) + "".join(cells[2:]))
-EOF_FILE
-put reorder.py <<'EOF_FILE'
-import sys
-
-from search import hybrid, rerank
-
-question, fact = sys.argv[1], sys.argv[2]
-before = hybrid(question, 20)
-after = rerank(question, before, 20)
-for label, rows in (("hybrid", before), ("reranked", after)):
-    print(label)
-    for rank, (id, path, text, score) in enumerate(rows[:5], 1):
-        mark = "  <- the answer" if fact in " ".join(text.split()) else ""
-        print(f"  {rank}  {path}{mark}")
-EOF_FILE
-put scores.py <<'EOF_FILE'
-import json
-
-from search import vector
-
-for line in open("data/eval.jsonl"):
-    q = json.loads(line)
-    best = vector(q["question"], 1)[0][3]
-    print(f"{best:.3f}  {'answerable  ' if q['facts'] else 'unanswerable'}  {q['question']}")
-EOF_FILE
-
+block restore
+on 'sh docs.sh'
+on 'psql -qc "DROP TABLE chunks"'
+on 'python ingest.py'
 block first
 on 'python show.py vector "How much is express delivery?"'
-block lexical
+block lexical-vector
 on 'python show.py vector "What does error E-4104 mean?"'
 on 'python show.py lexical "What does error E-4104 mean?"'
+block lexical-lexical
 on 'python show.py lexical "how do I send a book back"'
-block hybrid
+block hybrid-show
 on 'python show.py hybrid "What does error E-4104 mean?"'
-on 'python measure.py'
-block rerank
+block rerank-express
 on 'python reorder.py "How much is express delivery?" "9.90"'
+block rerank-window
 on 'python reorder.py "How many days do I have to return a printed book?" "30 days from delivery"'
-block rewrite
+block rewrite-short
 on 'python show.py vector "And for e-books?"'
+block rewrite-long
 on 'python show.py vector "How long do I have to return an e-book?"'
-block filters
+block filter-none
 on 'python show.py vector "Who pays for the return postage?"'
+block filter-on
 on 'python -c "from search import vector; [print(r[1]) for r in vector(\"Who pays for the return postage?\", 3, \"status = %s AND audience = %s\", (\"current\", \"public\"))]"'
 block threshold
 on 'python scores.py | sort -r'
+block measure
+on 'python measure.py'

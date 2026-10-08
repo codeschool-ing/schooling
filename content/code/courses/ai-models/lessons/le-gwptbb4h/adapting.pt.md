@@ -22,7 +22,7 @@ fronteira, mostre alguns: um e-mail, o rótulo certo, outro e-mail, o rótulo de
 `prompt-engineering` trata de quantos e quais. Custa horas escolhendo bons exemplos e alguns tokens
 em cada requisição, porque os exemplos vão junto toda vez.
 
-**3. Recuperação.** Quando o que falta é um fato, a lacuna da seção 06, busque o texto relevante e
+**3. Recuperação.** Quando o que falta é um fato, a lacuna da seção 10, busque o texto relevante e
 coloque no prompt: o status do pedido, a política de reembolso, o número de páginas do livro. Isso
 é um sistema para construir e manter funcionando, por isso se mede em dias, e é o único dos quatro
 que acompanha fatos que mudam.

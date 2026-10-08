@@ -1,16 +1,24 @@
 ---
 title: Filters, and the image that changed under you
-version: 1
+version: 2
 ---
 
 A tag lookup is the simple case. Some data sources search a large catalogue, and the query has to be
 narrow enough to come back with one answer. **Machine images** are the usual example: an AWS region
-lists thousands of public images, and even the lab's moto carries a catalogue of Amazon's. A machine started from the wrong one is a machine running the wrong operating
+lists thousands of public images, and even moto carries a catalogue of Amazon's. A machine started from the wrong one is a machine running the wrong operating
 system.
 
 At the shop an image team bakes the web server's image (lesson 20 is about how) and publishes each
-build under a name with its date. Ana can see the one that exists so far; it was made in the lab by a
-staged command, as the image team would have made it:
+build under a name with its date. In your lab the image team is you again. Its build is a copy of a
+throwaway instance started from one of moto's Ubuntu images, and these two commands make it;
+`BASE` keeps the instance's id, so stay in the same terminal until the second build:
+
+```sh
+BASE=$(aws ec2 run-instances --image-id ami-1e749f67 --instance-type t3.micro --query 'Instances[0].InstanceId' --output text)
+aws ec2 create-image --instance-id $BASE --name shop-web-20260915
+```
+
+Ana can see the one image that exists so far:
 
 ```
 ana@laptop:~/shop/app$ aws ec2 describe-images --owners self --query "Images[].[Name,ImageId]" --output text
@@ -20,7 +28,7 @@ shop-web-20260915	ami-737937c26a362335e
 `data "aws_ami"` takes the same filters as `aws ec2 describe-images`, written as `filter` blocks,
 plus an `owners` list that says whose images to search, here `self`, the account itself. The pattern
 `shop-web-*` matches every build, so **`most_recent = true` picks the newest of them** by creation
-date. The instance takes the image's id as its `ami`:
+date. The instance takes the image's id as its `ami`, and both go in a new file, `image.tf`:
 
 ```hcl
 data "aws_ami" "web" {
@@ -56,8 +64,15 @@ Changes to Outputs:
   + web_image      = "shop-web-20260915"
 ```
 
-Two weeks later the image team publishes a new build. Nobody tells Ana, and nobody needs to, because
-the image list says it:
+Two weeks later the image team publishes a new build, and retires the throwaway instance. Playing
+that part, in the terminal that still holds `BASE`:
+
+```sh
+aws ec2 create-image --instance-id $BASE --name shop-web-20261001
+aws ec2 terminate-instances --instance-ids $BASE
+```
+
+Nobody tells Ana, and nobody needs to, because the image list says it:
 
 ```
 ana@laptop:~/shop/app$ aws ec2 describe-images --owners self --query "Images[].[Name,ImageId]" --output text
@@ -111,7 +126,7 @@ the next apply, for whatever reason they ran it.
 **`most_recent` is a decision to follow the newest image, made once and applied on every plan.**
 That is sometimes exactly right: a scratch environment that should always run the latest build.
 For production the safer arrangement is to pin the exact build and make moving it a diff somebody
-reviews:
+reviews. Ana rewrites `image.tf`:
 
 ```hcl
 variable "web_image" {

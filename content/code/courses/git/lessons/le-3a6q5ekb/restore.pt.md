@@ -1,15 +1,28 @@
 ---
 title: Restore: jogar fora uma mudança que ainda não foi para o commit
-version: 1
+version: 2
 ---
 
 **O `git restore` devolve um arquivo ao que ele era**, e só mexe no diretório de trabalho e na área
 de preparo. Nenhum commit é criado, movido ou removido, o que o torna o mais seguro dos três comandos
 desta aula e o primeiro a tentar.
 
+Esta aula começa de uma cópia nova da semana da aula 3, para que os seus arquivos sejam os desta
+página:
+
+```bash
+cd ~ && rm -rf ~/site && bash ~/make-site.sh && cd ~/site
+```
+
 ## Uma mudança que deu errado
 
-Alguém digitou `9.00` para um pão. A mudança não foi preparada:
+Alguém digitou `9.00` para um pão. Cometa o mesmo deslize, no nano ou numa linha:
+
+```bash
+sed -i 's/0.90/9.00/' menu.html
+```
+
+A mudança não foi preparada:
 
 ```
 ana@vm:~/site$ git diff --stat
@@ -30,7 +43,13 @@ está editando há um tempo, um `git diff` rápido mostra o que você está pres
 ## Tirando um arquivo da área de preparo
 
 O `--staged` vai para o outro lado: tira uma mudança da área de preparo e a deixa no diretório de
-trabalho. É o desfazer de um `git add` que você não queria:
+trabalho. É o desfazer de um `git add` que você não queria. Primeiro uma edição para adicionar, o
+pão de queijo a 2.60:
+
+```bash
+sed -i 's/2.50/2.60/' menu.html
+```
+
 
 ```
 ana@vm:~/site$ git add menu.html

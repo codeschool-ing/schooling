@@ -1,6 +1,6 @@
 ---
 title: Dois desenhos de uma rede
-version: 1
+version: 2
 ---
 
 Uma **topologia** é uma rede desenhada como pontos e linhas: cada aparelho um ponto, cada conexão
@@ -47,7 +47,7 @@ tudo, e quem mais vai ligar daqui a pouco.
 
 Cada máquina do laboratório deste curso é um **namespace de rede** num único computador Linux, e
 cada "cabo" é um par de interfaces de rede virtuais emendadas no kernel (a aula 7 o monta em
-detalhe). Então o laboratório não tem topologia física para fotografar. O que ele tem é o desenho no
-`lab.sh`, e o kernel o respeita: um namespace só alcança o que seus cabos virtuais alcançam. Quando
+detalhe). Então o laboratório não tem topologia física para fotografar. O que ele tem é o desenho no alto
+do arquivo de cada rede em `~/netlab`, e o kernel o respeita: um namespace só alcança o que seus cabos virtuais alcançam. Quando
 uma seção abaixo "corta um cabo", ela desliga uma ponta de um cabo virtual, e a outra ponta vê o
 sinal sumir exatamente como se alguém tivesse puxado o plugue.

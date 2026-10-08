@@ -1,13 +1,13 @@
 ---
 title: Testar que uma regra recusa o que deve
-version: 1
+version: 2
 ---
 
 O módulo tem duas regras: `cidr` precisa ser uma faixa com máscara, e a zona de uma sub-rede precisa
 ser uma que a região oferece. As duas foram escritas para o dia em que alguém passar o valor errado,
 e **uma regra que ninguém viu recusar nada é uma regra que ninguém sabe se funciona**. Um run que dá
 a ela um valor ruim normalmente falharia, que é o contrário do que um teste deve informar.
-`expect_failures` inverte isso.
+`expect_failures` inverte isso. O `tests/rules.tftest.hcl` da Ana:
 
 ```hcl
 mock_provider "aws" {}
@@ -71,7 +71,11 @@ encontra.
 
 Regras são afrouxadas como qualquer código: alguém precisa de um valor que a regra recusa e
 simplifica a condição. Aqui a regra de `cidr` é reduzida a "dígitos, pontos e barras", que ainda
-parece uma faixa:
+parece uma faixa. A edição, no `variables.tf`:
+
+```sh
+sed -i 's|condition     = can(cidrnetmask(var.cidr))|condition     = can(regex("^[0-9./]+$", var.cidr))|' variables.tf
+```
 
 ```
 ana@laptop:~/shop/modules/network$ grep -n "condition" variables.tf
@@ -118,7 +122,11 @@ que quem chama o módulo nunca escreveu.
 **O run seguinte a um run que falhou é pulado**, como `zone_from_another_region` foi aqui. Os runs
 de um arquivo vão em ordem e compartilham um state, e o Terraform não segue adiante depois de uma
 falha, então uma regra quebrada pode esconder se a próxima ainda funciona até a primeira ser
-consertada.
+consertada. A Ana devolve a regra ao que era:
+
+```sh
+sed -i 's|condition     = can(regex("^\[0-9./\]+$", var.cidr))|condition     = can(cidrnetmask(var.cidr))|' variables.tf
+```
 
 ## O que testar assim
 

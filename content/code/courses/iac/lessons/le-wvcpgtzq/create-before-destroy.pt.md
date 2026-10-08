@@ -1,12 +1,13 @@
 ---
 title: Criar antes de destruir, e o nome que atrapalha
-version: 1
+version: 2
 ---
 
 Uma substituição são duas operações, e elas têm uma ordem. **Por padrão o Terraform destrói o
 recurso antigo primeiro e cria o novo depois**, que é o que `-/+ destroy and then create
-replacement` diz com todas as letras. A Ana aplica a troca de imagem da seção anterior e fica só
-com as linhas que relatam o progresso:
+replacement` diz com todas as letras. A Ana desfaz a edição da faixa com `git checkout main.tf`,
+refaz a troca de imagem da seção anterior e a aplica, ficando só com as linhas que relatam o
+progresso. Depois faz commit:
 
 ```
 ana@laptop:~/shop/app$ terraform apply -auto-approve | grep -E "Destr|Creat"
@@ -29,7 +30,7 @@ tempo todo.
 
 `create_before_destroy` é um argumento de lifecycle, e os argumentos de lifecycle ficam num bloco
 `lifecycle` dentro do recurso. Eles não descrevem o recurso para a AWS; dizem ao Terraform como
-tratá-lo. A Ana acrescenta um na `web`:
+tratá-lo. A Ana acrescenta um na `web` e faz commit:
 
 ```
 ana@laptop:~/shop/app$ git diff
@@ -68,7 +69,8 @@ tocada.
 
 O preço é que, por um momento, as duas existem. Para uma instância isso é inofensivo. Para qualquer
 coisa cujo nome precisa ser único, é uma colisão. O nome de um security group precisa ser único
-dentro da VPC, e a Ana acrescenta um grupo chamado `web`, com a mesma configuração de lifecycle:
+dentro da VPC, e a Ana acrescenta um grupo chamado `web`, com a mesma configuração de lifecycle,
+aplica e faz commit:
 
 ```
 ana@laptop:~/shop/app$ git show --format= -U1
@@ -90,8 +92,9 @@ index d5b3605..b6ac7a8 100644
 +}
 ```
 
-Mudar a descrição dele força uma substituição, e a substituta é criada primeiro, com o nome que o
-grupo antigo ainda ocupa:
+Mudar a descrição dele força uma substituição. A Ana a troca por `the shop web servers` e roda
+`terraform apply -auto-approve`, e a substituta é criada primeiro, com o nome que o grupo antigo
+ainda ocupa. O fim do que o apply imprime:
 
 ```
 Plan: 1 to add, 0 to change, 1 to destroy.
@@ -139,7 +142,7 @@ web-1180f21630fc619080001bfd97
 
 A ordem é a da figura: criar, depois destruir o deposed object. O mesmo vale para qualquer coisa
 com nome único, um load balancer, uma role do IAM, um bucket; onde o provider oferece um
-`name_prefix`, ele existe para isso.
+`name_prefix`, ele existe para isso. A Ana faz commit do nome novo antes de seguir.
 
 **Por que o security group é o caso típico.** Numa conta real a AWS se recusa a apagar um grupo que
 ainda está associado a uma instância em execução, então a ordem padrão tentaria destruir primeiro e

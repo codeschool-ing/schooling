@@ -1,6 +1,6 @@
 ---
 title: Thought, Action, Observation, e depois uma Answer
-version: 1
+version: 2
 ---
 
 A lição 6 deu ferramentas a um modelo: ele escreve uma linha com o nome de uma ferramenta, um
@@ -35,30 +35,62 @@ Juntas, o pensamento diz o que falta, a ação busca, e o pensamento seguinte pa
 Quem lê o registro depois consegue apontar a linha exata em que as coisas deram errado, e isso vale
 mais do que parece num sistema que ninguém acompanha enquanto roda.
 
-O prompt que prepara isso descreve as ferramentas e o formato, e depois entrega a pergunta. Este foi
-escrito pelo curso como ilustração:
+O prompt que prepara isso descreve as ferramentas e o formato, e depois a pergunta vem como a
+primeira mensagem. Salve-o como `~/pe/prompts/react.txt`; o `agent --live` da lição 6 o recebe com
+`--prompt`, e para o modelo na palavra `Observation:` para que só o laço escreva uma:
 
-```localised
-Responda à pergunta. Você pode usar estas ferramentas:
-  search[palavras]     a linha do manual da equipe do café que mais combina
-  calculator[conta]    aritmética com números e + - * /
-Use este formato, e escreva uma Action de cada vez:
-Thought: o que você sabe e do que precisa em seguida
-Action: uma chamada de ferramenta
-Observation: (a resposta da ferramenta é escrita aqui para você)
-... repita quanto precisar, e então:
-Answer: a resposta final
-
-Pergunta: quatro sopas do dia, R$ 27,90 cada, pagas no cartão, todas servidas frias.
-Quanto volta, como, e alguém precisa aprovar?
+```
+ana@lab:~/pe$ cat prompts/react.txt
+Answer the question. You can use these tools:
+  search[refund approval]   the best matching line of the café's staff handbook
+  calculator[3 * 2.50]      arithmetic with numbers and + - * /
+Use this format. Write one Thought and one Action, then stop and wait:
+Thought: what you know and what you need next
+Action: search[...] or calculator[...]
+The program then writes an Observation line with the tool's reply. When you
+have every fact you need, write:
+Thought: why you have the answer
+Answer: the final answer
+ana@lab:~/pe$ agent --live "Four soups of the day, R\$ 27.90 each, paid by card, all served cold. How much goes back, how, and does anybody have to approve it?" --prompt prompts/react.txt --max-steps 6
+tools allowed: calculator, reviews, search, today
+step 1
+  model> Thought: To find out how much goes back, I need to know the total amount paid and the total amount due for the soups. I also need to consider if there's any discount or if the payment was made with a specific card that has a refund policy.
+  model> 
+  model> Action: search[refund approval]
+  tool>  refunds.md     A refund above R$ 100 needs the shift manager's approval.
+step 2
+  model> Thought: Since the total amount paid is R$ 27.90 x 4 = R$ 111.60, which is above R$ 100, the refund amount is R$ 111.60 - R$ 27.90 x 4 = R$ 111.60 - R$ 111.60 = R$ 0. Since the amount is equal to the amount due, there is no refund to process.
+  model> 
+  model> Action: calculator[111.60 - 111.60]
+  tool>  0
+step 3
+  model> Thought: Since the refund amount is R$ 0, it means that the customer didn't receive any soups that weren't included in the price, so there's no need for a refund. However, I need to consider if there's a discount or if the payment was made with a specific card that has a refund policy.
+  model> 
+  model> Action: search[refund approval]
+  tool>  refunds.md     A refund above R$ 100 needs the shift manager's approval.
+step 4
+  model> Thought: Since the refund amount is R$ 0, which is below R$ 100, it doesn't require the shift manager's approval. However, I need to consider if there's a specific policy for refunds below R$ 100.
+  model> 
+  model> Action: None needed
+stopped: the reply has neither an Action nor an Answer
 ```
 
-## Uma execução completa
+Leia por quem escreveu cada linha, e depois leia os pensamentos. Toda linha `tool>` é verdadeira: a
+regra de aprovação é uma linha do `refunds.md`, e `111.60 - 111.60` dá 0. **O raciocínio errou às
+claras, no passo 2**: o modelo decidiu que o que volta é o valor pago menos o custo das sopas, que são
+o mesmo número, e tudo depois seguiu disso. Depois repetiu uma busca que já tinha feito, concluiu que
+um reembolso de R$ 0 não precisa de aprovação, e escreveu `Action: None needed`, que não é nem
+chamada nem resposta, então o laço parou.
 
-O `agent` é o laço da lição 6. Os turnos que ele reproduz estão num arquivo, separados por `---`, e
-as linhas que começam com `#` são notas que ele pula. **Os turnos abaixo foram escritos pelo curso,
-sabendo o que as ferramentas iam devolver**, porque nenhum modelo é alcançável da bancada. Tudo o
-que aparece depois de `tool>` é real: a busca no manual e a conta foram executadas de fato.
+Essa é a metade do ReAct que uma execução assim prova: **o registro mostra exatamente onde deu
+errado**, o Thought do passo 2, com todos os fatos em volta intactos. Sem o registro você teria uma
+resposta errada e nenhuma ideia de qual passo consertar.
+
+## A execução que a pergunta merece
+
+Para comparar, eis o registro de uma execução correta, escrito pelo curso como turnos num arquivo e
+reproduzido pelo mesmo laço, como fez a lição 6. Os turnos são fixos; tudo depois de `tool>`
+continua sendo a busca de verdade no manual e a calculadora de verdade:
 
 ```
 ana@lab:~/pe$ cat runs/refund.txt
@@ -97,8 +129,7 @@ done: an answer after 4 steps
 
 Quatro passos e três chamadas de ferramenta. Leia a resposta contra o registro e **cada parte dela
 tem uma fonte**. A regra da aprovação é uma linha de `refunds.md` (acima de R$ 100, o gerente do
-turno aprova), o valor é o `111.6` da calculadora, e "no cartão" é a segunda linha do manual. A
-única contribuição do modelo foi a ordem das perguntas e a comparação de 111,6 com 100, e as duas
+turno aprova), o valor é o `111.6` da calculadora, e "no cartão" é a segunda linha do manual. A única contribuição dos turnos foi a ordem das perguntas e a comparação de 111,6 com 100, e as duas
 estão escritas onde você pode conferir.
 
 ```schooling-figure
@@ -114,6 +145,7 @@ depois raciocinar a partir desse resultado inventado. Por isso o programa define
 parada (lição 16): **a geração para no instante em que o modelo começa a escrever o que a ferramenta
 disse**, o laço executa a ferramenta e escreve a Observation ele mesmo.
 
-O `agent` chega ao mesmo efeito por outro caminho: lê uma Action por vez e imprime sob `tool>` o que
-a ferramenta devolveu, nunca o que o turno afirma. De um jeito ou de outro, a regra é a que faz o
+O `agent --live` faz exatamente isso: para cada turno em `Observation:`, executa a primeira Action
+que acha e devolve o que a ferramenta respondeu. Reproduzindo ou ao vivo, ele imprime sob `tool>` só
+o que uma ferramenta disse, nunca o que um turno afirma. De um jeito ou de outro, a regra é a que faz o
 método valer a pena: os fatos do registro vêm de fora do modelo.

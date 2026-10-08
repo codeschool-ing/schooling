@@ -1,6 +1,6 @@
 ---
 title: Coverage of the lines a change touched
-version: 1
+version: 2
 ---
 
 A total moves slowly. On a large project, a change that adds forty untested lines barely shifts the
@@ -8,7 +8,8 @@ percentage, and a reviewer reading "coverage 81% → 80%" learns nothing about t
 them. The useful question for a pull request is narrower: **did the tests run the lines this change
 added?**
 
-Here a surcharge for heavy parcels is added to `freight`, two lines, and no test:
+Here a surcharge for heavy parcels is added to `freight`, two lines, and no test. They go right
+after the line `extra = (weight_g - 1) // 500` in `shipquote/quote.py`, indented like it:
 
 ```python
     if weight_g > 30_000:           # heavy parcels go by road freight
@@ -33,7 +34,8 @@ TOTAL                   21      1      8      1    93%
 The total went from **81% to 80%**. In the file, the report names line 30, the new `return`, as
 never run. The `if` above it ran, because every quote passes through it, so a line-only report would
 have claimed half of the change was tested. **Of the new behaviour, nothing was tested**: no test
-sends a parcel over 30 kg, and the price for one could be anything.
+sends a parcel over 30 kg, and the price for one could be anything. (`git checkout
+shipquote/quote.py` takes the surcharge out again when you are done.)
 
 ## Making it a check
 

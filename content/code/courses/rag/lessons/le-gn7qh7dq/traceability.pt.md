@@ -1,6 +1,6 @@
 ---
 title: Rastreabilidade
-version: 1
+version: 2
 ---
 
 Um líder de atendimento lê uma resposta que o assistente mandou a um cliente ontem e precisa saber uma
@@ -10,20 +10,24 @@ não há resposta, e essa diferença pesa mais na prática que a atualidade ou o
 ## Uma citação é um ponteiro que dá para seguir
 
 ```
-ana@lab:~/rag$ python sections.py "How long do I have to return a printed book?"
+ana@vm:~/rag$ python sections.py "How long do I have to return a printed book?"
 [1] 0.807  returns-policy-2025 > Returning a book
-[2] 0.798  returns-policy > The return window
+[2] 0.797  returns-policy > The return window
 [3] 0.765  returns-policy > Damaged, faulty and wrong items
-You may return a printed book within 14 days of delivery if it is unread and in the condition in which you received it. [1] You have 30 days from delivery to return a printed book in the condition you received it. [2] A printed book with a fault from the printer, such as pages bound upside down or missing, can be returned for a refund or a replacement within 30 days, like any other return. [3]
-ana@lab:~/rag$ grep -n "30 days from delivery" data/docs/returns-policy.md
+According to the provided sources, you have 30 days from delivery to return a printed book in the condition you received it.
+ana@vm:~/rag$ grep -n "30 days from delivery" data/docs/returns-policy.md
 21:You have 30 days from delivery to return a printed book in the condition you received it. The 30
 ```
 
-Essa forma de perguntar pôs o regulamento de 2025 em primeiro, com 0,807, contra 0,798 do atual, e a
-resposta começa com catorze dias. É a mesma falha que a aula 1 achou. O que muda aqui é a rapidez do
-diagnóstico: **a resposta diz `[1]`, a linha de nota diz que `[1]` é `returns-policy-2025`, e a
-correção aparece na mesma tela** — aquele documento não devia estar disponível para a pergunta de um
-cliente. Seguir `[2]` até a linha 21 do regulamento atual confirma que a frase certa existe e onde.
+Essa forma de perguntar pôs o regulamento de 2025 em primeiro, com 0,807, contra 0,797 do atual. A
+resposta está certa mesmo assim, trinta dias, e não cita nada, embora a mensagem de sistema pedisse
+citações por número. Então um supervisor que a lê no dia seguinte tem a resposta certa e nenhum jeito de
+saber que ela veio da fonte certa e não da errada; a próxima forma de perguntar poderia tirar os
+catorze dias de `[1]` com a mesma confiança. O que torna o diagnóstico possível é a linha acima da
+resposta: **a linha de nota diz que `[1]` é `returns-policy-2025`, e a correção aparece na mesma
+tela** — aquele documento não devia estar disponível para a pergunta de um cliente. Seguir a frase
+até a linha 21 do regulamento atual confirma que ela existe e onde. A aula 7 transforma a citação numa
+exigência que é conferida, em vez de um pedido que o modelo pode ignorar.
 
 Três coisas ficam possíveis por causa desse ponteiro:
 

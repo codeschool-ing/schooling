@@ -1,6 +1,6 @@
 ---
 title: Colocando o documento no prompt
-version: 1
+version: 2
 ---
 
 Se o modelo não conhece o regulamento de devoluções, o passo óbvio é dar o regulamento a ele. Um modelo
@@ -18,11 +18,11 @@ O `with_doc.py` faz exatamente isso, com o regulamento inteiro:
   "parts": [
     {
       "code": "import sys\nfrom openai import OpenAI\n\nclient = OpenAI()\npolicy = open(\"data/docs/returns-policy.md\").read()",
-      "note": "O regulamento de devoluções inteiro, lido do disco como uma única string. O cliente encontra o labgen pela `OPENAI_BASE_URL`, que o laboratório define."
+      "note": "O regulamento de devoluções inteiro, lido do disco como uma única string. O cliente encontra o Ollama pela `OPENAI_BASE_URL`, que o `env.sh` define."
     },
     {
-      "code": "reply = client.chat.completions.create(\n    model=\"extract-1\",\n    messages=[\n        {\"role\": \"system\", \"content\": \"Answer the question from the source below.\"},",
-      "note": "A mensagem de sistema diz o que fazer com o texto que vem a seguir. Para um modelo real é uma instrução; o extract-1 não faz nada com ela, porque a regra 3 vale sempre que há fontes."
+      "code": "reply = client.chat.completions.create(\n    model=\"llama3.2:3b\",\n    temperature=0,\n    messages=[\n        {\"role\": \"system\", \"content\": \"Answer the question from the source below.\"},",
+      "note": "A mensagem de sistema diz o que fazer com o texto que vem a seguir. É uma instrução, e o modelo a pesa contra tudo o mais que lê."
     },
     {
       "code": "        {\"role\": \"user\", \"content\": f\"[1] returns-policy\\n{policy}\\nQuestion: {sys.argv[1]}\"},\n    ],\n)",
@@ -30,29 +30,28 @@ O `with_doc.py` faz exatamente isso, com o regulamento inteiro:
     },
     {
       "code": "print(reply.choices[0].message.content)\nprint(\"prompt tokens:\", reply.usage.prompt_tokens)",
-      "note": "A resposta, e quantos tokens a requisição levou, contados pelo provedor."
+      "note": "A resposta, e quantos tokens a requisição levou, contados pelo próprio modelo."
     }
   ],
-  "output": "ana@lab:~/rag$ python with_doc.py \"How many days do I have to return a printed book?\"\nYou have 30 days from delivery to return a printed book in the condition you received it. [1] A printed book with a fault from the printer, such as pages bound upside down or missing, can be returned for a refund or a replacement within 30 days, like any other return. [1]\nprompt tokens: 1144\nana@lab:~/rag$ python with_doc.py \"What is the phone number for customer service?\"\nThe sources do not say.\nprompt tokens: 1141"
+  "output": "ana@vm:~/rag$ python with_doc.py \"How many days do I have to return a printed book?\"\nYou have 30 days from delivery to return a printed book.\nprompt tokens: 1166\nana@vm:~/rag$ python with_doc.py \"What is the phone number for customer service?\"\nUnfortunately, the provided text does not include the phone number for customer service.\nprompt tokens: 1163"
 }
 ```
 
-**A mesma pergunta agora recebe a resposta em vigor hoje, trinta dias, com um número dizendo de onde
-ela veio.** A segunda frase é sobre livros com defeito, que ninguém perguntou; está ali porque também
-diz "printed book" e "30 days", e o extract-1 escolhe frases por similaridade, não pela relevância para
-o que a pessoa precisa. Guarde essa frase: a aula 12 trata de manter texto como ela fora da janela
-desde o começo.
+**A mesma pergunta agora recebe a resposta que vale hoje, trinta dias.** O modelo que falava de
+multas de biblioteca uma seção atrás leu o regulamento e citou a única frase que responde a pergunta.
+Não disse de onde tirou a resposta, embora a fonte traga um número, `[1]`, porque nada pediu isso a
+ele. A aula 7 pede, e confere.
 
-A pergunta do telefone mostra a outra metade. Com o regulamento na frente, o extract-1 não achou
-nenhuma frase parecida o bastante e disse isso, em vez de buscar um número de telefone. Dada uma fonte,
-a resposta honesta a uma pergunta que a fonte não cobre é que ela não cobre. A aula 7 transforma isso
-numa regra que você escreve no prompt, e não numa propriedade de um substituto.
+A pergunta do telefone mostra a outra metade. Com o regulamento na frente, o modelo disse que o texto
+não traz um número de telefone, em vez de partir para conselhos sobre como achar um. Com uma fonte, a
+resposta honesta a uma pergunta que a fonte não cobre é que ela não cobre. Um modelo faz isso com
+frequência e não sempre, então a aula 7 transforma isso numa regra que você escreve no prompt e testa,
+em vez de um hábito em que você confia.
 
 ## O que mudou, exatamente
 
-Nada no modelo mudou entre o `ask.py` e o `with_doc.py`. Os pesos são os mesmos, o arquivo de memória
-é o mesmo, e ele daria de novo a resposta dos catorze dias no instante em que o regulamento saísse do
-prompt. **O conhecimento mora na requisição, pelo tempo que a requisição dura.** A próxima pergunta
+Nada no modelo mudou entre o `ask.py` e o `with_doc.py`. Os pesos são os mesmos, e ele voltaria a falar
+de empréstimos de biblioteca no instante em que o regulamento saísse do prompt. **O conhecimento mora na requisição, pelo tempo que a requisição dura.** A próxima pergunta
 começa do zero de novo, e o que ela precisar tem de ser mandado de novo.
 
 Esse é o mecanismo inteiro sobre o qual este curso constrói, e ele tem três consequências que vale
@@ -68,12 +67,13 @@ número, e uma pessoa consegue abrir a fonte e conferir. É essa rastreabilidade
 balança contra o fine-tuning.
 
 **A requisição fica maior, e cada token é pago.** O regulamento transformou uma pergunta de uma dúzia
-de tokens numa requisição de 1.144. Esse número é o assunto da próxima seção.
+de tokens numa requisição de 1.166, contados pelo tokenizador do próprio modelo. Esse número é o assunto da próxima seção.
 
 ## A janela tem tamanho
 
 Todo modelo tem uma janela de contexto, um número máximo de tokens que ele consegue ler e escrever
-numa requisição. A do extract-1 é de 8.192, um tamanho escolhido para este laboratório para que o
-limite seja fácil de alcançar; os modelos comerciais atuais aceitam de uns cem mil tokens a mais de um
-milhão. Uma janela maior empurra o limite. Ela não elimina os motivos, na próxima seção, para não
-enchê-la.
+numa requisição. O llama3.2:3b foi treinado com uma janela de 131.072 tokens, e o Ollama o serve com
+4.096 a menos que alguém peça outra coisa, para manter pequena a memória de que ele precisa; a coluna
+`CONTEXT` do `ollama ps` na instalação dizia isso. Os modelos comerciais atuais aceitam de uns cem
+mil tokens a mais de um milhão. Uma janela maior empurra o limite. Ela não elimina os motivos, na
+próxima seção, para não enchê-la.

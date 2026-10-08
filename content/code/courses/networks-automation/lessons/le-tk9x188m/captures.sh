@@ -12,7 +12,8 @@
 # talks to FRR through napalm_frr, the driver written for the lab (lesson 8).
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab
-# itself, built by lab.sh reset, and the files ana wrote (put below), whose
+# itself, built by lab.sh reset; the two directories data-and-template.md
+# says to make; and the files ana wrote (put below), whose
 # contents the lesson shows. render.py is written twice: first without
 # keep_trailing_newline, which is the run the lesson's first comparison
 # quotes, and then as the lesson shows it.

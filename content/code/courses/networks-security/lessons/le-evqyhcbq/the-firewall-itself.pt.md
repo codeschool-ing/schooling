@@ -52,6 +52,10 @@ Erros sobre as conexões do próprio firewall já passam como `related`. Para o 
 permite os três tipos que importam, com um limite de taxa para que não possam ser usados para
 inundar:
 
+```sh
+nft add rule ip filter input icmp type { echo-request, destination-unreachable, time-exceeded } limit rate 10/second accept comment \"ping and the errors path discovery needs\"
+```
+
 ```
 root@fw:~# nft list chain ip filter input | grep icmp
 		icmp type { destination-unreachable, echo-request, time-exceeded } limit rate 10/second burst 5 packets accept comment "ping and the errors path discovery needs"

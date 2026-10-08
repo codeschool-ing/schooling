@@ -49,10 +49,12 @@ second needs `base64 -d`. The third needs `base64 -d` **and the key**.
 ## The commonest case: a Kubernetes Secret
 
 Kubernetes stores Secret values in Base64, and many people read the word *Secret* and the unreadable
-value and assume encryption. Vereda's portal has one:
+value and assume encryption. Vereda's portal has one, and these commands write it into the lab
+exactly as it is deployed:
 
-```
-ana@lab:~/lab$ cat data/portal-secret.yaml
+```sh
+cd ~/lab
+cat > data/portal-secret.yaml <<'EOF'
 apiVersion: v1
 kind: Secret
 metadata:
@@ -61,6 +63,7 @@ type: Opaque
 data:
   username: cG9ydGFs
   password: Vi1kYi1zM2NyZXQtMjAyNg==
+EOF
 ```
 
 And whoever can read the manifest, or run `kubectl get secret -o yaml` with read access to it, has the

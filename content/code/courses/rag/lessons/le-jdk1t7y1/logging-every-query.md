@@ -1,6 +1,6 @@
 ---
 title: Logging every query
-version: 1
+version: 2
 ---
 
 Three lessons have promised this section. Lesson 2 wanted a record of what was asked and retrieved, so
@@ -10,10 +10,23 @@ are the same file: **one line per query, saying everything that happened.**
 
 `ask` in `rag.py` writes it, after the reply is known:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "last_query.py",
+  "parts": [
+    {
+      "code": "import json\n\nrecord = json.loads(open(\"queries.jsonl\").read().splitlines()[-1])\ndel record[\"ms\"]\nprint(json.dumps(record, indent=2))",
+      "note": "The last line of the log, laid out to be read. The time it took is left out, because it differs on every run."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ wc -l < queries.jsonl
+
+```
+ana@vm:~/rag$ wc -l < queries.jsonl
 2
-ana@lab:~/rag$ python rag.py "How long is a gift card valid?" > /dev/null; python last_query.py
+ana@vm:~/rag$ python rag.py "How long is a gift card valid?" > /dev/null; python last_query.py
 {
   "question": "How long is a gift card valid?",
   "sources": [
@@ -30,13 +43,13 @@ ana@lab:~/rag$ python rag.py "How long is a gift card valid?" > /dev/null; pytho
       0.573
     ]
   ],
-  "reply": "A gift card is valid for two years from the day it was bought. [1] Gift cards are valid for two years from purchase and cannot be exchanged for cash. [2]",
+  "reply": "According to [1], a gift card is valid for two years from the day it was bought. This is also confirmed by [2], which states that gift cards are valid for two years from purchase.",
   "cited": [
     "gift-cards:40925d184216",
     "payments-and-invoices:7c26788f8bc3"
   ],
-  "prompt_tokens": 314,
-  "completion_tokens": 37
+  "prompt_tokens": 336,
+  "completion_tokens": 42
 }
 ```
 

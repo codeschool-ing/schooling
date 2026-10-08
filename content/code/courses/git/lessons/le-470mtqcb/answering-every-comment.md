@@ -1,10 +1,30 @@
 ---
 title: Answering every comment
-version: 1
+version: 2
 ---
 
 **Every comment gets an answer**, even if the answer is one word. A reviewer who comes back to four comments
 and finds two replies does not know whether the other two were done, missed or ignored.
+
+This section is Bruno's terminal, and his prompt says so: `bruno@vm:~/site$` is his machine. On
+yours, his machine is the clone in `~/bruno/site` that lesson 13 made, and this block makes it again,
+pull request and all, from a fresh week. It leaves you in his clone, on his branch:
+
+```bash
+cd ~ && rm -rf ~/site ~/remotes ~/bruno && bash ~/make-site.sh && cd ~/site
+git init -q --bare ~/remotes/site.git
+git remote add origin ~/remotes/site.git
+git push -q -u origin main
+git clone -q ~/remotes/site.git ~/bruno/site && cd ~/bruno/site
+git config user.name 'Bruno Lima' && git config user.email bruno@example.com
+git switch -q -c 30-pickup-times
+printf '<h1>Order ahead</h1>\n<form class="order">\n  <label>Pickup time <input name="pickup" type="time"></label>\n  <button>Order</button>\n</form>\n' > order.html
+printf '<p><a href="order.html">Order ahead</a></p>\n' >> index.html
+git add -A && git commit -qm 'Let customers choose a pickup time' -m 'Refs #30'
+sed -i 's/darkorange/saddlebrown/' style.css && printf '.order label { display: block; }\n' >> style.css
+git commit -qam 'Style the order form' -m 'Refs #30'
+git push -q -u origin 30-pickup-times
+```
 
 ## The blocking one: fix it
 
@@ -12,6 +32,7 @@ Bruno fixes the empty field, and while he is in that line he answers the questio
 into the input as `min` and `max`:
 
 ```
+bruno@vm:~/site$ sed -i 's|type="time">|type="time" min="06:00" max="19:00" required>|' order.html
 bruno@vm:~/site$ git diff
 diff --git a/order.html b/order.html
 index 49c300b..3a0bdcf 100644
@@ -38,6 +59,7 @@ The colour change comes out of this branch, again as a new commit, and leaves `s
 the form needs:
 
 ```
+bruno@vm:~/site$ sed -i 's/saddlebrown/darkorange/' style.css
 bruno@vm:~/site$ git commit -qam 'Leave the heading colour for its own pull request' -m 'Refs #30'
 bruno@vm:~/site$ git diff main... -- style.css
 diff --git a/style.css b/style.css
@@ -75,6 +97,7 @@ own branch, started from `main` so it carries nothing of #31:
 ```
 bruno@vm:~/site$ git switch -c 32-heading-colour main
 Switched to a new branch '32-heading-colour'
+bruno@vm:~/site$ sed -i 's/darkorange/saddlebrown/' style.css
 bruno@vm:~/site$ git commit -qam 'Darken the heading colour' -m 'Refs #32'
 bruno@vm:~/site$ git push -u origin 32-heading-colour
 Enumerating objects: 5, done.

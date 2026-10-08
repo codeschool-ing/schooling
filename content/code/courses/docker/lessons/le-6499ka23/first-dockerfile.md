@@ -1,14 +1,14 @@
 ---
 title: A first Dockerfile
-version: 1
+version: 2
 ---
 
 **A Dockerfile is the written recipe for an image: a base to start from, then one instruction per
 step, each read from top to bottom.** It replaces lesson 7's `docker commit` with something a person
 can read, review and run again, and every image in the rest of this course is built from one.
 
-Ana's project is the Go service `shelf`, with its one dependency, the PostgreSQL driver pgx, kept in
-`vendor/` so that it builds without a network:
+Ana's project is `shelf`, as the previous section wrote it out, with pgx in `vendor/` so that it
+builds without a network:
 
 ```
 ana@vm:~/shelf$ ls -A

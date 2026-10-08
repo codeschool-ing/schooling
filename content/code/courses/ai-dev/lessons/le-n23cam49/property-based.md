@@ -1,6 +1,6 @@
 ---
 title: Properties instead of examples
-version: 1
+version: 2
 ---
 
 An example-based test checks the inputs you thought of. A **property-based test** states something
@@ -78,31 +78,31 @@ FAILED tests/test_money_properties.py::test_a_negative_price_reads_as_minus_the_
 ```
 
 **The round trip passed.** The symmetry property failed at once, shrunk to `n = -1`: minus one cent
-reads as `'-1.99'`. So `format_price` is wrong for every negative number, and the round trip did
+reads as `'-1.99'`. So `format_price` is wrong for a negative amount that is not a whole number of units, and the round trip did
 not notice, because `parse_price` is wrong in the matching way: `'-1.99'` parses back to minus one.
 **Two bugs that cancel each other pass a round trip.** That is worth knowing about round-trip
 properties in general: they test that two functions agree, not that either is right.
 
 ## Fixing one side
 
-ana fixes `format_price` to handle the sign:
+ana fixes `format_price` to handle the sign. This is `shop/money.py` now:
 
-```
-ana@dev:~/shop$ git diff shop/money.py
-diff --git a/shop/money.py b/shop/money.py
-index 9af0e26..9d4ce02 100644
---- a/shop/money.py
-+++ b/shop/money.py
-@@ -9,5 +9,7 @@ def parse_price(text: str) -> int:
- 
- 
- def format_price(cents: int) -> str:
--    """Turn cents into a price as people read it: 1290 -> '12.90'."""
--    return f"{cents // 100}.{cents % 100:02d}"
-+    """Turn cents into a price as people read it: 1290 -> '12.90', -5 -> '-0.05'."""
-+    sign = "-" if cents < 0 else ""
-+    cents = abs(cents)
-+    return f"{sign}{cents // 100}.{cents % 100:02d}"
+```python
+"""Money is an integer number of cents. Never a float."""
+
+
+def parse_price(text: str) -> int:
+    """Turn a price as people write it into cents: '12.90' -> 1290."""
+    units, _, cents = text.strip().partition(".")
+    cents = (cents + "00")[:2]
+    return int(units) * 100 + int(cents)
+
+
+def format_price(cents: int) -> str:
+    """Turn cents into a price as people read it: 1290 -> '12.90', -5 -> '-0.05'."""
+    sign = "-" if cents < 0 else ""
+    cents = abs(cents)
+    return f"{sign}{cents // 100}.{cents % 100:02d}"
 ```
 
 ```
@@ -133,13 +133,34 @@ E       )
 tests/test_money_properties.py:11: AssertionError
 =========================== short test summary info ============================
 FAILED tests/test_money_properties.py::test_a_price_survives_a_round_trip_through_text
-1 failed, 1 passed in 0.14s
+1 failed, 1 passed in 0.21s
 ```
 
 Now the symmetry holds and the round trip fails, on the same simplest input: `'-0.01'` parses as
 `1`. The other half of the cancelled pair is exposed, `parse_price` reading `-0` as `0` and adding
-the cents on. She fixes that too, so the sign is read first and applied to the whole amount, and
-runs everything:
+the cents on. She fixes that too, so the sign is read first and applied to the whole amount:
+
+```python
+"""Money is an integer number of cents. Never a float."""
+
+
+def parse_price(text: str) -> int:
+    """Turn a price as people write it into cents: '12.90' -> 1290, '-0.05' -> -5."""
+    text = text.strip()
+    sign = -1 if text.startswith("-") else 1
+    units, _, cents = text.lstrip("-").partition(".")
+    cents = (cents + "00")[:2]
+    return sign * (int(units) * 100 + int(cents))
+
+
+def format_price(cents: int) -> str:
+    """Turn cents into a price as people read it: 1290 -> '12.90', -5 -> '-0.05'."""
+    sign = "-" if cents < 0 else ""
+    cents = abs(cents)
+    return f"{sign}{cents // 100}.{cents % 100:02d}"
+```
+
+And runs everything:
 
 ```
 ana@dev:~/shop$ python -m pytest -q -p no:cacheprovider --hypothesis-seed=0

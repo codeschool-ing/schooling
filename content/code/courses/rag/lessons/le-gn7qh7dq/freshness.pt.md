@@ -1,6 +1,6 @@
 ---
 title: Atualidade
-version: 1
+version: 2
 ---
 
 O regulamento de devoluções da Marginalia mudou em 2 de fevereiro de 2026, de catorze dias para trinta
@@ -10,17 +10,34 @@ depois da mudança o assistente começou a dar a resposta nova.
 ## Com recuperação: refazer o embedding do que mudou
 
 Num sistema de RAG o regulamento novo é um documento novo. Cortá-lo em seções e gerar seus embeddings é
-a mudança inteira, e o `reindex_cost.py` conta e mede o tempo disso nesta máquina, arredondando o tempo para cima até o
-segundo, porque ele muda um pouco de uma execução para outra:
+a mudança inteira, e o `reindex_cost.py` conta e mede o tempo disso, arredondando o tempo para cima
+até o segundo, porque ele muda um pouco de uma execução para outra:
+
+```schooling-example
+{
+  "language": "python",
+  "file": "reindex_cost.py",
+  "parts": [
+    {
+      "code": "import glob\nimport math\nimport re\nimport time\n\nimport tiktoken\nfrom vectors import embed\n\nenc = tiktoken.get_encoding(\"cl100k_base\")\n\n\ndef cut(path):\n    return re.split(r\"\\n(?=## )\", open(path).read())[1:]",
+      "note": "O mesmo corte nos títulos `## ` do `sections.py`."
+    },
+    {
+      "code": "one = cut(\"data/docs/returns-policy.md\")\nevery = [part for path in sorted(glob.glob(\"data/docs/*.md\")) for part in cut(path)]\nfor label, parts in ((\"the returns policy\", one), (\"every document\", every)):\n    start = time.perf_counter()\n    embed(parts)\n    seconds = time.perf_counter() - start\n    tokens = sum(len(enc.encode(p)) for p in parts)\n    print(f\"{label:20} {len(parts):3} sections  {tokens:5} tokens  under {math.ceil(seconds)} s\")",
+      "note": "Gera os embeddings do único regulamento que mudou, depois do corpus inteiro, e imprime quantas seções, quantos tokens um provedor cobraria e quanto tempo levou, arredondado para cima até o segundo."
+    }
+  ]
+}
+```
 
 ```
-ana@lab:~/rag$ python reindex_cost.py
+ana@vm:~/rag$ python reindex_cost.py
 the returns policy     9 sections    973 tokens  under 1 s
-every document        92 sections   7855 tokens  under 7 s
+every document        92 sections   7855 tokens  under 3 s
 ```
 
-**Menos de um segundo para o regulamento que mudou, menos de sete para o corpus inteiro**, num núcleo
-de processador com um modelo pequeno, e 973 tokens contra 7.855, que é o que um provedor hospedado
+**Menos de um segundo para o regulamento que mudou, menos de três para o corpus inteiro**, em quatro
+núcleos de processador com um modelo pequeno, e 973 tokens contra 7.855, que é o que um provedor hospedado
 cobraria. Um modelo de embeddings hospedado somaria tempo de rede e
 alguns centavos; nenhum dos dois muda a ordem de grandeza. A resposta nova vale a partir da próxima
 pergunta, e a antiga some no instante em que os pedaços antigos saem do índice, que é o assunto da seção

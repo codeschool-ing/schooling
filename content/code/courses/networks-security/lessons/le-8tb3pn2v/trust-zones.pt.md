@@ -21,7 +21,8 @@ laboratório são as suas zonas:
 | gestão | a máquina de onde os administradores trabalham | o bastante para administrar as outras | não |
 
 **Segmentação** é pôr um firewall entre as zonas, de modo que toda conversa de uma para outra tenha
-de ser permitida por uma regra. Antes de qualquer regra ser carregada, o `fw` roteia tudo, e um
+de ser permitida por uma regra. No seu laboratório esta aula começa com `sudo bash nslab.sh reset`.
+Antes de qualquer regra ser carregada, o `fw` roteia tudo, e um
 desconhecido na internet alcança o que quer que responda:
 
 ```
@@ -34,8 +35,8 @@ www:443                open
 ```
 
 O banco de dados, a aplicação, o SSH no servidor de aplicação: tudo `open`. `laptop:22` diz
-`refused`, o que ainda é uma resposta: uma máquina respondeu que nada escuta ali. O `probe`, um
-pequeno comando que o laboratório instala, imprime uma de três palavras, e a diferença entre elas
+`refused`, o que ainda é uma resposta: uma máquina respondeu que nada escuta ali. O `probe`, o
+pequeno comando que o `nslab.sh` instala na aula 1, imprime uma de três palavras, e a diferença entre elas
 importa a aula inteira:
 
 | o probe diz | o que aconteceu |

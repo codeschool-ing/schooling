@@ -11,10 +11,8 @@
 # What is STAGED rather than typed:
 #   - the cluster, and the Backup CustomResourceDefinition of lesson 43,
 #     applied again.
-#   - building the controller: `go mod tidy` and `go build`, with the Go
-#     toolchain and client-go v0.37.1, before the lesson starts. The source is
-#     the file below; go.mod names the module and the toolchain fetches the
-#     rest.
+#   - building the controller with the docker command the lesson shows,
+#     golang:1.26 and client-go v0.37.1.
 #   - the controller runs on the laptop, in the background, with the same
 #     kubeconfig kubectl uses; its log is a file the lesson reads, as a second
 #     terminal would show it. The pauses let it make a pass (every five
@@ -185,9 +183,10 @@ func reconcile(ctx context.Context, kube *kubernetes.Clientset, b unstructured.U
 
 func ptr[T any](v T) *T { return &v }
 CODE
-printf 'module backup-controller\n\ngo 1.25\n\nrequire k8s.io/client-go v0.37.1\n' >go.mod
-HTTPS_PROXY=$PROXY GOTOOLCHAIN=auto go mod tidy >/dev/null 2>&1
-HTTPS_PROXY=$PROXY GOTOOLCHAIN=auto go build -o backup-controller . >/dev/null 2>&1 || { echo "##### the controller did not build" >&2; exit 1; }
+# The build the lesson shows, plus the recording machine's CA, which the
+# Go container needs to verify the module proxy through its TLS inspection.
+rm -f go.mod go.sum
+docker run --rm -u $(id -u):$(id -g) -v /root/.ccr/ca-bundle.crt:/etc/ssl/certs/ca-certificates.crt:ro -v "$PWD":/src -w /src -e GOCACHE=/tmp/cache -e GOPATH=/tmp/go golang:1.26 sh -c 'go mod init backup-controller && go get k8s.io/client-go@v0.37.1 && go mod tidy && CGO_ENABLED=0 go build -o backup-controller .' >/dev/null 2>&1 || { echo "##### the controller did not build" >&2; exit 1; }
 ./backup-controller >controller.log 2>&1 & CTRL=$!
 trap 'kill $CTRL 2>/dev/null' EXIT
 

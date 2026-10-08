@@ -11,17 +11,17 @@ does it cost to fill".
 How many priced chat entries reach each size:
 
 ```
-ana@desk:~/desk$ sheet pick --min-window 1000000 | sed -n 2p
+ana@desk:~/desk$ python sheet.py pick --min-window 1000000 | sed -n 2p
 761 entries pass
 ```
 
 ```
-ana@desk:~/desk$ sheet pick --min-window 200000 | sed -n 2p
+ana@desk:~/desk$ python sheet.py pick --min-window 200000 | sed -n 2p
 1666 entries pass
 ```
 
 ```
-ana@desk:~/desk$ sheet pick --min-window 32000 | sed -n 2p
+ana@desk:~/desk$ python sheet.py pick --min-window 32000 | sed -n 2p
 2722 entries pass
 ```
 
@@ -40,7 +40,7 @@ A window is a limit, not a promise of good use. Three things to know before fill
 - **Long prompts are slower to start.** The whole prompt is read before the first token, and the
   first-token time of section 06 grows with it.
 - **Models use the middle of a long context less reliably than its ends**, a pattern seen across
-  many models and the reason retrieval (lesson 1 section 07) still exists in an age of
+  many models and the reason retrieval (lesson 1 section 11) still exists in an age of
   million-token windows: sending the relevant page beats sending the whole book.
 
 ## The other ceiling
@@ -49,7 +49,7 @@ The window has a sibling that is easier to miss: **the most a model will write i
 five of section 05's candidates, side by side:
 
 ```
-ana@desk:~/desk$ sheet compare claude-haiku-4-5 gemini/gemini-3.5-flash-lite gpt-5.4-mini mistral/mistral-small-latest deepseek/deepseek-v3.2
+ana@desk:~/desk$ python sheet.py compare claude-haiku-4-5 gemini/gemini-3.5-flash-lite gpt-5.4-mini mistral/mistral-small-latest deepseek/deepseek-v3.2
 # LiteLLM model sheet at 21881c57, 4472 entries
 model                                            window  max out   in $/M  out $/M  VFSCRP
 claude-haiku-4-5                                200,000    64000        1        5  VFSCRP

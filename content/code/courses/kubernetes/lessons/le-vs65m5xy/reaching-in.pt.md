@@ -3,6 +3,33 @@ title: Sem shell, e um túnel no lugar
 version: 1
 ---
 
+Esta aula precisa de duas coisas para depurar depois do `./up.sh`: a loja, cuja imagem não tem shell, e
+um pod chamado `crashing` que sai no instante em que começa, porque `CRASH` está definido.
+
+`debug-apps.yaml`:
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: shop}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: shop}}
+  template:
+    metadata: {labels: {app: shop}}
+    spec: {containers: [{name: shop, image: "shop:1.0"}]}
+---
+apiVersion: v1
+kind: Pod
+metadata: {name: crashing}
+spec:
+  containers: [{name: shop, image: "shop:1.0", env: [{name: CRASH, value: "yes"}, {name: GREETING, value: "hello"}]}]
+```
+
+```sh
+kubectl apply -f debug-apps.yaml
+```
+
 O primeiro reflexo quando um pod se comporta mal é um shell dentro dele:
 
 ```

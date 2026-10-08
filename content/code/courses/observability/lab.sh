@@ -2,9 +2,20 @@
 # The machine every transcript in the observability course was recorded on.
 #
 # IT IS ONE LINUX COMPUTER RUNNING DOCKER. The shop the course instruments is
-# five small Python services and a nightly job, written for this course and
-# printed in full below; everything that watches it is real, unmodified
-# open-source software, each in the official image named beside it:
+# five small Python services and a nightly job, written for this course;
+# everything that watches it is real, unmodified open-source software, each in
+# the official image named beside it.
+#
+# THE STUDENT NEVER RECEIVES THIS SCRIPT, and needs nothing from it. Every file
+# it writes into ~/shop is a fence in a lesson, under a paragraph that opens
+# with its path, and this script reads it from there (FILES_FROM below):
+# lesson 1's "The shop, written in full" and "What watches it" carry the shop
+# and its configuration, and lessons 9, 12, 13 and 19 the files only they use.
+# Lesson 1's "Your lab, built by you" tells the student to build the machine
+# with Multipass and Docker's own packages; this script builds the same thing
+# on the machine the course is recorded on, which cannot run a hypervisor.
+# Every file a capture writes goes through `lab.sh put`, which refuses one
+# whose whole text is not in a lesson.
 #
 #   the shop (written for the course, image shop:1.4.0 built from python:3.12-slim)
 #     storefront   where a checkout arrives; instrumented by hand (lesson 2)
@@ -33,21 +44,22 @@
 #
 # Elasticsearch and OpenSearch run with their disk watermarks switched off:
 # they measure the host's whole disk, and on the machine this was recorded on
-# that disk is shared, so its free space said nothing about the lab's. On a
-# machine of your own, leave them on.
+# that disk is shared, so its free space said nothing about the lab's.
 #
 # Every port is published on 127.0.0.1 only. Nothing here reaches the internet
-# once the images and the Python wheels are downloaded.
+# once the images are downloaded and the shop's image is built.
 #
 #   sudo bash lab.sh up           write ~/shop, build the image, start it all
 #   sudo bash lab.sh reset        stop it, delete every volume, start again
 #   sudo bash lab.sh down
 #   sudo bash lab.sh as 'cmd'     run a command as ana, in ~/shop
+#   sudo bash lab.sh put PATH < file   write ~/shop/PATH, if a lesson shows it whole
 #   sudo bash lab.sh up PROFILE   also start a profile: elastic, graylog, mesh
 #   sudo bash lab.sh kind-up | kind-down
 #   sudo bash lab.sh kind-load IMAGE...   pull an image here, copy it into kind
 #
-# Recorded on Ubuntu 24.04 with Docker Engine 29.6 and Compose 5.3,
+# Recorded on Ubuntu 24.04 with Docker Engine 29.6 and Compose 5.3 (lessons 2
+# to 19) and Docker Engine 29.8 and Compose 5.6 (lesson 1's set-up sections),
 # TZ=America/Sao_Paulo. The machine needs 4 CPUs and 8 GB of memory, and
 # 16 GB while the graylog profile runs.
 set -euo pipefail
@@ -58,1444 +70,101 @@ export TZ=America/Sao_Paulo
 
 as_ana() { su - "$USER_LAB" -c "cd $SHOP && $*"; }
 
-write_files() {
-  mkdir -p "$SHOP/faults" "$SHOP/grafana/dashboards" "$SHOP/scratch"
-  mkdir -p "$SHOP/."
-  cat > "$SHOP/Dockerfile" <<'LABFILE'
-FROM python:3.12-slim
-COPY wheels /wheels
-COPY requirements.txt /requirements.txt
-RUN pip install --no-cache-dir --no-index --find-links /wheels -r /requirements.txt \
- && opentelemetry-bootstrap --action=requirements | grep -q . || true
-COPY services /app
-WORKDIR /app
-ENV PYTHONUNBUFFERED=1 PYTHONPATH=/app
-LABFILE
-  mkdir -p "$SHOP/alertmanager"
-  cat > "$SHOP/alertmanager/alertmanager.yml" <<'LABFILE'
-route:
-  receiver: pager
-  group_by: [alertname, job]
-  group_wait: 10s
-  group_interval: 1m
-  repeat_interval: 4h
-
-receivers:
-  - name: pager
-    webhook_configs:
-      - url: http://pager:8090/page
-LABFILE
-  mkdir -p "$SHOP/."
-  cat > "$SHOP/blackbox.yml" <<'LABFILE'
-modules:
-  http_2xx:
-    prober: http
-    timeout: 5s
-  # A synthetic checkout (lesson 14): the path a customer takes, not a
-  # health endpoint. Every probe is a real order of one kettle.
-  checkout:
-    prober: http
-    timeout: 5s
-    http:
-      method: POST
-      headers:
-        Content-Type: application/json
-      body: '{"sku": "kettle", "qty": 1, "card": "4111 1111 1111 1111"}'
-      valid_status_codes: [201]
-LABFILE
-  mkdir -p "$SHOP/."
-  cat > "$SHOP/compose.yaml" <<'LABFILE'
-# The shop, and everything that watches it. One machine, one command:
-#   docker compose up -d
-# The shop's code is mounted from ./services, so an edit takes effect on
-# `docker compose restart <service>`, without building the image again.
-name: shop
-
-x-shop: &shop
-  image: shop:1.4.0
-  build: .
-  restart: unless-stopped
-  environment: &env
-    SHOP_VERSION: 1.4.0
-    OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
-  logging:
-    driver: fluentd
-    options:
-      fluentd-address: 127.0.0.1:24224
-      fluentd-async: "true"
-      tag: "{{.Name}}"
-  volumes: ["./services:/app:ro"]
-  depends_on: [otel-collector]
-
-services:
-  storefront:
-    <<: *shop
-    command: waitress-serve --port 8080 --threads 16 storefront.app:app
-    environment:
-      <<: *env
-      OTEL_SERVICE_NAME: storefront
-    ports: ["127.0.0.1:8080:8080"]
-
-  orders:
-    <<: *shop
-    command: opentelemetry-instrument waitress-serve --port 8081 --threads 16 orders.app:app
-    environment:
-      <<: *env
-      OTEL_SERVICE_NAME: orders
-      OTEL_TRACES_EXPORTER: otlp
-      OTEL_METRICS_EXPORTER: none
-      OTEL_LOGS_EXPORTER: none
-      OTEL_EXPORTER_OTLP_PROTOCOL: http/protobuf
-      OTEL_PYTHON_FLASK_EXCLUDED_URLS: health,metrics
-    depends_on: [otel-collector, postgres, rabbitmq]
-
-  payments:
-    <<: *shop
-    command: waitress-serve --port 8082 --threads 16 payments.app:app
-    environment:
-      <<: *env
-      OTEL_SERVICE_NAME: payments
-    volumes: ["./services:/app:ro", "./faults:/faults:ro"]
-
-  mailer:
-    <<: *shop
-    command: python -m mailer.worker
-    environment:
-      <<: *env
-      OTEL_SERVICE_NAME: mailer
-    depends_on: [otel-collector, rabbitmq]
-
-  report:
-    <<: *shop
-    profiles: [jobs]
-    restart: "no"
-    command: python -m report.job
-    environment:
-      <<: *env
-      OTEL_SERVICE_NAME: report
-
-  loadgen:
-    <<: *shop
-    profiles: [jobs]
-    restart: "no"
-    command: python -m loadgen.load 5 60
-    logging: {driver: json-file}
-
-  sandbox:
-    <<: *shop
-    profiles: [jobs]
-    restart: "no"
-    working_dir: /scratch
-    volumes: ["./scratch:/scratch"]
-    environment:
-      <<: *env
-      OTEL_SERVICE_NAME: sandbox
-    logging: {driver: json-file}
-    command: python
-
-  pager:
-    <<: *shop
-    command: waitress-serve --port 8090 pager.app:app
-    environment:
-      <<: *env
-      OTEL_SERVICE_NAME: pager
-
-  postgres:
-    image: postgres:16.15
-    environment:
-      POSTGRES_USER: shop
-      POSTGRES_PASSWORD: shop
-    volumes: ["./postgres-init.sql:/docker-entrypoint-initdb.d/init.sql:ro"]
-
-  rabbitmq:
-    image: rabbitmq:4.2-management
-    ports: ["127.0.0.1:15672:15672"]
-
-  otel-collector:
-    image: otel/opentelemetry-collector-contrib:0.161.0
-    command: ["--config=/etc/otelcol/config.yaml"]
-    volumes: ["./otel/collector.yaml:/etc/otelcol/config.yaml:ro"]
-    ports: ["127.0.0.1:24224:24224", "127.0.0.1:4318:4318"]
-
-  prometheus:
-    image: prom/prometheus:v3.15.0
-    command: [--config.file=/etc/prometheus/prometheus.yml, --web.enable-lifecycle,
-              --storage.tsdb.path=/prometheus]
-    volumes: ["./prometheus:/etc/prometheus:ro"]
-    ports: ["127.0.0.1:9090:9090"]
-
-  alertmanager:
-    image: prom/alertmanager:v0.34.1
-    command: [--config.file=/etc/alertmanager/alertmanager.yml]
-    volumes: ["./alertmanager:/etc/alertmanager:ro"]
-    ports: ["127.0.0.1:9093:9093"]
-
-  pushgateway:
-    image: prom/pushgateway:v1.11.3
-
-  node-exporter:
-    image: prom/node-exporter:v1.12.1
-
-  postgres-exporter:
-    image: prometheuscommunity/postgres-exporter:v0.20.1
-    environment:
-      DATA_SOURCE_NAME: postgresql://shop:shop@postgres:5432/shop?sslmode=disable
-
-  blackbox-exporter:
-    image: prom/blackbox-exporter:v0.28.0
-    command: [--config.file=/etc/blackbox.yml]
-    volumes: ["./blackbox.yml:/etc/blackbox.yml:ro"]
-
-  envoy:
-    image: envoyproxy/envoy:v1.39.2
-    profiles: [mesh]
-    command: [envoy, -c, /etc/envoy/envoy.yaml, --log-level, warn]
-    volumes: ["./envoy/envoy.yaml:/etc/envoy/envoy.yaml:ro"]
-    ports: ["127.0.0.1:10000:10000", "127.0.0.1:9901:9901"]
-
-  grafana:
-    image: grafana/grafana:13.0.10
-    environment:
-      GF_SECURITY_ADMIN_PASSWORD__FILE: /run/secrets/grafana
-      GF_ANALYTICS_REPORTING_ENABLED: "false"
-      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
-      GF_NEWS_NEWS_FEED_ENABLED: "false"
-    volumes:
-      - ./grafana/provisioning:/etc/grafana/provisioning:ro
-      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
-      - ./.grafana-password:/run/secrets/grafana:ro
-    ports: ["127.0.0.1:3000:3000"]
-
-  loki:
-    image: grafana/loki:3.7.8
-    command: [-config.file=/etc/loki/loki.yaml]
-    volumes: ["./loki/loki.yaml:/etc/loki/loki.yaml:ro"]
-    ports: ["127.0.0.1:3100:3100"]
-
-  jaeger:
-    image: jaegertracing/jaeger:2.21.0
-    ports: ["127.0.0.1:16686:16686"]
-
-  zipkin:
-    image: openzipkin/zipkin:3.6.1
-    ports: ["127.0.0.1:9411:9411"]
-
-  elasticsearch:
-    image: elasticsearch:9.5.3
-    profiles: [elastic]
-    environment:
-      discovery.type: single-node
-      xpack.security.enabled: "false"
-      cluster.routing.allocation.disk.threshold_enabled: "false"
-      ES_JAVA_OPTS: -Xms1g -Xmx1g
-    ports: ["127.0.0.1:9200:9200"]
-
-  mongo:
-    image: mongo:8.0
-    profiles: [graylog]
-
-  opensearch:
-    image: opensearchproject/opensearch:2.19.6
-    profiles: [graylog]
-    environment:
-      discovery.type: single-node
-      DISABLE_SECURITY_PLUGIN: "true"
-      DISABLE_INSTALL_DEMO_CONFIG: "true"
-      cluster.routing.allocation.disk.threshold_enabled: "false"
-      OPENSEARCH_JAVA_OPTS: -Xms512m -Xmx512m
-
-  graylog:
-    image: graylog/graylog:7.0.13
-    profiles: [graylog]
-    env_file: [.graylog.env]
-    environment:
-      GRAYLOG_HTTP_EXTERNAL_URI: http://127.0.0.1:9000/
-      GRAYLOG_ELASTICSEARCH_HOSTS: http://opensearch:9200
-      GRAYLOG_MONGODB_URI: mongodb://mongo:27017/graylog
-    depends_on: [mongo, opensearch]
-    ports: ["127.0.0.1:9000:9000"]
-LABFILE
-  mkdir -p "$SHOP/envoy"
-  cat > "$SHOP/envoy/envoy.yaml" <<'LABFILE'
-# Envoy for lesson 19: one proxy, two listeners, playing the part a mesh's
-# sidecars play. :10000 sits in front of the storefront; :10001 sits between
-# orders and payments, with a timeout and retries. :9901 is Envoy's admin page.
-static_resources:
-  listeners:
-    - name: storefront
-      address: {socket_address: {address: 0.0.0.0, port_value: 10000}}
-      filter_chains:
-        - filters:
-            - name: envoy.filters.network.http_connection_manager
-              typed_config:
-                "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
-                stat_prefix: storefront
-                access_log:
-                  - name: envoy.access_loggers.stdout
-                    typed_config:
-                      "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
-                      log_format:
-                        json_format:
-                          listener: storefront
-                          method: "%REQ(:METHOD)%"
-                          path: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
-                          code: "%RESPONSE_CODE%"
-                          ms: "%DURATION%"
-                          upstream_ms: "%RESP(X-ENVOY-UPSTREAM-SERVICE-TIME)%"
-                          attempts: "%UPSTREAM_REQUEST_ATTEMPT_COUNT%"
-                          flags: "%RESPONSE_FLAGS%"
-                route_config:
-                  virtual_hosts:
-                    - name: storefront
-                      domains: ["*"]
-                      routes:
-                        - match: {prefix: /}
-                          route: {cluster: storefront, timeout: 5s}
-                http_filters:
-                  - name: envoy.filters.http.router
-                    typed_config:
-                      "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
-    - name: payments
-      address: {socket_address: {address: 0.0.0.0, port_value: 10001}}
-      filter_chains:
-        - filters:
-            - name: envoy.filters.network.http_connection_manager
-              typed_config:
-                "@type": type.googleapis.com/envoy.extensions.filters.network.http_connection_manager.v3.HttpConnectionManager
-                stat_prefix: payments
-                access_log:
-                  - name: envoy.access_loggers.stdout
-                    typed_config:
-                      "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
-                      log_format:
-                        json_format:
-                          listener: payments
-                          method: "%REQ(:METHOD)%"
-                          path: "%REQ(X-ENVOY-ORIGINAL-PATH?:PATH)%"
-                          code: "%RESPONSE_CODE%"
-                          ms: "%DURATION%"
-                          attempts: "%UPSTREAM_REQUEST_ATTEMPT_COUNT%"
-                          flags: "%RESPONSE_FLAGS%"
-                route_config:
-                  virtual_hosts:
-                    - name: payments
-                      domains: ["*"]
-                      routes:
-                        - match: {prefix: /}
-                          route:
-                            cluster: payments
-                            timeout: 2s
-                            retry_policy:
-                              retry_on: 5xx
-                              num_retries: 2
-                http_filters:
-                  - name: envoy.filters.http.router
-                    typed_config:
-                      "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
-  clusters:
-    - name: storefront
-      type: STRICT_DNS
-      load_assignment:
-        cluster_name: storefront
-        endpoints: [{lb_endpoints: [{endpoint: {address: {socket_address: {address: storefront, port_value: 8080}}}}]}]
-    - name: payments
-      type: STRICT_DNS
-      load_assignment:
-        cluster_name: payments
-        endpoints: [{lb_endpoints: [{endpoint: {address: {socket_address: {address: payments, port_value: 8082}}}}]}]
-admin:
-  address: {socket_address: {address: 0.0.0.0, port_value: 9901}}
-LABFILE
-  mkdir -p "$SHOP/grafana/provisioning/dashboards"
-  cat > "$SHOP/grafana/provisioning/dashboards/shop.yaml" <<'LABFILE'
-apiVersion: 1
-providers:
-  - name: shop
-    folder: Shop
-    type: file
-    options:
-      path: /var/lib/grafana/dashboards
-LABFILE
-  mkdir -p "$SHOP/grafana/provisioning/datasources"
-  cat > "$SHOP/grafana/provisioning/datasources/shop.yaml" <<'LABFILE'
-apiVersion: 1
-datasources:
-  - name: Prometheus
-    uid: prometheus
-    type: prometheus
-    url: http://prometheus:9090
-    isDefault: true
-  - name: Loki
-    uid: loki
-    type: loki
-    url: http://loki:3100
-  - name: Jaeger
-    uid: jaeger
-    type: jaeger
-    url: http://jaeger:16686
-LABFILE
-  mkdir -p "$SHOP/loki"
-  cat > "$SHOP/loki/loki.yaml" <<'LABFILE'
-auth_enabled: false
-
-server:
-  http_listen_port: 3100
-  log_level: warn
-
-common:
-  instance_addr: 127.0.0.1
-  path_prefix: /loki
-  storage:
-    filesystem:
-      chunks_directory: /loki/chunks
-      rules_directory: /loki/rules
-  replication_factor: 1
-  ring:
-    kvstore:
-      store: inmemory
-
-schema_config:
-  configs:
-    - from: 2026-01-01
-      store: tsdb
-      object_store: filesystem
-      schema: v13
-      index:
-        prefix: index_
-        period: 24h
-
-limits_config:
-  allow_structured_metadata: true
-  retention_period: 168h
-
-compactor:
-  working_directory: /loki/compactor
-  retention_enabled: true
-  delete_request_store: filesystem
-LABFILE
-  mkdir -p "$SHOP/otel"
-  cat > "$SHOP/otel/collector-fanout.yaml" <<'LABFILE'
-# The Collector of collector.yaml, sending every trace to one more place
-# (lesson 13): an OTLP endpoint of the kind a hosted product gives you, with the
-# key that identifies the account read from the environment.
-receivers:
-  otlp:
-    protocols:
-      grpc:
-        endpoint: 0.0.0.0:4317
-      http:
-        endpoint: 0.0.0.0:4318
-  fluent_forward:
-    endpoint: 0.0.0.0:24224
-
-processors:
-  memory_limiter:
-    check_interval: 1s
-    limit_mib: 400
-  batch: {}
-  # A batch from Docker mixes every container's lines under one resource, so
-  # the lines are regrouped by their own "service" field, one resource each,
-  # before that field becomes the resource's service.name.
-  groupbyattrs/service:
-    keys: [service]
-  transform/service:
-    error_mode: ignore
-    log_statements:
-      - context: resource
-        statements:
-          - set(attributes["service.name"], attributes["service"]) where attributes["service"] != nil
-  transform/logs:
-    error_mode: ignore
-    log_statements:
-      - context: log
-        conditions:
-          - IsMatch(body, "^\\{")
-        statements:
-          - merge_maps(attributes, ParseJSON(body), "upsert")
-          - set(severity_text, attributes["level"])
-          - set(trace_id.string, attributes["trace_id"]) where attributes["trace_id"] != nil
-          - set(span_id.string, attributes["span_id"]) where attributes["span_id"] != nil
-
-exporters:
-  debug:
-    verbosity: basic
-  otlp_grpc/jaeger:
-    endpoint: jaeger:4317
-    tls:
-      insecure: true
-  zipkin:
-    endpoint: http://zipkin:9411/api/v2/spans
-  otlp_http/loki:
-    endpoint: http://loki:3100/otlp
-  otlp_http/vendor:
-    endpoint: http://vendor:4318
-    encoding: json
-    headers:
-      api-key: ${env:VENDOR_API_KEY}
-
-service:
-  telemetry:
-    metrics:
-      readers:
-        - pull:
-            exporter:
-              prometheus:
-                host: 0.0.0.0
-                port: 8888
-  pipelines:
-    traces:
-      receivers: [otlp]
-      processors: [memory_limiter, batch]
-      exporters: [otlp_grpc/jaeger, zipkin, otlp_http/vendor]
-    logs:
-      receivers: [fluent_forward]
-      processors: [memory_limiter, transform/logs, groupbyattrs/service, transform/service, batch]
-      exporters: [otlp_http/loki]
-LABFILE
-  mkdir -p "$SHOP/otel"
-  cat > "$SHOP/otel/collector-logs.yaml" <<'LABFILE'
-# The same Collector, sending every log line to three stores at once:
-# Loki, Elasticsearch and Graylog. Lesson 9 switches to it.
-receivers:
-  otlp:
-    protocols:
-      grpc:
-        endpoint: 0.0.0.0:4317
-      http:
-        endpoint: 0.0.0.0:4318
-  fluent_forward:
-    endpoint: 0.0.0.0:24224
-
-processors:
-  memory_limiter:
-    check_interval: 1s
-    limit_mib: 400
-  batch: {}
-  # A batch from Docker mixes every container's lines under one resource, so
-  # the lines are regrouped by their own "service" field, one resource each,
-  # before that field becomes the resource's service.name.
-  groupbyattrs/service:
-    keys: [service]
-  transform/service:
-    error_mode: ignore
-    log_statements:
-      - context: resource
-        statements:
-          - set(attributes["service.name"], attributes["service"]) where attributes["service"] != nil
-  transform/logs:
-    error_mode: ignore
-    log_statements:
-      - context: log
-        conditions:
-          - IsMatch(body, "^\\{")
-        statements:
-          - merge_maps(attributes, ParseJSON(body), "upsert")
-          - set(severity_text, attributes["level"])
-          - set(trace_id.string, attributes["trace_id"]) where attributes["trace_id"] != nil
-          - set(span_id.string, attributes["span_id"]) where attributes["span_id"] != nil
-
-exporters:
-  debug:
-    verbosity: basic
-  otlp_grpc/jaeger:
-    endpoint: jaeger:4317
-    tls:
-      insecure: true
-  zipkin:
-    endpoint: http://zipkin:9411/api/v2/spans
-  otlp_http/loki:
-    endpoint: http://loki:3100/otlp
-  elasticsearch:
-    endpoints: [http://elasticsearch:9200]
-  otlp_grpc/graylog:
-    endpoint: graylog:4317
-    tls:
-      insecure: true
-
-service:
-  telemetry:
-    metrics:
-      readers:
-        - pull:
-            exporter:
-              prometheus:
-                host: 0.0.0.0
-                port: 8888
-  pipelines:
-    traces:
-      receivers: [otlp]
-      processors: [memory_limiter, batch]
-      exporters: [otlp_grpc/jaeger, zipkin]
-    logs:
-      receivers: [fluent_forward]
-      processors: [memory_limiter, transform/logs, groupbyattrs/service, transform/service, batch]
-      exporters: [otlp_http/loki, elasticsearch, otlp_grpc/graylog]
-LABFILE
-  mkdir -p "$SHOP/otel"
-  cat > "$SHOP/otel/collector-sampling.yaml" <<'LABFILE'
-# The Collector of collector.yaml, deciding which traces to keep (lesson 12).
-# Every span still feeds the span metrics; only the traces worth reading go
-# on to Jaeger and Zipkin.
-receivers:
-  otlp:
-    protocols:
-      grpc:
-        endpoint: 0.0.0.0:4317
-      http:
-        endpoint: 0.0.0.0:4318
-  fluent_forward:
-    endpoint: 0.0.0.0:24224
-
-connectors:
-  # Rate, errors and duration per service and span name, computed from every
-  # span before any of them is dropped.
-  spanmetrics:
-    metrics_flush_interval: 15s
-    histogram:
-      explicit:
-        buckets: [10ms, 50ms, 100ms, 250ms, 500ms, 1s, 2.5s, 5s]
-
-processors:
-  # Wait until a trace has had time to finish, then keep it if any policy says so.
-  tail_sampling:
-    decision_wait: 10s
-    num_traces: 20000
-    policies:
-      - name: errors
-        type: status_code
-        status_code: {status_codes: [ERROR]}
-      - name: slow
-        type: latency
-        latency: {threshold_ms: 1000}
-      - name: a-few-of-the-rest
-        type: probabilistic
-        probabilistic: {sampling_percentage: 5}
-  memory_limiter:
-    check_interval: 1s
-    limit_mib: 400
-  batch: {}
-  # A batch from Docker mixes every container's lines under one resource, so
-  # the lines are regrouped by their own "service" field, one resource each,
-  # before that field becomes the resource's service.name.
-  groupbyattrs/service:
-    keys: [service]
-  transform/service:
-    error_mode: ignore
-    log_statements:
-      - context: resource
-        statements:
-          - set(attributes["service.name"], attributes["service"]) where attributes["service"] != nil
-  transform/logs:
-    error_mode: ignore
-    log_statements:
-      - context: log
-        conditions:
-          - IsMatch(body, "^\\{")
-        statements:
-          - merge_maps(attributes, ParseJSON(body), "upsert")
-          - set(severity_text, attributes["level"])
-          - set(trace_id.string, attributes["trace_id"]) where attributes["trace_id"] != nil
-          - set(span_id.string, attributes["span_id"]) where attributes["span_id"] != nil
-
-exporters:
-  debug:
-    verbosity: basic
-  otlp_grpc/jaeger:
-    endpoint: jaeger:4317
-    tls:
-      insecure: true
-  zipkin:
-    endpoint: http://zipkin:9411/api/v2/spans
-  otlp_http/loki:
-    endpoint: http://loki:3100/otlp
-  otlp_http/prometheus:
-    endpoint: http://prometheus:9090/api/v1/otlp
-
-service:
-  telemetry:
-    metrics:
-      readers:
-        - pull:
-            exporter:
-              prometheus:
-                host: 0.0.0.0
-                port: 8888
-  pipelines:
-    traces/all:
-      receivers: [otlp]
-      processors: [memory_limiter]
-      exporters: [spanmetrics]
-    traces:
-      receivers: [otlp]
-      processors: [memory_limiter, tail_sampling, batch]
-      exporters: [otlp_grpc/jaeger, zipkin]
-    metrics/spans:
-      receivers: [spanmetrics]
-      processors: [batch]
-      exporters: [otlp_http/prometheus]
-    logs:
-      receivers: [fluent_forward]
-      processors: [memory_limiter, transform/logs, groupbyattrs/service, transform/service, batch]
-      exporters: [otlp_http/loki]
-LABFILE
-  mkdir -p "$SHOP/otel"
-  cat > "$SHOP/otel/collector.yaml" <<'LABFILE'
-# The OpenTelemetry Collector: every trace and every log line of the shop
-# passes through here on its way to where it is stored.
-receivers:
-  otlp:
-    protocols:
-      grpc:
-        endpoint: 0.0.0.0:4317
-      http:
-        endpoint: 0.0.0.0:4318
-  fluent_forward:
-    endpoint: 0.0.0.0:24224
-
-processors:
-  memory_limiter:
-    check_interval: 1s
-    limit_mib: 400
-  batch: {}
-  # A batch from Docker mixes every container's lines under one resource, so
-  # the lines are regrouped by their own "service" field, one resource each,
-  # before that field becomes the resource's service.name.
-  groupbyattrs/service:
-    keys: [service]
-  transform/service:
-    error_mode: ignore
-    log_statements:
-      - context: resource
-        statements:
-          - set(attributes["service.name"], attributes["service"]) where attributes["service"] != nil
-  transform/logs:
-    error_mode: ignore
-    log_statements:
-      - context: log
-        conditions:
-          - IsMatch(body, "^\\{")
-        statements:
-          - merge_maps(attributes, ParseJSON(body), "upsert")
-          - set(severity_text, attributes["level"])
-          - set(trace_id.string, attributes["trace_id"]) where attributes["trace_id"] != nil
-          - set(span_id.string, attributes["span_id"]) where attributes["span_id"] != nil
-
-exporters:
-  debug:
-    verbosity: basic
-  otlp_grpc/jaeger:
-    endpoint: jaeger:4317
-    tls:
-      insecure: true
-  zipkin:
-    endpoint: http://zipkin:9411/api/v2/spans
-  otlp_http/loki:
-    endpoint: http://loki:3100/otlp
-
-service:
-  telemetry:
-    metrics:
-      readers:
-        - pull:
-            exporter:
-              prometheus:
-                host: 0.0.0.0
-                port: 8888
-  pipelines:
-    traces:
-      receivers: [otlp]
-      processors: [memory_limiter, batch]
-      exporters: [otlp_grpc/jaeger, zipkin]
-    logs:
-      receivers: [fluent_forward]
-      processors: [memory_limiter, transform/logs, groupbyattrs/service, transform/service, batch]
-      exporters: [otlp_http/loki]
-LABFILE
-  mkdir -p "$SHOP/."
-  cat > "$SHOP/postgres-init.sql" <<'LABFILE'
-CREATE TABLE orders (
-  id          bigserial PRIMARY KEY,
-  sku         text NOT NULL,
-  qty         integer NOT NULL,
-  total_cents integer NOT NULL,
-  status      text NOT NULL,
-  traceparent text,
-  created_at  timestamptz NOT NULL DEFAULT now()
-);
-LABFILE
-  mkdir -p "$SHOP/prometheus"
-  cat > "$SHOP/prometheus/prometheus.yml" <<'LABFILE'
-global:
-  scrape_interval: 15s
-  evaluation_interval: 15s
-
-rule_files:
-  - /etc/prometheus/rules/*.yml
-
-alerting:
-  alertmanagers:
-    - static_configs:
-        - targets: [alertmanager:9093]
-
-scrape_configs:
-  - job_name: storefront
-    static_configs:
-      - targets: [storefront:8080]
-  - job_name: orders
-    static_configs:
-      - targets: [orders:8081]
-  - job_name: payments
-    static_configs:
-      - targets: [payments:8082]
-  - job_name: mailer
-    static_configs:
-      - targets: [mailer:9102]
-  - job_name: otel-collector
-    static_configs:
-      - targets: [otel-collector:8888]
-  - job_name: pushgateway
-    honor_labels: true
-    static_configs:
-      - targets: [pushgateway:9091]
-  - job_name: node
-    static_configs:
-      - targets: [node-exporter:9100]
-  - job_name: postgres
-    static_configs:
-      - targets: [postgres-exporter:9187]
-  - job_name: rabbitmq
-    static_configs:
-      - targets: [rabbitmq:15692]
-  - job_name: blackbox
-    metrics_path: /probe
-    params:
-      module: [http_2xx]
-    static_configs:
-      - targets: [http://storefront:8080/health]
-    relabel_configs:
-      - source_labels: [__address__]
-        target_label: __param_target
-      - source_labels: [__param_target]
-        target_label: instance
-      - target_label: __address__
-        replacement: blackbox-exporter:9115
-LABFILE
-  mkdir -p "$SHOP/prometheus/rules"
-  cat > "$SHOP/prometheus/rules/shop.yml" <<'LABFILE'
-groups:
-  - name: shop
-    rules:
-      - alert: TargetDown
-        expr: up == 0
-        for: 1m
-        labels:
-          severity: ticket
-        annotations:
-          summary: "{{ $labels.job }} has not answered a scrape for a minute"
-LABFILE
-  mkdir -p "$SHOP/."
-  cat > "$SHOP/requirements.txt" <<'LABFILE'
-flask==3.1.3
-waitress==3.0.2
-requests==2.34.2
-psycopg[binary]==3.3.6
-pika==1.4.4
-prometheus-client==0.26.0
-opentelemetry-api==1.45.0
-opentelemetry-sdk==1.45.0
-opentelemetry-exporter-otlp-proto-http==1.45.0
-opentelemetry-distro==0.66b0
-opentelemetry-instrumentation-flask==0.66b0
-opentelemetry-instrumentation-requests==0.66b0
-opentelemetry-instrumentation-psycopg==0.66b0
-sentry-sdk==2.71.0
-LABFILE
-  mkdir -p "$SHOP/services/common"
-  cat > "$SHOP/services/common/__init__.py" <<'LABFILE'
-LABFILE
-  mkdir -p "$SHOP/services/common"
-  cat > "$SHOP/services/common/logs.py" <<'LABFILE'
-"""One JSON object per line on stdout: how every service of the shop logs.
-
-The platform collects stdout; nothing here knows where the lines end up.
-"""
-import json
-import logging
-import os
-import sys
-from datetime import datetime, timezone
-
-from opentelemetry import trace
-
-SERVICE = os.environ.get("OTEL_SERVICE_NAME", "unknown")
-
-
-class JsonFormatter(logging.Formatter):
-    def format(self, record):
-        line = {
-            "time": datetime.fromtimestamp(record.created, timezone.utc)
-            .isoformat(timespec="milliseconds")
-            .replace("+00:00", "Z"),
-            "level": record.levelname,
-            "service": SERVICE,
-            "logger": record.name,
-            "message": record.getMessage(),
-        }
-        ctx = trace.get_current_span().get_span_context()
-        if ctx.is_valid:
-            line["trace_id"] = format(ctx.trace_id, "032x")
-            line["span_id"] = format(ctx.span_id, "016x")
-        line.update(getattr(record, "fields", {}))
-        if record.exc_info:
-            line["exception"] = self.formatException(record.exc_info)
-        return json.dumps(line)
-
-
-def setup(level=None):
-    handler = logging.StreamHandler(sys.stdout)
-    handler.setFormatter(JsonFormatter())
-    root = logging.getLogger()
-    root.handlers[:] = [handler]
-    root.setLevel(level or os.environ.get("LOG_LEVEL", "INFO"))
-    logging.getLogger("waitress").setLevel(logging.WARNING)
-    logging.getLogger("pika").setLevel(logging.CRITICAL)
-    return logging.getLogger(SERVICE)
-LABFILE
-  mkdir -p "$SHOP/services/common"
-  cat > "$SHOP/services/common/tracing.py" <<'LABFILE'
-"""The OpenTelemetry SDK, set up by hand, for the services instrumented by hand."""
-from opentelemetry import trace
-from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
-from opentelemetry.sdk.resources import Resource
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
-
-
-def setup(service, version):
-    resource = Resource.create({"service.name": service, "service.version": version})
-    provider = TracerProvider(resource=resource)
-    provider.add_span_processor(BatchSpanProcessor(OTLPSpanExporter()))
-    trace.set_tracer_provider(provider)
-    return trace.get_tracer(service, version)
-LABFILE
-  mkdir -p "$SHOP/services/common"
-  cat > "$SHOP/services/common/web.py" <<'LABFILE'
-"""Rate, errors and duration for every Flask route, in Prometheus's format."""
-import time
-
-from flask import Response, g, request
-from opentelemetry import trace
-from prometheus_client import REGISTRY, Counter, Histogram
-from prometheus_client.exposition import choose_encoder
-
-REQUESTS = Counter(
-    "http_server_requests",
-    "HTTP requests answered, by route, method and status code.",
-    ["route", "method", "code"],
-)
-DURATION = Histogram(
-    "http_server_request_duration_seconds",
-    "Time taken to answer an HTTP request.",
-    ["route", "method"],
-    buckets=(0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5),
+# Every file of ~/shop is a fence in a lesson, under a line that is nothing but
+# its path, `~/shop/<path>`; the student copies it from there, and this reads it
+# from there. There is no second copy to drift. Lesson 1's two pages give every
+# file they caption; a later lesson gives only the one named after its colon,
+# because it also captions files the lesson writes for a while and takes away.
+FILES_FROM=(
+  le-7fgac3dc/the-shop.md
+  le-7fgac3dc/what-watches-it.md
+  le-aamwg2qb/shipping.md:otel/collector-logs.yaml
+  le-68t063mj/tail-sampling.md:otel/collector-sampling.yaml
+  le-af8knzar/fan-out.md:otel/collector-fanout.yaml
+  le-m2spgnw3/envoy.md:envoy/envoy.yaml
 )
 
-
-def measure(app):
-    @app.before_request
-    def start():
-        g.started = time.perf_counter()
-
-    @app.after_request
-    def finish(response):
-        route = request.url_rule.rule if request.url_rule else "unmatched"
-        if route != "/metrics":
-            REQUESTS.labels(route, request.method, str(response.status_code)).inc()
-            ctx = trace.get_current_span().get_span_context()
-            exemplar = {"trace_id": format(ctx.trace_id, "032x")} if ctx.is_valid else None
-            DURATION.labels(route, request.method).observe(time.perf_counter() - g.started, exemplar)
-        return response
-
-    @app.get("/metrics")
-    def metrics():
-        # OpenMetrics, which carries exemplars, for a scraper that asks for it
-        encoder, content_type = choose_encoder(request.headers.get("Accept"))
-        return Response(encoder(REGISTRY), content_type=content_type)
-LABFILE
-  mkdir -p "$SHOP/services/loadgen"
-  cat > "$SHOP/services/loadgen/load.py" <<'LABFILE'
-"""Customers, simulated: a fixed mix of browsing and checkouts at a steady rate.
-
-  python -m loadgen.load RATE SECONDS     e.g. 5 60: five requests a second for a minute
-
-The mix repeats every 20 requests, so two runs of the same length send the same
-requests: 2 product listings, 17 checkouts with a good card and 1 with a card
-that is declined.
-"""
-import collections
-import sys
-import time
-from concurrent.futures import ThreadPoolExecutor
-
-import requests
-
-URL = "http://storefront:8080"
-SKUS = ["tea-500g", "mug-blue", "kettle"]
-GOOD, DECLINED = "4111 1111 1111 1111", "4000 0000 0000 0002"
-
-
-def request_number(n, http):
-    if n % 10 == 0:
-        return http.get(f"{URL}/products", timeout=10)
-    card = DECLINED if n % 20 == 7 else GOOD
-    return http.post(f"{URL}/checkout", timeout=10,
-                        json={"sku": SKUS[n % 3], "qty": 1 + n % 2, "card": card})
-
-
-def one(n):
-    try:
-        return request_number(n, requests).status_code
-    except requests.RequestException:
-        return "no answer"
-
-
-def main(rate, seconds):
-    start = time.monotonic()
-    with ThreadPoolExecutor(16) as pool:
-        answers = []
-        for n in range(int(rate * seconds)):
-            time.sleep(max(0, start + n / rate - time.monotonic()))
-            answers.append(pool.submit(one, n))
-    counts = collections.Counter(a.result() for a in answers)
-    print(" ".join(f"{k}={v}" for k, v in sorted(counts.items(), key=str)))
-
-
-if __name__ == "__main__":
-    main(float(sys.argv[1]), float(sys.argv[2]))
-LABFILE
-  mkdir -p "$SHOP/services/mailer"
-  cat > "$SHOP/services/mailer/worker.py" <<'LABFILE'
-"""Mailer: takes each paid order off the queue and sends the confirmation.
-
-The e-mail is not really sent; the line it would have carried is logged.
-"""
-import json
-import os
-import time
-
-import pika
-from opentelemetry import propagate
-from opentelemetry.trace import SpanKind
-from prometheus_client import Counter, start_http_server
-
-from common import logs, tracing
-
-VERSION = os.environ.get("SHOP_VERSION", "1.4.0")
-log = logs.setup()
-tracer = tracing.setup("mailer", VERSION)
-SENT = Counter("mailer_messages", "Order messages handled.", ["outcome"])
-
-
-def handle(channel, method, properties, body):
-    ctx = propagate.extract(properties.headers or {})
-    with tracer.start_as_current_span("orders.placed process", context=ctx, kind=SpanKind.CONSUMER) as span:
-        order = json.loads(body)
-        span.set_attribute("messaging.system", "rabbitmq")
-        span.set_attribute("messaging.destination.name", "orders.placed")
-        span.set_attribute("shop.order_id", order["id"])
-        with tracer.start_as_current_span("send confirmation"):
-            time.sleep(0.02)
-            log.info("confirmation sent", extra={"fields": {"order_id": order["id"]}})
-        SENT.labels("sent").inc()
-        channel.basic_ack(method.delivery_tag)
-
-
-def main():
-    start_http_server(9102)
-    while True:
-        try:
-            conn = pika.BlockingConnection(pika.ConnectionParameters(os.environ.get("RABBIT_HOST", "rabbitmq")))
-            channel = conn.channel()
-            channel.queue_declare("orders.placed", durable=True)
-            channel.basic_consume("orders.placed", handle)
-            log.info("waiting for orders")
-            channel.start_consuming()
-        except pika.exceptions.AMQPConnectionError:
-            log.warning("rabbitmq not reachable, retrying in 2 s")
-            time.sleep(2)
-
-
-if __name__ == "__main__":
-    main()
-LABFILE
-  mkdir -p "$SHOP/services/orders"
-  cat > "$SHOP/services/orders/app.py" <<'LABFILE'
-"""Orders: stores an order, asks payments to charge it, and announces it.
-
-It runs under opentelemetry-instrument, which instruments Flask, requests and
-psycopg for it. The only OpenTelemetry code in the file is the two lines in
-publish() that carry the trace into the message, because nothing instruments
-the queue client here.
-"""
-import json
-import os
-
-import pika
-import psycopg
-import requests
-from flask import Flask, request
-from opentelemetry import propagate
-
-from common import logs, web
-
-DB = os.environ.get("DATABASE_URL", "postgresql://shop:shop@postgres/shop")
-PAYMENTS = os.environ.get("PAYMENTS_URL", "http://payments:8082")
-RABBIT = os.environ.get("RABBIT_HOST", "rabbitmq")
-
-log = logs.setup()
-app = Flask(__name__)
-web.measure(app)
-
-
-def db():
-    return psycopg.connect(DB, autocommit=True)
-
-
-def publish(order):
-    headers = {}
-    propagate.inject(headers)
-    with pika.BlockingConnection(pika.ConnectionParameters(RABBIT)) as conn:
-        channel = conn.channel()
-        channel.queue_declare("orders.placed", durable=True)
-        channel.basic_publish(
-            exchange="",
-            routing_key="orders.placed",
-            body=json.dumps(order),
-            properties=pika.BasicProperties(headers=headers, delivery_mode=2),
-        )
-
-
-@app.get("/health")
-def health():
-    return {"status": "ok"}
-
-
-@app.get("/ready")
-def ready():
-    """Ready to take an order: the database answers and the broker takes a connection."""
-    checks = {}
-    try:
-        with psycopg.connect(DB, connect_timeout=2) as conn:
-            conn.execute("SELECT 1")
-        checks["postgres"] = "ok"
-    except psycopg.Error as e:
-        checks["postgres"] = type(e).__name__
-    try:
-        params = pika.ConnectionParameters(RABBIT, socket_timeout=2, connection_attempts=1)
-        with pika.BlockingConnection(params):
-            checks["rabbitmq"] = "ok"
-    except pika.exceptions.AMQPError as e:
-        checks["rabbitmq"] = type(e).__name__
-    ok = all(v == "ok" for v in checks.values())
-    return {"ready": ok, "checks": checks}, 200 if ok else 503
-
-
-@app.post("/orders")
-def create():
-    body = request.get_json()
-    traceparent = request.headers.get("traceparent")
-    with db() as conn:
-        order_id = conn.execute(
-            "INSERT INTO orders (sku, qty, total_cents, status, traceparent)"
-            " VALUES (%s, %s, %s, 'pending', %s) RETURNING id",
-            (body["sku"], body["qty"], body["total_cents"], traceparent),
-        ).fetchone()[0]
-        charge = requests.post(
-            f"{PAYMENTS}/charge",
-            json={"order_id": order_id, "amount_cents": body["total_cents"], "card": body["card"]},
-            timeout=3,
-        )
-        if charge.status_code >= 500:
-            conn.execute("UPDATE orders SET status = 'failed' WHERE id = %s", (order_id,))
-            log.error("payment failed", extra={"fields": {"order_id": order_id, "payments_status": charge.status_code}})
-            return {"id": order_id, "status": "failed"}, 502
-        status = "paid" if charge.json()["approved"] else "declined"
-        conn.execute("UPDATE orders SET status = %s WHERE id = %s", (status, order_id))
-    order = {"id": order_id, "sku": body["sku"], "qty": body["qty"], "status": status}
-    if status == "paid":
-        publish(order)
-    log.info("order stored", extra={"fields": {"order_id": order_id, "status": status}})
-    return order, 201 if status == "paid" else 402
-
-
-@app.get("/orders")
-def listing():
-    since = request.args.get("since", "1970-01-01")
-    with db() as conn:
-        rows = conn.execute(
-            "SELECT id, sku, qty, total_cents, status, traceparent, created_at FROM orders"
-            " WHERE created_at >= %s ORDER BY id",
-            (since,),
-        ).fetchall()
-    return [
-        {"id": r[0], "sku": r[1], "qty": r[2], "total_cents": r[3], "status": r[4],
-         "traceparent": r[5], "created_at": r[6].isoformat()}
-        for r in rows
-    ]
-LABFILE
-  mkdir -p "$SHOP/services/pager"
-  cat > "$SHOP/services/pager/app.py" <<'LABFILE'
-"""The lab's pager: Alertmanager's webhooks land here, and each alert becomes a line.
-
-/page is what would wake somebody, and /ticket what would wait for the morning.
-In production the first would be PagerDuty, Opsgenie or a phone, and the second
-a queue of tickets; here both are a log.
-"""
-from flask import Flask, request
-
-from common import logs
-
-log = logs.setup()
-app = Flask(__name__)
-
-
-def record(kind):
-    note = request.get_json()
-    for alert in note["alerts"]:
-        log.warning(kind, extra={"fields": {
-            "status": alert["status"],
-            "alertname": alert["labels"].get("alertname"),
-            "severity": alert["labels"].get("severity"),
-            "summary": alert["annotations"].get("summary"),
-            "receiver": note["receiver"],
-        }})
-    return {"ok": True}
-
-
-@app.post("/page")
-def page():
-    return record("PAGE")
-
-
-@app.post("/ticket")
-def ticket():
-    return record("TICKET")
-LABFILE
-  mkdir -p "$SHOP/services/payments"
-  cat > "$SHOP/services/payments/app.py" <<'LABFILE'
-"""Payments: approves or declines a charge. Instrumented by hand.
-
-It can be told to misbehave: /faults/payments.json is read on every request.
-  {"latency_ms": 800}   every charge waits that long before answering
-  {"fail_every": 20}    every twentieth charge answers 503
-  {"slow_every": 25, "slow_ms": 1500}
-                        every twenty-fifth charge waits that much longer
-"""
-import itertools
-import json
-import os
-import time
-
-from flask import Flask, request
-from opentelemetry import propagate, trace
-from opentelemetry.trace import SpanKind, Status, StatusCode
-from prometheus_client import Counter
-
-from common import logs, tracing, web
-
-VERSION = os.environ.get("SHOP_VERSION", "1.4.0")
-DECLINED_CARDS = {"4000000000000002"}
-
-log = logs.setup()
-tracer = tracing.setup("payments", VERSION)
-app = Flask(__name__)
-web.measure(app)
-CHARGES = Counter("payments_charges", "Charges decided, by outcome.", ["outcome"])
-counter = itertools.count(1)
-
-
-def faults():
-    try:
-        with open("/faults/payments.json") as f:
-            return json.load(f)
-    except FileNotFoundError:
-        return {}
-
-
-@app.get("/health")
-def health():
-    return {"status": "ok"}
-
-
-@app.post("/charge")
-def charge():
-    ctx = propagate.extract(request.headers)
-    with tracer.start_as_current_span("POST /charge", context=ctx, kind=SpanKind.SERVER) as span:
-        n = next(counter)
-        body = request.get_json()
-        span.set_attribute("http.request.method", "POST")
-        span.set_attribute("http.route", "/charge")
-        span.set_attribute("shop.order_id", body["order_id"])
-        span.set_attribute("shop.amount_cents", body["amount_cents"])
-        fault = faults()
-        wait_ms = fault.get("latency_ms", 0)
-        if fault.get("slow_every") and n % fault["slow_every"] == 0:
-            wait_ms += fault.get("slow_ms", 0)
-        if wait_ms:
-            with tracer.start_as_current_span("wait for the card network"):
-                time.sleep(wait_ms / 1000)
-        if fault.get("fail_every") and n % fault["fail_every"] == 0:
-            span.set_status(Status(StatusCode.ERROR, "card network unavailable"))
-            span.set_attribute("http.response.status_code", 503)
-            CHARGES.labels("error").inc()
-            log.error("card network unavailable", extra={"fields": {"order_id": body["order_id"]}})
-            return {"error": "card network unavailable"}, 503
-        approved = body["card"].replace(" ", "") not in DECLINED_CARDS
-        span.set_attribute("shop.approved", approved)
-        span.set_attribute("http.response.status_code", 200)
-        CHARGES.labels("approved" if approved else "declined").inc()
-        log.info("charge decided", extra={"fields": {
-            "order_id": body["order_id"], "approved": approved}})
-        return {"approved": approved}
-LABFILE
-  mkdir -p "$SHOP/services/report"
-  cat > "$SHOP/services/report/job.py" <<'LABFILE'
-"""The nightly report: run once by a scheduler, never by a request.
-
-It has no caller, so its trace starts here. Each order it counts was created by
-a request with a trace of its own, and the report links to those.
-
-It is gone before Prometheus could scrape it, so it pushes its metrics to the
-Pushgateway on the way out, and Prometheus scrapes them there.
-"""
-import os
-import sys
-
-import requests
-from opentelemetry import trace
-from opentelemetry.trace import Link, SpanContext, TraceFlags
-from prometheus_client import CollectorRegistry, Gauge, push_to_gateway
-
-from common import logs, tracing
-
-VERSION = os.environ.get("SHOP_VERSION", "1.4.0")
-log = logs.setup()
-tracer = tracing.setup("report", VERSION)
-
-
-def link_to(traceparent):
-    _, trace_id, span_id, flags = traceparent.split("-")
-    return Link(SpanContext(int(trace_id, 16), int(span_id, 16), is_remote=True,
-                            trace_flags=TraceFlags(int(flags, 16))))
-
-
-def main(since):
-    orders = requests.get(f"{os.environ.get('ORDERS_URL', 'http://orders:8081')}/orders",
-                          params={"since": since}, timeout=10).json()
-    links = [link_to(o["traceparent"]) for o in orders if o["traceparent"]][:100]
-    with tracer.start_as_current_span("nightly report", links=links) as span:
-        paid = [o for o in orders if o["status"] == "paid"]
-        span.set_attribute("report.orders", len(orders))
-        span.set_attribute("report.paid", len(paid))
-        log.info("report written", extra={"fields": {
-            "orders": len(orders), "paid": len(paid),
-            "revenue_cents": sum(o["total_cents"] for o in paid)}})
-    registry = CollectorRegistry()
-    Gauge("report_orders", "Orders the last report counted.", registry=registry).set(len(orders))
-    Gauge("report_last_success_timestamp_seconds", "When the report last finished.",
-          registry=registry).set_to_current_time()
-    push_to_gateway(os.environ.get("PUSHGATEWAY", "pushgateway:9091"), job="report", registry=registry)
-    trace.get_tracer_provider().shutdown()
-
-
-if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "1970-01-01")
-LABFILE
-  mkdir -p "$SHOP/services/storefront"
-  cat > "$SHOP/services/storefront/app.py" <<'LABFILE'
-"""The storefront: where a customer's checkout arrives. Instrumented by hand."""
-import os
-
-import requests
-from flask import Flask, jsonify, request
-from opentelemetry import propagate, trace
-from opentelemetry.trace import SpanKind, Status, StatusCode
-
-from common import logs, tracing, web
-
-VERSION = os.environ.get("SHOP_VERSION", "1.4.0")
-ORDERS = os.environ.get("ORDERS_URL", "http://orders:8081")
-PRODUCTS = {"tea-500g": 3450, "mug-blue": 5900, "kettle": 18990}
-
-log = logs.setup()
-tracer = tracing.setup("storefront", VERSION)
-app = Flask(__name__)
-web.measure(app)
-
-
-@app.get("/health")
-def health():
-    return {"status": "ok"}
-
-
-@app.get("/products")
-def products():
-    return jsonify([{"sku": s, "price_cents": p} for s, p in PRODUCTS.items()])
-
-
-@app.post("/checkout")
-def checkout():
-    with tracer.start_as_current_span("POST /checkout", kind=SpanKind.SERVER) as span:
-        body = request.get_json()
-        sku, qty = body["sku"], int(body.get("qty", 1))
-        span.set_attribute("http.request.method", "POST")
-        span.set_attribute("http.route", "/checkout")
-        span.set_attribute("shop.sku", sku)
-        span.set_attribute("shop.quantity", qty)
-        if sku not in PRODUCTS:
-            span.set_attribute("http.response.status_code", 404)
-            log.info("unknown product", extra={"fields": {"sku": sku}})
-            return {"error": f"no product {sku}"}, 404
-        total = PRODUCTS[sku] * qty
-        span.set_attribute("shop.total_cents", total)
-
-        headers = {}
-        propagate.inject(headers)
-        try:
-            answer = requests.post(
-                f"{ORDERS}/orders",
-                json={"sku": sku, "qty": qty, "total_cents": total, "card": body["card"]},
-                headers=headers,
-                timeout=5,
-            )
-        except requests.RequestException as e:
-            span.record_exception(e)
-            span.set_status(Status(StatusCode.ERROR, "orders unreachable"))
-            span.set_attribute("http.response.status_code", 503)
-            log.error("orders unreachable", extra={"fields": {"error": str(e)}})
-            return {"error": "try again later"}, 503
-
-        span.set_attribute("http.response.status_code", answer.status_code)
-        if answer.status_code >= 500:
-            span.set_status(Status(StatusCode.ERROR, f"orders answered {answer.status_code}"))
-            log.error("checkout failed", extra={"fields": {"sku": sku, "orders_status": answer.status_code}})
-            return {"error": "try again later"}, 502
-        order = answer.json()
-        log.info("checkout finished", extra={"fields": {
-            "sku": sku, "order_id": order.get("id"), "outcome": order.get("status")}})
-        return order, answer.status_code
-LABFILE
+extract() {
+  python3 - "$SHOP" "$@" <<'PY'
+import os, re, sys
+shop, sources = sys.argv[1], sys.argv[2:]
+fence = re.compile(r"^`~/shop/([^`]+)`\n\n```[a-z]*\n(.*?)^```$", re.M | re.S)
+seen = {}
+for spec in sources:
+    src, _, only = spec.partition(":")
+    found = 0
+    for m in fence.finditer(open(src).read()):
+        path, body = m.group(1), m.group(2)
+        if only and path != only:
+            continue
+        if path in seen:
+            sys.exit(f"lab: ~/shop/{path} is written in {seen[path]} and again in {src}")
+        seen[path] = src
+        found += 1
+        out = os.path.join(shop, path)
+        os.makedirs(os.path.dirname(out), exist_ok=True)
+        open(out, "w").write(body)
+    if only and found != 1:
+        sys.exit(f"lab: {src} should show ~/shop/{only} once, and shows it {found} times")
+print(len(seen))
+PY
 }
 
-wheels() {
-  # The image installs from these and from nothing else, so a build never
-  # depends on the index answering on the day.
-  # A copy of the requirements they were downloaded for says when to fetch again.
-  cmp -s "$SHOP/requirements.txt" "$SHOP/wheels/.requirements" && return
-  pip3 download -q -d "$SHOP/wheels" --python-version 3.12 --only-binary=:all: \
-    --platform manylinux_2_17_x86_64 --platform manylinux2014_x86_64 \
-    --platform manylinux_2_28_x86_64 -r "$SHOP/requirements.txt" &&
-    cp "$SHOP/requirements.txt" "$SHOP/wheels/.requirements"
+write_files() {
+  local here n
+  here=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+  mkdir -p "$SHOP/faults" "$SHOP/scratch" "$SHOP/grafana/dashboards"
+  n=$(extract "${FILES_FROM[@]/#/$here/lessons/}")
+  touch "$SHOP/services/common/__init__.py"
+  [ "$n" -ge 26 ] || { echo "lab: only $n files found in the lessons" >&2; exit 1; }
+}
+
+put_shown() {
+  # A file a capture writes into ~/shop is one the student was shown: its
+  # whole text is in a lesson, as a fence, as the output of a `cat`, or as the
+  # parts of an annotated example put together. Anything else is refused, so a
+  # capture cannot run a program the lessons never gave.
+  local here; here=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+  local tmp; tmp=$(mktemp)
+  cat > "$tmp"
+  python3 - "$here/lessons" "$1" "$tmp" <<'PY' || { rm -f "$tmp"; exit 1; }
+import glob, json, re, sys
+lessons, path, tmp = sys.argv[1:]
+body = open(tmp).read().rstrip("\n")
+texts = []
+for md in glob.glob(f"{lessons}/*/*.md"):
+    if md.endswith(".pt.md"):
+        continue
+    t = open(md).read()
+    texts.append(t)
+    for ex in re.findall(r"^```schooling-example\n(.*?)^```$", t, re.M | re.S):
+        texts.append("".join(p["code"] for p in json.loads(ex)["parts"]))
+if not any(body in t for t in texts):
+    sys.exit(f"lab: {path} is not shown whole in any lesson")
+PY
+  as_ana "mkdir -p \"\$(dirname '$1')\" && cat > '$1'" < "$tmp"
+  rm -f "$tmp"
+}
+
+base_image() {
+  # THE ONE THING THIS MACHINE NEEDS THAT A STUDENT'S DOES NOT. The computer the
+  # course is recorded on reaches the internet only through a proxy that
+  # re-signs TLS, so pip inside a build trusts nothing it is shown. This puts
+  # the proxy's certificate into python:3.12-slim under its own name, so the
+  # student's Dockerfile builds unchanged: the same base, the same packages
+  # from the same index, at the same pinned versions.
+  [ -n "${HTTPS_PROXY:-}" ] && [ -f /root/.ccr/ca-bundle.crt ] || return 0
+  docker image inspect python:3.12-slim --format '{{index .Config.Labels "lab.proxy-ca"}}' 2>/dev/null | grep -q yes && return 0
+  local d; d=$(mktemp -d)
+  cp /root/.ccr/ca-bundle.crt "$d/ca.crt"
+  printf 'FROM python:3.12-slim\nCOPY ca.crt /etc/ssl/proxy-ca.crt\nENV PIP_CERT=/etc/ssl/proxy-ca.crt\nLABEL lab.proxy-ca=yes\n' > "$d/Dockerfile"
+  { docker image inspect python:3.12-slim >/dev/null 2>&1 || docker pull -q python:3.12-slim >/dev/null; } && docker build -q -t python:3.12-slim "$d" >/dev/null
+  rm -rf "$d"
+}
+
+build() {
+  base_image
+  docker build -q --network host ${HTTPS_PROXY:+--build-arg HTTPS_PROXY=$HTTPS_PROXY} -t shop:1.4.0 "$SHOP" >/dev/null
 }
 
 wait_for() {
@@ -1511,8 +180,8 @@ wait_for() {
 up() {
   id "$USER_LAB" >/dev/null 2>&1 || useradd -m -s /bin/bash -G docker "$USER_LAB"
   write_files
-  wheels
   [ -f "$SHOP/.grafana-password" ] || openssl rand -hex 12 > "$SHOP/.grafana-password"
+  build
   if [ ! -f "$SHOP/.graylog.env" ]; then
     openssl rand -hex 12 > "$SHOP/.graylog-password"
     printf 'GRAYLOG_PASSWORD_SECRET=%s\nGRAYLOG_ROOT_PASSWORD_SHA2=%s\n' "$(openssl rand -hex 32)" \
@@ -1521,7 +190,7 @@ up() {
   chown -R "$USER_LAB:$USER_LAB" "$SHOP"
   local profiles=""
   for p in "$@"; do profiles+=" --profile $p"; done
-  as_ana "docker compose$profiles build -q && docker compose$profiles up -d --quiet-pull" >/dev/null 2>&1
+  as_ana "docker compose$profiles up -d --quiet-pull" >/dev/null 2>&1
   wait_for storefront http://127.0.0.1:8080/health
   wait_for prometheus http://127.0.0.1:9090/-/ready
   wait_for loki http://127.0.0.1:3100/ready
@@ -1577,6 +246,7 @@ case "${1:-}" in
   reset) shift; down; rm -rf "$SHOP"; up "$@" ;;
   down) down ;;
   as) shift; as_ana "$*" ;;
+  put) shift; put_shown "$1" ;;
   kind-up) kind_up ;;
   kind-load) shift; for i in "$@"; do kind_load "$i"; done ;;
   kind-down) kind delete cluster --name lab >/dev/null 2>&1 || true ;;

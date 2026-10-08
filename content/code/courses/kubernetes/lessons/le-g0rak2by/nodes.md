@@ -60,8 +60,10 @@ otherwise, and `kubeadm token delete` ends it sooner. The `--discovery-token-ca-
 direction. It pins the cluster's certificate authority, so a node handed a wrong address refuses to
 join a control plane that is not this one, instead of trusting whatever answered.
 
-Two things in this transcript are the lab's and not the method. `--ignore-preflight-errors=all` is
-there because the machine that recorded it fails a preflight check that kind also skips; **on a real
-machine, leave it out** and fix what the checks report. And the node's request for a serving
-certificate was approved by a script in the background, as `lab.sh` does for every node, so that
-metrics-server can verify the kubelet it talks to.
+Two things in this transcript belong to kind and not to the method. `--ignore-preflight-errors=all` is
+there because a node that is a container fails preflight checks that kind itself skips when it builds
+a cluster; **on a real machine, leave it out** and fix what the checks report. And the rejoined node
+asks for a serving certificate, as every node of this course's clusters does (lesson 1), which nobody
+approves for it. `up.sh` approved the first ones; this one you approve by hand while the node joins,
+with `kubectl get csr` to find the `Pending` request and `kubectl certificate approve` followed by its
+name. Until then `kubectl logs` and `kubectl exec` fail for every pod on that node.

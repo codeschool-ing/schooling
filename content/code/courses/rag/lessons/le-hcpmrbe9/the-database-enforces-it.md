@@ -1,6 +1,6 @@
 ---
 title: The database enforces it
-version: 1
+version: 2
 ---
 
 The filter in `access.search` depends on every query remembering it. The query in this lesson does,
@@ -14,8 +14,8 @@ whatever the query says, with **row-level security**:
   "file": "policy.sql",
   "parts": [
     {
-      "code": "-- The assistant reads through a role of its own, and the database decides which rows that role sees.\n-- Run by the loader, which owns the table and is not limited by the policy.\nDO $$ BEGIN CREATE ROLE assistant LOGIN; EXCEPTION WHEN duplicate_object THEN NULL; END $$;",
-      "note": "A role for the assistant, created only if it does not exist yet: roles belong to the whole PostgreSQL server, not to one database."
+      "code": "-- The assistant reads through a role of its own, and the database decides which rows that role sees.\n-- Run by the loader, which owns the table and is not limited by the policy.\nDO $$ BEGIN CREATE ROLE assistant LOGIN PASSWORD 'reads-only'; EXCEPTION WHEN duplicate_object THEN NULL; END $$;",
+      "note": "A role for the assistant, created only if it does not exist yet: roles belong to the whole PostgreSQL server, not to one database. It logs in with a password, over `localhost`, because a role with no account on the machine cannot use the socket's peer authentication that your own login uses. On a machine of your own a password in a file is fine; in production it comes from a secret store."
     },
     {
       "code": "GRANT SELECT ON chunks TO assistant;\nALTER TABLE chunks ENABLE ROW LEVEL SECURITY;",
@@ -29,18 +29,31 @@ whatever the query says, with **row-level security**:
 }
 ```
 
-The loader, `ana` in this lab, owns the table and is not limited by the policy; the assistant
+The loader, your own login's role from lesson 1, owns the table and is not limited by the policy; the assistant
 connects as `assistant`, a role that can only read, and every read it makes passes through
 `by_audience`. A query from the assistant that forgets the `WHERE` entirely, counting every chunk by
 audience:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "asassistant.py",
+  "parts": [
+    {
+      "code": "import sys\n\nimport psycopg\n\nwith psycopg.connect(host=\"localhost\", user=\"assistant\", password=\"reads-only\") as conn:\n    if len(sys.argv) > 1:\n        conn.execute(\"SELECT set_config('rag.audiences', %s, true)\", (sys.argv[1],))\n    rows = conn.execute(\"SELECT audience, count(*) FROM chunks GROUP BY audience ORDER BY audience\").fetchall()\n    print(rows or \"no rows\")",
+      "note": "The assistant's own connection, counting every chunk it can see by audience, with no `WHERE` at all. An argument sets the audiences the transaction may read."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ psql -q -f policy.sql
-ana@lab:~/rag$ python asassistant.py
+
+```
+ana@vm:~/rag$ psql -q -f policy.sql
+ana@vm:~/rag$ python asassistant.py
 no rows
-ana@lab:~/rag$ python asassistant.py public
+ana@vm:~/rag$ python asassistant.py public
 [('public', 86)]
-ana@lab:~/rag$ python asassistant.py public,staff
+ana@vm:~/rag$ python asassistant.py public,staff
 [('public', 86), ('staff', 22)]
 ```
 

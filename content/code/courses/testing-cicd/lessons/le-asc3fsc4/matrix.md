@@ -1,6 +1,6 @@
 ---
 title: The matrix
-version: 1
+version: 2
 ---
 
 A **matrix** runs the same job once per combination of a few variables: versions of the language,
@@ -11,7 +11,9 @@ configuration cannot see them.
 
 Lesson 3 section 09 pointed at the `WAREHOUSE` zone on line 11 of `dispatch.py`. Here a colleague
 simplifies that function, reasoning that the shop and its server are both in São Paulo, so there is
-no need to name a zone:
+no need to name a zone. Make the same edit, the lines the diff below takes out and the one it
+changes, and commit it as they did, with
+`git commit -am "Read the order time in local time, no zone table needed"`:
 
 ```
 ana@laptop:~/shipquote$ git diff

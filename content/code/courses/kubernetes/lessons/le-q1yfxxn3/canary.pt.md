@@ -3,6 +3,33 @@ title: Um canary é dois Deployments e um peso
 version: 1
 ---
 
+O roteador desta aula é o da aula 16: o cluster dela, os tipos da Gateway API, o Traefik do
+`traefik.yaml` dela, e um Gateway chamado `public`, escrito aqui numa forma mais curta que a da aula 16.
+
+`gateway.yaml`:
+
+```yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata: {name: traefik}
+spec: {controllerName: traefik.io/gateway-controller}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata: {name: public}
+spec:
+  gatewayClassName: traefik
+  listeners: [{name: web, protocol: HTTP, port: 8000, allowedRoutes: {namespaces: {from: Same}}}]
+```
+
+```sh
+./up.sh ports.yaml
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.0/standard-install.yaml
+kubectl apply -f traefik.yaml
+kubectl -n traefik rollout status deployment/traefik
+kubectl apply -f gateway.yaml
+```
+
 **Um canary precisa que as duas versões sejam coisas separadas que o roteador consiga distinguir.** Aqui
 são dois Deployments, três cópias da 1.0 e uma da 1.1, cada um com o seu próprio Service. Os dois
 carregam `app: shop`, e um segundo rótulo, `track`, diz qual é qual:

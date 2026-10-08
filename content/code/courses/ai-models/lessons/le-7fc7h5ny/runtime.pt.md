@@ -9,6 +9,23 @@ respondendo por ele. **Transformers.js** é a biblioteca do Hugging Face para is
 em JavaScript da biblioteca `transformers` de Python, com a mesma ideia na frente: peça uma tarefa
 e um modelo, receba uma função.
 
+Esta aula roda JavaScript além de Python, então precisa do **Node.js**, versão 22 ou mais nova, de
+nodejs.org ou dos pacotes do seu sistema. O Transformers.js vem do npm, para dentro de `~/desk` como
+qualquer outro pacote:
+
+```
+ana@desk:~/desk$ node --version
+v22.22.0
+ana@desk:~/desk$ npm init -y > /dev/null && npm install @huggingface/transformers@4.3.0
+
+added 46 packages, and audited 47 packages in 17s
+
+12 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+```
+
 Por baixo, são duas metades, e as versões no projeto da ana mostram as duas:
 
 ```

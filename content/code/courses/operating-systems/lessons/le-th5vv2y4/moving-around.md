@@ -1,10 +1,27 @@
 ---
 title: Moving around: where, what, go
-version: 1
+version: 2
 ---
 
 Three commands do almost all of it: **`pwd`** says where you are, `ls` lists what is there, and
 `cd` goes somewhere else.
+
+This lesson walks around the office's folder, and you need the same one to follow it. Paste this on
+your server. The first line removes lesson 1's `office`, so that yours holds exactly what these
+transcripts show. The rest makes three folders, four files and one hidden file, and the last line
+dates them all 1 September 2026, so that a listing shows the same dates as the ones here:
+
+```sh
+rm -rf ~/office && mkdir -p ~/office/clients ~/office/'invoices 2026' ~/office/scans
+printf 'Acme Ltd\nRua Augusta 100\n' > ~/office/clients/acme.txt
+printf 'Bravo & Filhos\n' > ~/office/clients/bravo.txt
+head -c 48213 /dev/zero > ~/office/'invoices 2026'/march.pdf
+printf 'call the printer company\n' > ~/office/notes.txt
+printf 'keep=30\n' > ~/office/.backup-settings
+find ~/office -exec touch -h -d '2026-09-01 09:00' {} +
+```
+
+You do not need to understand these lines yet; lesson 12 is about making files and folders.
 
 ```
 ana@server:~$ pwd

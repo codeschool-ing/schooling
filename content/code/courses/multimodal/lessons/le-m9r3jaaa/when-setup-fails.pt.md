@@ -1,22 +1,41 @@
 ---
 title: Quando a montagem falha
-version: 1
+version: 2
 ---
 
-A maioria das falhas deste laboratório vem de quatro lugares, e cada um avisa do seu jeito. Leia primeiro a última linha do erro.
+A maioria das falhas desta montagem vem de seis lugares, e cada uma avisa do seu jeito. Leia primeiro a última linha do erro. Toda mensagem abaixo é uma que a máquina deste curso imprimiu.
 
-**O labmm não está rodando.** Toda aula de API conversa com ele, e quando ele está fora do ar os SDKs informam um erro de conexão, não algo sobre imagens ou áudio. Confira diretamente:
+**O Ollama não está rodando.** O instalador transforma o Ollama num serviço que inicia com o computador, e isso precisa do systemd. O WSL sem systemd, um contêiner ou um servidor mínimo não o têm, e o instalador avisa numa linha fácil de passar batido: `WARNING: systemd is not running`. Então tudo o que fala com um modelo falha, e não com uma mensagem sobre modelos:
 
 ```
-ana@lab:~/mm$ curl -sS http://127.0.0.1:8700/
-curl: (7) Failed to connect to 127.0.0.1 port 8700 after 0 ms: Couldn't connect to server
-ana@lab:~/mm$ curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:8700/
-200
+ana@lab:~/mm$ ollama list
+Error: could not connect to ollama server, run 'ollama serve' to start it
+ana@lab:~/mm$ python -c "from openai import OpenAI; OpenAI().models.list()" 2>&1 | tail -1
+openai.APIConnectionError: Connection error.
+ana@lab:~/mm$ ollama list | head -1
+NAME                                                                         ID              SIZE      MODIFIED           
 ```
 
-`Couldn't connect to server` significa que nada está escutando na porta 8700. `sudo bash lab.sh reset` o inicia de novo, e a segunda linha é o que um laboratório funcionando responde. Se ele não voltar, o erro dele está em `/run/labmm.out`.
+O `ollama list` diz isso com todas as letras; o programa de uma aula só diz `Connection error.`, porque o SDK da OpenAI conhece um endereço e não o que deveria estar lá. Inicie o servidor à mão, e deixe-o rodando no próprio terminal ou em segundo plano:
 
-**Um arquivo de modelo não é o que deveria ser.** Um download interrompido, ou um arquivo que alguém editou, carrega com um erro que cita uma camada ou um tensor, não o arquivo. O `lab.sh` confere todo modelo contra um SHA-256 antes de usá-lo, e você pode fazer a mesma conferência à mão. Aqui uma cópia do modelo de ruído recebeu um byte a mais:
+```sh
+nohup ollama serve > ~/ollama.log 2>&1 &
+```
+
+A última linha acima é um Ollama funcionando, respondendo de novo. No WSL, a solução duradoura é ligar o systemd (`[boot]` e `systemd=true` em `/etc/wsl.conf`, depois `wsl --shutdown` no Windows); o `setup.sh` já inicia o servidor para você quando não acha nenhum.
+
+**O instalador do Ollama para logo no começo.** Num Ubuntu recém-instalado ele imprimiu `ERROR: This version requires zstd for extraction. Please install zstd and try again` na máquina deste curso, antes de o `zstd` estar nas primeiras linhas do `setup.sh`. Se você instalar o Ollama por conta própria, instale o `zstd` antes.
+
+**Um terminal aberto antes da montagem não tem o Python do curso.** O `~/.bashrc` é lido quando um terminal começa, então uma janela que já estava aberta roda o Python do próprio Ubuntu, que não tem nenhuma das bibliotecas:
+
+```
+ana@lab:~/mm$ deactivate; python3 listen.py 2>&1 | tail -1
+python3: can't open file '/home/ana/mm/listen.py': [Errno 2] No such file or directory
+```
+
+Abra um terminal novo, ou digite `. ~/.bashrc` neste.
+
+**Um arquivo de modelo não é o que deveria ser.** Um download interrompido, ou um arquivo que alguém editou, carrega com um erro que cita uma camada ou um tensor, não o arquivo. O `setup.sh` confere todo modelo contra o seu SHA-256, e você pode fazer a mesma conferência à mão. Aqui uma cópia do modelo de ruído ganhou um byte a mais:
 
 ```
 ana@lab:~/mm$ echo "e77603ac0c23dac3227dd2d7135b3a585cbee2679048aecfa886657d3ae1b534  /tmp/gtcrn.onnx" | sha256sum -c
@@ -26,10 +45,10 @@ ana@lab:~/mm$ echo "e77603ac0c23dac3227dd2d7135b3a585cbee2679048aecfa886657d3ae1
 /opt/multimodal/share/gtcrn_simple.onnx: OK
 ```
 
-`FAILED` na cópia e `OK` no original. Apague o arquivo e rode `lab.sh up` de novo; ele baixa só o que falta.
+`FAILED` na cópia e `OK` no original. Apague um arquivo que falha e rode `sh setup.sh` de novo: ele pula tudo o que já está lá e busca só o que falta.
 
-**Falta uma biblioteca do sistema.** O MediaPipe desenha por OpenGL mesmo numa máquina sem tela, e num Ubuntu mínimo ele para com `OSError: libEGL.so.1: cannot open shared object file: No such file or directory`, que é o que ele disse na máquina em que este curso foi montado antes de o `libegl1` ser instalado. O `lab.sh up` instala `libegl1` e `libgles2` por esse motivo, junto com o ffmpeg, o Tesseract e as fontes DejaVu com que a mídia é desenhada.
+**Falta uma biblioteca do sistema.** O MediaPipe desenha por OpenGL mesmo numa máquina sem tela, e num Ubuntu mínimo ele para com `OSError: libEGL.so.1: cannot open shared object file: No such file or directory`. Foi o que ele disse na máquina em que este curso foi feito, antes de o `libegl1` ser instalado, e é por isso que o `setup.sh` instala `libegl1` e `libgles2`.
 
-**O disco está cheio.** O laboratório precisa de uns 2 GB. `df -h /opt /home` diz quanto sobra, e `/opt/multimodal/media` pode ser apagado e reconstruído a qualquer momento, já que o próximo `reset` o desenha de novo.
+**O disco está cheio.** O curso precisa de uns 10 GB, 8 deles dos modelos do Ollama, e um download que fica sem espaço para pela metade. `df -h ~` diz quanto sobra. O `media/` pode ser apagado a qualquer momento, já que o `make_media.py` o faz de novo, e `ollama rm` remove um modelo com que você terminou.
 
-Se falhar algo que não está nesta lista, a última linha do erro continua sendo o ponto de partida. Procure por ela junto com o nome da biblioteca que a levantou, e diga isso onde pedir ajuda: "o sherpa-onnx levantou isto ao carregar o decodificador do Whisper" recebe resposta, e "o laboratório não funciona" não recebe.
+Se algo falhar que não está nesta lista, a última linha do erro continua sendo o lugar por onde começar. Procure por ela com o nome do programa que a imprimiu, e diga isso onde pedir ajuda: "o sherpa-onnx levantou isto ao carregar o decodificador do Whisper" recebe resposta, e "a montagem não funciona" não recebe.

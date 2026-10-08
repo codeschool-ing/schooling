@@ -43,7 +43,7 @@ nothing else.
       "note": "Print the lengths as they arrived, then divide each vector by its own length. Google documents that only its full-size output comes back normalised, so a truncated vector needs this line before a dot product is a cosine."
     }
   ],
-  "output": "ana@lab:~/emb$ python gemini.py\n1 (384,)\n(3, 128) [1. 1. 1.]\nana@lab:~/emb$ jq -c '{path, inputs, dims, task_type}' /var/log/labembed/requests.jsonl\n{\"path\":\"/v1beta/models/lab-minilm:batchEmbedContents\",\"inputs\":1,\"dims\":384,\"task_type\":null}\n{\"path\":\"/v1beta/models/lab-wordllama:batchEmbedContents\",\"inputs\":3,\"dims\":128,\"task_type\":\"RETRIEVAL_DOCUMENT\"}"
+  "output": "ana@lab:~/emb$ python gemini.py\n1 (384,)\n(3, 128) [1. 1. 1.]\nana@lab:~/emb$ jq -c '{path, inputs, dims, task_type}' labembed.jsonl\n{\"path\":\"/v1beta/models/lab-minilm:batchEmbedContents\",\"inputs\":1,\"dims\":384,\"task_type\":null}\n{\"path\":\"/v1beta/models/lab-wordllama:batchEmbedContents\",\"inputs\":3,\"dims\":128,\"task_type\":\"RETRIEVAL_DOCUMENT\"}"
 }
 ```
 

@@ -7,8 +7,10 @@ Retirar um acesso tem duas metades: impedir novas conexões e **encerrar as que 
 primeira é a regra; a segunda, no Linux, é remover as entradas do conntrack, depois do que o próximo
 pacote da sessão não casa com nada e cai na política.
 
-A sessão é aberta de novo, e desta vez a retirada faz as duas coisas, carregando as regras e apagando
-as entradas da aplicação para a porta 5432:
+A sessão é aberta de novo, depois que a regra do banco de dados volta ao `db` com
+`nft -f /dev/stdin <<<"$(sed "s/# app withdrawn from the database, ticket 6203/ip saddr { 192.168.20.10 } tcp dport 5432 accept/" /root/segment.nft)"`
+e o cliente no `app` sobe como antes. Desta vez a retirada faz as duas coisas, carregando as regras e
+apagando as entradas da aplicação para a porta 5432:
 
 ```
 root@db:~# nft -f segment.nft && conntrack -D -p tcp --dport 5432 -s 192.168.20.10 -u ASSURED 2>&1 >/dev/null

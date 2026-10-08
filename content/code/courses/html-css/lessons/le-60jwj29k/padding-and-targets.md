@@ -1,9 +1,9 @@
 ---
 title: Padding that makes a target bigger
-version: 1
+version: 2
 ---
 
-Lesson 2 left one axe rule failing on the semantic home page: **target-size**. Each link in the menu was 17 pixels tall, with the next one 18 pixels below, and WCAG 2.2 asks for targets of 24 by 24 pixels, or enough space around a smaller one. That lesson said the fix was padding. Here it is, in `menu.css`, linked from the same page:
+Lesson 2 left one axe rule failing on the semantic home page: **target-size**. Each link in the menu was 17 pixels tall, with the next one 18 pixels below, and WCAG 2.2 asks for targets of 24 by 24 pixels, or enough space around a smaller one. That lesson said the fix was padding. Here it is, in `menu.css`, linked from the same page. `menu.html` is lesson 2's `semantic.html` with one line added after its title, `<link rel="stylesheet" href="menu.css">`:
 
 ```css
 nav ul { list-style: none; padding: 0; }

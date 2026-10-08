@@ -1,9 +1,9 @@
 ---
 title: Virtual processors
-version: 1
+version: 2
 ---
 
-vm1 was made with two virtual processors, **vCPUs**, and libvirt can say what each is doing:
+vm1, fresh from `bash newvm.sh vm1`, lesson 1, was made with two virtual processors, **vCPUs**, and libvirt can say what each is doing:
 
 ```
 ana@host:~$ virsh vcpucount vm1

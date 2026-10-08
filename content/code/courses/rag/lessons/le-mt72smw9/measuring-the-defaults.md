@@ -1,6 +1,6 @@
 ---
 title: Measuring the defaults
-version: 1
+version: 2
 ---
 
 Every part of this lesson so far has been read: a signature, a printed prompt, a count of rows. The
@@ -11,8 +11,21 @@ count the tokens they would put in the prompt. `frameworks.py` does that for sev
 with the same embedding model, so the only differences are how the text was cut and what is
 returned:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "frameworks.py",
+  "parts": [
+    {
+      "code": "import glob\nimport json\n\nimport tiktoken\nfrom langchain_core.documents import Document\nfrom langchain_core.vectorstores import InMemoryVectorStore\nfrom langchain_openai import OpenAIEmbeddings\nfrom langchain_text_splitters import RecursiveCharacterTextSplitter\nfrom li_setup import docs\nfrom llama_index.core import StorageContext, VectorStoreIndex\nfrom llama_index.core.node_parser import HierarchicalNodeParser, SentenceWindowNodeParser, get_leaf_nodes\nfrom llama_index.core.postprocessor import MetadataReplacementPostProcessor\nfrom llama_index.core.retrievers import AutoMergingRetriever\nfrom search import vector\n\nenc = tiktoken.get_encoding(\"cl100k_base\")\nquestions = [q for q in map(json.loads, open(\"data/eval.jsonl\")) if q[\"facts\"]]\nnorm = lambda t: \" \".join(t.replace(\"|\", \" \").split())\n\n\ndef measure(name, retrieve):\n    found, tokens = 0, 0\n    for q in questions:\n        top = retrieve(q[\"question\"])\n        found += any(f in norm(t) for t in top for f in q[\"facts\"])\n        tokens += len(enc.encode(\"\\n\".join(top)))\n    print(f\"{name:34} {found:3}/{len(questions)} {tokens / len(questions):7.0f}\")\n\n\nprint(f\"{'pipeline':34} {'found':>6} {'tokens':>7}\")\ntexts = [Document(page_content=open(p).read()) for p in sorted(glob.glob(\"data/docs/*.md\"))]\nembeddings = OpenAIEmbeddings(model=\"all-minilm\", check_embedding_ctx_length=False)\nfor size, overlap in ((4000, 200), (400, 50)):\n    store = InMemoryVectorStore(embeddings)\n    store.add_documents(RecursiveCharacterTextSplitter(chunk_size=size, chunk_overlap=overlap).split_documents(texts))\n    measure(f\"LangChain, {size} characters\", lambda q: [d.page_content for d in store.similarity_search(q, k=3)])\n\nplain = VectorStoreIndex.from_documents(docs).as_retriever(similarity_top_k=3)\nmeasure(\"LlamaIndex, defaults\", lambda q: [n.node.get_content() for n in plain.retrieve(q)])\n\nwindows = VectorStoreIndex(SentenceWindowNodeParser.from_defaults(window_size=3).get_nodes_from_documents(docs))\nsentence = windows.as_retriever(similarity_top_k=3)\nwiden = MetadataReplacementPostProcessor(target_metadata_key=\"window\")\nmeasure(\"LlamaIndex, sentences alone\", lambda q: [n.node.get_content() for n in sentence.retrieve(q)])\nmeasure(\"LlamaIndex, sentence window\", lambda q: [n.node.get_content() for n in widen.postprocess_nodes(sentence.retrieve(q))])\n\nnodes = HierarchicalNodeParser.from_defaults().get_nodes_from_documents(docs)\nstorage = StorageContext.from_defaults()\nstorage.docstore.add_documents(nodes)\nleaves = VectorStoreIndex(get_leaf_nodes(nodes), storage_context=storage)\nmerging = AutoMergingRetriever(leaves.as_retriever(similarity_top_k=6), storage)\nmeasure(\"LlamaIndex, auto-merging\", lambda q: [n.node.get_content() for n in merging.retrieve(q)])\n\nmeasure(\"lesson 5's index\", lambda q: [r[2] for r in vector(q, 3)])",
+      "note": "Every pipeline in this lesson measured the way lesson 4 measured chunking: how many of the 26 answerable questions had a right fact in what came back, and how many tokens that cost, with lesson 5's own index at the end for comparison."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python frameworks.py
+
+```
+ana@vm:~/rag$ python frameworks.py
 pipeline                            found  tokens
 LangChain, 4000 characters          23/26    1943
 LangChain, 400 characters           24/26     211

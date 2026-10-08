@@ -1,6 +1,6 @@
 ---
 title: Testando a compactação
-version: 1
+version: 2
 ---
 
 Tudo nesta aula se reduz a um teste, e vale escrevê-lo como teste e não como conselho:
@@ -13,10 +13,10 @@ Tudo nesta aula se reduz a um teste, e vale escrevê-lo como teste e não como c
   aprovação é todos; uma compactação que larga um essencial é um defeito com uma conversa que o
   reproduz.
 
-A verificação desta aula é uma busca de trecho exato, que serve a um resumidor que copia frases e a
-frases fixadas mantidas literalmente. O resumo de um modelo de linguagem parafraseia, então "write to me
-by email only" pode voltar como "prefere contato por e-mail", e a verificação precisa ser mais solta onde
-o fato permite e estrita onde não permite. **Identificadores continuam estritos**: um número de pedido ou
+A verificação desta aula é uma busca de trecho exato, que serve a identificadores e a frases fixadas
+mantidas literalmente. O resumo de um modelo de linguagem parafraseia: "I want my money back" voltou
+como "a refund", e "write to me by email only" pode voltar como "prefere contato por e-mail", então a
+verificação precisa ser mais solta onde o fato permite e estrita onde não permite. **Identificadores continuam estritos**: um número de pedido ou
 aparece exatamente ou se perdeu. Preferências e decisões podem ser conferidas com uma pequena lista de
 redações aceitáveis, ou com um segundo modelo a quem se faz uma pergunta de sim ou não por essencial, com
 a cautela da aula 8 sobre usar um modelo para julgar outro: meça o juiz em alguns casos que uma pessoa

@@ -1,0 +1,402 @@
+{
+  "ex-73gkc09s": {
+    "prompt": "Na regra do rsyslog `auth,authpriv.*  /var/log/auth.log`, o que quer dizer `.*`?",
+    "hint": "Um seletor é facility.severity.",
+    "choices": [
+      {
+        "text": "Toda severidade",
+        "why": "Isso. A parte depois do ponto é a severidade, e * pega todas."
+      },
+      {
+        "text": "As mensagens de todo usuário",
+        "why": "O rsyslog não seleciona por usuário."
+      },
+      {
+        "text": "Todo arquivo em /var/log",
+        "why": "O destino é o lado direito da regra."
+      },
+      {
+        "text": "Todo programa da máquina",
+        "why": "Programas não entram no seletor; a facility antes do ponto os agrupa."
+      }
+    ]
+  },
+  "ex-v2j3xp61": {
+    "prompt": "Qual é o efeito do `-` em `-/var/log/syslog`?",
+    "hint": "Velocidade contra durabilidade.",
+    "choices": [
+      {
+        "text": "As mensagens que casam com a regra são descartadas em vez de escritas naquele arquivo",
+        "why": "Descartar se escreve com `stop` ou `~`; esta regra escreve."
+      },
+      {
+        "text": "O arquivo fica fora da rotação e cresce até alguém esvaziá-lo à mão",
+        "why": "Rotação é assunto do logrotate, na aula 3."
+      },
+      {
+        "text": "O arquivo passa a ser escrito em binário, como o journal, e só o journalctl o lê",
+        "why": "É um arquivo de texto; o binário é o journal."
+      },
+      {
+        "text": "O rsyslog não força a linha ao disco; uma queda perde as últimas",
+        "why": "Isso. Escritas mais rápidas, e as linhas mais recentes são as que correm risco."
+      }
+    ]
+  },
+  "ex-tfv261t1": {
+    "prompt": "A ana roda `tail /var/log/auth.log` e recebe `Permission denied`. O que deixaria ela ler o arquivo, no Ubuntu, sem virar root?",
+    "hint": "Olhe o dono e o grupo do arquivo.",
+    "choices": [
+      {
+        "text": "Ler o /var/log/syslog no lugar",
+        "why": "Ele tem o mesmo dono, grupo e modo."
+      },
+      {
+        "text": "Rodar o `logger` antes",
+        "why": "Escrever uma linha não dá direito a ler o arquivo."
+      },
+      {
+        "text": "Fazer parte do grupo adm",
+        "why": "Isso. Os arquivos são syslog:adm com modo rw-r-----."
+      },
+      {
+        "text": "Fazer parte do grupo syslog",
+        "why": "syslog é o usuário dono; o grupo com leitura é o adm."
+      }
+    ]
+  },
+  "ex-g8bedbxd": {
+    "prompt": "Associe cada mensagem ao arquivo em que as regras padrão do rsyslog no Ubuntu a escrevem.",
+    "hint": "auth vai para um lugar, kern para outro, o resto para um terceiro.",
+    "pairs": [
+      {
+        "left": "o su abrindo uma sessão (authpriv)",
+        "right": "/var/log/auth.log"
+      },
+      {
+        "left": "logger -t backup 'pronto' (user)",
+        "right": "/var/log/syslog"
+      },
+      {
+        "left": "um aviso do driver de disco (kern)",
+        "right": "/var/log/kern.log"
+      },
+      {
+        "left": "um pacote instalado com apt",
+        "right": "/var/log/apt/history.log"
+      }
+    ]
+  },
+  "ex-58k1eqh6": {
+    "prompt": "Na RFC 5424, qual número é a severidade `err`?",
+    "hint": "emerg é 0 e debug é 7."
+  },
+  "ex-1gdf2qwr": {
+    "prompt": "No Ubuntu 24.04, qual programa recebe primeiro uma mensagem do sshd?",
+    "hint": "Um deles escreve arquivos de texto a partir de uma cópia.",
+    "choices": [
+      {
+        "text": "rsyslog",
+        "why": "Ele escreve o auth.log, mas a partir do que o journald entrega."
+      },
+      {
+        "text": "logrotate",
+        "why": "Ele rotaciona arquivos num horário; nunca recebe mensagens."
+      },
+      {
+        "text": "journald",
+        "why": "Isso. O rsyslog recebe uma cópia do journald e escreve os arquivos de texto."
+      },
+      {
+        "text": "auditd",
+        "why": "Ele registra eventos de auditoria do kernel, uma trilha à parte, e só quando instalado."
+      }
+    ]
+  },
+  "ex-6pqn94nq": {
+    "prompt": "Um servidor mínimo não tem o diretório /var/log/journal. Ele reinicia depois de uma pane. O que aconteceu com o journal de antes do reinício?",
+    "hint": "Onde o journald o guarda quando esse diretório falta?",
+    "choices": [
+      {
+        "text": "Foi comprimido em /var/log/journal.gz ao desligar",
+        "why": "Esse arquivo não existe."
+      },
+      {
+        "text": "Está intacto em /var/log/journal, que o journald cria ao iniciar",
+        "why": "O journald usa esse diretório se ele existir; não o cria por conta própria."
+      },
+      {
+        "text": "Foi copiado para /var/log/syslog antes do reinício",
+        "why": "Só se o rsyslog estivesse rodando e recebendo cópias; o journal em si se perde do mesmo jeito."
+      },
+      {
+        "text": "Sumiu: ficava em memória, em /run/log/journal",
+        "why": "Isso. Armazenamento volátil dura até o próximo boot."
+      }
+    ]
+  },
+  "ex-884t08m0": {
+    "prompt": "Qual opção do journalctl filtra pela unidade do systemd de onde veio a mensagem?",
+    "hint": "ssh.service é uma unidade.",
+    "choices": [
+      {
+        "text": "-p",
+        "why": "-p filtra por severidade."
+      },
+      {
+        "text": "-o",
+        "why": "-o escolhe o formato de saída."
+      },
+      {
+        "text": "-u",
+        "why": "Isso. `journalctl -u ssh.service`."
+      },
+      {
+        "text": "-b",
+        "why": "-b limita a um boot."
+      }
+    ]
+  },
+  "ex-5hcfb91h": {
+    "prompt": "Uma analista procura o evento 4688 numa instalação nova do Windows e não acha nenhum, embora programas claramente tenham rodado. Por quê?",
+    "hint": "O canal Security só escreve o que algo pede.",
+    "choices": [
+      {
+        "text": "O Visualizador de Eventos esconde eventos de processo a menos que o Sysmon esteja instalado",
+        "why": "O Sysmon acrescenta um canal próprio; não revela eventos do Security."
+      },
+      {
+        "text": "O 4688 é escrito no canal System, e não no Security, então ela procurava no lugar errado",
+        "why": "É um evento do Security."
+      },
+      {
+        "text": "A criação de processos não vem habilitada na política de auditoria",
+        "why": "Isso. O auditpol precisa ligá-la; até lá, nada é escrito."
+      },
+      {
+        "text": "Os eventos foram sobrescritos porque o canal estava cheio",
+        "why": "Possível numa máquina movimentada, mas uma nova sem nenhum aponta para a política."
+      }
+    ]
+  },
+  "ex-1d3qzqw0": {
+    "prompt": "Duas analistas, em São Paulo e em Lisboa, abrem o mesmo evento 4625 no Visualizador de Eventos e veem horários diferentes. O que é verdade?",
+    "hint": "Guardado de um jeito, mostrado de outro.",
+    "choices": [
+      {
+        "text": "Um dos dois computadores está com o relógio errado",
+        "why": "Desvio de relógio muda o que é escrito, não como uma hora guardada é exibida."
+      },
+      {
+        "text": "O evento guarda uma hora em UTC, mostrada no fuso local de cada uma",
+        "why": "Isso. Mesmo instante, duas exibições."
+      },
+      {
+        "text": "O Visualizador de Eventos arredonda a hora de logs remotos",
+        "why": "Ele não arredonda."
+      },
+      {
+        "text": "Cada cópia do evento foi escrita por um controlador de domínio diferente",
+        "why": "É o mesmo evento, lido duas vezes."
+      }
+    ]
+  },
+  "ex-pb7hzp38": {
+    "prompt": "Associe cada id de evento do Windows ao que ele registra.",
+    "hint": "46xx são logons, 47xx contas, 1102 o próprio log.",
+    "pairs": [
+      {
+        "left": "4624",
+        "right": "uma conta fez logon"
+      },
+      {
+        "left": "4625",
+        "right": "um logon falhou"
+      },
+      {
+        "left": "4720",
+        "right": "uma conta de usuário foi criada"
+      },
+      {
+        "left": "1102",
+        "right": "o log de auditoria foi apagado"
+      },
+      {
+        "left": "7045",
+        "right": "um serviço foi instalado"
+      }
+    ]
+  },
+  "ex-z111z8v5": {
+    "prompt": "Um controlador de domínio registra 300 eventos 4625 em dez minutos, de um endereço, cada um para um nome de usuário diferente e cada um com status 0xC0000064. Qual é a leitura mais provável?",
+    "hint": "O que 0xC0000064 diz sobre a conta?",
+    "choices": [
+      {
+        "text": "Trezentas contas foram bloqueadas",
+        "why": "Bloqueios são 4740, e contas que não existem não podem ser bloqueadas."
+      },
+      {
+        "text": "O log de auditoria do controlador de domínio foi apagado",
+        "why": "Isso é o 1102."
+      },
+      {
+        "text": "Alguém está tentando nomes que não existem no domínio",
+        "why": "Isso. 0xC0000064 é conta inexistente; muitos nomes a partir de uma origem é adivinhação de nomes."
+      },
+      {
+        "text": "Um usuário continua digitando a senha errada",
+        "why": "Isso seria um nome só e 0xC000006A, a senha errada para uma conta que existe."
+      }
+    ]
+  },
+  "ex-c8z2hhcg": {
+    "prompt": "Num evento 4624, qual tipo de logon quer dizer que a sessão veio pela Área de Trabalho Remota?",
+    "hint": "2 é o teclado, 3 a rede."
+  },
+  "ex-f3qjj3mk": {
+    "prompt": "Por que o evento 1102 é útil, se ele registra a destruição de evidência?",
+    "hint": "Quando ele é escrito?",
+    "choices": [
+      {
+        "text": "Ele impede que o log seja apagado de novo por um dia",
+        "why": "Nada nele bloqueia coisa alguma."
+      },
+      {
+        "text": "Ele contém uma cópia dos eventos apagados",
+        "why": "Ele guarda quem apagou, não os eventos."
+      },
+      {
+        "text": "Ele é escrito depois da limpeza, então o fato de ter havido limpeza sobrevive a ela",
+        "why": "Isso. A evidência se foi, e fica um registro de que foi removida, com quem e quando."
+      },
+      {
+        "text": "O Windows o escreve em todos os outros canais ao mesmo tempo",
+        "why": "É um evento do Security."
+      }
+    ]
+  },
+  "ex-dnfp7kzx": {
+    "prompt": "Associe cada evento do Windows ao equivalente mais próximo no Linux.",
+    "hint": "A maioria mora no auth.log.",
+    "pairs": [
+      {
+        "left": "4625 um logon falhou",
+        "right": "sshd: Failed password for"
+      },
+      {
+        "left": "4688 um processo foi criado",
+        "right": "um registro execve no audit.log"
+      },
+      {
+        "left": "7045 um serviço foi instalado",
+        "right": "um arquivo de unidade novo em /etc/systemd/system"
+      },
+      {
+        "left": "4634 um logoff",
+        "right": "pam_unix: session closed for user"
+      }
+    ]
+  },
+  "ex-hnx9e5fq": {
+    "prompt": "`date -d 'Sep 17 02:33:07'` imprimiu `Thu Sep 17 02:33:07 -03 2026`. De onde vieram o ano e o fuso?",
+    "hint": "A linha em si não tinha nenhum dos dois.",
+    "choices": [
+      {
+        "text": "Da máquina em que o date rodou",
+        "why": "Isso. Um registro sem eles é lido no ano e no fuso de quem lê."
+      },
+      {
+        "text": "Do firewall que escreveu a linha",
+        "why": "A linha não traz ano nem fuso de onde tirá-los."
+      },
+      {
+        "text": "Do padrão syslog, que fixa UTC-3",
+        "why": "Nenhum padrão fixa um fuso."
+      },
+      {
+        "text": "De um servidor NTP",
+        "why": "O NTP acerta o relógio; não anota linhas antigas."
+      }
+    ]
+  },
+  "ex-h60jt41j": {
+    "prompt": "Um evento está carimbado 2026-09-17T23:10:00-03:00. Que hora é em UTC, no relógio de 24 horas? Dê só a hora.",
+    "hint": "Some três horas, e cuidado com o dia."
+  },
+  "ex-bwfjtmcn": {
+    "prompt": "O relógio do gw está 40 segundos adiantado e o do files está certo. O gw registra um login às 02:33:47; o files registra a cópia que ele causou às 02:33:20. O que diz uma linha do tempo montada com os carimbos crus?",
+    "hint": "Corrija um deles em 40 segundos e compare.",
+    "choices": [
+      {
+        "text": "A ordem certa, já que 40 segundos estão dentro da tolerância normal",
+        "why": "A ordem se inverte; a tolerância não é a questão."
+      },
+      {
+        "text": "Que o login e a cópia aconteceram no mesmo segundo",
+        "why": "Eles estão a 27 segundos de distância como carimbados."
+      },
+      {
+        "text": "Nada, porque as duas máquinas não podem ser comparadas",
+        "why": "Podem, quando se conhece o desvio; é isso que o NTP evita ter de fazer."
+      },
+      {
+        "text": "Que a cópia aconteceu antes do login que a causou",
+        "why": "Isso. Corrigido, o login foi às 02:33:07, antes da cópia; sem correção, a ordem se inverte."
+      }
+    ]
+  },
+  "ex-2cywhdda": {
+    "prompt": "Ordene a vida de uma mensagem do sshd no Ubuntu 24.04, do programa até o arquivo em que um analista dá grep.",
+    "hint": "Dois programas no meio.",
+    "items": [
+      "o sshd escreve a mensagem",
+      "o journald a guarda com os campos",
+      "o rsyslog recebe uma cópia e casa com auth,authpriv.*",
+      "a linha é acrescentada ao /var/log/auth.log"
+    ]
+  },
+  "ex-v6n47pk7": {
+    "prompt": "Você precisa saber quando um pacote foi instalado num servidor Ubuntu há dois meses. Onde olha primeiro?",
+    "hint": "O apt guarda o próprio histórico.",
+    "choices": [
+      {
+        "text": "/var/log/wtmp",
+        "why": "O wtmp registra logins."
+      },
+      {
+        "text": "/var/log/auth.log",
+        "why": "Ele guarda logins e sudo; a linha do sudo está ali, mas não o que o apt fez."
+      },
+      {
+        "text": "/var/log/apt/history.log e as cópias rotacionadas",
+        "why": "Isso. O apt escreve ali cada instalação e remoção, com datas."
+      },
+      {
+        "text": "/var/log/kern.log, onde o kernel anota os módulos e o software que carrega",
+        "why": "O kernel não registra instalação de pacotes."
+      }
+    ]
+  },
+  "ex-k0zfsrzx": {
+    "prompt": "Alguém pergunta se rodou código PowerShell numa estação ontem à noite, e o que ele dizia. Qual canal responde, se estava habilitado?",
+    "hint": "Evento 4104.",
+    "choices": [
+      {
+        "text": "Security",
+        "why": "O 4688 ali mostraria o processo, não o texto do script."
+      },
+      {
+        "text": "Application",
+        "why": "Programas escrevem ali; os blocos de script do PowerShell vão para um canal próprio."
+      },
+      {
+        "text": "System",
+        "why": "O System guarda serviços e drivers."
+      },
+      {
+        "text": "Microsoft-Windows-PowerShell/Operational",
+        "why": "Isso. O registro de blocos de script escreve o 4104 ali, com o código."
+      }
+    ]
+  }
+}

@@ -33,7 +33,7 @@ In **1 track** — `ai`(13).
 
 | | |
 |---|---|
-| runtime | **an API key with a bill attached** — a metered third party, not a machine — **and the most expensive calls in the category**: image generation, video understanding and speech both ways |
+| runtime | **the student's own computer** (C-38): open speech and vision models run locally — Whisper, Piper, `qwen2.5vl:3b` and `llama3.2:3b` through Ollama — built by lesson 1's `setup.sh`; image generation answers from a stand-in the course prints whole, because Ollama draws only on macOS. **An API key with a bill attached is optional**, and the most expensive calls in the category are the ones a student would pay for with one |
 | browser · database | no · no |
 | exercises **blocked** | **~350 (70%), and the cost per blocked exercise is the highest in the catalogue** |
 | exercises that would **improve** | the remainder |
@@ -45,7 +45,7 @@ In **1 track** — `ai`(13).
 
 ## Flags
 
-**1 ·** **Every other blocked exercise in the sweep costs a machine that is already running. These cost money per attempt.** A student generating an image, transcribing audio or reading a video pays a metered call each time, and *retrying is the whole pedagogy* — lesson 3 is prompt, style and limits, which is learnt by varying one thing and looking again. **A per-attempt cost that rises with how much a student practises is a new shape**, and it is worse than `deep-learning`'s GPU because there is no cheaper local substitute for most of it.
+**1 ·** **Every other blocked exercise in the sweep costs a machine that is already running. These cost money per attempt.** A student generating an image, transcribing audio or reading a video pays a metered call each time, and *retrying is the whole pedagogy* — lesson 3 is prompt, style and limits, which is learnt by varying one thing and looking again. **A per-attempt cost that rises with how much a student practises is a new shape**, and it is worse than `deep-learning`'s GPU because there is no cheaper local substitute for most of it. *Since the retrofit to C-38 and C-40, there is one for everything but drawing: the course's models run on the student's machine, and only image generation is a stand-in.*
 
 **2 ·** **And the course knows: lesson 13 is *"Cost, file size and upload limits"*.** Third time in the sweep that a course teaches a cost its students cannot incur — after the vendor data family and `bigdata`. That is now a pattern worth naming rather than a coincidence: **the subjects that most need a real bill to be understood are the ones a sandbox can least provide.**
 

@@ -45,7 +45,7 @@ quiet 'cp -r /opt/docker-lab/gopath/pkg ~/gopkg'
 quiet 'docker run -d --name registry -p 127.0.0.1:5000:5000 registry:3'
 cd shelf
 mkdir -p probe
-cat > probe/main.go <<'GO'
+staged probe/main.go <<'GO'
 // probe exits 0 when a GET of its one argument answers 200, and 1 otherwise.
 // It is the health check for an image that has no shell and no curl.
 package main
@@ -64,7 +64,7 @@ func main() {
 	}
 }
 GO
-cat > compose.test.yaml <<'YAML'
+staged compose.test.yaml <<'YAML'
 services:
   db:
     image: postgres:17
@@ -91,7 +91,7 @@ services:
       db:
         condition: service_healthy
 YAML
-cat > .dockerignore <<'IGN'
+staged .dockerignore <<'IGN'
 .git
 .github
 .env

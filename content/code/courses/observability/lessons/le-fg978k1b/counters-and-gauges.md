@@ -1,11 +1,18 @@
 ---
 title: Counters and gauges
-version: 1
+version: 2
 ---
 
 Every metric declares a **type** in its `# TYPE` line, and the type decides which questions the
 metric can answer. The storefront's page lists them all, its own and the ones the Python client
-library adds for free:
+library adds for free. This lesson reads a shop under load, so start from a lab started again from
+nothing, set the simulated customers going for half an hour, and give them a minute:
+
+```sh
+docker compose run -d --rm loadgen python -m loadgen.load 5 1800
+```
+
+Then the types:
 
 ```
 ana@obs:~/shop$ curl -s localhost:8080/metrics | grep '^# TYPE'

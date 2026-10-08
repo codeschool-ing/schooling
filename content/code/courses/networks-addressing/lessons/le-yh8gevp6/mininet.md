@@ -1,6 +1,6 @@
 ---
 title: Mininet: a network built from the kernel
-version: 1
+version: 2
 ---
 
 Mininet takes neither approach. **It builds the network out of the Linux kernel itself**: each host is
@@ -9,7 +9,9 @@ switch is a software switch in the kernel. It was made at Stanford for research 
 networking, so by default its switches are Open vSwitch, steered by an OpenFlow controller. For this
 lesson it ran in its simplest form, with ordinary Linux bridges as switches (`--switch lxbr`) and no
 controller at all (`--controller none`), so that it needs nothing beyond the kernel. The version is
-Mininet 2.3.0, from Ubuntu's own package.
+Mininet 2.3.0, from Ubuntu's own package: `sudo apt-get install -y mininet` on the lab's machine. A
+run that is interrupted leaves interfaces behind, and `sudo mn -c` clears them; it was run before each
+command below.
 
 One command builds a network, tests it and takes it down again. `--topo linear,3` asks for three
 switches in a line with one host on each, and `--test pingall` makes every host ping every other host:

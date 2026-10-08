@@ -1,6 +1,6 @@
 ---
 title: `$EDITOR`, e o editor que outra coisa escolheu por você
-version: 1
+version: 2
 ---
 
 Metade das vezes em que você abre um editor, você não o abriu — alguma coisa o
@@ -67,8 +67,14 @@ ana@vm:~$ EDITOR=nano; export EDITOR; echo "EDITOR is now $EDITOR"
 EDITOR is now nano
 ```
 
-Isso dura até o shell sair. Para ficar, vai no arquivo de inicialização do seu
-shell — aula 5 seção 05:
+Isso dura até o shell sair, ou até você tirar de novo, o que o fim desta seção
+espera:
+
+```
+ana@vm:~$ unset EDITOR
+```
+
+Para ficar, vai no arquivo de inicialização do seu shell — aula 5 seção 05:
 
 ```sh
 # ~/.bashrc, or ~/.profile

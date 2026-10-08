@@ -25,15 +25,16 @@ ana@pc1:~$ sudo -u tec sudo systemctl restart cups && echo restarted
 restarted
 ```
 
-tec's commands run with `sudo -u tec` from ana's session, as the lab's header says. Asked to create a
-user, which is not on the list:
+tec is the help desk's account, and in this recording ana plays its part: each of its commands is run
+from her session with `sudo -u tec`. Asked to create a user, which is not on the list:
 
 ```
 ana@pc1:~$ echo lab-only-password | sudo -u tec sudo -S useradd bruno
 [sudo] password for tec: Sorry, user tec is not allowed to execute '/usr/sbin/useradd bruno' as root on pc1.
 ```
 
-`sudo` asked for tec's password first, which the script piped in with `-S`, and only then refused: `is not
+`sudo` asked for tec's password first, which the recording passed in with `-S` rather than typing it, and
+only then refused: `is not
 allowed to execute`, naming the exact command and the computer. **That refusal is the end of the
 matter for this account**, and the right next step is not to find another way to run the same command. It
 is to pass the request on to whoever creates accounts, lesson 7, with what was asked.

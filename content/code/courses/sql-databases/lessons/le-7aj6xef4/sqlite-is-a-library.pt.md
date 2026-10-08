@@ -36,16 +36,23 @@ armazém chave-valor com SQL pintado por cima.
 ## O que isso custa, e é uma coisa só
 
 **Um escritor por vez, para o arquivo inteiro.** Não um por tabela, não um por linha — um por
-banco. Aqui está o que um segundo escritor encontra enquanto o primeiro ainda tem uma transação
-aberta:
+banco. Aqui está um primeiro escritor, num terminal, segurando uma transação aberta:
+
+```
+sqlite> BEGIN;
+sqlite> UPDATE products SET price = 359.00 WHERE sku = 'KB-101';
+```
+
+E aqui está o que um segundo escritor encontra, em outro terminal, enquanto o primeiro continua
+aberto:
 
 ```
 sqlite> UPDATE products SET price = 199.00 WHERE sku = 'MS-204';
 Error: stepping, database is locked (5)
 ```
 
-Leitores não são bloqueados por esse escritor, e enxergam o valor confirmado em vez do não
-confirmado:
+Leitores não são bloqueados por esse escritor, e enxergam o valor confirmado em vez do `359.00`
+não confirmado:
 
 ```
 sqlite> SELECT sku, price FROM products WHERE sku = 'KB-101';

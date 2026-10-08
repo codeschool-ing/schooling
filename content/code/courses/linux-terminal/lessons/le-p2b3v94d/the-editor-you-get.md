@@ -1,6 +1,6 @@
 ---
 title: `$EDITOR`, and the editor something else chose for you
-version: 1
+version: 2
 ---
 
 Half the time you open an editor, you did not open it — something opened it for
@@ -67,8 +67,14 @@ ana@vm:~$ EDITOR=nano; export EDITOR; echo "EDITOR is now $EDITOR"
 EDITOR is now nano
 ```
 
-That lasts until the shell exits. For it to stick, it goes in your shell's
-startup file — lesson 5 section 05:
+That lasts until the shell exits, or until you take it away again, which the
+end of this section expects:
+
+```
+ana@vm:~$ unset EDITOR
+```
+
+For it to stick, it goes in your shell's startup file — lesson 5 section 05:
 
 ```sh
 # ~/.bashrc, or ~/.profile

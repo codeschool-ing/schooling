@@ -1,9 +1,30 @@
 ---
 title: What is cheap to animate
-version: 1
+version: 2
 ---
 
-Lesson 10 of `web-fundamentals` described the browser's work for each frame: **style**, then **layout**, then **paint**, then **compositing** the painted layers together. An animation runs that work up to sixty times a second, and how much of it each frame needs depends on the property being animated. Two dots slide 200 pixels back and forth, one by animating `margin-left`, one by animating `transform: translateX()`. The new step **`frames`** lets the page run for a second and reads Chromium's own counters:
+Lesson 10 of `web-fundamentals` described the browser's work for each frame: **style**, then **layout**, then **paint**, then **compositing** the painted layers together. An animation runs that work up to sixty times a second, and how much of it each frame needs depends on the property being animated. Two dots slide 200 pixels back and forth, one by animating `margin-left`, one by animating `transform: translateX()`. The first is `cost-margin.html`:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Andorinha Books</title>
+    <style>
+      .dot { width: 24px; height: 24px; background: #8a1c1c;
+             animation: by-margin 1s linear infinite alternate; }
+      @keyframes by-margin { to { margin-left: 200px; } }
+    </style>
+  </head>
+  <body>
+    <div class="dot"></div>
+  </body>
+</html>
+```
+
+`cost-transform.html` is a copy with the animation renamed and its one keyframe moving by `transform` instead: `animation: by-transform 1s linear infinite alternate;` and `@keyframes by-transform { to { transform: translateX(200px); } }`. The new step **`frames`** lets each page run for a second and reads Chromium's own counters:
 
 ```
 ana@laptop:~/site$ probe cost-margin.html frames 1000

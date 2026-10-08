@@ -1,6 +1,6 @@
 ---
 title: Por que os documentos são cortados
-version: 1
+version: 2
 ---
 
 A aula 1 cortou cada documento nos títulos sem dizer por quê, e a objeção óbvia é que nada a obrigava.
@@ -9,13 +9,38 @@ motivos, e um deles é um limite duro que a maioria das pessoas só descobre por
 
 ## O modelo de embeddings lê um número fixo de pedaços
 
-O all-MiniLM-L6-v2 lê no máximo 256 pedaços de palavra. Não é uma preferência flexível: o tokenizador
-corta a entrada em 256, e tudo depois desse ponto nunca chega ao modelo. Todo modelo de embeddings tem
+O all-MiniLM-L6-v2 lê no máximo 256 pedaços de palavra. Não é uma preferência flexível: o Ollama
+corta a entrada em 256, não avisa, e tudo depois desse ponto nunca chega ao modelo. Todo modelo de embeddings tem
 um limite assim; os hospedados têm limites maiores, alguns milhares de pedaços, e ainda finitos. O
 `truncation.py` mede o que isso significa para o regulamento de devoluções:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "truncation.py",
+  "parts": [
+    {
+      "code": "from openai import OpenAI\n\nfrom chunking import load\nfrom vectors import embed\n\nclient = OpenAI()",
+      "note": "O mesmo cliente do `vectors.py`, usado aqui pelo que o endpoint de embeddings informa e não pelos vetores."
+    },
+    {
+      "code": "def pieces(text):\n    \"\"\"How many word pieces all-minilm makes of TEXT, its two markers included.\"\"\"\n    words = text.split()\n    parts = [\" \".join(words[i:i + 100]) for i in range(0, len(words), 100)]\n    used = client.embeddings.create(model=\"all-minilm\", input=parts).usage.prompt_tokens\n    return used - 2 * (len(parts) - 1)",
+      "note": "O endpoint informa quantos pedaços leu, e nunca lê mais de 256 de um texto, então um texto longo é contado em partes de cem palavras que cabem cada uma. Toda parte leva os dois marcadores que abrem e fecham uma entrada, e o texto inteiro os levaria uma vez só."
+    },
+    {
+      "code": "meta, body = load()[\"returns-policy\"]\nprint(\"pieces in the whole policy:\", pieces(body))\nwords = body.split()\nlow, high = 1, len(words)\nwhile low < high:\n    mid = (low + high + 1) // 2\n    low, high = (mid, high) if pieces(\" \".join(words[:mid])) <= 256 else (low, mid - 1)\nprint(f\"words the model reads: {low} of {len(words)}\")",
+      "note": "A maior abertura da política que cabe em 256 pedaços, achada dividindo o intervalo ao meio, já que uma palavra a mais nunca deixa um texto mais curto."
+    },
+    {
+      "code": "whole, prefix, extra = embed([body, \" \".join(words[:low]), body + \" Returns are never accepted.\"])\nprint(f\"similarity, whole policy and its first {low} words: {whole @ prefix:.4f}\")\nprint(f\"similarity, whole policy and the policy plus a sentence at the end: {whole @ extra:.4f}\")",
+      "note": "Três vetores: a política inteira, a abertura dela, e a política com uma frase acrescentada no fim que a contradiz."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python truncation.py
+
+```
+ana@vm:~/rag$ python truncation.py
 pieces in the whole policy: 1043
 words the model reads: 219 of 884
 similarity, whole policy and its first 219 words: 1.0000
@@ -24,7 +49,7 @@ similarity, whole policy and the policy plus a sentence at the end: 1.0000
 
 **O regulamento tem 1.043 pedaços, e o modelo lê os primeiros 256, que são 219 das suas 884
 palavras.** O vetor do regulamento inteiro e o vetor das suas primeiras 219 palavras são idênticos,
-similaridade 1,0000, porque são a mesma entrada depois que o tokenizador termina. A última linha é a
+similaridade 1,0000, porque são a mesma entrada depois do corte. A última linha é a
 alarmante: acrescentar *Returns are never accepted.* ao fim do regulamento não mexeu o vetor dele em
 nada. Diga o que disser um documento depois das primeiras 219 palavras, o embedding dele não tem como
 saber.
@@ -69,7 +94,7 @@ usam, e um carregador que lê cada documento e seu cabeçalho:
   "file": "chunking.py",
   "parts": [
     {
-      "code": "import glob\nimport re\n\nimport numpy as np\nfrom minilm import embed",
+      "code": "import glob\nimport re\n\nimport numpy as np\nfrom vectors import embed",
       "note": "numpy para o corte semântico, e o mesmo modelo de embeddings de todas as outras aulas."
     },
     {

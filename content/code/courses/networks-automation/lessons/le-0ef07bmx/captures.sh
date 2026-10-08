@@ -9,7 +9,8 @@
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
 # The API the lesson calls is devapi, the lab's REST API on each router,
-# written for this course and printed in full in lab.sh. It answers from FRR
+# written for this course and printed in full in the-server.md, whence
+# lab.sh extracts it. It answers from FRR
 # and the kernel and applies every change as a vtysh command.
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab

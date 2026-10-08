@@ -21,8 +21,8 @@ measured many times and reported as a **distribution**: the median (p50), what a
 request sees, and the 95th percentile (p95), what one request in twenty sees or worse. The p95
 is the number an annoyed user remembers.
 
-`lab/latency.py` streams the same drafting request twenty times to each of the stand-in's models
-and times both moments:
+`latency.py` streams the same drafting request twenty times to each of the two models lesson 1
+installed, and times both moments:
 
 ```python
 import statistics
@@ -31,10 +31,10 @@ import time
 
 import anthropic
 
-client = anthropic.Anthropic()
+client = anthropic.Anthropic()  # Ollama, through desk.env
 email = "Hello, where is my parcel? LB-20488"
 print(f"{'model':14} {'first token p50':>16} {'p95':>6} {'whole reply p50':>16} {'p95':>6}")
-for model in ("standin-large", "standin-small", "standin-local"):
+for model in ("llama3.2:3b", "llama3.2:1b"):
     first, whole = [], []
     for _ in range(int(sys.argv[1])):
         start = time.perf_counter()
@@ -50,23 +50,25 @@ for model in ("standin-large", "standin-small", "standin-local"):
 ```
 
 ```
-ana@desk:~/desk$ python lab/latency.py 20
+ana@desk:~/desk$ python latency.py 20
 model           first token p50    p95  whole reply p50    p95
-standin-large             0.85s  1.84s            3.69s  4.68s
-standin-small             0.23s  0.39s            1.17s  1.32s
-standin-local             1.28s  3.01s            6.92s  8.66s
+llama3.2:3b               0.24s  0.38s            9.94s 16.63s
+llama3.2:1b               0.16s 10.35s            5.45s 15.15s
 ```
 
-**These timings measure the stand-in, not any real model.** The course set each stand-in's delay
-before the first token and per token after it, and told it to stretch the first token by a random
-factor with a long tail, the way a shared service does. What is real is the method: the stream,
-the clock, the percentiles.
+**These timings are one machine's**: four processors, no graphics card, and both models on
+Ollama. Yours will differ, and the shape is what to read. Before the run the 1b model was unloaded,
+so its first request had to load it from disk, as the first request of the morning does.
 
-Read it as a pattern. **standin-small** answers before the others have started and finishes first.
-**standin-local**, the one playing a self-hosted model on modest hardware, has the slowest first
-token and the slowest generation, and its p95 is more than twice its median for the first token.
-The gap between the two columns is the reply's length: about 3 seconds of writing for
-standin-large, almost 6 for standin-local.
+**The first token is quick for both**, a quarter of a second or less at the median. The **p95** is
+where they part: 0.38 seconds for the 3b and **10.35 for the 1b**, and the 1b's is the one request
+that waited for its model to load. One request in twenty is exactly what a p95 is about, and the
+median does not move at all.
+
+**The whole reply is a different number.** The 3b took about ten seconds at the median to write
+its draft and the 1b about five and a half: on a processor with no graphics card, a model three
+times the size writes more slowly. The p95s, 16.63 and 15.15 seconds, are the longest drafts, and
+a model's reply length varies from one request to the next even when the e-mail does not.
 
 ## What matters for ana
 
@@ -74,7 +76,9 @@ standin-large, almost 6 for standin-local.
   makes it a candidate for batch prices (section 05).
 - **Drafting** has a person waiting. Streaming makes the first-token number the one they feel,
   and the p95 the one that decides whether they trust the tool. Her ceiling, written in section 03
-  as a rank with a limit, becomes a number here: **first token under two seconds at p95**.
+  as a rank with a limit, becomes a number here: **first token under two seconds at p95**. On
+  the run above the 3b meets it and the 1b misses it on the cold start alone, which keeping the
+  model loaded fixes (lesson 14).
 
 Measure it on the real candidates, from where the program will run, at the hour it will run. A
 latency measured from a laptop at night is a different measurement from one taken from the shop's

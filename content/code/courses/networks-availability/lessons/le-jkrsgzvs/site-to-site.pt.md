@@ -7,8 +7,11 @@ version: 1
 site não tem botão nem usuário.** Ela liga duas redes, de roteador a roteador, e as pessoas e máquinas
 nelas nunca ficam sabendo que ela existe.
 
-Os dois escritórios do laboratório estão ligados assim, pelo túnel WireGuard da aula 4 entre `hq` e
-`branch`. Este é o caixa traçando o caminho até o servidor de arquivos da matriz:
+Os dois escritórios estão ligados assim, pelo túnel WireGuard da aula 4 entre `hq` e `branch`. **Esta
+aula começa onde a primeira seção da aula 4 terminou**, numa rede recém montada: gere os três pares de
+chaves como a aula 4 fez, escreva os três `wg0.conf` daquela seção com as suas próprias chaves e suba o
+túnel com `sudo wg-quick up wg0` em `hq` e em `branch`. O laptop da Ana sobe depois, na seção sobre
+túnel dividido. Este é o caixa traçando o caminho até o servidor de arquivos da matriz:
 
 ```
 ana@till:~$ traceroute -n -q 1 192.168.10.10
@@ -45,9 +48,9 @@ Esse arranjo tem um caráter próprio:
 - autentica um local, não uma pessoa. **Qualquer coisa ligada na LAN da filial chega à matriz como
   a filial**, o laptop de um visitante incluído. Então cada ponta ainda precisa de regras de firewall dizendo
   quais endereços do outro escritório alcançam quais servidores, e de uma rede de visitantes mantida fora
-  do túnel, na própria VLAN (aula 19 de `networks-addressing`);
+  do túnel, na própria VLAN (veja `networks-addressing`);
 - tem poucos pares, com endereços fixos. A configuração muda quando um escritório abre ou se muda, e
   quem cuida dela é a equipe de rede;
 - as rotas aqui são escritas à mão. Com dois escritórios são duas linhas. Com trinta, os escritórios
-  rodam um protocolo de roteamento pelos túneis, OSPF ou BGP das aulas 16 e 17 de `networks-addressing`,
+  rodam um protocolo de roteamento pelos túneis, OSPF ou BGP de `networks-addressing`,
   que é onde o GRE dentro de IPsec das aulas 1 e 2 ainda se justifica.

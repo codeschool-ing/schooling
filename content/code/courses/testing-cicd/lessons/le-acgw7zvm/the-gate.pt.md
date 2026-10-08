@@ -1,6 +1,6 @@
 ---
 title: A barreira antes da produção
-version: 1
+version: 2
 ---
 
 Entre a homologação e a produção fica a **barreira** (*gate*): o ponto em que alguém, ou algo, decide
@@ -12,7 +12,8 @@ verde, e a mudança vai sozinha.
 
 A decisão é sobre **um artefato específico**, identificado pelo hash, e o que chega à produção precisa
 ser esse artefato e mais nada. O `deploy.sh` confere o hash antes de desempacotar qualquer coisa. Aqui
-uma cópia do artefato ganha um byte a mais no caminho para a produção:
+uma cópia do artefato ganha um byte a mais no caminho para a produção. A cópia é feita com
+`cp dist/shipquote-1.4.0.tar.gz* /tmp/`, e o byte com `printf x >> /tmp/shipquote-1.4.0.tar.gz`:
 
 ```
 ana@laptop:~/shipquote$ ops/deploy.sh production /tmp/shipquote-1.4.0.tar.gz; echo "exit status $?"

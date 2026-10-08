@@ -22,6 +22,9 @@
 
 set -euo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
+# Ubuntu's own search path, so that a command which is not installed fails the
+# way it does on a fresh machine and not the way it does on a busy one.
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 cd ~ && rm -rf ~/.gitconfig ~/report ~/notes ~/copy ~/first
 
 # Print the prompt and the command the way the lesson shows them, then run it.
@@ -108,3 +111,41 @@ show 'rm -rf ~/notes'
 show 'cd ~/copy'
 cd ~/copy
 show 'git log --oneline'
+
+# ---------------------------------------------------------------- your-lab
+# The machine this course recommends is Ubuntu Server 24.04, and Git comes
+# with it. `apt` only prints its progress to a terminal, so it runs under
+# `script`, a pseudo-terminal, and each line is kept as
+# the terminal leaves it: what follows its last carriage return. The
+# account needs sudo, which is the one thing beyond a fresh account this
+# scene asks for.
+scene 'your-lab'
+cd ~
+show 'git --version'
+printf 'ana@vm:~$ sudo apt install git\n'
+script -qec 'sudo apt install git' /dev/null | sed 's/\r*$//; s/.*\r//' || true
+
+# ---------------------------------------------------------------- when-setup-fails
+scene 'when-setup-fails: not a repository'
+cd ~ && rm -rf ~/first && mkdir ~/first && cd ~/first && git init -q
+echo 'first line' > notes.txt && git add notes.txt
+cd ~
+show 'git status'
+show 'cd first'
+cd ~/first
+show 'git status --short'
+
+scene 'when-setup-fails: a typo'
+show 'git comit -m "Start the notes"'
+
+scene 'when-setup-fails: a name without quotes'
+show 'git config --global user.name Ana Souza'
+show 'git config --global user.name'
+show 'git config --global user.name "Ana Souza"'
+show 'git config --global user.name'
+
+scene 'when-setup-fails: an editor that is not there'
+show 'git config --global core.editor "code --wait"'
+show 'git commit'
+show 'git config --global core.editor nano'
+cd ~ && rm -rf ~/first

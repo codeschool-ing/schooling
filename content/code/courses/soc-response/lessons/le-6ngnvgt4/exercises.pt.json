@@ -1,0 +1,366 @@
+{
+  "ex-y0wcrnpt": {
+    "prompt": "Ordene as etapas por que um evento passa num SIEM.",
+    "hint": "Uma regra lê o que foi guardado.",
+    "items": [
+      "coleta",
+      "normalização",
+      "enriquecimento",
+      "armazenamento",
+      "correlação"
+    ]
+  },
+  "ex-axtaryvr": {
+    "prompt": "Uma regra deveria contar contas distintas por endereço, mas o parser de uma fonte nunca extraiu a conta. O que acontece?",
+    "hint": "Uma etapa só usa o que uma anterior produziu.",
+    "choices": [
+      {
+        "text": "O enriquecimento preenche a conta que falta a partir da lista de ativos, que sabe quem usa cada endereço",
+        "why": "O enriquecimento acrescenta fatos sobre um endereço ou uma máquina, não a conta que a linha citou."
+      },
+      {
+        "text": "A regra dá erro na primeira execução, citando o campo que falta para alguém consertar o parser",
+        "why": "A maioria das regras trata um campo ausente como não correspondência, e é por isso que a lacuna é silenciosa."
+      },
+      {
+        "text": "O SIEM lê a conta da linha crua na hora da consulta",
+        "why": "Só se alguém escrever um parser para isso; a linha crua é guardada justamente para esse dia, mas nada a lê sozinho."
+      },
+      {
+        "text": "Ela fica cega para esses eventos, sem aviso nenhum",
+        "why": "Isso. O campo não existe, então a pergunta não pode ser feita, e nada dá erro."
+      }
+    ]
+  },
+  "ex-h6jp1wqn": {
+    "prompt": "Qual destas coisas é enriquecimento?",
+    "hint": "Algo que a própria linha não sabia.",
+    "choices": [
+      {
+        "text": "Renomear SRC= para src_ip em cada linha do firewall",
+        "why": "Normalização de novo: um nome para a mesma coisa."
+      },
+      {
+        "text": "Guardar a linha crua ao lado dos campos",
+        "why": "Isso é boa prática de armazenamento, não conhecimento acrescentado."
+      },
+      {
+        "text": "Converter a hora local do firewall para UTC",
+        "why": "Isso é normalização: a linha tinha a hora, em outra forma."
+      },
+      {
+        "text": "Acrescentar o dono de 192.168.20.10",
+        "why": "Isso. Nenhuma linha de log diz isso; uma lista de ativos diz."
+      }
+    ]
+  },
+  "ex-jcpysyxb": {
+    "prompt": "Quantas linhas o week.py escreveu nos três arquivos, contando o cabeçalho?",
+    "hint": "O wc -l imprime o total."
+  },
+  "ex-6xw0yp1w": {
+    "prompt": "Toda noite à 01:00, o flows.csv mostra o files enviando de 330 a 380 MB para 203.0.113.150. O que é isso, segundo o gerador?",
+    "hint": "Leia o comentário ao lado.",
+    "choices": [
+      {
+        "text": "A equipe baixando os arquivos para trabalhar de casa",
+        "why": "A equipe entra às oito pelo gw; isto é o files enviando à uma da manhã."
+      },
+      {
+        "text": "Dados saindo para um endereço que ninguém reconhece, toda noite",
+        "why": "O endereço é o provedor de backup da empresa, o mesmo toda noite."
+      },
+      {
+        "text": "O backup noturno",
+        "why": "Isso. É o normal contra o qual uma transferência grande para outro lugar se destaca."
+      },
+      {
+        "text": "O próprio log do firewall sendo despachado ao soc",
+        "why": "O despacho vai para o soc em 192.168.99.10, não para a internet."
+      }
+    ]
+  },
+  "ex-qdmt8cnc": {
+    "prompt": "Por que a semana é produzida por um programa com semente fixa, e não gravada do laboratório?",
+    "hint": "Todo leitor, toda execução.",
+    "choices": [
+      {
+        "text": "Para todo leitor receber as mesmas linhas",
+        "why": "Isso. random.seed(7) faz cada execução sair idêntica."
+      },
+      {
+        "text": "Para a semana ser mais longa do que o laboratório aguentaria",
+        "why": "O tamanho não é o motivo; a reprodutibilidade é."
+      },
+      {
+        "text": "Porque guardar logs reais de uma empresa é ilegal",
+        "why": "Guardar os próprios logs é comum; a aula 3 pôs os limites."
+      },
+      {
+        "text": "Porque os servidores SSH do laboratório não registram logins falhos",
+        "why": "A aula 3 gravou um."
+      }
+    ]
+  },
+  "ex-cepeyz0x": {
+    "prompt": "Por que o load.py guarda a linha crua em cada linha da tabela?",
+    "hint": "Parsers são código.",
+    "choices": [
+      {
+        "text": "Porque as regras Sigma casam com o texto cru da linha, e não com os campos com nome",
+        "why": "A regra convertida pediu campos com nome."
+      },
+      {
+        "text": "Para deixar o banco menor",
+        "why": "Deixa maior."
+      },
+      {
+        "text": "Porque o SQLite exige uma coluna de texto",
+        "why": "Ele não exige nada disso."
+      },
+      {
+        "text": "Para interpretar os eventos de novo quando um campo se revelar errado",
+        "why": "Isso. O parser pode ter defeitos; o original, não."
+      }
+    ]
+  },
+  "ex-f7y94j1n": {
+    "prompt": "Na tabela, o que detail = unknown_user diz sobre um login falho?",
+    "hint": "Compare 'Invalid user' com 'Failed password'.",
+    "choices": [
+      {
+        "text": "O parser não conseguiu ler o nome do usuário",
+        "why": "Ele leu: a coluna user guarda o nome tentado."
+      },
+      {
+        "text": "A conta citada não existe naquela máquina",
+        "why": "Isso. Veio de uma linha `Invalid user`; `Failed password` vira wrong_password."
+      },
+      {
+        "text": "O endereço de onde veio a tentativa não está na lista de ativos da empresa",
+        "why": "Isso seria enriquecimento, que o load.py não faz."
+      },
+      {
+        "text": "A senha estava certa, mas a conta estava bloqueada",
+        "why": "Nada na semana bloqueia conta."
+      }
+    ]
+  },
+  "ex-swh8nrmb": {
+    "prompt": "O firewall escreve `Sep 14 01:00:00`, horário de São Paulo. Que hora a tabela guarda, em UTC?",
+    "hint": "Três horas à frente."
+  },
+  "ex-fbcf8ex4": {
+    "prompt": "Suponha que o load.py tivesse assumido UTC para o firewall em vez de -03:00. O que uma pergunta como 'o que passou pelo fw até um minuto depois do login do bruno às 02:33?' encontraria?",
+    "hint": "As linhas do SSH trazem o deslocamento; as do firewall, não.",
+    "choices": [
+      {
+        "text": "Um erro do sqlite3 sobre fusos misturados",
+        "why": "A tabela guarda texto; nada confere fusos."
+      },
+      {
+        "text": "Os mesmos eventos, porque UTC e -03:00 caem no mesmo dia",
+        "why": "Mesmo dia, horas diferentes."
+      },
+      {
+        "text": "Nada, porque o SSH não tem linha de firewall para esse login",
+        "why": "O login() escreve uma linha de firewall e uma de SSH."
+      },
+      {
+        "text": "Eventos do firewall de três horas de distância, e nenhum dos certos",
+        "why": "Isso. Toda linha do firewall ficaria deslocada três horas em relação ao SSH, sem erro em lugar nenhum."
+      }
+    ]
+  },
+  "ex-gxv8qdj3": {
+    "prompt": "O que o sigma-cli faz com uma regra?",
+    "hint": "-t sqlite.",
+    "choices": [
+      {
+        "text": "Converte para a linguagem de consulta de um destino",
+        "why": "Isso. Aqui, SQL para o SQLite."
+      },
+      {
+        "text": "Confere a regra contra o catálogo MITRE ATT&CK",
+        "why": "Não é isso que o convert faz."
+      },
+      {
+        "text": "Baixa da internet a versão mais recente da regra antes de usá-la",
+        "why": "Ele lê o arquivo que recebe."
+      },
+      {
+        "text": "Roda a regra diretamente contra os logs",
+        "why": "Ele produz uma consulta; o alerts.sh a roda."
+      }
+    ]
+  },
+  "ex-f2z4wwdx": {
+    "prompt": "Um colega baixa uma regra Sigma, converte para o seu SIEM, e ela nunca casa com nada. Qual é a causa mais comum, segundo a aula?",
+    "hint": "Nomes.",
+    "choices": [
+      {
+        "text": "Ela pede um campo que o seu SIEM chama de outra coisa",
+        "why": "Isso. Os processing pipelines mapeiam nomes de campo; sem o mapeamento a consulta pede uma coluna que não existe."
+      },
+      {
+        "text": "Regras Sigma expiram depois de um ano e param de casar",
+        "why": "Regras não têm validade."
+      },
+      {
+        "text": "O nível foi posto baixo demais para o SIEM mostrar",
+        "why": "O nível afeta a prioridade; um resultado continua sendo resultado."
+      },
+      {
+        "text": "O UUID da regra colide com um já carregado no SIEM",
+        "why": "Um id duplicado é um problema de controle, não motivo para zero resultados."
+      }
+    ]
+  },
+  "ex-81smckhm": {
+    "prompt": "O failures.yml virou: SELECT * FROM logs ___ product='sshd' AND `action`='failure'",
+    "hint": "A palavra do SQL que filtra linhas.",
+    "blanks": [
+      {
+        "accept": [
+          "WHERE"
+        ]
+      }
+    ]
+  },
+  "ex-5cap4vc3": {
+    "prompt": "Por que uma regra Sigma traz um UUID além do título?",
+    "hint": "Títulos são reescritos.",
+    "choices": [
+      {
+        "text": "Para o nível ser derivado dele",
+        "why": "O nível é um campo próprio."
+      },
+      {
+        "text": "Para poder ser renomeada e continuar sendo a mesma regra",
+        "why": "Isso. O mesmo motivo de este curso dar a tudo um id opaco."
+      },
+      {
+        "text": "Porque o SQLite precisa de uma chave primária única para cada regra convertida para ele",
+        "why": "O conversor não guarda regras no SQLite."
+      },
+      {
+        "text": "Para cifrar o conteúdo da regra",
+        "why": "Um UUID não cifra nada."
+      }
+    ]
+  },
+  "ex-83557ah8": {
+    "prompt": "Quantos alertas o rules-v1.yml gerou na semana?",
+    "hint": "Conte as linhas que o alerts.sh imprimiu."
+  },
+  "ex-emdv8v38": {
+    "prompt": "Por que a v1 apontou a Carla?",
+    "hint": "Leia as linhas dela.",
+    "choices": [
+      {
+        "text": "Ela falhou uma vez e entrou segundos depois, que é tudo o que a v1 pedia",
+        "why": "Isso. Uma falha e depois um sucesso descreve um erro de digitação tanto quanto uma adivinhação."
+      },
+      {
+        "text": "Ela entrou de um endereço que ninguém tinha visto",
+        "why": "203.0.113.23 é o endereço dela todo dia."
+      },
+      {
+        "text": "A conta dela estava entre as dezenove tentadas a partir de 203.0.113.66 na noite de quinta, então todo login dela depois disso é suspeito",
+        "why": "Estava, mas os alertas dela são de terça e quarta, do próprio endereço."
+      },
+      {
+        "text": "Ela usou chave em vez de senha",
+        "why": "Ela entra com senha."
+      }
+    ]
+  },
+  "ex-xnepdzqh": {
+    "prompt": "O que a v2 disse que a v1 não dizia?",
+    "hint": "O que foi diferente na quinta?",
+    "choices": [
+      {
+        "text": "Que a conta que entrou era a do bruno",
+        "why": "Nenhuma conta é citada na regra."
+      },
+      {
+        "text": "Que o sucesso veio entre meia-noite e seis da manhã",
+        "why": "A v2 não diz nada sobre a hora; pegou o login das 03:05 e pegaria um ao meio-dia."
+      },
+      {
+        "text": "Que um endereço tentou ao menos dez contas, e depois um login funcionou",
+        "why": "Isso. O comportamento, muitas contas a partir de uma origem, é algo que um erro de digitação nunca parece."
+      },
+      {
+        "text": "Que o endereço pertence a uma lista de endereços maliciosos conhecidos",
+        "why": "Nenhuma lista é consultada."
+      }
+    ]
+  },
+  "ex-zx09jgbv": {
+    "prompt": "O que mostrou que a v1 estava errada?",
+    "hint": "Não foi lê-la.",
+    "choices": [
+      {
+        "text": "O sigma-cli se recusar a convertê-la",
+        "why": "Ela converteu sem reclamar."
+      },
+      {
+        "text": "Um colega revisando o YAML",
+        "why": "O YAML era válido; o problema era a ideia."
+      },
+      {
+        "text": "O nível dela estar como high",
+        "why": "O nível não faz uma regra certa ou errada."
+      },
+      {
+        "text": "Rodá-la contra uma semana conhecida",
+        "why": "Isso. Ela parecia boa e errou três vezes em cinco; só os dados mostraram."
+      }
+    ]
+  },
+  "ex-td3p9gsw": {
+    "prompt": "Associe cada parte de uma regra Sigma ao que ela faz.",
+    "hint": "Quatro chaves do YAML.",
+    "pairs": [
+      {
+        "left": "logsource",
+        "right": "de que tipo de log a regra trata"
+      },
+      {
+        "left": "detection",
+        "right": "os valores de campo a selecionar"
+      },
+      {
+        "left": "correlation",
+        "right": "uma regra sobre vários eventos e o tempo entre eles"
+      },
+      {
+        "left": "level",
+        "right": "quanta atenção um resultado merece"
+      }
+    ]
+  },
+  "ex-ndy598fz": {
+    "prompt": "A v2 gerou um segundo alerta às 03:05 locais, para um login com chave. Por que uma regra sobre adivinhação o pegou?",
+    "hint": "timespan: 1h, agrupado por endereço.",
+    "choices": [
+      {
+        "text": "Veio do mesmo endereço, dentro de uma hora da janela em que muitas contas foram tentadas",
+        "why": "Isso. A regra segue o endereço, não o método, então qualquer sucesso dele naquela hora casa."
+      },
+      {
+        "text": "O bruno nunca usa chave, e a regra conhece os hábitos de cada usuário",
+        "why": "Verdade sobre o bruno, mas a regra não sabe nada de hábitos; a aula 10 caça isso."
+      },
+      {
+        "text": "Logins com chave são sempre tratados como críticos pelo Sigma",
+        "why": "O Sigma não tem essa regra."
+      },
+      {
+        "text": "Uma segunda rodada de tentativas aconteceu às 03:00",
+        "why": "Houve uma rodada só, a partir das 02:10."
+      }
+    ]
+  }
+}

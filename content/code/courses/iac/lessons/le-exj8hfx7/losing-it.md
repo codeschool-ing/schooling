@@ -1,6 +1,6 @@
 ---
 title: Losing the state, and the second network
-version: 1
+version: 2
 ---
 
 The common belief is that the state is a cache: something Terraform keeps to go faster, and could
@@ -8,7 +8,8 @@ rebuild by looking around if it had to. **It cannot rebuild it.** Without the st
 no idea that anything exists, and it does what any declarative tool does with a description and an
 empty world: it creates the description.
 
-Ana keeps the configuration in git, and she does what most guides say and leaves the state out:
+Ana keeps the configuration in git, and she does what most guides say and leaves the state out.
+This is her `.gitignore`, written before `git init` and the first commit:
 
 ```
 .terraform/

@@ -19,6 +19,10 @@ a ser igual a si mesmo — a aula 4 ensinou tudo isso e nenhuma regra muda aqui.
 O que muda é quanto custa um engano. É por isso que elas chegam nesta aula e não na 4: a próxima
 seção é sobre o engano, e o resto desta é sobre as instruções.
 
+**Toda sessão desta aula começa da loja como a aula 1 a carrega.** Uma escrita muda o que a próxima
+encontra. Para ver as mesmas linhas que a página, ponha a loja de volta entre elas com as três
+linhas do fim da aula 1: `dropdb shop`, `createdb shop`, `psql shop -f shop.sql`.
+
 ## `INSERT`
 
 ```
@@ -71,7 +75,7 @@ disparar:
 shop=# INSERT INTO orders (customer_id, total) VALUES (3, 39.90) RETURNING id, ordered_on, status;
  id | ordered_on | status 
 ----+------------+--------
-  5 | 2026-09-18 | placed
+  5 | 2026-10-07 | placed
 (1 row)
 
 INSERT 0 1

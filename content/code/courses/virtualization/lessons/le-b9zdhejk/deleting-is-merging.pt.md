@@ -1,6 +1,6 @@
 ---
 title: Apagar um snapshot é uma fusão
-version: 1
+version: 2
 ---
 
 Uma camada não pode simplesmente ser apagada: ela guarda toda escrita desde o snapshot. Apagar o snapshot
@@ -32,7 +32,7 @@ O primeiro `blockcommit` tentou fundir no **fundo da cadeia**, que é o padrão 
 `lab-base.qcow2`, o disco de que todo convidado deste curso lê. Ele só falhou porque esse arquivo é só de
 leitura. **Isso não é hipotético**: enquanto esta aula era preparada, o mesmo comando, rodado contra uma
 base que não era só de leitura, escreveu as mudanças de um convidado na base de todos, e ela teve de ser
-refeita. O `lab.sh` deixa a base só de leitura desde então.
+refeita. É por isso que a aula 1 deixou a base só de leitura com `chmod 444`.
 
 O `--shallow` funde uma camada abaixo, no `vm1.qcow2`, e o `--pivot` passa o convidado ligado para ele,
 sem pará-lo. Depois, o registro do snapshot e o arquivo agora vazio dele vão embora. O `vm1.qcow2` guarda

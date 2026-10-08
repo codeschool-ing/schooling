@@ -1,6 +1,6 @@
 ---
 title: Arquivos de unit, e qual cópia vence
-version: 1
+version: 2
 ---
 
 Um arquivo de unit é como um serviço se descreve. É um arquivo ini — seções entre colchetes, linhas
@@ -153,21 +153,36 @@ descobre o que outra pessoa fez numa máquina.
 ## Confira antes de iniciar
 
 Este é o comando da demonstração no fim da aula, e ele roda sobre um **arquivo** e não sobre um
-sistema em execução:
+sistema em execução. O arquivo é este, com três erros — leia-o antes da resposta abaixo e veja
+quantos você acha:
+
+```sh
+sudo tee /etc/systemd/system/broken.service > /dev/null <<'END'
+[Unit]
+Descriptoin=A service with three mistakes in it
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/does-not-exist.sh
+User=ana
+Restart=maybe
+
+[Install]
+WantedBy=multi-user.target
+END
+```
+
 
 ```
 root@vm:~# systemd-analyze verify /etc/systemd/system/broken.service
 /etc/systemd/system/broken.service:2: Unknown key name 'Descriptoin' in section 'Unit', ignoring.
 /etc/systemd/system/broken.service:8: Failed to parse service restart specifier, ignoring: maybe
-Binding to IPv6 address not available since kernel does not support IPv6.
 broken.service: Command /usr/local/bin/does-not-exist.sh is not executable: No such file or directory
 root@vm:~# echo $?
 1
 ```
 
-Ignore a linha do IPv6 — é o kernel desta máquina, não a sua unit, e ela aparece verifique você o
-que verificar. As outras três são os achados, e **leia a última palavra das duas primeiras:
-`ignoring`.**
+Três achados, e **leia a última palavra dos dois primeiros: `ignoring`.**
 
 Um nome de chave escrito errado não é um erro. O systemd descarta a linha e segue, então um serviço
 com `Descriptoin=` não tem descrição e não tem reclamação, e um serviço com `Restart=maybe` não
@@ -182,10 +197,9 @@ chegando num lugar novo:
 
 ```
 root@vm:~# systemd-analyze verify /etc/systemd/system/hello.service
-Binding to IPv6 address not available since kernel does not support IPv6.
 root@vm:~# echo $?
 0
 ```
 
-A linha solitária é o mesmo ruído da máquina, e o código de saída é `0`. **Essa é a resposta** — e é
+Nada impresso, e o código de saída é `0`. **Essa é a resposta** — e é
 por isso que um script confere o `$?` em vez de conferir se algo foi impresso.

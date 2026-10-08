@@ -34,10 +34,10 @@ ana@desk:~/desk$ python -c "import inspect; from google.genai import types; prin
     text = ''
 ```
 
-`Optional[str]`, e a primeira coisa que ele faz é devolver **`None`** quando o primeiro candidato não
-tem conteúdo ou não tem partes. Uma resposta pode chegar assim: um 200, um candidato e nenhum texto,
-porque a geração parou antes de escrever qualquer coisa. Por que parou está no `finish_reason` do
-candidato, e a biblioteca lista os motivos que conhece:
+`Optional[str]`, e a primeira coisa que ele faz é devolver **`None`** quando o primeiro candidato
+não tem conteúdo ou não tem partes. Uma resposta pode chegar assim: um 200, um candidato e nenhum
+texto, porque a geração parou antes de escrever qualquer coisa. Por que parou está no
+`finish_reason` do candidato, e a biblioteca lista os motivos que conhece:
 
 ```
 ana@desk:~/desk$ python -c "from google.genai import types; print(types.FinishReason.__members__.keys())"
@@ -51,8 +51,8 @@ informação pessoal sensível. Se um e-mail comum de cliente chega a esbarrar n
 esta máquina pôde testar, então o programa precisa estar pronto de qualquer jeito.
 
 A falha que vem depois é previsível. Um programa que escreve `r.text.strip()` levanta
-`AttributeError` num `None`, no fundo do laço de classificação; um que escreve `label = r.text` guarda
-`None` como rótulo e o passa adiante. De um jeito ou de outro, a causa fica a três objetos de
+`AttributeError` num `None`, no fundo do laço de classificação; um que escreve `label = r.text`
+guarda `None` como rótulo e o passa adiante. De um jeito ou de outro, a causa fica a três objetos de
 distância do erro. **Leia o `finish_reason` antes do `text`**, e decida o que cada motivo significa
 para a mesa: um `MAX_TOKENS` é um limite a aumentar, um `SAFETY` é um e-mail para uma pessoa
 classificar. O harness da aula 5 conta os dois como falhas, o que é certo para a pontuação, e o

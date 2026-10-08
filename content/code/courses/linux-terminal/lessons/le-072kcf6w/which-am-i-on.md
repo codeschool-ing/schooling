@@ -1,6 +1,6 @@
 ---
 title: The first command on any machine
-version: 2
+version: 3
 ---
 
 Everything in this lesson reduces to one reflex. You reach a machine you did not set up, and
@@ -60,7 +60,8 @@ Linux vm 6.18.44-fc-v24 #1 SMP PREEMPT_DYNAMIC @0 x86_64 x86_64 x86_64 GNU/Linux
 ```
 
 `uname` is the **kernel**, not the distribution. The `6.18.44` is the kernel version, `x86_64` is
-the processor architecture, and `vm` is the hostname. It answers a different question, and it is
+the processor architecture, and `vm` is the hostname. The kernel here is the sandbox's own, which is
+why its name is odd; yours will name the kernel Ubuntu installed. It answers a different question, and it is
 the one to ask when a piece of software says it needs a particular kernel or architecture.
 
 And the third tool, which is worth showing because of how it fails:
@@ -72,7 +73,8 @@ Failed to connect to bus: Host is down
 ```
 
 `hostnamectl` gives a tidy summary — distribution, kernel, architecture, hostname, hardware — and
-**it is part of systemd**, so inside a container it cannot answer at all. Same cause as the
+**it is part of systemd**, so inside a container — which is where these transcripts were captured —
+it cannot answer at all. On your virtual machine it prints the summary. Same cause as the
 `systemctl` message in lesson 1 section 04, and the same reading: nothing is broken, nothing
 booted.
 

@@ -1,12 +1,74 @@
 ---
 title: Oito grupos de dezesseis bits
-version: 1
+version: 2
 ---
 
 Um endereço IPv6 tem 128 bits, quatro vezes o tamanho de um endereço IPv4. Escrito em decimal com
 pontos seriam dezesseis números, então ele é escrito **em hexadecimal: oito grupos de quatro dígitos
 hexadecimais, separados por dois-pontos**. Cada dígito hexadecimal são quatro bits, então cada grupo
 tem 16 bits, e oito grupos dão 128.
+
+O escritório desta aula fala IPv4 e IPv6 ao mesmo tempo. Salve-o como `~/netlab/dualstack.sh`:
+
+```bash
+# ~/netlab/dualstack.sh: an office LAN that speaks IPv4 and IPv6 at once. r1
+# announces the office's IPv6 prefix with radvd and the PCs build their own
+# addresses from it; srv is given its IPv6 address by hand.
+#
+#   pc1 pc2 srv --- sw1 --- r1 === isp --- web
+#   10.20.10.0/24           203.0.113.0/30        192.0.2.0/24
+#   2001:db8:20:10::/64     2001:db8:ffff::/64    2001:db8:99::/64
+local n
+for n in pc1 pc2 srv sw1 web; do node $n; done
+node r1 router; node isp router
+link pc1 eth0 sw1 p1; link pc2 eth0 sw1 p2; link srv eth0 sw1 p4; link r1 eth0 sw1 p8
+switch sw1 "p1 p2 p4 p8"
+addr pc1 eth0 10.20.10.21/24; addr pc2 eth0 10.20.10.22/24; addr srv eth0 10.20.10.10/24
+addr r1 eth0 10.20.10.1/24; addr r1 eth0 2001:db8:20:10::1/64
+addr srv eth0 2001:db8:20:10::10/64
+ip netns exec srv sysctl -qw net.ipv6.conf.eth0.autoconf=0   # its one address is the one it was given
+for n in pc1 pc2 srv; do gw $n 10.20.10.1; done
+ip -n srv -6 route add default via 2001:db8:20:10::1
+link r1 eth1 isp eth0
+addr r1 eth1 203.0.113.2/30; addr isp eth0 203.0.113.1/30; gw r1 203.0.113.1
+addr r1 eth1 2001:db8:ffff::2/64; addr isp eth0 2001:db8:ffff::1/64
+ip -n r1 -6 route add default via 2001:db8:ffff::1
+ip -n isp -6 route add 2001:db8:20::/48 via 2001:db8:ffff::2
+link isp eth1 web eth0
+addr isp eth1 192.0.2.1/24; addr web eth0 192.0.2.80/24; gw web 192.0.2.1
+addr isp eth1 2001:db8:99::1/64; addr web eth0 2001:db8:99::80/64
+ip -n web -6 route add default via 2001:db8:99::1
+ip netns exec r1 nft -f - <<'NFT'
+table ip nat {
+  chain postrouting {
+    type nat hook postrouting priority srcnat;
+    oifname "eth1" masquerade
+  }
+}
+NFT
+cat > "$LAB/r1/radvd.conf" <<'RA'
+interface eth0 {
+  AdvSendAdvert on;
+  MinRtrAdvInterval 30;
+  MaxRtrAdvInterval 100;
+  prefix 2001:db8:20:10::/64 {
+    AdvOnLink on;
+    AdvAutonomous on;
+  };
+};
+RA
+daemon r1 radvd radvd -n -C "$LAB/r1/radvd.conf" -p "$LAB/r1/radvd.pidfile" -m stderr
+web web '::'
+for n in pc1 pc2 srv r1; do
+  host $n 10.20.10.10 srv; host $n 2001:db8:20:10::10 srv
+  host $n 192.0.2.80 web; host $n 2001:db8:99::80 web
+done
+```
+
+O r1 roda o radvd, o programa que a seção sobre SLAAC lê, com a configuração escrita no diretório
+dele, e os PCs montam seus endereços IPv6 a partir do que ele anuncia. Monte com
+`sudo bash ~/netlab/netlab.sh up dualstack` e dê dez segundos, para que o primeiro anúncio chegue a
+todos os PCs.
 
 Essa forma é comprida, e duas regras a encurtam. O servidor do escritório desta aula recebeu o
 endereço à mão, e a forma curta é o que o Linux imprime:

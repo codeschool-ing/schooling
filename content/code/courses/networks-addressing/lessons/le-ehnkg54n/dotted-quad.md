@@ -1,6 +1,6 @@
 ---
 title: Four octets, thirty-two bits
-version: 1
+version: 2
 ---
 
 An IPv4 address is one number, 32 bits long. The form everybody writes, `10.20.10.21`, is a
@@ -14,8 +14,8 @@ octet, which lesson 12 does on purpose. **Where the network part ends and the ho
 decided by the mask, not by the dots.** In this office the mask is `/24`, which happens to fall on
 a dot, and that coincidence is why the four-fields picture survives so long.
 
-`ipcalc` prints an address in binary beside the decimal. On pc1, whose address is
-`10.20.10.21/24`:
+This lesson runs on lesson 1's office, built with `sudo bash ~/netlab/netlab.sh up office`. `ipcalc`
+prints an address in binary beside the decimal. On pc1, whose address is `10.20.10.21/24`:
 
 ```
 ana@pc1:~$ ipcalc 10.20.10.21/24

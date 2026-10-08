@@ -22,7 +22,7 @@ Events:
 
 **Back to one replica.** Scaling down is deliberately slower than scaling up: by default the
 autoscaler takes the highest recommendation of the last five minutes, so that a traffic dip of a few
-seconds does not remove pods that will be needed again at once. This lab shortened that window to 30
+seconds does not remove pods that will be needed again at once. This lesson shortened that window to 30
 seconds in `behavior.scaleDown.stabilizationWindowSeconds`, so that the capture fits in a page; in
 production the default is usually right.
 
@@ -37,7 +37,7 @@ with `name: memory`, but most programs do not hand memory back when the load goe
 on memory often scales up and never down.
 
 Two more kinds of metric need an adapter that serves them through the API, the way metrics-server
-serves CPU. This lab installs none, so these are described and not run:
+serves CPU. This course installs none, so these are described and not run:
 
 | metric type | example | served by |
 |---|---|---|

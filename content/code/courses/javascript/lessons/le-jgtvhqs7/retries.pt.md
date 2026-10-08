@@ -1,10 +1,10 @@
 ---
 title: Tentando de novo, com cuidado
-version: 1
+version: 2
 ---
 
 Algumas falhas são temporárias: um servidor reiniciando, ou ocupado, responde **`503 Service
-Unavailable`** e espera ser chamado de novo. O `/api/flaky` do laboratório falha as duas primeiras
+Unavailable`** e espera ser chamado de novo. O `/api/flaky` do `api.mjs` falha as duas primeiras
 requisições desse jeito:
 
 ```html
@@ -61,5 +61,5 @@ Então um laço de novas tentativas precisa de três limites:
   tratou;
 - **quantas vezes**: `attempts = 4` aqui, e depois o erro vai para o usuário, que merece saber.
 
-O `withRetries` só tem o último dos três, o que basta para um `GET` no laboratório e não para código
+O `withRetries` só tem o último dos três, o que basta para um `GET` contra o `api.mjs` e não para código
 de verdade, em que os dois primeiros decidem se tentar de novo ajuda ou atrapalha.

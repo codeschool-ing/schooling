@@ -1,6 +1,6 @@
 ---
 title: Antes do primeiro commit — instale o Git e diga a ele quem você é
-version: 1
+version: 2
 ---
 
 A aula 2 começa a fazer commits, e uma máquina nova não está pronta para um. Esta seção a deixa
@@ -15,10 +15,9 @@ git version 2.43.0
 ```
 
 Qualquer versão a partir da 2.23 tem todos os comandos que este curso usa; foi nessa versão, de
-2019, que `git switch` e `git restore` chegaram. Se o shell responder `command not found`, instale.
-No Debian e no Ubuntu é `sudo apt install git`. No macOS, digitar `git` num terminal oferece instalar
-as ferramentas de desenvolvedor da Apple, que o incluem. No Windows, o instalador de git-scm.com traz
-o Git e um terminal chamado Git Bash, e todo comando deste curso funciona nesse terminal.
+2019, que `git switch` e `git restore` chegaram. Se o shell responder `command not found`, o Git
+não está instalado na máquina em que você está digitando, e a seção anterior diz como instalá-lo em
+cada caminho.
 
 ## O que o Git diz na primeira vez
 

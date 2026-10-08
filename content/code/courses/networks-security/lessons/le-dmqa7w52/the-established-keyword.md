@@ -18,7 +18,8 @@ connection, a `SYN`, carries neither, so it fails the test; every later packet o
 ACK. The `wan_in` chain in `acl-extended.nft`, back in section 04, does the same on `branch`'s internet side: it
 drops TCP towards the branch whose ACK and RST flags are both clear.
 
-A server on `branchpc` is listening on 8080. `remote` tries to open a connection to it, and the branch's
+A server on `branchpc` is listening on 8080, started there as root with
+`setsid socat TCP-LISTEN:8080,bind=192.168.30.20,fork,reuseaddr SYSTEM:"echo branchpc" </dev/null >/dev/null 2>&1 &`. `remote` tries to open a connection to it, and the branch's
 own computer opens one outwards:
 
 ```

@@ -1,6 +1,6 @@
 ---
 title: Internal knowledge bases
-version: 1
+version: 2
 ---
 
 The fourth use is the one companies ask for first and deploy last: an assistant over everything the
@@ -15,7 +15,7 @@ relied on.
 Every document in this corpus says who it was written for, in its front matter:
 
 ```
-ana@lab:~/rag$ grep -h "^audience:" data/docs/*.md | sort | uniq -c
+ana@vm:~/rag$ grep -h "^audience:" data/docs/*.md | sort | uniq -c
       1 audience: developers
       1 audience: finance
       8 audience: public
@@ -31,16 +31,16 @@ agents, sellers or customers: an agent who knows them can be talked into working
 Now ask the search from a support agent's desk:
 
 ```
-ana@lab:~/rag$ python sections.py "When does an order get held for manual fraud review?"
+ana@vm:~/rag$ python sections.py "When does an order get held for manual fraud review?"
 [1] 0.720  finance-refund-controls > Automatic holds
 [2] 0.573  support-handbook > Suspected fraud
 [3] 0.514  finance-refund-controls > Finance reviews
-An order with a score of 0.82 or more is held before dispatch and goes to manual review. [1] The payment provider gives every order a fraud score from 0 to 1. [1]
+According to [1] finance-refund-controls > Automatic holds, an order gets held for manual fraud review when its fraud score is 0.82 or more.
 ```
 
 **The exact threshold the finance team asked to keep from support agents, delivered to a support
 agent, with a citation.** Nothing went wrong in the pipeline. The question was a good question, the
-search found the best section, the generator quoted it faithfully. The leak is a property of the
+search found the best section, the generator answered from it faithfully. The leak is a property of the
 design: one index over documents with different readers, and a search that does not know who is
 asking.
 

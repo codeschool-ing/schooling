@@ -1,6 +1,6 @@
 ---
 title: Do modelo a um navegador
-version: 1
+version: 2
 ---
 
 Uma página num navegador não consegue chamar a API do modelo sozinha: **a requisição precisaria da
@@ -35,18 +35,18 @@ navegador conforme chegam, num stream próprio.
       "note": "**A resposta começa antes de a resposta existir**: status, tipo de conteúdo e cabeçalhos saem primeiro."
     },
     {
-      "code": "        try:\n            with model.messages.stream(model=\"scripted-1\", max_tokens=300,\n                                       messages=[{\"role\": \"user\", \"content\": question}]) as stream:\n                for text in stream.text_stream:\n                    self.send_event(\"text\", {\"text\": text})\n            self.send_event(\"done\", {\"stop_reason\": stream.get_final_message().stop_reason})\n",
+      "code": "        try:\n            with model.messages.stream(model=\"llama3.2:3b\", max_tokens=300,\n                                       messages=[{\"role\": \"user\", \"content\": question}]) as stream:\n                for text in stream.text_stream:\n                    self.send_event(\"text\", {\"text\": text})\n            self.send_event(\"done\", {\"stop_reason\": stream.get_final_message().stop_reason})\n",
       "note": "**Cada pedaço do modelo vira um evento para a página**, e o fim vira `done`."
     },
     {
-      "code": "        except anthropic.APIError as e:\n            self.send_event(\"error\", {\"message\": \"the answer stopped halfway; please ask again\"})\n            self.log_error(\"model stream failed: %s\", e)\n\n",
+      "code": "        except Exception as e:  # whatever ended it, the page has half an answer\n            self.send_event(\"error\", {\"message\": \"the answer stopped halfway; please ask again\"})\n            self.log_error(\"model stream failed: %s\", e)\n\n",
       "note": "**Uma falha no meio vira um evento `error`**, com uma frase para uma pessoa; o detalhe do provedor vai para o log do servidor."
     },
     {
       "code": "    def log_message(self, *args):\n        pass\n\n\n"
     },
     {
-      "code": "ThreadingHTTPServer((\"127.0.0.1\", 8500), Relay).serve_forever()",
+      "code": "ThreadingHTTPServer((\"127.0.0.1\", 8500), Relay).serve_forever()\n",
       "note": "**Uma thread por requisição**, para duas páginas poderem receber ao mesmo tempo."
     }
   ]
@@ -56,7 +56,7 @@ navegador conforme chegam, num stream próprio.
 Iniciado em segundo plano, consultado com `curl`, parado com `kill`:
 
 ```
-ana@dev:~/shop$ python relay.py & sleep 1; curl -sN -X POST localhost:8500/ask -d '{"question": "Say hello in five words."}'; kill $!
+ana@dev:~/shop$ python relay.py & sleep 3; curl -sN -X POST localhost:8500/ask -d '{"question": "Say hello in five words."}'; kill $!
 event: text
 data: {"text": "Hello"}
 
@@ -67,20 +67,16 @@ event: text
 data: {"text": " the"}
 
 event: text
-data: {"text": " shop"}
+data: {"text": " friendly"}
 
 event: text
-data: {"text": "'s"}
-
-event: text
-data: {"text": " assistant"}
+data: {"text": " server"}
 
 event: text
 data: {"text": "."}
 
 event: done
 data: {"stop_reason": "end_turn"}
-
 ```
 
 **Os eventos do relay são dele**, menores que os do provedor: `text`, `done` e `error`. O navegador
@@ -88,6 +84,16 @@ não precisa saber que provedor está atrás do relay, nem que existe um, e o re
 provedor sem mudar a página.
 
 ## O lado da página
+
+O lado da página é JavaScript, e para rodá-lo fora de um navegador esta aula usa o Node, que o Ubuntu
+empacota. O do Ubuntu 24.04 é a versão 18, que tem o `fetch` e todas as outras peças de que o cliente
+precisa:
+
+```
+ana@dev:~/shop$ sudo apt install -y nodejs 2>&1 | tail -n 1; node --version
+Processing triggers for libc-bin (2.39-0ubuntu8.9) ...
+v18.19.1
+```
 
 Um navegador tem dois jeitos de ler um stream. O `EventSource` foi feito para server-sent events,
 mas só manda requisições `GET`, sem corpo. O `fetch` consegue fazer `POST` de uma pergunta e ler a
@@ -115,7 +121,7 @@ que um navegador tem:
       "note": "**Um evento termina numa linha em branco.** O que vem depois da última é meio evento, guardado para a próxima leitura."
     },
     {
-      "code": "  for (const raw of events) {\n    const name = raw.match(/^event: (.*)$/m)[1];\n    const data = JSON.parse(raw.match(/^data: (.*)$/m)[1]);\n    if (name === \"text\") shown += data.text;\n    if (name === \"done\") console.log(`${shown}\\n[done: ${data.stop_reason}]`);\n    if (name === \"error\") console.log(`${shown}\\n[error: ${data.message}]`);\n  }\n}",
+      "code": "  for (const raw of events) {\n    const name = raw.match(/^event: (.*)$/m)[1];\n    const data = JSON.parse(raw.match(/^data: (.*)$/m)[1]);\n    if (name === \"text\") shown += data.text;\n    if (name === \"done\") console.log(`${shown}\\n[done: ${data.stop_reason}]`);\n    if (name === \"error\") console.log(`${shown}\\n[error: ${data.message}]`);\n  }\n}\n",
       "note": "**Cada evento completo é tratado**: texto é acrescentado, `done` e `error` encerram a resposta."
     }
   ]
@@ -123,12 +129,12 @@ que um navegador tem:
 ```
 
 ```
-ana@dev:~/shop$ python relay.py & sleep 1; node client.mjs "Explain in a paragraph why the cart stores prices in cents."; kill $!
-The cart stores prices as integer cents because a float cannot hold most decimal amounts exactly. In binary floating point, 0.1 plus 0.2 is not 0.3, and a total built from many such sums drifts by a cent here and there. Integers add exactly, so the cart adds cents and formats them only at the edge, when it prints a price for a person.
+ana@dev:~/shop$ python relay.py & sleep 3; node client.mjs "Explain in a paragraph why the cart stores prices in cents."; kill $!
+The practice of pricing items in cents, particularly in cart or checkout displays, is largely a marketing technique rather than a fundamental principle of commerce. The idea behind this is to create a psychological bias in the consumer's mind, making the item seem more affordable or desirable by presenting a price that ends in zero. This is based on the fact that humans are wired to perceive prices that end in zero as more attractive and less expensive, as it creates a mental association with the word "free." By pricing items in cents, businesses aim to create a positive impression and encourage impulse purchases, as the perceived value of the item is increased.
 [done: end_turn]
 ```
 
-Numa página, o `shown` iria para um elemento a cada evento `text`, em vez de ser impresso no fim.
+A mesma pergunta da seção 02, outro sorteio. Numa página, o `shown` iria para um elemento a cada evento `text`, em vez de ser impresso no fim.
 **O buffer é a parte que as pessoas esquecem.** Uma leitura da rede pode terminar no meio de um
 evento, então o código guarda o que vem depois da última linha em branco e espera o resto.
 

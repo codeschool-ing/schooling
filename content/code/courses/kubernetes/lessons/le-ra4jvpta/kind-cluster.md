@@ -3,9 +3,9 @@ title: A three-node cluster with kind
 version: 1
 ---
 
-Three programs are all the lab needs: Docker, which runs the nodes, `kind`, which builds the
-cluster, and `kubectl`, which talks to it. These are the versions every transcript in the course was
-recorded with:
+Three programs are all a kind cluster needs: Docker, which runs the nodes, `kind`, which builds the
+cluster, and `kubectl`, which talks to it. Lesson 1 installed them, and these are the versions the
+transcripts from lesson 2 on were recorded with:
 
 ```
 ana@laptop:~/shop$ docker version --format "client {{.Client.Version}}, server {{.Server.Version}}"
@@ -17,8 +17,8 @@ Client Version: v1.37.1
 Kustomize Version: v5.8.1
 ```
 
-`kubectl` installs on its own from the Kubernetes project's downloads, and kind is a single binary
-from its release page or a package manager. **Keep `kubectl` within one minor version of the
+The `go1.24.7` in kind's line is the Go that copy was compiled with; the released binary from lesson 1
+names a newer one and is the same kind. **Keep `kubectl` within one minor version of the
 cluster**: 1.37 against a cluster of 1.37 here, which the project guarantees to work, while a gap of
 two versions is not supported.
 

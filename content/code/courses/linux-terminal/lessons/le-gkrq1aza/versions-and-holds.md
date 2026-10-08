@@ -1,6 +1,6 @@
 ---
 title: Which version you got, and how to stop it changing
-version: 1
+version: 2
 ---
 
 `apt policy` answers the question nobody thinks to ask until something is wrong: **where did this
@@ -28,6 +28,10 @@ Three things:
 newest version apt is willing to give you from the repositories you have, at their priorities.
 
 ## Priorities, and the number in front of the URL
+
+`docker-ce` below comes from Docker's own repository, which the machine these transcripts were
+captured on has and yours does not (section 03). Read the numbers for what they show; to see the same
+on yours, `apt policy` any package you have installed.
 
 ```
 root@vm:~# apt policy docker-ce 2>/dev/null | head -12

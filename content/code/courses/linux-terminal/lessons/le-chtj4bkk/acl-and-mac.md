@@ -1,6 +1,6 @@
 ---
 title: Where twelve bits run out
-version: 1
+version: 2
 ---
 
 The model in this lesson has a hard limit, and it is easy to state: **a file has one owner and one
@@ -14,11 +14,19 @@ problems.
 ## ACLs: extra names on one file
 
 An **access control list** lets a file carry permissions for named users and named groups beyond
-the three rows.
+the three rows. Ubuntu Server has the tools for them in the package `acl`; if `getfacl` is missing,
+`sudo apt install acl` brings it. A report only its owner and group may read:
+
+```sh
+mkdir -p ~/acl
+cd ~/acl
+printf 'the report\n' > report.txt
+chmod 640 report.txt
+```
 
 ```
 ana@vm:~/acl$ ls -l report.txt
--rw-r----- 1 ana ana 11 Sep 14 22:46 report.txt
+-rw-r----- 1 ana ana 11 Oct  7 11:28 report.txt
 ana@vm:~/acl$ getfacl report.txt
 # file: report.txt
 # owner: ana
@@ -26,6 +34,7 @@ ana@vm:~/acl$ getfacl report.txt
 user::rw-
 group::r--
 other::---
+
 ```
 
 With no ACL set, `getfacl` prints the ordinary mode in a different notation: `user::`, `group::` and
@@ -34,7 +43,7 @@ With no ACL set, `getfacl` prints the ordinary mode in a different notation: `us
 ```
 ana@vm:~/acl$ setfacl -m u:carla:r report.txt
 ana@vm:~/acl$ ls -l report.txt
--rw-r-----+ 1 ana ana 11 Sep 14 22:46 report.txt
+-rw-r-----+ 1 ana ana 11 Oct  7 11:28 report.txt
 ana@vm:~/acl$ getfacl report.txt
 # file: report.txt
 # owner: ana
@@ -44,24 +53,34 @@ user:carla:r--
 group::r--
 mask::r--
 other::---
+
 ```
 
 Two things changed. There is a new line, `user:carla:r--`. And `ls -l` now ends the mode with a
 **`+`** — which is the only sign in an ordinary listing that a file has an ACL at all.
 
-It works:
+One thing still stands between carla and the file: `/home/ana` is `drwxr-x---`, and section 05
+said a directory without `x` cannot be passed through. An ACL lets her through it and gives her
+nothing else there:
+
+```
+ana@vm:~/acl$ setfacl -m u:carla:x /home/ana
+```
+
+And it works:
 
 ```
 carla@vm:~$ cat /home/ana/acl/report.txt
 the report
 ```
 
-Carla is not the owner, is not in the group, and `other` is `---`. She reads it because the ACL
-names her.
+Carla is not the owner, is not in the group, and `other` is `---`. She reads it because two ACLs
+name her: one on the directory and one on the file.
 
 `-m` modifies, `-x` removes one entry, `-b` removes them all:
 
 ```
+ana@vm:~/acl$ setfacl -x u:carla /home/ana
 ana@vm:~/acl$ setfacl -x u:carla report.txt
 ana@vm:~/acl$ getfacl report.txt
 # file: report.txt
@@ -71,6 +90,7 @@ user::rw-
 group::r--
 mask::r--
 other::---
+
 ```
 
 ### The `mask` line, which is where people get caught
@@ -131,15 +151,20 @@ still fails — is the signature.
 | what was denied? | `sudo ausearch -m avc -ts recent` | `/var/log/syslog`, `dmesg` |
 | relabel a file | `restorecon -v path` | — |
 
-On this machine neither is running, and the tools say so plainly:
+On the machine these transcripts were captured on, neither is running, and the tools say so
+plainly:
 
 ```
+root@vm:~# aa-status
+apparmor not present.
 root@vm:~# getenforce
-bash: line 7: getenforce: command not found
+bash: getenforce: command not found
 root@vm:~# ls -Z /etc/hosts
 ? /etc/hosts
 ```
 
+`apparmor not present` is this machine's kernel saying it has no AppArmor at all; on Ubuntu
+installed normally AppArmor is on, and `sudo aa-status` there lists every profile it has loaded.
 `command not found` means SELinux's userspace is not even installed, and the `?` where `ls -Z`
 would print a label means the file carries none. **That is a useful thing to be able to check
 quickly**, because half the advice you will read online assumes one of the two is on.

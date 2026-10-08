@@ -1,9 +1,10 @@
 ---
 title: The processor QEMU imitates
-version: 1
+version: 2
 ---
 
-Inside the guest, the same two questions:
+Inside the guest, the same two questions. vm1 is a fresh guest, made with `bash newvm.sh vm1` from
+lesson 1:
 
 ```
 ana@vm1:~$ lscpu | grep -E "^(Vendor ID|Model name|Virtualization|Hypervisor)"

@@ -1,0 +1,384 @@
+{
+  "ex-vvpycst3": {
+    "prompt": "Por que uma carga completa está certa por construção?",
+    "hint": "Ela não precisa saber o que aconteceu.",
+    "choices": [
+      {
+        "text": "Ela copia a origem como está agora",
+        "why": "Isso. Nada precisa ser detectado."
+      },
+      {
+        "text": "Ela lê mais rápido",
+        "why": "Ela lê mais, não mais rápido."
+      },
+      {
+        "text": "Ela trava a origem enquanto copia",
+        "why": "O `COPY` de uma consulta não trava nada que pare os caixas."
+      },
+      {
+        "text": "Ela confere cada linha contra a cópia anterior",
+        "why": "Ela nunca compara; ela joga a cópia antiga fora."
+      }
+    ]
+  },
+  "ex-q7dbekg1": {
+    "prompt": "O `full_customers.py` roda `TRUNCATE` e `COPY` numa transação só. O que um relatório lendo `raw.customers` durante a carga vê?",
+    "hint": "Quando o truncate fica visível?",
+    "choices": [
+      {
+        "text": "Uma tabela vazia",
+        "why": "A tabela vazia nunca é confirmada sozinha."
+      },
+      {
+        "text": "Metade das linhas novas",
+        "why": "Nada fica visível até a transação ser confirmada."
+      },
+      {
+        "text": "A cópia antiga, até a nova ser confirmada",
+        "why": "Isso. No PostgreSQL ele pode também esperar a trava que o `TRUNCATE` pega, mas nunca vê meia tabela."
+      },
+      {
+        "text": "Um erro, porque a tabela está sendo substituída",
+        "why": "Nenhum erro é lançado; o leitor recebe o estado confirmado."
+      }
+    ]
+  },
+  "ex-3x4ak377": {
+    "prompt": "Na noite de 2 de março a extração incremental leu 261 linhas, onde uma carga completa de pedidos teria lido 17.453. Cerca de quantas vezes menos linhas é isso? Dê um número inteiro.",
+    "hint": "Divida."
+  },
+  "ex-srwnvt6f": {
+    "prompt": "Quais promessas a origem precisa cumprir sobre o `updated_at` para uma extração incremental merecer confiança? Escolha todas as que se aplicam.",
+    "hint": "Três delas.",
+    "choices": [
+      {
+        "text": "Toda escrita o preenche",
+        "why": "Sim. Uma escrita que esquece é uma mudança que ninguém vê."
+      },
+      {
+        "text": "Ele nunca anda para trás numa linha",
+        "why": "Sim. Um valor menor se esconderia abaixo da marca d'água."
+      },
+      {
+        "text": "Ele tem índice",
+        "why": "Sim. Senão cada noite é uma varredura completa disfarçada."
+      },
+      {
+        "text": "Ele é guardado em UTC",
+        "why": "Um `timestamptz` compara certo em qualquer fuso em que seja mostrado."
+      }
+    ]
+  },
+  "ex-qv64nmfz": {
+    "prompt": "Um desenvolvedor corrige um erro de digitação na cidade de um cliente com um `UPDATE` à mão que não toca o `updated_at`. O que acontece no warehouse?",
+    "hint": "O que a extração pede?",
+    "choices": [
+      {
+        "text": "A correção chega na noite seguinte",
+        "why": "Só linhas com `updated_at` mais novo são lidas."
+      },
+      {
+        "text": "O erro fica lá para sempre",
+        "why": "Isso. Nenhuma execução incremental vai ver a mudança."
+      },
+      {
+        "text": "A extração falha com um conflito entre as duas versões",
+        "why": "Ela nunca vê uma segunda versão com que conflitar."
+      },
+      {
+        "text": "O PostgreSQL preenche o `updated_at` sozinho",
+        "why": "Só se um gatilho fizer isso, e a loja não tem."
+      }
+    ]
+  },
+  "ex-5x4qnfyq": {
+    "prompt": "Por que o `incremental.py` tira a nova marca d'água do `max(updated_at)` dentro do snapshot em vez da hora em que o job começou?",
+    "hint": "Sobre o que a marca d'água faz uma afirmação?",
+    "choices": [
+      {
+        "text": "A hora de início do job não está disponível em Python",
+        "why": "Está; o `datetime.now()` a dá."
+      },
+      {
+        "text": "Um relógio poderia alegar linhas que o snapshot nunca viu",
+        "why": "Isso. A marca d'água precisa descrever o que de fato foi lido."
+      },
+      {
+        "text": "Os horários da loja estão em março e o relógio da máquina em outubro",
+        "why": "Verdade no laboratório, mas o motivo vale em produção também."
+      },
+      {
+        "text": "O `max` é mais rápido que ler o relógio",
+        "why": "Velocidade não tem nada a ver."
+      }
+    ]
+  },
+  "ex-xxkzfa4d": {
+    "prompt": "Um colega muda o script para salvar a nova marca d'água numa transação própria, antes de carregar as linhas. Numa noite a carga cai no meio. Qual é o resultado?",
+    "hint": "Uma marca d'água que corre na frente dos dados.",
+    "choices": [
+      {
+        "text": "Amanhã lê a mesma janela de novo",
+        "why": "Isso é o que mantê-las juntas dá."
+      },
+      {
+        "text": "As linhas são carregadas duas vezes amanhã",
+        "why": "Amanhã começa acima da marca salva e nunca as relê."
+      },
+      {
+        "text": "As mudanças da noite se perdem, em silêncio",
+        "why": "Isso. A marca d'água alega linhas que o warehouse nunca recebeu."
+      },
+      {
+        "text": "O PostgreSQL desfaz a marca d'água automaticamente",
+        "why": "Ela foi confirmada na própria transação; nada a desfaz."
+      }
+    ]
+  },
+  "ex-dv1ggrrh": {
+    "prompt": "O maior `updated_at` que um pipeline já carregou se chama a sua marca d'___.",
+    "hint": "Marca até onde a maré chegou.",
+    "blanks": [
+      {
+        "accept": [
+          "água",
+          "agua"
+        ]
+      }
+    ]
+  },
+  "ex-v09t14n0": {
+    "prompt": "O pedido 900001 tem `updated_at` 23:40 de 2 de março, mas foi confirmado depois da extração daquela noite. Por que a extração simples da noite seguinte o perdeu?",
+    "hint": "Compare 23:40 com a marca d'água.",
+    "choices": [
+      {
+        "text": "O horário dele fica abaixo da marca d'água",
+        "why": "Isso. A noite seguinte só pede linhas acima de 23:59:47."
+      },
+      {
+        "text": "O caixa o apagou depois de confirmar",
+        "why": "Ele continua na loja."
+      },
+      {
+        "text": "Pedidos em dinheiro não são extraídos",
+        "why": "A forma de pagamento não entra na extração."
+      },
+      {
+        "text": "A loja dele, a Paulista, é filtrada",
+        "why": "A extração lê todas as lojas."
+      }
+    ]
+  },
+  "ex-4yyjnfk6": {
+    "prompt": "A `raw.orders_changes_60m` tinha 17.766 linhas, mas 17.758 versões distintas. Quantas linhas o retrocesso carregou duas vezes?",
+    "hint": "Linhas menos versões."
+  },
+  "ex-ssmjh91k": {
+    "prompt": "Uma origem roda um job em lote noturno cujas transações ficam abertas por até 90 minutos. Que retrocesso o raciocínio da lição sugere?",
+    "hint": "A transação aberta mais longa, com folga.",
+    "choices": [
+      {
+        "text": "Sessenta minutos, como no laboratório",
+        "why": "Linhas da última meia hora de uma transação longa ainda se perderiam."
+      },
+      {
+        "text": "Mais de 90 minutos",
+        "why": "Isso. A janela precisa alcançar além da transação mais longa."
+      },
+      {
+        "text": "Nenhum: um retrocesso só cria duplicatas",
+        "why": "Duplicatas são a metade barata; linhas perdidas são a cara."
+      },
+      {
+        "text": "Exatamente 90 minutos e nem um segundo a mais",
+        "why": "A lição diz com folga."
+      }
+    ]
+  },
+  "ex-db48s233": {
+    "prompt": "O pedido 113697 aparece duas vezes em `raw.orders_changes`, uma como concluído e outra como estornado. Qual linha está errada?",
+    "hint": "Cada uma foi lida num momento diferente.",
+    "choices": [
+      {
+        "text": "A de concluído, porque o pedido foi estornado",
+        "why": "Ele estava concluído quando foi lido; é um registro verdadeiro."
+      },
+      {
+        "text": "Nenhuma",
+        "why": "Isso. Cada uma é o que a loja dizia no momento em que foi lida."
+      },
+      {
+        "text": "A de estornado, porque foi extraída depois",
+        "why": "Depois é mais novo, não errado."
+      },
+      {
+        "text": "As duas, porque um pedido tem um status só",
+        "why": "Um pedido tem um status por vez; a camada crua guarda os tempos."
+      }
+    ]
+  },
+  "ex-q9br2y00": {
+    "prompt": "A view `raw.orders_latest` tinha 17.749 pedidos enquanto a loja tinha 17.750 atualizados até o mesmo momento. O que explica a diferença?",
+    "hint": "Sobre qual extração a view é montada?",
+    "choices": [
+      {
+        "text": "O `DISTINCT ON` descartou um pedido com duas versões idênticas",
+        "why": "O `DISTINCT ON` guarda uma linha por pedido; ele nunca descarta um pedido."
+      },
+      {
+        "text": "O pedido do caixa lento, que a extração simples nunca viu",
+        "why": "Isso. A view está sobre a extração sem retrocesso."
+      },
+      {
+        "text": "Um pedido apagado por um pedido de apagamento",
+        "why": "Apagamentos apagam clientes, não pedidos, e o primeiro é no dia 14."
+      },
+      {
+        "text": "Uma diferença de fuso à meia-noite",
+        "why": "Os dois lados comparam valores `timestamptz`; fusos não os deslocam."
+      }
+    ]
+  },
+  "ex-am8sfqpr": {
+    "prompt": "O que `DISTINCT ON (order_id)` com `ORDER BY order_id, updated_at DESC` devolve?",
+    "hint": "A primeira linha de cada pedido, nessa ordem.",
+    "choices": [
+      {
+        "text": "A versão mais antiga de cada pedido",
+        "why": "O `DESC` põe a mais nova primeiro."
+      },
+      {
+        "text": "Todas as versões, ordenadas",
+        "why": "O `DISTINCT ON` guarda uma por pedido."
+      },
+      {
+        "text": "Pedidos que mudaram mais de uma vez",
+        "why": "Todo pedido aparece, mudado ou não."
+      },
+      {
+        "text": "A versão mais nova de cada pedido",
+        "why": "Isso. Uma linha por pedido, a mais recente."
+      }
+    ]
+  },
+  "ex-bns3zc4d": {
+    "prompt": "Por que a extração incremental de clientes em 14 de março não viu a exclusão do cliente 1880?",
+    "hint": "Onde ela procuraria a mudança?",
+    "choices": [
+      {
+        "text": "Uma linha apagada não tem `updated_at` para achar",
+        "why": "Isso. Não há linha, então nada fica acima da marca d'água."
+      },
+      {
+        "text": "A exclusão aconteceu antes da marca d'água",
+        "why": "Aconteceu naquele dia; o tempo não é o problema."
+      },
+      {
+        "text": "O papel `etl_reader` não vê exclusões",
+        "why": "Nenhum papel vê uma linha que não existe mais."
+      },
+      {
+        "text": "A extração pulou os clientes naquele dia",
+        "why": "Ela rodou e leu 294 clientes alterados."
+      }
+    ]
+  },
+  "ex-9xzzbjma": {
+    "prompt": "Ligue cada jeito de ver exclusões ao seu custo ou limite.",
+    "hint": "Quatro jeitos, quatro trocas.",
+    "pairs": [
+      {
+        "left": "Uma carga completa",
+        "right": "Lê cada linha, toda noite"
+      },
+      {
+        "left": "Comparar chaves",
+        "right": "Lê cada chave, toda noite"
+      },
+      {
+        "left": "Exclusões lógicas",
+        "right": "Errado quando a linha tem de sumir"
+      },
+      {
+        "left": "Ler o log",
+        "right": "O assunto da lição 5"
+      }
+    ]
+  },
+  "ex-npz9jjhe": {
+    "prompt": "Os pedidos de um cliente apagado tiveram o `customer_id` posto em `NULL`. A extração incremental de pedidos viu isso, e por quê?",
+    "hint": "Uma atualização ou um sumiço?",
+    "choices": [
+      {
+        "text": "Não, porque o cliente foi apagado",
+        "why": "Os pedidos foram atualizados, não apagados."
+      },
+      {
+        "text": "Sim, porque o `updated_at` andou em cada pedido",
+        "why": "Isso. Uma atualização é visível para uma marca d'água."
+      },
+      {
+        "text": "Não, porque `NULL` não é comparado pelo `>`",
+        "why": "A comparação é no `updated_at`, que não é nulo."
+      },
+      {
+        "text": "Sim, mas só com o retrocesso",
+        "why": "A extração simples vê também."
+      }
+    ]
+  },
+  "ex-dx96zk8j": {
+    "prompt": "Por que a Ponto Final recarrega `customers` inteira toda noite, mesmo tendo um bom `updated_at`?",
+    "hint": "Leia a coluna das exclusões.",
+    "choices": [
+      {
+        "text": "É a maior tabela",
+        "why": "Pedidos e linhas são maiores."
+      },
+      {
+        "text": "Apagamentos, que só uma carga completa vê",
+        "why": "Isso. E com cinco mil linhas a carga completa é barata."
+      },
+      {
+        "text": "O `updated_at` dela não tem índice",
+        "why": "Isso deixaria uma carga incremental lenta, mas não é o motivo dado."
+      },
+      {
+        "text": "A LGPD proíbe cargas incrementais de dados pessoais",
+        "why": "Ela proíbe guardar dados depois de um apagamento, não um método."
+      }
+    ]
+  },
+  "ex-4zv8g59q": {
+    "prompt": "Ordene os passos de uma noite do `incremental.py`.",
+    "hint": "Ler a antiga, achar a nova, carregar, depois andar.",
+    "items": [
+      "Ler e travar a marca d'água",
+      "Pegar o updated_at mais novo num snapshot da loja",
+      "Ler as linhas entre a marca antiga e a nova",
+      "Inserir as linhas e mover a marca d'água, num commit só"
+    ]
+  },
+  "ex-ttqj1sap": {
+    "prompt": "Uma tabela tem 2 milhões de linhas, cresce mil por dia, tem um `updated_at` confiável com índice, e as linhas dela às vezes são apagadas. Para qual extração o raciocínio da lição aponta?",
+    "hint": "Grande demais para recarregar, e as exclusões importam.",
+    "choices": [
+      {
+        "text": "Uma carga completa toda noite",
+        "why": "Dois milhões de linhas por noite para mil mudanças é o custo de que a lição avisa."
+      },
+      {
+        "text": "Incremental, mais uma comparação noturna de chaves ou o log para as exclusões",
+        "why": "Isso. A marca d'água acha atualizações; outra coisa precisa achar exclusões."
+      },
+      {
+        "text": "Incremental com retrocesso longo, que também pega exclusões",
+        "why": "Nenhum retrocesso acha uma linha que sumiu."
+      },
+      {
+        "text": "Só incremental, já que exclusões são raras",
+        "why": "Raro não é nunca, e cada uma deixa uma linha que não devia existir."
+      }
+    ]
+  }
+}

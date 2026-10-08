@@ -67,7 +67,7 @@ e o parâmetro é como você escolhe um lado dela por consulta.
 ## Qdrant
 
 Este é o cliente Python do Qdrant em **modo local**, a implementação dentro do processo que a aula
-13 usou, porque o servidor do Qdrant estava fora de alcance do laboratório:
+13 usou, porque o servidor do Qdrant estava fora de alcance da máquina em que este curso foi gravado:
 
 ```schooling-example
 {

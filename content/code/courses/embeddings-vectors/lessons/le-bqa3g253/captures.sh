@@ -181,7 +181,7 @@ on 'python bench.py'
 block machine
 on 'nproc'
 on 'grep -m1 "model name" /proc/cpuinfo'
-on 'grep -n "num_threads" /opt/emb/lib/python3.11/site-packages/minilm.py'
+on 'grep -n "num_threads" minilm.py'
 
 block speed
 on 'python speed.py'

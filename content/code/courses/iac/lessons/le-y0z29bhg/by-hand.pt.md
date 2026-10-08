@@ -1,7 +1,10 @@
 ---
 title: Uma rede feita à mão
-version: 1
+version: 2
 ---
+
+Nada nesta aula pede que você digite. As transcrições são da Ana e estão aqui para serem lidas, e
+as últimas quatro seções montam o laboratório em que você vai digitar a partir da aula 2.
 
 A Ana cuida da infraestrutura de uma pequena loja online. Na primeira vez em que precisou de uma
 rede para ela, fez o que quase todo mundo faz na primeira vez: digitou. Uma rede virtual (uma

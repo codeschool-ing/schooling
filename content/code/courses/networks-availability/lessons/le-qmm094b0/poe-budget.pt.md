@@ -3,8 +3,8 @@ title: Power over Ethernet, o orçamento que ninguém soma
 version: 1
 ---
 
-Um AP corporativo tira a energia da porta do switch, pelo mesmo cabo dos dados: Power over Ethernet, da
-aula 21 de `networks-addressing`. As normas definem o que uma porta de switch fornece e o que chega ao
+Um AP corporativo tira a energia da porta do switch, pelo mesmo cabo dos dados: Power over Ethernet, que
+`networks-addressing` apresentou. As normas definem o que uma porta de switch fornece e o que chega ao
 aparelho depois da perda no cabo:
 
 | norma | na porta do switch | no aparelho |

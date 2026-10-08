@@ -1,6 +1,6 @@
 ---
 title: O modelo como propositor e juiz, e quando compensa
-version: 1
+version: 2
 ---
 
 O `tot` propõe e julga com aritmética exata. No método como foi publicado, e no artigo que o
@@ -12,29 +12,65 @@ julgamento.
 ## Dois prompts
 
 O propositor recebe o pedido de próximos passos possíveis a partir de um estado. O juiz é
-consultado sobre um estado por vez. Este é um prompt de avaliação que o curso escreveu como
-exemplo; ele não foi executado, já que a bancada não tem modelo:
+consultado sobre um estado por vez. Eis um prompt de avaliação para o estado que o `tot` manteve no
+nível 1, com `4 13 19` sobrando, salvo como `~/pe/prompts/judge.txt` e mandado ao modelo local:
 
 ```
+ana@lab:~/pe$ cat prompts/judge.txt
 Numbers left: 4 13 19
 Goal: make 24 using each number exactly once, with + - * /.
 Try a few combinations, then give your verdict on the last line:
 sure (you found a way), likely (it looks reachable), or impossible (every attempt is far off).
+ana@lab:~/pe$ ask - --temperature 0 < prompts/judge.txt
+Let's try a few combinations:
+
+1. (13 + 4) * 19 = 217 (not 24)
+2. (19 - 4) * 13 = 221 (not 24)
+3. (19 + 4) * 13 = 247 (not 24)
+4. (19 + 13) * 4 = 208 (not 24)
+5. (19 - 13) * 4 = 6 (not 24)
+6. (19 + 13) / 4 = 8 (not 24)
+7. (19 - 4) / 13 = 1.38 (not 24)
+8. (13 + 4) / 19 = 0.74 (not 24)
+9. (19 + 4) / 13 = 2.46 (not 24)
+10. (19 - 4) / 13 = 1.38 (not 24)
+11. (13 + 4) * 19 / 13 = 24 (yes!)
+
+Verdict: sure (I found a way)
+-- llama3.2:3b, finish: stop, prompt 88 tokens, output 236 tokens
 ```
 
-E a ilustração do curso para uma resposta:
+`4 13 19` consegue dar 24: o `tot` achou no nível 2, `19 - 13 = 6`, depois `4 * 6`. O modelo testou
+exatamente essa combinação na linha 5 e escreveu `(19 - 13) * 4 = 6`. Depois, na linha 11, escreveu
+`(13 + 4) * 19 / 13 = 24`, que usa o 13 duas vezes e dá 24,85, e com base nisso disse **sure**. O
+veredito está certo, e o motivo dele é falso. Um julgamento feito desse jeito podia muito bem ter dito impossível, e podado o ramo que resolve o quebra-cabeça. **É aí que a busca erra quando tem um modelo dentro**: não na busca,
+que é só contabilidade, mas num julgamento que ninguém confere.
 
-```localised
-19 - 13 = 6, e 4 * 6 = 24.
-Veredito: sure
+Um estado sem caminho até 24, `1 1 2`, mostra o outro risco. O mesmo prompt, com um limite de 150
+tokens:
+
+```
+ana@lab:~/pe$ sed "s/4 13 19/1 1 2/" prompts/judge.txt > prompts/judge-dead.txt
+ana@lab:~/pe$ ask - --temperature 0 --max-tokens 150 < prompts/judge-dead.txt
+Let's try a few combinations:
+
+1. (1 + 2) * 1 = 3 (not enough)
+2. (1 + 1) * 2 = 4 (not enough)
+3. (1 + 2) - 1 = 2 (not enough)
+4. (1 + 1) - 2 = 0 (not enough)
+5. (1 + 2) / 1 = 3 (not enough)
+6. (1 + 1) / 2 = 1.5 (not enough)
+7. (1 + 2) * (1 + 1) = 6 (not enough)
+8. (1 + 2) * (1
+-- llama3.2:3b, finish: length, prompt 88 tokens, output 150 tokens
 ```
 
-Aqui o juiz por acaso achou uma solução, então `sure` é fácil. A maioria dos estados é mais
-difícil: o juiz tenta algumas combinações, não acha nada que funcione de cara, e tem de chutar
-entre `likely` e `impossible`. **Esse chute é onde a busca pode dar errado**, e é por isso que a
-largura da seção anterior importa com um modelo e não com o `tot`. Implementações muitas vezes
-consultam o juiz várias vezes por estado e combinam os vereditos, que é a votação da lição 27
-aplicada a um passo.
+Ele foi cortado no meio da lista, em 150 tokens, e ainda não tinha chegado a um veredito. Um juiz que passa pelas combinações uma a uma pode custar muitas vezes o que um julgamento deveria, e é para isso que serve o limite da lição
+15.
+
+É por isso que a largura da seção anterior importa com um modelo e não com o `tot`, e por isso que as
+implementações costumam perguntar ao juiz várias vezes por estado e combinar os vereditos: a
+votação da lição 27, aplicada a um passo, com os limites da lição 27.
 
 ## Quantas chamadas uma resposta exige
 

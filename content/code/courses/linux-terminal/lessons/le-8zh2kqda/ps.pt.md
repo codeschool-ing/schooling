@@ -1,6 +1,6 @@
 ---
 title: `ps`, e os dois dialetos que ele fala
-version: 1
+version: 2
 ---
 
 O `ps` tem o tratamento de opções mais estranho de todos os comandos deste curso, e há um motivo
@@ -123,7 +123,8 @@ ps -eo pid,ppid,user,stat,etime,cmd
 ```
 
 `-e` é todo processo, `-o` são as colunas que você quer, e os nomes das colunas são os da tabela
-acima. Acrescente `--sort=` para ordenar por uma delas, e um sinal de menos inverte:
+acima. Acrescente `--sort=` para ordenar por uma delas, e um sinal de menos inverte. Este rodou com
+`./runaway.sh &` em andamento em `~/work`:
 
 ```
 ana@vm:~/work$ ps -eo pid,ppid,user,%cpu,%mem,etime,comm --sort=-%cpu | head -5
@@ -137,12 +138,14 @@ ana@vm:~/work$ ps -eo pid,ppid,user,%cpu,%mem,etime,comm --sort=-%cpu | head -5
 **`--sort=-%cpu | head` é o `ps` mais útil que existe** — é "o que está comendo esta máquina",
 respondido numa linha. Aqui a resposta não deixa dúvida: um processo a 100% e o seguinte a 4,5%.
 (Os três abaixo dele são o sandbox em que estas transcrições são capturadas, e o `runaway.sh` é o
-laço ocupado proposital da seção 13.)
+laço ocupado proposital da seção 07.)
 
 `comm` é o nome do programa; `cmd` ou `args` é a linha de comando inteira. Use `comm` quando quiser
 uma coluna estreita e `args` quando precisar distinguir dois processos `python3`.
 
 ## `pgrep` quando você quer o número, não a tabela
+
+Com `./sleeper.sh &` rodando; o último comando veio depois de um `kill %1` tê-lo parado:
 
 ```
 ana@vm:~/work$ pgrep -u ana -f sleeper.sh

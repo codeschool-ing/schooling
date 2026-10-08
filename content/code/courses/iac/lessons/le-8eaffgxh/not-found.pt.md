@@ -1,6 +1,6 @@
 ---
 title: Nenhum resultado, dois resultados e uma lista vazia
-version: 1
+version: 2
 ---
 
 Um bloco de recurso que falha para no apply. **Uma data source que falha para o plan**, e o plan
@@ -8,8 +8,21 @@ inteiro junto, porque nada que se refira à resposta pode ser calculado sem ela.
 errado de três jeitos, e só dois deles fazem barulho.
 
 **Nenhum resultado.** A VPC que a Ana pediu não existe, porque a tag dela é `shop`, não `shop-prod`.
-Um segundo diretório, `~/shop/probe`, guarda configurações pequenas para experimentar isso, e a
-primeira pede o nome errado:
+Um segundo diretório, `~/shop/probe`, guarda configurações pequenas para experimentar isso. O
+`versions.tf` dele fica igual o tempo todo:
+
+```hcl
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
+    }
+  }
+}
+```
+
+O primeiro `main.tf` pede o nome errado:
 
 ```hcl
 provider "aws" {
@@ -41,7 +54,8 @@ Planning failed. Terraform encountered an error while generating this plan.
 
 **Dois resultados, numa data source que devolve um.** Uma data source no singular (`aws_vpc`,
 `aws_ami`, `aws_subnet`) precisa achar exatamente uma coisa, e se recusa a escolher entre duas. Peça
-todas as imagens `shop-web-*` sem `most_recent`, agora que o time de imagens publicou duas:
+todas as imagens `shop-web-*` sem `most_recent`, agora que o time de imagens publicou duas, num
+`main.tf` novo:
 
 ```hcl
 provider "aws" {
@@ -122,7 +136,14 @@ errada, diga isso: uma `precondition` ou um bloco `check` da aula 3 pode recusá
 sua.
 
 **O resultado que quebra depois** é o que dói, porque a configuração não mudou. O time de rede monta
-uma cópia de staging da rede e copia as tags junto com todo o resto:
+uma cópia de staging da rede e copia as tags junto com todo o resto. Fazendo o papel dele mais uma
+vez, de qualquer diretório:
+
+```sh
+aws ec2 create-vpc --cidr-block 10.30.0.0/16 --tag-specifications 'ResourceType=vpc,Tags=[{Key=Name,Value=shop},{Key=Environment,Value=staging},{Key=Owner,Value=network}]'
+```
+
+Agora duas VPCs respondem à tag:
 
 ```
 ana@laptop:~/shop/app$ aws ec2 describe-vpcs --filters Name=tag:Name,Values=shop --query "Vpcs[].[CidrBlock,Tags[?Key==\`Environment\`]|[0].Value]" --output text
@@ -162,7 +183,8 @@ Planning failed. Terraform encountered an error while generating this plan.
 
 A busca estava certa no dia em que ela a escreveu. **A consulta de uma data source é um contrato com
 quem é dono daquilo que ela procura**, e esse contrato nunca foi escrito: "existe uma VPC com a tag
-`shop`" era verdade por acaso. A correção é pedir o que ela quer dizer, a rede de produção:
+`shop`" era verdade por acaso. A correção é pedir o que ela quer dizer, a rede de produção, no
+`network.tf`:
 
 ```hcl
 data "aws_vpc" "shop" {

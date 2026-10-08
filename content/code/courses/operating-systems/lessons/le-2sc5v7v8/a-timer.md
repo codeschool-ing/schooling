@@ -1,11 +1,43 @@
 ---
 title: A scheduled task, written from scratch
-version: 1
+version: 2
 ---
 
 The nightly backup needs three things: *a script* that does the work, *a service* that runs the
 script, and *a timer* that starts the service. The script, `/usr/local/bin/office-backup`, compresses
-`/etc/apt` into `/var/backups`. The other two are short text files:
+`/etc/apt` into `/var/backups`. The other two are short text files. Write all three on your server:
+
+```sh
+sudo tee /usr/local/bin/office-backup > /dev/null <<'EOF'
+#!/bin/sh
+tar -czf /var/backups/etc-apt.tar.gz -C /etc apt && echo "backup written: /var/backups/etc-apt.tar.gz"
+EOF
+sudo chmod 755 /usr/local/bin/office-backup
+sudo tee /etc/systemd/system/office-backup.service > /dev/null <<'EOF'
+[Unit]
+Description=Copy /etc/apt to /var/backups
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/office-backup
+EOF
+sudo tee /etc/systemd/system/office-backup.timer > /dev/null <<'EOF'
+[Unit]
+Description=Run office-backup every weekday at 02:00
+
+[Timer]
+OnCalendar=Mon..Fri 02:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+EOF
+```
+
+`sudo tee` writes what it reads into a file only root may change, and `<<'EOF'` hands it every line
+up to the one that says `EOF`. The `chmod` makes the script executable, lesson 9's `x`. Lesson 15 is
+about the files that configure a system, of which these are three. Here are the two unit files, read
+back:
 
 ```
 ana@server:~$ cat /etc/systemd/system/office-backup.service

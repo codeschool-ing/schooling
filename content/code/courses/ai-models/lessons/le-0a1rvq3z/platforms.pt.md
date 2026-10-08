@@ -7,8 +7,8 @@ O Claude é acessado pela API da própria Anthropic e pelas grandes nuvens, e a 
 que os preços quase não mudam entre elas. O que muda é **o nome pelo qual você o chama**:
 
 ```
-ana@desk:~/desk$ python lab/card.py "Claude Haiku 4.5" "Claude API ID" "Claude API alias" "Amazon Bedrock ID" "Google Cloud ID" "Microsoft Foundry ID"
-# https://platform.claude.com/docs/en/about-claude/models/overview, read 2026-10-05
+ana@desk:~/desk$ python card.py "Claude Haiku 4.5" "Claude API ID" "Claude API alias" "Amazon Bedrock ID" "Google Cloud ID" "Microsoft Foundry ID"
+# https://platform.claude.com/docs/en/about-claude/models/overview, read 2026-10-07
 Claude Haiku 4.5
   Claude API ID               claude-haiku-4-5-20251001
   Claude API alias            claude-haiku-4-5

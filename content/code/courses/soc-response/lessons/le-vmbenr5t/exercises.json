@@ -1,0 +1,579 @@
+[
+  {
+    "id": "ex-5b48mjpa",
+    "version": 1,
+    "section": "when-packets",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which question can a packet capture answer that flow records cannot?",
+    "hint": "Content.",
+    "choices": [
+      {
+        "text": "What files sent",
+        "correct": true,
+        "why": "Right. Flows say how much, not what."
+      },
+      {
+        "text": "How many bytes left",
+        "correct": false,
+        "why": "Flows answer that too."
+      },
+      {
+        "text": "When the conversation began, to the second, according to the firewall",
+        "correct": false,
+        "why": "Flows have times."
+      },
+      {
+        "text": "Whether files talked to an address at all during the night",
+        "correct": false,
+        "why": "Flows answer that."
+      }
+    ]
+  },
+  {
+    "id": "ex-3k8zfjgc",
+    "version": 1,
+    "section": "when-packets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a SOC not keep every packet for months?",
+    "hint": "Size.",
+    "choices": [
+      {
+        "text": "A capture is the whole conversation, so it is huge",
+        "correct": true,
+        "why": "Right. Flows are kept long; packets on purpose."
+      },
+      {
+        "text": "Packets carry no times",
+        "correct": false,
+        "why": "They do."
+      },
+      {
+        "text": "tcpdump cannot run for longer than a few hours",
+        "correct": false,
+        "why": "It can run indefinitely."
+      },
+      {
+        "text": "Captures are illegal",
+        "correct": false,
+        "why": "They raise privacy questions; they are not illegal."
+      }
+    ]
+  },
+  {
+    "id": "ex-6g3s4xxy",
+    "version": 1,
+    "section": "capturing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the capture filter host 192.168.20.10 decide?",
+    "hint": "Kept, or shown?",
+    "choices": [
+      {
+        "text": "Which interface it listens on",
+        "correct": false,
+        "why": "-i eth0 does."
+      },
+      {
+        "text": "Which host runs tcpdump",
+        "correct": false,
+        "why": "ip netns exec fw does."
+      },
+      {
+        "text": "Which packets are kept at all",
+        "correct": true,
+        "why": "Right. What it leaves out was never recorded."
+      },
+      {
+        "text": "Which packets are shown later",
+        "correct": false,
+        "why": "That is a display filter."
+      }
+    ]
+  },
+  {
+    "id": "ex-qtfnc2yj",
+    "version": 1,
+    "section": "capturing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many packets did the kernel drop during the capture?",
+    "hint": "The last line of tcpdump's summary.",
+    "value": 0,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-586dn93m",
+    "version": 1,
+    "section": "capturing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why read the 'dropped by kernel' number every time?",
+    "hint": "Gaps.",
+    "choices": [
+      {
+        "text": "It must match the flow record's packet count exactly, or the capture is rejected as evidence",
+        "correct": false,
+        "why": "No such rule."
+      },
+      {
+        "text": "Dropped packets leave a gap nobody sees later",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It counts attacks blocked",
+        "correct": false,
+        "why": "It counts packets the capture missed."
+      },
+      {
+        "text": "It decides how large the capture file is allowed to be",
+        "correct": false,
+        "why": "No."
+      }
+    ]
+  },
+  {
+    "id": "ex-jz34fyt2",
+    "version": 1,
+    "section": "capturing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the capture file copied to ana for analysis?",
+    "hint": "Root is for capturing.",
+    "choices": [
+      {
+        "text": "tshark refuses to run as root",
+        "correct": false,
+        "why": "It warns, but runs."
+      },
+      {
+        "text": "Root cannot read pcap files",
+        "correct": false,
+        "why": "Root can read anything."
+      },
+      {
+        "text": "Reading needs no root, and less power means less damage",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "ana owns the case",
+        "correct": false,
+        "why": "Ownership of the case is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-3gjdsxw6",
+    "version": 1,
+    "section": "reading-tcpdump",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order the first packets of a TCP conversation.",
+    "hint": "Three-way handshake, then data.",
+    "items": [
+      "SYN",
+      "SYN-ACK",
+      "ACK",
+      "PUSH with data"
+    ]
+  },
+  {
+    "id": "ex-fp9vhq1w",
+    "version": 1,
+    "section": "reading-tcpdump",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why read captures with -nn during an incident?",
+    "hint": "Lookups.",
+    "choices": [
+      {
+        "text": "It reads only new connections, skipping every packet that belongs to one already open",
+        "correct": false,
+        "why": "That is a filter."
+      },
+      {
+        "text": "It decrypts TLS",
+        "correct": false,
+        "why": "No option does that."
+      },
+      {
+        "text": "No name lookups, which could reach the other side",
+        "correct": true,
+        "why": "Right. And it is faster."
+      },
+      {
+        "text": "It shows the content of every packet as readable text",
+        "correct": false,
+        "why": "-A or -X would."
+      }
+    ]
+  },
+  {
+    "id": "ex-88r8nzjz",
+    "version": 1,
+    "section": "reading-tcpdump",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many packets does web.pcap hold?",
+    "hint": "wc -l.",
+    "value": 20,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-jpdvrm2v",
+    "version": 1,
+    "section": "tshark-and-wireshark",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is tshark, relative to Wireshark?",
+    "hint": "Same dissectors.",
+    "choices": [
+      {
+        "text": "Its command-line half, same decoders and filters",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A Windows edition of the same program, with a GUI",
+        "correct": false,
+        "why": "It runs everywhere."
+      },
+      {
+        "text": "A different product with a different filter language that has to be learnt separately",
+        "correct": false,
+        "why": "Same display filters."
+      },
+      {
+        "text": "A capture-only tool",
+        "correct": false,
+        "why": "It reads and analyses too."
+      }
+    ]
+  },
+  {
+    "id": "ex-t59d6q60",
+    "version": 1,
+    "section": "tshark-and-wireshark",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the conversation table, which way did the 50 kB go?",
+    "hint": "Read the arrows.",
+    "choices": [
+      {
+        "text": "Both ways equally",
+        "correct": false,
+        "why": "Very unequal."
+      },
+      {
+        "text": "From files outward",
+        "correct": false,
+        "why": "That was 829 bytes."
+      },
+      {
+        "text": "The table does not say which way the bytes went, only how many crossed in total",
+        "correct": false,
+        "why": "The arrows do."
+      },
+      {
+        "text": "Towards files: a download",
+        "correct": true,
+        "why": "Right. Thursday's 612 MB went the other way."
+      }
+    ]
+  },
+  {
+    "id": "ex-r68xgt4w",
+    "version": 1,
+    "section": "tshark-and-wireshark",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "How does a display filter differ from a capture filter?",
+    "hint": "Kept or shown.",
+    "choices": [
+      {
+        "text": "It only hides packets, and names any field",
+        "correct": true,
+        "why": "Right. Nothing is lost by it."
+      },
+      {
+        "text": "It uses BPF syntax, the same as tcpdump's own filters",
+        "correct": false,
+        "why": "That is the capture filter."
+      },
+      {
+        "text": "It deletes packets from the file",
+        "correct": false,
+        "why": "It changes nothing on disk."
+      },
+      {
+        "text": "It is faster",
+        "correct": false,
+        "why": "Not the difference."
+      }
+    ]
+  },
+  {
+    "id": "ex-n495w0e4",
+    "version": 1,
+    "section": "tshark-and-wireshark",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which frame number holds the HTTP request?",
+    "hint": "The GET line.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-fzyhq8ad",
+    "version": 1,
+    "section": "what-was-transferred",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does following a TCP stream show?",
+    "hint": "As the programs saw it.",
+    "choices": [
+      {
+        "text": "The flow record",
+        "correct": false,
+        "why": "That is nfdump."
+      },
+      {
+        "text": "Only the headers of each request and each reply",
+        "correct": false,
+        "why": "The body follows them."
+      },
+      {
+        "text": "Every stream in the capture at once, interleaved by the time each packet arrived",
+        "correct": false,
+        "why": "One stream, by number."
+      },
+      {
+        "text": "The conversation's bytes, in order, per side",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-0bvws697",
+    "version": 1,
+    "section": "what-was-transferred",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What proved the exported file is the file on the server?",
+    "hint": "Lesson 16's shape.",
+    "choices": [
+      {
+        "text": "Content-Length matched the size that ls printed for the exported copy",
+        "correct": false,
+        "why": "Size is not identity."
+      },
+      {
+        "text": "tshark said success",
+        "correct": false,
+        "why": "It printed nothing."
+      },
+      {
+        "text": "The same SHA-256 for both",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The same name",
+        "correct": false,
+        "why": "Names prove nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-3e8f1dy2",
+    "version": 1,
+    "section": "what-was-transferred",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "tshark --export-___ http,out writes every file sent over HTTP into a folder.",
+    "hint": "Wireshark: File, Export ...",
+    "blanks": [
+      {
+        "accept": [
+          "objects"
+        ],
+        "ignore_case": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kc7xgjhg",
+    "version": 1,
+    "section": "encryption",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What survives TLS in a capture?",
+    "hint": "The shape.",
+    "choices": [
+      {
+        "text": "The headers",
+        "correct": false,
+        "why": "Encrypted."
+      },
+      {
+        "text": "The path requested, and the query string after it",
+        "correct": false,
+        "why": "Encrypted."
+      },
+      {
+        "text": "Addresses, ports, times, sizes and the server name",
+        "correct": true,
+        "why": "Right. The conversation, not the content."
+      },
+      {
+        "text": "Nothing",
+        "correct": false,
+        "why": "The shape survives."
+      }
+    ]
+  },
+  {
+    "id": "ex-shvjhx0b",
+    "version": 1,
+    "section": "encryption",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the SNI?",
+    "hint": "Sent in the clear.",
+    "choices": [
+      {
+        "text": "The server name, sent in the clear at the start of TLS",
+        "correct": true,
+        "why": "Right. Unless Encrypted Client Hello is used."
+      },
+      {
+        "text": "A flow record field",
+        "correct": false,
+        "why": "It is a TLS field."
+      },
+      {
+        "text": "A session key, exchanged at the start of the connection",
+        "correct": false,
+        "why": "Keys are never sent in the clear."
+      },
+      {
+        "text": "A certificate authority",
+        "correct": false,
+        "why": "No."
+      }
+    ]
+  },
+  {
+    "id": "ex-8gc0zhnp",
+    "version": 1,
+    "section": "encryption",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can a TLS inspection proxy not reveal an intruder's own encrypted channel?",
+    "hint": "Whose keys?",
+    "choices": [
+      {
+        "text": "The company never holds that connection's keys",
+        "correct": true,
+        "why": "Right. The content is out of reach."
+      },
+      {
+        "text": "The proxy sits inside the server",
+        "correct": false,
+        "why": "It sits at the edge."
+      },
+      {
+        "text": "TLS inspection is illegal in Brazil",
+        "correct": false,
+        "why": "It raises questions; it is not banned."
+      },
+      {
+        "text": "Proxies only read e-mail",
+        "correct": false,
+        "why": "No."
+      }
+    ]
+  },
+  {
+    "id": "ex-709pxw94",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tshark command to its Wireshark menu.",
+    "hint": "Statistics, Follow, Export.",
+    "pairs": [
+      {
+        "left": "-z conv,tcp",
+        "right": "Statistics, Conversations"
+      },
+      {
+        "left": "-z follow,tcp,ascii,0",
+        "right": "Follow, TCP Stream"
+      },
+      {
+        "left": "--export-objects http,objects",
+        "right": "File, Export Objects, HTTP"
+      }
+    ]
+  },
+  {
+    "id": "ex-jc3s96ad",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A capture ends. What happens to the file first?",
+    "hint": "Like an image.",
+    "choices": [
+      {
+        "text": "It is hashed and recorded",
+        "correct": true,
+        "why": "Right. Then a working copy."
+      },
+      {
+        "text": "It is deleted after the flows are made",
+        "correct": false,
+        "why": "It is evidence."
+      },
+      {
+        "text": "It is shared with the sharing group",
+        "correct": false,
+        "why": "Not first, and maybe never."
+      },
+      {
+        "text": "It is opened in Wireshark to see what is in it, before anything else is done to it",
+        "correct": false,
+        "why": "Hash first."
+      }
+    ]
+  }
+]

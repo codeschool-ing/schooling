@@ -12,8 +12,35 @@ prometeu começar.
 
 Em 4 de maio, o Bruno acrescentou ao portal da Vereda a verificação dos webhooks: o HMAC da aula 6,
 com a chave que o provedor de pagamentos emitiu. Para fazer funcionar, escreveu a chave no
-`settings.py`. Em 10 de junho, depois de uma revisão, trocou-a por uma leitura do ambiente. O arquivo
-de hoje está limpo:
+`settings.py`. Em 10 de junho, depois de uma revisão, trocou-a por uma leitura do ambiente. Estes
+comandos criam a mesma história no seu laboratório: os dois commits, com o nome dele e as datas em
+que os fez, e a chave de webhook da aula 6 no primeiro. O Git nomeia um commit por um resumo
+exatamente dessas coisas, então os seus ganham os mesmos nomes:
+
+```sh
+cd ~/lab
+export GIT_AUTHOR_NAME="Bruno Reis" GIT_AUTHOR_EMAIL=bruno.reis@vereda.example
+export GIT_COMMITTER_NAME="Bruno Reis" GIT_COMMITTER_EMAIL=bruno.reis@vereda.example
+git init -q -b main portal
+cat > portal/settings.py <<EOF
+DATABASE_HOST = "db.vereda.example"
+WEBHOOK_KEY = bytes.fromhex("$(cat keys/webhook.hex)")
+EOF
+git -C portal add settings.py
+GIT_AUTHOR_DATE="2026-05-04T10:12:00-03:00" GIT_COMMITTER_DATE="2026-05-04T10:12:00-03:00" \
+  git -C portal commit -q -m "Verify the payment provider's webhooks"
+cat > portal/settings.py <<'EOF'
+import os
+
+DATABASE_HOST = "db.vereda.example"
+WEBHOOK_KEY = bytes.fromhex(os.environ["VEREDA_WEBHOOK_KEY"])
+EOF
+GIT_AUTHOR_DATE="2026-06-10T16:40:00-03:00" GIT_COMMITTER_DATE="2026-06-10T16:40:00-03:00" \
+  git -C portal commit -q -am "Read the webhook key from the environment"
+unset GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
+```
+
+O arquivo de hoje está limpo:
 
 ```
 ana@lab:~/lab$ git -C portal log --oneline

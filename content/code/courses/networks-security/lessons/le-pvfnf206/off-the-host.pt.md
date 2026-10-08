@@ -14,7 +14,21 @@ Aqui o coletor é `admin`, na rede de gerência. `fw` roda o **rsyslog** com est
 ```
 
 `admin` também roda o rsyslog, escutando na porta TCP 514 e gravando as linhas de cada máquina em um
-diretório próprio, e um firewall de host decide quem pode falar com ele:
+diretório próprio. O `/root/rsyslog.conf` dele:
+
+```conf
+global(workDirectory="/var/log/lab/rsyslog" net.enableDNS="off")
+module(load="imtcp")
+input(type="imtcp" port="514" address="192.168.99.10" ruleset="remote")
+template(name="byhost" type="string" string="/var/log/lab/remote/%hostname%/%programname%.json")
+template(name="asis" type="string" string="%msg:2:$%\n")
+ruleset(name="remote") {
+  action(type="omfile" dynaFile="byhost" template="asis")
+}
+```
+
+Um firewall de host, o `/root/host.nft`, decide quem pode falar com ele; ele aparece abaixo como o
+`nft` o lê de volta depois de carregado:
 
 ```
 root@admin:~# nft list ruleset

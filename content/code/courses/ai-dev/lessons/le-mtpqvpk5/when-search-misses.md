@@ -1,13 +1,13 @@
 ---
 title: When search by meaning misses
-version: 1
+version: 2
 ---
 
-Embeddings are good at paraphrase and bad at exact strings. Lesson 1 section 05 predicted it, and
+Embeddings are good at paraphrase and bad at exact strings. Lesson 1 section 09 predicted it, and
 the handbook has the case that proves it: an error code. A customer pastes what the checkout said:
 
 ```
-ana@dev:~/shop$ python lab/search.py vector "checkout says E1042"
+ana@dev:~/shop$ python scratch/search.py vector "checkout says E1042"
 vector: checkout says E1042
     0.542  payment-errors.md#4  Payment errors at checkout. E2003: the billing address does no…
     0.498  payment-errors.md#1  Payment errors at checkout. The checkout shows a code when a p…
@@ -45,7 +45,7 @@ def keyword_search(query, k=3):
 ```
 
 ```
-ana@dev:~/shop$ python lab/search.py keyword "checkout says E1042"
+ana@dev:~/shop$ python scratch/search.py keyword "checkout says E1042"
 keyword: checkout says E1042
     3.943  payment-errors.md#3  Payment errors at checkout. E1042: the payment timed out betwe…
     2.272  payment-errors.md#1  Payment errors at checkout. The checkout shows a code when a p…
@@ -56,12 +56,12 @@ keyword: checkout says E1042
 word in the question. Keyword search has the opposite weakness, though:
 
 ```
-ana@dev:~/shop$ python lab/search.py keyword "my parcel never arrived"
+ana@dev:~/shop$ python scratch/search.py keyword "my parcel never arrived"
 keyword: my parcel never arrived
     3.367  shipping.md#4        Shipping. A customer can follow the parcel with the tracking c…
     2.662  contact.md#1         Contacting support. Support answers by email and chat from 9:0…
     2.417  contact.md#2         Contacting support. The target for a first reply is four worki…
-ana@dev:~/shop$ python lab/search.py vector "my parcel never arrived"
+ana@dev:~/shop$ python scratch/search.py vector "my parcel never arrived"
 vector: my parcel never arrived
     0.568  shipping.md#4        Shipping. A customer can follow the parcel with the tracking c…
     0.297  contact.md#2         Contacting support. The target for a first reply is four worki…
@@ -69,8 +69,8 @@ vector: my parcel never arrived
 ```
 
 *Never arrived* shares no rare words with *no tracking update for ten working days*, so keyword search
-puts the right passage first only because *parcel* is in it, and fills the rest with passages about
-support hours that happen to contain common words. Vector search ranks the same passage first with a
+puts the right passage first only because *parcel* is in it, and fills the rest with support passages
+that share *parcel* or *arrived*. Vector search ranks the same passage first with a
 clear lead, 0.568, because it reads the meaning.
 
 ## Both at once
@@ -92,12 +92,12 @@ def hybrid_search(query, k=3):
 ```
 
 ```
-ana@dev:~/shop$ python lab/search.py hybrid "checkout says E1042"
+ana@dev:~/shop$ python scratch/search.py hybrid "checkout says E1042"
 hybrid: checkout says E1042
     0.033  payment-errors.md#4  Payment errors at checkout. E2003: the billing address does no…
     0.033  payment-errors.md#1  Payment errors at checkout. The checkout shows a code when a p…
     0.033  payment-errors.md#3  Payment errors at checkout. E1042: the payment timed out betwe…
-ana@dev:~/shop$ python lab/search.py hybrid "my parcel never arrived"
+ana@dev:~/shop$ python scratch/search.py hybrid "my parcel never arrived"
 hybrid: my parcel never arrived
     0.033  shipping.md#4        Shipping. A customer can follow the parcel with the tracking c…
     0.033  contact.md#2         Contacting support. The target for a first reply is four worki…

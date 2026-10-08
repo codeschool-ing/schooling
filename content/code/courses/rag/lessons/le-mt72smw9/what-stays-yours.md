@@ -1,6 +1,6 @@
 ---
 title: What stays yours
-version: 1
+version: 2
 ---
 
 A framework is worth what it saves minus what it hides, and this lesson has measured both.
@@ -39,16 +39,17 @@ decisions with no measurement, because it has never seen the documents, and a pi
 from defaults reads well in a demonstration and fails on the questions nobody tried.
 
 They also **change between versions**. Every class name in this lesson is from the versions pinned
-in the lab; `langchain-postgres` is still numbered 0.0.18, and a version below 1 promises nothing
+in lesson 1's `requirements.txt`; `langchain-postgres` is still numbered 0.0.18, and a version below 1 promises nothing
 about the next one. A default that changes in an upgrade changes the pipeline's behaviour with
 nothing in the team's code changing. So pin the versions, and run lesson 8's test after every
 upgrade as well as after every change of your own.
 
 ## A way to use one
 
-- **Read what it sends.** The prompt, the address, the shape of the embedding request. labgen's log
-  in this lab, and a provider's own request log or a proxy in production, show the request as it
-  left, which is the only version that matters.
+- **Read what it sends.** The prompt, the address, the shape of the embedding request. Both
+  frameworks call the `openai` SDK underneath, so `OPENAI_LOG=debug` prints every request it sends;
+  in production, a provider's own request log or a proxy shows the request as it left, which is the
+  only version that matters.
 - **Set every value lessons 4 to 8 measured**, explicitly, even when it equals the default, so that
   the next upgrade cannot move it without the code saying so.
 - **Keep the test outside the framework.** The questions, the facts and the rule for a hit live in

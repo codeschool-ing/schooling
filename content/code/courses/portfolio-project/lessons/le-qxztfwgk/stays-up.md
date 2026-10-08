@@ -1,6 +1,6 @@
 ---
 title: Proving it stays up
-version: 1
+version: 2
 ---
 
 *It stays up* is a claim, and this lesson is about evidence, so here is the evidence. First, the health
@@ -35,9 +35,9 @@ The counter went from 0 to 1: systemd saw the service die and started it again, 
 one touching it. From laptop, the address still answers, and the list still has eight items, because the
 database lives in the volume and not in the container that died.
 
-The last check is the boot. A reboot was not recorded, because the lab's machines are containers
-themselves and one that reboots does not come back on its own. What can be shown is that both services
-are wired to start at boot:
+The last check is the boot. The srv these transcripts come from is a container, which does not come
+back on its own after a reboot, so a reboot was not recorded. What can be shown is that both services are
+wired to start at boot:
 
 ```
 ana@srv:~$ systemctl is-enabled loanbook caddy
@@ -46,7 +46,8 @@ enabled
 ```
 
 `generated` is how systemd describes a unit Quadlet wrote; its `WantedBy=multi-user.target` is what
-starts it at boot. `enabled` is Caddy's. On a real server, reboot it once before calling the deploy done.
+starts it at boot. `enabled` is Caddy's. Your srv is a real machine, so reboot it once, with
+`multipass restart srv`, and ask `https://loans.lab/healthz` again before calling the deploy done.
 
 These three checks, health, a crash and a boot, are the difference between *I ran it on a server* and *it
 is deployed*, and each is one or two commands. Put them in the README's deploy section, lesson 16, and

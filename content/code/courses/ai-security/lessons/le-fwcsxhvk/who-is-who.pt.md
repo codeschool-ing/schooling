@@ -1,6 +1,6 @@
 ---
 title: Uma chamada de API, lida do jeito que a LGPD lê
-version: 1
+version: 2
 ---
 
 A intuição que a maioria dos desenvolvedores traz é que um fornecedor de modelo é infraestrutura,
@@ -10,8 +10,50 @@ Enviar um ticket à API de um fornecedor é tratamento, a palavra da lei para qu
 dado pessoal, e o art. 5, X lista a transferência e a comunicação entre as operações que ela cobre.
 Quem faz é outra empresa, nos computadores dela, e em geral fora do Brasil.
 
-O ticket desta aula é do tipo que uma equipe de suporte gostaria que um modelo resumisse. Como tudo
-no `~/guard`, ele foi escrito pelo curso, e as pessoas nele são inventadas:
+O ticket desta aula é do tipo que uma equipe de suporte gostaria que um modelo resumisse. Ele foi
+escrito pelo curso, e as pessoas nele são inventadas. Cole-o:
+
+```sh
+cat > ~/guard/data/ticket-4471.json <<'EOF'
+{
+ "ticket": "TK-4471",
+ "opened": "2026-09-18",
+ "client": {
+  "name": "Marcos Teixeira",
+  "cpf": "529.982.247-25",
+  "email": "marcos.teixeira@example.com.br",
+  "phone": "+55 11 98765-4321",
+  "birth_date": "1984-02-11",
+  "address": "Rua Augusta 1500, ap 32, São Paulo"
+ },
+ "freelancer": {
+  "name": "Juliana Prado",
+  "cpf": "111.444.777-35",
+  "pix_key": "juliana.prado@example.com"
+ },
+ "job": {
+  "id": "4471",
+  "title": "Logo for a bakery",
+  "price_cents": 120000,
+  "due": "2026-09-10"
+ },
+ "messages": [
+  {
+   "from": "client",
+   "text": "Juliana, the logo was due on 10 September and I have nothing. I paid R$ 1.200,00."
+  },
+  {
+   "from": "freelancer",
+   "text": "Sorry, I was in hospital for a week with a kidney infection and couldn't work. I can deliver by Friday."
+  },
+  {
+   "from": "client",
+   "text": "I don't care, I want my money back. Call me on +55 11 98765-4321."
+  }
+ ]
+}
+EOF
+```
 
 ```
 ana@lab:~/guard$ cat data/ticket-4471.json

@@ -1,6 +1,6 @@
 ---
 title: "User data: instructions for the first boot"
-version: 1
+version: 2
 ---
 
 **User data is a piece of text you hand to the provider when you launch an instance.** The provider
@@ -33,14 +33,20 @@ carries on**, so a misspelt key is skipped and the instance comes up without wha
 for. If the key was the one that installs your SSH key, you are now locked out of a machine whose
 log would tell you why.
 
-Cloud-init can check a file against its schema without booting anything. It is not published on
-PyPI, so it was run here from its own source tree, version 26.2, on the laptop; **nothing was
-booted, in any cloud**:
+Cloud-init can check a file against its schema without booting anything, and lesson 1 installed
+version 26.2 of it, from its own source tree, for exactly this. Copy the example above with its
+button and save it as `web.yaml` in `~/cloud`. The `sed` below makes `typo.yaml` from it, the same
+file with one word changed; **nothing is booted, in any cloud**:
 
 ```
+ana@laptop:~/cloud$ sed 's/ssh_authorized_keys/ssh_authorised_keys/' web.yaml > typo.yaml
 ana@laptop:~/cloud$ cloud-init schema -c web.yaml
+2026-10-07 10:55:03,190 - log_util.py[WARNING]: Getting data from <class 'cloudinit.sources.DataSourceNone.DataSourceNone'> failed
+2026-10-07 10:55:03,190 - schema.py[WARNING]: datasource not detected, using default instance-data/user-data paths.
 Valid schema web.yaml
 ana@laptop:~/cloud$ cloud-init schema -c typo.yaml 2>&1 | cut -c1-120
+2026-10-07 10:55:03,542 - log_util.py[WARNING]: Getting data from <class 'cloudinit.sources.DataSourceNone.DataSourceNon
+2026-10-07 10:55:03,543 - schema.py[WARNING]: datasource not detected, using default instance-data/user-data paths.
 Error: Cloud config schema errors: users.1: Additional properties are not allowed ('ssh_authorised_keys' was unexpected)
 
 Error: Invalid schema: user-data
@@ -48,8 +54,13 @@ Error: Invalid schema: user-data
 Invalid user-data typo.yaml
 ```
 
-The first file is the one above. The second is the same file with one word respelt in British
-English, `ssh_authorised_keys`, and the schema refuses it: that key does not exist, and the one
+The two `WARNING` lines come before every answer, and they are not about your file. Cloud-init
+expects to be running on an instance, and looks first for the datasource, the provider's metadata
+service; on a laptop there is none, so it says so and checks the file on its own. The answers are
+the lines after them.
+
+The first file is the one above. The second has the one word respelt in British English,
+`ssh_authorised_keys`, and the schema refuses it: that key does not exist, and the one
 that does is spelt with a *z*. The message was cut at 120 characters by the command, which is where
 the part worth reading ends. On a real boot the same mistake would be a warning in the instance's
 log, and the machine would come up without the key.

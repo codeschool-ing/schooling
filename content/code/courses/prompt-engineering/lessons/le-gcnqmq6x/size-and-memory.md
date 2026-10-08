@@ -1,6 +1,6 @@
 ---
 title: How many bytes a model needs
-version: 1
+version: 2
 ---
 
 It is tempting to read a model's size as a feeling: 70B sounds big, 7B sounds small, and whether
@@ -84,6 +84,40 @@ weights that matter most, but the trade is the same. **Fewer bits buys memory an
 quality**, and the loss grows as the width shrinks. How much quality a given model loses at a given
 width is measured, not assumed: look for that measurement wherever the quantised version is
 published.
+
+## The model on your own machine
+
+You have one of these on disk already. Ollama says what it is:
+
+```
+ana@lab:~/pe$ ollama show llama3.2:3b | head -7
+  Model
+    architecture        llama     
+    parameters          3.2B      
+    context length      131072    
+    embedding length    3072      
+    quantization        Q4_K_M    
+
+```
+
+**3.2 billion weights, quantised with a method called `Q4_K_M`.** The same multiplication, for
+that count:
+
+```
+ana@lab:~/pe$ python3 size.py 3.2e9
+32 bits:   12.8 GB
+16 bits:    6.4 GB
+ 8 bits:    3.2 GB
+ 4 bits:    1.6 GB
+```
+
+At 4 bits the weights would be 1.6 GB, and `ollama list` in lesson 1 said the file is 2.0 GB.
+`Q4_K_M` stores most weights at about four bits and some of the most sensitive ones at more, so
+the real average is a little above four, and the file is a little above the line. Then lesson 1's
+`ollama ps` said 2.9 GB while it answered: the 2.0 GB of weights, plus the working memory for a
+context window of 4096 tokens, the `CONTEXT` column on the same line. **The arithmetic gives the
+floor, and the measurement gives the total**, and both are worth having before you choose a model
+for a machine.
 
 ## Why this decides where a model runs
 

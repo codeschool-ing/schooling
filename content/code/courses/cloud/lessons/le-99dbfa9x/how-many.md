@@ -1,6 +1,6 @@
 ---
 title: How many regions, counted from published data
-version: 1
+version: 2
 ---
 
 "How many regions does AWS have?" has an answer on a marketing page, and it changes whenever a
@@ -36,7 +36,15 @@ sa-west-1
 Each entry is one block of addresses with three labels. This copy was created on 28 September 2026,
 by its own `createDate`, and holds 10532 IPv4 blocks and 6901 IPv6 blocks. **The IPv4 blocks carry
 43 different values in `region`.** Two of them start with `sa-`, which is South America: `sa-east-1`
-is São Paulo, and `sa-west-1` is the first surprise.
+is São Paulo, and `sa-west-1` is the first surprise. The copy you fetch is the one of the day you
+fetch it, so its date and its counts will be newer than these.
+
+The rest of the section also reads `partitions.json`, a file that ships inside the AWS CLI and is
+described below. Copy it out of the CLI lesson 1 installed, next to the first file:
+
+```
+ana@laptop:~/cloud$ cp ~/.local/aws-cli/v2/current/dist/awscli/botocore/data/partitions.json .
+```
 
 43 is not the number of regions, and the reason is in the values themselves. Three kinds do not
 belong in the count:

@@ -6,7 +6,7 @@
 # this lesson was copied from running it, so the next person can run it and see
 # what moved.
 #
-#   sudo bash ../../lab.sh up        # once: the machine, the models, labmm
+#   sudo bash ../../lab.sh up        # once: setup.sh from lesson 1, as ana
 #   sudo bash captures.sh
 #
 # A line that starts with ana@lab:~/mm$ is what ana typed and what it printed.
@@ -16,7 +16,7 @@
 #
 # The Hugging Face Hub could not be reached from the machine this course was
 # recorded on, so nothing here downloads from it; the models measured are the
-# ones lab.sh fetched from sherpa-onnx's releases and MediaPipe's bucket, which
+# ones setup.sh fetched from sherpa-onnx's releases and MediaPipe's bucket, which
 # are conversions of models published on the Hub. The transformers code in the
 # lesson was not run. Timings are this machine's, on four cores.
 #
@@ -27,13 +27,21 @@ cd "$(dirname "$0")"
 LAB_SH=${LAB_SH:-../../lab.sh}
 lab() { bash "$LAB_SH" "$@"; }
 # on 'command': what ana typed in ~/mm, and what it printed.
-on() { printf 'ana@lab:~/mm$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
-# put PATH: a file ana wrote in ~/mm, from stdin. Its content is shown in the lesson.
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
+on() { printf 'ana@lab:~/mm$ %s\n' "$*"; lab exec "$*" </dev/null 2>&1 || true; }
+# put PATH: a file ana wrote in ~/mm, from stdin, which a fence in this lesson
+# (or in $SHOWN, another lesson's .md) must show byte for byte.
+put() {
+  local tmp; tmp=$(mktemp)
+  cat >"$tmp"
+  python3 ../../lab/shown.py check ./*.md ${SHOWN:-} <"$tmp" || { echo "put $1: not shown" >&2; exit 1; }
+  lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'" <"$tmp"
+  rm -f "$tmp"
+}
 block() { printf '##### %s\n' "$1"; }
 # One capture at a time: every run rebuilds ~/mm from nothing.
 exec 9>/var/tmp/multimodal-capture.lock; flock 9
 lab reset >/dev/null
+SHOWN=../le-h18ew830/cleaning.md   # measure.py is lesson 5's
 
 put measure.py <<'PY'
 """Two measurements the audio lessons share: words wrong, and speech found."""

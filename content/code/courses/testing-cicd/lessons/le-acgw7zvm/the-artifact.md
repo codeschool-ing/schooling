@@ -1,6 +1,6 @@
 ---
 title: Build once, promote the same bytes
-version: 1
+version: 2
 ---
 
 The artifact is the thing a release deploys: a tarball, a wheel, a container image, a mobile app
@@ -9,8 +9,8 @@ everywhere.** A pipeline that builds again for staging and again for production 
 ships another, and every difference between the builds, a dependency released in between, a flag on
 one machine, is a difference nobody tested.
 
-`shipquote`'s artifact is a tarball of the committed tree, built by `ops/build.sh` from step 9 of the
-project:
+`shipquote`'s artifact is a tarball of the committed tree, built by a script in a new directory,
+`mkdir ops`. Save it as `ops/build.sh`:
 
 ```schooling-example
 {
@@ -37,6 +37,20 @@ project:
 }
 ```
 
+The build names the release after a tag, so the release needs one, on a commit that holds
+everything it deploys with. Four more scripts belong to it: `deploy.sh`, `restart.sh` and
+`rollback.sh`, shown whole in section 06, and `smoke.sh`, in section 07. Save those four now as
+well, then make all five executable, commit, and tag the commit as release 1.4.0:
+
+```sh
+chmod +x ops/*.sh
+git add ops
+git commit -m "Build one artifact, deploy it, and check it answers"
+git tag -a v1.4.0 -m "shipquote 1.4.0"
+```
+
+Then the build, twice:
+
 ```
 ana@laptop:~/shipquote$ git describe --tags
 v1.4.0
@@ -48,8 +62,9 @@ ana@laptop:~/shipquote$ rm -rf dist && ops/build.sh > /dev/null && cat dist/ship
 4b61176498717d0fb05adae2b03d1b2dfafb346899610aab7197818b75d0d5f3  shipquote-1.4.0.tar.gz
 ```
 
-The build printed the artifact's path, and its hash begins `4b611764`. Then `dist/` was deleted and
-the build run again, and **the hash is the same**. `git archive` sets every file's timestamp from the
+The build printed the artifact's path, and its hash begins `4b611764`; yours begins with something
+else, because the archive records the commit's time and yours was made at another one. Then
+`dist/` was deleted and the build run again, and **the hash is the same**. `git archive` sets every file's timestamp from the
 commit rather than from the clock, so the same commit gives the same bytes. A build with that
 property is called **reproducible**, and it means anybody can check that an artifact came from the
 commit it claims: build it again and compare the hash.

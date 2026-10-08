@@ -28,16 +28,16 @@
   },
   {
     "id": "ex-0brkn07k",
-    "version": 1,
+    "version": 2,
     "section": "three-shapes",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why did all three providers report 20 input tokens?",
+    "prompt": "Why did both providers report 43 input tokens?",
     "hint": "Who counted?",
     "choices": [
       {
-        "text": "The three SDKs share a tokenizer",
+        "text": "The two SDKs share a tokenizer",
         "correct": false,
         "why": "Each SDK sends text; none counts it."
       },
@@ -47,14 +47,14 @@
         "why": "Each real provider has its own tokenizer."
       },
       {
-        "text": "labllm counted all three",
+        "text": "One model behind one server counted both",
         "correct": true,
-        "why": "Right: real providers would give three different numbers."
+        "why": "Right: real providers would give two different numbers."
       },
       {
-        "text": "The question was too short to differ",
+        "text": "The question is exactly 43 words long",
         "correct": false,
-        "why": "Short texts differ between tokenizers too."
+        "why": "Tokens are not words, and the system instruction counts too."
       }
     ]
   },
@@ -236,16 +236,16 @@
   },
   {
     "id": "ex-qswfna4d",
-    "version": 1,
+    "version": 2,
     "section": "rate-limits",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "With a limit of 3 requests a minute, which request of `burst.py` got the first 429?",
-    "hint": "Count the 200s.",
-    "value": 4,
-    "tolerance": 0,
-    "unit": "request"
+    "prompt": "In `burst.py`, about how many seconds apart were the five answers?",
+    "hint": "Sort the five times.",
+    "value": 0.8,
+    "tolerance": 0.2,
+    "unit": "s"
   },
   {
     "id": "ex-m1tcggw1",
@@ -326,33 +326,33 @@
   },
   {
     "id": "ex-6stzqd8v",
-    "version": 1,
+    "version": 2,
     "section": "retries",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "With two 529s injected, what did `once.py` see?",
-    "hint": "Compare its output with the log.",
+    "prompt": "With Ollama started a second after `once.py`, what did the script see?",
+    "hint": "Compare its last line with the log lines above it.",
     "choices": [
       {
-        "text": "A normal reply, a little late",
+        "text": "A normal reply, a few seconds late",
         "correct": true,
-        "why": "Right: the SDK absorbed both failures."
+        "why": "Right: the SDK absorbed the failure and retried."
       },
       {
-        "text": "Two errors and a reply",
+        "text": "An error and then a reply",
         "correct": false,
-        "why": "The errors stayed inside the SDK."
+        "why": "The error stayed inside the SDK."
       },
       {
-        "text": "An `OverloadedError`",
+        "text": "An `APIConnectionError`",
         "correct": false,
-        "why": "That took three failures."
+        "why": "That was the run with the server stopped throughout."
       },
       {
-        "text": "A 429",
+        "text": "A 529",
         "correct": false,
-        "why": "The failures were 529s."
+        "why": "Ollama never sent one; it was not running."
       }
     ]
   },
@@ -548,13 +548,13 @@
   },
   {
     "id": "ex-xxqctq30",
-    "version": 1,
+    "version": 2,
     "section": "adapter",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "Why did the first fallback never ask OpenAI?",
-    "hint": "What did the adapter catch?",
+    "prompt": "Why would the first version of `llm.py` not have asked OpenAI when Anthropic answered 529?",
+    "hint": "What did the adapter catch, and what does `issubclass` say?",
     "choices": [
       {
         "text": "A 529 raises a class the code did not list",
@@ -562,9 +562,9 @@
         "why": "Right: `OverloadedError` is not an `InternalServerError`."
       },
       {
-        "text": "OpenAI was down too",
+        "text": "OpenAI would have been down too",
         "correct": false,
-        "why": "OpenAI was never asked."
+        "why": "Nothing in the code depends on that."
       },
       {
         "text": "`LLM_PROVIDERS` named only Anthropic",
@@ -572,9 +572,9 @@
         "why": "It named both."
       },
       {
-        "text": "The SDK stopped retrying too early",
+        "text": "The SDK retries a 529 forever",
         "correct": false,
-        "why": "It retried twice, as configured."
+        "why": "It retries twice, then raises."
       }
     ]
   },

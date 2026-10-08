@@ -37,7 +37,14 @@ with SQL painted on.
 ## What that costs, and it is one thing
 
 **One writer at a time, for the whole file.** Not one per table, not one per row — one per
-database. Here is what a second writer meets while the first still has a transaction open:
+database. Here is a first writer, in one terminal, holding a transaction open:
+
+```
+sqlite> BEGIN;
+sqlite> UPDATE products SET price = 359.00 WHERE sku = 'KB-101';
+```
+
+And here is what a second writer meets, in another terminal, while the first is still open:
 
 ```
 sqlite> UPDATE products SET price = 199.00 WHERE sku = 'MS-204';
@@ -45,7 +52,7 @@ Error: stepping, database is locked (5)
 ```
 
 Readers are not blocked by that writer, and they see the committed value rather than the
-uncommitted one:
+uncommitted `359.00`:
 
 ```
 sqlite> SELECT sku, price FROM products WHERE sku = 'KB-101';

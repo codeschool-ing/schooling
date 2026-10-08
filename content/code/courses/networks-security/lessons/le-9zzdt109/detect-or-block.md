@@ -27,5 +27,5 @@ from detection-only to blocking.
 ```
 
 The lab has both. `sensor` sits on the DMZ with no address and hears every frame, like the sensor of
-lesson 7. For the second half of the lesson, `lab.sh inline` puts a new machine, `ips`, **on the cable
+lesson 7. For the second half of the lesson, a short script, `inline.sh`, puts a new machine, `ips`, **on the cable
 between `fw` and the DMZ**, so nothing reaches the shop from outside without crossing it.

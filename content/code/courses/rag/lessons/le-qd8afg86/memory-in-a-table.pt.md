@@ -1,6 +1,6 @@
 ---
 title: Memória numa tabela
-version: 1
+version: 2
 ---
 
 Recuperar um turno exige que os turnos estejam em algum lugar que uma busca alcance. O `memory.py` os
@@ -10,7 +10,6 @@ modelo:
 ```schooling-example
 {
   "language": "python",
-  "file": "memory.py",
   "parts": [
     {
       "code": "SCHEMA = \"\"\"\nCREATE TABLE IF NOT EXISTS memories (\n    id           bigserial PRIMARY KEY,\n    account      text NOT NULL,\n    conversation text NOT NULL,\n    turn         int NOT NULL,\n    text         text NOT NULL,\n    embedding    vector(384) NOT NULL,\n    created      timestamptz NOT NULL DEFAULT now()\n);\nCREATE INDEX IF NOT EXISTS memories_account ON memories (account);\n\"\"\"\nORDER = re.compile(r\"\\bMG-\\d{8}\\b\")\nconn.execute(SCHEMA)",

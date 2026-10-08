@@ -1,6 +1,6 @@
 ---
 title: Regras de validação, preconditions e checks
-version: 1
+version: 2
 ---
 
 Um tipo diz que formato um valor tem. **Uma regra de validação diz quais valores desse formato
@@ -14,7 +14,7 @@ que acontece quando uma falha.
 
 ## Validation, na variável
 
-As variáveis da Ana ganham uma regra cada:
+As variáveis da Ana, no `variables.tf`, ganham uma regra cada:
 
 ```hcl
 variable "environment" {
@@ -101,7 +101,7 @@ Desde o Terraform 1.9 uma condição pode se referir a outras variáveis além d
 
 Algumas regras tratam de um valor que nenhuma variável sozinha guarda. O bucket de arquivos da loja
 tem o nome montado a partir de três pedaços, e o S3 recusa um nome de bucket com mais de 63
-caracteres:
+caracteres. A Ana o escreve no `bucket.tf`:
 
 ```hcl
 locals {
@@ -168,12 +168,13 @@ chegado ao S3 na hora do apply, depois de as outras mudanças já terem sido fei
 Uma postcondition cujo valor é conhecido durante o plan é conferida ali, como esta região. Quando o
 valor só existe depois da mudança, o Terraform confere depois de fazer a mudança, e uma falha
 nesse momento é um erro com o recurso já criado ou alterado. É o preço de uma regra sobre algo que
-só a AWS sabe dizer.
+só a AWS sabe dizer. Com o dono padrão, `ana`, o nome cabe, e a Ana cria o bucket com
+`terraform apply -auto-approve`; o plano abaixo já o encontra lá.
 
 ## Blocos check, que só avisam
 
 Um bloco `check` fica sozinho, fora de qualquer recurso, e **uma asserção que falha é um aviso, não
-um erro**:
+um erro**. O da Ana vai no `checks.tf`:
 
 ```hcl
 check "two_zones" {

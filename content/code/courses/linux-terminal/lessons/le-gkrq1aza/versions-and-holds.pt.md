@@ -1,6 +1,6 @@
 ---
 title: Que versão você recebeu, e como impedir que ela mude
-version: 1
+version: 2
 ---
 
 O `apt policy` responde à pergunta que ninguém pensa em fazer até algo dar errado: **de onde veio
@@ -28,6 +28,10 @@ Três coisas:
 o apt está disposto a te dar dos repositórios que você tem, nas prioridades deles.
 
 ## Prioridades, e o número na frente da URL
+
+O `docker-ce` abaixo vem do repositório do próprio Docker, que a máquina em que estas transcrições
+foram capturadas tem e a sua não (seção 03). Leia os números pelo que eles mostram; para ver o mesmo
+na sua, faça `apt policy` de qualquer pacote que você tenha instalado.
 
 ```
 root@vm:~# apt policy docker-ce 2>/dev/null | head -12

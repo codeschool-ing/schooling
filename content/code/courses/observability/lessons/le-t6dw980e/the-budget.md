@@ -1,13 +1,13 @@
 ---
 title: The error budget
-version: 1
+version: 2
 ---
 
 An objective of 99.5% says something that a target of *as reliable as possible* never does: **0.5% of
 checkouts may fail, and that is fine.** That half per cent is the **error budget**, and treating it as
 a budget, something to spend, is the idea that makes SLOs change how a team works.
 
-The lab has been running for fifty-five minutes, so the one-hour window of `slo.yml` is full:
+Fifty-five minutes after the customers started, the one-hour window of `slo.yml` is full:
 
 ```
 ana@obs:~/shop$ ./promq 'sum(increase(http_server_requests_total{job="storefront",route="/checkout"}[1h]))'

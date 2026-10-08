@@ -21,7 +21,7 @@ What you can choose, even with a closed model, is often **where** it is processe
 platforms that resell closed models sell regional routes, and the sheet prices them:
 
 ```
-ana@desk:~/desk$ sheet where anthropic.claude-sonnet-5-5 | grep -E "^(global|us|eu|jp)\."
+ana@desk:~/desk$ python sheet.py where anthropic.claude-sonnet-5-5 | grep -E "^(global|us|eu|jp)\."
 eu.anthropic.claude-sonnet-5-5                       bedrock_converse                2.2       11
 global.anthropic.claude-sonnet-5-5                   bedrock_converse                  2       10
 jp.anthropic.claude-sonnet-5-5                       bedrock_converse                2.2       11

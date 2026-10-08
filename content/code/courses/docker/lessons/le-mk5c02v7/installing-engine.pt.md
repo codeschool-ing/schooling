@@ -1,6 +1,6 @@
 ---
 title: Instalando o Docker Engine, e quem pode usá-lo
-version: 1
+version: 2
 ---
 
 **No Linux, instale o Docker Engine pelo repositório de pacotes do próprio Docker, e não pelo da
@@ -29,9 +29,10 @@ fornecem `docker buildx` e `docker compose`. A linha do repositório nomeia o se
 arquitetura da máquina, a versão do Ubuntu pelo codinome, `noble`, e a chave que assina os pacotes,
 então o `apt` recusa qualquer coisa que não tenha sido assinada pelo Docker.
 
-Estes são os comandos que montam isso no Ubuntu, das instruções de instalação do Docker. **Eles não
-foram executados para este curso**, porque o laboratório já tinha o resultado, e a documentação do
-Docker é o lugar para conferi-los antes de rodar, já que os detalhes mudam:
+Estes são os comandos que montam isso no Ubuntu, das instruções de instalação do Docker, e os que a
+aula 5 mandou você digitar. **Eles não foram executados para este curso**, porque o laboratório já
+tinha o resultado, e a documentação do Docker é o lugar para conferi-los antes de rodar, já que os
+detalhes mudam:
 
 ```sh
 sudo apt-get update
@@ -47,8 +48,7 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 Numa máquina que inicia com systemd, que é quase todo servidor e notebook Linux, o pacote inicia o
 daemon e o habilita no boot; o `sudo systemctl status docker` o mostra rodando, e o
 `sudo systemctl start docker` o inicia se ele tiver parado. **A máquina do laboratório é a exceção**:
-ela não inicia com systemd, então o daemon dela é iniciado pelo script do próprio laboratório, e o
-`systemctl` diz isso:
+ela não inicia com systemd, então o daemon dela é iniciado à mão, e o `systemctl` diz isso:
 
 ```
 ana@vm:~$ systemctl status docker
@@ -69,6 +69,16 @@ ana@vm:~$ getent group docker
 docker:x:996:ana
 ```
 
+A conta do Bruno existe para esta seção, junto com um diretório que só o root pode ler, com números
+de salário inventados. Para repetir o que vem a seguir na sua máquina, crie os dois antes:
+
+```sh
+sudo useradd --create-home --shell /bin/bash bruno
+sudo install -d -m 700 -o root -g root /srv/payroll
+printf 'name,monthly_brl\nana,9800\nbruno,10400\n' | sudo tee /srv/payroll/salaries.csv > /dev/null
+sudo chmod 600 /srv/payroll/salaries.csv
+```
+
 ```
 ana@vm:~$ sudo -u bruno docker ps
 permission denied while trying to connect to the docker API at unix:///var/run/docker.sock
@@ -77,8 +87,8 @@ permission denied while trying to connect to the docker API at unix:///var/run/d
 A mensagem é o socket recusando o Bruno, o que está certo. **Antes de acrescentá-lo, entenda o que o
 grupo concede.** Pertencer a ele deixa o Bruno pedir qualquer coisa ao `dockerd`, e o `dockerd` roda
 como root. Um pedido que ele aceita é "inicie um container com este diretório do host montado lá
-dentro". O laboratório tem um diretório que só o root pode ler, com números de salário inventados. A
-Ana não consegue listá-lo como ela mesma, e consegue lê-lo através de um container:
+dentro". O `/srv/payroll` é o diretório criado acima, que só o root pode ler. A Ana não consegue
+listá-lo como ela mesma, e consegue lê-lo através de um container:
 
 ```
 ana@vm:~$ ls /srv/payroll

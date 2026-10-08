@@ -1,6 +1,6 @@
 ---
 title: The same questions on Windows and macOS
-version: 1
+version: 2
 ---
 
 The layers are the same on every system, and so are the questions. The commands change:
@@ -22,7 +22,7 @@ netstat -rn                   # macOS: the routing table
 - `ipconfig /all` is the Windows first look: the MAC is labelled *Physical Address*, and the
   addresses, the gateway and the DNS servers are in one screen. `Get-NetIPConfiguration` is the same
   in PowerShell.
-- `arp -a` prints the neighbour table on both Windows and macOS, the `ip neigh` of section 03.
+- `arp -a` prints the neighbour table on both Windows and macOS, the `ip neigh` of section 10.
 - `tracert` is Windows' `traceroute`. It sends ICMP where Linux's `traceroute` sends UDP by default,
   so a firewall can let one through and stop the other. Lesson 10 uses that.
 - `Test-NetConnection` with `-Port` is Windows' `nc -zv`: it reports `TcpTestSucceeded : True` or

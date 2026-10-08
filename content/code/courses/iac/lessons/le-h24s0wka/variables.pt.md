@@ -1,12 +1,12 @@
 ---
 title: Variáveis, para os valores que mudam
-version: 1
+version: 2
 ---
 
 Tudo no `main.tf` até aqui é literal. Isso serve para uma rede e dá errado no dia em que a loja
 precisa de uma segunda, para produção. **A saída tentadora é copiar o diretório e editar os números, e o resultado são duas configurações que se afastam uma da outra a cada edição esquecida.** A
 alternativa é dar nome aos valores que mudam e deixá-los em aberto. Esses nomes são as **variáveis
-de entrada**, declaradas em blocos próprios:
+de entrada**, declaradas em blocos próprios, num arquivo novo, `variables.tf`:
 
 ```hcl
 variable "environment" {
@@ -32,7 +32,8 @@ quem lê o arquivo. `type` diz que tipo de valor é aceitável: `string` e `numb
 listas, mapas e objetos na aula 3. **Um `default` torna a variável opcional; sem ele, ela é
 obrigatória**, então `environment` precisa ser informada toda vez e as outras duas não.
 
-O `main.tf` as usa como `var.NOME`, e como a versão anterior está no commit, o `git diff` mostra
+O `main.tf` as usa como `var.NOME`. A Ana fez commit da versão anterior depois do apply, com
+`git add . && git commit -m "A subnet and the web security group"`, então o `git diff` mostra
 exatamente onde:
 
 ```
@@ -79,7 +80,47 @@ index e565f3e..a597fc0 100644
 
 A faixa agora vem de `var.vpc_cidr`, os dois recursos levam uma tag `Environment`, e a porta da
 regra é `var.https_port`. Um default igual ao literal antigo quer dizer que a rede em si não muda;
-só a tag é nova.
+só a tag é nova. O `main.tf` inteiro agora diz:
+
+```hcl
+provider "aws" {
+  region = "sa-east-1"
+}
+
+resource "aws_vpc" "shop" {
+  cidr_block = var.vpc_cidr
+
+  tags = {
+    Name        = "shop"
+    Environment = var.environment
+  }
+}
+
+resource "aws_subnet" "web_a" {
+  vpc_id            = aws_vpc.shop.id
+  cidr_block        = "10.20.1.0/24"
+  availability_zone = "sa-east-1a"
+
+  tags = {
+    Name        = "shop-web-a"
+    Environment = var.environment
+  }
+}
+
+resource "aws_security_group" "web" {
+  name        = "web"
+  description = "web servers"
+  vpc_id      = aws_vpc.shop.id
+}
+
+resource "aws_vpc_security_group_ingress_rule" "https" {
+  security_group_id = aws_security_group.web.id
+  ip_protocol       = "tcp"
+  from_port         = var.https_port
+  to_port           = var.https_port
+  cidr_ipv4         = "0.0.0.0/0"
+}
+```
 
 **Uma variável obrigatória sem valor vira uma pergunta, ou um erro.** Num terminal, o Terraform
 pergunta, usando a descrição:
@@ -120,7 +161,7 @@ ana@laptop:~/shop$ echo var.environment | TF_VAR_environment=dev terraform conso
 ```
 
 **Num arquivo que o Terraform carrega sozinho**: `terraform.tfvars`, ou qualquer nome terminado em
-`.auto.tfvars`, no diretório da configuração. A Ana escreve uma linha:
+`.auto.tfvars`, no diretório da configuração. A Ana escreve uma linha no `terraform.tfvars`:
 
 ```hcl
 environment = "dev"

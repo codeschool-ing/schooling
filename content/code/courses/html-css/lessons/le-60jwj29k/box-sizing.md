@@ -1,11 +1,11 @@
 ---
 title: box-sizing: what width means
-version: 1
+version: 2
 ---
 
 Section 02 measured a card with `width: 300px` drawn 348 pixels wide. That is the default, and it is called **`content-box`**: `width` sets the content area, and padding and border are added outside it. It makes arithmetic of every layout: a column meant to be a third of the page, with padding, is wider than a third, and three of them no longer fit in a row.
 
-**`box-sizing: border-box`** changes what `width` means. Here is the same card with that one declaration added:
+**`box-sizing: border-box`** changes what `width` means. Here is the same card, `box.html` saved as `border-box.html`, with that one declaration added to the `.card` rule, after `margin: 30px;`:
 
 ```
 ana@laptop:~/site$ probe border-box.html box .card box '.card p'

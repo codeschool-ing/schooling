@@ -1,12 +1,23 @@
 ---
 title: Indicadores, medidos do lado do cliente
-version: 1
+version: 2
 ---
 
 A aula 5 escreveu a expressão sobre a qual esta aula se constrói, eventos ruins sobre todos os eventos,
 e prometeu um nome para ela. **Um indicador de nível de serviço, um SLI, é a fração dos eventos que
 deram certo, medida onde o cliente encontra o serviço.** Para a loja, o evento que importa é um
-checkout, e o lugar é a vitrine. Cinco minutos deles, por código de status:
+checkout, e o lugar é a vitrine.
+
+Esta aula vê uma hora passar, porque um objetivo é medido sobre uma janela e a janela aqui é de uma
+hora. Inicie o laboratório de novo do zero e ponha os clientes para rodar por setenta minutos; as
+primeiras consultas precisam de cinco deles:
+
+```sh
+docker compose run -d --rm loadgen python -m loadgen.load 5 4200
+sleep 300
+```
+
+Cinco minutos de checkouts, por código de status:
 
 ```
 ana@obs:~/shop$ ./promq 'sum by (code) (increase(http_server_requests_total{job="storefront",route="/checkout"}[5m]))'

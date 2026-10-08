@@ -1,10 +1,15 @@
 ---
 title: Editing a file that is on another machine
-version: 1
+version: 2
 ---
 
 The whole reason for this lesson is that the file is somewhere else. There are
 four ways to deal with that and only one of them is "learn vim".
+
+`web01` below stands for any server you reach with `ssh`, and
+`/etc/nginx/nginx.conf` for any file on it. To try the commands, use a machine
+you can `ssh` to with a file that exists there — the virtual machine from
+lesson 1, reached from the computer it runs on, is one.
 
 ## One: edit it there
 

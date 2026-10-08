@@ -6,7 +6,8 @@ version: 1
 Quando um túnel não sobe, o pessoal lê a configuração de novo, e os dois arquivos parecem certos para
 quem os escreveu. **O log de uma negociação diz qual passo falhou**, e isso reduz a busca a poucas
 linhas. O `swanctl --initiate` começa uma negociação na mão e imprime o log do daemon enquanto ela
-acontece. Uma que funciona é a referência para ler uma quebrada:
+acontece. Uma que funciona é a referência para ler uma quebrada. Derrube a conexão antes, como na seção
+anterior, para que haja o que negociar:
 
 ```
 ana@hq:~$ sudo swanctl --initiate --child lans
@@ -44,8 +45,9 @@ do outro, um décimo de 14400: a folga que uma IKE SA tem para renegociar antes 
 
 ## Uma chave errada
 
-O segredo de `branch` perdeu a última letra, o `l` de `Quill`, e foi recarregado. Depois `hq` tentou de
-novo:
+Tire a última letra, o `l` de `Quill`, do segredo de `branch` e recarregue-o, em `branch`:
+`sudo sed -i 's/7294-Quill/7294-Quil/' /etc/swanctl/swanctl.conf && sudo swanctl --load-all`. Derrube a
+conexão em `hq` de novo, e tente:
 
 ```
 ana@hq:~$ sudo swanctl --initiate --child lans
@@ -69,6 +71,9 @@ O veredito saiu primeiro, acima do log que ele resume. **A primeira troca deu ce
 IKE_SA_INIT não envolve chave. A resposta ao IKE_AUTH teve 80 bytes em vez de 224, levando só
 `N(AUTH_FAILED)`: `branch` conferiu a prova de `hq` com o próprio segredo, e elas não bateram.
 
+Ponha a letra de volta antes de seguir, com a substituição contrária, em `branch`:
+`sudo sed -i 's/7294-Quil"/7294-Quill"/' /etc/swanctl/swanctl.conf && sudo swanctl --load-all`.
+
 A notificação diz que a autenticação falhou, e não o motivo. **O lado que recusou sabe mais do que o
 lado que pediu**, e o log do próprio `branch`, não capturado aqui, diria mais. Um `id` errado termina na
 mesma notificação que um segredo errado, um caso também não capturado, então confira os dois nos dois
@@ -77,8 +82,10 @@ roteadores.
 ## Redes que não batem
 
 A falha clássica entre duas empresas, ou entre roteadores de dois fabricantes, é um desacordo sobre
-quais redes o túnel une. O `remote_ts` de `hq` foi mudado para `192.168.30.0/24`, uma rede que `branch`
-não tem:
+quais redes o túnel une. Mude o `remote_ts` de `hq` para `192.168.30.0/24`, uma rede que `branch` não
+tem, com a conexão derrubada antes:
+`sudo sed -i 's/192.168.20.0/192.168.30.0/' /etc/swanctl/swanctl.conf && sudo swanctl --load-all`.
+Depois inicie:
 
 ```
 ana@hq:~$ sudo swanctl --initiate --child lans 2>&1 | tail -5
@@ -91,7 +98,8 @@ ana@hq:~$ sudo swanctl --initiate --child lans 2>&1 | tail -5
 
 **A IKE SA foi estabelecida e a CHILD SA foi recusada**: `TS_UNACCEPTABLE`, seletores de tráfego
 inaceitáveis. Os dois roteadores confiam um no outro e não levam nada, o estado que o pessoal chama de
-"fase 1 de pé, fase 2 caída". A regra segura é fazer os seletores dos dois lados se espelharem
+"fase 1 de pé, fase 2 caída". O mesmo `sed` ao contrário, `s/192.168.30.0/192.168.20.0/`, devolve o
+arquivo ao que era. A regra segura é fazer os seletores dos dois lados se espelharem
 exatamente. O IKEv2 deixa quem responde estreitar um pedido para a parte que aceita, e as implementações
 usam isso de jeitos diferentes. Um `/24` contra um `/16` pode funcionar com um par de roteadores e
 falhar com outro.

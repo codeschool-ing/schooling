@@ -1,12 +1,29 @@
 ---
 title: Uma interface, três formatos
-version: 1
+version: 2
 ---
 
 A automação de redes lê e escreve três formatos de texto o dia inteiro, e cada um veio de um lugar
 diferente. **XML** é o que o NETCONF fala. **JSON** é o que as APIs REST, o RESTCONF e o gNMI
 falam. **YAML** é o que as pessoas escrevem à mão: inventários, playbooks do Ansible, o estado
-pretendido guardado num repositório. A mesma interface, `eth1`, nos três:
+pretendido guardado num repositório. A mesma interface, `eth1`, nos três.
+
+O YAML é um arquivo que alguém escreveu, `eth1.yaml`, na home da `ana` no `ctl`:
+
+```yaml
+# The same interface, written by a person for a file in a repository.
+name: eth1
+description: uplink to core1
+type: ethernetCsmacd
+enabled: true
+ipv4:
+  address:
+    - ip: 198.51.100.2
+      prefix-length: 30
+```
+
+O programa ao lado dele importa o `nc.py`, o auxiliar de NETCONF que a aula 3 escreveu, então esse
+arquivo também está no mesmo diretório:
 
 ```schooling-example
 {

@@ -1,6 +1,6 @@
 ---
 title: O projeto que este curso constrói
-version: 1
+version: 2
 ---
 
 Cada aula daqui em diante acrescenta uma peça a um projeto, e mostra essa peça num projeto de verdade:
@@ -10,9 +10,13 @@ O loanbook troca a folha por uma página que mostra o que está fora, com quem e
 
 Ele é pequeno de propósito: uma página, uma API, um arquivo SQLite, umas duzentas linhas de Python sem
 framework. Tem uma parte difícil, que é o assunto da aula 5. Termina implantado num servidor, com README,
-testes, licença e uma apresentação de dois minutos. A história inteira dele está no curso, então quando
-uma aula diz *o commit 6 recusou o segundo empréstimo*, você pode reconstruir o repositório e ler o
-commit 6.
+testes, licença e uma apresentação de dois minutos. A história dele é contada uma aula de cada vez:
+quando uma aula diz *o commit 6 recusou o segundo empréstimo*, a transcrição do commit 6 está ali.
+
+**O loanbook é para ler, não para digitar.** O curso não lhe entrega o código dele, e as transcrições
+não são passos a repetir. Cada uma mostra um passo bem feito num projeto de verdade, e o passo que você
+dá é o mesmo, no seu. Duas coisas você monta à mão, porque o seu projeto também precisa delas: o seu
+computador, pronto para trabalhar, na próxima seção, e o servidor para onde você faz o deploy, na aula 15.
 
 O exemplo é um serviço web porque esse formato tem mais partes móveis para mostrar. O seu projeto terá o
 formato que a sua trilha pede:

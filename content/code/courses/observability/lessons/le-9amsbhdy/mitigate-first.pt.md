@@ -1,6 +1,6 @@
 ---
 title: Mitigar primeiro, entender depois
-version: 1
+version: 2
 ---
 
 Há uma versão do payments com três minutos de vida, e o payments está falhando. **Qual é o bug ainda não
@@ -12,7 +12,13 @@ ana@obs:~/shop$ curl -s -H "Authorization: Bearer $(cat .grafana-token)" -H 'Con
 {"id":3,"message":"Annotation added"}
 ```
 
-O arquivo de falhas é removido, que é a reversão do laboratório, e noventa segundos depois:
+Aqui a reversão é remover o arquivo de falhas, e noventa segundos depois:
+
+```sh
+rm faults/payments.json
+sleep 90
+```
+
 
 ```
 ana@obs:~/shop$ ./promq '{__name__=~"checkout:burn_rate:.*"}'

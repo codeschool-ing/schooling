@@ -1,6 +1,6 @@
 ---
 title: Documentation, read off the network
-version: 1
+version: 2
 ---
 
 Every principle in this lesson depends on somebody knowing what the network actually is: which cable
@@ -129,5 +129,5 @@ c2. When the two sources disagree with the drawing, **the drawing is the one tha
   devices it is the cheapest documentation there is.
 
 The test of a network's documentation is simple and unkind: could somebody who has never seen it rebuild
-it from the documents alone? For the lab, the answer is yes, because `lab.sh` is the whole of it. For a
+it from the documents alone? For the lab, the answer is yes, because `campus.sh` is the whole of it. For a
 real network, the answer is the documentation.

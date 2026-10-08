@@ -11,12 +11,13 @@ ou um snapshot do disco obtém os dados sem nem entrar no banco.
 
 O banco do laboratório da Vereda tem uma tabela `patients`, montada na próxima seção. Depois que um
 checkpoint grava a tabela em disco, o arquivo da tabela pode ser lido com o `strings`, que imprime
-qualquer sequência de caracteres legíveis num arquivo binário:
+qualquer sequência de caracteres legíveis num arquivo binário. O arquivo pertence à conta do próprio
+PostgreSQL, então lê-lo exige `sudo`, que quem administra o servidor tem:
 
 ```
 ana@lab:~/lab$ psql -c CHECKPOINT
 CHECKPOINT
-ana@lab:~/lab$ strings /var/lib/postgresql/16/main/$(psql -Atc "SELECT pg_relation_filepath('patients')") | grep -oE 'Marina Duarte|Joao Pires|111\.444\.777-35' | sort | uniq -c
+ana@lab:~/lab$ sudo strings /var/lib/postgresql/16/main/$(psql -Atc "SELECT pg_relation_filepath('patients')") | grep -oE 'Marina Duarte|Joao Pires|111\.444\.777-35' | sort | uniq -c
       2 Joao Pires
       2 Marina Duarte
 ```

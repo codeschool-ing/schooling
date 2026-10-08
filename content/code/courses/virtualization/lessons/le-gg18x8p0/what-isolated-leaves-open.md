@@ -1,10 +1,11 @@
 ---
 title: What an isolated network leaves open
-version: 1
+version: 2
 ---
 
 The lab is lesson 14's network, `labnet`, with two guests on it, and the office network of lesson 11
-standing in for the real one. First, the wall that is already there:
+standing in for the real one (`sudo bash office.sh` brings it back if the host has restarted since).
+First, the wall that is already there:
 
 ```
 ana@host:~$ ip route get 10.0.0.50
@@ -24,7 +25,16 @@ leaves. And the two guests still reach each other, which is the point of the lab
 
 Now look at the host from the same guest. Two things on host listen on **every** address, `0.0.0.0`: its
 ssh server, and a small web server serving a folder of notes, the kind of thing somebody starts for five
-minutes and forgets:
+minutes and forgets. To have the same two on your host, the second is one line in a terminal you leave
+open, and the first is the `openssh-server` package, which Ubuntu Server has and Ubuntu Desktop does
+not:
+
+```bash
+mkdir -p ~/notes && echo "renew the office printer's toner" > ~/notes/todo.txt
+python3 -m http.server 8000 --directory ~/notes
+```
+
+Then, on the host and from the guest:
 
 ```
 ana@host:~$ ss -tln | grep -E ":(22|8000) "

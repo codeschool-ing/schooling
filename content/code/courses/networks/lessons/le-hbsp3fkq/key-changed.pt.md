@@ -1,10 +1,16 @@
 ---
 title: Quando a chave do servidor muda
-version: 1
+version: 2
 ---
 
-O servidor do escritório foi reinstalado, e uma reinstalação cria uma chave de host nova. A conexão
-seguinte:
+O servidor do escritório foi reinstalado, e uma reinstalação cria uma chave de host nova. No seu
+laboratório, dê ao servidor uma chave nova da sua máquina virtual:
+
+```sh
+sudo bash ~/netlab/netlab exec server root 'rm -f /etc/ssh/ssh_host_ed25519_key*; ssh-keygen -q -t ed25519 -N "" -C root@server -f /etc/ssh/ssh_host_ed25519_key; kill -HUP $(cat /run/sshd-server.pid)'
+```
+
+A conexão seguinte:
 
 ```
 ana@laptop:~$ ssh -o BatchMode=yes office true

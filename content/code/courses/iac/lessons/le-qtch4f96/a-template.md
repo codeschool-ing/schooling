@@ -1,6 +1,6 @@
 ---
 title: A Packer template
-version: 1
+version: 2
 ---
 
 **Packer builds machine images from a template**, and it is the same idea for every kind of image:
@@ -12,7 +12,15 @@ Docker it is a container, and the result is a container image.
 The lab has no AWS that runs machines (moto keeps records, not computers), so this lesson builds
 Docker images, which are real and run on the laptop. The template is HCL, the language of every
 Terraform file in this course, in a file whose name ends `.pkr.hcl`. Ana keeps it in its own
-repository, `~/shop/image`:
+repository, `~/shop/image`, which ignores one file a build will write there, as the section on
+versioning shows:
+
+```sh
+mkdir -p ~/shop/image && cd ~/shop/image
+git init -q . && printf "manifest.json\n" > .gitignore
+```
+
+The template is `web.pkr.hcl`:
 
 ```hcl
 packer {
@@ -64,11 +72,19 @@ asks for the container to be saved as an image at the end, which is what makes t
 not just a run. `changes` are settings written into the new image: the command it runs when
 started, and the port it listens on.
 
-`pull = false` is there because of this lab. By default Packer asks Docker Hub for the newest
+`pull = false` is there because of the recording. By default Packer asks Docker Hub for the newest
 `ubuntu:24.04` before every build, and while this lesson was being recorded Docker Hub answered
 those requests with `429 Too Many Requests`. With `pull = false` the build uses the copy already on
 the laptop. Leaving it out is the ordinary setting; four sections on, this lesson explains
-why the base image should be pinned either way.
+why the base image should be pinned either way. With the line in, your Docker needs that copy
+before the first build, so fetch it once:
+
+```sh
+docker pull ubuntu:24.04
+```
+
+Yours is whichever image the tag points at on the day you pull it, which the section on versioning
+comes back to.
 
 **`build`** says what happens. `sources` names the source blocks to start from, and a build can
 list several to produce the same image for several targets at once. Inside it:
@@ -79,8 +95,11 @@ list several to produce the same image for several targets at once. Inside it:
 - a **post-processor** acts on the image after it is saved. `docker-tag` gives it the name
   `shop-web:1.0.0`.
 
+Ana commits the template as it stands, `git add -A && git commit -qm 'the web image'`, so that the
+diffs in the next sections show only what changed after it.
+
 The same template for AWS would differ in its `source` block and little else. This one is
-**illustrative, not run here**: the `amazon-ebs` plugin is not installed in the lab, and moto
+**illustrative, not run here**: the `amazon-ebs` plugin is not installed for this lesson, and moto
 starts no machine to provision.
 
 ```hcl

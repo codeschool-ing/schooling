@@ -1,10 +1,17 @@
 ---
 title: tcpdump to a file, for later
-version: 1
+version: 2
 ---
 
 tcpdump has appeared in almost every lesson, printing packets as they pass. With `-w` it writes them to
-a file instead, the **pcap** format that Wireshark and every other packet tool can open:
+a file instead, the **pcap** format that Wireshark and every other packet tool can open. In your lab,
+unplug section 09's printer first, from your virtual machine, and empty the laptop's neighbour table
+with `sudo ip neigh flush dev eth0`; then, while the capture runs, fetch the home page from a second
+shell on the laptop with `curl -s https://www.example.com/ -o /dev/null`:
+
+```sh
+sudo ip netns del printer
+```
 
 ```
 ana@laptop:~$ sudo ip neigh flush dev eth0

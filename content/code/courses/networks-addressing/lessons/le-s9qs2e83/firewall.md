@@ -1,6 +1,6 @@
 ---
 title: "The firewall: a rule for every packet"
-version: 1
+version: 2
 ---
 
 "Firewall" sounds like a box with a wall drawn on it, or like the antivirus on a laptop. **A
@@ -40,8 +40,9 @@ so the list says how much traffic each rule has already decided: 10 packets matc
 14 the second and none the last.
 
 Now one connection in each direction. pc1 asks the web service beyond the provider for a page; the
-provider tries to open the web server inside the office. (The lab gave the provider a route to the
-office's private network for this block, so that the firewall is the only thing in the way.)
+provider tries to open the web server inside the office. (For this block the provider was given a route to the
+office's private network, `ip route add 10.20.10.0/24 via 203.0.113.2` at a root prompt on isp, so
+that the firewall is the only thing in the way.)
 
 ```
 ana@pc1:~$ curl -s http://192.0.2.80/

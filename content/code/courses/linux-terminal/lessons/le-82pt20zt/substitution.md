@@ -1,7 +1,22 @@
 ---
 title: `$( )` and `$(( ))`, which look alike and are not related
-version: 1
+version: 2
 ---
+
+The script this section runs, made in `~/work/scripts` the way section 02 described:
+
+```sh
+cd ~/work/scripts
+cat > counttrap.sh <<'END'
+#!/bin/bash
+set -e
+count=0
+(( count++ ))
+echo "count is now $count"
+echo "never reached"
+END
+chmod +x counttrap.sh
+```
 
 Two constructions, one character apart, doing entirely different things.
 

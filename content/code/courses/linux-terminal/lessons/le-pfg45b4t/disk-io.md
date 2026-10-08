@@ -1,19 +1,29 @@
 ---
 title: Disk throughput, and why 100% busy is not a verdict
-version: 1
+version: 2
 ---
 
 Space is one question; whether the disk can keep up is a different one, and the
 tool is `iostat`.
 
-Here is this machine writing about a gigabyte a second:
+Start the writers, and give them a few seconds:
+
+```sh
+cd ~/work/load
+./fill.sh &
+sleep 10
+```
+
+Here is this machine writing as fast as its disk will take it:
 
 ```
 ana@vm:~$ iostat -xz 2 2 | tail -6
-           1.25    0.00    6.99   21.35    0.25   70.16
+           0.25    0.00    9.95   41.44    1.01   47.36
 
 Device            r/s     rkB/s   rrqm/s  %rrqm r_await rareq-sz     w/s     wkB/s   wrqm/s  %wrqm w_await wareq-sz     d/s     dkB/s   drqm/s  %drqm d_await dareq-sz     f/s f_await  aqu-sz  %util
-vda              0.00      0.00     0.00   0.00    0.00     0.00 1482.50 1028608.00     0.00   0.00    0.97   693.83    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    1.43  93.20
+vda              0.00      0.00     0.00   0.00    0.00     0.00 2062.50 1055746.00     0.00   0.00    1.63   511.88    0.00      0.00     0.00   0.00    0.00     0.00    0.00    0.00    3.36  99.80
+
+
 ```
 
 | | |
@@ -38,12 +48,12 @@ Out of twenty-odd columns, five:
 | `aqu-sz` | average queue depth |
 | `%util` | percentage of time the device had at least one request in flight |
 
-Reading the capture above: 1482 writes a second, a gigabyte a second of data,
-a queue depth of 1.43, **0.97 milliseconds of write await**, and 93% utilisation.
+Reading the capture above: 2062 writes a second, a gigabyte a second of data,
+a queue depth of 3.36, **1.63 milliseconds of write await**, and 99.8% utilisation.
 
-**That is a healthy disk working hard.** A millisecond of wait on a device doing
-a gigabyte a second is nothing; the queue is barely more than one deep; nothing
-is suffering.
+**That is a healthy disk working hard.** A millisecond and a half of wait on a
+device doing a gigabyte a second is nothing; the queue is three deep, about one
+and a half per writer; nothing is suffering.
 
 ## `%util` stopped meaning saturation
 
@@ -56,7 +66,7 @@ requests at once shows `%util 100` while handling one request at a time, and it
 shows `%util 100` while handling thirty-two. The number is the same and the
 machine is in completely different states.
 
-So `%util 93` above is a fact and not a diagnosis. **The diagnosis is in
+So `%util 99.80` above is a fact and not a diagnosis. **The diagnosis is in
 `await`**:
 
 | | |
@@ -78,19 +88,28 @@ You do not always need `iostat`:
 ana@vm:~$ vmstat 1 3
 procs -----------memory---------- ---swap-- -----io---- -system-- -------cpu-------
  r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st gu
- 0  1      0 14476076  56304 1542856    0    0    69  5180  452    1  3  0 96  0  0  0
- 0  1      0 14477244  56304 1542856    0    0     0 883716 3874 4433  6  5 67 22  0  0
- 0  1      0 14485424  56304 1542856    0    0     0 980992 3815 4290  2  4 72 22  0  0
+ 1  2      0 15709852   6988 371876    0    0   137 15593 1056    2  9  2 88  1  0  0
+ 3  1      0 15713056   6988 371876    0    0     0 1010688 3933 4592  0 10 45 43  1  0
+ 0  2      0 15713056   6988 371876    0    0     0 1001472 3914 4764  0 10 52 36  1  0
 ```
 
-**`b 1` and `wa 22` with `r 0` is the whole diagnosis in six characters.**
-Nothing wants a processor, one thing is blocked, and a fifth of the machine's
-processor time was idle-because-of-disk. `bo` is 900,000 blocks a second going
+**`b 2` and `wa 36` with `r 0` is the whole diagnosis in six characters.**
+Nothing wants a processor, two things are blocked, and over a third of the
+machine's processor time was idle-because-of-disk. `bo` is a million blocks a second going
 out.
 
 That combination — high `wa`, high `b`, low `r` — is what an I/O problem looks
 like from `vmstat`, and it is why `vmstat 1` is the first command and `iostat`
 is the second.
+
+Stop the writers, and delete what they wrote:
+
+```sh
+cd ~/work/load
+pkill -f fill.sh
+sleep 3
+rm -f fill1.tmp fill2.tmp
+```
 
 ## Reads, writes and flushes are different
 

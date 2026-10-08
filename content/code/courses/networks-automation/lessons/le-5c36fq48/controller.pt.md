@@ -1,6 +1,6 @@
 ---
 title: Um controlador que aprende
-version: 1
+version: 2
 ---
 
 Um controlador é um servidor ao qual os switches se conectam. O OS-Ken escuta no endereço de
@@ -77,7 +77,8 @@ OFPST_FLOW reply (OF1.3) (xid=0x2):
 
 **Os flows foram escritos pelo programa**: um table-miss com prioridade 0 que manda o tráfego
 desconhecido para o controlador, e um flow para cada direção que ele aprendeu, cada um com o idle
-timeout de trinta segundos. O terminal do controlador, parado depois:
+timeout de trinta segundos. O terminal do controlador, parado depois a partir de outro terminal no `ctl` com
+`pkill -TERM -f "^python controller.py learning$"`, que é o que imprimiu `Terminated`:
 
 ```
 ana@ctl:~$ cd sdn && python controller.py learning

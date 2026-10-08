@@ -65,33 +65,33 @@
   },
   {
     "id": "ex-6fd9s1bq",
-    "version": 1,
+    "version": 2,
     "section": "what-a-model-knows",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "extract-1 answered the e-book refund question with the rule for printed books. Which real-model behaviour does that stand for?",
-    "hint": "It had no e-book sentence in its memory file.",
+    "prompt": "Asked how many days it gives to return a printed book, llama3.2:3b answered with a library's loan rules. Which behaviour is that?",
+    "hint": "Nothing but the question was in the request.",
     "choices": [
       {
-        "text": "Reading the help centre article about e-books",
+        "text": "Reading a help-centre article about libraries",
         "correct": false,
         "why": "Nothing was in the request but the question. There was nothing to read."
       },
       {
-        "text": "Answering with the nearest thing it has, in the form of an answer",
+        "text": "Answering the nearest question it knows, in the form of an answer",
         "correct": true,
-        "why": "Right: no knowledge of the e-book rule, and still a fluent, confident reply."
+        "why": "Right: no knowledge of Marginalia, and still a fluent, confident reply about something else."
       },
       {
         "text": "Mixing up two documents that had both been sent in its prompt together",
         "correct": false,
-        "why": "Its prompt held no documents at all; this was the closed-book rule."
+        "why": "Its prompt held no documents at all."
       },
       {
         "text": "Refusing a question it was not trained on",
         "correct": false,
-        "why": "It did not refuse. The closed-book rule always answers, which is the point."
+        "why": "It refused the phone question, not this one, and that is the danger: nothing in the text says which kind of reply it is."
       }
     ]
   },
@@ -119,76 +119,76 @@
   },
   {
     "id": "ex-2v9wn9bv",
-    "version": 1,
+    "version": 2,
     "section": "the-lab",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "What does extract-1 do when the prompt holds sources?",
-    "hint": "It writes no new words.",
+    "prompt": "What does `OPENAI_BASE_URL=http://localhost:11434/v1` in `env.sh` do?",
+    "hint": "The SDK is OpenAI's; the server is not.",
     "choices": [
       {
-        "text": "Copies up to three sentences most similar to the question, with their numbers",
+        "text": "Sends OpenAI's SDK to Ollama on your own machine instead of OpenAI's servers",
         "correct": true,
-        "why": "Right: rule 3. The similarity is MiniLM's cosine, computed for real."
+        "why": "Right. Ollama speaks the same wire format, so the SDK talks to it unchanged."
       },
       {
-        "text": "Returns the first source unchanged",
+        "text": "Downloads llama3.2:3b the first time a program runs",
         "correct": false,
-        "why": "It chooses sentences by similarity, from any source."
+        "why": "`ollama pull` downloads models; the variable only says where requests go."
       },
       {
-        "text": "Generates a new answer word by word, like a small language model",
+        "text": "Gives the programs a free OpenAI account",
         "correct": false,
-        "why": "It generates nothing. It copies whole sentences out of the sources."
+        "why": "No request leaves the machine, and no account is involved anywhere."
       },
       {
-        "text": "Sends the question to a real model through the proxy",
+        "text": "Tells PostgreSQL where to find the vectors",
         "correct": false,
-        "why": "No model API was reachable from the lab; that is why extract-1 exists."
+        "why": "`PGDATABASE` is the database's; this one is the model's."
       }
     ]
   },
   {
     "id": "ex-yzm4eh8q",
-    "version": 1,
+    "version": 2,
     "section": "the-lab",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "In this course, which of these is the lab's rather than real?",
-    "hint": "One thing is written by rules; the rest is computed.",
+    "prompt": "Why do the course's programs ask the model for `temperature=0`?",
+    "hint": "What would a rerun print without it?",
     "choices": [
       {
-        "text": "The token counts of each request",
+        "text": "It makes the model more accurate",
         "correct": false,
-        "why": "Those are tiktoken's cl100k_base, computed on the machine."
+        "why": "It removes randomness from the choice of words; it does not add knowledge."
       },
       {
-        "text": "The SDK objects the programs receive",
-        "correct": false,
-        "why": "The SDKs are the providers' own, unmodified; only the server behind them is the lab's."
-      },
-      {
-        "text": "The text of every generated reply",
+        "text": "Reruns on one machine then print the same reply, nearly every time",
         "correct": true,
-        "why": "Yes. The replies follow extract-1's rules; everything around them is real."
+        "why": "Right. Nearly, not always: reused work can change a word, and another machine or model changes more."
       },
       {
-        "text": "The cosine similarities between chunks and questions",
+        "text": "Ollama refuses requests without it",
         "correct": false,
-        "why": "Real: all-MiniLM-L6-v2 runs on the machine."
+        "why": "Ollama has a default; the programs set it so that a rerun is repeatable."
+      },
+      {
+        "text": "It makes every student's reply identical to the lesson's",
+        "correct": false,
+        "why": "A different processor or version of Ollama still changes the words, which is why the lessons read patterns, not wording."
       }
     ]
   },
   {
     "id": "ex-tnw7bqs9",
-    "version": 1,
-    "section": "the-lab",
+    "version": 2,
+    "section": "the-documents",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "By the `grep` in the lab tour, how many times does \"14 days\" appear across the corpus?",
+    "prompt": "By the `grep` after `docs.sh`, how many times does \"14 days\" appear across the corpus?",
     "hint": "Add the four counts.",
     "value": 11,
     "tolerance": 0,
@@ -196,7 +196,7 @@
   },
   {
     "id": "ex-gqgsedhs",
-    "version": 1,
+    "version": 2,
     "section": "the-document-in-the-prompt",
     "type": "quiz",
     "difficulty": "easy",
@@ -205,14 +205,14 @@
     "hint": "Compare the two requests, not the two models.",
     "choices": [
       {
-        "text": "Its memory file now holds the thirty-day rule",
+        "text": "It remembered the policy from an earlier question",
         "correct": false,
-        "why": "The memory file is unchanged; without the policy it would say fourteen days again."
+        "why": "Nothing carries over between requests; without the policy it would talk about libraries again."
       },
       {
         "text": "It switched to a larger context window",
         "correct": false,
-        "why": "The window is 8,192 in both; 1,144 tokens fit easily."
+        "why": "Ollama served it with 4,096 tokens both times; 1,166 fit easily."
       },
       {
         "text": "Nothing; the request carried the policy",
@@ -228,52 +228,52 @@
   },
   {
     "id": "ex-q1a75yyy",
-    "version": 1,
+    "version": 2,
     "section": "the-document-in-the-prompt",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "with_doc.py's reply to the return-window question also quoted a sentence about books with a printer's fault. Why did extract-1 pick it?",
-    "hint": "Its rule ranks sentences by one measure.",
+    "prompt": "with_doc.py's reply gave thirty days and no `[1]`, although the policy was numbered. Why?",
+    "hint": "Read the system message again.",
     "choices": [
       {
-        "text": "It came first in the document",
+        "text": "The number was cut off by the context window",
         "correct": false,
-        "why": "It comes later than the return window section; order plays no part in rule 3."
+        "why": "The request was 1,166 tokens, well inside 4,096."
       },
       {
-        "text": "The system message asked for every rule about printed books",
-        "correct": false,
-        "why": "It asked to answer the question; extract-1 ignores it anyway."
-      },
-      {
-        "text": "Faulty books have a 30-day window that overrides the general one",
-        "correct": false,
-        "why": "Both say 30 days; neither overrides the other, and that is not why it was picked."
-      },
-      {
-        "text": "It is similar to the question, which is not the same as needed",
+        "text": "Nothing in the request asked it to cite",
         "correct": true,
-        "why": "Right: it also says printed book and 30 days. Similarity is not relevance."
+        "why": "Right. A number makes a citation possible; an instruction asks for it, and lesson 7 checks it."
+      },
+      {
+        "text": "llama3.2:3b cannot cite sources",
+        "correct": false,
+        "why": "It cited [1] in tiny_rag.py, where the system message asked."
+      },
+      {
+        "text": "The answer came from its training, not the policy",
+        "correct": false,
+        "why": "Without the policy it answered about libraries. Thirty days came from the source."
       }
     ]
   },
   {
     "id": "ex-r1rw40dv",
-    "version": 1,
+    "version": 2,
     "section": "the-document-in-the-prompt",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
     "prompt": "How many prompt tokens did with_doc.py's request carry for the return-window question?",
     "hint": "The program prints it after the reply.",
-    "value": 1144,
+    "value": 1166,
     "tolerance": 0,
     "unit": "tokens"
   },
   {
     "id": "ex-bhwxh64p",
-    "version": 1,
+    "version": 2,
     "section": "the-document-in-the-prompt",
     "type": "quiz",
     "difficulty": "hard",
@@ -294,7 +294,7 @@
       {
         "text": "The model blends 2025 with what it learnt in training",
         "correct": false,
-        "why": "With a source present, extract-1 answers from the source. A real model might also, which would be worse, not better."
+        "why": "With a source present, a model mostly answers from the source. One that also blended in its training would be worse, not better."
       },
       {
         "text": "The citation number exposes the mistake to the customer",
@@ -318,33 +318,33 @@
   },
   {
     "id": "ex-jn0v5kpz",
-    "version": 1,
+    "version": 2,
     "section": "why-not-everything",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "everything.py's request was refused at 9,072 tokens plus 256. What were the 256?",
-    "hint": "A request has to fit two things.",
+    "prompt": "everything.py sent about 9,000 tokens and the reply reported `prompt tokens: 2050`. What happened?",
+    "hint": "Ollama's log said `truncating input prompt`.",
     "choices": [
       {
-        "text": "Room reserved for the reply",
+        "text": "Ollama cut the prompt to fit the window and kept its end",
         "correct": true,
-        "why": "Right. labgen reserves 256 when the request does not say how long a reply it wants."
+        "why": "Right. The question survived; the documents at the start, the delivery prices among them, did not."
       },
       {
-        "text": "A safety margin the SDK adds to every request",
+        "text": "The provider refused the request",
         "correct": false,
-        "why": "The SDK added nothing; the reservation is the server's."
+        "why": "Nothing refused. A reply came back, which is what makes this failure easy to miss."
       },
       {
-        "text": "The tokens of the question",
+        "text": "The model read everything and summarised it in 2,050 tokens",
         "correct": false,
-        "why": "The question is inside the 9,072."
+        "why": "prompt_tokens counts what it read, not what it wrote."
       },
       {
-        "text": "The numbers and names in front of each document",
+        "text": "tiktoken and llama count tokens four times differently",
         "correct": false,
-        "why": "Those are inside the 9,072 too: it is more than the 8,914 the documents alone took."
+        "why": "They differ by a few percent, not by a factor of four."
       }
     ]
   },
@@ -382,14 +382,14 @@
   },
   {
     "id": "ex-rmgmgnwy",
-    "version": 1,
+    "version": 2,
     "section": "why-not-everything",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "At the lesson's illustrative 3 per million input tokens, what do ten thousand 9,072-token prompts cost? Round to a whole number.",
-    "hint": "9,072 × 10,000 × 3 / 1,000,000.",
-    "value": 272,
+    "prompt": "At the lesson's illustrative 3 per million input tokens, what do ten thousand prompts carrying the 8,914 tokens of the documents cost? Round to a whole number.",
+    "hint": "8,914 × 10,000 × 3 / 1,000,000.",
+    "value": 267,
     "tolerance": 1,
     "unit": "per day"
   },
@@ -443,33 +443,33 @@
   },
   {
     "id": "ex-hd5vnqer",
-    "version": 1,
+    "version": 2,
     "section": "retrieve-then-generate",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "For the express-delivery question, tiny_rag.py put the right section first and the reply missed the price. Which half failed?",
-    "hint": "Was 9.90 in the prompt?",
+    "prompt": "For the return-window question, tiny_rag.py also retrieved the replaced 2025 policy, second at 0.807, and the reply was right. What does that say?",
+    "hint": "What told the model which source was current?",
     "choices": [
       {
-        "text": "Indexing, because the table was not embedded",
+        "text": "Retrieval failed, because it returned an old document",
         "correct": false,
-        "why": "The whole section, table included, was embedded and found."
+        "why": "It returned what was most similar, which is its job; nothing told it the document was old."
       },
       {
-        "text": "Retrieval, because the section had the wrong score",
-        "correct": false,
-        "why": "It scored 0.698, first by a wide margin. Retrieval did its job."
-      },
-      {
-        "text": "Both, since the reply was wrong",
-        "correct": false,
-        "why": "A wrong reply does not tell you which half failed; the scores do."
-      },
-      {
-        "text": "Generation: the answer was in front of it and it chose another sentence",
+        "text": "The reply was right by luck: nothing told the model which source is current",
         "correct": true,
-        "why": "Right. Each half can fail while the other succeeds."
+        "why": "Right. For return postage the old policy came first and the reply quoted it."
+      },
+      {
+        "text": "llama3.2:3b knows the 2025 policy was replaced",
+        "correct": false,
+        "why": "It has never seen either policy outside the prompt."
+      },
+      {
+        "text": "Both halves are now proven to work",
+        "correct": false,
+        "why": "One right answer proves nothing about the next; lesson 8 measures thirty."
       }
     ]
   },
@@ -520,7 +520,7 @@
   },
   {
     "id": "ex-yspcjdmm",
-    "version": 1,
+    "version": 2,
     "section": "what-rag-does-not-fix",
     "type": "matching",
     "difficulty": "medium",
@@ -534,19 +534,19 @@
       },
       {
         "left": "How much is express delivery?",
-        "right": "The answer was retrieved and the reply missed it"
+        "right": "The right section found and the price cited"
       },
       {
         "left": "How many days do I have to return a printed book?",
-        "right": "Two sources that disagree, quoted together"
+        "right": "Two sources that disagree, both retrieved"
       },
       {
         "left": "Can I place an order by phone?",
-        "right": "Three weak sections returned and nothing to say"
+        "right": "Nothing answered, and a rule was invented"
       }
     ],
     "right_distractors": [
-      "The model invented a number from its training"
+      "The answer was retrieved and the reply missed it"
     ]
   },
   {
@@ -583,7 +583,7 @@
   },
   {
     "id": "ex-tkhrxex2",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "quiz",
     "difficulty": "medium",
@@ -602,9 +602,9 @@
         "why": "There is no phone number to find; no document mentions one."
       },
       {
-        "text": "With sources and a threshold, it would say the sources do not cover it",
+        "text": "With the documents in the prompt, it could say they do not cover it",
         "correct": true,
-        "why": "Right: that is what with_doc.py printed for the same question."
+        "why": "Right: that is what with_doc.py printed for the same question. Lesson 7 makes it a rule rather than a habit."
       },
       {
         "text": "The bot would quote the 2025 policy",

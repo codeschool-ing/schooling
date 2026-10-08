@@ -1,12 +1,33 @@
 ---
 title: When a service ignores the flag
-version: 1
+version: 2
 ---
 
 Head sampling works only if every service obeys the decision it receives. **The trace is kept or
 dropped whole because the flag travels with it**; one service with its own idea breaks that.
 
-Here `orders` is given `always_on`, a sampler that records everything and ignores any parent:
+Here `orders` is given `always_on`, a sampler that records everything and ignores any parent. The
+override grows by three lines:
+
+`~/shop/compose.override.yaml`
+
+```yaml
+services:
+  storefront:
+    environment:
+      OTEL_TRACES_SAMPLER: parentbased_traceidratio
+      OTEL_TRACES_SAMPLER_ARG: "0.1"
+  orders:
+    environment:
+      OTEL_TRACES_SAMPLER: always_on
+```
+
+```sh
+docker compose up -d orders
+sleep 45
+```
+
+And the same ten traces' worth of lookup:
 
 ```
 ana@obs:~/shop$ for t in $(docker compose logs --no-log-prefix --since 40s --until 15s storefront | grep "checkout finished" | jq -r .trace_id | tail -10); do printf "%s  " $t; curl -s localhost:16686/api/traces/$t | jq -r 'if .data then (.data[0] as $d | ($d.spans | map(.spanID)) as $ids | $d.spans | "\(length) spans, top: " + (map(select(.references == [] or (.references[0].spanID | IN($ids[]) | not))) | map($d.processes[.processID].serviceName + " " + .operationName) | join(", "))) else .errors[0].msg end'; done

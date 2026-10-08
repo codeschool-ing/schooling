@@ -65,9 +65,9 @@
     ]
   },
   "ex-y0e6dv3j": {
-    "prompt": "Quantos passos o agente deu para responder sobre o pedido 1042?",
-    "hint": "Conte os prefixos [n].",
-    "unit": "passos"
+    "prompt": "Quantas requisições o agente fez na primeira pergunta sobre o pedido 1042?",
+    "hint": "A última linha da rodada.",
+    "unit": "requisições"
   },
   "ex-6fghwv8e": {
     "prompt": "Como o host sabe que o modelo terminou?",
@@ -92,24 +92,24 @@
     ]
   },
   "ex-s8ecp0j3": {
-    "prompt": "De onde veio o 28 de outubro da resposta?",
-    "hint": "Dois resultados de ferramenta e um passo de raciocínio.",
+    "prompt": "A primeira resposta sobre o pedido 1042 disse que o prazo de devolução tinha acabado. Que resultado de ferramenta sustenta isso?",
+    "hint": "Que ferramentas foram chamadas, e o que nenhuma delas dá?",
     "choices": [
       {
-        "text": "Do treino do modelo",
-        "why": "O pedido é da loja, e recente."
+        "text": "O `get_order`, que deu a data de entrega",
+        "why": "A data sozinha não diz nada sobre um prazo, nem sobre hoje."
       },
       {
-        "text": "Só do `get_order`",
-        "why": "Ele deu a data de entrega, não o prazo."
+        "text": "O `read_handbook`, que deu os 30 dias",
+        "why": "Ele nem foi chamado nessa rodada."
       },
       {
-        "text": "Só do manual",
-        "why": "Ele deu 30 dias, não a data."
+        "text": "Nenhum",
+        "why": "Isso: nenhuma ferramenta deu o prazo nem a data de hoje."
       },
       {
-        "text": "Dois resultados de ferramenta, somados",
-        "why": "Isso: a data de entrega mais o prazo de 30 dias; cada fato tem um resultado de ferramenta por trás."
+        "text": "Os dois, somados",
+        "why": "Só um foi chamado."
       }
     ]
   },
@@ -343,7 +343,7 @@
     "hint": "O `cat` depois da primeira execução do reembolso.",
     "choices": [
       {
-        "text": "Um reembolso de 7980 centavos",
+        "text": "Um reembolso de 0 centavos",
         "why": "Isso é depois do `y`."
       },
       {
@@ -362,7 +362,7 @@
   },
   "ex-yd47daq7": {
     "prompt": "Por que o pedido de aprovação mostra os argumentos exatos?",
-    "hint": "\"um reembolso\" contra \"7980 centavos no pedido 1042\".",
+    "hint": "\"um reembolso\" contra \"0 centavos no pedido 1042\".",
     "choices": [
       {
         "text": "Porque o MCP exige",
@@ -405,46 +405,54 @@
     ]
   },
   "ex-n3e0t2r9": {
-    "prompt": "Ligue cada execução à guarda que a parou.",
-    "hint": "Duas execuções, duas guardas.",
+    "prompt": "Ligue cada rodada ao que aconteceu.",
+    "hint": "Quatro rodadas da seção 09.",
     "pairs": [
       {
-        "left": "Página de produtos pedida duas vezes",
-        "right": "A checagem de repetição"
+        "left": "A luminária, sem opções",
+        "right": "Dois produtos inventados"
       },
       {
-        "left": "Cinco páginas diferentes, sem resposta",
-        "right": "O limite de passos"
+        "left": "A luminária, com `--rules`",
+        "right": "Não achou a resposta"
+      },
+      {
+        "left": "A luminária, com `--remind`",
+        "right": "A guarda de repetição a parou"
+      },
+      {
+        "left": "O pedido 1042, com `--rules`",
+        "right": "A regra, e nunca o pedido"
       }
     ],
     "right_distractors": [
-      "O pedido de aprovação"
+      "O limite de passos a parou"
     ]
   },
   "ex-ec00je41": {
-    "prompt": "Quantos tokens de entrada os cinco passos da execução sem rumo somaram?",
-    "hint": "O total na última linha.",
+    "prompt": "Com `--remind`, quantos tokens de entrada a pergunta da luminária custou ao todo?",
+    "hint": "A última linha dessa rodada.",
     "unit": "tokens"
   },
   "ex-v84gnw4c": {
-    "prompt": "Por que cada um dos cinco passos levou mais tokens de entrada que o anterior?",
-    "hint": "O que cada passo manda?",
+    "prompt": "Na primeira rodada sobre o pedido 1042, a segunda requisição levou 166 tokens de entrada e a primeira 289. Por que menos, se ela levava mais conversa?",
+    "hint": "Leia o `if` do template.",
     "choices": [
       {
-        "text": "O labllm cobra mais conforme a tarefa avança",
-        "why": "Os preços não mudam."
+        "text": "O Ollama esquece a pergunta depois do primeiro passo",
+        "why": "A pergunta continua na conversa."
       },
       {
-        "text": "As definições de ferramentas cresceram",
-        "why": "São as mesmas três a cada passo."
+        "text": "As ferramentas tinham saído do prompt",
+        "why": "Isso: o template só as lista numa última mensagem que seja do usuário."
       },
       {
-        "text": "O histórico se acumula",
-        "why": "Isso: cada passo leva toda chamada e todo resultado anterior."
+        "text": "O cache deixou a segunda requisição mais barata",
+        "why": "A conta inclui o que foi reaproveitado."
       },
       {
-        "text": "As respostas do modelo ficaram mais longas",
-        "why": "Não houve respostas, só chamadas."
+        "text": "O resultado da ferramenta foi cortado em 72 caracteres",
+        "why": "Esse corte é só no que o host imprime."
       }
     ]
   },

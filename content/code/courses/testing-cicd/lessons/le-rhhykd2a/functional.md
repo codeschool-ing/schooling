@@ -1,13 +1,15 @@
 ---
 title: Functional tests
-version: 1
+version: 2
 ---
 
 A **functional test** exercises the application through the interface its users use, here HTTP,
 and checks what comes back. It does not know about `freight` or `Store`. It knows that a GET on
 `/quote` with a CEP and a weight must answer 200 and a JSON body with a formatted price.
 
-Before automating it, here is the same check by hand, against the server running on a laptop:
+Before automating it, here is the same check by hand. The server is started in a second terminal,
+in `~/shipquote` with the environment active, by `python -m shipquote.app`; it says it is
+listening on 127.0.0.1:8080 and keeps the terminal until Ctrl-C stops it. From the first terminal:
 
 ```
 ana@laptop:~/shipquote$ curl -s 'http://127.0.0.1:8080/quote?cep=01310-100&weight=1200&subtotal=5000'; echo
@@ -97,7 +99,7 @@ tests/test_app.py::test_a_bad_cep_is_a_400_that_says_why PASSED          [100%]
 
 ## What this layer costs
 
-Three tests took 0.68 seconds, against 0.16 for eleven unit tests. Section 09 measures where the
+Three tests took 0.68 seconds, against 0.16 for eleven unit tests. Section 12 measures where the
 time goes; it is not the requests. What matters here is the trade: **a functional test sees the
 wiring that every other layer assumes**, the route, the parsing, the encoding, the status code, at
 the price of being slower and of pointing less precisely at the cause when it fails. A red

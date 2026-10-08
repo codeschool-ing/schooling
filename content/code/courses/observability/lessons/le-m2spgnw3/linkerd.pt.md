@@ -1,6 +1,6 @@
 ---
 title: Linkerd, comparado pelo projeto
-version: 1
+version: 2
 ---
 
 O **Linkerd** é o outro mesh do título desta aula, e o mais antigo: ele deu nome à categoria em 2016. A
@@ -58,3 +58,10 @@ As diferenças que importam na escolha, ditas a partir do projeto de cada um e n
 **Nenhuma das escolhas muda o argumento de observabilidade desta aula.** As duas dão contagens de
 requisições, latências e taxas de sucesso por par de serviços sem código, as duas protegem o tráfego com
 identidade de carga, e as duas param no mesmo lugar: veem requisições, não para que elas serviam.
+
+Quando terminar com o cluster, apague os dois namespaces e depois o cluster:
+
+```sh
+kubectl delete namespace shop-mesh outside
+kind delete cluster --name lab
+```

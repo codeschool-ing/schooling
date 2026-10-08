@@ -1,10 +1,11 @@
 ---
 title: A full clone
-version: 1
+version: 2
 ---
 
 A **clone** is a new virtual machine made by copying an existing one. `virt-clone` does it for libvirt,
-with the original switched off so its disk is not changing:
+with the original switched off so its disk is not changing. The original here is vm1, fresh from
+`bash newvm.sh vm1`, lesson 1:
 
 ```
 ana@host:~$ virsh shutdown vm1

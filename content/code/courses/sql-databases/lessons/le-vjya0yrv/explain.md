@@ -11,14 +11,19 @@ Put `EXPLAIN` in front of a query and the database does not run it. It **plans**
 it would fetch the rows — and prints the decision. That decision is the plan, and every question in
 this lesson is answered by reading one.
 
-Here is the shop's `orders` table, a million rows, with the indexes lesson 9 left it: a primary
-key and nothing on `customer_id`.
+Here is the shop's `orders` table, a million rows, as lesson 9's script left it: a primary key, an
+index each on `status` and `placed_at`, and nothing on `customer_id`. The first line is one to
+type yourself, once, at the start of the session — it is explained at the end of the section on
+joins, and until then it keeps every plan a single tree, the way they are printed here:
 
 ```
+shop=# SET max_parallel_workers_per_gather = 0;
+SET
+
 shop=# EXPLAIN SELECT * FROM orders WHERE customer_id = 42;
                          QUERY PLAN                         
 ------------------------------------------------------------
- Seq Scan on orders  (cost=0.00..19966.00 rows=11 width=28)
+ Seq Scan on orders  (cost=0.00..19969.00 rows=11 width=28)
    Filter: (customer_id = 42)
 (2 rows)
 ```
@@ -31,7 +36,7 @@ that node: as it reads, it keeps the rows where `customer_id = 42` and drops the
 ## The four numbers
 
 ```
-(cost=0.00..19966.00 rows=11 width=28)
+(cost=0.00..19969.00 rows=11 width=28)
 ```
 
 **`cost` is two numbers, and neither is a time.** They are in the planner's own unit, where reading
@@ -58,7 +63,7 @@ hash will need. Twenty-eight bytes for `SELECT *` from `orders`; ask for fewer c
 shop=# EXPLAIN SELECT * FROM customers WHERE email = 'user42@example.com';
                                       QUERY PLAN                                      
 --------------------------------------------------------------------------------------
- Index Scan using customers_email_key on customers  (cost=0.42..8.44 rows=1 width=56)
+ Index Scan using customers_email_key on customers  (cost=0.42..8.44 rows=1 width=48)
    Index Cond: (email = 'user42@example.com'::text)
 (2 rows)
 ```
@@ -69,7 +74,7 @@ were fetched. `Filter`, above, is a condition applied to rows already in hand. T
 the most useful thing to look for in a plan. It is what "the index is not used" looks like in
 practice: **the column is in a `Filter` line, and there is no `Index Cond` naming it.**
 
-The costs say the rest. `0.42..8.44` against `0.00..19966.00`: the index scan pays a small amount
+The costs say the rest. `0.42..8.44` against `0.00..19969.00`: the index scan pays a small amount
 to start — descending the tree — and is done after a handful of pages. The scan is free to start
 and costs twenty thousand to finish.
 
@@ -81,9 +86,9 @@ Most queries need more than one step, and the steps nest:
 shop=# EXPLAIN SELECT c.name, o.id, o.total FROM customers c JOIN orders o ON o.customer_id = c.id WHERE c.email = 'user42@example.com';
                                              QUERY PLAN                                             
 ----------------------------------------------------------------------------------------------------
- Hash Join  (cost=8.45..20099.56 rows=10 width=23)
+ Hash Join  (cost=8.45..20102.56 rows=10 width=23)
    Hash Cond: (o.customer_id = c.id)
-   ->  Seq Scan on orders o  (cost=0.00..17466.00 rows=1000000 width=14)
+   ->  Seq Scan on orders o  (cost=0.00..17469.00 rows=1000000 width=14)
    ->  Hash  (cost=8.44..8.44 rows=1 width=17)
          ->  Index Scan using customers_email_key on customers c  (cost=0.42..8.44 rows=1 width=17)
                Index Cond: (email = 'user42@example.com'::text)
@@ -100,7 +105,7 @@ bottom of the deepest branch, and the last is at the top.
 ```
 
 The join here is the one from lesson 5: one customer, found by email through the index, joined to
-their orders. And the plan says something the query does not: to find thirteen orders it read
+their orders. And the plan says something the query does not: to find seven orders it read
 **all million** — `Seq Scan on orders`, with `rows=1000000` — and matched them against a hash of
 one customer. That is the missing index on `orders.customer_id` from lesson 9, seen from the other
 side. Nothing in the SQL is wrong; the plan is how you find out that the schema is.
@@ -127,7 +132,7 @@ shop=# EXPLAIN (FORMAT JSON) SELECT * FROM customers WHERE email = 'user42@examp
        "Startup Cost": 0.42,                               +
        "Total Cost": 8.44,                                 +
        "Plan Rows": 1,                                     +
-       "Plan Width": 56,                                   +
+       "Plan Width": 48,                                   +
        "Index Cond": "(email = 'user42@example.com'::text)"+
      }                                                     +
    }                                                       +

@@ -1,10 +1,11 @@
 ---
 title: Names for the machines you use
-version: 1
+version: 2
 ---
 
 Addresses, user names and ports are tedious to type and easy to get wrong. `~/.ssh/config` gives each
-machine a short name and remembers the rest:
+machine a short name and remembers the rest. Write it on the laptop with `nano ~/.ssh/config`, as the
+`cat` below shows it, and make it private with `chmod 600 ~/.ssh/config`:
 
 ```
 ana@laptop:~$ cat ~/.ssh/config

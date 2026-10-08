@@ -1,11 +1,11 @@
 ---
 title: The network tab
-version: 1
+version: 2
 ---
 
 **The Network panel lists every request a page makes: what it asked for, the status that came
 back, the size and the timing.** When a page shows the wrong data, or none, this is where you find
-out whether the problem is in the page or in the server. The lab's `--network` prints one line per
+out whether the problem is in the page or in the server. `page --network` prints one line per
 response. `missing.html` loads this script with `<script type="module">`, because it uses `await`
 at the top level, as lesson 9 explained:
 
@@ -31,7 +31,7 @@ net  GET /api/broken  500  fetch  41 B
 ```
 
 Each `net` line has the method, the address, the **status**, the **type** of request and the size of
-the body. The lab prints a line once the body has arrived, so the lines for the three requests come
+the body. `page` prints a line once the body has arrived, so the lines for the three requests come
 after the page's own messages.
 
 Two things here are worth knowing before they confuse you:
@@ -90,7 +90,7 @@ start  took    request
  1200   400  GET /api/slow?ms=400&book=3              ####
 ```
 
-The lab's `--waterfall` draws the same time line in text, rounded to 100 ms, with one `#` per 100
+`--waterfall`, from `devtools.mjs`, draws the same time line in text, rounded to 100 ms, with one `#` per 100
 ms. The first three requests form a staircase. Each starts when the previous one ends, because
 each `await` waits before the next `fetch` is sent. The last three start together, because
 `Promise.all` sent all three before waiting for any.

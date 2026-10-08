@@ -1,10 +1,11 @@
 ---
 title: Not only VMware’s
-version: 1
+version: 2
 ---
 
 A VMDK is only a disk, and any hypervisor that reads the format can boot from it. Here QEMU starts a
-guest whose disk is a VMDK, with the same `virt-install` as lesson 1 and `format=vmdk`:
+guest whose disk is a VMDK, with the same `virt-install` as lesson 1 and `format=vmdk`. Its seed disk, `vmw1-seed.img`, is made by
+hand as in lesson 1, section 05, with `hostname: vmw1`:
 
 ```
 ana@host:~$ cd /var/lib/libvirt/images && sudo qemu-img convert -O vmdk lab-base.qcow2 vmw1.vmdk

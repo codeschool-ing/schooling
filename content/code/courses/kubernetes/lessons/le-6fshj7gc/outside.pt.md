@@ -24,7 +24,7 @@ spec:
 ```
 
 `Cluster` é o padrão, escrito aqui porque o próximo passo o muda. Antes das requisições, a loja foi
-reduzida a uma cópia, para que dois dos três nós não tenham pod próprio:
+reduzida a uma cópia, com `kubectl scale deployment shop --replicas=1`, para que dois dos três nós não tenham pod próprio:
 
 ```
 ana@laptop:~/shop$ kubectl apply -f shop-public.yaml

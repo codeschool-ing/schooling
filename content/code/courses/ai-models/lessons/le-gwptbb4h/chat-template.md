@@ -7,7 +7,7 @@ A chat API takes a list of messages, each with a role. The network inside takes 
 reads **one sequence of tokens**, and the roles have to be written into that sequence somehow. The
 convention for writing them is the **chat template**, and every model family has its own.
 
-Meta publishes Llama 3.1's in the same document. `lab/template.py` follows it to the letter and
+Meta publishes Llama 3.1's in the same document. `template.py` follows it to the letter and
 renders ana's sorting prompt and the first e-mail in `cases/triage.jsonl`:
 
 ```python
@@ -28,7 +28,7 @@ print(render([{"role": "system", "content": open("prompts/triage.txt").read().st
 ```
 
 ```
-ana@desk:~/desk$ python lab/template.py
+ana@desk:~/desk$ python template.py
 <|begin_of_text|><|start_header_id|>system<|end_header_id|>
 
 You sort the e-mail of Lantern Books, an online bookshop.
@@ -41,7 +41,7 @@ Hi, I ordered two books on Monday (order LB-20417) and the tracking page still s
 That is the whole trick behind a chat. Each turn is fenced by special tokens naming its role, and
 the string **ends with the header of an assistant turn that has no content yet**. The model's only
 skill is continuing text, so it continues by writing the assistant's turn, and the tuning from
-section 03 makes it close that turn with `<|eot_id|>`.
+section 07 makes it close that turn with `<|eot_id|>`.
 
 ## Why you should know this when an API hides it
 

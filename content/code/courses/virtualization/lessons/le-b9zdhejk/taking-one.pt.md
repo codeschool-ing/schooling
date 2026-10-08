@@ -1,9 +1,9 @@
 ---
 title: Tirando um
-version: 1
+version: 2
 ---
 
-Dentro da vm1 há um arquivo que vale guardar. Depois, um snapshot, pelo host:
+A vm1 é um convidado novo do `bash newvm.sh vm1`, aula 1, e dentro dela há um arquivo que vale guardar. Depois, um snapshot, pelo host:
 
 ```
 ana@vm1:~$ echo "checked, all fine" > notes.txt; cat notes.txt

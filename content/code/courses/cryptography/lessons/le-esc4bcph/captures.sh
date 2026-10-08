@@ -7,33 +7,27 @@
 #
 #   bash captures.sh            # beside this file; it finds ../../lab.sh
 #
-# It rebuilds ~/lab with lab.sh reset under its own HOME, so nothing of yours
-# is touched, and prints each command after a prompt, ana@lab:~/lab$,
-# followed by what it printed.
+# It rebuilds ~/lab with lab.sh reset, which builds it as the lessons do, in
+# the home of a user `ana` (LAB_HOME moves it), and prints each command after
+# a prompt, ana@lab:~/lab$, followed by what it printed.
 #
-# What is STAGED rather than typed: the whole of ~/lab, built by lab.sh,
-# including data/dns/, Vereda's zone and two Ed25519 DNSSEC keys in BIND's
-# format, and pki/ana-mail.* and pki/bruno-mail.*, the S/MIME certificates
-# vlab/pki.py issues. The zone is signed with fixed inception and expiry
-# dates (2026-06-01 to 2036-06-01) because dnssec-verify reads the real
-# clock. Ed25519 and RSA signatures are deterministic, so the transcripts
-# repeat; CMS encryption is randomised, so only its structure is printed.
+# data/dns/ is what section `dnssec` makes: Vereda's zone, written by a
+# heredoc, and its two Ed25519 DNSSEC keys, which `vcrypt dnskeys` derives
+# from labels so that the signed zone repeats. The S/MIME certificates are
+# lesson 8's, from `vcrypt pki`.
 #
-# NOT RUN: IPsec. The kernel the course was recorded on does not provide
-# the ESP transform to network namespaces, so section 02 is explanation
-# and a figure, and says so.
-#
-# Recorded with OpenSSL 3.0.13, BIND 9.18 and Python 3.13,
-# TZ=America/Sao_Paulo.
+# Recorded on Ubuntu 24.04 with BIND 9.18, OpenSSL 3.0.13, Python 3.12 and
+# cryptography 50.0.2, TZ=America/Sao_Paulo.
 
 set -uo pipefail
 here=$(cd "$(dirname "$0")" && pwd)
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 COLUMNS=100 PYTHONDONTWRITEBYTECODE=1
-export HOME=${LAB_HOME:-/var/tmp/cryptography}
-mkdir -p "$HOME"
+export LAB_HOME=${LAB_HOME:-/home/ana}
+export HOME=$LAB_HOME
 bash "$here/../../lab.sh" reset >/dev/null
 cd "$HOME/lab"
-export PATH=$HOME/lab/bin:$PATH
+# What the three lines lesson 1 adds to ~/.bashrc do.
+export PATH=$HOME/lab/venv/bin:$HOME/lab/bin:$PATH VIRTUAL_ENV=$HOME/lab/venv
 on() { printf 'ana@lab:~/lab$ %s\n' "$*"; bash -c "$*" 2>&1; }
 block() { printf '##### %s\n' "$1"; }
 
@@ -41,7 +35,6 @@ block() { printf '##### %s\n' "$1"; }
 T=1781535600
 
 block dnssec
-on 'cat data/dns/db.vereda.example'
 on 'ls data/dns'
 on 'cd data/dns && dnssec-signzone -S -K . -s 20260601000000 -e 20360601000000 -o vereda.example -f signed.zone db.vereda.example 2>&1 | tail -5'
 on "grep -A6 '^portal' data/dns/signed.zone"

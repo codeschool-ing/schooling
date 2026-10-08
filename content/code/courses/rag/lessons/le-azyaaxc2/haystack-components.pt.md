@@ -1,20 +1,32 @@
 ---
 title: Os componentes do Haystack, e ids feitos de conteúdo
-version: 1
+version: 2
 ---
 
 O **Haystack**, da deepset, segue uma linha mais rígida que as duas bibliotecas da aula 10. Tudo é
 um **componente**: uma classe com um método `run` cujas entradas e saídas são declaradas com seus
 tipos. Um **pipeline** é um grafo de componentes com nome, e cada ligação entre dois deles é
-conferida no momento em que é feita. O laboratório fixa o `haystack-ai` 3.3.0.
+conferida no momento em que é feita. O `requirements.txt` da aula 1 fixa o `haystack-ai` 3.3.0.
 
 ## Uma ligação que não encaixa
 
 Ligar a saída do gerador de embeddings de texto direto no gerador de chat é um absurdo, já que um
 vetor não é uma conversa, e o Haystack diz isso antes de qualquer coisa rodar:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "hs_wrong.py",
+  "parts": [
+    {
+      "code": "from haystack import Pipeline\nfrom haystack.components.embedders import OpenAITextEmbedder\nfrom haystack.components.generators.chat import OpenAIChatGenerator\n\np = Pipeline()\np.add_component(\"embed\", OpenAITextEmbedder(model=\"all-minilm\"))\np.add_component(\"generate\", OpenAIChatGenerator(model=\"llama3.2:3b\"))\ntry:\n    p.connect(\"embed.embedding\", \"generate.messages\")\nexcept Exception as e:\n    print(type(e).__name__ + \":\", \" \".join(str(e).split()))",
+      "note": "Dois componentes cujos encaixes não combinam, o vetor do embedder nas mensagens do gerador, ligados mesmo assim para ver quem reclama e quando."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python hs_wrong.py
+```
+ana@vm:~/rag$ python hs_wrong.py
 PipelineConnectError: Cannot connect 'embed.embedding' with 'generate.messages': their declared input and output types do not match. 'embed': - embedding: list[float] 'generate': - messages: list[ChatMessage] | str (available)
 ```
 
@@ -25,9 +37,23 @@ que um que quebra quando um cliente o usa.
 
 ## Indexação como pipeline
 
-A indexação também é um pipeline: dividir, gerar embeddings, gravar. O programa carrega o acervo,
-carrega de novo, e depois muda um campo dos metadados de um documento, o dono da política de
-devoluções, e carrega só esse documento:
+A indexação também é um pipeline: dividir, gerar embeddings, gravar. Primeiro os documentos, lidos
+do jeito que o Haystack os quer pelo `hs_docs.py`:
+
+```schooling-example
+{
+  "language": "python",
+  "file": "hs_docs.py",
+  "parts": [
+    {
+      "code": "import glob\n\nfrom haystack import Document\n\n\ndef document(path):\n    \"\"\"The text after the front matter, with the front matter as metadata.\"\"\"\n    _, head, body = open(path).read().split(\"---\\n\", 2)\n    return Document(content=body, meta=dict(line.split(\": \", 1) for line in head.splitlines()))\n\n\ndocs = [document(p) for p in sorted(glob.glob(\"data/docs/*.md\"))]",
+      "note": "Cada documento como um `Document` do Haystack: o texto depois do front matter como conteúdo, e o front matter como metadados. Os programas desta aula importam `docs` daqui."
+    }
+  ]
+}
+```
+Depois o programa de indexação. Ele carrega o acervo, carrega de novo, e depois muda um campo dos
+metadados de um documento, o dono da política de devoluções, e carrega só esse documento:
 
 ```schooling-example
 {
@@ -39,7 +65,7 @@ devoluções, e carrega só esse documento:
       "note": "Um pipeline, três componentes e um armazenamento que vive na memória. O `hs_docs.py` lê o front matter para os metadados, como o `lc_load.py` fazia na aula 10."
     },
     {
-      "code": "store = InMemoryDocumentStore()\npolicy = DuplicatePolicy.OVERWRITE if \"--overwrite\" in sys.argv else DuplicatePolicy.NONE\nindexing = Pipeline()\nindexing.add_component(\"split\", DocumentSplitter(split_by=\"word\", split_length=60))\nindexing.add_component(\"embed\", OpenAIDocumentEmbedder(model=\"lab-minilm\", progress_bar=False))\nindexing.add_component(\"write\", DocumentWriter(store, policy=policy))\nindexing.connect(\"split\", \"embed\")\nindexing.connect(\"embed\", \"write\")",
+      "code": "store = InMemoryDocumentStore()\npolicy = DuplicatePolicy.OVERWRITE if \"--overwrite\" in sys.argv else DuplicatePolicy.NONE\nindexing = Pipeline()\nindexing.add_component(\"split\", DocumentSplitter(split_by=\"word\", split_length=60))\nindexing.add_component(\"embed\", OpenAIDocumentEmbedder(model=\"all-minilm\", progress_bar=False))\nindexing.add_component(\"write\", DocumentWriter(store, policy=policy))\nindexing.connect(\"split\", \"embed\")\nindexing.connect(\"embed\", \"write\")",
       "note": "Cada componente entra com um nome e depois é ligado pelo nome. O `connect` confere se o que um manda é o que o seguinte aceita. `DuplicatePolicy.NONE` deixa a decisão para o armazenamento, o que neste armazenamento quer dizer recusar uma duplicata."
     },
     {
@@ -55,11 +81,11 @@ devoluções, e carrega só esse documento:
 ```
 
 O divisor está em 60 palavras, o tamanho da aula 4; o padrão dele é 200 palavras sem sobreposição,
-ao qual a seção de medição volta. O gerador de embeddings manda texto, como o provedor espera, e lê o
+ao qual a seção de medição volta. O gerador de embeddings manda texto, como o Ollama espera, e lê o
 endereço do provedor no `OPENAI_BASE_URL`, como o SDK `openai` sobre o qual é construído.
 
 ```
-ana@lab:~/rag$ python hs_index.py
+ana@vm:~/rag$ python hs_index.py
 written: 110
 PipelineRuntimeError: Error: ID '070820b895e5fb0107bb644c997975b17ee639273fdc05bbcd34657810edd9b8' already exists.
 written: 14
@@ -78,7 +104,7 @@ cujo texto não mudou mas cujo dono mudou tem outro id, então é gravado ao lad
 cima dele. Os 14 antigos continuam lá, com o dono antigo.
 
 ```
-ana@lab:~/rag$ python hs_index.py --overwrite
+ana@vm:~/rag$ python hs_index.py --overwrite
 written: 110
 written: 110
 written: 14

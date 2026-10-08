@@ -1,9 +1,16 @@
 ---
 title: Lendo e-mail com IMAP
-version: 1
+version: 2
 ---
 
-O Bruno respondeu. A resposta dele fez o caminho inverso, para o que o MX do `example.com` indicar:
+O Bruno respondeu. No seu laboratório, a resposta dele sai do `netmail`, como `bruno`, da sua máquina
+virtual:
+
+```sh
+sudo bash ~/netlab/netlab exec netmail bruno 'printf "Date: Fri, 25 Sep 2026 10:15:00 -0300\nMessage-ID: <re-2231@example.net>\nIn-Reply-To: <order-2231@example.com>\nFrom: Bruno <bruno@example.net>\nTo: Ana <ana@example.com>\nSubject: Re: Order 2231\n\nConfirmed, it ships on Monday.\n" | /usr/sbin/sendmail -t'
+```
+
+A resposta dele fez o caminho inverso, para o que o MX do `example.com` indicar:
 
 ```
 ana@laptop:~$ dig +short MX example.com

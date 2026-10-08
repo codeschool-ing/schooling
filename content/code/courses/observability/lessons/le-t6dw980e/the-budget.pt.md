@@ -1,6 +1,6 @@
 ---
 title: O orçamento de erros
-version: 1
+version: 2
 ---
 
 Um objetivo de 99,5% diz algo que uma meta de *o mais confiável possível* nunca diz: **0,5% dos
@@ -8,7 +8,7 @@ checkouts podem falhar, e tudo bem.** Esse meio por cento é o **orçamento de e
 tratá-lo como orçamento, algo a ser gasto, é a ideia que faz os SLOs mudarem o jeito de uma equipe
 trabalhar.
 
-O laboratório está rodando há cinquenta e cinco minutos, então a janela de uma hora do `slo.yml` está
+Cinquenta e cinco minutos depois de os clientes começarem, a janela de uma hora do `slo.yml` está
 cheia:
 
 ```

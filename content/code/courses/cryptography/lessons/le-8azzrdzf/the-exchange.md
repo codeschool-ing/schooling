@@ -11,7 +11,23 @@ idea in 1976, and it is the first step of every TLS, SSH and WireGuard connectio
 
 ## The exchange, small enough to do by hand
 
-`vcrypt toydh` runs the textbook example with a prime of 23:
+`vcrypt toydh` runs the textbook example with a prime of 23, and the whole exchange is six lines
+of arithmetic:
+
+```py
+# ~/lab/tools/toydh.py
+"""vcrypt toydh: Diffie-Hellman with numbers small enough to follow by hand."""
+p, g = 23, 5
+a, b = 6, 15  # Ana's secret and Bruno's
+A, B = pow(g, a, p), pow(g, b, p)
+print(f"public:  p = {p}, g = {g}")
+print(f"Ana   picks a = {a} (secret), sends A = g^a mod p = {A}")
+print(f"Bruno picks b = {b} (secret), sends B = g^b mod p = {B}")
+print(f"Ana   computes B^a mod p = {pow(B, a, p)}")
+print(f"Bruno computes A^b mod p = {pow(A, b, p)}")
+print(f"on the wire: p, g, A = {A}, B = {B}; never a, b or the result")
+```
+
 
 ```
 ana@lab:~/lab$ vcrypt toydh

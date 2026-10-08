@@ -1,6 +1,6 @@
 ---
 title: Finding a neighbour without ARP or broadcast
-version: 1
+version: 2
 ---
 
 IPv6 has no broadcast address at all, and no ARP. The job ARP did, turning an IP address into a MAC
@@ -8,7 +8,8 @@ address on the same link, is done by **Neighbour Discovery**, a set of ICMPv6 me
 includes the router advertisements of the previous section. What changes is who gets interrupted
 by the question.
 
-Both neighbour tables were emptied before this capture, so pc1 has to ask. pc1 pings srv, and
+Both neighbour tables were emptied before this capture, with `ip -6 neigh flush all` at a root prompt
+on each, so pc1 has to ask. pc1 pings srv, and
 meanwhile `tcpdump` on srv was printing what arrived; its output came out after the ping finished:
 
 ```

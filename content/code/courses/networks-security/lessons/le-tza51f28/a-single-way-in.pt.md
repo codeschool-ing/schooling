@@ -16,7 +16,21 @@ A matriz do firewall já só deixa o SSH chegar aos servidores a partir da gest�
 de `db` estreitou isso ao endereço de `admin`, e só a ele.
 
 Endereços, porém, podem ser emprestados, e chaves podem ser copiadas. O SSH deixa um servidor prender
-uma chave ao lugar de onde ela pode ser usada, no arquivo `authorized_keys` de `db`:
+uma chave ao lugar de onde ela pode ser usada, no arquivo `authorized_keys` de `db`. No laboratório
+você cria a chave no `admin`, como você mesmo, e depois, a partir do seu próprio computador, instala a
+metade pública dela no `db` com a restrição na frente:
+
+```sh
+# on admin, as you
+mkdir -p ~/.ssh; ssh-keygen -q -t ed25519 -N "" -C "$USER@admin" -f ~/.ssh/id_ed25519
+printf "Host *\n  StrictHostKeyChecking accept-new\n  UserKnownHostsFile /dev/null\n  LogLevel ERROR\n  BatchMode yes\n" > ~/.ssh/config
+# on your own computer
+sudo mkdir -p /lab/db/home/$USER/.ssh
+printf 'from="192.168.99.10",no-agent-forwarding,no-port-forwarding,no-X11-forwarding %s\n' "$(sudo cat /lab/admin/home/$USER/.ssh/id_ed25519.pub)" | sudo tee /lab/db/home/$USER/.ssh/authorized_keys >/dev/null
+sudo chown -R $USER: /lab/db/home/$USER/.ssh; sudo chmod 700 /lab/db/home/$USER/.ssh
+```
+
+A linha que ele escreveu:
 
 ```
 root@db:~# cut -c1-96 /home/ana/.ssh/authorized_keys
@@ -34,7 +48,16 @@ db
 
 `db`. Agora a mesma chave privada, copiada para uma segunda máquina no segmento de gestão, `admin2`,
 e o firewall de host instruído a deixar `admin2` se conectar, para que só a restrição da chave fique
-no caminho:
+no caminho. A partir do seu próprio computador, e depois no `db` como root:
+
+```sh
+sudo bash nslab.sh plug admin2 mgmt 192.168.99.11/24 52:54:00:a8:63:0b; sudo ip -n admin2 route add default via 192.168.99.1
+sudo mkdir -p /lab/admin2/home/$USER/.ssh
+sudo cp /lab/admin/home/$USER/.ssh/id_ed25519 /lab/admin/home/$USER/.ssh/id_ed25519.pub /lab/admin/home/$USER/.ssh/config /lab/admin2/home/$USER/.ssh/
+sudo chown -R $USER: /lab/admin2/home/$USER/.ssh; sudo chmod 700 /lab/admin2/home/$USER/.ssh
+# on db, as root
+nft add rule inet host input ip saddr 192.168.99.11 tcp dport 22 accept
+```
 
 ```
 ana@admin2:~$ ssh db hostname; echo "exit $?"

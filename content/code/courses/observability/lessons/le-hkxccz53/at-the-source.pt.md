@@ -1,16 +1,16 @@
 ---
 title: Removendo na origem
-version: 1
+version: 2
 ---
 
 A primeira defesa fica no código, onde a linha nasce, e não confia que cada ponto de chamada vá
 lembrar. **Um filtro de logging fica entre toda chamada e o formatador**, então ele vê todo registro
-que todo serviço escreve. O da loja, em `common/redact.py`:
+que todo serviço escreve. O da loja, em `services/common/redact.py`:
 
 ```schooling-example
 {
   "language": "python",
-  "file": "common/redact.py",
+  "file": "services/common/redact.py",
   "parts": [
     {
       "code": "\"\"\"A logging filter that keeps secrets and card numbers out of every line.\"\"\"\nimport logging\nimport re\n\n"
@@ -29,6 +29,13 @@ que todo serviço escreve. O da loja, em `common/redact.py`:
     }
   ]
 }
+```
+
+Salve-o, e guarde uma cópia do `logs.py` antes de a configuração do formatador ganhar uma linha e
+uma importação:
+
+```sh
+cp services/common/logs.py /tmp/logs.py
 ```
 
 Duas linhas no `logs.py` compartilhado o instalam no handler, então todo serviço que chama

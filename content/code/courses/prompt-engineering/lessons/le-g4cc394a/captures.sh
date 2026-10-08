@@ -8,11 +8,13 @@
 #   sudo bash ../../lab.sh tools     # once
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
-# Staged: five files of model turns under runs/, written with put below and
-# shown in the lesson. THE TURNS WERE WRITTEN BY THE COURSE, knowing what the
-# tools would return; no model is reachable from the machine. bin/agent plays
-# them back, and the parsing, the tools, the allow-list and the step limit are
-# real (lab.sh prints the loop in full).
+# Staged with put: five turn files in runs/, WRITTEN BY THE COURSE and played
+# back by agent so that each rule of the loop shows on its own, which the lesson
+# says; and two versions of the ReAct prompt, react-v1.txt and react.txt, shown
+# with cat and diff.
+#
+# THE MODEL'S TURNS in live-react and live-words are llama3.2:3b served by
+# Ollama 0.40.0, at temperature 0, captured on 7 October 2026.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 set -uo pipefail
@@ -74,6 +76,33 @@ Thought: I may not send e-mail in this task. A person has to ask the manager.
 Answer: R$ 111.60 to the card. Ask the shift manager to approve it before refunding.
 T
 
+put prompts/react-v1.txt <<'P'
+Answer the question. You can use these tools:
+  search[words]        the best matching line of the café's staff handbook
+  calculator[sum]      arithmetic with numbers and + - * /
+Use this format, and write one Action at a time:
+Thought: what you know and what you need next
+Action: one tool call
+Observation: (the tool's reply is written here for you)
+... repeat as needed, then:
+Answer: the final answer
+P
+put prompts/react.txt <<'P'
+Answer the question. You can use these tools:
+  search[refund approval]   the best matching line of the café's staff handbook
+  calculator[3 * 2.50]      arithmetic with numbers and + - * /
+Use this format. Write one Thought and one Action, then stop and wait:
+Thought: what you know and what you need next
+Action: search[...] or calculator[...]
+The program then writes an Observation line with the tool's reply. When you
+have every fact you need, write:
+Thought: why you have the answer
+Answer: the final answer
+P
+
+block live-react
+on 'cat prompts/react.txt'
+on 'agent --live "Four soups of the day, R\$ 27.90 each, paid by card, all served cold. How much goes back, how, and does anybody have to approve it?" --prompt prompts/react.txt --max-steps 6'
 block thought-action-observation
 on 'cat runs/refund.txt'
 on 'agent runs/refund.txt'
@@ -81,6 +110,10 @@ on 'agent runs/refund.txt'
 block when-it-goes-wrong
 on 'agent runs/ignored.txt'
 on 'agent runs/paren.txt'
+block live-words
+on 'diff prompts/react-v1.txt prompts/react.txt'
+on 'agent --live "Four soups of the day, R\$ 27.90 each, paid by card, all served cold. How much goes back, how, and does anybody have to approve it?" --prompt prompts/react-v1.txt --max-steps 6'
+block when-2
 on 'agent runs/comma.txt'
 on 'agent runs/refund.txt --max-steps 2'
 on 'agent runs/email.txt'

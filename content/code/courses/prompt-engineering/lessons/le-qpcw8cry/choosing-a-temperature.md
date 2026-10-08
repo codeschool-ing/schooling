@@ -1,6 +1,6 @@
 ---
 title: Choosing a temperature for the task
-version: 1
+version: 2
 ---
 
 A low temperature is not the safe choice and a high one is not the creative choice. **The right
@@ -47,8 +47,26 @@ Each word followed the two before it somewhere in the file, which is all a trigr
 and at 1.5 the unlikely continuations were drawn often enough to show.
 
 `toylm` can only recombine pairs it has seen. A large model at a high temperature has its whole
-vocabulary to draw from, so the drift goes further: a wrong name, an invented detail, a sentence
-that changes subject halfway.
+vocabulary to draw from, so the drift goes further. `ask` takes the same setting, and a seed for
+each draw. Four names for a new cake, at 0.2 and at 1.5:
+
+```
+ana@lab:~/pe$ ask "Suggest a name for a new cake at Café Aurora. Reply with the name only." --temperature 0.2 --seed 1 --samples 4
+[seed 1] "Cosmic Sunrise"
+[seed 2] Aurora Bloom
+[seed 3] Aurora Bloom
+[seed 4] "Sunrise in Bloom"
+ana@lab:~/pe$ ask "Suggest a name for a new cake at Café Aurora. Reply with the name only." --temperature 1.5 --seed 1 --samples 4
+[seed 1] Blucora Twilight
+[seed 2] "Harlequin Dreams"
+[seed 3] Aurora Sunset Bliss
+[seed 4] Starlight Spectacle
+```
+
+At 0.2 two of the four draws are the same name, and all four stay close to the café's own name and
+to the word sunrise. At 1.5 every draw is different, and the first is `Blucora`, a word that is not
+one, put together from pieces that were each likely somewhere. For names to choose from, that
+spread is what you asked for; in a reply to a customer, it is an invented detail.
 
 ## Guidance by task
 

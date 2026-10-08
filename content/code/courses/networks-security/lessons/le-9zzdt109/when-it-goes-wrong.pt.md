@@ -4,7 +4,8 @@ version: 1
 ---
 
 Bloquear só é tão bom quanto a regra, e a regra foi escrita às pressas. A loja publica uma página de
-ajuda chamada `admin-guide.html`, para os clientes:
+ajuda chamada `admin-guide.html`, para os clientes. No laboratório é uma linha no `app`, escrita lá
+como root com `printf "how to use the admin console\n" > /srv/app/admin-guide.html`:
 
 ```
 ana@remote:~$ curl -s -m3 http://www.example.com/admin-guide.html; echo "exit $?"

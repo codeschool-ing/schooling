@@ -1,6 +1,6 @@
 ---
 title: Um assistente no pull request
-version: 1
+version: 2
 ---
 
 A mesma revisão da aula 4 seção 02 pode rodar sem ninguém pedir: um robô que lê todo pull request e
@@ -13,18 +13,20 @@ cuidadoso é útil, e perigoso do mesmo jeito que uma leitura não conferida ser
 - **Lê todo pull request**, inclusive os pequenos que ninguém revisa com atenção e os que chegam
   tarde numa sexta.
 - **É bom nos achados locais e mecânicos**: um erro de um no limite, um erro ignorado, um recurso
-  nunca fechado, um teste que não afirma nada. O achado 1 da aula 4 seção 02 é desse tipo.
+  nunca fechado, um teste que não afirma nada. O erro de um da aula 4 seção 03 é do tipo que um
+  bom modelo acha, e o pequeno deste curso não achou.
 - **Dá uma vantagem ao revisor humano**: uma lista de lugares para olhar, que se confere mais
   depressa do que se lê um diff do zero.
 
 ## O que manter fora das mãos dele
 
 - **Nunca a decisão de fazer o merge.** A aprovação de um robô é uma afirmação, e a aula 4 seção 03
-  mostrou uma em cada três afirmações confiantes estar errada. As checagens que liberam um merge são
+  mostrou três afirmações confiantes, nenhuma delas um bug, e o bug de verdade de fora. As checagens que liberam um merge são
   as que são verdadeiras ou falsas: os testes, o linter, o verificador de tipos. Os comentários do
   robô informam a pessoa que decide.
 - **Não a própria triagem.** Um achado em que o robô está errado deve ser respondido no pull
-  request, com o motivo, do mesmo jeito que a ana respondeu ao achado 3 com um teste que passa.
+  request, com o motivo, do mesmo jeito que a ana respondeu à terceira afirmação da revisão lendo a
+  linha que ela citava.
   Ignorar comentários do robô em silêncio ensina um time a ignorar todos, inclusive os certos.
 - **Não mais contexto do que precisa.** O job roda com o repositório e uma chave. Não deveria ter
   também as credenciais de deploy, e o código que ele manda vai ao provedor a cada pull request,

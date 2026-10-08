@@ -1,6 +1,6 @@
 ---
 title: One change per commit
-version: 1
+version: 2
 ---
 
 A good message is easy to write for a commit that does one thing, and impossible for one that does
@@ -12,7 +12,13 @@ something that could be reverted on its own without undoing anything else.
 
 Ana has two changes waiting, for two different reasons: the opening days on the home page, and the
 price of French bread. She wants a commit for the first only. `git add -p`, *patch*, shows each change
-and asks about it:
+and asks about it. The two changes:
+
+```bash
+sed -i 's/half past six/half past six, Monday to Saturday/' index.html
+sed -i 's/French bread, 0.90/French bread, 0.95/' menu.html
+```
+
 
 ```
 ana@vm:~/site$ git diff --stat
@@ -52,6 +58,13 @@ Each block is a **hunk**, lesson 3's word, and Git asks whether to stage it: `y`
 The home page's hunk went in, the menu's did not, and after the commit `git status` still shows
 `menu.html` modified, waiting for a commit of its own with its own reason. The other letters are
 worth knowing too: `q` stops, `a` stages the rest of the file, and `?` explains every one of them.
+
+The price of French bread is not wanted in the next section, so throw it away with lesson 4's
+command:
+
+```bash
+git restore menu.html
+```
 
 When two changes are in the same file, far enough apart, they are separate hunks and `add -p` picks
 between them exactly the same way. This is the tool lesson 2 promised for the typo fix sitting in the

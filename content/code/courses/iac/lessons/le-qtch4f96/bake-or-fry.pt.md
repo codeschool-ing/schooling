@@ -1,6 +1,6 @@
 ---
 title: Assar uma imagem, ou configurar no boot
-version: 1
+version: 2
 ---
 
 Toda máquina parte de uma imagem: um disco com um sistema operacional, copiado para cada máquina
@@ -27,7 +27,8 @@ dias diferentes ofereciam, e nada em arquivo nenhum diz qual:
 
 Eis a diferença no notebook, com contêineres no papel de máquinas. O primeiro comando é uma partida
 frita: Ubuntu limpo, depois apt. O segundo parte de `shop-web:1.0.1`, a imagem que esta aula
-constrói nas duas próximas seções:
+constrói nas duas próximas seções, então no seu computador ele funciona depois que você a construir
+lá. Os dois usam o Docker como a aula 18 o instalou:
 
 ```
 ana@laptop:~/shop/image$ time docker run --rm ubuntu:24.04 sh -c 'apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq nginx > /dev/null && nginx -v'

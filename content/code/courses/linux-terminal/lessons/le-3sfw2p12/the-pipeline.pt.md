@@ -1,6 +1,6 @@
 ---
 title: O pipeline, e o momento em que texto vira objetos
-version: 1
+version: 2
 ---
 
 O `|` faz o que faz no bash: a coisa da esquerda alimenta a da direita. O que
@@ -11,20 +11,20 @@ PS /home/ana/work/ps> Import-Csv sales.csv | Select-Object -First 3
 region  : north
 rep     : ana
 quarter : Q1
-units   : 171
-revenue : 8721
+units   : 145
+revenue : 18850
 
 region  : north
 rep     : bruno
 quarter : Q1
-units   : 49
-revenue : 4116
+units   : 275
+revenue : 23100
 
 region  : south
 rep     : carla
 quarter : Q1
-units   : 292
-revenue : 37084
+units   : 215
+revenue : 16555
 ```
 
 **O `Import-Csv` é o momento em que texto vira objetos.** Ele leu a linha de
@@ -40,13 +40,13 @@ Name    MemberType   Definition
 quarter NoteProperty string quarter=Q1
 region  NoteProperty string region=north
 rep     NoteProperty string rep=ana
-revenue NoteProperty string revenue=8721
-units   NoteProperty string units=171
+revenue NoteProperty string revenue=18850
+units   NoteProperty string units=145
 ```
 
 Leia a coluna da direita com cuidado, porque a próxima seção gira em torno dela:
-**cada um daqueles é uma `string`**. O `Import-Csv` não adivinha tipos. O `171`
-são os três caracteres `171`.
+**cada um daqueles é uma `string`**. O `Import-Csv` não adivinha tipos. O `145`
+são os três caracteres `145`.
 
 ## Um de cada vez, não todos de uma vez
 
@@ -96,11 +96,11 @@ PS /home/ana/work/ps> Get-ChildItem | Select-Object Name, Length | ConvertTo-Jso
 [
   {
     "Name": "access.log",
-    "Length": 148233
+    "Length": 153934
   },
   {
     "Name": "sales.csv",
-    "Length": 788
+    "Length": 807
   }
 ]
 ```

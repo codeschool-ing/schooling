@@ -1,0 +1,520 @@
+{
+  "ex-w8qqzbw2": {
+    "prompt": "O que um arquivo de modelo do dbt contém?",
+    "hint": "O dbt escreve o resto.",
+    "choices": [
+      {
+        "text": "Um comando `CREATE TABLE … AS`",
+        "why": "O dbt escreve isso a partir da materialização."
+      },
+      {
+        "text": "Um `select`",
+        "why": "Isso. Tudo em volta dele é do dbt."
+      },
+      {
+        "text": "Uma função Python",
+        "why": "Estes modelos são SQL."
+      },
+      {
+        "text": "Uma lista dos modelos a rodar antes dele",
+        "why": "A ordem vem dos refs dentro do select."
+      }
+    ]
+  },
+  "ex-cxxpt2zy": {
+    "prompt": "Que parte do pipeline da Ana o dbt assume?",
+    "hint": "E, L ou T?",
+    "choices": [
+      {
+        "text": "Extrair as tabelas da loja",
+        "why": "Isso continua sendo o load_raw.py."
+      },
+      {
+        "text": "Agendar a execução noturna",
+        "why": "Isso continua sendo o Airflow."
+      },
+      {
+        "text": "Copiar dados do PostgreSQL para um servidor dbt",
+        "why": "Não há servidor dbt; o SQL roda no PostgreSQL."
+      },
+      {
+        "text": "O T, dentro do warehouse",
+        "why": "Isso. O T do ELT, rodado onde os dados já estão."
+      }
+    ]
+  },
+  "ex-bsbh6zf2": {
+    "prompt": "Por que a conexão fica em `~/.dbt/profiles.yml` e não no projeto?",
+    "hint": "Quem mais lê o projeto?",
+    "choices": [
+      {
+        "text": "Para o projeto ser compartilhado sem credenciais dentro",
+        "why": "Isso. Cada pessoa mantém o próprio profile."
+      },
+      {
+        "text": "O dbt não lê YAML dentro do projeto",
+        "why": "O dbt_project.yml é YAML dentro do projeto."
+      },
+      {
+        "text": "O PostgreSQL exige que os dados de conexão fiquem no diretório pessoal",
+        "why": "O PostgreSQL não sabe nada do dbt."
+      },
+      {
+        "text": "Faz o dbt rodar mais rápido",
+        "why": "Velocidade não é o motivo."
+      }
+    ]
+  },
+  "ex-gemx6zcm": {
+    "prompt": "Ligue cada função àquilo a que ela se refere.",
+    "hint": "Construído pelo dbt, ou não.",
+    "pairs": [
+      {
+        "left": "source('raw', 'orders')",
+        "right": "Uma tabela que o dbt não construiu"
+      },
+      {
+        "left": "ref('stg_orders')",
+        "right": "Outro modelo do projeto"
+      }
+    ],
+    "right_distractors": [
+      "Uma coluna do modelo atual"
+    ]
+  },
+  "ex-k7y7bhy7": {
+    "prompt": "Um modelo lê `dbt_staging.stg_orders` pelo nome em vez de `{{ ref('stg_orders') }}`. O que pode dar errado?",
+    "hint": "O que o ref registra?",
+    "choices": [
+      {
+        "text": "Ele pode não compilar, porque o dbt só aceita nomes escritos com ref ou source",
+        "why": "Ele compila e roda."
+      },
+      {
+        "text": "O PostgreSQL recusa nomes com schema",
+        "why": "Ele os aceita."
+      },
+      {
+        "text": "O dbt pode construí-lo antes do stg_orders, e nada reclama",
+        "why": "Isso. A dependência fica invisível para o dbt."
+      },
+      {
+        "text": "O modelo vira efêmero",
+        "why": "A materialização não muda."
+      }
+    ]
+  },
+  "ex-49t9z7e5": {
+    "prompt": "Dentro de um projeto dbt, um modelo lê outro modelo com `{{ ___('stg_orders') }}`.",
+    "hint": "Três letras.",
+    "blanks": [
+      {
+        "accept": [
+          "ref"
+        ]
+      }
+    ]
+  },
+  "ex-er6x83y3": {
+    "prompt": "O schema do profile é `dbt` e uma pasta diz `+schema: staging`. Para onde vão as views?",
+    "hint": "Somado, não trocado.",
+    "choices": [
+      {
+        "text": "staging",
+        "why": "Só com um generate_schema_name trocado."
+      },
+      {
+        "text": "dbt",
+        "why": "A configuração da pasta não é ignorada."
+      },
+      {
+        "text": "dbt_staging",
+        "why": "Isso. O schema do target, depois o próprio."
+      },
+      {
+        "text": "staging_dbt",
+        "why": "O target vem primeiro."
+      }
+    ]
+  },
+  "ex-vd5ndky8": {
+    "prompt": "Por que somar o schema próprio ao schema do target é um padrão útil?",
+    "hint": "Pense numa equipe de três.",
+    "choices": [
+      {
+        "text": "Cada pessoa constrói o projeto inteiro sem sobrescrever o de ninguém",
+        "why": "Isso. Cada profile nomeia o próprio schema de target."
+      },
+      {
+        "text": "Mantém os nomes de schema abaixo do limite do PostgreSQL para o tamanho de identificadores",
+        "why": "Ele os deixa mais longos, não mais curtos."
+      },
+      {
+        "text": "O PostgreSQL precisa de um prefixo em todo schema",
+        "why": "Ele não precisa de nada disso."
+      },
+      {
+        "text": "Impede o dbt de ler o raw",
+        "why": "Fontes são lidas onde estiverem."
+      }
+    ]
+  },
+  "ex-vy9q6ag2": {
+    "prompt": "Quantas linhas o `daily_sales` do pipeline antigo tinha que o do dbt não tinha?",
+    "hint": "EXCEPT, antigo menos novo."
+  },
+  "ex-rq01c807": {
+    "prompt": "Um modelo devolve as linhas erradas. Que arquivo a Ana pode colar no psql do jeito que está?",
+    "hint": "Depois do Jinja, antes do DDL.",
+    "choices": [
+      {
+        "text": "O arquivo do modelo em models/",
+        "why": "Ele ainda tem Jinja, que o psql não lê."
+      },
+      {
+        "text": "dbt_project.yml, com as configurações do modelo",
+        "why": "Isso guarda configurações, não SQL."
+      },
+      {
+        "text": "target/run/…",
+        "why": "Isso criaria uma tabela, não mostraria linhas."
+      },
+      {
+        "text": "target/compiled/…",
+        "why": "Isso. O select com cada ref resolvido."
+      }
+    ]
+  },
+  "ex-6jhqr7gb": {
+    "prompt": "Um relatório lê o `daily_sales` enquanto o dbt o refaz como tabela. O que o relatório vê?",
+    "hint": "Construída com outro nome, depois trocada.",
+    "choices": [
+      {
+        "text": "Uma tabela vazia",
+        "why": "A tabela nova é construída com um nome provisório."
+      },
+      {
+        "text": "A tabela antiga ou a nova, nunca meia",
+        "why": "Isso. As trocas de nome acontecem numa transação."
+      },
+      {
+        "text": "Um erro, porque a tabela fica travada a execução inteira",
+        "why": "Só a troca curta no fim pega um lock."
+      },
+      {
+        "text": "Linhas das duas tabelas, misturadas num mesmo resultado",
+        "why": "A troca é atômica."
+      }
+    ]
+  },
+  "ex-z4901f57": {
+    "prompt": "Ligue cada materialização àquilo que ela deixa no banco.",
+    "hint": "Uma não deixa nada.",
+    "pairs": [
+      {
+        "left": "view",
+        "right": "Uma consulta guardada"
+      },
+      {
+        "left": "table",
+        "right": "Linhas, refeitas a cada execução"
+      },
+      {
+        "left": "ephemeral",
+        "right": "Nada; vira uma CTE"
+      },
+      {
+        "left": "incremental",
+        "right": "Linhas, só com as novas acrescentadas depois da primeira execução"
+      }
+    ]
+  },
+  "ex-1ep5wdsv": {
+    "prompt": "Por que o `int_sales` faltou na lista que o `dbt run` imprimiu?",
+    "hint": "O que há para construir?",
+    "choices": [
+      {
+        "text": "Ele falhou em silêncio",
+        "why": "A execução passou e os marts foram construídos a partir dele."
+      },
+      {
+        "text": "Nada no projeto se referia a ele com um ref",
+        "why": "Os dois marts se referem."
+      },
+      {
+        "text": "O dbt pula modelos da pasta staging quando nenhum seletor é dado",
+        "why": "Ele construiu as três views stg."
+      },
+      {
+        "text": "Ele é efêmero, então nada é construído",
+        "why": "Isso. Ele é colado no daily_sales e no fact_sales."
+      }
+    ]
+  },
+  "ex-psqwrnmd": {
+    "prompt": "Quais são bons motivos para fazer de um modelo de staging uma view? Escolha todos os que se aplicam.",
+    "hint": "Barato, e sempre atual.",
+    "choices": [
+      {
+        "text": "Não custa nada para construir",
+        "why": "Isso. Criar uma view guarda uma consulta."
+      },
+      {
+        "text": "Sempre mostra o que está no raw agora",
+        "why": "Isso. Ela é lida na hora."
+      },
+      {
+        "text": "Relatórios a leem o dia inteiro",
+        "why": "Isso pede uma tabela: toda leitura roda a view de novo."
+      },
+      {
+        "text": "Deixa o carregador apagar e recriar o raw à vontade",
+        "why": "É exatamente o que impediu isso."
+      }
+    ]
+  },
+  "ex-70qyq5dy": {
+    "prompt": "Por que o `load_raw.py` falhou no dia 10 se tinha funcionado todos os dias antes?",
+    "hint": "O que agora está em cima do raw.books?",
+    "choices": [
+      {
+        "text": "As tabelas da loja mudaram de formato",
+        "why": "Não mudaram."
+      },
+      {
+        "text": "O dbt ainda segurava um lock no schema raw desde a última execução",
+        "why": "Nenhum dbt run estava acontecendo."
+      },
+      {
+        "text": "Uma view do dbt depende do raw.books, então ele não pode ser apagado",
+        "why": "Isso. O PostgreSQL se recusa a deixar uma view apontando para o nada."
+      },
+      {
+        "text": "O dia 10 tem linhas demais",
+        "why": "O tamanho não teve nada a ver."
+      }
+    ]
+  },
+  "ex-233phc89": {
+    "prompt": "Por que não corrigir o carregador com `DROP TABLE … CASCADE`?",
+    "hint": "O que mais iria junto?",
+    "choices": [
+      {
+        "text": "Apagaria as views do dbt também, em silêncio",
+        "why": "Isso. O staging sumiria até o próximo dbt run."
+      },
+      {
+        "text": "CASCADE é mais lento",
+        "why": "Velocidade não é o problema."
+      },
+      {
+        "text": "O PostgreSQL não dá suporte",
+        "why": "Dá."
+      },
+      {
+        "text": "Precisa de privilégios de superusuário, que a conexão do carregador não tem",
+        "why": "O dono pode fazer."
+      }
+    ]
+  },
+  "ex-42nrfd5p": {
+    "prompt": "Depois da mudança, a loja acrescenta uma coluna a `orders`. O que acontece na próxima carga?",
+    "hint": "O CREATE TABLE IF NOT EXISTS não faz nada da segunda vez.",
+    "choices": [
+      {
+        "text": "O raw.orders ganha a coluna nova",
+        "why": "A tabela já existe, então não é recriada."
+      },
+      {
+        "text": "O COPY falha porque as colunas não batem mais",
+        "why": "Isso. Barulhento, que é o tipo certo de falha."
+      },
+      {
+        "text": "A coluna nova é descartada em silêncio",
+        "why": "O COPY não pula colunas."
+      },
+      {
+        "text": "O dbt acrescenta a coluna",
+        "why": "O dbt não mexe no raw."
+      }
+    ]
+  },
+  "ex-gdbee7mt": {
+    "prompt": "Na segunda execução, que dias o `fact_sales` incremental trocou?",
+    "hint": "max(order_date), e depois.",
+    "choices": [
+      {
+        "text": "Só o dia 10",
+        "why": "O where usa >=, então o 9 veio junto."
+      },
+      {
+        "text": "O dia 9 e o dia 10",
+        "why": "Isso. O dia mais novo que ela tinha, e o novo."
+      },
+      {
+        "text": "Todos os dias",
+        "why": "Isso é a primeira execução, ou o --full-refresh."
+      },
+      {
+        "text": "Os últimos sete dias",
+        "why": "Não há janela de volta no modelo."
+      }
+    ]
+  },
+  "ex-2c88ffnv": {
+    "prompt": "Quantos dias a consulta de deriva encontrou errados na tabela incremental?",
+    "hint": "Antes da recarga completa."
+  },
+  "ex-5bn2vt9h": {
+    "prompt": "Um pedido de 25 de fevereiro é reembolsado em 9 de março. Que execução acerta o `fact_sales`?",
+    "hint": "Para que dias a execução noturna olha?",
+    "choices": [
+      {
+        "text": "A execução incremental noturna de 10 de março",
+        "why": "Ela só troca os dias mais novos."
+      },
+      {
+        "text": "Nenhuma: reembolsos nunca chegam ao fact_sales",
+        "why": "A recarga completa tirou exatamente linhas assim."
+      },
+      {
+        "text": "Qualquer execução, porque o dbt percebe quais linhas do raw mudaram desde a execução anterior",
+        "why": "O dbt não acompanha nada; quem decide é o where."
+      },
+      {
+        "text": "Só uma recarga completa, ou uma janela de volta que chegue a fevereiro",
+        "why": "Isso. A janela incremental nunca mais vê aquele dia."
+      }
+    ]
+  },
+  "ex-9195kz3y": {
+    "prompt": "Para reconstruir um modelo incremental do zero: `dbt run -s fact_sales ___`",
+    "hint": "Duas palavras unidas por hífen, depois de dois traços.",
+    "blanks": [
+      {
+        "accept": [
+          "--full-refresh"
+        ]
+      }
+    ]
+  },
+  "ex-y2ak76q4": {
+    "prompt": "O que o `is_incremental()` devolve na primeiríssima execução do `fact_sales`?",
+    "hint": "Já existe uma tabela?",
+    "choices": [
+      {
+        "text": "False",
+        "why": "Isso. Todo o histórico é selecionado."
+      },
+      {
+        "text": "True",
+        "why": "Ainda não há tabela a que acrescentar."
+      },
+      {
+        "text": "Levanta um erro",
+        "why": "Ela pode ser chamada sem problema."
+      },
+      {
+        "text": "Depende do dia da semana",
+        "why": "Dias não têm nada a ver."
+      }
+    ]
+  },
+  "ex-9k7tp6d3": {
+    "prompt": "Ligue cada seletor ao que ele roda.",
+    "hint": "Antes do nome, ou depois.",
+    "pairs": [
+      {
+        "left": "-s +daily_sales",
+        "right": "O daily_sales e tudo de que ele depende"
+      },
+      {
+        "left": "-s stg_books+",
+        "right": "O stg_books e tudo o que depende dele"
+      },
+      {
+        "left": "-s fact_sales",
+        "right": "Só o fact_sales"
+      }
+    ],
+    "right_distractors": [
+      "Todo modelo do projeto"
+    ]
+  },
+  "ex-s2yb34me": {
+    "prompt": "A Ana vai mudar o `stg_orders`. Que comando lista o que a mudança pode afetar?",
+    "hint": "Para baixo.",
+    "choices": [
+      {
+        "text": "dbt ls -s +stg_orders",
+        "why": "Isso lista aquilo de que ele depende."
+      },
+      {
+        "text": "dbt debug --config-dir",
+        "why": "Isso mostra onde está o profile."
+      },
+      {
+        "text": "dbt ls -s stg_orders+",
+        "why": "Isso. Tudo o que vem depois dele."
+      },
+      {
+        "text": "dbt run --full-refresh",
+        "why": "Isso constrói, não lista."
+      }
+    ]
+  },
+  "ex-pennc5h9": {
+    "prompt": "O que o Airflow continua fazendo depois que as transformações estão no dbt?",
+    "hint": "Quando, e e se falhar.",
+    "choices": [
+      {
+        "text": "Ordena os modelos",
+        "why": "O dbt faz isso a partir dos refs."
+      },
+      {
+        "text": "Escreve os comandos CREATE",
+        "why": "O dbt os escreve."
+      },
+      {
+        "text": "Decide quando rodar, espera a carga, tenta de novo e alerta",
+        "why": "Isso. O Airflow cuida do quando; o dbt do em que ordem."
+      },
+      {
+        "text": "Nada; o dbt o substitui",
+        "why": "O dbt não tem agendamento nem retries próprios."
+      }
+    ]
+  },
+  "ex-nkvg82ze": {
+    "prompt": "Ordene o que aconteceu quando a Ana rodou `dbt run` no projeto com quatro modelos.",
+    "hint": "Ler, depois as views, depois a tabela.",
+    "items": [
+      "O dbt leu o projeto e achou os modelos",
+      "As três views de staging foram criadas juntas",
+      "O daily_sales foi construído com um nome provisório",
+      "A tabela nova foi trocada para o lugar"
+    ]
+  },
+  "ex-6wykkkea": {
+    "prompt": "Um `dbt run` noturno constrói o `fact_sales` incrementalmente sem janela de volta. Um mês depois a receita do financeiro está maior que a da loja. Qual é a causa mais provável?",
+    "hint": "Para que lado vão as mudanças atrasadas?",
+    "choices": [
+      {
+        "text": "Vendas canceladas ou reembolsadas depois de o dia delas ser carregado",
+        "why": "Isso. A tabela ainda as conta; a loja não."
+      },
+      {
+        "text": "Linhas duplicadas de um retry",
+        "why": "O delete+insert troca dias inteiros, então um retry não duplica."
+      },
+      {
+        "text": "As views estão desatualizadas",
+        "why": "Views são lidas na hora."
+      },
+      {
+        "text": "O dbt arredonda dinheiro",
+        "why": "Ele roda o SQL como está escrito."
+      }
+    ]
+  }
+}

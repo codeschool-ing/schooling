@@ -1,0 +1,41 @@
+title: SSH login failure
+name: ssh_login_failure
+id: 3f1d2c6a-8b7e-4e0f-9a52-6c1b0e7d4a10
+status: test
+description: One failed SSH login, for a known or an unknown account.
+logsource:
+  product: linux
+  service: sshd
+detection:
+  selection:
+    product: sshd
+    action: failure
+  condition: selection
+level: low
+---
+title: SSH login success
+name: ssh_login_success
+id: 6a0c3e9b-2d71-4f58-a1e4-8b9d2c7f0e63
+status: test
+logsource:
+  product: linux
+  service: sshd
+detection:
+  selection:
+    product: sshd
+    action: success
+  condition: selection
+level: informational
+---
+title: Login accepted from an address that failed first
+id: 2b8e5f0d-7c41-4a93-8e6b-d50f1c2a9b37
+status: test
+correlation:
+  type: temporal_ordered
+  rules:
+    - ssh_login_failure
+    - ssh_login_success
+  group-by:
+    - src_ip
+  timespan: 1h
+level: high

@@ -1,6 +1,6 @@
 ---
 title: As outras portas
-version: 1
+version: 2
 ---
 
 A rede é um dos caminhos entre convidado e host. A aula 12 abriu mais dois de propósito, e um laboratório
@@ -23,8 +23,8 @@ coisas ao convidado e não dá nada ao convidado no host. **Nenhum `filesystem`*
 compartilhada; **nenhum `graphics`**, então nenhuma tela para levar área de transferência ou arrastar e
 soltar.
 
-O VirtualBox guarda as mesmas portas como configurações. A `lab1` começou com a área de transferência
-compartilhada nos dois sentidos, arrastar e soltar do host para o convidado e NAT, o arranjo da aula 12.
+O VirtualBox guarda as mesmas portas como configurações. A `lab1`, uma máquina vazia feita como na aula
+4, começou com a área de transferência compartilhada nos dois sentidos, arrastar e soltar do host para o convidado e NAT, o arranjo da aula 12.
 Um comando desliga os dois primeiros e põe a placa de rede dela numa **internal network**, o nome do
 VirtualBox para o quarto modo da aula 11. Os convidados se alcançam, e o host não tem endereço nenhum nela,
 então não há serviço do host para alcançar.

@@ -1,6 +1,6 @@
 ---
 title: setuid, setgid e o sticky bit
-version: 2
+version: 3
 ---
 
 Mais três bits, um quarto dígito octal, e cada um existe porque os nove caracteres não conseguiam
@@ -114,14 +114,16 @@ ana@vm:~$ ls -l /tmp/anas.txt
 
 ```
 bruno@vm:~$ ls -ld /tmp
-drwxrwxrwt 38 root root 36864 Sep 14 22:45 /tmp
+drwxrwxrwt 9 root root 4096 Oct  7 11:28 /tmp
 bruno@vm:~$ cat /tmp/anas.txt
 anas file
 bruno@vm:~$ rm /tmp/anas.txt
+rm: remove write-protected regular file '/tmp/anas.txt'? y
 rm: cannot remove '/tmp/anas.txt': Operation not permitted
 ```
 
-O bruno tem `w` no `/tmp`. Ele pode criar arquivos ali e apagar os dele. **O `t` restringe a
+O `rm` pergunta antes, porque o arquivo não é um que o bruno possa escrever, e responder `y` não
+ajuda. O bruno tem `w` no `/tmp`. Ele pode criar arquivos ali e apagar os dele. **O `t` restringe a
 remoção ao dono da entrada** — e ao dono do diretório, e ao root.
 
 Chama-se *sticky* por uma razão histórica que não vale mais: no Unix antigo ele mantinha a imagem de

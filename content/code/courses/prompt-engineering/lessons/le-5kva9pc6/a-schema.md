@@ -1,6 +1,6 @@
 ---
 title: A schema says what a valid reply is
-version: 1
+version: 2
 ---
 
 Lesson 18 stopped at one question: does the reply parse? That is necessary and far from enough. A
@@ -10,8 +10,8 @@ checks the shape.**
 
 A **JSON Schema** is a JSON document that describes the objects you will accept: which fields, of
 which types, with which values, and which of them are required. It is a published standard, and
-there are libraries that check data against it in every common language. On the workbench,
-`validate` uses Python's `jsonschema` library.
+there are libraries that check data against it in every common language. `validate`, from lesson
+15, uses Python's `jsonschema` library.
 
 ## A schema for triaging complaints
 
@@ -45,6 +45,9 @@ the five queues the café actually has. The 80 characters are what fits on one l
 manager's list. `refund_amount` is optional, because a complaint with no refund has no amount.
 
 ## A valid reply
+
+The three replies in this section were written by the course, each to show one thing the
+validator says. Save the schema as `~/pe/schema.json`; the next two sections use it too.
 
 ```
 ana@lab:~/pe$ cat triage/good.json

@@ -1,6 +1,6 @@
 ---
 title: The control plane and the data plane
-version: 1
+version: 2
 ---
 
 Every router in this course does two jobs. **The control plane decides**: OSPF talks to the
@@ -29,4 +29,6 @@ work without, and section 06 stops it to see what happens.
 The lab has a corner for this: `sw1`, an Open vSwitch switch, with three computers, h1, h2 and h3,
 on its ports 1, 2 and 3. Open vSwitch is the software switch inside many Linux virtualisation
 platforms, and it speaks OpenFlow. The controller is OS-Ken, a Python framework for writing one,
-running on `ctl`.
+running on `ctl`. Each of them is a machine of the lab: a shell on the switch is
+`sudo ~/netlab/netlab.sh enter sw1` from the virtual machine, and the same with `h1` or `h2` for a
+computer. The controller wants a terminal of its own on `ctl`, because it runs until it is stopped.

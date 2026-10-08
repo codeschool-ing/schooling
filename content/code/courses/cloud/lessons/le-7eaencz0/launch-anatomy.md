@@ -1,6 +1,6 @@
 ---
 title: What launching an instance asks for
-version: 1
+version: 2
 ---
 
 A console's launch page makes starting an instance look like a form with a big button at the
@@ -9,7 +9,9 @@ field of that request. The quickest way to see all of them is to ask the command
 shape of the request without sending it.
 
 The AWS CLI does that locally. It was run here with an empty environment and a fresh home
-directory, so it had no credentials, no configuration and no account to talk to:
+directory, so it had no credentials, no configuration and no account to talk to. The CLI lesson 1
+installed has never been given a key either, so on your machine the same commands answer the same
+way, apart from the system named in the version line:
 
 ```
 ana@laptop:~/cloud$ aws --version

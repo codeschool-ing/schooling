@@ -1,6 +1,6 @@
 ---
 title: Busca lexical
-version: 1
+version: 2
 ---
 
 Antes dos embeddings, os buscadores comparavam palavras. Uma busca **lexical** dá nota a um documento
@@ -12,7 +12,6 @@ bibliotecas de busca, e ainda é a referência contra a qual qualquer método de
 ```schooling-example
 {
   "language": "python",
-  "file": "search.py",
   "parts": [
     {
       "code": "TOKEN = re.compile(r\"[a-z0-9]+(?:[-.%][a-z0-9]+)*%?\")\n\n\ndef words(text):\n    return TOKEN.findall(text.lower())",
@@ -34,13 +33,13 @@ desenvolvedores faz perguntas diferentes, então esta aula acrescenta um segundo
 erro, um nível de severidade, um endpoint, um número de cláusula.
 
 ```
-ana@lab:~/rag$ python show.py vector "What does error E-4104 mean?"
+ana@vm:~/rag$ python show.py vector "What does error E-4104 mean?"
 1    0.367  Affiliate API reference > Errors  | | code | HTTP | meaning | | --- | --- | --- | | 
 2    0.355  Affiliate API reference > Errors  | Errors are returned as JSON with a code and a me
-3    0.352  Affiliate API reference > Changes in 2.3  | Version 2.3, released on 10 February 2026, added
-4    0.310  Affiliate API reference > Rate limits  | A key may make 120 requests per minute. A reques
+3    0.351  Affiliate API reference > Changes in 2.3  | Version 2.3, released on 10 February 2026, added
+4    0.309  Affiliate API reference > Rate limits  | A key may make 120 requests per minute. A reques
 5    0.264  E-books and audiobooks > Downloading  | An e-book appears in your library as soon as the
-ana@lab:~/rag$ python show.py lexical "What does error E-4104 mean?"
+ana@vm:~/rag$ python show.py lexical "What does error E-4104 mean?"
 1    5.787  Affiliate API reference > Errors  | | code | HTTP | meaning | | --- | --- | --- | | 
 2    5.148  Customer support handbook > What you can decide on your own  | A replacement for a book that arrived damaged ne
 3    4.268  Warehouse on-call runbook > After an incident  | Every SEV-1 and SEV-2 gets a short review within
@@ -50,7 +49,7 @@ ana@lab:~/rag$ python show.py lexical "What does error E-4104 mean?"
 
 As duas puseram a tabela de erros em primeiro desta vez. A busca vetorial fez isso graças ao caminho,
 *Affiliate API reference > Errors*, e com similaridade de 0,367, por pouco acima do registro de mudanças
-com 0,352. A busca lexical fez isso porque `e-4104` é uma palavra da pergunta e da tabela e de mais
+com 0,351. A busca lexical fez isso porque `e-4104` é uma palavra da pergunta e da tabela e de mais
 nada, e a nota dela, 5,787, fica bem acima do resto. Nas seis perguntas de identificador a diferença não
 é pequena:
 
@@ -65,7 +64,7 @@ quatro.**
 ## Onde ela perde
 
 ```
-ana@lab:~/rag$ python show.py lexical "how do I send a book back"
+ana@vm:~/rag$ python show.py lexical "how do I send a book back"
 1   10.636  Customer support handbook > What you can decide on your own  | A replacement for a book that arrived damaged ne
 2    9.414  Returns and refunds policy > Damaged, faulty and wrong items  | If a book arrives with a torn cover, bent corner
 3    8.771  Returns policy > Damaged books  | If a book arrives damaged, send it back within 1

@@ -1,6 +1,6 @@
 ---
 title: O prompt ancorado
-version: 1
+version: 2
 ---
 
 Colar trechos acima de uma pergunta não basta. Um modelo que recebe algumas fontes e uma pergunta
@@ -22,15 +22,17 @@ Question: when does the café open on sundays
 ```
 
 Três partes, numa ordem fixa: a instrução, as fontes numeradas com o arquivo de onde cada uma veio,
-e a pergunta por último. Esse texto inteiro é o que seria enviado ao modelo, e é a única coisa que o
-modelo saberia sobre o café.
+e a pergunta por último. Esse texto inteiro é o que vai para o modelo, e é a única coisa que o
+modelo sabe sobre o café. Passe-o para o `ask`:
 
-O que um modelo poderia responder foi escrito por este curso como ilustração; nenhum modelo foi
-rodado:
-
-```localised
-Aos domingos o café abre às 08:00 e fecha às 12:00 [1].
 ```
+ana@lab:~/pe$ retrieve --prompt "when does the café open on sundays" | ask - --temperature 0
+According to the sources, the café opens on Sundays at 08:00. [1]
+-- llama3.2:3b, finish: stop, prompt 153 tokens, output 20 tokens
+```
+
+Certo, citado, e metade do horário: a hora de fechar está na mesma fonte e a resposta a deixou de
+fora, porque a pergunta só queria saber quando ele abre.
 
 ## Por que a citação importa
 
@@ -57,11 +59,18 @@ does not say, and do not answer from general knowledge.
 Question: can I bring my dog
 ```
 
-A resposta que a instrução pede, de novo escrita pelo curso como ilustração:
+A instrução pede uma resposta aqui, a de que o manual não diz. O modelo deu outra:
 
-```localised
-O manual não diz se cachorros podem entrar no café.
 ```
+ana@lab:~/pe$ retrieve --prompt "can I bring my dog" | ask - --temperature 0
+I don't have enough information to answer your question. Could you please provide more context or clarify what you are referring to? Are you asking about bringing a dog into a specific location, such as a building or a park?
+-- llama3.2:3b, finish: stop, prompt 82 tokens, output 46 tokens
+```
+
+Ele não inventou uma regra sobre cachorros, que é o desfecho que mais importa, e também não disse
+que o manual se cala. Sem fontes embaixo da instrução, ele leu o prompt como uma pergunta faltando
+alguma coisa e pediu mais. Um programa que confere respostas teria de tratar isso também como
+recusa, e um teste que só procura as palavras exatas "não diz" deixaria passar.
 
 **Sem essa permissão, um modelo que recebe uma pergunta tende a produzir uma resposta**, porque uma
 resposta é a continuação provável de uma pergunta (lição 1), e a resposta provável sobre cachorros em

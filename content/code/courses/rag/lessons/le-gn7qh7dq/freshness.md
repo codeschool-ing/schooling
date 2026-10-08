@@ -1,6 +1,6 @@
 ---
 title: Freshness
-version: 1
+version: 2
 ---
 
 Marginalia's returns policy changed on 2 February 2026, from fourteen days to thirty and from paid to
@@ -10,17 +10,34 @@ assistant started giving the new answer.
 ## With retrieval: re-embed what changed
 
 In a RAG system the new policy is a new document. Cutting it into sections and embedding them is the
-whole of the change, and `reindex_cost.py` counts and times it on this machine, rounding the time
-up to the second because it changes a little from run to run:
+whole of the change, and `reindex_cost.py` counts and times it, rounding the time up to the second
+because it changes a little from run to run:
+
+```schooling-example
+{
+  "language": "python",
+  "file": "reindex_cost.py",
+  "parts": [
+    {
+      "code": "import glob\nimport math\nimport re\nimport time\n\nimport tiktoken\nfrom vectors import embed\n\nenc = tiktoken.get_encoding(\"cl100k_base\")\n\n\ndef cut(path):\n    return re.split(r\"\\n(?=## )\", open(path).read())[1:]",
+      "note": "The same cut at `## ` headings as `sections.py`."
+    },
+    {
+      "code": "one = cut(\"data/docs/returns-policy.md\")\nevery = [part for path in sorted(glob.glob(\"data/docs/*.md\")) for part in cut(path)]\nfor label, parts in ((\"the returns policy\", one), (\"every document\", every)):\n    start = time.perf_counter()\n    embed(parts)\n    seconds = time.perf_counter() - start\n    tokens = sum(len(enc.encode(p)) for p in parts)\n    print(f\"{label:20} {len(parts):3} sections  {tokens:5} tokens  under {math.ceil(seconds)} s\")",
+      "note": "Embeds the one policy that changed, then the whole corpus, and prints how many sections, how many tokens a provider would bill and how long it took, rounded up to the second."
+    }
+  ]
+}
+```
 
 ```
-ana@lab:~/rag$ python reindex_cost.py
+ana@vm:~/rag$ python reindex_cost.py
 the returns policy     9 sections    973 tokens  under 1 s
-every document        92 sections   7855 tokens  under 7 s
+every document        92 sections   7855 tokens  under 3 s
 ```
 
-**Under a second for the policy that changed, under seven for the entire corpus**, on one processor
-core with a small model, and 973 tokens against 7,855, which is what a hosted provider would bill. A hosted embedding model would add network time and a few
+**Under a second for the policy that changed, under three for the entire corpus**, on four processor
+cores with a small model, and 973 tokens against 7,855, which is what a hosted provider would bill. A hosted embedding model would add network time and a few
 cents; neither changes the order of magnitude. The new answer is live from the next question, and the
 old one is gone the moment the old chunks leave the index, which is the subject of the section on
 deleting.

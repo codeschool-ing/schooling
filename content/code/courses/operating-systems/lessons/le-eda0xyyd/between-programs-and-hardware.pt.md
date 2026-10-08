@@ -1,6 +1,6 @@
 ---
 title: Entre os seus programas e o hardware
-version: 1
+version: 2
 ---
 
 **Um sistema operacional é o programa que opera o computador para os outros programas.** Um
@@ -17,7 +17,7 @@ A parte que faz esse papel de juiz é o **kernel**. Ele é o primeiro programa c
 computador liga e o último a parar, e é o único programa com permissão para mexer diretamente no
 hardware. Todo o resto, inclusive as partes do sistema que você vê, pede ao kernel o que precisa
 por meio de **chamadas de sistema**: abra este arquivo, leia dele, inicie aquele programa, me dê
-mais memória. A seção 06 vê um programa fazendo exatamente isso.
+mais memória. A seção 09 vê um programa fazendo exatamente isso.
 
 ## Do que ele cuida
 

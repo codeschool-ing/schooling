@@ -1,6 +1,6 @@
 ---
 title: Making, copying, moving and removing
-version: 1
+version: 2
 ---
 
 Six commands do all of it, and none of them will ask you whether you are sure.
@@ -16,23 +16,34 @@ Six commands do all of it, and none of them will ask you whether you are sure.
 
 ## `mkdir` and `touch`
 
+Everything in this section happens in a directory made for it, so nothing you care about is in
+reach:
+
+```sh
+mkdir ~/sandbox
+cd ~/sandbox
+```
+
 ```
 ana@vm:~/sandbox$ mkdir archive
 ana@vm:~/sandbox$ touch report.txt
 ana@vm:~/sandbox$ ls -l
-total 0
--rw-r--r-- 1 ana ana 0 Sep 14 22:01 report.txt
+total 4
+drwxr-xr-x 2 ana ana 4096 Oct  7 11:09 archive
+-rw-r--r-- 1 ana ana    0 Oct  7 11:09 report.txt
 ```
 
 `touch` on a name that does not exist creates an empty file. On a name that **does** exist, it
-changes nothing but the timestamp:
+changes nothing but the timestamp. `-d` sets a date of your choosing, which gives this one a file
+that looks a year old:
 
 ```
+ana@vm:~/sandbox$ touch -d 2025-01-01 old.txt
 ana@vm:~/sandbox$ ls -l old.txt
 -rw-r--r-- 1 ana ana 0 Jan  1  2025 old.txt
 ana@vm:~/sandbox$ touch old.txt
 ana@vm:~/sandbox$ ls -l old.txt
--rw-r--r-- 1 ana ana 0 Sep 14 22:01 old.txt
+-rw-r--r-- 1 ana ana 0 Oct  7 11:09 old.txt
 ```
 
 That is what the name means — touching a file without changing it — and it is how you make
@@ -64,7 +75,7 @@ ana@vm:~/sandbox$ cp archive backup
 cp: -r not specified; omitting directory 'archive'
 ana@vm:~/sandbox$ cp -r archive backup
 ana@vm:~/sandbox$ ls backup
-report-2.txt  report.txt
+report.txt
 ```
 
 Read that first message carefully: it is not an error, it is `cp` telling you it **skipped**
@@ -103,7 +114,11 @@ Across filesystems it is a copy and a delete wearing a rename's clothes.
 
 ## Nothing asks. Here is what that costs.
 
+Two small files, one you want to keep and one you do not:
+
 ```
+ana@vm:~/sandbox$ printf 'the good one\n' > keep.txt
+ana@vm:~/sandbox$ printf 'the other one\n' > other.txt
 ana@vm:~/sandbox$ cat keep.txt
 the good one
 ana@vm:~/sandbox$ cp other.txt keep.txt
@@ -117,14 +132,21 @@ unless you have a backup. `mv` does exactly the same:
 ```
 ana@vm:~/sandbox$ mv other.txt keep.txt
 ana@vm:~/sandbox$ ls
-archive  deep  keep.txt  old.txt
+archive
+backup
+deep
+keep.txt
+old.txt
+report.txt
 ```
 
 Two files went in, one came out, and nothing was said about it.
 
-**`-i` makes it ask:**
+**`-i` makes it ask.** Make the two files again, and this time copy with `-i`:
 
 ```
+ana@vm:~/sandbox$ printf 'the good one\n' > keep.txt
+ana@vm:~/sandbox$ printf 'the other one\n' > other.txt
 ana@vm:~/sandbox$ cp -i other.txt keep.txt
 cp: overwrite 'keep.txt'? n
 ana@vm:~/sandbox$ cat keep.txt

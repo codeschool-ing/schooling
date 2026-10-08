@@ -1,6 +1,6 @@
 ---
 title: Logging in, and what comes back
-version: 1
+version: 2
 ---
 
 Most device APIs authenticate in one of two ways. **HTTP Basic** sends the username and password
@@ -18,7 +18,7 @@ ana@ctl:~$ curl -s --cacert lab-ca.pem -H "Content-Type: application/json" -d @l
 ```
 
 The password never appears in the command. It is read from `~/.netops-password`, a file only
-`ana` can read, and `jq` builds the JSON body from it into `login.json`. **A password typed on a
+`ana` can read, which `netlab.sh` writes into her home on every build, and `jq` builds the JSON body from it into `login.json`. **A password typed on a
 command line ends up in the shell's history and in the process list**, where anyone on the
 machine can see it while the command runs.
 

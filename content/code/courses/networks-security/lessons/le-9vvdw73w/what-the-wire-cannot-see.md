@@ -3,8 +3,19 @@ title: What the wire cannot see
 version: 1
 ---
 
-The network sensor on the DMZ watches for the admin path requested from outside, as in lesson 14. A
-stranger asks for it twice, once over plain HTTP and once over HTTPS:
+The network sensor on the DMZ watches for the admin path requested from outside, as in lesson 14. In
+your lab this lesson starts from `sudo bash nslab.sh reset`, with the company's policy loaded on `fw`
+by `nft -f baseline.nft`. Put lesson 14's rule in `/etc/suricata/rules/local.rules` on `sensor`, as
+its third revision, which asks for `/admin/` with the slash so that a page such as `/admin-guide.html`
+no longer matches:
+
+```conf
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"admin path requested from outside"; flow:to_server,established; http.uri; content:"/admin/"; startswith; classtype:policy-violation; sid:1000101; rev:3;)
+```
+
+Start Suricata there with lesson 14's command,
+`suricata -c /etc/suricata/suricata.yaml --af-packet=eth0 -D --pidfile /var/log/suricata/suricata.pid`,
+and give it ten seconds. A stranger asks for the path twice, once over plain HTTP and once over HTTPS:
 
 ```
 ana@remote:~$ curl -s http://www.example.com/admin/; curl -s https://www.example.com/admin/

@@ -15,7 +15,21 @@ configuration:
 ```
 
 `admin` runs rsyslog too, listening on TCP port 514 and writing each machine's lines into a directory
-of its own, and a host firewall decides who may talk to it:
+of its own. Its `/root/rsyslog.conf`:
+
+```conf
+global(workDirectory="/var/log/lab/rsyslog" net.enableDNS="off")
+module(load="imtcp")
+input(type="imtcp" port="514" address="192.168.99.10" ruleset="remote")
+template(name="byhost" type="string" string="/var/log/lab/remote/%hostname%/%programname%.json")
+template(name="asis" type="string" string="%msg:2:$%\n")
+ruleset(name="remote") {
+  action(type="omfile" dynaFile="byhost" template="asis")
+}
+```
+
+A host firewall, `/root/host.nft`, decides who may talk to it; it is printed below as `nft` reads it
+back once loaded:
 
 ```
 root@admin:~# nft list ruleset

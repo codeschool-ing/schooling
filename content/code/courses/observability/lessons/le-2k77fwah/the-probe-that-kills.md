@@ -1,13 +1,14 @@
 ---
 title: The probe that kills
-version: 1
+version: 2
 ---
 
 The most expensive health check is the one that is right about a problem and wrong about whose it
 is. **A liveness probe that checks a dependency restarts every copy of a service when the dependency
 fails**, and none of the restarts can help.
 
-Three copies of a service whose liveness probe insists on reaching the database:
+Three copies of a service whose liveness probe insists on reaching the database, saved as
+`~/shop/k8s/deep.yaml`:
 
 ```schooling-example
 {
@@ -81,3 +82,10 @@ The fix is a sentence: **liveness checks the process, readiness checks the depen
 check been a readiness probe, the three copies would have left the Service while the database was
 gone. They would have come back by themselves a few seconds after it returned, with nothing
 restarted and nothing lost.
+
+When you are done with the cluster, delete what this lesson put in it, and then the cluster:
+
+```sh
+kubectl delete -f k8s/deep.yaml -f k8s/probe-demo.yaml
+kind delete cluster --name lab
+```

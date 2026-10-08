@@ -49,10 +49,12 @@ que a reverte. A segunda precisa de `base64 -d`. A terceira precisa de `base64 -
 ## O caso mais comum: um Secret do Kubernetes
 
 O Kubernetes guarda os valores de um Secret em Base64, e muita gente lê a palavra *Secret* e o valor
-ilegível e supõe cifragem. O portal da Vereda tem um:
+ilegível e supõe cifragem. O portal da Vereda tem um, e estes comandos o gravam no laboratório
+exatamente como está implantado:
 
-```
-ana@lab:~/lab$ cat data/portal-secret.yaml
+```sh
+cd ~/lab
+cat > data/portal-secret.yaml <<'EOF'
 apiVersion: v1
 kind: Secret
 metadata:
@@ -61,6 +63,7 @@ type: Opaque
 data:
   username: cG9ydGFs
   password: Vi1kYi1zM2NyZXQtMjAyNg==
+EOF
 ```
 
 E quem consegue ler o manifesto, ou rodar `kubectl get secret -o yaml` com permissão de leitura sobre

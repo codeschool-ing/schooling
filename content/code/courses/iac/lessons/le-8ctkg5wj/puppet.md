@@ -1,12 +1,12 @@
 ---
 title: Puppet, a manifest and a catalogue
-version: 1
+version: 2
 ---
 
 Puppet describes a machine as a set of **resources**, each with a type, a title and attributes, written
 in a language of its own. It is not YAML and not Ruby, though Puppet itself is written in Ruby. Ana's
-first manifest manages a directory, two files and a command that should run only when the
-configuration file changes:
+first manifest, `site.pp` in `~/shop/puppet`, manages a directory, two files and a command that
+should run only when the configuration file changes:
 
 ```
 $root = '/home/ana/web'
@@ -35,9 +35,10 @@ exec { 'reload-web':
 }
 ```
 
-On a real web server those paths would be under `/var/www` and `/etc/nginx`. **In the lab they are in
-Ana's home**, because she is not root and the laptop is the only machine there is; the resources and
-the way Puppet applies them are the same. `$root` is a variable, and `"${root}/index.html"` puts it into
+On a real web server those paths would be under `/var/www` and `/etc/nginx`. **Here they are in
+Ana's home**, because Puppet runs as her rather than as root, and her computer is the only machine
+there is; the resources and the way Puppet applies them are the same. Write yours with your own home
+directory in place of `/home/ana`; where the transcripts below print her path, yours print your own. `$root` is a variable, and `"${root}/index.html"` puts it into
 a string, which works only in double quotes. Each `file` says what must be true (`ensure => file`, this
 `content`, this `mode`) and not how to get there.
 
@@ -66,8 +67,9 @@ Notice: /Stage[main]/Main/Exec[reload-web]: Triggered 'refresh' from 1 event
 Notice: Applied catalog in 0.05 seconds
 ```
 
-Read it from the top. The warning is the lab's: Facter, the part of Puppet that gathers facts about
-the machine, found no network address, because a lab run has no network. **`Compiled catalog for
+Read it from the top. The warning belongs to the machine these lessons were recorded on: Facter, the
+part of Puppet that gathers facts about the machine, found no network address, because each recording
+ran with no network. Your computer has one, and your runs do not print it. **`Compiled catalog for
 laptop` is the important line.** The catalogue is the manifest worked out for one machine: every
 resource, with variables filled in and relationships resolved. With an agent, the server compiles it
 and sends it down; `puppet apply` compiles it on the spot. Then one `Notice` per change: the
@@ -111,7 +113,7 @@ agent would have done this on its own, at the next run.
 ## Package, file, service
 
 The shape that a real web server gets is three resource types that appear in almost every Puppet
-codebase:
+codebase. Ana writes them in `server.pp`:
 
 ```
 package { 'nginx':
@@ -137,8 +139,8 @@ resources in an order that respects it. Where two resources have no relationship
 of the manifest, but a manifest that depends on that order without saying so breaks the day somebody
 moves a resource into another file.
 
-Ana is not root and the lab has no network for `apt`, so this one runs with `--noop`, which compares
-and reports without changing anything:
+Installing a package needs root, and Puppet runs as Ana, an ordinary user, as it does as you. So this
+one runs first with `--noop`, which compares and reports without changing anything:
 
 ```
 ana@laptop:~/shop/puppet$ puppet apply --noop server.pp

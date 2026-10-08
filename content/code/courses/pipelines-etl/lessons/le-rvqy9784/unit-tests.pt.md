@@ -1,0 +1,208 @@
+---
+title: Testes de unidade, e o código que eles fizeram a Ana mudar
+version: 1
+---
+
+A primeira coisa que um teste pede ao código é que ele possa ser chamado. O validador da lição 16 não
+podia: o trabalho dele era feito no nível de cima do arquivo, lendo o `sys.argv` no momento em que
+era importado, então um teste que o importasse para chamar o `check` teria rodado o programa
+inteiro. A Ana leva esse trabalho para uma função `main`, chamada só quando o arquivo roda como
+script:
+
+```
+ana@vm:~/etl$ diff /tmp/validate_prices.before.py validate_prices.py | head -n 12; echo …; diff /tmp/validate_prices.before.py validate_prices.py | tail -n 6
+49,58c49,58
+< src, good_path, bad_path = sys.argv[1:4]
+< fixed, rejected, good, bad = Counter(), Counter(), [], []
+< for line in open(src, encoding="utf-8"):
+<     rec = json.loads(line)
+<     reason = check(rec, fixed)
+<     if reason:
+<         rejected[reason] += 1
+<         bad.append({"reason": reason, "record": json.loads(line)})
+<     else:
+<         good.append(rec)
+---
+…
+>         out.writelines(json.dumps(g, ensure_ascii=False) + "\n" for g in good)
+>     return 0
+> 
+> 
+> if __name__ == "__main__":
+>     sys.exit(main(*sys.argv[1:4]))
+```
+
+O programa faz exatamente o que fazia. O que mudou é que o `check` e o `isbn13_ok` agora podem ser
+importados e chamados sobre um registro por vez. **Código fácil de testar costuma ser código que
+mantém as decisões separadas da entrada e da saída**, e a mudança valia a pena só por isso.
+
+Depois, os testes: uma regra cada, com um registro que o validador aceita e um campo mudado.
+
+```
+"""Unit tests for the price validator: one record in, one decision out."""
+from collections import Counter
+
+from validate_prices import check, isbn13_ok
+
+
+def price(**changes):
+    """A record the validator accepts as it is, with some fields changed."""
+    rec = {"isbn": "9786574218454", "publisher": "Borda", "list_price_cents": 10490,
+           "currency": "BRL", "updated_at": "2026-01-01T05:01:00-03:00"}
+    rec.update(changes)
+    return rec
+
+
+def test_a_real_isbn_passes_its_check_digit():
+    assert isbn13_ok("9786574218454")
+
+
+def test_one_wrong_digit_fails_it():
+    assert not isbn13_ok("9786574218455")
+
+
+def test_hyphens_are_removed_and_counted():
+    rec, fixed = price(isbn="978-65-7421-845-4"), Counter()
+    assert check(rec, fixed) is None
+    assert rec["isbn"] == "9786574218454"
+    assert fixed == {"isbn written with hyphens": 1}
+
+
+def test_a_missing_price_is_rejected():
+    assert check(price(list_price_cents=None), Counter()) == "price missing"
+
+
+def test_a_price_with_a_decimal_comma_is_rejected():
+    assert check(price(list_price_cents="104,90"), Counter()) == "price '104,90' is not a number"
+
+
+def test_another_currency_is_rejected_not_converted():
+    assert check(price(currency="USD"), Counter()) == "currency 'USD'"
+
+
+def test_a_price_in_reais_is_not_taken_for_cents():
+    assert check(price(list_price_cents=104.9), Counter()) == "price 104.9 is not a whole number of cents"
+```
+
+```
+ana@vm:~/etl$ python -m pytest -q tests/test_validate.py 2>&1 | tail -n 15
+......F                                                                  [100%]
+=================================== FAILURES ===================================
+_________________ test_a_price_in_reais_is_not_taken_for_cents _________________
+
+    def test_a_price_in_reais_is_not_taken_for_cents():
+>       assert check(price(list_price_cents=104.9), Counter()) == "price 104.9 is not a whole number of cents"
+E       AssertionError: assert None == 'price 104.9 is not a whole number of cents'
+E        +  where None = check({'isbn': '9786574218454', 'publisher': 'Borda', 'list_price_cents': 104.9, 'currency': 'BRL', ...}, Counter())
+E        +    where {'isbn': '9786574218454', 'publisher': 'Borda', 'list_price_cents': 104.9, 'currency': 'BRL', ...} = price(list_price_cents=104.9)
+E        +    and   Counter() = Counter()
+
+tests/test_validate.py:43: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_validate.py::test_a_price_in_reais_is_not_taken_for_cents
+1 failed, 6 passed in 0.02s
+```
+
+Seis passaram. O sétimo é o que a Ana escreveu perguntando *o que uma editora poderia mandar que eu
+ainda não vi?* — um preço em reais com ponto decimal, `104.9`, como número e não como texto. O
+validador **aceitou**: não é `None`, não é string, e está entre 100 e 100.000, então passou como um
+preço de 104,9 centavos, um centésimo do que o livro custa. Nenhuma editora mandou um ainda. O
+primeiro teria sido carregado sem uma palavra.
+
+A correção é conferir que o preço é um número inteiro:
+
+```
+ana@vm:~/etl$ diff /tmp/validate_prices.before.py validate_prices.py | sed -n "/whole number/,+0p;/isinstance(rec/,+0p"
+>     if not isinstance(rec["list_price_cents"], int):
+>         return f"price {rec['list_price_cents']} is not a whole number of cents"
+ana@vm:~/etl$ python -m pytest -q tests/test_validate.py
+.......                                                                  [100%]
+7 passed in 0.02s
+```
+
+Sete passaram. Esse é o argumento a favor de testes de unidade num pipeline: **eles deixam perguntar
+sobre a entrada que ainda não chegou**, o que nenhum teste sobre os dados consegue.
+
+As duas mudanças juntas, o validador como o resto do curso o roda:
+
+```python
+"""Check every price the publishers sent before it is loaded.
+
+Each record is fixed where the fix is certain, rejected where it is not, and
+counted either way. The good records go on to be loaded; the rejected ones go
+to quarantine with the reason; and if too many are rejected, nothing is loaded."""
+import json
+import sys
+from collections import Counter
+
+MAX_REJECTED = 0.05          # more than 5% rejected: the batch is wrong, not the records
+
+
+def isbn13_ok(isbn):
+    """The last digit of an ISBN-13 is a check digit over the other twelve."""
+    if len(isbn) != 13 or not isbn.isdigit():
+        return False
+    total = sum(int(d) * (3 if i % 2 else 1) for i, d in enumerate(isbn[:12]))
+    return (10 - total % 10) % 10 == int(isbn[12])
+
+
+def check(rec, fixed):
+    """Return the reason to reject rec, or None; fix what can be fixed, in place."""
+    if "-" in rec["isbn"]:
+        rec["isbn"] = rec["isbn"].replace("-", "")
+        fixed["isbn written with hyphens"] += 1
+    if not isbn13_ok(rec["isbn"]):
+        return "isbn fails its check digit"
+    if rec["publisher"] != rec["publisher"].strip():
+        rec["publisher"] = rec["publisher"].strip()
+        fixed["publisher with stray spaces"] += 1
+    if rec["currency"] != "BRL":
+        if rec["currency"].upper() != "BRL":
+            return f"currency {rec['currency']!r}"
+        rec["currency"] = "BRL"
+        fixed["currency in lower case"] += 1
+    price = rec["list_price_cents"]
+    if price is None:
+        return "price missing"
+    if isinstance(price, str):
+        if not price.isdigit():
+            return f"price {price!r} is not a number"
+        rec["list_price_cents"] = int(price)
+        fixed["price sent as text"] += 1
+    if not isinstance(rec["list_price_cents"], int):
+        return f"price {rec['list_price_cents']} is not a whole number of cents"
+    if not 100 <= rec["list_price_cents"] <= 100_000:
+        return f"price {rec['list_price_cents']} out of range"
+    return None
+
+
+def main(src, good_path, bad_path):
+    fixed, rejected, good, bad = Counter(), Counter(), [], []
+    for line in open(src, encoding="utf-8"):
+        rec = json.loads(line)
+        reason = check(rec, fixed)
+        if reason:
+            rejected[reason] += 1
+            bad.append({"reason": reason, "record": json.loads(line)})
+        else:
+            good.append(rec)
+
+    total = len(good) + len(bad)
+    print(f"{total} records: {len(good)} accepted, {len(bad)} rejected")
+    for what, n in sorted(fixed.items()):
+        print(f"  fixed     {n:4}  {what}")
+    for why, n in sorted(rejected.items()):
+        print(f"  rejected  {n:4}  {why}")
+    with open(bad_path, "w", encoding="utf-8") as out:
+        out.writelines(json.dumps(b, ensure_ascii=False) + "\n" for b in bad)
+    if len(bad) > MAX_REJECTED * total:
+        print(f"STOP: {len(bad) / total:.0%} rejected is more than {MAX_REJECTED:.0%}; nothing loaded")
+        return 1
+    with open(good_path, "w", encoding="utf-8") as out:
+        out.writelines(json.dumps(g, ensure_ascii=False) + "\n" for g in good)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main(*sys.argv[1:4]))
+```

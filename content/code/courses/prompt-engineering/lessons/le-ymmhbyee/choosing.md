@@ -1,6 +1,6 @@
 ---
 title: Choosing a model, and checking what you read
-version: 1
+version: 2
 ---
 
 The tempting way to choose is to find a comparison table, pick the model at the top, and move on.
@@ -30,8 +30,8 @@ set tells you whether its replacement is as good.
 
 Providers price per million tokens, and it is tempting to compare those numbers directly. They do
 not compare, because **each provider's models split text into tokens their own way**, so the same
-request is a different number of tokens at each one. The workbench has two tokenizers, both
-OpenAI's, an older encoding and a newer one, and they disagree on one Portuguese sentence:
+request is a different number of tokens at each one. `tok` has two tokenizers, both OpenAI's, an
+older encoding and a newer one, and they disagree on one Portuguese sentence:
 
 ```
 ana@lab:~/pe$ tok show "O café abre às oito aos domingos." -e cl100k_base
@@ -66,8 +66,9 @@ tokens  words  chars  file
     48     35    209  handbook/wifi.md
 ```
 
-That is two encodings from one provider. Other providers' tokenizers differ again, and none of them
-is in the workbench, so this course shows no count for them. The rule that follows does not need
+That is two encodings from one provider. Other providers' tokenizers differ again, and `tok` has
+none of them; the count `ask` prints under every reply is Llama's own, with the conversation's
+markers included, so it is not comparable with these either. The rule that follows does not need
 one: **compare what a whole typical request costs at each provider**, which their own token
 counters or a test request will tell you, not the price per million.
 

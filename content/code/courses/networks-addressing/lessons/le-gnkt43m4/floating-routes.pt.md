@@ -1,6 +1,6 @@
 ---
 title: Uma rota reserva, e o que ela não enxerga
-version: 1
+version: 2
 ---
 
 O cabo reserva de r1 a r3 é um segundo caminho. Uma **rota flutuante** o põe para uso: uma segunda rota
@@ -25,7 +25,8 @@ estática flutuante* vem daí. O mecanismo é outro e o propósito é o mesmo.
 
 ## Puxando um cabo
 
-Então o cabo de r1 a r2 foi puxado. r1 perdeu o sinal em `eth1`, e sua tabela mudou sozinha:
+Então o cabo de r1 a r2 foi puxado, derrubando a ponta do r2: `ip link set eth1 down` num prompt de
+root no r2. r1 perdeu o sinal em `eth1`, e sua tabela mudou sozinha:
 
 ```
 root@r1:~# ip route show 10.20.3.0/24

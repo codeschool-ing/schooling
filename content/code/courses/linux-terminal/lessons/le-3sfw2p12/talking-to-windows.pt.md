@@ -1,6 +1,6 @@
 ---
 title: A metade do PowerShell que esta máquina não tem
-version: 1
+version: 2
 ---
 
 Tudo até aqui rodou na máquina em que estas capturas foram feitas. Esta seção é
@@ -31,14 +31,16 @@ Microsoft.PowerShell.Host
 Microsoft.PowerShell.Management
 Microsoft.PowerShell.PSResourceGet
 Microsoft.PowerShell.Security
+Microsoft.PowerShell.ThreadJob
 Microsoft.PowerShell.Utility
 PackageManagement
 PowerShellGet
 PSReadLine
-ThreadJob
+PS /home/ana/work/ps> (Get-Command -CommandType Cmdlet).Count
+257
 ```
 
-Dez módulos, 293 comandos. Um Windows Server tem esses mais dezenas de outros, e a
+Dez módulos, 257 cmdlets. Um Windows Server tem esses mais dezenas de outros, e a
 contagem chega aos milhares assim que os papéis de servidor são instalados.
 
 **Este é o escopo honesto da aula.** O que segue é descrito, não demonstrado, e

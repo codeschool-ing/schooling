@@ -1,6 +1,6 @@
 ---
 title: Nomes, e quatro regras que não são as que você espera
-version: 2
+version: 3
 ---
 
 Um nome de arquivo no Linux é mais livre do que você pensa e mais estrito do que você pensa, em
@@ -14,10 +14,11 @@ ana@vm:~/case$ ls
 NOTES.TXT
 Notes.txt
 notes.txt
+report.pdf
 ```
 
-**Três arquivos diferentes**, num diretório só, ao mesmo tempo. O Windows e o macOS teriam recusado
-criar o segundo: neles, `Notes.txt` e `notes.txt` são o mesmo nome escrito de dois jeitos.
+**`NOTES.TXT`, `Notes.txt` e `notes.txt` são três arquivos diferentes**, num diretório só, ao mesmo
+tempo. O Windows e o macOS teriam recusado criar o segundo: neles, `Notes.txt` e `notes.txt` são o mesmo nome escrito de dois jeitos.
 
 Essa é a regra que quebra deploy. Um projeto funciona no Mac de alguém, onde `Header.css` e
 `header.css` são um arquivo só, e falha no servidor Linux que o serve, onde são dois e só um

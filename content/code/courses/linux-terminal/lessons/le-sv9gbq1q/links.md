@@ -1,18 +1,26 @@
 ---
 title: Inodes, hard links and symlinks
-version: 1
+version: 2
 ---
 
 A filename is not a file. **The file is a numbered thing on the disk, and a filename is an entry
 in a directory that points at that number.** Once that sentence is real to you, everything in this
 section is obvious — and several things you have already seen stop being strange.
 
-The number is called the **inode**, and `ls -i` prints it:
+The number is called the **inode**, and `ls -i` prints it. Two directories for this section, each
+with one file of thirteen bytes in it:
+
+```sh
+mkdir -p ~/hard ~/soft
+printf 'the original\n' > ~/hard/report.txt
+printf 'the original\n' > ~/soft/report.txt
+cd ~/hard
+```
 
 ```
 ana@vm:~/hard$ ls -li
 total 4
-573516 -rw-r--r-- 1 ana ana 13 Sep 14 22:20 report.txt
+722950 -rw-r--r-- 1 ana ana 13 Oct  7 11:09 report.txt
 ```
 
 `573516` is what the filesystem calls this data. `report.txt` is what the directory calls it. The
@@ -25,8 +33,8 @@ bytes are. **The name is not in the inode.** The name is in the directory.
 ana@vm:~/hard$ ln report.txt hardlink.txt
 ana@vm:~/hard$ ls -li
 total 8
-573516 -rw-r--r-- 2 ana ana 13 Sep 14 22:20 hardlink.txt
-573516 -rw-r--r-- 2 ana ana 13 Sep 14 22:20 report.txt
+722950 -rw-r--r-- 2 ana ana 13 Oct  7 11:09 hardlink.txt
+722950 -rw-r--r-- 2 ana ana 13 Oct  7 11:09 report.txt
 ```
 
 Two names. **One inode.** And the link count — field 3 from section 06 — went from `1` to `2`,
@@ -48,7 +56,7 @@ And now the part that surprises people:
 ana@vm:~/hard$ rm report.txt
 ana@vm:~/hard$ ls -li
 total 4
-573516 -rw-r--r-- 1 ana ana 8 Sep 14 22:20 hardlink.txt
+722950 -rw-r--r-- 1 ana ana 8 Oct  7 11:09 hardlink.txt
 ana@vm:~/hard$ cat hardlink.txt
 changed
 ```
@@ -63,14 +71,14 @@ and it is named honestly.
 
 ## A symbolic link is a name that contains a path
 
-A fresh directory, one file, and a link made with `-s`:
+The other directory, its one file, and a link made with `-s`:
 
 ```
 ana@vm:~/soft$ ln -s report.txt softlink.txt
 ana@vm:~/soft$ ls -li
 total 4
-573518 -rw-r--r-- 1 ana ana 13 Sep 14 22:20 report.txt
-573519 lrwxrwxrwx 1 ana ana 10 Sep 14 22:20 softlink.txt -> report.txt
+722951 -rw-r--r-- 1 ana ana 13 Oct  7 11:09 report.txt
+722952 lrwxrwxrwx 1 ana ana 10 Oct  7 11:09 softlink.txt -> report.txt
 ```
 
 Three differences from a hard link, and each one matters:
@@ -94,7 +102,7 @@ ana@vm:~/soft$ rm report.txt
 ana@vm:~/soft$ cat softlink.txt
 cat: softlink.txt: No such file or directory
 ana@vm:~/soft$ ls -l softlink.txt
-lrwxrwxrwx 1 ana ana 10 Sep 14 22:20 softlink.txt -> report.txt
+lrwxrwxrwx 1 ana ana 10 Oct  7 11:09 softlink.txt -> report.txt
 ```
 
 **The link is fine. What it points at is gone.** `ls` shows it happily — it is a real file with
@@ -106,7 +114,7 @@ You can make one pointing at nothing at all, and nothing objects:
 ```
 ana@vm:~/soft$ ln -s /etc/nothing-here broken.txt
 ana@vm:~/soft$ ls -l broken.txt
-lrwxrwxrwx 1 ana ana 17 Sep 14 22:20 broken.txt -> /etc/nothing-here
+lrwxrwxrwx 1 ana ana 17 Oct  7 11:09 broken.txt -> /etc/nothing-here
 ```
 
 `ln -s` does not check, because the target is allowed to arrive later — that is a feature, and it
@@ -137,9 +145,10 @@ deduplicate, and in the answer to "why did deleting the log not free any space" 
 A symlink stores whatever path you gave it, unchanged:
 
 ```
+ana@vm:~/soft$ printf 'back again\n' > report.txt
 ana@vm:~/soft$ ln -s ../soft/report.txt rel.txt
 ana@vm:~/soft$ ls -l rel.txt
-lrwxrwxrwx 1 ana ana 18 Sep 14 22:20 rel.txt -> ../soft/report.txt
+lrwxrwxrwx 1 ana ana 18 Oct  7 11:09 rel.txt -> ../soft/report.txt
 ana@vm:~/soft$ cat rel.txt
 back again
 ```

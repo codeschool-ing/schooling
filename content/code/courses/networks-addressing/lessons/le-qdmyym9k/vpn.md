@@ -1,6 +1,6 @@
 ---
 title: The VPN, a private link through somebody else's network
-version: 1
+version: 2
 ---
 
 The head office wants to reach the branch: pc1 to pc2, private address to private address. It
@@ -52,8 +52,8 @@ Read the head office's three lines. `wg0` is created; then `wg set` gives it a *
 gives `wg0` an address, brings it up, and adds the route that sends the branch's LAN into the tunnel.
 The branch's lines are the mirror image.
 
-**About those keys.** The two private keys were written into `lab.sh` by its author, so that `wg show`
-prints the same thing every time the lab is built. That means anybody can read them, and they protect
+**About those keys.** The two private keys are written into `sites.sh`, so that `wg show`
+prints the same thing every time the network is built. That means anybody can read them, and they protect
 nothing. A real tunnel uses keys made on the machine with `wg genkey`, and a private key that has
 been printed, pasted or committed is a key to replace.
 

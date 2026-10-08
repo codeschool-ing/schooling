@@ -46,7 +46,7 @@ deployment.apps/shop image updated
 
 **One failure again, and again a timeout.** Read the error before the count. A refused connection is
 the race above; a timeout is something else, a packet that got no answer at all. Neither run had a
-refusal, so in this lab the race did not show, and the timeout that remained has a cause this lesson
+refusal, so on the machine this was recorded on the race did not show, and the timeout that remained has a cause this lesson
 did not find. The `preStop` is still worth keeping, because the race is real wherever kube-proxy is
 slower than here. What the count says is narrower: it did not take this run to zero.
 

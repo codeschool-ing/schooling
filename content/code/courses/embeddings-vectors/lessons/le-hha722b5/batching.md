@@ -48,7 +48,7 @@ for one input, and how much the request will cost:
 ana@lab:~/emb$ python batch.py
 cl100k_base tokens: 2205  longest article: 75
 40 vectors from 40 articles
-ana@lab:~/emb$ jq -c '{inputs, tokens, encoding_format}' /var/log/labembed/requests.jsonl | tail -n 3
+ana@lab:~/emb$ jq -c '{inputs, tokens, encoding_format}' labembed.jsonl | tail -n 3
 {"inputs":16,"tokens":884,"encoding_format":"base64"}
 {"inputs":16,"tokens":858,"encoding_format":"base64"}
 {"inputs":8,"tokens":554,"encoding_format":"base64"}

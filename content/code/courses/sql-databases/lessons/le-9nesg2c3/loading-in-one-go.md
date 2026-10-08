@@ -13,41 +13,43 @@ in one statement, and hand each order to its customer in memory:
 
 ```
 shop=# SELECT id, customer_id, placed_at, total FROM orders WHERE customer_id = ANY(ARRAY[1, 2, 3]) ORDER BY customer_id, placed_at;
-   id   | customer_id |          placed_at          | total  
---------+-------------+-----------------------------+--------
- 258406 |           1 | 2023-12-29 04:15:09.9072+00 | 707.73
-   3664 |           1 | 2025-06-11 16:30:37.6704+00 | 537.02
- 933519 |           1 | 2025-07-23 19:30:48.384+00  | 996.95
- 856379 |           2 | 2023-01-16 09:35:05.568+00  |  75.34
- 548786 |           2 | 2023-03-04 12:53:26.9088+00 | 761.50
- 418066 |           2 | 2023-03-11 05:06:16.416+00  | 898.33
- 132296 |           2 | 2023-06-05 23:12:51.5232+00 | 480.19
- 469617 |           2 | 2023-07-01 21:12:32.1984+00 | 187.07
- 548309 |           2 | 2023-08-04 11:18:44.208+00  | 248.10
- 339910 |           2 | 2023-09-25 09:19:04.2816+00 | 410.59
- 179551 |           2 | 2023-10-09 01:41:05.0208+00 |  84.13
-  82698 |           2 | 2024-02-16 13:46:51.1392+00 | 767.87
- 813068 |           2 | 2024-05-04 09:01:28.4736+00 |  30.91
- 468689 |           2 | 2024-11-15 21:47:22.56+00   | 449.14
-  78609 |           2 | 2025-01-09 14:25:20.1792+00 | 824.88
- 875237 |           2 | 2025-02-27 00:28:56.208+00  | 280.21
- 315081 |           2 | 2025-02-28 03:37:02.7264+00 | 588.75
- 199093 |           2 | 2025-08-23 21:31:48.4032+00 | 629.38
- 812773 |           2 | 2025-09-27 16:48:58.752+00  | 508.08
- 672465 |           3 | 2023-03-19 11:35:05.28+00   | 614.69
- 410227 |           3 | 2023-03-20 00:35:30.1056+00 | 918.16
- 505327 |           3 | 2023-06-08 14:29:04.9056+00 | 377.35
- 937359 |           3 | 2023-06-22 19:57:59.184+00  |  39.77
- 983688 |           3 | 2023-07-25 08:36:50.688+00  |  29.13
- 690660 |           3 | 2023-10-28 14:22:25.0464+00 | 718.48
- 699978 |           3 | 2024-06-10 06:32:00.672+00  | 468.04
- 394239 |           3 | 2024-08-15 02:02:41.3664+00 | 938.50
- 160670 |           3 | 2024-08-19 09:50:06.288+00  | 538.64
- 772914 |           3 | 2024-12-17 10:44:42.3168+00 | 928.93
- 708466 |           3 | 2024-12-24 02:45:46.1952+00 | 631.79
- 370786 |           3 | 2025-02-06 17:23:09.5424+00 | 676.42
- 517439 |           3 | 2025-09-10 18:10:11.5392+00 |  98.63
-(32 rows)
+   id   | customer_id |           placed_at           | total  
+--------+-------------+-------------------------------+--------
+ 867901 |           1 | 2024-02-01 19:45:14.879823+00 | 645.81
+ 436232 |           1 | 2024-03-20 14:06:59.047487+00 | 248.10
+ 832622 |           1 | 2024-04-03 05:16:39.364248+00 | 292.93
+ 563685 |           1 | 2024-05-12 06:31:09.597037+00 | 950.55
+ 712515 |           1 | 2024-06-19 20:24:34.119482+00 | 999.09
+ 106558 |           1 | 2024-10-24 13:18:18.94516+00  | 378.71
+ 376517 |           1 | 2025-03-01 12:22:17.35475+00  | 449.14
+ 186406 |           1 | 2025-03-13 08:14:07.577697+00 | 241.28
+  83957 |           1 | 2025-04-01 08:36:51.409198+00 | 824.88
+ 561192 |           1 | 2025-05-18 15:20:10.148928+00 | 826.20
+ 174320 |           1 | 2025-07-28 07:33:10.682282+00 | 629.38
+ 634580 |           1 | 2025-08-13 19:55:45.983218+00 | 508.08
+ 973786 |           2 | 2023-11-25 23:44:59.843629+00 | 402.98
+ 153988 |           2 | 2024-02-05 13:20:55.311275+00 | 362.49
+ 377213 |           2 | 2024-02-14 05:58:51.408678+00 | 187.07
+ 750331 |           2 | 2024-05-30 12:41:13.21633+00  | 130.32
+ 808345 |           2 | 2024-06-30 19:37:46.382061+00 | 661.96
+ 817860 |           2 | 2024-08-11 14:43:12.612129+00 | 584.30
+ 906859 |           2 | 2024-08-14 19:10:22.97878+00  | 431.19
+  66505 |           2 | 2025-04-07 09:18:44.349303+00 | 706.37
+ 681428 |           2 | 2025-04-27 15:58:35.762079+00 | 280.21
+ 261311 |           2 | 2025-04-28 06:47:29.029807+00 | 588.75
+ 529349 |           3 | 2023-09-27 13:43:57.406336+00 | 614.69
+ 733286 |           3 | 2023-10-19 15:14:47.740549+00 | 359.85
+ 263511 |           3 | 2024-01-15 10:05:51.665555+00 | 398.62
+ 115453 |           3 | 2024-06-11 18:02:51.326442+00 | 473.14
+  38758 |           3 | 2024-09-07 23:17:18.02898+00  | 254.42
+ 818551 |           3 | 2024-09-29 21:18:52.879204+00 | 494.03
+ 298176 |           3 | 2024-11-01 04:43:50.533645+00 | 343.01
+ 789889 |           3 | 2024-12-27 14:51:54.473518+00 | 840.21
+ 795003 |           3 | 2025-01-17 23:10:49.224958+00 | 961.90
+ 135774 |           3 | 2025-03-14 15:27:50.707643+00 | 700.78
+ 881393 |           3 | 2025-06-24 11:11:44.245599+00 | 533.82
+ 665173 |           3 | 2025-08-25 05:04:37.836811+00 | 616.18
+(34 rows)
 ```
 
 Two statements for the page instead of fifty-one, whatever N is. The plan is the one lesson 10
@@ -57,18 +59,18 @@ would predict:
 shop=# EXPLAIN ANALYZE SELECT id, customer_id, placed_at, total FROM orders WHERE customer_id = ANY(ARRAY[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
                                                             QUERY PLAN                                                             
 -----------------------------------------------------------------------------------------------------------------------------------
- Bitmap Heap Scan on orders  (cost=45.13..446.72 rows=110 width=22) (actual time=0.047..0.461 rows=88 loops=1)
+ Bitmap Heap Scan on orders  (cost=45.13..443.26 rows=109 width=22) (actual time=0.045..0.214 rows=95 loops=1)
    Recheck Cond: (customer_id = ANY ('{1,2,3,4,5,6,7,8,9,10}'::integer[]))
-   Heap Blocks: exact=88
-   ->  Bitmap Index Scan on orders_customer_id_idx  (cost=0.00..45.08 rows=110 width=0) (actual time=0.024..0.025 rows=88 loops=1)
+   Heap Blocks: exact=93
+   ->  Bitmap Index Scan on orders_customer_id_idx  (cost=0.00..45.08 rows=109 width=0) (actual time=0.022..0.022 rows=95 loops=1)
          Index Cond: (customer_id = ANY ('{1,2,3,4,5,6,7,8,9,10}'::integer[]))
- Planning Time: 0.698 ms
- Execution Time: 0.514 ms
+ Planning Time: 0.566 ms
+ Execution Time: 0.271 ms
 (7 rows)
 ```
 
-A bitmap scan through the index on `customer_id`, once, for all ten ids — 88 rows in half a
-millisecond. Fifty ids is the same shape with a longer array, and a hundred thousand ids is the
+A bitmap scan through the index on `customer_id`, once, for all ten ids — 95 rows in a quarter of
+a millisecond. Fifty ids is the same shape with a longer array, and a hundred thousand ids is the
 point at which the ORM sends the array in chunks.
 
 This is what Django calls `prefetch_related`, Rails `preload`, SQLAlchemy `selectinload`, and
@@ -81,45 +83,47 @@ The other shape is lesson 5's answer:
 
 ```
 shop=# SELECT c.id, c.name, o.id AS order_id, o.total FROM customers c LEFT JOIN orders o ON o.customer_id = c.id WHERE c.id IN (1, 2, 3) ORDER BY c.id, o.id;
- id |      name       | order_id | total  
-----+-----------------+----------+--------
-  1 | Helena Santos   |     3664 | 537.02
-  1 | Helena Santos   |   258406 | 707.73
-  1 | Helena Santos   |   933519 | 996.95
-  2 | Bruno Costa     |    78609 | 824.88
-  2 | Bruno Costa     |    82698 | 767.87
-  2 | Bruno Costa     |   132296 | 480.19
-  2 | Bruno Costa     |   179551 |  84.13
-  2 | Bruno Costa     |   199093 | 629.38
-  2 | Bruno Costa     |   315081 | 588.75
-  2 | Bruno Costa     |   339910 | 410.59
-  2 | Bruno Costa     |   418066 | 898.33
-  2 | Bruno Costa     |   468689 | 449.14
-  2 | Bruno Costa     |   469617 | 187.07
-  2 | Bruno Costa     |   548309 | 248.10
-  2 | Bruno Costa     |   548786 | 761.50
-  2 | Bruno Costa     |   812773 | 508.08
-  2 | Bruno Costa     |   813068 |  30.91
-  2 | Bruno Costa     |   856379 |  75.34
-  2 | Bruno Costa     |   875237 | 280.21
-  3 | Fábio Carvalho |   160670 | 538.64
-  3 | Fábio Carvalho |   370786 | 676.42
-  3 | Fábio Carvalho |   394239 | 938.50
-  3 | Fábio Carvalho |   410227 | 918.16
-  3 | Fábio Carvalho |   505327 | 377.35
-  3 | Fábio Carvalho |   517439 |  98.63
-  3 | Fábio Carvalho |   672465 | 614.69
-  3 | Fábio Carvalho |   690660 | 718.48
-  3 | Fábio Carvalho |   699978 | 468.04
-  3 | Fábio Carvalho |   708466 | 631.79
-  3 | Fábio Carvalho |   772914 | 928.93
-  3 | Fábio Carvalho |   937359 |  39.77
-  3 | Fábio Carvalho |   983688 |  29.13
-(32 rows)
+ id |     name     | order_id | total  
+----+--------------+----------+--------
+  1 | Igor Fontes  |    83957 | 824.88
+  1 | Igor Fontes  |   106558 | 378.71
+  1 | Igor Fontes  |   174320 | 629.38
+  1 | Igor Fontes  |   186406 | 241.28
+  1 | Igor Fontes  |   376517 | 449.14
+  1 | Igor Fontes  |   436232 | 248.10
+  1 | Igor Fontes  |   561192 | 826.20
+  1 | Igor Fontes  |   563685 | 950.55
+  1 | Igor Fontes  |   634580 | 508.08
+  1 | Igor Fontes  |   712515 | 999.09
+  1 | Igor Fontes  |   832622 | 292.93
+  1 | Igor Fontes  |   867901 | 645.81
+  2 | Ana Alves    |    66505 | 706.37
+  2 | Ana Alves    |   153988 | 362.49
+  2 | Ana Alves    |   261311 | 588.75
+  2 | Ana Alves    |   377213 | 187.07
+  2 | Ana Alves    |   681428 | 280.21
+  2 | Ana Alves    |   750331 | 130.32
+  2 | Ana Alves    |   808345 | 661.96
+  2 | Ana Alves    |   817860 | 584.30
+  2 | Ana Alves    |   906859 | 431.19
+  2 | Ana Alves    |   973786 | 402.98
+  3 | Elisa Fontes |    38758 | 254.42
+  3 | Elisa Fontes |   115453 | 473.14
+  3 | Elisa Fontes |   135774 | 700.78
+  3 | Elisa Fontes |   263511 | 398.62
+  3 | Elisa Fontes |   298176 | 343.01
+  3 | Elisa Fontes |   529349 | 614.69
+  3 | Elisa Fontes |   665173 | 616.18
+  3 | Elisa Fontes |   733286 | 359.85
+  3 | Elisa Fontes |   789889 | 840.21
+  3 | Elisa Fontes |   795003 | 961.90
+  3 | Elisa Fontes |   818551 | 494.03
+  3 | Elisa Fontes |   881393 | 533.82
+(34 rows)
 ```
 
 One statement, one round trip, and the customer's columns are on every row of their orders —
-`Bruno Costa` sixteen times. The ORM reads the rows back into one customer object holding sixteen
+`Igor Fontes` twelve times. The ORM reads the rows back into one customer object holding twelve
 orders, and the repetition costs bandwidth rather than correctness.
 
 Django's `select_related`, Rails' `eager_load`, SQLAlchemy's `joinedload`, Hibernate's

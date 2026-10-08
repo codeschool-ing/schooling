@@ -1,12 +1,20 @@
 ---
 title: The traceparent header
-version: 1
+version: 2
 ---
 
 Each service keeps its current span in its own memory, as lesson 2 showed, and memory does not
 cross a network. **What crosses is a header.** `orders` happens to store the one it received with
 every order, in a column of its own, so the header can be read straight out of the database after a
-checkout:
+checkout. Start this lesson from a lab started again from nothing, with the three commands at the
+end of lesson 1's *What watches it, and starting it all*, and the order ids here will be yours: the
+first checkout is order 1. Then send one, with the function of lesson 3:
+
+```sh
+checkout
+```
+
+And read it back:
 
 ```
 ana@obs:~/shop$ docker compose exec postgres psql -U shop -tAc 'SELECT id, traceparent FROM orders ORDER BY id DESC LIMIT 1'

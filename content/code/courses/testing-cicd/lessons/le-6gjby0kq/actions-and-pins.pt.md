@@ -1,6 +1,6 @@
 ---
 title: Actions, e como fixá-las num commit
-version: 1
+version: 2
 ---
 
 Uma **action** é um passo que alguém empacotou para reuso: fazer checkout do código, instalar o
@@ -25,7 +25,8 @@ versão ao lado como comentário: o hash para a máquina, o comentário para que
 ## Este repositório confere os próprios pins
 
 O repositório que publica este curso tem uma ferramenta exatamente para isso, `tools/check-actions`,
-e a roda na CI. Com `-offline` ela confere a metade da fixação sem buscar nada:
+e a roda na CI. Com `-offline` ela confere a metade da fixação sem buscar nada. Você não precisa
+digitar este; ele roda naquele repositório, não no `shipquote`:
 
 ```
 ana@laptop:~/schooling$ go run ./tools/check-actions -offline

@@ -1,6 +1,6 @@
 ---
 title: O que conta como segredo
-version: 1
+version: 2
 ---
 
 Um **segredo** é qualquer valor que dá acesso a algo, de modo que quem o tem consegue agir como você.
@@ -13,6 +13,15 @@ ela, qualquer pessoa conseguiria pedir preços à transportadora na conta da loj
 transportadora de verdade, criar remessas e gerar uma conta. No laboratório ele é `lab-live-token`, um
 valor inventado para o curso que só abre a simulação em 127.0.0.1, e esta aula o trata como se fosse
 real.
+
+A aula trabalha no ambiente de produção da aula 8 e na transportadora da porta 9092 que aceita esse
+token, e os dois devem continuar rodando. Se não estiverem, a primeira linha abaixo sobe a
+transportadora, num terminal próprio, e a segunda faz de novo o deploy da versão 1.5.0 na produção:
+
+```sh
+CARRIER_TOKEN=lab-live-token CARRIER_PORT=9092 python3 ~/carrier/server.py
+ops/deploy.sh production dist/shipquote-1.5.0.tar.gz
+```
 
 ## Por que o pipeline é onde segredos vazam
 

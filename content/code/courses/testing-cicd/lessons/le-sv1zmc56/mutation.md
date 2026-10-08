@@ -1,6 +1,6 @@
 ---
 title: Breaking the code to test the tests
-version: 1
+version: 2
 ---
 
 Lesson 1 broke `brl` on purpose to see a test fail, and lesson 3 did the same to `split`. **Mutation
@@ -11,8 +11,8 @@ code from the real one.
 
 Tools such as `mutmut` and `cosmic-ray` for Python, PIT for Java and Stryker for JavaScript generate
 thousands of mutants automatically. The idea fits in a short script, and seeing it whole is the
-best way to understand what those tools report. This one was written for the lesson and lives
-beside its capture script:
+best way to understand what those tools report. This one was written for the lesson, and it runs
+from the project's directory. Save it as `mutate.py`:
 
 ```python
 """Mutation testing by hand: change one thing, run the suite, see who notices.

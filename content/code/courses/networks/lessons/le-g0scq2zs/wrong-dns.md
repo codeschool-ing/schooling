@@ -1,9 +1,15 @@
 ---
 title: Ticket: "websites do not open"
-version: 1
+version: 2
 ---
 
-This time the laptop reaches addresses and not names:
+This time the laptop reaches addresses and not names. The fault, in your lab:
+
+```sh
+echo 'nameserver 192.168.10.53' | sudo tee /etc/netns/laptop/resolv.conf
+```
+
+Then, on the laptop:
 
 ```
 ana@laptop:~$ curl -sS -m 30 https://www.example.com/ -o /dev/null

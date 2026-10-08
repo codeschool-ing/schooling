@@ -1,11 +1,11 @@
 ---
 title: box-sizing: o que width quer dizer
-version: 1
+version: 2
 ---
 
 A seção 02 mediu um cartão com `width: 300px` desenhado com 348 pixels de largura. Esse é o padrão, e se chama **`content-box`**: `width` define a área de conteúdo, e padding e borda são somados por fora. Isso transforma todo layout em conta: uma coluna que devia ter um terço da página, com padding, fica maior que um terço, e três delas deixam de caber numa linha.
 
-**`box-sizing: border-box`** muda o que `width` quer dizer. Aqui está o mesmo cartão com essa única declaração a mais:
+**`box-sizing: border-box`** muda o que `width` quer dizer. Aqui está o mesmo cartão, o `box.html` salvo como `border-box.html`, com essa única declaração a mais na regra `.card`, depois de `margin: 30px;`:
 
 ```
 ana@laptop:~/site$ probe border-box.html box .card box '.card p'

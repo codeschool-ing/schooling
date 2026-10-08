@@ -10,7 +10,7 @@ next, and this course has already met three of them:
 - **The time zone.** Lesson 5's dispatch draft passed on a laptop in São Paulo and failed on every
   machine set to UTC. A developer's laptop and a server rarely share a zone unless somebody makes
   them.
-- **The database engine.** Lesson 1 section 06 warned against testing against SQLite and deploying
+- **The database engine.** Lesson 1 section 09 warned against testing against SQLite and deploying
   on PostgreSQL: the two disagree on types and on SQL.
 - **The interpreter's version.** Lesson 5's matrix ran three Pythons because production might run
   any of them.

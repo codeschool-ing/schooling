@@ -1,0 +1,543 @@
+[
+  {
+    "id": "ex-basjr047",
+    "version": 1,
+    "section": "three-places",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each place a check can sit to what it can see.",
+    "hint": "Record, model, reader.",
+    "pairs": [
+      {
+        "left": "At the edge",
+        "right": "One record as it arrives"
+      },
+      {
+        "left": "In the middle",
+        "right": "Joins, totals and yesterday"
+      },
+      {
+        "left": "At the end",
+        "right": "The shape a reader was promised"
+      }
+    ],
+    "right_distractors": [
+      "The orchestrator's schedule"
+    ]
+  },
+  {
+    "id": "ex-3t7gww0q",
+    "version": 1,
+    "section": "three-places",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each kind of problem to an example from the lab.",
+    "hint": "Validity, completeness, volume.",
+    "pairs": [
+      {
+        "left": "Validity",
+        "right": "An ISBN that fails its check digit"
+      },
+      {
+        "left": "Completeness",
+        "right": "A price that is missing"
+      },
+      {
+        "left": "Volume",
+        "right": "A day with a fifth of its events"
+      }
+    ],
+    "right_distractors": [
+      "A task that retries"
+    ]
+  },
+  {
+    "id": "ex-4340s1dk",
+    "version": 1,
+    "section": "at-the-edge",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What was wrong with how lesson 6's staging cleaned the prices?",
+    "hint": "Did anybody learn what it fixed?",
+    "choices": [
+      {
+        "text": "It cleaned them wrongly",
+        "correct": false,
+        "why": "The fixes were right."
+      },
+      {
+        "text": "It was too slow for a thousand records",
+        "correct": false,
+        "why": "Speed was not the problem."
+      },
+      {
+        "text": "It did it silently, so nobody knew what it had fixed",
+        "correct": true,
+        "why": "Right. The validator counts every fix."
+      },
+      {
+        "text": "It could not read JSON",
+        "correct": false,
+        "why": "It read it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ag4yz4mf",
+    "version": 1,
+    "section": "at-the-edge",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the validator reject a missing price rather than fill it in?",
+    "hint": "What would the filled value be?",
+    "choices": [
+      {
+        "text": "The database forbids nulls in that column",
+        "correct": false,
+        "why": "The point is not the database."
+      },
+      {
+        "text": "Nothing says what it should be, and a guess would load as a fact",
+        "correct": true,
+        "why": "Right. Only certain fixes are made."
+      },
+      {
+        "text": "Missing prices are always errors at the publisher, and the publisher always resends them",
+        "correct": false,
+        "why": "Not always; the quarantine file is how Ana asks."
+      },
+      {
+        "text": "To keep the batch under 5%",
+        "correct": false,
+        "why": "The threshold is a separate rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-5xc63cb1",
+    "version": 1,
+    "section": "at-the-edge",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A record arrives in currency `USD`. What does the validator do?",
+    "hint": "Fix only what is certain.",
+    "choices": [
+      {
+        "text": "Converts it to reais at today's rate",
+        "correct": false,
+        "why": "That is a decision, not a certain fix."
+      },
+      {
+        "text": "Stops the whole batch",
+        "correct": false,
+        "why": "Only if more than 5% are rejected."
+      },
+      {
+        "text": "Changes the currency to BRL and keeps the number",
+        "correct": false,
+        "why": "That would keep a dollar price as reais."
+      },
+      {
+        "text": "Rejects it, with the reason",
+        "correct": true,
+        "why": "Right. currency 'USD'."
+      }
+    ]
+  },
+  {
+    "id": "ex-qdeg8e4m",
+    "version": 1,
+    "section": "at-the-edge",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many records did the validator reject from the real prices?",
+    "hint": "price missing",
+    "value": 4,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-8940kfja",
+    "version": 1,
+    "section": "at-the-edge",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a rejected record kept as it arrived, not as half-fixed?",
+    "hint": "What will be sent to the publisher?",
+    "choices": [
+      {
+        "text": "So what the source sent is not confused with what the pipeline did",
+        "correct": true,
+        "why": "Right. The quarantine shows the source's mistake."
+      },
+      {
+        "text": "Half-fixed records are larger",
+        "correct": false,
+        "why": "Size is not the point."
+      },
+      {
+        "text": "JSON cannot hold a record that was changed after it was parsed from a line",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "The loader reads the quarantine and needs the fields as they were sent",
+        "correct": false,
+        "why": "It reads only the valid file."
+      }
+    ]
+  },
+  {
+    "id": "ex-yrd7jj7f",
+    "version": 1,
+    "section": "a-bad-batch",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Half the records in a batch have no price. Why load none of them rather than the good half?",
+    "hint": "Is what is left a smaller truth?",
+    "choices": [
+      {
+        "text": "PostgreSQL cannot load half a file",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "The good half is a false picture of the night, not a smaller true one",
+        "correct": true,
+        "why": "Right. The batch is the problem."
+      },
+      {
+        "text": "The good half is probably wrong too",
+        "correct": false,
+        "why": "Each of its records passed."
+      },
+      {
+        "text": "To save time",
+        "correct": false,
+        "why": "Time is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-mcmrxaxx",
+    "version": 1,
+    "section": "a-bad-batch",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What percentage of the broken batch was rejected?",
+    "hint": "101 of 200.",
+    "value": 50,
+    "tolerance": 1,
+    "unit": "%"
+  },
+  {
+    "id": "ex-69zrjd5j",
+    "version": 1,
+    "section": "a-bad-batch",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the validator exit with status 1 when it stops?",
+    "hint": "Who runs it?",
+    "choices": [
+      {
+        "text": "To delete the quarantine file",
+        "correct": false,
+        "why": "The quarantine is kept."
+      },
+      {
+        "text": "To retry the fetch, which Airflow does automatically when a step exits non-zero",
+        "correct": false,
+        "why": "Retrying a broken export changes nothing."
+      },
+      {
+        "text": "Python requires it after printing",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "So the shell, make or Airflow stops the load after it",
+        "correct": true,
+        "why": "Right. A failure that nothing sees is not a stop."
+      }
+    ]
+  },
+  {
+    "id": "ex-xjdrx91s",
+    "version": 1,
+    "section": "contracts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When does dbt check a model's contract?",
+    "hint": "Before or after the table exists?",
+    "choices": [
+      {
+        "text": "Before building the table",
+        "correct": true,
+        "why": "Right. The report keeps yesterday's table."
+      },
+      {
+        "text": "After building, by reading the rows",
+        "correct": false,
+        "why": "It never builds a mismatched table."
+      },
+      {
+        "text": "Only in dbt test",
+        "correct": false,
+        "why": "It is checked in run and build."
+      },
+      {
+        "text": "When the report reads the table",
+        "correct": false,
+        "why": "dbt is not involved in reading."
+      }
+    ]
+  },
+  {
+    "id": "ex-nf5wrbab",
+    "version": 1,
+    "section": "contracts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a contract on `daily_sales` not protect against?",
+    "hint": "Types, or values?",
+    "choices": [
+      {
+        "text": "A column being renamed",
+        "correct": false,
+        "why": "Names are in the contract."
+      },
+      {
+        "text": "revenue_cents becoming a decimal number of reais",
+        "correct": false,
+        "why": "That is exactly what it caught."
+      },
+      {
+        "text": "Wrong numbers in a column of the right type",
+        "correct": true,
+        "why": "Right. That is what tests are for."
+      },
+      {
+        "text": "A column being dropped from the model's select",
+        "correct": false,
+        "why": "The number of columns is checked."
+      }
+    ]
+  },
+  {
+    "id": "ex-n8er2jy6",
+    "version": 1,
+    "section": "contracts",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To switch on a model's contract, its config says `contract: ___: true`.",
+    "hint": "A word for making a rule apply.",
+    "blanks": [
+      {
+        "accept": [
+          "enforced"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ptrmvy9z",
+    "version": 1,
+    "section": "contracts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the `not_null` constraint under `order_date` add, beyond a dbt test?",
+    "hint": "Who refuses the null?",
+    "choices": [
+      {
+        "text": "PostgreSQL refuses a null there from any writer",
+        "correct": true,
+        "why": "Right. A constraint on the table itself."
+      },
+      {
+        "text": "Nothing; it is another test",
+        "correct": false,
+        "why": "It is part of the table."
+      },
+      {
+        "text": "It fills any null with today's date before inserting the row",
+        "correct": false,
+        "why": "It refuses them."
+      },
+      {
+        "text": "It makes the build faster",
+        "correct": false,
+        "why": "Speed is unrelated."
+      }
+    ]
+  },
+  {
+    "id": "ex-37qvx7m9",
+    "version": 1,
+    "section": "expectations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes the event volume check an expectation rather than a rule?",
+    "hint": "Could a real day fall outside it?",
+    "choices": [
+      {
+        "text": "It is written in SQL",
+        "correct": false,
+        "why": "Rules are written in SQL too."
+      },
+      {
+        "text": "It never fails",
+        "correct": false,
+        "why": "It failed on the 20th."
+      },
+      {
+        "text": "Some real days fall outside it",
+        "correct": true,
+        "why": "Right. Sometimes the answer is a sale."
+      },
+      {
+        "text": "It runs only once a week, on Mondays, after the backfill",
+        "correct": false,
+        "why": "It runs in every build."
+      }
+    ]
+  },
+  {
+    "id": "ex-8s6mgrvd",
+    "version": 1,
+    "section": "expectations",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many events did the 20th have after the incident?",
+    "hint": "The compiled test says.",
+    "value": 399,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-shzz36rz",
+    "version": 1,
+    "section": "expectations",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did no other check catch the cut-off file?",
+    "hint": "What was wrong with each row?",
+    "choices": [
+      {
+        "text": "The other tests were switched off",
+        "correct": false,
+        "why": "They ran and passed."
+      },
+      {
+        "text": "load_raw.py skipped it",
+        "correct": false,
+        "why": "It loaded the 400 lines."
+      },
+      {
+        "text": "The file was not JSON",
+        "correct": false,
+        "why": "It was valid JSON."
+      },
+      {
+        "text": "Every row was valid; only the count was wrong",
+        "correct": true,
+        "why": "Right. Only a comparison with usual sees it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1c32vspy",
+    "version": 1,
+    "section": "expectations",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the range half to double, and not ten per cent either way?",
+    "hint": "Real days vary.",
+    "choices": [
+      {
+        "text": "SQL cannot compute ten per cent of a moving average",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "A tight range would fire on good news too",
+        "correct": true,
+        "why": "Right. Loose on purpose."
+      },
+      {
+        "text": "The lab has too little data for a narrower one",
+        "correct": false,
+        "why": "The reason is real variation."
+      },
+      {
+        "text": "dbt limits expectations to that range",
+        "correct": false,
+        "why": "dbt imposes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-p6qzecer",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana points `load_raw.py` at `landing/prices.valid.jsonl`. What happens on a night when the validator stops?",
+    "hint": "What did it not write?",
+    "choices": [
+      {
+        "text": "The loader loads the broken batch",
+        "correct": false,
+        "why": "It reads only the valid file."
+      },
+      {
+        "text": "The quarantine is loaded instead",
+        "correct": false,
+        "why": "Nothing loads the quarantine."
+      },
+      {
+        "text": "No new valid file is written, and the load does not run",
+        "correct": true,
+        "why": "Right. The non-zero exit stops it."
+      },
+      {
+        "text": "The validator retries the fetch until the batch comes back whole",
+        "correct": false,
+        "why": "It only checks."
+      }
+    ]
+  },
+  {
+    "id": "ex-dn0x6erg",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the three places a price passes a check, from the API to the report.",
+    "hint": "Edge, middle, end.",
+    "items": [
+      "The validator, as it arrives",
+      "dbt tests, as models are built",
+      "The contract on what the report reads"
+    ]
+  }
+]

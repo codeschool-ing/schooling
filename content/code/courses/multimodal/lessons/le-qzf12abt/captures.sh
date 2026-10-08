@@ -6,7 +6,7 @@
 # this lesson was copied from running it, so the next person can run it and see
 # what moved.
 #
-#   sudo bash ../../lab.sh up        # once: the machine, the models, labmm
+#   sudo bash ../../lab.sh up        # once: setup.sh from lesson 1, as ana
 #   sudo bash captures.sh
 #
 # A line that starts with ana@lab:~/mm$ is what ana typed and what it printed.
@@ -26,9 +26,16 @@ cd "$(dirname "$0")"
 LAB_SH=${LAB_SH:-../../lab.sh}
 lab() { bash "$LAB_SH" "$@"; }
 # on 'command': what ana typed in ~/mm, and what it printed.
-on() { printf 'ana@lab:~/mm$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
-# put PATH: a file ana wrote in ~/mm, from stdin. Its content is shown in the lesson.
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
+on() { printf 'ana@lab:~/mm$ %s\n' "$*"; lab exec "$*" </dev/null 2>&1 || true; }
+# put PATH: a file ana wrote in ~/mm, from stdin, which a fence in this lesson
+# (or in $SHOWN, another lesson's .md) must show byte for byte.
+put() {
+  local tmp; tmp=$(mktemp)
+  cat >"$tmp"
+  python3 ../../lab/shown.py check ./*.md ${SHOWN:-} <"$tmp" || { echo "put $1: not shown" >&2; exit 1; }
+  lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'" <"$tmp"
+  rm -f "$tmp"
+}
 block() { printf '##### %s\n' "$1"; }
 # One capture at a time: every run rebuilds ~/mm from nothing.
 exec 9>/var/tmp/multimodal-capture.lock; flock 9
@@ -189,14 +196,26 @@ for path in sys.argv[1:]:
 PY
 
 put formats.py <<'PY'
-"""One sentence from labmm's speech route in every format it offers, and what each one weighs."""
-from openai import OpenAI
+"""One sentence from a Piper voice, in the five formats speech APIs offer, and what each one weighs."""
+import subprocess
 
-client = OpenAI()
-TEXT = "Your order has shipped. It should arrive on Thursday."
-for fmt in ("wav", "flac", "mp3", "aac", "opus"):
-    audio = client.audio.speech.create(model="lab-tts-1", voice="lessac", input=TEXT, response_format=fmt)
-    print(f"{fmt:5} {len(audio.content):7,} bytes")
+import numpy as np
+
+import mmlab
+
+FORMATS = {"wav": ("wav", ["-c:a", "pcm_s16le"]),
+           "flac": ("flac", ["-c:a", "flac"]),
+           "mp3": ("mp3", ["-c:a", "libmp3lame", "-b:a", "64k"]),
+           "aac": ("adts", ["-c:a", "aac", "-b:a", "64k"]),
+           "opus": ("ogg", ["-c:a", "libopus", "-b:a", "32k"])}
+
+audio = mmlab.piper("en_US-lessac-medium").generate("Your order has shipped. It should arrive on Thursday.", sid=0, speed=1.0)
+pcm = (np.clip(np.asarray(audio.samples), -1, 1) * 32767).astype("<i2").tobytes()   # 16-bit samples, as a file holds them
+for name, (container, codec) in FORMATS.items():
+    out = subprocess.run(["ffmpeg", "-nostdin", "-loglevel", "error", "-f", "s16le", "-ar", str(audio.sample_rate),
+                          "-ac", "1", "-i", "-", *codec, "-map_metadata", "-1", "-fflags", "+bitexact",
+                          "-f", container, "-"], input=pcm, capture_output=True, check=True).stdout
+    print(f"{name:5} {len(out):7,} bytes")
 PY
 
 put said.txt <<'TXT'

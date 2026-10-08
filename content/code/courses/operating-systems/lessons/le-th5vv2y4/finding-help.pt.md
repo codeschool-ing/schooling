@@ -1,6 +1,6 @@
 ---
 title: Achando ajuda para um comando
-version: 1
+version: 2
 ---
 
 Ninguém lembra de toda opção. A habilidade é saber onde está a resposta, e todo shell a carrega.
@@ -46,12 +46,14 @@ você saber o nome de qualquer um.
 
 Numa instalação Linux normal, o **`man ls`** abre a página de manual completa, com toda opção e
 exemplos. No PowerShell, o **`Get-Help Set-Location -Examples`** faz o mesmo, depois que o
-`Update-Help` baixou os arquivos de ajuda uma vez. O servidor da aula 3 é uma instalação mínima e deixa
-os manuais de fora, então aqui o primeiro deles nem existe:
+`Update-Help` baixou os arquivos de ajuda uma vez. O servidor em que estas transcrições foram gravadas é
+menor do que o que você montou na aula 1 e deixa os manuais de fora, então lá o primeiro deles nem
+existe:
 
 ```
 ana@server:~$ man ls
 bash: man: command not found
 ```
 
-O `sudo apt install man-db` o traz de volta, que é o assunto da aula 11.
+No seu servidor o `man ls` abre o manual, e o `q` fecha. Onde o `man` faltar, o
+`sudo apt install man-db` o traz de volta, que é o assunto da aula 11.

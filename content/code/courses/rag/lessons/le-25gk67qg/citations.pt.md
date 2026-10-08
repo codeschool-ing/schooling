@@ -1,6 +1,6 @@
 ---
 title: Citações
-version: 1
+version: 2
 ---
 
 Uma resposta com `[1]` e `[3]` é meia citação. A outra metade é o que o leitor vê: um link ou uma nota
@@ -13,7 +13,7 @@ porque o modelo só conhece os números que recebeu.
   "file": "answer.py",
   "parts": [
     {
-      "code": "def ask(question, sources):\n    reply = client.chat.completions.create(model=\"extract-1\", messages=[\n        {\"role\": \"system\", \"content\": SYSTEM},\n        {\"role\": \"user\", \"content\": prompt(question, sources)}])\n    return reply.choices[0].message.content",
+      "code": "def ask(question, sources):\n    reply = client.chat.completions.create(model=\"llama3.2:3b\", temperature=0, messages=[\n        {\"role\": \"system\", \"content\": SYSTEM},\n        {\"role\": \"user\", \"content\": prompt(question, sources)}])\n    return reply.choices[0].message.content",
       "note": "Uma chamada, a mensagem de sistema e as fontes numeradas. Qualquer modelo compatível com a OpenAI pode entrar no lugar, pelo nome."
     },
     {
@@ -32,20 +32,30 @@ porque o modelo só conhece os números que recebeu.
 }
 ```
 
-## Duas respostas, com suas fontes
+## Uma resposta, com suas fontes
 
 ```
-ana@lab:~/rag$ python answer.py "How long after my return arrives will I get the refund?"
-We refund within three working days of the return reaching our warehouse. [1] Every seller must accept returns for at least 14 days from delivery, and many accept them for longer. [3] If a seller does not answer a return request within two working days, open a claim from the order and we decide it. [3]
+ana@vm:~/rag$ python answer.py "How long after my return arrives will I get the refund?"
+According to [1], the money goes back to the card or account you paid with, and your bank may take another five to ten days to show it. This means that the refund processing time is at least 5-10 days after the return reaches the warehouse.
+
+However, [2] states that the return window starts on the day the carrier records the parcel as delivered, not on the day you placed the order. This implies that the refund processing time may be shorter than 5-10 days, as it depends on when the carrier records the parcel as delivered.
+
+To clarify, I would recommend checking the seller's policy, as mentioned in [3], as they may have a different return window and refund processing time.
   [1] Returns and refunds policy > Refunds, updated 2026-02-02
+  [2] Returns and refunds policy > The return window, updated 2026-02-02
   [3] Returns and refunds policy > Items sold by marketplace sellers, updated 2026-02-02
 ```
 
-**A resposta é a primeira frase, de `[1]`, a seção de reembolsos.** As duas frases seguintes são sobre
-vendedores do marketplace, de `[3]`: verdadeiras, citadas, e sem nada a ver com a pergunta. O extract-1
-as escolheu porque falam de devoluções e prazos, e um modelo real com as mesmas três fontes teria mais
-chance de deixá-las de fora. As citações tornam o problema visível: quem lê vê que dois terços da
-resposta vieram de uma seção sobre vendedores do marketplace e pode julgar.
+**A resposta cita as três fontes, e a resposta à pergunta não está em nenhuma das frases dela.** A
+seção de reembolsos, `[1]`, diz duas coisas: a Marginalia reembolsa em até três dias úteis depois que a
+devolução chega ao armazém, e o banco pode levar mais cinco a dez dias. O modelo citou a segunda e
+deixou de fora a primeira, que é a que o cliente perguntou. Depois tirou uma conclusão própria, *at
+least 5-10 days after the return reaches the warehouse*, que nenhuma fonte diz e que está errada.
+Depois trouxe o prazo de devolução de `[2]` e os vendedores do marketplace de `[3]`, verdadeiros e sem
+nada a ver com um reembolso.
+
+As citações são o que torna isso visível. Quem lê vê de onde veio cada frase, e as frases que não
+citam nada são as primeiras de que duvidar. A próxima seção transforma essa leitura num programa.
 
 As notas impressas são o que um assistente de atendimento mostraria como links. Elas levam o caminho e a
 data, então um cliente que lê *updated 2026-02-02* sabe que a regra é deste ano, e um líder de

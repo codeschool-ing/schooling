@@ -70,16 +70,16 @@
     ]
   },
   "ex-9dzwk0g3": {
-    "prompt": "A Ana roda o Checkov offline com `--skip-download`. O que ela perde em relação a uma execução conectada?",
+    "prompt": "A Ana roda o Checkov com `--skip-download`. Em relação a uma execução que alcança a API da Prisma Cloud sem chave de conta, o que ela perde?",
     "hint": "Para que servia o download?",
     "choices": [
       {
         "text": "Todos os checks escritos para a AWS",
-        "why": "Os checks estão no pacote; 35 rodaram offline."
+        "why": "Os checks estão no pacote; 35 rodaram com `--skip-download`."
       },
       {
-        "text": "Severidades e links de guia",
-        "why": "Certo. Os dois vêm das guidelines da Prisma Cloud, e os checks não trazem severidade própria."
+        "text": "O link `Guide:` impresso embaixo de cada achado",
+        "why": "Certo. O download público liga cada check à sua página de documentação; severidades precisariam também da chave de API de uma conta."
       },
       {
         "text": "A capacidade de varrer qualquer coisa que não sejam arquivos Terraform",
@@ -87,7 +87,7 @@
       },
       {
         "text": "Nomes de arquivo e números de linha nos achados",
-        "why": "Todo achado offline ainda imprimiu `File: /ssh.tf:1-8` e afins."
+        "why": "Todo achado com `--skip-download` ainda imprimiu `File: /ssh.tf:1-8` e afins."
       }
     ]
   },
@@ -164,7 +164,7 @@
       },
       {
         "text": "Severidades precisam da rede",
-        "why": "Isso é o Checkov. As severidades do Trivy vêm com cada check."
+        "why": "Não no Trivy: as severidades dele vêm com cada check."
       }
     ]
   },
@@ -191,7 +191,7 @@
     ]
   },
   "ex-krxv8fg4": {
-    "prompt": "Por que o Trivy imprime o link `See https://avd.aquasec.com/...` mesmo no laboratório sem rede, enquanto o link `Guide:` do Checkov some?",
+    "prompt": "Por que o Trivy imprime o link `See https://avd.aquasec.com/...` mesmo com `--skip-check-update`, enquanto o link `Guide:` do Checkov some com `--skip-download`?",
     "hint": "De onde vem cada link?",
     "choices": [
       {
@@ -403,12 +403,12 @@
       },
       {
         "text": "Liga as severidades offline",
-        "why": "Severidades ainda precisam do download."
+        "why": "As severidades do Checkov precisam de uma conta da Prisma Cloud."
       }
     ]
   },
   "ex-598jpfsm": {
-    "prompt": "O portão do Checkov offline da Ana é `--hard-fail-on HIGH`. A varredura tem nove checks reprovados. Que código de saída ele dá, e por quê?",
+    "prompt": "O Checkov da Ana roda sem conta da Prisma Cloud, e o portão dele é `--hard-fail-on HIGH`. A varredura tem nove checks reprovados. Que código de saída ele dá, e por quê?",
     "hint": "De onde vêm as severidades do Checkov?",
     "choices": [
       {
@@ -416,7 +416,7 @@
         "why": "Com `--hard-fail-on` só achados que casam reprovam a execução, e nenhum casou."
       },
       {
-        "text": "0, já que offline nenhum achado tem severidade",
+        "text": "0, já que sem conta nenhum achado tem severidade",
         "why": "Isso. O portão aprova tudo, em silêncio; use ids de check no lugar."
       },
       {
@@ -425,7 +425,7 @@
       },
       {
         "text": "1, porque o `CKV_AWS_24` é HIGH",
-        "why": "Offline nada é HIGH, e o `CKV_AWS_24` estava aprovado naquele momento."
+        "why": "Sem conta nada é HIGH, e o `CKV_AWS_24` estava aprovado naquele momento."
       }
     ]
   },
@@ -570,11 +570,11 @@
     "hint": "Quatro comportamentos, um para cada.",
     "pairs": [
       {
-        "left": "O Checkov imprime um traceback de Python e depois varre",
+        "left": "Na máquina de gravação, o Checkov imprimiu um traceback de Python e depois varreu",
         "right": "não alcançou a Prisma Cloud"
       },
       {
-        "left": "O Trivy registra `Falling back to embedded checks`",
+        "left": "Na máquina de gravação, o Trivy registrou `Falling back to embedded checks`",
         "right": "não havia checks bundle mais novo disponível"
       },
       {

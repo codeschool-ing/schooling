@@ -1,9 +1,9 @@
 ---
 title: Two systems, not one
-version: 1
+version: 2
 ---
 
-With vm1 running, there are two operating systems on the computer, and they are more separate than
+vm1 is a fresh guest, made with `bash newvm.sh vm1` from lesson 1. With vm1 running, there are two operating systems on the computer, and they are more separate than
 they look:
 
 ```

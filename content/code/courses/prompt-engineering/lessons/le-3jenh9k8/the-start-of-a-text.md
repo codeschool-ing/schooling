@@ -1,6 +1,6 @@
 ---
 title: The start of a text the model continues
-version: 1
+version: 2
 ---
 
 The everyday picture of a prompt is an order: you say what you want, and a program that understood
@@ -53,9 +53,9 @@ part of the text is an instruction, including the parts you did not mean as one.
 ## A chat is a document with turns
 
 A chat window seems to be a different thing from continuing a text. Lesson 1 showed that it is the
-same thing with the turns marked. At the time of writing (2026), the APIs behind chat assistants
-take a conversation as a list of messages, each with a role and its text. The field names differ
-between providers; the shape is this one (an illustration, not a request that was sent):
+same thing with the turns marked. The APIs behind chat assistants take a conversation as a list of
+messages, each with a role and its text. Given a system message, `ask` sends this list, and the
+field names are the ones most providers use:
 
 ```json
 [
@@ -64,7 +64,18 @@ between providers; the shape is this one (an illustration, not a request that wa
 ]
 ```
 
-Before the model sees it, the list is laid out as one text, with markers that say where each turn
+```
+ana@lab:~/pe$ ask "When do you open on Sunday?" --temperature 0 --system "You answer questions from Café Aurora's customers. Keep replies to two sentences."
+We're open from 8am to 10pm on Sundays, offering a special brunch menu from 11am to 3pm. Please note that our hours may be subject to change, especially during holidays or special events.
+-- llama3.2:3b, finish: stop, prompt 47 tokens, output 47 tokens
+```
+
+Two sentences, as the system message asked, and **every fact in them made up**. Nothing in the
+conversation says when the café opens, so the model wrote what an opening-hours reply usually
+looks like. The café's real Sunday hours, which lesson 4 gives you in its handbook, are 08:00 to
+12:00, and there is no brunch. Lesson 5 is about why a model does this and what stops it.
+
+Before the model sees the list, it is laid out as one text, with markers that say where each turn
 starts and who is speaking, and it ends with an assistant turn that has been opened and not
 written. **The model's reply is its continuation of that one open turn.**
 

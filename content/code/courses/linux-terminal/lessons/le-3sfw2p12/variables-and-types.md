@@ -1,6 +1,6 @@
 ---
 title: Variables have types, and the left operand decides
-version: 1
+version: 2
 ---
 
 ```
@@ -68,10 +68,11 @@ containing a `$`.
 a property into a message:
 
 ```
+PS /home/ana/work/ps> $f = Get-Item sales.csv
 PS /home/ana/work/ps> "$f.Name"
 /home/ana/work/ps/sales.csv.Name
 PS /home/ana/work/ps> "$($f.Name) is $($f.Length) bytes"
-sales.csv is 788 bytes
+sales.csv is 807 bytes
 ```
 
 Without the `$( )`, the variable expanded on its own and `.Name` was four
@@ -109,7 +110,7 @@ does not expand anything
 ```
 PS /home/ana/work/ps> $d = Get-Date; $d.GetType().FullName; $d.AddDays(7).DayOfWeek
 System.DateTime
-Tuesday
+Wednesday
 ```
 
 `Get-Date` does not return text. It returns a `DateTime`, which knows what a week
@@ -143,6 +144,7 @@ OverloadDefinitions
 string Trim()
 string Trim(char trimChar)
 string Trim(Params char[] trimChars)
+string Trim(System.ReadOnlySpan[char] trimChars)
 ```
 
 A method without its parentheses prints **the method's signatures**, which is

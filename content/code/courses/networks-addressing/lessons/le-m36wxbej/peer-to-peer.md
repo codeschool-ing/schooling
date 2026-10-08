@@ -1,6 +1,6 @@
 ---
 title: Both at once
-version: 1
+version: 2
 ---
 
 In client-server the roles are fixed for the whole service: browsers are clients, the web server is a
@@ -8,8 +8,9 @@ server. **In peer to peer, every machine runs both roles**: it listens for other
 others, and no single machine holds the service. A file shared over BitTorrent is the instance most
 people have met: each computer downloading it also serves the pieces it already has to the others.
 
-The lab shows the shape with two PCs. Each one starts a listener on port 8000, and then each one
-connects to the other's listener. Both list their TCP connections with `ss -tn`:
+The lab shows the shape with two PCs. Each one starts a listener on port 8000,
+`timeout 8 nc -l 8000`, and then each one connects to the other's, `sleep 5 | timeout 6 nc pc2 8000`
+on pc1 and the same towards pc1 on pc2. Both list their TCP connections with `ss -tn`:
 
 ```
 ana@pc1:~$ ss -tn

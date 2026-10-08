@@ -1,0 +1,604 @@
+[
+  {
+    "id": "ex-rqhf12fj",
+    "version": 1,
+    "section": "tests-are-queries",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each generic test to the belief it checks.",
+    "hint": "Four tests, four beliefs.",
+    "pairs": [
+      {
+        "left": "unique",
+        "right": "No value appears twice"
+      },
+      {
+        "left": "not_null",
+        "right": "Every row has a value"
+      },
+      {
+        "left": "accepted_values",
+        "right": "The value is one of a list"
+      },
+      {
+        "left": "relationships",
+        "right": "The value exists in another model"
+      }
+    ]
+  },
+  {
+    "id": "ex-enzngvfz",
+    "version": 1,
+    "section": "tests-are-queries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a dbt test's compiled SQL return when the test passes?",
+    "hint": "It selects the rows that break the rule.",
+    "choices": [
+      {
+        "text": "One row saying true",
+        "correct": false,
+        "why": "It returns the failing rows, so none."
+      },
+      {
+        "text": "The model's rows",
+        "correct": false,
+        "why": "Only the ones that break the rule."
+      },
+      {
+        "text": "No rows",
+        "correct": true,
+        "why": "Right. Zero rows is a pass."
+      },
+      {
+        "text": "A count of the rows checked",
+        "correct": false,
+        "why": "dbt counts the failing rows itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-7yemcrcd",
+    "version": 1,
+    "section": "tests-are-queries",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many orders had no customer in the first `dbt test`?",
+    "hint": "FAIL followed by a number.",
+    "value": 5809,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-t2z5ktbw",
+    "version": 1,
+    "section": "a-failure-is-a-question",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `not_null` on `customer_id` fail for thousands of orders?",
+    "hint": "Look at which shops they came from.",
+    "choices": [
+      {
+        "text": "The bookshops' tills sell to people who give no name",
+        "correct": true,
+        "why": "Right. The rule was wrong, not the data."
+      },
+      {
+        "text": "The loader lost the customers on the way from the shop to raw",
+        "correct": false,
+        "why": "raw has what the shop has."
+      },
+      {
+        "text": "The website's customers were deleted by a bug in the shop",
+        "correct": false,
+        "why": "The website had seven, and those were erasures."
+      },
+      {
+        "text": "dbt's view drops nulls",
+        "correct": false,
+        "why": "Views return what the table has."
+      }
+    ]
+  },
+  {
+    "id": "ex-bqyfcryd",
+    "version": 1,
+    "section": "a-failure-is-a-question",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`unique` on `stg_order_lines.order_id` failed. What was wrong?",
+    "hint": "What is the grain of the model?",
+    "choices": [
+      {
+        "text": "There are duplicate lines in the shop",
+        "correct": false,
+        "why": "The pair order and line passed."
+      },
+      {
+        "text": "The relationships test interfered with it",
+        "correct": false,
+        "why": "Tests are independent queries."
+      },
+      {
+        "text": "The view was out of date",
+        "correct": false,
+        "why": "Views are read live."
+      },
+      {
+        "text": "The test checked the wrong key",
+        "correct": true,
+        "why": "Right. One row per order line: the key is the order and the line."
+      }
+    ]
+  },
+  {
+    "id": "ex-mvf740fk",
+    "version": 1,
+    "section": "a-failure-is-a-question",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A test is right and the data breaks it. What should happen to the test?",
+    "hint": "Where do the bad rows come from?",
+    "choices": [
+      {
+        "text": "Narrow it until it passes",
+        "correct": false,
+        "why": "That hides a true failure."
+      },
+      {
+        "text": "It stays as it is; the fix goes upstream",
+        "correct": true,
+        "why": "Right. Silencing a true test is never right."
+      },
+      {
+        "text": "Delete it until the data is fixed, then write it again from scratch",
+        "correct": false,
+        "why": "Then nothing would say when they are."
+      },
+      {
+        "text": "Make it a warning permanently",
+        "correct": false,
+        "why": "A warning is for known, explained exceptions."
+      }
+    ]
+  },
+  {
+    "id": "ex-7zgnrjj7",
+    "version": 1,
+    "section": "narrowing-a-test",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `where: \"shop_id = 7\"` do to a `not_null` test?",
+    "hint": "dbt wraps the model first.",
+    "choices": [
+      {
+        "text": "Deletes the other shops' orders",
+        "correct": false,
+        "why": "Tests never change data."
+      },
+      {
+        "text": "Checks only the website's orders",
+        "correct": true,
+        "why": "Right. The model is filtered before the check."
+      },
+      {
+        "text": "Makes the test a warning",
+        "correct": false,
+        "why": "That is severity."
+      },
+      {
+        "text": "Runs the test only on Sundays, when the website alone is open for business",
+        "correct": false,
+        "why": "It filters rows, not days."
+      }
+    ]
+  },
+  {
+    "id": "ex-f6h3p4rm",
+    "version": 1,
+    "section": "narrowing-a-test",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many web orders without a customer did the narrowed test find?",
+    "hint": "Erased customers.",
+    "value": 7,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-azj8fw1b",
+    "version": 1,
+    "section": "narrowing-a-test",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why not add the seven erased orders to the test's `where`, so that it passes?",
+    "hint": "What would the next one look like?",
+    "choices": [
+      {
+        "text": "The where clause cannot list ids",
+        "correct": false,
+        "why": "It can; the problem is what it hides."
+      },
+      {
+        "text": "dbt forbids where on not_null",
+        "correct": false,
+        "why": "Ana used one."
+      },
+      {
+        "text": "Erased customers must make every build fail",
+        "correct": false,
+        "why": "They are lawful; a warning is enough."
+      },
+      {
+        "text": "It would hide the next order that loses its customer for a reason nobody intended",
+        "correct": true,
+        "why": "Right. Known exceptions belong in a warning, still counted."
+      }
+    ]
+  },
+  {
+    "id": "ex-pp864ef6",
+    "version": 1,
+    "section": "build-and-severity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A test on `stg_orders` fails with severity error during `dbt build`. What happens to `daily_sales`?",
+    "hint": "It reads stg_orders through int_sales.",
+    "choices": [
+      {
+        "text": "It is skipped and keeps its old rows",
+        "correct": true,
+        "why": "Right. Nothing downstream of a failed test is built."
+      },
+      {
+        "text": "It is built anyway, from the views as they stand at that moment",
+        "correct": false,
+        "why": "Its upstream failed a test, so it is skipped."
+      },
+      {
+        "text": "It is emptied",
+        "correct": false,
+        "why": "Skipping touches nothing."
+      },
+      {
+        "text": "It is dropped, and rebuilt by the next successful run of dbt",
+        "correct": false,
+        "why": "A skipped model is left as it was."
+      }
+    ]
+  },
+  {
+    "id": "ex-2n5yb3z8",
+    "version": 1,
+    "section": "build-and-severity",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each command to what it does.",
+    "hint": "Build, test, or both.",
+    "pairs": [
+      {
+        "left": "dbt run",
+        "right": "Builds models"
+      },
+      {
+        "left": "dbt test",
+        "right": "Runs tests"
+      },
+      {
+        "left": "dbt build",
+        "right": "Builds and tests, in the graph's order"
+      }
+    ],
+    "right_distractors": [
+      "Generates the documentation"
+    ]
+  },
+  {
+    "id": "ex-sgh295df",
+    "version": 1,
+    "section": "build-and-severity",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `severity: warn` change?",
+    "hint": "Report, or stop?",
+    "choices": [
+      {
+        "text": "The test is no longer run",
+        "correct": false,
+        "why": "It runs and reports every time."
+      },
+      {
+        "text": "The failing rows are deleted",
+        "correct": false,
+        "why": "Tests never change data."
+      },
+      {
+        "text": "A failure is reported and nothing is skipped",
+        "correct": true,
+        "why": "Right. The count still shows in every build."
+      },
+      {
+        "text": "It fails only on the first build of the day",
+        "correct": false,
+        "why": "Severity has no clock."
+      }
+    ]
+  },
+  {
+    "id": "ex-5mv1abp5",
+    "version": 1,
+    "section": "singular-tests",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is a singular test?",
+    "hint": "A file in tests/.",
+    "choices": [
+      {
+        "text": "A generic test used once",
+        "correct": false,
+        "why": "It is written as its own query."
+      },
+      {
+        "text": "A Python function",
+        "correct": false,
+        "why": "It is SQL."
+      },
+      {
+        "text": "A test that runs on its own, outside dbt build, whenever its file is changed",
+        "correct": false,
+        "why": "dbt build runs it after the models it refers to."
+      },
+      {
+        "text": "A select returning the wrong rows, with any joins it needs",
+        "correct": true,
+        "why": "Right. Like drift.sql, with refs."
+      }
+    ]
+  },
+  {
+    "id": "ex-zj4ef9fg",
+    "version": 1,
+    "section": "singular-tests",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After four more days of trade, how many days did the drift test find wrong?",
+    "hint": "FAIL followed by a number.",
+    "value": 11,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-x2421dak",
+    "version": 1,
+    "section": "singular-tests",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the drift test name `fact_sales` through `ref` rather than as `dbt_marts.fact_sales`?",
+    "hint": "When must it run?",
+    "choices": [
+      {
+        "text": "A test cannot read a schema directly",
+        "correct": false,
+        "why": "It could; it would just not be ordered."
+      },
+      {
+        "text": "So dbt runs it after fact_sales is built",
+        "correct": true,
+        "why": "Right. The ref puts it in the graph after the model."
+      },
+      {
+        "text": "It makes the test a warning",
+        "correct": false,
+        "why": "Severity is separate."
+      },
+      {
+        "text": "ref is faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-05xe6n4b",
+    "version": 1,
+    "section": "singular-tests",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order what happened when the drift test first failed.",
+    "hint": "Days, load, build, refresh.",
+    "items": [
+      "Four days of trade were played",
+      "raw was loaded again",
+      "dbt build added the new days and the drift test failed",
+      "A full refresh of fact_sales+ made it pass"
+    ]
+  },
+  {
+    "id": "ex-c9wzdby4",
+    "version": 1,
+    "section": "documentation",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each file `dbt docs generate` leaves in target/ to what it holds.",
+    "hint": "The project, the database, and the site.",
+    "pairs": [
+      {
+        "left": "manifest.json",
+        "right": "Every node, its description and the graph"
+      },
+      {
+        "left": "catalog.json",
+        "right": "Every column's type, from the database"
+      },
+      {
+        "left": "index.html",
+        "right": "The site that reads the two"
+      }
+    ]
+  },
+  {
+    "id": "ex-6qgr3he9",
+    "version": 1,
+    "section": "documentation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where did the column types printed by `docs.py` come from?",
+    "hint": "Nobody wrote them in YAML.",
+    "choices": [
+      {
+        "text": "From Ana's schema.yml",
+        "correct": false,
+        "why": "She wrote descriptions, not types."
+      },
+      {
+        "text": "From the compiled SQL",
+        "correct": false,
+        "why": "The SQL has no types written in it."
+      },
+      {
+        "text": "From PostgreSQL, through catalog.json",
+        "correct": true,
+        "why": "Right. dbt asks the database."
+      },
+      {
+        "text": "dbt guesses them from the column names and the values it has seen",
+        "correct": false,
+        "why": "It asks the database."
+      }
+    ]
+  },
+  {
+    "id": "ex-t17swp6h",
+    "version": 1,
+    "section": "documentation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which columns are most worth a description?",
+    "hint": "Where would a reasonable person guess wrong?",
+    "choices": [
+      {
+        "text": "The ones a reader would likely misread",
+        "correct": true,
+        "why": "Right. A local date, money in cents, a null that means something."
+      },
+      {
+        "text": "Every column, equally",
+        "correct": false,
+        "why": "Some are obvious from the name."
+      },
+      {
+        "text": "Only the keys",
+        "correct": false,
+        "why": "Keys are often the most obvious."
+      },
+      {
+        "text": "None: the types are enough",
+        "correct": false,
+        "why": "A date type does not say which time zone."
+      }
+    ]
+  },
+  {
+    "id": "ex-bpkdj1ws",
+    "version": 1,
+    "section": "lineage",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does an exposure add to the project?",
+    "hint": "It builds nothing.",
+    "choices": [
+      {
+        "text": "A table for the report",
+        "correct": false,
+        "why": "It builds nothing."
+      },
+      {
+        "text": "A test that checks the report's numbers against the warehouse each night",
+        "correct": false,
+        "why": "It runs nothing."
+      },
+      {
+        "text": "A node for something that reads the models, with an owner",
+        "correct": true,
+        "why": "Right. The graph reaches the people who use it."
+      },
+      {
+        "text": "A schedule telling dbt when the report's models must be rebuilt",
+        "correct": false,
+        "why": "dbt has no schedule."
+      }
+    ]
+  },
+  {
+    "id": "ex-5ntd06j4",
+    "version": 1,
+    "section": "lineage",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to the selector that answers it.",
+    "hint": "Upstream, or downstream.",
+    "pairs": [
+      {
+        "left": "Where does the morning report's data come from?",
+        "right": "+exposure:morning_report"
+      },
+      {
+        "left": "What will a change to how orders are loaded reach?",
+        "right": "source:raw.orders+"
+      }
+    ],
+    "right_distractors": [
+      "stg_books+"
+    ]
+  },
+  {
+    "id": "ex-v1gz775j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new test, `accepted_values` on `status`, starts failing with one row: a status `on_hold` nobody has seen before. What should Ana do first?",
+    "hint": "A failure is a question.",
+    "choices": [
+      {
+        "text": "Find out what on_hold means in the shop",
+        "correct": true,
+        "why": "Right. Then decide whether the rule or the data is wrong."
+      },
+      {
+        "text": "Add on_hold to the list so the build is green",
+        "correct": false,
+        "why": "Not before knowing whether on_hold is a sale."
+      },
+      {
+        "text": "Delete the test",
+        "correct": false,
+        "why": "Never the right move."
+      },
+      {
+        "text": "Make it a warning permanently",
+        "correct": false,
+        "why": "Only for an exception that is known and explained."
+      }
+    ]
+  }
+]

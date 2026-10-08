@@ -1,15 +1,22 @@
 ---
 title: Quanto custa uma imagem
-version: 1
+version: 2
 ---
 
-A aula 8 mediu a regra de blocos do GPT-4o numa capa. Este programa aplica essa regra, e a do Google para o Gemini, a três imagens de tamanhos muito diferentes. A terceira é o `cat_and_dog.jpg` do laboratório ampliado para 4032 por 3024 pixels, o tamanho que uma câmera de celular de 12 megapixels salva; ela foi preparada, para uma foto de celular ter um substituto.
+A aula 8 mediu a regra de blocos do GPT-4o numa capa. Este programa aplica essa regra, e a do Google para o Gemini, a três imagens de tamanhos muito diferentes. A terceira é o `cat_and_dog.jpg` ampliado para 4032 por 3024 pixels, o tamanho que uma câmera de celular de 12 megapixels salva, para uma foto de celular ter um substituto. Uma linha a faz:
+
+```
+ana@lab:~/mm$ python -c "from PIL import Image; Image.open(\"media/cat_and_dog.jpg\").resize((4032, 3024)).save(\"media/phone.jpg\", quality=90)"; stat -c "%s %n" media/phone.jpg
+883497 media/phone.jpg
+```
+
+O programa lê as regras de tokens do `tokens.py` da aula 4:
 
 ```python
 """What one picture costs to send, by the token rules of lesson 8 and the sheet's input prices."""
 import sys
 
-from labmm import gemini_tokens, gpt4o_tokens
+from tokens import gemini_tokens, gpt4o_tokens
 from PIL import Image
 
 GPT4O = 2.5e-06          # sheet: gpt-4o input_cost_per_token
@@ -43,4 +50,4 @@ Leia primeiro a coluna `tokens`.
 - **`high` não é proporcional aos pixels.** A foto de celular tem mais de 22 vezes os pixels da capa e os mesmos 765 tokens, porque a OpenAI primeiro a encaixa em 2048 e depois reduz o lado menor para 768, o que deixa 1024 por 768 e quatro blocos. A nota é alta, então os mesmos passos deixam seis blocos e 1.105 tokens.
 - **A regra do Gemini não encolhe antes.** Ela conta 258 tokens por bloco de 768 pixels da imagem como foi enviada, então a foto de celular dá 24 blocos e 6.192 tokens. O preço por token é bem menor, e mesmo assim a foto de celular é de longe a imagem mais cara dele.
 
-**A mesma imagem pode ser barata num provedor e cara em outro**, e a ordem pode se inverter. A capa custa US$ 0,15 por mil no Gemini e US$ 1,91 em alto detalhe no GPT-4o; a foto de celular custa mais ou menos o mesmo nos dois. Uma estimativa feita com a regra de um provedor não diz nada sobre a do outro. Estas são as regras que o labmm aplica, tiradas dos documentos dos provedores; uma conta real é a contagem do próprio provedor, no `usage` de cada resposta.
+**A mesma imagem pode ser barata num provedor e cara em outro**, e a ordem pode se inverter. A capa custa US$ 0,15 por mil no Gemini e US$ 1,91 em alto detalhe no GPT-4o; a foto de celular custa mais ou menos o mesmo nos dois. Uma estimativa feita com a regra de um provedor não diz nada sobre a do outro. Estas são as regras que o `tokens.py` escreve, tiradas dos documentos dos provedores; uma conta real é a contagem do próprio provedor, no `usage` de cada resposta.

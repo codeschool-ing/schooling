@@ -1,6 +1,6 @@
 ---
 title: Inside a container, every tool in this lesson reads the wrong number
-version: 1
+version: 2
 ---
 
 This machine is a container. So is almost every machine you will be asked about
@@ -8,9 +8,9 @@ now, and it changes the answer to every question in this lesson.
 
 ```
 ana@vm:~$ head -1 /proc/meminfo
-MemTotal:       16482220 kB
+MemTotal:       16480968 kB
 ana@vm:~$ cg=$(awk -F: '/:memory:/{print $3}' /proc/self/cgroup); echo "$cg"
-/process_api/01a0a3d8-ffc7-75b6-823b-37ba3b6b8c0e/claude-code-bash
+/process_api/01a115ea-1e96-7537-8c10-99a9bebe11ff/claude-code-bash
 ana@vm:~$ numfmt --to=iec $(cat /sys/fs/cgroup/memory/$cg/memory.limit_in_bytes)
 14G
 ana@vm:~$ numfmt --to=iec $(( $(awk '/MemTotal/{print $2}' /proc/meminfo) * 1024 ))
@@ -47,6 +47,49 @@ The limits are somewhere else entirely, in the control group:
 
 `/proc/self/cgroup` is how you find `<path>`, which is what the `awk` above is
 doing.
+
+## The same lie on your own machine
+
+The virtual machine from lesson 1 is not a container, but the half of a
+container that matters here is only a control group with limits on it, and
+`systemd-run` makes one for a single command. A script to run inside it, which
+reports what it can find out and from where:
+
+```sh
+cd ~/work/load
+cat > inside.sh <<'END'
+#!/bin/bash
+# What a process in a limited control group can find out, and from where.
+cg=$(cut -d: -f3 /proc/self/cgroup)
+echo "my group:       $cg"
+echo "its memory.max: $(numfmt --to=iec "$(cat /sys/fs/cgroup"$cg"/memory.max)")"
+echo "its cpu.max:    $(cat /sys/fs/cgroup"$cg"/cpu.max)"
+echo "/proc/meminfo:  $(numfmt --to=iec $(( $(awk '/MemTotal/{print $2}' /proc/meminfo) * 1024 )))"
+echo "nproc:          $(nproc)"
+END
+chmod +x inside.sh
+```
+
+`-p MemoryMax=512M` and `-p CPUQuota=200%` are the limits a container runtime
+would set: half a gigabyte, and two cores' worth of processor time. This was
+captured on an Ubuntu 24.04 virtual machine with four cores and 4 GB, which uses
+cgroup v2:
+
+```
+ana@vm:~/work/load$ sudo systemd-run --scope --quiet -p MemoryMax=512M -p CPUQuota=200% ./inside.sh
+my group:       /system.slice/run-re24852e083fc41c182290b2e94f9e2d4.scope
+its memory.max: 512M
+its cpu.max:    200000 100000
+/proc/meminfo:  3.9G
+nproc:          4
+```
+
+**Half a gigabyte according to the group, 3.9G according to `/proc/meminfo`.**
+The script ran inside a group that kills it past 512 MB, and the file every tool
+reads told it about the whole machine. `cpu.max` is `200000 100000` — two hundred
+thousand microseconds of processor in every hundred thousand, which is two
+cores — and `nproc` still says 4. That is a container's situation exactly, made
+with one command and gone when the command ends.
 
 ## The processor is the same story
 
@@ -87,6 +130,36 @@ the machine that says so — `%util`, load average and `top` all look fine, beca
 from the host's point of view nothing is wrong.
 
 `/sys/fs/cgroup/cpu.stat`, without the `cpu/`, is the same file on cgroup v2.
+
+To see it not be zero, give a busy loop half a core and let it run for five
+seconds. The script reads its own group's `cpu.stat` at the end, before the
+group goes away:
+
+```sh
+cd ~/work/load
+cat > throttle.sh <<'END'
+#!/bin/bash
+# Spin for five seconds, then report what the group's quota did to it.
+cg=$(cut -d: -f3 /proc/self/cgroup)
+timeout 5 bash -c 'while :; do :; done'
+grep -E '^(usage_usec|nr_periods|nr_throttled|throttled_usec)' /sys/fs/cgroup"$cg"/cpu.stat
+END
+chmod +x throttle.sh
+```
+
+```
+ana@vm:~/work/load$ sudo systemd-run --scope --quiet -p CPUQuota=50% ./throttle.sh
+usage_usec 2954020
+nr_periods 61
+nr_throttled 58
+throttled_usec 2910354
+```
+
+**`nr_throttled 58` out of 61 periods.** The loop wanted a whole core, and the
+quota gave it half of every hundred-millisecond period. In nearly every period it
+used its half and was stopped until the next one began, and `throttled_usec` is
+the 2.9 seconds it spent stopped. Nothing outside the group says so: `top` would
+have shown one process at 50% on a machine with three and a half cores idle.
 
 ## Load average is the host's
 

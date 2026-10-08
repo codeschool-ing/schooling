@@ -1,11 +1,14 @@
 ---
 title: O que há debaixo do Docker
-version: 1
+version: 2
 ---
 
 **A aula 3 nomeou as três especificações que toda ferramenta de containers segue: o formato da imagem,
 a API de distribuição e o runtime.** Esta aula olha as ferramentas do outro lado delas, começando pelas
 de que o próprio Docker é feito, que já estão na máquina da Ana.
+
+A `shelf:1.0.0` aqui é a imagem que a aula 15 construiu. Se a sua máquina não a tem mais, o build
+que aquela aula mostra a refaz.
 
 ## containerd e runc, encontrados rodando
 

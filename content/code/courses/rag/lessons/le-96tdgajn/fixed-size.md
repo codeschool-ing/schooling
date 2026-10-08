@@ -1,18 +1,23 @@
 ---
 title: Fixed-size chunks
-version: 1
+version: 2
 ---
 
 The simplest way to cut is by count: every so many words, or characters, or tokens, start a new
 chunk. It needs no knowledge of the document at all, which is both why it is the default in most
 libraries and why it does damage.
 
-```python
-def fixed(text, size, overlap=0):
-    """Every SIZE words, starting again OVERLAP words before the last cut."""
-    words = text.split()
-    step = size - overlap
-    return [" ".join(words[i:i + size]) for i in range(0, max(len(words) - overlap, 1), step)]
+```schooling-example
+{
+  "language": "python",
+  "file": "chunking.py",
+  "parts": [
+    {
+      "code": "def fixed(text, size, overlap=0):\n    \"\"\"Every SIZE words, starting again OVERLAP words before the last cut.\"\"\"\n    words = text.split()\n    step = size - overlap\n    return [\" \".join(words[i:i + size]) for i in range(0, max(len(words) - overlap, 1), step)]",
+      "note": "The second function of `chunking.py`: add it after `load`."
+    }
+  ]
+}
 ```
 
 `fixed` counts words, which is easy to read and close enough for English prose. Libraries usually
@@ -25,8 +30,25 @@ wherever the count says, regardless of what is there.
 `boundaries.py` cuts the returns policy into 60-word chunks and prints the edges of three of them,
 counting from 0:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "boundaries.py",
+  "parts": [
+    {
+      "code": "import sys\n\nfrom chunking import fixed, load\n\nsize, overlap = int(sys.argv[1]), int(sys.argv[2])\nmeta, body = load()[\"returns-policy\"]\nchunks = fixed(body, size, overlap)\nprint(f\"{len(chunks)} chunks of {size} words, {overlap} overlapping\")",
+      "note": "The size and the overlap come from the command line, so the next section can rerun it with an overlap."
+    },
+    {
+      "code": "for i in (3, 4, 5):\n    words = chunks[i].split()\n    print(f\"chunk {i} starts: {' '.join(words[:9])} ...\")\n    print(f\"chunk {i} ends:   ... {' '.join(words[-9:])}\")",
+      "note": "The first and last nine words of chunks 3, 4 and 5, which is where the cuts are."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python boundaries.py 60 0
+
+```
+ana@vm:~/rag$ python boundaries.py 60 0
 15 chunks of 60 words, 0 overlapping
 chunk 3 starts: to you at our cost with an email explaining ...
 chunk 3 ends:   ... choose Return items. 2. Select the books you are

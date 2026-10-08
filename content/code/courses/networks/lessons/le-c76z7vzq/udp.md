@@ -1,10 +1,10 @@
 ---
 title: UDP: one packet, and no promises
-version: 1
+version: 2
 ---
 
 UDP sends a packet to a port and that is all. No handshake, no acknowledgement, no retransmission.
-A DNS question from the laptop, seen at the resolver:
+A DNS question from the laptop, `dig +short www.example.com`, seen at the resolver:
 
 ```
 ana@resolver:~$ sudo tcpdump -n -i eth0 -c 2 udp port 53 and host 203.0.113.2

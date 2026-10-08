@@ -1,6 +1,6 @@
 ---
 title: Publicando um pacote
-version: 1
+version: 2
 ---
 
 **Publicar envia uma pasta para o registro com um nome e uma versão, e esse par nunca mais pode
@@ -68,9 +68,8 @@ npm notice
 shelf-count-1.0.0.tgz
 ```
 
-`npm whoami` responde com a conta com que o npm vai publicar. No laboratório, o login da ana é
-preparado: a montagem escreveu o token dela em `~/.npmrc`, que é o que o `npm login` faz depois de
-pedir uma senha.
+`npm whoami` responde com a conta com que o npm vai publicar. É a `ana`, a conta que o `npm adduser`
+criou na primeira seção, cujo token ele lê de `~/.npmrc`.
 
 `npm pack --dry-run` monta o pacote sem enviá-lo e lista o que tem dentro. Dois arquivos, porque
 `files` nomeou um e o npm sempre acrescenta o `package.json`; o teste ficou em casa. O npm começa
@@ -115,7 +114,7 @@ janela curta, e `npm deprecate` anexa um aviso no lugar.
 ```
 ana@dev:~/js/first$ npm install shelf-count
 
-added 1 package in 407ms
+added 1 package in 400ms
 ```
 
 ```javascript

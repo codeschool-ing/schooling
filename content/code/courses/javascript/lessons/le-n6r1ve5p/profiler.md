@@ -1,6 +1,6 @@
 ---
 title: The profiler
-version: 1
+version: 2
 ---
 
 **A profiler samples the call stack thousands of times a second and counts where the program
@@ -35,7 +35,7 @@ share  self time  function
           186 ms  busy in total
 ```
 
-The lab's `--profile` records a CPU profile with a sample every 0.1 ms and lists the five functions
+`--profile` records a CPU profile with a sample every 0.1 ms and lists the five functions
 with the most **self time**. The milliseconds are this run's and move by a few between runs. `key`
 came first in every run made for this lesson; the rows below it changed places.
 

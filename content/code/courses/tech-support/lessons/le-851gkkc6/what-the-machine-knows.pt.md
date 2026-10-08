@@ -17,7 +17,7 @@ ana@pc1:~$ bash /tmp/inventory.sh
 
 Um notebook de loja diria o nome do fabricante, o modelo e um número de série impresso na etiqueta dele.
 Este diz **`QEMU`** e **`Not Specified`**: é uma máquina virtual, e ninguém deu um número de série a ela.
-Vale saber isso como fato, e não como detalhe do laboratório, porque **máquinas virtuais também são bens**,
+Vale saber isso como fato, e não como detalhe do escritório deste curso, porque **máquinas virtuais também são bens**,
 no papel, e não têm etiqueta para ler. A organização dá a elas um identificador próprio.
 
 O script por trás da última linha coleta o resto:

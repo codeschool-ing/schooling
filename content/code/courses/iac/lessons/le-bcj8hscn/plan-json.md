@@ -1,6 +1,6 @@
 ---
 title: The plan as data, and a guard that reads it
-version: 1
+version: 2
 ---
 
 The text of a plan is written for people: aligned columns, hidden unchanged attributes, a
@@ -43,8 +43,8 @@ has a one-word answer in JSON: does any list contain `delete`?
 
 That question is worth asking by machine because the text plan makes it easy to miss. A
 replacement is a destroy, and in a long plan it looks like one more block of `~` lines with a
-comment at the top. Ana writes a guard of a few lines that refuses any plan that deletes, for
-whatever reason:
+comment at the top. Ana writes a guard of a few lines, `check-plan.sh`, that refuses any plan that
+deletes, for whatever reason:
 
 ```sh
 #!/bin/sh
@@ -63,8 +63,8 @@ fi
 echo "ok: this plan deletes nothing"
 ```
 
-`index("delete")` is jq's way of asking whether the list contains that string; `select` keeps
-the entries where it does. Run against the same plan, the guard names both deletions, the
+She makes it executable with `chmod +x check-plan.sh`. `index("delete")` is jq's way of asking
+whether the list contains that string; `select` keeps the entries where it does. Run against the same plan, the guard names both deletions, the
 replacement first, and fails:
 
 ```
@@ -75,8 +75,8 @@ delete  aws_subnet.b
 exit 1
 ```
 
-Against a plan that only adds things, it passes. This one is the plan from two sections on, which
-adds three resources:
+Against a plan that only adds things, it passes. This one is the plan from two sections on, saved
+there with `terraform plan -out=tfplan`, which adds three resources:
 
 ```
 ana@laptop:~/shop$ ./check-plan.sh tfplan; echo "exit $?"

@@ -1,6 +1,6 @@
 ---
 title: How big a packet can be
-version: 1
+version: 2
 ---
 
 Every link has a **MTU**, *maximum transmission unit*: the largest IP packet it carries in one frame.
@@ -29,7 +29,16 @@ ping: local error: message too long, mtu=1500
 One byte more and the laptop refused to send it at all: `message too long, mtu=1500`.
 
 Now the office line is changed to the kind many small offices have, DSL with **PPPoE**, which spends 8
-bytes of every frame on its own header and leaves an MTU of **1492**. The same 1500-byte ping:
+bytes of every frame on its own header and leaves an MTU of **1492**. To make that change in your lab,
+lower the MTU on both ends of the line between the router and the provider, from your virtual
+machine:
+
+```sh
+sudo bash ~/netlab/netlab exec router root 'ip link set eth1 mtu 1492'
+sudo bash ~/netlab/netlab exec isp root 'ip link set eth0 mtu 1492'
+```
+
+The same 1500-byte ping:
 
 ```
 ana@laptop:~$ ping -c 2 -M do -s 1472 192.0.2.80

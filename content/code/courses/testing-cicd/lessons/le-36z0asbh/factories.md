@@ -1,6 +1,6 @@
 ---
 title: Factories for test data
-version: 1
+version: 2
 ---
 
 A test of the store needs a quote to save: a CEP, a weight, a price and a timestamp. Written out
@@ -8,7 +8,7 @@ in every test, those four values are noise, and they hide the one value each tes
 about. A **factory** builds a valid object with sensible defaults and lets the test override only
 the fields it cares about.
 
-`shipquote`'s factory, from step 7 of the project, is a function in `tests/factories.py`:
+`shipquote`'s factory is a function, new in this lesson. Save it as `tests/factories.py`:
 
 ```schooling-example
 {
@@ -16,7 +16,7 @@ the fields it cares about.
   "file": "tests/factories.py",
   "parts": [
     {
-      "code": "\"\"\"Test data with sensible defaults: a test names only what it is about.\"\"\"\nfrom itertools import count\n\n_ids = count(1)",
+      "code": "\"\"\"Test data with sensible defaults: a test names only what it is about.\"\"\"\nfrom itertools import count\n\n_ids = count(1)\n\n",
       "note": "A counter shared by every call, so each quote the factory builds is different from the last."
     },
     {
@@ -31,7 +31,8 @@ the fields it cares about.
 }
 ```
 
-And the store tests, rewritten to use it:
+And the store tests, rewritten to use it, in place of lesson 1's. Save them as
+`tests/test_store.py`:
 
 ```python
 import sqlite3

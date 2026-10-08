@@ -1,9 +1,12 @@
 ---
 title: One kernel or two
-version: 1
+version: 2
 ---
 
-The same question, asked of the host, of a virtual machine, and of a container started with `podman`:
+The same question, asked of the host, of a virtual machine, and of a container started with `podman`.
+vm1 is a fresh guest from `newvm.sh`, lesson 1, and podman is one package on the host, `sudo apt
+install podman`, which fetches the two images used here, `ubuntu:24.04` and `nginx:alpine`, the first
+time it needs them:
 
 ```
 ana@host:~$ uname -r

@@ -1,6 +1,6 @@
 ---
 title: The translations endpoint
-version: 1
+version: 2
 ---
 
 Whisper was trained to transcribe speech in many languages and to **translate it into English**, and the API exposes the second job as its own endpoint: `audio.translations`. It takes a recording in any language Whisper knows and returns English text, in one step.
@@ -9,11 +9,11 @@ Whisper was trained to transcribe speech in many languages and to **translate it
 """The Portuguese voicemail, transcribed as it was said and translated into English."""
 from openai import OpenAI
 
-client = OpenAI()
+client = OpenAI(base_url="http://localhost:8700/v1")   # audio_server.py, on this machine
 with open("media/voicemail-pt.wav", "rb") as audio:
-    said = client.audio.transcriptions.create(model="lab-whisper-base", file=audio)
+    said = client.audio.transcriptions.create(model="whisper-base", file=audio)
 with open("media/voicemail-pt.wav", "rb") as audio:
-    english = client.audio.translations.create(model="lab-whisper-base", file=audio)
+    english = client.audio.translations.create(model="whisper-base", file=audio)
 print("transcribed:", said.text)
 print("translated: ", english.text)
 ```
@@ -24,7 +24,7 @@ transcribed: Oi, aqui é o Rafael Piente da Maginalia, sou ligando sobre o pedid
 translated:  Hi, here is Rafael Pienta from Marginalia, I'm calling on the request in my 2017 an exemplary memory of brass cubes that arrived with the mass cover. You can come back in the end of the afternoon, thank you.
 ```
 
-Both lines are Whisper base's, run by labmm. The translation carries the transcription's errors into English and adds its own: *pedido M-2087* became *the request in my 2017*, and *Memórias Póstumas de Brás Cubas* became *an exemplary memory of brass cubes*. The meaning of the message (a customer, a damaged cover, please call back in the afternoon) survives; the order number and the title, which are what the shop needs, do not.
+Both lines are Whisper base's, run by the course's server. The translation carries the transcription's errors into English and adds its own: *pedido M-2087* became *the request in my 2017*, and *Memórias Póstumas de Brás Cubas* became *an exemplary memory of brass cubes*. The meaning of the message (a customer, a damaged cover, please call back in the afternoon) survives; the order number and the title, which are what the shop needs, do not.
 
 Three things to know about it:
 

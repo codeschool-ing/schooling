@@ -1,6 +1,6 @@
 ---
 title: Silences: quiet on purpose, with a reason
-version: 1
+version: 2
 ---
 
 During planned work an alert can be right and useless: everybody already knows payments is down,
@@ -47,7 +47,13 @@ Two rules for silences in a team:
   because a silence somebody else made is the most surprising thing to discover during an incident.
 
 When the work is done, the payments fault is removed and the silence is expired by hand rather than
-left to run out. Four minutes later:
+left to run out:
+
+```sh
+rm faults/payments.json
+```
+
+Then the silence, and four minutes later the burn rates and the pager:
 
 ```
 ana@obs:~/shop$ docker compose exec alertmanager sh -c 'amtool --alertmanager.url=http://localhost:9093 silence expire $(amtool --alertmanager.url=http://localhost:9093 silence query -q)'

@@ -1,6 +1,6 @@
 ---
 title: "The MAC address: six bytes and two bits"
-version: 1
+version: 2
 ---
 
 A MAC address looks like a serial number, and that is half right. **It is six bytes, written as
@@ -30,8 +30,8 @@ with `02`. Look at that byte bit by bit:
   manufacturer's OUI; **1 means somebody set it locally**, and the first three bytes name no
   manufacturer at all.
 
-So `02` reads: one card, locally administered. The lab chose it on purpose. Its script gives
-every card an address made of `02` and five bytes computed from the device's and the interface's
+So `02` reads: one card, locally administered. The lab chose it on purpose. Its script,
+`netlab.sh` from lesson 1, gives every card an address made of `02` and five bytes computed from the device's and the interface's
 names, so that pc1 has the same MAC every time the lab is built and a transcript recorded today
 matches one recorded next month. The server, `02:9e:43:3e:ca:ae`, and the router, `02:1f:23:e7:e9:d5`,
 follow the same rule.

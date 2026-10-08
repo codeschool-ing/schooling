@@ -1,6 +1,6 @@
 ---
 title: Labels, and the experiment
-version: 1
+version: 2
 ---
 
 A label is what lets one metric answer *by route* or *by status code*, and lesson 5 leaned on it in
@@ -36,7 +36,12 @@ time.sleep(3600)
 ```
 
 Prometheus is given two more scrape jobs, itself, so its own memory and series count become
-metrics, and the experiment:
+metrics, and the experiment. Keep a copy of `prometheus.yml`, then add at its end the six lines the
+`tail` below prints, and save `logins.py` in `~/shop/scratch`:
+
+```sh
+cp prometheus/prometheus.yml /tmp/prometheus.yml.orig
+```
 
 ```
 ana@obs:~/shop$ tail -6 prometheus/prometheus.yml
@@ -81,3 +86,9 @@ __name__=prometheus_tsdb_head_series instance=localhost:9090 job=prometheus  378
 **Three series**, one per plan, adding up to 20000, and the head grew by 22. Six are for the logins,
 because every counter brings its `_created` gauge. The rest are for the new target itself: its `up`,
 its scrape statistics and the process metrics the client library publishes. Nothing to see.
+
+Stop the experiment before the next section, which starts it again under the same name:
+
+```sh
+docker stop logins
+```

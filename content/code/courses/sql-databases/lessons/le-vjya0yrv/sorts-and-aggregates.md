@@ -9,17 +9,23 @@ that says how it did its work, and that line is the thing to read.
 
 ## Sort, and the difference LIMIT makes
 
+The index lesson 9's script built on `placed_at` would answer the first query below without
+sorting anything, so to see a sort it goes first. It comes back at the end of this part.
+
 ```
+shop=# DROP INDEX orders_placed_at_idx;
+DROP INDEX
+
 shop=# EXPLAIN ANALYZE SELECT * FROM orders ORDER BY placed_at LIMIT 10;
                                                           QUERY PLAN                                                          
 ------------------------------------------------------------------------------------------------------------------------------
- Limit  (cost=39075.64..39075.67 rows=10 width=28) (actual time=99.300..99.303 rows=10 loops=1)
-   ->  Sort  (cost=39075.64..41575.64 rows=1000000 width=28) (actual time=99.298..99.300 rows=10 loops=1)
+ Limit  (cost=39078.64..39078.67 rows=10 width=28) (actual time=136.385..136.402 rows=10 loops=1)
+   ->  Sort  (cost=39078.64..41578.64 rows=1000000 width=28) (actual time=136.383..136.384 rows=10 loops=1)
          Sort Key: placed_at
          Sort Method: top-N heapsort  Memory: 26kB
-         ->  Seq Scan on orders  (cost=0.00..17466.00 rows=1000000 width=28) (actual time=0.003..48.091 rows=1000000 loops=1)
- Planning Time: 0.282 ms
- Execution Time: 99.348 ms
+         ->  Seq Scan on orders  (cost=0.00..17469.00 rows=1000000 width=28) (actual time=0.016..70.753 rows=1000000 loops=1)
+ Planning Time: 0.378 ms
+ Execution Time: 136.442 ms
 (7 rows)
 ```
 
@@ -34,18 +40,18 @@ Take the `LIMIT` off:
 shop=# EXPLAIN ANALYZE SELECT * FROM orders ORDER BY placed_at;
                                                        QUERY PLAN                                                       
 ------------------------------------------------------------------------------------------------------------------------
- Sort  (cost=141049.84..143549.84 rows=1000000 width=28) (actual time=333.134..404.816 rows=1000000 loops=1)
+ Sort  (cost=141052.84..143552.84 rows=1000000 width=28) (actual time=387.046..478.885 rows=1000000 loops=1)
    Sort Key: placed_at
-   Sort Method: external merge  Disk: 38576kB
-   ->  Seq Scan on orders  (cost=0.00..17466.00 rows=1000000 width=28) (actual time=0.003..49.042 rows=1000000 loops=1)
- Planning Time: 0.211 ms
- Execution Time: 433.040 ms
+   Sort Method: external merge  Disk: 38584kB
+   ->  Seq Scan on orders  (cost=0.00..17469.00 rows=1000000 width=28) (actual time=0.010..66.162 rows=1000000 loops=1)
+ Planning Time: 0.074 ms
+ Execution Time: 519.615 ms
 (6 rows)
 ```
 
-`Sort Method: external merge  Disk: 38576kB`. The same million rows no longer fit in the memory a
+`Sort Method: external merge  Disk: 38584kB`. The same million rows no longer fit in the memory a
 sort is allowed — `work_mem`, 4 MB on this server — so they were written to disk in sorted runs
-and merged back. Four times slower than the top-N, and the word to look for is **`Disk`**: a sort
+and merged back. Nearly four times slower than the top-N, and the word to look for is **`Disk`**: a sort
 that spills is the most common reason a query that was fine at ten thousand rows is slow at a
 million.
 
@@ -53,19 +59,22 @@ Two fixes, in the order to try them. Ask for fewer rows, if the query can — a 
 `WHERE`. Otherwise give the sort an index to read from:
 
 ```
+shop=# CREATE INDEX ON orders (placed_at);
+CREATE INDEX
+
 shop=# EXPLAIN ANALYZE SELECT * FROM orders ORDER BY placed_at LIMIT 10;
                                                                   QUERY PLAN                                                                   
 -----------------------------------------------------------------------------------------------------------------------------------------------
- Limit  (cost=0.42..0.98 rows=10 width=28) (actual time=0.042..0.094 rows=10 loops=1)
-   ->  Index Scan using orders_placed_at_idx on orders  (cost=0.42..55844.42 rows=1000000 width=28) (actual time=0.041..0.092 rows=10 loops=1)
- Planning Time: 0.332 ms
- Execution Time: 0.124 ms
+ Limit  (cost=0.42..0.98 rows=10 width=28) (actual time=0.037..0.056 rows=10 loops=1)
+   ->  Index Scan using orders_placed_at_idx on orders  (cost=0.42..55855.11 rows=1000000 width=28) (actual time=0.036..0.053 rows=10 loops=1)
+ Planning Time: 0.250 ms
+ Execution Time: 0.074 ms
 (4 rows)
 ```
 
-With lesson 9's index on `placed_at`, there is no `Sort` node at all. The index is already in
-order, the scan reads it forwards and stops after ten, and the whole thing is a tenth of a
-millisecond. Raising `work_mem` is the third option and the one people reach for first; it is a
+With the index on `placed_at` back, there is no `Sort` node at all. The index is already in
+order, the scan reads it forwards and stops after ten, and the whole thing is less than a tenth of
+a millisecond. Raising `work_mem` is the third option and the one people reach for first; it is a
 per-sort allowance, granted to every sort in every connection at once, and a number that fixes one
 report can take the server out of memory under load.
 
@@ -75,12 +84,12 @@ report can take the server out of memory under load.
 shop=# EXPLAIN ANALYZE SELECT status, count(*) FROM orders GROUP BY status;
                                                       QUERY PLAN                                                       
 -----------------------------------------------------------------------------------------------------------------------
- HashAggregate  (cost=22466.00..22466.04 rows=4 width=14) (actual time=193.690..193.692 rows=4 loops=1)
+ HashAggregate  (cost=22469.00..22469.04 rows=4 width=14) (actual time=252.201..252.203 rows=4 loops=1)
    Group Key: status
    Batches: 1  Memory Usage: 24kB
-   ->  Seq Scan on orders  (cost=0.00..17466.00 rows=1000000 width=6) (actual time=0.004..50.667 rows=1000000 loops=1)
- Planning Time: 0.239 ms
- Execution Time: 193.886 ms
+   ->  Seq Scan on orders  (cost=0.00..17469.00 rows=1000000 width=6) (actual time=0.007..74.667 rows=1000000 loops=1)
+ Planning Time: 0.130 ms
+ Execution Time: 252.272 ms
 (6 rows)
 ```
 
@@ -100,15 +109,15 @@ Neither is better; they suit different inputs, and the line beside the node is t
 shop=# EXPLAIN ANALYZE SELECT city, count(*) FROM customers GROUP BY city ORDER BY city;
                                                          QUERY PLAN                                                          
 -----------------------------------------------------------------------------------------------------------------------------
- Sort  (cost=2602.27..2602.29 rows=10 width=18) (actual time=21.176..21.178 rows=10 loops=1)
+ Sort  (cost=2487.27..2487.29 rows=10 width=18) (actual time=26.138..26.141 rows=10 loops=1)
    Sort Key: city
    Sort Method: quicksort  Memory: 25kB
-   ->  HashAggregate  (cost=2602.00..2602.10 rows=10 width=18) (actual time=21.148..21.150 rows=10 loops=1)
+   ->  HashAggregate  (cost=2487.00..2487.10 rows=10 width=18) (actual time=26.103..26.107 rows=10 loops=1)
          Group Key: city
          Batches: 1  Memory Usage: 24kB
-         ->  Seq Scan on customers  (cost=0.00..2102.00 rows=100000 width=10) (actual time=0.007..5.063 rows=100000 loops=1)
- Planning Time: 0.236 ms
- Execution Time: 21.351 ms
+         ->  Seq Scan on customers  (cost=0.00..1987.00 rows=100000 width=10) (actual time=0.006..7.831 rows=100000 loops=1)
+ Planning Time: 0.181 ms
+ Execution Time: 26.181 ms
 (9 rows)
 ```
 

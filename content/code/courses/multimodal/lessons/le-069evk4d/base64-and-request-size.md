@@ -1,6 +1,6 @@
 ---
 title: A picture inside a request is a third bigger
-version: 1
+version: 2
 ---
 
 Lesson 8 sent pictures as data URLs: base64 inside the JSON. Base64 spends four characters on every three bytes, so the request is bigger than the file it carries:
@@ -13,7 +13,7 @@ import sys
 
 for path in sys.argv[1:]:
     raw = open(path, "rb").read()
-    body = json.dumps({"model": "lab-vision-1", "messages": [{"role": "user", "content": [
+    body = json.dumps({"model": "qwen2.5vl:3b", "messages": [{"role": "user", "content": [
         {"type": "text", "text": "Read the total."},
         {"type": "image_url", "image_url": {"url": "data:image/jpeg;base64," + base64.b64encode(raw).decode()}}]}]})
     print("%-22s file %9d   request %9d   x%.3f" % (path.split("/")[-1], len(raw), len(body), len(body) / len(raw)))

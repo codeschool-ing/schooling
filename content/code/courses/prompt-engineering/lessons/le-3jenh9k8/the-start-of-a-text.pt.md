@@ -1,6 +1,6 @@
 ---
 title: O começo de um texto que o modelo continua
-version: 1
+version: 2
 ---
 
 A imagem cotidiana de um prompt é a de uma ordem: você diz o que quer, e um programa que entendeu a
@@ -54,10 +54,9 @@ Cada parte do texto é uma instrução, inclusive as partes que você não prete
 ## Um chat é um documento em que cada um fala no seu turno
 
 Uma janela de chat parece ser algo diferente de continuar um texto. A lição 1 mostrou que é a mesma
-coisa com os turnos marcados. Na época em que este curso foi escrito (2026), as APIs por trás dos
-assistentes de chat recebem uma conversa como uma lista de mensagens, cada uma com um papel e o seu
-texto. Os nomes dos campos mudam de um fornecedor para outro; o formato é este (uma ilustração, não
-uma requisição que foi enviada):
+coisa com os turnos marcados. As APIs por trás dos assistentes de chat recebem uma conversa como uma
+lista de mensagens, cada uma com um papel e o seu texto. Com uma mensagem de sistema, o `ask` manda
+esta lista, e os nomes dos campos são os que a maioria dos provedores usa:
 
 ```json
 [
@@ -65,6 +64,17 @@ uma requisição que foi enviada):
   {"role": "user", "content": "When do you open on Sunday?"}
 ]
 ```
+
+```
+ana@lab:~/pe$ ask "When do you open on Sunday?" --temperature 0 --system "You answer questions from Café Aurora's customers. Keep replies to two sentences."
+We're open from 8am to 10pm on Sundays, offering a special brunch menu from 11am to 3pm. Please note that our hours may be subject to change, especially during holidays or special events.
+-- llama3.2:3b, finish: stop, prompt 47 tokens, output 47 tokens
+```
+
+Duas frases, como a mensagem de sistema pediu, e **todos os fatos nelas inventados**. Nada na conversa
+diz quando o café abre, então o modelo escreveu o que uma resposta sobre horário costuma parecer. O
+horário de domingo de verdade, que a lição 4 lhe dá no manual do café, é das 08:00 às 12:00, e não
+existe brunch. A lição 5 trata de por que um modelo faz isso e do que o impede.
 
 Antes de o modelo vê-la, a lista é disposta como um só texto, com marcadores que dizem onde cada turno
 começa e quem está falando, e termina com um turno do assistente que foi aberto e não escrito. **A

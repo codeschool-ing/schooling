@@ -1,11 +1,18 @@
 ---
 title: Um vazamento, feito de propósito
-version: 1
+version: 2
 ---
 
 Vazamentos raramente são alguém decidindo registrar uma senha. **São uma linha de depuração prestativa
 que registra um objeto inteiro**, escrita enquanto se caçava um bug e esquecida. Eis uma, acrescentada
-à vitrine do jeito que costuma acontecer, logo depois de o corpo da requisição ser lido:
+à vitrine do jeito que costuma acontecer, logo depois de o corpo da requisição ser lido.
+Guarde antes uma cópia do código da vitrine, para devolvê-lo no fim da aula:
+
+```sh
+cp services/storefront/app.py /tmp/storefront.app.py
+```
+
+Depois, a linha:
 
 ```
 ana@obs:~/shop$ sed -i 's/^        body = request.get_json()$/&\n        log.debug("request", extra={"fields": {"headers": dict(request.headers), "body": body}})/' services/storefront/app.py && grep -n 'log.debug' services/storefront/app.py
@@ -14,7 +21,7 @@ ana@obs:~/shop$ sed -i 's/^        body = request.get_json()$/&\n        log.deb
 
 A linha registra todo cabeçalho e o corpo inteiro em `DEBUG`, que a aula 8 mostrou estar desligado por
 padrão. Alguém então liga o `DEBUG` para investigar, no arquivo de override que já aponta o Collector para o Loki
-e o Elasticsearch:
+e o Elasticsearch. Troque o `compose.override.yaml` por este:
 
 ```yaml
 services:

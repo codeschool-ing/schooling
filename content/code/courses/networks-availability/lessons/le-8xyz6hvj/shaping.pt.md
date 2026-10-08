@@ -3,7 +3,7 @@ title: Um shaper no uplink de hq
 version: 1
 ---
 
-Primeiro, a velocidade do uplink do laboratório sem nada no caminho. Um upload com `iperf3` do laptop para
+Primeiro, a velocidade do uplink da rede sem nada no caminho. Um upload com `iperf3` do laptop para
 `web1`:
 
 ```

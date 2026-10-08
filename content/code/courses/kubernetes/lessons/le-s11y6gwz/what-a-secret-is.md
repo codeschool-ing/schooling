@@ -6,7 +6,7 @@ version: 1
 **The most common belief about Secrets is that their values are encrypted, because they look
 scrambled.** They are encoded. Base64 writes any bytes using 64 printable characters, so that a
 binary key or a password with odd characters fits in a JSON or YAML field; it has no key and hides
-nothing. The password used here is made up for the lab and opens nothing:
+nothing. The password used here is made up for this lesson and opens nothing:
 
 ```
 ana@laptop:~/shop$ kubectl create secret generic db --from-literal=user=shop --from-literal=password=lab-only-7Hq2

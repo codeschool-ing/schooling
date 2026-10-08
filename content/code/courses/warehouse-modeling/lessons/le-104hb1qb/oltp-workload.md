@@ -1,6 +1,6 @@
 ---
 title: What the till needs
-version: 1
+version: 2
 ---
 
 The name for the till's side is **OLTP**, online transaction processing. The word that matters is
@@ -55,4 +55,4 @@ Everything about the operational schema serves that shape of work:
   lives *now*. When it changes, the old value is gone from that row.
 
 **That last one is a design decision, not a flaw.** A till does not need to know where a customer
-lived last year. Section 08 shows what it costs somebody who does.
+lived last year. Section 11 shows what it costs somebody who does.

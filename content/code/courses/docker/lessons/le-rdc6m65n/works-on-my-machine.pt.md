@@ -1,6 +1,6 @@
 ---
 title: Na minha máquina funciona
-version: 1
+version: 2
 ---
 
 **Um programa nunca roda sozinho.** Ele roda em cima de um compilador ou interpretador numa certa
@@ -39,7 +39,9 @@ interpretador, as bibliotecas, os arquivos de configuração, nas versões exata
 A máquina embaixo só precisa de um motor de containers, e essa é a última coisa que alguém precisa
 instalar à mão.
 
-A máquina da Ana mostra isso. Não há Go nenhum nela:
+A máquina da Ana mostra isso. **As transcrições das aulas 1 a 4 estão aqui para serem lidas**: você
+monta uma máquina como a dela na aula 5, e dali em diante todo comando pode ser digitado. Volte a
+estas então, se quiser vê-las acontecer na sua. Não há Go nenhum na máquina dela:
 
 ```
 ana@vm:~$ env go version

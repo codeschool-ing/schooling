@@ -1,6 +1,6 @@
 ---
 title: Why documents are cut up
-version: 1
+version: 2
 ---
 
 Lesson 1 cut every document at its headings without saying why, and the obvious objection is that
@@ -9,13 +9,38 @@ reasons, and one of them is a hard limit that most people only discover by accid
 
 ## The embedding model reads a fixed number of pieces
 
-all-MiniLM-L6-v2 reads at most 256 word pieces. That is not a soft preference: the tokenizer cuts the
-input at 256, and everything after that point never reaches the model. Every embedding model has a
+all-MiniLM-L6-v2 reads at most 256 word pieces. That is not a soft preference: Ollama cuts the input
+at 256, says nothing, and everything after that point never reaches the model. Every embedding model has a
 limit like it; the hosted ones are larger, a few thousand pieces, and still finite. `truncation.py`
 measures what that means for the returns policy:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "truncation.py",
+  "parts": [
+    {
+      "code": "from openai import OpenAI\n\nfrom chunking import load\nfrom vectors import embed\n\nclient = OpenAI()",
+      "note": "The same client as `vectors.py`, used here for what the embedding endpoint reports rather than for its vectors."
+    },
+    {
+      "code": "def pieces(text):\n    \"\"\"How many word pieces all-minilm makes of TEXT, its two markers included.\"\"\"\n    words = text.split()\n    parts = [\" \".join(words[i:i + 100]) for i in range(0, len(words), 100)]\n    used = client.embeddings.create(model=\"all-minilm\", input=parts).usage.prompt_tokens\n    return used - 2 * (len(parts) - 1)",
+      "note": "The endpoint reports how many pieces it read, and it never reads more than 256 of one text, so a long text is counted in parts of a hundred words that each fit. Every part carries the two markers that open and close an input, and the whole text would carry them once."
+    },
+    {
+      "code": "meta, body = load()[\"returns-policy\"]\nprint(\"pieces in the whole policy:\", pieces(body))\nwords = body.split()\nlow, high = 1, len(words)\nwhile low < high:\n    mid = (low + high + 1) // 2\n    low, high = (mid, high) if pieces(\" \".join(words[:mid])) <= 256 else (low, mid - 1)\nprint(f\"words the model reads: {low} of {len(words)}\")",
+      "note": "The longest opening of the policy that fits in 256 pieces, found by halving the range, since one more word never makes a text shorter."
+    },
+    {
+      "code": "whole, prefix, extra = embed([body, \" \".join(words[:low]), body + \" Returns are never accepted.\"])\nprint(f\"similarity, whole policy and its first {low} words: {whole @ prefix:.4f}\")\nprint(f\"similarity, whole policy and the policy plus a sentence at the end: {whole @ extra:.4f}\")",
+      "note": "Three vectors: the whole policy, its opening, and the policy with a sentence added at the end that reverses it."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python truncation.py
+
+```
+ana@vm:~/rag$ python truncation.py
 pieces in the whole policy: 1043
 words the model reads: 219 of 884
 similarity, whole policy and its first 219 words: 1.0000
@@ -24,7 +49,7 @@ similarity, whole policy and the policy plus a sentence at the end: 1.0000
 
 **The policy is 1,043 pieces, and the model reads the first 256 of them, which is 219 of its 884
 words.** The vector for the whole policy and the vector for its first 219 words are identical,
-similarity 1.0000, because they are the same input once the tokenizer is done. The last line is the
+similarity 1.0000, because they are the same input once the cut is made. The last line is the
 alarming one: appending *Returns are never accepted.* to the end of the policy did not move its
 vector at all. Whatever a document says after its first 219 words, its embedding cannot know.
 
@@ -68,7 +93,7 @@ use them, and a loader that reads each document and its front matter:
   "file": "chunking.py",
   "parts": [
     {
-      "code": "import glob\nimport re\n\nimport numpy as np\nfrom minilm import embed",
+      "code": "import glob\nimport re\n\nimport numpy as np\nfrom vectors import embed",
       "note": "numpy for the semantic cut, and the same embedding model as every other lesson."
     },
     {

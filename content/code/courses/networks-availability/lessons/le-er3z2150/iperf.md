@@ -6,7 +6,9 @@ version: 1
 A ping says a path is there; it says nothing about how much the path carries. **iperf3 measures
 throughput between two machines you control**: a server that listens, on port 5201 unless told
 otherwise, and a client that sends as fast as the path allows for a set time. For these runs `hq`'s link
-to the ISP was shaped to 20 Mbit/s, the way lessons 18 and 20 did it, and web1 was the server:
+to the ISP was shaped to 20 Mbit/s, the way lessons 18 and 20 did it,
+`sudo tc qdisc add dev eth1 root tbf rate 20mbit burst 32kb latency 50ms` on `hq`, and web1 was the
+server, the `iperf3 -s` that `netlab.sh` starts on every web server:
 
 ```
 ana@web1:~$ ss -tlnp | grep 5201

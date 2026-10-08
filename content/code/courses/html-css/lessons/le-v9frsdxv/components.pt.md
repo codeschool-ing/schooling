@@ -1,6 +1,6 @@
 ---
 title: Componentes sem se repetir
-version: 1
+version: 2
 ---
 
 Vinte cartões de evento com as mesmas quinze classes é a repetição da seção 02. **A primeira resposta não é CSS**: os templates do site devem produzir o cartão a partir de um lugar só, para que a lista seja escrita uma vez. Um template numa linguagem de servidor, um componente num framework, um include num gerador de sites estáticos: cada um é um arquivo só para "um cartão de evento", e as classes moram ali.
@@ -13,7 +13,7 @@ No framework que você escolher depois de `javascript`, um componente é um arqu
 Sites renderizados no servidor resolvem do mesmo jeito, com templates: o HTML de um cartão de evento é escrito uma vez e preenchido para cada evento.
 :::
 
-Quando a marcação não pode ser controlada, uma classe acrescentada por um sistema de gerenciamento de conteúdo ou por uma biblioteca, o **`@apply`** copia utilitários para uma classe sua:
+Quando a marcação não pode ser controlada, uma classe acrescentada por um sistema de gerenciamento de conteúdo ou por uma biblioteca, o **`@apply`** copia utilitários para uma classe sua, aqui em `components/input.css`:
 
 ```css
 @import "tailwindcss";
@@ -23,6 +23,24 @@ Quando a marcação não pode ser controlada, uma classe acrescentada por um sis
     @apply rounded-md bg-emerald-700 px-4 py-2 font-semibold text-white;
   }
 }
+```
+
+A página ao lado, `components/index.html`, tem dois botões com essa classe:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Andorinha Books</title>
+    <link rel="stylesheet" href="out.css">
+  </head>
+  <body class="p-4">
+    <button id="reserve" type="button" class="btn">Reserve a place</button>
+    <button id="wait" type="button" class="btn bg-stone-700">Join the waiting list</button>
+  </body>
+</html>
 ```
 
 ```

@@ -1,6 +1,6 @@
 ---
 title: Um armazenamento e uma cadeia no LangChain
-version: 1
+version: 2
 ---
 
 O armazenamento é o `PGVector`, do `langchain-postgres`, no mesmo PostgreSQL com pgvector em que
@@ -17,7 +17,7 @@ tamanho que a seção anterior escolheu e entrega os pedaços:
       "note": "As peças do LangChain: um tipo de documento, o cliente de embeddings da OpenAI, o armazenamento do Postgres e um divisor."
     },
     {
-      "code": "URL = \"postgresql+psycopg:///rag?host=/run/emb-pg\"\nembeddings = OpenAIEmbeddings(model=\"lab-minilm\", check_embedding_ctx_length=False)\nstore = PGVector(embeddings=embeddings, collection_name=\"docs\", connection=URL)",
+      "code": "URL = \"postgresql+psycopg:///rag\"\nembeddings = OpenAIEmbeddings(model=\"all-minilm\", check_embedding_ctx_length=False)\nstore = PGVector(embeddings=embeddings, collection_name=\"docs\", connection=URL)",
       "note": "O armazenamento recebe o cliente de embeddings e a coleção a preencher. Ele cria as próprias tabelas no primeiro uso. `check_embedding_ctx_length=False` é a correção da seção anterior."
     },
     {
@@ -35,9 +35,9 @@ tamanho que a seção anterior escolheu e entrega os pedaços:
 ## Um armazenamento que carrega duas vezes
 
 ```
-ana@lab:~/rag$ python lc_load.py
+ana@vm:~/rag$ python lc_load.py
 126 chunks added
-ana@lab:~/rag$ psql -c "\dt"
+ana@vm:~/rag$ psql -c "\dt"
                 List of relations
  Schema |          Name           | Type  | Owner 
 --------+-------------------------+-------+-------
@@ -45,9 +45,9 @@ ana@lab:~/rag$ psql -c "\dt"
  public | langchain_pg_collection | table | ana
  public | langchain_pg_embedding  | table | ana
 (3 rows)
-ana@lab:~/rag$ python lc_load.py
+ana@vm:~/rag$ python lc_load.py
 126 chunks added
-ana@lab:~/rag$ psql -Atc "SELECT count(*) FROM langchain_pg_embedding"
+ana@vm:~/rag$ psql -Atc "SELECT count(*) FROM langchain_pg_embedding"
 252
 ```
 
@@ -64,12 +64,12 @@ dos seus três lugares com elas. A aula 5 resolveu isso com ids feitos do docume
 armazenamento os aceita:
 
 ```
-ana@lab:~/rag$ psql -qc "DELETE FROM langchain_pg_embedding"
-ana@lab:~/rag$ python lc_load.py --ids
+ana@vm:~/rag$ psql -qc "DELETE FROM langchain_pg_embedding"
+ana@vm:~/rag$ python lc_load.py --ids
 126 chunks added
-ana@lab:~/rag$ python lc_load.py --ids
+ana@vm:~/rag$ python lc_load.py --ids
 126 chunks added
-ana@lab:~/rag$ psql -Atc "SELECT count(*) FROM langchain_pg_embedding"
+ana@vm:~/rag$ psql -Atc "SELECT count(*) FROM langchain_pg_embedding"
 126
 ```
 
@@ -82,8 +82,20 @@ tabela.
 
 ## Uma nota que aponta para o outro lado
 
+```schooling-example
+{
+  "language": "python",
+  "file": "lc_search.py",
+  "parts": [
+    {
+      "code": "import sys\n\nfrom langchain_openai import OpenAIEmbeddings\nfrom langchain_postgres import PGVector\n\nstore = PGVector(embeddings=OpenAIEmbeddings(model=\"all-minilm\", check_embedding_ctx_length=False),\n                 collection_name=\"docs\", connection=\"postgresql+psycopg:///rag\")\nfor doc, score in store.similarity_search_with_score(sys.argv[1], k=3):\n    print(f\"{score:.3f}  {doc.metadata['id']:22} {doc.page_content[:40]!r}\")",
+      "note": "O armazenamento que o `lc_load.py` preencheu, pesquisado com uma pergunta; o LangChain devolve cada documento com uma nota, que no PGVector é a distância do cosseno, menor quer dizer mais perto."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python lc_search.py "How long is a gift card valid?"
+```
+ana@vm:~/rag$ python lc_search.py "How long is a gift card valid?"
 0.253  gift-cards             '## Validity\n\nA gift card is valid for tw'
 0.287  payments-and-invoices  'Gift cards are valid for two years from '
 0.377  gift-cards             '## Using a gift card\n\nEach card has a si'
@@ -115,7 +127,7 @@ LangChain de ligar passos, o `|` da sua linguagem de expressões:
       "note": "As instruções e a frase de recusa são as da aula 7, importadas do `answer.py`, e não do LangChain."
     },
     {
-      "code": "store = PGVector(embeddings=OpenAIEmbeddings(model=\"lab-minilm\", check_embedding_ctx_length=False),\n                 collection_name=\"docs\", connection=\"postgresql+psycopg:///rag?host=/run/emb-pg\")\nsearch = {\"k\": 3, \"score_threshold\": 0.5}\nif \"--all\" not in sys.argv:\n    search[\"filter\"] = {\"status\": \"current\", \"audience\": \"public\"}\nretriever = store.as_retriever(search_type=\"similarity_score_threshold\", search_kwargs=search)\nprompt = ChatPromptTemplate.from_messages([(\"system\", SYSTEM), (\"user\", \"{sources}\\n\\nQuestion: {question}\")])\nchain = prompt | ChatOpenAI(model=\"extract-1\") | StrOutputParser()",
+      "code": "store = PGVector(embeddings=OpenAIEmbeddings(model=\"all-minilm\", check_embedding_ctx_length=False),\n                 collection_name=\"docs\", connection=\"postgresql+psycopg:///rag\")\nsearch = {\"k\": 3, \"score_threshold\": 0.5}\nif \"--all\" not in sys.argv:\n    search[\"filter\"] = {\"status\": \"current\", \"audience\": \"public\"}\nretriever = store.as_retriever(search_type=\"similarity_score_threshold\", search_kwargs=search)\nprompt = ChatPromptTemplate.from_messages([(\"system\", SYSTEM), (\"user\", \"{sources}\\n\\nQuestion: {question}\")])\nchain = prompt | ChatOpenAI(model=\"llama3.2:3b\", temperature=0) | StrOutputParser()",
       "note": "O `similarity_score_threshold` transforma a distância numa relevância de 1 menos a distância antes de comparar com 0,5, então este é o piso da aula 6. O filtro também é o da aula 6, escrito como um dicionário que o armazenamento converte numa condição sobre a coluna JSON. A cadeia são três peças ligadas por `|`: preencher o prompt, chamar o modelo, tirar o texto da resposta."
     },
     {
@@ -133,26 +145,30 @@ LangChain de ligar passos, o `|` da sua linguagem de expressões:
 Primeiro sem o filtro, passando `--all`, e depois com ele:
 
 ```
-ana@lab:~/rag$ python lc_chain.py --all "How many days do I have to return a printed book?"
-You have 30 days from delivery to return a printed book in the condition you received it. [2] You may return a printed book within 14 days of delivery if it is unread and in the condition in which you received it. [1] A printed book with a fault from the printer, such as pages bound upside down or missing, can be returned for a refund or a replacement within 30 days, like any other return. [3]
+ana@vm:~/rag$ python lc_chain.py --all "How many days do I have to return a printed book?"
+According to [1], you have 14 days to return a printed book, but this is not explicitly stated as the return window. However, [2] states that you have 30 days from delivery to return a printed book in the condition you received it. 
+
+Since [2] is updated more recently than [1], I prefer [2]. Therefore, you have 30 days from delivery to return a printed book.
   [1] returns-policy-2025, superseded
   [2] returns-policy, current
   [3] returns-policy, current
-ana@lab:~/rag$ python lc_chain.py "How many days do I have to return a printed book?"
-You have 30 days from delivery to return a printed book in the condition you received it. [1] Our returns and refunds policy extends this period to 30 days for printed books. [3] A printed book with a fault from the printer, such as pages bound upside down or missing, can be returned for a refund or a replacement within 30 days, like any other return. [2]
+ana@vm:~/rag$ python lc_chain.py "How many days do I have to return a printed book?"
+According to [1], you have 30 days from delivery to return a printed book. This is the most recent policy update, and it supersedes the information in [3], which states a 7-day withdrawal period, but only extends it to 30 days for printed books.
   [1] returns-policy, current
   [2] returns-policy, current
   [3] terms-of-sale, current
 ```
 
-Sem o filtro, a segunda frase da resposta, **14 dias, vem da política de 2025**, que o armazenamento
-guarda porque nada lhe disse o contrário; a resposta a cita como [1], e o status dela diz
-`superseded`. Com o filtro, as três fontes são atuais. As respostas vêm do extract-1, o substituto
-do laboratório, que copia as frases das fontes mais próximas da pergunta; um modelo de linguagem com
-as mesmas três fontes teria os mesmos dois números na frente.
+Sem o filtro, **a política de 2025 veio primeiro**, que o armazenamento guarda porque nada lhe disse
+o contrário, e o status dela diz `superseded`. O modelo citou os catorze dias dela, depois os trinta
+da política atual, e escolheu os trinta porque o `[2]` tem data mais recente, como a instrução da
+aula 7 pede. Com o filtro, as três fontes são atuais, e a resposta ainda achou o que resolver: os sete
+dias dos termos de venda, *estendidos* para trinta pela política, que ela descreveu como substituídos.
+O número está certo, e o raciocínio em volta dele é do próprio modelo: nenhuma fonte diz que uma
+substitui a outra.
 
 ```
-ana@lab:~/rag$ python lc_chain.py "Can I pay with cryptocurrency?"
+ana@vm:~/rag$ python lc_chain.py "Can I pay with cryptocurrency?"
 No relevant docs were retrieved using the relevance score threshold 0.5
 I could not find that in our documents.
 ```

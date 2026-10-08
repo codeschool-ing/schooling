@@ -1,14 +1,15 @@
 ---
 title: Dimensões: quem, o quê, onde e quando
-version: 1
+version: 2
 ---
 
 Uma **tabela dimensão** guarda as coisas que descrevem um fato, uma linha por coisa, com todo
 atributo pelo qual uma pessoa possa filtrar ou agrupar. Ela responde às perguntas de que um número
 precisa antes de significar algo: *qual* livro, *qual* loja, *qual* dia.
 
-A Ana constrói três para o processo de vendas, mais uma pequena para promoções, a partir dos arquivos
-que o curso guarda em `lab/warehouse/`:
+A Ana constrói três para o processo de vendas, mais uma pequena para promoções, um arquivo SQL para
+cada. `dim_book.sql` e `dim_shop.sql` estão nesta seção e `dim_promotion.sql` no fim dela;
+`dim_date.sql` é o assunto da seção 06. Salve os quatro em `~/wh` e então:
 
 ```
 ana@lab:~/wh$ for f in dim_date dim_shop dim_book dim_promotion; do duckdb wh.duckdb < $f.sql; done
@@ -81,7 +82,24 @@ os três níveis e ninguém que escreve um relatório precisa saber quais ramos 
 - **Poucas linhas, muitas colunas.** 3.000 livros, 7 lojas, 732 linhas de datas: tabelas pequenas
   para as quais toda linha fato aponta.
 
-As lojas, todas:
+As lojas vêm de `dim_shop.sql`:
+
+```sql
+CREATE TABLE dim_shop AS
+SELECT row_number() OVER (ORDER BY opened_on) AS shop_key,
+       shop_id,
+       name                                   AS shop_name,
+       coalesce(city, 'Online')               AS city,
+       coalesce(state, '--')                  AS state,
+       CASE WHEN state IN ('SP', 'MG') THEN 'Southeast'
+            WHEN state IN ('PR', 'RS') THEN 'South'
+            ELSE 'Online' END                 AS region,
+       channel,
+       opened_on
+FROM staging.shops;
+```
+
+Todas elas:
 
 ```
 ana@lab:~/wh$ duckdb wh.duckdb -c "SELECT * FROM dim_shop"
@@ -104,3 +122,19 @@ com o Sudeste, e **uma dimensão é o lugar de um atributo assim**: escrito uma 
 e disponível para toda tabela fato que aponte para uma loja. A loja online não tem cidade, e recebe a
 palavra `Online` em vez de uma célula vazia, para que um relatório agrupado por cidade tenha uma linha
 que consiga rotular.
+
+## As promoções
+
+`dim_promotion.sql` copia as dez promoções e acrescenta uma linha que não é promoção nenhuma: a chave
+0, *No promotion*, para onde aponta toda venda sem promoção. A lição 4 explica por que uma linha assim
+é melhor que uma chave vazia.
+
+```sql
+CREATE TABLE dim_promotion AS
+SELECT promotion_id AS promotion_key, promotion_id, code, name AS promotion_name,
+       percent_off, starts_on, ends_on, coalesce(category, 'All departments') AS applies_to
+FROM staging.promotions
+UNION ALL
+SELECT 0, NULL, '', 'No promotion', 0, NULL, NULL, ''
+ORDER BY promotion_key;
+```

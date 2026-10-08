@@ -42,24 +42,22 @@ whole of what you need.
 
 Keeps everything from both sides:
 
-```sql
-SELECT c.name, o.id
-FROM   customers c
-FULL JOIN orders o ON o.customer_id = c.id;
 ```
-
-```
- name       | id
+joins=# SELECT c.name, o.id
+joins-# FROM   customers c
+joins-# FULL JOIN orders o ON o.customer_id = c.id;
+    name    |  id  
 ------------+------
  Ana Lopes  | 1001
+ Bruno Sá   | 1002
  Ana Lopes  | 1003
  Ana Lopes  | 1004
- Bruno Sá   | 1002
- Célia Reis | NULL    <- a customer with no order
- NULL       | 1005    <- an order with no customer
+ NULL       | 1005
+ Célia Reis | NULL
+(6 rows)
 ```
 
-Both kinds of orphan, in one result. It is genuinely rare in application code and genuinely useful
+Both kinds of orphan, in one result: order 1005 with no customer, and Célia with no order. It is genuinely rare in application code and genuinely useful
 for one job: **reconciliation**.
 
 ```sql

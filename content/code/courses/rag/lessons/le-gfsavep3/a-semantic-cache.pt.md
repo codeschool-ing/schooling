@@ -1,6 +1,6 @@
 ---
 title: Um cache semântico
-version: 1
+version: 2
 ---
 
 Um cache semântico casa perguntas pelo sentido: gera o embedding de cada pergunta nova, acha a guardada
@@ -10,8 +10,20 @@ e "refund timing after return" são uma pergunta só, e um cache exato guarda du
 O `semantic.py` reproduz a semana por um cache semântico em seis limites, e usa o assunto de que cada
 pergunta foi gerada para contar os acertos que serviram a resposta de outra pergunta:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "semantic.py",
+  "parts": [
+    {
+      "code": "import json\n\nimport numpy as np\nfrom vectors import embed\n\nLOG = [json.loads(line) for line in open(\"data/querylog.jsonl\")]\ntexts = sorted({q[\"text\"] for q in LOG})\nvectors = dict(zip(texts, embed(texts)))\ntopic = {q[\"text\"]: q[\"topic\"] for q in LOG}\nprint(f\"{'threshold':>9} {'misses':>7} {'hits':>5} {'wrong':>6}\")\nfor threshold in (0.95, 0.9, 0.85, 0.8, 0.75, 0.7):\n    stored, hits, wrong = [], 0, 0\n    for q in LOG:\n        v = vectors[q[\"text\"]]\n        best = max(stored, key=lambda s: float(v @ vectors[s]), default=None)\n        if best is not None and float(v @ vectors[best]) >= threshold:\n            hits += 1\n            wrong += topic[best] != q[\"topic\"]\n        else:\n            stored.append(q[\"text\"])\n    print(f\"{threshold:9.2f} {len(stored):7} {hits:5} {wrong:6}\")",
+      "note": "Um cache semântico reproduzido sobre a semana em seis limiares: uma pergunta perto o bastante de uma já respondida é um acerto, e um acerto numa pergunta sobre outro assunto é uma resposta errada servida do cache."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python semantic.py
+```
+ana@vm:~/rag$ python semantic.py
 threshold  misses  hits  wrong
      0.95      38   462      0
      0.90      35   465      0
@@ -30,10 +42,22 @@ poupadas em relação ao cache exato. Em **0,75, mais três chamadas são poupad
 erradas**, todas de um cliente perguntando sobre um tipo de cancelamento e recebendo a resposta sobre o
 outro:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "near.py",
+  "parts": [
+    {
+      "code": "from vectors import embed\n\npairs = [(\"Can I cancel a pre-order?\", \"Can I cancel my order?\"),\n         (\"how do I cancel a pre-order\", \"how do I cancel an order\"),\n         (\"how long does a refund take\", \"refund timing after return\")]\nfor a, b in pairs:\n    v = embed([a, b])\n    print(f\"{float(v[0] @ v[1]):.3f}  {a!r}  {b!r}\")",
+      "note": "Três pares de perguntas, e o quanto o modelo de embeddings acha cada par parecido."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python near.py
+```
+ana@vm:~/rag$ python near.py
 0.867  'Can I cancel a pre-order?'  'Can I cancel my order?'
-0.872  'how do I cancel a pre-order'  'how do I cancel an order'
+0.871  'how do I cancel a pre-order'  'how do I cancel an order'
 0.774  'how long does a refund take'  'refund timing after return'
 ```
 

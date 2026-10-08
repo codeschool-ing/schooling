@@ -1,10 +1,11 @@
 ---
 title: Redes próprias
-version: 1
+version: 2
 ---
 
 **O `docker network create` cria uma bridge nova, e containers nela se acham pelo nome.** A aula 19
-contou com isso, e o Compose faz isso para todo projeto:
+contou com isso, e o Compose faz isso para todo projeto. A `shelf:1.0.0` abaixo é a imagem que a aula
+15 construiu; se a sua máquina não a tem mais, o build que aquela aula mostra a refaz:
 
 ```
 ana@vm:~$ docker network create shelfnet

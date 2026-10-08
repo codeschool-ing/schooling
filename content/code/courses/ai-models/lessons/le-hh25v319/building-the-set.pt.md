@@ -20,12 +20,12 @@ ana@desk:~/desk$ python -c "import json, collections; print(collections.Counter(
 Counter({'order-status': 9, 'refund': 8, 'address-change': 8, 'product-question': 8, 'other': 7})
 ```
 
-Oito ou nove de cada rótulo, com `other` um pouco abaixo. O tráfego real raramente é tão uniforme,
-e há uma escolha a fazer: **espelhar o tráfego**, para a nota geral prever o que a caixa de entrada
+Oito ou nove de cada rótulo, com `other` um pouco abaixo. O tráfego real raramente é tão uniforme, e
+há uma escolha a fazer: **espelhar o tráfego**, para a nota geral prever o que a caixa de entrada
 vai ver, ou **equilibrar os rótulos**, para a nota de um rótulo raro não depender de dois casos. A
 ana equilibrou, e a seção 06 relata o resultado por modelo, sem dizer que ele prevê a caixa de
-entrada. A segunda coisa que ela conferiu foram os casos sem pedido, que a tarefa de extração precisa
-responder com `null`:
+entrada. A segunda coisa que ela conferiu foram os casos sem pedido, que a tarefa de extração
+precisa responder com `null`:
 
 ```
 ana@desk:~/desk$ grep -c "\"order\": null" cases/triage.jsonl
@@ -37,19 +37,20 @@ resposta "não há nenhum", e é ela que um modelo descuidado erra.
 
 ## Os casos que mais ensinam
 
-**Casos de fronteira** valem mais que os fáceis, porque os fáceis todo candidato acerta e não separam
-nenhum. A ana manteve os e-mails em que ela mesma hesitou. Dois deles:
+**Casos de fronteira** valem mais que os fáceis, porque os fáceis todo candidato acerta e não
+separam nenhum. A ana manteve os e-mails em que ela mesma hesitou. Dois deles:
 
 ```
-ana@desk:~/desk$ grep -E "\"c(20|38)\"" cases/triage.jsonl
-{"id": "c20", "text": "Your courier left a card saying they will try again tomorrow, but I won't be home. Order LB-20466. Can they leave it with a neighbour?", "label": "order-status", "order": "LB-20466"}
-{"id": "c38", "text": "Do you ship to Portugal, and how long does it take?", "label": "product-question", "order": null}
+ana@desk:~/desk$ grep -E "\"c(24|26)\"" cases/triage.jsonl
+{"id": "c24", "text": "I'm a teacher and would like to order thirty copies. Do you give discounts to schools?", "label": "other", "order": null}
+{"id": "c26", "text": "I ordered the hardback but you sent the paperback (LB-20431). I'll keep it if you refund the difference.", "label": "refund", "order": "LB-20431"}
 ```
 
-O aviso de uma transportadora e um pedido para deixar o pacote com um vizinho são sobre o status do
-pedido, ou sobre onde ele é entregue? Entregar em Portugal é uma pergunta sobre um produto? **Uma
-pessoa decidiu os dois**, e a decisão é tanto política da loja quanto um fato sobre o e-mail. A seção
-07 mostra o que acontece com eles.
+Uma professora perguntando se escolas têm desconto em trinta exemplares está perguntando sobre um
+produto, ou pedindo alguém que possa negociar? Um pedido de reembolso da diferença entre duas
+edições é um reembolso, ou uma reclamação sobre a edição? **Uma pessoa decidiu os dois**, e a
+decisão é tanto política da loja quanto um fato sobre o e-mail. A seção 07 mostra o que acontece com
+eles.
 
 ## Rótulos precisam de uma segunda pessoa
 
@@ -62,6 +63,6 @@ regra escrita, ou removido.
 ## Quantos
 
 Quarenta bastam para separar um modelo ruim de um bom e são poucos para separar dois bons, o que a
-seção 06 mede em vez de afirmar. Comece com o que uma pessoa consegue rotular com cuidado numa tarde,
-e faça o conjunto crescer a partir das falhas que aparecem no uso. Um conjunto que só cresce a partir
-de erros reais fica mais difícil exatamente onde o trabalho é difícil.
+seção 06 mede em vez de afirmar. Comece com o que uma pessoa consegue rotular com cuidado numa
+tarde, e faça o conjunto crescer a partir das falhas que aparecem no uso. Um conjunto que só cresce
+a partir de erros reais fica mais difícil exatamente onde o trabalho é difícil.

@@ -1,6 +1,6 @@
 ---
 title: Pedindo as bordas
-version: 1
+version: 2
 ---
 
 A maioria dos bugs mora nas bordas da entrada: zero, um, a lista vazia, o maior valor, o número
@@ -10,7 +10,7 @@ lista de entradas se confere lendo, e as saídas esperadas continuam vindo de vo
 
 ## Uma tabela de casos
 
-A aula 3 seção 07 achou que `format_price(-5)` devolve `'-1.95'`. A ana pede casos de borda para a
+A aula 3 seção 07 achou que `format_price(-1290)` devolve `'-13.10'`. A ana pede casos de borda para a
 função, fica com as entradas que a lista sugere (zero, um centavo, logo abaixo e em cima de uma
 unidade inteira, um valor grande, negativos) e escreve ela mesma o texto esperado de cada uma. O
 `parametrize` do pytest transforma a tabela num teste por linha:
@@ -90,8 +90,8 @@ FAILED tests/test_format_edges.py::test_format_price[-1290--12.90] - Assertio...
 ```
 
 Seis linhas passam e as duas negativas falham, cada uma com a saída errada exata: `-5` vira `-1.95`
-e `-1290` vira `-13.10`. Uma tabela torna o padrão visível de uma vez. **Todo valor negativo está
-errado, não um**, o que diz que o bug está na conta e não num caso especial.
+e `-1290` vira `-13.10`. Uma tabela torna o padrão visível de uma vez. **As duas linhas negativas estão
+erradas, não só uma**, o que diz que o bug está na conta e não num caso especial.
 
 ## De onde vem a lista de bordas
 

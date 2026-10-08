@@ -1,6 +1,6 @@
 ---
 title: The network, which is a device with a queue
-version: 1
+version: 2
 ---
 
 A network interface is a device with a queue, so the same three questions work:
@@ -10,15 +10,16 @@ how busy, how much is waiting, and how many errors.
 
 ```
 ana@vm:~$ ss -s
-Total: 29
-TCP:   18 (estab 13, closed 1, orphaned 0, timewait 1)
+Total: 32
+TCP:   15 (estab 11, closed 0, orphaned 0, timewait 0)
 
 Transport Total     IP        IPv6
 RAW       0         0         0
 UDP       0         0         0
-TCP       17        17        0
-INET      17        17        0
+TCP       15        15        0
+INET      15        15        0
 FRAG      0         0         0
+
 ```
 
 `ss -s` is the one-line summary: how many sockets, how many established, how
@@ -27,10 +28,10 @@ many in `TIME-WAIT`.
 ```
 ana@vm:~$ ss -tulpn 2>/dev/null | head -8
 Netid State  Recv-Q Send-Q Local Address:Port  Peer Address:PortProcess
-tcp   LISTEN 0      512        127.0.0.1:42989      0.0.0.0:*
-tcp   LISTEN 0      4096       127.0.0.1:45939      0.0.0.0:*
-tcp   LISTEN 0      128          0.0.0.0:2024       0.0.0.0:*
+tcp   LISTEN 0      4096       127.0.0.1:39221      0.0.0.0:*
 tcp   LISTEN 0      128          0.0.0.0:2025       0.0.0.0:*
+tcp   LISTEN 0      128          0.0.0.0:2024       0.0.0.0:*
+tcp   LISTEN 0      512        127.0.0.1:33393      0.0.0.0:*
 ```
 
 **`ss -tulpn` is the one to memorise**, and the letters spell out what it does:
@@ -42,7 +43,7 @@ tcp   LISTEN 0      128          0.0.0.0:2025       0.0.0.0:*
 | `-p` | which process — needs privilege to see other users' |
 | `-n` | numeric. **Do not resolve names**, which is what makes it instant |
 
-`0.0.0.0:2025` is reachable from the network; `127.0.0.1:45939` is not. That
+`0.0.0.0:2025` is reachable from the network; `127.0.0.1:39221` is not. That
 distinction is a security question as much as a performance one, and `ss -tulpn`
 is how you answer "is this service actually exposed".
 
@@ -73,17 +74,21 @@ the far end. A large `Send-Q` that is not draining is a slow or absent peer.
 
 ## Errors and drops
 
+The interface on this machine is `eth0`. On yours it probably has another name,
+such as `enp0s3`; `ip -br link` lists them, and yours goes wherever `eth0` is
+written below.
+
 ```
 ana@vm:~$ ip -s link show eth0
 4: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1400 qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
     link/ether 02:fc:00:00:00:01 brd ff:ff:ff:ff:ff:ff
     RX:  bytes packets errors dropped  missed   mcast
-     365057734  262464      0       6       0       0
+    1003499363  214183      0       6       0       0
     TX:  bytes packets errors dropped carrier collsns
-     426949616  260028      0       0       0       0
+     333316983  179298      0       0       0       0
 ```
 
-**Six received packets dropped out of 262,464.** That is the `E` of the USE
+**Six received packets dropped out of 214,183.** That is the `E` of the USE
 method from section 02, and it is the number nobody looks at.
 
 | | |
@@ -92,7 +97,7 @@ method from section 02, and it is the number nobody looks at.
 | `dropped` | the packet was fine and there was nowhere to put it. A **buffer** |
 | `missed` | the card had no descriptor free. The driver could not keep up |
 
-Six drops in a quarter of a million is noise. The same ratio at a million
+Six drops in two hundred thousand is noise. The same ratio at a million
 packets a second is thousands per second, and it appears as occasional,
 unreproducible slowness in an application that has no idea anything is wrong.
 
@@ -125,12 +130,14 @@ sar -n EDEV 1                                               # the error counters
 
 ```
 ana@vm:~$ sar -n DEV 1 1 2>&1 | grep -E 'IFACE|eth0'
-11:39:28        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
-11:39:29         eth0      2.00      3.00      0.13      0.19      0.00      0.00      0.00      0.00
+13:50:40        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+13:50:41         eth0      4.00      4.00      0.26      0.26      0.00      0.00      0.00      0.00
+Average:        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+Average:         eth0      4.00      4.00      0.26      0.26      0.00      0.00      0.00      0.00
 ```
 
-Two packets a second in, three out, and an interface utilisation of zero. Those
-are numbers you can act on; `RX packets 262464` is not. That is the whole subject
+Four packets a second in, four out, and an interface utilisation of zero. Those
+are numbers you can act on; `RX packets 214183` is not. That is the whole subject
 of the next section, and the network counters are where it bites hardest —
 nobody has ever looked at a total since boot and known whether it was a lot.
 

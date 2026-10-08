@@ -13,7 +13,7 @@ written in Python, with `requests`:
   "parts": [
     {
       "code": "from pathlib import Path\n\nimport requests\n\nBASE = \"https://edge1.example.net/api/v1\"\nCA = \"lab-ca.pem\"\npassword = Path(\"~/.netops-password\").expanduser().read_text().strip()\n",
-      "note": "**The address of the API and the file that proves who the server is.** `lab-ca.pem` is the lab's certificate authority; section 08 is about why it is named here."
+      "note": "**The address of the API and the file that proves who the server is.** `lab-ca.pem` is the lab's certificate authority; section 09 is about why it is named here."
     },
     {
       "code": "r = requests.post(f\"{BASE}/auth/login\", json={\"username\": \"netops\", \"password\": password},\n                  verify=CA, timeout=10)\nr.raise_for_status()\ntoken = r.json()[\"token\"]\n",
@@ -43,7 +43,7 @@ Three details in the script matter more than they look:
 - **`timeout=10`**. `requests` has no timeout unless you give one, and a device that accepts the
   connection and never answers will hold the script forever.
 - **`verify=CA`** names the certificate authority to check the router's certificate against.
-  Section 08 shows what happens without it.
+  Section 09 shows what happens without it.
 
 Every script from here on needs the same address, the same certificate authority and the same
 token, so they move into a small client that the rest of the lesson imports. The constructor

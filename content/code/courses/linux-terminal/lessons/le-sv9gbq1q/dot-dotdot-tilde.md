@@ -1,6 +1,6 @@
 ---
 title: The shorthands: `.`, `..`, `~` and `-`
-version: 2
+version: 3
 ---
 
 Four pieces of shorthand appear in almost every path you will ever type. Two of them are real
@@ -128,7 +128,8 @@ something that looks like an option and does not exist.
 ana@vm:~/work$ ./ledger
 ```
 
-You must write `./` to run a program sitting in the current directory. The reason is security:
+You must write `./` to run a program sitting in the current directory (and, as in section 03, your
+`~/work` has no `ledger` to run). The reason is security:
 if `.` were searched automatically, dropping a file called `ls` into a shared directory would be
 enough to have the next person run it. Section 03 already made the mechanical point; this is why
 nobody has ever fixed it.

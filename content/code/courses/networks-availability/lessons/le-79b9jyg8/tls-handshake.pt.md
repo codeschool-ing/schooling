@@ -4,8 +4,10 @@ version: 1
 ---
 
 A aula 5 de `networks` descreveu o handshake TLS do lado do cliente. Visto do fio, **o TLS 1.3 mostra
-muito menos do que mostrava antes, e isso é de propósito.** Aqui ele está funcionando, na porta 443 de
-`web1`:
+muito menos do que mostrava antes, e isso é de propósito.** `web1` serve TLS em quatro portas, cada uma
+com um certificado que o `netlab.sh` criou na aula 1. O nome é `www.example.com`, que pertence aos
+balanceadores de carga, e eles não estão rodando nesta aula, então cada `--resolve` manda o pedido para
+aquele nome e porta ao endereço do próprio `web1`. Aqui ele está funcionando, na porta 443:
 
 ```
 ana@laptop:~$ curl -sS --resolve www.example.com:443:192.0.2.21 --resolve www.example.com:8443:192.0.2.21 --resolve www.example.com:9443:192.0.2.21 --resolve www.example.com:10443:192.0.2.21 https://www.example.com/
@@ -37,7 +39,7 @@ respostas.
 
 ## Três certificados que o laptop recusou
 
-`web1` servia mais três certificados em mais três portas: um vencido, um para outro nome e um assinado
+`web1` serve mais três certificados em mais três portas: um vencido, um para outro nome e um assinado
 por uma autoridade em que o laptop não confia. O primeiro:
 
 ```

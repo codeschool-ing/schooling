@@ -1,6 +1,6 @@
 ---
 title: Achar um pacote, e achar de onde veio um arquivo
-version: 1
+version: 2
 ---
 
 Quatro perguntas, e cada uma tem um comando. Elas são perguntas diferentes e as pessoas usam a
@@ -17,6 +17,10 @@ A terceira e a quarta parecem iguais e são opostas: **o `dpkg -S` pergunta ao b
 está instalado; o `apt-file` pergunta aos repositórios sobre o que não está.**
 
 ## Buscar por nome e por descrição
+
+O `[installed]` abaixo marca o que está instalado na máquina de onde vêm estas transcrições, que tem
+o `ripgrep` e algumas outras ferramentas que a sua não tem; `sudo apt install ripgrep` faz a
+primeira linha bater.
 
 ```
 root@vm:~# apt search "^ripgrep$" 2>/dev/null
@@ -140,7 +144,8 @@ O `rpm -qf` é a mesma pergunta na outra família, e a seção 10 o usa.
 
 O `dpkg -S` não responde "qual pacote me daria o `pdftotext`", porque o pacote não está instalado e a
 lista de arquivos dele não está na sua máquina. O `apt-file` baixa as listas de arquivos para
-conseguir:
+conseguir, e antes precisa ser instalado e receber o seu índice, ao que o próximo parágrafo volta:
+`sudo apt install apt-file` e depois `sudo apt-file update`.
 
 ```
 root@vm:~# apt-file search bin/pdftotext

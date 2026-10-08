@@ -22,7 +22,7 @@ Events:
 
 **De volta a uma réplica.** Descer é de propósito mais lento que subir: por padrão o autoscaler usa a
 maior recomendação dos últimos cinco minutos, para que uma queda de tráfego de poucos segundos não
-remova pods que vão ser necessários de novo em seguida. Este laboratório encurtou essa janela para 30
+remova pods que vão ser necessários de novo em seguida. Esta aula encurtou essa janela para 30
 segundos em `behavior.scaleDown.stabilizationWindowSeconds`, para a captura caber numa página; em
 produção o padrão costuma estar certo.
 
@@ -37,7 +37,7 @@ que a fórmula queria menos de uma réplica e foi segurada em `minReplicas`. Qua
 autoscaler por memória muitas vezes sobe e nunca desce.
 
 Mais dois tipos de métrica precisam de um adaptador que os sirva pela API, do jeito que o
-metrics-server serve CPU. Este laboratório não instala nenhum, então eles são descritos e não rodados:
+metrics-server serve CPU. Este curso não instala nenhum, então eles são descritos e não rodados:
 
 | tipo de métrica | exemplo | servida por |
 |---|---|---|

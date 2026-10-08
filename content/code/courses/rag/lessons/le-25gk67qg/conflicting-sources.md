@@ -1,13 +1,13 @@
 ---
 title: When the sources disagree
-version: 1
+version: 2
 ---
 
 Two documents can both be relevant and say different things. Sometimes one replaced the other, as the
 2025 returns policy was replaced. Sometimes both are current and apply to different cases: the returns
 policy gives thirty days and the terms of sale give seven, because one is the shop's promise and the
-other is the law. A generator handed both has to decide what to do, and the worst decision is the
-one extract-1 makes.
+other is the law. A generator handed both has to decide what to do, and the worst decision is to quote
+both and leave the reader to choose.
 
 ## With the replaced policy in the sources
 
@@ -15,30 +15,30 @@ The status filter is what kept the 2025 policy out. Here it is loosened to the a
 replaced policy is allowed back in:
 
 ```
-ana@lab:~/rag$ python -c "from answer import answer; print(answer(\"How many days do I have to return a printed book?\", where=\"audience = %s\", params=(\"public\",))[0])"
-You have 30 days from delivery to return a printed book in the condition you received it. [2] You may return a printed book within 14 days of delivery if it is unread and in the condition in which you received it. [1] A printed book with a fault from the printer, such as pages bound upside down or missing, can be returned for a refund or a replacement within 30 days, like any other return. [3]
+ana@vm:~/rag$ python -c "from answer import answer; print(answer(\"How many days do I have to return a printed book?\", where=\"audience = %s\", params=(\"public\",))[0])"
+According to [1], you have 14 days to return a printed book, but this is only if it is unread and in the condition in which you received it. However, [2] states that you have 30 days from delivery to return a printed book in the condition you received it. 
+
+Since [2] is the more recent update, I prefer it. Therefore, you have 30 days from delivery to return a printed book.
 ```
 
-**Thirty days from `[2]` and fourteen from `[1]`, side by side, each cited.** The prompt said to prefer
-the source updated most recently and say so; the headers carried the dates, 2026-02-02 and 2025-03-01.
-extract-1 has no notion of a date and quoted both. A real model would usually follow the instruction
-here, given the dates, which is exactly why the dates have to be in the prompt: the instruction is
-useless without them.
+**Fourteen days from `[1]`, thirty from `[2]`, and a choice, said out loud.** The prompt said to
+prefer the source updated most recently and say so, and the headers carried the dates, 2025-03-01 and
+2026-02-02. The model did both. Without the dates in the prompt it could not have: the instruction is
+useless when nothing in front of the model says which source is newer. And it is an instruction, so
+it is followed most of the time, by this model on this question.
 
 ## With the filter back on
 
 ```
-ana@lab:~/rag$ python answer.py "How many days do I have to return a printed book?"
-You have 30 days from delivery to return a printed book in the condition you received it. [1] Our returns and refunds policy extends this period to 30 days for printed books. [3] A printed book with a fault from the printer, such as pages bound upside down or missing, can be returned for a refund or a replacement within 30 days, like any other return. [2]
+ana@vm:~/rag$ python answer.py "How many days do I have to return a printed book?"
+According to [1], you have 30 days from delivery to return a printed book. This is the most recent and updated policy, as stated in the source date (2026-02-02).
   [1] Returns and refunds policy > The return window, updated 2026-02-02
-  [3] Terms of sale > 6. The right of withdrawal, updated 2026-01-05
-  [2] Returns and refunds policy > Damaged, faulty and wrong items, updated 2026-02-02
 ```
 
-**Thirty days, from the current policy, and a second source that agrees.** `[3]` is the terms of
-sale's clause on withdrawal, *Our returns and refunds policy extends this period to 30 days*, which is
-a different document saying the same thing. This is the kind of disagreement that is not one: the
-terms state the legal minimum of seven days and point to the policy for the thirty.
+**Thirty days, from the current policy, with no conflict left to resolve.** The filter removed the
+2025 policy before the model saw it, so there was nothing to choose between. The model still said the
+policy was the most recent, an instruction applied where it had nothing to do, which is harmless here
+and is the reason a prompt should not carry an instruction for a case the code can settle.
 
 ## Resolve conflicts in code where you can
 

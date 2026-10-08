@@ -1,69 +1,62 @@
 ---
 title: Errors and retries
-version: 1
+version: 2
 ---
 
 A RAG pipeline calls a provider twice per question, once to embed it and once to answer it, and each
 call can fail: too many requests, a provider overloaded, a network that drops the connection. Lesson 5
 met the first while indexing. At query time it matters more, because a customer is waiting.
 
-## A refusal the SDK absorbs
+## What the SDK retries
 
-labgen can be told to refuse the next requests, the same way labembed was in lesson 5:
+The SDKs retry, by themselves, the failures that can succeed a moment later: a 429 for too many
+requests, a 500-something from an overloaded provider, a connection that dropped, and a request that
+took longer than the client's timeout. Lesson 5 watched the loop against a port where nothing
+listened. Ollama on your own machine never rate-limits and is rarely overloaded, so the failure a
+local pipeline meets is the last one: a model on a processor with no graphics card can take longer
+than the timeout to answer.
+
+## A failure it does not absorb
+
+`fragile.py` gives `rag.py` a client that waits one second for any reply, and lets it retry twice:
+
+```schooling-example
+{
+  "language": "python",
+  "file": "fragile.py",
+  "parts": [
+    {
+      "code": "import sys\n\nimport openai\nimport rag\n\n# A client that gives a reply one second, and gives up after two retries.\nrag.client = openai.OpenAI(max_retries=2, timeout=1)\ntry:\n    print(rag.ask(sys.argv[1])[0])\nexcept (openai.APITimeoutError, openai.APIConnectionError) as e:\n    print(\"gave up after retries:\", type(e).__name__)\n    print(\"Our assistant is busy right now. Please try again in a minute.\")",
+      "note": "`rag.py`'s client replaced by one that waits one second for any reply, and the failure caught where a customer would otherwise see a stack trace."
+    }
+  ]
+}
+```
 
 ```
-ana@lab:~/rag$ curl -s -X POST localhost:8600/lab/config -d "{\"fail\": 2, \"status\": 429}"; echo
-{"fail": 2, "status": 429}
-ana@lab:~/rag$ python rag.py "How long is a gift card valid?"
-A gift card is valid for two years from the day it was bought. [1] Gift cards are valid for two years from purchase and cannot be exchanged for cash. [2]
-  [1] Gift card terms > Validity, updated 2025-10-27
-  [2] Payments, invoices and gift cards > Gift cards, updated 2026-03-30
-ana@lab:~/rag$ python statuses.py
-/v1/embeddings 200
-/v1/chat/completions 200
-/v1/embeddings 429
-/v1/embeddings 429
-/v1/embeddings 200
-/v1/chat/completions 200
-```
-
-`statuses.py` prints the last six requests labgen received. The first two are the previous query. Then
-**the embedding request was refused twice and succeeded on the third attempt**, and the chat request
-went through. The customer saw an answer; the program never knew. `rag.py` built its client with
-`max_retries=3`, and the SDK spent two of them, waiting a little longer before each.
-
-## A refusal it does not
-
-```
-ana@lab:~/rag$ curl -s -X POST localhost:8600/lab/config -d "{\"fail\": 5, \"status\": 429}"; echo
-{"fail": 5, "status": 429}
-ana@lab:~/rag$ python fragile.py "How long is a gift card valid?"
-gave up after retries: 429
+ana@vm:~/rag$ OPENAI_LOG=info python fragile.py "How long is a gift card valid?" 2>&1
+[2026-10-07 22:17:27 - httpx:1025 - INFO] HTTP Request: POST http://localhost:11434/v1/embeddings "HTTP/1.1 200 OK"
+[2026-10-07 22:17:28 - openai._base_client:1172 - INFO] Retrying request to /chat/completions in 0.394029 seconds
+[2026-10-07 22:17:29 - openai._base_client:1172 - INFO] Retrying request to /chat/completions in 0.835753 seconds
+gave up after retries: APITimeoutError
 Our assistant is busy right now. Please try again in a minute.
-ana@lab:~/rag$ python statuses.py
-/v1/embeddings 429
-/v1/embeddings 200
-/v1/chat/completions 200
-/v1/embeddings 429
-/v1/embeddings 429
-/v1/embeddings 429
 ```
 
-`fragile.py` replaces the client with one allowed only two retries, and five refusals are waiting.
-**Three attempts, three refusals, and the SDK raised `RateLimitError`.** The program caught it and
-showed the customer a sentence instead of a stack trace. The last six lines of the log show the
-previous query's three requests and then the three refused attempts at this one; the chat endpoint was
-never reached, because there was no vector to search with.
+The embedding request answered within the second, `200 OK`. **The chat request did not, three times:
+one attempt, two retries with a growing wait between them, and the SDK raised `APITimeoutError`.** The
+program caught it and showed the customer a sentence instead of a stack trace. Each retry started the
+generation again from nothing, so a timeout that is too short does not only fail: it spends three
+generations' worth of the machine on an answer nobody receives.
 
-```
-ana@lab:~/rag$ curl -s -X POST localhost:8600/lab/config -d "{\"fail\": 0}"; echo
-{"fail": 0, "status": 429}
-```
+`rag.py` itself sets twenty seconds, which on the machine this course was recorded on was enough for
+every run in this lesson.
+A model behind a commercial API answers a question this size in a second or two, and a timeout of ten
+or twenty seconds there catches a stuck request rather than a slow one.
 
 ## The rules worth having
 
-**Set the retry budget and the timeout on the client.** `rag.py` sets three retries and twenty
-seconds. The defaults of most SDKs are two retries and ten minutes, and ten minutes is not a timeout
+**Set the retry budget and the timeout on the client**, and measure the timeout against the model you
+actually run. `rag.py` sets three retries and twenty seconds. The defaults of most SDKs are two retries and ten minutes, and ten minutes is not a timeout
 anybody waiting at a chat window would choose.
 
 **Retry what can succeed, not what cannot.** The SDKs retry rate limits, overloads and connection
@@ -79,6 +72,6 @@ the embedding call, and the documents themselves are useful.
 failing after a search means the sources are known and can be shown. A pipeline that treats both as
 one error throws away the half that worked.
 
-**And count them.** Every retry is a request the provider bills or rate-limits, and a rising rate of
-429s is the first sign of a quota about to be outgrown. The log of the last section of this lesson is
+**And count them.** Every retry is a request the provider bills or rate-limits, and with a commercial provider a
+rising rate of 429s is the first sign of a quota about to be outgrown. The log of the last section of this lesson is
 the place to record them.

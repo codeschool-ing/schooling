@@ -1,6 +1,6 @@
 ---
 title: Cutting where the meaning changes
-version: 1
+version: 2
 ---
 
 Headings are where an author said a topic changes. **Semantic chunking** tries to find where the topic
@@ -27,8 +27,21 @@ and other text with no headings.
 
 ## What it found in the returns policy
 
+```schooling-example
+{
+  "language": "python",
+  "file": "boundaries_semantic.py",
+  "parts": [
+    {
+      "code": "from chunking import load, semantic\n\nmeta, body = load()[\"returns-policy\"]\nfor i, chunk in enumerate(semantic(body), 1):\n    print(f\"{i:2} {len(chunk.split()):4} words  {' '.join(chunk.split()[:9])} ...\")",
+      "note": "Every chunk `semantic` makes of the returns policy, with its size and its first nine words."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python boundaries_semantic.py
+
+```
+ana@vm:~/rag$ python boundaries_semantic.py
  1   31 words  This policy applies to every order placed on marginalia.example ...
  2   84 words  It covers printed books, gifts and items sold by ...
  3   66 words  A book is in the condition you received it ...

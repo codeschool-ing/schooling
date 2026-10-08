@@ -1,11 +1,13 @@
 ---
 title: O que um certificado diz
-version: 1
+version: 2
 ---
 
 Um certificado é uma chave pública com uma declaração junto: "esta chave pertence a estes nomes, até
 esta data", assinada por alguém que conferiu. O `openssl s_client` busca o que `www.example.com` manda,
-e o `openssl x509` imprime os campos que importam:
+e o `openssl x509` imprime os campos que importam. O seu laboratório gera chaves e certificados
+novos toda vez que é montado, então as suas datas, números de série e impressões digitais vão ser
+diferentes dos desta aula; os campos e o que eles dizem, não.
 
 ```
 ana@laptop:~$ openssl s_client -connect www.example.com:443 -servername www.example.com </dev/null 2>/dev/null | openssl x509 -noout -subject -issuer -dates -ext subjectAltName,basicConstraints,extendedKeyUsage

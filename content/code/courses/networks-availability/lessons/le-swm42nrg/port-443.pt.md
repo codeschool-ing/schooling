@@ -4,8 +4,17 @@ version: 1
 ---
 
 A rede de hóspedes de um hotel, o escritório de um cliente, algumas operadoras móveis: muitas redes
-deixam sair tráfego web e pouco mais. O roteador doméstico do laboratório foi transformado numa dessas,
-como root e sem mostrar, e esta é a cadeia de encaminhamento dele:
+deixam sair tráfego web e pouco mais. Transforme o roteador doméstico numa dessas, em `homegw`:
+
+```sh
+sudo nft add table ip filter
+sudo nft add chain ip filter forward '{ type filter hook forward priority 0; policy drop; }'
+sudo nft add rule ip filter forward ct state established,related accept
+sudo nft add rule ip filter forward iifname eth0 tcp dport 443 accept
+sudo nft add rule ip filter forward iifname eth0 udp dport 53 accept
+```
+
+Esta é a cadeia de encaminhamento dele:
 
 ```
 ana@homegw:~$ sudo nft list chain ip filter forward
@@ -30,9 +39,21 @@ ana@remote:~$ cd /etc/openvpn && sudo timeout 8 openvpn --config client.conf | g
 
 Nenhum erro, nenhuma recusa, nenhum `Initialization Sequence Completed`. Os pacotes saíram do laptop e
 morreram no roteador doméstico, que é o que um firewall com política `drop` faz, e o cliente ficou
-esperando resposta. Os dois arquivos foram então mudados em duas linhas cada, também sem mostrar: o
-servidor para `proto tcp-server` e `port 443`, o cliente para `proto tcp-client` e
-`remote vpn.example.com 443`.
+esperando resposta. Os dois arquivos mudam então em duas linhas cada: o servidor para `proto tcp-server`
+e `port 443`, o cliente para `proto tcp-client` e `remote vpn.example.com 443`. O servidor só lê o
+arquivo quando começa, então pare-o antes, na máquina virtual, com `sudo bash netlab.sh kill hq openvpn`.
+Depois, em `hq`:
+
+```sh
+sudo sed -i 's/^proto udp$/proto tcp-server/; s/^port 1194$/port 443/' /etc/openvpn/server.conf
+sudo setsid openvpn --cd /etc/openvpn --config server.conf >/dev/null 2>&1 &
+```
+
+E em `remote`, antes de tentar de novo:
+
+```sh
+sudo sed -i 's/^proto udp$/proto tcp-client/; s/ 1194$/ 443/' /etc/openvpn/client.conf
+```
 
 ```
 ana@remote:~$ cd /etc/openvpn && sudo timeout 6 openvpn --config client.conf | grep -E "TCP connection|Peer Connection|Initialization"

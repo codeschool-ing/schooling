@@ -1,6 +1,6 @@
 ---
 title: A rule, and where CSS lives
-version: 1
+version: 2
 ---
 
 Lesson 2 made the opening-hours subheadings `<h2>` and promised that if they were too big, that was CSS. Here is that CSS, the first rule of this lesson:
@@ -15,7 +15,40 @@ h2 { font-size: 1.1rem; }
 
 A **rule** is a **selector**, here `h2`, which picks the elements it applies to, followed by a **declaration block** in braces. Inside the block, each **declaration** is a **property**, a colon, a **value** and a semicolon. A rule can carry any number of declarations; this one carries one.
 
-The rule lives in `events.css`, and the page links it as lesson 1 section 10 showed. Here is what it did to the headings:
+The rule lives in `events.css`, and the page links it as lesson 1 section 12 showed. The page is the bookshop's events page, `events.html`:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Events · Andorinha Books</title>
+    <link rel="stylesheet" href="events.css">
+  </head>
+  <body>
+    <main id="events">
+      <h1>Events</h1>
+      <p class="intro">Everything here is free unless it says otherwise.</p>
+      <article class="event">
+        <h2>Poetry reading: Hilda Hilst</h2>
+        <p>Thursday 8 October, 7 pm.</p>
+        <p class="note">Bring a poem of your own.</p>
+      </article>
+      <article class="event featured">
+        <h2>Book swap</h2>
+        <p>Saturday 10 October, from 10 am.</p>
+        <a href="swap.html" class="more">How the swap works</a>
+      </article>
+      <article class="event cancelled">
+        <h2>Bookbinding class</h2>
+        <p>Cancelled: the teacher is ill.</p>
+      </article>
+    </main>
+  </body>
+</html>
+```
+
+Every page in this lesson is this one, linking a different stylesheet. Save a copy for each stylesheet a section shows, named after it, and change its `<link>`: `cascade.html` links `cascade.css`, `states.html` links `states.css`, and the same goes for `extras`, `order` and `inherit`. Here is what `events.css` did to the headings:
 
 ```
 ana@laptop:~/site$ probe events.html rules h2 font-size

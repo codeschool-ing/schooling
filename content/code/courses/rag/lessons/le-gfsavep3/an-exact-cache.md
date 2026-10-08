@@ -1,6 +1,6 @@
 ---
 title: An exact cache
-version: 1
+version: 2
 ---
 
 An exact cache stores each answer under a key and serves it again when the same key comes back. The
@@ -44,12 +44,12 @@ The key has three parts, and each one closes a hole that an earlier lesson found
   section after next, every answer built on them has to stop being served.
 
 ```
-ana@lab:~/rag$ python exact.py
+ana@vm:~/rag$ python exact.py
 index version 0acfdfa0d064
-38 keys, 462 hits of 500 (92%), 35 model calls, 156581 tokens not spent
+38 keys, 462 hits of 500 (92%), 35 model calls, 170175 tokens not spent
 ```
 
-**462 of 500 questions were hits, and the week needed 35 model calls instead of 486**, with 156,581
+**462 of 500 questions were hits, and the week needed 35 model calls instead of 486**, with 170,175
 tokens not spent. On this log the exact cache does almost all the work, for the reason the previous
 section gave: the log repeats itself far more than a real one. On a real log the hit rate is lower and
 the design is the same.

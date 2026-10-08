@@ -5,7 +5,7 @@
 # this lesson was copied from running it, so the next person can run it and see
 # what moved.
 #
-#   bash captures.sh            # from anywhere; it finds prices.py beside course.json
+#   bash captures.sh            # from anywhere; prices.py is read out of lesson 1
 #
 # THERE IS NO CLOUD ACCOUNT IN THIS COURSE, AND LAMBDA IS NOT INVOLVED ANYWHERE
 # BELOW. The handler of the section "a-function" is called as an ordinary Python
@@ -29,7 +29,8 @@ export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
 COURSE=$(cd "$(dirname "$0")/../.." && pwd) || exit 1
 WORK=$(mktemp -d)
 trap 'rm -rf "$WORK"' EXIT
-cp "$COURSE/prices.py" "$WORK/"
+. "$(cd "$(dirname "$0")/../.." && pwd)/from-lessons.sh"   # prices_py: the program as lesson 1 prints it
+prices_py "$WORK" || exit 1
 cd "$WORK" || exit 1
 # what ana typed at her prompt, and everything it printed
 run() { printf 'ana@laptop:~/cloud$ %s\n' "$*"; bash -c "$*" 2>&1 || true; }

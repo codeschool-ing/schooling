@@ -9,6 +9,23 @@ expects a model: in a web page, on the visitor's own machine, with no server ans
 Python `transformers` library, with the same idea at the front: ask for a task and a model, get a
 function.
 
+This lesson runs JavaScript as well as Python, so it needs **Node.js**, version 22 or later, from
+nodejs.org or your system's packages. Transformers.js comes from npm, into `~/desk` like any other
+package:
+
+```
+ana@desk:~/desk$ node --version
+v22.22.0
+ana@desk:~/desk$ npm init -y > /dev/null && npm install @huggingface/transformers@4.3.0
+
+added 46 packages, and audited 47 packages in 17s
+
+12 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+```
+
 Underneath, it is two halves, and the versions in ana's project show both:
 
 ```

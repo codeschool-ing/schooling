@@ -49,6 +49,7 @@ de um protocolo de roteamento passe, e protegem o GRE com ESP em modo transporte
 ```
 
 **O modo transporte está desenhado aqui, e não capturado.** O kernel em que este curso foi gravado não
-tem ESP, então o laboratório usa a implementação do strongSwan em espaço de usuário, o
-`kernel-libipsec`, que só fala modo túnel. A fileira do túnel é um pacote real, o ping de 84 bytes do
+tem ESP, então a rede da aula 1 faz o strongSwan cuidar do ESP ele mesmo, com o `kernel-libipsec` dele,
+em espaço de usuário, que só fala modo túnel. O seu Ubuntu tem ESP no kernel, mas o `netlab.sh` liga o
+mesmo plugin, então os seus túneis se comportam exatamente como os capturados aqui. A fileira do túnel é um pacote real, o ping de 84 bytes do
 laptop como o provedor o capturou, e a seção sobre associações de segurança lê essa captura.

@@ -1,16 +1,88 @@
 ---
 title: `dnf`, `yum` and `rpm`
-version: 1
+version: 2
 ---
 
 **A note about this section before anything else.** The machine these transcripts were captured on
-is Ubuntu. `rpm`, `dnf` and `zypper` are installed on it, and the packages in the transcripts come
-from a repository built for this lesson — two small packages, one of which requires the other, in a
-directory with an index over it.
+is Ubuntu, like yours. Ubuntu packages `rpm`, `dnf` and `zypper` too, and the packages in the
+transcripts come from a repository built for this lesson — two small packages, one of which requires
+the other, in a directory with an index over it.
 
 So **the commands, their options and their output are real and were run**, and the distribution is
 not Red Hat. Two consequences show up in the output and are pointed out where they do. Everything
 else on this page is what you would see on Rocky, Alma, Fedora or RHEL.
+
+## Building the repository, on your Ubuntu
+
+You can build the same repository and follow every transcript below, sections 10 and 11 both.
+`rpmbuild` makes a package from a *spec* file, which says what goes in it and what it needs, and
+`createrepo_c` writes the index that makes a directory a repository. The block installs the tools,
+writes the two specs, builds both packages, and points `dnf` at the result; `zypper` is pointed at
+it in section 11:
+
+```sh
+sudo apt install -y dnf zypper rpm createrepo-c
+mkdir -p ~/rpmbuild/SPECS
+cat > ~/rpmbuild/SPECS/greet.spec <<'END'
+Name:      greet
+Version:   1.2.0
+Release:   1
+Summary:   Print a greeting, for teaching package managers
+License:   MIT
+BuildArch: noarch
+AutoReqProv: no
+
+%description
+A two-line shell script that prints a greeting. It exists so that a
+package manager has something real to install, remove and query.
+
+%install
+mkdir -p %{buildroot}/usr/bin %{buildroot}/usr/share/doc/greet
+printf '#!/bin/sh\necho "hello from greet 1.2.0"\n' > %{buildroot}/usr/bin/greet
+chmod 755 %{buildroot}/usr/bin/greet
+printf 'greet: prints a greeting.\n' > %{buildroot}/usr/share/doc/greet/README
+
+%files
+/usr/bin/greet
+/usr/share/doc/greet/README
+END
+cat > ~/rpmbuild/SPECS/greet-tools.spec <<'END'
+Name:      greet-tools
+Version:   0.3.0
+Release:   1
+Summary:   Extra commands that need greet
+License:   MIT
+BuildArch: noarch
+AutoReqProv: no
+Requires:  greet >= 1.2.0
+
+%description
+One more command, built on greet, so that installing it has a dependency
+to resolve.
+
+%install
+mkdir -p %{buildroot}/usr/bin
+printf '#!/bin/sh\ngreet; greet\n' > %{buildroot}/usr/bin/greet-twice
+chmod 755 %{buildroot}/usr/bin/greet-twice
+
+%files
+/usr/bin/greet-twice
+END
+rpmbuild --quiet -bb ~/rpmbuild/SPECS/greet.spec ~/rpmbuild/SPECS/greet-tools.spec
+sudo mkdir -p /srv/teaching-repo
+sudo cp ~/rpmbuild/RPMS/noarch/*.rpm /srv/teaching-repo/
+sudo createrepo_c --quiet /srv/teaching-repo
+sudo mkdir -p /etc/yum.repos.d /etc/dnf/vars
+echo 24.04 | sudo tee /etc/dnf/vars/releasever > /dev/null
+printf '[teaching]\nname=A local repository, built for this lesson\nbaseurl=file:///srv/teaching-repo\nenabled=1\ngpgcheck=0\n' | sudo tee /etc/yum.repos.d/teaching.repo > /dev/null
+```
+
+`AutoReqProv: no` stops `rpmbuild` adding requirements of its own, such as `/bin/sh` for a shell
+script, which nothing in a repository of two packages would provide. The `releasever` file answers
+a question `dnf` asks on every run, which release of its own distribution it is on; Ubuntu has no
+answer for it, and without the file `dnf` says so at the top of every command. Nothing here touches
+Ubuntu's own packages: the RPM database is a separate one. The commands below are run as root, in
+the shell `sudo -i` opens.
 
 ## `yum` is `dnf`
 

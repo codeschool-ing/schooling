@@ -1,6 +1,6 @@
 ---
 title: The console, beyond log
-version: 1
+version: 2
 ---
 
 **`console.log` is one of about twenty methods, and a few of the others save real time.** They
@@ -80,7 +80,7 @@ for a reason the last method makes clear.
   ana's code; the lines that `head` cut were Node loading the file, which is why they were cut.
 
 `console.warn` and `console.error` print like `log`, to the error output. In the browser they are
-coloured and can be filtered, and the lab's `page` command marks them `[warn]` and `[error]`.
+coloured and can be filtered, and `page` marks them `[warn]` and `[error]`.
 
 ## Where log stops being enough
 

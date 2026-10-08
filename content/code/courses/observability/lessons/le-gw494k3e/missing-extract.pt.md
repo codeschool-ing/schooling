@@ -1,10 +1,17 @@
 ---
 title: Um argumento a menos
-version: 1
+version: 2
 ---
 
 A propagação falha em silêncio, e o jeito de reconhecer o sintoma é provocá-lo uma vez. O extract
-do payments é mantido, mas o contexto que ele devolve deixa de ser usado para começar o span:
+do payments é mantido, mas o contexto que ele devolve deixa de ser usado para começar o span. Guarde
+antes uma cópia do arquivo:
+
+```sh
+cp services/payments/app.py /tmp/payments.app.py
+```
+
+Depois, a edição:
 
 ```
 ana@obs:~/shop$ grep -n 'context=ctx' services/payments/app.py
@@ -46,5 +53,9 @@ uma raiz só.
 
 Dois hábitos pegam isso. Olhe um rastro de todo serviço novo e confira que o primeiro span tem um
 pai vindo de outro serviço. E num serviço instrumentado à mão, **trate o `extract` e o span que o usa
-como uma unidade**, nunca duas linhas que podem se afastar numa edição. O `app.py` original foi
-devolvido e o payments reiniciado antes da seção seguinte.
+como uma unidade**, nunca duas linhas que podem se afastar numa edição. Devolva o `app.py`
+original, e reinicie o payments, antes da seção seguinte:
+
+```sh
+cp /tmp/payments.app.py services/payments/app.py && docker compose restart payments
+```

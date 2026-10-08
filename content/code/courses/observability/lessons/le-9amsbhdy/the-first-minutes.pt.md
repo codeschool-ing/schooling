@@ -1,18 +1,40 @@
 ---
 title: Os primeiros minutos
-version: 1
+version: 2
 ---
 
-O laboratório encena um incidente com os alertas da aula 16 no lugar. Um robô de deploy marca uma
-versão do payments no Grafana, como o da aula 7 fazia:
+Esta aula encena um incidente com os alertas da aula 16 no lugar. Para encenar o mesmo, inicie o
+laboratório de novo do zero e salve de novo os três arquivos da aula 16, `prometheus/rules/burn.yml`,
+`alertmanager/routes.yml` e `compose.override.yaml`, como as seções *Escrevendo a regra* e
+*Roteamento* daquela aula os dão. Depois carregue-os, dê a um robô de deploy um token no Grafana como
+a aula 7 fez, e ponha os clientes para rodar por quarenta minutos; três minutos depois a loja está
+pronta para quebrar:
+
+```sh
+curl -s -X POST localhost:9090/-/reload
+docker compose up -d alertmanager
+curl -s -u admin:$(cat .grafana-password) -H 'Content-Type: application/json' -d '{"name": "deploy-bot", "role": "Editor"}' localhost:3000/api/serviceaccounts
+SA=$(curl -s -u admin:$(cat .grafana-password) localhost:3000/api/serviceaccounts/search?query=deploy-bot | jq -r '.serviceAccounts[0].id')
+curl -s -u admin:$(cat .grafana-password) -H 'Content-Type: application/json' -d '{"name": "incidents"}' localhost:3000/api/serviceaccounts/$SA/tokens | jq -r .key > .grafana-token
+docker compose run -d --rm loadgen python -m loadgen.load 5 2400
+sleep 180
+```
+
+O robô marca uma versão do payments no Grafana:
 
 ```
 ana@obs:~/shop$ curl -s -H "Authorization: Bearer $(cat .grafana-token)" -H 'Content-Type: application/json' -d '{"tags": ["deploy"], "text": "payments 1.4.2"}' localhost:3000/api/annotations | jq -c .
 {"id":1,"message":"Annotation added"}
 ```
 
-A versão é o arquivo de falhas mandando o payments falhar uma cobrança em oito. Nada mais acontece até o
-alerta de taxa de queima decidir que vale um page:
+A versão é o arquivo de falhas mandando o payments falhar uma cobrança em oito:
+
+```sh
+echo '{"fail_every": 8}' > faults/payments.json
+```
+
+Nada mais acontece até o alerta de taxa de queima decidir que vale um page, e o log do pager fica vazio
+até lá:
 
 ```
 ana@obs:~/shop$ docker compose logs --no-log-prefix pager | grep '"PAGE"' | jq -c '{time, status, alertname, summary}'

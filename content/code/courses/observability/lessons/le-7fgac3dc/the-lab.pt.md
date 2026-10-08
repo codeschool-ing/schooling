@@ -1,83 +1,83 @@
 ---
-title: O laboratório em que este curso roda
-version: 1
+title: O seu laboratório, montado por você
+version: 2
 ---
 
-Todo comando deste curso foi executado, e toda linha de saída é o que ele imprimiu. **O
-laboratório é um computador Linux rodando Docker**: uma pequena loja online, escrita para o curso,
-e o software de código aberto que a vigia, cada um no seu contêiner. A usuária é `ana` e o trabalho
-acontece em `~/shop`:
+Todo comando deste curso foi executado, e toda linha de saída é o que ele imprimiu. **Você monta o
+mesmo laboratório no seu próprio computador, e todo comando de toda aula é digitado lá.** Nada neste
+curso roda numa máquina hospedada por nós.
 
+O laboratório é uma máquina Linux rodando Docker: uma pequena loja online, escrita para o curso, e o
+software de código aberto que a vigia, cada um no seu contêiner. As duas próximas seções entregam
+todos os arquivos dele. Esta aqui arruma a máquina.
+
+Há três jeitos de ter essa máquina. Escolha a máquina virtual, a não ser que tenha um motivo para não
+escolher.
+
+| | o que é | o que custa |
+|---|---|---|
+| instalado | Docker Engine num computador Linux que você já tem | 4 processadores e 8 GB de memória livres enquanto o laboratório roda, e cerca de 15 GB de disco para as imagens |
+| **uma máquina virtual com o Multipass** (recomendado) | a ferramenta da Canonical que cria uma máquina Ubuntu Server 24.04 com um comando, no Windows, no macOS e no Linux | os mesmos 4 processadores e 8 GB, entregues à máquina enquanto ela roda, e um disco de 40 GB que cresce conforme enche |
+| online | uma máquina virtual alugada por hora de um provedor de nuvem | dinheiro por cada hora em que ela existe, então ela é apagada no fim de cada sessão |
+
+**O laboratório precisa de quatro processadores e 8 GB de memória**, e é com esse número que se
+planeja. Subido e deixado quieto ele usa cerca de 900 MB, mas as aulas rodam clientes simulados
+contra ele por muitos minutos seguidos. A aula 9 acrescenta o Elasticsearch e o Graylog, e essa aula
+sozinha pede 16 GB; num computador menor as transcrições dela podem ser lidas em vez de
+reproduzidas, e a aula diz quais.
+
+**Instalado** é a escolha certa num computador Linux que você possa ceder, ou no que você usa todo
+dia se já roda Docker nele: nada aqui instala coisa alguma fora do Docker, e toda porta é publicada
+só para o próprio computador. No Windows ou no macOS, o Docker Desktop roda o Linux numa máquina
+virtual escondida, só dele. Ele pode muito bem rodar o laboratório inteiro, mas o curso não foi
+gravado nele, e quando algo difere você está depurando uma máquina que não consegue ver. O caminho
+recomendado evita essa pergunta. **Online** também funciona, e as menores máquinas de toda nuvem são
+pequenas demais para este laboratório; uma com quatro processadores e 8 GB custa dinheiro de verdade
+por hora, então apague-a quando parar em vez de deixá-la ligada. O curso `cloud`, que este exige, é
+onde se ensina a criar uma. Qualquer outro hipervisor também funciona no lugar do Multipass:
+VirtualBox, UTM num Mac com Apple silicon, Hyper-V no Windows ou GNOME Boxes no Linux, ao preço de
+meia hora de telas de instalação e da imagem do Ubuntu Server 24.04 baixada à mão.
+
+## Com o Multipass
+
+Instale o Multipass pelo site dele e depois, no terminal do seu próprio computador:
+
+```sh
+multipass launch 24.04 --name obs --cpus 4 --memory 8G --disk 40G
+multipass shell obs
 ```
-ana@obs:~/shop$ docker compose ps --format 'table {{.Service}}\t{{.Image}}' | sort
-SERVICE             IMAGE
-alertmanager        prom/alertmanager:v0.34.1
-blackbox-exporter   prom/blackbox-exporter:v0.28.0
-grafana             grafana/grafana:13.0.10
-jaeger              jaegertracing/jaeger:2.21.0
-loki                grafana/loki:3.7.8
-mailer              shop:1.4.0
-node-exporter       prom/node-exporter:v1.12.1
-orders              shop:1.4.0
-otel-collector      otel/opentelemetry-collector-contrib:0.161.0
-pager               shop:1.4.0
-payments            shop:1.4.0
-postgres            postgres:16.15
-postgres-exporter   prometheuscommunity/postgres-exporter:v0.20.1
-prometheus          prom/prometheus:v3.15.0
-rabbitmq            rabbitmq:4.2-management
-storefront          shop:1.4.0
-zipkin              openzipkin/zipkin:3.6.1
+
+**Esses dois comandos não foram executados para este curso**, porque o computador em que ele foi
+gravado não consegue rodar um hipervisor; ele é uma máquina Ubuntu 24.04 por si só. O primeiro cria
+a máquina virtual e o segundo abre um shell dentro dela, com o usuário `ubuntu`. Tudo daqui em
+diante acontece nesse shell.
+
+## O Docker, pelos pacotes do próprio Docker
+
+O repositório do Ubuntu traz um Docker mais antigo com outro nome, então o curso instala o Docker
+Engine e o plugin do Compose pelo repositório do Docker, como a documentação do Docker manda, junto
+com o `jq`, que as aulas usam para ler JSON:
+
+```sh
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl jq
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo usermod -aG docker $USER
 ```
 
-**A loja é a parte escrita para o curso**, todo contêiner cuja imagem é `shop:1.4.0`. Um checkout
-chega ao `storefront`, que pede ao `orders` para guardá-lo. O `orders` pede ao `payments` para
-cobrar o cartão e, depois de pago, põe uma mensagem numa fila do RabbitMQ que o `mailer` retira
-para mandar a confirmação. O `pager` é onde os alertas chegam na aula 16, e mais dois programas da
-mesma imagem só rodam quando chamados: `report`, a tarefa noturna da aula 4, e `loadgen`, que faz
-o papel dos clientes. A loja é pequena de propósito, e **tem as formas que sistemas de produção
-têm**: HTTP entre serviços, um banco de dados, uma fila e uma tarefa agendada, que são exatamente
-os lugares onde sinais se perdem.
+A última linha põe você no grupo `docker`, que é o que deixa você falar com o Docker sem `sudo`.
+**Ela só vale a partir do seu próximo login**, então saia do shell com `exit` e abra de novo com
+`multipass shell obs`. Aí `docker compose version` deve responder com uma versão. Este curso foi
+gravado com o Docker Engine 29.8 e o Compose 5.6; um mais novo imprime as mesmas coisas.
 
-::: track networks-infra
-Os serviços são escritos em Python, que esta trilha já ensinou. Lê-los é ler um código que você
-conhece, e as aulas 2 a 4 os modificam.
-:::
+## Os nomes nas transcrições
 
-::: track data-platform
-Os serviços são escritos em Python, que a trilha de dados que esta continua já ensinou. Lê-los é
-ler um código que você conhece, e as aulas 2 a 4 os modificam.
-:::
-
-::: track software-architecture
-Os serviços são escritos em Python, que esta trilha não ensinou, e você não vai precisar escrevê-lo.
-Todo trecho de código que este curso mostra traz uma nota dizendo o que faz, e o que você muda nele
-é uma ou duas linhas que a aula entrega prontas.
-:::
-
-::: track *
-Os serviços são escritos em Python. Você precisa conseguir lê-lo, não escrevê-lo. Todo trecho de
-código que este curso mostra traz uma nota dizendo o que faz, e o que você muda nele é uma ou duas
-linhas que a aula entrega prontas.
-:::
-
-Todo o resto é software real, sem modificação, na sua imagem oficial. O OpenTelemetry Collector
-recebe rastros e logs e os encaminha. O Prometheus guarda métricas e o Alertmanager roteia os
-alertas que ele dispara. O Loki guarda logs, o Jaeger e o Zipkin guardam rastros, e o Grafana
-desenha todos eles. Os exporters transformam a máquina, o banco de dados e uma sonda externa em
-métricas. As aulas 9, 14 e 19 acrescentam Elasticsearch, Graylog, um cluster Kubernetes e o Envoy,
-e dizem quando o fazem.
-
-**Toda porta é publicada só em `127.0.0.1`**, então `localhost:8080` é a loja e `localhost:9090`
-é o Prometheus, a partir do shell da `ana` e de nenhum outro lugar.
-
-Para montar o mesmo laboratório você precisa de uma máquina Linux, sendo uma máquina virtual o
-mais fácil, com o Docker Engine e o plugin Compose, quatro processadores e 8 GB de memória. O
-script que o constrói é o `lab.sh`, publicado com o código-fonte deste curso. Rodar `sudo bash lab.sh up`
-escreve `~/shop`, constrói a imagem da loja e sobe tudo, e `sudo bash lab.sh reset` joga tudo fora
-e recomeça do zero. As transcrições de toda aula começam de um reset, então **o que você vê na sua
-máquina depois de um reset é o que a aula mostra**. As exceções são as partes que mudam a cada execução:
-datas, durações no milissegundo e os ids aleatórios que todo rastro recebe.
-
-**Quando algo não responde**, pergunte ao Docker antes de perguntar ao programa: `docker compose ps`
-diz se o contêiner está rodando, e `docker compose logs <serviço>` diz o que ele imprimiu ao subir.
+A máquina em que este curso foi gravado se chama `obs`, a usuária dela é `ana`, e o laboratório
+fica em `~/shop`, então toda transcrição começa com `ana@obs:~/shop$`. A sua diz `ubuntu@obs` se você
+usou o Multipass, ou o seu próprio nome num computador seu. Essa é a única diferença que você deve
+ver, fora as partes que mudam a cada execução: datas, durações em milissegundos e os ids aleatórios
+que todo trace recebe.

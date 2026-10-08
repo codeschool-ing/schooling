@@ -1,6 +1,6 @@
 ---
 title: Tirado do código, ainda no histórico
-version: 1
+version: 2
 ---
 
 O vazamento mais comum é o mais simples: um segredo commitado no repositório. Acontece com as melhores
@@ -9,6 +9,18 @@ e a reação usual, apagar o arquivo no commit seguinte, não desfaz nada.
 
 Eis essa sequência num branch descartável do `shipquote`. Um commit acrescenta `deploy/production.env`
 com a URL da transportadora e o token; vinte minutos depois outro commit o tira:
+
+```sh
+git switch -c add-deploy-config
+mkdir deploy
+printf 'SHIPQUOTE_CARRIER_URL=http://127.0.0.1:9092\nSHIPQUOTE_CARRIER_TOKEN=lab-live-token\n' > deploy/production.env
+git add deploy
+git commit -m "Keep the production settings with the code"
+git rm -q deploy/production.env
+git commit -m "Remove the production settings again"
+```
+
+E o que sobra dele:
 
 ```
 ana@laptop:~/shipquote$ git log --oneline -3
@@ -29,6 +41,8 @@ A cópia de trabalho não tem mais o arquivo. **O histórico tem**: `git log -S`
 acrescentou ou tirou a string, e `git show` imprime o arquivo exatamente como foi commitado, token
 incluído. Quem clonou ou buscou o repositório naqueles vinte minutos, e quem algum dia ler o histórico,
 tem o valor. Num serviço hospedado, forks, caches e os backups do próprio serviço também têm.
+
+(`git switch main` e `git branch -D add-deploy-config` guardam o branch descartável.)
 
 ## O que decorre disso
 

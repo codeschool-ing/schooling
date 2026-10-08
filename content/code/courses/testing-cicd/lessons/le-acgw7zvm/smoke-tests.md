@@ -1,6 +1,6 @@
 ---
 title: The smoke test after every deploy
-version: 1
+version: 2
 ---
 
 A deploy that finished is not a deploy that worked. The files can be in place and the process
@@ -9,7 +9,7 @@ because the restart did not happen. A **smoke test** is the short check run righ
 against the deployed program, that asks the two questions that matter first: **is it up, and is it
 the version we meant?**
 
-`shipquote`'s smoke test is twelve lines of shell:
+`shipquote`'s smoke test is twelve lines of shell. Save it as `ops/smoke.sh`:
 
 ```sh
 #!/usr/bin/env bash
@@ -36,7 +36,8 @@ configuration, which is the one thing no earlier stage could test.
 
 ## A deploy that a smoke test stops
 
-Here is a third environment, `preview`, whose configuration has a typo nobody would see at a glance:
+Here is a third environment, `preview`, whose configuration has a typo nobody would see at a glance.
+Make it with `mkdir ~/envs/preview` and `echo SHIPQUOTE_PORT=84OO > ~/envs/preview/config.env`:
 
 ```
 ana@laptop:~/shipquote$ cat ~/envs/preview/config.env
@@ -68,6 +69,6 @@ Keep it short, fast and safe to run against production:
 - **nothing that writes data** a customer could see, and nothing that costs money, such as a paid
   carrier call.
 
-The acceptance test of lesson 1 section 08, free shipping from R$ 199,00 in every region, is a good
+The acceptance test of lesson 1 section 11, free shipping from R$ 199,00 in every region, is a good
 candidate to run against staging after the smoke test: it is the promise, checked through the
 deployed program.

@@ -1,9 +1,13 @@
 ---
 title: Many files at once: wildcards
-version: 1
+version: 2
 ---
 
-Five empty files were added to `invoices` for this section.
+This section needs five more empty files in `invoices`, and section 02's `touch` makes them:
+
+```sh
+touch invoices/march.pdf invoices/april.pdf invoices/may.pdf invoices/draft.tmp invoices/old.tmp
+```
 
 ```
 ana@server:~/work$ ls invoices

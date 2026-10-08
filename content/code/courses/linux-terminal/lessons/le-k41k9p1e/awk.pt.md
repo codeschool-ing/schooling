@@ -1,6 +1,6 @@
 ---
 title: O `awk`, uma linguagem de programação que se escreve numa linha
-version: 2
+version: 3
 ---
 
 O `awk` lê uma linha, divide em campos, e roda o seu código nela. É esse o modelo inteiro, e é o que
@@ -8,12 +8,12 @@ faz do `awk` a ferramenta que faz o que o `cut`, o `grep` e uma calculadora teri
 
 ```
 ana@vm:~/work$ awk '{print $1}' logs/access.log | head -2
-10.0.1.6
-10.0.1.11
+198.51.100.10
+198.51.100.15
 ana@vm:~/work$ awk '{print $9, $7}' logs/access.log | head -3
-200 /static/app.js
 200 /
-404 /index.html
+200 /
+200 /
 ```
 
 **O `$1` é o primeiro campo, o `$0` é a linha inteira, o `$NF` é o último.** Os campos são divididos
@@ -25,7 +25,7 @@ E o segundo comando reordenou os campos, o que a seção 08 mostrou que o `cut` 
 ## A forma de um programa
 
 ```localised
-awk 'padrão { ação }'
+awk 'pattern { action }'
 ```
 
 Qualquer uma das metades pode ser omitida:
@@ -38,16 +38,16 @@ Qualquer uma das metades pode ser omitida:
 
 ```
 ana@vm:~/work$ awk '$9 == 500 {print $7}' logs/access.log | sort | uniq -c
-      2 /
+      6 /
+      4 /api/orders
       1 /api/orders/new
-      5 /api/reports
-      2 /api/users
       1 /favicon.ico
-      7 /health
+      8 /health
       1 /index.html
-      2 /static/app.js
+      2 /static/app.css
+      1 /static/app.js
 ana@vm:~/work$ awk '$9 >= 400' logs/access.log | wc -l
-63
+78
 ```
 
 **O `$9 >= 400` é a coisa que o `grep` não consegue fazer**, porque é aritmética num campo em vez de
@@ -55,16 +55,17 @@ correspondência de texto. Aqui está a diferença, medida:
 
 ```
 ana@vm:~/work$ awk '$9 >= 400 && $9 < 500' logs/access.log | wc -l
-42
+54
 ana@vm:~/work$ grep -c ' 4[0-9][0-9] ' logs/access.log
-46
+80
 ana@vm:~/work$ grep ' 4[0-9][0-9] ' logs/access.log | awk '$9 < 400 || $9 >= 500' | head -2
-10.0.1.19 - - [14/Sep/2026:06:03:17 +0000] "GET /static/app.css HTTP/1.1" 200 451 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 Safari/18.1" 87
-10.0.1.20 - - [14/Sep/2026:07:55:33 +0000] "GET /favicon.ico HTTP/1.1" 200 485 "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/131.0 Safari/537.36" 59
+10.0.1.28 - - [14/Sep/2026:06:14:58 +0000] "GET /static/app.css HTTP/1.1" 500 419 "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" 145
+10.0.1.10 - - [14/Sep/2026:06:32:19 +0000] "GET /static/app.js HTTP/1.1" 200 410 "python-requests/2.32.3" 190
 ```
 
-**Quarenta e dois contra quarenta e seis, e os quatro extras são respostas `200`.** Os *tamanhos em
-bytes* deles eram 451 e 485, que o padrão casou porque ele não faz ideia de qual número é o status. O
+**Cinquenta e quatro contra oitenta, e os vinte e seis extras nem são respostas 4xx.** Os dois
+mostrados são um `500` e um `200` cujos *tamanhos em bytes* eram 419 e 410, que o padrão casou
+porque ele não faz ideia de qual número é o status. O
 `awk` foi perguntado sobre o campo nove e o `grep` foi perguntado sobre uma forma.
 
 ## As variáveis embutidas
@@ -104,10 +105,10 @@ Que é o aviso que esta seção precisa carregar. **O `$7` é o caminho em toda 
 
 ```
 ana@vm:~/work$ awk '{print $11}' logs/access.log | sort | uniq -c | sort -rn
-    461 "Mozilla/5.0
-    442 "kube-probe/1.29"
-    154 "curl/8.5.0"
-    143 "python-requests/2.32.3"
+    553 "Mozilla/5.0
+    287 "kube-probe/1.29"
+    191 "curl/8.5.0"
+    169 "python-requests/2.32.3"
 ```
 
 Três daqueles são strings de user-agent inteiras e um é a **primeira palavra de uma mais longa**.
@@ -118,15 +119,15 @@ porque ele conta da outra ponta.
 
 ```
 ana@vm:~/work$ awk '{n++; bytes += $10} END {print n, bytes, bytes/n}' logs/access.log
-1200 14262906 11885.8
+1200 11880770 9900.64
 ```
 
-Mil e duzentas requisições, quatorze megabytes, uma média de uns doze kilobytes cada. **Variáveis não
+Mil e duzentas requisições, uns doze megabytes, uma média de uns dez kilobytes cada. **Variáveis não
 precisam de declaração e começam em zero**, que é o que torna comandos de uma linha tão curtos.
 
 ```
 ana@vm:~/work$ awk -F, 'NR>1 {s+=$5} END {print s}' data/sales.csv
-573278
+571083
 ```
 
 A seção 08 fez isso com quatro processos e o `bc`.
@@ -135,10 +136,10 @@ A seção 08 fez isso com quatro processos e o `bc`.
 
 ```
 ana@vm:~/work$ awk -F, 'NR>1 {rev[$1] += $5} END {for (r in rev) print r, rev[r]}' data/sales.csv | sort
-east 144250
-north 147239
-south 167399
-west 114390
+east 130235
+north 143924
+south 125015
+west 171909
 ```
 
 **O `rev[$1] += $5` é um agrupar-por e uma soma**, numa expressão, numa passagem. Um array indexado
@@ -158,10 +159,10 @@ A seção 10 mostrou aquilo dando a mesma resposta que o `sort | uniq -c`, sem o
 
 ```
 ana@vm:~/work$ awk '$NF > 3000 {printf "%-22s %6s ms  %s\n", $1, $NF, $7}' logs/access.log | head -4
-10.0.1.21                5833 ms  /api/reports
-10.0.1.38                3370 ms  /api/reports
-198.51.100.10            3496 ms  /api/reports
-10.0.1.29                4072 ms  /api/reports
+203.0.113.11             4885 ms  /api/reports
+10.0.1.29                5560 ms  /api/reports
+10.0.1.7                 4422 ms  /api/reports
+10.0.1.29                4960 ms  /api/reports
 ```
 
 O `printf` é o do C: `%s` string, `%d` inteiro, `%.2f` duas casas decimais, `%-22s` alinhado à
@@ -170,8 +171,8 @@ esquerda em 22 colunas. **O `printf` precisa do próprio `\n`**; o `print` acres
 ```
 ana@vm:~/work$ awk 'BEGIN {FS=","; OFS=" | "} NR<4 {print $2, $4}' data/sales.csv
 rep | units
-ana | 171
-bruno | 49
+ana | 145
+bruno | 275
 ```
 
 Definir o `FS` e o `OFS` no `BEGIN` é a alternativa ao `-F`, e é o único jeito de definir o separador
@@ -182,7 +183,7 @@ concatena sem nada no meio.
 
 ```
 ana@vm:~/work$ awk '/api/ {c++} END {print c " api requests"}' logs/access.log
-260 api requests
+285 api requests
 ```
 
 O `/padrão/` casa com a linha inteira, o `$7 ~ /padrão/` com um campo, e o `!~` é "não casa". A

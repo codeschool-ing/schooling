@@ -9,11 +9,14 @@
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
 # Staged beyond the workbench lab.sh builds: three turn files, runs/order.txt,
-# runs/weather.txt and runs/unfinished.txt, written with put below and shown in
-# the lesson with cat. They are the model's side of each run, WRITTEN BY THE
-# COURSE because no model is reachable from the workbench; agent plays them
-# back, and the parsing, the tools, the allow-list and the step limit are real
-# (lab.sh prints the loop in full).
+# runs/weather.txt and runs/unfinished.txt, written with put below. They are a
+# model's side of a run WRITTEN BY THE COURSE, and the lesson says so: agent
+# plays them back so that each rule of the loop can be watched on its own.
+# order.txt is shown with cat; the other two hold the model> lines
+# their runs print. agent and tools.txt are read out of tool-calls.md.
+#
+# THE MODEL'S TURNS in ask-tools, live-order and live-allow are llama3.2:3b
+# served by Ollama 0.40.0, at temperature 0, captured on 7 October 2026.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 set -uo pipefail
@@ -50,12 +53,19 @@ Action: today[]
 Action: calculator[3 * 42.50]
 T
 
-block tool-calls
+block ask-tools
+on 'ask "Bruno wants three whole cakes at R\$ 42.50 each, to collect tomorrow. What day is tomorrow, and what is the total?" --system "$(cat tools.txt)" --temperature 0'
+block live-order
+on 'agent --live "Bruno wants three whole cakes at R\$ 42.50 each, to collect tomorrow. What day is tomorrow, and what is the total?"'
+block playback-order
 on 'cat runs/order.txt'
 on 'agent runs/order.txt'
 
 block the-loop
 on 'agent runs/weather.txt'
 on 'agent runs/order.txt --allow calculator'
+block live-allow
+on 'agent --live "Bruno wants three whole cakes at R\$ 42.50 each, to collect tomorrow. What day is tomorrow, and what is the total?" --allow calculator'
+block the-loop-2
 on 'agent runs/order.txt --max-steps 1'
 on 'agent runs/unfinished.txt'

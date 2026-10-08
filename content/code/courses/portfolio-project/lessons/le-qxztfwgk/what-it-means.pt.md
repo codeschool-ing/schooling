@@ -1,6 +1,6 @@
 ---
 title: O que deploy quer dizer para o seu projeto
-version: 1
+version: 2
 ---
 
 Num portfólio, implantado quer dizer que **quem avalia consegue ver o projeto funcionando sem instalar
@@ -49,7 +49,7 @@ O que quer que você tenha construído, implantado quer dizer que alguém conseg
 no mês que vem tanto quanto hoje. Leia o resto desta aula pelas partes que se aplicam.
 :::
 
-Tudo o que vem a seguir acontece no laboratório do curso: **srv** é um servidor numa rede privada, não na
-internet, e o endereço dele, `loans.lab`, é um nome que só o laboratório conhece. Isso é deliberado. Um
-deploy de laboratório pode ser repetido por qualquer pessoa, para sempre, e não custa nada; a última seção
-diz o que muda quando o servidor é público.
+Tudo o que vem a seguir acontece num laboratório que você monta na próxima seção: **srv** é um servidor numa
+rede privada entre ele e o seu computador, não na internet, e o endereço dele, `loans.lab`, é um nome que só
+o seu computador conhece. Isso é deliberado. Um deploy de laboratório pode ser repetido por qualquer pessoa,
+para sempre, e não custa nada; a última seção diz o que muda quando o servidor é público.

@@ -9,6 +9,10 @@
 #   sudo bash ../../lab.sh tools     # once: the software the lab runs
 #   sudo bash captures.sh
 #
+# The sessions of "building-the-lab" and "working-in-the-lab", and all of
+# "when-it-fails" but its last one, are not here: installing the lab needs the
+# network this lab does not have, so captures-setup.sh records them.
+#
 # The AWS in these sessions is moto, emulated on the laptop (lab.sh says how),
 # and it starts empty on every run. Ids that AWS invents, vpc-… and sg-…, are
 # random, so a second run prints different ones.
@@ -82,10 +86,19 @@ run 'terraform apply -auto-approve'
 block vpcs-tf
 run 'aws ec2 describe-vpcs --filters Name=tag:Name,Values=shop-tf --query "Vpcs[].[VpcId,CidrBlock]" --output text'
 
-block the-lab
-run 'terraform version'
-run 'aws --version'
-run 'env | grep ^AWS_ | sort'
-run 'aws sts get-caller-identity'
-block not-listening
-run 'AWS_ENDPOINT_URL=http://localhost:4567 aws sts get-caller-identity'
+
+# when-it-fails: what a moto left running from an earlier lesson looks like.
+# The two "shop" VPCs are the ones network.sh made twice above.
+block leftovers
+mkdir -p ~/lookup && cd ~/lookup
+put main.tf <<'CODE'
+provider "aws" {
+  region = "sa-east-1"
+}
+
+data "aws_vpc" "shop" {
+  tags = { Name = "shop" }
+}
+CODE
+quiet 'terraform init'
+run 'terraform plan'

@@ -1,6 +1,6 @@
 ---
 title: O que continua sendo seu
-version: 1
+version: 2
 ---
 
 Um framework vale o que poupa menos o que esconde, e esta aula mediu as duas coisas.
@@ -39,16 +39,17 @@ mesmas decisões sem medição nenhuma, porque nunca viu os documentos, e um pip
 fica bonito numa demonstração e falha nas perguntas que ninguém testou.
 
 Eles também **mudam entre versões**. Todo nome de classe desta aula é das versões fixadas no
-laboratório; o `langchain-postgres` ainda está na 0.0.18, e uma versão abaixo de 1 não promete nada
+`requirements.txt` da aula 1; o `langchain-postgres` ainda está na 0.0.18, e uma versão abaixo de 1 não promete nada
 sobre a próxima. Um padrão que muda numa atualização muda o comportamento do pipeline sem nada mudar
 no código da equipe. Então fixe as versões, e rode o teste da aula 8 depois de toda atualização, além
 de depois de toda mudança sua.
 
 ## Um jeito de usar um
 
-- **Leia o que ele manda.** O prompt, o endereço, o formato da requisição de embeddings. O registro do
-  labgen neste laboratório, e o registro de requisições do próprio provedor ou um proxy em produção,
-  mostram a requisição como ela saiu, que é a única versão que importa.
+- **Leia o que ele manda.** O prompt, o endereço, o formato da requisição de embeddings. Os dois
+  frameworks chamam o SDK `openai` por baixo, então `OPENAI_LOG=debug` imprime cada requisição que ele
+  manda; em produção, o registro de requisições do próprio provedor ou um proxy mostra a requisição
+  como ela saiu, que é a única versão que importa.
 - **Defina todo valor que as aulas 4 a 8 mediram**, explicitamente, mesmo quando ele é igual ao
   padrão, para que a próxima atualização não possa movê-lo sem o código dizer.
 - **Mantenha o teste fora do framework.** As perguntas, os fatos e a regra do acerto ficam no

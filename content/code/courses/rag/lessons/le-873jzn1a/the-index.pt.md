@@ -1,6 +1,6 @@
 ---
 title: O índice vetorial
-version: 1
+version: 2
 ---
 
 Uma tabela de vetores já pode ser buscada: ordenar as linhas pela distância à pergunta e pegar as
@@ -11,9 +11,9 @@ rápida, e as aulas 15 e 16 do `embeddings-vectors` mediram como: o que o HNSW c
 só acrescenta o índice à tabela e confere que o planejador o usa.
 
 ```
-ana@lab:~/rag$ psql -c "CREATE INDEX ON chunks USING hnsw (embedding vector_cosine_ops)"
+ana@vm:~/rag$ psql -c "CREATE INDEX ON chunks USING hnsw (embedding vector_cosine_ops)"
 CREATE INDEX
-ana@lab:~/rag$ psql -c "SET enable_seqscan = off" -c "EXPLAIN (COSTS OFF) SELECT path FROM chunks ORDER BY embedding <=> (SELECT embedding FROM chunks LIMIT 1) LIMIT 3"
+ana@vm:~/rag$ psql -c "SET enable_seqscan = off" -c "EXPLAIN (COSTS OFF) SELECT path FROM chunks ORDER BY embedding <=> (SELECT embedding FROM chunks LIMIT 1) LIMIT 3"
 SET
                       QUERY PLAN                       
 -------------------------------------------------------

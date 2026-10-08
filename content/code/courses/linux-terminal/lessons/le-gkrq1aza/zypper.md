@@ -1,6 +1,6 @@
 ---
 title: `zypper`, on SUSE and openSUSE
-version: 1
+version: 2
 ---
 
 SUSE uses `.rpm` files and `rpm` underneath, exactly as section 10 described — and a different
@@ -9,7 +9,12 @@ new words.
 
 **Same caveat as section 10**: these transcripts were captured on Ubuntu with `zypper` installed
 and the lesson's own repository configured. The commands and their output are real; the
-distribution is not SUSE, and the one place that shows is pointed out below.
+distribution is not SUSE, and the one place that shows is pointed out below. Section 10's block
+built the repository; this tells `zypper` about it:
+
+```sh
+sudo zypper --non-interactive addrepo --no-gpgcheck /srv/teaching-repo teaching
+```
 
 ## Repositories
 

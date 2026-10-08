@@ -1,6 +1,6 @@
 ---
 title: Dependencies Terraform cannot see
-version: 1
+version: 2
 ---
 
 Terraform decides the order of operations from references. In lesson 2 the subnet named
@@ -9,8 +9,9 @@ built from expressions, so a dependency that is not in an expression does not ex
 everything with no path between it and something else is created at the same time, in parallel.
 
 That is usually what you want, and it fails in one specific way: when a resource needs another
-one through something Terraform does not read. In `~/shop/boot`, the `web` instance boots by
-downloading a script from a bucket that the same configuration creates:
+one through something Terraform does not read. In a new directory, `~/shop/boot`, the `web`
+instance boots by downloading a script from a bucket that the same configuration creates. Ana
+initialises it and commits it to Git before applying anything:
 
 ```hcl
 provider "aws" {
@@ -104,7 +105,8 @@ nothing was really unknown.
 
 ## A reference is better
 
-Here there was a reference to make. The instance does depend on the object's bucket and key, so it
+Ana takes the `depends_on` out again with `git checkout main.tf`. Here there was a reference to
+make. The instance does depend on the object's bucket and key, so it
 can say so in the string:
 
 ```
@@ -130,3 +132,6 @@ bucket's name is written once instead of twice, and renaming the bucket renames 
 script too. Reach for `depends_on` when there is truly nothing to reference: a policy that must be
 attached before a service can use a role, or a resource whose effect on another is invisible in
 both of their arguments. When you do, leave a comment beside it saying what it waits for.
+
+Ana is done with this directory, and destroys it with `terraform destroy -auto-approve`, so that
+its bucket does not turn up in the bucket listing at the end of the lesson.

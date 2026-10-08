@@ -15,9 +15,9 @@ shop=# PREPARE by_email (text) AS SELECT id, name FROM customers WHERE email = $
 PREPARE
 
 shop=# EXECUTE by_email('user42@example.com');
- id |      name      
-----+----------------
- 42 | Carla Oliveira
+ id |     name     
+----+--------------
+ 42 | Elisa Mendes
 (1 row)
 
 shop=# EXECUTE by_email('x'' OR ''1''=''1');
@@ -42,11 +42,11 @@ Glue the value into the text instead, and the text is whatever the user typed:
 
 ```
 shop=# SELECT id, name FROM customers WHERE email = 'x' OR '1'='1' LIMIT 3;
- id |      name       
-----+-----------------
-  1 | Helena Santos
-  2 | Bruno Costa
-  3 | Fábio Carvalho
+ id |     name     
+----+--------------
+  1 | Igor Fontes
+  2 | Ana Alves
+  3 | Elisa Fontes
 (3 rows)
 ```
 

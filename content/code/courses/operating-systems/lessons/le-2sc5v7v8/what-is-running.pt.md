@@ -1,6 +1,6 @@
 ---
 title: O que está rodando em segundo plano
-version: 1
+version: 2
 ---
 
 A aula 1 deixou o `systemd` como primeiro processo, o PID 1, e disse que ele inicia todo o resto. O
@@ -26,7 +26,8 @@ ana@server:~$ sudo systemctl status cron --no-pager -n 0
 
 Seis serviços neste servidor mínimo, cada um com uma descrição de uma linha: o `cron`, o agendador
 clássico da seção 05; o `dbus`, como os programas conversam entre si; o journal, que junta todo log; os
-logins; a resolução de nomes; e um gerenciador da sessão da própria ana.
+logins; a resolução de nomes; e um gerenciador da sessão da própria ana. O servidor que você montou na
+aula 1 é a instalação padrão e lista mais deles; cada linha se lê do mesmo jeito.
 
 O `systemctl status` dá o quadro completo de um serviço: *Loaded*, que arquivo o define e se ele está
 *habilitado*; *Active*, se roda agora e desde quando; e o *Main PID*, o processo que você veria no

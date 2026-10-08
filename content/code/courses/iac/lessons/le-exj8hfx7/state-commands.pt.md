@@ -1,6 +1,6 @@
 ---
 title: Ler e editar o estado com terraform state
-version: 1
+version: 2
 ---
 
 De volta ao diretório da própria Ana, com o estado que conhece os três recursos. O JSON pode ser
@@ -149,3 +149,6 @@ O `public_a` voltou, e o plan está limpo. **Isso funcionou porque o backup esta
 diretório**, que é o mesmo motivo pelo qual ele sumiria junto com o laptop. Duas seções adiante, o backend põe o
 estado num lugar onde a história dele sobrevive, e a aula 8 mostra o `terraform import`, que traz um
 recurso real de volta à gerência sem backup nenhum.
+
+A Ana faz commit do `main.tf` com o bloco renomeado, para que o arquivo no Git também diga
+`public_a`; as próximas seções o clonam.

@@ -1,6 +1,6 @@
 ---
 title: Finding it before it is indexed
-version: 1
+version: 2
 ---
 
 A listing is written once and read by every question that retrieves it. That makes ingestion the
@@ -24,7 +24,7 @@ cheapest place to look at it, once, before it reaches any prompt:
 ```
 
 ```
-ana@lab:~/rag$ python scan.py
+ana@vm:~/rag$ python scan.py
 L01  ok
 L02  ok
 L03  ok
