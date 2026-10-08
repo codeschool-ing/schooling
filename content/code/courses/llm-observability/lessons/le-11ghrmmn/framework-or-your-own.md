@@ -1,6 +1,6 @@
 ---
 title: A framework, your own code, or both
-version: 1
+version: 2
 ---
 
 After lessons 8 to 12 the course has both: checks written in a few lines each, and two frameworks that
@@ -26,4 +26,4 @@ whose docstring is its whole definition.
 
 Lesson 14 uses these metrics to compare two versions of the assistant, and lesson 15 makes the
 comparison a test that can fail a build. Both work with the course's own checks or with a framework's,
-and both use the sixty labelled replies to say which checks can be believed.
+and both use the forty-eight labelled replies to say which checks can be believed.

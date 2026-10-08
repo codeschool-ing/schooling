@@ -1,16 +1,20 @@
 ---
-title: RAGAS without a model
-version: 1
+title: RAGAS, with and without a model
+version: 2
 ---
 
 RAGAS has a family of metrics that need **no model**: they compare strings. Two of them are context
 precision and context recall, the ones lesson 11 computed by its own definition. RAGAS's versions take
 **reference contexts**, the text that should have been retrieved, and judge a retrieved chunk relevant
-when its string similarity to some reference text is at least 0.5.
+when its string similarity to some reference text is at least 0.5. And it has metrics that do need
+one, of which **response relevancy** is the one lesson 11 described: a model writes the questions a
+reply would answer, and the score is how close those are to the real question, times zero if the
+reply is noncommittal.
 
-`ragas_run.py` gives RAGAS the text of every chunk in each question's gold sections as reference
-contexts, runs both metrics through `evaluate`, and prints lesson 11's numbers for the same questions
-beside them:
+`ragas_run.py` runs both kinds. The reference contexts are the text of each question's gold chunks, and
+lesson 11's numbers for the same questions are printed beside RAGAS's. Response relevancy runs on every
+reply, with the local model as its judge; read the comment above `llm` before running it, because it
+took three tries to get any score at all out of RAGAS on this machine:
 
 ```python
 """ragas_run.py: RAGAS on the forty-eight replies of lesson 10. Its context precision and recall that
@@ -69,22 +73,42 @@ for run in ("old", "new"):
               + (f", the rest a mean of {mean(got):.2f}" if got else ""))
 ```
 
-CAPTURE:ragas
+```
+ana@dev:~/obs$ python ragas_run.py 2>/dev/null
+old 2026.09.4, 19 questions with gold and chunks
+  RAGAS      precision 0.99   recall 1.00
+  lesson 11  precision 1.00   recall 1.00
+  response relevancy, answers: 17 replies, 10 with no score, the rest a mean of 0.70
+  response relevancy, refusals: 7 replies, 7 with no score
+new 2026.10.1, 17 questions with gold and chunks
+  RAGAS      precision 1.00   recall 1.00
+  lesson 11  precision 1.00   recall 1.00
+  response relevancy, answers: 15 replies, 8 with no score, the rest a mean of 0.79
+  response relevancy, refusals: 9 replies, 9 with no score
+```
 
-**Precision agrees exactly, and recall does not, by a lot.** Under the new release RAGAS says the
-search found less than half of what it should; lesson 11 says it found nine tenths.
+**The string metrics agree with lesson 11, nearly exactly.** Precision 0.99 and 1.00, recall 1.00 in
+both releases, over the questions where the model was given anything. That is because the references
+are the gold chunks themselves, so a retrieved gold chunk matches its reference word for word. Make the
+references longer than what one chunk holds, a whole section split across three chunks, and RAGAS's
+recall would fall where lesson 11's would not: RAGAS asks whether every reference text was found, and
+lesson 11 whether every gold chunk was. **The reference decides the score as much as the metric does**,
+and a recall published without saying what the references were cannot be compared with anything.
 
-Both are right about different things. Lesson 11 asks, for each gold **section**, whether any chunk from
-it was given to the model. RAGAS asks, for each reference **text**, whether some retrieved chunk is
-similar to it, and the references here are every chunk of every gold section. A section split into
-three chunks of which the search returned one counts as found in lesson 11 and as one in three in
-RAGAS. The new release returns one chunk for most questions, so the difference is largest there.
+**Response relevancy scored 14 of the 48 replies.** None of the sixteen refusals has a score, and
+eighteen of the answers have none either. For every one of them the local model's reply to one of
+RAGAS's prompts could not be parsed, and RAGAS recorded the score as missing and went on, without
+stopping the run and without saying so in the table: the program above counts the missing ones because
+RAGAS's own mean would quietly skip them. On a first try with RAGAS's defaults, two test replies got no
+score at all: one call timed out at three minutes, and for the refusal the model wrote its question
+inside a paragraph of explanation. With JSON mode, the same refusal came back with a question about
+where Albert Einstein was born, which is the example in RAGAS's own prompt.
 
-Which one is the right recall depends on what the answer needs. If one chunk of a section is enough to
-answer, lesson 11's is the honest measure; if the answer is spread across the section, RAGAS's is. That
-is a property of the questions, and it is decided when the references are written, not when the
-metric is chosen.
+So lesson 11's claim, that RAGAS scores the agreed refusal 0 because it is noncommittal, could not be
+checked here: with this judge RAGAS gives a refusal no score at all. The fourteen answers it did score
+average 0.70 and 0.79, which says little when two thirds of the replies are missing from it. **A mean
+over the replies a metric managed to score is a number about the metric**, not about the replies.
 
-**And the reference decides the score as much as the metric does.** Change the reference contexts and
-the same metric reports a different recall for the same retrieval. A recall published without saying
-what the reference contexts were cannot be compared with anything.
+None of this is RAGAS being broken. Its metrics are written for models that follow a JSON instruction
+every time, and a three-billion-parameter model on a processor does not. With a larger judge most of
+the missing scores would appear; the lesson to keep is to count them, every run, beside the mean.

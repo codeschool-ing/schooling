@@ -42,7 +42,20 @@ for metric in (AnswerRelevancyMetric(model=model, async_mode=False), Faithfulnes
     print("  reason:", metric.reason)
 ```
 
-CAPTURE:builtin
+```
+ana@dev:~/obs$ python builtin.py
+
+
+AnswerRelevancyMetric: score 1.0, 3 model calls, 9 s
+  statements: ['According to [1], the customer pays for the return postage.']
+  verdicts: [<Verdict.YES: 'yes'>]
+  reason: The score is 1.00 because there are no irrelevant statements in the actual output, making it a perfect answer that directly addresses the question.
+FaithfulnessMetric: score 0.0, 4 model calls, 15 s
+  claims: ['According to [1], the customer pays for the return postage.']
+  truths: ['Returns are free', "You can return an item by choosing 'Return an item' in your account", 'A prepaid label is emailed to you for returns', 'You can drop the parcel at any post office']
+  verdicts: [<Verdict.NO: 'no'>]
+  reason: The score is 0.00 because there are no contradictions in the actual output to justify a higher faithfulness score.
+```
 
 Both verdicts are right. The reply is about who pays for the postage, so it is relevant, and it says
 the opposite of its source, so it is not faithful. And the steps printed under each score show how a

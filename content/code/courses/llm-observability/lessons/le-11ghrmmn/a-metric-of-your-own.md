@@ -3,7 +3,7 @@ title: A metric of your own
 version: 2
 ---
 
-What a framework gives without a model is its **structure**: test cases, a runner, a report, a
+What a framework gives before any of its metrics is its **structure**: test cases, a runner, a report, a
 cache, a pytest integration. A metric is any class that can say a score, a reason and whether it
 passed, so the checks this course already has can run inside DeepEval as they are.
 
@@ -109,9 +109,26 @@ for release in ("2026.09.4", "2026.10.1"):
 DeepEval prints a banner, a warning and a summary of its own, with a few emoji the page cannot draw; the
 `grep` keeps the summary's pass rate and the script's two lines:
 
-CAPTURE:deepeval
+```
+ana@dev:~/obs$ python deepeval_run.py | grep -E "faithfulness failed|^2026"
+  faithfulness failed e01 2026.09.4: According to [1], you have 30 days from delivery to return a
+  faithfulness failed e08 2026.09.4: According to source [1], express delivery costs R$ 29.90.
+  faithfulness failed e12 2026.09.4: I could not find that in our documents.
+  faithfulness failed e02 2026.10.1: According to [1], the customer pays for the return postage.
+  faithfulness failed e06 2026.10.1: According to [1], standard delivery takes three to six worki
+  faithfulness failed e07 2026.10.1: According to [1], standard delivery is free on orders over R
+  faithfulness failed e08 2026.10.1: According to source [1], express delivery costs R$ 29.90.
+  faithfulness failed e12 2026.10.1: Unfortunately, according to [1], e-books purchased from us a
+  faithfulness failed e13 2026.10.1: According to [1], yes, you can download audiobooks to listen
+  faithfulness failed e16 2026.10.1: You will receive the electronic invoice for your order as so
+  faithfulness failed e18 2026.10.1: According to [1], if the order costs more than the card hold
+2026.09.4 judge relevance 15/24  fact check 22/24  Faithfulness 6/24 (15 errors)
+2026.10.1 judge relevance 16/24  fact check 18/24  Faithfulness 3/24 (13 errors)
+```
 
-The `grep` keeps the script's own lines and drops DeepEval's banner and summary. Read the two counts at
+The `grep` keeps the script's own lines and drops DeepEval's banner and summary. The summary counts a
+test case as passed only when every metric on it passed, a fair rule for a test and a poor one for a
+report, because it hides which metric failed; the script's per-metric counts are the report. Read the two counts at
 the bottom first, then the list above them.
 
 **The checks this course wrote come through unchanged.** The fact check passes 22 and 18 replies of
@@ -146,7 +163,14 @@ the run it graded.
   time, because the judge shares one processor with everything else.
 - **A record.** The `.deepeval` folder holds the last run in full.
 
-CAPTURE:ls
+```
+ana@dev:~/obs$ ls -a .deepeval
+.
+..
+.deepeval-cache.json
+.latest_run_full.json
+.latest_test_run.json
+```
 
 The record is useful and, as the first section said, it is customers' text: those files need the same
 care as a trace.

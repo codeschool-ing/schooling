@@ -1,6 +1,6 @@
 ---
 title: Um framework, código próprio, ou os dois
-version: 1
+version: 2
 ---
 
 Depois das aulas 8 a 12 o curso tem as duas coisas: verificações escritas em poucas linhas cada, e dois
@@ -27,5 +27,5 @@ cuja docstring é a definição inteira.
 
 A aula 14 usa essas métricas para comparar duas versões do assistente, e a aula 15 transforma a
 comparação num teste que pode reprovar um build. As duas funcionam com as verificações do curso ou com
-as de um framework, e as duas usam as sessenta respostas rotuladas para dizer em quais verificações dá
+as de um framework, e as duas usam as quarenta e oito respostas rotuladas para dizer em quais verificações dá
 para acreditar.

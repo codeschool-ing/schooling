@@ -1,6 +1,6 @@
 ---
 title: Dois frameworks, e do que são feitos
-version: 1
+version: 2
 ---
 
 **DeepEval** e **RAGAS** são as duas bibliotecas de avaliação de código aberto mais encontradas em
@@ -15,27 +15,35 @@ estrutura comum, e ler essa estrutura é a maior parte de aprender qualquer uma.
 | as métricas próprias | em geral um prompt a um modelo mais aritmética | o mesmo, mais uma família que não precisa de modelo |
 
 Os nomes dos campos mudam e as ideias não: uma pergunta, uma resposta, os trechos que o modelo viu e,
-quando existe, a resposta esperada. As sessenta respostas da aula 10 levam as quatro coisas, e é por
+quando existe, a resposta esperada. As quarenta e oito respostas da aula 10 levam as quatro coisas, e é por
 isso que os dois frameworks conseguem avaliá-las sem coletar nada de novo.
 
-## Antes de instalar qualquer um
+## Instalando, e três coisas a saber antes
 
-Três coisas neste laboratório valem ser sabidas antes de surpreenderem uma equipe.
+Os dois entram no ambiente do curso, com dois ajustes antes:
+
+```sh
+cat >> ~/llmobs/bin/activate <<'EOF'
+export DEEPEVAL_TELEMETRY_OPT_OUT=YES
+export RAGAS_DO_NOT_TRACK=true
+EOF
+source ~/llmobs/bin/activate
+pip install deepeval==4.2.8 ragas==0.3.1 langchain-community==0.3.31 langchain-openai==1.6.7 pillow==12.3.0 rapidfuzz==3.14.6
+```
 
 **Os dois mandam telemetria por padrão.** O DeepEval e o RAGAS relatam uso anônimo a quem os faz, a
-menos que se diga o contrário; o `/etc/llmobs.env` define `DEEPEVAL_TELEMETRY_OPT_OUT=YES` e
-`RAGAS_DO_NOT_TRACK=true`, e o raciocínio da aula 2 é o porquê. Uma biblioteca de avaliação roda sobre
-as palavras dos clientes, e o que ela manda para fora da máquina é uma questão a resolver antes da
-primeira execução, não depois.
+menos que se diga que não, e as duas linhas acrescentadas ao `activate` dizem que não. O raciocínio da
+aula 2 é o motivo: uma biblioteca de avaliação roda sobre as palavras dos clientes, e o que ela manda
+para fora da máquina é uma questão a resolver antes da primeira execução, não depois.
 
-**O DeepEval guarda cada caso de teste em disco.** Ele escreve uma pasta `.deepeval` ao lado do
-script, e a última execução ali tem cada input, output e retrieval context por inteiro. É texto de
-clientes num arquivo que ninguém pensa como dado: ele vai para o `.gitignore` e fica sob a mesma
-retenção que os traces.
+**O DeepEval guarda cada caso de teste em disco.** Ele escreve uma pasta `.deepeval` ao lado do script,
+e a última execução ali guarda cada entrada, saída e contexto recuperado inteiros. É texto de clientes
+num arquivo que ninguém pensa como dado: ele vai para o `.gitignore` e fica sob a mesma retenção dos
+traces.
 
-**O RAGAS 0.3.1 não importava como instalado.** Ele importa um modelo de chat que o
-`langchain-community` removeu na 0.4, e usa dois pacotes, `pillow` e `rapidfuzz`, sem declará-los. O
-RAGAS mais novo, 0.4.3, teria puxado o cliente da OpenAI de volta da 3.24 para a 1.x, por baixo de todos
-os outros programas deste curso. O laboratório fixa o `langchain-community` na 0.3.31 e acrescenta os
-outros dois, com um comentário no `lab.sh` dizendo por quê. Um framework de avaliação é uma dependência
-como outra qualquer, e muitas vezes é a que tem mais dependências próprias.
+**O RAGAS 0.3.1 não importa como os próprios requisitos o instalam.** Ele importa um modelo de chat que
+o `langchain-community` removeu na 0.4, e usa dois pacotes, `pillow` e `rapidfuzz`, sem declará-los. O
+RAGAS mais novo, 0.4.3, puxaria o cliente da OpenAI de volta de 3.24 para 1.x, por baixo de todos os
+outros programas deste curso. Então a linha acima fixa o `langchain-community` em 0.3.31 e acrescenta os
+outros dois, e o `langchain-openai` é como o RAGAS chega a um modelo. Um framework de avaliação é uma
+dependência como outra qualquer, e muitas vezes é a que tem mais dependências próprias.
