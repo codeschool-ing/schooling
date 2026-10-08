@@ -5,53 +5,41 @@
 # THE SCRIPT IS THE SOURCE AND ITS OUTPUT IS NOT COMMITTED. Every transcript in
 # this lesson was copied from running it:
 #
-#   bash captures.sh            # beside this file; it finds ../../lab.sh
+#   bash captures.sh            # beside this file
 #
-# It rebuilds ~/triage with lab.sh reset under its own HOME, so nothing of
-# yours is touched, and prints each command after a prompt, ana@lab:~/triage$,
-# followed by what it printed.
+# lab-capture.sh builds ~/triage as a student has it after this lesson, every
+# file read out of the lessons' own fences, and prints each command after a
+# prompt, ana@lab:~/triage$, followed by what it printed.
 #
-# What is STAGED rather than typed: the whole of ~/triage, built by lab.sh,
-# including every prompt file the lesson shows. The model is the lab's
-# stand-in (promptlab/standin.py), NOT a language model; lab.sh's header says
-# what that means and what in the lab was written by the course.
+# THE MODEL IS REAL: llama3.2:3b (Q4_K_M, id a80c4f17acd5) on Ollama 0.40.0,
+# CPU only, temperature 0 and seed 1, captured on 2026-10-08. The replies
+# tone.py reads are the model's, written by lesson 4's reply.txt.
 #
-# Recorded with Python 3.11 and git 2.43, TZ=America/Sao_Paulo.
-
-set -uo pipefail
+# Recorded on Ubuntu 24.04 with Python 3.12, TZ=America/Sao_Paulo.
 here=$(cd "$(dirname "$0")" && pwd)
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 PAGER=cat GIT_PAGER=cat COLUMNS=100 PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
-export HOME=${LAB_HOME:-/var/tmp/prompt-reliability}
-mkdir -p "$HOME"
-bash "$here/../../lab.sh" reset
-cd "$HOME/triage"
-export PATH=$HOME/triage/bin:$PATH
-on() { printf 'ana@lab:~/triage$ %s\n' "$*"; bash -c "$*" 2>&1; }
-block() { printf '##### %s\n' "$1"; }
+LESSON=12; . "$here/../../lab-capture.sh"
 
 block correctness
 on 'pl run prompts/v6-escaped.txt cases/all.jsonl --out runs/v6-all.jsonl'
-on 'pl confusion runs/v6-all.jsonl'
-on 'grep h03 cases/all.jsonl'
-on 'pl show runs/v6-all.jsonl h03'
-on 'pl confusion runs/v6-all.jsonl --field urgency'
+on 'python3 confusion.py runs/v6-all.jsonl'
+on 'python3 confusion.py runs/v6-all.jsonl --field urgency'
 
 block format
-on 'pl check runs/v6-all.jsonl'
 on 'pl check runs/v6-all.jsonl --failures | grep json'
-on 'pl show runs/v6-all.jsonl t26'
 
 block tone
-on 'cat checks/tone.json'
-on 'pl tone runs/drafts.jsonl'
-on 'pl show runs/drafts.jsonl t02'
-on 'pl show runs/drafts.jsonl t03'
+on 'pl run prompts/reply.txt cases/dev.jsonl --out runs/replies.jsonl --var shop=Folio --var language=English'
+on 'python3 tone.py runs/replies.jsonl'
+on 'pl show runs/replies.jsonl t11'
+on 'pl show runs/replies.jsonl t33'
+on 'pl show runs/replies.jsonl t06'
+on 'grep -c "\[Customer\]" runs/replies.jsonl'
 
 block safety
-on 'pl show runs/drafts.jsonl t12'
-on 'pl show runs/drafts.jsonl t09'
+on 'pl show runs/replies.jsonl t01'
+on 'pl show runs/replies.jsonl t13'
 
 block many
 on 'pl run prompts/v3-examples.txt cases/all.jsonl --out runs/v3-all.jsonl'
 on 'pl check runs/v3-all.jsonl'
-on 'pl confusion runs/v3-all.jsonl'
+on 'python3 confusion.py runs/v3-all.jsonl'

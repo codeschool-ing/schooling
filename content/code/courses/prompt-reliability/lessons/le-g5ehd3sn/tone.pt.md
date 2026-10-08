@@ -1,74 +1,188 @@
 ---
 title: Tom, por regras
-version: 1
+version: 2
 ---
 
-Exatidão e formato têm respostas que alguém anotou. Tom não tem, e a reação mais comum é
-desistir de medi-lo. A alternativa é anotar as partes dele que **dá** para expressar como regras. O
-`runs/drafts.jsonl` guarda doze respostas a clientes, escritas pelo curso e não por um modelo, e é por
-isso que o `pl show` não informa tokens para elas. O `checks/tone.json` guarda as regras:
+Exatidão e formato têm respostas que alguém escreveu. Tom não tem, e o primeiro movimento de costume
+é desistir de medi-lo. O outro movimento é escrever as partes dele que **podem** ser ditas como
+regras. Cinco regras para uma resposta a um cliente da Folio, num arquivo que o programa lê: no
+máximo um ponto de exclamação, no máximo oitenta palavras, nenhuma das expressões que a loja nunca
+usa, nenhuma promessa de uma lista curta de padrões, e algum reconhecimento do cliente. Salve-as
+como `checks/tone.json`:
 
-```
-ana@lab:~/triage$ cat checks/tone.json
+```json
 {
   "max_exclamations": 1,
   "max_words": 80,
-  "banned": ["\\bdear (sir|madam)\\b", "\\bvalued customer\\b", "\\bas per\\b"],
-  "promises": ["\\btoday\\b", "\\bimmediately\\b", "\\bguarantee", "\\bwithin 24 hours\\b"],
-  "acknowledge": ["\\bsorry\\b", "\\bthank", "\\bapologi"]
+  "banned": [
+    "\\bdear (sir|madam)\\b",
+    "\\bvalued customer\\b",
+    "\\bas per\\b"
+  ],
+  "promises": [
+    "\\bwill (process|issue|send) (a |your )?(full )?refund",
+    "\\btoday\\b",
+    "\\btomorrow\\b",
+    "\\bimmediately\\b",
+    "\\bguarantee",
+    "\\bwithin (the next )?\\d"
+  ],
+  "acknowledge": [
+    "\\bsorry\\b",
+    "\\bthank",
+    "\\bapologi"
+  ]
 }
-ana@lab:~/triage$ pl tone runs/drafts.jsonl
-t01  ok   
-t02  FAIL exclamations
-t03  FAIL promise
-t04  FAIL banned, acknowledge
+```
+
+Cada item de `banned`, `promises` e `acknowledge` é uma expressão regular, escrita do jeito que o
+`scan.py` da aula 10 escreveu os padrões dele. Este programa confere cada resposta contra elas e diz
+quais regras ela quebra. Salve-o como `tone.py`:
+
+```python
+"""tone: hold each reply to the rules in checks/tone.json, and say which it breaks."""
+import json
+import re
+import sys
+
+from pl import read_jsonl
+
+rules = json.load(open("checks/tone.json", encoding="utf-8"))
+
+
+def broken(text):
+    found = []
+    if text.count("!") > rules["max_exclamations"]:
+        found.append("exclamations")
+    if len(text.split()) > rules["max_words"]:
+        found.append("length")
+    for name in ("banned", "promises"):
+        if any(re.search(p, text, re.I) for p in rules[name]):
+            found.append(name)
+    if not any(re.search(p, text, re.I) for p in rules["acknowledge"]):
+        found.append("acknowledge")
+    return found
+
+
+rows = read_jsonl(sys.argv[1])
+counts = {}
+for r in rows:
+    found = broken(r["text"])
+    for name in found:
+        counts[name] = counts.get(name, 0) + 1
+    print("%-4s %-4s %s" % (r["case"], "FAIL" if found else "ok", ", ".join(found)))
+print()
+for name in ("exclamations", "length", "banned", "promises", "acknowledge"):
+    print("%-13s %d of %d fail" % (name, counts.get(name, 0), len(rows)))
+```
+
+O `reply.txt` da aula 4 escreve respostas, então aqui estão quarenta do `llama3.2:3b`, uma para
+cada mensagem do dev:
+
+```
+ana@lab:~/triage$ pl run prompts/reply.txt cases/dev.jsonl --out runs/replies.jsonl --var shop=Folio --var language=English
+40 calls, prompt 13304d8d, llama3.2:3b, written to runs/replies.jsonl
+ana@lab:~/triage$ python3 tone.py runs/replies.jsonl
+t01  FAIL promises
+t02  FAIL promises
+t03  ok   
+t04  FAIL promises
 t05  ok   
-t06  ok   
-t07  ok   
+t06  FAIL acknowledge
+t07  FAIL promises
 t08  ok   
-t09  FAIL promise
-t10  FAIL exclamations
-t11  FAIL length
-t12  FAIL banned, promise
+t09  FAIL promises, acknowledge
+t10  FAIL exclamations, acknowledge
+t11  ok   
+t12  FAIL promises
+t13  FAIL promises, acknowledge
+t14  ok   
+t15  FAIL exclamations
+t16  ok   
+t17  ok   
+t18  FAIL promises
+t19  FAIL promises
+t20  FAIL acknowledge
+t21  FAIL promises
+t22  FAIL acknowledge
+t23  FAIL promises
+t24  ok   
+t25  FAIL promises
+t26  FAIL promises
+t27  FAIL promises, acknowledge
+t28  ok   
+t29  ok   
+t30  FAIL acknowledge
+t31  ok   
+t32  FAIL promises
+t33  FAIL promises
+t34  FAIL acknowledge
+t35  ok   
+t36  FAIL promises
+t37  FAIL promises
+t38  FAIL promises
+t39  ok   
+t40  ok   
 
-exclamations  2 of 12 fail
-length        1 of 12 fail
-banned        2 of 12 fail
-promise       3 of 12 fail
-acknowledge   1 of 12 fail
+exclamations  2 of 40 fail
+length        0 of 40 fail
+banned        0 of 40 fail
+promises      19 of 40 fail
+acknowledge   9 of 40 fail
 ```
 
-Cinco regras, cada uma um teste unitário no sentido da aula 11: no máximo um ponto de exclamação, no
-máximo oitenta palavras, nenhuma das expressões que a loja nunca usa, nenhuma promessa de uma lista
-curta, e algum reconhecimento do cliente. Cinco dos doze rascunhos passam em todas as regras.
+Cinco regras, cada uma um teste unitário no sentido da aula 11. Catorze das quarenta respostas
+passam em todas. Dezenove quebram `promises` e nove `acknowledge`; nenhuma é longa demais e nenhuma
+usa uma expressão proibida.
 
-## O que uma regra enxerga
+## O que uma regra vê
 
-**Uma regra pega exatamente o que ela nomeia**, e isso tem dois lados:
+**Uma regra pega exatamente o que ela nomeia**, e isso corta para os dois lados:
 
 ```
-ana@lab:~/triage$ pl show runs/drafts.jsonl t02
-│ Thank you for your patience! The tracking stopped at the courier's depot. I've asked them to trace it and I'll write again by Thursday!
-stop: end, tokens in 0, out 0
-ana@lab:~/triage$ pl show runs/drafts.jsonl t03
-│ Sorry the cover arrived torn. A replacement goes out today and there's no need to send the damaged copy back.
-stop: end, tokens in 0, out 0
+ana@lab:~/triage$ pl show runs/replies.jsonl t11
+│ "Dear [Customer],
+│
+│ We're sorry to hear that your card was declined, but the payment still went through. We're investigating this issue and will be in touch with you shortly to discuss further. Please allow 2-3 working days for our team to review the transaction. We'll be in touch to resolve this matter and ensure a smooth shopping experience for you.
+│
+│ Best regards, Folio Team"
+stop: stop, tokens in 92, out 82, 9.9 s
+ana@lab:~/triage$ pl show runs/replies.jsonl t33
+│ "Sorry to hear that you received someone else's order. Please contact our customer service team immediately so we can assist you in resolving the issue. We will guide you through the next steps to ensure the correct order is sent to you. You can reach us via phone or email, and we will be happy to help. Thank you for bringing this to our attention."
+stop: stop, tokens in 94, out 74, 8.6 s
+ana@lab:~/triage$ pl show runs/replies.jsonl t06
+│ "Dear [Customer],
+│
+│ We've located your invoice for last month's order. You can find it in the 'Order History' section of your account on our website. Please log in to your account and navigate to this section. If you're having trouble finding it, feel free to contact us and we'll be happy to assist you.
+│
+│ Best regards, Folio Team"
+stop: stop, tokens in 95, out 76, 9.2 s
 ```
 
-`t02` falha nos pontos de exclamação, dois onde a regra permite um, o que é justo. Ela também promete
-escrever de novo *by Thursday*, uma data, e a regra `promise` não percebeu, porque a lista dela nomeia
-*today*, *immediately*, *guarantee* e *within 24 hours*, e Thursday não é nenhuma dessas. `t03` falha
-em `promise` por *a replacement goes out today*. Se a loja de fato envia reposições no mesmo dia, essa
-é a frase mais útil da resposta.
+O `t11` passa em `promises`, e pede ao cliente que *allow 2-3 working days*: uma data, numa resposta
+a alguém cujo cartão foi cobrado depois de ser recusado. A regra nomeia *within* um número de dias e
+esta resposta escreveu *allow*. O `t33` falha em `promises` por *immediately*, e a frase é *please
+contact our customer service team immediately*: ela pede algo ao cliente e não promete nada. O `t06`
+falha em `acknowledge` porque não agradece nem pede desculpas, e é uma resposta simples e correta a
+uma pergunta simples sobre onde está uma fatura.
 
-Então os rascunhos mostram os dois erros de uma regra em duas linhas: uma promessa que ela perdeu e
-uma frase boa que ela marcou. **Uma regra é um substituto para um julgamento**, e os erros dela são
-onde o julgamento e o substituto se separam. Isso não é motivo para largar as regras. Elas são de
-graça, dão o mesmo veredito sempre, e pegam *Dear Sir/Madam* e *valued customer* sem falhar.
+Então três respostas mostram os dois erros de uma regra: uma promessa que ela deixou passar, e duas
+frases boas que ela marcou. **Uma regra é uma aproximação de um julgamento**, e os erros dela são
+onde o julgamento e a aproximação se separam. Isso não é motivo para largar as regras. Elas são de
+graça, dão o mesmo veredicto toda vez, e neste modelo a regra `promises` é a linha mais útil do
+arquivo.
 
-## O que nenhuma regra aqui enxerga
+## O que nenhuma regra aqui vê
 
-Nenhuma das cinco pergunta se a resposta é verdadeira, se responde à pergunta, ou se soa como alguém
-que se importa. `t01` passa em tudo; uma resposta educada sobre o pedido errado também passaria. Tom
-além das regras precisa de alguém lendo uma amostra, ou de um modelo encarregado de julgar, e a aula 13
-mede até onde dá para confiar num modelo juiz para isso.
+O `t06` começa com *Dear [Customer]*. Outras também:
+
+```
+ana@lab:~/triage$ grep -c "\[Customer\]" runs/replies.jsonl
+11
+```
+
+Onze respostas de quarenta se dirigem ao cliente com um marcador entre colchetes, e todas as regras
+as aprovaram, porque ninguém pensou em escrever essa. Agora alguém pensou, e ela pertence ao arquivo.
+Nenhuma das cinco pergunta também se a resposta é verdadeira, se responde à pergunta, ou se soa como
+alguém que se importa. Tom além das regras precisa de alguém lendo uma amostra, ou de um modelo
+chamado a julgar, e a aula 13 mede até onde se pode confiar isso a um modelo juiz.

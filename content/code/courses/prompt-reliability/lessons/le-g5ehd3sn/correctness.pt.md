@@ -1,81 +1,116 @@
 ---
 title: Exatidão, um erro de cada vez
-version: 1
+version: 2
 ---
 
-A taxa de acerto é o primeiro número que todo mundo informa e o que menos diz. Ela conta as respostas
+A acurácia é o primeiro número que todo mundo relata e o que menos diz. Ela conta as respostas
 certas e trata toda resposta errada como o mesmo erro. **Uma matriz de confusão mantém cada erro
 separado**: uma linha para cada rótulo que uma pessoa deu, uma coluna para cada rótulo que a resposta
-deu.
+deu. Este programa desenha uma a partir de um arquivo de execução, lendo as respostas do jeito que o
+`pl check --lenient` não lê: uma resposta que não é JSON válido, ou que dá um rótulo fora da lista,
+vai para uma coluna só dela. Salve-o como `confusion.py`:
+
+```python
+"""confusion: every mistake in a run, one cell each, with recall and precision."""
+import argparse
+
+from pl import LABELS, parse, read_jsonl
+
+p = argparse.ArgumentParser(prog="confusion")
+p.add_argument("run")
+p.add_argument("--field", default="category", choices=sorted(LABELS))
+a = p.parse_args()
+
+rows = read_jsonl(a.run)
+expect = {c["id"]: c["expect"] for c in read_jsonl(rows[0]["cases"])}
+labels = LABELS[a.field]
+cols = labels + ["(bad)"]
+cells = {(e, g): 0 for e in labels for g in cols}
+for r in rows:
+    got = (parse(r["text"]) or {}).get(a.field)
+    cells[expect[r["case"]][a.field], got if got in labels else "(bad)"] += 1
+
+print("%-10s" % "expected" + "".join("%9s" % c for c in cols) + "   recall")
+for e in labels:
+    total = sum(cells[e, g] for g in cols)
+    recall = "%.2f" % (cells[e, e] / total) if total else "-"
+    print("%-10s" % e + "".join("%9d" % cells[e, g] for g in cols) + "%9s" % recall)
+precision = []
+for g in labels:
+    total = sum(cells[e, g] for e in labels)
+    precision.append("%.2f" % (cells[g, g] / total) if total else "-")
+print("%-10s" % "precision" + "".join("%9s" % x for x in precision))
+right = sum(cells[e, e] for e in labels)
+print("\naccuracy %d/%d = %.2f" % (right, len(rows), right / len(rows)))
+```
+
+Ele importa `LABELS` e `parse()` do `pl.py`, então os rótulos e a leitura são os do próprio harness.
+Aqui está o `v6-escaped.txt` sobre as setenta mensagens, os quarenta casos do dev e os trinta do
+holdout que a aula 5 juntou em `cases/all.jsonl`:
 
 ```
 ana@lab:~/triage$ pl run prompts/v6-escaped.txt cases/all.jsonl --out runs/v6-all.jsonl
-70 calls, prompt fbc4c9b1, written to runs/v6-all.jsonl
-ana@lab:~/triage$ pl confusion runs/v6-all.jsonl
+70 calls, prompt fbc4c9b1, llama3.2:3b, written to runs/v6-all.jsonl
+ana@lab:~/triage$ python3 confusion.py runs/v6-all.jsonl
 expected    billing delivery  returns  account    other    (bad)   recall
-billing          13        1        1        0        0        1   0.81
-delivery          0       13        0        0        1        0   0.93
-returns           0        1       13        0        2        0   0.81
-account           1        2        0        9        1        1   0.64
-other             1        1        0        0        8        0   0.80
-precision      0.87     0.72     0.93     1.00     0.67
+billing           4        0        6        5        1        0     0.25
+delivery          0        9        5        0        0        0     0.64
+returns           0        1       14        0        0        1     0.88
+account           0        1        3        9        1        0     0.64
+other             0        0        1        0        9        0     0.90
+precision      1.00     0.82     0.48     0.64     0.82
 
-accuracy 56/70 = 0.80
+accuracy 45/70 = 0.64
 ```
 
-O `cases/all.jsonl` são as quarenta mensagens de dev e as trinta do holdout juntas. A diagonal são as
-respostas certas, 56 de 70. Cada uma das outras células é um erro específico: linha `account`, coluna
-`delivery`, 2, quer dizer que duas mensagens de account foram classificadas como delivery. `(bad)`
-guarda as respostas sem rótulo utilizável, que a próxima seção conta como formato.
+A diagonal são as respostas certas, 45 de 70. Toda outra célula é um erro específico: linha
+`billing`, coluna `returns`, 6, quer dizer que seis mensagens de billing foram classificadas como
+returns. `(bad)` guarda as respostas sem rótulo utilizável nenhum, que a próxima seção conta como
+formato.
 
-## Recall e precisão
+## Revocação e precisão
 
-Os dois números nas bordas respondem a perguntas diferentes.
+Os dois números das bordas respondem perguntas diferentes.
 
-**O recall se lê ao longo de uma linha**: das mensagens que eram de fato account, que fração o prompt
-chamou de account? Nove de catorze, 0,64. Cinco mensagens de account foram para outro lugar, e a
-equipe de account nunca vai vê-las a menos que alguém as encaminhe.
+**A revocação se lê ao longo de uma linha**: das mensagens que eram mesmo billing, que fatia o
+prompt chamou de billing? Quatro de dezesseis, 0,25. Doze mensagens de billing foram para outro
+lugar, seis para returns e cinco para account, e a equipe de cobrança nunca vai vê-las a não ser que
+alguém as encaminhe.
 
-**A precisão se lê descendo uma coluna**: das mensagens que o prompt chamou de delivery, que fração
-era delivery? Treze de dezoito, 0,72. Cinco dos chamados da equipe de entregas são trabalho de outra
-pessoa. Account tem a forma oposta, precisão 1,00: quando o prompt diz account ele acerta, e diz
-account menos vezes do que devia.
+**A precisão se lê descendo uma coluna**: das mensagens que o prompt chamou de returns, que fatia
+era returns? Catorze de vinte e nove, 0,48. Mais da metade dos chamados da equipe de devoluções é
+de outra pessoa. Billing tem o formato oposto, precisão 1,00: quando este prompt diz billing, ele
+acerta, e diz billing quatro vezes em setenta. **Com este prompt, `returns` é a caixa de tudo do
+`llama3.2:3b`**: seis mensagens de billing foram para lá, cinco de entrega e três de conta, e a
+matriz diz isso numa coluna onde a acurácia diz só 0,64.
 
-Um prompt consegue subir um abaixando o outro. Chamar tudo de account levaria o recall de account a
-1,00 e a precisão dele ao chão. É por isso que os dois são informados juntos, por rótulo.
+Um prompt pode subir uma baixando a outra. Chamar tudo de billing levaria a revocação de billing a
+1,00 e a precisão dele ao chão. É por isso que as duas são relatadas juntas, por rótulo.
 
 ## Que erros custam mais
 
 As células não custam o mesmo. A urgência mostra isso melhor:
 
 ```
-ana@lab:~/triage$ grep h03 cases/all.jsonl
-{"id": "h03", "message": "My account shows an order I never placed and my card has been charged for it.", "expect": {"category": "billing", "urgency": "high"}}
-ana@lab:~/triage$ pl show runs/v6-all.jsonl h03
-│ {
-│   "category": "billing",
-│   "urgency": "normal",
-│   "summary": "Their account shows an order they never placed and their card has been charged for it."
-│ }
-stop: end, tokens in 123, out 41
-ana@lab:~/triage$ pl confusion runs/v6-all.jsonl --field urgency
+ana@lab:~/triage$ python3 confusion.py runs/v6-all.jsonl --field urgency
 expected        low   normal     high    (bad)   recall
-low              17        7        0        0   0.71
-normal            1       27        0        2   0.90
-high              0        6       10        0   0.62
-precision      0.94     0.68     1.00
+low              22        2        0        0     0.92
+normal            3        4       22        1     0.13
+high              1        0       15        0     0.94
+precision      0.85     0.67     0.41
 
-accuracy 54/70 = 0.77
+accuracy 41/70 = 0.59
 ```
 
-`h03` é um cartão cobrado por um pedido que o cliente nunca fez, o que pode querer dizer que outra
-pessoa está usando o cartão dele. A categoria está certa e a urgência é normal, então ela espera na
-fila comum. É uma de seis mensagens high classificadas como normal: o recall de high é 0,62. A
-precisão de high é 1,00, então nada foi escalado sem motivo.
+Leia a linha `normal`: de trinta mensagens que uma pessoa chamou de normal, o prompt chamou vinte e
+duas de high. A revocação de normal é 0,13. Leia a coluna `high`: quarenta e um por cento do que ele
+chama de high é high. E a célula que mais custaria, uma mensagem urgente classificada como normal,
+tem zero: a revocação de high é 0,94, e a única mensagem urgente que ele perdeu ele chamou de low.
 
-O acerto de urgência é 54 de 70, e esse número conta `h03` exatamente como as sete mensagens de
-urgência baixa classificadas como normal, cujo único custo é serem respondidas um pouco antes do
-necessário. **Uma mensagem urgente perdida e um alarme falso são ambos uma resposta errada, e não
-custam o mesmo.** Decida quanto custa cada tipo de erro antes de ler a matriz, e informe as células
-caras pelo nome. *Seis high classificadas como normal* é uma frase que leva alguém a agir; *0,77*
-não é.
+Então este prompt falha na direção barata. Uma equipe de suporte por trás dele acharia a maior parte
+da fila marcada como urgente, e aprenderia em uma semana a ignorar o rótulo, o que tem o seu próprio
+custo: **um rótulo que todos ignoram não protege ninguém**. A acurácia de urgência é 41 de 70, e
+esse número conta uma mensagem urgente perdida exatamente como uma rotineira escalada. Elas não
+custam o mesmo. Decida quanto custa cada tipo de erro antes de ler a matriz, e relate as células
+caras pelo nome. *Vinte e duas normais classificadas como high, nenhuma high como normal* é uma frase
+sobre a qual alguém age; *0,59* não é.

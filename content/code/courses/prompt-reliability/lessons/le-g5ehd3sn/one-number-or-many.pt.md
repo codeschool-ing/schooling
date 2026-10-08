@@ -1,61 +1,59 @@
 ---
 title: Um número ou vários
-version: 1
+version: 2
 ---
 
-Com quatro tipos de métrica na mesa, a tentação é combiná-los: tanto para formato, tanto para acerto,
-um pouco para tom, uma nota só para comparar versões. **Uma nota ponderada única deixa uma métrica
-esconder outra**, e os dois prompts abaixo mostram como.
+Com quatro tipos de métrica na mesa, a tentação é combiná-las: tanto para formato, tanto para
+acurácia, um pouco para tom, uma nota só para comparar versões. **Uma nota ponderada única deixa uma
+métrica esconder outra**, e dois prompts que já estão no disco mostram como. Aqui está o
+`v3-examples.txt` sobre as mesmas setenta mensagens:
 
 ```
 ana@lab:~/triage$ pl run prompts/v3-examples.txt cases/all.jsonl --out runs/v3-all.jsonl
-70 calls, prompt 1d9c6ec4, written to runs/v3-all.jsonl
+70 calls, prompt 1d9c6ec4, llama3.2:3b, written to runs/v3-all.jsonl
 ana@lab:~/triage$ pl check runs/v3-all.jsonl
 check      pass  fail
-json         70     0
-fields       70     0
-labels       70     0
-category     56    14
-urgency      47    23
-all          47    23
-ana@lab:~/triage$ pl confusion runs/v3-all.jsonl
+json         69     1
+fields       69     1
+labels       69     1
+category     53    17
+urgency      42    28
+all          42    28
+ana@lab:~/triage$ python3 confusion.py runs/v3-all.jsonl
 expected    billing delivery  returns  account    other    (bad)   recall
-billing          14        0        1        1        0        0   0.88
-delivery          2       12        0        0        0        0   0.86
-returns           1        1       13        0        1        0   0.81
-account           3        1        0       10        0        0   0.71
-other             3        0        0        0        7        0   0.70
-precision      0.61     0.86     0.93     0.91     0.88
+billing          10        0        1        4        1        0     0.62
+delivery          0       11        2        0        0        1     0.79
+returns           2        2       12        0        0        0     0.75
+account           1        1        0       10        2        0     0.71
+other             0        0        0        0       10        0     1.00
+precision      0.77     0.79     0.80     0.71     0.77
 
-accuracy 56/70 = 0.80
+accuracy 53/70 = 0.76
 ```
 
-O `v3-examples.txt` e o `v6-escaped.txt` têm o mesmo acerto de categoria nas mesmas setenta
-mensagens: 56 de 70, 0,80. Por baixo, são prompts diferentes. Toda resposta da `v3` é JSON válido,
-contra 68 de 70 da `v6`. Mas a `v3` classificou 23 mensagens como billing e só 14 eram, uma precisão
-de billing de 0,61 contra 0,87 da `v6`. O primeiro exemplo dela é uma mensagem de billing, e no
-substituto todo exemplo puxa para o próprio rótulo as mensagens que se parecem com ele, o efeito que a
-aula 1 encontrou em `t37`, aqui espalhado por setenta mensagens.
+Por todos os totais, o `v3` é o prompt melhor: 53 categorias certas contra 45, 42 respostas
+aprovadas em todas as verificações contra 26, os mesmos 69 de 70 em formato. Qualquer nota construída
+com isso o escolheria, e na maior parte da matriz ele merece vencer: revocação de billing de 0,25
+para 0,62, precisão de returns de 0,48 para 0,80.
 
-```schooling-figure
-{"svg": "<svg viewBox=\"0 0 720 300\" role=\"img\" aria-label=\"Quatro métricas de dois prompts nas 70 mensagens. Respostas analisáveis: 1,00 com três exemplos, 0,97 com tags e escape. Acerto de categoria: 0,80 nos dois. Precisão de billing: 0,61 contra 0,87. Recall de account: 0,71 contra 0,64.\"><text x=\"20\" y=\"22\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">dois prompts nas mesmas 70 mensagens</text><text x=\"178\" y=\"68\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">respostas analisáveis</text><rect x=\"190\" y=\"50\" width=\"420.0\" height=\"14\" rx=\"2\" fill=\"var(--amber)\"></rect><text x=\"624.0\" y=\"57\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">1.00</text><rect x=\"190\" y=\"68\" width=\"408.0\" height=\"14\" rx=\"2\" fill=\"var(--phosphor)\"></rect><text x=\"624.0\" y=\"75\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">0.97</text><text x=\"178\" y=\"122\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">acerto de categoria</text><rect x=\"190\" y=\"104\" width=\"336.0\" height=\"14\" rx=\"2\" fill=\"var(--amber)\"></rect><text x=\"624.0\" y=\"111\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">0.80</text><rect x=\"190\" y=\"122\" width=\"336.0\" height=\"14\" rx=\"2\" fill=\"var(--phosphor)\"></rect><text x=\"624.0\" y=\"129\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">0.80</text><text x=\"178\" y=\"176\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">precisão de billing</text><rect x=\"190\" y=\"158\" width=\"255.7\" height=\"14\" rx=\"2\" fill=\"var(--amber)\"></rect><text x=\"624.0\" y=\"165\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">0.61</text><rect x=\"190\" y=\"176\" width=\"364.0\" height=\"14\" rx=\"2\" fill=\"var(--phosphor)\"></rect><text x=\"624.0\" y=\"183\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">0.87</text><text x=\"178\" y=\"230\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">recall de account</text><rect x=\"190\" y=\"212\" width=\"300.0\" height=\"14\" rx=\"2\" fill=\"var(--amber)\"></rect><text x=\"624.0\" y=\"219\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">0.71</text><rect x=\"190\" y=\"230\" width=\"270.0\" height=\"14\" rx=\"2\" fill=\"var(--phosphor)\"></rect><text x=\"624.0\" y=\"237\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">0.64</text><path d=\"M190 44 L190 262\" stroke=\"var(--wire)\" stroke-width=\"1\" fill=\"none\"></path><rect x=\"190\" y=\"272\" width=\"12\" height=\"12\" rx=\"2\" fill=\"var(--amber)\"></rect><text x=\"208\" y=\"278\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">três exemplos  (v3)</text><rect x=\"390\" y=\"272\" width=\"12\" height=\"12\" rx=\"2\" fill=\"var(--phosphor)\"></rect><text x=\"408\" y=\"278\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">tags e escape  (v6)</text></svg>", "caption": "O mesmo acerto, e dois prompts diferentes por baixo dele. Cada um vence em algum lugar, e só as métricas lado a lado dizem onde."}
-```
+Uma célula foi para o outro lado. **A precisão de billing caiu de 1,00 para 0,77**: o `v3` manda à
+equipe de cobrança treze chamados, três dos quais não são dela, onde o `v6` mandava quatro e os
+quatro eram. Se a equipe de cobrança trabalha a fila à mão, é um preço justo por seis mensagens de
+cobrança a mais chegando até ela. Se alguma coisa age automaticamente a partir do rótulo billing, um
+formulário de reembolso, um estorno, os três são o número que importa e os totais não. **Nenhuma das
+escolhas está errada; escondê-la dentro de um número só está.**
 
-Qualquer nota que dê peso ao formato escolheria a `v3`. A equipe de billing, recebendo nove chamados
-por execução que são de outra pessoa, escolheria a `v6`. **Nenhuma das escolhas está errada; o erro é
-escondê-la dentro de um número.**
+## Lado a lado, com travas
 
-## Lado a lado, com portões
+Relate as métricas uma ao lado da outra, sempre as mesmas:
 
-Informe as métricas uma ao lado da outra, as mesmas toda vez:
+- formato, como uma taxa própria;
+- acurácia, e revocação e precisão para os rótulos de que alguém depende;
+- as células caras pelo nome, como urgência alta classificada como normal;
+- falhas das regras de tom, e as contagens de segurança nas duas direções.
 
-- formato, como taxa própria;
-- acerto, e recall e precisão dos rótulos de que alguém depende;
-- as células caras pelo nome, como urgência high classificada como normal;
-- falhas nas regras de tom, e as contagens de segurança nas duas direções.
-
-Onde uma métrica não pode piorar, faça dela um **portão** em vez de um peso: uma versão que classifica
-mais uma mensagem urgente como normal é recusada, aconteça o que acontecer com o acerto. Um portão é
-um limite sobre uma métrica só, então não pode ser comprado de volta por um ganho em outro lugar. A
-aula 14 guarda esses números ao lado de cada versão do prompt, para que uma mudança seja julgada
-contra todos eles de uma vez.
+Onde uma métrica não pode piorar, faça dela uma **trava** em vez de um peso: uma versão que
+classifica mais uma mensagem urgente como normal é recusada, aconteça o que acontecer com a
+acurácia. Uma trava é um limite numa métrica só, então não pode ser recomprada por um ganho em outro
+lugar. A aula 14 guarda esses números ao lado de cada versão do prompt, para que uma mudança seja
+julgada contra todos eles de uma vez.
