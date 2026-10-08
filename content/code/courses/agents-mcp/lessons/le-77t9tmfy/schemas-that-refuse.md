@@ -1,6 +1,6 @@
 ---
 title: A schema that refuses
-version: 1
+version: 2
 ---
 
 The wrong belief is that a schema is documentation for the model: it lists the arguments and their types, and the model fills them in. Providers do use it that way. **In the host it is also a check, and a schema that refuses nothing checks nothing.** `{"type": "object", "properties": {"order_id": {"type": "string"}}}` accepts `{"order_id": "the book I bought last week"}`, and `{}`, and `{"order_id": "M-1043", "delete": true}`.
@@ -38,4 +38,4 @@ Each refusal names the argument and the rule it broke, in words a model can act 
 
 Strict where a mistake costs something, loose where it does not. An order id has one shape, so a pattern costs nothing and catches every typo. A free-text search query should not have one: a pattern there refuses legitimate questions. `additionalProperties: false` is worth having everywhere, because an argument the function does not expect is either a model's invention or somebody probing for one.
 
-Some providers also offer a strict mode, which constrains the model's generation so that its arguments always match the schema. It is useful, and it does not replace the host's check. It is a promise from the provider, it supports a subset of JSON Schema, and the host is still the last place that can refuse a call before it runs. labllm does not implement it, so this course does not show it.
+Some providers also offer a strict mode, which constrains the model's generation so that its arguments always match the schema. It is useful, and it does not replace the host's check. It is a promise from the provider, it supports a subset of JSON Schema, and the host is still the last place that can refuse a call before it runs. This course does not use it: the check worth learning is the host's, which works whatever the provider offers.
