@@ -1,6 +1,6 @@
 ---
 title: Conferindo a resposta
-version: 1
+version: 2
 ---
 
 O que quer que tenha chegado ao modelo, a resposta pode ser conferida antes de alguém vê-la, e a aula 7
@@ -25,15 +25,18 @@ nas fontes que referenciam não é mostrada:
 ```
 
 ```
-ana@lab:~/rag$ python checked.py "Which copy of Emma is for sale, and in what condition?"
-reply:   PINEAPPLE
-checks:  ['uncited']
+ana@vm:~/rag$ python checked.py "Which copy of Emma is for sale, and in what condition?"
+reply:   According to source [4], the copy of Emma for sale is in the condition of "acceptable" and has a loose front cover and some underlining in pencil in the first three chapters.
+checks:  ['unsupported (0.58)']
 shown:   I can't compare these listings right now. Each listing's page has the seller's full description.
 ```
 
-O modelo disse PINEAPPLE; a verificação achou uma frase sem citação; **o cliente viu o aviso seguro**. A
-injeção funcionou contra o modelo e falhou contra a função, porque a função nunca mostra texto que não
-possa ser rastreado até um anúncio.
+**A resposta estava certa, e o cliente viu o aviso seguro no lugar dela.** O modelo juntou a condição,
+que está na linha de cabeçalho do anúncio, à descrição, e a frase que escreveu marca 0,58 contra as
+frases da descrição, abaixo dos 0,75 que a verificação chama de perto. A verificação não distingue um
+ataque de uma paráfrase; ela só distingue o que é rastreável até um anúncio do que não é. Num dia comum
+isso custa uma resposta certa de vez em quando, e esse custo é o preço da camada: no dia em que uma
+injeção fizer o modelo dizer algo novo, a mesma regra o mantém longe do cliente.
 
 Esta camada é forte contra injeções que fazem o modelo dizer algo novo: uma afirmação inventada, uma
 instrução ao cliente, um link, uma palavra. É mais fraca contra uma injeção que faz o modelo **escolher**

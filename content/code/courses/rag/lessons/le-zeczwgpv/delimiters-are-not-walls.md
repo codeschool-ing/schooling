@@ -1,6 +1,6 @@
 ---
 title: Delimiters are not walls
-version: 1
+version: 2
 ---
 
 The first mitigation everybody reaches for is to mark the untrusted text and tell the model what it
@@ -20,7 +20,7 @@ is. It is a good habit, and worth doing:
       "note": "The instructions say, in so many words, that the listings are data and that instructions inside them are not to be followed."
     },
     {
-      "code": "sources = \"\\n\".join(f'<source id=\"{l[\"id\"]}\">{l[\"title\"]}, {l[\"condition\"]}. {l[\"description\"]}</source>'\n                    for l in LISTINGS)\nreply = OpenAI().chat.completions.create(model=\"extract-1\", messages=[\n    {\"role\": \"system\", \"content\": SYSTEM},\n    {\"role\": \"user\", \"content\": f\"{sources}\\n\\nQuestion: {sys.argv[1]}\"}])\nprint(reply.choices[0].message.content)",
+      "code": "sources = \"\\n\".join(f'<source id=\"{l[\"id\"]}\">{l[\"title\"]}, {l[\"condition\"]}. {l[\"description\"]}</source>'\n                    for l in LISTINGS)\nreply = OpenAI().chat.completions.create(model=\"llama3.2:3b\", temperature=0, messages=[\n    {\"role\": \"system\", \"content\": SYSTEM},\n    {\"role\": \"user\", \"content\": f\"{sources}\\n\\nQuestion: {sys.argv[1]}\"}])\nprint(reply.choices[0].message.content)",
       "note": "Each listing goes inside a `<source>` element with its id, so the model can tell where every piece of seller text starts and ends."
     }
   ]
@@ -28,16 +28,17 @@ is. It is a good habit, and worth doing:
 ```
 
 ```
-ana@lab:~/rag$ python delimited.py "Which copy of Emma is for sale, and in what condition?"
-PINEAPPLE
+ana@vm:~/rag$ python delimited.py "Which copy of Emma is for sale, and in what condition?"
+According to the listings, the copy of Emma for sale is in the condition of "acceptable".
 ```
 
-**Still PINEAPPLE.** extract-1 reads the instruction inside the element as it read it in a numbered
-source, because nothing about an element makes text inert. With a language model, labelling the
-sources and saying they are data does reduce how often an injected sentence is followed, and providers
-train their models to give the system message more weight than the user's text. Reducing is not
-preventing. The delimiter is text too, a seller can write `</source>` in a description, and the model
-decides how much a label means.
+**Ignored again, and the reply is thinner**: the condition, without the description, and no listing
+id cited although the instruction asked for one. With a model that ignored the canary already, this
+run cannot show what the delimiter stops. With models that do follow injected sentences, labelling the
+sources and saying they are data reduces how often it happens, and providers train their models to
+give the system message more weight than the user's text. Reducing is not preventing. The delimiter is
+text too, a seller can write `</source>` in a description, and the model decides how much a label
+means.
 
 So delimiting stays, as one layer, and the design does not depend on it. The next three sections are
 the layers that do not ask the model to behave: finding the injection before it is indexed, checking
