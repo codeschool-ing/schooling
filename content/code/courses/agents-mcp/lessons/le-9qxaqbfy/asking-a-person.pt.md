@@ -1,6 +1,6 @@
 ---
 title: Perguntando a uma pessoa
-version: 1
+version: 2
 ---
 
 No modo `default`, uma chamada que não é permitida vai para o `can_use_tool`, uma função que você fornece. O SDK passa o nome da ferramenta e os argumentos exatos que o modelo escolheu; a função devolve permitir ou negar, e uma negação leva uma mensagem para o modelo.
@@ -82,7 +82,9 @@ ana@lab:~/agents$ python -c 'import sqlite3; print(sqlite3.connect("data/shop.db
 []
 ```
 
-Recusado, o reembolso não rodou e o modelo leu *"Not approved by staff. A colleague will review this refund."* como resultado com erro. Aprovado, ele rodou: o segundo comando lê a tabela de reembolsos, e há uma linha, 3890 centavos no M-1047, aprovada por ana. **As respostas ao cliente foram escritas pelo curso.**
+Recusado, o reembolso não rodou e o modelo leu *"Not approved by staff. A colleague will review this refund."* como resultado com erro. Ele tinha pedido 7780 centavos, o pedido inteiro, por um exemplar danificado de dois: uma pessoa lendo a pergunta era a única coisa entre esse número e o cartão do cliente, e é para isso que se pergunta. Depois ele tentou buscar na central de ajuda. O `search_help` também não está em `allowed_tools`, então o `ask_a_person` perguntou sobre ele, encontrou a entrada padrão já vazia e o recusou com a mesma frase sobre um reembolso. Um callback escrito para uma ferramenta recebe toda chamada que não é permitida, e a resposta dele tem de fazer sentido para cada uma.
+
+A execução com `y` foi diferente, porque o modelo foi: consultou o pedido, depois pediu ao cliente um motivo em vez de chamar `refund`, e a execução terminou sem pergunta nenhuma para a pessoa. A tabela de reembolsos, lida pelo último comando, está vazia. Mesmo programa, mesma entrada, dois caminhos diferentes: o próximo passo de um modelo não é algo que um teste do hospedeiro possa fixar de antemão, e o código de aprovação tem de estar certo para os dois.
 
 O aviso acima de cada execução é do SDK, e vale a leitura: o `can_use_tool` não vai ser chamado para o `get_order`, porque uma entrada em `allowed_tools` aprova a ferramenta inteira antes de o callback ser consultado. É isso que este programa quer (consultar um pedido não precisa da aprovação de ninguém), e é também a forma de um erro real: permita uma ferramenta "por enquanto" e a pessoa que devia ver cada chamada nunca vê nenhuma. A aprovação da aula 8 estava presa à ferramenta; aqui ela é a ausência da ferramenta numa lista, e uma lista é fácil de aumentar.
 

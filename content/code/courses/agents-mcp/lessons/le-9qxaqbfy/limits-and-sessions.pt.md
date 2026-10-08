@@ -1,6 +1,6 @@
 ---
 title: Limites de turnos, e sessões em disco
-version: 1
+version: 2
 ---
 
 ## O limite de turnos
@@ -85,6 +85,6 @@ ana@lab:~/agents$ ls ~/.claude/projects/-home-ana-agents/ | wc -l; grep -l "this
 2
 ```
 
-Separada, a segunda execução perguntou qual pedido. Retomada com `resume=first`, ela levou o primeiro turno, usou-o, e ficou **na mesma sessão**, `09b2f915` nos dois resultados. **As palavras do modelo foram escritas pelo curso**; o histórico que fez a diferença foi do SDK, e estava no pedido, como a aula 1 disse que tem de estar. A estimativa do turno retomado, 0.0106, é mais que o dobro dos 0.0043 do primeiro turno, porque levou o primeiro turno além de um resultado de busca.
+Separada, a segunda execução pediu o número do pedido. Retomada com `resume=first`, ela respondeu sobre o M-1042 e ficou **na mesma sessão**, `2ff7ac48` nos dois resultados: o histórico que fez a diferença foi do SDK, e estava no pedido, como a aula 1 disse que tem de estar. A resposta em si estava errada, e com toda a confiança. Ela disse que um pedido entregue não pode ser devolvido, quando a política da Marginalia dá 30 dias a partir da entrega: o modelo tinha o pedido, não a política, e não a buscou. Retomar dá ao modelo a conversa, não o conhecimento. A estimativa do turno retomado, 0.0046, é mais que o triplo dos 0.0013 do primeiro turno, porque levou o primeiro turno junto.
 
 O último comando é a parte para lembrar. O CLI guardou **três arquivos de sessão**, um por sessão, em `~/.claude/projects/` sob um diretório com o nome do diretório de trabalho, e dois deles têm a mensagem da Bia. Ninguém passou um caminho; eles estão ali porque o Claude Code guarda toda sessão para poder retomá-la. Para um agente que atende clientes, isso é um depósito de dados pessoais que o programa nunca menciona, o que a aula 8 disse do `sessions.db` e que vale aqui com menos aviso. Decida onde esses arquivos ficam, por quanto tempo e como são apagados quando um cliente pede; as opções de armazenamento de sessão do SDK existem exatamente para isso.

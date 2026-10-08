@@ -1,6 +1,6 @@
 ---
 title: Um CLAUDE.md no diretório é lido
-version: 1
+version: 2
 ---
 
 O Claude Code lê instruções de arquivos: configurações em `~/.claude/` e no `.claude/` do projeto, e um `CLAUDE.md` no diretório de trabalho. A opção do SDK para isso é `setting_sources`, e quando ela não é dada, **todas são carregadas**, como o CLI faria. Um arquivo que ninguém passou pode mudar o agente.
@@ -28,7 +28,7 @@ request 2:  3 tools,    699 tokens in  mcp__shop__get_order, mcp__shop__refund, 
 0
 ```
 
-Com `no-builtins`, que define `tools=[]` e mais nada, a instrução estava nos dois pedidos (`2`), e o primeiro pedido cresceu de 399 tokens para 478. O CLI pôs o texto do arquivo na conversa dentro de um lembrete que manda o modelo segui-lo. Com `isolated`, que acrescenta `setting_sources=[]`, o arquivo nem foi lido (`0`), e os pedidos voltaram a 399 e 581.
+Com `no-builtins`, que define `tools=[]` e mais nada, a instrução estava nos dois pedidos (`2`), e o primeiro pedido cresceu dos 468 tokens da seção 04 para 546. O CLI pôs o texto do arquivo na conversa dentro de um lembrete que manda o modelo segui-lo. Com `isolated`, que acrescenta `setting_sources=[]`, o arquivo nem foi lido (`0`), e os pedidos voltaram a 468 e 699.
 
 Para o Claude Code na máquina de um desenvolvedor, esse comportamento é o objetivo: o `CLAUDE.md` do projeto é como uma equipe diz ao assistente como trabalhar, e este repositório tem um. Para um agente implantado para atender clientes, é uma dependência do que estiver no diretório de trabalho quando o processo inicia, e ninguém que revise o código a veria. **Defina `setting_sources` explicitamente.** Passe `[]` para um agente implantado, ou nomeie as fontes que você quer e mantenha esses arquivos sob revisão como o código.
 

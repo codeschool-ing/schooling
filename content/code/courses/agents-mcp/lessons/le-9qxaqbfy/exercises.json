@@ -1,7 +1,7 @@
 [
   {
     "id": "ex-pvxpzrt2",
-    "version": 1,
+    "version": 2,
     "section": "claude-code-as-a-library",
     "type": "quiz",
     "difficulty": "easy",
@@ -24,30 +24,30 @@
         "why": "That is the OpenAI SDK's design, not this one."
       },
       {
-        "text": "Inside labllm",
+        "text": "Inside Ollama",
         "correct": false,
-        "why": "labllm is the model provider; it decides nothing about the loop."
+        "why": "Ollama answers model requests; it decides nothing about the loop."
       }
     ]
   },
   {
     "id": "ex-0wqv1k3j",
-    "version": 1,
+    "version": 2,
     "section": "claude-code-as-a-library",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "The first run's result said cost_usd=0.1370. What is that number?",
+    "prompt": "The first run's result said cost_usd=0.0188. What is that number?",
     "choices": [
       {
-        "text": "The amount labllm charged the lab's key",
+        "text": "The amount Ollama charged for the run",
         "correct": false,
-        "why": "labllm charges nothing; the CLI computed the number."
+        "why": "Ollama charges nothing; the CLI computed the number."
       },
       {
-        "text": "The CLI's own estimate, not a bill",
+        "text": "An estimate the CLI makes itself, not a bill",
         "correct": true,
-        "why": "Right. It comes from the CLI's price table, guessed for a model it did not recognise; its size came from real token counts."
+        "why": "Right. It comes from the CLI's price table, guessed for a model name it does not recognise."
       },
       {
         "text": "The price of the subprocess's CPU time",
@@ -57,7 +57,7 @@
       {
         "text": "A fixed fee for each query() call, whatever it sends",
         "correct": false,
-        "why": "The later runs cost far less for the same answer."
+        "why": "The run with tools=[] was estimated at 0.0068 for the same question."
       }
     ]
   },
@@ -137,7 +137,7 @@
   },
   {
     "id": "ex-j7p9kw29",
-    "version": 1,
+    "version": 2,
     "section": "what-it-sends",
     "type": "quiz",
     "difficulty": "medium",
@@ -157,18 +157,18 @@
       {
         "text": "Because allowed_tools listed them",
         "correct": false,
-        "why": "allowed_tools listed two shop tools and decides approval, not existence."
+        "why": "allowed_tools decides approval, not existence."
       },
       {
-        "text": "Because labllm adds its own tools to every request",
+        "text": "Because Ollama adds its own tools to every request",
         "correct": false,
-        "why": "labllm logs what arrived; it adds nothing."
+        "why": "Ollama adds nothing; the recorder logged what the CLI sent."
       }
     ]
   },
   {
     "id": "ex-axcz9b38",
-    "version": 1,
+    "version": 2,
     "section": "what-it-sends",
     "type": "quiz",
     "difficulty": "medium",
@@ -183,7 +183,7 @@
       {
         "text": "Because built-in tools stop the shop's tools from working",
         "correct": false,
-        "why": "The shop's tools worked in the default run."
+        "why": "The model called a shop tool in the default run too."
       },
       {
         "text": "A support agent was handed a shell it never needed",
@@ -193,19 +193,19 @@
       {
         "text": "Speed",
         "correct": false,
-        "why": "Latency was nearly the same in both runs."
+        "why": "Speed was not the lesson's argument; the point is what the model can call."
       }
     ]
   },
   {
     "id": "ex-nnrakse9",
-    "version": 1,
+    "version": 2,
     "section": "what-it-sends",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
     "prompt": "With tools=[], how many tokens did the first request carry in?",
-    "value": 399,
+    "value": 468,
     "tolerance": 0,
     "unit": "tokens"
   },
@@ -290,38 +290,38 @@
   },
   {
     "id": "ex-f8ndedp8",
-    "version": 1,
+    "version": 2,
     "section": "allowed-is-not-available",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "With no permission_mode, the refund run took over nine seconds. What was the CLI doing?",
+    "prompt": "With no permission_mode, what judged the refund call, according to the lesson?",
     "choices": [
       {
-        "text": "Waiting for a person to type an answer",
+        "text": "A person, who typed an answer on standard input",
         "correct": false,
         "why": "No callback was set in that run."
       },
       {
-        "text": "Running the refund and rolling it back",
+        "text": "The shop server, which rejects amounts above the order",
         "correct": false,
-        "why": "The refund never ran."
+        "why": "The call never reached the server."
       },
       {
-        "text": "Retrying the agent's own request after a 404",
+        "text": "The agent's own model, in the same request",
         "correct": false,
-        "why": "The 404 was for the classifier's model, not the agent's request."
+        "why": "The verdict was asked for in separate requests."
       },
       {
-        "text": "Asking a classifier, eleven times, whether the call was safe",
+        "text": "Nothing: the classifier's model was missing or timed out",
         "correct": true,
-        "why": "Right. Auto mode sent the conversation to a classifier model; no verdict came back."
+        "why": "Right. claude-sonnet-5 answered 404 and the fallback timed out; the refusal was safe for the wrong reason."
       }
     ]
   },
   {
     "id": "ex-hwyvrt9x",
-    "version": 1,
+    "version": 2,
     "section": "allowed-is-not-available",
     "type": "quiz",
     "difficulty": "hard",
@@ -329,9 +329,9 @@
     "prompt": "The dontAsk refusal told the model it may reach the goal with other tools. Why did that not matter in cs_refund.py?",
     "choices": [
       {
-        "text": "Because the model was scripted to obey",
+        "text": "The model ignores tool results",
         "correct": false,
-        "why": "The script is the lab's; the boundary has to hold for a real model."
+        "why": "It read it, and offered to try \"different tools\"."
       },
       {
         "text": "tools=[] left no other tool to use",
@@ -414,24 +414,24 @@
   },
   {
     "id": "ex-kdvb01eq",
-    "version": 1,
+    "version": 2,
     "section": "asking-a-person",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "After the approved run, how many cents did the refunds table hold for M-1047?",
-    "value": 3890,
+    "prompt": "In the declined ask run, how many cents did the model ask to refund for one damaged copy?",
+    "value": 7780,
     "tolerance": 0,
     "unit": "cents"
   },
   {
     "id": "ex-shrajsa6",
-    "version": 1,
+    "version": 2,
     "section": "hooks",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "In the hooked run, why was nobody asked about the refund of 7780 cents?",
+    "prompt": "In the hooked run, why was nobody asked about the refund of 10,000,000 cents?",
     "choices": [
       {
         "text": "Because allowed_tools contained the refund tool",
@@ -488,7 +488,7 @@
   },
   {
     "id": "ex-4eve2pp2",
-    "version": 1,
+    "version": 2,
     "section": "limits-and-sessions",
     "type": "quiz",
     "difficulty": "medium",
@@ -513,13 +513,13 @@
       {
         "text": "Nothing; the stream hung",
         "correct": false,
-        "why": "The run ended in 378 ms."
+        "why": "The run ended in 5968 ms."
       }
     ]
   },
   {
     "id": "ex-59022737",
-    "version": 1,
+    "version": 2,
     "section": "limits-and-sessions",
     "type": "quiz",
     "difficulty": "medium",
@@ -532,9 +532,9 @@
         "why": "That was the separate run's answer."
       },
       {
-        "text": "Because labllm remembered the earlier request",
+        "text": "Because Ollama remembered the earlier request",
         "correct": false,
-        "why": "labllm keeps nothing between requests."
+        "why": "Ollama keeps no conversation between requests."
       },
       {
         "text": "The first turn was sent again in the request",
