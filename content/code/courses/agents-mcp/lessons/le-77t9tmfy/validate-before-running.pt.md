@@ -1,6 +1,6 @@
 ---
 title: Validar antes de rodar
-version: 1
+version: 2
 ---
 
 O `agent.py` desta aula é o laço da aula 1 com uma mudança: toda chamada passa pelo `run_tool`, que valida os argumentos contra o esquema da ferramenta antes de a função rodar, e todo desfecho volta ao modelo como um `tool_result`, marcado com `is_error` quando falhou.
@@ -26,7 +26,7 @@ O `agent.py` desta aula é o laço da aula 1 com uma mudança: toda chamada pass
       "note": "**Um bug deliberado para a seção 08**, ligado com uma flag."
     },
     {
-      "code": "for step in range(1, 6):\n    reply = client.messages.create(model=\"scripted-1\", max_tokens=1024, system=SYSTEM,\n                                   tools=TOOLS, messages=messages)\n    messages.append({\"role\": \"assistant\", \"content\": reply.content})\n    if reply.stop_reason != \"tool_use\":\n        print(f\"[{step}] answer: {reply.content[-1].text}\")\n        break\n    results = []\n    for block in reply.content:\n        if block.type == \"tool_use\":\n",
+      "code": "for step in range(1, 6):\n    reply = client.messages.create(model=\"llama3.2:3b\", max_tokens=1024, system=SYSTEM,\n                                   tools=TOOLS, messages=messages)\n    messages.append({\"role\": \"assistant\", \"content\": reply.content})\n    if reply.stop_reason != \"tool_use\":\n        print(f\"[{step}] answer: {reply.content[-1].text}\")\n        break\n    results = []\n    for block in reply.content:\n        if block.type == \"tool_use\":\n",
       "note": "**O mesmo laço da aula 1.**"
     },
     {
@@ -41,17 +41,57 @@ O `agent.py` desta aula é o laço da aula 1 com uma mudança: toda chamada pass
 }
 ```
 
-O substituto foi roteirizado para cometer dois erros que um modelo real comete: tirar o prefixo de um id que o cliente escreveu sem ele, e escrever um número por extenso. **As chamadas dele foram escritas pelo curso; as recusas são as mensagens do próprio validador.**
+Aqui está ele nas duas perguntas com mais chance de produzir uma chamada ruim: um número de pedido escrito sem o prefixo, e um pedido de lista.
 
 ```
 ana@lab:~/agents$ python agent.py "Where is my order 1043?"
-[1] get_order({"order_id": "1043"}) -> ERROR invalid arguments: order_id: '1043' does not match '^M-[0-9]{4}$'
-[2] get_order({"order_id": "M-1043"}) -> {"id": "M-1043", "customer_id": "c-102", "placed_on": "2026-09-28", "s
-[3] answer: Order M-1043 has shipped and is on its way, with tracking code BR5512340003. It has not been delivered yet.
+[1] get_order({"order_id": "M-1043"}) -> {"id": "M-1043", "customer_id": "c-102", "placed_on": "2026-09-28", "s
+[2] answer: Your order 1043 has been shipped and has a tracking number BR5512340003. The order was placed on 2026-09-28 and contains the following items:
+
+- Book 13 (2490 cents)
+- Book 14 (2590 cents)
+- Book 26 (5990 cents)
+
+The total cost of the order is 11070 cents. If you would like to track the status of your order or have any questions, please contact our customer service team.
 ```
 
 ```
 ana@lab:~/agents$ python agent.py "Which mystery novels do you have in stock?"
+[1] find_books({"genre": "mystery"}) -> [{"id": "b11", "title": "The Mysterious Affair at Styles", "author": "
+[2] answer: Here are some mystery novels that I have in stock:
+
+1. "The Mysterious Affair at Styles" by Agatha Christie - This is a classic whodunit novel that introduces the iconic character of Hercule Poirot. It's a great starting point for anyone looking to explore the world of mystery fiction.
+
+If you're interested in more mystery novels, I can suggest some additional titles. Would you like more recommendations?
+```
+
+**Nenhuma chamada ruim, então nada para o portão fazer.** O cliente escreveu `1043`, e o modelo mandou `M-1043`, porque a descrição diz que um id é M- seguido de quatro dígitos. Ele pediu mistérios sem `max_results` e recebeu o padrão de três, dos quais um estava em estoque. (A resposta depois oferece "additional titles" que a loja não tem: o resultado disse um livro, e um leitor cuidadoso pararia ali.)
+
+Um modelo real comete esses erros em algumas execuções e não em outras, o que não serve para observar um portão. Para vê-lo funcionar sempre, use o dublê da aula 3 com respostas que cometem dois erros comuns, tirar o prefixo e escrever um número por extenso, e depois corrigem cada um. Salve isto como `~/agents/retry.json`:
+
+```json
+{"order 1043": [
+  {"tool": "get_order", "input": {"order_id": "1043"}},
+  {"tool": "get_order", "input": {"order_id": "M-1043"}},
+  {"text": "Order M-1043 has shipped and is on its way, with tracking code BR5512340003. It has not been delivered yet."}
+ ],
+ "mystery novels": [
+  {"tool": "find_books", "input": {"genre": "mystery", "max_results": "five"}},
+  {"tool": "find_books", "input": {"genre": "mystery", "max_results": 5}},
+  {"text": "Right now we have one mystery in stock: The Mysterious Affair at Styles by Agatha Christie, at 31.90."}
+ ]
+}
+```
+
+Inicie-o como na aula 3 e aponte o `agent.py` para ele:
+
+```
+ana@lab:~/agents$ python standin.py retry.json &
+ana@lab:~/agents$ ANTHROPIC_BASE_URL=http://127.0.0.1:11436 python agent.py "Where is my order 1043?"
+[1] get_order({"order_id": "1043"}) -> ERROR invalid arguments: order_id: '1043' does not match '^M-[0-9]{4}$'
+[2] get_order({"order_id": "M-1043"}) -> {"id": "M-1043", "customer_id": "c-102", "placed_on": "2026-09-28", "s
+[3] answer: Order M-1043 has shipped and is on its way, with tracking code BR5512340003. It has not been delivered yet.
+ana@lab:~/agents$ ANTHROPIC_BASE_URL=http://127.0.0.1:11436 python agent.py "Which mystery novels do you have in stock?"
 [1] find_books({"genre": "mystery", "max_results": "five"}) -> ERROR invalid arguments: max_results: 'five' is not of type 'integer'
 [2] find_books({"genre": "mystery", "max_results": 5}) -> [{"id": "b11", "title": "The Mysterious Affair at Styles", "author": "
 [3] answer: Right now we have one mystery in stock: The Mysterious Affair at Styles by Agatha Christie, at 31.90.
@@ -61,8 +101,8 @@ ana@lab:~/agents$ python agent.py "Which mystery novels do you have in stock?"
 {"svg": "<svg viewBox=\"0 0 720 230\" role=\"img\" aria-label=\"O portão de validação. Uma chamada de ferramenta do modelo vai primeiro para a checagem do esquema. Se os argumentos falham, um erro descrevendo a falha volta ao modelo como resultado da ferramenta, e nenhuma função roda. Se passam, a função roda; se ela levanta um erro conhecido, esse erro volta do mesmo jeito; senão, volta o resultado.\"><defs><marker id=\"l4gate-ah-amber\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker><marker id=\"l4gate-ah-phosphor\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker></defs><rect x=\"20\" y=\"90\" width=\"130\" height=\"50\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"30\" y=\"107.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">chamada</text><text x=\"30\" y=\"123.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">do modelo</text><rect x=\"200\" y=\"90\" width=\"140\" height=\"50\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"210\" y=\"107.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">checar esquema</text><text x=\"210\" y=\"123.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">jsonschema</text><rect x=\"400\" y=\"90\" width=\"130\" height=\"50\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"410\" y=\"107.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">a função</text><text x=\"410\" y=\"123.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">shop.py</text><rect x=\"580\" y=\"20\" width=\"120\" height=\"50\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"590\" y=\"37.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">is_error: true</text><text x=\"590\" y=\"53.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">o que falhou</text><rect x=\"580\" y=\"160\" width=\"120\" height=\"50\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"590\" y=\"177.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">is_error: false</text><text x=\"590\" y=\"193.0\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">o resultado</text><path d=\"M150 115 L200 115\" fill=\"none\" stroke=\"var(--amber)\" stroke-width=\"1.4\" marker-end=\"url(#l4gate-ah-amber)\"></path><path d=\"M340 115 L400 115\" fill=\"none\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" marker-end=\"url(#l4gate-ah-phosphor)\"></path><text x=\"370\" y=\"104\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">passa</text><path d=\"M270 90 L270 45 L580 45\" fill=\"none\" stroke=\"var(--amber)\" stroke-width=\"1.4\" marker-end=\"url(#l4gate-ah-amber)\"></path><text x=\"330\" y=\"36\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">falha</text><path d=\"M465 90 L465 60 L580 60\" fill=\"none\" stroke=\"var(--amber)\" stroke-width=\"1.4\" marker-end=\"url(#l4gate-ah-amber)\"></path><text x=\"520\" y=\"74\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">levanta</text><path d=\"M465 140 L465 185 L580 185\" fill=\"none\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" marker-end=\"url(#l4gate-ah-phosphor)\"></path><text x=\"520\" y=\"176\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">devolve</text></svg>", "caption": "Todo caminho acaba num resultado de ferramenta. Nenhum acaba numa queda.", "same": ["jsonschema", "shop.py"]}
 ```
 
-Nas duas execuções a chamada ruim custou um passo e mais nada. O validador a recusou, a mensagem voltou como erro, e a chamada seguinte veio certa. Sem o portão, `get_order("1043")` teria levantado um `LookupError` dentro do hospedeiro, que é o caso melhor; `find_books(max_results="five")` teria chegado ao `stocked[:max_results]` e caído com um `TypeError`, que é uma falha do hospedeiro em vez de um erro do modelo que dá para corrigir.
+As chamadas e as frases finais são do arquivo; as recusas são as mensagens do próprio validador, e os resultados são da loja. Nas duas execuções a chamada ruim custou um passo e mais nada. O validador a recusou, a mensagem voltou como erro, e a chamada seguinte veio certa. Com o `llama3.2:3b` essa segunda chamada não pode acontecer, porque o template dele esconde as ferramentas quando um resultado de ferramenta é a última mensagem (aula 1); o erro ainda chega ao modelo, e o melhor que ele pode fazer é dizer isso na resposta. Um modelo que pode chamar de novo é o caso para o qual este portão foi feito. Sem o portão, `get_order("1043")` teria levantado um `LookupError` dentro do hospedeiro, que é o caso melhor; `find_books(max_results="five")` teria chegado ao `stocked[:max_results]` e caído com um `TypeError`, que é uma falha do hospedeiro em vez de um erro do modelo que dá para corrigir.
 
 **É o acúmulo da aula 2 sendo interrompido.** Um passo errado que vira um erro que o modelo lê é um passo que se corrige em vez de servir de base. O custo é um pedido a mais, e o rastro mostra exatamente onde aconteceu.
 
-Repare também no que a segunda execução devolveu: um livro, embora cinco tenham sido pedidos. O `find_books` lista só o que está em estoque, e dois dos três mistérios que a Marginalia tem com preço estão esgotados. O modelo informou um, porque voltou um. Uma ferramenta que responde com honestidade, mesmo quando a resposta é pequena, vale mais que uma que enche.
+Repare também no que as execuções dos mistérios devolveram: um livro, fossem três ou cinco os pedidos. O `find_books` lista só o que está em estoque, e dois dos três mistérios que a Marginalia tem com preço estão esgotados. Uma ferramenta que responde com honestidade, mesmo quando a resposta é pequena, vale mais que uma que enche, e vale exatamente tanto quanto a disposição do modelo de relatá-la: a oferta de mais títulos do modelo real veio do nada.

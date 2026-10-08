@@ -1,29 +1,62 @@
 ---
 title: Two calls in one reply
-version: 1
+version: 2
 ---
 
-A model may ask for several tools in one reply when the calls do not depend on each other. Asked about two orders, there is no reason to look up the first, wait, and then look up the second. **The course scripted the stand-in to ask for both at once**, as current models do:
+A model may ask for several tools in one reply when the calls do not depend on each other. Asked about two orders, there is no reason to look up the first, wait, and then look up the second, and `llama3.2:3b` did not:
 
 ```
 ana@lab:~/agents$ python agent.py "What is the status of my orders M-1043 and M-1048?"
 [1] get_order({"order_id": "M-1043"}) -> {"id": "M-1043", "customer_id": "c-102", "placed_on": "2026-09-28", "s
 [1] get_order({"order_id": "M-1048"}) -> {"id": "M-1048", "customer_id": "c-102", "placed_on": "2026-09-30", "s
-[2] answer: M-1043 has shipped (tracking BR5512340003). M-1048 was cancelled, so nothing from it will arrive.
+[2] answer: The current status of your orders are as follows:
+
+- Order M-1043: Shipped on 2026-09-28. The book details are as follows:
+  - Book ID: b13
+  - Quantity: 1
+  - Price in cents: 2490
+  - Total price in cents: 2490
+  - Book ID: b14
+  - Quantity: 1
+  - Price in cents: 2590
+  - Total price in cents: 2590
+  - Book ID: b26
+  - Quantity: 1
+  - Price in cents: 5990
+  - Total price in cents: 5990
+  - Total price for order M-1043: 11070 cents
+
+- Order M-1048: Cancelled on 2026-09-30. There is no tracking information available.
 ```
 
-Both calls carry step number `[1]`: one reply, two `tool_use` blocks, two results sent back together in one message. The run took two requests instead of three. With the lab's timing rule that saves one request's worth of time; with tools that take seconds each, such as a web fetch or a slow database, running them concurrently in the host saves the slower one's time too. `agent.py` runs them one after the other, which is correct and simple; lesson 18 measures what concurrency buys.
+Both calls carry step number `[1]`: one reply, two `tool_use` blocks, two results sent back together in one message. The run took two requests instead of three. With tools that take seconds each, such as a web fetch or a slow database, running them concurrently in the host saves the slower one's time too. `agent.py` runs them one after the other, which is correct and simple; lesson 18 measures what concurrency buys. (The answer then recites every line of M-1043 in cents, which nobody asked for: the observation carried them, and section 07 of lesson 3 is about what to leave out of one.)
 
 ## Every call gets its result
 
-The API requires every `tool_use` in a reply to be answered by a `tool_result` with its id in the very next message. `--drop-one` sends only the first result back, the bug a host has when it stops processing a reply's blocks after the first one, or when one tool raises and the loop skips the rest:
+Anthropic's API requires every `tool_use` in a reply to be answered by a `tool_result` with its id in the very next message, and refuses the request with a `400` naming the call when one is missing. `--drop-one` sends only the first result back, the bug a host has when it stops processing a reply's blocks after the first one, or when one tool raises and the loop skips the rest. A model that asks for two things at once on every run makes the bug easy to see, so this part uses the stand-in, with two calls written into one reply. Save it as `~/agents/parallel.json`:
+
+```json
+{"M-1043 and M-1048": [
+  [{"tool": "get_order", "input": {"order_id": "M-1043"}},
+   {"tool": "get_order", "input": {"order_id": "M-1048"}}],
+  {"text": "M-1043 has shipped (tracking BR5512340003). M-1048 was cancelled, so nothing from it will arrive."}
+ ]
+}
+```
 
 ```
-ana@lab:~/agents$ python agent.py "What is the status of my orders M-1043 and M-1048?" --drop-one 2>&1 | tail -n 1
-anthropic.BadRequestError: Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', 'message': 'messages.2: tool_use ids were found without tool_result blocks immediately after: toolu_lab_0012_2'}, 'request_id': 'req_lab_0013'}
+ana@lab:~/agents$ python standin.py parallel.json &
+ana@lab:~/agents$ ANTHROPIC_BASE_URL=http://127.0.0.1:11436 python agent.py "What is the status of my orders M-1043 and M-1048?"
+[1] get_order({"order_id": "M-1043"}) -> {"id": "M-1043", "customer_id": "c-102", "placed_on": "2026-09-28", "s
+[1] get_order({"order_id": "M-1048"}) -> {"id": "M-1048", "customer_id": "c-102", "placed_on": "2026-09-30", "s
+[2] answer: M-1043 has shipped (tracking BR5512340003). M-1048 was cancelled, so nothing from it will arrive.
+ana@lab:~/agents$ ANTHROPIC_BASE_URL=http://127.0.0.1:11436 python agent.py "What is the status of my orders M-1043 and M-1048?" --drop-one
+[1] get_order({"order_id": "M-1043"}) -> {"id": "M-1043", "customer_id": "c-102", "placed_on": "2026-09-28", "s
+[1] get_order({"order_id": "M-1048"}) -> {"id": "M-1048", "customer_id": "c-102", "placed_on": "2026-09-30", "s
+[2] answer: M-1043 has shipped (tracking BR5512340003). M-1048 was cancelled, so nothing from it will arrive.
 ```
 
-labllm refuses the conversation the way Anthropic's API does: `messages.2` (the third message, counting from zero) has a call whose id never got a result. **The fix is never to drop a call silently.** If a tool cannot run, send a result anyway, marked as an error, saying why (*"not run: the previous call failed"*). The model then knows what happened to every request it made.
+The two runs print the same, and that is the problem. In the second, the host ran both lookups, sent back only M-1043's result, and the answer still states M-1048's status. **Nothing refused it.** Neither Ollama nor the stand-in checks the rule Anthropic's API enforces; the stand-in's answer was written in advance, and a real model in the same place has two choices, both bad: say it cannot find M-1048, or guess. That refusal is worth having, and a host that talks to a model which does not enforce it has to enforce it itself. **Never drop a call silently.** If a tool cannot run, send a result anyway, marked as an error, saying why (*"not run: the previous call failed"*). The model then knows what happened to every request it made.
 
 ## When not to run calls together
 
