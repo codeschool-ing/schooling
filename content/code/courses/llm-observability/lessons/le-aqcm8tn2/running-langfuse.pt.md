@@ -135,18 +135,66 @@ Na primeira vez, o Docker baixa as seis imagens antes de iniciar qualquer coisa,
 ocupam **5,4 GB** de disco, a maior coisa que este curso instala depois do modelo. A transcrição abaixo
 é uma subida posterior, com as imagens já presentes:
 
-CAPTURE:up
+```
+ana@dev:~$ docker compose -f ~/langfuse/docker-compose.yml up -d
+ Network langfuse_default Creating 
+ Network langfuse_default Creating 
+ Network langfuse_default Created 
+ Network langfuse_default Created 
+ Container langfuse-minio-1 Creating 
+ Container langfuse-clickhouse-1 Creating 
+ Container langfuse-postgres-1 Creating 
+ Container langfuse-redis-1 Creating 
+ Container langfuse-postgres-1 Created 
+ Container langfuse-redis-1 Created 
+ Container langfuse-clickhouse-1 Created 
+ Container langfuse-minio-1 Created 
+ Container langfuse-web-1 Creating 
+ Container langfuse-worker-1 Creating 
+ Container langfuse-worker-1 Created 
+ Container langfuse-web-1 Created 
+ Container langfuse-postgres-1 Starting 
+ Container langfuse-minio-1 Starting 
+ Container langfuse-redis-1 Starting 
+ Container langfuse-clickhouse-1 Starting 
+ Container langfuse-postgres-1 Started 
+ Container langfuse-minio-1 Started 
+ Container langfuse-redis-1 Started 
+ Container langfuse-clickhouse-1 Started 
+ Container langfuse-worker-1 Starting 
+ Container langfuse-web-1 Starting 
+ Container langfuse-worker-1 Started 
+ Container langfuse-web-1 Started 
+```
 
 O `-d` os deixa rodando em segundo plano, e eles continuam rodando até você pará-los, de um terminal
 para outro, mas não depois de um reinício do Docker, a menos que você os suba de novo. Na primeira vez
 o servidor leva mais ou menos um minuto migrando os bancos; até lá a verificação de saúde abaixo não
 responde nada. Depois:
 
-CAPTURE:health
+```
+ana@dev:~/obs$ curl -s $LANGFUSE_BASE_URL/api/public/health; echo
+{"status":"OK","version":"3.225.11"}
+```
 
 O que seis contêineres custam parados, e o disco que as imagens e os dados delas ocupam:
 
-CAPTURE:stats
+```
+ana@dev:~$ docker stats --no-stream --format "table {{.Name}}\t{{.CPUPerc}}\t{{.MemUsage}}"
+NAME                    CPU %     MEM USAGE / LIMIT
+langfuse-web-1          0.74%     1.147GiB / 15.72GiB
+langfuse-worker-1       0.58%     440.9MiB / 15.72GiB
+langfuse-postgres-1     0.03%     70.42MiB / 15.72GiB
+langfuse-redis-1        0.40%     7.672MiB / 15.72GiB
+langfuse-clickhouse-1   34.45%    338.1MiB / 15.72GiB
+langfuse-minio-1        0.11%     204.3MiB / 15.72GiB
+ana@dev:~$ docker system df
+TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
+Images          7         7         5.428GB   0B (0%)
+Containers      6         6         766kB     0B (0%)
+Local Volumes   5         5         54.29MB   0B (0%)
+Build Cache     0         0         0B        0B
+```
 
 Parados, os seis seguram cerca de **2,2 GB de memória** entre eles, metade no servidor web, e o
 ClickHouse mantém um processador ocupado arrumando as próprias tabelas mesmo sem nada chegando. Com o

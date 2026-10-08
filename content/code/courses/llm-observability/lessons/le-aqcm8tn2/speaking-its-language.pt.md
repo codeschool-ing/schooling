@@ -1,6 +1,6 @@
 ---
 title: Acrescentando os nomes que ele lê
-version: 1
+version: 2
 ---
 
 O Langfuse documenta um conjunto de atributos que lê além dos do OpenTelemetry:
@@ -31,15 +31,15 @@ O `replay.py` aceita `--processor MODULO:CLASSE` e acrescenta cada um ao provedo
 exportadores. A reprodução do sábado, com ele:
 
 ```
-ana@lab:~/obs$ export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=$LANGFUSE_HOST/api/public/otel/v1/traces OTEL_EXPORTER_OTLP_TRACES_HEADERS="Authorization=Basic $(printf %s $LANGFUSE_PUBLIC_KEY:$LANGFUSE_SECRET_KEY | base64 -w0)"; python replay.py --from 2026-10-03 --to 2026-10-04 --processor lf_names:LangfuseNames
-replayed 120 requests from data/traffic.jsonl: 153 asked, 0 failed, 70 feedback events
-ana@lab:~/obs$ python lf.py traces 2026-10-03 1
-2026-10-03T03:01:53 e1a355f5 ask user 845c4ccdf2b1e0d8 session s0890 cost 0 input 'how long do I have to return a book'
+ana@dev:~/obs$ export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=$LANGFUSE_BASE_URL/api/public/otel/v1/traces OTEL_EXPORTER_OTLP_TRACES_HEADERS="Authorization=Basic $(printf %s $LANGFUSE_PUBLIC_KEY:$LANGFUSE_SECRET_KEY | base64 -w0)"; python replay.py --from 2026-10-03 --to 2026-10-04 --processor lf_names:LangfuseNames
+replayed 31 requests from data/traffic.jsonl: 36 asked, 0 failed, 12 feedback events
+ana@dev:~/obs$ python lf.py traces 2026-10-03 1
+2026-10-03T09:25:27 f0320995 ask user 759c1b8e0d00460b session s222 cost 0 input 'How long is the statutory right of withdrawal?'
 ```
 
-O usuário é o pseudônimo, sob um nome que o Langfuse lê, e o trace tem a pergunta como entrada. A raiz
-não é mais uma geração. Nada no `assistant.py` mudou, e o arquivo para onde foram os mesmos spans
-continua sem nenhum dos nomes `langfuse.*`.
+O usuário é o pseudônimo, sob um nome que o Langfuse lê, e o trace tem a pergunta como entrada. E a
+raiz agora diz que é um span comum, então nada que conte gerações a conta. Nada no `assistant.py`
+mudou, e o arquivo para onde foram os mesmos spans continua sem nenhum dos nomes `langfuse.*`.
 
 ## Por que a resposta não está lá
 

@@ -1,6 +1,6 @@
 ---
 title: LangSmith, and what its SDK sends
-version: 1
+version: 2
 ---
 
 LangSmith is LangChain's platform for the same jobs: traces of model calls, datasets, evaluations,
@@ -11,7 +11,7 @@ that lives in your application. Point it at a program of your own that answers t
 ingest endpoint does and keeps every body it receives, and whatever arrives there is exactly what
 would have left your machine.
 
-That program is `recorder.py`. It is a **stand-in**, about eighty lines, and it is not LangSmith:
+That program is `recorder.py`. It is a **stand-in**, under ninety lines, and it is not LangSmith:
 it answers the one question the SDK asks before sending, and writes down the rest. Save it in
 `~/obs`:
 
@@ -162,18 +162,54 @@ for request in map(json.loads, open("recorder/requests.jsonl")):
             print(f"        {field[0]}: {json.dumps(body, ensure_ascii=False)[:110]}")
 ```
 
-CAPTURE:langsmith
+```
+ana@dev:~/obs$ LANGSMITH_TRACING=true LANGSMITH_ENDPOINT=http://127.0.0.1:8700 LANGSMITH_API_KEY=the-recorder-ignores-it LANGSMITH_PROJECT=marginalia-assistant LANGSMITH_DISABLE_RUN_COMPRESSION=true python ls_ask.py
+Hello Joana!
+
+The validity period of a gift card can vary depending on the issuer and the type of card. Some gift cards may be valid for a specific period, such as 1-2 years, while others may be valid for a longer or shorter period.
+
+Typically, gift cards are valid for:
+
+* 1-2 years from the date of purchase
+* 3-5 years from the date of purchase (for premium or high-value cards)
+* Until the balance is depleted (in some cases)
+
+It's always best to check the specific terms and conditions of the gift card issuer, as they may have different policies. You can usually find this information on the gift card itself, on the issuer's website, or by contacting their customer service.
+
+If you're unsure about the validity of your gift card, I recommend reaching out to the issuer to confirm the expiration date.
+
+Hope this helps, Joana!
+ana@dev:~/obs$ python sent.py
+post  run 01a1191a ask (chain)
+        inputs: {"question": "Hi, I'm Joana Prado (joana.prado@example.com). How long is a gift card valid?"}
+        extra: {"metadata": {"ls_method": "traceable", "LANGSMITH_PROJECT": "marginalia-assistant", "LANGSMITH_TRACING": "tru
+post  run 01a1191a ChatOpenAI (llm)
+        inputs: {"messages": [{"role": "user", "content": "Hi, I'm Joana Prado (joana.prado@example.com). How long is a gift c
+        extra: {"metadata": {"ls_method": "traceable", "ls_provider": "openai", "ls_model_type": "chat", "ls_model_name": "ll
+        serialized: {"name": "ChatOpenAI"}
+patch run 01a1191a ask (chain)
+        outputs: {"output": "Hello Joana!\n\nThe validity period of a gift card can vary depending on the issuer and the type o
+        extra: {"metadata": {"ls_method": "traceable", "LANGSMITH_PROJECT": "marginalia-assistant", "LANGSMITH_TRACING": "tru
+patch run 01a1191a ChatOpenAI (llm)
+        outputs: {"id": "chatcmpl-339", "choices": [{"finish_reason": "stop", "index": 0, "logprobs": null, "message": {"conten
+        extra: {"metadata": {"ls_method": "traceable", "ls_provider": "openai", "ls_model_type": "chat", "ls_model_name": "ll
+```
 
 LangSmith's word for a span is a **run**, and each run is sent twice: a `post` when it starts, with its
 inputs, and a `patch` when it ends, with its outputs. The function is a run of type `chain`, the model
 call a run of type `llm` inside it.
 
-Read what went with them. **The customer's message, address included, in full**, on both runs. The
-model's whole reply. And under `extra`, metadata the SDK adds on its own: the environment variables
-that configured it, by name and value, and runtime details that `sent.py` cuts off at the edge of the
-screen: the SDK's version, the Python version, the operating system and the machine's platform string.
-None of it is a secret here. All of it leaves the machine, and a team that has not looked will not
-know.
+First, the reply. `ls_ask.py` asks the model directly, with none of Marginalia's documents, so
+`llama3.2:3b` answers from what it learnt elsewhere: gift cards in general, one to five years, check
+with the issuer. Marginalia's own answer, two years, is in a document it was never shown. That is
+not what this section is about, but it is why the assistant searches the documents before it asks.
+
+Then read what went with it. **The customer's message, address included, in full**, on both runs.
+The model's whole reply. And under `extra`, metadata the SDK adds on its own: the environment
+variables that configured it, by name and value, and runtime details that `sent.py` cuts off at the
+edge of the screen: the SDK's version, the Python version, the operating system and the machine's
+platform string. None of it is a secret here. All of it leaves the machine, and a team that has not
+looked will not know.
 
 ## The SDK's own hooks
 
@@ -181,10 +217,47 @@ The LangSmith client takes functions that see the inputs and outputs before they
 `hide_inputs`, `hide_outputs`, and an `anonymizer` for patterns; and `omit_traced_runtime_info` leaves
 the runtime details out. The `--redact` run passes lesson 2's `redact()` to the first two:
 
-CAPTURE:redact
+```
+ana@dev:~/obs$ rm recorder/requests.jsonl
+ana@dev:~/obs$ LANGSMITH_TRACING=true LANGSMITH_ENDPOINT=http://127.0.0.1:8700 LANGSMITH_API_KEY=the-recorder-ignores-it LANGSMITH_PROJECT=marginalia-assistant LANGSMITH_DISABLE_RUN_COMPRESSION=true python ls_ask.py --redact
+Hello Joana!
 
-The address is gone from the inputs, and the environment variables and runtime details from `extra`. Two things are worth
-noticing. The hooks receive the inputs as a dictionary, and the simple `str(v)` in `ls_ask.py` turned
+The validity period of a gift card can vary depending on the issuer and the type of card. Some gift cards may be valid for a specific period, such as 1-2 years, while others may be valid for a longer or shorter period.
+
+Typically, gift cards are valid for:
+
+* 1-2 years from the date of purchase
+* 3-5 years from the date of purchase (for premium or high-value cards)
+* Until the balance is depleted (in some cases)
+
+It's always best to check the specific terms and conditions of the gift card issuer, as they may have different policies. You can usually find this information on the gift card itself, on the issuer's website, or by contacting their customer service.
+
+If you're unsure about the validity of your gift card, I recommend reaching out to the issuer to confirm the expiration date.
+
+Hope this helps, Joana!
+ana@dev:~/obs$ python sent.py
+post  run 01a1191b ask (chain)
+        inputs: {"question": "Hi, I'm Joana Prado ([email]). How long is a gift card valid?"}
+        extra: {"metadata": {"ls_method": "traceable"}}
+post  run 01a1191b ChatOpenAI (llm)
+        inputs: {"messages": "[{'role': 'user', 'content': \"Hi, I'm Joana Prado ([email]). How long is a gift card valid?\"}]
+        extra: {"metadata": {"ls_method": "traceable", "ls_provider": "openai", "ls_model_type": "chat", "ls_model_name": "ll
+        serialized: {"name": "ChatOpenAI"}
+patch run 01a1191b ask (chain)
+        outputs: {"output": "Hello Joana!\n\nThe validity period of a gift card can vary depending on the issuer and the type o
+        extra: {"metadata": {"ls_method": "traceable"}}
+patch run 01a1191b ChatOpenAI (llm)
+        outputs: {"id": "chatcmpl-883", "choices": "[{'finish_reason': 'stop', 'index': 0, 'logprobs': None, 'message': {'conte
+        extra: {"metadata": {"ls_method": "traceable", "ls_provider": "openai", "ls_model_type": "chat", "ls_model_name": "ll
+```
+
+The address is gone from the inputs, and the environment variables and runtime details from `extra`.
+**Her name is not.** "Joana Prado" is still in the question, because lesson 2's patterns find what
+has a shape and a name has none, and the model, given the name, used it: "Hello Joana!" opens the
+reply that went out as well. Redacting the input does nothing for what the model writes back with
+it.
+
+Two more things are worth noticing. The hooks receive the inputs as a dictionary, and the simple `str(v)` in `ls_ask.py` turned
 the list of messages into the text of a list, which a screen will show as a string rather than as
 messages; a careful hook redacts inside the structure. And the model's own run kept its
 `ls_model_name` and provider metadata, which is fine, and a reminder that **only an inspection of what

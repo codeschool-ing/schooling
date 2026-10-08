@@ -1,10 +1,10 @@
 ---
 title: O que uma plataforma acrescenta a um armazém de traces
-version: 1
+version: 2
 ---
 
 Todo trace das aulas 1 a 5 foi para um arquivo, e toda pergunta foi um script Python sobre ele. Isso
-escala para uma semana e um laboratório. Não escala para uma equipe, e a aula 11 do `observability` já
+escala para uma semana numa máquina. Não escala para uma equipe, e a aula 11 do `observability` já
 pôs traces no Jaeger e no Zipkin, que os desenham para qualquer um com um navegador. Então por que
 aplicações com LLM têm ferramentas próprias?
 
@@ -25,8 +25,9 @@ coisas embutidas:
 Duas das ferramentas mais conhecidas feitas para isso ficam nas duas pontas de uma escolha que toda
 equipe faz. O **Langfuse** é código aberto sob a licença MIT, e pode rodar nas suas máquinas ou ser
 usado como serviço hospedado. O **LangSmith** é o serviço hospedado da LangChain; instalá-lo nas
-próprias máquinas é oferecido a clientes corporativos. O resto desta aula roda o primeiro de verdade,
-e roda o SDK do segundo contra um gravador, porque o serviço em si estava fora de alcance.
+próprias máquinas é oferecido a clientes corporativos. O resto desta aula roda o primeiro na sua
+máquina, e roda o SDK do segundo contra um pequeno gravador seu, porque o serviço em si só roda na
+máquina de outra empresa.
 
 ## O que continua igual
 
