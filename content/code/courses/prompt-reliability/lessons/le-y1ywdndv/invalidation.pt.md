@@ -1,103 +1,65 @@
 ---
 title: O que quebra um cache
-version: 1
+version: 2
 ---
 
-**Qualquer mudança no prefixo quebra todos os blocos a partir do que mudou.** No substituto é assim
-que os blocos são identificados: a chave de cada bloco é um hash dele e de todos os blocos anteriores,
-então um bloco só bate se o prompt inteiro até o fim dele bater. Caches reais também casam um
-prefixo, e a consequência é a mesma.
+**Qualquer mudança no começo de um prompt torna novo tudo o que vem depois.** O cache acha o começo
+guardado mais longo que casa; o primeiro token diferente encerra a correspondência, e todo token
+depois dele é lido de novo, mesmo onde o texto não mudou. Caches hospedados também casam um começo, e
+a consequência é a mesma.
 
-O `v17-message-first` era o caso extremo, um primeiro bloco diferente em cada chamada. Edições comuns
-fazem a mesma coisa de forma mais discreta:
+O `v17-message-first` foi o caso extremo, um começo diferente em toda chamada. Edições comuns fazem a
+mesma coisa com menos barulho:
 
-- Uma palavra mudada no guia torna novo todo bloco daquela palavra em diante. As chamadas seguintes
-  gravam tudo de novo, e só então começam a ler.
-- Um exemplo novo inserido perto do topo desloca todos os tokens depois dele, então todos os
-  blocos seguintes mudam mesmo que o texto deles não tenha mudado.
-- Uma data, o nome de um cliente ou o número de um chamado no começo, *"Today is 14 August.
-  Customer: Maria Souza."*, varia a cada chamada exatamente como a mensagem, e custa ao cache tudo o
+- Uma palavra mudada no guia torna novo tudo a partir dela. A próxima chamada lê tudo de novo, e só
+  então o cache passa a ter a versão nova.
+- Um exemplo novo inserido perto do topo desloca todo token depois dele, então tudo depois dele muda
+  mesmo sem o texto ter mudado.
+- Uma data, o nome de um cliente ou o número de um chamado postos cedo, *"Today is 14 August.
+  Customer: Maria Souza."*, variam por chamada exatamente como a mensagem, e custam ao cache tudo o
   que vem depois.
+- Cinco minutos ociosos no Ollama descarregam o modelo, e o cache vai junto.
 
-Então deixe no fim o que varia, e mude a parte fixa de propósito e raramente, sabendo que cada mudança
-é paga uma vez em gravações.
+Então mantenha o que varia no fim, e mude a parte fixa de propósito e raramente, sabendo que cada
+mudança é paga uma vez, pela primeira chamada que a lê.
 
-## O cache não pode mudar as respostas
+## O cache não deveria mudar as respostas
 
-Um cache deveria mudar custo e tempo e nada mais. **Verifique isso em vez de supor**, do mesmo jeito
-que qualquer mudança é verificada:
-
-```
-ana@lab:~/triage$ pl compare runs/plain.jsonl runs/static.jsonl
-runs/plain.jsonl         passes 32/40
-runs/static.jsonl        passes 32/40
-fixed 0, broken 0, still passing 32, still failing 8
-sign test on the 0 that changed: p = 1.000
-```
-
-Nada corrigido, nada quebrado: o mesmo template com o cache ligado deu o mesmo resultado em cada
-mensagem. No substituto a resposta é calculada antes de o cache ser consultado, então isso estava
-garantido; com um provedor real, é a verificação que avisaria se não estivesse.
+Um cache deveria mudar custo e tempo e mais nada. A aula 8 mostrou que nesta máquina isso não é bem
+verdade: três respostas ao mesmo prompt com temperatura 0, uma lida do zero e duas do cache, e a
+primeira diferiu das outras duas depois de trinta palavras. **Um prompt em cache é calculado por outro
+caminho pela mesma aritmética**, e um quase empate pode sair para o outro lado. É mais um motivo para
+medir num conjunto de teste em vez de confiar que uma mudança no cache não mudou nada.
 
 ## Reordenar não é uma configuração do cache
 
-Levar a mensagem para a frente é diferente. Isso muda o texto que o modelo lê, então é um prompt novo,
-e as respostas podem mudar por motivos que nada têm a ver com o cache:
+Pôr a mensagem na frente é uma mudança maior. Muda o texto que o modelo lê, então é um prompt novo, e
+as respostas dele podem diferir por motivos que não têm nada a ver com o cache:
 
 ```
 ana@lab:~/triage$ pl compare runs/static.jsonl runs/first.jsonl
-runs/static.jsonl        passes 32/40
-runs/first.jsonl         passes 34/40
-fixed 5, broken 3, still passing 29, still failing 3
-broken: t18 t26 t40
-sign test on the 8 that changed: p = 0.727
+runs/static.jsonl        passes 23/40
+runs/first.jsonl         passes 18/40
+fixed 0, broken 5
+broken: t10 t14 t17 t27 t34
+sign test on the 5 that changed: p = 0.062
 ana@lab:~/triage$ pl compare runs/static.jsonl runs/first.jsonl --answers
-40 cases, same answer 40, different answer 0
-ana@lab:~/triage$ pl check runs/static.jsonl
-check      pass  fail
-json         35     5
-fields       35     5
-labels       35     5
-category     35     5
-urgency      32     8
-all          32     8
-ana@lab:~/triage$ pl check runs/first.jsonl
-check      pass  fail
-json         37     3
-fields       37     3
-labels       37     3
-category     37     3
-urgency      34     6
-all          34     6
+40 cases, same answer 30, different answer 10
+  t10    other -> delivery
+  t14    account -> other
+  t16    billing -> other
+  t17    delivery -> None
+  t18    returns -> delivery
+  t25    account -> delivery
+  t33    returns -> delivery
+  t34    account -> other
+  t38    None -> returns
+  t39    account -> other
 ```
 
-Trinta e quatro contra trinta e duas, cinco corrigidas e três quebradas, e um teste do sinal de 0,727
-que não consegue distinguir os dois. O `--answers` compara a categoria, e as quarenta concordam. As
-verificações põem toda a diferença em `json`: cinco respostas falharam nela com o guia primeiro e três
-com a mensagem primeiro, e as falhas de urgência depois dela são três em cada. Aqui está uma das três
-que quebraram:
-
-```
-ana@lab:~/triage$ pl show runs/static.jsonl t18
-│ {
-│   "category": "returns",
-│   "urgency": "normal",
-│   "summary": "Two pages are missing from chapter 3."
-│ }
-stop: end, tokens in 250, out 32
-ana@lab:~/triage$ pl show runs/first.jsonl t18
-│ ```json
-│ {
-│   "category": "returns",
-│   "urgency": "normal",
-│   "summary": "Two pages are missing from chapter 3."
-│ }
-│ ```
-stop: end, tokens in 250, out 39
-```
-
-A mesma resposta, embrulhada num bloco de código. No substituto, os hábitos de formatação da aula 1
-caem em mensagens escolhidas por um hash do prompt inteiro, então **reordenar um prompt os leva para
-outras mensagens** na mesma taxa. Um modelo real reage à ordem por motivos próprios, e é por isso que
-uma reordenação feita para o cache passa pela barreira da aula 14 como qualquer outra mudança no
-texto.
+Vinte e três contra dezoito, nenhuma consertada e cinco quebradas, p = 0.062. Dez categorias
+mudaram, e o `t17` e o `t38` trocaram de lugar no formato: o `t38`, o ebook cujo apóstrofo quebra o
+JSON, saiu válido com a mensagem primeiro, e o `t17` deixou de sair. **O prompt com a mensagem
+primeiro é mais lento e, neste conjunto, pior**, e o teste do sinal em cinco mensagens para pouco antes
+de chamar isso de mais que acaso. Uma reordenação feita por causa do cache passa pela trava da aula 14
+como qualquer outra mudança no texto; aqui ela não teria poupado nada e teria custado cinco mensagens.
