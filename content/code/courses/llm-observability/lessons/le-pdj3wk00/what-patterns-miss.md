@@ -1,6 +1,6 @@
 ---
 title: What patterns miss, and what they catch by mistake
-version: 1
+version: 2
 ---
 
 A regular expression finds text with a shape. Personal data mostly has one, and sometimes does not,
@@ -20,7 +20,7 @@ for text in ["Hi, I'm Joana Prado (joana.prado@example.com), order MG-20481937."
 ```
 
 ```
-ana@lab:~/obs$ python misses.py
+ana@dev:~/obs$ python misses.py
 Hi, I'm Joana Prado (joana.prado@example.com), order MG-20481937.
   -> Hi, I'm Joana Prado ([email]), order [order].
 my email is joana dot prado at example dot com
@@ -63,8 +63,17 @@ Not one of the six lines lost a name, and neither did any span in this lesson. A
 pattern can find without also finding every capitalised word. Finding names takes **named-entity
 recognition**: a model that reads the sentence and marks which words are a person, a place, a date.
 Microsoft's **Presidio** is the usual open-source tool for it. It combines a spaCy language model with
-patterns of its own, and gives every finding a score. `presidio_try.py` runs the same six sentences
-through it:
+patterns of its own, and gives every finding a score. It is two packages, and the language model is
+a third, downloaded from spaCy's own releases on GitHub:
+
+```sh
+pip install presidio-analyzer==2.2.364 presidio-anonymizer==2.2.364
+pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.8.0/en_core_web_lg-3.8.0-py3-none-any.whl
+```
+
+The language model is most of it, a few hundred megabytes on its own.
+
+`presidio_try.py` runs the same six sentences through it:
 
 ```python
 """presidio_try.py: the same sentences through Presidio, which finds entities with a language model as well as patterns."""
@@ -90,7 +99,7 @@ for text in ["Hi, I'm Joana Prado (joana.prado@example.com), order MG-20481937."
 ```
 
 ```
-ana@lab:~/obs$ python presidio_try.py
+ana@dev:~/obs$ python presidio_try.py
 Hi, I'm <PERSON> (<EMAIL_ADDRESS>), order <DATE_TIME>.
     PERSON 0.85, EMAIL_ADDRESS 1.00, URL 0.50, URL 0.50, DATE_TIME 0.85, US_BANK_NUMBER 0.05, US_DRIVER_LICENSE 0.01
 my email is <PERSON> at example dot com
@@ -119,7 +128,7 @@ Every finding has a score, and by default every finding is used, down to 0.01. A
 trade:
 
 ```
-ana@lab:~/obs$ python presidio_try.py 0.5
+ana@dev:~/obs$ python presidio_try.py 0.5
 Hi, I'm <PERSON> (<EMAIL_ADDRESS>), order <DATE_TIME>.
     PERSON 0.85, EMAIL_ADDRESS 1.00, URL 0.50, URL 0.50, DATE_TIME 0.85
 my email is <PERSON> at example dot com

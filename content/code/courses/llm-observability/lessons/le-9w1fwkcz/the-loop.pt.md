@@ -1,24 +1,25 @@
 ---
 title: O ciclo, fechado
-version: 1
+version: 2
 ---
 
-Ponha as peças do curso na ordem em que teriam rodado na sexta, 2 de outubro, se estivessem no lugar:
+Ponha as peças do curso na ordem em que teriam rodado na quinta, 1º de outubro, se estivessem no lugar:
 
-1. **10h.** A 2026.10.1 vai ao ar. Ela nunca passou pelo portão da aula 15, que a teria parado em cinco
+1. **10h.** A 2026.10.1 vai ao ar. Ela nunca passou pelo portão da aula 15, que a teria parado em sete
    casos quebrados.
-2. **14h.** A regra de Wilson dispara: as recusas das últimas seis horas estão com certeza acima da linha
+2. **15h.** A regra de Wilson dispara: as recusas das últimas 24 horas estão com certeza acima da linha
    de base. O alerta nomeia a versão e tem um link para os traces das respostas recusadas.
-3. **Os traces** mostram a busca guardando menos trechos: na árvore da aula 1, o span de busca de uma
-   resposta recusada tem `app.search.kept` em 0 e `app.search.floor` em 0.62.
-4. **Os sinais de produção** da aula 5 dizem quem é afetado: perguntas de pedido mais que todas, recusadas
-   quase duas vezes em três, com os polegares acompanhando.
+3. **Os traces** mostram a busca guardando menos trechos: na árvore da aula 1, o span de busca de 38 das
+   57 respostas recusadas tem `app.search.kept` em 0, abaixo de `app.search.floor` em 0.55.
+4. **Os sinais de produção** da aula 5 dizem quem é afetado: perguntas de ajuda e de pedido por igual,
+   recusadas cerca de duas vezes em cinco, onde antes era uma em quatro.
 5. **A coleta** da aula 13 transforma as perguntas da semana postas em dúvida em casos, entre eles as
    formulações por palavra-chave e as mensagens de pedido que o conjunto nunca teve.
 6. **O teste de regressão** da aula 14 compara uma correção com a produção no conjunto, caso a caso: o piso
-   de volta conserta os cinco casos quebrados.
-7. **O portão** da aula 15 sujeita a correção aos orçamentos, e uma pessoa escreve por que o custo pode
-   subir: a produção era barata porque recusava.
+   de volta conserta sete casos e quebra dois, os dois pelo nome.
+7. **O portão** da aula 15 sujeita a correção a todos os casos e aos orçamentos, e uma pessoa escreve por
+   que os dois casos, as quatro frases sem citação e o custo mais alto são aceitáveis: a produção era
+   barata porque recusava.
 8. **A 2026.10.3 vai ao ar**, e o painel desta aula mostraria a parcela de recusas voltando à linha de
    base. O alerta se resolveria porque o problema se resolveu.
 

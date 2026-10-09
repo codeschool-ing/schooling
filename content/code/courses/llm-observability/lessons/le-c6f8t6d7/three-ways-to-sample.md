@@ -1,6 +1,6 @@
 ---
 title: Three ways to choose
-version: 1
+version: 2
 ---
 
 `sample.py` holds three rules for choosing which replies to grade:
@@ -44,17 +44,17 @@ refusal.
 interval:
 
 ```python
-"""grade_sample.py: judge-1 on a sample of the week, pass rates per release with how sure they are."""
+"""grade_sample.py: the judge on a sample of the week, pass rates per release with how sure they are."""
 import argparse
 import json
 import math
-from collections import defaultdict
-from concurrent.futures import ThreadPoolExecutor
+import time
+from collections import Counter
 
 import judge
 import sample
 import telemetry
-import traffic
+import week
 
 p = argparse.ArgumentParser()
 p.add_argument("how", choices=["uniform", "stratified", "targeted"])
@@ -73,67 +73,72 @@ def wilson(passed, n, z=1.96):
     return centre - half, centre + half
 
 
-replies = list(traffic.replies())
+replies = list(week.replies())
 chosen = {"uniform": lambda: sample.uniform(replies, a.share),
           "stratified": lambda: sample.stratified(replies, a.per_group),
           "targeted": lambda: sample.targeted(replies)}[a.how]()
 telemetry.setup("judge-spans.jsonl", service="judge")
-with ThreadPoolExecutor(8) as pool:   # eight at a time, as replay.py does
-    verdicts = list(pool.map(lambda r: judge.grade("relevance", r["question"], r["reply"], r["sources"]), chosen))
-passed, seen = defaultdict(int), defaultdict(int)
+started = time.monotonic()
+passed, seen, unreadable = Counter(), Counter(), Counter()
 with open("verdicts.jsonl", "a") as out:
-    for r, v in zip(chosen, verdicts):
-        out.write(json.dumps({"trace": r["trace"], "criterion": "relevance", "sample": a.how, **v}) + "\n")
+    for r in chosen:   # one at a time: a judge on the same machine as the assistant competes with it
+        v = judge.grade("relevance", r["question"], r["reply"], r["sources"])
+        out.write(json.dumps({"trace": r["trace"], "sample": a.how, **v}) + "\n")
+        if v["verdict"] == "unreadable":
+            unreadable[r["release"]] += 1
+            continue
         seen[r["release"]] += 1
         passed[r["release"]] += v["verdict"] == "pass"
-print(f"{a.how}: {len(chosen)} of {len(replies)} replies graded for relevance")
+print(f"{a.how}: {len(chosen)} of {len(replies)} replies graded for relevance in "
+      f"{(time.monotonic() - started) / 60:.1f} min, {sum(unreadable.values())} verdicts unreadable")
 for rel in sorted(seen):
     lo, hi = wilson(passed[rel], seen[rel])
     print(f"  {rel}  {passed[rel]:4}/{seen[rel]:<4} pass  {passed[rel] / seen[rel]:5.1%}   95% between {lo:5.1%} and {hi:5.1%}")
 ```
 
 ```
-ana@lab:~/obs$ python grade_sample.py uniform --share 0.1
-uniform: 129 of 1221 replies graded for relevance
-  2026.09.4    69/92   pass  75.0%   95% between 65.3% and 82.7%
-  2026.10.1    21/37   pass  56.8%   95% between 40.9% and 71.3%
+ana@dev:~/obs$ python grade_sample.py uniform --share 0.1
+uniform: 23 of 275 replies graded for relevance in 2.1 min, 0 verdicts unreadable
+  2026.09.4     3/10   pass  30.0%   95% between 10.8% and 60.3%
+  2026.10.1     2/13   pass  15.4%   95% between  4.3% and 42.2%
 ```
 
 ```
-ana@lab:~/obs$ python grade_sample.py stratified --per-group 30
-stratified: 120 of 1221 replies graded for relevance
-  2026.09.4    40/60   pass  66.7%   95% between 54.1% and 77.3%
-  2026.10.1    37/60   pass  61.7%   95% between 49.0% and 72.9%
+ana@dev:~/obs$ python grade_sample.py stratified --per-group 30
+stratified: 120 of 275 replies graded for relevance in 10.6 min, 0 verdicts unreadable
+  2026.09.4    28/60   pass  46.7%   95% between 34.6% and 59.1%
+  2026.10.1    20/60   pass  33.3%   95% between 22.7% and 45.9%
 ```
 
 ```
-ana@lab:~/obs$ python grade_sample.py targeted
-targeted: 393 of 1221 replies graded for relevance
-  2026.09.4    27/212  pass  12.7%   95% between  8.9% and 17.9%
-  2026.10.1    18/181  pass   9.9%   95% between  6.4% and 15.2%
+ana@dev:~/obs$ python grade_sample.py targeted
+targeted: 90 of 275 replies graded for relevance in 7.7 min, 0 verdicts unreadable
+  2026.09.4     1/32   pass   3.1%   95% between  0.6% and 15.7%
+  2026.10.1     0/58   pass   0.0%   95% between  0.0% and  6.2%
 ```
 
 ```schooling-figure
-{"svg": "<svg viewBox=\"0 0 720 260\" role=\"img\" aria-label=\"Relevance pass rates per release, as dots with 95% intervals, on an axis from 0 to 100%. Every reply: 76.6% before the release and 62.3% after, with narrow intervals. A uniform 10% sample: 75.0% and 56.8%, with intervals that overlap. Thirty per group: 66.7% and 61.7%, both too low for the first release. Targeted: 12.7% and 9.9%, nowhere near the truth.\"><text x=\"20\" y=\"42\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">every reply</text><text x=\"20\" y=\"58\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">n = 1221</text><path d=\"M552.2 40 L582.88 40\" stroke=\"var(--phosphor)\" stroke-width=\"2\" fill=\"none\"></path><circle cx=\"568.32\" cy=\"40\" r=\"4\" fill=\"var(--phosphor)\" stroke=\"none\"></circle><path d=\"M469.52 56 L516.84 56\" stroke=\"var(--amber)\" stroke-width=\"2\" fill=\"none\"></path><circle cx=\"493.96\" cy=\"56\" r=\"4\" fill=\"var(--amber)\" stroke=\"none\"></circle><text x=\"20\" y=\"86\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">uniform 10%</text><text x=\"20\" y=\"102\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">n = 129</text><path d=\"M509.56 84 L600.04 84\" stroke=\"var(--phosphor)\" stroke-width=\"2\" fill=\"none\"></path><circle cx=\"560\" cy=\"84\" r=\"4\" fill=\"var(--phosphor)\" stroke=\"none\"></circle><path d=\"M382.68 100 L540.76 100\" stroke=\"var(--amber)\" stroke-width=\"2\" fill=\"none\"></path><circle cx=\"465.36\" cy=\"100\" r=\"4\" fill=\"var(--amber)\" stroke=\"none\"></circle><text x=\"20\" y=\"130\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">30 per group</text><text x=\"20\" y=\"146\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">n = 120</text><path d=\"M451.32 128 L571.96 128\" stroke=\"var(--phosphor)\" stroke-width=\"2\" fill=\"none\"></path><circle cx=\"516.84\" cy=\"128\" r=\"4\" fill=\"var(--phosphor)\" stroke=\"none\"></circle><path d=\"M424.8 144 L549.08 144\" stroke=\"var(--amber)\" stroke-width=\"2\" fill=\"none\"></path><circle cx=\"490.84\" cy=\"144\" r=\"4\" fill=\"var(--amber)\" stroke=\"none\"></circle><text x=\"20\" y=\"174\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">targeted</text><text x=\"20\" y=\"190\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">n = 393</text><path d=\"M216.28 172 L263.08 172\" stroke=\"var(--phosphor)\" stroke-width=\"2\" fill=\"none\"></path><circle cx=\"236.04\" cy=\"172\" r=\"4\" fill=\"var(--phosphor)\" stroke=\"none\"></circle><path d=\"M203.28 188 L249.04 188\" stroke=\"var(--amber)\" stroke-width=\"2\" fill=\"none\"></path><circle cx=\"221.48\" cy=\"188\" r=\"4\" fill=\"var(--amber)\" stroke=\"none\"></circle><path d=\"M170 218 L690 218\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M170 218 L170 223\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"170\" y=\"233\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">0%</text><path d=\"M274 218 L274 223\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"274\" y=\"233\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">20%</text><path d=\"M378 218 L378 223\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"378\" y=\"233\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">40%</text><path d=\"M482 218 L482 223\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"482\" y=\"233\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">60%</text><path d=\"M586 218 L586 223\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"586\" y=\"233\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">80%</text><path d=\"M690 218 L690 223\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"690\" y=\"233\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">100%</text><text x=\"430\" y=\"250\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">share of replies judge-1 passes for relevance</text><circle cx=\"190.8\" cy=\"14\" r=\"4\" fill=\"var(--phosphor)\" stroke=\"none\"></circle><text x=\"200.8\" y=\"14\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--phosphor)\">2026.09.4</text><circle cx=\"305.2\" cy=\"14\" r=\"4\" fill=\"var(--amber)\" stroke=\"none\"></circle><text x=\"315.2\" y=\"14\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--amber)\">2026.10.1</text></svg>", "caption": "Only the first row is the week. The others are what three ways of sampling would have reported, and how sure each could be."}
+{"svg": "<svg viewBox=\"0 0 720 260\" role=\"img\" aria-label=\"Relevance pass rates per release, as dots with 95% intervals, on an axis from 0 to 100%. Every reply: 43.3% before the release and 34.0% after, with intervals that overlap. A uniform 10% sample: 30.0% and 15.4%, with intervals so wide they cover most of the axis. Thirty per group: 46.7% and 33.3%, a little high for the first release. Targeted: 3.1% and 0.0%, nowhere near the week.\"><text x=\"20\" y=\"42\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">every reply</text><text x=\"20\" y=\"58\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">n = 275</text><path d=\"M353.04 40 L438.84 40\" stroke=\"var(--phosphor)\" stroke-width=\"2\" fill=\"none\"></path><circle cx=\"395.16\" cy=\"40\" r=\"4\" fill=\"var(--phosphor)\" stroke=\"none\"></circle><path d=\"M308.84 56 L389.44 56\" stroke=\"var(--amber)\" stroke-width=\"2\" fill=\"none\"></path><circle cx=\"346.8\" cy=\"56\" r=\"4\" fill=\"var(--amber)\" stroke=\"none\"></circle><text x=\"20\" y=\"86\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">uniform 10%</text><text x=\"20\" y=\"102\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">n = 23</text><path d=\"M226.16 84 L483.56 84\" stroke=\"var(--phosphor)\" stroke-width=\"2\" fill=\"none\"></path><circle cx=\"326.0\" cy=\"84\" r=\"4\" fill=\"var(--phosphor)\" stroke=\"none\"></circle><path d=\"M192.36 100 L389.44 100\" stroke=\"var(--amber)\" stroke-width=\"2\" fill=\"none\"></path><circle cx=\"250.08\" cy=\"100\" r=\"4\" fill=\"var(--amber)\" stroke=\"none\"></circle><text x=\"20\" y=\"130\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">30 per group</text><text x=\"20\" y=\"146\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">n = 120</text><path d=\"M349.92 128 L477.32 128\" stroke=\"var(--phosphor)\" stroke-width=\"2\" fill=\"none\"></path><circle cx=\"412.84\" cy=\"128\" r=\"4\" fill=\"var(--phosphor)\" stroke=\"none\"></circle><path d=\"M288.04 144 L408.68 144\" stroke=\"var(--amber)\" stroke-width=\"2\" fill=\"none\"></path><circle cx=\"343.16\" cy=\"144\" r=\"4\" fill=\"var(--amber)\" stroke=\"none\"></circle><text x=\"20\" y=\"174\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">targeted</text><text x=\"20\" y=\"190\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">n = 90</text><path d=\"M173.12 172 L251.64 172\" stroke=\"var(--phosphor)\" stroke-width=\"2\" fill=\"none\"></path><circle cx=\"186.12\" cy=\"172\" r=\"4\" fill=\"var(--phosphor)\" stroke=\"none\"></circle><path d=\"M170.0 188 L202.24 188\" stroke=\"var(--amber)\" stroke-width=\"2\" fill=\"none\"></path><circle cx=\"170.0\" cy=\"188\" r=\"4\" fill=\"var(--amber)\" stroke=\"none\"></circle><path d=\"M170 218 L690 218\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M170 218 L170 223\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"170\" y=\"233\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">0%</text><path d=\"M274 218 L274 223\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"274\" y=\"233\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">20%</text><path d=\"M378 218 L378 223\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"378\" y=\"233\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">40%</text><path d=\"M482 218 L482 223\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"482\" y=\"233\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">60%</text><path d=\"M586 218 L586 223\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"586\" y=\"233\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">80%</text><path d=\"M690 218 L690 223\" stroke=\"var(--wire)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"690\" y=\"233\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">100%</text><text x=\"430\" y=\"250\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">share of replies the judge passes for relevance</text><circle cx=\"190.8\" cy=\"14\" r=\"4\" fill=\"var(--phosphor)\" stroke=\"none\"></circle><text x=\"200.8\" y=\"14\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--phosphor)\">2026.09.4</text><circle cx=\"305.2\" cy=\"14\" r=\"4\" fill=\"var(--amber)\" stroke=\"none\"></circle><text x=\"315.2\" y=\"14\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--amber)\">2026.10.1</text></svg>", "caption": "Only the first row is the week. The others are what three ways of sampling would have reported, and how sure each could be."}
 ```
 
-**Uniform gets the week right, loosely.** 75.0% and 56.8%, against the true 76.6% and 62.3%. Both true
-values are inside its intervals, which is what an unbiased sample promises. But the intervals are wide,
-and they overlap: from this sample alone, a team could not be confident the release made relevance
-worse. A tenth of a week is not enough to see a fall of fourteen points with certainty, and the next
-section says how much would be.
+**Uniform is unbiased and nearly useless at this size.** A tenth of 275 is 23 replies, and 30.0% and
+15.4% come with intervals from 10.8% to 60.3% and from 4.3% to 42.2%. Both of the week's values are
+inside them, which is all an unbiased sample promises. Neither interval can tell the releases apart, or
+tell a judge that passes a third of the replies from one that passes half.
 
-**Stratified is wrong about the first release**, 66.7% against a true 76.6%, and the reason is the
-design. Thirty replies from each feature means the order questions, a fifth of the traffic, are half
-the sample, and order questions fail relevance far more often. An equal number per group is the right
-way to learn about each group, and the wrong way to estimate the whole unless every group's result is
-weighted back by its share of the traffic. Stratifying and forgetting to reweight is a common way to
-report a number nobody measured.
+**Stratified is close, and biased upwards.** 46.7% and 33.3%, against the week's 43.3% and 34.0%.
+Thirty replies from each feature in each release means the `order` requests, a quarter of the week,
+are half the sample, and this judge passes `order` replies more often than `help` ones: 43% against
+37%, over the whole week. An equal number per group is the right way to learn about each group, and
+the wrong way to estimate the whole unless every group's result is weighted back by its share of the
+traffic. Stratifying and forgetting to reweight is a common way to report a number nobody measured.
 
-**Targeted is not an estimate of anything**: 12.7% and 9.9%. It chose the replies most likely to be bad,
-and they were. That is its purpose. It finds failures to read, debug and turn into test cases, lesson
-13's subject, at a fraction of the cost of finding them at random. Its pass rate must never be put on a
-dashboard as "quality", because it measures the sampling rule.
+**Targeted is not an estimate of anything**: 3.1% and 0.0%. It chose every reply somebody already
+doubted, a thumb down or a refusal, and the judge failed all of them but one. Most of those are the
+refusals it fails by habit, so here the targeted sample measures the judge as much as the assistant.
+That is its other use: it finds failures to read, debug and turn into test cases, lesson 13's subject,
+and it finds where the judge is wrong. Its pass rate must never be put on a dashboard as "quality",
+because it measures the sampling rule.
 
 ## Which to use
 

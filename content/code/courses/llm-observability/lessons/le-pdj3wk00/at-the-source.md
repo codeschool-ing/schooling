@@ -1,6 +1,6 @@
 ---
 title: Taking it out before it is written
-version: 1
+version: 2
 ---
 
 The safest place to remove something is **before it is recorded at all**: once a value is on a span,
@@ -44,17 +44,16 @@ And in `assistant.py`, the two attributes that carry text are written through it
 One of the week's order questions, asked by hand:
 
 ```
-ana@lab:~/obs$ python assistant.py --feature order --user u021 "Hi, I am Joana Prado (joana.prado@example.com). My order MG-20481937 has not arrived after 12 working days. Is it lost?"
+ana@dev:~/obs$ python assistant.py --feature order --user u021 "Hi, I am Joana Prado (joana.prado@example.com). My order MG-20481937 has not arrived after 12 working days. Is it lost?"
 I could not find that in our documents.
-trace 31b9488c6865b9bd1722d976e1ce6a0c
-ana@lab:~/obs$ python tree.py --attrs | grep -E "app.question|app.reply|user.hash"
-                     user.hash = "d6aad8d0fb204820"
+trace 78614786547d03a25236b322d8f142da
+ana@dev:~/obs$ python tree.py --attrs | grep -E "app.question|app.reply|user.hash"
+                     user.hash = "5735c1a8554810c6"
                      app.question = "Hi, I am Joana Prado ([email]). My order [order] has not arrived after 12 working days. Is it lost?"
-                     app.reply = "I could not find that in our documents."
 ```
 
 The address and the order number are gone from the question, replaced by the name of what was there.
-The reply is a refusal, so it had nothing to remove. And the user is `d6aad8d0fb204820` rather than
+The reply is a refusal, so it had nothing to remove. And the user is `5735c1a8554810c6` rather than
 `u021`, which is the pseudonym the last section of this lesson explains.
 
 **A placeholder that says what it replaced is worth more than a blank.** `[email]` keeps the sentence
@@ -67,9 +66,10 @@ Writing a redaction is not the same as knowing it ran. The check is to search th
 value that was sent:
 
 ```
-ana@lab:~/obs$ grep -c "joana.prado@example.com" spans.jsonl
+                     app.reply = "I could not find that in our documents."
+ana@dev:~/obs$ grep -c "joana.prado@example.com" spans.jsonl
 0
-ana@lab:~/obs$ grep -c "Joana Prado" spans.jsonl
+ana@dev:~/obs$ grep -c "Joana Prado" spans.jsonl
 1
 ```
 

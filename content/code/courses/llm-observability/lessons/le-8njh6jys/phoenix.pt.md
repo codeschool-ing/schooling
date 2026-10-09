@@ -1,26 +1,62 @@
 ---
 title: O Arize Phoenix
-version: 1
+version: 2
 ---
 
 A Arize é uma empresa com dois produtos para isso. O **Arize AX** é a sua plataforma hospedada, para
 monitorar e avaliar modelos em produção, de aprendizado de máquina além de modelos de linguagem. O
 **Phoenix** é o seu rastreador e ferramenta de avaliação de código aberto, construído sobre o
 OpenTelemetry e sobre o OpenInference, a convenção que a aula 1 encontrou. O AX é um serviço hospedado
-e não foi rodado. O Phoenix roda como um pacote Python, sem precisar de nenhum outro serviço, e o
-laboratório o inicia com `sudo bash lab.sh phoenix`, guardando os dados em SQLite no disco:
+e não é rodado aqui. O Phoenix é um pacote Python sem nenhum outro serviço por trás, então ele se instala
+no ambiente do curso como qualquer biblioteca:
+
+```sh
+pip install arize-phoenix==20.18.0
+```
 
 ```
-ana@lab:~/obs$ curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:6006/
-200
+ana@dev:~/obs$ du -sh ~/llmobs
+1.7G	/home/ana/llmobs
+ana@dev:~/obs$ pip list 2>/dev/null | grep -E "^opentelemetry-sdk "
+opentelemetry-sdk                        1.45.1
 ```
+
+O ambiente agora tem 1,7 GB, a maior parte do Phoenix e do que ele traz: um servidor web, uma camada de
+banco de dados e o pandas, entre outros. O pip também levou o SDK do OpenTelemetry de 1.45.0, a versão
+que a aula 1 fixou, para 1.45.1, porque uma das dependências do próprio Phoenix pede essa versão. É uma
+correção, e nada que este curso lê muda com ela.
+
+Depois inicie-o em segundo plano, com duas configurações que não são as padrão dele:
+
+```sh
+PHOENIX_HOST=127.0.0.1 PHOENIX_TELEMETRY_ENABLED=false phoenix serve > ~/phoenix.log 2>&1 &
+```
+
+**Deixado por conta própria, o Phoenix escuta em todas as interfaces de rede**, `0.0.0.0`, e qualquer
+pessoa na mesma rede que o seu computador consegue abri-lo, traces e tudo. O `PHOENIX_HOST` o mantém na
+sua máquina. E as telas dele informam como são usadas a dois serviços de análise, FullStory e Scarf, a
+menos que `PHOENIX_TELEMETRY_ENABLED` seja falso. Nenhum dos dois padrões é incomum numa ferramenta feita
+para ser compartilhada por uma equipe; os dois valem ser conhecidos antes de as perguntas dos clientes
+irem para ela. Ele guarda os dados num arquivo SQLite em `~/.phoenix`, e para quando você o encerra, com
+`kill %1` no mesmo terminal.
+
+```
+ana@dev:~/obs$ curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:6006/
+200
+ana@dev:~/obs$ curl -s -o /dev/null -w "%{http_code}\n" http://$(hostname -I | cut -d" " -f1):6006/
+000
+```
+
+O primeiro endereço é a sua própria máquina, e o Phoenix responde. O segundo é o endereço do mesmo
+computador na rede dele, o que o navegador de um colega usaria, e ali nada responde: `000` é o `curl`
+dizendo que não conseguiu conectar. É o `PHOENIX_HOST` fazendo o trabalho dele.
 
 Ele recebe OTLP na porta 6006, então o assistente precisa, de novo, só de uma variável de ambiente. A
 reprodução do domingo, mandada para ele:
 
 ```
-ana@lab:~/obs$ OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://127.0.0.1:6006/v1/traces python replay.py --from 2026-10-04 --to 2026-10-05
-replayed 118 requests from data/traffic.jsonl: 143 asked, 0 failed, 54 feedback events
+ana@dev:~/obs$ OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://127.0.0.1:6006/v1/traces python replay.py --from 2026-10-04 --to 2026-10-05
+replayed 32 requests from data/traffic.jsonl: 34 asked, 0 failed, 7 feedback events
 ```
 
 O Phoenix tem um cliente Python, e o `px_spans.py` lê os spans de volta dele como uma tabela, agrupada
@@ -40,20 +76,20 @@ print(table.round(0).to_string())
 ```
 
 ```
-ana@lab:~/obs$ python px_spans.py
-747 spans; 143 traces
+ana@dev:~/obs$ python px_spans.py
+182 spans; 34 traces
 span_kind
-UNKNOWN      367
-LLM          250
-EMBEDDING    130
-                 spans       kind  median_ms  prompt_tokens
-name                                                       
-ask                143        LLM      760.0            0.0
-chat extract-1     107        LLM     1185.0        21815.0
-check_citations    130    UNKNOWN        0.0            0.0
-embed              130  EMBEDDING       58.0         1325.0
-generate           107    UNKNOWN     1185.0            0.0
-search             130    UNKNOWN        3.0            0.0
+UNKNOWN      90
+LLM          60
+EMBEDDING    32
+                  spans       kind  median_ms  prompt_tokens
+name                                                        
+ask                  34        LLM     2857.0            0.0
+chat llama3.2:3b     26        LLM     3058.0         4379.0
+check_citations      32    UNKNOWN        0.0            0.0
+embed                32  EMBEDDING      146.0          478.0
+generate             26    UNKNOWN     3059.0            0.0
+search               32    UNKNOWN        0.0            0.0
 ```
 
 ## O que ele fez dos spans
@@ -77,6 +113,6 @@ ele, que mostra os documentos recuperados e as suas notas num painel próprio; o
 assistente não diz que é um. Acrescentar `openinference.span.kind = RETRIEVER`, e os ids dos trechos
 como o `retrieval.documents` do OpenInference, é um adaptador da mesma forma que o da aula 6.
 
-Repare também nos tokens de prompt do `embed`: 1.325. O Phoenix conta a entrada de um embedding como
+Repare também nos tokens de prompt do `embed`: 478. O Phoenix conta a entrada de um embedding como
 tokens de prompt, o que é justo, e um total de tokens de prompt somando todos os tipos misturaria então
 dois preços.

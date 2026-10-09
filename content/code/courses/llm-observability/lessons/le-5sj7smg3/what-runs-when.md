@@ -1,6 +1,6 @@
 ---
 title: What runs, and when
-version: 1
+version: 2
 ---
 
 Lessons 13 and 14 built two kinds of check: the set's own integrity, and the comparison of a candidate
@@ -13,17 +13,19 @@ Not everything should run on every commit, because the checks cost very differen
 
 | Tier | What runs | Calls a model? | When |
 | --- | --- | --- | --- |
-| the set | ids, manifest hash, facts in gold sections, documents at their pinned versions, personal data | no | every change to the set, the documents or the tests |
+| the set | ids, manifest hash, gold chunks, facts in gold chunks, documents not updated since, personal data | no | every change to the set, the documents or the tests |
 | the regression | production and candidate answer the set; broken cases, new check failures, budgets | yes, twice per case | every change that can alter a reply |
 | the slow ones | held-out split, judge-graded metrics, a look at the changed replies | yes, more | before a release, or nightly |
 
-**The first tier costs nothing and should never be skipped.** It is lesson 13's `check_set.py` as tests. It fails in seconds when somebody commits a set that does not match its manifest, or a case that
-holds a customer's name.
+**The first tier costs nothing and should never be skipped.** It is lesson 13's `check_set.py` as
+tests. It fails in seconds when somebody commits a set that does not match its manifest, or a case
+that holds a customer's name.
 
-**The second tier costs money on every run.** In lesson 14 the whole set cost under five cents to
-answer, at the lab's prices, for the most expensive candidate. Twice that per pull request is cheap
-next to a release that breaks five questions, and it is still a bill: the trigger has to be the changes
-that can alter a reply, not every edit to a README.
+**The second tier costs on every run.** In lesson 14 the dearest candidate answered the whole set for
+about a cent and a third, at the course's prices; on your own machine it costs nothing but time, a few
+minutes for the two releases together. Either is cheap next to a release that breaks seven questions,
+and it is still a bill: the trigger has to be the changes that can alter a reply, not every edit to a
+README.
 
 **The third tier is where people come in**: the held-out split is run once a candidate is final, and the
 replies that changed are read, as lesson 14 asked. A pipeline can schedule these; it cannot do the

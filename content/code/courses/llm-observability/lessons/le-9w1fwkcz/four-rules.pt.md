@@ -1,9 +1,9 @@
 ---
 title: Quatro regras para um alerta
-version: 1
+version: 2
 ---
 
-Um alerta é uma regra avaliada num horário: a cada hora, digamos, o sistema de alertas calcula um número
+Um alerta é uma regra avaliada numa agenda: a cada hora, digamos, o sistema de alertas calcula um número
 sobre uma janela recente e o compara com um limiar. O `alerts.py` avalia quatro regras para "as recusas
 subiram" a cada hora da semana reproduzida, e conta o que cada uma teria feito:
 
@@ -15,8 +15,8 @@ from datetime import datetime, timedelta
 import replies
 
 week = replies.week()
-RELEASE = datetime(2026, 10, 2, 10)
-before = [r["refused"] for r in week if r["at"] < datetime(2026, 10, 1)]
+RELEASE = datetime(2026, 10, 1, 10)
+before = [r["refused"] for r in week if r["at"] < RELEASE]
 BASELINE = sum(before) / len(before)
 
 
@@ -36,11 +36,11 @@ def lower(k, n, z=1.96):
 
 RULES = {
     "last hour above 40%": lambda now: (lambda k, n: n > 0 and k / n > 0.40)(*window(now, 1)),
-    "last 3 hours above 40%, 30 replies or more": lambda now: (lambda k, n: n >= 30 and k / n > 0.40)(*window(now, 3)),
+    "last 6 hours above 40%, 10 replies or more": lambda now: (lambda k, n: n >= 10 and k / n > 0.40)(*window(now, 6)),
     "yesterday above 30%, checked at midnight": lambda now: now.hour == 0 and (lambda k, n: n > 0 and k / n > 0.30)(*window(now, 24)),
-    "last 6 hours surely above the baseline": lambda now: lower(*window(now, 6)) > BASELINE,
+    "last 24 hours surely above the baseline": lambda now: lower(*window(now, 24)) > BASELINE,
 }
-print(f"baseline: {sum(before)} refused of {len(before)} replies before 1 October, {BASELINE:.1%}")
+print(f"baseline: {sum(before)} refused of {len(before)} replies before the release, {BASELINE:.1%}")
 hours = [datetime(2026, 9, 29) + timedelta(hours=h) for h in range(24 * 6 + 1)]
 for name, rule in RULES.items():
     fired = [h for h in hours if rule(h)]
@@ -52,36 +52,38 @@ for name, rule in RULES.items():
 ```
 
 ```
-ana@lab:~/obs$ python alerts.py
-baseline: 136 refused of 551 replies before 1 October, 24.7%
+ana@dev:~/obs$ python alerts.py
+baseline: 31 refused of 134 replies before the release, 23.1%
 last hour above 40%
-    false alarms before the release  19   first after it: Fri 02 13:00, 3 h after   firing in 25 of the 62 hours after
-last 3 hours above 40%, 30 replies or more
-    false alarms before the release   0   first after it: Fri 02 14:00, 4 h after   firing in 6 of the 62 hours after
+    false alarms before the release  12   first after it: Thu 01 14:00, 4 h after   firing in 31 of the 86 hours after
+last 6 hours above 40%, 10 replies or more
+    false alarms before the release   0   first after it: Thu 01 11:00, 1 h after   firing in 21 of the 86 hours after
 yesterday above 30%, checked at midnight
-    false alarms before the release   0   first after it: Sat 03 00:00, 14 h after   firing in 3 of the 62 hours after
-last 6 hours surely above the baseline
-    false alarms before the release   1   first after it: Fri 02 14:00, 4 h after   firing in 28 of the 62 hours after
+    false alarms before the release   0   first after it: Fri 02 00:00, 14 h after   firing in 3 of the 86 hours after
+last 24 hours surely above the baseline
+    false alarms before the release   0   first after it: Thu 01 15:00, 5 h after   firing in 55 of the 86 hours after
 ```
 
-A versão foi ao ar na sexta às 10h. Cada regra é uma troca diferente:
+A versão foi ao ar na quinta às 10h. Cada regra é uma troca diferente:
 
-- **"A última hora acima de 40%"** pega a versão três horas depois dela, e já disparou **19 vezes** nos
-  três dias anteriores, quase sempre de madrugada, quando uma hora tem uma ou duas respostas. Na sexta
-  ninguém mais a lê. A precisão da aula 11, medida num alerta: a maior parte dos disparos é falsa.
-- **"As últimas três horas acima de 40%, com 30 respostas ou mais"** nunca dispara em falso, pega a
-  versão em quatro horas, e depois **fica quieta**: dispara em 6 das 62 horas seguintes, porque a parcela
-  fica em torno de 40% e toda madrugada cai abaixo do mínimo. Um alerta que se resolve sozinho enquanto o
-  problema continua diz a quem o recebeu que o problema passou.
+- **"A última hora acima de 40%"** pega a versão quatro horas depois dela, e já disparou **12 vezes** nos
+  dois dias e meio anteriores. De dia uma hora tem duas ou três respostas e de madrugada nenhuma ou uma,
+  então uma recusa em duas basta. Na quinta ninguém mais a lê. A precisão da aula 11, medida num alerta: a
+  maioria dos disparos é falsa.
+- **"As últimas seis horas acima de 40%, com 10 respostas ou mais"** nunca dispara em falso e pega a versão
+  primeiro, uma hora depois dela, e então **fica quieta**: dispara em 21 das 86 horas seguintes, porque
+  toda madrugada cai abaixo de dez respostas e de dia a parcela fica em torno de 40%. Um alerta que se
+  resolve sozinho enquanto o problema ainda está lá diz a quem o recebeu que o problema passou.
 - **"Ontem acima de 30%, conferido à meia-noite"** é seguro e lento: catorze horas depois da versão, à
-  meia-noite, com os clientes da noite inteira já dispensados.
-- **"As últimas seis horas com certeza acima da linha de base"** usa o intervalo da aula 9: dispara quando
-  até o extremo inferior do intervalo de 95% da parcela da janela está acima dos 24,7% dos dias
-  anteriores. Pega a versão em quatro horas, fica ligado em 28 das 62 horas seguintes, e tem **um** alarme
-  falso em três dias.
+  meia-noite, com os clientes da tarde inteira já despachados.
+- **"As últimas 24 horas com certeza acima da linha de base"** usa o intervalo da aula 9: dispara quando
+  até a ponta de baixo do intervalo de 95% da parcela da janela está acima dos 23,1% dos dias anteriores.
+  Ela pega a versão em cinco horas, **não** tem alarme falso, e fica ligada em 55 das 86 horas seguintes.
 
-A quarta regra é a que esta equipe manteria, e a razão está na definição dela. Ela tem uma amostra mínima
-embutida: com poucas respostas o intervalo é largo e o extremo inferior não passa da linha de base, então
-as madrugadas não a disparam. E ela compara com o que este assistente costuma fazer, não com um número que
-alguém escolheu, então não precisa de novo ajuste quando uma funcionalidade nova muda a parcela habitual de
-recusas.
+A quarta regra é a que esta equipe manteria, e o motivo está na definição dela. Ela tem uma amostra
+mínima embutida: com poucas respostas o intervalo é largo e a ponta de baixo não passa da linha de base,
+então as madrugadas não a disparam, e ninguém precisou escolher um número como dez. Ela compara com o que
+este assistente costuma fazer, não com um número que alguém escolheu, então não precisa ser reajustada
+quando uma funcionalidade nova muda a parcela usual de recusas. E a janela dela é um dia porque esta loja
+tem quarenta respostas por dia: um assistente mais movimentado ganha uma janela mais curta pela mesma
+aritmética, e um mais quieto, uma mais longa.

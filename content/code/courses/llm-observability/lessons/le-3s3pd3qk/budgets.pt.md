@@ -1,6 +1,6 @@
 ---
 title: Orçamentos no código
-version: 1
+version: 2
 ---
 
 Um relatório diz o que foi gasto. Um orçamento diz o que pode ser gasto, e os úteis são conferidos pela
@@ -12,7 +12,7 @@ olhar. **Um teto por usuário por dia** protege contra uma conta, ou um script, 
 outros juntos gastariam. Ultrapassá-lo é uma decisão que a aplicação toma na hora: ir mais devagar,
 usar um modelo mais barato, ou recusar até amanhã.
 
-Os orçamentos do laboratório são um arquivo, e o `budget.py` confronta a semana com eles:
+Os orçamentos são um arquivo, e o `budget.py` confronta a semana com eles:
 
 ```python
 """budget.py: each day's spend per feature against a daily budget, and the users over a daily cap."""
@@ -42,32 +42,40 @@ for v, d, u in over[-3:]:
     print(f"  {d}  {u}  {v:.4f}")
 ```
 
+Salve os orçamentos como `budgets.json`:
+
+```json
+{"daily": {"help": "0.020", "order": "0.008", "summary": "0.003"}, "per_user_daily": "0.002"}
 ```
-ana@lab:~/obs$ cat budgets.json
-{"daily": {"help": "0.10", "order": "0.04", "summary": "0.012"}, "per_user_daily": "0.005"}
-ana@lab:~/obs$ python budget.py
+
+```
+ana@dev:~/obs$ python budget.py
 day                help           order         summary
-Mon 28      0.0986          0.0434 OVER     0.0121 OVER
-Tue 29      0.1130 OVER     0.0383          0.0126 OVER
-Wed 30      0.1220 OVER     0.0322          0.0116     
-Thu 01      0.0827          0.0334          0.0070     
-Fri 02      0.0751          0.0200          0.0067     
-Sat 03      0.0423          0.0094          0.0048     
-Sun 04      0.0439          0.0083          0.0054     
-users over 0.005 a day: 8
-  Mon 28  29732abf5563ccec  0.0060
-  Tue 29  adc7eb33a816d390  0.0066
-  Tue 29  3f5e7afb6e2effd3  0.0074
+Mon 28      0.0183          0.0086 OVER     0.0038 OVER
+Tue 29      0.0212 OVER     0.0073          0.0025     
+Wed 30      0.0166          0.0068          0.0013     
+Thu 01      0.0114          0.0054          0.0024     
+Fri 02      0.0081          0.0044          0.0036 OVER
+Sat 03      0.0073          0.0020          0.0016     
+Sun 04      0.0067          0.0032          0.0007     
+users over 0.002 a day: 3
+  Tue 29  2b86d5011760317d  0.0026
+  Wed 30  bfc965310daf2eda  0.0030
+  Mon 28  91aa3bdfe71fb999  0.0032
 ```
 
-Os orçamentos foram definidos olhando a semana, que é como um primeiro orçamento se define na prática,
-e é por isso que os estouros se concentram onde a semana foi mais movimentada. `help` passou dos seus
-0,10 na terça e na quarta, `order` dos seus 0,04 na segunda, e `summary` dos seus 0,012 na segunda e na
-terça. De quinta em diante nada chega perto, o que nesta semana é o corte de preço e depois a versão,
-não contenção.
+Os orçamentos foram definidos olhando a semana, que é como um primeiro orçamento se define na
+prática, e é por isso que os estouros se concentram onde a semana foi mais movimentada. `help`
+passou dos seus 0,020 na terça, `order` dos seus 0,008 na segunda, e `summary` dos seus 0,003 na
+segunda. De quarta em diante, `help` e `order` nem chegam perto, o que nesta semana é o corte de
+preço e depois a versão, não contenção. **`summary` passou de novo na sexta**, depois dos dois,
+porque nenhum deles o tocou: um resumo não busca nada, então o piso não consegue encurtar o prompt
+dele, e a equipe de atendimento simplesmente pediu mais resumos naquele dia. Um orçamento por
+funcionalidade é o que separa essas duas histórias.
 
-Oito vezes na semana um usuário passou de meio centavo num dia, nenhuma delas por muito: a maior foi
-0,0074. Nenhuma assusta, e é para isso que serve um teto. Ele não custa nada até o dia em que importa.
+Três vezes na semana um usuário passou de um quinto de centavo num dia, nenhuma delas por muito: a
+maior foi 0,0032. Nenhuma assusta, e é para isso que serve um teto. Ele não custa nada até o dia em
+que importa.
 
 ## Onde fica a verificação
 

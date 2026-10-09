@@ -1,6 +1,6 @@
 ---
 title: Budgets in the code
-version: 1
+version: 2
 ---
 
 A report says what was spent. A budget says what may be spent, and the useful ones are checked by the
@@ -12,7 +12,7 @@ look. **A cap per user per day** protects against one account, or one script, sp
 else together would. Crossing it is a decision the application makes on the spot: slow down, use a
 cheaper model, or refuse until tomorrow.
 
-The lab's budgets are a file, and `budget.py` holds the week against them:
+The budgets are a file, and `budget.py` holds the week against them:
 
 ```python
 """budget.py: each day's spend per feature against a daily budget, and the users over a daily cap."""
@@ -42,32 +42,39 @@ for v, d, u in over[-3:]:
     print(f"  {d}  {u}  {v:.4f}")
 ```
 
+Save the budgets as `budgets.json`:
+
+```json
+{"daily": {"help": "0.020", "order": "0.008", "summary": "0.003"}, "per_user_daily": "0.002"}
 ```
-ana@lab:~/obs$ cat budgets.json
-{"daily": {"help": "0.10", "order": "0.04", "summary": "0.012"}, "per_user_daily": "0.005"}
-ana@lab:~/obs$ python budget.py
+
+```
+ana@dev:~/obs$ python budget.py
 day                help           order         summary
-Mon 28      0.0986          0.0434 OVER     0.0121 OVER
-Tue 29      0.1130 OVER     0.0383          0.0126 OVER
-Wed 30      0.1220 OVER     0.0322          0.0116     
-Thu 01      0.0827          0.0334          0.0070     
-Fri 02      0.0751          0.0200          0.0067     
-Sat 03      0.0423          0.0094          0.0048     
-Sun 04      0.0439          0.0083          0.0054     
-users over 0.005 a day: 8
-  Mon 28  29732abf5563ccec  0.0060
-  Tue 29  adc7eb33a816d390  0.0066
-  Tue 29  3f5e7afb6e2effd3  0.0074
+Mon 28      0.0183          0.0086 OVER     0.0038 OVER
+Tue 29      0.0212 OVER     0.0073          0.0025     
+Wed 30      0.0166          0.0068          0.0013     
+Thu 01      0.0114          0.0054          0.0024     
+Fri 02      0.0081          0.0044          0.0036 OVER
+Sat 03      0.0073          0.0020          0.0016     
+Sun 04      0.0067          0.0032          0.0007     
+users over 0.002 a day: 3
+  Tue 29  2b86d5011760317d  0.0026
+  Wed 30  bfc965310daf2eda  0.0030
+  Mon 28  91aa3bdfe71fb999  0.0032
 ```
 
 The budgets were set by looking at the week, which is how a first budget is usually set, and that is
-why the overruns cluster where the week was busiest. `help` crossed its 0.10 on Tuesday and
-Wednesday, `order` its 0.04 on Monday, and `summary` its 0.012 on Monday and Tuesday. From
-Thursday on nothing comes near, which in this week is the price cut and then the release, not
-restraint.
+why the overruns cluster where the week was busiest. `help` crossed its 0.020 on Tuesday, `order` its
+0.008 on Monday, and `summary` its 0.003 on Monday. From Wednesday on, `help` and `order` come
+nowhere near, which in this week is the price cut and then the release, not restraint. **`summary`
+crossed again on Friday**, after both, because neither touched it: a summary searches nothing, so the
+floor cannot shorten its prompt, and the support team simply asked for more of them that day. A
+budget per feature is what tells those two stories apart.
 
-Eight times in the week a user crossed half a cent in a day, none of them by much: the largest was
-0.0074. None is alarming, and that is what a cap is for. It costs nothing until the day it matters.
+Three times in the week a user crossed a fifth of a cent in a day, none of them by much: the largest
+was 0.0032. None is alarming, and that is what a cap is for. It costs nothing until the day it
+matters.
 
 ## Where the check goes
 

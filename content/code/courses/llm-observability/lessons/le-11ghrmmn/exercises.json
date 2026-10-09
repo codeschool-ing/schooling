@@ -27,12 +27,12 @@
   },
   {
     "id": "ex-b83fq7jn",
-    "version": 1,
+    "version": 2,
     "section": "two-frameworks",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why does /etc/llmobs.env set DEEPEVAL_TELEMETRY_OPT_OUT and RAGAS_DO_NOT_TRACK?",
+    "prompt": "Why does the lesson add DEEPEVAL_TELEMETRY_OPT_OUT and RAGAS_DO_NOT_TRACK to activate?",
     "choices": [
       {
         "text": "Both report usage by default",
@@ -50,7 +50,7 @@
         "why": "Speed is not the reason."
       },
       {
-        "text": "They switch the metrics to the lab's judge",
+        "text": "They switch the metrics to the local model",
         "correct": false,
         "why": "The judge is chosen in code."
       }
@@ -89,12 +89,12 @@
   },
   {
     "id": "ex-m442j1em",
-    "version": 1,
+    "version": 2,
     "section": "two-frameworks",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "Why did the lab pin langchain-community to 0.3.31 rather than upgrade RAGAS to 0.4.3?",
+    "prompt": "Why does the course pin langchain-community to 0.3.31 rather than upgrade RAGAS to 0.4.3?",
     "choices": [
       {
         "text": "RAGAS 0.4.3 removed the metrics that need no model",
@@ -104,7 +104,7 @@
       {
         "text": "langchain-community 0.4 is not on the package index",
         "correct": false,
-        "why": "0.4.2 was installed; it lacks a module RAGAS imports."
+        "why": "It is; 0.4 removed a chat model RAGAS 0.3.1 imports."
       },
       {
         "text": "The course wants the oldest versions of each library",
@@ -114,38 +114,38 @@
       {
         "text": "0.4.3 would pull the OpenAI client back to 1.x",
         "correct": true,
-        "why": "Right, under every other program in the course. And 0.4.3 also failed on the same import."
+        "why": "Right, under every other program in the course."
       }
     ]
   },
   {
     "id": "ex-z30q7rz5",
-    "version": 1,
+    "version": 2,
     "section": "what-a-metric-asks",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why did judge-1 refuse DeepEval's answer relevancy?",
+    "prompt": "DeepEval's faithfulness scored the return-postage reply 0. What was wrong with what it printed?",
     "choices": [
       {
-        "text": "DeepEval sent an invalid API key",
+        "text": "The score: the reply is faithful",
         "correct": false,
-        "why": "The error is about the prompt, not the key."
+        "why": "It contradicts its source, which says returns are free."
       },
       {
-        "text": "It had no criterion and no tagged question",
+        "text": "The reason, which denied the contradiction",
         "correct": true,
-        "why": "Right. judge-1 answers only the shape judge.py sends."
+        "why": "Right. The verdict found it; the separate call that wrote the reason did not."
       },
       {
-        "text": "The reply was too short to split",
+        "text": "The claims, which it took from the source",
         "correct": false,
-        "why": "The judge never got that far."
+        "why": "The claim came from the reply; the truths came from the source."
       },
       {
-        "text": "DeepEval refuses models it does not know by name",
+        "text": "Nothing: score and reason agreed",
         "correct": false,
-        "why": "The request reached the lab; the lab refused it."
+        "why": "The reason said there were no contradictions."
       }
     ]
   },
@@ -245,24 +245,24 @@
   },
   {
     "id": "ex-0pkkrrek",
-    "version": 1,
+    "version": 2,
     "section": "a-metric-of-your-own",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "How many of the 60 test cases did DeepEval's own summary report as failed?",
-    "value": 25,
+    "prompt": "For how many of the 48 replies did DeepEval's faithfulness give a score with the local model as judge?",
+    "value": 20,
     "tolerance": 0,
-    "unit": "test cases"
+    "unit": "replies"
   },
   {
     "id": "ex-rmnbdfjz",
-    "version": 1,
+    "version": 2,
     "section": "a-metric-of-your-own",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "Why is DeepEval's passed and failed count a poor report on its own?",
+    "prompt": "Why does deepeval_run.py print counts per metric instead of DeepEval's own summary?",
     "choices": [
       {
         "text": "It counts each metric twice",
@@ -275,45 +275,76 @@
         "why": "Right. A case passes only if every metric passes; the per-metric counts are the report."
       },
       {
-        "text": "It is rounded to whole percentages",
+        "text": "The summary is rounded to whole percentages",
         "correct": false,
-        "why": "It printed 58.33%."
+        "why": "Rounding is not the issue."
       },
       {
-        "text": "It leaves out the refusals",
+        "text": "The summary leaves out the refusals",
         "correct": false,
-        "why": "All 60 cases are in it."
+        "why": "Every case is in it."
       }
     ]
   },
   {
     "id": "ex-t4d8kmje",
-    "version": 1,
+    "version": 2,
     "section": "a-metric-of-your-own",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why does deepeval_run.py run with run_async=False?",
+    "prompt": "Why does deepeval_run.py pass ErrorConfig(ignore_errors=True)?",
     "choices": [
       {
-        "text": "judge-1 accepts one connection at a time",
+        "text": "To hide the replies the judge failed",
         "correct": false,
-        "why": "Lesson 9 graded eight at a time."
+        "why": "Failures are still counted; errors are counted beside them."
       },
       {
-        "text": "Async mode needs a Confident AI key",
-        "correct": false,
-        "why": "It does not."
+        "text": "So one unparseable answer does not stop all 48",
+        "correct": true,
+        "why": "Right. The first run without it ended on the first invalid JSON."
       },
       {
-        "text": "FactCheck cannot be awaited",
+        "text": "Because FactCheck cannot be awaited",
         "correct": false,
         "why": "It has an a_measure."
       },
       {
-        "text": "To keep judge-1's calls in one order",
+        "text": "To skip the refusals, which retrieved nothing",
+        "correct": false,
+        "why": "They carry a placeholder context and are scored."
+      }
+    ]
+  },
+  {
+    "id": "ex-ry207z9z",
+    "version": 1,
+    "section": "a-metric-of-your-own",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Of the eleven replies DeepEval's faithfulness failed, how many were really unfaithful?",
+    "choices": [
+      {
+        "text": "All eleven",
+        "correct": false,
+        "why": "Ten say what their sources say, and one is a refusal that says nothing."
+      },
+      {
+        "text": "One, the return-postage reply",
         "correct": true,
-        "why": "Right. The lab keeps its transcripts repeatable."
+        "why": "Right. Wrong on ten of its eleven failures, with this judge."
+      },
+      {
+        "text": "None of them",
+        "correct": false,
+        "why": "e02 under the new release contradicts its source."
+      },
+      {
+        "text": "About half",
+        "correct": false,
+        "why": "Only e02 under the new release is unfaithful."
       }
     ]
   },
@@ -351,7 +382,7 @@
   {
     "id": "ex-twbwpk6w",
     "version": 1,
-    "section": "ragas-without-a-model",
+    "section": "ragas",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
@@ -381,50 +412,51 @@
   },
   {
     "id": "ex-9c4vea95",
-    "version": 1,
-    "section": "ragas-without-a-model",
+    "version": 2,
+    "section": "ragas",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "Under release 2026.10.1, what context recall did RAGAS report, to two decimals?",
-    "value": 0.48,
-    "tolerance": 0.005
+    "prompt": "How many of the 48 replies did RAGAS's response relevancy score, with the local model as judge?",
+    "value": 14,
+    "tolerance": 0,
+    "unit": "replies"
   },
   {
     "id": "ex-ba024fsc",
-    "version": 1,
-    "section": "ragas-without-a-model",
+    "version": 2,
+    "section": "ragas",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "Why is RAGAS's recall so much lower than lesson 11's on the same retrievals?",
+    "prompt": "RAGAS's context recall matched lesson 11's exactly. Why would longer references change that?",
     "choices": [
       {
-        "text": "RAGAS used a different embedding model for the chunks",
+        "text": "RAGAS would switch to embeddings for long texts",
         "correct": false,
         "why": "These metrics compare strings, not embeddings."
       },
       {
-        "text": "RAGAS counts chunks; lesson 11 counts sections",
+        "text": "RAGAS asks whether each reference was found",
         "correct": true,
-        "why": "Right. One chunk of three is a found section and a third of the references."
+        "why": "Right. A section of three chunks, one retrieved, is one reference text in three."
       },
       {
-        "text": "RAGAS includes the questions that were given no chunks",
+        "text": "Lesson 11 would stop counting refusals",
         "correct": false,
-        "why": "Both were given the same questions."
+        "why": "Both leave out questions with nothing retrieved."
       },
       {
-        "text": "Lesson 11 rounded its recall up",
+        "text": "Longer texts are rounded differently",
         "correct": false,
-        "why": "Both round to two decimals."
+        "why": "Rounding has nothing to do with it."
       }
     ]
   },
   {
     "id": "ex-5n1ss6j4",
     "version": 1,
-    "section": "ragas-without-a-model",
+    "section": "ragas",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
@@ -516,22 +548,22 @@
   },
   {
     "id": "ex-6b7rzxyz",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "A colleague reports \"RAGAS context recall 0.48\" for the new release. What do you ask first?",
+    "prompt": "A colleague reports \"RAGAS response relevancy 0.79\" for the new release. What do you ask first?",
     "choices": [
       {
-        "text": "Which model ran the metric",
+        "text": "Which reference contexts were used",
         "correct": false,
-        "why": "This metric needs no model."
+        "why": "This metric uses none; it compares generated questions with the real one."
       },
       {
-        "text": "Which reference contexts were used",
+        "text": "How many replies it could not score",
         "correct": true,
-        "why": "Right. With sections as references the same retrievals score 0.91."
+        "why": "Right. Here it scored 7 of 24; a mean over a third of the replies is about the metric."
       },
       {
         "text": "Whether telemetry was turned off",
@@ -578,13 +610,13 @@
   },
   {
     "id": "ex-ewvbefdv",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
     "prompt": "How many replies did FactCheck pass under release 2026.09.4?",
-    "value": 19,
+    "value": 22,
     "tolerance": 0,
     "unit": "replies"
   }

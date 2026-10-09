@@ -1,6 +1,6 @@
 ---
 title: What a bill made from traces leaves out
-version: 1
+version: 2
 ---
 
 `bill.py` adds up what the spans recorded. The provider's invoice adds up what the provider charged.
@@ -12,8 +12,8 @@ same API key and no instrumentation. Every one is on the invoice and none is in 
 not more care; it is **one key per service**, so that the provider's own usage page splits the bill
 the same way the traces do, and a key with spend and no spans stands out.
 
-**Attempts that failed after work was done.** labobs refuses a failed request before doing anything,
-and a refusal before any work is usually free at a real provider too. A reply cut off half way is
+**Attempts that failed after work was done.** A provider that refuses a request before doing anything
+usually charges nothing for it. A reply cut off half way is
 another matter: the tokens already generated have been produced, and a provider may charge for them.
 The assistant records a cut-off attempt as an error span with the number of pieces received
 (`app.partial_pieces`), but its usage never arrives, because the final chunk that carries it was the

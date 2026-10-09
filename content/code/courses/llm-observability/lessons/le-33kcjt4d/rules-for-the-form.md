@@ -1,6 +1,6 @@
 ---
 title: Rules for the form of a reply
-version: 1
+version: 2
 ---
 
 A fact needs an expected answer. A **rule** does not: it is a property every good reply has, whatever
@@ -10,6 +10,20 @@ reply nobody wrote an answer key for.
 `checks.py` has six:
 
 ```python
+"""checks.py: rules a reply can be held to without a model, each a function that says pass or fail.
+
+    import checks
+    for name, ok, why in checks.run(reply, sources):
+        ...
+
+Every check is deterministic: the same reply and sources give the same verdict
+on every run, in microseconds, at no cost. Which is why they can run on every
+reply in production, and why lesson 15 can make a build fail on them.
+"""
+import re
+
+import redact
+
 REFUSAL = "I could not find that in our documents."
 CITE = re.compile(r"\[(\d+)\]")
 NUMBER = re.compile(r"\d+(?:[.,]\d+)?")
@@ -85,18 +99,19 @@ They encode what Marginalia's system prompt asks for and what the support team c
   slips past as an answer;
 - **an answer stays under 80 words**.
 
-The stand-in model passes them by construction, so to see each fire, `broken.py` puts five replies
-**written by the course** through all six, against a source about delivery prices:
+To see each one fire on demand, `broken.py` puts five replies **written by the course** through all
+six, against the chunk about standard delivery, which says it costs R$ 12.90 and is free over R$ 40:
 
 ```python
 """broken.py: five replies the course wrote, each breaking one rule, through every check."""
+import json
+
 import checks
 
-source = [{"id": "shipping-and-delivery:ca3796df6832",
-           "text": "standard three to five working days 4.90, free on orders over 40 express next working day 9.90"}]
-for reply in ["Standard delivery is free on orders over 40.",
-              "Standard delivery is free on orders over 40. [2]",
-              "Express delivery costs 12.90. [1]",
+source = [c for c in json.load(open("data/index.json"))["chunks"] if c["id"] == "shipping-and-delivery:standard-delivery"]
+for reply in ["Standard delivery is free on orders over R$ 40.",
+              "Standard delivery is free on orders over R$ 40. [2]",
+              "Standard delivery costs R$ 9.90. [1]",
               "Joana, we sent the details to joana.prado@example.com. [1]",
               "Sorry, I could not find anything about that."]:
     failed = [f"{name}: {why}" for name, ok, why in checks.run(reply, source) if not ok]
@@ -104,13 +119,13 @@ for reply in ["Standard delivery is free on orders over 40.",
 ```
 
 ```
-ana@lab:~/obs$ python broken.py
-Standard delivery is free on orders over 40.
+ana@dev:~/obs$ python broken.py
+Standard delivery is free on orders over R$ 40.
     cites_every_sentence: 1 sentence(s) with no citation
-Standard delivery is free on orders over 40. [2]
+Standard delivery is free on orders over R$ 40. [2]
     citations_exist: no source [2]
-Express delivery costs 12.90. [1]
-    numbers_in_sources: not in any source: ['12.90']
+Standard delivery costs R$ 9.90. [1]
+    numbers_in_sources: not in any source: ['9.90']
 Joana, we sent the details to joana.prado@example.com. [1]
     no_personal_data: repeats {'email': 1}
 Sorry, I could not find anything about that.
@@ -121,7 +136,8 @@ Each reply breaks the rule it was written to break, and the last breaks two: a r
 cites nothing and is not the agreed sentence, so it would be missed by every count of refusals in
 lesson 5.
 
-Notice what the number rule caught: **12.90 is a price the documents do not contain**. A real model that
-"remembers" an old price, or adds two numbers it should not, produces exactly that, and no customer can
-tell. It is the one kind of faithfulness a program can check with certainty, and for a shop whose
-answers are mostly prices, days and thresholds, it covers a large share of what matters.
+Notice what the number rule caught: **R$ 9.90 is a price the source does not contain**. A model that
+"remembers" a price from somewhere else, or works out a number it should have copied, produces
+exactly that, and no customer can tell. The next section finds `llama3.2:3b` doing the second. It is
+the one kind of faithfulness a program can check with certainty, and for a shop whose answers are
+mostly prices, days and thresholds, it covers a large share of what matters.

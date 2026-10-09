@@ -1,6 +1,6 @@
 ---
 title: Adding the names it reads
-version: 1
+version: 2
 ---
 
 Langfuse documents a set of attributes it reads on top of OpenTelemetry's: `langfuse.observation.type`
@@ -31,15 +31,16 @@ class LangfuseNames(SpanProcessor):
 replay of Saturday, with it:
 
 ```
-ana@lab:~/obs$ export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=$LANGFUSE_HOST/api/public/otel/v1/traces OTEL_EXPORTER_OTLP_TRACES_HEADERS="Authorization=Basic $(printf %s $LANGFUSE_PUBLIC_KEY:$LANGFUSE_SECRET_KEY | base64 -w0)"; python replay.py --from 2026-10-03 --to 2026-10-04 --processor lf_names:LangfuseNames
-replayed 120 requests from data/traffic.jsonl: 153 asked, 0 failed, 70 feedback events
-ana@lab:~/obs$ python lf.py traces 2026-10-03 1
-2026-10-03T03:01:53 e1a355f5 ask user 845c4ccdf2b1e0d8 session s0890 cost 0 input 'how long do I have to return a book'
+ana@dev:~/obs$ export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=$LANGFUSE_BASE_URL/api/public/otel/v1/traces OTEL_EXPORTER_OTLP_TRACES_HEADERS="Authorization=Basic $(printf %s $LANGFUSE_PUBLIC_KEY:$LANGFUSE_SECRET_KEY | base64 -w0)"; python replay.py --from 2026-10-03 --to 2026-10-04 --processor lf_names:LangfuseNames
+replayed 31 requests from data/traffic.jsonl: 36 asked, 0 failed, 12 feedback events
+ana@dev:~/obs$ python lf.py traces 2026-10-03 1
+2026-10-03T09:25:27 f0320995 ask user 759c1b8e0d00460b session s222 cost 0 input 'How long is the statutory right of withdrawal?'
 ```
 
-The user is the pseudonym, under a name Langfuse reads, and the trace has its question as input.
-The root is no longer a generation. Nothing in `assistant.py` changed, and the file the same spans
-went to still has none of the `langfuse.*` names.
+The user is the pseudonym, under a name Langfuse reads, and the trace has its question as input. And
+the root now says it is a plain span, so nothing that counts generations counts it. Nothing in
+`assistant.py` changed, and the file the same spans went to still has none of the `langfuse.*`
+names.
 
 ## Why the reply is not there
 

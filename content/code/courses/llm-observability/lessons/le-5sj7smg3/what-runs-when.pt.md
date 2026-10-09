@@ -1,6 +1,6 @@
 ---
 title: O que roda, e quando
-version: 1
+version: 2
 ---
 
 As aulas 13 e 14 montaram dois tipos de verificação: a integridade do próprio conjunto, e a comparação
@@ -13,7 +13,7 @@ Nem tudo deve rodar em todo commit, porque as verificações custam quantias mui
 
 | Camada | O que roda | Chama modelo? | Quando |
 | --- | --- | --- | --- |
-| o conjunto | ids, hash do manifesto, fatos nas seções gold, documentos nas versões fixadas, dados pessoais | não | toda mudança no conjunto, nos documentos ou nos testes |
+| o conjunto | ids, hash do manifesto, trechos gold, fatos nos trechos gold, documentos não atualizados desde então, dados pessoais | não | toda mudança no conjunto, nos documentos ou nos testes |
 | a regressão | produção e candidata respondem ao conjunto; casos quebrados, verificações novas falhando, orçamentos | sim, duas vezes por caso | toda mudança que possa alterar uma resposta |
 | as lentas | divisão reservada, métricas avaliadas por juiz, uma olhada nas respostas que mudaram | sim, mais | antes de um lançamento, ou toda noite |
 
@@ -21,10 +21,11 @@ Nem tudo deve rodar em todo commit, porque as verificações custam quantias mui
 testes, e ela falha em segundos quando alguém faz commit de um conjunto que não bate com o manifesto, ou
 de um caso com o nome de um cliente.
 
-**A segunda camada custa dinheiro a cada execução.** Na aula 14 o conjunto inteiro custou menos de cinco
-centavos de dólar para responder, nos preços do laboratório, para a candidata mais cara. O dobro disso
-por pull request é barato perto de uma versão que quebra cinco perguntas, e ainda assim é uma conta: o
-gatilho tem de ser as mudanças que podem alterar uma resposta, não toda edição num README.
+**A segunda camada custa a cada execução.** Na aula 14 a candidata mais cara respondeu ao conjunto
+inteiro por cerca de um centavo e um terço de dólar, nos preços do curso; na sua própria máquina não
+custa nada além de tempo, alguns minutos para as duas versões juntas. Qualquer um dos dois é barato
+perto de uma versão que quebra sete perguntas, e ainda assim é uma conta: o gatilho tem de ser as
+mudanças que podem alterar uma resposta, não toda edição num README.
 
 **A terceira camada é onde as pessoas entram**: a divisão reservada roda quando uma candidata está pronta,
 e as respostas que mudaram são lidas, como a aula 14 pediu. Um pipeline pode agendar isso; não pode fazer

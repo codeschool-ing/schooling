@@ -1,23 +1,23 @@
 ---
 title: A name is not a definition
-version: 1
+version: 2
 ---
 
 Every framework has a metric called faithfulness and one called relevance, and the names suggest they
 measure the same thing. They do not. The definitions below are read from the source of the versions
-installed in this lab, RAGAS 0.3.1 and DeepEval 4.2.8, which lesson 12 runs:
+that lesson 12 installs, RAGAS 0.3.1 and DeepEval 4.2.8:
 
 | Name | In this course | In RAGAS | In DeepEval |
 | --- | --- | --- | --- |
-| relevance | judge-1's cosine of question and reply, refusal passed by rule | a model writes questions the reply would answer; their mean cosine with the real question, times zero if the reply is noncommittal | the share of the reply's statements a model judges relevant, borderline counted as relevant |
-| faithfulness | judge-1's share of sentences close to a source sentence | the share of the reply's statements a model judges inferable from the context | the share of the reply's claims a model does not find contradicted by the context, borderline counted as passing |
-| context precision | rank-weighted share of chunks in a gold section | rank-weighted share of chunks a model, or a string match, judges useful against a reference | rank-weighted share of chunks a model judges relevant to the expected output |
+| relevance | the judge's verdict, refusal decided by the answer key | a model writes questions the reply would answer; their mean cosine with the real question, times zero if the reply is noncommittal | the share of the reply's statements a model judges relevant, borderline counted as relevant |
+| faithfulness | the judge's score for whether the reply's statements are supported | the share of the reply's statements a model judges inferable from the context | the share of the reply's claims a model does not find contradicted by the context, borderline counted as passing |
+| context precision | rank-weighted share of chunks that are gold chunks | rank-weighted share of chunks a model, or a string match, judges useful against a reference | rank-weighted share of chunks a model judges relevant to the expected output |
 
 Three differences are large enough to change a verdict on the same reply:
 
 - **RAGAS scores a noncommittal reply 0 for relevance.** The prompt that asks for the generated question
   also asks whether the reply is noncommittal, and gives "I don't know" as its example. The agreed
-  refusal is noncommittal by that definition, so RAGAS fails every refusal, as judge-1 did in lesson 10
+  refusal is noncommittal by that definition, so RAGAS fails every refusal, as this course's judge did in lesson 10
   and the rubric does not.
 - **DeepEval's faithfulness asks whether a claim is contradicted, RAGAS's whether it can be inferred.**
   A reply that adds a fact the context does not mention, without contradicting it, passes the first
@@ -32,4 +32,4 @@ reporting "faithfulness 0.9" may be reporting different things**, and the honest
 framework, its version, the metric's class and the model that ran it.
 
 The course's own definitions are in `metrics.py`, a docstring each. Lesson 12 runs both frameworks on
-the same sixty replies, with the metrics a lab with no language model can run.
+the same forty-eight replies, with `llama3.2:3b` as their judge.

@@ -1,6 +1,6 @@
 ---
 title: Agreement, and agreement by chance
-version: 1
+version: 2
 ---
 
 The obvious measure of two raters is how often they agree. It is misleading on its own, and the reason
@@ -37,7 +37,6 @@ from collections import Counter
 
 import checks
 
-
 def kappa(a, b):
     """Cohen's kappa: the agreement observed, the agreement chance would give, and how far beyond it."""
     n = len(a)
@@ -46,14 +45,11 @@ def kappa(a, b):
     expected = sum(ca[k] * cb[k] for k in ca) / n / n
     return observed, expected, (observed - expected) / (1 - expected)
 
-
 def load(name):
     if name == "judge":
         return {(r["case"], r["release"]): r["label"] for r in map(json.loads, open("runs/judged.jsonl"))}
     rubric, rater = name.split("/")
-    return {(r["case"], r["release"]): r["label"] for r in map(json.loads, open("data/labels.jsonl"))
-            if r["rubric"] == rubric and r["rater"] == rater}
-
+    return {(r["case"], r["release"]): r[rubric][rater] for r in map(json.loads, open("data/labels.jsonl"))}
 
 replies = {(r["id"], r["release"]): r["reply"] for run in ("old", "new") for r in map(json.loads, open(f"runs/{run}.jsonl"))}
 left, right = load(sys.argv[1]), load(sys.argv[2])
@@ -71,50 +67,54 @@ apart = [key for key in keys if left[key] != right[key]]
 refusals = [key for key in apart if checks.is_refusal(replies[key])]
 print(f"apart on {len(apart)}: {len(refusals)} refusals, {len(apart) - len(refusals)} other replies")
 for key in apart:
-    if key not in refusals:
-        print(f"  {key[0]} {key[1]}  {left[key]} / {right[key]}  {replies[key][:58]}")
+    print(f"  {key[0]} {key[1]}  {left[key]} / {right[key]}  {replies[key][:58]}")
 ```
 
 ## Version 1
 
 ```
-ana@lab:~/obs$ python agree.py relevance-v1/ana relevance-v1/bruno
-60 replies; rows relevance-v1/ana, columns relevance-v1/bruno
+ana@dev:~/obs$ python agree.py relevance-v1/ana relevance-v1/bruno
+48 replies; rows relevance-v1/ana, columns relevance-v1/bruno
           pass  fail
-  pass      27    29
-  fail       0     4
-agreement 51.7%   by chance 45.7%   kappa 0.11
-apart on 29: 24 refusals, 5 other replies
-  e02 2026.09.4  pass / fail  Keep the receipt the post office gives you until the refun
-  e05 2026.09.4  pass / fail  An e-book can be refunded within 14 days of purchase if yo
-  e05 2026.10.1  pass / fail  An e-book can be refunded within 14 days of purchase if yo
-  e06 2026.09.4  pass / fail  Express delivery is not free at any order value. [1]
-  e06 2026.10.1  pass / fail  Express delivery is not free at any order value. [1]
+  pass      31    17
+  fail       0     0
+agreement 64.6%   by chance 64.6%   kappa 0.00
+apart on 17: 17 refusals, 0 other replies
+  e04 2026.10.1  pass / fail  I could not find that in our documents.
+  e05 2026.09.4  pass / fail  I could not find that in our documents.
+  e05 2026.10.1  pass / fail  I could not find that in our documents.
+  e12 2026.09.4  pass / fail  I could not find that in our documents.
+  e12 2026.10.1  pass / fail  I could not find that in our documents.
+  e14 2026.10.1  pass / fail  I could not find that in our documents.
+  e19 2026.10.1  pass / fail  I could not find that in our documents.
+  e20 2026.09.4  pass / fail  I could not find that in our documents.
+  e20 2026.10.1  pass / fail  I could not find that in our documents.
+  e21 2026.09.4  pass / fail  I could not find that in our documents.
+  e21 2026.10.1  pass / fail  I could not find that in our documents.
+  e22 2026.09.4  pass / fail  I could not find that in our documents.
+  e22 2026.10.1  pass / fail  I could not find that in our documents.
+  e23 2026.09.4  pass / fail  I could not find that in our documents.
+  e23 2026.10.1  pass / fail  I could not find that in our documents.
+  e24 2026.09.4  pass / fail  I could not find that in our documents.
+  e24 2026.10.1  pass / fail  I could not find that in our documents.
 ```
 
-**They agree on 31 of the 60 replies, 51.7%, and chance alone would give 45.7%.** Kappa is 0.11: two
-people reading the same replies against the same sentence agreed barely more than if one of them had
-written verdicts without looking. Neither of them was careless. The table says where it went wrong:
-Ana passed almost everything, 56 of 60, and Bruno passed fewer than half.
+**They agree on 31 of the 48 replies, 64.6%, and chance alone would give exactly that.** Kappa is
+0.00: two people reading the same replies against the same sentence agreed on two thirds of them, and
+not one agreement more than if one of them had written verdicts without looking. Neither was careless.
+The table says why: Ana passed every reply, and when one rater never says fail, every agreement is the
+free kind.
 
-**Twenty-four of the twenty-nine disagreements are the refusal.** Ana read "does the reply address the
-question" as "is it about the question", and a reply saying the documents have no answer is about the
-question. Bruno read it as "does it answer", and a refusal answers nothing. Both readings are
-reasonable, and version 1 does not choose between them.
-
-The other five are two kinds of reply that sit on the boundary of the same sentence:
-
-- **e02 under the old release**: asked who pays for return postage, the reply talks about keeping the
-  post office receipt. It is about returns postage, and it does not say who pays.
-- **e06 under both releases**: asked how much express delivery costs, the reply says it is not free at
-  any order value. On the subject; not the price.
-- **e05 under both releases**: asked whether an e-book downloaded yesterday can be refunded, the reply
-  says an e-book can be refunded if it has not been downloaded. The answer is in it, but the customer
-  has to work it out.
+**All seventeen disagreements are the refusal.** Ana read "does the reply address the question" as "is
+it about the question", and a reply saying the documents have no answer is about the question. Bruno
+read it as "does it answer", and a refusal answers nothing. Both readings are reasonable, and version 1
+does not choose between them. Notice that both of them passed every reply that did answer, including
+e02 under the new release, which tells the customer they pay the return postage when they do not.
+Neither reading of version 1 asks whether a reply is true, and neither should: that is faithfulness.
 
 ## What the number is for
 
-A kappa this low says nothing about the replies and everything about the rubric: **the labels cannot be
+A kappa of zero says nothing about the replies and everything about the rubric: **the labels cannot be
 used as a reference**, because a third person would agree with Ana or with Bruno depending on how they
 happened to read one sentence. Measuring the judge against either set would measure the judge against
 a coin.

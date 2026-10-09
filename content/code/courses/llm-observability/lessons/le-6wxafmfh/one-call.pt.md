@@ -1,6 +1,6 @@
 ---
 title: Um span em volta de uma chamada
-version: 1
+version: 2
 ---
 
 Um **span** é o registro de uma operação: um nome, quando começou e terminou, se falhou, e atributos,
@@ -17,50 +17,50 @@ Comece pelo caso menor: uma chamada, um span, escrito no terminal quando termina
   "file": "one_call.py",
   "parts": [
     {
-      "code": "\"\"\"One model call, with a span around it, printed to the terminal when it ends.\"\"\"\nfrom openai import OpenAI\nfrom opentelemetry import trace\nfrom opentelemetry.sdk.trace import TracerProvider\nfrom opentelemetry.sdk.trace.export import ConsoleSpanExporter, SimpleSpanProcessor\n\nprovider = TracerProvider()\nprovider.add_span_processor(SimpleSpanProcessor(ConsoleSpanExporter()))\ntrace.set_tracer_provider(provider)\ntracer = trace.get_tracer(\"one_call\")",
-      "note": "As três partes do SDK: um provedor que cria spans, um processador que passa adiante cada span terminado, e um exportador que o escreve em algum lugar. Aqui, no terminal, um span por vez."
+      "code": "\"\"\"one_call.py: one model call, with a span around it, printed to the terminal when it ends.\"\"\"\nfrom openai import OpenAI\nfrom opentelemetry import trace\nfrom opentelemetry.sdk.trace import TracerProvider\nfrom opentelemetry.sdk.trace.export import ConsoleSpanExporter, SimpleSpanProcessor\n\nprovider = TracerProvider()\nprovider.add_span_processor(SimpleSpanProcessor(ConsoleSpanExporter()))\ntrace.set_tracer_provider(provider)\ntracer = trace.get_tracer(\"one_call\")\n\n",
+      "note": "As três partes do SDK: um provider que cria spans, um processor que repassa cada span terminado, e um exporter que o escreve em algum lugar. Aqui, no terminal, um span de cada vez."
     },
     {
-      "code": "client = OpenAI()\nwith tracer.start_as_current_span(\"chat extract-1\") as span:\n    span.set_attribute(\"gen_ai.operation.name\", \"chat\")\n    span.set_attribute(\"gen_ai.request.model\", \"extract-1\")",
-      "note": "O span abre antes de o pedido sair, então a sua duração inclui a espera pelo fornecedor. O nome e os dois primeiros atributos dizem o que foi pedido, antes de existir qualquer resposta."
+      "code": "client = OpenAI()\nwith tracer.start_as_current_span(\"chat llama3.2:3b\") as span:\n    span.set_attribute(\"gen_ai.operation.name\", \"chat\")\n    span.set_attribute(\"gen_ai.request.model\", \"llama3.2:3b\")\n",
+      "note": "O span abre antes que o pedido saia, então a sua duração inclui a espera pelo modelo. O nome e os dois primeiros atributos dizem o que foi pedido, antes que exista qualquer resposta."
     },
     {
-      "code": "    reply = client.chat.completions.create(\n        model=\"extract-1\", messages=[{\"role\": \"user\", \"content\": \"How long is a gift card valid?\"}])",
-      "note": "A chamada em si, sem mudança."
+      "code": "    reply = client.chat.completions.create(\n        model=\"llama3.2:3b\", temperature=0,\n        messages=[{\"role\": \"user\", \"content\": \"How long is a Marginalia gift card valid?\"}])\n",
+      "note": "A chamada em si. A pergunta cita a loja, e mais nada: nenhum documento vai junto."
     },
     {
-      "code": "    span.set_attribute(\"gen_ai.response.model\", reply.model)\n    span.set_attribute(\"gen_ai.response.finish_reasons\", [reply.choices[0].finish_reason])\n    span.set_attribute(\"gen_ai.usage.input_tokens\", reply.usage.prompt_tokens)\n    span.set_attribute(\"gen_ai.usage.output_tokens\", reply.usage.completion_tokens)\nprint(reply.choices[0].message.content)",
-      "note": "O que voltou: qual modelo respondeu, por que parou, e os tokens de cada lado, lidos do `usage` da resposta. O span fecha no fim do bloco."
+      "code": "    span.set_attribute(\"gen_ai.response.model\", reply.model)\n    span.set_attribute(\"gen_ai.response.finish_reasons\", [reply.choices[0].finish_reason])\n    span.set_attribute(\"gen_ai.usage.input_tokens\", reply.usage.prompt_tokens)\n    span.set_attribute(\"gen_ai.usage.output_tokens\", reply.usage.completion_tokens)\nprint(reply.choices[0].message.content)\n",
+      "note": "O que voltou: qual modelo respondeu, por que parou, e os tokens de cada lado, lidos do `usage` da resposta. O span fecha no fim do bloco, e o exporter o imprime."
     }
   ]
 }
 ```
 
 ```
-ana@lab:~/obs$ python one_call.py
+ana@dev:~/obs$ python one_call.py
 {
-    "name": "chat extract-1",
+    "name": "chat llama3.2:3b",
     "context": {
-        "trace_id": "0xd4a8903817f935061c7255069d52f5c8",
-        "span_id": "0x15f2ef0a0e59a80f",
+        "trace_id": "0x4180c8f065f602f38fb728f61f5a079f",
+        "span_id": "0x9dd954745af919d3",
         "trace_state": "[]"
     },
     "kind": "SpanKind.INTERNAL",
     "parent_id": null,
-    "start_time": "2026-10-06T06:47:23.748671Z",
-    "end_time": "2026-10-06T06:47:24.383897Z",
+    "start_time": "2026-10-07T23:47:44.760014Z",
+    "end_time": "2026-10-07T23:47:56.454514Z",
     "status": {
         "status_code": "UNSET"
     },
     "attributes": {
         "gen_ai.operation.name": "chat",
-        "gen_ai.request.model": "extract-1",
-        "gen_ai.response.model": "extract-1",
+        "gen_ai.request.model": "llama3.2:3b",
+        "gen_ai.response.model": "llama3.2:3b",
         "gen_ai.response.finish_reasons": [
             "stop"
         ],
-        "gen_ai.usage.input_tokens": 11,
-        "gen_ai.usage.output_tokens": 13
+        "gen_ai.usage.input_tokens": 36,
+        "gen_ai.usage.output_tokens": 75
     },
     "events": [],
     "links": [],
@@ -69,19 +69,23 @@ ana@lab:~/obs$ python one_call.py
             "telemetry.sdk.language": "python",
             "telemetry.sdk.name": "opentelemetry",
             "telemetry.sdk.version": "1.45.0",
-            "service.instance.id": "66df69dd-62b0-4bf2-8ac7-a4f835754534",
+            "service.instance.id": "932c115f-77a5-4a12-962c-e4c90052f169",
             "service.name": "unknown_service:python"
         },
         "schema_url": ""
     }
 }
-Marginalia gift cards are valid for one year from purchase.
+I couldn't find any information on a gift card called "Marginalia." It's possible that it's a lesser-known or regional gift card, or it may be a misspelling or incorrect name.
+
+If you could provide more context or clarify the name of the gift card, I'd be happy to try and help you find the information you're looking for.
 ```
 
 Tudo nesse registro é algo que uma linha de log também poderia dizer, menos duas coisas: o **id de
 trace e o id de span**, que deixam este span ser encontrado e ligado a outros, e os **horários de
-início e de fim**, que estão a 635 ms um do outro. Essa é a chamada ao modelo inteira, da saída do
-pedido à leitura da resposta.
+início e de fim**, que estão a 11,7 segundos um do outro. Essa é a chamada ao modelo inteira, da
+saída do pedido à leitura da resposta, e desta vez a maior parte dela foi o Ollama carregando o
+modelo na memória: era a primeira pergunta feita ao servidor desde que ele subiu. Os traces da seção
+07 mostram quanto leva uma chamada comum.
 
 ## Nomes que outra pessoa escolheu
 
@@ -100,16 +104,22 @@ com uma ou duas renomeações a cada atualização.
 
 Modelo do pedido e modelo da resposta são dois atributos por um motivo. Um pedido para um apelido
 (alias) como `gpt-4o` é respondido pela versão datada para a qual o apelido aponta naquele dia, e a
-resposta diz qual foi. A aula 14 é sobre o dia em que os dois divergem.
+resposta diz qual foi. Os nomes do Ollama funcionam do mesmo jeito: `llama3.2:3b` é uma etiqueta, e
+baixá-la de novo noutro dia pode trazer outro arquivo com o mesmo nome, por isso o `ollama list`
+mostra um id ao lado. A aula 14 compara dois modelos nas mesmas perguntas, que é o teste a rodar no
+dia em que uma etiqueta traz outro arquivo.
 
 ## O que o span não pegou
 
-Leia a resposta: *Marginalia gift cards are valid for one year from purchase.* Os vale-presentes
-valeriam um ano, e isso está errado; os documentos dizem dois. O `one_call.py` mandou a pergunta sem
-fontes, então o extract-1 respondeu com o que "aprendeu no treino", que a aula 1 do `rag` mostrou
-serem as regras do ano passado. **O span está perfeito e a resposta está errada**, e nada no span
-consegue distinguir as duas coisas: o status é `UNSET`, o motivo de parada é `stop`, as contagens de
-tokens são plausíveis.
+Leia a resposta. O modelo nunca ouviu falar de um vale-presente chamado Marginalia, diz isso, e pede
+mais contexto: 75 tokens com que um cliente não conseguiria fazer nada. Os documentos da loja dizem
+que um vale vale dois anos, mas o `one_call.py` mandou a pergunta sem mais nada, e um modelo só sabe o
+que aprendeu no treino e o que recebe junto. É por isso que o assistente da seção 07 entrega a ele os
+documentos. Desta vez o modelo admitiu; perguntado sobre algo mais perto do que aprendeu, ele teria
+dado com a mesma facilidade um número seguro, e errado.
+
+**O span está perfeito e a resposta não serve para nada**, e nada no span consegue distinguir as
+duas coisas: o status é `UNSET`, o motivo de parada é `stop`, as contagens de tokens são plausíveis.
 
 Essa é a linha que este curso não para de traçar. Um trace diz **o que aconteceu**: quais etapas
 rodaram, em que ordem, quanto tempo cada uma levou, quanto cada uma custou. Se a resposta prestava é

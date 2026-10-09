@@ -1,6 +1,6 @@
 ---
 title: Cinco métricas, cada uma com a sua definição
-version: 1
+version: 2
 ---
 
 Os frameworks de avaliação de geração aumentada por recuperação relatam uma família de métricas com
@@ -20,10 +20,8 @@ precisam, fidelidade e relevância, podem rodar no tráfego de produção, e é 
 9 avaliou essas duas.
 
 O `metrics.py` calcula as cinco para uma execução, cada uma numa função de poucas linhas cuja docstring
-é a sua definição. A referência para context precision e recall é o `gold` do conjunto de avaliação:
-para cada pergunta, as seções dos documentos que têm a resposta, escritas pelo `rag` quando o conjunto
-foi feito. Um trecho pertence a uma seção gold quando vem do mesmo documento e o seu caminho termina com
-o título da seção:
+é a sua definição. A referência para context precision e recall é o `gold` do conjunto de avaliação: para cada pergunta, os
+ids dos trechos que têm a resposta, que a aula 8 escreveu ao lado dos fatos:
 
 ```python
 """metrics.py: five numbers for each run of the evaluation set, each defined in its function.
@@ -33,45 +31,40 @@ o título da seção:
 import json
 import sys
 
-import psycopg
-
 import checks
 import judge
 import telemetry
 from facts import normalised
 
 cases = {c["id"]: c for c in map(json.loads, open("data/eval.jsonl"))}
-section = {cid: (doc, path.split(" > ")[-1])
-           for cid, doc, path in psycopg.connect().execute("SELECT id, doc_id, path FROM chunks")}
 
 
 def context_precision(chunks, gold):
-    """How high the chunks that belong to a gold section sit among those the model was given:
-    the precision at each such chunk's rank, averaged. None when nothing was given."""
+    """How high the gold chunks sit among those the model was given: the precision at each gold
+    chunk's rank, averaged. None when nothing was given."""
     if not chunks:
         return None
-    hits = [section[c] in gold for c in chunks]
+    hits = [c in gold for c in chunks]
     at = [sum(hits[:i + 1]) / (i + 1) for i, h in enumerate(hits) if h]
     return sum(at) / len(at) if at else 0.0
 
 
 def context_recall(chunks, gold):
-    """The share of the gold sections that at least one given chunk comes from. None when there is no gold."""
+    """The share of the gold chunks that the model was given. None when there is no gold."""
     if not gold:
         return None
-    found = {section[c] for c in chunks}
-    return sum(g in found for g in gold) / len(gold)
+    return sum(g in chunks for g in gold) / len(gold)
 
 
 def faithfulness(r):
-    """judge-1's share of the reply's sentences supported by its sources; a refusal claims nothing."""
+    """The judge's score for whether the reply's statements are supported by its sources."""
     return judge.grade("faithfulness", r["question"], r["reply"], r["sources"])["score"]
 
 
-def relevance(r):
-    """judge-1's relevance verdict, with the refusal passed by rule as lesson 10 decided."""
+def relevance(r, case):
+    """The judge's relevance verdict, with the refusal decided by the answer key as lesson 10 did."""
     if checks.is_refusal(r["reply"]):
-        return 1.0
+        return 0.0 if case["facts"] else 1.0
     return float(judge.grade("relevance", r["question"], r["reply"], r["sources"])["verdict"] == "pass")
 
 
@@ -89,12 +82,11 @@ for name in sys.argv[1:]:
     cols = {"p": [], "r": [], "f": [], "v": [], "c": []}
     for r in run:
         case = cases[r["id"]]
-        gold = {tuple(g) for g in case["gold"]}
         chunks = [s["id"] for s in r["sources"]]
-        cols["p"].append(context_precision(chunks, gold))
-        cols["r"].append(context_recall(chunks, gold))
+        cols["p"].append(context_precision(chunks, set(case["gold"])))
+        cols["r"].append(context_recall(chunks, case["gold"]))
         cols["f"].append(faithfulness(r))
-        cols["v"].append(relevance(r))
+        cols["v"].append(relevance(r, case))
         cols["c"].append(correctness(r, case))
     print(f"{name:4} {run[0]['release']}" + "".join(f"{mean(v):>9.2f} (n={count(v):2})" for v in cols.values()))
 ```
@@ -108,6 +100,6 @@ Três das definições são escolhas que vale notar:
 - **Uma recusa sem trechos não tem context precision**, em vez de precisão zero ou um. Nada foi dado,
   então nada pode estar certo ou errado nisso. Ela ainda tem context recall zero quando a pergunta tinha
   resposta, porque a resposta não foi dada ao modelo.
-- **A relevância aprova a recusa por regra.** É a rubrica da aula 10. Um framework que dá nota de
-  irrelevante a uma recusa mede outra coisa com o mesmo nome, e a última seção desta aula acha um que faz
-  isso.
+- **A relevância decide a recusa por regra**, pelo gabarito, como a aula 10 fez: uma recusa passa
+  quando a pergunta não tem fatos e reprova quando tem. Um framework que dá nota de irrelevante a toda
+  recusa mede outra coisa com o mesmo nome, e a última seção desta aula acha um que faz isso.

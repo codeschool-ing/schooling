@@ -1,17 +1,17 @@
 ---
 title: Por que vale guardar o texto
-version: 1
+version: 2
 ---
 
 A aula 10 do `observability` termina com uma regra para serviços comuns: o corpo de um pedido não vai
 para um log, porque cedo ou tarde ele carrega tudo o que nunca deveria estar lá. Uma chamada a modelo
 é o caso em que essa regra é mais difícil de seguir, porque **o corpo é justamente o que se observa**.
 
-Veja o que a aula 1 conseguiu e não conseguiu explicar. A resposta sobre entrega estava errada, e o
-trace disse por quê: um trecho mantido, sobre o tipo errado de entrega. Isso funcionou porque a
-pergunta estava no span raiz. Tire a pergunta, e o trace diz que um pedido da funcionalidade `help`
-manteve um trecho e recebeu uma resposta de 13 tokens, e ninguém sabe dizer se é uma boa resposta a
-uma boa pergunta ou uma boa resposta à pergunta errada.
+Veja o que a aula 1 conseguiu e não conseguiu explicar. A resposta sobre a postagem da devolução
+estava errada, e o trace disse onde: o único trecho mantido era o certo, e o modelo o contradisse.
+Isso funcionou porque a pergunta e a resposta estavam no span raiz. Tire as duas, e o trace diz que um
+pedido da funcionalidade `help` manteve um trecho e recebeu uma resposta de 14 tokens, e ninguém sabe
+dizer se é uma boa resposta a uma boa pergunta ou uma resposta errada à pergunta certa.
 
 O texto é necessário para três trabalhos, e cada um precisa de uma quantidade diferente dele:
 

@@ -1,6 +1,6 @@
 ---
 title: O que os padrões deixam passar, e o que pegam por engano
-version: 1
+version: 2
 ---
 
 Uma expressão regular acha texto que tem forma. Dados pessoais quase sempre têm uma, às vezes não têm,
@@ -20,7 +20,7 @@ for text in ["Hi, I'm Joana Prado (joana.prado@example.com), order MG-20481937."
 ```
 
 ```
-ana@lab:~/obs$ python misses.py
+ana@dev:~/obs$ python misses.py
 Hi, I'm Joana Prado (joana.prado@example.com), order MG-20481937.
   -> Hi, I'm Joana Prado ([email]), order [order].
 my email is joana dot prado at example dot com
@@ -65,7 +65,17 @@ um padrão consiga achar sem achar também toda palavra com inicial maiúscula. 
 **reconhecimento de entidades nomeadas**: um modelo que lê a frase e marca quais palavras são uma
 pessoa, um lugar, uma data. O **Presidio**, da Microsoft, é a ferramenta de código aberto de costume
 para isso. Ele combina um modelo de linguagem do spaCy com padrões próprios, e dá uma nota a cada
-achado. O `presidio_try.py` passa as mesmas seis frases por ele:
+achado. São dois pacotes, e o modelo de linguagem é um terceiro, baixado das versões do próprio spaCy
+no GitHub:
+
+```sh
+pip install presidio-analyzer==2.2.364 presidio-anonymizer==2.2.364
+pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.8.0/en_core_web_lg-3.8.0-py3-none-any.whl
+```
+
+O modelo de linguagem é quase tudo, umas centenas de megabytes sozinho.
+
+O `presidio_try.py` passa as mesmas seis frases por ele:
 
 ```python
 """presidio_try.py: the same sentences through Presidio, which finds entities with a language model as well as patterns."""
@@ -91,7 +101,7 @@ for text in ["Hi, I'm Joana Prado (joana.prado@example.com), order MG-20481937."
 ```
 
 ```
-ana@lab:~/obs$ python presidio_try.py
+ana@dev:~/obs$ python presidio_try.py
 Hi, I'm <PERSON> (<EMAIL_ADDRESS>), order <DATE_TIME>.
     PERSON 0.85, EMAIL_ADDRESS 1.00, URL 0.50, URL 0.50, DATE_TIME 0.85, US_BANK_NUMBER 0.05, US_DRIVER_LICENSE 0.01
 my email is <PERSON> at example dot com
@@ -120,7 +130,7 @@ garantia.
 Todo achado tem uma nota, e por padrão todo achado é usado, até 0,01. Um limiar muda a troca:
 
 ```
-ana@lab:~/obs$ python presidio_try.py 0.5
+ana@dev:~/obs$ python presidio_try.py 0.5
 Hi, I'm <PERSON> (<EMAIL_ADDRESS>), order <DATE_TIME>.
     PERSON 0.85, EMAIL_ADDRESS 1.00, URL 0.50, URL 0.50, DATE_TIME 0.85
 my email is <PERSON> at example dot com

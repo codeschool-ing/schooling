@@ -63,7 +63,7 @@
   },
   {
     "id": "ex-bbcdqqkt",
-    "version": 1,
+    "version": 2,
     "section": "what-changed",
     "type": "matching",
     "difficulty": "medium",
@@ -72,11 +72,11 @@
     "pairs": [
       {
         "left": "2026.10.2",
-        "right": "the model, to extract-2"
+        "right": "the model, to llama3.2:1b"
       },
       {
         "left": "2026.10.3",
-        "right": "the floor, back to 0.5"
+        "right": "the floor, back to 0.4"
       },
       {
         "left": "2026.10.4",
@@ -89,19 +89,19 @@
   },
   {
     "id": "ex-r1chkrhd",
-    "version": 1,
+    "version": 2,
     "section": "the-release-that-shipped",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
     "prompt": "Comparing 2026.09.4 with 2026.10.1, how many cases broke?",
-    "value": 5,
+    "value": 7,
     "tolerance": 0,
     "unit": "cases"
   },
   {
     "id": "ex-cwgyvyz0",
-    "version": 1,
+    "version": 2,
     "section": "the-release-that-shipped",
     "type": "quiz",
     "difficulty": "medium",
@@ -111,7 +111,7 @@
       {
         "text": "Its model was a smaller one",
         "correct": false,
-        "why": "Both used extract-1."
+        "why": "Both used llama3.2:3b."
       },
       {
         "text": "It cached the replies from the week before",
@@ -124,15 +124,15 @@
         "why": "Right. A refusal is short and calls no model: the savings were unanswered questions."
       },
       {
-        "text": "The price of extract-1 fell on 1 October",
+        "text": "The price of llama3.2:3b fell on 30 September",
         "correct": false,
-        "why": "Both runs are priced today."
+        "why": "Every run is priced at today's prices, so a price change cannot separate them."
       }
     ]
   },
   {
     "id": "ex-epx98esh",
-    "version": 1,
+    "version": 2,
     "section": "the-release-that-shipped",
     "type": "quiz",
     "difficulty": "hard",
@@ -157,13 +157,13 @@
       {
         "text": "Only a significant p-value counts",
         "correct": false,
-        "why": "Five broken cases at p = 0.0625 still block it."
+        "why": "Seven broken cases at p = 0.18 still block it."
       }
     ]
   },
   {
     "id": "ex-yteved46",
-    "version": 1,
+    "version": 2,
     "section": "the-release-that-shipped",
     "type": "multiple-choice",
     "difficulty": "medium",
@@ -171,24 +171,24 @@
     "prompt": "Which cases did the floor release break? Choose every one that applies.",
     "choices": [
       {
-        "text": "e07, the free-delivery threshold",
+        "text": "e02, who pays for return postage",
         "correct": true,
         "why": "Right."
       },
       {
-        "text": "e24, the IP address",
+        "text": "e14, paying in instalments",
         "correct": true,
         "why": "Right."
       },
       {
-        "text": "e38, a lost parcel with an order number",
+        "text": "e30, a lost parcel with an order number",
         "correct": true,
         "why": "Right."
       },
       {
-        "text": "e04, the signed copy",
+        "text": "e12, e-books on a Kindle",
         "correct": false,
-        "why": "That one the combined candidate fixed."
+        "why": "The floor release fixed that one: with fewer chunks the model answered."
       }
     ]
   },
@@ -225,43 +225,43 @@
   },
   {
     "id": "ex-37hsny97",
-    "version": 1,
+    "version": 2,
     "section": "paired",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Five changed cases, all broken. What is the exact two-sided McNemar p-value?",
-    "value": 0.0625,
+    "prompt": "Seven changed cases, all broken, as for the smaller model. What is the exact two-sided McNemar p-value?",
+    "value": 0.0156,
     "tolerance": 0.0001
   },
   {
     "id": "ex-hy7bntnr",
-    "version": 1,
+    "version": 2,
     "section": "paired",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "p = 0.0625 for the floor release. Why does it still not ship?",
+    "prompt": "p = 0.18 for the floor release. Why does it still not ship?",
     "choices": [
       {
-        "text": "Because 0.0625 rounds down to 0.05",
+        "text": "Because 0.18 is near enough to 0.05",
         "correct": false,
-        "why": "It does not, and that is not the reason."
+        "why": "No threshold is being stretched here."
       },
       {
-        "text": "Because McNemar is the wrong test here",
+        "text": "Because McNemar is the wrong test",
         "correct": false,
-        "why": "It is the right one for paired verdicts."
+        "why": "It is the right test for paired verdicts."
       },
       {
         "text": "Because the held-out split was not run",
         "correct": false,
-        "why": "It ran: two of the five are held out."
+        "why": "It was, and it broke one case as well."
       },
       {
-        "text": "Five customer questions broke",
+        "text": "Seven customer questions broke",
         "correct": true,
-        "why": "Right. A broken case is a fact, not a statistic."
+        "why": "Right. A broken case is a fact, whatever the p-value."
       }
     ]
   },
@@ -285,106 +285,137 @@
   },
   {
     "id": "ex-050pfqx5",
-    "version": 1,
+    "version": 2,
     "section": "three-candidates",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "The new model changed no verdict. Why is it still a regression?",
+    "prompt": "The smaller model is 62% cheaper and 42% faster. Why is it not the release to ship?",
     "choices": [
       {
-        "text": "It broke a check on e38",
-        "correct": false,
-        "why": "That was the combined candidate."
-      },
-      {
-        "text": "The set costs 118% more to answer",
+        "text": "It broke seven cases and fixed none",
         "correct": true,
-        "why": "Right, and it buys nothing these questions can see."
+        "why": "Right, at p = 0.016, and it broke checks on ten more."
       },
       {
-        "text": "It refuses more questions than before",
+        "text": "Its p-value is above 0.05",
         "correct": false,
-        "why": "Nothing moved."
+        "why": "It is 0.016, the one result in the lesson below 0.05."
       },
       {
-        "text": "Its median reply is far slower",
+        "text": "It writes fewer output tokens",
         "correct": false,
-        "why": "It moved 2%."
+        "why": "It writes 39% more."
+      },
+      {
+        "text": "It costs more per token than llama3.2:3b",
+        "correct": false,
+        "why": "It costs a third as much."
       }
     ]
   },
   {
     "id": "ex-y1q6dtj3",
-    "version": 1,
+    "version": 2,
     "section": "three-candidates",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "2026.10.4 fixes six cases at p = 0.031. Why ship 2026.10.3 instead?",
+    "prompt": "2026.10.4 is 37% cheaper than production. Why ship 2026.10.3 instead?",
     "choices": [
       {
-        "text": "A broken check and a bill quadrupled",
+        "text": "2026.10.4 breaks seven cases",
         "correct": true,
-        "why": "Right. e04 is a reason to look at e04, not to change the model."
+        "why": "Right. 2026.10.3 fixes seven and breaks two, both named."
       },
       {
-        "text": "Significance below 0.05 is a warning sign",
+        "text": "2026.10.3 is cheaper than 2026.10.4",
         "correct": false,
-        "why": "It is not."
+        "why": "It costs 50% more than production."
       },
       {
-        "text": "2026.10.3 also fixes e04",
+        "text": "2026.10.4 has a significant p-value",
         "correct": false,
-        "why": "It fixes five, not e04."
+        "why": "Its p is 0.55."
       },
       {
-        "text": "extract-2 is not allowed in production",
+        "text": "llama3.2:1b is not allowed in production",
         "correct": false,
-        "why": "No such rule."
+        "why": "No rule says so; the report decides."
       }
     ]
   },
   {
     "id": "ex-5r6htf5e",
-    "version": 1,
+    "version": 2,
     "section": "three-candidates",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "How many replies changed between 2026.10.1 and 2026.10.2, the new model?",
-    "value": 5,
+    "prompt": "How many replies changed between 2026.10.1 and 2026.10.2, the smaller model?",
+    "value": 20,
     "tolerance": 0,
     "unit": "replies"
   },
   {
     "id": "ex-850vdg1n",
+    "version": 2,
+    "section": "three-candidates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does regress.py count the replies that changed, as well as the verdicts?",
+    "choices": [
+      {
+        "text": "e31 changed and passed while wrong",
+        "correct": true,
+        "why": "Right. e31 contradicts its source and passes the facts."
+      },
+      {
+        "text": "Replies are too slow to grade by machine",
+        "correct": false,
+        "why": "They are graded by machine in the same run."
+      },
+      {
+        "text": "To find out which release wrote each reply",
+        "correct": false,
+        "why": "Each run already records its release."
+      },
+      {
+        "text": "Because McNemar's test needs that number",
+        "correct": false,
+        "why": "McNemar uses only the changed verdicts."
+      }
+    ]
+  },
+  {
+    "id": "ex-t4q3g5fw",
     "version": 1,
     "section": "three-candidates",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why are the five changed replies of the new model read, if no verdict moved?",
+    "prompt": "2026.10.3 has the settings of 2026.09.4, and e31 was answered differently by the two. Why?",
     "choices": [
       {
-        "text": "Some changes are invisible to every grader here",
+        "text": "Temperature 0 is not fully repeatable",
         "correct": true,
-        "why": "Right. Facts and form are not all a reply is."
+        "why": "Right. Near-ties can go either way between runs."
       },
       {
-        "text": "Too slow to grade by machine",
+        "text": "The two releases do not have the same floor",
         "correct": false,
-        "why": "They were graded."
+        "why": "Both have a floor of 0.4."
       },
       {
-        "text": "To find out which of the two models wrote each of them",
+        "text": "The set changed between the two runs",
         "correct": false,
-        "why": "The run says so."
+        "why": "regress.py would have refused to compare them."
       },
       {
-        "text": "Because McNemar needs them",
+        "text": "Ollama gives each release its own model",
         "correct": false,
-        "why": "McNemar uses verdicts."
+        "why": "Both use llama3.2:3b."
       }
     ]
   },
@@ -452,7 +483,7 @@
   },
   {
     "id": "ex-4z61csf3",
-    "version": 1,
+    "version": 2,
     "section": "what-a-gate-checks",
     "type": "quiz",
     "difficulty": "hard",
@@ -472,7 +503,7 @@
       {
         "text": "That every customer question will be answered",
         "correct": false,
-        "why": "The set is 42 questions."
+        "why": "The set is 32 questions."
       },
       {
         "text": "That its cost is within budget",
@@ -529,44 +560,44 @@
   },
   {
     "id": "ex-0rh5e46q",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "Pass rates 23/42 and 18/42 compared as two numbers, with ±15-point intervals. What does a paired test add?",
+    "prompt": "Pass rates 25/32 and 20/32 compared as two numbers, with ±15-point intervals. What does a paired test add?",
     "choices": [
       {
-        "text": "It narrows both intervals to ±5 points",
+        "text": "It narrows both of the intervals to ±5 points",
         "correct": false,
-        "why": "It does not compute intervals."
+        "why": "It does not compute intervals at all."
       },
       {
         "text": "It weighs held-out cases twice",
         "correct": false,
-        "why": "No weighting."
+        "why": "Every case counts once."
       },
       {
         "text": "It adds the judge's verdicts",
         "correct": false,
-        "why": "regress.py uses facts and checks."
+        "why": "No judge is involved."
       },
       {
-        "text": "It looks only at the five cases that changed",
+        "text": "It looks only at the nine that changed",
         "correct": true,
-        "why": "Right. That is the information."
+        "why": "Right. The 23 unchanged ones say nothing about the difference."
       }
     ]
   },
   {
     "id": "ex-g4w4p6bz",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
     "prompt": "By what percentage did output tokens change from 2026.10.1 to 2026.10.4?",
-    "value": 118,
+    "value": 154,
     "tolerance": 0,
     "unit": "%"
   }

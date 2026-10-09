@@ -1,12 +1,12 @@
 ---
 title: O que é um conjunto de avaliação
-version: 1
+version: 2
 ---
 
-As aulas 8 a 12 avaliaram as mesmas trinta perguntas várias vezes: o `data/eval.jsonl`, que a aula 8 de
-`rag` escreveu para medir a recuperação. Cada linha é um **caso**: um id, uma pergunta, as seções dos
-documentos que a respondem (`gold`) e os fatos que uma resposta certa contém. Quatro dos trinta não têm
-gold nem fatos; a resposta certa a esses é a recusa.
+As aulas 8 a 12 avaliaram as mesmas vinte e quatro perguntas várias vezes: o `data/eval.jsonl`, que a
+aula 8 escreveu. Cada linha é um **caso**: um id, uma pergunta, os trechos dos documentos que a
+respondem (`gold`) e os fatos que uma resposta certa contém. Cinco dos vinte e quatro não têm gold nem
+fatos; a resposta certa a eles é a recusa.
 
 Esse arquivo é um **conjunto de avaliação**, e é uma coisa diferente de tudo o que a aula 9 amostrou.
 Uma amostra do tráfego diz como o assistente foi na semana passada, no que os clientes calharam de
@@ -25,6 +25,6 @@ Quatro propriedades tornam um conjunto apto para isso, e esta aula é sobre mant
 - **O conjunto é fixado.** Todo resultado diz de que versão do conjunto veio, e uma versão é um arquivo
   fixo cujo hash pode ser conferido.
 
-Os trinta casos do `rag` foram escritos por pessoas lendo os documentos. É um bom começo e um mau fim:
+Os vinte e quatro casos da aula 8 foram escritos por alguém lendo os documentos. É um bom começo e um mau fim:
 são as perguntas que alguém achou que os clientes fariam, escritas do jeito que alguém escreve. A
 próxima seção acrescenta as perguntas que os clientes fizeram.

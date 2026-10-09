@@ -1,6 +1,6 @@
 ---
 title: Annotations
-version: 1
+version: 2
 ---
 
 Phoenix's word for a score is an **annotation**: a label, a number, or both, with an explanation, put
@@ -30,12 +30,13 @@ print(len(rows), "sent;", len(got), "read back:", got["result.label"].value_coun
 ```
 
 ```
-ana@lab:~/obs$ python px_thumbs.py
-20 sent; 20 read back: {'up': 11, 'down': 9}
+ana@dev:~/obs$ python px_thumbs.py
+4 sent; 4 read back: {'up': 4}
 ```
 
-Twenty thumbs from Sunday, eleven up and nine down, now on the spans they judge. In Phoenix's screens
-they appear beside each trace, and a filter can list the traces with a thumbs down.
+Four thumbs from Sunday, all four up, now on the spans they judge. The few customers who rated a
+reply that day liked what they got. In Phoenix's screens they appear beside each trace, and a filter
+can list the traces with a thumbs down.
 
 The join was by id twice: the thumb carried the trace id, and `spans.jsonl` turned it into the root
 span's id, both written by OpenTelemetry when the request ran and identical in Phoenix. The same thumbs
