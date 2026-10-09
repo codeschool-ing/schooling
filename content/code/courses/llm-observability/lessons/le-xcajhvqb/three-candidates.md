@@ -1,87 +1,142 @@
 ---
 title: Three candidates
-version: 1
+version: 2
 ---
 
-The same report for each candidate against the release in production, starting with the new model:
+The same report for each candidate against the release in production, starting with the smaller model:
 
 ```
-ana@lab:~/obs$ python regress.py 2026.10.1 2026.10.2
-data/eval-v2.jsonl sha256 0d464ef783cd: 2026.10.1 -> 2026.10.2
+ana@dev:~/obs$ python regress.py 2026.10.1 2026.10.2
+data/eval-v2.jsonl sha256 8763ed310b27: 2026.10.1 -> 2026.10.2
                both right  both wrong  fixed  broken
-  dev                 10          18      0       0
-  held-out             8           6      0       0
-exact McNemar p = 1.0000 on 0 changed verdicts
-checks newly failing: none
-replies changed: 5 of 42
-output tokens         637 ->        782   +23%
-cost US$       0.00944242 -> 0.02061592   +118%
-median ms              92 ->         95   +2%
+  dev                  8          10      0       4
+  held-out             5           2      0       3
+exact McNemar p = 0.0156 on 7 changed verdicts
+  broken e07 dev      Above what order value is standard delivery free?
+  broken e10 dev      How long does a pickup point keep my parcel?
+  broken e17 dev      How long is a gift card valid?
+  broken e31 dev      Order MG-00000003 - I want to return it. Who pays for th
+  broken e09 held-out When is a standard parcel considered lost?
+  broken e15 held-out When does an order paid by bank slip ship?
+  broken e18 held-out What happens if my order costs more than my gift card ho
+checks newly failing:
+  cites_every_sentence   10  e01 e03 e05 e06 e08 e10 e11 e12 e13 e26
+  numbers_in_sources      9  e01 e03 e05 e06 e11 e12 e13 e26 e28
+  refusal_is_exact        4  e06 e08 e10 e13
+  short_enough            1  e05
+replies changed: 20 of 32
+output tokens         471 ->        657   +39%
+cost US$       0.00877328 -> 0.00330228   -62%
+median ms            2158 ->       1248   -42%
 ```
 
-**Nothing moved, and the price more than doubled.** Not one verdict changed, five replies read
-differently, extract-2 writes 23% more tokens, and at twice the price per token the set costs 118% more
-to answer. A pass rate alone would have reported this candidate as "no change". It is a regression, in
-money, and it buys nothing these 42 questions can see.
+**Seven broken, nothing fixed, p = 0.016: the one result in this lesson that clears 0.05.** The set
+can tell this time, because every changed verdict went the same way. Free delivery, the pickup point,
+the gift card, the lost parcel: questions `llama3.2:3b` answered from the chunk it was shown, and
+`llama3.2:1b` refuses with the same chunk in front of it.
 
-The five changed replies still need reading, because the set grades facts and form, and a reply can
-change in ways neither sees: an extra sentence that is true but beside the point, as lesson 11's
-definitions of relevance disagreed about. `regress.py` counts them so that somebody knows how many to
-read.
+**And eleven cases fail a check they used to pass**, ten of them not among the seven. Most of those
+`llama3.2:1b` still answers right by the facts, in a form the assistant does not accept: sentences with
+no citation, numbers that are not in the sources, and four replies that answer and then add the
+refusal underneath, or say it twice. The reply to e06 is both at once:
+
+```
+According to the source, standard delivery takes 3 to 6 working days. [1]
+
+I could not find that in our documents.
+```
+
+**It is also 62% cheaper and 42% faster.** Everything a cost dashboard can see gets better, and
+everything the set can see gets worse. A provider's smaller model, a new snapshot, a cheaper tier: each
+arrives with a price that is easy to read and a quality that is not, and this is the report that puts
+the two side by side.
 
 The floor put back:
 
 ```
-ana@lab:~/obs$ python regress.py 2026.10.1 2026.10.3
-data/eval-v2.jsonl sha256 0d464ef783cd: 2026.10.1 -> 2026.10.3
+ana@dev:~/obs$ python regress.py 2026.10.1 2026.10.3
+data/eval-v2.jsonl sha256 8763ed310b27: 2026.10.1 -> 2026.10.3
                both right  both wrong  fixed  broken
-  dev                 10          15      3       0
-  held-out             8           4      2       0
-exact McNemar p = 0.0625 on 5 changed verdicts
-  fixed  e07 dev      Above what order value is standard delivery free?
-  fixed  e17 dev      When is the contract of sale formed?
-  fixed  e38 dev      My parcel MG-00000001 still hasn't arrived, two weeks no
-  fixed  e24 held-out Do you store my IP address?
-  fixed  e42 held-out right of withdrawal days
-checks newly failing: none
-replies changed: 12 of 42
-output tokens         637 ->        956   +50%
-cost US$       0.00944242 -> 0.01821592   +93%
-median ms              92 ->        651   +604%
+  dev                 11           4      6       1
+  held-out             7           1      1       1
+exact McNemar p = 0.1797 on 9 changed verdicts
+  broken e29 dev      This is Ana Teste, order MG-00000001: can I still return
+  broken e12 held-out Will my e-books open on a Kindle?
+  fixed  e02 dev      Who pays for the return postage?
+  fixed  e04 dev      Can I return a signed copy?
+  fixed  e14 dev      Can I pay in instalments?
+  fixed  e16 dev      When do I get the invoice for my order?
+  fixed  e19 dev      How long is the statutory right of withdrawal?
+  fixed  e32 dev      when is shipping free
+  fixed  e30 held-out Hi, I'm Ana Teste (ana.teste@example.com). My order MG-0
+checks newly failing:
+  cites_every_sentence    4  e02 e13 e14 e30
+  numbers_in_sources      1  e30
+  refusal_is_exact        1  e02
+replies changed: 16 of 32
+output tokens         471 ->        637   +35%
+cost US$       0.00877328 -> 0.01320278   +50%
+median ms            2158 ->       3271   +52%
 ```
 
-**The mirror of the release that shipped.** The same five cases fixed, nothing broken, and the cost and
-the latency go back to about what they were before 2 October. The p-value is the same 0.0625, for the same
-reason: five cases. Nobody needs it to be smaller to ship this one, because every changed case changed
-in the right direction and each can be read.
+**The mirror of the release that shipped**: the same nine cases, the other way, at the same p = 0.18.
+That is expected, because 2026.10.3 has exactly the settings of 2026.09.4. What is not expected is the
+line below it. History changed 15 replies; this changes 16. The extra one is e31, which two runs of
+the same settings at temperature 0 answered differently, 2026.09.4 first and 2026.10.3 second:
+
+```
+According to [1], returns are free, which means that the customer does not have to pay for the return postage. The company will email a prepaid label to the customer, and they can drop the parcel at any post office.
+```
+
+```
+According to [1], the customer pays for the return postage, as it states: "Returns are free: we e-mail you a prepaid label, and you drop the parcel at any post office."
+```
+
+The second contradicts the source it quotes, and **both pass the facts**, because both contain "free".
+Temperature 0 picks the likeliest word every time, but the numbers that decide which word is likeliest
+can differ in their last decimals between two runs, and Ollama reusing work cached from the request
+before is one reason why. Where two words are nearly tied, that is enough. So a changed reply
+is not proof that the release changed it, and a reply that passes is not proof that it is right. That
+is why `regress.py` counts the changed replies, and why somebody reads them.
 
 Both changes together:
 
 ```
-ana@lab:~/obs$ python regress.py 2026.10.1 2026.10.4
-data/eval-v2.jsonl sha256 0d464ef783cd: 2026.10.1 -> 2026.10.4
+ana@dev:~/obs$ python regress.py 2026.10.1 2026.10.4
+data/eval-v2.jsonl sha256 8763ed310b27: 2026.10.1 -> 2026.10.4
                both right  both wrong  fixed  broken
-  dev                 10          14      4       0
-  held-out             8           4      2       0
-exact McNemar p = 0.0312 on 6 changed verdicts
-  fixed  e04 dev      Can I return a signed copy?
-  fixed  e07 dev      Above what order value is standard delivery free?
-  fixed  e17 dev      When is the contract of sale formed?
-  fixed  e38 dev      My parcel MG-00000001 still hasn't arrived, two weeks no
-  fixed  e24 held-out Do you store my IP address?
-  fixed  e42 held-out right of withdrawal days
-checks newly failing: e38 short_enough
-replies changed: 23 of 42
-output tokens         637 ->       1389   +118%
-cost US$       0.00944242 -> 0.04161892   +341%
-median ms              92 ->        904   +877%
+  dev                  8           6      4       4
+  held-out             5           2      0       3
+exact McNemar p = 0.5488 on 11 changed verdicts
+  broken e10 dev      How long does a pickup point keep my parcel?
+  broken e11 dev      On how many devices can I read my e-books?
+  broken e13 dev      Can I listen to an audiobook without an internet connect
+  broken e31 dev      Order MG-00000003 - I want to return it. Who pays for th
+  broken e03 held-out How long after my return arrives will I get the refund?
+  broken e09 held-out When is a standard parcel considered lost?
+  broken e18 held-out What happens if my order costs more than my gift card ho
+  fixed  e02 dev      Who pays for the return postage?
+  fixed  e16 dev      When do I get the invoice for my order?
+  fixed  e19 dev      How long is the statutory right of withdrawal?
+  fixed  e32 dev      when is shipping free
+checks newly failing:
+  cites_every_sentence   18  e02 e03 e04 e05 e06 e07 e08 e10 e11 e12 e13 e15 e16 e17 e18 e19 e26 e32
+  numbers_in_sources      9  e04 e05 e06 e11 e12 e16 e19 e26 e28
+  refusal_is_exact       16  e02 e03 e04 e06 e07 e08 e10 e11 e12 e13 e16 e17 e18 e19 e26 e32
+  short_enough            2  e15 e29
+replies changed: 23 of 32
+output tokens         471 ->       1196   +154%
+cost US$       0.00877328 -> 0.00552478   -37%
+median ms            2158 ->       2528   +17%
 ```
 
-**Six fixed, and the first significant result of the lesson, p = 0.031**, and still not the candidate to
-ship. One reply, e38, now fails a check it passed: lesson 8's `short_enough`, more than eighty words,
-because extract-2 keeps up to four sentences and the lower floor gives it more to choose from. And the
-set costs more than four times as much to answer and takes about ten times as long.
+**Four fixed, seven broken, p = 0.55, and checks failing on 20 cases.** The smaller model with more
+chunks is the worst of the three: sixteen replies carry the refusal beside something else, sometimes
+beside itself, and on e11 it writes the same sentence three times before refusing. That is where the extra 154% of output tokens
+went. It is still 37% cheaper than production.
 
-A team choosing among the three would ship **2026.10.3**: it fixes what the floor release broke, at the
-cost the shop paid before. The sixth fix, e04, is the one thing 2026.10.4 adds, and it comes with a
-check broken and a bill quadrupled; it is a reason to look at e04, not to change the model.
+A team choosing among the three would ship **2026.10.3**: it fixes seven of the cases the floor release
+broke, for the bill the shop paid before 1 October. It is not clean. It breaks e12 and e29, the two
+cases the floor fixed, and it fails a check on four replies that now answer with a sentence nobody
+cited. The regression report is what lets the team ship it knowing that: e12 and e29 go on the list of
+things to look at next, by name, instead of turning up in a complaint.
