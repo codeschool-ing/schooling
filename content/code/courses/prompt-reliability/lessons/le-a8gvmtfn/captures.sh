@@ -5,56 +5,38 @@
 # THE SCRIPT IS THE SOURCE AND ITS OUTPUT IS NOT COMMITTED. Every transcript in
 # this lesson was copied from running it:
 #
-#   bash captures.sh            # beside this file; it finds ../../lab.sh
+#   bash captures.sh            # beside this file
 #
-# It rebuilds ~/triage with lab.sh reset under its own HOME, so nothing of
-# yours is touched, and prints each command after a prompt, ana@lab:~/triage$,
-# followed by what it printed.
+# lab-capture.sh builds ~/triage as a student has it after this lesson, every
+# file read out of the lessons' own fences, and prints each command after a
+# prompt, ana@lab:~/triage$, followed by what it printed.
 #
-# What is STAGED rather than typed: the whole of ~/triage, built by lab.sh,
-# including every prompt file the lesson shows. The model is the lab's
-# stand-in (promptlab/standin.py), NOT a language model; lab.sh's header says
-# what that means and what in the lab was written by the course.
+# THE MODEL IS REAL: llama3.2:3b (Q4_K_M, id a80c4f17acd5) on Ollama 0.40.0,
+# CPU only (4 cores), temperature 0 and seed 1 unless a command sets them,
+# captured on 2026-10-09. The seconds are this machine's wall clock, so they
+# are the one thing in this lesson a rerun will not repeat; the prices are
+# prices.json's, which the course wrote for the arithmetic.
 #
-# Recorded with Python 3.11 and git 2.43, TZ=America/Sao_Paulo.
-
-set -uo pipefail
+# Recorded on Ubuntu 24.04 with Python 3.12, TZ=America/Sao_Paulo.
 here=$(cd "$(dirname "$0")" && pwd)
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 PAGER=cat GIT_PAGER=cat COLUMNS=100 PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
-export HOME=${LAB_HOME:-/var/tmp/prompt-reliability}
-mkdir -p "$HOME"
-bash "$here/../../lab.sh" reset
-cd "$HOME/triage"
-export PATH=$HOME/triage/bin:$PATH
-on() { printf 'ana@lab:~/triage$ %s\n' "$*"; bash -c "$*" 2>&1; }
-block() { printf '##### %s\n' "$1"; }
+LESSON=16; . "$here/../../lab-capture.sh"
 
 block time
-on 'grep -n "^LATENCY" promptlab/model.py'
 on 'pl run prompts/v2-json.txt cases/dev.jsonl --out runs/v2.jsonl'
 on 'pl run prompts/v3-examples.txt cases/dev.jsonl --out runs/v3.jsonl'
-on 'pl run prompts/v8-guide.txt cases/dev.jsonl --out runs/v8.jsonl'
-on 'pl latency runs/v2.jsonl'
-on 'pl latency runs/v3.jsonl'
-on 'pl latency runs/v8.jsonl'
-on 'pl cost runs/v2.jsonl | head -n 5'
-on 'pl cost runs/v3.jsonl | head -n 5'
+on 'pl run prompts/v1-bare.txt cases/dev.jsonl --out runs/v1.jsonl'
+on 'python3 stats.py runs/v2.jsonl runs/v3.jsonl runs/v1.jsonl'
 
 block cost
-on 'cat prices.json'
-on 'pl cost runs/v3.jsonl'
-on 'grep -n -A1 "Prices are whole cents" promptlab/cli.py'
+on 'python3 cost.py runs/v3.jsonl'
 on "python3 -c 'print(0.1 + 0.2)'"
 
 block cutting
 on 'pl run prompts/v4-only-json.txt cases/dev.jsonl --out runs/v4.jsonl'
-on 'pl cost runs/v4.jsonl'
-on 'pl compare runs/v3.jsonl runs/v4.jsonl'
-on 'pl run prompts/v3-examples.txt cases/dev.jsonl --set max_tokens=30 --out runs/cap.jsonl'
-on 'pl latency runs/cap.jsonl'
-on 'pl check runs/cap.jsonl | tail -n 1'
+on 'python3 cost.py runs/v4.jsonl'
+on 'pl compare runs/v4.jsonl runs/v3.jsonl'
+on 'pl run prompts/v3-examples.txt cases/dev.jsonl --set num_predict=20 --out runs/cap.jsonl'
+on 'python3 stats.py runs/cap.jsonl'
+on 'pl check runs/cap.jsonl --failures | grep -c "cut off at num_predict"'
+on 'pl check runs/v3.jsonl | tail -n 1'
 on 'pl show runs/cap.jsonl t01'
-
-block tradeoffs
-on 'pl latency runs/v4.jsonl'
-on 'pl check runs/v4.jsonl --failures | tail -n 6'

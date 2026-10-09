@@ -1,6 +1,6 @@
 ---
 title: The format is a contract
-version: 1
+version: 2
 ---
 
 A prompt that asks for JSON is making a promise to whatever reads the reply next. Three lines of
@@ -15,37 +15,48 @@ Read the message and answer in JSON with three fields:
 ```
 
 **The checks are the other side of it**: what the program reading the reply relies on, written as
-code. The two in the middle are a schema in miniature:
+code. They are in `pl.py`, in one function:
 
 ```
-ana@lab:~/triage$ grep -n -A12 'elif c == "fields"' promptlab/cli.py
-223:        elif c == "fields":
-224-            missing = [k for k in ("category", "urgency") if k not in obj]
-225-            extra = [k for k in obj if k not in ("category", "urgency", "summary", "confidence")]
-226-            ok = not missing and not extra
-227-            reason = ("missing " + ", ".join(missing)) if missing else ("unexpected " + ", ".join(extra))
-228-        elif c == "labels":
-229-            bad = []
-230-            if obj["category"] not in LABELS:
-231-                bad.append("category %r" % obj["category"])
-232-            if obj["urgency"] not in URGENCIES:
-233-                bad.append("urgency %r" % obj["urgency"])
-234-            ok, reason = not bad, "; ".join(bad)
-235-        elif c == "category":
+ana@lab:~/triage$ grep -n -A20 "^def judge" pl.py
+130:def judge(row, expect, lenient=False):
+131-    """The first check a reply fails, and why; (None, None) if it passes them all."""
+132-    obj = parse(row["text"], lenient)
+133-    if obj is None:
+134-        return "json", "cut off at num_predict" if row["stop"] == "length" else "not a JSON object"
+135-    missing = [k for k in LABELS if k not in obj]
+136-    extra = [k for k in obj if k not in LABELS and k != "summary"]
+137-    if missing:
+138-        return "fields", "missing " + ", ".join(missing)
+139-    if extra:
+140-        return "fields", "unexpected " + ", ".join(extra)
+141-    for k in LABELS:
+142-        if obj[k] not in LABELS[k]:
+143-            return "labels", "%s %r" % (k, obj[k])
+144-    for k in LABELS:
+145-        if obj[k] != expect[k]:
+146-            return k, "%s, expected %s" % (obj[k], expect[k])
+147-    return None, None
+148-
+149-
+150-def verdicts(path, lenient=False):
 ```
 
-`fields` requires two keys, `category` and `urgency`, and refuses any key outside a list of four.
-`labels` requires each value to come from its list. Those are the three things a JSON schema says
-most often: **which keys must be there, which may be there, and which values each one may take.**
-The check of lesson 1 that caught an order number copied out of an example was the second of them:
+The `fields` check requires two keys, `category` and `urgency`, and refuses any key outside them
+and `summary`. `labels` requires each value to come from its list. Those are the three things a
+JSON schema says most often: **which keys must be there, which may be there, and which values each
+one may take.** The check of lesson 1 that caught an order number copied out of an example was the
+second of them, and it still does:
 
 ```
 ana@lab:~/triage$ pl run prompts/v3-leaky.txt cases/dev.jsonl --out runs/leaky.jsonl
-40 calls, prompt 0acdc3c7, written to runs/leaky.jsonl
-ana@lab:~/triage$ pl check runs/leaky.jsonl --failures | sed -n 9,11p
+40 calls, prompt 0acdc3c7, llama3.2:3b, written to runs/leaky.jsonl
+ana@lab:~/triage$ pl check runs/leaky.jsonl --failures | grep fields
+fields       34     6
 t01    fields    unexpected order
-t02    fields    unexpected order
-t03    fields    unexpected order
+t08    fields    unexpected order
+t16    fields    unexpected order
+t31    fields    unexpected order
 ```
 
 ## Read the contract, not the prompt
@@ -53,9 +64,8 @@ t03    fields    unexpected order
 The check is not a copy of the prompt, and the differences are decisions. The prompt asks for three
 fields; the check requires two. A reply with no `summary` passes `fields`, because the program that
 routes a message needs the category and the urgency and nothing else, and the summary is there for
-the person who opens the ticket. The fourth allowed key, `confidence`, is for lesson 21, which asks
-for one. **Writing down what the reader actually requires is how you find out what the prompt can
-afford to be loose about.**
+the person who opens the ticket. **Writing down what the reader actually requires is how you find
+out what the prompt can afford to be loose about.**
 
 Once a reply has passed the first three checks, the program may assume an object, the two keys, a
 value from each list, and no keys it has never heard of. It may not assume the summary is there,

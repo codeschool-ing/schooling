@@ -1,12 +1,14 @@
 ---
 title: Triple backticks
-version: 1
+version: 2
 ---
 
 The first delimiter most people reach for is the one Markdown uses for code: three backticks above
-the message and three below. `prompts/v5-backticks.txt` does that, and says so in the instructions:
+the message and three below. Lesson 4 saved `prompts/v5-tagged.txt`, which marks the message with
+tags; this sed makes a copy that uses backticks instead, and says so in the instructions:
 
 ```
+ana@lab:~/triage$ sed -e 's/between <message> tags/between triple backticks/' -e 's|^</\?message>$|```|' prompts/v5-tagged.txt > prompts/v5-backticks.txt
 ana@lab:~/triage$ cat -n prompts/v5-backticks.txt
      1	You sort customer messages for Folio, an online bookshop.
      2	
@@ -26,63 +28,65 @@ ana@lab:~/triage$ cat -n prompts/v5-backticks.txt
 
 The lines are numbered for a practical reason. This page is written in Markdown, and Markdown also
 ends a block of code at a line of three backticks. **Shown as it is, the prompt would have closed
-this page's own frame at line 12**, which is exactly the failure this section is about.
+this page's own frame at line 12**, which is exactly the failure this section is about. It is also
+why the file is made with a sed rather than saved from a block on this page.
 
 ```
 ana@lab:~/triage$ pl run prompts/v5-backticks.txt cases/pasted.jsonl --out runs/backticks.jsonl
-6 calls, prompt f83c11a3, written to runs/backticks.jsonl
+6 calls, prompt f83c11a3, llama3.2:3b, written to runs/backticks.jsonl
 ana@lab:~/triage$ pl check runs/backticks.jsonl --failures
 check      pass  fail
 json          6     0
 fields        6     0
 labels        6     0
-category      2     4
-urgency       1     5
-all           1     5
+category      3     3
+urgency       0     6
+all           0     6
 
-p01    category  other, expected returns
-p02    category  other, expected billing
-p03    urgency   normal, expected low
-p04    category  other, expected delivery
-p06    category  other, expected delivery
+p01    urgency   high, expected normal
+p02    category  returns, expected billing
+p03    category  other, expected account
+p04    urgency   low, expected normal
+p05    category  returns, expected other
+p06    urgency   high, expected normal
 ```
 
-One pass in six. Four of the five failures are categories, and every one of them is `other`, the
-label for a message the stand-in could not place. Here is what it was given for `p01`, and what it
-made of it:
+None of the six passes, as before, and three categories are right where the undelimited prompt had
+two. Here is what the model was given for `p04`, the message with the courier's note in it:
 
 ```
-ana@lab:~/triage$ pl render prompts/v5-backticks.txt --cases cases/pasted.jsonl --case p01 | tail -n 4 | cat -n
-pl: warning: the value of {{message}} contains ```, which closes its delimiter
-     1	
-     2	```
-     3	The ebook I bought won't download. The page shows ```Error 403: link expired``` instead.
-     4	```
-ana@lab:~/triage$ pl show runs/backticks.jsonl p01
-│ {
-│   "category": "other",
-│   "urgency": "normal",
-│   "summary": ""
-│ }
-stop: end, tokens in 128, out 24
+ana@lab:~/triage$ pl render prompts/v5-backticks.txt --cases cases/pasted.jsonl --case p04 | tail -n 8 | cat -n
+     1	```
+     2	The courier left this note:
+     3	```
+     4	Attempted delivery 14:02
+     5	No safe place
+     6	```
+     7	When will they try again?
+     8	```
+```
+
+The prompt now holds four lines of three backticks, two the template's and two the customer's, and
+nothing in it says which pairs with which. Read it as Markdown would and line 3 closes the block that
+line 1 opened. The courier's note on lines 4 and 5 is outside the message, in the part of the prompt
+where the instructions live, and line 6 opens a new block that line 8 closes, holding only the
+customer's question. **`llama3.2:3b` read it the way a person would**:
+
+```
 ana@lab:~/triage$ pl show runs/backticks.jsonl p04
-│ {
-│   "category": "other",
-│   "urgency": "normal",
-│   "summary": "When will they try again?"
-│ }
-stop: end, tokens in 129, out 30
+│ {"category": "delivery", "urgency": "low", "summary": "Customer wants to know when the courier will try again after failed delivery"}
+stop: stop, tokens in 160, out 32, 4.5 s
 ```
 
-`pl render` warns before it prints: the value of `{{message}}` contains three backticks, which close
-its delimiter. The prompt now holds four sets of them, two the template's and two the customer's,
-and nothing says which pairs with which. The stand-in takes the last pair. For `p01` that is the
-customer's second set and the template's closing one, with only *instead.* between them. A first
-line after backticks is a language label in Markdown, as in a block that opens with `json`, and the
-stand-in drops it, so the summary is empty. For `p04` the last pair holds the customer's final
-question and nothing else, so the courier's note was never read.
+The summary has the failed delivery in it, so the note was read as part of the message.
 
-**Backticks are common in exactly the text customers paste**: code, logs, error pages, anything
-copied from a chat tool that formats code. A delimiter that the content can contain is a delimiter
-the content can close. Notice too that `pl run` gave no warning. It renders with warnings off, so
-**render a few real cases whenever you change a template**, and read what it says first.
+So on these six messages the ambiguity cost nothing. That is a fact about this model and these
+messages, not something a template can rely on. **A delimiter that the content can contain is a
+delimiter the content can close**, and whether the model notices is decided again on every message.
+Backticks are common in exactly the text customers paste: code, logs, error pages, anything copied
+from a chat tool that formats code. There is also no standard way to escape them. A line of three
+backticks inside the message cannot be turned into something that reads the same and closes nothing,
+the way the next two sections do with a tag.
+
+Notice too that `pl run` said nothing. Nothing checks the structure of a rendered prompt unless you
+look, so **render a few real cases whenever you change a template**, and read them.

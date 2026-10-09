@@ -1,285 +1,285 @@
 [
   {
     "id": "ex-9k0zmxe3",
-    "version": 1,
+    "version": 2,
     "section": "correctness",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "In `pl confusion`, what does a row hold?",
-    "hint": "Rows and columns are two different people's answers.",
+    "prompt": "In `confusion.py`'s table, what does a row hold?",
+    "hint": "Read along it.",
     "choices": [
       {
-        "text": "The messages with one person's label",
-        "correct": true,
-        "why": "Right, spread by the label the reply gave: the row is the truth, the columns are the replies."
+        "text": "One message and all the replies the model gave to it",
+        "correct": false,
+        "why": "Each cell counts messages."
       },
       {
-        "text": "The messages that the reply gave one particular label to",
+        "text": "The checks one reply failed, in the order they ran",
+        "correct": false,
+        "why": "That is `pl check --failures`."
+      },
+      {
+        "text": "Every message a person gave one label, by the label the reply gave",
+        "correct": true,
+        "why": "Right: recall is read along it."
+      },
+      {
+        "text": "Every reply that gave one label, by the label a person gave",
         "correct": false,
         "why": "That is a column."
-      },
-      {
-        "text": "One message's five samples, side by side",
-        "correct": false,
-        "why": "This run has one call per message."
-      },
-      {
-        "text": "The checks a reply passed",
-        "correct": false,
-        "why": "That is `pl check`."
       }
     ]
   },
   {
     "id": "ex-3n370pvg",
-    "version": 1,
+    "version": 2,
     "section": "correctness",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "In the category matrix for `v6-escaped.txt`, how many messages did the prompt sort as delivery, right or wrong?",
-    "hint": "Add up the `delivery` column.",
-    "value": 18,
+    "prompt": "In the category matrix for `v6-escaped.txt`, how many messages did the prompt sort as returns, right or wrong?",
+    "hint": "Add the `returns` column.",
+    "value": 29,
     "tolerance": 0
   },
   {
     "id": "ex-shxmj969",
-    "version": 1,
+    "version": 2,
     "section": "correctness",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "In the same matrix, how many of the messages the prompt called `other` were not `other`?",
-    "hint": "Precision for other is 0.67, and the diagonal cell is 8.",
-    "value": 4,
+    "prompt": "In the same matrix, how many billing messages did the prompt sort as something other than billing, the `(bad)` column included?",
+    "hint": "The billing row, off the diagonal.",
+    "value": 12,
     "tolerance": 0
   },
   {
     "id": "ex-9z7a7jye",
-    "version": 1,
+    "version": 2,
     "section": "correctness",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Account has recall 0.64 and precision 1.00. What does that pair say?",
-    "hint": "Read one along a row, the other down a column.",
+    "prompt": "Billing has recall 0.25 and precision 1.00. What does that pair say?",
+    "hint": "Row and column.",
     "choices": [
       {
-        "text": "The prompt is good at account and nothing needs fixing",
-        "correct": false,
-        "why": "Five account messages never reach the account team."
-      },
-      {
-        "text": "Account labels in the test set are wrong",
-        "correct": false,
-        "why": "Nothing in the matrix says so."
-      },
-      {
-        "text": "Every account message was found, but some were wrong",
-        "correct": false,
-        "why": "That is the opposite pair: high recall, low precision."
-      },
-      {
-        "text": "When it says account it is right, and it says it too rarely",
+        "text": "The prompt says billing rarely, and right when it does",
         "correct": true,
-        "why": "Right: nine of nine called account were, and nine of fourteen were found."
+        "why": "Right: four calls, all correct, and twelve missed."
+      },
+      {
+        "text": "The prompt says billing too often, and is right a quarter of the time",
+        "correct": false,
+        "why": "That would be low precision."
+      },
+      {
+        "text": "Billing messages are a quarter of the test set",
+        "correct": false,
+        "why": "Recall is a share of the row, not of the set."
+      },
+      {
+        "text": "Billing is the label this prompt gets most often right overall",
+        "correct": false,
+        "why": "It gets four right."
       }
     ]
   },
   {
     "id": "ex-bd40crez",
-    "version": 1,
+    "version": 2,
     "section": "correctness",
     "type": "quiz",
-    "difficulty": "hard",
+    "difficulty": "medium",
     "drillable": true,
-    "prompt": "Urgency accuracy is 54 of 70. Why does the lesson say that number is not enough?",
-    "hint": "Compare `h03` with a low question sorted normal.",
+    "prompt": "Urgency accuracy is 41 of 70. Why does the lesson say that number is not enough?",
+    "hint": "Which cell is which?",
     "choices": [
       {
-        "text": "It counts a missed urgent message the same as a harmless one",
+        "text": "Because 41 of 70 is below the 0.05 threshold",
+        "correct": false,
+        "why": "That threshold is for a sign test."
+      },
+      {
+        "text": "Because urgency has three labels and needs a sign test",
+        "correct": false,
+        "why": "The number of labels is not the problem."
+      },
+      {
+        "text": "Because it was measured on the dev set only",
+        "correct": false,
+        "why": "It was measured on all seventy."
+      },
+      {
+        "text": "It counts a missed urgent message like a false alarm",
         "correct": true,
-        "why": "Right: six high sorted normal cost far more than seven low sorted normal."
-      },
-      {
-        "text": "It includes the two format failures, so it is too low",
-        "correct": false,
-        "why": "They are counted, but that is not the argument."
-      },
-      {
-        "text": "Urgency should be measured with recall only and never with accuracy",
-        "correct": false,
-        "why": "Recall alone can be gamed by calling everything high."
-      },
-      {
-        "text": "Seventy messages are too few",
-        "correct": false,
-        "why": "The problem is what the number weighs, not the sample."
+        "why": "Right: and here the errors were nearly all false alarms."
       }
     ]
   },
   {
     "id": "ex-bcekvs9w",
-    "version": 1,
+    "version": 2,
     "section": "format",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "`t26` has the right category and urgency inside a code fence. How should it be counted?",
-    "hint": "Which fix would it need?",
+    "prompt": "`t38`'s reply does not parse. How should it be counted?",
+    "hint": "A column of its own.",
     "choices": [
       {
-        "text": "As a correct answer, since the content is right",
+        "text": "As a returns message sorted as some other label",
         "correct": false,
-        "why": "A program cannot use it; it fails `json`."
+        "why": "Nothing was sorted; nothing could be read."
       },
       {
         "text": "As a format failure, apart from wrong labels",
         "correct": true,
-        "why": "Right: it lands in `(bad)`, not in a billing cell."
+        "why": "Right: a different problem with a different fix."
       },
       {
-        "text": "As a billing message sorted wrongly",
+        "text": "As a pass, since the category inside it was right",
         "correct": false,
-        "why": "Its label was right; the wrapping was wrong."
+        "why": "Nobody can read the category inside it."
       },
       {
-        "text": "It should be removed from the test set",
+        "text": "It should be left out of every count",
         "correct": false,
-        "why": "Its failure is information."
+        "why": "Leaving it out hides a failure."
       }
     ]
   },
   {
     "id": "ex-w2rnbr77",
-    "version": 1,
+    "version": 2,
     "section": "format",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Of the 14 replies that fail `category` under `v6-escaped.txt`, how many parsed and chose the wrong label?",
-    "hint": "Two never parsed.",
-    "value": 12,
+    "prompt": "Of the 25 replies that fail `category` under `v6-escaped.txt`, how many parsed and chose the wrong label?",
+    "hint": "One did not parse.",
+    "value": 24,
     "tolerance": 0
   },
   {
     "id": "ex-avjvmd56",
-    "version": 1,
+    "version": 2,
     "section": "format",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
     "prompt": "Why can a format rate be measured in production when accuracy cannot?",
-    "hint": "What does accuracy need that format does not?",
+    "hint": "What does each need?",
     "choices": [
       {
-        "text": "Production replies are always valid JSON",
+        "text": "Accuracy is too slow to compute on live traffic",
         "correct": false,
-        "why": "They are not; that is why it is worth measuring."
+        "why": "It is not about speed; there is no label."
       },
       {
-        "text": "It needs no person's label",
+        "text": "Format is measured by the model itself",
+        "correct": false,
+        "why": "It is measured by the checks."
+      },
+      {
+        "text": "Format needs no person's label",
         "correct": true,
-        "why": "Right: a live message has no `expect`."
+        "why": "Right: only the reply and the contract."
       },
       {
-        "text": "Format checks run faster than a model call",
+        "text": "Production replies are always valid JSON anyway",
         "correct": false,
-        "why": "True, but speed is not what makes it possible."
-      },
-      {
-        "text": "Accuracy needs temperature 0",
-        "correct": false,
-        "why": "Temperature is unrelated."
+        "why": "One in seventy was not, here."
       }
     ]
   },
   {
     "id": "ex-x5jexx5e",
-    "version": 1,
+    "version": 2,
     "section": "tone",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "How many of the twelve drafts pass every tone rule?",
+    "prompt": "How many of the forty replies pass every tone rule?",
     "hint": "Count the `ok` lines.",
-    "value": 5,
+    "value": 14,
     "tolerance": 0
   },
   {
     "id": "ex-9q29va83",
-    "version": 1,
+    "version": 2,
     "section": "tone",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "`t02` promises to write again *by Thursday*, and the `promise` rule did not flag it. Why?",
-    "hint": "Read `checks/tone.json`.",
+    "prompt": "`t11` asks the customer to *allow 2-3 working days*, and the `promises` rule did not flag it. Why?",
+    "hint": "What does the rule name?",
     "choices": [
       {
-        "text": "Thursday is not on its list",
+        "text": "The rule names *within* a number, not *allow*",
         "correct": true,
-        "why": "Right: a rule catches exactly what it names."
+        "why": "Right: a rule catches what it names."
       },
       {
-        "text": "The exclamation rule failed first and stopped the others",
+        "text": "The reply was too short to be checked",
         "correct": false,
-        "why": "`pl tone` applies every rule; `t12` fails two."
+        "why": "Length does not stop the check."
       },
       {
-        "text": "A date is not a promise in this domain",
+        "text": "Rules skip replies that apologise",
         "correct": false,
-        "why": "A date a customer is told is a commitment."
+        "why": "`acknowledge` is a separate rule."
       },
       {
-        "text": "The rule ignores replies that thank the customer",
+        "text": "Working days are not a promise",
         "correct": false,
-        "why": "Nothing in the rule looks at thanks."
+        "why": "A date given to a customer is exactly one."
       }
     ]
   },
   {
     "id": "ex-zh2wy4g5",
-    "version": 1,
+    "version": 2,
     "section": "tone",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "`t03` fails `promise` for *a replacement goes out today*. What kind of error is that, if same-day replacements are normal at the shop?",
-    "hint": "Is anything wrong with the sentence?",
+    "prompt": "`t33` fails `promises` for *please contact our customer service team immediately*. What kind of error is that?",
+    "hint": "Who is asked to act?",
     "choices": [
       {
-        "text": "A missed promise the rule should have caught",
+        "text": "A false negative: the rule missed a promise",
         "correct": false,
-        "why": "It was flagged, not missed."
+        "why": "The rule fired."
       },
       {
-        "text": "A correct flag on a risky sentence",
+        "text": "No error: every use of *immediately* is a promise",
         "correct": false,
-        "why": "If the shop does it, the sentence is fine."
+        "why": "Here the customer is the one asked to act."
       },
       {
-        "text": "A false positive",
+        "text": "A format error in the reply's JSON",
+        "correct": false,
+        "why": "Replies are prose; there is no JSON."
+      },
+      {
+        "text": "A false positive: it asks, and promises nothing",
         "correct": true,
-        "why": "Right: the proxy and the judgement part ways."
-      },
-      {
-        "text": "A format failure caused by the word today",
-        "correct": false,
-        "why": "Drafts are prose; there is no format check."
+        "why": "Right."
       }
     ]
   },
   {
     "id": "ex-v1jdrg1z",
-    "version": 1,
+    "version": 2,
     "section": "tone",
     "type": "cloze",
-    "difficulty": "medium",
+    "difficulty": "easy",
     "drillable": true,
     "prompt": "A rule stands in for a judgement it cannot make, so a rule is a ___ for that judgement.",
-    "hint": "A stand-in measure.",
+    "hint": "A stand-in.",
     "blanks": [
       {
         "accept": [
@@ -292,179 +292,179 @@
   },
   {
     "id": "ex-dhxjcnq0",
-    "version": 1,
+    "version": 2,
     "section": "safety",
     "type": "quiz",
-    "difficulty": "easy",
+    "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why is the `promise` rule a safety check in this domain rather than a style note?",
-    "hint": "Who is bound by what a reply says?",
+    "prompt": "Why is the `promises` rule a safety check in this domain rather than a style note?",
+    "hint": "Who pays for a promise?",
     "choices": [
       {
-        "text": "Because promises make replies longer",
+        "text": "The model cannot spell dates correctly",
         "correct": false,
-        "why": "Length has its own rule."
-      },
-      {
-        "text": "Because customers dislike promises",
-        "correct": false,
-        "why": "They like them; the shop may not keep them."
-      },
-      {
-        "text": "Because a promise in a prompt is an injection",
-        "correct": false,
-        "why": "These are replies, not prompts."
+        "why": "Spelling is not the issue."
       },
       {
         "text": "A reply commits the shop to what it promises",
         "correct": true,
-        "why": "Right: `t12`'s refund in 24 hours is owed once it is sent."
+        "why": "Right: `t01` promised a refund the prompt forbade."
+      },
+      {
+        "text": "Promises make replies longer than eighty words",
+        "correct": false,
+        "why": "Length is a separate rule."
+      },
+      {
+        "text": "Promises are rude to customers",
+        "correct": false,
+        "why": "Rudeness is not the risk."
       }
     ]
   },
   {
     "id": "ex-v3a7gn34",
-    "version": 1,
+    "version": 2,
     "section": "safety",
     "type": "quiz",
-    "difficulty": "hard",
+    "difficulty": "medium",
     "drillable": true,
     "prompt": "A team cuts its leak rate to zero by refusing every message that contains *ignore*. What has it forgotten to measure?",
-    "hint": "Think of `a07`.",
+    "hint": "The other direction.",
     "choices": [
       {
-        "text": "The leak rate at a higher temperature",
+        "text": "The temperature of the refusing prompt",
         "correct": false,
-        "why": "Zero is zero; the missing number is elsewhere."
+        "why": "Temperature is not what was forgotten."
       },
       {
-        "text": "The honest messages it now refuses",
+        "text": "How long a refusal takes to send",
+        "correct": false,
+        "why": "Latency is not the missing count."
+      },
+      {
+        "text": "How many messages it refuses that it should answer",
         "correct": true,
-        "why": "Right: a safety metric in one direction improves by doing less."
+        "why": "Right: `a07` would be refused."
       },
       {
-        "text": "The cost of the extra check",
+        "text": "Whether the refusals are valid JSON",
         "correct": false,
-        "why": "A string search costs next to nothing."
-      },
-      {
-        "text": "Whether the canary is still in the prompt",
-        "correct": false,
-        "why": "Unrelated to refusals."
+        "why": "Format is not the missing count."
       }
     ]
   },
   {
     "id": "ex-dc5kxm7s",
-    "version": 1,
+    "version": 2,
     "section": "safety",
     "type": "multiple-choice",
     "difficulty": "medium",
     "drillable": true,
     "prompt": "Which of these are safety metrics in the sense of this lesson? Choose all that apply.",
-    "hint": "Three kinds were named, in two directions.",
+    "hint": "Lines crossed, both ways.",
     "choices": [
       {
-        "text": "Replies that promise something the shop did not agree",
+        "text": "Replies that promise a refund or a date",
         "correct": true,
-        "why": "Yes: the `promise` rule."
+        "why": "Yes."
       },
       {
-        "text": "Replies that repeat the canary",
+        "text": "Replies that obeyed an instruction in the message",
         "correct": true,
-        "why": "Yes: a leak of the prompt."
+        "why": "Yes, from lesson 10."
       },
       {
-        "text": "Honest messages refused",
+        "text": "Replies that refused to answer a fair question",
         "correct": true,
         "why": "Yes: the other direction."
       },
       {
-        "text": "Replies with more than one exclamation mark",
+        "text": "Replies longer than eighty words",
         "correct": false,
-        "why": "That is tone, not safety."
+        "why": "That is a tone rule."
       }
     ]
   },
   {
     "id": "ex-j0kzvxxh",
-    "version": 1,
+    "version": 2,
     "section": "one-number-or-many",
     "type": "numeric",
-    "difficulty": "medium",
+    "difficulty": "easy",
     "drillable": true,
-    "prompt": "`v3-examples.txt` sorted 23 messages as billing. How many of those were not billing?",
-    "hint": "The diagonal cell for billing is 14.",
-    "value": 9,
+    "prompt": "`v3-examples.txt` sorted 13 messages as billing. How many of those were not billing?",
+    "hint": "The billing column.",
+    "value": 3,
     "tolerance": 0
   },
   {
     "id": "ex-80cwyp16",
-    "version": 1,
+    "version": 2,
     "section": "one-number-or-many",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "`v3` and `v6` both sort 56 of 70 correctly. Which statement is supported by the metrics?",
-    "hint": "Look at format and at the billing column.",
+    "prompt": "`v3` beats `v6` on every total and its billing precision is 0.77 against 1.00. Which statement is supported?",
+    "hint": "One cell went the other way.",
     "choices": [
       {
-        "text": "They are equivalent, since the accuracy is the same",
-        "correct": false,
-        "why": "Same accuracy, different mistakes."
-      },
-      {
-        "text": "`v6` is better at everything",
-        "correct": false,
-        "why": "`v3` parses every reply and `v6` does not."
-      },
-      {
-        "text": "`v3` parses better; `v6` is far more precise on billing",
+        "text": "Which is better depends on what reads the billing label",
         "correct": true,
-        "why": "Right: 70 against 68 parsed, and 0.61 against 0.87."
+        "why": "Right: a person, or something that acts on it."
       },
       {
-        "text": "`v3` is better at everything, because none of its replies fail format",
+        "text": "`v6` is better because precision matters more than recall",
         "correct": false,
-        "why": "Nine of its billing tickets belong to someone else."
+        "why": "That depends on the team, not on a rule."
+      },
+      {
+        "text": "The two prompts cannot be compared at all",
+        "correct": false,
+        "why": "They can, metric by metric."
+      },
+      {
+        "text": "`v3` is better in every way that matters",
+        "correct": false,
+        "why": "Billing precision fell."
       }
     ]
   },
   {
     "id": "ex-4gb04pfb",
-    "version": 1,
+    "version": 2,
     "section": "one-number-or-many",
     "type": "quiz",
-    "difficulty": "hard",
+    "difficulty": "medium",
     "drillable": true,
     "prompt": "Why does the lesson prefer a gate on high-sorted-as-normal to a weight on it inside a combined score?",
-    "hint": "What can a weight be traded against?",
+    "hint": "Can it be bought back?",
     "choices": [
       {
-        "text": "Gates are easier to compute",
+        "text": "A weight cannot be computed on a confusion matrix",
         "correct": false,
-        "why": "Both are trivial arithmetic."
+        "why": "It can; it can also be outweighed."
       },
       {
-        "text": "A gain elsewhere cannot buy back a gate",
+        "text": "Gates are faster to compute than weights",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "A combined score needs a person's label",
+        "correct": false,
+        "why": "Both need labels."
+      },
+      {
+        "text": "A gate cannot be bought back by a gain elsewhere",
         "correct": true,
-        "why": "Right: a threshold on one metric cannot be offset."
-      },
-      {
-        "text": "Weights only work for format",
-        "correct": false,
-        "why": "Weights work for anything; that is the problem."
-      },
-      {
-        "text": "Urgency cannot be measured as a number",
-        "correct": false,
-        "why": "It was: recall 0.62 for high."
+        "why": "Right."
       }
     ]
   },
   {
     "id": "ex-t15ya3g7",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "matching",
     "difficulty": "medium",
@@ -473,55 +473,55 @@
     "hint": "One each.",
     "pairs": [
       {
-        "left": "Recall for account",
-        "right": "Of the real account messages, how many were found?"
+        "left": "Recall",
+        "right": "Of the messages that were this label, how many did it find?"
       },
       {
-        "left": "Precision for delivery",
-        "right": "Of the replies saying delivery, how many were right?"
+        "left": "Precision",
+        "right": "Of the messages it called this label, how many were?"
       },
       {
         "left": "Format rate",
-        "right": "How many replies could a program use?"
+        "right": "Can a program read the reply at all?"
       },
       {
-        "left": "The `promise` rule",
-        "right": "Does a reply commit the shop to something?"
+        "left": "Promises count",
+        "right": "Did a reply commit the shop to something?"
       }
     ],
     "right_distractors": [
-      "Which prompt is cheaper per call?"
+      "Did the customer like the reply?"
     ]
   },
   {
     "id": "ex-47xwb39d",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "A new prompt raises urgency accuracy from 54 to 56 of 70, and high-urgency recall falls from 0.62 to 0.50. What do you report?",
-    "hint": "Which cell is the expensive one?",
+    "prompt": "A new prompt raises urgency accuracy from 41 to 45 of 70, and high-urgency recall falls from 0.94 to 0.75. What do you report?",
+    "hint": "The expensive cell.",
     "choices": [
       {
-        "text": "An improvement of two messages, so ship it",
+        "text": "An improvement of four messages",
         "correct": false,
-        "why": "The two gained hide the urgent ones lost."
+        "why": "Some of those four were bought with missed urgent ones."
       },
       {
-        "text": "Nothing until the format rate is known",
-        "correct": false,
-        "why": "Format is worth reporting, but it does not answer this."
-      },
-      {
-        "text": "That more urgent messages are now missed",
+        "text": "Urgent messages now missed, by name, before accuracy",
         "correct": true,
-        "why": "Right, whatever accuracy did: name the expensive cell, and gate on it."
+        "why": "Right: the expensive cell first."
       },
       {
-        "text": "A tie, since the two changes cancel each other out",
+        "text": "Nothing, since the change is within noise",
         "correct": false,
-        "why": "They cost different amounts; they do not cancel."
+        "why": "A recall drop on urgent messages is the point."
+      },
+      {
+        "text": "Only the accuracy, since recall is a detail",
+        "correct": false,
+        "why": "Recall here is the cost."
       }
     ]
   }

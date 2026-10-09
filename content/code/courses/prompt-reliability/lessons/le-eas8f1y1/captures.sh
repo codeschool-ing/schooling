@@ -5,42 +5,30 @@
 # THE SCRIPT IS THE SOURCE AND ITS OUTPUT IS NOT COMMITTED. Every transcript in
 # this lesson was copied from running it:
 #
-#   bash captures.sh            # beside this file; it finds ../../lab.sh
+#   bash captures.sh            # beside this file
 #
-# It rebuilds ~/triage with lab.sh reset under its own HOME, so nothing of
-# yours is touched, and prints each command after a prompt, ana@lab:~/triage$,
-# followed by what it printed.
+# lab-capture.sh builds ~/triage as a student has it after this lesson, every
+# file read out of the lessons' own fences, and cases/all.jsonl made by the
+# command measuring-it.md shows. It prints each command after a prompt,
+# ana@lab:~/triage$, followed by what it printed.
 #
-# What is STAGED rather than typed: the whole of ~/triage, built by lab.sh,
-# including every prompt file the lesson shows. The model is the lab's
-# stand-in (promptlab/standin.py), NOT a language model; lab.sh's header says
-# what that means and what in the lab was written by the course.
+# THE MODEL IS REAL: llama3.2:3b (Q4_K_M, id a80c4f17acd5) on Ollama 0.40.0,
+# CPU only, temperature 0 and seed 1, captured on 2026-10-08.
 #
-# Recorded with Python 3.11 and git 2.43, TZ=America/Sao_Paulo.
-
-set -uo pipefail
+# Recorded on Ubuntu 24.04 with Python 3.12, TZ=America/Sao_Paulo.
 here=$(cd "$(dirname "$0")" && pwd)
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 PAGER=cat GIT_PAGER=cat COLUMNS=100 PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
-export HOME=${LAB_HOME:-/var/tmp/prompt-reliability}
-mkdir -p "$HOME"
-bash "$here/../../lab.sh" reset
-cd "$HOME/triage"
-export PATH=$HOME/triage/bin:$PATH
-on() { printf 'ana@lab:~/triage$ %s\n' "$*"; bash -c "$*" 2>&1; }
-block() { printf '##### %s\n' "$1"; }
+LESSON=5; . "$here/../../lab-capture.sh"
 
 block pile
 on 'cat -n prompts/v8-rules.txt'
-on 'pl lint prompts/v8-rules.txt'
-on 'grep t22 cases/all.jsonl'
+on 'python3 lint.py prompts/v8-rules.txt'
+on 'grep t22 cases/dev.jsonl'
 
 block guide
-on 'cat -n prompts/v8-guide.txt'
-on 'pl lint prompts/v8-guide.txt'
-on 'pl tokens prompts/v8-rules.txt'
-on 'pl tokens prompts/v8-guide.txt'
+on 'python3 lint.py prompts/v8-guide.txt'
 
 block measure
+on 'cat cases/dev.jsonl cases/holdout.jsonl > cases/all.jsonl'
 on 'wc -l cases/all.jsonl'
 on 'pl run prompts/v8-rules.txt cases/all.jsonl --out runs/rules.jsonl'
 on 'pl run prompts/v8-guide.txt cases/all.jsonl --out runs/guide.jsonl'
@@ -48,12 +36,17 @@ on 'pl check runs/rules.jsonl'
 on 'pl check runs/guide.jsonl'
 on 'pl compare runs/rules.jsonl runs/guide.jsonl'
 on 'pl compare runs/rules.jsonl runs/guide.jsonl --answers'
+on 'python3 stats.py runs/rules.jsonl runs/guide.jsonl'
+on 'pl check runs/rules.jsonl --failures'
+on 'pl check runs/guide.jsonl --failures'
+
+block t22
 on 'pl show runs/rules.jsonl t22'
-on 'grep h03 cases/all.jsonl'
-on 'pl check runs/guide.jsonl --failures | grep -e h03 -e h22'
+on 'pl show runs/guide.jsonl t22'
 
 block reader
 on 'grep h01 cases/all.jsonl'
 on 'grep -n refund prompts/v8-rules.txt'
 on 'grep -n "goes to" prompts/v8-guide.txt'
-on 'pl check runs/rules.jsonl --failures | grep h01'
+on 'pl show runs/rules.jsonl h01'
+on 'pl show runs/guide.jsonl h01'

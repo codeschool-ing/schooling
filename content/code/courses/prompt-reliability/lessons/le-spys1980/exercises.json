@@ -1,83 +1,83 @@
 [
   {
     "id": "ex-9q2jqvtt",
-    "version": 1,
+    "version": 2,
     "section": "stated-vs-actual",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "In the stand-in, what is the stated confidence worked out from?",
-    "hint": "Read the docstring of `confidence`.",
+    "prompt": "How many different confidence values did `llama3.2:3b` state over the seventy replies?",
+    "hint": "The `uniq -c` count.",
     "choices": [
       {
-        "text": "The gap between its two best labels",
+        "text": "Two, 0.8 and 0.9, and no others",
         "correct": false,
-        "why": "That would look at the other labels, which it never does."
+        "why": "0.0 and 0.95 appear once each."
       },
       {
-        "text": "Its chosen label's evidence",
+        "text": "Ten, one per tenth",
+        "correct": false,
+        "why": "Four distinct values."
+      },
+      {
+        "text": "Four, mostly 0.8 and 0.9",
         "correct": true,
-        "why": "Right: 0.62 plus a tenth of that score, capped at 0.99."
+        "why": "Right: 0.0 once, 0.8, 0.9 and 0.95 once."
       },
       {
-        "text": "The confidences shown in the prompt's three examples",
+        "text": "Seventy, one for every reply",
         "correct": false,
-        "why": "The examples show the format; the number is computed."
-      },
-      {
-        "text": "How often it was right on the test set",
-        "correct": false,
-        "why": "It never sees the labels; that would make it calibrated by construction."
+        "why": "Most replies share a value."
       }
     ]
   },
   {
     "id": "ex-m6dy1csg",
-    "version": 1,
+    "version": 2,
     "section": "stated-vs-actual",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "What confidence did the stand-in state for `h04`, the atlas it labelled delivery?",
-    "hint": "The last field of the reply.",
-    "value": 0.97,
+    "prompt": "What confidence did the model state for `h03`, the unrecognised charge it labelled account?",
+    "hint": "`pl show runs/v9.jsonl h03`.",
+    "value": 0.9,
     "tolerance": 0.001
   },
   {
     "id": "ex-70zvsa7s",
-    "version": 1,
+    "version": 2,
     "section": "stated-vs-actual",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why was `h04` answered wrongly *and* confidently?",
-    "hint": "The message has words for two labels.",
+    "prompt": "`t35`, a thank-you note, was answered `other`, which is right, with a confidence of 0.0. What can the run tell you about why?",
+    "hint": "What is the field?",
     "choices": [
       {
-        "text": "It had no keywords, so the stand-in guessed",
-        "correct": false,
-        "why": "It had three, two for delivery and one for returns."
-      },
-      {
-        "text": "The prompt's examples told it to say 0.97",
-        "correct": false,
-        "why": "The examples say 0.9, 0.95 and 0.85; the number is computed."
-      },
-      {
-        "text": "Returns evidence went unseen",
+        "text": "Nothing: the meaning is the model's",
         "correct": true,
-        "why": "Right: confidence from the winner's evidence alone."
+        "why": "Right: the run cannot say which reading the model took."
       },
       {
-        "text": "The person who labelled it was wrong",
+        "text": "The model knew the label was wrong",
         "correct": false,
-        "why": "The customer wants to return the atlas; returns is a fair label."
+        "why": "The label was right."
+      },
+      {
+        "text": "Zero means the message had no category",
+        "correct": false,
+        "why": "It was given one, and it was right."
+      },
+      {
+        "text": "`calibrate.py` set it to zero",
+        "correct": false,
+        "why": "The program only reads it."
       }
     ]
   },
   {
     "id": "ex-fakc8gg7",
-    "version": 1,
+    "version": 2,
     "section": "reliability",
     "type": "quiz",
     "difficulty": "easy",
@@ -96,7 +96,7 @@
         "why": "Every reply here carries one."
       },
       {
-        "text": "`pl calibrate` refuses fewer than ten replies",
+        "text": "`calibrate.py` refuses fewer than ten replies",
         "correct": false,
         "why": "It does not; it would print a thin table."
       },
@@ -109,14 +109,14 @@
   },
   {
     "id": "ex-p6mmqdjz",
-    "version": 1,
+    "version": 2,
     "section": "reliability",
     "type": "numeric",
-    "difficulty": "medium",
+    "difficulty": "easy",
     "drillable": true,
-    "prompt": "The seven replies between 0.7 and 0.8 stated 0.73 on average. What share of them was right? Two decimal places.",
-    "hint": "The accuracy column.",
-    "value": 0.29,
+    "prompt": "The 46 replies that stated 0.8: what share of them was right? Two decimal places.",
+    "hint": "The `accuracy` column.",
+    "value": 0.72,
     "tolerance": 0.005
   },
   {
@@ -153,46 +153,46 @@
   },
   {
     "id": "ex-en4zcf2p",
-    "version": 1,
+    "version": 2,
     "section": "reliability",
     "type": "quiz",
-    "difficulty": "hard",
+    "difficulty": "medium",
     "drillable": true,
-    "prompt": "The bin below 0.7 holds two replies, both wrong. How much weight should that point carry when you read the diagram?",
-    "hint": "What does `n` say?",
+    "prompt": "The replies stated at 0.9 were right 0.78 of the time, and those stated at 0.8 were right 0.72. What does that closeness say?",
+    "hint": "What should a confidence do?",
     "choices": [
       {
-        "text": "The most, because its gap is the largest",
+        "text": "The model is perfectly calibrated in both bins",
         "correct": false,
-        "why": "A large gap measured on two replies is mostly chance."
+        "why": "Both points are below the diagonal."
       },
       {
-        "text": "Very little: two cannot show a rate",
+        "text": "The model is underconfident",
+        "correct": false,
+        "why": "It said more than it delivered."
+      },
+      {
+        "text": "The 0.9 group is too small to read anything into",
+        "correct": false,
+        "why": "Twenty-three is the smaller, not a tiny, bin."
+      },
+      {
+        "text": "It barely separates right from wrong",
         "correct": true,
-        "why": "Right: a point needs its `n` beside it."
-      },
-      {
-        "text": "None, so the diagram should drop small bins",
-        "correct": false,
-        "why": "Dropping them hides where the model may be worst; showing `n` is enough."
-      },
-      {
-        "text": "Exactly as much as the bin of 34",
-        "correct": false,
-        "why": "ECE itself weights bins by their size."
+        "why": "Right: two groups almost equally right."
       }
     ]
   },
   {
     "id": "ex-6k093zed",
-    "version": 1,
+    "version": 2,
     "section": "ece-and-brier",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Seven replies of 70 stated 0.73 on average and were right 0.29 of the time. How much does that bin add to the ECE? Three decimal places.",
-    "hint": "The bin's share of replies, times the gap.",
-    "value": 0.044,
+    "prompt": "Forty-six replies of 70 stated 0.80 and were right 0.72 of the time. How much does that bin add to the ECE? Three decimal places.",
+    "hint": "Share times gap.",
+    "value": 0.053,
     "tolerance": 0.001
   },
   {
@@ -216,7 +216,7 @@
   },
   {
     "id": "ex-77nj96e3",
-    "version": 1,
+    "version": 2,
     "section": "ece-and-brier",
     "type": "quiz",
     "difficulty": "medium",
@@ -227,7 +227,7 @@
       {
         "text": "Both say it is perfect",
         "correct": false,
-        "why": "Brier charges it 0.16, worse than the stand-in's 0.139."
+        "why": "Brier charges it 0.16 for separating nothing."
       },
       {
         "text": "Both say it is badly calibrated",
@@ -248,33 +248,33 @@
   },
   {
     "id": "ex-mx77n4yh",
-    "version": 1,
+    "version": 2,
     "section": "ece-and-brier",
     "type": "quiz",
-    "difficulty": "medium",
+    "difficulty": "hard",
     "drillable": true,
-    "prompt": "`h04` stated 0.97 and was wrong. Why does one such reply move the Brier score so much more than a right reply stated at 0.97?",
-    "hint": "Square both gaps.",
+    "prompt": "Stating 0.74 on every reply would have scored a Brier of 0.19. The model's own numbers scored 0.212. What does that say?",
+    "hint": "Which is less informative?",
     "choices": [
       {
-        "text": "Wrong replies are counted twice",
+        "text": "Brier cannot compare a constant",
         "correct": false,
-        "why": "Every reply counts once."
+        "why": "It compares any confidence."
       },
       {
-        "text": "The gap is squared: 0.9409 against 0.0009",
+        "text": "The numbers carry less than the base rate",
         "correct": true,
-        "why": "Right: a confident mistake costs about a thousand times a confident success."
+        "why": "Right: a constant beat them."
       },
       {
-        "text": "Brier ignores right replies",
+        "text": "The model is perfectly calibrated",
         "correct": false,
-        "why": "They add (0.97 − 1)², which is small but not zero."
+        "why": "ECE was 0.108."
       },
       {
-        "text": "Brier uses bins, and `h04` sits in the largest bin, so its weight is multiplied by 34",
+        "text": "A Brier of 0.212 is an excellent score for a model",
         "correct": false,
-        "why": "Brier uses no bins; that is ECE."
+        "why": "Lower is better, and a constant did better."
       }
     ]
   },
@@ -312,77 +312,77 @@
   },
   {
     "id": "ex-79yy5qyx",
-    "version": 1,
+    "version": 2,
     "section": "using-confidence",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "With the threshold at 0.80, what accuracy did the holdout set get on the replies it answered? Two decimal places.",
-    "hint": "The `conf >= 0.80` line of the holdout run.",
-    "value": 0.68,
+    "prompt": "With the threshold at 0.85, what accuracy did the holdout set get on the replies it answered? Two decimal places.",
+    "hint": "The `conf >= 0.85` line of the holdout.",
+    "value": 0.55,
     "tolerance": 0.005
   },
   {
     "id": "ex-pg6rvjnp",
-    "version": 1,
+    "version": 2,
     "section": "using-confidence",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "On dev, a threshold of 0.80 gave 39 answers at accuracy 1.00. On holdout it gave 22 at 0.68. What changed?",
-    "hint": "Same model, same prompt, same threshold.",
+    "prompt": "On dev, a threshold of 0.85 gave 12 answers at accuracy 1.00. On the holdout it gave 11 at 0.55. What changed?",
+    "hint": "The model and the threshold did not.",
     "choices": [
       {
-        "text": "The stand-in was sampled at a higher temperature on the holdout run, so its answers were noisier",
+        "text": "The threshold, which moved with the set",
         "correct": false,
-        "why": "Both runs were at temperature 0."
+        "why": "It was 0.85 in both."
       },
       {
-        "text": "The messages: harder ones, many with evidence for two labels",
+        "text": "Nothing; the difference is rounding",
+        "correct": false,
+        "why": "1.00 against 0.55 is not rounding."
+      },
+      {
+        "text": "The messages, which were harder",
         "correct": true,
-        "why": "Right: exactly where the stand-in's rule overstates."
+        "why": "Right: on them the 0.9s were not more often right."
       },
       {
-        "text": "The threshold was applied differently",
+        "text": "The model, which was updated between the two runs",
         "correct": false,
-        "why": "It is the same comparison, `conf >= 0.80`."
-      },
-      {
-        "text": "The dev set was mislabelled",
-        "correct": false,
-        "why": "Nothing suggests that; it is the easier set."
+        "why": "Same model, same day."
       }
     ]
   },
   {
     "id": "ex-4d03sy77",
-    "version": 1,
+    "version": 2,
     "section": "using-confidence",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "On the holdout, answering everything gives 0.57 and answering at 0.80 or above gives 0.68. What does that show about a miscalibrated confidence?",
-    "hint": "A threshold uses the order of the numbers, not their values.",
+    "prompt": "On the holdout, answering everything gives 0.57 and answering at 0.85 or above gives 0.55. What does that show?",
+    "hint": "Better or worse than no threshold?",
     "choices": [
       {
-        "text": "It is useless and should be thrown away",
-        "correct": false,
-        "why": "It still raised accuracy by holding eight messages back."
+        "text": "It bought nothing here",
+        "correct": true,
+        "why": "Right: slightly worse than answering everything."
       },
       {
         "text": "It still ranks answers usefully",
-        "correct": true,
-        "why": "Right: the ranking helps; the stated accuracy does not hold."
+        "correct": false,
+        "why": "Not on this set."
       },
       {
-        "text": "It becomes calibrated above 0.80",
+        "text": "The holdout labels are wrong",
         "correct": false,
-        "why": "Above 0.80 it still says about 0.85 to 0.96 and delivers 0.68."
+        "why": "Nothing points there."
       },
       {
-        "text": "The holdout is too small to say anything",
+        "text": "The threshold should be raised to 0.95 instead",
         "correct": false,
-        "why": "It is small, and the difference from dev is still large."
+        "why": "No holdout reply reached 0.95."
       }
     ]
   },
@@ -467,7 +467,7 @@
   },
   {
     "id": "ex-28427mbk",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "quiz",
     "difficulty": "hard",
@@ -483,7 +483,7 @@
       {
         "text": "Trust it: 0.02 is very small",
         "correct": false,
-        "why": "Small on their messages; the stand-in went from 0.092 to 0.282 between two sets."
+        "why": "Small on their messages; this lesson's ECE went from 0.064 on dev to 0.270 on the holdout."
       },
       {
         "text": "Ask for the Brier score instead",

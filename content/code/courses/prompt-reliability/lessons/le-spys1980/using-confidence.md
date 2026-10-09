@@ -1,6 +1,6 @@
 ---
 title: Using a stated confidence
-version: 1
+version: 2
 ---
 
 A confidence is worth collecting if it helps you decide what to do with an answer. The common use
@@ -8,76 +8,81 @@ is a threshold: **answer automatically above it, and send the rest to a person**
 threshold answers fewer messages and, if the confidence means anything, gets more of them right.
 The trade is called coverage against accuracy.
 
-`pl calibrate --thresholds` prints that trade for a few thresholds. The way to use it is to choose
+`calibrate.py --thresholds` prints that trade for a few thresholds. The way to use it is to choose
 on one set and check on another that played no part in the choice. Here, choose on the dev set:
 
 ```
 ana@lab:~/triage$ pl run prompts/v9-confidence.txt cases/dev.jsonl --out runs/v9-dev.jsonl
-40 calls, prompt c31bed19, written to runs/v9-dev.jsonl
-ana@lab:~/triage$ pl calibrate runs/v9-dev.jsonl --thresholds
+40 calls, prompt c31bed19, llama3.2:3b, written to runs/v9-dev.jsonl
+ana@lab:~/triage$ python3 calibrate.py runs/v9-dev.jsonl --thresholds
 stated         n  mean said  accuracy
-0.50-0.60    0          -         -
-0.60-0.70    0          -         -
-0.70-0.80    1       0.70      0.00
-0.80-0.90   14       0.85      1.00
-0.90-1.00   25       0.97      1.00
+0.00-0.50     1       0.00      1.00
+0.50-0.60     0          -         -
+0.60-0.70     0          -         -
+0.70-0.80     0          -         -
+0.80-0.90    27       0.80      0.81
+0.90-1.00    12       0.90      1.00
 
-replies 40, right 39, mean stated confidence 0.92
-ECE 0.092   Brier 0.022
+replies 40, 0 with no usable confidence; right 35 of 40, mean stated 0.81
+ECE 0.064   Brier 0.130
 
-answer if  answered  accuracy
-conf >= 0.00     40      0.97
-conf >= 0.80     39      1.00
-conf >= 0.85     34      1.00
-conf >= 0.90     25      1.00
-conf >= 0.95     21      1.00
+answer if      answered  accuracy
+conf >= 0.00       40      0.88
+conf >= 0.80       39      0.87
+conf >= 0.85       12      1.00
+conf >= 0.90       12      1.00
+conf >= 0.95        1      1.00
 ```
 
-On dev, the stand-in looks **underconfident**: replies stated around 0.85 were right every time.
-The only wrong answer was stated at 0.70, and a threshold of 0.80 removes it. Answer when the
-confidence is at least 0.80, and you answer 39 messages of 40 with an accuracy of 1.00.
+On dev, the stated number looks useful. Replies stated at 0.9 or above were right every time, 12 of
+12, and the ones stated at 0.8 were right 0.81 of the time. Answer when the confidence is at least
+0.85, and you answer 12 messages of 40 **with an accuracy of 1.00**, and send 28 to a person.
 
 Now hold that threshold against the harder set it never saw:
 
 ```
 ana@lab:~/triage$ pl run prompts/v9-confidence.txt cases/holdout.jsonl --out runs/v9-holdout.jsonl
-30 calls, prompt c31bed19, written to runs/v9-holdout.jsonl
-ana@lab:~/triage$ pl calibrate runs/v9-holdout.jsonl --thresholds
+30 calls, prompt c31bed19, llama3.2:3b, written to runs/v9-holdout.jsonl
+ana@lab:~/triage$ python3 calibrate.py runs/v9-holdout.jsonl --thresholds
 stated         n  mean said  accuracy
-0.50-0.60    0          -         -
-0.60-0.70    2       0.69      0.00
-0.70-0.80    6       0.74      0.33
-0.80-0.90   13       0.85      0.62
-0.90-1.00    9       0.96      0.78
+0.00-0.50     0          -         -
+0.50-0.60     0          -         -
+0.60-0.70     0          -         -
+0.70-0.80     0          -         -
+0.80-0.90    19       0.80      0.58
+0.90-1.00    11       0.90      0.55
 
-replies 30, right 17, mean stated confidence 0.85
-ECE 0.282   Brier 0.295
+replies 30, 0 with no usable confidence; right 17 of 30, mean stated 0.84
+ECE 0.270   Brier 0.322
 
-answer if  answered  accuracy
-conf >= 0.00     30      0.57
-conf >= 0.80     22      0.68
-conf >= 0.85     16      0.75
-conf >= 0.90      9      0.78
-conf >= 0.95      7      0.86
+answer if      answered  accuracy
+conf >= 0.00       30      0.57
+conf >= 0.80       30      0.57
+conf >= 0.85       11      0.55
+conf >= 0.90       11      0.55
+conf >= 0.95        0         -
 ```
 
-The same rule answers 22 messages of 30 and gets **0.68** of them right. On this set the stand-in is
-overconfident in every bin, and its ECE is 0.282 against 0.092 on dev. Nothing about the model or
-the threshold changed. The messages did: the holdout holds the harder messages, many of them with
-evidence for two labels like `h04`, and that is exactly where the stand-in's rule states a
-confidence its answer has not earned.
+The same rule answers 11 messages of 30 and gets **0.55** of them right. Answering everything gets
+0.57. On this set the replies stated at 0.9 were right less often than the ones stated at 0.8, and a
+threshold that was perfect on dev is worse than no threshold at all. Nothing about the model or the
+threshold changed. The messages did: the holdout holds the harder messages, and on them the model
+wrote 0.9 for reasons that had nothing to do with being right.
 
-## What the threshold still did
+## What the threshold did
 
-It did help. On the holdout, answering everything gives 0.57; answering at 0.80 or above gives
-0.68, and the eight messages it held back went to a person. A confidence that is miscalibrated can
-still rank answers usefully, and that ranking is what a threshold uses. What it cannot do is
-deliver the accuracy it promised on the set it was chosen on.
+On dev, a confidence that barely separated right from wrong over seventy messages looked like a
+perfect filter over forty, because twelve replies happened to be right. On the holdout the same
+filter did nothing useful. That is the lesson 11 gap again, dev against holdout, in a different
+number: **a threshold chosen on one set is a best case for that set**, and the number that means
+anything is the one from a set it was not chosen on.
 
 So the rules for a stated confidence are the rules for any other output:
 
 - **Measure it against labels a person gave**, with a reliability table, ECE and Brier, on the
   messages you will actually see.
+- **Compare it with saying the base rate every time.** If a constant beats it on Brier, as one did
+  here, the number carries no information you can route on.
 - **Choose a threshold on one set and report it on another.** The number from the set you chose on
   is a best case.
 - **Re-measure when anything changes**: the prompt, the model, the kind of messages arriving. A

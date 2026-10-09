@@ -5,45 +5,29 @@
 # THE SCRIPT IS THE SOURCE AND ITS OUTPUT IS NOT COMMITTED. Every transcript in
 # this lesson was copied from running it:
 #
-#   bash captures.sh            # beside this file; it finds ../../lab.sh
+#   bash captures.sh            # beside this file
 #
-# It rebuilds ~/triage with lab.sh reset under its own HOME, so nothing of
-# yours is touched, and prints each command after a prompt, ana@lab:~/triage$,
-# followed by what it printed.
+# lab-capture.sh builds ~/triage as a student has it after this lesson, every
+# file read out of the lessons' own fences, and prints each command after a
+# prompt, ana@lab:~/triage$, followed by what it printed.
 #
-# What is STAGED rather than typed: the whole of ~/triage, built by lab.sh,
-# including every prompt file the lesson shows. The model is the lab's
-# stand-in (promptlab/standin.py), NOT a language model; lab.sh's header says
-# what that means and what in the lab was written by the course.
+# THE MODEL IS REAL: llama3.2:3b (Q4_K_M, id a80c4f17acd5) on Ollama 0.40.0,
+# CPU only, temperature 0 and seed 1 unless a command sets them, captured on
+# 2026-10-09.
 #
-# Recorded with Python 3.11 and git 2.43, TZ=America/Sao_Paulo.
-
-set -uo pipefail
+# Recorded on Ubuntu 24.04 with Python 3.12, TZ=America/Sao_Paulo.
 here=$(cd "$(dirname "$0")" && pwd)
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 PAGER=cat GIT_PAGER=cat COLUMNS=100 PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
-export HOME=${LAB_HOME:-/var/tmp/prompt-reliability}
-mkdir -p "$HOME"
-bash "$here/../../lab.sh" reset
-cd "$HOME/triage"
-export PATH=$HOME/triage/bin:$PATH
-on() { printf 'ana@lab:~/triage$ %s\n' "$*"; bash -c "$*" 2>&1; }
-block() { printf '##### %s\n' "$1"; }
-
-block review
-on 'cat prompts/review.txt'
-on 'grep -n -A5 "^def review" promptlab/standin.py'
+LESSON=20; . "$here/../../lab-capture.sh"
 
 block t0
 on 'pl run prompts/v6-escaped.txt cases/all.jsonl --out runs/v6.jsonl'
-on 'pl selfcheck runs/v6.jsonl'
-on "grep -E '\"(h13|h15|h16|h19|h20|h28)\"' cases/all.jsonl | grep -o '\"category\": \"[a-z]*\"'"
-on 'grep h27 cases/all.jsonl'
-on 'pl show runs/v6.jsonl h27'
+on 'python3 selfcheck.py runs/v6.jsonl'
+on 'pl show runs/v6.jsonl t07'
 
 block sampled
-on 'pl run prompts/v6-escaped.txt cases/all.jsonl --samples 5 --set temperature=0.8 --out runs/s5.jsonl'
-on 'pl selfcheck runs/s5.jsonl | tail -n 4'
-on 'pl selfcheck runs/s5.jsonl | grep -E "^(t37|h27)"'
+on 'pl run prompts/v6-escaped.txt cases/dev.jsonl --samples 5 --set temperature=0.8 --out runs/s5.jsonl'
+on 'python3 selfcheck.py runs/s5.jsonl | tail -n 4'
 
 block code
 on 'pl check runs/v6.jsonl --failures | grep json'
+on 'pl show runs/v6.jsonl t38'

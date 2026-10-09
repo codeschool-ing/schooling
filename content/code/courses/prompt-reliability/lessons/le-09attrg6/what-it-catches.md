@@ -1,92 +1,115 @@
 ---
 title: What it catches
-version: 1
+version: 2
 ---
 
-Run the delimited, escaped prompt at temperature 0 and ask the stand-in to check every answer:
+Run the delimited, escaped prompt at temperature 0 and ask the model to check every answer it gave:
 
 ```
 ana@lab:~/triage$ pl run prompts/v6-escaped.txt cases/all.jsonl --out runs/v6.jsonl
-70 calls, prompt fbc4c9b1, written to runs/v6.jsonl
-ana@lab:~/triage$ pl selfcheck runs/v6.jsonl
-t26  wrong  WRONG: the answer is not valid JSON
-t37  right  WRONG: it could also be other
-t39  wrong  WRONG: the answer is not valid JSON
-h01  wrong  OK
-h04  wrong  OK
-h07  right  WRONG: it could also be account
-h11  wrong  OK
-h13  wrong  WRONG: it could also be billing
-h14  wrong  OK
-h15  wrong  WRONG: it could also be other
-h16  wrong  WRONG: it could also be delivery
-h19  wrong  WRONG: it could also be billing
-h20  wrong  WRONG: it could also be billing
-h26  wrong  OK
-h27  wrong  OK
-h28  wrong  WRONG: it could also be other
-h30  right  WRONG: it could also be billing
+70 calls, prompt fbc4c9b1, llama3.2:3b, written to runs/v6.jsonl
+ana@lab:~/triage$ python3 selfcheck.py runs/v6.jsonl
+t01    wrong WRONG The answer is not valid JSON because it is missing the nec
+t02    right WRONG The reason is that the category "delivery" is not specific
+t04    right WRONG The answer is not valid JSON because it is missing the nec
+t05    right WRONG The answer is not valid JSON because it is missing the req
+t06    wrong WRONG The answer is not valid JSON because it is missing the req
+t07    right WRONG The answer is not valid JSON because it is missing a closi
+t08    right WRONG The answer is not valid JSON because it is missing the req
+t09    right WRONG The reason is that the JSON object is missing a closing br
+t11    right WRONG The reason is that the JSON object is missing a closing br
+t13    right WRONG The answer is not valid JSON because it is missing the req
+t14    right WRONG The reason is that the JSON is missing a closing bracket a
+t16    right WRONG The answer is not valid JSON because it is missing a closi
+t17    right WRONG The reason is that the JSON object is missing a closing br
+t18    right WRONG The answer is not valid JSON because it is missing the req
+t19    wrong WRONG The answer is not valid JSON because it is missing the req
+t21    right WRONG The reason is that the JSON is missing a closing bracket a
+t22    wrong WRONG The answer is not valid JSON because it is missing the req
+t23    right WRONG The reason is that the JSON object is missing a closing br
+t25    wrong OK
+t26    wrong WRONG The answer is not valid JSON because it is missing the req
+t27    right WRONG The answer is not valid JSON because it is missing the req
+t28    right WRONG The answer is not valid JSON because it is missing the req
+t31    wrong WRONG The answer is missing a colon (:) between the key "categor
+t32    right WRONG The answer is not valid JSON because it is missing the nec
+t36    right WRONG The answer is not valid JSON because it is missing a closi
+t37    wrong OK
+t38    wrong OK
+t39    wrong OK
+h01    wrong OK
+h02    right WRONG The answer is not valid JSON because it is missing the req
+h03    wrong WRONG The answer is not valid JSON because it is missing the req
+h05    wrong WRONG The answer is not valid JSON because it is missing the req
+h06    wrong OK
+h07    wrong WRONG The answer is not valid JSON because it is missing the req
+h08    right WRONG The answer is not valid JSON because it is missing the nec
+h11    wrong WRONG The reason is that the JSON object is missing a closing br
+h12    wrong WRONG The reason is that the JSON answer is missing the "descrip
+h13    right WRONG The answer is not valid JSON because it is missing a closi
+h15    right WRONG The reason is that the JSON object is missing a closing br
+h16    right WRONG The reason is that the JSON answer is missing the "descrip
+h17    wrong WRONG The reason is that the JSON object is missing a required k
+h18    right WRONG The answer is not valid JSON because it is missing the req
+h19    right WRONG The answer is not valid JSON because it is missing the req
+h21    wrong OK
+h22    wrong WRONG The reason is that the answer is missing the "description"
+h23    wrong WRONG The reason is that the JSON object is missing a required k
+h24    wrong WRONG The reason is that the category "returns" is not the corre
+h25    right WRONG The answer is not valid JSON because it is missing a closi
+h26    wrong OK
+h27    wrong WRONG The reason is that the JSON is missing a closing bracket a
+h28    wrong WRONG The reason is that the category is missing a value. In JSO
+h29    right WRONG The reason is that the JSON object is missing a closing br
+h30    wrong WRONG The answer is missing the "message" key, which is present 
 
-               really wrong  really right
-flagged                   8             3
-not flagged               6            53
-precision 0.73   recall 0.57
+                 really wrong  really right
+flagged                    18            27
+not flagged                 8            17
+precision 0.40   recall 0.69
 ```
 
-`pl selfcheck` lists every reply that was flagged or was wrong, then the table. Of seventy replies,
-fourteen were really wrong. The check flagged eleven, and eight of those were among the fourteen.
+Of seventy replies, 26 were really wrong. The reviewer flagged 45 replies, and 18 of those were
+among the 26.
 
-Two numbers summarise the table. **Precision** asks how many flags were right: 8 of 11, 0.73.
-**Recall** asks how many mistakes were flagged: 8 of 14, 0.57. A check with high precision and low
+Two numbers summarise the table. **Precision** asks how many flags were right: 18 of 45, 0.40.
+**Recall** asks how many mistakes were flagged: 18 of 26, 0.69. A check with high precision and low
 recall is quiet and trustworthy when it speaks; one with the opposite is loud and catches more.
 Neither number means anything without the other.
 
-## Reading the table
+## Against a coin
 
-Two of the eight catches are `t26` and `t39`, replies that are not JSON. Any program could have
-found those, and the last section of this lesson does.
+Those two numbers need a baseline, and the honest one is a check that never reads anything. Flag 45
+replies of the seventy at random, and on average the flags land on wrong replies in the same share
+as wrong replies have in the whole run: 26 of 70, a precision of 0.37. Recall would be 45 of 70,
+0.64. **The reviewer's 0.40 and 0.69 are barely above a check that flips a coin**, which is what
+the table says when you read it by columns: it flagged 18 of the 26 wrong replies, 69%, and 27 of
+the 44 right ones, 61%.
 
-The other six are label mistakes, and every one of them was caught the same way, with *it could
-also be*. The reviewer doubted those answers because its two best labels were close. Look at what
-it suggested instead, against what the person said:
+## What it said
+
+Read the reasons, not only the flags. Almost every one is about the format, and almost every one is
+false. Here is `t07`, which the reviewer said was *not valid JSON because it is missing a closing
+bracket*:
 
 ```
-ana@lab:~/triage$ grep -E '"(h13|h15|h16|h19|h20|h28)"' cases/all.jsonl | grep -o '"category": "[a-z]*"'
-"category": "returns"
-"category": "account"
-"category": "returns"
-"category": "account"
-"category": "delivery"
-"category": "billing"
+ana@lab:~/triage$ pl show runs/v6.jsonl t07
+│ {"category": "delivery", "urgency": "high", "summary": "Customer disputes delivery address"}
+stop: stop, tokens in 151, out 23, 2.9 s
 ```
 
-Returns, account, returns, account, delivery, billing. The reviewer suggested billing, other,
-delivery, billing, billing and other. **Not one of its six alternatives is the person's label.** It
-knew the answer was shaky and did not know what it should be, which is a useful flag and a useless
-correction.
+It parses, it has every field, and its category is right. The reviewer was asked a yes-or-no
+question about this text, and it answered with a defect the text does not have. The same sentence,
+*missing a closing bracket* or *missing the required field*, appears on most of the 45 flags, right
+replies and wrong ones alike. **A flag that comes with a reason is not more trustworthy for having
+one**: the reason is generated like everything else, and here it is mostly invented.
+
+And the replies that were really broken? `t38` is not JSON at all, and the reviewer said OK. The
+last section of this lesson comes back to it.
 
 ## The misses
 
-Six wrong answers came back OK. Here is one:
-
-```
-ana@lab:~/triage$ grep h27 cases/all.jsonl
-{"id": "h27", "message": "Someone used my gift card balance before I did.", "expect": {"category": "account", "urgency": "high"}}
-ana@lab:~/triage$ pl show runs/v6.jsonl h27
-│ {
-│   "category": "billing",
-│   "urgency": "normal",
-│   "summary": "Someone used their gift card balance before they did."
-│ }
-stop: end, tokens in 116, out 34
-```
-
-A stranger spent the customer's gift card balance. The person who labelled it called that an
-account problem, someone else getting into what is theirs. The stand-in reads `card`, a billing
-word, and says billing. Asked to check, it reads `card` again and agrees with itself. **A mistake
-the model would make again is a mistake its own check cannot see**, and every one of the six misses
-is one of those.
-
-The three false alarms are the same mechanism from the other side: `t37`, `h07` and `h30` were
-answered correctly, and on close calls, so the reviewer doubted them anyway. A flag here means
-*this was a close call*. That is worth knowing, as long as nobody reads it as *this is wrong*.
+Eight wrong replies came back OK: `t25`, `t37`, `t38`, `t39`, `h01`, `h06`, `h21` and `h26`. Seven
+of them are label mistakes, and the reviewer read the message and the wrong label and agreed. **A
+mistake the model would make again is a mistake its own check cannot see**, because the check reads
+with the same knowledge the answer was written with.

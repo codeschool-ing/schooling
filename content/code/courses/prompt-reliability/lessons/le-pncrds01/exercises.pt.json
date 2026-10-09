@@ -1,374 +1,394 @@
 {
   "ex-6mskq32h": {
-    "prompt": "No laboratório, `They were charged twice for order 4471.` tem sete palavras e oito tokens. De onde vem o oitavo?",
-    "hint": "Olhe o fim da frase.",
+    "prompt": "`They were charged twice for order 4471.` deu dez tokens para sete palavras. Cite um motivo dado para a diferença.",
+    "hint": "Veja como foi enviado.",
     "choices": [
       {
-        "text": "O número 4471 é dividido em dois tokens",
-        "why": "No laboratório uma sequência de dígitos é um token."
+        "text": "O harness soma as instruções do prompt à contagem",
+        "why": "O `tokens.py` manda o texto sozinho, cru, sem nada em volta."
       },
       {
-        "text": "O ponto final",
-        "why": "Certo: no laboratório cada sinal de pontuação é um token."
+        "text": "O `tokens.py` conta letras, não palavras",
+        "why": "Ele lê a contagem do próprio modelo; 40 caracteres é outro número."
       },
       {
-        "text": "A quebra de linha que o `echo` acrescenta no fim",
-        "why": "O tokenizador do laboratório não conta espaços nem quebras de linha."
+        "text": "A quebra de linha do `echo` e o número partido em pedaços",
+        "why": "Certo: pontuação, números e a quebra de linha contam."
       },
       {
-        "text": "A palavra *charged*, longa o bastante para ser dividida",
-        "why": "O laboratório nunca divide uma palavra; um tokenizador real talvez divida."
+        "text": "Toda palavra em inglês são dois tokens",
+        "why": "Palavras comuns costumam ser um token cada."
       }
     ]
   },
   "ex-ndpafv0m": {
-    "prompt": "Dentro de um campo JSON, `{\"summary\": \"…\"}`, a frase de oito tokens passou a ter quantos tokens?",
-    "hint": "A segunda linha do `pl tokens`.",
-    "unit": "tokens"
+    "prompt": "Posta dentro de um campo JSON, `{\"summary\": \"…\"}`, a frase de dez tokens deu quantos tokens?",
+    "hint": "O terceiro comando."
   },
   "ex-3dyqq7nc": {
-    "prompt": "A resposta para `t01` tem 32 tokens, e o resumo é 8 deles. O que são os outros 24?",
-    "hint": "Conte o que está em volta da frase.",
+    "prompt": "A resposta do `t01` tem 28 tokens. Quais são os tokens que não são o resumo?",
+    "hint": "O que envolve a frase?",
     "choices": [
       {
-        "text": "Os espaços e quebras de linha do JSON indentado",
-        "why": "O laboratório não conta espaço nenhum."
+        "text": "A moldura: nomes, rótulos e pontuação",
+        "why": "Certo: numa resposta JSON boa parte do que se escreve é estrutura."
       },
       {
-        "text": "A mensagem, que o modelo repete antes de responder",
-        "why": "A resposta não traz cópia da mensagem."
+        "text": "As instruções do prompt, copiadas de volta",
+        "why": "Essas são tokens de entrada, não de saída."
       },
       {
-        "text": "Nomes de campo, rótulos e pontuação",
-        "why": "Certo: 19 sinais de pontuação e 5 nomes e rótulos."
+        "text": "Enchimento que o Ollama acrescenta para arredondar a contagem",
+        "why": "Nada é preenchido."
       },
       {
-        "text": "Raciocínio oculto",
-        "why": "O substituto não escreve nada que não apareça."
+        "text": "Tokens que o modelo gastou pensando antes de responder",
+        "why": "O `llama3.2:3b` não escreve raciocínio escondido aqui; todo token está na resposta."
       }
     ]
   },
   "ex-c9s3arsh": {
-    "prompt": "A contagem de tokens do laboratório diz quanto um provedor cobraria pelo mesmo texto?",
-    "hint": "Pelo tokenizador de quem o provedor cobra?",
+    "prompt": "A contagem do `tokens.py` diz o que um provedor vai cobrar pelo mesmo texto?",
+    "hint": "De quem é o tokenizador?",
     "choices": [
       {
-        "text": "Sim, porque todo tokenizador conta pontuação do mesmo jeito",
-        "why": "Tokenizadores reais muitas vezes juntam a pontuação ao que está ao lado."
+        "text": "Sim, desde que o texto seja em inglês",
+        "why": "O idioma muda a contagem; não faz os tokenizadores concordarem."
       },
       {
-        "text": "Não: o provedor conta com o próprio tokenizador",
-        "why": "Certo. O que se mantém é a proporção de estrutura, não o número."
+        "text": "Não, porque os provedores cobram por caractere",
+        "why": "Cobram pelos seus próprios tokens."
       },
       {
-        "text": "Sim, para texto em inglês",
-        "why": "A língua não faz dois tokenizadores concordarem."
+        "text": "Sim, porque um token é a mesma unidade em todo lugar",
+        "why": "Cada modelo parte o texto do seu jeito."
       },
       {
-        "text": "Só para JSON",
-        "why": "O formato também não faz."
+        "text": "Não: cada modelo conta os tokens do seu próprio jeito",
+        "why": "Certo: o que vale em todo lugar é a proporção, não o número."
       }
     ]
   },
   "ex-8efghfxr": {
-    "prompt": "Um limite escolhido pensando em quanto o ___ deveria ter sai pequeno demais, porque essa parte é só um quarto da resposta.",
-    "hint": "A parte da resposta que uma pessoa lê.",
+    "prompt": "Um limite escolhido pensando em quanto o ___ deveria ter fica pequeno demais, porque a moldura em volta dele também conta.",
+    "hint": "A parte que uma pessoa lê.",
     "blanks": [
       {
         "accept": [
-          "resumo"
+          "resumo",
+          "summary"
         ]
       }
     ]
   },
   "ex-btj71m3x": {
-    "prompt": "Com `max_tokens=30`, quantas das quarenta respostas passaram em todas as verificações?",
-    "hint": "A linha `all` de `pl check runs/cap30.jsonl`."
+    "prompt": "Com `num_predict=25`, quantas das quarenta respostas passaram em todas as verificações?",
+    "hint": "A linha `all`."
   },
   "ex-0eg1gvj8": {
-    "prompt": "Por que `t35` passou com o limite de 30, quando outras 39 falharam?",
-    "hint": "Olhe o `out` na última linha.",
+    "prompt": "Com o limite de 25 houve trinta falhas de `json`, e o `grep -c` contou vinte e nove cortadas. Qual foi a trigésima?",
+    "hint": "A aula 3.",
     "choices": [
       {
-        "text": "A mensagem pedia uma resposta curta",
-        "why": "Não pedia; o cliente só gosta da loja."
+        "text": "Uma resposta cortada em exatamente 25 tokens que por acaso era JSON válido",
+        "why": "Uma resposta que é JSON válido não falha em `json`."
       },
       {
-        "text": "O substituto percebeu o limite e escreveu menos",
-        "why": "Nada na resposta mudou; o limite tira, não planeja."
+        "text": "O `t38`, quebrado pelo apóstrofo",
+        "why": "Certo: uma falha diferente com o mesmo nome de verificação."
       },
       {
-        "text": "A resposta tinha 29 tokens",
-        "why": "Certo: o resumo tinha quatro palavras, e a resposta inteira coube no limite."
+        "text": "Uma resposta que o modelo se recusou a escrever",
+        "why": "Toda resposta voltou."
       },
       {
-        "text": "O limite não vale para respostas classificadas como other, já que ninguém as lê",
-        "why": "O limite vale igual para todas as respostas."
+        "text": "Uma resposta cortada em 24 tokens",
+        "why": "Isso ainda é um corte, e teria sido contado."
       }
     ]
   },
   "ex-cynjhg3m": {
-    "prompt": "Uma resposta termina com `stop: max_tokens`. O que isso diz?",
-    "hint": "Compare com `stop: end`.",
+    "prompt": "Uma resposta termina com `stop: length`. O que isso diz?",
+    "hint": "Quem a terminou?",
     "choices": [
       {
-        "text": "Quem a terminou foi o limite, não o modelo",
-        "why": "Certo, então falta o fim da resposta."
+        "text": "O modelo ficou sem memória",
+        "why": "Isso seria um erro, não um motivo de parada."
       },
       {
-        "text": "O modelo julgou a resposta completa e parou",
-        "why": "Isso é `end`."
+        "text": "O modelo terminou sozinho",
+        "why": "Isso é `stop: stop`."
       },
       {
-        "text": "O prompt era longo demais para o modelo ler",
-        "why": "O limite é sobre a saída, não a entrada."
+        "text": "O limite a terminou, onde quer que estivesse",
+        "why": "Certo: a resposta está incompleta, seja ela JSON válido ou não."
       },
       {
-        "text": "A resposta custou mais do que o limite deixa",
-        "why": "O limite conta tokens, e a resposta cortada é cobrada pelo que escreveu."
+        "text": "A resposta era longa demais para o terminal",
+        "why": "O motivo da parada vem do modelo, não do terminal."
       }
     ]
   },
   "ex-cz9jjhv9": {
-    "prompt": "Um colega põe `max_tokens` em 20 num prompt que escreve respostas de um parágrafo a clientes, para que fiquem curtas. Como as respostas vão sair?",
-    "hint": "O limite muda o que o modelo pretende escrever?",
+    "prompt": "Um colega põe `num_predict` em 20 num prompt que escreve respostas de um parágrafo para clientes, para mantê-las curtas. O que acontece?",
+    "hint": "Tesoura, não pedido.",
     "choices": [
       {
-        "text": "Mais curtas e completas: o modelo ajusta a resposta ao limite",
-        "why": "O limite decide onde a escrita para, não o que é escrito."
+        "text": "As respostas chegam cortadas no meio da frase",
+        "why": "Certo: peça brevidade no prompt, e mantenha o limite bem acima."
       },
       {
-        "text": "Iguais, porque o provedor ignora limites muito pequenos",
-        "why": "O limite vale qualquer que seja o tamanho."
+        "text": "O modelo recusa respostas que passariam de 20 tokens",
+        "why": "Ele escreve até ser parado."
       },
       {
-        "text": "Recusadas antes de qualquer texto ser escrito",
-        "why": "Nada recusa o pedido; ele é cortado."
+        "text": "Nada, porque um limite só vale para JSON",
+        "why": "Um limite vale para qualquer texto."
       },
       {
-        "text": "A maioria parada no meio de uma frase",
-        "why": "Certo. Para ter respostas curtas, peça no prompt."
+        "text": "As respostas voltam como parágrafos mais curtos",
+        "why": "O modelo não sabe do limite; é cortado nele."
       }
     ]
   },
   "ex-229bj5b1": {
-    "prompt": "Com `v4-words.txt`, `t37` voltou mais curta e ainda em JSON válido, enquanto o limite de 30 a quebrou. Qual é a diferença?",
-    "hint": "Qual dos dois mudou o que foi escrito?",
+    "prompt": "Com o `v4-words.txt`, o `t37` voltou mais curto e ainda JSON válido, enquanto o limite de 25 cortava respostas no meio do texto. Qual é a diferença?",
+    "hint": "Quem lê o quê?",
     "choices": [
       {
-        "text": "O prompt de palavras também aumentou o limite, e a resposta teve espaço para terminar",
-        "why": "Nenhum limite foi definido nessa execução."
+        "text": "O pedido é mais rígido que o limite",
+        "why": "O pedido é mais fraco: nada obriga o modelo a obedecer."
       },
       {
-        "text": "O pedido mudou o que foi escrito; o limite tirou o fim",
-        "why": "Certo: pedir dá forma à resposta, o limite só a corta."
+        "text": "O limite só vale para o resumo",
+        "why": "Vale para a resposta inteira."
       },
       {
-        "text": "Um pedido de tamanho desliga o limite",
-        "why": "Com limite de 30 o prompt de palavras também falhou 39 vezes."
+        "text": "São o mesmo mecanismo com números diferentes",
+        "why": "Um faz parte do prompt; o outro para a geração."
       },
       {
-        "text": "Resumos curtos nunca são cortados",
-        "why": "São, quando a moldura mais o resumo passa do limite."
+        "text": "O modelo lê o pedido e nunca lê o limite",
+        "why": "Certo: pedir molda, o limite só corta."
       }
     ]
   },
   "ex-85d6ezxp": {
-    "prompt": "A média de tokens de saída foi de 38.0 para 36.8 quando o prompt pediu menos de 12 palavras. Em quantos tokens por resposta a média caiu?",
-    "hint": "Subtraia.",
-    "unit": "tokens"
+    "prompt": "A média de tokens de saída foi de 28,8 para 25,3 quando o prompt pediu menos de 12 palavras. Quantos tokens por resposta a média caiu? Dê uma casa decimal.",
+    "hint": "Subtraia."
   },
   "ex-mcbqktpk": {
-    "prompt": "Por que pedir um resumo com menos de 12 palavras baixou tão pouco a média de saída?",
-    "hint": "Que parte da resposta pode encolher?",
+    "prompt": "Pedir um resumo mais curto também fez o `t38` virar JSON válido. Por quê?",
+    "hint": "O que quebrou o `t38` na aula 3?",
     "choices": [
       {
-        "text": "O substituto ignorou o pedido e escreveu os mesmos resumos de uma frase de sempre",
-        "why": "Obedeceu: `t37` foi cortada em doze palavras."
+        "text": "O pedido consertou o JSON depois de escrito",
+        "why": "Nada o conserta; o modelo escreveu outra resposta."
       },
       {
-        "text": "O prompt cresceu algumas palavras, e o tamanho da saída acompanha o do prompt",
-        "why": "O tamanho da entrada não define o da saída."
+        "text": "Com menos palavras, o *won't* nem apareceu",
+        "why": "Certo: o apóstrofo que quebrava o objeto nem apareceu."
       },
       {
-        "text": "Só o resumo encolhe, e a moldura JSON em volta continua do mesmo tamanho",
-        "why": "Certo, e muitos resumos já tinham menos de doze palavras."
+        "text": "O limite parou a resposta antes do apóstrofo",
+        "why": "Essa execução não tinha limite."
       },
       {
-        "text": "Doze palavras é o mínimo do substituto",
-        "why": "Ele não tem mínimo; o resumo de `t35` tinha quatro palavras."
+        "text": "O `v4-words.txt` pede JSON com mais firmeza",
+        "why": "Só a linha do resumo mudou."
       }
     ]
   },
   "ex-ttdzxp1a": {
-    "prompt": "Com `max_tokens=30`, o prompt que pede menos de 12 palavras ainda passou 1 resposta em 40. O que deve mudar?",
-    "hint": "Doze palavras de resumo ficam dentro de uma moldura.",
+    "prompt": "Com `num_predict=25`, o prompt que pede menos de 12 palavras ainda teve nove respostas cortadas. O que deveria mudar?",
+    "hint": "Pedido ou limite?",
     "choices": [
       {
-        "text": "Pedir menos palavras, abaixo de seis",
-        "why": "Isso briga com o limite pelo conteúdo; o errado é o limite."
+        "text": "Tirar o pedido, já que o limite faz o trabalho",
+        "why": "O limite corta; não deixa respostas mais curtas."
       },
       {
-        "text": "O limite: bem acima do tamanho pedido mais a moldura",
-        "why": "Certo. O pedido define o tamanho; o limite é só a proteção."
+        "text": "Pedir ainda menos palavras",
+        "why": "Qualquer resposta acima do limite continua sendo cortada."
       },
       {
-        "text": "Tirar o pedido, já que o limite já limita o tamanho",
-        "why": "Aí toda resposta longa é cortada em vez de encurtada."
+        "text": "Subir o limite acima da resposta mais longa",
+        "why": "Certo: o limite protege contra a resposta que ignora o pedido."
       },
       {
-        "text": "Analisar as respostas cortadas com tolerância",
-        "why": "Uma resposta cortada é uma falha, não um problema de análise."
+        "text": "Baixar o limite para 20 por segurança",
+        "why": "Um limite mais baixo corta mais."
       }
     ]
   },
   "ex-xssf2z5w": {
-    "prompt": "Quais destas valem para pedir um tamanho no prompt? Marque todas as que se aplicam.",
-    "hint": "Compare com o limite.",
+    "prompt": "Quais destes são verdade sobre pedir um tamanho no prompt? Marque todos os que se aplicam.",
+    "hint": "Meça como qualquer mudança.",
     "choices": [
       {
-        "text": "Muda o que o modelo escreve",
-        "why": "Sim: a chave ainda fecha."
+        "text": "O modelo o lê e escreve uma resposta diferente, mais curta",
+        "why": "Sim."
       },
       {
-        "text": "Precisa ser conferido, como um rótulo",
-        "why": "Sim: o substituto manteve doze palavras onde menos de 12 permitia onze."
+        "text": "Ele mexeu em quatro categorias nesta aula",
+        "why": "Sim: uma linha sobre tamanho continua sendo uma linha."
       },
       {
-        "text": "Torna o limite desnecessário",
-        "why": "O limite é para a resposta que ignora o pedido."
+        "text": "Ele garante que a resposta fica abaixo do número dado",
+        "why": "Nada obriga o modelo a contar direito."
       },
       {
-        "text": "Não detém uma resposta que o ignora",
-        "why": "Sim, e por isso o limite continua."
+        "text": "Ele mantém o JSON fechado, onde um limite o cortaria",
+        "why": "Sim: a chave faz parte do que foi escrito."
       }
     ]
   },
   "ex-092266x2": {
     "prompt": "Por onde começa a escolha de um limite?",
-    "hint": "Um limite precisa ficar fora do caminho das respostas comuns.",
+    "hint": "Medida.",
     "choices": [
       {
-        "text": "O tamanho que você pediu para o resumo",
-        "why": "O resumo é um quarto da resposta."
+        "text": "Pela resposta comum mais longa que você mediu",
+        "why": "Certo: 38 tokens em setenta mensagens."
       },
       {
-        "text": "O maior valor que o provedor permite",
-        "why": "Isso não protege contra nada."
+        "text": "Pelo tamanho que você gostaria que o resumo tivesse",
+        "why": "Isso dá um limite que corta respostas comuns."
       },
       {
-        "text": "A média de saída de uma execução, já que a maioria das respostas fica perto dela",
-        "why": "Metade das respostas passa de um limite perto da média."
+        "text": "Pelo máximo do provedor",
+        "why": "Aí o limite não protege contra nada."
       },
       {
-        "text": "A resposta comum mais longa, medida num conjunto de teste",
-        "why": "Certo: o `pl latency` mostra."
+        "text": "Pelo tamanho médio das respostas",
+        "why": "Metade das respostas é mais longa que a média."
       }
     ]
   },
   "ex-1eye7fx8": {
-    "prompt": "Com o campo de confiança e limite de 100, quantos tokens teve a resposta mais longa?",
-    "hint": "A última linha de `pl latency runs/v9-100.jsonl`.",
-    "unit": "tokens"
+    "prompt": "Com o campo de confiança e um limite de 76, quantos tokens teve a resposta mais longa?",
+    "hint": "`stats.py runs/v9-76.jsonl`."
   },
   "ex-55qs1nbd": {
-    "prompt": "Com limite de 50, duas respostas com o campo de confiança foram cortadas, e mesmo assim `all` deu 36, como com limite de 100. Por quê?",
-    "hint": "O que mais estava errado em `t37` e `t24`?",
+    "prompt": "Com um limite de 38, sete respostas com o campo de confiança foram cortadas; com 76 as sete passaram. O que isso mostra?",
+    "hint": "O que mudou entre as execuções?",
     "choices": [
       {
-        "text": "As duas já falhavam num rótulo",
-        "why": "Certo: o corte mudou por que falharam, e não quantas falharam."
+        "text": "Um limite mais alto faz o modelo escrever respostas melhores",
+        "why": "O limite não muda o que se escreve, só onde para."
       },
       {
-        "text": "A bancada deixa respostas cortadas fora da conta",
-        "why": "Elas contam, como falhas de `json`."
+        "text": "O teste do sinal estava errado",
+        "why": "Sete consertadas e nenhuma quebrada é p = 0.016, uma diferença real."
       },
       {
-        "text": "A bancada rodou as duas respostas cortadas de novo sem o limite",
-        "why": "Nada roda de novo; cada chamada é feita uma vez."
+        "text": "O campo de confiança deixa o modelo menos preciso",
+        "why": "O mesmo prompt passou sete a mais quando nada foi cortado."
       },
       {
-        "text": "Uma resposta cortada passa em `all` se a categoria estiver certa",
-        "why": "Uma resposta que falha em `json` falha em todas as seguintes."
+        "text": "O máximo antigo não deixava folga nenhuma",
+        "why": "Certo: um campo levou o máximo de 38 para 43."
       }
     ]
   },
   "ex-rzjzn4nx": {
-    "prompt": "Um leitor acrescenta a chave que falta em `t24`, analisa e obtém a resposta certa. Por que essa ainda é uma regra ruim para o leitor?",
-    "hint": "Onde vai cair o próximo corte?",
+    "prompt": "Um leitor acrescenta a chave que falta a uma resposta cortada depois do último campo, a interpreta e tem a resposta certa. Por que isso ainda é uma regra ruim para toda resposta cortada?",
+    "hint": "Onde mais um corte pode cair?",
     "choices": [
       {
-        "text": "Acrescentar um caractere a uma resposta é mais lento que analisá-la",
-        "why": "Velocidade não é o problema."
+        "text": "Porque acrescentar uma chave é lento",
+        "why": "Velocidade não é a questão."
       },
       {
-        "text": "O próximo corte cai dentro de um resumo, e o conserto o aceita sem o fim",
-        "why": "Certo: uma resposta que parou em `max_tokens` é uma falha, sobre o que quer que tenha sobrado."
+        "text": "Em outro ponto do texto, o conserto aceita uma resposta errada",
+        "why": "Certo: toda resposta que bateu no limite é uma falha."
       },
       {
-        "text": "O JSON proíbe acrescentar chaves depois",
-        "why": "Nada no JSON proíbe; o risco é aceitar uma resposta truncada."
+        "text": "Porque o JSON proíbe acrescentar caracteres",
+        "why": "O JSON não tem opinião; a questão é o que o conserto aceita."
       },
       {
-        "text": "O valor de confiança se perderia",
-        "why": "Em `t24` ele estava lá; o problema são os outros cortes."
+        "text": "Porque o motivo da parada mudaria",
+        "why": "O motivo continua `length`, faça o leitor o que fizer."
+      }
+    ]
+  },
+  "ex-p3n8v2sz": {
+    "prompt": "Por que o `v9-confidence.txt` precisa da edição com `sed` no `pl.py` antes de as respostas dele poderem passar?",
+    "hint": "O que a `judge()` recusa?",
+    "choices": [
+      {
+        "text": "Porque o Ollama rejeita JSON com quatro campos",
+        "why": "O Ollama não confere a resposta."
+      },
+      {
+        "text": "Porque o `pl.py` não consegue ler números",
+        "why": "Ele lê bem; a questão é a chave."
+      },
+      {
+        "text": "A `judge()` recusa chaves que não conhece",
+        "why": "Certo: a verificação são as necessidades do leitor, e o leitor precisa de mais uma chave."
+      },
+      {
+        "text": "Porque o arquivo do prompt tem um cabeçalho que o harness não entende",
+        "why": "Este prompt não tem cabeçalho."
       }
     ]
   },
   "ex-vykbxm55": {
-    "prompt": "Ponha em ordem os passos para definir um limite.",
-    "hint": "Medir, definir, vigiar, repetir.",
+    "prompt": "Ponha em ordem os passos para escolher um limite.",
+    "hint": "Medir, definir, medir de novo.",
     "items": [
-      "Rodar o prompt num conjunto de teste e ler a resposta mais longa",
-      "Pôr o limite bem acima disso, perto do dobro",
-      "Tratar toda resposta que parou no limite como falha, e contá-las",
-      "Medir de novo quando o prompt mudar"
+      "Rodar o prompt em todos os casos sem limite",
+      "Ler a resposta mais longa",
+      "Pôr o limite bem acima dela",
+      "Medir de novo sempre que o prompt mudar"
     ]
   },
   "ex-ezhhx7cf": {
-    "prompt": "Associe cada comando ao que ele mostrou nesta aula.",
-    "hint": "Um cada.",
+    "prompt": "Ligue cada comando ao que ele disse nesta aula.",
+    "hint": "Um para cada.",
     "pairs": [
       {
-        "left": "`pl tokens`",
-        "right": "Quantos tokens um trecho de texto tem"
+        "left": "`python3 tokens.py -`",
+        "right": "Quantos tokens um texto tem"
       },
       {
-        "left": "`pl latency`",
-        "right": "A média e a maior saída de uma execução"
-      },
-      {
-        "left": "`pl show`",
-        "right": "Uma resposta e por que ela parou"
+        "left": "`python3 stats.py`",
+        "right": "A média e a resposta mais longa de uma execução"
       },
       {
         "left": "`pl check --failures`",
-        "right": "Cada falha e o motivo dela"
+        "right": "Quais respostas foram cortadas"
+      },
+      {
+        "left": "`pl show`",
+        "right": "O motivo da parada de uma resposta"
       }
     ],
     "right_distractors": [
-      "O preço de um milhão de chamadas"
+      "O preço de uma execução em dólares"
     ]
   },
   "ex-8rkxj6c5": {
-    "prompt": "Depois de uma mudança no prompt, o `pl check` passa a mostrar falhas de `json` com o motivo `cut off at max_tokens`. O que você faz?",
-    "hint": "O prompt mudou e o limite não.",
+    "prompt": "Depois de uma mudança no prompt, o `pl check` começa a mostrar falhas de `json` com o motivo `cut off at num_predict`. O que você faz primeiro?",
+    "hint": "O que a mudança fez com as respostas?",
     "choices": [
       {
-        "text": "Acrescentar *be brief* ao prompt para que as respostas voltem a caber no limite",
-        "why": "Isso muda a resposta para servir a uma proteção que está no lugar errado."
+        "text": "Medir a nova resposta mais longa e subir o limite",
+        "why": "Certo: o limite foi parar no tráfego comum."
       },
       {
-        "text": "Fechar as respostas cortadas no leitor, acrescentando as aspas e a chave que faltam",
-        "why": "Uma resposta cortada é uma falha, não algo a consertar."
+        "text": "Baixar a temperatura",
+        "why": "A temperatura não decide onde cai o limite."
       },
       {
-        "text": "Medir a nova resposta mais longa e subir o limite bem acima dela",
-        "why": "Certo: o limite foi definido para o prompt antigo."
+        "text": "Pedir respostas mais curtas no prompt e manter o limite",
+        "why": "Pode ajudar, e deixa um limite sem folga."
       },
       {
-        "text": "Pôr a temperatura em 0",
-        "why": "A temperatura não decide onde a escrita para."
+        "text": "Consertar as respostas cortadas fechando as chaves",
+        "why": "Uma resposta cortada é uma falha; consertar esconde o que se perdeu."
       }
     ]
   }

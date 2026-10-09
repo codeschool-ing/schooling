@@ -1,12 +1,14 @@
 ---
 title: Crases triplas
-version: 1
+version: 2
 ---
 
-O primeiro delimitador a que a maioria recorre é o do Markdown para código: três crases
-acima da mensagem e três abaixo. `prompts/v5-backticks.txt` faz isso e avisa nas instruções:
+O primeiro delimitador que a maioria das pessoas usa é o que o Markdown usa para código: três crases
+acima da mensagem e três abaixo. A aula 4 salvou o `prompts/v5-tagged.txt`, que marca a mensagem
+com tags; este sed faz uma cópia que usa crases no lugar, e diz isso nas instruções:
 
 ```
+ana@lab:~/triage$ sed -e 's/between <message> tags/between triple backticks/' -e 's|^</\?message>$|```|' prompts/v5-tagged.txt > prompts/v5-backticks.txt
 ana@lab:~/triage$ cat -n prompts/v5-backticks.txt
      1	You sort customer messages for Folio, an online bookshop.
      2	
@@ -25,65 +27,66 @@ ana@lab:~/triage$ cat -n prompts/v5-backticks.txt
 ```
 
 As linhas estão numeradas por um motivo prático. Esta página é escrita em Markdown, e o Markdown
-também encerra um bloco de código numa linha de três crases. **Mostrado como está, o prompt teria
-fechado a moldura da própria página na linha 12**, que é exatamente a falha de que esta seção trata.
+também termina um bloco de código numa linha de três crases. **Mostrado como é, o prompt teria
+fechado a moldura desta própria página na linha 12**, que é exatamente a falha de que esta seção
+trata. É também por isso que o arquivo é feito com um sed em vez de salvo de um bloco desta página.
 
 ```
 ana@lab:~/triage$ pl run prompts/v5-backticks.txt cases/pasted.jsonl --out runs/backticks.jsonl
-6 calls, prompt f83c11a3, written to runs/backticks.jsonl
+6 calls, prompt f83c11a3, llama3.2:3b, written to runs/backticks.jsonl
 ana@lab:~/triage$ pl check runs/backticks.jsonl --failures
 check      pass  fail
 json          6     0
 fields        6     0
 labels        6     0
-category      2     4
-urgency       1     5
-all           1     5
+category      3     3
+urgency       0     6
+all           0     6
 
-p01    category  other, expected returns
-p02    category  other, expected billing
-p03    urgency   normal, expected low
-p04    category  other, expected delivery
-p06    category  other, expected delivery
+p01    urgency   high, expected normal
+p02    category  returns, expected billing
+p03    category  other, expected account
+p04    urgency   low, expected normal
+p05    category  returns, expected other
+p06    urgency   high, expected normal
 ```
 
-Uma aprovação em seis. Quatro das cinco falhas são categorias, e todas são `other`, o rótulo de uma
-mensagem que o substituto não conseguiu situar. Veja o que ele recebeu em `p01` e o que fez
-com isso:
+Nenhuma das seis passa, como antes, e três categorias estão certas onde o prompt sem delimitador
+acertava duas. Isto é o que o modelo recebeu para o `p04`, a mensagem com o bilhete do entregador:
 
 ```
-ana@lab:~/triage$ pl render prompts/v5-backticks.txt --cases cases/pasted.jsonl --case p01 | tail -n 4 | cat -n
-pl: warning: the value of {{message}} contains ```, which closes its delimiter
-     1	
-     2	```
-     3	The ebook I bought won't download. The page shows ```Error 403: link expired``` instead.
-     4	```
-ana@lab:~/triage$ pl show runs/backticks.jsonl p01
-│ {
-│   "category": "other",
-│   "urgency": "normal",
-│   "summary": ""
-│ }
-stop: end, tokens in 128, out 24
+ana@lab:~/triage$ pl render prompts/v5-backticks.txt --cases cases/pasted.jsonl --case p04 | tail -n 8 | cat -n
+     1	```
+     2	The courier left this note:
+     3	```
+     4	Attempted delivery 14:02
+     5	No safe place
+     6	```
+     7	When will they try again?
+     8	```
+```
+
+O prompt agora tem quatro linhas de três crases, duas do template e duas do cliente, e nada nele diz
+qual faz par com qual. Lido como Markdown, a linha 3 fecha o bloco que a linha 1 abriu. O bilhete do
+entregador, nas linhas 4 e 5, fica fora da mensagem, na parte do prompt onde moram as instruções, e
+a linha 6 abre um bloco novo que a linha 8 fecha, com só a pergunta do cliente dentro. **O
+`llama3.2:3b` leu como uma pessoa leria**:
+
+```
 ana@lab:~/triage$ pl show runs/backticks.jsonl p04
-│ {
-│   "category": "other",
-│   "urgency": "normal",
-│   "summary": "When will they try again?"
-│ }
-stop: end, tokens in 129, out 30
+│ {"category": "delivery", "urgency": "low", "summary": "Customer wants to know when the courier will try again after failed delivery"}
+stop: stop, tokens in 160, out 32, 4.5 s
 ```
 
-O `pl render` avisa antes de mostrar: o valor de `{{message}}` contém três crases, que fecham o
-delimitador. O prompt agora tem quatro grupos delas, dois do template e dois do cliente, e nada diz
-qual faz par com qual. O substituto pega o último par. Em `p01` são o segundo grupo do cliente e o de
-fechamento do template, com só *instead.* entre eles. Uma primeira linha depois das crases é um
-rótulo de linguagem no Markdown, como num bloco que abre com `json`, e o substituto a descarta, então
-o resumo sai vazio. Em `p04` o último par guarda a pergunta final do cliente e mais nada, e o bilhete
-do entregador nunca foi lido.
+O resumo tem a entrega que falhou, então o bilhete foi lido como parte da mensagem.
 
-**Crases são comuns justamente no texto que clientes colam**: código, logs, páginas de erro,
-qualquer coisa copiada de uma ferramenta de chat que formata código. Um delimitador que o conteúdo
-pode conter é um delimitador que o conteúdo pode fechar. Repare também que o `pl run` não deu
-aviso. Ele renderiza com os avisos desligados, então **renderize alguns casos reais sempre que mudar
-um template**, e leia o que ele diz primeiro.
+Então nestas seis mensagens a ambiguidade não custou nada. Isso é um fato sobre este modelo e estas
+mensagens, e não é algo em que um template possa se apoiar: **um delimitador que o conteúdo pode
+conter é um delimitador que o conteúdo pode fechar**, e se o modelo percebe ou não é decidido de novo
+a cada mensagem. Crases são comuns justamente no texto que os clientes colam: código, logs, páginas
+de erro, qualquer coisa copiada de um chat que formata código. Também não existe um jeito padrão de
+escapá-las. Uma linha de três crases dentro da mensagem não pode virar algo que se leia igual e não
+feche nada, como as duas próximas seções fazem com uma tag.
+
+Repare também que o `pl run` não disse nada. Nada verifica a estrutura de um prompt renderizado a
+menos que você olhe, então **renderize alguns casos reais sempre que mudar um template**, e leia.

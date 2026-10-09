@@ -1,10 +1,11 @@
 ---
 title: O que é um conjunto de teste
-version: 1
+version: 2
 ---
 
-O conjunto de teste é a única parte de uma avaliação que não dá para automatizar. **Cada caso é uma
-entrada e a resposta que uma pessoa decidiu ser a certa**, anotada antes de qualquer execução:
+Um conjunto de teste é a única parte de uma avaliação que não dá para automatizar. **Cada caso é
+uma entrada e a resposta que uma pessoa decidiu que é a certa**, escrita antes de qualquer coisa
+rodar:
 
 ```
 ana@lab:~/triage$ head -n 1 cases/dev.jsonl
@@ -12,65 +13,68 @@ ana@lab:~/triage$ head -n 1 cases/dev.jsonl
 ```
 
 `message` é o que o prompt recebe e `expect` é o julgamento de uma pessoa. Tudo o que o `pl check`
-faz depois disso é aritmética, e a aritmética só é tão boa quanto os quarenta julgamentos por trás
+faz depois disso é aritmética, e a aritmética só vale o que valem os quarenta julgamentos embaixo
 dela.
 
 ## De onde vêm os casos
 
 O instinto errado é sentar e escrevê-los. Mensagens inventadas são mais arrumadas que as reais, o
-que a aula 1 disse sobre exemplos. Em casos de teste isso pesa mais: **um conjunto de mensagens
+que a aula 1 disse sobre exemplos. Para casos de teste isso importa mais: **um conjunto de mensagens
 arrumadas mede uma caixa de entrada que não existe.** Tire os casos do tráfego que o prompt vai de
-fato receber. Remova o que pertence a um cliente, nomes, endereços e números de pedido, e mantenha
-todo o resto: o erro de digitação, as duas perguntas numa mensagem só, as três linhas de desculpas
-antes do assunto.
+fato ver. Remova o que pertence a um cliente, nomes, endereços e números de pedido, e mantenha todo o
+resto: o erro de digitação, as duas perguntas numa mensagem, as três linhas de desculpas antes do
+assunto.
 
-E tire-os de mais de uma tarde. Uma semana em que a transportadora teve uma segunda-feira
-ruim é uma semana de mensagens de entrega, e um conjunto tirado dela vai dizer que o prompt é bom
-em delivery.
+Tire-os de mais de uma tarde, também. Uma semana em que a transportadora teve uma segunda-feira ruim
+é uma semana de mensagens de entrega, e um conjunto tirado dela vai dizer que o prompt é bom em
+entregas.
 
 ## Rotule antes de olhar
 
-**Escreva cada rótulo antes de rodar o prompt nele.** Quem lê primeiro a resposta do modelo deixou
-de decidir do que a mensagem trata; está decidindo se a resposta do modelo é aceitável, que é uma
-prova mais fácil de passar. `t37`, o pedido ainda aguardando despacho, é delivery para qualquer
-pessoa que o rotule a frio. Se vir antes a palavra *billing* ao lado, um leitor apressado pode
-deixar passar.
+**Escreva cada rótulo antes de rodar o prompt na mensagem.** Quem lê a resposta do modelo primeiro
+já não está decidindo sobre o que a mensagem trata; está decidindo se a resposta do modelo é
+aceitável, que é um teste mais fácil de passar. O `t22`, o cliente que quer pagar com um vale-presente
+e um cartão de crédito, é billing para qualquer um que o rotule sem ver nada. Mostrada a palavra
+*other* ao lado dele primeiro, que é o que o `llama3.2:3b` diz, alguém com pressa poderia deixar
+passar.
 
 Quando duas pessoas rotulam a mesma mensagem de jeitos diferentes, isso é uma descoberta sobre as
-categorias, e não um incômodo. Escreva a regra que resolve, porque o prompt precisa da mesma regra.
+categorias e não um incômodo. Escreva a regra que resolve o caso, porque o prompt precisa da mesma
+regra.
 
 ## Quantos
 
-Quarenta bastam para ver um efeito grande e são poucos para ver um pequeno:
+Quarenta bastam para ver um efeito grande e são poucos para ver um pequeno. Aqui estão três prompts
+das primeiras aulas, rodados de novo sobre as mesmas quarenta:
 
 ```
 ana@lab:~/triage$ pl run prompts/v2-json.txt cases/dev.jsonl --out runs/v2.jsonl
-40 calls, prompt 9c365e2d, written to runs/v2.jsonl
+40 calls, prompt 9c365e2d, llama3.2:3b, written to runs/v2.jsonl
 ana@lab:~/triage$ pl run prompts/v3-examples.txt cases/dev.jsonl --out runs/v3.jsonl
-40 calls, prompt 1d9c6ec4, written to runs/v3.jsonl
+40 calls, prompt 1d9c6ec4, llama3.2:3b, written to runs/v3.jsonl
 ana@lab:~/triage$ pl run prompts/v4-only-json.txt cases/dev.jsonl --out runs/v4.jsonl
-40 calls, prompt 651820d7, written to runs/v4.jsonl
+40 calls, prompt 651820d7, llama3.2:3b, written to runs/v4.jsonl
 ana@lab:~/triage$ pl compare runs/v2.jsonl runs/v3.jsonl
-runs/v2.jsonl            passes 24/40
-runs/v3.jsonl            passes 36/40
-fixed 13, broken 1, still passing 23, still failing 3
-broken: t37
-sign test on the 14 that changed: p = 0.002
+runs/v2.jsonl            passes 22/40
+runs/v3.jsonl            passes 28/40
+fixed 7, broken 1
+broken: t01
+sign test on the 8 that changed: p = 0.070
 ana@lab:~/triage$ pl compare runs/v4.jsonl runs/v3.jsonl
-runs/v4.jsonl            passes 34/40
-runs/v3.jsonl            passes 36/40
-fixed 3, broken 1, still passing 33, still failing 3
-broken: t37
-sign test on the 4 that changed: p = 0.625
+runs/v4.jsonl            passes 20/40
+runs/v3.jsonl            passes 28/40
+fixed 9, broken 1
+broken: t01
+sign test on the 10 that changed: p = 0.021
 ```
 
-Entre a `v2` e a `v3`, catorze mensagens mudaram e treze foram para o mesmo lado; uma moeda honesta
-faz isso duas vezes em mil. Entre a `v4` e a `v3` os totais estão a dois de distância, quatro
-mensagens mudaram, e o teste do sinal diz que uma moeda as dividiria de forma ao menos tão desigual
-em mais da metade das vezes. **Quarenta mensagens enxergam treze falhas de formato e não distinguem
-34 de 36.**
+Entre o `v2` e o `v3`, oito mensagens mudaram e sete foram para o mesmo lado; uma moeda honesta
+divide oito pelo menos tão desigualmente sete vezes em cem, que é o p = 0.070 da aula 1. Entre o
+`v4` e o `v3` mudaram dez, nove para um lado, e p = 0.021. **Duas comparações do mesmo prompt, uma
+de cada lado da linha que as pessoas traçam em 0,05**, separadas por duas mensagens. Quarenta
+mensagens conseguem ver uma diferença de oito; não conseguem dizer muito sobre uma de seis.
 
-Ver uma diferença com metade do tamanho exige cerca de quatro vezes mais casos, porque o ruído de
-uma proporção diminui com a raiz quadrada da contagem. É sobre essa troca que um conjunto de teste
-é construído: um caso custa um minuto de uma pessoa, e o tamanho da mudança que você quer detectar
-decide quantos minutos.
+Ver uma diferença da metade do tamanho exige mais ou menos quatro vezes os casos, porque o ruído de
+uma proporção encolhe com a raiz quadrada da contagem. Essa é a troca sobre a qual um conjunto de
+teste é construído: um caso custa um minuto de uma pessoa, e o tamanho da mudança que você quer
+detectar decide quantos minutos.

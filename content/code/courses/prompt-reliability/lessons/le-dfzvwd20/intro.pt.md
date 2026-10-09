@@ -1,4 +1,4 @@
 ---
-title: Noventa e oito tokens que não compraram nada
-version: 1
+title: Noventa e sete tokens que não compraram nada
+version: 2
 ---

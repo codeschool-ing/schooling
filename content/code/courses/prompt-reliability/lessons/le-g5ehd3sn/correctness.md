@@ -1,46 +1,88 @@
 ---
 title: Correctness, one mistake at a time
-version: 1
+version: 2
 ---
 
 Accuracy is the first number anybody reports and the one that says least. It counts the right
 answers and treats every wrong one as the same wrong. **A confusion matrix keeps every mistake
-apart**: one row for each label a person gave, one column for each label the reply gave.
+apart**: one row for each label a person gave, one column for each label the reply gave. This
+program draws one from a run file, reading the replies the way `pl check --lenient` does not: a
+reply that does not parse, or names a label not on the list, goes in a column of its own. Save it as
+`confusion.py`:
+
+```python
+"""confusion: every mistake in a run, one cell each, with recall and precision."""
+import argparse
+
+from pl import LABELS, parse, read_jsonl
+
+p = argparse.ArgumentParser(prog="confusion")
+p.add_argument("run")
+p.add_argument("--field", default="category", choices=sorted(LABELS))
+a = p.parse_args()
+
+rows = read_jsonl(a.run)
+expect = {c["id"]: c["expect"] for c in read_jsonl(rows[0]["cases"])}
+labels = LABELS[a.field]
+cols = labels + ["(bad)"]
+cells = {(e, g): 0 for e in labels for g in cols}
+for r in rows:
+    got = (parse(r["text"]) or {}).get(a.field)
+    cells[expect[r["case"]][a.field], got if got in labels else "(bad)"] += 1
+
+print("%-10s" % "expected" + "".join("%9s" % c for c in cols) + "   recall")
+for e in labels:
+    total = sum(cells[e, g] for g in cols)
+    recall = "%.2f" % (cells[e, e] / total) if total else "-"
+    print("%-10s" % e + "".join("%9d" % cells[e, g] for g in cols) + "%9s" % recall)
+precision = []
+for g in labels:
+    total = sum(cells[e, g] for e in labels)
+    precision.append("%.2f" % (cells[g, g] / total) if total else "-")
+print("%-10s" % "precision" + "".join("%9s" % x for x in precision))
+right = sum(cells[e, e] for e in labels)
+print("\naccuracy %d/%d = %.2f" % (right, len(rows), right / len(rows)))
+```
+
+It imports `LABELS` and `parse()` from `pl.py`, so the labels and the parsing are the harness's own.
+Here is `v6-escaped.txt` over all seventy messages, the forty dev cases and the thirty holdout ones
+that lesson 5 joined into `cases/all.jsonl`:
 
 ```
 ana@lab:~/triage$ pl run prompts/v6-escaped.txt cases/all.jsonl --out runs/v6-all.jsonl
-70 calls, prompt fbc4c9b1, written to runs/v6-all.jsonl
-ana@lab:~/triage$ pl confusion runs/v6-all.jsonl
+70 calls, prompt fbc4c9b1, llama3.2:3b, written to runs/v6-all.jsonl
+ana@lab:~/triage$ python3 confusion.py runs/v6-all.jsonl
 expected    billing delivery  returns  account    other    (bad)   recall
-billing          13        1        1        0        0        1   0.81
-delivery          0       13        0        0        1        0   0.93
-returns           0        1       13        0        2        0   0.81
-account           1        2        0        9        1        1   0.64
-other             1        1        0        0        8        0   0.80
-precision      0.87     0.72     0.93     1.00     0.67
+billing           4        0        6        5        1        0     0.25
+delivery          0        9        5        0        0        0     0.64
+returns           0        1       14        0        0        1     0.88
+account           0        1        3        9        1        0     0.64
+other             0        0        1        0        9        0     0.90
+precision      1.00     0.82     0.48     0.64     0.82
 
-accuracy 56/70 = 0.80
+accuracy 45/70 = 0.64
 ```
 
-`cases/all.jsonl` is the forty dev messages and the thirty holdout ones together. The diagonal is
-the replies that were right, 56 of 70. Every other cell is one particular mistake: row `account`,
-column `delivery`, 2, means two account messages were sorted as delivery. `(bad)` holds replies with
-no usable label at all, which the next section counts as format.
+The diagonal is the replies that were right, 45 of 70. Every other cell is one particular mistake:
+row `billing`, column `returns`, 6, means six billing messages were sorted as returns. `(bad)` holds
+replies with no usable label at all, which the next section counts as format.
 
 ## Recall and precision
 
 The two numbers at the edges answer different questions.
 
-**Recall reads along a row**: of the messages that really were account, what share did the prompt
-call account? Nine of fourteen, 0.64. Five account messages went somewhere else, and the account
-team will never see them unless somebody forwards them.
+**Recall reads along a row**: of the messages that really were billing, what share did the prompt
+call billing? Four of sixteen, 0.25. Twelve billing messages went somewhere else, six of them to
+returns and five to account, and the billing team will never see them unless somebody forwards them.
 
-**Precision reads down a column**: of the messages the prompt called delivery, what share were
-delivery? Thirteen of eighteen, 0.72. Five of the delivery team's tickets belong to someone else.
-Account has the opposite shape, precision 1.00: when the prompt says account it is right, and it
-says account too rarely.
+**Precision reads down a column**: of the messages the prompt called returns, what share were
+returns? Fourteen of twenty-nine, 0.48. More than half of the returns team's tickets belong to
+someone else. Billing has the opposite shape, precision 1.00: when this prompt says billing it is
+right, and it says billing four times in seventy. **Under this prompt `returns` is
+`llama3.2:3b`'s catch-all**: six billing messages went there, five delivery and three account, and
+the matrix says so in one column where the accuracy says only 0.64.
 
-A prompt can raise one by lowering the other. Calling everything account would take account recall
+A prompt can raise one by lowering the other. Calling everything billing would take billing recall
 to 1.00 and its precision to the floor. That is why the two are reported together, per label.
 
 ## Which mistakes cost more
@@ -48,32 +90,25 @@ to 1.00 and its precision to the floor. That is why the two are reported togethe
 The cells do not cost the same. Urgency shows it best:
 
 ```
-ana@lab:~/triage$ grep h03 cases/all.jsonl
-{"id": "h03", "message": "My account shows an order I never placed and my card has been charged for it.", "expect": {"category": "billing", "urgency": "high"}}
-ana@lab:~/triage$ pl show runs/v6-all.jsonl h03
-│ {
-│   "category": "billing",
-│   "urgency": "normal",
-│   "summary": "Their account shows an order they never placed and their card has been charged for it."
-│ }
-stop: end, tokens in 123, out 41
-ana@lab:~/triage$ pl confusion runs/v6-all.jsonl --field urgency
+ana@lab:~/triage$ python3 confusion.py runs/v6-all.jsonl --field urgency
 expected        low   normal     high    (bad)   recall
-low              17        7        0        0   0.71
-normal            1       27        0        2   0.90
-high              0        6       10        0   0.62
-precision      0.94     0.68     1.00
+low              22        2        0        0     0.92
+normal            3        4       22        1     0.13
+high              1        0       15        0     0.94
+precision      0.85     0.67     0.41
 
-accuracy 54/70 = 0.77
+accuracy 41/70 = 0.59
 ```
 
-`h03` is a card charged for an order the customer never placed, which may mean somebody else is
-using their card. The category is right and the urgency is normal, so it waits in the ordinary
-queue. It is one of six high messages sorted normal: recall for high is 0.62. Precision for high is
-1.00, so nothing was escalated that should not have been.
+Read the `normal` row: of thirty messages a person called normal, the prompt called twenty-two high.
+Recall for normal is 0.13. Read the `high` column: forty-one per cent of what it calls high is high.
+And the cell that would cost most, a high message sorted as normal, holds zero: high recall is 0.94,
+and the one high message it missed it called low.
 
-Urgency accuracy is 54 of 70, and that number counts `h03` exactly like the seven low-urgency
-messages sorted normal, whose only cost is being answered a little sooner than they needed. **A missed
-urgent message and a false alarm are both one wrong answer, and they do not cost the same.** Decide
-what each kind of mistake costs before you read the matrix, and report the expensive cells by name.
-*Six high sorted normal* is a sentence somebody acts on; *0.77* is not.
+So this prompt fails in the cheap direction. A support team behind it would find most of its queue
+marked urgent, and would learn within a week to ignore the label, which is its own cost: **a label
+everybody ignores protects nobody**. Urgency accuracy is 41 of 70, and that number counts an urgent
+message missed exactly like a routine one escalated. They do not cost the same. Decide what each
+kind of mistake costs before you read the matrix, and report the expensive cells by name.
+*Twenty-two normal sorted high, no high sorted normal* is a sentence somebody acts on; *0.59* is
+not.

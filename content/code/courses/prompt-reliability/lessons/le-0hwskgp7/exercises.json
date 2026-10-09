@@ -121,63 +121,63 @@
   },
   {
     "id": "ex-b2p5vs2r",
-    "version": 1,
+    "version": 2,
     "section": "three-prompts",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
     "prompt": "How many of the seventy cases did the majority of `v3-examples`, `v4-only-json` and `v6-escaped` get right?",
     "hint": "The `majority of 3` line.",
-    "value": 58,
+    "value": 49,
     "tolerance": 0
   },
   {
     "id": "ex-xn4arx00",
-    "version": 1,
+    "version": 2,
     "section": "three-prompts",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Two of the prompts score 56 of 70. Why does their majority with the third reach only 58 rather than the 63 the arithmetic promises?",
-    "hint": "Look at the cases all three got wrong.",
+    "prompt": "`v3-examples` gets 54 of 70 right and the other two 45 each. Why does their majority get only 49?",
+    "hint": "Who outvotes whom?",
     "choices": [
       {
-        "text": "`pl vote` throws away the third prompt's ballots",
+        "text": "Three voters can never beat the best of them",
         "correct": false,
-        "why": "Every reply that parses casts a ballot."
+        "why": "With independent mistakes they can; here they share them."
       },
       {
-        "text": "Their mistakes fall on the same cases",
+        "text": "The prompts were run at different temperatures",
+        "correct": false,
+        "why": "All three ran at 0."
+      },
+      {
+        "text": "The two weaker prompts outvote the strong one where they agree",
         "correct": true,
-        "why": "Right: eleven cases wrong under all three, where independent voters would put half a case."
+        "why": "Right: five cases lost that way, and three more to ties."
       },
       {
-        "text": "Seventy cases are too few for a vote",
+        "text": "`vote.py` counts every reply that does not parse as wrong",
         "correct": false,
-        "why": "The size of the set does not change what a vote does on each case."
-      },
-      {
-        "text": "The third prompt is so much worse than the other two that it drags the majority down",
-        "correct": false,
-        "why": "53 against 56 is close, and every case it alone got wrong was outvoted."
+        "why": "A reply that does not parse casts no ballot; that saved `t38`."
       }
     ]
   },
   {
     "id": "ex-t2jv679k",
-    "version": 1,
+    "version": 2,
     "section": "three-prompts",
     "type": "numeric",
-    "difficulty": "medium",
+    "difficulty": "easy",
     "drillable": true,
     "prompt": "In the `uniq -c` count, how many cases were wrong under all three prompts?",
-    "hint": "Count the lines that begin with 3.",
-    "value": 11,
+    "hint": "The rows that start with 3.",
+    "value": 12,
     "tolerance": 0
   },
   {
     "id": "ex-ttccsz8e",
-    "version": 1,
+    "version": 2,
     "section": "three-prompts",
     "type": "quiz",
     "difficulty": "medium",
@@ -186,35 +186,35 @@
     "hint": "Two against one.",
     "choices": [
       {
-        "text": "Kept the wrong answer whenever it came from `v3-examples`, the most expensive prompt",
-        "correct": false,
-        "why": "Cost plays no part in a vote."
-      },
-      {
         "text": "Fixed all ten",
         "correct": true,
-        "why": "Right: the other two outvoted the one that was wrong."
+        "why": "Right: the other two outvoted it."
       },
       {
-        "text": "Settled them as ties",
+        "text": "Fixed half of them",
         "correct": false,
-        "why": "Two against one is not a tie."
+        "why": "Two right ballots beat one wrong one every time."
       },
       {
-        "text": "Fixed only the ones that parsed",
+        "text": "Nothing, since they were already wrong",
         "correct": false,
-        "why": "A reply that does not parse casts no ballot, so the other two decide."
+        "why": "Only one prompt had them wrong."
+      },
+      {
+        "text": "Turned them into ties",
+        "correct": false,
+        "why": "A tie needs the ballots split evenly."
       }
     ]
   },
   {
     "id": "ex-n9ts7mxs",
-    "version": 1,
+    "version": 2,
     "section": "three-prompts",
     "type": "cloze",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "In `pl vote`, a reply that does not parse casts no ___, and the other replies decide the case.",
+    "prompt": "In `vote.py`, a reply that does not parse casts no ___, and the other replies decide the case.",
     "hint": "What a voter puts in the box.",
     "blanks": [
       {
@@ -229,329 +229,328 @@
   },
   {
     "id": "ex-70p77y7f",
-    "version": 1,
+    "version": 2,
     "section": "three-prompts",
     "type": "quiz",
-    "difficulty": "hard",
+    "difficulty": "medium",
     "drillable": true,
-    "prompt": "You want an ensemble whose members make different mistakes. Which of these is the weakest way to get that?",
-    "hint": "Where would a shared blind spot survive?",
+    "prompt": "Independent voters this accurate would all be wrong on about two cases in seventy. These three were wrong together on twelve. What does that say?",
+    "hint": "The assumption of the arithmetic.",
     "choices": [
       {
-        "text": "Using a different model for one member",
+        "text": "The arithmetic of the first section is wrong",
         "correct": false,
-        "why": "A different model has different gaps, which is what you want."
+        "why": "The arithmetic assumed independence, and that is what failed."
       },
       {
-        "text": "Giving one member evidence the others lack, such as definitions of the categories",
+        "text": "Twelve is within chance of two",
         "correct": false,
-        "why": "Different evidence changes what the member knows."
+        "why": "Not at seventy cases."
       },
       {
-        "text": "Three rewordings of one prompt to one model",
+        "text": "The holdout labels are wrong",
+        "correct": false,
+        "why": "Nothing points there."
+      },
+      {
+        "text": "Their mistakes are not independent",
         "correct": true,
-        "why": "Right: what the model does not know, it does not know under any wording."
-      },
-      {
-        "text": "Having one member reach the answer a different way",
-        "correct": false,
-        "why": "A different route makes different slips."
+        "why": "Right: one model, the same blind spots."
       }
     ]
   },
   {
     "id": "ex-t4n6cf8c",
-    "version": 1,
+    "version": 2,
     "section": "sampling-and-voting",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
     "prompt": "Five samples per message at temperature 0.8, voted. How many of the seventy did the vote get right?",
-    "hint": "The `majority of the samples` line.",
-    "value": 52,
+    "hint": "The `majority of 5` line.",
+    "value": 46,
     "tolerance": 0
   },
   {
     "id": "ex-87t8ys4h",
-    "version": 1,
+    "version": 2,
     "section": "sampling-and-voting",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "In the stand-in, why can a vote of samples at 0.8 not beat the single answer at temperature 0, apart from ties?",
-    "hint": "What is each sample, relative to the temperature-0 answer?",
+    "prompt": "The vote of five samples got one message more than `v6-escaped` at temperature 0. Which one, and why?",
+    "hint": "Lesson 15's failure log.",
     "choices": [
       {
-        "text": "Samples at 0.8 are not valid JSON",
+        "text": "`h17`, where three samples found the right label",
         "correct": false,
-        "why": "Almost all of them parse."
+        "why": "Three samples of `h17` were wrong, and so was the vote."
       },
       {
-        "text": "Five samples is too few, and fifty would beat temperature 0 comfortably",
-        "correct": false,
-        "why": "More samples get closer to the temperature-0 answer, not past it."
-      },
-      {
-        "text": "At best it finds the temperature-0 label",
+        "text": "`t38`, whose reply at 0 is cut at an apostrophe",
         "correct": true,
-        "why": "Right: sampling adds errors around it and voting removes some of them."
+        "why": "Right: the samples wrote around the bug, F-0001."
       },
       {
-        "text": "The stand-in ignores temperature",
+        "text": "`t12`, a close call between two labels",
         "correct": false,
-        "why": "`t37` got two different wrong labels in two samples."
+        "why": "`t12` was right at 0 already."
+      },
+      {
+        "text": "None; the extra one was a tie broken in its favour",
+        "correct": false,
+        "why": "There were no ties among the samples."
       }
     ]
   },
   {
     "id": "ex-jkzxq9da",
-    "version": 1,
+    "version": 2,
     "section": "sampling-and-voting",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "A report says the vote of five samples beat a single sample at 0.8, 52 of 70 against about 65%. What is wrong with the comparison?",
-    "hint": "What else could you have run instead?",
+    "prompt": "A report says the vote of five samples at 0.8 beat a single sample at 0.8. What is wrong with the comparison?",
+    "hint": "Which baseline matters?",
     "choices": [
       {
-        "text": "Nothing; the vote is better",
+        "text": "Temperature 0.8 is too high to sample at",
         "correct": false,
-        "why": "Better than its own member, worse than the temperature-0 call."
+        "why": "The comparison is the flaw, not the setting."
       },
       {
-        "text": "It is measured against a member",
+        "text": "Samples should be compared in tokens, not answers",
+        "correct": false,
+        "why": "Answers are the point."
+      },
+      {
+        "text": "It is measured against one of its own members",
         "correct": true,
-        "why": "Right: against temperature 0, which got 56, the vote loses."
+        "why": "Right: compare with the best single call, here 54."
       },
       {
-        "text": "The percentages use different denominators",
+        "text": "Five samples are too few to vote with",
         "correct": false,
-        "why": "Converting both to percentages fixes that; the problem is what is being compared."
-      },
-      {
-        "text": "A vote should be run at temperature 1",
-        "correct": false,
-        "why": "A higher temperature adds more errors for the vote to remove."
+        "why": "The count is not the flaw."
       }
     ]
   },
   {
     "id": "ex-kc1k1y5q",
-    "version": 1,
+    "version": 2,
     "section": "sampling-and-voting",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
     "prompt": "Wang and others (2022) reported gains from self-consistency. What kind of task were they on, and why does that matter here?",
-    "hint": "How many routes lead to a one-word label?",
+    "hint": "How many ways to the answer?",
     "choices": [
       {
         "text": "Reasoning with many paths to one answer; a label has one path",
         "correct": true,
-        "why": "Right: wrong chains scatter, right ones converge, and a classification has no chain."
+        "why": "Right."
       },
       {
-        "text": "Classification of customer messages, the same as here",
+        "text": "Classification, the same as here; the gain should carry over",
         "correct": false,
-        "why": "The paper was about reasoning problems such as arithmetic."
+        "why": "They sampled chains of reasoning."
       },
       {
-        "text": "Translation, where samples differ only in style",
+        "text": "Translation, where variety is the point of sampling",
         "correct": false,
-        "why": "Translation is not what the paper measured."
+        "why": "Arithmetic and commonsense questions."
       },
       {
-        "text": "Tasks run at temperature 0",
+        "text": "Short answers, where samples rarely differ",
         "correct": false,
-        "why": "At temperature 0 every sample would be the same."
+        "why": "Their samples were long chains."
       }
     ]
   },
   {
     "id": "ex-kjpnffj7",
-    "version": 1,
+    "version": 2,
     "section": "sampling-and-voting",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "How does `pl vote` settle a tie between labels?",
-    "hint": "Six of the sampled votes were ties.",
+    "prompt": "How does `vote.py` count a case whose ballots tie?",
+    "hint": "Read the loop.",
     "choices": [
       {
-        "text": "It calls the model once more",
+        "text": "It takes the first ballot",
         "correct": false,
-        "why": "It makes no new calls."
+        "why": "It breaks no ties."
       },
       {
-        "text": "It counts the case as wrong",
+        "text": "It drops the case from the total",
         "correct": false,
-        "why": "A tie still has a winner."
+        "why": "The total stays seventy."
       },
       {
-        "text": "It picks the label listed first in the prompt",
+        "text": "As right, if one of the tied labels is right",
         "correct": false,
-        "why": "That is a rule of the stand-in's own scoring, not of the vote."
+        "why": "It needs a single winner."
       },
       {
-        "text": "It takes the first sample's answer",
+        "text": "As wrong",
         "correct": true,
-        "why": "Right: with several runs, the first run's."
+        "why": "Right: a tie is not a decision."
       }
     ]
   },
   {
     "id": "ex-cwhypbxx",
-    "version": 1,
+    "version": 2,
     "section": "the-cost",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Per million messages, the three members cost 127,749, 85,084 and 92,649 cents. How many times the cost of `v6-escaped` alone is the ensemble? One decimal place.",
-    "hint": "Add them and divide by 92,649.",
-    "value": 3.3,
-    "tolerance": 0.05,
-    "unit": "times"
+    "prompt": "Per million messages, the three members cost 120,690, 80,083 and 87,797 cents. How many times the cost of `v3-examples` alone is the ensemble? One decimal place.",
+    "hint": "Sum, then divide.",
+    "value": 2.4,
+    "tolerance": 0.05
   },
   {
     "id": "ex-tqts1bcd",
-    "version": 1,
+    "version": 2,
     "section": "the-cost",
     "type": "quiz",
-    "difficulty": "medium",
+    "difficulty": "easy",
     "drillable": true,
-    "prompt": "An ensemble's three calls run at the same time. What is the wait for an answer?",
-    "hint": "They are independent of each other.",
+    "prompt": "A provider runs an ensemble's calls at the same time. What is the wait for an answer?",
+    "hint": "Who finishes last?",
     "choices": [
       {
-        "text": "The sum of the three latencies",
+        "text": "The fastest member's time",
         "correct": false,
-        "why": "That is the wait if they run one after another."
+        "why": "The answer needs every ballot."
       },
       {
-        "text": "The slowest member's",
+        "text": "The slowest member's time",
         "correct": true,
-        "why": "Right: the money is the sum, the wait is not."
+        "why": "Right, and the bill is still all of them."
       },
       {
-        "text": "The fastest member's, because the first answer to arrive is used straight away",
+        "text": "The mean of the members' times",
         "correct": false,
-        "why": "A vote needs all the ballots."
+        "why": "The vote waits for the last ballot."
       },
       {
-        "text": "The average of the three",
+        "text": "The sum of every member's time",
         "correct": false,
-        "why": "Nothing finishes until the slowest does."
+        "why": "That is when they run one after another, as `pl` does."
       }
     ]
   },
   {
     "id": "ex-1hfvr5ks",
-    "version": 1,
+    "version": 2,
     "section": "the-cost",
     "type": "multiple-choice",
     "difficulty": "medium",
     "drillable": true,
     "prompt": "Which of these make an ensemble more likely to be worth what it costs? Choose all that apply.",
-    "hint": "Three things, each measurable.",
+    "hint": "Three things the lesson measures.",
     "choices": [
       {
         "text": "A wrong answer is expensive",
         "correct": true,
-        "why": "Yes: two answers in seventy can be worth a lot."
+        "why": "Yes."
       },
       {
         "text": "Each call is cheap",
         "correct": true,
-        "why": "Yes: the bill is n times a small number."
+        "why": "Yes."
       },
       {
         "text": "The members make different mistakes",
         "correct": true,
-        "why": "Yes: that is the condition the arithmetic needs."
+        "why": "Yes: otherwise the vote cannot outvote them."
       },
       {
-        "text": "The members are rewordings of the same prompt",
+        "text": "The members are rewordings of one prompt",
         "correct": false,
-        "why": "That is the case where their mistakes coincide."
+        "why": "Rewordings share the model's mistakes."
       }
     ]
   },
   {
     "id": "ex-pa4gg9hh",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "ordering",
     "difficulty": "medium",
     "drillable": true,
     "prompt": "Put these in order of how many of the seventy cases they got right, fewest first.",
-    "hint": "52, 53, 56 and 58.",
+    "hint": "45, 46, 49, 54.",
     "items": [
+      "`v6-escaped` at temperature 0",
       "The vote of five samples at 0.8",
-      "`v4-only-json` alone",
-      "`v6-escaped` alone, at temperature 0",
-      "The majority of three prompts"
+      "The majority of three prompts",
+      "`v3-examples` alone"
     ]
   },
   {
     "id": "ex-7rzqrd8n",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "matching",
     "difficulty": "medium",
     "drillable": true,
     "prompt": "Match each observation from this lesson to what explains it.",
-    "hint": "One explanation each.",
+    "hint": "One cause each.",
     "pairs": [
       {
-        "left": "Eleven cases wrong under all three prompts",
+        "left": "Twelve cases wrong under all three prompts",
         "right": "Mistakes that are not independent"
       },
       {
-        "left": "Ten cases wrong under one prompt, all fixed",
-        "right": "Two voters outvoting one"
+        "left": "`t38` right in every sample and wrong at 0",
+        "right": "A formatting bug the samples wrote around"
       },
       {
-        "left": "The vote of samples below temperature 0",
-        "right": "Errors added around the favoured label"
+        "left": "The majority of three below its best member",
+        "right": "Two weaker voters outvoting a strong one"
       },
       {
-        "left": "Five samples costing five times as much",
-        "right": "One call per voter"
+        "left": "All five samples agreeing on 61 messages",
+        "right": "A label has one path to it"
       }
     ],
     "right_distractors": [
-      "A cache on the prompt"
+      "The samples used different prompts"
     ]
   },
   {
     "id": "ex-8dz6733d",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
     "prompt": "A team votes five samples at temperature 1 and reports 85% against 75% for a single sample. Before adopting it, what do you ask for?",
-    "hint": "What is the best single call, and what does the vote cost?",
+    "hint": "Two numbers it left out.",
     "choices": [
       {
-        "text": "The same comparison at temperature 2",
+        "text": "More samples per message, to raise the score",
         "correct": false,
-        "why": "More randomness gives the vote more to undo."
+        "why": "Not before the baseline."
       },
       {
-        "text": "A vote of ten samples instead of five",
+        "text": "The same vote run on the dev set",
         "correct": false,
-        "why": "That still compares the vote with its own members."
-      },
-      {
-        "text": "Nothing more: ten points is a large gain",
-        "correct": false,
-        "why": "Ten points over a sample, not over the best single call."
+        "why": "The set is not the missing comparison."
       },
       {
         "text": "Its baseline at 0, and its price",
         "correct": true,
-        "why": "Right: that is the comparison that decides, and the price of winning it."
+        "why": "Right: the best single call, and five times the bill."
+      },
+      {
+        "text": "A larger temperature, to spread the samples further",
+        "correct": false,
+        "why": "That adds mistakes for the vote to remove."
       }
     ]
   }

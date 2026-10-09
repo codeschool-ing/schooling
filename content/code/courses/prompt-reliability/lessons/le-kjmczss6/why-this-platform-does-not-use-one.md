@@ -1,6 +1,6 @@
 ---
 title: Why this platform does not grade with one
-version: 1
+version: 2
 ---
 
 You are reading this on a platform that grades every answer you give it. How it does that is worth a
@@ -26,15 +26,14 @@ random ones, because a student told they were right on Tuesday and wrong on Thur
 which was the mistake.
 
 **A judge with a position bias is that student's Tuesday and Thursday.** Swap the order of two
-answers and six verdicts in sixteen change. Make one answer longer and the judge prefers it. A model
-sampled above temperature 0 adds a third way to give two answers to one question. None of that is
-acceptable in the one place where nobody checks the verdict afterwards, and an exam is that place:
-a certificate rests on it.
+answers and twelve verdicts in sixteen change. Ask the same question twice at temperature 0 and one
+verdict in sixteen changed anyway. Every verdict that survived the swap went to the longer reply.
+None of that is acceptable in the one place where nobody checks the verdict afterwards, and an exam
+is that place: a certificate rests on it.
 
 ## Where a judge earns its place
 
-So the question is where a judge goes. **Use a judge where
-its mistakes are cheap and something else catches them:**
+**Use a judge where its mistakes are cheap and something else catches them:**
 
 - Ranking drafts: five candidate replies, ordered for a person who edits the top one. A wrong
   ranking costs that person a few seconds.

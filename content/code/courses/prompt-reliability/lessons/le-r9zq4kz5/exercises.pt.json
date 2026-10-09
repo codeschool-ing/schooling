@@ -1,383 +1,383 @@
 {
   "ex-6x89ygf0": {
     "prompt": "O que cada linha de `cases/dev.jsonl` guarda?",
-    "hint": "Duas partes.",
+    "hint": "Duas partes e um id.",
     "choices": [
       {
-        "text": "Mensagem e resposta de uma pessoa",
-        "why": "Certo: a resposta que uma pessoa decidiu ser a certa. Tudo depois disso é aritmética."
+        "text": "Um prompt e a nota que ele alcançou no conjunto",
+        "why": "Notas são calculadas a partir das execuções."
       },
       {
-        "text": "Uma mensagem e a resposta do modelo, salva na primeira vez que o prompt rodou",
-        "why": "Respostas ficam em `runs/`; o caso guarda a resposta da pessoa."
+        "text": "Uma mensagem e a contagem de tokens dela no modelo",
+        "why": "Contagens de tokens ficam nos arquivos de execução."
       },
       {
-        "text": "Um prompt e a mensagem para a qual foi escrito",
-        "why": "Prompts ficam em `prompts/`."
+        "text": "Uma mensagem e o rótulo que uma pessoa deu a ela",
+        "why": "Certo: a entrada e o julgamento."
       },
       {
-        "text": "Uma mensagem e o custo dela em tokens",
-        "why": "O custo é calculado a partir das execuções, não guardado nos casos."
+        "text": "Uma mensagem e a resposta que o modelo deu a ela",
+        "why": "Respostas ficam nos arquivos de execução, não nos casos."
       }
     ]
   },
   "ex-hb9txast": {
     "prompt": "Por que escrever cada rótulo antes de rodar o prompt na mensagem?",
-    "hint": "O que muda depois que você viu a resposta do modelo?",
+    "hint": "Qual pergunta fica mais fácil?",
     "choices": [
       {
-        "text": "A bancada recusa um caso cujo rótulo foi acrescentado depois de uma execução",
-        "why": "Nada na bancada verifica quando um rótulo foi escrito."
+        "text": "Para julgar o que o cliente escreveu, e não a resposta",
+        "why": "Certo: depois da resposta, você passa a julgar a resposta."
       },
       {
-        "text": "Rótulos escritos depois custam mais tokens",
-        "why": "Rótulos não são enviados ao modelo."
+        "text": "Porque o harness recusa casos sem rótulo",
+        "why": "Recusaria, mas o motivo não é esse."
       },
       {
-        "text": "Depois você julga se a resposta dele é aceitável",
-        "why": "Certo: uma prova mais fácil que decidir do que a mensagem trata."
+        "text": "Porque rodar antes muda os pesos do modelo",
+        "why": "Rodar não muda nada no modelo."
       },
       {
-        "text": "Para o modelo não conseguir ler o rótulo",
-        "why": "O modelo nunca vê `expect`, de um jeito ou de outro."
+        "text": "Para o rótulo poder ser copiado da resposta do modelo",
+        "why": "Esse é o erro que a regra evita."
       }
     ]
   },
   "ex-nfkevzbd": {
-    "prompt": "A `v4` passa em 34 de 40 e a `v3` em 36. O teste do sinal nas quatro mensagens que mudaram dá p = 0,625. O que isso diz?",
-    "hint": "Com que frequência uma moeda dividiria quatro de forma tão desigual?",
+    "prompt": "`v2` contra `v3` deu p = 0.070, e `v4` contra `v3` deu p = 0.021. O que separa os dois resultados?",
+    "hint": "Conte as mensagens que mudaram.",
     "choices": [
       {
-        "text": "A `v3` é melhor, por duas mensagens",
-        "why": "Duas mensagens cabem com folga no que o acaso produz."
+        "text": "Os prompts rodaram em duas máquinas diferentes",
+        "why": "Rodaram um depois do outro."
       },
       {
-        "text": "Quarenta casos não distinguem os dois",
-        "why": "Certo. Uma moeda faria ao menos isso em mais da metade das vezes."
+        "text": "Só o segundo usou um conjunto holdout",
+        "why": "Os dois foram no dev."
       },
       {
-        "text": "A `v4` é melhor, porque o valor-p passa de 0,5",
-        "why": "Um valor-p não aponta um vencedor."
+        "text": "A primeira comparação rodou com temperatura mais alta",
+        "why": "Os três rodaram com 0."
       },
       {
-        "text": "O conjunto de teste tem um rótulo errado",
-        "why": "Nada aqui sugere isso."
+        "text": "Duas mensagens na contagem das que mudaram",
+        "why": "Certo: oito contra dez, um de cada lado de 0,05."
       }
     ]
   },
   "ex-szy6336y": {
-    "prompt": "Um conjunto de 40 casos enxerga diferenças de uns dez pontos. Mais ou menos quantos casos seriam precisos para ver diferenças com metade desse tamanho?",
-    "hint": "O ruído diminui com a raiz quadrada da contagem.",
-    "unit": "casos"
+    "prompt": "Um conjunto de 40 casos vê diferenças de uns dez pontos. Quantos casos, aproximadamente, seriam necessários para ver diferenças da metade desse tamanho?",
+    "hint": "Quatro vezes."
   },
   "ex-ee0hh14s": {
     "prompt": "Ponha as verificações do `pl check` na ordem em que rodam.",
-    "hint": "Da mais barata e mais certa para a menos.",
+    "hint": "A mais barata e mais certa primeiro.",
     "items": [
-      "`json`",
-      "`fields`",
-      "`labels`",
-      "`category`",
-      "`urgency`"
+      "json",
+      "fields",
+      "labels",
+      "category",
+      "urgency"
     ]
   },
   "ex-6ntbmjza": {
     "prompt": "Quais verificações poderiam rodar em toda resposta em produção, onde nenhuma pessoa rotulou a mensagem?",
-    "hint": "Quais precisam de `expect`?",
+    "hint": "Sem rótulo.",
     "choices": [
       {
-        "text": "Só `category` e `urgency`",
-        "why": "São justamente as duas que precisam de rótulo."
+        "text": "`category` e `urgency`, com o modelo como rótulo",
+        "why": "Elas precisam do rótulo de uma pessoa."
       },
       {
-        "text": "As cinco",
-        "why": "Duas precisam da resposta da pessoa."
+        "text": "`json`, `fields` e `labels`, que só leem a resposta",
+        "why": "Certo: precisam só da resposta e do contrato."
       },
       {
-        "text": "`json`, `fields` e `labels`",
-        "why": "Certo: só precisam da resposta e da especificação."
+        "text": "As cinco, rodadas contra os rótulos de ontem",
+        "why": "Os rótulos de ontem são das mensagens de ontem."
       },
       {
-        "text": "Nenhuma: verificações pertencem ao conjunto de teste e a nenhum outro lugar",
-        "why": "A aula 10 usou `json` em respostas ao vivo para recusar as injetadas."
+        "text": "Nenhuma, já que as cinco precisam de um conjunto de teste",
+        "why": "Três precisam só da resposta."
       }
     ]
   },
   "ex-kvmr7bvm": {
-    "prompt": "`t03` falhou em `json`. Por que ela não aparece também com a categoria errada?",
-    "hint": "O que acontece depois da primeira falha?",
+    "prompt": "O `t37` falhou em `json`. Por que ele não aparece também como categoria errada?",
+    "hint": "Primeira causa.",
     "choices": [
       {
-        "text": "A categoria dela estava certa",
-        "why": "Ninguém sabe: a resposta não pôde ser lida."
+        "text": "A verificação `category` pula mensagens que terminam em pergunta",
+        "why": "Nenhuma verificação lê a pontuação da mensagem."
       },
       {
-        "text": "A lista mostra só a primeira verificação em que cada resposta falhou",
-        "why": "Certo, o que a torna uma lista de causas primeiras."
+        "text": "O harness lista uma falha só por arquivo",
+        "why": "Lista uma por resposta."
       },
       {
-        "text": "A categoria só é verificada com temperatura 0",
-        "why": "A temperatura não muda quais verificações rodam."
+        "text": "Uma resposta que falha numa verificação não é pontuada na seguinte",
+        "why": "Certo: não há categoria numa resposta que ninguém consegue ler."
       },
       {
-        "text": "`--failures` esconde falhas de categoria a menos que se peça",
-        "why": "Ele as mostra; `t37` aparece em category na v3."
+        "text": "A categoria dele por acaso estava certa",
+        "why": "Nada leu a categoria dele."
       }
     ]
   },
   "ex-ctgrjgh5": {
-    "prompt": "Quais destes fazem uma verificação valer a pena, segundo a seção? Marque todos que se aplicam.",
+    "prompt": "Quais destas coisas fazem uma verificação valer a pena, segundo a seção? Marque todas as que se aplicam.",
     "hint": "Quatro propriedades.",
     "choices": [
       {
-        "text": "Dá o mesmo veredito sempre",
-        "why": "Sim: uma verificação que muda de ideia é uma segunda coisa a medir."
+        "text": "Dá o mesmo veredito toda vez",
+        "why": "Sim."
       },
       {
-        "text": "É tão rigorosa quanto o programa que lê a resposta",
-        "why": "Sim, ou aprova respostas que o programa vai recusar."
+        "text": "Afirma uma propriedade só",
+        "why": "Sim."
       },
       {
-        "text": "Verifica várias propriedades de uma vez, para poupar tempo",
-        "why": "Uma propriedade cada, para que a falha diga o que falhou."
+        "text": "É tão estrita quanto quem lê a resposta",
+        "why": "Sim."
       },
       {
-        "text": "A falha diz o que viu",
-        "why": "Sim: *urgency normal, expected low* é uma tarefa."
+        "text": "É escrita por um modelo em vez de uma pessoa",
+        "why": "Uma verificação que pode mudar de ideia é mais uma coisa a medir."
       }
     ]
   },
   "ex-11dtx8yj": {
-    "prompt": "Por que o `v3-examples.txt` passa em 36 de 40 no `dev.jsonl` e só em 11 de 30 no `holdout.jsonl`?",
+    "prompt": "Por que o `v3-examples.txt` passa 28 de 40 no `dev.jsonl` e só 14 de 30 no `holdout.jsonl`?",
     "hint": "Quem escreveu cada conjunto, e quando?",
     "choices": [
       {
-        "text": "O holdout rodou com uma temperatura maior",
-        "why": "As duas execuções foram com temperatura 0."
+        "text": "O dev foi escrito com o prompt, o holdout depois",
+        "why": "Certo: o autor imaginou as mensagens mais fáceis."
       },
       {
-        "text": "As respostas do holdout deixaram de ser JSON válido no meio do caminho",
-        "why": "As 30 são analisáveis; o que falha é a classificação."
+        "text": "O holdout roda com temperatura mais alta por padrão",
+        "why": "Os dois rodaram com 0."
       },
       {
-        "text": "O dev foi escrito pelo autor do prompt",
-        "why": "Certo, e o holdout veio depois, de mensagens mais difíceis. O dev mediu as mensagens que o autor imaginou."
+        "text": "O modelo viu as mensagens do dev no treinamento",
+        "why": "O curso as escreveu; nada sugere isso."
       },
       {
-        "text": "Os rótulos do holdout foram escritos sem cuidado",
-        "why": "Nada sugere isso; as mensagens são mais difíceis."
+        "text": "Os rótulos do holdout estão errados",
+        "why": "Foram escritos do mesmo jeito, por uma pessoa."
       }
     ]
   },
   "ex-j4f12tf8": {
-    "prompt": "A `v3` venceu a `v4` em dev por 36 a 34, e elas empatam em 11 no holdout. O que isso sugere?",
-    "hint": "Uma escolha feita num conjunto, conferida em outro.",
+    "prompt": "O `v3` venceu o `v4` no dev por 28 a 20, e no holdout por 14 a 4. O que isso diz?",
+    "hint": "Não foi derrubado.",
     "choices": [
       {
-        "text": "O holdout é pequeno demais para ser usado para qualquer coisa",
-        "why": "Pequeno, mas é justamente a conferência que a nota de dev não dava."
+        "text": "Que o holdout é mais fácil que o dev",
+        "why": "Os dois prompts pontuaram menos nele."
       },
       {
-        "text": "A `v4` é o prompt melhor, afinal",
-        "why": "Um empate não diz nem uma coisa nem outra."
+        "text": "Que agora o holdout deve servir para ajustar os exemplos",
+        "why": "Ajustar nele o tornaria um segundo dev."
       },
       {
-        "text": "Escolher pelo dev não comprou nada visível",
-        "why": "Certo: o que tornou a `v3` melhor em dev não aparece em outro lugar."
+        "text": "Que o ganho dos exemplos foi ajustado ao dev",
+        "why": "Ele se manteve, e cresceu, em mensagens com que não foi escolhido."
       },
       {
-        "text": "O dev e o holdout medem exatamente a mesma coisa",
-        "why": "Então não difeririam em 90% contra 37%."
+        "text": "A escolha se sustentou em mensagens novas para ela",
+        "why": "Certo: a outra metade do trabalho de um holdout."
       }
     ]
   },
   "ex-b6kvs0xf": {
-    "prompt": "Um segundo conjunto, construído à parte e rodado só na hora de decidir, para nunca servir de base a ajustes, se chama conjunto de ___.",
-    "hint": "Você o guarda de reserva.",
+    "prompt": "Um segundo conjunto, construído à parte e rodado só na hora de decidir, para nunca ser usado em ajustes, chama-se conjunto ___.",
+    "hint": "Guardado de lado.",
     "blanks": [
       {
         "accept": [
           "holdout",
-          "reserva"
+          "de holdout",
+          "reservado"
         ]
       }
     ]
   },
   "ex-zw2zmvpn": {
-    "prompt": "Depois de publicar, você lê por que `h01` falha, muda o prompt até ela passar e informa a nova nota do holdout. O que há de errado com esse número?",
-    "hint": "No que `h01` se transformou quando você a corrigiu?",
+    "prompt": "Depois de publicar, você lê por que o `h01` falha, muda o prompt até ele passar e relata a nova nota do holdout. O que há de errado?",
+    "hint": "O que o `h01` é agora?",
     "choices": [
       {
-        "text": "Nada, desde que a correção no prompt seja pequena",
-        "why": "O tamanho não importa; o prompt foi ajustado àquele caso."
+        "text": "Nada, já que a nota do holdout subiu",
+        "why": "Subiu num caso em que você ajustou."
       },
       {
-        "text": "O holdout virou um segundo dev",
-        "why": "Certo, e você precisa de um holdout novo."
+        "text": "O `h01` virou um caso de dev, usado em ajustes",
+        "why": "Certo: e o holdout precisa ser trocado."
       },
       {
-        "text": "Deveria ser informado sobre 29, e não sobre 30",
-        "why": "Tirar um caso não desfaz o ajuste."
+        "text": "O holdout precisa rodar com temperatura 1 depois de uma mudança",
+        "why": "A temperatura não é a questão."
       },
       {
-        "text": "Notas de holdout precisam rodar com temperatura 1",
-        "why": "A temperatura não tem relação."
+        "text": "Casos de holdout não podem ser lidos por ninguém",
+        "why": "Ler tudo bem; o problema é ajustar a eles."
       }
     ]
   },
   "ex-6dn41pe9": {
-    "prompt": "O `v11-contaminated.txt` usa `t21`, `t23` e `t37` como exemplos. O que acontece com esses três casos?",
-    "hint": "O prompt contém as respostas deles.",
+    "prompt": "O `v11-contaminated.txt` usa o `t22`, o `t25` e o `t26` como exemplos. O que acontece com esses três casos?",
+    "hint": "O prompt tem as respostas deles.",
     "choices": [
       {
-        "text": "Falham, porque o modelo se confunde ao vê-los duas vezes",
-        "why": "Os três passam."
+        "text": "Os rótulos deles mudam para o que o exemplo diz",
+        "why": "Os rótulos estão no arquivo de casos e não se mexem."
       },
       {
-        "text": "Não conseguem mais falhar, e não medem nada",
-        "why": "Certo: são respondidos por cópia."
+        "text": "Ficam mais difíceis para o modelo",
+        "why": "Ficam triviais."
       },
       {
-        "text": "A bancada os pula",
-        "why": "Nada na bancada percebe."
+        "text": "Passam na categoria, por cópia",
+        "why": "Certo: não conseguem mais falhar nela."
       },
       {
-        "text": "Não custam tokens",
-        "why": "Custam o mesmo que qualquer mensagem."
+        "text": "O `pl run` os tira da execução",
+        "why": "O `pl` roda todo caso do arquivo."
       }
     ]
   },
   "ex-vck78f29": {
-    "prompt": "Nas 37 mensagens de dev que não são exemplos dele, em quantas o `v11-contaminated.txt` passa?",
-    "hint": "Ele passa em 37 de 40, e três dessas 37 são os próprios exemplos."
+    "prompt": "Nas 37 mensagens do dev que não são exemplos dele, quantas o `v11-contaminated.txt` aprova?",
+    "hint": "28 menos as três."
   },
   "ex-27wq728n": {
-    "prompt": "A contaminação subiu a nota de dev em só um ponto aqui. Por que uma subida pequena é a perigosa?",
-    "hint": "Como parece uma subida de um ponto depois que alguém melhorou os exemplos?",
+    "prompt": "A contaminação deixou o total do dev em 28 e levou a contagem de categorias de 35 para 39. Por que esse é o formato perigoso?",
+    "hint": "Onde você olharia?",
     "choices": [
       {
-        "text": "Parece progresso comum",
-        "why": "Certo: nada nela anuncia um vazamento."
+        "text": "Parece progresso numa linha da tabela",
+        "why": "Certo: uma contagem de categorias melhor depois de alguém melhorar os exemplos."
       },
       {
-        "text": "Subidas pequenas nunca são significativas",
-        "why": "Significância não é a questão; os casos não medem nada."
+        "text": "Porque 39 de 40 fica acima do limite de 0,05",
+        "why": "Esse limite é de um teste do sinal, não de uma contagem."
       },
       {
-        "text": "Faz a nota do holdout cair",
-        "why": "O holdout foi de 11 para 12 aqui."
+        "text": "Porque o holdout nunca é rodado depois",
+        "why": "Foi, e caiu de 14 para 9."
       },
       {
-        "text": "Um ponto é o máximo que a contaminação consegue somar",
-        "why": "Ela soma tantos quantos casos vazados estavam falhando."
+        "text": "Porque o total o denuncia na hora",
+        "why": "O total não mexeu."
       }
     ]
   },
   "ex-5p4esj1y": {
-    "prompt": "Duas execuções do mesmo prompt com temperatura 1, sementes diferentes, passaram em 31 e 28. Quantas mensagens mudaram de resultado entre elas?",
-    "hint": "`fixed` mais `broken`."
+    "prompt": "Duas execuções do mesmo prompt com temperatura 1 e sementes diferentes aprovaram 27 e 28. Quantas mensagens mudaram de resultado entre elas?",
+    "hint": "As linhas `fixed` e `broken`."
   },
   "ex-7g7cbrab": {
-    "prompt": "Com temperatura 1, `t14` falhou em cinco chamadas de cinco. Que tipo de descoberta é essa?",
-    "hint": "Ela passava com temperatura 0?",
+    "prompt": "Com temperatura 1, o `t36` falhou nas cinco chamadas, e ele passa com temperatura 0. Que tipo de resultado é esse?",
+    "hint": "O que mudou?",
     "choices": [
       {
-        "text": "Um caso instável que precisa de mais amostras para medir",
-        "why": "Ela nunca muda; não há o que amostrar."
+        "text": "Ruído que cinco amostras são poucas para ver",
+        "why": "Cinco de cinco não é ruído."
       },
       {
-        "text": "Um defeito estável, no prompt ou no rótulo",
-        "why": "Certo: uma execução o encontra, em qualquer temperatura."
+        "text": "Um defeito estável do prompt, achado com uma execução",
+        "why": "Com temperatura 0 ele passa."
       },
       {
-        "text": "Prova de que temperatura 1 é alta demais para esta tarefa",
-        "why": "Ela falha com temperatura 0 também."
+        "text": "Um rótulo errado, já que falha com tanta consistência",
+        "why": "O mesmo rótulo passa com temperatura 0."
       },
       {
-        "text": "Azar no sorteio",
-        "why": "Cinco de cinco, e o mesmo com temperatura 0, não é azar."
+        "text": "A configuração faz parte do que está sendo testado",
+        "why": "Certo: o prompt e a temperatura dele são uma coisa só."
       }
     ]
   },
   "ex-wt4y0r5q": {
-    "prompt": "Um teste que aprova e reprova a mesma entrada em chamadas diferentes é chamado de ___.",
-    "hint": "A palavra dos programadores para isso.",
+    "prompt": "Um teste que passa e falha com a mesma entrada em chamadas diferentes é chamado de ___.",
+    "hint": "Palavra de programador.",
     "blanks": [
       {
         "accept": [
           "flaky",
           "instável",
-          "instavel"
+          "intermitente"
         ]
       }
     ]
   },
   "ex-95tj3h1p": {
-    "prompt": "Associe cada observação ao que ela diz.",
-    "hint": "Uma cada.",
+    "prompt": "Ligue cada observação desta aula ao que ela diz.",
+    "hint": "Uma para cada.",
     "pairs": [
       {
-        "left": "Um caso falha em toda chamada, em qualquer temperatura",
-        "right": "Um defeito no prompt ou no rótulo"
+        "left": "O `t25` falha cinco de cinco, e com temperatura 0",
+        "right": "Uma discordância estável que uma execução acha"
       },
       {
-        "left": "Um caso falha em algumas chamadas e passa em outras",
-        "right": "Uma taxa, que só amostras medem"
+        "left": "O `t22` falha três de cinco",
+        "right": "Uma taxa que só amostras acham"
       },
       {
-        "left": "A nota de dev sobe um ponto depois de acrescentar exemplos",
-        "right": "Confira que os exemplos não são casos de teste"
+        "left": "O `t07` falha cinco de cinco, como `high` e como `low`",
+        "right": "Nenhuma resposta firme, sob uma contagem estável"
       },
       {
-        "left": "O dev passa em 90% e o holdout em 37%",
-        "right": "O dev é mais fácil que o tráfego real"
+        "left": "39 categorias de 40 com três exemplos copiados",
+        "right": "Uma nota inflada por contaminação"
       }
     ],
     "right_distractors": [
-      "As verificações rodam na ordem errada"
+      "Um prompt pronto para publicar"
     ]
   },
   "ex-tnt9ns1y": {
-    "prompt": "Um colega informa: \"Prompt novo: 38/40 em dev, antes 36. Pode publicar.\" O prompt roda com temperatura 0,7 e foi ajustado em dev. O que você pede primeiro?",
-    "hint": "Três coisas desta aula poderiam, cada uma, produzir esses dois pontos.",
+    "prompt": "Um colega relata: \"Prompt novo: 30/40 no dev, subiu de 28. Pode publicar.\" O prompt roda com temperatura 0,7 e foi ajustado no dev. O que você pede?",
+    "hint": "Faltam três coisas.",
     "choices": [
       {
-        "text": "Uma nova execução do mesmo comando, para confirmar o 38",
-        "why": "Mais uma execução é mais um sorteio; diz pouco."
+        "text": "Mais nada: dois casos a mais bastam para publicar",
+        "why": "Dois casos de uma execução sorteada é do tamanho do ruído."
       },
       {
-        "text": "Taxas sobre amostras para os dois prompts, o holdout, e a conferência de que nenhum exemplo é caso de dev",
-        "why": "Certo: instabilidade, ajuste e contaminação, cada um, fingem um ganho."
+        "text": "Taxas sobre amostras e também uma execução no holdout",
+        "why": "Certo: e os casos que mudaram."
       },
       {
-        "text": "Um dev maior escrito pelo mesmo colega",
-        "why": "Mais mensagens do mesmo autor mantêm o mesmo ponto cego."
+        "text": "Uma execução com temperatura 1,0 para confirmar o ganho",
+        "why": "Uma execução mais quente mede outra coisa."
       },
       {
-        "text": "O custo do prompt novo",
-        "why": "Vale saber, mas não testa se o ganho é real."
+        "text": "Um dev maior feito com as respostas do prompt novo",
+        "why": "Os rótulos vêm antes das respostas."
       }
     ]
   },
   "ex-jjcg59js": {
     "prompt": "Qual destas é a evidência mais forte de que um prompt é melhor que outro?",
-    "hint": "Conte em que cada resultado se apoia.",
+    "hint": "Mensagens não vistas, e a divisão.",
     "choices": [
       {
-        "text": "Uma execução de cada em dev, três casos de diferença",
-        "why": "Duas execuções de um mesmo prompt diferiram em três aqui."
+        "text": "Duas aprovações a mais no dev em que foi ajustado",
+        "why": "Conjuntos usados em ajustes lisonjeiam."
       },
       {
-        "text": "Maior no holdout, com um teste do sinal bem abaixo de 0,05",
-        "why": "Certo: casos não vistos, e uma divisão que uma moeda raramente produziria."
+        "text": "Mais categorias certas com três exemplos tirados do dev",
+        "why": "Essa é a tabela contaminada."
       },
       {
-        "text": "Maior em dev depois de copiar os exemplos do dev",
-        "why": "Esses casos não medem nada."
+        "text": "Dez consertadas e nenhuma quebrada num holdout",
+        "why": "Certo: mensagens com que ele não foi escolhido, numa divisão desequilibrada."
       },
       {
-        "text": "O autor está confiante",
-        "why": "Confiança não é medição."
+        "text": "Uma execução só com temperatura 1 que aprovou uma a mais",
+        "why": "Uma mensagem foi o que duas sementes diferiram."
       }
     ]
   }

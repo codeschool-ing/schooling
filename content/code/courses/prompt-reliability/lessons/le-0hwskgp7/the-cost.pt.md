@@ -1,82 +1,78 @@
 ---
 title: Quanto custa uma votação
-version: 1
+version: 2
 ---
 
 Um ensemble de n membros faz n chamadas para cada mensagem. **A conta é a soma das contas dos
-membros**, e o ganho é o que a votação mediu. Ponha os dois lado a lado antes de ficar com um.
+membros**, e o ganho é o que a votação mediu. Ponha os dois lado a lado antes de ficar com um. O
+`cost.py` da aula 16 põe preço numa execução com o `prices.json`, os preços inventados do curso:
 
 ```
-ana@lab:~/triage$ pl cost runs/v6.jsonl
-tokens          count   per call
-input            8443      120.6
-cache_read          0        0.0
-cache_write         0        0.0
-output           2635       37.6
-
-cost of these 70 calls: 6.4854 cents
-cost of a million calls like them: 92,649 cents
-ana@lab:~/triage$ pl cost runs/s5.jsonl
-tokens          count   per call
-input           42215      120.6
-cache_read          0        0.0
-cache_write         0        0.0
-output          13175       37.6
-
-cost of these 350 calls: 32.4270 cents
-cost of a million calls like them: 92,649 cents
+ana@lab:~/triage$ python3 cost.py runs/v3.jsonl runs/v4.jsonl runs/v6.jsonl runs/s5.jsonl
+runs/v3.jsonl, 70 calls
+  input      17381 tokens      248.3 a call
+  output      2156 tokens       30.8 a call
+  these calls      8.4483 cents
+  a million calls  120690.0000 cents
+runs/v4.jsonl, 70 calls
+  input       8491 tokens      121.3 a call
+  output      2039 tokens       29.1 a call
+  these calls      5.6058 cents
+  a million calls  80082.8571 cents
+runs/v6.jsonl, 70 calls
+  input      10381 tokens      148.3 a call
+  output      2021 tokens       28.9 a call
+  these calls      6.1458 cents
+  a million calls  87797.1429 cents
+runs/s5.jsonl, 350 calls
+  input      51905 tokens      148.3 a call
+  output      9995 tokens       28.6 a call
+  these calls      30.5640 cents
+  a million calls  87325.7143 cents
 ```
 
-O `pl cost` soma os tokens que uma execução usou e os precifica com o `prices.json`, que guarda os
-preços do curso e de nenhum provedor. O `v6-escaped` custa 6,4854 centavos por setenta chamadas.
-A execução com cinco amostras usou os mesmos 120,6 tokens de entrada por chamada, fez cinco vezes
-mais chamadas e custou 32,4270 centavos, exatamente cinco vezes mais. Em troca, acertou quatro
-mensagens a menos.
+A última linha de cada execução é o preço de um milhão de chamadas iguais às dela. No ensemble de
+três prompts uma mensagem é uma chamada a cada membro, então um milhão de mensagens custa 120.690 +
+80.083 + 87.797 = 288.570 centavos. O melhor membro sozinho, o `v3-examples`, custa 120.690 e acertou
+cinco mensagens a mais que a votação. **O ensemble custou 2,4 vezes o melhor prompt para ser pior que
+ele.**
 
-O ensemble de três prompts custa a soma de três prompts diferentes:
+As cinco amostras são um prompt cinco vezes. Cada chamada custou o que custa uma chamada do
+`v6-escaped`, 148,3 tokens de entrada e uns 29 de saída, e uma mensagem são cinco delas: 5 × 87.325,71 = 436.629 centavos por milhão de mensagens, cinco vezes o `v6-escaped` sozinho, por uma resposta certa
+a mais em setenta.
+
+O tempo é a outra conta:
 
 ```
-ana@lab:~/triage$ pl cost runs/v3.jsonl
-tokens          count   per call
-input           16703      238.6
-cache_read          0        0.0
-cache_write         0        0.0
-output           2621       37.4
-
-cost of these 70 calls: 8.9424 cents
-cost of a million calls like them: 127,749 cents
-ana@lab:~/triage$ pl cost runs/v4.jsonl
-tokens          count   per call
-input            6553       93.6
-cache_read          0        0.0
-cache_write         0        0.0
-output           2660       38.0
-
-cost of these 70 calls: 5.9559 cents
-cost of a million calls like them: 85,084 cents
+ana@lab:~/triage$ python3 stats.py runs/v6.jsonl runs/s5.jsonl
+runs/v6.jsonl, 70 calls
+  tokens in    mean  148.3   total  10381
+  tokens out   mean   28.9   total   2021   max 37
+  seconds      p50   3.2   p95   4.4   total  263.7
+runs/s5.jsonl, 350 calls
+  tokens in    mean  148.3   total  51905
+  tokens out   mean   28.6   total   9995   max 45
+  seconds      p50   2.9   p95   3.7   total 1042.8
 ```
 
-Por milhão de mensagens, 127.749 + 85.084 + 92.649 = 305.482 centavos, contra 92.649 do
-`v6-escaped` sozinho: **3,3 vezes o custo por duas respostas certas a mais em setenta**. O
-`v3-examples` é o membro mais caro, porque os três exemplos dele vão junto em toda chamada.
-
-Latência é a única coisa que um ensemble não precisa multiplicar. As chamadas são independentes,
-então podem rodar ao mesmo tempo, e a espera é a do membro mais lento. O dinheiro continua sendo a
-soma.
+Cada chamada amostrada foi um pouco mais rápida que uma chamada da execução simples, p50 de 2,9
+segundos contra 3,2, provavelmente pelo cache da aula 17: o `pl` manda as cinco amostras de uma
+mensagem uma atrás da outra, com o mesmo prompt toda vez. Cinco chamadas por mensagem levaram
+1.042,8 segundos contra 263,7. Um provedor que roda as cinco ao mesmo tempo faz você esperar a mais
+lenta delas em vez de todas, e ainda cobra as cinco.
 
 ## Quando compensa
 
-Três coisas decidem, e cada uma é algo que você consegue medir:
+Três coisas decidem, e cada uma é algo que você pode medir:
 
-- Quanto custa um erro: duas respostas certas a mais em setenta valem 3,3 vezes a conta quando
-  um rótulo errado deixa uma conta invadida na fila errada. Não valem quando um rótulo errado
-  significa uma pessoa reclassificando uma pergunta sobre a newsletter.
-- Quanto custa uma chamada: um ensemble de três chamadas a um modelo pequeno e barato pode
-  custar menos que uma chamada a um grande. É uma comparação que vale rodar com o `pl cost` nos
-  dois.
-- Quão diferentes são os membros: a conta só rende quando os membros erram coisas diferentes.
-  Conte do jeito da seção dos três prompts, caso a caso, antes de contar dinheiro.
+- **O quanto os membros são diferentes.** A conta só compensa quando os membros erram coisas
+  diferentes. Conte do jeito que a seção dos três prompts contou, caso a caso, antes de contar
+  dinheiro. Aqui doze casos erraram nos três prompts.
+- **Quanto custa um erro.** Uma resposta certa a mais em setenta pode valer cinco vezes a conta
+  quando um rótulo errado deixa uma conta sequestrada na fila errada. Não vale quando um rótulo
+  errado significa uma pessoa reclassificando uma pergunta sobre a newsletter.
+- **Quanto custa uma chamada.** Um ensemble de três chamadas a um modelo pequeno e barato pode custar
+  menos que uma chamada a um grande. É uma comparação que vale rodar com o `cost.py` nos dois.
 
 A ordem dessas verificações importa. **Meça o ganho da votação contra a melhor chamada única
-primeiro**; se for zero ou negativo, como foi o das cinco amostras, o custo nem precisa ser
-calculado.
+primeiro**; se for negativo, como foi para os três prompts, o custo nem precisa ser calculado.

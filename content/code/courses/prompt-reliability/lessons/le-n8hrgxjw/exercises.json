@@ -1,205 +1,205 @@
 [
   {
     "id": "ex-6vgb5xa6",
-    "version": 1,
+    "version": 2,
     "section": "scores-to-choices",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "Which step turns a model's scores for the next word into probabilities?",
-    "hint": "Raise *e* to each score, then divide by the total.",
+    "prompt": "Which step turns a model's scores for the next token into probabilities?",
+    "hint": "It adds up to one.",
     "choices": [
+      {
+        "text": "Temperature, which divides the scores by a number",
+        "correct": false,
+        "why": "Temperature reshapes the scores; softmax makes them probabilities."
+      },
+      {
+        "text": "The seed that the harness passes with every call",
+        "correct": false,
+        "why": "The seed decides a draw, not the probabilities it draws from."
+      },
       {
         "text": "Softmax",
         "correct": true,
-        "why": "Right: everything then adds up to one."
+        "why": "Right: raise e to each score and divide by the total."
       },
       {
-        "text": "Top-k, which keeps the likeliest few and drops the rest",
+        "text": "Top-k, which keeps the highest-scoring candidates",
         "correct": false,
-        "why": "Top-k cuts a distribution that softmax already produced."
-      },
-      {
-        "text": "The tokenizer",
-        "correct": false,
-        "why": "It splits text into tokens; it scores nothing."
-      },
-      {
-        "text": "The temperature, by itself",
-        "correct": false,
-        "why": "Temperature divides the scores; softmax still has to turn them into probabilities."
+        "why": "Top-k cuts candidates after the probabilities exist."
       }
     ]
   },
   {
     "id": "ex-fyj0zbc3",
-    "version": 1,
+    "version": 2,
     "section": "scores-to-choices",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "`on` scores 3.1 and `delayed` 2.6. At temperature 1, about how many times likelier is `on`? Give two decimal places.",
-    "hint": "*e* to the power of the difference.",
-    "value": 1.65,
-    "tolerance": 0.02
+    "prompt": "For `t22`, `other` has a log probability of -0.49 and `billing` -1.50. At temperature 1, about how many times likelier is `other`? Two decimal places.",
+    "hint": "e to the difference.",
+    "value": 2.75,
+    "tolerance": 0.05
   },
   {
     "id": "ex-rp24gh1h",
-    "version": 1,
+    "version": 2,
     "section": "scores-to-choices",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "`purple` has a probability of 0.1% and was never drawn in 1,000 tries. What follows?",
-    "hint": "Scale it up.",
+    "prompt": "For `t22`, `'payment'` has 0.1% and was drawn twice in 1,000; `'accounts'` has 0.1% and was never drawn. What follows?",
+    "hint": "A thousand draws of a rare token.",
     "choices": [
       {
-        "text": "It is never drawn, since the sampler ignores candidates under 1%",
-        "correct": false,
-        "why": "Nothing in plain sampling drops a candidate for being small."
-      },
-      {
-        "text": "The probability shown is wrong",
-        "correct": false,
-        "why": "A thousand draws is a small sample of a 0.1% event."
-      },
-      {
-        "text": "At a million calls it comes out about a thousand times",
+        "text": "At this share, a few draws or none are both normal",
         "correct": true,
-        "why": "Right: rare per call is not rare per day."
+        "why": "Right: rare is not impossible, and one run of a thousand shows it either way."
       },
       {
-        "text": "Sampling is broken for the tail",
+        "text": "`'accounts'` cannot be drawn at temperature 1",
         "correct": false,
-        "why": "It is working as arithmetic says it should."
+        "why": "It has a share; it was unlucky in this run."
+      },
+      {
+        "text": "The program's random number generator is not working",
+        "correct": false,
+        "why": "Two against zero at 0.1% is ordinary."
+      },
+      {
+        "text": "`'payment'` scores higher than `'accounts'` on every message",
+        "correct": false,
+        "why": "These are one message's scores."
       }
     ]
   },
   {
     "id": "ex-dg4vfdyt",
-    "version": 1,
+    "version": 2,
     "section": "scores-to-choices",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Adding 10 to every score leaves the probabilities exactly as they were. Why?",
-    "hint": "What does softmax respond to?",
+    "prompt": "Adding 10 to every score leaves softmax's probabilities exactly as they were. Why?",
+    "hint": "What does softmax compare?",
     "choices": [
       {
-        "text": "Softmax only uses the order of the scores",
+        "text": "Softmax rounds every score to the nearest whole number",
         "correct": false,
-        "why": "The size of the gaps matters too, which is why temperature works."
+        "why": "Nothing is rounded."
       },
       {
-        "text": "Only the differences between scores matter",
+        "text": "Scores above zero are clipped back to zero first",
+        "correct": false,
+        "why": "Nothing is clipped; `distribution()` subtracts the top score to keep the numbers small, which is the same fact."
+      },
+      {
+        "text": "A score of 10 is too large for the model to produce",
+        "correct": false,
+        "why": "The size of the score is not the point."
+      },
+      {
+        "text": "Softmax compares only the differences between scores",
         "correct": true,
-        "why": "Right: a constant added to all of them cancels out."
-      },
-      {
-        "text": "Scores above 10 are capped before softmax sees them",
-        "correct": false,
-        "why": "Nothing is capped."
-      },
-      {
-        "text": "Softmax divides every score by the largest one first",
-        "correct": false,
-        "why": "It divides by the total of the exponentials."
+        "why": "Right: e to the 10 cancels out of every ratio."
       }
     ]
   },
   {
     "id": "ex-d20hc07e",
-    "version": 1,
+    "version": 2,
     "section": "temperature",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
     "prompt": "What does a temperature below 1 do to the distribution?",
-    "hint": "At 0.2, `on` had 92.2%.",
+    "hint": "Divide by a small number.",
     "choices": [
       {
-        "text": "It flattens it so that the less likely words get drawn more often than before",
+        "text": "Removes every candidate except the one at the top",
         "correct": false,
-        "why": "That is a temperature above 1."
+        "why": "Only temperature 0 always takes the top one."
       },
       {
-        "text": "It sharpens it towards the top candidate",
+        "text": "Stretches the gaps, so the top one takes more",
         "correct": true,
-        "why": "Right: the gaps between scores are stretched."
+        "why": "Right: at 0.2 `other` took 99.4%."
       },
       {
-        "text": "It removes the bottom half of the words",
+        "text": "Changes the order of the candidates by score",
         "correct": false,
-        "why": "Removing is what top-k and top-p do."
+        "why": "The order stays; only the shares change."
       },
       {
-        "text": "Nothing until it reaches 0",
+        "text": "Spreads the probability more evenly over the candidates",
         "correct": false,
-        "why": "0.2 changed `on` from 45.1% to 92.2%."
+        "why": "That is what a temperature above 1 does."
       }
     ]
   },
   {
     "id": "ex-17r30fdz",
-    "version": 1,
+    "version": 2,
     "section": "temperature",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "At temperature 1.5, what percentage did `pl sample` give `on`?",
-    "hint": "The first line of the 1.5 run.",
-    "value": 35.3,
-    "tolerance": 0.05,
-    "unit": "%"
+    "prompt": "At temperature 1.5, what percentage did `next.py` give `other` for `t22`?",
+    "hint": "The second table.",
+    "value": 47.8,
+    "tolerance": 0.05
   },
   {
     "id": "ex-4s8wfkk7",
-    "version": 1,
+    "version": 2,
     "section": "temperature",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "`pl sample` refuses a temperature of 0, while `pl run` uses 0 by default. Why is that consistent?",
-    "hint": "What does the formula do with the temperature?",
+    "prompt": "Dividing by zero is impossible, yet `pl run` uses temperature 0 by default. How is temperature 0 defined?",
+    "hint": "As a limit.",
     "choices": [
       {
-        "text": "`pl run` silently rounds 0 up to 0.1",
+        "text": "As the candidate the prompt's examples used most often",
         "correct": false,
-        "why": "At 0 the stand-in takes the top score; nothing is rounded."
+        "why": "The sampler does not read the prompt."
       },
       {
-        "text": "0 is the limit, the top candidate with no draw, and `pl sample` exists to show a draw",
+        "text": "As temperature 1 with the seed fixed",
+        "correct": false,
+        "why": "A fixed seed repeats a draw; temperature 0 makes no draw."
+      },
+      {
+        "text": "As the top candidate, every time, with no draw",
         "correct": true,
-        "why": "Right: dividing by zero is undefined, so 0 is defined as the limit."
+        "why": "Right: it is the limit as the temperature falls."
       },
       {
-        "text": "Temperature 0 only exists for classification",
+        "text": "As a very small temperature, such as 0.01",
         "correct": false,
-        "why": "It exists for any task; it is a setting of the sampler."
-      },
-      {
-        "text": "They use different samplers",
-        "correct": false,
-        "why": "Both use `distribution` in `sample.py` above 0."
+        "why": "A small temperature still draws; `t22` at 0.2 drew billing 5 times in 1,000."
       }
     ]
   },
   {
     "id": "ex-bwv9ysc4",
-    "version": 1,
+    "version": 2,
     "section": "temperature",
     "type": "cloze",
     "difficulty": "easy",
     "drillable": true,
     "prompt": "At temperature 0 the sampler takes the ___ candidate every time, with no draw at all.",
-    "hint": "The one with the highest score.",
+    "hint": "Highest score.",
     "blanks": [
       {
         "accept": [
           "top",
           "highest",
+          "most probable",
           "likeliest",
-          "highest-scoring"
+          "first"
         ],
         "ignore_case": true,
         "ignore_accents": true
@@ -208,393 +208,392 @@
   },
   {
     "id": "ex-7pr4kt1t",
-    "version": 1,
+    "version": 2,
     "section": "temperature",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why does a temperature of 1 not promise the same amount of randomness on two different models?",
-    "hint": "What is the temperature divided into?",
+    "prompt": "Why does a temperature of 1 change `t22` a great deal and `t08` hardly at all?",
+    "hint": "Look at the gaps.",
     "choices": [
       {
-        "text": "Providers define 1 differently in their price lists",
-        "correct": false,
-        "why": "Prices have nothing to do with it."
-      },
-      {
-        "text": "Temperature is weaker on text in languages other than English",
-        "correct": false,
-        "why": "It acts on scores, whatever the language of the text."
-      },
-      {
-        "text": "It divides scores, and how far apart they sit differs",
+        "text": "Its effect depends on the size of the gaps it divides",
         "correct": true,
-        "why": "Right: in the stand-in they sit within a point, so 1 is a lot."
+        "why": "Right: one point for `t22`, almost seven for `t08`."
       },
       {
-        "text": "One of them ignores the setting and uses its own default",
+        "text": "`t08` is a shorter message than `t22`",
         "correct": false,
-        "why": "Providers apply it; the point is the scale of the scores."
+        "why": "Length is not what the temperature divides."
+      },
+      {
+        "text": "The temperature is applied only to close calls",
+        "correct": false,
+        "why": "It divides every score of every message."
+      },
+      {
+        "text": "`t08` was in the prompt's examples",
+        "correct": false,
+        "why": "`v6-escaped.txt` has no examples."
       }
     ]
   },
   {
     "id": "ex-fdkdr1zk",
-    "version": 1,
+    "version": 2,
     "section": "top-k-and-top-p",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "With `--top-p 0.9`, `lost` was kept along with the top three. Why?",
-    "hint": "Add up the top three.",
+    "prompt": "For `t22` at temperature 1, `--top-k 3` and `--top-p 0.9` printed identical tables. Why?",
+    "hint": "Add up the first three.",
     "choices": [
       {
-        "text": "Top-p always keeps four words",
+        "text": "Top-k and top-p are two names for one setting",
         "correct": false,
-        "why": "A fixed count is top-k; top-p keeps a share."
+        "why": "One is a count and one is a share."
       },
       {
-        "text": "Three made only 86.1%",
+        "text": "Both settings always keep exactly three candidates",
+        "correct": false,
+        "why": "Top-p keeps fewer when one dominates and more when it is spread."
+      },
+      {
+        "text": "Top-p is ignored by `next.py` at temperature 1",
+        "correct": false,
+        "why": "It is applied; it happened to keep three."
+      },
+      {
+        "text": "The top three reach 96.3%, past 0.9",
         "correct": true,
-        "why": "Right: short of 90%, so the fourth joins."
-      },
-      {
-        "text": "`lost` has a score above 1",
-        "correct": false,
-        "why": "`ready` scores 1.0 and was cut; the threshold is a share, not a score."
-      },
-      {
-        "text": "0.9 rounds up to four candidates",
-        "correct": false,
-        "why": "Nothing is rounded; the probabilities are added up."
+        "why": "Right: on this message the two rules keep the same set."
       }
     ]
   },
   {
     "id": "ex-v2fc4s15",
-    "version": 1,
+    "version": 2,
     "section": "top-k-and-top-p",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "With `--top-k 3`, what percentage did `on` get after renormalising?",
-    "hint": "45.1% divided by the share the three kept.",
-    "value": 52.4,
-    "tolerance": 0.1,
-    "unit": "%"
+    "prompt": "With `--top-k 3`, what percentage did `other` get after renormalising?",
+    "hint": "Divide by 96.3%.",
+    "value": 64.5,
+    "tolerance": 0.05
   },
   {
     "id": "ex-22h2ytm7",
-    "version": 1,
+    "version": 2,
     "section": "top-k-and-top-p",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "In a distribution where the top word has 97% of the probability, how many words do `top-k 3` and `top-p 0.9` keep?",
-    "hint": "One is a count, the other a share.",
+    "prompt": "For `t08`, `returns` has 99.8%. How many candidates do `top-k 3` and `top-p 0.9` keep?",
+    "hint": "One is a count, one a share.",
     "choices": [
       {
-        "text": "Three each",
+        "text": "One and one",
         "correct": false,
-        "why": "Top-p stops as soon as the share is reached."
+        "why": "Top-k keeps three whatever their shares."
       },
       {
-        "text": "Top-k keeps three; top-p keeps one",
+        "text": "Three and one",
         "correct": true,
-        "why": "Right: 97% is already past 90%."
+        "why": "Right: `returns` alone passes 0.9."
       },
       {
-        "text": "Top-k keeps one; top-p keeps three",
+        "text": "One and three",
         "correct": false,
-        "why": "Top-k keeps its count whatever the shares."
+        "why": "It is the other way round."
       },
       {
-        "text": "Both keep the words whose share is above the 3% that the top word left over",
+        "text": "Three and three",
         "correct": false,
-        "why": "Neither works by a per-word threshold."
+        "why": "Top-p stops as soon as the total reaches 0.9."
       }
     ]
   },
   {
     "id": "ex-mjnxt27j",
-    "version": 1,
+    "version": 2,
     "section": "top-k-and-top-p",
     "type": "ordering",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Put the lab sampler's steps in the order it applies them.",
-    "hint": "`distribution` in `sample.py`.",
+    "prompt": "Put the steps of `distribution()` in the order it applies them.",
+    "hint": "Temperature comes first.",
     "items": [
-      "Softmax of the scores divided by the temperature",
+      "Divide the scores by the temperature and apply softmax",
       "Keep the top k candidates",
       "Keep the smallest top set reaching p",
-      "Renormalise what is left and draw"
+      "Share the total among the survivors"
     ]
   },
   {
     "id": "ex-dg7hpedr",
-    "version": 1,
+    "version": 2,
     "section": "top-k-and-top-p",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "`--top-p 0.9` kept four words at temperature 1 and five at temperature 1.5. Why?",
-    "hint": "Which step runs first?",
+    "prompt": "`--top-p 0.9` kept three tokens of `t22` at temperature 1 and four at 1.5. Why?",
+    "hint": "Which step ran first?",
     "choices": [
       {
-        "text": "Temperature ran first and flattened it",
+        "text": "At 1.5 the model scored a fourth token higher",
+        "correct": false,
+        "why": "The scores are the same; only their division changed."
+      },
+      {
+        "text": "Top-p counts tokens with a leading space twice",
+        "correct": false,
+        "why": "Every token counts once."
+      },
+      {
+        "text": "Temperature flattened them before top-p looked",
         "correct": true,
-        "why": "Right: a setting's effect depends on what ran before it."
+        "why": "Right: the first three then held only 87.8%."
       },
       {
-        "text": "Top-p is applied before temperature",
+        "text": "Top-p is applied before the temperature",
         "correct": false,
-        "why": "The source shows temperature first."
-      },
-      {
-        "text": "1.5 adds a word to whatever top-p keeps",
-        "correct": false,
-        "why": "Temperature adds nothing directly; it reshapes the probabilities."
-      },
-      {
-        "text": "It was sampling noise, and a rerun would keep four",
-        "correct": false,
-        "why": "Which words are kept is computed, not drawn."
+        "why": "It is applied after, and that is the reason."
       }
     ]
   },
   {
     "id": "ex-50620b0z",
-    "version": 1,
+    "version": 2,
     "section": "top-k-and-top-p",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
     "prompt": "Which of these accepts `temperature` and `top_p` but has no `top_k`?",
-    "hint": "The section names two hosted APIs.",
+    "hint": "One of the three named in the lesson.",
     "choices": [
+      {
+        "text": "OpenAI's Chat Completions API",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "None of the three",
+        "correct": false,
+        "why": "One of them has no `top_k`."
+      },
+      {
+        "text": "Ollama's options",
+        "correct": false,
+        "why": "Ollama accepts all three."
+      },
       {
         "text": "Anthropic's Messages API",
         "correct": false,
         "why": "It accepts all three."
-      },
-      {
-        "text": "The lab's `pl sample`",
-        "correct": false,
-        "why": "It has `--top-k` as well."
-      },
-      {
-        "text": "OpenAI's Chat Completions API",
-        "correct": true,
-        "why": "Right, which is why you read the documentation of the API you call."
-      },
-      {
-        "text": "`pl run` with `--set`",
-        "correct": false,
-        "why": "`--set top_k=…` is accepted."
       }
     ]
   },
   {
     "id": "ex-w78ydwpg",
-    "version": 1,
+    "version": 2,
     "section": "choosing-for-the-task",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "Over 350 calls, right categories numbered 280 at temperature 0. How many at temperature 1?",
-    "hint": "The `category` line of `pl check runs/t1.jsonl`.",
-    "value": 194,
+    "prompt": "Over 200 calls, `all` passed 100 at temperature 0. How many passed at temperature 1?",
+    "hint": "The second table.",
+    "value": 85,
     "tolerance": 0
   },
   {
     "id": "ex-e2zcg3db",
-    "version": 1,
+    "version": 2,
     "section": "choosing-for-the-task",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "The `json` line stayed at 340 at temperatures 0, 0.2 and 1. Why?",
-    "hint": "What decides the stand-in's formatting habits?",
+    "prompt": "From temperature 0 to temperature 1, the categories went from 150 to 152 and the urgencies from 100 to 85. What does that say?",
+    "hint": "Which decision was close?",
     "choices": [
       {
-        "text": "Temperature never affects formatting, in any model",
+        "text": "The urgency labels in the test set are wrong",
         "correct": false,
-        "why": "That is a claim about real models the lesson does not make."
+        "why": "The same labels gave 100 at temperature 0."
       },
       {
-        "text": "The prompt asks for JSON, which overrides the temperature",
+        "text": "The seed was not applied at temperature 1",
         "correct": false,
-        "why": "The categories did change, so the temperature was not overridden."
+        "why": "Each sample had its own seed; that is what made them differ."
       },
       {
-        "text": "Coincidence",
+        "text": "Temperature 1 is better for categories",
         "correct": false,
-        "why": "Three identical counts are not chance here; there is a rule."
+        "why": "Two more out of two hundred is noise, and the run is a mix."
       },
       {
-        "text": "In the stand-in, habits hang on the prompt and the message",
+        "text": "For this model, urgency is the close call",
         "correct": true,
-        "why": "Right: they are not drawn by the sampler."
+        "why": "Right: sampling spends the margins, and they were in the urgency."
       }
     ]
   },
   {
     "id": "ex-stq3066b",
-    "version": 1,
+    "version": 2,
     "section": "choosing-for-the-task",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "A team routes support tickets at temperature 0.3, \"for a little flexibility\". What does this lesson's measurement suggest?",
-    "hint": "What happened at 0.2?",
+    "prompt": "A team routes support tickets at temperature 0.2, \"for a little flexibility\". What does this lesson's measurement say?",
+    "hint": "Look at 0.2.",
     "choices": [
       {
-        "text": "Nothing changes below 0.5",
+        "text": "It is safe if the prompt has examples in it",
         "correct": false,
-        "why": "At 0.2 the categories already lost 9 of 280."
+        "why": "Nothing in the lesson ties the cost to examples."
       },
       {
-        "text": "Close calls flip from call to call; a task with one right answer belongs at 0",
+        "text": "It loses a few right answers for nothing",
         "correct": true,
-        "why": "Right: flexibility in routing is the same ticket going to two queues."
+        "why": "Right: a task with one right answer belongs at 0."
       },
       {
-        "text": "They should raise it to 1 to see more variety",
+        "text": "It costs nothing measurable, since 0.2 is close to 0",
         "correct": false,
-        "why": "At 1 the stand-in lost 86 of 280 right categories."
+        "why": "At 0.2 the urgency lost 4 of 100."
       },
       {
-        "text": "0.3 is fine as long as top-p is also set, so that the unlikely labels are cut off",
+        "text": "It helps, because sampling corrects wrong answers",
         "correct": false,
-        "why": "Top-p cuts the tail; close calls are at the top."
+        "why": "`t01` and `t22` stayed wrong in every sample."
       }
     ]
   },
   {
     "id": "ex-4mze9hj1",
-    "version": 1,
+    "version": 2,
     "section": "choosing-for-the-task",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "A hosted model at temperature 0 gives a different category for the same message once in a while. What is the likeliest explanation?",
-    "hint": "What does the provider's own documentation say about 0?",
+    "prompt": "The same prompt, model and settings printed 22 passes in lesson 1 and 21 in lessons 2 and 3. What is the likeliest cause?",
+    "hint": "Where were they captured?",
     "choices": [
       {
-        "text": "The temperature setting was ignored by the provider for that call",
+        "text": "Somebody edited `v2-json.txt` between the lessons",
         "correct": false,
-        "why": "It was applied; 0 is just not fully deterministic there."
+        "why": "The prompt id is the same in every run."
       },
       {
-        "text": "Batching and floating-point arithmetic swap near-ties",
+        "text": "`pl check` counts differently in later lessons",
+        "correct": false,
+        "why": "It is the same program."
+      },
+      {
+        "text": "Floating-point arithmetic on a different machine",
         "correct": true,
-        "why": "Right: zero is not a guarantee of identical output."
+        "why": "Right: a near tie can swap when the additions run in another order."
       },
       {
-        "text": "The model learnt from the previous call",
+        "text": "The harness used another seed in lesson 1",
         "correct": false,
-        "why": "A call does not change the model."
-      },
-      {
-        "text": "The message was cached the first time and the cache returned a stale category",
-        "correct": false,
-        "why": "A prompt cache stores processed input, not answers."
+        "why": "The seed is 1 in every run, and at temperature 0 it chooses nothing."
       }
     ]
   },
   {
     "id": "ex-kw85z2zy",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "multiple-choice",
     "difficulty": "medium",
     "drillable": true,
     "prompt": "For which of these is a temperature above 0 a reasonable choice? Choose all that apply.",
-    "hint": "Does the task have one right answer?",
+    "hint": "Is there one right answer?",
     "choices": [
       {
-        "text": "Five subject lines for a newsletter, to pick one from",
+        "text": "Five subject lines for a newsletter to choose from",
         "correct": true,
-        "why": "Yes: five identical lines would be useless."
+        "why": "Yes: variety is the point."
       },
       {
-        "text": "Sorting messages into five categories",
+        "text": "A reply to a customer that should not read like the last one",
+        "correct": true,
+        "why": "Yes."
+      },
+      {
+        "text": "Routing a ticket to the billing or returns queue",
         "correct": false,
-        "why": "One right answer: keep it at 0."
+        "why": "One right answer: 0."
       },
       {
-        "text": "Drafting replies that should not all read alike",
-        "correct": true,
-        "why": "Yes: variety is the point there."
-      },
-      {
-        "text": "Sampling several answers on purpose to vote on them",
-        "correct": true,
-        "why": "Yes: lesson 19 uses the randomness instead of suffering it."
+        "text": "Pulling the order number out of an e-mail",
+        "correct": false,
+        "why": "Extraction has one right answer: 0."
       }
     ]
   },
   {
     "id": "ex-pcpawk37",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "matching",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Match each setting to what it did to *Your parcel is ___*.",
+    "prompt": "Match each setting to what it did to `t22`.",
     "hint": "One each.",
     "pairs": [
       {
-        "left": "`--temperature 0.2`",
-        "right": "Nearly every draw was the top word"
+        "left": "Temperature 0.2",
+        "right": "`other` at 99.4%"
       },
       {
-        "left": "`--temperature 1.5`",
-        "right": "Nonsense words got drawn"
+        "left": "Temperature 1.5",
+        "right": "`other` at 47.8%"
       },
       {
-        "left": "`--top-k 3`",
-        "right": "Exactly three candidates left"
+        "left": "Top-k 3",
+        "right": "Three candidates, `other` at 64.5%"
       },
       {
-        "left": "`--top-p 0.9`",
-        "right": "The fewest top words reaching 90%"
+        "left": "Temperature 1.5 with top-p 0.9",
+        "right": "`' billing'` kept at 5.5%"
       }
     ],
     "right_distractors": [
-      "Writing stopped at 90% of the cap"
+      "`billing` at 99.4%"
     ]
   },
   {
     "id": "ex-hjdw5je1",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "In the lab you run with `--set temperature=0 --set top_p=0.5`. What does the top-p setting change?",
-    "hint": "Is there a draw at temperature 0?",
+    "prompt": "You run with `--set temperature=0 --set top_p=0.5`. What does the top-p setting change?",
+    "hint": "What does temperature 0 draw from?",
     "choices": [
       {
-        "text": "Nothing: at 0 the top label is taken with no draw",
+        "text": "Nothing: at 0 the top candidate is taken anyway",
         "correct": true,
-        "why": "Right. Top-p only matters when something is drawn."
+        "why": "Right: cutting the tail of a draw that never happens changes nothing."
       },
       {
-        "text": "It halves the labels it may choose from",
+        "text": "It keeps only the half of the vocabulary with the highest scores",
         "correct": false,
-        "why": "Nothing is chosen from a set at 0; the top is taken."
+        "why": "Top-p is a share of probability, and at 0 there is no draw."
       },
       {
-        "text": "It makes the answers more random",
+        "text": "It makes the replies shorter",
         "correct": false,
-        "why": "Top-p only ever removes candidates."
+        "why": "Top-p does not set a length."
       },
       {
-        "text": "It overrides the temperature",
+        "text": "It raises the temperature to make up for the cut",
         "correct": false,
-        "why": "Temperature is applied first."
+        "why": "No setting changes another."
       }
     ]
   }

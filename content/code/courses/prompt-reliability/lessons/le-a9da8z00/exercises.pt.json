@@ -4,68 +4,90 @@
     "hint": "Ele não chama modelo nenhum.",
     "choices": [
       {
-        "text": "Chama o modelo uma vez e imprime a resposta ao primeiro caso do conjunto",
-        "why": "Isso seria uma execução; render não faz chamada."
+        "text": "Preenche os buracos e imprime o prompt",
+        "why": "Certo: o teste mais barato que existe."
       },
       {
-        "text": "Preenche as lacunas de um template e imprime o resultado",
-        "why": "Certo: o prompt que o modelo receberia."
+        "text": "Chama o modelo uma vez e imprime a resposta",
+        "why": "Isso é o `pl run` seguido do `pl show`."
       },
       {
-        "text": "Verifica as respostas de uma execução",
+        "text": "Confere uma resposta nas cinco verificações",
         "why": "Isso é o `pl check`."
       },
       {
-        "text": "Conta os tokens de um arquivo de prompt e põe preço em cada chamada",
-        "why": "Isso é `pl tokens` e `pl cost`."
+        "text": "Formata um arquivo de execução como tabela para uma pessoa ler",
+        "why": "Nada no `pl` faz isso; o `pl show` imprime uma resposta."
       }
     ]
   },
   "ex-y8j81k8c": {
     "prompt": "O `pl render` não recebeu valor para `{{language}}`. Com que status de saída ele parou?",
-    "hint": "A captura mostra."
+    "hint": "A última linha da transcrição."
   },
   "ex-0bgfbnbr": {
-    "prompt": "Por que manter um template de resposta com `{{shop}}` e `{{language}}` em vez de uma cópia do prompt para cada loja e idioma?",
-    "hint": "Pense na próxima correção.",
+    "prompt": "Por que manter um modelo de resposta com `{{shop}}` e `{{language}}` em vez de uma cópia do prompt para cada loja e idioma?",
+    "hint": "Onde vai a próxima correção?",
     "choices": [
       {
-        "text": "Uma instrução passa a morar num arquivo só, então uma correção é feita uma vez e não fica esquecida numa cópia",
-        "why": "Certo: um lugar para mudar."
+        "text": "Cópias são mais lentas para o modelo ler",
+        "why": "O modelo lê um prompt renderizado de qualquer jeito."
       },
       {
-        "text": "Templates rodam mais rápido",
-        "why": "O modelo lê o prompt preenchido de qualquer jeito."
+        "text": "Uma instrução mora então num arquivo só, e uma correção é feita uma vez",
+        "why": "Certo: duas cópias são dois lugares para corrigir, e um é esquecido."
       },
       {
-        "text": "Cópias custam mais tokens",
-        "why": "Cada chamada manda um prompt de qualquer jeito."
+        "text": "Um modelo de texto faz o modelo seguir as instruções mais de perto do que uma cópia faria",
+        "why": "As duas respostas prometeram um reembolso que o modelo de texto proíbe."
       },
       {
-        "text": "Modelos recusam prompts copiados",
-        "why": "O modelo não tem como saber."
+        "text": "O Ollama só aceita prompts que contêm marcadores",
+        "why": "O Ollama recebe o texto renderizado e não sabe nada de marcadores."
       }
     ]
   },
   "ex-r3mj5j18": {
     "prompt": "Quando o `pl run` chama o modelo, o que o modelo lê?",
-    "hint": "As lacunas não vão como lacunas.",
+    "hint": "Buracos ou preenchido?",
     "choices": [
       {
-        "text": "O template, com as lacunas, e os valores mandados à parte ao lado dele",
-        "why": "Os valores são colados antes da chamada."
+        "text": "O modelo de texto, com marcadores e tudo",
+        "why": "Os marcadores são preenchidos antes da chamada."
       },
       {
-        "text": "O arquivo de `prompts/` exatamente como foi escrito",
-        "why": "Esse ainda tem as lacunas."
+        "text": "O modelo de texto uma vez, e depois cada mensagem separadamente",
+        "why": "Cada chamada leva o prompt inteiro preenchido."
       },
       {
-        "text": "Só os valores passados com `--var`",
-        "why": "Ele lê as instruções também."
+        "text": "O prompt que o modelo de texto vira depois que os buracos são preenchidos",
+        "why": "Certo: o que o `pl render` imprime."
       },
       {
-        "text": "O template preenchido",
-        "why": "Certo: o que o render imprime."
+        "text": "Só a mensagem, com as instruções guardadas em cache pelo harness",
+        "why": "Nada fica em cache; as instruções vão com toda chamada."
+      }
+    ]
+  },
+  "ex-k3wq8r5d": {
+    "prompt": "As duas respostas ao `t01`, em inglês e em português, prometeram um reembolso, e o `reply.txt` diz para não prometer. O que isso mostra sobre modelos de texto?",
+    "hint": "O que um modelo de texto garante?",
+    "choices": [
+      {
+        "text": "Que a tradução da regra para o português estava errada",
+        "why": "A regra está escrita uma vez, em inglês; só o valor do idioma mudou."
+      },
+      {
+        "text": "Mantém a regra num lugar só; obedecê-la é outra história",
+        "why": "Certo: obedecer se mede, na aula 12."
+      },
+      {
+        "text": "Que o `{{language}}` foi preenchido no lugar errado",
+        "why": "As duas respostas voltaram no idioma certo."
+      },
+      {
+        "text": "Que a regra precisa ser repetida em cada idioma em que a loja escreve",
+        "why": "Repetir uma regra é o erro da aula 2; a correção é medi-la."
       }
     ]
   },
@@ -74,209 +96,230 @@
     "hint": "A seção cita três motores.",
     "choices": [
       {
-        "text": "Um erro que interrompe a renderização",
-        "why": "Isso é o que o `pl render` faz; o padrão do Jinja2 não."
+        "text": "O marcador exatamente como foi escrito",
+        "why": "Esse é o `string.Template` do Python com `safe_substitute`."
       },
       {
-        "text": "O marcador como foi escrito",
-        "why": "Isso é o `string.Template` com `safe_substitute`."
+        "text": "Um erro, e nada é renderizado",
+        "why": "É o que o `pl render` faz, não o Jinja2 por padrão."
       },
       {
-        "text": "A palavra *undefined*",
-        "why": "Ele não escreve nada."
+        "text": "Um texto vazio",
+        "why": "Certo, e é por isso que nada aparece como erro."
       },
       {
-        "text": "Texto vazio",
-        "why": "Certo, e o prompt sai com um buraco na frase."
+        "text": "A palavra `undefined`",
+        "why": "O indefinido padrão do Jinja2 renderiza como texto vazio."
       }
     ]
   },
   "ex-51m0e37j": {
-    "prompt": "Por que um valor faltando precisa interromper a execução em vez de virar texto vazio?",
-    "hint": "Quem conseguiria perceber depois?",
+    "prompt": "Por que um valor ausente precisa interromper a execução em vez de renderizar vazio?",
+    "hint": "O que distingue um buraco vazio de uma frase curta?",
     "choices": [
       {
-        "text": "Porque o modelo passa a responder com uma mensagem de erro em vez de uma resposta sempre que um marcador fica vazio",
-        "why": "Ele responde algo plausível, e esse é o problema."
+        "text": "Porque o modelo recusa um prompt com buraco vazio",
+        "why": "O modelo recebe uma frase e a contorna no palpite."
       },
       {
-        "text": "Nada depois da renderização distingue uma lacuna vazia de uma frase curta",
-        "why": "Certo: o defeito seguiria em silêncio."
+        "text": "Nada adiante distingue um buraco vazio de uma frase curta",
+        "why": "Certo: o defeito ficaria no lugar em silêncio."
       },
       {
-        "text": "Economiza tokens",
-        "why": "Alguns tokens não são a questão."
+        "text": "Porque um valor vazio custa mais tokens",
+        "why": "Um valor vazio custa menos tokens, se tanto."
       },
       {
-        "text": "O substituto quebra",
-        "why": "Ele responderia; esse é o perigo."
+        "text": "Porque o `pl check` não interpreta respostas a um prompt quebrado",
+        "why": "Ele interpreta o que voltar."
       }
     ]
   },
   "ex-8m92082n": {
-    "prompt": "Alguém roda o template de resposta com `--var tone=warm`, e o template não tem `{{tone}}`. O que aconteceu?",
-    "hint": "Para onde o valor teria ido?",
+    "prompt": "Alguém roda o modelo de resposta com `--var tone=warm`, e o modelo de texto não tem `{{tone}}`. O que aconteceu?",
+    "hint": "Para onde foi o valor?",
     "choices": [
       {
-        "text": "As respostas ficaram mais calorosas, como a pessoa que as leu notou",
-        "why": "O valor não tinha para onde ir; o calor está na leitura."
+        "text": "As respostas voltaram mais calorosas, como pedido",
+        "why": "O valor nunca chegou ao modelo."
       },
       {
-        "text": "A bancada acrescentou sozinha uma linha de tom no fim do prompt",
-        "why": "Ela cola valores nas lacunas e em mais lugar nenhum."
+        "text": "A execução parou com um erro",
+        "why": "Um valor não usado é um aviso; a execução seguiu."
       },
       {
-        "text": "O valor nunca chegou ao modelo",
-        "why": "Certo, e o aviso é o único sinal."
+        "text": "O valor não chegou a nada, com um aviso por caso",
+        "why": "Certo: três avisos para três mensagens."
       },
       {
-        "text": "A execução falhou",
-        "why": "O prompt foi renderizado corretamente."
+        "text": "O valor foi acrescentado ao fim do prompt",
+        "why": "A `render()` só preenche os buracos que o modelo de texto tem."
       }
     ]
   },
   "ex-h2avbb5g": {
-    "prompt": "Por que renderizar um caso antes de rodar um template que você acabou de mudar?",
-    "hint": "Compare o que o `pl run` e o `pl render` imprimem.",
+    "prompt": "Por que renderizar um caso antes de rodar um modelo de texto que você acabou de mudar?",
+    "hint": "O que uma execução de quarenta faz com o aviso?",
     "choices": [
       {
-        "text": "O `pl run` não repete os avisos por caso, então a renderização é onde um valor sobrando aparece",
-        "why": "Certo, e não custa chamada."
+        "text": "Porque o `pl run` esconde os avisos",
+        "why": "Ele os imprime, uma vez por caso, num bloco que passa rápido."
       },
       {
-        "text": "Renderizar treina o modelo no template",
-        "why": "Nada é treinado."
+        "text": "É de graça, e o aviso aparece uma vez",
+        "why": "Certo: fácil de ler, onde quarenta repetições são fáceis de pular."
       },
       {
-        "text": "Uma execução se recusa a começar sem isso",
-        "why": "Ela começa; só fica quieta sobre valores sobrando."
+        "text": "Porque o primeiro caso de uma execução nunca é renderizado",
+        "why": "Todo caso é renderizado."
       },
       {
-        "text": "Para aquecer o cache",
-        "why": "Render não faz chamada, então não toca no cache."
+        "text": "Porque renderizar aquece o cache do modelo para a execução",
+        "why": "Renderizar não chama modelo nenhum."
       }
     ]
   },
   "ex-dp0amv3n": {
-    "prompt": "Um template é editado e `{{tone}}` vira `{{register}}`. Um script que ainda passa `tone` agora recebe um aviso de que o valor está ___.",
-    "hint": "`not used by the template`.",
+    "prompt": "Um marcador é renomeado de `{{tone}}` para `{{register}}`. Um script que ainda passa `tone` agora recebe um ___, e a execução segue.",
+    "hint": "Não um erro.",
     "blanks": [
       {
         "accept": [
-          "sobrando",
-          "sem uso",
-          "não usado"
+          "aviso",
+          "alerta"
         ]
       }
     ]
   },
   "ex-2hmym7zw": {
     "prompt": "Por que o caso `a08` quebrou a estrutura do `v5-tagged.txt`?",
-    "hint": "Leia a mensagem.",
+    "hint": "O que o cliente digitou?",
     "choices": [
       {
-        "text": "O texto contém `</message>`, que fecha a tag que o template abriu, e a linha seguinte cai fora",
-        "why": "Certo: um valor que encerra a própria lacuna."
+        "text": "O cliente digitou `</message>`, que fechou as tags antes da hora",
+        "why": "Certo: o texto depois dela fica fora da mensagem."
       },
       {
-        "text": "Ela é longa demais",
-        "why": "São três linhas curtas."
+        "text": "A mensagem era longa demais para as tags",
+        "why": "O tamanho não tem nada a ver."
       },
       {
-        "text": "Ela está em outro idioma",
-        "why": "Está em inglês."
+        "text": "O modelo de texto tem duas tags `<message>`",
+        "why": "O modelo de texto tem um par; o cliente acrescentou o resto."
       },
       {
-        "text": "Ela não tem categoria",
-        "why": "A categoria esperada é delivery."
+        "text": "O Ollama tira as tags do prompt antes de o modelo vê-las",
+        "why": "Nada as tira."
       }
     ]
   },
   "ex-v4zyh0m5": {
     "prompt": "O que o filtro `|xml` muda?",
-    "hint": "Veja o `&lt;` no prompt renderizado.",
+    "hint": "Três caracteres.",
     "choices": [
       {
-        "text": "Ele envolve o template inteiro, instruções incluídas, em XML para o modelo ler cada linha como dado",
-        "why": "Ele mexe só no valor; as instruções continuam instruções."
+        "text": "Tira as tags do cliente por completo",
+        "why": "O texto está todo lá ainda."
       },
       {
-        "text": "Ele troca `<`, `>` e `&` do valor por entidades XML",
-        "why": "Certo: a tag do cliente para de fechar qualquer coisa."
+        "text": "Envolve o valor num segundo par de tags",
+        "why": "Ele não acrescenta tags."
       },
       {
-        "text": "Ele apaga as tags",
-        "why": "As palavras do cliente continuam todas lá."
+        "text": "Transforma `<`, `>` e `&` em entidades",
+        "why": "Certo: a tag do cliente não fecha mais nada."
       },
       {
-        "text": "Ele analisa a resposta",
-        "why": "Ele age no prompt, antes da chamada."
+        "text": "Traduz o valor para XML",
+        "why": "Ele escapa três caracteres e deixa o resto em paz."
       }
     ]
   },
   "ex-n6jaxtn1": {
-    "prompt": "Por que o filtro é aplicado ao valor e não ao template inteiro?",
-    "hint": "O que aconteceria com o próprio `<message>`?",
+    "prompt": "Por que o filtro é aplicado ao valor e não ao modelo de texto inteiro?",
+    "hint": "As tags de quem precisam continuar tags?",
     "choices": [
       {
-        "text": "Aplicá-lo ao template inteiro deixaria o prompt longo demais para o modelo ler",
-        "why": "O tamanho não é a questão; as tags do template deixariam de ser tags."
+        "text": "As tags do próprio modelo de texto seriam escapadas também",
+        "why": "Certo: só o texto de fora é mudado."
       },
       {
-        "text": "O template já é escapado quando é salvo em `prompts/`",
-        "why": "Nada o escapa; ele tem tags de verdade de propósito."
+        "text": "Filtros só rodam em textos curtos",
+        "why": "Não existe esse limite."
       },
       {
-        "text": "Filtros só funcionam em valores lidos de um arquivo JSON",
-        "why": "Um valor de `--var` é filtrado do mesmo jeito."
+        "text": "O modelo de texto não tem caracteres especiais",
+        "why": "Tem `<message>` e `</message>`."
       },
       {
-        "text": "As tags do template seguem tags",
-        "why": "Certo: só o texto de fora é alterado."
+        "text": "Escapar o modelo de texto mudaria o id do prompt",
+        "why": "Verdade, mas não é o motivo; as tags dele deixariam de ser tags."
       }
     ]
   },
   "ex-qq8rw79p": {
-    "prompt": "Quais destes valores deveriam ser escapados antes de serem colados entre as tags do template? Marque todos que se aplicam.",
-    "hint": "Quem escreveu cada um?",
+    "prompt": "Quais destes valores devem ser escapados antes de serem colados entre as tags do modelo de texto? Marque todos os que se aplicam.",
+    "hint": "De onde veio o texto?",
     "choices": [
       {
         "text": "A mensagem de um cliente",
-        "why": "Sim: um cliente pode digitar uma tag de fechamento."
+        "why": "Sim: texto de fora."
       },
       {
-        "text": "Texto copiado de um formulário web",
-        "why": "Sim: veio de fora."
+        "text": "Uma avaliação de produto colada do site",
+        "why": "Sim: qualquer pessoa pode tê-la escrito."
       },
       {
-        "text": "A resenha de livro que um cliente escreveu",
-        "why": "Sim, pelo mesmo motivo."
+        "text": "O nome da loja, escolhido por você",
+        "why": "Você o escolheu; ele faz parte das instruções."
       },
       {
-        "text": "O nome da loja que você escolheu para `{{shop}}`",
-        "why": "Você o escreveu; ele não tem tag a não ser que você ponha uma."
+        "text": "O assunto de um e-mail recebido",
+        "why": "Sim: um estranho o digitou."
+      }
+    ]
+  },
+  "ex-p7c1vr2m": {
+    "prompt": "Depois de escapado, o `a08` fica inteiro dentro das tags, e o modelo ainda deu `high`, a urgência que o texto do cliente pediu. O que vem daí?",
+    "hint": "O que o escape consertou?",
+    "choices": [
+      {
+        "text": "O escape não funcionou e deveria ser tirado",
+        "why": "Consertou a estrutura; sem ele o cliente reescreve o seu prompt."
+      },
+      {
+        "text": "O rótulo `normal` da pessoa deve estar errado",
+        "why": "Alguém perguntando onde está um pedido foi rotulado `normal` de propósito."
+      },
+      {
+        "text": "Escapar é necessário, não suficiente",
+        "why": "Certo: a aula 10 trata do resto."
+      },
+      {
+        "text": "O modelo só obedece instruções escritas em maiúsculas, e esta não estava",
+        "why": "O texto não estava em maiúsculas."
       }
     ]
   },
   "ex-2a89fc7h": {
-    "prompt": "Por que um conjunto de teste precisa de um template renderizado do mesmo jeito para todo caso?",
-    "hint": "O que pode variar?",
+    "prompt": "Por que um conjunto de teste precisa de um modelo de texto renderizado do mesmo jeito em todo caso?",
+    "hint": "O que uma diferença entre execuções deveria significar?",
     "choices": [
       {
-        "text": "Porque a bancada não consegue abrir mais de um arquivo de prompt no mesmo diretório ao mesmo tempo",
-        "why": "Ela abre o arquivo que você indicar."
+        "text": "Para as execuções ficarem mais curtas",
+        "why": "O tamanho não é a questão."
       },
       {
-        "text": "Para toda mensagem receber a mesma resposta do modelo",
-        "why": "As respostas variam; as instruções não."
+        "text": "Para uma diferença entre execuções ser do modelo de texto",
+        "why": "Certo: quarenta prompts de uma vez seriam ruído."
       },
       {
-        "text": "Para uma diferença entre execuções ser obra do template",
-        "why": "Certo: só a mensagem muda de caso para caso."
+        "text": "Para o modelo aprender o modelo de texto",
+        "why": "Nada é aprendido entre chamadas."
       },
       {
-        "text": "Para economizar disco",
-        "why": "Espaço não tem nada a ver."
+        "text": "Para o `pl check` conseguir ler as respostas",
+        "why": "O `pl check` lê respostas, seja o que for que as produziu."
       }
     ]
   },
@@ -285,48 +328,48 @@
     "hint": "Compare com o `sha256sum`.",
     "choices": [
       {
-        "text": "Um contador que sobe um a cada vez que qualquer prompt do laboratório roda, guardado num arquivo oculto",
-        "why": "Duas execuções do mesmo arquivo imprimiram o mesmo id."
+        "text": "Um número que o `pl` dá a cada execução, em ordem",
+        "why": "Duas execuções do mesmo arquivo imprimem o mesmo id."
       },
       {
         "text": "Os oito primeiros caracteres do SHA-256 do arquivo de prompt",
-        "why": "Certo: `b04095b1` dos dois jeitos."
+        "why": "Certo: `ff210f58` dos dois jeitos."
       },
       {
-        "text": "A data da última edição",
-        "why": "É um hash do conteúdo."
+        "text": "Um id que o Ollama atribui ao modelo",
+        "why": "O id do modelo é `a80c4f17acd5`, outra coisa."
       },
       {
-        "text": "Um nome aleatório para a execução",
-        "why": "É o mesmo sempre que o arquivo é o mesmo."
+        "text": "Um hash do prompt renderizado para o primeiro caso",
+        "why": "Ele faz o hash do arquivo, antes de qualquer renderização."
       }
     ]
   },
   "ex-cv7jk2j7": {
-    "prompt": "Duas execuções do `v17-static-first.txt` imprimem `prompt b04095b1`, e uma usou `--set temperature=0.8`. Por que isso é um problema?",
+    "prompt": "Duas execuções do `v6-escaped.txt` imprimem `prompt fbc4c9b1`, e uma usou `--set num_predict=60`. Por que isso é um problema?",
     "hint": "O que o id cobre?",
     "choices": [
       {
-        "text": "O id cobre o arquivo e não a linha de comando, então os arquivos de execução fazem as duas parecerem um prompt só",
-        "why": "Certo: mantenha as configurações no cabeçalho, onde o id as vê."
+        "text": "O Ollama ignorou a configuração",
+        "why": "Nada diz que foi ignorada; o id só não a registra."
+      },
+      {
+        "text": "Ninguém nota pelas execuções que elas diferem",
+        "why": "Certo: uma configuração na linha de comando não é coberta por nada."
+      },
+      {
+        "text": "A função de hash está quebrada",
+        "why": "Ela faz o hash do arquivo, e o arquivo não mudou."
       },
       {
         "text": "A segunda execução sobrescreveu a primeira",
         "why": "Foram gravadas em arquivos diferentes."
-      },
-      {
-        "text": "O hash está quebrado",
-        "why": "Ele calculou o hash do mesmo arquivo duas vezes, corretamente."
-      },
-      {
-        "text": "A temperatura não tem efeito",
-        "why": "Tem; o id só não a registra."
       }
     ]
   },
   "ex-cy022900": {
-    "prompt": "Neste laboratório um arquivo de prompt traz suas configurações em linhas `nome: valor` acima de uma linha de três ___.",
-    "hint": "O `head -n 3` mostrou.",
+    "prompt": "Um arquivo de prompt leva as configurações como linhas `nome: valor` acima de uma linha de três ___.",
+    "hint": "Caracteres.",
     "blanks": [
       {
         "accept": [
@@ -338,55 +381,55 @@
     ]
   },
   "ex-9rbgr5wg": {
-    "prompt": "Ponha em ordem os passos de pôr em uso um template alterado.",
-    "hint": "Rodar por último.",
+    "prompt": "Ponha em ordem os passos para pôr em uso um modelo de texto alterado.",
+    "hint": "Renderize antes de rodar.",
     "items": [
-      "Escrever o template com lacunas nomeadas",
-      "Renderizar um caso e ler o resultado",
-      "Corrigir o que a renderização aponta como faltando ou sobrando",
-      "Rodar no conjunto de teste"
+      "Editar o modelo de texto",
+      "Renderizar um caso e lê-lo",
+      "Rodar o conjunto de teste",
+      "Comparar com a execução anterior"
     ]
   },
   "ex-sbb67syx": {
-    "prompt": "Associe cada mensagem da bancada ao que ela significa.",
-    "hint": "Um significado cada.",
+    "prompt": "Ligue cada mensagem do harness ao que ela significa.",
+    "hint": "Um significado para cada.",
     "pairs": [
       {
-        "left": "`no value for {{language}}`",
-        "right": "Uma lacuna que ninguém preencheu"
+        "left": "`pl: no value for {{language}}`",
+        "right": "Um buraco sem valor; nada foi enviado"
       },
       {
-        "left": "`not used by the template: tone`",
-        "right": "Um valor sem lacuna"
+        "left": "`pl: warning: {{tone}} is not in the template`",
+        "right": "Um valor que não chegou a buraco nenhum"
       },
       {
-        "left": "`contains </message>, which closes its delimiter`",
-        "right": "Um valor que encerra a própria lacuna"
+        "left": "`prompt fbc4c9b1`",
+        "right": "Os oito primeiros caracteres do hash do arquivo de prompt"
       }
     ],
     "right_distractors": [
-      "Uma resposta que não é analisável"
+      "O modelo recusou o prompt"
     ]
   },
   "ex-2w8kt3h7": {
-    "prompt": "Respostas que deviam vir em português começaram a chegar em inglês ontem. O template diz `Write in {{language}}.`, e o seu motor renderiza um valor faltando como texto vazio. O que você verifica primeiro?",
-    "hint": "O que o modelo teria lido?",
+    "prompt": "Respostas que deviam estar em português começaram a chegar em inglês ontem. O modelo de texto diz `Write in {{language}}.`, e o seu motor renderiza um valor ausente como texto vazio. O que você confere primeiro?",
+    "hint": "O que o prompt teria dito?",
     "choices": [
       {
-        "text": "Se o modelo foi retreinado com material em inglês desde anteontem",
-        "why": "Olhe o que você mandou antes de suspeitar do modelo."
+        "text": "Se o modelo foi atualizado ontem",
+        "why": "Possível, mas o padrão de texto vazio é um jeito conhecido de isso acontecer."
       },
       {
-        "text": "Se o conjunto de teste tem mensagens em português suficientes para medir",
-        "why": "Útil depois; o sintoma aponta para a renderização."
+        "text": "Se o `language` ainda é passado com esse nome",
+        "why": "Certo: um valor renomeado ou perdido renderiza *Write in .* sem erro."
       },
       {
-        "text": "Se o valor do idioma ainda é passado",
-        "why": "Certo: uma lacuna vazia vira *Write in .*"
+        "text": "Se as respostas estão longas demais",
+        "why": "O tamanho não decide o idioma."
       },
       {
-        "text": "A temperatura",
-        "why": "A temperatura não escolhe idioma."
+        "text": "Se a configuração de idioma padrão do Ollama mudou",
+        "why": "O Ollama não tem idioma padrão para respostas."
       }
     ]
   }
