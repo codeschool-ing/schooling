@@ -43,7 +43,7 @@ for row in rows:
     table[flagged, wrong] += 1
     if flagged or wrong:
         tag = row["case"] + ("#%d" % row["sample"] if row["sample"] else "")
-        print("%-6s %-5s %s" % (tag, "wrong" if wrong else "right", said.split("\n")[0][:70]))
+        print("%-6s %-5s %s" % (tag, "wrong" if wrong else "right", " ".join(said.split())[:64]))
 print("\n%15s %13s %13s" % ("", "really wrong", "really right"))
 print("%-15s %13d %13d" % ("flagged", table[True, True], table[True, False]))
 print("%-15s %13d %13d" % ("not flagged", table[False, True], table[False, False]))
