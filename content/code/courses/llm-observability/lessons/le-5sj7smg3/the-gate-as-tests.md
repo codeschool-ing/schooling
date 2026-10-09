@@ -1,15 +1,20 @@
 ---
 title: The gate as tests
-version: 1
+version: 2
 ---
 
-The gate is three files of tests and one file of decisions:
+The gate is pytest tests: three files in a `tests` folder, and one file of decisions beside them.
+pytest came into the environment with DeepEval in lesson 12; if you skipped that lesson, install it:
 
+```sh
+pip install pytest==9.1.1
 ```
-ana@lab:~/obs$ find tests -name "*.py" | sort; cat gate.json
-tests/conftest.py
-tests/test_regression.py
-tests/test_set.py
+
+`gate.json` holds what a person decides and a program enforces: which set, its manifest, the budgets
+for cost and median latency as a share of production's, and an empty list of accepted exceptions,
+which the next section fills. Save it in `~/obs`:
+
+```json
 {
   "set": "data/eval-v2.jsonl",
   "manifest": "data/eval-v2.manifest.json",
@@ -18,17 +23,13 @@ tests/test_set.py
 }
 ```
 
-`gate.json` holds what a person decides and a program enforces: which set, its manifest, the budgets
-for cost and median latency as a share of production's, and an empty list of accepted exceptions,
-which the next section fills.
-
 `tests/conftest.py` holds what every regression test needs. The candidate must be named, by the
-`CANDIDATE` variable. Production is the release live now, unless `PRODUCTION` names another. And both
+`CANDIDATE` variable. Production is the release live now, unless `PRODUCTION` names another. Both
 answer the set **in the same run**, so a model that drifted overnight, or a price that changed, shows
-in both and cancels out:
+in both and cancels out. And `accepted` reads the decisions in `gate.json` for the candidate:
 
 ```python
-"""The gate's shared pieces: the gate file, the set, and the two runs every regression test compares.
+"""tests/conftest.py: the gate's shared pieces: the gate file, the set, and the two runs every regression test compares.
 
 PRODUCTION is the release live now unless the variable names another; CANDIDATE must be named.
 """
@@ -67,13 +68,18 @@ def runs(releases):
                        check=True, capture_output=True)
         out[role] = {r["id"]: r for r in map(json.loads, open(f"runs/{role}.jsonl"))}
     return out
+
+
+def accepted(releases, kind):
+    """What gate.json accepts for the candidate under KIND: cases by id for broken and checks, a ceiling for a budget."""
+    return GATE["accepted"].get(releases[1], {}).get(kind, {})
 ```
 
-`tests/test_set.py` is lesson 13's check, one test per property, each failing with a sentence that says
-what to do:
+`tests/test_set.py` is lesson 13's `check_set.py`, one test per property, each failing with a sentence
+that says what to do:
 
 ```python
-"""The evaluation set itself: lesson 13's checks, as tests. No model is called."""
+"""tests/test_set.py: the evaluation set itself, lesson 13's checks as tests. No model is called."""
 import hashlib
 import json
 import logging
@@ -85,9 +91,10 @@ import docs
 import redact
 from conftest import GATE
 
-logging.disable(logging.WARNING)   # tldextract warns that it could not fetch a list; it uses its own copy
+logging.disable(logging.WARNING)   # Presidio warns about every recogniser it loads; none of it is news here
 MANIFEST = json.load(open(GATE["manifest"]))
 SHOP = docs.load()
+CHUNKS = {cid: text for _, found in SHOP.values() for cid, text in found.items()}
 
 
 def test_the_set_is_the_version_the_manifest_pins():
@@ -101,16 +108,22 @@ def test_no_id_is_used_twice(cases):
     assert len(ids) == len(set(ids)) == len(cases)
 
 
-def test_every_fact_is_in_its_gold_section(cases):
-    squash = lambda t: re.sub(r"\s+", " ", re.sub(r"[^\w\s.]", " ", t.lower())).strip()
-    false = [i for i, c in cases.items() if c["facts"]
-             and not any(squash(f) in squash(" ".join(SHOP[d][1].get(h, "") for d, h in c["gold"])) for f in c["facts"])]
+def test_every_gold_chunk_exists(cases):
+    missing = {i: [g for g in c["gold"] if g not in CHUNKS] for i, c in cases.items()}
+    missing = {i: m for i, m in missing.items() if m}
+    assert not missing, f"gold chunks no document has any more: {missing}. Point the cases at the new ones"
+
+
+def test_every_fact_is_in_its_gold_chunks(cases):
+    squash = lambda t: re.sub(r"\s+", " ", re.sub(r"[^\w\s.$]", " ", t.lower())).strip()
+    false = [i for i, c in cases.items() if c["facts"] and all(g in CHUNKS for g in c["gold"])
+             and not any(squash(f) in squash(" ".join(CHUNKS[g] for g in c["gold"])) for f in c["facts"])]
     assert not false, f"no longer true of the documents: {false}. Retire them and write new cases"
 
 
-def test_every_document_is_at_the_pinned_version():
-    moved = [d for d, v in MANIFEST["documents"].items() if SHOP[d][0]["version"] != v]
-    assert not moved, f"changed since the set was checked: {moved}. Re-check the cases that rest on them"
+def test_no_document_was_updated_after_the_set_was_checked():
+    moved = [d for d, updated in MANIFEST["documents"].items() if SHOP[d][0]["updated"] != updated]
+    assert not moved, f"updated since the set was checked: {moved}. Re-check the cases that rest on them"
 
 
 def test_no_question_holds_personal_data(cases):
@@ -128,14 +141,14 @@ def test_no_question_holds_personal_data(cases):
 `tests/test_regression.py` is lesson 14's rules:
 
 ```python
-"""The candidate against production on the set: lesson 14's rules, as tests."""
+"""tests/test_regression.py: the candidate against production on the set, lesson 14's rules as tests."""
 import statistics
 
 import pytest
 
 import checks
 import costs
-from conftest import GATE
+from conftest import GATE, accepted
 from facts import normalised
 
 
@@ -148,17 +161,18 @@ def failing(r):
 
 
 def test_no_case_that_production_answers_is_broken(runs, cases, releases):
-    accepted = GATE["accepted"].get(releases[1], {}).get("broken", {})
     broken = [i for i in cases if right(runs["production"][i], cases) and not right(runs["candidate"][i], cases)]
-    unread = [i for i in broken if i not in accepted]
+    unread = [i for i in broken if i not in accepted(releases, "broken")]
     assert not unread, (f"{releases[1]} breaks {unread} against {releases[0]}: read each one, then fix the "
                         "candidate or accept the case in gate.json with the reason")
 
 
-def test_no_check_newly_fails(runs, cases):
-    new = {i: sorted(failing(runs["candidate"][i]) - failing(runs["production"][i])) for i in cases}
-    new = {i: n for i, n in new.items() if n}
-    assert not new, f"checks the candidate newly fails: {new}"
+def test_no_check_newly_fails(runs, cases, releases):
+    new = [i for i in cases if failing(runs["candidate"][i]) - failing(runs["production"][i])]
+    unread = [i for i in new if i not in accepted(releases, "checks")]
+    assert not unread, (f"{releases[1]} newly fails a check on {unread}: python regress.py production candidate "
+                        "names each one. Read each reply, then fix the candidate or accept the case in gate.json "
+                        "with the reason")
 
 
 @pytest.mark.parametrize("measure", ["cost", "median_ms"])
@@ -167,34 +181,49 @@ def test_within_budget(runs, releases, measure):
     total = {"cost": lambda run: sum(spent[r["trace"]]["cost"] for r in run.values()),
              "median_ms": lambda run: statistics.median(spent[r["trace"]]["ms"] for r in run.values())}[measure]
     before, after = float(total(runs["production"])), float(total(runs["candidate"]))
-    accepted = GATE["accepted"].get(releases[1], {}).get(measure)
-    ceiling = accepted["up_to"] if accepted else GATE["budgets"][measure]
+    ceiling = accepted(releases, measure).get("up_to", GATE["budgets"][measure])
     change = (after - before) / before
     assert change <= ceiling, (f"{measure} {before:.6g} -> {after:.6g}, {change:+.0%}, over the {ceiling:+.0%} "
                                "budget: make it cheaper, or accept it in gate.json with the reason")
 ```
 
-## The test nobody ran on 2 October
+```
+ana@dev:~/obs$ find tests -name "*.py" | sort
+tests/conftest.py
+tests/test_regression.py
+tests/test_set.py
+```
+
+## The test nobody ran on 1 October
 
 Run with production set back to 2026.09.4 and the floor release as the candidate:
 
 ```
-ana@lab:~/obs$ PRODUCTION=2026.09.4 CANDIDATE=2026.10.1 python -m pytest -q --tb=line -p no:cacheprovider tests
-F........                                                                [100%]Running teardown with pytest sessionfinish...
+ana@dev:~/obs$ PRODUCTION=2026.09.4 CANDIDATE=2026.10.1 python -m pytest -q --tb=line -p no:cacheprovider tests
+FF........                                                               [100%]Running teardown with pytest sessionfinish...
 
 =================================== FAILURES ===================================
-E   AssertionError: 2026.10.1 breaks ['e07', 'e17', 'e24', 'e38', 'e42'] against 2026.09.4: read each one, then fix the candidate or accept the case in gate.json with the reason
-    assert not ['e07', 'e17', 'e24', 'e38', 'e42']
-/home/ana/obs/tests/test_regression.py:24: AssertionError: 2026.10.1 breaks ['e07', 'e17', 'e24', 'e38', 'e42'] against 2026.09.4: read each one, then fix the candidate or accept the case in gate.json with the reason
+E   AssertionError: 2026.10.1 breaks ['e02', 'e04', 'e14', 'e16', 'e19', 'e30', 'e32'] against 2026.09.4: read each one, then fix the candidate or accept the case in gate.json with the reason
+    assert not ['e02', 'e04', 'e14', 'e16', 'e19', 'e30', ...]
+/home/ana/obs/tests/test_regression.py:23: AssertionError: 2026.10.1 breaks ['e02', 'e04', 'e14', 'e16', 'e19', 'e30', 'e32'] against 2026.09.4: read each one, then fix the candidate or accept the case in gate.json with the reason
+E   AssertionError: 2026.10.1 newly fails a check on ['e29']: python regress.py production candidate names each one. Read each reply, then fix the candidate or accept the case in gate.json with the reason
+    assert not ['e29']
+/home/ana/obs/tests/test_regression.py:30: AssertionError: 2026.10.1 newly fails a check on ['e29']: python regress.py production candidate names each one. Read each reply, then fix the candidate or accept the case in gate.json with the reason
 =========================== short test summary info ============================
 FAILED tests/test_regression.py::test_no_case_that_production_answers_is_broken
-1 failed, 8 passed in 71.66s (0:01:11)
+FAILED tests/test_regression.py::test_no_check_newly_fails - AssertionError: ...
+2 failed, 8 passed in 177.28s (0:02:57)
 ```
 
-**One test fails, and its message is the decision.** It names the five cases, the two releases, and the
-two ways out: fix the candidate, or accept each case in writing. That is the shape this repository's own
-`validate-content` uses for its errors, and for the same reason: a failure that says what to do gets
-fixed, and one that says only "failed" gets retried.
+**Two tests fail, and their messages are the decision.** The first names the seven cases, the two
+releases, and the two ways out: fix the candidate, or accept each case in writing. The second names
+e29, the order message the floor release now answers with an uncited sentence, and says where to see
+which check: `regress.py` from lesson 14 reads the two runs the gate has just made. That is the shape
+this repository's own `validate-content` uses for its errors, and for the same reason: a failure that
+says what to do gets fixed, and one that says only "failed" gets retried.
+
+**The budgets pass.** The floor release was cheaper and faster than the one before it, so neither
+budget had anything to say. Only the cases did, which is lesson 14's first rule enforced by a program.
 
 The line about a teardown after the dots is not the gate's. It comes from DeepEval, which lesson 12
 installed: its package registers a pytest plugin, and every pytest run in this environment loads it.
