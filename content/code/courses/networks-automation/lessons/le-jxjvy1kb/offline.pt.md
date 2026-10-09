@@ -1,6 +1,6 @@
 ---
 title: Testando as configurações sem um roteador
-version: 1
+version: 2
 ---
 
 Um modelo verifica cada arquivo isoladamente. Alguns erros só aparecem entre arquivos, ou só na
@@ -30,6 +30,32 @@ exceção:
 
 O `render.py` é o da aula 10, com o laço movido para dentro de `if __name__ == "__main__":` para
 que os testes possam importar o template sem renderizar todos os arquivos como efeito colateral.
+
+```python
+import ipaddress
+import pathlib
+
+import yaml
+from jinja2 import Environment, FileSystemLoader, StrictUndefined
+
+
+def network(address):
+    return str(ipaddress.ip_interface(address).network)
+
+
+env = Environment(loader=FileSystemLoader("templates"), trim_blocks=True, lstrip_blocks=True,
+                  keep_trailing_newline=True, undefined=StrictUndefined)
+env.filters["network"] = network
+template = env.get_template("frr.j2")
+
+if __name__ == "__main__":
+    pathlib.Path("configs").mkdir(exist_ok=True)
+    for path in sorted(pathlib.Path("data").glob("*.yaml")):
+        data = yaml.safe_load(path.read_text())
+        text = template.render(data)
+        (pathlib.Path("configs") / f"{data['hostname']}.conf").write_text(text)
+        print(f"{path} -> configs/{data['hostname']}.conf, {len(text.splitlines())} lines")
+```
 
 ```
 ana@ctl:~$ cd net && pytest -v test_configs.py

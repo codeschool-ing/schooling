@@ -1,12 +1,13 @@
 ---
 title: Create before destroy, and the name that gets in the way
-version: 1
+version: 2
 ---
 
 A replacement is two operations, and they have an order. **By default Terraform destroys the old
 resource first and creates the new one after**, which is what `-/+ destroy and then create
-replacement` says in so many words. Ana applies the image change from the last section and keeps
-only the lines that report progress:
+replacement` says in so many words. Ana undoes the range edit with `git checkout main.tf`, makes
+the image change from the last section again and applies it, keeping only the lines that report
+progress. Then she commits it:
 
 ```
 ana@laptop:~/shop/app$ terraform apply -auto-approve | grep -E "Destr|Creat"
@@ -28,7 +29,7 @@ machine takes to boot and start serving, and the shop has no web server for all 
 
 `create_before_destroy` is a lifecycle argument, and lifecycle arguments live in a `lifecycle`
 block inside the resource. They do not describe the resource to AWS; they tell Terraform how to
-handle it. Ana adds one to `web`:
+handle it. Ana adds one to `web` and commits it:
 
 ```
 ana@laptop:~/shop/app$ git diff
@@ -67,7 +68,7 @@ touched.
 
 The price is that, for a moment, both exist. For an instance that is harmless. For anything whose
 name must be unique, it is a collision. A security group's name must be unique within its VPC, so
-Ana adds a group called `web`, with the same lifecycle setting:
+Ana adds a group called `web`, with the same lifecycle setting, applies it and commits:
 
 ```
 ana@laptop:~/shop/app$ git show --format= -U1
@@ -89,8 +90,9 @@ index d5b3605..b6ac7a8 100644
 +}
 ```
 
-Changing its description forces a replacement, and the replacement is created first, under the
-name the old group still holds:
+Changing its description forces a replacement. Ana changes it to `the shop web servers` and runs
+`terraform apply -auto-approve`, and the replacement is created first, under the name the old
+group still holds. The end of what the apply prints:
 
 ```
 Plan: 1 to add, 0 to change, 1 to destroy.
@@ -138,7 +140,7 @@ web-1180f21630fc619080001bfd97
 
 The order is the one the figure shows: create, then destroy the deposed object. The same applies
 to anything with a unique name, a load balancer, an IAM role, a bucket; where the provider offers
-a `name_prefix`, it is there for this.
+a `name_prefix`, it is there for this. Ana commits the new name before going on.
 
 **Why a security group is the usual case.** On a real account AWS refuses to delete a group that
 is still attached to a running instance, so the default order would try to destroy first and fail.

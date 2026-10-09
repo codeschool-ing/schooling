@@ -12,10 +12,13 @@
 # directories it builds before it starts, which is why it wants a throwaway
 # account. `block NAME` marks where a transcript in the prose begins.
 #
-# What is STAGED rather than typed, and not shown in the lesson:
-# lesson 3's week of the bakery's site, rebuilt by the helper `c` with dates
-# and authors set through GIT_AUTHOR_* and GIT_COMMITTER_*; and the edits each
-# branch commits, made with sed or printf between the commands shown.
+# Nothing the student types is staged. Lesson 3's week is the program lesson 3
+# prints, started afresh by the block what-a-branch-is prints, and the edits
+# each branch commits are typed in the transcripts, with sed or printf, where a
+# person would use an editor.
+#
+# What is STAGED rather than typed: the date of each commit, so that the ids
+# printed in the prose are reproducible.
 # Every line after a prompt is what the command printed.
 #
 # Recorded with git 2.43.0 on Ubuntu 24.04, TZ=America/Sao_Paulo.
@@ -30,34 +33,57 @@ block() { printf '##### %s\n' "$1"; }
 at() { export GIT_AUTHOR_DATE="$1" GIT_COMMITTER_DATE="$1"; }
 as() { export GIT_AUTHOR_NAME="$1" GIT_AUTHOR_EMAIL="$2" GIT_COMMITTER_NAME="$1" GIT_COMMITTER_EMAIL="$2"; }
 me() { as 'Ana Souza' 'ana@example.com'; }
+
+# Where the lessons are, so that a block can be read out of the page that prints
+# it: what the capture runs and what the student is shown cannot then drift.
+lessons=$(cd "$(dirname "$0")/.." && pwd)
+self=$(basename "$(cd "$(dirname "$0")" && pwd)")
+# fence FILE N: the Nth ```bash block of FILE, exactly as the lesson prints it.
+fence() {
+  local body
+  body=$(awk -v n="$2" '/^```bash$/ { if (++c == n) { f = 1; next } } f && /^```$/ { exit } f' "$1")
+  [ -n "$body" ] || { echo "no bash block $2 in $1" >&2; exit 1; }
+  printf '%s\n' "$body"
+}
+# given SECTION N [DATE...]: run the Nth ```bash block of this lesson's SECTION,
+# as somebody pasting it would. Each git command in it that makes a commit or a
+# tag is dated with the next DATE, the one thing a capture adds, and a DATE left
+# over is an error: the block and the dates have stopped agreeing. Names come
+# from the settings and from the block's own `-c user.name=…`, so the exported
+# identity is set aside while it runs and put back afterwards.
+given() {
+  local section=$1 md="$lessons/$self/$1.md" n=$2 name=${GIT_AUTHOR_NAME-} email=${GIT_AUTHOR_EMAIL-}
+  shift 2
+  dates=("$@")
+  unset GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
+  git() {
+    local a skip= sub=
+    for a in "$@"; do
+      if [ -n "$skip" ]; then skip=; continue; fi
+      case $a in -c|-C) skip=1 ;; -*) ;; *) sub=$a; break ;; esac
+    done
+    case $sub in commit|merge|revert|rebase|cherry-pick|pull|tag)
+      if [ ${#dates[@]} -gt 0 ]; then at "${dates[0]}"; dates=("${dates[@]:1}"); fi ;;
+    esac
+    command git "$@"
+  }
+  eval "$(fence "$md" "$n")"
+  unset -f git
+  [ ${#dates[@]} -eq 0 ] || { echo "given $section $n: ${#dates[@]} date(s) left over" >&2; exit 1; }
+  [ -z "$name" ] || as "$name" "$email"
+}
 git config --global user.name 'Ana Souza'
 git config --global user.email 'ana@example.com'
 git config --global init.defaultBranch main
 git config --global core.editor nano
 
 # The week of lesson 3, rebuilt: nine commits by Ana and Bruno.
-cd ~ && rm -rf ~/site
-mkdir ~/site && cd ~/site && git init -q
 bruno() { as 'Bruno Lima' 'bruno@example.com'; }
 c() { git add -A && git commit -q -m "$1"; }
-me; at '2026-09-14T09:05:00-03:00'
-printf '<h1>Padaria Sol</h1>\n<p>Bread from six in the morning.</p>\n' > index.html; c 'Add the home page'
-at '2026-09-14T10:20:00-03:00'
-printf 'h1 { color: darkorange; }\n' > style.css; c 'Give the heading its colour'
-at '2026-09-14T14:10:00-03:00'
-printf '<h1>Menu</h1>\n<p>French bread, 0.80</p>\n' > menu.html; c 'Add the menu'
-bruno; at '2026-09-15T11:02:00-03:00'
-printf '<p>Rye bread, 1.20</p>\n' >> menu.html; c 'Add rye bread to the menu'
-me; at '2026-09-16T09:40:00-03:00'
-sed -i 's/six in the morning/half past five/' index.html; c 'Open at half past five'
-bruno; at '2026-09-16T16:25:00-03:00'
-sed -i 's/0.80/0.90/; s/1.20/1.35/' menu.html; c 'Put the prices up for September'
-me; at '2026-09-17T10:15:00-03:00'
-printf '<p>Cheese roll, 2.50</p>\n' >> menu.html; c 'Add cheese rolls'
-bruno; at '2026-09-18T08:50:00-03:00'
-sed -i '/Rye bread/d' menu.html; c 'Take rye bread off until the flour arrives'
+# Lesson 3's week, made by the program lesson 3 prints, read out of its page.
+fence "$lessons/le-5gv65sh1/the-week.md" 1 > ~/make-site.sh
 me; at '2026-09-18T15:30:00-03:00'
-printf '<p><a href="menu.html">See the menu</a></p>\n' >> index.html; c 'Link the menu from the home page'
+cd ~ && given what-a-branch-is 1
 
 
 block pointer
@@ -72,24 +98,24 @@ block switch
 at '2026-09-21T09:10:00-03:00'
 show 'git switch opening-hours'
 show 'cat .git/HEAD'
-sed -i 's/half past five/half past five; Sundays from seven/' index.html
+show "sed -i 's/half past five/half past five; Sundays from seven/' index.html"
 show 'git commit -qam "Open on Sundays from seven"'
 show 'git log --oneline -2'
 show 'git switch main'
 show 'cat index.html'
 
 block carry
-printf 'h1 { color: darkorange; }\np { line-height: 1.5; }\n' > style.css
+show "printf 'h1 { color: darkorange; }\\np { line-height: 1.5; }\\n' > style.css"
 show 'git status --short'
 show 'git switch opening-hours'
 show 'git status --short'
 show 'git switch main'
-git restore style.css
+show 'git restore style.css'
 
 block refuse
-sed -i 's/half past five/half past six/' index.html
+show "sed -i 's/half past five/half past six/' index.html"
 show 'git switch opening-hours'
-git restore index.html
+show 'git restore index.html'
 
 block fast-forward
 show 'git merge opening-hours'
@@ -98,11 +124,11 @@ show 'git log --oneline -3'
 block diverge
 at '2026-09-21T11:00:00-03:00'
 show 'git switch -c menu-prices'
-sed -i 's/0.90/0.95/' menu.html
+show "sed -i 's/0.90/0.95/' menu.html"
 show 'git commit -qam "Charge 0.95 for French bread"'
 show 'git switch main'
 at '2026-09-21T11:30:00-03:00'
-printf 'h1 { color: darkorange; }\np { line-height: 1.5; }\n' > style.css
+show "printf 'h1 { color: darkorange; }\\np { line-height: 1.5; }\\n' > style.css"
 show 'git commit -qam "Give paragraphs more room"'
 show 'git log --oneline --graph --all -4'
 
@@ -115,7 +141,7 @@ show 'git cat-file -p HEAD'
 block delete
 at '2026-09-21T14:00:00-03:00'
 show 'git switch -c experiment'
-sed -i 's/darkorange/purple/' style.css
+show "sed -i 's/darkorange/purple/' style.css"
 show 'git commit -qam "Try purple"'
 show 'git switch main'
 show 'git branch -v'

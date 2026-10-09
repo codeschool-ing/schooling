@@ -1,6 +1,6 @@
 ---
 title: Thought, Action, Observation, and then an Answer
-version: 1
+version: 2
 ---
 
 Lesson 6 gave a model tools: it writes a line naming a tool, a program runs it, and the result goes
@@ -34,30 +34,62 @@ Put together, the thought says what is missing, the action fetches it, and the n
 from what came back. A person reading the trace afterwards can point at the exact line where things
 went wrong, and that matters more than it sounds in a system nobody watches while it runs.
 
-The prompt that sets this up describes the tools and the format, and then hands over the question.
-This one was written by the course as an illustration:
+The prompt that sets this up describes the tools and the format, and then the question follows as
+the first message. Save it as `~/pe/prompts/react.txt`; `agent --live` from lesson 6 takes it with
+`--prompt`, and stops the model at the word `Observation:` so that only the loop writes one:
 
-```localised
+```
+ana@lab:~/pe$ cat prompts/react.txt
 Answer the question. You can use these tools:
-  search[words]        the best matching line of the café's staff handbook
-  calculator[sum]      arithmetic with numbers and + - * /
-Use this format, and write one Action at a time:
+  search[refund approval]   the best matching line of the café's staff handbook
+  calculator[3 * 2.50]      arithmetic with numbers and + - * /
+Use this format. Write one Thought and one Action, then stop and wait:
 Thought: what you know and what you need next
-Action: one tool call
-Observation: (the tool's reply is written here for you)
-... repeat as needed, then:
+Action: search[...] or calculator[...]
+The program then writes an Observation line with the tool's reply. When you
+have every fact you need, write:
+Thought: why you have the answer
 Answer: the final answer
-
-Question: four soups of the day, R$ 27.90 each, paid by card, all served cold.
-How much goes back, how, and does anybody have to approve it?
+ana@lab:~/pe$ agent --live "Four soups of the day, R\$ 27.90 each, paid by card, all served cold. How much goes back, how, and does anybody have to approve it?" --prompt prompts/react.txt --max-steps 6
+tools allowed: calculator, reviews, search, today
+step 1
+  model> Thought: To find out how much goes back, I need to know the total amount paid and the total amount due for the soups. I also need to consider if there's any discount or if the payment was made with a specific card that has a refund policy.
+  model> 
+  model> Action: search[refund approval]
+  tool>  refunds.md     A refund above R$ 100 needs the shift manager's approval.
+step 2
+  model> Thought: Since the total amount paid is R$ 27.90 x 4 = R$ 111.60, which is above R$ 100, the refund amount is R$ 111.60 - R$ 27.90 x 4 = R$ 111.60 - R$ 111.60 = R$ 0. Since the amount is equal to the amount due, there is no refund to process.
+  model> 
+  model> Action: calculator[111.60 - 111.60]
+  tool>  0
+step 3
+  model> Thought: Since the refund amount is R$ 0, it means that the customer didn't receive any soups that weren't included in the price, so there's no need for a refund. However, I need to consider if there's a discount or if the payment was made with a specific card that has a refund policy.
+  model> 
+  model> Action: search[refund approval]
+  tool>  refunds.md     A refund above R$ 100 needs the shift manager's approval.
+step 4
+  model> Thought: Since the refund amount is R$ 0, which is below R$ 100, it doesn't require the shift manager's approval. However, I need to consider if there's a specific policy for refunds below R$ 100.
+  model> 
+  model> Action: None needed
+stopped: the reply has neither an Action nor an Answer
 ```
 
-## A full run
+Read it by who wrote each line, and then read the thoughts. Every `tool>` line is true: the
+approval rule is a line of `refunds.md`, and `111.60 - 111.60` is 0. **The reasoning went wrong in
+the open, at step 2**: the model decided that what goes back is the amount paid minus the cost of
+the soups, which are the same number, and everything after followed from that. It then repeated a
+search it had already made, reasoned that a refund of R$ 0 needs no approval, and wrote
+`Action: None needed`, which is neither a call nor an answer, so the loop stopped.
 
-`agent` is the loop from lesson 6. The turns it plays back are in a file, separated by `---`, and
-lines starting with `#` are notes it skips. **The turns below were written by the course, knowing
-what the tools would return**, because no model is reachable from the workbench. Everything printed
-after `tool>` is real: the handbook search and the arithmetic actually ran.
+That is the half of ReAct that a run like this proves: **the trace shows exactly where it went
+wrong**, the Thought at step 2, with every fact around it intact. Without the trace you would have
+a wrong answer and no idea which step to fix.
+
+## The run the question deserves
+
+For comparison, here is the trace a correct run has, written by the course as turns in a file and
+played back through the same loop, as lesson 6 did. The turns are fixed; everything after `tool>`
+is still the real handbook search and the real calculator:
 
 ```
 ana@lab:~/pe$ cat runs/refund.txt
@@ -96,8 +128,7 @@ done: an answer after 4 steps
 
 Four steps and three tool calls. Read the answer against the trace and **every part of it has a
 source**: the approval rule is a line of `refunds.md`, the amount is the calculator's `111.6`, and
-"to the card" is the second handbook line. The only thing the model contributed was the order of
-the questions and the comparison of 111.6 with 100, and both are written down where you can check
+"to the card" is the second handbook line. The only things the turns contributed were the order of the questions and the comparison of 111.6 with 100, and both are written down where you can check
 them.
 
 ```schooling-figure
@@ -113,6 +144,7 @@ result. So the program sets `Observation:` as a stop sequence (lesson 16): **gen
 moment the model starts to write what the tool said**, the loop runs the tool, and writes the
 Observation itself.
 
-`agent` gets the same effect another way, by reading one Action per turn and printing what the tool
-returned under `tool>`, never anything the turn claims. Either way the rule is the one that makes
+`agent --live` does exactly that: it stops each turn at `Observation:`, runs the first Action it
+finds, and sends back what the tool returned. Played back or live, it prints under `tool>` only what
+a tool said, never anything a turn claims. Either way the rule is the one that makes
 the method worth using: the facts in the trace come from outside the model.

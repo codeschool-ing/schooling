@@ -1,0 +1,520 @@
+[
+  {
+    "id": "ex-pwg4kkrg",
+    "version": 1,
+    "section": "the-raw-layer",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does `load_raw.py` land the publishers' prices in the warehouse?",
+    "hint": "Parsing is somebody else's job.",
+    "choices": [
+      {
+        "text": "As `jsonb`, one document per line",
+        "correct": true,
+        "why": "Right. Staging parses it; raw keeps it untouched."
+      },
+      {
+        "text": "Parsed into typed columns, with bad rows dropped on the way",
+        "correct": false,
+        "why": "That would be cleaning in the raw layer, which the lesson keeps out of it."
+      },
+      {
+        "text": "As CSV text files in the warehouse directory",
+        "correct": false,
+        "why": "They go into a table, not a file."
+      },
+      {
+        "text": "As one row per publisher with all its prices in an array",
+        "correct": false,
+        "why": "Each price stays its own row, exactly as the API sent it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ve9xe99f",
+    "version": 1,
+    "section": "the-raw-layer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `load_raw.py` ask the shop for each table's columns instead of having them written in the script?",
+    "hint": "What happens when the shop adds a column?",
+    "choices": [
+      {
+        "text": "PostgreSQL requires it for `COPY`",
+        "correct": false,
+        "why": "`COPY` works with any matching table; the reason is change."
+      },
+      {
+        "text": "A new column arrives without editing the loader",
+        "correct": true,
+        "why": "Right. The decision about it is then made in staging."
+      },
+      {
+        "text": "It hides the shop's schema from the warehouse's users",
+        "correct": false,
+        "why": "The raw tables show the shop's schema exactly."
+      },
+      {
+        "text": "It makes the copy faster",
+        "correct": false,
+        "why": "The columns are read once per table; speed is unaffected."
+      }
+    ]
+  },
+  {
+    "id": "ex-8d9zw4w6",
+    "version": 1,
+    "section": "cleaning",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before cleaning, 839 of the 909 prices matched a book. How many did not?",
+    "hint": "Subtract.",
+    "value": 70,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-vt3dq8af",
+    "version": 1,
+    "section": "cleaning",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each problem in the publishers' feed to the expression in `staging/prices.sql` that fixes it.",
+    "hint": "One decision per problem.",
+    "pairs": [
+      {
+        "left": "Maré's hyphenated ISBNs",
+        "right": "replace(trim(doc->>'isbn'), '-', '')"
+      },
+      {
+        "left": "Granito's trailing space",
+        "right": "trim(doc->>'publisher')"
+      },
+      {
+        "left": "Farol's price sent as text",
+        "right": "(doc->>'list_price_cents')::integer"
+      },
+      {
+        "left": "Farol's lower-case currency",
+        "right": "upper(doc->>'currency')"
+      }
+    ],
+    "right_distractors": [
+      "coalesce(doc->>'list_price_cents', '0')"
+    ]
+  },
+  {
+    "id": "ex-hjg4xfhd",
+    "version": 1,
+    "section": "cleaning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson refuse to replace a missing price with the average price of the publisher's books?",
+    "hint": "Shape or facts?",
+    "choices": [
+      {
+        "text": "Averages are slow to compute in SQL",
+        "correct": false,
+        "why": "They are cheap; the objection is what the number would claim."
+      },
+      {
+        "text": "It would invent a fact nobody said",
+        "correct": true,
+        "why": "Right. Fix how a value is written, never what it is."
+      },
+      {
+        "text": "The publisher would see it",
+        "correct": false,
+        "why": "Nobody outside sees the warehouse; the problem is internal truth."
+      },
+      {
+        "text": "Missing prices are illegal under the LGPD",
+        "correct": false,
+        "why": "Prices are not personal data."
+      }
+    ]
+  },
+  {
+    "id": "ex-vzvgr15y",
+    "version": 1,
+    "section": "deduplicating",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`raw.events` held 18,308 deliveries and `staging.events` 18,230 events. How many deliveries were second copies?",
+    "hint": "Subtract.",
+    "value": 78,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-zynsd82s",
+    "version": 1,
+    "section": "deduplicating",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two customers really bought the same book at the same second from the same shop. Which way of deduplicating would wrongly merge them?",
+    "hint": "Which definition of the same ignores identity?",
+    "choices": [
+      {
+        "text": "By an id the producer assigned",
+        "correct": false,
+        "why": "Two purchases get two ids, so they stay apart."
+      },
+      {
+        "text": "By the order id",
+        "correct": false,
+        "why": "Two purchases are two orders."
+      },
+      {
+        "text": "`SELECT DISTINCT` on book and time",
+        "correct": true,
+        "why": "Right. Equal columns are not the same event."
+      },
+      {
+        "text": "A business key that includes the customer",
+        "correct": false,
+        "why": "The customer tells them apart."
+      }
+    ]
+  },
+  {
+    "id": "ex-2mym3qyq",
+    "version": 1,
+    "section": "deduplicating",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`staging/events.sql` numbers the copies of each event with the window function ___() and keeps copy number one.",
+    "hint": "It numbers rows within a partition.",
+    "blanks": [
+      {
+        "accept": [
+          "row_number"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5zw8cxms",
+    "version": 1,
+    "section": "joining",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Joining completed orders to their payments and their lines gave a revenue of R$ 4,173,913.50 instead of R$ 2,121,622.90. Why?",
+    "hint": "How many rows does an order with three lines become?",
+    "choices": [
+      {
+        "text": "Refunded orders were counted",
+        "correct": false,
+        "why": "Both queries filter on completed orders."
+      },
+      {
+        "text": "Each payment repeats once per line",
+        "correct": true,
+        "why": "Right. That is fan-out."
+      },
+      {
+        "text": "Payments include tax that lines do not",
+        "correct": false,
+        "why": "Lines and payments agree to the cent, as the reconciliation showed."
+      },
+      {
+        "text": "Each order appears in two shops",
+        "correct": false,
+        "why": "An order belongs to one shop."
+      }
+    ]
+  },
+  {
+    "id": "ex-jtnfp2se",
+    "version": 1,
+    "section": "joining",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A query sums `orders.discount_cents` after joining orders to order lines. On which days will its total be right?",
+    "hint": "Fan-out depends on the data.",
+    "choices": [
+      {
+        "text": "Every day, because the join is on the key",
+        "correct": false,
+        "why": "A join on the key still repeats the order once per line."
+      },
+      {
+        "text": "No day, because discounts are on lines",
+        "correct": false,
+        "why": "The question puts the discount on the order."
+      },
+      {
+        "text": "When each one had one line",
+        "correct": true,
+        "why": "Right. Which is why the bug hides until a busy day."
+      },
+      {
+        "text": "Weekends only",
+        "correct": false,
+        "why": "Busier days make it worse, not better."
+      }
+    ]
+  },
+  {
+    "id": "ex-vc1q9yqy",
+    "version": 1,
+    "section": "joining",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these protect a transformation against fan-out? Choose all that apply.",
+    "hint": "Grain, and a count.",
+    "choices": [
+      {
+        "text": "Counting rows before and after each join",
+        "correct": true,
+        "why": "Yes. An unexpected change is the symptom."
+      },
+      {
+        "text": "Summing columns only at the grain they live at",
+        "correct": true,
+        "why": "Yes. Revenue from lines, not payments repeated by lines."
+      },
+      {
+        "text": "Aggregating each side to a common grain before joining",
+        "correct": true,
+        "why": "Yes. Then the join matches one row to one row."
+      },
+      {
+        "text": "Adding `DISTINCT` to the sum",
+        "correct": false,
+        "why": "`sum(DISTINCT amount)` merges two different orders that cost the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-z0j7knxk",
+    "version": 1,
+    "section": "deriving",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `is_sale` derived in `staging/orders.sql` rather than written as `status = 'completed'` in each report?",
+    "hint": "A decision written once.",
+    "choices": [
+      {
+        "text": "A boolean is smaller than text",
+        "correct": false,
+        "why": "Size is not the argument."
+      },
+      {
+        "text": "Reports cannot filter on text",
+        "correct": false,
+        "why": "They can; the risk is filtering differently."
+      },
+      {
+        "text": "So it is defined once",
+        "correct": true,
+        "why": "Right. One definition of a sale, inherited by everything that reads it."
+      },
+      {
+        "text": "The shop's status column will be removed",
+        "correct": false,
+        "why": "Nothing says so; the reason is consistency."
+      }
+    ]
+  },
+  {
+    "id": "ex-y5wmjrsz",
+    "version": 1,
+    "section": "deriving",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On 6 and 7 March there were 623 orders. Dated in UTC, 34 of them fell on 8 March. How many orders did the UTC dating move from Friday the 6th to Saturday the 7th, if Friday had 279 in São Paulo and 252 in UTC?",
+    "hint": "Friday lost what Saturday gained.",
+    "value": 27,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-b0g6tctj",
+    "version": 1,
+    "section": "deriving",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague runs the warehouse on a server set to UTC and writes `ordered_at::date` in a new report. Which orders end up on the wrong day?",
+    "hint": "São Paulo is three hours behind UTC.",
+    "choices": [
+      {
+        "text": "None; `::date` uses the order's own zone",
+        "correct": false,
+        "why": "A `timestamptz` keeps no zone; `::date` uses the session's."
+      },
+      {
+        "text": "Every order, shifted by three hours",
+        "correct": false,
+        "why": "Only the date changes, and only for some."
+      },
+      {
+        "text": "Orders placed before 03:00 in São Paulo",
+        "correct": false,
+        "why": "Those are already the next day in UTC and in São Paulo alike."
+      },
+      {
+        "text": "Those after 21:00 local",
+        "correct": true,
+        "why": "Right. In UTC they are already the next day."
+      }
+    ]
+  },
+  {
+    "id": "ex-tqn05xr4",
+    "version": 1,
+    "section": "aggregating",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can the joins in `marts/daily_sales.sql` not fan out?",
+    "hint": "Which direction do they go?",
+    "choices": [
+      {
+        "text": "They go up, from each line to one order and one book",
+        "correct": true,
+        "why": "Right. Each line matches exactly one row on the other side."
+      },
+      {
+        "text": "They use `USING` instead of `ON`",
+        "correct": false,
+        "why": "`USING` is shorthand; it does not change how many rows match."
+      },
+      {
+        "text": "The mart has a primary key",
+        "correct": false,
+        "why": "It has none, and a key would not stop a join multiplying rows."
+      },
+      {
+        "text": "Staging removed duplicates",
+        "correct": false,
+        "why": "Orders and lines had none; direction is the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-qts76pmt",
+    "version": 1,
+    "section": "aggregating",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is fragile about `run_sql.sh`?",
+    "hint": "Where does its order come from?",
+    "choices": [
+      {
+        "text": "It stops at the first file that fails",
+        "correct": false,
+        "why": "That is a strength: nothing runs on top of a broken table."
+      },
+      {
+        "text": "Its order comes from file names",
+        "correct": true,
+        "why": "Right. Nothing records that one table needs another."
+      },
+      {
+        "text": "It hides NOTICE messages",
+        "correct": false,
+        "why": "That keeps the output readable; warnings and errors still show."
+      },
+      {
+        "text": "It needs Python",
+        "correct": false,
+        "why": "It is a shell script calling psql."
+      }
+    ]
+  },
+  {
+    "id": "ex-g4j52b6a",
+    "version": 1,
+    "section": "reconciling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The mart, the lines and the payments all gave R$ 2,121,622.90. If the mart had been higher than the payments, what would that most likely mean?",
+    "hint": "Which mistake adds rows?",
+    "choices": [
+      {
+        "text": "A till charged too little",
+        "correct": false,
+        "why": "That would make lines and payments disagree, not the mart."
+      },
+      {
+        "text": "The mart fanned out",
+        "correct": true,
+        "why": "Right. A higher total after joins is the classic symptom."
+      },
+      {
+        "text": "Some payments were refunded",
+        "correct": false,
+        "why": "Every total is over completed orders only."
+      },
+      {
+        "text": "The raw layer was loaded twice",
+        "correct": false,
+        "why": "Then lines and payments would be doubled as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-rhzwx77p",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the layers and steps that build `marts.daily_sales`.",
+    "hint": "Land, clean, then answer.",
+    "items": [
+      "load_raw.py copies the shop into raw",
+      "staging derives order_date, is_sale and line_cents",
+      "the mart joins lines up to orders and books, and groups",
+      "three totals are compared"
+    ]
+  },
+  {
+    "id": "ex-a27xfgjh",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new mart reports views per book per day from `raw.events` directly, dating each event by the file it landed in. Which two errors does it carry?",
+    "hint": "What did staging fix about events?",
+    "choices": [
+      {
+        "text": "Fan-out and a UTC date",
+        "correct": false,
+        "why": "There is no join to fan out, and file dates are local."
+      },
+      {
+        "text": "Missing prices and hyphenated ISBNs",
+        "correct": false,
+        "why": "Those are the prices' problems, not the events'."
+      },
+      {
+        "text": "Duplicates counted, and late events on the wrong day",
+        "correct": true,
+        "why": "Right. Staging removes the copies and dates by event time."
+      },
+      {
+        "text": "None, if the files are complete",
+        "correct": false,
+        "why": "Complete files still carry duplicates and late arrivals."
+      }
+    ]
+  }
+]

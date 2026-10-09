@@ -1,11 +1,19 @@
 ---
 title: Attaching two folders
-version: 1
+version: 2
 ---
 
 Two folders on host, one to share for working in and one for documents the guest should only read.
 Each is added to vm1's description as a **filesystem** device, with a **tag** the guest will use to find
-it:
+it. vm1 is a fresh guest from `bash newvm.sh vm1`, lesson 1, and the two folders are made like this:
+
+```bash
+sudo mkdir -p /srv/share /srv/docs && sudo chown $USER:$USER /srv/share /srv/docs
+echo "written on host" > /srv/share/from-host.txt
+echo "how to reset the printer" > /srv/docs/manual.txt
+```
+
+Then:
 
 ```
 ana@host:~$ ls -l /srv/share /srv/docs

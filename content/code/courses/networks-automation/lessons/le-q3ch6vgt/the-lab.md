@@ -1,11 +1,10 @@
 ---
-title: The lab this course runs on
-version: 1
+title: A tour of the lab
+version: 2
 ---
 
-Every command in this course was run, and every line of output is what the command printed. The
-network it ran against is a lab: **nine machines built on one Linux computer**, each one a network
-namespace with its own interfaces, addresses and routes, joined by virtual cables.
+This is what `netlab.sh up` built, seen from `ctl`, the machine you work on. Every machine has a
+name in `example.net`, and every `/etc/hosts` in the lab lists them:
 
 ```
 ana@ctl:~$ grep example.net /etc/hosts
@@ -16,6 +15,7 @@ ana@ctl:~$ grep example.net /etc/hosts
 192.0.2.21 nc1.example.net nc1
 192.0.2.30 netbox.example.net netbox
 192.0.2.40 tickets.example.net tickets
+192.0.2.50 sw1.example.net sw1
 ```
 
 | machine | what it is |
@@ -26,13 +26,14 @@ ana@ctl:~$ grep example.net /etc/hosts
 | `netbox` | NetBox, the source of truth of lesson 12 |
 | `tickets` | the service desk that lesson 7's webhooks open tickets in |
 | `pc1`, `pc2` | one computer on each branch's LAN, to test the network from |
+| `sw1`, `h1` to `h3` | an OpenFlow switch and three computers plugged into it, for lesson 15 |
 
 `ctl` has one interface, on the management network:
 
 ```
 ana@ctl:~$ ip -br addr
 lo               UNKNOWN        127.0.0.1/8 
-eth0@if36        UP             192.0.2.10/24 
+eth0@if494       UP             192.0.2.10/24 
 ana@ctl:~$ python --version
 Python 3.12.3
 ana@ctl:~$ pip list 2>/dev/null | grep -iE "^(netmiko|napalm|nornir|ncclient|pygnmi|jinja2|pynetbox) "
@@ -51,11 +52,11 @@ three, and `edge1` has learnt the other branch through `core1`:
 
 ```
 ana@ctl:~$ ssh netops@edge1 "show version" | head -1
-FRRouting 8.4.4 (edge1) on Linux(6.18.44-fc-v49).
+FRRouting 8.4.4 (edge1) on Linux(6.18.44-fc-v77).
 ana@ctl:~$ ssh netops@edge1 "show ip ospf neighbor"
 
 Neighbor ID     Pri State           Up Time         Dead Time Address         Interface                        RXmtL RqstL DBsmL
-203.0.113.251     1 Full/-          25.256s           34.742s 198.51.100.1    eth1:198.51.100.2                    0     0     0
+203.0.113.251     1 Full/-          36.144s           33.854s 198.51.100.1    eth1:198.51.100.2                    0     0     0
 
 ana@ctl:~$ ssh netops@edge1 "show ip route ospf"
 Codes: K - kernel route, C - connected, S - static, R - RIP,
@@ -65,32 +66,29 @@ Codes: K - kernel route, C - connected, S - static, R - RIP,
        > - selected route, * - FIB route, q - queued, r - rejected, b - backup
        t - trapped, o - offload failure
 
-O   192.0.2.0/24 [110/20] via 198.51.100.1, eth1, weight 1, 00:00:14
-O   198.51.100.0/30 [110/10] is directly connected, eth1, weight 1, 00:00:35
-O>* 198.51.100.4/30 [110/20] via 198.51.100.1, eth1, weight 1, 00:00:15
-O   203.0.113.0/26 [110/10] is directly connected, eth2, weight 1, 00:00:35
-O>* 203.0.113.64/26 [110/30] via 198.51.100.1, eth1, weight 1, 00:00:15
-O>* 203.0.113.251/32 [110/20] via 198.51.100.1, eth1, weight 1, 00:00:14
-O>* 203.0.113.253/32 [110/20] via 198.51.100.1, eth1, weight 1, 00:00:14
+O   192.0.2.0/24 [110/20] via 198.51.100.1, eth1, weight 1, 00:00:25
+O   198.51.100.0/30 [110/10] is directly connected, eth1, weight 1, 00:00:46
+O>* 198.51.100.4/30 [110/20] via 198.51.100.1, eth1, weight 1, 00:00:26
+O   203.0.113.0/26 [110/10] is directly connected, eth2, weight 1, 00:00:46
+O>* 203.0.113.64/26 [110/30] via 198.51.100.1, eth1, weight 1, 00:00:26
+O>* 203.0.113.251/32 [110/20] via 198.51.100.1, eth1, weight 1, 00:00:25
+O>* 203.0.113.253/32 [110/20] via 198.51.100.1, eth1, weight 1, 00:00:25
 ```
 
 **What is real and what was written for the course.** The network operating systems people
 automate at work are licensed, so no vendor image runs here. Everything the lessons import or talk
-to is real open-source software (FRR, OpenSSH, Clixon for `nc1`, NetBox, Ansible and every Python
-library shown above) with three exceptions, written for the lab and named wherever a lesson uses
-them. The routers' REST API and gNMI port are a small program that answers from FRR and the
-kernel, because FRR has neither. The NAPALM driver for FRR is another, because NAPALM ships none.
-The service desk is the third, because the ticketing systems people use are too large to install
-for one lesson. Each is modelled on the pattern real products follow, and the lessons teach the
-pattern.
+to is real open-source software: FRR, OpenSSH, Clixon for `nc1`, NetBox, Ansible and every Python
+library shown above. There are three exceptions, written for this course and printed whole in the
+lesson that starts each one. The routers' REST API and gNMI port are a program that answers from FRR and
+the kernel, because FRR has neither: `devapid.py`, in lesson 2. The NAPALM driver for FRR is
+another, because NAPALM ships none: `napalm_frr.py`, in lesson 8. The service desk is the third,
+because the ticketing systems people use are too large to install for one lesson: `deskd.py`, in
+lesson 7. Each is modelled on the pattern real products follow, and the lessons teach the pattern.
+`nc1` also needs a short plugin that checks a RESTCONF password, because Clixon leaves that to the
+product built on it. Lesson 3 prints it too.
 
 The addresses are the ranges reserved for documentation, `192.0.2.0/24`, `198.51.100.0/24` and
 `203.0.113.0/24`, and the names end in `example.net`. **Nothing in the lab reaches the internet.**
-
-To follow along at home you need one Linux machine, a virtual machine being the easiest, with FRR
-and Python 3.12 installed; a namespace per router is how this lab does it, and a virtual machine
-per router works the same way with more memory. Where your routers are real equipment, the
-libraries are the same and only the device type and the addresses change.
 
 **When something does not answer**, check it in the order the packets travel: can `ctl` reach
 the address at all, is the port open, and is the login accepted by hand?
@@ -98,15 +96,15 @@ the address at all, is the port open, and is the login accepted by hand?
 ```
 ana@ctl:~$ ping -c 1 edge1
 PING edge1.example.net (192.0.2.12) 56(84) bytes of data.
-64 bytes from edge1.example.net (192.0.2.12): icmp_seq=1 ttl=64 time=6.79 ms
+64 bytes from edge1.example.net (192.0.2.12): icmp_seq=1 ttl=64 time=0.349 ms
 
 --- edge1.example.net ping statistics ---
 1 packets transmitted, 1 received, 0% packet loss, time 0ms
-rtt min/avg/max/mdev = 6.791/6.791/6.791/0.000 ms
+rtt min/avg/max/mdev = 0.349/0.349/0.349/0.000 ms
 ana@ctl:~$ nc -vz edge1 22
 Connection to edge1 (192.0.2.12) 22 port [tcp/ssh] succeeded!
 ```
 
 `ping` answered, and `nc -vz` connected to port 22 without sending anything. The third question is
-the one `by-hand` asked, an interactive `ssh netops@edge1`. **A script that fails in any of those
+an interactive `ssh netops@edge1`, which the next section opens. **A script that fails in any of those
 three places fails for a reason that is not in the script**, and no change to the script fixes it.

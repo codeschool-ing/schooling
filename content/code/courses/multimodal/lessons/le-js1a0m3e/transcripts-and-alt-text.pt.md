@@ -1,6 +1,6 @@
 ---
 title: Transcrições com falantes, e texto alternativo que uma máquina confere
-version: 1
+version: 2
 ---
 
 Uma gravação sem vídeo, como uma ligação de suporte guardada para treinamento, precisa de uma **transcrição** pelo critério 1.2.1. Numa ligação, uma transcrição que não diz quem está falando é difícil de acompanhar, então esta junta a separação de falantes da aula 5 aos segmentos do Whisper: cada segmento vai para o falante que mais se sobrepõe a ele.
@@ -12,7 +12,8 @@ from openai import OpenAI
 
 turns = diarizer(speakers=2).process(read_audio("media/call-1042.wav")).sort_by_start_time()
 with open("media/call-1042.wav", "rb") as f:
-    heard = OpenAI().audio.transcriptions.create(model="lab-whisper-base", file=f, response_format="verbose_json")
+    heard = OpenAI(base_url="http://localhost:8700/v1").audio.transcriptions.create(model="whisper-base", file=f,
+                                                                              response_format="verbose_json")
 
 
 def speaker(start, end):
@@ -82,7 +83,7 @@ for line, a in page.found:
     print("line %d  %-22s %s" % (line, src, verdict))
 ```
 
-```python
+```html
 <main>
   <h1>Dom Casmurro</h1>
   <img src="cover-b39.png" alt="Cover of Dom Casmurro: a moon over a dark house with two lit windows">
@@ -105,4 +106,4 @@ line 7  author.jpg             starts with 'image of': the reader already says i
 
 Quatro de cinco precisam que uma pessoa olhe. A tabela de tamanhos não tem `alt`, então muitos leitores de tela acabam anunciando o nome do arquivo. O `alt` da contracapa é um nome de arquivo. O do autor começa com "Image of", que o leitor de tela já disse. O `alt` vazio do divisor está certo, porque é decoração, e a conferência só diz isso porque a página o marcou com `role="presentation"`.
 
-O `alt` da capa passa, e só uma pessoa pode dizer se ele é bom. Ele foi feito a partir da descrição escrita pelo curso na aula 8, cortada ao que quem escolhe uma edição precisa. O rascunho de um modelo de visão é um bom começo para texto alternativo; a descrição completa que ele escreveu seria longa demais, e **o propósito da imagem naquela página** decide o que fica. Esta plataforma roda o `axe` em toda tela, nos dois temas, e ele acha o `alt` que falta; se um `alt` diz a coisa certa está fora do que ele decide. Uma conferência automática é onde uma revisão começa, não onde termina.
+O `alt` da capa passa, e só uma pessoa pode dizer se ele é bom. Ele foi escrito a partir da descrição da aula 8, conferida contra o que o `make_media.py` desenhou e cortada ao que quem escolhe uma edição precisa. O rascunho de um modelo de visão é um bom começo para texto alternativo; a descrição completa que ele escreveu seria longa demais, e **o propósito da imagem naquela página** decide o que fica. Esta plataforma roda o `axe` em toda tela, nos dois temas, e ele acha o `alt` que falta; se um `alt` diz a coisa certa está fora do que ele decide. Uma conferência automática é onde uma revisão começa, não onde termina.

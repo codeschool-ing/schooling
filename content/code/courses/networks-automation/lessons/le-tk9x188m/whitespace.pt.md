@@ -1,6 +1,6 @@
 ---
 title: De onde vêm as linhas em branco
-version: 1
+version: 2
 ---
 
 Um roteador não se importa com uma linha em branco na configuração; um diff se importa. A aula 11
@@ -19,6 +19,21 @@ interface {{ i.name }}
  ip address {{ i.address }}
 exit
 {% endfor %}
+```
+
+Salvo como `templates/iface.j2`, ele é renderizado para o edge1 pelo `spacing.py`, que liga as duas
+opções de espaço em branco do Jinja2 quando recebe `--trim`:
+
+```python
+import sys
+
+import yaml
+from jinja2 import Environment, FileSystemLoader
+
+data = yaml.safe_load(open("data/edge1.yaml"))
+trim = "--trim" in sys.argv
+env = Environment(loader=FileSystemLoader("templates"), trim_blocks=trim, lstrip_blocks=trim)
+print(env.get_template("iface.j2").render(data), end="")
 ```
 
 Renderizado com os padrões do Jinja2:

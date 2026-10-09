@@ -1,6 +1,6 @@
 ---
 title: Scanning for known vulnerabilities
-version: 1
+version: 2
 ---
 
 **A vulnerability scanner does two things: it lists what is inside an image, and it looks each item
@@ -20,6 +20,17 @@ ana@vm:~$ jq -c "{UpdatedAt}" ~/trivy-cache/db/metadata.json
 day by default. The lab's containers have no network, so this one was fetched before the lab
 started, from the same place Trivy fetches it, and the flags tell Trivy not to look for another.
 Every number below is true as of that `UpdatedAt`; the same scan tomorrow can find more.
+
+On your own machine, leave `--skip-db-update` and `--offline-scan` out. The first scan then
+downloads the database into `~/trivy-cache`, which takes a minute, and later scans refresh it once a
+day:
+
+```sh
+trivy() { docker run --rm -v ~/trivy-cache:/cache -v "$PWD":/work -w /work aquasec/trivy:0.75.0 "$@" --cache-dir /cache --skip-version-check --scanners vuln --quiet; }
+```
+
+That version was not run here, for the reason above, and your counts will differ from these by
+whatever was published between the two databases.
 
 ## Three images, side by side
 

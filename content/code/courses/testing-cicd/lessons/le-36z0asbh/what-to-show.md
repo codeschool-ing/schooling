@@ -1,6 +1,6 @@
 ---
 title: What a test should show, and what it should hide
-version: 1
+version: 2
 ---
 
 Factories hide data. That is their purpose, and it can be overdone. A test is read far more often
@@ -34,7 +34,7 @@ def test_a_saved_quote_comes_back_by_id(store):
     assert store.get(quote_id)["cents"] == 2190
 ```
 
-This is the store test as it was before step 7, and it is not wrong. But a reader has to work out
+This is the store test as lesson 1 wrote it, and it is not wrong. But a reader has to work out
 which of the four values matters. Only `2190` does: it appears in the call and in the assertion. The
 factory version, `a_quote(cents=2190)`, says that directly.
 

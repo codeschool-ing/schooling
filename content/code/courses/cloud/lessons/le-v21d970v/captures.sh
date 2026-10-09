@@ -5,7 +5,7 @@
 # this lesson was copied from running it, so the next person can run it and see
 # what moved.
 #
-#   bash captures.sh            # from anywhere; it finds prices.py beside course.json
+#   bash captures.sh            # from anywhere; prices.py is read out of lesson 1
 #
 # THERE IS NO CLOUD ACCOUNT IN THIS COURSE, and nothing below reaches one. The
 # address arithmetic is Python's own ipaddress module on a laptop: it knows what
@@ -25,7 +25,11 @@
 
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
-cd "$(dirname "$0")/../.." || exit 1
+. "$(cd "$(dirname "$0")/../.." && pwd)/from-lessons.sh"   # prices_py: the program as lesson 1 prints it
+SHEET=$(mktemp -d)   # the student's ~/cloud, holding prices.py
+trap 'rm -rf "$SHEET"' EXIT
+prices_py "$SHEET" || exit 1
+cd "$SHEET" || exit 1
 AWS_CLI=${AWS_CLI:-$(command -v aws)}
 # what ana typed at her prompt, and everything it printed
 run() { printf 'ana@laptop:~/cloud$ %s\n' "$*"; bash -c "$*" 2>&1 || true; }

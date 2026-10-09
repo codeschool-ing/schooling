@@ -1,6 +1,6 @@
 ---
 title: Kept running by systemd
-version: 1
+version: 2
 ---
 
 An image is not a service. Something has to start it, restart it when it dies and start it again when
@@ -33,13 +33,11 @@ WantedBy=multi-user.target
 ana@srv:~/loanbook$ sudo cp deploy/loanbook.container /etc/containers/systemd/
 ana@srv:~/loanbook$ sudo systemctl daemon-reload
 ana@srv:~/loanbook$ sudo systemctl start loanbook
-ana@srv:~/loanbook$ systemctl status loanbook --no-pager | head -6
+ana@srv:~/loanbook$ systemctl status loanbook --no-pager | head -4
 ● loanbook.service - loanbook, the equipment loan register
      Loaded: loaded (/etc/containers/systemd/loanbook.container; generated)
-     Active: active (running) since Sun 2026-09-27 06:59:22 UTC; 3s ago
-   Main PID: 711 (conmon)
-        CPU: 822ms
-     CGroup: /system.slice/loanbook.service
+     Active: active (running) since Wed 2026-10-07 10:58:47 UTC; 3s ago
+   Main PID: 2143 (conmon)
 ana@srv:~/loanbook$ curl -s 127.0.0.1:8000/healthz
 {"ok": true}
 ```

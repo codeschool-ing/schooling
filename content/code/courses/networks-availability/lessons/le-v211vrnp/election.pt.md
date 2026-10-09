@@ -4,7 +4,14 @@ version: 1
 ---
 
 Os dois roteadores foram iniciados com `state BACKUP`, `hq2` cerca de um segundo antes de `hq`, e
-deixados para se entenderem sozinhos. Alguns segundos depois, um deles tem dois endereços e o outro tem um:
+deixados para se entenderem sozinhos. O keepalived roda em segundo plano, com o log no
+`/run/keepalived.log` de cada roteador; digite isto em `hq2`, depois em `hq`:
+
+```sh
+sudo sh -c 'setsid keepalived -n -l -f /etc/keepalived/keepalived.conf -p /run/keepalived.pid -r /run/vrrp.pid > /run/keepalived.log 2>&1 &'
+```
+
+Alguns segundos depois, um deles tem dois endereços e o outro tem um:
 
 ```
 ana@hq:~$ ip -br addr show eth0

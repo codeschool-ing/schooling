@@ -1,6 +1,6 @@
 ---
 title: sticky: in the flow until it would leave
-version: 1
+version: 2
 ---
 
 **`position: sticky`** is the hybrid. The box is in the normal flow and takes up its space, like a static one, **until scrolling would carry it past the edge set by its inset**; then it sticks at that edge, and stays there until the end of its parent passes. The months on the events page have sticky headings, `top: 0`, and each month's section is 900 pixels tall:
@@ -29,7 +29,50 @@ At the top of the page, the headings are where the flow put them: October at 0, 
 
 ## Why sticky sometimes does nothing
 
-The commonest complaint about sticky is that it does not stick, and the commonest cause is this:
+The commonest complaint about sticky is that it does not stick, and the commonest cause is this. Here is `fixed.html` saved as `sticky-broken.html`, with its two sections wrapped in a `<div>` and one rule added for it:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Fixed and sticky · Andorinha Books</title>
+    <style>
+      body { margin: 0; font: 16px/1.5 sans-serif; }
+      .chat {
+        position: fixed;
+        right: 16px;
+        bottom: 16px;
+        padding: 8px 16px;
+        background: #2f6f4e;
+        color: white;
+      }
+      .month h2 {
+        position: sticky;
+        top: 0;
+        margin: 0;
+        padding: 8px;
+        background: #f4f1ea;
+      }
+      .month { height: 900px; }
+      .wrapper { overflow: hidden; }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+    <section class="month" id="october">
+      <h2>October</h2>
+      <p>Poetry reading, book swap and a bookbinding class.</p>
+    </section>
+    <section class="month" id="november">
+      <h2>November</h2>
+      <p>Nothing is planned yet.</p>
+    </section>
+    </div>
+    <a class="chat" href="contact.html">Ask us</a>
+  </body>
+</html>
+```
 
 ```
 ana@laptop:~/site$ probe sticky-broken.html scroll 500 box h2
@@ -37,6 +80,6 @@ h2  x 0      y 0      width 1024   height 52
 h2  x 0      y 900    width 1024   height 52
 ```
 
-The same page with the sections wrapped in a `<div>` that has **`overflow: hidden`**, and scrolled 500: the heading is still at **0**. It did not stick. A sticky box sticks to its nearest **scrolling** ancestor, and `overflow: hidden`, `auto` or `scroll` on any ancestor makes that ancestor the one, even though it never scrolls itself. The heading stuck faithfully to the top of a box that never moved. The fix is to remove the `overflow`, or to use `overflow: clip`, which cuts off overflowing content without making a scroll container.
+Wrapped in a `<div>` that has **`overflow: hidden`**, and scrolled 500, the heading is still at **0**. It did not stick. A sticky box sticks to its nearest **scrolling** ancestor, and `overflow: hidden`, `auto` or `scroll` on any ancestor makes that ancestor the one, even though it never scrolls itself. The heading stuck faithfully to the top of a box that never moved. The fix is to remove the `overflow`, or to use `overflow: clip`, which cuts off overflowing content without making a scroll container.
 
 The other two causes: **no inset**, because `position: sticky` without `top` or another inset never sticks; and **a parent no taller than the sticky box**, which leaves it no room to move.

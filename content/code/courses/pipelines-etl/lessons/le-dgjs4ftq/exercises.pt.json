@@ -1,0 +1,384 @@
+{
+  "ex-fm935m6y": {
+    "prompt": "Ligue cada origem a quem decide o ritmo da extração.",
+    "hint": "O controle vai sumindo na lista.",
+    "pairs": [
+      {
+        "left": "O banco da loja",
+        "right": "A Ana, dentro do que ele aguenta"
+      },
+      {
+        "left": "A API de preços",
+        "right": "A API, pelo limite de taxa"
+      },
+      {
+        "left": "O arquivo de estoque",
+        "right": "Quem escreve o arquivo"
+      },
+      {
+        "left": "Os eventos do site",
+        "right": "O mundo"
+      }
+    ]
+  },
+  "ex-dpdn44ja": {
+    "prompt": "O que a leitura rasgada, o meio arquivo e o evento duplicado têm em comum?",
+    "hint": "Como cada uma terminou?",
+    "choices": [
+      {
+        "text": "Cada uma lançou um erro que parou o pipeline",
+        "why": "Nenhuma lançou nada; esse é o problema."
+      },
+      {
+        "text": "Elas dão certo",
+        "why": "Isso. Cada uma produz números, linhas ou contagens, e nada diz que estão errados."
+      },
+      {
+        "text": "Só acontecem com origens que a empresa não controla",
+        "why": "A leitura rasgada aconteceu no próprio banco da Ponto Final."
+      },
+      {
+        "text": "Todas vêm de falhas de rede",
+        "why": "Um dia de vendas e um coletor que tenta de novo não são falhas de rede."
+      }
+    ]
+  },
+  "ex-m5nfe69x": {
+    "prompt": "O `torn.py` contou 17.453 pedidos, e quatro segundos depois as linhas que leu pertenciam a 17.749 pedidos. Quantos pedidos ele nunca contou?",
+    "hint": "Subtraia."
+  },
+  "ex-t6qtsxhc": {
+    "prompt": "Por que o `snapshot.py` obteve contagens que batem enquanto um dia de vendas era confirmado durante a sua pausa de quatro segundos?",
+    "hint": "Quando o snapshot é tirado?",
+    "choices": [
+      {
+        "text": "A pausa impediu o dia de ser confirmado",
+        "why": "O dia foi confirmado; a transação só não o viu."
+      },
+      {
+        "text": "O `READ ONLY` faz o PostgreSQL recusar linhas novas enquanto ela roda",
+        "why": "O `READ ONLY` impede esta transação de escrever; as outras escrevem normalmente."
+      },
+      {
+        "text": "As duas leituras viram um snapshot só",
+        "why": "Isso. As duas leituras descrevem um momento só."
+      },
+      {
+        "text": "Ele contou a partir de uma cópia em cache das tabelas",
+        "why": "Ele leu as tabelas vivas, por meio de um snapshot."
+      }
+    ]
+  },
+  "ex-4enxbz32": {
+    "prompt": "Uma extração abre uma transação `REPEATABLE READ` à 1 da manhã e, por causa de um bug, a deixa aberta até as 9. O que o banco da loja sofre?",
+    "hint": "O que o PostgreSQL precisa guardar para um snapshot aberto?",
+    "choices": [
+      {
+        "text": "Nada: uma transação só de leitura não segura recursos",
+        "why": "Ela segura a limpeza das versões antigas das linhas."
+      },
+      {
+        "text": "Tabelas e índices crescem, porque versões antigas das linhas são guardadas para o snapshot",
+        "why": "Isso. Oito horas de atualizações que não podem ser limpas."
+      },
+      {
+        "text": "Os caixas ficam impedidos de inserir até ela fechar",
+        "why": "Leitores não bloqueiam escritores no PostgreSQL."
+      },
+      {
+        "text": "A transação é morta depois de uma hora",
+        "why": "Nada na configuração do laboratório faz isso."
+      }
+    ]
+  },
+  "ex-6rcy3f08": {
+    "prompt": "O que o `UPDATE` rodado como `etl_reader` demonstrou?",
+    "hint": "Leia o erro.",
+    "choices": [
+      {
+        "text": "A tabela de pedidos fica bloqueada durante a extração",
+        "why": "Nada estava bloqueado; falta a permissão ao papel."
+      },
+      {
+        "text": "O pedido 100001 não existe",
+        "why": "O erro é de permissão, não de linha ausente."
+      },
+      {
+        "text": "O papel do pipeline lê e não escreve",
+        "why": "Isso. Um bug ou um comando colado não mudam nada na loja por ele."
+      },
+      {
+        "text": "O PostgreSQL recusa todo `UPDATE` mandado por um socket local",
+        "why": "O papel da própria Ana atualiza normalmente pelo mesmo socket."
+      }
+    ]
+  },
+  "ex-ma6pa1ej": {
+    "prompt": "Quais destas reduzem a carga que uma extração põe sobre os caixas da loja? Escolha todas as que se aplicam.",
+    "hint": "Onde, quando e quanto.",
+    "choices": [
+      {
+        "text": "Ler de uma réplica de leitura",
+        "why": "Sim. A réplica não registra vendas."
+      },
+      {
+        "text": "Ler só as linhas que mudaram",
+        "why": "Sim. Menos para ler é menos carga; lições 4 e 5."
+      },
+      {
+        "text": "Rodar à noite com as lojas fechadas",
+        "why": "Sim, para as lojas; a loja online nunca fecha."
+      },
+      {
+        "text": "Conectar como dono do banco",
+        "why": "Isso acrescenta risco e não tira nada da carga."
+      }
+    ]
+  },
+  "ex-j3y1xm4q": {
+    "prompt": "Por que um cliente deve devolver o `next_cursor` da API sem mudança em vez de montar o seu a partir do deslocamento que há nele?",
+    "hint": "De quem é o significado do cursor?",
+    "choices": [
+      {
+        "text": "O servidor é livre para mudar o que ele significa",
+        "why": "Isso. Um cursor decodificado amarra o cliente a um detalhe interno."
+      },
+      {
+        "text": "Decodificar base64 é lento demais para fazer uma vez por página em Python",
+        "why": "São microssegundos; o motivo é a quem pertence."
+      },
+      {
+        "text": "O cursor é criptografado com a chave da API",
+        "why": "Este é base64 simples, e ainda assim o cliente não deve lê-lo."
+      },
+      {
+        "text": "A API recusa cursores que não emitiu",
+        "why": "Esta API aceitaria um; essa é exatamente a armadilha."
+      }
+    ]
+  },
+  "ex-dz0ytqcn": {
+    "prompt": "A API responde `429` com `Retry-After: 1`. O que o `prices.py` faz?",
+    "hint": "Um 429 é uma instrução.",
+    "choices": [
+      {
+        "text": "Espera um segundo e pede a mesma página",
+        "why": "Isso. Ele conta a espera e segue do mesmo cursor."
+      },
+      {
+        "text": "Pula para a próxima página",
+        "why": "Isso deixaria um buraco nos preços."
+      },
+      {
+        "text": "Para com um erro, como qualquer outro status que não seja 200",
+        "why": "Outras falhas o param; o 429 é tratado antes do `raise_for_status`."
+      },
+      {
+        "text": "Recomeça da primeira página",
+        "why": "O cursor que ele tem continua válido."
+      }
+    ]
+  },
+  "ex-647r1rzv": {
+    "prompt": "Por que toda requisição no `prices.py` leva `timeout=10`?",
+    "hint": "Imagine um servidor que aceita a conexão e nunca responde.",
+    "choices": [
+      {
+        "text": "A API recusa requisições sem timeout",
+        "why": "O timeout nunca vai para o servidor; ele limita a espera do cliente."
+      },
+      {
+        "text": "Dez segundos é a janela do limite de taxa",
+        "why": "A janela do limite de taxa é de um segundo."
+      },
+      {
+        "text": "Para o pipeline ficar mais rápido nos dias bons",
+        "why": "Num dia bom o timeout nunca dispara."
+      },
+      {
+        "text": "Para um servidor calado não o travar",
+        "why": "Isso. Um travamento é uma falha que nunca avisa."
+      }
+    ]
+  },
+  "ex-9frrz1mg": {
+    "prompt": "O carregador aceitou um arquivo de estoque cortado na linha 600 e relatou 599 linhas carregadas. Por que nada pegou?",
+    "hint": "O que um CSV diz sobre o próprio tamanho?",
+    "choices": [
+      {
+        "text": "A verificação do cabeçalho foi pulada para arquivos curtos",
+        "why": "O cabeçalho estava lá e correto."
+      },
+      {
+        "text": "Cada linha estava bem formada, e nada diz o tamanho que ele deveria ter",
+        "why": "Isso. O corte caiu entre duas linhas."
+      },
+      {
+        "text": "O PostgreSQL descarta linhas que não cabem",
+        "why": "Toda linha lida foi inserida; as linhas faltavam no arquivo."
+      },
+      {
+        "text": "O carregador lê só as primeiras 600 linhas",
+        "why": "Ele lê o arquivo inteiro; o arquivo era curto."
+      }
+    ]
+  },
+  "ex-am4zrggz": {
+    "prompt": "Ligue cada jeito de saber que um arquivo está completo ao que ele exige.",
+    "hint": "Três precisam do fornecedor; um não.",
+    "pairs": [
+      {
+        "left": "Escrever em .tmp, depois renomear",
+        "right": "O fornecedor renomeia depois de escrever"
+      },
+      {
+        "left": "Um arquivo marcador",
+        "right": "O fornecedor deixa um segundo arquivo ao terminar"
+      },
+      {
+        "left": "Um rodapé com a contagem de linhas",
+        "right": "O fornecedor escreve a contagem no arquivo"
+      },
+      {
+        "left": "Uma expectativa sua",
+        "right": "Saber que existem 1.200 livros"
+      }
+    ]
+  },
+  "ex-axyhqma1": {
+    "prompt": "Num mesmo sistema de arquivos, renomear um arquivo é ___: quem lê vê ou nenhum arquivo ou o arquivo inteiro.",
+    "hint": "Acontece de uma vez só.",
+    "blanks": [
+      {
+        "accept": [
+          "atômico",
+          "atomico"
+        ]
+      }
+    ]
+  },
+  "ex-2szvmwcq": {
+    "prompt": "O arquivo de eventos de 5 de março tem 2.438 linhas, e 23 ids de evento aparecem duas vezes nele. Quantos eventos distintos ele tem?",
+    "hint": "Cada id duplicado é uma linha a mais."
+  },
+  "ex-10hy683e": {
+    "prompt": "Por que o `event_id` é o campo mais importante do arquivo de eventos?",
+    "hint": "A entrega pelo menos uma vez manda alguns eventos duas vezes.",
+    "choices": [
+      {
+        "text": "Ele ordena os eventos na ordem em que aconteceram",
+        "why": "Os ids não estão em ordem de tempo; o horário é `occurred_at`."
+      },
+      {
+        "text": "Sem ele um evento repetido e dois cliques reais parecem iguais",
+        "why": "Isso. É o único jeito de transformar pelo menos uma vez em exatamente uma vez."
+      },
+      {
+        "text": "Ele diz a que sessão o evento pertence",
+        "why": "Isso é o `session`."
+      },
+      {
+        "text": "O warehouse exige uma chave primária",
+        "why": "A camada crua não tem chaves; o motivo são as duplicatas."
+      }
+    ]
+  },
+  "ex-1kp517hr": {
+    "prompt": "Um relatório conta visualizações por dia pelo arquivo em que cada evento caiu. No dia seguinte a uma grande greve de trens, o que ele erra?",
+    "hint": "Horário do evento contra horário de processamento.",
+    "choices": [
+      {
+        "text": "Nada, porque cada arquivo guarda exatamente um dia",
+        "why": "O arquivo é o dia da chegada, não do evento."
+      },
+      {
+        "text": "Ele conta duplicatas duas vezes",
+        "why": "Verdade para qualquer contagem ingênua, mas não é o erro desta pergunta."
+      },
+      {
+        "text": "Ele perde os eventos por completo",
+        "why": "Eles são contados; no dia errado."
+      },
+      {
+        "text": "As atrasadas contam no dia seguinte",
+        "why": "Isso. Um dia fica com menos e o seguinte com mais."
+      }
+    ]
+  },
+  "ex-ave5085x": {
+    "prompt": "O carregador tem uma verificação de cabeçalho, mas o arquivo de 5 de março falhou com `UnicodeDecodeError`. Por que a verificação nunca rodou?",
+    "hint": "O que acontece antes de um cabeçalho poder ser comparado?",
+    "choices": [
+      {
+        "text": "A verificação só roda em arquivos acima de 50 kB",
+        "why": "Não existe essa condição no carregador."
+      },
+      {
+        "text": "Decodificar a primeira linha como UTF-8 falhou antes",
+        "why": "Isso. O byte `0xED` parou o Python antes da comparação."
+      },
+      {
+        "text": "Os pontos e vírgulas esconderam o cabeçalho do `csv.reader`",
+        "why": "O `csv.reader` nunca recebeu uma linha para dividir."
+      },
+      {
+        "text": "O `sys.exit` foi capturado pelo shell",
+        "why": "O `sys.exit` nunca foi alcançado."
+      }
+    ]
+  },
+  "ex-dnd3rk3m": {
+    "prompt": "Por que a lição argumenta contra um carregador que detecta a codificação, fareja o separador e mapeia `disponível` para `available` sozinho?",
+    "hint": "O que mais ele aceitaria?",
+    "choices": [
+      {
+        "text": "Seria lento demais para um job noturno",
+        "why": "Velocidade não é a objeção."
+      },
+      {
+        "text": "O Python não tem jeito confiável de detectar uma codificação",
+        "why": "A detecção é imperfeita, mas a objeção é sobre decisões."
+      },
+      {
+        "text": "Ele aceita também uma mudança de significado",
+        "why": "Isso. Mudanças de forma são decisões, e uma pessoa deve tomá-las."
+      },
+      {
+        "text": "Mapear nomes de colunas é proibido pela LGPD",
+        "why": "A LGPD não diz nada sobre nomes de colunas."
+      }
+    ]
+  },
+  "ex-01v772nm": {
+    "prompt": "Ordene as origens pelo controle que o pipeline tem sobre o que lê, do maior para o menor.",
+    "hint": "Quem decide o ritmo?",
+    "items": [
+      "Um banco de dados",
+      "Uma API",
+      "Um arquivo",
+      "Eventos"
+    ]
+  },
+  "ex-ta94mt7j": {
+    "prompt": "O arquivo de um fornecedor chega toda noite e é carregado às 06:00. Numa noite o job dele está lento e o arquivo ainda está sendo escrito às 06:00. Sem acordo nenhum, qual é a primeira coisa a pedir ao fornecedor?",
+    "hint": "A correção mais barata que torna um meio arquivo invisível.",
+    "choices": [
+      {
+        "text": "Mandar o arquivo por e-mail",
+        "why": "Um e-mail também pode levar meio arquivo, e acrescenta um passo."
+      },
+      {
+        "text": "Terminar antes das 05:00 toda noite",
+        "why": "Um prazo não diz se o arquivo terminou."
+      },
+      {
+        "text": "Escrever o arquivo com nome temporário e renomeá-lo ao terminar",
+        "why": "Isso. O pipeline então vê nenhum arquivo ou o arquivo inteiro."
+      },
+      {
+        "text": "Comprimir o arquivo",
+        "why": "Um arquivo compactado truncado não abre, o que ajuda um pouco, por acaso."
+      }
+    ]
+  }
+}

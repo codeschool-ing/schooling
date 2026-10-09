@@ -1,6 +1,6 @@
 ---
 title: Switching, and what happens to your files
-version: 1
+version: 2
 ---
 
 **`git switch` moves `HEAD` to another branch, and changes the working tree to match that branch's
@@ -12,6 +12,7 @@ ana@vm:~/site$ git switch opening-hours
 Switched to branch 'opening-hours'
 ana@vm:~/site$ cat .git/HEAD
 ref: refs/heads/opening-hours
+ana@vm:~/site$ sed -i 's/half past five/half past five; Sundays from seven/' index.html
 ana@vm:~/site$ git commit -qam "Open on Sundays from seven"
 ana@vm:~/site$ git log --oneline -2
 9677eef Open on Sundays from seven
@@ -38,6 +39,7 @@ An uncommitted edit belongs to the working tree, not to any branch. So when noth
 travels:
 
 ```
+ana@vm:~/site$ printf 'h1 { color: darkorange; }\np { line-height: 1.5; }\n' > style.css
 ana@vm:~/site$ git status --short
  M style.css
 ana@vm:~/site$ git switch opening-hours
@@ -48,22 +50,26 @@ ana@vm:~/site$ git status --short
 ana@vm:~/site$ git switch main
 Switched to branch 'main'
 M	style.css
+ana@vm:~/site$ git restore style.css
 ```
 
 The edit to `style.css` was there before the switch and after it, and Git listed it on each switch
 (`M	style.css`) so it does not go unnoticed. The two branches have the same `style.css`, so carrying the
-edit across could not damage anything.
+edit across could not damage anything. The `git restore` at the end is lesson 4's, and it throws
+the edit away so that the next part starts from a clean working tree.
 
 ## And when it would lose them, Git refuses
 
 Now an uncommitted edit to `index.html`, the one file the two branches disagree about:
 
 ```
+ana@vm:~/site$ sed -i 's/half past five/half past six/' index.html
 ana@vm:~/site$ git switch opening-hours
 error: Your local changes to the following files would be overwritten by checkout:
 	index.html
 Please commit your changes or stash them before you switch branches.
 Aborting
+ana@vm:~/site$ git restore index.html
 ```
 
 **Git will not overwrite a change it has no copy of.** Switching would have replaced `index.html` with

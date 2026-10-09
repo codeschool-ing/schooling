@@ -1,10 +1,10 @@
 ---
 title: LogQL: filtros, parsers, e métricas a partir de logs
-version: 1
+version: 2
 ---
 
 O LogQL, a linguagem de consulta do Loki, é um seletor de stream seguido de uma esteira de estágios
-separados por `|`. O payments foi ajustado para falhar uma cobrança em vinte, então há algo a achar. O
+separados por `|`. O payments falha uma cobrança em vinte desde o começo da aula, então há algo a achar. O
 estágio mais simples é um **filtro de linha**, `|= "texto"`, que mantém as linhas que contêm o texto,
 como o `grep`:
 

@@ -1,10 +1,27 @@
 ---
 title: Lendo a sequência de permissões
-version: 1
+version: 2
 ---
 
 Todo arquivo e pasta no Linux tem **um dono, um grupo e três conjuntos de permissões**. O `ls -l`
-mostra tudo:
+mostra tudo. Para ver isso no seu servidor, você precisa do que esta aula usa: mais duas pessoas, `bruno`
+e `carla`, que ficam do outro lado de cada permissão, e a pasta compartilhada do escritório em `/srv`,
+com dois arquivos. Cole isto; os comandos que criam pessoas são da aula 10, e o `chmod` está duas seções
+adiante:
+
+```sh
+sudo useradd -m -s /bin/bash bruno
+sudo useradd -m -s /bin/bash carla
+sudo mkdir /srv/office && sudo chown $USER:$USER /srv/office
+cd /srv/office && mkdir reports
+printf 'Q3 figures\n' > reports/q3.txt
+printf 'salaries\n' > payroll.txt
+chmod 755 /srv/office reports
+chmod 644 payroll.txt reports/q3.txt
+find /srv/office -exec touch -h -d '2026-09-01 09:00' {} +
+```
+
+Depois, a listagem:
 
 ```
 ana@server:/srv/office$ ls -l

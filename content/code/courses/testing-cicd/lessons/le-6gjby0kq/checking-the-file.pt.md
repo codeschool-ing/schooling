@@ -1,6 +1,6 @@
 ---
 title: Pegando um workflow quebrado antes de rodar
-version: 1
+version: 2
 ---
 
 Um erro num arquivo de workflow sai caro de achar pelo caminho de sempre: push, esperar um runner,
@@ -8,8 +8,9 @@ ler uma falha, corrigir, push de novo. Alguns erros nem falham. Uma expressão c
 vira uma string vazia, e um passo roda em silêncio com nada onde deveria haver um valor.
 
 Eis dois erros de digitação feitos de propósito: `matrix.pyton` no lugar de `matrix.python` no job
-suite, e `cache-dependancy-path` no lugar de `cache-dependency-path` no job fast. O actionlint roda de
-novo:
+suite, e `cache-dependancy-path` no lugar de `cache-dependency-path` no job fast. Faça os dois em
+`.github/workflows/ci.yml`, rode o actionlint de novo e ponha o arquivo de volta depois com
+`git checkout .github/workflows/ci.yml`:
 
 ```
 ana@laptop:~/shipquote$ actionlint; echo "exit status $?"

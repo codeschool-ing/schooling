@@ -1,6 +1,6 @@
 ---
 title: Filtros
-version: 1
+version: 2
 ---
 
 Algumas perguntas sobre quais pedaços devolver não têm nada a ver com significado. *Esta política ainda
@@ -11,7 +11,7 @@ responde a isso, e a aula 5 guardou as respostas ao lado de cada pedaço exatame
 ## O regulamento substituído, uma última vez
 
 ```
-ana@lab:~/rag$ python show.py vector "Who pays for the return postage?"
+ana@vm:~/rag$ python show.py vector "Who pays for the return postage?"
 1    0.806  Returns policy > Return postage  | Return postage is paid by the customer. You can 
 2    0.537  Returns and refunds policy > How to start a return  | 1. Open the order in your account and choose Ret
 3    0.514  Returns and refunds policy > How to start a return  | Returns are free. You do not pay for the label, 
@@ -25,7 +25,7 @@ problema é que um cliente nunca deveria ver uma política substituída como se 
 é uma regra, não uma nota.
 
 ```
-ana@lab:~/rag$ python -c "from search import vector; [print(r[1]) for r in vector(\"Who pays for the return postage?\", 3, \"status = %s AND audience = %s\", (\"current\", \"public\"))]"
+ana@vm:~/rag$ python -c "from search import vector; [print(r[1]) for r in vector(\"Who pays for the return postage?\", 3, \"status = %s AND audience = %s\", (\"current\", \"public\"))]"
 Returns and refunds policy > How to start a return
 Returns and refunds policy > How to start a return
 Returns and refunds policy > Gifts

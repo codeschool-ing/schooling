@@ -1,6 +1,6 @@
 ---
 title: Fábricas de dados de teste
-version: 1
+version: 2
 ---
 
 Um teste do store precisa de uma cotação para gravar: um CEP, um peso, um preço e um timestamp.
@@ -8,7 +8,7 @@ Escritos em todo teste, esses quatro valores são ruído, e escondem o único va
 de fato trata. Uma **fábrica** (*factory*) constrói um objeto válido com padrões razoáveis e deixa o
 teste sobrescrever só os campos que importam para ele.
 
-A fábrica do `shipquote`, do passo 7 do projeto, é uma função em `tests/factories.py`:
+A fábrica do `shipquote` é uma função, nova nesta aula. Salve como `tests/factories.py`:
 
 ```schooling-example
 {
@@ -16,7 +16,7 @@ A fábrica do `shipquote`, do passo 7 do projeto, é uma função em `tests/fact
   "file": "tests/factories.py",
   "parts": [
     {
-      "code": "\"\"\"Test data with sensible defaults: a test names only what it is about.\"\"\"\nfrom itertools import count\n\n_ids = count(1)",
+      "code": "\"\"\"Test data with sensible defaults: a test names only what it is about.\"\"\"\nfrom itertools import count\n\n_ids = count(1)\n\n",
       "note": "Um contador compartilhado por todas as chamadas, então cada cotação que a fábrica monta é diferente da anterior."
     },
     {
@@ -31,7 +31,8 @@ A fábrica do `shipquote`, do passo 7 do projeto, é uma função em `tests/fact
 }
 ```
 
-E os testes do store, reescritos para usá-la:
+E os testes do store, reescritos para usá-la, no lugar dos da aula 1. Salve como
+`tests/test_store.py`:
 
 ```python
 import sqlite3

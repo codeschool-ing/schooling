@@ -37,9 +37,8 @@ in absolute terms for a shop this size. **The decision is going to be made by th
 model that sorts 39 cases in 40 for $8 a month beats one that sorts 34 for $2, and the opposite may
 hold for drafting.
 
-Lesson 5 fills the column. In this course's lab the candidates are played by the stand-in's three
-models, one for each kind of row: `standin-large` for the expensive tier, `standin-small` for the
-cheap tier, `standin-local` for an open model ana would run herself. **Their answers were written by
-the course**, so the scores they get are the course's too. What carries over to real candidates is
-the harness, the scoring and the reading of the results, which are the parts that are hard to get
-right.
+Lesson 5 fills the column. The rows above need keys and a bill, so the candidates it measures are
+three small open models you can run yourself, the kind lesson 3 priced as a machine: `llama3.2:3b`,
+`qwen2.5:3b` and `llama3.2:1b`. **Their answers are real**, and they are not the rows above. What
+carries over to those is the harness, the scoring and the reading of the results, which are the
+parts that are hard to get right.

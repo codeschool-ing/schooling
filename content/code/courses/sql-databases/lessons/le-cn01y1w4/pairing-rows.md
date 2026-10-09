@@ -28,24 +28,55 @@ id  name                         id    customer_id  total
 Ana has three orders, Bruno has one, Célia has none, and order 1005 belongs to nobody — a guest
 checkout, from lesson 1's optional relationship.
 
-## Pairing them
+They are small on purpose, and they are not the shop: a database of their own keeps them apart.
+Save this as `joins.sql`, the same way as `shop.sql` in lesson 1:
 
 ```sql
-SELECT c.name, o.id, o.total
-FROM   customers c
-JOIN   orders o ON o.customer_id = c.id;
+-- joins.sql: the two tables of lesson 5, in a database of their own.
+CREATE TABLE customers (
+    id   integer PRIMARY KEY,
+    name text    NOT NULL
+);
+
+CREATE TABLE orders (
+    id          integer PRIMARY KEY,
+    customer_id integer REFERENCES customers (id),
+    total       numeric(10,2) NOT NULL
+);
+
+INSERT INTO customers (id, name) VALUES
+    (1, 'Ana Lopes'), (2, 'Bruno Sá'), (3, 'Célia Reis');
+
+INSERT INTO orders (id, customer_id, total) VALUES
+    (1001, 1, 34.90), (1002, 2, 69.80), (1003, 1, 51.00),
+    (1004, 1, 34.90), (1005, NULL, 12.00);
 ```
 
-```
- name       | id   | total
-------------+------+-------
- Ana Lopes  | 1001 | 34.90
- Ana Lopes  | 1003 | 51.00
- Ana Lopes  | 1004 | 34.90
- Bruno Sá   | 1002 | 69.80
+```sh
+createdb joins
+psql joins -f joins.sql
+psql joins
 ```
 
-Four rows. Read them as pairs rather than as a table:
+The prompt says `joins=#` from here to the end of the lesson.
+
+## Pairing them
+
+```
+joins=# SELECT c.name, o.id, o.total
+joins-# FROM   customers c
+joins-# JOIN   orders o ON o.customer_id = c.id;
+   name    |  id  | total 
+-----------+------+-------
+ Ana Lopes | 1001 | 34.90
+ Bruno Sá  | 1002 | 69.80
+ Ana Lopes | 1003 | 51.00
+ Ana Lopes | 1004 | 34.90
+(4 rows)
+```
+
+Four rows, in the order the engine happened to meet them — without an `ORDER BY` there is no
+other promise, which is lesson 4's rule. Read them as pairs rather than as a table:
 
 - `(Ana, 1001)` — the condition holds, so it is a row.
 - `(Ana, 1002)` — Bruno's order, so `o.customer_id = c.id` is false. Not a row.

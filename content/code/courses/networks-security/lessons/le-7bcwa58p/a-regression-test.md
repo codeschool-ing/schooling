@@ -29,10 +29,11 @@ The test is a short script that tries each line from the machine it names and pr
 whose result differs:
 
 ```schooling-example
-{"language": "sh", "file": "matrix-test.sh", "parts": [{"code": "#!/bin/bash\n# Try every cell of matrix.expected from the machine it starts on,\n# and print each cell whose result differs from what was expected.\nfail=0", "note": "Silence means the matrix holds. A test that prints every passing cell buries the one that failed."}, {"code": "while read -r from target want; do\n  got=$(bash /var/tmp/nslab.sh exec \"$from\" ana \"probe $target\" | awk '{print $2}')", "note": "In the lab, `lab.sh exec` runs `probe` on the machine in the first column, so the connection really starts in that zone. On real equipment this line is an SSH command to a small test machine in each zone, or a monitoring agent that can open connections."}, {"code": "  if [ \"$got\" != \"$want\" ]; then\n    printf '%-7s %-12s expected %-8s got %s\\n' \"$from\" \"$target\" \"$want\" \"$got\"\n    fail=1\n  fi\ndone < matrix.expected\nexit $fail", "note": "Any difference is printed and makes the exit code 1, so the test can gate an automated change: if it fails, the change is rolled back before anybody is paged."}]}
+{"language": "sh", "file": "matrix-test.sh", "parts": [{"code": "#!/bin/bash\n# Try every cell of matrix.expected from the machine it starts on,\n# and print each cell whose result differs from what was expected.\nfail=0", "note": "Silence means the matrix holds. A test that prints every passing cell buries the one that failed."}, {"code": "while read -r from target want; do\n  got=$(sudo bash ~/nslab/nslab.sh exec \"$from\" \"$USER\" \"probe $target\" | awk '{print $2}')", "note": "On your own computer, `nslab.sh exec` runs `probe` on the machine in the first column, as you, so the connection really starts in that zone. On real equipment this line is an SSH command to a small test machine in each zone, or a monitoring agent that can open connections."}, {"code": "  if [ \"$got\" != \"$want\" ]; then\n    printf '%-7s %-12s expected %-8s got %s\\n' \"$from\" \"$target\" \"$want\" \"$got\"\n    fail=1\n  fi\ndone < matrix.expected\nexit $fail", "note": "Any difference is printed and makes the exit code 1, so the test can gate an automated change: if it fails, the change is rolled back before anybody is paged."}]}
 ```
 
-It runs on the lab's own host, the one machine that can start a connection from every zone. Against
+It runs on your own computer, the one machine that can start a connection from every zone, from a
+directory of its own with `matrix.expected` beside it; `sudo` may ask for your password once. Against
 the rule set that still carries the `/16` mistake from section 03:
 
 ```

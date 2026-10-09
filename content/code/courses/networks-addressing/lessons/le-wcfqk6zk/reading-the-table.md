@@ -1,6 +1,6 @@
 ---
 title: Reading a routing table
-version: 1
+version: 2
 ---
 
 The usual picture of a router is a box that knows the network: it can see where things are and
@@ -17,6 +17,37 @@ dynamically: every route in the lesson is typed by hand, which is lesson 15's su
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"The lab for this lesson. pc1, 10.20.10.21, is cabled to the router r1, which is 10.20.10.1 on eth0. r1 has two more cables: eth1, 10.20.1.1, on the link 10.20.1.0/30 to the router ra at 10.20.1.2; and eth2, 10.20.2.1, on the link 10.20.2.0/30 to the router rb at 10.20.2.2. ra (10.30.0.1) and rb (10.30.0.2) both sit on the far network, 10.30.0.0/16, where far1 is 10.30.5.10 and far2 is 10.30.7.10.\"><rect x=\"20\" y=\"100\" width=\"120\" height=\"50\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"30\" y=\"116\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">pc1</text><text x=\"30\" y=\"134\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">10.20.10.21</text><line x1=\"140\" y1=\"125\" x2=\"190\" y2=\"125\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.5\"></line><rect x=\"190\" y=\"72\" width=\"124\" height=\"106\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"200\" y=\"90\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">r1</text><text x=\"200\" y=\"108\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">router</text><text x=\"200\" y=\"130\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\">eth0 10.20.10.1</text><text x=\"200\" y=\"146\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\">eth1 10.20.1.1</text><text x=\"200\" y=\"162\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\">eth2 10.20.2.1</text><line x1=\"314\" y1=\"106\" x2=\"440\" y2=\"55\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.5\"></line><line x1=\"314\" y1=\"144\" x2=\"440\" y2=\"195\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.5\"></line><text x=\"352\" y=\"62\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">10.20.1.0/30</text><text x=\"352\" y=\"192\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">10.20.2.0/30</text><rect x=\"440\" y=\"24\" width=\"96\" height=\"62\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"450\" y=\"39\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">ra</text><text x=\"450\" y=\"56\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">10.20.1.2</text><text x=\"450\" y=\"72\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">10.30.0.1</text><line x1=\"536\" y1=\"55\" x2=\"572\" y2=\"55\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.5\"></line><rect x=\"440\" y=\"164\" width=\"96\" height=\"62\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"450\" y=\"179\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">rb</text><text x=\"450\" y=\"196\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">10.20.2.2</text><text x=\"450\" y=\"212\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">10.30.0.2</text><line x1=\"536\" y1=\"195\" x2=\"572\" y2=\"195\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.5\"></line><rect x=\"572\" y=\"14\" width=\"138\" height=\"222\" rx=\"3\" fill=\"none\" stroke=\"var(--wire)\" stroke-width=\"1.5\" stroke-dasharray=\"4 4\"></rect><text x=\"584\" y=\"34\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">the far network</text><text x=\"584\" y=\"50\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">10.30.0.0/16</text><rect x=\"584\" y=\"80\" width=\"112\" height=\"44\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"594\" y=\"95\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">far1</text><text x=\"594\" y=\"111\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">10.30.5.10</text><rect x=\"584\" y=\"132\" width=\"112\" height=\"44\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"594\" y=\"147\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">far2</text><text x=\"594\" y=\"163\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">10.30.7.10</text></svg>", "caption": "The lab for this lesson: r1 has two ways to the far network, through ra and through rb, and starts knowing neither."}
 ```
+
+Save it as `~/netlab/paths.sh` and build it with `sudo bash ~/netlab/netlab.sh up paths`:
+
+```bash
+# ~/netlab/paths.sh: a router with two ways out. r1 is cabled to ra and to rb,
+# and both sit on the same far network, where far1 and far2 live. No routing
+# protocol: FRR runs on r1 with nothing configured, so its table can be read
+# beside the kernel's.
+#
+#                 +-- ra (10.20.1.0/30) --+
+#   pc1 --- r1 ---+                       +--- 10.30.0.0/16: far1 .5.10, far2 .7.10
+#   10.20.10.0/24 +-- rb (10.20.2.0/30) --+    (ra .0.1, rb .0.2)
+local n
+for n in pc1 sw9 far1 far2; do node $n; done
+node r1 router; node ra router; node rb router
+link pc1 eth0 r1 eth0; addr pc1 eth0 10.20.10.21/24; addr r1 eth0 10.20.10.1/24; gw pc1 10.20.10.1
+link r1 eth1 ra eth0; addr r1 eth1 10.20.1.1/30; addr ra eth0 10.20.1.2/30
+link r1 eth2 rb eth0; addr r1 eth2 10.20.2.1/30; addr rb eth0 10.20.2.2/30
+link ra eth1 sw9 p1; link rb eth1 sw9 p2; link far1 eth0 sw9 p3; link far2 eth0 sw9 p4
+switch sw9 "p1 p2 p3 p4"
+addr ra eth1 10.30.0.1/16; addr rb eth1 10.30.0.2/16
+addr far1 eth0 10.30.5.10/16; addr far2 eth0 10.30.7.10/16
+gw far1 10.30.0.1; gw far2 10.30.0.1
+ip -n ra route add 10.20.0.0/16 via 10.20.1.1
+ip -n rb route add 10.20.0.0/16 via 10.20.2.1
+echo "hostname r1" | frr r1
+```
+
+ra and rb each get one route back towards the office in the file; r1 gets none, and the last line
+starts FRR on it with nothing configured, so that its view of the table can be read beside the
+kernel's in the section on administrative distance.
 
 This is r1's table before anybody has typed anything, followed by pc1 trying to reach far1:
 

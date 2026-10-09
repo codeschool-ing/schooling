@@ -9,11 +9,11 @@ answer is different for each kind.
 
 ## A closed model is retired on the provider's schedule
 
-Providers publish dates after which a model identifier stops answering. The sheet carries them
-where it knows them, as `deprecation_date`, and `sheet retiring` lists every entry that has one:
+Providers publish dates after which a model identifier stops answering. The sheet carries them where
+it knows them, as `deprecation_date`, and `python sheet.py retiring` lists every entry that has one:
 
 ```
-ana@desk:~/desk$ sheet retiring --provider anthropic
+ana@desk:~/desk$ python sheet.py retiring --provider anthropic
 # LiteLLM model sheet at 21881c57, 4472 entries
 3 entries carry a deprecation date
 2026-06-09  claude-mythos-preview                              anthropic
@@ -26,7 +26,7 @@ Two dates, and today, as this course is recorded, one of them is already past. *
 instead of a reply. DeepSeek's two API names had a date too:
 
 ```
-ana@desk:~/desk$ sheet retiring --provider deepseek
+ana@desk:~/desk$ python sheet.py retiring --provider deepseek
 # LiteLLM model sheet at 21881c57, 4472 entries
 4 entries carry a deprecation date
 2026-07-24  deepseek-chat                                      deepseek
@@ -38,7 +38,7 @@ ana@desk:~/desk$ sheet retiring --provider deepseek
 And OpenAI's list is long enough to need `head`:
 
 ```
-ana@desk:~/desk$ sheet retiring --provider openai | head -6
+ana@desk:~/desk$ python sheet.py retiring --provider openai | head -6
 # LiteLLM model sheet at 21881c57, 4472 entries
 44 entries carry a deprecation date
 2026-07-23  computer-use-preview                               openai

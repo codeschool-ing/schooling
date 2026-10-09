@@ -1,6 +1,6 @@
 ---
 title: `sed`, and the one command that is ninety per cent of it
-version: 1
+version: 2
 ---
 
 `sed` is a stream editor: it reads lines, applies commands to them, and prints the result. It has a
@@ -69,8 +69,8 @@ app started
 
 ```
 ana@vm:~/work$ sed "1d" data/sales.csv | head -2
-north,ana,Q1,171,8721
-north,bruno,Q1,49,4116
+north,ana,Q1,145,18850
+north,bruno,Q1,275,23100
 ```
 
 **`1d` deletes the first line**, which is the header-dropping idiom alongside section 05's

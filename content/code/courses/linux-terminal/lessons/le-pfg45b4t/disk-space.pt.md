@@ -1,35 +1,35 @@
 ---
 title: Espaço em disco, e três jeitos de um disco cheio não estar cheio
-version: 1
+version: 2
 ---
 
 ```
 ana@vm:~$ df -h /
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/vda        252G   11G   27G  30% /
+/dev/vda        252G   11G   29G  28% /
 ```
 
-Leia aquela linha com cuidado. **252 gigabytes no total, 11 usados, 27
-disponíveis — e 11 mais 27 não dá 252.**
+Leia aquela linha com cuidado. **252 gigabytes no total, 11 usados, 29
+disponíveis — e 11 mais 29 não dá 252.**
 
 Isso não é bug e é a primeira coisa a entender sobre o `df`:
 
 ```
 ana@vm:~$ stat -f / | head -6
   File: "/"
-    ID: 98cd458b5846bde Namelen: 255     Type: ext2/ext3
+    ID: ea3c3688a915b271 Namelen: 255     Type: ext2/ext3
 Block size: 4096       Fundamental block size: 4096
-Blocks: Total: 66053021   Free: 63208038   Available: 6867148
-Inodes: Total: 16777216   Free: 16553026
+Blocks: Total: 66053021   Free: 63275800   Available: 7433682
+Inodes: Total: 16777216   Free: 16531303
 ```
 
 **`Free` e `Available` são números diferentes.** 63 milhões de blocos não estão
-em uso; 6,8 milhões deles estão disponíveis *para você*. O resto é reservado — por
+em uso; 7,4 milhões deles estão disponíveis *para você*. O resto é reservado — por
 padrão o ext4 guarda 5% para o `root`, para que um disco cheio não impeça a
 máquina de ser consertada, e nesta máquina uma cota reserva bem mais que isso.
 
 E o `Use%` é calculado contra o que você pode usar, não contra o total:
-11 / (11 + 27) dá 29%, que arredonda para os 30% da saída. **O `df` está te
+11 / (11 + 29) dá 27,5%, que arredonda para os 28% da saída. **O `df` está te
 dizendo a verdade sobre um número que você não pediu**, e no momento em que você
 precisar que `Size` seja igual a `Used + Avail` você está com o modelo mental
 errado.
@@ -40,22 +40,35 @@ má ideia.
 
 ## Cheio com espaço livre
 
+Isto precisa de um sistema de arquivos pequeno o bastante para encher, então crie
+um dentro de um arquivo, como a aula 3 seção 12 fez, com pouquíssimos inodes — o
+`-N 256` pede 256:
+
+```sh
+cd ~
+truncate -s 32M small.img
+mkfs.ext4 -q -N 256 small.img
+sudo mkdir -p /mnt/small
+sudo mount -o loop small.img /mnt/small
+sudo chown ana:ana /mnt/small
+```
+
 ```
 ana@vm:/mnt/small$ df -h /mnt/small; df -i /mnt/small
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/loop0       28M   24K   26M   1% /mnt/small
+/dev/loop1       28M   24K   26M   1% /mnt/small
 Filesystem     Inodes IUsed IFree IUse% Mounted on
-/dev/loop0        256    11   245    5% /mnt/small
+/dev/loop1        256    11   245    5% /mnt/small
 ana@vm:/mnt/small$ cd /mnt/small && for i in $(seq 1 300); do touch f$i 2>/dev/null; done; ls | wc -l
 246
 ana@vm:/mnt/small$ touch one-more
 touch: cannot touch 'one-more': No space left on device
 ana@vm:/mnt/small$ df -h /mnt/small
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/loop0       28M   24K   26M   1% /mnt/small
+/dev/loop1       28M   24K   26M   1% /mnt/small
 ana@vm:/mnt/small$ df -i /mnt/small
 Filesystem     Inodes IUsed IFree IUse% Mounted on
-/dev/loop0        256   256     0  100% /mnt/small
+/dev/loop1        256   256     0  100% /mnt/small
 ```
 
 **`No space left on device`, com 26 megabytes livres e 1% usado.**
@@ -75,20 +88,32 @@ O `df -i` é a outra metade, e olhar não custa nada.
 
 ## Cheio com o arquivo apagado
 
-O segundo jeito, e o que mais desperdiça tempo:
+O segundo jeito, e o que mais desperdiça tempo. Esvazie o sistema de arquivos
+pequeno, e crie um processo que faz o que uma rotação de log descuidada faz: ele
+abre o `big.log`, escreve vinte megabytes nele, apaga-o, e continua rodando com o
+arquivo ainda aberto, como descritor 9:
+
+```sh
+cd ~
+rm -f /mnt/small/f* /mnt/small/one-more
+bash -c 'exec 9> /mnt/small/big.log; head -c 20M /dev/zero >&9; rm /mnt/small/big.log; exec sleep 3600' &
+sleep 1
+```
+
+Agora olhe o disco como alguém que não viu aquilo olharia:
 
 ```
 ana@vm:~$ df -h /mnt/small
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/loop0       28M   21M  5.7M  78% /mnt/small
+/dev/loop1       28M   21M  5.7M  78% /mnt/small
 ana@vm:~$ du -sh /mnt/small
 du: cannot read directory '/mnt/small/lost+found': Permission denied
 20K     /mnt/small
 ana@vm:~$ ls -la /mnt/small
 total 24
-drwxr-xr-x 3 ana  ana   4096 Sep 15 11:28 .
-drwxr-xr-x 8 root root  4096 Sep 15 11:27 ..
-drwx------ 2 root root 16384 Sep 15 11:27 lost+found
+drwxr-xr-x 3 ana  ana   4096 Oct  7 13:48 .
+drwxr-xr-x 8 root root  4096 Oct  7 13:21 ..
+drwx------ 2 root root 16384 Oct  7 13:48 lost+found
 ```
 
 **O `df` diz que 21 megabytes estão usados. O `du` diz 20 kilobytes. O `ls` não
@@ -102,7 +127,7 @@ A resposta:
 ```
 ana@vm:~$ lsof +L1 /mnt/small
 COMMAND   PID USER   FD   TYPE DEVICE SIZE/OFF NLINK NODE NAME
-sleep   16238  ana    9w   REG    7,0 20971520     0   12 /mnt/small/big.log (deleted)
+sleep   13124  ana    9w   REG    7,1 20971520     0   12 /mnt/small/big.log (deleted)
 ```
 
 **`NLINK 0` e `(deleted)`.** Um processo tem o arquivo aberto; alguém apagou o
@@ -117,12 +142,22 @@ caso e nada mais.
 processo, ou, se você não puder, truncar o arquivo pelo descritor:
 
 ```sh
-: > /proc/16238/fd/9        # the space comes back immediately
+: > /proc/13124/fd/9        # the space comes back immediately
 ```
 
 É o que acontece quando alguém rotaciona um log apagando-o em vez de usar o
 `logrotate`: o disco continua cheio até o serviço ser reiniciado, e o `du` jura
 que o espaço não está em uso.
+
+Aqui, encerrar o processo é o reinício, e ele devolve o espaço. Depois o sistema
+de arquivos pequeno pode ir embora:
+
+```sh
+cd ~
+pkill -xf 'sleep 3600'
+sudo umount /mnt/small
+rm small.img
+```
 
 ## Achar o espaço
 

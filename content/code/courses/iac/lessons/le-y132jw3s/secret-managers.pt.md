@@ -1,6 +1,6 @@
 ---
 title: Deixar a AWS gerar e guardar a senha
-version: 1
+version: 2
 ---
 
 Um argumento write-only ainda deixa a senha nas mãos do Terraform por um instante, e ainda é ele quem
@@ -8,7 +8,7 @@ a escolhe e decide quando ela muda. Para um banco de dados existe um arranjo mai
 serviço de banco gera a senha, guarda-a no Secrets Manager, e o Terraform nunca a vê.** No RDS isso é
 um argumento, `manage_master_user_password`.
 
-O banco da Ana para a loja, sem senha em lugar nenhum do arquivo:
+O banco da Ana para a loja, em `~/shop/db/main.tf`, sem senha em lugar nenhum do arquivo:
 
 ```hcl
 terraform {

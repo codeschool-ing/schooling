@@ -45,18 +45,20 @@ EXPLAIN QUERY PLAN SELECT * FROM orders WHERE customer_id = 42;
 ```
 
 `EXPLAIN` sozinho imprime o bytecode que o SQLite vai executar, que não é o que ninguém quer.
-`EXPLAIN QUERY PLAN` imprime uma linha por passo:
+`EXPLAIN QUERY PLAN` imprime uma linha por passo, desenhada como uma árvore pequena. Aqui está na loja
+da aula 1 carregada no SQLite, que a aula 12 mostra como fazer; você não precisa dela para ler isto:
 
 ```
-EXPLAIN QUERY PLAN SELECT * FROM orders WHERE customer_id = 42;
-  SCAN orders
-
-EXPLAIN QUERY PLAN SELECT * FROM customers WHERE email = 'user42@example.com';
-  SEARCH customers USING INDEX sqlite_autoindex_customers_1 (email=?)
-
-CREATE INDEX orders_customer_id_idx ON orders (customer_id);
-EXPLAIN QUERY PLAN SELECT * FROM orders WHERE customer_id = 42;
-  SEARCH orders USING INDEX orders_customer_id_idx (customer_id=?)
+sqlite> EXPLAIN QUERY PLAN SELECT * FROM orders WHERE customer_id = 42;
+QUERY PLAN
+`--SCAN orders
+sqlite> EXPLAIN QUERY PLAN SELECT * FROM customers WHERE email = 'user42@example.com';
+QUERY PLAN
+`--SEARCH customers USING INDEX sqlite_autoindex_customers_1 (email=?)
+sqlite> CREATE INDEX orders_customer_id_idx ON orders (customer_id);
+sqlite> EXPLAIN QUERY PLAN SELECT * FROM orders WHERE customer_id = 42;
+QUERY PLAN
+`--SEARCH orders USING INDEX orders_customer_id_idx (customer_id=?)
 ```
 
 `SCAN` é uma leitura completa da tabela e `SEARCH … USING INDEX` é uma busca por índice; esse par

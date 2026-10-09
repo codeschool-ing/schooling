@@ -23,7 +23,7 @@ Estas são as linhas que vale ler, com o que o card do all-MiniLM-L6-v2 diz para
 ## Os arquivos discordam entre si, e o card decide
 
 Os pesos chegam com arquivos de configuração, e dá vontade de ler os limites neles. Eis o que três
-dos arquivos que o `lab.sh` baixou dizem:
+dos arquivos que o `setup.sh` baixou na aula 1 dizem:
 
 ```
 ana@lab:~/emb$ jq "{vocab_size, hidden_size, num_hidden_layers, max_position_embeddings}" $MINILM_DIR/config.json

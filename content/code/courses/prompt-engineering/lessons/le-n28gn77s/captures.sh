@@ -8,10 +8,12 @@
 #   sudo bash ../../lab.sh tools     # once
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
-# Staged: three prompts ana wrote, direct.txt, step1.txt and step2.txt, all
-# shown in full in the section "step-back". The <rules> block inside
-# step2.txt is the course's illustration of a reply to step1.txt, and the
-# lesson says so; no model wrote it. tok is the real tokenizer in lab.sh.
+# Staged with put: direct.txt and step1.txt, the handbook's opening hours and a
+# question, shown in the lesson. rules.txt is the model's reply to step1.txt,
+# and step2.txt is built from it by the command the lesson shows.
+#
+# THE MODEL'S REPLIES (every ask below) are llama3.2:3b served by Ollama 0.40.0,
+# at temperature 0, captured on 7 October 2026.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 set -uo pipefail
@@ -39,15 +41,22 @@ On public holidays the café follows the Sunday hours.
 QUESTION='Today is Wednesday, and it is a public holiday. At 11:45 a customer asks for a hot toastie. Can the kitchen take the order? Answer yes or no, then one sentence saying why.'
 { printf '%s\n' "$HOURS" "$QUESTION"; } | put direct.txt
 { printf '%s\n' "$HOURS" 'Do not answer any particular question yet. Step back: what general rules decide the last time the kitchen takes a hot food order on a given day? List the rules from the handbook that apply, and what they give for each kind of day.'; } | put step1.txt
-{ printf '%s\n' "$HOURS" '<rules>
-1. The closing time depends on the day: 18:00 from Monday to Saturday, 12:00 on Sunday.
-2. A public holiday follows the Sunday hours, whatever day of the week it falls on.
-3. The kitchen stops taking hot food orders 30 minutes before closing.
-So the last hot food order is at 17:30 on an ordinary day from Monday to Saturday, and at 11:30 on a Sunday or a public holiday.
-</rules>
-' "Using the rules above, answer the question. $QUESTION"; } | put step2.txt
 
-block step-back
+block direct
+on 'cat direct.txt'
+on 'ask - --temperature 0 < direct.txt'
+block step1
+on 'tail -1 step1.txt'
+on 'ask - --temperature 0 --plain < step1.txt > rules.txt; cat rules.txt'
+block step2
+on '{ sed -n "1,/^<\/handbook>/p" direct.txt; echo; echo "<rules>"; cat rules.txt; echo "</rules>"; echo; echo "Using the rules above, answer the question. $(tail -1 direct.txt)"; } > step2.txt'
+on 'ask - --temperature 0 < step2.txt'
+block gas
+on 'ask "What happens to the pressure of a gas if its temperature is doubled and its volume made eight times larger? Answer in two sentences." --temperature 0'
+on 'ask "Which physical law relates the pressure, temperature and volume of a gas? State it as a formula, in one line." --temperature 0 --plain > law.txt; cat law.txt'
+on 'ask "$(cat law.txt)
+
+Using that law: What happens to the pressure of a gas if its temperature is doubled and its volume made eight times larger? Answer in two sentences." --temperature 0'
 on 'python3 -c "print(2 / 8)"'
 
 block when-it-helps

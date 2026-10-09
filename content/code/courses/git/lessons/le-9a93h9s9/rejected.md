@@ -1,10 +1,22 @@
 ---
 title: When a push is rejected
-version: 1
+version: 2
 ---
 
 Ana commits a change to the opening days. Meanwhile, without her knowing, Bruno commits and pushes a
-change to the stylesheet. Ana pushes:
+change to the stylesheet. Play both parts, Ana's in `~/site` and Bruno's in his copy:
+
+```bash
+sed -i 's/half past five/half past five, Monday to Saturday/' index.html
+git commit -qam 'Say which days we open'
+cd ~/bruno/site
+printf 'h1 { color: darkorange; }\np { line-height: 1.5; }\n' > style.css
+git commit -qam 'Give paragraphs more room'
+git push -q
+cd ~/site
+```
+
+Then Ana pushes:
 
 ```
 ana@vm:~/site$ git push

@@ -5,7 +5,10 @@ version: 1
 
 Once software runs on one laptop, it looks for the next machine. On a flat staff LAN it finds every
 other computer answering on the ports Windows uses to share files, **445**, and to offer remote
-desktop, **3389**. On `desk`, both answer to anybody on the segment:
+desktop, **3389**. In the lab two listeners stand in for those services; start them on `desk`, as
+root, with
+`for p in 445 3389; do setsid socat TCP-LISTEN:$p,bind=192.168.10.21,fork,reuseaddr SYSTEM:"echo desk $p" </dev/null >/dev/null 2>&1 & done`.
+On `desk`, both answer to anybody on the segment:
 
 ```
 ana@laptop:~$ probe desk:445 desk:3389

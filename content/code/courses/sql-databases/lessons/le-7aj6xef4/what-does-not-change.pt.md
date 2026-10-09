@@ -12,32 +12,29 @@ ordenação. O mesmo texto, mandado para três motores:
 
 ```
 shop=# SELECT c.city, count(DISTINCT o.id) AS orders, sum(l.quantity * l.unit_price) AS revenue FROM customers c JOIN orders o ON o.customer_id = c.id JOIN order_lines l ON l.order_id = o.id WHERE o.status <> 'cancelled' GROUP BY c.city ORDER BY revenue DESC;
-   city    | orders | revenue 
------------+--------+---------
- Curitiba  |      1 | 2998.00
- Recife    |      2 | 1928.70
- Sao Paulo |      1 |  228.90
-(3 rows)
+   city   | orders | revenue 
+----------+--------+---------
+ Curitiba |      1 | 2998.00
+ Recife   |      3 | 2117.70
+(2 rows)
 ```
 
 ```
 mysql> SELECT c.city, count(DISTINCT o.id) AS orders, sum(l.quantity * l.unit_price) AS revenue FROM customers c JOIN orders o ON o.customer_id = c.id JOIN order_lines l ON l.order_id = o.id WHERE o.status <> 'cancelled' GROUP BY c.city ORDER BY revenue DESC;
-+-----------+--------+---------+
-| city      | orders | revenue |
-+-----------+--------+---------+
-| Curitiba  |      1 | 2998.00 |
-| Recife    |      2 | 1928.70 |
-| Sao Paulo |      1 |  228.90 |
-+-----------+--------+---------+
++----------+--------+---------+
+| city     | orders | revenue |
++----------+--------+---------+
+| Curitiba |      1 | 2998.00 |
+| Recife   |      3 | 2117.70 |
++----------+--------+---------+
 ```
 
 ```
 sqlite> SELECT c.city, count(DISTINCT o.id) AS orders, sum(l.quantity * l.unit_price) AS revenue FROM customers c JOIN orders o ON o.customer_id = c.id JOIN order_lines l ON l.order_id = o.id WHERE o.status <> 'cancelled' GROUP BY c.city ORDER BY revenue DESC;
-city       orders  revenue
----------  ------  -------
-Curitiba   1       2998   
-Recife     2       1928.7 
-Sao Paulo  1       228.9  
+city      orders  revenue
+--------  ------  -------
+Curitiba  1       2998   
+Recife    3       2117.7 
 ```
 
 As mesmas linhas, na mesma ordem, com as mesmas contagens. As molduras ao redor são dos clientes —

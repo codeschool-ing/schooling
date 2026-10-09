@@ -5,9 +5,24 @@ version: 1
 
 **The Vertical Pod Autoscaler has three parts**: a recommender that watches usage and computes
 requests, an updater that evicts pods whose requests are far from the recommendation, and an
-admission controller that writes the recommended requests into new pods. This lab installs only the
-recommender, with the project's CRDs and RBAC (`lab.sh vpa`), because reading recommendations is the
-safe first step, and it is what `updateMode: "Off"` asks for anyway.
+admission controller that writes the recommended requests into new pods. This lesson installs only the
+recommender, with the project's CRDs and RBAC, because reading recommendations is the safe first step,
+and it is what `updateMode: "Off"` asks for anyway. It reads usage from metrics-server, so a fresh
+`./up.sh` gets both, metrics-server as in lesson 21 and then the recommender from the project's own
+manifests, at the release this course used:
+
+```sh
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.9.0/components.yaml
+```
+
+```sh
+BASE=https://raw.githubusercontent.com/kubernetes/autoscaler/vertical-pod-autoscaler-1.8.0/vertical-pod-autoscaler/deploy
+kubectl apply -f $BASE/vpa-v1-crd-gen.yaml -f $BASE/vpa-rbac.yaml -f $BASE/recommender-deployment.yaml
+kubectl -n kube-system rollout status deployment/vpa-recommender
+```
+
+On the machine this course was recorded on, both images were built from the projects' source at those
+versions, because their registry could not be reached from it; the manifests are the same.
 
 The shop, with requests that are wrong on purpose, far less CPU than it uses under load and far more
 memory than it uses:
@@ -68,7 +83,13 @@ service/shop created
 verticalpodautoscaler.autoscaling.k8s.io/shop created
 ```
 
-A busybox pod kept the shop busy, and four minutes later:
+A busybox pod kept the shop busy, asking it for a tenth of a second of work in a loop:
+
+```sh
+kubectl run load --image=busybox:1.37 --restart=Never --command -- sh -c "while true; do wget -qO- shop/work?ms=100 >/dev/null; done"
+```
+
+Four minutes later:
 
 ```
 ana@laptop:~/shop$ kubectl get vpa shop

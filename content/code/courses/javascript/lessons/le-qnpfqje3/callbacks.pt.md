@@ -1,11 +1,22 @@
 ---
 title: Callbacks
-version: 1
+version: 2
 ---
 
 O jeito mais antigo de dizer "faça isto quando o trabalho terminar" é **passar a função que deve
 rodar nessa hora**. As funções de arquivo originais do Node funcionam assim, e criaram uma convenção
 que você ainda vai ver: o primeiro parâmetro do callback é um erro, ou `null` se não houve nenhum.
+
+Os programas desta aula leem quatro arquivos JSON pequenos, um livro ou um autor cada. Crie-os
+em `~/js` antes:
+
+```sh
+mkdir -p books authors
+echo '{ "id": 7, "title": "Iracema", "authorId": 3 }' > books/7.json
+echo '{ "id": 12, "title": "Dom Casmurro", "authorId": 1 }' > books/12.json
+echo '{ "id": 1, "name": "Machado de Assis" }' > authors/1.json
+echo '{ "id": 3, "name": "José de Alencar" }' > authors/3.json
+```
 
 ```javascript
 const fs = require("node:fs");

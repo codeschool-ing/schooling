@@ -1,9 +1,9 @@
 ---
 title: Áudio é cobrado por segundo e limitado por byte
-version: 1
+version: 2
 ---
 
-Uma transcrição é cobrada pelos segundos, então a codificação não muda o preço. Ela muda duas outras coisas: se o arquivo cabe no limite de envio, e o que o modelo ouve. Este programa codifica a ligação de quatro jeitos, manda cada uma ao Whisper base do labmm, e compara o que voltou com o roteiro da ligação:
+Uma transcrição é cobrada pelos segundos, então a codificação não muda o preço. Ela muda duas outras coisas: se o arquivo cabe no limite de envio, e o que o modelo ouve. Este programa codifica a ligação de quatro jeitos, manda cada uma ao Whisper base pelo `audio_server.py` da aula 10 (inicie-o antes, num segundo terminal), e compara o que voltou com o roteiro da ligação:
 
 ```python
 """One call in four encodings: the bytes, how many minutes fit under 25 MB, and what Whisper heard."""
@@ -28,7 +28,8 @@ for name, args, ext in (("wav 16 kHz 16-bit", ["-ar", "16000", "-ac", "1"], "wav
     subprocess.run(["ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", "media/call-1042.wav", *args, out], check=True)
     size = os.path.getsize(out)
     with open(out, "rb") as f:
-        heard = OpenAI().audio.transcriptions.create(model="lab-whisper-base", file=f, response_format="text")
+        heard = OpenAI(base_url="http://localhost:8700/v1").audio.transcriptions.create(
+            model="whisper-base", file=f, response_format="text")
     wer = jiwer.wer(truth, heard, reference_transform=norm, hypothesis_transform=norm)
     print("%-24s %9d %10.0f %5.1f%%" % (name, size, LIMIT / size * seconds / 60, 100 * wer))
 ```

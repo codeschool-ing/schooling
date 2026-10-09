@@ -1,6 +1,6 @@
 ---
 title: Credentials on a machine
-version: 1
+version: 2
 ---
 
 A program that calls a cloud API needs credentials, exactly like a person. The obvious way to give
@@ -41,8 +41,19 @@ running on a managed service has an equivalent endpoint of its own.
 
 The CLI and the SDKs do not look in one place: they search a chain of sources in a fixed order and
 use the first that answers. You can watch the search on a laptop with the AWS CLI and no credentials
-at all. Nothing here reaches an AWS account; the environment and the home directory are empty on
-purpose, as the lesson's `captures.sh` sets up.
+at all. Nothing here reaches an AWS account.
+
+**Run this section in a shell with an empty environment and an empty home**, so nothing you already
+have takes part, and nothing the section writes lands among your own files. That includes the four
+variables lesson 5 exported, if the terminal you used then is still open:
+
+```sh
+env -i HOME="$(mktemp -d)" PATH="$HOME/.local/bin:/usr/bin:/bin" TERM="$TERM" bash
+```
+
+The new shell stays in the directory you were in, but its `~` is a new, empty directory, and its
+path holds the AWS CLI and the system and nothing else of yours. `exit` takes you back to the
+terminal you came from.
 
 ```
 ana@laptop:~/cloud$ aws --version
@@ -89,10 +100,13 @@ own: `container-role` for a container's endpoint and `iam-role` for the instance
 **On a virtual machine with a perfectly scoped role, one forgotten `AWS_ACCESS_KEY_ID` in the
 environment wins**, and every call quietly runs as whoever that key belongs to.
 
-This is what a long-lived key looks like when somebody does put one in a file. The pair is the example
-AWS prints in its own documentation and belongs to nobody:
+This is what a long-lived key looks like when somebody does put one in a file. `aws configure set`
+writes it there, one value at a time, and the pair is the example AWS prints in its own documentation,
+which belongs to nobody:
 
 ```
+ana@laptop:~/cloud$ aws configure set aws_access_key_id AKIAIOSFODNN7EXAMPLE
+ana@laptop:~/cloud$ aws configure set aws_secret_access_key wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
 ana@laptop:~/cloud$ cat ~/.aws/credentials
 [default]
 aws_access_key_id = AKIAIOSFODNN7EXAMPLE

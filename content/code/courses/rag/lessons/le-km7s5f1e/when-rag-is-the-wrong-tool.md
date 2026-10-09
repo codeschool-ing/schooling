@@ -1,6 +1,6 @@
 ---
 title: When retrieval is the wrong tool
-version: 1
+version: 2
 ---
 
 Retrieval answers questions whose answer is written down somewhere, in a passage short enough to
@@ -11,12 +11,14 @@ has, and the generator does its best with them.
 ## A question about the whole corpus
 
 ```
-ana@lab:~/rag$ python sections.py "Which documents mention a 14-day limit?"
+ana@vm:~/rag$ python sections.py "Which documents mention a 14-day limit?"
 [1] 0.414  privacy-notice > How long we keep it
-[2] 0.410  returns-policy > The return window
+[2] 0.409  returns-policy > The return window
 [3] 0.348  terms-of-sale > 6. The right of withdrawal
-The sources do not say.
-ana@lab:~/rag$ grep -l "14 days" data/docs/*.md
+None of the documents mention a 14-day limit. 
+
+However, [3] terms-of-sale > 6. The right of withdrawal mentions a 7-day limit for withdrawal from a purchase, and [2] returns-policy > The return window mentions a 7-day limit for the statutory right of withdrawal, but also mentions a 30-day limit for printed books.
+ana@vm:~/rag$ grep -l "14 days" data/docs/*.md
 data/docs/ebooks-and-audiobooks.md
 data/docs/returns-policy-2025.md
 data/docs/returns-policy.md
@@ -27,24 +29,40 @@ data/docs/seller-agreement.md
 three sections, none of which contains the phrase, because **a question about which documents say
 something is a question about all of them**, and a search returns the few nearest. Even a perfect
 search with k = 3 could not list four documents, and nothing in its output says it was cut short.
-extract-1 refused this time, because no sentence was similar enough. A real model given those three
-sections might have named them as the answer, a confident partial list with citations.
+
+The model, reading only those three, did the worst thing available: it answered the question about
+the whole corpus from three sections of it. *None of the documents mention a 14-day limit*, said with
+confidence, is false four times over. It then reported, correctly, the seven-day statutory withdrawal
+period and the thirty days for printed books, which nobody asked about. A reader has no way to see from the
+reply that it was built on three sections out of ninety-two.
 
 ## A question about everything
 
 ```
-ana@lab:~/rag$ python sections.py "Summarise all of our policies"
+ana@vm:~/rag$ python sections.py "Summarise all of our policies"
 [1] 0.272  support-handbook > How we write
 [2] 0.227  terms-of-sale > 10. Personal data
 [3] 0.202  privacy-notice > What we collect
-Quote the policy in your own words and link the help centre article. [1]
+Yes, you can return a book.
+
+To summarize our policies, we use your personal data as described in our privacy notice, which includes account data, order data, reading data, support data, and technical data. We store this data to provide you with a personalized experience and to improve our services.
+
+For more information on our policies, including our terms of sale, please refer to our help centre articles:
+
+* [1] How we write: This article explains our communication style and how we respond to customer inquiries.
+* [2] Terms of sale > 10. Personal data: This article describes how we use your personal data.
+* [3] Privacy notice > What we collect: This article provides a detailed overview of the types of personal data we collect and how we use it.
+
+If you have any further questions or concerns, please don't hesitate to ask. We will respond again on [insert date, if applicable].
 ```
 
-The best match scored 0.272, close to the floor, and the reply is a sentence about how support agents
-write. A summary of every policy needs every policy read. The tool for that is a batch job that reads
-each document, summarises it, then summarises the summaries, run when the documents change and stored
-like any other document. Lesson 15 builds the summarising step for conversations, and the same
-method serves documents.
+The best match scored 0.272, close to the floor, and the reply is a mess that reads like a reply. It
+opens by answering a question nobody asked, *Yes, you can return a book*; it summarises the privacy
+sections it was given as if they were all the policies; and it ends promising to *respond again on
+[insert date, if applicable]*. A summary of every policy needs every policy read. The tool for that is
+a batch job that reads each document, summarises it, then summarises the summaries, run when the
+documents change and stored like any other document. Lesson 15 builds the summarising step for
+conversations, and the same method serves documents.
 
 ## Three kinds of question that belong elsewhere
 

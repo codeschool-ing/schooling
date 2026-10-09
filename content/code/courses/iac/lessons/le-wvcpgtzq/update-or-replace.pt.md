@@ -1,6 +1,6 @@
 ---
 title: Atualizado no lugar, ou substituído
-version: 1
+version: 2
 ---
 
 Uma primeira imagem comum do Terraform é que editar uma linha edita a coisa. Mude a faixa da
@@ -10,7 +10,7 @@ e nada do conteúdo do antigo. Qual das duas coisas ele vai fazer é decidido pe
 argumento por argumento, e o plan conta antes de qualquer coisa se mexer.
 
 Esta aula trabalha numa configuração pequena em `~/shop/app`: a VPC da loja, uma sub-rede e a
-instância `web`. A Ana já aplicou uma vez, em silêncio, e fez commit no git:
+instância `web`. A Ana já aplicou uma vez e fez commit no Git:
 
 ```hcl
 terraform {
@@ -46,9 +46,20 @@ resource "aws_instance" "web" {
 }
 ```
 
+Para começar do mesmo ponto, salve-a como `~/shop/app/main.tf` e rode isto nesse diretório. O
+`.gitignore` deixa o provider e o state fora do Git:
+
+```sh
+terraform init
+terraform apply -auto-approve
+git init -q . && printf ".terraform/\n*.tfstate*\n" > .gitignore
+git add -A && git commit -qm 'the shop network and web'
+```
+
 Os ids de AMI são duas das imagens de exemplo que vêm com o moto, um Ubuntu mais antigo e um mais
-novo. São os mesmos em toda execução do laboratório, então podem ser citados; os ids `vpc-…` e
-`i-…` dos plans abaixo são inventados de novo a cada vez.
+novo. São os mesmos em todo moto, então podem ser citados; os ids `vpc-…` e `i-…` dos plans abaixo
+são inventados de novo a cada vez. **A AWS não tem imagens com esses dois ids.** Numa conta real
+você poria uma de verdade no lugar, buscada com um data source como a aula 5 fez.
 
 ## Uma mudança que a AWS faz no lugar
 
@@ -140,7 +151,7 @@ resumo diz `1 to add, 0 to change, 1 to destroy`, que é como uma substituição
 ## Uma substituição que se espalha
 
 Uma substituição dá ao recurso novo um id novo, e tudo o que referencia o id antigo tem de ir
-junto. A Ana tenta mudar a faixa da sub-rede:
+junto. A Ana volta a imagem com `git checkout main.tf` e tenta mudar a faixa da sub-rede:
 
 ```
 ana@laptop:~/shop/app$ git diff

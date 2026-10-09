@@ -1,14 +1,20 @@
 ---
 title: Stop the old, start the new
-version: 1
+version: 2
 ---
 
 Every deploy in lesson 7 did the same thing: stop the process that was running, start the new
 release, check it answers. That strategy has a name, **recreate**, and it has one property every
 other strategy in this lesson exists to remove. Between the stop and the start, nothing answers.
 
-Here production runs 1.5.0 on port 8300. A loop asks `/health` every 50 milliseconds and prints
-the status code; half a second in, `restart.sh` stops the process and starts it again.
+Here production runs 1.5.0 on port 8300, deployed the way lesson 7 deployed it:
+
+```sh
+ops/deploy.sh production dist/shipquote-1.5.0.tar.gz
+```
+
+A loop asks `/health` every 50 milliseconds and prints the status code; half a second in,
+`restart.sh` stops the process and starts it again.
 
 ```
 ana@laptop:~/shipquote$ for i in $(seq 60); do curl -s -o /dev/null -w "%{http_code} " --max-time 1 http://127.0.0.1:8300/health; sleep 0.05; done & sleep 0.5; ops/restart.sh production; wait; echo
@@ -40,4 +46,5 @@ version cannot read, or a job that must never run twice. It is also the simplest
 internal tool used during office hours a deploy at 7 in the morning costs nobody anything.
 
 What it should not be is the strategy nobody chose. The rest of this lesson is the alternatives,
-each one buying something with something else.
+each one buying something with something else. Stop this production now,
+`kill $(cat ~/envs/production/pid)`: from section 06 on, port 8300 belongs to the router.

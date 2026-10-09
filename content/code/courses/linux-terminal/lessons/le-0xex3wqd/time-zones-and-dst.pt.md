@@ -1,6 +1,6 @@
 ---
 title: Três da manhã de quem, e as duas noites do ano em que dá errado
-version: 1
+version: 2
 ---
 
 "Rode às três" tem uma pergunta escondida dentro, e a resposta não é a que você
@@ -24,7 +24,21 @@ porque remove esta pergunta. Uma frota em UTC tem uma três da manhã só.
 
 O conselho que você vai achar é pôr `CRON_TZ` no topo do crontab. No cron do Red
 Hat — o `cronie` — isso funciona e reagenda as linhas abaixo dele. No cron vixie
-do Debian e do Ubuntu, **não é uma diretiva de jeito nenhum**:
+do Debian e do Ubuntu, **não é uma diretiva de jeito nenhum**. Um crontab para
+descobrir isso, substituindo o anterior; a segunda linha pede 08:30 em Nova York,
+e a primeira diz, a cada minuto, o que recebeu e quando rodou:
+
+```sh
+cd ~/work/cron
+cat > tz.cron <<'END'
+MAILTO=""
+CRON_TZ=America/New_York
+* * * * * echo "CRON_TZ=[$CRON_TZ]  ran at $(date -u +\%H:\%M) UTC" >> /home/ana/work/cron/tzenv2.log
+30 8 * * * echo "08:30 New York?" >> /home/ana/work/cron/tz830.log
+END
+crontab tz.cron
+sleep 70
+```
 
 ```
 ana@vm:~/work/cron$ crontab -l
@@ -33,14 +47,14 @@ CRON_TZ=America/New_York
 * * * * * echo "CRON_TZ=[$CRON_TZ]  ran at $(date -u +\%H:\%M) UTC" >> /home/ana/work/cron/tzenv2.log
 30 8 * * * echo "08:30 New York?" >> /home/ana/work/cron/tz830.log
 ana@vm:~/work/cron$ date -u "+%H:%M UTC"; TZ=America/New_York date "+%H:%M %Z"
-12:45 UTC
-08:45 EDT
-ana@vm:~/work/cron$ cat tzenv2.log
-CRON_TZ=[America/New_York]  ran at 12:45 UTC
+14:36 UTC
+10:36 EDT
+ana@vm:~/work/cron$ tail -1 tzenv2.log
+CRON_TZ=[America/New_York]  ran at 14:36 UTC
 ```
 
 **Leia a última linha duas vezes.** A variável chegou ao job — ela está ali na
-saída, `CRON_TZ=[America/New_York]`. E o job rodou às **12:45 UTC**, no minuto
+saída, `CRON_TZ=[America/New_York]`. E o job rodou às **14:36 UTC**, no minuto
 UTC, numa máquina onde Nova York estava quatro horas atrás.
 
 Então neste cron o `CRON_TZ` é uma variável de ambiente comum: exportada para o
@@ -63,8 +77,8 @@ Ou use um timer do systemd, que aceita o fuso na própria expressão:
 ```
 ana@vm:~$ systemd-analyze calendar "*-*-* 03:00:00 America/New_York"
 Normalized form: *-*-* 03:00:00 America/New_York
-    Next elapse: Wed 2026-09-16 07:00:00 UTC
-       From now: 18h left
+    Next elapse: Thu 2026-10-08 07:00:00 UTC
+       From now: 16h left
 ```
 
 **Três da manhã em Nova York, devolvido como 07:00 UTC** — e vai imprimir 08:00
@@ -83,16 +97,16 @@ ana@vm:~/work/cron$ TZ=America/New_York systemd-analyze calendar --iterations=4 
 Normalized form: *-*-* 02:30:00
     Next elapse: Fri 2026-03-06 02:30:00 EST
        (in UTC): Fri 2026-03-06 07:30:00 UTC
-       From now: 6 months 10 days ago
+       From now: 7 months 2 days ago
    Iteration #2: Sat 2026-03-07 02:30:00 EST
        (in UTC): Sat 2026-03-07 07:30:00 UTC
-       From now: 6 months 9 days ago
+       From now: 7 months 1 day ago
    Iteration #3: Mon 2026-03-09 02:30:00 EDT
        (in UTC): Mon 2026-03-09 06:30:00 UTC
-       From now: 6 months 7 days ago
+       From now: 6 months 29 days ago
    Iteration #4: Tue 2026-03-10 02:30:00 EDT
        (in UTC): Tue 2026-03-10 06:30:00 UTC
-       From now: 6 months 6 days ago
+       From now: 6 months 28 days ago
 ```
 
 **Conte as datas: o dia 6, o 7, o 9.** O domingo dia 8 sumiu inteiro, porque às
@@ -106,13 +120,16 @@ ana@vm:~/work/cron$ TZ=America/New_York systemd-analyze calendar --iterations=4 
 Normalized form: *-*-* 01:30:00
     Next elapse: Sat 2026-10-31 01:30:00 EDT
        (in UTC): Sat 2026-10-31 05:30:00 UTC
-       From now: 1 month 15 days left
+       From now: 3 weeks 2 days left
    Iteration #2: Sun 2026-11-01 01:30:00 EDT
        (in UTC): Sun 2026-11-01 05:30:00 UTC
-       From now: 1 month 16 days left
+       From now: 3 weeks 3 days left
    Iteration #3: Mon 2026-11-02 01:30:00 EST
        (in UTC): Mon 2026-11-02 06:30:00 UTC
-       From now: 1 month 17 days left
+       From now: 3 weeks 4 days left
+   Iteration #4: Tue 2026-11-03 01:30:00 EST
+       (in UTC): Tue 2026-11-03 06:30:00 UTC
+       From now: 3 weeks 5 days left
 ```
 
 01:30 acontece duas vezes em 1º de novembro, uma no EDT e uma no EST. **O systemd

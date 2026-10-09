@@ -3,7 +3,8 @@ title: Cifra simétrica, e por que ela precisa ser autenticada
 version: 1
 ---
 
-Um arquivo, uma chave de 32 bytes aleatórios escrita em hexadecimal, e AES-256 em modo CBC pelo
+No seu laboratório esta aula começa com `sudo bash nslab.sh reset`, com a política da empresa
+carregada no `fw` por `nft -f baseline.nft`. Um arquivo, uma chave de 32 bytes aleatórios escrita em hexadecimal, e AES-256 em modo CBC pelo
 `openssl enc`:
 
 ```

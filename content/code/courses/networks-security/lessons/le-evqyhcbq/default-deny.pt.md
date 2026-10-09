@@ -29,7 +29,12 @@ app:8080               open
 
 O banco de dados está `blocked`. O SSH no servidor de aplicação e a própria aplicação estão `open`
 para a internet inteira, porque ninguém pensou em listá-los. Então um desenvolvedor instala um cache
-no `db`, escutando na 6379, e não avisa ninguém:
+no `db`, escutando na 6379, e não avisa ninguém. No laboratório, um processo escutando faz o papel do
+cache; suba-o no `db`, como root:
+
+```sh
+setsid socat TCP-LISTEN:6379,bind=192.168.20.30,fork,reuseaddr SYSTEM:"echo cache ready" </dev/null >/dev/null 2>&1 &
+```
 
 ```
 ana@remote:~$ probe db:6379

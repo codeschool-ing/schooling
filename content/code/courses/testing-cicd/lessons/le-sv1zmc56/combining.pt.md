@@ -3,7 +3,7 @@ title: Cobertura de várias execuções
 version: 1
 ---
 
-Num pipeline, a suíte raramente roda como um comando só. A aula 1 seção 11 a dividiu numa camada
+Num pipeline, a suíte raramente roda como um comando só. A aula 1 seção 14 a dividiu numa camada
 rápida e numa lenta, e a aula 5 vai rodá-la em três versões do Python e dois fusos horários. Cada uma
 dessas execuções vê parte do código, e **a cobertura que importa é a união de todas elas**.
 

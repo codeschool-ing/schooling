@@ -1,12 +1,13 @@
 ---
 title: Blocos, argumentos e rótulos
-version: 1
+version: 2
 ---
 
 Um arquivo do Terraform parece uma linguagem de programação e está mais perto de um formulário.
 **A HCL tem dois tipos de coisa, blocos e argumentos**, e uma expressão à direita de cada
 argumento. Não há instruções que rodam em ordem, nem laços que executam, nem funções que você
-define. O `main.tf` da Ana, agora com uma variável lida de um segundo arquivo, mostra quase tudo:
+define. A Ana começa esta aula num `~/shop` novo e vazio, e o `main.tf` dela, com uma variável lida
+de um segundo arquivo, mostra quase tudo:
 
 ```hcl
 # The shop's network, as Terraform describes it.
@@ -62,7 +63,7 @@ declarada em outro arquivo. Os nomes `main.tf`, `variables.tf` e `outputs.tf` s�
 que as pessoas seguem para um colega saber onde procurar, e o Terraform não dá significado nenhum
 a eles. Um subdiretório nem é lido; a aula 10 transforma um deles em módulo.
 
-O segundo arquivo está em JSON. **Todo bloco pode ser escrito como `.tf.json`**, com o tipo do
+O segundo arquivo, `owner.tf.json`, está em JSON. **Todo bloco pode ser escrito como `.tf.json`**, com o tipo do
 bloco e os rótulos virando chaves aninhadas:
 
 ```json
@@ -91,7 +92,7 @@ Success! The configuration is valid.
 
 O `terraform validate` lê o diretório inteiro e o confere contra os schemas dos providers, sem
 perguntar nada à AWS. É o jeito mais rápido de descobrir que um arquivo não diz o que você quis
-dizer. Eis uma sub-rede cuja faixa a Ana esqueceu de pôr entre aspas:
+dizer. Eis uma sub-rede, num arquivo novo `subnet.tf`, cuja faixa a Ana esqueceu de pôr entre aspas:
 
 ```hcl
 resource "aws_subnet" "a" {
@@ -115,4 +116,5 @@ ana@laptop:~/shop$ terraform validate
 O parser viu `10.20` e tentou ler um número, que é o que um valor sem aspas começando por dígito
 é. **O erro aponta o arquivo, a linha e o bloco, e cita a linha.** Todo erro desta aula tem esse
 formato, e lê-lo a partir da linha citada é o hábito que vale ter. A aula 13 roda o `validate`
-como primeiro passo de uma suíte de testes.
+como primeiro passo de uma suíte de testes. A Ana apaga o `subnet.tf` depois de ler o erro, e as
+sub-redes voltam, escritas direito, na seção sobre locals.

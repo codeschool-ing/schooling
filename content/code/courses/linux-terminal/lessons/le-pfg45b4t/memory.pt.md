@@ -1,12 +1,12 @@
 ---
 title: Memória, e por que pouca memória livre é a cara da saúde
-version: 1
+version: 2
 ---
 
 ```
 ana@vm:~$ free -h
                total        used        free      shared  buff/cache   available
-Mem:            15Gi       657Mi        13Gi        11Mi       1.5Gi        15Gi
+Mem:            15Gi       649Mi        14Gi        13Mi       369Mi        15Gi
 Swap:             0B          0B          0B
 ```
 
@@ -33,18 +33,18 @@ Veja acontecendo:
 ```
 ana@vm:~$ free -m | head -2
                total        used        free      shared  buff/cache   available
-Mem:           16095         661       14125          11        1558       15434
+Mem:           16094         649       15351          13         369       15445
 ana@vm:~$ dd if=/dev/zero of=/home/ana/work/cache.tmp bs=1M count=600 2>&1 | tail -1
-629145600 bytes (629 MB, 600 MiB) copied, 3.4391 s, 183 MB/s
+629145600 bytes (629 MB, 600 MiB) copied, 2.68458 s, 234 MB/s
 ana@vm:~$ free -m | head -2
                total        used        free      shared  buff/cache   available
-Mem:           16095         668       13510          11        2173       15426
+Mem:           16094         658       14734          13         985       15436
 ```
 
-Seiscentos megabytes foram escritos num arquivo. O `buff/cache` subiu 615, e o
-`free` **caiu** 615.
+Seiscentos megabytes foram escritos num arquivo. O `buff/cache` subiu 616, e o
+`free` **caiu** 617.
 
-**E o `available` não se mexeu**: 15434 antes, 15426 depois — oito megabytes, que
+**E o `available` não se mexeu**: 15445 antes, 15436 depois — nove megabytes, que
 é ruído.
 
 É a aula inteira numa medição. **Os 600 MB não sumiram.** Eles estão segurando
@@ -56,10 +56,10 @@ Apague o arquivo e o cache vai junto:
 ```
 ana@vm:~$ rm -f /home/ana/work/cache.tmp; free -m | head -2
                total        used        free      shared  buff/cache   available
-Mem:           16095         647       14139          11        1558       15448
+Mem:           16094         645       15354          13         369       15449
 ```
 
-De volta a 1558, exatamente onde começou.
+De volta a 369, exatamente onde começou.
 
 **Então: uma máquina com 200 MB livres e 30 GB de cache não está sem memória.**
 Uma com 200 MB *disponíveis* está. Quem escreve scripts para "liberar memória"
@@ -71,16 +71,23 @@ depuração para repetibilidade de benchmark. Não é conserto de nada.
 
 ## Por processo
 
-O `free` diz o total da máquina. O `ps` diz quem:
+O `free` diz o total da máquina. O `ps` diz quem, e fica mais claro com os laços
+ocupados rodando:
+
+```sh
+cd ~/work/load
+./spin.sh &
+sleep 5
+```
 
 ```
 ana@vm:~$ ps -eo pid,%cpu,%mem,rss,comm --sort=-%cpu | head -6
   PID %CPU %MEM   RSS COMMAND
-16260  100  0.0  3388 bash
-16258 99.8  0.0  3380 bash
-16259 99.6  0.0  3348 bash
-  103  4.1  2.4 403252 claude
-16257  0.3  0.0 11156 python3
+11832 98.6  0.0  3412 bash
+11833 98.6  0.0  3308 bash
+11831 98.4  0.0  3388 bash
+11834 97.6  0.0  3336 bash
+   85  3.5  2.3 391944 claude
 ```
 
 | | |
@@ -93,6 +100,13 @@ ana@vm:~$ ps -eo pid,%cpu,%mem,rss,comm --sort=-%cpu | head -6
 Bibliotecas compartilhadas são contadas no `RSS` de todo processo que as mapeia,
 então somar a coluna `RSS` de cem processos dá uma resposta maior que a máquina.
 
+Os laços só serviam para isso aqui:
+
+```sh
+cd ~/work/load
+pkill -f spin.sh
+```
+
 O `VSZ` é quase sem sentido em programas modernos — um runtime que reserva 32 GB
 de espaço de endereçamento e toca 200 MB mostra `VSZ` de 32 GB e está usando 200
 MB.
@@ -103,16 +117,16 @@ compartilham:
 
 ```
 ana@vm:~$ grep -E 'Rss|Pss' /proc/self/smaps_rollup
-Rss:                2224 kB
-Pss:                 667 kB
+Rss:                2196 kB
+Pss:                 430 kB
 Pss_Dirty:           152 kB
 Pss_Anon:            152 kB
-Pss_File:            515 kB
+Pss_File:            278 kB
 Pss_Shmem:             0 kB
 SwapPss:               0 kB
 ```
 
-**2224 kB residentes, 667 kB proporcionais.** A maior parte da memória residente
+**2196 kB residentes, 430 kB proporcionais.** A maior parte da memória residente
 deste shell é a libc e o próprio binário, compartilhados com todo outro processo
 da máquina, e o `Pss` cobra dele a parte justa. Some o `Pss` de todo processo e o
 total é a verdade; some o `Rss` e não é.
@@ -121,11 +135,11 @@ total é a verdade; some o `Rss` e não é.
 
 ```
 ana@vm:~$ grep -E 'MemTotal|MemFree|MemAvailable|^Cached|^Buffers|SwapTotal' /proc/meminfo
-MemTotal:       16482220 kB
-MemFree:        14493656 kB
-MemAvailable:   15809336 kB
-Buffers:           56096 kB
-Cached:          1458848 kB
+MemTotal:       16480968 kB
+MemFree:        15721760 kB
+MemAvailable:   15818692 kB
+Buffers:            6984 kB
+Cached:           292264 kB
 SwapTotal:             0 kB
 ```
 
@@ -133,9 +147,9 @@ O `free` é um formatador para este arquivo. Mais duas linhas dele valem:
 
 ```
 ana@vm:~$ grep -E '^Dirty|^Slab|^Writeback' /proc/meminfo
-Dirty:               180 kB
+Dirty:                48 kB
 Writeback:             0 kB
-Slab:              81980 kB
+Slab:             109112 kB
 WritebackTmp:          0 kB
 ```
 

@@ -1,6 +1,6 @@
 ---
 title: The bill, and dropping what you cannot afford
-version: 1
+version: 2
 ---
 
 On your own Prometheus, cardinality costs memory and disk. **On a managed service it costs money
@@ -12,7 +12,8 @@ fifty copies, every copy would have added its own forty thousand.
 
 When a metric like that is already in production, the first remedy is at the scrape. A **metric
 relabelling** rule in the job's configuration runs on every scraped sample before it is stored, and
-can drop a metric by name:
+can drop a metric by name. Add these four lines at the end of `prometheus.yml`, under the `logins`
+job, which is the last one in the file, as the `tail` below shows:
 
 ```
 ana@obs:~/shop$ tail -8 prometheus/prometheus.yml
@@ -44,5 +45,11 @@ is only as complete as its regular expression.
 
 **The fix belongs in the code**: count by `plan`, or by nothing, and put the user id on the span of
 the login, where lesson 2 says it costs nothing. A relabel rule is how a team stops the bleeding on
-a Friday night. A change to the instrumentation is how it stops it from happening again. The
-experiment was stopped after this capture and `prometheus.yml` restored.
+a Friday night. A change to the instrumentation is how it stops it from happening again. Stop the
+experiment and put `prometheus.yml` back as it was:
+
+```sh
+docker stop logins
+cp /tmp/prometheus.yml.orig prometheus/prometheus.yml
+curl -s -X POST localhost:9090/-/reload
+```

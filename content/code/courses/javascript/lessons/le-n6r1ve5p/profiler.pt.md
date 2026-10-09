@@ -1,6 +1,6 @@
 ---
 title: O profiler
-version: 1
+version: 2
 ---
 
 **Um profiler amostra a pilha de chamadas milhares de vezes por segundo e conta onde o programa
@@ -35,7 +35,7 @@ share  self time  function
           186 ms  busy in total
 ```
 
-O `--profile` do laboratório grava um perfil de CPU com uma amostra a cada 0,1 ms e lista as cinco
+O `--profile` grava um perfil de CPU com uma amostra a cada 0,1 ms e lista as cinco
 funções com mais **self time** (tempo próprio). Os milissegundos são desta execução e mudam alguns
 de uma execução para outra. `key` veio primeiro em toda execução feita para esta aula; as linhas
 abaixo dela trocaram de lugar.

@@ -1,0 +1,538 @@
+{
+  "ex-g2mjc7sj": {
+    "prompt": "Ligue cada falha da busca de preços ao que o Airflow deve fazer com ela.",
+    "hint": "Pedir de novo muda a resposta?",
+    "pairs": [
+      {
+        "left": "A API responde 503",
+        "right": "Tentar de novo, cada vez mais tarde"
+      },
+      {
+        "left": "A API responde 401",
+        "right": "Falhar agora e alertar"
+      },
+      {
+        "left": "O arquivo do DAG não importa",
+        "right": "Corrigir o código; nada roda até lá"
+      }
+    ],
+    "right_distractors": [
+      "Marcar a tarefa como sucesso"
+    ]
+  },
+  "ex-z4nv8csn": {
+    "prompt": "Por que um `401` da API de preços não deve ser tentado de novo?",
+    "hint": "O que estaria diferente um minuto depois?",
+    "choices": [
+      {
+        "text": "A chave vai continuar errada",
+        "why": "Isso. Toda nova tentativa recebe a mesma resposta, e o alerta só atrasa."
+      },
+      {
+        "text": "Tentar de novo um 401 bloqueia a conta",
+        "why": "Nada na lição diz isso; a questão é que nada muda."
+      },
+      {
+        "text": "O Airflow não consegue tentar de novo erros HTTP",
+        "why": "Ele tentou de novo o 503 sem reclamar."
+      },
+      {
+        "text": "Um 401 é sempre culpa da API e os donos dela vão corrigir em poucos minutos",
+        "why": "Um 401 é sobre a chave do pedido, que cabe à Ana corrigir."
+      }
+    ]
+  },
+  "ex-9wxwpsky": {
+    "prompt": "Um arquivo de DAG não consegue importar. O que o agendador faz com a execução das 03:00 dele?",
+    "hint": "O agendador enxerga o DAG?",
+    "choices": [
+      {
+        "text": "Ele a roda e todas as tarefas falham",
+        "why": "Não há tarefas para rodar: o arquivo não carregou."
+      },
+      {
+        "text": "Ele chama o `on_failure_callback`",
+        "why": "Esse é um callback de tarefa, e nenhuma tarefa existe."
+      },
+      {
+        "text": "Ele tenta de novo a importação com os `retries` do DAG",
+        "why": "Os `retries` são das tarefas, e ainda não há nenhuma."
+      },
+      {
+        "text": "Nada: o DAG não pode ser agendado",
+        "why": "Isso. Nenhuma execução, nenhuma tentativa e nenhum callback de falha. Só o `list-import-errors` mostra."
+      }
+    ]
+  },
+  "ex-q5w1fqte": {
+    "prompt": "O comando que mostra por que um arquivo de DAG não carregou: `airflow dags ___`",
+    "hint": "Duas palavras unidas por hífens, listando erros.",
+    "blanks": [
+      {
+        "accept": [
+          "list-import-errors"
+        ]
+      }
+    ]
+  },
+  "ex-8msye5qj": {
+    "prompt": "A Ana edita o `failed` em `~/airflow/plugins/oncall.py` com o Airflow rodando. A próxima falha escreve a linha antiga. Por quê?",
+    "hint": "Quando um módulo é importado?",
+    "choices": [
+      {
+        "text": "A pasta de plugins fica travada como somente leitura depois que o Airflow começa",
+        "why": "Ela escreveu o arquivo sem problema."
+      },
+      {
+        "text": "Os processos em execução ficam com o módulo que importaram",
+        "why": "Isso. Mudar um plugin pede um reinício."
+      },
+      {
+        "text": "Callbacks ficam em cache no banco de metadados",
+        "why": "A função é importada, não guardada."
+      },
+      {
+        "text": "Um DAG precisa ser renomeado antes de os callbacks mudarem",
+        "why": "Renomear não é preciso; reiniciar é."
+      }
+    ]
+  },
+  "ex-735psev3": {
+    "prompt": "Por que o `oncall.py` fica na pasta de plugins e não em `dags/`?",
+    "hint": "Que processo roda o callback do prazo?",
+    "choices": [
+      {
+        "text": "Plugins rodam mais rápido",
+        "why": "Velocidade não tem nada a ver."
+      },
+      {
+        "text": "Arquivos em `dags/` precisam conter um DAG",
+        "why": "Um módulo auxiliar ali é ignorado como DAG, mas ainda pode ser importado por tarefas."
+      },
+      {
+        "text": "O triggerer roda o callback do prazo e não importa de `dags/`",
+        "why": "Isso. A primeira versão ao lado do DAG falhou com No module named 'oncall' no log do triggerer."
+      },
+      {
+        "text": "O Airflow se recusa a chamar funções definidas numa pasta de DAGs",
+        "why": "Tarefas chamam funções assim o tempo todo; o triggerer é a exceção."
+      }
+    ]
+  },
+  "ex-vab30wz6": {
+    "prompt": "O `fetch` levanta `AirflowFailException` na primeira tentativa, e o `retries` é 4. Quantas tentativas ele faz?",
+    "hint": "O que essa exceção diz ao Airflow?",
+    "choices": [
+      {
+        "text": "Cinco",
+        "why": "Isso é o que uma exceção comum teria."
+      },
+      {
+        "text": "Quatro",
+        "why": "Esse é o número de retries que ela teria."
+      },
+      {
+        "text": "Uma",
+        "why": "Isso. A exceção passa por cima do `retries`."
+      },
+      {
+        "text": "Depende do intervalo de retry",
+        "why": "O intervalo define quando, não se."
+      }
+    ]
+  },
+  "ex-j813wpba": {
+    "prompt": "Ligue cada falha no `airflow tasks test` ao estado em que ela deixou a tarefa.",
+    "hint": "Uma vai ser tentada de novo.",
+    "pairs": [
+      {
+        "left": "503 da API",
+        "right": "up_for_retry"
+      },
+      {
+        "left": "401 da API",
+        "right": "failed"
+      }
+    ],
+    "right_distractors": [
+      "success",
+      "skipped"
+    ]
+  },
+  "ex-qgrgwaff": {
+    "prompt": "Volta um código que ninguém listou no `if`, digamos `418`. O que acontece?",
+    "hint": "Para onde vai um código não listado?",
+    "choices": [
+      {
+        "text": "O `raise_for_status()` levanta exceção, e ela é tentada de novo",
+        "why": "Isso. O padrão seguro: um retry por engano custa minutos."
+      },
+      {
+        "text": "A tarefa falha na hora",
+        "why": "Só os códigos listados fazem isso."
+      },
+      {
+        "text": "O laço espera e pede a mesma página",
+        "why": "Isso é só para o 429."
+      },
+      {
+        "text": "As linhas são gravadas e a tarefa dá certo",
+        "why": "O `raise_for_status()` levanta exceção para qualquer 4xx ou 5xx."
+      }
+    ]
+  },
+  "ex-tysspgm9": {
+    "prompt": "Uma tarefa espera uma conexão que nunca responde, sem timeout em lugar nenhum. O que a pessoa de plantão vê?",
+    "hint": "Uma tarefa que nunca acaba chega a falhar?",
+    "choices": [
+      {
+        "text": "Um alerta de falha depois dos retries",
+        "why": "Nenhuma tentativa termina, então nenhuma é repetida."
+      },
+      {
+        "text": "O agendador a mata à meia-noite",
+        "why": "Nada faz isso."
+      },
+      {
+        "text": "Um AirflowTaskTimeout depois de uma hora",
+        "why": "Não há execution timeout padrão."
+      },
+      {
+        "text": "Nada, a menos que haja um prazo",
+        "why": "Isso. A execução fica em running, e só um prazo consegue perceber."
+      }
+    ]
+  },
+  "ex-v5rt918b": {
+    "prompt": "No laboratório, quantos segundos depois de o comando começar o Airflow parou a tarefa travada?",
+    "hint": "O execution_timeout."
+  },
+  "ex-gv2p6779": {
+    "prompt": "O que o `execution_timeout` limita e o `timeout=10` de cada pedido não?",
+    "hint": "Um pedido, ou a tentativa inteira?",
+    "choices": [
+      {
+        "text": "O tempo para abrir uma conexão",
+        "why": "Isso faz parte do que o timeout do pedido cobre."
+      },
+      {
+        "text": "A tentativa inteira, quantos pedidos ela fizer",
+        "why": "Isso. Cem páginas lentas, cada uma abaixo de dez segundos, ainda podem levar tempo demais."
+      },
+      {
+        "text": "A espera entre retries",
+        "why": "Isso é o `retry_delay`."
+      },
+      {
+        "text": "Quanto tempo a execução pode ficar na fila",
+        "why": "O timeout de uma tentativa começa quando ela começa."
+      }
+    ]
+  },
+  "ex-qrb8nafy": {
+    "prompt": "O `retries` é 4. Quantas tentativas uma tarefa pode fazer ao todo?",
+    "hint": "A primeira não é um retry."
+  },
+  "ex-vc01x37j": {
+    "prompt": "Um DAG antigo diz `retry_exponential_backoff: True` com um intervalo de 15 segundos. No Airflow 3.3, qual é a espera base antes de cada retry?",
+    "hint": "Que número é True?",
+    "choices": [
+      {
+        "text": "15, 30, 60, 120 segundos",
+        "why": "Isso pede `2.0`."
+      },
+      {
+        "text": "15 segundos toda vez",
+        "why": "Isso. True é 1, e um multiplicador 1 não muda nada."
+      },
+      {
+        "text": "Ele se recusa a ler o DAG",
+        "why": "Ele aceita sem dizer nada."
+      },
+      {
+        "text": "Nenhuma espera",
+        "why": "O intervalo ainda é de 15 segundos."
+      }
+    ]
+  },
+  "ex-a6s2zesq": {
+    "prompt": "Com `retry_delay` de 15 segundos e multiplicador 2.0, qual é a espera base, em segundos, antes do quarto retry?",
+    "hint": "15, 30, 60, …"
+  },
+  "ex-2z4g624g": {
+    "prompt": "A execução que se recuperou depois de duas tentativas falhas não escreveu nada no `alerts.log`. Isso estava certo?",
+    "hint": "Havia alguma coisa para uma pessoa fazer?",
+    "choices": [
+      {
+        "text": "Não: duas falhas sempre devem acordar alguém",
+        "why": "Elas foram absorvidas; não sobrou nada a fazer."
+      },
+      {
+        "text": "Não: o callback estava quebrado",
+        "why": "Ele escreveu a sua linha depois, na noite em que os retries acabaram."
+      },
+      {
+        "text": "Sim: um sucesso mais lento não é notícia",
+        "why": "Isso. O callback de falha só roda quando a tarefa falhou de vez."
+      },
+      {
+        "text": "Sim, porque a API era do próprio laboratório",
+        "why": "De quem é a API não muda para que serve o callback."
+      }
+    ]
+  },
+  "ex-amv1qken": {
+    "prompt": "Uma tarefa acrescenta linhas a uma tabela, falha no meio e é tentada de novo. O que dá errado?",
+    "hint": "O que ainda está lá da primeira tentativa?",
+    "choices": [
+      {
+        "text": "A primeira metade é carregada duas vezes",
+        "why": "Isso. Uma tarefa repetida precisa poder rodar duas vezes sem estrago."
+      },
+      {
+        "text": "Nada: o Airflow desfaz uma tentativa falha",
+        "why": "O Airflow não sabe nada da tabela."
+      },
+      {
+        "text": "O retry é recusado",
+        "why": "O Airflow a repete normalmente."
+      },
+      {
+        "text": "Só a segunda metade é carregada",
+        "why": "O retry começa do início."
+      }
+    ]
+  },
+  "ex-5tz62jmz": {
+    "prompt": "Quando o `on_failure_callback` roda?",
+    "hint": "Uma tentativa, ou a tarefa?",
+    "choices": [
+      {
+        "text": "Depois de cada tentativa falha",
+        "why": "Esse é o `on_retry_callback`."
+      },
+      {
+        "text": "Antes da primeira tentativa",
+        "why": "Nada falhou ainda."
+      },
+      {
+        "text": "Quando a execução passa do prazo",
+        "why": "Esse é o callback do prazo."
+      },
+      {
+        "text": "Quando a tarefa falhou de vez",
+        "why": "Isso. Retries gastos, ou uma recusa de retry."
+      }
+    ]
+  },
+  "ex-5d4zmh6g": {
+    "prompt": "Qual destas coisas um prazo consegue perceber e um callback de falha não? Escolha todas as que se aplicam.",
+    "hint": "Quais delas nunca falham?",
+    "choices": [
+      {
+        "text": "Uma execução ainda tentando de novo na hora em que o relatório é lido",
+        "why": "Isso. Ela ainda não falhou, e já está atrasada."
+      },
+      {
+        "text": "Uma tarefa presa atrás de um lock sem timeout",
+        "why": "Isso. Ela nunca falha, então só um prazo a vê."
+      },
+      {
+        "text": "Uma chave de API errada",
+        "why": "Isso falha na hora, e o callback de falha avisa."
+      },
+      {
+        "text": "Um arquivo de DAG que não importa",
+        "why": "Sem DAG não há execução, e nenhum prazo a vencer."
+      }
+    ]
+  },
+  "ex-9s8c8p5b": {
+    "prompt": "O que substituiu os SLAs do Airflow 2 no Airflow 3?",
+    "hint": "Uma referência, um intervalo e um callback.",
+    "choices": [
+      {
+        "text": "Prazos (deadlines)",
+        "why": "Isso. `DeadlineAlert` no DAG."
+      },
+      {
+        "text": "`execution_timeout`",
+        "why": "Isso para uma tentativa; não relata atraso."
+      },
+      {
+        "text": "Sensores",
+        "why": "Um sensor espera algo; ele não alerta."
+      },
+      {
+        "text": "`on_retry_callback`",
+        "why": "Esse roda nas tentativas falhas."
+      }
+    ]
+  },
+  "ex-jhjyqqmj": {
+    "prompt": "Na noite encenada, qual linha chegou primeiro ao `alerts.log`, e por quê?",
+    "hint": "Um espera o fim das tentativas, o outro não.",
+    "choices": [
+      {
+        "text": "FAILED, porque uma falha é mais urgente",
+        "why": "Ela só podia vir quando as tentativas acabassem."
+      },
+      {
+        "text": "LATE, porque prazos são sempre verificados antes de falhas",
+        "why": "É questão de tempo, não de uma regra de precedência."
+      },
+      {
+        "text": "Chegaram juntas, no mesmo segundo, quando a execução terminou",
+        "why": "Com minutos de diferença."
+      },
+      {
+        "text": "LATE, porque o prazo passou enquanto a execução ainda tentava",
+        "why": "Isso. Dois minutos depois da fila; as tentativas levaram vários."
+      }
+    ]
+  },
+  "ex-wgzg70kr": {
+    "prompt": "Quantas tentativas o `fetch` fez na noite encenada antes de o callback de falha rodar?",
+    "hint": "retries: 4"
+  },
+  "ex-v41af5mf": {
+    "prompt": "O alerta diz `503`. Por que a Ana consulta a API ela mesma antes de fazer qualquer outra coisa?",
+    "hint": "O alerta descreve o passado.",
+    "choices": [
+      {
+        "text": "Porque o alerta pode ter o código errado",
+        "why": "Os logs concordaram com ele, cinco vezes."
+      },
+      {
+        "text": "Para ver se ela continua fora do ar agora",
+        "why": "Isso. Refazer contra uma API que continua fora do ar só falha de novo."
+      },
+      {
+        "text": "Para zerar o limite de taxa da API",
+        "why": "Um pedido não faz isso."
+      },
+      {
+        "text": "Porque o Airflow não refaz uma tarefa cujo último erro foi HTTP",
+        "why": "Ele a refez com um clear."
+      }
+    ]
+  },
+  "ex-rv616ghr": {
+    "prompt": "Ordene a manhã da Ana, do alerta à nova execução.",
+    "hint": "O que o Airflow viu, depois o que a fonte diz agora.",
+    "items": [
+      "Ler o alerts.log",
+      "Listar as tentativas da execução",
+      "Ler a exceção no log de cada tentativa",
+      "Consultar a API à mão",
+      "Limpar a tarefa que falhou"
+    ]
+  },
+  "ex-5t92xk1k": {
+    "prompt": "Por que limpar a tarefa que falhou em vez de disparar uma execução nova para a mesma noite?",
+    "hint": "O que a lista de execuções diria depois?",
+    "choices": [
+      {
+        "text": "Uma execução nova carregaria outro dia",
+        "why": "Com a mesma data lógica, carregaria o mesmo."
+      },
+      {
+        "text": "Disparar não é permitido depois de uma falha",
+        "why": "É permitido; só é o registro errado."
+      },
+      {
+        "text": "A mesma execução dá certo, e o histórico fica num lugar só",
+        "why": "Isso. Uma segunda execução deixaria a que falhou dizendo que a noite falhou."
+      },
+      {
+        "text": "Limpar pula os retries e marca a execução como sucesso na hora",
+        "why": "A tarefa limpa ganha as tentativas normalmente."
+      }
+    ]
+  },
+  "ex-hz3jb1q6": {
+    "prompt": "Depois do clear, qual número de tentativa deu certo?",
+    "hint": "Cinco tinham falhado."
+  },
+  "ex-5hwf1fka": {
+    "prompt": "Uma tarefa carrega `date.today()` menos um dia. Ela falhou na segunda e é limpa na quinta. O que ela carrega?",
+    "hint": "De onde ela tira o dia?",
+    "choices": [
+      {
+        "text": "O domingo, o dia que falhou",
+        "why": "Só uma tarefa que lê a data lógica faria isso."
+      },
+      {
+        "text": "Os dois dias, primeiro o domingo e depois a quarta",
+        "why": "Nada nela sabe do domingo."
+      },
+      {
+        "text": "A quarta, e o domingo nunca é carregado",
+        "why": "Isso. Uma tarefa que lê o relógio não pode ser refeita."
+      },
+      {
+        "text": "Nada: o Airflow se recusa a limpá-la",
+        "why": "O Airflow não sabe o que o código lê."
+      }
+    ]
+  },
+  "ex-y578emzp": {
+    "prompt": "Para refazer o `transform` e as cargas depois dele: `airflow tasks clear shop_nightly -t transform ___ -s … -e …`",
+    "hint": "A opção que inclui as tarefas seguintes.",
+    "blanks": [
+      {
+        "accept": [
+          "--downstream",
+          "-d"
+        ]
+      }
+    ]
+  },
+  "ex-a9rvy0xt": {
+    "prompt": "Um DAG tem `retries: 3` e mais nenhuma configuração sobre falha. A senha do banco de uma tarefa expira. O que acontece?",
+    "hint": "Que tipo de falha, e o que falta?",
+    "choices": [
+      {
+        "text": "Quatro tentativas falham, e ninguém fica sabendo",
+        "why": "Isso. Uma falha permanente repetida, e nenhum callback para avisar."
+      },
+      {
+        "text": "Ela falha na hora e alerta",
+        "why": "Nada levanta AirflowFailException e nada alerta."
+      },
+      {
+        "text": "Ela tenta de novo até a senha ser renovada",
+        "why": "Três retries, depois ela para."
+      },
+      {
+        "text": "O prazo dispara",
+        "why": "Não há nenhum."
+      }
+    ]
+  },
+  "ex-vh50me16": {
+    "prompt": "Ligue cada configuração à pergunta que ela responde.",
+    "hint": "Quatro configurações, quatro perguntas.",
+    "pairs": [
+      {
+        "left": "retries",
+        "right": "Quantas vezes mais?"
+      },
+      {
+        "left": "retry_exponential_backoff",
+        "right": "Quanto mais longo a cada vez?"
+      },
+      {
+        "left": "execution_timeout",
+        "right": "Quanto tempo uma tentativa pode durar?"
+      },
+      {
+        "left": "deadline",
+        "right": "Até quando a execução precisa terminar?"
+      }
+    ],
+    "right_distractors": [
+      "Que dia a execução carrega?"
+    ]
+  }
+}

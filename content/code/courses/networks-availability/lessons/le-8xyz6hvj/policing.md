@@ -3,7 +3,8 @@ title: A policer at the provider
 version: 1
 ---
 
-The shaper was removed, off screen, and the limit moved to where a provider would put it: the ISP's
+The shaper is removed, `sudo tc qdisc del dev eth1 root` on `hq`, and the limit moves to where a
+provider would put it: the ISP's
 router, on traffic arriving from `hq`. It is an `nftables` rule with the same rate and the same bucket,
 and a different ending, `drop`:
 

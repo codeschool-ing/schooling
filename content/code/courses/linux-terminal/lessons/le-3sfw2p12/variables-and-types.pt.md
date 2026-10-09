@@ -1,6 +1,6 @@
 ---
 title: Variáveis têm tipo, e quem decide é o operando da esquerda
-version: 1
+version: 2
 ---
 
 ```
@@ -67,10 +67,11 @@ com a mesma consequência para expressões regulares e qualquer coisa contendo u
 você põe uma propriedade numa mensagem:
 
 ```
+PS /home/ana/work/ps> $f = Get-Item sales.csv
 PS /home/ana/work/ps> "$f.Name"
 /home/ana/work/ps/sales.csv.Name
 PS /home/ana/work/ps> "$($f.Name) is $($f.Length) bytes"
-sales.csv is 788 bytes
+sales.csv is 807 bytes
 ```
 
 Sem o `$( )`, a variável expandiu sozinha e o `.Name` virou quatro caracteres
@@ -109,7 +110,7 @@ does not expand anything
 ```
 PS /home/ana/work/ps> $d = Get-Date; $d.GetType().FullName; $d.AddDays(7).DayOfWeek
 System.DateTime
-Tuesday
+Wednesday
 ```
 
 O `Get-Date` não devolve texto. Ele devolve um `DateTime`, que sabe o que é uma
@@ -143,6 +144,7 @@ OverloadDefinitions
 string Trim()
 string Trim(char trimChar)
 string Trim(Params char[] trimChars)
+string Trim(System.ReadOnlySpan[char] trimChars)
 ```
 
 Um método sem os parênteses imprime **as assinaturas do método**, o que

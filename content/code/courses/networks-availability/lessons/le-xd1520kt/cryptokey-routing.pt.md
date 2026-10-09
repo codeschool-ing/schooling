@@ -26,8 +26,9 @@ ana@hq:~$ ip route | grep wg0
 192.168.20.0/24 dev wg0 scope link 
 ```
 
-O filtro é a metade que ninguém vê até ela morder. Para mostrá-lo, a entrada de `hq` em `branch` foi
-reduzida, como root e fora da tela, só ao endereço de túnel de `hq`:
+O filtro é a metade que ninguém vê até ela morder. Para mostrá-lo, reduza a entrada de `hq` em `branch`
+só ao endereço de túnel de `hq`. Em `branch`, com a chave pública de `hq` no lugar do marcador:
+`sudo wg set wg0 peer HQ_PUBLIC_KEY allowed-ips 10.20.0.1/32`. Depois:
 
 ```
 ana@branch:~$ sudo wg show wg0 allowed-ips

@@ -1,13 +1,13 @@
 ---
 title: What the report needs
-version: 1
+version: 2
 ---
 
 The manager's side is **OLAP**, online analytical processing. Where a transaction touches a few
 rows by key, an analytical query touches most of a table and summarises it: a total, a count, an
 average, grouped by something a person cares about.
 
-Section 04's report ran in 1.6 seconds. Ask PostgreSQL what it read to get there:
+Section 07's report ran in 1.6 seconds. Ask PostgreSQL what it read to get there:
 
 ```
 ana@lab:~/wh$ { echo 'EXPLAIN (ANALYZE, BUFFERS, COSTS OFF)'; cat report.sql; } | psql | grep -m1 Buffers
@@ -36,5 +36,5 @@ The shape of an analytical workload, then:
 - **Joins to context.** A sale is a number; *who*, *what*, *where* and *when* make it a question.
 - **History.** This year against last, before the promotion against after.
 
-**Every item in that list is the opposite of the one in section 05.** A single design cannot be
+**Every item in that list is the opposite of the one in section 08.** A single design cannot be
 best at both, so the warehouse is a second design.

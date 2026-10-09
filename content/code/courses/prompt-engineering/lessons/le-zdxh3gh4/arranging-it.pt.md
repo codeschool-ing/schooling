@@ -1,11 +1,11 @@
 ---
 title: Organizando o contexto no prompt
-version: 1
+version: 2
 ---
 
 Pôr fatos num prompt é metade do trabalho. **A outra metade é dispô-los de modo que o modelo
 distinga o material da instrução**, e a instrução do material que só parece uma. Este é o prompt
-para o qual a segunda resposta da seção anterior foi escrita, como a ana o salvou em `with-context.txt`:
+por trás da segunda resposta da seção anterior. Salve-o como `~/pe/with-context.txt`:
 
 ```
 <handbook>
@@ -64,7 +64,7 @@ Duas linhas do prompt tratam das bordas da tarefa, e não da tarefa:
   modelo. A lição 7 explica por que uma frase como essa reduz esse risco e não o elimina.
 - "If the customer asks for something it does not cover, say that a member of staff will reply."
   Sem ela, uma lacuna no manual é uma lacuna que o modelo preenche com a resposta de costume, e
-  você volta à primeira resposta da seção anterior.
+  você volta à primeira resposta da seção anterior e às suas 24 a 48 horas.
 
 **Dizer o que ignorar e o que fazer na borda também é contexto**: diz ao modelo onde o material
 dele termina.

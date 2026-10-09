@@ -1,6 +1,6 @@
 ---
 title: Ignorar não é deixar de acompanhar, e um segredo fica no histórico
-version: 1
+version: 2
 ---
 
 Dois erros com o `.gitignore` são comuns o bastante para ter uma seção própria, e o segundo sai caro.
@@ -8,6 +8,15 @@ Dois erros com o `.gitignore` são comuns o bastante para ter uma seção própr
 ## Pondo no .gitignore um arquivo que já foi para commit
 
 O `settings.local` foi para um commit, e depois entrou no `.gitignore`. Alguém o edita:
+
+```bash
+printf 'preview = on\n' > settings.local
+git add settings.local && git commit -qm 'Add local settings'
+printf 'settings.local\n' >> .gitignore
+git commit -qam 'Ignore local settings'
+printf 'preview = off\n' > settings.local
+```
+
 
 ```
 ana@vm:~/site$ git status --short
@@ -32,6 +41,16 @@ mensagem do commit.
 ## Um segredo que foi para um commit sem querer
 
 Uma chave de pagamento foi para um commit, e o commit seguinte a removeu:
+
+```bash
+printf 'PAYMENT_KEY=sk_live_example_not_a_real_key\n' > .env
+git add .env && git commit -qm 'Configure payments'
+git rm -q --cached .env && printf '.env\n' >> .gitignore && git add .gitignore && git commit -qm 'Remove the payment key'
+```
+
+A chave é inventada, como toda chave deste curso. Nunca ponha uma de verdade num repositório de
+treino também.
+
 
 ```
 ana@vm:~/site$ git log --oneline -2

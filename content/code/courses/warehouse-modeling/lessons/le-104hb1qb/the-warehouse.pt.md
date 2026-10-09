@@ -1,6 +1,6 @@
 ---
 title: Um segundo banco, feito para ser lido
-version: 1
+version: 2
 ---
 
 Um **data warehouse** é um banco cujo único trabalho é responder perguntas sobre o negócio. Ele é
@@ -8,7 +8,7 @@ carregado a partir dos sistemas operacionais, numa agenda, e lido por pessoas e 
 digita nele.
 
 Bill Inmon, que cunhou o termo no começo dos anos 1990, deu a ele quatro propriedades, e cada uma é
-o oposto de algo das seções 05 e 08:
+o oposto de algo das seções 08 e 11:
 
 - **Orientado a assunto.** Organizado em torno do que o negócio pergunta, como vendas, estoque e
   clientes, e não em torno das telas da aplicação que gravou os dados.
@@ -17,8 +17,9 @@ o oposto de algo das seções 05 e 08:
 - **Variante no tempo.** Cada linha sabe o período que descreve, e o passado é guardado.
 - **Não volátil.** Carregado e depois lido. Quem lê não edita as linhas.
 
-O laboratório da Ana já tem um, construído a partir do banco da rede. As lições 2 a 5 o constroem
-peça por peça; aqui ele vem pronto, para receber a pergunta da seção 04:
+As lições 2 a 5 constroem um a partir do banco da rede, peça por peça, e a lição 2 termina com um
+script que constrói tudo de uma vez. Aqui ele já vem pronto, para receber a pergunta da seção 07;
+você pode digitar esta quando a lição 2 tiver lhe dado o warehouse.
 
 ```sql
 -- The same question, asked of the warehouse.

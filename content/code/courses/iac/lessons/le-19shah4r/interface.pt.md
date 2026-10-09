@@ -1,6 +1,6 @@
 ---
 title: A interface, e o que fica dentro
-version: 1
+version: 2
 ---
 
 Um módulo tem dois públicos: quem escreve o que está dentro e quem o chama. Quem chama deveria
@@ -11,7 +11,8 @@ depende dela, quase nunca.
 
 ## Outputs são a única saída
 
-Quem quer a faixa da VPC pode tentar lê-la do recurso dentro do módulo:
+Quem quer a faixa da VPC pode tentar lê-la do recurso dentro do módulo, com um terceiro output
+acrescentado no fim do `outputs.tf`:
 
 ```
 ana@laptop:~/shop$ tail -n 3 outputs.tf
@@ -38,7 +39,8 @@ quem chama pudesse entrar, o autor do módulo nunca poderia renomear um recurso 
 correção é um output no módulo, escrito de propósito, que passa então a fazer parte da interface.
 
 Então publique o que quem chama precisa, e um id em vez do objeto inteiro quando o id basta: um
-objeto exportado "por via das dúvidas" transforma cada atributo dele numa promessa.
+objeto exportado "por via das dúvidas" transforma cada atributo dele numa promessa. A Ana apaga o
+output `shop_vpc_cidr` de novo.
 
 ## Variáveis que recusam entrada ruim cedo
 
@@ -67,7 +69,7 @@ ana@laptop:~/shop$ terraform plan
 **O erro aponta para `analytics.tf`, onde está o engano, e nomeia a regra do módulo que o pegou.**
 Sem a regra, a faixa errada chegaria à AWS durante o apply e voltaria como um erro de API sem número
 de linha nenhum. A aula 3 ensinou `validation`; num módulo ela vale mais, porque quem erra não é
-quem escreveu o código.
+quem escreveu o código. A Ana volta a faixa em `analytics.tf` para `10.30.0.0/16`.
 
 Uma boa variável tem um `type` tão estreito quanto o valor permite, uma `description` que diz para
 que ela serve, e um `default` só quando uma resposta serve para a maioria de quem chama. Uma variável
@@ -84,8 +86,9 @@ delas, como esta rede faz.
 **Não configure providers dentro de um módulo.** Veja o que falta em `modules/network`: não há bloco
 `provider "aws"` nele. Ele usa a configuração de provider de quem o chama, então o mesmo módulo
 funciona em `sa-east-1` e em qualquer outro lugar. Um estilo mais antigo punha o bloco `provider`
-dentro, e o Terraform hoje limita o que um módulo assim pode fazer. Aqui está um que faz isso,
-chamado uma vez por bucket:
+dentro, e o Terraform hoje limita o que um módulo assim pode fazer. Aqui está um que faz isso, num
+diretório só dele, `~/legacy`: o módulo é `modules/bucket/main.tf`, e o `main.tf` do root o chama
+uma vez por bucket:
 
 ```hcl
 provider "aws" {
@@ -131,8 +134,17 @@ Initializing modules...
 ╵
 ```
 
-Chamado sem `for_each`, ele funciona até o dia em que a chamada é removida. Com um bucket aplicado e
-o bloco `module` apagado, o bucket precisa ser destruído, e a configuração que sabia chegar à AWS
+Chamado sem `for_each`, ele funciona até o dia em que a chamada é removida. A Ana troca o `main.tf`
+por uma chamada simples, roda `terraform init` e aplica:
+
+```hcl
+module "assets" {
+  source = "./modules/bucket"
+  name   = "shop-assets-123456789012"
+}
+```
+
+Depois apaga o bloco, deixando o `main.tf` vazio. Com um bucket aplicado e o bloco `module` apagado, o bucket precisa ser destruído, e a configuração que sabia chegar à AWS
 para isso estava dentro do bloco que sumiu:
 
 ```

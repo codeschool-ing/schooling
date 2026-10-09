@@ -41,7 +41,7 @@ rtt min/avg/max/mdev = 24.483/26.292/27.973/1.185 ms
 
 **26 ms on average: the laptop's ping is back in the upload's queue.** The laptop still marks its ping EF; `hq` no
 longer believes it. And `files` sends one datagram to port 5004, with `echo voice | nc -u -w1
-192.0.2.21 5004`, a command with no marking option at all, run off screen. The ISP sees it arrive:
+192.0.2.21 5004` typed on `files`, a command with no marking option at all. The ISP sees it arrive:
 
 ```
 ana@isp:~$ sudo tcpdump -n -v -i eth0 -c 1 udp port 5004
@@ -59,5 +59,5 @@ sent it**, which is the only kind of mark a router can afford to act on.
 
 Where the boundary goes in a real office is the access switch, the first thing a phone or a laptop is
 plugged into. Switches trust the mark on a port where an IP phone sits, often on a voice VLAN of its
-own, the idea from lesson 19 of `networks-addressing`, and reset it on every other port. A router
+own, the idea from `networks-addressing`, and reset it on every other port. A router
 further in then has marks it can believe without asking who wrote them.

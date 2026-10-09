@@ -6,7 +6,7 @@
 # what moved.
 #
 #   sudo useradd -m -s /bin/bash -G sudo ana     # once, on a throwaway machine
-#   sudo cp ../../lab.sh /var/tmp/lab.sh          # the lab, beside course.json
+#   sudo cp -r ../.. /var/tmp/virtualization      # the course: lab.sh, and the lessons it reads
 #   sudo -u ana -i bash /path/to/captures.sh
 #
 # EVERY MACHINE IN THE LESSON IS PART OF ONE LAB. The computer is called host
@@ -32,7 +32,7 @@
 
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 PAGER=cat SYSTEMD_PAGER=cat COLUMNS=100
-LAB_SH=${LAB_SH:-/var/tmp/lab.sh}
+LAB_SH=${LAB_SH:-/var/tmp/virtualization/lab.sh}
 lab() { sudo bash "$LAB_SH" "$@"; }
 # on MACHINE 'command': what ana typed at her prompt, on host itself or inside
 # one of its guests (reached with ssh), and everything it printed.

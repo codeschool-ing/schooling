@@ -1,11 +1,19 @@
 ---
 title: Ligando duas pastas
-version: 1
+version: 2
 ---
 
 Duas pastas no host, uma para compartilhar e trabalhar, e uma para documentos que o convidado só deve
 ler. Cada uma é acrescentada à descrição da vm1 como um dispositivo **filesystem**, com uma **etiqueta**
-(tag) que o convidado vai usar para achá-la:
+(tag) que o convidado vai usar para achá-la. A vm1 é um convidado novo do `bash newvm.sh vm1`, aula 1, e as duas pastas são feitas assim:
+
+```bash
+sudo mkdir -p /srv/share /srv/docs && sudo chown $USER:$USER /srv/share /srv/docs
+echo "written on host" > /srv/share/from-host.txt
+echo "how to reset the printer" > /srv/docs/manual.txt
+```
+
+Depois:
 
 ```
 ana@host:~$ ls -l /srv/share /srv/docs

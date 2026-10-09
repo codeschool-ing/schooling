@@ -1,6 +1,6 @@
 ---
 title: Para que serve, e quanto custa
-version: 1
+version: 2
 ---
 
 Para que um técnico de suporte usa máquinas virtuais, na ordem em que você deve encontrá-las:
@@ -17,7 +17,7 @@ Para que um técnico de suporte usa máquinas virtuais, na ordem em que você de
   isso que torna barato quebrar coisas de propósito.
 
 Nada disso é de graça. **Tudo o que um convidado tem, o host deixa de ter.** O convidado de 1 GiB daqui
-custou ao host cerca de 1,5 GiB enquanto rodava. Os dois processadores dele são
+custou ao host cerca de 1,6 GiB enquanto rodava. Os dois processadores dele são
 tempo tirado dos 4 do host, e cinco convidados ocupados em quatro processadores esperam a vez. O
 disco dele cresce conforme ele escreve, e dez sobreposições numa base podem encher o disco de um host
 devagar, onde ninguém está olhando. E um convidado é mais lento que o host em tudo o que passa pelo

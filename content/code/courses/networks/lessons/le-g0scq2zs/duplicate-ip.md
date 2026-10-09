@@ -1,10 +1,16 @@
 ---
 title: Ticket: "the server comes and goes"
-version: 1
+version: 2
 ---
 
 A new printer was installed this morning, and since then the office server is unreachable at times.
-The printer was given an address by hand, and it is the server's:
+The printer was given an address by hand, and it is the server's. In your lab, plug it in:
+
+```sh
+sudo bash ~/netlab/netlab plug printer office 192.168.10.10/24 52:54:00:99:00:01
+```
+
+Then, on the laptop:
 
 ```
 ana@laptop:~$ sudo ip neigh flush dev eth0; ping -c 1 192.168.10.10 >/dev/null; ip neigh show 192.168.10.10

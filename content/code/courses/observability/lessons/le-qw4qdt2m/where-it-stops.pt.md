@@ -1,6 +1,6 @@
 ---
 title: Onde ela para
-version: 1
+version: 2
 ---
 
 A instrumentação automática vê um serviço pelas bordas, e é boa nelas. **Ela para em três
@@ -27,7 +27,12 @@ escreveu `shop.sku` à mão.
 **Ela não atravessa um cliente para o qual não há instrumentação.** O `orders` publica cada pedido
 pago no RabbitMQ pelo `pika`, e nenhuma instrumentação para o `pika` está instalada. No laboratório,
 duas linhas de `publish()` levam o rastro adiante assim mesmo, escritas à mão. Aqui uma delas é
-apagada, para que o serviço fique exatamente como a instrumentação automática sozinha o deixaria:
+apagada, para que o serviço fique exatamente como a instrumentação automática sozinha o deixaria.
+Guarde uma cópia antes, para devolvê-la depois:
+
+```sh
+cp services/orders/app.py /tmp/orders.app.py
+```
 
 ```
 ana@obs:~/shop$ grep -n 'propagate' services/orders/app.py
@@ -62,5 +67,8 @@ automática tudo isso é o intervalo entre dois spans. No rastro da aula 1 a par
 porque o código do payments tinha envolvido a espera num span próprio. Se a espera estivesse lá sem
 span em volta, o rastro teria mostrado `POST /charge` levando 1501 ms e nada dentro dele.
 
-As duas linhas foram devolvidas, e o `orders` reiniciado, antes de qualquer outra coisa desta aula
-rodar.
+Devolva a linha, e reinicie o `orders`, antes de qualquer outra coisa desta aula:
+
+```sh
+cp /tmp/orders.app.py services/orders/app.py && docker compose restart orders
+```

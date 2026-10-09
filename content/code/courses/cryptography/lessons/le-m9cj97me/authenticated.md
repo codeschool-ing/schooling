@@ -10,7 +10,7 @@ encryption**, and GCM is the one this section uses.
 
 ## What the plain modes cannot tell you
 
-Section 02 already showed the symptom from the other side: a cipher turns any input into some
+Section 04 already showed the symptom from the other side: a cipher turns any input into some
 output, and the `bad decrypt` you saw was the padding failing to fit, not the cipher detecting
 anything. In CTR, which has no padding, there is not even that. A byte changed in a CTR ciphertext
 changes the same byte of the plaintext and nothing else, and decryption succeeds. In CBC a change
@@ -26,7 +26,66 @@ order of the two wrong was a long-running source of bugs, which is why the combi
 
 GCM, *Galois/Counter Mode*, is CTR for the encryption plus a **tag**, sixteen bytes computed over
 the whole ciphertext with the same key. Decryption recomputes the tag first and refuses to return
-anything if it differs. `vcrypt seal` encrypts the appointment file with AES-256-GCM:
+anything if it differs. Python's `cryptography` library has it as `AESGCM`, and two short tools
+put it on the command line. `vcrypt seal` encrypts a file and writes the nonce in front of the
+result, so that the file carries what decryption needs:
+
+```py
+# ~/lab/tools/seal.py
+"""vcrypt seal --key KEYFILE --nonce HEX [--aad TEXT] IN OUT: encrypt IN with
+AES-256-GCM and write OUT as nonce + ciphertext + tag. IN may be -."""
+import argparse
+import sys
+
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+
+p = argparse.ArgumentParser(prog="vcrypt seal")
+p.add_argument("--key", required=True, help="a file holding the key in hex")
+p.add_argument("--nonce", required=True, help="12 bytes in hex, never used twice with one key")
+p.add_argument("--aad", help="associated data: checked by the tag, not encrypted, not stored")
+p.add_argument("infile")
+p.add_argument("outfile")
+a = p.parse_args()
+
+key = bytes.fromhex(open(a.key).read().strip())
+nonce = bytes.fromhex(a.nonce)
+data = sys.stdin.buffer.read() if a.infile == "-" else open(a.infile, "rb").read()
+out = AESGCM(key).encrypt(nonce, data, a.aad.encode() if a.aad else None)
+with open(a.outfile, "wb") as f:
+    f.write(nonce + out)
+print(f"sealed {a.infile}: 12-byte nonce + {len(out) - 16} bytes of ciphertext + 16-byte tag -> {a.outfile}")
+```
+
+`vcrypt open` reads the nonce back, and either gets the plaintext or an exception, never both:
+
+```py
+# ~/lab/tools/open.py
+"""vcrypt open --key KEYFILE [--aad TEXT] IN: check the tag of a file seal
+wrote and, only if it holds, print the plaintext."""
+import argparse
+import sys
+
+from cryptography.exceptions import InvalidTag
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+
+p = argparse.ArgumentParser(prog="vcrypt open")
+p.add_argument("--key", required=True)
+p.add_argument("--aad")
+p.add_argument("infile")
+a = p.parse_args()
+
+key = bytes.fromhex(open(a.key).read().strip())
+blob = sys.stdin.buffer.read() if a.infile == "-" else open(a.infile, "rb").read()
+try:
+    plain = AESGCM(key).decrypt(blob[:12], blob[12:], a.aad.encode() if a.aad else None)
+except InvalidTag:
+    print(f"{a.infile}: authentication failed, nothing decrypted", file=sys.stderr)
+    sys.exit(1)
+sys.stdout.buffer.write(plain)
+```
+
+`AESGCM` checks the tag inside `decrypt`, before it returns a single byte. Here they are on the
+appointment file, with AES-256-GCM:
 
 ```
 ana@lab:~/lab$ vcrypt seal --key keys/aes-256.hex --nonce 000000000000000000000001 data/slots.dat slots.gcm
@@ -42,7 +101,21 @@ room1 free
 ```
 
 Now one bit of the ciphertext is changed, the kind of change a faulty disk or a hostile network
-could make, and the file is opened again with the right key:
+could make. A third tool does it:
+
+```py
+# ~/lab/tools/flip.py
+"""vcrypt flip FILE OFFSET: change one bit of one byte of FILE, in place."""
+import sys
+
+path, offset = sys.argv[1], int(sys.argv[2])
+data = bytearray(open(path, "rb").read())
+data[offset] ^= 0x01
+open(path, "wb").write(data)
+print(f"{path}: byte {offset} XOR 0x01")
+```
+
+And the file is opened again with the right key:
 
 ```
 ana@lab:~/lab$ vcrypt flip slots.gcm 18

@@ -1,0 +1,19 @@
+version: 2
+
+unit_tests:
+  - name: order_date_is_the_day_in_sao_paulo
+    description: >
+      Late on a São Paulo evening is already tomorrow in UTC; the order belongs to
+      the shop's day. And only a completed order is a sale.
+    model: stg_orders
+    given:
+      - input: source('raw', 'orders')
+        rows:
+          - {order_id: 1, shop_id: 1, ordered_at: "2026-03-02 23:30:00-03", status: completed}
+          - {order_id: 2, shop_id: 1, ordered_at: "2026-03-03 00:10:00-03", status: completed}
+          - {order_id: 3, shop_id: 7, ordered_at: "2026-03-02 12:00:00-03", status: refunded}
+    expect:
+      rows:
+        - {order_id: 1, order_date: 2026-03-02, is_sale: true}
+        - {order_id: 2, order_date: 2026-03-03, is_sale: true}
+        - {order_id: 3, order_date: 2026-03-02, is_sale: false}

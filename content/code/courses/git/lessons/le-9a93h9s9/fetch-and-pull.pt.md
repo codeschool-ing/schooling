@@ -1,11 +1,12 @@
 ---
 title: Fetch e pull: nada acontece sozinho
-version: 1
+version: 2
 ---
 
 O Bruno muda um preço e o envia:
 
 ```
+ana@vm:~/bruno/site$ sed -i 's/Cheese roll, 2.50/Cheese roll, 2.60/' menu.html
 ana@vm:~/bruno/site$ git commit -qam "Charge 2.60 for cheese rolls"
 ana@vm:~/bruno/site$ git push
 Enumerating objects: 5, done.

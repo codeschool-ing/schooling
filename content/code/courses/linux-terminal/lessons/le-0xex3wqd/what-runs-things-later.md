@@ -1,6 +1,6 @@
 ---
 title: Five things that run something later, and the one you should not write
-version: 1
+version: 2
 ---
 
 The job is always the same shape. Something has to happen at three in the
@@ -16,9 +16,12 @@ done
 ```
 
 **It is the first thing everybody writes and it is wrong in five ways**, and the
-first of them is measurable in fifteen seconds:
+first of them is measurable in fifteen seconds, with a script in the directory
+lesson 9 made:
 
 ```sh
+mkdir -p ~/work/scripts && cd ~/work/scripts
+cat > drift.sh <<'END'
 #!/bin/bash
 # the "run it in a loop" pattern: work, then sleep
 for i in 1 2 3; do
@@ -26,13 +29,15 @@ for i in 1 2 3; do
   sleep 2                 # the work
   sleep 3                 # the interval
 done
+END
+chmod +x drift.sh
 ```
 
 ```
 ana@vm:~/work/scripts$ ./drift.sh
-12:33:41  cycle start
-12:33:46  cycle start
-12:33:51  cycle start
+14:27:13  cycle start
+14:27:18  cycle start
+14:27:23  cycle start
 ```
 
 **The interval is three seconds and the cycles are five apart.** The work is
@@ -65,15 +70,38 @@ This lesson is about the first four. The fifth matters and is somebody else's
 documentation, except for one thing it shares with all of them, which is the
 subject of section 16.
 
+## What a fresh Ubuntu Server is missing
+
+Three of the tools this lesson uses are not installed on Ubuntu Server: `anacron`
+and `at`, and something to deliver the mail cron sends — section 07 is about that
+mail. `postfix` is the usual choice:
+
+```sh
+sudo apt install anacron at postfix
+```
+
+`postfix` asks one question while it installs, about the kind of mail
+configuration. Choose **Local only**: mail is delivered to accounts on this
+machine and goes nowhere else, which is all a cron job needs. Accept the system
+mail name it offers.
+
 ## Which of them is on this machine
 
 ```
 ana@vm:~$ ls /etc/cron.d /etc/cron.daily
 /etc/cron.d:
-anacron  e2scrub_all  php  sysstat
+anacron
+e2scrub_all
+sysstat
 
 /etc/cron.daily:
-0anacron  apt-compat  dpkg  sysstat
+0anacron
+apport
+apt-compat
+dpkg
+logrotate
+man-db
+sysstat
 ```
 
 **Cron is already running, and it is already running things**, which is true of

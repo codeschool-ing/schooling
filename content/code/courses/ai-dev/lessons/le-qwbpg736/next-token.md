@@ -1,6 +1,6 @@
 ---
 title: One token at a time
-version: 1
+version: 2
 ---
 
 A language model does one thing, over and over: **given the text so far, it gives every possible
@@ -22,82 +22,120 @@ compiler's internals to write a program. You do need the loop, because every lim
 in this course is a property of it.
 :::
 
-## A model you can see inside
+## Asking the model for one step
 
-The models you will call through an API have billions of parameters and cannot be inspected in
-any useful way. The lab has one small enough to read. **`tinylm` is a table of which token
-followed which**, counted over 78,351 tokens of the documentation that ships inside Python's
-standard library. It predicts the next token from the last two, and it is a real language model
-in the sense that matters here: same input, same kind of output.
+The APIs of the big providers return the finished text and hide the step. Ollama will show it:
+asked for one token, it can also return the five candidates it rated highest and the probability
+of each, as a logarithm. `~/shop/scratch/next.py` asks for exactly that and prints the
+probabilities as percentages:
 
-Ask it what follows `Return the`:
+```python
+import json
+import math
+import sys
+import urllib.request
 
-```
-ana@dev:~/shop$ python lab/next.py "Return the"
-context used: 2 tokens
-  5.0%  ' message'
-  4.1%  ' number'
-  4.1%  ' current'
-  3.3%  ' string'
-  3.3%  ' object'
-```
-
-That is a probability distribution. The five most likely tokens add up to under 20%; the rest is
-spread thinly over every other token the model has seen after those two. Notice the space at the
-start of each one: `' message'` is a single token that includes its leading space, which lesson 1
-section 03 comes back to.
-
-Change the context and the distribution changes with it:
-
-```
-ana@dev:~/shop$ python lab/next.py "Return the number of"
-context used: 2 tokens
-  7.5%  ' data'
-  7.5%  ' context'
-  7.5%  ' lines'
-  7.5%  ' threads'
-  3.8%  ' types'
-ana@dev:~/shop$ python lab/next.py "If the file does not"
-context used: 2 tokens
- 11.5%  ' have'
-  7.7%  ' add'
-  7.7%  ' check'
-  7.7%  ' exist'
-  7.7%  ' close'
+# Ollama's own API rather than an SDK: it can return the probabilities the model
+# gave each candidate for the next token, which no provider's API shows.
+body = {"model": "llama3.2:3b", "prompt": sys.argv[1], "raw": True, "stream": False,
+        "logprobs": True, "top_logprobs": 5, "options": {"num_predict": 1}}
+request = urllib.request.Request("http://127.0.0.1:11434/api/generate", json.dumps(body).encode())
+step = json.load(urllib.request.urlopen(request))["logprobs"][0]
+for candidate in step["top_logprobs"]:
+    print(f"{math.exp(candidate['logprob']):6.1%}  {candidate['token']!r}")
 ```
 
-`context used: 2 tokens` is the whole of this model's memory. After `If the file does not`, it
-only ever saw `does not`, so `exist` (the word any reader expects) ranks fourth, level with
-`add` and `close`. A large model computes the same kind of distribution, over a vocabulary of
-about 200,000 tokens, but it looks at **everything in its context window**: hundreds of
-thousands of tokens on current models, against two here. That difference is what makes one of
-them useful and the other a toy. The output has the same shape in both.
+`"raw": True` sends the text exactly as written. Without it, Ollama wraps the text in the
+template of a chat, and the model answers it instead of continuing it. Ask what follows
+`Return the`:
 
-## The loop, and how it goes wrong
+```
+ana@dev:~/shop$ python scratch/next.py "Return the"
+  7.6%  ' sum'
+  5.5%  ' number'
+  2.5%  ' first'
+  2.4%  ' value'
+  2.1%  ' count'
+```
 
-Generation repeats the step. This run always takes the single most likely token, which is called
+That is a probability distribution, and these are its five largest entries. Together they come to
+about a fifth; the rest is spread thinly over the 128,000 or so other tokens in this model's
+vocabulary. Notice the space at the start of each one: `' sum'` is a single token that includes its
+leading space, which section 07 comes back to.
+
+**Nothing has been drawn at random yet**, so your numbers will be close to these. Not identical:
+between two runs on the recording machine they moved by up to three points, which section 08
+comes back to. Change the context and the distribution changes
+with it:
+
+```
+ana@dev:~/shop$ python scratch/next.py "Return the number of"
+ 24.4%  ' elements'
+  5.1%  ' nodes'
+  4.6%  ' unique'
+  4.1%  ' ways'
+  3.4%  ' days'
+ana@dev:~/shop$ python scratch/next.py "If the file does not"
+ 72.3%  ' exist'
+ 10.4%  ' have'
+  7.4%  ' contain'
+  1.2%  ' already'
+  0.7%  ' open'
+```
+
+After `If the file does not`, one continuation takes almost three quarters of the probability,
+because the model read the whole sentence and `exist` is what that sentence nearly always says
+next. After `Return the`, nothing is that clear, and the model spreads its bets. **Both are the
+same kind of output**: a score for every token, computed from everything in the context. A model
+with a window of a few thousand tokens and one with a million produce exactly this; the larger
+window only changes how much text the scores are computed from.
+
+## The loop, and what it writes
+
+Generation repeats the step. `~/shop/scratch/generate.py` asks Ollama to run the whole loop for a
+number of tokens, with the settings of the draw that section 08 is about:
+
+```python
+import argparse
+import json
+import urllib.request
+
+ap = argparse.ArgumentParser()
+ap.add_argument("prompt")
+ap.add_argument("--tokens", type=int, default=20)
+ap.add_argument("--temperature", type=float, default=0.8)
+ap.add_argument("--top-p", type=float, default=1.0)
+ap.add_argument("--seed", type=int, default=1)
+a = ap.parse_args()
+
+# "raw" sends the text as it is, so the model continues it rather than replying to it.
+body = {"model": "llama3.2:3b", "prompt": a.prompt, "raw": True, "stream": False,
+        "options": {"num_predict": a.tokens, "temperature": a.temperature,
+                    "top_p": a.top_p, "top_k": 0, "seed": a.seed}}
+request = urllib.request.Request("http://127.0.0.1:11434/api/generate", json.dumps(body).encode())
+print(a.prompt + json.load(urllib.request.urlopen(request))["response"])
+```
+
+With the temperature at 0, every step takes the single most likely token, which is called
 **greedy decoding**:
 
 ```
-ana@dev:~/shop$ python lab/generate.py "Return the" --tokens 40 --temperature 0
-Return the message's header by summing up all threads started from the
-        the type of the
-        the type of the
-        the type of the
-        the type of the
-        the type
+ana@dev:~/shop$ python scratch/generate.py "Return the" --tokens 40 --temperature 0
+Return the sum of all the elements in the list.
+
+## Step 1: Define the problem
+We need to write a function that takes a list of numbers as input and returns the sum of all the elements
 ```
 
 ```schooling-figure
-{"svg": "<svg viewBox=\"0 0 720 280\" role=\"img\" aria-label=\"The generation loop with tinylm&#x27;s real numbers. The context Return the goes into the model, which gives every possible next token a probability: message 5.0%, number 4.1%, current 4.1%, string 3.3%, object 3.3%, and the rest spread thinly. One token is picked, message, appended to the context, and the loop asks again.\"><defs><marker id=\"lp-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><rect x=\"20\" y=\"70\" width=\"150\" height=\"60\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"95.0\" y=\"92.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">context</text><text x=\"95.0\" y=\"108.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">Return the</text><path d=\"M172 100 L218 100\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#lp-ah)\"></path><rect x=\"222\" y=\"70\" width=\"120\" height=\"60\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"282.0\" y=\"92.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">the model</text><text x=\"282.0\" y=\"108.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">reads all of it</text><path d=\"M344 100 L380 100\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#lp-ah)\"></path><rect x=\"384\" y=\"20\" width=\"200\" height=\"180\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"484\" y=\"38\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">next-token distribution</text><text x=\"398\" y=\"64\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\">&#x27; message&#x27;</text><rect x=\"478\" y=\"58\" width=\"70.0\" height=\"12\" rx=\"1\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"554.0\" y=\"64\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">5.0%</text><text x=\"398\" y=\"86\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\">&#x27; number&#x27;</text><rect x=\"478\" y=\"80\" width=\"57.39999999999999\" height=\"12\" rx=\"1\" fill=\"var(--phosphor-dim)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"541.4\" y=\"86\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">4.1%</text><text x=\"398\" y=\"108\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\">&#x27; current&#x27;</text><rect x=\"478\" y=\"102\" width=\"57.39999999999999\" height=\"12\" rx=\"1\" fill=\"var(--phosphor-dim)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"541.4\" y=\"108\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">4.1%</text><text x=\"398\" y=\"130\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\">&#x27; string&#x27;</text><rect x=\"478\" y=\"124\" width=\"46.199999999999996\" height=\"12\" rx=\"1\" fill=\"var(--phosphor-dim)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"530.2\" y=\"130\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">3.3%</text><text x=\"398\" y=\"152\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\">&#x27; object&#x27;</text><rect x=\"478\" y=\"146\" width=\"46.199999999999996\" height=\"12\" rx=\"1\" fill=\"var(--phosphor-dim)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"530.2\" y=\"152\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">3.3%</text><text x=\"484\" y=\"182\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">… and every other token</text><path d=\"M586 100 L604 100\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#lp-ah)\"></path><rect x=\"608\" y=\"70\" width=\"96\" height=\"60\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"656.0\" y=\"92.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--amber)\">pick one</text><text x=\"656.0\" y=\"108.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">&#x27; message&#x27;</text><path d=\"M656 132 L656 240 L95 240 L95 134\" stroke=\"var(--amber)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#lp-ah)\"></path><text x=\"376\" y=\"256\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--amber)\">append it, and ask again</text><text x=\"95\" y=\"160\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">Return the message</text></svg>", "caption": "One step of generation, with the numbers `tinylm` printed for `Return the`. A reply is this step repeated until a stop condition."}
+{"svg": "<svg viewBox=\"0 0 720 280\" role=\"img\" aria-label=\"The generation loop with llama3.2:3b&#x27;s real numbers. The context Return the goes into the model, which gives every possible next token a probability: sum 7.6%, number 5.5%, first 2.5%, value 2.4%, count 2.1%, and the rest spread thinly. One token is picked, sum, appended to the context, and the loop asks again.\"><defs><marker id=\"lp-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><rect x=\"20\" y=\"70\" width=\"150\" height=\"60\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"95.0\" y=\"92.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">context</text><text x=\"95.0\" y=\"108.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">Return the</text><path d=\"M172 100 L218 100\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#lp-ah)\"></path><rect x=\"222\" y=\"70\" width=\"120\" height=\"60\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"282.0\" y=\"92.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">the model</text><text x=\"282.0\" y=\"108.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">reads all of it</text><path d=\"M344 100 L380 100\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#lp-ah)\"></path><rect x=\"384\" y=\"20\" width=\"200\" height=\"180\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"484\" y=\"38\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">next-token distribution</text><text x=\"398\" y=\"64\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\">&#x27; sum&#x27;</text><rect x=\"478\" y=\"58\" width=\"76.0\" height=\"12\" rx=\"1\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"560.0\" y=\"64\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">7.6%</text><text x=\"398\" y=\"86\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\">&#x27; number&#x27;</text><rect x=\"478\" y=\"80\" width=\"55.0\" height=\"12\" rx=\"1\" fill=\"var(--phosphor-dim)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"539.0\" y=\"86\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">5.5%</text><text x=\"398\" y=\"108\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\">&#x27; first&#x27;</text><rect x=\"478\" y=\"102\" width=\"25.0\" height=\"12\" rx=\"1\" fill=\"var(--phosphor-dim)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"509.0\" y=\"108\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">2.5%</text><text x=\"398\" y=\"130\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\">&#x27; value&#x27;</text><rect x=\"478\" y=\"124\" width=\"24.0\" height=\"12\" rx=\"1\" fill=\"var(--phosphor-dim)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"508.0\" y=\"130\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">2.4%</text><text x=\"398\" y=\"152\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\">&#x27; count&#x27;</text><rect x=\"478\" y=\"146\" width=\"21.0\" height=\"12\" rx=\"1\" fill=\"var(--phosphor-dim)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"505.0\" y=\"152\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">2.1%</text><text x=\"484\" y=\"182\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">… and every other token</text><path d=\"M586 100 L604 100\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#lp-ah)\"></path><rect x=\"608\" y=\"70\" width=\"96\" height=\"60\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.2\"></rect><text x=\"656.0\" y=\"92.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--amber)\">pick one</text><text x=\"656.0\" y=\"108.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">&#x27; sum&#x27;</text><path d=\"M656 132 L656 240 L95 240 L95 134\" stroke=\"var(--amber)\" stroke-width=\"1.4\" fill=\"none\" marker-end=\"url(#lp-ah)\"></path><text x=\"376\" y=\"256\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--amber)\">append it, and ask again</text><text x=\"95\" y=\"160\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">Return the sum</text></svg>", "caption": "One step of generation, with the numbers `llama3.2:3b` gave for `Return the`. A reply is this step repeated until a stop condition."}
 ```
 
-**It falls into a loop and stays there.** Once `the type of the` has been written, the last two
-tokens are `of the`, the most likely continuation of those is the same as last time, and nothing
-in a greedy loop ever chooses differently. Large models repeat themselves under greedy decoding
-too, less often and over longer stretches, and the providers' defaults pick at random from the
-distribution rather than always taking the top. Lesson 1 section 04 shows how that choice is
-controlled.
+**Nothing in that text was asked for.** `Return the` became a coding exercise with a numbered
+step and a heading in Markdown, because text that starts that way, in what the model was trained
+on, often goes on that way. It stopped mid-sentence because it was allowed forty tokens and used
+them all. The model did not decide to write an exercise; at each step, one more token of an
+exercise was the likeliest thing to come next.
 
 ## What follows from the loop
 
@@ -109,8 +147,6 @@ Four facts about every model you will call come straight from this, and each has
 - **You pay per token**, in and out, because tokens are what the model processes. Lesson 2 does
   the arithmetic.
 - **The model sees only its context.** It has no memory between requests and no view of your
-  files unless they are in the request. Lesson 1 section 06 shows what a conversation really
-  sends.
+  files unless they are in the request. Section 10 shows what a conversation really sends.
 - **Nothing in the loop checks facts.** The next token is the likely one, and likely is not the
-  same as true. Lesson 1 section 07 shows the small model doing it, and lesson 11 deals with it
-  in production.
+  same as true. Section 11 shows this model doing it, and lesson 11 deals with it in production.

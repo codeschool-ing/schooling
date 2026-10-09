@@ -1,10 +1,10 @@
 ---
 title: Alocar, usar, liberar
-version: 1
+version: 2
 ---
 
 Todo valor que o seu programa cria ocupa memória. **Alocá-lo é automático, usá-lo é o seu código, e
-liberá-lo é trabalho do coletor de lixo.** O laboratório consegue mostrar os três, com uma opção feita
+liberá-lo é trabalho do coletor de lixo.** O Node consegue mostrar os três, com uma opção feita
 para experimentos, `--expose-gc`, que deixa um script rodar o coletor sob demanda, para cada número
 ser tirado depois de uma coleta:
 

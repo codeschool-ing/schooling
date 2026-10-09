@@ -1,6 +1,6 @@
 ---
 title: Four ways an answer goes wrong
-version: 1
+version: 2
 ---
 
 `status` in the header is the first thing to read when a name does not work, because each value points
@@ -57,7 +57,13 @@ ns1.example.com.        172800  IN      A       192.0.2.53
 
 Asked directly, the server `old` was delegated to does not answer the question at all: it points back
 up to `example.com`'s servers, which pointed to it. The resolver gave up in 4 milliseconds. A dead
-authoritative server gives SERVFAIL too, only slowly; asked directly, it looks like this:
+authoritative server gives SERVFAIL too, only slowly; asked directly, it looks like this. In your lab, leave
+this one for the end of the lesson, because sections 08 and 09 still need `ns1`. Then stop its server
+from your virtual machine, and `reset` the lab afterwards:
+
+```sh
+sudo bash ~/netlab/netlab exec ns1 root 'for p in $(ip netns pids ns1); do [ "$(cat /proc/$p/comm)" = named ] && kill $p; done'
+```
 
 ```
 ana@laptop:~$ dig @192.0.2.53 www.example.com +tries=1 +time=2

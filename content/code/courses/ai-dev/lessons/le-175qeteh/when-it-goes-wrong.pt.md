@@ -1,6 +1,6 @@
 ---
 title: Quando algo passa
-version: 1
+version: 2
 ---
 
 As defesas desta aula tornam os erros mais raros e menores. Elas não os tornam impossíveis, então
@@ -16,8 +16,8 @@ ser quem consegue fazer deploy. Teste-a como a aula 10 testou o fallback: usando
 
 ## Saiba o que aconteceu
 
-- **O log de requisições da aula 11 seção 04** diz que requisições, que modelo, que ferramentas, e os
-  ids de requisição para passar a um provedor.
+- **O log de requisições da aula 11 seção 04** diz que requisição, que modelo, quantos tokens e por
+  que parou, com o id de requisição para passar a um provedor.
 - **Chamadas de ferramenta são registradas como ações**, com os argumentos e quem as aprovou. "O
   modelo reembolsou o pedido 1042" precisa ter resposta para quando, quanto e com o sim de quem.
 - **Guarde os prompts e respostas que você escolheu guardar**, redigidos, por tempo suficiente para

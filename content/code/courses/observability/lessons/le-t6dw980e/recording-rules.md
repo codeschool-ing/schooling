@@ -1,12 +1,12 @@
 ---
 title: The objective, written as rules
-version: 1
+version: 2
 ---
 
 An SLI computed by hand is a query. An objective a team lives by is **a set of recording rules**,
 evaluated every few seconds and stored as series. That way dashboards and alerts read the same
 numbers and nobody retypes the expression with a different window. The shop's, in
-`prometheus/rules/slo.yml`:
+`prometheus/rules/slo.yml`, a file to save as the `cat` below prints it:
 
 ```
 ana@obs:~/shop$ cat prometheus/rules/slo.yml

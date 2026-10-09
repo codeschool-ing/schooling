@@ -1,6 +1,6 @@
 ---
 title: Duas linhas que todo head precisa: charset e viewport
-version: 1
+version: 2
 ---
 
 Dois elementos `<meta>` aparecem no head de praticamente toda página da web, e cada um resolve um problema que é invisível na máquina onde a página foi escrita.
@@ -9,7 +9,22 @@ Dois elementos `<meta>` aparecem no head de praticamente toda página da web, e 
 
 Um arquivo é feito de bytes, e a letra *ã* de *São Paulo* não é um byte em toda codificação. Em **UTF-8**, que é o que todo editor moderno salva, são dois bytes; no antigo **ISO-8859-1**, é um. O navegador precisa saber que codificação o arquivo usa antes de transformar bytes em texto, e `<meta charset="utf-8">` diz isso a ele.
 
-Três versões da mesma página mostram o que acontece. A primeira declara UTF-8 e foi salva em UTF-8. A segunda declara UTF-8 e foi salva em ISO-8859-1, que é o que acontece quando um arquivo passa por um editor antigo. A terceira não declara nada.
+Três versões da mesma página mostram o que acontece. A primeira declara UTF-8 e foi salva em UTF-8. A segunda declara UTF-8 e foi salva em ISO-8859-1, que é o que acontece quando um arquivo passa por um editor antigo. A terceira não declara nada. Aqui está a primeira, `charset.html`:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Andorinha Books</title>
+  </head>
+  <body>
+    <p class="where">Pinheiros, São Paulo</p>
+  </body>
+</html>
+```
+
+Para a segunda, salve uma cópia como `latin1.html` na codificação ocidental, ISO 8859-1. No VS Code, clique em *UTF-8* na barra de status, embaixo da janela, escolha **Save with Encoding** (Salvar com Codificação) e depois *Western (ISO 8859-1)*. Para a terceira, salve outra cópia como `no-charset.html` e apague a linha com `<meta charset>`.
 
 ```
 ana@laptop:~/site$ probe charset.html text .where
@@ -28,7 +43,7 @@ Então a regra é salvar todo arquivo em UTF-8 e dizer isso nos primeiros 1024 b
 
 Quando os smartphones chegaram, quase todo site era feito para uma tela de desktop de uns mil pixels de largura. Desenhada no tamanho real num celular, uma página dessas mostraria o canto superior esquerdo e mais nada. Então os navegadores móveis fingem: **sem instruções, eles montam a página como se a tela tivesse 980 pixels de largura, e depois encolhem o resultado para caber.**
 
-`probe --mobile` faz o Chromium se comportar como o navegador de um celular, aqui um de 390 pixels de largura, que é um celular comum. A mesma página, sem e com a tag viewport:
+`probe --mobile` faz o Chromium se comportar como o navegador de um celular, aqui um de 390 pixels de largura, que é um celular comum. A página é o `skeleton.html` da seção 07, salvo como `viewport.html`, e `no-viewport.html` é uma cópia dele sem a linha `<meta name="viewport">`. Sem e com a tag viewport:
 
 ```
 ana@laptop:~/site$ probe --mobile --width 390 --height 844 --dpr 3 no-viewport.html window box h1

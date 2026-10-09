@@ -1,9 +1,9 @@
 ---
 title: Redesenhando a moldura da página em duas larguras
-version: 1
+version: 2
 ---
 
-A seção 11 da aula 9 deixou uma página com um problema: numa janela de 700, o aside de 240 pixels continuava ao lado do conteúdo e ocupava um terço da tela. A seção 06 da aula 9 prometeu a correção, reescrever `grid-template-areas` dentro de uma media query. Aqui está a moldura reescrita em mobile first, com uma navegação acrescentada:
+A seção 11 da aula 9 deixou uma página com um problema: numa janela de 700, o aside de 240 pixels continuava ao lado do conteúdo e ocupava um terço da tela. A seção 06 da aula 9 prometeu a correção, reescrever `grid-template-areas` dentro de uma media query. Aqui está a moldura reescrita em mobile first, com uma navegação acrescentada, em `shell.css`:
 
 ```css
 *, *::before, *::after { box-sizing: border-box; }
@@ -59,7 +59,36 @@ footer       { grid-area: footer; }
 .cards article { padding: 16px; background: #f4f1ea; }
 ```
 
-A base é uma coluna, cinco áreas empilhadas na ordem do HTML. Em **48rem**, 768 pixels, o aside vai para o lado do `main`. Em **64rem**, 1024, a navegação vira uma coluna própria à esquerda. Cada passo só reescreve as strings do template e as colunas; as cinco linhas de `grid-area` são escritas uma vez:
+A base é uma coluna, cinco áreas empilhadas na ordem do HTML. Em **48rem**, 768 pixels, o aside vai para o lado do `main`. Em **64rem**, 1024, a navegação vira uma coluna própria à esquerda. Cada passo só reescreve as strings do template e as colunas; as cinco linhas de `grid-area` são escritas uma vez.
+
+A página, `shell.html`, tem as cinco áreas na ordem em que um celular as mostra:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Andorinha Books</title>
+    <link rel="stylesheet" href="shell.css">
+  </head>
+  <body>
+    <header class="site-header"><p>Andorinha Books</p></header>
+    <nav aria-label="Main"><p>Events · Order a book · Opening hours</p></nav>
+    <main>
+      <h1>This week</h1>
+      <div class="cards">
+        <article><h2>Poetry reading</h2><p>Thursday, 7 pm.</p></article>
+        <article><h2>Book swap</h2><p>Saturday, from 10 am.</p></article>
+        <article><h2>Bookbinding</h2><p>Saturday, 2 pm.</p></article>
+        <article><h2>New arrivals</h2><p>Forty paperbacks.</p></article>
+      </div>
+    </main>
+    <aside><h2>Opening hours</h2><p>10 am to 7 pm.</p></aside>
+    <footer><p>Rua dos Pinheiros, 1000 · São Paulo</p></footer>
+  </body>
+</html>
+```
 
 ```
 ana@laptop:~/site$ probe --width 700 shell.html box "body > *"

@@ -3,7 +3,14 @@ title: Uma linha de aritmética, a cada quinze segundos
 version: 1
 ---
 
-A loja, com uma réplica e um request de CPU de 200m. **O request importa mais aqui do que em qualquer
+O autoscaler lê seus números do metrics-server, que um cluster kind não tem, então esta aula começa
+com `./up.sh` e o instala como a aula 21 fez:
+
+```sh
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.9.0/components.yaml
+```
+
+Depois a loja, com uma réplica e um request de CPU de 200m. **O request importa mais aqui do que em qualquer
 outro lugar**, porque o autoscaler mede cada pod como uma porcentagem do que ele pediu:
 
 ```yaml
@@ -84,7 +91,15 @@ paz. Ele lê os números do metrics-server, instalado como na lição 21.
 ## Sob carga
 
 Um pod busybox agora roda quatro laços ao mesmo tempo, cada um pedindo à loja 300 milissegundos de
-trabalho por vez. Quarenta e cinco segundos depois, e de novo um minuto depois:
+trabalho por vez, durante dois minutos e meio. A primeira linha cria o pod; a segunda começa os laços e
+segura o terminal até eles acabarem, então rode-a num segundo terminal:
+
+```sh
+kubectl run load --image=busybox:1.37 --restart=Never --command -- sleep 3600
+kubectl exec load -- sh -c 'for n in 1 2 3 4; do (end=$(($(date +%s)+150)); while [ $(date +%s) -lt $end ]; do wget -qO- "shop/work?ms=300" >/dev/null; done) & done; wait'
+```
+
+Quarenta e cinco segundos depois, e de novo um minuto depois:
 
 ```
 ana@laptop:~/shop$ kubectl get hpa shop

@@ -1,10 +1,15 @@
 ---
 title: `umask`, which decides what a new file is born with
-version: 1
+version: 2
 ---
 
 Nothing asked you what permissions `report.txt` should have. Something decided, and it decided the
-same thing every time:
+same thing every time. Watch it decide, in a directory of its own:
+
+```sh
+mkdir -p ~/um
+cd ~/um
+```
 
 ```
 ana@vm:~/um$ umask
@@ -76,9 +81,11 @@ ana@vm:~/um$ ls -l c.txt
 `664` — group can write. That is the umask for working in a shared directory, and it is what the
 setgid bit in section 10 is usually paired with.
 
-`-S` prints it the other way round, as what is *allowed* rather than what is removed:
+`-S` prints it the other way round, as what is *allowed* rather than what is removed. Back to the
+default first, because a umask lasts as long as the shell it was set in:
 
 ```
+ana@vm:~/um$ umask 022
 ana@vm:~/um$ umask -S
 u=rwx,g=rx,o=rx
 ```
@@ -125,7 +132,13 @@ could create by hand.
 *creation*, and `chmod` is not creation.
 
 There is one exception worth naming, because it looks like a contradiction: **`chmod +x` with no
-`u`, `g` or `o` is filtered by the umask.**
+`u`, `g` or `o` is filtered by the umask.** Two empty files, in another directory:
+
+```sh
+mkdir -p ~/uq
+cd ~/uq
+touch t1.txt t2.txt
+```
 
 ```
 ana@vm:~/uq$ umask 077
@@ -140,3 +153,9 @@ total 0
 
 Same intention, two different results. The bare `+x` was filtered and gave the owner alone; `a+x`
 said who, and was not. **Write the audience out** and this never comes up.
+
+And put the umask back before you go on, or open a new terminal, which starts with the default:
+
+```
+ana@vm:~/uq$ umask 022
+```

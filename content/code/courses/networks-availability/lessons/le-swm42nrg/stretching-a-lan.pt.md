@@ -18,7 +18,7 @@ Em qualquer outro caso, o que os escritórios dividem é o que sofrem juntos:
 |---|---|
 | broadcasts | todo pedido ARP e todo DHCP discover de um site atravessa o túnel para todos os outros |
 | um loop | um cabo ligado de volta no próprio switch num site inunda os outros sites também |
-| spanning tree | uma árvore só atravessando a WAN, a aula 20 de `networks-addressing`: uma mudança de topologia num site chega aos outros |
+| spanning tree | uma árvore só atravessando a WAN, como em `networks-addressing`: uma mudança de topologia num site chega aos outros |
 | uma sub-rede | se o enlace da WAN cai, a sub-rede se parte em duas metades que acreditam estar inteiras |
 | um gateway | uma máquina movida para a filial continua mandando para o gateway na matriz, e de volta, pela WAN |
 
@@ -45,5 +45,5 @@ como o VXLAN roda em escala.
 
 O EVPN responde à lista de inundação da seção anterior. Em vez de copiar todo broadcast e todo quadro
 desconhecido para cada site e aprender os endereços pelas respostas, cada ponta anuncia os próprios
-endereços MAC no BGP, o protocolo da aula 17 de `networks-addressing`. As outras sabem onde um endereço
+endereços MAC no BGP, o protocolo que `networks-addressing` apresenta. As outras sabem onde um endereço
 mora antes de precisar perguntar. 

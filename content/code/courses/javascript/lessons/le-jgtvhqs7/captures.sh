@@ -12,7 +12,7 @@
 # What is STAGED rather than typed: the files ana wrote (put below), whose
 # contents the lesson shows in full.
 #
-# Every request goes to the lab's own server, lab/serve.mjs: started by page
+# Every request goes to serve.mjs with the api.mjs this lesson shows: started by page
 # for the browser captures, and started by this script with serve, in the
 # background, for the two programs run with node. Its /api/ answers are
 # written in that file; /api/slow really waits, and /api/flaky fails its first

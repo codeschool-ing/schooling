@@ -1,6 +1,6 @@
 ---
 title: Tags that every resource carries
-version: 1
+version: 2
 ---
 
 Tags look like notes for whoever browses the console. On the bill they are something else: **the
@@ -13,7 +13,8 @@ the enforcement, because a convention people have to remember is followed on the
 
 Writing `tags = { ... }` on every resource works until somebody adds a resource and forgets.
 The AWS provider has a block for exactly this, `default_tags`, which merges a set of tags into every
-resource the provider creates. Ana makes the set a variable, so it cannot be left out:
+resource the provider creates. Ana makes the set a variable, so it cannot be left out. `main.tf`
+becomes:
 
 ```hcl
 terraform {
@@ -45,6 +46,8 @@ provider "aws" {
   }
 }
 ```
+
+and the values go in `terraform.tfvars`, which Terraform reads without being asked:
 
 ```hcl
 tags = {
@@ -92,8 +95,8 @@ ana@laptop:~/shop$ terraform plan -no-color | sed -n '/aws_nat_gateway.shop will
 
 **`tags` stays empty and `tags_all` gains four.** `tags` is what the resource block says;
 `tags_all` is what AWS will hold, the resource's own tags merged over the defaults; where both name
-the same key, the resource's value wins. Each web server keeps its `Name` beside the four, as AWS
-shows after the apply:
+the same key, the resource's value wins. Ana applies the change and commits it as *tag everything
+for the bill*. Each web server keeps its `Name` beside the four, as AWS shows after the apply:
 
 ```
 ana@laptop:~/shop$ aws ec2 describe-instances --filters Name=tag:Name,Values=web-0 --query "Reservations[0].Instances[0].Tags" --output table

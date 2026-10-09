@@ -1,6 +1,6 @@
 ---
 title: Deleting a snapshot is a merge
-version: 1
+version: 2
 ---
 
 A layer cannot simply be deleted: it holds every write since the snapshot. Deleting the snapshot and
@@ -32,7 +32,7 @@ The first `blockcommit` tried to merge into the **bottom of the chain**, which i
 bottom here is `lab-base.qcow2`, the disk every guest in this course reads from. It failed only because
 that file is read-only. **This is not hypothetical**: while this lesson was being prepared, the same
 command, run against a base that was not read-only, wrote one guest's changes into the base of all of
-them, and it had to be rebuilt. `lab.sh` has made the base read-only ever since.
+them, and it had to be rebuilt. That is why lesson 1 made the base read-only with `chmod 444`.
 
 `--shallow` merges one layer down, into `vm1.qcow2`, and `--pivot` switches the running guest onto it,
 without stopping it. Then the snapshot's record and its now-empty file go. `vm1.qcow2` holds the

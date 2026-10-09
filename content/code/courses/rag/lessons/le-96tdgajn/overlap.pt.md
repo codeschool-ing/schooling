@@ -1,6 +1,6 @@
 ---
 title: Sobreposição
-version: 1
+version: 2
 ---
 
 Se o problema dos pedaços de tamanho fixo é que um corte cai dentro de uma frase, uma solução é
@@ -9,7 +9,7 @@ antes do fim do anterior, para que o texto em volta de cada fronteira apareça d
 um pedaço e outra no começo do seguinte.
 
 ```
-ana@lab:~/rag$ python boundaries.py 60 15
+ana@vm:~/rag$ python boundaries.py 60 15
 20 chunks of 60 words, 15 overlapping
 chunk 3 starts: has no writing, no broken spine and no missing ...
 chunk 3 ends:   ... an email explaining why. The statutory right of withdrawal
@@ -49,7 +49,7 @@ pedaços recuperados. Duas linhas dela pertencem aqui:
 | estratégia | pedaços | achadas |
 | --- | --- | --- |
 | fixo, 60 palavras | 116 | 19 de 26 |
-| fixo, 60 palavras, 15 sobrepostas | 150 | 23 de 26 |
+| fixo, 60 palavras, 15 sobrepostas | 150 | 22 de 26 |
 
 **A sobreposição achou quatro respostas a mais de 26**, por 34 pedaços a mais no corpus. É a melhoria mais
 barata que o corte de tamanho fixo pode ter, e o conselho comum é uma sobreposição de 10 a 20 por cento

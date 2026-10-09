@@ -1,6 +1,6 @@
 ---
 title: Ruído, e a equipe que para de ler alertas
-version: 1
+version: 2
 ---
 
 **Fadiga de alertas** é o que acontece com uma equipe acionada com frequência por coisas que não pedem
@@ -29,3 +29,11 @@ Google sugere no máximo dois incidentes por turno, para cada um receber a aten�
 que pediam ação como fração de todos os pages** mostra o ruído; qualquer coisa bem abaixo da metade é um
 pager treinando o dono a ignorá-lo. Os dois podem sair dos próprios registros do Alertmanager, e a aula
 18 os põe na rotina do plantão.
+
+Antes da próxima aula, tire as regras e o override desta aula:
+
+```sh
+rm prometheus/rules/burn.yml compose.override.yaml
+curl -s -X POST localhost:9090/-/reload
+docker compose up -d alertmanager
+```

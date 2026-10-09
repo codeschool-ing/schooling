@@ -32,28 +32,38 @@ go.onclick = async () => {
 </script>
 ```
 
-A browser has no folder to read a model from, so **local** there means *from the page's own
-server*, and it starts switched off. `wasmPaths` says where the runtime's WebAssembly lives; left
-alone, the library fetches it from `cdn.jsdelivr.net`, a public CDN, which is a third party learning who opened the
-page. ana serves `~/desk` with Python's `http.server` on her own machine, and `browse` (a headless
-Chromium, standing in for her) opens the page and presses the button:
+A browser has no folder to read a model from, so **local** there means *from the page's own server*,
+and it starts switched off. `wasmPaths` says where the runtime's WebAssembly lives; left alone, the
+library fetches it from `cdn.jsdelivr.net`, a public CDN, which is a third party learning who opened
+the page. ana serves `~/desk` with Python's own web server, in a second terminal, and leaves it
+running:
 
 ```
-ana@desk:~/desk$ browse http://127.0.0.1:8600/sort.html
+ana@desk:~/desk$ python -m http.server 8600 --bind 127.0.0.1
+Serving HTTP on 127.0.0.1 port 8600 (http://127.0.0.1:8600/) ...
+```
+
+Then ana opens `http://127.0.0.1:8600/sort.html` in a browser, opens the developer tools on the
+**Network** tab, and presses **Sort**. Here is the same visit made by a headless Chromium, the
+browser this course was recorded with, which prints what the page said and every request it made:
+
+```
+# headless Chromium 141.0.7390.37, http://127.0.0.1:8600/sort.html
 console  WebGPU is experimental on this platform. See https://github.com/gpuweb/gpuweb/wiki/Implementation-Status#implementation-status
 console  Failed to create WebGPU Context Provider
 page     address-change 0.890
 fetched  200      1106  127.0.0.1:8600/sort.html
 fetched  200    581935  127.0.0.1:8600/node_modules/@huggingface/transformers/dist/transformers.min.js
 fetched  200       326  127.0.0.1:8600/models/lantern-sorter/config.json
-fetched  200      4303  127.0.0.1:8600/models/lantern-sorter/tokenizer.json
 fetched  200        90  127.0.0.1:8600/models/lantern-sorter/tokenizer_config.json
+fetched  200      4303  127.0.0.1:8600/models/lantern-sorter/tokenizer.json
 fetched  200      4949  127.0.0.1:8600/models/lantern-sorter/onnx/model.onnx
 fetched  200     53057  127.0.0.1:8600/node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.asyncify.mjs
 fetched  200        90  127.0.0.1:8600/models/lantern-sorter/tokenizer_config.json
 fetched  200  26861777  127.0.0.1:8600/node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.asyncify.wasm
 9 requests, to 1 host: 127.0.0.1:8600
 ```
+
 
 `address-change`, at 0.890. The two console lines are Chromium's, about WebGPU, which this headless
 browser could not provide; the runtime ran on WebAssembly, the `.wasm` file in the list.
@@ -77,15 +87,20 @@ the option out and open the page again:
 ```
 ana@desk:~/desk$ sed "s/, { dtype: \"fp32\" }//" sort.html > sort-q8.html && grep -c dtype sort-q8.html
 0
-ana@desk:~/desk$ browse http://127.0.0.1:8600/sort-q8.html --wait 15
+```
+
+And in the browser, or the headless one:
+
+```
+# headless Chromium 141.0.7390.37, http://127.0.0.1:8600/sort-q8.html
 console  Failed to load resource: the server responded with a status of 404 (File not found)
 error    `local_files_only=true` or `env.allowRemoteModels=false` and file was not found locally at "./models/lantern-sorter/onnx/model_quantized.onnx".
 page     loading the model… (no answer after 15 s)
 fetched  200      1087  127.0.0.1:8600/sort-q8.html
 fetched  200    581935  127.0.0.1:8600/node_modules/@huggingface/transformers/dist/transformers.min.js
 fetched  200       326  127.0.0.1:8600/models/lantern-sorter/config.json
-fetched  200        90  127.0.0.1:8600/models/lantern-sorter/tokenizer_config.json
 fetched  200      4303  127.0.0.1:8600/models/lantern-sorter/tokenizer.json
+fetched  200        90  127.0.0.1:8600/models/lantern-sorter/tokenizer_config.json
 fetched  200        90  127.0.0.1:8600/models/lantern-sorter/tokenizer_config.json
 fetched  404       335  127.0.0.1:8600/models/lantern-sorter/onnx/model_quantized.onnx
 7 requests, to 1 host: 127.0.0.1:8600

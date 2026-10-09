@@ -1,6 +1,6 @@
 ---
 title: Um rollback que ninguém rodou não funciona
-version: 1
+version: 2
 ---
 
 O caminho de volta só é usado em dias ruins, o que faz dele o caminho menos exercitado de todo o
@@ -24,6 +24,13 @@ pessoas que rodam uma vez cada, põem o bug de volta na frente dos clientes. O s
 passo para trás, e não faz ideia de qual dos dois releases era o bom.
 
 ## Na primeira vez não há para onde voltar
+
+A homologação, criada de novo do zero para isso, recebe o primeiro deploy:
+
+```sh
+mkdir ~/envs/staging
+echo SHIPQUOTE_PORT=8200 > ~/envs/staging/config.env
+```
 
 ```
 ana@laptop:~/shipquote$ ops/deploy.sh staging dist/shipquote-1.6.1.tar.gz

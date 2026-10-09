@@ -1,6 +1,6 @@
 ---
 title: A forma abreviada flex
-version: 1
+version: 2
 ---
 
 As três propriedades quase sempre são definidas juntas, com **`flex`**, e três valores dela cobrem quase tudo:
@@ -11,7 +11,32 @@ As três propriedades quase sempre são definidas juntas, com **`flex`**, e trê
 | `flex: auto` | `1 1 auto` | cresce a partir do conteúdo: conteúdo maior, item maior |
 | `flex: none` | `0 0 auto` | fica do tamanho do conteúdo, nem cresce nem encolhe |
 
-A primeira linha é a que vale ler duas vezes, e o navegador a confirma:
+A primeira linha é a que vale ler duas vezes. Aqui estão as três nos mesmos três nomes de estante, em `shorthand.html`:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>flex · Andorinha Books</title>
+    <style>
+      body { margin: 0; font: 16px/1.5 sans-serif; }
+      .row { display: flex; width: 600px; margin-bottom: 8px; background: #f4f1ea; }
+      .row p { margin: 0; background: #2f6f4e; color: white; }
+      .one p { flex: 1; }
+      .auto p { flex: auto; }
+      .none p { flex: none; }
+    </style>
+  </head>
+  <body>
+    <div class="row one"><p>Poetry</p><p>Fiction in Portuguese</p><p>Children</p></div>
+    <div class="row auto"><p>Poetry</p><p>Fiction in Portuguese</p><p>Children</p></div>
+    <div class="row none"><p>Poetry</p><p>Fiction in Portuguese</p><p>Children</p></div>
+  </body>
+</html>
+```
+
+O navegador confirma o que `flex: 1` quer dizer:
 
 ```
 ana@laptop:~/site$ probe shorthand.html style '.one p:first-child' flex-grow,flex-shrink,flex-basis

@@ -6,7 +6,7 @@ version: 1
 A aula 4 viu dois preços por modelo, normal e lote. A entrada do Gemini Pro traz mais:
 
 ```
-ana@desk:~/desk$ sheet show gemini/gemini-pro-latest | grep -E "^(input|output)_cost_per_token"
+ana@desk:~/desk$ python sheet.py show gemini/gemini-pro-latest | grep -E "^(input|output)_cost_per_token"
 input_cost_per_token                       2e-06
 input_cost_per_token_above_200k_tokens     4e-06
 input_cost_per_token_above_200k_tokens_priority 7.2e-06
@@ -43,18 +43,17 @@ Duas linhas acima trazem `above_200k_tokens`, e elas mudam a conta dos prompts l
 ingênua de uma requisição de 300.000 tokens usa o preço normal:
 
 ```
-ana@desk:~/desk$ sheet cost gemini/gemini-pro-latest 300000 1000
+ana@desk:~/desk$ python sheet.py cost gemini/gemini-pro-latest 300000 1000
 # LiteLLM model sheet at 21881c57, 4472 entries
 300,000 in  x $2/M = $0.6000
 1,000 out x $12/M = $0.0120
 total $0.6120
 ```
 
-É o que o `sheet cost` faz, e está errado para este modelo. O próprio código do LiteLLM, que usa
+É o que o `sheet.py cost` faz, e está errado para este modelo. O próprio código do LiteLLM, que usa
 esses mesmos campos para cobrar os usuários dele, diz como o limite se aplica:
 
 ```
-ana@desk:~/desk$ sources quote litellm-cost "If input_tokens > threshold|for all token types"
 # BerriAI/litellm@21881c57 litellm/litellm_core_utils/llm_cost_calc/utils.py
  627: If input_tokens > threshold and `input_cost_per_token_above_[x]k_tokens` or
       `input_cost_per_token_above_[x]_tokens` is set,
@@ -62,13 +61,13 @@ ana@desk:~/desk$ sources quote litellm-cost "If input_tokens > threshold|for all
 ```
 
 **Quando o prompt passa de 200.000 tokens, todo token da requisição vai para o preço mais alto**, os
-primeiros 200.000 incluídos, e a saída junto. O `lab/tiered.py` aplica essa regra:
+primeiros 200.000 incluídos, e a saída junto. O `tiered.py` aplica essa regra:
 
 ```python
 import json
 import sys
 
-sheet = json.load(open("/opt/aimodels/share/litellm-21881c57.json"))
+sheet = json.load(open("litellm-21881c57.json"))  # the copy sheet.py keeps
 model, tokens_in, tokens_out = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
 e = sheet[model]
 rate_in, rate_out = e["input_cost_per_token"], e["output_cost_per_token"]
@@ -81,7 +80,7 @@ print(f"{tokens_in:,} in at ${rate_in * 1e6:g}/M, {tokens_out:,} out at ${rate_o
 ```
 
 ```
-ana@desk:~/desk$ python lab/tiered.py gemini/gemini-pro-latest 190000 1000; python lab/tiered.py gemini/gemini-pro-latest 210000 1000
+ana@desk:~/desk$ python tiered.py gemini/gemini-pro-latest 190000 1000; python tiered.py gemini/gemini-pro-latest 210000 1000
 190,000 in at $2/M, 1,000 out at $12/M: $0.3920
 210,000 in at $4/M, 1,000 out at $18/M: $0.8580
 ```
@@ -91,6 +90,6 @@ Vinte mil tokens de prompt a mais, e a requisição custa **mais que o dobro**: 
 lado dela cada requisição cai, e o conserto costuma estar antes: recuperar menos (aula 4 seção 07),
 ou dividir o documento.
 
-Um lembrete sobre a ferramenta: a tabela registra esses níveis; o `sheet cost` os ignora. **Uma
+Um lembrete sobre a ferramenta: a tabela registra esses níveis; o `sheet.py cost` os ignora. **Uma
 calculadora de custo que só conhece o preço normal está certa até o dia em que erra feio**, que é um
 motivo de a aula 21 contar o que cada resposta informa em vez do que uma calculadora prevê.

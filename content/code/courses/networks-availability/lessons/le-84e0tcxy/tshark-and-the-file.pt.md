@@ -3,7 +3,7 @@ title: Wireshark sem janela
 version: 1
 ---
 
-**Não há tela neste laboratório, então toda captura desta aula é feita com o `tshark`.** Isso muda
+**As máquinas deste curso não têm tela, então toda captura desta aula é feita com o `tshark`.** Isso muda
 menos do que parece. O `tshark` é o Wireshark com um terminal na frente: os mesmos dissectors
 decodificam cada pacote, as mesmas duas linguagens de filtro escolhem o que guardar e o que mostrar, e
 um arquivo salvo por um abre no outro. Onde esta aula digita `-f "tcp port 80"`, a janela tem a caixa
@@ -32,7 +32,9 @@ ana wireshark
 15. wifidump (Wi-Fi remote capture)
 ```
 
-`ana` está no grupo `wireshark`, e é por isso que nenhum comando desta aula começa com `sudo`.
+`ana` está no grupo `wireshark`, e é por isso que nenhum comando desta aula começa com `sudo`. O
+`netlab.sh` pôs você nele também; numa máquina do Multipass a sua lista de grupos é mais longa, e
+`wireshark` está nela.
 **Capturar exige um privilégio, e decodificar um pacote não.** Então o pacote do Ubuntu dá o
 privilégio ao pequeno auxiliar que abre a interface e deixa os membros de um grupo rodá-lo. Os
 dissectors, o código que interpreta o que um estranho resolveu mandar, rodam como `ana`. Rodar o
@@ -47,7 +49,12 @@ só a `eth0` leva alguma coisa.
 
 O hábito que compensa é **gravar a captura num arquivo e analisar o arquivo**, em vez de ler uma tela
 rolando. `mon` capturou por oito segundos enquanto `files` fazia uma manhã de trabalho em miniatura:
-uma página web, duas consultas DNS, um ping, uma requisição HTTPS e uma página que não existe.
+uma página web, duas consultas DNS, um ping, uma requisição HTTPS e uma página que não existe. Comece a
+captura abaixo em `mon` e, dentro dos oito segundos dela, cole isto em `files`:
+
+```sh
+curl -s http://192.0.2.21/ >/dev/null; dig +short www.example.com >/dev/null; dig +short nosuch.example.com >/dev/null; ping -c 2 192.0.2.22 >/dev/null; curl -s https://www.example.com/ --resolve www.example.com:443:192.0.2.21 >/dev/null; curl -s http://192.0.2.23/nothing-here >/dev/null
+```
 
 ```
 ana@mon:~$ tshark -n -q -i eth0 -f "not arp" -a duration:8 -w files.pcap

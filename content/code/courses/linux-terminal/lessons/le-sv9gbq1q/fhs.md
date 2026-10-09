@@ -1,6 +1,6 @@
 ---
 title: The hierarchy, directory by directory
-version: 1
+version: 2
 ---
 
 Lesson 1 section 13 gave you eight names so you could stop feeling lost. This is the full map, and
@@ -137,3 +137,64 @@ there.
 for; it does not forbid anything else. When you meet a name you do not recognise at the root of a
 tree, `ls -l` it and look at who owns it — that answers the question more often than searching for
 the name does.
+
+## The practice directory for this lesson
+
+The rest of this lesson walks around a small project in `~/work`: a few source files, a data file,
+some logs and two notes. Lessons 6, 8 and 9 come back to it. Build it now by copying this whole
+block into the terminal; it prints nothing, and it takes a second:
+
+```sh
+mkdir -p ~/work/src ~/work/data ~/work/logs ~/work/notes ~/work/build
+cd ~/work
+cat > README.md <<'END'
+# ledger
+
+A small tool that reads a CSV and totals a column.
+
+Build with `make`. Run with `./ledger data/report.csv`.
+END
+printf 'ledger: src/main.c src/util.c\n\tcc -o ledger src/main.c src/util.c\n' > Makefile
+printf 'CURRENCY=BRL\nDATA=data/report.csv\nDEBUG=false\n' > .env
+printf 'int total(const char *path);\n' > src/util.h
+printf '#include "util.h"\n\nint total(const char *csvpath)\n{\n\treturn 0;\n}\n' > src/util.c
+cat > src/main.c <<'END'
+#include <stdio.h>
+#include "util.h"
+
+int main(int argc, char **argv)
+{
+    if (argc != 2) {
+        fprintf(stderr, "usage: ledger FILE\n");
+        return 2;
+    }
+    printf("%d\n", total(argv[1]));
+    return 0;
+}
+END
+printf 'date,amount\n2025-01-03,1200\n2025-01-09,-340\n2025-02-11,880\n' > data/report.csv
+head -c 2048 /dev/urandom > data/cache.bin
+for i in 1 2 3 4 5 6 7 8 9 10; do
+  printf 'app started\napp ready\napp handled a request\n'
+done > logs/app.log
+printf 'app old\n' > logs/app.log.1
+printf 'could not open data/report.csv\n' > logs/error.log
+touch logs/empty.log
+printf '# January\n\n- read the CSV, by row\n' > notes/2025-01-plan.md
+printf '# February\n\n- total it up\n' > notes/2025-02-plan.md
+head -c 200704 /dev/zero > build/ledger.o
+head -c 200704 /dev/zero > build/util.o
+touch -d '2025-03-22 14:30' README.md Makefile .env
+touch -d '2025-01-15 10:00' notes/2025-01-plan.md
+touch -d '2025-02-15 10:00' notes/2025-02-plan.md
+touch -d '2025-03-19 09:00' logs/app.log.1
+touch -d '2025-03-26 09:00' src/* data/* logs/app.log logs/error.log logs/empty.log build/*
+touch -d '2025-03-26 09:00' src data logs notes build .
+cd
+```
+
+**You do not need to read it yet**, and by lesson 9 you will be able to read every line. Two
+things in it are there on purpose. The `touch -d` lines at the end date the files in March 2025, so
+that section 09's searches by age have something old to find. And the two files in `build` are
+196 KB of zeros, standing in for what a compiler would have made: this project is never built, and
+nothing in the course runs it.

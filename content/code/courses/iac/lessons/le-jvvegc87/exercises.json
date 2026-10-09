@@ -807,5 +807,37 @@
       "`ansible-playbook -i hosts.ini site.yml`"
     ],
     "trap": "The host keys must be trusted before Ansible connects by address."
+  },
+  {
+    "id": "ex-c3vdz3x8",
+    "version": 1,
+    "section": "the-machines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana runs `up.sh` a second time, and `ansible all -m ping` now fails with SSH warning that the remote host identification has changed. Why?",
+    "hint": "What does `up.sh` do to the machines that were already there?",
+    "choices": [
+      {
+        "text": "The new machines have new host keys",
+        "correct": true,
+        "why": "Yes. `up.sh` throws the old containers away, and each new one makes its own SSH host key; `ssh-keygen -R` forgets the old one."
+      },
+      {
+        "text": "`up.sh` replaced Ana's own key with a new one",
+        "correct": false,
+        "why": "It makes a key only when `~/.ssh/id_ed25519` does not exist, and hers did."
+      },
+      {
+        "text": "The machines got different addresses the second time",
+        "correct": false,
+        "why": "The addresses are fixed in the script, `172.30.0.11` and so on, on every run."
+      },
+      {
+        "text": "The `deploy` user lost its permission to use `sudo`",
+        "correct": false,
+        "why": "The image grants it on every build, and SSH would not even get that far."
+      }
+    ]
   }
 ]

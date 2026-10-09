@@ -1,6 +1,6 @@
 ---
 title: `awk`, a programming language you write on one line
-version: 2
+version: 3
 ---
 
 `awk` reads a line, splits it into fields, and runs your code on it. That is the whole model, and it
@@ -8,12 +8,12 @@ makes `awk` the tool that does what `cut`, `grep` and a calculator would have to
 
 ```
 ana@vm:~/work$ awk '{print $1}' logs/access.log | head -2
-10.0.1.6
-10.0.1.11
+198.51.100.10
+198.51.100.15
 ana@vm:~/work$ awk '{print $9, $7}' logs/access.log | head -3
-200 /static/app.js
 200 /
-404 /index.html
+200 /
+200 /
 ```
 
 **`$1` is the first field, `$0` is the whole line, `$NF` is the last one.** Fields are split on runs
@@ -38,16 +38,16 @@ Either half can be left out:
 
 ```
 ana@vm:~/work$ awk '$9 == 500 {print $7}' logs/access.log | sort | uniq -c
-      2 /
+      6 /
+      4 /api/orders
       1 /api/orders/new
-      5 /api/reports
-      2 /api/users
       1 /favicon.ico
-      7 /health
+      8 /health
       1 /index.html
-      2 /static/app.js
+      2 /static/app.css
+      1 /static/app.js
 ana@vm:~/work$ awk '$9 >= 400' logs/access.log | wc -l
-63
+78
 ```
 
 **`$9 >= 400` is the thing `grep` cannot do**, because it is arithmetic on a field rather than text
@@ -55,16 +55,17 @@ matching. Here is the difference, measured:
 
 ```
 ana@vm:~/work$ awk '$9 >= 400 && $9 < 500' logs/access.log | wc -l
-42
+54
 ana@vm:~/work$ grep -c ' 4[0-9][0-9] ' logs/access.log
-46
+80
 ana@vm:~/work$ grep ' 4[0-9][0-9] ' logs/access.log | awk '$9 < 400 || $9 >= 500' | head -2
-10.0.1.19 - - [14/Sep/2026:06:03:17 +0000] "GET /static/app.css HTTP/1.1" 200 451 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 Safari/18.1" 87
-10.0.1.20 - - [14/Sep/2026:07:55:33 +0000] "GET /favicon.ico HTTP/1.1" 200 485 "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/131.0 Safari/537.36" 59
+10.0.1.28 - - [14/Sep/2026:06:14:58 +0000] "GET /static/app.css HTTP/1.1" 500 419 "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" 145
+10.0.1.10 - - [14/Sep/2026:06:32:19 +0000] "GET /static/app.js HTTP/1.1" 200 410 "python-requests/2.32.3" 190
 ```
 
-**Forty-two against forty-six, and the four extras are `200` responses.** Their *byte counts* were
-451 and 485, which the pattern matched because it has no idea which number is the status. `awk` was
+**Fifty-four against eighty, and the twenty-six extras are not 4xx responses at all.** The two shown
+are a `500` and a `200` whose *byte counts* were 419 and 410, which the pattern matched because it
+has no idea which number is the status. `awk` was
 asked about field nine and `grep` was asked about a shape.
 
 ## The built-in variables
@@ -105,10 +106,10 @@ not:
 
 ```
 ana@vm:~/work$ awk '{print $11}' logs/access.log | sort | uniq -c | sort -rn
-    461 "Mozilla/5.0
-    442 "kube-probe/1.29"
-    154 "curl/8.5.0"
-    143 "python-requests/2.32.3"
+    553 "Mozilla/5.0
+    287 "kube-probe/1.29"
+    191 "curl/8.5.0"
+    169 "python-requests/2.32.3"
 ```
 
 Three of those are whole user-agent strings and one is the **first word of a longer one**. Any field
@@ -122,15 +123,15 @@ positional fields are safe at all.
 
 ```
 ana@vm:~/work$ awk '{n++; bytes += $10} END {print n, bytes, bytes/n}' logs/access.log
-1200 14262906 11885.8
+1200 11880770 9900.64
 ```
 
-Twelve hundred requests, fourteen megabytes, an average of about twelve kilobytes each.
+Twelve hundred requests, about twelve megabytes, an average of about ten kilobytes each.
 **Variables need no declaration and start at zero**, which is what makes one-liners this short.
 
 ```
 ana@vm:~/work$ awk -F, 'NR>1 {s+=$5} END {print s}' data/sales.csv
-573278
+571083
 ```
 
 Section 08 did that with four processes and `bc`.
@@ -139,10 +140,10 @@ Section 08 did that with four processes and `bc`.
 
 ```
 ana@vm:~/work$ awk -F, 'NR>1 {rev[$1] += $5} END {for (r in rev) print r, rev[r]}' data/sales.csv | sort
-east 144250
-north 147239
-south 167399
-west 114390
+east 130235
+north 143924
+south 125015
+west 171909
 ```
 
 **`rev[$1] += $5` is a group-by and a sum**, in one expression, in one pass. An array subscripted by
@@ -162,10 +163,10 @@ Section 10 showed that giving the same answer as `sort | uniq -c`, without the s
 
 ```
 ana@vm:~/work$ awk '$NF > 3000 {printf "%-22s %6s ms  %s\n", $1, $NF, $7}' logs/access.log | head -4
-10.0.1.21                5833 ms  /api/reports
-10.0.1.38                3370 ms  /api/reports
-198.51.100.10            3496 ms  /api/reports
-10.0.1.29                4072 ms  /api/reports
+203.0.113.11             4885 ms  /api/reports
+10.0.1.29                5560 ms  /api/reports
+10.0.1.7                 4422 ms  /api/reports
+10.0.1.29                4960 ms  /api/reports
 ```
 
 `printf` is the C one: `%s` string, `%d` integer, `%.2f` two decimal places, `%-22s` left-aligned in
@@ -174,8 +175,8 @@ ana@vm:~/work$ awk '$NF > 3000 {printf "%-22s %6s ms  %s\n", $1, $NF, $7}' logs/
 ```
 ana@vm:~/work$ awk 'BEGIN {FS=","; OFS=" | "} NR<4 {print $2, $4}' data/sales.csv
 rep | units
-ana | 171
-bruno | 49
+ana | 145
+bruno | 275
 ```
 
 Setting `FS` and `OFS` in `BEGIN` is the alternative to `-F`, and it is the only way to set the
@@ -186,7 +187,7 @@ concatenates with nothing between them.
 
 ```
 ana@vm:~/work$ awk '/api/ {c++} END {print c " api requests"}' logs/access.log
-260 api requests
+285 api requests
 ```
 
 `/pattern/` matches against the whole line, `$7 ~ /pattern/` against one field, and `!~` is "does

@@ -51,7 +51,19 @@ para ela.
 Esse algo é o que um Service LoadBalancer pede. O Kubernetes não fornece o balanceador: **ele pede um
 à nuvem**, por um componente chamado cloud controller manager, e escreve no Service o endereço que
 recebe. Neste laptop, o `cloud-provider-kind` do projeto kind faz o papel da nuvem, respondendo a cada
-Service LoadBalancer com um pequeno proxy Envoy na rede do Docker.
+Service LoadBalancer com um pequeno proxy Envoy na rede do Docker. É um programa só, das releases do projeto,
+rodado na sua máquina num segundo terminal, com `sudo` porque cria containers e rotas de rede; ele
+continua rodando e registrando até o `Ctrl+C`:
+
+```sh
+ARCH=$(dpkg --print-architecture)
+curl -fsSL https://github.com/kubernetes-sigs/cloud-provider-kind/releases/download/v0.12.0/cloud-provider-kind_0.12.0_linux_$ARCH.tar.gz | tar xz cloud-provider-kind
+sudo ./cloud-provider-kind
+```
+
+A máquina em que o curso foi gravado não tem IPv6, então a cópia dela foi compilada do código-fonte da
+mesma release com um endereço trocado de `::` para `0.0.0.0`; numa máquina com IPv6, como uma VM
+Ubuntu, a da release funciona como está.
 
 ```yaml
 apiVersion: v1

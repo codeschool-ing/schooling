@@ -1,6 +1,6 @@
 ---
 title: Reprodutível, e imutável na prática
-version: 1
+version: 2
 ---
 
 Um número de versão diz *qual* imagem roda. Não diz que construir o mesmo template de novo daria a
@@ -34,6 +34,10 @@ nginx:
         500 http://archive.ubuntu.com/ubuntu noble/main amd64 Packages
 ```
 
+A Ana escreve as duas fixações no template. O seu recebe o digest e a versão que os seus dois
+comandos imprimiram, porque o seu `ubuntu:24.04` foi baixado em outro dia e pode ser outra imagem.
+O diff dela:
+
 ```
 ana@laptop:~/shop/image$ git diff
 diff --git a/web.pkr.hcl b/web.pkr.hcl
@@ -59,6 +63,9 @@ index 554e9e1..5ea1fd9 100644
        "echo 'shop web ${var.version}' > /var/www/html/index.html",
      ]
 ```
+
+Ela faz o commit, `git add -A && git commit -qm 'pin the base image and nginx'`, e constrói a
+versão seguinte:
 
 ```
 ana@laptop:~/shop/image$ packer build -var version=1.2.0 -var commit=$(git rev-parse --short HEAD) . 2>&1 | grep -E "Run command|Image ID|finished"

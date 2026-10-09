@@ -3,6 +3,39 @@ title: One file, two objects
 version: 1
 ---
 
+This lesson ends in a browser, so its cluster opens one port of your machine to the cluster. That is a
+second file beside `cluster.yaml`, the same cluster with three lines added, and lessons 15, 16, 17 and
+36 start from it too.
+
+`ports.yaml`:
+
+```yaml
+# cluster.yaml, plus one port of this machine: 8080 reaches port 30080 of
+# the control-plane node, which is where a NodePort Service of that number
+# answers.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+containerdConfigPatches:
+- |-
+  [plugins."io.containerd.grpc.v1.cri"]
+    restrict_oom_score_adj = true
+kubeadmConfigPatches:
+- |
+  kind: KubeletConfiguration
+  failCgroupV1: false
+  serverTLSBootstrap: true
+nodes:
+- role: control-plane
+  extraPortMappings:
+  - containerPort: 30080
+    hostPort: 8080
+- role: worker
+- role: worker
+```
+
+Start with `./up.sh ports.yaml`, and delete the two patches as you did in lesson 1. The next section says
+what the port mapping does.
+
 **A first manifest is usually copied from somewhere and edited until it works, which leaves the
 reader unsure which lines matter.** Nearly all of them do. This one holds the two objects every web
 application on Kubernetes starts with: a Deployment, which keeps copies of the shop running, and a

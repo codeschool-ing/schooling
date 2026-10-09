@@ -3,6 +3,33 @@ title: A canary is two Deployments and a weight
 version: 1
 ---
 
+The router in this lesson is lesson 16's: its cluster, the Gateway API's types, Traefik from its
+`traefik.yaml`, and a Gateway called `public`, written here in a shorter form than lesson 16 used.
+
+`gateway.yaml`:
+
+```yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata: {name: traefik}
+spec: {controllerName: traefik.io/gateway-controller}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata: {name: public}
+spec:
+  gatewayClassName: traefik
+  listeners: [{name: web, protocol: HTTP, port: 8000, allowedRoutes: {namespaces: {from: Same}}}]
+```
+
+```sh
+./up.sh ports.yaml
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.0/standard-install.yaml
+kubectl apply -f traefik.yaml
+kubectl -n traefik rollout status deployment/traefik
+kubectl apply -f gateway.yaml
+```
+
 **A canary needs the two versions to be separate things the router can tell apart.** Here that is two
 Deployments, three copies of 1.0 and one of 1.1, each with a Service of its own. Both carry
 `app: shop`, and a second label, `track`, says which is which:

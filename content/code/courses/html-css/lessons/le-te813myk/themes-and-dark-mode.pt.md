@@ -1,9 +1,9 @@
 ---
 title: Temas, e o modo escuro de quem lê
-version: 1
+version: 2
 ---
 
-Como uma variável pode ser redefinida, um esquema de cores inteiro pode ser trocado redefinindo algumas delas. É assim que se constrói o **modo escuro**. A pessoa escolhe uma preferência no sistema operacional, e a media feature **`prefers-color-scheme`** permite que uma folha de estilos responda a ela:
+Como uma variável pode ser redefinida, um esquema de cores inteiro pode ser trocado redefinindo algumas delas. É assim que se constrói o **modo escuro**. A pessoa escolhe uma preferência no sistema operacional, e a media feature **`prefers-color-scheme`** permite que uma folha de estilos responda a ela. Aqui está o `theme.css`:
 
 ```css
 :root {
@@ -27,7 +27,28 @@ body {
 a { color: var(--color-accent); }
 ```
 
-Toda regra da página usa `--color-page`, `--color-text` e `--color-accent`, e nenhuma menciona uma cor. Um bloco `@media` redefine as três em `:root` quando a pessoa prefere escuro. `probe --dark` abre o Chromium com o esquema escuro, como faria a configuração do sistema:
+Toda regra da página usa `--color-page`, `--color-text` e `--color-accent`, e nenhuma menciona uma cor. Um bloco `@media` redefine as três em `:root` quando a pessoa prefere escuro. `probe --dark` abre o Chromium com o esquema escuro, como faria a configuração do sistema.
+
+A página, `theme.html`, diz no head que pode ser desenhada dos dois jeitos, com `<meta name="color-scheme">`:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="color-scheme" content="light dark">
+    <title>Themes · Andorinha Books</title>
+    <link rel="stylesheet" href="theme.css">
+  </head>
+  <body>
+    <main>
+      <h1>Events</h1>
+      <p>Everything here is free unless it says otherwise.</p>
+      <a href="swap.html">How the swap works</a>
+    </main>
+  </body>
+</html>
+```
 
 ```
 ana@laptop:~/site$ probe theme.html style body background-color,color style a color axe

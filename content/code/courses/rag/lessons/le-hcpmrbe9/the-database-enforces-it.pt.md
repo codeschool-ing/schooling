@@ -1,6 +1,6 @@
 ---
 title: O banco garante
-version: 1
+version: 2
 ---
 
 O filtro do `access.search` depende de toda consulta lembrar dele. A consulta desta aula lembra, e a
@@ -14,7 +14,7 @@ aplicar a regra, diga a consulta o que disser, com **segurança em nível de lin
   "file": "policy.sql",
   "parts": [
     {
-      "code": "-- The assistant reads through a role of its own, and the database decides which rows that role sees.\n-- Run by the loader, which owns the table and is not limited by the policy.\nDO $$ BEGIN CREATE ROLE assistant LOGIN; EXCEPTION WHEN duplicate_object THEN NULL; END $$;",
+      "code": "-- The assistant reads through a role of its own, and the database decides which rows that role sees.\n-- Run by the loader, which owns the table and is not limited by the policy.\nDO $$ BEGIN CREATE ROLE assistant LOGIN PASSWORD 'reads-only'; EXCEPTION WHEN duplicate_object THEN NULL; END $$;",
       "note": "Um papel para o assistente, criado só se ainda não existir: papéis pertencem ao servidor PostgreSQL inteiro, e não a um banco."
     },
     {
@@ -29,17 +29,30 @@ aplicar a regra, diga a consulta o que disser, com **segurança em nível de lin
 }
 ```
 
-O carregador, `ana` neste laboratório, é dono da tabela e não é limitado pela política; o assistente se
-conecta como `assistant`, um papel que só lê, e toda leitura dele passa pela `by_audience`. Uma
-consulta do assistente que esquece o `WHERE` por completo, contando todos os pedaços por público:
+O carregador, o papel do seu próprio login desde a aula 1, é dono da tabela e não é limitado pela
+política; o assistente se conecta como `assistant`, um papel que só lê, e toda leitura dele passa
+pela `by_audience`. Uma consulta do assistente que esquece o `WHERE` por completo, contando todos os
+pedaços por público:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "asassistant.py",
+  "parts": [
+    {
+      "code": "import sys\n\nimport psycopg\n\nwith psycopg.connect(host=\"localhost\", user=\"assistant\", password=\"reads-only\") as conn:\n    if len(sys.argv) > 1:\n        conn.execute(\"SELECT set_config('rag.audiences', %s, true)\", (sys.argv[1],))\n    rows = conn.execute(\"SELECT audience, count(*) FROM chunks GROUP BY audience ORDER BY audience\").fetchall()\n    print(rows or \"no rows\")",
+      "note": "A conexão do próprio assistente, contando por público cada pedaço que ela vê, sem `WHERE` nenhum. Um argumento define os públicos que a transação pode ler."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ psql -q -f policy.sql
-ana@lab:~/rag$ python asassistant.py
+```
+ana@vm:~/rag$ psql -q -f policy.sql
+ana@vm:~/rag$ python asassistant.py
 no rows
-ana@lab:~/rag$ python asassistant.py public
+ana@vm:~/rag$ python asassistant.py public
 [('public', 86)]
-ana@lab:~/rag$ python asassistant.py public,staff
+ana@vm:~/rag$ python asassistant.py public,staff
 [('public', 86), ('staff', 22)]
 ```
 

@@ -1,6 +1,6 @@
 ---
 title: A model for the data
-version: 1
+version: 2
 ---
 
 The first check is the cheapest: is the data even the right shape? Lesson 10's `StrictUndefined`
@@ -49,7 +49,23 @@ data/edge1.yaml: ok
 data/edge2.yaml: ok
 ```
 
-A new router's file with three mistakes in it, put in a directory of its own:
+A new router's file with three mistakes in it, `edge3.yaml`:
+
+```yaml
+hostname: edge3
+loopback: 203.0.113.254
+interfaces:
+  - name: eth1
+    description: uplink to core1
+    adress: 198.51.100.10/30
+    ospf: point-to-point
+  - name: eth2
+    description: branch LAN
+    address: 203.0.113.300/26
+    ospf: p2p
+```
+
+Put in a directory of its own and checked:
 
 ```
 ana@ctl:~$ cd net && mkdir -p new && cp edge3.yaml new/ && python validate.py new; echo "exit status $?"

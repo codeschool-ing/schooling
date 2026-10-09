@@ -1,10 +1,18 @@
 ---
 title: Hopping through a machine
-version: 1
+version: 2
 ---
 
 The company's web server, `www`, accepts SSH only from the office's public address, a common and
-sensible rule. From home, the connection goes nowhere:
+sensible rule. Its administrator has already put Ana's public key in `~/.ssh/authorized_keys` there;
+in your lab, do that from your virtual machine:
+
+```sh
+sudo install -d -o ana -g ana -m 700 /lab/www/home/ana/.ssh
+sudo install -o ana -g ana -m 600 /lab/laptop/home/ana/.ssh/id_ed25519.pub /lab/www/home/ana/.ssh/authorized_keys
+```
+
+From home, the connection goes nowhere:
 
 ```
 ana@home:~$ ssh -o ConnectTimeout=5 192.0.2.80 hostname

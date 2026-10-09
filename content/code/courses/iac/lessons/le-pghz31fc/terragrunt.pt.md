@@ -1,12 +1,23 @@
 ---
 title: Onde o Terragrunt entra
-version: 1
+version: 2
 ---
 
 **O Terragrunt é um invólucro: ele escreve as partes repetitivas de uma configuração raiz para você e
 depois roda o Terraform nela.** É um programa separado, da Gruntwork, com o seu próprio arquivo, o
 `terragrunt.hcl`, e não substitui a linguagem do Terraform; os módulos ficam exatamente como estão. O
 que ele assume é o layout de um diretório por ambiente da seção anterior, menos as cópias.
+
+**Instalando o Terragrunt.** É um programa só, publicado no GitHub a cada versão. As transcrições
+abaixo foram feitas com a versão 1.1.6, e estes dois comandos instalam a mesma:
+
+```sh
+curl -fsSLo terragrunt https://github.com/gruntwork-io/terragrunt/releases/download/v1.1.6/terragrunt_linux_amd64
+sudo install terragrunt /usr/local/bin/terragrunt && rm terragrunt
+```
+
+Numa máquina ARM, como uma máquina virtual num Mac com Apple silicon, o arquivo a baixar termina em
+`_linux_arm64`. Depois, `terragrunt --version` diz a versão.
 
 A Ana acrescenta uma árvore `live` ao lado de `envs`, usando os mesmos dois módulos. Cada diretório
 folha é uma **unit**: um módulo, um ambiente, um estado.
@@ -27,7 +38,7 @@ live
 └── root.hcl
 ```
 
-Tudo o que as units compartilham é escrito uma vez, no `root.hcl`:
+Tudo o que as units compartilham é escrito uma vez, no `live/root.hcl`:
 
 ```hcl
 terraform_binary = "terraform"
@@ -70,7 +81,8 @@ ana@laptop:~/shop-infra/live$ terragrunt run --help | grep -e --tf-path
    --tf-path value                             Path to the OpenTofu/Terraform binary. Default is tofu (on PATH). [$TG_TF_PATH]
 ```
 
-Uma unit é curta. Ela inclui a raiz, nomeia o seu módulo e entrega a ele as entradas:
+Uma unit é curta. Ela inclui a raiz, nomeia o seu módulo e entrega a ele as entradas.
+`live/dev/network/terragrunt.hcl`:
 
 ```hcl
 include "root" {
@@ -90,7 +102,8 @@ inputs = {
 
 A unit `web` precisa do id da VPC, que é um output do estado de outra unit. Numa configuração única
 isso seria uma referência; entre dois estados é um bloco **`dependency`**, que lê os outputs da outra
-unit e também diz ao Terragrunt para rodar aquela unit primeiro:
+unit e também diz ao Terragrunt para rodar aquela unit primeiro.
+`live/dev/web/terragrunt.hcl`:
 
 ```hcl
 include "root" {
@@ -107,6 +120,45 @@ dependency "network" {
 
 inputs = {
   environment = "dev"
+  vpc_id      = dependency.network.outputs.vpc_id
+}
+```
+
+As duas units de prod são iguais, com os valores de prod, `live/prod/network/terragrunt.hcl`:
+
+```hcl
+include "root" {
+  path = find_in_parent_folders("root.hcl")
+}
+
+terraform {
+  source = "../../../modules/network"
+}
+
+inputs = {
+  environment = "prod"
+  cidr        = "10.20.0.0/16"
+  azs         = ["sa-east-1a", "sa-east-1c"]
+}
+```
+
+e `live/prod/web/terragrunt.hcl`:
+
+```hcl
+include "root" {
+  path = find_in_parent_folders("root.hcl")
+}
+
+terraform {
+  source = "../../../modules/web"
+}
+
+dependency "network" {
+  config_path = "../network"
+}
+
+inputs = {
+  environment = "prod"
   vpc_id      = dependency.network.outputs.vpc_id
 }
 ```
@@ -164,9 +216,12 @@ Are you sure you want to run 'terragrunt apply' in each unit of the run queue di
 12:16:23.959 ERROR  EOF
 ```
 
-A pergunta ficou sem resposta, porque a entrada deste terminal está vazia, e o Terragrunt parou com
-`EOF` antes de rodar qualquer coisa. Respondida com `y`, ou pulada com `--non-interactive`, ele aplica
-cada unit por vez:
+A página mostra o que acontece quando a pergunta fica sem resposta: a máquina em que estas aulas
+foram gravadas não deu entrada nenhuma ao comando, e o Terragrunt parou com `EOF` antes de rodar
+qualquer coisa. No seu terminal ele espera por você. A pergunta pode nem aparecer, porque o `grep` só
+imprime uma linha quando ela termina, então o cursor fica parado embaixo da árvore. Digite `n` e
+Enter, e nada é aplicado, como na página. Respondida com `y`, ou pulada com `--non-interactive`, ele
+aplica cada unit por vez:
 
 ```
 ana@laptop:~/shop-infra/live/dev$ terragrunt run --all --non-interactive --summary-disable apply 2>&1 | grep -e "units will be run" -e "Apply complete"

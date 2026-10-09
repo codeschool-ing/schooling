@@ -1,10 +1,11 @@
 ---
 title: O que dá para ver de fora
-version: 1
+version: 2
 ---
 
-Comece de onde o cliente está. O `checkout.json` é um checkout: uma chaleira, uma unidade, e um
-número de cartão que os sistemas de pagamento reservam para testes e que não cobra ninguém:
+Comece de onde o cliente está. Um checkout é uma chaleira, uma unidade, e um número de cartão que os
+sistemas de pagamento reservam para testes e que não cobra ninguém. Salve-o em `~/shop` como
+`checkout.json`, porque as aulas o mandam de novo e de novo:
 
 ```json
 {"sku": "kettle", "qty": 1, "card": "4111 1111 1111 1111"}
@@ -20,9 +21,9 @@ ana@obs:~/shop$ curl -s -o /dev/null -w '%{http_code} in %{time_total} s\n' -X P
 ```
 
 O `-w` pede ao `curl` que imprima o código de status e o tempo total em vez do corpo: `201 Created`,
-em 36 milissegundos. Agora o payments é instruído a ficar lento. O laboratório lê
-`faults/payments.json` a cada cobrança, e este arquivo faz cada uma esperar um segundo e meio antes
-de responder:
+em 36 milissegundos. Agora o payments é instruído a ficar lento. Ele lê
+`faults/payments.json` a cada cobrança, como o código dele na página da loja mostrou, e este arquivo
+faz cada uma esperar um segundo e meio antes de responder:
 
 ```
 ana@obs:~/shop$ echo '{"latency_ms": 1500}' > faults/payments.json
@@ -39,5 +40,21 @@ Isso é tudo o que o lado de fora consegue dizer. O checkout atravessou quatro s
 dados e uma fila, e daqui ele é um número só. **Qual deles gastou o tempo não está na resposta**, e
 nenhuma quantidade de atenção à resposta vai pôr isso lá. O que vem a seguir é o mesmo checkout
 visto por três sinais que a loja foi construída para emitir. Cada um existe porque algumas linhas
-de código da loja o produzem. Em seguida o laboratório rodou um minuto de clientes simulados, duas
-requisições por segundo, para que os sinais tenham mais de uma requisição dentro.
+de código da loja o produzem.
+
+Uma requisição só é pouco para olhar, então os clientes simulados rodam por um minuto antes, duas
+requisições por segundo, com o payments ainda lento. O `loadgen` imprime como as requisições dele
+foram respondidas: doze listagens de produtos, 102 pedidos pagos e seis recusados, porque a mistura
+inclui um cartão que é recusado.
+
+```
+ana@obs:~/shop$ docker compose run --rm loadgen python -m loadgen.load 2 60
+ Container shop-otel-collector-1 Running 
+ Container shop-loadgen-run-01a965de6938 Creating 
+ Container shop-loadgen-run-01a965de6938 Created 
+200=12 201=102 402=6
+```
+
+As linhas `Container` são o Compose subindo um contêiner avulso e removendo-o depois, que é o que
+`run --rm` quer dizer. **Deixe o arquivo de falha no lugar até o fim desta aula**; a última seção diz
+quando removê-lo.

@@ -60,8 +60,164 @@ não.
 | motor de armazenamento padrão | o próprio | InnoDB | InnoDB | o próprio |
 
 Tudo daqui em diante decorre dessa tabela. As versões contra as quais esta aula foi escrita são as
-das transcrições: PostgreSQL 16.13, MySQL 8.0.46, MariaDB 10.11.14 e SQLite 3.45.1, cada um
-rodando a loja da aula 1.
+das transcrições: PostgreSQL 16.15, MySQL 8.0.46, MariaDB 10.11.14 e SQLite 3.45.1, cada um
+rodando a loja da aula 1 — a pequena, com cinco clientes, e não o milhão de pedidos das aulas 9 a
+11.
+
+## Acompanhando
+
+**Você não precisa dos outros três para acompanhar esta aula.** Cada comparação nela está impressa
+a partir de cada motor, e a saída é o que importa. O seu PostgreSQL precisa da loja pequena de
+volta — as três linhas da aula 1, `dropdb shop`, `createdb shop`, `psql shop -f shop.sql` — e só.
+
+Se quiser rodar os outros, dois deles são um comando cada na sua máquina Ubuntu, e o terceiro
+precisa de uma máquina só dele:
+
+```sh
+sudo apt install -y sqlite3        # SQLite 3.45
+sudo apt install -y mysql-server   # MySQL 8.0
+```
+
+O MariaDB é `sudo apt install -y mariadb-server`, e ele **substitui** o MySQL em vez de ficar ao
+lado: os pacotes do Ubuntu para os dois não podem ser instalados juntos. Instale-o numa segunda
+máquina virtual — um clone da primeira, da aula 1, é o caminho mais rápido — ou depois de remover o
+MySQL.
+
+A loja então precisa ser escrita no dialeto de cada motor, que é metade do assunto desta aula. Para
+o SQLite:
+
+```sql
+-- shop-sqlite.sql: lesson 1's shop, for SQLite.
+-- Load it with:  sqlite3 shop.db < shop-sqlite.sql
+
+CREATE TABLE customers (
+    id     INTEGER PRIMARY KEY,
+    name   TEXT    NOT NULL,
+    email  TEXT    NOT NULL UNIQUE,
+    city   TEXT
+);
+
+CREATE TABLE products (
+    id     INTEGER PRIMARY KEY,
+    sku    TEXT          NOT NULL UNIQUE,
+    name   TEXT          NOT NULL,
+    price  NUMERIC(10,2) NOT NULL CHECK (price >= 0)
+);
+
+CREATE TABLE orders (
+    id          INTEGER PRIMARY KEY,
+    customer_id INTEGER NOT NULL REFERENCES customers (id) ON DELETE RESTRICT,
+    ordered_on  TEXT    NOT NULL DEFAULT (date('now')),
+    total       NUMERIC(10,2) NOT NULL CHECK (total >= 0),
+    status      TEXT    NOT NULL DEFAULT 'placed'
+                        CHECK (status IN ('placed', 'shipped', 'cancelled'))
+);
+
+CREATE TABLE order_lines (
+    order_id   INTEGER NOT NULL REFERENCES orders   (id) ON DELETE CASCADE,
+    product_id INTEGER NOT NULL REFERENCES products (id) ON DELETE RESTRICT,
+    quantity   INTEGER NOT NULL CHECK (quantity > 0),
+    unit_price NUMERIC(10,2) NOT NULL CHECK (unit_price >= 0),
+    PRIMARY KEY (order_id, product_id)
+);
+
+INSERT INTO customers (name, email, city) VALUES
+    ('Ana Ribeiro',  'ana@example.com',   'Recife'),
+    ('Bruno Costa',  'bruno@example.com', 'Sao Paulo'),
+    ('Carla Mendes', 'carla@example.com', 'Recife'),
+    ('Diego Alves',  'diego@example.com', 'Curitiba'),
+    ('Elisa Fontes', 'elisa@example.com', NULL);
+
+INSERT INTO products (sku, name, price) VALUES
+    ('KB-101', 'Mechanical keyboard',  349.90),
+    ('MS-204', 'Wireless mouse',       189.00),
+    ('MN-330', '27-inch monitor',     1499.00),
+    ('CB-012', 'USB-C cable',           39.90);
+
+INSERT INTO orders (customer_id, ordered_on, total) VALUES
+    (1, '2026-03-02', 1499.00),
+    (4, '2026-03-03', 2998.00),
+    (1, '2026-03-04',  268.80),
+    (1, '2026-03-09',  349.90);
+
+INSERT INTO order_lines (order_id, product_id, quantity, unit_price) VALUES
+    (1, 3, 1, 1499.00),
+    (2, 3, 2, 1499.00),
+    (3, 4, 2,   39.90),
+    (3, 2, 1,  189.00),
+    (4, 1, 1,  349.90);
+```
+
+E para o MySQL e o MariaDB, que dividem o mesmo:
+
+```sql
+-- shop-mysql.sql: lesson 1's shop, for MySQL and MariaDB.
+-- Load it with:  sudo mysql -e 'CREATE DATABASE shop' && sudo mysql shop < shop-mysql.sql
+
+CREATE TABLE customers (
+    id     int          AUTO_INCREMENT PRIMARY KEY,
+    name   varchar(120) NOT NULL,
+    email  varchar(120) NOT NULL UNIQUE,
+    city   varchar(120)
+);
+
+CREATE TABLE products (
+    id     int           AUTO_INCREMENT PRIMARY KEY,
+    sku    varchar(20)   NOT NULL UNIQUE,
+    name   varchar(120)  NOT NULL,
+    price  decimal(10,2) NOT NULL CHECK (price >= 0)
+);
+
+CREATE TABLE orders (
+    id          int           AUTO_INCREMENT PRIMARY KEY,
+    customer_id int           NOT NULL,
+    ordered_on  date          NOT NULL DEFAULT (curdate()),
+    total       decimal(10,2) NOT NULL CHECK (total >= 0),
+    status      varchar(10)   NOT NULL DEFAULT 'placed'
+                              CHECK (status IN ('placed', 'shipped', 'cancelled')),
+    FOREIGN KEY (customer_id) REFERENCES customers (id) ON DELETE RESTRICT
+);
+
+CREATE TABLE order_lines (
+    order_id   int           NOT NULL,
+    product_id int           NOT NULL,
+    quantity   int           NOT NULL CHECK (quantity > 0),
+    unit_price decimal(10,2) NOT NULL CHECK (unit_price >= 0),
+    PRIMARY KEY (order_id, product_id),
+    FOREIGN KEY (order_id)   REFERENCES orders   (id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE RESTRICT
+);
+
+INSERT INTO customers (name, email, city) VALUES
+    ('Ana Ribeiro',  'ana@example.com',   'Recife'),
+    ('Bruno Costa',  'bruno@example.com', 'Sao Paulo'),
+    ('Carla Mendes', 'carla@example.com', 'Recife'),
+    ('Diego Alves',  'diego@example.com', 'Curitiba'),
+    ('Elisa Fontes', 'elisa@example.com', NULL);
+
+INSERT INTO products (sku, name, price) VALUES
+    ('KB-101', 'Mechanical keyboard',  349.90),
+    ('MS-204', 'Wireless mouse',       189.00),
+    ('MN-330', '27-inch monitor',     1499.00),
+    ('CB-012', 'USB-C cable',           39.90);
+
+INSERT INTO orders (customer_id, ordered_on, total) VALUES
+    (1, '2026-03-02', 1499.00),
+    (4, '2026-03-03', 2998.00),
+    (1, '2026-03-04',  268.80),
+    (1, '2026-03-09',  349.90);
+
+INSERT INTO order_lines (order_id, product_id, quantity, unit_price) VALUES
+    (1, 3, 1, 1499.00),
+    (2, 3, 2, 1499.00),
+    (3, 4, 2,   39.90),
+    (3, 2, 1,  189.00),
+    (4, 1, 1,  349.90);
+```
+
+As linhas são os `INSERT`s da aula 1, sem mudança — são a parte portável. As transcrições do
+`sqlite3` nesta aula são tiradas com `sqlite3 -column -header shop.db`, que desenha os
+cabeçalhos, e as do `mysql` com `sudo mysql -t shop`, que desenha as caixas.
 
 Existe um quinto motor que você vai encontrar num emprego corporativo, e ele é diferente o
 bastante — no que custa, em como é comprado, e no que faz com a forma de um sistema — para ganhar

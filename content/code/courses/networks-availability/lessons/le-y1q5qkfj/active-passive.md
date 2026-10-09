@@ -6,20 +6,22 @@ version: 1
 Each balancer runs two programs. **HAProxy does the balancing**: it accepts a connection on the public
 address, picks a web server and passes the request on. **keepalived decides which balancer holds the
 public address**, exactly as it decided which router held the gateway in lesson 15. Both balancers carry
-identical HAProxy configurations. This is `lb1`'s, as `cat /etc/haproxy/haproxy.cfg` printed it:
+identical HAProxy configurations, `/etc/haproxy/haproxy.cfg`. Write it with `sudo nano` on `lb1` and
+again on `lb2`:
 
 ```schooling-example
 {"language": "conf", "file": "haproxy.cfg", "parts": [{"code": "global\n    log stdout format raw local0\n    stats socket /run/haproxy.sock mode 600 level admin", "note": "HAProxy logs to its standard output, which the lab sent to `/run/haproxy.log`, and opens an administration socket; `show stat` talks to it in the section on health checks."}, {"code": "defaults\n    mode http\n    log global\n    option httplog\n    timeout connect 2s\n    timeout client 10s\n    timeout server 10s", "note": "Every proxy below speaks HTTP and logs each request in HAProxy's HTTP format. The timeouts: two seconds to connect to a server, ten for a client or a server to say something."}, {"code": "frontend www\n    bind 192.0.2.80:80\n    bind 192.0.2.81:80\n    default_backend web", "note": "The public side. It listens on `192.0.2.80`, the address keepalived moves, and on `.81`, which the last section uses. Both balancers carry this same file."}, {"code": "frontend health\n    bind 127.0.0.1:8404\n    monitor-uri /health", "note": "A page HAProxy answers itself, on the loopback only: `/health` returns `200` for as long as the process is alive. keepalived asks for it every second."}, {"code": "backend web\n    balance roundrobin\n    option httpchk GET /\n    server web1 192.0.2.21:80 check inter 1s fall 2 rise 2\n    server web2 192.0.2.22:80 check inter 1s fall 2 rise 2\n    server web3 192.0.2.23:80 check inter 1s fall 2 rise 2", "note": "The three web servers, in turn. Each is checked with `GET /` every second; two failed checks in a row take a server out, two good ones bring it back."}]}
 ```
 
 One detail makes the passive balancer ready. HAProxy on `lb2` is running and told to listen on
-`192.0.2.80`, an address `lb2` does not hold, and Linux normally refuses that. The lab set
-`net.ipv4.ip_nonlocal_bind` on both balancers so that it does not, and it is not shown here. **The standby
+`192.0.2.80`, an address `lb2` does not hold, and Linux normally refuses that. Setting
+`net.ipv4.ip_nonlocal_bind` on both balancers is what makes Linux allow it:
+`sudo sysctl -w net.ipv4.ip_nonlocal_bind=1`, typed on `lb1` and on `lb2`. **The standby
 is already listening when the address arrives**, so a failover is only keepalived's half; nothing has to
 start.
 
 keepalived on `lb1` is the lesson 15 configuration with one addition, a script that checks the balancer
-rather than a cable:
+rather than a cable. Write `/etc/keepalived/keepalived.conf` on `lb1` with what `cat` prints here:
 
 ```
 ana@lb1:~$ cat /etc/keepalived/keepalived.conf
@@ -51,8 +53,20 @@ vrrp_instance www_a {
 `vrrp_script` runs `curl` against HAProxy's `/health` page every second. `fall 2` means two failures in a
 row put the instance into `FAULT`, which gives the address up; `rise 2` means two successes bring it
 back. `curl -sf` exits with 0 when the page answers and with an error code when it does not, and that exit
-code is all keepalived reads. `lb2` has the same file with a priority of 100, written while the lab was
-set up and not shown.
+code is all keepalived reads. `lb2` gets the same file with `priority 100`.
+
+Both programs run in the background, each logging to its balancer's own `/run`. Start HAProxy on both
+balancers:
+
+```sh
+sudo sh -c 'setsid haproxy -db -f /etc/haproxy/haproxy.cfg >> /run/haproxy.log 2>&1 &'
+```
+
+Then keepalived, on `lb2` first and on `lb1` about a second later:
+
+```sh
+sudo sh -c 'setsid keepalived -n -l -f /etc/keepalived/keepalived.conf -p /run/keepalived.pid -r /run/vrrp.pid >> /run/keepalived.log 2>&1 &'
+```
 
 ## Running
 

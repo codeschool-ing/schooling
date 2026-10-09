@@ -1,9 +1,10 @@
 ---
 title: "Infracost: o preço de um pull request"
-version: 1
+version: 2
 ---
 
-Quem revisa um diff vê palavras. Aqui está uma mudança de uma palavra no `web.tf`:
+Quem revisa um diff vê palavras. Aqui está uma mudança de uma palavra no `web.tf`, feita com
+`sed -i 's/t3.medium/m7i.large/' web.tf`:
 
 ```
 ana@laptop:~/shop$ git diff
@@ -42,6 +43,9 @@ change per month, USD                      +136.44
 diff nem no plano diz isso. A decisão pode até estar certa, a loja pode precisar da memória, mas deve
 ser tomada por alguém que viu o número.
 
+A Ana não a toma hoje. `git checkout -q web.tf` devolve o arquivo ao `t3.medium`, e `rm -f tfplan`
+joga fora o plano com preço; o resto da aula segue a partir dos dois servidores `t3.medium`.
+
 ## O que o Infracost faz
 
 **O Infracost faz o que o `price.py` faz, para centenas de tipos de recurso, em todo pull request.** Ele
@@ -64,13 +68,15 @@ Três coisas sobre ele valem saber antes de adotá-lo:
 
 ## Não executado aqui
 
-**O Infracost não foi executado para esta aula, e não há saída do Infracost nesta página.** Ele precisa
-do serviço de preços, e o laboratório não tem rede; um detalhamento inventado seria justamente a coisa
-que este curso promete nunca imprimir. Os comandos abaixo são o que um pipeline rodaria, escritos como
-referência e não executados:
+**O Infracost não foi executado para esta aula, e não há saída do Infracost nesta página.** Os preços
+dele vêm do próprio serviço, por uma chave de API que o Infracost dá com uma conta gratuita, e este
+curso nunca pede uma conta a você. Um detalhamento inventado seria justamente a coisa que este curso
+promete nunca imprimir. Os comandos abaixo são o que um pipeline rodaria, escritos como referência e
+não executados. Se você se cadastrar e instalar o Infracost como a documentação dele descreve, pode
+experimentá-los no `~/shop` com a sua própria chave; nada adiante no curso depende disso.
 
 ```sh
-# Not run in this lab: Infracost needs an API key and its pricing service.
+# Not run for this lesson: Infracost needs an API key and its pricing service.
 export INFRACOST_API_KEY=...   # from your Infracost account
 
 # on the main branch: the baseline

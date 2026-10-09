@@ -1,6 +1,6 @@
 ---
 title: Hybrid search
-version: 1
+version: 2
 ---
 
 A **hybrid search** runs the vector search and the lexical search and merges their results. The merge
@@ -14,7 +14,6 @@ chunks by rank, `1 / (60 + rank)`, and a chunk's fused score is the sum of its v
 ```schooling-example
 {
   "language": "python",
-  "file": "search.py",
   "parts": [
     {
       "code": "def hybrid(question, k=3, depth=20, where=\"TRUE\", params=()):\n    \"\"\"Reciprocal rank fusion of the two lists, each DEPTH long.\"\"\"\n    fused = {}\n    for ranking in (vector(question, depth, where, params), lexical(question, depth, where, params)):\n        for rank, row in enumerate(ranking, 1):\n            fused.setdefault(row[0], [row[:3], 0.0])[1] += 1 / (60 + rank)\n    best = sorted(fused.values(), key=lambda item: -item[1])[:k]\n    return [(*row, score) for row, score in best]",
@@ -29,7 +28,7 @@ controls how much a first place outweighs a tenth: with 60 the difference is sma
 lists rank fairly high beats one that a single list ranks first.
 
 ```
-ana@lab:~/rag$ python show.py hybrid "What does error E-4104 mean?"
+ana@vm:~/rag$ python show.py hybrid "What does error E-4104 mean?"
 1    0.033  Affiliate API reference > Errors  | | code | HTTP | meaning | | --- | --- | --- | | 
 2    0.032  Affiliate API reference > Errors  | Errors are returned as JSON with a code and a me
 3    0.031  Affiliate API reference > Changes in 2.3  | Version 2.3, released on 10 February 2026, added
@@ -46,13 +45,30 @@ only good for ordering.
 `measure.py` runs every method of `search.py` against both test sets and counts the questions whose
 answer is in the first chunk and in the first three:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "measure.py",
+  "parts": [
+    {
+      "code": "import json\n\nfrom search import hybrid, lexical, rerank, vector\n\nnorm = lambda t: \" \".join(t.split())\nfound = lambda rows, q: any(f in norm(r[2]) for r in rows for f in q[\"facts\"])\nmethods = {\n    \"vector\": lambda q: vector(q, 3),\n    \"lexical\": lambda q: lexical(q, 3),\n    \"hybrid\": lambda q: hybrid(q, 3),\n    \"hybrid, reranked\": lambda q: rerank(q, hybrid(q, 20), 3),\n}\nsets = {name: [q for q in map(json.loads, open(f\"data/{name}.jsonl\")) if q[\"facts\"]]\n        for name in (\"eval\", \"identifiers\")}",
+      "note": "Four ways of searching, each asked for its top three. The reranked one reorders the hybrid's top twenty, so it costs twenty calls to the model per question."
+    },
+    {
+      "code": "print(f\"{'':18}{'eval @1':>9}{'eval @3':>9}{'ids @1':>8}{'ids @3':>8}\")\nfor name, run in methods.items():\n    cells = []\n    for s in (\"eval\", \"identifiers\"):\n        results = [(q, run(q[\"question\"])) for q in sets[s]]\n        for k in (1, 3):\n            hits = sum(found(rows[:k], q) for q, rows in results)\n            cells.append(f\"{hits:>{6 if s == 'eval' else 5}}/{len(sets[s]):<2}\")\n    print(f\"{name:18}\" + \"\".join(cells))",
+      "note": "For each method and each question set, how many questions had a right fact in the first result, and in the top three. Each question is searched once and the first result is read off the top three."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python measure.py
+
+```
+ana@vm:~/rag$ python measure.py
                     eval @1  eval @3  ids @1  ids @3
 vector                19/26    26/26    3/6     4/6 
 lexical               16/26    20/26    4/6     6/6 
 hybrid                20/26    24/26    4/6     5/6 
-hybrid, reranked      19/26    26/26    4/6     4/6 
+hybrid, reranked      19/26    26/26    0/6     4/6 
 ```
 
 **No line wins every column.** Vector search is best on the customer questions at three, 26 of 26.

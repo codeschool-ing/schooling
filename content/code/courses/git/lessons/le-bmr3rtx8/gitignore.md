@@ -1,11 +1,18 @@
 ---
 title: .gitignore: what Git should not even mention
-version: 1
+version: 2
 ---
 
 A working tree collects files that do not belong in the history. The operating system leaves some,
 tools write logs, a package manager downloads other people's code, and you keep a note or two that
-are nobody else's business:
+are nobody else's business. Start from a fresh week, and make four such leftovers in it:
+
+```bash
+cd ~ && rm -rf ~/site ~/remotes ~/copy ~/photos && bash ~/make-site.sh && cd ~/site
+mkdir -p node_modules/lightbox && printf 'x\n' > node_modules/lightbox/index.js
+printf 'x\n' > .DS_Store; printf 'x\n' > debug.log; printf 'call the supplier\n' > notes-private.txt
+```
+
 
 ```
 ana@vm:~/site$ git status --short
@@ -23,7 +30,8 @@ status` stops being readable, and **`git add .` would commit all of them**. A fi
 {"language": "conf", "file": ".gitignore", "parts": [{"code": "# Other people's code, which a package manager fetches again\nnode_modules/\n", "note": "A folder is ignored by its name and a slash: everything inside `node_modules/` goes, at any depth. A line starting with `#` is a comment, for the next person."}, {"code": "# Files the operating system or the tools leave behind\n.DS_Store\n*.log\n", "note": "`*` matches any name, so `*.log` is every file ending in `.log`, in any folder. `.DS_Store` is one exact name, the file macOS leaves in every folder it opens."}, {"code": "# Notes that are nobody else's business\nnotes-private.txt", "note": "A single file, by its path. Ignoring it keeps it out of `git status` and out of `git add .`, and nothing more."}]}
 ```
 
-With it in place:
+Write it with `nano .gitignore` in `~/site`. The copy button gives the file without the notes,
+ready to paste. With it in place:
 
 ```
 ana@vm:~/site$ git status --short
@@ -34,7 +42,11 @@ ana@vm:~/site$ git check-ignore -v debug.log node_modules/lightbox/index.js
 ```
 
 Only `.gitignore` itself is left, and it should be committed: **the ignore list is part of the
-project**, shared with everybody who clones it, so that nobody commits `node_modules/` by accident.
+project**, shared with everybody who clones it, so that nobody commits `node_modules/` by accident:
+
+```bash
+git add .gitignore && git commit -qm 'Ignore what nobody should commit'
+```
 
 `git check-ignore -v` answers the question you will eventually ask, *why is Git not seeing this
 file?* It names the file, the line and the rule that matched: `debug.log` by `*.log` on line 6,

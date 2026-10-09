@@ -28,5 +28,5 @@ aula 3 fez o mesmo caminho, de somente detecção até bloqueio.
 ```
 
 O laboratório tem os dois. O `sensor` fica na DMZ sem endereço e ouve cada quadro, como o sensor da
-aula 7. Na segunda metade da aula, o `lab.sh inline` põe uma máquina nova, `ips`, **no cabo entre o
+aula 7. Na segunda metade da aula, um script curto, o `inline.sh`, põe uma máquina nova, `ips`, **no cabo entre o
 `fw` e a DMZ**, de modo que nada de fora chega à loja sem atravessá-la.

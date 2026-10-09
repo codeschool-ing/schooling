@@ -45,18 +45,20 @@ EXPLAIN QUERY PLAN SELECT * FROM orders WHERE customer_id = 42;
 ```
 
 `EXPLAIN` on its own prints the bytecode SQLite will execute, which is not what anybody wants.
-`EXPLAIN QUERY PLAN` prints one line per step:
+`EXPLAIN QUERY PLAN` prints one line per step, drawn as a small tree. Here it is on lesson 1's shop
+loaded into SQLite, which lesson 12 shows how to do; you do not need it to read this:
 
 ```
-EXPLAIN QUERY PLAN SELECT * FROM orders WHERE customer_id = 42;
-  SCAN orders
-
-EXPLAIN QUERY PLAN SELECT * FROM customers WHERE email = 'user42@example.com';
-  SEARCH customers USING INDEX sqlite_autoindex_customers_1 (email=?)
-
-CREATE INDEX orders_customer_id_idx ON orders (customer_id);
-EXPLAIN QUERY PLAN SELECT * FROM orders WHERE customer_id = 42;
-  SEARCH orders USING INDEX orders_customer_id_idx (customer_id=?)
+sqlite> EXPLAIN QUERY PLAN SELECT * FROM orders WHERE customer_id = 42;
+QUERY PLAN
+`--SCAN orders
+sqlite> EXPLAIN QUERY PLAN SELECT * FROM customers WHERE email = 'user42@example.com';
+QUERY PLAN
+`--SEARCH customers USING INDEX sqlite_autoindex_customers_1 (email=?)
+sqlite> CREATE INDEX orders_customer_id_idx ON orders (customer_id);
+sqlite> EXPLAIN QUERY PLAN SELECT * FROM orders WHERE customer_id = 42;
+QUERY PLAN
+`--SEARCH orders USING INDEX orders_customer_id_idx (customer_id=?)
 ```
 
 `SCAN` is a full read of the table and `SEARCH … USING INDEX` is an index lookup; that pair is the

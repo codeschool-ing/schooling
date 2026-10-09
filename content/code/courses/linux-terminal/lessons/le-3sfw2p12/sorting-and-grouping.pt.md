@@ -1,6 +1,6 @@
 ---
 title: Ordenar, agrupar e medir — o `sort | uniq -c` com o sort embutido
-version: 1
+version: 2
 ---
 
 A regra do encerramento da aula 8 era que o `sort` antes do `uniq -c` não é
@@ -46,9 +46,9 @@ um objeto aninhado.
 PS /home/ana/work/ps> Import-Csv sales.csv | Sort-Object { [int]$_.revenue } -Descending | Select-Object -First 3 rep, revenue
 rep    revenue
 ---    -------
-ana    43731
-felipe 41574
-carla  37084
+helena 39865
+diego  39072
+elena  36036
 ```
 
 O `Sort-Object` recebe nomes de propriedade, ou um bloco que calcula a chave — e o
@@ -57,15 +57,15 @@ ordenação sem ele:
 
 ```
 PS /home/ana/work/ps> Import-Csv sales.csv | Sort-Object revenue -Descending | Select-Object -First 3 rep, revenue
-rep  revenue
----  -------
-ana  8721
-ana  8601
-hugo 7257
+rep    revenue
+---    -------
+carla  9804
+diego  8840
+felipe 8778
 ```
 
-**A maior receita do arquivo é 43731 e ela não está naquela tabela.** Ordenado
-como texto, `8721` é a maior coisa que existe, porque `8` ganha de `4`. Nenhum
+**A maior receita do arquivo é 39865 e ela não está naquela tabela.** Ordenado
+como texto, `9804` é a maior coisa que existe, porque `9` ganha de `3`. Nenhum
 erro, uma resposta perfeitamente plausível, e as três linhas erradas.
 
 | | |
@@ -86,8 +86,8 @@ vale para o `sort` do bash também, e é o motivo de o `Select-Object -First 3` 
 ```
 PS /home/ana/work/ps> Import-Csv sales.csv | Measure-Object -Property units -Sum -Average
 Count             : 32
-Average           : 199.34375
-Sum               : 6379
+Average           : 195.15625
+Sum               : 6245
 Maximum           :
 Minimum           :
 StandardDeviation :
@@ -128,10 +128,10 @@ um milhão de forma idêntica, e o `@( … ).Count` força um array antes.
 PS /home/ana/work/ps> Import-Csv sales.csv | Where-Object { [int]$_.revenue -gt 20000 } | Group-Object region | Sort-Object Count -Descending | Select-Object Name, Count
 Name  Count
 ----  -----
-east      4
-north     4
-south     3
-west      1
+west      5
+east      3
+north     3
+south     2
 ```
 
 Filtre, agrupe, ordene, pegue. **Essa forma responde a maioria das perguntas

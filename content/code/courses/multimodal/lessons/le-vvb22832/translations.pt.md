@@ -1,6 +1,6 @@
 ---
 title: O endpoint de tradução
-version: 1
+version: 2
 ---
 
 O Whisper foi treinado para transcrever fala em muitas línguas e para **traduzi-la para o inglês**, e a API expõe o segundo trabalho como endpoint próprio: `audio.translations`. Ele recebe uma gravação em qualquer língua que o Whisper conhece e devolve texto em inglês, num passo só.
@@ -9,11 +9,11 @@ O Whisper foi treinado para transcrever fala em muitas línguas e para **traduzi
 """The Portuguese voicemail, transcribed as it was said and translated into English."""
 from openai import OpenAI
 
-client = OpenAI()
+client = OpenAI(base_url="http://localhost:8700/v1")   # audio_server.py, on this machine
 with open("media/voicemail-pt.wav", "rb") as audio:
-    said = client.audio.transcriptions.create(model="lab-whisper-base", file=audio)
+    said = client.audio.transcriptions.create(model="whisper-base", file=audio)
 with open("media/voicemail-pt.wav", "rb") as audio:
-    english = client.audio.translations.create(model="lab-whisper-base", file=audio)
+    english = client.audio.translations.create(model="whisper-base", file=audio)
 print("transcribed:", said.text)
 print("translated: ", english.text)
 ```
@@ -24,7 +24,7 @@ transcribed: Oi, aqui é o Rafael Piente da Maginalia, sou ligando sobre o pedid
 translated:  Hi, here is Rafael Pienta from Marginalia, I'm calling on the request in my 2017 an exemplary memory of brass cubes that arrived with the mass cover. You can come back in the end of the afternoon, thank you.
 ```
 
-As duas linhas são do Whisper base, rodado pelo labmm. A tradução leva os erros da transcrição para o inglês e acrescenta os seus: *pedido M-2087* virou *the request in my 2017*, e *Memórias Póstumas de Brás Cubas* virou *an exemplary memory of brass cubes*. O sentido do recado (um cliente, uma capa danificada, por favor ligue de volta à tarde) sobrevive; o número do pedido e o título, que são o que a loja precisa, não.
+As duas linhas são do Whisper base, rodado pelo servidor do curso. A tradução leva os erros da transcrição para o inglês e acrescenta os seus: *pedido M-2087* virou *the request in my 2017*, e *Memórias Póstumas de Brás Cubas* virou *an exemplary memory of brass cubes*. O sentido do recado (um cliente, uma capa danificada, por favor ligue de volta à tarde) sobrevive; o número do pedido e o título, que são o que a loja precisa, não.
 
 Três coisas a saber sobre ele:
 

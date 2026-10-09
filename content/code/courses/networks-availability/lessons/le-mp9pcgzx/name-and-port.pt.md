@@ -5,7 +5,8 @@ version: 1
 
 ## O nome
 
-Com o gateway corrigido, a falha seguinte chega pelo nome:
+Com o gateway corrigido, a falha seguinte chega pelo nome. Ela é encenada em `laptop` com
+`echo nameserver 192.0.2.54 | sudo tee /etc/resolv.conf`:
 
 ```
 ana@laptop:~$ curl -sS -m 10 http://www.example.com/
@@ -32,7 +33,7 @@ ana@laptop:~$ cat /etc/resolv.conf
 nameserver 192.0.2.54
 ```
 
-O servidor DNS do laboratório, `ns` em `192.0.2.53`, responde ao ping. Um `dig` simples, que pergunta a
+O servidor DNS da rede, `ns` em `192.0.2.53`, responde ao ping. Um `dig` simples, que pergunta a
 qualquer servidor que o laptop tenha configurado, **informa a quem perguntou**: `192.0.2.54`, que nunca
 respondeu. A mesma pergunta feita a `192.0.2.53` com `@` recebe `192.0.2.80`, a resposta certa. Então a
 rede está bem e o DNS está bem, e o laptop está perguntando a um endereço onde ninguém escuta. O
@@ -41,9 +42,11 @@ concessão DHCP, o NetworkManager, o systemd-resolved.
 
 O `grep` por `status` não imprimiu nada, e isso também é informação. Um servidor que responde, mesmo que
 seja para dizer que um nome não existe, produz uma linha de status; **nenhuma linha de status quer dizer
-nenhuma resposta**.
+nenhuma resposta**. O mesmo `tee` com `192.0.2.53` devolve a linha.
 
 ## A porta
+
+Encenada na máquina virtual com `sudo bash netlab.sh kill web1 nginx`:
 
 ```
 ana@laptop:~$ curl -sS http://192.0.2.21/
@@ -74,8 +77,8 @@ LISTEN 0      4096         0.0.0.0:5201      0.0.0.0:*
 ```
 
 A primeira listagem tem um único ouvinte, na porta 5201, o servidor `iperf3` que a aula 22 usa, e **nada
-na 80**: o nginx tinha parado. A segunda listagem foi tirada depois que ele foi iniciado de novo, fora da
-tela, e `0.0.0.0:80` voltou. **Uma pergunta de camada 4 se resolve no servidor, não no cliente.** O
+na 80**: o nginx tinha parado. A segunda listagem foi tirada depois que ele foi iniciado de novo,
+`sudo nginx -c /lab/web1/www/nginx.conf` em `web1`, e `0.0.0.0:80` voltou. **Uma pergunta de camada 4 se resolve no servidor, não no cliente.** O
 `ss -tln` lista o que está escutando, e leva um segundo.
 
 ## A página

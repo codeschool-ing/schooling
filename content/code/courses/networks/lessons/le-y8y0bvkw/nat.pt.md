@@ -1,13 +1,15 @@
 ---
 title: Um endereço público para o escritório inteiro
-version: 1
+version: 2
 ---
 
 `192.168.10.20` é um **endereço privado**. As faixas `10.0.0.0/8`, `172.16.0.0/12` e `192.168.0.0/16`
 são reservadas pela RFC 1918 para uso dentro de qualquer prédio, e a internet não as roteia: milhões de
 escritórios usam `192.168.10.20` ao mesmo tempo. Para sair, o escritório pega emprestado o único
 endereço público que o provedor lhe deu, `203.0.113.2`. Isso é **NAT**, *network address translation*,
-tradução de endereços de rede, e é uma regra no roteador do escritório:
+tradução de endereços de rede, e é uma regra no roteador do escritório. A linha de log depois dela é o
+laptop buscando a página inicial, `curl -s -o /dev/null https://www.example.com/`, como o servidor web
+a viu:
 
 ```
 ana@router:~$ sudo nft list ruleset

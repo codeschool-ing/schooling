@@ -1,6 +1,6 @@
 ---
 title: Commits convencionais
-version: 1
+version: 2
 ---
 
 **Commits convencionais** (*Conventional Commits*) é uma convenção publicada, hoje na versão 1.0.0, para
@@ -19,7 +19,24 @@ sem deixar a mensagem menos legível para uma pessoa:
 - **A descrição** vem depois dos dois-pontos, no imperativo, como na seção anterior.
 - **O rodapé** `BREAKING CHANGE:` declara o que quebra, para quem precisar se adaptar.
 
-Aqui está o site depois de quatro commits assim desde a `v1.0`:
+Aqui está o site depois de quatro commits assim desde a `v1.0`. Primeiro a tag, no commit que você
+acabou de fazer, depois três commits que cabem numa linha cada, e os arquivos do quarto:
+
+```bash
+git tag -a v1.0 -m 'The site as it went live'
+sed -i 's/2.50/2.60/' menu.html
+git commit -qam 'fix(menu): show the new price of cheese rolls'
+printf '<p>Carrot cake, 3.00</p>\n' >> menu.html
+git commit -qam 'feat(menu): add carrot cake'
+printf 'How to add an item: one line per item in menu.html.\n' > README.md
+git add README.md && git commit -qm 'docs: explain how to add a menu item'
+printf '<form><label>Pickup time <input name="pickup" required></label></form>\n' > order.html
+git add order.html
+```
+
+O quarto tem corpo e rodapé, então é escrito no editor, como o da seção anterior: rode `git commit` e
+digite a mensagem que o último comando abaixo imprime.
+
 
 ```
 ana@vm:~/site$ git log --oneline v1.0..HEAD

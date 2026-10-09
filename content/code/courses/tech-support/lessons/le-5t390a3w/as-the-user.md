@@ -22,5 +22,6 @@ exactly where his settings send them.
 
 This is the kind of cause the user's explanation hides. "The printer is broken" named the last thing he
 could see, the printer that stayed silent. The fault was one step before it, in a choice he made in a
-dialog box. In the lab, what that choice did was done with `lpoptions -d pdf`, run as Bruno, and the
-capture's header says so: the lab's computers have no desktop to show the window on.
+dialog box. The office's computers have no desktop to show that window on, so in this recording the
+choice was made with `lpoptions -d pdf`, run as Bruno: the command that sets the same default, for him
+alone.

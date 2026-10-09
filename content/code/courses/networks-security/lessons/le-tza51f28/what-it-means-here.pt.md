@@ -10,7 +10,8 @@ testável aqui, porque cada privilégio é uma célula da matriz e uma célula p
 
 A linha de base da aula 4 já o aplica entre zonas: a equipe alcança a aplicação e não o banco de
 dados, o proxy alcança a aplicação e nada mais. O que a matriz de zonas não consegue expressar é algo
-mais fino que uma zona. Quem alcança o banco de dados hoje:
+mais fino que uma zona. No seu laboratório esta aula começa com `sudo bash nslab.sh reset`, com a
+política da empresa carregada no `fw` por `nft -f baseline.nft`. Quem alcança o banco de dados hoje:
 
 ```
 ana@app:~$ probe db:5432 db:22

@@ -1,7 +1,15 @@
 ---
 title: A line for a person, a record for a machine
-version: 1
+version: 2
 ---
+
+Start this lesson from a lab started again from nothing, and set the simulated customers going
+for twenty minutes before anything else: the shop's own logs are what the later sections read, and
+the last one counts a minute of them.
+
+```sh
+docker compose run -d --rm loadgen python -m loadgen.load 5 1200
+```
 
 The first log lines anybody writes are sentences: *checkout finished for order 5001 in 11ms*. They
 read well, and they are read by people for exactly as long as there are few enough to read. **After

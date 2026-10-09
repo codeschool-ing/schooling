@@ -1,0 +1,30 @@
+title: SSH login failure
+name: ssh_login_failure
+id: 3f1d2c6a-8b7e-4e0f-9a52-6c1b0e7d4a10
+status: test
+description: One failed SSH login, for a known or an unknown account.
+logsource:
+  product: linux
+  service: sshd
+detection:
+  selection:
+    product: sshd
+    action: failure
+  condition: selection
+level: low
+---
+title: Many accounts tried from one address
+name: many_accounts_one_source
+id: 9c4b7e21-5d3a-4f86-b0e2-1a7c9d3e6f58
+status: test
+correlation:
+  type: value_count
+  rules:
+    - ssh_login_failure
+  group-by:
+    - src_ip
+  timespan: 1h
+  condition:
+    field: user
+    gte: 10
+level: high

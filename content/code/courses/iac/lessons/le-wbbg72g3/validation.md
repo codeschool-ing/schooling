@@ -1,6 +1,6 @@
 ---
 title: Validation rules, preconditions and checks
-version: 1
+version: 2
 ---
 
 A type says what shape a value has. **A validation rule says which values of that shape are
@@ -14,7 +14,7 @@ happens when one fails.
 
 ## Validation, in the variable
 
-Ana's variables gain one rule each:
+Ana's variables, in `variables.tf`, gain one rule each:
 
 ```hcl
 variable "environment" {
@@ -100,7 +100,8 @@ passes the type, and it still has no room for `/24` subnets, so the rule says so
 ## Preconditions and postconditions, on a resource
 
 Some rules are about a value that no single variable holds. The shop's assets bucket is named
-from three pieces, and S3 refuses a bucket name longer than 63 characters:
+from three pieces, and S3 refuses a bucket name longer than 63 characters. Ana writes it in
+`bucket.tf`:
 
 ```hcl
 locals {
@@ -166,12 +167,13 @@ same name would have reached S3 at apply time, after the other changes had been 
 A postcondition whose value is known during the plan is checked then, as this region is. When the
 value only exists after the change, Terraform checks it after making the change, and a failure
 then is an error with the resource already created or changed. That is the price of a rule about
-something only AWS can tell you.
+something only AWS can tell you. With the default owner, `ana`, the name fits, and Ana creates the
+bucket with `terraform apply -auto-approve`; the plan below finds it already there.
 
 ## Check blocks, which only warn
 
 A `check` block stands on its own, outside any resource, and **a failed assertion is a warning,
-not an error**:
+not an error**. Ana's goes in `checks.tf`:
 
 ```hcl
 check "two_zones" {

@@ -1,6 +1,6 @@
 ---
 title: Versions and ranges
-version: 1
+version: 2
 ---
 
 **A version number is `MAJOR.MINOR.PATCH`, and each part is a promise about what changed.** This
@@ -12,7 +12,7 @@ convention is called **semantic versioning**, or semver, and the whole npm ecosy
 - **MAJOR** goes up when something that worked stops working: a function renamed, an argument
   removed, a default changed.
 
-The lab's registry has five versions of `shelf-slug`, one of each kind of change:
+`publish-shelf.sh` published five versions of `shelf-slug`, one of each kind of change:
 
 ```
 ana@dev:~/js/first$ npm view shelf-slug versions
@@ -66,7 +66,7 @@ installs an old version on purpose:
 ```
 ana@dev:~/js/first$ npm install shelf-slug@1.0.0
 
-changed 1 package in 506ms
+changed 1 package in 574ms
 ana@dev:~/js/first$ node slug.js
 grande-sertão:-veredas
 ana@dev:~/js/first$ npm outdated
@@ -88,7 +88,7 @@ Asking for `@2` installs `2.0.0` and rewrites the range to `^2.0.0`:
 ```
 ana@dev:~/js/first$ npm install shelf-slug@2
 
-changed 1 package in 508ms
+changed 1 package in 534ms
 ana@dev:~/js/first$ node slug.js 2>&1 | head -n 5
 file:///home/ana/js/first/slug.js:1
 import { slug } from "shelf-slug";

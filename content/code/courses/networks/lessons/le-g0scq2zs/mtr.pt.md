@@ -1,12 +1,22 @@
 ---
 title: mtr: perda por salto, e como ler
-version: 1
+version: 2
 ---
 
 O `mtr` roda o traceroute sem parar e conta, por salto, quantas sondas tiveram resposta. Para este
 chamado, "o site fica lento às vezes", o laboratório foi montado com duas coisas erradas ao mesmo tempo.
 O roteador do ISP responde só a parte das sondas que expiram nele, como roteadores ocupados fazem, e
-depois o `core` passou a descartar um pacote em cada cinco no caminho para o `www`:
+depois o `core` passou a descartar um pacote em cada cinco no caminho para o `www`. No seu laboratório,
+o primeiro defeito antes do primeiro `mtr`, o segundo antes do segundo; a perda é aleatória, então as
+suas porcentagens vão ser outras:
+
+```sh
+sudo bash ~/netlab/netlab exec isp root 'nft add table inet slow; nft "add chain inet slow out { type filter hook output priority 0; }"; nft add rule inet slow out icmp type time-exceeded numgen random mod 2 == 0 drop'
+```
+
+```sh
+sudo bash ~/netlab/netlab exec core root 'nft add table inet lossy; nft "add chain inet lossy lose { type filter hook forward priority 0; }"; nft add rule inet lossy lose ip daddr 192.0.2.80 numgen random mod 5 == 0 drop'
+```
 
 ```
 ana@laptop:~$ mtr -rwn -c 20 www.example.com

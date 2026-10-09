@@ -34,9 +34,30 @@ AllowedIPs = 10.99.0.2/32, 192.168.30.0/24
 ```
 
 `AllowedIPs` é ao mesmo tempo uma tabela de rotas e um filtro: os pacotes que chegam pelo túnel vindos
-desse par têm de vir desses endereços, ou são descartados. A interface é ativada em cada ponta, com uma
+desse par têm de vir desses endereços, ou são descartados. O `wg0.conf` da filial é o espelho deste,
+com a chave pública do `fw`, as redes da matriz e um keepalive, porque a filial fica atrás de um
+roteador que, sem ele, esqueceria o túnel quando ficasse quieto:
+
+```ini
+[Interface]
+ListenPort = 51820
+PrivateKey = (the contents of the branch's wg.key)
+
+[Peer]
+# head office
+PublicKey = (the contents of fw's wg.pub)
+Endpoint = 203.0.113.2:51820
+AllowedIPs = 10.99.0.1/32, 192.168.10.0/24, 192.168.20.0/24
+PersistentKeepalive = 25
+```
+
+A interface é ativada em cada ponta, com uma
 rota para a rede do outro lado passando por ela, e o `fw` ganha duas regras, uma que deixa entrar o UDP
 do túnel e outra que deixa a filial usar a aplicação:
+
+```sh
+nft insert rule ip filter input index 0 iifname "eth0" udp dport 51820 accept comment \"the branch tunnel\"; nft insert rule ip filter forward index 0 iifname "wg0" oifname "eth3" ip daddr 192.168.20.10 tcp dport 8080 ct state new accept comment \"the branch uses the application\"
+```
 
 ```
 root@fw:~# wireguard-go wg0 2>/dev/null && wg setconf wg0 wg0.conf && ip addr add 10.99.0.1/24 dev wg0 && ip link set wg0 up && ip route add 192.168.30.0/24 dev wg0
@@ -63,7 +84,9 @@ peer: RzVWXllEFMVGdig288pqtFqTXs//oftHmzj6v9yYtlU=
 ```
 
 **Um handshake há dois segundos**, e tráfego nos dois sentidos. O que o segmento da internet
-carregou enquanto isso, gravado na interface externa do `fw`:
+carregou enquanto isso, gravado na interface externa do `fw` por
+`setsid timeout 8 tcpdump -n -i eth0 -c 6 "host 203.0.113.70" > /root/wire.txt 2>/dev/null </dev/null &`,
+iniciado logo antes de o `branchpc` fazer o seu pedido:
 
 ```
 root@fw:~# cut -d" " -f2- wire.txt

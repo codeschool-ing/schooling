@@ -1,6 +1,6 @@
 ---
 title: Escolhendo uma coleção
-version: 1
+version: 2
 ---
 
 Seis formatos agora guardam dados nos seus programas, e **escolher o certo deixa mais curto o
@@ -46,4 +46,4 @@ Dom Casmurro 2
 
 O `map` transforma cada livro num par `[id, livro]`, e o `Map` se constrói a partir dos pares.
 Depois disso, `byId.get(12)` substitui um `find` que percorria o array inteiro. A aula 16 faz isso
-com livros buscados no servidor do laboratório.
+com livros buscados num servidor.

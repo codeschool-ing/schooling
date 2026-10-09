@@ -1,6 +1,6 @@
 ---
 title: Onde a linha fica borrada
-version: 1
+version: 2
 ---
 
 A divisão não é absoluta, e três coisas que você vai encontrar na prática ficam em cima dela. Cada
@@ -12,7 +12,7 @@ O PostgreSQL consegue manter uma segunda cópia do banco, uma **réplica**, que 
 que o primário faz, uma fração de segundo atrás. Os relatórios rodam na réplica e os caixas nem
 percebem.
 
-**Ela resolve a disputa por memória, disco e processadores** da seção 07, por completo. Não resolve
+**Ela resolve a disputa por memória, disco e processadores** da seção 10, por completo. Não resolve
 mais nada. A réplica tem o mesmo esquema normalizado, então o relatório ainda precisa de seis tabelas
 e de um `coalesce`. Tem as mesmas linhas de estado atual, então o cliente 2123 continua no Paraná em
 todo pedido que já fez. Uma réplica é o primeiro passo certo para uma rede pequena cujos relatórios

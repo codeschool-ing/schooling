@@ -1,6 +1,6 @@
 ---
 title: O problema de um estado só para tudo
-version: 1
+version: 2
 ---
 
 A aula 7 deixou a loja com uma configuração e um estado, guardado no S3 sob uma key. Desde então a
@@ -66,6 +66,37 @@ resource "aws_s3_bucket" "logs" {
 }
 ```
 
+**Para começar de onde a Ana está**, lembre que o seu moto está vazio no começo de toda aula. Crie
+de novo o bucket de estado da aula 7, com versionamento ligado:
+
+```sh
+aws s3api create-bucket --bucket shop-tfstate-123456789012 --create-bucket-configuration LocationConstraint=sa-east-1
+aws s3api put-bucket-versioning --bucket shop-tfstate-123456789012 --versioning-configuration Status=Enabled
+```
+
+Depois, em `~/shop`, salve o `main.tf` acima e, ao lado dele, o `backend.tf` da aula 7:
+
+```hcl
+terraform {
+  backend "s3" {
+    bucket       = "shop-tfstate-123456789012"
+    key          = "shop/terraform.tfstate"
+    region       = "sa-east-1"
+    encrypt      = true
+    use_lockfile = true
+  }
+}
+```
+
+e aplique e faça commit, com o `.gitignore` da aula 7:
+
+```sh
+terraform init
+terraform apply -auto-approve
+printf ".terraform/\n*.tfstate\n*.tfstate.*\n" > .gitignore
+git init -q && git add . && git commit -qm "the shop, in one state"
+```
+
 O backend é o da aula 7, sem mudança, e o estado guarda seis recursos sob uma key:
 
 ```
@@ -117,7 +148,8 @@ Plan: 0 to add, 1 to change, 0 to destroy.
 pergunta à AWS por cada recurso do estado, porque não tem como saber quais alguém mudou à mão. Seis
 chamadas não custam nada. Com seiscentas, o plan de uma tag num bucket espera por cada sub-rede, rota e registro DNS que a empresa
 tem. O lock da aula 7 fica preso o tempo todo, então ninguém mais consegue planejar a rede enquanto
-a Ana mexe na tag do bucket dela.
+a Ana mexe na tag do bucket dela. Ela não aplica a tag, e volta o arquivo com `git checkout
+main.tf`.
 
 ## O raio de explosão é o estado inteiro
 

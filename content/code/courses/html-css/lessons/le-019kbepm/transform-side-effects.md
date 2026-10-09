@@ -1,13 +1,40 @@
 ---
 title: Two things a transform also does
-version: 1
+version: 2
 ---
 
 A transform does two other things that surprise people, and lesson 7 pointed at both.
 
 ## It becomes the containing block for fixed descendants
 
-Lesson 7 section 06 said a `position: fixed` element is placed relative to the window. **Unless an ancestor has a transform**: then that ancestor becomes the containing block, and the "fixed" element moves with it. Here are two identical toasts, `position: fixed; bottom: 16px; right: 16px`, one in the page and one inside a panel with `transform: translateX(0)`, a transform that moves nothing:
+Lesson 7 section 06 said a `position: fixed` element is placed relative to the window. **Unless an ancestor has a transform**: then that ancestor becomes the containing block, and the "fixed" element moves with it. Here are two identical toasts, `position: fixed; bottom: 16px; right: 16px`, one in the page and one inside a panel with `transform: translateX(0)`, a transform that moves nothing. The page is `fixed.html`:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Andorinha Books</title>
+    <style>
+      body { margin: 0; }
+      .page { height: 2000px; }
+      .panel { transform: translateX(0); height: 300px; }
+      .toast { position: fixed; bottom: 16px; right: 16px; width: 200px; height: 40px; }
+    </style>
+  </head>
+  <body>
+    <div class="page">
+      <p class="toast outside">Saved</p>
+      <div class="panel">
+        <p class="toast inside">Saved</p>
+      </div>
+    </div>
+  </body>
+</html>
+```
+
+Measured before and after scrolling 600:
 
 ```
 ana@laptop:~/site$ probe fixed.html box .toast scroll 600 box .toast
@@ -21,7 +48,34 @@ Before scrolling, the toast outside is at y **696**, at the bottom of the window
 
 ## It creates a stacking context
 
-Lesson 7 section 08 showed that a stacking context traps the `z-index` of everything inside it. A transform creates one. A card has a menu with `z-index: 100`, and the next card has `z-index: 1`. With the first card lifted by a 4-pixel `translateY`, and without:
+Lesson 7 section 08 showed that a stacking context traps the `z-index` of everything inside it. A transform creates one. A card has a menu with `z-index: 100`, and the next card has `z-index: 1`. Here they are in `stack.html`, with the first card lifted by a 4-pixel `translateY`:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Andorinha Books</title>
+    <style>
+      body { margin: 0; }
+      .card { position: relative; width: 300px; height: 120px; background: #f4f1ea; }
+      .lifted { transform: translateY(-4px); }
+      .menu { position: absolute; top: 80px; left: 20px; z-index: 100; width: 200px; height: 100px; background: #ffffff; }
+      .next { position: relative; z-index: 1; width: 300px; height: 120px; background: #e6dfd0; }
+    </style>
+  </head>
+  <body>
+    <div class="card lifted">
+      <p>Poetry reading</p>
+      <div class="menu">Share · Save · Report</div>
+    </div>
+    <div class="next">Book swap</div>
+  </body>
+</html>
+```
+
+`flat.html` is a copy with `lifted` taken out of the first card's `class`. With the lift, and without:
 
 ```
 ana@laptop:~/site$ probe stack.html top 100 140

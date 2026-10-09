@@ -1,6 +1,6 @@
 ---
 title: O fluxo, do pull request ao plan aplicado
-version: 1
+version: 2
 ---
 
 Um pipeline de Terraform tem duas raias, e quase todo o projeto dele é decidir o que acontece em
@@ -32,7 +32,22 @@ state; assim, um pull request que nem consegue se formatar nunca chega a um plan
 
 Aqui está o scan fazendo o seu trabalho. Um pull request abre SSH no grupo `web` para a internet
 inteira, a mesma mudança que a aula 1 viu um colega fazer à mão. Desta vez ela chega como um
-arquivo numa branch, e o pipeline roda sobre ela:
+arquivo numa branch, o `ssh.tf`:
+
+```hcl
+resource "aws_security_group_rule" "ssh" {
+  type              = "ingress"
+  description       = "SSH"
+  security_group_id = aws_security_group.web.id
+  from_port         = 22
+  to_port           = 22
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+```
+
+O pipeline roda sobre essa branch. Esta execução foi gravada perto do fim da aula, e a seção 08
+termina com os comandos que põem a mesma branch no seu remoto:
 
 ```
 ana@laptop:~$ git clone -q -b ssh git/shop.git ci/pr-ssh

@@ -1,6 +1,6 @@
 ---
 title: Audiodescrição nas pausas
-version: 1
+version: 2
 ---
 
 A audiodescrição padrão, o critério 1.2.5, fala nas pausas da trilha sonora sem mudar a duração do vídeo. Então são três perguntas: o que dizer, onde estão as pausas, e se as palavras cabem.
@@ -51,7 +51,7 @@ ana@lab:~/mm$ python describe.py
 20.72  Code: RETURN30.                                  1.45 s into a 1.82 s pause at 20.01: fits
 26.44  The label is valid for seven days.               1.99 s into a 1.18 s pause at 25.70: does NOT fit
 described.wav: 1 of 3 descriptions mixed in
-ana@lab:~/mm$ python -c "from openai import OpenAI; print(OpenAI().audio.transcriptions.create(model=\"lab-whisper-base\", file=open(\"described.wav\", \"rb\"), response_format=\"text\"))" | cut -c1-400
+ana@lab:~/mm$ python -c "from openai import OpenAI; print(OpenAI(base_url=\"http://localhost:8700/v1\").audio.transcriptions.create(model=\"whisper-base\", file=open(\"described.wav\", \"rb\"), response_format=\"text\"))" | cut -c1-400
 Here is how to return a book you bought from Marginelia. It takes four steps and the label is free. First, sign and end open the order the book came in. You will find it under account then orders. Second, press return this item and choose a reason from the list. 3. Print the prepared label we send you by email and tape it over the old address. Code, return 30, 4. Drop the parcel at any post office
 ```
 

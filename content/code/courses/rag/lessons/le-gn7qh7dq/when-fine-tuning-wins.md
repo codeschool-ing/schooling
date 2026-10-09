@@ -1,6 +1,6 @@
 ---
 title: When fine-tuning wins
-version: 1
+version: 2
 ---
 
 The last four sections leave fine-tuning looking like the wrong tool, and for teaching a model a
@@ -42,8 +42,8 @@ fine-tuning run like any other.
 ## When there is no time to retrieve
 
 Retrieval adds a search to every request: an embedding of the question, a query to the index, and a
-longer prompt for the model to read. In this lab the search is one embedding and one matrix
-product, and for most uses its time does not matter. For a voice assistant or an autocomplete, where the whole reply has a budget of a few
+longer prompt for the model to read. On the machine this course was recorded on, the search is one
+embedding and one matrix product, and for most uses its time does not matter. For a voice assistant or an autocomplete, where the whole reply has a budget of a few
 hundred milliseconds, a model that already knows the small, stable set of facts it needs can be the
 only design that fits.
 

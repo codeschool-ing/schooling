@@ -11,16 +11,66 @@ somebody else's choosing.
 
 ## Vereda's zone, before signing
 
+The signing tools come from BIND, the DNS server most zones are signed with, and Ubuntu packages
+them on their own:
+
+```sh
+sudo apt-get install -y bind9-utils
 ```
-ana@lab:~/lab$ cat data/dns/db.vereda.example
+
+The zone itself is a text file: who answers for it, and two names with their addresses, from the
+range reserved for documentation:
+
+```sh
+cd ~/lab
+mkdir -p data/dns
+cat > data/dns/db.vereda.example <<'EOF'
 $TTL 3600
 @       IN SOA ns1.vereda.example. hostmaster.vereda.example. 2026061501 7200 900 1209600 300
 @       IN NS  ns1.vereda.example.
 ns1     IN A   192.0.2.53
 portal  IN A   192.0.2.10
+EOF
+vcrypt dnskeys
 ```
 
-And two Ed25519 key pairs, in BIND's file format, made by the lab:
+`vcrypt dnskeys` writes two Ed25519 key pairs, in BIND's file format. BIND's own `dnssec-keygen`
+makes the same files from random bytes; this tool derives them from labels, so that the signed zone
+below is the one you get:
+
+```py
+# ~/lab/tools/dnskeys.py
+"""vcrypt dnskeys: Vereda's two DNSSEC keys, a key-signing key (flags 257)
+and a zone-signing key (flags 256), both Ed25519 (algorithm 15), written
+into data/dns/ in the file format BIND's tools read. `dnssec-keygen -a
+ED25519` makes the same files from fresh random bytes; these come from
+keys.py so that the signed zone in the lesson is the one you get."""
+import base64
+import struct
+
+from cryptography.hazmat.primitives import serialization
+
+import keys
+
+for label, flags in (("ksk", 257), ("zsk", 256)):
+    k = keys.ed25519_key("dns/" + label)
+    pub = k.public_key().public_bytes(serialization.Encoding.Raw, serialization.PublicFormat.Raw)
+    priv = k.private_bytes(serialization.Encoding.Raw, serialization.PrivateFormat.Raw,
+                           serialization.NoEncryption())
+    # The key tag that names the files, computed over the DNSKEY record as
+    # RFC 4034 appendix B says: flags, protocol 3, algorithm 15, the key.
+    rdata = struct.pack("!HBB", flags, 3, 15) + pub
+    acc = sum(b if i & 1 else b << 8 for i, b in enumerate(rdata))
+    tag = (acc + ((acc >> 16) & 0xFFFF)) & 0xFFFF
+    base = f"data/dns/Kvereda.example.+015+{tag:05d}"
+    open(base + ".key", "w").write(
+        f"vereda.example. IN DNSKEY {flags} 3 15 {base64.b64encode(pub).decode()}\n")
+    open(base + ".private", "w").write(
+        f"Private-key-format: v1.3\nAlgorithm: 15 (ED25519)\nPrivateKey: {base64.b64encode(priv).decode()}\n"
+        "Created: 20260101000000\nPublish: 20260101000000\nActivate: 20260101000000\n")
+```
+
+The directory now holds the zone and the two pairs:
 
 ```
 ana@lab:~/lab$ ls data/dns

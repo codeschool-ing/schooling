@@ -1,6 +1,6 @@
 ---
 title: Um laço não tem saída
-version: 1
+version: 2
 ---
 
 O instinto é bom e o resultado não é. Um segundo cabo entre dois switches parece um seguro: se um
@@ -25,6 +25,36 @@ e o laboratório começa com o cabo entre `sw3` e `sw1` desconectado:
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 720 320\" role=\"img\" aria-label=\"Três switches ligados em triângulo com o spanning tree desligado: sw1 em cima, com o pc1 na porta p10; sw2 embaixo à esquerda e sw3 embaixo à direita, com pc2 e pc3 nas portas p10. A p2 do sw1 vai à p1 do sw2, a p3 do sw2 à p2 do sw3, e a p1 do sw3 à p3 do sw1, o cabo ligado por três segundos. Duas cópias de um broadcast dão a volta no triângulo, uma no sentido horário e outra no contrário, e nenhuma para nunca. Nesses três segundos a p2 do sw1 recebeu 201.975 quadros.\"><defs><marker id=\"stl-a\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker><marker id=\"stl-p\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker></defs><path d=\"M360 40 L360 70\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M170 254 L170 282\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M550 254 L550 282\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M320 114 L210 210\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\"></path><path d=\"M400 114 L510 210\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\" stroke-dasharray=\"5 4\"></path><path d=\"M230 232 L490 232\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" fill=\"none\"></path><text x=\"298\" y=\"126\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">p2</text><text x=\"422\" y=\"126\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">p3</text><text x=\"214\" y=\"194\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">p1</text><text x=\"506\" y=\"194\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">p1</text><text x=\"238\" y=\"221\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">p3</text><text x=\"482\" y=\"221\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">p2</text><text x=\"368\" y=\"55\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">p10</text><text x=\"178\" y=\"268\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">p10</text><text x=\"558\" y=\"268\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">p10</text><rect x=\"320\" y=\"10\" width=\"80\" height=\"30\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"360.0\" y=\"25.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">pc1</text><rect x=\"130\" y=\"282\" width=\"80\" height=\"30\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"170.0\" y=\"297.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">pc2</text><rect x=\"510\" y=\"282\" width=\"80\" height=\"30\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"550.0\" y=\"297.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">pc3</text><rect x=\"300\" y=\"70\" width=\"120\" height=\"44\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"360.0\" y=\"92.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">sw1</text><rect x=\"110\" y=\"210\" width=\"120\" height=\"44\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"170.0\" y=\"232.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">sw2</text><rect x=\"490\" y=\"210\" width=\"120\" height=\"44\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"550.0\" y=\"232.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">sw3</text><path d=\"M425.1 151.8 L469.1 190.2\" stroke=\"var(--amber)\" stroke-width=\"2\" fill=\"none\" marker-end=\"url(#stl-a)\"></path><path d=\"M412.0 220.0 L308.0 220.0\" stroke=\"var(--amber)\" stroke-width=\"2\" fill=\"none\" marker-end=\"url(#stl-a)\"></path><path d=\"M250.9 190.2 L294.9 151.8\" stroke=\"var(--amber)\" stroke-width=\"2\" fill=\"none\" marker-end=\"url(#stl-a)\"></path><path d=\"M484.9 172.2 L440.9 133.8\" stroke=\"var(--phosphor)\" stroke-width=\"2\" fill=\"none\" marker-end=\"url(#stl-p)\"></path><path d=\"M308.0 244.0 L412.0 244.0\" stroke=\"var(--phosphor)\" stroke-width=\"2\" fill=\"none\" marker-end=\"url(#stl-p)\"></path><path d=\"M279.1 133.8 L235.1 172.2\" stroke=\"var(--phosphor)\" stroke-width=\"2\" fill=\"none\" marker-end=\"url(#stl-p)\"></path><path d=\"M14 22 L44 22\" stroke=\"var(--amber)\" stroke-width=\"2\" fill=\"none\" marker-end=\"url(#stl-a)\"></path><text x=\"52\" y=\"22\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">uma cópia, inundada no sentido horário</text><path d=\"M14 44 L44 44\" stroke=\"var(--phosphor)\" stroke-width=\"2\" fill=\"none\" marker-end=\"url(#stl-p)\"></path><text x=\"52\" y=\"44\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">outra cópia, no sentido contrário</text><text x=\"486\" y=\"150\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">ligado por três segundos</text><text x=\"706\" y=\"22\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper-dim)\">a p2 do sw1 recebeu</text><text x=\"706\" y=\"40\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">201.975 quadros nesses segundos</text></svg>", "caption": "O laço que o laboratório fechou por três segundos. Um switch inunda um broadcast por todas as portas menos aquela por onde ele entrou, então cada cópia segue dando a volta no triângulo, nos dois sentidos, e nada num quadro Ethernet se esgota."}
 ```
+
+Salve-o como `~/netlab/stp.sh` e monte com `sudo bash ~/netlab/netlab.sh up stp`:
+
+```bash
+# ~/netlab/stp.sh: three switches cabled in a triangle, a PC on each, and
+# spanning tree off. The cable from sw3 to sw1 starts unplugged (its sw3 end
+# down), because with spanning tree off a triangle is a loop.
+#
+#          pc1
+#           | p10
+#          sw1
+#     p2  /    \  p3
+#     p1 /      \ p1   (unplugged)
+#      sw2 ---- sw3
+#       | p3  p2 |
+#      pc2      pc3   (both on p10)
+local n
+for n in sw1 sw2 sw3 pc1 pc2 pc3; do node $n; done
+link sw1 p2 sw2 p1; link sw2 p3 sw3 p2; link sw3 p1 sw1 p3
+link pc1 eth0 sw1 p10; link pc2 eth0 sw2 p10; link pc3 eth0 sw3 p10
+ip -n sw3 link set p1 down
+switch sw1 "p2 p3 p10"; switch sw2 "p1 p3 p10"; switch sw3 "p1 p2 p10"
+addr pc1 eth0 10.20.10.21/24; addr pc2 eth0 10.20.10.22/24; addr pc3 eth0 10.20.10.23/24
+```
+
+A linha `ip -n sw3 link set p1 down` é o cabo desconectado. Num prompt de root no sw3,
+`ip link set p1 up` o conecta e `ip link set p1 down` o desconecta de novo. Com o spanning tree
+desligado, conectá-lo cria o laço de que esta seção trata. Neste laboratório isso custa alguns segundos
+de uma máquina virtual ocupada; numa rede de verdade é uma queda, então é um experimento só de
+laboratório.
 
 No `sw1`, esse cabo é o da `p3`:
 

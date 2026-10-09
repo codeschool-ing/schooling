@@ -5,13 +5,13 @@ version: 1
 
 As duas ferramentas também respondem no formato da OpenAI, o mesmo que a seção 05 da aula 9 viu a
 Mistral compartilhar. Então a biblioteca da OpenAI, apontada para outro endereço, fala com
-qualquer uma. O `lab/two_servers.py` pergunta a cada servidor que modelo ele tem carregado e
-classifica o mesmo caso com ele:
+qualquer uma. O `two_servers.py` pergunta a cada servidor que modelos ele tem e
+classifica o mesmo caso com um deles:
 
 ```python
 import json
 
-from openai import OpenAI
+from openai import OpenAI, APIConnectionError
 
 prompt = open("prompts/triage.txt").read()
 case = [json.loads(line) for line in open("cases/triage.jsonl")][4]
@@ -19,38 +19,39 @@ case = [json.loads(line) for line in open("cases/triage.jsonl")][4]
 SERVERS = {"Ollama": ("http://127.0.0.1:11434/v1", "ollama"),
            "LM Studio": ("http://127.0.0.1:1234/v1", "lm-studio")}
 for name, (url, key) in SERVERS.items():
-    client = OpenAI(base_url=url, api_key=key)   # the library needs a key; neither server reads it here
-    model = client.models.list().data[0].id
+    # the library needs a key; neither server reads it here
+    client = OpenAI(base_url=url, api_key=key, max_retries=0)
+    try:
+        models = [m.id for m in client.models.list().data]
+    except APIConnectionError:
+        print(f"{name:9} nothing is listening at {url}")
+        continue
+    model = "llama3.2:3b" if "llama3.2:3b" in models else models[0]
     r = client.chat.completions.create(model=model, temperature=0, messages=[
         {"role": "system", "content": prompt}, {"role": "user", "content": case["text"]}])
-    print(f"{name:9} {model:22} {r.choices[0].message.content}")
+    print(f"{name:9} {len(models)} models, among them {model}: {r.choices[0].message.content}")
 ```
 
 ```
-ana@desk:~/desk$ python lab/two_servers.py
-Ollama    standin-local:latest   other
-LM Studio standin-local          other
+ana@desk:~/desk$ python two_servers.py
+Ollama    3 models, among them llama3.2:3b: other.
+LM Studio nothing is listening at http://127.0.0.1:1234/v1
 ```
 
-```
-ana@desk:~/desk$ wire --count 4
-GET /v1/models -> 200 ollama 
-POST /v1/chat/completions -> 200 ollama standin-local
-GET /v1/models -> 200 lmstudio 
-POST /v1/chat/completions -> 200 lmstudio standin-local
-```
+**O mesmo caminho, duas portas**, e na máquina em que este curso foi gravado só uma respondeu: não
+havia LM Studio lá, e o programa diz isso em vez de parar, porque `APIConnectionError` é o que a
+biblioteca levanta quando ninguém está escutando. Com o LM Studio rodando e o servidor dele ligado,
+a segunda linha também é um caso classificado.
 
-Os mesmos caminhos, duas portas. As chaves são marcadores tirados dos exemplos de cada projeto, que
-estão lá porque a biblioteca se recusa a começar sem uma. A documentação do Ollama chama o marcador
-dela de "required but ignored"; o LM Studio só confere uma chave com o ajuste *Require
-Authentication* ligado, que serve para quando o servidor é compartilhado. **O nome do
-modelo é a única coisa que não é portátil**: o Ollama diz `standin-local:latest` onde o LM Studio
-diz `standin-local`, e é por isso que o programa pergunta em vez de supor.
+As chaves são marcadores tirados dos exemplos de cada projeto, que estão lá porque a biblioteca se
+recusa a começar sem uma. A documentação do Ollama chama o marcador dela de "required but ignored";
+o LM Studio só confere uma chave com o ajuste *Require Authentication* ligado, que serve para quando
+o servidor é compartilhado. **O nome do modelo é a única coisa que não é portátil**: cada servidor
+lista o que tem com os próprios nomes, e é por isso que o programa pede a lista em vez de supor um.
 
 O formato também tem um custo, e a documentação do Ollama o declara:
 
 ```
-ana@desk:~/desk$ sources quote ollama-openai "does not have a way of setting the context size"
 # ollama/ollama@42e911bc docs/api/openai-compatibility.mdx
  386: The OpenAI API does not have a way of setting the context size for a model. If you need
       to change the context size, create a `Modelfile` which looks like:

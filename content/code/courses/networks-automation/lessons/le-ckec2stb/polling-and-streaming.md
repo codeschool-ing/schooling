@@ -1,6 +1,6 @@
 ---
 title: Asking, and being told
-version: 1
+version: 2
 ---
 
 Everything so far has been **polling**: a program asks a device a question and the device answers.
@@ -30,8 +30,31 @@ gNMI has four operations, called RPCs, and this lesson uses all four:
 | `Subscribe` | values at a path, from now on | 05 and 06 |
 | `Set` | change a value | 07 |
 
-The routers' gNMI port, `9339`, is served by the same program as their REST API, written for
-the lab because FRR has none. It follows the gNMI 0.8 specification, serves part of the
+The routers' gNMI port, `9339`, is served by the same program as their REST API, `devapid`
+from lesson 2, written for the lab because FRR has none. It follows the gNMI 0.8 specification, serves part of the
 `openconfig-interfaces` model from FRR and from the kernel's counters, and needs a username and
 password in each call's metadata, as most devices do. **The clients are the real ones**: `gnmic`,
 the command-line client most people use, and `pygnmi` from Python.
+
+`pygnmi` came with lesson 1's virtual environment. `gnmic` is a single program published by the
+OpenConfig project as a package for each processor, and the version this course used is 0.42.0.
+On the virtual machine, not inside the lab, whose machines cannot reach the internet: download the
+package for your processor, check it against the checksums the release publishes, and install it.
+
+```sh
+curl -fLO https://github.com/openconfig/gnmic/releases/download/v0.42.0/gnmic_0.42.0_Linux_$(uname -m).deb
+curl -fLO https://github.com/openconfig/gnmic/releases/download/v0.42.0/checksums.txt
+sha256sum --ignore-missing -c checksums.txt
+sudo apt-get install -y ./gnmic_0.42.0_Linux_$(uname -m).deb
+```
+
+`uname -m` prints `x86_64` on most computers and `aarch64` on an Apple-silicon Mac, which are the
+two names the release uses. `sha256sum` must print `OK` beside the file's name, as it did here:
+
+```
+ubuntu@netlab:~$ sha256sum --ignore-missing -c checksums.txt
+gnmic_0.42.0_Linux_x86_64.deb: OK
+```
+
+Anything else means the download is not what the project published, and it should not be
+installed.

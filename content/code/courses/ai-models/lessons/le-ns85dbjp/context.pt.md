@@ -10,17 +10,17 @@ ser usados direto, e eles cresceram tanto que a pergunta mudou de "cabe?" para "
 Quantas entradas de chat com preço chegam a cada tamanho:
 
 ```
-ana@desk:~/desk$ sheet pick --min-window 1000000 | sed -n 2p
+ana@desk:~/desk$ python sheet.py pick --min-window 1000000 | sed -n 2p
 761 entries pass
 ```
 
 ```
-ana@desk:~/desk$ sheet pick --min-window 200000 | sed -n 2p
+ana@desk:~/desk$ python sheet.py pick --min-window 200000 | sed -n 2p
 1666 entries pass
 ```
 
 ```
-ana@desk:~/desk$ sheet pick --min-window 32000 | sed -n 2p
+ana@desk:~/desk$ python sheet.py pick --min-window 32000 | sed -n 2p
 2722 entries pass
 ```
 
@@ -40,7 +40,7 @@ Uma janela é um limite, não uma promessa de bom uso. Três coisas a saber ante
 - **Prompts longos demoram mais para começar.** O prompt inteiro é lido antes do primeiro token, e
   o tempo até o primeiro token da seção 06 cresce junto.
 - **Os modelos usam o meio de um contexto longo com menos confiabilidade que as pontas**, um padrão
-  visto em muitos modelos e o motivo de a recuperação (aula 1 seção 07) continuar existindo na era
+  visto em muitos modelos e o motivo de a recuperação (aula 1 seção 11) continuar existindo na era
   das janelas de um milhão de tokens: mandar a página relevante é melhor que mandar o livro inteiro.
 
 ## O outro teto
@@ -49,7 +49,7 @@ A janela tem um irmão mais fácil de esquecer: **o máximo que um modelo escrev
 cinco dos candidatos da seção 05, lado a lado:
 
 ```
-ana@desk:~/desk$ sheet compare claude-haiku-4-5 gemini/gemini-3.5-flash-lite gpt-5.4-mini mistral/mistral-small-latest deepseek/deepseek-v3.2
+ana@desk:~/desk$ python sheet.py compare claude-haiku-4-5 gemini/gemini-3.5-flash-lite gpt-5.4-mini mistral/mistral-small-latest deepseek/deepseek-v3.2
 # LiteLLM model sheet at 21881c57, 4472 entries
 model                                            window  max out   in $/M  out $/M  VFSCRP
 claude-haiku-4-5                                200,000    64000        1        5  VFSCRP

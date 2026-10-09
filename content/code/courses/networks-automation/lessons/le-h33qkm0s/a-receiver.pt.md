@@ -1,6 +1,6 @@
 ---
 title: O menor receptor possível
-version: 1
+version: 2
 ---
 
 Um receptor é um servidor web com um handler, e a biblioteca padrão do Python tem um:
@@ -27,8 +27,15 @@ Um receptor é um servidor web com um handler, e a biblioteca padrão do Python 
 ```
 
 O roteador precisa saber para onde enviar, então o primeiro passo é uma assinatura, criada pelo
-mesmo cliente de API que a aula 2 escreveu. Os eventos são os dois que o roteador oferece, um link
-caindo e voltando:
+mesmo cliente de API que a aula 2 escreveu, o `devapi.py`, que continua na home da `ana`. O roteador
+assina cada entrega com um segredo que as duas pontas conhecem, e a `ana` o cria uma vez, como uma
+sequência aleatória num arquivo que só ela consegue ler:
+
+```
+ana@ctl:~$ head -c 24 /dev/urandom | base64 > ~/.hook-secret; chmod 600 ~/.hook-secret
+```
+
+Os eventos são os dois que o roteador oferece, um link caindo e voltando:
 
 ```schooling-example
 {

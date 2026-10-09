@@ -1,6 +1,6 @@
 ---
 title: One apply at a time
-version: 1
+version: 2
 ---
 
 Two merges close together start two pipeline runs, and both runs plan against the same state. The
@@ -21,7 +21,16 @@ Plan: 3 to add, 0 to change, 0 to destroy.
 
 Three to add. Run 2's plan is correct for the state it read, which was still empty, and its file
 describes a whole second network. Run 1 was then approved and applied, as the last section showed,
-and run 2's approval arrived after that:
+and run 2's approval arrived after that. Its apply job, like run 1's, ran in a clone of its own that
+received run 2's `tfplan`:
+
+```sh
+cd ~ && git clone -q git/shop.git ci/run-2-apply
+cd ci/run-2-apply && cp ../run-2/tfplan .
+./ci.sh apply
+```
+
+It stopped at once:
 
 ```
 + terraform apply -input=false -lock-timeout=5m tfplan
@@ -40,7 +49,8 @@ and run 2's approval arrived after that:
 **The stale-plan refusal from lesson 9 is what stood between this pipeline and a duplicate VPC.**
 Applied as it was, run 2's plan would have created a second `shop` network beside the first, which
 is exactly the accident lesson 7 produced by losing a state. The pipeline does the honest thing
-with the refusal and plans again:
+with the refusal and plans again in run 2's clone, copies the new `tfplan` into the apply job's
+clone with `cp tfplan ../run-2-apply/`, and applies it there:
 
 ```
 ana@laptop:~/ci/run-2$ ./ci.sh plan 2>&1 | grep -E "# aws|Plan:"
@@ -89,5 +99,35 @@ Some tools are built around exactly these problems. **Atlantis** is a server you
 plans when a pull request opens, applies when someone comments `atlantis apply`, and locks each
 directory to one pull request until it is merged, so applying happens before the merge rather than
 after. **HCP Terraform**, HashiCorp's service, runs plans and applies itself and queues the runs of
-each workspace one at a time. Neither is installed here, and neither changes the ideas: one place
-applies, it applies a plan somebody read, and it applies one at a time.
+each workspace one at a time. Neither was used for this lesson, because each needs an account this
+course never asks for: Atlantis a repository on a service such as GitHub or GitLab, and HCP
+Terraform an account with HashiCorp. Neither changes the ideas: one place applies, it applies a plan
+somebody read, and it applies one at a time.
+
+## The two transcripts from the start of this lesson
+
+Section 02 showed Ana's laptop with an uncommitted change, and section 03 a pull request stopped by
+the scan. Both were recorded here, at the end, and this is how to make them on your machine. For the
+laptop, bring `~/shop` up to date with the remote and change the subnet's range without committing:
+
+```sh
+cd ~/shop
+git pull -q origin main
+sed -i 's#10.20.1.0/24#10.20.3.0/24#' main.tf
+```
+
+Then type section 02's three commands. Put the file back afterwards with `git checkout -q main.tf`.
+
+For the pull request, make a branch in `~/shop`:
+
+```sh
+git checkout -qb ssh
+```
+
+save section 03's `ssh.tf` in it, and commit and push it:
+
+```sh
+git add ssh.tf && git commit -qm "web: SSH for debugging" && git push -q origin ssh
+```
+
+Section 03's commands then run the pipeline on that branch, from your home directory.

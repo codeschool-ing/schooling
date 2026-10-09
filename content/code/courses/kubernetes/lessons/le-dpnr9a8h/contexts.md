@@ -5,8 +5,17 @@ version: 1
 
 **kubectl keeps no state of its own about clusters.** Everything it knows is in one file,
 `~/.kube/config`, and a request goes wherever that file says. Ana now has two clusters on the
-laptop, the `shop` cluster the lessons use and a `study` one beside it, and kind wrote both into
-the file:
+laptop, the `shop` cluster the lessons use and a `study` one beside it, made from the same file and
+left alone, so that there is a second cluster to switch to. kind makes the newest one the current
+context, and the last line points `kubectl` back at `shop`:
+
+```sh
+./up.sh
+kind create cluster --name study --config cluster.yaml --quiet
+kubectl config use-context kind-shop
+```
+
+kind wrote both into the file:
 
 ```
 ana@laptop:~/shop$ kubectl config get-contexts

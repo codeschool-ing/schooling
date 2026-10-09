@@ -1,17 +1,36 @@
 ---
 title: The shop's own words
-version: 1
+version: 2
 ---
 
 A speech model is trained on general speech, and every business has words that general speech does not: product names, people's names, codes, jargon. They are also the words that matter most in its transcripts. In the call, the words Whisper got wrong are almost all of that kind: *Kau* and *Kyo* for Caio, *Dom Kazmuro* and *Dom Casmorrow* for Dom Casmurro, *Machado Desiss* for Machado de Assis, *M1042* for M-1042.
 
 There are three places to fix them, and only the last one runs in this lab.
 
-**Before decoding, by biasing the model.** Some hosted APIs take a list of words to favour. OpenAI's transcription endpoint takes a `prompt`: text that Whisper treats as what came before the audio, so the spellings in it become more likely. Google's and Amazon's services take phrase lists. Lesson 10 shows where the prompt goes, and why labmm accepts it and cannot use it: the ONNX export this lab runs has no way to take one.
+**Before decoding, by biasing the model.** Some hosted APIs take a list of words to favour. OpenAI's transcription endpoint takes a `prompt`: text that Whisper treats as what came before the audio, so the spellings in it become more likely. Google's and Amazon's services take phrase lists. Lesson 10 shows where the prompt goes, and why the course's `audio_server.py` accepts it and cannot use it: the ONNX export of Whisper it runs has no way to take one.
 
 **By training**, on recordings of your own speakers saying your own words. That is the strongest fix and the most expensive, and it is out of this course's reach.
 
-**After decoding, by correcting the text against what the shop knows.** The shop has a catalogue, so it knows how every title and author is spelt. A program can look for runs of words that are spelt almost like one of them, and replace them:
+**After decoding, by correcting the text against what the shop knows.** The shop has a catalogue, so it knows how every title and author is spelt. A program can look for runs of words that are spelt almost like one of them, and replace them.
+
+The catalogue first. A real shop's has thousands of lines; this one has twelve, enough for the call. Save it as `data/books.jsonl` in `~/mm`, one book per line:
+
+```json
+{"title": "Dom Casmurro", "author": "Machado de Assis"}
+{"title": "The Posthumous Memoirs of Brás Cubas", "author": "Machado de Assis"}
+{"title": "Bleak House", "author": "Charles Dickens"}
+{"title": "Great Expectations", "author": "Charles Dickens"}
+{"title": "The Secret Garden", "author": "Frances Hodgson Burnett"}
+{"title": "Pride and Prejudice", "author": "Jane Austen"}
+{"title": "Emma", "author": "Jane Austen"}
+{"title": "Jane Eyre", "author": "Charlotte Brontë"}
+{"title": "Middlemarch", "author": "George Eliot"}
+{"title": "Madame Bovary", "author": "Gustave Flaubert"}
+{"title": "Anna Karenina", "author": "Leo Tolstoy"}
+{"title": "Crime and Punishment", "author": "Fyodor Dostoevsky"}
+```
+
+Then the program that uses it:
 
 ```schooling-example
 {

@@ -1,17 +1,26 @@
 ---
 title: Filtros, e a imagem que mudou sem avisar
-version: 1
+version: 2
 ---
 
 Procurar por tag é o caso simples. Algumas data sources vasculham um catálogo grande, e a consulta
 precisa ser estreita o bastante para voltar com uma resposta só. **Imagens de máquina** são o exemplo
-de sempre: uma região da AWS lista milhares de imagens públicas, e até o moto do laboratório traz um
+de sempre: uma região da AWS lista milhares de imagens públicas, e até o moto traz um
 catálogo da Amazon. Uma máquina ligada a partir da imagem errada é uma máquina rodando o sistema
 operacional errado.
 
 Na loja, um time de imagens prepara a imagem do servidor web (a aula 20 mostra como) e publica cada
-build com um nome que leva a data. A Ana vê a única que existe até agora; ela foi feita no laboratório
-por um comando preparado de antemão, como o time de imagens a teria feito:
+build com um nome que leva a data. No seu laboratório, o time de imagens é você de novo. O build é
+uma cópia de uma instância descartável ligada a partir de uma das imagens Ubuntu do moto, e estes
+dois comandos o fazem; o `BASE` guarda o id da instância, então fique no mesmo terminal até o
+segundo build:
+
+```sh
+BASE=$(aws ec2 run-instances --image-id ami-1e749f67 --instance-type t3.micro --query 'Instances[0].InstanceId' --output text)
+aws ec2 create-image --instance-id $BASE --name shop-web-20260915
+```
+
+A Ana vê a única imagem que existe até agora:
 
 ```
 ana@laptop:~/shop/app$ aws ec2 describe-images --owners self --query "Images[].[Name,ImageId]" --output text
@@ -21,7 +30,8 @@ shop-web-20260915	ami-737937c26a362335e
 `data "aws_ami"` aceita os mesmos filtros do `aws ec2 describe-images`, escritos como blocos
 `filter`, mais uma lista `owners` que diz de quem são as imagens a procurar, aqui `self`, a própria
 conta. O padrão `shop-web-*` pega todos os builds, então **`most_recent = true` escolhe o mais novo
-deles** pela data de criação. A instância usa o id da imagem como `ami`:
+deles** pela data de criação. A instância usa o id da imagem como `ami`, e as duas vão num arquivo
+novo, o `image.tf`:
 
 ```hcl
 data "aws_ami" "web" {
@@ -57,8 +67,15 @@ Changes to Outputs:
   + web_image      = "shop-web-20260915"
 ```
 
-Duas semanas depois, o time de imagens publica um build novo. Ninguém avisa a Ana, e nem precisa,
-porque a lista de imagens diz:
+Duas semanas depois, o time de imagens publica um build novo e se desfaz da instância descartável.
+Fazendo esse papel, no terminal que ainda guarda o `BASE`:
+
+```sh
+aws ec2 create-image --instance-id $BASE --name shop-web-20261001
+aws ec2 terminate-instances --instance-ids $BASE
+```
+
+Ninguém avisa a Ana, e nem precisa, porque a lista de imagens diz:
 
 ```
 ana@laptop:~/shop/app$ aws ec2 describe-images --owners self --query "Images[].[Name,ImageId]" --output text
@@ -112,7 +129,7 @@ apply, pelo motivo que for.
 **`most_recent` é a decisão de seguir a imagem mais nova, tomada uma vez e aplicada a cada plan.**
 Às vezes é exatamente o certo: um ambiente de rascunho que deve rodar sempre o último build. Para
 produção, o arranjo mais seguro é fixar o build exato e fazer de cada mudança dele um diff que alguém
-revisa:
+revisa. A Ana reescreve o `image.tf`:
 
 ```hcl
 variable "web_image" {

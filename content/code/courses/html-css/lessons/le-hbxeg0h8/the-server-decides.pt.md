@@ -1,11 +1,11 @@
 ---
 title: O servidor confere tudo de novo
-version: 1
+version: 2
 ---
 
 Tudo nesta aula até aqui acontece no navegador do leitor, e isso tem uma consequência que é questão de segurança, e não de comodidade. **O navegador pertence ao leitor.** A validação nativa é um serviço à pessoa honesta que preenche o formulário; não é um guarda do servidor.
 
-A demonstração é curta. Aqui está o formulário de encomenda com um atributo a mais, `novalidate`, que diz ao navegador para não conferir nada antes de enviar:
+A demonstração é curta. Salve uma cópia de `order.html` como `unchecked.html` e acrescente um atributo ao formulário, `novalidate`, que diz ao navegador para não conferir nada antes de enviar: `<form action="order" method="post" novalidate>`. Depois preencha com bobagem e envie:
 
 ```
 ana@laptop:~/site$ probe unchecked.html fill '#email' 'not an address' fill '#copies' -40 send button

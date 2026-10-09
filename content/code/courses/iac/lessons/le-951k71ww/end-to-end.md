@@ -1,6 +1,6 @@
 ---
 title: An end-to-end run, against moto
-version: 1
+version: 2
 ---
 
 Everything so far asked Terraform what it would do. **An end-to-end test does it**: it applies the
@@ -29,6 +29,8 @@ In this course "real infrastructure" is moto, so nothing below was billed. On a 
 every run of this file creates a VPC and two subnets, and costs what they cost while they exist.
 
 ## Build, then ask AWS
+
+The test file is `tests/e2e.tftest.hcl`:
 
 ```hcl
 provider "aws" {
@@ -78,7 +80,8 @@ run "aws_agrees" {
 that failed in a plan, now evaluated against ids AWS actually returned. But that is still Terraform
 grading its own homework, since the values come from what Terraform recorded. **`aws_agrees` asks
 AWS instead**, through a helper module: a run's `module` block swaps the module under test for
-another one, here a directory of data sources that read the VPC back by id.
+another one, here a directory of data sources that read the VPC back by id,
+`tests/aws/main.tf`:
 
 ```hcl
 # A helper module for the tests: it reads the VPC back from AWS.
@@ -142,7 +145,8 @@ ana@laptop:~/shop/modules/network$ aws ec2 describe-vpcs --query "Vpcs[].[CidrBl
 
 Here is the case the earlier rungs could not catch. A subnet of `10.30.1.0/24` in a VPC of
 `10.20.0.0/16` is a valid range, in a real zone, of the right type. `validate` has no values to
-look at, the plan has no reason to object, and a mock accepts anything. AWS refuses it:
+look at, the plan has no reason to object, and a mock accepts anything. AWS refuses it, as
+`tests/range.tftest.hcl` shows:
 
 ```hcl
 provider "aws" {
@@ -193,7 +197,9 @@ account, whatever a failed teardown leaves behind stays, and is billed, until so
 An end-to-end failure is expensive to find, so the right response is to move the knowledge up the
 ladder. Ana adds a rule to `subnets` that compares each subnet's network with the VPC's; it needs
 Terraform 1.9, because the condition reads a second variable. Then she adds a run to
-`rules.tftest.hcl` that expects the rule to refuse:
+`rules.tftest.hcl` that expects the rule to refuse. In `variables.tf` the new block goes inside
+`variable "subnets"`, after its `description` and a blank line, and the run goes at the end of the
+test file, after a blank line:
 
 ```
 ana@laptop:~/shop/modules/network$ tail -n 10 variables.tf
@@ -267,7 +273,7 @@ The other common way to write these tests is **Terratest**, a Go library from Gr
 test runs `terraform apply`, calls the cloud's own SDK to inspect the result, and runs `terraform
 destroy` in a deferred function. It reaches further than a helper module can, for instance making
 an HTTP request to a server it just created, at the price of a second language. It is named here
-and was not run in this lab.
+and was not run for this lesson, because it needs Go, which this course does not install.
 
 Whichever you use, run end-to-end tests less often than the rest: on a pull request that changes
 the module, or nightly, in an account of their own that holds nothing else. Lesson 15 puts the

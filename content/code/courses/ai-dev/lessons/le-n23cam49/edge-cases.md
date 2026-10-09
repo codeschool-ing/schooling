@@ -1,6 +1,6 @@
 ---
 title: Asking for the edges
-version: 1
+version: 2
 ---
 
 Most bugs live at the edges of the input: zero, one, the empty list, the largest value, the
@@ -11,7 +11,7 @@ still come from you.
 
 ## A table of cases
 
-Lesson 3 section 07 found that `format_price(-5)` returns `'-1.95'`. ana asks for edge cases for the
+Lesson 3 section 07 found that `format_price(-1290)` returns `'-13.10'`. ana asks for edge cases for the
 function, keeps the inputs the list suggests (zero, one cent, just under and at a whole unit, a
 large amount, negatives) and writes the expected text for each herself. pytest's `parametrize`
 turns the table into one test per row:
@@ -91,8 +91,8 @@ FAILED tests/test_format_edges.py::test_format_price[-1290--12.90] - Assertio...
 ```
 
 Six rows pass and both negative rows fail, each with the exact wrong output: `-5` reads as `-1.95`
-and `-1290` as `-13.10`. A table makes the pattern visible at once. **Every negative amount is wrong,
-not one**, which tells you the bug is in the arithmetic rather than in a special case.
+and `-1290` as `-13.10`. A table makes the pattern visible at once. **Both negative rows are wrong,
+not one of them**, which tells you the bug is in the arithmetic rather than in a special case.
 
 ## Where the list of edges comes from
 

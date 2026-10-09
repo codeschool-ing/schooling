@@ -1,6 +1,6 @@
 ---
 title: Perguntando de fora o que um cliente perguntaria
-version: 1
+version: 2
 ---
 
 Toda verificação até aqui rodou ao lado do serviço. **Uma verificação de fora vê o que nada de dentro
@@ -33,6 +33,11 @@ probe_success 0
 
 **Status 502, sucesso 0**: a mesma resposta que um cliente recebeu. Com o banco iniciado de novo:
 
+```sh
+docker compose start postgres
+```
+
+
 ```
 ana@obs:~/shop$ docker compose exec prometheus wget -qO- 'http://blackbox-exporter:9115/probe?module=checkout&target=http://storefront:8080/checkout' | grep -E '^probe_(success|http_status_code) '
 probe_http_status_code 201
@@ -58,3 +63,10 @@ partir de vários países ao mesmo tempo. É a melhor verificação de fora que 
 Usadas juntas, uma cobre a outra: **a sonda percebe uma queda quando não há tráfego**, às três da manhã,
 e a taxa de erros mede quanto do tráfego real ela feriu. Qual das duas deve acordar alguém é a pergunta
 da aula 16.
+
+Antes da próxima aula, tire o health check de novo:
+
+```sh
+rm compose.override.yaml
+docker compose up -d orders
+```

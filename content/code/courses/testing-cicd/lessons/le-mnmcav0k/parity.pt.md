@@ -10,7 +10,7 @@ encontrou três delas:
 - **O fuso horário.** O rascunho de despacho da aula 5 passou num notebook em São Paulo e falhou em
   toda máquina em UTC. O notebook de quem desenvolve e um servidor raramente dividem um fuso, a menos
   que alguém faça isso acontecer.
-- **O motor de banco.** A aula 1 seção 06 avisou contra testar com SQLite e implantar em PostgreSQL:
+- **O motor de banco.** A aula 1 seção 09 avisou contra testar com SQLite e implantar em PostgreSQL:
   os dois discordam em tipos e em SQL.
 - **A versão do interpretador.** A matriz da aula 5 rodou três Pythons porque a produção poderia rodar
   qualquer um deles.

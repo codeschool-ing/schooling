@@ -1,13 +1,13 @@
 ---
 title: for_each, and copies with names
-version: 1
+version: 2
 ---
 
 `for_each` makes copies the way `count` does, with one difference that decides everything else:
 **each copy is named by a key you chose**, not numbered by its position. Remove one key and only
 the copy with that key goes, because no other copy's name depended on it.
 
-Ana tries it in a scratch directory first, with a VPC of its own, so the shop's network is not
+Ana tries it in a scratch directory first, `~/shop/scratch`, with a VPC of its own, so the shop's network is not
 part of the experiment. The ranges are now a map from a name to a range:
 
 ```hcl
@@ -73,7 +73,7 @@ aws_vpc.scratch
 ## The same removal, again
 
 Now the experiment from the previous section. The middle subnet goes, this time by leaving its key
-out of the map:
+out of the map, in a `terraform.tfvars`:
 
 ```hcl
 subnets = {
@@ -99,14 +99,25 @@ Adding a key later creates one subnet, and the order in which the keys are writt
 makes no difference at all.
 
 After the plan Ana deletes the `terraform.tfvars` and destroys the scratch copy, which has done its
-job.
+job, with `terraform destroy -auto-approve`.
 
 ## A list is not enough
 
 `for_each` refuses a list, even a list of strings. A list
 is ordered and can hold the same value twice, so its elements have no name except their position,
-and position is what `for_each` exists to avoid. Here is a list written straight into the
-argument:
+and position is what `for_each` exists to avoid. Ana writes a list straight into the argument,
+in one more directory, `~/shop/try`, whose `main.tf` is all of this:
+
+```hcl
+provider "aws" {
+  region = "sa-east-1"
+}
+
+resource "aws_vpc" "try" {
+  for_each   = ["10.30.0.0/16", "10.31.0.0/16"]
+  cidr_block = each.value
+}
+```
 
 ```
 ana@laptop:~/shop/try$ terraform plan

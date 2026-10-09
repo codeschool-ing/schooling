@@ -7,8 +7,7 @@ Um serviço compartilhado às vezes está ocupado demais para responder. A API d
 com um código de status próprio, e a documentação diz o que a biblioteca faz a respeito:
 
 ```
-ana@desk:~/desk$ sources quote claude-errors "overloaded_error|529 errors can occur|automatically retries"
-# https://platform.claude.com/docs/en/api/errors, read 2026-10-05
+# https://platform.claude.com/docs/en/api/errors, read 2026-10-07
  247: overloaded_error
  250: 529 errors can occur when the API experiences high traffic across all users.
  252: The official SDK automatically retries transient failures (such as connection errors,
@@ -16,9 +15,15 @@ ana@desk:~/desk$ sources quote claude-errors "overloaded_error|529 errors can oc
       the
 ```
 
-O `lab/retries.py` classifica um caso com um número dado de novas tentativas e mede o tempo. O lab
-manda o substituto responder as duas próximas requisições com um 529, o que no mundo seria a API
-ocupada:
+O `retries.py` classifica um caso com um número dado de novas tentativas e mede o tempo. O Ollama
+nunca fica ocupado desse jeito, então o relay faz o papel da API ocupada: pare-o no segundo terminal
+com Ctrl-C e suba de novo com `--fail`, que responde as duas próximas requisições com um 529 em vez
+de repassá-las:
+
+```
+ana@desk:~/desk$ python relay.py --fail 529:2
+relay on 127.0.0.1:8500, to Ollama on 11434, writing wire.jsonl
+```
 
 ```python
 import json
@@ -33,7 +38,7 @@ case = [json.loads(line) for line in open("cases/triage.jsonl")][4]
 
 start = time.monotonic()
 try:
-    r = client.messages.create(model="standin-large", max_tokens=16, system=prompt,
+    r = client.messages.create(model="llama3.2:3b", max_tokens=16, system=prompt,
                                messages=[{"role": "user", "content": case["text"]}])
     print(f"{r.content[0].text} after {time.monotonic() - start:.1f} s")
 except anthropic.APIStatusError as e:
@@ -41,24 +46,29 @@ except anthropic.APIStatusError as e:
 ```
 
 ```
-ana@desk:~/desk$ python lab/retries.py 2
-other after 2.0 s
+ana@desk:~/desk$ python retries.py 2
+other. after 1.7 s
 ```
 
 ```
-ana@desk:~/desk$ wire --count 3
-POST /v1/messages -> 529 anthropic 
-POST /v1/messages -> 529 anthropic 
-POST /v1/messages -> 200 anthropic standin-large
+ana@desk:~/desk$ python relay.py show --count 3
+POST /v1/messages -> 529 llama3.2:3b
+POST /v1/messages -> 529 llama3.2:3b
+POST /v1/messages -> 200 llama3.2:3b
 ```
 
-O programa fez uma chamada e recebeu uma resposta. O substituto recebeu **três requisições**, duas
-das quais falharam. A biblioteca absorveu as falhas, esperou entre as tentativas e devolveu a
-terceira como se fosse a primeira; o único rastro no programa da ana são os dois segundos. Sem novas
-tentativas, a mesma sobrecarga é uma exceção na hora:
+O programa fez uma chamada e recebeu uma resposta. O relay recebeu **três requisições** e fez duas
+delas falharem. A biblioteca absorveu as falhas, esperou entre as tentativas e devolveu a terceira
+como se fosse a primeira; o único rastro no programa da ana é o tempo. Sem novas tentativas, a
+mesma sobrecarga é uma exceção na hora. Suba o relay de novo com uma falha para entregar:
 
 ```
-ana@desk:~/desk$ python lab/retries.py 0
+ana@desk:~/desk$ python relay.py --fail 529:1
+relay on 127.0.0.1:8500, to Ollama on 11434, writing wire.jsonl
+```
+
+```
+ana@desk:~/desk$ python retries.py 0
 OverloadedError 529 after 0.0 s
 ```
 
@@ -73,4 +83,4 @@ Os dois padrões são razoáveis, e o ponto é saber qual está rodando:
   uma mensagem pode ser melhor que dez segundos de silêncio.
 
 O `max_retries` é um ajuste do cliente, e a decisão fica no código ao lado dele, onde a próxima
-pessoa consegue ler.
+pessoa consegue ler. Suba o relay de novo sem `--fail` antes da próxima seção.

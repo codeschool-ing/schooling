@@ -20,7 +20,6 @@ na licença que a abertura se mede. A concessão da Meta para a Llama 3.1 é gen
 cuidadosa nos adjetivos:
 
 ```
-ana@desk:~/desk$ sources quote llama3.1-licence "Grant of Rights"
 # meta-llama/llama-models@0e0b8c51 models/llama3_1/LICENSE
   21: a. Grant of Rights. You are granted a non-exclusive, worldwide, non-transferable and
       royalty-free limited license under Meta’s intellectual property or other rights owned by
@@ -35,7 +34,6 @@ pesos são seus para rodar; os termos vêm junto.
 vezes uma das licenças que o software usa há décadas. A DeepSeek diz isso do R1, no próprio README:
 
 ```
-ana@desk:~/desk$ sources quote deepseek-r1-readme "^This code repository and the model weights"
 # deepseek-ai/DeepSeek-R1@0cf78561 README.md
  257: This code repository and the model weights are licensed under the [MIT
       License](https://github.com/deepseek-ai/DeepSeek-R1/blob/main/LICENSE).

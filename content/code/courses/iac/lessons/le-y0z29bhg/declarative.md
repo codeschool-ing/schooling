@@ -1,6 +1,6 @@
 ---
 title: Describing the result instead of the steps
-version: 1
+version: 2
 ---
 
 Back to the third question from the network built by hand: what happens if Ana runs `network.sh` again? She finds
@@ -48,7 +48,9 @@ resource "aws_vpc" "shop" {
 }
 ```
 
-The first `terraform apply` finds no such VPC and creates it. Look at the last lines:
+In a new directory Terraform needs `terraform init` first, which downloads the AWS provider and
+which lesson 2 reads line by line. Then the first `terraform apply` finds no such VPC and creates
+it. Look at the last lines:
 
 ```
 Plan: 1 to add, 0 to change, 0 to destroy.

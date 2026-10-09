@@ -11,7 +11,30 @@ fact, and it is small enough to do by hand once.
 ## RSA with numbers you can check
 
 `vcrypt toyrsa` runs RSA with the primes of the classic textbook example, 61 and 53, and encrypts
-the number 65:
+a number. Every line of the arithmetic is in it:
+
+```py
+# ~/lab/tools/toyrsa.py
+"""vcrypt toyrsa M: RSA with numbers small enough to follow by hand, on the
+message M (a number below n). This is textbook RSA, with no padding, which
+is NOT how RSA is used; lesson 2 says why."""
+import sys
+
+p, q, e = 61, 53, 17
+m = int(sys.argv[1])
+n, phi = p * q, (p - 1) * (q - 1)
+d = pow(e, -1, phi)
+print(f"p = {p}, q = {q}         two primes, kept secret")
+print(f"n = p*q = {n}           public: the modulus")
+print(f"phi = (p-1)(q-1) = {phi}   secret: needs p and q")
+print(f"e = {e}                  public exponent")
+print(f"d = e^-1 mod phi = {d}   private exponent")
+c = pow(m, e, n)
+print(f"encrypt m = {m}:  c = m^e mod n = {c}")
+print(f"decrypt c = {c}:  m = c^d mod n = {pow(c, d, n)}")
+```
+
+Here it encrypts the number 65:
 
 ```
 ana@lab:~/lab$ vcrypt toyrsa 65

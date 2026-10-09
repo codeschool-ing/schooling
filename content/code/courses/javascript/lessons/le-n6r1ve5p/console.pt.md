@@ -1,6 +1,6 @@
 ---
 title: O console, além do log
-version: 1
+version: 2
 ---
 
 **`console.log` é um de uns vinte métodos, e alguns dos outros economizam tempo de verdade.** Eles
@@ -81,8 +81,7 @@ motivo que o último método deixa claro.
   por isso foram cortadas.
 
 `console.warn` e `console.error` imprimem como o `log`, na saída de erro. No navegador eles são
-coloridos e podem ser filtrados, e o comando `page` do laboratório os marca com `[warn]` e
-`[error]`.
+coloridos e podem ser filtrados, e o `page` os marca com `[warn]` e `[error]`.
 
 ## Onde o log deixa de bastar
 

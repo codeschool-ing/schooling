@@ -9,7 +9,9 @@ máquina que o escreveu, pela pessoa que tinha acabado de causá-lo. Isso é uma
 precisa dos registros guardados, em um só lugar, por tempo suficiente para responder a perguntas que
 ninguém fez ainda.**
 
-Uma rede produz três tipos, e eles respondem a perguntas diferentes:
+No seu laboratório esta aula começa com `sudo bash nslab.sh reset`, com a política da empresa
+carregada no `fw` por `nft -f baseline.nft`. Uma rede produz três tipos, e eles respondem a perguntas
+diferentes:
 
 | registro | escrito por | um registro é | ele responde |
 |---|---|---|---|
@@ -46,7 +48,29 @@ root@fw:~# ulogd -d -c /root/ulogd.conf
 {"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"Onde os registros da aula são feitos e onde vão parar. No fw, o ulogd escreve drops.json a partir da regra de log e flows.json a partir do rastreamento de conexões, e o rsyslog manda cada linha nova por TCP, porta 514, para o admin, na rede de gerência. O sensor escreve eve.json, que numa rede real chega ao admin por um link de gerência próprio. O firewall do admin aceita a porta 514 vinda do fw e mais nada, então o fw consegue acrescentar linhas mas não consegue entrar para alterá-las.\"><defs><marker id=\"co-ah-amber\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker><marker id=\"co-ah-paper-dim\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker><marker id=\"co-ah-phosphor\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--phosphor)\"></path></marker></defs><rect x=\"20\" y=\"30\" width=\"250\" height=\"120\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"32\" y=\"48\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">fw</text><rect x=\"35\" y=\"60\" width=\"105\" height=\"46\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"45\" y=\"76\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">drops.json</text><text x=\"45\" y=\"93\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">regra de log</text><rect x=\"150\" y=\"60\" width=\"105\" height=\"46\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"160\" y=\"76\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">flows.json</text><text x=\"160\" y=\"93\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">conntrack</text><text x=\"32\" y=\"128\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">o ulogd escreve, o rsyslog envia</text><rect x=\"20\" y=\"180\" width=\"250\" height=\"46\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"30\" y=\"196\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">sensor</text><text x=\"30\" y=\"213\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">eve.json: alertas, HTTP, fluxos</text><rect x=\"450\" y=\"30\" width=\"250\" height=\"200\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"462\" y=\"48\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">admin</text><text x=\"462\" y=\"66\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">coletor, na rede de gerência</text><rect x=\"465\" y=\"85\" width=\"220\" height=\"46\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"475\" y=\"101\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">/var/log/lab/remote/</text><text x=\"475\" y=\"118\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper-dim)\">fw/drops.json  fw/flows.json</text><rect x=\"465\" y=\"145\" width=\"220\" height=\"46\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"475\" y=\"161\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"11\" fill=\"var(--paper)\">correlate.py</text><text x=\"475\" y=\"178\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">uma linha do tempo por endereço</text><path d=\"M270 80 L450 80\" fill=\"none\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\" marker-end=\"url(#co-ah-phosphor)\"></path><text x=\"360\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--phosphor)\">tcp/514</text><path d=\"M270 120 L450 120\" fill=\"none\" stroke=\"var(--amber)\" stroke-width=\"1.4\" marker-end=\"url(#co-ah-amber)\" stroke-dasharray=\"4 3\"></path><text x=\"360\" y=\"110\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">ssh: descartado</text><path d=\"M270 205 L450 205\" fill=\"none\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" marker-end=\"url(#co-ah-paper-dim)\" stroke-dasharray=\"4 3\"></path><text x=\"360\" y=\"195\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">link de gerência próprio</text></svg>", "caption": "Os registros são escritos onde as coisas acontecem e guardados onde ninguém que é vigiado alcança.", "same": ["conntrack"]}
 ```
 
-Depois, um trecho curto e comum de tráfego. Duas requisições da equipe e uma que a política recusa:
+Mais duas coisas começam no mesmo momento, e a aula as lê depois. Os registros do firewall são
+enviados ao `admin` à medida que são escritos, o que a seção 04 explica; escreva antes os dois
+`rsyslog.conf` e o `host.nft` do `admin`, daquela seção. E o `sensor` vigia a DMZ com uma regra, para
+um arquivo que nenhum visitante deveria pedir à loja:
+
+```conf
+alert http $EXTERNAL_NET any -> $HOME_NET any (msg:"secrets file requested from outside"; flow:to_server,established; http.uri; content:"/.env"; endswith; classtype:attempted-recon; sid:1000231; rev:1;)
+```
+
+Ponha essa linha em `/etc/suricata/rules/local.rules` no `sensor` e suba os três, como root em cada
+máquina:
+
+```sh
+# on admin
+mkdir -p /var/log/lab/rsyslog /var/log/lab/remote; nft -f /root/host.nft; rsyslogd -f /root/rsyslog.conf -i /var/log/lab/rsyslog.pid
+# on fw
+mkdir -p /var/log/lab/rsyslog; rsyslogd -f /root/rsyslog.conf -i /var/log/lab/rsyslog.pid
+# on sensor
+suricata -c /etc/suricata/suricata.yaml --af-packet=eth0 -D --pidfile /var/log/suricata/suricata.pid
+```
+
+Depois, passados dez segundos para o Suricata subir, um trecho curto e comum de tráfego. Duas
+requisições da equipe e uma que a política recusa:
 
 ```
 ana@laptop:~$ curl -s -o /dev/null -w "%{http_code}\n" http://www.example.com/

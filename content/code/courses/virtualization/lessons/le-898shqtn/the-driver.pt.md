@@ -1,6 +1,6 @@
 ---
 title: O VirtualBox, e a parte no kernel
-version: 1
+version: 2
 ---
 
 O VirtualBox é um hypervisor tipo 2, aula 2, e roda no Windows, no macOS e no Linux. É gratuito. A
@@ -8,8 +8,8 @@ Oracle o publica, com um *Extension Pack* opcional sob outra licença, que acres
 como a tela remota, e pelo qual empresas podem ter de pagar.
 
 Ele é um aplicativo, e também instala um **driver no kernel do host**, chamado `vboxdrv` no Linux, para
-usar os recursos de virtualização do processador. Eis o VirtualBox 7.0.16 no host
-deste curso:
+usar os recursos de virtualização do processador. No Ubuntu ele é um pacote, `sudo apt install
+virtualbox`, que foi o que pôs o VirtualBox 7.0.16 no host deste curso:
 
 ```
 ana@host:~$ VBoxManage --version

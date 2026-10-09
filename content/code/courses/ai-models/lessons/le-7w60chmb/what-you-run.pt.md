@@ -14,7 +14,7 @@ de API fazia por você sem mencionar:
 seção 03 calcula o tamanho, a seção 04 como deixá-los menores.
 
 **Um runtime**, o programa que carrega os pesos no hardware e gera tokens: lê o prompt, produz um
-token de cada vez, aplica o template de chat da aula 1 seção 04. llama.cpp, vLLM e Ollama são três;
+token de cada vez, aplica o template de chat da aula 1 seção 08. llama.cpp, vLLM e Ollama são três;
 a aula 14 roda o último. Cada um suporta alguns formatos de modelo e algum hardware, e não outros.
 
 **O hardware**, e na prática o único número que decide se um modelo roda ou não: **a memória do

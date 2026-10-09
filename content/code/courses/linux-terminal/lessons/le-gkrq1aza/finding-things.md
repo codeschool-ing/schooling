@@ -1,6 +1,6 @@
 ---
 title: Finding a package, and finding what a file came from
-version: 1
+version: 2
 ---
 
 Four questions, and each has one command. They are different questions and people use the wrong
@@ -17,6 +17,10 @@ The third and fourth look the same and are opposites: **`dpkg -S` asks the datab
 installed; `apt-file` asks the repositories about what is not.**
 
 ## Searching by name and by description
+
+`[installed]` below marks what is installed on the machine these transcripts come from, which has
+`ripgrep` and a few other tools yours does not; `sudo apt install ripgrep` makes the first line
+match.
 
 ```
 root@vm:~# apt search "^ripgrep$" 2>/dev/null
@@ -140,7 +144,9 @@ get there.
 ## The file you do not have yet
 
 `dpkg -S` cannot answer "which package would give me `pdftotext`", because the package is not
-installed and its file list is not on your machine. `apt-file` downloads the file lists so it can:
+installed and its file list is not on your machine. `apt-file` downloads the file lists so it can,
+and it has to be installed and given its index first, which the next paragraph comes back to:
+`sudo apt install apt-file` and then `sudo apt-file update`.
 
 ```
 root@vm:~# apt-file search bin/pdftotext

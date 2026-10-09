@@ -1,6 +1,6 @@
 ---
 title: Lendo uma recusa
-version: 2
+version: 3
 ---
 
 Um terminal te diz mais quando recusa do que qualquer interface que você já usou te diz quando dá
@@ -33,6 +33,24 @@ bash: celar: command not found
 
 O `bash:` é quem fala — o shell, não um programa, porque nenhum programa foi alcançado. Ele
 procurou e não achou nada com esse nome. Um erro de digitação, ou algo que não está instalado.
+
+**No Ubuntu, o mesmo erro de digitação ganha uma resposta mais longa.** O bash entrega um nome que
+não acha a um ajudante, o `command-not-found`, que o procura entre os pacotes que o Ubuntu oferece e
+sugere um:
+
+```
+ana@vm:~$ celar
+Command 'celar' not found, did you mean:
+  command 'clear' from deb ncurses-bin (6.4+20240113-1ubuntu2.1)
+Try: sudo apt install <deb name>
+ana@vm:~$ echo $?
+127
+```
+
+A notícia é a mesma, nada com esse nome foi encontrado, e o `127` diz que terminou do mesmo jeito
+também (o número é a última parte desta seção). A maioria das transcrições deste curso foi capturada
+numa máquina sem o ajudante, então elas mostram a linha única do bash; na sua, um nome parecido com
+um de verdade ganha essa resposta mais longa.
 
 **Permissão negada.**
 

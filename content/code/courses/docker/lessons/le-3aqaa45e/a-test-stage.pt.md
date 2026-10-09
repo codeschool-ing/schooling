@@ -1,10 +1,24 @@
 ---
 title: Um estágio de testes no Dockerfile
-version: 1
+version: 2
 ---
 
 **Um Dockerfile multiestágio (aula 13) pode levar os testes como mais um estágio.** O estágio parte do
-estágio de build, então tem o código, os módulos e o compilador, e roda as verificações:
+estágio de build, então tem o código, os módulos e o compilador, e roda as verificações. O contexto
+de build antes perde todo arquivo do Compose, já que esta aula acrescenta um segundo, e todo `.env`.
+Este é o `.dockerignore` da Ana daqui em diante:
+
+```
+.git
+.env
+*.env
+compose*.yaml
+testdata/
+Dockerfile*
+.dockerignore
+```
+
+E o Dockerfile:
 
 ```dockerfile
 FROM golang:1.25 AS build

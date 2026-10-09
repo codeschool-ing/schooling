@@ -1,10 +1,10 @@
 ---
 title: O `OnCalendar`, e o comando que te diz quando ele vai disparar
-version: 2
+version: 3
 ---
 
 ```localised
-DiaDaSemana Ano-Mês-Dia Hora:Minuto:Segundo
+DayOfWeek Year-Month-Day Hour:Minute:Second
 ```
 
 Tudo é opcional, o `*` é qualquer um, e a coisa inteira tem um conferidor — que o
@@ -15,8 +15,8 @@ cron não tem, e que é o melhor argumento isolado a favor dos timers.
 ```
 ana@vm:~/work/cron$ systemd-analyze calendar "Mon *-*-* 03:00:00"
 Normalized form: Mon *-*-* 03:00:00
-    Next elapse: Mon 2026-09-21 03:00:00 UTC
-       From now: 5 days left
+    Next elapse: Mon 2026-10-12 03:00:00 UTC
+       From now: 4 days left
 ```
 
 **Três linhas, e a do meio é a resposta.** Não "isto analisa" — *esta é a data em
@@ -27,16 +27,16 @@ O `--iterations` mostra mais de uma:
 ```
 ana@vm:~/work/cron$ systemd-analyze calendar --iterations=5 "*-*-* *:00/15:00"
 Normalized form: *-*-* *:00/15:00
-    Next elapse: Tue 2026-09-15 12:45:00 UTC
-       From now: 14min left
-   Iteration #2: Tue 2026-09-15 13:00:00 UTC
-       From now: 29min left
-   Iteration #3: Tue 2026-09-15 13:15:00 UTC
-       From now: 44min left
-   Iteration #4: Tue 2026-09-15 13:30:00 UTC
-       From now: 59min left
-   Iteration #5: Tue 2026-09-15 13:45:00 UTC
-       From now: 1h 14min left
+    Next elapse: Wed 2026-10-07 14:45:00 UTC
+       From now: 5min left
+   Iteration #2: Wed 2026-10-07 15:00:00 UTC
+       From now: 20min left
+   Iteration #3: Wed 2026-10-07 15:15:00 UTC
+       From now: 35min left
+   Iteration #4: Wed 2026-10-07 15:30:00 UTC
+       From now: 50min left
+   Iteration #5: Wed 2026-10-07 15:45:00 UTC
+       From now: 1h 5min left
 ```
 
 O `*:00/15:00` é "minuto 0, e então a cada 15" — quatro vezes por hora, e as
@@ -66,18 +66,18 @@ expressar de jeito nenhum.
 ana@vm:~/work/cron$ systemd-analyze calendar daily weekly monthly
   Original form: daily
 Normalized form: *-*-* 00:00:00
-    Next elapse: Wed 2026-09-16 00:00:00 UTC
-       From now: 11h left
+    Next elapse: Thu 2026-10-08 00:00:00 UTC
+       From now: 9h left
 
   Original form: weekly
 Normalized form: Mon *-*-* 00:00:00
-    Next elapse: Mon 2026-09-21 00:00:00 UTC
-       From now: 5 days left
+    Next elapse: Mon 2026-10-12 00:00:00 UTC
+       From now: 4 days left
 
   Original form: monthly
 Normalized form: *-*-01 00:00:00
-    Next elapse: Thu 2026-10-01 00:00:00 UTC
-       From now: 2 weeks 1 day left
+    Next elapse: Sun 2026-11-01 00:00:00 UTC
+       From now: 3 weeks 3 days left
 ```
 
 **O `weekly` aqui é segunda-feira**, onde o `@weekly` do cron é domingo. Não são a
@@ -93,11 +93,11 @@ máquina — a razão de o `RandomizedDelaySec=` estar no timer da seção anter
 ana@vm:~/work/cron$ systemd-analyze calendar "*-*-13 05:00:00" --iterations=3
 Normalized form: *-*-13 05:00:00
     Next elapse: Tue 2026-10-13 05:00:00 UTC
-       From now: 3 weeks 6 days left
+       From now: 5 days left
    Iteration #2: Fri 2026-11-13 05:00:00 UTC
-       From now: 1 month 28 days left
+       From now: 1 month 6 days left
    Iteration #3: Sun 2026-12-13 05:00:00 UTC
-       From now: 2 months 27 days left
+       From now: 2 months 5 days left
 ```
 
 O dia treze de todo mês. Agora acrescente um dia da semana:
@@ -107,9 +107,9 @@ ana@vm:~/work/cron$ systemd-analyze calendar "Fri *-*-13" --iterations=2
   Original form: Fri *-*-13
 Normalized form: Fri *-*-13 00:00:00
     Next elapse: Fri 2026-11-13 00:00:00 UTC
-       From now: 1 month 28 days left
+       From now: 1 month 5 days left
    Iteration #2: Fri 2027-08-13 00:00:00 UTC
-       From now: 10 months 27 days left
+       From now: 10 months 5 days left
 ```
 
 **O systemd combina os dois campos de dia com E onde o cron combina com OU**

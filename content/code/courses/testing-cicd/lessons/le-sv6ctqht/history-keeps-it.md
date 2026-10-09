@@ -1,6 +1,6 @@
 ---
 title: Removed from the code, still in the history
-version: 1
+version: 2
 ---
 
 The commonest leak is the simplest: a secret committed to the repository. It happens with the best
@@ -9,6 +9,18 @@ else, and the usual reaction, deleting the file in the next commit, does not und
 
 Here is that sequence on a throwaway branch of `shipquote`. One commit adds `deploy/production.env`
 with the carrier URL and the token; twenty minutes later another commit removes it:
+
+```sh
+git switch -c add-deploy-config
+mkdir deploy
+printf 'SHIPQUOTE_CARRIER_URL=http://127.0.0.1:9092\nSHIPQUOTE_CARRIER_TOKEN=lab-live-token\n' > deploy/production.env
+git add deploy
+git commit -m "Keep the production settings with the code"
+git rm -q deploy/production.env
+git commit -m "Remove the production settings again"
+```
+
+And what is left of it:
 
 ```
 ana@laptop:~/shipquote$ git log --oneline -3
@@ -30,6 +42,8 @@ added or removed the string, and `git show` prints the file exactly as it was co
 included. Anybody who cloned or fetched the repository in those twenty minutes, and anybody who ever
 reads its history, has the value. On a hosted service, forks, caches and the service's own backups
 have it too.
+
+(`git switch main` and `git branch -D add-deploy-config` put the throwaway branch away.)
 
 ## What follows from that
 

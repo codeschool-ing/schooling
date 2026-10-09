@@ -1,6 +1,6 @@
 ---
 title: The vector index
-version: 1
+version: 2
 ---
 
 A table of vectors can already be searched: order the rows by distance to the question and take the
@@ -11,9 +11,9 @@ and fast, and `embeddings-vectors` lessons 15 and 16 measured how: what HNSW bui
 the index to the table and checks that the planner uses it.
 
 ```
-ana@lab:~/rag$ psql -c "CREATE INDEX ON chunks USING hnsw (embedding vector_cosine_ops)"
+ana@vm:~/rag$ psql -c "CREATE INDEX ON chunks USING hnsw (embedding vector_cosine_ops)"
 CREATE INDEX
-ana@lab:~/rag$ psql -c "SET enable_seqscan = off" -c "EXPLAIN (COSTS OFF) SELECT path FROM chunks ORDER BY embedding <=> (SELECT embedding FROM chunks LIMIT 1) LIMIT 3"
+ana@vm:~/rag$ psql -c "SET enable_seqscan = off" -c "EXPLAIN (COSTS OFF) SELECT path FROM chunks ORDER BY embedding <=> (SELECT embedding FROM chunks LIMIT 1) LIMIT 3"
 SET
                       QUERY PLAN                       
 -------------------------------------------------------

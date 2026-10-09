@@ -1,6 +1,6 @@
 ---
 title: O que é um ambiente
-version: 1
+version: 2
 ---
 
 Um **ambiente** é um lugar onde um release roda: as máquinas, a configuração, os dados e os serviços
@@ -38,3 +38,20 @@ próprio `config.env` e o próprio processo: `dev` na porta 8100, `staging` na 8
 laboratório iniciada duas vezes, nas portas 9091 e 9092, com tokens diferentes. É um modelo, e a seção
 06 diz o que uma homologação de verdade acrescenta; as regras que ele demonstra, um artefato,
 configuração fora do código e nenhuma mudança feita à mão, não dependem da escala.
+
+Para montá-lo, pare o que a aula 7 deixou rodando e comece sem ambiente nenhum. O `preview` da aula
+7 nunca subiu, então o `kill` reclama dele, e essa é a única reclamação esperada:
+
+```sh
+kill $(cat ~/envs/*/pid)
+rm -rf ~/envs
+```
+
+Depois as duas transportadoras, a simulada da aula 2 iniciada duas vezes, cada uma com uma porta e
+um token próprios, cada uma num terminal próprio. Os dois tokens são valores inventados para o
+laboratório e não abrem nada além desses dois processos:
+
+```sh
+CARRIER_TOKEN=lab-sandbox-token CARRIER_PORT=9091 python3 ~/carrier/server.py
+CARRIER_TOKEN=lab-live-token CARRIER_PORT=9092 python3 ~/carrier/server.py
+```

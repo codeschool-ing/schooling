@@ -18,15 +18,15 @@ finding.
 shop=# EXPLAIN ANALYZE SELECT * FROM orders WHERE date(placed_at) = DATE '2025-03-01';
                                                  QUERY PLAN                                                  
 -------------------------------------------------------------------------------------------------------------
- Seq Scan on orders  (cost=0.00..22466.00 rows=5000 width=28) (actual time=0.129..114.541 rows=1834 loops=1)
+ Seq Scan on orders  (cost=0.00..22469.00 rows=5000 width=28) (actual time=0.193..122.519 rows=1558 loops=1)
    Filter: (date(placed_at) = '2025-03-01'::date)
-   Rows Removed by Filter: 998166
- Planning Time: 0.238 ms
- Execution Time: 114.682 ms
+   Rows Removed by Filter: 998442
+ Planning Time: 0.349 ms
+ Execution Time: 122.679 ms
 (5 rows)
 ```
 
-Estimated 5000, actual 1834. The planner has statistics about `placed_at` — its range, its
+Estimated 5000, actual 1558. The planner has statistics about `placed_at` — its range, its
 distribution — and none about `date(placed_at)`, because a function's result is not a column. So
 it fell back to a default: half a percent of the table, whatever the table. That guess is wrong in
 both directions on different days, and a plan built on it will sometimes be the wrong plan.
@@ -65,19 +65,23 @@ shop=# EXPLAIN SELECT * FROM returns WHERE reason = 'damaged';
 
 `rows=5`, because the table has never been analysed and the planner is guessing from its size on
 disk, which is nothing. Now two hundred thousand rows are loaded, and the same `EXPLAIN` is run
-again, without doing anything else:
+again, without doing anything else — type it straight away, because within a minute or so the
+automatic analysis described below will do the next step for you:
 
 ```
+shop=# INSERT INTO returns (id, order_id, reason, opened_at) SELECT n, n * 5, (ARRAY['damaged', 'late', 'wrong item', 'changed mind'])[1 + n % 4], timestamptz '2025-01-01 00:00+00' + n * interval '1 minute' FROM generate_series(1, 200000) AS n;
+INSERT 0 200000
+
 shop=# EXPLAIN SELECT * FROM returns WHERE reason = 'damaged';
                          QUERY PLAN                          
 -------------------------------------------------------------
- Seq Scan on returns  (cost=0.00..3293.54 rows=754 width=48)
+ Seq Scan on returns  (cost=0.00..3218.74 rows=737 width=48)
    Filter: (reason = 'damaged'::text)
 (2 rows)
 ```
 
-The cost went up — the planner can see the table is bigger — but `rows=754` is still a guess
-scaled from nothing, and the truth is forty times that. Then:
+The cost went up — the planner can see the table is bigger — but `rows=737` is still a guess
+scaled from nothing, and the truth is nearly seventy times that. Then:
 
 ```
 shop=# ANALYZE returns;
@@ -86,13 +90,15 @@ ANALYZE
 shop=# EXPLAIN SELECT * FROM returns WHERE reason = 'damaged';
                           QUERY PLAN                           
 ---------------------------------------------------------------
- Seq Scan on returns  (cost=0.00..3909.00 rows=33400 width=26)
+ Seq Scan on returns  (cost=0.00..3877.00 rows=49493 width=25)
    Filter: (reason = 'damaged'::text)
 (2 rows)
 ```
 
-`rows=33400`, which is a quarter of two hundred thousand, which is right: four reasons, evenly
-spread. One statement, and the planner went from guessing to knowing.
+`rows=49493`, within a percent of the 50 000 that a quarter of two hundred thousand would be,
+which is right: four reasons, evenly spread. One statement, and the planner went from guessing to
+knowing. It is not exactly 50 000 because `ANALYZE` reads a sample of the table rather than all of
+it — which is also why the estimates on your own screen may differ from these by a little.
 
 Autovacuum runs `ANALYZE` on its own once a table has changed enough, and on a table that grows
 slowly that is fine. On a table that was just loaded, or just had half its rows rewritten, the

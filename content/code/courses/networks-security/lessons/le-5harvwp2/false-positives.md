@@ -3,7 +3,8 @@ title: A false positive, and an exclusion that stays narrow
 version: 1
 ---
 
-A customer writes to the support form. They are a developer, and they paste the query they ran:
+A customer writes to the support form. They are a developer, and they paste the query they ran. The
+audit log was emptied first, so it holds this request alone:
 
 ```
 ana@remote:~$ curl -s -o /dev/null -w "%{http_code}\n" -d "comment=select id from orders where total > 100" https://www.example.com/support
@@ -23,7 +24,8 @@ about what it saw. That combination is a **false positive**, and every WAF produ
 
 The wrong fixes are the tempting ones: switch the engine back to detection-only, or remove rule
 942100 everywhere. Either weakens the whole site to rescue one form. The right
-fix is **as narrow as the problem**: this rule, this field, this location.
+fix is **as narrow as the problem**: this rule, this field, this location. In the site's file it is a
+new location, written just above `location /admin/`:
 
 ```
 root@www:~# sed -n "/location \/support/,/}/p" /etc/nginx/sites-enabled/shop

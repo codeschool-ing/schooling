@@ -42,24 +42,22 @@ tudo de que você precisa.
 
 Mantém tudo dos dois lados:
 
-```sql
-SELECT c.name, o.id
-FROM   customers c
-FULL JOIN orders o ON o.customer_id = c.id;
 ```
-
-```
- name       | id
+joins=# SELECT c.name, o.id
+joins-# FROM   customers c
+joins-# FULL JOIN orders o ON o.customer_id = c.id;
+    name    |  id  
 ------------+------
  Ana Lopes  | 1001
+ Bruno Sá   | 1002
  Ana Lopes  | 1003
  Ana Lopes  | 1004
- Bruno Sá   | 1002
- Célia Reis | NULL    <- a customer with no order
- NULL       | 1005    <- an order with no customer
+ NULL       | 1005
+ Célia Reis | NULL
+(6 rows)
 ```
 
-Os dois tipos de órfão, num resultado. É genuinamente raro em código de aplicação e genuinamente útil
+Os dois tipos de órfão, num resultado: o pedido 1005 sem cliente, e a Célia sem pedido. É genuinamente raro em código de aplicação e genuinamente útil
 para um trabalho: **reconciliação**.
 
 ```sql

@@ -1,6 +1,6 @@
 ---
 title: O que ele sabe, e o que ele não sabe dizer que não sabe
-version: 1
+version: 2
 ---
 
 O conhecimento de um modelo é o que o texto de treino continha, comprimido nos parâmetros e
@@ -10,61 +10,83 @@ aquele treino, e para um fato comum a continuação provável quase sempre é a 
 fato raro, recente, ou que nunca esteve no texto de treino, **o laço ainda produz uma continuação
 com cara de provável, porque produzir uma é a única coisa que ele sabe fazer.**
 
-## O modelo pequeno numa pergunta que não é da conta dele
+## Uma pergunta com resposta, e uma sem
 
-O `tinylm` foi treinado com a documentação do Python, que nunca fala da França. Pergunte assim
-mesmo:
-
-```
-ana@dev:~/shop$ python lab/next.py "The capital of France is"
-context used: 1 tokens
- 11.5%  ' a'
-  8.0%  ' the'
-  5.9%  '\n'
-  5.2%  ' not'
-  3.8%  ' used'
-ana@dev:~/shop$ python lab/generate.py "The capital of France is" --tokens 14 --temperature 0
-The capital of France is a string, and
-  A binascii.Error is raised if
+O `next.py` da seção 06 mostra o que o modelo acha mais provável depois de uma frase. Aqui está
+uma frase que ele leu milhares de vezes, e uma que ele nunca pode ter lido, porque o país foi
+inventado para esta aula:
 
 ```
-
-`context used: 1 tokens`: ele nunca tinha visto `France is`, então recuou para o que vem depois de
-` is` sozinho, e daí escreveu o que vem depois de ` is` no corpus dele. É o mesmo texto que a
-execução gulosa da aula 1 seção 04 produziu depois de `The default value is`, pelo mesmo motivo.
-
-**E ele não deu sinal nenhum disso.** Aqui ele está numa frase de que nunca viu parte alguma:
-
-```
-ana@dev:~/shop$ python lab/next.py "colourless green ideas"
-context used: 0 tokens
-  3.7%  ' the'
-  3.0%  '\n'
-  2.9%  ','
-  2.4%  '.\n\n'
-  2.0%  ' a'
+ana@dev:~/shop$ python scratch/next.py "The capital of France is"
+ 62.7%  ' Paris'
+  8.4%  ' located'
+  3.7%  '...'
+  3.6%  ' not'
+  3.2%  ' a'
+ana@dev:~/shop$ python scratch/next.py "The capital of the Republic of Veldoria is"
+ 10.3%  ' the'
+  5.8%  ' V'
+  3.8%  ' a'
+  3.4%  ' located'
+  2.7%  ' not'
 ```
 
-Sem contexto nenhum, ele prevê os tokens mais comuns do corpus. A saída continua sendo uma
-distribuição que soma 100%, e o laço de geração sortearia dela exatamente como antes. **Uma
-distribuição não tem lugar para "nunca vi isto".** O script do laboratório imprime quanto contexto
-usou porque o laboratório escreveu essa linha; a API de nenhum provedor devolve algo parecido.
+A primeira é um fato que o modelo aprendeu: um token com a maior parte da probabilidade. A
+segunda está espalhada. **Mas continua sendo uma distribuição que soma 100%**, e o laço sorteia
+dela exatamente como antes. Uma distribuição não tem lugar para "nunca vi isto". Deixe o laço
+rodar:
 
-## A versão de modelo grande da mesma coisa
+```
+ana@dev:~/shop$ python scratch/generate.py "The capital of the Republic of Veldoria is" --tokens 30 --temperature 0
+The capital of the Republic of Veldoria is the city of Veldoria, which is located in the heart of the Veldorian Valley. The city is known for its rich history, cultural
+```
 
-Um modelo grande é muito melhor nisso que o `tinylm`, e consegue dizer "não sei", porque foi
-treinado com exemplos de quem diz isso. Isso é um comportamento aprendido, porém, não uma medição:
-o modelo não tem um sinal interno confiável que separe um fato que aprendeu de um fato que está
-reconstruindo. Então ele comete esse erro justamente nas perguntas em que o texto de treino era
-ralo, e comete no mesmo estilo fluente e confiante de todo o resto. Isso se chama **alucinação**, e
-para quem desenvolve ela chega em três formas comuns:
+Uma capital, um vale e uma história rica, para um país que não existe, no tom de uma
+enciclopédia. Cada token foi a continuação mais provável do texto anterior, que é tudo o que o
+laço jamais prometeu.
 
-- **uma API que não existe**: um nome de método que seria o óbvio, numa biblioteca que o batizou de
-  outro jeito;
+Agora a mesma pergunta como pergunta, pelo `ollama run`, que a embrulha no template de conversa do
+modelo, do jeito que toda aplicação de chat faz:
+
+```
+ana@dev:~/shop$ ollama run llama3.2:3b "What is the capital of the Republic of Veldoria?"
+I couldn't find any information on a country called the "Republic of
+Veldoria". It's possible that it's a fictional country or not a recognized
+sovereign state. If you could provide more context or details, I'll be
+happy to help you further.
+```
+
+Isso é melhor, e a próxima parte desta seção diz por que não basta.
+
+## Dizer "não sei" é um hábito, não uma medida
+
+O modelo que inventou um vale e o modelo que recusou a pergunta são o mesmo modelo. A diferença é
+o template de conversa: depois de treinado em texto, este modelo foi treinado mais um pouco em
+conversas em que um assistente diz que não sabe, e o template o põe nesse papel. **Isso
+é um comportamento aprendido, não uma medida.** O modelo não tem nenhum sinal interno confiável
+que separe um fato que ele aprendeu de um fato que ele está reconstruindo, então ele recusa
+quando a pergunta parece com as que aprendeu a recusar, e responde com fluência no resto. Um país
+inventado é fácil de reconhecer. Uma função inventada não é:
+
+```
+ana@dev:~/shop$ ollama run llama3.2:3b "In Python's standard library, which function in the statistics module computes the harmonic median? Answer with one line of code."
+The `statistics.hmean` function in Python's standard library computes the
+harmonic mean.
+```
+
+**`statistics.hmean` não existe.** A função do módulo é `statistics.harmonic_mean`, e não há
+mediana harmônica nele. A resposta dá nome a uma função plausível, troca a pergunta de mediana
+para média sem avisar, e soa tão segura quanto a resposta sobre Paris. Pergunte você mesmo e pode
+vir outra resposta errada, ou uma certa; a seção 08 explica por quê.
+
+Isso se chama **alucinação**, e para um desenvolvedor ela chega em três formas comuns:
+
+- **uma API que não existe**: um nome de método que seria o óbvio, numa biblioteca que deu outro
+  nome, como acima;
 - **uma API que existia**: a versão de uma biblioteca de antes do corte de treino, com confiança,
-  para código que roda contra a versão de depois;
-- **um pacote que não existe**: um import plausível que ninguém nunca publicou, o que é pior que um
-  erro de digitação, porque qualquer um pode publicá-lo depois (aula 11).
+  para um código que roda contra a versão de depois;
+- **um pacote que não existe**: um import plausível que ninguém nunca publicou, o que é pior que
+  um erro de digitação, porque qualquer um pode publicá-lo depois (aula 11).
 
 ## Trabalhando com isso
 

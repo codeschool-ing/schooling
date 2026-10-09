@@ -1,6 +1,6 @@
 ---
 title: When something gets through
-version: 1
+version: 2
 ---
 
 The defences in this lesson make mistakes rarer and smaller. They do not make them impossible, so a
@@ -16,8 +16,8 @@ can deploy. Test it the way lesson 10 tested the fallback, by using it.
 
 ## Know what happened
 
-- **The request log of lesson 11 section 04** says which requests, which model, which tools, and the
-  request ids to give a provider.
+- **The request log of lesson 11 section 04** says which request, which model, how many tokens and
+  why it stopped, with the request id to give a provider.
 - **Tool calls are logged as actions**, with their arguments and who approved them. "The model
   refunded order 1042" has to be answerable with when, how much and on whose yes.
 - **Keep the prompts and replies you chose to keep**, redacted, long enough to read the bad

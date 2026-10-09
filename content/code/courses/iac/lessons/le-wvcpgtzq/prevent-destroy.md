@@ -1,6 +1,6 @@
 ---
 title: prevent_destroy, and what it does not prevent
-version: 1
+version: 2
 ---
 
 Some resources are cheap to lose and some are not. A replaced instance comes back from its image;
@@ -30,10 +30,14 @@ resource "aws_s3_bucket" "logs" {
 }
 ```
 
+She applied it and committed it, as in `~/shop/app`. **On AWS a bucket's name has to be unique
+across every account in the world**, so on a real account you would put a prefix of your own in
+front of these names; moto accepts them as they are.
+
 ## The refusal
 
-A `terraform destroy` here plans the destruction of both buckets, prints that plan in full, and
-stops before asking anything:
+Ana runs `terraform destroy`. It plans the destruction of both buckets, prints that plan in full,
+and stops before asking anything. The end of its output:
 
 ```
 Plan: 0 to add, 0 to change, 2 to destroy.
@@ -53,8 +57,8 @@ Plan: 0 to add, 0 to change, 2 to destroy.
 **The whole run is refused, not just the protected resource.** The logs bucket, which has no
 protection, was not destroyed either: Terraform does not apply part of a plan it has rejected.
 
-A rename is caught the same way, because a bucket's name cannot change in place. Ana tries
-`shop-assets-prod`:
+A rename is caught the same way, because a bucket's name cannot change in place. Ana changes the
+name to `shop-assets-prod` and runs `terraform plan`. Part of what it prints:
 
 ```
 -/+ destroy and then create replacement
@@ -77,7 +81,8 @@ that cannot run.
 ## What it does not stop
 
 **The setting lives in the resource block, so it protects the resource only while the block is
-in the file.** Delete the whole block and the protection goes with it:
+in the file.** Delete the whole block and the protection goes with it. Ana puts the name back with
+`git checkout main.tf` and deletes the `assets` block:
 
 ```
 ana@laptop:~/shop/assets$ git diff --stat

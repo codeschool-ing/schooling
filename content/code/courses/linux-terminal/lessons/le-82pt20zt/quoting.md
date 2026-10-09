@@ -1,6 +1,6 @@
 ---
 title: Quoting, which is where the bugs live
-version: 1
+version: 2
 ---
 
 More shell bugs come from quoting than from everything else in this lesson combined. The reason is
@@ -33,7 +33,13 @@ first field.
 
 ## What double quotes actually stop
 
-Not expansion — they let that through. They stop the *two things that happen after* it.
+Not expansion — they let that through. They stop the *two things that happen after* it. This part
+works in a scratch directory under `/tmp`, which the machine empties when it restarts:
+
+```sh
+mkdir -p /tmp/q
+cd /tmp/q
+```
 
 ```
 ana@vm:/tmp/q$ touch 'my file.txt' plain.txt a.log b.log

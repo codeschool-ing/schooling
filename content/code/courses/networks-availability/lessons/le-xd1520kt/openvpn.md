@@ -4,8 +4,9 @@ version: 1
 ---
 
 Lesson 3 brought OpenVPN up and read its TLS handshake off the wire, Client Hello and all. Here it is
-set up the way a remote-access server usually is, on `hq`, for Ana. This is the server's file, as
-`cat /etc/openvpn/server.conf` printed it:
+set up the way a remote-access server usually is, on `hq`, for Ana. Take WireGuard down on `hq` first,
+`sudo wg-quick down wg0`, so that only one VPN is running. This is the server's file,
+`/etc/openvpn/server.conf`, to write on `hq` with `sudo nano`:
 
 ```schooling-example
 {"language": "conf", "file": "server.conf", "parts": [{"code": "dev tun\nproto udp\nport 1194", "note": "A layer 3 tunnel, `tun`, over UDP on OpenVPN's registered port."}, {"code": "server 10.8.0.0 255.255.255.0\ntopology subnet", "note": "A pool for the clients. The server takes `10.8.0.1` and hands out the rest, one address per connection, all in one subnet."}, {"code": "ca ca.crt\ncert vpn-server.crt\nkey vpn-server.key", "note": "The authority both sides trust, and the server's own certificate and key. Each client has a certificate of its own from the same authority, and that is its identity."}, {"code": "dh none", "note": "No file of Diffie-Hellman parameters: the key exchange is done on elliptic curves instead."}, {"code": "tls-crypt tc.key", "note": "A key shared by the server and every client, which encrypts and authenticates the control channel, handshake included."}, {"code": "push \"route 192.168.10.0 255.255.255.0\"", "note": "Sent to each client as it connects: route the head office LAN into the tunnel, and nothing else. A split tunnel, which lesson 5 is about."}, {"code": "keepalive 10 60", "note": "A ping through the tunnel every 10 seconds, and a client restarts the connection after 60 without an answer. The server waits twice as long."}, {"code": "status /run/openvpn-status.log 5\nverb 3", "note": "Rewrite the list of who is connected into a file every 5 seconds, and log at the usual level."}]}
@@ -15,8 +16,27 @@ set up the way a remote-access server usually is, on `hq`, for Ana. This is the 
 certificate the server has never seen before.** Any client whose certificate the lab's authority signed
 can connect, and the server needs no line per user.
 
-`tls-crypt` needs a key of its own, generated once on the server and copied to every client, here to
-Ana's laptop, as root and not shown:
+Ana's `/etc/openvpn/client.conf` on `remote` is lesson 3's with one line more, `tls-crypt tc.key`,
+written after the line `key vpn-ana.key`. The certificates are copied as in lesson 3, and `tls-crypt`
+needs a key of its own, generated once on the server. On `hq`:
+
+```sh
+sudo cp /lab/tls/ca.crt /lab/tls/vpn-server.crt /lab/tls/vpn-server.key /etc/openvpn/
+sudo chmod 600 /etc/openvpn/vpn-server.key
+sudo openvpn --genkey tls-crypt /etc/openvpn/tc.key
+```
+
+Then every client gets a copy. Between real machines that is a copy over SSH or a configuration
+management tool. Here every machine's `/etc/openvpn` lives under `/lab` on the virtual machine, as the
+notes on `netlab.sh` in lesson 1 say, so `remote` can take `hq`'s directly. On `remote`:
+
+```sh
+sudo cp /lab/tls/ca.crt /lab/tls/vpn-ana.crt /lab/tls/vpn-ana.key /etc/openvpn/
+sudo chmod 600 /etc/openvpn/vpn-ana.key
+sudo cp /lab/hq/etc/openvpn/tc.key /etc/openvpn/
+```
+
+The key file starts like this:
 
 ```
 ana@hq:~$ sudo head -3 /etc/openvpn/tc.key
@@ -26,8 +46,21 @@ ana@hq:~$ sudo head -3 /etc/openvpn/tc.key
 ```
 
 It is not an identity, since every client holds the same file. **Its job is to make a packet without it
-worthless before TLS starts.** The ISP captured the client connecting, with `tshark` started first and
-the client started as root; then Ana pinged the file server through the tunnel:
+worthless before TLS starts.** Start the server on `hq`, writing its log to `/run/openvpn.log`, where
+the end of this section reads it:
+
+```sh
+sudo sh -c 'setsid openvpn --cd /etc/openvpn --config server.conf > /run/openvpn.log 2>&1 &'
+```
+
+The ISP captured the client connecting, with `tshark` started first on `isp` and then the client on
+`remote`, in the background like the server:
+
+```sh
+sudo setsid openvpn --cd /etc/openvpn --config client.conf >/dev/null 2>&1 &
+```
+
+Then Ana pinged the file server through the tunnel:
 
 ```
 ana@isp:~$ tshark -n -i eth1 -c 6 -f "udp port 1194"

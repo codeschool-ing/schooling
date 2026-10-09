@@ -51,3 +51,15 @@ put() { # also printed between file markers, so the lesson quotes the file
   printf '##### file:%s\n' "${PWD/#\/home\/ana/\~}/$1"; cat "$1"; printf '##### end-file\n'
 }
 block() { printf '##### %s\n' "$1"; }
+
+# from_lesson MD PATH: the fenced block in the lesson file MD that has the line
+# "# PATH" in it, byte for byte. A script the lesson shows the student is taken
+# from the lesson rather than kept twice, so the file a capture runs and the file
+# the student reads cannot drift apart. No such block is an error, not a blank.
+from_lesson() {
+  awk -v want="# $2" '
+    /^```/ { if (open) { if (hit) { printf "%s", buf; found = 1; exit } open = 0; next }
+             open = 1; buf = ""; hit = 0; next }
+    open   { buf = buf $0 "\n"; if ($0 == want || index($0, want ":") == 1) hit = 1 }
+    END    { exit found ? 0 : 1 }' "$1" || { echo "from_lesson: no block with \"# $2\" in $1" >&2; exit 1; }
+}

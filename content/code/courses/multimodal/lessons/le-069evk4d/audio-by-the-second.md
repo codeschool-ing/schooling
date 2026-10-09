@@ -1,9 +1,9 @@
 ---
 title: Audio is billed by the second and limited by the byte
-version: 1
+version: 2
 ---
 
-A transcription is billed by its seconds, so the encoding cannot change the price. It can change two other things: whether the file fits under the upload limit, and what the model hears. This program encodes the call four ways, sends each to labmm's Whisper base, and scores what came back against the call's script:
+A transcription is billed by its seconds, so the encoding cannot change the price. It can change two other things: whether the file fits under the upload limit, and what the model hears. This program encodes the call four ways, sends each to Whisper base through lesson 10's `audio_server.py` (start it first, in a second terminal), and scores what came back against the call's script:
 
 ```python
 """One call in four encodings: the bytes, how many minutes fit under 25 MB, and what Whisper heard."""
@@ -28,7 +28,8 @@ for name, args, ext in (("wav 16 kHz 16-bit", ["-ar", "16000", "-ac", "1"], "wav
     subprocess.run(["ffmpeg", "-nostdin", "-loglevel", "error", "-y", "-i", "media/call-1042.wav", *args, out], check=True)
     size = os.path.getsize(out)
     with open(out, "rb") as f:
-        heard = OpenAI().audio.transcriptions.create(model="lab-whisper-base", file=f, response_format="text")
+        heard = OpenAI(base_url="http://localhost:8700/v1").audio.transcriptions.create(
+            model="whisper-base", file=f, response_format="text")
     wer = jiwer.wer(truth, heard, reference_transform=norm, hypothesis_transform=norm)
     print("%-24s %9d %10.0f %5.1f%%" % (name, size, LIMIT / size * seconds / 60, 100 * wer))
 ```

@@ -12,9 +12,10 @@
 # (lesson 8), from the lab's virtual environment.
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab
-# itself, built by lab.sh reset; ana's git identity; the files ana wrote (put
-# below), whose contents the lesson shows, with lesson 10's data, template and
-# push.py beside them; and two waits, for OSPF's dead interval to pass after
+# itself, built by lab.sh reset; ana's git identity, which lesson 11 typed;
+# lesson 10's data, template and push.py where that lesson left them, in
+# ~/tpl, which checks.md copies into ~/net; the files ana wrote (put below),
+# whose contents the lesson shows; and two waits, for OSPF's dead interval to pass after
 # the bad change, and twelve seconds and then ten more after the revert, which
 # the lesson says.
 #
@@ -55,9 +56,10 @@ bgon() {
 fgon() { wait "$BG"; cat /tmp/bg.out; rm -f /tmp/bg.out; }
 
 lab reset
-lab exec ctl ana 'git config --global user.name ana && git config --global user.email ana@example.net && git config --global init.defaultBranch main && mkdir -p net/data net/templates'
+# lesson 10 as it left ana's home (its files are shown there); git's identity, from lesson 11
+lab exec ctl ana 'git config --global user.name ana && git config --global user.email ana@example.net && git config --global init.defaultBranch main'
 
-put net/data/core1.yaml <<'CODE'
+put tpl/data/core1.yaml <<'CODE'
 hostname: core1
 loopback: 203.0.113.251
 interfaces:
@@ -70,7 +72,7 @@ interfaces:
     address: 198.51.100.5/30
     ospf: point-to-point
 CODE
-put net/data/edge1.yaml <<'CODE'
+put tpl/data/edge1.yaml <<'CODE'
 hostname: edge1
 loopback: 203.0.113.252
 interfaces:
@@ -83,7 +85,7 @@ interfaces:
     address: 203.0.113.1/26
     ospf: passive
 CODE
-put net/data/edge2.yaml <<'CODE'
+put tpl/data/edge2.yaml <<'CODE'
 hostname: edge2
 loopback: 203.0.113.253
 interfaces:
@@ -96,7 +98,7 @@ interfaces:
     address: 203.0.113.65/26
     ospf: passive
 CODE
-put net/templates/frr.j2 <<'CODE'
+put tpl/templates/frr.j2 <<'CODE'
 frr version 8.4.4
 frr defaults traditional
 hostname {{ hostname }}
@@ -135,6 +137,29 @@ exit
 !
 end
 CODE
+put tpl/push.py <<'CODE'
+import sys
+
+from napalm import get_network_driver
+
+driver = get_network_driver("frr")
+for host in ("core1", "edge1", "edge2"):
+    with driver(host, "netops", None, optional_args={"key_file": "/home/ana/.ssh/id_ed25519"}) as dev:
+        dev.load_replace_candidate(filename=f"configs/{host}.conf")
+        diff = dev.compare_config()
+        if not diff:
+            print(f"{host}: matches")
+            dev.discard_config()
+            continue
+        print(f"{host}:\n{diff}")
+        if "--commit" in sys.argv:
+            dev.commit_config()
+            print(f"{host}: committed")
+        else:
+            dev.discard_config()
+CODE
+block setup
+on ctl 'mv net net-lesson11 2>/dev/null; mkdir -p net/templates && cp -r tpl/data tpl/push.py net/ && cp tpl/templates/frr.j2 net/templates/'
 put net/render.py <<'CODE'
 import ipaddress
 import pathlib
@@ -159,27 +184,6 @@ if __name__ == "__main__":
         text = template.render(data)
         (pathlib.Path("configs") / f"{data['hostname']}.conf").write_text(text)
         print(f"{path} -> configs/{data['hostname']}.conf, {len(text.splitlines())} lines")
-CODE
-put net/push.py <<'CODE'
-import sys
-
-from napalm import get_network_driver
-
-driver = get_network_driver("frr")
-for host in ("core1", "edge1", "edge2"):
-    with driver(host, "netops", None, optional_args={"key_file": "/home/ana/.ssh/id_ed25519"}) as dev:
-        dev.load_replace_candidate(filename=f"configs/{host}.conf")
-        diff = dev.compare_config()
-        if not diff:
-            print(f"{host}: matches")
-            dev.discard_config()
-            continue
-        print(f"{host}:\n{diff}")
-        if "--commit" in sys.argv:
-            dev.commit_config()
-            print(f"{host}: committed")
-        else:
-            dev.discard_config()
 CODE
 put net/model.py <<'CODE'
 from ipaddress import IPv4Address, IPv4Interface
@@ -303,7 +307,8 @@ def test_every_branch_lan_is_routed(name):
     routes = show(name, "show ip route")
     assert [lan for lan in LANS if lan not in routes] == []
 CODE
-lab exec ctl ana 'cd net && printf "configs/\n__pycache__/\n.pytest_cache/\n" > .gitignore && git init -q && git add . && git commit -qm "lesson 10 project, with tests"'
+block commit
+on ctl 'cd net && printf "configs/\n__pycache__/\n.pytest_cache/\n" > .gitignore && git init -q && git add . && git commit -qm "lesson 10 project, with tests"'
 
 block validate
 on ctl 'cd net && python validate.py'

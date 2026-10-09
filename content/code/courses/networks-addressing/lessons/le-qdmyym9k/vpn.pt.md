@@ -1,6 +1,6 @@
 ---
 title: A VPN, um link privado pela rede de outra pessoa
-version: 1
+version: 2
 ---
 
 A matriz quer alcançar a filial: do pc1 ao pc2, de endereço privado a endereço privado. Não consegue, e
@@ -52,8 +52,8 @@ IPs**, `10.30.10.0/24,10.255.255.2/32`, os endereços que podem chegar por este 
 um endereço à `wg0`, sobe a interface e acrescenta a rota que manda a LAN da filial para dentro do túnel.
 As linhas da filial são o espelho delas.
 
-**Sobre essas chaves.** As duas chaves privadas foram escritas no `lab.sh` pelo autor dele, para que o
-`wg show` imprima a mesma coisa toda vez que o laboratório é montado. Isso quer dizer que qualquer pessoa
+**Sobre essas chaves.** As duas chaves privadas estão escritas no `sites.sh`, para que o
+`wg show` imprima a mesma coisa toda vez que a rede é montada. Isso quer dizer que qualquer pessoa
 pode lê-las, e elas não protegem nada. Um túnel de verdade usa chaves geradas na própria máquina com
 `wg genkey`, e uma chave privada que foi impressa, colada ou commitada é uma chave a trocar.
 

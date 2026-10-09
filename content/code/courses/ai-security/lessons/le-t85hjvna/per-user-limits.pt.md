@@ -1,6 +1,6 @@
 ---
 title: Um limite por usuário, para uma pessoa não gastar o de todos
-version: 1
+version: 2
 ---
 
 Um fornecedor limita cada chave: tantas requisições por minuto, tantos tokens por minuto, tanto por
@@ -8,11 +8,106 @@ mês. Esses limites protegem o fornecedor. **Não protegem os usuários da Taref
 porque o orçamento de uma chave é dividido por todos que a usam, e uma pessoa com um script consegue
 gastá-lo por todos.
 
-O `data/api-requests.jsonl` são cinco minutos do tráfego do assistente, escritos pelo laboratório:
-seis usuários, cada requisição marcada com o identificador da seção anterior, todas na única chave da
-Tarefa. Durante o segundo e o terceiro minuto, um dos seis roda um script.
+O `data/api-requests.jsonl` são cinco minutos do tráfego do assistente, escritos pelo curso: seis
+usuários, cada requisição marcada com um identificador de usuário final como os da seção anterior,
+todas na única chave da Tarefa. Durante o segundo e o terceiro minuto, um dos seis roda um script. Este
+programa o escreve a partir de uma tabela de quantas requisições cada usuário mandou em cada minuto.
+Salve-o como `~/guard/tools/traffic.py`:
+
+```python
+# traffic.py: write five minutes of the assistant's API requests, one per line.
+#
+#   guard traffic > FILE
+#
+# WRITTEN BY THE COURSE from the table below: six of Tarefa's users, each
+# tagged with an end-user id, all on Tarefa's one key with the provider. One
+# of the six runs a script in the second and third minutes. Times are seconds
+# after the first request, so a replay gives the same answer every time.
+import json
+
+USERS = {  # end user: requests in each of the five minutes
+    "eu-2b8e41c07d93a5f60e1c": [3, 4, 3, 5, 4],
+    "eu-5c0d9f72aa1e48b3c6d2": [6, 5, 6, 4, 6],
+    "eu-7e3a18b5c90f2d64a1b7": [2, 2, 3, 2, 2],
+    "eu-91f4d2a6e07c3b85d1e9": [4, 6, 5, 6, 5],
+    "eu-b37c05e8d1a294f6c0a3": [5, 3, 4, 4, 3],
+    "eu-e60a7d3c4b19f8e25d07": [2, 90, 110, 3, 2],
+}
+
+rows = []
+for user, per_minute in USERS.items():
+    shift = sum(map(ord, user)) % 7  # so that the six do not all arrive at once
+    for minute, n in enumerate(per_minute):
+        for i in range(n):
+            t = minute * 60 + (i * 60) // n + shift
+            rows.append({"t": min(t, minute * 60 + 59), "key": "tarefa-prod", "end_user": user})
+rows.sort(key=lambda r: (r["t"], r["end_user"]))
+for r in rows:
+    print(json.dumps(r))
+```
+
+E a reprodução, `~/guard/tools/ratelimit.py`:
+
+```python
+# ratelimit.py: a log of API requests replayed against rate limits.
+#
+#   guard ratelimit FILE --per-key N [--per-user M]
+#
+# A limit is a sliding window: a request is allowed if fewer than the limit
+# were allowed in the 60 seconds before it. A refused request does not count
+# against the window, as a client that is refused and waits gets back in.
+# With --per-user, each end user has a window of their own in front of the key.
+import argparse
+import json
+from collections import deque
+
+
+class Window:
+    def __init__(self, limit):
+        self.limit, self.times = limit, deque()
+
+    def allow(self, t):
+        while self.times and self.times[0] <= t - 60:
+            self.times.popleft()
+        if len(self.times) < self.limit:
+            self.times.append(t)
+            return True
+        return False
+
+
+p = argparse.ArgumentParser(prog="guard ratelimit")
+p.add_argument("file")
+p.add_argument("--per-key", type=int, required=True)
+p.add_argument("--per-user", type=int)
+a = p.parse_args()
+
+with open(a.file) as f:
+    rows = [json.loads(line) for line in f if line.strip()]
+keys, users, out = {}, {}, {}
+for r in rows:
+    stat = out.setdefault(r["end_user"], [0, 0])
+    stat[0] += 1
+    uw = users.setdefault(r["end_user"], Window(a.per_user)) if a.per_user else None
+    if uw and not uw.allow(r["t"]):
+        continue
+    if not keys.setdefault(r["key"], Window(a.per_key)).allow(r["t"]):
+        if uw:
+            uw.times.pop()  # the user's slot is given back: the key refused it
+        continue
+    stat[1] += 1
+
+print("limits: %d a minute per key%s" % (
+    a.per_key, ", %d a minute per user" % a.per_user if a.per_user else ""))
+print("%-25s %5s %8s %8s" % ("end user", "sent", "allowed", "refused"))
+for user in sorted(out):
+    sent, allowed = out[user]
+    print("%-25s %5d %8d %8d" % (user, sent, allowed, sent - allowed))
+hit = [u for u, (s, al) in out.items() if s > al]
+print("%d of %d users had a request refused" % (len(hit), len(out)))
+```
 
 ```
+ana@lab:~/guard$ guard traffic > data/api-requests.jsonl
 ana@lab:~/guard$ head -3 data/api-requests.jsonl
 {"t": 0, "key": "tarefa-prod", "end_user": "eu-b37c05e8d1a294f6c0a3"}
 {"t": 2, "key": "tarefa-prod", "end_user": "eu-2b8e41c07d93a5f60e1c"}

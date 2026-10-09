@@ -1,6 +1,6 @@
 ---
 title: De onde vem um módulo
-version: 1
+version: 2
 ---
 
 Um módulo em `modules/network` serve a um repositório. No dia em que outro time quiser a mesma rede,
@@ -23,8 +23,18 @@ você vai encontrar na maioria das configurações, e o segundo ganha uma seçã
 
 O módulo vai para um repositório próprio. Neste laboratório, o papel do servidor Git da loja é de um
 repositório bare na home da Ana, `~/git/terraform-aws-network.git`; num time de verdade são os mesmos
-comandos contra o GitHub, o GitLab ou o que a empresa usar. Ela commita os três arquivos e marca o
-commit com uma tag:
+comandos contra o GitHub, o GitLab ou o que a empresa usar. De `~/shop`, ela cria esse repositório,
+copia os três arquivos do módulo para `~/src/terraform-aws-network`, faz commit deles lá e aponta o
+repositório bare como remote:
+
+```sh
+mkdir -p ~/git && git init -q --bare ~/git/terraform-aws-network.git
+mkdir -p ~/src && cp -r modules/network ~/src/terraform-aws-network && cd ~/src/terraform-aws-network
+git init -q && git add . && git commit -qm "network module: a VPC and its subnets"
+git remote add origin ~/git/terraform-aws-network.git
+```
+
+Depois marca o commit com uma tag e faz push dos dois:
 
 ```
 ana@laptop:~/src/terraform-aws-network$ git tag v1.0.0
@@ -34,7 +44,8 @@ ana@laptop:~/src/terraform-aws-network$ git ls-remote --tags origin
 ```
 
 **Uma tag é um nome para um commit**, e `v1.0.0` é o que quem chama vai pedir. Então o root troca as
-suas duas linhas `source` para apontar para o repositório:
+suas duas linhas `source`, no `main.tf` e no `analytics.tf`, para apontar para o repositório.
+`/home/ana` é a home da Ana; na sua, escreva a sua (`echo $HOME` a mostra):
 
 ```
 ana@laptop:~/shop$ grep -n "source =" *.tf
@@ -163,3 +174,7 @@ dias diferentes. Uma tag foi feita para ficar parada, mas quem pode fazer push n
 movê-la. Um hash de commit completo não se move de jeito nenhum, ao custo de uma linha `source` que
 ninguém lê de relance. Tags são o meio-termo de costume, com a regra de que uma tag publicada nunca
 é movida.
+
+A Ana tira a linha `version` de novo e roda `terraform init`. A cópia local em `modules/` agora não
+é usada, então ela a apaga e faz commit:
+`rm -rf modules && git add -A && git commit -qm "use the network module from its repository"`.

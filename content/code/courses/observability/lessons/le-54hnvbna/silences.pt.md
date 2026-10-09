@@ -1,6 +1,6 @@
 ---
 title: Silêncios: quietos de propósito, com um motivo
-version: 1
+version: 2
 ---
 
 Durante um trabalho planejado, um alerta pode estar certo e ser inútil: todo mundo já sabe que o
@@ -50,7 +50,13 @@ Duas regras para silêncios numa equipe:
   incidente.
 
 Quando o trabalho acaba, a falha do payments é removida e o silêncio é expirado à mão, em vez de esperar
-o fim. Quatro minutos depois:
+o fim:
+
+```sh
+rm faults/payments.json
+```
+
+Depois o silêncio, e quatro minutos depois as taxas de queima e o pager:
 
 ```
 ana@obs:~/shop$ docker compose exec alertmanager sh -c 'amtool --alertmanager.url=http://localhost:9093 silence expire $(amtool --alertmanager.url=http://localhost:9093 silence query -q)'

@@ -1,6 +1,6 @@
 ---
 title: The interface, and what stays inside
-version: 1
+version: 2
 ---
 
 A module has two audiences: whoever writes its insides and whoever calls it. The caller should be
@@ -11,7 +11,8 @@ mostly cannot.
 
 ## Outputs are the only way out
 
-A caller who wants the VPC's range might try to read it from the resource inside the module:
+A caller who wants the VPC's range might try to read it from the resource inside the module,
+with a third output added at the end of `outputs.tf`:
 
 ```
 ana@laptop:~/shop$ tail -n 3 outputs.tf
@@ -38,7 +39,8 @@ callers could reach in, the module's author could never rename a resource withou
 The fix is an output in the module, written on purpose, which then becomes part of the interface.
 
 So publish what callers need, and an id rather than a whole object when the id is enough: an object
-exported "just in case" turns every attribute of it into a promise.
+exported "just in case" turns every attribute of it into a promise. Ana deletes the
+`shop_vpc_cidr` output again.
 
 ## Variables that refuse bad input early
 
@@ -67,7 +69,8 @@ ana@laptop:~/shop$ terraform plan
 **The error points at `analytics.tf`, where the mistake is, and names the rule in the module that
 caught it.** Without the rule the bad range would reach AWS during the apply and come back as an
 API error with no line number at all. Lesson 3 taught `validation`; in a module it is worth more,
-because the person who makes the mistake is not the person who wrote the code.
+because the person who makes the mistake is not the person who wrote the code. Ana puts the range
+in `analytics.tf` back to `10.30.0.0/16`.
 
 A good variable has a `type` as narrow as the value allows, a `description` that says what it is
 for, and a `default` only when one answer is right for most callers. A variable whose default is
@@ -84,7 +87,9 @@ tags, the way this network does.
 **Do not configure providers inside a module.** Look at what `modules/network` lacks: there is no
 `provider "aws"` block in it. It uses the provider configuration of whoever calls it, so the same
 module works in `sa-east-1` and anywhere else. An older style put the `provider` block inside, and
-Terraform now limits what such a module can do. Here is one that does it, called once per bucket:
+Terraform now limits what such a module can do. Here is one that does it, in a directory of its
+own, `~/legacy`: the module is `modules/bucket/main.tf`, and the root's `main.tf` calls it once per
+bucket:
 
 ```hcl
 provider "aws" {
@@ -130,8 +135,18 @@ Initializing modules...
 ╵
 ```
 
-Called without `for_each`, it works until the day the call is removed. With one bucket applied
-and the `module` block deleted, the bucket has to be destroyed, and the configuration that knew how
+Called without `for_each`, it works until the day the call is removed. Ana changes `main.tf` to
+one plain call, runs `terraform init` and applies it:
+
+```hcl
+module "assets" {
+  source = "./modules/bucket"
+  name   = "shop-assets-123456789012"
+}
+```
+
+Then she deletes the block, leaving `main.tf` empty. With one bucket applied and the `module` block
+deleted, the bucket has to be destroyed, and the configuration that knew how
 to reach AWS for it was inside the block that is now gone:
 
 ```

@@ -1,6 +1,6 @@
 ---
 title: An agent is a loop
-version: 1
+version: 2
 ---
 
 "Agent" is used for many things, and the useful definition is the mechanical one. **An agent is a
@@ -41,6 +41,5 @@ need a person) is a line of code in the host, not a sentence in the prompt.
 ## What the loop costs
 
 Each step is a full request, carrying the whole conversation so far: the question, every tool call,
-every result. Lesson 2 section 06's arithmetic applies with a vengeance, since tool results are often
-long. Lesson 7 section 09 measures a loop that went five steps and finds every step bigger than the
-last.
+every result. Lesson 2 section 06's arithmetic applies, and tool results are often long. Lesson 7
+section 09 measures three-step loops in which each request is bigger than the last.

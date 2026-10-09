@@ -9,9 +9,24 @@ orchestrators, and they come in three groups: identity (who are you, are you ali
 (create, delete, attach a volume) and node (mount it on this machine). A cloud's disk driver answers
 them by calling the cloud's API; the driver here answers them by making a directory.
 
-This lab installs the CSI host-path driver, the Kubernetes project's own example driver, which keeps
+This lesson installs the CSI host-path driver, the Kubernetes project's own example driver, which keeps
 every volume in a directory on a node. It is a teaching driver and nothing more: the data never leaves
-the node, and losing the node loses it. Its value here is that it is small enough to watch.
+the node, and losing the node loses it. Its value here is that it is small enough to watch. After
+`./up.sh`, it comes from the project's own manifests for a cluster of several nodes, with the
+permissions its provisioner needs from that project's release:
+
+```sh
+P=https://raw.githubusercontent.com/kubernetes-csi/external-provisioner/v6.3.0/deploy/kubernetes
+H=https://raw.githubusercontent.com/kubernetes-csi/csi-driver-host-path/v1.18.0/deploy/kubernetes-distributed/hostpath
+kubectl apply -f $P/rbac.yaml -f $H/csi-hostpath-driverinfo.yaml -f $H/csi-hostpath-plugin.yaml -f $H/csi-hostpath-storageclass-fast.yaml
+kubectl rollout status daemonset/csi-hostpathplugin
+```
+
+**Those files run one more container than the transcripts below show**, `liveness-probe`, which only
+checks that the driver answers; on the machine this course was recorded on, the driver, its two
+sidecars and their images were built from the projects' source, because their registry could not be
+reached from it, and the liveness container was left out. So your pods say `4/4` where these say
+`3/3`, and your driver is v1.17.1, the version the release's manifest names.
 
 ```
 ana@laptop:~/shop$ kubectl get csidriver

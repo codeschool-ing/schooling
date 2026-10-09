@@ -1,22 +1,22 @@
 ---
 title: Valores que nunca são anotados
-version: 1
+version: 2
 ---
 
 O Terraform 1.10 trouxe um tipo de valor que o estado nunca vê, e o 1.11 trouxe o lugar onde
 colocá-lo. Um valor **efêmero** (*ephemeral*) existe durante uma execução: é produzido quando o
 Terraform precisa dele, entregue a quem precisa, e descartado, sem ser gravado nem no arquivo de plan
 nem no estado. Um **argumento write-only** é um argumento de um recurso que aceita um valor assim,
-repassa-o ao provider durante o apply e não guarda registro dele depois. O laboratório roda o
-Terraform 1.16.4, então os dois estão aqui.
+repassa-o ao provider durante o apply e não guarda registro dele depois. A aula 1 instalou o
+Terraform 1.16.4, então o seu laboratório tem os dois.
 
 Um valor efêmero vem de um de dois lugares. Um **recurso** efêmero produz um: o provider random tem
 `ephemeral "random_password"`, e o provider da AWS tem recursos efêmeros que leem um segredo do
 Secrets Manager ou do Parameter Store durante uma execução. E uma variável declarada com
 `ephemeral = true` é um, para um valor que chega de fora, por `TF_VAR_` ou `-var`.
 
-A Ana reescreve a configuração da seção anterior num diretório novo, com a senha feita por um recurso
-efêmero. A primeira tentativa mantém o mesmo argumento:
+A Ana reescreve a configuração da seção anterior num diretório novo, `~/shop/secrets-wo`, com a senha
+feita por um recurso efêmero. A primeira tentativa de `main.tf` mantém o mesmo argumento:
 
 ```hcl
 terraform {
@@ -174,7 +174,9 @@ mudar o segredo à mão, nenhum plan vai perceber, porque não há nada no estad
 
 ## Onde existem argumentos write-only
 
-Só onde um provider escreveu um. No provider da AWS do laboratório, a lista é curta:
+Só onde um provider escreveu um. Na versão 6.67.0 do provider da AWS, a usada na gravação destas
+aulas, a lista é curta. A sua é a 6.x mais nova do dia em que você rodou o `terraform init`, já que a
+configuração pede `~> 6.0`, e uma mais nova pode listar mais:
 
 ```
 ana@laptop:~/shop/secrets-wo$ terraform providers schema -json | jq -r ".provider_schemas[].resource_schemas | to_entries[] | select(any(.value.block.attributes[]; .write_only == true)) | .key"

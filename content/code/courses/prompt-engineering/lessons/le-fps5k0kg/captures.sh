@@ -8,10 +8,13 @@
 #   sudo bash ../../lab.sh tools     # once
 #   sudo LAB_SH=../../lab.sh bash captures.sh
 #
-# Staged: candidates.txt (prompt templates), tests.tsv (the examples they are
-# chosen on), held.tsv (examples kept back) and best.txt, written with put
-# below and shown in the lesson. The model being scored is toylm, the trigram
-# model printed in lab.sh; bin/ape is printed there too. No other model runs.
+# Staged with put, and shown in the lesson with cat: the meta-prompt, five
+# candidate templates, the four test examples, the three held-out ones, and
+# best.txt. ape is read out of generate-and-score.md.
+#
+# THE MODEL'S REPLIES in meta (sampled at 0.8, seeds 1 to 5) and in ape-ask
+# (temperature 0, through ape) are llama3.2:3b served by Ollama 0.40.0,
+# captured on 7 October 2026.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 set -uo pipefail
@@ -36,15 +39,31 @@ the {x} is
 T
 printf 'coffee\thot\ntea\thot\nbread\tfresh\nterrace\topen\n' | put tests.tsv
 printf 'café\tfull\nsoup\ttomato\ncake\tgone\n' | put held.tsv
+put prompts/meta.txt <<'T'
+I gave a friend an instruction and four inputs. The friend read the
+instruction and wrote one output for each input. Here are the pairs:
+
+Input: coffee     Output: hot
+Input: tea        Output: hot
+Input: bread      Output: fresh
+Input: terrace    Output: open
+
+What was the instruction? Reply with the instruction alone, in one line.
+T
 put best.txt <<'T'
 the {x} is
 T
 
+block meta
+on 'cat prompts/meta.txt'
+on 'ask - --temperature 0.8 --seed 1 --samples 5 --max-tokens 40 < prompts/meta.txt'
 block generate-and-score
 on 'cat candidates.txt'
 on 'cat tests.tsv'
 on 'ape candidates.txt tests.tsv'
 on 'toylm next "describe the coffee in one word :"'
+block ape-ask
+on 'ape candidates.txt tests.tsv --ask'
 
 block keeping-it-honest
 on 'cat held.tsv'

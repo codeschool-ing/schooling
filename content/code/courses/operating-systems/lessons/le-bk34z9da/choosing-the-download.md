@@ -1,6 +1,6 @@
 ---
 title: Choosing a version, and checking the download
-version: 1
+version: 2
 ---
 
 Lesson 6 covers the families of Linux distributions properly. For this lesson the choice is made:
@@ -23,7 +23,24 @@ somebody tampered with. Every distribution publishes a **checksum** for each fil
 computed from its exact contents, in a file usually called `SHA256SUMS`. If one byte of the download
 differs, the number is completely different.
 
-Here is the check on a small stand-in file, with its published sums beside it:
+Lesson 1 checked the real installer, and the answer was `OK`. To see the other answer, make a stand-in
+on your server: a small file of numbers, with its sum written beside it the way a download site
+publishes one.
+
+```sh
+mkdir ~/downloads && cd ~/downloads
+seq 1 200000 > download.img
+sha256sum download.img > SHA256SUMS
+```
+
+Then check it, change one byte of it, and check again. The byte is changed with this line, typed between
+the two checks:
+
+```sh
+printf 'X' | dd of=download.img bs=1 seek=100000 conv=notrunc status=none
+```
+
+Here are the three on the server:
 
 ```
 ana@server:~/downloads$ cat SHA256SUMS
@@ -35,8 +52,8 @@ download.img: FAILED
 sha256sum: WARNING: 1 computed checksum did NOT match
 ```
 
-`OK` means the file is byte for byte what the publisher made. Then one byte of it was changed, and the
-same check says `FAILED`. A failed checksum means **download it again**, never "it is probably fine".
+`OK` means the file is byte for byte what the publisher made. After `dd` wrote one `X` over one byte,
+the same check says `FAILED`. A failed checksum means **download it again**, never "it is probably fine".
 
 On Windows the same number comes from `Get-FileHash` in PowerShell, and on macOS from
 `shasum -a 256`. To be sure the `SHA256SUMS` file itself is genuine, distributions also sign it with a

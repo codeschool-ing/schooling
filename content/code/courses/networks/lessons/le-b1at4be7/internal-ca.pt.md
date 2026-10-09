@@ -1,11 +1,18 @@
 ---
 title: A autoridade do próprio escritório
-version: 1
+version: 2
 ---
 
 A intranet do escritório, `intranet.example.com`, usa um certificado da autoridade certificadora do
 próprio escritório, coisa que muitas organizações mantêm para os servidores internos. O laptop não
-confia nela:
+confia nela. O certificado da CA do escritório, `office-ca.crt`, é o que um colega mandaria para você;
+no seu laboratório, ponha-o na pasta pessoal da `ana` no laptop, da sua máquina virtual:
+
+```sh
+sudo install -o ana -g ana -m 644 /lab/ca/office.crt /lab/laptop/home/ana/office-ca.crt
+```
+
+Depois, no laptop:
 
 ```
 ana@laptop:~$ curl -sS -o /dev/null https://intranet.example.com/

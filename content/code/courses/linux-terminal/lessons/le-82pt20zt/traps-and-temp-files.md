@@ -1,7 +1,46 @@
 ---
 title: Temporary files, and cleaning up when you did not plan to stop
-version: 1
+version: 2
 ---
+
+The scripts this section runs, made in `~/work/scripts` the way section 02 described; each is shown again where it is explained:
+
+```sh
+cd ~/work/scripts
+cat > leaky.sh <<'END'
+#!/bin/bash
+tmp=$(mktemp /tmp/leaky.XXXXXX)
+echo "working in $tmp"
+echo data > "$tmp"
+exit 1
+END
+cat > tidy.sh <<'END'
+#!/bin/bash
+tmp=$(mktemp /tmp/tidy.XXXXXX)
+trap 'rm -f "$tmp"' EXIT
+echo "working in $tmp"
+echo data > "$tmp"
+exit 1
+END
+cat > trapped.sh <<'END'
+#!/bin/bash
+cleanup() { echo "cleanup ran, signal or not"; }
+trap cleanup EXIT
+trap 'echo "caught an interrupt"; exit 130' INT
+echo "my pid is $$"
+sleep 30
+echo "not reached"
+END
+cat > errtrap.sh <<'END'
+#!/bin/bash
+set -e
+trap 'echo "failed at line $LINENO" >&2' ERR
+echo "step one"
+cp /etc/nosuchfile /tmp/x 2>/dev/null
+echo "never reached"
+END
+chmod +x leaky.sh tidy.sh trapped.sh errtrap.sh
+```
 
 A script that needs scratch space has two problems: picking a name nobody else will pick, and
 deleting it however the script ends.

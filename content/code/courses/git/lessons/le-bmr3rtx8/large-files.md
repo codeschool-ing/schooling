@@ -1,6 +1,6 @@
 ---
 title: Large files, and Git LFS
-version: 1
+version: 2
 ---
 
 **Git keeps every version of every file, in every clone.** For text that is cheap: a changed line
@@ -10,6 +10,7 @@ whole new image, and images do not compress:
 ```
 ana@vm:~/site$ du -sh .git
 500K	.git
+ana@vm:~/site$ for i in 1 2 3; do head -c 1048576 /dev/urandom > photo.jpg; git add photo.jpg; git commit -qm "Photo of the shop front, take $i"; done
 ana@vm:~/site$ du -h photo.jpg
 1.0M	photo.jpg
 ana@vm:~/site$ du -sh .git
@@ -24,10 +25,13 @@ line too: GitHub warns about files over 50 MB and refuses files over 100 MB.
 ## Git LFS
 
 **Git LFS**, *Large File Storage*, is an extension that keeps large files out of the history and puts
-a small text file in their place. It is installed separately from Git, and then switched on once per
-account:
+a small text file in their place. It is installed separately from Git: inside the virtual machine
+with `sudo apt install git-lfs`, on macOS with the installer from git-lfs.com, and on Windows it
+already came with Git for Windows. Then it is switched on once per account. A new repository,
+`~/photos`, keeps this experiment away from the site:
 
 ```
+ana@vm:~/site$ cd ~ && mkdir photos && cd photos && git init -q
 ana@vm:~/photos$ git lfs install
 Updated Git hooks.
 Git LFS initialized.
@@ -35,6 +39,7 @@ ana@vm:~/photos$ git lfs track "*.jpg"
 Tracking "*.jpg"
 ana@vm:~/photos$ cat .gitattributes
 *.jpg filter=lfs diff=lfs merge=lfs -text
+ana@vm:~/photos$ head -c 1048576 /dev/zero | tr '\0' 'a' > front.jpg
 ana@vm:~/photos$ git add .gitattributes front.jpg
 ana@vm:~/photos$ git commit -qm "Add the shop front photo"
 ana@vm:~/photos$ git lfs ls-files

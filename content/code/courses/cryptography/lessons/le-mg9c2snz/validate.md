@@ -30,7 +30,7 @@ pki/radius.pem: OK
 
 The lab has a second RADIUS server, at 127.0.0.2, standing in for a fake access point in the car park.
 Its certificate claims every name Vereda's does, including an issuer called `Vereda Root CA`. It was
-made by the lab's impostor root of lesson 9, which anybody can create with one command:
+made by the impostor root of lesson 8, which anybody can create with one command:
 
 ```
 ana@lab:~/lab$ openssl x509 -in pki/radius-impostor.pem -noout -subject -issuer -ext subjectAltName
@@ -60,7 +60,14 @@ MSCHAPv2 exchange never left the laptop. This is the outcome to aim for, and it 
 moment it happens. The person sees a network that would not connect.
 
 Now the same laptop with a careless profile, the one a person ends up with after clicking through a
-settings screen. The only difference is the two lines:
+settings screen. It is the same file without its last two lines:
+
+```sh
+cd ~/lab
+grep -v -e ca_cert -e domain_suffix_match peap.conf > peap-lax.conf
+```
+
+The only difference is those two lines:
 
 ```
 ana@lab:~/lab$ diff peap.conf peap-lax.conf

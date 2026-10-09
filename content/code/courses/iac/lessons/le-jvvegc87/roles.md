@@ -1,6 +1,6 @@
 ---
 title: Roles, the unit you reuse
-version: 1
+version: 2
 ---
 
 `site.yml` now holds the tasks, the handler, two templates and the variables they need, for one
@@ -123,28 +123,28 @@ ana@laptop:~/shop/ansible$ ansible-playbook site.yml
 PLAY [Web servers] *************************************************************
 
 TASK [Gathering Facts] *********************************************************
-ok: [web1]
 ok: [web2]
+ok: [web1]
 
 TASK [web : Install nginx] *****************************************************
-ok: [web2]
 ok: [web1]
+ok: [web2]
 
 TASK [web : Create the site's directory] ***************************************
 ok: [web1]
 ok: [web2]
 
 TASK [web : Write the index page] **********************************************
-ok: [web2]
 ok: [web1]
+ok: [web2]
 
 TASK [web : Configure the shop's site] *****************************************
-ok: [web2]
 ok: [web1]
+ok: [web2]
 
 TASK [web : Start nginx] *******************************************************
-ok: [web1]
 ok: [web2]
+ok: [web1]
 
 PLAY RECAP *********************************************************************
 web1                       : ok=6    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
@@ -161,7 +161,7 @@ changed, so the group variable won.
 
 The same command, `ansible-galaxy`, installs roles and **collections**, the larger packages of
 modules and roles, from Ansible Galaxy or from a git repository, pinned in a `requirements.yml`.
-Nothing was installed from Galaxy for this lesson: the lab has `ansible-core` and its built-in
-modules only. The advice from lesson 10 about the Terraform Registry applies unchanged: pin a
+Nothing was installed from Galaxy for this lesson, which uses `ansible-core` and its built-in modules
+only. The advice from lesson 10 about the Terraform Registry applies unchanged: pin a
 version, and read a role before running it with `become`, because every task in it runs as root on
 your machines.

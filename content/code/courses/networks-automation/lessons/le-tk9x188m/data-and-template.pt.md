@@ -1,6 +1,6 @@
 ---
 title: Os dados separados do template
-version: 1
+version: 2
 ---
 
 Os três roteadores do laboratório têm configurações quase iguais. Cada um tem um hostname, duas
@@ -24,6 +24,57 @@ Mudar algo que todo roteador tem, um timeout ou um nível de log, significa edit
 vez e renderizar de novo. **E uma configuração digitada à mão num roteador deixa de ser a
 verdade**: a verdade são os dados e o template, e espera-se que o roteador bata com o que eles
 renderizam. A aula 11 compara os dois toda noite; a aula 12 leva os dados para o NetBox.
+
+Os dados, nesta aula, são um diretório na home da `ana` no `ctl`, `~/tpl/data`, com um arquivo por
+roteador, e os templates ficam ao lado em `~/tpl/templates`. Crie os dois com
+`mkdir -p ~/tpl/data ~/tpl/templates` e salve os três arquivos de dados; eles são curtos porque só
+guardam o que muda. `data/core1.yaml`:
+
+```yaml
+hostname: core1
+loopback: 203.0.113.251
+interfaces:
+  - name: eth1
+    description: link to edge1
+    address: 198.51.100.1/30
+    ospf: point-to-point
+  - name: eth2
+    description: link to edge2
+    address: 198.51.100.5/30
+    ospf: point-to-point
+```
+
+`data/edge1.yaml`:
+
+```yaml
+hostname: edge1
+loopback: 203.0.113.252
+interfaces:
+  - name: eth1
+    description: uplink to core1
+    address: 198.51.100.2/30
+    ospf: point-to-point
+  - name: eth2
+    description: branch LAN
+    address: 203.0.113.1/26
+    ospf: passive
+```
+
+`data/edge2.yaml`:
+
+```yaml
+hostname: edge2
+loopback: 203.0.113.253
+interfaces:
+  - name: eth1
+    description: uplink to core1
+    address: 198.51.100.6/30
+    ospf: point-to-point
+  - name: eth2
+    description: branch LAN
+    address: 203.0.113.65/26
+    ospf: passive
+```
 
 A linguagem de template aqui é o **Jinja2**, a que as ferramentas de rede do Python compartilham. O
 módulo `template` do Ansible renderiza Jinja2, um plugin do Nornir também, o NetBox o usa para

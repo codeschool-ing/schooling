@@ -8,7 +8,6 @@ da Meta descreve cada Llama que ela lançou como um bloco de números de arquite
 3.1 8B:
 
 ```
-ana@desk:~/desk$ sources lines llama-skus 235 246
 # meta-llama/llama-models@0e0b8c51 models/sku_list.py
  235|             arch_args={
  236|                 "dim": 4096,
@@ -24,17 +23,17 @@ ana@desk:~/desk$ sources lines llama-skus 235 246
  246|             },
 ```
 
-Esses sete números, com o tamanho do vocabulário, determinam todos os pesos da rede. O
-`lab/size.py` lê os números dos três tamanhos da Llama 3.1 e faz a conta:
+Seis desses números, com o tamanho do vocabulário, determinam todos os pesos da rede. O
+O `size.py` lê os números dos três tamanhos da Llama 3.1 e faz a conta:
 
 ```schooling-example
 {
   "language": "python",
-  "file": "lab/size.py",
+  "file": "size.py",
   "parts": [
     {
-      "code": "import re\nimport subprocess\nimport sys\n\nsrc = subprocess.run([\"sources\", \"lines\", \"llama-skus\", \"1\", \"330\"], capture_output=True, text=True).stdout\nVOCAB = 128256  # LLAMA3_VOCAB_SIZE, line 19 of sku_list.py\n\n\n",
-      "note": "A arquitetura é lida do próprio arquivo da Meta, pelo `sources`, então os números não têm como se afastar dos publicados. O tamanho do vocabulário é uma constante no topo desse arquivo."
+      "code": "import re\nimport sys\nimport urllib.request\n\nURL = (\"https://raw.githubusercontent.com/meta-llama/llama-models/\"\n       \"0e0b8c519242d5833d8c11bffc1232b77ad7f301/models/sku_list.py\")\nsrc = urllib.request.urlopen(URL).read().decode()\nVOCAB = 128256  # LLAMA3_VOCAB_SIZE, line 19 of sku_list.py\n\n\n",
+      "note": "A arquitetura é lida do próprio arquivo da Meta, no commit citado acima, então os números não têm como se afastar dos publicados. O tamanho do vocabulário é uma constante no topo desse arquivo."
     },
     {
       "code": "def arch(name):\n    block = src[src.index(f'\"meta-llama/{name}\"'):]\n    num = lambda k: float(re.search(rf'\"{k}\": ([0-9.]+)', block).group(1))  # noqa: E731\n    return {k: num(k) for k in (\"dim\", \"n_layers\", \"n_heads\", \"n_kv_heads\", \"ffn_dim_multiplier\", \"multiple_of\")}\n\n\n",
@@ -70,8 +69,8 @@ os modelos são publicados, cada parâmetro ocupa dois bytes, então 8 bilhões 
 cada token de contexto, para não recalcular o prompt inteiro a cada token novo. Esse é o **cache
 KV**, e a última coluna de memória é o tamanho dele por token: 128 KiB para o 8B. Um prompt de 8.192
 tokens precisa então de 1 GiB de cache além dos pesos, e a janela inteira do modelo, de 131.072
-tokens, precisa de **16 GiB**, mais ou menos o mesmo que os próprios pesos em 16 bits. Cada requisição atendida ao mesmo
-tempo precisa do seu.
+tokens, precisa de **16 GiB**, mais ou menos o mesmo que os próprios pesos em 16 bits. Cada
+requisição atendida ao mesmo tempo precisa do seu.
 
 ## O que isso significa em hardware
 
@@ -85,5 +84,6 @@ acelerador. Então:
 - o **405B** em 4 bits (203 GB) precisa de vários dos maiores aceleradores trabalhando juntos, o que
   é um cluster, não uma máquina.
 
-Os números são da Llama, e a aritmética é a mesma para todo modelo com arquitetura publicada. Para um
-modelo fechado não há nada a calcular: o provedor não diz, e nem precisa, porque você nunca vai tê-lo.
+Os números são da Llama, e a aritmética é a mesma para todo modelo com arquitetura publicada. Para
+um modelo fechado não há nada a calcular: o provedor não diz, e nem precisa, porque você nunca vai
+tê-lo.

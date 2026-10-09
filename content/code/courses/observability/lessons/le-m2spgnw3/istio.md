@@ -1,10 +1,28 @@
 ---
 title: Istio on Kubernetes
-version: 1
+version: 2
 ---
 
-Istio puts an Envoy beside every pod and configures all of them from one control plane, `istiod`. The
-lab installs its minimal profile into the kind cluster, with images from Docker Hub:
+Istio puts an Envoy beside every pod and configures all of them from one control plane, `istiod`. This
+section needs a Kubernetes cluster again, and lesson 14 built one with kind: if `kind` and `kubectl`
+are not on your machine any more, its section *Readiness and liveness on Kubernetes* installs them.
+These lines add the two command-line tools this lesson uses, `istioctl` and `linkerd`, at the
+versions it was recorded with, create the cluster, and copy the shop's image into it:
+
+```sh
+ARCH=$(dpkg --print-architecture)
+curl -L https://github.com/istio/istio/releases/download/1.30.5/istioctl-1.30.5-linux-$ARCH.tar.gz | tar xz
+curl -Lo linkerd https://github.com/linkerd/linkerd2/releases/download/edge-26.9.3/linkerd2-cli-edge-26.9.3-linux-$ARCH
+sudo install istioctl linkerd /usr/local/bin/
+rm istioctl linkerd
+kind create cluster --name lab
+kind load docker-image shop:1.4.0 --name lab
+mkdir -p ~/shop/k8s
+```
+
+The machine this was recorded on also copied Istio's two images into the cluster by hand, because
+its cluster could not reach Docker Hub on its own; yours pulls them when they are first needed. Then
+the minimal profile, with images from Docker Hub:
 
 ```
 ana@obs:~/shop$ istioctl install --set profile=minimal --set hub=docker.io/istio -y >/dev/null 2>&1 && kubectl -n istio-system get deployments
@@ -13,7 +31,51 @@ istiod   1/1     1            1           7s
 ```
 
 In the minimal profile the whole control plane is that one Deployment. A namespace labelled `istio-injection=enabled` tells Istio to add the proxy to every pod created in it.
-Two small workloads go there: a server, and a client that requests it twice a second:
+Two small workloads go there: a server, and a client that requests it twice a second. Save them as
+one file:
+
+`~/shop/k8s/mesh.yaml`
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: server}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: server}}
+  template:
+    metadata: {labels: {app: server}}
+    spec:
+      containers:
+        - name: server
+          image: shop:1.4.0
+          imagePullPolicy: Never
+          command: [python, -m, http.server, "8000"]
+---
+apiVersion: v1
+kind: Service
+metadata: {name: server}
+spec:
+  selector: {app: server}
+  ports: [{name: http, port: 80, targetPort: 8000}]
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: client}
+spec:
+  replicas: 1
+  selector: {matchLabels: {app: client}}
+  template:
+    metadata: {labels: {app: client}}
+    spec:
+      containers:
+        - name: client
+          image: shop:1.4.0
+          imagePullPolicy: Never
+          command: [python, -c, "import time, urllib.request\nwhile True:\n    try: urllib.request.urlopen('http://server/', timeout=2).read()\n    except Exception as e: print(e, flush=True)\n    time.sleep(0.5)"]
+```
+
+And apply it in the labelled namespace:
 
 ```
 ana@obs:~/shop$ kubectl create namespace shop-mesh && kubectl label namespace shop-mesh istio-injection=enabled

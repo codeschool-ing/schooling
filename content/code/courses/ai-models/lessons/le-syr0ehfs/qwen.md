@@ -8,7 +8,6 @@ Qwen is Alibaba's family. Lesson 2 quoted its older licence, the Tongyi Qianwen 
 generation's repository says something different:
 
 ```
-ana@desk:~/desk$ sources quote qwen3-readme "open-weight models are licensed|license files"
 # QwenLM/Qwen3@7a2f61ff README.md
  397: All our open-weight models are licensed under Apache 2.0.
  398: You can find the license files in the respective Hugging Face repositories.
@@ -24,7 +23,7 @@ version she runs: an answer read from Qwen's old agreement is wrong for Qwen 3.
 Qwen's names carry their architecture, and once read they say a lot:
 
 ```
-ana@desk:~/desk$ sheet where qwen3-235b-a22b
+ana@desk:~/desk$ python sheet.py where qwen3-235b-a22b
 # LiteLLM model sheet at 21881c57, 4472 entries
 entry                                                provider                     in $/M  out $/M
 qwen.qwen3-235b-a22b-2507-v1:0                       bedrock_converse               0.22     0.88
@@ -53,7 +52,7 @@ The prices span a factor of more than eight on input, from $0.0875 to $0.75, for
 ## The model that is not open
 
 ```
-ana@desk:~/desk$ sheet where qwen3-max | head -4
+ana@desk:~/desk$ python sheet.py where qwen3-max | head -4
 # LiteLLM model sheet at 21881c57, 4472 entries
 entry                                                provider                     in $/M  out $/M
 dashscope/qwen3-max                                  dashscope                         -        -

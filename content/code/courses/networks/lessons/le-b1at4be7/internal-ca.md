@@ -1,10 +1,18 @@
 ---
 title: The office's own authority
-version: 1
+version: 2
 ---
 
 The office's intranet, `intranet.example.com`, uses a certificate from the office's own certificate
-authority, which many organisations run for their internal servers. The laptop does not trust it:
+authority, which many organisations run for their internal servers. The laptop does not trust it.
+The office CA's certificate, `office-ca.crt`, is what a colleague would send you; in your lab, put it
+in `ana`'s home on the laptop from your virtual machine:
+
+```sh
+sudo install -o ana -g ana -m 644 /lab/ca/office.crt /lab/laptop/home/ana/office-ca.crt
+```
+
+Then, on the laptop:
 
 ```
 ana@laptop:~$ curl -sS -o /dev/null https://intranet.example.com/

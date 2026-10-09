@@ -28,7 +28,7 @@ Three things are left, and they belong in the ticket:
 - **`test.txt` is empty.** It was created by the check in section 04 before the write failed. A failed
   write can leave an empty file behind, and an empty report in a shared folder is worse than none.
 - **The program is still the cause.** Whatever writes `export.log` retries forever and logs every try.
-  In the lab nothing is running any more; in an office, the disk fills again tomorrow unless the owner of
+  In this recording nothing is running any more; in an office, the disk fills again tomorrow unless the owner of
   that program is told, lesson 7.
 - **Deleting other people's data** is a decision. This log was kept in part and nothing else was
   touched; when space is short, it is tempting to remove what looks unimportant, and lesson 14 is about

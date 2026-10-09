@@ -1,6 +1,6 @@
 ---
 title: Asking from outside what a customer would ask
-version: 1
+version: 2
 ---
 
 Every check so far ran next to the service. **A check from outside sees what nothing inside can**:
@@ -33,6 +33,11 @@ probe_success 0
 
 **Status 502, success 0**: the same answer a customer got. With the database started again:
 
+```sh
+docker compose start postgres
+```
+
+
 ```
 ana@obs:~/shop$ docker compose exec prometheus wget -qO- 'http://blackbox-exporter:9115/probe?module=checkout&target=http://storefront:8080/checkout' | grep -E '^probe_(success|http_status_code) '
 probe_http_status_code 201
@@ -57,3 +62,10 @@ countries at once. It is the best outside check there is, and it has costs that 
 Used together they cover each other: **the probe notices an outage when there is no traffic**, at
 three in the morning, and the error ratio measures how much of the real traffic it hurt. Which of the
 two should wake somebody is lesson 16's question.
+
+Before the next lesson, take the health check away again:
+
+```sh
+rm compose.override.yaml
+docker compose up -d orders
+```

@@ -13,7 +13,7 @@ that a proposal to self-host can be checked against them.
 | **control of time** | the model may not change until you decide (lesson 2 section 06) | partly: a pinned dated identifier gives her most of it |
 | **no network** | the model has to work offline, on a device, in a factory, at sea | no |
 | **volume** | steady load in the hundreds of thousands of requests a day | no: 400 a day |
-| **a model nobody sells** | a fine-tuned model, or an open model no host offers | not yet: lesson 1 section 07 says fine-tuning comes last |
+| **a model nobody sells** | a fine-tuned model, or an open model no host offers | not yet: lesson 1 section 11 says fine-tuning comes last |
 | **latency next to the data** | the model has to sit in the same building as what calls it | no |
 
 Read the table as a filter, not a score. **One row that truly applies can be enough**: a hospital

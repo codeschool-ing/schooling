@@ -11,8 +11,9 @@ lesson 19 narrowed them to single addresses.
 That assumption fails in three ways the course has already met. A machine inside is compromised
 (lesson 9), and everything its zone may reach is now the attacker's. An address is borrowed or forged
 (lesson 8). And the network stops having an inside at all: laptops at home, services in somebody
-else's data centre, a branch joined by a tunnel. In the lab, the staff LAN reaches the application's
-admin page because the baseline says the LAN may:
+else's data centre, a branch joined by a tunnel. In your lab this lesson starts from
+`sudo bash nslab.sh reset`, with the company's policy loaded on `fw` by `nft -f baseline.nft`. The
+staff LAN reaches the application's admin page because the baseline says the LAN may:
 
 ```
 ana@laptop:~$ probe app:8080 app:8443

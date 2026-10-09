@@ -1,6 +1,6 @@
 ---
 title: O `sort`, e a opção que não é opcional
-version: 1
+version: 2
 ---
 
 O `sort` ordena linhas. A ordem padrão é **alfabética, pela linha inteira**, e a primeira coisa a
@@ -8,19 +8,19 @@ saber é quando isso está errado.
 
 ```
 ana@vm:~/work$ cut -d, -f4 data/sales.csv | tail -n +2 | sort | head -4
-109
-113
-122
+102
+107
 123
+125
 ana@vm:~/work$ cut -d, -f4 data/sales.csv | tail -n +2 | sort -n | head -4
-26
-31
-40
-49
+25
+27
+69
+74
 ```
 
-**Os mesmos números, duas respostas, e a primeira está errada.** Alfabeticamente o `109` vem antes
-do `26`, porque o `1` vem antes do `2` — e é ordem alfabética correta, aplicada a algo que não é
+**Os mesmos números, duas respostas, e a primeira está errada.** Alfabeticamente o `102` vem antes
+do `25`, porque o `1` vem antes do `2` — e é ordem alfabética correta, aplicada a algo que não é
 texto.
 
 **O `-n` é a opção que você vai esquecer e depois ter que aprender duas vezes.** Toda vez que a coisa
@@ -40,9 +40,9 @@ do `-n`.
 
 ```
 ana@vm:~/work$ sort -t, -k5 -rn data/sales.csv | head -3
-north,ana,Q2,387,43731
-east,felipe,Q4,338,41574
-south,carla,Q1,292,37084
+west,helena,Q4,335,39865
+south,diego,Q3,352,39072
+east,elena,Q1,396,36036
 ```
 
 O `-t,` define o separador, o `-k5` é o quinto campo, o `-rn` é numérico invertido. A maior receita
@@ -53,10 +53,10 @@ o fim da linha", não "campo 5". Para um campo só você quer `-k5,5`:
 
 ```
 ana@vm:~/work$ sort -t, -k1,1 -k3,3 data/sales.csv | head -4
-east,elena,Q1,31,3348
-east,felipe,Q1,338,24336
-east,elena,Q2,332,20584
-east,felipe,Q2,109,12862
+east,elena,Q1,396,36036
+east,felipe,Q1,140,8260
+east,elena,Q2,25,2750
+east,felipe,Q2,251,31375
 ```
 
 Região primeiro, e depois trimestre dentro da região. **Duas opções `-k` são duas chaves de
@@ -125,8 +125,8 @@ E o `sort --parallel=4` usa vários núcleos, o que num arquivo grande é uma di
 ## Os dois hábitos
 
 **Reduza antes de ordenar.** `grep` e `cut` primeiro: ordenar mil e duzentos campos de quatro
-caracteres é mais barato que ordenar mil e duzentas linhas de cento e cinquenta, e num log grande a
+caracteres é mais barato que ordenar mil e duzentas linhas de bem mais de cem, e num log grande a
 proporção é a mesma mas os números são minutos.
 
-**E confira o `-n` toda santa vez.** A falha é silenciosa, a saída parece ordenada, e `109` antes de
-`26` é fácil de não ver numa lista de duzentos.
+**E confira o `-n` toda santa vez.** A falha é silenciosa, a saída parece ordenada, e `102` antes de
+`25` é fácil de não ver numa lista de duzentos.

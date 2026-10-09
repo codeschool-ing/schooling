@@ -1,6 +1,6 @@
 ---
 title: Functions that check their own arguments
-version: 1
+version: 2
 ---
 
 ```
@@ -169,7 +169,20 @@ version numbers attached.
 
 **A script file does not need a shebang on Windows** and does need one on Linux —
 `#!/usr/bin/env pwsh`, exactly as lesson 9 section 02 described — and then it is an
-ordinary executable file, from an ordinary bash prompt:
+ordinary executable file, from an ordinary bash prompt. Leave PowerShell with
+`exit` and make one:
+
+```sh
+cd ~/work/ps
+cat > bigfiles.ps1 <<'END'
+#!/usr/bin/env pwsh
+param([Parameter(Mandatory)][string]$Path, [int]$MinBytes = 1000)
+Get-ChildItem $Path |
+  Where-Object Length -gt $MinBytes |
+  Select-Object Name, Length
+END
+chmod +x bigfiles.ps1
+```
 
 ```
 ana@vm:~/work/ps$ cat bigfiles.ps1
@@ -182,7 +195,8 @@ ana@vm:~/work/ps$ ./bigfiles.ps1 -Path .
 
 Name       Length
 ----       ------
-access.log 148233
+access.log 153934
+
 ```
 
 Note that `param()` works at the top of a script file and not just in a function,

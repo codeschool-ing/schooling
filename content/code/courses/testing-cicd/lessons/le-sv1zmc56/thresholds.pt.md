@@ -1,6 +1,6 @@
 ---
 title: Um mínimo, e o que um mínimo convida
-version: 1
+version: 2
 ---
 
 O jeito óbvio de usar cobertura numa equipe é uma regra: o build falha abaixo de uma porcentagem.
@@ -18,12 +18,13 @@ exit status 2
 O primeiro comando imprimiu a mensagem de falha e depois `exit status 0`. O segundo imprimiu
 `exit status 2`. Mesmo relatório, mesmo limite, e a diferença é o pipe: `| tail -1` faz o código de
 saída da linha ser o do `tail`, que deu certo. **Um passo de pipeline escrito como a primeira linha
-passa com a cobertura abaixo do mínimo.** A aula 1 seção 11 avisou disso com o código 5 do pytest, e
+passa com a cobertura abaixo do mínimo.** A aula 1 seção 14 avisou disso com o código 5 do pytest, e
 a aula 5 mostra como um shell de CI é configurado para isso não acontecer.
 
 ## O que o mínimo convida
 
-Agora alguém precisa do build verde até o fim do dia. Acrescenta um arquivo:
+Agora alguém precisa do build verde até o fim do dia. Acrescenta um arquivo, que você também pode
+acrescentar e apagar depois. Salve como `tests/test_touch_everything.py`:
 
 ```python
 from unittest import mock
@@ -56,7 +57,8 @@ exit status 0
 **90%, e o limite passa.** Os dois testes executam o cliente da transportadora e o mailer e não
 conferem nada; o primeiro ainda engole qualquer exceção que o cliente levante. Toda linha que eles
 tocam agora está "coberta". O teste de contrato da aula 2 continua pulado, então o `CarrierClient`
-não está mais bem testado que uma hora antes, e o relatório agora diz o contrário.
+não está mais bem testado que uma hora antes, e o relatório agora diz o contrário. Apague o arquivo
+antes de seguir.
 
 É a lei de Goodhart em miniatura: **quando uma medida vira meta, deixa de ser uma boa medida.**
 Ninguém quis enganar ninguém. A regra pediu um número, e o número era a coisa mais barata de mudar.

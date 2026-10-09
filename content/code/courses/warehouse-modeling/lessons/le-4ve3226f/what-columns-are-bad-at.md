@@ -1,6 +1,6 @@
 ---
 title: What a column store is bad at
-version: 1
+version: 2
 ---
 
 Every advantage in this lesson came from keeping each column together, compressed, in large blocks. The
@@ -33,7 +33,19 @@ rewriting the block. Column stores handle it by marking rows as deleted and writ
 and cleaning up later. That works, and it is slow for many small changes.
 
 **Fetching one row by its key.** The row's eleven values are in eleven places. With the data sorted by that
-key, zone maps find it quickly:
+key, zone maps find it quickly. `lookup.sql` gives PostgreSQL the index it needs and asks;
+`duck-lookup.sql` asks DuckDB, which has no index to build:
+
+```sql
+\timing on
+CREATE INDEX ON fact_sales (order_id);
+SELECT line_no, net_cents FROM fact_sales WHERE order_id = 112406;
+```
+
+```sql
+.timer on
+SELECT line_no, net_cents FROM fact_sales WHERE order_id = 112406;
+```
 
 ```
 ana@lab:~/wh$ psql -f lookup.sql

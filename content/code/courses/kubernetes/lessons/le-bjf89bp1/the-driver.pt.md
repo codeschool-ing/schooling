@@ -9,9 +9,24 @@ compartilha com outros orquestradores, e vêm em três grupos: identidade (quem 
 controller (criar, apagar, anexar um volume) e nó (montá-lo nesta máquina). O driver de discos de uma
 nuvem as responde chamando a API da nuvem; o driver daqui as responde criando um diretório.
 
-Este laboratório instala o CSI host-path driver, o driver de exemplo do próprio projeto Kubernetes,
-que guarda cada volume num diretório num nó. É um driver de ensino e nada mais: os dados nunca saem do
-nó, e perder o nó os perde. O valor dele aqui é ser pequeno o bastante para ser observado.
+Esta aula instala o CSI host-path driver, o driver de exemplo do próprio projeto Kubernetes, que
+guarda cada volume num diretório num nó. É um driver de ensino e nada mais: os dados nunca saem do nó,
+e perder o nó os perde. O valor dele aqui é ser pequeno o bastante para ser observado. Depois do
+`./up.sh`, ele vem dos manifestos do próprio projeto para um cluster de vários nós, com as permissões
+de que o provisionador precisa tiradas da release desse projeto:
+
+```sh
+P=https://raw.githubusercontent.com/kubernetes-csi/external-provisioner/v6.3.0/deploy/kubernetes
+H=https://raw.githubusercontent.com/kubernetes-csi/csi-driver-host-path/v1.18.0/deploy/kubernetes-distributed/hostpath
+kubectl apply -f $P/rbac.yaml -f $H/csi-hostpath-driverinfo.yaml -f $H/csi-hostpath-plugin.yaml -f $H/csi-hostpath-storageclass-fast.yaml
+kubectl rollout status daemonset/csi-hostpathplugin
+```
+
+**Esses arquivos rodam um container a mais do que as transcrições abaixo mostram**, `liveness-probe`,
+que só confere se o driver responde; na máquina em que o curso foi gravado, o driver, os dois sidecars
+e as imagens deles foram compilados do código-fonte dos projetos, porque o registro deles não era
+alcançável de lá, e o container de liveness ficou de fora. Então os seus pods dizem `4/4` onde estes
+dizem `3/3`, e o seu driver é o v1.17.1, a versão que o manifesto da release cita.
 
 ```
 ana@laptop:~/shop$ kubectl get csidriver

@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: daily_sales
+    description: >
+      Books and revenue by day, shop and category, counting completed sales only.
+      One row per combination that sold anything. Read by the morning report.
+    config:
+      contract:
+        enforced: true            # these columns, with these types, or the build fails
+    columns:
+      - name: order_date
+        data_type: date
+        description: The day of the sale in São Paulo, not in UTC.
+        constraints:
+          - type: not_null
+      - name: shop_id
+        data_type: integer
+      - name: category
+        data_type: text
+      - name: books
+        data_type: integer
+      - name: revenue_cents
+        data_type: bigint
+        description: Sum of quantity times unit price, in cents of a real.
+  - name: fact_sales
+    description: >
+      One row per order line sold. Incremental: each run replaces the last thirty
+      days it has, so changes older than that need a full refresh.
+    columns:
+      - name: customer_id
+        description: Null for a sale at a till to nobody, and for a customer erased on request.

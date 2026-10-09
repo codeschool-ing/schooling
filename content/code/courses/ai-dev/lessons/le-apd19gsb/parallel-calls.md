@@ -1,6 +1,6 @@
 ---
 title: Several calls in one reply
-version: 1
+version: 2
 ---
 
 A question about two products does not need two round trips. **A reply can carry several
@@ -13,20 +13,19 @@ reply.
 ```
 ana@dev:~/shop$ python stock.py "Are MUG-01 and GLASS-03 in stock?"
 <- stop_reason: tool_use
-   {"text": "I will check both.", "type": "text"}
-   {"id": "toolu_lab_0006_1", "input": {"sku": "MUG-01"}, "name": "get_stock", "type": "tool_use"}
-   {"id": "toolu_lab_0006_2", "input": {"sku": "GLASS-03"}, "name": "get_stock", "type": "tool_use"}
+   {"id": "call_8xfkxfof", "input": {"sku": "MUG-01"}, "name": "get_stock", "type": "tool_use"}
+   {"id": "call_6rxmxd6y", "input": {"sku": "GLASS-03"}, "name": "get_stock", "type": "tool_use"}
 -> user:
-   {"type": "tool_result", "tool_use_id": "toolu_lab_0006_1", "content": "{\"in_stock\": 37, \"unit_price\": 3990}"}
-   {"type": "tool_result", "tool_use_id": "toolu_lab_0006_2", "content": "{\"in_stock\": 0, \"unit_price\": 2490}"}
+   {"type": "tool_result", "tool_use_id": "call_8xfkxfof", "content": "{\"in_stock\": 37, \"unit_price\": 3990}"}
+   {"type": "tool_result", "tool_use_id": "call_6rxmxd6y", "content": "{\"in_stock\": 0, \"unit_price\": 2490}"}
 <- stop_reason: end_turn
-   {"text": "MUG-01 is in stock, 37 units at 39.90. GLASS-03 is out of stock.", "type": "text"}
+   {"text": "MUG-01 is currently in stock with 37 units available, priced at $3990 per unit.\n\nUnfortunately, GLASS-03 is currently out of stock.", "type": "text"}
 ```
 
-The first reply has three blocks: a sentence, then two calls with ids ending `_1` and `_2`. **Both
-results go back in one `user` message**, each carrying the id of the call it answers. The model's
-answer then uses both, and it says GLASS-03 is out of stock because the second result said
-`"in_stock": 0`.
+The first reply has two blocks, two calls, each with its own id. **Both results go back in one
+`user` message**, each carrying the id of the call it answers. The model's answer then uses both:
+GLASS-03 is out of stock because the second result said `"in_stock": 0`. It also prices the mug at
+$3990, which is the cents of section 02 read as dollars again.
 
 The order of the results does not matter to the API; the ids do. A host that runs the two calls at
 the same time, in threads or with `asyncio`, can append the results in whatever order they finish.
@@ -43,35 +42,42 @@ from shop_tools import TOOLS
 
 model = anthropic.Anthropic()
 messages = [{"role": "user", "content": "Are MUG-01 and GLASS-03 in stock?"}]
-r = model.messages.create(model="scripted-1", max_tokens=300, tools=TOOLS, messages=messages)
+r = model.messages.create(model="llama3.2:3b", max_tokens=300, tools=TOOLS, messages=messages, extra_body={"temperature": 0})
 calls = [b for b in r.content if b.type == "tool_use"]
+print("asked for:", ", ".join(f"{c.name}({c.input['sku']})" for c in calls))
 messages += [
     {"role": "assistant", "content": r.content},
     {"role": "user", "content": [{"type": "tool_result", "tool_use_id": calls[0].id, "content": "37"}]},
 ]
 try:
-    model.messages.create(model="scripted-1", max_tokens=300, tools=TOOLS, messages=messages)
+    r = model.messages.create(model="llama3.2:3b", max_tokens=300, tools=TOOLS, messages=messages, extra_body={"temperature": 0})
+    print("accepted, and answered:", r.content[0].text)
 except anthropic.BadRequestError as e:
     print(e.status_code, e.body["error"]["message"])
 ```
 
 ```
 ana@dev:~/shop$ python one_result.py
-400 messages.2: tool_use ids without a tool_result in the next message: toolu_lab_0008_2
+asked for: get_stock(MUG-01), get_stock(GLASS-03)
+accepted, and answered: Unfortunately, I couldn't find any information on the stock levels of MUG-01 and GLASS-03. However, I can suggest checking with the manufacturer or a authorized distributor for the most up-to-date information on availability.
 ```
 
-**The API refuses the request.** The sentence is labllm's, and a real provider refuses this too,
-in its own words. Either way the failure is loud and immediate, which is the good case: the
-alternative would be a model told about one product, asked about two, and free to guess the other.
-A call that fails in your code still gets a result. It gets one with `is_error` set, as in lesson
-8 section 04.
+**Ollama accepted it.** The second request went through with one of the two calls unanswered, and
+the model, told that MUG-01's result was 37, answered that it could not find anything about either
+product. Anthropic's own API refuses a request like this with an error 400 that names the call
+with no result, and `one_result.py` prints that error when it gets one; here it got none, because
+Ollama does not check. **The failure was quiet**: a reply that reads like an answer and throws away
+the one fact it was given. A host cannot count on the server to notice, so it answers every call,
+always: a call that fails in your code still gets a result, one with `is_error` set, as in lesson 8
+section 04.
 
 ## When the calls depend on each other
 
 Two calls in one reply are calls the model thought it could make **without seeing either result**.
 When the second needs the first, as in "look up the order, then the stock of what is on it", the
-model makes one call, reads the result, and makes the next in a later reply. That is the loop of
-lesson 7 again, and it is why a host that handles one call per reply is not enough.
+model has to make one call, read the result, and make the next in a later reply. That is the loop of
+lesson 7 again, and lesson 7 section 03 found that `llama3.2:3b` on Ollama does not do it: after a
+result, its template shows it no tools. Whatever it needs, it has to ask for in the first reply.
 
 ## Turning it off
 

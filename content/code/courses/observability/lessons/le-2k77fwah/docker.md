@@ -1,6 +1,6 @@
 ---
 title: Docker's healthcheck, and what it does not do
-version: 1
+version: 2
 ---
 
 Docker can run a command inside a container on a schedule and record whether it passed. An
@@ -21,7 +21,14 @@ services:
 
 `interval` is how often, `timeout` how long one check may take, and `retries` how many failures in a
 row make the container *unhealthy*. `start_period` is a grace time after a start in which failures
-do not count, Docker's version of a startup probe. With the database up:
+do not count, Docker's version of a startup probe. Save it as `~/shop/compose.override.yaml` and
+recreate `orders` with it:
+
+```sh
+docker compose up -d orders
+```
+
+With the database up, it turns healthy:
 
 ```
 ana@obs:~/shop$ docker compose ps orders --format '{{.Name}}  {{.Status}}'

@@ -1,6 +1,6 @@
 ---
 title: Travamento, para que uma execução grave por vez
-version: 1
+version: 2
 ---
 
 Duas execuções que leem o mesmo estado e o gravam de volta produzem a clássica atualização perdida.
@@ -23,7 +23,8 @@ ana@laptop:~/shop$ sed -i 's/{ Name = "shop" }/{ Name = "shop", Environment = "d
 
 Num terminal ela inicia o `terraform apply`, lê o plan, e deixa a pergunta *Do you want to perform
 these actions?* na tela enquanto confere outra coisa. **O apply segura a trava desde o momento em que
-começa até sair**, pergunta incluída. Num segundo terminal, o bucket:
+começa até sair**, pergunta incluída. Num segundo terminal, com o `. ~/iac-env.sh` lido e em
+`~/shop`, o bucket:
 
 ```
 ana@laptop:~/shop$ aws s3 ls --recursive s3://shop-tfstate-123456789012
@@ -63,13 +64,13 @@ ana@laptop:~/shop$ terraform plan
 
 O `412` e o `PreconditionFailed` são o S3 recusando a gravação condicional: o objeto de trava existe.
 Abaixo deles está o conteúdo da própria trava, e ele responde às perguntas que você tem nessa hora.
-`Who` é o usuário e a máquina que a seguram (a máquina do laboratório se chama `vm`), `Operation` diz
-que é um apply, `Created` diz desde quando, e `ID` é o que você precisa se quem a segura nunca
+`Who` é o usuário e a máquina que a seguram: `ana@vm` na máquina em que estas aulas foram gravadas,
+o seu usuário e o nome da sua máquina na sua. `Operation` diz que é um apply, `Created` diz desde quando, e `ID` é o que você precisa se quem a segura nunca
 voltar. **Plans também travam**, embora não gravem nada na AWS: um plan lê o estado, e ler metade de
 um estado que está sendo gravado dá o plan de um mundo que nunca existiu.
 
 Falhar não é a única opção. O `-lock-timeout` faz uma execução tentar de novo pelo tempo que você
-permitir:
+permitir. Para ver isso, inicie este plan e responda `yes` no primeiro terminal dentro do minuto:
 
 ```
 ana@laptop:~/shop$ terraform plan -lock-timeout=60s
@@ -110,6 +111,15 @@ pergunta:
 ```
 ana@laptop:~/shop$ sed -i 's/{ Name = "shop-a" }/{ Name = "shop-a", Environment = "dev" }/' main.tf
 ```
+
+Para matá-lo como uma queda de energia faria, rode isto no segundo terminal enquanto a pergunta está
+na tela do primeiro; o `pgrep` acha o id do processo do apply:
+
+```sh
+kill -9 $(pgrep -x terraform)
+```
+
+O plan seguinte encontra a trava que ele deixou:
 
 ```
 ana@laptop:~/shop$ terraform plan 2>&1 | grep -A 7 "Lock Info"

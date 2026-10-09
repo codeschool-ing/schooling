@@ -1,6 +1,6 @@
 ---
 title: Applying exactly the plan that was read
-version: 1
+version: 2
 ---
 
 The approval in this pipeline is a person reading a saved plan and saying yes to it. **What makes
@@ -15,8 +15,21 @@ press. In GitLab it is the manual `apply` job. Either way, the reviewer reads th
 
 ## The file travels; the checkout is fresh
 
-Run 1's plan was saved earlier, in its own clone. Its apply job starts in a new one, receives
-`tfplan`, and applies it. Notice which commit this clone holds:
+Run 1's plan was saved earlier, in its own clone. While it waited for its approval, a pull request
+adding an `Owner` tag to the VPC was merged. To merge the same change into your remote, in `~/shop`:
+
+```sh
+sed -i 's/{ Name = "shop", Environment = var.environment }/{ Name = "shop", Environment = var.environment, Owner = "ana" }/' main.tf
+terraform fmt
+git commit -qam "shop: Owner tag on the VPC" && git push -q origin main
+```
+
+Run 2, the pipeline for that commit, also planned before run 1 was approved, and the next section
+opens with its plan. To see the same plan, type that section's first three commands now: the clone
+from your home directory, the other two in `~/ci/run-2`. Then come back here.
+
+Run 1's apply job starts in a new clone, receives `tfplan`, and applies it. Notice which commit this
+clone holds:
 
 ```
 ana@laptop:~$ git clone -q git/shop.git ci/run-1-apply
@@ -26,8 +39,8 @@ ana@laptop:~/ci/run-1-apply$ cp ../run-1/tfplan .
 ana@laptop:~/ci/run-1-apply$ ./ci.sh apply
 ```
 
-While run 1 waited for its approval, a pull request adding an `Owner` tag to the VPC was merged, so
-a clone of `main` now holds that later commit. The apply goes ahead:
+The `Owner` tag was merged while run 1 waited, so a clone of `main` now holds that later commit. The
+apply goes ahead:
 
 ```
 + terraform apply -input=false -lock-timeout=5m tfplan
@@ -59,9 +72,9 @@ it goes through its own plan and its own approval.
 The checkout is not irrelevant, though. `terraform init` in the apply job reads the backend block
 and the dependency lock file from it, and Terraform refuses a saved plan whose provider selections
 differ from the lock file it finds. That is why the GitHub workflow leaves `actions/checkout` at its
-default, the commit that triggered the run: every job of one run then sees the same files. The lab's
-clone was taken from `main` as it was at that moment, which is the mistake a workflow makes when it
-checks out a branch name instead of the run's own commit. It did no harm this time because only a
+default, the commit that triggered the run: every job of one run then sees the same files. This
+lesson's clone was taken from `main` as it was at that moment, which is the mistake a workflow makes
+when it checks out a branch name instead of the run's own commit. It did no harm this time because only a
 tag differed.
 
 ## When the plan cannot be applied any more

@@ -1,21 +1,33 @@
 ---
 title: Um pipeline escrito como arquivo
-version: 1
+version: 2
 ---
 
 Como cada componente declara seus parâmetros e cada ligação tem nome, um pipeline do Haystack pode
 ser escrito em YAML e carregado de volta. O `hs_dump.py` importa o pipeline do `hs_ask.py` e imprime
 `rag.dumps()`:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "hs_dump.py",
+  "parts": [
+    {
+      "code": "from hs_ask import rag\n\nprint(rag.dumps())",
+      "note": "O pipeline do `hs_ask.py`, escrito pelo próprio Haystack como YAML."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python hs_dump.py > rag.yaml; wc -l rag.yaml
-114 rag.yaml
+```
+ana@vm:~/rag$ python hs_dump.py > rag.yaml; wc -l rag.yaml
+115 rag.yaml
 ```
 
 O primeiro componente, como ficou escrito:
 
 ```
-ana@lab:~/rag$ head -n 18 rag.yaml
+ana@vm:~/rag$ head -n 18 rag.yaml
 components:
   embed:
     init_parameters:
@@ -28,7 +40,7 @@ components:
       dimensions: null
       http_client_kwargs: null
       max_retries: null
-      model: lab-minilm
+      model: all-minilm
       organization: null
       prefix: ''
       suffix: ''
@@ -47,20 +59,20 @@ o endereço vem do ambiente, e `max_retries: null`, que vale o padrão do própr
 arquivo vê os padrões, exatamente o que a aula 10 teve de cavar para achar.
 
 ```
-ana@lab:~/rag$ grep -n -A 11 "      filters:" rag.yaml
-89:      filters:
-90-        conditions:
-91-        - field: meta.status
-92-          operator: ==
-93-          value: current
-94-        - field: meta.audience
-95-          operator: ==
-96-          value: public
-97-        operator: AND
-98-      return_embedding: false
-99-      scale_score: false
-100-      top_k: 3
-ana@lab:~/rag$ sed -n "/^connections:/,\$p" rag.yaml
+ana@vm:~/rag$ grep -n -A 11 "      filters:" rag.yaml
+90:      filters:
+91-        conditions:
+92-        - field: meta.status
+93-          operator: ==
+94-          value: current
+95-        - field: meta.audience
+96-          operator: ==
+97-          value: public
+98-        operator: AND
+99-      return_embedding: false
+100-      scale_score: false
+101-      top_k: 3
+ana@vm:~/rag$ sed -n "/^connections:/,\$p" rag.yaml
 connections:
 - receiver: retrieve.query_embedding
   sender: embed.embedding

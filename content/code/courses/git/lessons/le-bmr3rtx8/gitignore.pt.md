@@ -1,11 +1,19 @@
 ---
 title: .gitignore: o que o Git nem deve mencionar
-version: 1
+version: 2
 ---
 
 Um diretório de trabalho junta arquivos que não pertencem ao histórico. O sistema operacional deixa
 alguns, ferramentas escrevem logs, um gerenciador de pacotes baixa código de outras pessoas, e você
-guarda uma ou duas anotações que não são da conta de ninguém:
+guarda uma ou duas anotações que não são da conta de ninguém. Comece de uma semana nova e crie quatro
+dessas sobras nela:
+
+```bash
+cd ~ && rm -rf ~/site ~/remotes ~/copy ~/photos && bash ~/make-site.sh && cd ~/site
+mkdir -p node_modules/lightbox && printf 'x\n' > node_modules/lightbox/index.js
+printf 'x\n' > .DS_Store; printf 'x\n' > debug.log; printf 'call the supplier\n' > notes-private.txt
+```
+
 
 ```
 ana@vm:~/site$ git status --short
@@ -23,7 +31,8 @@ o `git status` deixa de ser legível, e **um `git add .` faria commit de todas**
 {"language": "conf", "file": ".gitignore", "parts": [{"code": "# Other people's code, which a package manager fetches again\nnode_modules/\n", "note": "Uma pasta é ignorada pelo nome e uma barra: tudo dentro de `node_modules/` sai, em qualquer profundidade. Uma linha começando com `#` é comentário, para a próxima pessoa."}, {"code": "# Files the operating system or the tools leave behind\n.DS_Store\n*.log\n", "note": "O `*` combina com qualquer nome, então `*.log` é todo arquivo terminado em `.log`, em qualquer pasta. O `.DS_Store` é um nome exato, o arquivo que o macOS deixa em toda pasta que abre."}, {"code": "# Notes that are nobody else's business\nnotes-private.txt", "note": "Um arquivo só, pelo caminho. Ignorá-lo o tira do `git status` e do `git add .`, e nada além disso."}]}
 ```
 
-Com ele no lugar:
+Escreva-o com `nano .gitignore` em `~/site`. O botão de copiar entrega o arquivo sem as notas,
+pronto para colar. Com ele no lugar:
 
 ```
 ana@vm:~/site$ git status --short
@@ -35,7 +44,11 @@ ana@vm:~/site$ git check-ignore -v debug.log node_modules/lightbox/index.js
 
 Só o próprio `.gitignore` sobra, e ele deve ir para um commit: **a lista de ignorados faz parte do
 projeto**, compartilhada com todo mundo que o clona, para ninguém fazer commit de `node_modules/` sem
-querer.
+querer:
+
+```bash
+git add .gitignore && git commit -qm 'Ignore what nobody should commit'
+```
 
 O `git check-ignore -v` responde à pergunta que você vai acabar fazendo, *por que o Git não está vendo
 este arquivo?* Ele nomeia o arquivo, a linha e a regra que combinou: `debug.log` pelo `*.log` da linha

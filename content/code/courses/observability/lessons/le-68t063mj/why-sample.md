@@ -1,10 +1,18 @@
 ---
 title: Why traces are sampled
-version: 1
+version: 2
 ---
 
 Lesson 1 put traces at the expensive end of its table: one span per step, for every request traced.
-Here is what that means in the lab, with five simulated customers buying and every trace kept:
+Here is what that means in the lab, with five simulated customers buying and every trace kept.
+Start the lab again from nothing, and set the customers going for half an hour:
+
+```sh
+docker compose run -d --rm loadgen python -m loadgen.load 5 1800
+sleep 90
+```
+
+Then:
 
 ```
 ana@obs:~/shop$ ./promq 'sum(rate(http_server_requests_total{job="storefront",route="/checkout"}[1m]))'

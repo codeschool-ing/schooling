@@ -1,12 +1,14 @@
 ---
 title: Caching what does not change
-version: 1
+version: 2
 ---
 
 Every CI run starts clean, and starting clean is expensive: every dependency downloaded again,
 every package unpacked, every compiler cache cold. **A cache** keeps a copy of something slow to
 produce between runs, under a key that says when the copy is still valid. Here is the difference,
-measured by creating the same virtual environment twice with `uv`, starting from an empty cache:
+measured by creating the same virtual environment twice with `uv`, starting from an empty cache.
+`export UV_CACHE_DIR=/tmp/uv-cold` points uv at a new, empty directory for this terminal only, and
+`unset UV_CACHE_DIR` puts it back afterwards:
 
 ```
 ana@laptop:~/shipquote$ time (uv venv -q -p 3.13 /tmp/v1 && VIRTUAL_ENV=/tmp/v1 uv pip install -q -r requirements-dev.txt)

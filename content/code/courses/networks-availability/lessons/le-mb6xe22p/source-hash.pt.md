@@ -50,7 +50,7 @@ bem dar cara quatro vezes em cinco. Com cinco clientes, um terço dos servidores
 
 O laboratório também mostra o segundo motivo de um hash de origem balancear mal na vida real. `lb1` não vê
 `192.168.10.20`, o endereço do próprio laptop: vê o endereço de onde a conexão chega, que para o laptop é o
-público de `hq`, `203.0.113.2`, depois do NAT do escritório, a aula 11 de `networks-addressing`. Toda
+público de `hq`, `203.0.113.2`, depois do NAT do escritório, visto em `networks-addressing`. Toda
 máquina da matriz chega desse único endereço, então **um escritório inteiro atrás de NAT é um cliente só
 para um hash de origem**, e vai todo para um servidor. O NAT de grande escala de uma operadora móvel faz o
 mesmo com milhares de celulares de uma vez.

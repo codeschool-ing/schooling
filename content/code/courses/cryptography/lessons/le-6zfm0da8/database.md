@@ -11,12 +11,13 @@ disk snapshot gets the data without logging in to the database at all.
 
 Vereda's lab database holds a `patients` table, built in the next section. After a checkpoint flushes
 the table to disk, the table's file can be read with `strings`, which prints any run of readable
-characters in a binary file:
+characters in a binary file. The file belongs to PostgreSQL's own account, so reading it takes
+`sudo`, which whoever administers the server has:
 
 ```
 ana@lab:~/lab$ psql -c CHECKPOINT
 CHECKPOINT
-ana@lab:~/lab$ strings /var/lib/postgresql/16/main/$(psql -Atc "SELECT pg_relation_filepath('patients')") | grep -oE 'Marina Duarte|Joao Pires|111\.444\.777-35' | sort | uniq -c
+ana@lab:~/lab$ sudo strings /var/lib/postgresql/16/main/$(psql -Atc "SELECT pg_relation_filepath('patients')") | grep -oE 'Marina Duarte|Joao Pires|111\.444\.777-35' | sort | uniq -c
       2 Joao Pires
       2 Marina Duarte
 ```

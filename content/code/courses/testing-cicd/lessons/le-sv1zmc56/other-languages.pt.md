@@ -1,6 +1,6 @@
 ---
 title: A mesma medição em outras linguagens
-version: 1
+version: 2
 ---
 
 Toda linguagem de uso comum tem uma ferramenta de cobertura, e todas medem a mesma coisa do mesmo
@@ -19,7 +19,9 @@ nome do comando.
 
 O lado Go do repositório que publica este curso tem cobertura embutida no comando de teste. Duas das
 bibliotecas dele, o corretor por onde passa toda resposta de prova e o leitor de trechos por
-trilha, medidas a partir de um checkout:
+trilha, medidas a partir de um checkout. Você não precisa digitar este: o repositório é público e
+um clone com Go 1.25 imprimiria o mesmo, mas nada adiante no curso o usa, e o que importa são os
+números:
 
 ```
 ana@laptop:~/schooling$ go test -count=1 -cover ./internal/grade/ ./internal/trackblock/

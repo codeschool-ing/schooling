@@ -1,6 +1,6 @@
 ---
 title: Credentials without a key in the repository
-version: 1
+version: 2
 ---
 
 The obvious way to let a pipeline into AWS is the wrong one: create an IAM user, generate an access
@@ -30,7 +30,8 @@ variable; `before_script` writes it to a file, and the AWS SDK inside the provid
 ## Two roles, and what each may do
 
 The AWS side is Terraform too, in a configuration of its own that an administrator applies once.
-It cannot be applied by the pipeline it creates the roles for:
+It cannot be applied by the pipeline it creates the roles for. Ana keeps it in `~/ci-roles/main.tf`,
+outside the shop's repository:
 
 ```hcl
 terraform {

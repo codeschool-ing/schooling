@@ -1,9 +1,50 @@
 ---
 title: Easing: how the time is spent
-version: 1
+version: 2
 ---
 
-The **timing function** decides how the progress of a transition is spread over its duration. Four dots move 200 pixels in 400 ms when the track is hovered, each with a different timing function, and here they are at 100 ms and at 200 ms:
+The **timing function** decides how the progress of a transition is spread over its duration. Four dots move 200 pixels in 400 ms when the track is hovered, each with a different timing function, in `transition.html`, which also holds the button from section 05:
+
+```html
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Andorinha Books</title>
+    <style>
+      body { margin: 16px; font-family: system-ui, sans-serif; }
+      .button {
+        padding: 8px 16px;
+        border: 0;
+        color: white;
+        background-color: #2f6f4e;
+        transition: background-color 200ms ease-out;
+      }
+      .button:hover { background-color: #1e4a33; }
+
+      .track { height: 160px; }
+      .dot { width: 24px; height: 24px; margin-bottom: 16px; background: #8a1c1c; }
+      .linear   { transition: translate 400ms linear; }
+      .ease     { transition: translate 400ms ease; }
+      .ease-in  { transition: translate 400ms ease-in; }
+      .ease-out { transition: translate 400ms ease-out; }
+      .track:hover .dot { translate: 200px; }
+    </style>
+  </head>
+  <body>
+    <button class="button" type="button">Reserve a place</button>
+    <div class="track">
+      <div class="dot linear"></div>
+      <div class="dot ease"></div>
+      <div class="dot ease-in"></div>
+      <div class="dot ease-out"></div>
+    </div>
+  </body>
+</html>
+```
+
+Here they are at 100 ms and at 200 ms:
 
 ```
 ana@laptop:~/site$ probe transition.html hover .track at 100 style .dot translate

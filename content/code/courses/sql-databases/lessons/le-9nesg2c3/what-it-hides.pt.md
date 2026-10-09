@@ -53,7 +53,7 @@ INSERT 0 1
 shop=# SELECT id, body, created_at FROM notes ORDER BY id;
  id |         body         |          created_at           
 ----+----------------------+-------------------------------
-  1 | from the database    | 2026-09-17 23:31:57.290649+00
+  1 | from the database    | 2026-10-07 08:06:43.588224+00
   2 | from the application | 2020-01-01 00:00:00+00
 (2 rows)
 ```

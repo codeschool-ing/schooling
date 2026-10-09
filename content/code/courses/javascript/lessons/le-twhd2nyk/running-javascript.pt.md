@@ -1,6 +1,6 @@
 ---
 title: Dois lugares para rodar
-version: 1
+version: 2
 ---
 
 **JavaScript é uma linguagem, e uma linguagem precisa de um programa que a execute.** Esse
@@ -20,8 +20,8 @@ divisão é proposital**: um curso posterior de Node precisa de tudo daqui, meno
 
 ## Node: um arquivo e um comando
 
-O laboratório tem o Node.js 22 instalado. A primeira coisa a conferir em qualquer máquina é a
-versão:
+A primeira coisa a conferir em qualquer máquina é a versão do Node, de dentro de `~/js`, onde fica
+o seu trabalho:
 
 ```
 ana@dev:~/js$ node --version
@@ -65,11 +65,11 @@ navegador o executa enquanto lê a página:
 </script>
 ```
 
-No seu computador você abriria esse arquivo num navegador e olharia o **console**, o painel que as
-ferramentas de desenvolvedor do navegador reservam para mensagens dos scripts. Neste curso uma
-transcrição de terminal não consegue mostrar uma janela de navegador, então o laboratório tem um
-comando, `page`. Ele serve `~/js` em `http://127.0.0.1:8080`, abre a página num Chromium de
-verdade e imprime o que o console disse:
+Com um navegador na sua área de trabalho, você abriria esse arquivo e olharia o **console**, o
+painel que as ferramentas de desenvolvedor do navegador reservam para mensagens dos scripts. Uma
+transcrição de terminal não consegue mostrar uma janela, então este curso usa o comando `page` da
+seção anterior. Ele serve `~/js` em `http://127.0.0.1:8080`, abre a página num Chromium de verdade
+e imprime o que o console disse:
 
 ```
 ana@dev:~/js$ page hello.html
@@ -104,15 +104,3 @@ undefined object
 
 **O Node tem `process` e não tem `document`; o navegador, o contrário.** Todo o resto desta aula
 funciona nos dois, e daqui em diante um programa roda no hospedeiro que deixar o ponto mais claro.
-
-## Três jeitos de montar isso em casa
-
-| | quanto custa | o que você ganha |
-|---|---|---|
-| **instalar o Node.js** (recomendado) | um download de nodejs.org e alguns minutos | `node arquivo.js` exatamente como neste curso |
-| o console do seu navegador | nada: aperte F12 no Chrome, Edge ou Firefox | a linguagem, uma linha por vez, sem arquivos |
-| um playground online | nada, mas é preciso estar online | uma página com editor; o seu código fica no servidor de outra pessoa |
-
-**Instale o Node.** Escolha a versão marcada como LTS, que é a suportada por mais tempo, e o editor
-que preferir. O console serve para testar uma linha, e a aula 22 o usa de propósito. Um playground
-serve num computador emprestado, desde que você lembre que a máquina não é sua.

@@ -11,7 +11,10 @@
 # Staged beyond the workbench lab.sh builds: two short files, hours.en.txt and
 # hours.pt.txt, the café's opening hours in English and in Portuguese, written
 # with put below and shown in the lesson with cat. tok is the real tokenizer
-# lab.sh prints in full; no model is involved.
+# this lesson prints in full, in pieces.md.
+#
+# THE MODEL'S REPLIES (every `ask` below) are llama3.2:3b served by Ollama
+# 0.40.0, at temperature 0, captured on 7 October 2026.
 #
 # Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 set -uo pipefail
@@ -58,5 +61,14 @@ on 'tok cost hours.pt.txt -o 30 -i 2 -p 8'
 
 block quirks
 on 'tok show "How many r are in strawberry?"'
+block ask-strawberry
+on 'ask "How many times does the letter r appear in strawberry? Answer with a number." --temperature 0'
+block quirks-2
 on 'tok show "yrrebwarts"'
+block ask-kitchen
+on 'ask "Write kitchen backwards." --temperature 0'
+on 'python3 -c "print(\"kitchen\"[::-1])"'
+block quirks-3
 on 'tok show "1234567"; tok show "1,234,567"'
+block ask-spelt
+on 'ask "Spell strawberry one letter per line, then count the lines that are the letter r." --temperature 0'

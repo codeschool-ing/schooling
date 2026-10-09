@@ -1,6 +1,6 @@
 ---
 title: Ambientes com data de validade
-version: 1
+version: 2
 ---
 
 Um ambiente de preview é uma cópia da aplicação montada para um pull request, para que quem revisa
@@ -16,8 +16,9 @@ ambiente continua rodando e, dali em diante, é um órfão com boas tags.
 ## Uma data de validade em tudo
 
 A defesa é fazer cada ambiente de preview dizer quando pode ser removido, em cada recurso, no único
-lugar que uma busca lê sem o state: uma tag. A configuração de preview da Ana é um workspace por pull
-request, o arranjo que a aula 11 descreve, com a validade passada pelo pipeline:
+lugar que uma busca lê sem o state: uma tag. A configuração de preview da Ana, em
+`~/shop-preview/main.tf`, é um workspace por pull request, o arranjo que a aula 11 descreve, com a
+validade passada pelo pipeline:
 
 ```hcl
 terraform {
@@ -67,8 +68,17 @@ resource "aws_eip" "web" {
 `Environment` é o nome do workspace, e `Expires` é uma variável. **O pipeline calcula a data e a
 passa.** Calcular na configuração com `timestamp()` parece mais arrumado e falha, porque essa função
 devolve um valor novo a cada execução. Todo plano seguinte ia querer mudar todas as tags, e a data
-andaria para a frente cada vez que alguém mexesse no ambiente. O pull request 21 ganha o seu workspace
-e uma semana:
+andaria para a frente cada vez que alguém mexesse no ambiente.
+
+O pull request 17 ganhou o seu ambiente há dez dias, com uma semana de vida, então a data dele foi há
+três dias. Para ter o mesmo ambiente no seu moto, crie-o agora com essa data:
+
+```sh
+terraform workspace new pr-17
+terraform apply -auto-approve -var expires=$(date -d '-3 days' +%F)
+```
+
+O pull request 21 ganha o seu workspace e uma semana:
 
 ```
 ana@laptop:~/shop-preview$ terraform workspace new pr-21
@@ -88,7 +98,8 @@ ana@laptop:~/shop-preview$ terraform plan -no-color -var "expires=$(date -d +7da
 Plan: 2 to add, 0 to change, 0 to destroy.
 ```
 
-E o preço de um ambiente, com o `price.py` do começo desta aula:
+E o preço de um ambiente, com o `price.py` do começo desta aula, copiado com
+`cp ~/shop/price.py .`:
 
 ```
 ana@laptop:~/shop-preview$ terraform show -json tfplan | python3 price.py
@@ -100,12 +111,14 @@ change per month, USD                       +55.75
 **55.75 USD por mês por uma máquina e o endereço dela**, barato o bastante para ninguém se preocupar
 com um. Esquecê-los é o que pesa: dez ambientes de preview deixados
 rodando por um trimestre dão 10 × 3 × 55.75, ou 1,672.50 USD, por cópias de revisão de pull requests
-mergeados meses antes.
+mergeados meses antes. A Ana aplica o plano do pr-21, `terraform apply -auto-approve tfplan`, e o
+ambiente dele sobe.
 
 ## Achando os que passaram da data
 
 O ambiente do pull request 17 foi criado há dez dias, e a data dele já passou. A busca usa a tagging
-API, que aqui funciona porque estes recursos têm tags; ela lista tudo cujo `Expires` é anterior a hoje:
+API, que aqui funciona porque estes recursos têm tags; ela lista tudo cujo `Expires` é anterior a hoje,
+e a Ana a salva como `expired.sh`:
 
 ```sh
 #!/bin/sh

@@ -1,6 +1,6 @@
 ---
 title: Mude uma coisa e conte o que se move
-version: 1
+version: 2
 ---
 
 Taxas por grupo dizem que algo está desigual. Não dizem o que causa isso, e precisam de centenas de
@@ -10,7 +10,40 @@ Mude o campo, mantenha o resto, rode o sistema de novo e conte as decisões que 
 
 O `guard counterfactual` faz isso com os perfis da primeira seção. Ele leva todo CEP do Sudeste para
 Recife, `50010-000`, e todo CEP do Nordeste para São Paulo, `01310-100`. A nota e o número de
-trabalhos ficam como estavam:
+trabalhos ficam como estavam. Salve-o como `~/guard/tools/counterfactual.py`:
+
+```python
+# counterfactual.py: score every profile again with only its CEP moved.
+#
+#   guard counterfactual FILE
+#
+# A Southeastern CEP becomes Recife's, 50010-000, and any other becomes São
+# Paulo's, 01310-100. Nothing else in the profile changes, so a decision that
+# flips was decided by the CEP alone.
+import json
+import sys
+
+from standin import THRESHOLD, score
+
+with open(sys.argv[1], encoding="utf-8") as f:
+    profiles = [json.loads(line) for line in f if line.strip()]
+
+flips = {}
+print("%-8s %-9s %-10s %5s   %-10s %5s" % ("who", "region", "cep", "score", "swapped", "score"))
+for p in profiles:
+    other = dict(p, cep="50010-000" if p["cep"][0] in "0123" else "01310-100")
+    s1, s2 = score(p), score(other)
+    before, after = s1 >= THRESHOLD, s2 >= THRESHOLD
+    note = ""
+    if before != after:
+        note = "  FLIP: %s" % ("shortlisted -> out" if before else "out -> shortlisted")
+        flips[p["region"]] = flips.get(p["region"], 0) + 1
+    print("%-8s %-9s %-10s %5.2f   %-10s %5.2f%s" % (
+        p["applicant"], p["region"], p["cep"], s1, other["cep"], s2, note))
+print("%d of %d decisions changed when only the CEP did (%s)" % (
+    sum(flips.values()), len(profiles),
+    ", ".join("%s %d" % kv for kv in flips.items()) or "none"))
+```
 
 ```
 ana@lab:~/guard$ guard counterfactual data/profiles.jsonl
@@ -43,7 +76,7 @@ dois scores.
 
 ## Rodando contra um modelo de linguagem
 
-O scorer do laboratório é determinístico, então uma execução por perfil basta. Um modelo de linguagem
+O scorer substituto é determinístico, então uma execução por perfil basta. Um modelo de linguagem
 não é, e o mesmo teste precisa de três mudanças para valer alguma coisa contra um:
 
 - **Pares que diferem numa coisa só.** Dois currículos idênticos menos o nome, com os nomes escolhidos

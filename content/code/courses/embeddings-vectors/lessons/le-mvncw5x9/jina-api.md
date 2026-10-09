@@ -79,7 +79,7 @@ is 422, where lessons 7 and 8 met 400 for a malformed request, so code that trea
 labembed's log shows what it understood:
 
 ```
-ana@lab:~/emb$ tail -n 4 /var/log/labembed/requests.jsonl | jq -c "{provider, task, dims, status}"
+ana@lab:~/emb$ tail -n 4 labembed.jsonl | jq -c "{provider, task, dims, status}"
 {"provider":"jina","task":"retrieval.query","dims":64,"status":200}
 {"provider":"jina","task":"retrieval.query","dims":256,"status":200}
 {"provider":"jina","task":"retrieval.passage","dims":256,"status":200}

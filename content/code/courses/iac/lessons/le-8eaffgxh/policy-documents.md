@@ -1,6 +1,6 @@
 ---
 title: Documents built by a data source
-version: 1
+version: 2
 ---
 
 Not every data source asks a cloud anything. Some compute their answer on the laptop, from what you
@@ -13,12 +13,14 @@ apply time and a bucket name typed into an ARN is not updated when the bucket is
 and Terraform's own syntax checks all apply to it. Ana's bucket for the shop's images gets two
 statements. The first refuses every request that does not use TLS, which is a common baseline for
 buckets. The second lets the account read objects, but only from the office's addresses, which the
-security team keeps in a file in the repository:
+security team keeps in a file in the repository, `office-cidrs.txt`:
 
 ```
 203.0.113.0/28
 198.51.100.32/29
 ```
+
+The bucket, the document and the policy that joins them go in `bucket.tf`:
 
 ```hcl
 resource "aws_s3_bucket" "assets" {
@@ -74,7 +76,8 @@ the bucket a name unique to the account and names the account in the second stat
 file on the machine running Terraform rather than anything in AWS. And the policy document turns the
 statements into JSON.
 
-The plan shows two different timings again:
+`local` is a provider this directory has not used before, so Ana runs `terraform init` again, and it
+installs `hashicorp/local` beside `aws`. The plan then shows two different timings again:
 
 ```
 ana@laptop:~/shop/app$ terraform plan

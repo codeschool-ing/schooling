@@ -1,6 +1,6 @@
 ---
 title: Três vistas, e o que as junta
-version: 1
+version: 2
 ---
 
 O checkout lento foi achado numa ordem, e a ordem é a lição. **A métrica disse que algo estava
@@ -37,3 +37,9 @@ amostrados.
 quarenta linhas no código da loja, as linhas JSON são um formatador de log, e os spans são um SDK
 configurado na partida mais alguns nomes escolhidos à mão. A aula 2 abre a vitrine e escreve os
 spans dela desde o começo.
+
+Antes de sair da aula, devolva o payments ao normal:
+
+```sh
+rm ~/shop/faults/payments.json
+```

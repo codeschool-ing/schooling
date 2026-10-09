@@ -9,7 +9,7 @@
 #   bash captures.sh
 #
 # Staged rather than typed: the images below are pulled before the first
-# command, and shelf:1.0.0 is built quietly from the lesson 14 Dockerfile. The
+# command, and shelf:1.0.0 is built quietly from the Dockerfile lesson 15 shows. The
 # daemon's configuration is NOT changed: user namespace remapping is described
 # in the lesson and marked as not run there.
 #
@@ -21,14 +21,14 @@
 export LAB_IMAGES="golang:1.25 gcr.io/distroless/static-debian12:nonroot alpine:3.22 postgres:17 docker:29.8.2-cli"
 . "$(dirname "$0")/../../capture.sh"
 cd shelf
-cat > .dockerignore <<'IGN'
+staged .dockerignore <<'IGN'
 .git
 .env
 testdata/
 Dockerfile*
 .dockerignore
 IGN
-cat > Dockerfile <<'DF'
+staged Dockerfile <<'DF'
 FROM golang:1.25 AS build
 WORKDIR /src
 COPY go.mod go.sum ./

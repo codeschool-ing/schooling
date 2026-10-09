@@ -1,6 +1,6 @@
 ---
 title: A rede, que é um dispositivo com fila
-version: 1
+version: 2
 ---
 
 Uma interface de rede é um dispositivo com fila, então as mesmas três perguntas
@@ -10,15 +10,16 @@ funcionam: quão ocupada, quanto está esperando, e quantos erros.
 
 ```
 ana@vm:~$ ss -s
-Total: 29
-TCP:   18 (estab 13, closed 1, orphaned 0, timewait 1)
+Total: 32
+TCP:   15 (estab 11, closed 0, orphaned 0, timewait 0)
 
 Transport Total     IP        IPv6
 RAW       0         0         0
 UDP       0         0         0
-TCP       17        17        0
-INET      17        17        0
+TCP       15        15        0
+INET      15        15        0
 FRAG      0         0         0
+
 ```
 
 O `ss -s` é o resumo de uma linha: quantos sockets, quantos estabelecidos,
@@ -27,10 +28,10 @@ quantos em `TIME-WAIT`.
 ```
 ana@vm:~$ ss -tulpn 2>/dev/null | head -8
 Netid State  Recv-Q Send-Q Local Address:Port  Peer Address:PortProcess
-tcp   LISTEN 0      512        127.0.0.1:42989      0.0.0.0:*
-tcp   LISTEN 0      4096       127.0.0.1:45939      0.0.0.0:*
-tcp   LISTEN 0      128          0.0.0.0:2024       0.0.0.0:*
+tcp   LISTEN 0      4096       127.0.0.1:39221      0.0.0.0:*
 tcp   LISTEN 0      128          0.0.0.0:2025       0.0.0.0:*
+tcp   LISTEN 0      128          0.0.0.0:2024       0.0.0.0:*
+tcp   LISTEN 0      512        127.0.0.1:33393      0.0.0.0:*
 ```
 
 **O `ss -tulpn` é o de decorar**, e as letras soletram o que ele faz:
@@ -42,7 +43,7 @@ tcp   LISTEN 0      128          0.0.0.0:2025       0.0.0.0:*
 | `-p` | qual processo — precisa de privilégio para ver os de outros usuários |
 | `-n` | numérico. **Não resolva nomes**, que é o que o torna instantâneo |
 
-O `0.0.0.0:2025` é alcançável pela rede; o `127.0.0.1:45939` não é. Essa
+O `0.0.0.0:2025` é alcançável pela rede; o `127.0.0.1:39221` não é. Essa
 distinção é uma questão de segurança tanto quanto de desempenho, e o `ss -tulpn`
 é como você responde "este serviço está mesmo exposto".
 
@@ -73,17 +74,21 @@ outro lado. Um `Send-Q` grande que não drena é um par lento ou ausente.
 
 ## Erros e descartes
 
+A interface nesta máquina é a `eth0`. Na sua ela provavelmente tem outro nome,
+como `enp0s3`; o `ip -br link` lista as interfaces, e a sua vai onde quer que
+`eth0` esteja escrito abaixo.
+
 ```
 ana@vm:~$ ip -s link show eth0
 4: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1400 qdisc pfifo_fast state UP mode DEFAULT group default qlen 1000
     link/ether 02:fc:00:00:00:01 brd ff:ff:ff:ff:ff:ff
     RX:  bytes packets errors dropped  missed   mcast
-     365057734  262464      0       6       0       0
+    1003499363  214183      0       6       0       0
     TX:  bytes packets errors dropped carrier collsns
-     426949616  260028      0       0       0       0
+     333316983  179298      0       0       0       0
 ```
 
-**Seis pacotes recebidos descartados em 262.464.** Esse é o `E` do método USE da
+**Seis pacotes recebidos descartados em 214.183.** Esse é o `E` do método USE da
 seção 02, e é o número que ninguém olha.
 
 | | |
@@ -92,7 +97,7 @@ seção 02, e é o número que ninguém olha.
 | `dropped` | o pacote estava bom e não havia onde pô-lo. Um **buffer** |
 | `missed` | a placa não tinha descritor livre. O driver não deu conta |
 
-Seis descartes em um quarto de milhão é ruído. A mesma proporção a um milhão de
+Seis descartes em duzentos mil é ruído. A mesma proporção a um milhão de
 pacotes por segundo são milhares por segundo, e aparece como lentidão ocasional e
 irreprodutível numa aplicação que não faz ideia de que algo está errado.
 
@@ -125,12 +130,14 @@ sar -n EDEV 1                                               # the error counters
 
 ```
 ana@vm:~$ sar -n DEV 1 1 2>&1 | grep -E 'IFACE|eth0'
-11:39:28        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
-11:39:29         eth0      2.00      3.00      0.13      0.19      0.00      0.00      0.00      0.00
+13:50:40        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+13:50:41         eth0      4.00      4.00      0.26      0.26      0.00      0.00      0.00      0.00
+Average:        IFACE   rxpck/s   txpck/s    rxkB/s    txkB/s   rxcmp/s   txcmp/s  rxmcst/s   %ifutil
+Average:         eth0      4.00      4.00      0.26      0.26      0.00      0.00      0.00      0.00
 ```
 
-Dois pacotes por segundo entrando, três saindo, e uma utilização de interface de
-zero. Esses são números sobre os quais dá para agir; `RX packets 262464` não é. É
+Quatro pacotes por segundo entrando, quatro saindo, e uma utilização de interface de
+zero. Esses são números sobre os quais dá para agir; `RX packets 214183` não é. É
 esse o assunto inteiro da próxima seção, e os contadores de rede são onde ele
 morde mais forte — ninguém nunca olhou um total desde o boot e soube se era
 muito.

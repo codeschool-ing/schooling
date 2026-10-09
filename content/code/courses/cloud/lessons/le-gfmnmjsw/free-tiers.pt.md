@@ -1,6 +1,6 @@
 ---
 title: O que "grátis" quer dizer numa lista de preços
-version: 1
+version: 2
 ---
 
 "Está na camada gratuita" é dito como se quisesse dizer que a coisa não custa nada. **Uma camada
@@ -12,7 +12,9 @@ de um jeito.
 
 Uma franquia é uma quantidade por mês que não é cobrada. A do Lambda está na tabela: 1.000.000 de
 requisições e 400.000 GB-segundos por mês. Na lista de preços bruta ela é uma faixa, como a seção sobre
-a lista de preços descreveu: uma dimensão de preço com preço zero e um fim.
+a lista de preços descreveu: uma dimensão de preço com preço zero e um fim. `$url` é o arquivo do
+Lambda de `sa-east-1` que aquela seção definiu; num terminal novo, defina-o de novo com a mesma linha
+`url=`.
 
 ```
 ana@laptop:~/cloud$ curl -s "$url" | jq '(.products[] | select(.attributes.usagetype == "Global-Request") | .sku) as $s | .terms.OnDemand[$s][].priceDimensions[] | {description, beginRange, endRange, pricePerUnit}'

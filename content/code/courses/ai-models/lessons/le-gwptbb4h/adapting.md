@@ -21,7 +21,7 @@ borderline cases wrong, show it some: an e-mail, the right label, another e-mail
 `prompt-engineering` covers how many and which. It costs hours of choosing good examples and some
 tokens on every request, because the examples are sent every time.
 
-**3. Retrieval.** When what is missing is a fact, section 06's gap, fetch the relevant text and put
+**3. Retrieval.** When what is missing is a fact, section 10's gap, fetch the relevant text and put
 it in the prompt: the order's status, the refund policy, the book's page count. This is a system to
 build and keep running, which is why it is measured in days, and it is the only one of the four
 that keeps up with facts that change.

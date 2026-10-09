@@ -1,6 +1,6 @@
 ---
 title: Checking by hand, and why it stops
-version: 1
+version: 2
 ---
 
 A common picture of testing is a person clicking through the application before a release, ticking
@@ -16,7 +16,7 @@ hours a day re-checking things that did not break, and in practice nobody does. 
 are skipped are the ones that would have caught the regression.**
 
 The same 31 checks, as a program, run in about a second and a quarter on a laptop. You will see
-that number printed in section 09 of this lesson. A second and a quarter is short enough to run
+that number printed in section 12 of this lesson. A second and a quarter is short enough to run
 after every save, which changes when a mistake is found: minutes after it was made, by the person
 who made it, while the change is still in their head.
 
@@ -25,7 +25,7 @@ who made it, while the change is still in their head.
 A passing test says one thing: **for these inputs, the code did what the test expected.** It does
 not say the code is correct for inputs nobody tried, and it does not say the expectation was
 right. A test that checks the wrong number passes happily. That is why a test is only as good as
-the thinking that chose its inputs, which section 10 of this lesson works through.
+the thinking that chose its inputs, which section 13 of this lesson works through.
 
 What automation buys, then, is not certainty. It buys three cheaper things:
 
@@ -47,5 +47,5 @@ three lessons are about releasing safely and stopping a release that is going wr
 **The project is small on purpose.** `shipquote` is a few hundred lines of Python with no
 dependency outside the standard library. The language is incidental: pytest has a counterpart in
 every ecosystem (JUnit, Jest, `go test`, XCTest), and what this course says about tests and
-pipelines holds in all of them. The lab script beside the course rebuilds the project exactly as
-the lessons show it, commit hashes included.
+pipelines holds in all of them. The next section sets up the machine you run it on, and the one
+after it builds the project, file by file.

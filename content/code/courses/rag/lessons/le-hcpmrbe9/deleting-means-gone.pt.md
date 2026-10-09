@@ -1,6 +1,6 @@
 ---
 title: Apagar quer dizer sumir
-version: 1
+version: 2
 ---
 
 A aula 2 pôs uma exclusão que funcione entre as coisas que conhecimento interno pede a um pipeline:
@@ -9,13 +9,25 @@ uma mudança de permissão, a mais completa, para ninguém, e merece o mesmo tip
 O `deleted.py` faz duas perguntas ao sistema: quantos pedaços do manual do armazém estão na tabela, e
 quantos dos cinco pedaços mais próximos do atendente, numa pergunta que só o manual responde, vêm dele.
 
+```schooling-example
+{
+  "language": "python",
+  "file": "deleted.py",
+  "parts": [
+    {
+      "code": "import access\nfrom search import conn\n\nQUESTION = \"What is a SEV-2 incident?\"\nchunks = conn.execute(\"SELECT count(*) FROM chunks WHERE doc_id = 'warehouse-runbook'\").fetchone()[0]\nfound = [r[1] for r in access.search(access.connect(), \"agent\", QUESTION, 5)]\nfrom_it = [p for p in found if p.startswith(\"Warehouse on-call runbook\")]\nprint(f\"chunks of warehouse-runbook in the table: {chunks}\")\nprint(f\"of the agent's 5 nearest for {QUESTION!r}, from the runbook: {len(from_it)}\")",
+      "note": "Quantos pedaços do manual do armazém a tabela guarda, e quantos dos cinco resultados mais próximos de um atendente para uma pergunta do manual vêm dele."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python deleted.py
+```
+ana@vm:~/rag$ python deleted.py
 chunks of warehouse-runbook in the table: 7
 of the agent's 5 nearest for 'What is a SEV-2 incident?', from the runbook: 4
-ana@lab:~/rag$ rm data/docs/warehouse-runbook.md && python ingest.py
+ana@vm:~/rag$ rm data/docs/warehouse-runbook.md && python ingest.py
 chunks: 130  embedded: 0  removed: 7  kept: 130
-ana@lab:~/rag$ python deleted.py
+ana@vm:~/rag$ python deleted.py
 chunks of warehouse-runbook in the table: 0
 of the agent's 5 nearest for 'What is a SEV-2 incident?', from the runbook: 0
 ```

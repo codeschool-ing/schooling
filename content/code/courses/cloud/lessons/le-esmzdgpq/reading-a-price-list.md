@@ -1,6 +1,6 @@
 ---
 title: Reading a price list
-version: 1
+version: 2
 ---
 
 Every provider in this lesson publishes prices, and they publish them differently. **AWS publishes
@@ -50,7 +50,9 @@ cannot say why. The course's `prices.py` reads one pinned version of each offer 
 why the sheet prints its versions at the top: **a price without the version it came from cannot be
 checked by anybody.**
 
-How much is in one region's file depends on the service:
+How much is in one region's file depends on the service. The EC2 file is too big to fetch twice, so
+the second command reads the copy the price sheet keeps in its cache, from its first `ec2` run in
+lesson 1:
 
 ```
 ana@laptop:~/cloud$ curl -s https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AWSLambda/20260919002359/sa-east-1/index.json | jq '.products | length'

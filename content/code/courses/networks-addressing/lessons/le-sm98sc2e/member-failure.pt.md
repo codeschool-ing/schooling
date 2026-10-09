@@ -1,6 +1,6 @@
 ---
 title: Perdendo um cabo do grupo
-version: 1
+version: 2
 ---
 
 Na lição 20 um cabo puxado custou meio minuto a um ping, porque o spanning tree teve de levar uma
@@ -10,7 +10,8 @@ para acordar**: o outro membro já está encaminhando, e o bond só tem de parar
 ## Puxando o e1 com um ping rodando
 
 No `pc1`, foi iniciado um ping para o `pc3`, dois pacotes por segundo durante dez segundos. Dois
-segundos depois, o cabo `e1` foi puxado, desativando a ponta dele no `sw2`. O ping imprimiu o resumo
+segundos depois, o cabo `e1` foi puxado, desativando a ponta dele no `sw2`: `ip link set e1 down` num
+prompt de root no sw2. O ping imprimiu o resumo
 quando terminou, e então o `sw1` foi consultado sobre os membros:
 
 ```

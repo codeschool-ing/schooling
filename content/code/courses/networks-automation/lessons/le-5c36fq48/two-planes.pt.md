@@ -1,6 +1,6 @@
 ---
 title: O control plane e o data plane
-version: 1
+version: 2
 ---
 
 Todo roteador deste curso faz dois trabalhos. **O control plane decide**: o OSPF conversa com os
@@ -29,4 +29,6 @@ consegue funcionar, e a seção 06 o para para ver o que acontece.
 O laboratório tem um canto para isso: o `sw1`, um switch Open vSwitch, com três computadores, h1,
 h2 e h3, nas suas portas 1, 2 e 3. O Open vSwitch é o switch em software dentro de muitas
 plataformas de virtualização Linux, e ele fala OpenFlow. O controlador é o OS-Ken, um framework
-Python para escrever um, rodando no `ctl`.
+Python para escrever um, rodando no `ctl`. Cada um deles é uma máquina do laboratório: um shell no
+switch é `sudo ~/netlab/netlab.sh enter sw1` a partir da máquina virtual, e o mesmo com `h1` ou
+`h2` para um computador. O controlador quer um terminal só dele no `ctl`, porque roda até ser parado.

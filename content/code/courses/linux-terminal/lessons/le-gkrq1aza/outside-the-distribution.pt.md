@@ -1,6 +1,6 @@
 ---
 title: Tudo o que você instala e o gerenciador de pacotes desconhece
-version: 1
+version: 2
 ---
 
 Os repositórios da distribuição não têm tudo, e o que eles têm muitas vezes é mais antigo do que você
@@ -85,7 +85,9 @@ Quando a distribuição mais tarde atualiza o `python3-requests`, os dois discor
 instalado, e o que quebra normalmente é alguma ferramenta de sistema escrita em python e não a coisa
 em que você estava trabalhando.
 
-**Distribuições recentes recusam isso**, e a recusa é o sistema de empacotamento se protegendo:
+**Distribuições recentes recusam isso**, e a recusa é o sistema de empacotamento se protegendo.
+(O próprio `pip` é o pacote `python3-pip`, que o Ubuntu Server não instala; `sudo apt install
+python3-pip` antes, ou a resposta é `No module named pip`.)
 
 ```
 root@vm:~# /usr/bin/python3 -m pip install requests 2>&1 | head -14

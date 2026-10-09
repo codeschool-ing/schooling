@@ -35,7 +35,10 @@ means something to Lantern Books. That is an **evaluation**, and the rest of thi
 one: the set (section 03), the scoring (04), the harness (05), and how to read what comes out
 (06 to 10).
 
-**The stand-in plays the candidates.** Lesson 4 section 08 said it: the three models answering here
-are the stand-in's, and the course wrote their answers to these cases, mistakes included. Every
-score, interval and comparison below is computed for real from those answers. It is the method
-that carries over to real models, and it carries over unchanged.
+**The candidates are three small open models on your own machine.** `llama3.2:3b` is the course's
+model; `llama3.2:1b` is the smaller one lesson 1 named for a weaker computer; and `qwen2.5:3b`, from
+another family at the same size, is here because an evaluation needs candidates to compare and this
+lesson alone uses it. Pull it before section 05 with `ollama pull qwen2.5:3b`; with less memory,
+run the other two. They stand in for the hosted rows of lesson 4's matrix, which need keys, and
+**their answers are real**: every score below is what they wrote, on the machine the course was
+recorded on. With a key, the same harness runs on the hosted candidates unchanged.

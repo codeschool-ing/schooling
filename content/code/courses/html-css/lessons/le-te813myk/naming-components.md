@@ -1,9 +1,9 @@
 ---
 title: Naming components so nobody has to guess
-version: 1
+version: 2
 ---
 
-Classes are where most of a stylesheet's selectors live, and a class name is read far more often than it is written. Without a convention, the same site ends up with `.card`, `.event-box`, `.eventCard` and `.tile` for four versions of one thing, and a selector like `.card .title` that also catches the title of a card inside another card. A naming convention prevents both. The one most teams know is **BEM**, for *block, element, modifier*:
+Classes are where most of a stylesheet's selectors live, and a class name is read far more often than it is written. Without a convention, the same site ends up with `.card`, `.event-box`, `.eventCard` and `.tile` for four versions of one thing, and a selector like `.card .title` that also catches the title of a card inside another card. A naming convention prevents both. The one most teams know is **BEM**, for *block, element, modifier*, and section 09's `css/components/event-card.css` is written in it:
 
 ```css
 .event-card { padding: calc(var(--space) * 2); border-left: 4px solid var(--color-accent); }

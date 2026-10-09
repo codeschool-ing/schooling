@@ -1,12 +1,13 @@
 ---
 title: Carregando um mês de cada vez
-version: 1
+version: 2
 ---
 
 A maioria das origens não guarda registro de mudanças. O que o warehouse recebe é uma **foto**
-(snapshot): a tabela de clientes inteira, como está no momento da extração. O laboratório tem três,
-tiradas à meia-noite do primeiro dia de outubro, novembro e dezembro de 2025. O tipo 2 a partir de
-fotos funciona por comparação: o que diz a extração, contra o que dizem as linhas atuais da dimensão?
+(snapshot): a tabela de clientes inteira, como está no momento da extração. O gerador da lição 1
+escreveu três em `extracts/`, tiradas à meia-noite do primeiro dia de outubro, novembro e dezembro
+de 2025. O tipo 2 a partir de fotos funciona por comparação: o que diz a extração, contra o que
+dizem as linhas atuais da dimensão?
 
 Esta dimensão é construída ao lado da do warehouse, como `dim_customer_m`. A primeira carga é todo
 mundo, uma versão cada:

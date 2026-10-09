@@ -1,12 +1,36 @@
 ---
 title: Uma máscara é uma fileira de uns
-version: 1
+version: 2
 ---
 
 A aula 8 disse que a máscara decide onde termina a parte de rede de um endereço. Esta aula é a
 aritmética disso, num laboratório montado para ela: um `/24`, `10.20.32.0/24`, cortado em três LANs de
 tamanhos diferentes atrás do roteador r1. A aula 13 trata de como esse plano foi feito; esta trata de
-como lê-lo.
+como lê-lo. Salve o laboratório como `~/netlab/plan.sh` e monte com
+`sudo bash ~/netlab/netlab.sh up plan`:
+
+```bash
+# ~/netlab/plan.sh: one /24 cut into subnets of different sizes, each on its
+# own interface of r1, and r2 upstream holding one route for all of them.
+#
+#   sales1 --(10.20.32.0/25)---+
+#   eng1   --(10.20.32.128/26)-+- r1 --(10.20.32.224/30)-- r2 --(10.20.99.0/24)-- hq1
+#   ops1   --(10.20.32.192/27)-+
+local n
+for n in sales1 eng1 ops1 hq1; do node $n; done
+node r1 router; node r2 router
+link sales1 eth0 r1 eth1; addr sales1 eth0 10.20.32.10/25;  addr r1 eth1 10.20.32.1/25
+link eng1 eth0 r1 eth2;   addr eng1 eth0 10.20.32.140/26;  addr r1 eth2 10.20.32.129/26
+link ops1 eth0 r1 eth3;   addr ops1 eth0 10.20.32.200/27;  addr r1 eth3 10.20.32.193/27
+gw sales1 10.20.32.1; gw eng1 10.20.32.129; gw ops1 10.20.32.193
+link r1 eth0 r2 eth0; addr r1 eth0 10.20.32.225/30; addr r2 eth0 10.20.32.226/30
+gw r1 10.20.32.226
+link r2 eth1 hq1 eth0; addr r2 eth1 10.20.99.1/24; addr hq1 eth0 10.20.99.10/24; gw hq1 10.20.99.1
+ip -n r2 route add 10.20.32.0/24 via 10.20.32.225
+```
+
+Toda máscara desta aula está numa linha `addr` desse arquivo, e a rota única do r2 para as três LANs é
+a última linha dele.
 
 Primeiro a forma. **Uma máscara de sub-rede tem 32 bits: uma sequência de uns, depois uma sequência
 de zeros, e mais nada.** Os uns cobrem a parte de rede do endereço e os zeros cobrem a parte de host.

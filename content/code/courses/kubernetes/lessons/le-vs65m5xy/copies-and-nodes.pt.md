@@ -51,7 +51,7 @@ serverTLSBootstrap: true
 ```
 
 O arquivo de configuração do kubelet, lido do laptop sem SSH: `failCgroupV1: false` e
-`serverTLSBootstrap: true` são as duas configurações que o lab.sh mudou, e aqui estão elas no nó. Esse
+`serverTLSBootstrap: true` são duas configurações que o `cluster.yaml` acrescentou na aula 1, e aqui estão elas no nó. Esse
 pod roda com acesso aos arquivos do nó, então é tão poderoso quanto um login na máquina, e o RBAC
 deveria tratar o direito de criá-lo desse jeito.
 

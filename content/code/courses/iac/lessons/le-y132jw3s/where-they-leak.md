@@ -1,6 +1,6 @@
 ---
 title: Four places a password leaks to
-version: 1
+version: 2
 ---
 
 The usual picture of a leaked secret is a file pushed to a public repository by mistake. That
@@ -11,7 +11,7 @@ copies.
 
 Ana's web server needs the shop database's password. The quickest way to get it there is a
 variable, and a `user_data` script that writes it into a file the application reads when the
-machine boots:
+machine boots. `~/shop/main.tf`:
 
 ```hcl
 terraform {
@@ -63,8 +63,23 @@ db_password = "s3cr3t-Shop-2026"
 
 ## Copy one: the git history
 
-Ana's `.gitignore` has the lines lesson 7 gave it, for the state and for `.terraform/`. It says
-nothing about `*.tfvars`, and weeks ago a `git add .` took the file along:
+Ana's `.gitignore` has the lines lesson 7 gave it, for the state and for `.terraform/`:
+
+```
+.terraform/
+*.tfstate
+*.tfstate.*
+```
+
+It says nothing about `*.tfvars`, and weeks ago a `git add .` took the file along. To give your
+directory the same history, initialise it and make that commit:
+
+```sh
+terraform init -input=false
+git init -q && git add . && git commit -qm "web server with its database password"
+```
+
+Git now tracks four files:
 
 ```
 ana@laptop:~/shop$ git ls-files

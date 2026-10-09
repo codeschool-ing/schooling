@@ -25,7 +25,7 @@ JavaScript. O `sort.mjs` roda o modelo da ana nos dez casos que ele nunca viu:
     },
     {
       "code": "const cases = JSON.parse(readFileSync(\"cases/held-out.json\", \"utf8\"));\nlet right = 0;\nfor (const c of cases) {\n  const [top] = await classify(c.text);\n  if (top.label === c.label) right++;\n  console.log(`${c.id} ${top.label.padEnd(16)} ${top.score.toFixed(3)}  (${c.label})`);\n}\nconsole.log(`${right} of ${cases.length} held-out cases right`);\n",
-      "note": "Os dez casos que o `train-sorter` deixou de fora. Cada resposta é uma lista de rótulos com notas, a melhor primeiro; o programa fica com a primeira e imprime ao lado, entre parênteses, o rótulo dado pela pessoa."
+      "note": "Os dez casos que o `train_sorter.py` deixou de fora. Cada resposta é uma lista de rótulos com notas, a melhor primeiro; o programa fica com a primeira e imprime ao lado, entre parênteses, o rótulo dado pela pessoa."
     }
   ]
 }
@@ -45,12 +45,12 @@ c39 other            0.483  (other)
 c40 order-status     0.690  (order-status)
 7 of 10 held-out cases right
 
-real	0m0.263s
-user	0m0.390s
-sys	0m0.034s
+real	0m0.259s
+user	0m0.413s
+sys	0m0.028s
 ```
 
-**Sete de dez**, e a execução inteira levou 0,217 segundo, carga incluída. Sem chave, sem
+**Sete de dez**, e a execução inteira levou 0,259 segundo, carga incluída. Sem chave, sem
 requisição, sem conta: o programa leu quatro arquivos e fez a conta na CPU.
 
 Leia os erros do jeito que a seção 07 da aula 5 leu erros, pelo que foi confundido com o quê. O
@@ -61,6 +61,7 @@ estava, e são baixas justamente nesses: 0,441, 0,502, 0,488, contra 0,910 no re
 para uma pessoa é o uso óbvio para ela.
 
 E leia os sete com a seção 06 da aula 5 em mente. Sete de dez tem intervalo de Wilson de **40% a
-89%**: dez casos não distinguem um modelo que acerta metade das vezes de um que acerta nove em dez. O ponto desta execução é que o modelo funciona no Node a partir dos
-arquivos. Se ele é bom o bastante para classificar o correio da Lantern Books é uma pergunta para o
-conjunto completo e um modelo melhor, e a aula 5 já diz como fazê-la.
+89%**: dez casos não distinguem um modelo que acerta metade das vezes de um que acerta nove em dez.
+O ponto desta execução é que o modelo funciona no Node a partir dos arquivos. Se ele é bom o
+bastante para classificar o correio da Lantern Books é uma pergunta para o conjunto completo e um
+modelo melhor, e a aula 5 já diz como fazê-la.

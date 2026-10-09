@@ -5,9 +5,9 @@ version: 1
 
 Um modelo de embedding recebe um texto e devolve uma quantidade fixa de números. O modelo que este
 curso usa na maior parte do tempo é o **all-MiniLM-L6-v2**, um modelo aberto e pequeno publicado
-pelo projeto sentence-transformers. Ele roda no notebook e não precisa de conta. A aula 9 abre o
-modelo por dentro; por enquanto ele é uma função chamada `embed` em `minilm.py`, que o `lab.sh`
-instalou.
+pelo projeto sentence-transformers. Ele roda no seu próprio computador e não precisa de conta. A aula 9 abre o
+modelo por dentro; por enquanto ele é uma função chamada `embed` em `minilm.py`, o arquivo que você
+salvou em *Preparando o ambiente*.
 
 Aqui está o título do artigo de reembolso passando por ele:
 

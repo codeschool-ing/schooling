@@ -1,11 +1,19 @@
 ---
 title: A sonda que mente
-version: 1
+version: 2
 ---
 
 Todo serviço da loja tem um `/health` desde a aula 1, e cada um deles são três linhas que devolvem
 `{"status": "ok"}`. O blackbox exporter pergunta ao da vitrine a cada quinze segundos desde a aula 5.
-Eis quanto isso vale. O Postgres é parado, com clientes ainda comprando:
+Eis quanto isso vale. Inicie o laboratório de novo do zero, ponha os clientes para rodar e dê a eles um
+minuto:
+
+```sh
+docker compose run -d --rm loadgen python -m loadgen.load 5 1500
+sleep 60
+```
+
+Depois o Postgres é parado, com clientes ainda comprando:
 
 ```
 ana@obs:~/shop$ docker compose stop postgres 2>&1 | tail -1
@@ -41,3 +49,10 @@ framework web está rodando. Ela não é inútil, como as próximas seções mos
 sonda de liveness deve ser. **O que ela nunca pode ser é a coisa que decide se a loja está
 funcionando**, numa página de status, num alerta ou na escolha de um balanceador sobre para onde
 mandar um pedido.
+
+Suba o Postgres de novo, e dê ao `orders` meio minuto para achá-lo, antes da próxima seção:
+
+```sh
+docker compose start postgres
+sleep 30
+```

@@ -1,6 +1,6 @@
 ---
 title: Patch, e onde um nome é consultado
-version: 1
+version: 2
 ---
 
 Quando o código não tem costura, um teste ainda consegue trocar um colaborador com um **patch**:
@@ -9,8 +9,9 @@ substituir o objeto ao qual um nome se refere, durante o teste, e devolvê-lo de
 pode mudar. Também tem uma armadilha que pega quase todo mundo uma vez, e o `shipquote` cai nela de
 propósito.
 
-Eis um arquivo de teste escrito para esta seção. Os dois testes querem que `CarrierClient.rate`
-receba uma resposta pronta de 1999 centavos sem tocar a rede:
+Eis um arquivo de teste escrito para esta seção, e só para ela. Os dois testes querem que
+`CarrierClient.rate` receba uma resposta pronta de 1999 centavos sem tocar a rede. Salve como
+`tests/test_patch_trap.py`:
 
 ```python
 import io
@@ -37,7 +38,8 @@ def test_handing_the_double_in_through_the_seam():
 
 O primeiro aplica o patch em `urllib.request.urlopen`, a função que o cliente usa por padrão. O
 segundo passa o dublê pelo parâmetro `opener`. Na porta 9 de 127.0.0.1 não há nada escutando, então
-qualquer requisição que saia de verdade seria recusada.
+qualquer requisição que saia de verdade seria recusada. Apague o arquivo depois de rodá-lo: ele
+existe para falhar.
 
 ```
 ana@laptop:~/shipquote$ python -m pytest tests/test_patch_trap.py -q --tb=line

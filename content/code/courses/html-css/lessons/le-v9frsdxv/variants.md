@@ -1,9 +1,9 @@
 ---
 title: Variants: states, widths, dark and motion
-version: 1
+version: 2
 ---
 
-A utility applies always. A **variant** is a prefix that applies it only in some condition: `hover:bg-andorinha-900`, `md:grid-cols-2`, `dark:bg-black`. Here is a page that uses several, built:
+A utility applies always. A **variant** is a prefix that applies it only in some condition: `hover:bg-andorinha-900`, `md:grid-cols-2`, `dark:bg-black`. Here is a page that uses several, `variants/index.html`, with a copy of `theme/input.css` beside it, built:
 
 ```html
 <!doctype html>

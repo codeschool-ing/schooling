@@ -33,13 +33,13 @@
   },
   {
     "id": "ex-d5rynv5m",
-    "version": 1,
+    "version": 2,
     "section": "the-lab",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "Why does the course recommend running `lab.sh` inside a virtual machine?",
-    "hint": "Look at what the script changes on the machine.",
+    "prompt": "Why does the course recommend running its lab in a virtual machine?",
+    "hint": "Look at what the setup installs and fills.",
     "choices": [
       {
         "text": "DuckDB refuses to run outside a virtual machine",
@@ -47,17 +47,17 @@
         "why": "No. DuckDB is one program and runs anywhere, including a browser."
       },
       {
-        "text": "The data is too large for a laptop",
+        "text": "The data is too large for an ordinary laptop",
         "correct": false,
-        "why": "No. The whole lab takes about a gigabyte of disk."
+        "why": "No. The programs, the database and the files come to under two gigabytes."
       },
       {
-        "text": "It adds a user and a database server",
+        "text": "A database server is easier to throw away than to remove",
         "correct": true,
-        "why": "Right. Those are changes you would rather keep off the computer you work on."
+        "why": "Right. Deleting the virtual machine removes the server, its data and the packages in one go."
       },
       {
-        "text": "A virtual machine makes PostgreSQL's queries faster than an installed copy",
+        "text": "PostgreSQL runs faster in a virtual machine than installed",
         "correct": false,
         "why": "No. A virtual machine adds a layer; it does not speed anything up."
       }
@@ -65,15 +65,79 @@
   },
   {
     "id": "ex-3ddmnjwp",
-    "version": 1,
-    "section": "the-lab",
+    "version": 2,
+    "section": "the-data",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "The generated CSV files take 97 MB and PostgreSQL holds them in 802 MB. About how many times larger is the database than the files? Give one decimal.",
+    "prompt": "PostgreSQL keeps 89 MB of generated CSV files in about 1,100 MB. About how many times larger is the database than the files? Give a whole number.",
     "hint": "Divide the larger by the smaller.",
-    "value": 8.3,
-    "tolerance": 0.1
+    "value": 12,
+    "tolerance": 0.5
+  },
+  {
+    "id": "ex-gy06088v",
+    "version": 1,
+    "section": "the-shop-database",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `ALTER SYSTEM SET shared_buffers = '512MB'`, `SHOW shared_buffers` still answers `128MB`. Why?",
+    "hint": "When does the server read its configuration?",
+    "choices": [
+      {
+        "text": "The server reads that setting only when it starts",
+        "correct": true,
+        "why": "Right. `sudo pg_ctlcluster 16 main restart`, and the same query answers 512MB."
+      },
+      {
+        "text": "The role needs a password before it can change settings",
+        "correct": false,
+        "why": "No. The four ALTER SYSTEM lines answered ALTER SYSTEM; the change was written."
+      },
+      {
+        "text": "512 MB is more memory than PostgreSQL 16 accepts",
+        "correct": false,
+        "why": "No. It is a modest value, and after a restart the server uses it."
+      },
+      {
+        "text": "The setting applies only to databases created afterwards",
+        "correct": false,
+        "why": "No. It is a setting of the whole server, not of one database."
+      }
+    ]
+  },
+  {
+    "id": "ex-z5m3nj17",
+    "version": 1,
+    "section": "setup-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`psql` answers `FATAL: role \"ana\" does not exist`. What is missing?",
+    "hint": "The server answered, so it is running.",
+    "choices": [
+      {
+        "text": "A PostgreSQL role with the login name, made by createuser",
+        "correct": true,
+        "why": "Right. Ubuntu's PostgreSQL knows nobody until a role is created."
+      },
+      {
+        "text": "The database shop, made by createdb",
+        "correct": false,
+        "why": "No. That error names the database, and comes after the role exists."
+      },
+      {
+        "text": "A running server, started with pg_ctlcluster",
+        "correct": false,
+        "why": "No. A stopped server cannot say anything about roles."
+      },
+      {
+        "text": "The generated files, written by generate.py",
+        "correct": false,
+        "why": "No. psql never reads them; load.sh does, after the database exists."
+      }
+    ]
   },
   {
     "id": "ex-mjje4ta7",

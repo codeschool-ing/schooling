@@ -1,11 +1,11 @@
 ---
 title: What a control is called
-version: 1
+version: 2
 ---
 
 Every link, button and form field has an **accessible name**: the words a screen reader says when it reaches it, and the words voice-control users say to activate it. The tree printed them in quotes: `link "Events"`, `button "Reserve (button)"`. The browser works the name out from the markup, and most of the time it is simply the text inside the element.
 
-That is why the text inside a link matters so much. Here are three links and two images inside links:
+That is why the text inside a link matters so much. Here are three links and two images inside links, in `names.html`. Any small picture saved beside it as `shelf.png` will do:
 
 ```html
 <!doctype html>

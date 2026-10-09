@@ -1,13 +1,15 @@
 ---
 title: A dashboard is a file
-version: 1
+version: 2
 ---
 
 Dashboards built by clicking have a familiar life. Somebody makes a good one, and somebody else changes
 a query to investigate something and forgets to change it back. A month later nobody knows which
 version was right or who broke it. **A dashboard stored as a file in version control has a history,
 a review, and a way back.** Grafana's dashboards are JSON, and the lab's provisioning reads every
-file in `grafana/dashboards` on start-up and again every few seconds. The shop's:
+file in `grafana/dashboards` on start-up and again every few seconds. The shop's, which you save as
+`~/shop/grafana/dashboards/shop.json` with the copy button, which copies the whole file without the
+notes:
 
 ```schooling-example
 {

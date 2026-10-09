@@ -1,10 +1,11 @@
 ---
 title: VirtualBox, VMware e a área de transferência
-version: 1
+version: 2
 ---
 
 No VirtualBox, a mesma pasta é um comando, e a área de transferência e o arrastar e soltar são
-configurações da máquina:
+configurações da máquina. A `lab1` é uma máquina vazia feita como a aula 4 fez uma, `VBoxManage createvm
+--name lab1 --ostype Ubuntu_64 --register`; nada disto precisa que ela tenha disco ou esteja ligada:
 
 ```
 ana@host:~$ VBoxManage sharedfolder add lab1 --name docs --hostpath /srv/docs --readonly --automount

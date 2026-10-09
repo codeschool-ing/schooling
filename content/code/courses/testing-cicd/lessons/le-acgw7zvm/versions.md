@@ -1,6 +1,6 @@
 ---
 title: The version is written once
-version: 1
+version: 2
 ---
 
 A running program should be able to say what it is. When something goes wrong in production, the
@@ -26,7 +26,9 @@ someone's laptop.
 
 ## A build that is not a release
 
-What happens to a commit with no tag? Here a change is committed on a throwaway branch and built:
+What happens to a commit with no tag? Here a change is committed on a throwaway branch and built.
+The branch is `git switch -c try-a-change`, the change one empty line, `echo >> README.md`, and the
+commit `git commit -qam "Try a change"`:
 
 ```
 ana@laptop:~/shipquote$ git describe --tags
@@ -38,6 +40,8 @@ dist/shipquote-dev-7c77050.tar.gz
 `git describe` says the commit is **one past `v1.4.0`**, with the hash `7c77050`. The build calls it
 `dev-7c77050`: a name that cannot be mistaken for a release and that still says exactly which commit
 it is. During an incident, "dev-7c77050" is an answer; "1.4.0, probably with Ana's fix" is not.
+Throw the branch and its build away afterwards: `git switch main`, `git branch -D try-a-change` and
+`rm dist/shipquote-dev-*`.
 
 ## Semantic versions
 

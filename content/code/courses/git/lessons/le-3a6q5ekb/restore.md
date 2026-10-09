@@ -1,15 +1,28 @@
 ---
 title: Restore: throw away a change you have not committed
-version: 1
+version: 2
 ---
 
 **`git restore` puts a file back the way it was**, and it only ever touches the working tree and the
 staging area. No commit is created, moved or removed, which makes it the safest of the three commands
 in this lesson and the one to reach for first.
 
+This lesson starts from a fresh copy of lesson 3's week, so that your files are the ones on this
+page:
+
+```bash
+cd ~ && rm -rf ~/site && bash ~/make-site.sh && cd ~/site
+```
+
 ## A change that went wrong
 
-Somebody typed `9.00` for a loaf of bread. It has not been staged:
+Somebody typed `9.00` for a loaf of bread. Make the same slip, in nano or in one line:
+
+```bash
+sed -i 's/0.90/9.00/' menu.html
+```
+
+It has not been staged:
 
 ```
 ana@vm:~/site$ git diff --stat
@@ -30,7 +43,13 @@ painful for an afternoon of work. Before restoring a file you have been editing 
 ## Taking a file out of the staging area
 
 `--staged` moves the other way: it takes a change out of the staging area and leaves it in the working
-tree. This is the undo for a `git add` you did not mean:
+tree. This is the undo for a `git add` you did not mean. First an edit to add, the cheese roll to
+2.60:
+
+```bash
+sed -i 's/2.50/2.60/' menu.html
+```
+
 
 ```
 ana@vm:~/site$ git add menu.html

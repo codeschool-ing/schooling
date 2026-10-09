@@ -1,10 +1,18 @@
 ---
 title: Creating folders and files
-version: 1
+version: 2
 ---
 
 Everything in this lesson happens in one folder, `~/work`, with two files already in it: a backup log and
-a list of clients.
+a list of clients. Make them on your server first. The second line is a small program: a loop that
+writes 240 lines, ten for each day from 1 September, the way a backup that runs every few minutes
+would leave them. The third writes the list of clients in one go:
+
+```sh
+rm -rf ~/work && mkdir ~/work && cd ~/work
+for i in $(seq 1 240); do printf '2026-09-%02d 09:%02d backup ok\n' $(( (i-1)/10 + 1 )) $(( (i-1) % 60 )); done > backup.log
+printf 'id,name,city\n1,Acme Ltd,Sao Paulo\n2,Bravo & Filhos,Campinas\n3,Casa Verde,Santos\n' > clients.csv
+```
 
 ```
 ana@server:~/work$ mkdir invoices

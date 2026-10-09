@@ -1,6 +1,6 @@
 ---
 title: SBOMs and provenance
-version: 1
+version: 2
 ---
 
 **A scanner rebuilds the list of what is inside an image after the fact. A build can write that list
@@ -11,6 +11,10 @@ the image:
 - a **provenance** statement: what was built, from which inputs, by which builder.
 
 ## Building with attestations
+
+The pushes go to a registry on `127.0.0.1:5000` without a password, the kind lesson 15 started. If
+your machine has none running, `docker run -d --name registry -p 127.0.0.1:5000:5000 registry:3`
+starts one.
 
 ```
 ana@vm:~$ cd shelf && docker build --sbom=true --provenance=mode=min --build-arg VERSION=1.6.0 -t localhost:5000/shelf:1.6.0 --push . 2>&1 | grep -E "attestation|manifest list|pushing manifest" | sort -u; cd ..

@@ -1,6 +1,6 @@
 ---
 title: O que faz disso engenharia
-version: 1
+version: 2
 ---
 
 "Engenharia de prompt" costuma ser entendida como uma coleção de frases mágicas: a redação que
@@ -76,22 +76,56 @@ inteiros contra um conjunto de testes rotulados.
 ## Um prompt vago e um específico
 
 O primeiro rascunho de um prompt costuma ser o pedido como você o diria a um colega que já conhece o
-contexto. O modelo não conhece nada dele. Dois prompts para o mesmo trabalho, escritos pelo curso
-como ilustração:
+contexto. O modelo não conhece nada dele. Dois prompts para o mesmo trabalho:
 
-```localised
-Vago:
-  Escreva alguma coisa sobre o nosso horário de funcionamento.
+```
+ana@lab:~/pe$ cat prompts/vague.txt
+Write something about our opening hours.
+ana@lab:~/pe$ ask - --temperature 0 < prompts/vague.txt
+**Our Opening Hours**
 
-Específico:
-  Você está escrevendo o aviso para a porta do Café Aurora.
-  Horário: de segunda a sábado, das 07:00 às 18:00; domingo, das 08:00 às 12:00.
-  A cozinha para de aceitar pedidos de comida quente 30 minutos antes de fechar.
-  Escreva o aviso em português, em no máximo quatro linhas, uma linha por regra.
-  Não acrescente nenhuma informação que não esteja neste horário.
+We are committed to providing our customers with convenient and accessible shopping experiences. Our opening hours are as follows:
+
+Monday to Saturday: 9:00 AM - 6:00 PM
+Sunday: 10:00 AM - 5:00 PM
+
+Please note that these hours may be subject to change, especially on public holidays or during special events. We recommend checking our website or social media channels for any updates before visiting us.
+
+We are also open on the following public holidays:
+
+* New Year's Day: 12:00 PM - 5:00 PM
+* Good Friday: 9:00 AM - 5:00 PM
+* Easter Monday: 10:00 AM - 5:00 PM
+* Christmas Day: 12:00 PM - 4:00 PM
+* Boxing Day: 10:00 AM - 5:00 PM
+
+We look forward to welcoming you to our store during our opening hours. If you have any questions or concerns, please don't hesitate to contact us.
+-- llama3.2:3b, finish: stop, prompt 32 tokens, output 215 tokens
 ```
 
-O vago pode ser respondido de mil maneiras e todas passam, porque nada diz o que é uma boa resposta.
+```
+ana@lab:~/pe$ cat prompts/specific.txt
+You are writing the notice for the door of Café Aurora.
+Opening hours: Monday to Saturday 07:00 to 18:00; Sunday 08:00 to 12:00.
+The kitchen stops taking hot food orders 30 minutes before closing.
+Write the notice in English, at most four lines, one line per rule.
+Do not add any information that is not in these hours.
+ana@lab:~/pe$ ask - --temperature 0 < prompts/specific.txt
+Here is the notice:
+
+Café Aurora is open from Monday to Saturday from 07:00 to 18:00 and on Sunday from 08:00 to 12:00.
+
+Please note that our kitchen stops taking hot food orders 30 minutes before closing.
+-- llama3.2:3b, finish: stop, prompt 105 tokens, output 56 tokens
+```
+
+**O vago recebeu uma página confiante de horários, e nenhum deles é o do café.** Nada no prompt dizia
+qual era o horário, então o modelo escreveu horários típicos, com domingo e feriados, e um aviso de
+loja, não de café. Nada no prompt dizia o que é uma boa resposta, tampouco, então nada nela está
+errado pelo próprio critério. O específico acertou o horário e a regra da cozinha, e ainda assim
+deixou de cumprir duas instruções: começou com `Here is the notice:` e pôs duas regras numa linha só.
+Um prompt mais longo resolveu o que ele dizia, e é o teste que acha o que ele não resolveu.
+
 **O específico é mais longo porque carrega as quatro partes que um prompt pode ter**, e cada uma
 fecha um caminho pelo qual a resposta poderia dar errado:
 

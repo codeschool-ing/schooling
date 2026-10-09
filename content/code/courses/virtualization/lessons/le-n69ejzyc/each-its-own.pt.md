@@ -1,6 +1,6 @@
 ---
 title: Cada um com a própria identidade
-version: 1
+version: 2
 ---
 
 No primeiro boot, os dois clones construíram uma identidade própria:
@@ -26,4 +26,4 @@ dividido.
 
 É assim que todo laboratório do resto deste curso é feito, e como a maioria das nuvens faz máquinas: uma
 imagem selada, uma camada fina por máquina, e um disco pequeno de configurações lido no primeiro boot. O
-`lab.sh vm` faz exatamente isso desde a aula 1, com a própria imagem de nuvem do Ubuntu como modelo.
+`newvm.sh` faz exatamente isso desde a aula 1, com a própria imagem de nuvem do Ubuntu como modelo.

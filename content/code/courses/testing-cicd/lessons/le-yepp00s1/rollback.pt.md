@@ -1,10 +1,11 @@
 ---
 title: Voltar ao release anterior
-version: 1
+version: 2
 ---
 
 Nem todo ambiente tem dois lados e um roteador. A produção da aula 7 é um diretório com um link
-`current` e um link `previous`, e o `ops/rollback.sh` troca os dois:
+`current` e um link `previous`, e o `ops/rollback.sh` troca os dois. A seção 06 da aula 7 mostra o
+script inteiro; esta é a parte que trabalha:
 
 ```sh
 [ -L "$root/previous" ] || { echo "rollback: $env has no previous release" >&2; exit 1; }
@@ -16,7 +17,17 @@ set -a; . "$root/config.env"; set +a
 "$(dirname "$0")/smoke.sh" "http://127.0.0.1:$SHIPQUOTE_PORT" "${before#releases/shipquote-}"
 ```
 
-Aqui a produção acabou de receber o 1.6.0, com o 1.5.0 antes dele:
+Aqui a produção acabou de receber o 1.6.0, com o 1.5.0 antes dele. Para chegar lá, o roteador sai
+primeiro, com Ctrl-C no terminal dele, depois os dois lados, para que a porta 8300 volte a ser da
+produção única, e depois os dois deploys:
+
+```sh
+kill $(cat ~/envs/production-blue/pid ~/envs/production-green/pid)
+ops/deploy.sh production dist/shipquote-1.5.0.tar.gz
+ops/deploy.sh production dist/shipquote-1.6.0.tar.gz
+```
+
+Como fica:
 
 ```
 ana@laptop:~/shipquote$ readlink ~/envs/production/current ~/envs/production/previous

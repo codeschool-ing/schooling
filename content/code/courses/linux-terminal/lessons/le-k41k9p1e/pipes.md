@@ -1,6 +1,6 @@
 ---
 title: The pipe, and the idea the rest of this lesson is made of
-version: 1
+version: 2
 ---
 
 A pipe connects one program's stdout to the next program's stdin. That is the entire mechanism, and
@@ -8,14 +8,14 @@ it is the reason Unix has hundreds of small commands instead of a dozen large on
 
 ```
 ana@vm:~/work$ cut -d" " -f9 logs/access.log | sort | uniq -c | sort -rn
-   1033 200
-     70 201
-     28 404
-     21 500
-     18 302
-     16 304
-      9 401
-      5 403
+   1017 200
+     59 201
+     41 404
+     27 302
+     24 500
+     19 304
+      7 401
+      6 403
 ```
 
 **Four programs, none of which knows anything about web servers**, and the answer is every kind of

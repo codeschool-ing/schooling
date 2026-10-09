@@ -55,5 +55,5 @@ depend on remembering any of it: either name the shell, or start multi-line step
 Jobs run in parallel unless one says it needs another. A typical graph: a fast lint job and the unit
 tests side by side; integration tests only after both pass; a deploy only after everything. Lesson
 6 writes those edges as `needs:` in GitHub Actions and as stages in GitLab CI. The principle is the
-one from lesson 1 section 11: **fast checks first**, so a typo fails in thirty seconds rather than
+one from lesson 1 section 14: **fast checks first**, so a typo fails in thirty seconds rather than
 after a ten-minute browser suite.

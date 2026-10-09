@@ -1,13 +1,14 @@
 ---
 title: A sonda que mata
-version: 1
+version: 2
 ---
 
 A verificação de saúde mais cara é a que acerta sobre um problema e erra sobre de quem ele é. **Uma
 sonda de liveness que verifica uma dependência reinicia toda cópia de um serviço quando a dependência
 falha**, e nenhum dos reinícios pode ajudar.
 
-Três cópias de um serviço cuja sonda de liveness insiste em alcançar o banco:
+Três cópias de um serviço cuja sonda de liveness insiste em alcançar o banco, salvas como
+`~/shop/k8s/deep.yaml`:
 
 ```schooling-example
 {
@@ -81,3 +82,10 @@ A correção é uma frase: **a liveness verifica o processo, a readiness verific
 esta verificação fosse uma sonda de readiness, as três cópias teriam saído do Service enquanto o
 banco estava fora. Teriam voltado sozinhas poucos segundos depois de ele voltar, sem nada reiniciado
 e nada perdido.
+
+Quando terminar com o cluster, apague o que esta aula pôs nele, e depois o cluster:
+
+```sh
+kubectl delete -f k8s/deep.yaml -f k8s/probe-demo.yaml
+kind delete cluster --name lab
+```

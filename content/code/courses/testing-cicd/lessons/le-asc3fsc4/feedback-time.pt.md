@@ -35,7 +35,7 @@ mas uma matriz põe números assim lado a lado, onde alguém pode notar.
 |---|---|
 | células rodando uma depois da outra | rodá-las em paralelo, como os runners hospedados fazem: a execução leva o tempo da célula mais lenta |
 | instalar dependências | guardá-las em cache com chave no arquivo de travamento (seção 08) |
-| testes lentos rodando primeiro | ordenar os jobs para a camada rápida relatar antes (aula 1 seção 11) |
+| testes lentos rodando primeiro | ordenar os jobs para a camada rápida relatar antes (aula 1 seção 14) |
 | tudo rodando a cada mudança | pular o que a mudança não afeta, sem pular em silêncio (seção 04) |
 | uma suíte lenta | dividi-la entre várias máquinas, e medir a parte mais lenta |
 

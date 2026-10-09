@@ -1,6 +1,6 @@
 ---
 title: Sort, group and measure — `sort | uniq -c` with the sort built in
-version: 1
+version: 2
 ---
 
 Lesson 8's closing rule was that `sort` before `uniq -c` is not optional, because
@@ -45,9 +45,9 @@ object.
 PS /home/ana/work/ps> Import-Csv sales.csv | Sort-Object { [int]$_.revenue } -Descending | Select-Object -First 3 rep, revenue
 rep    revenue
 ---    -------
-ana    43731
-felipe 41574
-carla  37084
+helena 39865
+diego  39072
+elena  36036
 ```
 
 `Sort-Object` takes property names, or a block that computes the key — and the
@@ -56,15 +56,15 @@ without it:
 
 ```
 PS /home/ana/work/ps> Import-Csv sales.csv | Sort-Object revenue -Descending | Select-Object -First 3 rep, revenue
-rep  revenue
----  -------
-ana  8721
-ana  8601
-hugo 7257
+rep    revenue
+---    -------
+carla  9804
+diego  8840
+felipe 8778
 ```
 
-**The largest revenue in the file is 43731 and it is not in that table.** Sorted
-as text, `8721` is the biggest thing there is, because `8` beats `4`. No error,
+**The largest revenue in the file is 39865 and it is not in that table.** Sorted
+as text, `9804` is the biggest thing there is, because `9` beats `3`. No error,
 a perfectly plausible answer, and the wrong three rows.
 
 | | |
@@ -85,8 +85,8 @@ belongs *after* the sort and not before it.
 ```
 PS /home/ana/work/ps> Import-Csv sales.csv | Measure-Object -Property units -Sum -Average
 Count             : 32
-Average           : 199.34375
-Sum               : 6379
+Average           : 195.15625
+Sum               : 6245
 Maximum           :
 Minimum           :
 StandardDeviation :
@@ -126,10 +126,10 @@ zero, one or a million identically, and `@( … ).Count` forces an array first.
 PS /home/ana/work/ps> Import-Csv sales.csv | Where-Object { [int]$_.revenue -gt 20000 } | Group-Object region | Sort-Object Count -Descending | Select-Object Name, Count
 Name  Count
 ----  -----
-east      4
-north     4
-south     3
-west      1
+west      5
+east      3
+north     3
+south     2
 ```
 
 Filter, group, sort, take. **That shape answers most questions you will ask a

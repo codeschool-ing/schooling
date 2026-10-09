@@ -1,11 +1,16 @@
 ---
 title: What a branch is: a name for a commit
-version: 1
+version: 2
 ---
 
 **The usual picture of a branch is a copy of the project**, a parallel folder where you can work
 without disturbing the original. That picture predicts that making a branch takes a while, uses
-space, and duplicates the files. None of that happens:
+space, and duplicates the files. None of that happens, as a fresh copy of lesson 3's week shows:
+
+```bash
+cd ~ && rm -rf ~/site && bash ~/make-site.sh && cd ~/site
+```
+
 
 ```
 ana@vm:~/site$ git branch

@@ -5,7 +5,12 @@ version: 1
 
 Ler linhas enquanto elas rolam funciona para quatro pacotes. Para o resto, **o `tcpdump` grava um
 arquivo pcap, e a leitura acontece depois**, no servidor ou na máquina de outra pessoa. O laptop fez
-quatro requisições, três da página inicial e uma de uma página que não existe:
+quatro requisições, três da página inicial e uma de uma página que não existe. Comece a captura em
+`web1`, depois digite isto em `laptop`:
+
+```sh
+for i in 1 2 3; do curl -s http://192.0.2.21/ >/dev/null; done; curl -s http://192.0.2.21/missing >/dev/null
+```
 
 ```
 ana@web1:~$ sudo tcpdump -n -i eth0 -c 40 -Z ana -w web1.pcap tcp port 80

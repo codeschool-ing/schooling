@@ -1,9 +1,15 @@
 ---
 title: Chamado: "os sites não abrem"
-version: 1
+version: 2
 ---
 
-Desta vez o laptop alcança endereços e não nomes:
+Desta vez o laptop alcança endereços e não nomes. O defeito, no seu laboratório:
+
+```sh
+echo 'nameserver 192.168.10.53' | sudo tee /etc/netns/laptop/resolv.conf
+```
+
+Depois, no laptop:
 
 ```
 ana@laptop:~$ curl -sS -m 30 https://www.example.com/ -o /dev/null

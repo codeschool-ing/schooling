@@ -17,23 +17,7 @@
 
 . "$(dirname "$0")/../../capture.sh"
 fresh
-cat >/tmp/debug-apps.yaml <<'CODE'
-apiVersion: apps/v1
-kind: Deployment
-metadata: {name: shop}
-spec:
-  replicas: 1
-  selector: {matchLabels: {app: shop}}
-  template:
-    metadata: {labels: {app: shop}}
-    spec: {containers: [{name: shop, image: "shop:1.0"}]}
----
-apiVersion: v1
-kind: Pod
-metadata: {name: crashing}
-spec:
-  containers: [{name: shop, image: "shop:1.0", env: [{name: CRASH, value: "yes"}, {name: GREETING, value: "hello"}]}]
-CODE
+shown "$COURSE/lessons/le-vs65m5xy/reaching-in.md" debug-apps.yaml >/tmp/debug-apps.yaml || exit 1
 quiet 'kubectl apply -f /tmp/debug-apps.yaml'
 quiet 'kubectl rollout status deployment/shop --timeout=120s'
 POD=$(kubectl get pods -l app=shop -o name | head -n 1 | cut -d/ -f2)

@@ -1,6 +1,6 @@
 ---
 title: An apply that fails halfway
-version: 1
+version: 2
 ---
 
 It is natural to think of an apply as a database transaction: either every change in the plan
@@ -44,7 +44,7 @@ index cc59f60..20936a5 100644
 +}
 ```
 
-The plan is clean. **Terraform checks that `10.30.3.0/24` is a valid CIDR, and it is**; whether it
+Ana saves the plan with `terraform plan -out=tfplan`. The plan is clean. **Terraform checks that `10.30.3.0/24` is a valid CIDR, and it is**; whether it
 fits inside the VPC is something only the API knows. The guard from two sections back passes too,
 because nothing is deleted. Then the apply:
 
@@ -104,7 +104,7 @@ Plan: 2 to add, 0 to change, 0 to destroy.
 This is the property that makes a failed apply recoverable rather than a mess. Terraform does not
 need to remember that an apply failed; the state already records what exists, so planning again
 compares the configuration with that and finds the difference, like any other plan. Ana corrects
-the range to `10.20.3.0/24` and applies again:
+the range to `10.20.3.0/24` and applies again, and commits once it has worked:
 
 ```
 ana@laptop:~/shop$ terraform apply -auto-approve | tail -n 6

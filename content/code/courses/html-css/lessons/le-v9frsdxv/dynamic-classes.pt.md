@@ -1,9 +1,9 @@
 ---
 title: Uma classe que o build não enxerga
-version: 1
+version: 2
 ---
 
-O build acha os nomes de classe **lendo os arquivos como texto**. Ele não roda JavaScript. Então um nome de classe montado juntando strings não existe para o build:
+O build acha os nomes de classe **lendo os arquivos como texto**. Ele não roda JavaScript. Então um nome de classe montado juntando strings não existe para o build. Aqui está o `dynamic/index.html`, com o `input.css` de uma linha ao lado:
 
 ```html
 <!doctype html>

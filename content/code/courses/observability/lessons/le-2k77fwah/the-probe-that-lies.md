@@ -1,12 +1,19 @@
 ---
 title: The probe that lies
-version: 1
+version: 2
 ---
 
 Every service in the shop has had a `/health` since lesson 1, and every one of them is three lines
 that return `{"status": "ok"}`. The blackbox exporter has been asking the storefront's every fifteen
-seconds since lesson 5. Here is what it is worth. Postgres is stopped, with customers still
-buying:
+seconds since lesson 5. Here is what it is worth. Start the lab again from nothing, set the customers going, and give them
+a minute:
+
+```sh
+docker compose run -d --rm loadgen python -m loadgen.load 5 1500
+sleep 60
+```
+
+Then Postgres is stopped, with customers still buying:
 
 ```
 ana@obs:~/shop$ docker compose stop postgres 2>&1 | tail -1
@@ -41,3 +48,10 @@ That is the probe that lies, and it is the most common health check there is: a 
 the web framework is running. It is not useless, as the next sections show: it is exactly what a
 liveness probe should be. **What it must never be is the thing that decides whether the shop is
 working**, on a status page, in an alert, or in a load balancer's choice of where to send an order.
+
+Start Postgres again, and give `orders` half a minute to find it, before the next section:
+
+```sh
+docker compose start postgres
+sleep 30
+```

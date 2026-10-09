@@ -3,6 +3,15 @@ title: What the cluster already exposes
 version: 1
 ---
 
+After `./up.sh`, this lesson gives the cluster something to measure: two copies of the shop behind a
+Service, and a busybox pod that asks it twenty times and then waits.
+
+```sh
+kubectl create deployment shop --image=shop:1.0 --replicas=2
+kubectl expose deployment shop --port 80 --target-port 8080
+kubectl run probe --image=busybox:1.37 --restart=Never --command -- sh -c "for i in \$(seq 20); do wget -qO- shop >/dev/null; done; sleep 3600"
+```
+
 **Every component of Kubernetes publishes its own measurements**, as plain text in the Prometheus
 format, at an address called `/metrics`. A monitoring system collects them; nothing has to be
 installed in the components themselves. The API server's own, read through kubectl:

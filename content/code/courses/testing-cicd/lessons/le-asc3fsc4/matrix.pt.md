@@ -1,6 +1,6 @@
 ---
 title: A matriz
-version: 1
+version: 2
 ---
 
 Uma **matriz** roda o mesmo job uma vez por combinação de algumas variáveis: versões da linguagem,
@@ -11,7 +11,9 @@ execução única na configuração de quem escreveu não os vê.
 
 A aula 3 seção 09 apontou o fuso `WAREHOUSE` na linha 11 de `dispatch.py`. Aqui um colega simplifica
 essa função, pensando que a loja e o servidor ficam os dois em São Paulo, então não há por que
-nomear um fuso:
+nomear um fuso. Faça a mesma edição, as linhas que o diff abaixo tira e a que ele muda, e faça o
+commit como o colega fez, com
+`git commit -am "Read the order time in local time, no zone table needed"`:
 
 ```
 ana@laptop:~/shipquote$ git diff

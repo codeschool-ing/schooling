@@ -4,7 +4,12 @@ version: 1
 ---
 
 A policy of `drop` is silent by design: the sender gets nothing, and neither does the administrator.
-A rule placed **last in the chain**, just before the policy, can record what is about to be dropped:
+A rule placed **last in the chain**, just before the policy, can record what is about to be dropped.
+On `fw`, with the baseline loaded:
+
+```sh
+nft add rule ip filter forward limit rate 5/second log group 1 prefix \"fw-drop \" comment \"what the policy is about to drop\"
+```
 
 ```
 root@fw:~# nft list chain ip filter forward | tail -3
@@ -17,8 +22,9 @@ root@fw:~# nft list chain ip filter forward | tail -3
 the prefix labels the lines. `limit rate 5/second` matters as much as the log itself: without it,
 anybody can fill the disk by sending packets the firewall drops, and the log becomes the attack.
 
-`tcpdump` can read that group directly. With it listening on `fw`, `remote` tries two cells that are
-closed, and `laptop` one:
+`tcpdump` can read that group directly. With it listening on `fw`, started in the background with
+`setsid timeout 10 tcpdump -n -l -i nflog:1 -c 3 > /root/drops.txt 2>/dev/null </dev/null &`, `remote`
+tries two cells that are closed, and `laptop` one:
 
 ```
 ana@remote:~$ probe db:5432 app:22

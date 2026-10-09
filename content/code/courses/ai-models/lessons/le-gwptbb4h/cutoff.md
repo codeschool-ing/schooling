@@ -7,7 +7,6 @@ A pretrained model knows what was in its training text, and nothing that happene
 was collected. That date is the **knowledge cutoff**, and Llama 3.1's card states it plainly:
 
 ```
-ana@desk:~/desk$ sources quote llama3.1-card "data freshness"
 # meta-llama/llama-models@0e0b8c51 models/llama3_1/MODEL_CARD.md
  188: **Data Freshness:** The pretraining data has a cutoff of December 2023.
 ```

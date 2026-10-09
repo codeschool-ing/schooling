@@ -20,7 +20,7 @@ nada pode ser calculado antes: cada candidato custa uma execução do modelo par
 isso ele é usado em 20 candidatos e não numa coleção inteira.
 
 No sentence-transformers fica assim. Isto **não foi executado** aqui: o modelo é baixado de
-huggingface.co, que estava fora de alcance do laboratório, e a biblioteca precisa do PyTorch, cujo
+huggingface.co, que estava fora de alcance da máquina em que este curso foi gravado, e a biblioteca precisa do PyTorch, cujo
 índice também estava fora de alcance.
 
 ```python

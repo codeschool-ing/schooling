@@ -5,12 +5,12 @@ version: 1
 
 The usual picture is that any machine on an office network can watch the office's traffic, if it
 only runs the right program. **On a switched network it cannot.** A switch learns which MAC address
-sits behind which port, as lesson 18 of `networks-addressing` showed, and sends a unicast frame out of
+sits behind which port, as `networks-addressing` showed, and sends a unicast frame out of
 that one port and no other. A laptop on the next port sees its own traffic, the broadcasts, and very
 little else.
 
-The lab shows it. `files` fetched a page from `web1` while `laptop`, on the same switch, captured
-everything to or from `files` for five seconds:
+The network of lesson 1 shows it. Start the capture on `laptop`, which sits on the same switch, and
+while it runs its five seconds, fetch a page from `web1` on `files` with `curl -s http://192.0.2.21/`:
 
 ```
 ana@laptop:~$ sudo timeout 5 tcpdump -n -i eth0 host 192.168.10.10 and not host 192.168.10.20
@@ -31,9 +31,10 @@ laptop's.
 ## Three places that do see the traffic
 
 **A mirror port**, which Cisco calls SPAN, is a switch setting that copies every frame of one port,
-or of a whole VLAN, out of another port where an analyser listens. The lab's switch was set to mirror
-the port of `files` to `mon`, a machine with one interface and no IP address, and the same request
-was made again:
+or of a whole VLAN, out of another port where an analyser listens. `netlab.sh` has a verb for it. On
+the virtual machine, `sudo bash netlab.sh span hq files` sets the head-office switch to mirror the port
+of `files` to `mon`, a machine with one interface and no IP address. Start the capture on `mon` and
+make the same request on `files` again:
 
 ```
 ana@mon:~$ tshark -n -i eth0 -c 6 -f "tcp port 80"
@@ -55,7 +56,7 @@ machines it watches.
 **A tap** is a small device put in the cable itself. It passes the traffic through and copies both
 directions to a monitoring port, whatever the switch is configured to do. It costs money and a moment
 of downtime to insert, and it is the answer when a mirror port cannot be trusted to be complete. The
-lab has no tap, so this one is described and not shown.
+network of this course has no tap, so this one is described and not shown.
 
 **On the host itself** is the third place, and often the simplest: capture on the server that is
 misbehaving, where every packet it sends or receives crosses its own interface. That is lesson 12,

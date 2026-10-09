@@ -1,6 +1,6 @@
 ---
 title: Where the blank lines come from
-version: 1
+version: 2
 ---
 
 A router does not mind a blank line in its configuration; a diff does. Lesson 11 compares the
@@ -19,6 +19,21 @@ interface {{ i.name }}
  ip address {{ i.address }}
 exit
 {% endfor %}
+```
+
+Saved as `templates/iface.j2`, it is rendered for edge1 by `spacing.py`, which turns on Jinja2's
+two whitespace options when it is given `--trim`:
+
+```python
+import sys
+
+import yaml
+from jinja2 import Environment, FileSystemLoader
+
+data = yaml.safe_load(open("data/edge1.yaml"))
+trim = "--trim" in sys.argv
+env = Environment(loader=FileSystemLoader("templates"), trim_blocks=trim, lstrip_blocks=trim)
+print(env.get_template("iface.j2").render(data), end="")
 ```
 
 Rendered with Jinja2's defaults:

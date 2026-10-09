@@ -1,70 +1,93 @@
 ---
 title: Uma janela para a pergunta e a resposta
-version: 1
+version: 2
 ---
 
-Todo modelo tem uma **janela de contexto**: o máximo de tokens que ele consegue tratar numa
-requisição. O erro comum é lê-la como o tamanho da pergunta que se pode fazer. **Ela é o tamanho da
-pergunta e da resposta juntas.** O modelo escreve a resposta na mesma janela de onde leu o prompt,
-um token por vez, então cada token de saída que você permite é um token que a entrada não pode
-usar.
+Todo modelo tem uma **janela de contexto**: o máximo de tokens que ele dá conta de tratar numa
+requisição. O erro comum é lê-la como o tamanho da pergunta que você pode fazer. **Ela é o tamanho
+da pergunta e da resposta juntas.** O modelo escreve a resposta na mesma janela de onde leu o
+prompt, um token por vez, então cada token de saída que você permite é um token que a entrada não
+pode usar.
 
-A requisição leva o segundo número. O `max_tokens` é o máximo que o modelo pode escrever, e a API
-o exige, porque sem ele o provedor não saberia quanto espaço reservar. Um provedor publica dois
-limites por modelo, a janela e o máximo de saída de uma única resposta, e uma requisição precisa
-caber nos dois.
+A requisição leva o segundo número. `max_tokens` é o máximo que o modelo pode escrever, e a API da
+Anthropic o exige, porque sem ele o provedor não saberia quanto espaço reservar. Um provedor
+publica dois limites por modelo, a janela e o máximo de saída que uma resposta pode ter, e uma
+requisição precisa caber nos dois.
 
-## Batendo nos limites de propósito
+## O que acontece depois da borda
 
-O `tiny-1` do labllm tem uma janela de 2.048 tokens e deixa uma resposta ter no máximo 512,
-pequenos de propósito, para os limites ficarem a poucas linhas de texto. O `lab/window.py` manda
-as primeiras *n* palavras do corpus do laboratório com um certo `max_tokens`:
+O Llama 3.2 foi treinado para uma janela de 128 mil tokens, mas **o Ollama o roda com uma janela de
+4.096** a não ser que alguém mande outra coisa, porque cada token de janela custa memória: é a
+coluna `CONTEXT` que o `ollama ps` imprimiu na aula 1. Quatro mil tokens são umas poucas páginas,
+perto o bastante para chegar lá de propósito. O `~/shop/scratch/window.py` escreve uma senha no
+topo de um texto longo, enche o texto com cópias do `CONVENTIONS.md` e pergunta a senha no fim:
+
+```python
+import sys
+
+import anthropic
+import tiktoken
+
+client = anthropic.Anthropic()
+enc = tiktoken.get_encoding("o200k_base")
+copies = int(sys.argv[1])
+text = ("The password for this exercise is PINEAPPLE.\n\n" + open("CONVENTIONS.md").read() * copies
+        + "\n\nWhat is the password for this exercise? Answer with the word only.")
+r = client.messages.create(model="llama3.2:3b", max_tokens=20,
+                           messages=[{"role": "user", "content": text}])
+read = r.usage.input_tokens + (r.usage.cache_read_input_tokens or 0)
+print(f"sent about {len(enc.encode(text))}, read {read}: {r.stop_reason}, {r.content[0].text!r}")
+```
+
+Ele imprime dois números: quanto o `tiktoken` estima que foi enviado, e quanto o Ollama diz que o
+modelo leu. Duas cópias, dez e doze:
 
 ```
-ana@dev:~/shop$ python lab/window.py 900 200
-max_tokens: 1717 in, 200 out
-ana@dev:~/shop$ python lab/window.py 900 400
-400 prompt is too long: 1717 tokens + 400 max_tokens > 2048 maximum
-ana@dev:~/shop$ python lab/window.py 1300 200
-400 prompt is too long: 2292 tokens + 200 max_tokens > 2048 maximum
-ana@dev:~/shop$ python lab/window.py 900 600
-400 max_tokens: 600 > 512, which is the maximum allowed number of output tokens for tiny-1
+ana@dev:~/shop$ python scratch/window.py 2
+sent about 772, read 805: end_turn, 'PINEAPPLE'
+ana@dev:~/shop$ python scratch/window.py 10
+sent about 3764, read 3829: end_turn, 'PINEAPPLE'
+ana@dev:~/shop$ python scratch/window.py 12
+sent about 4512, read 2050: end_turn, 'shop'
 ```
 
-Leia as quatro linhas como quatro situações diferentes:
+Leia as três linhas como três situações:
 
-- **1.717 de entrada e 200 de saída cabe**, com 131 tokens sobrando. A resposta parou em 200 tokens
-  com `stop_reason` igual a `max_tokens`, assunto da aula 2 seção 08.
-- **O mesmo prompt com 400 de saída é recusado**, embora o prompt não tenha mudado. 1.717 mais 400
-  passa de 2.048. O prompt estava bom e o espaço pedido para a resposta não.
-- **2.292 de entrada não cabe de jeito nenhum**, diga o `max_tokens` o que disser.
-- **600 de saída é recusado antes de qualquer contagem**: passa do limite por resposta de 512, e um
-  prompt menor não mudaria isso.
+- **Duas cópias cabem com folga.** As duas contagens diferem por algumas dezenas de tokens, porque
+  o `tiktoken` não é o tokenizador deste modelo e não vê o embrulho em volta de uma mensagem; a
+  próxima seção é sobre essa diferença.
+- **Dez cópias também cabem, por pouco.** 3.829 tokens lidos, de 4.096, com espaço sobrando para
+  os vinte da resposta. A senha lá no topo foi achada.
+- **Doze cópias não couberam, e nada disse isso.** Uns 4.512 tokens foram enviados e o modelo leu
+  2.050. O Ollama ficou com o fim do prompt, descartou o começo, e a senha foi junto. A requisição
+  ainda terminou com `end_turn`, e o modelo ainda respondeu, com uma palavra da parte que recebeu.
 
 ```schooling-figure
-{"svg": "<svg viewBox=\"0 0 720 230\" role=\"img\" aria-label=\"Três requisições contra a janela de 2.048 tokens do tiny-1. 1.717 de entrada e 200 de saída cabe. 1.717 de entrada e 400 de saída dá 2.117 e é recusado. 2.292 de entrada com 200 de saída é recusado antes mesmo de a saída contar.\"><defs><marker id=\"wn-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><text x=\"150\" y=\"19\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">janela do tiny-1: 2.048 tokens</text><text x=\"140\" y=\"62\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\">1.717 + 200</text><rect x=\"150\" y=\"50\" width=\"343.40000000000003\" height=\"24\" rx=\"2\" fill=\"var(--phosphor-dim)\" stroke=\"none\" stroke-width=\"1.2\"></rect><rect x=\"493.40000000000003\" y=\"50\" width=\"40.0\" height=\"24\" rx=\"2\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"541.4000000000001\" y=\"62\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--phosphor)\">cabe</text><text x=\"140\" y=\"114\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\">1.717 + 400</text><rect x=\"150\" y=\"102\" width=\"343.40000000000003\" height=\"24\" rx=\"2\" fill=\"var(--phosphor-dim)\" stroke=\"none\" stroke-width=\"1.2\"></rect><rect x=\"493.40000000000003\" y=\"102\" width=\"80.0\" height=\"24\" rx=\"2\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"581.4000000000001\" y=\"114\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">recusado</text><text x=\"140\" y=\"166\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\">2.292 + 200</text><rect x=\"150\" y=\"154\" width=\"458.40000000000003\" height=\"24\" rx=\"2\" fill=\"var(--phosphor-dim)\" stroke=\"none\" stroke-width=\"1.2\"></rect><rect x=\"608.4000000000001\" y=\"154\" width=\"40.0\" height=\"24\" rx=\"2\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"656.4000000000001\" y=\"166\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">recusado</text><path d=\"M559.6 36 L559.6 47\" stroke=\"var(--paper)\" stroke-width=\"1.2\" fill=\"none\" stroke-dasharray=\"4 3\"></path><path d=\"M559.6 77 L559.6 99\" stroke=\"var(--paper)\" stroke-width=\"1.2\" fill=\"none\" stroke-dasharray=\"4 3\"></path><path d=\"M559.6 129 L559.6 151\" stroke=\"var(--paper)\" stroke-width=\"1.2\" fill=\"none\" stroke-dasharray=\"4 3\"></path><path d=\"M559.6 181 L559.6 206\" stroke=\"var(--paper)\" stroke-width=\"1.2\" fill=\"none\" stroke-dasharray=\"4 3\"></path><text x=\"559.6\" y=\"218\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">2048</text><rect x=\"560\" y=\"14\" width=\"12\" height=\"10\" rx=\"1\" fill=\"var(--phosphor-dim)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"578\" y=\"19\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">entrada</text><rect x=\"630\" y=\"14\" width=\"12\" height=\"10\" rx=\"1\" fill=\"var(--phosphor)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"648\" y=\"19\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">saída</text></svg>", "caption": "O prompt e o espaço para a resposta dividem uma janela. A requisição do meio tem o mesmo prompt da primeira e é recusada por pedir mais espaço."}
+{"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"Três requisições contra a janela de 4.096 tokens do Ollama para o llama3.2:3b. Duas cópias: 805 tokens lidos, a senha achada. Dez cópias: 3.829 lidos, achada. Doze cópias: uns 4.512 enviados, o começo descartado, 2.050 lidos, e a resposta foi shop.\"><text x=\"150\" y=\"19\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" font-weight=\"600\" fill=\"var(--paper)\">a janela do Ollama para o llama3.2:3b: 4.096 tokens</text><text x=\"140\" y=\"62\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\">2 cópias</text><rect x=\"150\" y=\"50\" width=\"78.6\" height=\"24\" rx=\"2\" fill=\"var(--phosphor-dim)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"236.6\" y=\"62\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--phosphor)\">leu 805: PINEAPPLE</text><text x=\"140\" y=\"114\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\">10 cópias</text><rect x=\"150\" y=\"102\" width=\"373.9\" height=\"24\" rx=\"2\" fill=\"var(--phosphor-dim)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"531.9\" y=\"114\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--phosphor)\">leu 3.829: PINEAPPLE</text><text x=\"140\" y=\"166\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\">12 cópias</text><rect x=\"150\" y=\"154\" width=\"240.4\" height=\"24\" rx=\"2\" fill=\"none\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><rect x=\"390.4\" y=\"154\" width=\"200.2\" height=\"24\" rx=\"2\" fill=\"var(--phosphor-dim)\" stroke=\"none\" stroke-width=\"1.2\"></rect><text x=\"270.2\" y=\"166\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">descartado</text><text x=\"598.6\" y=\"166\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--amber)\">leu 2.050: shop</text><path d=\"M550.0 36 L550.0 47\" stroke=\"var(--paper)\" stroke-width=\"1.2\" fill=\"none\" stroke-dasharray=\"4 3\"></path><path d=\"M550.0 77 L550.0 99\" stroke=\"var(--paper)\" stroke-width=\"1.2\" fill=\"none\" stroke-dasharray=\"4 3\"></path><path d=\"M550.0 129 L550.0 151\" stroke=\"var(--paper)\" stroke-width=\"1.2\" fill=\"none\" stroke-dasharray=\"4 3\"></path><path d=\"M550.0 181 L550.0 206\" stroke=\"var(--paper)\" stroke-width=\"1.2\" fill=\"none\" stroke-dasharray=\"4 3\"></path><text x=\"550.0\" y=\"218\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper-dim)\">4096</text><text x=\"150\" y=\"238\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">a senha era a primeira linha; a parte descartada a levou</text></svg>", "caption": "O prompt e a resposta dividem uma janela. A terceira requisição foi cortada pela frente sem uma palavra, e a senha do topo foi junto com o que foi cortado."}
 ```
 
-**Os quatro são erros `400`, levantados antes de qualquer geração**, então não custam nada e
-terminam em milissegundos. A regra de somar o prompt ao `max_tokens` é do labllm, e também é como
-a API da Anthropic trata os modelos recentes dela: recusa em vez de encurtar a resposta por você.
-Outras APIs e modelos mais antigos já cortaram a saída em silêncio, o que é pior, porque a
-requisição dá certo com menos do que você pediu. De um jeito ou de outro, a verificação pertence ao
-seu código, antes de a requisição sair, e é isso que a aula 2 seção 09 constrói.
+**Esse é o pior dos dois jeitos de uma janela ser imposta.** A API da Anthropic recusa uma
+requisição cujo prompt e `max_tokens` não cabem, com um erro `400`, antes de qualquer geração:
+não custa nada e diz exatamente o que está errado. O Ollama, e algumas outras APIs e modelos mais
+antigos, cortam a entrada ou a saída, e a requisição dá certo com menos do que você mandou. De um
+jeito ou de outro, **a verificação fica no seu código, antes de a requisição sair**, que é o que a
+aula 2 seção 09 constrói. E onde uma ferramenta encurta as coisas calada, um teste como este, com
+um fato no começo que só sobrevive se tudo chegar, é como você descobre.
 
 ## Do tamanho das janelas reais
 
-As janelas dos modelos da tabela de preços da aula 2 seção 04 vão de 200 mil tokens a pouco mais de
-um milhão, e o máximo de saída por resposta, de 64 mil a 128 mil. Um milhão de tokens são vários
-milhares de páginas. É fácil concluir daí que o limite deixou de importar, e três coisas dizem o
+As janelas dos modelos da tabela de preços da aula 2 seção 04 vão de 200 mil tokens a pouco mais
+de um milhão, e o máximo de saída por resposta de 64 mil a 128 mil. Um milhão de tokens são
+milhares de páginas. É fácil concluir daí que o limite não importa mais, e três coisas dizem o
 contrário:
 
-- **Você paga por cada token de entrada em cada requisição.** Uma janela que você enche é uma conta
-  que você paga, toda vez; a aula 2 seção 05 põe números nisso.
-- **Uma janela cheia é mais lenta.** O modelo lê tudo antes de escrever o primeiro token, e a espera
-  pelo primeiro token cresce com o prompt.
-- **Uma janela cheia não é uma janela bem lida.** Modelos são mensuravelmente piores em usar
-  informação enterrada no meio de um contexto muito longo do que no começo ou no fim, resultado
+- **Você paga cada token de entrada em cada requisição.** Uma janela que você enche é uma conta que
+  você paga, toda vez; a aula 2 seção 05 põe números nisso.
+- **Uma janela cheia é mais lenta.** O modelo lê tudo antes de escrever o primeiro token, e a
+  espera pelo primeiro token cresce com o prompt. Na máquina da gravação, ler 1.400 tokens levou
+  uns vinte segundos; a aula 2 seção 07 mede isso.
+- **Uma janela cheia não é uma janela bem lida.** Os modelos são mensuravelmente piores em usar
+  informação enterrada no meio de um contexto muito longo do que no começo ou no fim, um resultado
   publicado primeiro como *Lost in the Middle* (Liu e outros, 2023). Pôr o repositório inteiro no
   prompt não é o mesmo que o modelo tê-lo entendido. A aula 6 busca os poucos trechos que importam
   em vez disso.

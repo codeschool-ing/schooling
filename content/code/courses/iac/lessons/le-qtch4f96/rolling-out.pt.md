@@ -1,6 +1,6 @@
 ---
 title: Levar uma imagem à produção com o Terraform
-version: 1
+version: 2
 ---
 
 Uma imagem sozinha não roda nada. Alguma coisa precisa ligar máquinas a partir dela, e substituí-las
@@ -15,7 +15,18 @@ O moto do laboratório não consegue rodar o build do Packer que faria uma AMI, 
 abaixo foram **encenadas**: criadas no moto a partir de uma instância descartável, do jeito que a
 aula 5 fez as imagens dela, e nomeadas como o source `amazon-ebs` da seção sobre o template as
 nomearia. Não há nada dentro de nenhuma das duas; o moto guarda um registro com um id. O que o
-Terraform faz com elas é exatamente o que faria numa conta de verdade.
+Terraform faz com elas é exatamente o que faria numa conta de verdade. Para criar as mesmas duas no seu moto, rode o que a Ana rodou, no
+diretório onde fica a configuração dela; `BASE` guarda o id da instância descartável:
+
+```sh
+mkdir -p ~/shop/app && cd ~/shop/app
+BASE=$(aws ec2 run-instances --image-id ami-1e749f67 --instance-type t3.micro --query 'Instances[0].InstanceId' --output text)
+aws ec2 create-image --instance-id $BASE --name shop-web-1.0.1
+aws ec2 create-image --instance-id $BASE --name shop-web-1.1.0
+aws ec2 terminate-instances --instance-ids $BASE
+```
+
+Elas aparecem assim:
 
 ```
 ana@laptop:~/shop/app$ aws ec2 describe-images --owners self --query "sort_by(Images,&Name)[].[Name,ImageId]" --output text
@@ -24,7 +35,7 @@ shop-web-1.1.0	ami-d9628db9f20e7ed8f
 ```
 
 A configuração da Ana em `~/shop/app` procura a imagem pela versão, com o `data "aws_ami"` que a
-aula 5 ensinou, e liga o servidor web a partir dela:
+aula 5 ensinou, e liga o servidor web a partir dela. O `main.tf`:
 
 ```hcl
 terraform {
@@ -65,6 +76,8 @@ resource "aws_instance" "web" {
 }
 ```
 
+e o `terraform.tfvars`:
+
 ```hcl
 web_version = "1.0.1"
 ```
@@ -73,6 +86,15 @@ Duas escolhas importam aqui. A versão é uma **variável sem default**, definid
 `terraform.tfvars`, então a imagem que a loja roda está escrita numa linha de um arquivo revisado e
 em nenhum outro lugar. E a instância tem `create_before_destroy`, da aula 6, porque mudar a imagem
 vai substituí-la.
+
+A configuração é um repositório git próprio, que deixa de fora o que o Terraform escreve, e a Ana
+faz o commit antes do primeiro apply:
+
+```sh
+terraform init
+git init -q . && printf ".terraform/\n*.tfstate*\n" > .gitignore
+git add -A && git commit -qm 'web runs shop-web 1.0.1'
+```
 
 ```
 ana@laptop:~/shop/app$ terraform apply -auto-approve | tail -n 3
@@ -142,7 +164,8 @@ Apply complete! Resources: 1 added, 0 changed, 1 destroyed.
 
 A ordem é o `+/-` da aula 6: a instância nova é criada primeiro, e só depois a antiga, mantida por um
 momento como *deposed object*, é destruída. Numa conta de verdade a máquina nova não tem nada a
-instalar quando liga, então pode começar a atender assim que sobe.
+instalar quando liga, então pode começar a atender assim que sobe. A mudança entra num commit, como entraria um pull
+request aceito: `git add -A && git commit -qm 'web runs shop-web 1.1.0'`.
 
 ## Voltar atrás é avançar para um número mais antigo
 

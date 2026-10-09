@@ -1,11 +1,16 @@
 ---
 title: First queries: selecting series
-version: 1
+version: 2
 ---
 
 PromQL, Prometheus's query language, is asked through an HTTP API, and its answers are JSON. A short
 script, `promq`, sends one expression and prints each series it got back on one line, its labels and
-then its value:
+then its value. Save it as `~/shop/promq`, as the `cat` below prints it, and make it executable;
+every lesson after this one uses it too:
+
+```sh
+chmod +x promq
+```
 
 ```
 ana@obs:~/shop$ cat promq

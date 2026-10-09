@@ -1,0 +1,234 @@
+---
+title: O warehouse inteiro, num script
+version: 1
+---
+
+Toda lição depois desta faz perguntas ao mesmo warehouse, e parte dele só é explicada mais adiante:
+a dimensão de clientes na lição 5, os autores na lição 4, e versões das tabelas fato desta lição que
+apontam para um cliente. **Esta seção lhe dá tudo agora**, para que a próxima lição tenha onde
+rodar. Salve os arquivos em `~/wh` e leia cada um quando chegar a lição que o explica.
+
+A dimensão de clientes, que a lição 5 constrói e explica. Ela guarda uma linha por cliente para cada
+trecho de tempo em que nada nele mudou, para que uma venda aponte para o cliente como ele era no dia:
+
+```sql
+-- Slowly changing, type 2 on tier, city and state: a new row every time one
+-- of them changed, each row valid from the change until the next one.
+-- The name is type 1: every version carries the name as it is spelled now.
+CREATE TABLE dim_customer AS
+WITH tracked AS (
+    SELECT * FROM staging.customer_changes WHERE field IN ('tier', 'city', 'state')
+),
+-- what each tracked field held when the customer joined: the old value of its
+-- first change, or the current value if it never changed
+first_values AS (
+    SELECT c.customer_id, c.created_at AS valid_from,
+           coalesce((SELECT old_value FROM tracked t WHERE t.customer_id = c.customer_id
+                     AND t.field = 'tier' ORDER BY changed_at LIMIT 1), c.tier)  AS tier,
+           coalesce((SELECT old_value FROM tracked t WHERE t.customer_id = c.customer_id
+                     AND t.field = 'city' ORDER BY changed_at LIMIT 1), c.city)  AS city,
+           coalesce((SELECT old_value FROM tracked t WHERE t.customer_id = c.customer_id
+                     AND t.field = 'state' ORDER BY changed_at LIMIT 1), c.state) AS state
+    FROM staging.customers c
+),
+-- one event per moment something tracked changed
+moments AS (
+    SELECT customer_id, changed_at AS valid_from,
+           max(new_value) FILTER (WHERE field = 'tier')  AS tier,
+           max(new_value) FILTER (WHERE field = 'city')  AS city,
+           max(new_value) FILTER (WHERE field = 'state') AS state
+    FROM tracked GROUP BY customer_id, changed_at
+),
+timeline AS (
+    SELECT * FROM first_values
+    UNION ALL
+    SELECT * FROM moments
+),
+-- carry each field forward until the moment that changes it
+versions AS (
+    SELECT customer_id, valid_from,
+           last_value(tier IGNORE NULLS)  OVER w AS tier,
+           last_value(city IGNORE NULLS)  OVER w AS city,
+           last_value(state IGNORE NULLS) OVER w AS state,
+           lead(valid_from) OVER (PARTITION BY customer_id ORDER BY valid_from) AS next_from
+    FROM timeline
+    WINDOW w AS (PARTITION BY customer_id ORDER BY valid_from
+                 ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+)
+SELECT row_number() OVER (ORDER BY v.customer_id, v.valid_from) AS customer_key,
+       v.customer_id,
+       c.name,
+       v.tier,
+       v.city,
+       v.state,
+       v.valid_from,
+       coalesce(v.next_from, TIMESTAMPTZ '9999-12-31 00:00:00-03') AS valid_to,
+       v.next_from IS NULL                                     AS is_current
+FROM versions v JOIN staging.customers c USING (customer_id)
+UNION ALL
+SELECT 0, NULL, 'Walk-in, not identified', 'none', 'Unknown', '--',
+       TIMESTAMPTZ '1970-01-01 00:00:00-03', TIMESTAMPTZ '9999-12-31 00:00:00-03', true
+ORDER BY customer_key;
+```
+
+A dimensão de autores, e a ponte entre um livro e os seus autores, que a lição 4 explica:
+
+```sql
+CREATE TABLE dim_author AS
+SELECT row_number() OVER (ORDER BY author_id) AS author_key, author_id, name AS author_name,
+       country
+FROM staging.authors;
+
+-- A book can have several authors, so the link is a table of its own. The
+-- weight divides a book's sales between them and adds up to 1 per book.
+CREATE TABLE bridge_book_author AS
+SELECT b.book_key, a.author_key, ba.position,
+       1.0 / count(*) OVER (PARTITION BY ba.book_id) AS weight
+FROM staging.book_authors ba
+JOIN dim_book b   ON b.book_id = ba.book_id
+JOIN dim_author a ON a.author_id = ba.author_id;
+```
+
+`fact_sales.sql` e `fact_fulfilment.sql` substituem as versões desta lição. Cada uma ganha um
+`customer_key`, achado perguntando qual versão do cliente valia quando o pedido foi feito; um pedido
+sem cliente, como muitas vendas de caixa, recebe a chave 0, que a lição 4 explica.
+
+```sql
+-- Grain: one row per line of an order that was not cancelled.
+CREATE TABLE fact_sales AS
+SELECT d.date_key,
+       s.shop_key,
+       b.book_key,
+       coalesce(c.customer_key, 0)                     AS customer_key,
+       coalesce(l.promotion_id, 0)                     AS promotion_key,
+       o.order_id,
+       l.line_no,
+       l.quantity,
+       l.quantity * l.unit_price_cents                 AS gross_cents,
+       l.discount_cents,
+       l.quantity * l.unit_price_cents - l.discount_cents AS net_cents
+FROM staging.order_lines l
+JOIN staging.orders o USING (order_id)
+JOIN dim_date d       ON d.date = CAST(o.ordered_at AS DATE)
+JOIN dim_shop s       ON s.shop_id = o.shop_id
+JOIN dim_book b       ON b.book_id = l.book_id
+LEFT JOIN dim_customer c
+       ON c.customer_id = o.customer_id
+      AND o.ordered_at >= c.valid_from AND o.ordered_at < c.valid_to
+WHERE o.status <> 'cancelled'
+ORDER BY o.order_id, l.line_no;
+```
+
+```sql
+-- Grain: one row per online order, updated as it moves. A milestone not
+-- reached yet points at the 'Not yet' date, key 0.
+CREATE TABLE fact_fulfilment AS
+SELECT o.order_id,
+       c.customer_key,
+       CAST(strftime(o.ordered_at, '%Y%m%d') AS INTEGER)                  AS ordered_date_key,
+       coalesce(CAST(strftime(o.paid_at, '%Y%m%d') AS INTEGER), 0)        AS paid_date_key,
+       coalesce(CAST(strftime(o.shipped_at, '%Y%m%d') AS INTEGER), 0)     AS shipped_date_key,
+       coalesce(CAST(strftime(o.delivered_at, '%Y%m%d') AS INTEGER), 0)   AS delivered_date_key,
+       o.status,
+       date_diff('day', CAST(o.ordered_at AS DATE), CAST(o.shipped_at AS DATE))   AS days_to_ship,
+       date_diff('day', CAST(o.ordered_at AS DATE), CAST(o.delivered_at AS DATE)) AS days_to_deliver
+FROM staging.orders o
+JOIN staging.shops sh USING (shop_id)
+JOIN dim_customer c
+  ON c.customer_id = o.customer_id
+ AND o.ordered_at >= c.valid_from AND o.ordered_at < c.valid_to
+WHERE sh.channel = 'online' AND o.status <> 'cancelled'
+ORDER BY o.order_id;
+```
+
+`fact_payments.sql` é novo. A lição 4 é sobre por que um pagamento precisa de uma tabela própria:
+
+```sql
+-- Grain: one row per payment. Most orders have one; some have two.
+CREATE TABLE fact_payments AS
+SELECT d.date_key, s.shop_key, coalesce(c.customer_key, 0) AS customer_key,
+       p.order_id, p.payment_id, p.method, p.installments, p.amount_cents
+FROM staging.payments p
+JOIN staging.orders o USING (order_id)
+JOIN dim_date d ON d.date = CAST(o.ordered_at AS DATE)
+JOIN dim_shop s ON s.shop_id = o.shop_id
+LEFT JOIN dim_customer c
+       ON c.customer_id = o.customer_id
+      AND o.ordered_at >= c.valid_from AND o.ordered_at < c.valid_to
+ORDER BY p.payment_id;
+```
+
+E `fact_event_attendance.sql` toma o lugar de `fact_attendance.sql`, com o autor e o cliente como
+eram às seis da tarde, quando os eventos começam:
+
+```sql
+-- Grain: one row per customer who came to an author's event. No measure:
+-- the row is the fact. The events start at six in the evening.
+CREATE TABLE fact_event_attendance AS
+SELECT d.date_key, s.shop_key, a.author_key, c.customer_key
+FROM staging.event_attendance ea
+JOIN staging.events e USING (event_id)
+JOIN dim_date d   ON d.date = e.held_on
+JOIN dim_shop s   ON s.shop_id = e.shop_id
+JOIN dim_author a ON a.author_id = e.author_id
+JOIN dim_customer c
+  ON c.customer_id = ea.customer_id
+ AND e.held_on + INTERVAL 18 HOUR >= c.valid_from
+ AND e.held_on + INTERVAL 18 HOUR < c.valid_to
+ORDER BY d.date_key, s.shop_key;
+```
+
+O script que roda todos eles, numa ordem em que cada tabela é construída depois das tabelas para as
+quais aponta. Ele começa de uma extração nova, então o que o banco da rede tiver quando você o rodar
+é o que o warehouse vai ter. Salve-o como `~/wh/build.sh`:
+
+```sh
+#!/bin/sh
+# Build the whole warehouse from nothing: a fresh extract of the shop's
+# database, the staging layer, every dimension, then the facts that point at
+# them.
+set -e
+rm -rf extract wh.duckdb wh.duckdb.wal
+sh extract.sh
+for f in staging dim_date dim_shop dim_book dim_customer dim_promotion dim_author \
+         fact_sales fact_inventory fact_fulfilment fact_payments fact_event_attendance; do
+  duckdb wh.duckdb < $f.sql
+done
+```
+
+```
+ana@lab:~/wh$ time sh build.sh
+
+real	0m6.056s
+user	0m5.844s
+sys	0m1.315s
+ana@lab:~/wh$ duckdb wh.duckdb -c "SELECT table_name, estimated_size AS rows FROM duckdb_tables() WHERE schema_name = 'main' ORDER BY table_name"
+┌───────────────────────┬────────┐
+│      table_name       │  rows  │
+│        varchar        │ int64  │
+├───────────────────────┼────────┤
+│ bridge_book_author    │   3570 │
+│ dim_author            │   1800 │
+│ dim_book              │   3000 │
+│ dim_customer          │  49309 │
+│ dim_date              │    732 │
+│ dim_promotion         │     11 │
+│ dim_shop              │      7 │
+│ fact_event_attendance │   2923 │
+│ fact_fulfilment       │ 244275 │
+│ fact_inventory        │ 197574 │
+│ fact_payments         │ 586405 │
+│ fact_sales            │ 887477 │
+└───────────────────────┴────────┘
+  12 rows              2 columns
+```
+
+Doze tabelas em seis segundos, numa máquina dividida com outro trabalho. Toda lição da 3 à 12 foi
+gravada com o banco da rede exatamente como a lição 1 o carregou e um warehouse recém-saído deste
+script. As lições mudam os dois pelo caminho, e a lição 1 acrescentou um pedido próprio, então para
+começar uma lição onde as transcrições dela começam:
+
+```sh
+dropdb shop && createdb --locale=C.UTF-8 --template=template0 shop
+psql -q -f oltp.sql && sh load.sh && sh build.sh
+```

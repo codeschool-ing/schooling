@@ -1,6 +1,6 @@
 ---
 title: Um apply por vez
-version: 1
+version: 2
 ---
 
 Dois merges próximos disparam duas execuções do pipeline, e as duas fazem plan contra o mesmo
@@ -21,7 +21,16 @@ Plan: 3 to add, 0 to change, 0 to destroy.
 
 Três a adicionar. O plan da execução 2 está correto para o state que leu, que ainda estava vazio, e
 o arquivo dele descreve uma segunda rede inteira. A execução 1 foi então aprovada e aplicada, como a
-seção anterior mostrou, e a aprovação da execução 2 chegou depois disso:
+seção anterior mostrou, e a aprovação da execução 2 chegou depois disso. O job de apply dela, como o
+da execução 1, rodou num clone próprio que recebeu o `tfplan` da execução 2:
+
+```sh
+cd ~ && git clone -q git/shop.git ci/run-2-apply
+cd ci/run-2-apply && cp ../run-2/tfplan .
+./ci.sh apply
+```
+
+Ele parou na hora:
 
 ```
 + terraform apply -input=false -lock-timeout=5m tfplan
@@ -40,7 +49,8 @@ seção anterior mostrou, e a aprovação da execução 2 chegou depois disso:
 **A recusa de plan stale da aula 9 foi o que ficou entre este pipeline e uma VPC duplicada.**
 Aplicado como estava, o plan da execução 2 teria criado uma segunda rede `shop` ao lado da
 primeira, exatamente o acidente que a aula 7 produziu ao perder um state. O pipeline faz a coisa
-honesta com a recusa e faz o plan de novo:
+honesta com a recusa: faz o plan de novo no clone da execução 2, copia o `tfplan` novo para o clone
+do job de apply com `cp tfplan ../run-2-apply/`, e o aplica lá:
 
 ```
 ana@laptop:~/ci/run-2$ ./ci.sh plan 2>&1 | grep -E "# aws|Plan:"
@@ -90,6 +100,36 @@ Algumas ferramentas são construídas exatamente em torno desses problemas. O **
 servidor que você mesmo roda: ele faz plan quando um pull request abre, aplica quando alguém comenta
 `atlantis apply`, e trava cada diretório para um pull request até o merge, então o apply acontece
 antes do merge, e não depois. O **HCP Terraform**, o serviço da HashiCorp, roda plans e applies por
-conta própria e enfileira as execuções de cada workspace, uma de cada vez. Nenhum dos dois está
-instalado aqui, e nenhum muda as ideias: um só lugar aplica, aplica um plan que alguém leu, e aplica
-um de cada vez.
+conta própria e enfileira as execuções de cada workspace, uma de cada vez. Nenhum dos dois foi usado
+nesta aula, porque cada um exige uma conta que este curso nunca pede: o Atlantis, um repositório num
+serviço como o GitHub ou o GitLab, e o HCP Terraform, uma conta na HashiCorp. Nenhum muda as ideias:
+um só lugar aplica, aplica um plan que alguém leu, e aplica um de cada vez.
+
+## As duas transcrições do começo desta aula
+
+A seção 02 mostrou o laptop da Ana com uma mudança sem commit, e a seção 03 um pull request barrado
+pelo scan. As duas foram gravadas aqui, no fim, e é assim que você as reproduz na sua máquina. Para o
+laptop, atualize o `~/shop` com o remoto e mude a faixa da sub-rede sem fazer commit:
+
+```sh
+cd ~/shop
+git pull -q origin main
+sed -i 's#10.20.1.0/24#10.20.3.0/24#' main.tf
+```
+
+Depois digite os três comandos da seção 02. Ponha o arquivo de volta em seguida com
+`git checkout -q main.tf`.
+
+Para o pull request, crie uma branch no `~/shop`:
+
+```sh
+git checkout -qb ssh
+```
+
+salve nela o `ssh.tf` da seção 03, e faça o commit e o push:
+
+```sh
+git add ssh.tf && git commit -qm "web: SSH for debugging" && git push -q origin ssh
+```
+
+Os comandos da seção 03 então rodam o pipeline sobre essa branch, a partir do seu diretório home.

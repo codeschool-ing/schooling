@@ -1,13 +1,14 @@
 ---
 title: O orçamento de tokens
-version: 1
+version: 2
 ---
 
-Toda requisição tem um limite de tamanho, e a aula 1 bateu nele: 9.072 tokens de documentos contra a
-janela de 8.192 do extract-1, recusados antes de uma palavra ser lida. Com recuperação o prompt é pequeno,
-algumas centenas de tokens, e o limite parece longe. Ele deixa de parecer no dia em que alguém aumenta o k,
-acrescenta um histórico de conversa, ou indexa um documento com uma seção enorme. Um programa que conta
-antes de mandar nunca encontra a recusa.
+Toda requisição tem um limite de tamanho, e a aula 1 bateu nele: uns 9.000 tokens de documentos contra
+os 4.096 com que o Ollama serve o llama3.2:3b, cortados para caber sem uma palavra de aviso. Com
+recuperação o prompt é pequeno, algumas centenas de tokens, e o limite parece longe. Ele deixa de parecer
+no dia em que alguém aumenta o k, acrescenta um histórico de conversa, ou indexa um documento com uma
+seção enorme. Um programa que conta antes de mandar nunca encontra o corte, nem, com um provedor
+comercial, a recusa.
 
 ## Contando antes de mandar
 
@@ -40,13 +41,13 @@ ordem de posição enquanto cabem, e descarta o resto:
 ```
 
 ```
-ana@lab:~/rag$ python budget.py "How long after my return arrives will I get the refund?" 400
+ana@vm:~/rag$ python budget.py "How long after my return arrives will I get the refund?" 400
 instructions and question: 85 tokens
   keep    84 tokens  Returns and refunds policy > Refunds
   keep    85 tokens  Returns and refunds policy > The return window
   keep   104 tokens  Returns and refunds policy > Items sold by marketplace sellers
 358 of 400 tokens, 3 of 3 sources
-ana@lab:~/rag$ python budget.py "How long after my return arrives will I get the refund?" 250
+ana@vm:~/rag$ python budget.py "How long after my return arrives will I get the refund?" 250
 instructions and question: 85 tokens
   keep    84 tokens  Returns and refunds policy > Refunds
   drop    85 tokens  Returns and refunds policy > The return window
@@ -62,15 +63,17 @@ está certo quando a posição é um bom guia, e a aula 12 trata dos casos em qu
 ## O que contar
 
 **Tudo o que entra na requisição.** As instruções, as fontes com os cabeçalhos, a pergunta, qualquer
-histórico de conversa, e o espaço deixado para a resposta: a recusa da aula 1 foi de 9.072 tokens mais 256
-reservados para a resposta. Um orçamento que esquece a resposta é um orçamento que falha nas respostas
-mais longas.
+histórico de conversa, e o espaço deixado para a resposta. A janela do Ollama guarda o prompt e a
+resposta juntos, então um prompt que a enche não deixa lugar para a resposta. Um orçamento que esquece a
+resposta é um orçamento que falha nas respostas mais longas.
 
-**Com a codificação do provedor.** A contagem aqui é do `cl100k_base` do tiktoken, que é com o que o
-labgen conta; o uso do provedor para esta pergunta pelo `rag.py` diz 314 tokens de prompt, que incluem o
-custo extra por mensagem que o provedor acrescenta e esta contagem deixa de fora. Perto o bastante para
-orçar com margem, nunca perto o bastante para orçar até o último token. A API da Anthropic oferece um
-endpoint de contagem de tokens exatamente para isso, e o labgen não o implementa.
+**Com uma codificação próxima da do modelo.** A contagem aqui é do `cl100k_base` do tiktoken, a da
+OpenAI; o llama3.2 tem um tokenizador próprio, então a contagem de um é uma estimativa da do outro. A
+consulta do vale-presente registrada nesta aula saiu com 336 tokens de prompt pela contagem do llama3.2,
+que inclui também o modelo de texto que o Ollama põe em volta de cada mensagem e que nenhuma contagem
+feita antes do envio enxerga. Perto o bastante para orçar com margem, nunca perto o bastante para orçar
+até o último token. A API da Anthropic oferece um endpoint de contagem de tokens exatamente para isso, e o
+Ollama não o implementa.
 
 **Na ordem de posição, inteiras.** Uma fonte cortada ao meio para caber é uma fonte sem a segunda metade,
 em geral a metade com a exceção. Descartar fontes inteiras mantém cada fonte intacta.

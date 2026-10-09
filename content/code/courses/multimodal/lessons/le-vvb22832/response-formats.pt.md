@@ -1,6 +1,6 @@
 ---
 title: Cinco formatos para uma transcrição
-version: 1
+version: 2
 ---
 
 O mesmo áudio pode voltar em cinco formatos, e escolher o certo poupa escrever um conversor.
@@ -18,9 +18,9 @@ Oi, aqui é o Rafael Piente da Maginalia, sou ligando sobre o pedido em 2002-198
 """verbose_json: the text, the language, the length, and every segment with its times."""
 from openai import OpenAI
 
-client = OpenAI()
+client = OpenAI(base_url="http://localhost:8700/v1")   # audio_server.py, on this machine
 with open("media/call-1042.wav", "rb") as audio:
-    result = client.audio.transcriptions.create(model="lab-whisper-base", file=audio,
+    result = client.audio.transcriptions.create(model="whisper-base", file=audio,
                                                 response_format="verbose_json")
 print(f"language {result.language}, {result.duration} s, {len(result.segments)} segments")
 for s in result.segments[:4]:

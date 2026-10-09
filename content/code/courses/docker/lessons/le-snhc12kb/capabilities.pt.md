@@ -1,6 +1,6 @@
 ---
 title: Capabilities
-version: 1
+version: 2
 ---
 
 **O Linux não trata o root como um poder só. Ele o divide em umas quarenta capabilities**: mudar o dono
@@ -44,6 +44,9 @@ CapEff:	0000000000000000
 **O `chown` funcionou com o padrão e falhou sem ele**, como root, dentro do container. Esse é o
 mecanismo inteiro: o usuário continua sendo o UID 0, e a operação é recusada porque a capability não
 está lá.
+
+A `shelf:1.0.0` aqui é a imagem que a aula 15 construiu. Se a sua máquina não a tem mais, o build
+que aquela aula mostra a refaz.
 
 O `shelf` roda como UID 65532 e usa a porta 8080; ele não precisa de nenhuma das 14:
 

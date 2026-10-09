@@ -7,7 +7,7 @@ Uma conversa guardada do lado da OpenAI é uma conversa **armazenada** do lado d
 documentação da biblioteca diz por quanto tempo:
 
 ```
-ana@desk:~/desk$ python lab/doc.py store
+ana@desk:~/desk$ python doc.py store
 store: Whether to store the generated model response for later retrieval via API.
     Defaults to true when omitted. If set to true, response data will be stored for
     at least 30 days, subject to the
@@ -17,7 +17,7 @@ store: Whether to store the generated model response for later retrieval via API
 Armazenar é o padrão. Toda resposta que a ana cria sem dizer o contrário, com o e-mail junto, fica
 guardada por pelo menos trinta dias e pode ser buscada de novo por quem tiver a chave e o id. Para a
 Lantern Books essa é a pergunta da seção 07 da aula 2 com uma resposta nova: o e-mail vai para a
-OpenAI, e fica. O `lab/forget.py` exercita as duas saídas:
+OpenAI, e fica. O `forget.py` exercita as duas saídas:
 
 ```python
 import json
@@ -28,7 +28,7 @@ client = OpenAI()
 prompt = open("prompts/triage.txt").read()
 case = [json.loads(line) for line in open("cases/triage.jsonl")][4]
 
-kept = client.responses.create(model="standin-small", instructions=prompt, input=case["text"])
+kept = client.responses.create(model="llama3.2:3b", instructions=prompt, input=case["text"])
 print("stored:   ", client.responses.retrieve(kept.id).output_text)
 client.responses.delete(kept.id)
 try:
@@ -36,27 +36,33 @@ try:
 except NotFoundError as e:
     print("deleted:  ", e.status_code, e.body["message"])
 
-once = client.responses.create(model="standin-small", instructions=prompt, input=case["text"], store=False)
+once = client.responses.create(model="llama3.2:3b", instructions=prompt, input=case["text"], store=False)
 try:
-    client.responses.create(model="standin-small", previous_response_id=once.id, input="Thanks.")
+    client.responses.create(model="llama3.2:3b", previous_response_id=once.id, input="Thanks.")
 except BadRequestError as e:
     print("store=False:", e.status_code, e.body["message"])
 ```
 
 ```
-ana@desk:~/desk$ python lab/forget.py
-stored:    other
-deleted:   404 Response with id 'resp_lab_0006' not found.
-store=False: 400 Previous response with id 'resp_lab_0010' not found.
+ana@desk:~/desk$ python forget.py 2>&1 | tail -1
+openai.NotFoundError: 404 page not found
+ana@desk:~/desk$ python relay.py show --count 2
+POST /v1/responses -> 200 llama3.2:3b
+GET /v1/responses/resp_977775 -> 404 
 ```
 
-**Apague depois de usar**, e a resposta some da API: o `retrieve` seguinte é um 404. **Ou nunca
-armazene**: `store=False`, e não há nada para buscar nem de onde encadear, como a última linha
-mostra. As duas não prometem a mesma coisa. Apagar remove o que a API devolve; o que o provedor
-guarda para fins próprios é regido pela política de dados dele,
-para a qual o link da docstring aponta e que esta máquina não conseguiu ler. Esse é o documento a ler
-antes de o e-mail de clientes ir a qualquer lugar.
+Contra o Ollama o programa para no primeiro `retrieve`, e o relay mostra por quê: a resposta foi
+criada, e o `GET` que a pede de volta é um 404. **O Ollama não guarda nada**, então não há o que
+recuperar, apagar ou encadear, e um servidor local responde à pergunta desta seção do jeito mais
+simples que existe. Na OpenAI, o programa foi escrito para o outro resultado: a resposta é guardada,
+por pelo menos os 30 dias que a docstring dá, e volta. Depois **apagar depois de usar** a remove, e
+**nunca guardar**, `store=False`, pede que nada seja mantido.
+
+As duas coisas não prometem o mesmo. Apagar remove o que a API devolve; o que o provedor guarda para
+os próprios fins é regido pela política de dados dele, para onde o link da docstring aponta e que
+esta máquina não conseguiu ler. Esse é o documento a ler antes de os e-mails de clientes irem para
+qualquer lugar.
 
 Para a classificação da ana a escolha é fácil: toda requisição é independente, então `store=False`
-não custa nada. Para uma conversa que ela queira guardar, a alternativa é o hábito da Chat
+não custa nada. Para uma conversa que ela quer guardar, a alternativa é o hábito do Chat
 Completions: guardar o histórico no próprio banco de dados e mandá-lo toda vez.

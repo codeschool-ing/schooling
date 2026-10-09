@@ -1,6 +1,6 @@
 ---
 title: Reading a red run
-version: 1
+version: 2
 ---
 
 A red run is information, and most of the work after it is reading. The lab's hook keeps, for every
@@ -46,7 +46,8 @@ UTC cell's log names the test and both dates: the code said 6 October where the 
 
 The change is reverted rather than patched, because reverting returns `main` to a commit that is
 known to pass, and the colleague can bring the simplification back later with the zone and a test
-that runs in UTC. The revert is pushed and the CI confirms it:
+that runs in UTC. `git revert --no-edit HEAD` makes the commit that undoes it, which is then pushed,
+and the CI confirms it:
 
 ```
 ana@laptop:~/shipquote$ git log --oneline -3

@@ -1,11 +1,12 @@
 ---
 title: A table of cases, kept as data
-version: 1
+version: 2
 ---
 
 Some rules are best checked as a table: inputs in columns, the expected answer in the last one,
 one row per case. The shop publishes a freight table for customers, and `shipquote` keeps the same
-cases in `tests/data/quotes.csv`:
+cases in a file of its own, in a directory that does not exist yet, so `mkdir tests/data` first.
+Save it as `tests/data/quotes.csv`:
 
 ```
 cep,weight_g,subtotal_cents,cents
@@ -19,7 +20,8 @@ cep,weight_g,subtotal_cents,cents
 80010-000,300,19900,0
 ```
 
-The test reads the file and turns every row into a test case:
+The test reads the file and turns every row into a test case. Save it as
+`tests/test_quote_table.py`:
 
 ```python
 """The price table the shop publishes, one row per case, checked as data."""
@@ -110,4 +112,4 @@ code does today and calls it correct.
 The CSV is short on purpose. Its eight rows include one per zone that matters, a weight that
 crosses several bands (2600 g, five extra bands), the largest weight in the table and the
 free-shipping edge. A table with five hundred rows of ordinary cases adds run time and review time
-and catches nothing the eight do not; the edges of lesson 1 section 10 are what earn a row.
+and catches nothing the eight do not; the edges of lesson 1 section 13 are what earn a row.

@@ -1,0 +1,565 @@
+[
+  {
+    "id": "ex-fm935m6y",
+    "version": 1,
+    "section": "four-sources",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each source to who decides the pace of extraction.",
+    "hint": "Control falls away down the list.",
+    "pairs": [
+      {
+        "left": "The shop's database",
+        "right": "Ana, within what it can bear"
+      },
+      {
+        "left": "The price API",
+        "right": "The API, by its rate limit"
+      },
+      {
+        "left": "The stock file",
+        "right": "Whoever writes the file"
+      },
+      {
+        "left": "The website's events",
+        "right": "The world"
+      }
+    ]
+  },
+  {
+    "id": "ex-dpdn44ja",
+    "version": 1,
+    "section": "four-sources",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What do the torn read, the half file and the duplicate event have in common?",
+    "hint": "How did each one end?",
+    "choices": [
+      {
+        "text": "Each one raised an error that stopped the pipeline",
+        "correct": false,
+        "why": "None of them raised anything; that is the trouble."
+      },
+      {
+        "text": "They succeed",
+        "correct": true,
+        "why": "Right. Each produces numbers, rows or counts, and nothing says they are wrong."
+      },
+      {
+        "text": "They only happen with sources that a company does not own",
+        "correct": false,
+        "why": "The torn read happened on Ponto Final's own database."
+      },
+      {
+        "text": "They all come from network failures",
+        "correct": false,
+        "why": "A day of trade and a retrying collector are not network failures."
+      }
+    ]
+  },
+  {
+    "id": "ex-m5nfe69x",
+    "version": 1,
+    "section": "databases",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`torn.py` counted 17,453 orders, and four seconds later the lines it read belonged to 17,749 orders. How many orders did it never count?",
+    "hint": "Subtract.",
+    "value": 296,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-t6qtsxhc",
+    "version": 1,
+    "section": "databases",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `snapshot.py` get matching counts while a day of trade committed during its four-second sleep?",
+    "hint": "When is the snapshot taken?",
+    "choices": [
+      {
+        "text": "The sleep blocked the day from committing",
+        "correct": false,
+        "why": "The day committed; the transaction just did not see it."
+      },
+      {
+        "text": "`READ ONLY` makes PostgreSQL refuse new rows while it runs",
+        "correct": false,
+        "why": "`READ ONLY` stops this transaction writing; others write as usual."
+      },
+      {
+        "text": "Both reads saw one snapshot",
+        "correct": true,
+        "why": "Right. Both reads describe one moment."
+      },
+      {
+        "text": "It counted from a cached copy of the tables",
+        "correct": false,
+        "why": "It read the live tables, through a snapshot."
+      }
+    ]
+  },
+  {
+    "id": "ex-4enxbz32",
+    "version": 1,
+    "section": "databases",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An extraction opens a `REPEATABLE READ` transaction at 1 a.m. and, because of a bug, leaves it open until 9 a.m. What does the shop's database suffer?",
+    "hint": "What must PostgreSQL keep for an open snapshot?",
+    "choices": [
+      {
+        "text": "Nothing: a read-only transaction holds no resources",
+        "correct": false,
+        "why": "It holds back the cleanup of old row versions."
+      },
+      {
+        "text": "Tables and indexes grow, because old row versions are kept for the snapshot",
+        "correct": true,
+        "why": "Right. Eight hours of updates that cannot be cleaned up."
+      },
+      {
+        "text": "The tills are blocked from inserting until it closes",
+        "correct": false,
+        "why": "Readers do not block writers in PostgreSQL."
+      },
+      {
+        "text": "The transaction is killed after an hour",
+        "correct": false,
+        "why": "Nothing in the lab's configuration does that."
+      }
+    ]
+  },
+  {
+    "id": "ex-6rcy3f08",
+    "version": 1,
+    "section": "reading-politely",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did the `UPDATE` run as `etl_reader` demonstrate?",
+    "hint": "Read the error.",
+    "choices": [
+      {
+        "text": "The orders table is locked during extraction",
+        "correct": false,
+        "why": "Nothing was locked; the role lacks the permission."
+      },
+      {
+        "text": "Order 100001 does not exist",
+        "correct": false,
+        "why": "The error is about permission, not a missing row."
+      },
+      {
+        "text": "The pipeline's role reads and does not write",
+        "correct": true,
+        "why": "Right. A bug or a pasted command changes nothing in the shop through it."
+      },
+      {
+        "text": "PostgreSQL refuses every `UPDATE` sent over a local socket",
+        "correct": false,
+        "why": "Ana's own role updates fine over the same socket."
+      }
+    ]
+  },
+  {
+    "id": "ex-ma6pa1ej",
+    "version": 1,
+    "section": "reading-politely",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these reduce the load an extraction puts on the shop's tills? Choose all that apply.",
+    "hint": "Where, when and how much.",
+    "choices": [
+      {
+        "text": "Reading from a read replica",
+        "correct": true,
+        "why": "Yes. The replica takes no sales."
+      },
+      {
+        "text": "Reading only the rows that changed",
+        "correct": true,
+        "why": "Yes. Less to read is less load; lessons 4 and 5."
+      },
+      {
+        "text": "Running at night while the shops are shut",
+        "correct": true,
+        "why": "Yes, for the shops; the online shop never closes."
+      },
+      {
+        "text": "Connecting as the database's owner",
+        "correct": false,
+        "why": "That adds risk and removes nothing from the load."
+      }
+    ]
+  },
+  {
+    "id": "ex-j3y1xm4q",
+    "version": 1,
+    "section": "apis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should a client send the API's `next_cursor` back unchanged rather than build its own from the offset inside it?",
+    "hint": "Who owns the cursor's meaning?",
+    "choices": [
+      {
+        "text": "The server is free to change what it means",
+        "correct": true,
+        "why": "Right. A decoded cursor ties the client to an internal detail."
+      },
+      {
+        "text": "Decoding base64 is too slow to do once per page in Python",
+        "correct": false,
+        "why": "It is microseconds; the reason is ownership."
+      },
+      {
+        "text": "The cursor is encrypted with the API key",
+        "correct": false,
+        "why": "This one is plain base64, and still the client should not read it."
+      },
+      {
+        "text": "The API refuses cursors it did not issue",
+        "correct": false,
+        "why": "This API would accept one; that is exactly the trap."
+      }
+    ]
+  },
+  {
+    "id": "ex-dz0ytqcn",
+    "version": 1,
+    "section": "apis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The API answers `429` with `Retry-After: 1`. What does `prices.py` do?",
+    "hint": "A 429 is an instruction.",
+    "choices": [
+      {
+        "text": "Waits a second and asks for the same page",
+        "correct": true,
+        "why": "Right. It counts the wait and carries on from the same cursor."
+      },
+      {
+        "text": "Skips to the next page",
+        "correct": false,
+        "why": "That would leave a hole in the prices."
+      },
+      {
+        "text": "Stops with an error, like any other status that is not 200",
+        "correct": false,
+        "why": "Other failures stop it; 429 is handled before `raise_for_status`."
+      },
+      {
+        "text": "Starts again from the first page",
+        "correct": false,
+        "why": "The cursor it holds is still valid."
+      }
+    ]
+  },
+  {
+    "id": "ex-647r1rzv",
+    "version": 1,
+    "section": "apis",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does every request in `prices.py` carry `timeout=10`?",
+    "hint": "Imagine a server that accepts the connection and never answers.",
+    "choices": [
+      {
+        "text": "The API refuses requests without a timeout",
+        "correct": false,
+        "why": "The timeout is never sent to the server; it limits the client's wait."
+      },
+      {
+        "text": "Ten seconds is the rate limit's window",
+        "correct": false,
+        "why": "The rate limit's window is one second."
+      },
+      {
+        "text": "To make the pipeline faster on good days",
+        "correct": false,
+        "why": "On a good day the timeout never fires."
+      },
+      {
+        "text": "So a silent server cannot hang it",
+        "correct": true,
+        "why": "Right. A hang is a failure that never says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-9frrz1mg",
+    "version": 1,
+    "section": "files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The loader accepted a stock file cut off at line 600 and reported 599 rows loaded. Why did nothing catch it?",
+    "hint": "What does a CSV say about its own length?",
+    "choices": [
+      {
+        "text": "The header check was skipped for short files",
+        "correct": false,
+        "why": "The header was present and correct."
+      },
+      {
+        "text": "Every line in it was well-formed, and nothing says how long it should be",
+        "correct": true,
+        "why": "Right. The cut fell between two lines."
+      },
+      {
+        "text": "PostgreSQL drops rows it cannot fit",
+        "correct": false,
+        "why": "Every row read was inserted; the rows were missing from the file."
+      },
+      {
+        "text": "The loader reads only the first 600 lines",
+        "correct": false,
+        "why": "It reads the whole file; the file was short."
+      }
+    ]
+  },
+  {
+    "id": "ex-am4zrggz",
+    "version": 1,
+    "section": "files",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way of knowing a file is complete to what it needs.",
+    "hint": "Three need the supplier; one does not.",
+    "pairs": [
+      {
+        "left": "Write to .tmp, then rename",
+        "right": "The supplier renames after writing"
+      },
+      {
+        "left": "A marker file",
+        "right": "The supplier drops a second file when done"
+      },
+      {
+        "left": "A trailer with a row count",
+        "right": "The supplier writes the count in the file"
+      },
+      {
+        "left": "An expectation of your own",
+        "right": "Knowing there are 1,200 books"
+      }
+    ]
+  },
+  {
+    "id": "ex-axyhqma1",
+    "version": 1,
+    "section": "files",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On one filesystem, renaming a file is ___: a reader sees either no file or the whole file.",
+    "hint": "It happens all at once.",
+    "blanks": [
+      {
+        "accept": [
+          "atomic"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2szvmwcq",
+    "version": 1,
+    "section": "events",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The event file for 5 March holds 2,438 lines, and 23 event ids appear twice in it. How many distinct events does it hold?",
+    "hint": "Each duplicated id is one extra line.",
+    "value": 2415,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-10hy683e",
+    "version": 1,
+    "section": "events",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `event_id` the most important field in the event file?",
+    "hint": "At-least-once delivery sends some events twice.",
+    "choices": [
+      {
+        "text": "It sorts the events in the order they happened",
+        "correct": false,
+        "why": "The ids are not in time order; `occurred_at` is the time."
+      },
+      {
+        "text": "Without it a retried event and two real clicks look the same",
+        "correct": true,
+        "why": "Right. It is the only way to turn at-least-once into exactly once."
+      },
+      {
+        "text": "It tells which session the event belongs to",
+        "correct": false,
+        "why": "That is `session`."
+      },
+      {
+        "text": "The warehouse requires a primary key",
+        "correct": false,
+        "why": "The raw layer has no keys; the reason is duplicates."
+      }
+    ]
+  },
+  {
+    "id": "ex-1kp517hr",
+    "version": 1,
+    "section": "events",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A report counts views per day by which file each event landed in. On the day after a big train strike, what does it get wrong?",
+    "hint": "Event time against processing time.",
+    "choices": [
+      {
+        "text": "Nothing, because each file holds exactly one day",
+        "correct": false,
+        "why": "The file is the day of arrival, not of the event."
+      },
+      {
+        "text": "It counts duplicates twice",
+        "correct": false,
+        "why": "True of any naive count, but not the error this question is about."
+      },
+      {
+        "text": "It loses the events entirely",
+        "correct": false,
+        "why": "They are counted; on the wrong day."
+      },
+      {
+        "text": "Late views count on the next day",
+        "correct": true,
+        "why": "Right. One day is undercounted and the next one overcounted."
+      }
+    ]
+  },
+  {
+    "id": "ex-ave5085x",
+    "version": 1,
+    "section": "schema-drift",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The loader has a header check, yet the 5 March file failed with a `UnicodeDecodeError`. Why did the check never run?",
+    "hint": "What happens before a header can be compared?",
+    "choices": [
+      {
+        "text": "The check only runs on files over 50 kB",
+        "correct": false,
+        "why": "There is no such condition in the loader."
+      },
+      {
+        "text": "Decoding the first line as UTF-8 failed first",
+        "correct": true,
+        "why": "Right. The byte `0xED` stopped Python before the comparison."
+      },
+      {
+        "text": "The semicolons hid the header from `csv.reader`",
+        "correct": false,
+        "why": "`csv.reader` never got a line to split."
+      },
+      {
+        "text": "`sys.exit` was caught by the shell",
+        "correct": false,
+        "why": "`sys.exit` was never reached."
+      }
+    ]
+  },
+  {
+    "id": "ex-dnd3rk3m",
+    "version": 1,
+    "section": "schema-drift",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson argue against a loader that detects the encoding, sniffs the separator and maps `disponível` to `available` by itself?",
+    "hint": "What else would it accept?",
+    "choices": [
+      {
+        "text": "It would be too slow for a nightly job",
+        "correct": false,
+        "why": "Speed is not the objection."
+      },
+      {
+        "text": "Python has no reliable way to detect an encoding",
+        "correct": false,
+        "why": "Detection is imperfect, but the objection is about decisions."
+      },
+      {
+        "text": "It accepts a change of meaning too",
+        "correct": true,
+        "why": "Right. Shape changes are decisions, and a person should make them."
+      },
+      {
+        "text": "Mapping column names is forbidden by the LGPD",
+        "correct": false,
+        "why": "The LGPD says nothing about column names."
+      }
+    ]
+  },
+  {
+    "id": "ex-01v772nm",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the sources by how much control the pipeline has over what it reads, from most to least.",
+    "hint": "Who decides the pace?",
+    "items": [
+      "A database",
+      "An API",
+      "A file",
+      "Events"
+    ]
+  },
+  {
+    "id": "ex-ta94mt7j",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A supplier's file arrives every night and is loaded at 06:00. One night their job is slow and the file is still being written at 06:00. With no agreement in place, what is the first thing to ask the supplier for?",
+    "hint": "The cheapest fix that makes a half file invisible.",
+    "choices": [
+      {
+        "text": "To send the file by e-mail instead",
+        "correct": false,
+        "why": "An e-mail can also carry half a file, and adds a step."
+      },
+      {
+        "text": "To finish before 05:00 every night",
+        "correct": false,
+        "why": "A deadline does not say whether the file is finished."
+      },
+      {
+        "text": "To write the file under a temporary name and rename it when done",
+        "correct": true,
+        "why": "Right. The pipeline then sees no file or the whole one."
+      },
+      {
+        "text": "To compress the file",
+        "correct": false,
+        "why": "A truncated archive fails to open, which helps a little, by accident."
+      }
+    ]
+  }
+]

@@ -1,7 +1,15 @@
 ---
 title: Uma linha para uma pessoa, um registro para uma máquina
-version: 1
+version: 2
 ---
+
+Comece esta aula de um laboratório iniciado de novo do zero, e ponha os clientes simulados para
+rodar por vinte minutos antes de qualquer outra coisa: os logs da própria loja são o que as seções
+seguintes leem, e a última conta um minuto deles.
+
+```sh
+docker compose run -d --rm loadgen python -m loadgen.load 5 1200
+```
 
 As primeiras linhas de log que alguém escreve são frases: *checkout finished for order 5001 in
 11ms*. Leem bem, e são lidas por pessoas exatamente enquanto forem poucas o bastante para ler.

@@ -1,17 +1,32 @@
 ---
 title: Conferindo um achado antes de agir
-version: 1
+version: 2
 ---
 
 Um achado de revisão é uma hipótese sobre o código: *se fizermos isto, acontece aquilo*. **O jeito
-de conferir uma hipótese sobre código é rodá-lo.** Escreva o menor teste que falharia se o achado
-estivesse certo, e veja.
+de conferir uma hipótese sobre código é rodá-lo**, ou ler a linha de que ela fala. E uma revisão
+que não acha nada sobre uma parte da mudança também é uma hipótese: a de que essa parte está
+certa. Essa se confere do mesmo jeito.
 
-## Um teste por achado
+## As afirmações, uma por uma
 
-O achado 1 diz que o FRIENDS15 é recusado no último dia. O achado 3 diz que um código em
-minúsculas é recusado. O achado 2 é sobre o relógio do servidor, nenhum teste de unidade o alcança,
-e ele espera. A ana escreve um teste para cada um dos outros dois, com o nome do achado:
+Cada uma das três afirmações da revisão se resolve lendo a linha que ela cita. O `today` usa a data
+de hoje como padrão de propósito, então a primeira é uma escolha a manter ou mudar, não um defeito.
+A segunda pede mais informação numa exceção, o que é um desejo. A terceira é sobre `cart: Cart`, e
+`Cart` é a classe importada no topo do arquivo: não há nada a corrigir, e a correção sugerida
+pioraria o código. **Nenhuma delas precisa de teste.** Agir sobre a terceira sem ler a linha teria
+custado uma tarde, baixado a qualidade do código e fechado um achado como resolvido.
+
+É isso que a revisão de um modelo pequeno é, na maior parte: afirmações com a forma de uma revisão
+e a substância de nada. A revisão de um modelo maior tem menos delas e alguns achados reais no
+meio, e o jeito de separar um tipo do outro é o mesmo: a linha, e, quando a linha não resolve, um
+teste.
+
+## O que a mudança prometia
+
+A mudança prometia duas coisas: o FRIENDS15 vale até 31 de outubro, e um código pode ser digitado
+em qualquer caixa. A ana escreve um teste para cada uma, em `tests/test_review.py`, porque, diga a
+revisão o que disser, esses são os dois comportamentos para os quais este branch existe:
 
 ```python
 from datetime import date
@@ -20,13 +35,13 @@ from shop.cart import Cart
 from shop.coupons import apply_coupon
 
 
-def test_finding_1_friends15_is_valid_on_its_last_day():
+def test_friends15_is_valid_on_its_last_day():
     cart = Cart()
     apply_coupon(cart, "FRIENDS15", today=date(2026, 10, 31))
     assert cart.discount_percent == 15
 
 
-def test_finding_3_a_lower_case_code_is_accepted():
+def test_a_lower_case_code_is_accepted():
     cart = Cart()
     apply_coupon(cart, "welcome10", today=date(2026, 10, 2))
     assert cart.discount_percent == 10
@@ -36,9 +51,9 @@ def test_finding_3_a_lower_case_code_is_accepted():
 ana@dev:~/shop$ python -m pytest -q tests/test_review.py
 F.                                                                       [100%]
 =================================== FAILURES ===================================
-______________ test_finding_1_friends15_is_valid_on_its_last_day _______________
+___________________ test_friends15_is_valid_on_its_last_day ____________________
 
-    def test_finding_1_friends15_is_valid_on_its_last_day():
+    def test_friends15_is_valid_on_its_last_day():
         cart = Cart()
 >       apply_coupon(cart, "FRIENDS15", today=date(2026, 10, 31))
 
@@ -61,35 +76,28 @@ E           shop.coupons.ExpiredCoupon: FRIENDS15
 
 shop/coupons.py:25: ExpiredCoupon
 =========================== short test summary info ============================
-FAILED tests/test_review.py::test_finding_1_friends15_is_valid_on_its_last_day
-1 failed, 1 passed in 0.57s
+FAILED tests/test_review.py::test_friends15_is_valid_on_its_last_day - shop.c...
+1 failed, 1 passed in 0.67s
 ```
 
-**O achado 1 é real.** O teste falha com `ExpiredCoupon: FRIENDS15` em 31 de outubro, e o traceback
-aponta para `today >= until`. **O achado 3 não é.** O código em minúsculas foi aceito, porque a
-segunda linha de `apply_coupon` é `code = code.strip().upper()`. O assistente disse que a busca
-distingue maiúsculas enquanto a linha que resolve isso estava no diff que ele revisava.
+**O último dia é recusado.** O teste falha com `ExpiredCoupon: FRIENDS15` em 31 de outubro, e o
+traceback aponta para `today >= until`: a comparação deveria ser `>`, já que `until` é o último dia
+válido. O código em minúsculas é aceito, porque a segunda linha do `apply_coupon` é
+`code = code.strip().upper()`.
 
-Esse achado falso é o mais instrutivo dos dois. Era específico, citava uma linha real e um
-comportamento real de cliente, e estava errado com confiança. Quem agisse sem conferir teria posto
-uma segunda chamada a `upper()`, piorado o código e fechado o achado como resolvido.
+**O bug que a revisão não mencionou é o que o teste achou.** Um revisor que deixa algo passar não
+diz nada sobre isso, e o silêncio parece aprovação. Esse é o mais perigoso dos dois erros de um
+revisor, e é por isso que as promessas da própria mudança ganham um teste, diga a revisão o que
+disser.
 
-## O achado 2, que nenhum teste resolve
+## Uma pergunta que nenhum teste resolve
 
-`date.today()` devolve a data de onde o servidor roda. Se o servidor roda em UTC e os clientes estão
-em São Paulo, três horas atrás, então a partir das 21h de 31 de outubro, hora local, o servidor já
-acha que é 1º de novembro. É uma pergunta real, e é uma pergunta para uma pessoa: a que fuso os
-termos do cupom se referem, e onde rodam os servidores da loja. A revisão fez bem em levantá-la.
-**Um achado pode valer sem ser um bug**, e se responde com uma decisão, por escrito, não com um
-teste.
+O `date.today()` devolve a data do lugar onde o servidor roda. Se o servidor roda em UTC e os
+clientes estão em São Paulo, três horas atrás, então a partir das 21h de 31 de outubro, hora local,
+o servidor já acredita que é 1º de novembro. Essa é uma pergunta real, e é uma pergunta para uma
+pessoa: que fuso os termos dos cupons querem dizer, e onde os servidores da loja rodam. **Um achado
+pode ter valor sem ser um bug**, e ele se responde com uma decisão, escrita, não com um teste. Nada
+nesta revisão levantou isso; um revisor que soubesse onde a loja roda levantaria.
 
-## A triagem
-
-| achado | como foi conferido | resultado |
-|---|---|---|
-| 1, último dia recusado | um teste que falha | um bug: corrigir, e guardar o teste |
-| 2, fuso do servidor | uma pergunta a quem cuida dos termos | uma decisão a tomar |
-| 3, busca sensível a maiúsculas | um teste que passa | errado: descartar, com o teste como motivo |
-
-Guarde os testes da triagem, inclusive o do achado falso. Custou dois minutos, documenta que
+Fique com os testes da conferência, inclusive o que passou. Ele custou dois minutos, documenta que
 códigos em minúsculas funcionam, e falha se alguém tirar o `upper()` depois.

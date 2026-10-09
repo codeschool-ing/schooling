@@ -1,10 +1,10 @@
 ---
 title: Quando compactar
-version: 1
+version: 2
 ---
 
 A aula 13 mediu quanto custa uma conversa quando todo turno é mandado de novo: o prompt da Beatriz
-cresceu de 98 tokens na primeira mensagem a 725 na décima primeira, e os doze turnos custaram 4.609
+cresceu de 119 tokens na primeira mensagem a 1.235 na décima primeira, e os doze turnos custaram 8.070
 tokens de prompt. Aquela conversa é curta. Um chat de atendimento que dura quarenta mensagens, um
 agente trabalhando numa tarefa com saídas longas de ferramentas, uma sessão de tutoria que dura uma
 hora: cada um chega à janela, e muito antes chega ao orçamento que a aula 12 definiu.

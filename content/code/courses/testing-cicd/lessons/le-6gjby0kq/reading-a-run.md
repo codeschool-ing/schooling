@@ -1,6 +1,6 @@
 ---
 title: Reading a real run
-version: 1
+version: 2
 ---
 
 `shipquote`'s workflow has never run on GitHub. The repository that publishes this course runs its
@@ -8,7 +8,9 @@ own on every pull request and every merge, and GitHub keeps a record of each run
 read through its public API, since the repository is public. This section reads one of them: the
 run triggered by merging the previous course's pull request, on 6 October 2026.
 
-`A` is just the API's address for this repository's Actions, to keep the commands short:
+`A` is just the API's address for this repository's Actions, to keep the commands short. Set it
+with `A=https://api.github.com/repos/codeschool-ing/schooling/actions` and the commands below work
+in your own terminal; curl and jq are the ones lesson 1 installed:
 
 ```
 ana@laptop:~$ echo $A

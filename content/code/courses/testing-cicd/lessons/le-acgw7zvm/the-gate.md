@@ -1,6 +1,6 @@
 ---
 title: The gate before production
-version: 1
+version: 2
 ---
 
 Between staging and production sits the **gate**: the point where somebody, or something, decides
@@ -12,7 +12,8 @@ check green, and the change goes on its own.
 
 The decision is about **a specific artifact**, identified by its hash, and what reaches production
 has to be that artifact and nothing else. `deploy.sh` checks the hash before unpacking anything.
-Here a copy of the artifact has one byte added on its way to production:
+Here a copy of the artifact has one byte added on its way to production. The copy is made with
+`cp dist/shipquote-1.4.0.tar.gz* /tmp/`, and the byte with `printf x >> /tmp/shipquote-1.4.0.tar.gz`:
 
 ```
 ana@laptop:~/shipquote$ ops/deploy.sh production /tmp/shipquote-1.4.0.tar.gz; echo "exit status $?"

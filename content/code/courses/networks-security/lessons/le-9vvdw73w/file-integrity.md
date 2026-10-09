@@ -41,7 +41,13 @@ exit 0
 ```
 
 Then somebody adds a location to the proxy's configuration, sending `/debug/` to a program on port
-8081. AIDE, run again:
+8081. Play that somebody on `www`, as root:
+
+```sh
+sed -i "s|    location / {|    location /debug/ {\n        proxy_pass http://127.0.0.1:8081;\n    }\n    location / {|" /etc/nginx/sites-enabled/shop
+```
+
+AIDE, run again:
 
 ```
 root@www:~# aide --config /etc/aide/shop.conf --check > aide.txt; echo "exit $?"; grep -E "^Summary|^ *Total|^ *Changed|^[fd] " aide.txt

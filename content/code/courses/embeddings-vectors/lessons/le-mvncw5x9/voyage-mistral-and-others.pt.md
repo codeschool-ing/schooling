@@ -38,8 +38,8 @@ fornecedores porque a tabela não registra a dimensão deles, e `batch` está va
 registra preço de lote com desconto para eles. Nenhum dos dois quer dizer que a coisa não existe. Um
 valor que falta na tabela de um terceiro é uma pergunta para a documentação do próprio fornecedor.
 Vale o mesmo para o formato de requisição da Voyage, que recebe um `input_type` de `query` ou
-`document`, como o da Cohere na aula 8. O SDK de nenhum dos dois está instalado no laboratório e
-nenhuma das duas APIs estava ao alcance, então nenhum código deles aparece aqui.
+`document`, como o da Cohere na aula 8. O `setup.sh` da aula 1 não instala o SDK de nenhum dos dois, e
+nenhuma das duas APIs estava ao alcance da máquina em que este curso foi gravado, então nenhum código deles aparece aqui.
 
 ## O que mais a tabela tem
 

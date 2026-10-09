@@ -1,6 +1,6 @@
 ---
 title: O `grep`, e as seis opções que cobrem quase tudo
-version: 1
+version: 2
 ---
 
 O `grep` imprime as linhas que casam. É só isso que ele faz, e é o comando que você vai digitar mais
@@ -8,11 +8,11 @@ do que qualquer outro desta aula.
 
 ```
 ana@vm:~/work$ grep -c " 500 " logs/access.log
-21
+25
 ana@vm:~/work$ grep -n "/admin" logs/access.log | head -3
-165:10.0.1.33 - - [14/Sep/2026:07:59:27 +0000] "GET /admin HTTP/1.1" 403 16628 "kube-probe/1.29" 115
-433:10.0.1.24 - - [14/Sep/2026:11:20:59 +0000] "GET /admin HTTP/1.1" 403 21827 "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" 98
-449:203.0.113.5 - - [14/Sep/2026:11:31:01 +0000] "GET /admin HTTP/1.1" 403 20646 "python-requests/2.32.3" 46
+115:10.0.1.12 - - [14/Sep/2026:06:57:27 +0000] "GET /admin HTTP/1.1" 401 22952 "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/131.0 Safari/537.36" 143
+165:198.51.100.34 - - [14/Sep/2026:07:23:37 +0000] "GET /admin HTTP/1.1" 401 15437 "python-requests/2.32.3" 45
+313:198.51.100.3 - - [14/Sep/2026:08:37:10 +0000] "GET /admin HTTP/1.1" 401 21154 "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" 6
 ```
 
 ## As seis
@@ -28,9 +28,9 @@ ana@vm:~/work$ grep -n "/admin" logs/access.log | head -3
 
 ```
 ana@vm:~/work$ grep -c -v " 200 " logs/access.log
-167
+183
 ana@vm:~/work$ grep -i "GOOGLEBOT" logs/access.log | wc -l
-159
+190
 ana@vm:~/work$ grep -l "admin" logs/*.log
 logs/access.log
 ana@vm:~/work$ grep -r "app started" logs/ | head -3
@@ -62,10 +62,10 @@ Para contar ocorrências você precisa do `-o`, que imprime cada correspondênci
 
 ```
 ana@vm:~/work$ grep -o "GET\|POST\|PUT\|DELETE" logs/access.log | sort | uniq -c
-     28 DELETE
-    975 GET
-    167 POST
-     30 PUT
+     27 DELETE
+    964 GET
+    187 POST
+     22 PUT
 ```
 
 **O `-o` é como o `grep` vira um extrator** em vez de um filtro. Combinado com `sort | uniq -c` ele
@@ -76,12 +76,12 @@ escrevem um script.
 
 ```
 ana@vm:~/work$ grep -A1 -B1 " 500 " logs/access.log | head -6
-10.0.1.33 - - [14/Sep/2026:06:08:07 +0000] "GET /health HTTP/1.1" 200 3411 "kube-probe/1.29" 42
-10.0.1.21 - - [14/Sep/2026:06:09:02 +0000] "POST /api/reports HTTP/1.1" 500 18487 "curl/8.5.0" 5833
-10.0.1.36 - - [14/Sep/2026:06:09:03 +0000] "GET / HTTP/1.1" 200 20657 "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/131.0 Safari/537.36" 79
+10.0.1.28 - - [14/Sep/2026:06:06:18 +0000] "GET / HTTP/1.1" 200 21743 "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/131.0 Safari/537.36" 207
+10.0.1.14 - - [14/Sep/2026:06:06:29 +0000] "DELETE /api/orders HTTP/1.1" 500 5465 "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/131.0 Safari/537.36" 158
+198.51.100.23 - - [14/Sep/2026:06:06:30 +0000] "GET /index.html HTTP/1.1" 200 18849 "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 Safari/18.1" 228
 --
-198.51.100.9 - - [14/Sep/2026:06:45:22 +0000] "GET / HTTP/1.1" 200 7628 "kube-probe/1.29" 52
-198.51.100.17 - - [14/Sep/2026:06:45:55 +0000] "GET /favicon.ico HTTP/1.1" 500 5887 "kube-probe/1.29" 129
+198.51.100.34 - - [14/Sep/2026:06:14:26 +0000] "POST /api/orders HTTP/1.1" 200 9009 "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/131.0 Safari/537.36" 88
+10.0.1.28 - - [14/Sep/2026:06:14:58 +0000] "GET /static/app.css HTTP/1.1" 500 419 "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)" 145
 ```
 
 O `-A` depois, o `-B` antes, o `-C` os dois. O `--` é o `grep` separando grupos não adjacentes.
@@ -121,7 +121,7 @@ Há três linguagens de padrão e a opção escolhe uma:
 
 ```
 ana@vm:~/work$ grep -E "^10\.0\.1\.[0-9]+ " logs/access.log | wc -l
-651
+713
 ana@vm:~/work$ grep -F "." logs/access.log | wc -l
 1200
 ```

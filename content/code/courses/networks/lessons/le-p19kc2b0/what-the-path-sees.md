@@ -1,10 +1,12 @@
 ---
 title: What the path can see
-version: 1
+version: 2
 ---
 
 The office router is where the internet provider's view begins, so it is the place to test the
-promise. First the price list over plain HTTP, recorded to a file and then searched:
+promise. First the price list over plain HTTP, recorded to a file and then searched. While the
+capture runs, within its three seconds, fetch the file from a shell on the laptop, `curl -s -o /dev/null
+http://www.example.com/prices.txt`, and the same with `https://` for the second capture:
 
 ```
 ana@router:~$ sudo timeout 3 tcpdump -n -i eth1 -w /tmp/http.pcap tcp port 80

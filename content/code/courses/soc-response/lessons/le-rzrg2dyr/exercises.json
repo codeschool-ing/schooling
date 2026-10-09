@@ -1,0 +1,570 @@
+[
+  {
+    "id": "ex-3zgs6jtd",
+    "version": 1,
+    "section": "how-long-to-keep",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these sets the CEILING of a log retention policy, rather than its floor?",
+    "hint": "Personal data cannot be kept beyond its purpose.",
+    "choices": [
+      {
+        "text": "The size of the disk",
+        "correct": false,
+        "why": "The disk is a constraint, but the lesson places it last, and it is not a legal limit."
+      },
+      {
+        "text": "The LGPD's principle of necessity",
+        "correct": true,
+        "why": "Right. It is the reason a policy says when logs are deleted, not only how long they are kept."
+      },
+      {
+        "text": "The twelve months that PCI DSS asks for when a company handles payment cards",
+        "correct": false,
+        "why": "Also a minimum, set by a contract standard."
+      },
+      {
+        "text": "Article 15 of the Marco Civil da Internet",
+        "correct": false,
+        "why": "It sets a minimum of six months for application providers: a floor."
+      }
+    ]
+  },
+  {
+    "id": "ex-pnd5762r",
+    "version": 1,
+    "section": "how-long-to-keep",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Under article 15 of the Marco Civil da Internet, for how many months does an application provider keep access records?",
+    "hint": "Half of what a connection provider keeps.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-r5w2mnyh",
+    "version": 1,
+    "section": "how-long-to-keep",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A company keeps logs for 60 days. A compromise is found in March that began the previous November. What is lost?",
+    "hint": "Count back from March.",
+    "choices": [
+      {
+        "text": "The flow records, though the authentication logs survive",
+        "correct": false,
+        "why": "Both are kept for the same 60 days in this policy."
+      },
+      {
+        "text": "Nothing, since the SIEM keeps alerts for ever",
+        "correct": false,
+        "why": "Alerts are only as old as the events they were made from, and most events never became alerts."
+      },
+      {
+        "text": "The records of how it started",
+        "correct": true,
+        "why": "Right. November is outside a 60-day window opened in March."
+      },
+      {
+        "text": "Only the packet captures from March",
+        "correct": false,
+        "why": "March is inside the window; November is the gap."
+      }
+    ]
+  },
+  {
+    "id": "ex-511dah2r",
+    "version": 1,
+    "section": "how-long-to-keep",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What separates warm storage from hot storage in the lesson's plan?",
+    "hint": "Both hold logs; the difference is speed and price.",
+    "choices": [
+      {
+        "text": "Warm is compressed and cheaper, and has to be loaded back before anyone searches it",
+        "correct": true,
+        "why": "Right. Hot is the SIEM itself, searchable at once and dear per gigabyte."
+      },
+      {
+        "text": "Warm holds only the logs that triggered alerts, because nobody needs to search the quiet ones again",
+        "correct": false,
+        "why": "It holds the same sources, older."
+      },
+      {
+        "text": "Warm storage is deleted after three months",
+        "correct": false,
+        "why": "Hot is the three-month tier; warm runs to thirteen."
+      },
+      {
+        "text": "Warm storage keeps the logs unencrypted for speed",
+        "correct": false,
+        "why": "Encryption is not what separates the tiers."
+      }
+    ]
+  },
+  {
+    "id": "ex-s472g6s2",
+    "version": 1,
+    "section": "shipping-logs-off-the-box",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does sending each line to soc as it is written protect against?",
+    "hint": "Think about what happens to gw on a bad day.",
+    "choices": [
+      {
+        "text": "Disk space running out on gw, since the lines leave as soon as they are written and nothing piles up",
+        "correct": false,
+        "why": "The local file on gw grows exactly as before; shipping adds a copy, it does not move the original."
+      },
+      {
+        "text": "Somebody on soc reading the lines without having the permissions that gw would require",
+        "correct": false,
+        "why": "Permissions on soc are a separate decision, set in the rule."
+      },
+      {
+        "text": "Losing the record together with the machine that wrote it",
+        "correct": true,
+        "why": "Right. A failed disk or a compromised account on gw no longer reaches the copy on soc."
+      },
+      {
+        "text": "Lines arriving out of order",
+        "correct": false,
+        "why": "Forwarding adds a second time stamp; it does not reorder anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-h86235tp",
+    "version": 1,
+    "section": "shipping-logs-off-the-box",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Without fileCreateMode, fileOwner and fileGroup in the remote rule, the copies on soc came out with mode 644. Why does that matter?",
+    "hint": "Who can read a 644 file?",
+    "choices": [
+      {
+        "text": "rsyslog could no longer write to them, so every new line from gw would be dropped silently",
+        "correct": false,
+        "why": "The owner can write a 644 file."
+      },
+      {
+        "text": "Every user on soc could read logs full of account names and addresses",
+        "correct": true,
+        "why": "Right. 644 is readable by all; logs with personal data belong to root and adm."
+      },
+      {
+        "text": "logrotate refuses to rotate world-readable files",
+        "correct": false,
+        "why": "It rotates them; the problem is who reads them."
+      },
+      {
+        "text": "The hash of the file changes with its mode",
+        "correct": false,
+        "why": "A hash covers the content, not the permissions."
+      }
+    ]
+  },
+  {
+    "id": "ex-8s712xd9",
+    "version": 1,
+    "section": "shipping-logs-off-the-box",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A line in /var/log/remote/gw.log carries two time stamps minutes apart. What is the likeliest explanation?",
+    "hint": "One stamp is when sshd wrote; the other when rsyslog on gw read and sent.",
+    "choices": [
+      {
+        "text": "gw and soc are set to different time zones, so the two clocks print different hours for one moment",
+        "correct": false,
+        "why": "Both are written with their offsets; a zone difference shows as hours, and in the offset."
+      },
+      {
+        "text": "Somebody opened the file on soc and edited the line afterwards by hand",
+        "correct": false,
+        "why": "An edit would not add a second stamp; the format places both there."
+      },
+      {
+        "text": "soc was unreachable and gw's queue held the lines",
+        "correct": true,
+        "why": "Right. The queue delays, it does not lose, and the gap shows the outage."
+      },
+      {
+        "text": "ts rounds each stamp to the nearest minute before writing it",
+        "correct": false,
+        "why": "It writes seconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-xt8g4kdk",
+    "version": 1,
+    "section": "shipping-logs-off-the-box",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "gw forwards with the template RSYSLOG_SyslogProtocol23Format, which is the message format of RFC ___ and carries the time zone with the time.",
+    "hint": "The same RFC lesson 1 named for syslog messages.",
+    "blanks": [
+      {
+        "accept": [
+          "5424"
+        ],
+        "ignore_case": true
+      }
+    ]
+  },
+  {
+    "id": "ex-z8fd2br5",
+    "version": 1,
+    "section": "proving-a-log-unchanged",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`sha256sum -c` prints `FAILED` for a log copy. What does that tell the analyst?",
+    "hint": "It answers yes or no.",
+    "choices": [
+      {
+        "text": "Which line of the copy was changed, so the analyst can restore just that one",
+        "correct": false,
+        "why": "That is what a hash chain adds."
+      },
+      {
+        "text": "Who changed the file",
+        "correct": false,
+        "why": "A hash knows nothing about people; the custody record does."
+      },
+      {
+        "text": "That the copy differs from the file that was hashed, without saying where",
+        "correct": true,
+        "why": "Right. A file hash says that something changed; it does not say what."
+      },
+      {
+        "text": "That the disk holding the copy is failing and has started corrupting the files written to it",
+        "correct": false,
+        "why": "It could be one cause among many; the check does not say."
+      }
+    ]
+  },
+  {
+    "id": "ex-pbexctvq",
+    "version": 1,
+    "section": "proving-a-log-unchanged",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where should the day's hash be kept?",
+    "hint": "A hash replaced together with its file proves nothing.",
+    "choices": [
+      {
+        "text": "Apart from the file, where the people who handle the file do not write",
+        "correct": true,
+        "why": "Right. Otherwise the file and its hash can be replaced together."
+      },
+      {
+        "text": "In the same folder as the file, so that the two are never separated when the file is moved",
+        "correct": false,
+        "why": "Together, they can be replaced together."
+      },
+      {
+        "text": "Inside the log file, as its last line",
+        "correct": false,
+        "why": "Adding a line changes the file the hash describes."
+      },
+      {
+        "text": "Nowhere in particular: it can be recomputed from the file at any moment it is needed",
+        "correct": false,
+        "why": "Recomputing describes the file as it is now, which is the thing in question."
+      }
+    ]
+  },
+  {
+    "id": "ex-bkgps2zf",
+    "version": 1,
+    "section": "proving-a-log-unchanged",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the lesson's chain, deleting line 2 left the first hash, f32a8cbd8f4539cc, unchanged. Why?",
+    "hint": "What does a line's hash cover?",
+    "choices": [
+      {
+        "text": "sed restored line 1 from a backup it keeps",
+        "correct": false,
+        "why": "sed -i keeps no backup unless asked."
+      },
+      {
+        "text": "It covers only the start value and line 1, which did not change",
+        "correct": true,
+        "why": "Right. A link depends on what comes before it, never on what comes after."
+      },
+      {
+        "text": "Hashes are only recomputed for the lines that changed",
+        "correct": false,
+        "why": "Every hash is recomputed on every run; most simply come out different."
+      },
+      {
+        "text": "The script skips the first line",
+        "correct": false,
+        "why": "It hashes every line, the first included."
+      }
+    ]
+  },
+  {
+    "id": "ex-a9enbnh8",
+    "version": 1,
+    "section": "proving-a-log-unchanged",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `chattr +a` do to a log file?",
+    "hint": "a for append.",
+    "choices": [
+      {
+        "text": "It sends a copy of the file to the remote collector each time a new line is appended",
+        "correct": false,
+        "why": "That is rsyslog's omfwd."
+      },
+      {
+        "text": "Lines are added, but not rewritten until the attribute is removed",
+        "correct": true,
+        "why": "Right. Even root has to remove the attribute before rewriting it."
+      },
+      {
+        "text": "It hashes the file every minute",
+        "correct": false,
+        "why": "It sets an attribute; nothing is hashed."
+      },
+      {
+        "text": "It compresses the file as each line arrives, so that it takes less space on the disk",
+        "correct": false,
+        "why": "Compression is logrotate's job."
+      }
+    ]
+  },
+  {
+    "id": "ex-17ph7mzs",
+    "version": 1,
+    "section": "rotation",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `daily` and `rotate 400`, for how many days are old files kept before the oldest is deleted?",
+    "hint": "One file a day.",
+    "value": 400,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-j0xmm8jm",
+    "version": 1,
+    "section": "rotation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What is the price of `copytruncate` compared with `create` and a signal to rsyslog?",
+    "hint": "Something happens between two steps.",
+    "choices": [
+      {
+        "text": "rsyslog has to be restarted every night",
+        "correct": false,
+        "why": "copytruncate is the option that needs no signal and no restart."
+      },
+      {
+        "text": "The rotated file cannot be compressed",
+        "correct": false,
+        "why": "It can; compress applies either way."
+      },
+      {
+        "text": "A line written between the copy and the truncation is lost",
+        "correct": true,
+        "why": "Right. The writer keeps its file open, and that brief window is the cost."
+      },
+      {
+        "text": "The old file loses its owner and group",
+        "correct": false,
+        "why": "The listing shows syslog and adm on both files."
+      }
+    ]
+  },
+  {
+    "id": "ex-rm21f2px",
+    "version": 1,
+    "section": "rotation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson's configuration use `dateext`?",
+    "hint": "Compare gw.log-20261007 with gw.log.1.",
+    "choices": [
+      {
+        "text": "Because logrotate refuses to compress numbered files",
+        "correct": false,
+        "why": "It compresses both kinds."
+      },
+      {
+        "text": "So that rsyslog starts writing the full date into each line it receives from now on",
+        "correct": false,
+        "why": "Lines carry their own time stamps already."
+      },
+      {
+        "text": "To keep the rotated file in the hot tier, where the SIEM can still search it directly",
+        "correct": false,
+        "why": "Tiers are about where files live, not their names."
+      },
+      {
+        "text": "So a name says which day it holds",
+        "correct": true,
+        "why": "Right. A numbered file shifts every night; a dated one does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-6p1gmkx0",
+    "version": 1,
+    "section": "chain-of-custody",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which Brazilian text defines the chain of custody stage by stage, for evidence in criminal proceedings?",
+    "hint": "Articles 158-A to 158-F.",
+    "choices": [
+      {
+        "text": "The Code of Criminal Procedure, as changed by Law 13.964/2019",
+        "correct": true,
+        "why": "Right. Articles 158-A to 158-F, from recognising evidence to discarding it."
+      },
+      {
+        "text": "The Marco Civil da Internet",
+        "correct": false,
+        "why": "It sets retention periods for providers."
+      },
+      {
+        "text": "ISO/IEC 27037",
+        "correct": false,
+        "why": "An international guideline, not Brazilian law."
+      },
+      {
+        "text": "The LGPD",
+        "correct": false,
+        "why": "The LGPD governs personal data; custody of evidence is procedural law."
+      }
+    ]
+  },
+  {
+    "id": "ex-az6swbfx",
+    "version": 1,
+    "section": "chain-of-custody",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An analyst wants to search the collected log. What does the lesson say to do first?",
+    "hint": "The collected file stays untouched.",
+    "choices": [
+      {
+        "text": "Open the collected file read-only and search it there",
+        "correct": false,
+        "why": "Read-only access still risks the original; the rule is to work on copies."
+      },
+      {
+        "text": "Note the transfer at the end of the week",
+        "correct": false,
+        "why": "Transfers are recorded when they happen."
+      },
+      {
+        "text": "Compress it first, so that it cannot be edited by accident while being searched",
+        "correct": false,
+        "why": "Compression changes the file and its hash."
+      },
+      {
+        "text": "Make a copy and check its hash against the record",
+        "correct": true,
+        "why": "Right. Work on copies, and confirm each one matches before trusting it."
+      }
+    ]
+  },
+  {
+    "id": "ex-tq2138ya",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each technique to the question it answers.",
+    "hint": "Availability, change, place of change, people.",
+    "pairs": [
+      {
+        "left": "shipping to a collector",
+        "right": "is there still a copy if gw is lost?"
+      },
+      {
+        "left": "a SHA-256 of the day's file",
+        "right": "is this the file that was collected?"
+      },
+      {
+        "left": "a hash chain",
+        "right": "from which line on did it change?"
+      },
+      {
+        "left": "a custody record",
+        "right": "who held it, and when?"
+      }
+    ]
+  },
+  {
+    "id": "ex-ywef7p3a",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the life of one day's log on soc, from first line to last record.",
+    "hint": "It is written, closed, sealed, then handed over.",
+    "items": [
+      "lines arrive from gw over TCP",
+      "logrotate closes the day as gw.log-20261007",
+      "the analyst hashes the closed file and stores the hash apart",
+      "a transfer to the investigator is written in the custody record"
+    ]
+  },
+  {
+    "id": "ex-smf6h6nj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague hands you a log and its SHA-256 on the same USB stick, and the hash matches. What can you conclude?",
+    "hint": "What would a swap of both look like?",
+    "choices": [
+      {
+        "text": "That the log is the one collected, since SHA-256 cannot be forged",
+        "correct": false,
+        "why": "Nobody forged the hash; it could simply have been recomputed over a changed file."
+      },
+      {
+        "text": "Only that file and hash agree; both could have been swapped together",
+        "correct": true,
+        "why": "Right. The hash needs a custody record, and a copy kept apart, to mean more."
+      },
+      {
+        "text": "That the log is complete and in order, with no line missing from the day it covers",
+        "correct": false,
+        "why": "A matching hash says the file is the one hashed, not that nothing was missing then."
+      },
+      {
+        "text": "Nothing: hashes on USB sticks are invalid",
+        "correct": false,
+        "why": "The medium does not matter; who could change it does."
+      }
+    ]
+  }
+]

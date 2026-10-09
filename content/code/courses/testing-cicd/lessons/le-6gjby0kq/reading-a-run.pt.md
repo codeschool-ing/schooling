@@ -1,6 +1,6 @@
 ---
 title: Lendo uma execução de verdade
-version: 1
+version: 2
 ---
 
 O workflow do `shipquote` nunca rodou no GitHub. O repositório que publica este curso roda o dele a
@@ -8,7 +8,9 @@ cada pull request e a cada merge, e o GitHub guarda um registro de cada execuç�
 pode ler pela API pública, já que o repositório é público. Esta seção lê uma delas: a execução
 disparada pelo merge do pull request do curso anterior, em 6 de outubro de 2026.
 
-`A` é só o endereço da API para as Actions deste repositório, para encurtar os comandos:
+`A` é só o endereço da API para as Actions deste repositório, para encurtar os comandos. Defina-o
+com `A=https://api.github.com/repos/codeschool-ing/schooling/actions` e os comandos abaixo
+funcionam no seu próprio terminal; o curl e o jq são os que a aula 1 instalou:
 
 ```
 ana@laptop:~$ echo $A

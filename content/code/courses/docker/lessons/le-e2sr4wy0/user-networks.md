@@ -1,10 +1,11 @@
 ---
 title: Networks of your own
-version: 1
+version: 2
 ---
 
 **`docker network create` makes a new bridge, and containers on it find each other by name.** Lesson
-19 relied on this, and Compose does it for every project:
+19 relied on this, and Compose does it for every project. The `shelf:1.0.0` below is the image lesson
+15 built; if your machine no longer has it, the build that lesson shows makes it again:
 
 ```
 ana@vm:~$ docker network create shelfnet

@@ -1,6 +1,6 @@
 ---
 title: `top`, `htop`, and what the load average actually says
-version: 1
+version: 2
 ---
 
 `ps` is a photograph. **`top` is a film**, and the question it answers is the one you will actually
@@ -80,7 +80,7 @@ ana@vm:~/work$ cat runaway.sh
 while true; do :; done
 ```
 
-With it running:
+With it running — `./runaway.sh &` from `~/work`, and `kill %1` when you are finished with it:
 
 ```
 ana@vm:~$ top -b -n 1 -o %CPU | head -11

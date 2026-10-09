@@ -1,9 +1,15 @@
 ---
 title: Ticket: "the internet is down"
-version: 1
+version: 2
 ---
 
-The laptop cannot reach anything. The first error is about a name, and it is misleading:
+The laptop cannot reach anything. The fault, in your lab:
+
+```sh
+sudo bash ~/netlab/netlab exec laptop root 'ip route del default'
+```
+
+The first error is about a name, and it is misleading:
 
 ```
 ana@laptop:~$ ping -c 2 www.example.com

@@ -1,6 +1,6 @@
 ---
 title: Montagem: um disco chega como diretório
-version: 2
+version: 3
 ---
 
 A seção 10 da aula 1 já disse: não existem letras de unidade, existe uma árvore, e todo disco da
@@ -10,7 +10,7 @@ máquina aparece em algum lugar dentro dela. O verbo para *aparece em algum luga
 ```
 ana@vm:~$ df -h /
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/vda        252G   11G   27G  28% /
+/dev/vda        252G  9.6G   30G  25% /
 ```
 
 Leia as duas pontas juntas. `/dev/vda` é um **dispositivo** — uma entrada em `/dev`, um disco. `/`
@@ -24,7 +24,7 @@ Três comandos, cada vez mais específicos:
 ```
 ana@vm:~$ df -h /
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/vda        252G   11G   27G  28% /
+/dev/vda        252G  9.6G   30G  25% /
 ```
 
 `df` — *disk free* — é o que você vai digitar. Ele aceita um caminho e responde sobre o sistema de
@@ -39,16 +39,15 @@ ana@vm:~$ findmnt -no SOURCE,FSTYPE /
 `-o` escolhe as colunas.
 
 ```
-root@vm:/root# lsblk -o NAME,SIZE,TYPE,MOUNTPOINTS /dev/vda /dev/loop0
-NAME   SIZE TYPE MOUNTPOINTS
-loop0   64M loop /mnt/backups
-vda    256G disk /
+ana@vm:~$ lsblk -o NAME,SIZE,TYPE,MOUNTPOINTS /dev/vda
+NAME  SIZE TYPE MOUNTPOINTS
+vda   256G disk /
 ```
 
 `lsblk` lista **dispositivos de bloco** — o lado do hardware — estejam eles montados ou não. É
 essa última parte que faz dele a ferramenta certa quando um disco está *faltando*: o `df` não tem
 como mostrar um disco que não está montado, e o `lsblk` tem. Sem argumentos ele lista todos os
-dispositivos da máquina; aqui recebeu dois.
+dispositivos da máquina; aqui recebeu um.
 
 Esta máquina é virtual, e é por isso que o disco dela é `vda`. Num laptop você veria `sda` ou
 `nvme0n1` com duas ou três linhas `part` embaixo — as partições — e os pontos de montagem ao lado.
@@ -59,26 +58,39 @@ discos. É por isso que o `/etc/fstab` prefere um UUID, logo abaixo.
 
 ## O que montar realmente faz com um diretório
 
+Para experimentar isto você precisa de um segundo disco, e um arquivo pode fazer o papel de um.
+Montar exige root, então o resto desta seção trabalha num shell de root: o `sudo -i` abre um, o
+prompt dele termina em `#`, e a aula 4 é sobre o que isso quer dizer. Depois crie um diretório onde
+montar, um arquivo de 64 MB de zeros e um sistema de arquivos vazio dentro do arquivo, com o rótulo
+`backups`:
+
+```
+ana@vm:~$ sudo -i
+root@vm:~# mkdir -p /root/img /mnt/backups
+root@vm:~# dd if=/dev/zero of=/root/img/disk.img bs=1M count=64 status=none
+root@vm:~# mkfs.ext4 -q -L backups /root/img/disk.img
+```
+
 A ideia inteira numa sessão só. Um diretório, com algo dentro:
 
 ```
-root@vm:/root# echo 'this is on the main disk' > /mnt/backups/oops.txt
-root@vm:/root# df -h /mnt/backups
+root@vm:~# echo 'this is on the main disk' > /mnt/backups/oops.txt
+root@vm:~# df -h /mnt/backups
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/vda        252G   11G   27G  28% /
+/dev/vda        252G  9.6G   30G  25% /
 ```
 
 Nada está montado ali ainda, então `/mnt/backups` é um diretório comum no disco principal. Agora
 monte algo em cima dele:
 
 ```
-root@vm:/root# mount -o loop /root/img/disk.img /mnt/backups
-root@vm:/root# ls -la /mnt/backups
+root@vm:~# mount -o loop /root/img/disk.img /mnt/backups
+root@vm:~# ls -la /mnt/backups
 total 24
-drwxr-xr-x 3 root root  4096 Sep 14 22:22 .
-drwxr-xr-x 7 root root  4096 Sep 14 22:22 ..
-drwx------ 2 root root 16384 Sep 14 22:22 lost+found
-root@vm:/root# df -h /mnt/backups
+drwxr-xr-x 3 root root  4096 Oct  7 11:10 .
+drwxr-xr-x 7 root root  4096 Oct  7 11:10 ..
+drwx------ 2 root root 16384 Oct  7 11:10 lost+found
+root@vm:~# df -h /mnt/backups
 Filesystem      Size  Used Avail Use% Mounted on
 /dev/loop0       56M   24K   52M   1% /mnt/backups
 ```
@@ -90,11 +102,14 @@ há um instante havia 252 GB.
 Trabalhe nele normalmente:
 
 ```
-root@vm:/root# mkdir /mnt/backups/nightly
-root@vm:/root# touch /mnt/backups/nightly/2026-09-14.tar.gz
-root@vm:/root# ls -R /mnt/backups
+root@vm:~# mkdir /mnt/backups/nightly
+root@vm:~# touch /mnt/backups/nightly/2026-09-14.tar.gz
+root@vm:~# ls -R /mnt/backups
 /mnt/backups:
-lost+found  nightly
+lost+found
+nightly
+
+/mnt/backups/lost+found:
 
 /mnt/backups/nightly:
 2026-09-14.tar.gz
@@ -103,13 +118,13 @@ lost+found  nightly
 E desmonte:
 
 ```
-root@vm:/root# umount /mnt/backups
-root@vm:/root# ls -la /mnt/backups
+root@vm:~# umount /mnt/backups
+root@vm:~# ls -la /mnt/backups
 total 12
-drwxr-xr-x 2 root root 4096 Sep 14 22:22 .
-drwxr-xr-x 7 root root 4096 Sep 14 22:22 ..
--rw-r--r-- 1 root root   25 Sep 14 22:22 oops.txt
-root@vm:/root# cat /mnt/backups/oops.txt
+drwxr-xr-x 2 root root 4096 Oct  7 11:10 .
+drwxr-xr-x 7 root root 4096 Oct  7 11:10 ..
+-rw-r--r-- 1 root root   25 Oct  7 11:10 oops.txt
+root@vm:~# cat /mnt/backups/oops.txt
 this is on the main disk
 ```
 
@@ -142,6 +157,8 @@ disco, que é como a demonstração acima funcionou e como se monta uma imagem I
 O erro que você vai encontrar de verdade é este:
 
 ```
+root@vm:~# mount -o loop /root/img/disk.img /mnt/backups
+root@vm:~# cd /mnt/backups
 root@vm:/mnt/backups# umount /mnt/backups
 umount: /mnt/backups: target is busy.
 root@vm:/mnt/backups# cd /
@@ -160,12 +177,13 @@ onde esses dois ficam familiares.
 ## `/etc/fstab` é a lista do que montar no boot
 
 ```
-root@vm:/root# cat /etc/fstab
+root@vm:~# cat /etc/fstab
 # UNCONFIGURED FSTAB FOR BASE SYSTEM
 ```
 
-Vazio, nesta máquina, porque ela é uma máquina virtual cujo sistema de arquivos raiz foi montado
-pelo que a iniciou, e não a partir de uma tabela. Numa instalação normal ele tem uma linha por
+Vazio, na máquina em que estas transcrições foram capturadas, porque o sistema de arquivos raiz
+dela foi montado pelo que a iniciou, e não a partir de uma tabela. Na máquina que você instalou na
+aula 1 ele tem uma linha para cada sistema de arquivos que o instalador criou. Numa instalação normal ele tem uma linha por
 sistema de arquivos, com seis campos cada:
 
 | campo | é | exemplo |
@@ -179,11 +197,12 @@ sistema de arquivos, com seis campos cada:
 
 **O campo 1 é normalmente um UUID em vez de `/dev/sdb1`**, e esse é o detalhe importante: letras de
 dispositivo mudam quando você acrescenta um disco, e um UUID pertence ao próprio sistema de
-arquivos. O `blkid` imprime:
+arquivos. O `blkid` os imprime, e lê um sistema de arquivos dentro de um arquivo tão bem quanto um
+num disco:
 
 ```
-root@vm:/root# blkid /dev/loop0
-/dev/loop0: LABEL="backups" UUID="c26bf719-319e-4ab2-9b16-e641c60ab92e" BLOCK_SIZE="4096" TYPE="ext4"
+root@vm:~# blkid /root/img/disk.img
+/root/img/disk.img: LABEL="backups" UUID="00826b00-4138-4b93-9ff5-ced97fdda026" BLOCK_SIZE="4096" TYPE="ext4"
 ```
 
 Esse UUID foi gravado no sistema de arquivos quando ele foi criado e viaja com ele — para outra
@@ -204,3 +223,5 @@ em silêncio *antes* de reiniciar. O `mount -a` é o ensaio gratuito.
 | o Windows, dentro do WSL | `/mnt/c` — o mesmo mecanismo, e a razão de ser mais lento |
 | um contêiner | o sistema de arquivos dele é todo montagem, e o `-v` do `docker run` acrescenta uma |
 | `/proc`, `/sys`, `/dev` | montados, e em disco nenhum — seção 14 |
+
+Quando terminar, `exit` sai do shell de root, e o prompt volta a ser seu.

@@ -79,7 +79,7 @@ um 400 como "minha requisição estava errada" vai tratar esta como outra coisa.
 O log do labembed mostra o que ele entendeu:
 
 ```
-ana@lab:~/emb$ tail -n 4 /var/log/labembed/requests.jsonl | jq -c "{provider, task, dims, status}"
+ana@lab:~/emb$ tail -n 4 labembed.jsonl | jq -c "{provider, task, dims, status}"
 {"provider":"jina","task":"retrieval.query","dims":64,"status":200}
 {"provider":"jina","task":"retrieval.query","dims":256,"status":200}
 {"provider":"jina","task":"retrieval.passage","dims":256,"status":200}

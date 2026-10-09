@@ -1,6 +1,6 @@
 ---
 title: When no answer comes
-version: 1
+version: 2
 ---
 
 With `getJSON` in place, every way a request can go wrong ends up in the same `catch`, with a message
@@ -50,6 +50,16 @@ browser refused for security reasons; the console line above it, `ERR_CONNECTION
 written for the developer and is not available to the script.
 
 ## The same in Node
+
+A program run with `node` has no `page` to start the server for it, so start it yourself, in a
+second terminal and from `~/js`:
+
+```sh
+node ~/js-tools/serve.mjs
+```
+
+It says `serving` and the folder and address it serves, and keeps running until you press Ctrl+C.
+Back in the first terminal:
 
 ```javascript
 for (const url of ["http://127.0.0.1:8080/api/books/2", "http://127.0.0.1:8099/api/books"]) {

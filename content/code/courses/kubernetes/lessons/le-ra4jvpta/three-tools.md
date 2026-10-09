@@ -24,17 +24,10 @@ this course.
 Docker Desktop can also switch on a cluster of its own, from its settings. It is the shortest path
 on Windows and macOS, and it is one cluster with one name, which is limiting by lesson 48.
 
-## Three paths, and what each costs your computer
+## Which path
 
-| path | what you install | what it costs | when to take it |
-|---|---|---|---|
-| **on your machine** (recommended) | Docker, `kind`, `kubectl` | about 0.8 GiB of memory for three nodes, measured in the next section | almost always |
-| in a Linux virtual machine | a VM with 4 GiB or more, then the same three | the VM's memory on top, and its disk | your machine runs something that conflicts with Docker, or you want the lab kept apart |
-| online, in the browser | nothing | nothing, and the session is deleted after an hour or so | a machine you may not install on; nothing survives between sessions |
-
-The browser path is a playground such as Killercoda, which hands you a fresh cluster in a tab. It
-is a good way to try a command and a poor way to follow a course, because every lesson starts by
-rebuilding what the last one left.
-
-The next two sections build the recommended one and then break it, because the setup is where most
-people give up, and it is almost always one of four errors.
+Lesson 1 already made this choice: Docker, `kind` and `kubectl` in an Ubuntu virtual machine, or
+straight on a computer that runs Linux, with a browser playground named as the third path and not
+relied on. Nothing here changes it. The next section builds a cluster by hand, called `study`, from
+the same kind of file `up.sh` uses, and measures what it costs in memory. The section after it breaks the setup on purpose, because that is where most people give up, and it is almost always
+one of four errors.

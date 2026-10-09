@@ -1,9 +1,9 @@
 ---
 title: A Delta table, by hand
-version: 1
+version: 2
 ---
 
-The lab has the `deltalake` library, delta-rs, a Rust implementation of Delta Lake with a Python interface.
+Lesson 1 installed the `deltalake` library, delta-rs, a Rust implementation of Delta Lake with a Python interface.
 No server and no cluster: a Delta table is a folder, and the library is what reads and writes the log in it.
 
 Ana's first program takes one year of `fact_sales` from the warehouse and writes it into a Delta table on the

@@ -1,6 +1,6 @@
 ---
 title: O que um modelo sabe, e o que ele não sabe
-version: 1
+version: 2
 ---
 
 Um modelo de linguagem sabe o que o texto de treinamento ensinou a ele, e nada mais. Esse
@@ -32,44 +32,76 @@ algo por trás que já esteve certo, e isso é muito mais difícil de pegar.
 
 ## Perguntando sem fonte
 
-O laboratório deste curso tem um gerador chamado **extract-1**, e a próxima seção diz exatamente o que
-ele é. Ele responde pela mesma API que um modelo real. Para esta seção basta saber como ele se
-comporta quando a pergunta chega sozinha, sem nenhum documento junto. Responde a partir de um pequeno
-arquivo de frases que o curso escreveu como o que ele "aprendeu no treinamento", e responde sempre.
+O `ask.py` manda uma pergunta ao llama3.2:3b, sozinha, e imprime a resposta:
 
-O `ask.py` manda uma pergunta e imprime a resposta:
-
-```
-ana@lab:~/rag$ python ask.py "How many days do I have to return a printed book?"
-You can return a book to Marginalia within 14 days of delivery, as long as it is unread. Return postage is paid by the customer.
-ana@lab:~/rag$ python ask.py "What is the phone number for customer service?"
-You can call Marginalia's customer service on 0800 555 0199, every day from 9 am to 6 pm.
-ana@lab:~/rag$ python ask.py "Can I get my money back for an e-book I downloaded yesterday?"
-You can return a book to Marginalia within 14 days of delivery, as long as it is unread. Return postage is paid by the customer.
-```
-
-**As três respostas estão erradas, e as três parecem certas.** A primeira é o caso do fato *mudado*:
-catorze dias e frete de devolução pago eram as regras da Marginalia em 2025, e a política em vigor
-desde fevereiro de 2026 dá trinta dias e devolução grátis. A segunda é um telefone de uma central que
-não existe; nada nos documentos da loja menciona uma. A terceira responde a uma pergunta sobre e-books
-com a regra dos livros impressos, porque era o que ele tinha de mais próximo.
-
-```
-ana@lab:~/rag$ grep -c "\"q\"" /opt/rag/share/memory.json
-10
+```schooling-example
+{
+  "language": "python",
+  "file": "ask.py",
+  "parts": [
+    {
+      "code": "import sys\nfrom openai import OpenAI\n\nclient = OpenAI()",
+      "note": "O cliente encontra o Ollama pelo `OPENAI_BASE_URL`, que o `env.sh` define."
+    },
+    {
+      "code": "reply = client.chat.completions.create(\n    model=\"llama3.2:3b\",\n    temperature=0,\n    messages=[{\"role\": \"user\", \"content\": sys.argv[1]}],\n)\nprint(reply.choices[0].message.content)",
+      "note": "A pergunta da linha de comando, sozinha: sem mensagem de sistema, sem documento. `temperature=0` faz a mesma pergunta receber a mesma resposta na mesma máquina."
+    }
+  ]
+}
 ```
 
-A memória do extract-1 são dez frases, escritas pelo curso para se comportar como a memória de um
-modelo real se comporta mal. A memória de um modelo real é imensamente maior e em geral está certa, o
-que torna o erro mais raro e os erros mais difíceis de notar. A forma é a mesma: **uma resposta
+```
+ana@vm:~/rag$ python ask.py "How many days do I have to return a printed book?"
+The number of days you have to return a printed book depends on the library's return policy, which can vary depending on the library and the type of book.
+
+Typically, most public libraries have a return policy that allows you to return books within a certain timeframe, usually 1-3 weeks, without any fines. However, if you keep a book for longer than the allowed time, you may be charged a fine.
+
+Here are some general guidelines:
+
+* Most public libraries: 1-2 weeks (7-14 days) without fines
+* Some libraries: 2-3 weeks (14-21 days) without fines
+* Interlibrary loan books: 1-2 weeks (7-14 days) without fines
+
+It's always best to check with your local library's return policy to confirm their specific rules and deadlines.
+ana@vm:~/rag$ python ask.py "What is the phone number for customer service?"
+I don't have have access to real-time information, but I can suggest some options to help you find the customer service phone number for a specific company:
+
+1. Check the company's website: Most companies list their customer service phone number on their official website.
+2. Search online: You can search for the company's name along with "customer service phone number" to find the information.
+3. Check the packaging or documentation: If you have the product or documentation, you can check the packaging or instructions for the customer service phone number.
+4. Contact the company directly: You can try contacting the company directly through their website's contact form or by sending an email.
+
+If you provide me with the name of the company, I can try to help you find the customer service phone number.
+ana@vm:~/rag$ python ask.py "Can I get my money back for an e-book I downloaded yesterday?"
+I can't provide information about a specific e-book or purchase. If you're unhappy with an e-book you've downloaded, I can offer general guidance on returning or refunding an e-book purchase. Would that help?
+```
+
+**Nenhuma das três respostas é sobre a Marginalia, e só uma delas diz isso.** A primeira é a
+perigosa. Um modelo que nunca ouviu falar da loja recebeu uma pergunta sobre devolver um livro
+impresso e respondeu a pergunta que conhecia, sobre devolver um livro a uma biblioteca: de uma a três
+semanas, multas, empréstimo entre bibliotecas. É fluente, específica e confiante, e é sobre outro
+negócio. Um cliente que a lê procurando um número encontra um, "7-14 days", e o número está errado
+para esta loja, cuja política dá trinta dias.
+
+As outras duas fazem o que um modelo cuidadoso faz com uma pergunta que não sabe responder. A do
+telefone recebe a admissão de que ele não tem acesso à informação e conselhos para encontrá-la, e a do
+e-book recebe uma oferta de orientação geral. É o comportamento para o qual o treinamento empurra os
+modelos, e o llama3.2:3b o mostra duas vezes em três. **O problema é a terceira vez: nada no texto da
+primeira resposta a distingue de uma resposta certa.**
+
+Um modelo maior sabe mais e hesita mais, o que torna a falha mais rara e mais difícil de notar. A
+forma continua a mesma, e é ela que importa para os documentos de uma empresa: **uma resposta
 fluente, nenhuma fonte, e nenhum sinal no texto que separe a certa da errada.**
 
 ## Por que o modelo não diz simplesmente que não sabe
 
-Seria cômodo se o modelo se recusasse quando lhe falta o fato. O treinamento empurra os modelos a
-admitir que não sabem, e os modelos atuais fazem isso mais que os antigos. Mas um modelo não tem
-registro do que leu, então não consegue verificar se um fato estava no texto de treinamento; só tem a
-probabilidade de cada próxima palavra. Um número de telefone plausível é um texto bem provável. **A
+Ele recusou duas vezes acima, e seria conveniente se recusasse toda vez que lhe faltasse o fato. O
+treinamento de fato empurra os modelos a admitir que não sabem, e os modelos modernos fazem isso mais
+que os antigos. Mas um modelo não tem registro do que leu, então não consegue conferir se um fato
+estava no texto de treinamento; tudo o que ele tem é a probabilidade de cada próxima palavra. Depois
+de uma pergunta sobre devolver um livro impresso, as regras de empréstimo de uma biblioteca são um
+texto muito provável. **A
 confiança do modelo mede o quanto a resposta soa plausível, e não se ela é verdadeira.**
 
 É esse o problema que este curso resolve. Não fazendo o modelo saber mais, o que só empurra a data de

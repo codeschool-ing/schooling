@@ -1,6 +1,6 @@
 ---
 title: Moving the root, and losing a cable
-version: 1
+version: 2
 ---
 
 The tree is not fixed. It is recomputed whenever something changes, and two changes matter in
@@ -44,6 +44,7 @@ rapid-spanning-tree section of this lesson comes back to that.
 For the second test the root went back to `sw1` (priority 32768 on `sw3` again, then a wait for the
 tree to settle), which put `sw2`'s `p3` back in `blocking`. On `pc2`, a ping to `pc1` was started,
 one packet a second for 60 seconds. Two seconds later the cable between `sw1` and `sw2` was pulled,
+`ip link set p2 down` at a root prompt on sw1,
 and `sw2`'s `p3` was read every six seconds:
 
 ```

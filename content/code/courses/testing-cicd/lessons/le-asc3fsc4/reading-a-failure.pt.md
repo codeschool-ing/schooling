@@ -1,6 +1,6 @@
 ---
 title: Lendo uma execução vermelha
-version: 1
+version: 2
 ---
 
 Uma execução vermelha é informação, e a maior parte do trabalho depois dela é leitura. O hook do
@@ -47,7 +47,8 @@ teste esperava o dia 5.
 
 A mudança é revertida em vez de remendada, porque reverter devolve a `main` a um commit que
 sabidamente passa, e o colega pode trazer a simplificação de volta depois, com o fuso e um teste que
-rode em UTC. A reversão é enviada e a CI confirma:
+rode em UTC. `git revert --no-edit HEAD` faz o commit que a desfaz, que então é enviado, e a CI
+confirma:
 
 ```
 ana@laptop:~/shipquote$ git log --oneline -3

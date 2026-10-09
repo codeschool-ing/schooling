@@ -12,7 +12,17 @@ faz dele o mesmo tipo de ferramenta que um IDS por assinatura (aula 15).
 O laboratório roda o **ModSecurity**, o motor de WAF de código aberto, como módulo do nginx, com o
 **OWASP Core Rule Set** (CRS), o conjunto de regras de que a maioria das implantações parte. Ele é
 ligado para o site com duas linhas, e seu motor começa no modo **somente detecção**
-(*detection-only*):
+(*detection-only*). No `www`, escreva o `waf.conf` como ele aparece impresso abaixo e depois faça três
+edições. O log de auditoria vai para o diretório de logs do próprio nginx, as duas linhas
+`modsecurity` entram abaixo de `client_max_body_size`, e o burst do limite de taxa sobe para 50. A
+última é para que os testes desta seção sejam julgados pelo WAF e não recusados pela velocidade:
+
+```sh
+# on www, as root
+sed -i "s#^SecAuditLog .*#SecAuditLog /var/log/nginx/modsec_audit.log#" /etc/nginx/modsecurity.conf
+sed -i "0,/client_max_body_size 16k;/s||client_max_body_size 16k;\n    modsecurity on;\n    modsecurity_rules_file /etc/nginx/waf.conf;|" /etc/nginx/sites-enabled/shop
+sed -i "s/limit_req zone=perip burst=10 nodelay;/limit_req zone=perip burst=50 nodelay;/" /etc/nginx/sites-enabled/shop
+```
 
 ```
 root@www:~# cat /etc/nginx/waf.conf; grep -E "^SecRuleEngine" /etc/nginx/modsecurity.conf; grep -n modsecurity /etc/nginx/sites-enabled/shop
@@ -53,7 +63,9 @@ comparou o total, 15, com o limiar e teria bloqueado. No modo somente detecção
 não faz nada.
 
 **É assim que um WAF deve ser introduzido**: no modo somente detecção, por tempo suficiente para ver
-o que ele bloquearia no tráfego real. Passando para o bloqueio:
+o que ele bloquearia no tráfego real. Passando para o bloqueio, depois de esvaziar o log de auditoria
+com `: > /var/log/nginx/modsec_audit.log` e trocar `DetectionOnly` por `On` em
+`/etc/nginx/modsecurity.conf`:
 
 ```
 root@www:~# grep -E "^SecRuleEngine" /etc/nginx/modsecurity.conf; nginx -s reload

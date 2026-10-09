@@ -1,6 +1,6 @@
 ---
 title: O que reduz o problema, e o que não reduz
-version: 1
+version: 2
 ---
 
 O primeiro impulso é acrescentar uma linha ao prompt: "Não invente coisas." Não custa nada e ajuda
@@ -13,8 +13,80 @@ honesta e conferir o que volta contra algo que o modelo não escreveu.
 
 Um modelo perguntado de memória sobre as regras de reembolso do café não tem em que se apoiar além
 do que regras de reembolso costumam dizer. Dê as regras a ele, e a continuação mais provável passa a
-ser uma que as repete. O `retrieve --prompt` da bancada monta esse tipo de prompt: ele acha as
-linhas do manual que combinam com a pergunta e as põe acima dela, numeradas, com uma instrução:
+ser uma que as repete. O `retrieve` acha as linhas do manual que combinam com
+uma pergunta, e com `--prompt` as põe acima dela, numeradas, com uma instrução. Salve-o como
+`~/pe/bin/retrieve` e torne-o executável:
+
+```python
+#!/usr/bin/env python3
+"""retrieve QUESTION [--k N] [--prompt]: find the handbook passages for a question.
+
+Each line of each file in handbook/ is a passage. Passages are scored with
+BM25, the ranking formula most keyword search engines start from: a word
+counts for more when it is rare across the handbook, and for less each extra
+time it repeats in one passage. With --prompt, the top passages are put into
+the prompt a model would receive, each with a number to cite.
+"""
+import math
+import os
+import re
+import sys
+from collections import Counter
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+BOOK = os.path.join(HERE, "..", "handbook")
+STOP = set("a an and are at be by can do does for from i if in is it its my not of on or "
+           "the to was what when which who will with you".split())
+words = lambda t: [w for w in re.findall(r"[a-z0-9]+", t.lower()) if w not in STOP]
+
+args = sys.argv[1:]
+k = 3
+if "--k" in args:
+    i = args.index("--k"); k = int(args[i + 1]); del args[i : i + 2]
+prompt = "--prompt" in args
+question = " ".join(a for a in args if a != "--prompt")
+
+passages = []
+for name in sorted(os.listdir(BOOK)):
+    for line in open(os.path.join(BOOK, name), encoding="utf-8"):
+        line = line.strip()
+        if line and not line.startswith("#"):
+            passages.append((name, line))
+docs = [Counter(words(t)) for _, t in passages]
+avg = sum(sum(d.values()) for d in docs) / len(docs)
+df = Counter(w for d in docs for w in d)
+N = len(docs)
+
+def bm25(q, d, k1=1.2, b=0.75):
+    size = sum(d.values())
+    s = 0.0
+    for w in q:
+        if w in d:
+            idf = math.log(1 + (N - df[w] + 0.5) / (df[w] + 0.5))
+            s += idf * d[w] * (k1 + 1) / (d[w] + k1 * (1 - b + b * size / avg))
+    return s
+
+q = words(question)
+ranked = sorted(((bm25(q, d), i) for i, d in enumerate(docs)), key=lambda x: (-x[0], x[1]))
+top = [(s, i) for s, i in ranked[:k] if s > 0]
+if not prompt:
+    print("query words: %s" % " ".join(q))
+    for s, i in top:
+        print("%6.2f  %-14s %s" % (s, passages[i][0], passages[i][1]))
+    if not top:
+        print("no passage shares a word with the question")
+    sys.exit(0)
+print("Answer the question using only the sources below. Cite each source you use")
+print("as [1], [2]. If the sources do not contain the answer, say that the handbook")
+print("does not say, and do not answer from general knowledge.")
+print()
+for n, (s, i) in enumerate(top, 1):
+    print("[%d] (%s) %s" % (n, passages[i][0], passages[i][1]))
+print()
+print("Question: %s" % question)
+```
+
+Como ele pontua as linhas é assunto da lição 11. O que ele monta é isto:
 
 ```
 ana@lab:~/pe$ retrieve "Can I get a refund in cash if I paid by card?" --prompt
@@ -31,12 +103,15 @@ Question: Can I get a refund in cash if I paid by card?
 
 Três coisas nesse prompt fazem o trabalho. **As fontes estão no texto**, então os fatos agora são a
 continuação provável, e não um palpite sobre cafés em geral. Elas são **numeradas**, então a
-resposta pode dizer qual usou. E a primeira linha limita a resposta a elas. Eis uma resposta que um
-modelo poderia dar, escrita pelo curso como ilustração:
+resposta pode dizer qual usou. E a primeira linha limita a resposta a elas. Mande-o ao modelo passando-o
+para o `ask` por um pipe; com `-`, o `ask` lê o prompt da entrada padrão:
 
-```localised
-Não. O reembolso volta para o cartão ou meio com que você pagou, nunca
-em dinheiro para um pagamento com cartão [1].
+```
+ana@lab:~/pe$ retrieve "Can I get a refund in cash if I paid by card?" --prompt | ask - --temperature 0
+According to the handbook, refunds are made to the card or method used to pay, never in cash for a card payment. [1]
+
+Therefore, the answer is no, you cannot get a refund in cash if you paid by card.
+-- llama3.2:3b, finish: stop, prompt 159 tokens, output 49 tokens
 ```
 
 O `[1]` é o que torna a resposta conferível: um leitor, ou um programa, pode ir à fonte 1 e ver se
@@ -74,11 +149,12 @@ Question: Who owns the café?
 que só dissesse "use estas fontes" deixaria o modelo com duas linhas sobre horários e uma pergunta
 que não dá para responder com elas, e a continuação mais provável de uma pergunta é uma resposta. É
 por isso que a instrução tem a segunda frase: se as fontes não contêm a resposta, diga que o manual
-não diz. **Uma saída explícita transforma a resposta honesta numa resposta provável.** A resposta
-que essa instrução quer produzir, escrita pelo curso como ilustração:
+não diz. **Uma saída explícita transforma a resposta honesta numa resposta provável.** Aqui funcionou:
 
-```localised
-O manual não diz quem é o dono do café.
+```
+ana@lab:~/pe$ retrieve "Who owns the café?" --prompt | ask - --temperature 0
+The handbook does not say who owns the café.
+-- llama3.2:3b, finish: stop, prompt 125 tokens, output 11 tokens
 ```
 
 Uma resposta curta assim é um sucesso, e precisa ser tratada como tal onde quer que as respostas

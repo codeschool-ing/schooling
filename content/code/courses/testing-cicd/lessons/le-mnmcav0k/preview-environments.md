@@ -1,6 +1,6 @@
 ---
 title: An environment per pull request
-version: 1
+version: 2
 ---
 
 Shared staging has a scheduling problem: two teams want to try two changes at once, and one waits or
@@ -9,7 +9,8 @@ environment, solves it by creating a fresh environment for each pull request, de
 request's build to it, and destroying it when the pull request closes.
 
 In the lab an environment is a directory and a port, so a preview for pull request 42 is cheap to
-show:
+show. Its configuration is one line, `mkdir ~/envs/pr-42` and
+`echo SHIPQUOTE_PORT=8442 > ~/envs/pr-42/config.env`:
 
 ```
 ana@laptop:~/shipquote$ cat ~/envs/pr-42/config.env

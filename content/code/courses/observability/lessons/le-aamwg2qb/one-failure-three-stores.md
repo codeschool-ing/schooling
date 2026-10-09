@@ -1,11 +1,19 @@
 ---
 title: One failed checkout, in all three
-version: 1
+version: 2
 ---
 
 The test that matters is the one an investigation runs: one failed checkout, found by its trace id,
 in every place its lines went. The newest failure's trace id is taken from payments' own output, and
-the script waits for the batches to land before asking:
+then the batches are given time to land, because the Elasticsearch exporter sends in batches and
+the newest lines take a while to arrive there:
+
+```sh
+TRACE=$(docker compose logs --no-log-prefix payments | grep 'card network unavailable' | tail -1 | jq -r .trace_id)
+sleep 45
+```
+
+`$TRACE` is the id in every query below:
 
 ```
 ana@obs:~/shop$ curl -sG localhost:3100/loki/api/v1/query_range --data-urlencode 'query={service_name="payments"} |= "0232ecb24f137876488caaa13f510759"' | jq -r '.data.result[].values[][1]' | jq -c '{message, order_id}'
@@ -58,5 +66,10 @@ ana@obs:~/shop$ rm faults/payments.json compose.override.yaml
 same lines, a few thousand of them, on stores that were all configured small. Most of the JVMs'
 memory is a heap reserved up front, and none of these numbers scales linearly with traffic. What
 they show is the shape of the trade in this lesson's figure: Loki keeps writing cheap and pays when it
-reads. The other two pay to index every line, and keep the memory to do it. The fault file and the
-override were removed at the end of the capture.
+reads. The other two pay to index every line, and keep the memory to do it. Remove the fault file and
+the override, and put the Collector back on its first configuration:
+
+```sh
+rm faults/payments.json compose.override.yaml
+docker compose up -d otel-collector
+```

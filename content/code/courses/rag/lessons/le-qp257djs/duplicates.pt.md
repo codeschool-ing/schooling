@@ -1,6 +1,6 @@
 ---
 title: Duplicatas
-version: 1
+version: 2
 ---
 
 Uma empresa escreve a mesma regra em mais de um lugar. A política de devoluções da Marginalia tem uma
@@ -15,7 +15,6 @@ fonte já mantida:
 ```schooling-example
 {
   "language": "python",
-  "file": "context.py",
   "parts": [
     {
       "code": "def dedupe(sources, same=SAME):\n    \"\"\"Drop a source that says what a better one already said.\"\"\"\n    if not sources:\n        return []\n    v = embed([s[\"text\"] for s in sources])\n    kept = []\n    for i in range(len(sources)):\n        if all(v[i] @ v[j] < same for j in kept):\n            kept.append(i)\n    return [sources[i] for i in kept]",
@@ -25,15 +24,27 @@ fonte já mantida:
 }
 ```
 
+```schooling-example
+{
+  "language": "python",
+  "file": "alike.py",
+  "parts": [
+    {
+      "code": "import sys\n\nfrom context import candidates, dedupe\n\nfound = candidates(sys.argv[1], 10)\nfor s in found:\n    print(f\"{s['score']:.3f}  {s['path']}\")\nprint(\"after dedupe:\")\nfor s in dedupe(found):\n    print(f\"{s['score']:.3f}  {s['path']}\")",
+      "note": "Os dez candidatos mais próximos de uma pergunta, e o que sobra deles depois do `dedupe`."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python alike.py "When can an audiobook be refunded?"
+```
+ana@vm:~/rag$ python alike.py "When can an audiobook be refunded?"
 0.902  Returns and refunds policy > E-books and audiobooks
 0.894  E-books and audiobooks > Audiobooks
 0.831  Returns and refunds policy > E-books and audiobooks
 0.812  E-books and audiobooks > Refunds for e-books
 0.778  E-books and audiobooks > Refunds for e-books
-0.666  Returns and refunds policy > Damaged, faulty and wrong items
-0.626  Terms of sale > 8. Digital content
+0.665  Returns and refunds policy > Damaged, faulty and wrong items
+0.625  Terms of sale > 8. Digital content
 0.622  Returns and refunds policy > Damaged, faulty and wrong items
 0.610  Returns and refunds policy > The return window
 0.585  Returns and refunds policy > Damaged, faulty and wrong items
@@ -41,8 +52,8 @@ after dedupe:
 0.902  Returns and refunds policy > E-books and audiobooks
 0.831  Returns and refunds policy > E-books and audiobooks
 0.778  E-books and audiobooks > Refunds for e-books
-0.666  Returns and refunds policy > Damaged, faulty and wrong items
-0.626  Terms of sale > 8. Digital content
+0.665  Returns and refunds policy > Damaged, faulty and wrong items
+0.625  Terms of sale > 8. Digital content
 0.622  Returns and refunds policy > Damaged, faulty and wrong items
 0.610  Returns and refunds policy > The return window
 0.585  Returns and refunds policy > Damaged, faulty and wrong items
@@ -55,8 +66,20 @@ estava mantido. A política de devoluções disse primeiro, então a política d
 
 O limite é a decisão. Com 0,9 só quase-cópias saem, e nas 30 perguntas isso é raro:
 
+```schooling-example
+{
+  "language": "python",
+  "file": "removed.py",
+  "parts": [
+    {
+      "code": "import json\n\nfrom context import candidates, dedupe\n\ntotal, removed = 0, 0\nfor q in map(json.loads, open(\"data/eval.jsonl\")):\n    found = candidates(q[\"question\"], 10, \"status = %s\", (\"current\",))\n    total += len(found)\n    removed += len(found) - len(dedupe(found))\nprint(f\"{removed} of {total} sources removed as duplicates, over 30 questions\")",
+      "note": "Quantos dos candidatos o `dedupe` remove no conjunto de teste inteiro."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python removed.py
+```
+ana@vm:~/rag$ python removed.py
 5 of 115 sources removed as duplicates, over 30 questions
 ```
 

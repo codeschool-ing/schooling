@@ -1,9 +1,9 @@
 ---
 title: Elements by their relations
-version: 1
+version: 2
 ---
 
-Lesson 1 section 05 named the relations in the tree: parent, child, sibling, descendant. **Combinators** are how a selector uses them. There are four:
+Lesson 1 section 07 named the relations in the tree: parent, child, sibling, descendant. **Combinators** are how a selector uses them. There are four:
 
 | combinator | written | means |
 | --- | --- | --- |

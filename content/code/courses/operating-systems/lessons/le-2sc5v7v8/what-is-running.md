@@ -1,6 +1,6 @@
 ---
 title: What is running in the background
-version: 1
+version: 2
 ---
 
 Lesson 1 left `systemd` as the first process, PID 1, and said it starts everything else. **`systemctl`**
@@ -26,7 +26,8 @@ ana@server:~$ sudo systemctl status cron --no-pager -n 0
 
 Six services on this minimal server, each with a one-line description: `cron`, the classic scheduler of
 section 05; `dbus`, how programs talk to each other; the journal, which collects every log; logins; name
-resolution; and a manager for ana's own session.
+resolution; and a manager for ana's own session. The server you built in lesson 1 is the standard
+installation and lists more of them; each line reads the same way.
 
 `systemctl status` gives one service's full picture: *Loaded*, which file defines it and whether it is
 *enabled*; *Active*, whether it runs now and since when; and its *Main PID*, the process you

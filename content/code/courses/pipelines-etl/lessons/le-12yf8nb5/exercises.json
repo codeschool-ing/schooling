@@ -1,0 +1,602 @@
+[
+  {
+    "id": "ex-9a4qtt6x",
+    "version": 1,
+    "section": "what-it-means",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes a step idempotent?",
+    "hint": "Once, or twice.",
+    "choices": [
+      {
+        "text": "It never fails",
+        "correct": false,
+        "why": "Failing has nothing to do with it."
+      },
+      {
+        "text": "Running it twice leaves what running it once left",
+        "correct": true,
+        "why": "Right. The same rows, the same values."
+      },
+      {
+        "text": "It runs in one transaction from the first statement to the last",
+        "correct": false,
+        "why": "A transaction can still insert the same rows twice."
+      },
+      {
+        "text": "It is fast enough to run every night",
+        "correct": false,
+        "why": "Speed is unrelated."
+      }
+    ]
+  },
+  {
+    "id": "ex-4meftv7x",
+    "version": 1,
+    "section": "what-it-means",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these run a step more than once? Choose all that apply.",
+    "hint": "The course has met all of them.",
+    "choices": [
+      {
+        "text": "A retry after a timeout",
+        "correct": true,
+        "why": "Right. Lesson 10."
+      },
+      {
+        "text": "Clearing a task days later",
+        "correct": true,
+        "why": "Right. Lesson 10."
+      },
+      {
+        "text": "A backfill over days already loaded",
+        "correct": true,
+        "why": "Right. Lesson 9."
+      },
+      {
+        "text": "A sensor that never pokes",
+        "correct": false,
+        "why": "A sensor that never pokes runs nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-shjhqpvm",
+    "version": 1,
+    "section": "a-load-that-doubles",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the naive insert had run twice on top of the nightly, how many lines did the 16th have?",
+    "hint": "448 three times.",
+    "value": 1344,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-4y09c0td",
+    "version": 1,
+    "section": "a-load-that-doubles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a fingerprint better than a row count for comparing two runs?",
+    "hint": "What would a count miss?",
+    "choices": [
+      {
+        "text": "It is faster to compute",
+        "correct": false,
+        "why": "It is slower; it reads every column."
+      },
+      {
+        "text": "It ignores duplicate rows",
+        "correct": false,
+        "why": "Duplicates change it."
+      },
+      {
+        "text": "Any changed value changes it",
+        "correct": true,
+        "why": "Right. A count only sees how many."
+      },
+      {
+        "text": "PostgreSQL stores it with the table",
+        "correct": false,
+        "why": "It is computed by the query."
+      }
+    ]
+  },
+  {
+    "id": "ex-1y7wwvpa",
+    "version": 1,
+    "section": "a-load-that-doubles",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the fingerprint query sort the rows with `ORDER BY order_id, line_no`?",
+    "hint": "Same rows, same text.",
+    "choices": [
+      {
+        "text": "So the same rows always give the same md5",
+        "correct": true,
+        "why": "Right. Without an order, rows may come back in any order."
+      },
+      {
+        "text": "To make the md5 faster to compute on a large day",
+        "correct": false,
+        "why": "Order does not change the speed."
+      },
+      {
+        "text": "To drop the duplicates",
+        "correct": false,
+        "why": "ORDER BY removes nothing."
+      },
+      {
+        "text": "Because string_agg refuses to run without an ORDER BY",
+        "correct": false,
+        "why": "It is optional; leaving it out makes the result unstable."
+      }
+    ]
+  },
+  {
+    "id": "ex-ma7d7g58",
+    "version": 1,
+    "section": "replace-not-add",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What made `load/fact_sales.sql` idempotent?",
+    "hint": "One line the naive load did not have.",
+    "choices": [
+      {
+        "text": "CREATE TABLE IF NOT EXISTS",
+        "correct": false,
+        "why": "That only creates the table once."
+      },
+      {
+        "text": "psql's -q flag",
+        "correct": false,
+        "why": "That only makes it quiet."
+      },
+      {
+        "text": "A unique index on order_date",
+        "correct": false,
+        "why": "There is none, and a day has many lines."
+      },
+      {
+        "text": "It deletes the day first",
+        "correct": true,
+        "why": "Right. It replaces the slice it owns."
+      }
+    ]
+  },
+  {
+    "id": "ex-kec1mteb",
+    "version": 1,
+    "section": "replace-not-add",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each load to the idempotent shape it takes.",
+    "hint": "Slice, key, or whole.",
+    "pairs": [
+      {
+        "left": "load/fact_sales.sql",
+        "right": "Delete, then insert"
+      },
+      {
+        "left": "load/dim_book.sql",
+        "right": "Upsert by key"
+      },
+      {
+        "left": "A dbt table model",
+        "right": "Rebuild and swap"
+      }
+    ],
+    "right_distractors": [
+      "Plain INSERT"
+    ]
+  },
+  {
+    "id": "ex-1wz3enjn",
+    "version": 1,
+    "section": "replace-not-add",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is upsert the right shape?",
+    "hint": "Rows with an identity.",
+    "choices": [
+      {
+        "text": "When rows arrive one by one, each with its own key",
+        "correct": true,
+        "why": "Right. A second run finds every key and changes nothing."
+      },
+      {
+        "text": "When a run owns a whole day",
+        "correct": false,
+        "why": "That is delete then insert."
+      },
+      {
+        "text": "When the table has no key",
+        "correct": false,
+        "why": "Upsert needs a key."
+      },
+      {
+        "text": "When the result is small enough to rebuild whole",
+        "correct": false,
+        "why": "That is rebuild and swap."
+      }
+    ]
+  },
+  {
+    "id": "ex-nrc1jr22",
+    "version": 1,
+    "section": "proving-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `twice.sh` compare?",
+    "hint": "After one run, after two.",
+    "choices": [
+      {
+        "text": "The step's code as it was before and after the last edit",
+        "correct": false,
+        "why": "It never reads the code."
+      },
+      {
+        "text": "The exit codes",
+        "correct": false,
+        "why": "set -e stops on a failure; the comparison is of the query."
+      },
+      {
+        "text": "The time each run took, to see whether the second was faster",
+        "correct": false,
+        "why": "Time is not compared."
+      },
+      {
+        "text": "What the step left, after one run and after two",
+        "correct": true,
+        "why": "Right. It tests the property, not the code."
+      }
+    ]
+  },
+  {
+    "id": "ex-wpb6pzzg",
+    "version": 1,
+    "section": "proving-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A step inserts new prices, and `twice.sh` says it is idempotent on a day when the API returned nothing new. What has been shown?",
+    "hint": "Did it have anything to write?",
+    "choices": [
+      {
+        "text": "That the step is idempotent",
+        "correct": false,
+        "why": "Only that it wrote nothing twice."
+      },
+      {
+        "text": "That the API is idempotent",
+        "correct": false,
+        "why": "The API was not tested."
+      },
+      {
+        "text": "Nothing useful: the test needs rows to write",
+        "correct": true,
+        "why": "Right. Idempotent by luck is not idempotent."
+      },
+      {
+        "text": "That the step is broken",
+        "correct": false,
+        "why": "It did nothing wrong that day."
+      }
+    ]
+  },
+  {
+    "id": "ex-8rc0vq5k",
+    "version": 1,
+    "section": "not-quite",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `load_log` not idempotent, and why is that right?",
+    "hint": "What does it record?",
+    "choices": [
+      {
+        "text": "It is a bug; it should be fixed with an upsert",
+        "correct": false,
+        "why": "Two loads happened, and it says so."
+      },
+      {
+        "text": "It records runs, and two runs happened",
+        "correct": true,
+        "why": "Right. A log is where appending is the point."
+      },
+      {
+        "text": "now() is not allowed in PostgreSQL",
+        "correct": false,
+        "why": "It is allowed; it differs each run."
+      },
+      {
+        "text": "It has no primary key, so PostgreSQL cannot tell its rows apart",
+        "correct": false,
+        "why": "A key would not change what it records."
+      }
+    ]
+  },
+  {
+    "id": "ex-swdent5t",
+    "version": 1,
+    "section": "not-quite",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these break the idempotency of a table of facts about the shop? Choose all that apply.",
+    "hint": "What differs from run to run?",
+    "choices": [
+      {
+        "text": "A column filled with now()",
+        "correct": true,
+        "why": "Right. Every run writes a different value."
+      },
+      {
+        "text": "An identity number used as a key elsewhere",
+        "correct": true,
+        "why": "Right. Handed out in arrival order."
+      },
+      {
+        "text": "random()",
+        "correct": true,
+        "why": "Right. Different every time."
+      },
+      {
+        "text": "A WHERE on the logical date",
+        "correct": false,
+        "why": "The same run gives the same date."
+      }
+    ]
+  },
+  {
+    "id": "ex-qeq8d7zk",
+    "version": 1,
+    "section": "not-quite",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "How should an e-mail to the managers be made safe to run twice?",
+    "hint": "It is an act, not a table.",
+    "choices": [
+      {
+        "text": "Make it an upsert",
+        "correct": false,
+        "why": "An e-mail has no row to upsert."
+      },
+      {
+        "text": "Retry it until the mail server answers and confirms that it delivered",
+        "correct": false,
+        "why": "That is how it gets sent twice."
+      },
+      {
+        "text": "Send it first, before the load runs, so a failure cannot send it twice",
+        "correct": false,
+        "why": "It belongs at the end."
+      },
+      {
+        "text": "Record that it was sent, and check that record before sending",
+        "correct": true,
+        "why": "Right. A guard written on purpose."
+      }
+    ]
+  },
+  {
+    "id": "ex-exdt2vz6",
+    "version": 1,
+    "section": "reprocessing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The incremental model replaced only its newest day. Was it idempotent?",
+    "hint": "Idempotent is not the same as complete.",
+    "choices": [
+      {
+        "text": "Yes, but older days could still change unseen",
+        "correct": true,
+        "why": "Right. Idempotent, and incomplete."
+      },
+      {
+        "text": "No, because it drifted",
+        "correct": false,
+        "why": "Running it twice left the same table."
+      },
+      {
+        "text": "No, because it used delete+insert",
+        "correct": false,
+        "why": "That is what made it idempotent."
+      },
+      {
+        "text": "Yes, and it was complete",
+        "correct": false,
+        "why": "The drift test showed otherwise."
+      }
+    ]
+  },
+  {
+    "id": "ex-669bqv18",
+    "version": 1,
+    "section": "reprocessing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many days back does the new `fact_sales` replace on every run?",
+    "hint": "max(order_date) minus…",
+    "value": 30,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-9k57s58x",
+    "version": 1,
+    "section": "reprocessing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the thirty-day window cost?",
+    "hint": "Look at the INSERT count.",
+    "choices": [
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "Each run writes a month of lines."
+      },
+      {
+        "text": "Each run writes about a month of lines instead of a day",
+        "correct": true,
+        "why": "Right. Cheap here; real money on a large warehouse."
+      },
+      {
+        "text": "The drift test can no longer run, since the window hides old days from it",
+        "correct": false,
+        "why": "It runs and passes."
+      },
+      {
+        "text": "Old days are deleted for good",
+        "correct": false,
+        "why": "They are written again."
+      }
+    ]
+  },
+  {
+    "id": "ex-r5bke6vy",
+    "version": 1,
+    "section": "reprocessing",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A window that each run deletes and writes again, to catch late changes, is called a ___.",
+    "hint": "Lesson 4's word; how far back it looks.",
+    "blanks": [
+      {
+        "accept": [
+          "lookback",
+          "lookback window"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5t9z1kfs",
+    "version": 1,
+    "section": "at-least-once",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does *exactly once* mean in practice?",
+    "hint": "Two halves.",
+    "choices": [
+      {
+        "text": "A network that never loses or repeats a single message",
+        "correct": false,
+        "why": "No network promises that."
+      },
+      {
+        "text": "Never retrying a step",
+        "correct": false,
+        "why": "Then things are lost."
+      },
+      {
+        "text": "At least once, with idempotent writes",
+        "correct": true,
+        "why": "Right. Nothing lost, duplicates harmless."
+      },
+      {
+        "text": "Running everything once a day",
+        "correct": false,
+        "why": "Frequency is not the point."
+      }
+    ]
+  },
+  {
+    "id": "ex-agg85qfv",
+    "version": 1,
+    "section": "at-least-once",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does staging make a duplicated website event harmless?",
+    "hint": "Lesson 6.",
+    "choices": [
+      {
+        "text": "The collector stops sending duplicates",
+        "correct": false,
+        "why": "It still sends them."
+      },
+      {
+        "text": "It keeps one row per event_id",
+        "correct": true,
+        "why": "Right. A second copy changes nothing."
+      },
+      {
+        "text": "It deletes the day's file",
+        "correct": false,
+        "why": "Files are kept."
+      },
+      {
+        "text": "It counts events per session and drops the sessions with too many to be real",
+        "correct": false,
+        "why": "Nothing is dropped by count."
+      }
+    ]
+  },
+  {
+    "id": "ex-dtd03fe4",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps of `twice.sh`.",
+    "hint": "Run, describe, run, describe, compare.",
+    "items": [
+      "Run the step",
+      "Describe what it left",
+      "Run the step again",
+      "Describe what it left again",
+      "Compare the two descriptions"
+    ]
+  },
+  {
+    "id": "ex-7kzrsf5r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A backfill runs `load/fact_sales_append.sql` for the whole of March over days the nightly already loaded. What does the warehouse say about March afterwards?",
+    "hint": "Append, over loaded days.",
+    "choices": [
+      {
+        "text": "The right numbers, since the backfill reloaded them",
+        "correct": false,
+        "why": "It added, it did not replace."
+      },
+      {
+        "text": "The backfill fails on duplicate keys",
+        "correct": false,
+        "why": "fact_sales has no unique key to stop it."
+      },
+      {
+        "text": "Twice the sales, with no error anywhere",
+        "correct": true,
+        "why": "Right. The most common silent failure."
+      },
+      {
+        "text": "Only the newest day doubles",
+        "correct": false,
+        "why": "Every day in the range does."
+      }
+    ]
+  }
+]

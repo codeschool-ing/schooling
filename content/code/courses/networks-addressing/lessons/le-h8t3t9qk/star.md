@@ -1,10 +1,11 @@
 ---
 title: The star, and the two ways it breaks
-version: 1
+version: 2
 ---
 
 In a **star**, every device has its own cable to one central device — today a switch. It is the
-shape of almost every office, and of this course's `office` scenario: pc1, pc2, pc3, the server
+shape of almost every office, and of lesson 1's office, built with
+`sudo bash ~/netlab/netlab.sh up office`: pc1, pc2, pc3, the server
 `srv` at `10.20.10.10` and the router r1 each have one cable to the switch sw1, and nothing else
 joins them.
 

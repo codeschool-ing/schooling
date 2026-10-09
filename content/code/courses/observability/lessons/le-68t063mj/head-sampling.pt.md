@@ -1,11 +1,30 @@
 ---
 title: Decidindo na cabeça
-version: 1
+version: 2
 ---
 
 **A amostragem na cabeça decide quando o rastro começa**, no serviço que o inicia, e todo serviço
 depois dele faz o que mandaram. O SDK toma a decisão com um *amostrador* (sampler), e o mais comum
-guarda uma fração fixa. Um script na sandbox inicia oito checkouts sob um amostrador que guarda metade:
+guarda uma fração fixa. Um script na sandbox inicia oito checkouts sob um amostrador que guarda metade.
+Salve-o como `~/shop/scratch/flags.py`:
+
+```python
+"""Eight checkouts under a sampler that keeps half of all traces."""
+from opentelemetry import propagate, trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.sampling import ParentBased, TraceIdRatioBased
+
+trace.set_tracer_provider(TracerProvider(sampler=ParentBased(TraceIdRatioBased(0.5))))
+tracer = trace.get_tracer("flags")
+
+for _ in range(8):
+    with tracer.start_as_current_span("POST /checkout") as span:
+        headers = {}
+        propagate.inject(headers)
+        print(headers["traceparent"], "recorded" if span.is_recording() else "dropped")
+```
+
+E rode-o:
 
 ```
 ana@obs:~/shop$ docker compose run --rm sandbox python flags.py
@@ -30,7 +49,16 @@ rastro se esse número cai abaixo da fração. Dois serviços com o mesmo id e a
 mesma resposta sem conversar.
 
 A loja não precisa de código para isso. O SDK lê o amostrador do ambiente, então a vitrine, onde
-começa o rastro de todo checkout, ganha um num override, guardando um rastro em dez:
+começa o rastro de todo checkout, ganha um num override, guardando um rastro em dez. Salve as linhas que o `cat` abaixo imprime como
+`~/shop/compose.override.yaml`, recrie a vitrine com elas, e dê à mudança um minuto e quinze segundos
+para aparecer nos números:
+
+```sh
+docker compose up -d storefront
+sleep 75
+```
+
+Depois:
 
 ```
 ana@obs:~/shop$ cat compose.override.yaml

@@ -1,10 +1,19 @@
 ---
 title: A canary that stops itself
-version: 1
+version: 2
 ---
 
 Production is back where lesson 10 found it: blue on 1.5.0 with all the traffic, green on 1.6.0,
-the release that cannot quote Alagoas. This time nobody edits the weights. `canary.py` does:
+the release that cannot quote Alagoas. Put it back that way, with lesson 10's router still running
+in its terminal (lesson 10 section 06 has the line that starts it, if it is not):
+
+```sh
+ops/deploy.sh production-blue dist/shipquote-1.5.0.tar.gz
+ops/deploy.sh production-green dist/shipquote-1.6.0.tar.gz
+printf '{"backends": {"blue": "http://127.0.0.1:8301", "green": "http://127.0.0.1:8302"}, "weights": {"blue": 100, "green": 0}}\n' > ~/envs/routes.json
+```
+
+This time nobody edits the weights. `canary.py` does:
 
 ```
 ana@laptop:~/shipquote$ curl -s http://127.0.0.1:8302/version; echo
@@ -31,7 +40,7 @@ Two customers out of 400 at the second step met the bug. With blue-green in less
 
 The rule worked here, and it has a flaw worth seeing. At 98 answers, **one** error is a rate of
 1.02%, which is already more than 1.0 point above a blue with none. So between 50 and 99 answers
-the rule is really "stop on the first error". Lesson 10 section 08 showed what one error is worth:
+the rule is really "stop on the first error". Lesson 10 section 10 showed what one error is worth:
 very little. A canary with this rule will sometimes abort a good release on a single unlucky request.
 
 There are two honest fixes, and they pull in opposite directions:

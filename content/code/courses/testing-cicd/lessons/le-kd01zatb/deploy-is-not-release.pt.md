@@ -1,6 +1,6 @@
 ---
 title: Implantar não é liberar
-version: 1
+version: 2
 ---
 
 Tudo até aqui amarrava duas coisas: pôr código novo em produção e mostrá-lo aos clientes. Uma
@@ -68,4 +68,4 @@ novo está em produção, rodando, e **nenhum cliente o viu**. Isso às vezes se
   uma mudança que leva semanas.
 
 O preço é que o código agora tem os dois caminhos, o comportamento antigo e o novo, até alguém
-remover um deles. A seção 11 trata desse preço.
+remover um deles. A seção 13 trata desse preço.

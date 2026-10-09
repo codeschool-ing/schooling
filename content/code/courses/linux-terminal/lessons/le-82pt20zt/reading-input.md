@@ -1,7 +1,42 @@
 ---
 title: Reading lines, and the four things that go wrong
-version: 1
+version: 2
 ---
+
+The scripts this section runs, made in `~/work/scripts` the way section 02 described; each is shown again where it is explained:
+
+```sh
+cd ~/work/scripts
+cat > readloop.sh <<'END'
+#!/bin/bash
+n=0
+while IFS= read -r line; do
+  n=$((n+1))
+  echo "$n: $line"
+done < "$1"
+echo "read $n lines"
+END
+cat > fields.sh <<'END'
+#!/bin/bash
+while IFS=, read -r region rep quarter units revenue; do
+  echo "$region/$rep sold $units for $revenue"
+done < <(tail -n +2 "$1" | head -3)
+END
+cat > subshell.sh <<'END'
+#!/bin/bash
+total=0
+printf '%s\n' 10 20 30 | while read -r n; do
+  total=$((total + n))
+done
+echo "after the pipe, total is $total"
+total=0
+while read -r n; do
+  total=$((total + n))
+done < <(printf '%s\n' 10 20 30)
+echo "after the redirect, total is $total"
+END
+chmod +x readloop.sh fields.sh subshell.sh
+```
 
 The loop that reads a file line by line is one line long and has four traps in it. Here it is with
 all four already avoided:
@@ -28,6 +63,13 @@ file — which is what stops the `while`. The redirect is on the `done`, feeding
 **`while IFS= read -r line` is one idiom, to be typed as one thing.** Here is what each piece buys.
 
 ## `-r`, for backslashes
+
+A file with a backslash in one line and spaces around the other:
+
+```sh
+cd /tmp/q2
+printf '%s\n' 'C:\path\to\file' '   padded   ' > tricky.txt
+```
 
 ```
 ana@vm:/tmp/q2$ cat -A tricky.txt
@@ -68,9 +110,9 @@ while IFS=, read -r region rep quarter units revenue; do
   echo "$region/$rep sold $units for $revenue"
 done < <(tail -n +2 "$1" | head -3)
 ana@vm:~/work/scripts$ ./fields.sh ~/work/data/sales.csv
-north/ana sold 171 for 8721
-north/bruno sold 49 for 4116
-south/carla sold 292 for 37084
+north/ana sold 145 for 18850
+north/bruno sold 275 for 23100
+south/carla sold 215 for 16555
 ```
 
 **`read` with several variable names splits the line between them**, and the last one gets

@@ -4,7 +4,7 @@ version: 1
 ---
 
 An enterprise AP takes its power from the switch port, over the same cable as its data: Power over
-Ethernet, from lesson 21 of `networks-addressing`. The standards set what a switch port supplies and what
+Ethernet, from `networks-addressing`. The standards set what a switch port supplies and what
 reaches the device after the cable's loss:
 
 | standard | at the switch port | at the device |

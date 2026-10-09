@@ -1,9 +1,13 @@
 ---
 title: Muitos arquivos de uma vez: curingas
-version: 1
+version: 2
 ---
 
-Cinco arquivos vazios foram acrescentados em `invoices` para esta seção.
+Esta seção precisa de mais cinco arquivos vazios em `invoices`, e o `touch` da seção 02 os cria:
+
+```sh
+touch invoices/march.pdf invoices/april.pdf invoices/may.pdf invoices/draft.tmp invoices/old.tmp
+```
 
 ```
 ana@server:~/work$ ls invoices

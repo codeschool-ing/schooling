@@ -1,6 +1,6 @@
 ---
 title: Tools that run apart from the model, with limits of their own
-version: 1
+version: 2
 ---
 
 The gate decides which calls run. **Isolation decides what a call can reach when it does run**, and
@@ -31,7 +31,7 @@ c6  send_message   DENY   budget of 4 calls per conversation is spent
 c7  update_contact DENY   budget of 4 calls per conversation is spent
 ```
 
-With a budget of four, the fifth proposal is refused whatever it is. The lab's manifest allows eight,
+With a budget of four, the fifth proposal is refused whatever it is. Tarefa's manifest allows eight,
 which is enough for a support conversation and too few for a runaway one. When the budget is spent,
 the conversation goes to a person, the same fallback as the retry loop of lesson 9.
 

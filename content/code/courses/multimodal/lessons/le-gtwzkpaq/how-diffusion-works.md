@@ -1,6 +1,6 @@
 ---
 title: How a diffusion model makes a picture
-version: 1
+version: 2
 ---
 
 **A diffusion model does not paint. It removes noise.** That is the idea every image generator of the last few years is built on, and it explains most of how they behave: why a prompt is a suggestion, why two runs differ, and why some things come out wrong every time.
@@ -57,4 +57,4 @@ The model is trained on the reverse: shown a noisy picture and told how noisy it
 
 **The picture is fixed at a size.** A model generates at the resolutions it was trained for. Asking for another size means a different shape of noise to start from, which can change the composition, and an API offers a short list of sizes for that reason (lesson 9).
 
-*The noise in `noise.py` is real arithmetic, and the generating is not run anywhere in this lab: no image model could be reached from the machine this course was recorded on. Generating runs the curve from right to left, from pure noise back to a picture.*
+*The noise in `noise.py` is real arithmetic, and the generating is not run anywhere in this course: Ollama's image models run only on macOS so far, and the course's machine is Linux. Generating runs the curve from right to left, from pure noise back to a picture.*

@@ -11,14 +11,19 @@ Ponha `EXPLAIN` na frente de uma consulta e o banco não a roda. Ele a **planeja
 buscaria as linhas — e imprime a decisão. Essa decisão é o plano, e toda pergunta desta aula se
 responde lendo um.
 
-Aqui está a tabela `orders` da loja, um milhão de linhas, com os índices que a aula 9 deixou nela:
-uma chave primária e nada em `customer_id`.
+Aqui está a tabela `orders` da loja, um milhão de linhas, como o script da aula 9 a deixou: uma
+chave primária, um índice em `status` e outro em `placed_at`, e nada em `customer_id`. A primeira
+linha é para você digitar, uma vez, no começo da sessão — ela é explicada no fim da etapa sobre
+junções, e até lá mantém cada plano numa árvore só, do jeito que eles estão impressos aqui:
 
 ```
+shop=# SET max_parallel_workers_per_gather = 0;
+SET
+
 shop=# EXPLAIN SELECT * FROM orders WHERE customer_id = 42;
                          QUERY PLAN                         
 ------------------------------------------------------------
- Seq Scan on orders  (cost=0.00..19966.00 rows=11 width=28)
+ Seq Scan on orders  (cost=0.00..19969.00 rows=11 width=28)
    Filter: (customer_id = 42)
 (2 rows)
 ```
@@ -32,7 +37,7 @@ linha ter sido buscada.
 ## Os quatro números
 
 ```
-(cost=0.00..19966.00 rows=11 width=28)
+(cost=0.00..19969.00 rows=11 width=28)
 ```
 
 **`cost` são dois números, e nenhum deles é tempo.** Estão na unidade do próprio planejador, em
@@ -59,7 +64,7 @@ hash vai precisar. Vinte e oito bytes para `SELECT *` em `orders`; peça menos c
 shop=# EXPLAIN SELECT * FROM customers WHERE email = 'user42@example.com';
                                       QUERY PLAN                                      
 --------------------------------------------------------------------------------------
- Index Scan using customers_email_key on customers  (cost=0.42..8.44 rows=1 width=56)
+ Index Scan using customers_email_key on customers  (cost=0.42..8.44 rows=1 width=48)
    Index Cond: (email = 'user42@example.com'::text)
 (2 rows)
 ```
@@ -70,7 +75,7 @@ buscadas. `Filter`, acima, é uma condição aplicada a linhas já em mãos. A d
 útil para procurar num plano. É como "o índice não é usado" aparece na prática: **a coluna está
 numa linha `Filter`, e não há `Index Cond` nomeando ela.**
 
-Os custos dizem o resto. `0.42..8.44` contra `0.00..19966.00`: o index scan paga um pouco para
+Os custos dizem o resto. `0.42..8.44` contra `0.00..19969.00`: o index scan paga um pouco para
 começar — descer a árvore — e termina depois de um punhado de páginas. A varredura é de graça para
 começar e custa vinte mil para terminar.
 
@@ -82,9 +87,9 @@ A maioria das consultas precisa de mais de um passo, e os passos se aninham:
 shop=# EXPLAIN SELECT c.name, o.id, o.total FROM customers c JOIN orders o ON o.customer_id = c.id WHERE c.email = 'user42@example.com';
                                              QUERY PLAN                                             
 ----------------------------------------------------------------------------------------------------
- Hash Join  (cost=8.45..20099.56 rows=10 width=23)
+ Hash Join  (cost=8.45..20102.56 rows=10 width=23)
    Hash Cond: (o.customer_id = c.id)
-   ->  Seq Scan on orders o  (cost=0.00..17466.00 rows=1000000 width=14)
+   ->  Seq Scan on orders o  (cost=0.00..17469.00 rows=1000000 width=14)
    ->  Hash  (cost=8.44..8.44 rows=1 width=17)
          ->  Index Scan using customers_email_key on customers c  (cost=0.42..8.44 rows=1 width=17)
                Index Cond: (email = 'user42@example.com'::text)
@@ -101,7 +106,7 @@ mais profundo, e o último é no topo.
 ```
 
 A junção aqui é a da aula 5: um cliente, achado por email pelo índice, junto aos pedidos dele. E o
-plano diz algo que a consulta não diz: para achar treze pedidos ele leu **o milhão inteiro** —
+plano diz algo que a consulta não diz: para achar sete pedidos ele leu **o milhão inteiro** —
 `Seq Scan on orders`, com `rows=1000000` — e casou todos contra um hash de um cliente. É o índice
 que falta em `orders.customer_id`, da aula 9, visto do outro lado. Nada no SQL está errado; o
 plano é como você descobre que o esquema está.
@@ -128,7 +133,7 @@ shop=# EXPLAIN (FORMAT JSON) SELECT * FROM customers WHERE email = 'user42@examp
        "Startup Cost": 0.42,                               +
        "Total Cost": 8.44,                                 +
        "Plan Rows": 1,                                     +
-       "Plan Width": 56,                                   +
+       "Plan Width": 48,                                   +
        "Index Cond": "(email = 'user42@example.com'::text)"+
      }                                                     +
    }                                                       +

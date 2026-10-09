@@ -1,11 +1,12 @@
 ---
 title: A workflow file, line by line
-version: 1
+version: 2
 ---
 
 GitHub Actions reads pipelines from YAML files in `.github/workflows/` of the repository. Each file
-is a **workflow**: the events that start it, and the jobs it runs. Step 8 of `shipquote` added one
-that does what lesson 5's hook did, plus the coverage of lesson 4, on GitHub's machines:
+is a **workflow**: the events that start it, and the jobs it runs. This one does what lesson 5's
+hook did, plus the coverage of lesson 4, on GitHub's machines. The directory is new,
+`mkdir -p .github/workflows`, and the file goes in it. Save it as `.github/workflows/ci.yml`:
 
 ```schooling-example
 {
@@ -43,8 +44,19 @@ that does what lesson 5's hook did, plus the coverage of lesson 4, on GitHub's m
 ## Checked, not run
 
 This workflow has **not run on GitHub**: the lab has no repository there, and nothing in this course
-pushes to one. What the lab can do is check the file with **actionlint**, an open-source static
-checker for GitHub Actions workflows:
+pushes to one. If you have a GitHub account you can push `shipquote` to a repository of your own
+and watch it run, but no lesson depends on that. What the lab can do is check the file with
+**actionlint**, an open-source static checker for GitHub Actions workflows. It is written in Go and
+installs with Ubuntu's own Go, into `~/go/bin`:
+
+```sh
+sudo apt-get install -y golang-go
+go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.7
+export PATH="$PATH:$HOME/go/bin"
+```
+
+The `export` lasts as long as the terminal; the same line at the end of `~/.bashrc` makes it
+permanent. Run from the project's directory, actionlint finds the workflows by itself:
 
 ```
 ana@laptop:~/shipquote$ actionlint; echo "exit status $?"
@@ -54,7 +66,9 @@ exit status 0
 Silence and an exit status of 0 mean actionlint found nothing to report: the YAML parses, every key
 is one GitHub knows, and every `${{ }}` expression refers to something that exists. (actionlint
 can also pass each `run:` script to ShellCheck, which this lab does not have installed.) The next
-section shows what it does report, and what it cannot know.
+section shows what it does report, and what it cannot know, so commit the file first, with
+`git add .github && git commit -m "Run the checks on GitHub Actions"`, and the next section can
+break it and put it back.
 
 ## Where the parts came from
 

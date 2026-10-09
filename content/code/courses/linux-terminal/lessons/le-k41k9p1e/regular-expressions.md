@@ -1,6 +1,6 @@
 ---
 title: Regular expressions, the useful half
-version: 1
+version: 2
 ---
 
 A regular expression is a pattern that describes a set of strings. There is a great deal of it and
@@ -87,7 +87,7 @@ ana@vm:~/work$ printf "cat\ndog\nbird\n" | grep -E "cat|dog"
 cat
 dog
 ana@vm:~/work$ grep -cE "^(10|198)\." logs/access.log
-997
+1078
 ```
 
 `|` is "or". `( )` groups, both for `|` and for repetition.
@@ -137,9 +137,9 @@ name. `[[:digit:].]` is "a digit or a full stop".
 
 ```
 ana@vm:~/work$ grep -oE "\"[A-Z]+ [^ ]+" logs/access.log | head -3
-"GET /static/app.js
 "GET /
-"POST /index.html
+"GET /
+"GET /
 ```
 
 That works because `[^ ]+` stops at a space. The version that does not work is `".*"` on a line with

@@ -1,0 +1,410 @@
+{
+  "ex-rqhf12fj": {
+    "prompt": "Ligue cada teste genérico à crença que ele confere.",
+    "hint": "Quatro testes, quatro crenças.",
+    "pairs": [
+      {
+        "left": "unique",
+        "right": "Nenhum valor aparece duas vezes"
+      },
+      {
+        "left": "not_null",
+        "right": "Toda linha tem um valor"
+      },
+      {
+        "left": "accepted_values",
+        "right": "O valor é um de uma lista"
+      },
+      {
+        "left": "relationships",
+        "right": "O valor existe em outro modelo"
+      }
+    ]
+  },
+  "ex-enzngvfz": {
+    "prompt": "O que o SQL compilado de um teste do dbt devolve quando o teste passa?",
+    "hint": "Ele seleciona as linhas que quebram a regra.",
+    "choices": [
+      {
+        "text": "Uma linha dizendo true",
+        "why": "Ele devolve as linhas que falham, portanto nenhuma."
+      },
+      {
+        "text": "As linhas do modelo",
+        "why": "Só as que quebram a regra."
+      },
+      {
+        "text": "Nenhuma linha",
+        "why": "Isso. Zero linhas é aprovação."
+      },
+      {
+        "text": "Uma contagem das linhas conferidas",
+        "why": "O dbt conta ele mesmo as linhas que falham."
+      }
+    ]
+  },
+  "ex-7yemcrcd": {
+    "prompt": "Quantos pedidos não tinham cliente no primeiro `dbt test`?",
+    "hint": "FAIL seguido de um número."
+  },
+  "ex-t2z5ktbw": {
+    "prompt": "Por que o `not_null` no `customer_id` falhou para milhares de pedidos?",
+    "hint": "Veja de que lojas eles vieram.",
+    "choices": [
+      {
+        "text": "Os caixas das livrarias vendem para quem não dá nome",
+        "why": "Isso. A regra estava errada, não os dados."
+      },
+      {
+        "text": "O carregador perdeu os clientes no caminho da loja até o raw",
+        "why": "O raw tem o que a loja tem."
+      },
+      {
+        "text": "Os clientes do site foram apagados por um bug da loja",
+        "why": "O site tinha sete, e eram apagamentos."
+      },
+      {
+        "text": "A view do dbt descarta nulos",
+        "why": "Views devolvem o que a tabela tem."
+      }
+    ]
+  },
+  "ex-bqyfcryd": {
+    "prompt": "O `unique` em `stg_order_lines.order_id` falhou. O que estava errado?",
+    "hint": "Qual é o grão do modelo?",
+    "choices": [
+      {
+        "text": "Há linhas duplicadas na loja",
+        "why": "O par pedido e linha passou."
+      },
+      {
+        "text": "O teste relationships interferiu",
+        "why": "Testes são consultas independentes."
+      },
+      {
+        "text": "A view estava desatualizada",
+        "why": "Views são lidas na hora."
+      },
+      {
+        "text": "O teste conferiu a chave errada",
+        "why": "Isso. Uma linha por linha de pedido: a chave é o pedido e a linha."
+      }
+    ]
+  },
+  "ex-mvf740fk": {
+    "prompt": "Um teste está certo e os dados o quebram. O que deve acontecer com o teste?",
+    "hint": "De onde vêm as linhas ruins?",
+    "choices": [
+      {
+        "text": "Estreitá-lo até passar",
+        "why": "Isso esconde uma falha verdadeira."
+      },
+      {
+        "text": "Fica como está; a correção vai para a origem",
+        "why": "Isso. Calar um teste verdadeiro nunca está certo."
+      },
+      {
+        "text": "Apagá-lo até os dados serem corrigidos, e depois escrevê-lo de novo do zero",
+        "why": "Aí nada diria quando forem."
+      },
+      {
+        "text": "Torná-lo um aviso para sempre",
+        "why": "Um aviso é para exceções conhecidas e explicadas."
+      }
+    ]
+  },
+  "ex-7zgnrjj7": {
+    "prompt": "O que o `where: \"shop_id = 7\"` faz com um teste `not_null`?",
+    "hint": "O dbt embrulha o modelo antes.",
+    "choices": [
+      {
+        "text": "Apaga os pedidos das outras lojas",
+        "why": "Testes nunca mudam dados."
+      },
+      {
+        "text": "Confere só os pedidos do site",
+        "why": "Isso. O modelo é filtrado antes da conferência."
+      },
+      {
+        "text": "Transforma o teste em aviso",
+        "why": "Isso é a severidade."
+      },
+      {
+        "text": "Roda o teste só aos domingos, quando apenas o site está aberto para vendas",
+        "why": "Ele filtra linhas, não dias."
+      }
+    ]
+  },
+  "ex-f6h3p4rm": {
+    "prompt": "Quantos pedidos do site sem cliente o teste estreitado encontrou?",
+    "hint": "Clientes apagados."
+  },
+  "ex-azj8fw1b": {
+    "prompt": "Por que não acrescentar os sete pedidos apagados ao `where` do teste, para ele passar?",
+    "hint": "Como seria o próximo?",
+    "choices": [
+      {
+        "text": "A cláusula where não pode listar ids",
+        "why": "Pode; o problema é o que ela esconde."
+      },
+      {
+        "text": "O dbt proíbe where no not_null",
+        "why": "A Ana usou um."
+      },
+      {
+        "text": "Clientes apagados devem fazer todo build falhar",
+        "why": "Eles são legais; um aviso basta."
+      },
+      {
+        "text": "Esconderia o próximo pedido que perder o cliente por um motivo que ninguém pretendeu",
+        "why": "Isso. Exceções conhecidas cabem num aviso, ainda contadas."
+      }
+    ]
+  },
+  "ex-pp864ef6": {
+    "prompt": "Um teste no `stg_orders` falha com severidade error durante o `dbt build`. O que acontece com o `daily_sales`?",
+    "hint": "Ele lê o stg_orders pelo int_sales.",
+    "choices": [
+      {
+        "text": "É pulado e fica com as linhas antigas",
+        "why": "Isso. Nada abaixo de um teste que falhou é construído."
+      },
+      {
+        "text": "É construído mesmo assim, a partir das views como estão naquele momento",
+        "why": "O que vem antes dele falhou num teste, então ele é pulado."
+      },
+      {
+        "text": "É esvaziado",
+        "why": "Pular não mexe em nada."
+      },
+      {
+        "text": "É apagado, e reconstruído pela próxima execução bem-sucedida do dbt",
+        "why": "Um modelo pulado fica como estava."
+      }
+    ]
+  },
+  "ex-2n5yb3z8": {
+    "prompt": "Ligue cada comando ao que ele faz.",
+    "hint": "Construir, testar, ou os dois.",
+    "pairs": [
+      {
+        "left": "dbt run",
+        "right": "Constrói modelos"
+      },
+      {
+        "left": "dbt test",
+        "right": "Roda testes"
+      },
+      {
+        "left": "dbt build",
+        "right": "Constrói e testa, na ordem do grafo"
+      }
+    ],
+    "right_distractors": [
+      "Gera a documentação"
+    ]
+  },
+  "ex-sgh295df": {
+    "prompt": "O que o `severity: warn` muda?",
+    "hint": "Avisar, ou parar?",
+    "choices": [
+      {
+        "text": "O teste deixa de rodar",
+        "why": "Ele roda e avisa toda vez."
+      },
+      {
+        "text": "As linhas que falham são apagadas",
+        "why": "Testes nunca mudam dados."
+      },
+      {
+        "text": "A falha é relatada e nada é pulado",
+        "why": "Isso. A contagem continua aparecendo em todo build."
+      },
+      {
+        "text": "Ele só falha no primeiro build do dia",
+        "why": "A severidade não tem relógio."
+      }
+    ]
+  },
+  "ex-5mv1abp5": {
+    "prompt": "O que é um teste singular?",
+    "hint": "Um arquivo em tests/.",
+    "choices": [
+      {
+        "text": "Um teste genérico usado uma vez",
+        "why": "Ele é escrito como uma consulta própria."
+      },
+      {
+        "text": "Uma função Python",
+        "why": "Ele é SQL."
+      },
+      {
+        "text": "Um teste que roda sozinho, fora do dbt build, sempre que o arquivo dele é alterado",
+        "why": "O dbt build o roda depois dos modelos a que ele se refere."
+      },
+      {
+        "text": "Um select que devolve as linhas erradas, com os joins que precisar",
+        "why": "Isso. Como o drift.sql, com refs."
+      }
+    ]
+  },
+  "ex-zj4ef9fg": {
+    "prompt": "Depois de mais quatro dias de vendas, quantos dias o teste de deriva achou errados?",
+    "hint": "FAIL seguido de um número."
+  },
+  "ex-x2421dak": {
+    "prompt": "Por que o teste de deriva nomeia o `fact_sales` por `ref` e não como `dbt_marts.fact_sales`?",
+    "hint": "Quando ele precisa rodar?",
+    "choices": [
+      {
+        "text": "Um teste não pode ler um schema diretamente",
+        "why": "Poderia; só não seria ordenado."
+      },
+      {
+        "text": "Para o dbt rodá-lo depois de o fact_sales ser construído",
+        "why": "Isso. O ref o põe no grafo depois do modelo."
+      },
+      {
+        "text": "Isso o torna um aviso",
+        "why": "A severidade é à parte."
+      },
+      {
+        "text": "O ref é mais rápido",
+        "why": "Velocidade não é o motivo."
+      }
+    ]
+  },
+  "ex-05xe6n4b": {
+    "prompt": "Ordene o que aconteceu quando o teste de deriva falhou pela primeira vez.",
+    "hint": "Dias, carga, build, recarga.",
+    "items": [
+      "Quatro dias de vendas foram tocados",
+      "O raw foi carregado de novo",
+      "O dbt build acrescentou os dias novos e o teste de deriva falhou",
+      "Uma recarga completa do fact_sales+ o fez passar"
+    ]
+  },
+  "ex-c9wzdby4": {
+    "prompt": "Ligue cada arquivo que o `dbt docs generate` deixa em target/ ao que ele guarda.",
+    "hint": "O projeto, o banco e o site.",
+    "pairs": [
+      {
+        "left": "manifest.json",
+        "right": "Cada nó, a sua descrição e o grafo"
+      },
+      {
+        "left": "catalog.json",
+        "right": "O tipo de cada coluna, vindo do banco"
+      },
+      {
+        "left": "index.html",
+        "right": "O site que lê os dois"
+      }
+    ]
+  },
+  "ex-6qgr3he9": {
+    "prompt": "De onde vieram os tipos de coluna que o `docs.py` imprimiu?",
+    "hint": "Ninguém os escreveu em YAML.",
+    "choices": [
+      {
+        "text": "Do schema.yml da Ana",
+        "why": "Ela escreveu descrições, não tipos."
+      },
+      {
+        "text": "Do SQL compilado",
+        "why": "O SQL não tem tipos escritos."
+      },
+      {
+        "text": "Do PostgreSQL, pelo catalog.json",
+        "why": "Isso. O dbt pergunta ao banco."
+      },
+      {
+        "text": "O dbt os adivinha pelos nomes das colunas e pelos valores que já viu",
+        "why": "Ele pergunta ao banco."
+      }
+    ]
+  },
+  "ex-t17swp6h": {
+    "prompt": "Que colunas mais merecem uma descrição?",
+    "hint": "Onde uma pessoa sensata adivinharia errado?",
+    "choices": [
+      {
+        "text": "As que um leitor provavelmente leria errado",
+        "why": "Isso. Uma data local, dinheiro em centavos, um nulo que quer dizer algo."
+      },
+      {
+        "text": "Todas as colunas, igualmente",
+        "why": "Algumas são óbvias pelo nome."
+      },
+      {
+        "text": "Só as chaves",
+        "why": "Chaves costumam ser as mais óbvias."
+      },
+      {
+        "text": "Nenhuma: os tipos bastam",
+        "why": "Um tipo date não diz qual fuso."
+      }
+    ]
+  },
+  "ex-bpkdj1ws": {
+    "prompt": "O que uma exposure acrescenta ao projeto?",
+    "hint": "Ela não constrói nada.",
+    "choices": [
+      {
+        "text": "Uma tabela para o relatório",
+        "why": "Ela não constrói nada."
+      },
+      {
+        "text": "Um teste que confere os números do relatório contra o warehouse toda noite",
+        "why": "Ela não roda nada."
+      },
+      {
+        "text": "Um nó para algo que lê os modelos, com um dono",
+        "why": "Isso. O grafo chega às pessoas que o usam."
+      },
+      {
+        "text": "Um agendamento que diz ao dbt quando os modelos do relatório devem ser refeitos",
+        "why": "O dbt não tem agendamento."
+      }
+    ]
+  },
+  "ex-5ntd06j4": {
+    "prompt": "Ligue cada pergunta ao seletor que a responde.",
+    "hint": "Para cima, ou para baixo.",
+    "pairs": [
+      {
+        "left": "De onde vêm os dados do relatório da manhã?",
+        "right": "+exposure:morning_report"
+      },
+      {
+        "left": "O que uma mudança no jeito de carregar pedidos vai alcançar?",
+        "right": "source:raw.orders+"
+      }
+    ],
+    "right_distractors": [
+      "stg_books+"
+    ]
+  },
+  "ex-v1gz775j": {
+    "prompt": "Um teste novo, `accepted_values` no `status`, começa a falhar com uma linha: um status `on_hold` que ninguém viu antes. O que a Ana deve fazer primeiro?",
+    "hint": "Uma falha é uma pergunta.",
+    "choices": [
+      {
+        "text": "Descobrir o que on_hold quer dizer na loja",
+        "why": "Isso. Depois decidir se a regra ou os dados estão errados."
+      },
+      {
+        "text": "Pôr on_hold na lista para o build ficar verde",
+        "why": "Não antes de saber se on_hold é uma venda."
+      },
+      {
+        "text": "Apagar o teste",
+        "why": "Nunca é o movimento certo."
+      },
+      {
+        "text": "Torná-lo aviso para sempre",
+        "why": "Só para uma exceção conhecida e explicada."
+      }
+    ]
+  }
+}

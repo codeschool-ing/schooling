@@ -1,6 +1,6 @@
 ---
 title: Empacotando a janela
-version: 1
+version: 2
 ---
 
 As decisões desta aula, na ordem em que precisam acontecer, são uma função do `context.py`:
@@ -8,10 +8,9 @@ As decisões desta aula, na ordem em que precisam acontecer, são uma função d
 ```schooling-example
 {
   "language": "python",
-  "file": "context.py",
   "parts": [
     {
-      "code": "\"\"\"What goes into the window, and in what order: lesson 12's decisions in one place.\"\"\"\nimport re\n\nimport tiktoken\nfrom answer import FLOOR, REFUSAL, ask\nfrom minilm import embed\nfrom search import conn, vector\n\nenc = tiktoken.get_encoding(\"cl100k_base\")\nSAME = 0.9      # two sources this similar say the same thing\nKEEP = 0.45     # a sentence this similar to the question stays in its source\nBUDGET = 200    # tokens of sources, headers included",
+      "code": "\"\"\"What goes into the window, and in what order: lesson 12's decisions in one place.\"\"\"\nimport re\n\nimport tiktoken\nfrom answer import FLOOR, REFUSAL, ask\nfrom vectors import embed\nfrom search import conn, vector\n\nenc = tiktoken.get_encoding(\"cl100k_base\")\nSAME = 0.9      # two sources this similar say the same thing\nKEEP = 0.45     # a sentence this similar to the question stays in its source\nBUDGET = 200    # tokens of sources, headers included",
       "note": "As três configurações que esta aula mede, escritas onde podem ser achadas. O `BUDGET` conta as fontes com os cabeçalhos; as instruções e a pergunta são pagas de qualquer jeito."
     },
     {
@@ -44,8 +43,20 @@ que tudo o que coube. E a ordem de escrita vem por último, porque não muda nad
 O `three.py` monta o prompt da pergunta sobre cartão-presente de três jeitos: os doze pedaços mais
 próximos sem filtro nenhum, as três fontes da aula 7 acima do piso, e o `pack`.
 
+```schooling-example
+{
+  "language": "python",
+  "file": "three.py",
+  "parts": [
+    {
+      "code": "import sys\n\nfrom answer import SYSTEM, sources_for\nfrom context import header, pack, tokens\nfrom search import conn, vector\n\nquestion = sys.argv[1]\nrows = vector(question, 12)\nupdated = dict(conn.execute(\"SELECT id, updated FROM chunks WHERE id = ANY(%s)\", ([r[0] for r in rows],)).fetchall())\nnear = [{\"path\": p, \"text\": t, \"updated\": updated[i]} for i, p, t, _ in rows]\nfor name, sources in ((\"twelve nearest\", near), (\"lesson 7\", sources_for(question)), (\"packed\", pack(question))):\n    heads = sum(tokens(header(n, s)) for n, s in enumerate(sources, 1))\n    texts = sum(tokens(s[\"text\"]) for s in sources)\n    asked = tokens(\"Question: \" + question)\n    print(f\"{name:15} instructions {tokens(SYSTEM):3}  headers {heads:3}  sources {texts:3}  question {asked:2}\"\n          f\"  total {tokens(SYSTEM) + heads + texts + asked:4}  ({len(sources)} sources)\")",
+      "note": "A mesma pergunta empacotada de três jeitos, os doze pedaços mais próximos, as fontes da aula 7 e o `pack` desta aula, e para onde vão os tokens em cada um."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python three.py "How long is a gift card valid?"
+```
+ana@vm:~/rag$ python three.py "How long is a gift card valid?"
 twelve nearest  instructions  71  headers 248  sources 671  question 10  total 1000  (12 sources)
 lesson 7        instructions  71  headers  63  sources 167  question 10  total  311  (3 sources)
 packed          instructions  71  headers  62  sources 116  question 10  total  259  (3 sources)
@@ -61,23 +72,38 @@ fontes que a aula 7 mandou e cortou o texto delas de 167 tokens para 116.
 
 ## Medido, em todas as perguntas
 
-O `compare.py` roda os dois pipelines nas 30 perguntas do `eval.jsonl`, pelo extract-1, e pontua as
+O `compare.py` roda os dois pipelines nas 30 perguntas do `eval.jsonl`, pelo llama3.2:3b, e pontua as
 respostas com as regras da aula 8. Uma resposta está correta quando contém um fato da resposta, ou
 recusa uma pergunta que os documentos não respondem, e é fiel quando toda frase está citada literalmente
 ou perto da fonte citada.
 
+```schooling-example
+{
+  "language": "python",
+  "file": "compare.py",
+  "parts": [
+    {
+      "code": "import json\n\nimport answer as plain\nimport context as packed\nfrom context import tokens\nfrom verify import check\n\nnorm = lambda t: \" \".join(t.replace(\"|\", \" \").split())\nquestions = list(map(json.loads, open(\"data/eval.jsonl\")))\nwhere = dict(where=\"status = %s\", params=(\"current\",))\nprint(f\"{'pipeline':8} {'correct':>8} {'refused':>8} {'faithful':>9} {'sources':>8} {'prompt':>7}\")\nfor name, run in ((\"plain\", plain.answer), (\"packed\", packed.answer)):\n    correct, refused, faithful, sources, sent = 0, 0, 0, 0, 0\n    for q in questions:\n        reply, found = run(q[\"question\"], **where)\n        refusal = reply == plain.REFUSAL\n        correct += refusal if not q[\"facts\"] else not refusal and any(f in norm(reply) for f in q[\"facts\"])\n        refused += refusal and not q[\"facts\"]\n        faithful += refusal or all(v.startswith((\"quoted\", \"close\")) for _, _, v in check(reply, found))\n        sources += len(found)\n        sent += tokens(plain.SYSTEM) + tokens(plain.prompt(q[\"question\"], found)) if found else 0\n    n = len(questions)\n    print(f\"{name:8} {correct:5}/{n} {refused:6}/4 {faithful:6}/{n} {sources / n:8.1f} {sent / n:7.0f}\")",
+      "note": "O pipeline da aula 7 e o empacotado desta aula, nas trinta perguntas, pelo mesmo modelo: quantas respostas estavam certas, quantas recusas estavam certas, quantas eram fiéis às fontes, e quantas fontes e tokens cada um mandou."
+    }
+  ]
+}
 ```
-ana@lab:~/rag$ python compare.py
+```
+ana@vm:~/rag$ python compare.py
 pipeline  correct  refused  faithful  sources  prompt
-plain       24/30      4/4     30/30      2.2     247
-packed      24/30      4/4     30/30      2.3     198
+plain       23/30      4/4     14/30      2.2     247
+packed      23/30      4/4     20/30      2.3     198
 ```
 
-**As mesmas 24 corretas, as mesmas 30 fiéis, e 198 tokens por prompt em vez de 247**, um quinto a
-menos, com um orçamento de 200 tokens de fontes. Essa é a metade mensurável: mesmas respostas, conta
-menor, leitura mais curta. A metade que não dá para medir aqui é a que a pesquisa estuda, e ela aponta
-para o mesmo lado: menos texto irrelevante, e as fontes mais fortes nas pontas. Uma equipe com um
-modelo real roda a mesma comparação contra ele e descobre se essa metade também vale.
+**As mesmas 23 corretas, 20 fiéis em vez de 14, e 198 tokens por prompt em vez de 247**, um quinto a
+menos, com um orçamento de 200 tokens de fontes. Os tokens são a metade mensurável: mesmas respostas,
+conta menor, leitura mais curta. A fidelidade é a surpresa. Mais seis respostas tiveram toda frase
+citada literalmente ou perto da fonte, e uma execução em trinta perguntas não sabe dizer por quê. Um
+palpite que vale testar é que uma fonte mais curta deixa ao modelo menos em volta do que parafrasear,
+e então mais do que ele escreve são as palavras da própria fonte. A metade que a pesquisa estuda, a
+atenção espalhada por texto irrelevante, aponta para o mesmo lado, e uma equipe com um modelo maior
+roda a mesma comparação contra ele para saber se isso também vale.
 
 Toda configuração da função, `SAME`, `KEEP`, `BUDGET` e o piso, é um número que esta aula escolheu
 medindo este acervo. Em outro acervo, eles são por onde começar, nunca o que manter.

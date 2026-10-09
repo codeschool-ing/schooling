@@ -1,11 +1,43 @@
 ---
 title: Uma tarefa agendada, escrita do zero
-version: 1
+version: 2
 ---
 
 O backup noturno precisa de três coisas: *um script* que faz o trabalho, *um serviço* que roda o
 script, e *um timer* que inicia o serviço. O script, `/usr/local/bin/office-backup`, compacta o
-`/etc/apt` em `/var/backups`. Os outros dois são arquivos de texto curtos:
+`/etc/apt` em `/var/backups`. Os outros dois são arquivos de texto curtos. Escreva os três no seu
+servidor:
+
+```sh
+sudo tee /usr/local/bin/office-backup > /dev/null <<'EOF'
+#!/bin/sh
+tar -czf /var/backups/etc-apt.tar.gz -C /etc apt && echo "backup written: /var/backups/etc-apt.tar.gz"
+EOF
+sudo chmod 755 /usr/local/bin/office-backup
+sudo tee /etc/systemd/system/office-backup.service > /dev/null <<'EOF'
+[Unit]
+Description=Copy /etc/apt to /var/backups
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/office-backup
+EOF
+sudo tee /etc/systemd/system/office-backup.timer > /dev/null <<'EOF'
+[Unit]
+Description=Run office-backup every weekday at 02:00
+
+[Timer]
+OnCalendar=Mon..Fri 02:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+EOF
+```
+
+O `sudo tee` grava o que lê num arquivo que só o root pode mudar, e o `<<'EOF'` entrega a ele cada linha
+até a que diz `EOF`. O `chmod` torna o script executável, o `x` da aula 9. A aula 15 é sobre os
+arquivos que configuram um sistema, e estes são três deles. Aqui estão os dois arquivos de unidade, lidos de volta:
 
 ```
 ana@server:~$ cat /etc/systemd/system/office-backup.service

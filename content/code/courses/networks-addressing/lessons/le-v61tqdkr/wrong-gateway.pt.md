@@ -1,11 +1,12 @@
 ---
 title: Um gateway que ninguém tem
-version: 1
+version: 2
 ---
 
 O jeito mais comum de configurar mal um host à mão é digitar o gateway errado. O sintoma é fácil de
-ler errado, porque metade da rede continua funcionando. Neste bloco o laboratório deu ao pc2 uma
-rota padrão via 10.20.10.254, um endereço dentro da rede do escritório que nenhuma máquina tem:
+ler errado, porque metade da rede continua funcionando. Neste bloco a rota padrão do pc2 foi
+trocada, num prompt de root no pc2, com `ip route replace default via 10.20.10.254`: um endereço
+dentro da rede do escritório que nenhuma máquina tem.
 
 ```
 ana@pc2:~$ ip route

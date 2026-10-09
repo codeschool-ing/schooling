@@ -1,6 +1,6 @@
 ---
 title: Sendo chamado de volta
-version: 1
+version: 2
 ---
 
 A aula 4 inverteu o polling para a telemetria: o equipamento envia valores a um coletor que fez a
@@ -25,7 +25,7 @@ outras APIs. Esta aula constrói o segundo, e faz ele acionar o primeiro.
 Os roteadores do laboratório enviam webhooks pela sua API, a mesma que a aula 2 usou: uma
 assinatura indica uma URL, uma lista de eventos e um segredo compartilhado, e daí em diante toda
 mudança do estado operacional de uma interface é enviada por POST para essa URL. O sistema de
-chamados é o `tickets`, uma pequena central de chamados escrita para o laboratório; o ServiceNow,
+chamados é o `tickets`, a central de chamados que a seção anterior ligou; o ServiceNow,
 o Jira Service Management e as centrais open source que o pessoal roda têm o mesmo formato,
 chamados com números, status e comentários por trás de uma API JSON autenticada por token.
 

@@ -1,6 +1,6 @@
 ---
 title: The state column, read off a real machine
-version: 1
+version: 2
 ---
 
 Every process is in one of a handful of states, and `ps` prints it in a column called `STAT`. It is
@@ -73,23 +73,27 @@ if os.fork() == 0:
 time.sleep(60)           # the parent does not call wait()
 ```
 
-And here is the result:
+Started in the background, and then looked for:
 
 ```
+ana@vm:~/work$ ./zombie.py &
+[1] 1093
+ana@vm:~/work$ sleep 1
 ana@vm:~/work$ ps -eo pid,ppid,stat,comm,args | grep -E 'zombie|defunct' | grep -v grep
- 1173     1 S    zombie.sh       /bin/bash ./zombie.sh
- 1197  1192 S    runuser         runuser -u ana -- /home/ana/work/zombie.py
- 1199  1197 S    python3         python3 /home/ana/work/zombie.py
- 1200  1199 Z    python3         [python3] <defunct>
+   81     1 Z    sh              [sh] <defunct>
+ 1093  1060 S    python3         python3 ./zombie.py
+ 1095  1093 Z    python3         [python3] <defunct>
 ```
 
-`1200` is the zombie. It is `Z`, it belongs to `1199` — the parent that will not collect it — and
+`1095` is the zombie. It is `Z`, it belongs to `1093` — the parent that will not collect it — and
 `ps` writes `<defunct>` where a command line would be, in square brackets, because there is no
 longer a program to name.
 
-The first row is a different script from an earlier attempt, still running, and it is in the output
-only because it has the word `zombie` in its name. **That is what searching processes with `grep`
-gets you**: everything whose command line contains the string, related or not. Section 05's `pgrep`
+The first row is another zombie, and it was there before `zombie.py` started: a `sh` whose parent
+is PID 1, on the sandbox these transcripts were captured on, where PID 1 is not an init system and
+never collects anything. Your machine will not have it. It is in the output only because `grep`
+matched `defunct`, and **that is what searching processes with `grep` gets you**: everything whose
+line contains the string, related or not. Section 05's `pgrep`
 is the version that does not do this to you.
 
 **A zombie is not using anything.** No memory, no processor, no open files. What it occupies is one

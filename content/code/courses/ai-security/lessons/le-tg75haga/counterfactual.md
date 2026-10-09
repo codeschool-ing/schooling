@@ -1,6 +1,6 @@
 ---
 title: Change one thing and count what moves
-version: 1
+version: 2
 ---
 
 Group rates say that something is uneven. They do not say what causes it, and they need hundreds of
@@ -11,7 +11,40 @@ decisions that flip.
 
 `guard counterfactual` does that to the profiles from the first section. It moves every Southeastern
 CEP to Recife, `50010-000`, and every Northeastern one to São Paulo, `01310-100`. The rating and the
-number of jobs stay as they were:
+number of jobs stay as they were. Save it as `~/guard/tools/counterfactual.py`:
+
+```python
+# counterfactual.py: score every profile again with only its CEP moved.
+#
+#   guard counterfactual FILE
+#
+# A Southeastern CEP becomes Recife's, 50010-000, and any other becomes São
+# Paulo's, 01310-100. Nothing else in the profile changes, so a decision that
+# flips was decided by the CEP alone.
+import json
+import sys
+
+from standin import THRESHOLD, score
+
+with open(sys.argv[1], encoding="utf-8") as f:
+    profiles = [json.loads(line) for line in f if line.strip()]
+
+flips = {}
+print("%-8s %-9s %-10s %5s   %-10s %5s" % ("who", "region", "cep", "score", "swapped", "score"))
+for p in profiles:
+    other = dict(p, cep="50010-000" if p["cep"][0] in "0123" else "01310-100")
+    s1, s2 = score(p), score(other)
+    before, after = s1 >= THRESHOLD, s2 >= THRESHOLD
+    note = ""
+    if before != after:
+        note = "  FLIP: %s" % ("shortlisted -> out" if before else "out -> shortlisted")
+        flips[p["region"]] = flips.get(p["region"], 0) + 1
+    print("%-8s %-9s %-10s %5.2f   %-10s %5.2f%s" % (
+        p["applicant"], p["region"], p["cep"], s1, other["cep"], s2, note))
+print("%d of %d decisions changed when only the CEP did (%s)" % (
+    sum(flips.values()), len(profiles),
+    ", ".join("%s %d" % kv for kv in flips.items()) or "none"))
+```
 
 ```
 ana@lab:~/guard$ guard counterfactual data/profiles.jsonl
@@ -44,7 +77,7 @@ the tool prints both scores.
 
 ## Running it against a language model
 
-The lab's scorer is deterministic, so one run per profile is enough. A language model is not, and
+The stand-in scorer is deterministic, so one run per profile is enough. A language model is not, and
 the same test needs three changes to be worth anything against one:
 
 - **Pairs that differ in one thing.** Two CVs identical except for the name, where the names are

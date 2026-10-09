@@ -1,6 +1,6 @@
 ---
 title: Unit files, and which copy wins
-version: 1
+version: 2
 ---
 
 A unit file is how a service describes itself. It is an ini file — sections in square brackets,
@@ -152,13 +152,29 @@ find out what somebody else did to a machine.
 ## Check it before you start it
 
 This is the command from the demonstration at the end of the lesson, and it runs on a **file**
-rather than on a running system:
+rather than on a running system. The file is this one, with three mistakes in it — read it before
+the answer below, and see how many you find:
+
+```sh
+sudo tee /etc/systemd/system/broken.service > /dev/null <<'END'
+[Unit]
+Descriptoin=A service with three mistakes in it
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/does-not-exist.sh
+User=ana
+Restart=maybe
+
+[Install]
+WantedBy=multi-user.target
+END
+```
 
 ```
 root@vm:~# systemd-analyze verify /etc/systemd/system/broken.service
 /etc/systemd/system/broken.service:2: Unknown key name 'Descriptoin' in section 'Unit', ignoring.
 /etc/systemd/system/broken.service:8: Failed to parse service restart specifier, ignoring: maybe
-Binding to IPv6 address not available since kernel does not support IPv6.
 broken.service: Command /usr/local/bin/does-not-exist.sh is not executable: No such file or directory
 root@vm:~# echo $?
 1
@@ -180,7 +196,6 @@ arriving in a new place:
 
 ```
 root@vm:~# systemd-analyze verify /etc/systemd/system/hello.service
-Binding to IPv6 address not available since kernel does not support IPv6.
 root@vm:~# echo $?
 0
 ```

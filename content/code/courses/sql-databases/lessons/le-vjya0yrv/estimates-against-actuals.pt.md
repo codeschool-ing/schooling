@@ -17,15 +17,15 @@ parar na primeira distância grande. Um fator de dois é ruído. Um fator de cem
 shop=# EXPLAIN ANALYZE SELECT * FROM orders WHERE date(placed_at) = DATE '2025-03-01';
                                                  QUERY PLAN                                                  
 -------------------------------------------------------------------------------------------------------------
- Seq Scan on orders  (cost=0.00..22466.00 rows=5000 width=28) (actual time=0.129..114.541 rows=1834 loops=1)
+ Seq Scan on orders  (cost=0.00..22469.00 rows=5000 width=28) (actual time=0.193..122.519 rows=1558 loops=1)
    Filter: (date(placed_at) = '2025-03-01'::date)
-   Rows Removed by Filter: 998166
- Planning Time: 0.238 ms
- Execution Time: 114.682 ms
+   Rows Removed by Filter: 998442
+ Planning Time: 0.349 ms
+ Execution Time: 122.679 ms
 (5 rows)
 ```
 
-Estimado 5000, real 1834. O planejador tem estatísticas sobre `placed_at` — a faixa, a
+Estimado 5000, real 1558. O planejador tem estatísticas sobre `placed_at` — a faixa, a
 distribuição — e nenhuma sobre `date(placed_at)`, porque o resultado de uma função não é uma
 coluna. Então ele recorreu a um padrão: meio por cento da tabela, seja qual for a tabela. Esse
 chute está errado nas duas direções em dias diferentes, e um plano construído sobre ele às vezes
@@ -65,19 +65,23 @@ shop=# EXPLAIN SELECT * FROM returns WHERE reason = 'damaged';
 
 `rows=5`, porque a tabela nunca foi analisada e o planejador está chutando pelo tamanho dela em
 disco, que é nada. Agora duzentas mil linhas são carregadas, e o mesmo `EXPLAIN` é rodado de novo,
-sem fazer mais nada:
+sem fazer mais nada — digite logo, porque em um minuto ou pouco mais a análise automática descrita
+abaixo faz o próximo passo por você:
 
 ```
+shop=# INSERT INTO returns (id, order_id, reason, opened_at) SELECT n, n * 5, (ARRAY['damaged', 'late', 'wrong item', 'changed mind'])[1 + n % 4], timestamptz '2025-01-01 00:00+00' + n * interval '1 minute' FROM generate_series(1, 200000) AS n;
+INSERT 0 200000
+
 shop=# EXPLAIN SELECT * FROM returns WHERE reason = 'damaged';
                          QUERY PLAN                          
 -------------------------------------------------------------
- Seq Scan on returns  (cost=0.00..3293.54 rows=754 width=48)
+ Seq Scan on returns  (cost=0.00..3218.74 rows=737 width=48)
    Filter: (reason = 'damaged'::text)
 (2 rows)
 ```
 
-O custo subiu — o planejador consegue ver que a tabela está maior — mas `rows=754` ainda é um
-chute escalado a partir do nada, e a verdade é quarenta vezes isso. Então:
+O custo subiu — o planejador consegue ver que a tabela está maior — mas `rows=737` ainda é um
+chute escalado a partir do nada, e a verdade é quase setenta vezes isso. Então:
 
 ```
 shop=# ANALYZE returns;
@@ -86,13 +90,15 @@ ANALYZE
 shop=# EXPLAIN SELECT * FROM returns WHERE reason = 'damaged';
                           QUERY PLAN                           
 ---------------------------------------------------------------
- Seq Scan on returns  (cost=0.00..3909.00 rows=33400 width=26)
+ Seq Scan on returns  (cost=0.00..3877.00 rows=49493 width=25)
    Filter: (reason = 'damaged'::text)
 (2 rows)
 ```
 
-`rows=33400`, que é um quarto de duzentas mil, que está certo: quatro motivos, distribuídos por
-igual. Uma instrução, e o planejador passou de chutar a saber.
+`rows=49493`, a menos de um por cento das 50 000 que um quarto de duzentas mil seria, o que está
+certo: quatro motivos, distribuídos por igual. Uma instrução, e o planejador passou de chutar a
+saber. Não dá 50 000 exatas porque o `ANALYZE` lê uma amostra da tabela e não ela inteira — que é
+também por que as estimativas na sua tela podem diferir destas um pouco.
 
 O autovacuum roda `ANALYZE` sozinho quando uma tabela mudou o bastante, e numa tabela que cresce
 devagar isso basta. Numa tabela que acabou de ser carregada, ou que acabou de ter metade das

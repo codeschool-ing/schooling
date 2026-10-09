@@ -1,6 +1,6 @@
 ---
 title: A coluna de estado, lida numa máquina de verdade
-version: 1
+version: 2
 ---
 
 Todo processo está num de um punhado de estados, e o `ps` imprime isso numa coluna chamada `STAT`.
@@ -74,23 +74,27 @@ if os.fork() == 0:
 time.sleep(60)           # the parent does not call wait()
 ```
 
-E aqui está o resultado:
+Iniciado em segundo plano, e depois procurado:
 
 ```
+ana@vm:~/work$ ./zombie.py &
+[1] 1093
+ana@vm:~/work$ sleep 1
 ana@vm:~/work$ ps -eo pid,ppid,stat,comm,args | grep -E 'zombie|defunct' | grep -v grep
- 1173     1 S    zombie.sh       /bin/bash ./zombie.sh
- 1197  1192 S    runuser         runuser -u ana -- /home/ana/work/zombie.py
- 1199  1197 S    python3         python3 /home/ana/work/zombie.py
- 1200  1199 Z    python3         [python3] <defunct>
+   81     1 Z    sh              [sh] <defunct>
+ 1093  1060 S    python3         python3 ./zombie.py
+ 1095  1093 Z    python3         [python3] <defunct>
 ```
 
-O `1200` é o zumbi. Ele está em `Z`, pertence ao `1199` — o pai que não vai recolhê-lo — e o `ps`
+O `1095` é o zumbi. Ele está em `Z`, pertence ao `1093` — o pai que não vai recolhê-lo — e o `ps`
 escreve `<defunct>` onde haveria uma linha de comando, entre colchetes, porque não há mais programa
 para nomear.
 
-A primeira linha é outro script, de uma tentativa anterior, ainda rodando, e ela está na saída só
-porque tem a palavra `zombie` no nome. **É isso que procurar processos com `grep` te dá**: tudo cuja
-linha de comando contém a string, relacionado ou não. O `pgrep` da seção 05 é a versão que não faz
+A primeira linha é outro zumbi, e já estava lá antes de o `zombie.py` começar: um `sh` cujo pai é o
+PID 1, no sandbox em que estas transcrições foram capturadas, onde o PID 1 não é um sistema de
+inicialização e nunca recolhe nada. A sua máquina não vai tê-lo. Ele está na saída só porque o
+`grep` casou `defunct`, e **é isso que procurar processos com `grep` te dá**: tudo cuja linha contém
+a string, relacionado ou não. O `pgrep` da seção 05 é a versão que não faz
 isso com você.
 
 **Um zumbi não está usando nada.** Nem memória, nem processador, nem arquivos abertos. O que ele

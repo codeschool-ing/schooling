@@ -5,7 +5,7 @@
 # this lesson, all of them in the section "reading-a-price-list", was copied
 # from running it.
 #
-#   bash captures.sh            # from anywhere; it finds prices.py beside course.json
+#   bash captures.sh            # from anywhere; prices.py is read out of lesson 1
 #
 # THERE IS NO CLOUD ACCOUNT IN THIS COURSE. Everything below reads the AWS public
 # price list, which AWS publishes as JSON with no account and no key. The index
@@ -25,7 +25,11 @@
 
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
-cd "$(dirname "$0")/../.." || exit 1
+. "$(cd "$(dirname "$0")/../.." && pwd)/from-lessons.sh"   # prices_py: the program as lesson 1 prints it
+SHEET=$(mktemp -d)   # the student's ~/cloud, holding prices.py
+trap 'rm -rf "$SHEET"' EXIT
+prices_py "$SHEET" || exit 1
+cd "$SHEET" || exit 1
 # what ana typed at her prompt, and everything it printed
 run() { printf 'ana@laptop:~/cloud$ %s\n' "$*"; bash -c "$*" 2>&1 || true; }
 block() { printf '##### %s\n' "$1"; }

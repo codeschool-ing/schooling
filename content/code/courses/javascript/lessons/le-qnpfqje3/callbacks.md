@@ -1,11 +1,22 @@
 ---
 title: Callbacks
-version: 1
+version: 2
 ---
 
 The oldest way to say "do this when the work is done" is to **pass the function that should run
 then**. Node's original file functions work this way, and they set a convention you will still see:
 the callback's first parameter is an error, or `null` if there was none.
+
+The programs in this lesson read four small JSON files, a book or an author each. Make them in
+`~/js` first:
+
+```sh
+mkdir -p books authors
+echo '{ "id": 7, "title": "Iracema", "authorId": 3 }' > books/7.json
+echo '{ "id": 12, "title": "Dom Casmurro", "authorId": 1 }' > books/12.json
+echo '{ "id": 1, "name": "Machado de Assis" }' > authors/1.json
+echo '{ "id": 3, "name": "José de Alencar" }' > authors/3.json
+```
 
 ```javascript
 const fs = require("node:fs");
