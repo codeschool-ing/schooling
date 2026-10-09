@@ -1,6 +1,6 @@
 {
   "ex-9j3vzwmv": {
-    "prompt": "No laboratório do curso, o labllm registra cada pedido com suas contagens de tokens. Para a pergunta da Bia sobre o pedido M-1042, quantos tokens de entrada levou o único pedido do `assistant.py`?",
+    "prompt": "O `agent.py` respondeu à pergunta da Bia através do `recorder.py`, e o log mostrou dois pedidos. Quantos tokens de entrada levou o segundo pedido?",
     "hint": "Aula 1.",
     "unit": "tokens"
   },
@@ -54,52 +54,52 @@
         "why": "Não. O `shop.py` tem funções simples; nada é lembrado fora da conversa."
       },
       {
-        "text": "No log de pedidos do labllm, que o laço relê a cada passo",
+        "text": "No `requests.jsonl` do recorder, que o laço relê a cada passo",
         "why": "Não. Esse log serve a quem inspeciona as execuções; o `agent.py` não o lê."
       }
     ]
   },
   "ex-t98hzy29": {
-    "prompt": "Um programa no laboratório do curso imprime `[scripted-1 has no reply written for this conversation]`. O que isso diz?",
+    "prompt": "Com o `ANTHROPIC_BASE_URL` apontado para a porta 11435, o `agent.py` termina com `anthropic.APIConnectionError: Connection error.` O que isso diz?",
     "hint": "Aula 1.",
     "choices": [
       {
-        "text": "O labllm não subiu, porque outro processo ocupa a porta 8600",
-        "why": "Não. Essa falha aparece como `labllm did not start; see /run/labllm.out`; aqui o labllm respondeu."
+        "text": "O `ollama.env` não chegou a este shell, e a biblioteca não achou chave",
+        "why": "Não. A falta de chave aparece como `Could not resolve authentication method`; aqui havia chave e ninguém respondeu."
       },
       {
-        "text": "O laboratório funciona; o curso não escreveu regra para essa pergunta",
-        "why": "Certo. O labllm só responde as conversas que as aulas roteirizam, e o log de pedidos mostra o que chegou."
+        "text": "Ninguém respondeu nesse endereço: o recorder não estava rodando",
+        "why": "Certo. A mesma linha aparece quando o próprio Ollama está parado, e aí o `ollama --version` também avisa."
       },
       {
-        "text": "O checksum do modelo de embeddings não bateu com o arquivo do curso",
-        "why": "Não. Isso para a construção com um aviso do `sha256sum`; não produz resposta."
+        "text": "O Python em uso é anterior ao 3.12, que o `shop.py` exige",
+        "why": "Não. Isso falha com `module 'math' has no attribute 'sumprod'`."
       },
       {
-        "text": "A chave de API do fornecedor está faltando ou venceu",
-        "why": "Não. O laboratório não usa fornecedor nenhum; o labllm responde pelas regras do curso."
+        "text": "O nome do modelo foi digitado errado, e o Ollama não tem modelo com ele",
+        "why": "Não. O Ollama responde a isso com `pull model manifest: file does not exist`."
       }
     ]
   },
   "ex-jxddj8dm": {
-    "prompt": "Durante o `sudo bash lab.sh up`, o `sha256sum` avisa que o modelo de embeddings baixado do bucket da Chroma não confere. O que o curso manda fazer?",
+    "prompt": "Depois de gravar a configuração de contexto, o `ollama ps` ainda mostra 4096 na coluna CONTEXT. O que o curso diz que está errado?",
     "hint": "Aula 1.",
     "choices": [
       {
-        "text": "Editar o checksum no script para a construção passar",
-        "why": "Não. A aula diz para não fazer isso: as notas da busca deixariam de bater com as transcrições."
+        "text": "O modelo foi baixado antes da configuração existir e precisa ser baixado de novo",
+        "why": "Não. A configuração é do Ollama, não do modelo; baixar de novo não muda nada."
       },
       {
-        "text": "Fixar o `js-tiktoken@1.0.21` e reconstruir o tokenizador",
-        "why": "Não. Essa versão fixa responde a um `ValueError` do tiktoken, não a um download de modelo."
+        "text": "O serviço precisa ser reiniciado, com a configuração no ambiente dele",
+        "why": "Certo. No Linux ela vai no ambiente do serviço, não no do seu shell, e o Ollama só a lê quando inicia."
       },
       {
-        "text": "Apagar a cópia baixada pela metade e rodar o `up` de novo",
-        "why": "Certo. Se ainda diferir, o bucket agora serve outro arquivo e as notas da busca não vão bater."
+        "text": "4096 é o máximo que o `llama3.2:3b` aceita, então a configuração é limitada",
+        "why": "Não. O curso roda o modelo com 8192, e o `ollama ps` mostra isso quando a configuração pega."
       },
       {
-        "text": "Instalar o Node.js 22 pelo NodeSource ou com `nvm`",
-        "why": "Não. Isso resolve um problema de versão do Node.js, não um arquivo de modelo diferente."
+        "text": "A configuração só vale para uma conversa depois que ela passa de 4096 tokens",
+        "why": "Não. A coluna mostra o contexto que o Ollama deu ao modelo; 4096 quer dizer que a configuração não pegou."
       }
     ]
   },
@@ -263,7 +263,7 @@
         "why": "Não. Nada na API exige esse campo."
       },
       {
-        "text": "Sem ele, o objeto de 27 tokens deixaria de ser JSON válido",
+        "text": "Sem ele, o objeto de 28 tokens deixaria de ser JSON válido",
         "why": "Não. O objeto enxuto é JSON válido de qualquer jeito."
       },
       {
@@ -272,7 +272,7 @@
       },
       {
         "text": "O valor do reembolso é calculado a partir do cadastro completo do cliente na loja",
-        "why": "Não. O reembolso saiu do `total` do pedido, 7780 centavos."
+        "why": "Não. O valor de um reembolso vem do `total` do pedido, 7780 centavos, que o objeto enxuto mantém."
       }
     ]
   },
@@ -338,7 +338,7 @@
       },
       {
         "text": "Procurar `Answer:` antes de procurar uma ação",
-        "why": "Não. Essa é a ordem que acreditou na resposta inventada; procurar uma ação primeiro é mais seguro."
+        "why": "Não. Essa ordem é o motivo de o passo 3 da primeira execução ter terminado sem rodar a busca; procurar uma ação primeiro é mais seguro."
       },
       {
         "text": "Devolver um erro curto como observação quando uma ação não se interpreta",
@@ -347,7 +347,7 @@
     ]
   },
   "ex-wsy4apw5": {
-    "prompt": "No `wires.py` do curso, uma chamada de ferramenta voltou pelos SDKs de três fornecedores. Associe cada API ao campo que disse ao programa por que a resposta parou.",
+    "prompt": "No `wires.py` do curso, uma pergunta foi ao `llama3.2:3b` por três formatos de fio, e cada resposta trouxe a mesma chamada de ferramenta. Associe cada API ao campo que disse por que a resposta parou.",
     "hint": "Aula 4.",
     "pairs": [
       {
@@ -359,12 +359,12 @@
         "right": "`finish_reason: \"tool_calls\"`"
       },
       {
-        "left": "Google Gemini",
-        "right": "`finishReason: \"STOP\"`, com a chamada nas partes"
+        "left": "Ollama `/api/chat`",
+        "right": "`done_reason: \"stop\"`, com a chamada na mensagem"
       }
     ],
     "right_distractors": [
-      "`stop_reason: \"stop_sequence\"`"
+      "`finishReason: \"STOP\"`, com a chamada nas partes"
     ]
   },
   "ex-95144mrt": {
@@ -428,11 +428,11 @@
     "choices": [
       {
         "text": "Nada; o modelo vai notar sozinho que falta um resultado e pedir a mesma ferramenta de novo",
-        "why": "Não. O labllm, como a API da Anthropic, recusa uma conversa em que uma chamada fica sem resultado."
+        "why": "Não. A API da Anthropic recusa uma conversa em que uma chamada fica sem resultado, com um `400` que nomeia a chamada."
       },
       {
         "text": "O resultado da outra chamada, sozinho, para não confundir o modelo",
-        "why": "Não. Esse é o defeito do `--drop-one`, e termina num 400."
+        "why": "Não. Esse é o defeito do `--drop-one`: a API da Anthropic o recusa, e onde nada recusa, o modelo tem de adivinhar."
       },
       {
         "text": "Um resultado com o id dessa chamada, marcado como erro, dizendo por que não rodou",
@@ -467,9 +467,9 @@
     ]
   },
   "ex-fqh9dnmt": {
-    "prompt": "No laboratório do curso, o `agent.py --max-tokens 1500` parou com `token budget: 1895 of 1500 used`. Em quantos tokens o orçamento foi estourado?",
+    "prompt": "No curso, o `agent.py --max-seconds 2` parou com `time budget: 2.0 s`, mas só o primeiro pedido tinha levado 119835 ms. Pela conta da aula, com quantos segundos de atraso veio a conferência?",
     "hint": "Aula 5.",
-    "unit": "tokens"
+    "unit": "segundos"
   },
   "ex-5seqsazk": {
     "prompt": "Por que o `agent.py` do curso conta três orçamentos (passos, tokens e segundos) em vez de um?",
@@ -494,24 +494,24 @@
     ]
   },
   "ex-4mha1py9": {
-    "prompt": "O curso rodou a pergunta do presente e do pedido com `--max-seconds 1`. Até onde a execução tinha chegado quando parou?",
+    "prompt": "O curso rodou a pergunta do presente e do pedido no `llama3.2:3b` com `--max-seconds 2`. Até onde a execução tinha chegado quando parou?",
     "hint": "Aula 5.",
     "choices": [
       {
-        "text": "Tinha consultado o M-1045, mas não buscado livros",
-        "why": "Não. Isso é o que as execuções de passos e de tokens listaram como feito; esta nem chegou ao `get_order`."
+        "text": "Não tinha mandado pedido nenhum: o relógio acabou antes do primeiro",
+        "why": "Não. O orçamento é conferido antes de cada pedido, e o primeiro saiu na hora; o recorder o registrou."
       },
       {
-        "text": "Tinha respondido a metade do pedido e largado o presente",
-        "why": "Não. Devolveu `stopped`, com todos os passos do plano em `not_done`."
+        "text": "Tinha escrito um plano e parado antes de agir sobre ele",
+        "why": "Não. Nenhum plano foi escrito: `done` e `not_done` estão vazios, e a passagem diz isso."
       },
       {
-        "text": "Não tinha mandado pedido nenhum ao modelo",
-        "why": "Não. Um pedido rodou: 52 tokens de saída em 2282 ms, o plano."
+        "text": "Uma resposta tinha rodado, com duas chamadas de ferramenta e nenhum plano",
+        "why": "Certo. A conferência antes do segundo pedido parou a execução, 118 segundos atrasada."
       },
       {
-        "text": "Tinha escrito o plano, e nada mais",
-        "why": "Certo. A conferência antes do segundo pedido parou a execução, então `done` ficou vazio."
+        "text": "Tinha respondido pelo `finish`, e a conferência de tempo descartou a resposta",
+        "why": "Não. Essa resposta não chamou `finish`; quem chamou foi a execução de tokens, que terminou `answered`."
       }
     ]
   },
@@ -564,9 +564,8 @@
     "hint": "Aula 6.",
     "items": [
       "O agente de triagem faz um pedido e chama `transfer_to_orders`",
-      "O hospedeiro roda o especialista de pedidos sobre a mensagem do cliente",
-      "O especialista chama `get_order` e vê que o pedido está `received`",
-      "O especialista busca na central de ajuda o que dá para mudar antes do empacotamento",
+      "O hospedeiro inicia o especialista de pedidos sobre a mensagem do cliente",
+      "O especialista busca na central de ajuda, sem consultar o pedido",
       "O próprio especialista responde ao cliente"
     ]
   },
@@ -606,7 +605,7 @@
       },
       {
         "text": "O mesmo modelo está por trás de todo agente, e nenhum sabe mais",
-        "why": "Certo. O especialista de pedidos chama o mesmo `scripted-1`; a divisão muda o que cada agente vê e faz."
+        "why": "Certo. Todo agente do `multi.py` é o `llama3.2:3b`; a divisão muda o que cada agente vê e pode fazer."
       },
       {
         "text": "A perícia é real, mas só aparece no formato de passagem",
@@ -628,7 +627,7 @@
       },
       {
         "text": "A resposta final do orquestrador era um texto mais longo",
-        "why": "Não. As duas respostas são iguais palavra por palavra."
+        "why": "Não. A resposta dele foi a mais curta: deixou o livro de fora."
       },
       {
         "text": "Novas tentativas depois que a chamada do especialista de catálogo falhou",
@@ -719,30 +718,30 @@
         "why": "O modelo lê a conversa, não o arquivo de rastro."
       },
       {
-        "text": "Porque o labllm recusa pedidos maiores que um passo de rastro",
-        "why": "O labllm nunca vê o arquivo de rastro."
+        "text": "Porque o Ollama recusa pedidos maiores que um passo de rastro",
+        "why": "O Ollama nunca vê o arquivo de rastro."
       }
     ]
   },
   "ex-pgh3h1em": {
-    "prompt": "Na execução com rastro da devolução de *Drácula*, no curso, o `search_help` levou 1053 ms; na execução do reembolso logo depois, o mesmo tipo de busca levou 331 ms. Que explicação a aula dá?",
+    "prompt": "Na execução do curso em que o cliente digitou `M1047`, o passo 1 levou 434 tokens de entrada e o passo 2 só 166, embora o pedido do passo 2 trouxesse tudo o que o do passo 1 trazia. Por quê?",
     "hint": "Aula 7.",
     "choices": [
       {
-        "text": "A segunda consulta era mais curta e comparou menos palavras",
-        "why": "O tamanho da consulta não é o motivo que a aula dá."
+        "text": "O Ollama guardou em cache o prompt do passo 1, e tokens em cache não contam",
+        "why": "Não. O adaptador soma os tokens em cache de volta ao `tokens_in`, então eles contam."
       },
       {
-        "text": "O labllm estava menos ocupado na segunda execução",
-        "why": "O tempo do labllm só pode afetar a metade do modelo num passo; search_help é uma ferramenta."
+        "text": "O laço tira da conversa os passos anteriores quando uma chamada falha",
+        "why": "Não. O `Agent.run` acrescenta a `messages` e nunca remove nada."
       },
       {
-        "text": "A primeira carregou o modelo de embeddings num processo novo; depois os arquivos provavelmente estavam em cache",
-        "why": "Certo. A maior parte dos 1053 ms foi carregar o modelo; na execução seguinte o sistema operacional provavelmente já tinha os arquivos em cache."
+        "text": "O template deixa as ferramentas de fora quando um resultado vem por último",
+        "why": "Certo. A aula 1 achou isso: as definições de ferramenta só entram quando a última mensagem é do usuário."
       },
       {
-        "text": "O SDK repetiu a primeira busca uma vez depois de um timeout",
-        "why": "O SDK repete pedidos ao modelo, não chamadas de ferramenta, e nenhuma repetição aparece nesta execução."
+        "text": "A recusa do schema trocou os argumentos da chamada por um erro",
+        "why": "Não. O erro voltou como resultado de ferramenta; a chamada ficou na conversa como estava."
       }
     ]
   },
@@ -796,8 +795,8 @@
         "why": "O rastreamento vem ligado por padrão."
       },
       {
-        "text": "Para o labllm, junto com cada pedido ao modelo",
-        "why": "O labllm recebe pedidos ao modelo; o exportador padrão aponta para outro lugar."
+        "text": "Para o Ollama, junto com cada pedido ao modelo",
+        "why": "O Ollama recebe pedidos ao modelo; o exportador padrão aponta para outro lugar."
       },
       {
         "text": "Para os servidores da OpenAI",
@@ -897,12 +896,12 @@
         "why": "O reembolso não rodou; a chamada foi recusada."
       },
       {
-        "text": "A conversa foi, onze vezes, para um modelo que o código nunca nomeou",
-        "why": "Certo. Cada pedido ao classificador levou a mensagem do cliente e os argumentos do reembolso."
+        "text": "A conversa foi mandada a um modelo que o código nunca nomeou",
+        "why": "Certo. O pedido do classificador levou a mensagem do cliente e os argumentos do reembolso, para o claude-sonnet-5."
       },
       {
         "text": "O CLI trocou em silêncio os pedidos do próprio agente para `claude-sonnet-5`",
-        "why": "Os dois pedidos do agente foram para o scripted-1; um pedido do classificador pediu claude-sonnet-5."
+        "why": "Os dois pedidos do agente foram para o qwen2.5:3b; o pedido do classificador pediu claude-sonnet-5."
       },
       {
         "text": "Esse modo grava reembolsos numa tabela que ninguém lê",
@@ -963,8 +962,8 @@
         "why": "Certo. Vinte delas eram do próprio Claude Code."
       },
       {
-        "text": "O primeiro pedido levou 13.531 tokens de entrada",
-        "why": "Certo. A maioria eram definições de ferramentas."
+        "text": "O modelo leu 4.098 tokens do primeiro pedido",
+        "why": "Certo. O Ollama cortou um prompt de 12.247 tokens para caber, e a pergunta se perdeu."
       },
       {
         "text": "Passar `system_prompt` tirou as ferramentas embutidas do Claude Code",
@@ -981,20 +980,20 @@
     ]
   },
   "ex-ewm9cbam": {
-    "prompt": "Na sessão retomada do Claude Agent SDK no curso, a estimativa de custo da segunda rodada foi 0,0106, mais que o dobro dos 0,0043 da primeira. Por quê?",
+    "prompt": "Na sessão retomada do Claude Agent SDK no curso, a estimativa de custo da segunda rodada foi 0,0046, mais que o triplo dos 0,0013 da primeira. Por quê?",
     "hint": "Aula 9.",
     "choices": [
       {
         "text": "Retomar abre uma sessão nova, que o CLI cobra a uma taxa mais alta",
-        "why": "Ela ficou na mesma sessão, 09b2f915 nos dois resultados."
+        "why": "Ela ficou na mesma sessão, 2ff7ac48 nos dois resultados."
       },
       {
-        "text": "Levou a primeira rodada e mais um resultado de busca",
-        "why": "Certo. O pedido retomado levou o histórico e um resultado do search_help."
+        "text": "Levou a primeira rodada junto",
+        "why": "Certo. O pedido retomado levou o histórico da primeira rodada."
       },
       {
-        "text": "O CLI reconheceu o `scripted-1` na segunda rodada e cobrou mais caro por ele",
-        "why": "O CLI não reconhece o scripted-1; ele chuta um preço."
+        "text": "O CLI reconheceu o `qwen2.5:3b` na segunda rodada e cobrou mais caro por ele",
+        "why": "O CLI não reconhece o nome; ele chuta um preço."
       },
       {
         "text": "O modelo escreveu uma resposta bem mais longa",
@@ -1028,7 +1027,7 @@
     "hint": "Aula 10.",
     "choices": [
       {
-        "text": "A API do Gemini recusa esquemas que trazem um padrão",
+        "text": "O Ollama recusa esquemas que têm um padrão",
         "why": "O motivo da aula é a anotação, que só dizia str."
       },
       {
@@ -1651,13 +1650,13 @@
     ]
   },
   "ex-9hscee78": {
-    "prompt": "Uma primeira versão do ENV do mcp_host.py tinha só PATH e HOME, e o search_help falhou: o módulo dele acha o diretório do modelo de embeddings pela variável ___.",
+    "prompt": "O mcp_host.py inicia cada servidor com o comando python, que o processo do servidor procura no ___ que o ENV lhe dá, então essa lista põe o bin do ambiente virtual primeiro.",
     "hint": "Aula 15.",
     "blanks": [
       {
         "accept": [
-          "MINILM_DIR",
-          "$MINILM_DIR"
+          "PATH",
+          "$PATH"
         ]
       }
     ]
@@ -1882,34 +1881,34 @@
     ]
   },
   "ex-aqnzqbnj": {
-    "prompt": "O labllm guarda em cache um prefixo de prompt como um fornecedor faz: um prefixo marcado de 1.024 tokens ou mais é escrito uma vez e depois pode ser lido por quantos segundos?",
+    "prompt": "Na segunda execução da mesma pergunta, na aula de custo, quantos tokens do primeiro pedido o Ollama reaproveitou da execução anterior?",
     "hint": "Aula 18.",
-    "unit": "segundos"
+    "unit": "tokens"
   },
   "ex-69trt6eq": {
-    "prompt": "O cost_run.py scripted-1 --cache --stamp pôs a hora de cada pedido no topo do prompt de sistema. Quantos tokens essa execução escreveu no cache somando os três pedidos?",
+    "prompt": "O cost_run.py llama3.2:3b --cache --stamp pôs a hora de cada pedido no topo do prompt de sistema. Quantos tokens de entrada essa execução leu do zero somando os dois pedidos?",
     "hint": "Aula 18.",
     "unit": "tokens"
   },
   "ex-jkkdfeg4": {
-    "prompt": "No labllm, tokens de entrada não custam tempo: ele só os conta. O que a aula de custo diz que um fornecedor de verdade faz de diferente?",
+    "prompt": "O primeiro pedido da mesma pergunta levou 10.447 ms numa execução e 3.955 ms na seguinte. O que a aula de custo diz que fez a diferença?",
     "hint": "Aula 18.",
     "choices": [
       {
-        "text": "Cobra tokens de entrada só quando eles são lidos de volta do cache do fornecedor",
-        "why": "A entrada é cobrada pelo preço dela; o cache muda como ela é cobrada."
+        "text": "A resposta da segunda execução foi mais curta",
+        "why": "Os dois primeiros pedidos escreveram uma chamada de ferramenta de menos de 20 tokens."
       },
       {
-        "text": "Escreve a saída mais rápido conforme o prompt cresce",
+        "text": "O Ollama escreveu a saída mais rápido da segunda vez",
         "why": "A saída é produzida um token por vez de qualquer jeito."
       },
       {
-        "text": "Recusa prompts de mais de 1.024 tokens que não estão em cache",
-        "why": "1.024 é o mínimo do labllm para um prefixo guardável em cache, não um limite de prompt."
+        "text": "A segunda execução usou o modelo menor",
+        "why": "As duas execuções usaram o llama3.2:3b."
       },
       {
-        "text": "Gasta tempo lendo um prompt longo, então o primeiro token chega mais tarde",
-        "why": "Certo. Esse é um dos pontos em que o labllm é mais simples do que aquilo que representa."
+        "text": "Reaproveitou 847 tokens em vez de ler 994",
+        "why": "Certo. Ler um prompt longo é a maior parte da espera numa CPU."
       }
     ]
   },
@@ -1945,7 +1944,7 @@
     ]
   },
   "ex-257hqyb3": {
-    "prompt": "O scripted-mini do labllm escreve quatro vezes mais rápido que o scripted-1. Como a aula diz para decidir que tarefas um modelo menor consegue levar?",
+    "prompt": "O llama3.2:1b leu o mesmo prompt em cerca de metade do tempo do llama3.2:3b, e depois mandou uma chamada de ferramenta quebrada. Como a aula diz para decidir que tarefas um modelo menor consegue levar?",
     "hint": "Aula 18.",
     "choices": [
       {

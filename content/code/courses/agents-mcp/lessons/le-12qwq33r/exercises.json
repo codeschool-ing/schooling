@@ -125,32 +125,32 @@
   },
   {
     "id": "ex-chc3gm8k",
-    "version": 1,
+    "version": 2,
     "section": "what-it-sends",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "How did the order reach the model as a tool result in the ADK run?",
+    "prompt": "In the ADK run's second request, what came before the tool's result?",
     "choices": [
       {
-        "text": "As Python text made with str()",
+        "text": "The model's call to get_order, with its arguments",
         "correct": false,
-        "why": "That was lesson 8's SDK."
+        "why": "That call is in the ADK's events, not in the request."
       },
       {
-        "text": "As a JSON object in a functionResponse",
+        "text": "An assistant turn with no text and no tool call",
         "correct": true,
-        "why": "Right. The Gemini API takes a structured value, and the dictionary went through."
+        "why": "Right. The call was dropped on the way to Ollama; the model read a result with no question before it."
       },
       {
-        "text": "As a CSV table written by the ADK so that the model reads fewer tokens",
+        "text": "A CSV table of the order written by the ADK",
         "correct": false,
-        "why": "No table was written; the dictionary went as it was."
+        "why": "No table was written; the order went as JSON text."
       },
       {
-        "text": "It did not; the ADK summarised it first",
+        "text": "A summary of the order, written by LiteLLM",
         "correct": false,
-        "why": "The whole order is in the request."
+        "why": "Nothing summarised the order."
       }
     ]
   },
@@ -248,7 +248,7 @@
   },
   {
     "id": "ex-34h8vp19",
-    "version": 1,
+    "version": 2,
     "section": "a-person-confirms",
     "type": "quiz",
     "difficulty": "medium",
@@ -273,50 +273,50 @@
       {
         "text": "Asked the model whether the refund was safe",
         "correct": false,
-        "why": "No model was asked during the wait: two requests in total."
+        "why": "No model was asked during the wait: the run had already ended."
       }
     ]
   },
   {
     "id": "ex-d905q66b",
-    "version": 1,
+    "version": 2,
     "section": "a-person-confirms",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "In the declined refund run, how many requests did labllm log in total?",
-    "value": 2,
+    "prompt": "In the declined refund run, how many requests did the recorder log in total, /api/show included?",
+    "value": 8,
     "tolerance": 0,
     "unit": "requests"
   },
   {
     "id": "ex-hptdqa69",
-    "version": 1,
+    "version": 2,
     "section": "a-person-confirms",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "Why was nobody asked about the refund of 7780 cents?",
+    "prompt": "Asked to refund the whole order M-1047, the model asked for 0 cents. Why did limit_refunds let the call through to the person?",
     "choices": [
       {
-        "text": "before_tool_callback returned a result, so the tool and its confirmation never ran",
+        "text": "Because 0 is a whole number under the 5000-cent limit",
         "correct": true,
-        "why": "Right. A dictionary from the callback replaces the tool's result."
+        "why": "Right. The callback refuses only what is not a number or is above the limit; refund itself refused 0."
       },
       {
-        "text": "Because the customer withdrew the request",
+        "text": "Because the callback runs only after the person answers",
         "correct": false,
-        "why": "The model asked for it; the callback refused."
+        "why": "It runs before the question, on every call."
       },
       {
-        "text": "Because require_confirmation only applies below 5000 cents",
+        "text": "Because require_confirmation turns callbacks off",
         "correct": false,
-        "why": "The limit is in limit_refunds, not in the flag."
+        "why": "Both ran; the callback first."
       },
       {
-        "text": "Because the y on standard input approved it automatically",
+        "text": "Because the y on standard input approved it in advance",
         "correct": false,
-        "why": "The y was never read."
+        "why": "The y was read when the person was asked, after the callback."
       }
     ]
   },
@@ -508,7 +508,7 @@
   },
   {
     "id": "ex-26e6j1vf",
-    "version": 1,
+    "version": 2,
     "section": "three-libraries",
     "type": "matching",
     "difficulty": "medium",
@@ -525,7 +525,7 @@
       },
       {
         "left": "Google ADK",
-        "right": "a JSON object in a functionResponse"
+        "right": "JSON text in a tool message"
       }
     ],
     "right_distractors": [
@@ -565,7 +565,7 @@
   },
   {
     "id": "ex-4dj4wp3n",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "ordering",
     "difficulty": "medium",
@@ -576,7 +576,7 @@
       "call refund",
       "call adk_request_confirmation",
       "the person answers y",
-      "result refund with refunded 3890",
+      "result refund with the error for 0 cents",
       "the model's reply"
     ]
   },

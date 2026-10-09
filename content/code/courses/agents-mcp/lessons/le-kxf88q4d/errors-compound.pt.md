@@ -1,6 +1,6 @@
 ---
 title: Os erros se acumulam
-version: 1
+version: 2
 ---
 
 A execução de um agente é uma cadeia de decisões, e uma cadeia vale o mesmo que todos os elos juntos. Se cada passo está certo com probabilidade *p*, e os passos falham de forma independente, uma execução de *n* passos está certa do começo ao fim com probabilidade *p* elevado a *n*. Três linhas de Python imprimem a tabela:
@@ -26,6 +26,6 @@ Um passo que acerta 95 vezes em 100 parece confiável. **Dez passos assim em seq
 
 **Medir a execução inteira.** A precisão por passo é fácil de estimar e engana; o que o usuário vive é a execução. A aula 18 mede o sucesso ao longo de muitas execuções da mesma tarefa, que é o número que esta tabela manda acompanhar.
 
-## Por que o substituto esconde isso, e por que tudo bem
+## As execuções deste curso já mostram isso
 
-Neste laboratório, toda execução da mesma pergunta segue o mesmo caminho, porque as respostas do substituto são regras. A precisão por passo de um modelo real fica abaixo de 1, e a tabela mostra o que isso faz com uma cadeia. O laboratório existe para mostrar o código que limita o estrago, que funciona do mesmo jeito qualquer que seja a precisão.
+A aula 1 perguntou sobre o M-1043 e o agente consultou o pedido. A seção 05 fez a mesma pergunta ao mesmo programa, e o agente buscou o id do pedido na central de ajuda. Toda execução de agente sobre a pergunta da Bia até aqui respondeu errado, e nem sempre com o mesmo erro. Isso é acerto por passo abaixo de 1, visto de fora, e um agente com vinte passos o encontraria vinte vezes por execução. O código que limita o estrago, que as próximas aulas escrevem, funciona igual seja qual for o acerto.

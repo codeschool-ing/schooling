@@ -8,33 +8,27 @@
 #   sudo bash captures.sh
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab
-# (lab.sh reset); the files ana wrote (put below), which the lesson shows in
-# full; and emptying labllm's log before the runs whose requests are read,
-# done as root because the log belongs to the labllm user.
+# (lab.sh reset), and the files ana wrote (put below), which the lesson shows
+# in full, each checked by lab/shown.py.
 #
-# THE MODEL'S WORDS AND DECISIONS IN THIS LESSON WERE WRITTEN BY THE COURSE,
-# as rules in lab/scripted/12-components.json, and so was archive_mcp.py, a
-# second server whose "archived" orders are not in shop.db. The servers (mcp
+# THE MODELS ARE REAL, in Ollama 0.40.0 with an 8192-token context, captured
+# on 2026-10-08: llama3.2:3b (a80c4f17acd5) for the OpenAI and Google hosts,
+# and qwen2.5:3b (357c53fb659c) for the Claude host, for the reason lesson 9
+# gives. archive_mcp.py is a second server the course wrote, whose "archived"
+# orders are not in shop.db; the lesson shows it whole. The servers (mcp
 # 2.3.0), the three hosts and their clients (openai-agents 0.23.1,
-# claude-agent-sdk 0.2.163 with the Claude Code CLI 2.1.286, google-adk
-# 2.11.0), the processes, the environment each server received (its variable
-# NAMES; no value is printed anywhere in this lesson), the messages each
-# client sent and each host's handling of two tools with one name are real.
-# Standard error is dropped where a command says 2> /dev/null; it holds the
-# warnings the earlier lessons showed.
+# claude-agent-sdk 0.2.163 with the Claude Code CLI 2.1.286, google-adk 2.11.0
+# through LiteLLM), the processes, the environment each server received (its
+# variable NAMES; no value is printed anywhere in this lesson), the messages
+# each client sent and each host's handling of two tools with one name are
+# real. Standard error is dropped where a command says 2> /dev/null; it holds
+# the warnings the earlier lessons showed.
 #
-# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo, with LAB_TODAY=2026-10-06.
-set -uo pipefail
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
+# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1 PYTHONWARNINGS=ignore::UserWarning; $*" 2>&1 || true; }
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-block() { printf '##### %s\n' "$1"; }
-fresh_log() { : > /var/log/labllm/requests.jsonl; }
-exec 9>/var/tmp/agents-capture.lock; flock 9
-lab reset >/dev/null
+. ../../lab/capture.sh
+on() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "$SHELL_STATE export PYTHONUNBUFFERED=1; $*" < /dev/null 2>&1 || true; }
+lab exec 'ollama run llama3.2:3b hello' < /dev/null >/dev/null 2>&1
 lab exec 'python -c "import shop; shop.search_help(\"warm up\")"' >/dev/null
 
 put probe_mcp.py <<'PY'
@@ -106,7 +100,7 @@ import sys
 
 host, task, names = sys.argv[1], sys.argv[2], sys.argv[3:]
 WRAP = {"tee": lambda n: ["sh", "-c", f"tee {n}.in.jsonl | python {n}_mcp.py"],   # keep a copy of what the client sent
-        "clean": lambda n: ["env", "-i", "PATH=/opt/agents/bin:/usr/bin:/bin", "HOME=/home/ana", "python", f"{n}_mcp.py"]}
+        "clean": lambda n: ["env", "-i", "PATH=/home/ana/agents/.venv/bin:/usr/bin:/bin", "HOME=/home/ana", "python", f"{n}_mcp.py"]}
 
 
 def command(entry):
@@ -125,13 +119,12 @@ SYSTEM = f"You are the {host} host of the components lesson."
 
 async def openai_host():
     from contextlib import AsyncExitStack
-    from agents import Agent, Runner, set_default_openai_api, set_tracing_disabled
+    from agents import Agent, Runner, set_tracing_disabled
     from agents.mcp import MCPServerStdio
-    set_default_openai_api("chat_completions")
     set_tracing_disabled(True)
     async with AsyncExitStack() as stack:
         servers = [await stack.enter_async_context(MCPServerStdio(params=p, name=n)) for n, p in SERVERS.items()]
-        agent = Agent(name="support", model="scripted-1", instructions=SYSTEM, mcp_servers=servers)
+        agent = Agent(name="support", model="llama3.2:3b", instructions=SYSTEM, mcp_servers=servers)
         try:
             print((await Runner.run(agent, task)).final_output)
         except Exception as e:
@@ -140,7 +133,7 @@ async def openai_host():
 
 async def claude_host():
     from claude_agent_sdk import ClaudeAgentOptions, ResultMessage, query
-    options = ClaudeAgentOptions(model="scripted-1", system_prompt=SYSTEM, tools=[], setting_sources=[],
+    options = ClaudeAgentOptions(model="qwen2.5:3b", system_prompt=SYSTEM, tools=[], setting_sources=[],
                                  allowed_tools=[f"mcp__{n}" for n in SERVERS],
                                  mcp_servers={n: {"type": "stdio", **p} for n, p in SERVERS.items()})
     async for message in query(prompt=task, options=options):
@@ -150,14 +143,14 @@ async def claude_host():
 
 async def google_host():
     from google.adk.agents import Agent
-    from google.adk.models.google_llm import Gemini
+    from google.adk.models.lite_llm import LiteLlm
     from google.adk.runners import InMemoryRunner
     from google.adk.tools.mcp_tool import McpToolset, StdioConnectionParams
     from google.genai.types import Content, Part
     from mcp import StdioServerParameters
     toolsets = [McpToolset(connection_params=StdioConnectionParams(server_params=StdioServerParameters(**p)))
                 for p in SERVERS.values()]
-    agent = Agent(name="support", model=Gemini(model="scripted-1", base_url="http://127.0.0.1:8600"),
+    agent = Agent(name="support", model=LiteLlm(model="ollama_chat/llama3.2:3b"),
                   instruction=SYSTEM, tools=toolsets)
     runner = InMemoryRunner(agent=agent, app_name="marginalia")
     session = await runner.session_service.create_session(app_name="marginalia", user_id="bia")
@@ -174,11 +167,11 @@ asyncio.run({"OpenAI": openai_host, "Claude": claude_host, "Google": google_host
 PY
 
 put probed.py <<'PY'
-"""Print what where_am_i reported, from the tool result in labllm's log, wherever each provider's format put it."""
+"""Print what where_am_i reported, from the tool result in the recorder's log, wherever each API's format put it."""
 import json
 import re
 
-log = open("/var/log/labllm/requests.jsonl").read()
+log = open("requests.jsonl").read()
 found = re.search(r'parent[\\"]+: [\\"]+(.*?)[\\"]+, [\\"]+uid[\\"]+: (\d+), [\\"]+cwd[\\"]+: [\\"]+(.*?)[\\"]+,.*?env[\\"]+: \[(.*?)\]', log)
 parent, uid, cwd, env = found.groups()
 names = [n for n in re.split(r'[\\", ]+', env) if n]
@@ -205,38 +198,41 @@ for name in sys.argv[1:]:
 PY
 
 put names.py <<'PY'
-"""The tool names the host offered its model in the first request, or that it sent none."""
+"""The tool names the host offered its model, in the first request that offered any."""
 import json
+import os
 
-lines = open("/var/log/labllm/requests.jsonl").readlines()
-if not lines:
-    print("offered: no request was sent")
+lines = open("requests.jsonl").readlines() if os.path.exists("requests.jsonl") else []
+offered = [r["request"]["tools"] for r in map(json.loads, lines) if r["request"].get("tools")]
+if not offered:
+    print("offered: no tools were sent" if lines else "offered: no request was sent")
 else:
-    tools = json.loads(lines[0])["request"].get("tools", [])
-    flat = [f for t in tools for f in t.get("functionDeclarations", [t])]
-    print("offered:", ", ".join(t.get("name") or t["function"]["name"] for t in flat))
+    print("offered:", ", ".join(t.get("name") or t["function"]["name"] for t in offered[0]))
 PY
+
+recorder
+say 'export ANTHROPIC_BASE_URL=http://127.0.0.1:11435 OPENAI_BASE_URL=http://127.0.0.1:11435/v1 OLLAMA_API_BASE=http://127.0.0.1:11435 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1'
 
 block probe
 for h in OpenAI Claude Google; do
-  fresh_log
+  on 'rm -f requests.jsonl'
   on "python hosts.py $h 'Where are you running?' probe > /dev/null 2>&1; python probed.py"
 done
 
 block clean
-fresh_log
+on 'rm -f requests.jsonl'
 on "python hosts.py Claude 'Where are you running?' probe:env > /dev/null 2>&1; python probed.py"
-fresh_log
+on 'rm -f requests.jsonl'
 on "python hosts.py Claude 'Where are you running?' probe:clean > /dev/null 2>&1; python probed.py"
 
 block what-it-sees
 for h in OpenAI Claude Google; do
-  lab exec "export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1 PYTHONWARNINGS=ignore; python hosts.py $h 'Where is my order M-1043?' orders:tee > /dev/null 2>&1; mv orders.in.jsonl $h.in.jsonl"
+  lab exec "$SHELL_STATE python hosts.py $h 'Where is my order M-1043?' orders:tee > /dev/null 2>&1; mv orders.in.jsonl $h.in.jsonl" < /dev/null
 done
 on 'python said.py OpenAI Claude Google'
 
 block two-servers
 for h in OpenAI Claude Google; do
-  fresh_log
-  on "python hosts.py $h 'Where is my order M-1043?' orders archive 2>&1 | grep -v unrecognized_model; python names.py"
+  on 'rm -f requests.jsonl'
+  on "python hosts.py $h 'Where is my order M-1043?' orders archive 2> /dev/null; python names.py"
 done

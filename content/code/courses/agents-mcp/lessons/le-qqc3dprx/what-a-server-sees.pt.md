@@ -1,6 +1,6 @@
 ---
 title: O que um servidor vê
-version: 1
+version: 2
 ---
 
 A outra metade do princípio é o que um servidor recebe. O servidor `orders` foi iniciado com o `tee` (o truque da aula 11, `orders:tee` no `hosts.py`) enquanto cada hospedeiro respondia *"Where is my order M-1043?"*. O `said.py` imprime o método de cada mensagem e o que o cliente declarou, e para a chamada de ferramenta, os argumentos e qualquer `_meta` além dos campos do próprio protocolo:
@@ -36,7 +36,7 @@ Claude
   tools/list                 
   prompts/list               
   resources/list             
-  tools/call                 {"arguments": {"order_id": "M-1043"}, "_meta": {"claudecode/toolUseId": "toolu_lab_0014_1", "progressToken": 4}}
+  tools/call                 {"arguments": {"order_id": "M-1043"}, "_meta": {"claudecode/toolUseId": "call_r5k7x8tt", "progressToken": 4}}
 Google
   initialize                 {}
   notifications/initialized  

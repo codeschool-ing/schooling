@@ -248,13 +248,13 @@
   },
   {
     "id": "ex-56q610ht",
-    "version": 1,
+    "version": 2,
     "section": "router-versus-agent",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
     "prompt": "How many requests did the agent send to the model for lesson 1's three messages, as `tally.py` counted them?",
-    "value": 8,
+    "value": 6,
     "tolerance": 0,
     "unit": "requests"
   },
@@ -291,22 +291,22 @@
   },
   {
     "id": "ex-qsgkx3hg",
-    "version": 1,
+    "version": 2,
     "section": "router-versus-agent",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "The tallies show 1.0 s of model time for the router and 9.9 s for the agent. Which conclusion carries over to a real provider?",
+    "prompt": "The tallies show 2.0 s of model time for the router and 37.4 s for the agent, on a small model with no graphics chip. Which conclusion carries over to a paid provider?",
     "choices": [
       {
-        "text": "That the agent will be about ten times slower than the router",
+        "text": "That the agent will be about eighteen times slower than the router",
         "correct": false,
-        "why": "The ratio comes from labllm's timing rule. A provider's timing differs."
+        "why": "The ratio depends on this machine and this model. A provider's timing differs, and so would yours."
       },
       {
-        "text": "None, since the lab's timings are invented",
+        "text": "None, because a local model's timings say nothing about any other",
         "correct": false,
-        "why": "The timings follow a declared rule, and the requests and tokens behind them are real."
+        "why": "The seconds do not carry over, but the requests and tokens behind them would be sent to any model."
       },
       {
         "text": "More, larger requests, and more tokens written",
@@ -395,32 +395,32 @@
   },
   {
     "id": "ex-pgsqdq09",
-    "version": 1,
+    "version": 2,
     "section": "errors-compound",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why do runs of the same question in this lab never show the compounding the table describes?",
+    "prompt": "Lesson 1 asked the agent about M-1043 and it looked the order up; this lesson asked the same and it searched the help centre. What does the table in this section say that means for a run of ten steps?",
     "choices": [
       {
-        "text": "Because labllm retries any step that goes wrong",
+        "text": "Nothing, because a question asked twice is only one step each time",
         "correct": false,
-        "why": "labllm has no notion of a wrong step. It returns the reply a rule names."
+        "why": "It is one step here, and the same uncertainty sits in every step of a longer run."
       },
       {
-        "text": "Because the lab's tools never fail",
-        "correct": false,
-        "why": "They do fail: lesson 1's automation hit a LookupError from the same shop.py."
-      },
-      {
-        "text": "Because the runs are too short for errors to add up",
-        "correct": false,
-        "why": "Short runs compound too: three steps at 0.90 give 0.73."
-      },
-      {
-        "text": "The stand-in follows fixed rules",
+        "text": "Each step's chance of going right is below 1, and ten of them multiply",
         "correct": true,
-        "why": "Right. Every run takes the same path, so per-step accuracy is effectively 1. A real model's is not."
+        "why": "Right. A step that varies between runs has an accuracy below 1, and a chain of them compounds it."
+      },
+      {
+        "text": "The search was a better choice, so longer runs will improve",
+        "correct": false,
+        "why": "Searching for an order id in the help centre was the worse choice: the order holds the answer."
+      },
+      {
+        "text": "Ollama changed the model between the two lessons",
+        "correct": false,
+        "why": "Both runs used llama3.2:3b with the same tag. The model chose differently."
       }
     ]
   },

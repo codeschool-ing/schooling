@@ -1,23 +1,26 @@
 ---
 title: A smaller model
-version: 1
+version: 2
 ---
 
-labllm has two models, and the second, `scripted-mini`, writes four times faster: 10 ms a token instead of 40. The same run, with nothing else changed:
+Lesson 1 pulled a second model, `llama3.2:1b`: the same family with a third of the parameters, 1.3 GB on disk instead of 2.0. The same run, with nothing else changed:
 
 ```
-ana@lab:~/agents$ python cost_run.py scripted-mini
+ana@lab:~/agents$ python cost_run.py llama3.2:1b
 step   input  c.write  c.read  output     ms  stop
-   1    2359        0       0      10    335  tool_use
-       tool get_order: 1 ms
-   2    2520        0       0       8    330  tool_use
-       tool search_help: 317 ms
-   3    2561        0       0      75    957  end_turn
-total    7440        0       0      93   1939
+   1     994        0      15      34   5588  tool_use
+       tool get_order {"function": "get_order", "parameters": {"properties": {"order_id": "M-1043"}, "required": ["order_id"], "type": "object"}, "type": "function"}Traceback (most recent call last):
+  File "/home/ana/agents/cost_run.py", line 57, in <module>
+    out = json.dumps(RUN[call.name](call.input))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ana/agents/cost_run.py", line 29, in <lambda>
+    RUN = {"get_order": lambda a: shop.get_order(a["order_id"]),
+                                                 ~^^^^^^^^^^^^
+KeyError: 'order_id'
 ```
 
-**1,939 ms instead of 4,768.** The tokens are identical, because the same text went in and the same answer, written by the course, came out; the difference is all in the writing. The answer request fell from 3,208 ms to 957.
+The first request **took 5,588 ms instead of 10,447**, for the same 994 tokens read: a smaller model reads and writes faster. And then the program crashed. The model asked for `get_order`, and for arguments it sent the tool's own description back, `{"function": "get_order", "parameters": {...}}`, with the order id buried one level down where `order_id` should have been. `cost_run.py` trusted the arguments, which lesson 4 warned against, and `a["order_id"]` raised `KeyError`.
 
-With real providers the smaller model of a family is faster and cheaper per token, and less capable. Which tasks it can carry is a question to answer by testing, not by assumption. Lesson 2's routing pattern is where the answer pays: send the easy questions (*where is my order?*) to the small model and the hard ones to the large one, and decide which is which with something cheap. A router that sends ninety per cent of traffic to a model that is four times faster has made the agent faster for ninety per cent of customers.
+That is what a smaller model trades. It is faster and, from a provider, cheaper per token, and it is less able to do what the larger one did on this very request. **Which tasks it can carry is a question to answer by testing**, not by assumption, and the test is runs like this one, many of them, read for the call as well as the time. Lesson 2's routing pattern is where the answer pays: send the easy questions to the small model and the hard ones to the large one, decide which is which with something cheap. Check the small model's tool calls before running them, too: a schema check would have turned this crash into an error result the loop could handle.
 
-What a smaller model does not change is the shape of the bill. It still reads 7,440 tokens to write 93. That part is the next section's subject.
+What a smaller model does not change is the shape of the bill. It still reads the whole prompt on every request. That part is the next section's subject.

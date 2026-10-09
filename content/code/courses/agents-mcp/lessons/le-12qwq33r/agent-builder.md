@@ -1,11 +1,11 @@
 ---
 title: Agent Builder, the hosted half
-version: 1
+version: 2
 ---
 
 Google's offer for agents has the same two halves as OpenAI's in lesson 8. **Vertex AI Agent Builder** is the name Google Cloud gives its hosted products for building, deploying and running agents, and **Agent Engine** is the managed runtime inside it that runs an agent as a service. The **Agent Development Kit** (ADK) is an open-source library, `google-adk` on PyPI; this lab pins 2.11.0, and it is the half the rest of the lesson runs.
 
-**The hosted half could not be run for this course.** It needs a Google Cloud project, a region and a bill, and the lab reaches no cloud. What can be seen from here is the bridge between the two, because the library's own command-line tool knows how to deploy:
+**The hosted half could not be run for this course.** It needs a Google Cloud project, a region and a bill, and this course runs on your own machine. What can be seen from here is the bridge between the two, because the library's own command-line tool knows how to deploy:
 
 ```
 ana@lab:~/agents$ adk deploy --help

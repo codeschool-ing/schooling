@@ -1,6 +1,6 @@
 ---
 title: Automation, assistant, agent
-version: 1
+version: 2
 ---
 
 The three words are used as if they were rungs on a ladder of intelligence, with automation at the bottom and agents at the top. **They are not a ladder.** A script can be the right answer to a problem an agent would make worse, and an agent can run on the same model as an assistant. What separates them is one question, and it is a question about control rather than about cleverness: **who decides the next step, and when?**
@@ -19,7 +19,7 @@ Product pages do not settle it, because "agent" is a word that sells. Code does.
 - `print(reply.text)` and nothing after it: a person decides. Assistant.
 - `if reply.stop_reason == "tool_use": run(reply.tool_calls)`: the next step is whatever the model asked for. Agent.
 
-The lab's `agent.py`, which section 03 runs, is forty lines, and that `if` is the line that makes it an agent.
+The `agent.py` that section 05 runs is forty lines, and that `if` is the line that makes it an agent.
 
 ## Why the distinction earns a lesson
 

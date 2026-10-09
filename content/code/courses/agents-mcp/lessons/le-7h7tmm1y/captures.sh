@@ -8,26 +8,19 @@
 #   sudo bash captures.sh
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab
-# (lab.sh reset), and the files ana wrote (put below), which the lesson shows
-# in full. The answer a person typed at the approval prompt is fed on standard
-# input.
+# (lab.sh reset); the files ana wrote (put below), which the lesson shows in
+# full, each checked by lab/shown.py; starting and stopping the HTTP server,
+# which the lesson starts in a second terminal; and the answer a person typed
+# at the approval prompt, fed on standard input.
 #
 # NO MODEL TAKES PART IN THIS LESSON. Every message is typed by hand or sent by
 # a short script, and every reply came from the servers (mcp 2.3.0) and the
 # HTTP server underneath (uvicorn). Replies are cut to the page's width where
 # a command says so; nothing else is edited.
 #
-# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo, with LAB_TODAY=2026-10-06.
-set -uo pipefail
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
+# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-block() { printf '##### %s\n' "$1"; }
-exec 9>/var/tmp/agents-capture.lock; flock 9
-lab reset >/dev/null
+. ../../lab/capture.sh
 
 put shop_mcp.py <<'PY'
 """Marginalia's order lookup as an MCP server: written once, for any host."""

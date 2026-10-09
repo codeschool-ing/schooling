@@ -1,23 +1,25 @@
 ---
 title: Uma chamada
-version: 1
+version: 2
 ---
 
-O hospedeiro iniciou os dois servidores, listou as ferramentas deles e perguntou ao modelo. A regra do curso fez o modelo chamar `shop__get_order`:
+O hospedeiro iniciou os dois servidores, listou as ferramentas deles e perguntou ao modelo, o `llama3.2:3b`, através do gravador da aula 1:
 
 ```
+ana@lab:~/agents$ python recorder.py &
+ana@lab:~/agents$ export ANTHROPIC_BASE_URL=http://127.0.0.1:11435
 ana@lab:~/agents$ python mcp_host.py "Where is my order M-1043?" 2> host.err
 step 1: shop__get_order {"order_id": "M-1043"}
   result: {"id": "M-1043", "status": "shipped", "placed_on": "2026-09-28", "delivered_on": null, "tracking": "BR55123400
-answer: Order M-1043 has shipped; its tracking code is BR5512340003, and the link in your shipping email follows it.
+answer: Your order M-1043 has been shipped. The tracking number is BR5512340003. You can track the status of your order by visiting the tracking link or entering the tracking number on the shipping carrier's website.
 ```
 
-**A chamada e a resposta do modelo foram escritas pelo curso**; o hospedeiro, os dois clientes e o servidor são reais. Ninguém foi perguntado: o `get_order` é só leitura e o `shop` é um servidor em cujas dicas o hospedeiro acredita. O que chegou ao modelo foi o resultado estruturado da aula 14, em JSON, sem o `customer_id`.
+O modelo chamou `shop__get_order` e respondeu a partir do resultado. Ninguém foi perguntado: o `get_order` é só leitura e o `shop` é um servidor em cujas dicas o hospedeiro acredita. O que chegou ao modelo foi o resultado estruturado da aula 14, em JSON, sem o `customer_id`.
 
-O que o modelo recebeu como oferta, lido do log do labllm:
+O que o modelo recebeu como oferta, lido do log do gravador:
 
 ```
-ana@lab:~/agents$ python -c 'import json; [print(t["name"].ljust(20), t["description"][:70]) for t in json.loads(open("/var/log/labllm/requests.jsonl").readline())["request"]["tools"]]'
+ana@lab:~/agents$ python -c 'import json; [print(t["name"].ljust(20), t["description"][:70]) for t in json.loads(open("requests.jsonl").readline())["request"]["tools"]]'
 shop__get_order      (server shop) Look up one Marginalia order: status, dates, tracking, l
 shop__search_help    (server shop) Search Marginalia's help centre by meaning. Returns titl
 refunds__refund      (server refunds) Refund part or all of an order, in cents, after a mem

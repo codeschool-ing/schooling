@@ -1,9 +1,9 @@
 ---
 title: Why split the work at all
-version: 1
+version: 2
 ---
 
-The common picture is a team: a manager agent and a row of expert agents, each better at its job than one generalist could be, so a multi-agent system must be the more capable design. **Nothing in the model makes a specialist more expert.** The orders specialist in this lesson calls the same `scripted-1` as everybody else. What a split changes is what each agent sees and what each may do, and those are real reasons, with real costs.
+The common picture is a team: a manager agent and a row of expert agents, each better at its job than one generalist could be, so a multi-agent system must be the more capable design. **Nothing in the model makes a specialist more expert.** The orders specialist in this lesson calls the same `llama3.2:3b` as everybody else. What a split changes is what each agent sees and what each may do, and those are real reasons, with real costs.
 
 The reasons that hold up:
 

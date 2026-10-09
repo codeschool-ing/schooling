@@ -1,6 +1,6 @@
 ---
 title: Uma descrição é um prompt
-version: 1
+version: 2
 ---
 
 A descrição é a única explicação que o modelo recebe, e ela é lida no momento da escolha. **Escrevê-la é engenharia de prompt**, com a diferença de que uma descrição ruim não produz um parágrafo ruim; produz uma chamada errada, ou nenhuma chamada onde uma era necessária.
@@ -12,7 +12,7 @@ Compare as duas descrições do `get_order` que este curso usou:
 | aula 1 | Look up one Marginalia order by its id, such as M-1042: status, dates, lines and amounts in cents. |
 | esta aula | Look up one Marginalia order by its id, which is M- followed by four digits, such as M-1042. Returns status, dates, lines and amounts in cents. |
 
-As duas dizem o que a ferramenta faz e o que volta. A segunda também diz em palavras o formato do id, que o esquema impõe com um padrão. **Dizer na descrição previne o erro; impor no esquema o pega quando a descrição não bastou.** A seção 05 mostra a segunda metade funcionando, porque o substituto do curso foi escrito para ignorar a primeira.
+As duas dizem o que a ferramenta faz e o que volta. A segunda também diz em palavras o formato do id, que o esquema impõe com um padrão. **Dizer na descrição previne o erro; impor no esquema o pega quando a descrição não bastou.** A seção 05 mostra as duas metades: o `llama3.2:3b`, informado do formato, transformou sozinho o `1043` do cliente em `M-1043`, e um dublê escrito para ignorar a descrição esbarra no padrão.
 
 ## O que uma boa descrição diz
 

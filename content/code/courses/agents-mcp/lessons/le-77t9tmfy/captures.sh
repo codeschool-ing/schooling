@@ -8,27 +8,20 @@
 #   sudo bash captures.sh
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab
-# (lab.sh reset) and the files ana wrote (put below), which the lesson shows
-# in full.
+# (lab.sh reset), standin.py (lesson 3's), and the files ana wrote (put
+# below), which the lesson shows in full, each checked by lab/shown.py.
 #
-# THE MODEL'S WORDS AND DECISIONS IN THIS LESSON WERE WRITTEN BY THE COURSE,
-# as rules in lab/scripted/04-*.json. That includes the arguments that fail
-# validation: the course wrote a model that sends "1043" without its prefix
-# and "five" for a number, to show what the host does with them. The schemas,
-# the validation messages, the tools, the errors, the three SDKs and what
-# they put on the wire are real.
+# THE MODEL IS REAL: llama3.2:3b (a80c4f17acd5) in Ollama 0.40.0, with an
+# 8192-token context, captured on 2026-10-08. Its calls and its words are what
+# it said that day. Where a run shows the stand-in instead (standin.py, from
+# lesson 3), its replies are the JSON file the lesson shows beside it.
 #
-# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo, with LAB_TODAY=2026-10-06.
-set -uo pipefail
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
+# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-block() { printf '##### %s\n' "$1"; }
-exec 9>/var/tmp/agents-capture.lock; flock 9
-lab reset >/dev/null
+. ../../lab/capture.sh
+lab exec 'ollama run llama3.2:3b hello' < /dev/null >/dev/null 2>&1
+# standin.py is lesson 3's, written again unchanged.
+put standin.py < ../../lab/work/standin.py
 
 put tools.py <<'PY'
 """Marginalia's tools for the model: each a schema the model reads and a function the host runs."""
@@ -124,7 +117,7 @@ DROP_ONE = "--drop-one" in sys.argv
 client = anthropic.Anthropic()
 messages = [{"role": "user", "content": sys.argv[1]}]
 for step in range(1, 6):
-    reply = client.messages.create(model="scripted-1", max_tokens=1024, system=SYSTEM,
+    reply = client.messages.create(model="llama3.2:3b", max_tokens=1024, system=SYSTEM,
                                    tools=TOOLS, messages=messages)
     messages.append({"role": "assistant", "content": reply.content})
     if reply.stop_reason != "tool_use":
@@ -145,12 +138,46 @@ block agent-pattern
 on 'python agent.py "Where is my order 1043?"'
 block agent-type
 on 'python agent.py "Which mystery novels do you have in stock?"'
+put retry.json <<'JSON'
+{"order 1043": [
+  {"tool": "get_order", "input": {"order_id": "1043"}},
+  {"tool": "get_order", "input": {"order_id": "M-1043"}},
+  {"text": "Order M-1043 has shipped and is on its way, with tracking code BR5512340003. It has not been delivered yet."}
+ ],
+ "mystery novels": [
+  {"tool": "find_books", "input": {"genre": "mystery", "max_results": "five"}},
+  {"tool": "find_books", "input": {"genre": "mystery", "max_results": 5}},
+  {"text": "Right now we have one mystery in stock: The Mysterious Affair at Styles by Agatha Christie, at 31.90."}
+ ]
+}
+JSON
+
+block standin-retry
+on 'python standin.py retry.json &'
+sleep 1
+on 'ANTHROPIC_BASE_URL=http://127.0.0.1:11436 python agent.py "Where is my order 1043?"'
+on 'ANTHROPIC_BASE_URL=http://127.0.0.1:11436 python agent.py "Which mystery novels do you have in stock?"'
+quiet
+
 block agent-missing
 on 'python agent.py "What happened to my order M-9999?"'
 block parallel
 on 'python agent.py "What is the status of my orders M-1043 and M-1048?"'
-block parallel-drop
-on 'python agent.py "What is the status of my orders M-1043 and M-1048?" --drop-one 2>&1 | tail -n 1'
+put parallel.json <<'JSON'
+{"M-1043 and M-1048": [
+  [{"tool": "get_order", "input": {"order_id": "M-1043"}},
+   {"tool": "get_order", "input": {"order_id": "M-1048"}}],
+  {"text": "M-1043 has shipped (tracking BR5512340003). M-1048 was cancelled, so nothing from it will arrive."}
+ ]
+}
+JSON
+
+block standin-parallel
+on 'python standin.py parallel.json &'
+sleep 1
+on 'ANTHROPIC_BASE_URL=http://127.0.0.1:11436 python agent.py "What is the status of my orders M-1043 and M-1048?"'
+on 'ANTHROPIC_BASE_URL=http://127.0.0.1:11436 python agent.py "What is the status of my orders M-1043 and M-1048?" --drop-one'
+quiet
 
 block idempotency
 on 'python -c "from tools import run_tool; print(run_tool(\"issue_refund\", {\"order_id\": \"M-1042\", \"cents\": 3480, \"reason\": \"damaged copy\", \"idempotency_key\": \"ticket-5521-refund\"}))"'
@@ -158,39 +185,41 @@ on 'python -c "from tools import run_tool; print(run_tool(\"issue_refund\", {\"o
 on 'python -c "from tools import run_tool; print(run_tool(\"issue_refund\", {\"order_id\": \"M-1042\", \"cents\": 3480, \"reason\": \"damaged copy\", \"idempotency_key\": \"ticket-5521-again\"}))"'
 
 put wires.py <<'PY'
-"""One tool, one question, three providers' SDKs: what each one sends and gets back."""
+"""One tool, one question, three wire formats: Anthropic's, OpenAI's and Ollama's own."""
 import json
+import os
+import urllib.request
 
 import anthropic
 import openai
-from google import genai
-from google.genai import types
 
 NAME, DESCRIPTION = "get_order", "Look up one Marginalia order by its id, such as M-1042."
 SCHEMA = {"type": "object", "properties": {"order_id": {"type": "string"}}, "required": ["order_id"]}
 QUESTION = "Where is order M-1043?"
 
 a = anthropic.Anthropic().messages.create(
-    model="scripted-1", max_tokens=200, messages=[{"role": "user", "content": QUESTION}],
+    model="llama3.2:3b", max_tokens=200, messages=[{"role": "user", "content": QUESTION}],
     tools=[{"name": NAME, "description": DESCRIPTION, "input_schema": SCHEMA}])
 call = next(b for b in a.content if b.type == "tool_use")
 print("anthropic ", a.stop_reason, call.name, json.dumps(call.input), call.id)
 
 o = openai.OpenAI().chat.completions.create(
-    model="scripted-1", messages=[{"role": "user", "content": QUESTION}],
+    model="llama3.2:3b", messages=[{"role": "user", "content": QUESTION}],
     tools=[{"type": "function", "function": {"name": NAME, "description": DESCRIPTION, "parameters": SCHEMA}}])
 call = o.choices[0].message.tool_calls[0]
 print("openai    ", o.choices[0].finish_reason, call.function.name, call.function.arguments, call.id)
 
-gemini = genai.Client(http_options=types.HttpOptions(base_url="http://127.0.0.1:8600"))
-g = gemini.models.generate_content(
-    model="scripted-1", contents=QUESTION,
-    config=types.GenerateContentConfig(tools=[types.Tool(function_declarations=[
-        types.FunctionDeclaration(name=NAME, description=DESCRIPTION, parameters_json_schema=SCHEMA)])]))
-call = g.candidates[0].content.parts[0].function_call
-print("gemini    ", g.candidates[0].finish_reason.name, call.name, json.dumps(call.args), call.id)
+body = {"model": "llama3.2:3b", "stream": False, "messages": [{"role": "user", "content": QUESTION}],
+        "tools": [{"type": "function", "function": {"name": NAME, "description": DESCRIPTION, "parameters": SCHEMA}}]}
+req = urllib.request.Request(os.environ["OLLAMA_API_BASE"] + "/api/chat", json.dumps(body).encode(),
+                             {"Content-Type": "application/json"})
+n = json.load(urllib.request.urlopen(req))
+call = n["message"]["tool_calls"][0]
+print("ollama    ", n["done_reason"], call["function"]["name"], json.dumps(call["function"]["arguments"]), call.get("id"))
 PY
 
 block wires
+recorder
+say 'export ANTHROPIC_BASE_URL=http://127.0.0.1:11435 OPENAI_BASE_URL=http://127.0.0.1:11435/v1 OLLAMA_API_BASE=http://127.0.0.1:11435'
 on 'python wires.py'
-on "tail -n 3 /var/log/labllm/requests.jsonl | python -c 'import json, sys; [print(r[\"path\"].split(\"/\")[-1][:28].ljust(28), json.dumps(r[\"request\"][\"tools\"])[:118]) for r in map(json.loads, sys.stdin)]'"
+on "python -c 'import json; [print(r[\"path\"].ljust(22), json.dumps(r[\"request\"][\"tools\"])[:118]) for r in map(json.loads, open(\"requests.jsonl\"))]'"

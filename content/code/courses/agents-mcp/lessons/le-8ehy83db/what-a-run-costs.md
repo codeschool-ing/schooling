@@ -1,11 +1,11 @@
 ---
 title: What a run costs
-version: 1
+version: 2
 ---
 
-A provider charges for tokens: those it reads (input) and those it writes (output), at different prices per million, which vary by model and change over time. This lesson counts tokens and leaves the prices to the provider's own page, because a price written in a course is out of date by the time it is read.
+A provider charges for tokens: those it reads (input) and those it writes (output), at different prices per million, which vary by model and change over time. Ollama on your own machine charges nothing per token, and pays in time instead, which this lesson measures as well. Prices are left to each provider's own page, because a price written in a course is out of date by the time it is read.
 
-`cost_run.py` is lesson 1's agent with a measuring tape: the same two tools, a system prompt that carries Marginalia's forty help articles as policy, and a line per request with the tokens in and out and the time it took.
+`cost_run.py` is lesson 1's agent with a measuring tape: the same two tools, a system prompt that carries Marginalia's fourteen help articles as policy, and a line per request with the tokens in and out and the time it took.
 
 ```python
 """One agent run, measured: tokens and time per request, per tool, and in total."""
@@ -63,8 +63,9 @@ for step in range(1, 7):
     results = []
     for call in calls:
         t0 = time.perf_counter()
+        print(f"       tool {call.name} {json.dumps(call.input)}", end="", flush=True)
         out = json.dumps(RUN[call.name](call.input))
-        print(f"       tool {call.name}: {(time.perf_counter() - t0) * 1000:.0f} ms")
+        print(f": {(time.perf_counter() - t0) * 1000:.0f} ms")
         results.append({"type": "tool_result", "tool_use_id": call.id, "content": out})
     messages.append({"role": "user", "content": results})
 print(f"total {totals['input']:7} {totals['cache_write']:8} {totals['cache_read']:7} {totals['output']:7} "
@@ -72,22 +73,20 @@ print(f"total {totals['input']:7} {totals['cache_write']:8} {totals['cache_read'
 ```
 
 ```
-ana@lab:~/agents$ python cost_run.py scripted-1
+ana@lab:~/agents$ python cost_run.py llama3.2:3b
 step   input  c.write  c.read  output     ms  stop
-   1    2359        0       0      10    641  tool_use
-       tool get_order: 1 ms
-   2    2520        0       0       8    571  tool_use
-       tool search_help: 348 ms
-   3    2561        0       0      75   3208  end_turn
-total    7440        0       0      93   4768
+   1     994        0      15      16  10447  tool_use
+       tool search_help {"query": "M-1043"}: 166 ms
+   2      65        0     847      67   8629  end_turn
+total    1059        0     862      83  19242
 ```
 
-**The model's calls and answer were written by the course**; the counts and times are labllm's, by the rules at the top of `lab/labllm.py`: tokens counted with `o200k_base`, 200 ms before the first token and 40 ms for each one after, for `scripted-1`.
+The columns come from the reply's `usage`, in the Anthropic API's shape. **`input`** is the input the model read fresh. **`c.read`** is input it did not have to read again, because Ollama still held it from the request before. **`c.write`** is what a provider reports when it stores a prefix on request, and Ollama never reports one, so the column stays at zero here. The times are this machine's: a CPU, with nothing else running. Yours will differ, and so will the model's words and even its choice of tool: asked about an order, it searched the help centre for *"M-1043"* instead of looking the order up. A run is a sample, and the next sections are three more of them.
 
-Read the columns. The answer took **three requests**, and they carried **7,440 input tokens** between them against **93 output tokens**. Each request carried everything before it: the tools, the system prompt with the policies, and the conversation so far. Lesson 1 said it in one sentence: the API keeps nothing, so whatever the model must remember travels in every request.
+The answer took **two requests**. The first read 994 tokens and wrote 16; the second read 65 new tokens on top of 847 it reused, and wrote the 67-token answer. Each request carried everything before it: the tools, the system prompt with the policies, and the conversation so far. Lesson 1 said it in one sentence: the API keeps nothing, so whatever the model must remember travels in every request.
 
 ```schooling-figure
-{"svg": "<svg viewBox=\"0 0 720 200\" role=\"img\" aria-label=\"The three requests of one run, as bars of input tokens. Each carries the tools, the system prompt with the policies, and the conversation so far. The first two parts are the same in all three, about 2,350 tokens; the conversation grows from a few tokens to about 210. Marked as a cacheable prefix, the repeated part is written once and read twice.\"><defs></defs><text x=\"20\" y=\"47\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">request 1</text><rect x=\"110\" y=\"30\" width=\"451\" height=\"34\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"120\" y=\"47\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">tools + system: 2,347</text><rect x=\"561\" y=\"30\" width=\"4\" height=\"34\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"573\" y=\"47\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">conversation: 12</text><text x=\"20\" y=\"102\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">request 2</text><rect x=\"110\" y=\"85\" width=\"451\" height=\"34\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"120\" y=\"102\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">tools + system: 2,347</text><rect x=\"561\" y=\"85\" width=\"33\" height=\"34\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"602\" y=\"102\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">conversation: 173</text><text x=\"20\" y=\"157\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">request 3</text><rect x=\"110\" y=\"140\" width=\"451\" height=\"34\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"120\" y=\"157\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">tools + system: 2,347</text><rect x=\"561\" y=\"140\" width=\"41\" height=\"34\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"610\" y=\"157\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">conversation: 214</text></svg>", "caption": "Most of each request is text the provider has already seen."}
+{"svg": "<svg viewBox=\"0 0 720 140\" role=\"img\" aria-label=\"The two requests of one run, as bars of input tokens. The first read 994 tokens and reused 15. The second reused 847 tokens Ollama had kept from the first, the system prompt with the policies among them, and read only 65 new ones.\"><defs></defs><text x=\"20\" y=\"47\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">request 1</text><rect x=\"110\" y=\"30\" width=\"8\" height=\"34\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><rect x=\"117\" y=\"30\" width=\"447\" height=\"34\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"127\" y=\"47\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">read: 994</text><text x=\"577\" y=\"47\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">reused: 15</text><text x=\"20\" y=\"102\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper)\">request 2</text><rect x=\"110\" y=\"85\" width=\"381\" height=\"34\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"120\" y=\"102\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">reused: 847</text><rect x=\"491\" y=\"85\" width=\"29\" height=\"34\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"530\" y=\"102\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">read: 65</text></svg>", "caption": "Most of the second request is text the model had already read."}
 ```
 
-Two things follow. **The fixed part dominates**: about 2,350 tokens of tools and policy went out three times, and the conversation added only 161 and 41 tokens on the next two requests. And **the input grows with every step**, so an agent that takes ten steps pays for its early turns ten times. Both are why the levers in this lesson's next sections work.
+Two things follow. **The fixed part dominates**: the policies are most of every request, and the conversation added only 65 tokens on the second. And **the input grows with every step**, so an agent that takes ten steps pays for its early turns ten times. Here reuse hid most of that cost, and the next sections show when it does and when it does not.

@@ -1,35 +1,57 @@
 ---
 title: A mesma ferramenta, três vezes
-version: 1
+version: 2
 ---
 
-As aulas 8, 9 e 10 deram a três agentes o mesmo `get_order`. A cada vez ele foi escrito de novo para a biblioteca: uma função decorada, um `@tool` devolvendo conteúdo MCP, uma função simples. E cada biblioteca o descreveu ao seu modelo no formato do próprio fornecedor. Aqui está o primeiro pedido que cada hospedeiro mandou nesta aula, cortado até a ferramenta:
+As aulas 8, 9 e 10 deram a três agentes o mesmo `get_order`. A cada vez ele foi escrito de novo para a biblioteca: uma função decorada, um `@tool` devolvendo conteúdo MCP, uma função simples. E cada biblioteca o descreveu ao seu modelo no formato do próprio fornecedor. Aqui está o primeiro pedido com ferramentas que cada hospedeiro mandou, cortado até a ferramenta:
+
+O `wire.py` lê o log do gravador da aula 1 e imprime as ferramentas do primeiro pedido, como o hospedeiro as escreveu:
+
+```python
+"""For the first request in the recorder's log that offered tools: which API it went to, and get_order as the host described it."""
+import json
+import textwrap
+
+for line in open("requests.jsonl"):
+    r = json.loads(line)
+    tools = r["request"].get("tools", [])
+    if not tools:
+        continue   # LiteLLM's first request, /api/show, asks about the model and offers no tools
+    for t in tools:
+        print(r["path"])
+        print(textwrap.fill(json.dumps(t, ensure_ascii=False), 100, initial_indent="  ", subsequent_indent="  "))
+    break
+```
 
 ```
+ana@lab:~/agents$ rm -f requests.jsonl
 ana@lab:~/agents$ python hosts.py openai > /dev/null 2>&1; python wire.py
-/v1/chat/completions
-  {"type": "function", "function": {"name": "get_order", "description": "Look up one Marginalia
-  order by its id, M- and four digits. Returns status, dates, lines and amounts in cents.",
-  "parameters": {"type": "object", "properties": {"order_id": {"title": "Order Id", "type":
-  "string"}}, "required": ["order_id"], "title": "get_orderArguments"}, "strict": false}}
+/v1/responses
+  {"name": "get_order", "parameters": {"type": "object", "properties": {"order_id": {"title": "Order
+  Id", "type": "string"}}, "required": ["order_id"], "title": "get_orderArguments"}, "strict":
+  false, "type": "function", "description": "Look up one Marginalia order by its id, M- and four
+  digits. Returns status, dates, lines and amounts in cents."}
+ana@lab:~/agents$ rm -f requests.jsonl
 ana@lab:~/agents$ python hosts.py claude > /dev/null 2>&1; python wire.py
-/v1/messages
+/v1/messages?beta=true
   {"name": "mcp__shop__get_order", "description": "Look up one Marginalia order by its id, M- and
   four digits. Returns status, dates, lines and amounts in cents.", "input_schema": {"type":
   "object", "properties": {"order_id": {"title": "Order Id", "type": "string"}}, "required":
   ["order_id"], "title": "get_orderArguments"}}
+ana@lab:~/agents$ rm -f requests.jsonl
 ana@lab:~/agents$ python hosts.py google > /dev/null 2>&1; python wire.py
-/v1beta/models/scripted-1:generateContent
-  {"description": "<<<BEGIN_UNTRUSTED_TOOL_DESCRIPTION>>>\nLook up one Marginalia order by its id,
-  M- and four digits. Returns status, dates, lines and amounts in
-  cents.\n<<<END_UNTRUSTED_TOOL_DESCRIPTION>>>", "name": "get_order", "parameters_json_schema":
-  {"properties": {"order_id": {"title": "Order Id", "type": "string"}}, "required": ["order_id"],
-  "type": "object", "title": "get_orderArguments"}, "response_json_schema": {"properties":
-  {"result": {"title": "Result", "type": "string"}}, "required": ["result"], "type": "object",
-  "title": "get_orderOutput"}}
+/api/chat
+  {"type": "function", "function": {"name": "get_order", "description":
+  "<<<BEGIN_UNTRUSTED_TOOL_DESCRIPTION>>>\nLook up one Marginalia order by its id, M- and four
+  digits. Returns status, dates, lines and amounts in
+  cents.\n<<<END_UNTRUSTED_TOOL_DESCRIPTION>>>\nReturns a JSON object conforming to this schema: {\"
+  properties\":{\"result\":{\"title\":\"Result\",\"type\":\"string\"}},\"required\":[\"result\"],\"t
+  itle\":\"get_orderOutput\",\"type\":\"object\"}", "parameters": {"properties": {"order_id":
+  {"title": "Order Id", "type": "string"}}, "required": ["order_id"], "type": "object", "title":
+  "get_orderArguments"}}}
 ```
 
-Três formatos para uma ferramenta. A Chat Completions da OpenAI a embrulha como `{"type": "function", "function": {...}}` com `parameters`; a API de Messages da Anthropic chama o esquema de `input_schema`; a declaração da API do Gemini tem `parameters_json_schema` e, aqui, também um `response_json_schema`. Os nomes diferem (`mcp__shop__get_order` num deles), e também detalhes como `"strict": false`.
+Três formatos para uma ferramenta, em três caminhos do mesmo Ollama. O hospedeiro da OpenAI usou a Responses API, `/v1/responses`, em que uma ferramenta de função é um objeto plano com `parameters` e `"strict": false`. A CLI do hospedeiro Claude usou a API de Messages da Anthropic, que chama o esquema de `input_schema`. O hospedeiro do Google passou pelo LiteLLM até o `/api/chat` do próprio Ollama, que aninha a ferramenta como `{"type": "function", "function": {...}}` e não tem onde pôr o esquema de saída da ferramenta; por isso o ADK o escreveu na descrição, como uma frase. Os nomes também diferem (`mcp__shop__get_order` num deles).
 
 Nada disso é problema enquanto uma equipe escreve um agente com uma biblioteca. Vira problema quando uma empresa tem vários assistentes (o de um editor, o de um app de chat, o de um agente de suporte) e vários sistemas para oferecer a eles como ferramentas (pedidos, a central de ajuda, a fila de chamados). Sem um formato comum, **cada par precisa de um adaptador próprio**: três hospedeiros e dois fornecedores de ferramentas são seis peças de cola, cada uma mantida por alguém, cada uma um lugar onde uma mudança na ferramenta é esquecida.
 

@@ -1,20 +1,36 @@
 ---
-title: When the lab does not come up
-version: 1
+title: When the setup does not work
+version: 2
 ---
 
-`lab.sh` stops at the first command that fails (`set -euo pipefail`), so the last lines it printed name the step. These are the failures the script checks for, and the ones it cannot check for, in the order the build meets them.
+These are the failures met while this course was being recorded, each with what it printed. Most of them are one forgotten step, and the message says which once you know how to read it.
 
-**`python3 is required`, `npm is required`, `ip is required`, `openssl is required`.** The `need` step looks for the four programs before touching anything. On Ubuntu 24.04, `apt-get install python3 python3-venv nodejs npm iproute2 openssl` covers them; Node.js has to be version 22, which Ubuntu's own package is not, so install it from NodeSource or with `nvm`.
+```
+ana@lab:~/agents$ ANTHROPIC_BASE_URL=http://127.0.0.1:11435 python agent.py "Which ways can I pay?" 2>&1 | tail -n 1
+anthropic.APIConnectionError: Connection error.
+ana@lab:~/agents$ env -u ANTHROPIC_API_KEY -u ANTHROPIC_BASE_URL python agent.py "Which ways can I pay?" 2>&1 | tail -n 1
+TypeError: "Could not resolve authentication method. Expected one of api_key, auth_token, or credentials to be set. Or for one of the `X-Api-Key` or `Authorization` headers to be explicitly omitted"
+ana@lab:~/agents$ python3.11 -c "import shop; print(shop.search_help(\"returns\"))" 2>&1 | tail -n 1
+AttributeError: module 'math' has no attribute 'sumprod'
+ana@lab:~/agents$ ollama run llama3.2:3x "Hello"
+pulling manifest pulling manifest pulling manifest pulling manifest pulling manifest pulling manifest pulling manifest 
+Error: pull model manifest: file does not exist
+ana@lab:~/agents$ ollama ps
+NAME                 ID              SIZE      PROCESSOR          CONTEXT    RUNNER      UNTIL              
+all-minilm:latest    1b226e2802db    48 MB     56%/44% CPU/GPU    256        llamacpp    4 minutes from now    
+llama3.2:3b          a80c4f17acd5    3.5 GB    41%/59% CPU/GPU    8192       llamacpp    4 minutes from now    
+```
 
-**`embeddings-vectors' lab is required beside this course`.** The lab reads `minilm.py`, `help.jsonl` and `books.jsonl` from `../embeddings-vectors/lab`. If the course directory was copied on its own, copy that one next to it; nothing of that lab has to be built or running.
+**`APIConnectionError: Connection error.`** Nothing answered at the address the program was given. Here the address was the recorder's, and the recorder was not running; the same line appears when Ollama itself is stopped, and then `ollama --version` says so too, with `Warning: could not connect to a running Ollama instance` under the version. On Linux, `sudo systemctl start ollama` starts it; on macOS and Windows, open the Ollama application.
 
-**pip fails partway through the libraries.** Usually a network that cannot reach PyPI, or a Python other than 3.11 whose wheels for `onnxruntime` do not exist yet. The pins in `PYLIBS` are the versions every transcript was made with; changing one changes what the lessons print.
+**`Could not resolve authentication method`.** The library found no key, which means `ollama.env` did not reach this shell. Either the environment was activated before the file was appended to `.venv/bin/activate`, or this is a new terminal where `. .venv/bin/activate` was never typed. Without the base URL the program would also have gone to the provider's real address rather than to Ollama.
 
-**`sha256sum: WARNING: 1 computed checksum did NOT match`.** The embedding model downloaded from Chroma's bucket is not the file the course was recorded with. Do not edit the checksum to make it pass: delete the half-downloaded copy and run `up` again, and if it still differs, the bucket now serves a different file and the lesson's search scores will not match.
+**`module 'math' has no attribute 'sumprod'`.** A Python older than 3.12. `shop.py` uses `math.sumprod`, which arrived in 3.12; the line above ran 3.11 on purpose to show it. Inside the activated environment, `python --version` should say 3.12 or newer. On an older Ubuntu, install a newer Python before creating `.venv`, because a virtual environment keeps the Python it was created with.
 
-**`tiktoken` raises `ValueError` about a hash during `build_tokenizer`.** The encoding was rebuilt from js-tiktoken and tiktoken refused it, which means the npm package changed. The script pins `js-tiktoken@1.0.21` for this reason.
+**`pull model manifest: file does not exist`.** Ollama has no model by that name, and here the name was mistyped: `3x` for `3b`. `ollama list` shows the names you have, exactly as a program must spell them.
 
-**`labllm did not start; see /run/labllm.out`.** Read that file. `Address already in use` means something holds port 8600, often a labllm from an earlier build that was never stopped: `ss -ltnp | grep 8600` names the process, and `sudo bash lab.sh down` stops the lab's own.
+**The `CONTEXT` column of `ollama ps` says 4096.** The context setting did not take. Ollama reads it when it starts, so the service has to be restarted after the setting is written, and on Linux the setting has to be in the service's environment rather than your shell's. The symptom without this check is worse than an error: a long conversation loses its start, and the model answers as if Bia had never said who she was.
 
-**A program prints `[scripted-1 has no reply written for this conversation]`.** The lab works; the course has no rule for what was asked. labllm answers only the conversations the lessons script, so a question of your own reaches this reply. That is the honest limit of a stand-in, and `/var/log/labllm/requests.jsonl` shows exactly what it received.
+**A download stops halfway.** A model is a few gigabytes, and a connection that drops during `ollama pull` ends it with an error. Run the same `ollama pull` again: it resumes from what is already on the disk.
+
+**Installing Ollama by hand from its archive.** On Linux, the archive at `ollama.com/download` is compressed with zstd, and on a system without the `zstd` program `tar` stops with an error naming `unzstd`. `sudo apt install zstd` fixes it. The install script needs none of this, which is why it is the route above.

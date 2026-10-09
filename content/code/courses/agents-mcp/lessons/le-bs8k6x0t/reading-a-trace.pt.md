@@ -1,6 +1,6 @@
 ---
 title: Lendo uma execução de volta
-version: 1
+version: 2
 ---
 
 Um agente decide o caminho enquanto roda, então o único jeito de saber o que ele fez é ter anotado. O `react_native.py` acrescenta uma linha JSON por passo ao `trace.jsonl`, e o `show_trace.py` a imprime:
@@ -22,21 +22,17 @@ Para a execução do M-1047 da seção 05:
 
 ```
 ana@lab:~/agents$ python show_trace.py
-step 1  stop_reason=tool_use  input_tokens=184
-  said:     I need the order's delivery date and total before I can answer.
-  called:   get_order({"order_id": "M-1047"})
-  returned: {"id": "M-1047", "customer_id": "c-106", "placed_on": "2026-09-15", "sta
-step 2  stop_reason=tool_use  input_tokens=321
-  said:     Delivered on 18 September, so the window runs to 18 October; now the refund rules.
-  called:   search_help({"query": "refund after a return"})
-  returned: [{"title": "When your refund arrives", "body": "We refund within three w
-step 3  stop_reason=end_turn  input_tokens=544
-  said:     Yes. Order M-1047 was delivered on 18 September 2026, so both copies can be returned until 18 Oc
+step 1  stop_reason=tool_use  input_tokens=274
+  said:     
+  called:   search_help({"query": "returning books order M-1047 refund"})
+  returned: [{"title": "How to return a book", "body": "You have 30 days from delive
+step 2  stop_reason=end_turn  input_tokens=322
+  said:     To return the books in order M-1047, you have 30 days from delivery to return the printed books 
 ```
 
-Leia como você leria o raciocínio de qualquer pessoa. **Cada linha de `said` deve decorrer do `returned` acima dela.** A frase do passo 2 cita 18 de setembro, que está no resultado do passo 1; o prazo de reembolso do passo 3 está no resultado do passo 2. Um passo cujo pensamento menciona algo que nenhum resultado anterior contém é o primeiro lugar a olhar quando uma resposta está errada: é ali que o modelo forneceu um fato em vez de buscá-lo.
+Leia como você leria o raciocínio de qualquer pessoa. **Cada linha de `said` deve decorrer do `returned` acima dela.** O passo 1 não disse nada e buscou com o id do pedido dentro da consulta, `returning books order M-1047 refund`, como se a central de ajuda soubesse de pedidos. O passo 2 respondeu a partir do artigo de devoluções que recebeu. Nada no rastro menciona 18 de setembro, porque nenhum passo foi buscar essa data, e essa é a resposta para "por que ele não disse se estes livros podem voltar". Um passo cuja resposta menciona algo que nenhum resultado anterior contém é o primeiro lugar a olhar quando uma resposta está errada: é ali que o modelo forneceu um fato em vez de buscá-lo.
 
-O `input_tokens` mostra como o custo cresceu: 184, 321, 544, cada pedido carregando todos os anteriores. O `stop_reason` diz por que cada passo terminou, e o último tem de dizer `end_turn` numa execução que terminou direito. Qualquer outra coisa na última linha, `max_tokens` ou uma mensagem do hospedeiro, é uma execução que foi cortada.
+O `input_tokens` mostra como o custo cresceu: 274, depois 322, o segundo pedido carregando o primeiro mais a chamada e o resultado dela. É o prompt inteiro: o Ollama informa à parte o trecho que tinha em cache, e o `react_native.py` soma os dois de volta. O `stop_reason` diz por que cada passo terminou, e o último tem de dizer `end_turn` numa execução que terminou direito. Qualquer outra coisa na última linha, `max_tokens` ou uma mensagem do hospedeiro, é uma execução que foi cortada.
 
 ## O que um rastro deve guardar
 

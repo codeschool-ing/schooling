@@ -1,9 +1,9 @@
 ---
 title: Uma mensagem de cliente, três programas
-version: 1
+version: 2
 ---
 
-Bia, cliente da Marginalia, escreve: *"Hi, I am Bia. My order M-1042 arrived on 24 September. Can I still send it back?"* ("Oi, sou a Bia. Meu pedido M-1042 chegou em 24 de setembro. Ainda posso devolvê-lo?"). Aqui estão três programas respondendo a essa mensagem no laboratório, cada um fazendo o trabalho do jeito do seu tipo. **As palavras do modelo nesta seção foram escritas pelo curso**, como a seção 07 explica; os programas, os dados e a busca são reais.
+Bia, cliente da Marginalia, escreve: *"Hi, I am Bia. My order M-1042 arrived on 24 September. Can I still send it back?"* ("Oi, sou a Bia. Meu pedido M-1042 chegou em 24 de setembro. Ainda posso devolvê-lo?"). Aqui estão três programas respondendo a essa mensagem na máquina que a seção 03 montou, cada um fazendo o trabalho do jeito do seu tipo. O modelo é o `llama3.2:3b`, e as palavras dele abaixo são o que ele disse no dia em que esta aula foi gravada. **As suas vão sair com outras palavras**, e de vez em quando ele vai seguir outro caminho; isso é da natureza da coisa, e o fim desta seção volta a esse ponto.
 
 ## Automação
 
@@ -62,7 +62,7 @@ handbook = "\n\n".join(f"# {a['title']}\n{a['body']}" for a in articles)
 
 client = anthropic.Anthropic()
 reply = client.messages.create(
-    model="scripted-1",
+    model="llama3.2:3b",
     max_tokens=1024,
     system="You draft replies for Marginalia's support team. The help centre follows.\n\n" + handbook,
     messages=[{"role": "user", "content": sys.argv[1]}],
@@ -70,14 +70,23 @@ reply = client.messages.create(
 print(reply.content[0].text)
 ```
 
-Um pedido. O programa cola os quarenta artigos da central de ajuda no prompt de sistema, manda a mensagem da Bia e imprime o que volta:
+Um pedido. O programa cola os catorze artigos da central de ajuda no prompt de sistema, manda a mensagem da Bia e imprime o que volta:
 
 ```
 ana@lab:~/agents$ python assistant.py "Hi, I am Bia. My order M-1042 arrived on 24 September. Can I still send it back?"
-Draft reply: Hi Bia, printed books can be returned within 30 days of delivery, free of charge: start the return from the order in your account, print the prepaid label and drop the parcel at any post office. If M-1042 arrived on 24 September, you have until 24 October. [For the support team: I cannot see orders. Check the delivery date before sending this.]
+Hi Bia,
+
+According to our help centre, you have 30 days from delivery to return a printed book. Since your order arrived on 24 September, that means you have until 24 October to return it.
+
+Please go to the order in your account and follow the instructions for returning the book. Print the prepaid label and drop the parcel at any post office. Returns are free.
+
+If you have any issues or concerns with the return process, feel free to reach out to us and we'll be happy to assist you.
+
+Best,
+[Your Support Team]
 ```
 
-O rascunho é bom, e é cuidadoso com a única coisa que não podia saber. **Ele aceitou a data de entrega pela palavra da Bia**, porque não consegue ver pedidos, e diz isso a quem vai enviá-lo. Essa pessoa é a verificação: abre o pedido, vê o `delivered_on` e decide. O modelo escreveu; um humano age.
+O rascunho é bom: trinta dias a partir da entrega, então até 24 de outubro, e como mandar o pacote. **Ele aceitou a data de entrega pela palavra da Bia**, porque não enxerga pedidos, e nada no rascunho diz isso. Esse é o trabalho de quem envia: abrir o pedido, ver o `delivered_on` e decidir. O modelo escreveu; uma pessoa age.
 
 ## Agente
 
@@ -106,7 +115,7 @@ O rascunho é bom, e é cuidadoso com a única coisa que não podia saber. **Ele
       "note": "**A conversa começa com a mensagem da Bia**, e cresce uma resposta e um lote de resultados a cada passo."
     },
     {
-      "code": "for step in range(1, 6):\n    reply = client.messages.create(model=\"scripted-1\", max_tokens=1024, system=SYSTEM,\n                                   tools=TOOLS, messages=messages)\n    messages.append({\"role\": \"assistant\", \"content\": reply.content})\n    if reply.stop_reason != \"tool_use\":\n        print(f\"[{step}] answer: {reply.content[0].text}\")\n        break\n",
+      "code": "for step in range(1, 6):\n    reply = client.messages.create(model=\"llama3.2:3b\", max_tokens=1024, system=SYSTEM,\n                                   tools=TOOLS, messages=messages)\n    messages.append({\"role\": \"assistant\", \"content\": reply.content})\n    if reply.stop_reason != \"tool_use\":\n        print(f\"[{step}] answer: {reply.content[0].text}\")\n        break\n",
       "note": "**O laço.** Mandar tudo até aqui, ler a resposta e parar se o modelo não pediu ferramenta. Cinco passos no máximo, queira o modelo ou não."
     },
     {
@@ -120,25 +129,31 @@ O rascunho é bom, e é cuidadoso com a única coisa que não podia saber. **Ele
 ```
 ana@lab:~/agents$ python agent.py "Hi, I am Bia. My order M-1042 arrived on 24 September. Can I still send it back?"
 [1] get_order({"order_id": "M-1042"})
-[2] search_help({"query": "return a book"})
-[3] answer: Yes, Bia. Order M-1042 was delivered on 24 September 2026, and printed books can be returned within 30 days of delivery, so you have until 24 October. Start the return from the order in your account, print the prepaid label and drop the parcel at any post office. Returns are free.
+[2] answer: Hello Bia,
+
+According to the information provided, your order M-1042 was delivered on September 24, 2026. However, I don't have the exact date range during which returns are accepted.
+
+I recommend checking the website of the seller or the delivery company that brought your order to see if they have any specific return windows. If you're still unsure, you can also reach out to their customer service for assistance.
+
+Please note that even if you're able to return your order, it's always a good idea to contact the seller first to confirm their return policy and any potential restocking fees.
 ```
 
-Três pedidos ao modelo. No primeiro, ele pediu o pedido da loja; no segundo, com `delivered` e a data à frente, pediu o artigo de devolução; no terceiro, respondeu. **A data na resposta veio do banco de dados, não da Bia**, e essa é a diferença em relação ao rascunho do assistente.
+Dois pedidos ao modelo. No primeiro, ele pediu o pedido da loja; no segundo, com `delivered` e a data à frente, respondeu, e **a resposta está errada**. Ela diz que não conhece o prazo de devolução e manda a Bia procurar "o vendedor", quando o prazo é de trinta dias e a central de ajuda diz isso. Ele nunca buscou na central de ajuda. A data que ele cita veio do banco de dados e não da Bia, que é a única coisa que ele fez melhor que o assistente; tudo depois da data ele inventou.
+
+A seção 07 mostra por que este modelo parou depois de uma ferramenta, e não é falta de inteligência: no segundo pedido, o modelo já não enxergava as ferramentas. Por enquanto, guarde o formato da falha. **Um agente que age com base em fatos que nunca consultou é pior que um assistente cujo rascunho uma pessoa lê**, porque ninguém lê a resposta do agente antes da Bia.
 
 Dê ao mesmo programa duas outras mensagens e ele segue dois outros caminhos:
 
 ```
 ana@lab:~/agents$ python agent.py "My order M-1043 has not arrived yet. Where is it?"
 [1] get_order({"order_id": "M-1043"})
-[2] search_help({"query": "tracking a parcel"})
-[3] answer: Order M-1043 is on its way: it has shipped and has not been delivered yet. The carrier's tracking code is BR5512340003, and the tracking link in your shipping email updates at each step of the journey.
+[2] answer: Thank you for providing the order details. According to the tracking information, your order M-1043 was shipped on 2026-09-28, but it has not been delivered yet. The tracking number is BR5512340003. I recommend checking the tracking status periodically for updates on the delivery location and estimated arrival time. If you have any further concerns, please don't hesitate to contact us.
 ```
 
 ```
 ana@lab:~/agents$ python agent.py "Which ways can I pay?"
-[1] search_help({"query": "payment methods"})
-[2] answer: We accept Visa, Mastercard and American Express, PayPal, Pix and Marginalia gift cards. A card payment can be split into up to three instalments with no interest on orders over 120. We do not accept cash on delivery.
+[1] search_help({"query": "Payment methods"})
+[2] answer: We accept Visa, Mastercard, and American Express, PayPal, Pix, and Marginalia gift cards. If you have a gift card, enter the 16-digit code at checkout to use it towards your order. Please note that gift cards can be used to pay for part of an order and the rest can be paid with a card, with no interest on orders over $120. Gift cards are valid for two years from purchase and cannot be exchanged for cash. If you experience any issues with your payment being charged twice, please contact us with your order number and a bank statement to resolve the issue.
 ```
 
-**Nada no `agent.py` menciona rastreio, devolução ou pagamento.** No M-1043 o pedido voltou `shipped`, e o passo seguinte virou uma busca sobre rastreio; na pergunta de pagamento não havia pedido envolvido, então não houve consulta nenhuma, e dois pedidos bastaram. O caminho foi decidido na execução, pelo modelo, um passo depois do outro, e nenhum dos outros dois programas conseguia fazer isso.
+**Nada no `agent.py` menciona rastreio, devolução ou pagamento.** No M-1043 o passo seguinte foi o pedido, porque a mensagem citava um; na pergunta de pagamento não havia pedido envolvido, então o passo foi uma busca, e a resposta veio do artigo encontrado, com dois deslizes próprios: um cifrão que o artigo não tem e uma frase sobre cobrança em dobro que ninguém perguntou. O caminho foi decidido na hora, pelo modelo, e nenhum dos outros dois programas conseguiria isso. Se ele decidiu bem é a pergunta que o resto deste curso não para de fazer.

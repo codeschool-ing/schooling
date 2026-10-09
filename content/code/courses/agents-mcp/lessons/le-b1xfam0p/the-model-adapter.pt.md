@@ -1,6 +1,6 @@
 ---
 title: O modelo atrás de um método
-version: 1
+version: 2
 ---
 
 O laço precisa de quatro coisas de uma chamada ao modelo: o texto, as chamadas de ferramenta, por que parou e quantos tokens levou. Todo o resto sobre o fornecedor (o SDK, o formato do pedido, as classes de resposta) é detalhe que o laço não deveria conhecer. O `minagent` põe tudo isso atrás de um método.
@@ -30,11 +30,11 @@ O laço precisa de quatro coisas de uma chamada ao modelo: o texto, as chamadas 
       "note": "**A única classe que importa o SDK de um fornecedor.** Um adaptador para OpenAI ou Gemini seria outra classe com o mesmo método."
     },
     {
-      "code": "    def __init__(self, model=\"scripted-1\", max_tokens=1024, max_retries=2):\n        import anthropic\n        self.client = anthropic.Anthropic(max_retries=max_retries)\n        self.model, self.max_tokens = model, max_tokens\n\n",
+      "code": "    def __init__(self, model=\"llama3.2:3b\", max_tokens=1024, max_retries=2):\n        import anthropic\n        self.client = anthropic.Anthropic(max_retries=max_retries)\n        self.model, self.max_tokens = model, max_tokens\n\n",
       "note": "**O `max_retries` é passado direto ao SDK**; a seção 07 é sobre o que isso significa."
     },
     {
-      "code": "    def complete(self, system, messages, tools):\n        r = self.client.messages.create(model=self.model, max_tokens=self.max_tokens, system=system,\n                                        tools=tools, messages=messages)\n        return Reply(text=\"\".join(b.text for b in r.content if b.type == \"text\"),\n                     calls=[Call(b.id, b.name, b.input) for b in r.content if b.type == \"tool_use\"],\n                     stop=r.stop_reason, tokens_in=r.usage.input_tokens, tokens_out=r.usage.output_tokens,\n                     content=[b.model_dump(exclude_none=True) for b in r.content])\n\n",
+      "code": "    def complete(self, system, messages, tools):\n        r = self.client.messages.create(model=self.model, max_tokens=self.max_tokens, system=system,\n                                        tools=tools, messages=messages)\n        return Reply(text=\"\".join(b.text for b in r.content if b.type == \"text\"),\n                     calls=[Call(b.id, b.name, b.input) for b in r.content if b.type == \"tool_use\"],\n                     stop=r.stop_reason, tokens_out=r.usage.output_tokens,\n                     tokens_in=r.usage.input_tokens + (r.usage.cache_read_input_tokens or 0),\n                     content=[b.model_dump(exclude_none=True) for b in r.content])\n\n",
       "note": "**Um pedido, traduzido num `Reply`.** Blocos de texto são juntados, blocos `tool_use` viram `Call`s."
     }
   ]
@@ -49,4 +49,4 @@ O laço precisa de quatro coisas de uma chamada ao modelo: o texto, as chamadas 
 
 **Custo e roteamento.** Um segundo adaptador num modelo mais barato, escolhido por tarefa, é como a aula 18 corta custo sem tocar no laço.
 
-A costura não é perfeitamente limpa: o formato da conversa dentro do `Agent.run` é o da Anthropic (blocos `tool_use` e `tool_result`), então um adaptador para a OpenAI traduziria a conversa na ida, além da resposta na volta. O labllm faz exatamente essa tradução para os três protocolos dele, e são umas quarenta linhas; um adaptador de produção guardaria um tipo de mensagem neutro próprio. O `minagent` mantém o da Anthropic para continuar curto, e diz isso aqui.
+A costura não é perfeitamente limpa: o formato da conversa dentro do `Agent.run` é o da Anthropic (blocos `tool_use` e `tool_result`), então um adaptador para a OpenAI traduziria a conversa na ida, além da resposta na volta. O Ollama faz essa tradução dentro dele, e é assim que um único modelo respondeu a três protocolos na aula 4; um adaptador de produção guardaria, em vez disso, um tipo de mensagem neutro próprio. O `minagent` mantém o da Anthropic para continuar curto, e diz isso aqui.

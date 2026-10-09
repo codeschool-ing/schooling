@@ -1,44 +1,38 @@
 ---
 title: Caching the prefix
-version: 1
+version: 2
 ---
 
-Most of each request was text the provider had just read. Providers offer **prompt caching** for exactly that: mark the end of a prefix that does not change (`cache_control` in the Anthropic API), and the provider keeps it for a short time, so later requests that start with the same prefix read it from the cache. Cached reads are billed far below ordinary input and the first write somewhat above it; the exact multipliers are on the provider's page. labllm follows the same rule: a marked prefix of 1,024 tokens or more is written once and read for 300 seconds.
+Most of each request was text the model had just read. Hosted providers offer **prompt caching** for exactly that: mark the end of a prefix that does not change (`cache_control` in the Anthropic API), and the provider keeps it for a short time, so later requests that start with the same prefix read it from the cache. Cached reads are billed far below ordinary input and the first write somewhat above it; the exact multipliers, and how long a prefix is kept, are on the provider's page.
 
-`--cache` marks the end of the policy block. Two runs, one after the other:
+Ollama does something similar on its own. While a model stays loaded, it keeps what it computed for the last prompts it read, and a new request that starts with the same tokens skips them. That was the 847 in section 02. Run the same question again, then once more with `--cache`, which marks the end of the policy block the Anthropic way:
 
 ```
-ana@lab:~/agents$ python cost_run.py scripted-1 --cache
+ana@lab:~/agents$ python cost_run.py llama3.2:3b
 step   input  c.write  c.read  output     ms  stop
-   1      12     2347       0      10    632  tool_use
-       tool get_order: 1 ms
-   2     173        0    2347       8    570  tool_use
-       tool search_help: 314 ms
-   3     214        0    2347      75   3209  end_turn
-total     399     2347    4694      93   4726
-ana@lab:~/agents$ python cost_run.py scripted-1 --cache
+   1     162        0     847      18   3955  tool_use
+       tool search_help {"query": "Order status M-1043"}: 155 ms
+   2      73        0     847      35   4893  end_turn
+total     235        0    1694      53   9003
+ana@lab:~/agents$ python cost_run.py llama3.2:3b --cache
 step   input  c.write  c.read  output     ms  stop
-   1      12        0    2347      10    634  tool_use
-       tool get_order: 1 ms
-   2     173        0    2347       8    570  tool_use
-       tool search_help: 332 ms
-   3     214        0    2347      75   3209  end_turn
-total     399        0    7041      93   4747
+   1     162        0     847      17   3473  tool_use
+       tool get_order {"order_id": "M-1043"}: 1 ms
+   2     184        0     847      62   8801  end_turn
+total     346        0    1694      79  12275
 ```
 
-In the first run, request 1 **wrote** 2,347 tokens to the cache and requests 2 and 3 **read** them, so only 399 tokens across the run were ordinary input. The second run, inside the 300 seconds, read the prefix on its first request too: **no write at all**, 7,041 tokens read. The total is the same 7,440 tokens either way; what changes is how they are billed.
+Both runs reused the 847 tokens on **every** request, the first included, because the previous run had left them there. `--cache` changed nothing: Ollama accepts `cache_control` and ignores it, since it reuses whatever matches anyway. Notice the model too: one run searched the help centre, the other looked the order up. Same question, same prompt, two different paths; lesson 1 said the wording would differ, and here the choice of tool did.
 
-The cache keys on the **exact prefix**, from the first byte. The order is tools, then system prompt, then messages, so anything that changes near the front breaks it for everything after. `--stamp` puts the time of the request at the very top of the system prompt, which looks harmless:
+The reuse keys on the **exact prefix**, from the first token, for Ollama as for a provider's cache. Anything that changes near the front breaks it for everything after. `--stamp` puts the time of the request at the very top of the system prompt, which looks harmless:
 
 ```
-ana@lab:~/agents$ python cost_run.py scripted-1 --cache --stamp
+ana@lab:~/agents$ python cost_run.py llama3.2:3b --cache --stamp
 step   input  c.write  c.read  output     ms  stop
-   1      12     2358       0      10    637  tool_use
-       tool get_order: 1 ms
-   2     173     2358       0       8    577  tool_use
-       tool search_help: 381 ms
-   3     214     2358       0      75   3210  end_turn
-total     399     7074       0      93   4806
+   1    1004        0      15      17  11039  tool_use
+       tool search_help {"query": "order M-1043"}: 164 ms
+   2     905        0      21     245  36714  end_turn
+total    1909        0      36     262  47917
 ```
 
-Every request wrote the prefix again, **7,074 tokens written and none read**: more expensive than not caching at all, since writes cost more than ordinary input. A date, a request id, a user's name at the top of a system prompt: each one turns a cache into a cost. Put what changes **after** what does not, and keep the tool list in a fixed order (the 2026-07-28 revision of MCP asks servers to return tools in a deterministic order for this reason). Lesson 10's ADK warned about the same effect from the other side: every transfer between agents changes the system prompt and the tools, so the prefix starts over.
+Reuse fell to 15 and 21 tokens, and both requests read the whole prompt again: **1,909 tokens read**, against 235 and 346 in the runs above, and 47,917 ms, the slowest run in this lesson. With a hosted provider the same mistake is paid in money as well: every request writes the prefix again and reads none of it, which costs more than not caching at all. A date, a request id, a user's name at the top of a system prompt: each one turns a cache into a cost. Put what changes **after** what does not, and keep the tool list in a fixed order (the 2026-07-28 revision of MCP asks servers to return tools in a deterministic order for this reason). Lesson 10's ADK warned about the same effect from the other side: every transfer between agents changes the system prompt and the tools, so the prefix starts over.

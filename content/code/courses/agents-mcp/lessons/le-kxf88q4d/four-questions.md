@@ -1,6 +1,6 @@
 ---
 title: Four questions before building one
-version: 1
+version: 2
 ---
 
 Before writing a loop, answer four questions about the task. They take five minutes, and each one has an answer that rules an agent out.
@@ -11,7 +11,7 @@ Before writing a loop, answer four questions about the task. They take five minu
 
 **3. Can the result be checked?** An agent's answer is only as good as somebody's ability to tell whether it is right. Code that compiles and passes its tests is checkable. A refund amount can be compared with the order. "Is this a good summary of the supplier's new terms?" needs a person, and if that person must read the sources anyway, the agent saved less than it seemed.
 
-**4. Do the volume and the deadline allow it?** In section 05 the lab's agent spends 9.9 s of model time and 2551 input tokens on three messages, where the router spends 1.0 s and 130 tokens on four. For one research question a day that is irrelevant. For every message in a busy support queue, it is the bill and the queue.
+**4. Do the volume and the deadline allow it?** In section 05 the agent spends 37.4 s of model time and 1641 input tokens on three messages, where the router spends 2.0 s and 234 tokens on four. For one research question a day that is irrelevant. For every message in a busy support queue, it is the bill and the queue.
 
 | answer | points towards |
 |---|---|

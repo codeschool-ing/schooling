@@ -9,35 +9,26 @@
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab
 # (lab.sh reset); the files ana wrote (put below), which the lesson shows in
-# full; emptying labllm's log before the runs whose requests are read, done as
-# root because the log belongs to the labllm user; and the answers a person
-# typed at the approval prompts, fed on standard input; and removing the
-# session files the earlier blocks left, before the session block counts them.
+# full, each checked by lab/shown.py; and removing the session files the
+# earlier blocks left, before the session block counts them.
 #
-# THE MODEL'S WORDS AND DECISIONS IN THIS LESSON WERE WRITTEN BY THE COURSE,
-# as rules in lab/scripted/09-claude-agent-sdk.json. The Claude Agent SDK
-# (claude-agent-sdk 0.2.163, which bundles the Claude Code CLI 2.1.286), the
-# subprocess it starts, what that subprocess sent on the wire, its tool list,
-# its permission decisions and their messages, the hooks, the cost it
-# estimated, the turn limit and the session files are real. The CLI warns
-# once per run that it does not recognise the model name; that line goes to
-# standard error and is dropped below, and the lesson says so.
-# CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1 stops the CLI's own background
-# requests (update checks and the like), which would otherwise go to a
-# network this lab cannot reach.
+# THE MODEL IS REAL, AND IT IS qwen2.5:3b (357c53fb659c), not the course's
+# llama3.2:3b: through the Claude Code CLI, llama3.2:3b never called a tool,
+# because the CLI puts a system message after the user's and that model then
+# answers without its tools; the lesson says so. Ollama 0.40.0, 8192-token
+# context, captured on 2026-10-08. The Claude Agent SDK (claude-agent-sdk
+# 0.2.163, which bundles the Claude Code CLI), the subprocess it starts, what
+# it sent, its permission decisions, the hooks and the session files are
+# real. The CLI may warn that it does not recognise the model's name; such
+# lines go to standard error and are dropped below, and the lesson says so.
 #
-# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo, with LAB_TODAY=2026-10-06.
-set -uo pipefail
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
+# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "export CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1; { $*; } 2>&1 | grep -v 'unrecognized_model'" || true; }
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-block() { printf '##### %s\n' "$1"; }
-fresh_log() { : > /var/log/labllm/requests.jsonl; }
-exec 9>/var/tmp/agents-capture.lock; flock 9
-lab reset >/dev/null
+. ../../lab/capture.sh
+on() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "$SHELL_STATE export PYTHONUNBUFFERED=1; { $*; } 2>&1 | grep -v 'unrecognized_model'" < /dev/null || true; }
+# The recorder is started outside that filter, which would take it down with the pipe.
+recorder() { printf 'ana@lab:~/agents$ python recorder.py &\n'; lab exec 'python recorder.py > /dev/null 2>&1 &' < /dev/null; sleep 1; }
+lab exec 'ollama run qwen2.5:3b hello' < /dev/null >/dev/null 2>&1
 lab exec 'python -c "import shop; shop.search_help(\"warm up\")"' >/dev/null
 
 put cs_tools.py <<'PY'
@@ -114,7 +105,7 @@ SYSTEM = "You answer Marginalia's customers in the Claude Agent SDK lesson. Use 
 
 
 def options(how):
-    o = ClaudeAgentOptions(model="scripted-1", system_prompt=SYSTEM,
+    o = ClaudeAgentOptions(model="qwen2.5:3b", system_prompt=SYSTEM,
                            mcp_servers={"shop": shop_server},
                            allowed_tools=["mcp__shop__get_order", "mcp__shop__search_help"])
     if how in ("no-builtins", "isolated", "one-turn"):
@@ -138,14 +129,13 @@ anyio.run(main, sys.argv[1], sys.argv[2])
 PY
 
 put wire.py <<'PY'
-"""What each request in labllm's log carried: tools offered, their names, and tokens in."""
+"""What each request in the recorder's log carried: tools offered, their names, and tokens in."""
 import json
 
-for n, line in enumerate(open("/var/log/labllm/requests.jsonl"), 1):
+for n, line in enumerate(open("requests.jsonl"), 1):
     r = json.loads(line)
     tools = [t["name"] for t in r["request"].get("tools", [])]
-    u = r["usage"]
-    tokens_in = u["input_tokens"] + u.get("cache_creation_input_tokens", 0) + u.get("cache_read_input_tokens", 0)
+    tokens_in = r["usage"].get("input_tokens", 0)
     print(f"request {n}: {len(tools):2} tools, {tokens_in:6} tokens in  {', '.join(tools[:6])}"
           + (", ..." if len(tools) > 6 else ""))
 PY
@@ -184,7 +174,7 @@ async def audit_and_limit(hook_input, tool_use_id, context):
 
 
 async def main(how, task):
-    o = ClaudeAgentOptions(model="scripted-1", system_prompt=SYSTEM, mcp_servers={"shop": shop_server},
+    o = ClaudeAgentOptions(model="qwen2.5:3b", system_prompt=SYSTEM, mcp_servers={"shop": shop_server},
                            tools=[], setting_sources=[], allowed_tools=["mcp__shop__get_order"])
     if how == "dont-ask":
         o.permission_mode = "dontAsk"
@@ -214,7 +204,7 @@ SYSTEM = "You answer Marginalia's customers in the Claude Agent SDK lesson."
 
 
 async def turn(text, resume=None):
-    o = ClaudeAgentOptions(model="scripted-1", system_prompt=SYSTEM, mcp_servers={"shop": shop_server},
+    o = ClaudeAgentOptions(model="qwen2.5:3b", system_prompt=SYSTEM, mcp_servers={"shop": shop_server},
                            tools=[], setting_sources=[], resume=resume,
                            allowed_tools=["mcp__shop__get_order", "mcp__shop__search_help"])
     session = None
@@ -238,35 +228,36 @@ block bundled
 on 'CLI=$(python -c "import claude_agent_sdk, pathlib; print(pathlib.Path(claude_agent_sdk.__file__).parent / \"_bundled/claude\")"); du -h $CLI; $CLI --version'
 
 block first-run
-fresh_log
-on 'python cs_run.py default "Where is my order M-1043?"'
+recorder
+say 'export ANTHROPIC_BASE_URL=http://127.0.0.1:11435 CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1'
+on 'timeout 300 python cs_run.py default "Where is my order M-1043?"'
 
 block first-wire
 on 'python wire.py'
 
 block no-builtins
-fresh_log
+on 'rm -f requests.jsonl'
 on 'python cs_run.py no-builtins "Where is my order M-1043?"'
 on 'python wire.py'
 
 block claude-md
 printf 'Sign every reply as "The Marginalia team".\n' | put CLAUDE.md
 on 'cat CLAUDE.md'
-fresh_log
-on 'python cs_run.py no-builtins "Where is my order M-1043?" > /dev/null; python wire.py; grep -c "The Marginalia team" /var/log/labllm/requests.jsonl'
-fresh_log
-on 'python cs_run.py isolated "Where is my order M-1043?" > /dev/null; python wire.py; grep -c "The Marginalia team" /var/log/labllm/requests.jsonl'
+on 'rm -f requests.jsonl'
+on 'python cs_run.py no-builtins "Where is my order M-1043?" > /dev/null; python wire.py; grep -c "The Marginalia team" requests.jsonl'
+on 'rm -f requests.jsonl'
+on 'python cs_run.py isolated "Where is my order M-1043?" > /dev/null; python wire.py; grep -c "The Marginalia team" requests.jsonl'
 lab exec 'rm CLAUDE.md'
 
 block auto
-fresh_log
-on 'python cs_refund.py default "One copy of M-1047 arrived damaged; please refund it."'
-on "python -c 'import json; [print(r[\"status\"], r[\"request\"][\"model\"], r[\"request\"][\"system\"][1][\"text\"].splitlines()[0]) for r in map(json.loads, open(\"/var/log/labllm/requests.jsonl\"))]' | sort | uniq -c"
+on 'rm -f requests.jsonl'
+on 'python cs_refund.py default "Please refund the whole order M-1047."'
+on "python -c 'import json; [print(r[\"status\"], r[\"request\"][\"model\"], r[\"request\"][\"system\"][1][\"text\"].splitlines()[0]) for r in map(json.loads, open(\"requests.jsonl\"))]' | sort | uniq -c"
 
 block dont-ask
-fresh_log
-on 'python cs_refund.py dont-ask "One copy of M-1047 arrived damaged; please refund it."'
-on "python -c 'import json; [print(b[\"content\"]) for r in map(json.loads, open(\"/var/log/labllm/requests.jsonl\")) for m in r[\"request\"][\"messages\"] if isinstance(m[\"content\"], list) for b in m[\"content\"] if b.get(\"type\") == \"tool_result\"]' | head -1"
+on 'rm -f requests.jsonl'
+on 'python cs_refund.py dont-ask "Please refund the whole order M-1047."'
+on "python -c 'import json; [print(b[\"content\"]) for r in map(json.loads, open(\"requests.jsonl\")) for m in r[\"request\"][\"messages\"] if isinstance(m[\"content\"], list) for b in m[\"content\"] if b.get(\"type\") == \"tool_result\"]' | head -1"
 
 block ask
 on 'echo n | python cs_refund.py ask "One copy of M-1047 arrived damaged; please refund it."'

@@ -1,6 +1,6 @@
 ---
 title: Errors are results
-version: 1
+version: 2
 ---
 
 A tool that fails has two ways to fail: it can take the host down with it, or it can tell the model what went wrong. Only the second gives the model a chance to recover, and only the second leaves the run in a state anybody can explain.
@@ -8,10 +8,12 @@ A tool that fails has two ways to fail: it can take the host down with it, or it
 ```
 ana@lab:~/agents$ python agent.py "What happened to my order M-9999?"
 [1] get_order({"order_id": "M-9999"}) -> ERROR LookupError: no order M-9999
-[2] answer: I cannot find an order M-9999. Could you check the number in your confirmation email? It starts with M- and has four digits.
+[2] answer: It appears that the order M-9999 does not exist in our database. I couldn't find any information about an order with that specific ID. If you could provide more context or details about the order, such as the date or time it was placed, I may be able to help you better.
+
+Alternatively, you can also try checking the order status by contacting our customer service team directly. They will be able to look up the order and provide you with the most up-to-date information.
 ```
 
-`M-9999` matched the pattern, so the schema let it through, and `get_order` raised `LookupError: no order M-9999`. `run_tool` caught it and returned the message as an error. The model, scripted by the course for this case, did the useful thing: it told the customer the order was not found and what an order number looks like. **Nothing crashed, nothing was guessed, and the customer has something to do next.**
+`M-9999` matched the pattern, so the schema let it through, and `get_order` raised `LookupError: no order M-9999`. `run_tool` caught it and returned the message as an error. The model read it and did the useful thing: it told the customer the order does not exist and asked for something to find it by. **Nothing crashed, and the customer has something to do next.** It also sent the customer to "our customer service team", which is what this agent is; an error gives the model the facts, and what it makes of them is still the model's.
 
 ## What goes in an error
 
@@ -25,4 +27,4 @@ ana@lab:~/agents$ python agent.py "What happened to my order M-9999?"
 
 ## `is_error` is a signal, not decoration
 
-Anthropic's API has an `is_error` field on `tool_result`; OpenAI's and Google's tool messages have no such field, and the convention there is to put the error in the content, often as `{"error": "..."}`. Either way the point is the same: the model must be able to tell a failure from data. A result of `"no order M-9999"` with no marker could be read as an order whose status is that sentence.
+Anthropic's API has an `is_error` field on `tool_result`; OpenAI's and Google's tool messages have no such field, and neither has Ollama's own, and the convention there is to put the error in the content, often as `{"error": "..."}`. Either way the point is the same: the model must be able to tell a failure from data. A result of `"no order M-9999"` with no marker could be read as an order whose status is that sentence.

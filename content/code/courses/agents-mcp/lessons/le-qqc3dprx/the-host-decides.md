@@ -1,6 +1,6 @@
 ---
 title: The host decides
-version: 1
+version: 2
 ---
 
 The specification gives the host a list of jobs: creating and managing clients, controlling their permissions and lifecycle, enforcing security policies and consent, handling the person's authorisation decisions, coordinating the model, and aggregating context across clients. Every finding in this lesson sits on that list:
@@ -8,7 +8,7 @@ The specification gives the host a list of jobs: creating and managing clients, 
 | what was seen | whose decision |
 |---|---|
 | the server ran as ana, with her files | the host starts the server; the person installs it |
-| it received 4 environment variables, or 35 with three API keys | the host's client, and the configuration it accepts |
+| it received 4 environment variables, or 31 with two API keys | the host's client, and the configuration it accepts |
 | it saw only the call's arguments | the host, which decides what goes in a request |
 | the clients declared different capabilities | each host, for what it can do on a server's behalf |
 | two tools with one name: refused, renamed, or silently shadowed | the host |

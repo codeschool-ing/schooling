@@ -1,9 +1,9 @@
 ---
 title: The Agents SDK in one screen
-version: 1
+version: 2
 ---
 
-The OpenAI Agents SDK (`openai-agents` on PyPI, imported as `agents`; this lab pins 0.23.1) has three objects you meet first: **`Agent`**, which is configuration (a name, instructions, a model, tools); **`Runner`**, which runs the loop; and **`function_tool`**, which turns a Python function into a tool. Lesson 7 wrote the same three as `Agent`, `Agent.run` and `@tool`.
+The OpenAI Agents SDK (`openai-agents` on PyPI, imported as `agents`; lesson 1 pins 0.23.1) has three objects you meet first: **`Agent`**, which is configuration (a name, instructions, a model, tools); **`Runner`**, which runs the loop; and **`function_tool`**, which turns a Python function into a tool. Lesson 7 wrote the same three as `Agent`, `Agent.run` and `@tool`.
 
 ```python
 """Marginalia's tools for the OpenAI Agents SDK: shop.py's functions, decorated."""
@@ -41,22 +41,18 @@ The decorator reads the type hints and the docstring, like lesson 7's. Pydantic'
   "file": "oa_run.py",
   "parts": [
     {
-      "code": "\"\"\"A first agent with the OpenAI Agents SDK, pointed at the lab's stand-in provider.\"\"\"\nimport sys\n\n"
+      "code": "\"\"\"A first agent with the OpenAI Agents SDK, pointed at Ollama.\"\"\"\nimport sys\n\n"
     },
     {
-      "code": "from agents import Agent, MaxTurnsExceeded, Runner, set_default_openai_api, set_tracing_disabled\n\nfrom oa_tools import get_order, search_help\n\n",
+      "code": "from agents import Agent, MaxTurnsExceeded, Runner, set_tracing_disabled\n\nfrom oa_tools import get_order, search_help\n\n",
       "note": "**Four names from the SDK**, and an exception for the step limit."
-    },
-    {
-      "code": "set_default_openai_api(\"chat_completions\")  # labllm speaks Chat Completions, not the Responses API\n",
-      "note": "**The one concession to the lab.** The SDK talks to OpenAI's Responses API by default, and labllm implements Chat Completions; this line switches the SDK to Chat Completions. With a real OpenAI key you would leave it out."
     },
     {
       "code": "set_tracing_disabled(True)                    # traces would go to OpenAI's servers; section 08 keeps them here\n\n",
       "note": "**Tracing is on by default and sends spans to OpenAI's servers.** Here there is nowhere to send them; section 10 keeps them on the machine instead."
     },
     {
-      "code": "support = Agent(\n    name=\"Marginalia support\",\n    instructions=\"You answer Marginalia's customers with the OpenAI Agents SDK. Use the tools; never guess.\",\n    model=\"scripted-1\",\n    tools=[get_order, search_help],\n)\n\ntry:\n",
+      "code": "support = Agent(\n    name=\"Marginalia support\",\n    instructions=\"You answer Marginalia's customers with the OpenAI Agents SDK. Use the tools; never guess.\",\n    model=\"llama3.2:3b\",\n    tools=[get_order, search_help],\n)\n\ntry:\n",
       "note": "**An agent is configuration**: name, instructions, model, tools."
     },
     {
@@ -76,16 +72,16 @@ The decorator reads the type hints and the docstring, like lesson 7's. Pydantic'
 ```
 
 ```
+ana@lab:~/agents$ python recorder.py &
+ana@lab:~/agents$ export OPENAI_BASE_URL=http://127.0.0.1:11435/v1
 ana@lab:~/agents$ python oa_run.py "Where is my order M-1043?"
-ToolCallItem         ResponseFunctionToolCall(arguments='{"order_id": "M-1043"}', call_id='
-ToolCallOutputItem   {'call_id': 'call_lab_0002_1', 'output': "{'id': 'M-1043', 'customer_i
-ToolCallItem         ResponseFunctionToolCall(arguments='{"query": "tracking a parcel"}', c
-ToolCallOutputItem   {'call_id': 'call_lab_0003_1', 'output': "[{'title': 'Tracking a parce
-MessageOutputItem    ResponseOutputMessage(id='__fake_id__', content=[ResponseOutputText(an
-answer: Order M-1043 has shipped and is on its way; its tracking code is BR5512340003, and the tracking link in your shipping email updates at each step of the journey.
+ToolCallItem         ResponseFunctionToolCall(arguments='{"order_id":"M-1043"}', call_id='c
+ToolCallOutputItem   {'call_id': 'call_stnqmgl7', 'output': "{'id': 'M-1043', 'customer_id'
+MessageOutputItem    ResponseOutputMessage(id='msg_499255', content=[ResponseOutputText(ann
+answer: Your order M-1043 has been shipped and has a tracking number BR5512340003. The order was placed on 2026-09-28 and contains the books b13, b14, and b26. The total cost of the order is 11070 cents. You can use the tracking number to track the status of your order. If you have any further questions or concerns, please don't hesitate to reach out.
 ```
 
-**The model's calls and answer were written by the course** as rules for the stand-in; everything else is the SDK. The run is lesson 1's agent: a lookup, a search, an answer. What the SDK adds is visible in the items: a `ToolCallItem` for each call, a `ToolCallOutputItem` for each result and a `MessageOutputItem` for the answer, each tied to the agent that produced it. `result.final_output` is the answer's text.
+The recorder from lesson 1 sits in front of Ollama for the whole lesson, and `OPENAI_BASE_URL` points the SDK at it. The SDK speaks OpenAI's newer **Responses API** by default, and Ollama answers that one too, so nothing in the program had to change for a local model. The run is lesson 1's agent, as `llama3.2:3b` runs it: a lookup and an answer. What the SDK adds is visible in the items: a `ToolCallItem` for the call, a `ToolCallOutputItem` for its result and a `MessageOutputItem` for the answer, each tied to the agent that produced it. `result.final_output` is the answer's text, and it reports the total in cents, `11070 cents`, because that is what the result said.
 
 | lesson 7 (`minagent`) | Agents SDK |
 |---|---|

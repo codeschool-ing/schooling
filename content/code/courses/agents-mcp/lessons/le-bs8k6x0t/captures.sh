@@ -9,27 +9,17 @@
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab
 # (lab.sh reset) and the files ana wrote (put below), which the lesson shows
-# in full.
+# in full, each checked against it by lab/shown.py.
 #
-# THE MODEL'S WORDS AND DECISIONS IN THIS LESSON WERE WRITTEN BY THE COURSE,
-# as rules in lab/scripted/03-*.json. That includes the observation the model
-# invents in react_text.py's first run: the course wrote a reply that carries
-# a made-up Observation line, to show what a stop sequence is for. The
-# parsing, the stop sequence, the tools, their results, the trace and the
-# repeat guard are real.
+# THE MODEL IS REAL: llama3.2:3b (a80c4f17acd5) in Ollama 0.40.0, with an
+# 8192-token context, captured on 2026-10-08. Its thoughts, its actions and
+# the observations it invents are what it wrote that day.
 #
-# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo, with LAB_TODAY=2026-10-06.
-set -uo pipefail
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
+# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-block() { printf '##### %s\n' "$1"; }
-exec 9>/var/tmp/agents-capture.lock; flock 9
-lab reset >/dev/null
+. ../../lab/capture.sh
 lab exec 'python -c "import shop; shop.search_help(\"warm up\")"' >/dev/null
+lab exec 'ollama run llama3.2:3b hello' < /dev/null >/dev/null 2>&1
 
 put react_text.py <<'PY'
 """ReAct in plain text: the model writes Thought and Action lines, and the program parses them."""
@@ -59,7 +49,7 @@ STOP = ["Observation:"] if "--stop" in sys.argv else []
 client = anthropic.Anthropic()
 transcript = "Question: " + sys.argv[1] + "\n"
 for step in range(1, 6):
-    reply = client.messages.create(model="scripted-1", max_tokens=400, system=PROMPT,
+    reply = client.messages.create(model="llama3.2:3b", max_tokens=400, system=PROMPT,
                                    messages=[{"role": "user", "content": transcript}],
                                    stop_sequences=STOP)
     text = reply.content[0].text.rstrip()
@@ -69,6 +59,8 @@ for step in range(1, 6):
     if answer:
         break
     action = re.search(r"^Action: (\w+)\[(.*)\]", text, re.M)
+    if not action:   # neither an Action nor an Answer line: the reply is all there is
+        break
     observation = json.dumps(TOOLS[action.group(1)](action.group(2)))
     print(f"Observation: {observation[:100]}")
     transcript += text + f"\nObservation: {observation}\n"
@@ -108,10 +100,10 @@ messages = [{"role": "user", "content": sys.argv[1]}]
 seen = set()
 with open("trace.jsonl", "w") as trace:
     for step in range(1, 7):
-        reply = client.messages.create(model="scripted-1", max_tokens=1024, system=SYSTEM,
+        reply = client.messages.create(model="llama3.2:3b", max_tokens=1024, system=SYSTEM,
                                        tools=TOOLS, messages=messages)
         messages.append({"role": "assistant", "content": reply.content})
-        record = {"step": step, "stop_reason": reply.stop_reason, "input_tokens": reply.usage.input_tokens,
+        record = {"step": step, "stop_reason": reply.stop_reason, "input_tokens": reply.usage.input_tokens + (reply.usage.cache_read_input_tokens or 0),
                   "text": " ".join(b.text for b in reply.content if b.type == "text"), "calls": []}
         results = []
         for block in reply.content:
@@ -152,10 +144,100 @@ on 'python react_native.py "Can I still return the books in order M-1047, and ho
 block native-trace
 on 'python show_trace.py'
 
+put tokens.py <<'PY'
+"""tokens.py: how many tokens llama3.2:3b reads in the text on standard input, counted by Ollama."""
+import json
+import sys
+import urllib.request
+
+
+def count(text, model="llama3.2:3b"):
+    body = {"model": model, "prompt": text, "raw": True, "stream": False, "options": {"num_predict": 1}}
+    req = urllib.request.Request("http://127.0.0.1:11434/api/generate", json.dumps(body).encode(),
+                                 {"Content-Type": "application/json"})
+    with urllib.request.urlopen(req) as r:
+        return json.load(r)["prompt_eval_count"]
+
+
+if __name__ == "__main__":
+    print(count(sys.stdin.read()))
+PY
+
 block observation-size
-on "python -c 'import json, shop, tiktoken; enc = tiktoken.get_encoding(\"o200k_base\"); o = shop.get_order(\"M-1047\"); small = {k: o[k] for k in (\"status\", \"delivered_on\", \"total\")}; print(len(enc.encode(json.dumps(o))), len(enc.encode(json.dumps(small))))'"
-on "python -c 'import json, shop, tiktoken; enc = tiktoken.get_encoding(\"o200k_base\"); print(len(enc.encode(json.dumps(shop.search_help(\"refund after a return\")))))'"
+on 'python -c "import json, shop; print(json.dumps(shop.get_order(\"M-1047\")))" | python tokens.py'
+on 'python -c "import json, shop; o = shop.get_order(\"M-1047\"); print(json.dumps({k: o[k] for k in (\"status\", \"delivered_on\", \"total\")}))" | python tokens.py'
+on 'python -c "import json, shop; print(json.dumps(shop.search_help(\"refund after a return\")))" | python tokens.py'
 
 block loop
 on 'python react_native.py "Do you sell signed first editions of Dom Casmurro?"'
+on 'python show_trace.py'
+
+put standin.py <<'PY'
+"""standin.py REPLIES.json: a stand-in model. It answers Anthropic's Messages API with replies written in advance.
+
+It has no model in it. REPLIES.json maps a phrase to the list of replies a
+conversation gets, one per step: the first user message that contains the
+phrase picks the list, and the number of assistant turns so far picks the
+reply. A reply is {"text": ...}, {"tool": NAME, "input": {...}}, or a list of
+those, sent as one message. Point a program at http://127.0.0.1:11436.
+"""
+import json
+import sys
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+REPLIES = json.load(open(sys.argv[1]))
+
+
+def text_of(message):
+    c = message["content"]
+    return c if isinstance(c, str) else " ".join(b.get("text", "") for b in c)
+
+
+class StandIn(BaseHTTPRequestHandler):
+    def do_POST(self):
+        req = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
+        first = text_of(req["messages"][0])
+        step = sum(1 for m in req["messages"] if m["role"] == "assistant")
+        script = next((r for phrase, r in REPLIES.items() if phrase in first), None)
+        if script is None or step >= len(script):
+            return self.reply(400, {"type": "error", "error": {
+                "type": "invalid_request_error", "message": "standin.py has no reply written for this step"}})
+        planned = script[step] if isinstance(script[step], list) else [script[step]]
+        content = [{"type": "text", "text": p["text"]} if "text" in p else
+                   {"type": "tool_use", "id": f"toolu_{step}_{n}", "name": p["tool"], "input": p["input"]}
+                   for n, p in enumerate(planned)]
+        uses_tool = any(b["type"] == "tool_use" for b in content)
+        self.reply(200, {"id": f"msg_standin_{step}", "type": "message", "role": "assistant",
+                         "model": req["model"], "content": content,
+                         "stop_reason": "tool_use" if uses_tool else "end_turn", "stop_sequence": None,
+                         "usage": {"input_tokens": 0, "output_tokens": 0}})   # it counts nothing
+
+    def reply(self, status, body):
+        data = json.dumps(body).encode()
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(data)))
+        self.end_headers()
+        self.wfile.write(data)
+
+    def log_message(self, *args):
+        pass
+
+
+ThreadingHTTPServer(("127.0.0.1", 11436), StandIn).serve_forever()
+PY
+
+put loop.json <<'JSON'
+{"signed first editions": [
+  [{"text": "The help centre should say whether signed copies are sold."},
+   {"tool": "search_help", "input": {"query": "signed copies"}}],
+  [{"text": "Those articles do not mention signed copies; I will search for signed copies."},
+   {"tool": "search_help", "input": {"query": "signed copies"}}]
+]}
+JSON
+
+block standin-loop
+on 'python standin.py loop.json &'
+sleep 1
+on 'ANTHROPIC_BASE_URL=http://127.0.0.1:11436 python react_native.py "Do you sell signed first editions of Dom Casmurro?"'
 on 'python show_trace.py'

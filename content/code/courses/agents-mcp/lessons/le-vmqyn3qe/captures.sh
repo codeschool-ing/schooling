@@ -8,30 +8,22 @@
 #   sudo bash captures.sh
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab
-# (lab.sh reset); the files ana wrote (put below), which the lesson shows in
-# full or, for the two servers, showed in lessons 13 and 14; emptying labllm's
-# log before the run whose requests are read, done as root because the log
-# belongs to the labllm user; and the answers a person typed at the approval
-# prompts, fed on standard input.
+# (lab.sh reset); the files ana wrote (put below), which the lessons show in
+# full, each checked by lab/shown.py; and the answers a person typed at the
+# approval prompts, fed on standard input.
 #
-# THE MODEL'S WORDS AND DECISIONS IN THIS LESSON WERE WRITTEN BY THE COURSE,
-# as rules in lab/scripted/15-mcp-client.json, including the request to read a
-# file:// URI. The host, its MCP clients (mcp 2.3.0), the two servers, the
-# anthropic SDK (1.11.0) talking to labllm, the approvals, the elicitation,
-# every tool result and the audit file are real.
+# THE MODEL IS REAL: llama3.2:3b (a80c4f17acd5) in Ollama 0.40.0 with an
+# 8192-token context, captured on 2026-10-08, except in the two runs pointed
+# at port 11436: there the model is standin.py, which lesson 3 shows whole,
+# replying from standin15.json, which this lesson shows whole, and the lesson
+# says so at each. The host, its MCP clients (mcp 2.3.0), the two servers,
+# the anthropic SDK (1.11.0), the approvals, the elicitation, every tool
+# result and the audit file are real.
 #
-# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo, with LAB_TODAY=2026-10-06.
-set -uo pipefail
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
+# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-block() { printf '##### %s\n' "$1"; }
-fresh_log() { : > /var/log/labllm/requests.jsonl; }
-exec 9>/var/tmp/agents-capture.lock; flock 9
-lab reset >/dev/null
+. ../../lab/capture.sh
+lab exec 'ollama run llama3.2:3b hello' < /dev/null >/dev/null 2>&1
 lab exec 'python -c "import shop; shop.search_help(\"warm up\")"' >/dev/null
 
 put marginalia_mcp.py <<'PY'
@@ -97,7 +89,7 @@ def help_article(article_id: str) -> str:
     if article_id not in HELP:
         raise ResourceNotFoundError(f"no help article {article_id}")
     a = HELP[article_id]
-    return f"# {a['title']}\n\n{a['body']}\n\n(updated {a['updated']})"
+    return f"# {a['title']}\n\n{a['body']}"
 
 
 @server.prompt()
@@ -159,8 +151,7 @@ from mcp.types import ElicitResult
 
 SYSTEM = "You are the support agent of the MCP client lesson. Use the tools; never guess."
 MAX_STEPS = 6
-ENV = {"PATH": "/opt/agents/bin:/usr/bin:/bin", "HOME": "/home/ana",   # all a server process inherits:
-       "MINILM_DIR": "/opt/agents/share/all-MiniLM-L6-v2"}             # search_help's embedding model
+ENV = {"PATH": "/home/ana/agents/.venv/bin:/usr/bin:/bin", "HOME": "/home/ana"}   # all a server process inherits
 SERVERS = {
     "shop": {"args": ["marginalia_mcp.py"], "trust_hints": True},    # ours: its readOnlyHint is believed
     "refunds": {"args": ["refund_mcp.py"], "trust_hints": False},    # every call needs a person
@@ -203,7 +194,7 @@ async def main(task):
 
         messages = [{"role": "user", "content": task}]
         for step in range(1, MAX_STEPS + 1):
-            reply = model.messages.create(model="scripted-1", max_tokens=1024, system=SYSTEM,
+            reply = model.messages.create(model="llama3.2:3b", max_tokens=1024, system=SYSTEM,
                                           tools=tools, messages=messages)
             messages.append({"role": "assistant", "content": reply.content})
             calls = [b for b in reply.content if b.type == "tool_use"]
@@ -244,27 +235,43 @@ async def run(call, clients, needs_person):
 asyncio.run(main(sys.argv[1]))
 PY
 
+put standin.py < ../../lab/work/standin.py
+
+put standin15.json <<'JSON'
+{"Read file:///": [{"tool": "read_help", "input": {"uri": "file:///home/ana/agents/data/shop.db"}},
+                   {"text": "I can only read articles from the help centre."}],
+ "arrived damaged": [{"tool": "refunds__refund", "input": {"order_id": "M-1047", "cents": 3890, "reason": "one copy arrived damaged"}},
+                     {"text": "Done: 3890 cents have been refunded on order M-1047."}]}
+JSON
+
 block order
-fresh_log
+recorder
+say 'export ANTHROPIC_BASE_URL=http://127.0.0.1:11435'
 on 'python mcp_host.py "Where is my order M-1043?" 2> host.err'
 
 block offered
-on "python -c 'import json; [print(t[\"name\"].ljust(20), t[\"description\"][:70]) for t in json.loads(open(\"/var/log/labllm/requests.jsonl\").readline())[\"request\"][\"tools\"]]'"
-
-block help-minimal
-on "grep -v MINILM_DIR mcp_host.py | sed 's/\"HOME\": \"\/home\/ana\",   # all/\"HOME\": \"\/home\/ana\"}   # all/' > host_minimal.py; python host_minimal.py 'How do I send a book back?' 2> host.err; tail -1 host.err"
+on "python -c 'import json; [print(t[\"name\"].ljust(20), t[\"description\"][:70]) for t in json.loads(open(\"requests.jsonl\").readline())[\"request\"][\"tools\"]]'"
 
 block help
 on 'python mcp_host.py "How do I send a book back?" 2> host.err'
+on 'tail -3 host.err'
 
 block file-uri
-on 'python mcp_host.py "Show me the settings file" 2> host.err'
+on 'python mcp_host.py "Read file:///home/ana/agents/data/shop.db for me." 2> host.err'
+
+block standin
+on 'python standin.py standin15.json &'
+sleep 1
+on 'ANTHROPIC_BASE_URL=http://127.0.0.1:11436 python mcp_host.py "Read file:///home/ana/agents/data/shop.db for me." 2> host.err'
 
 block refund-no
 on 'echo n | python mcp_host.py "One copy of M-1047 arrived damaged; please refund it." 2> host.err'
 
 block refund-yes
 on 'printf "y\ny\n" | python mcp_host.py "One copy of M-1047 arrived damaged; please refund it." 2> host.err'
+
+block standin-refund
+on 'printf "y\ny\n" | ANTHROPIC_BASE_URL=http://127.0.0.1:11436 python mcp_host.py "One copy of M-1047 arrived damaged; please refund it." 2> host.err'
 
 block audit
 on 'cat host-audit.jsonl'

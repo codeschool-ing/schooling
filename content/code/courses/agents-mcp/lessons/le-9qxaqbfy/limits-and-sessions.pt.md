@@ -1,6 +1,6 @@
 ---
 title: Limites de turnos, e sessões em disco
-version: 1
+version: 2
 ---
 
 ## O limite de turnos
@@ -9,9 +9,9 @@ version: 1
 ana@lab:~/agents$ python cs_run.py one-turn "Where is my order M-1043?"
 system     init tools=3
 assistant  tool_use mcp__shop__get_order {'order_id': 'M-1043'}
-system     informational
 user       tool_result {"id": "M-1043", "customer_id": "c-102", "placed_on": "2026-09-28", "status": "shipped", "
-result     error_max_turns turns=2 378 ms cost_usd=0.0018 session=eecf2e5e
+system     informational
+result     error_max_turns turns=2 5968 ms cost_usd=0.0018 session=3109c2c9
 raised     ResultError: Claude Code returned an error result: Reached maximum number of turns (1) (exit code: 1)
 ```
 
@@ -35,7 +35,7 @@ SYSTEM = "You answer Marginalia's customers in the Claude Agent SDK lesson."
 
 
 async def turn(text, resume=None):
-    o = ClaudeAgentOptions(model="scripted-1", system_prompt=SYSTEM, mcp_servers={"shop": shop_server},
+    o = ClaudeAgentOptions(model="qwen2.5:3b", system_prompt=SYSTEM, mcp_servers={"shop": shop_server},
                            tools=[], setting_sources=[], resume=resume,
                            allowed_tools=["mcp__shop__get_order", "mcp__shop__search_help"])
     session = None
@@ -59,34 +59,32 @@ anyio.run(main, sys.argv[1])
 ana@lab:~/agents$ python cs_session.py separate
 system     init tools=3
 assistant  tool_use mcp__shop__get_order {'order_id': 'M-1042'}
-system     informational
 user       tool_result {"id": "M-1042", "customer_id": "c-101", "placed_on": "2026-09-20", "status": "delivered",
-assistant  Order M-1042 was delivered on 24 September 2026.
-result     success turns=2 1207 ms cost_usd=0.0043 session=61027713
+system     informational
+assistant  Your order M-1042 was delivered on 2026-09-24. The shipping cost was 490 cents. You can track your package with the tracking number: BR5512340002.
+result     success turns=2 16602 ms cost_usd=0.0055 session=5e16f94d
 ---
 system     init tools=3
-assistant  Which order do you mean? Please send me its number, such as M-1042.
+assistant  I'm sorry, it seems there is some information missing for me to assist you with returning an item. Could you please provide me with the order ID and the reason for the refund?
 system     informational
-result     success turns=1 1050 ms cost_usd=0.0019 session=9428d322
+result     success turns=1 7361 ms cost_usd=0.0025 session=1f5aee2e
 ana@lab:~/agents$ python cs_session.py resume
 system     init tools=3
 assistant  tool_use mcp__shop__get_order {'order_id': 'M-1042'}
-system     informational
 user       tool_result {"id": "M-1042", "customer_id": "c-101", "placed_on": "2026-09-20", "status": "delivered",
-assistant  Order M-1042 was delivered on 24 September 2026.
-result     success turns=2 1224 ms cost_usd=0.0043 session=09b2f915
+system     informational
+assistant  Your order M-1042 was delivered on 2026-09-24.
+result     success turns=2 5940 ms cost_usd=0.0013 session=2ff7ac48
 ---
 system     init tools=3
-assistant  tool_use mcp__shop__search_help {'query': 'return a book'}
+assistant  Based on the information provided, your order was marked as delivered. Unfortunately, once an order is marked as delivered, it cannot be returned. If you have any issues or need further assistance, you can contact our customer support team at support@marginalia.com.
 system     informational
-user       tool_result [{"title": "How to return a book", "body": "You have 30 days from delivery to return a pri
-assistant  Yes. M-1042 was delivered on 24 September, and books can be returned within 30 days of delivery, so until 24 October.
-result     success turns=2 2208 ms cost_usd=0.0106 session=09b2f915
+result     success turns=1 10367 ms cost_usd=0.0046 session=2ff7ac48
 ana@lab:~/agents$ ls ~/.claude/projects/-home-ana-agents/ | wc -l; grep -l "this is Bia" ~/.claude/projects/-home-ana-agents/*.jsonl | wc -l
 3
 2
 ```
 
-Separada, a segunda execução perguntou qual pedido. Retomada com `resume=first`, ela levou o primeiro turno, usou-o, e ficou **na mesma sessão**, `09b2f915` nos dois resultados. **As palavras do modelo foram escritas pelo curso**; o histórico que fez a diferença foi do SDK, e estava no pedido, como a aula 1 disse que tem de estar. A estimativa do turno retomado, 0.0106, é mais que o dobro dos 0.0043 do primeiro turno, porque levou o primeiro turno além de um resultado de busca.
+Separada, a segunda execução pediu o número do pedido. Retomada com `resume=first`, ela respondeu sobre o M-1042 e ficou **na mesma sessão**, `2ff7ac48` nos dois resultados: o histórico que fez a diferença foi do SDK, e estava no pedido, como a aula 1 disse que tem de estar. A resposta em si estava errada, e com toda a confiança. Ela disse que um pedido entregue não pode ser devolvido, quando a política da Marginalia dá 30 dias a partir da entrega: o modelo tinha o pedido, não a política, e não a buscou. Retomar dá ao modelo a conversa, não o conhecimento. A estimativa do turno retomado, 0.0046, é mais que o triplo dos 0.0013 do primeiro turno, porque levou o primeiro turno junto.
 
 O último comando é a parte para lembrar. O CLI guardou **três arquivos de sessão**, um por sessão, em `~/.claude/projects/` sob um diretório com o nome do diretório de trabalho, e dois deles têm a mensagem da Bia. Ninguém passou um caminho; eles estão ali porque o Claude Code guarda toda sessão para poder retomá-la. Para um agente que atende clientes, isso é um depósito de dados pessoais que o programa nunca menciona, o que a aula 8 disse do `sessions.db` e que vale aqui com menos aviso. Decida onde esses arquivos ficam, por quanto tempo e como são apagados quando um cliente pede; as opções de armazenamento de sessão do SDK existem exatamente para isso.

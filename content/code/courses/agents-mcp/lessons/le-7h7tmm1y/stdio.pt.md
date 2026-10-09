@@ -1,6 +1,6 @@
 ---
 title: stdio, onde a saída padrão pertence ao protocolo
-version: 1
+version: 2
 ---
 
 Sobre **stdio** o enquadramento é uma mensagem por linha: o `raw.py` escreve `json.dumps(message) + "\n"` e lê uma linha de volta para cada pedido. Nada mais marca onde uma mensagem termina. Isso faz da saída padrão um canal com um uso só: **tudo o que o servidor escreve ali tem de ser uma mensagem do protocolo**, e tudo o que é feito para uma pessoa (logs, avisos, um traceback) vai para a saída de erro. O `raw.py` guarda a saída de erro do servidor à parte, em `server.err`.
@@ -27,6 +27,13 @@ def get_order(order_id: str) -> str:
 
 if __name__ == "__main__":
     server.run()
+```
+
+As duas mensagens, `noisy.jsonl`:
+
+```json
+{"jsonrpc": "2.0", "id": 1, "method": "server/discover", "params": {"_meta": {"io.modelcontextprotocol/protocolVersion": "2026-07-28", "io.modelcontextprotocol/clientCapabilities": {}}}}
+{"jsonrpc": "2.0", "id": 2, "method": "tools/call", "params": {"name": "get_order", "arguments": {"order_id": "M-1043"}, "_meta": {"io.modelcontextprotocol/protocolVersion": "2026-07-28", "io.modelcontextprotocol/clientCapabilities": {}}}}
 ```
 
 ```

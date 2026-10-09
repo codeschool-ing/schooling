@@ -8,33 +8,22 @@
 #   sudo bash captures.sh
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab
-# (lab.sh reset); the files ana wrote (put below), which the lesson shows in
-# full; and emptying labllm's log before the runs whose requests are counted,
-# done as root because the log belongs to the labllm user.
+# (lab.sh reset) and the files ana wrote (put below), which the lesson shows
+# in full, each checked by lab/shown.py.
 #
-# THE MODELS' WORDS AND DECISIONS IN THIS LESSON WERE WRITTEN BY THE COURSE,
-# as rules in lab/scripted/08-*.json, including the id sent without its
-# prefix. The OpenAI Agents SDK (openai-agents 0.23.1), what it sent on the
-# wire, its error messages, handoffs, agents as tools, approvals, guardrails,
-# sessions and spans are real. The SDK talks to labllm through Chat
-# Completions, because labllm does not implement the Responses API that the
-# SDK uses by default; the lesson says so where it sets it. OpenAI's hosted
-# products (Agent Builder, ChatKit) were not reachable and are not run.
+# THE MODEL IS REAL: llama3.2:3b (a80c4f17acd5) in Ollama 0.40.0, with an
+# 8192-token context, captured on 2026-10-08, reached by the OpenAI Agents SDK
+# (openai-agents 0.23.1) through Ollama's Responses API, the SDK's default.
+# What the agents decided and wrote is what the model wrote that day. OpenAI's
+# hosted products (Agent Builder, ChatKit) need an OpenAI account and are not
+# run.
 #
-# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo, with LAB_TODAY=2026-10-06.
-set -uo pipefail
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
+# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-block() { printf '##### %s\n' "$1"; }
-fresh_log() { : > /var/log/labllm/requests.jsonl; }
-LAST_TOOL_MESSAGE="python -c 'import json; [print(m[\"content\"][:150]) for r in map(json.loads, open(\"/var/log/labllm/requests.jsonl\")) for m in r[\"request\"][\"messages\"][-1:] if m[\"role\"] == \"tool\"]'"
-exec 9>/var/tmp/agents-capture.lock; flock 9
-lab reset >/dev/null
+. ../../lab/capture.sh
+lab exec 'ollama run llama3.2:3b hello' < /dev/null >/dev/null 2>&1
 lab exec 'python -c "import shop; shop.search_help(\"warm up\")"' >/dev/null
+LAST_TOOL_OUTPUT="python -c 'import json; [print(i[\"output\"][:150]) for r in map(json.loads, open(\"requests.jsonl\")) for i in r[\"request\"][\"input\"][-1:] if i.get(\"type\") == \"function_call_output\"]'"
 
 put oa_tools.py <<'PY'
 """Marginalia's tools for the OpenAI Agents SDK: shop.py's functions, decorated."""
@@ -65,20 +54,19 @@ def refund(order_id: Annotated[str, Field(pattern="^M-[0-9]{4}$")], cents: int, 
 PY
 
 put oa_run.py <<'PY'
-"""A first agent with the OpenAI Agents SDK, pointed at the lab's stand-in provider."""
+"""A first agent with the OpenAI Agents SDK, pointed at Ollama."""
 import sys
 
-from agents import Agent, MaxTurnsExceeded, Runner, set_default_openai_api, set_tracing_disabled
+from agents import Agent, MaxTurnsExceeded, Runner, set_tracing_disabled
 
 from oa_tools import get_order, search_help
 
-set_default_openai_api("chat_completions")  # labllm speaks Chat Completions, not the Responses API
 set_tracing_disabled(True)                    # traces would go to OpenAI's servers; section 08 keeps them here
 
 support = Agent(
     name="Marginalia support",
     instructions="You answer Marginalia's customers with the OpenAI Agents SDK. Use the tools; never guess.",
-    model="scripted-1",
+    model="llama3.2:3b",
     tools=[get_order, search_help],
 )
 
@@ -93,18 +81,19 @@ else:
 PY
 
 block first-run
-fresh_log
+recorder
+say 'export OPENAI_BASE_URL=http://127.0.0.1:11435/v1'
 on 'python oa_run.py "Where is my order M-1043?"'
 block on-the-wire
-on "tail -n 1 /var/log/labllm/requests.jsonl | python -c 'import json, sys; r = json.loads(sys.stdin.read()); print(json.dumps(r[\"request\"][\"tools\"][0], indent=1)); print(r[\"request\"][\"messages\"][3][\"content\"][:120])'"
+on "tail -n 1 requests.jsonl | python -c 'import json, sys; r = json.loads(sys.stdin.read()); print(r[\"path\"]); print(json.dumps(r[\"request\"][\"tools\"][0], indent=1)); print([i.get(\"type\", i.get(\"role\")) for i in r[\"request\"][\"input\"]])'"
 block max-turns
-on 'python oa_run.py "Where is my order M-1043?" 2'
+on 'python oa_run.py "Where is my order M-1043?" 1'
 
 block errors-default
-fresh_log
+on 'rm requests.jsonl'
 on 'python oa_run.py "What happened to my order M-9999?" | tail -n 1'
 on 'python oa_run.py "Where is my order 1044?" | tail -n 1'
-on "$LAST_TOOL_MESSAGE"
+on "$LAST_TOOL_OUTPUT"
 
 put oa_tools.py <<'PY'
 """Marginalia's tools for the OpenAI Agents SDK: shop.py's functions, decorated."""
@@ -140,30 +129,29 @@ def refund(order_id: Annotated[str, Field(pattern="^M-[0-9]{4}$")], cents: int, 
 PY
 
 block errors-clear
-fresh_log
+on 'rm requests.jsonl'
 on 'python oa_run.py "What happened to my order M-9999?" | tail -n 1'
 on 'python oa_run.py "Where is my order 1044?" | tail -n 1'
-on "$LAST_TOOL_MESSAGE"
+on "$LAST_TOOL_OUTPUT"
 
 put oa_team.py <<'PY'
 """Two ways to combine agents in the OpenAI Agents SDK: a handoff, and an agent used as a tool."""
 import sys
 
-from agents import Agent, Runner, set_default_openai_api, set_tracing_disabled
+from agents import Agent, Runner, set_tracing_disabled
 
 from oa_tools import get_order, search_help
 
-set_default_openai_api("chat_completions")
 set_tracing_disabled(True)
 
-orders = Agent(name="Orders specialist", model="scripted-1", tools=[get_order, search_help],
+orders = Agent(name="Orders specialist", model="llama3.2:3b", tools=[get_order, search_help],
                instructions="You are the orders specialist of the OpenAI Agents SDK lesson. Answer about orders.",
                handoff_description="Questions about a customer's orders: status, delivery, changes.")
 
-triage = Agent(name="Triage", model="scripted-1", handoffs=[orders],
+triage = Agent(name="Triage", model="llama3.2:3b", handoffs=[orders],
                instructions="You are the triage agent of the OpenAI Agents SDK lesson. Hand off to the right agent.")
 
-front_desk = Agent(name="Front desk", model="scripted-1",
+front_desk = Agent(name="Front desk", model="llama3.2:3b",
                    instructions="You are the front desk of the OpenAI Agents SDK lesson. Ask the specialist, then answer.",
                    tools=[orders.as_tool(tool_name="ask_orders",
                                          tool_description="Ask the orders specialist one question about an order.")])
@@ -177,9 +165,9 @@ print("answer:", result.final_output)
 PY
 
 block handoff
-fresh_log
+on 'rm requests.jsonl'
 on 'python oa_team.py "My order M-1046 has not shipped. Why?" handoff'
-on "sed -n 2p /var/log/labllm/requests.jsonl | python -c 'import json, sys; [print(m[\"role\"], str(m.get(\"content\"))[:90]) for m in json.loads(sys.stdin.read())[\"request\"][\"messages\"]]'"
+on "sed -n 2p requests.jsonl | python -c 'import json, sys; r = json.loads(sys.stdin.read())[\"request\"]; print(\"instructions\", r[\"instructions\"][:80]); [print(i.get(\"role\", i.get(\"type\")), str(i.get(\"content\", i.get(\"output\", i.get(\"arguments\"))))[:80]) for i in r[\"input\"]]'"
 block as-tool
 on 'python oa_team.py "My order M-1046 has not shipped. Why?" tool'
 
@@ -190,11 +178,10 @@ import re
 import sys
 
 from agents import (Agent, GuardrailFunctionOutput, InputGuardrailTripwireTriggered, Runner, input_guardrail,
-                    set_default_openai_api, set_tracing_disabled)
+                    set_tracing_disabled)
 
 from oa_tools import get_order, refund
 
-set_default_openai_api("chat_completions")
 set_tracing_disabled(True)
 CARD = re.compile(r"\b(?:\d[ -]?){13,19}\b")
 
@@ -209,7 +196,7 @@ def card_check(parallel):
 
 
 def agent(parallel=True):
-    return Agent(name="Refunds", model="scripted-1", tools=[get_order, refund],
+    return Agent(name="Refunds", model="llama3.2:3b", tools=[get_order, refund],
                  input_guardrails=[card_check(parallel)],
                  instructions="You handle refunds in the OpenAI Agents SDK lesson. Look up the order, then refund.")
 
@@ -238,25 +225,24 @@ on 'python oa_guard.py approve "One copy in my order M-1047 arrived damaged. Ple
 on 'python -c "import shop; print(shop.get_order(\"M-1047\")[\"refunded\"])"'
 on 'python oa_guard.py decline "One copy in my order M-1047 arrived damaged. Please refund 38.90."'
 block guardrail
-fresh_log
+on 'rm requests.jsonl'
 on 'python oa_guard.py parallel "Refund it to my card 4111 1111 1111 1111 please"'
-on 'grep -c 4111 /var/log/labllm/requests.jsonl'
-fresh_log
+on 'sleep 20; grep -c 4111 requests.jsonl'
+on 'rm requests.jsonl'
 on 'python oa_guard.py blocking "Refund it to my card 4111 1111 1111 1111 please"'
-on 'grep -c 4111 /var/log/labllm/requests.jsonl'
+on 'sleep 20; grep -c 4111 requests.jsonl'
 
 put oa_session.py <<'PY'
 """Two turns of one conversation, with and without the SDK's session memory."""
 import sys
 
-from agents import Agent, Runner, SQLiteSession, set_default_openai_api, set_tracing_disabled
+from agents import Agent, Runner, SQLiteSession, set_tracing_disabled
 
 from oa_tools import get_order, search_help
 
-set_default_openai_api("chat_completions")
 set_tracing_disabled(True)
 
-agent = Agent(name="Support", model="scripted-1", tools=[get_order, search_help],
+agent = Agent(name="Support", model="llama3.2:3b", tools=[get_order, search_help],
               instructions="You remember the conversation in the OpenAI Agents SDK lesson. Use the tools.")
 session = SQLiteSession("bia", "sessions.db") if sys.argv[1] == "--session" else None
 for message in sys.argv[2:]:
@@ -273,12 +259,11 @@ put oa_trace.py <<'PY'
 import sys
 from datetime import datetime
 
-from agents import Agent, Runner, set_default_openai_api, set_trace_processors
+from agents import Agent, Runner, set_trace_processors
 from agents.tracing import TracingProcessor
 
 from oa_tools import get_order, search_help
 
-set_default_openai_api("chat_completions")
 
 
 class PrintSpans(TracingProcessor):
@@ -299,7 +284,7 @@ class PrintSpans(TracingProcessor):
 
 
 set_trace_processors([PrintSpans()])  # replaces the default exporter, which sends traces to OpenAI
-agent = Agent(name="Marginalia support", model="scripted-1", tools=[get_order, search_help],
+agent = Agent(name="Marginalia support", model="llama3.2:3b", tools=[get_order, search_help],
               instructions="You answer Marginalia's customers with the OpenAI Agents SDK. Use the tools; never guess.")
 Runner.run_sync(agent, sys.argv[1])
 PY

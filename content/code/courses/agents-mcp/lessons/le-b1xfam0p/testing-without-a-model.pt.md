@@ -1,6 +1,6 @@
 ---
 title: Testes que não precisam de modelo
-version: 1
+version: 2
 ---
 
 O comportamento de um agente depende de um modelo, mas a maior parte do código do `minagent` não depende: validação, recusas, limites, o rastro e o resultado são Python comum, e podem ser testados como Python comum. A costura do adaptador da seção 04 é o que torna isso possível: um teste entrega ao agente um modelo que responde exatamente o que o teste quer.
@@ -66,10 +66,10 @@ test_minagent.py::test_a_repeated_call_is_refused_with_its_reason PASSED [ 57%]
 test_minagent.py::test_the_step_limit_stops_the_run_and_says_what_was_found PASSED [ 71%]
 test_minagent.py::test_a_write_without_confirmation_never_runs PASSED    [ 85%]
 test_minagent.py::test_three_steps_of_only_errors_stop_the_run PASSED    [100%]
-============================== 7 passed in 0.05s ===============================
+============================== 7 passed in 0.06s ===============================
 ```
 
-Sete testes, um vigésimo de segundo, nenhuma rede e nenhum labllm. **Eles testam o hospedeiro, que é a parte que este curso diz ser sua**, e falham no momento em que uma mudança no laço quebra uma guarda: tire a verificação de `writes`, e o `test_a_write_without_confirmation_never_runs` falha, nomeando a garantia que se perdeu.
+Sete testes, um vigésimo de segundo, nenhuma rede e nenhum modelo. **Eles testam o hospedeiro, que é a parte que este curso diz ser sua**, e falham no momento em que uma mudança no laço quebra uma guarda: tire a verificação de `writes`, e o `test_a_write_without_confirmation_never_runs` falha, nomeando a garantia que se perdeu.
 
 ## O que estes testes não cobrem
 

@@ -84,23 +84,23 @@
     ]
   },
   "ex-chc3gm8k": {
-    "prompt": "Como o pedido chegou ao modelo como resultado de ferramenta na execução do ADK?",
+    "prompt": "No segundo pedido da execução do ADK, o que veio antes do resultado da ferramenta?",
     "choices": [
       {
-        "text": "Como texto Python feito com str()",
-        "why": "Esse era o SDK da aula 8."
+        "text": "A chamada do modelo ao get_order, com os argumentos",
+        "why": "Essa chamada está nos eventos do ADK, não no pedido."
       },
       {
-        "text": "Como um objeto JSON num functionResponse",
-        "why": "Certo. A API do Gemini aceita um valor estruturado, e o dicionário passou."
+        "text": "Uma vez do assistente sem texto e sem chamada de ferramenta",
+        "why": "Certo. A chamada se perdeu no caminho até o Ollama; o modelo leu um resultado sem a pergunta antes."
       },
       {
-        "text": "Como uma tabela CSV escrita pelo ADK para o modelo ler menos tokens",
-        "why": "Nenhuma tabela foi escrita; o dicionário foi como estava."
+        "text": "Uma tabela CSV do pedido escrita pelo ADK",
+        "why": "Nenhuma tabela foi escrita; o pedido foi como texto JSON."
       },
       {
-        "text": "Não chegou; o ADK o resumiu antes",
-        "why": "O pedido inteiro está no pedido HTTP."
+        "text": "Um resumo do pedido, escrito pelo LiteLLM",
+        "why": "Nada resumiu o pedido."
       }
     ]
   },
@@ -177,32 +177,32 @@
       },
       {
         "text": "Perguntou ao modelo se o reembolso era seguro",
-        "why": "Nenhum modelo foi consultado durante a espera: dois pedidos ao todo."
+        "why": "Nenhum modelo foi consultado durante a espera: a execução já tinha terminado."
       }
     ]
   },
   "ex-d905q66b": {
-    "prompt": "Na execução de reembolso recusada, quantos pedidos o labllm registrou ao todo?",
+    "prompt": "Na execução de reembolso recusada, quantos pedidos o gravador registrou ao todo, contando os /api/show?",
     "unit": "pedidos"
   },
   "ex-hptdqa69": {
-    "prompt": "Por que ninguém foi perguntado sobre o reembolso de 7780 centavos?",
+    "prompt": "Pedido para reembolsar o pedido inteiro M-1047, o modelo pediu 0 centavos. Por que o limit_refunds deixou a chamada passar até a pessoa?",
     "choices": [
       {
-        "text": "O before_tool_callback devolveu um resultado, então a ferramenta e a confirmação nunca rodaram",
-        "why": "Certo. Um dicionário vindo do callback substitui o resultado da ferramenta."
+        "text": "Porque zero é um número válido e não passa do teto do callback",
+        "why": "Certo. O callback recusa só o que não é número ou está acima do limite; o próprio refund recusou o 0."
       },
       {
-        "text": "Porque o cliente retirou o pedido",
-        "why": "O modelo pediu; o callback recusou."
+        "text": "Porque o callback só roda depois de a pessoa responder",
+        "why": "Ele roda antes da pergunta, em toda chamada."
       },
       {
-        "text": "Porque o require_confirmation só vale abaixo de 5000 centavos",
-        "why": "O limite está no limit_refunds, não na flag."
+        "text": "Porque o require_confirmation desliga os callbacks",
+        "why": "Os dois rodaram; o callback primeiro."
       },
       {
-        "text": "Porque o y na entrada padrão o aprovou automaticamente",
-        "why": "O y nunca foi lido."
+        "text": "Porque o y na entrada padrão o aprovou de antemão",
+        "why": "O y foi lido quando a pessoa foi perguntada, depois do callback."
       }
     ]
   },
@@ -345,7 +345,7 @@
       },
       {
         "left": "Google ADK",
-        "right": "um objeto JSON num functionResponse"
+        "right": "texto JSON numa mensagem tool"
       }
     ],
     "right_distractors": [
@@ -380,7 +380,7 @@
       "call refund",
       "call adk_request_confirmation",
       "a pessoa responde y",
-      "result refund com refunded 3890",
+      "result refund com o erro dos 0 centavos",
       "a resposta do modelo"
     ]
   },

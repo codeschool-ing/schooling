@@ -1,6 +1,6 @@
 ---
 title: When a tool fails
-version: 1
+version: 2
 ---
 
 ## By default, the run ends
@@ -42,7 +42,7 @@ LookupError: no order M-9999
 ana@lab:~/agents$ python adk_run.py caught "Where is my order M-9999?"
 support  call    get_order {"order_id": "M-9999"}
 support  result  get_order {"error": "LookupError: no order M-9999"}
-support  text    I could not find an order M-9999. Could you check the number in your confirmation email?
+support  text    I'm sorry, but I'm unable to find order M-9999. Can I look up the order by order ID or customer name instead?
 ```
 
 Now the model read `{"error": "LookupError: no order M-9999"}` and could answer the customer. One callback on the agent covers every tool, which is a better place for the rule than a `try` in each function.

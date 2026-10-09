@@ -1,6 +1,6 @@
 ---
 title: Automação, assistente, agente
-version: 1
+version: 2
 ---
 
 As três palavras são usadas como se fossem degraus de uma escada de inteligência, com a automação embaixo e os agentes no alto. **Elas não são uma escada.** Um script pode ser a resposta certa para um problema que um agente pioraria, e um agente pode rodar no mesmo modelo que um assistente. O que separa os três é uma pergunta, e ela é sobre controle, não sobre esperteza: **quem decide o próximo passo, e quando?**
@@ -19,7 +19,7 @@ Página de produto não resolve, porque "agente" é palavra que vende. O código
 - `print(reply.text)` e nada depois: uma pessoa decide. Assistente.
 - `if reply.stop_reason == "tool_use": run(reply.tool_calls)`: o próximo passo é o que o modelo pediu. Agente.
 
-O `agent.py` do laboratório, que a seção 03 executa, tem quarenta linhas, e esse `if` é a linha que faz dele um agente.
+O `agent.py` que a seção 05 executa tem quarenta linhas, e esse `if` é a linha que faz dele um agente.
 
 ## Por que a distinção merece uma aula
 

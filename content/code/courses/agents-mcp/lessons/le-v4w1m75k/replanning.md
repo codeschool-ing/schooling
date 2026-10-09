@@ -1,9 +1,23 @@
 ---
 title: When a result changes the plan
-version: 1
+version: 2
 ---
 
 A plan is a guess about the work, made before the work. Some results make the guess wrong, and the useful response is to say so in the plan rather than to carry on with steps that no longer make sense.
+
+```
+ana@lab:~/agents$ python agent.py "Is my order M-1049 delivered, and can I still return it?"
+[1] get_order({"order_id": "M-1049"}) -> ERROR LookupError: no order M-1049
+{
+ "status": "stopped",
+ "reason": "replied without calling finish",
+ "done": [],
+ "not_done": [],
+ "handoff": "Passed to a person. No plan was written."
+}
+```
+
+That is `llama3.2:3b`: one lookup, an error, and a reply in text, which the host treats as a stop. A model that cannot call a tool after a result cannot rewrite its plan after one either. The stand-in can, with the second entry of `plan.json` from section 03:
 
 ```
 ana@lab:~/agents$ python agent.py "Is my order M-1049 delivered, and can I still return it?"
@@ -19,7 +33,7 @@ ana@lab:~/agents$ python agent.py "Is my order M-1049 delivered, and can I still
 {
  "status": "answered",
  "steps": 4,
- "tokens": 2484,
+ "tokens": 0,
  "answer": "I cannot find an order M-1049, so I cannot check its return window yet. Could you send the order number from your confirmation email? It starts with M- and has four digits.",
  "sources": [
   "get_order M-1049"
@@ -35,4 +49,4 @@ The plan had three steps: look up M-1049, check its return window, answer. The l
 
 Replanning is the right response when a result changes the path but the goal is still reachable. It is the wrong response when the goal itself is gone, or when the agent keeps rewriting the plan without making progress. A host can catch the second case cheaply: count plan updates that are not followed by a new tool result, and stop after a few. That is the "no progress" row of lesson 3's table, applied to plans.
 
-Notice also what the model did not do. It did not guess that the customer meant M-1048 or M-1046, the closest ids that exist. **An agent that "corrects" an id on its own is an agent that acts on somebody else's order**, which lesson 17 treats as a permission problem.
+Notice also what the stand-in's replies do not do, because a real model sometimes does: guess that the customer meant M-1048 or M-1046, the closest ids that exist. **An agent that "corrects" an id on its own is an agent that acts on somebody else's order**, which lesson 17 treats as a permission problem.

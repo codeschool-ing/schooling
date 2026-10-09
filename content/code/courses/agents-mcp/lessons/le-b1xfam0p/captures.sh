@@ -9,27 +9,18 @@
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab
 # (lab.sh reset) and the files ana wrote (put below), which the lesson shows
-# in full. The failures in the retries section are injected through labllm's
-# /lab/config, which ana calls with curl in the transcript itself.
+# in full, each checked by lab/shown.py.
 #
-# THE MODEL'S WORDS AND DECISIONS IN THIS LESSON WERE WRITTEN BY THE COURSE,
-# as rules in lab/scripted/07-*.json, including the id typed without its
-# hyphen, the refund it asks for and the tools that do not exist. minagent,
-# its tests, the validation, the refusal, the retries made by the anthropic
-# SDK, the timings and the token counts are real. Timings vary a little from
-# run to run; the ones quoted are this run's.
+# THE MODEL IS REAL: llama3.2:3b (a80c4f17acd5) in Ollama 0.40.0, with an
+# 8192-token context, on 4 CPUs and no graphics chip, captured on 2026-10-08.
+# Its calls and words are what it wrote that day; the tests use a fake model
+# the lesson shows, and the failures in the retries section come from
+# flaky.py, which the lesson shows too. Timings are this run's.
 #
-# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo, with LAB_TODAY=2026-10-06.
-set -uo pipefail
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
+# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-block() { printf '##### %s\n' "$1"; }
-exec 9>/var/tmp/agents-capture.lock; flock 9
-lab reset >/dev/null
+. ../../lab/capture.sh
+lab exec 'ollama run llama3.2:3b hello' < /dev/null >/dev/null 2>&1
 lab exec 'python -c "import shop; shop.search_help(\"warm up\")"' >/dev/null
 
 put minagent.py <<'PY'
@@ -117,7 +108,7 @@ class Reply:
 class AnthropicModel:
     """The one place that knows a provider's wire. Anything with complete() can stand in for it."""
 
-    def __init__(self, model="scripted-1", max_tokens=1024, max_retries=2):
+    def __init__(self, model="llama3.2:3b", max_tokens=1024, max_retries=2):
         import anthropic
         self.client = anthropic.Anthropic(max_retries=max_retries)
         self.model, self.max_tokens = model, max_tokens
@@ -127,7 +118,8 @@ class AnthropicModel:
                                         tools=tools, messages=messages)
         return Reply(text="".join(b.text for b in r.content if b.type == "text"),
                      calls=[Call(b.id, b.name, b.input) for b in r.content if b.type == "tool_use"],
-                     stop=r.stop_reason, tokens_in=r.usage.input_tokens, tokens_out=r.usage.output_tokens,
+                     stop=r.stop_reason, tokens_out=r.usage.output_tokens,
+                     tokens_in=r.usage.input_tokens + (r.usage.cache_read_input_tokens or 0),
                      content=[b.model_dump(exclude_none=True) for b in r.content])
 
 
@@ -384,9 +376,50 @@ on 'wc -l trace.jsonl'
 on 'tail -n 1 trace.jsonl'
 
 RETURN="Can I return the copy of Dracula I bought in September? My order is M1047."
+put flaky.py <<'PY'
+"""flaky.py N: answer the first N requests on port 11437 with 529 Overloaded, then pass the rest on to Ollama."""
+import http.client
+import json
+import sys
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+left = int(sys.argv[1])
+
+
+class Flaky(BaseHTTPRequestHandler):
+    def do_POST(self):
+        global left
+        body = self.rfile.read(int(self.headers.get("Content-Length", 0)))
+        if left > 0:
+            left -= 1
+            status = 529
+            data = json.dumps({"type": "error", "error": {"type": "overloaded_error", "message": "Overloaded"}}).encode()
+        else:
+            upstream = http.client.HTTPConnection("127.0.0.1", 11434, timeout=900)
+            upstream.request("POST", self.path, body, {"Content-Type": "application/json"})
+            reply = upstream.getresponse()
+            status, data = reply.status, reply.read()
+        print(status, flush=True)
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(data)))
+        self.end_headers()
+        self.wfile.write(data)
+
+    def log_message(self, *args):
+        pass
+
+
+ThreadingHTTPServer(("127.0.0.1", 11437), Flaky).serve_forever()
+PY
+
 block retries
-on 'curl -s -X POST http://127.0.0.1:8600/lab/config -d "{\"fail_next\": 529, \"fail_count\": 2}"; echo'
-on "python run.py \"$RETURN\" | head -n 1"
-on "tail -n 6 /var/log/labllm/requests.jsonl | python -c 'import json, sys; print(*[json.loads(l)[\"status\"] for l in sys.stdin])'"
-on 'curl -s -X POST http://127.0.0.1:8600/lab/config -d "{\"fail_next\": 529, \"fail_count\": 3}"; echo'
-on "python run.py \"$RETURN\" 2>&1 | tail -n 1"
+on 'python flaky.py 2 > flaky.log &'
+sleep 1
+on "ANTHROPIC_BASE_URL=http://127.0.0.1:11437 python run.py \"$RETURN\" | head -n 1"
+on 'cat flaky.log'
+on 'pkill -f "^python flaky.py"'
+on 'python flaky.py 3 > flaky.log &'
+sleep 1
+on "ANTHROPIC_BASE_URL=http://127.0.0.1:11437 python run.py \"$RETURN\" 2>&1 | tail -n 1"
+on 'cat flaky.log'
