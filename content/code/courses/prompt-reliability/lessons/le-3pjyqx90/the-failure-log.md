@@ -1,6 +1,6 @@
 ---
 title: The failure log
-version: 1
+version: 2
 ---
 
 A decision record explains a choice. A failure log explains an accident: every time the prompt is
@@ -9,72 +9,69 @@ The practice is older than prompts. Google's *Site Reliability Engineering* book
 chapter, *Postmortem Culture: Learning from Failure*, to writing them without blame, and **the point
 carries over unchanged: the entry is about the system, not about who made the edit**.
 
-## The numbers for the entry
+## The evidence for the entry
 
-The regression from lesson 14 is a ready example. The numbers come from `pl log`, and the evidence
-from the run of the broken version that the last section already made:
+The prompt as it stands fails `json` on two dev messages, and they have something in common:
 
 ```
-ana@lab:~/triage$ pl log
-commit   date        all tokens  subject
-8ec39c2  2026-08-03  0/40   2366  First triage prompt
-90a013e  2026-08-04 24/40   4734  Ask for JSON, name the fields and list the labels
-f361c0a  2026-08-05 36/40  11036  Add three examples of the answer
-9683448  2026-08-07 36/40  11636  Ask for the JSON object and nothing else
-931c548  2026-08-10 36/40  13356  Put the message in tags and say it is data
-c8470c9  2026-08-11 36/40  13356  Escape the message so it cannot close its own tags
-31a6a59  2026-08-14  0/40   9739  Make the examples easier to read
-03e1151  2026-08-17 36/40  13356  Put the examples back in JSON
-ana@lab:~/triage$ pl check runs/plain.jsonl
-check      pass  fail
-json          0    40
-fields        0    40
-labels        0    40
-category      0    40
-urgency       0    40
-all           0    40
-ana@lab:~/triage$ pl show runs/plain.jsonl t04
-│ account, high: wants the express delivery charge back
-stop: end, tokens in 233, out 10
+ana@lab:~/triage$ grep -E "\"t3[78]\"" cases/dev.jsonl
+{"id": "t37", "message": "The book I ordered says 'in stock' but my order still says 'awaiting dispatch' after a week.", "expect": {"category": "delivery", "urgency": "normal"}}
+{"id": "t38", "message": "The ebook I bought won't open on my reader.", "expect": {"category": "returns", "urgency": "normal"}}
+ana@lab:~/triage$ pl show runs/dev.jsonl t37
+│ {"category": "delivery", "urgency": "high", "summary": "Wants to know why the order status hasn"}}
+stop: stop, tokens in 315, out 28, 4.2 s
+ana@lab:~/triage$ pl show runs/dev.jsonl t38
+│ {"category": "returns", "urgency": "normal", "summary": "The ebook won"}}
+stop: stop, tokens in 303, out 22, 3.0 s
 ```
+
+`t37` stops at *hasn* and `t38` at *won*, and both close the object twice. The model wrote the
+apostrophe of *hasn't* and *won't*, ended the string there, and lost its place. Lesson 3 found `t38`
+doing exactly this under `v2-json.txt`, and nothing since has fixed it.
 
 ## The entry
 
 ```localised
-F-0001  Every reply stopped being JSON              2026-08-14 to 2026-08-17
+F-0001  Summaries cut at an apostrophe; the reply is not JSON
 
-Change       31a6a59 "Make the examples easier to read"
-Message      t04 "I can't log in. The password reset email never comes."
-             and every other message: 0/40 on dev, 36/40 before
-Model said   account, high: wants the express delivery charge back
-Caught by    json, the first check: 0 of 40 passed. No run is recorded
-             before the fix; the gate of lesson 14 would have run it that day
-Fix          03e1151 put the examples back in JSON (decision 0001)
-Test added   none: dev already fails this on the first check. Added
-             instead: the gate, which runs dev on every change
-Cost         9739 tokens on dev against 13356; cheaper, and useless
+Seen         2026-08-17, prompts/triage.txt at 85dfa4e (id c1916fcd)
+Messages     t37 "...still says 'awaiting dispatch' after a week."
+             t38 "The ebook I bought won't open on my reader."
+Model said   {"category": "returns", "urgency": "normal",
+              "summary": "The ebook won"}}
+Caught by    json, the first check: 2 of 40 on dev
+Cause        the model ends the summary string at an apostrophe in a
+             contraction it is copying from the message
+Fix          not yet. Lesson 3's schema mode keeps the reply valid JSON;
+             it is not in prompts/triage.txt. Decision to follow.
+Test added   none needed: t37 and t38 are dev cases already. The gate of
+             lesson 14 fails any change that breaks a third
+Cost         two tickets in forty reach a person unsorted
 ```
 
 Five lines carry the weight.
 
-- *Message* and *Model said* are the evidence, quoted rather than described. One real reply tells a
-  reader more than a sentence about replies, and `t04` shows two things at once: the shape copied
-  from the example, and the first example's summary pasted into a message about a password.
+- *Messages* and *Model said* are the evidence, quoted rather than described. One real reply tells a
+  reader more than a sentence about replies, and `t38`'s shows the cut and the double brace at once.
 - *Caught by* names the check, or the check that would have caught it. When the answer is
   *nothing would have*, that line is the most important one in the log, because it is a hole in
   the tests.
-- *Fix* names a commit, so the entry and the history point at each other.
+- *Cause* says what the entry's author believes and no more. Two messages with the same cut are a
+  pattern; *the model cannot handle apostrophes* would be a claim nobody measured.
+- *Fix* names a commit or says there is none yet. An entry that is honest about an open failure is
+  worth more than a log that only records the closed ones.
 - *Test added* is what keeps it fixed.
 
 ## The line that matters most
 
-This failure is unusual in one way: the test set already caught it, and what was missing was
-somebody running it. Most failures are the other kind. A customer writes something nobody
-imagined, the reply is wrong, and somebody notices in the support queue. **The fix is not finished
-until that message, cleaned of names and numbers, is a case in a test set**, with the answer a
-person decided is right. Otherwise the gate has nothing to fail on, and the same failure can come
-back with the next change and pass every check.
+This failure is the convenient kind: the test set already catches it, and the work left is a fix.
+Most failures are the other kind. A customer writes something nobody imagined, the reply is wrong,
+and somebody notices in the support queue. **The fix is not finished until that message, cleaned of
+names and numbers, is a case in a test set**, with the answer a person decided is right. Otherwise
+the gate has nothing to fail on, and the same failure can come back with the next change and pass
+every check.
 
-Read a dozen entries together and they show patterns no single one does. If three of them ended
-*pulled towards the first example's label*, as `t37` would, the log would be saying something about
-how the prompt is built rather than about three messages.
+Read a dozen entries together and they show patterns no single one does. Here two messages already
+make one: an apostrophe in a contraction, copied into a JSON string, is where this model loses its
+place. A third entry ending *cut at an apostrophe* would be the log saying something about how the
+replies are produced rather than about three messages.

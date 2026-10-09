@@ -5,46 +5,47 @@
 # THE SCRIPT IS THE SOURCE AND ITS OUTPUT IS NOT COMMITTED. Every transcript in
 # this lesson was copied from running it:
 #
-#   bash captures.sh            # beside this file; it finds ../../lab.sh
+#   bash captures.sh            # beside this file
 #
-# It rebuilds ~/triage with lab.sh reset under its own HOME, so nothing of
-# yours is touched, and prints each command after a prompt, ana@lab:~/triage$,
-# followed by what it printed.
+# lab-capture.sh builds ~/triage as a student has it after this lesson, every
+# file read out of the lessons' own fences, and prints each command after a
+# prompt, ana@lab:~/triage$, followed by what it printed. The git history is
+# lesson 14's history.sh, run quietly first, as a student who did lesson 14
+# already has it.
 #
-# What is STAGED rather than typed: the whole of ~/triage, built by lab.sh,
-# including every prompt file the lesson shows. The model is the lab's
-# stand-in (promptlab/standin.py), NOT a language model; lab.sh's header says
-# what that means and what in the lab was written by the course.
+# THE MODEL IS REAL: llama3.2:3b (Q4_K_M, id a80c4f17acd5) on Ollama 0.40.0,
+# CPU only, temperature 0 and seed 1, captured on 2026-10-09.
 #
-# Recorded with Python 3.11 and git 2.43, TZ=America/Sao_Paulo.
-
-set -uo pipefail
+# Recorded on Ubuntu 24.04 with Python 3.12 and git 2.43, TZ=America/Sao_Paulo.
 here=$(cd "$(dirname "$0")" && pwd)
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 PAGER=cat GIT_PAGER=cat COLUMNS=100 PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
-export HOME=${LAB_HOME:-/var/tmp/prompt-reliability}
-mkdir -p "$HOME"
-bash "$here/../../lab.sh" reset
-cd "$HOME/triage"
-export PATH=$HOME/triage/bin:$PATH
-on() { printf 'ana@lab:~/triage$ %s\n' "$*"; bash -c "$*" 2>&1; }
-block() { printf '##### %s\n' "$1"; }
+LESSON=15; . "$here/../../lab-capture.sh"
+quiet 'sh history.sh'
 
 block log
 on "git log --format='%h %ad %s' --date=short -- prompts/triage.txt"
-on 'git log -1 --format=%B 31a6a59'
+on 'git log -1 --format=%B 86913c0'
+on 'git log -1 --format=%B 85dfa4e'
 
 block evidence
-on 'git show 31a6a59:prompts/triage.txt > runs/plain.txt'
+on 'git show 86913c0:prompts/triage.txt > runs/plain.txt'
 on 'pl run runs/plain.txt cases/dev.jsonl --out runs/plain.jsonl'
 on 'pl run prompts/triage.txt cases/dev.jsonl --out runs/dev.jsonl'
 on 'pl compare runs/plain.jsonl runs/dev.jsonl'
+on 'grep t12 cases/dev.jsonl'
+on 'pl show runs/plain.jsonl t12'
+on 'pl show runs/dev.jsonl t12'
 
-block failure
-on 'pl log'
-on 'pl check runs/plain.jsonl'
-on 'pl show runs/plain.jsonl t04'
 
 block card
 on 'for s in dev holdout attacks pasted; do pl run prompts/triage.txt cases/$s.jsonl --out runs/$s.jsonl > /dev/null; printf "%-8s" $s; pl check runs/$s.jsonl | tail -n 1; done'
-on 'pl check runs/dev.jsonl --failures | tail -n 4'
-on 'pl cost runs/dev.jsonl'
+on 'pl check runs/dev.jsonl --failures'
+on 'python3 stats.py runs/dev.jsonl'
+
+block holdout
+on 'pl run runs/plain.txt cases/holdout.jsonl --out runs/plain-holdout.jsonl'
+on 'pl compare runs/plain-holdout.jsonl runs/holdout.jsonl'
+
+block apostrophe
+on 'grep -E "\"t3[78]\"" cases/dev.jsonl'
+on 'pl show runs/dev.jsonl t37'
+on 'pl show runs/dev.jsonl t38'

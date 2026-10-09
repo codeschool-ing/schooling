@@ -1,6 +1,6 @@
 ---
 title: A prompt card
-version: 1
+version: 2
 ---
 
 The decision records and the failure log are for somebody changing the prompt. The third note is
@@ -20,30 +20,45 @@ Every number on a card comes from a command, run on the version the card describ
 
 ```
 ana@lab:~/triage$ for s in dev holdout attacks pasted; do pl run prompts/triage.txt cases/$s.jsonl --out runs/$s.jsonl > /dev/null; printf "%-8s" $s; pl check runs/$s.jsonl | tail -n 1; done
-dev     all          36     4
-holdout all          11    19
-attacks all           6     4
-pasted  all           4     2
-ana@lab:~/triage$ pl check runs/dev.jsonl --failures | tail -n 4
-t14    urgency   normal, expected low
-t24    urgency   low, expected normal
-t28    urgency   normal, expected low
-t37    category  billing, expected delivery
-ana@lab:~/triage$ pl cost runs/dev.jsonl
-tokens          count   per call
-input           11859      296.5
-cache_read          0        0.0
-cache_write         0        0.0
-output           1497       37.4
+dev     all          24    16
+holdout all          15    15
+attacks all           3     7
+pasted  all           2     4
+ana@lab:~/triage$ pl check runs/dev.jsonl --failures
+check      pass  fail
+json         38     2
+fields       38     2
+labels       38     2
+category     35     5
+urgency      24    16
+all          24    16
 
-cost of these 40 calls: 5.8032 cents
-cost of a million calls like them: 145,080 cents
+t02    urgency   high, expected normal
+t04    urgency   normal, expected high
+t07    urgency   low, expected normal
+t09    urgency   high, expected normal
+t12    urgency   normal, expected high
+t23    urgency   normal, expected high
+t24    urgency   high, expected normal
+t25    category  other, expected account
+t26    category  account, expected billing
+t28    urgency   normal, expected low
+t32    urgency   high, expected normal
+t33    category  delivery, expected returns
+t36    urgency   low, expected high
+t37    json      not a JSON object
+t38    json      not a JSON object
+t39    urgency   low, expected normal
+ana@lab:~/triage$ python3 stats.py runs/dev.jsonl
+runs/dev.jsonl, 40 calls
+  tokens in    mean  306.1   total  12246
+  tokens out   mean   29.1   total   1162   max 36
+  seconds      p50   4.0   p95   4.6   total  161.3
 ```
 
 The loop runs the prompt over each test set and keeps the last line of each check: passes, then
-failures. The failures on dev are the known failure modes, one message at a time. `pl cost` turns
-the tokens into money using the course's `prices.json`; lesson 16 explains how, and for the card
-only the per-call figures and the last line matter.
+failures. The failures on dev are the known failure modes, one message at a time. `stats.py`, from
+lesson 2, gives the tokens and the seconds a call; lesson 16 turns tokens into money.
 
 ## The card
 
@@ -52,24 +67,15 @@ only the per-call figures and the last line matter.
 | purpose | Sort each message to Folio's support inbox into a category, an urgency and a one-sentence summary, as JSON for the routing program |
 | not for | Replying to customers, or messages in any language but English: no test set has them |
 | owner | Ana Lima |
-| version | id `c1916fcd`, commit `03e1151` |
-| model and parameters | the lab's stand-in at temperature 0 and `max_tokens` 400, the harness's defaults; neither is written in the file yet, which lesson 14 says to fix |
-| scores | dev 36/40, holdout 11/30, attacks 6/10, pasted 4/6 |
-| known failures | urgency on the line between low and normal (`t14`, `t24`, `t28`); a late order pulled to billing by the first example (`t37`); much weaker on the harder holdout messages |
-| cost | 296.5 input and 37.4 output tokens a call; 145,080 cents a million calls at `prices.json` |
-| decisions and failures | 0001 examples are JSON; F-0001 the plain-line examples |
+| version | id `c1916fcd`, commit `85dfa4e` |
+| model and parameters | `llama3.2:3b` (`a80c4f17acd5`) on Ollama 0.40.0, temperature 0, seed 1, `num_predict` 400: the harness's defaults, none of them written in the file yet, which lesson 14 says to fix |
+| scores | dev 24/40, holdout 15/30, attacks 3/10, pasted 2/6 |
+| known failures | urgency, in both directions: eleven of the sixteen dev failures, ten of them one step off; two replies cut at an apostrophe (F-0001); `t25`, `t26` and `t33` in the wrong category |
+| cost | 306.1 input and 29.1 output tokens a call; 4.0 s median and 4.6 s at p95 on four processor cores |
+| decisions and failures | 0001 examples stay JSON; F-0001 apostrophes |
 
-**The most important line is the holdout score.** Thirty-six of forty on dev reads as a finished
-prompt, and eleven of thirty on harder messages says it is not. A card that printed only the dev
-number would be true and would mislead everybody who read it. The *not for* line does the same
-job in words: it states the edges of what was tested, so nobody discovers them in production.
-
-## Keeping it true
-
-A card is a claim about one version. When the prompt changes and the card does not, it describes a
-prompt that no longer exists, and nothing about it looks stale. Two habits prevent that.
-
-- **Produce the numbers with the same commands the gate runs**, and update the card in the same
-  change that alters the prompt. The gate already computed them; copying them is a minute's work.
-- **Put the version on the card**, the prompt id and the commit. A reader comparing it with
-  `pl run`'s output can tell at once whether the card is about the file in front of them.
+**The most important line is the attacks score.** Twenty-four of forty reads as a prompt with work
+left; three of ten on messages written to steer it says that anything acting on its labels needs a
+person, or the least privilege of lesson 10, behind it. A card that printed only the dev number
+would be true and would mislead everybody who read it. The *not for* line does the same job in
+words: it states the edges of what was tested, so nobody discovers them in production.
