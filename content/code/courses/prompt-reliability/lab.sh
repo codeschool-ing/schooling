@@ -3,7 +3,6 @@
 #
 #   bash lab.sh files N      write ~/triage as a student has it after lesson N
 #   bash lab.sh check        Ollama answers, and the model the lessons use is here
-#   bash lab.sh reset        the old stand-in lab, for the lessons not yet moved
 #
 # THE STUDENT NEVER RECEIVES THIS FILE, and nothing in it is a file of its own.
 # Every program, prompt and test set in ~/triage is a fence in a lesson,
@@ -99,6 +98,5 @@ check() {
 case "${1:-}" in
   files) files "${2:?files needs a lesson number}" ;;
   check) check ;;
-  reset) bash "$here/standin-lab.sh" reset ;;
-  *) echo "usage: bash lab.sh files N | check | reset" >&2; exit 2 ;;
+  *) echo "usage: bash lab.sh files N | check" >&2; exit 2 ;;
 esac
