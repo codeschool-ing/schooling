@@ -23,6 +23,10 @@ block stated
 on 'grep -n confidence prompts/v9-confidence.txt'
 on 'pl run prompts/v9-confidence.txt cases/all.jsonl --out runs/v9.jsonl'
 on 'pl check runs/v9.jsonl'
+on "grep -o 'confidence\\\\\": [0-9.]*' runs/v9.jsonl | sort | uniq -c"
+on 'grep h03 cases/all.jsonl'
+on 'pl show runs/v9.jsonl h03'
+on 'pl show runs/v9.jsonl t35'
 
 block reliability
 on 'python3 calibrate.py runs/v9.jsonl'
