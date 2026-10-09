@@ -9,14 +9,14 @@ CD/ANPD nº 15 of 2024 sets the deadline at three working days. This section app
 
 ## Is it reportable?
 
-Resolution 15 calls an incident relevant when it may significantly affect the subjects' interests
-and rights **and** involves at least one of a short list: sensitive data, data of children,
-adolescents or older people, financial data, authentication data, data under legal secrecy, or data
-at large scale. Two payment records, with a name, a CPF and an amount, read by an unknown address,
-are financial data in the hands of somebody who took them on purpose. The course reads INC-7 as
-reportable. **The decision is the encarregado's**, made on the day and written into the timeline
-with its reasons, whichever way it goes: an incident judged not reportable still needs the argument
-on record.
+Resolution 15 calls an incident relevant when two things hold. It may significantly affect the
+subjects' interests and rights, **and** it involves at least one of a short list: sensitive data,
+data of children, adolescents or older people, financial data, authentication data, data under legal
+secrecy, or data at large scale. Two payment records, with a name, a CPF and an amount, read by an
+unknown address, are financial data in the hands of somebody who took them on purpose. The course
+reads INC-7 as reportable. **The decision is the encarregado's**, made on the day and written into
+the timeline with its reasons, whichever way it goes: an incident judged not reportable still needs
+the argument on record.
 
 ## The deadline, counted
 
@@ -93,8 +93,8 @@ deadline: the end of 2026-10-15
 **Thursday 15 October, not Monday 12.** "Three days" counted on a calendar lands on a holiday; three
 working days skip the weekend and Our Lady of Aparecida. The other mistake goes the opposite way:
 the clock starts on the day Tarefa learned that personal data was affected, the Friday the blast
-showed the two reads, not when the report is finished. Three days spent investigating before deciding
-to notify is the whole deadline gone. When something is still unknown on day three, the
+showed the two reads, not when the report is finished. Three days spent investigating before
+deciding to notify is the whole deadline gone. When something is still unknown on day three, the
 communication says so and is completed later; lateness is not the way to wait for certainty.
 
 ## What the communication says

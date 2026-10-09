@@ -5,13 +5,14 @@ version: 1
 
 Toda defesa até aqui rodou nos servidores da Tarefa. O cliente nunca viu o `guard gate` nem o
 `memory.py`; viu uma janela de chat, uma resposta, uma recusa, uma confirmação. **O que essas telas
-dizem decide no que o cliente acredita e o que ele faz em seguida**, e um cliente que acredita na coisa
-errada é uma falha do sistema tão real quanto uma chave vazada: uma resposta tomada como promessa da
-equipe da Tarefa, uma recusa tentada de novo quarenta vezes, um reembolso confirmado sem ser lido.
+dizem decide no que o cliente acredita e o que ele faz em seguida.** Um cliente que acredita na
+coisa errada é uma falha do sistema tão real quanto uma chave vazada: uma resposta tomada como
+promessa da equipe da Tarefa, uma recusa tentada de novo quarenta vezes, um reembolso confirmado sem
+ser lido.
 
 Então as telas também ganham regras, escritas e conferidas como todo o resto. O assistente da Tarefa
-tem seis telas, cada uma com seu texto e as ações que oferece; o curso as escreveu como seria escrito
-um primeiro rascunho. Cole:
+tem seis telas, cada uma com seu texto e as ações que oferece; o curso as escreveu como seria
+escrito um primeiro rascunho. Cole:
 
 ```sh
 cat > ~/guard/data/ui-copy.json <<'EOF'
@@ -134,10 +135,10 @@ duas.
 
 A `chat-welcome` cumprimenta o cliente com simpatia e nunca diz o que está respondendo. **Um cliente
 que não sabe que fala com um modelo lê as respostas dele como palavra da Tarefa**: um preço que ele
-inventa vira orçamento, uma data que ele chuta vira promessa, e o cliente age sobre as duas. A aula 2
-mediu com que frequência um modelo afirma o que ninguém escreveu. As boas-vindas são onde o cliente
-aprende a conferir, e isso custa uma frase: *o assistente automatizado da Tarefa*. A regra procura as
-palavras que dizem isso e recusa umas boas-vindas sem elas.
+inventa vira orçamento, uma data que ele chuta vira promessa, e o cliente age sobre as duas. A aula
+2 mediu com que frequência um modelo afirma o que ninguém escreveu. As boas-vindas são onde o
+cliente aprende a conferir, e isso custa uma frase: *o assistente automatizado da Tarefa*. A regra
+procura as palavras que dizem isso e recusa umas boas-vindas sem elas.
 
 A mesma tela oferece uma pessoa, e continua oferecendo. Um assistente automatizado sem saída para
 além dele é uma parede, e um cliente que precisa de uma pessoa e não a encontra tenta fazer o
@@ -145,9 +146,9 @@ assistente fazer o que uma pessoa faria, que é exatamente o uso que ninguém pr
 
 ## Toda resposta pode ser denunciada
 
-A `reply` oferece copiar o texto e nada mais. **O cliente é quem vê todas as respostas**, inclusive as
-que nenhuma verificação pegou: a fila errada da aula 14, o erro confiante do `q1` da aula 15. Um botão
-de denúncia em toda resposta é o monitoramento mais barato que existe, e a aula 22 parte dele. Não
-custa nada mostrá-lo e custa muito pouco ler o que chega, desde que cada denúncia venha com o que a
-aula 20 registrou da chamada, para que alguém encontre a resposta, a versão do prompt e o modelo, e não
-uma captura de tela e um palpite.
+A `reply` oferece copiar o texto e nada mais. **O cliente é quem vê todas as respostas**, inclusive
+as que nenhuma verificação pegou: a fila errada da aula 14, o erro confiante do `q1` da aula 15. Um
+botão de denúncia em toda resposta é o monitoramento mais barato que existe, e a aula 22 parte dele.
+Não custa nada mostrá-lo e custa muito pouco ler o que chega, desde que cada denúncia venha com o
+que a aula 20 registrou da chamada, para que alguém encontre a resposta, a versão do prompt e o
+modelo, e não uma captura de tela e um palpite.

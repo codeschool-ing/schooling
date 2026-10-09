@@ -9,14 +9,14 @@ de 2024 fixa o prazo em três dias úteis. Esta seção a aplica ao INC-7.
 
 ## É comunicável?
 
-A Resolução 15 chama de relevante o incidente que possa afetar significativamente os interesses e
-direitos dos titulares **e** envolva pelo menos um item de uma lista curta: dados sensíveis, dados de
-crianças, adolescentes ou idosos, dados financeiros, dados de autenticação, dados protegidos por
-sigilo, ou dados em larga escala. Dois registros de pagamento, com nome, CPF e valor, lidos por um
-endereço desconhecido, são dados financeiros nas mãos de alguém que os pegou de propósito. O curso lê
-o INC-7 como comunicável. **A decisão é do encarregado**, tomada no dia e escrita na linha do tempo
-com os motivos, seja qual for: um incidente julgado não comunicável também precisa do argumento
-registrado.
+A Resolução 15 chama de relevante o incidente em que duas coisas valem. Ele pode afetar
+significativamente os interesses e direitos dos titulares, **e** envolve pelo menos um item de uma
+lista curta: dados sensíveis, dados de crianças, adolescentes ou idosos, dados financeiros, dados de
+autenticação, dados protegidos por sigilo, ou dados em larga escala. Dois registros de pagamento,
+com nome, CPF e valor, lidos por um endereço desconhecido, são dados financeiros nas mãos de alguém
+que os pegou de propósito. O curso lê o INC-7 como comunicável. **A decisão é do encarregado**,
+tomada no dia e escrita na linha do tempo com os motivos, seja qual for: um incidente julgado não
+comunicável também precisa do argumento registrado.
 
 ## O prazo, contado
 
@@ -90,12 +90,12 @@ ana@lab:~/guard$ guard anpd --known 2026-10-09
 deadline: the end of 2026-10-15
 ```
 
-**Quinta, 15 de outubro, não segunda, 12.** "Três dias" contados no calendário caem num feriado; três
-dias úteis pulam o fim de semana e Nossa Senhora Aparecida. O outro erro vai na direção contrária: o
-prazo começa no dia em que a Tarefa soube que dados pessoais foram afetados, a sexta em que o blast
-mostrou as duas leituras, e não quando o relatório fica pronto. Três dias investigando antes de
-decidir comunicar são o prazo inteiro perdido. Quando algo ainda é desconhecido no terceiro dia, a
-comunicação diz isso e é completada depois; atrasar não é o jeito de esperar pela certeza.
+**Quinta, 15 de outubro, não segunda, 12.** "Três dias" contados no calendário caem num feriado;
+três dias úteis pulam o fim de semana e Nossa Senhora Aparecida. O outro erro vai na direção
+contrária: o prazo começa no dia em que a Tarefa soube que dados pessoais foram afetados, a sexta em
+que o blast mostrou as duas leituras, e não quando o relatório fica pronto. Três dias investigando
+antes de decidir comunicar são o prazo inteiro perdido. Quando algo ainda é desconhecido no terceiro
+dia, a comunicação diz isso e é completada depois; atrasar não é o jeito de esperar pela certeza.
 
 ## O que a comunicação diz
 

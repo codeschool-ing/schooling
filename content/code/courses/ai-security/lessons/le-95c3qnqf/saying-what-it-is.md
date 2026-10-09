@@ -5,7 +5,7 @@ version: 1
 
 Every defence so far ran on Tarefa's servers. The client never saw `guard gate` or `memory.py`; they
 saw a chat window, a reply, a refusal, a confirmation. **What those screens say decides what the
-client believes and what the client does next**, and a client who believes the wrong thing is a
+client believes and what the client does next.** A client who believes the wrong thing is a
 failure of the system as real as a leaked key: a reply taken as a promise from Tarefa's staff, a
 refusal retried forty times, a refund confirmed without reading it.
 
@@ -146,7 +146,7 @@ person would, which is exactly the use nobody designed for.
 
 `reply` offers to copy the text and nothing else. **The client is the one who sees every reply**,
 including the ones no check caught: the wrong queue of lesson 14, the confident error of lesson 15's
-`q1`. A report button on every reply is the cheapest monitoring there is, and lesson 22 builds on it.
-It costs nothing to show and very little to read, provided each report arrives with what lesson 20
-logged for the call, so that somebody can find the reply, the prompt version and the model, rather
-than a screenshot and a guess.
+`q1`. A report button on every reply is the cheapest monitoring there is, and lesson 22 builds on
+it. It costs nothing to show and very little to read, provided each report arrives with what lesson
+20 logged for the call, so that somebody can find the reply, the prompt version and the model,
+rather than a screenshot and a guess.

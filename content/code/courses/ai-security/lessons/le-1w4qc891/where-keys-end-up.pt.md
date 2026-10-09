@@ -4,17 +4,17 @@ version: 1
 ---
 
 O assistente da Tarefa funciona com credenciais: uma chave do fornecedor do modelo, uma chave do
-sistema de pagamentos que emite reembolsos, uma senha do banco de pedidos, uma chave do armazenamento
-onde o log é gravado. Cada uma é uma permissão que alguém pode usar sem ser a Tarefa. **Uma credencial
-está segura exatamente onde ninguém além do código que precisa dela consegue lê-la**, e uma aplicação
-com LLM tem mais lugares por onde ela pode vazar que uma aplicação comum: o prompt, o log de prompts, o
-erro que uma ferramenta devolve, e o código-fonte que monta os três.
+sistema de pagamentos que emite reembolsos, uma senha do banco de pedidos, uma chave do
+armazenamento onde o log é gravado. Cada uma é uma permissão que alguém pode usar sem ser a Tarefa.
+**Uma credencial está segura exatamente onde ninguém além do código que precisa dela consegue
+lê-la.** Uma aplicação com LLM tem mais lugares por onde ela pode vazar que uma aplicação comum: o
+prompt, o log de prompts, o erro que uma ferramenta devolve, e o código-fonte que monta os três.
 
 A primeira defesa é mecânica. Antes que qualquer coisa chegue ao repositório, um programa lê cada
 arquivo procurando algo com formato de credencial. O repositório abaixo é o da Tarefa em miniatura,
-escrito pelo curso. **Todas as chaves nele são falsas**: as que começam com `sk-lab-` foram inventadas
-para esta aula, e a que começa com `AKIA` é o exemplo que a Amazon imprime na própria documentação, que
-não abre nada. Cole:
+escrito pelo curso. **Todas as chaves nele são falsas**: as que começam com `sk-lab-` foram
+inventadas para esta aula, e a que começa com `AKIA` é o exemplo que a Amazon imprime na própria
+documentação, que não abre nada. Cole:
 
 ```sh
 mkdir -p ~/guard/data/repo/app ~/guard/data/repo/prompts ~/guard/data/repo/deploy ~/guard/data/repo/logs ~/guard/data/repo/docs
@@ -50,8 +50,8 @@ docs/storage.md  1a5d44a2dca1  Amazon's documented example key; it opens nothing
 EOF
 ```
 
-O verificador usa os formatos de chave que o `detect.py` já conhece da aula 11, e acrescenta uma regra:
-uma atribuição cujo nome diz que guarda um segredo. Salve-o como `~/guard/tools/keyscan.py`:
+O verificador usa os formatos de chave que o `detect.py` já conhece da aula 11, e acrescenta uma
+regra: uma atribuição cujo nome diz que guarda um segredo. Salve-o como `~/guard/tools/keyscan.py`:
 
 ```python
 # keyscan.py: credentials written into files, before they reach a repository.
@@ -145,18 +145,18 @@ exit status 1
 ```
 
 Cinco achados em seis arquivos, e o verificador não imprimiu nenhum inteiro. **Um verificador que
-imprime o segredo que achou acabou de copiá-lo para o log do build**, que é lido por mais gente que o
-código. A máscara mostra o bastante para reconhecer o tipo; a impressão digital nomeia o valor exato
-sem revelá-lo, e é isso que permite comparar dois achados. O `app/payments.py` e o
+imprime o segredo que achou acabou de copiá-lo para o log do build**, que é lido por mais gente que
+o código. A máscara mostra o bastante para reconhecer o tipo; a impressão digital nomeia o valor
+exato sem revelá-lo, e é isso que permite comparar dois achados. O `app/payments.py` e o
 `prompts/support.txt` têm a mesma impressão digital, `9f8dfa2fe8d2`: **a mesma chave de pagamentos
 está escrita em dois lugares**, então tirá-la de um e esquecer o outro não resolve nada.
 
 ## Uma exceção é uma decisão escrita
 
-O `docs/storage.md` guarda a chave de exemplo da Amazon de propósito, como documentação. O verificador
-não tem como saber disso, e uma pessoa tem, então a pessoa anota: o arquivo, a impressão digital e o
-motivo. A lista de exceções faz parte do que foi colado acima, e com ela o exemplo documentado deixa de
-reprovar o build:
+O `docs/storage.md` guarda a chave de exemplo da Amazon de propósito, como documentação. O
+verificador não tem como saber disso, e uma pessoa tem, então a pessoa anota: o arquivo, a impressão
+digital e o motivo. A lista de exceções faz parte do que foi colado acima, e com ela o exemplo
+documentado deixa de reprovar o build:
 
 ```
 ana@lab:~/guard$ guard keyscan data/repo --allow data/keyscan-allow.txt; echo "exit status $?"
@@ -170,8 +170,9 @@ exit status 1
 ```
 
 A exceção está presa a um valor num arquivo. Uma chave real colada no mesmo documento tem outra
-impressão digital e falha como antes, e essa é a diferença entre uma exceção e um buraco. **Uma lista
-de exceções sem motivos é uma lista de coisas que ninguém lembra de ter decidido**, e ela só cresce.
+impressão digital e falha como antes, e essa é a diferença entre uma exceção e um buraco. **Uma
+lista de exceções sem motivos é uma lista de coisas que ninguém lembra de ter decidido**, e ela só
+cresce.
 
-O status de saída continua 1: quatro achados são reais, e o resto desta aula é sobre onde cada um deve
-ficar.
+O status de saída continua 1: quatro achados são reais, e o resto desta aula é sobre onde cada um
+deve ficar.

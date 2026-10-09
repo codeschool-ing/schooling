@@ -8,8 +8,8 @@ confirmation before an action.
 
 ## A refusal says why and what next
 
-`refusal-budget` is the screen a client sees when lesson 18's budget runs out. It says *something went
-wrong, please try again* and offers one button, `retry`. Each half is wrong in its own way:
+`refusal-budget` is the screen a client sees when lesson 18's budget runs out. It says *something
+went wrong, please try again* and offers one button, `retry`. Each half is wrong in its own way:
 
 - **"something went wrong" hides a decision behind an error.** Nothing went wrong; a limit Tarefa set
   was reached. A client told it is a fault waits for it to be fixed, or reports a bug.
@@ -23,18 +23,18 @@ filter should not describe the filter, but it always says what the client can do
 
 ## A confirmation shows the action
 
-`confirm-refund` says *the assistant wants to issue a refund. Allow?* Lesson 10 held the refund for a
-person precisely so that somebody would check it, and **a person can only check what the screen
+`confirm-refund` says *the assistant wants to issue a refund. Allow?* Lesson 10 held the refund for
+a person precisely so that somebody would check it, and **a person can only check what the screen
 shows**. Without the account, the job and the amount, "Allow?" asks for trust, and the person
-confirming is a click in the path rather than a check on it. The rule takes the arguments of the tool
-and refuses a confirmation that shows fewer.
+confirming is a click in the path rather than a check on it. The rule takes the arguments of the
+tool and refuses a confirmation that shows fewer.
 
 ## The draft, corrected
 
-A second version of the same six screens, also written by the course, with each failing screen
-rewritten: the welcome says it is automated, every reply can be reported, the budget refusal says the
-assistant cannot answer more today and offers a person, and the confirmation shows the account, the
-job and the amount. Paste it:
+A second version of the same six screens, also written by the course, rewrites each failing one. The
+welcome says it is automated, every reply can be reported, the budget refusal says the assistant
+cannot answer more today and offers a person, and the confirmation shows the account, the job and
+the amount. Paste it:
 
 ```sh
 cat > ~/guard/data/ui-copy-fixed.json <<'EOF'

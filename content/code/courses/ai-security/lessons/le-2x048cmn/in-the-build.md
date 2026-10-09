@@ -44,8 +44,8 @@ exit status 1
 
 Two reasons for a red build, and they are different kinds. The overdue key is a promise past its
 date. The candidate is a measurement that could not clear the bar: 40.4% is a tenth of a point over
-the ceiling. **That is not a finding that the candidate is bad.** It says 120 trials cannot show it is
-good enough. The author's choices are honest ones: run more trials and see whether the interval
+the ceiling. **That is not a finding that the candidate is bad.** It says 120 trials cannot show it
+is good enough. The author's choices are honest ones: run more trials and see whether the interval
 comes down under 40%, or drop the sentence the classifier never needed. Lowering the ceiling to let
 it through is not one of them.
 
@@ -67,10 +67,10 @@ monitoring of lesson 22 compares an hour with the hours before it.
 
 The suite needs no secret, so it can run on a pull request from anybody. The model check needs the
 provider's key when the model is hosted, and lesson 17's rules apply to the build like to any other
-program: **a key of its own, narrowed to the one model, with a spending limit**, stored in the CI
-system's secret store rather than in the repository, and given only to jobs that run on code
-somebody with write access has already accepted. A pull request from a fork that could print the
-key in its own build log is the leak lesson 17 was about, with the CI system as the courier.
+program: **a key of its own, narrowed to the one model, with a spending limit**. It is stored in the
+CI system's secret store rather than in the repository, and given only to jobs that run on code
+somebody with write access has already accepted. A pull request from a fork that could print the key
+in its own build log is the leak lesson 17 was about, with the CI system as the courier.
 
 The rate check also costs money every time it runs. Its 240 calls cost under one real at lesson 18's
 prices; 240 calls on every push of every branch, on a busy repository, is a budget line that grows

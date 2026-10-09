@@ -6,15 +6,15 @@ version: 1
 Tarefa's assistant runs on credentials: a key for the model provider, a key for the payments system
 that issues refunds, a password for the orders database, a key for the store the log is written to.
 Each one is a permission somebody can use without being Tarefa. **A credential is safe exactly where
-nobody but the code that needs it can read it**, and an LLM application has more places for one to
+nobody but the code that needs it can read it.** An LLM application has more places for one to
 leak than an ordinary one: the prompt, the log of prompts, the error a tool returns, and the source
 code that builds all three.
 
 The first defence is mechanical. Before anything reaches the repository, a program reads every file
-for something shaped like a credential. The repository below is Tarefa's in miniature, written by the
-course. **Every key in it is fake**: the ones beginning `sk-lab-` were made up for this lesson, and
-the one beginning `AKIA` is the example Amazon prints in its own documentation, which opens nothing.
-Paste it:
+for something shaped like a credential. The repository below is Tarefa's in miniature, written by
+the course. **Every key in it is fake**: the ones beginning `sk-lab-` were made up for this lesson,
+and the one beginning `AKIA` is the example Amazon prints in its own documentation, which opens
+nothing. Paste it:
 
 ```sh
 mkdir -p ~/guard/data/repo/app ~/guard/data/repo/prompts ~/guard/data/repo/deploy ~/guard/data/repo/logs ~/guard/data/repo/docs

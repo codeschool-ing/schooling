@@ -25,8 +25,8 @@ EOF
 ```
 
 O teto é 40%: um candidato passa quando o intervalo inteiro da sua taxa de falha fica abaixo dele. É
-uma pergunta mais exigente que "a taxa está abaixo de 40%?", e de propósito. O build não está pedindo
-um palpite; está pedindo que lhe mostrem.
+uma pergunta mais exigente que "a taxa está abaixo de 40%?", e de propósito. O build não está
+pedindo um palpite; está pedindo que lhe mostrem.
 
 ```
 ana@lab:~/guard$ CI_DATE=2026-10-09 bash ci.sh; echo "exit status $?"
@@ -44,10 +44,10 @@ exit status 1
 
 Dois motivos para o build vermelho, e são de tipos diferentes. A chave vencida é uma promessa que
 passou da data. O candidato é uma medição que não passou da barra: 40,4% é um décimo de ponto acima
-do teto. **Isso não é a constatação de que o candidato é ruim.** Diz que 120 tentativas não conseguem
-mostrar que ele é bom o bastante. As escolhas honestas de quem o escreveu são: rodar mais tentativas
-e ver se o intervalo desce abaixo de 40%, ou tirar a frase de que o classificador nunca precisou.
-Baixar o teto para deixá-lo passar não é uma delas.
+do teto. **Isso não é a constatação de que o candidato é ruim.** Diz que 120 tentativas não
+conseguem mostrar que ele é bom o bastante. As escolhas honestas de quem o escreveu são: rodar mais
+tentativas e ver se o intervalo desce abaixo de 40%, ou tirar a frase de que o classificador nunca
+precisou. Baixar o teto para deixá-lo passar não é uma delas.
 
 ## Que verificação roda quando
 
@@ -67,21 +67,21 @@ uma hora com as horas anteriores.
 
 A suíte não precisa de segredo, então pode rodar no pull request de qualquer pessoa. A verificação
 do modelo precisa da chave do fornecedor quando o modelo é hospedado, e as regras da aula 17 valem
-para o build como para qualquer outro programa: **uma chave só dele, restrita a um modelo, com limite
-de gasto**, guardada no cofre de segredos do sistema de CI e não no repositório, e entregue só a jobs
-que rodam código que alguém com permissão de escrita já aceitou. Um pull request vindo de um fork que
-pudesse imprimir a chave no próprio log de build é o vazamento de que a aula 17 tratou, com o sistema
-de CI como mensageiro.
+para o build como para qualquer outro programa: **uma chave só dele, restrita a um modelo, com
+limite de gasto**. Ela fica no cofre de segredos do sistema de CI e não no repositório, e só é
+entregue a jobs que rodam código que alguém com permissão de escrita já aceitou. Um pull request
+vindo de um fork que pudesse imprimir a chave no próprio log de build é o vazamento de que a aula 17
+tratou, com o sistema de CI como mensageiro.
 
 A verificação de taxa também custa dinheiro a cada execução. As 240 chamadas dela custam menos de um
-real aos preços da aula 18; 240 chamadas a cada push de cada branch, num repositório movimentado, são
-uma linha de orçamento que cresce sem ninguém ter decidido isso. Rodá-la só quando os arquivos que
-ela mede mudam é a resposta barata, e o teto diário da aula 18 é a rede de segurança.
+real aos preços da aula 18; 240 chamadas a cada push de cada branch, num repositório movimentado,
+são uma linha de orçamento que cresce sem ninguém ter decidido isso. Rodá-la só quando os arquivos
+que ela mede mudam é a resposta barata, e o teto diário da aula 18 é a rede de segurança.
 
 ## O que um build vermelho significa
 
 Toda falha desta suíte nomeia a sua correção: aprovar o arquivo, terminar o chamado, medir o
-candidato com mais tentativas ou melhorá-lo. **Nenhuma delas é "rodar de novo até ficar verde".** Nas
-verificações determinísticas, rodar de novo dá a mesma resposta. Na taxa, rodar de novo com sementes
-novas até uma passar é escolher a amostra de que você gostou, que é o mesmo erro de relatar uma
-execução à temperatura 0, cometido de propósito.
+candidato com mais tentativas ou melhorá-lo. **Nenhuma delas é "rodar de novo até ficar verde".**
+Nas verificações determinísticas, rodar de novo dá a mesma resposta. Na taxa, rodar de novo com
+sementes novas até uma passar é escolher a amostra de que você gostou, que é o mesmo erro de relatar
+uma execução à temperatura 0, cometido de propósito.
