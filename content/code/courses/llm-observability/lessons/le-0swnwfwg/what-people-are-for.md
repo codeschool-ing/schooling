@@ -18,8 +18,8 @@ Three things come out of a round of human labelling, and each is used later in t
 - **A measure of the judge.** How often the judge agrees with people, and on which kinds of reply
   it does not. That is the last section of this lesson.
 - **Reference labels.** Replies with an agreed verdict, kept by id, that every later version of the
-  judge, of the prompt or of the model is checked against. Lesson 13 builds an evaluation set from
-  them.
+  judge, of the prompt or of the model is checked against. Lesson 11 tests the judge's thresholds
+  against them.
 - **A better rubric.** People who disagree have found a question the rubric did not answer. Writing
   the answer down is the most useful thing a labelling round produces, and the next sections show it
   happening.

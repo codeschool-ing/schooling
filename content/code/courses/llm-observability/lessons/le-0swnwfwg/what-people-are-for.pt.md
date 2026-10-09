@@ -18,8 +18,8 @@ Três coisas saem de uma rodada de rotulagem humana, e cada uma é usada mais ad
 - **Uma medida do juiz.** Com que frequência o juiz concorda com as pessoas, e em que tipos de
   resposta não concorda. É a última seção desta aula.
 - **Rótulos de referência.** Respostas com um veredicto acordado, guardadas por id, contra as quais
-  toda versão futura do juiz, do prompt ou do modelo é conferida. A aula 13 constrói um conjunto de
-  avaliação a partir delas.
+  toda versão futura do juiz, do prompt ou do modelo é conferida. A aula 11 testa os limiares do juiz
+  contra elas.
 - **Uma rubrica melhor.** Pessoas que discordam acharam uma pergunta que a rubrica não respondia.
   Escrever a resposta é a coisa mais útil que uma rodada de rotulagem produz, e as próximas seções
   mostram isso acontecendo.
