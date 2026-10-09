@@ -75,7 +75,7 @@ Ollama faz aqui, enfileira cada pedido que chega enquanto ele está ocupado.
 seis é uma taxa sobre um punhado de pedidos; a mesma taxa entre nove e cinco é sobre mais de cem. Um
 painel que mostre taxas por hora sem o volume ao lado faz a madrugada parecer alarmante toda noite.
 
-**Uma queda de volume é uma falha que não manda erro.** Se o site da loja parasse de carregar o widget
-de ajuda, a taxa de erro do assistente seria perfeita: ninguém pergunta, nada falha. O volume
+**Uma queda de volume é uma falha que não manda erro.** Se o site da loja parasse de carregar o
+widget de ajuda, a taxa de erro do assistente seria perfeita: ninguém pergunta, nada falha. O volume
 comparado com a mesma hora da semana passada é o alarme para isso, e é o único que consegue vê-lo. A
-aula 16 o constrói.
+aula 16 diz por que ele precisa de um alerta próprio.

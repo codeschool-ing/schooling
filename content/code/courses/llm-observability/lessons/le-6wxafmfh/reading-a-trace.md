@@ -62,8 +62,8 @@ So the search did its job: the one chunk the model was handed is the one that an
 and it answers it in three plain words, *Returns are free*. **The mistake is the model's**, made
 while reading a source that said the opposite, and that changes where to look for a fix: not in the
 search or the floor, but in the prompt, the model, or how many sources it is given. Which of those
-would help cannot be decided from one trace. Lessons 8 to 14 measure them over many questions, and
-lesson 5 counts what the raised floor did over a week.
+would help cannot be decided from one trace. Lessons 8 to 14 measure the model and the floor over
+many questions, and lesson 5 counts what the raised floor did over a week.
 
 Notice what had to be on the span for this to be readable. A trace with only names and durations
 would have said "3,021 ms, nothing failed". **The attributes that explain a wrong answer are the ones

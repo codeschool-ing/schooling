@@ -249,7 +249,7 @@ isso depois de cada reprodução.
 docker compose -f ~/langfuse/docker-compose.yml down
 ```
 
-Isso para os seis e guarda o que eles armazenaram, e o próximo `up -d` acha os seus traces onde você os
-deixou. O `down -v` também apaga os dados armazenados, e `docker image rm` com os nomes das seis imagens
-devolve os 5,4 GB. A aula 7 roda outra ferramenta sob o Docker, e parar o Langfuse antes deixa a memória
-para ela.
+Isso para os seis e guarda o que eles armazenaram, e o próximo `up -d` acha os seus traces onde você
+os deixou. O `down -v` também apaga os dados armazenados, e `docker image rm` com os nomes das seis
+imagens devolve os 5,4 GB. A aula 7 roda outra ferramenta, o Phoenix, e parar o Langfuse antes deixa
+a memória para ela.

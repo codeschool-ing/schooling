@@ -73,8 +73,7 @@ pip install presidio-analyzer==2.2.364 presidio-anonymizer==2.2.364
 pip install https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.8.0/en_core_web_lg-3.8.0-py3-none-any.whl
 ```
 
-O modelo de linguagem é quase tudo: depois destas duas linhas o ambiente tem 857 MB, onde a aula 1 o
-deixou com 139.
+O modelo de linguagem é quase tudo, umas centenas de megabytes sozinho.
 
 O `presidio_try.py` passa as mesmas seis frases por ele:
 

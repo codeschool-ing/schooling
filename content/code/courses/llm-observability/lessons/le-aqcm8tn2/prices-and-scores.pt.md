@@ -104,7 +104,7 @@ ana@dev:~/obs$ python lf.py scores thumbs
 
 Vinte polegares dos três dias reproduzidos, dezessete para cima e três para baixo, cada um agora no
 trace que julga. A partir daqui uma tela pode filtrar traces por nota, desenhar a parcela de
-polegares para baixo por dia, ou listar os traces com polegar para baixo e ainda sem nota de juiz. A
-aula 9 acrescenta os vereditos de um juiz como uma segunda nota nos mesmos traces, e a aula 10 os de
-uma pessoa, e o motivo de as três poderem ficar lado a lado é que as três foram ligadas por id desde
-o começo.
+polegares para baixo por dia, ou listar os traces com polegar para baixo e ainda sem nota de juiz. O
+juiz da aula 9 guarda os vereditos também por id de trace, então eles poderiam ser mandados do mesmo
+jeito como uma segunda nota, e o motivo de um polegar e um veredicto poderem ficar lado a lado é que
+os dois foram ligados por id desde o começo.

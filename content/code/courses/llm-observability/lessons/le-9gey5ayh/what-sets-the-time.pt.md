@@ -59,9 +59,9 @@ quanto no hardware de um fornecedor: um prompt três vezes mais longo custa mais
 prompts menores, abaixo de 100 tokens, são os resumos da equipe de atendimento, e eles voltam mais
 rápido por um segundo motivo além do tamanho. Só duas conversas se repetem a semana toda, e o Ollama
 guarda o que calculou para o começo do último prompt e o reaproveita quando o próximo começa do
-mesmo jeito; é o `cached_tokens` que o span instrumentado da aula 1 informou. Com prompts de dezenas
-de milhares de tokens, como num agente que carrega um histórico longo, a mesma inclinação soma
-minutos numa máquina como esta.
+mesmo jeito; é a contagem de cache que o span instrumentado da aula 1 informou. Com prompts de
+dezenas de milhares de tokens, como num agente que carrega um histórico longo, a mesma inclinação
+soma minutos numa máquina como esta.
 
 E **nenhuma chamada em 265 esperou mais de três segundos** pelo primeiro token. Em produção essa
 linha raramente fica vazia: algumas chamadas esperam muito mais do que o tamanho delas explica, em

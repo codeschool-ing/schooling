@@ -251,5 +251,5 @@ docker compose -f ~/langfuse/docker-compose.yml down
 
 That stops the six and keeps what they stored, so the next `up -d` finds your traces where you left
 them. `down -v` also deletes the stored data, and `docker image rm` with the six image names gives
-back the 5.4 GB. Lesson 7 runs another tool under Docker, and stopping Langfuse first leaves it the
+back the 5.4 GB. Lesson 7 runs another tool, Phoenix, and stopping Langfuse first leaves it the
 memory.

@@ -20,7 +20,7 @@ coisas embutidas:
 | usuários e sessões | acompanhar uma pessoa, ou uma conversa | aulas 2 e 3 |
 | **notas** ligadas a um trace | polegares, juízes, pessoas, todos ligados por id | aulas 5 e 9 |
 | conjuntos de dados e experimentos | rodar o conjunto de avaliação contra uma mudança | aulas 13 e 14 |
-| gestão de prompts | versionar o prompt fora do código | aula 14 |
+| gestão de prompts | versionar o prompt fora do código | nenhuma: o curso mantém o prompt no código |
 
 Duas das ferramentas mais conhecidas feitas para isso ficam nas duas pontas de uma escolha que toda
 equipe faz. O **Langfuse** é código aberto sob a licença MIT, e pode rodar nas suas máquinas ou ser

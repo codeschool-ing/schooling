@@ -201,8 +201,8 @@ labels:
 - **Keep the judge's own sentence**, until a prompt measures better. A change to a judge is a change
   to an instrument, and this one was a change for the worse.
 - **Try a better judge**, a larger model or another one, and measure it the same way. A judge that
-  is a different model from the assistant also stops sharing its blind spots. Lesson 14 makes the
-  comparison a test that runs on every change.
+  is a different model from the assistant also stops sharing its blind spots. Comparing two judges
+  against the same labels is the same exercise as this section, run twice.
 
 The labels outlive every judge. That is why they are named by question and release rather than by
 trace, and why the rubric's version is written beside every verdict.

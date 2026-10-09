@@ -75,4 +75,4 @@ shows grading as a line beside help, order and summary. A cost nobody can see gr
 deciding it should: a sampling rate raised for one investigation and never lowered again is the
 usual way.
 
-Lesson 16 puts the grading on a dashboard beside the traffic, with its cost.
+Lesson 16 names the judge's sampled score as a signal worth an alert of its own, always with its n.

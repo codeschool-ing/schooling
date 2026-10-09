@@ -22,11 +22,12 @@ piso de 0,55 e o cliente é recusado; sem eles, passa. Sob o piso antigo de 0,4,
 passado.
 
 Essa é uma descoberta que um painel não teria feito e que um trace fez em dois comandos. Ela também
-aponta para a correção, e ela não está no piso: **a busca deveria receber a pergunta, não a mensagem**.
-Uma etapa antes da recuperação que tire os dados do cliente, que a aula 2 já escreveu (`redact()`), ou
-que peça a um modelo que reformule a pergunta, como faz a aula 6 do `rag` quando reescreve perguntas,
-daria às perguntas sobre pedido a mesma chance das de ajuda. A aula 14 testa uma mudança assim contra o
-conjunto de avaliação antes de deixá-la chegar perto da produção.
+aponta para a correção, e ela não está no piso: **a busca deveria receber a pergunta, não a
+mensagem**. Uma etapa antes da recuperação que tire os dados do cliente, que a aula 2 já escreveu
+(`redact()`), ou que peça a um modelo que reformule a pergunta, como faz a aula 6 do `rag` quando
+reescreve perguntas, daria às perguntas sobre pedido a mesma chance das de ajuda. O teste de
+regressão da aula 14 é como uma mudança assim é conferida contra o conjunto de avaliação antes de
+chegar perto da produção.
 
 ## O movimento geral
 

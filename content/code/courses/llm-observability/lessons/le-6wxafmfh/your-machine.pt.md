@@ -43,14 +43,14 @@ próxima seção então rodam dentro da VM, exatamente como estão escritos.
 programas usam o SDK da OpenAI e leem o endereço e a chave de duas variáveis, que a próxima seção
 define para o Ollama. Deixe o endereço de fora e defina a sua própria chave, e eles conversam com a
 OpenAI. Dois nomes mudam também: o modelo de chat no `releases.json`, e o modelo de embeddings no
-`index.py`, onde o `text-embedding-3-small` da OpenAI toma o lugar do `all-minilm`. Toda similaridade
-do curso então sai diferente, e o piso do `releases.json` tem de ser escolhido de novo; a aula 5
-mostra como. Defina um limite de gastos no console do fornecedor antes do primeiro pedido. **Nenhuma
-aula depende de uma franquia gratuita de fornecedor**; pode existir uma quando você ler isto, e ela é
-do fornecedor para mudar.
+`index.py`, onde o `text-embedding-3-small` da OpenAI toma o lugar do `all-minilm`. Toda
+similaridade do curso então sai diferente, e o piso do `releases.json` tem de ser escolhido de novo;
+a aula 5 mostra o que faz um piso mal escolhido. Defina um limite de gastos no console do fornecedor
+antes do primeiro pedido. **Nenhuma aula depende de uma franquia gratuita de fornecedor**; pode
+existir uma quando você ler isto, e ela é do fornecedor para mudar.
 
-As aulas 6 e 7 também rodam o Docker, para as ferramentas de trace cujas telas elas mostram. A aula 6
-diz o que isso acrescenta, e as duas aulas podem ser lidas sem ele.
+A aula 6 também roda o Docker, para a ferramenta de trace cujas telas ela mostra. Ela diz o que isso
+acrescenta, e pode ser lida sem ele.
 
 ## Quanto computador basta
 
@@ -92,6 +92,6 @@ Uns 11 tokens por segundo contra 37, em quatro núcleos. O ponto de cada aula ai
 modelo menor, embora as contagens das aulas seguintes fiquem mais longe das da aula. Para usá-lo,
 escreva `llama3.2:1b` no `releases.json` onde estiver `llama3.2:3b`.
 
-A semana de tráfego da aula 3 é a espera mais longa do curso: umas trezentas perguntas, que a máquina
-da gravação respondeu em dezoito minutos com o modelo recomendado. Com uma placa de vídeo, conte com
-uma fração disso.
+A semana de tráfego da aula 3 é a espera mais longa do curso: umas trezentas perguntas, que a
+máquina da gravação respondeu em dezessete minutos com o modelo recomendado. Com uma placa de vídeo,
+conte com uma fração disso.

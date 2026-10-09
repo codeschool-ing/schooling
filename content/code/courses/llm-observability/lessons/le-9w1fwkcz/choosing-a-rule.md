@@ -32,8 +32,8 @@ The person who opens it should be one click from lesson 1's trace tree.
 The same structure applies to every signal the course has built:
 
 - **Thumbs down and rephrasing**, lesson 5's, with a longer window, because there are fewer of them.
-- **Cost per request**, lesson 3's, against its own baseline: the release that is suddenly expensive is
-  as much a regression as the one that is suddenly bad, as lesson 14 found.
+- **Cost per request**, lesson 3's, against its own baseline: a sudden change either way deserves a
+  look, because in lesson 14 the releases that broke cases were the cheaper ones.
 - **Latency**, lesson 4's, on the slow percentiles rather than the median.
 - **The judge's sampled score**, lesson 9's, always with its n, and only on a criterion lesson 10
   showed the judge can see.

@@ -61,10 +61,10 @@ vez.
 
 Então a busca fez o seu trabalho: o único trecho que o modelo recebeu é o que responde à pergunta, e
 responde em três palavras simples, *Returns are free*. **O erro é do modelo**, cometido ao ler uma
-fonte que dizia o contrário, e isso muda onde procurar uma correção: não na busca nem no piso, mas no
-prompt, no modelo, ou em quantas fontes ele recebe. Qual dessas ajudaria não se decide com um trace.
-As aulas 8 a 14 as medem sobre muitas perguntas, e a aula 5 conta o que o piso mais alto fez em uma
-semana.
+fonte que dizia o contrário, e isso muda onde procurar uma correção: não na busca nem no piso, mas
+no prompt, no modelo, ou em quantas fontes ele recebe. Qual dessas ajudaria não se decide com um
+trace. As aulas 8 a 14 medem o modelo e o piso sobre muitas perguntas, e a aula 5 conta o que o piso
+mais alto fez em uma semana.
 
 Repare no que precisou estar no span para isso ser legível. Um trace só com nomes e durações teria
 dito "3.021 ms, nada falhou". **Os atributos que explicam uma resposta errada são os das entradas**:

@@ -69,10 +69,10 @@ metric reaches its number, which is the part worth learning:
 
 Three things in that output matter more than the scores:
 
-- **Each metric is several model calls per reply**: three for relevancy and four for faithfulness here,
-  nine and twelve seconds on this machine. The price of a framework's metric is the price of all its
-  calls, which lesson 9 taught to count, and a metric on every reply of a week is that many calls times
-  the week.
+- **Each metric is several model calls per reply**: three for relevancy and four for faithfulness
+  here, nine and fifteen seconds on this machine. The price of a framework's metric is the price of
+  all its calls, which lesson 9 taught to count, and a metric on every reply of a week is that many
+  calls times the week.
 - **The reason is a separate call, and it can be wrong when the score is right.** Faithfulness scored
   0 and explained it as "there are no contradictions in the actual output", the opposite of what its
   own verdict found. Lesson 9's judge did the same. Read the steps, not the sentence at the end.

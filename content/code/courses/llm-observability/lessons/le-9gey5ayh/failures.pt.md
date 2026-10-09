@@ -197,8 +197,8 @@ A semana precisa das duas, e elas significam coisas diferentes:
 
 Um alerta só na segunda dispara quando já é tarde demais. Um alerta só na primeira dispara a cada
 soluço do fornecedor que as novas tentativas absorveram e ninguém percebeu. **Uma taxa de erro por
-tentativa subindo com a taxa por pedido estável é um aviso; as duas subindo é um incidente.** A aula 16
-transforma isso em regras.
+tentativa subindo com a taxa por pedido estável é um aviso; as duas subindo é um incidente.** A aula
+16 monta regras desse tipo para as recusas, e o mesmo formato serve aqui.
 
 ## Uma nova tentativa que o trace não vê
 

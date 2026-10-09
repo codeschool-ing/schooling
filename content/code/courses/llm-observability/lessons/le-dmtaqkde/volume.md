@@ -76,6 +76,7 @@ six is a rate over a handful of requests; the same rate between nine and five is
 dashboard that shows rates by hour without the volume beside them makes the small hours look
 alarming every night.
 
-**A drop in volume is a failure that sends no error.** If the shop's website stopped loading the help
-widget, the assistant's error rate would be perfect: nobody asks, nothing fails. Volume against the same
-hour last week is the alarm for that, and it is the only one that can see it. Lesson 16 builds it.
+**A drop in volume is a failure that sends no error.** If the shop's website stopped loading the
+help widget, the assistant's error rate would be perfect: nobody asks, nothing fails. Volume against
+the same hour last week is the alarm for that, and it is the only one that can see it. Lesson 16
+says why it needs an alert of its own.

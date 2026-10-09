@@ -80,9 +80,9 @@ atributos significam.
 que lê a convenção ao pé da letra. Um painel que contasse gerações contaria agora cada pedido duas
 vezes.
 
-**A sessão foi achada, e o usuário não.** `session.id` é um nome que o Langfuse lê; `user.hash`, que a
-aula 2 escolheu como o nome da convenção semântica para um pseudônimo, não está entre os nomes que ele
-procura. Nem `app.question`, então o trace não tem entrada.
+**A sessão foi achada, e o usuário não.** `session.id` é um nome que o Langfuse lê; `user.hash`, o
+nome que a aula 2 deu ao pseudônimo, não está entre os nomes que ele procura. Nem `app.question`,
+então o trace não tem entrada.
 
 **E todo custo é 0.** O Langfuse dá preço a uma geração a partir de uma tabela de modelos que
 conhece, e o `llama3.2:3b` na sua própria máquina não é um para o qual ele tenha preço.

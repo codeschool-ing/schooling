@@ -106,7 +106,8 @@ Modelo do pedido e modelo da resposta são dois atributos por um motivo. Um pedi
 (alias) como `gpt-4o` é respondido pela versão datada para a qual o apelido aponta naquele dia, e a
 resposta diz qual foi. Os nomes do Ollama funcionam do mesmo jeito: `llama3.2:3b` é uma etiqueta, e
 baixá-la de novo noutro dia pode trazer outro arquivo com o mesmo nome, por isso o `ollama list`
-mostra um id ao lado. A aula 14 é sobre o dia em que pedido e resposta divergem.
+mostra um id ao lado. A aula 14 compara dois modelos nas mesmas perguntas, que é o teste a rodar no
+dia em que uma etiqueta traz outro arquivo.
 
 ## O que o span não pegou
 

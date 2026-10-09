@@ -43,7 +43,7 @@ Pedir uma pessoa em geral é um evento que a aplicação já tem: um botão, uma
 atendimento. Ele precisa ter o id de trace da última resposta anexado, para que a resposta que falhou
 seja a contada, e isso é uma mudança de uma linha onde quer que o botão esteja.
 
-**A regra que amarra tudo isso:** um sinal só é útil se puder ser ligado à resposta que ele julga. Um
-polegar sem id de trace é uma pesquisa de satisfação. Uma passagem para atendimento sem id de trace é um
-número de equipe. Com o id, os dois são avaliações de respostas específicas, e a aula 13 transforma as
-piores delas em casos de teste.
+**A regra que amarra tudo isso:** um sinal só é útil se puder ser ligado à resposta que ele julga.
+Um polegar sem id de trace é uma pesquisa de satisfação. Uma passagem para atendimento sem id de
+trace é um número de equipe. Com o id, os dois são avaliações de respostas específicas, e a aula 13
+transforma as respostas com polegar para baixo em casos de teste.

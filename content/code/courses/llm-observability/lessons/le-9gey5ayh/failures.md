@@ -195,8 +195,8 @@ it.
 
 An alert on the second alone fires only when it is already too late. An alert on the first alone
 fires on every provider hiccup that the retries absorbed and nobody noticed. **A rising attempt
-error rate with a flat request error rate is a warning; both rising is an incident.** Lesson 16 turns
-that into rules.
+error rate with a flat request error rate is a warning; both rising is an incident.** Lesson 16
+builds rules of this kind for refusals, and the same shape fits here.
 
 ## A retry the trace cannot see
 

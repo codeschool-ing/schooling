@@ -34,8 +34,9 @@ abre deveria estar a um clique da árvore de trace da aula 1.
 A mesma estrutura vale para todo sinal que o curso montou:
 
 - **Polegares para baixo e reformulações**, os da aula 5, com uma janela mais longa, porque são menos.
-- **Custo por requisição**, o da aula 3, contra a sua própria linha de base: a versão que de repente fica
-  cara é uma regressão tanto quanto a que de repente fica ruim, como a aula 14 viu.
+- **Custo por requisição**, o da aula 3, contra a sua própria linha de base: uma mudança brusca para
+  qualquer lado merece um olhar, porque na aula 14 as versões que quebraram casos eram as mais
+  baratas.
 - **Latência**, a da aula 4, nos percentis lentos e não na mediana.
 - **A nota amostrada do juiz**, a da aula 9, sempre com o seu n, e só num critério que a aula 10 mostrou
   que o juiz consegue ver.

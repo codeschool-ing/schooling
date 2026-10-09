@@ -101,6 +101,6 @@ ana@dev:~/obs$ python lf.py scores thumbs
 
 Twenty thumbs from the three days replayed, seventeen up and three down, each now on the trace it
 judges. From here a screen can filter traces by score, chart the share of thumbs down per day, or
-list the traces with a thumbs down and no judge score yet. Lesson 9 adds a judge's verdicts as a
-second score on the same traces, and lesson 10 a person's, and the reason all three can sit side by
-side is that all three were joined by id from the start.
+list the traces with a thumbs down and no judge score yet. Lesson 9's judge keeps its verdicts by
+trace id as well, so they could be sent the same way as a second score, and the reason a thumb and a
+verdict can sit side by side is that both were joined by id from the start.

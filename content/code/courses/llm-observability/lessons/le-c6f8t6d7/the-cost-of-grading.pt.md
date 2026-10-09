@@ -75,4 +75,5 @@ avaliação como uma linha ao lado de help, order e summary. Um custo que ningu�
 ninguém decida que deve crescer: uma taxa de amostragem aumentada para uma investigação e nunca mais
 baixada é o caminho de costume.
 
-A aula 16 põe a avaliação num painel ao lado do tráfego, com o seu custo.
+A aula 16 aponta a nota amostrada do juiz como um sinal que vale um alerta próprio, sempre com o seu
+n.

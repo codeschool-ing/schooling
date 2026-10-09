@@ -71,9 +71,9 @@ métrica chega ao número, que é a parte que vale aprender:
 Três coisas nessa saída importam mais que as notas:
 
 - **Cada métrica são várias chamadas de modelo por resposta**: três para relevância e quatro para
-  fidelidade aqui, nove e doze segundos nesta máquina. O preço de uma métrica de framework é o preço de
-  todas as suas chamadas, que a aula 9 ensinou a contar, e uma métrica em toda resposta de uma semana é
-  esse tanto de chamadas vezes a semana.
+  fidelidade aqui, nove e quinze segundos nesta máquina. O preço de uma métrica de framework é o
+  preço de todas as suas chamadas, que a aula 9 ensinou a contar, e uma métrica em toda resposta de
+  uma semana é esse tanto de chamadas vezes a semana.
 - **O motivo é uma chamada separada, e pode estar errado quando a nota está certa.** A fidelidade deu 0
   e explicou com "there are no contradictions in the actual output", o contrário do que o próprio
   veredicto achou. O juiz da aula 9 fez o mesmo. Leia os passos, não a frase do final.

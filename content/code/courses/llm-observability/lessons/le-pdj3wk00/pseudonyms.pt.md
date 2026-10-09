@@ -3,9 +3,9 @@ title: Um nome para o usuário que não é o id dele
 version: 2
 ---
 
-As aulas 3 e 5 contam por usuário: os usuários que mais usam, as pessoas que deram polegar para baixo
-duas vezes. Isso exige o mesmo valor em todo pedido de uma pessoa. Não exige que seja o id da conta
-dela, e não deveria ser, porque o id da conta leva a qualquer lugar a que a conta leva.
+A aula 3 conta por usuário: os usuários que mais usam, e quanto cada um custou. Isso exige o mesmo
+valor em todo pedido de uma pessoa. Não exige que seja o id da conta dela, e não deveria ser, porque
+o id da conta leva a qualquer lugar a que a conta leva.
 
 A resposta de costume é um **pseudônimo**: um valor derivado do id, sempre o mesmo, do qual o id não
 pode ser lido. O jeito óbvio de derivá-lo, um hash, não funciona:

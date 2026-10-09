@@ -39,18 +39,18 @@ it removes all three.
 least the sizes in the table; with less memory than 8 GB the model and Ubuntu fight over it. The
 next section's steps then run inside the VM, exactly as written.
 
-**Online works for most of the course, and it is the only path here that costs money.** The
-programs use OpenAI's SDK and read the address and key from two variables, which the next section
-sets for Ollama. Leave the address out and set your own key instead, and they talk to OpenAI. Two
-names change as well: the chat model in `releases.json`, and the embedding model in `index.py`,
-where OpenAI's `text-embedding-3-small` takes the place of `all-minilm`. Every similarity in the
-course then comes out different, so the floor in `releases.json` has to be chosen again, and lesson 5
-shows how. Set a spending limit in the provider's console before the first request. **No lesson
-depends on a provider's free allowance**; one may exist when you read this, and it is the
-provider's to change.
+**Online works for most of the course, and it is the only path here that costs money.** The programs
+use OpenAI's SDK and read the address and key from two variables, which the next section sets for
+Ollama. Leave the address out and set your own key instead, and they talk to OpenAI. Two names
+change as well: the chat model in `releases.json`, and the embedding model in `index.py`, where
+OpenAI's `text-embedding-3-small` takes the place of `all-minilm`. Every similarity in the course
+then comes out different, so the floor in `releases.json` has to be chosen again; lesson 5 shows
+what a floor set wrong does. Set a spending limit in the provider's console before the first
+request. **No lesson depends on a provider's free allowance**; one may exist when you read this, and
+it is the provider's to change.
 
-Lessons 6 and 7 also run Docker, for the tracing tools whose screens they show. Lesson 6 says what
-that adds, and both lessons can be read without it.
+Lesson 6 also runs Docker, for the tracing tool whose screens it shows. It says what that adds, and
+it can be read without it.
 
 ## How much computer is enough
 
@@ -93,5 +93,5 @@ the smaller model, though the counts in the later lessons will be further from t
 it, write `llama3.2:1b` in `releases.json` wherever it says `llama3.2:3b`.
 
 The week of traffic in lesson 3 is the longest wait in the course: about three hundred questions,
-which the recording machine answered in eighteen minutes with the recommended model. With a
+which the recording machine answered in seventeen minutes with the recommended model. With a
 graphics card, expect a fraction of that.

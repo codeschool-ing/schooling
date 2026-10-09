@@ -20,7 +20,7 @@ in:
 | users and sessions | following one person, or one conversation | lessons 2 and 3 |
 | **scores** attached to a trace | thumbs, judges, people, all joined by id | lessons 5 and 9 |
 | datasets and experiments | running the evaluation set against a change | lessons 13 and 14 |
-| prompt management | versioning the prompt outside the code | lesson 14 |
+| prompt management | versioning the prompt outside the code | none: the course keeps its prompt in the code |
 
 Two of the best-known tools built for this sit at two ends of a choice every team makes.
 **Langfuse** is open source under the MIT licence, and can be run on your own machines or used as a

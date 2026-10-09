@@ -199,9 +199,9 @@ oito rótulos:
   que o gabarito está.
 - **Manter a frase própria do juiz**, até um prompt medir melhor. Uma mudança no juiz é uma mudança no
   instrumento, e esta foi uma mudança para pior.
-- **Experimentar um juiz melhor**, um modelo maior ou outro, e medi-lo do mesmo jeito. Um juiz que é um
-  modelo diferente do assistente também deixa de dividir os pontos cegos dele. A aula 14 transforma a
-  comparação num teste que roda a cada mudança.
+- **Experimentar um juiz melhor**, um modelo maior ou outro, e medi-lo do mesmo jeito. Um juiz que é
+  um modelo diferente do assistente também deixa de dividir os pontos cegos dele. Comparar dois
+  juízes contra os mesmos rótulos é o mesmo exercício desta seção, rodado duas vezes.
 
 Os rótulos sobrevivem a todo juiz. É por isso que são nomeados por pergunta e versão, e não por trace,
 e por isso a versão da rubrica está escrita ao lado de cada veredicto.

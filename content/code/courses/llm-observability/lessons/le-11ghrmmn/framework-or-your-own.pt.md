@@ -25,7 +25,7 @@ cuja docstring é a definição inteira.
 3. **A métrica pronta de um framework é lida antes de ser rodada.** O prompt dela está no pacote
    instalado, e lê-lo diz o que ela vai premiar.
 
-A aula 14 usa essas métricas para comparar duas versões do assistente, e a aula 15 transforma a
-comparação num teste que pode reprovar um build. As duas funcionam com as verificações do curso ou com
-as de um framework, e as duas usam as quarenta e oito respostas rotuladas para dizer em quais verificações dá
-para acreditar.
+A aula 14 compara versões do assistente no conjunto de avaliação, com os fatos e as verificações da
+aula 8, e a aula 15 transforma a comparação num teste que pode reprovar um build. Uma métrica desta
+aula ou de um framework pode entrar nelas quando as quarenta e oito respostas rotuladas tiverem dito
+que dá para acreditar nela.

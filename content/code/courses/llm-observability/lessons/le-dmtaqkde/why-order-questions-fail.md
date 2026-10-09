@@ -22,12 +22,12 @@ number pull it away from the documents, which contain none of those. With them, 
 below the floor of 0.55 and the customer is refused; without them, it clears it. Under the old floor
 of 0.4, both would have passed.
 
-That is a finding a dashboard could not have made and a trace made in two commands. It also points at
-the fix, and it is not in the floor: **the search should be given the question, not the message**. A
-step before retrieval that strips the customer's details, which lesson 2 already wrote (`redact()`), or
-that asks a model to restate the question, as `rag` lesson 6 does when it rewrites questions, would
-give the order questions the same chance as the help ones. Lesson 14 tests a change like that against
-the evaluation set before letting it near production.
+That is a finding a dashboard could not have made and a trace made in two commands. It also points
+at the fix, and it is not in the floor: **the search should be given the question, not the
+message**. A step before retrieval that strips the customer's details, which lesson 2 already wrote
+(`redact()`), or that asks a model to restate the question, as `rag` lesson 6 does when it rewrites
+questions, would give the order questions the same chance as the help ones. Lesson 14's regression
+test is how a change like that is checked against the evaluation set before it goes near production.
 
 ## The general move
 

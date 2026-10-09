@@ -81,8 +81,8 @@ call to a tool that reads the convention literally. A dashboard that counted gen
 count every request twice.
 
 **The session was found, and the user was not.** `session.id` is a name Langfuse reads; `user.hash`,
-which lesson 2 chose as the semantic convention's name for a pseudonym, is not one of the names it
-looks for. Nor is `app.question`, so the trace has no input.
+the name lesson 2 gave the pseudonym, is not one of the names it looks for. Nor is `app.question`,
+so the trace has no input.
 
 **And every cost is 0.** Langfuse prices a generation from a table of models it knows, and
 `llama3.2:3b` on your own machine is not one it has a price for.

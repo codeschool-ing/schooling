@@ -122,12 +122,12 @@ asked in keywords, and a lost parcel asked about with a name and an order number
 the September release answered and the October one refuses, and here they are by name, before a
 customer has met any of them.
 
-The two fixed cases are worth a look as well. e12, the Kindle, and e29, a return asked inside an order
-message, are answered now and were refused before. With the lower floor the model was shown three
-chunks for each, the right one among them, and refused; with the higher floor it was shown one or two,
-and answered. That is lesson 11's finding from the other side: more context is not always more help to
-a small model. And e29's new answer fails two checks it never reached before, because a refusal has no
-sentence to leave uncited.
+The two fixed cases are worth a look as well. e12, the Kindle, and e29, a return asked inside an
+order message, are answered now and were refused before. With the lower floor the model was shown
+three chunks for each, the right one among them, and refused; with the higher floor it was shown one
+or two, and answered. Lesson 11 found the model refusing with the right chunk in hand; here a third
+chunk beside it is enough to tip it. And e29's new answer fails two checks it never reached before,
+because a refusal has no sentence to leave uncited.
 
 **Everything below the cases looks like an improvement.** 27% fewer output tokens, 34% cheaper, a
 median reply 31% faster. That is why a release like this ships. The floor makes the assistant refuse

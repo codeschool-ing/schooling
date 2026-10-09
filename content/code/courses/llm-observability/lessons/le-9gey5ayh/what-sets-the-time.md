@@ -59,9 +59,8 @@ provider's hardware: a prompt three times as long costs more than half a second.
 prompts, under 100 tokens, are the support team's summaries, and they come back fastest for a second
 reason besides their size. Only two conversations recur all week, and Ollama keeps what it computed
 for the start of the last prompt and reuses it when the next one starts the same way; that is the
-`cached_tokens` lesson 1's instrumented span reported. With prompts of tens of thousands of tokens,
-as in an agent carrying a long history, the same slope adds up to minutes on a machine like this
-one.
+cache count lesson 1's instrumented span reported. With prompts of tens of thousands of tokens, as
+in an agent carrying a long history, the same slope adds up to minutes on a machine like this one.
 
 And **not one call in 265 waited over three seconds** for its first token. In production that line
 is rarely empty: a few calls wait far longer than their size explains, in every group, which is the

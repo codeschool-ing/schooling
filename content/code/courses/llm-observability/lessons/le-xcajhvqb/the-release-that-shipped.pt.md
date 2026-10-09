@@ -122,12 +122,13 @@ arrependimento, o frete grátis perguntado em palavras-chave, e uma encomenda pe
 nome e um número de pedido. Cada um é uma pergunta que a versão de setembro respondia e a de outubro
 recusa, e aqui estão eles pelo nome, antes de algum cliente ter topado com qualquer um.
 
-Os dois casos consertados também merecem um olhar. A e12, o Kindle, e a e29, uma devolução perguntada
-dentro de uma mensagem de pedido, são respondidas agora e eram recusadas antes. Com o piso mais baixo o
-modelo recebia três trechos para cada uma, o certo entre eles, e recusava; com o piso mais alto recebia
-um ou dois, e respondia. É a descoberta da aula 11 vista do outro lado: mais contexto nem sempre ajuda
-mais um modelo pequeno. E a nova resposta da e29 falha duas verificações que nunca tinha alcançado,
-porque uma recusa não tem frase para deixar sem citação.
+Os dois casos consertados também merecem um olhar. A e12, o Kindle, e a e29, uma devolução
+perguntada dentro de uma mensagem de pedido, são respondidas agora e eram recusadas antes. Com o
+piso mais baixo o modelo recebia três trechos para cada uma, o certo entre eles, e recusava; com o
+piso mais alto recebia um ou dois, e respondia. A aula 11 achou o modelo recusando com o trecho
+certo na mão; aqui um terceiro trecho ao lado basta para virá-lo. E a nova resposta da e29 falha
+duas verificações que nunca tinha alcançado, porque uma recusa não tem frase para deixar sem
+citação.
 
 **Tudo abaixo dos casos parece uma melhora.** 27% menos tokens de saída, 34% mais barata, uma resposta
 mediana 31% mais rápida. É por isso que uma versão assim vai ao ar. O piso faz o assistente recusar

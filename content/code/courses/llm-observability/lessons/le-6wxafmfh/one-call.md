@@ -102,11 +102,12 @@ when this course was written, and one name had already changed: what is now
 `gen_ai.provider.name` used to be `gen_ai.system`. Pin the version of whatever writes them, and
 expect a rename or two when you upgrade.
 
-Request and response model are two attributes for a reason. A request for an alias such as
-`gpt-4o` is answered by whatever dated snapshot the alias points at that day, and the reply says
-which one. Ollama's names work the same way: `llama3.2:3b` is a tag, and pulling it again on another
-day can bring a different file under the same name, which is why `ollama list` shows an id beside
-it. Lesson 14 is about the day request and response differ.
+Request and response model are two attributes for a reason. A request for an alias such as `gpt-4o`
+is answered by whatever dated snapshot the alias points at that day, and the reply says which one.
+Ollama's names work the same way: `llama3.2:3b` is a tag, and pulling it again on another day can
+bring a different file under the same name, which is why `ollama list` shows an id beside it. Lesson
+14 compares two models on the same questions, which is the test to run on the day a tag brings a
+different file.
 
 ## What the span did not catch
 

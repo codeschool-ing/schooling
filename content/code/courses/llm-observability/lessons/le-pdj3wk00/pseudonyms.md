@@ -3,9 +3,9 @@ title: A name for the user that is not their id
 version: 2
 ---
 
-Lessons 3 and 5 count per user: the heaviest users, the people who gave a thumbs down twice. That
-needs the same value on every request from one person. It does not need to be their account id, and
-it should not be, because the account id leads anywhere the account does.
+Lesson 3 counts per user: the heaviest users, and what each of them cost. That needs the same value
+on every request from one person. It does not need to be their account id, and it should not be,
+because the account id leads anywhere the account does.
 
 The usual answer is a **pseudonym**: a value derived from the id, the same every time, from which the
 id cannot be read. The obvious way to derive it, a hash, does not work:

@@ -44,5 +44,5 @@ one that gets counted, and that is a one-line change wherever the button is.
 
 **The rule that ties these together:** a signal is only useful if it can be joined to the reply it
 judges. A thumb with no trace id is a satisfaction survey. A handover with no trace id is a staffing
-number. With the id, both are evaluations of particular answers, and lesson 13 turns the worst of
-them into test cases.
+number. With the id, both are evaluations of particular answers, and lesson 13 turns the replies
+thumbed down into test cases.
