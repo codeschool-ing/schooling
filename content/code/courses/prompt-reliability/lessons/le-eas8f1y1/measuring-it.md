@@ -40,8 +40,8 @@ with the labels a person gave them. Save them as `cases/holdout.jsonl`:
 {"id": "h30", "message": "Thank you for sorting out the refund so quickly last week.", "expect": {"category": "other", "urgency": "low"}}
 ```
 
-Join the two sets into one file, which later lessons use too, and run both prompts over all
-seventy:
+Join the two sets into one file, which lessons 12, 18, 19 and 20 use too, and run both prompts over
+all seventy:
 
 ```
 ana@lab:~/triage$ cat cases/dev.jsonl cases/holdout.jsonl > cases/all.jsonl
@@ -213,12 +213,11 @@ h29    urgency   high, expected normal
 h30    category  returns, expected other
 ```
 
-Line 12 of the rules, *NEVER mark a question as high urgency*, pulls answers down: `t04`, somebody
-who cannot log in, and `t12`, a parcel marked delivered that never came, both went to `low` where a
-person said `high`. The guide's *a customer out of pocket ... is high however politely they ask*
-pulls them up: `t02`, `t07` and a run of others that a person called `normal` came back `high`.
-**Each prompt has a direction it leans in**, and the total of each is the sum of a different set of
-mistakes. Two prompts can score within four of each other and be wrong about different customers.
+Under the rules, `t04`, somebody who cannot log in, and `t12`, a parcel marked delivered that never
+came, both went to `low` where a person said `high`. Under the guide, `t02`, `t07` and a run of
+others that a person called `normal` came back `high`. **Each prompt has a direction it leans in**,
+and the total of each is the sum of a different set of mistakes. Two prompts can score within four
+of each other and be wrong about different customers.
 
 ## The case two rules fought over
 

@@ -3,10 +3,10 @@ title: Balancing the examples
 version: 2
 ---
 
-Lesson 1 found that examples pin down a format, and lesson 7 that one example's label can pull
-answers towards it. The obvious worry follows: a set of examples where one label dominates should
-pull every close call towards that label. These two prompts test it. The first has five examples,
-four of them billing. Save it as `prompts/v18-skewed.txt`:
+Lesson 1 found that examples pin down a format, and that an example pulls the messages that look
+like it towards its own labels. The obvious worry follows: a set of examples where one label
+dominates should pull every close call towards that label. These two prompts test it. The first has
+five examples, four of them billing. Save it as `prompts/v18-skewed.txt`:
 
 ```
 You sort customer messages for Folio, an online bookshop.
@@ -143,11 +143,11 @@ The skewed set called 11 messages billing, 10 of them right; the balanced set ca
 is even slightly ahead, 55 against 53, which two of seventy cannot separate.
 
 That is a real result about this model and these examples, and it is not a licence to skew. The
-effect lesson 7 found, and that the literature names, is real on other models and other tasks: Zhao
-and others (2021) showed few-shot classifiers favouring the labels their examples used most and the
-labels of the last examples, which they called majority-label and recency bias. What this section
-adds is the method: **an imbalance is a hypothesis, and the matrix is how you test it**, on your
-model, before you rewrite your examples to fix a bias you assumed.
+effect is real on other models and other tasks, and the literature names it. Zhao and others (2021)
+showed few-shot classifiers favouring the labels their examples used most, and the labels of the
+last examples: majority-label and recency bias. What this section adds is the method: **an imbalance
+is a hypothesis, and the matrix is how you test it**, on your model, before you rewrite your
+examples to fix a bias you assumed.
 
 Balanced examples cost nothing to prefer, so prefer them, and measure, because the next model may
 not be this indifferent.

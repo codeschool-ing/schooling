@@ -34,13 +34,13 @@ urgency      20    20
 all          20    20
 ```
 
-O formato se manteve: uma resposta em quarenta não é JSON válido, o mesmo `t38` de sempre. **O que os
+O formato se manteve: uma resposta em quarenta não é JSON válido, como com o `v3`. **O que os
 exemplos estavam pagando é o julgamento**: as categorias caíram de 35 para 32 e as urgências de 28
-para 20. Um terço do custo por nove mensagens em quarenta é uma troca que alguém tem de fazer
-sabendo. Se uma urgência errada custa mais que 40.837,5 centavos por milhão de chamadas é uma
-pergunta sobre a equipe de suporte, não sobre o prompt, e só quem sabe quanto custa uma mensagem mal
-classificada consegue responder. O que o harness pode fazer é garantir que essa pessoa esteja olhando
-para os dois números.
+para 20. Um terço do custo por oito mensagens a menos, no saldo, em quarenta é uma troca que alguém
+tem de fazer sabendo. Se uma urgência errada custa mais que 40.837,5 centavos por milhão de chamadas
+é uma pergunta sobre a equipe de suporte, não sobre o prompt, e só quem sabe quanto custa uma
+mensagem mal classificada consegue responder. O que o harness pode fazer é garantir que essa pessoa
+esteja olhando para os dois números.
 
 ## p95, não a média
 

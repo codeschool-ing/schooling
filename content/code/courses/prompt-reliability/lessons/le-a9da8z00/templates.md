@@ -25,8 +25,9 @@ when. Do not promise a refund or a date the shop has not agreed.
 
 `{{shop}}` and `{{language}}` are settings, the same for a whole run, passed with `--var`.
 `{{message|xml}}` comes from the test case, and the `|xml` after its name is a filter, which the
-third section of this lesson is about. `pl render` fills a template and prints the result without
-calling any model, which makes it the cheapest way to see what the model will actually be sent:
+fourth section of this lesson, *A value is data*, is about. `pl render` fills a template and prints
+the result without calling any model, which makes it the cheapest way to see what the model will
+actually be sent:
 
 ```
 ana@lab:~/triage$ pl render prompts/reply.txt --cases cases/dev.jsonl --case t01 --var shop=Folio; echo "exit status $?"

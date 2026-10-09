@@ -146,7 +146,7 @@ about injection until the attack set has run on it too. **And every injection yo
 traffic becomes a case**, cleaned of the customer's details and labelled with what the message was
 really about, the same way a hard ordinary message becomes one.
 
-This course is not alone in ranking the problem that high. The OWASP Top 10 for Large Language
-Model Applications puts prompt injection first on its list. The controls it recommends are the
-layers of this lesson: constrain and validate the output, give the model the least privilege the
-task needs, require a person's approval for high-risk actions, and test with adversarial inputs.
+The OWASP Top 10 for Large Language Model Applications puts prompt injection first on its list. The
+controls it recommends are the layers of this lesson: constrain and validate the output, give the
+model the least privilege the task needs, require a person's approval for high-risk actions, and
+test with adversarial inputs.

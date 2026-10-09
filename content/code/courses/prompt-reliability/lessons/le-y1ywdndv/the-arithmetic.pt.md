@@ -4,15 +4,16 @@ version: 2
 ---
 
 O cache não muda quantos tokens são lidos, só quanto custa lê-los. Na sua própria máquina o custo é
-tempo, e a primeira seção dá os dois números que importam: 5009 milissegundos para ler o prompt com
-nada no cache, e uns 750 com o guia no cache e só a mensagem nova.
+tempo, e *O que um cache reaproveita*, duas seções antes, dá os dois números que importam: 5009
+milissegundos para ler o prompt com nada no cache, e uns 750 com o guia no cache e só a mensagem
+nova.
 
 ## O que o cache poupou
 
-Por chamada, o prompt com o guia primeiro poupou uns quatro segundos e um quarto de leitura em cinco.
-A escrita, uns três segundos e meio por chamada, não mudou nada. Então a chamada inteira foi de uns
-oito segundos e meio para uns quatro, e as execuções de quarenta chamadas da última seção dizem o
-mesmo do jeito delas:
+Por chamada, o prompt com o guia primeiro poupou uns quatro segundos e um quarto de leitura em
+cinco. A escrita, uns três segundos por chamada, não mudou nada. Então a chamada inteira foi de uns
+oito segundos para uns quatro, e as execuções de quarenta chamadas da última seção dizem o mesmo do
+jeito delas:
 
 | | guia primeiro | mensagem primeiro |
 |---|---|---|

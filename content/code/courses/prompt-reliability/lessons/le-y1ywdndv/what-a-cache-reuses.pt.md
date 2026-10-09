@@ -67,10 +67,10 @@ tokens entre 669 e 813: **a contagem é a mesma e o trabalho não**, porque só 
 nova. Os 287 da coluna `read tokens` são o que um provedor hospedado cobraria, e o que o `pl` registra
 como `tokens_in`; é no tempo que o cache aparece.
 
-A metade da escrita não mexeu, uns três segundos por chamada, porque o cache só mexe no prompt. E ele
-não dura: o `ollama ps` da aula 1 dizia que o modelo ficaria na memória *4 minutes from now*. Depois de
-cinco minutos ocioso, o Ollama o descarrega, com cache e tudo, e a próxima chamada lê o prompt
-inteiro de novo.
+A metade da escrita não mexeu, uns três segundos por chamada, porque o cache só mexe no prompt. E
+ele não dura: o `ollama ps` da aula 1 dizia que o `llama3.2:3b` ficaria na memória *3 minutes from
+now*. Depois de cinco minutos ocioso, o Ollama o descarrega, com cache e tudo, e a próxima chamada
+lê o prompt inteiro de novo.
 
 ## Caches reais
 

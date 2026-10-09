@@ -76,9 +76,9 @@ Quatro mensagens, quatro resultados diferentes:
 - **O `t25` falhou em cinco chamadas de cinco**, do mesmo jeito toda vez, e falha com temperatura 0
   também. Isso não é instável: é uma discordância estável sobre o que é um aplicativo que desconecta
   você, e uma execução a encontra.
-- **O `t07` falhou em cinco de cinco, de dois jeitos diferentes**: `high` três vezes e `low` duas,
-  onde uma pessoa disse `normal`. Uma contagem de falhas o chama de estável; as respostas dizem que o
-  modelo não tem opinião firme sobre ele.
+- **O `t07` falhou em cinco de cinco, de dois jeitos diferentes**: `low` três vezes e `high` duas,
+  onde uma pessoa disse `normal`. Uma contagem de falhas o chama de estável; as respostas dizem que
+  o modelo não tem opinião firme sobre ele.
 - **O `t22` falhou em três de cinco.** Ele falha com temperatura 0, então aqui o sorteio o salvou
   duas vezes: a resposta certa estava na distribuição do modelo, só não estava no topo. Isso é uma
   taxa, e só amostras a encontram.

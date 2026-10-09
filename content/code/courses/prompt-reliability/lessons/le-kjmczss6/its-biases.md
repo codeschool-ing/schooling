@@ -39,7 +39,7 @@ agrees AND keeps its verdict: 3 of 16
 
 **Twelve of sixteen verdicts flip.** Read the two columns together: in the first order the judge
 chose `b`, the reply shown second, thirteen times; with the order swapped it chose `a`, which was now
-the reply shown second, eleven times. Whatever it is reading, it is mostly reading the position. **A
+the reply shown second, twelve times. Whatever it is reading, it is mostly reading the position. **A
 verdict that changes when only the order changes is a verdict about the order.** Of the eight pairs
 it agreed with the person on in the first run, only three keep their verdict in both orders.
 
@@ -83,10 +83,10 @@ ana@lab:~/triage$ grep '"j16"' cases/pairs.jsonl
 {"id": "j16", "message": "Do you buy second-hand books?", "a": "We don't, sorry, but the Bookswap in Market Street does, and it's two minutes from the shop.", "b": "Thank you for thinking of us! We're always delighted to hear from book lovers. Second-hand books are a wonderful way to give stories a new life, and there are many good places in town where you can sell yours.", "human": "a"}
 ```
 
-`a` answers the question and sends the customer somewhere useful; `b` is warm and says nothing.
-**No swap can catch this bias, because the longer reply is longer in both orders.** Four stable
-verdicts is far too few to measure it, and a run that told you anything about length would need
-pairs where the longer reply is the worse one far more often than three in sixteen.
+`a` answers the question and sends the customer somewhere useful; `b` is warm and says nothing. **No
+swap can catch this bias, because the longer reply is longer in both orders.** Four stable verdicts
+is far too few to measure it: the set has nine pairs where the longer reply is the worse one, and
+only `j16` survived the swap.
 
 ## What the literature found
 

@@ -65,7 +65,7 @@ stop: stop, tokens in 291, out 38, 4.6 s
 
 Uma cobrança por um pedido que o cliente nunca fez. A pessoa que rotulou chamou isso de billing:
 dinheiro tirado que não deveria ter sido. O modelo chamou de account e declarou 0.9, o maior dos
-seus dois valores.
+dois valores que ele quase sempre usa.
 
 ```
 ana@lab:~/triage$ pl show runs/v9.jsonl t35

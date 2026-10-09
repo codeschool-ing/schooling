@@ -187,9 +187,10 @@ t39    urgency   low, expected normal
 ```
 
 Vinte e oito passam agora. Duas das urgências infladas sumiram, `t16` e `t18`, assim como quatro
-erros de categoria, e o `t38` agora é JSON válido. Os exemplos mostram o que *normal* quer dizer
-aqui: um livro danificado e uma entrega expressa que não foi cumprida são os dois `normal`, e
-nenhum é emergência. A aula 12 mede direito as falhas de urgência que restam.
+erros de categoria, e o `t38` agora é JSON válido, embora o `t37`, que antes falhava na urgência,
+agora nem seja JSON válido. Os exemplos mostram o que *normal* quer dizer aqui: um livro danificado
+e uma entrega expressa que não foi cumprida são os dois `normal`, e nenhum é emergência. A aula 12
+mede direito as falhas de urgência que restam.
 
 ```schooling-figure
 {"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"Quarenta respostas a cada um de três prompts, separadas pela primeira verificação em que falharam. O prompt sem nada: as 40 falham no formato. Pedindo JSON: 1 falha no formato, 17 num rótulo, 22 passam. Três exemplos: 1 falha no formato, 11 num rótulo, 28 passam.\"><text x=\"20\" y=\"22\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">40 respostas, pela primeira verificação em que cada uma falhou</text><text x=\"158\" y=\"70\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">prompt sem nada</text><rect x=\"170.0\" y=\"56\" width=\"500.0\" height=\"28\" rx=\"2\" fill=\"var(--wire)\"></rect><text x=\"680.0\" y=\"70\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">0</text><text x=\"158\" y=\"122\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">pede JSON</text><rect x=\"170.0\" y=\"108\" width=\"12.5\" height=\"28\" rx=\"2\" fill=\"var(--wire)\"></rect><rect x=\"182.5\" y=\"108\" width=\"212.5\" height=\"28\" rx=\"2\" fill=\"var(--amber)\"></rect><rect x=\"395.0\" y=\"108\" width=\"275.0\" height=\"28\" rx=\"2\" fill=\"var(--phosphor)\"></rect><text x=\"680.0\" y=\"122\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">22</text><text x=\"158\" y=\"174\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">três exemplos</text><rect x=\"170.0\" y=\"160\" width=\"12.5\" height=\"28\" rx=\"2\" fill=\"var(--wire)\"></rect><rect x=\"182.5\" y=\"160\" width=\"137.5\" height=\"28\" rx=\"2\" fill=\"var(--amber)\"></rect><rect x=\"320.0\" y=\"160\" width=\"350.0\" height=\"28\" rx=\"2\" fill=\"var(--phosphor)\"></rect><text x=\"680.0\" y=\"174\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">28</text><rect x=\"170\" y=\"216\" width=\"12\" height=\"12\" rx=\"2\" fill=\"var(--wire)\"></rect><text x=\"188\" y=\"222\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">formato</text><rect x=\"340\" y=\"216\" width=\"12\" height=\"12\" rx=\"2\" fill=\"var(--amber)\"></rect><text x=\"358\" y=\"222\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">rótulo errado</text><rect x=\"510\" y=\"216\" width=\"12\" height=\"12\" rx=\"2\" fill=\"var(--phosphor)\"></rect><text x=\"528\" y=\"222\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">passa em tudo</text></svg>", "caption": "As mesmas quarenta mensagens em três prompts, no llama3.2:3b. Pedir JSON resolveu o formato; o que sobrou foram quase só rótulos, e os exemplos resolveram parte deles."}
@@ -209,13 +210,13 @@ broken: t01
 sign test on the 8 that changed: p = 0.070
 ```
 
-Só as oito mensagens cujo resultado mudou trazem alguma evidência, e sete foram para o mesmo lado.
-O **teste do sinal** pergunta com que frequência uma moeda honesta dividiria oito lançamentos de
-forma pelo menos tão desigual, e a resposta é sete vezes em cem. **Isso sugere, e não prova.** Pelo
-critério habitual de cinco em cem, nem significativo é. Em quarenta mensagens, uma mudança precisa
-consertar mais de sete delas, e quebrar menos, antes que a contagem sozinha se sustente. A aula 7
-trata de ler esse número, e a aula 11 de montar um conjunto de teste grande o bastante para
-precisar menos dele.
+Só as oito mensagens cujo resultado mudou trazem alguma evidência, e sete foram para o mesmo lado. O
+**teste do sinal** pergunta com que frequência uma moeda honesta dividiria oito lançamentos de forma
+pelo menos tão desigual, e a resposta é sete vezes em cem. **Isso sugere, e não prova.** Pelo
+critério habitual de cinco em cem, nem significativo é. Com uma mensagem quebrada, como aqui, são
+precisas oito consertadas (p = 0,039) antes que a contagem sozinha passe de cinco em cem. A aula 7
+trata de ler esse número, e a aula 11 de montar um conjunto de teste grande o bastante para precisar
+menos dele.
 
 A única mensagem que os exemplos quebraram, o `t01`, é o assunto da próxima seção.
 

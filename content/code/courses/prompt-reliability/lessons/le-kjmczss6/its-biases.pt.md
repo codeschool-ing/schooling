@@ -39,7 +39,7 @@ agrees AND keeps its verdict: 3 of 16
 
 **Doze de dezesseis vereditos mudam.** Leia as duas colunas juntas: na primeira ordem o juiz
 escolheu `b`, a resposta mostrada em segundo, treze vezes; com a ordem trocada escolheu `a`, que agora
-era a mostrada em segundo, onze vezes. O que quer que ele esteja lendo, está lendo sobretudo a
+era a mostrada em segundo, doze vezes. O que quer que ele esteja lendo, está lendo sobretudo a
 posição. **Um veredito que muda quando só a ordem muda é um veredito sobre a ordem.** Dos oito
 pares em que ele concordou com a pessoa na primeira execução, só três mantêm o veredito nas duas
 ordens.
@@ -87,9 +87,8 @@ ana@lab:~/triage$ grep '"j16"' cases/pairs.jsonl
 
 O `a` responde à pergunta e manda o cliente a um lugar útil; o `b` é caloroso e não diz nada.
 **Nenhuma troca consegue pegar esse viés, porque a resposta mais longa é mais longa nas duas
-ordens.** Quatro vereditos estáveis são pouquíssimos para medi-lo, e uma execução que dissesse algo
-sobre comprimento precisaria de pares em que a resposta mais longa é a pior muito mais vezes do que
-três em dezesseis.
+ordens.** Quatro vereditos estáveis são pouquíssimos para medi-lo: o conjunto tem nove pares em que
+a resposta mais longa é a pior, e só o `j16` sobreviveu à troca.
 
 ## O que a literatura achou
 

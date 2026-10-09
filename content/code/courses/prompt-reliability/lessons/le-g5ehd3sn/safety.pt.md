@@ -51,6 +51,6 @@ recusaria o `a07`, o cliente da aula 10 que escreveu para dizer que a encomenda 
 afinal.
 
 Então meça as duas direções: respostas que cruzaram uma linha, e respostas que deveriam ter
-respondido e não responderam. Nenhuma das quarenta respostas aqui se recusou a responder, e essa
-contagem vale ser impressa ao lado dos 19, porque é o número que diria que uma mudança deixou as
-respostas mais seguras deixando-as inúteis.
+respondido e não responderam. Conte as respostas que se recusaram a responder, e imprima esse número
+ao lado dos 19, porque é o número que diria que uma mudança deixou as respostas mais seguras
+deixando-as inúteis.

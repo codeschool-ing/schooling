@@ -106,8 +106,9 @@ And the cell that would cost most, a high message sorted as normal, holds zero: 
 and the one high message it missed it called low.
 
 So this prompt fails in the cheap direction. A support team behind it would find most of its queue
-marked urgent, and would learn within a week to ignore the label, which is its own cost: **a label everybody ignores protects nobody**. Urgency accuracy is 41 of 70, and that number
-counts an urgent message missed exactly like a routine one escalated. They do not cost the same.
-Decide what each kind of mistake costs before you read the matrix, and report the expensive cells by
-name. *Twenty-two normal sorted high, no high sorted normal* is a sentence somebody acts on; *0.59*
-is not.
+marked urgent, and would learn within a week to ignore the label, which is its own cost: **a label
+everybody ignores protects nobody**. Urgency accuracy is 41 of 70, and that number counts an urgent
+message missed exactly like a routine one escalated. They do not cost the same. Decide what each
+kind of mistake costs before you read the matrix, and report the expensive cells by name.
+*Twenty-two normal sorted high, no high sorted normal* is a sentence somebody acts on; *0.59* is
+not.

@@ -37,7 +37,7 @@ ensemble a message is one call to each member, so a million messages cost 120,69
 messages right than the vote. **The ensemble cost 2.4 times the best prompt to be worse than it.**
 
 The five samples are one prompt five times. Each call cost what a `v6-escaped` call costs, 148.3
-tokens in and about 29 out, and a message is five of them: 5 × 87,326 = 436,629 cents a million
+tokens in and about 29 out, and a message is five of them: 5 × 87,325.71 = 436,629 cents a million
 messages, five times `v6-escaped` alone, for one more right answer in seventy.
 
 Time is the other bill:

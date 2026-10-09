@@ -38,13 +38,14 @@ o que um computador com 8 GB tem de sobra. Um com menos deve ficar com o modelo 
 abaixo.
 
 Todas as capturas deste curso foram feitas no Ubuntu 24.04 com o Ollama 0.40.0, numa máquina com
-quatro núcleos de processador e sem placa de vídeo. **Um modelo de linguagem não é uma
-calculadora**: com as configurações que o harness usa, o mesmo prompt dá a mesma resposta toda vez
-numa mesma máquina. Outra máquina, outra versão do Ollama ou outra compilação do modelo pode
-redigir uma resposta de outro jeito e, de vez em quando, rotulá-la de outro jeito. Então as suas
-contagens podem ficar a algumas unidades das impressas aqui. O que cada aula mostra deve continuar
-valendo: se uma mudança consertou treze respostas aqui e duas na sua máquina, a aula é sobre por
-que ela mexeu em alguma coisa.
+quatro núcleos de processador e sem placa de vídeo. **Numa mesma máquina uma resposta costuma se
+repetir**: com as configurações que o harness usa, o mesmo prompt quase sempre dá a mesma resposta.
+A aula 8 mede as exceções: a aula 1 conta 22 aprovações para o `v2-json.txt`, e as aulas 2 e 3,
+rodando-o de novo, contam 21. Outra máquina, outra versão do Ollama ou outra compilação do modelo
+pode redigir uma resposta de outro jeito e, de vez em quando, rotulá-la de outro jeito. Então as
+suas contagens podem ficar a algumas unidades das impressas aqui. O que cada aula mostra deve
+continuar valendo: se uma mudança consertou treze respostas aqui e duas na sua máquina, a aula é
+sobre por que ela mexeu em alguma coisa.
 
 ## Instalado
 
@@ -87,7 +88,7 @@ sistema, instale-o a partir de python.org. A versão 3.8 ou mais nova basta.
 ### Um computador mais fraco
 
 Se o seu computador tem menos de 8 GB de memória, ou se uma resposta leva mais de meio minuto, use
-o **`llama3.2:1b`**, da mesma família, com um terço do tamanho:
+o **`llama3.2:1b`**, da mesma família, com um terço dos parâmetros:
 
 ```sh
 ollama pull llama3.2:1b
@@ -113,6 +114,10 @@ category     14    26
 urgency       9    31
 all           9    31
 ```
+
+A coluna `PROCESSOR` diz CPU/GPU numa máquina sem placa de vídeo. Este processador tem AMX,
+instruções de matriz embutidas na CPU, e o Ollama 0.40.0 guarda a maior parte dos pesos num buffer
+AMX e relata essa parte como de uma GPU. Tudo rodou no processador.
 
 2,0 GB de memória contra 2,9, e **9 respostas de 40 passando onde o `llama3.2:3b` passa 28**. Ele
 roda, e é um modelo bem mais fraco: espere contagens muito mais baixas nestas aulas com ele. As

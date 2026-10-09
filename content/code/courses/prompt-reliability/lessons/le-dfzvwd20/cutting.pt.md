@@ -18,12 +18,12 @@ Aplicado ao `v2-long.txt`, a persona sai, já que ser prestativo e simpático n�
 objeto JSON. O resumo vira uma frase, porque a equipe percorre a fila. A regra repetida sai, e a
 regra contra campos extras também: a lista de campos já nomeia três, e na aula 1 toda resposta ao
 `v2-json.txt` que era JSON válido tinha exatamente esses três. O que sobra é o `v2-json.txt`, o
-prompt de onde a aula 1 partiu.
+prompt que a aula 1 usou quando pediu JSON pela primeira vez.
 
 ## Medindo que nada se perdeu
 
-Um corte é uma mudança, então é medido como uma. As duas execuções estão no disco desde a primeira
-seção:
+Um corte é uma mudança, então é medido como uma. As duas execuções estão no disco desde *O que um
+prompt mais longo compra*:
 
 ```
 ana@lab:~/triage$ pl check runs/long.jsonl
@@ -51,10 +51,10 @@ sign test on the 0 that changed: p = 1.000
 
 Vinte e um contra vinte e um, e **nenhuma mensagem mudou de resultado**: as mesmas vinte e uma
 passam com os dois prompts. Os 97 tokens a mais por chamada do prompt longo não compraram nada que
-uma verificação consiga ver. As verificações falham em lugares diferentes, porém. Com o prompt
-longo toda resposta era JSON válido e sete falharam na categoria; com o curto, uma não era JSON
-válido e nove falharam na categoria. O `--answers` compara a categoria que cada resposta deu, lida
-sem o embrulho:
+uma verificação consiga ver. As verificações falham em lugares diferentes, porém. Com o prompt longo
+toda resposta era JSON válido e sete falharam na categoria; com o curto, uma não era JSON válido e
+oito falharam na categoria. O `--answers` compara a categoria que cada resposta deu, lida sem o
+embrulho:
 
 ```
 ana@lab:~/triage$ pl compare runs/long.jsonl runs/v2.jsonl --answers

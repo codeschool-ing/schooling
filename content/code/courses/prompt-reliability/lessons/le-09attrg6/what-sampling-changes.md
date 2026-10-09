@@ -30,13 +30,13 @@ catch slips and pass misconceptions. At temperature 0 every label mistake is a m
 the answer is the favoured label by definition, and so a reviewer ought to do better on a sampled
 run than on a run at 0.
 
-Here recall went from 0.69 to 0.72 and precision fell from 0.40 to 0.28. Lesson 19 found why there
-was little for the argument to work on: the samples agreed on most messages, so most sampled
-mistakes were the same misconceptions temperature 0 made. And a reviewer that flags most replies for
-an invented reason does not get better when the mistakes get easier. **Whether self-checking helps
-is a measurement on your model and your settings**, and this one says it barely helps here. A
-recall measured on one configuration says little about another, so measure the check on the
-settings you will ship.
+Here, on the dev messages alone, recall was 0.72 and precision 0.28, against 0.69 and 0.40 for the
+temperature-0 run over all seventy. Lesson 19 found why there was little for the argument to work
+on: the samples agreed on most messages, so most sampled mistakes were the same misconceptions
+temperature 0 made. And a reviewer that flags most replies for an invented reason does not get
+better when the mistakes get easier. **Whether self-checking helps is a measurement on your model
+and your settings**, and this one says it barely helps here. A recall measured on one configuration
+says little about another, so measure the check on the settings you will ship.
 
 ## What others found
 

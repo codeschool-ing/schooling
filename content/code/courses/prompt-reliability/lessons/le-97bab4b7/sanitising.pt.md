@@ -83,10 +83,10 @@ errar sobre sentido. Depois que ele roda, nada na mensagem consegue fechar a tag
 mensagem o que disser. **Isso é uma propriedade que você pode afirmar, não uma taxa que precisa
 medir.**
 
-Ele protege a estrutura e nada mais. O `a08` foi obedecido com a tag escapada, na aula 4 e de novo
-nesta aula, porque um modelo segue uma instrução de dentro das tags tão facilmente quanto de fora
-delas. Escapar é a sanitização certa para o delimitador que você escolheu; não diz nada sobre as
-palavras.
+Ele protege a estrutura e nada mais. O `a08` ainda voltou `high` com a tag escapada, na aula 4 e de
+novo nesta aula, e nada no escape o teria impedido se o modelo resolvesse seguir a instrução de
+dentro das tags: um modelo segue uma de dentro delas tão facilmente quanto de fora. Escapar é a
+sanitização certa para o delimitador que você escolheu; não diz nada sobre as palavras.
 
 ## O que não fazer com o texto
 

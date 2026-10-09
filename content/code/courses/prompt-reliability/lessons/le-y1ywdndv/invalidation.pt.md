@@ -26,10 +26,11 @@ mudança é paga uma vez, pela primeira chamada que a lê.
 ## O cache não deveria mudar as respostas
 
 Um cache deveria mudar custo e tempo e mais nada. A aula 8 mostrou que nesta máquina isso não é bem
-verdade: três respostas ao mesmo prompt com temperatura 0, uma lida do zero e duas do cache, e a
-primeira diferiu das outras duas depois de trinta palavras. **Um prompt em cache é calculado por outro
-caminho pela mesma aritmética**, e um quase empate pode sair para o outro lado. É mais um motivo para
-medir num conjunto de teste em vez de confiar que uma mudança no cache não mudou nada.
+verdade: três respostas ao mesmo prompt com temperatura 0, em que a primeira diferiu das outras duas
+depois de duas frases, provavelmente porque as outras duas foram lidas do cache. **Um prompt em
+cache é calculado por outro caminho pela mesma aritmética**, e um quase empate pode sair para o
+outro lado. É mais um motivo para medir num conjunto de teste em vez de confiar que uma mudança no
+cache não mudou nada.
 
 ## Reordenar não é uma configuração do cache
 
@@ -57,9 +58,10 @@ ana@lab:~/triage$ pl compare runs/static.jsonl runs/first.jsonl --answers
   t39    account -> other
 ```
 
-Vinte e três contra dezoito, nenhuma consertada e cinco quebradas, p = 0.062. Dez categorias
-mudaram, e o `t17` e o `t38` trocaram de lugar no formato: o `t38`, o ebook cujo apóstrofo quebra o
-JSON, saiu válido com a mensagem primeiro, e o `t17` deixou de sair. **O prompt com a mensagem
-primeiro é mais lento e, neste conjunto, pior**, e o teste do sinal em cinco mensagens para pouco antes
-de chamar isso de mais que acaso. Uma reordenação feita por causa do cache passa pela trava da aula 14
-como qualquer outra mudança no texto; aqui ela não teria poupado nada e teria custado cinco mensagens.
+Vinte e três contra dezoito, nenhuma consertada e cinco quebradas, p = 0.062. Dez respostas mudaram,
+oito delas categorias, e o `t17` e o `t38` trocaram de lugar no formato: o `t38`, o ebook cujo
+apóstrofo quebra o JSON, saiu válido com a mensagem primeiro, e o `t17` deixou de sair. **O prompt
+com a mensagem primeiro é mais lento e, neste conjunto, pior**, e o teste do sinal em cinco
+mensagens para pouco antes de chamar isso de mais que acaso. Uma reordenação feita por causa do
+cache passa pela trava da aula 14 como qualquer outra mudança no texto; aqui ela não teria poupado
+nada e teria custado cinco mensagens.

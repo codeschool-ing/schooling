@@ -158,9 +158,9 @@ ana@lab:~/triage$ pl show runs/replies.jsonl t06
 stop: stop, tokens in 95, out 76, 9.2 s
 ```
 
-`t11` passes `promises`, and it asks the customer to *allow 2-3 working days*: a date, in a reply
-to somebody whose card was charged after it was declined. The rule names *within* a number of days
-and this reply wrote *allow* one. `t33` fails `promises` for *immediately*, and the sentence is
+`t11` passes `promises`, and it asks the customer to *allow 2-3 working days*: a time span, in a
+reply to somebody whose card was charged after it was declined. The rule names *within* a number of
+days and this reply wrote *allow* one. `t33` fails `promises` for *immediately*, and the sentence is
 *please contact our customer service team immediately*: it asks something of the customer and
 promises nothing. `t06` fails `acknowledge` because it neither thanks nor apologises, and it is a
 plain, correct answer to a plain question about where an invoice is.
@@ -179,8 +179,8 @@ ana@lab:~/triage$ grep -c "\[Customer\]" runs/replies.jsonl
 11
 ```
 
-Eleven replies of forty address the customer with a placeholder in square brackets, and every rule
-passed them, because nobody thought to write that one. Now somebody has, and it belongs in the file.
+Eleven replies of forty address the customer with a placeholder in square brackets, and no rule
+flagged it, because nobody thought to write that one. Now somebody has, and it belongs in the file.
 None of the five asks either whether the reply is true, whether it answers the question, or whether
 it sounds like someone who cares. Tone beyond the rules needs somebody to read a sample, or a model
 asked to judge, and lesson 13 measures how far a model judge can be trusted with that.

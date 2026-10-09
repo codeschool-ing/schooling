@@ -26,7 +26,7 @@ registrou como F-0001. O revisor leu esta resposta e disse OK. Ele marcou o `h28
 defeito, com *the category is missing a value*, que não é o defeito. **Uma verificação escrita em
 código é exata e não custa nada**: nunca duvida de uma resposta válida, nunca deixa passar uma
 quebrada, e não acrescenta chamada nenhuma. A revisão do modelo das mesmas setenta respostas custou
-setenta chamadas e chamou 45 delas de quebradas.
+setenta chamadas e marcou 45 delas como erradas.
 
 ## O que o código vê
 

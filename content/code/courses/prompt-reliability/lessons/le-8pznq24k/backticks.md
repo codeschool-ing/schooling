@@ -81,12 +81,12 @@ stop: stop, tokens in 160, out 32, 4.5 s
 The summary has the failed delivery in it, so the note was read as part of the message.
 
 So on these six messages the ambiguity cost nothing. That is a fact about this model and these
-messages, and it is not something a template can rely on: **a delimiter that the content can contain
-is a delimiter the content can close**, and whether the model notices is decided again on every
-message. Backticks are common in exactly the text customers paste: code, logs, error pages, anything
-copied from a chat tool that formats code. There is also no standard way to escape them. A line of
-three backticks inside the message cannot be turned into something that reads the same and closes
-nothing, the way the next two sections do with a tag.
+messages, not something a template can rely on. **A delimiter that the content can contain is a
+delimiter the content can close**, and whether the model notices is decided again on every message.
+Backticks are common in exactly the text customers paste: code, logs, error pages, anything copied
+from a chat tool that formats code. There is also no standard way to escape them. A line of three
+backticks inside the message cannot be turned into something that reads the same and closes nothing,
+the way the next two sections do with a tag.
 
 Notice too that `pl run` said nothing. Nothing checks the structure of a rendered prompt unless you
 look, so **render a few real cases whenever you change a template**, and read them.

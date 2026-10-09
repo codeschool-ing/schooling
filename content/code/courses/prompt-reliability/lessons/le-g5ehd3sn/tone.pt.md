@@ -159,7 +159,7 @@ ana@lab:~/triage$ pl show runs/replies.jsonl t06
 stop: stop, tokens in 95, out 76, 9.2 s
 ```
 
-O `t11` passa em `promises`, e pede ao cliente que *allow 2-3 working days*: uma data, numa resposta
+O `t11` passa em `promises`, e pede ao cliente que *allow 2-3 working days*: um prazo, numa resposta
 a alguém cujo cartão foi cobrado depois de ser recusado. A regra nomeia *within* um número de dias e
 esta resposta escreveu *allow*. O `t33` falha em `promises` por *immediately*, e a frase é *please
 contact our customer service team immediately*: ela pede algo ao cliente e não promete nada. O `t06`
@@ -181,8 +181,8 @@ ana@lab:~/triage$ grep -c "\[Customer\]" runs/replies.jsonl
 11
 ```
 
-Onze respostas de quarenta se dirigem ao cliente com um marcador entre colchetes, e todas as regras
-as aprovaram, porque ninguém pensou em escrever essa. Agora alguém pensou, e ela pertence ao arquivo.
+Onze respostas de quarenta se dirigem ao cliente com um marcador entre colchetes, e nenhuma regra o
+apontou, porque ninguém pensou em escrever essa. Agora alguém pensou, e ela pertence ao arquivo.
 Nenhuma das cinco pergunta também se a resposta é verdadeira, se responde à pergunta, ou se soa como
 alguém que se importa. Tom além das regras precisa de alguém lendo uma amostra, ou de um modelo
 chamado a julgar, e a aula 13 mede até onde se pode confiar isso a um modelo juiz.

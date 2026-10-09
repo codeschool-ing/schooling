@@ -95,7 +95,7 @@ urgency      16    24
 all          16    24
 ```
 
-Nine replies are still cut, because a summary under twelve words inside its frame is still more than
-25 tokens for some messages, and a reply that obeys the request exactly is still cut by a cap set
-below it. **Ask for the length you want, then set the cap well above it.** The request decides how
-long the answer is; the cap exists for the reply that ignores the request.
+Nine replies are still not JSON. A summary under twelve words inside its frame can still come to
+more than 25 tokens, and a reply that obeys the request exactly is still cut by a cap set below it.
+**Ask for the length you want, then set the cap well above it.** The request decides how long the
+answer is; the cap exists for the reply that ignores the request.

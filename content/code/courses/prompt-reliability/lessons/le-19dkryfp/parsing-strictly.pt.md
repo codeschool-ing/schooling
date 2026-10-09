@@ -65,12 +65,12 @@ broken: t04 t10
 sign test on the 2 that changed: p = 0.500
 ```
 
-**A linha não mudou nada daquilo para que foi escrita**, e mudou duas outras coisas. O
-`llama3.2:3b` nunca embrulhou uma resposta neste conjunto de teste, então não havia nada para ela
-consertar, e a única resposta que não é JSON válido também não era antes. Ela mexeu em duas
-urgências, `t04` e `t10`, as duas de aprovada para reprovada, e o teste do sinal sobre duas mudanças
-é cara ou coroa, p = 0.500. Uma linha que conserta um problema que o modelo não tem custa quinze
-tokens por chamada e dá ao modelo mais uma coisa para pesar.
+**A linha não mudou nada daquilo para que foi escrita**, e mudou duas outras coisas. O `llama3.2:3b`
+nunca embrulhou uma resposta neste conjunto de teste, então não havia nada para ela consertar, e a
+única resposta que não é JSON válido também não era antes. Ela quebrou duas respostas que passavam
+antes, o `t04` na urgência e o `t10` na categoria, e o teste do sinal sobre duas mudanças é cara ou
+coroa, p = 0.500. Uma linha que conserta um problema que o modelo não tem custa quinze tokens por
+chamada e dá ao modelo mais uma coisa para pesar.
 
 Vale dizer isso porque a linha é um bom conselho para muitos modelos: alguns embrulham o JSON num
 bloco de código por hábito. **Se o seu modelo tem o hábito é uma medição**, e aqui ela voltou não.

@@ -21,11 +21,11 @@ stop: stop, tokens in 145, out 22, 2.5 s
 ```
 
 The summary stops at the apostrophe of *won't* and a second brace closes the object, the failure
-lesson 15 logged as F-0001. The reviewer read this reply and said OK. It flagged `h28`, which has the
-same defect, with *the category is missing a value*, which is not the defect. **A check written as
-code is exact and costs nothing**: it never doubts a valid reply, never passes a broken one, and
-adds no call. The model's review of the same seventy replies cost seventy calls and called 45 of
-them broken.
+lesson 15 logged as F-0001. The reviewer read this reply and said OK. It flagged `h28`, which has
+the same defect, with *the category is missing a value*, which is not the defect. **A check written
+as code is exact and costs nothing**: it never doubts a valid reply, never passes a broken one, and
+adds no call. The model's review of the same seventy replies cost seventy calls and flagged 45 of
+them as wrong.
 
 ## What code can see
 

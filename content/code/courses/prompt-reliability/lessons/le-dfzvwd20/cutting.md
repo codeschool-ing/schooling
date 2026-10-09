@@ -13,15 +13,16 @@ measurement.
   above its neighbours whether or not anybody meant them to.
 - Delete what the model does anyway, and know it from a count rather than a hunch.
 
-Applied to `v2-long.txt`, the persona goes, since being helpful and friendly decides nothing about
-a JSON object. The summary becomes one sentence, because the team scans the queue. The repeated
-rule goes, and so does the rule against extra fields: the field list already names three, and in
-lesson 1 every reply to `v2-json.txt` that parsed had exactly those three. What is left is
-`v2-json.txt`, the prompt lesson 1 started from.
+Applied to `v2-long.txt`, the persona goes, since being helpful and friendly decides nothing about a
+JSON object. The summary becomes one sentence, because the team scans the queue. The repeated rule
+goes, and so does the rule against extra fields: the field list already names three, and in lesson 1
+every reply to `v2-json.txt` that parsed had exactly those three. What is left is `v2-json.txt`, the
+prompt lesson 1 used when it first asked for JSON.
 
 ## Measuring that it lost nothing
 
-A cut is a change, so it is measured like one. Both runs are on disk from the first section:
+A cut is a change, so it is measured like one. Both runs are on disk from *What a longer prompt
+buys*:
 
 ```
 ana@lab:~/triage$ pl check runs/long.jsonl
@@ -50,7 +51,7 @@ sign test on the 0 that changed: p = 1.000
 Twenty-one against twenty-one, and **not one message changed its result**: the same twenty-one pass
 under both prompts. The long prompt's 97 extra tokens a call bought nothing a check can see. The
 checks fail at different places, though. Under the long prompt every reply parsed and seven failed
-on category; under the short one, one did not parse and nine failed on category. `--answers`
+on category; under the short one, one did not parse and eight failed on category. `--answers`
 compares the category each reply gave, read without the wrapping:
 
 ```

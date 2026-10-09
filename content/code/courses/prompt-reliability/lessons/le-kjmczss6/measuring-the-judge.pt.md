@@ -114,8 +114,8 @@ Então concordariam 0,4375 das vezes por acaso.
 O kappa é o quanto a concordância observada se afastou do acaso, como fatia do quanto ela poderia
 ter se afastado: (0,5 − 0,4375) / (1 − 0,4375) = 0,11. **Um kappa de 0 é um juiz que concorda com
 pessoas exatamente tanto quanto o acaso concordaria, e 1 é concordância perfeita.** A escala mais
-citada, de Landis e Koch em 1977, chama tudo de 0 a 0,20 de leve. Um juiz que diz `b` treze vezes
-em dezesseis acerta os oito pares `b` por hábito, e o kappa tira esse hábito da conta.
+citada, de Landis e Koch em 1977, chama tudo de 0 a 0,20 de leve. Um juiz que diz `b` treze vezes em
+dezesseis acerta sete dos oito pares `b` por hábito, e o kappa tira esse hábito da conta.
 
 ## Calibre antes de confiar
 

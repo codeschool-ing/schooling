@@ -93,9 +93,9 @@ ana@lab:~/triage$ python3 -c 'import json, sys; rows = [json.loads(l) for l in o
 9 replies, 6 different
 ```
 
-Nove respostas e seis textos diferentes, com temperatura 0. Guarde isso; a última seção desta aula
-volta a esse ponto. Um prompt que quer variedade pode levar a própria temperatura, no cabeçalho que o
-`pl` lê acima de uma linha `---`. Salve isto como `prompts/reply-varied.txt`:
+Nove respostas e seis textos diferentes, com temperatura 0. Guarde isso; o fim desta seção volta a
+esse ponto. Um prompt que quer variedade pode levar a própria temperatura, no cabeçalho que o `pl`
+lê acima de uma linha `---`. Salve isto como `prompts/reply-varied.txt`:
 
 ```
 temperature: 0.8
@@ -131,8 +131,8 @@ stop: stop, tokens in 96, out 65, 7.3 s
 ```
 
 As nove são diferentes, e diferem desde a primeira linha: uma é uma carta com saudação e assinatura,
-a outra um parágrafo só, entre aspas. Se alguma delas é uma boa resposta é outra questão, e a aula 12
-mede o tom. O que o cabeçalho fez foi fazer cada chamada valer o que custa.
+a outra um parágrafo só, entre aspas. Se alguma delas é uma boa resposta é outra questão, e a aula
+12 mede o tom. O cabeçalho fez cada uma das nove chamadas devolver uma resposta diferente.
 
 **Decida por tarefa, e mantenha classificação e extração em 0.** Pôr a temperatura no arquivo do
 prompt deixa a decisão ao lado do texto para o qual ela foi tomada, e assim o prompt de triagem e o
@@ -170,17 +170,16 @@ ana@lab:~/triage$ pl show runs/same.jsonl t01 --sample 2
 stop: stop, tokens in 96, out 69, 8.3 s
 ```
 
-As amostras 1 e 2 concordam. A amostra 0 concorda com elas por trinta palavras e então escreve *You
-can expect* onde elas escrevem *You will receive*, e dali em diante é outra resposta. A semente não
-pode ser o motivo, porque as amostras 1 e 2 tiveram sementes diferentes e concordam. O mesmo
-aconteceu no `t02` e no `t03`: em cada um, a amostra 0 difere e as amostras 1 e 2 concordam. A causa
-mais provável é o cache do Ollama. A primeira chamada de cada mensagem calculou a mensagem inteira; as
-duas seguintes encontraram a maior parte já calculada e a reaproveitaram. A aritmética seguiu outro
-caminho, os últimos dígitos de duas pontuações quase iguais saíram invertidos, e a decodificação
-gulosa seguiu a nova vencedora até o fim da resposta. Um objeto JSON curto dá a um quase empate
-menos lugares para acontecer do que sessenta palavras de prosa, e é por isso que as amostras da
-triagem concordaram. As três respostas também prometem um reembolso, o que o prompt proíbe; a aula 4
-achou o mesmo, e a temperatura não tem nada a ver com isso.
+As amostras 1 e 2 concordam. A amostra 0 concorda com elas nas duas primeiras frases e então escreve
+*You can expect* onde elas escrevem *You will receive*, e dali em diante é outra resposta. A semente
+não pode ser o motivo, porque as amostras 1 e 2 tiveram sementes diferentes e concordam.  A causa
+mais provável é o cache do Ollama. A primeira chamada de cada mensagem calculou a mensagem inteira;
+as duas seguintes encontraram a maior parte já calculada e a reaproveitaram. A aritmética seguiu
+outro caminho, os últimos dígitos de duas pontuações quase iguais saíram invertidos, e a
+decodificação gulosa seguiu a nova vencedora até o fim da resposta. Um objeto JSON curto dá a um
+quase empate menos lugares para acontecer do que sessenta palavras de prosa, e é por isso que as
+amostras da triagem concordaram. As três respostas também prometem um reembolso, o que o prompt
+proíbe; a aula 4 achou o mesmo, e a temperatura não tem nada a ver com isso.
 
 Máquinas diferentes acrescentam uma segunda causa. A aula 1 rodou o `v2-json.txt` e imprimiu 22
 aprovações; as aulas 2 e 3 rodaram o mesmo arquivo sobre as mesmas quarenta mensagens, com o mesmo

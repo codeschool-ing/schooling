@@ -77,7 +77,7 @@ replies at temperature 0 flipping on a difference far smaller than a name, and a
 `returns` and `delivery` can fall either way on any change at all. **What it shows is that the name
 reached the label**, and that is the thing a counterfactual test exists to catch. To say more you
 need many pairs and many names, compared with the sign test, and the rule for reading them is the
-one lesson 11 gave: report the moves, not only the totals.
+one lesson 7 gave: report the moves, not only the totals.
 
 ## Building them
 

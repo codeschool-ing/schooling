@@ -40,7 +40,7 @@ ana@lab:~/triage$ head -n 1 runs/v7-warm.jsonl
 {"case": "t01", "sample": 0, "cases": "cases/all.jsonl", "prompt": "7864b0b5", "text": "{\"category\": \"billing\", \"urgency\": \"high\", \"summary\": \"Refund the second payment for order 4471\"}", "stop": "stop", "tokens_in": 153, "tokens_out": 29, "seconds": 4.45}
 ```
 
-Cada linha de uma execução guarda a mensagem, o id do prompt, o conjunto de teste, a resposta, o
+Cada linha de uma execução guarda o id do caso, o id do prompt, o conjunto de teste, a resposta, o
 motivo da parada, os tokens e o tempo. **Ela não guarda os parâmetros passados com `--set`.** O id
 `7864b0b5` é um hash do arquivo de prompt, então é idêntico para o prompt em prosa com temperatura 0
 e com 0,8. A aula 4 disse o mesmo sobre uma configuração digitada na linha de comando; a aula 14

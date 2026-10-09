@@ -95,8 +95,7 @@ urgency      16    24
 all          16    24
 ```
 
-Nove respostas continuam cortadas, porque um resumo de menos de doze palavras dentro da moldura
-ainda passa de 25 tokens em algumas mensagens, e uma resposta que obedece exatamente ao pedido ainda
-é cortada por um limite posto abaixo dele. **Peça o tamanho que você quer, e ponha o limite bem
-acima dele.** O pedido decide o tamanho da resposta; o limite existe para a resposta que ignora o
-pedido.
+Nove respostas continuam não sendo JSON válido. Um resumo de menos de doze palavras dentro da
+moldura ainda pode passar de 25 tokens, e uma resposta que obedece exatamente ao pedido ainda é
+cortada por um limite posto abaixo dele. **Peça o tamanho que você quer, e ponha o limite bem acima
+dele.** O pedido decide o tamanho da resposta; o limite existe para a resposta que ignora o pedido.

@@ -4,15 +4,15 @@ version: 2
 ---
 
 The cache does not change how many tokens are read, only what reading them costs. On your own
-machine the cost is time, and the first section gives the two numbers that matter: 5009 milliseconds
-to read the prompt with nothing cached, and about 750 with the guide cached and only the message new.
+machine the cost is time, and *What a cache reuses*, two sections back, gives the two numbers that
+matter: 5009 milliseconds to read the prompt with nothing cached, and about 750 with the guide
+cached and only the message new.
 
 ## What the cache saved
 
 Per call, the guide-first prompt saved about four and a quarter seconds of reading out of five. The
-writing, about three and a half seconds a call, did not change at all. So the whole call went from
-roughly eight and a half seconds to roughly four, and the forty-call runs of the last section say the
-same in their own way:
+writing, about three seconds a call, did not change at all. So the whole call went from about eight
+seconds to about four, and the forty-call runs of the last section say the same in their own way:
 
 | | guide first | message first |
 |---|---|---|

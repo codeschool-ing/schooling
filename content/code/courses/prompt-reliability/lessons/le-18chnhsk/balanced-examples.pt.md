@@ -3,10 +3,10 @@ title: Equilibrando os exemplos
 version: 2
 ---
 
-A aula 1 mostrou que exemplos fixam um formato, e a aula 7, que o rótulo de um exemplo pode puxar
-respostas para si. A preocupação óbvia vem em seguida: um conjunto de exemplos dominado por um rótulo
-deveria puxar todo caso duvidoso para esse rótulo. Estes dois prompts testam isso. O primeiro tem
-cinco exemplos, quatro deles de billing. Salve-o como `prompts/v18-skewed.txt`:
+A aula 1 mostrou que exemplos fixam um formato, e que um exemplo puxa as mensagens parecidas com ele
+para os próprios rótulos. A preocupação óbvia vem em seguida: um conjunto de exemplos dominado por
+um rótulo deveria puxar todo caso duvidoso para esse rótulo. Estes dois prompts testam isso. O
+primeiro tem cinco exemplos, quatro deles de billing. Salve-o como `prompts/v18-skewed.txt`:
 
 ```
 You sort customer messages for Folio, an online bookshop.
@@ -144,11 +144,11 @@ vezes.** O prompt desequilibrado fica até um pouco à frente, 55 contra 53, e d
 separam nada.
 
 É um resultado real sobre este modelo e estes exemplos, e não é licença para desequilibrar. O efeito
-que a aula 7 encontrou, e que a literatura nomeia, é real em outros modelos e outras tarefas: Zhao e
-outros (2021) mostraram classificadores few-shot favorecendo os rótulos mais usados nos exemplos e os
-rótulos dos últimos exemplos, o que chamaram de viés de maioria e viés de recência. O que esta seção
-acrescenta é o método: **um desequilíbrio é uma hipótese, e a matriz é como você a testa**, no seu
-modelo, antes de reescrever os exemplos para corrigir um viés que você presumiu.
+é real em outros modelos e outras tarefas, e a literatura o nomeia. Zhao e outros (2021) mostraram
+classificadores few-shot favorecendo os rótulos mais usados nos exemplos, e os rótulos dos últimos
+exemplos: viés de maioria e viés de recência. O que esta seção acrescenta é o método: **um
+desequilíbrio é uma hipótese, e a matriz é como você a testa**, no seu modelo, antes de reescrever
+os exemplos para corrigir um viés que você presumiu.
 
 Exemplos equilibrados não custam nada, então prefira-os, e meça, porque o próximo modelo pode não ser
 tão indiferente.

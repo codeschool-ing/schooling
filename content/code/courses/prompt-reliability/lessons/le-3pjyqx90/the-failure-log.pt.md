@@ -49,7 +49,7 @@ Teste novo   nenhum necessário: t37 e t38 já são casos do dev. A trava da
 Custo        dois chamados em quarenta chegam a uma pessoa sem classificação
 ```
 
-Cinco linhas carregam o peso.
+Seis linhas carregam o peso.
 
 - *Mensagens* e *O modelo disse* são a evidência, citada em vez de descrita. Uma resposta real diz
   a um leitor mais que uma frase sobre respostas, e a do `t38` mostra o corte e a chave dupla de uma

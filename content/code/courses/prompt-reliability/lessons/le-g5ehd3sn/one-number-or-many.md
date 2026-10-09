@@ -32,9 +32,9 @@ accuracy 53/70 = 0.76
 ```
 
 By every total, `v3` is the better prompt: 53 categories right against 45, 42 replies passing every
-check against 26, the same 69 of 70 on format. Any score built from those would pick it, and on
-most of the matrix it deserves to win: billing recall from 0.25 to 0.62, returns precision from 0.48
-to 0.80.
+check against the 26 `v6` passed in lesson 7, the same 69 of 70 on format. Any score built from
+those would pick it, and on most of the matrix it deserves to win: billing recall from 0.25 to 0.62,
+returns precision from 0.48 to 0.80.
 
 One cell went the other way. **Billing precision fell from 1.00 to 0.77**: `v3` sends the billing
 team thirteen tickets, three of which are not theirs, where `v6` sent four and all four were. If the

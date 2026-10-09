@@ -57,6 +57,6 @@ Os exemplos são pagos em toda chamada, porque fazem parte de todo prompt. O `pl
 tokens que entraram, e o `t01` entrou duas vezes acima: 108 tokens sem os exemplos e 250 com eles.
 **Os três exemplos mais que dobraram a entrada de toda chamada**, e um modelo lê cada token que
 recebe antes de escrever a primeira palavra da resposta, o que num processador é tempo de espera.
-Valeu a pena aqui, por sete respostas em quarenta. Um quarto exemplo tem de merecer o lugar do
-mesmo jeito, com uma contagem do que consertou. A aula 16 faz a conta do que cada token custa, e a
-aula 17 mostra como um cache barateia a parte fixa de um prompt.
+Valeu a pena aqui: sete respostas consertadas e uma quebrada, seis em quarenta. Um quarto exemplo
+tem de merecer o lugar do mesmo jeito, com uma contagem do que consertou. A aula 16 faz a conta do
+que cada token custa, e a aula 17 mostra como um cache barateia a parte fixa de um prompt.

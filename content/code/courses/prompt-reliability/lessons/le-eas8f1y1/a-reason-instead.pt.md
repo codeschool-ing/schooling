@@ -58,9 +58,9 @@ aquele em que elas colidem.** Esse é o argumento; a próxima seção o confere 
 
 ## Mais longo, e sem enchimento
 
-O guia é mais longo que as regras: 285,3 tokens por chamada contra 231,3, dizem as execuções da
-próxima seção. A aula 2 cortou 97 tokens de um prompt e não perdeu nada, e isso não é uma
-contradição: o que a aula 2 cortou foram linhas que não decidiam nada, diziam algo duas vezes ou
-brigavam entre si. **Cada linha do guia traz um motivo que um leitor consegue aplicar a uma
-mensagem**, e o teste de uma linha é se ela muda uma resposta, não o quanto ela é curta. Se estas
-linhas mudam respostas é uma medição, e a próxima seção a faz.
+O guia é mais longo que as regras: 54 tokens a mais em toda chamada, como o `t22` (233 contra 287) e
+o `h01` (228 contra 282) mostram nas execuções da próxima seção. A aula 2 cortou 97 tokens de um
+prompt e não perdeu nada, e isso não é uma contradição: o que a aula 2 cortou foram linhas que não
+decidiam nada, diziam algo duas vezes ou brigavam entre si. **Cada linha do guia traz um motivo que
+um leitor consegue aplicar a uma mensagem**, e o teste de uma linha é se ela muda uma resposta, não
+o quanto ela é curta. Se estas linhas mudam respostas é uma medição, e a próxima seção a faz.

@@ -30,19 +30,20 @@ The lab is three things:
 | **a virtual machine** | Ubuntu Server 24.04 LTS with Ollama inside it | the same, plus the virtual machine's own disk and memory; no graphics card, so slower | close, as installed |
 | **online** | a paid model behind an API, reached with your own key | money per token, and the course's numbers will not be yours | different |
 
-**Installed is the recommended path.** Ollama is one program and a directory of models; it
-changes nothing else on your system, and it uses your graphics card when it finds one it can use,
-which a virtual machine cannot give it. The model needs memory more than anything: loaded, it took 2.9 GB on the machine these lessons
-were captured on, which a computer with 8 GB has to spare. One with less should take the smaller
-model described below.
+**Installed is the recommended path.** Ollama is one program and a directory of models; it changes
+nothing else on your system, and it uses your graphics card when it finds one it can use, which a
+virtual machine cannot give it. The model needs memory more than anything: loaded, it took 2.9 GB on
+the machine these lessons were captured on, which a computer with 8 GB has to spare. One with less
+should take the smaller model described below.
 
-Every capture in this course was taken on Ubuntu 24.04 with Ollama 0.40.0, on a machine with
-four processor cores and no graphics card. **A language model is not a calculator**: with the
-settings the harness uses, the same prompt gives the same reply every time on one machine. A
-different machine, a different version of Ollama or a different build of the model can word a reply
-differently, and now and then label it differently. So your counts may be a few away from the
-ones printed here. What each lesson shows should still hold: if a change fixed thirteen replies
-here and two on your machine, the lesson is about why it moved at all.
+Every capture in this course was taken on Ubuntu 24.04 with Ollama 0.40.0, on a machine with four
+processor cores and no graphics card. **On one machine a reply is usually repeatable**: with the
+settings the harness uses, the same prompt almost always gives the same reply. Lesson 8 measures the
+exceptions: lesson 1 counts 22 passes for `v2-json.txt`, and lessons 2 and 3, running it again,
+count 21. A different machine, a different version of Ollama or a different build of the model can
+word a reply differently, and now and then label it differently. So your counts may be a few away
+from the ones printed here. What each lesson shows should still hold: if a change fixed thirteen
+replies here and two on your machine, the lesson is about why it moved at all.
 
 ## Installed
 
@@ -86,7 +87,7 @@ from python.org. Version 3.8 or later is enough.
 ### A weaker computer
 
 If your computer has less than 8 GB of memory, or a reply takes more than half a minute, use
-**`llama3.2:1b`**, the same family at a third of the size:
+**`llama3.2:1b`**, the same family with a third of the parameters:
 
 ```sh
 ollama pull llama3.2:1b
@@ -112,6 +113,10 @@ category     14    26
 urgency       9    31
 all           9    31
 ```
+
+The `PROCESSOR` column says CPU/GPU on a machine with no graphics card. This processor has AMX,
+matrix instructions built into the CPU, and Ollama 0.40.0 keeps most of the weights in an AMX buffer
+and reports that share as a GPU's. Everything ran on the processor.
 
 2.0 GB of memory against 2.9, and **9 replies of 40 passing where `llama3.2:3b` passes 28**. It
 runs, and it is a much weaker model: expect the counts in these lessons to be far lower on it. The

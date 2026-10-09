@@ -38,8 +38,7 @@ cinco mensagens a mais que a votação. **O ensemble custou 2,4 vezes o melhor p
 ele.**
 
 As cinco amostras são um prompt cinco vezes. Cada chamada custou o que custa uma chamada do
-`v6-escaped`, 148,3 tokens de entrada e uns 29 de saída, e uma mensagem são cinco delas: 5 × 87.326 =
-436.629 centavos por milhão de mensagens, cinco vezes o `v6-escaped` sozinho, por uma resposta certa
+`v6-escaped`, 148,3 tokens de entrada e uns 29 de saída, e uma mensagem são cinco delas: 5 × 87.325,71 = 436.629 centavos por milhão de mensagens, cinco vezes o `v6-escaped` sozinho, por uma resposta certa
 a mais em setenta.
 
 O tempo é a outra conta:

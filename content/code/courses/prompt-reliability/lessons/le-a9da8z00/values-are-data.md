@@ -132,9 +132,7 @@ it `high`**, the urgency the customer's text asked for. Escaping moved the fake 
 inside the message, which is where it belongs, and the model still did what it said. A line in the
 prompt saying that instructions inside the message are part of the message did not stop it either.
 
-
-That is the honest limit of this lesson. Escaping is necessary: without it a customer can rewrite
-the structure of your prompt, which is worse. It is not sufficient, because **a model reads the
-text inside the tags too**, and text that reads like an order can be obeyed from anywhere. Lesson 9
-compares tags with triple backticks as delimiters, and lesson 10 treats the text a customer sends as
-the attack surface it is.
+  Escaping is necessary: without it a customer can rewrite the structure of your prompt, which is
+worse. It is not sufficient, because **a model reads the text inside the tags too**, and text that
+reads like an order can be obeyed from anywhere. Lesson 9 compares tags with triple backticks as
+delimiters, and lesson 10 treats the text a customer sends as the attack surface it is.

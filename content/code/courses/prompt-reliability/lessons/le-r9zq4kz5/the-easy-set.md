@@ -48,8 +48,9 @@ The same prompt passes 28 of 40 on the set it was written against, 70%, and 14 o
 was not, 47%. Every reply still parses. What fails is the judgement: `h01` is a refund to the wrong
 card, a billing problem written in the words of a return, and `h03`, a charge for an order nobody
 placed, comes back as `account`, the noun the message opens with. Twelve categories wrong in thirty,
-against five in forty on dev. **The dev score measured how well the prompt handles messages like
-the ones its author imagined**, and the author imagined the easier ones.
+against four wrong categories, and one unparseable reply, in forty on dev. **The dev score measured
+how well the prompt handles messages like the ones its author imagined**, and the author imagined
+the easier ones.
 
 ## A set you tune against stops measuring
 

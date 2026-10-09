@@ -72,7 +72,7 @@ mensagem, uma palavra-chave, ou a confiança do próprio modelo barato. A regra 
 prompt, e é medida como uma: rode o pipeline roteado inteiro sobre os mesmos conjuntos de teste que o
 modelo único, e compare mensagem a mensagem.
 
-Este laboratório tem as peças para isso e a primeira aula as pôs na balança: o `llama3.2:1b` aprovou
+Este laboratório tem as peças para isso e a primeira aula as mediu: o `llama3.2:1b` aprovou
 9 de 40 no dev onde o `llama3.2:3b` aprovou 28, em dois terços da memória. Uma rota que mandasse as
 mensagens fáceis para o modelo pequeno seria mais uma versão, e o `pl compare` contra o modelo único
 diria se a economia custou alguma resposta.

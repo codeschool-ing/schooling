@@ -59,8 +59,9 @@ stop: length, tokens in 250, out 20, 5.5 s
 
 The p95 fell from 5.0 seconds to 3.1, and all forty replies were cut off, where uncapped the same
 prompt passed 28. Every one of them was longer than twenty tokens, so every one was cut where it
-stood, mid-string, and `stop: length` says so. **A cap is a ceiling for the answer that runs away, set above the longest good answer**, which
-for this prompt was 38 tokens. It saves money only on replies that were going wrong anyway.
+stood, mid-string, and `stop: length` says so. **A cap is a ceiling for the answer that runs away,
+set above the longest good answer**, which for this prompt was 38 tokens. It saves money only on
+replies that were going wrong anyway.
 
 ## A cheaper model for the easy cases
 
@@ -71,7 +72,7 @@ message's length, a keyword, or the cheap model's own confidence. The rule is pa
 now, and it is measured like one: run the whole routed pipeline over the same test sets as the
 single model, and compare them message by message.
 
-This lab has the pieces for that and the first lesson priced them: `llama3.2:1b` passed 9 of 40 on
+This lab has the pieces for that and the first lesson measured them: `llama3.2:1b` passed 9 of 40 on
 dev where `llama3.2:3b` passed 28, in two-thirds of the memory. A route that sent the easy messages
 to the small model would be one more version, and `pl compare` against the single model would say
 whether the saving cost any answers.

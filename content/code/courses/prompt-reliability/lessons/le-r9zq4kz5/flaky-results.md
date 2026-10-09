@@ -72,9 +72,9 @@ t36#4  urgency   low, expected high
 Four messages, four different findings:
 
 - **`t25` failed five calls of five**, the same way each time, and it fails at temperature 0 too.
-  That is not flaky at all: it is a stable disagreement about what an app that logs you out is,
-  and one run finds it.
-- **`t07` failed five of five, two different ways**: `high` three times and `low` twice, where a
+  That is not flaky at all: it is a stable disagreement about what an app that logs you out is, and
+  one run finds it.
+- **`t07` failed five of five, two different ways**: `low` three times and `high` twice, where a
   person said `normal`. A count of failures calls it stable; the answers say the model has no
   settled view of it.
 - **`t22` failed three of five.** It fails at temperature 0, so here sampling rescued it twice: the

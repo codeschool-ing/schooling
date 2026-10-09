@@ -91,9 +91,9 @@ ana@lab:~/triage$ python3 -c 'import json, sys; rows = [json.loads(l) for l in o
 9 replies, 6 different
 ```
 
-Nine replies and six different texts, at temperature 0. Hold on to that; the last section of this
-lesson comes back to it. A prompt that wants variety can carry its own temperature, in the header
-`pl` reads above a line of `---`. Save this as `prompts/reply-varied.txt`:
+Nine replies and six different texts, at temperature 0. Hold on to that; the end of this section
+comes back to it. A prompt that wants variety can carry its own temperature, in the header `pl`
+reads above a line of `---`. Save this as `prompts/reply-varied.txt`:
 
 ```
 temperature: 0.8
@@ -128,10 +128,10 @@ ana@lab:~/triage$ pl show runs/varied.jsonl t01 --sample 1
 stop: stop, tokens in 96, out 65, 7.3 s
 ```
 
-Nine of nine are different, and they differ from the first line: one is a letter with a greeting
-and a signature, the other a single paragraph in quotation marks. Whether either is a good reply is
-another question, and lesson 12 measures tone. What the header did is make every call worth paying
-for.
+Nine of nine are different, and they differ from the first line: one is a letter with a greeting and
+a signature, the other a single paragraph in quotation marks. Whether either is a good reply is
+another question, and lesson 12 measures tone. The header made each of the nine calls return a
+different reply.
 
 **Decide per task, and keep classification and extraction at 0.** Putting the temperature in the
 prompt file keeps the decision next to the text it was made for, so the triage prompt and the reply
@@ -169,16 +169,15 @@ ana@lab:~/triage$ pl show runs/same.jsonl t01 --sample 2
 stop: stop, tokens in 96, out 69, 8.3 s
 ```
 
-Samples 1 and 2 agree. Sample 0 agrees with them for thirty words and then writes *You can expect*
-where they write *You will receive*, and from there it is a different reply. The seed cannot be the
-reason, because samples 1 and 2 had different seeds and agree. The same happened for `t02` and
-`t03`: in each, sample 0 differs and samples 1 and 2 agree. The likeliest cause is Ollama's cache.
-The first call for each message computed the whole message; the next two found most of it already
-computed and reused it. The arithmetic took a different path, the last digits of two nearly equal
-scores came out the other way round, and greedy decoding followed the new winner to the end of the
-reply. A short JSON object gives a near tie fewer places to happen than sixty words of prose, which
-is why the triage samples agreed. All three replies also promise a refund, which the prompt forbids;
-lesson 4 found the same, and temperature has nothing to do with it.
+Samples 1 and 2 agree. Sample 0 agrees with them for its first two sentences and then writes *You
+can expect* where they write *You will receive*, and from there it is a different reply. The seed
+cannot be the reason, because samples 1 and 2 had different seeds and agree.  The likeliest cause is
+Ollama's cache. The first call for each message computed the whole message; the next two found most
+of it already computed and reused it. The arithmetic took a different path, the last digits of two
+nearly equal scores came out the other way round, and greedy decoding followed the new winner to the
+end of the reply. A short JSON object gives a near tie fewer places to happen than sixty words of
+prose, which is why the triage samples agreed. All three replies also promise a refund, which the
+prompt forbids; lesson 4 found the same, and temperature has nothing to do with it.
 
 Different machines add a second cause. Lesson 1 ran `v2-json.txt` and printed 22 passes; lessons 2
 and 3 ran the same file over the same forty messages, with the same model and the same settings,

@@ -50,6 +50,5 @@ would also refuse `a07`, the customer from lesson 10 who wrote to say their parc
 all.
 
 So measure both directions: replies that crossed a line, and replies that should have answered and
-did not. None of the forty replies here refused to answer, and that count is worth printing beside
-the 19, because it is the number that would tell you a change made the replies safer by making them
-useless.
+did not. Count the replies that refused to answer, and print that number beside the 19, because it
+is the number that would tell you a change made the replies safer by making them useless.

@@ -150,9 +150,10 @@ ana@lab:~/triage$ pl show runs/86913c0.jsonl t04
 stop: stop, tokens in 260, out 29, 4.2 s
 ```
 
-Valid JSON, the right category, the wrong urgency for a customer who is locked out, and a summary
-in the plain lines' style: lower case and no full stop. With `llama3.2:3b` the format came from the instruction and the field list, and the examples
-contributed the labels. **The revert reads like a fix** and its message says what it did, not why.
-Somebody believed examples must look exactly like the answer. That belief came from somewhere
-reasonable, and on this model, on this day, the table says it cost three messages and 1855 tokens a
-run. Whether three messages are real is the next section's question.
+Valid JSON, the right category, the wrong urgency for a customer who is locked out, and a summary in
+the plain lines' style: lower case and no full stop. With `llama3.2:3b` the format came from the
+instruction and the field list, and the examples contributed the labels. **The revert reads like a
+fix** and its message says what it did, not why. Somebody believed examples must look exactly like
+the answer. That belief came from somewhere reasonable, and on this model, on this day, the table
+says it cost three messages and 1855 tokens a run. Whether three messages are real is the next
+section's question.

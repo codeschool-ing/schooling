@@ -30,13 +30,14 @@ pegar os deslizes e deixar passar os equívocos. Com temperatura 0 todo erro de 
 equívoco, já que a resposta é o rótulo preferido por definição, e por isso um revisor
 deveria se sair melhor numa execução amostrada do que numa a 0.
 
-Aqui a revocação foi de 0,69 para 0,72 e a precisão caiu de 0,40 para 0,28. A aula 19 mostrou por que
-havia pouco para o argumento trabalhar: as amostras concordaram na maioria das mensagens, então a
-maioria dos erros amostrados eram os mesmos equívocos da temperatura 0. E um revisor que
-marca a maioria das respostas por um motivo inventado não melhora quando os erros ficam mais
-fáceis. **Se a autoverificação ajuda é uma medição no seu modelo e nos seus ajustes**, e esta diz
-que aqui ela mal ajuda. Uma revocação medida numa configuração diz pouco sobre outra, então meça a
-verificação nos ajustes que você vai pôr em produção.
+Aqui, só nas mensagens do dev, a revocação foi 0,72 e a precisão 0,28, contra 0,69 e 0,40 da
+execução com temperatura 0 sobre as setenta. A aula 19 mostrou por que havia pouco para o argumento
+trabalhar: as amostras concordaram na maioria das mensagens, então a maioria dos erros amostrados
+eram os mesmos equívocos da temperatura 0. E um revisor que marca a maioria das respostas por um
+motivo inventado não melhora quando os erros ficam mais fáceis. **Se a autoverificação ajuda é uma
+medição no seu modelo e nos seus ajustes**, e esta diz que aqui ela mal ajuda. Uma revocação medida
+numa configuração diz pouco sobre outra, então meça a verificação nos ajustes que você vai pôr em
+produção.
 
 ## O que outros encontraram
 

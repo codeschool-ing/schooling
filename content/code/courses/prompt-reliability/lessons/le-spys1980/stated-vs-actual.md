@@ -64,8 +64,8 @@ stop: stop, tokens in 291, out 38, 4.6 s
 ```
 
 A charge for an order the customer never placed. The person who labelled it called that billing:
-money taken that should not have been. The model called it account and stated 0.9, its higher
-value.
+money taken that should not have been. The model called it account and stated 0.9, the higher of the
+two values it almost always uses.
 
 ```
 ana@lab:~/triage$ pl show runs/v9.jsonl t35

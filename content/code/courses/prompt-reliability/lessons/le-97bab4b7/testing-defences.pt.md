@@ -146,8 +146,7 @@ não disse nada sobre injeção até o conjunto de ataques rodar com ela também
 você achar no tráfego real vira um caso**, limpa dos dados do cliente e rotulada com o assunto real
 da mensagem, do mesmo jeito que uma mensagem comum difícil vira um.
 
-Este curso não é o único a pôr o problema tão alto. O OWASP Top 10 for Large Language Model
-Applications põe a injeção de prompt em primeiro lugar na lista. Os controles que ele recomenda são
-as camadas desta aula: restringir e validar a saída, dar ao modelo o menor privilégio de que a
-tarefa precisa, exigir a aprovação de uma pessoa para ações de alto risco, e testar com entradas
-adversariais.
+O OWASP Top 10 for Large Language Model Applications põe a injeção de prompt em primeiro lugar na
+lista. Os controles que ele recomenda são as camadas desta aula: restringir e validar a saída, dar
+ao modelo o menor privilégio de que a tarefa precisa, exigir a aprovação de uma pessoa para ações de
+alto risco, e testar com entradas adversariais.

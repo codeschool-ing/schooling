@@ -42,8 +42,9 @@ elas pelo número.
 
 Leia como o modelo leria, de cima para baixo, com uma mensagem na mão, e veja quanto disso ajuda a
 decidir alguma coisa. Oito das treze dizem só o que não fazer. Duas estão em maiúsculas. A linha 9
-quer o resumo curto e a linha 20 quer todos os detalhes nele. O linter da aula 2 encontra quase tudo
-isso:
+quer o resumo curto e a linha 20 quer todos os detalhes nele. O linter da aula 2 encontra a
+contagem, as proibições e as maiúsculas, e deixa passar as linhas 9 e 20, porque *every detail* não
+está na lista dele:
 
 ```
 ana@lab:~/triage$ python3 lint.py prompts/v8-rules.txt

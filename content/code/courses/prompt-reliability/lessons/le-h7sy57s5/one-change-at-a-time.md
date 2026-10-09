@@ -40,7 +40,7 @@ ana@lab:~/triage$ head -n 1 runs/v7-warm.jsonl
 {"case": "t01", "sample": 0, "cases": "cases/all.jsonl", "prompt": "7864b0b5", "text": "{\"category\": \"billing\", \"urgency\": \"high\", \"summary\": \"Refund the second payment for order 4471\"}", "stop": "stop", "tokens_in": 153, "tokens_out": 29, "seconds": 4.45}
 ```
 
-Each line of a run keeps the message, the prompt's id, the test set, the reply, the stop reason,
+Each line of a run keeps the case's id, the prompt's id, the test set, the reply, the stop reason,
 the tokens and the time. **It does not keep the parameters you passed with `--set`.** The id
 `7864b0b5` is a hash of the prompt file, so it is identical for the prose prompt at temperature 0
 and at 0.8. Lesson 4 said the same about a setting typed on the command line; lesson 14 versions

@@ -27,14 +27,13 @@ which was the mistake.
 
 **A judge with a position bias is that student's Tuesday and Thursday.** Swap the order of two
 answers and twelve verdicts in sixteen change. Ask the same question twice at temperature 0 and one
-verdict in sixteen changed anyway. Every verdict that survived the swap went to the longer reply. None of that is
-acceptable in the one place where nobody checks the verdict afterwards, and an exam is that place:
-a certificate rests on it.
+verdict in sixteen changed anyway. Every verdict that survived the swap went to the longer reply.
+None of that is acceptable in the one place where nobody checks the verdict afterwards, and an exam
+is that place: a certificate rests on it.
 
 ## Where a judge earns its place
 
-So the question is where a judge goes. **Use a judge where
-its mistakes are cheap and something else catches them:**
+**Use a judge where its mistakes are cheap and something else catches them:**
 
 - Ranking drafts: five candidate replies, ordered for a person who edits the top one. A wrong
   ranking costs that person a few seconds.

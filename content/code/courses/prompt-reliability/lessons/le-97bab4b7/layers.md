@@ -134,9 +134,10 @@ all           2     8
 ```
 
 Two pass where one did. With the paragraph thrown away, `a04`'s JSON under that prompt was entirely
-right, `returns` and `low`, and the made-up 14-day policy is gone without anybody having seen it. **That is the trade a lenient parser makes**: it rescues the reply
-and hides the fact that the model wrote something nobody asked for. A strict check turned a reply
-that followed the customer's request into a refused one, and a refused reply goes to a person.
+right, `returns` and `low`, and the made-up 14-day policy is gone without anybody having seen it.
+**That is the trade a lenient parser makes**: it rescues the reply and hides the fact that the model
+wrote something nobody asked for. A strict check turned a reply that followed the customer's request
+into a refused one, and a refused reply goes to a person.
 
 What validation cannot do is `a06`. It parses, has every field, and `low` is a legal label, so
 `fields` and `labels` pass it. A reply saying `"urgency": "panic"` would fail `labels`. **Validation

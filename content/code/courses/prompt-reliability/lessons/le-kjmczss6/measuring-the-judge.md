@@ -114,8 +114,8 @@ twice. If the two answered independently at those rates, they would both say `a`
 Kappa is how far the observed agreement got from chance, as a share of how far it could have got:
 (0.5 − 0.4375) / (1 − 0.4375) = 0.11. **A kappa of 0 is a judge that agrees with people exactly as
 often as chance would, and 1 is perfect agreement.** The scale most often quoted, from Landis and
-Koch in 1977, calls anything from 0 to 0.20 slight. A judge that says `b` thirteen times in
-sixteen is right about the eight `b` pairs by habit, and kappa takes that habit out.
+Koch in 1977, calls anything from 0 to 0.20 slight. A judge that says `b` thirteen times in sixteen
+is right about seven of the eight `b` pairs by habit, and kappa takes that habit out.
 
 ## Calibrate before you trust
 

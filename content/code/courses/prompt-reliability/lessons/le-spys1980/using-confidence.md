@@ -34,9 +34,9 @@ conf >= 0.90       12      1.00
 conf >= 0.95        1      1.00
 ```
 
-On dev, the stated number looks useful. Replies stated at 0.9 were right every time, 12 of 12, and
-the ones stated at 0.8 were right 0.81 of the time. Answer when the confidence is at least 0.85, and
-you answer 12 messages of 40 **with an accuracy of 1.00**, and send 28 to a person.
+On dev, the stated number looks useful. Replies stated at 0.9 or above were right every time, 12 of
+12, and the ones stated at 0.8 were right 0.81 of the time. Answer when the confidence is at least
+0.85, and you answer 12 messages of 40 **with an accuracy of 1.00**, and send 28 to a person.
 
 Now hold that threshold against the harder set it never saw:
 

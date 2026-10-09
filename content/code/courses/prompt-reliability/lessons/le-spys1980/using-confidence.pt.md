@@ -34,9 +34,10 @@ conf >= 0.90       12      1.00
 conf >= 0.95        1      1.00
 ```
 
-No dev, o número declarado parece útil. As respostas declaradas com 0,9 acertaram todas as vezes, 12
-de 12, e as declaradas com 0,8 acertaram 0,81 das vezes. Responda quando a confiança for pelo menos
-0,85, e você responde 12 mensagens de 40 **com acurácia 1,00**, e manda 28 para uma pessoa.
+No dev, o número declarado parece útil. As respostas declaradas com 0,9 ou mais acertaram todas as
+vezes, 12 de 12, e as declaradas com 0,8 acertaram 0,81 das vezes. Responda quando a confiança for
+pelo menos 0,85, e você responde 12 mensagens de 40 **com acurácia 1,00**, e manda 28 para uma
+pessoa.
 
 Agora ponha esse limiar contra o conjunto mais difícil, que ele nunca viu:
 

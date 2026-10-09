@@ -101,7 +101,7 @@ stop: stop, tokens in 256, out 36, 4.0 s
 number, because it had a field it was shown and no value of its own to put in it. **Names, dates
 and numbers in examples turn up in answers about something else.**
 
-Two things in that transcript are worth keeping.
+
 
 **The check caught it because it is strict.** `fields` fails a reply with a field nobody asked
 for. A check that only looked for the fields it needed would have passed all five, and a wrong order

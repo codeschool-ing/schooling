@@ -24,8 +24,9 @@ when. Do not promise a refund or a date the shop has not agreed.
 
 `{{shop}}` e `{{language}}` são configurações, as mesmas para uma execução inteira, passadas com
 `--var`. `{{message|xml}}` vem do caso de teste, e o `|xml` depois do nome é um filtro, assunto da
-terceira seção desta aula. O `pl render` preenche um modelo de texto e imprime o resultado sem
-chamar modelo nenhum, o que o torna o jeito mais barato de ver o que de fato vai ser mandado:
+quarta seção desta aula, *Um valor é dado*. O `pl render` preenche um modelo de texto e imprime o
+resultado sem chamar modelo nenhum, o que o torna o jeito mais barato de ver o que de fato vai ser
+mandado:
 
 ```
 ana@lab:~/triage$ pl render prompts/reply.txt --cases cases/dev.jsonl --case t01 --var shop=Folio; echo "exit status $?"

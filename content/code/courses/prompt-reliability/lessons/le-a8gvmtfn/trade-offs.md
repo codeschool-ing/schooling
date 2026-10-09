@@ -33,12 +33,12 @@ urgency      20    20
 all          20    20
 ```
 
-Format held: one reply in forty does not parse, the same `t38` as ever. **What the examples were
-paying for is the judgement**: categories fell from 35 to 32 and urgencies from 28 to 20. A third of
-the cost for nine messages in forty is a trade somebody has to make knowingly. Whether a wrong
-urgency costs more than 40,837.5 cents a million calls is a question about the support team, not
-about the prompt, and only somebody who knows what a mis-sorted message costs can answer it. What
-the harness can do is make sure they are looking at both numbers.
+Format held: one reply in forty does not parse, as under `v3`. **What the examples were paying for
+is the judgement**: categories fell from 35 to 32 and urgencies from 28 to 20. A third of the cost
+for a net eight messages in forty is a trade somebody has to make knowingly. Whether a wrong urgency
+costs more than 40,837.5 cents a million calls is a question about the support team, not about the
+prompt, and only somebody who knows what a mis-sorted message costs can answer it. What the harness
+can do is make sure they are looking at both numbers.
 
 ## p95, not the mean
 

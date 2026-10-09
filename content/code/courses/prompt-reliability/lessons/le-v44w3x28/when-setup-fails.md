@@ -90,12 +90,13 @@ the server you are using, at the price of a second copy on the disk.
 
 ## The first answer is slow
 
-The first call after the server starts loads the model into memory, and that takes seconds before
-a single word comes back. In the first run of this lesson the first reply took 34.8 seconds and the next one 12.7. After five idle minutes Ollama unloads the model to give the
-memory back, and the next call pays to load it again. `ollama ps` shows what is loaded, how much
-memory it takes and until when.
+The first call after the server starts loads the model into memory, and that takes seconds before a
+single word comes back. In the first run of this lesson the first reply took 34.8 seconds and the
+next one 12.7. After five idle minutes Ollama unloads the model to give the memory back, and the
+next call pays to load it again. `ollama ps` shows what is loaded, how much memory it takes and
+until when.
 
-If **every** call is slow, more than half a minute for a reply of one line, the computer is short
-of memory or of processor for this model. Use `llama3.2:1b`, as the first section described: it took 2.0 GB of memory where `llama3.2:3b`
-took 2.9, and it is a weaker model. If even that will not run, the online path is the
-one left.
+If **every** call is slow, more than half a minute for a reply of one line, the computer is short of
+memory or of processor for this model. Use `llama3.2:1b`, as *Your lab, and three ways to build it*
+described: it took 2.0 GB of memory where `llama3.2:3b` took 2.9, and it is a weaker model. If even
+that will not run, the online path is the one left.

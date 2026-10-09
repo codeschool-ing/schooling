@@ -48,8 +48,9 @@ O mesmo prompt passa 28 de 40 no conjunto contra o qual foi escrito, 70%, e 14 d
 Toda resposta continua sendo JSON válido. O que falha é o julgamento: o `h01` é um reembolso no
 cartão errado, um problema de cobrança escrito com as palavras de uma devolução, e o `h03`, uma
 cobrança por um pedido que ninguém fez, volta como `account`, o substantivo com que a mensagem abre.
-Doze categorias erradas em trinta, contra cinco em quarenta no dev. **A nota do dev mediu o quanto o
-prompt lida com mensagens como as que o autor dele imaginou**, e o autor imaginou as mais fáceis.
+Doze categorias erradas em trinta, contra quatro categorias erradas, e uma resposta que não é JSON
+válido, em quarenta no dev. **A nota do dev mediu o quanto o prompt lida com mensagens como as que o
+autor dele imaginou**, e o autor imaginou as mais fáceis.
 
 ## Um conjunto em que você ajusta para de medir
 

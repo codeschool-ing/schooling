@@ -31,8 +31,7 @@ lugar: um certificado se apoia nela.
 
 ## Onde um juiz merece o lugar
 
-A questão, então, é onde um juiz fica. **Use um juiz onde os
-erros dele são baratos e alguma outra coisa os pega:**
+**Use um juiz onde os erros dele são baratos e alguma outra coisa os pega:**
 
 - Ordenar rascunhos: cinco respostas candidatas, ordenadas para uma pessoa que edita a primeira.
   Uma ordem errada custa a essa pessoa alguns segundos.

@@ -3,10 +3,10 @@ title: When a reply does not parse
 version: 2
 ---
 
-One reply in forty did not parse under every prompt in this lesson that asks for JSON. At a thousand messages a day,
-that rate is about twenty-five replies a day the router cannot read. **The consuming program needs
-a decision for that case written down before it happens**, because the alternative is whatever the
-code does by accident.
+One reply in forty did not parse under every prompt in this lesson that asks for JSON. At a thousand
+messages a day, that rate is about twenty-five replies a day the router cannot read. **The consuming
+program needs a decision for that case written down before it happens**, because the alternative is
+whatever the code does by accident.
 
 There are three reasonable decisions and one bad one.
 

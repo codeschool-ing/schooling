@@ -25,12 +25,12 @@ change is paid for once, by the first call that reads it.
 
 ## The cache should not change the answers
 
-A cache is supposed to change cost and time and nothing else. Lesson 8 showed that on this machine it
-is not quite true: three replies to the same prompt at temperature 0, one read from scratch and two
-from the cache, and the first differed from the other two after thirty words. **A cached prompt is
-computed by a different path through the same arithmetic**, and a near tie can come out the other
-way. That is one more reason to measure over a test set rather than trust that a change to caching
-changed nothing.
+A cache is supposed to change cost and time and nothing else. Lesson 8 showed that on this machine
+it is not quite true: three replies to the same prompt at temperature 0, where the first differed
+from the other two after two sentences, most likely because the other two were read from the cache.
+**A cached prompt is computed by a different path through the same arithmetic**, and a near tie can
+come out the other way. That is one more reason to measure over a test set rather than trust that a
+change to caching changed nothing.
 
 ## Reordering is not a cache setting
 
@@ -58,9 +58,9 @@ ana@lab:~/triage$ pl compare runs/static.jsonl runs/first.jsonl --answers
   t39    account -> other
 ```
 
-Twenty-three against eighteen, none fixed and five broken, p = 0.062. Ten categories changed, and
-`t17` and `t38` traded places on format: `t38`, the ebook whose apostrophe breaks the JSON, parsed
-with the message first, and `t17` stopped parsing. **The message-first prompt is slower and, on this
-set, worse**, and the sign test on five messages stops just short of calling that more than chance.
-A reorder made for the cache goes through the gate of lesson 14 like any other change to the text;
-here it would have saved nothing and cost five messages.
+Twenty-three against eighteen, none fixed and five broken, p = 0.062. Ten answers changed, eight of
+them categories, and `t17` and `t38` traded places on format: `t38`, the ebook whose apostrophe
+breaks the JSON, parsed with the message first, and `t17` stopped parsing. **The message-first
+prompt is slower and, on this set, worse**, and the sign test on five messages stops just short of
+calling that more than chance. A reorder made for the cache goes through the gate of lesson 14 like
+any other change to the text; here it would have saved nothing and cost five messages.

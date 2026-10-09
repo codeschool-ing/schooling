@@ -62,15 +62,15 @@ t04           284      669            32      3376
 t05           285      746            27      2932
 ```
 
-The first call read 287 tokens in 5009 milliseconds. The next four read the same number of tokens
-in between 669 and 813: **the count is the same and the work is not**, because only the message at the end was new.
-The 287 in the `read tokens` column is what a hosted provider would bill, and what `pl` records as
-`tokens_in`; the time is where the cache shows.
+The first call read 287 tokens in 5009 milliseconds. The next four read the same number of tokens in
+between 669 and 813: **the count is the same and the work is not**, because only the message at the
+end was new. The 287 in the `read tokens` column is what a hosted provider would bill, and what `pl`
+records as `tokens_in`; the time is where the cache shows.
 
 The writing half did not move, about three seconds a call, because the cache only ever touches the
-prompt. And it does not last: `ollama ps` in lesson 1 said the model would stay in memory *4 minutes
-from now*. After five idle minutes Ollama unloads it, cache and all, and the next call reads the
-whole prompt again.
+prompt. And it does not last: `ollama ps` in lesson 1 said `llama3.2:3b` would stay in memory *3
+minutes from now*. After five idle minutes Ollama unloads it, cache and all, and the next call reads
+the whole prompt again.
 
 ## Real caches
 

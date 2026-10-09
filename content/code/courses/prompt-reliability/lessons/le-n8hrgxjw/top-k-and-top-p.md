@@ -36,7 +36,7 @@ t22, temperature 1, top-k off, top-p 0.9, 1000 draws
 
 **Top-k keeps a fixed number of candidates**, here the three most probable. They had 96.3% of the
 probability between them, and each one's share is now divided by that: `other` goes from 62.1% to
-64.5%, and the four tokens that would fail the label check get nothing.
+64.5%, and the seven below them get nothing, including all six that would fail the label check.
 
 **Top-p keeps the smallest set of top candidates whose probabilities add up to at least p.** The
 first three add up to 96.3%, which already reaches 90%, so top-p 0.9 keeps exactly the same three

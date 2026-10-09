@@ -40,8 +40,8 @@ mais difíceis, com os rótulos que uma pessoa deu. Salve-as como `cases/holdout
 {"id": "h30", "message": "Thank you for sorting out the refund so quickly last week.", "expect": {"category": "other", "urgency": "low"}}
 ```
 
-Junte os dois conjuntos num arquivo só, que as aulas seguintes também usam, e rode os dois prompts
-nas setenta:
+Junte os dois conjuntos num arquivo só, que as aulas 12, 18, 19 e 20 também usam, e rode os dois
+prompts nas setenta:
 
 ```
 ana@lab:~/triage$ cat cases/dev.jsonl cases/holdout.jsonl > cases/all.jsonl
@@ -214,13 +214,11 @@ h29    urgency   high, expected normal
 h30    category  returns, expected other
 ```
 
-A linha 12 das regras, *NEVER mark a question as high urgency*, puxa as respostas para baixo: o
-`t04`, alguém que não consegue entrar, e o `t12`, um pacote marcado como entregue que nunca chegou,
-foram os dois para `low` onde uma pessoa disse `high`. O *a customer out of pocket ... is high
-however politely they ask* do guia as puxa para cima: o `t02`, o `t07` e uma série de outras que uma
-pessoa chamou de `normal` voltaram `high`. **Cada prompt tem uma direção para a qual pende**, e o
-total de cada um é a soma de um conjunto diferente de erros. Dois prompts podem ficar a quatro um do
-outro e errar sobre clientes diferentes.
+Com as regras, o `t04`, alguém que não consegue entrar, e o `t12`, um pacote marcado como entregue
+que nunca chegou, foram os dois para `low` onde uma pessoa disse `high`. Com o guia, o `t02`, o
+`t07` e uma série de outras que uma pessoa chamou de `normal` voltaram `high`. **Cada prompt tem uma
+direção para a qual pende**, e o total de cada um é a soma de um conjunto diferente de erros. Dois
+prompts podem ficar a quatro um do outro e errar sobre clientes diferentes.
 
 ## O caso pelo qual duas regras brigaram
 

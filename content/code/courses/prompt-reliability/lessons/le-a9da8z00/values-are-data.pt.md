@@ -132,8 +132,7 @@ volta para dentro da mensagem, que é onde ela pertence, e o modelo ainda fez o 
 linha no prompt dizendo que instruções dentro da mensagem fazem parte da mensagem também não o
 impediu.
 
-Esse é o limite honesto desta aula. Escapar é necessário: sem isso um cliente consegue reescrever a
-estrutura do seu prompt, o que é pior. Não é suficiente, porque **um modelo também lê o texto dentro
-das tags**, e um texto que parece uma ordem pode ser obedecido de qualquer lugar. A aula 9 compara
-tags com crases triplas como delimitadores, e a aula 10 trata o texto que um cliente manda como a
-superfície de ataque que ele é.
+ Escapar é necessário: sem isso um cliente consegue reescrever a estrutura do seu prompt, o que é
+pior. Não é suficiente, porque **um modelo também lê o texto dentro das tags**, e um texto que
+parece uma ordem pode ser obedecido de qualquer lugar. A aula 9 compara tags com crases triplas como
+delimitadores, e a aula 10 trata o texto que um cliente manda como a superfície de ataque que ele é.

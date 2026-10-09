@@ -101,7 +101,7 @@ O `grep` conta cinco respostas com `4471`, e só um cliente, o `t01`, chegou a m
 exemplo, porque tinha um campo que viu e nenhum valor próprio para pôr nele. **Nomes, datas e
 números de exemplos aparecem em respostas sobre outra coisa.**
 
-Duas coisas nessa transcrição valem guardar.
+
 
 **A verificação pegou porque é estrita.** `fields` reprova uma resposta com um campo que ninguém
 pediu. Uma verificação que só procurasse os campos de que precisa teria aprovado as cinco, e um

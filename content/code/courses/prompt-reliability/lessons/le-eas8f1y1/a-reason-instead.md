@@ -59,9 +59,9 @@ they collide.** That is the argument; the next section checks it against the mod
 
 ## Longer, and not padded
 
-The guide is longer than the rules: 285.3 tokens a call against 231.3, the next section's runs say.
-Lesson 2 cut a prompt by 97 tokens and lost nothing, and that is not a contradiction: what lesson 2
-cut were lines that decided nothing, said something twice or fought each other. **Every line of
-the guide carries a reason a reader can apply to a message**, and the test of a line is whether it
-changes an answer, not how short it is. Whether these lines change answers is a measurement, and
-the next section makes it.
+The guide is longer than the rules: 54 tokens more on every call, as `t22` (233 against 287) and
+`h01` (228 against 282) show in the next section's runs. Lesson 2 cut a prompt by 97 tokens and lost
+nothing, and that is not a contradiction: what lesson 2 cut were lines that decided nothing, said
+something twice or fought each other. **Every line of the guide carries a reason a reader can apply
+to a message**, and the test of a line is whether it changes an answer, not how short it is. Whether
+these lines change answers is a measurement, and the next section makes it.

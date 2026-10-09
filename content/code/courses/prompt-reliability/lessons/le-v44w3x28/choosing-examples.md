@@ -54,6 +54,6 @@ Examples are paid for on every call, because they are part of every prompt. `pl 
 tokens that went in, and `t01` went in twice above: 108 tokens without the examples and 250 with
 them. **The three examples more than doubled the input of every call**, and a model reads every
 token it is given before it writes the first word of its reply, which on a processor is time you
-wait. That was worth it here, for seven replies in forty. A fourth example has to earn its place
-the same way, with a count of what it fixed. Lesson 16 does the arithmetic of what each token
-costs, and lesson 17 shows how a cache makes the fixed part of a prompt cheaper.
+wait. That was worth it here: seven replies fixed and one broken, six in forty. A fourth example has
+to earn its place the same way, with a count of what it fixed. Lesson 16 does the arithmetic of what
+each token costs, and lesson 17 shows how a cache makes the fixed part of a prompt cheaper.

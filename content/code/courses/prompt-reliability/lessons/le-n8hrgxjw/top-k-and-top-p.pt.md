@@ -36,7 +36,8 @@ t22, temperature 1, top-k off, top-p 0.9, 1000 draws
 
 **O top-k mantém um número fixo de candidatos**, aqui os três mais prováveis. Eles tinham 96,3% da
 probabilidade entre si, e a parte de cada um agora é dividida por isso: `other` vai de 62,1% para
-64,5%, e os quatro tokens que reprovariam na verificação de rótulo não ficam com nada.
+64,5%, e os sete abaixo deles não ficam com nada, incluindo os seis que reprovariam na verificação
+de rótulo.
 
 **O top-p mantém o menor conjunto de primeiros candidatos cujas probabilidades somam pelo menos p.**
 Os três primeiros somam 96,3%, o que já chega a 90%, então o top-p 0,9 mantém exatamente as mesmas

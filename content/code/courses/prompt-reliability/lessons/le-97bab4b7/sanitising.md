@@ -83,10 +83,11 @@ and let `a06` through, which is the worst of both directions at once.
 cannot be wrong about meaning. After it runs, nothing in the message can close the `<message>` tag,
 whatever the message says. **That is a property you can state, not a rate you have to measure.**
 
-It protects the structure and nothing else. `a08` was obeyed with its tag escaped, in lesson 4 and
-again in this lesson, because a model can follow an instruction from inside the tags as easily as
-from outside them. Escaping is the right sanitising for the delimiter you chose; it says nothing
-about the words.
+It protects the structure and nothing else. `a08` still came back `high` with its tag escaped, in
+lesson 4 and again in this lesson, and nothing about escaping would have stopped it had the model
+chosen to follow the instruction inside the tags: a model can follow one from inside them as easily
+as from outside. Escaping is the right sanitising for the delimiter you chose; it says nothing about
+the words.
 
 ## What not to do to the text
 

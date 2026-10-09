@@ -98,6 +98,6 @@ devolver a memória, e a próxima chamada paga para carregá-lo de novo. O `olla
 está carregado, quanta memória ocupa e até quando.
 
 Se **toda** chamada é lenta, mais de meio minuto para uma resposta de uma linha, falta memória ou
-processador ao computador para este modelo. Use o `llama3.2:1b`, como a primeira seção descreveu:
-ele ocupou 2,0 GB de memória onde o `llama3.2:3b` ocupou 2,9, e é um modelo mais fraco. Se nem ele
-rodar, sobra o caminho online.
+processador ao computador para este modelo. Use o `llama3.2:1b`, como *Seu laboratório, e três
+jeitos de montá-lo* descreveu: ele ocupou 2,0 GB de memória onde o `llama3.2:3b` ocupou 2,9, e é um
+modelo mais fraco. Se nem ele rodar, sobra o caminho online.

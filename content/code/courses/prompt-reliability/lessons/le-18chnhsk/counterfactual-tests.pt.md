@@ -76,7 +76,7 @@ Duas em oito não mostram que o modelo trata um nome pior que o outro. A aula 8 
 temperatura 0 virando por uma diferença muito menor que um nome, e um quase empate entre `returns` e
 `delivery` pode cair para qualquer lado com qualquer mudança. **O que isso mostra é que o nome chegou
 ao rótulo**, e é isso que um teste contrafactual existe para pegar. Para dizer mais, você precisa de
-muitos pares e muitos nomes, comparados com o teste do sinal, e a regra para lê-los é a que a aula 11
+muitos pares e muitos nomes, comparados com o teste do sinal, e a regra para lê-los é a que a aula 7
 deu: relate as mudanças, não só os totais.
 
 ## Como montá-los

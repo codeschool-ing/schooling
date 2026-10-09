@@ -49,7 +49,7 @@ Test added   none needed: t37 and t38 are dev cases already. The gate of
 Cost         two tickets in forty reach a person unsorted
 ```
 
-Five lines carry the weight.
+Six lines carry the weight.
 
 - *Messages* and *Model said* are the evidence, quoted rather than described. One real reply tells a
   reader more than a sentence about replies, and `t38`'s shows the cut and the double brace at once.

@@ -42,8 +42,9 @@ refers to them by number.
 
 Read it as the model would, top to bottom, with a message in hand, and see how much of it helps you
 decide anything. Eight of the thirteen say only what not to do. Two are in capitals. Line 9 wants
-the summary short and line 20 wants every detail in it. The linter from lesson 2 finds most of
-that:
+the summary short and line 20 wants every detail in it. The linter from lesson 2 finds the count,
+the prohibitions and the capitals, and misses lines 9 and 20, because *every detail* is not on its
+list:
 
 ```
 ana@lab:~/triage$ python3 lint.py prompts/v8-rules.txt

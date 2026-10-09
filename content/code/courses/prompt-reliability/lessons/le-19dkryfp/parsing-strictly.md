@@ -65,11 +65,11 @@ broken: t04 t10
 sign test on the 2 that changed: p = 0.500
 ```
 
-**The line changed nothing it was written for**, and two other things. `llama3.2:3b` never wrapped
-a reply in this test set, so there was nothing for it to fix, and the one reply that does not parse
-did not parse before either. It moved two urgencies, `t04` and `t10`, both from a pass to a fail,
-and the sign test on two changes is a coin toss, p = 0.500. A line that fixes a problem the model
-does not have costs fifteen tokens a call and gives the model one more thing to weigh.
+**The line changed nothing it was written for**, and two other things. `llama3.2:3b` never wrapped a
+reply in this test set, so there was nothing for it to fix, and the one reply that does not parse
+did not parse before either. It broke two replies that passed before, `t04` on urgency and `t10` on
+category, and the sign test on two changes is a coin toss, p = 0.500. A line that fixes a problem
+the model does not have costs fifteen tokens a call and gives the model one more thing to weigh.
 
 That is worth saying because the line is good advice for many models: some wrap JSON in a code
 fence habitually. **Whether your model has the habit is a measurement**, and here it came back no.

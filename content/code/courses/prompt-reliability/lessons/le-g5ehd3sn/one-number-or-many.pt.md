@@ -32,9 +32,9 @@ accuracy 53/70 = 0.76
 ```
 
 Por todos os totais, o `v3` é o prompt melhor: 53 categorias certas contra 45, 42 respostas
-aprovadas em todas as verificações contra 26, os mesmos 69 de 70 em formato. Qualquer nota construída
-com isso o escolheria, e na maior parte da matriz ele merece vencer: revocação de billing de 0,25
-para 0,62, precisão de returns de 0,48 para 0,80.
+aprovadas em todas as verificações contra as 26 do `v6` na aula 7, os mesmos 69 de 70 em formato.
+Qualquer nota construída com isso o escolheria, e na maior parte da matriz ele merece vencer:
+revocação de billing de 0,25 para 0,62, precisão de returns de 0,48 para 0,80.
 
 Uma célula foi para o outro lado. **A precisão de billing caiu de 1,00 para 0,77**: o `v3` manda à
 equipe de cobrança treze chamados, três dos quais não são dela, onde o `v6` mandava quatro e os
