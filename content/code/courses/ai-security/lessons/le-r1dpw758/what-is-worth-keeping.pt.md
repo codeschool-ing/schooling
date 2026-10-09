@@ -56,6 +56,8 @@ import argparse
 import datetime as dt
 import json
 import os
+import sys
+import urllib.error
 import urllib.request
 
 import ask
@@ -85,8 +87,13 @@ def propose(message):
                                  {"Content-Type": "application/json"})
     if ask.KEY:
         req.add_header("Authorization", "Bearer " + ask.KEY)
-    with urllib.request.urlopen(req, timeout=600) as r:
-        return json.loads(json.load(r)["choices"][0]["message"]["content"])["memories"]
+    try:
+        with urllib.request.urlopen(req, timeout=600) as r:
+            return json.loads(json.load(r)["choices"][0]["message"]["content"])["memories"]
+    except urllib.error.HTTPError as e:
+        sys.exit("memory: %s answered %d: %s" % (ask.URL, e.code, e.read().decode().strip()))
+    except urllib.error.URLError as e:
+        sys.exit("memory: cannot reach %s (%s). Is Ollama running?" % (ask.URL, e.reason))
 
 
 def refuse(m):

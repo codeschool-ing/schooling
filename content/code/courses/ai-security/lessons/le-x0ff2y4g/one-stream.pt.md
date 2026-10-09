@@ -59,6 +59,8 @@ endereço e o nome do modelo:
 #   --show   print what the model wrote under each reply that was not ok
 import argparse
 import json
+import sys
+import urllib.error
 import urllib.request
 
 import ask
@@ -90,8 +92,13 @@ def reply(ticket, layout, schema):
                                  {"Content-Type": "application/json"})
     if ask.KEY:
         req.add_header("Authorization", "Bearer " + ask.KEY)
-    with urllib.request.urlopen(req, timeout=600) as r:
-        return json.load(r)["choices"][0]["message"]["content"]
+    try:
+        with urllib.request.urlopen(req, timeout=600) as r:
+            return json.load(r)["choices"][0]["message"]["content"]
+    except urllib.error.HTTPError as e:
+        sys.exit("classify: %s answered %d: %s" % (ask.URL, e.code, e.read().decode().strip()))
+    except urllib.error.URLError as e:
+        sys.exit("classify: cannot reach %s (%s). Is Ollama running?" % (ask.URL, e.reason))
 
 
 def verdict(text):
