@@ -34,6 +34,10 @@ on 'comm -23 runs/v3.wrong <(sort -m runs/v4.wrong runs/v6.wrong) | paste -sd " 
 block sampling
 on 'pl run prompts/v6-escaped.txt cases/all.jsonl --samples 5 --set temperature=0.8 --out runs/s5.jsonl'
 on 'python3 vote.py runs/s5.jsonl'
+on "pl check runs/s5.jsonl --failures | awk '\$2 == \"json\" || \$2 == \"category\" {print substr(\$1, 1, 3)}' | sort | uniq -c | awk '\$1 < 5'"
+on 'pl show runs/v6.jsonl t38'
+on "pl check runs/s5.jsonl --failures | grep '^t38'"
 
 block cost
+on 'python3 cost.py runs/v3.jsonl runs/v4.jsonl runs/v6.jsonl runs/s5.jsonl'
 on 'python3 stats.py runs/v6.jsonl runs/s5.jsonl'
