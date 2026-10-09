@@ -22,6 +22,7 @@ LESSON=20; . "$here/../../lab-capture.sh"
 block t0
 on 'pl run prompts/v6-escaped.txt cases/all.jsonl --out runs/v6.jsonl'
 on 'python3 selfcheck.py runs/v6.jsonl'
+on 'pl show runs/v6.jsonl t07'
 
 block sampled
 on 'pl run prompts/v6-escaped.txt cases/dev.jsonl --samples 5 --set temperature=0.8 --out runs/s5.jsonl'
@@ -29,3 +30,4 @@ on 'python3 selfcheck.py runs/s5.jsonl | tail -n 4'
 
 block code
 on 'pl check runs/v6.jsonl --failures | grep json'
+on 'pl show runs/v6.jsonl t38'

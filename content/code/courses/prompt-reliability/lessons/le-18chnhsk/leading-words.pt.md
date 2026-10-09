@@ -97,7 +97,7 @@ accuracy 34/70 = 0.49
 ```
 
 Setenta por cento do que este prompt chama de `delivery` é outra coisa: precisão 0,30, com 13
-mensagens de entrega de verdade entre as 43 que ele rotulou assim. O recall de billing caiu para 0,12.
+mensagens de entrega de verdade entre as 43 que ele rotulou assim. A revocação de billing caiu para 0,12.
 **Uma taxa de base num prompt é um dedo na balança**, e empurra todo caso duvidoso para o mesmo lado.
 
 A frase, aliás, é falsa aqui: catorze dos setenta casos são de entrega. Mas uma frase verdadeira

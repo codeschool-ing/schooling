@@ -3,7 +3,12 @@ title: Asking it to check
 version: 2
 ---
 
-Save it as `prompts/review.txt`:
+Self-evaluation is the step that sends a model's answer back to it with a question: is this right?
+It sounds like a second opinion. **It is the same opinion asked for twice**, and what it can add
+depends entirely on what differs between the first reading and the second.
+
+This review prompt shows the model the customer's message and the answer it gave, and asks for a
+verdict. Save it as `prompts/review.txt`:
 
 ```
 You check answers given by a triage assistant for Folio, an online bookshop.
@@ -19,7 +24,18 @@ You check answers given by a triage assistant for Folio, an online bookshop.
 Is the answer valid JSON with the right category? Reply OK, or WRONG and the reason.
 ```
 
-Save it as `selfcheck.py`:
+Both values go through `|xml`, as every outside value has since lesson 4: the answer is text the
+model wrote, and the message is text a customer wrote. The prompt asks about the format and the
+category, and not about the urgency, so a reply counts as wrong here when it fails `json`, `fields`,
+`labels` or `category`.
+
+## Measuring a check
+
+A check is a classifier like the triage prompt, and it is measured the same way: against labels a
+person gave. This program sends every reply in a run through `review.txt`, one more call per reply,
+and holds each verdict against what `pl` already knows about the reply. It prints every reply that
+was flagged or was really wrong, with the start of what the reviewer said, and then a table. Save it
+as `selfcheck.py`:
 
 ```python
 """selfcheck: ask the model to check each triage answer with prompts/review.txt,
@@ -51,3 +67,9 @@ flags, mistakes = table[True, True] + table[True, False], table[True, True] + ta
 print("precision %.2f   recall %.2f" % (table[True, True] / flags if flags else 0,
                                          table[True, True] / mistakes if mistakes else 0))
 ```
+
+`judge` is the function `pl check` uses, so *really wrong* means exactly what it means everywhere
+else in the course. A verdict that does not start with `OK` is a flag. That is the same
+measurement lesson 13 made of a model judging two replies, and it has the same reference point.
+**A check is only as good as its agreement with the labels a person gave**, and the next section
+reads that agreement as a table.

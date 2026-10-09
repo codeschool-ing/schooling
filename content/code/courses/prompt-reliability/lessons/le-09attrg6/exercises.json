@@ -33,39 +33,39 @@
   },
   {
     "id": "ex-dahq85f7",
-    "version": 1,
+    "version": 2,
     "section": "asking-it-to-check",
     "type": "multiple-choice",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "In which of these cases does the stand-in's review say WRONG? Choose all that apply.",
-    "hint": "Three cases, all about what it can see.",
+    "prompt": "In `selfcheck.py`, which replies count as a flag? Choose all that apply.",
+    "hint": "Read the line that sets `flagged`.",
     "choices": [
       {
-        "text": "The answer does not parse",
+        "text": "A verdict that starts with WRONG",
         "correct": true,
-        "why": "Yes: the first thing it checks."
+        "why": "Yes."
       },
       {
-        "text": "Its own top label differs from the answer's",
+        "text": "A verdict that starts with anything but OK",
         "correct": true,
-        "why": "Yes: it would have said something else."
+        "why": "Yes: `not said.upper().startswith(\"OK\")`."
       },
       {
-        "text": "Its two best labels are close",
-        "correct": true,
-        "why": "Yes: it doubts a close call."
-      },
-      {
-        "text": "The answer disagrees with the person's label",
+        "text": "A verdict of OK on a reply that is really wrong",
         "correct": false,
-        "why": "It never sees the person's label; that is what makes the check worth measuring."
+        "why": "That is a miss, not a flag."
+      },
+      {
+        "text": "A reply that `judge` finds wrong",
+        "correct": false,
+        "why": "That is the person's side of the table."
       }
     ]
   },
   {
     "id": "ex-pk6c4ape",
-    "version": 1,
+    "version": 2,
     "section": "asking-it-to-check",
     "type": "quiz",
     "difficulty": "medium",
@@ -89,7 +89,7 @@
         "why": "The review is not sampled."
       },
       {
-        "text": "Because `pl selfcheck` calls the model twice per reply",
+        "text": "Because `selfcheck.py` calls the model twice per reply",
         "correct": false,
         "why": "It makes one review call per reply; the phrase is about what the call knows."
       }
@@ -97,89 +97,89 @@
   },
   {
     "id": "ex-r5ewbj5p",
-    "version": 1,
-    "section": "what-it-catches",
-    "type": "numeric",
-    "difficulty": "easy",
-    "drillable": true,
-    "prompt": "On the temperature-0 run, the check flagged 11 replies and 8 of them were really wrong. What is its precision? Two decimal places.",
-    "hint": "Right flags over all flags.",
-    "value": 0.73,
-    "tolerance": 0.01
-  },
-  {
-    "id": "ex-qj0h2gd4",
-    "version": 1,
+    "version": 2,
     "section": "what-it-catches",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Fourteen replies were really wrong and the check flagged 8 of them. What is its recall? Two decimal places.",
+    "prompt": "On the temperature-0 run, the check flagged 45 replies and 18 of them were really wrong. What is its precision? Two decimal places.",
+    "hint": "Right flags over all flags.",
+    "value": 0.4,
+    "tolerance": 0.005
+  },
+  {
+    "id": "ex-qj0h2gd4",
+    "version": 2,
+    "section": "what-it-catches",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Twenty-six replies were really wrong and the check flagged 18 of them. What is its recall? Two decimal places.",
     "hint": "Flagged mistakes over all mistakes.",
-    "value": 0.57,
-    "tolerance": 0.01
+    "value": 0.69,
+    "tolerance": 0.005
   },
   {
     "id": "ex-ax83nsqt",
-    "version": 1,
+    "version": 2,
     "section": "what-it-catches",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "The six label mistakes the reviewer caught were all flagged *it could also be*, and none of its suggested alternatives was the person's label. What is such a flag good for?",
-    "hint": "Did it know what the label should be?",
+    "prompt": "Flagging 45 of the seventy at random would give a precision of about 0.37. Why?",
+    "hint": "26 of 70 were wrong.",
     "choices": [
       {
-        "text": "Replacing the answer with the suggestion",
+        "text": "Because a coin is right half the time",
         "correct": false,
-        "why": "That would swap six wrong labels for six other wrong ones."
+        "why": "Precision is not a coin's odds."
       },
       {
-        "text": "Nothing at all",
+        "text": "Because the reviewer's precision was 0.37",
         "correct": false,
-        "why": "Eight of its eleven flags were on real mistakes."
+        "why": "It was 0.40."
       },
       {
-        "text": "Saying the answer was shaky, so a person looks",
+        "text": "Random flags hit wrong replies in the share they occur",
         "correct": true,
-        "why": "Right: a useful flag and a useless correction."
+        "why": "Right: 26 of 70."
       },
       {
-        "text": "Proving that the person who labelled those six cases made a mistake",
+        "text": "Because 0.37 is the share of replies that the reviewer flagged",
         "correct": false,
-        "why": "The reviewer's alternatives were the ones that disagreed with everybody."
+        "why": "It flagged 45 of 70, 0.64."
       }
     ]
   },
   {
     "id": "ex-e8v2m2hf",
-    "version": 1,
+    "version": 2,
     "section": "what-it-catches",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "`h27`, a stolen gift card balance, was answered billing and the review said OK. Why did the review miss it?",
-    "hint": "What does the reviewer read in the message?",
+    "prompt": "The reviewer said `t07` was *not valid JSON because it is missing a closing bracket*. What did `pl show` reveal?",
+    "hint": "Read the reply.",
     "choices": [
       {
-        "text": "It reads `card` again and agrees with itself",
+        "text": "A complete, valid reply",
         "correct": true,
-        "why": "Right: a mistake it would make again is one it cannot see."
+        "why": "Right: with the right category; the defect was invented."
       },
       {
-        "text": "The reply was not valid JSON",
+        "text": "A reply cut off at the apostrophe of a word",
         "correct": false,
-        "why": "It parsed; the label was the problem."
+        "why": "That is `t38`."
       },
       {
-        "text": "The review prompt does not include the message, only the answer",
+        "text": "A reply with an extra field nobody asked for",
         "correct": false,
-        "why": "It includes both, inside tags."
+        "why": "It had the three fields."
       },
       {
-        "text": "Gift cards are not in any category",
+        "text": "A reply in a code fence",
         "correct": false,
-        "why": "A person put it in account."
+        "why": "No fence."
       }
     ]
   },
@@ -204,109 +204,109 @@
   },
   {
     "id": "ex-cj7ypjkz",
-    "version": 1,
+    "version": 2,
     "section": "what-it-catches",
     "type": "quiz",
-    "difficulty": "hard",
+    "difficulty": "medium",
     "drillable": true,
-    "prompt": "The three false alarms, `t37`, `h07` and `h30`, were answered correctly. What were they, to the reviewer?",
-    "hint": "Same mechanism as the six it caught.",
+    "prompt": "Why is a flag that comes with a reason not more trustworthy for having one?",
+    "hint": "Where does the reason come from?",
     "choices": [
       {
-        "text": "Replies that did not parse",
+        "text": "Reasons are cut off at 64 characters",
         "correct": false,
-        "why": "Those were `t26` and `t39`, and they were really wrong."
+        "why": "The printing is short; the problem is the content."
       },
       {
-        "text": "Messages from the holdout set, which the review prompt does not see",
+        "text": "The reviewer gives no reasons",
         "correct": false,
-        "why": "`t37` is a dev case, and the review sees every message."
+        "why": "It gave one on every flag."
       },
       {
-        "text": "Close calls, doubted though right",
+        "text": "A reason makes the verdict cost more tokens",
+        "correct": false,
+        "why": "Cost is not the point."
+      },
+      {
+        "text": "The reason is generated too, and here mostly invented",
         "correct": true,
-        "why": "Right: a flag means a close call, which is not the same as a wrong answer."
-      },
-      {
-        "text": "Answers it would have labelled differently",
-        "correct": false,
-        "why": "Then it would have said *should be*, not *could also be*."
+        "why": "Right: *missing a closing bracket* on valid JSON."
       }
     ]
   },
   {
     "id": "ex-dchfgxh5",
-    "version": 1,
+    "version": 2,
     "section": "what-sampling-changes",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
     "prompt": "On the run with five samples per message at temperature 0.8, what recall did the same check reach?",
     "hint": "The last line of the table.",
-    "value": 0.84,
+    "value": 0.72,
     "tolerance": 0.005
   },
   {
     "id": "ex-v0mm2njn",
-    "version": 1,
+    "version": 2,
     "section": "what-sampling-changes",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "The checker was identical, yet recall rose from 0.57 to 0.84 on the sampled run. Why?",
-    "hint": "What kind of mistake does sampling add?",
+    "prompt": "The slips argument says a reviewer should do better on a sampled run. Recall went only from 0.69 to 0.72. What does lesson 19 offer as part of the reason?",
+    "hint": "How often did the samples agree?",
     "choices": [
       {
-        "text": "The review is sampled too, so it catches more by chance",
+        "text": "The sampled run had only forty messages",
         "correct": false,
-        "why": "The review is not sampled; that is why it sees the favoured label."
+        "why": "Two hundred replies; recall is a share."
       },
       {
-        "text": "Mostly slips, which the reviewer sees",
+        "text": "The samples mostly agreed, so few mistakes were slips",
         "correct": true,
-        "why": "Right: the run's mistakes changed, and slips are what a self-check catches."
+        "why": "Right: little for the argument to work on."
       },
       {
-        "text": "350 replies are a larger sample than 70",
+        "text": "Sampled runs are always harder for a reviewer to check",
         "correct": false,
-        "why": "Size changes how precise the estimate is, not what it estimates."
+        "why": "Not what was measured."
       },
       {
-        "text": "At temperature 0.8 the replies are not JSON",
+        "text": "The reviewer was sampled too",
         "correct": false,
-        "why": "Almost all of them parse."
+        "why": "It ran at 0."
       }
     ]
   },
   {
     "id": "ex-0gww4xbg",
-    "version": 1,
+    "version": 2,
     "section": "what-sampling-changes",
     "type": "quiz",
-    "difficulty": "medium",
+    "difficulty": "easy",
     "drillable": true,
-    "prompt": "On `h27` in the sampled run, one sample answered account, the person's label. What did the reviewer say about it?",
-    "hint": "It reviews by its own belief.",
+    "prompt": "On the sampled run, flagging 117 of 200 replies at random would give what precision?",
+    "hint": "46 of 200 were wrong.",
     "choices": [
       {
-        "text": "OK",
+        "text": "0.59",
         "correct": false,
-        "why": "It passed the four billing samples, not this one."
+        "why": "That is the coin's recall."
       },
       {
-        "text": "*It could also be billing*",
+        "text": "0.72",
         "correct": false,
-        "why": "It was surer than that."
+        "why": "That is the reviewer's recall."
       },
       {
-        "text": "That the answer was not valid JSON",
-        "correct": false,
-        "why": "It parsed."
-      },
-      {
-        "text": "*The category should be billing*",
+        "text": "0.23",
         "correct": true,
-        "why": "Right: it argued a right answer back to the wrong one."
+        "why": "Right: the share of wrong replies."
+      },
+      {
+        "text": "0.28",
+        "correct": false,
+        "why": "That is the reviewer's."
       }
     ]
   },
@@ -344,71 +344,71 @@
   },
   {
     "id": "ex-m689zzkr",
-    "version": 1,
+    "version": 2,
     "section": "what-sampling-changes",
     "type": "quiz",
-    "difficulty": "hard",
+    "difficulty": "medium",
     "drillable": true,
-    "prompt": "You will ship at temperature 0. A colleague measured a self-check at recall 0.84 on sampled outputs. What do you conclude?",
-    "hint": "Recall depends on which mistakes the run makes.",
+    "prompt": "You will ship at temperature 0. A colleague measured a self-check on sampled outputs. What do you conclude?",
+    "hint": "Which configuration ships?",
     "choices": [
-      {
-        "text": "Expect about 0.84 in production",
-        "correct": false,
-        "why": "In this lab the same check got 0.57 at temperature 0."
-      },
-      {
-        "text": "Raise the temperature in production so the check catches more",
-        "correct": false,
-        "why": "That adds mistakes to catch; the answers get worse."
-      },
       {
         "text": "Measure it again at temperature 0",
         "correct": true,
-        "why": "Right: measure the check on the configuration you ship."
+        "why": "Right: a recall from one configuration says little about another."
       },
       {
-        "text": "Recall is meaningless for a self-check",
+        "text": "It will do better at 0",
         "correct": false,
-        "why": "It is meaningful; it is just specific to the run."
+        "why": "Nothing says so."
+      },
+      {
+        "text": "It will do the same at 0",
+        "correct": false,
+        "why": "That is what needs measuring."
+      },
+      {
+        "text": "Sampled measurements are always pessimistic",
+        "correct": false,
+        "why": "There is no such rule."
       }
     ]
   },
   {
     "id": "ex-397hj8ar",
-    "version": 1,
+    "version": 2,
     "section": "check-with-code-first",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "The self-check flagged `t26` and `t39` because they were not JSON. What else finds them?",
-    "hint": "No model needed.",
+    "prompt": "`t38` is not JSON, and the reviewer said OK. What finds it every time?",
+    "hint": "Lesson 3.",
     "choices": [
       {
-        "text": "A person reading every reply",
+        "text": "A second review at a higher temperature",
         "correct": false,
-        "why": "Possible, and far more expensive than a line of code."
+        "why": "That adds noise, not a parser."
+      },
+      {
+        "text": "A judge comparing it with another reply",
+        "correct": false,
+        "why": "Nothing needs comparing."
+      },
+      {
+        "text": "The person who labelled the case",
+        "correct": false,
+        "why": "No person is needed for this."
       },
       {
         "text": "The `json` check, exactly and for free",
         "correct": true,
-        "why": "Right: `json.loads` fails, with no call and no doubt."
-      },
-      {
-        "text": "A second self-check",
-        "correct": false,
-        "why": "Another call to do what parsing does."
-      },
-      {
-        "text": "Nothing else; only a model notices format",
-        "correct": false,
-        "why": "Format is the easiest thing a program checks."
+        "why": "Right: `json.loads` fails."
       }
     ]
   },
   {
     "id": "ex-ksscp3v6",
-    "version": 1,
+    "version": 2,
     "section": "check-with-code-first",
     "type": "multiple-choice",
     "difficulty": "medium",
@@ -429,7 +429,7 @@
       {
         "text": "The reply does not contain the canary word",
         "correct": true,
-        "why": "Yes: `pl check --canary`."
+        "why": "Yes: a string search."
       },
       {
         "text": "The category is the right reading of the message",
@@ -440,33 +440,33 @@
   },
   {
     "id": "ex-at5yysvf",
-    "version": 1,
+    "version": 2,
     "section": "check-with-code-first",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Your self-check has precision 0.73 and recall 0.57. What should a flag do in the pipeline?",
-    "hint": "What did its suggestions turn out to be?",
+    "prompt": "Your self-check has precision 0.40 and recall 0.69, and a coin would give 0.37 and 0.64. What should a flag do?",
+    "hint": "What can it be trusted to do?",
     "choices": [
       {
-        "text": "Replace the answer with the reviewer's suggestion",
+        "text": "Overwrite the answer with the one the reviewer would give",
         "correct": false,
-        "why": "Here that swaps six wrong labels for six other wrong ones."
+        "why": "It would act on 27 false alarms in seventy."
       },
       {
-        "text": "Send the reply to a person",
+        "text": "Nothing yet: it is barely better than a coin",
         "correct": true,
-        "why": "Right: eleven messages read, eight worth reading."
+        "why": "Right: measure a better checker before it routes anything."
       },
       {
-        "text": "Drop the reply silently and move on to the next message in the queue",
+        "text": "Retry the triage call at a higher temperature",
         "correct": false,
-        "why": "Three of the flagged replies were right, and the customer still needs an answer."
+        "why": "The reviewer's flags do not say which replies to retry."
       },
       {
-        "text": "Ask the same reviewer again",
+        "text": "Raise the answer's urgency",
         "correct": false,
-        "why": "It will say the same thing."
+        "why": "The flag says nothing about urgency."
       }
     ]
   },
@@ -519,7 +519,7 @@
   },
   {
     "id": "ex-kjtxhj3s",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "matching",
     "difficulty": "medium",
@@ -545,7 +545,7 @@
       }
     ],
     "right_distractors": [
-      "A reply cut off by `max_tokens`"
+      "A reply cut off by `num_predict`"
     ]
   },
   {

@@ -1,62 +1,75 @@
 ---
 title: Pedindo que ele confira
-version: 1
+version: 2
 ---
 
-Autoavaliação é o passo que devolve a resposta de um modelo para ele com uma pergunta: isto está
-certo? Parece uma segunda opinião. **É a mesma opinião pedida duas vezes**, e o que ela consegue
-acrescentar depende inteiramente do que muda entre a primeira leitura e a segunda.
+Autoavaliação é o passo que devolve a resposta de um modelo a ele com uma pergunta: isto está certo?
+Parece uma segunda opinião. **É a mesma opinião pedida duas vezes**, e o que ela pode acrescentar
+depende inteiramente do que muda entre a primeira leitura e a segunda.
 
-O prompt de revisão do laboratório mostra ao modelo a mensagem do cliente e a resposta que ele deu,
-e pede uma palavra de volta:
+Este prompt de revisão mostra ao modelo a mensagem do cliente e a resposta que ele deu, e pede um
+veredito. Salve-o como `prompts/review.txt`:
 
 ```
-ana@lab:~/triage$ cat prompts/review.txt
 You check answers given by a triage assistant for Folio, an online bookshop.
 
 <message>
-{{message}}
+{{message|xml}}
 </message>
 
 <answer>
-{{answer}}
+{{answer|xml}}
 </answer>
 
 Is the answer valid JSON with the right category? Reply OK, or WRONG and the reason.
 ```
 
-Ele pergunta sobre o formato e a categoria, e não sobre a urgência, então aqui uma resposta conta
-como errada quando falha em `json`, `fields`, `labels` ou `category`.
-
-## O que o substituto faz com isso
-
-Uma revisão precisa de uma regra, como tudo o que o substituto faz, e a regra dela está escrita ao
-lado da função que a aplica:
-
-```
-ana@lab:~/triage$ grep -n -A5 "^def review" promptlab/standin.py
-416:def review(message, answer):
-417-    """Asked to check an answer, it re-reads the message the way it read it
-418-    the first time. So it catches what it can SEE, a broken format, and a
-419-    label that differs from what it would say itself, and it doubts an answer
-420-    when its own two best labels were close. It cannot catch a mistake it
-421-    would make again."""
-```
-
-Ele pontua a mensagem de novo com a mesma tabela de palavras-chave com que respondeu. Essa leitura
-deixa de fora o que o prompt de triagem acrescentava, os exemplos e a ordem da lista, já que o
-prompt de revisão não traz nenhum dos dois. Então ele diz WRONG em três casos: a resposta não é
-JSON válido, o rótulo que ele mesmo põe em primeiro difere do da resposta, ou os dois melhores
-rótulos dele estão próximos. Fora isso, diz OK.
-
-Essa regra foi escolhida para se parecer com um relato honesto da autoavaliação. **Um revisor só
-consegue marcar o que lhe parece errado**, e uma resposta que ele daria de novo não lhe parece
-errada.
+Os dois valores passam pelo `|xml`, como todo valor de fora desde a aula 4: a resposta é texto que o
+modelo escreveu, e a mensagem é texto que um cliente escreveu. O prompt pergunta sobre o formato e a
+categoria, e não sobre a urgência, então uma resposta conta como errada aqui quando reprova em
+`json`, `fields`, `labels` ou `category`.
 
 ## Medindo uma verificação
 
-O `pl selfcheck RUN` passa cada resposta de uma execução pelo `review.txt`, uma chamada a mais por
-resposta, e compara cada veredito com o rótulo da pessoa: a resposta foi marcada, e estava mesmo
-errada? É a mesma medição que a aula 13 fez de um modelo julgando duas respostas, com o mesmo ponto
-de referência. **Uma verificação vale o quanto concorda com os rótulos que uma pessoa deu**, e a
-próxima seção lê essa concordância numa tabela.
+Uma verificação é um classificador como o prompt de triagem, e é medida do mesmo jeito: contra
+rótulos que uma pessoa deu. Este programa manda cada resposta de uma execução pelo `review.txt`, uma
+chamada a mais por resposta, e confronta cada veredito com o que o `pl` já sabe sobre a resposta.
+Ele imprime cada resposta que foi marcada ou estava de fato errada, com o começo do que o revisor
+disse, e depois uma tabela. Salve-o como `selfcheck.py`:
+
+```python
+"""selfcheck: ask the model to check each triage answer with prompts/review.txt,
+and measure the check against the person's labels."""
+import sys
+
+from pl import DEFAULTS, call, judge, read_jsonl, read_prompt, render
+
+params, template = read_prompt("prompts/review.txt")
+params = {**DEFAULTS, **params}
+rows = read_jsonl(sys.argv[1])
+cases = {c["id"]: c for c in read_jsonl(rows[0]["cases"])}
+table = {(f, w): 0 for f in (True, False) for w in (True, False)}
+for row in rows:
+    case = cases[row["case"]]
+    check, _ = judge(row, case["expect"])
+    wrong = check in ("json", "fields", "labels", "category")
+    said = call(render(template, {"message": case["message"], "answer": row["text"]}),
+                params)["text"].strip()
+    flagged = not said.upper().startswith("OK")
+    table[flagged, wrong] += 1
+    if flagged or wrong:
+        tag = row["case"] + ("#%d" % row["sample"] if row["sample"] else "")
+        print("%-6s %-5s %s" % (tag, "wrong" if wrong else "right", " ".join(said.split())[:64]))
+print("\n%15s %13s %13s" % ("", "really wrong", "really right"))
+print("%-15s %13d %13d" % ("flagged", table[True, True], table[True, False]))
+print("%-15s %13d %13d" % ("not flagged", table[False, True], table[False, False]))
+flags, mistakes = table[True, True] + table[True, False], table[True, True] + table[False, True]
+print("precision %.2f   recall %.2f" % (table[True, True] / flags if flags else 0,
+                                         table[True, True] / mistakes if mistakes else 0))
+```
+
+O `judge` é a função que o `pl check` usa, então *de fato errada* quer dizer exatamente o que quer
+dizer no resto do curso. Um veredito que não começa com `OK` é uma marcação. É a mesma medição que a
+aula 13 fez de um modelo julgando duas respostas, e tem a mesma referência. **Uma verificação vale o
+quanto concorda com os rótulos que uma pessoa deu**, e a próxima seção lê essa concordância numa
+tabela.

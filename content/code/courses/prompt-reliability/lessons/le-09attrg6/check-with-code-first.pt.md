@@ -1,56 +1,66 @@
 ---
 title: Primeiro, verifique com código
-version: 1
+version: 2
 ---
 
-As duas primeiras marcações certas da autoavaliação na execução com temperatura 0 foram respostas
-que não eram JSON válido. Um programa acha essas sem perguntar a ninguém:
+Duas respostas da execução com temperatura 0 não são JSON. Um programa as acha sem perguntar a
+ninguém:
 
 ```
 ana@lab:~/triage$ pl check runs/v6.jsonl --failures | grep json
 json         68     2
-t26    json      not JSON
-t39    json      not JSON
+t38    json      not a JSON object
+h28    json      not a JSON object
 ```
 
-As mesmas duas, `t26` e `t39`, achadas porque o `json.loads` falhou. **Uma verificação escrita em
+O `json.loads` falha no `t38` e no `h28`, toda vez, pelo motivo que de fato está lá:
+
+```
+ana@lab:~/triage$ pl show runs/v6.jsonl t38
+│ {"category": "returns", "urgency": "high", "summary": "Ebook won"}}
+stop: stop, tokens in 145, out 22, 2.5 s
+```
+
+O resumo para no apóstrofo de *won't* e uma segunda chave fecha o objeto, a falha que a aula 15
+registrou como F-0001. O revisor leu esta resposta e disse OK. Ele marcou o `h28`, que tem o mesmo
+defeito, com *the category is missing a value*, que não é o defeito. **Uma verificação escrita em
 código é exata e não custa nada**: nunca duvida de uma resposta válida, nunca deixa passar uma
-quebrada e não acrescenta chamada nenhuma. A revisão do modelo sobre as mesmas duas respostas
-custou duas chamadas e não acertou mais.
+quebrada, e não acrescenta chamada nenhuma. A revisão do modelo das mesmas setenta respostas custou
+setenta chamadas e chamou 45 delas de quebradas.
 
-## O que o código enxerga
+## O que o código vê
 
-Quase tudo o que dá errado nas respostas deste curso é visível para um programa:
+A maior parte do que dá errado com as respostas deste curso é visível para um programa:
 
-- Formato: a resposta é JSON, e nada além disso.
-- Campos: os campos pedidos, e nenhum outro. Foi isso que pegou o número de pedido copiado na
-  aula 1.
-- Rótulos: cada valor está na sua lista.
-- Um canário: o `pl check --canary` reprova uma resposta que repete uma palavra que o prompt
-  nunca deve revelar, o teste que a aula 10 usou para instruções vazadas.
+- Análise: a resposta é JSON, e nada mais.
+- Campos: os campos pedidos, e nenhum outro. Foi o que pegou o número de pedido copiado na aula 1.
+- Rótulos: cada valor vem da sua lista. Foi o que pegou *events* na aula 18.
+- Um canário: uma resposta que repete uma palavra que o prompt nunca deve revelar, o teste que a
+  aula 10 usou para instruções vazadas.
 - Tamanho e palavras: a aula 6 contou tamanhos e a aula 12 verificou o tom com regras.
 
-Cada um desses é uma linha de código com resposta certa, e nenhum deveria ser uma pergunta para um
-modelo.
+Cada uma dessas é uma linha de código com uma resposta certa, e nenhuma deveria ser uma pergunta
+para um modelo.
 
-## O que só um modelo enxerga
+## O que só um modelo vê
 
-O que o código não enxerga é se `billing` é a leitura certa de uma mensagem sobre um cartão-presente.
-É a única pergunta para a qual a autoavaliação serve, e com os números deste laboratório ela a
-responde com precisão 0,73 e revocação 0,57. Antes de pôr uma verificação assim num pipeline, decida
-o que uma marcação faz. Trocar a resposta pela sugestão do revisor teria substituído seis rótulos
-errados por outros seis rótulos errados. **Encaminhar uma resposta marcada para uma pessoa**
-transforma uma marcação duvidosa em onze mensagens que alguém lê, oito delas valendo a leitura.
+O que o código não vê é se `returns` é a leitura certa de uma mensagem sobre um pacote que nunca
+chegou. É a única pergunta para a qual uma autoverificação existe, e nos números deste laboratório
+este revisor a responde pouco melhor que o acaso. Antes de uma verificação assim entrar num
+pipeline, decida o que uma marcação faz. Sobrescrever a resposta agiria sobre 27 alarmes falsos em
+setenta. **Mandar uma resposta marcada para uma pessoa** transforma uma marcação numa mensagem que
+alguém lê, e aqui isso são 45 mensagens para achar 18.
 
-A ordem vem dos custos:
+A ordem sai dos custos:
 
-1. O código verifica toda resposta, de forma exata e de graça, e devolve as que falham ou as manda
-   para uma pessoa.
-2. A verificação do modelo lê o que passou e marca o que lhe parece duvidoso.
+1. O código verifica toda resposta, exatamente e de graça, e manda as que reprovam de volta ou para
+   uma pessoa.
+2. A verificação de um modelo lê o que passou e marca o que lhe parece duvidoso, depois de ter sido
+   medida e se mostrado melhor que uma moeda.
 3. Uma pessoa lê o que foi marcado.
 
-**Meça a verificação do modelo como qualquer outra verificação**: contra rótulos que uma pessoa deu,
-em precisão e revocação, na configuração que você roda. E lembre da aula 19 ao escolher o
-verificador. Um revisor que tem os mesmos pontos cegos do modelo que respondeu deixa passar os
-mesmos erros. Outro modelo, ou o mesmo com evidência que a primeira chamada não tinha, é o jeito
-de fazer os erros dele serem outros.
+**Meça a verificação do modelo como qualquer outra**: contra rótulos que uma pessoa deu, em
+precisão e revocação, na configuração que você roda, e contra uma moeda. E lembre-se da aula 19 ao
+escolher o verificador. Um revisor que compartilha os pontos cegos do modelo que respondeu
+compartilha os erros que ele deixa passar, e um modelo diferente, ou o mesmo com evidência que a
+primeira chamada não tinha, é o jeito de fazer os erros dele serem outros.
