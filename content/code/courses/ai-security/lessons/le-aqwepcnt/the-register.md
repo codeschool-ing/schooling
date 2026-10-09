@@ -37,8 +37,8 @@ makes the register agree with the diagram.
 
 `f6` is a different case. **No control sits on it at all**: the attachment goes from the file store
 to the assistant unread by anything. The right entry is a new threat, tampering, impact 3,
-likelihood 3, control `null`, and it lands at the top of the ranking beside `T11`. Lesson 15 is the
-work that closes both.
+likelihood 3, control `null`, and it lands at the top of the ranking beside `T11`. Lesson 14's two
+boundaries close both.
 
 ## A register that stays true
 
@@ -51,7 +51,7 @@ from turning into a description of an application that no longer exists:
   source or a new provider is a new row in `flows.json`, and `threats.py` then reports it as
   unreviewed until somebody writes what can go wrong there;
 - **the check runs where the tests run.** `threats.py` already exits with 1 while a marked flow has
-  no entry, and lesson 26 runs it in the build, so that an unreviewed flow fails a pull request the
+  no entry, and lesson 24 runs it in the build, so that an unreviewed flow fails a pull request the
   way a failing test does.
 
 ## What it does not do

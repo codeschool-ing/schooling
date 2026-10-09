@@ -40,7 +40,7 @@ did not stop being requests; they lost the means to show up in the output.
 the model picked `other`, a valid value. **A constrained output can be wrong inside the allowed set**,
 and that is the residual risk to design for. Here it is bounded: a category moves a ticket to a queue
 that people read, so the worst case is a ticket a person moves to the right queue, a few minutes
-late. Measuring how often that happens, with many more than twelve tickets, is what lesson 26
+late. Measuring how often that happens, with many more than twelve tickets, is what lesson 24
 automates.
 
 The rule generalises beyond categories. **Every field the code acts on should be the narrowest type
@@ -72,5 +72,6 @@ able to do**, and where it has to do both, a gate the model cannot talk to decid
 
 None of the three layers in this lesson is complete alone. A sentence about material is free and
 sometimes helps. A schema removes a whole class of reply. The split keeps the text that cannot be
-trusted away from the parts that can act. Lesson 15 applies the same thinking to the flow lesson 13
-left open, the files clients upload.
+trusted away from the parts that can act. The same two boundaries answer the flow lesson 13 left
+open, the files clients upload: whatever reads an attachment holds no tools and hands on only closed
+values.

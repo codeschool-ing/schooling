@@ -149,13 +149,15 @@ valor do registro está nas outras três.
 
 - **`T11`, um arquivo enviado que carrega texto escrito para conduzir o modelo**, vale 9: o maior
   impacto, porque o assistente que lê um anexo pode propor chamadas de ferramenta, e a maior
-  probabilidade, porque qualquer pessoa com conta pode anexar um arquivo. A aula 15 é o controle dela.
+  probabilidade, porque qualquer pessoa com conta pode anexar um arquivo. As duas fronteiras da aula 14
+  são o controle dela: o que lê um anexo não tem ferramentas e só entrega valores fechados.
 - **`T10`, uma resposta que não pode ser ligada ao prompt que a produziu**, é uma ameaça de repúdio.
   Quando um cliente reclama de algo que o assistente disse, a Tarefa tem a resposta no log e não sabe
-  dizer qual versão do prompt de sistema a produziu. A aula 23 versiona os prompts.
+  dizer qual versão do prompt de sistema a produziu. A aula 21 versiona os prompts.
 - **`T12`, uma página de ajuda editada para dizer algo falso**, vale 2. A central de ajuda é escrita
   pela Tarefa, então poucas pessoas podem editá-la e a probabilidade é 1, mas o assistente repete o
-  que a página disser. A aula 16 cuida do que entra no índice de onde o assistente lê.
+  que a página disser. A aula 21 põe a central de ajuda sob a mesma revisão dos prompts, para que uma
+  página alterada seja uma mudança que alguém aprovou.
 
 A letra do STRIDE sozinha não decide a ordem. **O risco decide**, e risco aqui é impacto vezes
 probabilidade. A escala é grossa de propósito: uma equipe que discute se uma probabilidade é 0,35 ou

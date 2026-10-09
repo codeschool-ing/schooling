@@ -41,7 +41,7 @@ modelo escolheu `other`, um valor válido. **Uma saída restrita pode estar erra
 permitido**, e esse é o risco residual para o qual se projeta. Aqui ele é limitado: uma categoria move
 um ticket para uma fila que pessoas leem, então o pior caso é um ticket que uma pessoa move para a fila
 certa, alguns minutos atrasado. Medir com que frequência isso acontece, com muito mais que doze
-tickets, é o que a aula 26 automatiza.
+tickets, é o que a aula 24 automatiza.
 
 A regra vale além das categorias. **Todo campo sobre o qual o código age deveria ser do tipo mais
 estreito que resolve**: uma escolha numa lista fechada, um número com faixa, o id de algo que existe.
@@ -72,5 +72,6 @@ onde ele precisa fazer as duas coisas, decide um portão com quem o modelo não 
 
 Nenhuma das três camadas desta aula é completa sozinha. Uma frase sobre o material é de graça e às
 vezes ajuda. Um esquema elimina uma classe inteira de resposta. A divisão mantém o texto em que não se
-pode confiar longe das partes que podem agir. A aula 15 aplica o mesmo raciocínio ao fluxo que a aula
-13 deixou aberto, os arquivos que os clientes enviam.
+pode confiar longe das partes que podem agir. As mesmas duas fronteiras respondem ao fluxo que a aula
+13 deixou aberto, os arquivos que os clientes enviam: o que lê um anexo não tem ferramentas e só
+entrega valores fechados.

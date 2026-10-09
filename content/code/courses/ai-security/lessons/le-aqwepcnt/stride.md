@@ -150,13 +150,15 @@ for.** The register's value is in the other three.
 
 - **`T11`, an upload carrying text written to steer the model**, scores 9: the highest impact,
   because the assistant that reads an attachment can propose tool calls, and the highest likelihood,
-  because anybody with an account can attach a file. Lesson 15 is its control.
+  because anybody with an account can attach a file. Lesson 14's two boundaries are its control:
+  whatever reads an attachment holds no tools and hands on only closed values.
 - **`T10`, a reply that cannot be traced to the prompt that made it**, is a repudiation threat. When
   a client complains about something the assistant said, Tarefa has the reply in the log and cannot
-  say which version of the system prompt produced it. Lesson 23 versions the prompts.
+  say which version of the system prompt produced it. Lesson 21 versions the prompts.
 - **`T12`, a help page edited to say something false**, scores 2. The help centre is written by
   Tarefa, so few people can edit it and the likelihood is 1, but the assistant repeats whatever the
-  page says. Lesson 16 looks after what goes into the index the assistant reads from.
+  page says. Lesson 21 puts the help centre under the same review as the prompts, so that a changed
+  page is a change somebody approved.
 
 A STRIDE letter on its own does not decide the order. **Risk does**, and risk here is impact times
 likelihood. The scale is coarse on purpose: a team that argues over whether a likelihood is 0.35 or
