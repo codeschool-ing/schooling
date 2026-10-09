@@ -41,10 +41,10 @@ next, and the week's percentiles are what a timeout is chosen from.
 The `first token` row of the week's percentiles had a p95 of 1,431 ms, a p99 of 1,954 and a maximum
 of 2,190. Three choices, three trades:
 
-- **A timeout on the first token of 3 s** cuts off nothing in this week, and only the calls that
-  are waiting for something other than the model's reading: a model being loaded, as in
-  `timeout.py`, a machine that is busy elsewhere, a provider that has stopped answering. For a
-  customer, a slow answer becomes a retry, or an apology, a few seconds sooner.
+- **A timeout on the first token of 3 s** cuts off nothing in this week. It catches only the calls
+  waiting for something other than the model's reading: a model being loaded, as in `timeout.py`, a
+  machine that is busy elsewhere, a provider that has stopped answering. For a customer, a slow
+  answer becomes a retry, or an apology, a few seconds sooner.
 - **A timeout on the whole call of 3 s** would also cut off every answer longer than about 20
   tokens, which is more than half the week. It confuses a long answer with a stuck one.
 - **No timeout of its own**, the SDK's ten minutes, means the slow starts are simply slow, and a

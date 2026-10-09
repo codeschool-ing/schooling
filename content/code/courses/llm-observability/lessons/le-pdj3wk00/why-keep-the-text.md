@@ -43,6 +43,6 @@ them.
 redaction that only looks at the input leaves the output carrying exactly what was removed from it.
 
 None of that says the text must not be kept. It says **what is kept is a decision, made per field,
-with a purpose and an end date**, which is what the LGPD asks of any processing of personal data, and
-the rest of this lesson builds the pieces: knowing what arrives, taking it out before it is written,
+with a purpose and an end date**, which is what the LGPD asks of any processing of personal data.
+The rest of this lesson builds the pieces: knowing what arrives, taking it out before it is written,
 a second net behind the first, names instead of identities, and an expiry.

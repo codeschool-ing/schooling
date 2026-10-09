@@ -170,9 +170,9 @@ ana@dev:~/obs$ grep -c "app.question" spans.jsonl
 ```
 
 Two days, 70 questions on root spans. With a day's life for the text, run at midnight on the Sunday
-night, the 36 questions from Saturday lose their words and keep their place in every count: the
-span is still there, with its feature, its release, its tokens, its duration and its outcome. Sunday's
-34 keep their text until the next run.
+night, the 36 questions from Saturday lose their words and keep their place in every count. The span
+is still there, with its feature, its release, its tokens, its duration and its outcome. Sunday's 34
+keep their text until the next run.
 
 ## What a retention policy for traces looks like
 
@@ -188,10 +188,10 @@ is that each line has a purpose and an end, and that the job enforcing it runs w
 remembers it.
 
 Two details decide whether it works. **Expiry rewrites, and some stores make that hard**: a tracing
-backend built for appending may only be able to delete whole traces by age, in which case the text
-belongs in a separate store with its own, shorter retention, joined to the trace by its id. And
-**erasure has to reach the text before expiry does**. A customer who asks the shop to delete what it
-holds about them is owed that today, not in seven days. The pseudonym makes the request findable:
-hash their user id with the key, delete the text on every span carrying that value, and the numbers
-stay in the counts with nothing left to identify. `observability` lesson 10 has the same problem for
-logs and reaches the same answer.
+backend built for appending may only be able to delete whole traces by age. Then the text belongs in
+a separate store with its own, shorter retention, joined to the trace by its id. And **erasure has
+to reach the text before expiry does**. A customer who asks the shop to delete what it holds about
+them is owed that today, not in seven days. The pseudonym makes the request findable: hash their
+user id with the key, delete the text on every span carrying that value, and the numbers stay in the
+counts with nothing left to identify. `observability` lesson 10 has the same problem for logs and
+reaches the same answer.

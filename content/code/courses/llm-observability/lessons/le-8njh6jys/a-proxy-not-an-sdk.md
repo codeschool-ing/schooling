@@ -32,10 +32,10 @@ what one sees without them.
 
 ## What a gateway can do that a tracer cannot
 
-Because it stands in the path of every request, a gateway can **act** on them as well as record them:
-answer a repeated request from a cache without calling the provider, refuse a user over a rate limit,
-retry on another provider when the first fails, and keep the provider keys so that applications never
-hold them. Those are lesson 3's budgets and lesson 4's retries, moved out of the application into
-infrastructure. That is a real gain for a company with many applications and one bill, and a real
-cost: one more service on the critical path of every answer, adding its own latency and its own
-outages, and holding every prompt and reply in its logs.
+Because it stands in the path of every request, a gateway can **act** on them as well as record
+them. It can answer a repeated request from a cache without calling the provider, refuse a user over
+a rate limit, retry on another provider when the first fails, and keep the provider keys so that
+applications never hold them. Those are lesson 3's budgets and lesson 4's retries, moved out of the
+application into infrastructure. That is a real gain for a company with many applications and one
+bill, and a real cost: one more service on the critical path of every answer, adding its own latency
+and its own outages, and holding every prompt and reply in its logs.

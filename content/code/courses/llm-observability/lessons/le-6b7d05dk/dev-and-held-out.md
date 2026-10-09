@@ -26,7 +26,8 @@ Lesson 9's arithmetic applies to a set as it does to a sample. With 10 held-out 
 70% is known to within about ±28 points; with 22, about ±19. A set this size can show a release that
 breaks a third of the answers, and it cannot show one that breaks a tenth.
 
-Two things follow. **A set is never finished**: every week's harvest is a source of cases, and a team
-that adds a few each week has a few hundred within the year. And **a small set is still worth having**,
-because what it lacks in precision it makes up in being the same every time: the same 32 questions,
-run on every version, find a change that breaks a case outright, which is the kind lesson 14 is about.
+Two things follow. **A set is never finished**: every week's harvest is a source of cases, and a
+team that adds a few each week has a few hundred within the year. And **a small set is still worth
+having**, because what it lacks in precision it makes up in being the same every time. The same 32
+questions, run on every version, find a change that breaks a case outright, which is the kind lesson
+14 is about.

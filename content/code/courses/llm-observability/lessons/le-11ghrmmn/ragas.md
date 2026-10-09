@@ -4,10 +4,10 @@ version: 2
 ---
 
 RAGAS has a family of metrics that need **no model**: they compare strings. Two of them are context
-precision and context recall, the ones lesson 11 computed by its own definition. RAGAS's versions take
-**reference contexts**, the text that should have been retrieved, and judge a retrieved chunk relevant
-when its string similarity to some reference text is at least 0.5. And it has metrics that do need
-one, of which **response relevancy** is the one lesson 11 described: a model writes the questions a
+precision and context recall, the ones lesson 11 computed by its own definition. RAGAS's versions
+take **reference contexts**, the text that should have been retrieved, and judge a retrieved chunk
+relevant when its string similarity to some reference text is at least 0.5. And it has metrics that
+do need one. **Response relevancy** is the one lesson 11 described: a model writes the questions a
 reply would answer, and the score is how close those are to the real question, times zero if the
 reply is noncommittal.
 
@@ -98,11 +98,11 @@ and a recall published without saying what the references were cannot be compare
 **Response relevancy scored 14 of the 48 replies.** None of the sixteen refusals has a score, and
 eighteen of the answers have none either. For every one of them the local model's reply to one of
 RAGAS's prompts could not be parsed, and RAGAS recorded the score as missing and went on, without
-stopping the run and without saying so in the table: the program above counts the missing ones because
-RAGAS's own mean would quietly skip them. On a first try with RAGAS's defaults, two test replies got no
-score at all: one call timed out at three minutes, and for the refusal the model wrote its question
-inside a paragraph of explanation. With JSON mode, the same refusal came back with a question about
-where Albert Einstein was born, which is the example in RAGAS's own prompt.
+stopping the run and without saying so in the table. The program above counts the missing ones
+because RAGAS's own mean would quietly skip them. On a first try with RAGAS's defaults, two test
+replies got no score at all: one call timed out at three minutes, and for the refusal the model
+wrote its question inside a paragraph of explanation. With JSON mode, the same refusal came back
+with a question about where Albert Einstein was born, which is the example in RAGAS's own prompt.
 
 So lesson 11's claim, that RAGAS scores the agreed refusal 0 because it is noncommittal, could not be
 checked here: with this judge RAGAS gives a refusal no score at all. The fourteen answers it did score

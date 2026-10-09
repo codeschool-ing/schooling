@@ -64,9 +64,9 @@ statutory seven days. Bruno, from support, did. They looked it up together and f
 that verdict is the third set of labels, `relevance-v2/agreed`. Settling the cases that remain by
 discussion, and recording the result as its own set, is called **adjudication**.
 
-The lesson for the next round is not in the rubric's words but in what it asks of a rater: a
+The lesson for the next round is in what the rubric asks of a rater, more than in its words. A
 criterion that needs the documents needs the documents beside the rater, or the answer key's facts,
-which is where the next section's rule comes from.
+and that is where the next section's rule comes from.
 
 ## What a reference needs
 

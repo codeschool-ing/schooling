@@ -91,10 +91,10 @@ order          68             8        1    563    940   1172
 help          207            38        0    428    939   1268
 ```
 
-**The minimum is zero, or one,** in two features because of the refusals lesson 1 found: when nothing
-clears the floor, the assistant answers without calling the model, and the request costs only its
-embedding, a fraction of a millionth. 38 of the 207 help requests and 8 of the 68 order requests cost
-nothing in model tokens. A summary always calls the model, so its minimum is 374.
+**The minimum is zero, or one,** in two features because of the refusals lesson 1 found. When
+nothing clears the floor, the assistant answers without calling the model, and the request costs
+only its embedding, a fraction of a millionth. 38 of the 207 help requests and 8 of the 68 order
+requests cost nothing in model tokens. A summary always calls the model, so its minimum is 374.
 
 **The 95th percentile is twice the median** in `help`, and well above it in `order`, and it is not the
 answer that makes it so. A request with three sources in its prompt pays for three chunks of text; a

@@ -206,10 +206,10 @@ not what this section is about, but it is why the assistant searches the documen
 
 Then read what went with it. **The customer's message, address included, in full**, on both runs.
 The model's whole reply. And under `extra`, metadata the SDK adds on its own: the environment
-variables that configured it, by name and value, and runtime details that `sent.py` cuts off at the
-edge of the screen: the SDK's version, the Python version, the operating system and the machine's
-platform string. None of it is a secret here. All of it leaves the machine, and a team that has not
-looked will not know.
+variables that configured it, by name and value, and runtime details. `sent.py` cuts those off at
+the edge of the screen; they are the SDK's version, the Python version, the operating system and the
+machine's platform string. None of it is a secret here. All of it leaves the machine, and a team
+that has not looked will not know.
 
 ## The SDK's own hooks
 

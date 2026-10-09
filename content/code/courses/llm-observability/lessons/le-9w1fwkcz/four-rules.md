@@ -67,13 +67,14 @@ last 24 hours surely above the baseline
 The release went out on Thursday at 10:00. Each rule is a different trade:
 
 - **"The last hour above 40%"** catches the release four hours after it, and has already fired **12
-  times** in the two and a half days before it. By day an hour holds two or three replies and at night none or one, so
-  one refusal in two is enough. By Thursday nobody is reading it. Lesson 11's precision, measured on an alert: most of
-  its firings are false.
+  times** in the two and a half days before it. By day an hour holds two or three replies and at
+  night none or one, so one refusal in two is enough. By Thursday nobody is reading it. Lesson 11's
+  precision, measured on an alert: most of its firings are false.
 - **"The last six hours above 40%, with 10 replies or more"** never fires falsely and catches the
-  release first, an hour after it, and then **goes quiet**: it fires in 21 of the 86 hours after,
-  because every night drops below ten replies and by day the share hovers around 40%. An alert that resolves
-  itself while the problem is still there tells the person who got it that the problem has gone.
+  release first, an hour after it. Then it **goes quiet**: it fires in 21 of the 86 hours after,
+  because every night drops below ten replies and by day the share hovers around 40%. An alert that
+  resolves itself while the problem is still there tells the person who got it that the problem has
+  gone.
 - **"Yesterday above 30%, checked at midnight"** is safe and slow: fourteen hours after the release, at
   midnight, with the whole afternoon's customers already turned away.
 - **"The last 24 hours surely above the baseline"** uses lesson 9's interval: it fires when even the low

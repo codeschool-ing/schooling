@@ -49,8 +49,8 @@ enough.
 The tail here has one cause, and the next section finds it: **the long answers**. What it does not
 have is the cause a production tail usually has. A model that has to be loaded into memory first, a
 request routed to a busy machine, a queue at the hour everybody's batch jobs start: none of those
-happened, because the model never left memory during a week replayed in seventeen minutes and
-nothing else was asking. The last section of this lesson makes the first of them happen on purpose.
+happened. The model never left memory during a week replayed in seventeen minutes, and nothing else
+was asking. The last section of this lesson makes the first of them happen on purpose.
 
 ## Which percentile to watch
 
