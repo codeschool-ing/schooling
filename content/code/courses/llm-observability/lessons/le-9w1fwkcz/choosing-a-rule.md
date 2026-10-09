@@ -1,6 +1,6 @@
 ---
 title: What makes an alert worth having
-version: 1
+version: 2
 ---
 
 The four rules share a structure, and the structure is what a team writes down for every alert it
@@ -17,9 +17,9 @@ keeps:
 
 ## Where it sends
 
-Lesson 11 said an alert that wakes somebody needs precision above all. The Wilson rule's one false
-alarm in three days is fine for a message in the team's channel and too many for a page at three in
-the morning. Most quality alerts belong in the first place: a rise in refusals is a problem for the
+Lesson 11 said an alert that wakes somebody needs precision above all. The Wilson rule raised no false
+alarm in two and a half days, which is fine for a message in the team's channel and says too little for
+a page at three in the morning: a few days of history cannot promise the next month. Most quality alerts belong in the first place: a rise in refusals is a problem for the
 morning, not an outage. What pages somebody is the assistant failing outright, the errors and timeouts
 of lesson 4, which have no definition problem at all.
 
