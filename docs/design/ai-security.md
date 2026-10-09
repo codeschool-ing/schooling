@@ -5,7 +5,7 @@ course: ai-security
 
 # ai-security
 
-**AI Security: Defending LLM Applications** · `co-qx0k8g73` · 27 h declared · advanced · 25 lessons · `ai` · paid
+**AI Security: Defending LLM Applications** · `co-qx0k8g73` · 56 h declared · advanced · 25 lessons · `ai` · paid
 
 ## Reach
 
@@ -23,11 +23,11 @@ In **3 tracks** — `ai`(11), `prompt`(4), `security`(17).
 
 | | |
 |---|---|
-| declared hours | 27 h, for the first twelve; written again when the twenty-fifth is |
+| declared hours | 56 h: 27 for the first twelve, at the same 2.25 for the thirteen after them |
 | lessons | 25 |
 | **hours per lesson** | **2.25** |
-| section budget | ~125, about 5 a lesson |
-| exercises | ~450, at the catalogue's density |
+| section budget | ~130, about 5 a lesson |
+| exercises | ~455, at the catalogue's density |
 
 ## Execution
 
