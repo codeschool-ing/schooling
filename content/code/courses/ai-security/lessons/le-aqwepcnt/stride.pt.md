@@ -153,10 +153,10 @@ valor do registro está nas outras três.
   são o controle dela: o que lê um anexo não tem ferramentas e só entrega valores fechados.
 - **`T10`, uma resposta que não pode ser ligada ao prompt que a produziu**, é uma ameaça de repúdio.
   Quando um cliente reclama de algo que o assistente disse, a Tarefa tem a resposta no log e não sabe
-  dizer qual versão do prompt de sistema a produziu. A aula 21 versiona os prompts.
+  dizer qual versão do prompt de sistema a produziu. A aula 20 versiona os prompts.
 - **`T12`, uma página de ajuda editada para dizer algo falso**, vale 2. A central de ajuda é escrita
   pela Tarefa, então poucas pessoas podem editá-la e a probabilidade é 1, mas o assistente repete o
-  que a página disser. A aula 21 põe a central de ajuda sob a mesma revisão dos prompts, para que uma
+  que a página disser. A aula 20 põe a central de ajuda sob a mesma revisão dos prompts, para que uma
   página alterada seja uma mudança que alguém aprovou.
 
 A letra do STRIDE sozinha não decide a ordem. **O risco decide**, e risco aqui é impacto vezes

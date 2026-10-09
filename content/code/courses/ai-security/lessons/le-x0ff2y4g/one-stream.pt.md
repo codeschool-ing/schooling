@@ -164,6 +164,6 @@ porque é visível. **O `t8` é o tipo caro.** Ele pediu para não ser classific
 incompleta foi para a fila de todo o resto, onde ninguém procura entregas atrasadas.
 
 Duas falhas em doze tickets não medem com que frequência isso acontece; doze é pouco para isso, e a
-aula 24 trata de quantos são precisos. Basta para mostrar para que servem as duas próximas seções: uma
+aula 23 trata de quantos são precisos. Basta para mostrar para que servem as duas próximas seções: uma
 resposta que obedeceu ao ticket de um jeito que a verificação viu, e uma que obedeceu de um jeito que
 ela não viu.

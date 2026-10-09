@@ -41,7 +41,7 @@ modelo escolheu `other`, um valor válido. **Uma saída restrita pode estar erra
 permitido**, e esse é o risco residual para o qual se projeta. Aqui ele é limitado: uma categoria move
 um ticket para uma fila que pessoas leem, então o pior caso é um ticket que uma pessoa move para a fila
 certa, alguns minutos atrasado. Medir com que frequência isso acontece, com muito mais que doze
-tickets, é o que a aula 24 automatiza.
+tickets, é o que a aula 23 automatiza.
 
 A regra vale além das categorias. **Todo campo sobre o qual o código age deveria ser do tipo mais
 estreito que resolve**: uma escolha numa lista fechada, um número com faixa, o id de algo que existe.

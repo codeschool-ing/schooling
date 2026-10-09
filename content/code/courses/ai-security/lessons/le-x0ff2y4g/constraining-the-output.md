@@ -40,7 +40,7 @@ did not stop being requests; they lost the means to show up in the output.
 the model picked `other`, a valid value. **A constrained output can be wrong inside the allowed set**,
 and that is the residual risk to design for. Here it is bounded: a category moves a ticket to a queue
 that people read, so the worst case is a ticket a person moves to the right queue, a few minutes
-late. Measuring how often that happens, with many more than twelve tickets, is what lesson 24
+late. Measuring how often that happens, with many more than twelve tickets, is what lesson 23
 automates.
 
 The rule generalises beyond categories. **Every field the code acts on should be the narrowest type

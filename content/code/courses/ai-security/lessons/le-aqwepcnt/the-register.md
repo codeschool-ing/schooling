@@ -51,7 +51,7 @@ from turning into a description of an application that no longer exists:
   source or a new provider is a new row in `flows.json`, and `threats.py` then reports it as
   unreviewed until somebody writes what can go wrong there;
 - **the check runs where the tests run.** `threats.py` already exits with 1 while a marked flow has
-  no entry, and lesson 24 runs it in the build, so that an unreviewed flow fails a pull request the
+  no entry, and lesson 23 runs it in the build, so that an unreviewed flow fails a pull request the
   way a failing test does.
 
 ## What it does not do

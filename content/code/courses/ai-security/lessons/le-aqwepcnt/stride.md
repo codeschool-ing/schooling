@@ -154,10 +154,10 @@ for.** The register's value is in the other three.
   whatever reads an attachment holds no tools and hands on only closed values.
 - **`T10`, a reply that cannot be traced to the prompt that made it**, is a repudiation threat. When
   a client complains about something the assistant said, Tarefa has the reply in the log and cannot
-  say which version of the system prompt produced it. Lesson 21 versions the prompts.
+  say which version of the system prompt produced it. Lesson 20 versions the prompts.
 - **`T12`, a help page edited to say something false**, scores 2. The help centre is written by
   Tarefa, so few people can edit it and the likelihood is 1, but the assistant repeats whatever the
-  page says. Lesson 21 puts the help centre under the same review as the prompts, so that a changed
+  page says. Lesson 20 puts the help centre under the same review as the prompts, so that a changed
   page is a change somebody approved.
 
 A STRIDE letter on its own does not decide the order. **Risk does**, and risk here is impact times

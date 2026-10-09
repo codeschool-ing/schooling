@@ -51,7 +51,7 @@ impedem que ele vire a descrição de uma aplicação que já não existe:
   ferramenta nova, uma fonte de dados nova ou um fornecedor novo é uma linha nova no `flows.json`, e o
   `threats.py` passa a apontá-la como não revisada até alguém escrever o que pode dar errado ali;
 - **a verificação roda onde os testes rodam.** O `threats.py` já sai com 1 enquanto um fluxo marcado
-  não tem entrada, e a aula 24 o roda no build, para que um fluxo não revisado reprove um pull request
+  não tem entrada, e a aula 23 o roda no build, para que um fluxo não revisado reprove um pull request
   como um teste que falha.
 
 ## O que ele não faz

@@ -72,5 +72,5 @@ exit status 0
 
 Thirteen results would have reached the wrong reader without the filter, and none with it. **The exit
 status is 0, and it would be 1 the day a change to `may_read` let one through**, which is what lets
-the audit run in the build beside every other test, as lesson 24 does. The model's answers vary with
+the audit run in the build beside every other test, as lesson 23 does. The model's answers vary with
 the model; this number does not.

@@ -72,5 +72,5 @@ exit status 0
 
 Treze resultados teriam chegado ao leitor errado sem o filtro, e nenhum com ele. **O status de saída é
 0, e seria 1 no dia em que uma mudança em `may_read` deixasse um passar**, e é isso que permite rodar a
-auditoria no build ao lado de todo outro teste, como faz a aula 24. As respostas do modelo variam com
+auditoria no build ao lado de todo outro teste, como faz a aula 23. As respostas do modelo variam com
 o modelo; este número não.

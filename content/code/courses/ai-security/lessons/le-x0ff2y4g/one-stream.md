@@ -165,6 +165,6 @@ an incomplete translation went to the queue for everything else, where nobody lo
 deliveries.
 
 Two failures in twelve tickets is not a measurement of how often this happens; twelve is too few for
-that, and lesson 24 is about how many it takes. It is enough to show what the next two sections are
+that, and lesson 23 is about how many it takes. It is enough to show what the next two sections are
 for: one reply that obeyed the ticket in a way the check could see, and one that obeyed it in a way
 the check could not.
