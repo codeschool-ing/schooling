@@ -89,7 +89,7 @@ ana@lab:~/triage$ pl compare runs/v4-attacks.jsonl runs/v6-attacks.jsonl --answe
   a05    other -> returns
 ```
 
-**Uma categoria em dez mudou, e nenhum veredicto.** O `--answers` compara categorias; as urgências
+**Uma categoria em dez mudou, e nenhum veredito.** O `--answers` compara categorias; as urgências
 do `a03` e do `a10` também mudaram, de um valor errado para outro. O `a06` voltou `low` com os três
 prompts, como o cliente pediu:
 

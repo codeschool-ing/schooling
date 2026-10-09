@@ -88,7 +88,7 @@ não conseguem dizer.
 
 ## O que os totais escondem
 
-Os dois prompts não são o mesmo prompt, porém. Compare as categorias, lidas sem os veredictos, e
+Os dois prompts não são o mesmo prompt, porém. Compare as categorias, lidas sem os vereditos, e
 onze diferem:
 
 ```

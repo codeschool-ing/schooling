@@ -99,7 +99,7 @@ line* e *leave nothing out* não estão em nenhuma das listas dele.
 E parte do que ele aponta não é o que o nome do achado diz. As linhas 11 e 14 começam com
 `IMPORTANT:`, e a linha 13 começa com *Never*, uma palavra comum com inicial maiúscula no começo de
 uma frase. A `where()` busca com `re.I`, que ignora maiúsculas e minúsculas, então contou a linha
-13 como gritando. **Um achado é uma linha para olhar, não um veredicto sobre ela.**
+13 como gritando. **Um achado é uma linha para olhar, não um veredito sobre ela.**
 
 Então `nothing found` quer dizer que nenhum padrão casou, o que é mais fraco do que dizer que o
 prompt está claro. O linter vale a pena porque os erros que ele pega são os que entram sem ninguém

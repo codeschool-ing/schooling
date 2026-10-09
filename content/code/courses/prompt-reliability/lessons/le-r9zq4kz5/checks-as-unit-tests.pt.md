@@ -39,7 +39,7 @@ ordem em que o `pl check` conta.
 ## A ordem é o projeto
 
 As cinco rodam da mais barata e mais certa para a menos. `json`, `fields` e `labels` não precisam de
-nada além da resposta e da especificação, então dão o mesmo veredicto em qualquer mensagem e poderiam
+nada além da resposta e da especificação, então dão o mesmo veredito em qualquer mensagem e poderiam
 rodar em toda resposta em produção. A aula 10 usou `json` exatamente assim, recusando uma resposta
 que tinha acrescentado uma política de reembolso inventada. `category` e `urgency` precisam do
 rótulo de uma pessoa, então só existem onde existe um conjunto de teste.
@@ -55,7 +55,7 @@ problema de classificação num prompt cujo problema era a forma da resposta.
 
 ## O que faz uma verificação valer a pena
 
-- **Dá o mesmo veredicto toda vez.** Toda verificação aqui são algumas linhas de comparação, sem
+- **Dá o mesmo veredito toda vez.** Toda verificação aqui são algumas linhas de comparação, sem
   modelo nenhum dentro. Uma verificação que pode mudar de ideia é mais uma coisa a medir, e a aula
   13 mede uma.
 - **Afirma uma propriedade só.** `fields` não liga para rótulos; `labels` não liga para a pessoa.

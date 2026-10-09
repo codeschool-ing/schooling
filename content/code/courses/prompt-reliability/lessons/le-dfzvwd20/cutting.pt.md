@@ -64,7 +64,7 @@ ana@lab:~/triage$ pl compare runs/long.jsonl runs/v2.jsonl --answers
   t39    account -> delivery
 ```
 
-Três respostas mudaram, e nenhuma mudou um veredicto. O `t38` é a resposta da aula 1 cujo resumo
+Três respostas mudaram, e nenhuma mudou um veredito. O `t38` é a resposta da aula 1 cujo resumo
 quebrou num apóstrofo, então não tem resposta para comparar; `t36` e `t39` estavam erradas com um
 prompt e erradas de outro jeito com o outro. **O corte manteve todas as aprovações e economizou 97
 tokens por chamada.**

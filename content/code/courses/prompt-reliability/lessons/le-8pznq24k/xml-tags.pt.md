@@ -51,7 +51,7 @@ ana@lab:~/triage$ pl compare runs/backticks.jsonl runs/tagged.jsonl --answers
 ```
 
 **Nenhuma resposta mudou.** Crases e tags deram a mesma categoria às seis mensagens, e os mesmos
-veredictos. Contra o prompt sem delimitador nenhum, duas categorias mudaram:
+vereditos. Contra o prompt sem delimitador nenhum, duas categorias mudaram:
 
 ```
 ana@lab:~/triage$ pl compare runs/pasted-v4.jsonl runs/tagged.jsonl --answers

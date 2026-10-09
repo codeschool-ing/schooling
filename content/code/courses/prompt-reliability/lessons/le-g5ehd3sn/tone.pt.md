@@ -169,7 +169,7 @@ uma pergunta simples sobre onde está uma fatura.
 Então três respostas mostram os dois erros de uma regra: uma promessa que ela deixou passar, e duas
 frases boas que ela marcou. **Uma regra é uma aproximação de um julgamento**, e os erros dela são
 onde o julgamento e a aproximação se separam. Isso não é motivo para largar as regras. Elas são de
-graça, dão o mesmo veredicto toda vez, e neste modelo a regra `promises` é a linha mais útil do
+graça, dão o mesmo veredito toda vez, e neste modelo a regra `promises` é a linha mais útil do
 arquivo.
 
 ## O que nenhuma regra aqui vê
