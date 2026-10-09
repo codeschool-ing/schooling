@@ -26,6 +26,11 @@ on 'pl run prompts/v6-escaped.txt cases/all.jsonl --out runs/v6.jsonl'
 on 'python3 vote.py runs/v3.jsonl runs/v4.jsonl runs/v6.jsonl'
 on "for r in v3 v4 v6; do pl check runs/\$r.jsonl --failures | awk '\$2 == \"json\" || \$2 == \"category\" {print \$1}'; done | sort | uniq -c | sort -rn"
 
+block against
+on "for r in v3 v4 v6; do pl check runs/\$r.jsonl --failures | awk '\$2 == \"json\" || \$2 == \"category\" {print \$1}' | sort > runs/\$r.wrong; done"
+on 'comm -12 runs/v4.wrong runs/v6.wrong | comm -23 - runs/v3.wrong | paste -sd " "'
+on 'comm -23 runs/v3.wrong <(sort -m runs/v4.wrong runs/v6.wrong) | paste -sd " "'
+
 block sampling
 on 'pl run prompts/v6-escaped.txt cases/all.jsonl --samples 5 --set temperature=0.8 --out runs/s5.jsonl'
 on 'python3 vote.py runs/s5.jsonl'
