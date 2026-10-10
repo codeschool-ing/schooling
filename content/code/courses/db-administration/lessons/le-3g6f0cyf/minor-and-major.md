@@ -29,8 +29,8 @@ is how your server arrived on 16.15 in lesson 3.
 A major version arrives once a year, in the autumn of the northern hemisphere, and carries the new
 features. It also changes the **system catalogue** — the tables in which PostgreSQL describes your
 tables, columns, types and functions — and sometimes the format of other files in the data
-directory. **PostgreSQL 17 refuses to start on a data directory that 16 created**, and the fourth
-section of this lesson shows it refusing. Something has to carry the data across, and there are
+directory. **PostgreSQL 17 refuses to start on a data directory that 16 created**, and section 05 of
+this lesson shows it refusing. Something has to carry the data across, and there are
 three ways to do it:
 
 | | how it works | downtime | the way back |
@@ -45,9 +45,9 @@ until November 2028. A server on an unsupported major version gets no security f
 is the deadline that usually decides when a major upgrade happens.
 
 **Ubuntu does not change the major version inside a release.** Ubuntu 24.04 ships 16 for its whole
-life, and its `apt upgrade` will bring 16.16 and 16.17 but never 17. A newer major version comes from
+life, and `apt upgrade` brings each new 16.x release but never 17. A newer major version comes from
 the PostgreSQL project's own repository, from a newer Ubuntu, or from a managed service's upgrade
-button, and the fourth section installs it from the first of those.
+button, and section 05 installs it from the first of those.
 
 Before PostgreSQL 10 the major version had two numbers: 9.5 and 9.6 were different major versions,
 and 9.6.24 was a minor release of 9.6. You will still meet servers like that, and the same rule

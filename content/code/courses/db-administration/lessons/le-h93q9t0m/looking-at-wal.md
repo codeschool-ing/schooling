@@ -28,7 +28,7 @@ and filled from the front. The name is 24 hexadecimal digits in three groups of 
 or a replica is promoted, both of which belong to db-reliability. The other two together
 are the segment's number, counting from the start of the cluster's history, so the names sort in
 the order they were written. `archive_status` is a directory, used when segments are copied away
-for a backup, and empty here.
+for a backup.
 
 ## Where the server is now
 

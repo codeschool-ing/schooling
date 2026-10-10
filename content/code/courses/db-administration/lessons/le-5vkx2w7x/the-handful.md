@@ -66,9 +66,9 @@ psql: error: connection to server at "127.0.0.2", port 5432 failed: Connection r
 
 `ss -ltn` lists the sockets listening for TCP, and the filter keeps port 5432: one, on
 `127.0.0.1`. Your virtual machine shows a second line for `[::1]:5432`, IPv6's loopback, which the
-recording machine did not have. `127.0.0.2` stands in here for an address the server is not
-listening on; it belongs to this machine, but nothing is listening there, so the kernel answered
-`Connection refused` and PostgreSQL never heard of the attempt. An application on another
+recording machine did not have. `127.0.0.2` stands in for an address the server is not
+listening on. It belongs to this machine, so the kernel answered `Connection refused` itself and
+PostgreSQL never heard of the attempt. An application on another
 computer gets the same answer.
 
 `'*'` means every address the machine has. It is a `postmaster` parameter, so it needs a restart:

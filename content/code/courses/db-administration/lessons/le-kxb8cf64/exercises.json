@@ -89,7 +89,7 @@
         "why": "ALTER DATABASE writes to the catalogue, not to any file. The diff did show the postgresql.auto.conf value, work_mem."
       },
       {
-        "text": "The query ran in the database ana",
+        "text": "The query ran in the database ana, not in shop",
         "correct": true,
         "why": "Right. A setting attached to shop applies only to connections to shop; \\drds lists it from anywhere."
       }
@@ -162,9 +162,9 @@
         "why": "Right. 90-local.conf sorts after 20-logging.conf, so its line is read later and wins."
       },
       {
-        "text": "1s, because the lower number has priority",
+        "text": "1s",
         "correct": false,
-        "why": "The number only sets the reading order, and a later value replaces an earlier one."
+        "why": "The lower number does not win: the number only sets the reading order, and a later value replaces an earlier one."
       },
       {
         "text": "Neither: the server refuses a parameter set in two files",
@@ -194,7 +194,7 @@
         "why": "Order of reading decides, not order of time. postgresql.auto.conf is read after every conf.d file."
       },
       {
-        "text": "128MB: postgresql.auto.conf overrides conf.d",
+        "text": "128MB, because postgresql.auto.conf is read after every conf.d file",
         "correct": true,
         "why": "Right. Until somebody runs ALTER SYSTEM RESET, the emergency value hides the repository's, which is why the rule is to move it into the repo the same day."
       },
@@ -607,12 +607,12 @@
         "why": "The step only creates the database when the name is missing; it never changes an owner."
       },
       {
-        "text": "postgres, because the script runs as postgres",
+        "text": "postgres",
         "correct": false,
-        "why": "Running as postgres does not transfer anything; nothing in the script runs ALTER DATABASE."
+        "why": "The script runs its SQL as postgres, but that transfers nothing; nothing in the script runs ALTER DATABASE."
       },
       {
-        "text": "ana",
+        "text": "Still ana",
         "correct": true,
         "why": "Right. The check asks whether a database called shop exists, and it does. A script checks what it was written to check."
       },
@@ -644,7 +644,7 @@
         "why": "The script rewrites 50-shop.conf, which is already right; it never touches what overrides it."
       },
       {
-        "text": "sourcefile in pg_settings, then \\drds",
+        "text": "The sourcefile column of pg_settings, then \\drds",
         "correct": true,
         "why": "Right. A later file such as postgresql.auto.conf, or a setting attached to the database or role, would explain it, and those two show where."
       },

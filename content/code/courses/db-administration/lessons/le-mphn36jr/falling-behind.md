@@ -18,11 +18,44 @@ for a person, for a remote call, for a bug to let go. You can make one with two 
 first, open a transaction at `REPEATABLE READ` and read the copy once, which fixes its snapshot, then
 leave that terminal alone:
 
-<<<falling-behind-a 1-2>>>
+```
+shop=# BEGIN ISOLATION LEVEL REPEATABLE READ;
+BEGIN
+
+shop=*# SELECT count(*) FROM orders_copy;
+  count  
+---------
+ 1000000
+(1 row)
+```
 
 In the second, change 100,000 rows, find who holds a snapshot, and vacuum:
 
-<<<falling-behind>>>
+```
+shop=# UPDATE orders_copy SET total_cents = total_cents + 1 WHERE id <= 100000;
+UPDATE 100000
+
+shop=# SELECT pid, state, backend_xmin, xact_start FROM pg_stat_activity WHERE backend_xmin IS NOT NULL;
+ pid |        state        | backend_xmin |          xact_start           
+-----+---------------------+--------------+-------------------------------
+ 448 | idle in transaction |          805 | 2026-10-10 16:42:50.024427-03
+ 458 | active              |          806 | 2026-10-10 16:42:51.424242-03
+(2 rows)
+
+shop=# VACUUM (VERBOSE, PROCESS_TOAST false) orders_copy;
+INFO:  vacuuming "shop.public.orders_copy"
+INFO:  finished vacuuming "shop.public.orders_copy": index scans: 0
+pages: 0 removed, 10417 remain, 1670 scanned (16.03% of total)
+tuples: 0 removed, 957677 remain, 100000 are dead but not yet removable
+removable cutoff: 805, which was 1 XIDs old when operation ended
+frozen: 0 pages from table (0.00% of total) had 0 tuples frozen
+index scan not needed: 0 pages from table (0.00% of total) had 0 dead item identifiers removed
+avg read rate: 0.000 MB/s, avg write rate: 0.525 MB/s
+buffer usage: 3361 hits, 0 misses, 1 dirtied
+WAL usage: 1 records, 1 full page images, 5949 bytes
+system usage: CPU: user: 0.01 s, system: 0.00 s, elapsed: 0.01 s
+VACUUM
+```
 
 **`100000 are dead but not yet removable`** is the line to know. VACUUM ran, read the pages,
 removed nothing, and said why: `removable cutoff: 805` means it could remove only what died before
@@ -35,11 +68,29 @@ Autovacuum gets exactly the same answer. On a busy server it keeps visiting the 
 behind. **More workers would only read the same pages more often.** The fix is in the first
 terminal:
 
-<<<falling-behind-a 3>>>
+```
+shop=*# COMMIT;
+COMMIT
+```
 
 And the same command in the second terminal now does its job:
 
-<<<falling-behind-after>>>
+```
+shop=# VACUUM (VERBOSE, PROCESS_TOAST false) orders_copy;
+INFO:  vacuuming "shop.public.orders_copy"
+INFO:  finished vacuuming "shop.public.orders_copy": index scans: 1
+pages: 0 removed, 10417 remain, 1670 scanned (16.03% of total)
+tuples: 100000 removed, 820339 remain, 0 are dead but not yet removable
+removable cutoff: 806, which was 0 XIDs old when operation ended
+frozen: 5 pages from table (0.05% of total) had 44 tuples frozen
+index scan needed: 834 pages from table (8.01% of total) had 99996 dead item identifiers removed
+index "orders_copy_pkey": pages: 3430 in total, 0 newly deleted, 0 currently deleted, 0 reusable
+avg read rate: 222.821 MB/s, avg write rate: 1.120 MB/s
+buffer usage: 5668 hits, 1990 misses, 10 dirtied
+WAL usage: 3892 records, 766 full page images, 2063336 bytes
+system usage: CPU: user: 0.06 s, system: 0.00 s, elapsed: 0.06 s
+VACUUM
+```
 
 `100000 removed`, and `index scans: 1` because there were entries in the primary key to take out
 this time. Nothing about the table changed between the two runs. Only the snapshot went away.

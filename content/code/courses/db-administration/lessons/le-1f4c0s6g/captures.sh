@@ -62,6 +62,7 @@ block max
 printf 'SHOW max_connections;\nSHOW superuser_reserved_connections;\nSHOW reserved_connections;\nSHOW shared_memory_size;\n' | session shop
 on 'sudo useradd --create-home app'
 on 'createuser app'
+on 'psql shop -c "GRANT SELECT, UPDATE ON customers, orders TO app"'
 on 'psql shop -c "ALTER SYSTEM SET max_connections = 5"'
 on 'sudo systemctl restart postgresql@16-main'
 on 'psql shop -c "SHOW max_connections" -c "SHOW shared_memory_size"'

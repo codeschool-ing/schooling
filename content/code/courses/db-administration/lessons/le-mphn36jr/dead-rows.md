@@ -15,7 +15,48 @@ the lessons after this one start from the same tables you have. The copy gets a 
 `VACUUM ANALYZE` so it starts tidy. `pageinspect` is an extension that ships with PostgreSQL and
 reads a table's pages raw; the last section drops it again.
 
-<<<dead-rows 1-10>>>
+```
+shop=# CREATE TABLE orders_copy AS SELECT * FROM orders;
+SELECT 1000000
+
+shop=# ALTER TABLE orders_copy ADD PRIMARY KEY (id);
+ALTER TABLE
+
+shop=# VACUUM ANALYZE orders_copy;
+VACUUM
+
+shop=# CREATE EXTENSION pageinspect;
+CREATE EXTENSION
+
+shop=# SELECT ctid, xmin, xmax, id, status FROM orders_copy WHERE id = 7;
+ ctid  | xmin | xmax | id | status 
+-------+------+------+----+--------
+ (0,7) |  782 |    0 |  7 | paid
+(1 row)
+
+shop=# BEGIN;
+BEGIN
+
+shop=*# UPDATE orders_copy SET status = 'shipped' WHERE id = 7;
+UPDATE 1
+
+shop=*# SELECT ctid, xmin, xmax, id, status FROM orders_copy WHERE id = 7;
+   ctid    | xmin | xmax | id | status  
+-----------+------+------+----+---------
+ (8333,41) |  786 |    0 |  7 | shipped
+(1 row)
+
+shop=*# SELECT lp, t_xmin, t_xmax, t_ctid FROM heap_page_items(get_raw_page('orders_copy', 0)) WHERE lp BETWEEN 6 AND 8;
+ lp | t_xmin | t_xmax |  t_ctid   
+----+--------+--------+-----------
+  6 |    782 |      0 | (0,6)
+  7 |    782 |    786 | (8333,41)
+  8 |    782 |      0 | (0,8)
+(3 rows)
+
+shop=*# COMMIT;
+COMMIT
+```
 
 Three hidden columns tell the story, and every table has them. **`ctid` is where a version lives**:
 page 0, item 7, at first. **`xmin` is the transaction that wrote the version**, here the one that
@@ -32,7 +73,22 @@ it takes the same space as a live row and nothing will ever read it. A `DELETE` 
 version the same way, with no new one beside it. A `ROLLBACK` leaves one too, the other way round:
 the new version it wrote is the one nobody will see.
 
-<<<dead-rows 11-14>>>
+```
+shop=# BEGIN;
+BEGIN
+
+shop=*# UPDATE orders_copy SET status = 'shipped' WHERE id = 500000;
+UPDATE 1
+
+shop=*# ROLLBACK;
+ROLLBACK
+
+shop=# SELECT n_live_tup, n_dead_tup FROM pg_stat_user_tables WHERE relname = 'orders_copy';
+ n_live_tup | n_dead_tup 
+------------+------------
+    1000000 |          2
+(1 row)
+```
 
 **`n_dead_tup` is the server's count of dead versions**, kept per table in `pg_stat_user_tables`:
 one from the committed `UPDATE` of row 7 and one from the `UPDATE` that rolled back. A session sends

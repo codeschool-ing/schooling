@@ -191,12 +191,12 @@ one from memory.
 
 ## What else logical replication does not carry
 
-- **Schema changes.** A `CREATE TABLE` or `ALTER TABLE` on the publisher is not sent. From the
+- Schema changes. A `CREATE TABLE` or `ALTER TABLE` on the publisher is not sent. From the
   moment the schema is copied until the switch, nobody changes it.
-- **Tables without a primary key**, for `UPDATE` and `DELETE`: the subscriber needs a way to find
+- Tables without a primary key, for `UPDATE` and `DELETE`: the subscriber needs a way to find
   the row, and a publisher refuses those statements on such a table until it has one or a
   `REPLICA IDENTITY` is set.
-- **Large objects**, the `lo_` kind, which are not rows of an ordinary table.
+- Large objects, the `lo_` kind, which are not rows of an ordinary table.
 
 That is the price of the near-zero downtime: the most moving parts of the three methods, and a list
 of exceptions to check against every database you publish.

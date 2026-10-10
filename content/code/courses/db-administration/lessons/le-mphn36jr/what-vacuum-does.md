@@ -22,7 +22,28 @@ compared with anything again. The wraparound section, two sections on, is why th
 
 `pg_visibility` is another extension that ships with PostgreSQL. It counts both bits:
 
-<<<what-vacuum-does 1-5>>>
+```
+shop=# CREATE EXTENSION pg_visibility;
+CREATE EXTENSION
+
+shop=# UPDATE orders_copy SET total_cents = total_cents + 1 WHERE id <= 50000;
+UPDATE 50000
+
+shop=# SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS size, * FROM pg_visibility_map_summary('orders_copy');
+ size  | all_visible | all_frozen 
+-------+-------------+------------
+ 68 MB |        7915 |          0
+(1 row)
+
+shop=# VACUUM orders_copy;
+VACUUM
+
+shop=# SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS size, * FROM pg_visibility_map_summary('orders_copy');
+ size  | all_visible | all_frozen 
+-------+-------------+------------
+ 68 MB |        8751 |        415
+(1 row)
+```
 
 The `UPDATE` took 836 pages out of the visibility map: the pages it removed rows from and the pages
 it wrote the new versions into. VACUUM put them back. **The size did not move**: 68 MB before and
@@ -33,7 +54,28 @@ The 415 frozen pages are a version 16 habit. When VACUUM is already writing a pa
 the write-ahead log, it freezes the page while it is there, because the extra work is nearly free.
 Everything else waits until its rows are old enough, or until somebody asks:
 
-<<<what-vacuum-does 6-9>>>
+```
+shop=# SELECT relname, relfrozenxid, age(relfrozenxid) FROM pg_class WHERE relname = 'orders_copy';
+   relname   | relfrozenxid | age 
+-------------+--------------+-----
+ orders_copy |          782 |  20
+(1 row)
+
+shop=# VACUUM (FREEZE) orders_copy;
+VACUUM
+
+shop=# SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS size, * FROM pg_visibility_map_summary('orders_copy');
+ size  | all_visible | all_frozen 
+-------+-------------+------------
+ 68 MB |        8751 |       8751
+(1 row)
+
+shop=# SELECT relname, relfrozenxid, age(relfrozenxid) FROM pg_class WHERE relname = 'orders_copy';
+   relname   | relfrozenxid | age 
+-------------+--------------+-----
+ orders_copy |          802 |   0
+(1 row)
+```
 
 **`relfrozenxid` is the oldest transaction id that can still appear unfrozen in the table**. Before
 the `FREEZE` it was 782, the transaction that loaded the copy. After it, every page is frozen and

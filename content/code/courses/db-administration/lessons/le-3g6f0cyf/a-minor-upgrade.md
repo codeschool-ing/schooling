@@ -35,7 +35,7 @@ ana@db:~$ psql -c "SELECT version();" -c "SELECT pg_postmaster_start_time();"
 
    pg_postmaster_start_time    
 -------------------------------
- 2026-10-10 04:43:12.549419-03
+ 2026-10-10 16:39:23.970676-03
 (1 row)
 ```
 
@@ -59,7 +59,7 @@ ana@db:~$ psql -c 'SELECT version();' -c 'SELECT pg_postmaster_start_time();'
 
    pg_postmaster_start_time    
 -------------------------------
- 2026-10-10 04:43:35.009418-03
+ 2026-10-10 16:40:20.370122-03
 (1 row)
 ```
 
@@ -70,12 +70,12 @@ the same thing from the inside:
 
 ```
 ana@db:~$ sudo grep -E 'fast shutdown|system is shut down|starting PostgreSQL|ready to accept' /var/log/postgresql/postgresql-16-main.log
-2026-10-10 04:43:12.547 -03 [2478] LOG:  starting PostgreSQL 16.2 (Ubuntu 16.2-1ubuntu4) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 13.2.0-23ubuntu3) 13.2.0, 64-bit
-2026-10-10 04:43:12.557 -03 [2478] LOG:  database system is ready to accept connections
-2026-10-10 04:43:31.913 -03 [2478] LOG:  received fast shutdown request
-2026-10-10 04:43:32.325 -03 [2478] LOG:  database system is shut down
-2026-10-10 04:43:35.007 -03 [3987] LOG:  starting PostgreSQL 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, 64-bit
-2026-10-10 04:43:35.014 -03 [3987] LOG:  database system is ready to accept connections
+2026-10-10 16:39:23.959 -03 [2478] LOG:  starting PostgreSQL 16.2 (Ubuntu 16.2-1ubuntu4) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 13.2.0-23ubuntu3) 13.2.0, 64-bit
+2026-10-10 16:39:23.991 -03 [2478] LOG:  database system is ready to accept connections
+2026-10-10 16:40:13.871 -03 [2478] LOG:  received fast shutdown request
+2026-10-10 16:40:14.206 -03 [2478] LOG:  database system is shut down
+2026-10-10 16:40:20.367 -03 [3987] LOG:  starting PostgreSQL 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, 64-bit
+2026-10-10 16:40:20.384 -03 [3987] LOG:  database system is ready to accept connections
 ```
 
 Read the four lines in the middle. **`received fast shutdown request`** is the package stopping the

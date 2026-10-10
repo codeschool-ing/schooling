@@ -32,14 +32,15 @@ So give the full path. `-Fc` writes the **custom format**: compressed, and reada
 ```
 ana@db:~$ time /usr/lib/postgresql/17/bin/pg_dump -Fc -f shop.dump shop
 
-real	0m1.566s
-user	0m1.439s
-sys	0m0.043s
+real	0m3.882s
+user	0m1.714s
+sys	0m0.081s
 ana@db:~$ ls -lh shop.dump
--rw-rw-r-- 1 ana ana 14M Oct 10 04:44 shop.dump
+-rw-rw-r-- 1 ana ana 14M Oct 10 16:41 shop.dump
 ```
 
-A 125 MB database became a 14 MB file. The rows compress well, and the indexes are not in it at all:
+The `orders` table and its indexes alone take 107 MB on `main`, and the whole dump is 14 MB. The rows
+compress well, and the indexes are not in it at all:
 a dump carries the `CREATE INDEX` statement and the restore builds the index again.
 
 ## Roles first
@@ -60,9 +61,9 @@ The same expected error as in the rehearsal: `postgres` exists already.
 ana@db:~$ createdb -p 5434 shop
 ana@db:~$ time pg_restore -p 5434 -d shop -j 4 shop.dump
 
-real	0m1.671s
+real	0m4.543s
 user	0m0.202s
-sys	0m0.054s
+sys	0m0.046s
 ```
 
 `-j 4` runs four jobs at once, loading tables and building indexes side by side; it works only with

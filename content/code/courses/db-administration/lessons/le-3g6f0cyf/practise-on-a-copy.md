@@ -14,6 +14,11 @@ backup works; restoring one is the subject of db-reliability lessons 1 to 10. On
 there is a cheaper copy that teaches the same steps: **a second cluster beside `16/main`**, made only
 for this lesson. Lesson 3 said that postgresql-common runs several clusters side by side, and this is
 what that is for. `16/main` is never stopped, never upgraded and never written to in what follows.
+Note when it last started, so that the end of the lesson can prove it:
+
+```sh
+psql -c "SELECT pg_postmaster_start_time();"
+```
 
 ## A second cluster
 

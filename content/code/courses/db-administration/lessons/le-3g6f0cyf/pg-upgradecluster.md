@@ -24,10 +24,8 @@ difference is the version string: yours carries the repository's packaging in br
 
 ```
 ana@db:~$ pg_lsclusters 17
-Ver Cluster   Port Status Owner    Data directory                   Log file
-16  main      5432 online postgres /var/lib/postgresql/16/main      /var/log/postgresql/postgresql-16-main.log
-16  rehearsal 5433 online postgres /var/lib/postgresql/16/rehearsal /var/log/postgresql/postgresql-16-rehearsal.log
-17  main      5434 online postgres /var/lib/postgresql/17/main      /var/log/postgresql/postgresql-17-main.log
+Ver Cluster Port Status Owner    Data directory              Log file
+17  main    5434 online postgres /var/lib/postgresql/17/main /var/log/postgresql/postgresql-17-main.log
 ana@db:~$ psql --version
 psql (PostgreSQL) 17.10
 ```
@@ -47,8 +45,8 @@ follow the version of the cluster they are pointed at, which matters in the next
 
 ```
 ana@db:~$ sudo -u postgres /usr/lib/postgresql/17/bin/postgres -D /var/lib/postgresql/16/rehearsal -c config_file=/etc/postgresql/16/rehearsal/postgresql.conf
-2026-10-10 04:43:51.181 -03 [4434] FATAL:  database files are incompatible with server
-2026-10-10 04:43:51.181 -03 [4434] DETAIL:  The data directory was initialized by PostgreSQL version 16, which is not compatible with this version 17.10.
+2026-10-10 16:40:48.813 -03 [4434] FATAL:  database files are incompatible with server
+2026-10-10 16:40:48.813 -03 [4434] DETAIL:  The data directory was initialized by PostgreSQL version 16, which is not compatible with this version 17.10.
 ```
 
 That is the reason major upgrades are a project. The rest of this section is `pg_upgrade`, the
@@ -61,7 +59,7 @@ in a fresh cluster of the new version, and then **moves the data files across wi
 them**: the format of a table's pages did not change between 16 and 17, only the catalogue that
 describes them. On Ubuntu you seldom call it directly. postgresql-common's **`pg_upgradecluster`**
 creates the new cluster, copies the configuration, runs `pg_upgrade` with the right paths, swaps the
-ports, and runs a step afterwards that the next sections explain.
+ports, and runs a step afterwards that section 08 explains.
 
 Two of its options decide everything. **`-m upgrade` chooses pg_upgrade**; without it,
 `pg_upgradecluster` falls back to its default, a dump and restore, which is correct but takes as long
@@ -119,9 +117,9 @@ Your installation references loadable libraries that are missing from the
 new installation.  You can add these libraries to the new installation,
 or remove the functions using them from the old installation.  A list of
 problem libraries is in the file:
-    /var/lib/postgresql/17/rehearsal/pg_upgrade_output.d/20261010T044352.796/loadable_libraries.txt
+    /var/lib/postgresql/17/rehearsal/pg_upgrade_output.d/20261010T164052.366/loadable_libraries.txt
 Failure, exiting
-pg_upgradecluster: pg_upgrade output scripts are in /var/log/postgresql/pg_upgradecluster-16-17-rehearsal.d3bZ
+pg_upgradecluster: pg_upgrade output scripts are in /var/log/postgresql/pg_upgradecluster-16-17-rehearsal.XsrL
 Error during cluster dumping, removing new cluster
 
 Cluster is not running.
@@ -255,7 +253,7 @@ Once you start the new server, consider running:
     /usr/lib/postgresql/17/bin/vacuumdb --all --analyze-in-stages
 Running this script will delete the old cluster's data files:
     ./delete_old_cluster.sh
-pg_upgradecluster: pg_upgrade output scripts are in /var/log/postgresql/pg_upgradecluster-16-17-rehearsal.h877
+pg_upgradecluster: pg_upgrade output scripts are in /var/log/postgresql/pg_upgradecluster-16-17-rehearsal.7TJ3
 Disabling automatic startup of old cluster...
 Starting upgraded cluster on port 5433...
 Running finish phase upgrade hook scripts ...
@@ -281,9 +279,9 @@ Ver Cluster   Port Status Owner    Data directory                   Log file
 Ver Cluster   Port Status Owner    Data directory                   Log file
 17  rehearsal 5433 online postgres /var/lib/postgresql/17/rehearsal /var/log/postgresql/postgresql-17-rehearsal.log
 
-real	0m8.556s
-user	0m1.097s
-sys	0m1.060s
+real	0m17.706s
+user	0m1.056s
+sys	0m0.673s
 ```
 
 The stages are worth knowing, because a real run takes longer and you will watch it:
@@ -296,7 +294,7 @@ The stages are worth knowing, because a real run takes longer and you will watch
   reason the next part shows.
 - `Linking user relation files` is the data, all of it, in one line.
 - `Checking for extension updates` and `Optimizer statistics are not transferred` are two jobs
-  left for you, and the section after next does them.
+  left for you, and the last reading section of this lesson does them.
 
 After `pg_upgrade`, `pg_upgradecluster` marked the old cluster to stay down at boot, **gave the new
 cluster the old port**, started it, and ran its analyze step: the `vacuumdb` lines.
@@ -324,13 +322,14 @@ file in both data directories:
 
 ```
 ana@db:~$ sudo ls -li /var/lib/postgresql/16/rehearsal/base/16386/16393 /var/lib/postgresql/17/rehearsal/base/16386/16393
-2197703 -rw------- 2 postgres postgres 68747264 Oct 10 04:43 /var/lib/postgresql/16/rehearsal/base/16386/16393
-2197703 -rw------- 2 postgres postgres 68747264 Oct 10 04:43 /var/lib/postgresql/17/rehearsal/base/16386/16393
+1756158 -rw------- 2 postgres postgres 68747264 Oct 10 16:40 /var/lib/postgresql/16/rehearsal/base/16386/16393
+1756158 -rw------- 2 postgres postgres 68747264 Oct 10 16:40 /var/lib/postgresql/17/rehearsal/base/16386/16393
 ```
 
-The same inode number on both lines, and a link count of **2**: one file of 68,747,264 bytes with two names.
-No byte of the table was copied, which is why linking takes about the same time for a 125 MB
-database and a 2 TB one. `du` sees it too, because it counts a file only once per invocation:
+The same inode number on both lines, and a link count of **2**: one file of 68,747,264 bytes with
+two names. No byte of the table was copied, which is why linking takes about the same time for a
+database the size of `shop` and one of 2 TB. `du` sees it too, because it counts a file only once
+per invocation:
 
 ```
 ana@db:~$ sudo du -sh /var/lib/postgresql/16/rehearsal /var/lib/postgresql/17/rehearsal
@@ -338,7 +337,8 @@ ana@db:~$ sudo du -sh /var/lib/postgresql/16/rehearsal /var/lib/postgresql/17/re
 55M	/var/lib/postgresql/17/rehearsal
 ```
 
-The new data directory adds only 55 MB of its own: a fresh catalogue and the WAL of a new cluster. Now try to start the old cluster:
+The new data directory adds only 55 MB of its own: a fresh catalogue and the WAL of a new cluster.
+Now try to start the old cluster:
 
 ```
 ana@db:~$ sudo pg_ctlcluster 16 rehearsal start
@@ -359,14 +359,16 @@ find it.
 
 Which leaves the choice that `--link` is about:
 
-- With `--link`, the upgrade takes seconds whatever the size and needs almost no extra disk. The
+- With `--link`, the upgrade takes about as long whatever the size of the data, and needs almost
+  no extra disk. The
   way back is a **backup taken before you started**, restored onto a 16 server.
 - Without it, every data file is copied. The upgrade takes as long as copying the data once,
   needs room for a second copy, and leaves the old cluster complete: if 17 misbehaves, you stop it
   and start 16 again.
 
-On the 125 MB rehearsal the two are indistinguishable, which is another reason to rehearse on a copy
-the size of production: the times you measure are the ones you will have.
+On a database the size of `shop` the difference hardly matters. On a large one it decides how long
+the night is, which is another reason to rehearse on a copy the size of production: the times you
+measure there are the ones you will have.
 
 ## When the real upgrade comes
 

@@ -47,10 +47,10 @@ work_mem = 64MB
 log_min_duraton_statement = 250ms
 ana@db:~$ sudo systemctl reload postgresql@16-main
 ana@db:~$ sudo tail -n 4 /var/log/postgresql/postgresql-16-main.log
-2026-10-10 04:31:27.769 -03 [2578] LOG:  parameter "work_mem" changed to "32MB"
-2026-10-10 04:31:29.959 -03 [2578] LOG:  received SIGHUP, reloading configuration files
-2026-10-10 04:31:29.960 -03 [2578] LOG:  unrecognized configuration parameter "log_min_duraton_statement" in file "/etc/postgresql/16/main/conf.d/50-shop.conf" line 10
-2026-10-10 04:31:29.960 -03 [2578] LOG:  configuration file "/etc/postgresql/16/main/conf.d/50-shop.conf" contains errors; no changes were applied
+2026-10-10 16:41:52.136 -03 [2578] LOG:  parameter "work_mem" changed to "32MB"
+2026-10-10 16:41:54.412 -03 [2578] LOG:  received SIGHUP, reloading configuration files
+2026-10-10 16:41:54.412 -03 [2578] LOG:  unrecognized configuration parameter "log_min_duraton_statement" in file "/etc/postgresql/16/main/conf.d/50-shop.conf" line 10
+2026-10-10 16:41:54.412 -03 [2578] LOG:  configuration file "/etc/postgresql/16/main/conf.d/50-shop.conf" contains errors; no changes were applied
 ```
 
 **O `systemctl reload` não imprimiu nada e deu certo.** Ele envia um sinal, e entregar um sinal é

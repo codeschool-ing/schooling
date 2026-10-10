@@ -1,0 +1,521 @@
+{
+  "ex-7k2rne6g": {
+    "prompt": "Qual é a diferença entre `CREATE USER bruno` e `CREATE ROLE bruno`?",
+    "hint": "Olhe o que o `\\du` imprimiu ao lado de `reporting`.",
+    "choices": [
+      {
+        "text": "Só o LOGIN: o CREATE USER o liga e o CREATE ROLE o deixa desligado",
+        "why": "Isso. `CREATE USER` é `CREATE ROLE` com `LOGIN` ligado; nada mais muda."
+      },
+      {
+        "text": "`CREATE USER` também cria uma conta no /etc/passwd",
+        "why": "O servidor nunca mexe nas contas do sistema operacional. O `id bruno` continuou dizendo que o usuário não existe."
+      },
+      {
+        "text": "Um usuário pertence a um banco e um papel ao cluster",
+        "why": "Os dois são o mesmo objeto, guardado no `pg_authid`, que todos os bancos compartilham."
+      },
+      {
+        "text": "Um usuário ganha uma senha e um papel não pode ter uma",
+        "why": "Nenhum dos dois comandos define senha, e qualquer papel pode receber uma com `\\password`."
+      }
+    ]
+  },
+  "ex-a43xe5jq": {
+    "prompt": "O `bruno` foi criado com a conexão no `shop`. Uma colega conecta ao banco `ana` e roda `SELECT rolname FROM pg_roles`. O `bruno` aparece no resultado?",
+    "hint": "Qual tabela do catálogo guarda os papéis, e ela é por banco?",
+    "choices": [
+      {
+        "text": "Não, papéis só existem no banco em que foram criados",
+        "why": "É assim que tabelas se comportam. O `pg_authid` tem `relisshared` verdadeiro: uma cópia para o cluster inteiro."
+      },
+      {
+        "text": "Só depois de `GRANT CONNECT ON DATABASE ana TO bruno`",
+        "why": "O `CONNECT` decide se o bruno pode entrar no `ana`, não se o papel aparece lá."
+      },
+      {
+        "text": "Só se a colega for superusuária, porque o pg_roles é escondido",
+        "why": "O `pg_roles` é legível por todos; é o `pg_authid`, com as senhas, que só um superusuário lê."
+      },
+      {
+        "text": "Sim, porque um papel é guardado uma vez para o cluster inteiro e todo banco o vê",
+        "why": "Isso. Papéis valem no cluster inteiro; só o que um papel pode fazer em cada banco é por banco."
+      }
+    ]
+  },
+  "ex-x943th0f": {
+    "prompt": "Ligue cada motor ao que uma conta é nele.",
+    "hint": "Um deles identifica a conta pelo lugar de onde ela conecta.",
+    "pairs": [
+      {
+        "left": "PostgreSQL",
+        "right": "Um papel, com LOGIN ou sem, para o cluster inteiro"
+      },
+      {
+        "left": "MySQL",
+        "right": "Um nome e um host juntos, então um nome pode ser duas contas"
+      },
+      {
+        "left": "SQL Server",
+        "right": "Um login no servidor, mapeado para um usuário em cada banco"
+      },
+      {
+        "left": "Oracle",
+        "right": "Um usuário que também é um esquema para os seus objetos"
+      }
+    ]
+  },
+  "ex-4xrmfqzk": {
+    "prompt": "Um analista sai na semana que vem, mas as tabelas que ele criou precisam ficar. Qual comando o impede de conectar hoje sem mexer no que ele possui?",
+    "hint": "Todo atributo tem uma forma com NO.",
+    "choices": [
+      {
+        "text": "Dar `DROP ROLE` nele e recriar as tabelas",
+        "why": "O servidor se recusa a apagar um papel que é dono de objetos, e recriar tabelas é uma migração, não uma mudança de conta."
+      },
+      {
+        "text": "`REVOKE ALL ON ALL TABLES IN SCHEMA public FROM ele`",
+        "why": "Isso tira privilégios de tabela; ele ainda conseguiria entrar, e um dono mantém todos os direitos nas próprias tabelas de qualquer forma."
+      },
+      {
+        "text": "`ALTER ROLE ... NOINHERIT`",
+        "why": "Isso muda como ele usa os privilégios dos grupos, não se ele consegue conectar."
+      },
+      {
+        "text": "`ALTER ROLE ... NOLOGIN`, que fecha a porta",
+        "why": "Isso. O papel e tudo o que ele possui ficam; só a porta fecha."
+      }
+    ]
+  },
+  "ex-zjzxpz61": {
+    "prompt": "No PostgreSQL 16, o papel `steward` tem `CREATEROLE` e tenta `ALTER ROLE bruno CREATEDB`, sendo que o `bruno` foi criado pela `ana`. O que acontece?",
+    "hint": "O que a linha DETAIL pediu?",
+    "choices": [
+      {
+        "text": "Recusado: sem opção ADMIN sobre o bruno",
+        "why": "Isso. O steward só tem ADMIN sobre os papéis que ele mesmo criou."
+      },
+      {
+        "text": "Funciona: o CREATEROLE administra todo papel que não é superusuário",
+        "why": "Isso era na versão 15 e anteriores. Desde a 16 é preciso a opção ADMIN sobre aquele papel."
+      },
+      {
+        "text": "Funciona, mas só até o próximo restart",
+        "why": "Os atributos de papel ficam no catálogo e sobrevivem a restarts; nada aqui é temporário."
+      },
+      {
+        "text": "Recusado, porque só um superusuário pode rodar ALTER ROLE",
+        "why": "O steward conseguiria alterar o `intern`, o papel que ele criou. A regra é sobre ADMIN, não sobre ser superusuário."
+      }
+    ]
+  },
+  "ex-hhh3q2nw": {
+    "prompt": "Você herda um servidor PostgreSQL 13 em que uma conta de suporte tem `CREATEROLE` e mais nada. Quanto você deve se preocupar?",
+    "hint": "Antes da 16, o que o CREATEROLE podia conceder?",
+    "choices": [
+      {
+        "text": "Nada: ele só cria papéis novos",
+        "why": "Na 15 e anteriores ele também alterava outros papéis e concedia participação em qualquer papel."
+      },
+      {
+        "text": "Um pouco: ele consegue renomear os papéis dos outros",
+        "why": "Renomear é o de menos. Conceder a si mesmo um papel que roda programas no servidor é o problema."
+      },
+      {
+        "text": "Nada, porque a versão 13 não tem CREATEROLE",
+        "why": "O CREATEROLE é muito mais antigo que a 13; o que mudou na 16 foi o que ele permite."
+      },
+      {
+        "text": "Tanto quanto com um superusuário",
+        "why": "Isso. Ele podia conceder a si mesmo os papéis predefinidos que leem arquivos e rodam programas, e a documentação dessas versões mandava tratá-lo como quase um superusuário."
+      }
+    ]
+  },
+  "ex-hn5geymp": {
+    "prompt": "Roda-se `ALTER ROLE reporting SET statement_timeout = '5min'`. O bruno, membro do reporting, faz login e começa um relatório que roda por vinte minutos. O que acontece?",
+    "hint": "As configurações de qual papel uma sessão carrega?",
+    "choices": [
+      {
+        "text": "Termina: o timeout não chega até ele",
+        "why": "Isso. Configurações por papel valem para o papel que fez login, e ninguém faz login como reporting."
+      },
+      {
+        "text": "É cancelado depois de cinco minutos",
+        "why": "Isso precisaria da configuração no bruno. Uma configuração num grupo não chega a nenhum membro."
+      },
+      {
+        "text": "O login do bruno é recusado até ele sair do grupo",
+        "why": "Um parâmetro nunca decide se alguém pode fazer login."
+      },
+      {
+        "text": "É cancelado na hora, porque a configuração do grupo é aplicada a cada SET ROLE",
+        "why": "O bruno nunca rodou SET ROLE, e a configuração é lida no login de qualquer forma."
+      }
+    ]
+  },
+  "ex-ns73drzg": {
+    "prompt": "Depois de `SET ROLE bruno` na sessão da ana, o que `current_user` e `session_user` devolvem?",
+    "hint": "Um deles é quem fez login.",
+    "choices": [
+      {
+        "text": "bruno e bruno",
+        "why": "É o que um login de verdade como bruno mostra. O SET ROLE não muda quem fez login."
+      },
+      {
+        "text": "ana e bruno",
+        "why": "Ao contrário: os privilégios verificados são os do bruno."
+      },
+      {
+        "text": "ana e ana, porque o SET ROLE só dura um comando",
+        "why": "O SET ROLE dura até o RESET ROLE ou o fim da sessão."
+      },
+      {
+        "text": "bruno, depois ana",
+        "why": "Isso. current_user é de quem são os privilégios verificados; session_user é quem fez login."
+      }
+    ]
+  },
+  "ex-k92srmg6": {
+    "prompt": "Ligue cada opção de uma participação no PostgreSQL 16 à pergunta que ela responde.",
+    "hint": "Três opções, três perguntas; uma resposta pertence a um atributo.",
+    "pairs": [
+      {
+        "left": "INHERIT",
+        "right": "Os privilégios do grupo são usados sem pedir?"
+      },
+      {
+        "left": "SET",
+        "right": "O membro pode trocar para o grupo com SET ROLE?"
+      },
+      {
+        "left": "ADMIN",
+        "right": "O membro pode conceder o grupo a outros?"
+      }
+    ],
+    "right_distractors": [
+      "O membro pode fazer login?"
+    ]
+  },
+  "ex-433vtz94": {
+    "prompt": "O bruno está no reporting `WITH INHERIT FALSE`, e o reporting tem SELECT em customers. Como bruno, `SELECT count(*) FROM customers` é recusado. O que ele faz para ler a tabela?",
+    "hint": "Ele continua membro.",
+    "choices": [
+      {
+        "text": "Pedir `GRANT reporting TO bruno` de novo, que zera as opções",
+        "why": "Um GRANT repetido muda só as opções que cita; sem nenhuma citada, o INHERIT FALSE continua."
+      },
+      {
+        "text": "Rodar `SET ROLE reporting` antes, trocando para o grupo pelo tempo que precisar",
+        "why": "Isso. Sem herança, o privilégio é alcançado virando o grupo por um momento."
+      },
+      {
+        "text": "Reconectar, porque a herança vale a partir do próximo login",
+        "why": "O INHERIT FALSE é uma propriedade da participação, e um login novo não muda isso."
+      },
+      {
+        "text": "Nada: um membro sem INHERIT não tem como usar o privilégio",
+        "why": "O SET ROLE é esse caminho, desde que a opção SET esteja ligada, o que é o padrão."
+      }
+    ]
+  },
+  "ex-8thtt3v6": {
+    "prompt": "Para conferir que o bruno não consegue virar reporting, uma colega roda `SET ROLE bruno; SET ROLE reporting;` da sessão de superusuária, vê `SET` duas vezes e conclui que a opção SET está ligada. O que há de errado no teste?",
+    "hint": "A participação de quem o SET ROLE verifica?",
+    "choices": [
+      {
+        "text": "Nada: dois SET provam que a opção está ligada",
+        "why": "Na lição a opção estava desligada e os dois SET funcionaram mesmo assim."
+      },
+      {
+        "text": "Ela devia ter usado RESET ROLE entre os dois comandos",
+        "why": "O RESET ROLE volta para a ana; o segundo SET testaria a ana, não o bruno."
+      },
+      {
+        "text": "A verificação foi feita contra a ana, e ela vira quem pedir para ser",
+        "why": "Isso. Só um login de verdade como bruno o torna o usuário da sessão, e aí a troca é recusada."
+      },
+      {
+        "text": "O SET ROLE nunca verifica participações, então o teste não mede nada",
+        "why": "Ele verifica, sim, contra o usuário da sessão; com login como bruno ele recusou."
+      }
+    ]
+  },
+  "ex-bfn41dbq": {
+    "prompt": "O psql 16 lista toda participação com as suas opções usando o comando de barra invertida \\___.",
+    "hint": "Três letras, a última de grants.",
+    "blanks": [
+      {
+        "accept": [
+          "drg"
+        ]
+      }
+    ]
+  },
+  "ex-6kvev64x": {
+    "prompt": "Pelo socket local, com o pg_hba.conf do Ubuntu, a ana roda `psql -U bruno shop`. Por que é recusado?",
+    "hint": "O que o peer compara?",
+    "choices": [
+      {
+        "text": "O bruno ainda não tem senha",
+        "why": "O peer não pede senha nenhuma; ele pergunta ao kernel quem abriu o socket."
+      },
+      {
+        "text": "O bruno não tem CONNECT no shop",
+        "why": "Naquele momento todo papel tinha CONNECT pelo PUBLIC; a mensagem citou a autenticação peer."
+      },
+      {
+        "text": "O usuário do sistema dela é ana, não bruno",
+        "why": "Isso. O peer deixa um usuário do sistema entrar só como o papel de mesmo nome."
+      },
+      {
+        "text": "Papéis criados com CREATE USER não podem usar o socket local",
+        "why": "Qualquer papel pode usar o socket; o mapa depois deixou a ana entrar como bruno por ele."
+      }
+    ]
+  },
+  "ex-5tmye3y1": {
+    "prompt": "Com `map=shop` na linha local e o pg_ident.conf listando só `shop ana bruno`, o que acontece com o `psql` comum da ana?",
+    "hint": "Quando há um mapa na linha, o que para?",
+    "choices": [
+      {
+        "text": "É recusado",
+        "why": "Isso. Sem uma linha `shop ana ana`, a ana se trancou fora do próprio papel."
+      },
+      {
+        "text": "Continua caindo como ana, porque o peer permite nomes iguais de qualquer jeito",
+        "why": "Com mapa, a comparação simples de nomes para; só os pares listados são permitidos."
+      },
+      {
+        "text": "Cai como bruno, o único papel do mapa",
+        "why": "O psql continua pedindo o papel com o seu nome; o mapa só diz se isso é permitido."
+      },
+      {
+        "text": "O servidor se recusa a recarregar um mapa com uma linha só",
+        "why": "Uma linha é um mapa válido; as visões dos arquivos não apontam erro nele."
+      }
+    ]
+  },
+  "ex-2pfckbm4": {
+    "prompt": "Ponha em ordem os passos para mudar o pg_hba.conf com segurança.",
+    "hint": "Pergunte ao servidor antes de fazê-lo agir.",
+    "items": [
+      "Copiar o arquivo com sudo cp -p",
+      "Editar a linha com um editor",
+      "Ler o pg_hba_file_rules e olhar a coluna error",
+      "Recarregar com pg_reload_conf()",
+      "Testar uma conexão"
+    ]
+  },
+  "ex-fsmzb9t8": {
+    "prompt": "O mapa lista `shop ana reporting`, e o pg_hba.conf aceita a conexão. Por que `psql -U reporting shop` ainda é recusado?",
+    "hint": "Duas verificações, em dois lugares.",
+    "choices": [
+      {
+        "text": "Um mapa não pode citar um grupo",
+        "why": "O pg_ident_file_mappings mostrou a linha sem erro; o mapa a aceitou."
+      },
+      {
+        "text": "O servidor não foi recarregado depois da mudança no mapa",
+        "why": "Foi, e o bruno, do mesmo mapa, fez login logo depois."
+      },
+      {
+        "text": "O reporting não tem o atributo LOGIN",
+        "why": "Isso. A autenticação diz quem você é; o atributo do próprio papel diz se essa identidade pode abrir uma sessão."
+      },
+      {
+        "text": "O reporting não tem CONNECT no shop",
+        "why": "Todo papel ainda tinha CONNECT pelo PUBLIC, e a mensagem disse que o papel não tem permissão de login."
+      }
+    ]
+  },
+  "ex-bh0m3tt4": {
+    "prompt": "O que o pg_authid guarda para um papel cuja senha foi definida no PostgreSQL 16 com as configurações padrão?",
+    "hint": "Olhe o começo do que a consulta imprimiu.",
+    "choices": [
+      {
+        "text": "A senha, criptografada com uma chave do postgresql.conf",
+        "why": "Nada reversível é guardado; não existe chave que a transforme de volta em senha."
+      },
+      {
+        "text": "Um hash md5 da senha com o nome do papel",
+        "why": "Esse era o padrão antes da versão 14; o password_encryption agora é scram-sha-256."
+      },
+      {
+        "text": "A senha em texto puro, legível por superusuários",
+        "why": "Um superusuário consegue ler o pg_authid, e o que ele encontra lá é um verificador, não a senha."
+      },
+      {
+        "text": "Um verificador SCRAM: um valor com sal do qual a senha não pode ser recuperada",
+        "why": "Isso. Um valor com sal de 4096 rodadas de hash; a senha não pode ser recuperada dele."
+      }
+    ]
+  },
+  "ex-bxrzam0y": {
+    "prompt": "Por que o `ALTER ROLE brunno PASSWORD '...'` com erro de digitação vazou a senha do bruno, se o comando não mudou nada?",
+    "hint": "O que o servidor escreve quando um comando falha?",
+    "choices": [
+      {
+        "text": "O psql manda todo comando para o journal do sistema antes de rodar",
+        "why": "O psql não faz isso. A linha estava no log do próprio servidor, escrita pelo servidor."
+      },
+      {
+        "text": "Porque o brunno foi criado pelo comando que falhou, com aquela senha",
+        "why": "O ALTER ROLE nunca cria papel; ele respondeu que o brunno não existe."
+      },
+      {
+        "text": "O servidor registra o texto do comando que falha",
+        "why": "Isso. A linha STATEMENT levou a senha em texto puro para o log."
+      },
+      {
+        "text": "Não vazou: um erro desfaz a linha de log também",
+        "why": "Um log não é transacional; o tail mostrou a linha depois do erro."
+      }
+    ]
+  },
+  "ex-d0t02gaf": {
+    "prompt": "Um script roda `psql -w -h localhost -U app shop` e falha com `fe_sendauth: no password supplied`, embora o ~/.pgpass tenha a linha certa. Qual é a causa mais provável?",
+    "hint": "O que dizia o warning acima dessa linha?",
+    "choices": [
+      {
+        "text": "O pg_hba.conf do servidor não tem linha para localhost",
+        "why": "Aí o servidor recusaria com um FATAL próprio; esta mensagem é o cliente desistindo antes de perguntar."
+      },
+      {
+        "text": "O -w faz o psql ignorar o ~/.pgpass",
+        "why": "O -w só proíbe a pergunta; depois do chmod 600 o mesmo comando funcionou."
+      },
+      {
+        "text": "O arquivo é legível por outros",
+        "why": "Isso. A libpq ignora um arquivo de senhas com acesso de grupo ou de outros, e só avisa."
+      },
+      {
+        "text": "A senha do app expirou",
+        "why": "Uma senha expirada falha no servidor, com password authentication failed e um DETAIL no log."
+      }
+    ]
+  },
+  "ex-j9x5yxfs": {
+    "prompt": "Que modo octal o chmod recebeu para deixar o ~/.pgpass legível só pelo dono?",
+    "hint": "Leitura e escrita para o dono, nada para os outros."
+  },
+  "ex-3fncxbg2": {
+    "prompt": "A senha do app tem `VALID UNTIL` ontem. Qual destas coisas ainda funciona?",
+    "hint": "O VALID UNTIL trata de uma credencial.",
+    "choices": [
+      {
+        "text": "Uma conexão nova por -h localhost com a senha do ~/.pgpass",
+        "why": "É exatamente o que falhou, com User app has an expired password no log."
+      },
+      {
+        "text": "Uma sessão que o app abriu hoje de manhã, antes de a data passar, e manteve aberta desde então",
+        "why": "Isso. A data é verificada quando uma senha é apresentada, e uma sessão aberta não apresenta nenhuma."
+      },
+      {
+        "text": "Uma conexão nova com a senha correta digitada à mão",
+        "why": "A senha estava certa na lição também; o que falhou foi a data dela."
+      },
+      {
+        "text": "Uma conexão nova depois de definir a senha do app de novo com o mesmo valor",
+        "why": "Definir uma senha não limpa o VALID UNTIL; a data fica até ser mudada."
+      }
+    ]
+  },
+  "ex-a35bnz1y": {
+    "prompt": "Uma ferramenta de deploy precisa criar tabelas como `shop_owner`, mas deve rodar todos os outros comandos com os seus direitos comuns. Qual participação serve?",
+    "hint": "Herdar, ou trocar de propósito?",
+    "choices": [
+      {
+        "text": "`GRANT shop_owner TO deployer WITH INHERIT TRUE, SET FALSE`",
+        "why": "Isso dá os direitos do dono o tempo todo e proíbe a troca: o oposto do que se pede."
+      },
+      {
+        "text": "`GRANT shop_owner TO deployer WITH INHERIT FALSE`",
+        "why": "Isso. O SET fica ligado por padrão, então ela troca com SET ROLE enquanto migra e não tem nada a mais no resto do tempo."
+      },
+      {
+        "text": "`GRANT shop_owner TO deployer WITH ADMIN TRUE`",
+        "why": "O ADMIN a deixa entregar o shop_owner a outros, o que ninguém pediu, e a herança continua ligada."
+      },
+      {
+        "text": "`ALTER ROLE deployer SUPERUSER`",
+        "why": "Isso remove todas as verificações, o tempo todo."
+      }
+    ]
+  },
+  "ex-smfbwtm6": {
+    "prompt": "Uma aplicação não consegue fazer login, e o log dela diz só `password authentication failed for user \"app\"`. Onde está o motivo de verdade?",
+    "hint": "O servidor conta o mínimo possível a estranhos.",
+    "choices": [
+      {
+        "text": "No log do servidor, na linha DETAIL escrita ao lado da FATAL",
+        "why": "Isso. O DETAIL lá diz se a senha estava errada ou expirada, e qual linha do pg_hba.conf casou."
+      },
+      {
+        "text": "No pg_authid, numa coluna que registra a última falha",
+        "why": "O pg_authid não guarda registro de tentativas; as falhas vão para o log."
+      },
+      {
+        "text": "Na mensagem do cliente: ela já disse tudo",
+        "why": "O cliente recebe a mesma frase para uma senha errada e uma expirada, de propósito."
+      },
+      {
+        "text": "No pg_hba_file_rules, cuja coluna error lista logins recusados",
+        "why": "Essa coluna aponta linhas do arquivo que o servidor não consegue ler, não conexões."
+      }
+    ]
+  },
+  "ex-11z4rcke": {
+    "prompt": "Ordene as verificações que uma conexão encontra, da primeira à última, para `psql -h localhost -U bruno shop`.",
+    "hint": "O arquivo escolhe o método antes de o método rodar.",
+    "items": [
+      "O pg_hba.conf escolhe a linha que casa",
+      "A senha é verificada com scram-sha-256",
+      "O atributo LOGIN e a data da senha do papel são verificados",
+      "Os privilégios são verificados comando a comando"
+    ]
+  },
+  "ex-z1ehadfx": {
+    "prompt": "Quais destes mantêm uma senha fora de todos os arquivos do servidor e da sua pasta pessoal? Marque todos que se aplicam.",
+    "hint": "Pense no log, no ~/.psql_history e no ~/.bash_history.",
+    "choices": [
+      {
+        "text": "`\\password app` no psql",
+        "why": "Sim. O psql manda um verificador; a senha não está em comando nenhum."
+      },
+      {
+        "text": "`psql -c \"ALTER ROLE app PASSWORD 'x'\"` no shell",
+        "why": "O histórico do shell guarda, e uma falha ou o log_statement põe no log do servidor."
+      },
+      {
+        "text": "`ALTER ROLE app PASSWORD 'x'` digitado no psql interativo",
+        "why": "O ~/.psql_history guarda tudo o que é digitado."
+      },
+      {
+        "text": "Um driver que calcula o verificador SCRAM e o envia",
+        "why": "Sim. É o que o \\password faz, feito por um programa."
+      }
+    ]
+  },
+  "ex-sh30g07g": {
+    "prompt": "Qual comando do psql mostra `Cannot login` ao lado de um papel?",
+    "hint": "O mesmo que mostra Superuser.",
+    "choices": [
+      {
+        "text": "\\drg",
+        "why": "O \\drg lista participações e as opções delas, não atributos."
+      },
+      {
+        "text": "\\du",
+        "why": "Isso. Ele lista os papéis com os atributos."
+      },
+      {
+        "text": "\\dp, os privilégios de acesso de cada tabela",
+        "why": "O \\dp mostra grants em objetos; o LOGIN é um atributo do papel."
+      },
+      {
+        "text": "\\conninfo, que descreve a conexão atual",
+        "why": "Ele diz como quem você está conectado, nada sobre outros papéis."
+      }
+    ]
+  }
+}

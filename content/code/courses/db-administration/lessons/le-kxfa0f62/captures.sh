@@ -42,11 +42,11 @@ printf "%s\n" "ALTER SYSTEM SET log_min_duration_statement = '50ms';" "ALTER SYS
 
 block slow
 printf "%s\n" "SELECT count(*) FROM orders WHERE status = 'cancelled' AND total_cents > 49000;" "SELECT name FROM customers WHERE id = 42;" | session shop
-on "sudo tail -n 2 $LOG"
+on "sudo grep duration: $LOG"
 
 block temp
 printf "%s\n" "SET work_mem = '1MB';" "SELECT count(DISTINCT total_cents) FROM orders;" | session shop
-on "sudo tail -n 4 $LOG"
+on "sudo grep -A1 'temporary file' $LOG"
 
 block locks
 T1='psql shop -c "BEGIN; UPDATE customers SET name = name WHERE id = 1; SELECT pg_sleep(4); COMMIT;"'
@@ -62,11 +62,11 @@ on "sudo tail -n 9 $LOG"
 block connections
 printf "%s\n" "ALTER SYSTEM SET log_connections = on;" "ALTER SYSTEM SET log_disconnections = on;" "SELECT pg_reload_conf();" | session shop
 on 'psql shop -c "SELECT 1"'
-on "sudo tail -n 4 $LOG"
+on "sudo grep -E 'connection (received|authenticated|authorized)|disconnection' $LOG"
 
 block checkpoint
 printf "CHECKPOINT;\n" | session shop
-on "sudo tail -n 4 $LOG"
+on "sudo grep checkpoint $LOG | tail -n 2"
 
 block cost-setup
 printf "%s\n" "ALTER SYSTEM RESET log_connections;" "ALTER SYSTEM RESET log_disconnections;" "ALTER SYSTEM RESET log_min_duration_statement;" "SELECT pg_reload_conf();" | session shop
@@ -80,12 +80,12 @@ on 'bash logcost.sh'
 block cost-all
 printf "%s\n" "ALTER SYSTEM SET log_statement = 'all';" "SELECT pg_reload_conf();" | session shop
 on 'bash logcost.sh'
-on "sudo tail -n 3 $LOG"
+on "sudo tail -n 7 $LOG"
 
 block cost-duration
 printf "%s\n" "ALTER SYSTEM RESET log_statement;" "ALTER SYSTEM SET log_min_duration_statement = 0;" "SELECT pg_reload_conf();" | session shop
 on 'bash logcost.sh'
-on "sudo tail -n 2 $LOG"
+on "sudo tail -n 1 $LOG"
 printf "%s\n" "ALTER SYSTEM RESET log_min_duration_statement;" "SELECT pg_reload_conf();" | session shop
 
 block reading
@@ -101,10 +101,9 @@ block jsonlog
 printf "%s\n" "ALTER SYSTEM SET logging_collector = on;" "ALTER SYSTEM SET log_destination = 'jsonlog';" | session shop
 on 'sudo systemctl restart postgresql@16-main'
 printf "%s\n" "SELECT pg_current_logfile();" "SELECT 1/0;" | session shop
-on "sudo tail -n 3 $LOG"
-J=$(lab as "psql -XAtc 'SELECT pg_current_logfile()' shop" | tr -d '\r')
+on "sudo tail -n 5 $LOG"
 on 'sudo ls -l /var/lib/postgresql/16/main/log'
-on "sudo tail -n 1 /var/lib/postgresql/16/main/$J | jq ."
+on "sudo sh -c 'tail -n 1 /var/lib/postgresql/16/main/log/*.json' | jq ."
 
 block putback
 printf "%s\n" "ALTER SYSTEM RESET logging_collector;" "ALTER SYSTEM RESET log_destination;" "ALTER SYSTEM RESET log_line_prefix;" "ALTER SYSTEM RESET log_lock_waits;" "ALTER SYSTEM RESET log_temp_files;" | session shop

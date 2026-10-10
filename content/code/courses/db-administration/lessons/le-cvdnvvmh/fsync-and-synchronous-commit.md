@@ -65,8 +65,8 @@ What it costs is exact. After a crash, the commits of the last moment that had n
 gone, though their clients were told they succeeded. **What is left is still a consistent
 database**: those transactions are absent as a whole, as if the crash had come a fraction of a
 second earlier, and recovery runs as in the previous section. That makes it a fair trade for work
-that can be lost — a page-view counter, a session's last-seen time — and the setting can be made
-for one transaction only:
+that can be lost, such as a page-view counter or a session's last-seen time. And the setting can be
+made for one transaction only:
 
 ```sql
 BEGIN;
@@ -90,7 +90,7 @@ not, and the result is damage that nothing reports until a query reads it.
 
 It was not demonstrated here, and the reason is worth knowing: **a `kill -9` cannot show it**. The
 operating system survives the kill with every write still in its cache, writes it out later, and
-the database comes back fine — which is how `fsync = off` passes every test that is not a real loss
+the database comes back fine. That is how `fsync = off` passes every test that is not a real loss
 of power or a crash of the kernel itself. The one defensible use is a database you are prepared to
 throw away and build again from scratch, such as the first load of a copy you will discard if
 anything goes wrong.

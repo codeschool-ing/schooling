@@ -1,0 +1,414 @@
+{
+  "ex-s3509sdb": {
+    "prompt": "Qual destes é alocado uma vez, quando o servidor sobe, e compartilhado por todos os processos?",
+    "hint": "Veja qual é parâmetro postmaster.",
+    "choices": [
+      {
+        "text": "work_mem",
+        "why": "Tomado por sort ou hash, dentro de um processo, e devolvido depois."
+      },
+      {
+        "text": "maintenance_work_mem",
+        "why": "Tomado por uma operação de manutenção num processo."
+      },
+      {
+        "text": "shared_buffers",
+        "why": "Isso. 128 MB por padrão, dimensionado na partida e mantido até o servidor parar."
+      },
+      {
+        "text": "temp_buffers",
+        "why": "O cache próprio de uma sessão para suas tabelas temporárias."
+      }
+    ]
+  },
+  "ex-rb7ve290": {
+    "prompt": "O `shared_memory_size` é 143 MB enquanto o `shared_buffers` é 128 MB. O que é a diferença?",
+    "hint": "O segmento compartilhado guarda mais do que páginas.",
+    "choices": [
+      {
+        "text": "O work_mem das conexões abertas no momento",
+        "why": "O work_mem é privado de cada processo e não faz parte do segmento compartilhado."
+      },
+      {
+        "text": "Tabelas de lock, buffers do WAL e outros controles",
+        "why": "Isso. Os buffers são a maior parte do segmento, não tudo."
+      },
+      {
+        "text": "O cache de páginas do sistema operacional para os arquivos de dados",
+        "why": "Esse pertence ao kernel e aparece em buff/cache, não no PostgreSQL."
+      },
+      {
+        "text": "Arredondamento: 128 MB aparece em unidades binárias e 143 em decimais",
+        "why": "Os dois estão na mesma unidade; 15 MB são memória de verdade."
+      }
+    ]
+  },
+  "ex-7ttaxzbd": {
+    "prompt": "Ligue cada parâmetro ao que ele é.",
+    "hint": "Compartilhado, privado, manutenção, ou nenhuma memória.",
+    "pairs": [
+      {
+        "left": "shared_buffers",
+        "right": "um cache de páginas para todos os processos"
+      },
+      {
+        "left": "work_mem",
+        "right": "o teto de um sort ou hash"
+      },
+      {
+        "left": "maintenance_work_mem",
+        "right": "o teto de uma criação de índice ou vacuum"
+      },
+      {
+        "left": "effective_cache_size",
+        "right": "uma estimativa para o planner, sem alocar nada"
+      }
+    ]
+  },
+  "ex-djsn8vqe": {
+    "prompt": "Com `shared_buffers` em 128 MB, um `count(*)` paralelo leu as 8334 páginas de `orders`. Quantas delas estavam no cache depois?",
+    "hint": "Três processos, um anel de 32 cada."
+  },
+  "ex-c3py9nc2": {
+    "prompt": "Por que uma tabela de 65 MB não ficou num cache de 128 MB depois de lida inteira?",
+    "hint": "Compare a tabela com um quarto do cache.",
+    "choices": [
+      {
+        "text": "O cache já estava cheio de catálogos do sistema",
+        "why": "16127 dos 16384 buffers estavam livres depois do restart."
+      },
+      {
+        "text": "O count(*) lê o índice em vez da tabela",
+        "why": "O plano dizia Parallel Seq Scan on orders, 8334 páginas lidas."
+      },
+      {
+        "text": "As páginas foram despejadas assim que a consulta terminou",
+        "why": "Nada despeja páginas no fim de uma consulta; com 1 GB de cache as 8334 ficaram."
+      },
+      {
+        "text": "Uma varredura sequencial grande recebe um pequeno anel de buffers",
+        "why": "Isso. Maior que um quarto do shared_buffers, então 32 buffers por processo, para proteger as páginas das outras tabelas."
+      }
+    ]
+  },
+  "ex-7jps6rx1": {
+    "prompt": "`Buffers: shared read=8238` e mesmo assim a consulta levou uma fração de segundo. De onde vieram as 8238 páginas?",
+    "hint": "read quer dizer fora do shared_buffers. Não diz de onde.",
+    "choices": [
+      {
+        "text": "Do disco, que é muito rápido nesta máquina",
+        "why": "Elas nem chegaram ao disco: o kernel as tinha em cache."
+      },
+      {
+        "text": "Da memória privada de outro backend",
+        "why": "Backends não compartilham memória privada; páginas compartilhadas moram no shared_buffers."
+      },
+      {
+        "text": "Do cache de páginas do sistema",
+        "why": "Isso. O segundo cache, debaixo do próprio PostgreSQL; ler dele é uma cópia em memória."
+      },
+      {
+        "text": "Do log de escrita antecipada",
+        "why": "O WAL é lido na recuperação, não para responder consultas."
+      }
+    ]
+  },
+  "ex-t2nbr73c": {
+    "prompt": "Por que o conselho comum começa o shared_buffers em cerca de um quarto da memória, e não na maior parte dela?",
+    "hint": "Existe um segundo cache.",
+    "choices": [
+      {
+        "text": "O cache de páginas do kernel também precisa de memória, e guarda boa parte dos mesmos dados",
+        "why": "Isso. Memória dada a um cache sai do outro, e os processos ainda precisam de memória privada."
+      },
+      {
+        "text": "O PostgreSQL recusa valores acima de 25%",
+        "why": "Ele aceita muito mais; 25% é conselho, não limite."
+      },
+      {
+        "text": "Caches maiores deixam toda consulta mais lenta",
+        "why": "A documentação diz que acima de 40% raramente ajuda, não que prejudica toda consulta."
+      },
+      {
+        "text": "O Linux limita a memória compartilhada a um quarto da RAM",
+        "why": "Nenhum limite assim impediu 1 GB aqui; a regra vem do cache duplo."
+      }
+    ]
+  },
+  "ex-c2pz4f28": {
+    "prompt": "No EXPLAIN ANALYZE, que linha diz que um sort transbordou para arquivos temporários?",
+    "hint": "Olhe o Sort Method.",
+    "choices": [
+      {
+        "text": "Sort Method: quicksort  Memory: 63639kB",
+        "why": "Esse sort coube na memória, com work_mem em 100MB."
+      },
+      {
+        "text": "Sort Method: top-N heapsort  Memory: 25kB",
+        "why": "Um sort que guardou só cinco linhas, em memória."
+      },
+      {
+        "text": "Sort Method: external merge  Disk: 21632kB",
+        "why": "Isso. Ordenado em pedaços, gravado em disco, intercalado."
+      },
+      {
+        "text": "Batches: 1  Memory Usage: 4881kB",
+        "why": "Um hash em um lote coube; mais lotes significariam transbordo."
+      }
+    ]
+  },
+  "ex-10rahn05": {
+    "prompt": "O HashAggregate usou 4881 kB em um único lote com `work_mem` em 4 MB. Como coube?",
+    "hint": "Um multiplicador vale só para hashes.",
+    "choices": [
+      {
+        "text": "work_mem é por consulta, e o sort acima usou só 25 kB",
+        "why": "Cada passo tem sua própria cota; nada é dividido entre eles."
+      },
+      {
+        "text": "hash_mem_multiplier é 2, então um hash recebe 8 MB",
+        "why": "Isso. Hashes custam mais para transbordar, então recebem o dobro."
+      },
+      {
+        "text": "O limite só é conferido no fim da operação",
+        "why": "Um sort acima do limite transbordou durante a execução; o hash simplesmente tinha um limite maior."
+      },
+      {
+        "text": "4881 kB é menos que 4 MB em unidades binárias",
+        "why": "4 MB são 4096 kB; 4881 é mais."
+      }
+    ]
+  },
+  "ex-bv324qqh": {
+    "prompt": "Para dar a uma sessão espaço para um sort grande sem mudar mais ninguém, rode ___ work_mem = '100MB'; nessa sessão.",
+    "hint": "O comando SQL para o valor da própria sessão.",
+    "blanks": [
+      {
+        "accept": [
+          "SET"
+        ]
+      }
+    ]
+  },
+  "ex-kk2jdvyz": {
+    "prompt": "O sort gravou 21632 kB em disco com 4 MB, mas só coube com work_mem bem acima de 21 MB. Por quê?",
+    "hint": "Compare quanto uma linha custa em disco e em memória.",
+    "choices": [
+      {
+        "text": "Os arquivos temporários são comprimidos",
+        "why": "Não são comprimidos; só são mais compactos que a forma em memória."
+      },
+      {
+        "text": "Em memória cada linha leva ponteiros e cabeçalhos",
+        "why": "Isso. O sort em memória levou 63639 kB, cerca de três vezes os arquivos."
+      },
+      {
+        "text": "Cada worker paralelo precisava de uma cópia das linhas",
+        "why": "Esse plano não tinha Gather: um processo fez o sort."
+      },
+      {
+        "text": "O work_mem é contado em páginas de 8 kB, não em kilobytes",
+        "why": "O pg_settings deu a unidade dele como kB."
+      }
+    ]
+  },
+  "ex-czxyyk5s": {
+    "prompt": "Qual destes usa maintenance_work_mem em vez de work_mem?",
+    "hint": "Não é uma consulta.",
+    "choices": [
+      {
+        "text": "SELECT … ORDER BY",
+        "why": "O sort de uma consulta usa work_mem."
+      },
+      {
+        "text": "SELECT … GROUP BY",
+        "why": "Um HashAggregate usa work_mem vezes hash_mem_multiplier."
+      },
+      {
+        "text": "Um hash join",
+        "why": "Também um passo de consulta, também work_mem."
+      },
+      {
+        "text": "CREATE INDEX",
+        "why": "Isso, junto com o VACUUM e a adição de chave estrangeira."
+      }
+    ]
+  },
+  "ex-pj2v24dv": {
+    "prompt": "A criação com 1 MB gravou um arquivo temporário de 20070400 bytes; a com 64 MB não gravou nenhum. Ambas levaram cerca de meio segundo. O que isso mostra?",
+    "hint": "Para onde foram os 19 MB?",
+    "choices": [
+      {
+        "text": "O maintenance_work_mem não afeta o CREATE INDEX",
+        "why": "Ele decidiu se o sort transbordava: um arquivo com 1 MB, nenhum com 64 MB."
+      },
+      {
+        "text": "A segunda criação reaproveitou o arquivo ordenado da primeira",
+        "why": "O arquivo é apagado quando a operação termina, e o índice foi removido."
+      },
+      {
+        "text": "Criações de índice sempre rodam em paralelo, escondendo o custo",
+        "why": "O max_parallel_maintenance_workers estava em 0: um processo de cada vez."
+      },
+      {
+        "text": "Transbordar sai barato com o arquivo no cache",
+        "why": "Isso. Numa máquina em que ele chega ao disco, a diferença cresce."
+      }
+    ]
+  },
+  "ex-cs1vy3w7": {
+    "prompt": "O maintenance_work_mem é 1GB numa máquina de 4 GB. Três workers do autovacuum rodam enquanto alguém cria um índice. Quanta memória esses quatro podem tomar?",
+    "hint": "O autovacuum_work_mem é -1. E o vacuum tem um teto próprio no 16.",
+    "choices": [
+      {
+        "text": "1 GB, dividido entre os quatro",
+        "why": "É por operação: cada worker e a criação têm o seu."
+      },
+      {
+        "text": "64 MB cada, porque o autovacuum ignora o maintenance_work_mem",
+        "why": "-1 quer dizer que o autovacuum usa o maintenance_work_mem."
+      },
+      {
+        "text": "Só a criação do índice, já que o autovacuum pausa durante ela",
+        "why": "O autovacuum trabalha em outras tabelas ao mesmo tempo."
+      },
+      {
+        "text": "Até 4 GB: cada um toma o seu",
+        "why": "Isso. O vacuum para em 1 GB, e esta configuração também: quatro cotas, a máquina inteira."
+      }
+    ]
+  },
+  "ex-h78cz58j": {
+    "prompt": "`SET effective_cache_size = '1TB'` foi aceito numa máquina de 15 GB. O que isso mudou?",
+    "hint": "Ele não aloca nada.",
+    "choices": [
+      {
+        "text": "Reservou um terabyte de swap para a sessão",
+        "why": "O free mostrou zero de swap, e o parâmetro não aloca nada."
+      },
+      {
+        "text": "Aumentou o shared_buffers para esta sessão",
+        "why": "O shared_buffers é postmaster: nenhuma sessão o muda."
+      },
+      {
+        "text": "A estimativa do planner sobre o que está em cache",
+        "why": "Isso. É uma crença que o planner usa para custos de índice, nada mais."
+      },
+      {
+        "text": "Nada, porque o valor passa da memória",
+        "why": "Valeu para a sessão; o SHOW imprimiu 1TB. Só não é verdade."
+      }
+    ]
+  },
+  "ex-ysm3khgv": {
+    "prompt": "Uma máquina de 4 GB: shared_buffers 1024 MB, 512 MB para o sistema, 1024 MB de cache de páginas mantidos, 100 conexões com duas operações cada. Que work_mem, em MB, a conta do curso dá, arredondado para inteiro?",
+    "hint": "(4096 − 1024 − 512 − 1024) ÷ 200.",
+    "unit": "MB"
+  },
+  "ex-6chxw6cw": {
+    "prompt": "Uma consulta com dois hash joins e um sort roda com dois ajudantes paralelos. Quantas vezes o work_mem ela pode usar, no máximo, pela conta do curso?",
+    "hint": "Três processos; um hash conta em dobro."
+  },
+  "ex-1wp8afge": {
+    "prompt": "Um backend é morto pelo OOM killer do Linux. O que o postmaster faz?",
+    "hint": "Ele não pode mais confiar na memória compartilhada.",
+    "choices": [
+      {
+        "text": "Encerra todas as conexões e reinicia",
+        "why": "Isso. Uma consulta descontrolada vira queda para todo mundo."
+      },
+      {
+        "text": "Sobe um substituto para aquele backend e segue em frente",
+        "why": "Um processo morto pode ter deixado a memória compartilhada inconsistente, então todos caem."
+      },
+      {
+        "text": "Baixa o work_mem automaticamente para todas as sessões",
+        "why": "O servidor não muda configuração sozinho."
+      },
+      {
+        "text": "Nada; o cliente vê um erro e reconecta",
+        "why": "Todos os outros clientes também veem erro, porque todos são desconectados."
+      }
+    ]
+  },
+  "ex-sqmeg2dc": {
+    "prompt": "Um painel abre o mesmo relatório de 120 MB vinte vezes ao mesmo tempo na máquina virtual de 4 GB com work_mem 8MB. O que acaba primeiro?",
+    "hint": "20 × 120 MB, contra a fatia de 1536 MB.",
+    "choices": [
+      {
+        "text": "O shared_buffers, que os relatórios enchem com seus sorts",
+        "why": "Sorts usam memória privada; o shared_buffers fica em 1 GB, façam o que fizerem."
+      },
+      {
+        "text": "O max_connections, em vinte",
+        "why": "O max_connections é 100; vinte conexões cabem com folga."
+      },
+      {
+        "text": "Nada: o work_mem limita o total a 8 MB por conexão",
+        "why": "Ele limita cada passo, nunca o total de uma conexão."
+      },
+      {
+        "text": "O cache de páginas, depois a memória livre",
+        "why": "Isso. 2400 MB é mais que a fatia de sorts e hashes; o kernel cede o cache primeiro."
+      }
+    ]
+  },
+  "ex-sjgbb8v9": {
+    "prompt": "Ponha em ordem os passos do orçamento de memória do curso.",
+    "hint": "Cache compartilhado primeiro, a divisão por último.",
+    "items": [
+      "dar um quarto da memória ao shared_buffers",
+      "separar memória para o sistema e os processos",
+      "manter um quarto para o cache de páginas",
+      "dividir o que sobra por conexões × operações"
+    ],
+    "trap": "Dividir antes de tirar as fatias dimensiona o work_mem contra memória que já tem dono."
+  },
+  "ex-8fg5fkyr": {
+    "prompt": "Depois de subir o shared_buffers de 128 MB para 1 GB, a segunda contagem de orders passou de read=8238 para hit=8334, e o tempo quase não mudou. O que explica?",
+    "hint": "Onde as páginas estavam antes?",
+    "choices": [
+      {
+        "text": "O cache de páginas já servia as faltas",
+        "why": "Isso. Numa máquina cujos dados não cabem na memória, os hits poupariam leituras reais."
+      },
+      {
+        "text": "A memória extra foi para o work_mem",
+        "why": "shared_buffers e work_mem são separados; o restart só aumentou o segmento compartilhado."
+      },
+      {
+        "text": "Um count não lê páginas, então o cache é irrelevante",
+        "why": "Ele leu as 8334 páginas, como mostra a linha Buffers."
+      },
+      {
+        "text": "Os workers paralelos contornam o shared_buffers",
+        "why": "Eles leem através dele: o hit=8334 conta as páginas deles também."
+      }
+    ]
+  },
+  "ex-796kjhrt": {
+    "prompt": "Ligue cada valor do orçamento do curso para a máquina de gravação de 15 GB.",
+    "hint": "Um quarto, a divisão, três quartos, quatro cotas.",
+    "pairs": [
+      {
+        "left": "shared_buffers",
+        "right": "3840MB"
+      },
+      {
+        "left": "work_mem",
+        "right": "32MB"
+      },
+      {
+        "left": "effective_cache_size",
+        "right": "11GB"
+      },
+      {
+        "left": "maintenance_work_mem",
+        "right": "512MB"
+      }
+    ],
+    "right_distractors": [
+      "8MB"
+    ]
+  }
+}

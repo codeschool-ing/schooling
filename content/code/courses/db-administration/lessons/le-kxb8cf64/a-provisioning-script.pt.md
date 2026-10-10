@@ -24,12 +24,12 @@ Salve-o como `shop-db/provision.sh` e faça o commit ao lado do arquivo de confi
 ```
 ana@db:~$ git -C shop-db add provision.sh
 ana@db:~$ git -C shop-db commit -m "provision.sh: build the shop server from nothing"
-[main 1f2f98e] provision.sh: build the shop server from nothing
+[main 2332b60] provision.sh: build the shop server from nothing
  1 file changed, 57 insertions(+)
  create mode 100644 provision.sh
 ana@db:~$ git -C shop-db log --oneline
-1f2f98e provision.sh: build the shop server from nothing
-cca080c The shop server's settings, one file
+2332b60 provision.sh: build the shop server from nothing
+6ab72d8 The shop server's settings, one file
 ```
 
 ## Onde rodar

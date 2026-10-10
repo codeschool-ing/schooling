@@ -76,11 +76,11 @@ printf "CREATE TABLESPACE small LOCATION '/srv/small/pg';\nCREATE TABLE filler (
 on 'df -h /srv/small'
 on 'sudo tail -n 3 /var/log/postgresql/postgresql-16-main.log'
 printf 'VACUUM filler;\n' | session shop
-on 'sudo tune2fs -m 0 /srv/small.img'
+on 'sudo tune2fs -m 0 "$(findmnt --noheadings --output SOURCE /srv/small)"'
 on 'df -h /srv/small'
 printf "VACUUM filler;\nSELECT pg_size_pretty(pg_relation_size('filler'));\n" | session shop
 on 'df -h /srv/small'
-on 'sudo tune2fs -m 5 /srv/small.img'
+on 'sudo tune2fs -m 5 "$(findmnt --noheadings --output SOURCE /srv/small)"'
 
 block walfull
 printf "CREATE TABLE walfill AS SELECT * FROM orders;\n" | session shop

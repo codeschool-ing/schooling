@@ -1,0 +1,514 @@
+{
+  "ex-k8qz2pyr": {
+    "prompt": "Por que esta lição testa outros papéis com `psql -h localhost -U bruno shop` em vez de `SET ROLE bruno` na sessão da ana?",
+    "hint": "Quando a primeira porta é verificada?",
+    "choices": [
+      {
+        "text": "O SET ROLE não é permitido num papel com senha",
+        "why": "Senha não tem nada a ver com SET ROLE; a ana trocou para o bruno sem problema na lição 11."
+      },
+      {
+        "text": "Pelo socket, o SET ROLE ignora os grants",
+        "why": "O SET ROLE verifica privilégios de tabela fielmente, venha a sessão de onde vier."
+      },
+      {
+        "text": "O -h localhost é mais rápido",
+        "why": "Velocidade não é o motivo; o socket é, se tanto, mais rápido."
+      },
+      {
+        "text": "O CONNECT é verificado quando uma conexão abre, e o SET ROLE não abre nenhuma",
+        "why": "Isso. Um teste da porta do banco precisa de um login de verdade."
+      }
+    ]
+  },
+  "ex-g5f8p3vm": {
+    "prompt": "`CREATE ROLE bruno LOGIN ___ ROLE reporting` torna o bruno membro do reporting já na criação.",
+    "hint": "Uma palavra-chave de duas letras.",
+    "blanks": [
+      {
+        "accept": [
+          "IN"
+        ]
+      }
+    ]
+  },
+  "ex-dfj3fbaj": {
+    "prompt": "Ordene as três portas por que um papel passa a caminho de uma linha de `reports.sales_by_month`.",
+    "hint": "De fora para dentro.",
+    "items": [
+      "CONNECT no banco shop",
+      "USAGE no esquema reports",
+      "SELECT na visão"
+    ]
+  },
+  "ex-8c3hgwnj": {
+    "prompt": "O reporting tem SELECT em `reports.sales_by_month`, e a consulta do bruno nela falha com `permission denied for schema reports`. O que falta?",
+    "hint": "Leia a última palavra antes do nome.",
+    "choices": [
+      {
+        "text": "SELECT em orders, que a visão lê",
+        "why": "A visão lê orders com os direitos do dono; o bruno a leu depois sem grant em orders."
+      },
+      {
+        "text": "USAGE em reports",
+        "why": "Isso. Um nome num esquema nem pode ser procurado sem USAGE nele."
+      },
+      {
+        "text": "CONNECT no shop, que foi revogado do PUBLIC",
+        "why": "Sem CONNECT ele nem estaria numa sessão para ver esse erro; ele viria no login."
+      },
+      {
+        "text": "A visão precisa ser recriada depois de um GRANT",
+        "why": "Grants valem na hora; mais um GRANT no esquema bastou."
+      }
+    ]
+  },
+  "ex-ykgn7h5k": {
+    "prompt": "No `\\l shop`, a lista de acesso mostra `=T/ana`. O que significa a parte vazia antes do `=`?",
+    "hint": "Quem é todo mundo?",
+    "choices": [
+      {
+        "text": "O dono, abreviado",
+        "why": "O dono tem a entrada própria, ana=CTc/ana."
+      },
+      {
+        "text": "Um papel que foi apagado",
+        "why": "O servidor se recusa a apagar um papel que tem privilégios, então uma lista de acesso nunca cita um sumido."
+      },
+      {
+        "text": "Um grant ainda esperando uma recarga",
+        "why": "Grants são linhas do catálogo e não precisam de recarga."
+      },
+      {
+        "text": "PUBLIC: todos os papéis, inclusive os criados amanhã",
+        "why": "Isso. Aqui todo mundo mantém o T, tabelas temporárias, e perdeu o c, conectar."
+      }
+    ]
+  },
+  "ex-xw9txezj": {
+    "prompt": "O bruno lê `reports.sales_by_month`, uma soma sobre orders, embora não tenha privilégio em orders. Por quê?",
+    "hint": "Com os direitos de quem a consulta de uma visão roda?",
+    "choices": [
+      {
+        "text": "Agregações não precisam de privilégio",
+        "why": "O `SELECT count(*) FROM customers` foi recusado a ele diretamente; agregações são verificadas como qualquer coisa."
+      },
+      {
+        "text": "Uma visão roda a consulta com os privilégios do dono, a ana",
+        "why": "Isso. A visão é uma porta própria, que deixa passar o que a consulta produz."
+      },
+      {
+        "text": "USAGE num esquema concede SELECT nas tabelas dele",
+        "why": "O USAGE só deixa procurar os nomes; orders está no public, onde ele tem USAGE e foi recusado mesmo assim."
+      },
+      {
+        "text": "A visão foi criada WITH security_invoker",
+        "why": "Essa opção faz o oposto: verifica o papel que consulta nas tabelas de baixo."
+      }
+    ]
+  },
+  "ex-acbfkz2z": {
+    "prompt": "Um script de auditoria precisa dizer, para quarenta papéis, se cada um consegue ler `orders`, sem saber as senhas deles. O que ele deve chamar?",
+    "hint": "O servidor consegue responder por qualquer papel.",
+    "choices": [
+      {
+        "text": "`has_table_privilege(papel, 'orders', 'SELECT')`",
+        "why": "Isso. Ele segue as participações como uma sessão de verdade, o que ler a lista de acesso a olho não faz."
+      },
+      {
+        "text": "Interpretar a saída do `\\dp orders` procurando o nome de cada papel",
+        "why": "Um papel com o privilégio por um grupo nunca aparece pelo nome na lista."
+      },
+      {
+        "text": "Dar `SET ROLE` para cada um e rodar um SELECT, capturando os erros",
+        "why": "Funciona para tabelas, mas custa quarenta consultas numa tabela grande e ignora o CONNECT por completo."
+      },
+      {
+        "text": "Ler o pg_authid",
+        "why": "O pg_authid guarda atributos e senhas, não grants em tabelas."
+      }
+    ]
+  },
+  "ex-mbqswttr": {
+    "prompt": "Num banco criado pelo PostgreSQL 16, o que um papel que consegue conectar, e não recebeu nada, pode fazer no esquema `public`?",
+    "hint": "`=U/pg_database_owner`",
+    "choices": [
+      {
+        "text": "Criar tabelas, mas não funções",
+        "why": "O CREATE TABLE do bruno foi recusado no esquema."
+      },
+      {
+        "text": "Nada mesmo, nem procurar nomes, até alguém conceder USAGE a ele",
+        "why": "O PUBLIC ainda tem USAGE no public, e é por isso que a recusa do bruno em customers veio da porta da tabela."
+      },
+      {
+        "text": "Procurar nomes, mas não criar nada",
+        "why": "Isso. O PUBLIC tem U e, desde a 15, não tem C."
+      },
+      {
+        "text": "Ler todas as tabelas dele",
+        "why": "O USAGE deixa procurar nomes; ler uma tabela precisa de privilégio na tabela."
+      }
+    ]
+  },
+  "ex-4zr0efpb": {
+    "prompt": "Um banco foi levado do PostgreSQL 13 para o 16 com pg_upgrade. O `\\dn+ public` mostra `=UC/postgres`. O que você deve concluir?",
+    "hint": "A quais bancos o padrão da 15 chega?",
+    "choices": [
+      {
+        "text": "O pg_upgrade falhou no meio e o catálogo está corrompido",
+        "why": "Manter a lista de acesso antiga é exatamente o que um upgrade bem-sucedido faz."
+      },
+      {
+        "text": "Todo papel ainda consegue criar objetos no public, e um REVOKE CREATE ON SCHEMA public FROM PUBLIC é necessário",
+        "why": "Isso. O novo padrão vale para bancos criados pela 15 ou posterior, não para os atualizados."
+      },
+      {
+        "text": "Nada: a versão 16 ignora o CREATE no public, diga a lista o que disser",
+        "why": "O servidor obedece à lista de acesso que tem; o padrão é só o que um banco novo recebe ao nascer."
+      },
+      {
+        "text": "O esquema agora pertence ao pg_database_owner",
+        "why": "O grantor mostrado é postgres, o dono antigo; a posse veio sem mudança."
+      }
+    ]
+  },
+  "ex-0m2xzp19": {
+    "prompt": "Depois de `REVOKE CONNECT ON DATABASE shop FROM PUBLIC`, o bruno ainda criou uma tabela temporária numa sessão. Por quê?",
+    "hint": "Leia as letras que sobraram ao lado do grantee vazio.",
+    "choices": [
+      {
+        "text": "Tabelas temporárias pulam os privilégios",
+        "why": "Criar uma precisa de TEMPORARY no banco; é um privilégio como os outros."
+      },
+      {
+        "text": "Porque a tabela temporária foi criada no public, onde o PUBLIC tem CREATE",
+        "why": "Tabelas temporárias moram num esquema próprio por sessão, e o PUBLIC não tem CREATE no public."
+      },
+      {
+        "text": "O PUBLIC manteve o T no banco",
+        "why": "Isso. Só o CONNECT foi revogado; o TEMPORARY fica até ser revogado também."
+      },
+      {
+        "text": "O reporting recebeu TEMPORARY junto com o CONNECT",
+        "why": "O grant citou só o CONNECT; o TEMPORARY veio do PUBLIC."
+      }
+    ]
+  },
+  "ex-pz96e7zq": {
+    "prompt": "Ligue cada objeto ao que o PUBLIC recebe nele por padrão no PostgreSQL 16.",
+    "hint": "Uma tabela que você cria não dá nada.",
+    "pairs": [
+      {
+        "left": "Um banco",
+        "right": "CONNECT e TEMPORARY"
+      },
+      {
+        "left": "O esquema public",
+        "right": "USAGE"
+      },
+      {
+        "left": "Uma função",
+        "right": "EXECUTE"
+      },
+      {
+        "left": "Uma tabela que você cria",
+        "right": "Nada"
+      }
+    ],
+    "right_distractors": [
+      "SELECT"
+    ]
+  },
+  "ex-z8g4dmwe": {
+    "prompt": "O reporting tem SELECT em quatro colunas de customers, sem o email. O que o `SELECT * FROM customers` dá ao bruno?",
+    "hint": "O que o * pede?",
+    "choices": [
+      {
+        "text": "As quatro colunas, com o email de fora",
+        "why": "O servidor não corta uma consulta para caber num grant; ele a recusa."
+      },
+      {
+        "text": "Um erro citando a tabela",
+        "why": "Isso. permission denied for table customers, o que manda as pessoas procurarem um grant de tabela."
+      },
+      {
+        "text": "Todas as colunas, com o email como NULL",
+        "why": "Nenhuma coluna é apagada para caber num grant."
+      },
+      {
+        "text": "Um erro citando a coluna email",
+        "why": "A mensagem cita a tabela, não a coluna, e é isso que a torna enganosa."
+      }
+    ]
+  },
+  "ex-m9ts7qn1": {
+    "prompt": "O app tem `GRANT SELECT ON customers`. Alguém roda `REVOKE SELECT (email) ON customers FROM app`. O app ainda consegue ler o email?",
+    "hint": "Os dois tipos de grant ficam guardados separados.",
+    "choices": [
+      {
+        "text": "Não, o revoke de coluna recorta o email do grant de tabela",
+        "why": "Não há recorte: o app leu customer1@example.com logo depois do REVOKE."
+      },
+      {
+        "text": "Sim",
+        "why": "Isso. O REVOKE tirou um grant de coluna que o app nunca teve; o grant de tabela ainda cobre o email."
+      },
+      {
+        "text": "Não, e o app perde as outras colunas também",
+        "why": "Nada foi tirado, então nada se perdeu."
+      },
+      {
+        "text": "O REVOKE falha com um erro",
+        "why": "Ele respondeu REVOKE, como se tivesse funcionado, e essa é a armadilha."
+      }
+    ]
+  },
+  "ex-ksk575er": {
+    "prompt": "O app tem só `UPDATE (status)` em orders. Qual comando dá certo?",
+    "hint": "Quais comandos leem uma coluna?",
+    "choices": [
+      {
+        "text": "`UPDATE orders SET status = 'shipped' WHERE id = 1`",
+        "why": "O WHERE id = 1 lê o id, o que precisa de SELECT nele; isto foi recusado."
+      },
+      {
+        "text": "`UPDATE orders SET status = 'shipped' WHERE id = 1 RETURNING id`",
+        "why": "O RETURNING também lê o id, então isto falha por dois motivos."
+      },
+      {
+        "text": "`UPDATE orders SET total_cents = 0`",
+        "why": "O total_cents não está no grant."
+      },
+      {
+        "text": "`UPDATE orders SET status = 'shipped'`",
+        "why": "Isso, e mudou o milhão de linhas: o comando sem WHERE não lê nada."
+      }
+    ]
+  },
+  "ex-615qp2vs": {
+    "prompt": "Para esconder uma coluna de um papel que lê a tabela inteira, revogue o privilégio da tabela e conceda as ___ que quer manter.",
+    "hint": "Uma lista delas vai entre parênteses depois do SELECT.",
+    "blanks": [
+      {
+        "accept": [
+          "colunas",
+          "coluna"
+        ]
+      }
+    ]
+  },
+  "ex-4xgtms9h": {
+    "prompt": "A segurança por linha está ligada em customers e não há política para o reporting. O que o `SELECT count(*) FROM customers` do bruno devolve?",
+    "hint": "Sem política, sem linhas, e nenhuma palavra sobre isso.",
+    "choices": [
+      {
+        "text": "50000",
+        "why": "É o que a ana vê, como superusuária; o bruno é filtrado."
+      },
+      {
+        "text": "0, sem aviso",
+        "why": "Isso. Negação por padrão, em silêncio."
+      },
+      {
+        "text": "Um erro dizendo que não existe política",
+        "why": "Não há erro, e é isso que torna o defeito difícil de achar."
+      },
+      {
+        "text": "10000, os clientes brasileiros",
+        "why": "Isso precisou da política reporting_brazil, criada depois."
+      }
+    ]
+  },
+  "ex-q2kxsr59": {
+    "prompt": "Uma aplicação conecta como dona das próprias tabelas. A segurança por linha com boas políticas está ligada nelas. O que a aplicação vê?",
+    "hint": "Três tipos de papel pulam as políticas.",
+    "choices": [
+      {
+        "text": "Só as linhas que as políticas permitem",
+        "why": "O dono fica isento a menos que a tabela receba FORCE ROW LEVEL SECURITY."
+      },
+      {
+        "text": "Todas as linhas, porque donos não são filtrados",
+        "why": "Isso, e é mais um motivo para o dono ser um papel separado."
+      },
+      {
+        "text": "Nada, porque donos precisam de BYPASSRLS",
+        "why": "Donos pulam as políticas sem esse atributo."
+      },
+      {
+        "text": "Recebe um erro até o FORCE ROW LEVEL SECURITY ser definido",
+        "why": "O FORCE faria com que fosse filtrada; sem ele, ela vê tudo."
+      }
+    ]
+  },
+  "ex-587jb4ev": {
+    "prompt": "Um pg_dump noturno roda com um papel que a segurança por linha filtra. Qual é a correção certa?",
+    "hint": "O pg_dump recusa em vez de salvar uma cópia filtrada.",
+    "choices": [
+      {
+        "text": "Desligar a segurança por linha toda noite antes do dump",
+        "why": "Isso abre todas as tabelas a todos os papéis filtrados enquanto o dump durar."
+      },
+      {
+        "text": "Rodar o pg_dump com a opção que aceita linhas filtradas",
+        "why": "Ele terminaria, e o backup ficaria sem linhas que ninguém nota até um restore."
+      },
+      {
+        "text": "Dar BYPASSRLS ao papel de backup",
+        "why": "Isso. Esse atributo existe exatamente para esse papel."
+      },
+      {
+        "text": "Escrever uma política USING (true) para cada tabela",
+        "why": "Funciona e precisa ser lembrada a cada tabela nova; o atributo não."
+      }
+    ]
+  },
+  "ex-fz5khw9y": {
+    "prompt": "Ligue cada parte da segurança por linha ao que ela faz.",
+    "hint": "Uma lê, uma escreve, uma liga, uma força.",
+    "pairs": [
+      {
+        "left": "USING",
+        "right": "A condição que uma linha precisa cumprir para ser vista"
+      },
+      {
+        "left": "WITH CHECK",
+        "right": "A condição que uma linha nova ou alterada precisa cumprir"
+      },
+      {
+        "left": "ENABLE ROW LEVEL SECURITY",
+        "right": "Começa a aplicar as políticas da tabela"
+      },
+      {
+        "left": "FORCE ROW LEVEL SECURITY",
+        "right": "Aplica-as ao dono também"
+      }
+    ]
+  },
+  "ex-gmfff40m": {
+    "prompt": "Por que o desenho faz do dono de todas as tabelas um papel com o qual ninguém faz login?",
+    "hint": "O que um grant não consegue limitar?",
+    "choices": [
+      {
+        "text": "Papéis NOLOGIN usam menos memória",
+        "why": "Um papel é uma linha do catálogo; os atributos dele não custam nada em execução."
+      },
+      {
+        "text": "Porque um dono pode fazer qualquer coisa com as tabelas, e nenhum grant o limita",
+        "why": "Isso. Sem login, não existe senha capaz de apagar uma tabela."
+      },
+      {
+        "text": "O PostgreSQL proíbe um dono de fazer login",
+        "why": "A ana foi dona das tabelas durante quase toda a lição e fez login o tempo todo."
+      },
+      {
+        "text": "Para que o reporting herde dele",
+        "why": "O reporting não é membro do shop_owner e não deve ser."
+      }
+    ]
+  },
+  "ex-g4pygwz8": {
+    "prompt": "O app inseriu em orders sem grant em orders_id_seq. O que mudaria se `id` fosse uma coluna `serial`?",
+    "hint": "Que tipo de coluna verifica a sequência?",
+    "choices": [
+      {
+        "text": "Nada; sequências não têm privilégios",
+        "why": "Sequências têm privilégios, USAGE entre eles; colunas identity é que não os verificam."
+      },
+      {
+        "text": "O app teria de ser dono da sequência",
+        "why": "Um grant basta; a posse daria muito mais que o necessário."
+      },
+      {
+        "text": "O insert precisaria de USAGE na sequência",
+        "why": "Isso. O padrão de um serial chama nextval com os privilégios do app."
+      },
+      {
+        "text": "O insert funcionaria mas pularia um número",
+        "why": "Números pulados acontecem nos dois tipos; a questão é a recusa."
+      }
+    ]
+  },
+  "ex-ttdyx37f": {
+    "prompt": "No `\\dp`, o que `app=arwd/shop_owner` dá ao app na tabela?",
+    "hint": "a é append.",
+    "choices": [
+      {
+        "text": "Alterar, renomear, escrever e apagar",
+        "why": "Alterar e apagar são do dono e não são letras numa lista de acesso."
+      },
+      {
+        "text": "INSERT, SELECT, UPDATE, DELETE",
+        "why": "Isso: append, read, write, delete; concedidos pelo dono."
+      },
+      {
+        "text": "Todos os privilégios, porque o shop_owner os concedeu",
+        "why": "O conjunto completo do dono é arwdDxt; o app não tem truncate, references e trigger."
+      },
+      {
+        "text": "SELECT em quatro colunas",
+        "why": "Grants de coluna aparecem na coluna Column privileges, não aqui."
+      }
+    ]
+  },
+  "ex-yye3fynm": {
+    "prompt": "Um papel novo `ops` é criado com LOGIN e senha, e não recebe mais nada. No shop como esta lição o deixou, onde vem a primeira recusa?",
+    "hint": "O que o layout.sql tirou do PUBLIC?",
+    "choices": [
+      {
+        "text": "No esquema public, na primeira consulta",
+        "why": "O PUBLIC ainda tem USAGE no public; e o ops nem chega lá."
+      },
+      {
+        "text": "Na tabela, no SELECT em orders",
+        "why": "Essa seria a terceira porta; a primeira já está fechada para o ops."
+      },
+      {
+        "text": "No login",
+        "why": "Isso. O CONNECT no shop foi revogado do PUBLIC e concedido só ao app e ao reporting."
+      },
+      {
+        "text": "Em lugar nenhum, até o pg_hba.conf citar o ops",
+        "why": "A linha host cobre todos os usuários; o banco o recusa por privilégio."
+      }
+    ]
+  },
+  "ex-rtz90e2f": {
+    "prompt": "Uma analista de suporte precisa ver só os clientes do próprio país e nunca o e-mail deles. Qual par de ferramentas faz isso?",
+    "hint": "Uma esconde colunas, a outra linhas.",
+    "choices": [
+      {
+        "text": "Um grant de tabela, mais REVOKE SELECT (email)",
+        "why": "O revoke de coluna não faz nada enquanto o grant de tabela existir, e nenhuma linha é filtrada."
+      },
+      {
+        "text": "BYPASSRLS e um grant de coluna",
+        "why": "O BYPASSRLS tira o filtro de linhas em vez de aplicá-lo."
+      },
+      {
+        "text": "Só uma política, cujo USING deixa o email de fora",
+        "why": "Uma política escolhe linhas, não colunas."
+      },
+      {
+        "text": "Um grant de colunas sem o email, mais uma política de segurança por linha no país",
+        "why": "Isso. Políticas estreitam o que um grant mostra; nunca o substituem."
+      }
+    ]
+  },
+  "ex-8ak30t0c": {
+    "prompt": "Ordene o que cada um destes controla, do mais amplo ao mais estreito.",
+    "hint": "Um banco contém esquemas, um esquema contém tabelas, uma tabela contém colunas e linhas.",
+    "items": [
+      "CONNECT num banco",
+      "USAGE num esquema",
+      "SELECT numa tabela",
+      "SELECT em algumas das colunas dela",
+      "Uma política que escolhe algumas das linhas dela"
+    ]
+  },
+  "ex-9b77aex6": {
+    "prompt": "Quantas linhas o `UPDATE orders SET status = 'shipped'` mudou para o app, antes do rollback?",
+    "hint": "Todas."
+  }
+}

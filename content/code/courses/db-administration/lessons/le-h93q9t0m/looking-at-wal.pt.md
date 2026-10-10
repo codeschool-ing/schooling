@@ -27,8 +27,7 @@ e preenchido do começo. O nome tem 24 dígitos hexadecimais em três grupos de 
 `00000001`, é a **timeline**, que só muda quando um servidor é recuperado para um ponto anterior ou
 uma réplica é promovida, e as duas coisas pertencem ao db-reliability. Os outros dois juntos são o
 número do segmento, contado desde o começo da história do cluster, então os nomes ficam em ordem
-de escrita. `archive_status` é um diretório, usado quando os segmentos são copiados para um backup,
-e aqui está vazio.
+de escrita. `archive_status` é um diretório, usado quando os segmentos são copiados para um backup.
 
 ## Onde o servidor está agora
 

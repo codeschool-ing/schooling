@@ -103,7 +103,7 @@ on 'pg_dump --schema-only ana | wc -l'
 block putback
 printf "%s\n" "DROP TABLE app_users, warehouses;" "DROP EXTENSION pgcrypto, postgis, pg_trgm;" "REVOKE CREATE ON DATABASE ana FROM clerk;" "DROP ROLE clerk;" "\\c shop" "DROP EXTENSION pg_stat_statements;" "ALTER SYSTEM RESET shared_preload_libraries;" | session ana
 on 'sudo systemctl restart postgresql@16-main'
-printf "SHOW shared_preload_libraries;\n" | session shop
+on 'psql shop -c "SHOW shared_preload_libraries"'
 lab as 'rm -f workload.sql warehouses.sql'
 
 lab down

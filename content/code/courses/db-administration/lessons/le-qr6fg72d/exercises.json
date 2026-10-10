@@ -1,0 +1,752 @@
+[
+  {
+    "id": "ex-k8qz2pyr",
+    "version": 1,
+    "section": "starting-here",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does this lesson test other roles with `psql -h localhost -U bruno shop` instead of `SET ROLE bruno` from ana's session?",
+    "hint": "When is the first door checked?",
+    "choices": [
+      {
+        "text": "SET ROLE is not allowed on a role with a password",
+        "correct": false,
+        "why": "A password has nothing to do with SET ROLE; ana switched to bruno freely in lesson 11."
+      },
+      {
+        "text": "Over the socket, SET ROLE ignores grants",
+        "correct": false,
+        "why": "SET ROLE checks table privileges faithfully wherever the session came from."
+      },
+      {
+        "text": "-h localhost is faster",
+        "correct": false,
+        "why": "Speed is not the reason; the socket is if anything quicker."
+      },
+      {
+        "text": "CONNECT is checked when a connection opens, and SET ROLE opens none",
+        "correct": true,
+        "why": "Right. A test of the database door needs a real login."
+      }
+    ]
+  },
+  {
+    "id": "ex-g5f8p3vm",
+    "version": 1,
+    "section": "starting-here",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`CREATE ROLE bruno LOGIN ___ ROLE reporting` makes bruno a member of reporting as he is created.",
+    "hint": "A two-letter keyword.",
+    "blanks": [
+      {
+        "accept": [
+          "IN"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dfj3fbaj",
+    "version": 1,
+    "section": "three-doors",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order the three doors a role passes on its way to a row of `reports.sales_by_month`.",
+    "hint": "Outside in.",
+    "items": [
+      "CONNECT on the database shop",
+      "USAGE on the schema reports",
+      "SELECT on the view"
+    ]
+  },
+  {
+    "id": "ex-8c3hgwnj",
+    "version": 1,
+    "section": "three-doors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "reporting has SELECT on `reports.sales_by_month`, and bruno's query on it fails with `permission denied for schema reports`. What is missing?",
+    "hint": "Read the last word before the name.",
+    "choices": [
+      {
+        "text": "SELECT on orders, which the view reads",
+        "correct": false,
+        "why": "The view reads orders with its owner's rights; bruno read it later with no grant on orders."
+      },
+      {
+        "text": "USAGE on reports",
+        "correct": true,
+        "why": "Right. A name in a schema cannot even be looked up without USAGE on it."
+      },
+      {
+        "text": "CONNECT on shop, which was revoked from PUBLIC",
+        "correct": false,
+        "why": "Without CONNECT he would not be in a session to see this error; it would have come at login."
+      },
+      {
+        "text": "The view must be recreated after a GRANT",
+        "correct": false,
+        "why": "Grants take effect at once; one more GRANT on the schema was enough."
+      }
+    ]
+  },
+  {
+    "id": "ex-ykgn7h5k",
+    "version": 1,
+    "section": "three-doors",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `\\l shop`, the access list shows `=T/ana`. What does the empty part before `=` mean?",
+    "hint": "Who is everybody?",
+    "choices": [
+      {
+        "text": "The owner, written short",
+        "correct": false,
+        "why": "The owner has its own entry, ana=CTc/ana."
+      },
+      {
+        "text": "A role that was dropped",
+        "correct": false,
+        "why": "The server refuses to drop a role that holds privileges, so an access list never names a vanished one."
+      },
+      {
+        "text": "A grant still waiting for a reload",
+        "correct": false,
+        "why": "Grants are catalogue rows and need no reload."
+      },
+      {
+        "text": "PUBLIC: every role, including those created tomorrow",
+        "correct": true,
+        "why": "Right. Here everybody keeps T, temporary tables, and lost c, connect."
+      }
+    ]
+  },
+  {
+    "id": "ex-xw9txezj",
+    "version": 1,
+    "section": "three-doors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "bruno reads `reports.sales_by_month`, a sum over orders, though he has no privilege on orders. Why?",
+    "hint": "Whose rights does a view's query run with?",
+    "choices": [
+      {
+        "text": "Aggregates need no privilege",
+        "correct": false,
+        "why": "`SELECT count(*) FROM customers` was refused to him directly; aggregates are checked like anything else."
+      },
+      {
+        "text": "A view runs its query with the privileges of its owner, ana",
+        "correct": true,
+        "why": "Right. The view is a door of its own, letting through what its query produces."
+      },
+      {
+        "text": "USAGE on a schema grants SELECT on its tables",
+        "correct": false,
+        "why": "USAGE only lets names be looked up; orders is in public, where he has USAGE and was still refused."
+      },
+      {
+        "text": "The view was created WITH security_invoker",
+        "correct": false,
+        "why": "That option does the opposite: it checks the querying role on the tables underneath."
+      }
+    ]
+  },
+  {
+    "id": "ex-acbfkz2z",
+    "version": 1,
+    "section": "three-doors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An audit script must report, for forty roles, whether each one can read `orders`, without knowing their passwords. What should it call?",
+    "hint": "The server can answer for any role.",
+    "choices": [
+      {
+        "text": "`has_table_privilege(role, 'orders', 'SELECT')`",
+        "correct": true,
+        "why": "Right. It follows memberships the way a real session does, which reading the access list by eye does not."
+      },
+      {
+        "text": "Parse the output of `\\dp orders` for each role's name",
+        "correct": false,
+        "why": "A role with the privilege through a group never appears by name in the list."
+      },
+      {
+        "text": "`SET ROLE` to each one and run a SELECT, trapping the errors",
+        "correct": false,
+        "why": "It works for tables but costs forty queries on a big table, and misses CONNECT entirely."
+      },
+      {
+        "text": "Read pg_authid",
+        "correct": false,
+        "why": "pg_authid holds attributes and passwords, not grants on tables."
+      }
+    ]
+  },
+  {
+    "id": "ex-mbqswttr",
+    "version": 1,
+    "section": "the-public-schema",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On a database created by PostgreSQL 16, what may a role that can connect, and has been given nothing, do in the `public` schema?",
+    "hint": "`=U/pg_database_owner`",
+    "choices": [
+      {
+        "text": "Create tables, but not functions",
+        "correct": false,
+        "why": "bruno's CREATE TABLE was refused at the schema."
+      },
+      {
+        "text": "Nothing at all, not even look up names, until somebody grants USAGE to it",
+        "correct": false,
+        "why": "PUBLIC still has USAGE on public, which is why bruno's refusal on customers came from the table door."
+      },
+      {
+        "text": "Look names up, but create nothing",
+        "correct": true,
+        "why": "Right. PUBLIC has U and, since 15, no C."
+      },
+      {
+        "text": "Read every table in it",
+        "correct": false,
+        "why": "USAGE lets names be looked up; reading a table needs a privilege on the table."
+      }
+    ]
+  },
+  {
+    "id": "ex-4zr0efpb",
+    "version": 1,
+    "section": "the-public-schema",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A database was moved from PostgreSQL 13 to 16 with pg_upgrade. `\\dn+ public` shows `=UC/postgres`. What should you conclude?",
+    "hint": "Which databases does the 15 default reach?",
+    "choices": [
+      {
+        "text": "pg_upgrade failed halfway and the catalogue is corrupt",
+        "correct": false,
+        "why": "Keeping the old access list is exactly what a successful upgrade does."
+      },
+      {
+        "text": "Every role can still create objects in public, and REVOKE CREATE ON SCHEMA public FROM PUBLIC is due",
+        "correct": true,
+        "why": "Right. The new default applies to databases created by 15 or later, not to upgraded ones."
+      },
+      {
+        "text": "Nothing: version 16 ignores CREATE on public whatever the list says",
+        "correct": false,
+        "why": "The server obeys the access list it has; the default is only what a new database starts with."
+      },
+      {
+        "text": "The schema now belongs to pg_database_owner",
+        "correct": false,
+        "why": "The grantor shown is postgres, the old owner; ownership came across unchanged."
+      }
+    ]
+  },
+  {
+    "id": "ex-0m2xzp19",
+    "version": 1,
+    "section": "the-public-schema",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `REVOKE CONNECT ON DATABASE shop FROM PUBLIC`, bruno still created a temporary table in a session. Why?",
+    "hint": "Read the letters left beside the empty grantee.",
+    "choices": [
+      {
+        "text": "Temporary tables bypass privileges",
+        "correct": false,
+        "why": "Creating one needs TEMPORARY on the database; it is a privilege like the others."
+      },
+      {
+        "text": "Because the temporary table was created in public, where PUBLIC has CREATE",
+        "correct": false,
+        "why": "Temporary tables live in a schema of their own per session, and PUBLIC has no CREATE on public."
+      },
+      {
+        "text": "PUBLIC kept T on the database",
+        "correct": true,
+        "why": "Right. Only CONNECT was revoked; TEMPORARY stays until revoked too."
+      },
+      {
+        "text": "reporting was granted TEMPORARY with CONNECT",
+        "correct": false,
+        "why": "The grant named CONNECT only; TEMPORARY came from PUBLIC."
+      }
+    ]
+  },
+  {
+    "id": "ex-pz96e7zq",
+    "version": 1,
+    "section": "the-public-schema",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each object to what PUBLIC is given on it by default in PostgreSQL 16.",
+    "hint": "A table you create gives nothing.",
+    "pairs": [
+      {
+        "left": "A database",
+        "right": "CONNECT and TEMPORARY"
+      },
+      {
+        "left": "The public schema",
+        "right": "USAGE"
+      },
+      {
+        "left": "A function",
+        "right": "EXECUTE"
+      },
+      {
+        "left": "A table you create",
+        "right": "Nothing"
+      }
+    ],
+    "right_distractors": [
+      "SELECT"
+    ]
+  },
+  {
+    "id": "ex-z8g4dmwe",
+    "version": 1,
+    "section": "columns",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "reporting has SELECT on four columns of customers, email not among them. What does `SELECT * FROM customers` give bruno?",
+    "hint": "What does * ask for?",
+    "choices": [
+      {
+        "text": "The four columns, with email left out",
+        "correct": false,
+        "why": "The server does not trim a query to fit a grant; it refuses it."
+      },
+      {
+        "text": "An error naming the table",
+        "correct": true,
+        "why": "Right. permission denied for table customers, which sends people looking for a table grant."
+      },
+      {
+        "text": "All columns, email shown as NULL",
+        "correct": false,
+        "why": "No column is ever blanked to fit a grant."
+      },
+      {
+        "text": "An error naming the email column",
+        "correct": false,
+        "why": "The message names the table, not the column, which is what makes it misleading."
+      }
+    ]
+  },
+  {
+    "id": "ex-m9ts7qn1",
+    "version": 1,
+    "section": "columns",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "app has `GRANT SELECT ON customers`. Somebody runs `REVOKE SELECT (email) ON customers FROM app`. Can app still read email?",
+    "hint": "The two kinds of grant are stored apart.",
+    "choices": [
+      {
+        "text": "No, the column revoke carves email out of the table grant",
+        "correct": false,
+        "why": "There is no carving: app read customer1@example.com right after the REVOKE."
+      },
+      {
+        "text": "Yes",
+        "correct": true,
+        "why": "Right. The REVOKE removed a column grant app never had; the table grant still covers email."
+      },
+      {
+        "text": "No, and app loses the other columns too",
+        "correct": false,
+        "why": "Nothing was removed at all, so nothing was lost."
+      },
+      {
+        "text": "The REVOKE fails with an error",
+        "correct": false,
+        "why": "It answered REVOKE, as if it had worked, which is the trap."
+      }
+    ]
+  },
+  {
+    "id": "ex-ksk575er",
+    "version": 1,
+    "section": "columns",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "app has only `UPDATE (status)` on orders. Which statement succeeds?",
+    "hint": "Which statements read a column?",
+    "choices": [
+      {
+        "text": "`UPDATE orders SET status = 'shipped' WHERE id = 1`",
+        "correct": false,
+        "why": "WHERE id = 1 reads id, which needs SELECT on it; this was refused."
+      },
+      {
+        "text": "`UPDATE orders SET status = 'shipped' WHERE id = 1 RETURNING id`",
+        "correct": false,
+        "why": "RETURNING reads id too, so this fails for two reasons."
+      },
+      {
+        "text": "`UPDATE orders SET total_cents = 0`",
+        "correct": false,
+        "why": "total_cents is not in the grant."
+      },
+      {
+        "text": "`UPDATE orders SET status = 'shipped'`",
+        "correct": true,
+        "why": "Right, and it changed all million rows: the statement with no WHERE reads nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-615qp2vs",
+    "version": 1,
+    "section": "columns",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To hide one column from a role that reads the whole table, revoke the table privilege and grant the ___ you want to keep.",
+    "hint": "A list of them goes in brackets after SELECT.",
+    "blanks": [
+      {
+        "accept": [
+          "columns",
+          "column"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4xgtms9h",
+    "version": 1,
+    "section": "row-level-security",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Row-level security is enabled on customers and there is no policy for reporting. What does bruno's `SELECT count(*) FROM customers` return?",
+    "hint": "No policy, no rows, and no word about it.",
+    "choices": [
+      {
+        "text": "50000",
+        "correct": false,
+        "why": "That is what ana sees, as a superuser; bruno is filtered."
+      },
+      {
+        "text": "0, with no warning",
+        "correct": true,
+        "why": "Right. Default deny, in silence."
+      },
+      {
+        "text": "An error saying no policy exists",
+        "correct": false,
+        "why": "There is no error, which is what makes the fault hard to find."
+      },
+      {
+        "text": "10000, the Brazilian customers",
+        "correct": false,
+        "why": "That needed the reporting_brazil policy, created afterwards."
+      }
+    ]
+  },
+  {
+    "id": "ex-q2kxsr59",
+    "version": 1,
+    "section": "row-level-security",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An application connects as the owner of its tables. Row-level security with good policies is enabled on them. What does the application see?",
+    "hint": "Three kinds of role skip the policies.",
+    "choices": [
+      {
+        "text": "Only the rows its policies allow",
+        "correct": false,
+        "why": "The owner is exempt unless the table is given FORCE ROW LEVEL SECURITY."
+      },
+      {
+        "text": "Every row, because owners are not filtered",
+        "correct": true,
+        "why": "Right, which is one more reason for the owner to be a separate role."
+      },
+      {
+        "text": "Nothing, because owners need BYPASSRLS",
+        "correct": false,
+        "why": "Owners skip the policies without that attribute."
+      },
+      {
+        "text": "It gets an error until FORCE ROW LEVEL SECURITY is set",
+        "correct": false,
+        "why": "FORCE would make it filtered; without it, it simply sees everything."
+      }
+    ]
+  },
+  {
+    "id": "ex-587jb4ev",
+    "version": 1,
+    "section": "row-level-security",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly pg_dump runs as a role that row-level security filters. What is the right fix?",
+    "hint": "pg_dump refuses rather than save a filtered copy.",
+    "choices": [
+      {
+        "text": "Disable row-level security every night before the dump",
+        "correct": false,
+        "why": "That opens every table to every filtered role for the length of the dump."
+      },
+      {
+        "text": "Run pg_dump with the option that accepts filtered rows",
+        "correct": false,
+        "why": "It would finish, and the backup would be missing rows nobody notices until a restore."
+      },
+      {
+        "text": "Give the backup role BYPASSRLS",
+        "correct": true,
+        "why": "Right. That attribute exists for exactly this role."
+      },
+      {
+        "text": "Write a policy USING (true) for every table",
+        "correct": false,
+        "why": "It works and has to be remembered for every new table; the attribute does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-fz5khw9y",
+    "version": 1,
+    "section": "row-level-security",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of row-level security to what it does.",
+    "hint": "One reads, one writes, one switches, one forces.",
+    "pairs": [
+      {
+        "left": "USING",
+        "right": "The condition a row must meet to be seen"
+      },
+      {
+        "left": "WITH CHECK",
+        "right": "The condition a new or changed row must meet"
+      },
+      {
+        "left": "ENABLE ROW LEVEL SECURITY",
+        "right": "Starts applying the table's policies"
+      },
+      {
+        "left": "FORCE ROW LEVEL SECURITY",
+        "right": "Applies them to the owner too"
+      }
+    ]
+  },
+  {
+    "id": "ex-gmfff40m",
+    "version": 1,
+    "section": "a-least-privilege-layout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the layout make the owner of every table a role that nobody logs in as?",
+    "hint": "What can a grant not limit?",
+    "choices": [
+      {
+        "text": "NOLOGIN roles use less memory",
+        "correct": false,
+        "why": "A role is a catalogue row; its attributes cost nothing at run time."
+      },
+      {
+        "text": "Because an owner can do anything to its tables, and no grant limits it",
+        "correct": true,
+        "why": "Right. With no login, no password exists that could drop a table."
+      },
+      {
+        "text": "PostgreSQL forbids an owner from logging in",
+        "correct": false,
+        "why": "ana owned the tables for most of the lesson and logged in all the time."
+      },
+      {
+        "text": "So that reporting inherits from it",
+        "correct": false,
+        "why": "reporting is not a member of shop_owner and must not be."
+      }
+    ]
+  },
+  {
+    "id": "ex-g4pygwz8",
+    "version": 1,
+    "section": "a-least-privilege-layout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "app inserted into orders with no grant on orders_id_seq. What would have changed if `id` were a `serial` column?",
+    "hint": "Which kind of column checks its sequence?",
+    "choices": [
+      {
+        "text": "Nothing; sequences carry no privileges",
+        "correct": false,
+        "why": "Sequences have privileges, USAGE among them; identity columns just do not check them."
+      },
+      {
+        "text": "app would have to own the sequence",
+        "correct": false,
+        "why": "A grant is enough; ownership would give far more than needed."
+      },
+      {
+        "text": "The insert would need USAGE on the sequence",
+        "correct": true,
+        "why": "Right. A serial default calls nextval with app's privileges."
+      },
+      {
+        "text": "The insert would work but skip a number",
+        "correct": false,
+        "why": "Skipped numbers happen with either kind; the question is the refusal."
+      }
+    ]
+  },
+  {
+    "id": "ex-ttdyx37f",
+    "version": 1,
+    "section": "a-least-privilege-layout",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `\\dp`, what does `app=arwd/shop_owner` give app on the table?",
+    "hint": "a is append.",
+    "choices": [
+      {
+        "text": "Alter, rename, write and drop",
+        "correct": false,
+        "why": "Altering and dropping belong to the owner and are not letters in an access list."
+      },
+      {
+        "text": "INSERT, SELECT, UPDATE, DELETE",
+        "correct": true,
+        "why": "Right: append, read, write, delete; granted by the owner."
+      },
+      {
+        "text": "All privileges, because shop_owner granted them",
+        "correct": false,
+        "why": "The owner's full set is arwdDxt; app lacks truncate, references and trigger."
+      },
+      {
+        "text": "SELECT on four columns",
+        "correct": false,
+        "why": "Column grants appear in the Column privileges column, not here."
+      }
+    ]
+  },
+  {
+    "id": "ex-yye3fynm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new role `ops` is created with LOGIN and a password, and given nothing else. On shop as left by this lesson, where is its first refusal?",
+    "hint": "What did layout.sql take from PUBLIC?",
+    "choices": [
+      {
+        "text": "At the schema public, on its first query",
+        "correct": false,
+        "why": "PUBLIC still has USAGE on public; and ops never gets that far."
+      },
+      {
+        "text": "At the table, on SELECT from orders",
+        "correct": false,
+        "why": "That would be the third door; the first one is already shut for ops."
+      },
+      {
+        "text": "At login",
+        "correct": true,
+        "why": "Right. CONNECT on shop was revoked from PUBLIC and granted only to app and reporting."
+      },
+      {
+        "text": "Nowhere, until pg_hba.conf names ops",
+        "correct": false,
+        "why": "The host line covers all users; the database refuses it by privilege."
+      }
+    ]
+  },
+  {
+    "id": "ex-rtz90e2f",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A support analyst must see only customers of her own country and never their e-mail. Which pair of tools does that?",
+    "hint": "One hides columns, the other rows.",
+    "choices": [
+      {
+        "text": "A table grant, plus REVOKE SELECT (email)",
+        "correct": false,
+        "why": "The column revoke does nothing while the table grant exists, and no rows are filtered."
+      },
+      {
+        "text": "BYPASSRLS and a column grant",
+        "correct": false,
+        "why": "BYPASSRLS removes the row filter instead of applying it."
+      },
+      {
+        "text": "A policy alone, whose USING leaves email out",
+        "correct": false,
+        "why": "A policy chooses rows, not columns."
+      },
+      {
+        "text": "A column grant without email, plus a row-level security policy on country",
+        "correct": true,
+        "why": "Right. Policies narrow what a grant shows; they never replace it."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ak30t0c",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order what each of these controls, from the widest to the narrowest.",
+    "hint": "A database holds schemas, a schema holds tables, a table holds columns and rows.",
+    "items": [
+      "CONNECT on a database",
+      "USAGE on a schema",
+      "SELECT on a table",
+      "SELECT on some of its columns",
+      "A policy choosing some of its rows"
+    ]
+  },
+  {
+    "id": "ex-9b77aex6",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many rows did `UPDATE orders SET status = 'shipped'` change for app, before the rollback?",
+    "hint": "All of them.",
+    "value": 1000000,
+    "tolerance": 0
+  }
+]

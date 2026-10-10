@@ -10,11 +10,19 @@ default:
 
 ```
 shop=# SHOW log_line_prefix;
+ log_line_prefix  
+------------------
+ %m [%p] %q%u@%d 
+(1 row)
+
 shop=# SELECT 1/0;
+ERROR:  division by zero
 ```
 
 ```
 ana@db:~$ sudo tail -n 2 /var/log/postgresql/postgresql-16-main.log
+2026-10-10 16:40:30.823 -03 [211] ana@shop ERROR:  division by zero
+2026-10-10 16:40:30.823 -03 [211] ana@shop STATEMENT:  SELECT 1/0;
 ```
 
 Each `%` escape is replaced on every line:
@@ -46,12 +54,23 @@ application set. Changing the prefix needs only a reload:
 
 ```
 shop=# ALTER SYSTEM SET log_line_prefix = '%m [%p] %q%u@%d %a ';
+ALTER SYSTEM
+
 shop=# SELECT pg_reload_conf();
+ pg_reload_conf 
+----------------
+ t
+(1 row)
+
 shop=# SELECT 1/0;
+ERROR:  division by zero
 ```
 
 ```
 ana@db:~$ sudo tail -n 3 /var/log/postgresql/postgresql-16-main.log
+2026-10-10 16:40:33.278 -03 [102] LOG:  parameter "log_line_prefix" changed to "%m [%p] %q%u@%d %a "
+2026-10-10 16:40:33.578 -03 [220] ana@shop psql ERROR:  division by zero
+2026-10-10 16:40:33.578 -03 [220] ana@shop psql STATEMENT:  SELECT 1/0;
 ```
 
 The reload itself is logged, with the new value, and the line from the postmaster has no user

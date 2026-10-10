@@ -22,8 +22,8 @@ ana@db:~$ psql -p 5433 shop
 shop=# SELECT relname, last_analyze FROM pg_stat_user_tables ORDER BY relname;
   relname  |         last_analyze          
 -----------+-------------------------------
- customers | 2026-10-10 04:44:06.193517-03
- orders    | 2026-10-10 04:44:06.122445-03
+ customers | 2026-10-10 16:41:19.983082-03
+ orders    | 2026-10-10 16:41:19.861384-03
 (2 rows)
 ```
 
@@ -70,17 +70,17 @@ shop=# \q
 ```
 
 `pg_stat_statements` went from 1.10 to 1.11, the version 17 ships. Run the script, or the
-`ALTER EXTENSION … UPDATE` it contains, in every database it names. Lesson 18 showed where
-`\dx` gets those numbers.
+`ALTER EXTENSION … UPDATE` it contains, in every database it names. Lesson 18 ended on keeping
+extensions current, and this is the moment it was preparing for.
 
 ## Everything else to check
 
-- **The application.** Point a test copy of it at the upgraded rehearsal and run what it does. The
+- The application. Point a test copy of it at the upgraded rehearsal and run what it does. The
   release notes of the new major version have a section on *incompatibilities*, and it is read
   against your own code before the real night, not during it.
-- **The configuration.** `pg_upgradecluster` copied `postgresql.conf` across. A parameter that was
+- The configuration. `pg_upgradecluster` copied `postgresql.conf` across. A parameter that was
   removed or renamed in the new version stops the server at start, and the log names it.
-- **Replicas and backups.** A physical standby cannot follow a primary of a different major
+- Replicas and backups. A physical standby cannot follow a primary of a different major
   version, and a base backup taken by 16 does not restore into 17. Both are rebuilt after the
   upgrade; db-reliability lessons 1 to 10 and 11 to 13 say how.
 
@@ -95,10 +95,7 @@ ana@db:~$ sudo pg_dropcluster 16 rehearsal
 ana@db:~$ sudo du -sh /var/lib/postgresql/17/rehearsal
 165M	/var/lib/postgresql/17/rehearsal
 ana@db:~$ psql -p 5433 -Atc "SELECT count(*) FROM orders;" shop
-  count  
----------
- 1000000
-(1 row)
+1000000
 ```
 
 **The data is still there after the old directory was deleted.** Each file had two names, and
@@ -114,26 +111,26 @@ ana@db:~$ sudo pg_dropcluster --stop 17 rehearsal
 ana@db:~$ sudo pg_dropcluster --stop 17 main
 ana@db:~$ sudo pg_dropcluster --stop 16 source
 ana@db:~$ pg_lsclusters -h
-Ver Cluster Port Status Owner    Data directory              Log file
-16  main    5432 online postgres /var/lib/postgresql/16/main /var/log/postgresql/postgresql-16-main.log
+16 main 5432 online postgres /var/lib/postgresql/16/main /var/log/postgresql/postgresql-16-main.log
 ```
 
 **One cluster, `16/main`, as at the start of the lesson.** Ask it what it is:
 
 ```
 ana@db:~$ psql -c "SHOW server_version;" -c "SELECT pg_postmaster_start_time();"
-                                                                 version                                                                  
-------------------------------------------------------------------------------------------------------------------------------------------
- PostgreSQL 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, 64-bit
+            server_version             
+---------------------------------------
+ 16.15 (Ubuntu 16.15-0ubuntu0.24.04.1)
 (1 row)
 
    pg_postmaster_start_time    
 -------------------------------
- 2026-10-10 04:43:35.009418-03
+ 2026-10-10 16:40:20.370122-03
 (1 row)
 ```
 
-Still 16.15, and its start time is the one the minor upgrade left at the beginning of this lesson:
-nothing in between restarted it, upgraded it or wrote to it. PostgreSQL 17's programs stay
+Still 16.15, and its start time has not moved since the minor upgrade at the beginning of the
+recording: nothing in between restarted it, upgraded it or wrote to it. On your server, compare it
+with the start time before this lesson; it should be the same. PostgreSQL 17's programs stay
 installed, which costs some disk space and nothing else; `sudo apt remove postgresql-17` takes them
 away if you prefer, and this course does not need them again.

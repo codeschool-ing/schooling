@@ -80,8 +80,8 @@ planejador percorre listas mais longas. É por isso que ele é aumentado coluna 
 uma estimativa errada, e quase nunca por `default_statistics_target`, que aumentaria o alvo de toda
 coluna de toda tabela de uma vez.
 
-A coluna que merece isso tem mais valores importantes do que uma lista de 100 comporta: um `country`
-ou um `product_id` em que algumas centenas de valores levam a maior parte das linhas e o resto vai
+A coluna que merece isso tem mais valores importantes do que uma lista de 100 comporta. O caso comum é
+um `country` ou um `product_id` em que algumas centenas de valores levam a maior parte das linhas e o resto vai
 rareando, de modo que um valor logo fora da lista é estimado como se fosse médio. O jeito de achar
 uma é a comparação que a seção anterior fez — estimativa contra o real no `EXPLAIN ANALYZE`, na
 condição sobre aquela coluna — e a lição 7 de `db-performance` percorre o histograma e os valores

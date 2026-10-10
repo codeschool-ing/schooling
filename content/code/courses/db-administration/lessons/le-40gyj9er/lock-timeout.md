@@ -13,20 +13,41 @@ The same three terminals, with one difference: the second sets `lock_timeout` be
 ```
 ana@db:~$ psql shop
 shop=# BEGIN;
+BEGIN
+
 shop=*# SELECT count(*) FROM orders_live;
+  count  
+---------
+ 1000000
+(1 row)
 ```
 
 ```
 ana@db:~$ psql shop
 shop=# \timing on
+Timing is on.
+
 shop=# SET lock_timeout = '2s';
+SET
+Time: 0.252 ms
+
 shop=# ALTER TABLE orders_live ADD COLUMN source text;
+ERROR:  canceling statement due to lock timeout
+Time: 2000.671 ms (00:02.001)
 ```
 
 ```
 ana@db:~$ psql shop
 shop=# \timing on
+Timing is on.
+
 shop=# SELECT status FROM orders_live WHERE id = 1;
+ status 
+--------
+ paid
+(1 row)
+
+Time: 1238.296 ms (00:01.238)
 ```
 
 **The `ALTER` gave up after two seconds**, with `canceling statement due to lock timeout`, and the
@@ -56,12 +77,25 @@ the first terminal a few seconds later:
 ```
 ana@db:~$ psql shop
 shop=# BEGIN;
+BEGIN
+
 shop=*# SELECT count(*) FROM orders_live;
+  count  
+---------
+ 1000000
+(1 row)
+
 shop=*# COMMIT;
+COMMIT
 ```
 
 ```
 ana@db:~$ bash retry-ddl.sh
+ERROR:  canceling statement due to lock timeout
+attempt 1: gave up the queue; trying again in 3 s
+ERROR:  canceling statement due to lock timeout
+attempt 2: gave up the queue; trying again in 3 s
+attempt 3: done
 ```
 
 Two attempts gave up while the transaction was open; the next one, after the commit, got its lock

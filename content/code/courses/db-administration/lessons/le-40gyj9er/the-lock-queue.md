@@ -23,7 +23,12 @@ Every later lesson expects `shop` as lesson 4 left it, and the last section drop
 ```
 ana@db:~$ psql shop
 shop=# \timing on
+Timing is on.
+
 shop=# CREATE TABLE orders_live AS SELECT * FROM orders;
+SELECT 1000000
+Time: 859.081 ms
+
 shop=# \q
 ```
 
@@ -40,8 +45,19 @@ the way a report or a slow page does, and then stays inside the transaction:
 ```
 ana@db:~$ psql shop
 shop=# SELECT pg_backend_pid();
+ pg_backend_pid 
+----------------
+            201
+(1 row)
+
 shop=# BEGIN;
+BEGIN
+
 shop=*# SELECT count(*) FROM orders_live;
+  count  
+---------
+ 1000000
+(1 row)
 ```
 
 The `*` in `shop=*#` is psql saying a transaction is open. The `SELECT` has finished, and its lock
@@ -54,8 +70,17 @@ changes there is, as the section after next measures:
 ```
 ana@db:~$ psql shop
 shop=# SELECT pg_backend_pid();
+ pg_backend_pid 
+----------------
+            203
+(1 row)
+
 shop=# \timing on
+Timing is on.
+
 shop=# ALTER TABLE orders_live ADD COLUMN note text;
+ALTER TABLE
+Time: 3913.761 ms (00:03.914)
 ```
 
 It does not come back. And in the third terminal, the kind of query a website sends a hundred times
@@ -64,8 +89,21 @@ a second:
 ```
 ana@db:~$ psql shop
 shop=# SELECT pg_backend_pid();
+ pg_backend_pid 
+----------------
+            205
+(1 row)
+
 shop=# \timing on
+Timing is on.
+
 shop=# SELECT status FROM orders_live WHERE id = 1;
+ status 
+--------
+ paid
+(1 row)
+
+Time: 2666.672 ms (00:02.667)
 ```
 
 That does not come back either.
@@ -78,13 +116,27 @@ A fourth terminal can see the whole queue. `pg_stat_activity` has a row per conn
 ```
 ana@db:~$ psql shop
 shop=# SELECT pid, pg_blocking_pids(pid) AS blocked_by, state, wait_event_type, wait_event, left(query, 45) AS query FROM pg_stat_activity WHERE datname = 'shop' AND pid <> pg_backend_pid() ORDER BY backend_start;
+ pid | blocked_by |        state        | wait_event_type | wait_event |                     query                     
+-----+------------+---------------------+-----------------+------------+-----------------------------------------------
+ 201 | {}         | idle in transaction | Client          | ClientRead | SELECT count(*) FROM orders_live;
+ 203 | {201}      | active              | Lock            | relation   | ALTER TABLE orders_live ADD COLUMN note text;
+ 205 | {203}      | active              | Lock            | relation   | SELECT status FROM orders_live WHERE id = 1;
+(3 rows)
+
 shop=# SELECT pid, mode, granted FROM pg_locks WHERE relation = 'orders_live'::regclass ORDER BY granted DESC, pid;
+ pid |        mode         | granted 
+-----+---------------------+---------
+ 201 | AccessShareLock     | t
+ 203 | AccessExclusiveLock | f
+ 205 | AccessShareLock     | f
+(3 rows)
 ```
 
 Read it from the top:
 
-- The first session is **`idle in transaction`**. It is doing nothing at all, and it holds an
-  `AccessShareLock` that was granted.
+- The first session is **`idle in transaction`**. Its wait is `ClientRead`, waiting for its client
+  to send the next command: it is doing nothing at all, and it holds an `AccessShareLock` that was
+  granted.
 - The `ALTER` is `active` and waiting: `wait_event_type` is `Lock` and `wait_event` is `relation`,
   a lock on a table. `blocked_by` names the first session.
 - The `SELECT` is waiting too, and **`blocked_by` names the `ALTER`**, not the first session. Its
@@ -102,6 +154,7 @@ Commit in the first terminal:
 
 ```
 shop=*# COMMIT;
+COMMIT
 ```
 
 The `ALTER` gets its lock, adds the column in a moment, and releases it; the `SELECT` runs right

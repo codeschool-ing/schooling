@@ -136,8 +136,8 @@ shop=# EXPLAIN ANALYZE SELECT c.country, count(*) FROM orders_copy o JOIN custom
 (27 rows)
 ```
 
-The plan is longer because it is a better one: the bitmap index scan now expects 297,267 rows and finds
-300,000, the customers are read once into a hash table (`Hash Join`) instead of looked up 300,000
+The plan is longer because it is a better one. The bitmap index scan now expects 297,267 rows and finds
+300,000. The customers are read once into a hash table (`Hash Join`) instead of looked up 300,000
 times, and two parallel workers share the work. **82.626 ms instead of 704.651 ms, for the same
 query on the same data**, and the only thing that changed was the summary.
 

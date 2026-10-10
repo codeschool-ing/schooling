@@ -19,7 +19,26 @@ shop(#                 'log_min_messages', 'log_min_duration_statement', 'log_st
 shop(#                 'log_lock_waits', 'log_temp_files', 'log_connections',
 shop(#                 'log_checkpoints', 'log_autovacuum_min_duration')
 shop-#  ORDER BY name;
+            name             |     setting      
+-----------------------------+------------------
+ log_autovacuum_min_duration | 600000
+ log_checkpoints             | on
+ log_connections             | off
+ log_destination             | stderr
+ log_line_prefix             | %m [%p] %q%u@%d 
+ log_lock_waits              | off
+ log_min_duration_statement  | -1
+ log_min_messages            | warning
+ log_statement               | none
+ log_temp_files              | -1
+ logging_collector           | off
+(11 rows)
+
 shop=# SELECT pg_current_logfile();
+ pg_current_logfile 
+--------------------
+ 
+(1 row)
 ```
 
 **`logging_collector` is off and `log_destination` is `stderr`**: the server does nothing with
@@ -31,8 +50,15 @@ made the default; every other line in that table is a kind of event this server 
 
 ```
 ana@db:~$ ls -l /var/log/postgresql
+total 4
+-rw-r----- 1 postgres adm 560 Oct 10 16:40 postgresql-16-main.log
 ana@db:~$ sudo ls -l /proc/$(sudo head -1 /var/lib/postgresql/16/main/postmaster.pid)/fd/2
+l-wx------ 1 postgres postgres 64 Oct 10 16:40 /proc/102/fd/2 -> /var/log/postgresql/postgresql-16-main.log
 ana@db:~$ sudo tail -n 4 /var/log/postgresql/postgresql-16-main.log
+2026-10-10 16:40:02.523 -03 [102] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2026-10-10 16:40:02.526 -03 [102] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-10-10 16:40:02.568 -03 [105] LOG:  database system was shut down at 2026-10-10 03:18:41 -03
+2026-10-10 16:40:02.589 -03 [102] LOG:  database system is ready to accept connections
 ```
 
 The first line of `postmaster.pid` is the postmaster's process id, and `/proc/<pid>/fd/2` is
@@ -45,6 +71,8 @@ systemd's journal has the unit starting and nothing from inside the server:
 
 ```
 ana@db:~$ sudo journalctl -u postgresql@16-main --no-pager -n 4
+Oct 10 16:40:01 db systemd[1]: Starting postgresql@16-main.service - PostgreSQL Cluster 16-main...
+Oct 10 16:40:04 db systemd[1]: Started postgresql@16-main.service - PostgreSQL Cluster 16-main.
 ```
 
 That surprises people who expect every service's output in the journal. It is there only when a

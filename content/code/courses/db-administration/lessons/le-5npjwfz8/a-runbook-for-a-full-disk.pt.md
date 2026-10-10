@@ -85,7 +85,7 @@ Depois siga a página, conferência por conferência.
 ```
 ana@db:~$ df -h /var/lib/postgresql
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/vda        252G   35G  4.4G  89% /
+/dev/vda        252G   21G   19G  54% /
 ```
 
 Na sua máquina virtual este é o disco da própria máquina, e o número é o que o alerta vigia. Na
@@ -128,12 +128,12 @@ que a ação A manda perguntar, e a nota a escrever é a quem você perguntou.
 
 ```
 ana@db:~$ sudo tail -n 6 /var/log/postgresql/postgresql-16-main.log
-2026-10-10 04:34:08.725 -03 [98] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-2026-10-10 04:34:08.728 -03 [104] LOG:  database system was shut down at 2026-10-10 03:18:41 -03
-2026-10-10 04:34:08.733 -03 [98] LOG:  database system is ready to accept connections
-2026-10-10 04:34:28.499 -03 [102] LOG:  checkpoints are occurring too frequently (20 seconds apart)
-2026-10-10 04:34:28.499 -03 [102] HINT:  Consider increasing the configuration parameter "max_wal_size".
-2026-10-10 04:34:28.499 -03 [102] LOG:  checkpoint starting: wal
+2026-10-10 16:42:09.976 -03 [101] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-10-10 16:42:09.979 -03 [104] LOG:  database system was shut down at 2026-10-10 03:18:41 -03
+2026-10-10 16:42:09.984 -03 [101] LOG:  database system is ready to accept connections
+2026-10-10 16:42:34.714 -03 [102] LOG:  checkpoints are occurring too frequently (25 seconds apart)
+2026-10-10 16:42:34.714 -03 [102] HINT:  Consider increasing the configuration parameter "max_wal_size".
+2026-10-10 16:42:34.714 -03 [102] LOG:  checkpoint starting: wal
 ```
 
 Nenhum `ERROR`, nenhum `PANIC`, nenhum `No space left on device`: nada falhou ainda. O que há é um
@@ -196,7 +196,7 @@ ana@db:~$ psql -c "SELECT count(*) AS slots FROM pg_replication_slots;"
 ana@db:~$ sudo du -sh /var/lib/postgresql/16/main/pg_wal
 673M	/var/lib/postgresql/16/main/pg_wal
 ana@db:~$ sudo tail -n 1 /var/log/postgresql/postgresql-16-main.log
-2026-10-10 04:34:33.546 -03 [102] LOG:  checkpoint complete: wrote 1086 buffers (6.6%); 0 WAL file(s) added, 0 removed, 40 recycled; write=0.011 s, sync=0.009 s, total=0.086 s; sync files=5, longest=0.007 s, average=0.002 s; distance=128710 kB, estimate=495458 kB; lsn=0/29E45150, redo lsn=0/29E45118
+2026-10-10 16:42:40.111 -03 [102] LOG:  checkpoint complete: wrote 1086 buffers (6.6%); 0 WAL file(s) added, 0 removed, 40 recycled; write=0.009 s, sync=0.011 s, total=0.068 s; sync files=5, longest=0.010 s, average=0.003 s; distance=128710 kB, estimate=495458 kB; lsn=0/29E451B0, redo lsn=0/29E45178
 ```
 
 O slot sumiu, e **o `pg_wal` não está menor.** A própria linha do checkpoint diz por quê: `0

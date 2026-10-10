@@ -33,7 +33,7 @@ file named for the day, under `~/incidents`.
 
 ## What goes in a line
 
-**What you saw, with the number.** "df 89%" can be compared with the next reading; "disk quite
+**What you saw, with the number.** "df 91%" can be compared with the next reading; "disk quite
 full" cannot. **What you did**, as the command or the act's letter in the runbook. **What you
 decided and why**, especially a decision not to act, because the reason is the first thing
 forgotten. **Whom you asked, and what they said**, since an answer given on the phone exists
@@ -44,16 +44,16 @@ check:
 
 ```
 ana@db:~$ cat incidents/$(date +%F).log
-04:34:31  Alert: disk under PostgreSQL filling on db. Opened runbook disk-filling.
-04:34:31  df: 89% used. Not 100%, writes still working.
-04:34:31  pg_wal 657M, base 467M. Looking at slots.
-04:34:31  slot standby1: inactive, retaining 649 MB. Asked its owner whether a replica still uses it.
-04:34:32  log: no errors, checkpoints started by WAL volume.
-04:34:32  table filler in db ana, 313 MB, created tonight. Not ours to delete: ticket for its owner.
-04:34:32  standby1: owner confirms no replica uses it. Dropping it.
-04:34:33  dropped standby1, ran CHECKPOINT.
-04:34:34  verify: no slots. pg_wal 673M, recycled for reuse rather than removed, as expected. df 90%. Watching 15 min.
-04:34:34  Closed. Follow-up: max_slot_wal_keep_size, and a check on slots in monitoring.
+16:42:37  Alert: disk under PostgreSQL filling on db. Opened runbook disk-filling.
+16:42:37  df: 54% used. Not 100%, writes still working.
+16:42:38  pg_wal 657M, base 467M. Looking at slots.
+16:42:38  slot standby1: inactive, retaining 649 MB. Asked its owner whether a replica still uses it.
+16:42:38  log: no errors, checkpoints started by WAL volume.
+16:42:38  table filler in db ana, 313 MB, created tonight. Not ours to delete: ticket for its owner.
+16:42:39  standby1: owner confirms no replica uses it. Dropping it.
+16:42:40  dropped standby1, ran CHECKPOINT.
+16:42:40  verify: no slots. pg_wal 673M, recycled for reuse rather than removed, as expected. df 54%. Watching 15 min.
+16:42:40  Closed. Follow-up: max_slot_wal_keep_size, and a check on slots in monitoring.
 ```
 
 On the recording machine the whole runbook ran in about three seconds, because nobody had to wait

@@ -81,9 +81,9 @@ because the planner walks longer lists. That is why it is raised column by colum
 estimate was seen to be wrong, and almost never through `default_statistics_target`, which would
 raise it for every column of every table at once.
 
-The column that earns it has more values that matter than a list of 100 can hold: a `country` or a
-`product_id` where a few hundred values carry most of the rows and the rest trail off, so a value
-just outside the list is estimated as if it were average. The way to find one is the comparison the
+The column that earns it has more values that matter than a list of 100 can hold. The usual case is a
+`country` or a `product_id` where a few hundred values carry most of the rows and the rest trail off,
+so that a value just outside the list is estimated as if it were average. The way to find one is the comparison the
 previous section made — estimate against actual in `EXPLAIN ANALYZE`, on that column's condition —
 and `db-performance` lesson 7 goes through the histogram and the common values in detail.
 

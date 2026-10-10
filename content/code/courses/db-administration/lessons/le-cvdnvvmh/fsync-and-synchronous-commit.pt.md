@@ -65,8 +65,8 @@ O que isso custa é exato. Depois de uma queda, os commits do último instante q
 gravados somem, embora os clientes deles tenham ouvido que deram certo. **O que sobra continua
 sendo um banco consistente**: essas transações estão ausentes por inteiro, como se a queda tivesse
 vindo uma fração de segundo antes, e a recuperação roda como na seção anterior. Isso faz dela uma
-troca justa para trabalho que pode ser perdido — um contador de visualizações, a hora do último
-acesso de uma sessão — e a configuração pode valer para uma transação só:
+troca justa para trabalho que pode ser perdido, como um contador de visualizações ou a hora do
+último acesso de uma sessão. E a configuração pode valer para uma transação só:
 
 ```sql
 BEGIN;
@@ -91,7 +91,7 @@ denuncia até uma consulta lê-lo.
 
 Isso não foi demonstrado aqui, e o motivo vale saber: **um `kill -9` não consegue mostrar isso**. O
 sistema operacional sobrevive ao kill com todas as escritas ainda no cache, grava tudo depois, e o
-banco volta bem — e é assim que o `fsync = off` passa em todo teste que não seja uma falta de energia
+banco volta bem. É assim que o `fsync = off` passa em todo teste que não seja uma falta de energia
 de verdade ou uma queda do próprio kernel. O único uso defensável é num banco que você está disposto
 a jogar fora e construir de novo do zero, como a primeira carga de uma cópia que você descarta se
 algo der errado.

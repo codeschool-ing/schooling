@@ -76,7 +76,7 @@ ana@db:~$ git -C shop-db init
 Initialized empty Git repository in /home/ana/shop-db/.git/
 ana@db:~$ git -C shop-db add conf.d/50-shop.conf
 ana@db:~$ git -C shop-db commit -m "The shop server's settings, one file"
-[main (root-commit) cca080c] The shop server's settings, one file
+[main (root-commit) 6ab72d8] The shop server's settings, one file
  1 file changed, 8 insertions(+)
  create mode 100644 conf.d/50-shop.conf
 ```

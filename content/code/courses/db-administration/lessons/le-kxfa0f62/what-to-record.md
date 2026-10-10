@@ -10,9 +10,19 @@ will be glad of on the day something is slow. They take effect on a reload:
 
 ```
 shop=# ALTER SYSTEM SET log_min_duration_statement = '50ms';
+ALTER SYSTEM
+
 shop=# ALTER SYSTEM SET log_lock_waits = on;
+ALTER SYSTEM
+
 shop=# ALTER SYSTEM SET log_temp_files = 0;
+ALTER SYSTEM
+
 shop=# SELECT pg_reload_conf();
+ pg_reload_conf 
+----------------
+ t
+(1 row)
 ```
 
 ## Slow statements
@@ -24,11 +34,20 @@ milliseconds to a second.
 
 ```
 shop=# SELECT count(*) FROM orders WHERE status = 'cancelled' AND total_cents > 49000;
+ count 
+-------
+  6000
+(1 row)
+
 shop=# SELECT name FROM customers WHERE id = 42;
+    name     
+-------------
+ Customer 42
+(1 row)
 ```
 
 ```
-ana@db:~$ sudo tail -n 2 /var/log/postgresql/postgresql-16-main.log
+ana@db:~$ sudo grep duration: /var/log/postgresql/postgresql-16-main.log
 ```
 
 The count read the whole table and is in the log. The lookup by primary key is not, and **that is
@@ -44,11 +63,17 @@ size. A sort or a hash that does not fit in `work_mem` spills, which is lesson 6
 
 ```
 shop=# SET work_mem = '1MB';
+SET
+
 shop=# SELECT count(DISTINCT total_cents) FROM orders;
+ count 
+-------
+ 50000
+(1 row)
 ```
 
 ```
-ana@db:~$ sudo tail -n 4 /var/log/postgresql/postgresql-16-main.log
+ana@db:~$ sudo grep -A1 'temporary file' /var/log/postgresql/postgresql-16-main.log
 ```
 
 The `size` is in bytes: about twelve megabytes written and read back for a sort that would have run
@@ -63,18 +88,36 @@ and sleeps for four seconds before committing:
 
 ```
 ana@db:~$ psql shop -c "BEGIN; UPDATE customers SET name = name WHERE id = 1; SELECT pg_sleep(4); COMMIT;"
+BEGIN
+UPDATE 1
+ pg_sleep 
+----------
+ 
+(1 row)
+
+COMMIT
 ```
 
 In the second, while the first is still sleeping, the same row:
 
 ```
 ana@db:~$ psql shop -c "UPDATE customers SET name = name WHERE id = 1"
+UPDATE 1
 ```
 
 The second `UPDATE` sat silent until the first committed. The log says what it was doing:
 
 ```
 ana@db:~$ sudo tail -n 9 /var/log/postgresql/postgresql-16-main.log
+2026-10-10 16:40:40.482 -03 [258] ana@shop psql LOG:  process 258 still waiting for ShareLock on transaction 782 after 1000.239 ms
+2026-10-10 16:40:40.482 -03 [258] ana@shop psql DETAIL:  Process holding the lock: 254. Wait queue: 258.
+2026-10-10 16:40:40.482 -03 [258] ana@shop psql CONTEXT:  while updating tuple (0,1) in relation "customers"
+2026-10-10 16:40:40.482 -03 [258] ana@shop psql STATEMENT:  UPDATE customers SET name = name WHERE id = 1
+2026-10-10 16:40:42.484 -03 [254] ana@shop psql LOG:  duration: 4069.069 ms  statement: BEGIN; UPDATE customers SET name = name WHERE id = 1; SELECT pg_sleep(4); COMMIT;
+2026-10-10 16:40:42.484 -03 [258] ana@shop psql LOG:  process 258 acquired ShareLock on transaction 782 after 3001.798 ms
+2026-10-10 16:40:42.484 -03 [258] ana@shop psql CONTEXT:  while updating tuple (0,1) in relation "customers"
+2026-10-10 16:40:42.484 -03 [258] ana@shop psql STATEMENT:  UPDATE customers SET name = name WHERE id = 1
+2026-10-10 16:40:42.484 -03 [258] ana@shop psql LOG:  duration: 3003.692 ms  statement: UPDATE customers SET name = name WHERE id = 1
 ```
 
 **The `DETAIL` line names the process holding the lock**, and the first terminal's statement is in
@@ -90,13 +133,21 @@ ends:
 
 ```
 shop=# ALTER SYSTEM SET log_connections = on;
+ALTER SYSTEM
+
 shop=# ALTER SYSTEM SET log_disconnections = on;
+ALTER SYSTEM
+
 shop=# SELECT pg_reload_conf();
+ pg_reload_conf 
+----------------
+ t
+(1 row)
 ```
 
 ```
 ana@db:~$ psql shop -c "SELECT 1"
-ana@db:~$ sudo tail -n 4 /var/log/postgresql/postgresql-16-main.log
+ana@db:~$ sudo grep -E 'connection (received|authenticated|authorized)|disconnection' /var/log/postgresql/postgresql-16-main.log
 ```
 
 Three lines to arrive and one to leave. The `authenticated` line names the method and **the line
@@ -112,10 +163,11 @@ of lines it writes:
 
 ```
 shop=# CHECKPOINT;
+CHECKPOINT
 ```
 
 ```
-ana@db:~$ sudo tail -n 4 /var/log/postgresql/postgresql-16-main.log
+ana@db:~$ sudo grep checkpoint /var/log/postgresql/postgresql-16-main.log | tail -n 2
 ```
 
 The `[%p]` here is the checkpointer, and `%q` has left its user and database out. Lesson 8 reads
