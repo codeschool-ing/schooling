@@ -1,0 +1,655 @@
+[
+  {
+    "id": "ex-gr7835vr",
+    "version": 1,
+    "section": "why-not-like",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did `ILIKE '%cafe torrado%'` find nothing?",
+    "hint": "Look at the letters.",
+    "choices": [
+      {
+        "text": "The table was empty",
+        "correct": false,
+        "why": "It had 25 products."
+      },
+      {
+        "text": "`e` is not `é`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`ILIKE` is case-sensitive",
+        "correct": false,
+        "why": "The `I` makes it insensitive."
+      },
+      {
+        "text": "PostgreSQL needs an index for `ILIKE`",
+        "correct": false,
+        "why": "It scans without one."
+      }
+    ]
+  },
+  {
+    "id": "ex-03p09n19",
+    "version": 1,
+    "section": "why-not-like",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can `ILIKE '%café%'` not use an ordinary index?",
+    "hint": "Where does the pattern start?",
+    "choices": [
+      {
+        "text": "Indexes do not store accented letters",
+        "correct": false,
+        "why": "They do."
+      },
+      {
+        "text": "`ILIKE` always locks the table",
+        "correct": false,
+        "why": "It does not lock."
+      },
+      {
+        "text": "No prefix, nothing to look up",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The column is too long",
+        "correct": false,
+        "why": "Length is not the issue."
+      }
+    ]
+  },
+  {
+    "id": "ex-akpgp5m3",
+    "version": 1,
+    "section": "why-not-like",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For a catalogue of a few hundred products, what does the lesson suggest considering first?",
+    "hint": "The database already running.",
+    "choices": [
+      {
+        "text": "A three-node Elasticsearch cluster",
+        "correct": false,
+        "why": "More than the catalogue needs."
+      },
+      {
+        "text": "PostgreSQL's full-text search",
+        "correct": true,
+        "why": "Right, with `unaccent` and `pg_trgm`."
+      },
+      {
+        "text": "`ILIKE` with a bigger server",
+        "correct": false,
+        "why": "Still misses accents and typos."
+      },
+      {
+        "text": "A search service from a third party",
+        "correct": false,
+        "why": "Possible, not the first suggestion."
+      }
+    ]
+  },
+  {
+    "id": "ex-r5e9hevm",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is OpenSearch's security plugin turned off in the lab?",
+    "hint": "Lab only.",
+    "choices": [
+      {
+        "text": "It is not needed in production",
+        "correct": false,
+        "why": "Every real deployment keeps it on."
+      },
+      {
+        "text": "It makes searches wrong",
+        "correct": false,
+        "why": "It does not change results."
+      },
+      {
+        "text": "To skip TLS and passwords",
+        "correct": true,
+        "why": "Right; production keeps it on."
+      },
+      {
+        "text": "It needs a second node",
+        "correct": false,
+        "why": "It runs on one."
+      }
+    ]
+  },
+  {
+    "id": "ex-bbzxxjg4",
+    "version": 1,
+    "section": "the-inverted-index",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did the analyser turn `Cafés` into?",
+    "hint": "Read `_analyze`.",
+    "choices": [
+      {
+        "text": "`cafés`",
+        "correct": false,
+        "why": "Accents were removed."
+      },
+      {
+        "text": "`cafe`",
+        "correct": false,
+        "why": "It was also stemmed."
+      },
+      {
+        "text": "`caf`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`coffee`",
+        "correct": false,
+        "why": "It does not translate."
+      }
+    ]
+  },
+  {
+    "id": "ex-wcc68r20",
+    "version": 1,
+    "section": "the-inverted-index",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does an inverted index map?",
+    "hint": "The back of a book.",
+    "choices": [
+      {
+        "text": "Each document to its words",
+        "correct": false,
+        "why": "That is the table."
+      },
+      {
+        "text": "Each term to the documents containing it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Each query to its results, cached",
+        "correct": false,
+        "why": "That is a cache."
+      },
+      {
+        "text": "Each shard to its node",
+        "correct": false,
+        "why": "That is cluster state."
+      }
+    ]
+  },
+  {
+    "id": "ex-zvwgycdv",
+    "version": 1,
+    "section": "the-inverted-index",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does changing the analyser mean reindexing everything?",
+    "hint": "When is it applied?",
+    "choices": [
+      {
+        "text": "The analyser is stored in each document",
+        "correct": false,
+        "why": "Its output is."
+      },
+      {
+        "text": "OpenSearch forbids changing settings",
+        "correct": false,
+        "why": "Some settings change live."
+      },
+      {
+        "text": "Queries cannot use a new analyser",
+        "correct": false,
+        "why": "They can."
+      },
+      {
+        "text": "It ran when documents were written",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-wsmxh93p",
+    "version": 1,
+    "section": "relevance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `Café torrado em grãos` rank first for \"café torrado\"?",
+    "hint": "Name, both words, rarity.",
+    "choices": [
+      {
+        "text": "It is the cheapest coffee",
+        "correct": false,
+        "why": "Price is not in the score."
+      },
+      {
+        "text": "It was indexed first",
+        "correct": false,
+        "why": "Order of indexing does not rank."
+      },
+      {
+        "text": "Both words are in its name",
+        "correct": true,
+        "why": "Right, and `torr` is rare among names."
+      },
+      {
+        "text": "It has the longest description",
+        "correct": false,
+        "why": "A long field lowers a match's weight."
+      }
+    ]
+  },
+  {
+    "id": "ex-dgb7ymp2",
+    "version": 1,
+    "section": "relevance",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each search feature to what it does.",
+    "hint": "Score, typos, filters, boost.",
+    "pairs": [
+      {
+        "left": "BM25",
+        "right": "ranks matches by term frequency, rarity and field length"
+      },
+      {
+        "left": "fuzziness",
+        "right": "matches terms a few edits away"
+      },
+      {
+        "left": "facets",
+        "right": "count results per category"
+      },
+      {
+        "left": "`name^3`",
+        "right": "weights matches in the name"
+      }
+    ]
+  },
+  {
+    "id": "ex-x6r8tqqv",
+    "version": 1,
+    "section": "relevance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without `--fuzzy`, what happened to \"cafe torado\"?",
+    "hint": "Which word still matched?",
+    "choices": [
+      {
+        "text": "Nothing was found",
+        "correct": false,
+        "why": "The coffees were found."
+      },
+      {
+        "text": "The wanted coffee fell to fourth",
+        "correct": true,
+        "why": "Right: only `cafe` matched."
+      },
+      {
+        "text": "The same five results as with accents",
+        "correct": false,
+        "why": "Farinha and the order changed."
+      },
+      {
+        "text": "An error about the misspelling",
+        "correct": false,
+        "why": "Search engines do not refuse typos."
+      }
+    ]
+  },
+  {
+    "id": "ex-e6t3qm3k",
+    "version": 1,
+    "section": "relevance",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the usual price of fuzziness?",
+    "hint": "More results.",
+    "choices": [
+      {
+        "text": "Every search becomes slower than `ILIKE`",
+        "correct": false,
+        "why": "Still faster at scale."
+      },
+      {
+        "text": "Exact matches stop working",
+        "correct": false,
+        "why": "They still score highest."
+      },
+      {
+        "text": "Results that are a little wrong",
+        "correct": true,
+        "why": "Right, ranked low."
+      },
+      {
+        "text": "It needs a second index",
+        "correct": false,
+        "why": "Same index."
+      }
+    ]
+  },
+  {
+    "id": "ex-5gnkzete",
+    "version": 1,
+    "section": "a-copy-of-the-database",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Right after the iced coffee was inserted in PostgreSQL, what did the search box show?",
+    "hint": "The feeder had not run.",
+    "choices": [
+      {
+        "text": "An error",
+        "correct": false,
+        "why": "It answered normally."
+      },
+      {
+        "text": "Only the mate tea",
+        "correct": true,
+        "why": "Right: the index had no iced coffee yet."
+      },
+      {
+        "text": "The iced coffee",
+        "correct": false,
+        "why": "Not yet."
+      },
+      {
+        "text": "Every product",
+        "correct": false,
+        "why": "It matched one."
+      }
+    ]
+  },
+  {
+    "id": "ex-78b5bvrt",
+    "version": 1,
+    "section": "a-copy-of-the-database",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the first search after feeding still miss the iced coffee?",
+    "hint": "Near real-time.",
+    "choices": [
+      {
+        "text": "The bulk request failed",
+        "correct": false,
+        "why": "The feeder reported it fed 1."
+      },
+      {
+        "text": "The analyser dropped `gelado`",
+        "correct": false,
+        "why": "A later search found it."
+      },
+      {
+        "text": "The feeder's checkpoint was wrong",
+        "correct": false,
+        "why": "It sent the right row."
+      },
+      {
+        "text": "The index had not refreshed yet",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-e4zhg1bx",
+    "version": 1,
+    "section": "a-copy-of-the-database",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does an alias let a search team do?",
+    "hint": "Rebuilding.",
+    "choices": [
+      {
+        "text": "Search two clusters at once",
+        "correct": false,
+        "why": "Not its purpose here."
+      },
+      {
+        "text": "Switch to a rebuilt index in one step",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Rename a field in every document",
+        "correct": false,
+        "why": "That needs a reindex."
+      },
+      {
+        "text": "Skip the refresh",
+        "correct": false,
+        "why": "Not related."
+      }
+    ]
+  },
+  {
+    "id": "ex-njfha8p1",
+    "version": 1,
+    "section": "a-copy-of-the-database",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which way of feeding the index needs no change to the application?",
+    "hint": "The database's log.",
+    "choices": [
+      {
+        "text": "A periodic job on `updated_at`",
+        "correct": false,
+        "why": "Every write must set `updated_at`."
+      },
+      {
+        "text": "Events through an outbox",
+        "correct": false,
+        "why": "Every change must publish."
+      },
+      {
+        "text": "Change data capture",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Writing to both from the application",
+        "correct": false,
+        "why": "A dual write, and a change."
+      }
+    ]
+  },
+  {
+    "id": "ex-hzm9f0ww",
+    "version": 1,
+    "section": "shards-and-replicas",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the number of primary shards fixed when the index is created?",
+    "hint": "Lesson 10's modulo.",
+    "choices": [
+      {
+        "text": "Shards cannot be copied",
+        "correct": false,
+        "why": "Replicas are copies."
+      },
+      {
+        "text": "The shard is hash modulo that number",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Lucene allows one shard per node",
+        "correct": false,
+        "why": "A node holds many."
+      },
+      {
+        "text": "Replicas depend on it",
+        "correct": false,
+        "why": "Replicas can change."
+      }
+    ]
+  },
+  {
+    "id": "ex-h1jw53d3",
+    "version": 1,
+    "section": "shards-and-replicas",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the more common sharding mistake, according to the lesson?",
+    "hint": "Fixed overhead per shard.",
+    "choices": [
+      {
+        "text": "Too few shards",
+        "correct": false,
+        "why": "The lesson says the opposite is commoner."
+      },
+      {
+        "text": "Too many shards",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "No replicas in production",
+        "correct": false,
+        "why": "A real risk, not the one named."
+      },
+      {
+        "text": "Shards larger than ten gigabytes",
+        "correct": false,
+        "why": "That is within guidance."
+      }
+    ]
+  },
+  {
+    "id": "ex-yqm3bjn7",
+    "version": 1,
+    "section": "choosing-an-engine",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What do Elasticsearch, OpenSearch and Solr have in common?",
+    "hint": "The library underneath.",
+    "choices": [
+      {
+        "text": "The same licence",
+        "correct": false,
+        "why": "They differ."
+      },
+      {
+        "text": "Apache Lucene",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The same company",
+        "correct": false,
+        "why": "Three different origins."
+      },
+      {
+        "text": "The same HTTP API",
+        "correct": false,
+        "why": "Solr's differs."
+      }
+    ]
+  },
+  {
+    "id": "ex-1hd7n68t",
+    "version": 1,
+    "section": "choosing-an-engine",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does OpenSearch exist?",
+    "hint": "2021.",
+    "choices": [
+      {
+        "text": "Elastic stopped maintaining Elasticsearch",
+        "correct": false,
+        "why": "It did not."
+      },
+      {
+        "text": "Solr was renamed",
+        "correct": false,
+        "why": "Solr is still Solr."
+      },
+      {
+        "text": "AWS wrote a new engine from scratch",
+        "correct": false,
+        "why": "It is a fork."
+      },
+      {
+        "text": "AWS forked it after a licence change",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-jfsb9v9k",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the iced-coffee experiment in order.",
+    "hint": "Insert, search, feed, search, wait, search.",
+    "items": [
+      "Insert the product in PostgreSQL",
+      "Search: not found",
+      "Run the feeder",
+      "Search at once: still not found",
+      "Wait for the refresh, and find it"
+    ]
+  },
+  {
+    "id": "ex-ydacnxvd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda changes a product's price in the database, and a customer still sees the old price in search results for a few minutes. What is happening, and what should the product page do?",
+    "hint": "The index is a copy.",
+    "choices": [
+      {
+        "text": "The index is corrupted; rebuild it",
+        "correct": false,
+        "why": "It is only behind."
+      },
+      {
+        "text": "The analyser changed the price",
+        "correct": false,
+        "why": "Prices are not analysed text."
+      },
+      {
+        "text": "The copy lags; the product page reads the price from the database",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The customer's browser is caching it",
+        "correct": false,
+        "why": "The index itself is behind."
+      }
+    ]
+  }
+]
