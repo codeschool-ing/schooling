@@ -31,7 +31,7 @@ fi
 
 É um script CGI: o servidor web o executa uma vez por requisição e envia o que ele imprimir. Isso
 importa mais adiante. Como o script roda de novo a cada requisição, um arquivo de token que muda
-debaixo dele é visto já na requisição seguinte, e a aula 11 depende disso. **Ele nunca imprime o
+debaixo dele é visto já na requisição seguinte, e a aula 10 depende disso. **Ele nunca imprime o
 próprio token**, só os doze primeiros caracteres do SHA-256 dele, o que basta para distinguir dois
 tokens e não serve para nada a quem lê a página.
 

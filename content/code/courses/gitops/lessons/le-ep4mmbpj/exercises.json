@@ -905,5 +905,310 @@
         "why": "That gives up drift correction for every application."
       }
     ]
+  },
+  {
+    "id": "ex-nptrp7t2",
+    "version": 1,
+    "section": "how-it-works",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does Redis do in an Argo CD installation?",
+    "choices": [
+      {
+        "text": "Holds the repository credentials",
+        "correct": false,
+        "why": "Those are Secrets in the argocd namespace."
+      },
+      {
+        "text": "Stores the Applications",
+        "correct": false,
+        "why": "Applications are Kubernetes objects."
+      },
+      {
+        "text": "Runs the sync operations",
+        "correct": false,
+        "why": "The application controller does that."
+      },
+      {
+        "text": "Caches renders and live state between comparisons",
+        "correct": true,
+        "why": "Right. So a comparison does not clone and render everything again."
+      }
+    ]
+  },
+  {
+    "id": "ex-6w4f2w7q",
+    "version": 1,
+    "section": "installing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "kubectl apply without --server-side refuses Argo CD's manifests. Why?",
+    "choices": [
+      {
+        "text": "Client-side apply cannot create namespaces",
+        "correct": false,
+        "why": "It can."
+      },
+      {
+        "text": "The cluster blocks client-side apply",
+        "correct": false,
+        "why": "Nothing blocks it in general."
+      },
+      {
+        "text": "Its CRDs exceed the annotation a client-side apply stores",
+        "correct": true,
+        "why": "Right. Server-side apply keeps no such annotation."
+      },
+      {
+        "text": "The manifests are not valid YAML",
+        "correct": false,
+        "why": "They are valid; only too large for that annotation."
+      }
+    ]
+  },
+  {
+    "id": "ex-gk5xsh2r",
+    "version": 1,
+    "section": "repository-access",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Argo CD's Gitea token leaks. What can somebody do with it?",
+    "choices": [
+      {
+        "text": "Change the cluster",
+        "correct": false,
+        "why": "The token reaches Gitea, not the cluster."
+      },
+      {
+        "text": "Read fleet",
+        "correct": true,
+        "why": "Right. It has read:repository and nothing more."
+      },
+      {
+        "text": "Push to main",
+        "correct": false,
+        "why": "The token cannot write, and main is protected anyway."
+      },
+      {
+        "text": "Approve pull requests",
+        "correct": false,
+        "why": "Approving needs write permission."
+      }
+    ]
+  },
+  {
+    "id": "ex-yv2wth4n",
+    "version": 1,
+    "section": "the-application",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In an Application, what does destination.server https://kubernetes.default.svc mean?",
+    "choices": [
+      {
+        "text": "A cluster on the public internet",
+        "correct": false,
+        "why": "It is the in-cluster address of the API server."
+      },
+      {
+        "text": "The Gitea server",
+        "correct": false,
+        "why": "Gitea is the source, not the destination."
+      },
+      {
+        "text": "The registry",
+        "correct": false,
+        "why": "Registries are never a destination."
+      },
+      {
+        "text": "The cluster Argo CD itself runs in",
+        "correct": true,
+        "why": "Right. Other clusters are registered by address."
+      }
+    ]
+  },
+  {
+    "id": "ex-4hxycp62",
+    "version": 1,
+    "section": "syncing",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each combination to what it usually means.",
+    "pairs": [
+      {
+        "left": "Synced and Healthy",
+        "right": "Git describes what runs, and it works"
+      },
+      {
+        "left": "OutOfSync and Healthy",
+        "right": "Git changed and nothing applied it yet"
+      },
+      {
+        "left": "Synced and Degraded",
+        "right": "Git was applied, and what it says does not work"
+      }
+    ],
+    "right_distractors": [
+      "Argo CD itself has crashed"
+    ]
+  },
+  {
+    "id": "ex-68fmpgz4",
+    "version": 1,
+    "section": "automation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What shortens the three-minute wait between a merge and Argo CD noticing it?",
+    "choices": [
+      {
+        "text": "A shorter revisionHistoryLimit",
+        "correct": false,
+        "why": "That limits history, not polling."
+      },
+      {
+        "text": "A webhook from the Git server on every push",
+        "correct": true,
+        "why": "Right. The wait drops to a second or two."
+      },
+      {
+        "text": "Turning selfHeal on",
+        "correct": false,
+        "why": "selfHeal reacts to the cluster, not to Git."
+      },
+      {
+        "text": "More replicas of the repo server",
+        "correct": false,
+        "why": "Polling interval is not about capacity."
+      }
+    ]
+  },
+  {
+    "id": "ex-67tnaktw",
+    "version": 1,
+    "section": "self-heal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Argo CD undo a manual scale faster than lesson 1's loop?",
+    "choices": [
+      {
+        "text": "It polls every second",
+        "correct": false,
+        "why": "It does not poll the cluster on a short timer."
+      },
+      {
+        "text": "It watches the objects and reacts to the change as an event",
+        "correct": true,
+        "why": "Right. The loop only noticed on its next timed pass."
+      },
+      {
+        "text": "It locks the Deployment",
+        "correct": false,
+        "why": "Nothing is locked."
+      },
+      {
+        "text": "kubectl asks Argo CD before scaling",
+        "correct": false,
+        "why": "kubectl talks only to the API server."
+      }
+    ]
+  },
+  {
+    "id": "ex-yz1pqzbz",
+    "version": 1,
+    "section": "history",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With automated sync off, argocd app rollback works. What state does it leave?",
+    "choices": [
+      {
+        "text": "Synced, and the old revision becomes main",
+        "correct": false,
+        "why": "main is unchanged."
+      },
+      {
+        "text": "Degraded, until a resync",
+        "correct": false,
+        "why": "Health depends on the objects, not on the rollback."
+      },
+      {
+        "text": "Synced, with Git rewritten",
+        "correct": false,
+        "why": "Argo CD never writes to Git."
+      },
+      {
+        "text": "OutOfSync until Git is fixed",
+        "correct": true,
+        "why": "Right. Honest, and the fix still belongs in Git."
+      }
+    ]
+  },
+  {
+    "id": "ex-at9zmnfh",
+    "version": 1,
+    "section": "app-of-apps",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the app of apps, what is still outside Git?",
+    "choices": [
+      {
+        "text": "The staging manifests",
+        "correct": false,
+        "why": "They were always in Git."
+      },
+      {
+        "text": "Every Application",
+        "correct": false,
+        "why": "They are all in argocd/ now."
+      },
+      {
+        "text": "root.yaml and the Argo CD installation",
+        "correct": true,
+        "why": "Right. The bootstrap, kept to two files."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "Something has to exist before the agent can read Git."
+      }
+    ]
+  },
+  {
+    "id": "ex-vbnvk512",
+    "version": 1,
+    "section": "projects",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The bulletin project allows only Namespace among cluster-scoped kinds. What would be refused?",
+    "choices": [
+      {
+        "text": "A Service in production",
+        "correct": false,
+        "why": "Namespaced, in an allowed destination."
+      },
+      {
+        "text": "A ClusterRole",
+        "correct": true,
+        "why": "Right. Cluster-scoped and not on the list."
+      },
+      {
+        "text": "The staging Namespace",
+        "correct": false,
+        "why": "Namespace is on the list."
+      },
+      {
+        "text": "A Deployment in staging",
+        "correct": false,
+        "why": "Namespaced, in an allowed destination."
+      }
+    ]
   }
 ]

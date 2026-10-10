@@ -677,5 +677,315 @@
         "why": "An environment is not needed for one change."
       }
     ]
+  },
+  {
+    "id": "ex-bxwc2h6y",
+    "version": 1,
+    "section": "what-varies",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the layout this lesson builds, what does adding a new environment take?",
+    "choices": [
+      {
+        "text": "A new directory",
+        "correct": true,
+        "why": "Right. One kind of change, one place."
+      },
+      {
+        "text": "A new repository",
+        "correct": false,
+        "why": "One repository holds every environment."
+      },
+      {
+        "text": "An edit to every application's files",
+        "correct": false,
+        "why": "That is the failure the layout avoids."
+      },
+      {
+        "text": "A new branch",
+        "correct": false,
+        "why": "Environments are directories, not branches."
+      }
+    ]
+  },
+  {
+    "id": "ex-2686efsz",
+    "version": 1,
+    "section": "two-repositories",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a monorepo for source and desired state cost?",
+    "choices": [
+      {
+        "text": "The separation has to be made by paths and rules",
+        "correct": true,
+        "why": "Right. The repository boundary no longer does it."
+      },
+      {
+        "text": "Flux cannot read a monorepo",
+        "correct": false,
+        "why": "It reads any path of any repository."
+      },
+      {
+        "text": "Pull requests stop working",
+        "correct": false,
+        "why": "They work the same."
+      },
+      {
+        "text": "Images can no longer be tagged",
+        "correct": false,
+        "why": "Tags are in the registry."
+      }
+    ]
+  },
+  {
+    "id": "ex-9efgsmty",
+    "version": 1,
+    "section": "directories",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do branches per environment fail, as the lesson argues? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A merge carries every commit, staging-only ones included",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The branches drift apart",
+        "correct": true,
+        "why": "Right. Hundreds of lines nobody chose."
+      },
+      {
+        "text": "The difference between environments is hard to see",
+        "correct": true,
+        "why": "Right. It is a diff nobody runs."
+      },
+      {
+        "text": "Git limits the number of branches",
+        "correct": false,
+        "why": "There is no such limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-e1qddxht",
+    "version": 1,
+    "section": "the-layout",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What could moving files to a path read by a different Kustomization do to a PersistentVolumeClaim?",
+    "choices": [
+      {
+        "text": "Nothing; a move is never a delete",
+        "correct": false,
+        "why": "Only while the same Kustomization keeps owning it."
+      },
+      {
+        "text": "Lock it until both agree",
+        "correct": false,
+        "why": "Kustomizations do not negotiate."
+      },
+      {
+        "text": "Resize it",
+        "correct": false,
+        "why": "Ownership has nothing to do with size."
+      },
+      {
+        "text": "Prune it and create it again, possibly with an empty disk",
+        "correct": true,
+        "why": "Right. A new owner is a delete and a create."
+      }
+    ]
+  },
+  {
+    "id": "ex-xegzva3g",
+    "version": 1,
+    "section": "production",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Staging and production run the same image. What does dependsOn guarantee about that?",
+    "choices": [
+      {
+        "text": "Production always runs staging's image",
+        "correct": false,
+        "why": "Promotion is a separate pull request."
+      },
+      {
+        "text": "Production waits for every staging commit",
+        "correct": false,
+        "why": "It waits for staging to be ready, not for its commits."
+      },
+      {
+        "text": "Nothing; it orders reconciliation, it does not promote",
+        "correct": true,
+        "why": "Right. Production runs what its own directory says."
+      },
+      {
+        "text": "Production rolls back when staging fails",
+        "correct": false,
+        "why": "It only stops reconciling while staging is not ready."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ytxkpj2",
+    "version": 1,
+    "section": "promotion",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In this course, who plays the application's CI for 1.1?",
+    "choices": [
+      {
+        "text": "The registry",
+        "correct": false,
+        "why": "The registry only stores the image."
+      },
+      {
+        "text": "Flux",
+        "correct": false,
+        "why": "Flux never builds images."
+      },
+      {
+        "text": "Gitea",
+        "correct": false,
+        "why": "Gitea only stores the code."
+      },
+      {
+        "text": "You: commit, tag, build from the tag, push",
+        "correct": true,
+        "why": "Right. A real CI would run the same steps on the tag."
+      }
+    ]
+  },
+  {
+    "id": "ex-1w7b1x92",
+    "version": 1,
+    "section": "ownership",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does fleet's CODEOWNERS write apps/bulletin/production/.* rather than apps/bulletin/production/?",
+    "choices": [
+      {
+        "text": "Gitea requires a dot in every pattern",
+        "correct": false,
+        "why": "It requires a regular expression, not a dot."
+      },
+      {
+        "text": "Gitea reads each pattern as a regular expression on the whole path",
+        "correct": true,
+        "why": "Right. GitHub and GitLab use .gitignore patterns."
+      },
+      {
+        "text": "Bruno owns only hidden files otherwise",
+        "correct": false,
+        "why": "The pattern has nothing to do with hidden files."
+      },
+      {
+        "text": "The trailing slash is invalid YAML",
+        "correct": false,
+        "why": "CODEOWNERS is not YAML."
+      }
+    ]
+  },
+  {
+    "id": "ex-hh65cv1y",
+    "version": 1,
+    "section": "ownership",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which setting turns a CODEOWNERS request into a requirement in Gitea?",
+    "choices": [
+      {
+        "text": "block_on_official_review_requests",
+        "correct": true,
+        "why": "Right. The merge waits for a requested owner."
+      },
+      {
+        "text": "dismiss_stale_approvals",
+        "correct": false,
+        "why": "That drops approvals when commits arrive."
+      },
+      {
+        "text": "required_approvals",
+        "correct": false,
+        "why": "That counts approvals from anybody."
+      },
+      {
+        "text": "enable_push_whitelist",
+        "correct": false,
+        "why": "That allows named pushers, the break-glass path."
+      }
+    ]
+  },
+  {
+    "id": "ex-j25s0ptt",
+    "version": 1,
+    "section": "many-clusters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two production clusters, one per region. How is production's configuration kept?",
+    "choices": [
+      {
+        "text": "Each region's Flux renders it differently",
+        "correct": false,
+        "why": "Flux renders what the path says."
+      },
+      {
+        "text": "Both read one shared directory under apps/",
+        "correct": true,
+        "why": "Right. A per-cluster overlay holds only a real difference."
+      },
+      {
+        "text": "One branch per region",
+        "correct": false,
+        "why": "Regions are directories under clusters/."
+      },
+      {
+        "text": "Each cluster gets a full copy",
+        "correct": false,
+        "why": "Copies drift apart."
+      }
+    ]
+  },
+  {
+    "id": "ex-vg29n3w0",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Kustomization's path is not found. What happens to the objects it applied before?",
+    "choices": [
+      {
+        "text": "They are pruned at once",
+        "correct": false,
+        "why": "Nothing is pruned without a successful build."
+      },
+      {
+        "text": "They are handed to another Kustomization",
+        "correct": false,
+        "why": "Ownership does not move by itself."
+      },
+      {
+        "text": "They are scaled to zero",
+        "correct": false,
+        "why": "Flux never scales on failure."
+      },
+      {
+        "text": "They stay as they are",
+        "correct": true,
+        "why": "Right. Flux does nothing with a path it cannot find."
+      }
+    ]
   }
 ]

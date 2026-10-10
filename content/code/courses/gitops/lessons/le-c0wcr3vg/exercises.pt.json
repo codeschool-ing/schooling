@@ -548,5 +548,198 @@
         "why": "A interface lê o Git; não o substitui."
       }
     ]
+  },
+  "ex-a08wgz0b": {
+    "prompt": "Qual controlador do Flux recebe webhooks do servidor Git?",
+    "choices": [
+      {
+        "text": "O source controller",
+        "why": "Ele busca; não escuta webhooks."
+      },
+      {
+        "text": "O kustomize controller, por meio de um Kustomization",
+        "why": "Ele aplica artefatos; não escuta."
+      },
+      {
+        "text": "O notification controller",
+        "why": "Isso. Por meio de um Receiver."
+      },
+      {
+        "text": "O helm controller",
+        "why": "Ele instala charts."
+      }
+    ]
+  },
+  "ex-nz0p3ncd": {
+    "prompt": "Onde o Flux guarda tudo o que sabe?",
+    "choices": [
+      {
+        "text": "No repositório Git, ao lado dos manifestos",
+        "why": "O Git guarda o estado desejado, não as observações do Flux."
+      },
+      {
+        "text": "No status dos objetos dele no Kubernetes",
+        "why": "Isso. O kubectl e o flux leem dali."
+      },
+      {
+        "text": "Na interface web dele",
+        "why": "Ele não tem interface web."
+      },
+      {
+        "text": "Num banco de dados próprio",
+        "why": "Ele não tem."
+      }
+    ]
+  },
+  "ex-0yq57vhs": {
+    "prompt": "Por que apagar as Applications deixou os pods do staging rodando?",
+    "choices": [
+      {
+        "text": "Pods não podem ser apagados rodando",
+        "why": "Podem."
+      },
+      {
+        "text": "O Argo CD nunca apaga nada",
+        "why": "Ele poda quando mandado."
+      },
+      {
+        "text": "Elas foram criadas sem o finalizer de cascata",
+        "why": "Isso. Apagá-las não apagou o que gerenciavam."
+      },
+      {
+        "text": "O Flux já tinha adotado os pods, então eles ficaram",
+        "why": "O Flux ainda não estava instalado."
+      }
+    ]
+  },
+  "ex-m49ptjgb": {
+    "prompt": "O que o flux check --pre pergunta antes de instalar qualquer coisa?",
+    "choices": [
+      {
+        "text": "Se o fleet tem um diretório flux-system",
+        "why": "Ele não olha o Git."
+      },
+      {
+        "text": "Se o registry tem as imagens do Flux",
+        "why": "Ele não confere registries."
+      },
+      {
+        "text": "Se o cluster atende aos requisitos do Flux",
+        "why": "Isso. Um Kubernetes recente o bastante, e um kubectl que funciona."
+      },
+      {
+        "text": "Se o Argo CD foi removido",
+        "why": "Ele não procura outros agentes."
+      }
+    ]
+  },
+  "ex-awxwwqwc": {
+    "prompt": "Por que o Secret fleet-auth é criado à mão em vez de commitado?",
+    "choices": [
+      {
+        "text": "O Flux não lê Secrets do Git",
+        "why": "Ele aplica Secrets como qualquer objeto."
+      },
+      {
+        "text": "O Gitea recusa commits que contenham qualquer tipo de Secret",
+        "why": "O Gitea não inspeciona conteúdo."
+      },
+      {
+        "text": "Ele guarda o token do Flux, que não pode ir para o Git",
+        "why": "Isso. A aula 9 mostra como poderia ir, cifrado."
+      },
+      {
+        "text": "O token muda a cada minuto",
+        "why": "É um token de longa duração."
+      }
+    ]
+  },
+  "ex-k0rxte83": {
+    "prompt": "Com interval: 10m e sem webhook, quantos minutos no máximo uma mudança manual no staging sobrevive?",
+    "unit": "min"
+  },
+  "ex-rmrs58gs": {
+    "prompt": "O que a anotação kustomize.toolkit.fluxcd.io/ssa: IfNotPresent faz?",
+    "choices": [
+      {
+        "text": "Ignora um único campo na comparação, como faz o Argo CD",
+        "why": "Isso é o ignoreDifferences do Argo CD."
+      },
+      {
+        "text": "Pula o objeto só na poda",
+        "why": "Ela muda a aplicação, não só a poda."
+      },
+      {
+        "text": "Aplica o objeto com apply do cliente",
+        "why": "Ela decide se aplica ou não."
+      },
+      {
+        "text": "Cria o objeto se faltar, e depois nunca mais mexe",
+        "why": "Isso. Mais grosseira que ignorar um campo."
+      }
+    ]
+  },
+  "ex-sg6d7wth": {
+    "prompt": "Por que o flux suspend não é o mesmo que parar um agente num laptop?",
+    "choices": [
+      {
+        "text": "Ele reverte o cluster para o último commit",
+        "why": "Ele não aplica nada enquanto suspenso."
+      },
+      {
+        "text": "Ele também impede o source controller de buscar qualquer coisa nova",
+        "why": "As fontes continuam buscando."
+      },
+      {
+        "text": "Ele expira sozinho depois de uma hora",
+        "why": "Dura até alguém retomar."
+      },
+      {
+        "text": "A pausa fica escrita no objeto, onde todo mundo vê",
+        "why": "Isso. Alertas sobre o status do Flux também veem."
+      }
+    ]
+  },
+  "ex-e8hbdes1": {
+    "prompt": "Por que o webhook precisa ser assinado?",
+    "choices": [
+      {
+        "text": "O Gitea se recusa a enviar webhooks que não levam assinatura",
+        "why": "A assinatura protege quem recebe, não o Gitea."
+      },
+      {
+        "text": "A assinatura leva o commit",
+        "why": "O commit vem da busca."
+      },
+      {
+        "text": "Services NodePort exigem isso",
+        "why": "Services não sabem nada de assinaturas."
+      },
+      {
+        "text": "Senão quem achasse o caminho faria o Flux buscar",
+        "why": "Isso. O segredo mora no cluster e no Gitea."
+      }
+    ]
+  },
+  "ex-jw1qxbn4": {
+    "prompt": "Uma organização roda Argo CD e Flux. O que ela nunca deve fazer?",
+    "choices": [
+      {
+        "text": "Rodá-los num mesmo cluster",
+        "why": "Podem dividir um cluster em objetos diferentes."
+      },
+      {
+        "text": "Usar Helm com os dois",
+        "why": "Cada um trata charts do seu jeito."
+      },
+      {
+        "text": "Ler caminhos diferentes do mesmo repositório",
+        "why": "Caminhos diferentes de um repositório funcionam."
+      },
+      {
+        "text": "Apontar os dois para os mesmos objetos",
+        "why": "Isso. São duas verdades brigando."
+      }
+    ]
   }
 }

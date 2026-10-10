@@ -605,5 +605,214 @@
         "why": "Isso abre mão da correção de desvio em toda aplicação."
       }
     ]
+  },
+  "ex-nptrp7t2": {
+    "prompt": "O que o Redis faz numa instalação do Argo CD?",
+    "choices": [
+      {
+        "text": "Guarda as credenciais do repositório",
+        "why": "Elas são Secrets no namespace argocd."
+      },
+      {
+        "text": "Guarda as Applications",
+        "why": "Applications são objetos do Kubernetes."
+      },
+      {
+        "text": "Executa as sincronizações",
+        "why": "Quem faz isso é o application controller."
+      },
+      {
+        "text": "Guarda em cache renderizações e estado vivo entre comparações",
+        "why": "Isso. Para uma comparação não clonar e renderizar tudo de novo."
+      }
+    ]
+  },
+  "ex-6w4f2w7q": {
+    "prompt": "O kubectl apply sem --server-side recusa os manifestos do Argo CD. Por quê?",
+    "choices": [
+      {
+        "text": "O apply do cliente não cria namespaces",
+        "why": "Cria."
+      },
+      {
+        "text": "O cluster bloqueia o apply do cliente",
+        "why": "Nada o bloqueia em geral."
+      },
+      {
+        "text": "Os CRDs passam do tamanho da anotação que o apply do cliente guarda",
+        "why": "Isso. O apply do servidor não guarda essa anotação."
+      },
+      {
+        "text": "Os manifestos não são YAML válido",
+        "why": "São válidos; só grandes demais para a anotação."
+      }
+    ]
+  },
+  "ex-gk5xsh2r": {
+    "prompt": "O token do Argo CD no Gitea vaza. O que alguém consegue fazer com ele?",
+    "choices": [
+      {
+        "text": "Mudar o cluster",
+        "why": "O token alcança o Gitea, não o cluster."
+      },
+      {
+        "text": "Ler o fleet",
+        "why": "Isso. Ele tem read:repository e mais nada."
+      },
+      {
+        "text": "Fazer push na main",
+        "why": "O token não escreve, e a main é protegida de todo jeito."
+      },
+      {
+        "text": "Aprovar pull requests",
+        "why": "Aprovar exige permissão de escrita."
+      }
+    ]
+  },
+  "ex-yv2wth4n": {
+    "prompt": "Numa Application, o que significa destination.server https://kubernetes.default.svc?",
+    "choices": [
+      {
+        "text": "Um cluster na internet pública",
+        "why": "É o endereço interno do API server."
+      },
+      {
+        "text": "O servidor Gitea",
+        "why": "O Gitea é a origem, não o destino."
+      },
+      {
+        "text": "O registry",
+        "why": "Registries nunca são destino."
+      },
+      {
+        "text": "O cluster em que o próprio Argo CD roda",
+        "why": "Isso. Outros clusters são registrados pelo endereço."
+      }
+    ]
+  },
+  "ex-4hxycp62": {
+    "prompt": "Associe cada combinação ao que ela costuma significar.",
+    "pairs": [
+      {
+        "left": "Synced e Healthy",
+        "right": "O Git descreve o que roda, e funciona"
+      },
+      {
+        "left": "OutOfSync e Healthy",
+        "right": "O Git mudou e nada aplicou ainda"
+      },
+      {
+        "left": "Synced e Degraded",
+        "right": "O Git foi aplicado, e o que ele diz não funciona"
+      }
+    ],
+    "right_distractors": [
+      "O próprio Argo CD caiu"
+    ]
+  },
+  "ex-68fmpgz4": {
+    "prompt": "O que encurta a espera de três minutos entre um merge e o Argo CD percebê-lo?",
+    "choices": [
+      {
+        "text": "Um revisionHistoryLimit menor",
+        "why": "Isso limita o histórico, não a consulta."
+      },
+      {
+        "text": "Um webhook do servidor Git a cada push",
+        "why": "Isso. A espera cai para um ou dois segundos."
+      },
+      {
+        "text": "Ligar o selfHeal",
+        "why": "O selfHeal reage ao cluster, não ao Git."
+      },
+      {
+        "text": "Mais réplicas do repo server",
+        "why": "O intervalo de consulta não é questão de capacidade."
+      }
+    ]
+  },
+  "ex-67tnaktw": {
+    "prompt": "Por que o Argo CD desfaz um scale manual mais rápido que o loop da aula 1?",
+    "choices": [
+      {
+        "text": "Ele consulta a cada segundo",
+        "why": "Ele não consulta o cluster num timer curto."
+      },
+      {
+        "text": "Ele observa os objetos e reage à mudança como evento",
+        "why": "Isso. O loop só percebia na próxima passada do timer."
+      },
+      {
+        "text": "Ele trava o Deployment",
+        "why": "Nada é travado."
+      },
+      {
+        "text": "O kubectl pergunta ao Argo CD antes de escalar",
+        "why": "O kubectl só fala com o API server."
+      }
+    ]
+  },
+  "ex-yz1pqzbz": {
+    "prompt": "Com a sincronização automática desligada, o argocd app rollback funciona. Em que estado ele deixa?",
+    "choices": [
+      {
+        "text": "Synced, e a revisão antiga vira a main",
+        "why": "A main não muda."
+      },
+      {
+        "text": "Degraded, até uma nova sincronização",
+        "why": "A saúde depende dos objetos, não do rollback."
+      },
+      {
+        "text": "Synced, com o Git reescrito",
+        "why": "O Argo CD nunca escreve no Git."
+      },
+      {
+        "text": "OutOfSync até o Git ser corrigido",
+        "why": "Isso. Honesto, e a correção continua sendo no Git."
+      }
+    ]
+  },
+  "ex-at9zmnfh": {
+    "prompt": "Depois do app of apps, o que ainda fica fora do Git?",
+    "choices": [
+      {
+        "text": "Os manifestos do staging",
+        "why": "Eles sempre estiveram no Git."
+      },
+      {
+        "text": "Toda Application",
+        "why": "Todas estão em argocd/ agora."
+      },
+      {
+        "text": "O root.yaml e a instalação do Argo CD",
+        "why": "Isso. O bootstrap, reduzido a dois arquivos."
+      },
+      {
+        "text": "Nada",
+        "why": "Algo precisa existir antes de o agente ler o Git."
+      }
+    ]
+  },
+  "ex-vbnvk512": {
+    "prompt": "O projeto bulletin permite só Namespace entre os tipos de escopo de cluster. O que seria recusado?",
+    "choices": [
+      {
+        "text": "Um Service na produção",
+        "why": "Tem namespace, num destino permitido."
+      },
+      {
+        "text": "Um ClusterRole",
+        "why": "Isso. De escopo de cluster e fora da lista."
+      },
+      {
+        "text": "O Namespace staging",
+        "why": "Namespace está na lista."
+      },
+      {
+        "text": "Um Deployment no staging",
+        "why": "Tem namespace, num destino permitido."
+      }
+    ]
   }
 }

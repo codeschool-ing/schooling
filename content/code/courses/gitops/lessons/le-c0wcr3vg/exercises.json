@@ -820,5 +820,296 @@
         "why": "The interface reads Git; it does not replace it."
       }
     ]
+  },
+  {
+    "id": "ex-a08wgz0b",
+    "version": 1,
+    "section": "flux-shape",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which Flux controller takes webhooks in from the Git server?",
+    "choices": [
+      {
+        "text": "The source controller",
+        "correct": false,
+        "why": "It fetches; it does not listen for webhooks."
+      },
+      {
+        "text": "The kustomize controller, through a Kustomization",
+        "correct": false,
+        "why": "It applies artifacts; it does not listen."
+      },
+      {
+        "text": "The notification controller",
+        "correct": true,
+        "why": "Right. Through a Receiver."
+      },
+      {
+        "text": "The helm controller",
+        "correct": false,
+        "why": "It installs charts."
+      }
+    ]
+  },
+  {
+    "id": "ex-nz0p3ncd",
+    "version": 1,
+    "section": "flux-shape",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does Flux keep everything it knows?",
+    "choices": [
+      {
+        "text": "In the Git repository, beside the manifests",
+        "correct": false,
+        "why": "Git holds the desired state, not Flux's observations."
+      },
+      {
+        "text": "In the status of its Kubernetes objects",
+        "correct": true,
+        "why": "Right. kubectl and flux read it from there."
+      },
+      {
+        "text": "In its web interface",
+        "correct": false,
+        "why": "It has no web interface."
+      },
+      {
+        "text": "In a database of its own",
+        "correct": false,
+        "why": "It has none."
+      }
+    ]
+  },
+  {
+    "id": "ex-0yq57vhs",
+    "version": 1,
+    "section": "one-agent",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did deleting the Applications leave staging's pods running?",
+    "choices": [
+      {
+        "text": "Pods cannot be deleted while running",
+        "correct": false,
+        "why": "They can."
+      },
+      {
+        "text": "Argo CD never deletes anything",
+        "correct": false,
+        "why": "It prunes when told to."
+      },
+      {
+        "text": "They were created without the cascade finalizer",
+        "correct": true,
+        "why": "Right. Deleting them did not delete what they managed."
+      },
+      {
+        "text": "Flux had already adopted the pods, so they stayed",
+        "correct": false,
+        "why": "Flux was not installed yet."
+      }
+    ]
+  },
+  {
+    "id": "ex-m49ptjgb",
+    "version": 1,
+    "section": "installing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does flux check --pre ask before anything is installed?",
+    "choices": [
+      {
+        "text": "Whether fleet has a flux-system directory",
+        "correct": false,
+        "why": "It does not look at Git."
+      },
+      {
+        "text": "Whether the registry has Flux's images",
+        "correct": false,
+        "why": "It does not check registries."
+      },
+      {
+        "text": "Whether the cluster meets Flux's requirements",
+        "correct": true,
+        "why": "Right. A recent enough Kubernetes, and a working kubectl."
+      },
+      {
+        "text": "Whether Argo CD is removed",
+        "correct": false,
+        "why": "It does not look for other agents."
+      }
+    ]
+  },
+  {
+    "id": "ex-awxwwqwc",
+    "version": 1,
+    "section": "bootstrap",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the fleet-auth Secret created by hand rather than committed?",
+    "choices": [
+      {
+        "text": "Flux cannot read Secrets from Git",
+        "correct": false,
+        "why": "It applies Secrets like any object."
+      },
+      {
+        "text": "Gitea refuses commits that contain a Secret of any kind",
+        "correct": false,
+        "why": "Gitea does not inspect content."
+      },
+      {
+        "text": "It holds Flux's token, which must not be in Git",
+        "correct": true,
+        "why": "Right. Lesson 9 shows how it could be, encrypted."
+      },
+      {
+        "text": "The token changes every minute",
+        "correct": false,
+        "why": "It is a long-lived token."
+      }
+    ]
+  },
+  {
+    "id": "ex-k0rxte83",
+    "version": 1,
+    "section": "reconciling",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With interval: 10m and no webhook, how many minutes at most does a manual change to staging survive?",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "min"
+  },
+  {
+    "id": "ex-rmrs58gs",
+    "version": 1,
+    "section": "reconciling",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does the annotation kustomize.toolkit.fluxcd.io/ssa: IfNotPresent do?",
+    "choices": [
+      {
+        "text": "Ignore one field during comparison, as Argo CD does",
+        "correct": false,
+        "why": "That is Argo CD's ignoreDifferences."
+      },
+      {
+        "text": "Skip the object during pruning only",
+        "correct": false,
+        "why": "It changes applying, not just pruning."
+      },
+      {
+        "text": "Apply the object with client-side apply",
+        "correct": false,
+        "why": "It is about whether to apply at all."
+      },
+      {
+        "text": "Create the object if missing, then never touch it",
+        "correct": true,
+        "why": "Right. Coarser than ignoring one field."
+      }
+    ]
+  },
+  {
+    "id": "ex-sg6d7wth",
+    "version": 1,
+    "section": "suspend",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is flux suspend not the same as stopping an agent on a laptop?",
+    "choices": [
+      {
+        "text": "It reverts the cluster to the last commit",
+        "correct": false,
+        "why": "It applies nothing while suspended."
+      },
+      {
+        "text": "It also stops the source controller from fetching anything new",
+        "correct": false,
+        "why": "Sources still fetch."
+      },
+      {
+        "text": "It expires on its own after an hour",
+        "correct": false,
+        "why": "It lasts until resumed."
+      },
+      {
+        "text": "The pause is written in the object, where everybody sees it",
+        "correct": true,
+        "why": "Right. Alerts on Flux's status see it too."
+      }
+    ]
+  },
+  {
+    "id": "ex-e8hbdes1",
+    "version": 1,
+    "section": "webhook",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must the webhook be signed?",
+    "choices": [
+      {
+        "text": "Gitea refuses to send webhooks that carry no signature at all",
+        "correct": false,
+        "why": "Signing protects the receiver, not Gitea."
+      },
+      {
+        "text": "The signature carries the commit",
+        "correct": false,
+        "why": "The commit comes from the fetch."
+      },
+      {
+        "text": "NodePort Services require it",
+        "correct": false,
+        "why": "Services know nothing about signatures."
+      },
+      {
+        "text": "Otherwise anybody who found the path could make Flux fetch",
+        "correct": true,
+        "why": "Right. The secret lives in the cluster and in Gitea."
+      }
+    ]
+  },
+  {
+    "id": "ex-jw1qxbn4",
+    "version": 1,
+    "section": "comparison",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An organisation runs Argo CD and Flux. What must it never do?",
+    "choices": [
+      {
+        "text": "Run them in one cluster",
+        "correct": false,
+        "why": "They can share a cluster on different objects."
+      },
+      {
+        "text": "Use Helm with both",
+        "correct": false,
+        "why": "Each handles charts its own way."
+      },
+      {
+        "text": "Read different paths of the same repository",
+        "correct": false,
+        "why": "Different paths of one repository are fine."
+      },
+      {
+        "text": "Point both at the same objects",
+        "correct": true,
+        "why": "Right. That is two truths fighting."
+      }
+    ]
   }
 ]

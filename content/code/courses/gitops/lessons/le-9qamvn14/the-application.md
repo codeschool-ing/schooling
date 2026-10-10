@@ -32,7 +32,7 @@ fi
 
 It is a CGI script: the web server runs it once per request and sends what it prints. That matters
 later. Because the script runs again for every request, a token file that changes under it is seen
-on the very next one, and lesson 11 relies on that. **It never prints the token itself**, only the
+on the very next one, and lesson 10 relies on that. **It never prints the token itself**, only the
 first twelve characters of its SHA-256, which is enough to tell two tokens apart and useless to
 anybody who reads the page.
 
