@@ -25,7 +25,7 @@
 
 HERE=$(cd "$(dirname "$0")" && pwd)
 . "$HERE/../../capture.sh"
-docker rm -f gitea >/dev/null 2>&1
+docker rm -fv gitea >/dev/null 2>&1
 lab up
 lab stage1
 rm -f /home/ana/ana.token /home/ana/bruno.token /home/ana/ci.token /home/ana/.git-credentials

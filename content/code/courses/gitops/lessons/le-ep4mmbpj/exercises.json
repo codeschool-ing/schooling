@@ -1,0 +1,909 @@
+[
+  {
+    "id": "ex-yypsht31",
+    "version": 1,
+    "section": "how-it-works",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which Argo CD component writes to the cluster?",
+    "choices": [
+      {
+        "text": "The application controller",
+        "correct": true,
+        "why": "Right. It compares and applies, and is the only part with write access."
+      },
+      {
+        "text": "The API server behind the CLI",
+        "correct": false,
+        "why": "It answers the CLI and the web interface and asks the controller to act."
+      },
+      {
+        "text": "Redis, the shared cache",
+        "correct": false,
+        "why": "It is a cache for the other two."
+      },
+      {
+        "text": "The repo server that renders manifests",
+        "correct": false,
+        "why": "It clones and renders, and holds no cluster credentials at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-t0ebs4hk",
+    "version": 1,
+    "section": "how-it-works",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does it matter that the repo server holds no credentials to the cluster?",
+    "choices": [
+      {
+        "text": "Gitea forbids it",
+        "correct": false,
+        "why": "Gitea knows nothing about Argo CD's components."
+      },
+      {
+        "text": "It would be slower with credentials",
+        "correct": false,
+        "why": "Credentials do not affect rendering speed."
+      },
+      {
+        "text": "It caches manifests in Redis, which is public",
+        "correct": false,
+        "why": "Redis is inside the cluster and not public."
+      },
+      {
+        "text": "It renders whatever a repository asks for, trusted or not",
+        "correct": true,
+        "why": "Right. A malicious chart or plugin reaches the repo server first, and finds no key there."
+      }
+    ]
+  },
+  {
+    "id": "ex-ns6pz76d",
+    "version": 1,
+    "section": "how-it-works",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "One Argo CD ___ is one arrow from a place in Git to a place in the cluster.",
+    "blanks": [
+      {
+        "accept": [
+          "Application"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dxm51kzs",
+    "version": 1,
+    "section": "installing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson apply Argo CD with --server-side?",
+    "choices": [
+      {
+        "text": "Without it, the images are pulled from quay.io",
+        "correct": false,
+        "why": "Image names come from the kustomization, not from the apply mode."
+      },
+      {
+        "text": "Server-side apply is how a namespace is set",
+        "correct": false,
+        "why": "Kustomize sets the namespace in this lesson."
+      },
+      {
+        "text": "Client-side apply does not read URLs",
+        "correct": false,
+        "why": "Kustomize fetches the URL either way."
+      },
+      {
+        "text": "Its CRDs are too large for the annotation a client-side apply stores",
+        "correct": true,
+        "why": "Right. A client-side apply stores the whole object in an annotation, which has a size limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-y27jd4rk",
+    "version": 1,
+    "section": "installing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The kustomization names install.yaml at v3.5.4. What does pinning the version buy?",
+    "choices": [
+      {
+        "text": "Faster downloads from GitHub",
+        "correct": false,
+        "why": "The size is the same either way."
+      },
+      {
+        "text": "The same URL always gives the same bytes",
+        "correct": true,
+        "why": "Right. An upgrade becomes a reviewed one-line change."
+      },
+      {
+        "text": "The installation skips the CRDs",
+        "correct": false,
+        "why": "The CRDs are part of install.yaml at any version."
+      },
+      {
+        "text": "Argo CD upgrades itself on each sync",
+        "correct": false,
+        "why": "Pinning does the opposite; nothing upgrades on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-df16pas1",
+    "version": 1,
+    "section": "installing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does argocd login --core change about how the command works?",
+    "choices": [
+      {
+        "text": "It disables the application controller",
+        "correct": false,
+        "why": "The controller keeps running; the CLI just reads its objects directly."
+      },
+      {
+        "text": "It logs in as the admin user with the generated password",
+        "correct": false,
+        "why": "That is the normal login, through the API server."
+      },
+      {
+        "text": "It goes through your kubeconfig instead",
+        "correct": true,
+        "why": "Right. No password, port-forward or ingress, at the price of needing cluster access."
+      },
+      {
+        "text": "It installs the core components into the cluster",
+        "correct": false,
+        "why": "Installing was the kubectl apply; login changes nothing in the cluster."
+      }
+    ]
+  },
+  {
+    "id": "ex-fj45bdnn",
+    "version": 1,
+    "section": "repository-access",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which Gitea permission does the argocd account have on fleet?",
+    "choices": [
+      {
+        "text": "admin",
+        "correct": false,
+        "why": "Nothing in this course gives a machine account admin."
+      },
+      {
+        "text": "write",
+        "correct": false,
+        "why": "That is Bruno's and ci's, which can push branches."
+      },
+      {
+        "text": "owner",
+        "correct": false,
+        "why": "Only Ana owns fleet."
+      },
+      {
+        "text": "read",
+        "correct": true,
+        "why": "Right. Argo CD never pushes, opens or approves anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-w04g8w6n",
+    "version": 1,
+    "section": "repository-access",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "argocd repo add stored the token where?",
+    "choices": [
+      {
+        "text": "In a Secret in the cluster",
+        "correct": true,
+        "why": "Right. A repository is a Secret with the argocd.argoproj.io/secret-type: repository label."
+      },
+      {
+        "text": "In ~/.git-credentials on your machine",
+        "correct": false,
+        "why": "That file is Git's, for your own pushes."
+      },
+      {
+        "text": "In Gitea, beside the argocd account",
+        "correct": false,
+        "why": "Gitea keeps tokens of its own; Argo CD keeps its copy in the cluster."
+      },
+      {
+        "text": "In the Application's spec",
+        "correct": false,
+        "why": "The Application names the repository URL, never its credentials."
+      }
+    ]
+  },
+  {
+    "id": "ex-qcq6mx2w",
+    "version": 1,
+    "section": "repository-access",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A teammate proposes committing the repository Secret's YAML to fleet so the setup is fully in Git. What is wrong?",
+    "choices": [
+      {
+        "text": "The label would be stripped by Kustomize",
+        "correct": false,
+        "why": "Kustomize keeps labels."
+      },
+      {
+        "text": "Gitea refuses YAML files that contain tokens",
+        "correct": false,
+        "why": "Gitea stores whatever is pushed."
+      },
+      {
+        "text": "Argo CD skips Secrets found in Git",
+        "correct": false,
+        "why": "It applies any manifest, Secrets included; that is the danger."
+      },
+      {
+        "text": "base64 is an encoding, not encryption",
+        "correct": true,
+        "why": "Right. Lesson 9 shows how to keep it in Git encrypted instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-cd3vw8pe",
+    "version": 1,
+    "section": "the-application",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first Application reported OutOfSync though the manifests matched what was deployed. Why?",
+    "choices": [
+      {
+        "text": "The image tag in Git was newer",
+        "correct": false,
+        "why": "Git and the cluster both said 1.0."
+      },
+      {
+        "text": "reconcile.sh had changed the replicas",
+        "correct": false,
+        "why": "The diff showed no replicas line."
+      },
+      {
+        "text": "The namespace had been deleted",
+        "correct": false,
+        "why": "Health was Healthy; the objects were all there."
+      },
+      {
+        "text": "A missing tracking annotation",
+        "correct": true,
+        "why": "Right. The diff showed only argocd.argoproj.io/tracking-id."
+      }
+    ]
+  },
+  {
+    "id": "ex-xjzdg8a5",
+    "version": 1,
+    "section": "the-application",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does the tracking annotation make possible that lesson 1's loop could not do?",
+    "choices": [
+      {
+        "text": "Pruning what left Git",
+        "correct": true,
+        "why": "Right. Objects that carry the id and are no longer in Git can be found and deleted."
+      },
+      {
+        "text": "Rendering Kustomize",
+        "correct": false,
+        "why": "The repo server renders whether or not objects are tracked."
+      },
+      {
+        "text": "Running without cluster credentials",
+        "correct": false,
+        "why": "The controller still needs them to apply."
+      },
+      {
+        "text": "Reading a private repository",
+        "correct": false,
+        "why": "That needs credentials, not an annotation."
+      }
+    ]
+  },
+  {
+    "id": "ex-w4pvp5r1",
+    "version": 1,
+    "section": "the-application",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson tell you to stop reconcile.sh before creating the Application?",
+    "choices": [
+      {
+        "text": "Argo CD refuses to start while the loop runs",
+        "correct": false,
+        "why": "Argo CD does not know the loop exists."
+      },
+      {
+        "text": "Two writers would race for one object",
+        "correct": true,
+        "why": "Right. Even reading the same repository, two writers race and confuse ownership."
+      },
+      {
+        "text": "reconcile.sh would delete the Application",
+        "correct": false,
+        "why": "It only applies the staging directory."
+      },
+      {
+        "text": "The loop uses the argocd token",
+        "correct": false,
+        "why": "It used Ana's credentials."
+      }
+    ]
+  },
+  {
+    "id": "ex-z7sgzpva",
+    "version": 1,
+    "section": "syncing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each combination of sync and health to what it usually means.",
+    "pairs": [
+      {
+        "left": "Synced, Healthy",
+        "right": "The goal"
+      },
+      {
+        "left": "OutOfSync, Healthy",
+        "right": "A change not applied yet, or drift"
+      },
+      {
+        "left": "Synced, Degraded",
+        "right": "Git applied faithfully, and wrong"
+      },
+      {
+        "left": "OutOfSync, Degraded",
+        "right": "Wrong on both counts"
+      }
+    ],
+    "right_distractors": [
+      "Argo CD itself has crashed"
+    ]
+  },
+  {
+    "id": "ex-8bqxrq14",
+    "version": 1,
+    "section": "syncing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Staging is Synced and Degraded after a merge. Where is the fault most likely to be?",
+    "choices": [
+      {
+        "text": "In what the repository says",
+        "correct": true,
+        "why": "Right. Argo CD applied it faithfully; the bug is in Git, like lesson 2's missing image."
+      },
+      {
+        "text": "In Gitea's branch protection",
+        "correct": false,
+        "why": "Protection governs merges, not running pods."
+      },
+      {
+        "text": "In Argo CD's controller",
+        "correct": false,
+        "why": "A failing controller would leave the application OutOfSync or Unknown."
+      },
+      {
+        "text": "In the repo server's cache",
+        "correct": false,
+        "why": "A stale cache shows the wrong revision, not a degraded object."
+      }
+    ]
+  },
+  {
+    "id": "ex-a0qj8vvq",
+    "version": 1,
+    "section": "syncing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After a sync, where does the answer to 'which commit is staging running?' come from?",
+    "choices": [
+      {
+        "text": "The newest commit on main",
+        "correct": false,
+        "why": "main may have moved since the last sync."
+      },
+      {
+        "text": "The Application's status",
+        "correct": true,
+        "why": "Right. It records the revision it applied."
+      },
+      {
+        "text": "The image tag",
+        "correct": false,
+        "why": "The tag names an image, not a commit of fleet."
+      },
+      {
+        "text": "Gitea's list of merged pull requests",
+        "correct": false,
+        "why": "That says what was merged, not what was applied."
+      }
+    ]
+  },
+  {
+    "id": "ex-zh1tpv1c",
+    "version": 1,
+    "section": "automation",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does the sync policy prune: true, selfHeal: true add to automated sync? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Syncing when the cluster drifts from Git",
+        "correct": true,
+        "why": "Right. That is selfHeal."
+      },
+      {
+        "text": "Deleting objects that disappeared from Git",
+        "correct": true,
+        "why": "Right. That is prune."
+      },
+      {
+        "text": "Rolling back when a pod becomes Degraded",
+        "correct": false,
+        "why": "Nothing rolls back on health; Argo CD applies Git."
+      },
+      {
+        "text": "Looking at Git more often than every three minutes",
+        "correct": false,
+        "why": "The interval is a separate setting, or a webhook."
+      }
+    ]
+  },
+  {
+    "id": "ex-7x8eyv32",
+    "version": 1,
+    "section": "automation",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By default, every how many minutes does Argo CD look at a repository for new commits?",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-a8gscwvr",
+    "version": 1,
+    "section": "automation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Right after the merge, argocd app get still showed the old revision. What made it see the new one at once?",
+    "choices": [
+      {
+        "text": "argocd app get --refresh",
+        "correct": true,
+        "why": "Right. It asks Argo CD to look now, and the automated policy synced in the same pass."
+      },
+      {
+        "text": "argocd app sync with --prune",
+        "correct": false,
+        "why": "Syncing applies what Argo CD already rendered; it needs a refresh first."
+      },
+      {
+        "text": "Restarting the repo server",
+        "correct": false,
+        "why": "That would work eventually, and is not what the lesson did."
+      },
+      {
+        "text": "Pushing the commit a second time",
+        "correct": false,
+        "why": "A second push of the same commit changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-mearhkxs",
+    "version": 1,
+    "section": "automation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With prune on, somebody deletes staging/bulletin.yaml by mistake and it is merged. What happens?",
+    "choices": [
+      {
+        "text": "Nothing until somebody syncs by hand",
+        "correct": false,
+        "why": "The policy is automated."
+      },
+      {
+        "text": "Only the Service is removed",
+        "correct": false,
+        "why": "Every object in the deleted file goes."
+      },
+      {
+        "text": "The objects are deleted in the cluster",
+        "correct": true,
+        "why": "Right. A file gone from Git is an object gone from the cluster; the review is the guard."
+      },
+      {
+        "text": "Argo CD refuses an empty render",
+        "correct": false,
+        "why": "That protects against a path that vanishes, not a file deleted inside it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1jttahsc",
+    "version": 1,
+    "section": "self-heal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did Argo CD revert the manual scale faster than lesson 1's loop did?",
+    "choices": [
+      {
+        "text": "kubectl scale is slower under Argo CD",
+        "correct": false,
+        "why": "kubectl took effect at once; Argo CD undid it."
+      },
+      {
+        "text": "Its interval is shorter than fifteen seconds",
+        "correct": false,
+        "why": "Its Git interval is three minutes."
+      },
+      {
+        "text": "It reacts to events, not to a timer",
+        "correct": true,
+        "why": "Right. selfHeal does not wait for the Git timer."
+      },
+      {
+        "text": "It polls the cluster each second",
+        "correct": false,
+        "why": "It watches; it does not poll the cluster on a timer."
+      }
+    ]
+  },
+  {
+    "id": "ex-fmfkh1x4",
+    "version": 1,
+    "section": "self-heal",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An autoscaler owns replicas for one Deployment. What is the narrowest correct response?",
+    "choices": [
+      {
+        "text": "Delete the autoscaler",
+        "correct": false,
+        "why": "It is the right owner of replicas; Git is the wrong one."
+      },
+      {
+        "text": "Ignore the whole Deployment object",
+        "correct": false,
+        "why": "The image, probes and the rest would go unreconciled."
+      },
+      {
+        "text": "Ignore that one field, and respect it on sync",
+        "correct": true,
+        "why": "Right. One field, one kind: the hole is exactly as wide as the owner."
+      },
+      {
+        "text": "Turn selfHeal off for the whole Application",
+        "correct": false,
+        "why": "That gives up every other field too."
+      }
+    ]
+  },
+  {
+    "id": "ex-evcyrzz7",
+    "version": 1,
+    "section": "self-heal",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without the sync option ___=true, a sync would still overwrite a field that ignoreDifferences only hides from the comparison.",
+    "blanks": [
+      {
+        "accept": [
+          "RespectIgnoreDifferences"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-g32as5cw",
+    "version": 1,
+    "section": "history",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did argocd app rollback refuse to run on staging?",
+    "choices": [
+      {
+        "text": "History keeps a single entry",
+        "correct": false,
+        "why": "It listed several entries."
+      },
+      {
+        "text": "Ana lacks permission to roll back",
+        "correct": false,
+        "why": "With --core she has the cluster's admin credentials."
+      },
+      {
+        "text": "The old revision was deleted from Gitea",
+        "correct": false,
+        "why": "Git keeps every commit; nothing was deleted."
+      },
+      {
+        "text": "Auto-sync was on and would undo it",
+        "correct": true,
+        "why": "Right. A rollback outside Git is drift by definition."
+      }
+    ]
+  },
+  {
+    "id": "ex-sx1ag7cz",
+    "version": 1,
+    "section": "history",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By default, how many syncs does an Application's history keep?",
+    "value": 10,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-ettfa0hk",
+    "version": 1,
+    "section": "app-of-apps",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the app of apps, what is left outside Git?",
+    "choices": [
+      {
+        "text": "Every Application except the staging one, still on your machine",
+        "correct": false,
+        "why": "They all live in fleet/argocd/ now."
+      },
+      {
+        "text": "Nothing at all",
+        "correct": false,
+        "why": "Something has to exist before the agent can read Git."
+      },
+      {
+        "text": "The staging manifests",
+        "correct": false,
+        "why": "They were always in fleet."
+      },
+      {
+        "text": "Argo CD's installation and root.yaml",
+        "correct": true,
+        "why": "Right. That is the bootstrap, and the goal is to keep it to two files."
+      }
+    ]
+  },
+  {
+    "id": "ex-y0vpbqe9",
+    "version": 1,
+    "section": "app-of-apps",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the root Application in place, how is a new application added to the cluster?",
+    "choices": [
+      {
+        "text": "Editing root.yaml",
+        "correct": false,
+        "why": "root.yaml points at the directory; it does not list applications."
+      },
+      {
+        "text": "A pull request adding its file to fleet/argocd/",
+        "correct": true,
+        "why": "Right. The root applies whatever is in that directory."
+      },
+      {
+        "text": "kubectl apply of the Application on your machine",
+        "correct": false,
+        "why": "That is what the root replaced."
+      },
+      {
+        "text": "argocd app create on the command line",
+        "correct": false,
+        "why": "It works, and leaves the application outside Git."
+      }
+    ]
+  },
+  {
+    "id": "ex-a0zfs6qm",
+    "version": 1,
+    "section": "projects",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each AppProject list to what it allows.",
+    "pairs": [
+      {
+        "left": "sourceRepos",
+        "right": "Which repositories may be read"
+      },
+      {
+        "left": "destinations",
+        "right": "Which namespaces of which clusters"
+      },
+      {
+        "left": "clusterResourceWhitelist",
+        "right": "Which objects outside a namespace"
+      }
+    ],
+    "right_distractors": [
+      "Which users may log in"
+    ]
+  },
+  {
+    "id": "ex-vecpyqg2",
+    "version": 1,
+    "section": "projects",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An Application in project bulletin points at kube-system. When is it stopped?",
+    "choices": [
+      {
+        "text": "It is not stopped; kube-system is allowed by default",
+        "correct": false,
+        "why": "Only listed destinations are allowed in this project."
+      },
+      {
+        "text": "Before any sync, when the controller validates it",
+        "correct": true,
+        "why": "Right. The Application itself is refused, with the project named."
+      },
+      {
+        "text": "During the sync, object by object",
+        "correct": false,
+        "why": "It never gets as far as a sync."
+      },
+      {
+        "text": "Only after a person rejects it in the web interface",
+        "correct": false,
+        "why": "The rule is enforced by the controller, not by a person."
+      }
+    ]
+  },
+  {
+    "id": "ex-e5afsgz8",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An Application's repository cannot be read. Why is its sync status Unknown rather than OutOfSync?",
+    "choices": [
+      {
+        "text": "Unknown means the Application was deleted",
+        "correct": false,
+        "why": "A deleted Application has no status at all."
+      },
+      {
+        "text": "The cluster is unreachable",
+        "correct": false,
+        "why": "The cluster was fine; the repository was the problem."
+      },
+      {
+        "text": "Argo CD hides failures behind Unknown",
+        "correct": false,
+        "why": "The ComparisonError condition says exactly what happened."
+      },
+      {
+        "text": "Nothing was rendered, so there is nothing to compare",
+        "correct": true,
+        "why": "Right. OutOfSync is a comparison result, and there was no comparison."
+      }
+    ]
+  },
+  {
+    "id": "ex-0mj4xecr",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does Argo CD not prune everything when an Application's path stops existing?",
+    "choices": [
+      {
+        "text": "An empty render is treated as an error",
+        "correct": true,
+        "why": "Right. A vanished path is reported as an error, and the objects stay."
+      },
+      {
+        "text": "Pruning needs a person to confirm each object",
+        "correct": false,
+        "why": "Pruning is automatic when the policy says so."
+      },
+      {
+        "text": "Objects outside the path keep their tracking ids",
+        "correct": false,
+        "why": "They keep them either way; the safeguard is about the render."
+      },
+      {
+        "text": "Git refuses to delete a directory",
+        "correct": false,
+        "why": "Directories can be deleted like any file."
+      }
+    ]
+  },
+  {
+    "id": "ex-q4pdkpcw",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order what happened when the staging message changed in this lesson.",
+    "items": [
+      "The pull request is merged",
+      "argocd app get still shows the old revision",
+      "argocd app get --refresh finds the new commit",
+      "The automated policy syncs it",
+      "curl shows the new message"
+    ],
+    "trap": "Argo CD does not know about the merge until it looks, and it syncs only what it has seen."
+  },
+  {
+    "id": "ex-t0t5tjcp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A chart you do not control sets replicas, an autoscaler also sets it, and selfHeal keeps fighting. What should change, and where?",
+    "choices": [
+      {
+        "text": "The cluster: scale it by hand after each sync",
+        "correct": false,
+        "why": "Every sync, or self-heal, would undo it."
+      },
+      {
+        "text": "The Application, in Git: ignore that one field",
+        "correct": true,
+        "why": "Right. The chart cannot change, so the Application narrows what it compares, through a pull request."
+      },
+      {
+        "text": "The autoscaler: delete it so Git wins",
+        "correct": false,
+        "why": "Then load decides nothing, which defeats having one."
+      },
+      {
+        "text": "Argo CD: turn off selfHeal globally",
+        "correct": false,
+        "why": "That gives up drift correction for every application."
+      }
+    ]
+  }
+]

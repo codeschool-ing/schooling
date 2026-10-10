@@ -1,11 +1,11 @@
 ---
-title: Installing Argo CD
+title: Instalando o Argo CD
 version: 1
 ---
 
-**Argo CD is installed the way it installs everything else: by applying manifests.** The project
-publishes one file per release with every object it needs, and a Kustomize file of three lines points
-at it. Save this as `~/setup/argocd/kustomization.yaml`:
+**O Argo CD é instalado do jeito que ele instala todo o resto: aplicando manifestos.** O projeto
+publica um arquivo por versão com todos os objetos de que precisa, e um arquivo do Kustomize de três
+linhas aponta para ele. Salve isto como `~/setup/argocd/kustomization.yaml`:
 
 ```yaml
 namespace: argocd
@@ -21,10 +21,10 @@ images:
   newName: localhost:5001/lab/dex
 ```
 
-The release is pinned, `v3.5.4`, and that is the habit this course asks for everywhere: **a URL that
-names a version always means the same bytes**, and upgrading Argo CD becomes a one-line change to
-this file, reviewed like any other. Kustomize, which `kubectl` carries built in, fetches the file and
-sets the namespace on every object in it. Lesson 6 is about Kustomize itself.
+A versão está fixada, `v3.5.4`, e esse é o hábito que o curso pede em todo lugar: **uma URL que cita
+uma versão quer dizer sempre os mesmos bytes**, e atualizar o Argo CD vira uma mudança de uma linha
+neste arquivo, revisada como qualquer outra. O Kustomize, que o `kubectl` já traz embutido, baixa o
+arquivo e põe o namespace em todos os objetos dele. A aula 6 é sobre o próprio Kustomize.
 
 ```
 ana@laptop:~/setup$ kubectl create namespace argocd
@@ -45,10 +45,10 @@ NAME                            READY   AGE
 argocd-application-controller   1/1     46s
 ```
 
-`--server-side` is needed and not a style choice: Argo CD's own resource definitions are larger
-than the annotation a client-side apply stores, and are refused without it. **Six deployments and
-a statefulset**, each one of the parts in the last section, and the `wait` held the terminal until all
-the deployments were available. The cluster now uses more memory than before:
+O `--server-side` é necessário e não uma questão de estilo: as definições de recurso do próprio Argo
+CD são maiores do que a anotação que um apply do lado do cliente guarda, e são recusadas sem ele.
+**Seis deployments e um statefulset**, cada um uma das partes da seção anterior, e o `wait` segurou o
+terminal até todos os deployments ficarem disponíveis. O cluster agora usa mais memória do que antes:
 
 ```
 ana@laptop:~/setup$ docker stats --no-stream --format "table {{.Name}}\t{{.MemUsage}}" gitops-control-plane registry gitea
@@ -58,9 +58,9 @@ registry               66.81MiB / 15.72GiB
 gitea                  104.2MiB / 15.72GiB
 ```
 
-## The command
+## O comando
 
-The `argocd` command is one more single file, from the same release, checked the same way:
+O comando `argocd` é mais um arquivo único, da mesma versão, conferido do mesmo jeito:
 
 ```
 ana@laptop:~$ ARCH=$(dpkg --print-architecture)
@@ -72,11 +72,11 @@ ana@laptop:~$ argocd version --client --short
 argocd: v3.5.4+d6d5b24
 ```
 
-`argocd` normally talks to Argo CD's API server, which needs a login, a port-forward or an ingress,
-and a password. **The `--core` mode skips all of that** and talks to the Kubernetes API directly,
-with your kubeconfig, reading and writing Argo CD's objects in the namespace your context points at.
-For a lab where you already hold the cluster's admin credentials it is the shortest path, and every
-command in this course uses it:
+O `argocd` normalmente fala com o API server do Argo CD, o que pede um login, um port-forward ou um
+ingress, e uma senha. **O modo `--core` pula tudo isso** e fala direto com a API do Kubernetes, com o
+seu kubeconfig, lendo e escrevendo os objetos do Argo CD no namespace para onde o seu contexto
+aponta. Para um laboratório em que você já tem as credenciais de administrador do cluster é o
+caminho mais curto, e todo comando deste curso o usa:
 
 ```
 ana@laptop:~$ kubectl config set-context --current --namespace=argocd
@@ -85,16 +85,17 @@ ana@laptop:~$ argocd login --core
 Context 'kubernetes' updated
 ```
 
-## The web interface
+## A interface web
 
-Argo CD's web interface draws every Application as a tree of the objects it owns, which is worth
-seeing once. It is not needed for anything in this course, and these commands were not run for it:
+A interface web do Argo CD desenha cada Application como uma árvore dos objetos que ela possui, o que
+vale ver uma vez. Ela não é necessária para nada neste curso, e estes comandos não foram executados
+para ela:
 
 ```sh
 argocd admin initial-password -n argocd
 kubectl -n argocd port-forward svc/argocd-server 8443:443
 ```
 
-The first prints the generated password of the `admin` user; the second makes the API server
-answer on `https://localhost:8443`, with a self-signed certificate your browser warns about, until
-you press `Ctrl+C`.
+O primeiro imprime a senha gerada do usuário `admin`; o segundo faz o API server responder em
+`https://localhost:8443`, com um certificado autoassinado sobre o qual o navegador avisa, até você
+apertar `Ctrl+C`.

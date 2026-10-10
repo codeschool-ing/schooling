@@ -1,13 +1,13 @@
 ---
-title: Projects: what an Application may touch
+title: Projetos: o que uma Application pode tocar
 version: 1
 ---
 
-**Every Application so far belongs to the project `default`, which allows any repository, any
-cluster, any namespace and any kind of object.** With the app of apps, anybody whose pull request
-to `argocd/` is merged can create an Application, and an Application in `default` can deploy
-anything anywhere, including into `kube-system`. A project narrows that. Save this as
-`fleet/argocd/project-bulletin.yaml`:
+**Toda Application até aqui pertence ao projeto `default`, que permite qualquer repositório, qualquer
+cluster, qualquer namespace e qualquer tipo de objeto.** Com o app de apps, qualquer pessoa cujo pull
+request em `argocd/` entre consegue criar uma Application, e uma Application no `default` publica
+qualquer coisa em qualquer lugar, inclusive no `kube-system`. Um projeto estreita isso. Salve isto
+como `fleet/argocd/project-bulletin.yaml`:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -29,13 +29,13 @@ spec:
     kind: Namespace
 ```
 
-Three lists, each an allow-list. **`sourceRepos`**: only `fleet` may be read. **`destinations`**:
-only the `staging` and `production` namespaces of this cluster. **`clusterResourceWhitelist`**: of
-the objects that live outside a namespace, only a Namespace; a ClusterRole, a CRD or a webhook is
-refused. Objects inside the allowed namespaces are allowed unless a `namespaceResourceBlacklist`
-says otherwise.
+Três listas, cada uma de permissões. **`sourceRepos`**: só o `fleet` pode ser lido.
+**`destinations`**: só os namespaces `staging` e `production` deste cluster.
+**`clusterResourceWhitelist`**: dos objetos que vivem fora de um namespace, só um Namespace; uma
+ClusterRole, uma CRD ou um webhook são recusados. Objetos dentro dos namespaces permitidos são
+permitidos, a menos que uma `namespaceResourceBlacklist` diga outra coisa.
 
-In the same pull request, `argocd/bulletin-staging.yaml` changes `project: default` to
+No mesmo pull request, o `argocd/bulletin-staging.yaml` troca `project: default` por
 `project: bulletin`:
 
 ```
@@ -56,10 +56,10 @@ argocd/bulletin-staging  https://kubernetes.default.svc  staging    bulletin  Sy
 argocd/root              https://kubernetes.default.svc  argocd     default   Synced  Healthy  Auto-Prune  <none>      http://gitea:3000/ana/fleet.git  argocd   main
 ```
 
-## The rule at work
+## A regra em ação
 
-An Application in that project that tries to deploy into `kube-system` never gets as far as a sync.
-This one is applied by hand, as a test, and deleted afterwards:
+Uma Application desse projeto que tente publicar no `kube-system` nunca chega a sincronizar. Esta é
+aplicada à mão, como teste, e apagada depois:
 
 ```
 ana@laptop:~/setup$ kubectl apply -f probe-system.yaml
@@ -72,7 +72,6 @@ ana@laptop:~/setup$ kubectl delete -f probe-system.yaml
 application.argoproj.io "probe-system" deleted from argocd namespace
 ```
 
-The controller refused the Application itself, with a message naming the project and the rule. **A
-project is the line between "may merge a file into `argocd/`" and "may change anything in the
-cluster"**, and lesson 11 draws it tighter, together with the permissions of Argo CD's own service
-account.
+O controller recusou a própria Application, com uma mensagem que cita o projeto e a regra. **Um
+projeto é a linha entre "pode fazer merge de um arquivo em `argocd/`" e "pode mudar qualquer coisa no
+cluster"**, e a aula 11 a aperta, junto com as permissões da service account do próprio Argo CD.

@@ -32,7 +32,24 @@ If lesson 2's `reconcile.sh` is still running in a terminal, **stop it with `Ctr
 agents applying the same objects is the "two truths" problem of lesson 2, even when they happen to
 read the same truth.
 
-@@capture create
+```
+ana@laptop:~/setup$ kubectl apply -f bulletin-staging.yaml
+application.argoproj.io/bulletin-staging created
+ana@laptop:~/setup$ argocd app get bulletin-staging
+Name:               argocd/bulletin-staging
+Project:            default
+Server:             https://kubernetes.default.svc
+Namespace:          staging
+URL:                http://localhost:32773/applications/bulletin-staging
+Source:
+- Repo:             http://gitea:3000/ana/fleet.git
+  Target:           main
+  Path:             staging
+SyncWindow:         Sync Allowed
+Sync Policy:        Manual
+Sync Status:        
+Health Status:      
+```
 
 ## Out of sync, and healthy
 
@@ -40,7 +57,21 @@ Argo CD read the repository at `main`, rendered `staging/`, compared the three o
 cluster and reported two things about each. It says **`OutOfSync`**, though nothing in the
 repository differs from what lesson 2 deployed. The diff says why:
 
-@@capture diff
+```
+ana@laptop:~/setup$ argocd app diff bulletin-staging
+
+===== /Namespace /staging ======
+4a5
+>     argocd.argoproj.io/tracking-id: bulletin-staging:/Namespace:staging/staging
+
+===== /Service staging/bulletin ======
+4a5
+>     argocd.argoproj.io/tracking-id: bulletin-staging:/Service:staging/bulletin
+
+===== apps/Deployment staging/bulletin ======
+4a5
+>     argocd.argoproj.io/tracking-id: bulletin-staging:apps/Deployment:staging/bulletin
+```
 
 The only difference is an annotation Argo CD wants on every object it manages,
 `argocd.argoproj.io/tracking-id`, naming the Application that owns it. **That label is how Argo CD

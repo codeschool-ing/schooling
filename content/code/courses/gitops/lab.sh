@@ -302,7 +302,7 @@ stage1() {
 stage2() {
   export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
   export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
-  docker rm -f gitea >/dev/null 2>&1 || true
+  docker rm -fv gitea >/dev/null 2>&1 || true
   gitea
   local u
   docker exec gitea gitea admin user create --admin --username ana --password change-me-now --email ana@example.org --must-change-password=false >/dev/null
@@ -336,6 +336,47 @@ stage2() {
   cd /home/ana
 }
 
+L3=$LAB/lessons/le-ep4mmbpj
+
+# The state at the end of lesson 3, on top of stage2: Argo CD installed from
+# lesson 3's kustomization, its read-only account and repository, and fleet's
+# argocd/ directory (the staging Application and the bulletin project) applied
+# through the root Application.
+stage3() {
+  export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
+  export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
+  mkdir -p /home/ana/setup/argocd
+  shown "$L3/installing.md" '~/setup/argocd/kustomization.yaml' > /home/ana/setup/argocd/kustomization.yaml
+  kubectl create namespace argocd >/dev/null
+  kubectl apply --server-side -k /home/ana/setup/argocd >/dev/null
+  kubectl -n argocd wait --for=condition=Available deployment --all --timeout=300s >/dev/null
+  docker exec gitea gitea admin user create --username argocd --password change-me-please --email argocd@example.org --must-change-password=false >/dev/null
+  docker exec gitea gitea admin user generate-access-token --username argocd --token-name cluster --scopes read:repository --raw > /home/ana/argocd.token
+  chmod 600 /home/ana/argocd.token
+  api PUT /repos/ana/fleet/collaborators/argocd '{"permission": "read"}' >/dev/null
+  kubectl config set-context --current --namespace=argocd >/dev/null
+  argocd login --core >/dev/null
+  argocd repo add http://gitea:3000/ana/fleet.git --username argocd --password "$(cat /home/ana/argocd.token)" >/dev/null
+  shown "$L3/automation.md" '~/setup/bulletin-staging.yaml' > /home/ana/setup/bulletin-staging.yaml
+  shown "$L3/app-of-apps.md" '~/setup/root.yaml' > /home/ana/setup/root.yaml
+  cd /home/ana/fleet
+  git switch --quiet -c app-of-apps
+  mkdir -p argocd && cp /home/ana/setup/bulletin-staging.yaml argocd/
+  shown "$L3/projects.md" 'fleet/argocd/project-bulletin.yaml' > argocd/project-bulletin.yaml
+  sed -i 's/  project: default/  project: bulletin/' argocd/bulletin-staging.yaml
+  git add argocd
+  commit_at 2026-10-09T16:40:00-03:00 -m "argocd: the staging application and the bulletin project live in Git"
+  merge app-of-apps "argocd: the staging application and the bulletin project live in Git"
+  kubectl apply -f /home/ana/setup/root.yaml >/dev/null
+  local i
+  for i in $(seq 90); do
+    [ "$(argocd app get bulletin-staging -o json 2>/dev/null | jq -r .status.sync.status)" = Synced ] && break
+    sleep 2
+  done
+  kubectl config set-context --current --namespace=default >/dev/null
+  cd /home/ana
+}
+
 api() { # METHOD PATH [JSON]: Gitea's API as ana
   curl -fs -X "$1" -H "Authorization: token $(cat /home/ana/ana.token)" \
     -H 'Content-Type: application/json' ${3:+-d "$3"} "http://localhost:3000/api/v1$2"
@@ -358,17 +399,24 @@ merge() {
   fi
   curl -fs -H "Authorization: token $(cat /home/ana/bruno.token)" -H 'Content-Type: application/json' \
     -d '{"event": "APPROVED", "body": "Approved."}' "http://localhost:3000/api/v1/repos/$repo/pulls/$n/reviews" >/dev/null
-  api POST /repos/$repo/pulls/$n/merge '{"Do": "merge"}' || die "pull request $n of $repo did not merge"
+  # Gitea checks a new pull request for conflicts in the background, and
+  # refuses a merge until it has; so the merge is retried for a while.
+  local i
+  for i in $(seq 20); do
+    api POST /repos/$repo/pulls/$n/merge '{"Do": "merge"}' >/dev/null && break
+    [ "$i" = 20 ] && die "pull request $n of $repo did not merge"
+    sleep 1
+  done
   git switch --quiet main && git pull --quiet
 }
 
 down() {
   kind delete cluster --name gitops >/dev/null 2>&1 || true
-  docker rm -f registry gitea >/dev/null 2>&1 || true
+  docker rm -fv registry gitea >/dev/null 2>&1 || true
 }
 
 case "${1:-}" in
   merge) shift; merge "$@" ;;
-  tools|images|mirror|up|down|nodes_mirror|gitea|stage1|stage2) "$1" ;;
+  tools|images|mirror|up|down|nodes_mirror|gitea|stage1|stage2|stage3) "$1" ;;
   *) sed -n '2,12p' "$0"; exit 1 ;;
 esac

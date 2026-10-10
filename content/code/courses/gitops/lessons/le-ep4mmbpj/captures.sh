@@ -46,6 +46,7 @@ quiet 'sleep 30'
 run 'docker stats --no-stream --format "table {{.Name}}\t{{.MemUsage}}" gitops-control-plane registry gitea'
 
 block cli
+cd /home/ana
 run 'ARCH=$(dpkg --print-architecture)'
 run 'curl -fsSLo argocd https://github.com/argoproj/argo-cd/releases/download/v3.5.4/argocd-linux-$ARCH'
 run 'curl -fsSL https://github.com/argoproj/argo-cd/releases/download/v3.5.4/cli_checksums.txt | grep " argocd-linux-$ARCH$" | sed "s/argocd-linux-$ARCH/argocd/" | sha256sum --check'
@@ -131,7 +132,7 @@ quiet 'sleep 5'
 run 'kubectl -n staging get deployment bulletin'
 
 block events
-run "kubectl -n argocd get events --field-selector involvedObject.name=bulletin-staging --sort-by=.lastTimestamp -o custom-columns=REASON:.reason,MESSAGE:.message | tail -n 4"
+run "kubectl -n argocd get events --field-selector involvedObject.name=bulletin-staging --sort-by=.lastTimestamp -o custom-columns=REASON:.reason,MESSAGE:.message | grep Operation | tail -n 4"
 
 block ignore
 cd /home/ana/setup
@@ -206,27 +207,27 @@ block denied
 probe probe-system bulletin http://gitea:3000/ana/fleet.git staging kube-system > probe-system.yaml
 run 'kubectl apply -f probe-system.yaml'
 quiet 'sleep 8'
-run "argocd app get probe-system | sed -n '/^CONDITION/,\$p'"
+run "argocd app get probe-system | sed -n '/^CONDITION/,/^\$/p'"
 run 'kubectl delete -f probe-system.yaml'
 
 block fail-repo
 probe probe-repo default http://gitea:3000/ana/missing.git staging staging > probe-repo.yaml
 quiet 'kubectl apply -f probe-repo.yaml'
 quiet 'sleep 8'
-run "argocd app get probe-repo | sed -n '/^Sync Status/p;/^CONDITION/,\$p'"
+run "argocd app get probe-repo | sed -n '/^Sync Status/p;/^CONDITION/,/^\$/p'"
 quiet 'kubectl delete -f probe-repo.yaml'
 
 block fail-path
 probe probe-path default http://gitea:3000/ana/fleet.git stagng staging > probe-path.yaml
 quiet 'kubectl apply -f probe-path.yaml'
 quiet 'sleep 8'
-run "argocd app get probe-path | sed -n '/^Sync Status/p;/^CONDITION/,\$p'"
+run "argocd app get probe-path | sed -n '/^Sync Status/p;/^CONDITION/,/^\$/p'"
 quiet 'kubectl delete -f probe-path.yaml'
 
 block fail-shared
 probe probe-copy default http://gitea:3000/ana/fleet.git staging staging > probe-copy.yaml
 quiet 'kubectl apply -f probe-copy.yaml'
 quiet 'sleep 10'
-run "argocd app get probe-copy | sed -n '/^Sync Status/p;/^CONDITION/,\$p'"
+run "argocd app get probe-copy | sed -n '/^Sync Status/p;/^CONDITION/,/^\$/p'"
 quiet 'kubectl delete -f probe-copy.yaml'
 rm -f probe-*.yaml

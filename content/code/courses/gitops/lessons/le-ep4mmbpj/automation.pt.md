@@ -1,12 +1,12 @@
 ---
-title: Automated sync, and pruning
+title: Sincronização automática, e poda
 version: 1
 ---
 
-**A sync you have to type is a deploy tool, not a reconciler.** The Application gets a sync policy
-that makes Argo CD apply every new commit on its own, delete what Git no longer describes, and undo
-changes made behind its back. The policy goes at the end of `spec`, and this is the whole of
-`~/setup/bulletin-staging.yaml` with it:
+**Uma sincronização que você precisa digitar é uma ferramenta de deploy, não um reconciliador.** A
+Application ganha uma política de sincronização que faz o Argo CD aplicar sozinho cada commit novo,
+apagar o que o Git não descreve mais e desfazer mudanças feitas pelas costas dele. A política vai no
+fim do `spec`, e este é o `~/setup/bulletin-staging.yaml` inteiro com ela:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -29,10 +29,10 @@ spec:
       selfHeal: true
 ```
 
-`automated` alone syncs when Git changes. **`prune: true`** lets that sync delete objects that
-disappeared from Git, and **`selfHeal: true`** makes it sync when the cluster changes too. Both are
-off by default, deliberately: deleting things and overwriting people are the two actions a new
-user of a tool should have to ask for.
+O `automated` sozinho sincroniza quando o Git muda. **O `prune: true`** deixa essa sincronização
+apagar objetos que sumiram do Git, e **o `selfHeal: true`** a faz sincronizar quando o cluster muda
+também. Os dois vêm desligados por padrão, de propósito: apagar coisas e sobrescrever pessoas são as
+duas ações que um usuário novo de uma ferramenta deveria precisar pedir.
 
 ```
 ana@laptop:~/setup$ kubectl apply -f bulletin-staging.yaml
@@ -42,17 +42,17 @@ NAME                     CLUSTER                         NAMESPACE  PROJECT  STA
 argocd/bulletin-staging  https://kubernetes.default.svc  staging    default  Synced  Healthy  Auto-Prune  <none>      http://gitea:3000/ana/fleet.git  staging  main
 ```
 
-## A change, through Git only
+## Uma mudança, só pelo Git
 
-The message changes the lesson 2 way: a branch, a commit, a pull request that the check and Bruno
-approve, a merge.
+A mensagem muda do jeito da aula 2: um branch, um commit, um pull request que a checagem e o Bruno
+aprovam, um merge.
 
 ```
 ana@laptop:~/fleet$ git switch --quiet -c argocd-banner
 ana@laptop:~/fleet$ git commit --quiet -am "staging: managed by Argo CD"
 ```
 
-Then Argo CD has to notice:
+Depois o Argo CD precisa perceber:
 
 ```
 ana@laptop:~/fleet$ argocd app get bulletin-staging | grep -E '^(Sync Status|Health Status)'
@@ -67,17 +67,17 @@ message: Staging is managed by Argo CD.
 token: none
 ```
 
-Right after the merge, Argo CD still reports the old revision. **It looks at the repository on a
-timer, every three minutes by default**, and nothing told it to look sooner. `--refresh` asks it to
-look now: it found the new commit and reported `OutOfSync`, and the automated policy synced it a
-moment later, which is the new message `curl` got. In a real
-setup the Git server calls Argo CD's webhook on every push, which makes the wait a second or two
-instead of minutes; lesson 4 sets one up for Flux.
+Logo depois do merge, o Argo CD ainda informa a revisão antiga. **Ele olha o repositório num
+cronômetro, a cada três minutos por padrão**, e nada mandou que olhasse antes. O `--refresh` pede
+que olhe agora: ele achou o commit novo e informou `OutOfSync`, e a política automática o
+sincronizou um momento depois, que é a mensagem nova que o `curl` recebeu. Num
+arranjo de verdade o servidor Git chama o webhook do Argo CD a cada push, o que transforma a espera
+em um ou dois segundos em vez de minutos; a aula 4 monta um para o Flux.
 
-## Pruning
+## Poda
 
-Lesson 1's loop could not delete. Remove the Service from `staging/bulletin.yaml` through a pull
-request, the same way:
+O laço da aula 1 não conseguia apagar. Tire o Service do `staging/bulletin.yaml` por um pull request,
+do mesmo jeito:
 
 ```
 ana@laptop:~/fleet$ git switch --quiet -c no-service
@@ -94,8 +94,8 @@ ana@laptop:~/fleet$ kubectl -n staging get service
 No resources found in staging namespace.
 ```
 
-`pruned`. The Service carried Argo CD's tracking annotation, it was no longer in the rendered
-manifests, so the controller deleted it. That is the whole mechanism, and it is also the danger:
-**a file deleted by mistake in Git is an object deleted in the cluster on the next sync.** The
-protection rule and the review of lesson 2 are what stand in the way of that mistake. The Service
-comes back with a revert, through one more pull request.
+`pruned`. O Service levava a anotação de rastreamento do Argo CD, não estava mais nos manifestos
+gerados, e o controller o apagou. Esse é todo o mecanismo, e é também o perigo: **um arquivo apagado
+por engano no Git é um objeto apagado no cluster na próxima sincronização.** A regra de proteção e a
+revisão da aula 2 são o que fica no caminho desse engano. O Service volta com um revert, por mais um
+pull request.

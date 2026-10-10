@@ -1,13 +1,13 @@
 ---
-title: A read-only key to the repository
+title: Uma chave só de leitura para o repositório
 version: 1
 ---
 
-**Argo CD needs to read `fleet`, and it needs nothing else from Gitea.** It never pushes, never
-opens a pull request, never approves. So it gets an account of its own with read access to that one
-repository, and a token with a single scope, `read:repository`. If that token leaks, the damage is
-that somebody can read the desired state, which is bad, and not that somebody can change it, which
-would be the cluster.
+**O Argo CD precisa ler o `fleet`, e não precisa de mais nada do Gitea.** Ele nunca faz push, nunca
+abre pull request, nunca aprova. Então ele ganha uma conta própria com acesso de leitura a esse
+repositório, e um token com um único escopo, `read:repository`. Se esse token vazar, o estrago é que
+alguém consegue ler o estado desejado, o que é ruim, e não que alguém consegue mudá-lo, o que seria
+o cluster.
 
 ```
 ana@laptop:~$ docker exec gitea gitea admin user create --username argocd --password 'change-me-please' --email argocd@example.org --must-change-password=false
@@ -18,8 +18,8 @@ ana@laptop:~$ curl -s -o /dev/null -w "%{http_code}\n" -X PUT -H "$AS_ANA" -H "$
 204
 ```
 
-`argocd` is a **collaborator with `read` permission**, the lowest Gitea has. Now Argo CD is told
-about the repository, at the address that works from inside the cluster:
+O `argocd` é um **colaborador com permissão `read`**, a mais baixa que o Gitea tem. Agora o Argo CD
+fica sabendo do repositório, no endereço que funciona de dentro do cluster:
 
 ```
 ana@laptop:~$ argocd repo add http://gitea:3000/ana/fleet.git --username argocd --password "$(cat ~/argocd.token)"
@@ -29,9 +29,9 @@ TYPE  NAME  REPO                             INSECURE  OCI    LFS    CREDS  STAT
 git         http://gitea:3000/ana/fleet.git  false     false  false  false  Successful           
 ```
 
-`Successful` means the repo server cloned it with those credentials. They are not stored anywhere
-mysterious: `argocd repo add` wrote a Kubernetes Secret in the `argocd` namespace, with a label that
-tells Argo CD what it is,
+`Successful` quer dizer que o repo server o clonou com essas credenciais. Elas não ficam guardadas
+em nenhum lugar misterioso: o `argocd repo add` escreveu um Secret do Kubernetes no namespace
+`argocd`, com um rótulo que diz ao Argo CD o que ele é,
 
 ```
 ana@laptop:~$ kubectl -n argocd get secrets -l argocd.argoproj.io/secret-type=repository
@@ -41,7 +41,7 @@ ana@laptop:~$ kubectl -n argocd get secrets -l argocd.argoproj.io/secret-type=re
 http://gitea:3000/ana/fleet.git
 ```
 
-and that is all a "repository" is to Argo CD. Writing that Secret as YAML and applying it does the
-same thing, which is how a team adds repositories without anybody typing a token into a terminal.
-**Keeping that YAML in Git is the one thing you must not do**: its `password` field is the token,
-base64 encoded. Lesson 9 shows how to keep it in Git encrypted.
+e isso é tudo o que um "repositório" é para o Argo CD. Escrever esse Secret em YAML e aplicá-lo faz a
+mesma coisa, e é assim que um time acrescenta repositórios sem ninguém digitar um token num terminal.
+**Guardar esse YAML no Git é a única coisa que você não pode fazer**: o campo `password` dele é o
+token, em base64. A aula 9 mostra como guardá-lo no Git cifrado.
