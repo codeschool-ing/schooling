@@ -74,7 +74,7 @@ Running 5 tests using 1 worker
   5 passed (15.0s)
 ```
 
-Cinco aprovações em cinco, cada uma levando pouco mais de dois segundos, um segundo e meio dos quais
+Cinco aprovações em cinco, cada uma levando cerca de dois segundos, um segundo e meio dos quais
 é a pausa do servidor. O teste espera exatamente o que a página precisa, e nada mais.
 
 ## A correção melhor é da página
@@ -83,9 +83,9 @@ A marca funciona, e é um acordo entre a página e os testes dela que mais ningu
 desenvolvedor que renomeie o atributo quebra o teste sem mudar nada que um usuário notaria. Existe
 uma correção que serve a todos, e cabe aos desenvolvedores fazê-la e a quem testa pedi-la: **enviar
 os botões desabilitados e habilitar cada um quando a função dele for ligada.** Uma pessoa então vê
-um botão acinzentado em vez de tocar num que a ignora, um leitor de tela o anuncia como
-indisponível, e a verificação de acionabilidade do Playwright, que já espera um botão estar
-habilitado antes de clicar, faz a espera sem nenhuma linha a mais no teste.
+um botão acinzentado em vez de tocar num que a ignora, e um leitor de tela o anuncia como
+indisponível. A verificação de acionabilidade do Playwright já espera um botão estar habilitado
+antes de clicar, então ela faz a espera sem nenhuma linha a mais no teste.
 
 São duas edições. Em `app/routes/ssr.js`, o botão é enviado com `disabled`:
 

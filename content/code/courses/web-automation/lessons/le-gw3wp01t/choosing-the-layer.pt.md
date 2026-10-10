@@ -90,7 +90,7 @@ Running 5 tests using 2 workers
 Cinco testes em dois workers. O que espera a página levou 2,0 s, e cada um dos outros quatro levou
 entre 32 ms e 174 ms.
 
-A regra por baixo desta seção, verificar cada coisa na camada mais barata que consegue vê-la e
-guardar o navegador para o que só um navegador vê, é a pirâmide de testes da aula 21, e a aula 1 de
-`testing-cicd` dá nome às camadas. Testes que falam só HTTP são o assunto do próximo curso,
+A regra por baixo desta seção é verificar cada coisa na camada mais barata que consegue vê-la, e
+guardar o navegador para o que só um navegador vê. A aula 21 faz dela a pirâmide de testes, e a
+aula 1 de `testing-cicd` dá nome às camadas. Testes que falam só HTTP são o assunto do próximo curso,
 `api-mobile-automation`.

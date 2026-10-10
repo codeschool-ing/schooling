@@ -74,7 +74,7 @@ Running 5 tests using 1 worker
   5 passed (15.0s)
 ```
 
-Five passes out of five, each taking a little over two seconds, a second and a half of which is the
+Five passes out of five, each taking about two seconds, a second and a half of which is the
 server's pause. The test waits exactly as long as the page needs and no longer.
 
 ## The better fix belongs to the page
@@ -83,9 +83,9 @@ The marker works, and it is an agreement between the page and its tests that nob
 A developer who renames the attribute breaks the test without changing anything a user would
 notice. There is a fix that serves everybody, and it is the developers' to make and a tester's to
 ask for: **send the buttons disabled, and enable each one when its handler is attached.** A person
-then sees a greyed-out button instead of tapping one that ignores them, a screen reader announces
-it as unavailable, and Playwright's actionability check, which already waits for a button to be
-enabled before clicking, does the waiting with no extra line in the test.
+then sees a greyed-out button instead of tapping one that ignores them, and a screen reader
+announces it as unavailable. Playwright's actionability check already waits for a button to be
+enabled before clicking, so it does the waiting with no extra line in the test.
 
 It is two edits. In `app/routes/ssr.js`, the button is sent with `disabled`:
 

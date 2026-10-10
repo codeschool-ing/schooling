@@ -88,7 +88,7 @@ Running 5 tests using 2 workers
 Five tests on two workers. The one that waits for the page took 2.0 s, and each of the other four
 took between 32 ms and 174 ms.
 
-The rule underneath this section, checking each thing at the cheapest layer that can see it and
-keeping the browser for what only a browser can see, is the testing pyramid of lesson 21, and
-`testing-cicd` lesson 1 names the layers. Tests that speak only HTTP are the subject of the next
+The rule underneath this section is to check each thing at the cheapest layer that can see it, and
+to keep the browser for what only a browser can see. Lesson 21 builds it into the testing pyramid,
+and `testing-cicd` lesson 1 names the layers. Tests that speak only HTTP are the subject of the next
 course, `api-mobile-automation`.
