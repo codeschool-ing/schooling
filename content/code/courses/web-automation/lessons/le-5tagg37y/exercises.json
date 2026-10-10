@@ -1,0 +1,568 @@
+[
+ {
+  "id": "ex-kj7tg8q5",
+  "version": 1,
+  "section": "the-protocol",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In a Selenium test against Chrome, which program actually works the browser?",
+  "choices": [
+   {
+    "text": "`chromedriver`, which the test sends HTTP requests to",
+    "correct": true,
+    "why": "Right. The test is an HTTP client, the driver an HTTP server, and only the driver touches Chrome."
+   },
+   {
+    "text": "Selenium code injected into the page",
+    "correct": false,
+    "why": "Nothing of Selenium runs inside the page; that picture belongs to tools like Cypress, lesson 9."
+   },
+   {
+    "text": "The test process, through a browser extension",
+    "correct": false,
+    "why": "No extension is involved: the test only speaks HTTP to a driver."
+   },
+   {
+    "text": "Node's test runner",
+    "correct": false,
+    "why": "`node:test` only runs the test functions; it knows nothing about browsers."
+   }
+  ]
+ },
+ {
+  "id": "ex-fdck29q9",
+  "version": 1,
+  "section": "the-protocol",
+  "type": "ordering",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Put the requests of the session you held by hand with `curl` in order.",
+  "items": [
+   "`POST /session`",
+   "`POST /session/{id}/url`",
+   "`POST /session/{id}/element`",
+   "`GET /session/{id}/element/{element}/text`",
+   "`DELETE /session/{id}`"
+  ],
+  "trap": "Every address after the first carries the session id, so nothing can come before `POST /session`."
+ },
+ {
+  "id": "ex-84de8102",
+  "version": 1,
+  "section": "the-protocol",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`POST /session/{id}/element` answered `{\"value\":{\"element-6066-11e4-a52e-4f735466cecf\":\"f.A30D…e.3\"}}`. What did you get back?",
+  "choices": [
+   {
+    "text": "The element's HTML",
+    "correct": false,
+    "why": "No markup came back; to learn its text you had to send a second request."
+   },
+   {
+    "text": "A reference the driver uses to name that node",
+    "correct": true,
+    "why": "Right. Anything about the element is a further request carrying that reference."
+   },
+   {
+    "text": "An error code, because the key looks like a fault number",
+    "correct": false,
+    "why": "That odd key is fixed by the standard so no page's own JSON can be mistaken for an element."
+   },
+   {
+    "text": "The heading's text, encoded",
+    "correct": false,
+    "why": "The text came from `GET .../text`, as `{\"value\":\"Banana\"}`."
+   }
+  ]
+ },
+ {
+  "id": "ex-h5sahst5",
+  "version": 1,
+  "section": "the-protocol",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A test finds the basket count, then the page redraws the whole header, then the test reads the element it found. What does the protocol predict?",
+  "choices": [
+   {
+    "text": "The new count, since the reference follows the selector",
+    "correct": false,
+    "why": "A reference names a node, not a selector; it is not looked up again."
+   },
+   {
+    "text": "An error: the reference names a node that is gone",
+    "correct": true,
+    "why": "Right. The reference has gone stale, and the driver says so."
+   },
+   {
+    "text": "The old count, cached by the driver",
+    "correct": false,
+    "why": "The driver keeps no copy of the text; every read is a new request to the page."
+   },
+   {
+    "text": "Nothing changes, since a test pauses the page between commands",
+    "correct": false,
+    "why": "The page goes on running between requests; that is why it can change under the test."
+   }
+  ]
+ },
+ {
+  "id": "ex-nppbf3jv",
+  "version": 1,
+  "section": "first-test",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The Selenium test fails at once because nothing answers on port 3000. Which step did the student skip?",
+  "choices": [
+   {
+    "text": "Running `npx playwright install chromium`",
+    "correct": false,
+    "why": "That fetches Playwright's browser; it starts no server."
+   },
+   {
+    "text": "Adding `webServer` to `selenium/shop.test.js`",
+    "correct": false,
+    "why": "`webServer` is a Playwright configuration option; `node:test` has nothing like it."
+   },
+   {
+    "text": "Starting the shop with `npm start` in another terminal",
+    "correct": true,
+    "why": "Right. With Selenium and `node:test`, nothing starts the shop for you."
+   },
+   {
+    "text": "Calling `quit()` in `after`",
+    "correct": false,
+    "why": "`quit()` closes the browser at the end; it has nothing to do with the shop being up."
+   }
+  ]
+ },
+ {
+  "id": "ex-0rc6qd0t",
+  "version": 1,
+  "section": "first-test",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the test wait for the count to say `1` instead of reading it straight after `click()`?",
+  "choices": [
+   {
+    "text": "Selenium cannot read text from a header",
+    "correct": false,
+    "why": "It reads any element's text; the issue is when, not where."
+   },
+   {
+    "text": "`click()` returns once the click is dispatched, before the shop has necessarily answered",
+    "correct": true,
+    "why": "Right. The count changes only when the shop's answer arrives, so the test waits for it."
+   },
+   {
+    "text": "The count is only drawn after the toast disappears",
+    "correct": false,
+    "why": "The script redraws the count first and then shows the toast."
+   },
+   {
+    "text": "`assert.equal` cannot compare strings",
+    "correct": false,
+    "why": "It compares strings fine; the final assert does exactly that."
+   }
+  ]
+ },
+ {
+  "id": "ex-7bxazfrf",
+  "version": 1,
+  "section": "first-test",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each job to what does it in the Selenium test with `node:test`.",
+  "pairs": [
+   {
+    "left": "Starting the shop",
+    "right": "You, with `npm start`"
+   },
+   {
+    "left": "Opening the browser",
+    "right": "`build()` in `before`"
+   },
+   {
+    "left": "Closing it",
+    "right": "`quit()` in `after`"
+   },
+   {
+    "left": "Waiting for the cards",
+    "right": "`until.elementsLocated`"
+   }
+  ]
+ },
+ {
+  "id": "ex-28xcskgs",
+  "version": 1,
+  "section": "first-test",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The wait timed out with `Waiting until element text is` and nothing more. What would make the next such failure say what went wrong?",
+  "choices": [
+   {
+    "text": "A longer timeout, so the message has time to fill in",
+    "correct": false,
+    "why": "The message's wording does not depend on the timeout; only the wait's length changes."
+   },
+   {
+    "text": "A message as `driver.wait`'s third argument",
+    "correct": true,
+    "why": "Right. `driver.wait(condition, 5000, 'basket count never became 1')` puts your words in the error."
+   },
+   {
+    "text": "An implicit wait set as well",
+    "correct": false,
+    "why": "Mixing the two makes timing harder to predict and adds nothing to the message."
+   },
+   {
+    "text": "The TAP reporter instead of `spec`",
+    "correct": false,
+    "why": "Both reporters print the same error; TAP is only terser around it."
+   }
+  ]
+ },
+ {
+  "id": "ex-f4c7aqtn",
+  "version": 1,
+  "section": "drivers",
+  "type": "matching",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Match each browser to its driver.",
+  "pairs": [
+   {
+    "left": "Chrome",
+    "right": "`chromedriver`"
+   },
+   {
+    "left": "Firefox",
+    "right": "`geckodriver`"
+   },
+   {
+    "left": "Edge",
+    "right": "`msedgedriver`"
+   },
+   {
+    "left": "Safari",
+    "right": "`safaridriver`"
+   }
+  ]
+ },
+ {
+  "id": "ex-n5yk2my2",
+  "version": 1,
+  "section": "drivers",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The morning after Chrome updated itself to 141, every test fails with `This version of ChromeDriver only supports Chrome version 139`. What is the fix?",
+  "choices": [
+   {
+    "text": "Pin Chrome back to 139 in the test",
+    "correct": false,
+    "why": "The test does not choose the browser's version; the installed Chrome is what it is."
+   },
+   {
+    "text": "Retry the tests until one passes",
+    "correct": false,
+    "why": "The driver refuses every session; no retry gets past a version check."
+   },
+   {
+    "text": "A driver whose major version is 141, often by deleting the old one on the `PATH`",
+    "correct": true,
+    "why": "Right. Selenium Manager uses a driver it finds on the `PATH` first; remove the stale one and it fetches the right one."
+   },
+   {
+    "text": "Change `forBrowser('chrome')` to `forBrowser('chromium')`",
+    "correct": false,
+    "why": "The browser is the same; the driver is still the one that does not match."
+   }
+  ]
+ },
+ {
+  "id": "ex-f2agh8aq",
+  "version": 1,
+  "section": "drivers",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Driver 140 opened Chrome 141 and logged `has not been tested with Chrome version 141`. A colleague wants to leave it, since the tests pass. What does the lesson say?",
+  "choices": [
+   {
+    "text": "Leave it: a warning is not a failure",
+    "correct": false,
+    "why": "Passing today is the driver guessing; the vendor's rule is the same major version."
+   },
+   {
+    "text": "Use the driver whose major version is the browser's",
+    "correct": true,
+    "why": "Right. Two versions behind and one ahead both refused outright; one behind only happens to work."
+   },
+   {
+    "text": "Downgrade Chrome to 140 so the warning disappears",
+    "correct": false,
+    "why": "Browsers update themselves; the driver is the part you keep in step."
+   },
+   {
+    "text": "Switch to geckodriver, which accepts any Chrome",
+    "correct": false,
+    "why": "geckodriver drives Firefox, not Chrome."
+   }
+  ]
+ },
+ {
+  "id": "ex-17181tb3",
+  "version": 1,
+  "section": "drivers",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Where does Selenium Manager look for a driver before it downloads one?",
+  "choices": [
+   {
+    "text": "In `node_modules`",
+    "correct": false,
+    "why": "Only Selenium Manager itself is in `node_modules`; drivers are not shipped there."
+   },
+   {
+    "text": "On the `PATH`",
+    "correct": true,
+    "why": "Right. Its log says `Found chromedriver ... in PATH`, and a stale one there wins."
+   },
+   {
+    "text": "Inside Chrome's own installation folder",
+    "correct": false,
+    "why": "Chrome does not ship its driver; the driver comes from Chrome for Testing."
+   },
+   {
+    "text": "On the Selenium Grid at port 4444, if there is one running",
+    "correct": false,
+    "why": "Selenium Manager knows nothing of a grid; a grid's node runs its own lookup."
+   }
+  ]
+ },
+ {
+  "id": "ex-p2hsz6ps",
+  "version": 1,
+  "section": "waits-in-selenium",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "With an implicit wait of 3000 ms, a test checks that no `.error` element exists. On a page with no error, how long does that check take?",
+  "choices": [
+   {
+    "text": "A few milliseconds",
+    "correct": false,
+    "why": "That is what finding the cards took, because they existed; an absent element is the opposite case."
+   },
+   {
+    "text": "The full three seconds, every time",
+    "correct": true,
+    "why": "Right. It measured 3036 ms: an implicit wait cannot tell not yet from never."
+   },
+   {
+    "text": "It never returns",
+    "correct": false,
+    "why": "It returns an empty list when the timeout runs out."
+   },
+   {
+    "text": "Half the timeout, on average",
+    "correct": false,
+    "why": "There is no averaging: it keeps looking until the whole timeout is spent."
+   }
+  ]
+ },
+ {
+  "id": "ex-093wyrhs",
+  "version": 1,
+  "section": "waits-in-selenium",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A test must wait for the toast to empty after it said `Added Banana`. Which wait can express that?",
+  "choices": [
+   {
+    "text": "An implicit wait, since the toast is an element",
+    "correct": false,
+    "why": "An implicit wait only waits for an element to exist, and the toast always exists."
+   },
+   {
+    "text": "Either kind, set to two seconds",
+    "correct": false,
+    "why": "The length is not the problem; an implicit wait has no condition about text at all."
+   },
+   {
+    "text": "An explicit wait on `until.elementTextIs(toast, '')`",
+    "correct": true,
+    "why": "Right. It took 2115 ms in the capture, about the two seconds the script waits."
+   },
+   {
+    "text": "None: a fixed sleep is the only way",
+    "correct": false,
+    "why": "An explicit wait does it and returns as soon as it holds; lesson 13 is about why sleeping is worse."
+   }
+  ]
+ },
+ {
+  "id": "ex-2p9gbbqg",
+  "version": 1,
+  "section": "waits-in-selenium",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What is the implicit timeout of a new session, in milliseconds, as the `timeouts` of the session you opened by hand showed?",
+  "value": 0,
+  "tolerance": 0,
+  "unit": "ms"
+ },
+ {
+  "id": "ex-6vfc9bnf",
+  "version": 1,
+  "section": "the-grid",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What changes in a test to run it on a Selenium Grid instead of a local driver?",
+  "choices": [
+   {
+    "text": "Every command becomes a grid-specific call",
+    "correct": false,
+    "why": "The grid speaks the same WebDriver protocol, so the commands are the same."
+   },
+   {
+    "text": "The address the builder sends requests to",
+    "correct": true,
+    "why": "Right. `usingServer('http://localhost:4444')`, or `SELENIUM_REMOTE_URL`, and nothing else."
+   },
+   {
+    "text": "The test runner, which must be Selenium's",
+    "correct": false,
+    "why": "Selenium has no runner of its own; `node:test` ran the grid test unchanged."
+   },
+   {
+    "text": "The selectors, which the router rewrites",
+    "correct": false,
+    "why": "The router forwards requests; it does not touch what they ask for."
+   }
+  ]
+ },
+ {
+  "id": "ex-tczgze1h",
+  "version": 1,
+  "section": "the-grid",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which part of the grid decides which node a new session goes to?",
+  "choices": [
+   {
+    "text": "The router",
+    "correct": false,
+    "why": "The router is the address and forwards requests; the choice is made after the queue."
+   },
+   {
+    "text": "The session map",
+    "correct": false,
+    "why": "It remembers which node holds a session once one exists; it does not choose."
+   },
+   {
+    "text": "The distributor, matching capabilities to free slots",
+    "correct": true,
+    "why": "Right. The log says `Session request received by the Distributor`, then the node creates it."
+   },
+   {
+    "text": "The test, by naming a node's address",
+    "correct": false,
+    "why": "The test only names the grid; it never learns which machine it got."
+   }
+  ]
+ },
+ {
+  "id": "ex-f96phxa4",
+  "version": 1,
+  "section": "the-grid",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A single process holding the router, queue, distributor, session map and one node is started with `java -jar selenium-server-4.51.0.jar ___` .",
+  "blanks": [
+   {
+    "accept": [
+     "standalone"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-fyzp512a",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A grid node runs on another machine. The test does `driver.get('http://localhost:3000/')` and the browser shows a connection error, though the shop runs on the tester's laptop. Why?",
+  "choices": [
+   {
+    "text": "The grid blocks port 3000",
+    "correct": false,
+    "why": "The grid has no say over which addresses a browser opens."
+   },
+   {
+    "text": "The node's chromedriver is the wrong version",
+    "correct": false,
+    "why": "A version mismatch refuses the session; here the session opened and the page failed."
+   },
+   {
+    "text": "`localhost` is resolved by the browser, on the node",
+    "correct": true,
+    "why": "Right. On the node's machine nothing listens on 3000; the app needs an address the nodes can reach."
+   },
+   {
+    "text": "`SELENIUM_REMOTE_URL` overrides the shop's address too",
+    "correct": false,
+    "why": "It only says where the WebDriver requests go, not what the browser loads."
+   }
+  ]
+ },
+ {
+  "id": "ex-yzmx2ytf",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Selenium and Playwright both open the shop headless here. Which part of that was written into the Selenium test by hand?",
+  "choices": [
+   {
+    "text": "Nothing: both are headless by default",
+    "correct": false,
+    "why": "Only Playwright is; Selenium opens a window unless told otherwise."
+   },
+   {
+    "text": "The `--headless=new` argument in the Chrome options",
+    "correct": true,
+    "why": "Right. It is Chrome's own switch, passed through Selenium; delete it to watch the run."
+   },
+   {
+    "text": "A `headless: true` line in a configuration file",
+    "correct": false,
+    "why": "The Selenium test has no configuration file; the option is in the code."
+   },
+   {
+    "text": "An environment variable set before `node --test`",
+    "correct": false,
+    "why": "The only variable in the lesson is `SELENIUM_REMOTE_URL`, which picks a server, not a mode."
+   }
+  ]
+ }
+]

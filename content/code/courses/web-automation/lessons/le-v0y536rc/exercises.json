@@ -9,11 +9,6 @@
   "prompt": "A response carries `Cache-Control: no-cache`. What may the browser do with it?",
   "choices": [
    {
-    "text": "Keep nothing and fetch it again every time",
-    "correct": false,
-    "why": "That is `no-store`. The name `no-cache` misleads exactly this way."
-   },
-   {
     "text": "Keep it, and ask the server before each use",
     "correct": true,
     "why": "Right. It may keep a copy, and the question it asks is answered by a `304` or a `200`."
@@ -27,6 +22,11 @@
     "text": "Use it for the rest of the session without asking",
     "correct": false,
     "why": "Using a copy without asking is what `max-age` allows, for as many seconds as it names."
+   },
+   {
+    "text": "Keep nothing and fetch it again every time",
+    "correct": false,
+    "why": "That is `no-store`. The name `no-cache` misleads exactly this way."
    }
   ]
  },
@@ -98,16 +98,6 @@
   "prompt": "A site serves `app.3f9c1a.js` with `max-age` set to a year. A new release changes the script. Why do returning visitors still get the new one?",
   "choices": [
    {
-    "text": "The browser checks the `ETag` once a day",
-    "correct": false,
-    "why": "Within `max-age` the browser checks nothing; that is the point of it."
-   },
-   {
-    "text": "The new release has a new file name, so a new address",
-    "correct": true,
-    "why": "Right. The cache is keyed by address, and the page now asks for one never seen."
-   },
-   {
     "text": "A release clears every visitor's cache",
     "correct": false,
     "why": "A server has no way to reach into a browser's cache."
@@ -116,6 +106,16 @@
     "text": "They do not; they wait a year",
     "correct": false,
     "why": "They would, if the name stayed the same. Here it does not."
+   },
+   {
+    "text": "The browser checks the `ETag` once a day",
+    "correct": false,
+    "why": "Within `max-age` the browser checks nothing; that is the point of it."
+   },
+   {
+    "text": "The new release has a new file name, so a new address",
+    "correct": true,
+    "why": "Right. The cache is keyed by address, and the page now asks for one never seen."
    }
   ]
  },
@@ -160,6 +160,11 @@
   "prompt": "The browser reported `200 /api/offer` on every visit. What does that status tell you?",
   "choices": [
    {
+    "text": "That the request was revalidated",
+    "correct": false,
+    "why": "A revalidation shows as `304` in the shop's log, and there was none for the offer."
+   },
+   {
     "text": "That the server answered each time",
     "correct": false,
     "why": "The server log has the request once; the other answers came from the cache."
@@ -173,11 +178,6 @@
     "text": "That the offer is fresh",
     "correct": false,
     "why": "The page said Mango after the change; a `200` and a stale answer go together fine."
-   },
-   {
-    "text": "That the request was revalidated",
-    "correct": false,
-    "why": "A revalidation shows as `304` in the shop's log, and there was none for the offer."
    }
   ]
  },
@@ -204,11 +204,6 @@
   "prompt": "Why does the first test in `tests/cache.spec.js` pass although the offer is cached for ten minutes?",
   "choices": [
    {
-    "text": "The `request` fixture clears the browser's cache",
-    "correct": false,
-    "why": "`request` sends HTTP requests outside the browser; it touches no cache."
-   },
-   {
     "text": "Its page lives in a new context with an empty cache",
     "correct": true,
     "why": "Right. Every test is a first visit, so there is no copy to be stale."
@@ -222,6 +217,11 @@
     "text": "`toContainText` retries until the cache expires",
     "correct": false,
     "why": "It retries for five seconds; the copy lasts six hundred."
+   },
+   {
+    "text": "The `request` fixture clears the browser's cache",
+    "correct": false,
+    "why": "`request` sends HTTP requests outside the browser; it touches no cache."
    }
   ]
  },
@@ -234,6 +234,11 @@
   "drillable": true,
   "prompt": "Which visitor in `visitors.mjs` was still shown Mango after the change?",
   "choices": [
+   {
+    "text": "None of them; a second `goto` always refetches",
+    "correct": false,
+    "why": "The same page visited again was shown Mango too."
+   },
    {
     "text": "A new context made from the first one's saved storage state",
     "correct": false,
@@ -248,11 +253,6 @@
     "text": "A new page in the same context",
     "correct": true,
     "why": "Right. Pages in one context share one cache."
-   },
-   {
-    "text": "None of them; a second `goto` always refetches",
-    "correct": false,
-    "why": "The same page visited again was shown Mango too."
    }
   ]
  },
@@ -265,11 +265,6 @@
   "drillable": true,
   "prompt": "A team saves a logged-in `storageState` and reuses it in every test so that nobody logs in twice. Does that make their tests returning customers as far as the cache goes?",
   "choices": [
-   {
-    "text": "Yes; the state includes everything the browser kept",
-    "correct": false,
-    "why": "It includes cookies and local storage. The saved-state visitor was shown the new offer."
-   },
    {
     "text": "Yes, but only for files with an `ETag`",
     "correct": false,
@@ -284,6 +279,11 @@
     "text": "No, because `storageState` disables caching",
     "correct": false,
     "why": "It disables nothing; the new context simply starts without a cache."
+   },
+   {
+    "text": "Yes; the state includes everything the browser kept",
+    "correct": false,
+    "why": "It includes cookies and local storage. The saved-state visitor was shown the new offer."
    }
   ]
  },
@@ -314,11 +314,6 @@
   "prompt": "What does `test.fail()` do to the returning-customer test?",
   "choices": [
    {
-    "text": "It skips the test until the flaw is fixed",
-    "correct": false,
-    "why": "That is `test.skip()`. This test runs every time."
-   },
-   {
     "text": "It expects a failure, and reports one if the test passes",
     "correct": true,
     "why": "Right. Green while the flaw exists, red the day somebody fixes it, which is the reminder to remove the mark."
@@ -332,6 +327,11 @@
     "text": "It turns the failure into a warning that the run ignores",
     "correct": false,
     "why": "The run does not ignore it: it counts as passed only while it fails as expected."
+   },
+   {
+    "text": "It skips the test until the flaw is fixed",
+    "correct": false,
+    "why": "That is `test.skip()`. This test runs every time."
    }
   ]
  },
@@ -345,16 +345,6 @@
   "prompt": "Why check the `Cache-Control` header with the `request` fixture rather than with a page?",
   "choices": [
    {
-    "text": "Because a page cannot read response headers",
-    "correct": false,
-    "why": "It can, through `response.headers()`; the difference is the cache in between."
-   },
-   {
-    "text": "Because `request` keeps no cache, so it always asks the server",
-    "correct": true,
-    "why": "Right. It sees exactly the promise the server makes, in milliseconds, with no browser."
-   },
-   {
     "text": "Because headers differ between Chromium and other browsers",
     "correct": false,
     "why": "The server sends the same headers whichever browser asks."
@@ -363,6 +353,16 @@
     "text": "Because `request` follows the cache rules of the browser",
     "correct": false,
     "why": "It follows none, which is exactly why it is useful here."
+   },
+   {
+    "text": "Because a page cannot read response headers",
+    "correct": false,
+    "why": "It can, through `response.headers()`; the difference is the cache in between."
+   },
+   {
+    "text": "Because `request` keeps no cache, so it always asks the server",
+    "correct": true,
+    "why": "Right. It sees exactly the promise the server makes, in milliseconds, with no browser."
    }
   ]
  },
@@ -394,6 +394,11 @@
   "prompt": "A test intercepts `/api/products` with `page.route` to watch the request. What else changes for that page?",
   "choices": [
    {
+    "text": "The page uses a new context",
+    "correct": false,
+    "why": "The page stays in its context; what goes is its cache."
+   },
+   {
     "text": "Nothing; a route that only continues is invisible",
     "correct": false,
     "why": "The last test in `tests/cache.spec.js` changes nothing in its route and still passes where the plain one fails."
@@ -407,11 +412,6 @@
     "text": "Every request waits for the route to finish",
     "correct": false,
     "why": "Only requests that match the pattern go through the handler."
-   },
-   {
-    "text": "The page uses a new context",
-    "correct": false,
-    "why": "The page stays in its context; what goes is its cache."
    }
   ]
  },
@@ -424,11 +424,6 @@
   "drillable": true,
   "prompt": "A test needs the cache off in Firefox as well as Chromium. Which of these does that?",
   "choices": [
-   {
-    "text": "Playwright's `--disable-cache` flag",
-    "correct": false,
-    "why": "Playwright 1.56 has no such flag."
-   },
    {
     "text": "`Network.setCacheDisabled` through a DevTools Protocol session",
     "correct": false,
@@ -443,6 +438,11 @@
     "text": "The Disable cache box in DevTools",
     "correct": false,
     "why": "It works while the panel is open, by hand, and a test opens no panel."
+   },
+   {
+    "text": "Playwright's `--disable-cache` flag",
+    "correct": false,
+    "why": "Playwright 1.56 has no such flag."
    }
   ]
  },
@@ -456,16 +456,6 @@
   "prompt": "Tests pass on a laptop and fail on staging, which sits behind a CDN. The failing check is that a just-changed price appears. What is worth asking first?",
   "choices": [
    {
-    "text": "Whether Playwright reused a context between tests",
-    "correct": false,
-    "why": "Each test gets a new context in both places; the browser is the same."
-   },
-   {
-    "text": "Whether the CDN kept the old response",
-    "correct": true,
-    "why": "Right. A new context empties the browser's cache, not one outside the browser."
-   },
-   {
     "text": "Whether staging runs a slower browser",
     "correct": false,
     "why": "Slowness delays an answer; it does not bring back an old price."
@@ -474,6 +464,16 @@
     "text": "Whether the laptop has Disable cache ticked",
     "correct": false,
     "why": "That box acts only while DevTools is open, and tests open none."
+   },
+   {
+    "text": "Whether Playwright reused a context between tests",
+    "correct": false,
+    "why": "Each test gets a new context in both places; the browser is the same."
+   },
+   {
+    "text": "Whether the CDN kept the old response",
+    "correct": true,
+    "why": "Right. A new context empties the browser's cache, not one outside the browser."
    }
   ]
  },
@@ -518,11 +518,6 @@
   "prompt": "Somebody fixes `/api/offer` to send `no-cache`. What happens on the next run of `tests/cache.spec.js`, unchanged?",
   "choices": [
    {
-    "text": "Everything passes, and the marks can stay",
-    "correct": false,
-    "why": "Two tests are marked to fail; once they pass, Playwright reports them."
-   },
-   {
     "text": "The two marked tests are reported as failures",
     "correct": true,
     "why": "Right. They now pass, which is not what they were marked to do, and that tells you to remove `test.fail`."
@@ -536,6 +531,11 @@
     "text": "The static file test fails, since `no-cache` is now on the offer too",
     "correct": false,
     "why": "It reads `style.css`, which the fix does not touch."
+   },
+   {
+    "text": "Everything passes, and the marks can stay",
+    "correct": false,
+    "why": "Two tests are marked to fail; once they pass, Playwright reports them."
    }
   ]
  },
@@ -549,16 +549,6 @@
   "prompt": "A tester wants to know whether a defect report about an old price is a cache problem. What is the cheapest first step?",
   "choices": [
    {
-    "text": "Read the response's `Cache-Control` header",
-    "correct": true,
-    "why": "Right. One `curl -i` shows the promise the server made, and `max-age` on a price is the answer."
-   },
-   {
-    "text": "Write a test with a new context",
-    "correct": false,
-    "why": "A new context is a first visit, the one case where the cache cannot show."
-   },
-   {
     "text": "Add `page.route` to the existing test",
     "correct": false,
     "why": "That switches the cache off and hides the very thing in question."
@@ -567,6 +557,16 @@
     "text": "Run the suite with `--retries 3`",
     "correct": false,
     "why": "Each retry is a new context again; none of them is a returning customer."
+   },
+   {
+    "text": "Read the response's `Cache-Control` header",
+    "correct": true,
+    "why": "Right. One `curl -i` shows the promise the server made, and `max-age` on a price is the answer."
+   },
+   {
+    "text": "Write a test with a new context",
+    "correct": false,
+    "why": "A new context is a first visit, the one case where the cache cannot show."
    }
   ]
  }

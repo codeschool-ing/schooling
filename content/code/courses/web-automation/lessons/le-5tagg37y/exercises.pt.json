@@ -1,0 +1,384 @@
+{
+ "ex-kj7tg8q5": {
+  "prompt": "Num teste com Selenium contra o Chrome, que programa de fato comanda o navegador?",
+  "choices": [
+   {
+    "text": "O `chromedriver`, a quem o teste manda requisições HTTP",
+    "why": "Certo. O teste é um cliente HTTP, o driver é um servidor HTTP, e só o driver toca o Chrome."
+   },
+   {
+    "text": "Código do Selenium injetado na página",
+    "why": "Nada do Selenium roda dentro da página; essa imagem é de ferramentas como o Cypress, da aula 9."
+   },
+   {
+    "text": "O processo do teste, por uma extensão do navegador",
+    "why": "Não há extensão nenhuma: o teste só fala HTTP com um driver."
+   },
+   {
+    "text": "O executor de testes do Node",
+    "why": "O `node:test` só roda as funções de teste; não sabe nada de navegadores."
+   }
+  ]
+ },
+ "ex-fdck29q9": {
+  "prompt": "Ponha em ordem as requisições da sessão que você conduziu à mão com o `curl`.",
+  "items": [
+   "`POST /session`",
+   "`POST /session/{id}/url`",
+   "`POST /session/{id}/element`",
+   "`GET /session/{id}/element/{element}/text`",
+   "`DELETE /session/{id}`"
+  ],
+  "trap": "Todo endereço depois do primeiro leva o id da sessão, então nada vem antes do `POST /session`."
+ },
+ "ex-84de8102": {
+  "prompt": "O `POST /session/{id}/element` respondeu `{\"value\":{\"element-6066-11e4-a52e-4f735466cecf\":\"f.A30D…e.3\"}}`. O que voltou?",
+  "choices": [
+   {
+    "text": "O HTML do elemento",
+    "why": "Não voltou marcação nenhuma; para saber o texto foi preciso mandar uma segunda requisição."
+   },
+   {
+    "text": "Uma referência que o driver usa para nomear aquele nó",
+    "why": "Certo. Qualquer coisa sobre o elemento é outra requisição levando essa referência."
+   },
+   {
+    "text": "Um código de erro, porque a chave parece número de falha",
+    "why": "Essa chave esquisita é fixada pelo padrão para que nenhum JSON da página seja confundido com um elemento."
+   },
+   {
+    "text": "O texto do título, codificado",
+    "why": "O texto veio do `GET .../text`, como `{\"value\":\"Banana\"}`."
+   }
+  ]
+ },
+ "ex-h5sahst5": {
+  "prompt": "Um teste acha a contagem da cesta, a página redesenha o cabeçalho inteiro, e então o teste lê o elemento que achou. O que o protocolo prevê?",
+  "choices": [
+   {
+    "text": "A contagem nova, já que a referência segue o seletor",
+    "why": "Uma referência nomeia um nó, não um seletor; ela não é procurada de novo."
+   },
+   {
+    "text": "Um erro: a referência nomeia um nó que sumiu",
+    "why": "Certo. A referência ficou velha (stale), e o driver avisa."
+   },
+   {
+    "text": "A contagem antiga, guardada pelo driver",
+    "why": "O driver não guarda cópia do texto; toda leitura é uma requisição nova à página."
+   },
+   {
+    "text": "Nada muda, pois o teste pausa a página entre comandos",
+    "why": "A página continua rodando entre requisições; é por isso que ela pode mudar debaixo do teste."
+   }
+  ]
+ },
+ "ex-nppbf3jv": {
+  "prompt": "O teste com Selenium falha na hora porque nada responde na porta 3000. Que passo o aluno pulou?",
+  "choices": [
+   {
+    "text": "Rodar `npx playwright install chromium`",
+    "why": "Isso baixa o navegador do Playwright; não inicia servidor nenhum."
+   },
+   {
+    "text": "Pôr `webServer` em `selenium/shop.test.js`",
+    "why": "`webServer` é opção de configuração do Playwright; o `node:test` não tem nada parecido."
+   },
+   {
+    "text": "Iniciar a loja com `npm start` em outro terminal",
+    "why": "Certo. Com Selenium e `node:test`, ninguém inicia a loja por você."
+   },
+   {
+    "text": "Chamar `quit()` no `after`",
+    "why": "O `quit()` fecha o navegador no fim; não tem nada a ver com a loja estar no ar."
+   }
+  ]
+ },
+ "ex-0rc6qd0t": {
+  "prompt": "Por que o teste espera a contagem dizer `1` em vez de lê-la logo depois do `click()`?",
+  "choices": [
+   {
+    "text": "O Selenium não consegue ler texto de um cabeçalho",
+    "why": "Ele lê o texto de qualquer elemento; a questão é quando, não onde."
+   },
+   {
+    "text": "O `click()` retorna quando o clique é despachado, antes de a loja necessariamente responder",
+    "why": "Certo. A contagem só muda quando chega a resposta da loja, então o teste a espera."
+   },
+   {
+    "text": "A contagem só é desenhada depois que o aviso some",
+    "why": "O script redesenha a contagem primeiro e depois mostra o aviso."
+   },
+   {
+    "text": "O `assert.equal` não compara strings",
+    "why": "Compara strings sem problema; a asserção final faz exatamente isso."
+   }
+  ]
+ },
+ "ex-7bxazfrf": {
+  "prompt": "Ligue cada tarefa ao que a faz no teste com Selenium e `node:test`.",
+  "pairs": [
+   {
+    "left": "Iniciar a loja",
+    "right": "Você, com `npm start`"
+   },
+   {
+    "left": "Abrir o navegador",
+    "right": "`build()` no `before`"
+   },
+   {
+    "left": "Fechá-lo",
+    "right": "`quit()` no `after`"
+   },
+   {
+    "left": "Esperar os cartões",
+    "right": "`until.elementsLocated`"
+   }
+  ]
+ },
+ "ex-28xcskgs": {
+  "prompt": "A espera estourou com `Waiting until element text is` e nada mais. O que faria a próxima falha assim dizer o que deu errado?",
+  "choices": [
+   {
+    "text": "Um tempo maior, para a mensagem ter tempo de se completar",
+    "why": "O texto da mensagem não depende do tempo; só muda quanto a espera dura."
+   },
+   {
+    "text": "Uma mensagem como terceiro argumento do `driver.wait`",
+    "why": "Certo. `driver.wait(condition, 5000, 'basket count never became 1')` põe suas palavras no erro."
+   },
+   {
+    "text": "Uma espera implícita configurada também",
+    "why": "Misturar as duas deixa o tempo mais difícil de prever e não acrescenta nada à mensagem."
+   },
+   {
+    "text": "O relator TAP em vez do `spec`",
+    "why": "Os dois relatores imprimem o mesmo erro; o TAP só é mais seco em volta dele."
+   }
+  ]
+ },
+ "ex-f4c7aqtn": {
+  "prompt": "Ligue cada navegador ao seu driver.",
+  "pairs": [
+   {
+    "left": "Chrome",
+    "right": "`chromedriver`"
+   },
+   {
+    "left": "Firefox",
+    "right": "`geckodriver`"
+   },
+   {
+    "left": "Edge",
+    "right": "`msedgedriver`"
+   },
+   {
+    "left": "Safari",
+    "right": "`safaridriver`"
+   }
+  ]
+ },
+ "ex-n5yk2my2": {
+  "prompt": "Na manhã seguinte à atualização automática do Chrome para o 141, todo teste falha com `This version of ChromeDriver only supports Chrome version 139`. Qual é o conserto?",
+  "choices": [
+   {
+    "text": "Fixar o Chrome de volta no 139 dentro do teste",
+    "why": "O teste não escolhe a versão do navegador; o Chrome instalado é o que é."
+   },
+   {
+    "text": "Repetir os testes até um passar",
+    "why": "O driver recusa toda sessão; nenhuma repetição passa por uma checagem de versão."
+   },
+   {
+    "text": "Um driver cuja versão principal é 141, muitas vezes apagando o velho do `PATH`",
+    "why": "Certo. O Selenium Manager usa primeiro um driver que acha no `PATH`; tire o velho e ele baixa o certo."
+   },
+   {
+    "text": "Trocar `forBrowser('chrome')` por `forBrowser('chromium')`",
+    "why": "O navegador é o mesmo; o driver continua sendo o que não bate."
+   }
+  ]
+ },
+ "ex-f2agh8aq": {
+  "prompt": "O driver 140 abriu o Chrome 141 e registrou `has not been tested with Chrome version 141`. Um colega quer deixar assim, já que os testes passam. O que a aula diz?",
+  "choices": [
+   {
+    "text": "Deixar: aviso não é falha",
+    "why": "Passar hoje é o driver chutando; a regra do fabricante é a mesma versão principal."
+   },
+   {
+    "text": "Usar o driver cuja versão principal é a do navegador",
+    "why": "Certo. Duas versões atrás e uma à frente recusaram de vez; uma atrás só calhou de funcionar."
+   },
+   {
+    "text": "Rebaixar o Chrome para o 140 para o aviso sumir",
+    "why": "Navegadores se atualizam sozinhos; o driver é a parte que você mantém em dia."
+   },
+   {
+    "text": "Trocar para o geckodriver, que aceita qualquer Chrome",
+    "why": "O geckodriver comanda o Firefox, não o Chrome."
+   }
+  ]
+ },
+ "ex-17181tb3": {
+  "prompt": "Onde o Selenium Manager procura um driver antes de baixar um?",
+  "choices": [
+   {
+    "text": "Em `node_modules`",
+    "why": "Só o próprio Selenium Manager está em `node_modules`; drivers não vêm ali."
+   },
+   {
+    "text": "No `PATH`",
+    "why": "Certo. O registro dele diz `Found chromedriver ... in PATH`, e um velho ali ganha."
+   },
+   {
+    "text": "Dentro da pasta de instalação do Chrome",
+    "why": "O Chrome não traz o driver; o driver vem do Chrome for Testing."
+   },
+   {
+    "text": "No Selenium Grid da porta 4444, se houver um rodando",
+    "why": "O Selenium Manager não sabe nada de grid; o nó de um grid faz a própria busca."
+   }
+  ]
+ },
+ "ex-p2hsz6ps": {
+  "prompt": "Com uma espera implícita de 3000 ms, um teste verifica que não existe elemento `.error`. Numa página sem erro, quanto tempo leva essa verificação?",
+  "choices": [
+   {
+    "text": "Poucos milissegundos",
+    "why": "Foi o que achar os cartões levou, porque eles existiam; um elemento ausente é o caso oposto."
+   },
+   {
+    "text": "Os três segundos inteiros, toda vez",
+    "why": "Certo. Mediu 3036 ms: uma espera implícita não distingue ainda não de nunca."
+   },
+   {
+    "text": "Ela nunca retorna",
+    "why": "Ela retorna uma lista vazia quando o tempo acaba."
+   },
+   {
+    "text": "Metade do tempo, em média",
+    "why": "Não há média: ela continua procurando até gastar o tempo inteiro."
+   }
+  ]
+ },
+ "ex-093wyrhs": {
+  "prompt": "Um teste precisa esperar o aviso esvaziar depois de dizer `Added Banana`. Que espera consegue expressar isso?",
+  "choices": [
+   {
+    "text": "Uma espera implícita, já que o aviso é um elemento",
+    "why": "Uma espera implícita só espera um elemento existir, e o aviso existe sempre."
+   },
+   {
+    "text": "Qualquer uma, ajustada para dois segundos",
+    "why": "A duração não é o problema; uma espera implícita não tem condição nenhuma sobre texto."
+   },
+   {
+    "text": "Uma espera explícita com `until.elementTextIs(toast, '')`",
+    "why": "Certo. Levou 2115 ms na captura, mais ou menos os dois segundos que o script espera."
+   },
+   {
+    "text": "Nenhuma: só um sleep fixo resolve",
+    "why": "Uma espera explícita resolve e volta assim que vale; a aula 13 trata de por que dormir é pior."
+   }
+  ]
+ },
+ "ex-2p9gbbqg": {
+  "prompt": "Qual é o tempo da espera implícita de uma sessão nova, em milissegundos, como mostravam os `timeouts` da sessão que você abriu à mão?",
+  "unit": "ms"
+ },
+ "ex-6vfc9bnf": {
+  "prompt": "O que muda num teste para rodá-lo num Selenium Grid em vez de um driver local?",
+  "choices": [
+   {
+    "text": "Todo comando vira uma chamada própria do grid",
+    "why": "O grid fala o mesmo protocolo WebDriver, então os comandos são os mesmos."
+   },
+   {
+    "text": "O endereço para onde o builder manda as requisições",
+    "why": "Certo. `usingServer('http://localhost:4444')`, ou `SELENIUM_REMOTE_URL`, e mais nada."
+   },
+   {
+    "text": "O executor de testes, que precisa ser o do Selenium",
+    "why": "O Selenium não tem executor próprio; o `node:test` rodou o teste no grid sem mudança."
+   },
+   {
+    "text": "Os seletores, que o roteador reescreve",
+    "why": "O roteador encaminha requisições; não mexe no que elas pedem."
+   }
+  ]
+ },
+ "ex-tczgze1h": {
+  "prompt": "Que parte do grid decide para que nó vai uma sessão nova?",
+  "choices": [
+   {
+    "text": "O roteador",
+    "why": "O roteador é o endereço e encaminha requisições; a escolha é feita depois da fila."
+   },
+   {
+    "text": "O mapa de sessões",
+    "why": "Ele lembra que nó guarda uma sessão depois que ela existe; não escolhe."
+   },
+   {
+    "text": "O distribuidor, casando capacidades com vagas livres",
+    "why": "Certo. O registro diz `Session request received by the Distributor`, e então o nó a cria."
+   },
+   {
+    "text": "O teste, nomeando o endereço de um nó",
+    "why": "O teste só nomeia o grid; nunca sabe que máquina recebeu."
+   }
+  ]
+ },
+ "ex-f96phxa4": {
+  "prompt": "Um processo único com roteador, fila, distribuidor, mapa de sessões e um nó é iniciado com `java -jar selenium-server-4.51.0.jar ___` .",
+  "blanks": [
+   {
+    "accept": [
+     "standalone"
+    ]
+   }
+  ]
+ },
+ "ex-fyzp512a": {
+  "prompt": "Um nó do grid roda em outra máquina. O teste faz `driver.get('http://localhost:3000/')` e o navegador mostra erro de conexão, embora a loja rode no notebook do testador. Por quê?",
+  "choices": [
+   {
+    "text": "O grid bloqueia a porta 3000",
+    "why": "O grid não tem voz sobre que endereços um navegador abre."
+   },
+   {
+    "text": "O chromedriver do nó está na versão errada",
+    "why": "Uma versão que não bate recusa a sessão; aqui a sessão abriu e a página falhou."
+   },
+   {
+    "text": "O `localhost` é resolvido pelo navegador, no nó",
+    "why": "Certo. Na máquina do nó nada escuta na 3000; a aplicação precisa de um endereço que os nós alcancem."
+   },
+   {
+    "text": "O `SELENIUM_REMOTE_URL` sobrescreve o endereço da loja também",
+    "why": "Ele só diz para onde vão as requisições WebDriver, não o que o navegador carrega."
+   }
+  ]
+ },
+ "ex-yzmx2ytf": {
+  "prompt": "O Selenium e o Playwright abrem a loja sem janela aqui. Que parte disso foi escrita à mão no teste com Selenium?",
+  "choices": [
+   {
+    "text": "Nada: os dois são sem janela por padrão",
+    "why": "Só o Playwright é; o Selenium abre uma janela a não ser que se diga o contrário."
+   },
+   {
+    "text": "O argumento `--headless=new` nas opções do Chrome",
+    "why": "Certo. É a chave do próprio Chrome, passada pelo Selenium; apague-a para assistir."
+   },
+   {
+    "text": "Uma linha `headless: true` num arquivo de configuração",
+    "why": "O teste com Selenium não tem arquivo de configuração; a opção está no código."
+   },
+   {
+    "text": "Uma variável de ambiente definida antes do `node --test`",
+    "why": "A única variável da aula é o `SELENIUM_REMOTE_URL`, que escolhe um servidor, não um modo."
+   }
+  ]
+ }
+}
