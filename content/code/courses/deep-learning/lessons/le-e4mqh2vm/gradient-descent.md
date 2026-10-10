@@ -62,7 +62,7 @@ So why descend, when algebra gets there in one line? Because the algebra exists 
 whose loss is a parabola in their weights. Put a ReLU between two layers and there is no formula
 for the bottom, but there is still a slope at every point, and descent needs nothing else. The
 price is that descent finds a bottom near where it started, which is not always the lowest one
-there is. Networks are trained that way regardless, because nothing better is known at their size.
+there is. For a network nothing better is known, so training accepts that price.
 
 **Notice what 3.4257 is: the best this model can do, not the slope the points were made with.** The
 points came from a line of slope 2 at height 1, and a line forced through zero has to tilt more

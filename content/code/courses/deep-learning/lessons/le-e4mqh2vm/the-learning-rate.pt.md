@@ -64,7 +64,7 @@ Quatro comportamentos, um por coluna:
 
 **Para este modelo, onde cada comportamento começa é aritmética.** A inclinação da inclinação, a
 **curvatura**, vale 0,77 em toda a parábola. Cada passo multiplica a distância até o fundo por
-`1 - lr × 0,77`: com 0,1 isso guarda 92% da distância, com 1,0 guarda 23%, com 2,4 troca o sinal e
+`1 - lr × 0,77`. Com 0,1 isso guarda 92% da distância, e com 1,0 guarda 23%. Com 2,4 troca o sinal e
 guarda 85%, e com 2,8 troca o sinal e aumenta a distância. A última linha imprimiu os dois limites:
 1,30 cai no fundo num passo só, e qualquer taxa acima de 2,60 diverge.
 

@@ -51,6 +51,6 @@ wrong and is wrong often. Ranked by loss, the order is C, A, B; ranked by accura
 **Train on the loss, choose on the metric.** The metric is whatever the problem is judged by:
 accuracy for the digits, recall when missing a rare case is what hurts, mean minutes late for
 deliveries. When two models disagree on the validation set, the metric decides which one ships. The
-loss says whether training is going well, and lesson 6 reads its curves; a validation loss that rises
+loss says whether training is going well, and lesson 6 reads its curves. A validation loss that rises
 while accuracy holds steady is usually a model growing confidently wrong on a few images, which is
 model B's shape.

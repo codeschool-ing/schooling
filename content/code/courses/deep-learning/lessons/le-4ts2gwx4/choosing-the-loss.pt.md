@@ -52,6 +52,6 @@ Ordenados pela perda, a ordem é C, A, B; pela acurácia, C fica em último.
 **Treine pela perda, escolha pela métrica.** A métrica é aquilo pelo que o problema é julgado: acurácia
 nos dígitos, recall quando deixar passar um caso raro é o que dói, média de minutos de atraso nas
 entregas. Quando dois modelos discordam no conjunto de validação, a métrica decide qual vai para
-produção. A perda diz se o treinamento vai bem, e a aula 6 lê as curvas dela; uma perda de validação
+produção. A perda diz se o treinamento vai bem, e a aula 6 lê as curvas dela. Uma perda de validação
 que sobe enquanto a acurácia fica parada costuma ser um modelo ficando confiante e errado em poucas
 imagens, que é o formato do modelo B.

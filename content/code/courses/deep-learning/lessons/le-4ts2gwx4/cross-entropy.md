@@ -39,7 +39,7 @@ Save as `~/dl/xent.py`:
 
 Read the loss column from the top. Confident and right costs 0.036. Unsure, with the right class
 barely ahead at 0.412, costs 0.886. Unsure and wrong costs 1.386. Confident and wrong costs 4.036,
-over a hundred times the first row. The log is what does this: as the probability of the right class
+over a hundred times the first row. The log is what does this. As the probability of the right class
 falls towards zero, minus its log rises without limit, so **a confident wrong answer is the most
 expensive thing a classifier can do**, and nothing caps what it costs.
 

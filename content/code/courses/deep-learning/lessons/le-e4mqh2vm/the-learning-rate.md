@@ -63,7 +63,7 @@ Four behaviours, one per column:
 
 **For this model, where each behaviour starts is arithmetic.** The slope of the slope, the
 **curvature**, is 0.77 everywhere on a parabola. Each step multiplies the distance to the bottom by
-`1 - lr × 0.77`: at 0.1 that keeps 92% of the distance, at 1.0 it keeps 23%, at 2.4 it flips the
+`1 - lr × 0.77`. At 0.1 that keeps 92% of the distance and at 1.0 it keeps 23%. At 2.4 it flips the
 sign and keeps 85%, and at 2.8 it flips the sign and grows it. The last line printed the two
 boundaries: 1.30 lands on the bottom in one step, and anything above 2.60 diverges.
 

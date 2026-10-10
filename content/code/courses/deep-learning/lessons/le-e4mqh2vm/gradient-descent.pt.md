@@ -61,8 +61,8 @@ pelo zero: o critério que o `machine-learning` usou para ajustar uma regressão
 Então por que descer, se a álgebra chega lá numa linha? Porque a álgebra só existe para modelos cuja
 perda é uma parábola nos pesos. Ponha um ReLU entre duas camadas e não há fórmula para o fundo, mas
 ainda há uma inclinação em cada ponto, e a descida não precisa de mais nada. O preço é que a descida
-acha um fundo perto de onde começou, que nem sempre é o mais baixo que existe. Redes são treinadas
-assim mesmo, porque não se conhece nada melhor no tamanho delas.
+acha um fundo perto de onde começou, que nem sempre é o mais baixo que existe. Para uma rede não
+se conhece nada melhor, então o treino aceita esse preço.
 
 **Repare no que é 3,4257: o melhor que este modelo consegue, não a inclinação com que os pontos foram
 feitos.** Os pontos vieram de uma reta de inclinação 2 na altura 1, e uma reta presa ao zero precisa

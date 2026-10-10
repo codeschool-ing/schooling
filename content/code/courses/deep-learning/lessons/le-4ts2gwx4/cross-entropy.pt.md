@@ -39,7 +39,7 @@ Salve como `~/dl/xent.py`:
 
 Leia a coluna `loss` de cima para baixo. Confiante e certo custa 0,036. Inseguro, com a classe certa
 mal à frente com 0,412, custa 0,886. Inseguro e errado custa 1,386. Confiante e errado custa 4,036,
-mais de cem vezes a primeira linha. É o log que faz isso: quando a probabilidade da classe certa cai
+mais de cem vezes a primeira linha. É o log que faz isso. Quando a probabilidade da classe certa cai
 para perto de zero, menos o log dela sobe sem limite, então **uma resposta errada e confiante é a coisa
 mais cara que um classificador pode fazer**, e nada limita quanto ela custa.
 

@@ -75,7 +75,7 @@ step   3   w  5.5046   b  8.6898   loss 93.2740   gradient (+11.1595, +19.2006)
 
 A perda sobe a cada passo. De través, o terreno se curva mais forte do que se curvava para `w`
 sozinho, e 1,0 passa do que essa direção aguenta. Uma taxa serve para todas as direções, então a mais
-íngreme define o teto e a mais suave fica se arrastando. O momento, na aula 5, e pôr as entradas numa
+íngreme define o teto e a mais suave fica se arrastando. O *momentum*, na aula 5, e pôr as entradas numa
 escala comum, na aula 8, são duas respostas exatamente para isso.
 
 Uma rede com um milhão de parâmetros tem um gradiente com um milhão de entradas, e o passo é a mesma
