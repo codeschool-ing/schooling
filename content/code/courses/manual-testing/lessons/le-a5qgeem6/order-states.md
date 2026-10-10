@@ -66,7 +66,7 @@ ana@laptop:~/boxoffice$ curl -s -d 'id=1003&action=cancel' http://127.0.0.1:8000
 ```
 
 All three are refused with a sentence and leave the order where it was, which is what the dashes
-say. Three of sixteen is a sample, and a sample is a choice to record: the case list should say
+say. **Three of sixteen is a sample, and a sample is a choice to record**: the case list should say
 which cells ran.
 
 ## The dash that matters

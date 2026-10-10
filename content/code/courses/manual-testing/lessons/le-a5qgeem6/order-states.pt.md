@@ -66,8 +66,8 @@ ana@laptop:~/boxoffice$ curl -s -d 'id=1003&action=cancel' http://127.0.0.1:8000
 <p class="msg">An order that is refunded cannot be canceled.</p>
 ```
 
-Os três são recusados com uma frase e deixam o pedido onde estava, que é o que os traços dizem. Três
-de dezesseis é uma amostra, e uma amostra é uma escolha a registrar: a lista de casos deve dizer
+Os três são recusados com uma frase e deixam o pedido onde estava, que é o que os traços dizem. **Três
+de dezesseis é uma amostra, e uma amostra é uma escolha a registrar**: a lista de casos deve dizer
 quais células rodaram.
 
 ## O traço que importa
