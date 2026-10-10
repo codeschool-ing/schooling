@@ -1,0 +1,692 @@
+[
+  {
+    "id": "ex-vcn0n4x7",
+    "version": 1,
+    "section": "explain",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You type `EXPLAIN DELETE FROM order_lines WHERE order_id = 7;` and nothing else. What happens to order 7's lines?",
+    "hint": "Plain EXPLAIN plans; it does not execute.",
+    "choices": [
+      {
+        "text": "They are deleted first, and the plan is printed afterwards, as a record",
+        "correct": false,
+        "why": "That is EXPLAIN ANALYZE. Plain EXPLAIN stops after planning."
+      },
+      {
+        "text": "Nothing: the plan is printed and the four lines are still there",
+        "correct": true,
+        "why": "Right: the lesson counted them afterwards and found all four."
+      },
+      {
+        "text": "They are locked until you commit",
+        "correct": false,
+        "why": "Nothing ran, so no row was touched or locked."
+      },
+      {
+        "text": "PostgreSQL refuses to plan a statement that writes",
+        "correct": false,
+        "why": "It planned it: `Delete on order_lines` above an index scan."
+      }
+    ]
+  },
+  {
+    "id": "ex-8ssw7kwb",
+    "version": 1,
+    "section": "explain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The ten earliest orders: `Limit (cost=0.43..0.77)` over `Index Scan using orders_placed_at_idx (cost=0.43..68618.43 rows=2000000)`. Why is the Limit's total so much smaller than the scan's?",
+    "hint": "Who stops asking for rows, and after how many?",
+    "choices": [
+      {
+        "text": "The index is smaller than the table, so reading it costs less",
+        "correct": false,
+        "why": "The scan's own total already prices the index; the Limit is far below even that."
+      },
+      {
+        "text": "The Limit's own cost is kept apart from its child's total",
+        "correct": false,
+        "why": "Costs are cumulative; the Limit charges a fraction of the child, not nothing."
+      },
+      {
+        "text": "It stops after ten rows, so it pays 10/2000000 of it",
+        "correct": true,
+        "why": "Right: 0.43 + 68618 × 10 / 2000000 is the 0.77, and it works because the scan's startup is low."
+      },
+      {
+        "text": "A cached plan was reused",
+        "correct": false,
+        "why": "Nothing in the costs depends on caching; they are computed every time."
+      }
+    ]
+  },
+  {
+    "id": "ex-pm3r8mrx",
+    "version": 1,
+    "section": "explain",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ordering by `total_cents` with no index, the `Sort` shows `cost=79886.28..84886.28` above a `Seq Scan` whose total is `36667.00`. Why is the sort's startup higher than everything below it?",
+    "hint": "Could the last row read be the first one out?",
+    "choices": [
+      {
+        "text": "Sorting is priced in milliseconds, scanning in pages",
+        "correct": false,
+        "why": "Every node uses the same unit; that is what makes them addable."
+      },
+      {
+        "text": "The sort writes the table to disk first, so it pays twice",
+        "correct": false,
+        "why": "This sort ran in 26 kB of memory; nothing went to disk."
+      },
+      {
+        "text": "Because the LIMIT above it forces a full sort",
+        "correct": false,
+        "why": "The LIMIT sits above; the sort's startup is the same with or without it."
+      },
+      {
+        "text": "It must read all its input first",
+        "correct": true,
+        "why": "Right: the scan's whole cost, plus the sorting, is paid before the first row."
+      }
+    ]
+  },
+  {
+    "id": "ex-k3hfdzpc",
+    "version": 1,
+    "section": "explain",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `rows=11 width=29`, the 29 is the average size of one row the node passes up, measured in ___.",
+    "hint": "A unit of storage, not of time.",
+    "blanks": [
+      {
+        "accept": [
+          "bytes",
+          "byte"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-etatfgqr",
+    "version": 1,
+    "section": "explain",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A query runs `WHERE EXISTS (…)`, so only the first row of the subquery matters. Plan A for the subquery costs `5.00..9000.00`; plan B costs `2000.00..2500.00`. Which suits it better, and why?",
+    "hint": "Which of the two numbers does EXISTS pay?",
+    "choices": [
+      {
+        "text": "A, because EXISTS stops at the first row and A's first row is cheap",
+        "correct": true,
+        "why": "Right: the startup is what a first-row consumer pays, and A's is 5 against 2000."
+      },
+      {
+        "text": "B, because its total is lower",
+        "correct": false,
+        "why": "The total is the price of every row; EXISTS asks for one."
+      },
+      {
+        "text": "Either: costs are only compared at their totals",
+        "correct": false,
+        "why": "The section showed the planner weighing startup whenever only the first rows are wanted."
+      },
+      {
+        "text": "B, because a high startup means an index",
+        "correct": false,
+        "why": "A high startup usually means something that must finish first, such as a sort or a hash."
+      }
+    ]
+  },
+  {
+    "id": "ex-n1p9er5q",
+    "version": 1,
+    "section": "reading-the-tree",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the seller dashboard's nodes in the order they start producing rows, first to last.",
+    "hint": "The most indented runs first.",
+    "items": [
+      "Bitmap Index Scan on orders_seller_id_idx",
+      "Bitmap Index Scan on orders_placed_at_idx",
+      "BitmapAnd",
+      "Bitmap Heap Scan on orders",
+      "Sort",
+      "GroupAggregate"
+    ],
+    "trap": "Reading top to bottom puts GroupAggregate first, and it is the last step."
+  },
+  {
+    "id": "ex-m7kh68zv",
+    "version": 1,
+    "section": "reading-the-tree",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the plan for customer 4242's orders, the `Bitmap Heap Scan` has a total cost of 47.80 and its only child, the `Bitmap Index Scan`, 4.51. What is the heap scan's own cost?",
+    "hint": "Costs include the children's.",
+    "value": 43.29,
+    "tolerance": 0.01,
+    "unit": "cost units"
+  },
+  {
+    "id": "ex-pfc3g3dk",
+    "version": 1,
+    "section": "reading-the-tree",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The planner expected 1491 orders for seller 42 and 106093 for December, and 79 for both. How did it arrive at 79?",
+    "hint": "Two fractions of two million.",
+    "choices": [
+      {
+        "text": "It counted seller 42's December orders when the index was built",
+        "correct": false,
+        "why": "An index keeps no counts of combinations; the planner computes them."
+      },
+      {
+        "text": "It multiplied the two fractions, treating them as independent",
+        "correct": true,
+        "why": "Right: 2000000 × (1491/2000000) × (106093/2000000) is 79.1."
+      },
+      {
+        "text": "It took the smaller estimate and divided by twenty",
+        "correct": false,
+        "why": "No such rule exists; 1491 / 20 landing near 79 is a coincidence."
+      },
+      {
+        "text": "It ran the query once during planning",
+        "correct": false,
+        "why": "The planner never runs the query; that is what makes plain EXPLAIN safe."
+      }
+    ]
+  },
+  {
+    "id": "ex-nebbkv70",
+    "version": 1,
+    "section": "reading-the-tree",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A report's plan has a top line of `cost=0.00..52000.00`. A Hash Join in the middle has a total of 51000, and its two children totals of 900 and 49000. Where should you look first?",
+    "hint": "Subtract, node by node.",
+    "choices": [
+      {
+        "text": "The top node, because it has the highest cost",
+        "correct": false,
+        "why": "The top line contains every node's cost; its own share here is 1000."
+      },
+      {
+        "text": "The Hash Join, since 51000 is most of the plan",
+        "correct": false,
+        "why": "Its own share is 51000 − 900 − 49000, which is 1100."
+      },
+      {
+        "text": "The 49000 child, then keep subtracting down",
+        "correct": true,
+        "why": "Right: it carries most of the cost, and you keep subtracting downwards until a node's own share is large."
+      },
+      {
+        "text": "The 900 child, the cheapest to fix",
+        "correct": false,
+        "why": "Fixing it would save at most 900 of 52000."
+      }
+    ]
+  },
+  {
+    "id": "ex-th9zf6bt",
+    "version": 1,
+    "section": "reading-the-tree",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each detail line to what it tells you.",
+    "hint": "Which ones were paid for row by row?",
+    "pairs": [
+      {
+        "left": "`Index Cond`",
+        "right": "only the matching index entries were read"
+      },
+      {
+        "left": "`Filter`",
+        "right": "each row was read, then checked, and some were thrown away"
+      },
+      {
+        "left": "`Recheck Cond`",
+        "right": "rows on the marked pages are checked again"
+      },
+      {
+        "left": "`Sort Key`",
+        "right": "the order the node puts its rows in"
+      }
+    ],
+    "right_distractors": [
+      "the number of times the node ran"
+    ]
+  },
+  {
+    "id": "ex-nsj90g9z",
+    "version": 1,
+    "section": "explain-analyze",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An inner index scan shows `actual time=0.012..0.012 rows=1 loops=25000`. Roughly how many milliseconds did it take in all?",
+    "hint": "Per loop, then multiply.",
+    "value": 300,
+    "tolerance": 10,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-g4rttkcc",
+    "version": 1,
+    "section": "explain-analyze",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The pending count's `Parallel Seq Scan` shows `actual time=68.112..68.407 rows=2440 loops=3`. What did the scan amount to?",
+    "hint": "Did the three processes take turns?",
+    "choices": [
+      {
+        "text": "2440 rows in about 205 ms of waiting",
+        "correct": false,
+        "why": "Both halves are wrong: rows are per process and times overlapped."
+      },
+      {
+        "text": "About 7320 rows in about 205 ms",
+        "correct": false,
+        "why": "The rows multiply, but the three ran side by side, so time does not."
+      },
+      {
+        "text": "2440 rows in about 68 ms of waiting",
+        "correct": false,
+        "why": "2440 is the average per process; there were three."
+      },
+      {
+        "text": "7320 rows or so, in 68 ms",
+        "correct": true,
+        "why": "Right: three processes at once, so rows add up and the wait does not. The plain count says 7319."
+      }
+    ]
+  },
+  {
+    "id": "ex-5ez8vz6y",
+    "version": 1,
+    "section": "explain-analyze",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You want the real plan of a large `UPDATE` on a copy of production data, without keeping its changes. What do you type?",
+    "hint": "ANALYZE runs the statement.",
+    "choices": [
+      {
+        "text": "`BEGIN;`, then `EXPLAIN ANALYZE UPDATE …;`, then `ROLLBACK;`",
+        "correct": true,
+        "why": "Right: the update really runs and the rollback undoes it."
+      },
+      {
+        "text": "`EXPLAIN ANALYZE UPDATE …;` on its own",
+        "correct": false,
+        "why": "That updates the rows and keeps the change."
+      },
+      {
+        "text": "`EXPLAIN UPDATE …;`, which shows the same numbers",
+        "correct": false,
+        "why": "Plain EXPLAIN has no actual times or rows."
+      },
+      {
+        "text": "`EXPLAIN (ANALYZE, BUFFERS) UPDATE …;`",
+        "correct": false,
+        "why": "BUFFERS adds page counts; the update still runs and stays."
+      }
+    ]
+  },
+  {
+    "id": "ex-apfydhn7",
+    "version": 1,
+    "section": "explain-analyze",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A query returning a million order lines shows `Execution Time: 225.431 ms`, and `psql` timed the same query at 1138 ms. What is in the difference?",
+    "hint": "What does EXPLAIN ANALYZE do with the result?",
+    "choices": [
+      {
+        "text": "Planning time, which the Execution Time line leaves out entirely",
+        "correct": false,
+        "why": "Planning took 0.749 ms here."
+      },
+      {
+        "text": "Sending the rows to the client, which the plan does not count",
+        "correct": true,
+        "why": "Right: EXPLAIN ANALYZE discards the rows instead of shipping them."
+      },
+      {
+        "text": "The timing overhead of ANALYZE",
+        "correct": false,
+        "why": "Measuring makes the plan's figure larger, not smaller."
+      },
+      {
+        "text": "A cold cache on the second run",
+        "correct": false,
+        "why": "The real query ran after the plan, with the same pages just read."
+      }
+    ]
+  },
+  {
+    "id": "ex-e0d6c1qj",
+    "version": 1,
+    "section": "explain-analyze",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "From the ten cheapest orders run with EXPLAIN ANALYZE (Seq Scan last row at 224.847 ms, Sort first row at 415.264 ms), which statements are true? Choose all that apply.",
+    "hint": "Times include the children.",
+    "choices": [
+      {
+        "text": "The sort's 415 ms includes the scan's 225",
+        "correct": true,
+        "why": "Right: a node's time contains its children's."
+      },
+      {
+        "text": "The sort could hand up nothing before the scan finished",
+        "correct": true,
+        "why": "Right: that is its startup, made visible."
+      },
+      {
+        "text": "The sort kept only ten rows in memory",
+        "correct": true,
+        "why": "Right: top-N heapsort, 26 kB."
+      },
+      {
+        "text": "The query took 415 + 225 = 640 ms in all",
+        "correct": false,
+        "why": "Adding them counts the scan twice; Execution Time was 415."
+      },
+      {
+        "text": "The scan ran ten times, once per row the Limit wanted",
+        "correct": false,
+        "why": "loops=1 on every node."
+      }
+    ]
+  },
+  {
+    "id": "ex-hng9x648",
+    "version": 1,
+    "section": "buffers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a plan, what does `shared read=380` say about those 380 pages?",
+    "hint": "Whose memory, and whose not?",
+    "choices": [
+      {
+        "text": "They came from the disk",
+        "correct": false,
+        "why": "Not necessarily: the operating system may have answered from its own cache."
+      },
+      {
+        "text": "They were read once and then written straight back",
+        "correct": false,
+        "why": "Reading a page does not write it; writes are counted separately."
+      },
+      {
+        "text": "They were not in shared buffers; the OS was asked",
+        "correct": true,
+        "why": "Right: where the OS found them is a separate question, which I/O timing answers."
+      },
+      {
+        "text": "They were already found in PostgreSQL's own memory",
+        "correct": false,
+        "why": "That is `shared hit`."
+      }
+    ]
+  },
+  {
+    "id": "ex-vsyw7gwm",
+    "version": 1,
+    "section": "buffers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Run twice in a row, the pending count read 16589 pages and then 16493 again, while the seller dashboard's second run found all its pages in memory. Why did the count not keep its pages?",
+    "hint": "What protects every other query's pages from one big scan?",
+    "choices": [
+      {
+        "text": "Shared buffers were full of the dashboard's pages",
+        "correct": false,
+        "why": "The dashboard used 380 pages of more than sixteen thousand available."
+      },
+      {
+        "text": "Parallel workers cannot use shared buffers",
+        "correct": false,
+        "why": "They do; the plan shows `shared hit=174` from the same scan."
+      },
+      {
+        "text": "The restart between the runs emptied them",
+        "correct": false,
+        "why": "Both runs were in the same session, with no restart between them."
+      },
+      {
+        "text": "A big scan reuses a small private ring",
+        "correct": true,
+        "why": "Right: a table larger than a quarter of shared buffers is scanned through a 256 kB ring."
+      }
+    ]
+  },
+  {
+    "id": "ex-fc0byyx0",
+    "version": 1,
+    "section": "buffers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two runs of a query both show `shared read=16493`. One took 352 ms, the other 60 ms. What tells you which reads came from the disk?",
+    "hint": "One setting adds a line per node.",
+    "choices": [
+      {
+        "text": "The `I/O Timings` line that `track_io_timing` adds: 876 ms against 44",
+        "correct": true,
+        "why": "Right: a read that takes long is the disk; a quick one is the OS cache."
+      },
+      {
+        "text": "The ratio of hit to read",
+        "correct": false,
+        "why": "Both runs have nearly the same counts; counts cannot see the OS cache."
+      },
+      {
+        "text": "The Planning Time",
+        "correct": false,
+        "why": "Planning reads the catalogue, not the table."
+      },
+      {
+        "text": "The `Heap Blocks` line",
+        "correct": false,
+        "why": "That line belongs to bitmap scans and counts pages, not where they came from."
+      }
+    ]
+  },
+  {
+    "id": "ex-0cvfwpkp",
+    "version": 1,
+    "section": "buffers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You rewrite a report's query and want to know if the new version does less work. The server is shared and its cache changes all day. What do you compare?",
+    "hint": "Which number did not move between the cold and warm runs?",
+    "choices": [
+      {
+        "text": "The Execution Time of a single run of each of the two versions",
+        "correct": false,
+        "why": "One run of each measures the cache as much as the query."
+      },
+      {
+        "text": "The pages touched, hit plus read, on the top node of each",
+        "correct": true,
+        "why": "Right: 380 pages cold and 380 warm. The page count is the work, whatever the cache held."
+      },
+      {
+        "text": "The estimated costs",
+        "correct": false,
+        "why": "Costs are predictions; they say nothing about what the new version really did."
+      },
+      {
+        "text": "Only the `shared read` counts",
+        "correct": false,
+        "why": "Reads move with the cache; a page that was a read becomes a hit."
+      }
+    ]
+  },
+  {
+    "id": "ex-vdyq220w",
+    "version": 1,
+    "section": "the-cost-model",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`seq_page_cost` is 1. What does that 1 mean?",
+    "hint": "Every other price is relative to something.",
+    "choices": [
+      {
+        "text": "One millisecond of time for each page read",
+        "correct": false,
+        "why": "Cost is not time; there is no exchange rate to milliseconds."
+      },
+      {
+        "text": "One page read for each query that runs",
+        "correct": false,
+        "why": "It is a price per page read, not a count."
+      },
+      {
+        "text": "One kilobyte of data read from the disk",
+        "correct": false,
+        "why": "Pages are 8 kB, and the setting is a price, not a size."
+      },
+      {
+        "text": "The unit all else is priced against",
+        "correct": true,
+        "why": "Right: random_page_cost 4 and cpu_tuple_cost 0.01 are multiples and fractions of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-9ke8frbk",
+    "version": 1,
+    "section": "the-cost-model",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`customers` has `relpages` 2283 and `reltuples` 200000. With the default prices, what total cost does the planner print for `EXPLAIN SELECT * FROM customers WHERE state = 'SP'`, a plain sequential scan?",
+    "hint": "Pages, rows, and one operator per row.",
+    "value": 4783,
+    "tolerance": 1,
+    "unit": "cost units"
+  },
+  {
+    "id": "ex-c2khy148",
+    "version": 1,
+    "section": "the-cost-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The pending count's plan cost 41683.51 and took 176 ms. Another query's plan costs 83000. How long will it take?",
+    "hint": "Is there an exchange rate?",
+    "choices": [
+      {
+        "text": "The cost cannot say: costs compare plans for one query, not times between queries",
+        "correct": true,
+        "why": "Right: the same cost takes longer cold and less on a faster disk; only running it tells you."
+      },
+      {
+        "text": "About 350 ms, twice as long",
+        "correct": false,
+        "why": "That assumes a fixed rate between cost and time, which the lesson says does not exist."
+      },
+      {
+        "text": "About 83 ms, one per thousand",
+        "correct": false,
+        "why": "There is no fixed conversion of cost units to milliseconds."
+      },
+      {
+        "text": "176 ms, the same",
+        "correct": false,
+        "why": "Nothing suggests the two take the same time either."
+      }
+    ]
+  },
+  {
+    "id": "ex-369cftbz",
+    "version": 1,
+    "section": "the-cost-model",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`order_lines` has `relpages` 31848 and `reltuples` 4999992. What total cost does `EXPLAIN SELECT * FROM order_lines` print, with the default prices?",
+    "hint": "No condition, so no operator cost.",
+    "value": 81847.92,
+    "tolerance": 0.5,
+    "unit": "cost units"
+  },
+  {
+    "id": "ex-5b8j91dt",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In one session you `SET cpu_operator_cost = 0.005` and ask for `EXPLAIN SELECT * FROM orders WHERE total_cents > 0` (16667 pages, 2000000 rows, no parallel plan). What total does it print?",
+    "hint": "Only the condition's price changed.",
+    "choices": [
+      {
+        "text": "41667.00, exactly as it was before the change",
+        "correct": false,
+        "why": "That total used 0.0025 per comparison."
+      },
+      {
+        "text": "36667.00, the scan with no condition priced",
+        "correct": false,
+        "why": "That is the scan with no condition at all."
+      },
+      {
+        "text": "46667.00: the condition now costs 10000",
+        "correct": true,
+        "why": "Right: 16667 + 20000 + 2000000 × 0.005."
+      },
+      {
+        "text": "56667.00, as when a price was doubled",
+        "correct": false,
+        "why": "That was doubling cpu_tuple_cost, which prices rows, not operators."
+      }
+    ]
+  },
+  {
+    "id": "ex-wdm92249",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The habit the section on pages leaves you with: run `EXPLAIN (ANALYZE, ___)` rather than the first option alone.",
+    "hint": "The option that counts pages.",
+    "blanks": [
+      {
+        "accept": [
+          "BUFFERS"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
