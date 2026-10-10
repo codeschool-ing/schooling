@@ -58,6 +58,9 @@ topic full of March timestamps needs that.
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic late --partitions 1 --config retention.ms=-1
+Created topic late.
+ubuntu@stream:~/work$ python late_tills.py
+sent 360 sales to late, from 09:00:27 to 15:13:59; natal held 38 from 10:20 to 14:00
 ```
 
 360 sales, from just after nine to a quarter past three, and 38 of them from Natal held back.
@@ -66,9 +69,22 @@ and then for the first two of those that came from Natal:
 
 ```
 ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic late --from-beginning --max-messages 360 --formatter-property print.timestamp=true | grep -m 2 'T11:'
+The consumer rebalance protocol (KIP-848) is production-ready! Set group.protocol=consumer to try it out. See https://kafka.apache.org/documentation/#consumer_rebalance_protocol
+CreateTime:1772460075000	{"sale": "rec-000120", "shop": "recife", "book": "bk-04", "qty": 3, "cents": 23700, "at": "2026-03-02T11:01:12-03:00"}
+CreateTime:1772460157000	{"sale": "rec-000121", "shop": "recife", "book": "bk-01", "qty": 3, "cents": 11970, "at": "2026-03-02T11:02:36-03:00"}
+Unable to write to standard out, closing consumer.
+Processed a total of 199 messages
+ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic late --from-beginning --max-messages 360 --formatter-property print.timestamp=true | grep -m 2 'natal.*T11:'
+The consumer rebalance protocol (KIP-848) is production-ready! Set group.protocol=consumer to try it out. See https://kafka.apache.org/documentation/#consumer_rebalance_protocol
+CreateTime:1772470806000	{"sale": "nat-000125", "shop": "natal", "book": "bk-07", "qty": 1, "cents": 3500, "at": "2026-03-02T11:07:19-03:00"}
+CreateTime:1772470807000	{"sale": "nat-000126", "shop": "natal", "book": "bk-04", "qty": 1, "cents": 7900, "at": "2026-03-02T11:08:42-03:00"}
+Processed a total of 360 messages
+ubuntu@stream:~/work$ date -d @1772470806 '+%F %T %z'
+2026-03-02 14:00:06 -0300
 ```
 
-The first two are sales of other shops, stamped a second or two after their `at`. Natal's were sold
+The first two are sales from Recife, stamped three seconds and one second after their `at`. `Unable to write to standard out` is the consumer noticing that `grep` had what it wanted
+and stopped reading, which is harmless. Natal's were sold
 in the same hour and stamped with a time the `date` line decodes as 14:00. **Their skew is around
 three hours**, and nothing about the records themselves says anything is wrong. Each is a perfectly
 ordinary sale that came in late.

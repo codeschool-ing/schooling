@@ -22,20 +22,20 @@ setting is what a real pipeline uses, and it was not measured here.
 Four topics, one per codec:
 
 ```
-ubuntu@stream:~/work$ for c in none gzip lz4 zstd; do kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales-$c --partitions 1 --config compression.type=$c; done
+ubuntu@stream:~/work$ for c in uncompressed gzip lz4 zstd; do kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales-$c --partitions 1 --config compression.type=$c; done
 ```
 
 The same hundred thousand sales into each, from the same seed, so the four topics hold identical
 messages:
 
 ```
-ubuntu@stream:~/work$ for c in none gzip lz4 zstd; do python tills.py --topic sales-$c --count 100000 --rate 0; done
+ubuntu@stream:~/work$ for c in uncompressed gzip lz4 zstd; do python tills.py --topic sales-$c --count 100000 --rate 0; done
 ```
 
 And the sizes, with the bytes per sale beside each, largest first:
 
 ```
-ubuntu@stream:~/work$ kafka-log-dirs.sh --bootstrap-server localhost:9092 --describe --topic-list sales-none,sales-gzip,sales-lz4,sales-zstd | grep '^{' | jq -r '.brokers[0].logDirs[0].partitions[] | "\(.partition)  \(.size)  \(.size / 100000 * 10 | round / 10)"' | sort -k2 -n -r
+ubuntu@stream:~/work$ kafka-log-dirs.sh --bootstrap-server localhost:9092 --describe --topic-list sales-uncompressed,sales-gzip,sales-lz4,sales-zstd | grep '^{' | jq -r '.brokers[0].logDirs[0].partitions[] | "\(.partition)  \(.size)  \(.size / 100000 * 10 | round / 10)"' | sort -k2 -n -r
 ```
 
 @@fig:l17-codecs@@

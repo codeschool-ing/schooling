@@ -35,17 +35,44 @@ idade, e é por isso que os timestamps de março das últimas seções foram ace
 Para ver a proteção, este programa manda uma venda de um caixa cujo relógio está adiantado um certo
 número de horas em relação ao real. Salve como `~/work/clock_ahead.py`:
 
-@@fence@@
+```python
+"""clock_ahead.py: one sale from a till whose clock is HOURS ahead of the broker's."""
+import json
+import sys
+import time
+
+from confluent_kafka import Producer
+
+hours, topic = float(sys.argv[1]), sys.argv[2]
+stamp = int((time.time() + hours * 3600) * 1000)
+
+def report(err, msg):
+    print(f"{hours:+} h: " + (f"refused, {err.str()}" if err else
+          f"stored at offset {msg.offset()}, timestamp {msg.timestamp()}"))
+
+producer = Producer({"bootstrap.servers": "localhost:9092"})
+producer.produce(topic, key="caruaru", value=json.dumps({"shop": "caruaru"}),
+                 timestamp=stamp, on_delivery=report)
+producer.flush()
+```
 
 Duas horas adiantado e meia hora adiantado, para o tópico `clocks`, que guarda `CreateTime`:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python clock_ahead.py 2 clocks
++2.0 h: refused, Broker: Invalid timestamp
+ubuntu@stream:~/work$ python clock_ahead.py 0.5 clocks
++0.5 h: stored at offset 2, timestamp (1, 1791621242883)
+```
 
 O relógio de duas horas é recusado, e o produtor é informado do motivo. O de meia hora é gravado,
 dentro da hora de tolerância, com o timestamp que o caixa afirmou. No tópico `appended`, o mesmo
 relógio de duas horas passa:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python clock_ahead.py 2 appended
++2.0 h: stored at offset 2, timestamp (2, 1791619443040)
+```
 
 **`LogAppendTime` pula a verificação porque descarta o timestamp do produtor de qualquer jeito**; o
 par impresso diz tipo 2, log-append, e o número é o presente do broker. Nenhum dos dois tópicos olhou
@@ -67,7 +94,10 @@ subtração pega um relógio mentiroso.
 **Limitar o que você acredita.** Um processador pode se recusar a deixar um tempo do evento passar à
 frente da chegada por mais que uma tolerância, e prendê-lo ali:
 
-@@fence@@
+```python
+def believed(at, arrived, tolerance=timedelta(minutes=1)):
+    return min(at, arrived + tolerance)
+```
 
 Essas duas linhas são um esboço, não um programa para rodar. Prender o valor impede que um caixa ruim
 empurre o relógio de todo mundo para a frente, ao preço de arquivar as vendas dele no minuto errado.

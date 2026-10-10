@@ -22,6 +22,11 @@ every sale, how far behind it that sale is:
 
 ```
 ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic late --from-beginning --max-messages 360 2>/dev/null \
+  | jq -r '.at[:19] + "Z" | fromdate' \
+  | awk '$1 > seen { seen = $1 } { behind = seen - $1 }
+         behind > 0 { late++ } behind > 60 { minute++ } behind > 3600 { hour++ }
+         END { print NR, "sales,", late, "out of order:", minute, "by over a minute,", hour, "by over an hour" }'
+360 sales, 68 out of order: 49 by over a minute, 29 by over an hour
 ```
 
 Two details make the `jq` step honest. Every `at` in these sales carries the same offset, `-03:00`,

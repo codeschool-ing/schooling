@@ -20,7 +20,14 @@ Três ferramentas encadeadas fazem a medição. O consumidor de console imprime 
 transforma cada `at` em segundos desde 1970, e o `awk` guarda o maior tempo do evento que já viu
 (`seen`) e, para cada venda, o quanto ela está atrás dele:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic late --from-beginning --max-messages 360 2>/dev/null \
+  | jq -r '.at[:19] + "Z" | fromdate' \
+  | awk '$1 > seen { seen = $1 } { behind = seen - $1 }
+         behind > 0 { late++ } behind > 60 { minute++ } behind > 3600 { hour++ }
+         END { print NR, "sales,", late, "out of order:", minute, "by over a minute,", hour, "by over an hour" }'
+360 sales, 68 out of order: 49 by over a minute, 29 by over an hour
+```
 
 Dois detalhes deixam o passo do `jq` honesto. Todo `at` destas vendas tem o mesmo deslocamento,
 `-03:00`, então os primeiros dezenove caracteres se comparam corretamente como se fossem UTC, e o

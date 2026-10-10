@@ -35,13 +35,31 @@ o valor do produtor e grava o relógio do broker no momento em que ele anexou o 
 
 Crie um tópico de cada tipo e mande duas vendas do caixa da lição 1 para os dois:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic clocks --partitions 1
+Created topic clocks.
+ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic appended --partitions 1 --config message.timestamp.type=LogAppendTime
+Created topic appended.
+```
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python tills.py --count 2 --topic clocks
+sent 2 sales to clocks, the last one at 09:00:09
+ubuntu@stream:~/work$ python tills.py --count 2 --topic appended
+sent 2 sales to appended, the last one at 09:00:09
+```
 
 O consumidor de console imprime o timestamp do registro quando você pede com `print.timestamp=true`:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic clocks --from-beginning --max-messages 2 --formatter-property print.timestamp=true
+The consumer rebalance protocol (KIP-848) is production-ready! Set group.protocol=consumer to try it out. See https://kafka.apache.org/documentation/#consumer_rebalance_protocol
+CreateTime:1791619421678	{"sale": "joa-000001", "shop": "joao-pessoa", "book": "bk-02", "qty": 1, "cents": 5490, "at": "2026-03-02T09:00:05-03:00"}
+CreateTime:1791619421878	{"sale": "nat-000002", "shop": "natal", "book": "bk-08", "qty": 2, "cents": 17980, "at": "2026-03-02T09:00:09-03:00"}
+Processed a total of 2 messages
+ubuntu@stream:~/work$ date -d @1791619421 '+%F %T %z'
+2026-10-10 05:03:41 -0300
+```
 
 `CreateTime:` seguido de um número é o timestamp do registro, em milissegundos desde o início de
 1970, e a linha do `date` transforma os dez primeiros dígitos, os segundos, numa data. **Dois
@@ -52,7 +70,13 @@ máquina.
 
 O tópico `appended` mostra a terceira possibilidade:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic appended --from-beginning --max-messages 2 --formatter-property print.timestamp=true
+The consumer rebalance protocol (KIP-848) is production-ready! Set group.protocol=consumer to try it out. See https://kafka.apache.org/documentation/#consumer_rebalance_protocol
+LogAppendTime:1791619422200	{"sale": "joa-000001", "shop": "joao-pessoa", "book": "bk-02", "qty": 1, "cents": 5490, "at": "2026-03-02T09:00:05-03:00"}
+LogAppendTime:1791619422399	{"sale": "nat-000002", "shop": "natal", "book": "bk-08", "qty": 2, "cents": 17980, "at": "2026-03-02T09:00:09-03:00"}
+Processed a total of 2 messages
+```
 
 Aqui o rótulo é `LogAppendTime`, e o número é o relógio do broker. Para um produtor que envia cada
 registro no momento em que o cria, `CreateTime` e `LogAppendTime` ficam a poucos milissegundos um do

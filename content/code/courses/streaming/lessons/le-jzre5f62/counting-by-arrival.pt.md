@@ -48,7 +48,17 @@ leitor em dia teria visto a venda.
 
 Primeiro por hora:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python per_minute.py --size 60
+  from  arrived  happened
+ 09:00       56        57
+ 10:00       57        62
+ 11:00       48        59
+ 12:00       41        54
+ 13:00       51        60
+ 14:00       93        54
+ 15:00       14        14
+```
 
 Leia as duas colunas de cima para baixo. Até as dez elas quase concordam; a diferença de uma venda é
 uma venda do fim da hora das nove que chegou na hora das dez. Das 10:00 às 13:00 a coluna de chegada
@@ -63,7 +73,15 @@ pela borda de uma hora, por alguns segundos.
 
 O minuto em torno das 14:00 mostra para onde elas foram:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python per_minute.py --from 13:58 --to 14:03
+minute  arrived  happened
+ 13:58        1         1
+ 13:59        0         1
+ 14:00       39         0
+ 14:01        1         1
+ 14:02        1         1
+```
 
 **Trinta e nove vendas chegaram no minuto das 14:00, e nenhuma aconteceu nele.** Um painel de vendas
 por minuto pela chegada mostraria um pico ali, e um período sem nada em Natal das 10:20 às 14:00. Um

@@ -26,8 +26,8 @@ each sale takes a tenth of a second, and every fifty sales it says how far it ha
       "note": "What it is for, and its three knobs. `--max-poll` waits for the section on backpressure; leave it alone for now."
     },
     {
-      "code": "consumer = Consumer({\n    \"bootstrap.servers\": \"localhost:9092\",\n    \"group.id\": args.group,\n    \"auto.offset.reset\": \"earliest\",\n    \"auto.commit.interval.ms\": 1000,\n    \"max.poll.interval.ms\": args.max_poll,\n    \"session.timeout.ms\": min(args.max_poll, 45000),\n})\n",
-      "note": "**The group's committed position is what the lag tools read**, so it is committed every second rather than every five, the default, to keep the numbers close to the truth."
+      "code": "consumer = Consumer({\n    \"bootstrap.servers\": \"localhost:9092\",\n    \"group.id\": args.group,\n    \"auto.offset.reset\": \"earliest\",\n    \"auto.commit.interval.ms\": 1000,\n    \"max.poll.interval.ms\": args.max_poll,\n    \"session.timeout.ms\": min(args.max_poll, 45000),\n    \"partition.assignment.strategy\": \"roundrobin\",\n})\n",
+      "note": "**The group's committed position is what the lag tools read**, so it is committed every second rather than every five, the default, to keep the numbers close to the truth. `roundrobin` deals the partitions out one at a time when a group has several members; the backpressure section needs that."
     },
     {
       "code": "def now():\n    return time.strftime(\"%H:%M:%S\")\n\ndef assigned(consumer, parts):\n    print(now(), \"assigned\", [p.partition for p in parts], flush=True)\n\ndef revoked(consumer, parts):\n    print(now(), \"revoked\", [p.partition for p in parts], flush=True)\n\nconsumer.subscribe([\"sales\"], on_assign=assigned, on_revoke=revoked)\n",

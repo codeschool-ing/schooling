@@ -31,17 +31,17 @@ vm 'ls -l ~/kafka-data/node1/log/bytes-0'
 
 # compression
 block comp-topics
-vm 'for c in none gzip lz4 zstd; do kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales-$c --partitions 1 --config compression.type=$c; done'
+vm 'for c in uncompressed gzip lz4 zstd; do kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales-$c --partitions 1 --config compression.type=$c; done'
 block comp-fill
-vm 'for c in none gzip lz4 zstd; do python tills.py --topic sales-$c --count 100000 --rate 0; done'
+vm 'for c in uncompressed gzip lz4 zstd; do python tills.py --topic sales-$c --count 100000 --rate 0; done'
 block comp-sizes
-vm "kafka-log-dirs.sh --bootstrap-server localhost:9092 --describe --topic-list sales-none,sales-gzip,sales-lz4,sales-zstd | grep '^{' | jq -r '.brokers[0].logDirs[0].partitions[] | \"\(.partition)  \(.size)  \(.size / 100000 * 10 | round / 10)\"' | sort -k2 -n -r"
+vm "kafka-log-dirs.sh --bootstrap-server localhost:9092 --describe --topic-list sales-uncompressed,sales-gzip,sales-lz4,sales-zstd | grep '^{' | jq -r '.brokers[0].logDirs[0].partitions[] | \"\(.partition)  \(.size)  \(.size / 100000 * 10 | round / 10)\"' | sort -k2 -n -r"
 
 # retention-arithmetic
 block bill-ponto
-vm 'python bill.py 20000 38.5 7 3'
+vm 'python bill.py 20000 17 7 3'
 block bill-year
-vm 'python bill.py 20000 38.5 365 3'
+vm 'python bill.py 20000 17 365 3'
 block bill-clicks
 vm 'python bill.py 50000000 400 7 3'
 block retention
@@ -49,7 +49,7 @@ vm 'kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --en
 vm 'kafka-configs.sh --bootstrap-server localhost:9092 --entity-type topics --entity-name sales-zstd --describe'
 
 # the-quiet-hours
-sleep 20
+sleep 60
 block idle
 vm "ps -o rss,etime,time -p \$(pgrep -f '^[^ ]*java .*node1')"
 sleep 60

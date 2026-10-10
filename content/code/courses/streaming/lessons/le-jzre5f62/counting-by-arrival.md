@@ -50,6 +50,14 @@ Per hour first:
 
 ```
 ubuntu@stream:~/work$ python per_minute.py --size 60
+  from  arrived  happened
+ 09:00       56        57
+ 10:00       57        62
+ 11:00       48        59
+ 12:00       41        54
+ 13:00       51        60
+ 14:00       93        54
+ 15:00       14        14
 ```
 
 Read down the two columns. Up to ten o'clock they nearly agree; the one sale of difference is a
@@ -67,6 +75,12 @@ The minute around 14:00 shows where they went:
 
 ```
 ubuntu@stream:~/work$ python per_minute.py --from 13:58 --to 14:03
+minute  arrived  happened
+ 13:58        1         1
+ 13:59        0         1
+ 14:00       39         0
+ 14:01        1         1
+ 14:02        1         1
 ```
 
 **Thirty-nine sales arrived in the minute 14:00, and none happened in it.** A dashboard of sales

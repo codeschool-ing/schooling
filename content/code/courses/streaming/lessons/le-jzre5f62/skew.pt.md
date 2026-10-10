@@ -56,15 +56,35 @@ O tópico tem uma partição, para que a ordem de chegada seja uma ordem só, qu
 `retention.ms=-1`, que guarda os registros para sempre; a última seção desta lição explica por que
 um tópico cheio de timestamps de março precisa disso.
 
-@@fence@@
+```
+ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic late --partitions 1 --config retention.ms=-1
+Created topic late.
+ubuntu@stream:~/work$ python late_tills.py
+sent 360 sales to late, from 09:00:27 to 15:13:59; natal held 38 from 10:20 to 14:00
+```
 
 São 360 vendas, de pouco depois das nove até um quarto depois das três, e 38 delas retidas no caixa
 de Natal. Para ver o efeito, peça ao consumidor os dois primeiros registros cujo `at` diz onze horas,
 e depois os dois primeiros desses que vieram de Natal:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic late --from-beginning --max-messages 360 --formatter-property print.timestamp=true | grep -m 2 'T11:'
+The consumer rebalance protocol (KIP-848) is production-ready! Set group.protocol=consumer to try it out. See https://kafka.apache.org/documentation/#consumer_rebalance_protocol
+CreateTime:1772460075000	{"sale": "rec-000120", "shop": "recife", "book": "bk-04", "qty": 3, "cents": 23700, "at": "2026-03-02T11:01:12-03:00"}
+CreateTime:1772460157000	{"sale": "rec-000121", "shop": "recife", "book": "bk-01", "qty": 3, "cents": 11970, "at": "2026-03-02T11:02:36-03:00"}
+Unable to write to standard out, closing consumer.
+Processed a total of 199 messages
+ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic late --from-beginning --max-messages 360 --formatter-property print.timestamp=true | grep -m 2 'natal.*T11:'
+The consumer rebalance protocol (KIP-848) is production-ready! Set group.protocol=consumer to try it out. See https://kafka.apache.org/documentation/#consumer_rebalance_protocol
+CreateTime:1772470806000	{"sale": "nat-000125", "shop": "natal", "book": "bk-07", "qty": 1, "cents": 3500, "at": "2026-03-02T11:07:19-03:00"}
+CreateTime:1772470807000	{"sale": "nat-000126", "shop": "natal", "book": "bk-04", "qty": 1, "cents": 7900, "at": "2026-03-02T11:08:42-03:00"}
+Processed a total of 360 messages
+ubuntu@stream:~/work$ date -d @1772470806 '+%F %T %z'
+2026-03-02 14:00:06 -0300
+```
 
-Os dois primeiros são vendas de outras lojas, carimbadas um ou dois segundos depois do `at`. As de
+Os dois primeiros são vendas de Recife, carimbadas três segundos e um segundo depois do `at`. `Unable to write to standard out` é o consumidor percebendo que o `grep` já tinha o
+que queria e parou de ler, o que não faz mal nenhum. As de
 Natal foram vendidas na mesma hora e carimbadas com uma hora que a linha do `date` decodifica como
 14:00. **O skew delas é de cerca de três horas**, e nada nos próprios registros diz que algo está
 errado. Cada um é uma venda perfeitamente comum que chegou tarde.

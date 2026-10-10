@@ -26,23 +26,43 @@ offset cujo timestamp é igual ou posterior a um momento, dado em milissegundos.
 
 Onde estava o tópico `late` à uma da tarde de 2 de março?
 
-@@fence@@
+```
+ubuntu@stream:~/work$ date -d '2026-03-02 13:00 -03:00' +%s%3N
+1772467200000
+ubuntu@stream:~/work$ kafka-get-offsets.sh --bootstrap-server localhost:9092 --topic late --time 1772467200000
+late:0:202
+```
 
-A resposta é o primeiro registro **carimbado** às 13:00 ou depois, e em `late` o carimbo é a hora do
+A resposta é o offset 202, o primeiro registro **carimbado** às 13:00 ou depois, e em `late` o carimbo é a hora do
 envio. Reler a partir desse offset lê tudo o que chegou depois das 13:00, e isso não é o mesmo que
 toda venda depois das 13:00: as vendas da manhã de Natal estão todas depois dele, porque chegaram às
 14:00. Agora o mesmo dia enviado de novo, com a hora da venda como carimbo:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic late-sold --partitions 1 --config retention.ms=-1
+Created topic late-sold.
+ubuntu@stream:~/work$ python late_tills.py --topic late-sold --stamp sold
+sent 360 sales to late-sold, from 09:00:27 to 15:13:59; natal held 38 from 10:20 to 14:00
+ubuntu@stream:~/work$ kafka-get-offsets.sh --bootstrap-server localhost:9092 --topic late-sold --time 1772467200000
+late-sold:0:202
+```
 
-A mesma pergunta recebe o mesmo offset, e isso não é coincidência. Toda venda que chegou antes das
+A mesma pergunta recebe o mesmo offset, 202, e isso não é coincidência. Toda venda que chegou antes das
 13:00 também aconteceu antes das 13:00, então, seja qual for o sentido do carimbo, o primeiro
 registro às 13:00 ou depois é o mesmo. O que muda é o que vem depois dele. Pergunte ao `late-sold`
 onde estão as vendas de Natal das onze horas:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic late-sold --from-beginning --max-messages 360 --formatter-property print.offset=true --formatter-property print.timestamp=true | grep -m 2 'natal.*T11:'
+The consumer rebalance protocol (KIP-848) is production-ready! Set group.protocol=consumer to try it out. See https://kafka.apache.org/documentation/#consumer_rebalance_protocol
+CreateTime:1772460439000	Offset:258	{"sale": "nat-000125", "shop": "natal", "book": "bk-07", "qty": 1, "cents": 3500, "at": "2026-03-02T11:07:19-03:00"}
+CreateTime:1772460522000	Offset:259	{"sale": "nat-000126", "shop": "natal", "book": "bk-04", "qty": 1, "cents": 7900, "at": "2026-03-02T11:08:42-03:00"}
+Unable to write to standard out, closing consumer.
+Processed a total of 268 messages
+```
 
-Carimbadas com as onze horas, em offsets bem depois do que a busca devolveu para a uma da tarde.
+Carimbadas com as onze horas, nos offsets 258 e 259, bem depois do 202 que a busca devolveu para a
+uma da tarde.
 **Num tópico carimbado com o tempo do evento, os timestamps andam para trás onde quer que chegue um
 evento atrasado**, e uma busca por tempo acha uma posição no log, não um conjunto de eventos: reler a
 partir do offset das 13:00 lê a manhã de Natal, e começar um pouco antes só não perde nada dela por

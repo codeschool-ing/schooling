@@ -18,11 +18,14 @@ the next is a property of a partition, and the topic is only the label on the gr
 
 ## Making one and looking at it
 
-Start from an empty one-node cluster, which is what `new 1` gives you:
+Start from an empty one-node cluster: stop the one you have, make a new one and start it.
 
 ```
 ubuntu@stream:~/work$ ./cluster.sh stop
 ```
+
+`new` deletes everything the cluster held, including lesson 1's five sales, which is what you want
+here: every number below starts from zero.
 
 Now create `sales` again, with three partitions, and ask Kafka to describe it:
 
@@ -30,7 +33,20 @@ Now create `sales` again, with three partitions, and ask Kafka to describe it:
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales --partitions 3
 ```
 
-DESCRIBE-PROSE
+The first line of the description is about the topic: an id Kafka gave it, which is how the
+cluster really knows it (the name can be reused after a delete; the id cannot), the number of
+partitions, and the **replication factor**, the number of copies of each partition. It is 1 here
+because there is one node to keep copies on. Then one line per partition, numbered from 0:
+
+- **`Leader`** is the node that holds the partition and takes its writes and reads. Node 1, for
+  all three, because node 1 is all there is.
+- **`Replicas`** lists every node with a copy, and **`Isr`** the ones whose copy is up to date.
+- **`Elr`** and **`LastKnownElr`** are empty, and stay empty until lesson 5 has three nodes and kills
+  some of them.
+
+With one node the last four columns say the same thing three times. **They start to differ in
+lesson 5**, where a partition has three copies on three nodes and losing one is something to
+watch.
 
 ## Why three, and not one
 

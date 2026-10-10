@@ -7,6 +7,7 @@ CAPTION = ("Lag is counted between two positions in the same partition: where th
 PT = {"handled": "tratadas", "waiting: the lag": "esperando: o lag",
       "CURRENT-OFFSET": "CURRENT-OFFSET", "LOG-END-OFFSET": "LOG-END-OFFSET",
       "next to read": "próxima a ler", "next to write": "próxima a escrever",
+      "producer appends": "o produtor acrescenta",
       "lag = 15 − 7 = 8": "lag = 15 − 7 = 8"}
 SAME = []
 def draw(s, t):

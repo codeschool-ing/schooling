@@ -39,7 +39,7 @@ compression section measured BYTES bytes a sale with `zstd`. A week of retention
 reach back to last Monday, and three copies, as in lesson 5:
 
 ```
-ubuntu@stream:~/work$ python bill.py 20000 38.5 7 3
+ubuntu@stream:~/work$ python bill.py 20000 17 7 3
 ```
 
 **Ponto Final's sales fit on a memory card.** That is the honest result for a small business: the
@@ -47,7 +47,7 @@ storage of its stream is negligible, and the bill is the always-on compute of th
 Keeping them a year instead of a week changes the number, and not the conclusion:
 
 ```
-ubuntu@stream:~/work$ python bill.py 20000 38.5 365 3
+ubuntu@stream:~/work$ python bill.py 20000 17 365 3
 ```
 
 ## A topic where storage is the bill

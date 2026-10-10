@@ -3,9 +3,18 @@ title: Which partition a key lands in
 version: 1
 ---
 
-DRAFT
+**A producer sends a message with a key to the partition its key hashes to, and every message with
+that key goes to the same one.** That is the rule lesson 2 asked for: one key, one log, so the
+events about one shop stay in the order the shop wrote them. Messages with no key are spread over
+the partitions instead, and keep no order with each other.
 
-Save this as `~/work/keys.py`:
+The common belief is that the broker does this. It does not. **The producer chooses the partition,
+in the client library, before the message leaves the program**, and the broker stores what it is
+given. That puts the hash function in the client, and different clients ship different ones.
+
+A small producer makes this visible. It sends whatever `KEY=VALUE` pairs it is given and prints the
+partition and offset each one was stored at, which the broker reports back once it has the
+message. Save this as `~/work/keys.py`:
 
 ```schooling-example
 {
@@ -31,3 +40,32 @@ Save this as `~/work/keys.py`:
   ]
 }
 ```
+
+Make a topic of three partitions and send one message per shop:
+
+```
+ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic shops --partitions 3
+```
+
+KEYS-DEFAULT
+
+## Kafka's own tools hash differently
+
+Now send the same five keys with Kafka's console producer, which is written in Java, and read the
+topic back with the partition and key of each message printed. `parse.key=true` tells the producer
+that each line is a key, a `:`, and a value:
+
+```
+ubuntu@stream:~/work$ printf "recife:java\nolinda:java\ncaruaru:java\nnatal:java\njoao-pessoa:java\n" | kafka-console-producer.sh --bootstrap-server localhost:9092 --topic shops --reader-property parse.key=true --reader-property key.separator=:
+```
+
+KEYS-JAVA
+
+The `murmur2_random` partitioner is librdkafka's copy of the Java one, and it is the line in
+`keys.py` that the `--partitioner` option sets:
+
+```
+ubuntu@stream:~/work$ python keys.py --partitioner murmur2_random shops recife=m2 olinda=m2 caruaru=m2 natal=m2 joao-pessoa=m2
+```
+
+KEYS-MURMUR

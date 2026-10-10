@@ -53,7 +53,7 @@ block slow-screen
 stop2 slow
 block replay-dry
 vm 'kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group stock --reset-offsets --topic sales --to-earliest --dry-run'
-AT=$(date -d "@$((T0 + 15))" +%Y-%m-%dT%H:%M:%S.000)
+AT=$(date -d "@$((T0 + 15))" +%Y-%m-%dT%H:%M:%S.000%:z)
 block replay-datetime
 vm "kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group stock --reset-offsets --topic sales --to-datetime $AT --execute"
 vm 'kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group stock'
@@ -70,14 +70,18 @@ block audit-good-screen
 stop2 good
 
 # poison-messages ------------------------------------------------------------
+block count-first
+vm 'python sturdy_consumer.py'
 block poison
 vm "echo 'recife|bk-03;1;2990' | kafka-console-producer.sh --bootstrap-server localhost:9092 --topic sales --reader-property parse.key=true --reader-property key.separator='|'"
 vm 'python tills.py --count 30 --rate 0 --seed 5'
 block crash-1
 vm 'python sturdy_consumer.py'
+block stuck
+vm 'kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group stock-count'
 block crash-2
 vm 'python sturdy_consumer.py'
-block stuck
+block stuck-2
 vm 'kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group stock-count'
 block dlq
 vm 'kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales.dlq --partitions 1'

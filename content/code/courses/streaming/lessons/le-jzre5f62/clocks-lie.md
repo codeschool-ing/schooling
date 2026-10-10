@@ -60,6 +60,9 @@ Two hours ahead and half an hour ahead, to the `clocks` topic, which keeps `Crea
 
 ```
 ubuntu@stream:~/work$ python clock_ahead.py 2 clocks
++2.0 h: refused, Broker: Invalid timestamp
+ubuntu@stream:~/work$ python clock_ahead.py 0.5 clocks
++0.5 h: stored at offset 2, timestamp (1, 1791621242883)
 ```
 
 The two-hour clock is refused, and the producer is told why. The half-hour one is stored, inside
@@ -68,6 +71,7 @@ two-hour clock gets through:
 
 ```
 ubuntu@stream:~/work$ python clock_ahead.py 2 appended
++2.0 h: stored at offset 2, timestamp (2, 1791619443040)
 ```
 
 **`LogAppendTime` skips the check because it discards the producer's timestamp anyway**; the

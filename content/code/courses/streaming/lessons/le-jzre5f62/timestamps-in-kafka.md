@@ -28,28 +28,41 @@ Where did the `late` topic stand at one in the afternoon of 2 March?
 
 ```
 ubuntu@stream:~/work$ date -d '2026-03-02 13:00 -03:00' +%s%3N
+1772467200000
+ubuntu@stream:~/work$ kafka-get-offsets.sh --bootstrap-server localhost:9092 --topic late --time 1772467200000
+late:0:202
 ```
 
-The answer is the first record **stamped** at or after 13:00, and in `late` the stamp is the time
+The answer is offset 202, the first record **stamped** at or after 13:00, and in `late` the stamp is the time
 of sending. Replaying from that offset reads everything that arrived after 13:00, and that is not
 the same as every sale after 13:00: Natal's sales from the morning are all after it, because they
 arrived at 14:00. Now the same day sent again, with the time of sale as the stamp:
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic late-sold --partitions 1 --config retention.ms=-1
+Created topic late-sold.
+ubuntu@stream:~/work$ python late_tills.py --topic late-sold --stamp sold
+sent 360 sales to late-sold, from 09:00:27 to 15:13:59; natal held 38 from 10:20 to 14:00
+ubuntu@stream:~/work$ kafka-get-offsets.sh --bootstrap-server localhost:9092 --topic late-sold --time 1772467200000
+late-sold:0:202
 ```
 
-The same question gets the same offset, and that is not a coincidence. Every sale that arrived
+The same question gets the same offset, 202, and that is not a coincidence. Every sale that arrived
 before 13:00 also happened before 13:00, so whichever the stamp means, the first record at or
 after 13:00 is the same one. What differs is what comes after it. Ask `late-sold` where its
 Natal sales from eleven o'clock are:
 
 ```
 ubuntu@stream:~/work$ kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic late-sold --from-beginning --max-messages 360 --formatter-property print.offset=true --formatter-property print.timestamp=true | grep -m 2 'natal.*T11:'
+The consumer rebalance protocol (KIP-848) is production-ready! Set group.protocol=consumer to try it out. See https://kafka.apache.org/documentation/#consumer_rebalance_protocol
+CreateTime:1772460439000	Offset:258	{"sale": "nat-000125", "shop": "natal", "book": "bk-07", "qty": 1, "cents": 3500, "at": "2026-03-02T11:07:19-03:00"}
+CreateTime:1772460522000	Offset:259	{"sale": "nat-000126", "shop": "natal", "book": "bk-04", "qty": 1, "cents": 7900, "at": "2026-03-02T11:08:42-03:00"}
+Unable to write to standard out, closing consumer.
+Processed a total of 268 messages
 ```
 
-Stamped with eleven o'clock, sitting at offsets well past the one the search returned for one in
-the afternoon. **In a topic stamped with event time, the timestamps go backwards wherever a late
+Stamped with eleven o'clock, at offsets 258 and 259, well past the 202 the search returned for one
+in the afternoon. **In a topic stamped with event time, the timestamps go backwards wherever a late
 event arrives**, and a search by time finds a position in the log, not a set of events: replaying
 from the 13:00 offset reads Natal's morning, and starting a little earlier misses none of it only by
 luck. Kafka's index copes with timestamps that go backwards, and the answer it gives is still "the
