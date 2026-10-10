@@ -227,5 +227,67 @@ def two_clouds(lang):
     return s.render(), cap, None
 
 
+# ---------------------------------------------------------------- lesson 2
+
+def brl(v, lang, signed=False):
+    t = f'{abs(v):,.2f}'
+    if lang == 'pt':
+        t = t.replace(',', '#').replace('.', ',').replace('#', '.')
+    sign = ('−' if v < 0 else '') if signed else ''
+    return f'{sign}R$ {t}'
+
+
+@figure
+def bridge(lang):
+    """Lesson 2, reconciling: block `bridge`."""
+    steps = [(L(lang, 'gross', 'bruto'), 329036.20, 'total'),
+             (L(lang, 'discounts', 'descontos'), -23768.58, 'step'),
+             (L(lang, 'refunds', 'estornos'), -11058.02, 'step'),
+             (L(lang, 'test account', 'conta de teste'), 0.0, 'step'),
+             (L(lang, 'net', 'líquido'), 294209.60, 'total')]
+    s = Svg('bridge', 720, 300, L(lang,
+        'A bridge from gross to net revenue for the first quarter of 2026, drawn as five columns. '
+        'Gross revenue is a full column of 329,036.20 reais. Discounts hang from its top as a '
+        'drop of 23,768.58. Refunds hang below that as a drop of 11,058.02. The test account is a '
+        'drop of zero, drawn as a flat line. Net revenue is a full column of 294,209.60, whose top '
+        'is level with the bottom of the last drop.',
+        'Uma ponte da receita bruta à líquida no primeiro trimestre de 2026, desenhada em cinco '
+        'colunas. A receita bruta é uma coluna inteira de 329.036,20 reais. Os descontos pendem do '
+        'topo dela como uma queda de 23.768,58. Os estornos pendem logo abaixo como uma queda de '
+        '11.058,02. A conta de teste é uma queda de zero, desenhada como uma linha. A receita '
+        'líquida é uma coluna inteira de 294.209,60, cujo topo fica na altura do fim da última '
+        'queda.'))
+    # the axis starts at 250,000 so the steps are visible; said on the drawing
+    base, top, y0, y1 = 250000, 340000, 250, 40
+    def Y(v): return y0 - (y0 - y1) * (v - base) / (top - base)
+    w, gap, x = 100, 30, 60
+    level = 0
+    for name, v, kind in steps:
+        if kind == 'total':
+            s.rect(x, Y(v), w, y0 - Y(v), fill='var(--panel)', stroke='var(--phosphor)')
+            level = v
+            s.text(x + w / 2, Y(v) - 12, brl(v, lang), 10.5, anchor='middle', mono=True)
+        else:
+            new = level + v
+            if v == 0:
+                s.line(x, Y(level), x + w, Y(level), stroke='var(--amber)', sw=2)
+            else:
+                s.rect(x, Y(level), w, Y(new) - Y(level), fill='var(--panel)', stroke='var(--amber)')
+            s.text(x + w / 2, Y(new) + 14 if v else Y(level) + 14, brl(v, lang, signed=True), 10.5,
+                   anchor='middle', mono=True, fill='var(--amber)')
+            level = new
+        s.text(x + w / 2, y0 + 18, name, 11, anchor='middle')
+        x += w + gap
+    s.line(50, y0, 690, y0, stroke='var(--paper-dim)', sw=1)
+    s.text(50, y0 + 40, L(lang, 'the scale starts at R$ 250,000, not at zero',
+                          'a escala começa em R$ 250.000, não em zero'), 10, fill='var(--paper-dim)',
+           italic=True)
+    cap = L(lang, 'Each drop is one difference between the two definitions, and they close: the last '
+                  'drop ends exactly where net revenue begins.',
+            'Cada queda é uma diferença entre as duas definições, e elas fecham: a última queda termina '
+            'exatamente onde começa a receita líquida.')
+    return s.render(), cap, None
+
+
 if __name__ == '__main__':
     inject()
