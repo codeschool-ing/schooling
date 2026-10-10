@@ -44,10 +44,10 @@ mesma, a parte mais útil do exercício:
 | **total ponderado** | 100% | **4,05** | **3,30** | **3,05** |
 
 Cada total é a soma de peso vezes nota. Para A: 0,30 × 5 + 0,20 × 2 + 0,15 × 5 + 0,25 × 4 + 0,10 × 4
-= 1,50 + 0,40 + 0,75 + 1,00 + 0,40 = 4,05. As notas vão de 1 a 5, e cada uma é um julgamento que o
-time justificou com uma frase: o módulo do monólito tira 5 em tempo porque os cadastros dos
-embarcadores já estão lá, e 2 em independência porque toda mudança no faturamento espera a
-implantação do monólito, que acontece duas vezes por semana.
+= 1,50 + 0,40 + 0,75 + 1,00 + 0,40 = 4,05. As notas vão de 1 a 5, e cada uma é um julgamento que o time justificou numa frase. O módulo do
+monólito tira 5 em tempo porque os cadastros dos embarcadores já estão lá. Tira 2 em independência
+porque toda mudança no faturamento espera a implantação do monólito, que acontece duas vezes por
+semana.
 
 **Três regras mantêm a matriz honesta:**
 
@@ -88,10 +88,10 @@ confiança.
 
 O que o time fez com isso foi simples. O Bruno argumentou que a independência ia pesar mais daqui a
 dois anos, quando o faturamento ganhar regras próprias; a Helena argumentou que as primeiras faturas
-tinham de sair neste trimestre. O Tomás decidiu: A, o módulo no monólito, construído atrás de uma
-interface para poder ser extraído depois, com um registro de decisão que cita o cruzamento em 32,5% e
-diz o que faria o time revisitá-la, a saber, mais de uma mudança por semana no faturamento travada
-pelo calendário de implantação do monólito. **O registro leva a matriz, a checagem de sensibilidade e
+tinham de sair neste trimestre. O Tomás decidiu: A, o módulo no monólito, construído atrás de uma interface para poder ser
+extraído depois. O registro de decisão cita o cruzamento em 32,5% e diz o que faria o time
+revisitá-la: mais de uma mudança por semana no faturamento travada pelo calendário de implantação do
+monólito. **O registro leva a matriz, a checagem de sensibilidade e
 a condição para mudar de rumo.**
 
 ## Outros jeitos de decidir bem

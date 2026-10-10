@@ -70,11 +70,11 @@ As seis partes, com o exemplo do Payments:
 fica satisfeito com uma tentativa por dia. Com ela, um desenho pode ser checado no papel agora e num
 ambiente de testes depois, e uma discussão entre dois desenhos tem contra o que ser resolvida.
 
-A forma não serve só para disponibilidade. Aqui vai um cenário de facilidade de mudança para o
-Pricing, escrito do mesmo jeito: um **desenvolvedor** do Pricing (fonte) recebe uma **nova tabela de
-piso da ANTT** (estímulo) durante o **desenvolvimento normal** (ambiente), para a **etapa de piso da
-cotação** (artefato); a tabela é carregada, testada e implantada (resposta) e **entra em produção em
-até dois dias úteis, sem código alterado fora do módulo de piso** (medida da resposta). Esse cenário
+A forma não serve só para disponibilidade. Aqui vai um cenário de facilidade de mudança para o Pricing, escrito do mesmo jeito. Um
+**desenvolvedor** do Pricing (fonte) recebe uma **nova tabela de piso da ANTT** (estímulo) durante o
+**desenvolvimento normal** (ambiente), para a **etapa de piso da cotação** (artefato). A tabela é
+carregada, testada e implantada (resposta), e **entra em produção em até dois dias úteis, sem código
+alterado fora do módulo de piso** (medida da resposta). Esse cenário
 é o motivo de a tabela ser dado e não código, e de a etapa de piso ser a única saída.
 
 A aula 7 trata de extrair cenários assim do negócio, de pessoas que dizem "rápido" e "sempre". Esta

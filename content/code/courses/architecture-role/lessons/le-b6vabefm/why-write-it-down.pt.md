@@ -29,9 +29,9 @@ escrita por quem sabia.
 ## A reunião que volta
 
 Toda empresa tem uma decisão que é discutida todo trimestre. Na Carreto, antes do log, era a consulta
-periódica. Alguém novo perguntava no fórum de arquitetura por que o Payments não pedia ao Tracking as
-provas novas a cada poucos minutos, as pessoas que lembravam da última discussão a reconstruíam, em
-parte e cada uma de um jeito, e uma hora depois a reunião terminava onde a anterior tinha terminado.
+periódica. Alguém novo perguntava no fórum de arquitetura por que o Payments não pedia ao Tracking as provas
+novas a cada poucos minutos. As pessoas que lembravam da última discussão a reconstruíam, em parte e
+cada uma de um jeito, e uma hora depois a reunião terminava onde a anterior tinha terminado.
 
 Com um registro, a conversa é mais curta e melhor. A Kátia Lemos levantou a consulta periódica de
 novo para outra integração, e a Renata apontou o registro 7. **A pergunta virou: o que mudou neste
@@ -50,8 +50,7 @@ as duas ou três horas que levou para escrever o registro e revisá-lo.
 
 Uma engenheira nova aprende uma base de código lendo-a, e o código responde *o quê* com fluência e
 *por quê* jamais. **Um log de decisões é a história mais curta que existe de um sistema**: uma lista
-numerada das escolhas que o moldaram, cada uma com as forças do seu momento. Ler o log da Carreto
-desde o primeiro registro leva cerca de uma hora, e no fim uma pessoa nova sabe por que o monólito
+numerada das escolhas que o moldaram, cada uma com as forças do seu momento. Ler o log da Carreto desde o primeiro registro leva cerca de uma hora. No fim, uma pessoa nova sabe por que o monólito
 ainda é dono do módulo de cargas, por que o Tracking tem banco próprio e por que os pagamentos são
 movidos por um evento, coisas que antes levavam meses de perguntas.
 

@@ -63,10 +63,11 @@ the internals; the second need the contract and the failure behaviour, and nothi
 team, which calls Pricing for every quote it shows, needs to know that Pricing answers within its
 agreed time or returns an explicit error. It has no use for the two stages.
 
-**The artefacts are close to the code.** A component diagram of the service's insides (the third
-of the C4 levels, which `architecture-modeling` lesson 3 draws properly and lesson 8 here
-introduces), the API contract, the module boundaries written as rules a build can check (lesson 9
-shows a program that enforces one), and decision records in the service's own repository. Pricing
+**The artefacts are close to the code.** There is a component diagram of the service's insides,
+the third of the C4 levels, which lesson 8 here introduces and `architecture-modeling` lesson 3
+draws properly. There is the API contract, and there are the module boundaries written as rules a
+build can check; lesson 9 shows a program that enforces one. And there are decision records in the
+service's own repository. Pricing
 keeps all four in its repository, and the diagram is short enough to redraw in ten minutes.
 
 ## Who does it, and where Renata fits

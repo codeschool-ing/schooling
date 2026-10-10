@@ -43,10 +43,10 @@ itself the most useful part of the exercise:
 | **weighted total** | 100% | **4.05** | **3.30** | **3.05** |
 
 Each total is the sum of weight times score. For A: 0.30 × 5 + 0.20 × 2 + 0.15 × 5 + 0.25 × 4 +
-0.10 × 4 = 1.50 + 0.40 + 0.75 + 1.00 + 0.40 = 4.05. The scores are on a scale of 1 to 5, and each
-one is a judgement the team wrote a sentence to justify: the monolith module scores 5 on time
-because the shipper records are already there, and 2 on independence because every invoicing change
-waits for the monolith's deploy, which happens twice a week.
+0.10 × 4 = 1.50 + 0.40 + 0.75 + 1.00 + 0.40 = 4.05. The scores are on a scale of 1 to 5, and each one is a judgement the team justified in a sentence.
+The monolith module scores 5 on time because the shipper records are already there. It scores 2 on
+independence because every invoicing change waits for the monolith's deploy, which happens twice a
+week.
 
 **Three rules keep the matrix honest:**
 
@@ -88,10 +88,9 @@ differently with the same confidence.
 
 What the team did with this was simple. Bruno argued that independence would matter more in two
 years, when invoicing grows rules of its own; Helena argued that the first invoices had to go out
-this quarter. Tomás settled it: A, the module in the monolith, built behind an interface so it
-could be extracted later, with a decision record that names the 32.5% crossover and says what
-would make the team revisit it, namely more than one change a week to invoicing blocked by the
-monolith's deploy schedule. **The record carries the matrix, the sensitivity check and the
+this quarter. Tomás settled it: A, the module in the monolith, built behind an interface so it could be
+extracted later. The decision record names the 32.5% crossover and says what would make the team
+revisit it: more than one change a week to invoicing blocked by the monolith's deploy schedule. **The record carries the matrix, the sensitivity check and the
 condition for changing course.**
 
 ## Other ways to decide well

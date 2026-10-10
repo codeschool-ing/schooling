@@ -70,11 +70,11 @@ The six parts, with the Payments example:
 satisfied by one retry a day. With it, a design can be checked on paper now and in a test
 environment later, and an argument between two designs has something to be settled against.
 
-The form is not only for availability. Here is a modifiability scenario for Pricing, written the
-same way: a **developer** on Pricing (source) receives a **new ANTT floor table** (stimulus) during
-**normal development** (environment), for the **floor stage of the quote** (artefact); the table is
-loaded, tested and deployed (response) and is **in production within two working days, with no code
-changed outside the floor module** (response measure). That scenario is why the table is data and
+The form is not only for availability. Here is a modifiability scenario for Pricing, written the same way. A **developer** on Pricing
+(source) receives a **new ANTT floor table** (stimulus) during **normal development** (environment),
+for the **floor stage of the quote** (artefact). The table is loaded, tested and deployed
+(response), and it is **in production within two working days, with no code changed outside the
+floor module** (response measure). That scenario is why the table is data and
 not code, and why the floor stage is the only way out.
 
 Lesson 7 is about getting scenarios like these out of the business, from people who say "fast" and

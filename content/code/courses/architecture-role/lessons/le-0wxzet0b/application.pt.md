@@ -63,10 +63,10 @@ de dentro; os segundos precisam do contrato e do comportamento em falha, e de ma
 Shipper, que chama o Pricing para cada cotação que mostra, precisa saber que o Pricing responde
 dentro do tempo combinado ou devolve um erro explícito. As duas etapas não servem para nada a ele.
 
-**Os artefatos ficam perto do código.** Um diagrama de componentes do interior do serviço (o
-terceiro nível do C4, que `architecture-modeling` aula 3 desenha direito e a aula 8 deste curso
-apresenta), o contrato da API, as fronteiras entre módulos escritas como regras que um build
-consegue checar (a aula 9 mostra um programa que garante uma delas) e os registros de decisão no
+**Os artefatos ficam perto do código.** Há um diagrama de componentes do interior do serviço, o
+terceiro nível do C4, que a aula 8 deste curso apresenta e `architecture-modeling` aula 3 desenha
+direito. Há o contrato da API, e há as fronteiras entre módulos escritas como regras que um build
+consegue checar; a aula 9 mostra um programa que garante uma delas. E há os registros de decisão no
 próprio repositório do serviço. O Pricing guarda os quatro no repositório dele, e o diagrama é curto
 o bastante para ser redesenhado em dez minutos.
 

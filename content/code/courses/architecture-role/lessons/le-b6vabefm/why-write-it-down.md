@@ -30,10 +30,9 @@ written by the person who knew.
 ## The meeting that happens again
 
 Every company has a decision that is argued about every quarter. At Carreto, before the log, it
-was polling. Somebody new would ask in the architecture forum why Payments did not simply ask
-Tracking for new proofs every few minutes, the people who remembered the last discussion would
-reconstruct it, partly and differently, and an hour later the meeting ended where the previous
-one had.
+was polling. Somebody new would ask in the architecture forum why Payments did not simply ask Tracking for new
+proofs every few minutes. The people who remembered the last discussion would reconstruct it,
+partly and differently, and an hour later the meeting ended where the previous one had.
 
 With a record, the conversation is shorter and better. Kátia Lemos raised polling again for a
 different integration, and Renata pointed at record 7. **The question became: what in this context
@@ -54,10 +53,9 @@ hours, against the two or three hours it took to write the record and have it re
 
 A new engineer learns a codebase by reading it, and the code answers *what* fluently and *why*
 never. **A decision log is the shortest history of a system there is**: a numbered list of the
-choices that shaped it, each with the forces of its moment. Reading Carreto's log from the first
-record takes about an hour, and at the end a new engineer knows why the monolith still owns the
-load module, why Tracking has its own database and why payouts are driven by an event, which used
-to take months of asking.
+choices that shaped it, each with the forces of its moment. Reading Carreto's log from the first record takes about an hour. At the end a new engineer knows
+why the monolith still owns the load module, why Tracking has its own database and why payouts are
+driven by an event, which used to take months of asking.
 
 It also changes what a new person dares to do. Somebody who knows why a structure exists can
 propose changing it with a real argument. Somebody who does not either leaves everything alone or
