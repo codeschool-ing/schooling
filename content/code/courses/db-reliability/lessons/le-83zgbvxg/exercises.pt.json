@@ -1,0 +1,216 @@
+{
+  "ex-trbyp5kn": {
+    "prompt": "Quantos megabytes tem um segmento de write-ahead log num servidor PostgreSQL com a configuração padrão?",
+    "hint": "O ls -l mostrou 16777216 bytes.",
+    "unit": "MB"
+  },
+  "ex-erp2vayq": {
+    "prompt": "O que `pg_wal_lsn_diff(pg_current_wal_lsn(), :'before')` mede depois de um UPDATE?",
+    "hint": "Um LSN é uma posição em bytes.",
+    "choices": [
+      { "text": "Quantas linhas o UPDATE alterou", "why": "O próprio UPDATE informa isso, 50000. A diferença é em bytes de log." },
+      { "text": "Quantos segmentos foram arquivados nesse meio-tempo", "why": "Nada estava sendo arquivado ainda; e o resultado é em bytes, não em segmentos." },
+      { "text": "Os bytes de log escritos nesse intervalo", "why": "Isso. Duas posições no log, subtraídas, dão a quantidade de log escrita entre elas." },
+      { "text": "Quanto tempo o UPDATE levou, em microssegundos", "why": "LSNs são posições, não tempos." }
+    ]
+  },
+  "ex-dq261ztt": {
+    "prompt": "Atualizar todas as linhas de uma tabela de uns 3 MB escreveu 15 MB de log. O que explica a maior parte da diferença?",
+    "hint": "O que a primeira mudança numa página depois de um checkpoint registra?",
+    "choices": [
+      { "text": "Páginas inteiras, registradas na primeira mudança após um checkpoint", "why": "Isso. Imagens de página inteira e novas entradas de índice para cada nova versão de linha somam várias vezes os dados." },
+      { "text": "O log guarda cada linha duas vezes, por segurança", "why": "Não existe cópia duplicada por segurança; cada mudança é registrada uma vez, na sua própria forma." },
+      { "text": "O log é texto sem compressão, bem maior que o formato binário da tabela", "why": "O log é feito de registros binários, não de texto." },
+      { "text": "O UPDATE rodou duas vezes por causa de uma nova tentativa", "why": "O UPDATE 50000 rodou uma vez." }
+    ]
+  },
+  "ex-xv4hvsk1": {
+    "prompt": "O que `SELECT pg_switch_wal()` faz?",
+    "hint": "O segmento não precisa estar cheio.",
+    "choices": [
+      { "text": "Move o log para outro diretório", "why": "O diretório continua sendo o pg_wal; só muda o segmento que está sendo escrito." },
+      { "text": "Liga o arquivamento sem precisar de restart", "why": "O archive_mode continua precisando de restart; a troca só fecha um segmento." },
+      { "text": "Apaga os segmentos de que o servidor não precisa mais", "why": "A reciclagem acontece nos checkpoints, não numa troca." },
+      { "text": "Termina o segmento atual agora e começa o próximo", "why": "Isso. É assim que esta lição deixa um segmento disponível para o arquivo sem esperar ele encher." }
+    ]
+  },
+  "ex-remztq6n": {
+    "prompt": "Ligue cada configuração ou marcador ao que ele faz.",
+    "hint": "Um deles precisa de restart.",
+    "pairs": [
+      { "left": "`archive_mode`", "right": "Faz o servidor acompanhar quais segmentos já foram arquivados; mudá-lo exige restart" },
+      { "left": "`archive_command`", "right": "O comando de shell rodado uma vez para cada segmento terminado" },
+      { "left": "`%p`", "right": "Trocado pelo caminho do segmento a arquivar" },
+      { "left": "`%f`", "right": "Trocado só pelo nome do arquivo do segmento" }
+    ],
+    "right_distractors": [
+      "Fecha um segmento depois de um tempo definido se algo foi escrito nele"
+    ]
+  },
+  "ex-r42x8d7m": {
+    "prompt": "Por que o comando de arquivamento começa com `test ! -f /var/lib/postgresql/wal-archive/%f &&`?",
+    "hint": "O que deveria acontecer se um segmento com esse nome já estiver arquivado?",
+    "choices": [
+      { "text": "Para a cópia ser mais rápida quando o arquivo já existe", "why": "Ela não copia mais rápido; ela se recusa a copiar se o arquivo existe." },
+      { "text": "Nunca sobrescrever um segmento arquivado", "why": "Isso. Senão outro servidor arquivando no mesmo lugar substituiria a sua história em silêncio." },
+      { "text": "Porque o cp não cria arquivos num diretório vazio", "why": "O cp cria arquivos em diretórios vazios sem problema." },
+      { "text": "Para pular segmentos que ainda não foram escritos", "why": "O servidor só chama o comando para segmentos terminados; não há nada a pular." }
+    ]
+  },
+  "ex-xvsjwpm3": {
+    "prompt": "A lição chama o `cp` de comando de arquivamento mais simples que funciona, e não de um bom comando para produção. Qual é a fraqueza dele?",
+    "hint": "Quando o cp informa sucesso?",
+    "choices": [
+      { "text": "Ele não copia arquivos de 16 MB", "why": "Ele copiou 16 MB sem problema." },
+      { "text": "Diz que terminou antes de os bytes estarem em disco", "why": "Isso: sucesso antes de se saber que a cópia está em disco. Uma queda de energia logo depois perde um segmento que o servidor acredita estar arquivado, e que então recicla." },
+      { "text": "Ele não preserva as permissões do arquivo", "why": "Não são as permissões que tornam um arquivo seguro." },
+      { "text": "Ele roda como ana e não como postgres", "why": "Quem o roda é o servidor, como postgres." }
+    ]
+  },
+  "ex-wgvk3tgh": {
+    "prompt": "Ninguém mais consegue escrever no diretório do arquivo. O que as consultas da aplicação percebem?",
+    "hint": "Onde a falha aparece?",
+    "choices": [
+      { "text": "Toda escrita falha até o arquivamento ser consertado", "why": "As escritas continuam; o servidor guarda os segmentos e tenta de novo." },
+      { "text": "Os commits ficam lentos enquanto o servidor tenta de novo", "why": "O arquivamento acontece num processo próprio, depois do commit; os commits não são atrasados por ele." },
+      { "text": "O banco passa para somente leitura", "why": "Não passa, até o disco que guarda o pg_wal encher, e aí ele para de vez." },
+      { "text": "Nada; uma linha de log e um contador mostram", "why": "Isso. É o comportamento certo, e é exatamente o que torna a falha perigosa." }
+    ]
+  },
+  "ex-p4kfwnav": {
+    "prompt": "Com o arquivo quebrado, quantos segmentos estavam esperando como `.ready` depois de mais seis updates?",
+    "hint": "O grep -c contou.",
+    "unit": "segmentos"
+  },
+  "ex-nx362vpj": {
+    "prompt": "Um comando de arquivamento quebrado passa despercebido por tempo suficiente para o disco que guarda o `pg_wal` encher. O que acontece com o banco?",
+    "hint": "O que um servidor não consegue fazer sem escrever no seu log?",
+    "choices": [
+      { "text": "Não consegue escrever o log, então para de aceitar escritas e desliga", "why": "Isso. Um problema de backup que ninguém viu vira uma indisponibilidade que todo mundo vê." },
+      { "text": "Apaga os segmentos não arquivados mais antigos para abrir espaço", "why": "Ele nunca joga fora log que não arquivou; isso quebraria o backup em silêncio." },
+      { "text": "Para de arquivar e segue em frente", "why": "O arquivamento já falhou. O problema é que ele não consegue escrever log novo." },
+      { "text": "Move o pg_wal para outro disco sozinho", "why": "Não existe tal mecanismo." }
+    ]
+  },
+  "ex-zdnkz6tc": {
+    "prompt": "Um banco escreve 2 GB de log por hora. O arquivo dele quebra às 18:00 de sexta e ninguém percebe até as 06:00 de segunda. Mais ou menos quantos GB de segmentos o servidor guardou até lá?",
+    "hint": "Conte as horas.",
+    "unit": "GB"
+  },
+  "ex-mtfad3qq": {
+    "prompt": "Depois do conserto, o `failed_count` ainda marca 13. Uma regra de monitoramento alerta quando `failed_count > 0`. O que está errado com a regra?",
+    "hint": "O que o contador conta?",
+    "choices": [
+      { "text": "Nada: 13 falhas merecem um alerta", "why": "São falhas antigas, já superadas. O alerta dispararia para sempre." },
+      { "text": "O failed_count só conta segmentos que acabaram arquivados", "why": "Ele conta tentativas que falharam, quer o segmento tenha sido arquivado depois ou não." },
+      { "text": "Conta tentativas antigas também, então nunca zera", "why": "Isso: ele conta tentativas desde o último reset, então um incidente o mantém acima de zero para sempre. Compare-o com o valor anterior, e vigie também o last_archived_time e os arquivos .ready." },
+      { "text": "Ela deveria alertar sobre o archived_count", "why": "O archived_count subindo diz que as coisas funcionam; não consegue dizer que algo falhou." }
+    ]
+  },
+  "ex-a9npvfy0": {
+    "prompt": "Num servidor tranquilo sem `archive_timeout`, um pedido é escrito num segmento que está longe de cheio. Quando ele é arquivado?",
+    "hint": "Um segmento é arquivado quando termina.",
+    "choices": [
+      { "text": "Em menos de um segundo, porque o pedido foi confirmado", "why": "Confirmar escreve o log no disco do próprio servidor. O arquivamento espera o segmento terminar." },
+      { "text": "No próximo checkpoint", "why": "Checkpoints não terminam segmentos; eles tornam os antigos recicláveis." },
+      { "text": "Nunca, porque um segmento parcial não é arquivável", "why": "Ele é arquivado assim que algo o termina, enchendo ou com uma troca." },
+      { "text": "Quando ele ficar cheio, o que leva dias com pouco movimento", "why": "Isso. Até lá o pedido só existe no servidor." }
+    ]
+  },
+  "ex-60083db6": {
+    "prompt": "O que `archive_timeout = '60s'` faz num servidor em que nada foi escrito por uma hora?",
+    "hint": "Ele só fecha um segmento se algo foi escrito nele.",
+    "choices": [
+      { "text": "Arquiva um segmento vazio a cada minuto", "why": "Ele só fecha um segmento se algo foi escrito nele, então um servidor ocioso não produz nada." },
+      { "text": "Para o arquivador até algo ser escrito", "why": "O arquivador continua rodando; só não há nada para entregar a ele." },
+      { "text": "Nada: não há mudança que justifique fechar", "why": "Isso. Ele limita quanto tempo uma mudança espera, e não custa nada quando não há mudanças." },
+      { "text": "Força um checkpoint a cada minuto", "why": "O archive_timeout troca segmentos; ele não provoca checkpoints." }
+    ]
+  },
+  "ex-3wgtzfa4": {
+    "prompt": "O segmento `0D` tinha um pedido e estava aberto havia mais de um minuto quando `archive_timeout = '60s'` foi configurado e recarregado. O que o servidor fez?",
+    "hint": "O timeout já tinha sido ultrapassado.",
+    "choices": [
+      { "text": "Fechou o 0D na hora, então o pedido seguinte foi para o 0E", "why": "Isso. O 0D foi arquivado imediatamente, e o 0E sessenta segundos depois." },
+      { "text": "Esperou sessenta segundos a partir do reload e então fechou o 0D", "why": "O minuto é medido a partir da última troca de segmento, que já tinha acontecido havia mais de um minuto." },
+      { "text": "Nada até o 0D encher, porque o timeout só vale para segmentos novos", "why": "A configuração valeu na hora para o segmento aberto." },
+      { "text": "Descartou o 0D, porque estava quase vazio", "why": "Nada é descartado. Um segmento quase vazio é arquivado como qualquer outro." }
+    ]
+  },
+  "ex-7ff39myp": {
+    "prompt": "Um servidor escreve algo a cada minuto e tem `archive_timeout = '60s'`. Cada segmento fechado tem 16 MB. Mais ou menos quantos GB de arquivo um dia acrescenta, antes da compressão?",
+    "hint": "Um dia tem 1440 minutos.",
+    "unit": "GB"
+  },
+  "ex-54ej1t44": {
+    "prompt": "Por que o arquivo que o `pg_receivewal` escreveu se chamava `…0F.partial`?",
+    "hint": "O segmento 0F está terminado?",
+    "choices": [
+      { "text": "Porque a cópia falhou no meio", "why": "Nada falhou. O servidor ainda não terminou de escrever esse segmento." },
+      { "text": "Porque o servidor ainda escreve esse segmento", "why": "Isso. Ele é renomeado sem o sufixo quando o segmento termina." },
+      { "text": "Porque o pg_receivewal comprime parte de cada arquivo", "why": "Ninguém pediu compressão, e o sufixo não tem a ver com isso." },
+      { "text": "Porque o slot só permite cópias parciais", "why": "O slot guarda log para o receptor; ele não limita o que é enviado." }
+    ]
+  },
+  "ex-40kg454j": {
+    "prompt": "Um `pg_receivewal` foi parado e o slot dele ficou no lugar, com `active` falso. O que o slot faz daí em diante?",
+    "hint": "Olhe o restart_lsn.",
+    "choices": [
+      { "text": "Nada: um slot inativo é ignorado", "why": "Um slot inativo é o tipo perigoso: ele cumpre a promessa sem ninguém para buscar." },
+      { "text": "Ele some depois do archive_timeout", "why": "Aqui slots nunca expiram sozinhos; alguém tem que removê-los." },
+      { "text": "Guarda todo segmento do restart_lsn em diante", "why": "Isso: o servidor guarda todo segmento a partir do restart_lsn do slot. Sem receptor, essa pilha cresce até alguém remover o slot ou o disco encher." },
+      { "text": "Ele obriga cada segmento a ser arquivado duas vezes", "why": "Ele guarda segmentos no servidor; não mexe no arquivo." }
+    ]
+  },
+  "ex-a6csmwqq": {
+    "prompt": "Com um receptor por streaming rodando, quanto log se perde se o disco do primário morrer?",
+    "hint": "O servidor espera o receptor antes de um commit retornar?",
+    "choices": [
+      { "text": "A última fração de segundo", "why": "Isso. Pouco, e não zero." },
+      { "text": "Um segmento inteiro, como com o archive_command", "why": "O receptor tem o log à medida que ele é escrito, não só quando um segmento termina." },
+      { "text": "Até um archive_timeout", "why": "Esse é o limite para um comando de arquivamento num servidor tranquilo." },
+      { "text": "Absolutamente nada", "why": "Um commit retorna antes de o receptor ter o registro, a menos que o servidor seja obrigado a esperar (lição 12)." }
+    ]
+  },
+  "ex-9zr8swa3": {
+    "prompt": "Os base backups são tirados todo domingo e os quatro últimos são guardados. A partir de quando o arquivo tem que ser guardado?",
+    "hint": "A recuperação parte de um base backup e precisa de todo segmento depois do início dele.",
+    "choices": [
+      { "text": "Do início do base backup mais recente", "why": "Aí os três base backups mais antigos não poderiam ser levados adiante até ponto nenhum." },
+      { "text": "Só dos últimos sete dias", "why": "Sete dias cobrem um backup, não quatro." },
+      { "text": "Só a partir do último checkpoint", "why": "Checkpoints decidem do que o servidor precisa para a recuperação de queda, não do que um backup precisa." },
+      { "text": "Do início do backup guardado mais antigo", "why": "Isso. Restaurar a partir do mais antigo exige todo segmento do ponto de início dele em diante." }
+    ]
+  },
+  "ex-b134nxhb": {
+    "prompt": "Falta no arquivo um segmento de quarta-feira; todo o resto, do base backup de domingo até sexta, está lá. É preciso restaurar até sexta às 15:00. Até onde se chega a partir do backup de domingo?",
+    "hint": "A reaplicação é uma corrente.",
+    "choices": [
+      { "text": "Até sexta às 15:00, pulando o segmento que falta", "why": "A reaplicação não pula: todo registro depende dos anteriores." },
+      { "text": "Até onde começa o segmento que falta", "why": "Isso. A recuperação para na primeira lacuna, por mais arquivo que venha depois dela." },
+      { "text": "Só até o fim do base backup no domingo", "why": "Segunda e terça estão inteiras e são reaplicadas." },
+      { "text": "Até lugar nenhum, o arquivo todo é inválido", "why": "Tudo antes da lacuna é utilizável." }
+    ]
+  },
+  "ex-v44387az": {
+    "prompt": "Ponha o que uma recuperação até um momento depois do base backup precisa, na ordem em que ela usa.",
+    "hint": "Comece pela cópia dos arquivos.",
+    "items": [
+      "Os arquivos do base backup",
+      "O backup_label dele, dizendo onde a reaplicação começa",
+      "Todo segmento arquivado a partir dali, sem lacuna",
+      "O momento em que parar"
+    ],
+    "trap": "O label aponta para dentro do log; os segmentos são reaplicados em ordem a partir dali; e a reaplicação para no momento escolhido, que a lição 6 define."
+  },
+  "ex-dmqjyxat": {
+    "prompt": "Você herda um servidor cujo `pg_stat_archiver` mostra `archived_count` 50211, `failed_count` 0 e `last_archived_time` de três dias atrás. O banco está ocupado. O que está acontecendo?",
+    "hint": "Um servidor ocupado termina segmentos a cada poucos minutos.",
+    "choices": [
+      { "text": "Está tudo bem: não há falhas", "why": "Nenhuma falha e nenhum arquivamento por três dias num servidor ocupado é um comando que trava em vez de falhar." },
+      { "text": "O arquivamento travou sem falhar, e o pg_wal está enchendo", "why": "Isso. É por isso que se alerta sobre o last_archived_time e a contagem de .ready, não só sobre falhas." },
+      { "text": "O servidor está ocioso, então não havia nada a arquivar", "why": "A pergunta diz que ele está ocupado." },
+      { "text": "O archive_mode foi desligado três dias atrás", "why": "Aí as estatísticas teriam sido zeradas pelo restart, e o pg_wal não seria o risco." }
+    ]
+  }
+}
