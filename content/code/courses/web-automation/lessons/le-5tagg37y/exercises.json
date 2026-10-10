@@ -14,12 +14,12 @@
     "why": "Right. The test is an HTTP client, the driver an HTTP server, and only the driver touches Chrome."
    },
    {
-    "text": "Selenium code injected into the page",
+    "text": "Selenium code injected into the page, the way a browser extension adds its own",
     "correct": false,
     "why": "Nothing of Selenium runs inside the page; that picture belongs to tools like Cypress, lesson 9."
    },
    {
-    "text": "The test process, through a browser extension",
+    "text": "The test process, through a browser extension it installs into Chrome first",
     "correct": false,
     "why": "No extension is involved: the test only speaks HTTP to a driver."
    },
@@ -72,7 +72,7 @@
     "why": "That odd key is fixed by the standard so no page's own JSON can be mistaken for an element."
    },
    {
-    "text": "The heading's text, encoded",
+    "text": "The heading's text, encoded so that it travels safely inside JSON",
     "correct": false,
     "why": "The text came from `GET .../text`, as `{\"value\":\"Banana\"}`."
    }
@@ -124,7 +124,7 @@
     "why": "That fetches Playwright's browser; it starts no server."
    },
    {
-    "text": "Adding `webServer` to `selenium/shop.test.js`",
+    "text": "Adding a `webServer` block to `selenium/shop.test.js`, as in Playwright's config",
     "correct": false,
     "why": "`webServer` is a Playwright configuration option; `node:test` has nothing like it."
    },
@@ -160,7 +160,7 @@
     "why": "Right. The count changes only when the shop's answer arrives, so the test waits for it."
    },
    {
-    "text": "The count is only drawn after the toast disappears",
+    "text": "The count is only drawn once the toast has gone",
     "correct": false,
     "why": "The script redraws the count first and then shows the toast."
    },
@@ -276,12 +276,12 @@
     "why": "The driver refuses every session; no retry gets past a version check."
    },
    {
-    "text": "A driver whose major version is 141, often by deleting the old one on the `PATH`",
+    "text": "A driver whose major version is 141; delete the old one on the `PATH`",
     "correct": true,
     "why": "Right. Selenium Manager uses a driver it finds on the `PATH` first; remove the stale one and it fetches the right one."
    },
    {
-    "text": "Change `forBrowser('chrome')` to `forBrowser('chromium')`",
+    "text": "Change `forBrowser('chrome')` to `forBrowser('chromium')`, so that Selenium asks for a newer driver",
     "correct": false,
     "why": "The browser is the same; the driver is still the one that does not match."
    }
@@ -302,7 +302,7 @@
     "why": "Passing today is the driver guessing; the vendor's rule is the same major version."
    },
    {
-    "text": "Use the driver whose major version is the browser's",
+    "text": "Replace it with a 141 driver, matching the browser's first number",
     "correct": true,
     "why": "Right. Two versions behind and one ahead both refused outright; one behind only happens to work."
    },
@@ -359,7 +359,7 @@
   "prompt": "With an implicit wait of 3000 ms, a test checks that no `.error` element exists. On a page with no error, how long does that check take?",
   "choices": [
    {
-    "text": "A few milliseconds",
+    "text": "A few milliseconds, as finding the cards did",
     "correct": false,
     "why": "That is what finding the cards took, because they existed; an absent element is the opposite case."
    },
@@ -374,7 +374,7 @@
     "why": "It returns an empty list when the timeout runs out."
    },
    {
-    "text": "Half the timeout, on average",
+    "text": "Half the timeout on average, since it stops looking at a random point",
     "correct": false,
     "why": "There is no averaging: it keeps looking until the whole timeout is spent."
    }
@@ -390,7 +390,7 @@
   "prompt": "A test must wait for the toast to empty after it said `Added Banana`. Which wait can express that?",
   "choices": [
    {
-    "text": "An implicit wait, since the toast is an element",
+    "text": "An implicit wait, since the toast is an element that has been on the page all along",
     "correct": false,
     "why": "An implicit wait only waits for an element to exist, and the toast always exists."
    },
@@ -433,7 +433,7 @@
   "prompt": "What changes in a test to run it on a Selenium Grid instead of a local driver?",
   "choices": [
    {
-    "text": "Every command becomes a grid-specific call",
+    "text": "Every command becomes a grid call",
     "correct": false,
     "why": "The grid speaks the same WebDriver protocol, so the commands are the same."
    },
@@ -464,12 +464,12 @@
   "prompt": "Which part of the grid decides which node a new session goes to?",
   "choices": [
    {
-    "text": "The router",
+    "text": "The router, since every request passes through it first",
     "correct": false,
     "why": "The router is the address and forwards requests; the choice is made after the queue."
    },
    {
-    "text": "The session map",
+    "text": "The session map, which keeps track of every node it has",
     "correct": false,
     "why": "It remembers which node holds a session once one exists; it does not choose."
    },
@@ -479,7 +479,7 @@
     "why": "Right. The log says `Session request received by the Distributor`, then the node creates it."
    },
    {
-    "text": "The test, by naming a node's address",
+    "text": "The test, by naming one node's own address in `usingServer`",
     "correct": false,
     "why": "The test only names the grid; it never learns which machine it got."
    }
@@ -513,17 +513,17 @@
   "prompt": "A grid node runs on another machine. The test does `driver.get('http://localhost:3000/')` and the browser shows a connection error, though the shop runs on the tester's laptop. Why?",
   "choices": [
    {
-    "text": "The grid blocks port 3000",
+    "text": "The grid blocks port 3000 for every browser it hands out",
     "correct": false,
     "why": "The grid has no say over which addresses a browser opens."
    },
    {
-    "text": "The node's chromedriver is the wrong version",
+    "text": "The node's chromedriver is the wrong version for its Chrome",
     "correct": false,
     "why": "A version mismatch refuses the session; here the session opened and the page failed."
    },
    {
-    "text": "`localhost` is resolved by the browser, on the node",
+    "text": "That address means the node's own computer, where nothing listens",
     "correct": true,
     "why": "Right. On the node's machine nothing listens on 3000; the app needs an address the nodes can reach."
    },

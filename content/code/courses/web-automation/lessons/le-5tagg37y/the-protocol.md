@@ -45,7 +45,14 @@ with this one, as `package.json`:
 ```
 
 ```
-%%CAP npm-install%%
+ana@laptop:~/quitanda$ npm install
+
+added 20 packages, and audited 21 packages in 2s
+
+1 package is looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
 ```
 
 That installed the library and, inside it, a small program called **Selenium Manager**, whose job
@@ -54,7 +61,18 @@ it would use for Chrome. The path below is the Linux one; on a Mac the folder is
 on Windows it is `bin\windows\selenium-manager.exe`:
 
 ```
-%%CAP manager%%
+ana@laptop:~/quitanda$ node_modules/selenium-webdriver/bin/linux-x86_64/selenium-manager --browser chrome --debug
+[2026-10-10T19:46:58.703Z DEBUG] Sending stats to Plausible: Props { browser: "chrome", browser_version: "", os: "linux", arch: "x86_64", lang: "", selenium_version: "4.51" }
+[2026-10-10T19:46:58.709Z DEBUG] Found chromedriver 141.0.7390.122 in PATH: /home/ana/bin/chromedriver
+[2026-10-10T19:46:58.709Z DEBUG] Found google-chrome in PATH: /home/ana/bin/google-chrome
+[2026-10-10T19:46:58.709Z DEBUG] Running command: /home/ana/bin/google-chrome --version
+[2026-10-10T19:46:58.733Z DEBUG] Output: "Chromium 141.0.7390.37 "
+[2026-10-10T19:46:58.735Z DEBUG] Detected browser: chrome 141.0.7390.37
+[2026-10-10T19:46:58.735Z DEBUG] Discovering versions from https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json
+[2026-10-10T19:46:58.737Z WARN ] Exception managing chrome: error sending request for url (https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json)
+[2026-10-10T19:46:58.737Z WARN ] Error sending stats to Plausible: error sending request for url (https://plausible.io/api/event)
+[2026-10-10T19:46:58.737Z INFO ] Driver path: /home/ana/bin/chromedriver
+[2026-10-10T19:46:58.737Z INFO ] Browser path: /home/ana/bin/google-chrome
 ```
 
 The last two lines are the answer: a driver and a browser. Section 04 reads the rest of that
@@ -74,13 +92,20 @@ would mangle the JSON.
 Start the driver on the port the standard suggests:
 
 ```
-%%CAP chromedriver%%
+ana@laptop:~/quitanda$ chromedriver --port=9515
+Starting ChromeDriver 141.0.7390.122 (b477534e7e10d193e916cd4e2967c589383625b2-refs/branch-heads/7390@{#2667}) on port 9515
+Only local connections are allowed.
+Please see https://chromedriver.chromium.org/security-considerations for suggestions on keeping ChromeDriver safe.
+[1791661614.462][SEVERE]: CreatePlatformSocket() failed: Address family not supported by protocol (97)
+ChromeDriver was started successfully on port 9515.
 ```
 
-It is now a web server, and it answers on `/status` like one:
+The `SEVERE` line is the machine these transcripts come from having no IPv6; the driver carries on
+with IPv4, as the next line says. It is now a web server, and it answers on `/status` like one:
 
 ```
-%%CAP status%%
+ana@laptop:~/quitanda$ curl -s http://localhost:9515/status
+{"value":{"build":{"version":"141.0.7390.122 (b477534e7e10d193e916cd4e2967c589383625b2-refs/branch-heads/7390@{#2667})"},"message":"ChromeDriver ready for new sessions.","os":{"arch":"x86_64","name":"Linux","version":"6.18.44-fc-v114"},"ready":true}}
 ```
 
 **A session is one browser, opened by one request.** The body says which browser and with which
@@ -88,7 +113,8 @@ options; `--headless=new` asks Chrome to run without a window, because the machi
 transcripts come from has no screen:
 
 ```
-%%CAP session%%
+ana@laptop:~/quitanda$ curl -s -X POST http://localhost:9515/session -H 'Content-Type: application/json' -d '{"capabilities":{"alwaysMatch":{"browserName":"chrome","goog:chromeOptions":{"args":["--headless=new"]}}}}'
+{"value":{"capabilities":{"acceptInsecureCerts":false,"browserName":"chrome","browserVersion":"141.0.7390.37","chrome":{"chromedriverVersion":"141.0.7390.122 (b477534e7e10d193e916cd4e2967c589383625b2-refs/branch-heads/7390@{#2667})","userDataDir":"/tmp/.org.chromium.Chromium.4M4Wnx"},"fedcm:accounts":true,"goog:chromeOptions":{"debuggerAddress":"localhost:33389"},"networkConnectionEnabled":false,"pageLoadStrategy":"normal","platformName":"linux","proxy":{},"setWindowRect":true,"strictFileInteractability":false,"timeouts":{"implicit":0,"pageLoad":300000,"script":30000},"unhandledPromptBehavior":"dismiss and notify","webauthn:extension:credBlob":true,"webauthn:extension:largeBlob":true,"webauthn:extension:minPinLength":true,"webauthn:extension:prf":true,"webauthn:virtualAuthenticators":true},"sessionId":"e4229beaca7b1633a5c8a483e578ecc5"}}
 ```
 
 Two things in the answer matter. `browserVersion` says which Chrome the driver found, and
@@ -96,14 +122,16 @@ Two things in the answer matter. `browserVersion` says which Chrome the driver f
 yours where this transcript has its own. Send the browser to the shop:
 
 ```
-%%CAP navigate%%
+ana@laptop:~/quitanda$ curl -s -X POST http://localhost:9515/session/e4229beaca7b1633a5c8a483e578ecc5/url -H 'Content-Type: application/json' -d '{"url":"http://localhost:3000/"}'
+{"value":null}
 ```
 
 `null` is the standard's way of saying *done, nothing to report*. Now find the heading of the
 Banana card, with the same CSS selector you would try in the Elements panel:
 
 ```
-%%CAP find%%
+ana@laptop:~/quitanda$ curl -s -X POST http://localhost:9515/session/e4229beaca7b1633a5c8a483e578ecc5/element -H 'Content-Type: application/json' -d '{"using":"css selector","value":"[data-testid=product-banana] h2"}'
+{"value":{"element-6066-11e4-a52e-4f735466cecf":"f.A30DC6592F8CE9BFBB2A69D15B4FE543.d.C74D23DBB922802EA2E9E604EB4538CF.e.3"}}
 ```
 
 **An element comes back as a reference, never as the element.** The long string under that odd
@@ -112,13 +140,15 @@ can be mistaken for it, is the driver's name for a node in the page. To learn an
 you ask again:
 
 ```
-%%CAP text%%
+ana@laptop:~/quitanda$ curl -s http://localhost:9515/session/e4229beaca7b1633a5c8a483e578ecc5/element/f.A30DC6592F8CE9BFBB2A69D15B4FE543.d.C74D23DBB922802EA2E9E604EB4538CF.e.3/text
+{"value":"Banana"}
 ```
 
 And close the session, which closes the browser:
 
 ```
-%%CAP delete%%
+ana@laptop:~/quitanda$ curl -s -X DELETE http://localhost:9515/session/e4229beaca7b1633a5c8a483e578ecc5
+{"value":null}
 ```
 
 ## What that costs, and what it explains

@@ -112,20 +112,20 @@ grep -E 'WARNING|SEVERE' /tmp/l8-140.out | grep -v CreatePlatformSocket
 
 start_app
 block mismatch
-printf 'ana@laptop:~/quitanda$ node --test --test-reporter=spec selenium/shop.test.js\n'
-as_ana "cd $P && PATH=$OLD:\$PATH node --test --test-reporter=spec selenium/shop.test.js" 2>&1
+printf 'ana@laptop:~/quitanda$ node --test --test-reporter=tap selenium/shop.test.js\n'
+as_ana "cd $P && PATH=$OLD:\$PATH node --test --test-reporter=tap selenium/shop.test.js" 2>&1
 block mismatch142
-printf 'ana@laptop:~/quitanda$ node --test --test-reporter=spec selenium/shop.test.js\n'
-as_ana "cd $P && PATH=$OLD142:\$PATH node --test --test-reporter=spec selenium/shop.test.js" 2>&1
+printf 'ana@laptop:~/quitanda$ node --test --test-reporter=tap selenium/shop.test.js\n'
+as_ana "cd $P && PATH=$OLD142:\$PATH node --test --test-reporter=tap selenium/shop.test.js" 2>&1
 
 # ---- first-test ----------------------------------------------------------------
 block first-run
-run 'node --test --test-reporter=spec selenium/shop.test.js'
+run 'node --test --test-reporter=tap selenium/shop.test.js'
 
 block fail-run
 cp selenium/shop.test.js /tmp/l8-shop.test.js
 sed -i "s/until.elementTextIs(count, '1')/until.elementTextIs(count, '2')/" selenium/shop.test.js
-run 'node --test --test-reporter=spec selenium/shop.test.js'
+run 'node --test --test-reporter=tap selenium/shop.test.js'
 cp /tmp/l8-shop.test.js selenium/shop.test.js; chown ana:ana selenium/shop.test.js
 
 # ---- waits-in-selenium ---------------------------------------------------------
@@ -145,7 +145,7 @@ GRID_LINES=$(wc -l < /tmp/l8-grid.out)
 bg_ana "cd $P && exec node app/server.js" /dev/null
 wait_app
 block grid-run
-run 'SELENIUM_REMOTE_URL=http://localhost:4444 node --test --test-reporter=spec selenium/shop.test.js'
+run 'SELENIUM_REMOTE_URL=http://localhost:4444 node --test --test-reporter=tap selenium/shop.test.js'
 sleep 1
 block grid-log
 tail -n +$((GRID_LINES + 1)) /tmp/l8-grid.out

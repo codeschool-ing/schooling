@@ -23,17 +23,55 @@ The shop has to be running first, so start it in one terminal with `npm start` a
 another, in `~/quitanda`:
 
 ```
-%%CAP first-run%%
+ana@laptop:~/quitanda$ node --test --test-reporter=spec selenium/shop.test.js
+✔ adding a banana puts one item in the basket (633.08805ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 865.904299
 ```
 
 **One test, one pass.** `--test-reporter=spec` asks for the readable report; it is what Node
 prints at a terminal anyway, and it is written out here because a terminal that is not interactive,
-a build server's for instance, gets the terse TAP format otherwise. The time on the first line
-includes starting Chrome and the driver, which is most of it.
+a build server's for instance, gets the terse TAP format otherwise. The 633 ms beside the test is
+the test alone; starting Chrome happened in `before`, and the `duration_ms` at the foot is the
+whole run.
 
-Change the expected count from `'1'` to `'2'` and run it again if you want to see a failure: the
-wait gives up after five seconds with a `TimeoutError` naming the condition it was waiting for.
-Put it back afterwards.
+Change the expected count from `'1'` to `'2'` in the wait and run it again to see a failure, then
+put it back:
+
+```
+ana@laptop:~/quitanda$ node --test --test-reporter=spec selenium/shop.test.js
+✖ adding a banana puts one item in the basket (5633.567052ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5866.427682
+
+✖ failing tests:
+
+test at selenium/shop.test.js:18:1
+✖ adding a banana puts one item in the basket (5633.567052ms)
+  Error [TimeoutError]: Waiting until element text is
+  Wait timed out after 5066ms
+      at /home/ana/quitanda/node_modules/selenium-webdriver/lib/webdriver.js:939:22
+      at process.processTicksAndRejections (node:internal/process/task_queues:105:5) {
+    remoteStacktrace: ''
+  }
+```
+
+The wait gave up after five seconds, and its message names the kind of condition, *element text
+is*, without the text it wanted or the text it found. **`driver.wait` takes a message as its third
+argument**, and a wait whose failure you will read at midnight is worth one:
+`driver.wait(until.elementTextIs(count, '1'), 5000, 'basket count never became 1')`.
 
 ## The same test, said in Playwright
 

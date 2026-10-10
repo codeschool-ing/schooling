@@ -53,33 +53,75 @@ computer to see how it works.
 The grid is a Java program, so it needs Java; this one ran on OpenJDK 21:
 
 ```
-%%CAP java%%
+ana@laptop:~$ java -version
+openjdk version "21.0.12.1" 2026-08-18
+OpenJDK Runtime Environment (build 21.0.12.1+1-1-24.04.4-Ubuntu)
+OpenJDK 64-Bit Server VM (build 21.0.12.1+1-1-24.04.4-Ubuntu, mixed mode, sharing)
 ```
 
 Download `selenium-server-4.51.0.jar` from the Selenium project's releases on GitHub, the asset of
 the `selenium-4.51.0` release, into your home folder, and start it in a terminal of its own:
 
 ```
-%%CAP grid-start%%
+ana@laptop:~$ java -jar selenium-server-4.51.0.jar standalone
+16:47:19.454 INFO [LoggingOptions.configureLogEncoding] - Using the system default encoding
+16:47:19.463 INFO [OpenTelemetryTracer.createTracer] - Using OpenTelemetry for tracing
+16:47:21.125 INFO [NodeOptions.getSessionFactories] - Detected 4 available processors
+16:47:21.127 INFO [NodeOptions.discoverDrivers] - Looking for existing drivers on the PATH.
+16:47:21.127 INFO [NodeOptions.discoverDrivers] - Add '--selenium-manager true' to the startup command to setup drivers automatically.
+16:47:21.855 WARN [SeleniumManager.lambda$runCommand$0] - Unable to discover proper msedgedriver version in offline mode
+16:47:21.864 WARN [SeleniumManager.lambda$runCommand$0] - Unable to discover proper geckodriver version in offline mode
+16:47:21.878 INFO [NodeOptions.report] - Adding Chrome for {"browserName": "chrome","platformName": "linux"} 4 times
+16:47:21.878 INFO [NodeOptions.report] - Adding Edge for {"browserName": "MicrosoftEdge","platformName": "linux"} 4 times
+16:47:21.879 INFO [NodeOptions.report] - Adding Firefox for {"browserName": "firefox","platformName": "linux"} 4 times
+16:47:21.914 INFO [Node.<init>] - Binding additional locator mechanisms: relative
+16:47:21.938 INFO [LocalGridModel.setAvailability] - Switching Node 31bec0f4-8210-436d-8fea-123ca3a28dd4 (uri: http://192.0.2.2:4444) from DOWN to UP
+16:47:21.938 INFO [LocalNodeRegistry.add] - Added node 31bec0f4-8210-436d-8fea-123ca3a28dd4 at http://192.0.2.2:4444. Health check every 120s
+16:47:22.191 INFO [Standalone.execute] - Started Selenium Standalone 4.51.0 (revision 35c5fab 35c5fab4a58fa5878edb255eb7747b04ca51a015): http://192.0.2.2:4444
 ```
 
-Read it from the top. The node looked on the `PATH` for drivers, used Selenium Manager to check
-them, and offered four slots for each browser it believed it could drive, one per processor. The
-last line gives the address. **It offered Firefox and Edge as well, and neither is installed on
-this machine**: Selenium Manager could not check them without the internet, and the node offered
-the slots anyway. A slot is a promise the node makes, not a browser anybody has checked. The address in the log is the machine's network
-address; `localhost:4444` reaches the same server.
+Read it from the top. The node found 4 processors, looked on the `PATH` for drivers, and offered 4
+slots for each browser it believed it could drive. The last line gives the address. The fifth line
+matters on your machine: your `chromedriver` is in Selenium Manager's cache, not on the `PATH`, so
+start the grid with the flag that line suggests, `--selenium-manager true`, and the node sets its
+drivers up itself. That variant was not run for these transcripts. **It offered Firefox and Edge as
+well, and neither is installed on this machine**: Selenium Manager could not check them without the
+internet, and the node offered the slots anyway. A slot is a promise the node makes, not a browser
+anybody has checked. The address in the log is the machine's network address; `localhost:4444`
+reaches the same server.
 
 With the shop running in another terminal, run the same test through the grid:
 
 ```
-%%CAP grid-run%%
+ana@laptop:~/quitanda$ SELENIUM_REMOTE_URL=http://localhost:4444 node --test --test-reporter=spec selenium/shop.test.js
+✔ adding a banana puts one item in the basket (1371.514675ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1630.977142
 ```
 
 It passed, and the grid's terminal printed the story of that session as it happened:
 
 ```
-%%CAP grid-log%%
+16:47:22.894 INFO [LocalDistributor.newSession] - Session request received by the Distributor: 
+ [Capabilities {browserName: chrome, goog:chromeOptions: {args: [--headless=new]}, se:remoteUrl: http://localhost:4444}]
+16:47:22.900 INFO [LocalNode.newSession] - Not using file system: desiredCapabilities=Capabilities {browserName: chrome, goog:chromeOptions: {args: [--headless=new]}, se:remoteUrl: http://localhost:4444}
+16:47:22.960 WARN [SeleniumManager.lambda$runCommand$0] - Exception managing chrome: error sending request for url (https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json)
+16:47:22.961 WARN [SeleniumManager.lambda$runCommand$0] - Error sending stats to Plausible: error sending request for url (https://plausible.io/api/event)
+16:47:23.624 INFO [LocalNode.newSession] - Session created by the Node. Id: f2ec5ac844c186189c52f5d32461a884, Caps: {acceptInsecureCerts=false, browserName=chrome, browserVersion=141.0.7390.37, chrome={chromedriverVersion=141.0.7390.122 (b477534e7e10d193e916cd4e2967c589383625b2-refs/branch-heads/7390@{#2667}), userDataDir=/tmp/.org.chromium.Chromium.rDkWaQ}, fedcm:accounts=true, goog:chromeOptions={debuggerAddress=localhost:36641}, networkConnectionEnabled=false, pageLoadStrategy=normal, platformName=linux, proxy=Proxy(), se:bidiEnabled=false, se:cdp=ws://localhost:4444/session/f2ec5ac844c186189c52f5d32461a884/se/cdp, se:cdpVersion=141.0.7390.37, setWindowRect=true, strictFileInteractability=false, timeouts={implicit=0, pageLoad=300000, script=30000}, unhandledPromptBehavior=dismiss and notify, webauthn:extension:credBlob=true, webauthn:extension:largeBlob=true, webauthn:extension:minPinLength=true, webauthn:extension:prf=true, webauthn:virtualAuthenticators=true}
+16:47:23.635 INFO [LocalSessionMap.add] - Added session to local Session Map, Id: f2ec5ac844c186189c52f5d32461a884, Node: http://192.0.2.2:4444
+16:47:23.637 INFO [LocalDistributor.newSession] - Session created by the Distributor. Id: f2ec5ac844c186189c52f5d32461a884 
+ Caps: {acceptInsecureCerts=false, browserName=chrome, browserVersion=141.0.7390.37, chrome={chromedriverVersion=141.0.7390.122 (b477534e7e10d193e916cd4e2967c589383625b2-refs/branch-heads/7390@{#2667}), userDataDir=/tmp/.org.chromium.Chromium.rDkWaQ}, fedcm:accounts=true, goog:chromeOptions={debuggerAddress=localhost:36641}, networkConnectionEnabled=false, pageLoadStrategy=normal, platformName=linux, proxy=Proxy(), se:bidiEnabled=false, se:cdp=ws://localhost:4444/session/f2ec5ac844c186189c52f5d32461a884/se/cdp, se:cdpVersion=141.0.7390.37, setWindowRect=true, strictFileInteractability=false, timeouts={implicit=0, pageLoad=300000, script=30000}, unhandledPromptBehavior=dismiss and notify, webauthn:extension:credBlob=true, webauthn:extension:largeBlob=true, webauthn:extension:minPinLength=true, webauthn:extension:prf=true, webauthn:virtualAuthenticators=true}
+16:47:24.108 INFO [LocalNode.stopTimedOutSession] - Session id f2ec5ac844c186189c52f5d32461a884 is stopping on demand...
+16:47:24.109 INFO [SessionSlot.stop] - Stopping session f2ec5ac844c186189c52f5d32461a884 (reason: QUIT_COMMAND)
+16:47:24.109 INFO [SessionSlot.stop] - Session stopped successfully: f2ec5ac844c186189c52f5d32461a884
+16:47:24.112 INFO [LocalSessionMap.removeWithReason] - Deleted session from local Session Map, Id: f2ec5ac844c186189c52f5d32461a884, Node: http://192.0.2.2:4444, Reason: session closed normally (QUIT command)
+16:47:24.113 INFO [LocalGridModel.release] - Releasing slot for session id f2ec5ac844c186189c52f5d32461a884
 ```
 
 The **distributor** received a request for `browserName: chrome`, the **node** created the
