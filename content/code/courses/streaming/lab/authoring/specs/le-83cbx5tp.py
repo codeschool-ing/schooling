@@ -25,7 +25,7 @@ Q(S2,"medium",("Two topics each show a lag of 1000 messages. One receives 1000 s
  ("The quiet topic's consumer is hours behind","O consumidor do tópico calmo está horas atrasado",True,"Right: about seventeen hours, against one second.","Isso: cerca de dezessete horas, contra um segundo."),
 ])
 Q(S2,"medium",("How does `lag_seconds.py` find how long the oldest unhandled message has waited?","Como o `lag_seconds.py` descobre há quanto tempo a mensagem não tratada mais antiga espera?"),[
- ("It reads the message at the committed offset and subtracts its record timestamp from the clock","Lê a mensagem no offset confirmado e subtrai o timestamp dela do relógio",True,"Right: that message is the oldest one waiting.","Isso: essa mensagem é a mais antiga que espera."),
+ ("It subtracts the waiting message's timestamp from now","Desconta do relógio o timestamp do primeiro registro pendente",True,"Right: that message is the oldest one waiting.","Isso: essa mensagem é a mais antiga que espera."),
  ("It divides the lag by the producer's rate","Divide o lag pela taxa do produtor",False,"That estimates the time to drain; the program reads a timestamp instead.","Isso estima o tempo para esvaziar; o programa lê um timestamp."),
  ("It reads the `at` field the tills put inside each sale","Lê o campo `at` que os caixas põem dentro de cada venda",False,"It uses the record's own timestamp, which the producer set.","Ele usa o timestamp do próprio registro, que o produtor definiu."),
  ("It joins the group and times its own poll","Entra no grupo e mede o próprio poll",False,"It deliberately never joins, so it does not cause a rebalance.","Ele de propósito nunca entra, para não causar um rebalanceamento."),
@@ -33,7 +33,7 @@ Q(S2,"medium",("How does `lag_seconds.py` find how long the oldest unhandled mes
 N(S2,"medium",("A group has a lag of 600 messages and its consumer handles 15 a second. If nothing else arrives, how many seconds does it need to catch up?","Um grupo tem lag de 600 mensagens e o consumidor trata 15 por segundo. Se nada mais chegar, de quantos segundos ele precisa para alcançar o fim?"),40,0,("seconds","segundos"))
 Q(S2,"hard",("Why does `lag_seconds.py` create one consumer with the group's id that never subscribes?","Por que o `lag_seconds.py` cria um consumidor com o id do grupo que nunca assina o tópico?"),[
  ("To take over the partitions while the measurement runs","Para assumir as partições enquanto a medição roda",False,"Taking them over would stop the real members; it avoids exactly that.","Assumi-las pararia os membros reais; ele evita justamente isso."),
- ("To ask for the group's committed offsets without joining it","Para pedir os offsets confirmados do grupo sem entrar nele",True,"Right: joining would rebalance the group being measured.","Isso: entrar rebalancearia o grupo medido."),
+ ("To read the group's offsets without joining","Para ler os offsets do grupo sem entrar nele",True,"Right: joining would rebalance the group being measured.","Isso: entrar rebalancearia o grupo medido."),
  ("Because Kafka refuses to read a message without a group","Porque o Kafka se recusa a ler uma mensagem sem grupo",False,"The reading is done by the other consumer, under a group of its own.","Quem lê é o outro consumidor, num grupo próprio."),
  ("So the measurement commits for the group","Para a medição confirmar pelo grupo",False,"Auto commit is off, and it never commits anything.","O commit automático está desligado, e ele nunca confirma nada."),
 ])
@@ -78,6 +78,12 @@ Q(S4,"hard",("The stock consumer fails because the database it writes to is down
  ("Yes, and the database should be restarted","Sim, e o banco deve ser reiniciado",False,"The message itself is fine; nothing about it needs setting aside.","A mensagem em si está boa; nada nela precisa ser posto de lado."),
  ("No, it should be deleted from the topic","Não, ela deve ser apagada do tópico",False,"Nothing deletes a single message from a topic, and nothing is wrong with it.","Nada apaga uma única mensagem de um tópico, e não há nada errado com ela."),
 ])
+Q(S4,"hard",("The counter is stuck on a bad message, the only one in partition 2, and `--describe` shows lag 0 on every partition it lists. Why does the lag not show the problem?","O contador está travado numa mensagem ruim, a única da partição 2, e o `--describe` mostra lag 0 em toda partição que lista. Por que o lag não mostra o problema?"),[
+ ("The bad message was deleted by the broker","A mensagem ruim foi apagada pelo broker",False,"It is still there; the next run meets it again.","Ela continua lá; a próxima execução a encontra de novo."),
+ ("Lag is counted only for keys that parse as JSON","O lag só é contado para chaves que viram JSON",False,"Lag knows nothing about what a message contains.","O lag não sabe nada do conteúdo de uma mensagem."),
+ ("The group never committed in partition 2, and lag is measured from commits","O grupo nunca confirmou na partição 2, e o lag é medido a partir dos commits",True,"Right: with no commit there, the tool has nothing to print for it.","Isso: sem commit ali, a ferramenta não tem o que imprimir sobre ela."),
+ ("The consumer had already handled it","O consumidor já a tinha tratado",False,"It crashed on it, twice; nothing was handled.","Ele caiu nela, duas vezes; nada foi tratado."),
+])
 C(S4,"easy",("A topic where a consumer copies the messages it cannot handle, with the reason, is called a dead-___ topic.","Um tópico para onde um consumidor copia as mensagens que não consegue tratar, com o motivo, se chama tópico de dead-___."),[(["letter"],["letter"])])
 Q(S5,"easy",("Why did `--reset-offsets --execute` refuse to move the group `stock`?","Por que o `--reset-offsets --execute` se recusou a mover o grupo `stock`?"),[
  ("The topic had no messages left to replay","O tópico não tinha mais mensagens para reprocessar",False,"The 600 sales were all there.","As 600 vendas estavam todas lá."),
@@ -92,7 +98,7 @@ Q(S5,"medium",("A reset `--to-datetime` is given 09:00 on Monday. Which time doe
  ("The time the segment file was created","A hora em que o arquivo de segmento foi criado",False,"The lookup is per record, through the time index.","A busca é por registro, pelo índice de tempo."),
 ])
 Q(S5,"hard",("The stock consumer adds each sale's quantity to a running total in a database. What happens if you replay last week without changing it?","O consumidor de estoque soma a quantidade de cada venda a um total num banco. O que acontece se você reprocessar a semana passada sem mudá-lo?"),[
- ("Last week's sales are counted twice","As vendas da semana passada são contadas duas vezes",True,"Right: replay is at-least-once on purpose; the consumer must set, not add.","Isso: reprocessar é at-least-once de propósito; o consumidor tem de definir, não somar."),
+ ("Those days' sales are counted twice","As vendas daqueles dias são contadas duas vezes",True,"Right: replay is at-least-once on purpose; the consumer must set, not add.","Isso: reprocessar é at-least-once de propósito; o consumidor tem de definir, não somar."),
  ("The totals are corrected, because the new run replaces the old","Os totais são corrigidos, porque a nova execução substitui a antiga",False,"Adding does not replace; that is what an idempotent write would do.","Somar não substitui; isso é o que uma escrita idempotente faria."),
  ("Kafka refuses to deliver messages a group has already read","O Kafka se recusa a entregar mensagens que um grupo já leu",False,"Delivering them again is exactly what the reset asked for.","Entregá-las de novo é exatamente o que o reset pediu."),
  ("Nothing, since the database notices","Nada, porque o banco percebe",False,"The database sees ordinary additions; nothing tells it they are repeats.","O banco vê somas comuns; nada diz a ele que são repetições."),
@@ -106,7 +112,7 @@ O(S5,"medium",("Put the steps of a careful replay in order.","Ponha em ordem os 
 ])
 Q(S6,"medium",("In blue-green reprocessing, why does the new version get its own `group.id`?","No reprocessamento blue-green, por que a versão nova ganha um `group.id` próprio?"),[
  ("Kafka allows one program per group","O Kafka permite um programa por grupo",False,"A group can have many members running the same program; that is not the reason.","Um grupo pode ter muitos membros rodando o mesmo programa; não é esse o motivo."),
- ("So that it starts from the oldest message while the old group keeps its position","Para começar da mensagem mais antiga enquanto o grupo antigo mantém a posição",True,"Right: new group, no committed offsets, the old one untouched.","Isso: grupo novo, sem offsets confirmados, o antigo intacto."),
+ ("To start from the oldest message, old group untouched","Para começar do início, sem tocar no grupo antigo",True,"Right: new group, no committed offsets, the old one untouched.","Isso: grupo novo, sem offsets confirmados, o antigo intacto."),
  ("So that it reads faster","Para ler mais rápido",False,"Speed comes from instances and partitions, not from the name.","Velocidade vem de instâncias e partições, não do nome."),
  ("To write to a different topic","Para escrever em outro tópico",False,"The output topic is a separate choice; the group decides where reading starts.","O tópico de saída é outra escolha; o grupo decide onde a leitura começa."),
 ])

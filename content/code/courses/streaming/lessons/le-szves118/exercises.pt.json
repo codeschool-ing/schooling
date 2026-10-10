@@ -1,0 +1,388 @@
+{
+  "ex-3hagj0kg": {
+    "prompt": "Por que um processador de stream não pode simplesmente informar o total de vendas?",
+    "choices": [
+      {
+        "text": "O total muda a cada venda, e as vendas nunca param",
+        "why": "Isso. Todo agregado sobre um stream tem de ser perguntado sobre uma fatia dele."
+      },
+      {
+        "text": "O Kafka apaga vendas antigas",
+        "why": "Retenção é outro assunto; mesmo com todas as vendas guardadas, o total nunca para de mudar."
+      },
+      {
+        "text": "Somar dinheiro em centavos estoura depois de vendas suficientes",
+        "why": "Inteiros em Python não estouram, e esse não é o problema que as janelas resolvem."
+      },
+      {
+        "text": "Um total precisa das vendas ordenadas, e um stream está fora de ordem",
+        "why": "Uma soma não se importa com a ordem; ela se importa com onde o período termina."
+      }
+    ]
+  },
+  "ex-dxxmx8pm": {
+    "prompt": "O estoque por livro da lição 2 é um total corrente sobre todas as vendas de sempre. Por que esse não precisa de janela?",
+    "choices": [
+      {
+        "text": "O estoque é pequeno o bastante para ficar na memória",
+        "why": "Tamanho não é o ponto; uma janela é sobre quais eventos contam."
+      },
+      {
+        "text": "O estoque é medido em unidades, não em centavos",
+        "why": "A unidade não tem nada a ver com haver um período envolvido."
+      },
+      {
+        "text": "O Kafka mantém o tópico de estoque compactado",
+        "why": "Compactação é sobre armazenamento; a pergunta não tem período, compactada ou não."
+      },
+      {
+        "text": "A pergunta não nomeia nenhum trecho de tempo",
+        "why": "Isso. Estoque é toda venda até agora; 'vendas desta manhã' nomeia um período e precisa de janela."
+      }
+    ]
+  },
+  "ex-gd1x3pz9": {
+    "prompt": "Quais destas perguntas precisam de uma janela? Escolha todas que se aplicam.",
+    "choices": [
+      {
+        "text": "Vendas em Recife nos últimos dez minutos",
+        "why": "Sim: ela nomeia um trecho de tempo."
+      },
+      {
+        "text": "Quanto durou cada visita de um cliente ao site",
+        "why": "Sim: uma janela de sessão, cujo tamanho os eventos decidem."
+      },
+      {
+        "text": "Quantas cópias do bk-04 sobram no estoque",
+        "why": "Estado dobrado a partir de toda venda, sem período nenhum."
+      },
+      {
+        "text": "Vendas por hora nesta manhã, por loja",
+        "why": "Sim: janelas tumbling de uma hora, por loja."
+      },
+      {
+        "text": "O preço atual do bk-02",
+        "why": "O valor mais recente por chave, que é estado e não um agregado sobre um período."
+      }
+    ]
+  },
+  "ex-gxa008ec": {
+    "prompt": "Com janelas tumbling de cinco minutos sobre as dez vendas, quantas vendas há na janela das 09:10 às 09:15?",
+    "unit": "vendas"
+  },
+  "ex-vsm2gqv0": {
+    "prompt": "Com janelas tumbling de 15 minutos, uma venda acontece às 10:37:20. Quantos minutos depois das 10:00 começa a janela dela?",
+    "hint": "Arredonde para baixo até um múltiplo do tamanho.",
+    "unit": "minutos"
+  },
+  "ex-gjnm6yt8": {
+    "prompt": "Com janelas tumbling de cinco minutos, a venda 4 aconteceu exatamente às 09:05:00. Qual janela a contém?",
+    "choices": [
+      {
+        "text": "09:00 às 09:05, porque o fim dela é 09:05:00",
+        "why": "O fim fica de fora; senão a venda estaria em duas janelas."
+      },
+      {
+        "text": "09:05 às 09:10, que começa nela",
+        "why": "Isso. Uma janela inclui o início e exclui o fim."
+      },
+      {
+        "text": "As duas, já que está na borda",
+        "why": "Aí as quatro janelas somariam onze vendas, não dez."
+      },
+      {
+        "text": "Nenhuma: um motor descarta eventos na borda",
+        "why": "Intervalos semiabertos existem justamente para nenhum evento cair fora."
+      }
+    ]
+  },
+  "ex-e86qmtfw": {
+    "prompt": "Uma janela tumbling `[09:00, 09:05)` inclui o início e exclui o ___.",
+    "blanks": [
+      {
+        "accept": [
+          "fim",
+          "final"
+        ]
+      }
+    ]
+  },
+  "ex-wtwcqsct": {
+    "prompt": "Janelas tumbling de 10 minutos sobre as dez vendas: quantas janelas o programa cria?",
+    "hint": "09:00 às 09:10, 09:10 às 09:20, 09:20 às 09:30: quais têm venda?",
+    "unit": "janelas"
+  },
+  "ex-7ybvmmmd": {
+    "prompt": "Uma janela hopping tem tamanho de 60 minutos e avanço de 15 minutos. Em quantas janelas está cada evento?",
+    "unit": "janelas"
+  },
+  "ex-h4g5w6bg": {
+    "prompt": "Com janelas hopping de 10 minutos a cada 5 sobre as dez vendas, quantas vendas há na janela das 09:05 às 09:15?",
+    "unit": "vendas"
+  },
+  "ex-sr484hyg": {
+    "prompt": "Janelas hopping de 30 minutos a cada 10 começam às 08:00, 08:10, 08:20 e assim por diante. Um evento acontece às 09:17. Quantos minutos depois das 08:00 começa a janela MAIS ANTIGA que o contém?",
+    "hint": "Ela precisa começar às 09:17 ou antes e terminar depois.",
+    "unit": "minutos"
+  },
+  "ex-ga283ptf": {
+    "prompt": "As seis janelas hopping de 10 minutos a cada 5 têm 3, 6, 6, 3, 1 e 1 vendas: vinte ao todo, de dez vendas. O que isso significa para um relatório?",
+    "choices": [
+      {
+        "text": "Dez das vendas eram duplicatas que deveriam ser removidas",
+        "why": "Nenhuma venda está duplicada no tópico; cada uma é contada em duas janelas sobrepostas."
+      },
+      {
+        "text": "As linhas dele não podem ser somadas",
+        "why": "Isso. Cada venda está em duas janelas, então uma soma a conta duas vezes."
+      },
+      {
+        "text": "As janelas hopping estão erradas e deveriam ser usadas tumbling",
+        "why": "Elas estão certas para a pergunta que respondem; só não são somáveis."
+      },
+      {
+        "text": "O relatório deveria dividir cada contagem pelo avanço",
+        "why": "Dividir muda o sentido dos números; a correção é não somar janelas sobrepostas."
+      }
+    ]
+  },
+  "ex-0bf4bc2f": {
+    "prompt": "Um job Flink usa `SlidingEventTimeWindows.of(10 minutes, 5 minutes)`. No vocabulário deste curso, que janela é essa?",
+    "choices": [
+      {
+        "text": "Uma janela sliding, definida pelo tempo entre eventos",
+        "why": "Esse é o sentido de sliding do Kafka Streams; a do Flink tem tamanho e passo."
+      },
+      {
+        "text": "Uma janela de sessão com pausa de cinco minutos",
+        "why": "Uma sessão não tem tamanho fixo; esta tem dez minutos."
+      },
+      {
+        "text": "Uma janela tumbling de cinco minutos",
+        "why": "Janelas tumbling não se sobrepõem; estas sim."
+      },
+      {
+        "text": "Hopping, tamanho 10 e avanço 5",
+        "why": "Isso. Flink e Spark dizem sliding para o que o Kafka Streams chama de hopping."
+      }
+    ]
+  },
+  "ex-51ac272b": {
+    "prompt": "Vendas às 09:00, 09:03, 09:05, 09:09 e 09:10. Numa janela sliding do Kafka Streams de 5 minutos, com as duas bordas incluídas, quantas vendas há na janela que termina às 09:10?",
+    "hint": "Das 09:05 às 09:10, e 09:05 está dentro.",
+    "unit": "vendas"
+  },
+  "ex-5qv15kda": {
+    "prompt": "As mesmas vendas, 09:00, 09:03, 09:05, 09:09 e 09:10, e uma janela sliding de 5 minutos com as duas bordas incluídas. Qual o máximo de vendas numa janela só?",
+    "unit": "vendas"
+  },
+  "ex-fdajtpbm": {
+    "prompt": "Por que uma janela sliding responde \"o máximo de vendas em quaisquer cinco minutos\" onde janelas hopping só chegam perto?",
+    "choices": [
+      {
+        "text": "As janelas dela ficam onde eventos entram ou saem, não nas marcas do relógio",
+        "why": "Isso. Só esses momentos podem mudar o que está nos últimos cinco minutos."
+      },
+      {
+        "text": "Ela usa o tempo de processamento, que não tem buracos entre uma janela e a seguinte",
+        "why": "Toda janela desta lição é sobre o tempo do evento."
+      },
+      {
+        "text": "Ela guarda todo evento para sempre",
+        "why": "Ela guarda os eventos pelo tamanho da janela, como as outras."
+      },
+      {
+        "text": "Janelas hopping excluem as duas bordas",
+        "why": "Elas incluem o início; o buraco está em onde elas começam."
+      }
+    ]
+  },
+  "ex-rjam0qgx": {
+    "prompt": "Eventos, em ordem de tempo, às 09:00, 09:03, 09:09, 09:12 e 09:20. Com pausa de sessão de 5 minutos, quantas sessões há?",
+    "unit": "sessões"
+  },
+  "ex-f01jrzqg": {
+    "prompt": "Depois desses cinco eventos, chega um atrasado que aconteceu às 09:06. Com a mesma pausa de 5 minutos, quantas sessões há agora?",
+    "hint": "Ele está a menos de cinco minutos das 09:03 e das 09:09.",
+    "unit": "sessões"
+  },
+  "ex-1msbbvab": {
+    "prompt": "O último evento de uma sessão é às 09:21:00 e a pausa é de cinco minutos. Quando a sessão pode ser fechada, no mínimo, pelo tempo do evento?",
+    "choices": [
+      {
+        "text": "09:21:00, no último evento",
+        "why": "Outro evento até cinco minutos depois ainda entraria nela."
+      },
+      {
+        "text": "09:26:00, cinco minutos depois",
+        "why": "Isso. Só depois que a pausa passa sem nada, e é por isso que o Flink termina a janela no último mais a pausa."
+      },
+      {
+        "text": "09:30:00, na próxima marca de cinco minutos",
+        "why": "Sessões não seguem as marcas do relógio."
+      },
+      {
+        "text": "Nunca, já que um evento atrasado sempre pode fundi-la",
+        "why": "Alguma decisão sempre é tomada, ou o estado cresce para sempre; a lição 11 a toma."
+      }
+    ]
+  },
+  "ex-ybfz5yvp": {
+    "prompt": "Ponha em ordem o que acontece com as sessões (pausa de 5 minutos) conforme as vendas chegam.",
+    "items": [
+      "As vendas 1 a 5 formam uma sessão terminando às 09:06:20",
+      "A venda 6, às 09:12:30, está longe demais e começa uma segunda sessão",
+      "A venda 7 estende a segunda sessão",
+      "A venda 8, das 09:08:50, chega perto das duas",
+      "As duas sessões viram uma de nove vendas"
+    ]
+  },
+  "ex-zf63dzxh": {
+    "prompt": "Por que janelas por loja podem rodar em vários trabalhadores sem eles conversarem entre si?",
+    "choices": [
+      {
+        "text": "Cada trabalhador guarda uma cópia das janelas de todas as lojas",
+        "why": "Isso seria o contrário: todo trabalhador precisaria de todo evento."
+      },
+      {
+        "text": "As janelas de lojas diferentes têm bordas diferentes",
+        "why": "As bordas tumbling vêm do relógio e são as mesmas para toda loja."
+      },
+      {
+        "text": "Vendas com a loja como chave põem cada loja numa partição, lida por um trabalhador",
+        "why": "Isso. Todos os eventos de uma chave, e portanto todas as janelas dela, ficam num lugar só."
+      },
+      {
+        "text": "O Kafka calcula as janelas no broker",
+        "why": "O broker armazena; as janelas são calculadas pelo processador."
+      }
+    ]
+  },
+  "ex-6ffp0jq4": {
+    "prompt": "Duzentos clientes, cada um com janelas hopping de 60 minutos a cada 15. Quantas janelas ficam abertas a cada momento, no máximo, somando todos os clientes?",
+    "hint": "Chaves vezes janelas abertas por chave.",
+    "unit": "janelas"
+  },
+  "ex-4egv91bz": {
+    "prompt": "No stream inteiro, a venda 8 junta duas sessões numa só. Por loja, ela não junta nada. Por quê?",
+    "choices": [
+      {
+        "text": "Por loja, a venda atrasada é descartada",
+        "why": "Ela está na sessão de Natal, que tem três vendas."
+      },
+      {
+        "text": "Dentro de Natal, ela só continua uma sessão das vendas da própria Natal",
+        "why": "Isso. As duas sessões que ela uniu eram feitas de vendas de outras lojas."
+      },
+      {
+        "text": "Sessões por chave usam uma pausa maior",
+        "why": "A pausa é a mesma, cinco minutos."
+      },
+      {
+        "text": "As chaves ordenam as vendas pelo tempo do evento antes",
+        "why": "A ordem de chegada é a mesma; o que muda é quais vendas são comparadas."
+      }
+    ]
+  },
+  "ex-6rey6jvy": {
+    "prompt": "Um processador emite o resultado de uma janela a cada atualização, e a saída vai para uma tabela de banco. O que quem escreve precisa fazer?",
+    "choices": [
+      {
+        "text": "Inserir cada linha como uma linha nova",
+        "why": "Aí a janela das 09:05 aparece três vezes, uma por atualização."
+      },
+      {
+        "text": "Ignorar toda linha depois da primeira de cada janela",
+        "why": "A primeira é a menos completa; as seguintes a corrigem."
+      },
+      {
+        "text": "Esperar o stream terminar antes de escrever",
+        "why": "Um stream não termina."
+      },
+      {
+        "text": "Fazer upsert, pela janela",
+        "why": "Isso. Cada atualização substitui a anterior daquela janela."
+      }
+    ]
+  },
+  "ex-m94rv887": {
+    "prompt": "Um processador emite cada janela uma vez, quando decide que ela é final. A venda 8 chega depois dessa decisão para 09:05 às 09:10. O que acontece com ela?",
+    "choices": [
+      {
+        "text": "Ela é descartada, ou tratada num lugar à parte",
+        "why": "Isso. Emitir uma vez não tem linha para corrigir, então um evento atrasado vai para outro lugar ou para lugar nenhum."
+      },
+      {
+        "text": "Ela entra na janela e a janela é emitida de novo",
+        "why": "Isso é emitir a cada atualização; quem lê um stream de emissão única trata as linhas como finais."
+      },
+      {
+        "text": "Ela é contada na janela seguinte, 09:10 às 09:15",
+        "why": "O tempo do evento dela pertence a 09:05 às 09:10; movê-la seria contar pela chegada."
+      },
+      {
+        "text": "O processador para até isso ser resolvido",
+        "why": "Nada para; a política decide."
+      }
+    ]
+  },
+  "ex-0346gh5q": {
+    "prompt": "Ligue cada pergunta à janela que combina com ela.",
+    "pairs": [
+      {
+        "left": "Vendas por hora, para somar no dia",
+        "right": "tumbling"
+      },
+      {
+        "left": "Vendas dos últimos dez minutos, atualizadas a cada cinco",
+        "right": "hopping"
+      },
+      {
+        "left": "Um cartão foi usado duas vezes em dez minutos",
+        "right": "sliding"
+      },
+      {
+        "left": "Quanto durou cada visita ao site",
+        "right": "sessão"
+      }
+    ],
+    "right_distractors": [
+      "total corrente"
+    ]
+  },
+  "ex-emag7gr1": {
+    "prompt": "Ordene estas janelas por em quantas janelas UM evento está, da menor para a maior.",
+    "items": [
+      "tumbling, 10 minutos",
+      "hopping, 10 minutos a cada 5",
+      "hopping, 10 minutos a cada 2",
+      "hopping, 10 minutos a cada minuto"
+    ]
+  },
+  "ex-jz4dpz5c": {
+    "prompt": "Janelas tumbling de cinco minutos, por loja, sobre as dez vendas: quantas linhas a saída tem, sem contar os nomes das lojas?",
+    "hint": "As duas vendas de Natal das 09:05 às 09:10 dividem uma linha.",
+    "unit": "linhas"
+  },
+  "ex-9jqysjm9": {
+    "prompt": "A Ponto Final quer \"os cinco minutos mais movimentados do dia em cada loja\". Qual janela, por loja, dá a resposta exata?",
+    "choices": [
+      {
+        "text": "Tumbling, cinco minutos",
+        "why": "Um trecho movimentado sobre uma borda é dividido em dois."
+      },
+      {
+        "text": "Hopping, cinco minutos a cada minuto",
+        "why": "Perto, mas um surto que começa às 09:01:20 não cabe exatamente em nenhuma janela."
+      },
+      {
+        "text": "Sessão, com pausa de cinco minutos",
+        "why": "Uma sessão pode durar bem mais que cinco minutos."
+      },
+      {
+        "text": "Sliding, de cinco minutos",
+        "why": "Isso. As janelas dela ficam onde as vendas entram e saem, então o máximo é exato."
+      }
+    ]
+  }
+}

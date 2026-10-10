@@ -57,11 +57,14 @@ Rode-o no primeiro shell enquanto os caixas da seção anterior ainda estão ven
 
 ```
 ubuntu@stream:~/work$ python lag_seconds.py stock
+partition 0: 54 messages behind, the oldest written 11 s ago
+partition 1: 182 messages behind, the oldest written 12 s ago
+partition 2: 0 messages behind
 ```
 
 Ponha ao lado da saída da ferramenta do grupo logo antes e os dois concordam na contagem, mais ou
 menos as vendas que chegaram entre um e outro. O que o segundo número acrescenta é que **as duas
-partições estão atrasadas em contagens muito diferentes e no mesmo tempo**. O consumidor pega
+partições estão atrasadas em contagens muito diferentes e mais ou menos no mesmo tempo**. O consumidor pega
 mensagens das duas conforme chegam, então a mensagem mais antiga esperando em cada uma foi escrita
 mais ou menos no mesmo momento; a partição 1 simplesmente recebe mais lojas. Um painel que somasse
 as contagens diria que o problema é a partição 1. O tempo diz que é o consumidor inteiro.
@@ -70,6 +73,9 @@ Quando o consumidor alcança o fim, o mesmo programa não tem nada esperando par
 
 ```
 ubuntu@stream:~/work$ python lag_seconds.py stock
+partition 0: 0 messages behind
+partition 1: 0 messages behind
+partition 2: 0 messages behind
 ```
 
 ## Qual pôr numa tela

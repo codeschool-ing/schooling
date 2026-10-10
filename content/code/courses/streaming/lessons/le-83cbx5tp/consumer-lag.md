@@ -46,6 +46,7 @@ holds sales, `./cluster.sh stop`, `new 1` and `start` give you a clean one.
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales --partitions 3
+Created topic sales.
 ```
 
 In the second shell, start the consumer. It joins the group `stock` and waits:
@@ -68,6 +69,11 @@ ubuntu@stream:~/work$ python tills.py --count 600 --rate 20
 
 ```
 ubuntu@stream:~/work$ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group stock
+
+GROUP           TOPIC           PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID                                  HOST            CLIENT-ID
+stock           sales           0          22              46              24              rdkafka-1e7efda9-0079-4f4e-8b2c-df2b4f32016c /127.0.0.1      rdkafka
+stock           sales           1          88              188             100             rdkafka-1e7efda9-0079-4f4e-8b2c-df2b4f32016c /127.0.0.1      rdkafka
+stock           sales           2          -               0               -               rdkafka-1e7efda9-0079-4f4e-8b2c-df2b4f32016c /127.0.0.1      rdkafka
 ```
 
 One line per partition, and three numbers on each that are the whole subject of this section:
@@ -83,6 +89,11 @@ partitions pair the way they do), so the group has nothing to commit in it. Ten 
 
 ```
 ubuntu@stream:~/work$ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group stock
+
+GROUP           TOPIC           PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID                                  HOST            CLIENT-ID
+stock           sales           0          43              97              54              rdkafka-1e7efda9-0079-4f4e-8b2c-df2b4f32016c /127.0.0.1      rdkafka
+stock           sales           1          177             358             181             rdkafka-1e7efda9-0079-4f4e-8b2c-df2b4f32016c /127.0.0.1      rdkafka
+stock           sales           2          -               0               -               rdkafka-1e7efda9-0079-4f4e-8b2c-df2b4f32016c /127.0.0.1      rdkafka
 ```
 
 **The lag has grown, and it grows by the difference between the two rates**: twenty a second in,
@@ -91,12 +102,18 @@ seconds after they started, whatever the consumer is doing:
 
 ```
 ubuntu@stream:~/work$ python tills.py --count 600 --rate 20
+sent 600 sales to sales, the last one at 10:46:46
 ```
 
 From that moment the lag stops growing and starts to shrink at the consumer's full speed:
 
 ```
 ubuntu@stream:~/work$ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group stock
+
+GROUP           TOPIC           PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID                                  HOST            CLIENT-ID
+stock           sales           0          66              135             69              rdkafka-1e7efda9-0079-4f4e-8b2c-df2b4f32016c /127.0.0.1      rdkafka
+stock           sales           1          244             465             221             rdkafka-1e7efda9-0079-4f4e-8b2c-df2b4f32016c /127.0.0.1      rdkafka
+stock           sales           2          -               0               -               rdkafka-1e7efda9-0079-4f4e-8b2c-df2b4f32016c /127.0.0.1      rdkafka
 ```
 
 ```schooling-figure
@@ -108,6 +125,11 @@ data:
 
 ```
 ubuntu@stream:~/work$ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group stock
+
+GROUP           TOPIC           PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID                                  HOST            CLIENT-ID
+stock           sales           0          135             135             0               rdkafka-1e7efda9-0079-4f4e-8b2c-df2b4f32016c /127.0.0.1      rdkafka
+stock           sales           1          465             465             0               rdkafka-1e7efda9-0079-4f4e-8b2c-df2b4f32016c /127.0.0.1      rdkafka
+stock           sales           2          -               0               -               rdkafka-1e7efda9-0079-4f4e-8b2c-df2b4f32016c /127.0.0.1      rdkafka
 ```
 
 Two things about the numbers deserve suspicion. **The lag is measured from the last commit, not from

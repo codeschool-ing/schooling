@@ -33,6 +33,8 @@ On a cluster of three nodes, with a topic whose partitions have three copies:
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales --partitions 3 --replication-factor 3
+Created topic sales.
+ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --describe --under-replicated-partitions
 ```
 
 `--under-replicated-partitions` lists the partitions with fewer copies in sync than they should
@@ -41,6 +43,12 @@ lesson 5, and a few seconds later:
 
 ```
 ubuntu@stream:~/work$ ./cluster.sh kill 3
+node 3: killed
+ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --describe --under-replicated-partitions
+	Topic: sales	Partition: 0	Leader: 1	Replicas: 3,1,2	Isr: 1,2	Elr: 	LastKnownElr: 
+	Topic: sales	Partition: 1	Leader: 1	Replicas: 1,2,3	Isr: 1,2	Elr: 	LastKnownElr: 
+	Topic: sales	Partition: 2	Leader: 2	Replicas: 2,3,1	Isr: 2,1	Elr: 	LastKnownElr: 
+ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --describe --unavailable-partitions
 ```
 
 Every partition lost one copy, and every one is still served: `--unavailable-partitions` lists those
@@ -53,6 +61,8 @@ node returns, the list empties again:
 
 ```
 ubuntu@stream:~/work$ ./cluster.sh start 3
+node 3: up on localhost:9094
+ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --describe --under-replicated-partitions
 ```
 
 ## Disk: the one that does not recover by itself
@@ -63,6 +73,12 @@ free space of the volume that holds the data, and alert well before it runs out:
 
 ```
 ubuntu@stream:~/work$ df -h ~/kafka-data
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/vda        252G   15G   25G  37% /
+ubuntu@stream:~/work$ du -sh ~/kafka-data/node*/log
+92K	/home/ubuntu/kafka-data/node1/log
+88K	/home/ubuntu/kafka-data/node2/log
+84K	/home/ubuntu/kafka-data/node3/log
 ```
 
 On this lab the data is tiny and the disk is shared with everything else in the machine. On a real

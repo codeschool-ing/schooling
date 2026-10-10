@@ -23,6 +23,10 @@ primeira seção ainda está rodando no segundo shell, como membro de `stock`. T
 
 ```
 ubuntu@stream:~/work$ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group stock --reset-offsets --topic sales --to-earliest --execute
+
+Error: Assignments can only be reset if the group 'stock' is inactive, but the current state is Stable.
+
+GROUP           TOPIC           PARTITION  NEW-OFFSET
 ```
 
 **Recusado, e com razão.** Um membro rodando guarda a posição em memória e a confirma a cada segundo;
@@ -31,6 +35,20 @@ Pare o consumidor com Ctrl+C. A tela dele, desde o começo da seção de lag:
 
 ```
 ubuntu@stream:~/work$ python slow_consumer.py --delay 0.1
+16:36:53 assigned [0, 1, 2]
+16:36:59 50 done, last rec-000050 from partition 1 offset 41
+16:37:04 100 done, last car-000100 from partition 0 offset 17
+16:37:09 150 done, last car-000150 from partition 0 offset 30
+16:37:14 200 done, last rec-000200 from partition 1 offset 158
+16:37:19 250 done, last oli-000250 from partition 1 offset 200
+16:37:24 300 done, last rec-000300 from partition 1 offset 238
+16:37:29 350 done, last nat-000350 from partition 1 offset 276
+16:37:34 400 done, last rec-000400 from partition 1 offset 318
+16:37:39 450 done, last rec-000450 from partition 1 offset 354
+16:37:44 500 done, last oli-000500 from partition 1 offset 392
+16:37:49 550 done, last nat-000550 from partition 1 offset 429
+16:37:54 600 done, last car-000600 from partition 0 offset 134
+16:38:05 revoked [0, 1, 2]
 ```
 
 ## Olhe antes de mover
@@ -40,6 +58,11 @@ e não muda nada, e **é o que se roda primeiro, toda vez**:
 
 ```
 ubuntu@stream:~/work$ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group stock --reset-offsets --topic sales --to-earliest --dry-run
+
+GROUP           TOPIC           PARTITION  NEW-OFFSET
+stock           sales           2          0
+stock           sales           1          0
+stock           sales           0          0
 ```
 
 `--to-earliest` manda cada partição para a mensagem mais antiga ainda guardada, e o grupo leria o
@@ -50,7 +73,22 @@ nove". O instante aqui é quinze segundos depois de os caixas começarem na seç
 de São Paulo para o UTC:
 
 ```
-ubuntu@stream:~/work$ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group stock --reset-offsets --topic sales --to-datetime
+ubuntu@stream:~/work$ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group stock --reset-offsets --topic sales --to-datetime 2026-10-10T16:37:09.000-03:00 --execute
+
+Warn: Partition 2 from topic sales is empty. Falling back to latest known offset.
+
+GROUP           TOPIC           PARTITION  NEW-OFFSET
+stock           sales           2          0
+stock           sales           1          233
+stock           sales           0          59
+ubuntu@stream:~/work$ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group stock
+
+Consumer group 'stock' has no active members.
+
+GROUP           TOPIC           PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID     HOST            CLIENT-ID
+stock           sales           0          59              135             76              -               -               -
+stock           sales           1          233             465             232             -               -               -
+stock           sales           2          0               0               0               -               -               -
 ```
 
 Cada partição foi para a primeira venda escrita depois daquele instante, e o grupo agora tem mais ou

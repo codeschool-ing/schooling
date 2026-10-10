@@ -34,6 +34,8 @@ Num cluster de três nós, com um tópico cujas partições têm três cópias:
 
 ```
 ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic sales --partitions 3 --replication-factor 3
+Created topic sales.
+ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --describe --under-replicated-partitions
 ```
 
 `--under-replicated-partitions` lista as partições com menos cópias em sincronia do que deveriam ter,
@@ -42,6 +44,12 @@ e **não imprimir nada é a resposta saudável**. Agora um nó morre, como morre
 
 ```
 ubuntu@stream:~/work$ ./cluster.sh kill 3
+node 3: killed
+ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --describe --under-replicated-partitions
+	Topic: sales	Partition: 0	Leader: 1	Replicas: 3,1,2	Isr: 1,2	Elr: 	LastKnownElr: 
+	Topic: sales	Partition: 1	Leader: 1	Replicas: 1,2,3	Isr: 1,2	Elr: 	LastKnownElr: 
+	Topic: sales	Partition: 2	Leader: 2	Replicas: 2,3,1	Isr: 2,1	Elr: 	LastKnownElr: 
+ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --describe --unavailable-partitions
 ```
 
 Toda partição perdeu uma cópia, e todas continuam sendo servidas: `--unavailable-partitions` lista
@@ -54,6 +62,8 @@ responder de vez. Quando o nó volta, a lista se esvazia de novo:
 
 ```
 ubuntu@stream:~/work$ ./cluster.sh start 3
+node 3: up on localhost:9094
+ubuntu@stream:~/work$ kafka-topics.sh --bootstrap-server localhost:9092 --describe --under-replicated-partitions
 ```
 
 ## Disco: o que não se recupera sozinho
@@ -64,6 +74,12 @@ espaço livre do volume que guarda os dados, e alerte bem antes de acabar:
 
 ```
 ubuntu@stream:~/work$ df -h ~/kafka-data
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/vda        252G   15G   25G  37% /
+ubuntu@stream:~/work$ du -sh ~/kafka-data/node*/log
+92K	/home/ubuntu/kafka-data/node1/log
+88K	/home/ubuntu/kafka-data/node2/log
+84K	/home/ubuntu/kafka-data/node3/log
 ```
 
 Neste laboratório os dados são minúsculos e o disco é dividido com tudo o mais da máquina. Num

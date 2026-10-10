@@ -1,0 +1,575 @@
+{
+  "ex-x2436cqs": {
+    "prompt": "Na saída de `kafka-consumer-groups.sh --describe`, o que é o `LAG` de uma partição?",
+    "choices": [
+      {
+        "text": "Os segundos desde o último commit do grupo",
+        "why": "O lag aqui é uma contagem de mensagens, não uma duração."
+      },
+      {
+        "text": "LOG-END-OFFSET menos CURRENT-OFFSET",
+        "why": "Isso: escritas e ainda não tratadas pelo grupo."
+      },
+      {
+        "text": "O número de membros que faltam ao grupo",
+        "why": "Membros não são contados nessa coluna."
+      },
+      {
+        "text": "As mensagens que o broker ainda não copiou para o disco",
+        "why": "O lag é sobre a posição de um leitor, não sobre as gravações do broker."
+      }
+    ]
+  },
+  "ex-8b3yk87a": {
+    "prompt": "Os produtores escrevem 20 vendas por segundo e o consumidor trata 10. Mais ou menos, como o lag muda enquanto os caixas rodam?",
+    "choices": [
+      {
+        "text": "Fica parado no primeiro valor que atingiu",
+        "why": "Ele só ficaria parado se as duas taxas fossem iguais."
+      },
+      {
+        "text": "Cresce cerca de 30 por segundo, a soma das duas taxas",
+        "why": "A leitura do consumidor tira mensagens; as taxas se subtraem."
+      },
+      {
+        "text": "Cresce cerca de 10 por segundo",
+        "why": "Isso: vinte entram, dez saem."
+      },
+      {
+        "text": "Cresce até o consumidor cair com a carga",
+        "why": "Um consumidor que puxa nunca recebe mais do que pede; ele fica para trás, não cai."
+      }
+    ]
+  },
+  "ex-r4r4ep2y": {
+    "prompt": "Um consumidor trata as vendas corretamente mas nunca confirma os offsets. O que o `--describe` mostra para o grupo enquanto ele trabalha?",
+    "choices": [
+      {
+        "text": "Um lag que nunca diminui",
+        "why": "Isso: a ferramenta mede a partir da posição confirmada, que nunca se move."
+      },
+      {
+        "text": "Lag zero, já que toda venda foi tratada",
+        "why": "A ferramenta não vê o que o programa tratou, só o que ele confirmou."
+      },
+      {
+        "text": "Um erro dizendo que o grupo não existe",
+        "why": "O grupo existe enquanto tem um membro; só faltam os offsets confirmados."
+      },
+      {
+        "text": "O mesmo lag de um grupo que confirma, um segundo depois",
+        "why": "Sem commits não há nada para o lag acompanhar."
+      }
+    ]
+  },
+  "ex-yphgcn1e": {
+    "prompt": "O número de mensagens escritas numa partição e ainda não tratadas por um grupo se chama ___ do consumidor.",
+    "blanks": [
+      {
+        "accept": [
+          "lag",
+          "atraso"
+        ]
+      }
+    ]
+  },
+  "ex-jxd36nf5": {
+    "prompt": "Dois tópicos mostram lag de 1000 mensagens cada. Um recebe 1000 vendas por segundo, o outro uma venda por minuto. O que isso diz?",
+    "choices": [
+      {
+        "text": "Os dois estão igualmente atrasados",
+        "why": "Contagens iguais, idades muito diferentes: um segundo contra umas dezessete horas."
+      },
+      {
+        "text": "O tópico movimentado está em mais apuros, porque tem mais tráfego",
+        "why": "O lag dele tem um segundo; o do tópico calmo é de ontem."
+      },
+      {
+        "text": "Nenhum pode ser julgado antes de o lag virar tempo",
+        "why": "As taxas da pergunta já transformam em tempo; é esse o ponto."
+      },
+      {
+        "text": "O consumidor do tópico calmo está horas atrasado",
+        "why": "Isso: cerca de dezessete horas, contra um segundo."
+      }
+    ]
+  },
+  "ex-pqxdjhp8": {
+    "prompt": "Como o `lag_seconds.py` descobre há quanto tempo a mensagem não tratada mais antiga espera?",
+    "choices": [
+      {
+        "text": "Desconta do relógio o timestamp do primeiro registro pendente",
+        "why": "Isso: essa mensagem é a mais antiga que espera."
+      },
+      {
+        "text": "Divide o lag pela taxa do produtor",
+        "why": "Isso estima o tempo para esvaziar; o programa lê um timestamp."
+      },
+      {
+        "text": "Lê o campo `at` que os caixas põem dentro de cada venda",
+        "why": "Ele usa o timestamp do próprio registro, que o produtor definiu."
+      },
+      {
+        "text": "Entra no grupo e mede o próprio poll",
+        "why": "Ele de propósito nunca entra, para não causar um rebalanceamento."
+      }
+    ]
+  },
+  "ex-0pm6x26n": {
+    "prompt": "Um grupo tem lag de 600 mensagens e o consumidor trata 15 por segundo. Se nada mais chegar, de quantos segundos ele precisa para alcançar o fim?",
+    "unit": "segundos"
+  },
+  "ex-13bk9g0y": {
+    "prompt": "Por que o `lag_seconds.py` cria um consumidor com o id do grupo que nunca assina o tópico?",
+    "choices": [
+      {
+        "text": "Para assumir as partições enquanto a medição roda",
+        "why": "Assumi-las pararia os membros reais; ele evita justamente isso."
+      },
+      {
+        "text": "Para ler os offsets do grupo sem entrar nele",
+        "why": "Isso: entrar rebalancearia o grupo medido."
+      },
+      {
+        "text": "Porque o Kafka se recusa a ler uma mensagem sem grupo",
+        "why": "Quem lê é o outro consumidor, num grupo próprio."
+      },
+      {
+        "text": "Para a medição confirmar pelo grupo",
+        "why": "O commit automático está desligado, e ele nunca confirma nada."
+      }
+    ]
+  },
+  "ex-xfe6w32v": {
+    "prompt": "Por que um consumidor Kafka lento não precisa frear o produtor?",
+    "choices": [
+      {
+        "text": "Porque o broker desacelera o produtor automaticamente",
+        "why": "O produtor não é desacelerado: os caixas terminaram no horário."
+      },
+      {
+        "text": "Consumidores puxam, e o log em disco guarda o acúmulo",
+        "why": "Isso: o log é o buffer, e o lag é o quanto ele está cheio."
+      },
+      {
+        "text": "Porque mensagens que o consumidor não acompanha são descartadas",
+        "why": "Nada é descartado; elas esperam no log."
+      },
+      {
+        "text": "O produtor espera a resposta de cada consumidor",
+        "why": "Produtores e consumidores nunca falam diretamente entre si."
+      }
+    ]
+  },
+  "ex-ctm3n4xv": {
+    "prompt": "Um consumidor com `max.poll.interval.ms` de 6000 gasta 8 segundos numa venda. O que acontece aos seis segundos?",
+    "choices": [
+      {
+        "text": "O broker apaga a venda",
+        "why": "Nada é apagado; o que está em jogo é a posição do membro."
+      },
+      {
+        "text": "A thread de heartbeat para e a sessão expira",
+        "why": "Os heartbeats continuam da thread do cliente; o intervalo de poll é outro relógio."
+      },
+      {
+        "text": "O membro sai do grupo e as partições dele são reatribuídas",
+        "why": "Isso: presumido travado, ele é removido, o que é um rebalanceamento."
+      },
+      {
+        "text": "Nada, porque o limite só é verificado quando ele faz poll",
+        "why": "O cliente verifica sozinho e sai; o programa só descobre no próximo poll."
+      }
+    ]
+  },
+  "ex-snbq1mmx": {
+    "prompt": "No grupo `audit`, o membro que levava meio segundo por venda ficou sendo revogado e atribuído. Por que ele sofreu pela lentidão do outro?",
+    "choices": [
+      {
+        "text": "O próprio processamento dele também era lento demais para o limite",
+        "why": "Meio segundo fica bem dentro de seis segundos."
+      },
+      {
+        "text": "Os dois dividiam uma única thread num processo",
+        "why": "Rodavam em shells diferentes, como processos diferentes."
+      },
+      {
+        "text": "As partições dele estavam cheias de mensagens venenosas",
+        "why": "Não havia mensagem ruim nessa demonstração."
+      },
+      {
+        "text": "Cada saída e volta rebalanceia o grupo inteiro",
+        "why": "Isso: um rebalanceamento é do grupo, não de um membro."
+      }
+    ]
+  },
+  "ex-0jky0j4m": {
+    "prompt": "Ligue cada correção do laço do intervalo de poll ao que ela muda.",
+    "pairs": [
+      {
+        "left": "Subir `max.poll.interval.ms` acima do registro mais lento",
+        "right": "o limite contra o qual o trabalho é medido"
+      },
+      {
+        "left": "Limitar `max.poll.records`",
+        "right": "quanto trabalho um poll entrega"
+      },
+      {
+        "left": "`pause()` e trabalhar em outra thread",
+        "right": "o poll continua enquanto o trabalho roda"
+      }
+    ],
+    "right_distractors": [
+      "o número de brokers do cluster"
+    ]
+  },
+  "ex-g9g1rm3q": {
+    "prompt": "Um consumidor falha num registro, reinicia e falha nele de novo. O que parou?",
+    "choices": [
+      {
+        "text": "Todos os tópicos do cluster",
+        "why": "Outros leitores e outros tópicos seguem."
+      },
+      {
+        "text": "Só as vendas com a chave do registro ruim",
+        "why": "Toda chave que divide a partição espera atrás dele, não só a dele."
+      },
+      {
+        "text": "O avanço dele naquela partição",
+        "why": "Isso: a posição dele não passa do registro em que falha."
+      },
+      {
+        "text": "O produtor, até o registro ser removido",
+        "why": "Os produtores continuam escrevendo; o acúmulo cresce atrás do registro ruim."
+      }
+    ]
+  },
+  "ex-z2e2dzm0": {
+    "prompt": "O que o `sturdy_consumer.py` põe nos cabeçalhos de uma carta morta?",
+    "choices": [
+      {
+        "text": "O erro, e o tópico, partição e offset de onde veio",
+        "why": "Isso: o bastante para achar, entender e reenviar."
+      },
+      {
+        "text": "A venda corrigida",
+        "why": "Ele copia o valor original como era; nada é corrigido."
+      },
+      {
+        "text": "O offset confirmado do grupo",
+        "why": "A origem é a posição da própria mensagem ruim, não a do grupo."
+      },
+      {
+        "text": "Um contador de tentativas",
+        "why": "Este programa não tenta de novo; os cabeçalhos são o erro e a origem."
+      }
+    ]
+  },
+  "ex-kfe2m6dk": {
+    "prompt": "O consumidor de estoque falha porque o banco em que ele escreve ficou fora do ar por dois segundos. Essa mensagem deve ir para o tópico de cartas mortas?",
+    "choices": [
+      {
+        "text": "Sim, toda falha vai para lá, para a partição continuar andando",
+        "why": "Aí uma venda comum fica de lado por um problema que já passou."
+      },
+      {
+        "text": "Não: tentar de novo, já que a falha é passageira",
+        "why": "Isso: cartas mortas são para o que falha do mesmo jeito sempre."
+      },
+      {
+        "text": "Sim, e o banco deve ser reiniciado",
+        "why": "A mensagem em si está boa; nada nela precisa ser posto de lado."
+      },
+      {
+        "text": "Não, ela deve ser apagada do tópico",
+        "why": "Nada apaga uma única mensagem de um tópico, e não há nada errado com ela."
+      }
+    ]
+  },
+  "ex-tvjqr4c6": {
+    "prompt": "O contador está travado numa mensagem ruim, a única da partição 2, e o `--describe` mostra lag 0 em toda partição que lista. Por que o lag não mostra o problema?",
+    "choices": [
+      {
+        "text": "A mensagem ruim foi apagada pelo broker",
+        "why": "Ela continua lá; a próxima execução a encontra de novo."
+      },
+      {
+        "text": "O lag só é contado para chaves que viram JSON",
+        "why": "O lag não sabe nada do conteúdo de uma mensagem."
+      },
+      {
+        "text": "O grupo nunca confirmou na partição 2, e o lag é medido a partir dos commits",
+        "why": "Isso: sem commit ali, a ferramenta não tem o que imprimir sobre ela."
+      },
+      {
+        "text": "O consumidor já a tinha tratado",
+        "why": "Ele caiu nela, duas vezes; nada foi tratado."
+      }
+    ]
+  },
+  "ex-p7th69n8": {
+    "prompt": "Um tópico para onde um consumidor copia as mensagens que não consegue tratar, com o motivo, se chama tópico de dead-___.",
+    "blanks": [
+      {
+        "accept": [
+          "letter"
+        ]
+      }
+    ]
+  },
+  "ex-s9qshadf": {
+    "prompt": "Por que o `--reset-offsets --execute` se recusou a mover o grupo `stock`?",
+    "choices": [
+      {
+        "text": "O tópico não tinha mais mensagens para reprocessar",
+        "why": "As 600 vendas estavam todas lá."
+      },
+      {
+        "text": "Um membro ainda estava rodando",
+        "why": "Isso: o grupo estava Stable, e o membro sobrescreveria o reset."
+      },
+      {
+        "text": "`--to-earliest` só é permitido com `--dry-run`",
+        "why": "Ele funciona com `--execute` quando o grupo está inativo."
+      },
+      {
+        "text": "Resetar precisa de um cluster de três nós",
+        "why": "O reset rodou em um nó um instante depois."
+      }
+    ]
+  },
+  "ex-0nxkvs3p": {
+    "prompt": "Um reset `--to-datetime` recebe 09:00 de segunda. Com que hora ele compara?",
+    "choices": [
+      {
+        "text": "A hora dentro de cada mensagem, o campo `at`",
+        "why": "O broker não sabe nada sobre campos dentro do valor."
+      },
+      {
+        "text": "A hora do último commit do grupo",
+        "why": "Horas de commit não são o que o reset procura."
+      },
+      {
+        "text": "A hora em que cada registro foi escrito, o timestamp dele",
+        "why": "Isso: ele pede ao broker os offsets pelo timestamp do registro."
+      },
+      {
+        "text": "A hora em que o arquivo de segmento foi criado",
+        "why": "A busca é por registro, pelo índice de tempo."
+      }
+    ]
+  },
+  "ex-adchbf4t": {
+    "prompt": "O consumidor de estoque soma a quantidade de cada venda a um total num banco. O que acontece se você reprocessar a semana passada sem mudá-lo?",
+    "choices": [
+      {
+        "text": "As vendas daqueles dias são contadas duas vezes",
+        "why": "Isso: reprocessar é at-least-once de propósito; o consumidor tem de definir, não somar."
+      },
+      {
+        "text": "Os totais são corrigidos, porque a nova execução substitui a antiga",
+        "why": "Somar não substitui; isso é o que uma escrita idempotente faria."
+      },
+      {
+        "text": "O Kafka se recusa a entregar mensagens que um grupo já leu",
+        "why": "Entregá-las de novo é exatamente o que o reset pediu."
+      },
+      {
+        "text": "Nada, porque o banco percebe",
+        "why": "O banco vê somas comuns; nada diz a ele que são repetições."
+      }
+    ]
+  },
+  "ex-37mt8bgr": {
+    "prompt": "Ponha em ordem os passos de um reprocessamento cuidadoso.",
+    "items": [
+      "Corrigir o consumidor e torná-lo seguro para rodar duas vezes",
+      "Parar todos os membros do grupo",
+      "Rodar o reset como dry run",
+      "Rodar de novo com --execute",
+      "Iniciar o consumidor"
+    ]
+  },
+  "ex-73e235gg": {
+    "prompt": "No reprocessamento blue-green, por que a versão nova ganha um `group.id` próprio?",
+    "choices": [
+      {
+        "text": "O Kafka permite um programa por grupo",
+        "why": "Um grupo pode ter muitos membros rodando o mesmo programa; não é esse o motivo."
+      },
+      {
+        "text": "Para começar do início, sem tocar no grupo antigo",
+        "why": "Isso: grupo novo, sem offsets confirmados, o antigo intacto."
+      },
+      {
+        "text": "Para ler mais rápido",
+        "why": "Velocidade vem de instâncias e partições, não do nome."
+      },
+      {
+        "text": "Para escrever em outro tópico",
+        "why": "O tópico de saída é outra escolha; o grupo decide onde a leitura começa."
+      }
+    ]
+  },
+  "ex-0zkqv20z": {
+    "prompt": "Depois que o `stock-v2` leu o tópico inteiro, o `sales.dlq` tinha a venda ruim duas vezes. O que isso mostra?",
+    "choices": [
+      {
+        "text": "O produtor de cartas mortas tem um bug",
+        "why": "Ele fez o que mandaram, uma vez por versão."
+      },
+      {
+        "text": "O grupo antigo não foi apagado a tempo",
+        "why": "Apagar o grupo remove offsets; não impede as escritas da versão nova."
+      },
+      {
+        "text": "Um efeito colateral acontece de novo quando uma versão nova reprocessa",
+        "why": "Isso: tudo o que é escrito fora da saída do próprio grupo se repete."
+      },
+      {
+        "text": "O Kafka duplicou uma mensagem em disco",
+        "why": "Duas escritas produziram duas mensagens; o broker não duplicou nada."
+      }
+    ]
+  },
+  "ex-bnsh5wra": {
+    "prompt": "O que `kafka-topics.sh --describe --under-replicated-partitions` imprime num cluster saudável?",
+    "choices": [
+      {
+        "text": "Nada",
+        "why": "Isso: uma lista vazia é a resposta saudável."
+      },
+      {
+        "text": "Toda partição, com o líder",
+        "why": "Isso é o `--describe` puro; a opção filtra para os casos com problema."
+      },
+      {
+        "text": "A palavra OK",
+        "why": "Ele imprime partições ou nada; não há palavra de status."
+      },
+      {
+        "text": "As partições sem líder",
+        "why": "Essas são as de `--unavailable-partitions`."
+      }
+    ]
+  },
+  "ex-w79rjyha": {
+    "prompt": "Por que \"lag acima de 1000\" é um alerta ruim para o consumidor de estoque?",
+    "choices": [
+      {
+        "text": "O lag não passa de 1000 num tópico com três partições",
+        "why": "Nada limita o lag além da retenção."
+      },
+      {
+        "text": "O Kafka zera o lag a cada hora",
+        "why": "O lag só cai quando o consumidor lê."
+      },
+      {
+        "text": "Precisa de um sistema de métricas que não existe",
+        "why": "O número é fácil de coletar; o problema é o que ele significa."
+      },
+      {
+        "text": "Dispara em todo pico que se resolve sozinho",
+        "why": "Isso: alerte por lag em tempo e por crescimento sustentado."
+      }
+    ]
+  },
+  "ex-rxdw9h2a": {
+    "prompt": "Um consumidor caiu à 01:00 e nenhuma venda chega até as 09:00. Qual alerta dispara primeiro?",
+    "choices": [
+      {
+        "text": "Lag crescendo por quinze minutos",
+        "why": "Sem vendas, o lag não cresce até as nove."
+      },
+      {
+        "text": "Um grupo sem membros",
+        "why": "Isso: a ausência aparece na hora, com tráfego ou sem."
+      },
+      {
+        "text": "Partições sub-replicadas",
+        "why": "Os brokers estão bem; só um consumidor parou."
+      },
+      {
+        "text": "Disco livre num volume de log",
+        "why": "Nada está sendo escrito, então o disco não muda."
+      }
+    ]
+  },
+  "ex-w7txw188": {
+    "prompt": "Quais destes merecem um alarme que acorda alguém? Escolha todos que se aplicam.",
+    "choices": [
+      {
+        "text": "Uma partição offline",
+        "why": "Sim: escritas e leituras nela estão falhando agora."
+      },
+      {
+        "text": "Lag em tempo acima do que a saída promete",
+        "why": "Sim: a promessa já foi quebrada."
+      },
+      {
+        "text": "Bytes de entrada por segundo maiores que ontem",
+        "why": "Esse é um número de painel; ninguém precisa agir sobre ele."
+      },
+      {
+        "text": "Um rebalanceamento quando um consumidor é implantado",
+        "why": "Implantações rebalanceiam por projeto."
+      },
+      {
+        "text": "Espaço livre acabando num volume de log",
+        "why": "Sim: disco cheio para as escritas e não se recupera sozinho."
+      }
+    ]
+  },
+  "ex-he46zcq9": {
+    "prompt": "Segunda, 10:00: a página de estoque está três horas atrasada, o lag do `stock` cresceu a manhã toda e o consumidor imprime um aviso `MAXPOLL` a cada poucos segundos. Qual é a primeira coisa a olhar?",
+    "choices": [
+      {
+        "text": "Por que um registro demora mais que o intervalo de poll",
+        "why": "Isso: esse laço é a causa; o lag é o sintoma."
+      },
+      {
+        "text": "Se o tópico tem retenção suficiente",
+        "why": "A retenção decide até onde dá para reprocessar, não por que o consumidor está lento."
+      },
+      {
+        "text": "Resetar o grupo para o offset mais recente",
+        "why": "Isso esconde o lag pulando três horas de mudanças de estoque."
+      },
+      {
+        "text": "Adicionar brokers ao cluster",
+        "why": "Os brokers não são a parte lenta; o consumidor é."
+      }
+    ]
+  },
+  "ex-t9qyk87k": {
+    "prompt": "Ponha em ordem os passos do reprocessamento blue-green.",
+    "items": [
+      "Iniciar a versão nova num grupo novo, escrevendo numa saída própria",
+      "Esperar o lag dela chegar a zero",
+      "Comparar a saída dela com a antiga",
+      "Mudar os leitores para a saída nova",
+      "Apagar o grupo antigo"
+    ]
+  },
+  "ex-596hqm0r": {
+    "prompt": "Um tópico de cartas mortas recebeu 40 mensagens desde sexta e ninguém olhou. O que a plataforma efetivamente fez com essas 40 vendas?",
+    "choices": [
+      {
+        "text": "Processou depois, automaticamente",
+        "why": "Nada lê um tópico de cartas mortas a menos que alguém faça isso."
+      },
+      {
+        "text": "Descartou, mais devagar",
+        "why": "Isso: um tópico de cartas mortas que ninguém lê é um jeito mais lento de perder dados."
+      },
+      {
+        "text": "Manteve em ordem com as outras vendas",
+        "why": "Pôr uma mensagem de lado abre mão da ordem dela."
+      },
+      {
+        "text": "Tentou cada uma até dar certo",
+        "why": "O consumidor seguiu em frente; nada tenta cartas mortas de novo."
+      }
+    ]
+  }
+}

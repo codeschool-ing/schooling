@@ -9,7 +9,7 @@ PT = {"sales": "sales", "old version": "versão antiga", "new version": "versão
       "from the oldest message": "da mensagem mais antiga", "at the end": "no fim",
       "stock": "stock", "stock.v2": "stock.v2", "readers today": "leitores hoje",
       "after the switch": "depois da troca", "compare": "comparar"}
-SAME = ["sales"]
+SAME = []
 def draw(s, t):
     s.rect(20, 85, 130, 60, stroke="var(--phosphor)")
     s.text(85, 115, t("sales"), size=12, weight=600, mono=True)

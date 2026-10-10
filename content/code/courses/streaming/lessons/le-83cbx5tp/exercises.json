@@ -1,0 +1,857 @@
+[
+  {
+    "id": "ex-x2436cqs",
+    "version": 1,
+    "section": "consumer-lag",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the output of `kafka-consumer-groups.sh --describe`, what is `LAG` for one partition?",
+    "choices": [
+      {
+        "text": "The seconds since the group last committed",
+        "correct": false,
+        "why": "Lag here is a count of messages, not a duration."
+      },
+      {
+        "text": "LOG-END-OFFSET minus CURRENT-OFFSET",
+        "correct": true,
+        "why": "Right: written and not yet handled by the group."
+      },
+      {
+        "text": "The number of members the group is missing",
+        "correct": false,
+        "why": "Members are not counted in that column at all."
+      },
+      {
+        "text": "The messages the broker has not yet copied to disk",
+        "correct": false,
+        "why": "Lag is about a reader's position, not about the broker's writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-8b3yk87a",
+    "version": 1,
+    "section": "consumer-lag",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Producers write 20 sales a second and the consumer handles 10. Roughly how does the lag change while the tills are running?",
+    "choices": [
+      {
+        "text": "It stays flat at the first value it reached",
+        "correct": false,
+        "why": "It would stay flat only if the two rates were equal."
+      },
+      {
+        "text": "It grows by about 30 a second, the sum of both rates",
+        "correct": false,
+        "why": "The consumer's reading takes messages away; the rates are subtracted."
+      },
+      {
+        "text": "It grows by about 10 a second",
+        "correct": true,
+        "why": "Right: twenty in, ten out."
+      },
+      {
+        "text": "It grows until the consumer crashes from the load",
+        "correct": false,
+        "why": "A pulling consumer is never sent more than it asks for; it falls behind, it does not crash."
+      }
+    ]
+  },
+  {
+    "id": "ex-r4r4ep2y",
+    "version": 1,
+    "section": "consumer-lag",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A consumer works through sales correctly but never commits its offsets. What does `--describe` show for its group while it works?",
+    "choices": [
+      {
+        "text": "A lag that never goes down",
+        "correct": true,
+        "why": "Right: the tool measures from the committed position, which never moves."
+      },
+      {
+        "text": "A lag of zero, since every sale was handled",
+        "correct": false,
+        "why": "The tool cannot see what the program handled, only what it committed."
+      },
+      {
+        "text": "An error saying the group does not exist",
+        "correct": false,
+        "why": "The group exists while it has a member; its committed offsets are just absent."
+      },
+      {
+        "text": "The same lag as a group that commits, a second later",
+        "correct": false,
+        "why": "Without commits there is nothing for the lag to follow."
+      }
+    ]
+  },
+  {
+    "id": "ex-yphgcn1e",
+    "version": 1,
+    "section": "consumer-lag",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The number of messages written to a partition and not yet handled by a group is called consumer ___.",
+    "blanks": [
+      {
+        "accept": [
+          "lag"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-jxd36nf5",
+    "version": 1,
+    "section": "lag-in-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two topics each show a lag of 1000 messages. One receives 1000 sales a second, the other one sale a minute. What does that tell you?",
+    "choices": [
+      {
+        "text": "Both are equally far behind",
+        "correct": false,
+        "why": "Equal counts, very different ages: one second against about seventeen hours."
+      },
+      {
+        "text": "The busy topic is in more trouble, because it has more traffic",
+        "correct": false,
+        "why": "Its lag is one second old; the quiet one's is from yesterday."
+      },
+      {
+        "text": "Neither can be judged until their lag is turned into a time",
+        "correct": false,
+        "why": "The rates in the question already turn it into time; that is the point."
+      },
+      {
+        "text": "The quiet topic's consumer is hours behind",
+        "correct": true,
+        "why": "Right: about seventeen hours, against one second."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqxdjhp8",
+    "version": 1,
+    "section": "lag-in-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does `lag_seconds.py` find how long the oldest unhandled message has waited?",
+    "choices": [
+      {
+        "text": "It subtracts the waiting message's timestamp from now",
+        "correct": true,
+        "why": "Right: that message is the oldest one waiting."
+      },
+      {
+        "text": "It divides the lag by the producer's rate",
+        "correct": false,
+        "why": "That estimates the time to drain; the program reads a timestamp instead."
+      },
+      {
+        "text": "It reads the `at` field the tills put inside each sale",
+        "correct": false,
+        "why": "It uses the record's own timestamp, which the producer set."
+      },
+      {
+        "text": "It joins the group and times its own poll",
+        "correct": false,
+        "why": "It deliberately never joins, so it does not cause a rebalance."
+      }
+    ]
+  },
+  {
+    "id": "ex-0pm6x26n",
+    "version": 1,
+    "section": "lag-in-time",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A group has a lag of 600 messages and its consumer handles 15 a second. If nothing else arrives, how many seconds does it need to catch up?",
+    "value": 40,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-13bk9g0y",
+    "version": 1,
+    "section": "lag-in-time",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does `lag_seconds.py` create one consumer with the group's id that never subscribes?",
+    "choices": [
+      {
+        "text": "To take over the partitions while the measurement runs",
+        "correct": false,
+        "why": "Taking them over would stop the real members; it avoids exactly that."
+      },
+      {
+        "text": "To read the group's offsets without joining",
+        "correct": true,
+        "why": "Right: joining would rebalance the group being measured."
+      },
+      {
+        "text": "Because Kafka refuses to read a message without a group",
+        "correct": false,
+        "why": "The reading is done by the other consumer, under a group of its own."
+      },
+      {
+        "text": "So the measurement commits for the group",
+        "correct": false,
+        "why": "Auto commit is off, and it never commits anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-xfe6w32v",
+    "version": 1,
+    "section": "backpressure",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does a slow Kafka consumer not need to push back on the producer?",
+    "choices": [
+      {
+        "text": "Because the broker slows the producer down automatically",
+        "correct": false,
+        "why": "The producer is not slowed: the tills finished on time."
+      },
+      {
+        "text": "Consumers pull, and the log on disk holds the backlog",
+        "correct": true,
+        "why": "Right: the log is the buffer, and lag is how full it is."
+      },
+      {
+        "text": "Because messages a consumer cannot keep up with are dropped",
+        "correct": false,
+        "why": "Nothing is dropped; they wait in the log."
+      },
+      {
+        "text": "The producer waits for each consumer's reply",
+        "correct": false,
+        "why": "Producers and consumers never talk to each other directly."
+      }
+    ]
+  },
+  {
+    "id": "ex-ctm3n4xv",
+    "version": 1,
+    "section": "backpressure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A consumer with `max.poll.interval.ms` of 6000 spends 8 seconds on one sale. What happens at six seconds?",
+    "choices": [
+      {
+        "text": "The broker deletes the sale",
+        "correct": false,
+        "why": "Nothing is deleted; the member's position is what is at stake."
+      },
+      {
+        "text": "Its heartbeat thread stops and the session times out",
+        "correct": false,
+        "why": "Heartbeats keep going from the client's own thread; the poll interval is a separate clock."
+      },
+      {
+        "text": "The member leaves the group and its partitions are reassigned",
+        "correct": true,
+        "why": "Right: presumed stuck, it is removed, which is a rebalance."
+      },
+      {
+        "text": "Nothing, because the limit is only checked when it polls",
+        "correct": false,
+        "why": "The client checks it on its own and leaves; the program learns at its next poll."
+      }
+    ]
+  },
+  {
+    "id": "ex-snbq1mmx",
+    "version": 1,
+    "section": "backpressure",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the `audit` group, the member that took half a second per sale kept being revoked and assigned. Why did it suffer for the other member's slowness?",
+    "choices": [
+      {
+        "text": "Its own processing was also too slow for the limit",
+        "correct": false,
+        "why": "Half a second is well inside six seconds."
+      },
+      {
+        "text": "The two shared a single thread in one process",
+        "correct": false,
+        "why": "They ran in different shells, as different processes."
+      },
+      {
+        "text": "Its partitions were full of poison messages",
+        "correct": false,
+        "why": "There was no bad message in this demonstration."
+      },
+      {
+        "text": "Each leave and rejoin rebalances the whole group",
+        "correct": true,
+        "why": "Right: a rebalance is the group's, not one member's."
+      }
+    ]
+  },
+  {
+    "id": "ex-0jky0j4m",
+    "version": 1,
+    "section": "backpressure",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each fix for the poll-interval loop to what it changes.",
+    "pairs": [
+      {
+        "left": "Raise `max.poll.interval.ms` above the slowest record",
+        "right": "the limit the work is measured against"
+      },
+      {
+        "left": "Cap `max.poll.records`",
+        "right": "how much work one poll hands over"
+      },
+      {
+        "left": "`pause()` and work on another thread",
+        "right": "polling continues while the work runs"
+      }
+    ],
+    "right_distractors": [
+      "the number of brokers in the cluster"
+    ]
+  },
+  {
+    "id": "ex-g9g1rm3q",
+    "version": 1,
+    "section": "poison-messages",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A consumer throws on one record, restarts, and throws on it again. What has stopped?",
+    "choices": [
+      {
+        "text": "Every topic on the cluster",
+        "correct": false,
+        "why": "Other readers and other topics carry on."
+      },
+      {
+        "text": "Only the sales with the bad record's key",
+        "correct": false,
+        "why": "Every key that shares the partition waits behind it, not just its own."
+      },
+      {
+        "text": "Its progress through that partition",
+        "correct": true,
+        "why": "Right: its position cannot move past the record it fails on."
+      },
+      {
+        "text": "The producer, until the record is removed",
+        "correct": false,
+        "why": "Producers keep writing; the backlog grows behind the bad record."
+      }
+    ]
+  },
+  {
+    "id": "ex-z2e2dzm0",
+    "version": 1,
+    "section": "poison-messages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `sturdy_consumer.py` put in the headers of a dead letter?",
+    "choices": [
+      {
+        "text": "The error, and the topic, partition and offset it came from",
+        "correct": true,
+        "why": "Right: enough to find it, understand it and send it back."
+      },
+      {
+        "text": "The corrected sale",
+        "correct": false,
+        "why": "It copies the original value as it was; nothing is corrected."
+      },
+      {
+        "text": "The group's committed offset",
+        "correct": false,
+        "why": "The origin is the bad message's own position, not the group's."
+      },
+      {
+        "text": "A retry counter",
+        "correct": false,
+        "why": "This program does not retry; the headers are the error and the origin."
+      }
+    ]
+  },
+  {
+    "id": "ex-kfe2m6dk",
+    "version": 1,
+    "section": "poison-messages",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The stock consumer fails because the database it writes to is down for two seconds. Should that message go to the dead-letter topic?",
+    "choices": [
+      {
+        "text": "Yes, every failure goes there, so the partition keeps moving",
+        "correct": false,
+        "why": "Then an ordinary sale is set aside for a problem that has already passed."
+      },
+      {
+        "text": "No: retry it, since the failure is transient",
+        "correct": true,
+        "why": "Right: dead letters are for what fails the same way every time."
+      },
+      {
+        "text": "Yes, and the database should be restarted",
+        "correct": false,
+        "why": "The message itself is fine; nothing about it needs setting aside."
+      },
+      {
+        "text": "No, it should be deleted from the topic",
+        "correct": false,
+        "why": "Nothing deletes a single message from a topic, and nothing is wrong with it."
+      }
+    ]
+  },
+  {
+    "id": "ex-tvjqr4c6",
+    "version": 1,
+    "section": "poison-messages",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The counter is stuck on a bad message, the only one in partition 2, and `--describe` shows lag 0 on every partition it lists. Why does the lag not show the problem?",
+    "choices": [
+      {
+        "text": "The bad message was deleted by the broker",
+        "correct": false,
+        "why": "It is still there; the next run meets it again."
+      },
+      {
+        "text": "Lag is counted only for keys that parse as JSON",
+        "correct": false,
+        "why": "Lag knows nothing about what a message contains."
+      },
+      {
+        "text": "The group never committed in partition 2, and lag is measured from commits",
+        "correct": true,
+        "why": "Right: with no commit there, the tool has nothing to print for it."
+      },
+      {
+        "text": "The consumer had already handled it",
+        "correct": false,
+        "why": "It crashed on it, twice; nothing was handled."
+      }
+    ]
+  },
+  {
+    "id": "ex-p7th69n8",
+    "version": 1,
+    "section": "poison-messages",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A topic where a consumer copies the messages it cannot handle, with the reason, is called a dead-___ topic.",
+    "blanks": [
+      {
+        "accept": [
+          "letter"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s9qshadf",
+    "version": 1,
+    "section": "replay",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did `--reset-offsets --execute` refuse to move the group `stock`?",
+    "choices": [
+      {
+        "text": "The topic had no messages left to replay",
+        "correct": false,
+        "why": "The 600 sales were all there."
+      },
+      {
+        "text": "A member was still running",
+        "correct": true,
+        "why": "Right: the group was Stable, and its member would overwrite the reset."
+      },
+      {
+        "text": "`--to-earliest` is only allowed with `--dry-run`",
+        "correct": false,
+        "why": "It works with `--execute` once the group is inactive."
+      },
+      {
+        "text": "Resetting needs a cluster of three nodes",
+        "correct": false,
+        "why": "The reset ran on one node a moment later."
+      }
+    ]
+  },
+  {
+    "id": "ex-0nxkvs3p",
+    "version": 1,
+    "section": "replay",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A reset `--to-datetime` is given 09:00 on Monday. Which time does it compare with?",
+    "choices": [
+      {
+        "text": "The time inside each message, the `at` field",
+        "correct": false,
+        "why": "The broker knows nothing about fields inside the value."
+      },
+      {
+        "text": "The time the group last committed",
+        "correct": false,
+        "why": "Commit times are not what the reset searches."
+      },
+      {
+        "text": "The time each record was written, its record timestamp",
+        "correct": true,
+        "why": "Right: it asks the broker for offsets by record timestamp."
+      },
+      {
+        "text": "The time the segment file was created",
+        "correct": false,
+        "why": "The lookup is per record, through the time index."
+      }
+    ]
+  },
+  {
+    "id": "ex-adchbf4t",
+    "version": 1,
+    "section": "replay",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The stock consumer adds each sale's quantity to a running total in a database. What happens if you replay last week without changing it?",
+    "choices": [
+      {
+        "text": "Those days' sales are counted twice",
+        "correct": true,
+        "why": "Right: replay is at-least-once on purpose; the consumer must set, not add."
+      },
+      {
+        "text": "The totals are corrected, because the new run replaces the old",
+        "correct": false,
+        "why": "Adding does not replace; that is what an idempotent write would do."
+      },
+      {
+        "text": "Kafka refuses to deliver messages a group has already read",
+        "correct": false,
+        "why": "Delivering them again is exactly what the reset asked for."
+      },
+      {
+        "text": "Nothing, since the database notices",
+        "correct": false,
+        "why": "The database sees ordinary additions; nothing tells it they are repeats."
+      }
+    ]
+  },
+  {
+    "id": "ex-37mt8bgr",
+    "version": 1,
+    "section": "replay",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a careful replay in order.",
+    "items": [
+      "Fix the consumer and make it safe to run twice",
+      "Stop every member of the group",
+      "Run the reset as a dry run",
+      "Run it again with --execute",
+      "Start the consumer"
+    ]
+  },
+  {
+    "id": "ex-73e235gg",
+    "version": 1,
+    "section": "reprocessing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In blue-green reprocessing, why does the new version get its own `group.id`?",
+    "choices": [
+      {
+        "text": "Kafka allows one program per group",
+        "correct": false,
+        "why": "A group can have many members running the same program; that is not the reason."
+      },
+      {
+        "text": "To start from the oldest message, old group untouched",
+        "correct": true,
+        "why": "Right: new group, no committed offsets, the old one untouched."
+      },
+      {
+        "text": "So that it reads faster",
+        "correct": false,
+        "why": "Speed comes from instances and partitions, not from the name."
+      },
+      {
+        "text": "To write to a different topic",
+        "correct": false,
+        "why": "The output topic is a separate choice; the group decides where reading starts."
+      }
+    ]
+  },
+  {
+    "id": "ex-0zkqv20z",
+    "version": 1,
+    "section": "reprocessing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `stock-v2` read the whole topic, `sales.dlq` held the bad sale twice. What does that show?",
+    "choices": [
+      {
+        "text": "The dead-letter producer has a bug",
+        "correct": false,
+        "why": "It did what it was told, once per version."
+      },
+      {
+        "text": "The old group was not deleted in time",
+        "correct": false,
+        "why": "Deleting the group removes offsets; it does not stop the new version's writes."
+      },
+      {
+        "text": "A side effect happens again when a new version reprocesses",
+        "correct": true,
+        "why": "Right: anything written outside the group's own output repeats."
+      },
+      {
+        "text": "Kafka duplicated a message on disk",
+        "correct": false,
+        "why": "Two writes produced two messages; nothing was duplicated by the broker."
+      }
+    ]
+  },
+  {
+    "id": "ex-bnsh5wra",
+    "version": 1,
+    "section": "what-to-alert-on",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `kafka-topics.sh --describe --under-replicated-partitions` print on a healthy cluster?",
+    "choices": [
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right: an empty list is the healthy answer."
+      },
+      {
+        "text": "Every partition, with its leader",
+        "correct": false,
+        "why": "That is plain `--describe`; the option filters to the problem cases."
+      },
+      {
+        "text": "The word OK",
+        "correct": false,
+        "why": "It prints partitions or nothing; there is no status word."
+      },
+      {
+        "text": "The partitions with no leader",
+        "correct": false,
+        "why": "Those are `--unavailable-partitions`."
+      }
+    ]
+  },
+  {
+    "id": "ex-w79rjyha",
+    "version": 1,
+    "section": "what-to-alert-on",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is \"lag above 1000\" a poor alert for the stock consumer?",
+    "choices": [
+      {
+        "text": "Lag cannot go above 1000 on a topic with three partitions",
+        "correct": false,
+        "why": "Nothing caps lag except retention."
+      },
+      {
+        "text": "Kafka resets the lag every hour",
+        "correct": false,
+        "why": "Lag only falls when the consumer reads."
+      },
+      {
+        "text": "It needs a metrics system that does not exist",
+        "correct": false,
+        "why": "The number is easy to collect; the trouble is what it means."
+      },
+      {
+        "text": "It fires at every busy peak that drains on its own",
+        "correct": true,
+        "why": "Right: alert on lag in time and on sustained growth instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-rxdw9h2a",
+    "version": 1,
+    "section": "what-to-alert-on",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A consumer crashed at 01:00 and no sales arrive until 09:00. Which alert fires first?",
+    "choices": [
+      {
+        "text": "Lag growing for fifteen minutes",
+        "correct": false,
+        "why": "With no sales, the lag does not grow until nine."
+      },
+      {
+        "text": "A group with no members",
+        "correct": true,
+        "why": "Right: the absence is visible at once, traffic or not."
+      },
+      {
+        "text": "Under-replicated partitions",
+        "correct": false,
+        "why": "The brokers are fine; only a consumer stopped."
+      },
+      {
+        "text": "Free disk on a log volume",
+        "correct": false,
+        "why": "Nothing is being written, so the disk does not change."
+      }
+    ]
+  },
+  {
+    "id": "ex-w7txw188",
+    "version": 1,
+    "section": "what-to-alert-on",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these deserve an alarm that wakes somebody? Choose all that apply.",
+    "choices": [
+      {
+        "text": "An offline partition",
+        "correct": true,
+        "why": "Yes: writes and reads to it are failing now."
+      },
+      {
+        "text": "Lag in time above what the output promises",
+        "correct": true,
+        "why": "Yes: the promise is already broken."
+      },
+      {
+        "text": "Bytes in per second higher than yesterday",
+        "correct": false,
+        "why": "That is a dashboard number; nobody has to act on it."
+      },
+      {
+        "text": "A rebalance when a consumer is deployed",
+        "correct": false,
+        "why": "Deploys rebalance by design."
+      },
+      {
+        "text": "Free space running out on a log volume",
+        "correct": true,
+        "why": "Yes: a full disk stops writes and does not recover by itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-he46zcq9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Monday 10:00: the stock page is three hours stale, the lag of `stock` has grown all morning, and its consumer prints a `MAXPOLL` warning every few seconds. What is the first thing to look at?",
+    "choices": [
+      {
+        "text": "Why one record takes longer than the poll interval",
+        "correct": true,
+        "why": "Right: that loop is the cause; the lag is the symptom."
+      },
+      {
+        "text": "Whether the topic has enough retention",
+        "correct": false,
+        "why": "Retention decides how far back you can replay, not why the consumer is slow."
+      },
+      {
+        "text": "Reset the group to the latest offset",
+        "correct": false,
+        "why": "That hides the lag by skipping three hours of stock changes."
+      },
+      {
+        "text": "Add brokers to the cluster",
+        "correct": false,
+        "why": "The brokers are not the slow part; the consumer is."
+      }
+    ]
+  },
+  {
+    "id": "ex-t9qyk87k",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the blue-green reprocessing steps in order.",
+    "items": [
+      "Start the new version under a new group, writing to its own output",
+      "Wait until its lag reaches zero",
+      "Compare its output with the old one",
+      "Switch the readers to the new output",
+      "Delete the old group"
+    ]
+  },
+  {
+    "id": "ex-596hqm0r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A dead-letter topic has received 40 messages since Friday and nobody has looked. What has the platform effectively done with those 40 sales?",
+    "choices": [
+      {
+        "text": "Processed them later, automatically",
+        "correct": false,
+        "why": "Nothing reads a dead-letter topic unless somebody makes it."
+      },
+      {
+        "text": "Dropped them, more slowly",
+        "correct": true,
+        "why": "Right: a dead-letter topic nobody reads is a slower way of losing data."
+      },
+      {
+        "text": "Kept them in order with the other sales",
+        "correct": false,
+        "why": "Moving a message aside gives up its order."
+      },
+      {
+        "text": "Retried each one until it succeeded",
+        "correct": false,
+        "why": "The consumer moved on; nothing retries dead letters."
+      }
+    ]
+  }
+]

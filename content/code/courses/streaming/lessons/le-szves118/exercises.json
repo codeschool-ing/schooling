@@ -1,0 +1,640 @@
+[
+  {
+    "id": "ex-3hagj0kg",
+    "version": 1,
+    "section": "why-windows",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can a stream processor not simply report total sales?",
+    "choices": [
+      {
+        "text": "The total changes with every sale, and sales never stop",
+        "correct": true,
+        "why": "Right. Any aggregate over a stream has to be asked over a slice of it."
+      },
+      {
+        "text": "Kafka deletes old sales",
+        "correct": false,
+        "why": "Retention is a separate matter; even with every sale kept, the total never stops moving."
+      },
+      {
+        "text": "Adding money in cents overflows after enough sales",
+        "correct": false,
+        "why": "Integers in Python do not overflow, and that is not the problem windows solve."
+      },
+      {
+        "text": "A total needs the sales sorted, and a stream is out of order",
+        "correct": false,
+        "why": "A sum does not care about order; it cares about where the period ends."
+      }
+    ]
+  },
+  {
+    "id": "ex-dxxmx8pm",
+    "version": 1,
+    "section": "why-windows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 2's stock per book is a running total over every sale ever. Why does that one not need a window?",
+    "choices": [
+      {
+        "text": "Stock is small enough to keep in memory",
+        "correct": false,
+        "why": "Size is not the point; a window is about which events count."
+      },
+      {
+        "text": "Stock is measured in units, not cents",
+        "correct": false,
+        "why": "The unit has nothing to do with whether a period is involved."
+      },
+      {
+        "text": "Kafka keeps the stock topic compacted",
+        "correct": false,
+        "why": "Compaction is about storage; the question has no period whether compacted or not."
+      },
+      {
+        "text": "The question names no stretch of time",
+        "correct": true,
+        "why": "Right. Stock is every sale so far; 'sales this morning' names a period and needs a window."
+      }
+    ]
+  },
+  {
+    "id": "ex-gd1x3pz9",
+    "version": 1,
+    "section": "why-windows",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these questions need a window? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Sales in Recife in the last ten minutes",
+        "correct": true,
+        "why": "Yes: it names a stretch of time."
+      },
+      {
+        "text": "How long each customer's visit to the website lasted",
+        "correct": true,
+        "why": "Yes: a session window, whose length the events decide."
+      },
+      {
+        "text": "How many copies of bk-04 are left in stock",
+        "correct": false,
+        "why": "State folded from every sale, with no period in it."
+      },
+      {
+        "text": "Sales per hour this morning, per shop",
+        "correct": true,
+        "why": "Yes: tumbling windows of an hour, keyed by shop."
+      },
+      {
+        "text": "The current price of bk-02",
+        "correct": false,
+        "why": "The latest value per key, which is state rather than an aggregate over a period."
+      }
+    ]
+  },
+  {
+    "id": "ex-gxa008ec",
+    "version": 1,
+    "section": "tumbling",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With five-minute tumbling windows over the ten sales, how many sales are in the window from 09:10 to 09:15?",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "sales"
+  },
+  {
+    "id": "ex-vsm2gqv0",
+    "version": 1,
+    "section": "tumbling",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With 15-minute tumbling windows, a sale happens at 10:37:20. How many minutes after 10:00 does its window start?",
+    "hint": "Round down to a multiple of the size.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-gjnm6yt8",
+    "version": 1,
+    "section": "tumbling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With five-minute tumbling windows, sale 4 happened at exactly 09:05:00. Which window holds it?",
+    "choices": [
+      {
+        "text": "09:00 to 09:05, because its end is 09:05:00",
+        "correct": false,
+        "why": "The end is excluded; otherwise the sale would be in two windows."
+      },
+      {
+        "text": "09:05 to 09:10, which starts there",
+        "correct": true,
+        "why": "Right. A window includes its start and excludes its end."
+      },
+      {
+        "text": "Both, since it is on the edge",
+        "correct": false,
+        "why": "Then the four windows would add up to eleven sales, not ten."
+      },
+      {
+        "text": "Neither: an engine drops events on an edge",
+        "correct": false,
+        "why": "Half-open intervals exist precisely so that no event falls through."
+      }
+    ]
+  },
+  {
+    "id": "ex-e86qmtfw",
+    "version": 1,
+    "section": "tumbling",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A tumbling window `[09:00, 09:05)` includes its start and excludes its ___.",
+    "blanks": [
+      {
+        "accept": [
+          "end"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wtwcqsct",
+    "version": 1,
+    "section": "tumbling",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Tumbling windows of 10 minutes over the ten sales: how many windows does the program create?",
+    "hint": "09:00 to 09:10, 09:10 to 09:20, 09:20 to 09:30: which ones have a sale?",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "windows"
+  },
+  {
+    "id": "ex-7ybvmmmd",
+    "version": 1,
+    "section": "hopping",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A hopping window has size 60 minutes and advance 15 minutes. How many windows is each event in?",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "windows"
+  },
+  {
+    "id": "ex-h4g5w6bg",
+    "version": 1,
+    "section": "hopping",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With hopping windows of 10 minutes every 5 over the ten sales, how many sales are in the window from 09:05 to 09:15?",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "sales"
+  },
+  {
+    "id": "ex-sr484hyg",
+    "version": 1,
+    "section": "hopping",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Hopping windows of 30 minutes every 10 start at 08:00, 08:10, 08:20 and so on. An event happens at 09:17. How many minutes after 08:00 does the EARLIEST window holding it start?",
+    "hint": "It must start at or before 09:17 and end after it.",
+    "value": 50,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-ga283ptf",
+    "version": 1,
+    "section": "hopping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The six hopping windows of 10 minutes every 5 hold 3, 6, 6, 3, 1 and 1 sales: twenty in all, from ten sales. What does that mean for a report?",
+    "choices": [
+      {
+        "text": "Ten of the sales were duplicates that should be removed",
+        "correct": false,
+        "why": "No sale is duplicated in the topic; each is counted in two overlapping windows."
+      },
+      {
+        "text": "Its rows must not be added together",
+        "correct": true,
+        "why": "Right. Each sale is in two windows, so a sum counts it twice."
+      },
+      {
+        "text": "The hopping windows are wrong and tumbling ones should be used",
+        "correct": false,
+        "why": "They are right for the question they answer; they are just not summable."
+      },
+      {
+        "text": "The report should divide each count by the advance",
+        "correct": false,
+        "why": "Dividing changes the numbers' meaning; the fix is not to sum overlapping windows."
+      }
+    ]
+  },
+  {
+    "id": "ex-0bf4bc2f",
+    "version": 1,
+    "section": "hopping",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Flink job uses `SlidingEventTimeWindows.of(10 minutes, 5 minutes)`. In this course's vocabulary, what window is it?",
+    "choices": [
+      {
+        "text": "A sliding window, defined by the time between events",
+        "correct": false,
+        "why": "That is Kafka Streams' meaning of sliding; Flink's has a size and a slide."
+      },
+      {
+        "text": "A session window with a five-minute gap",
+        "correct": false,
+        "why": "A session has no fixed size; this one has ten minutes."
+      },
+      {
+        "text": "A tumbling window of five minutes",
+        "correct": false,
+        "why": "Tumbling windows do not overlap; these do."
+      },
+      {
+        "text": "Hopping, size 10 and advance 5",
+        "correct": true,
+        "why": "Right. Flink and Spark say sliding for what Kafka Streams calls hopping."
+      }
+    ]
+  },
+  {
+    "id": "ex-51ac272b",
+    "version": 1,
+    "section": "sliding",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Sales at 09:00, 09:03, 09:05, 09:09 and 09:10. In a Kafka Streams sliding window of 5 minutes, both edges included, how many sales are in the window ending at 09:10?",
+    "hint": "From 09:05 to 09:10, and 09:05 is inside.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "sales"
+  },
+  {
+    "id": "ex-5qv15kda",
+    "version": 1,
+    "section": "sliding",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Same sales, 09:00, 09:03, 09:05, 09:09 and 09:10, and a 5-minute sliding window with both edges included. What is the most sales in any one window?",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "sales"
+  },
+  {
+    "id": "ex-fdajtpbm",
+    "version": 1,
+    "section": "sliding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a sliding window answer \"the most sales in any five minutes\" where hopping windows only come close?",
+    "choices": [
+      {
+        "text": "Its windows are placed where events enter or leave, not on the clock's marks",
+        "correct": true,
+        "why": "Right. Only those moments can change what is in the last five minutes."
+      },
+      {
+        "text": "It uses processing time, which has no gaps between one window and the next one",
+        "correct": false,
+        "why": "Every window in this lesson is on event time."
+      },
+      {
+        "text": "It keeps every event for ever",
+        "correct": false,
+        "why": "It keeps events for the window's size, like the others."
+      },
+      {
+        "text": "Hopping windows exclude both of their edges",
+        "correct": false,
+        "why": "They include their start; the gap is in where they start."
+      }
+    ]
+  },
+  {
+    "id": "ex-rjam0qgx",
+    "version": 1,
+    "section": "session",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Events, in time order, at 09:00, 09:03, 09:09, 09:12 and 09:20. With a session gap of 5 minutes, how many sessions are there?",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "sessions"
+  },
+  {
+    "id": "ex-f01jrzqg",
+    "version": 1,
+    "section": "session",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After those five events, a late one arrives that happened at 09:06. With the same 5-minute gap, how many sessions are there now?",
+    "hint": "It is within five minutes of 09:03 and of 09:09.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "sessions"
+  },
+  {
+    "id": "ex-1msbbvab",
+    "version": 1,
+    "section": "session",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A session's last event is at 09:21:00 and the gap is five minutes. When can the session be closed, at the earliest, by event time?",
+    "choices": [
+      {
+        "text": "09:21:00, at its last event",
+        "correct": false,
+        "why": "Another event up to five minutes later would still join it."
+      },
+      {
+        "text": "09:26:00, five minutes after it",
+        "correct": true,
+        "why": "Right. Only once the gap has passed with nothing in it, which is why Flink ends the window at last plus gap."
+      },
+      {
+        "text": "09:30:00, at the next five-minute mark",
+        "correct": false,
+        "why": "Sessions do not follow the clock's marks."
+      },
+      {
+        "text": "Never, since a late event can always merge it",
+        "correct": false,
+        "why": "Some decision is always made, or state grows for ever; lesson 11 makes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ybfz5yvp",
+    "version": 1,
+    "section": "session",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what happens to the sessions (gap 5 minutes) in order, as the sales arrive.",
+    "items": [
+      "Sales 1 to 5 build one session ending at 09:06:20",
+      "Sale 6, at 09:12:30, is too far away and starts a second session",
+      "Sale 7 extends the second session",
+      "Sale 8, from 09:08:50, arrives near both",
+      "The two sessions become one of nine sales"
+    ]
+  },
+  {
+    "id": "ex-zf63dzxh",
+    "version": 1,
+    "section": "keyed-windows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why can keyed windows by shop run on several workers without them talking to each other?",
+    "choices": [
+      {
+        "text": "Each worker keeps a copy of every shop's windows",
+        "correct": false,
+        "why": "That would be the opposite: every worker would need every event."
+      },
+      {
+        "text": "The windows of different shops have different edges",
+        "correct": false,
+        "why": "Tumbling edges come from the clock and are the same for every shop."
+      },
+      {
+        "text": "Sales keyed by shop put each shop in one partition, read by one worker",
+        "correct": true,
+        "why": "Right. All of a key's events, and so all of its windows, live in one place."
+      },
+      {
+        "text": "Kafka computes the windows on the broker",
+        "correct": false,
+        "why": "The broker stores; windows are computed by the processor."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ffp0jq4",
+    "version": 1,
+    "section": "keyed-windows",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two hundred customers, each with hopping windows of 60 minutes every 15. How many windows are open at any moment, at most, across all customers?",
+    "hint": "Keys times windows open per key.",
+    "value": 800,
+    "tolerance": 0,
+    "unit": "windows"
+  },
+  {
+    "id": "ex-4egv91bz",
+    "version": 1,
+    "section": "keyed-windows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Over the whole stream, sale 8 joins two sessions into one. Per shop, it joins nothing. Why?",
+    "choices": [
+      {
+        "text": "Per shop, the late sale is dropped",
+        "correct": false,
+        "why": "It is in Natal's session, which has three sales."
+      },
+      {
+        "text": "Within Natal, it just continues a session of Natal's own sales",
+        "correct": true,
+        "why": "Right. The two sessions it bridged were made of other shops' sales."
+      },
+      {
+        "text": "Keyed sessions use a longer gap",
+        "correct": false,
+        "why": "The gap is the same five minutes."
+      },
+      {
+        "text": "Keys sort the sales into event order first",
+        "correct": false,
+        "why": "Arrival order is the same; what changes is which sales are compared."
+      }
+    ]
+  },
+  {
+    "id": "ex-6rey6jvy",
+    "version": 1,
+    "section": "emitting-results",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A processor emits a window's result on every update, and the output goes into a database table. What must the writer do?",
+    "choices": [
+      {
+        "text": "Insert every line as a new row",
+        "correct": false,
+        "why": "Then the 09:05 window appears three times, once per update."
+      },
+      {
+        "text": "Ignore every line after the first for each window",
+        "correct": false,
+        "why": "The first is the least complete; later lines correct it."
+      },
+      {
+        "text": "Wait for the stream to end before writing",
+        "correct": false,
+        "why": "A stream does not end."
+      },
+      {
+        "text": "Upsert, keyed by the window",
+        "correct": true,
+        "why": "Right. Each update replaces the previous one for that window."
+      }
+    ]
+  },
+  {
+    "id": "ex-m94rv887",
+    "version": 1,
+    "section": "emitting-results",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A processor emits each window once, when it decides the window is final. Sale 8 arrives after that decision for 09:05 to 09:10. What happens to it?",
+    "choices": [
+      {
+        "text": "It is dropped, or handled somewhere separate",
+        "correct": true,
+        "why": "Right. Emit-once has no row to correct, so a late event goes elsewhere or nowhere."
+      },
+      {
+        "text": "It is added to the window and the window is emitted again",
+        "correct": false,
+        "why": "That is emit-on-update; the reader of an emit-once stream treats rows as final."
+      },
+      {
+        "text": "It is counted in the next window, 09:10 to 09:15",
+        "correct": false,
+        "why": "Its event time belongs to 09:05 to 09:10; moving it would be counting by arrival."
+      },
+      {
+        "text": "The processor stops until it is resolved",
+        "correct": false,
+        "why": "Nothing stops; the policy decides."
+      }
+    ]
+  },
+  {
+    "id": "ex-0346gh5q",
+    "version": 1,
+    "section": "emitting-results",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to the window that fits it.",
+    "pairs": [
+      {
+        "left": "Sales per hour, to add up for the day",
+        "right": "tumbling"
+      },
+      {
+        "left": "Sales in the last ten minutes, refreshed every five",
+        "right": "hopping"
+      },
+      {
+        "left": "Was a card used twice within ten minutes",
+        "right": "sliding"
+      },
+      {
+        "left": "How long each visit to the website lasted",
+        "right": "session"
+      }
+    ],
+    "right_distractors": [
+      "running total"
+    ]
+  },
+  {
+    "id": "ex-emag7gr1",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Order these windows by how many windows ONE event belongs to, fewest first.",
+    "items": [
+      "tumbling, 10 minutes",
+      "hopping, 10 minutes every 5",
+      "hopping, 10 minutes every 2",
+      "hopping, 10 minutes every minute"
+    ]
+  },
+  {
+    "id": "ex-jz4dpz5c",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Five-minute tumbling windows, keyed by shop, over the ten sales: how many rows does the output have, not counting shop names?",
+    "hint": "Natal's two sales from 09:05 to 09:10 share a row.",
+    "value": 9,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-9jqysjm9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ponto Final wants \"the busiest five minutes of the day in each shop\". Which window, keyed by shop, gives the exact answer?",
+    "choices": [
+      {
+        "text": "Tumbling, five minutes",
+        "correct": false,
+        "why": "A busy stretch across an edge is split in two."
+      },
+      {
+        "text": "Hopping, five minutes every minute",
+        "correct": false,
+        "why": "Close, but a burst starting at 09:01:20 fits no window exactly."
+      },
+      {
+        "text": "Session, with a five-minute gap",
+        "correct": false,
+        "why": "A session can be much longer than five minutes."
+      },
+      {
+        "text": "Sliding, of five minutes",
+        "correct": true,
+        "why": "Right. Its windows sit where sales enter and leave, so the maximum is exact."
+      }
+    ]
+  }
+]

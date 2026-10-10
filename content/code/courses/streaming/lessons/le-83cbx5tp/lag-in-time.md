@@ -57,11 +57,14 @@ Run it in the first shell while the tills from the last section are still sellin
 
 ```
 ubuntu@stream:~/work$ python lag_seconds.py stock
+partition 0: 54 messages behind, the oldest written 11 s ago
+partition 1: 182 messages behind, the oldest written 12 s ago
+partition 2: 0 messages behind
 ```
 
 Put it beside the group tool's output just before it and the two agree on the count, give or take
 the sales that arrived in between. What the second number adds is that **the two partitions are
-behind by very different counts and by the same time**. The consumer takes messages from both as
+behind by very different counts and by about the same time**. The consumer takes messages from both as
 they come, so the oldest waiting message in each was written at about the same moment; partition 1
 simply receives more shops. A dashboard that summed the counts would say partition 1 is the problem.
 The time says the whole consumer is.
@@ -70,6 +73,9 @@ Once the consumer has caught up, the same program has nothing waiting to read:
 
 ```
 ubuntu@stream:~/work$ python lag_seconds.py stock
+partition 0: 0 messages behind
+partition 1: 0 messages behind
+partition 2: 0 messages behind
 ```
 
 ## Which one to put on a screen

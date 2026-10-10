@@ -65,6 +65,7 @@ term2 good 'python slow_consumer.py --group audit --delay 0.5 --max-poll 6000' 6
 block audit-bad
 shown 'python slow_consumer.py --group audit --delay 8 --max-poll 6000'
 term2 bad 'python slow_consumer.py --group audit --delay 8 --max-poll 6000' 30
+block audit-bad-screen
 stop2 bad
 block audit-good-screen
 stop2 good

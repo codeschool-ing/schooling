@@ -1,0 +1,449 @@
+{
+  "ex-e050epty": {
+    "prompt": "O que acontece com uma mensagem numa fila depois que o consumidor dela confirma?",
+    "choices": [
+      {
+        "text": "Ela é apagada",
+        "why": "Isso. O tamanho da fila é o trabalho ainda por fazer."
+      },
+      {
+        "text": "Ela vai para o fim da fila, para o próximo consumidor",
+        "why": "Isso entregaria de novo um trabalho terminado."
+      },
+      {
+        "text": "Ela fica, e o offset do consumidor passa dela",
+        "why": "Isso é um log; uma fila não guarda offset."
+      },
+      {
+        "text": "Ela é copiada para todos os outros consumidores da fila",
+        "why": "Consumidores concorrentes recebem mensagens diferentes."
+      }
+    ]
+  },
+  "ex-jymztkm4": {
+    "prompt": "Um sistema novo de fidelidade quer as vendas do mês passado. De onde ele as tiraria, se a Ponto Final as tivesse posto numa fila do RabbitMQ em vez do Kafka?",
+    "choices": [
+      {
+        "text": "Da fila, voltando ao início do mês",
+        "why": "Uma fila não tem offset para voltar."
+      },
+      {
+        "text": "De uma exchange fanout ligada a uma fila nova",
+        "why": "Uma fila nova recebe só o que for publicado daqui em diante."
+      },
+      {
+        "text": "Não do broker: mensagens confirmadas foram apagadas",
+        "why": "Isso. Uma fila não tem replay."
+      },
+      {
+        "text": "Da fila de dead-letter, que guarda uma cópia de toda mensagem",
+        "why": "Ela guarda só o que foi abandonado."
+      }
+    ]
+  },
+  "ex-e6h7dp5v": {
+    "prompt": "Um quarto embalador entra na hora mais movimentada. O que uma fila faz que um tópico Kafka com três partições e três consumidores não faria?",
+    "choices": [
+      {
+        "text": "Dá trabalho a ele na hora, sem nada para planejar",
+        "why": "Isso. No grupo, um quarto membro além de três partições fica parado (lição 4)."
+      },
+      {
+        "text": "Rebalanceia as partições para que os quatro dividam as que já existem",
+        "why": "É o que o Kafka tenta, e com três partições um membro fica sem nenhuma."
+      },
+      {
+        "text": "Copia todo pedido também para o embalador novo, para ele ver o que os outros fizeram",
+        "why": "Consumidores concorrentes nunca recebem a mesma mensagem."
+      },
+      {
+        "text": "Dobra a vazão dos outros três",
+        "why": "Acrescenta a capacidade de um embalador, nada mais."
+      }
+    ]
+  },
+  "ex-x8xwc625": {
+    "prompt": "Por que a lição chama o moto de emulador?",
+    "choices": [
+      {
+        "text": "É a edição local oficial de SQS e SNS da AWS, mantida pela Amazon",
+        "why": "É uma biblioteca independente, não da Amazon."
+      },
+      {
+        "text": "Imita as APIs da AWS; tempos e limites são dele",
+        "why": "Isso. Nada medido nele diz algo sobre o serviço da Amazon."
+      },
+      {
+        "text": "Repassa cada requisição à AWS com chaves falsas",
+        "why": "Nada nesta lição fala com a AWS."
+      },
+      {
+        "text": "Roda o RabbitMQ com nomes de SQS",
+        "why": "É uma implementação própria em Python."
+      }
+    ]
+  },
+  "ex-9ttvn25x": {
+    "prompt": "O pika conecta no RabbitMQ como `guest`. Por que isso serve neste laboratório e não num servidor compartilhado?",
+    "choices": [
+      {
+        "text": "`guest` não tem senha, e o laboratório não tem rede",
+        "why": "A senha dele é `guest`, e a restrição é sobre de onde ele conecta."
+      },
+      {
+        "text": "`guest` só pode ler",
+        "why": "Ele pode publicar e consumir, como os programas fazem."
+      },
+      {
+        "text": "`guest` só conecta a partir do localhost, sua única proteção",
+        "why": "Isso. Um servidor acessível ganha usuários próprios e apaga o guest."
+      },
+      {
+        "text": "O pika criptografa a senha",
+        "why": "O ponto é quem alcança o servidor, não criptografia."
+      }
+    ]
+  },
+  "ex-884ryt3d": {
+    "prompt": "Um programa publica na exchange `\"\"` com routing key `packing`. Para onde vai a mensagem?",
+    "choices": [
+      {
+        "text": "Para lugar nenhum, porque a exchange não tem nome",
+        "why": "O nome vazio é a exchange padrão, que existe."
+      },
+      {
+        "text": "Para todas as filas do servidor",
+        "why": "Isso seria um fanout, e só para filas ligadas."
+      },
+      {
+        "text": "Para a fila chamada `packing`",
+        "why": "Isso. A exchange padrão roteia pelo nome da fila."
+      },
+      {
+        "text": "Para uma fila nova que o RabbitMQ cria com um nome aleatório",
+        "why": "A exchange padrão nunca cria filas."
+      }
+    ]
+  },
+  "ex-c7g98wq6": {
+    "prompt": "A Bia embalou o `web-0004` e caiu antes do `basic_ack`. O que aconteceu com o pedido?",
+    "choices": [
+      {
+        "text": "Ele se perdeu com o processo dela",
+        "why": "O servidor ainda o guardava como não confirmado."
+      },
+      {
+        "text": "A Ana o recebeu, marcado como reentregue, e ele foi embalado duas vezes",
+        "why": "Isso. Pelo menos uma vez: nada perdido, algo feito duas vezes."
+      },
+      {
+        "text": "Ele esperou no servidor até o processo da Bia voltar para terminá-lo",
+        "why": "O servidor o entrega a qualquer consumidor quando a conexão fecha."
+      },
+      {
+        "text": "Ele foi para a fila de dead-letter",
+        "why": "Uma queda não é rejeição; ele voltou para a fila."
+      }
+    ]
+  },
+  "ex-fvqx5r1w": {
+    "prompt": "O que `basic_qos(prefetch_count=1)` muda para um embalador lento?",
+    "choices": [
+      {
+        "text": "Ele segura no máximo um pedido não confirmado por vez",
+        "why": "Isso. O resto fica livre para quem estiver ocioso."
+      },
+      {
+        "text": "Faz o servidor esperar um segundo entre as entregas para ele",
+        "why": "Limita quantas ficam pendentes, não o ritmo."
+      },
+      {
+        "text": "Confirma cada mensagem automaticamente depois de um segundo",
+        "why": "Confirmar continua sendo trabalho do programa."
+      },
+      {
+        "text": "Deixa só um embalador conectar na fila",
+        "why": "A Ana e a Bia estavam conectadas."
+      }
+    ]
+  },
+  "ex-szjv23j0": {
+    "prompt": "Uma fila é declarada `durable=True`, mas as mensagens são publicadas sem modo de entrega persistente. O servidor reinicia. O que há na fila?",
+    "choices": [
+      {
+        "text": "Todas as mensagens, porque a fila é durável",
+        "why": "A durabilidade da fila cobre a fila, não as mensagens."
+      },
+      {
+        "text": "Nada, e a própria fila também sumiu",
+        "why": "A fila durável volta."
+      },
+      {
+        "text": "Só as mensagens que tinham sido confirmadas antes do reinício",
+        "why": "Mensagens confirmadas já tinham sido apagadas."
+      },
+      {
+        "text": "A fila, vazia",
+        "why": "Isso. O RabbitMQ precisa dos dois: fila durável e mensagens persistentes."
+      }
+    ]
+  },
+  "ex-q8jt1dkd": {
+    "prompt": "Ligue cada tipo de exchange a quando uma fila ligada recebe a mensagem.",
+    "pairs": [
+      {
+        "left": "direct",
+        "right": "a chave do binding é igual à routing key"
+      },
+      {
+        "left": "topic",
+        "right": "o padrão do binding casa com a routing key palavra por palavra"
+      },
+      {
+        "left": "fanout",
+        "right": "sempre, qualquer que seja a routing key"
+      }
+    ],
+    "right_distractors": [
+      "só quando a fila não tem consumidor"
+    ]
+  },
+  "ex-zaftkpmc": {
+    "prompt": "No `rabbit_routes.py`, quantas das filas ligadas à `pf.topic` receberam `sale.recife`?",
+    "unit": "filas"
+  },
+  "ex-k74wqkpm": {
+    "prompt": "`natal` foi publicado na exchange direct, e nenhum binding dizia `natal`. O que aconteceu?",
+    "choices": [
+      {
+        "text": "Esperou na exchange até uma fila compatível ser ligada",
+        "why": "Exchanges não guardam nada."
+      },
+      {
+        "text": "Foi descartado, e o publicador não foi avisado",
+        "why": "Isso. `mandatory=True` e publisher confirms são como o produtor fica sabendo."
+      },
+      {
+        "text": "Foi para a `recife-only`, a única fila ligada àquela exchange",
+        "why": "Uma exchange direct compara chaves; `natal` não é `recife`."
+      },
+      {
+        "text": "`basic_publish` lançou uma exceção",
+        "why": "Retornou normalmente; essa é a armadilha."
+      }
+    ]
+  },
+  "ex-21mz6pd7": {
+    "prompt": "Numa exchange topic, o padrão de binding `*.recife` casa com `refund.recife` porque `*` vale exatamente uma ___.",
+    "blanks": [
+      {
+        "accept": [
+          "palavra"
+        ]
+      }
+    ]
+  },
+  "ex-ce7p18f9": {
+    "prompt": "Um embalador rejeita uma mensagem com `requeue=False` numa fila que tem exchange de dead-letter. Para onde vai a mensagem?",
+    "choices": [
+      {
+        "text": "De volta ao começo da mesma fila",
+        "why": "Isso é `requeue=True`, e o laço sem fim."
+      },
+      {
+        "text": "Republicada, marcada `rejected`, para ser recolhida em outro lugar",
+        "why": "Isso. E uma fila ligada lá a recolhe."
+      },
+      {
+        "text": "Ela é apagada, como uma confirmação a apagaria",
+        "why": "Sem exchange de dead-letter seria; com uma, ela é republicada."
+      },
+      {
+        "text": "Para os outros consumidores, uma cópia para cada",
+        "why": "Nada numa fila é copiado para vários consumidores."
+      }
+    ]
+  },
+  "ex-pmxjq1ba": {
+    "prompt": "Ligue cada motivo do `x-death` ao que aconteceu com a mensagem.",
+    "pairs": [
+      {
+        "left": "rejected",
+        "right": "um consumidor a rejeitou sem devolver à fila"
+      },
+      {
+        "left": "expired",
+        "right": "ela esperou mais que o TTL"
+      },
+      {
+        "left": "maxlen",
+        "right": "a fila estava cheia e ela era a mais antiga"
+      }
+    ],
+    "right_distractors": [
+      "a conexão do consumidor dela fechou"
+    ]
+  },
+  "ex-62f3db0e": {
+    "prompt": "Os pedidos de uma fila de embalagem ganham um TTL de dez minutos sem exchange de dead-letter. O que dá errado no dia mais movimentado?",
+    "choices": [
+      {
+        "text": "A fila recusa pedidos novos depois de dez minutos de acúmulo",
+        "why": "Um TTL expira mensagens; não as recusa."
+      },
+      {
+        "text": "Os pedidos são reentregues a cada dez minutos para outro embalador",
+        "why": "Expirar remove; não reentrega."
+      },
+      {
+        "text": "Pedidos que esperam demais são apagados, sem aviso",
+        "why": "Isso. Um pedido que esperou ainda precisa ser embalado."
+      },
+      {
+        "text": "Nada: TTL só vale para mensagens não confirmadas",
+        "why": "Vale para mensagens esperando na fila."
+      }
+    ]
+  },
+  "ex-k054bd0y": {
+    "prompt": "Um consumidor de SQS recebe uma mensagem e cai sem apagá-la. Quando outro consumidor pode recebê-la?",
+    "choices": [
+      {
+        "text": "Na hora, porque a conexão fechou",
+        "why": "O SQS não tem conexão para observar; ele usa um relógio."
+      },
+      {
+        "text": "Depois do visibility timeout",
+        "why": "Isso. Na demonstração, nada na hora e a mensagem de novo depois de 6 segundos."
+      },
+      {
+        "text": "Nunca: uma mensagem do SQS é entregue exatamente uma vez",
+        "why": "Uma fila padrão é pelo menos uma vez."
+      },
+      {
+        "text": "Quando um operador a devolve à mão",
+        "why": "Ela volta sozinha."
+      }
+    ]
+  },
+  "ex-xs4w3qgc": {
+    "prompt": "Embalar um pedido leva 40 segundos e o visibility timeout da fila é 30. Nada cai. O que você vê?",
+    "choices": [
+      {
+        "text": "Todo pedido processado duas vezes",
+        "why": "Isso. A mensagem reaparece enquanto o primeiro embalador ainda trabalha."
+      },
+      {
+        "text": "Pedidos falhando com erro de timeout",
+        "why": "Nada dá erro; a mensagem só fica visível de novo."
+      },
+      {
+        "text": "Pedidos indo para a fila de dead-letter depois de 30 segundos",
+        "why": "Uma redrive policy conta recebimentos, não segundos, e nenhuma foi definida."
+      },
+      {
+        "text": "Comportamento correto, já que o SQS estende o timeout dos consumidores lentos automaticamente",
+        "why": "Ele não estende nada a menos que o consumidor peça."
+      }
+    ]
+  },
+  "ex-1k9ejh6v": {
+    "prompt": "Na demonstração FIFO, três mensagens foram enviadas e duas tinham o mesmo id de deduplicação. Quantas foram recebidas?",
+    "unit": "mensagens"
+  },
+  "ex-1dp0dmdt": {
+    "prompt": "SNS mais uma fila SQS por leitor equivale a quê no RabbitMQ?",
+    "choices": [
+      {
+        "text": "Uma exchange fanout com uma fila ligada para cada leitor",
+        "why": "Isso, e com o mesmo limite: nenhuma cópia do passado."
+      },
+      {
+        "text": "A exchange padrão",
+        "why": "Ela entrega a uma fila, pelo nome."
+      },
+      {
+        "text": "Uma exchange de dead-letter",
+        "why": "Ela recolhe o que foi abandonado."
+      },
+      {
+        "text": "Um stream do RabbitMQ lido do offset zero por todo leitor",
+        "why": "Isso daria replay, que o SNS não dá."
+      }
+    ]
+  },
+  "ex-z3z772xs": {
+    "prompt": "Cada mensagem pede uma nota fiscal em PDF que leva até dois minutos para gerar. Por que a seção puxa para uma fila?",
+    "choices": [
+      {
+        "text": "O Kafka não carrega mensagens que pedem PDF",
+        "why": "Ele carrega qualquer coisa; o problema é o progresso."
+      },
+      {
+        "text": "Uma mensagem lenta segura um worker, não tudo atrás dela numa partição",
+        "why": "Isso. Uma fila confirma por mensagem."
+      },
+      {
+        "text": "Uma fila gera PDFs mais rápido",
+        "why": "O broker não gera nada."
+      },
+      {
+        "text": "Filas guardam mensagens por mais tempo que logs",
+        "why": "O contrário."
+      }
+    ]
+  },
+  "ex-14xgah80": {
+    "prompt": "A carga do warehouse precisa reconstruir as vendas de um dia depois de um bug, e a equipe de embalagem precisa de uma tarefa por venda enviada. Que arranjo a seção descreve?",
+    "choices": [
+      {
+        "text": "Vendas numa fila, e o warehouse lê os dead letters",
+        "why": "Dead letters são falhas, não um histórico."
+      },
+      {
+        "text": "Tudo no Kafka, com os embaladores como um consumer group lendo o tópico de vendas",
+        "why": "Possível, mas tarefas lentas seguram partições; a seção mantém a embalagem numa fila."
+      },
+      {
+        "text": "Tudo no RabbitMQ, com um fanout por leitor",
+        "why": "Um fanout não dá replay, e o warehouse precisa."
+      },
+      {
+        "text": "Vendas no Kafka; um consumidor pequeno põe as tarefas de embalagem numa fila do RabbitMQ",
+        "why": "Isso. O log para o que aconteceu, a fila para o que é preciso fazer."
+      }
+    ]
+  },
+  "ex-b0fhdgyx": {
+    "prompt": "Ponha em ordem a vida de uma mensagem numa fila de trabalho do RabbitMQ.",
+    "items": [
+      "O produtor a publica numa exchange",
+      "A exchange a roteia para a fila",
+      "O servidor a entrega a um consumidor livre",
+      "O consumidor faz o trabalho",
+      "O consumidor a confirma",
+      "O servidor a apaga"
+    ]
+  },
+  "ex-gfy9w0hq": {
+    "prompt": "A Ponto Final quer que todo sistema consiga reconstruir os números de estoque a partir de todas as vendas do ano passado. Qual das ferramentas que esta lição roda serve para isso?",
+    "choices": [
+      {
+        "text": "Uma fila FIFO do SQS, porque mantém a ordem",
+        "why": "A ordem é mantida, mas mensagens entregues são apagadas."
+      },
+      {
+        "text": "Nenhuma: isso é trabalho de um log, com retenção suficiente",
+        "why": "Isso. Replay é justamente o que as filas abrem mão."
+      },
+      {
+        "text": "SNS, porque todo assinante recebe uma cópia",
+        "why": "Só do que é publicado depois que ele assina."
+      },
+      {
+        "text": "Uma fila do RabbitMQ com TTL longo",
+        "why": "O TTL limita quanto uma mensagem espera; uma leitura ainda a apaga."
+      }
+    ]
+  }
+}

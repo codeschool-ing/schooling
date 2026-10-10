@@ -1,0 +1,774 @@
+[
+  {
+    "id": "ex-ng9bmwfh",
+    "version": 1,
+    "section": "the-dual-write",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The website commits an `UPDATE` to `stock` and then crashes before sending the event to Kafka. What state is the system left in?",
+    "choices": [
+      {
+        "text": "The table and the topic disagree, and nothing will repair it",
+        "correct": true,
+        "why": "Right. Nothing remembers that a send was owed, so nothing retries."
+      },
+      {
+        "text": "PostgreSQL rolls the update back because Kafka never confirmed",
+        "correct": false,
+        "why": "Kafka is not part of PostgreSQL's transaction; the commit stands."
+      },
+      {
+        "text": "The producer sends the event when the program restarts",
+        "correct": false,
+        "why": "The event was never handed to the client, so there is nothing to resend."
+      },
+      {
+        "text": "Kafka holds the event in a pending state until the database confirms",
+        "correct": false,
+        "why": "The event never reached Kafka at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-em8abwwp",
+    "version": 1,
+    "section": "the-dual-write",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague moves the `produce` call inside the database transaction, just before `COMMIT`. Why does the dual write still fail?",
+    "choices": [
+      {
+        "text": "Kafka refuses messages sent from inside a transaction",
+        "correct": false,
+        "why": "Kafka has no idea a database transaction is open."
+      },
+      {
+        "text": "The send succeeds, and then the commit fails",
+        "correct": true,
+        "why": "Right. Kafka is not part of PostgreSQL's transaction, so that is the Kafka-first failure again."
+      },
+      {
+        "text": "Holding a transaction open while sending makes the event arrive out of order with other events of the same row",
+        "correct": false,
+        "why": "Order is not the problem the section names; the problem is two writes with no shared transaction."
+      },
+      {
+        "text": "A Kafka transaction around the send would fix it",
+        "correct": false,
+        "why": "Kafka transactions cover topics, and a database is not a topic."
+      }
+    ]
+  },
+  {
+    "id": "ex-zfbcn0fd",
+    "version": 1,
+    "section": "the-dual-write",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each approach to what makes the second write.",
+    "pairs": [
+      {
+        "left": "the outbox",
+        "right": "a relay that reads an events table written in the same transaction"
+      },
+      {
+        "left": "change data capture",
+        "right": "a reader of the database's write-ahead log"
+      },
+      {
+        "left": "the dual write",
+        "right": "the same program, straight after the database write"
+      }
+    ],
+    "right_distractors": [
+      "the broker, from a transaction it shares with PostgreSQL"
+    ]
+  },
+  {
+    "id": "ex-6eewarme",
+    "version": 1,
+    "section": "the-dual-write",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ponto Final's finance team wants each stock change to say which customer reserved the book. Why might CDC on `stock` alone not give them that?",
+    "choices": [
+      {
+        "text": "Debezium removes personal data from every event before writing it",
+        "correct": false,
+        "why": "Debezium copies the row as it is; it does not filter columns by itself."
+      },
+      {
+        "text": "Change events only carry the primary key of the row, never its other columns",
+        "correct": false,
+        "why": "`after` carries the whole new row."
+      },
+      {
+        "text": "The table never held the customer, so its row changes cannot carry it",
+        "correct": true,
+        "why": "Right. CDC events are row changes, not business facts; an outbox row can carry the fact."
+      },
+      {
+        "text": "Updates are not captured, only inserts",
+        "correct": false,
+        "why": "Updates are captured, with `op` `u`."
+      }
+    ]
+  },
+  {
+    "id": "ex-5jgsvtw7",
+    "version": 1,
+    "section": "logical-decoding",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a replication slot?",
+    "choices": [
+      {
+        "text": "A copy of the database kept on a second server",
+        "correct": false,
+        "why": "That is a replica; the slot is only a position."
+      },
+      {
+        "text": "A named WAL position kept for one reader",
+        "correct": true,
+        "why": "Right. It is the database's version of a committed offset."
+      },
+      {
+        "text": "The list of tables whose changes are sent",
+        "correct": false,
+        "why": "That is the publication."
+      },
+      {
+        "text": "The plugin that turns WAL records into rows",
+        "correct": false,
+        "why": "That is the output plugin, `pgoutput` here."
+      }
+    ]
+  },
+  {
+    "id": "ex-91wmkspa",
+    "version": 1,
+    "section": "logical-decoding",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each piece of logical decoding to its name in this lesson.",
+    "pairs": [
+      {
+        "left": "the output plugin",
+        "right": "pgoutput"
+      },
+      {
+        "left": "the publication",
+        "right": "ponto_final"
+      },
+      {
+        "left": "the replication slot",
+        "right": "debezium_stock"
+      },
+      {
+        "left": "the server setting",
+        "right": "wal_level = logical"
+      }
+    ],
+    "right_distractors": [
+      "test_decoding"
+    ]
+  },
+  {
+    "id": "ex-38gbqf3q",
+    "version": 1,
+    "section": "logical-decoding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Kafka and PostgreSQL both keep a reader's position. Where do they behave in opposite ways?",
+    "choices": [
+      {
+        "text": "Kafka deletes old data by retention whether or not it was read; PostgreSQL keeps WAL until the slot confirms it",
+        "correct": true,
+        "why": "Right. That is why a stopped slot can fill the database's disk."
+      },
+      {
+        "text": "Kafka keeps positions in memory, PostgreSQL on disk",
+        "correct": false,
+        "why": "Committed offsets are stored durably, in `__consumer_offsets`."
+      },
+      {
+        "text": "PostgreSQL lets several readers share one slot",
+        "correct": false,
+        "why": "A slot serves one reader; that is what `active` tells you."
+      },
+      {
+        "text": "Kafka positions are bytes, PostgreSQL's are message numbers",
+        "correct": false,
+        "why": "The reverse: an offset counts messages, an LSN is a byte position."
+      }
+    ]
+  },
+  {
+    "id": "ex-y54bn729",
+    "version": 1,
+    "section": "logical-decoding",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A position in PostgreSQL's WAL, written like `0/1A2B3C8`, is called an ___.",
+    "blanks": [
+      {
+        "accept": [
+          "LSN",
+          "log sequence number"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-t2jt79g5",
+    "version": 1,
+    "section": "logical-decoding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson create the publication by hand instead of letting Debezium create one for every table?",
+    "choices": [
+      {
+        "text": "Debezium cannot create publications when the plugin is pgoutput rather than test_decoding",
+        "correct": false,
+        "why": "It can; `publication.autocreate.mode` controls it."
+      },
+      {
+        "text": "A publication for every table would slow down every write the database makes",
+        "correct": false,
+        "why": "The argument in the section is about what leaves the database, not speed."
+      },
+      {
+        "text": "So the CDC user reads only the two tables that leave",
+        "correct": true,
+        "why": "Right. Naming the tables decides what goes to the broker."
+      },
+      {
+        "text": "Kafka Connect refuses to start without a publication",
+        "correct": false,
+        "why": "Debezium would create one; the choice is about privilege."
+      }
+    ]
+  },
+  {
+    "id": "ex-0mfmg1mt",
+    "version": 1,
+    "section": "installing-debezium",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson restart PostgreSQL after writing `wal_level = logical`?",
+    "choices": [
+      {
+        "text": "It is only read at start-up",
+        "correct": true,
+        "why": "Right. Unlike many settings, it cannot be reloaded."
+      },
+      {
+        "text": "Installing Debezium needs PostgreSQL down",
+        "correct": false,
+        "why": "Debezium is a Connect plugin; installing it touches only files."
+      },
+      {
+        "text": "To clear the WAL the server wrote before",
+        "correct": false,
+        "why": "A restart does not discard WAL."
+      },
+      {
+        "text": "The `conf.d` directory is read once a day",
+        "correct": false,
+        "why": "It is read at start-up and on reload, like the main file."
+      }
+    ]
+  },
+  {
+    "id": "ex-we9r2t0x",
+    "version": 1,
+    "section": "installing-debezium",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is `plugin.path` in Connect's configuration for?",
+    "choices": [
+      {
+        "text": "It is where Connect writes the offsets of each connector",
+        "correct": false,
+        "why": "That is `offset.storage.file.filename`."
+      },
+      {
+        "text": "It tells PostgreSQL which output plugin to load",
+        "correct": false,
+        "why": "That is the connector's `plugin.name`, and PostgreSQL ships pgoutput itself."
+      },
+      {
+        "text": "It lists the topics the connector may write to",
+        "correct": false,
+        "why": "Topic names come from `topic.prefix` and the tables."
+      },
+      {
+        "text": "The directories Connect loads plugins from",
+        "correct": true,
+        "why": "Right. Each plugin gets its own class loader."
+      }
+    ]
+  },
+  {
+    "id": "ex-q5q4k264",
+    "version": 1,
+    "section": "a-connector",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Debezium names the topic for the `stock` table `pf.public.stock`. Where does each part come from?",
+    "choices": [
+      {
+        "text": "Publication, database, table",
+        "correct": false,
+        "why": "The publication is `ponto_final`; it does not appear in the name."
+      },
+      {
+        "text": "Slot, schema, table",
+        "correct": false,
+        "why": "The slot is `debezium_stock`; it does not appear in the name."
+      },
+      {
+        "text": "Prefix, schema, table",
+        "correct": true,
+        "why": "Right: `topic.prefix`, then the schema, then the table."
+      },
+      {
+        "text": "Connector name, schema, table",
+        "correct": false,
+        "why": "The connector is called `stock`, not `pf`."
+      }
+    ]
+  },
+  {
+    "id": "ex-850bb5k8",
+    "version": 1,
+    "section": "a-connector",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A table with no primary key is added to the publication. What does Debezium lose for it, per the section?",
+    "choices": [
+      {
+        "text": "The snapshot, which needs a primary key to read the rows of a table one by one, in order",
+        "correct": false,
+        "why": "A snapshot reads rows with a plain SELECT."
+      },
+      {
+        "text": "A message key that keeps all changes to one row in one partition, in order",
+        "correct": true,
+        "why": "Right. The primary key becomes the Kafka key."
+      },
+      {
+        "text": "The ability to write JSON",
+        "correct": false,
+        "why": "The converter does not depend on the key."
+      },
+      {
+        "text": "Its topic, which is never created",
+        "correct": false,
+        "why": "The topic name comes from the table, key or not."
+      }
+    ]
+  },
+  {
+    "id": "ex-kz2xpsk2",
+    "version": 1,
+    "section": "a-connector",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`stock.sql` puts every book in every shop. How many rows does `stock` hold before any change?",
+    "value": 40,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-q8brwxrr",
+    "version": 1,
+    "section": "a-connector",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`curl localhost:8083/connectors/stock/status` shows `FAILED`. Where does the section tell you to look first?",
+    "choices": [
+      {
+        "text": "In `pg_replication_slots`",
+        "correct": false,
+        "why": "A failed connector may never have created its slot."
+      },
+      {
+        "text": "In its `trace` field",
+        "correct": true,
+        "why": "Right. It holds the Java exception."
+      },
+      {
+        "text": "In the `connect.offsets` file",
+        "correct": false,
+        "why": "That only holds positions."
+      },
+      {
+        "text": "In `kafka-topics.sh --list`",
+        "correct": false,
+        "why": "Missing topics are a symptom, not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-p7fge4ag",
+    "version": 1,
+    "section": "a-change-event",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The first messages in `pf.public.stock` have `op` set to `r`. What are they?",
+    "choices": [
+      {
+        "text": "Rows that a transaction rolled back before it committed",
+        "correct": false,
+        "why": "A rolled-back change never reaches the topic."
+      },
+      {
+        "text": "Replays of messages the connector had already sent once",
+        "correct": false,
+        "why": "Nothing had been sent before the snapshot."
+      },
+      {
+        "text": "Snapshot reads of existing rows",
+        "correct": true,
+        "why": "Right. `r` is a snapshot read."
+      },
+      {
+        "text": "Reads made by a consumer",
+        "correct": false,
+        "why": "Consumers do not write to the topic."
+      }
+    ]
+  },
+  {
+    "id": "ex-cyhhbvrv",
+    "version": 1,
+    "section": "a-change-event",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each value of `op` to what happened.",
+    "pairs": [
+      {
+        "left": "r",
+        "right": "a row read by the snapshot"
+      },
+      {
+        "left": "c",
+        "right": "an insert"
+      },
+      {
+        "left": "u",
+        "right": "an update"
+      },
+      {
+        "left": "d",
+        "right": "a delete"
+      }
+    ],
+    "right_distractors": [
+      "a rollback"
+    ]
+  },
+  {
+    "id": "ex-9y0v7y6r",
+    "version": 1,
+    "section": "a-change-event",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An event's `source.ts_ms` and its top-level `ts_ms` are three minutes apart. What does that tell you?",
+    "choices": [
+      {
+        "text": "The database's clock is three minutes wrong",
+        "correct": false,
+        "why": "Possible in theory, but the two fields measure two different moments."
+      },
+      {
+        "text": "Debezium processed the change three minutes after the database made it",
+        "correct": true,
+        "why": "Right. Event time against processing time: the connector is running behind."
+      },
+      {
+        "text": "The message took three minutes to travel from the broker to the consumer that read it",
+        "correct": false,
+        "why": "Neither field is written by the consumer."
+      },
+      {
+        "text": "The transaction stayed open for three minutes",
+        "correct": false,
+        "why": "Neither field records when the transaction began."
+      }
+    ]
+  },
+  {
+    "id": "ex-256j18j4",
+    "version": 1,
+    "section": "a-change-event",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `numeric` price column arrives on the topic as a short string of odd letters. What is the likely cause?",
+    "choices": [
+      {
+        "text": "The JSON converter has `schemas.enable=false` set on the worker",
+        "correct": false,
+        "why": "That removes the schema, not the encoding of decimals."
+      },
+      {
+        "text": "The column is corrupt in PostgreSQL",
+        "correct": false,
+        "why": "`psql` would show the price normally."
+      },
+      {
+        "text": "Debezium's exact decimal encoding, as bytes",
+        "correct": true,
+        "why": "Right. `decimal.handling.mode` changes it; integer cents avoid it."
+      },
+      {
+        "text": "The publication excludes the price column from the event",
+        "correct": false,
+        "why": "An excluded column would be missing, not garbled."
+      }
+    ]
+  },
+  {
+    "id": "ex-1nemd4cr",
+    "version": 1,
+    "section": "updates-and-deletes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the default replica identity, the update event for Recife's `bk-02` had `before: null`. Why?",
+    "choices": [
+      {
+        "text": "The WAL kept only the new row",
+        "correct": true,
+        "why": "Right. DEFAULT logs the key only when it changes, or on a delete."
+      },
+      {
+        "text": "Debezium drops `before` to save space in Kafka",
+        "correct": false,
+        "why": "With FULL, the same connector fills `before` in."
+      },
+      {
+        "text": "The JSON converter cannot write two copies of a row",
+        "correct": false,
+        "why": "The delete event's `before` shows it can."
+      },
+      {
+        "text": "`before` is only filled in on inserts",
+        "correct": false,
+        "why": "An insert has no before at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-cfsbgt3g",
+    "version": 1,
+    "section": "updates-and-deletes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A consumer sums `before.qty` over delete events to count copies taken out of the shops. With `REPLICA IDENTITY DEFAULT`, what does it get?",
+    "choices": [
+      {
+        "text": "The right total, because a delete always writes the whole old row into the WAL first",
+        "correct": false,
+        "why": "Only the key is logged; `qty` is a placeholder."
+      },
+      {
+        "text": "An error, because `before` is `null` on deletes",
+        "correct": false,
+        "why": "`before` is there on a delete, with the key."
+      },
+      {
+        "text": "Zero, silently: the WAL kept only the key and `qty` is a placeholder",
+        "correct": true,
+        "why": "Right. The Natal delete showed `qty` 0 for a row that held 3."
+      },
+      {
+        "text": "Twice the right total, because of the tombstone",
+        "correct": false,
+        "why": "The tombstone's value is `null`; it has no `before`."
+      }
+    ]
+  },
+  {
+    "id": "ex-9w78tz17",
+    "version": 1,
+    "section": "updates-and-deletes",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A message with a key and a `null` value, which tells compaction to drop that key, is called a ___.",
+    "blanks": [
+      {
+        "accept": [
+          "tombstone"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zbefd13g",
+    "version": 1,
+    "section": "the-slot-holds-wal",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Connect is stopped and the database keeps working. What happens to the WAL from the slot's position onwards?",
+    "choices": [
+      {
+        "text": "PostgreSQL keeps all of it until the slot confirms",
+        "correct": true,
+        "why": "Right. That is the slot's promise, and its danger."
+      },
+      {
+        "text": "It is deleted after a checkpoint, as usual",
+        "correct": false,
+        "why": "A slot stops exactly that removal."
+      },
+      {
+        "text": "Only the WAL of `books` and `stock` is kept, and the rest is recycled",
+        "correct": false,
+        "why": "The WAL is one stream for the whole server; the notes table's bytes were kept too."
+      },
+      {
+        "text": "It is sent straight to Kafka by PostgreSQL, without Debezium in between",
+        "correct": false,
+        "why": "Nothing reads the slot while Connect is down."
+      }
+    ]
+  },
+  {
+    "id": "ex-np909c1n",
+    "version": 1,
+    "section": "the-slot-holds-wal",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You set `max_slot_wal_keep_size` to 50GB and the connector is down for a week. What is the trade you made?",
+    "choices": [
+      {
+        "text": "None: the connector catches up later from the copy of the changes that Kafka keeps",
+        "correct": false,
+        "why": "The changes it missed were never in Kafka."
+      },
+      {
+        "text": "The database's disk is protected, and the connector must take a new snapshot",
+        "correct": true,
+        "why": "Right. The slot is marked lost past the limit."
+      },
+      {
+        "text": "The database stops accepting writes as soon as the WAL reaches 50GB on disk",
+        "correct": false,
+        "why": "It stops keeping WAL for the slot, not taking writes."
+      },
+      {
+        "text": "Kafka's retention is lowered to match",
+        "correct": false,
+        "why": "The setting is PostgreSQL's alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-v8m6fd1w",
+    "version": 1,
+    "section": "the-slot-holds-wal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The published tables change once a day, other tables write all night, and Connect is running. Why can retained WAL still grow?",
+    "choices": [
+      {
+        "text": "Connect only reads the slot once a day, when the published tables change",
+        "correct": false,
+        "why": "It reads continuously; there is just nothing for it to confirm."
+      },
+      {
+        "text": "The other tables are captured too",
+        "correct": false,
+        "why": "They are not in the publication."
+      },
+      {
+        "text": "The slot only moves when a change to its tables is confirmed",
+        "correct": true,
+        "why": "Right. `heartbeat.interval.ms` makes Debezium confirm on a timer."
+      },
+      {
+        "text": "pgoutput keeps a copy of every table",
+        "correct": false,
+        "why": "pgoutput decodes; it keeps nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-e0g5kj8w",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of this lesson's CDC setup in order.",
+    "items": [
+      "Set `wal_level = logical` and restart PostgreSQL",
+      "Unpack the Debezium plugin into ~/connect-plugins",
+      "Create the roles, the database and the tables",
+      "Create the publication for books and stock",
+      "Start connect-standalone.sh with both property files",
+      "Read the snapshot events from the topic"
+    ]
+  },
+  {
+    "id": "ex-2fhqqcn6",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A connector was retired last month and its slot was left behind. The database's disk alert fires. What is the right fix?",
+    "choices": [
+      {
+        "text": "Restart PostgreSQL so it forgets the slot",
+        "correct": false,
+        "why": "A slot survives a restart; that is its point."
+      },
+      {
+        "text": "Lower Kafka's retention on the CDC topics",
+        "correct": false,
+        "why": "The WAL is on the database's disk, not the broker's."
+      },
+      {
+        "text": "Drop the slot with `pg_drop_replication_slot`",
+        "correct": true,
+        "why": "Right. A slot nobody will read again is a leftover."
+      },
+      {
+        "text": "Set REPLICA IDENTITY FULL on every table",
+        "correct": false,
+        "why": "That makes more WAL, not less."
+      }
+    ]
+  }
+]

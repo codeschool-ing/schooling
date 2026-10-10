@@ -31,12 +31,27 @@ under `stock-v2`, starts from the beginning of `sales`:
 
 ```
 ubuntu@stream:~/work$ python sturdy_consumer.py --group stock-v2 --dead-letter sales.dlq
+dead letter: sales/2/0 JSONDecodeError('Expecting value: line 1 column 1 (char 0)')
+630 sales, 1042 books, 1 dead letters
 ```
 
 The cluster now knows every group this lesson made, and the new one is at the end of the topic:
 
 ```
 ubuntu@stream:~/work$ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --list
+console-consumer-64613
+audit
+stock-count
+stock-v2
+stock
+ubuntu@stream:~/work$ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group stock-v2
+
+Consumer group 'stock-v2' has no active members.
+
+GROUP           TOPIC           PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID     HOST            CLIENT-ID
+stock-v2        sales           0          139             139             0               -               -               -
+stock-v2        sales           1          491             491             0               -               -               -
+stock-v2        sales           2          1               1               0               -               -               -
 ```
 
 Once the readers have moved to the new output, the old group is only a set of committed offsets
@@ -45,6 +60,7 @@ from it by accident later. A group can be deleted only when no member is running
 
 ```
 ubuntu@stream:~/work$ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --delete --group stock-count
+Deletion of requested consumer groups ('stock-count') was successful.
 ```
 
 ## What reprocessing costs
