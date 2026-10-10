@@ -92,7 +92,7 @@ O `copies` foi de 12 para 11, e o `5: "A3"` continua lá.
 ## Por que um número nunca é reaproveitado
 
 Suponha que alguém, mais tarde, queira um `location` com um número menor e escolha o 2, porque está
-livre. Todo cliente ainda no primeiro `stock.proto` leria a localização como o **título**: os bytes
+livre. Todo cliente ainda no primeiro `stock.proto` leria a localização como o **título**, porque os bytes
 de uma string no campo 2 são exatamente o que ele espera, então ele imprimiria `A3` onde deveria
 estar o nome de um livro, e nada em lugar nenhum acusaria erro. O `reserved` é o que impede isso, e o
 `protoc` recusa o arquivo:

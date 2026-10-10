@@ -92,7 +92,7 @@ ana@api:~/shelf$ python3 -c 'import sys, stock_pb2; m = stock_pb2.StockLevel.Fro
 ## Why a number is never reused
 
 Suppose somebody later wants a `location` with a smaller number and picks 2, because it is free. Every
-client still on the first `stock.proto` would read the location as the **title**: the bytes for a
+client still on the first `stock.proto` would read the location as the **title**, because the bytes for a
 string in field 2 are exactly what it expects, so it would print `A3` where a book's name should be,
 and nothing anywhere would report an error. `reserved` is what stops it, and `protoc` refuses the
 file:
