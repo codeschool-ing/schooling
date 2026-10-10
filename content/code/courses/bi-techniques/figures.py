@@ -593,6 +593,112 @@ def l03_forecasts(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 4
+
+def month_ticks(p, first, last, lang, months=(1, 4, 7, 10)):
+    f = p.f
+    f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim', width=1.2)
+    for d in pd.date_range(first, last, freq='MS'):
+        if d.month in months:
+            x = p.sx((d - first).days)
+            f.line(x, p.y1, x, p.y1 + 4, stroke='--paper-dim', width=1)
+            f.text(x, p.y1 + 14, f"{MONTHS[lang][d.month - 1]} {d.year}", size=9.5, fill='--paper-dim')
+
+
+@figure('l04-horizon', 4)
+def l04_horizon(lang):
+    from statsmodels.tsa.holtwinters import ExponentialSmoothing
+    w = daily().resample('W-SUN').sum()['2023-01-08':'2025-12-28']
+    train, test = w[:'2024-12-29'], w['2025-01-05':]
+    straight = ExponentialSmoothing(train, trend='add', seasonal='mul', seasonal_periods=52).fit()
+    damped = ExponentialSmoothing(train, trend='add', damped_trend=True, seasonal='mul',
+                                  seasonal_periods=52).fit()
+    first = pd.Timestamp('2024-10-06')
+    show = w[first:]
+    t = {'en': dict(
+        label='Weekly orders from October 2024 to December 2025, with two forecasts made at the end '
+              'of 2024 for all of 2025: one with a straight trend and one with a damped trend. Both '
+              'follow the actual weeks until August. After the price rise of September the actual '
+              'weeks drop and both forecasts stay high, the straight one furthest away.',
+        y='orders per week', act='actual', st='straight trend', dm='damped trend',
+        rise='prices rise',
+        cap='The same model, a week ahead and a year ahead. For six months the forecast is close; '
+            'then the business changes, and the further the horizon reaches, the more of the '
+            'change it misses.'),
+        'pt': dict(
+        label='Pedidos semanais de outubro de 2024 a dezembro de 2025, com duas previsões feitas no '
+              'fim de 2024 para todo 2025: uma com tendência reta e outra com tendência amortecida. '
+              'As duas seguem as semanas reais até agosto. Depois do aumento de preço de setembro as '
+              'semanas reais caem e as duas previsões ficam altas, a reta mais longe.',
+        y='pedidos por semana', act='real', st='tendência reta', dm='tendência amortecida',
+        rise='preços sobem',
+        cap='O mesmo modelo, uma semana à frente e um ano à frente. Por seis meses a previsão fica '
+            'perto; depois o negócio muda, e quanto mais longe o horizonte chega, mais da mudança '
+            'ele perde.')}[lang]
+    f = Fig('l04-horizon', 640, 310, t['label'])
+    p = Plot(f, 70, 40, 620, 240, 0, (show.index[-1] - first).days, 6000, 14000)
+    p.yaxis(range(6000, 14001, 2000), fmt=lambda v: num(lang, v, 0), label=t['y'])
+    month_ticks(p, first, show.index[-1], lang)
+    xs = lambda idx: [(d - first).days for d in idx]
+    series(p, xs(show.index), show.values, stroke='--paper', width=1.6)
+    series(p, xs(test.index), straight.forecast(len(test)).values, stroke='--phosphor', width=1.8, dash='5 3')
+    series(p, xs(test.index), damped.forecast(len(test)).values, stroke='--amber', width=1.8, dash='2 3')
+    rx = p.sx((pd.Timestamp('2025-09-01') - first).days)
+    f.line(rx, p.y0, rx, p.y1, stroke='--wire', width=1.2, dash='3 3')
+    f.text(rx - 4, p.y0 + 4, t['rise'], size=9.5, anchor='end', fill='--paper-dim')
+    for i, (lab, col, dash) in enumerate([(t['act'], '--paper', None), (t['st'], '--phosphor', '5 3'),
+                                          (t['dm'], '--amber', '2 3')]):
+        x0 = 90 + i * 170
+        f.line(x0, 288, x0 + 24, 288, stroke=col, width=1.8, dash=dash)
+        f.text(x0 + 30, 288, lab, size=10, anchor='start')
+    return f, t['cap']
+
+
+@figure('l04-band', 4)
+def l04_band(lang):
+    from statsmodels.tsa.statespace.sarimax import SARIMAX
+    w = daily().resample('W-SUN').sum()['2023-01-08':'2025-12-28']
+    train, test = w[:'2024-12-29'], w['2025-01-05':'2025-06-29']
+    fc = SARIMAX(train, order=(1, 0, 1), seasonal_order=(0, 1, 0, 52), trend='c').fit(disp=False) \
+        .get_forecast(len(test))
+    lo, hi = fc.conf_int(alpha=0.2).T.values
+    first = test.index[0]
+    out = int(((test.values < lo) | (test.values > hi)).sum())
+    t = {'en': dict(
+        label=f'The 26 weeks from January to June 2025: a shaded 80% prediction interval around the '
+              f'seasonal ARIMA forecast, and the actual weeks as dots. {out} of the 26 dots fall '
+              f'outside the band, most of them below it, between January and April.',
+        y='orders per week', inside='inside the 80% interval', outside='outside it',
+        cap='An 80% interval should miss about one week in five. This one missed '
+            f'{out} of 26: the model\'s claim about its own uncertainty was too modest.'),
+        'pt': dict(
+        label=f'As 26 semanas de janeiro a junho de 2025: um intervalo de previsão de 80% sombreado '
+              f'em volta da previsão do ARIMA sazonal, e as semanas reais como pontos. {out} dos 26 '
+              f'pontos caem fora da faixa, a maioria abaixo dela, entre janeiro e abril.',
+        y='pedidos por semana', inside='dentro do intervalo de 80%', outside='fora dele',
+        cap='Um intervalo de 80% deveria errar cerca de uma semana em cinco. Este errou '
+            f'{out} de 26: o que o modelo dizia da própria incerteza era modesto demais.')}[lang]
+    f = Fig('l04-band', 640, 300, t['label'])
+    p = Plot(f, 70, 40, 620, 230, -3, (test.index[-1] - first).days + 3, 7000, 12000)
+    p.yaxis(range(7000, 12001, 1000), fmt=lambda v: num(lang, v, 0), label=t['y'])
+    month_ticks(p, first, test.index[-1], lang, months=range(1, 13))
+    xs = [(d - first).days for d in test.index]
+    d = 'M' + ' L'.join(f'{p.sx(x):.1f} {p.sy(v):.1f}' for x, v in zip(xs, hi))
+    d += ' L' + ' L'.join(f'{p.sx(x):.1f} {p.sy(v):.1f}' for x, v in zip(reversed(xs), reversed(lo))) + ' Z'
+    f.path(d, stroke=None, width=0, fill='--scan')
+    series(p, xs, fc.predicted_mean.values, stroke='--phosphor', width=1.6)
+    for x, v, a, b in zip(xs, test.values, lo, hi):
+        if a <= v <= b:
+            f.circle(p.sx(x), p.sy(v), 3.5, fill='--paper-dim')
+        else:
+            f.circle(p.sx(x), p.sy(v), 4, fill='--amber')
+    f.circle(90, 278, 3.5, fill='--paper-dim')
+    f.text(100, 278, t['inside'], size=10, anchor='start')
+    f.circle(330, 278, 4, fill='--amber')
+    f.text(340, 278, t['outside'], size=10, anchor='start')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
