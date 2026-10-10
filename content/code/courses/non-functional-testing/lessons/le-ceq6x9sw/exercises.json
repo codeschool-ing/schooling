@@ -1,0 +1,529 @@
+[
+ {
+  "id": "ex-e9tzykfp",
+  "version": 1,
+  "section": "install",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Why does running a k6 script need no Node.js and no `npm install`?",
+  "hint": "What kind of program is k6?",
+  "choices": [
+   {
+    "text": "k6 downloads Node.js the first time a script is run",
+    "correct": false,
+    "why": "Nothing is downloaded; the one file from the archive is the whole tool."
+   },
+   {
+    "text": "The scripts are compiled to Go before k6 runs them",
+    "correct": false,
+    "why": "The JavaScript is interpreted inside k6; it is not translated into Go source."
+   },
+   {
+    "text": "k6 is one Go program with a JavaScript engine of its own inside",
+    "correct": true,
+    "why": "Right. The script runs inside k6 itself, so the archive's single file is everything."
+   },
+   {
+    "text": "Ubuntu 24.04 ships a JavaScript runtime in its base",
+    "correct": false,
+    "why": "The base packages of lesson 1 hold no JavaScript runtime, and k6 would not use one."
+   }
+  ]
+ },
+ {
+  "id": "ex-g5xhwsxh",
+  "version": 1,
+  "section": "install",
+  "type": "numeric",
+  "difficulty": "medium",
+  "prompt": "Five looping virtual users each send one request and then sleep for 1 s. If every answer took 250 ms, how many requests a second would the five of them send in total?",
+  "hint": "One iteration lasts the answer plus the sleep.",
+  "value": 4,
+  "tolerance": 0.05,
+  "unit": "requests/s",
+  "drillable": true
+ },
+ {
+  "id": "ex-gkage1wq",
+  "version": 1,
+  "section": "install",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does `-q` change in `k6 run -q k6/first.js`?",
+  "hint": "Compare a run with and without it.",
+  "choices": [
+   {
+    "text": "It hides the logo and the progress line that k6 redraws while it runs",
+    "correct": true,
+    "why": "Right. The end-of-test summary is the same with and without it."
+   },
+   {
+    "text": "It shortens the summary to the thresholds and the checks, leaving out the rest",
+    "correct": false,
+    "why": "The summary keeps every line; only what is printed during the run goes."
+   },
+   {
+    "text": "It turns off the checks to make the run quicker",
+    "correct": false,
+    "why": "Checks run as usual; `-q` is about the terminal, not the test."
+   },
+   {
+    "text": "It runs the test in the background",
+    "correct": false,
+    "why": "The command still holds the terminal until the test ends."
+   }
+  ]
+ },
+ {
+  "id": "ex-jnyb3kr0",
+  "version": 1,
+  "section": "the-script",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A colleague puts `const shows = http.get(BASE + '/shows').json();` at the top level of the script, outside every function. What happens when the script is run?",
+  "hint": "Init code.",
+  "choices": [
+   {
+    "text": "It is sent once per iteration and counted in `http_reqs`",
+    "correct": false,
+    "why": "That would be the default function. The top level is init code."
+   },
+   {
+    "text": "k6 stops with an error before any load, and exits with 107",
+    "correct": true,
+    "why": "Right. Init code may not send requests; data needed before the load belongs in setup()."
+   },
+   {
+    "text": "It is sent once, by the first virtual user, and its answer is shared by all",
+    "correct": false,
+    "why": "Init code runs for every virtual user, and in any case k6 refuses a request there."
+   },
+   {
+    "text": "It is sent by each virtual user before the load, and left out of the summary",
+    "correct": false,
+    "why": "A reasonable guess about init code, but k6 refuses the request instead of sending it."
+   }
+  ]
+ },
+ {
+  "id": "ex-tjjtjdxy",
+  "version": 1,
+  "section": "the-script",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Why does the script add 409 to the expected statuses with `http.setResponseCallback`?",
+  "hint": "What does a 409 mean at the box office?",
+  "choices": [
+   {
+    "text": "A 409 is the seat being taken, a correct answer, and should not count as failed",
+    "correct": true,
+    "why": "Right. Left out, every refused seat would raise `http_req_failed` though nothing went wrong."
+   },
+   {
+    "text": "So that k6 retries the booking with another seat",
+    "correct": false,
+    "why": "k6 does not retry; the callback only decides what counts as a failure."
+   },
+   {
+    "text": "To make the 409 answers faster",
+    "correct": false,
+    "why": "The callback changes how answers are counted, not how the server answers."
+   },
+   {
+    "text": "Because k6 treats a 4xx answer as a crash of the script and stops the test",
+    "correct": false,
+    "why": "k6 counts an unexpected status in `http_req_failed` and carries on."
+   }
+  ]
+ },
+ {
+  "id": "ex-7wwvwk6f",
+  "version": 1,
+  "section": "the-script",
+  "type": "matching",
+  "difficulty": "medium",
+  "prompt": "Match each piece of a k6 scenario to what it decides.",
+  "hint": "The notes beside `options`.",
+  "pairs": [
+   {
+    "left": "constant-vus",
+    "right": "a fixed number of users, each looping as soon as it finishes"
+   },
+   {
+    "left": "constant-arrival-rate",
+    "right": "one rate of new iterations a second, held for a duration"
+   },
+   {
+    "left": "ramping-arrival-rate",
+    "right": "a rate of new iterations that moves through stages"
+   },
+   {
+    "left": "maxVUs",
+    "right": "how many users k6 may have busy before it drops iterations"
+   }
+  ],
+  "right_distractors": [
+   "how many times a failed request is retried"
+  ],
+  "drillable": true
+ },
+ {
+  "id": "ex-dnxn68bh",
+  "version": 1,
+  "section": "the-script",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The box office starts answering `GET /shows/{id}` with a 200 whose body has no `left` field. With the script as written, what does the run report?",
+  "hint": "Which of the two mechanisms is watching the body?",
+  "choices": [
+   {
+    "text": "`http_req_failed` rises above 1%, so the run ends with exit code 99",
+    "correct": false,
+    "why": "The status is 200, an expected one, so no request counts as failed."
+   },
+   {
+    "text": "A cross on `seats left is a number`, and the run exits 0",
+    "correct": true,
+    "why": "Right. A check counts the failure, and no threshold watches the checks."
+   },
+   {
+    "text": "k6 stops the scenario at the first wrong body and exits with 107",
+    "correct": false,
+    "why": "A check never stops anything; it is counted and the iteration carries on."
+   },
+   {
+    "text": "Nothing at all",
+    "correct": false,
+    "why": "The check does see it: it prints a cross with the count of failures."
+   }
+  ]
+ },
+ {
+  "id": "ex-a6v4ny8v",
+  "version": 1,
+  "section": "the-script",
+  "type": "cloze",
+  "difficulty": "easy",
+  "prompt": "In the threshold key `http_req_duration{name:booking}`, the part in braces keeps only the requests carrying that ___.",
+  "hint": "Set with `tags:` in the request's parameters.",
+  "blanks": [
+   {
+    "accept": [
+     "tag",
+     "tags"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ],
+  "drillable": true
+ },
+ {
+  "id": "ex-z2wz5rsp",
+  "version": 1,
+  "section": "the-script",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the browse request carry `tags: { name: 'show' }` when its address already says which show it asks for?",
+  "hint": "Twenty shows are on sale.",
+  "choices": [
+   {
+    "text": "Without a tag k6 leaves the request out of the summary and of every threshold",
+    "correct": false,
+    "why": "Untagged requests are counted like any other, under their address."
+   },
+   {
+    "text": "The tag sends the name to the server as a header",
+    "correct": false,
+    "why": "Tags stay inside k6; the server never sees them."
+   },
+   {
+    "text": "It names the step of the journey for whoever reads the script in a code review",
+    "correct": false,
+    "why": "`group('browse', …)` already does that; the tag has a job in the metrics."
+   },
+   {
+    "text": "The twenty addresses then count as one request for metrics and thresholds",
+    "correct": true,
+    "why": "Right. One name groups `/shows/981` to `/shows/1000` into one line instead of twenty."
+   }
+  ]
+ },
+ {
+  "id": "ex-hhpmajaj",
+  "version": 1,
+  "section": "thresholds",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "`k6 run` ends with `exit 99`. What does that code say?",
+  "hint": "The line just above it.",
+  "choices": [
+   {
+    "text": "The script has a syntax error",
+    "correct": false,
+    "why": "An error in the script stops k6 before the load, with another code: 107 in this lesson."
+   },
+   {
+    "text": "At least one threshold was crossed",
+    "correct": true,
+    "why": "Right. 99 is k6's code for crossed thresholds, whatever the other lines say."
+   },
+   {
+    "text": "A check failed in more than 1% of iterations",
+    "correct": false,
+    "why": "Checks do not set the exit code unless a threshold watches them."
+   },
+   {
+    "text": "The server stopped answering halfway",
+    "correct": false,
+    "why": "Refused connections would show in `http_req_failed`; 99 is about thresholds."
+   }
+  ]
+ },
+ {
+  "id": "ex-js2pngpc",
+  "version": 1,
+  "section": "thresholds",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the run at 30 journeys a second, `http_req_failed` was 0.00% and all 801 checks passed, yet the run failed. Why?",
+  "hint": "What did the box office do with each request?",
+  "choices": [
+   {
+    "text": "k6 counted the 409 answers as failures after all",
+    "correct": false,
+    "why": "Then `http_req_failed` would not be 0.00%."
+   },
+   {
+    "text": "Every answer was correct and late, and the time thresholds were crossed",
+    "correct": true,
+    "why": "Right. Slow is not an error, which is why the requirement carries a time threshold as well."
+   },
+   {
+    "text": "The 260 dropped iterations are counted as failed requests by the threshold",
+    "correct": false,
+    "why": "A dropped iteration sends nothing, so it adds no request to any metric of requests."
+   },
+   {
+    "text": "Checks that pass make k6 exit 99",
+    "correct": false,
+    "why": "Passing checks do nothing to the exit code."
+   }
+  ]
+ },
+ {
+  "id": "ex-s754wzc0",
+  "version": 1,
+  "section": "thresholds",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The summary of an arrival-rate run shows `dropped_iterations: 260`. What should you conclude before reading any percentile?",
+  "hint": "Who starts an iteration in that executor?",
+  "choices": [
+   {
+    "text": "260 requests failed and are left out of `http_req_failed`",
+    "correct": false,
+    "why": "Dropped iterations never sent a request, so there was nothing to fail."
+   },
+   {
+    "text": "The server refused 260 connections",
+    "correct": false,
+    "why": "The drops happen inside k6, which had no free virtual user to start them with."
+   },
+   {
+    "text": "The run applied less load than it was written for",
+    "correct": true,
+    "why": "Right. k6 ran out of virtual users, so the percentiles describe a lighter test."
+   },
+   {
+    "text": "260 iterations were retried after a timeout",
+    "correct": false,
+    "why": "k6 retries nothing; a dropped iteration simply never starts."
+   }
+  ]
+ },
+ {
+  "id": "ex-j72x731s",
+  "version": 1,
+  "section": "thresholds",
+  "type": "multiple-choice",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Which of these make `k6 run` end with a non-zero exit code? Choose every one that applies.",
+  "hint": "Which mechanisms decide the exit code?",
+  "choices": [
+   {
+    "text": "The 95th percentile of `http_req_duration` passes the limit in `thresholds`",
+    "correct": true,
+    "why": "Right. A crossed threshold is the exit code 99."
+   },
+   {
+    "text": "`checks: ['rate>0.99']` is in `thresholds`, and 5% of checks fail",
+    "correct": true,
+    "why": "Right. With a threshold on them, failed checks decide the result."
+   },
+   {
+    "text": "A check fails in 5% of iterations and no threshold mentions checks",
+    "correct": false,
+    "why": "Without a threshold, a failed check is a count in the summary and the exit code stays 0."
+   },
+   {
+    "text": "Some bookings answer 409, which the response callback lists as expected",
+    "correct": false,
+    "why": "An expected status is a success, so it moves no metric of failure."
+   }
+  ]
+ },
+ {
+  "id": "ex-nrheshwk",
+  "version": 1,
+  "section": "the-summary",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Why does the summary print a `{ name:booking }` line under `http_req_duration` but none for `{ name:show }`?",
+  "hint": "What in the script mentions `name:booking`?",
+  "choices": [
+   {
+    "text": "Only POST requests get a line of their own",
+    "correct": false,
+    "why": "The method has nothing to do with it; a threshold does."
+   },
+   {
+    "text": "A threshold names `name:booking`, and none names `name:show`",
+    "correct": true,
+    "why": "Right. k6 prints a tag's line when a threshold asks about it."
+   },
+   {
+    "text": "The show requests were too fast to measure apart",
+    "correct": false,
+    "why": "They were measured; nobody asked for them apart."
+   },
+   {
+    "text": "Groups hide the tags of the requests inside them",
+    "correct": false,
+    "why": "Groups and tags are separate, and the full summary shows both."
+   }
+  ]
+ },
+ {
+  "id": "ex-nan05ka2",
+  "version": 1,
+  "section": "the-summary",
+  "type": "ordering",
+  "difficulty": "medium",
+  "prompt": "Put the phases of one request over an open connection in the order they happen, as the full summary names them.",
+  "hint": "Write, wait, read.",
+  "items": [
+   "http_req_sending",
+   "http_req_waiting",
+   "http_req_receiving"
+  ],
+  "drillable": true
+ },
+ {
+  "id": "ex-xhsc72zk",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A new requirement reads: \"checkout completes within 2 s at the 95th percentile at 20 orders a second\". Which scenario tests it as written?",
+  "hint": "Is the load a number of people or a rate?",
+  "choices": [
+   {
+    "text": "`constant-vus` with 20 users, each sleeping one second between requests",
+    "correct": false,
+    "why": "That is about 20 a second only while answers are instant; as they slow, the rate falls."
+   },
+   {
+    "text": "`constant-arrival-rate` at 20 a second, with enough `maxVUs` that none is dropped",
+    "correct": true,
+    "why": "Right. The requirement is a rate, and an arrival rate holds it however slow the answers get."
+   },
+   {
+    "text": "`ramping-arrival-rate` from 1 to 200 a second",
+    "correct": false,
+    "why": "That looks for the breaking point; the requirement names one load to hold."
+   },
+   {
+    "text": "`constant-vus` with 20 users and no sleep",
+    "correct": false,
+    "why": "Each user waits for its answer, so the rate depends on the server, not on the requirement."
+   }
+  ]
+ },
+ {
+  "id": "ex-js0k3ehx",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A run with `vus: 50` and `duration: '10m'` passes its `p(95)<200` threshold. The summary also shows `http_reqs` at 12 a second, where the team expected about 40. What is the most likely reading?",
+  "hint": "Who sets the pace with looping virtual users?",
+  "choices": [
+   {
+    "text": "The test is valid, since the threshold is what decides",
+    "correct": false,
+    "why": "The threshold held at a load nobody asked for, so the verdict answers a different question."
+   },
+   {
+    "text": "k6 is too slow to send 40 requests a second",
+    "correct": false,
+    "why": "k6 sent what its users asked for; each user was waiting on the server."
+   },
+   {
+    "text": "The answers slowed down, the looping users sent fewer requests, and the test eased off",
+    "correct": true,
+    "why": "Right. The closed loop lowered the load, and the percentile describes the lighter test."
+   },
+   {
+    "text": "Half the requests failed and were left out of `http_reqs`",
+    "correct": false,
+    "why": "Failed requests are still counted in `http_reqs`."
+   }
+  ]
+ },
+ {
+  "id": "ex-d4dagnf0",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A pipeline step runs `k6 run -q load.js` and the job stays green although the team knows the error rate went up to 30%. The script asserts every response with `check`, and its only entry under `thresholds` is `http_req_duration: ['p(95)<500']`. What is missing?",
+  "hint": "What fails the run when requests fail fast?",
+  "choices": [
+   {
+    "text": "The `-q` flag, which hides the failures from the pipeline",
+    "correct": false,
+    "why": "`-q` hides only the progress bar; the exit code is the same."
+   },
+   {
+    "text": "A threshold on `http_req_failed` or on `checks`",
+    "correct": true,
+    "why": "Right. Fast errors keep the duration low, and checks alone never set the exit code."
+   },
+   {
+    "text": "A `group` around each request",
+    "correct": false,
+    "why": "Groups organise the summary and decide nothing."
+   },
+   {
+    "text": "A `sleep` in the default function",
+    "correct": false,
+    "why": "Think time changes the load, not what counts as a failure."
+   }
+  ]
+ }
+]
