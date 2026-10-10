@@ -196,6 +196,12 @@ def lesson(n):
         for name, f in (('build', build_search), ('buy', buy_search), ('adopt', adopt_search)):
             ys = f()
             p(f'{name}: ' + ', '.join(brl(y) for y in ys) + f'; three years {brl(sum(ys))}')
+        b4 = sum(build_search()) + build_search()[2]
+        lic4 = 9_000 * 12 * 1.10 ** 3
+        u4 = sum(buy_search()) + lic4 + 0.05 * FTE_YEAR
+        p(f'a fourth year: buy licence {brl(lic4)}; four years build {brl(b4)}, buy {brl(u4)}')
+        gap = sum(build_search()) - sum(buy_search())
+        p(f'the three-year gap {brl(gap)} is {gap / HOUR:.0f} engineer-hours')
     if n == 9:
         for name, f in (('hosted', hosted_obs), ('self-hosted', selfhosted_obs)):
             d = f()
@@ -204,12 +210,16 @@ def lesson(n):
         h, s = hosted_obs(), selfhosted_obs()
         p(f'monthly hosted licence {brl((HOSTS * PER_HOST + LOG_GB * PER_GB))}')
         p(f'licence-only: hosted {brl(h["licence"])} against self-hosted {brl(s["licence"])}')
+        rest = sum(h.values()) - s['licence'] - s['integration'] - s['exit']
+        p(f'self-hosting wins below {rest / HOUR / 3:.0f} h a year of operation '
+          f'({100 * rest / HOUR / 3 / FTE_HOURS:.0f}% of an engineer)')
     if n == 10:
         for name, sw, prob, up, yr in LOCKINS:
             exp = sw * HOUR * prob
             port = (up + 3 * yr) * HOUR
             p(f'{name}: switching {brl(sw * HOUR)}, expected {brl(exp)}; portability '
-              f'{brl(port)} over three years -> {"pay for portability" if port < exp else "accept the lock-in"}')
+              f'{brl(port)} over three years -> {"pay for portability" if port < exp else "accept the lock-in"}; '
+              f'break-even probability {100 * port / (sw * HOUR):.1f}%')
     if n == 11:
         total = sum(v for _, v in BUDGET)
         for name, v in BUDGET:
