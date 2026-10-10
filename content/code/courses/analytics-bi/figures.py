@@ -384,5 +384,50 @@ def pbi_model(lang):
     return s.render(), cap, None
 
 
+# ---------------------------------------------------------------- lesson 5
+
+@figure
+def four_shapes(lang):
+    """Lesson 5, four-shapes: the tools on two axes. A placement, not a measurement."""
+    s = Svg('four-shapes', 720, 330, L(lang,
+        'The BI tools placed on two axes. Across: who builds, from anybody clicking through menus '
+        'on the left to a programmer writing code on the right. Up: where definitions live, from '
+        'in each piece of work at the bottom to in one central model at the top. Metabase sits to '
+        'the left and in the middle. Tableau sits to the left and low. Power BI sits left of centre '
+        'and a little higher than Tableau. Looker sits in the middle and at the top. Streamlit sits '
+        'to the right and low. The two this course runs, Metabase and Streamlit, are highlighted.',
+        'As ferramentas de BI em dois eixos. Na horizontal: quem constrói, de qualquer pessoa clicando '
+        'em menus, à esquerda, a um programador escrevendo código, à direita. Na vertical: onde as '
+        'definições moram, de em cada trabalho, embaixo, a num modelo central, em cima. O Metabase fica '
+        'à esquerda e no meio. O Tableau fica à esquerda e embaixo. O Power BI fica à esquerda do centro '
+        'e um pouco acima do Tableau. O Looker fica no meio e em cima. O Streamlit fica à direita e '
+        'embaixo. As duas que este curso roda, Metabase e Streamlit, estão destacadas.'))
+    x0, x1, y0, y1 = 110, 690, 270, 40
+    s.line(x0, y0, x1, y0, stroke='var(--paper-dim)', sw=1, arrow=True)
+    s.line(x0, y0, x0, y1, stroke='var(--paper-dim)', sw=1, arrow=True)
+    s.text(x0, y0 + 18, L(lang, 'anybody, clicking', 'qualquer pessoa, clicando'), 10.5, fill='var(--paper-dim)')
+    s.text(x1, y0 + 18, L(lang, 'a programmer, in code', 'um programador, em código'), 10.5, anchor='end', fill='var(--paper-dim)')
+    s.text((x0 + x1) / 2, y0 + 40, L(lang, 'who builds', 'quem constrói'), 11, anchor='middle', weight='600')
+    s.text(x0 - 10, y0 - 6, L(lang, 'in each piece', 'em cada'), 10.5, anchor='end', fill='var(--paper-dim)')
+    s.text(x0 - 10, y0 + 8, L(lang, 'of work', 'trabalho'), 10.5, anchor='end', fill='var(--paper-dim)')
+    s.text(x0 - 10, y1 + 6, L(lang, 'in one central', 'num modelo'), 10.5, anchor='end', fill='var(--paper-dim)')
+    s.text(x0 - 10, y1 + 20, L(lang, 'model', 'central'), 10.5, anchor='end', fill='var(--paper-dim)')
+    s.text(x0 + 10, 26, L(lang, 'where definitions live', 'onde as definições moram'), 11, weight='600')
+    def tool(x, y, name, ours):
+        s.rect(x - 52, y - 15, 104, 30, stroke='var(--phosphor)' if ours else 'var(--wire)')
+        s.text(x, y, name, 11.5, anchor='middle', weight='600')
+    tool(200, 150, 'Metabase', True)
+    tool(230, 235, 'Tableau', False)
+    tool(330, 195, 'Power BI', False)
+    tool(430, 70, 'Looker', False)
+    tool(600, 235, 'Streamlit', True)
+    cap = L(lang, 'A placement to argue with, not a measurement: each tool can be pushed along both axes '
+                  'by how a team uses it.',
+            'Uma posição para discutir, não uma medida: cada ferramenta pode ser empurrada nos dois eixos '
+            'pelo jeito como um time a usa.')
+    same = ['Metabase', 'Tableau', 'Power BI', 'Looker', 'Streamlit'] if lang == 'pt' else None
+    return s.render(), cap, same
+
+
 if __name__ == '__main__':
     inject()
