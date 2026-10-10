@@ -1,0 +1,770 @@
+[
+  {
+    "id": "ex-qj438dbk",
+    "version": 1,
+    "section": "three-ways",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of the four parts of a server does a managed service keep out of your reach entirely?",
+    "hint": "Think about what needs a shell on the machine.",
+    "choices": [
+      {
+        "text": "The roles and grants",
+        "correct": false,
+        "why": "Those live inside the database, and they stay yours wherever the server runs."
+      },
+      {
+        "text": "The schema of your tables",
+        "correct": false,
+        "why": "The schema is yours in every column of the table: the provider never decides what your tables are."
+      },
+      {
+        "text": "Your SQL queries",
+        "correct": false,
+        "why": "You connect with the same psql and send the same SQL. That part does not change."
+      },
+      {
+        "text": "The data files",
+        "correct": true,
+        "why": "Right. With no shell there is no data directory to look at; only the provider sees the files."
+      }
+    ]
+  },
+  {
+    "id": "ex-vnhgwz6h",
+    "version": 1,
+    "section": "three-ways",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team runs PostgreSQL in a container and leaves out the `-v` option. What happens to the data when the container is removed?",
+    "hint": "Where does the data directory live without a volume?",
+    "choices": [
+      {
+        "text": "Docker moves it to a default volume",
+        "correct": false,
+        "why": "There is no default volume that outlives the container in this case: the files were inside it."
+      },
+      {
+        "text": "It goes with the container",
+        "correct": true,
+        "why": "Right. Without a volume the data directory is part of the container's own filesystem."
+      },
+      {
+        "text": "The server refuses to start until a volume is given",
+        "correct": false,
+        "why": "The image refuses to start without a password, not without a volume. It starts happily and loses the data later."
+      },
+      {
+        "text": "It stays on the host under /var/lib/postgresql",
+        "correct": false,
+        "why": "That path is inside the container. The host's /var/lib/postgresql belongs to a packaged server, if there is one."
+      }
+    ]
+  },
+  {
+    "id": "ex-86ntgke4",
+    "version": 1,
+    "section": "three-ways",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these remain your job on a managed service? Choose all that apply.",
+    "hint": "What lives inside the database, and what is a decision rather than a chore?",
+    "choices": [
+      {
+        "text": "Granting a reporting role read access to two schemas",
+        "correct": true,
+        "why": "Yes. Roles and grants are inside the database, wherever it runs."
+      },
+      {
+        "text": "Noticing that one large table needs different autovacuum thresholds",
+        "correct": true,
+        "why": "Yes. The provider runs autovacuum; it does not know your tables."
+      },
+      {
+        "text": "Installing the operating system's security updates",
+        "correct": false,
+        "why": "That is the provider's, along with the rest of the machine."
+      },
+      {
+        "text": "Choosing when to move to the next major version",
+        "correct": true,
+        "why": "Yes. The console executes the upgrade; the decision and the testing are yours."
+      },
+      {
+        "text": "Reading postgresql.conf on the server",
+        "correct": false,
+        "why": "There is no shell and no file to read. Parameters are a form in the console."
+      }
+    ]
+  },
+  {
+    "id": "ex-ww9agzgn",
+    "version": 1,
+    "section": "three-ways",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each way of having a server to where its log goes.",
+    "hint": "One writes a file, one writes to its output, one keeps it for you.",
+    "pairs": [
+      {
+        "left": "A package on Ubuntu",
+        "right": "A file under /var/log/postgresql"
+      },
+      {
+        "left": "A container",
+        "right": "The container's output, kept by Docker"
+      },
+      {
+        "left": "A managed service",
+        "right": "The provider's console, or a download"
+      }
+    ],
+    "right_distractors": [
+      "The database's own pg_log table"
+    ]
+  },
+  {
+    "id": "ex-2r99rcs0",
+    "version": 1,
+    "section": "your-server",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the course recommend a virtual machine over installing PostgreSQL on the laptop you work on, even when the laptop runs Ubuntu?",
+    "hint": "Think about lesson 9.",
+    "choices": [
+      {
+        "text": "PostgreSQL runs faster in a virtual machine",
+        "correct": false,
+        "why": "It runs slightly slower, if anything. Speed is not the argument."
+      },
+      {
+        "text": "Ubuntu's packages only install inside a virtual machine",
+        "correct": false,
+        "why": "They install on any Ubuntu, and the course says the installed path works as printed."
+      },
+      {
+        "text": "Its breakages stay away from your own files",
+        "correct": true,
+        "why": "Right. Filling a disk is a lesson in a virtual machine and an afternoon lost on a laptop."
+      },
+      {
+        "text": "A licence restricts PostgreSQL on personal computers",
+        "correct": false,
+        "why": "PostgreSQL's licence allows any use. Nothing restricts where it runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-tm94rzc3",
+    "version": 1,
+    "section": "your-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A student follows the course on Postgres.app on macOS. Which kind of lesson will match their screen?",
+    "hint": "PostgreSQL is the same program; what is around it is not.",
+    "choices": [
+      {
+        "text": "Lessons done inside psql",
+        "correct": true,
+        "why": "Right. Inside the server everything is the same; around it nothing is."
+      },
+      {
+        "text": "Lessons about where the files live",
+        "correct": false,
+        "why": "The paths are exactly what differs between installers."
+      },
+      {
+        "text": "Lessons about systemd and the service",
+        "correct": false,
+        "why": "macOS has no systemd. The service starts another way."
+      },
+      {
+        "text": "None, because macOS cannot run PostgreSQL 16",
+        "correct": false,
+        "why": "It runs it fine. Postgres.app and Homebrew both install 16."
+      }
+    ]
+  },
+  {
+    "id": "ex-tdfea494",
+    "version": 1,
+    "section": "your-server",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many gigabytes of memory does the course recommend giving the virtual machine?",
+    "hint": "Twice what a lighter course would ask.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-f8d5xkys",
+    "version": 1,
+    "section": "installing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `psql (PostgreSQL) 16.15`, what does the 15 tell you?",
+    "hint": "Two numbers, two kinds of release.",
+    "choices": [
+      {
+        "text": "Ubuntu's fifteenth rebuild of the package",
+        "correct": false,
+        "why": "Ubuntu's own version is the part in brackets, 0ubuntu0.24.04.1."
+      },
+      {
+        "text": "A minor release: fixes only",
+        "correct": true,
+        "why": "Right. Lesson 20 relies on that difference."
+      },
+      {
+        "text": "The fifteenth major version since 16 began",
+        "correct": false,
+        "why": "The major version is the first number alone. Since version 10 it has one part."
+      },
+      {
+        "text": "The number of clusters the package can run",
+        "correct": false,
+        "why": "A version string says nothing about clusters."
+      }
+    ]
+  },
+  {
+    "id": "ex-gq6gbcmr",
+    "version": 1,
+    "section": "installing",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Ubuntu, the systemd unit of the cluster called main of version 16 is postgresql@___.",
+    "hint": "Version, a dash, name.",
+    "blanks": [
+      {
+        "accept": [
+          "16-main"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kz6z93fk",
+    "version": 1,
+    "section": "installing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pg_lsclusters` prints one row per cluster. Which program is it part of?",
+    "hint": "It is not in the PostgreSQL source.",
+    "choices": [
+      {
+        "text": "psql, as a backslash command",
+        "correct": false,
+        "why": "psql's own commands start with a backslash and run inside psql. This one runs in the shell."
+      },
+      {
+        "text": "postgresql-common",
+        "correct": true,
+        "why": "Right. It is also what lets several versions run on one machine."
+      },
+      {
+        "text": "systemd",
+        "correct": false,
+        "why": "systemd knows units, not data directories or ports."
+      },
+      {
+        "text": "The PostgreSQL server itself",
+        "correct": false,
+        "why": "Upstream PostgreSQL has no notion of several clusters on a machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-gqbgy0ad",
+    "version": 1,
+    "section": "what-the-package-did",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Right after installing, `psql` answers `role \"ana\" does not exist`. What is missing?",
+    "hint": "The server answered. It just does not know the name.",
+    "choices": [
+      {
+        "text": "The operating-system user ana",
+        "correct": false,
+        "why": "That user exists: it is the one typing. The server keeps its own list."
+      },
+      {
+        "text": "A running server",
+        "correct": false,
+        "why": "A FATAL message means something answered. A stopped server answers nothing."
+      },
+      {
+        "text": "A database role called ana",
+        "correct": true,
+        "why": "Right. `createuser` makes one."
+      },
+      {
+        "text": "A password for the role postgres",
+        "correct": false,
+        "why": "Nothing asked about postgres, and over the socket no password is used."
+      }
+    ]
+  },
+  {
+    "id": "ex-kaxq4nsc",
+    "version": 1,
+    "section": "what-the-package-did",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `psql -U postgres`, typed as ana, fail with `Peer authentication failed`, while `sudo -u postgres psql` works?",
+    "hint": "Peer means the two names have to agree.",
+    "choices": [
+      {
+        "text": "Over the socket a role is allowed only to the operating-system user of the same name",
+        "correct": true,
+        "why": "Right. sudo makes you that user; -U only asks for the role."
+      },
+      {
+        "text": "The postgres role has a password that ana does not know, and sudo supplies it for her",
+        "correct": false,
+        "why": "Peer authentication never asks for a password. It compares names."
+      },
+      {
+        "text": "Only root may connect as postgres",
+        "correct": false,
+        "why": "root would be refused the same way: root is not called postgres either."
+      },
+      {
+        "text": "-U is not a valid option of psql",
+        "correct": false,
+        "why": "It is valid, and it works wherever the authentication rule allows it."
+      }
+    ]
+  },
+  {
+    "id": "ex-f51yy85h",
+    "version": 1,
+    "section": "what-the-package-did",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the course's psql, the prompt reads `ana=#`. What would an ordinary role see at the end instead of `#`?",
+    "hint": "A character that is also a shell's.",
+    "choices": [
+      {
+        "text": "`$`",
+        "correct": false,
+        "why": "That is the operating system's ordinary-user prompt, not psql's."
+      },
+      {
+        "text": "`-`",
+        "correct": false,
+        "why": "A dash appears when psql waits for the rest of a statement, as in `ana-#`."
+      },
+      {
+        "text": "`%`",
+        "correct": false,
+        "why": "psql does not use it in its default prompt."
+      },
+      {
+        "text": "`>`",
+        "correct": true,
+        "why": "Right. `#` marks a superuser."
+      }
+    ]
+  },
+  {
+    "id": "ex-0gn5vwxb",
+    "version": 1,
+    "section": "what-the-package-did",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`psql -h localhost` asks ana for a password, and plain `psql` does not. Both reach the same server. What explains it?",
+    "hint": "Two doors, two rules.",
+    "choices": [
+      {
+        "text": "localhost is treated as a remote machine and remote roles always need passwords",
+        "correct": false,
+        "why": "It is the same machine; what differs is that the connection used TCP, and the TCP rule asks for a password."
+      },
+      {
+        "text": "The server forgets the role between connections",
+        "correct": false,
+        "why": "Roles are stored in the cluster and persist."
+      },
+      {
+        "text": "ana's role was created only for the socket",
+        "correct": false,
+        "why": "A role is not tied to a door. The rules for each door are separate from the role."
+      },
+      {
+        "text": "TCP is matched by another line of the rules, one that wants a password",
+        "correct": true,
+        "why": "Right. The socket line says peer, the TCP line says password, and both come from pg_hba.conf."
+      }
+    ]
+  },
+  {
+    "id": "ex-ekcxaf1b",
+    "version": 1,
+    "section": "the-container",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the official postgres:16 container, where is postgresql.conf?",
+    "hint": "It is PostgreSQL's own default, not Ubuntu's.",
+    "choices": [
+      {
+        "text": "In /etc/postgresql/16/main",
+        "correct": false,
+        "why": "That is the Debian and Ubuntu package's choice."
+      },
+      {
+        "text": "Nowhere: containers are configured only with -c arguments",
+        "correct": false,
+        "why": "The file exists; -c arguments override it."
+      },
+      {
+        "text": "Inside the data directory, and so inside the volume",
+        "correct": true,
+        "why": "Right. /var/lib/postgresql/data/postgresql.conf, as SHOW config_file printed."
+      },
+      {
+        "text": "In Docker's own configuration",
+        "correct": false,
+        "why": "Docker knows nothing about PostgreSQL's settings."
+      }
+    ]
+  },
+  {
+    "id": "ex-bkz7186b",
+    "version": 1,
+    "section": "the-container",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A developer moves a container from postgres:16 to postgres:17 and keeps the same volume. What should they expect?",
+    "hint": "The image changed; the files in the volume did not.",
+    "choices": [
+      {
+        "text": "The new server refuses to start on a data directory from version 16",
+        "correct": true,
+        "why": "Right. A major upgrade moves the data, not just the image."
+      },
+      {
+        "text": "The new server upgrades the old files on its first start, then runs as before",
+        "correct": false,
+        "why": "No server converts a previous major version's files by itself. That is lesson 20's whole problem."
+      },
+      {
+        "text": "It works, because the data format is the same in every version",
+        "correct": false,
+        "why": "The format changes between major versions; that is what makes them major."
+      },
+      {
+        "text": "Docker refuses to mount a volume created by another image",
+        "correct": false,
+        "why": "Docker mounts it happily. It is PostgreSQL that refuses."
+      }
+    ]
+  },
+  {
+    "id": "ex-52ccsa5q",
+    "version": 1,
+    "section": "the-managed-service",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On a managed service, your first role belongs to something like rds_superuser. What is it missing compared with a real superuser?",
+    "hint": "The provider must keep the machine to itself.",
+    "choices": [
+      {
+        "text": "The right to create tables",
+        "correct": false,
+        "why": "It creates tables, roles and databases."
+      },
+      {
+        "text": "The right to connect over the network",
+        "correct": false,
+        "why": "Network is the only way in, and it works."
+      },
+      {
+        "text": "Reaching the operating system",
+        "correct": true,
+        "why": "Right. That is the line the provider holds."
+      },
+      {
+        "text": "The right to grant privileges to other roles",
+        "correct": false,
+        "why": "It grants freely inside its databases."
+      }
+    ]
+  },
+  {
+    "id": "ex-rkkjt5yv",
+    "version": 1,
+    "section": "the-managed-service",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A provider upgrades minor versions automatically. Which part of an upgrade is still left for you to do?",
+    "hint": "Minor and major are not the same job.",
+    "choices": [
+      {
+        "text": "Reading the major release notes and testing",
+        "correct": true,
+        "why": "Right. The console executes; it does not decide or test for you."
+      },
+      {
+        "text": "Compiling the new minor version",
+        "correct": false,
+        "why": "Nobody compiles anything; the provider ships binaries."
+      },
+      {
+        "text": "Copying the data files to the new machine",
+        "correct": false,
+        "why": "You never see the files on a managed service."
+      },
+      {
+        "text": "Restarting the instance after each minor upgrade",
+        "correct": false,
+        "why": "The provider restarts it as part of the upgrade."
+      }
+    ]
+  },
+  {
+    "id": "ex-8mxj2q1a",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`psql` answers `No such file or directory` and `Is the server running locally`. What is the first thing to run?",
+    "hint": "No FATAL means nothing answered.",
+    "choices": [
+      {
+        "text": "`sudo -u postgres createuser --superuser $USER`",
+        "correct": false,
+        "why": "That fixes a missing role, which is a FATAL message from a running server."
+      },
+      {
+        "text": "`sudo apt install -y postgresql` again",
+        "correct": false,
+        "why": "psql ran, so the client is installed. The server is what is not answering."
+      },
+      {
+        "text": "`pg_lsclusters`",
+        "correct": true,
+        "why": "Right. The socket exists only while the server runs."
+      },
+      {
+        "text": "`sudo rm /var/run/postgresql/.s.PGSQL.5432`",
+        "correct": false,
+        "why": "The file is not there, which is exactly the complaint. Deleting is never the step."
+      }
+    ]
+  },
+  {
+    "id": "ex-h0vsk31h",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A cluster will not start after somebody edited its configuration. Where does the reason appear first?",
+    "hint": "The last column of pg_lsclusters.",
+    "choices": [
+      {
+        "text": "In the cluster's log",
+        "correct": true,
+        "why": "Right. The last lines name the bad setting."
+      },
+      {
+        "text": "In psql's error message",
+        "correct": false,
+        "why": "psql only learns that nothing is listening."
+      },
+      {
+        "text": "In /etc/postgresql/16/main/postgresql.conf itself",
+        "correct": false,
+        "why": "The file holds the mistake, not a message about it."
+      },
+      {
+        "text": "In the hypervisor's window",
+        "correct": false,
+        "why": "The hypervisor knows nothing about PostgreSQL."
+      }
+    ]
+  },
+  {
+    "id": "ex-8a9t4w1w",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "VirtualBox refuses to start the machine and mentions VT-x. What does that mean?",
+    "hint": "The processor can; something is stopping it.",
+    "choices": [
+      {
+        "text": "The Ubuntu image is damaged",
+        "correct": false,
+        "why": "The machine never got as far as reading the image."
+      },
+      {
+        "text": "The computer is too old to run a virtual machine",
+        "correct": false,
+        "why": "Almost every processor of the last decade has the feature. It is usually switched off."
+      },
+      {
+        "text": "Virtualisation is off in the firmware",
+        "correct": true,
+        "why": "Right. A BIOS or UEFI setting, or Hyper-V on Windows."
+      },
+      {
+        "text": "The machine was given too little memory",
+        "correct": false,
+        "why": "Too little memory makes it slow, not refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-evce3va3",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps from a fresh Ubuntu server to `ana=#` in order.",
+    "hint": "Install, then the role, then the database, then connect.",
+    "items": [
+      "sudo apt install -y postgresql",
+      "sudo -u postgres createuser --superuser $USER",
+      "createdb $USER",
+      "psql"
+    ],
+    "trap": "createdb before createuser fails: the server does not know who is asking."
+  },
+  {
+    "id": "ex-zczx5cmv",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each message to its cause.",
+    "hint": "Read the part after FATAL, or notice there is none.",
+    "pairs": [
+      {
+        "left": "role \"ana\" does not exist",
+        "right": "createuser was not run"
+      },
+      {
+        "left": "database \"ana\" does not exist",
+        "right": "createdb was not run"
+      },
+      {
+        "left": "Peer authentication failed",
+        "right": "asking for a role that is not your name"
+      },
+      {
+        "left": "No such file or directory",
+        "right": "the server is not running"
+      }
+    ]
+  },
+  {
+    "id": "ex-w6wb2sbv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's server has two rows in `pg_lsclusters`: `16 main 5432 online` and `16 test 5433 online`. How many postmaster processes does the machine run?",
+    "hint": "One cluster, one server.",
+    "choices": [
+      {
+        "text": "One, serving both clusters",
+        "correct": false,
+        "why": "A postmaster serves exactly one data directory."
+      },
+      {
+        "text": "Two, one for each cluster, on different ports",
+        "correct": true,
+        "why": "Right. Each cluster is a whole server with its own processes."
+      },
+      {
+        "text": "None until somebody connects",
+        "correct": false,
+        "why": "online means the postmaster is running and listening."
+      },
+      {
+        "text": "Two, but only one of them can be online at any given moment",
+        "correct": false,
+        "why": "Both say online; different ports let them coexist."
+      }
+    ]
+  },
+  {
+    "id": "ex-rjwgbb20",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You need the `postgres` role on the course's server for one command. Which way works without changing any configuration?",
+    "hint": "Become the user whose name matches.",
+    "choices": [
+      {
+        "text": "psql -U postgres",
+        "correct": false,
+        "why": "Peer authentication refuses it: you are not the user postgres."
+      },
+      {
+        "text": "sudo -u postgres psql",
+        "correct": true,
+        "why": "Right. You become the operating-system user, and peer lets that user in as the role."
+      },
+      {
+        "text": "psql -h localhost -U postgres",
+        "correct": false,
+        "why": "Over TCP it asks for a password, and the postgres role has none."
+      },
+      {
+        "text": "sudo psql",
+        "correct": false,
+        "why": "That runs psql as root, and there is no role called root."
+      }
+    ]
+  },
+  {
+    "id": "ex-q6fnkz3e",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "PostgreSQL's word for one running server and the directory its data lives in is a ___.",
+    "hint": "An older sense of a word that now means many machines.",
+    "blanks": [
+      {
+        "accept": [
+          "cluster"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
