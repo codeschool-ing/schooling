@@ -1,0 +1,945 @@
+[
+  {
+    "id": "ex-1qsxbyqe",
+    "version": 1,
+    "section": "what-architecture-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By the definition this lesson uses, which of these is an architectural decision?",
+    "hint": "Ask what it would cost to reverse a year from now.",
+    "choices": [
+      {
+        "text": "Renaming `orders_place` to `place_order` across the whole program",
+        "correct": false,
+        "why": "A rename takes a minute with an editor; nothing else depends on the old name for long."
+      },
+      {
+        "text": "Keeping every module's tables in one shared database",
+        "correct": true,
+        "why": "Right. Other code, other teams and real data come to depend on it, so undoing it takes weeks."
+      },
+      {
+        "text": "Choosing a colour for the shop's buttons and the logo on every page",
+        "correct": false,
+        "why": "Cheap to change at any time, and nothing else is built on it."
+      },
+      {
+        "text": "Adding a comment above `stock_take`",
+        "correct": false,
+        "why": "A comment changes no behaviour and costs nothing to remove."
+      }
+    ]
+  },
+  {
+    "id": "ex-n9zkmek8",
+    "version": 1,
+    "section": "what-architecture-is",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each quality attribute to the question it asks.",
+    "hint": "The table in the first section.",
+    "pairs": [
+      {
+        "left": "availability",
+        "right": "What share of the time does it answer?"
+      },
+      {
+        "left": "latency",
+        "right": "How long does one request take?"
+      },
+      {
+        "left": "throughput",
+        "right": "How many requests can it take per second?"
+      },
+      {
+        "left": "modifiability",
+        "right": "How many people must agree to a change?"
+      }
+    ],
+    "right_distractors": [
+      "How many lines of code does it have?"
+    ]
+  },
+  {
+    "id": "ex-73dfg1s1",
+    "version": 1,
+    "section": "what-architecture-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team replicates its database to a second region so that the shop keeps answering when the first region goes down. Which attribute is it most likely to pay with?",
+    "hint": "Two copies of the data, written at two moments.",
+    "choices": [
+      {
+        "text": "Modifiability",
+        "correct": false,
+        "why": "Replication does not make the code harder to change."
+      },
+      {
+        "text": "Throughput",
+        "correct": false,
+        "why": "A replica adds capacity for reads rather than taking it away."
+      },
+      {
+        "text": "Consistency",
+        "correct": true,
+        "why": "Right. Two copies can disagree for a while, which is lessons 8 and 9."
+      },
+      {
+        "text": "Availability",
+        "correct": false,
+        "why": "That is what it buys, not what it pays with."
+      }
+    ]
+  },
+  {
+    "id": "ex-ss99c6hm",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which path does the lesson recommend for the machine the course is done on?",
+    "hint": "The same shape as the one the transcripts came from.",
+    "choices": [
+      {
+        "text": "A Codespace in the browser",
+        "correct": false,
+        "why": "Named so that you know it exists; its free hours are somebody else's decision."
+      },
+      {
+        "text": "An Ubuntu VM made with Multipass, with Docker Engine inside",
+        "correct": true,
+        "why": "Right: same shape as the lab, and free to throw away."
+      },
+      {
+        "text": "Docker Engine installed straight on the computer you use every day, with no VM",
+        "correct": false,
+        "why": "It works, and leaves every container of the course on your everyday machine."
+      },
+      {
+        "text": "A server rented from a cloud provider",
+        "correct": false,
+        "why": "Not one of the three paths, and it costs money from the first hour."
+      }
+    ]
+  },
+  {
+    "id": "ex-gxexrmzq",
+    "version": 1,
+    "section": "your-lab",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many gigabytes of memory does the lesson ask for the course's virtual machine?",
+    "hint": "The `--memory` flag of `multipass launch`.",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-8y65qxma",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You ran `sudo usermod -aG docker $USER` and `docker ps` still says permission denied. What is missing?",
+    "hint": "When does a new group membership reach your shell?",
+    "choices": [
+      {
+        "text": "Restarting the Docker daemon",
+        "correct": false,
+        "why": "The daemon is running and answered; it is your shell that has the old groups."
+      },
+      {
+        "text": "Running `sudo chmod 666 /var/run/docker.sock`",
+        "correct": false,
+        "why": "That gives every account on the machine root, by another route."
+      },
+      {
+        "text": "Logging out and in again",
+        "correct": true,
+        "why": "Right. The group is read at login, so `exit` and `multipass shell arch` again."
+      },
+      {
+        "text": "Reinstalling the `docker-ce` package",
+        "correct": false,
+        "why": "The package is fine; reinstalling does not change your session's groups."
+      }
+    ]
+  },
+  {
+    "id": "ex-ph38af4a",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A container exits with code 137 and `docker inspect` says `\"OOMKilled\": false`. What ran out?",
+    "hint": "137 is 128 plus 9. Whose limit was it, if not the container's?",
+    "choices": [
+      {
+        "text": "The memory of the VM itself",
+        "correct": true,
+        "why": "Right. The kernel killed the process for the whole machine, not for the container's own limit."
+      },
+      {
+        "text": "The disk",
+        "correct": false,
+        "why": "A full disk gives `no space left on device`, not a kill signal."
+      },
+      {
+        "text": "The container's own memory limit",
+        "correct": false,
+        "why": "Then `OOMKilled` would say `true`, as it did in the transcript."
+      },
+      {
+        "text": "Docker Hub's pull limit",
+        "correct": false,
+        "why": "That fails before the container starts, with a 429."
+      }
+    ]
+  },
+  {
+    "id": "ex-1agcyemg",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`docker compose up` ends with `Bind for 127.0.0.1:8000 failed: port is already allocated`. What does that tell you?",
+    "hint": "Who else wants that port?",
+    "choices": [
+      {
+        "text": "The image failed to build",
+        "correct": false,
+        "why": "The containers were created; the build had already finished."
+      },
+      {
+        "text": "Port 8000 is reserved by the operating system",
+        "correct": false,
+        "why": "Nothing reserves 8000; something running is holding it."
+      },
+      {
+        "text": "Something already running holds the port",
+        "correct": true,
+        "why": "Right, often a container from an earlier lesson. `docker ps` names it and `docker compose down` in its directory frees it."
+      },
+      {
+        "text": "The firewall in front of the VM blocked the connection",
+        "correct": false,
+        "why": "Nothing has connected yet; this is the container failing to listen."
+      }
+    ]
+  },
+  {
+    "id": "ex-tkemen9d",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`apt-get` cannot get its lock a minute after the VM booted. What should you do?",
+    "hint": "Who else installs packages right after a boot?",
+    "choices": [
+      {
+        "text": "Delete the lock file under `/var/lib/dpkg` and run the command again",
+        "correct": false,
+        "why": "That is how a package database gets corrupted."
+      },
+      {
+        "text": "Wait a few minutes for Ubuntu's own updates, then run it again",
+        "correct": true,
+        "why": "Right. Only one program may install at a time."
+      },
+      {
+        "text": "Reboot the VM in a loop until it works",
+        "correct": false,
+        "why": "Each boot starts the same updates again."
+      },
+      {
+        "text": "Make a new VM with more memory",
+        "correct": false,
+        "why": "The lock is about a second installer running, not about memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-n43qj9vt",
+    "version": 1,
+    "section": "the-shop",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the shop store a price of R$ 32,90 as `3290`?",
+    "hint": "What does `0.1 + 0.2` give in a floating-point number?",
+    "choices": [
+      {
+        "text": "To save space in the database",
+        "correct": false,
+        "why": "Both forms are a few bytes; space is not the reason."
+      },
+      {
+        "text": "Because SQLite has no decimal type at all to hold it",
+        "correct": false,
+        "why": "The choice would be the same in a database that has one."
+      },
+      {
+        "text": "Integers are exact; binary floating point is not",
+        "correct": true,
+        "why": "Right. Binary floating point cannot represent most decimal fractions, and integer cents add up to the cent."
+      },
+      {
+        "text": "To hide the real prices from anybody reading the browser's traffic",
+        "correct": false,
+        "why": "Anybody can read `3290` and divide by a hundred."
+      }
+    ]
+  },
+  {
+    "id": "ex-bzcxm1qn",
+    "version": 1,
+    "section": "the-shop",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Two bags of coffee at `3290` cents each were ordered. What `total_cents` did the shop answer?",
+    "hint": "Price times quantity.",
+    "value": 6580,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-1qdayw2q",
+    "version": 1,
+    "section": "the-shop",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the shop as written, how many processes answer a request that lists the products, and one that places an order?",
+    "hint": "`docker compose ps` showed one container running one command.",
+    "choices": [
+      {
+        "text": "One for the catalogue and four for the order, one per module",
+        "correct": false,
+        "why": "Modules are parts of the program, not processes of their own."
+      },
+      {
+        "text": "The same single process for both",
+        "correct": true,
+        "why": "Right. Every module is a function call inside `python app.py`."
+      },
+      {
+        "text": "Two: one for reads and one for writes",
+        "correct": false,
+        "why": "Nothing in the shop separates reads from writes; lesson 13 does."
+      },
+      {
+        "text": "One per request, started on demand",
+        "correct": false,
+        "why": "The server is started once and handles requests on threads."
+      }
+    ]
+  },
+  {
+    "id": "ex-jwgyg5y7",
+    "version": 1,
+    "section": "the-shop",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The compose file publishes the shop on `127.0.0.1:8000`, so it can be reached only from the machine's own ___.",
+    "hint": "The interface whose address starts with 127.",
+    "blanks": [
+      {
+        "accept": [
+          "loopback",
+          "loopback interface",
+          "lo"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8r2nsyhz",
+    "version": 1,
+    "section": "one-transaction",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A card ending in `0002` is declined after the order row was inserted and the coffee was taken. What does the shop's data look like afterwards?",
+    "hint": "Everything happened inside `with con:`.",
+    "choices": [
+      {
+        "text": "The order exists with no payment, and the coffee is gone",
+        "correct": false,
+        "why": "That would be the state without a transaction around the three changes."
+      },
+      {
+        "text": "The order row is gone, and the two bags of coffee stay taken out of stock",
+        "correct": false,
+        "why": "The rollback undoes every change in the block, the stock included."
+      },
+      {
+        "text": "As if nothing had happened: no order, no payment, the same stock",
+        "correct": true,
+        "why": "Right. The exception rolled back all three changes."
+      },
+      {
+        "text": "It depends on how long the charge took",
+        "correct": false,
+        "why": "Timing does not decide it; the transaction does."
+      }
+    ]
+  },
+  {
+    "id": "ex-c3csg13p",
+    "version": 1,
+    "section": "one-transaction",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Coffee started with 12 units, an order for 2 was paid, a second for 1 was declined, and a third for 50 was refused. How many units does the catalogue show?",
+    "hint": "Only one of the three changed anything.",
+    "value": 10,
+    "tolerance": 0,
+    "unit": "units"
+  },
+  {
+    "id": "ex-9083pmcr",
+    "version": 1,
+    "section": "one-transaction",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes the shop refuse an order for 50 bags of coffee when it has 10?",
+    "hint": "Look at the stock table's definition.",
+    "choices": [
+      {
+        "text": "A check in `orders_place` that compares the quantity with the stock",
+        "correct": false,
+        "why": "There is no such comparison in the code; the database does it."
+      },
+      {
+        "text": "The `CHECK (units >= 0)` on the stock table",
+        "correct": true,
+        "why": "Right. It refuses the update, the transaction rolls back, and the `IntegrityError` becomes the 409."
+      },
+      {
+        "text": "The payment module, which declines large amounts",
+        "correct": false,
+        "why": "It declines one card suffix, whatever the amount."
+      },
+      {
+        "text": "The catalogue, which hides products that run out",
+        "correct": false,
+        "why": "The catalogue only lists; it never refuses an order."
+      }
+    ]
+  },
+  {
+    "id": "ex-tkxv0q1p",
+    "version": 1,
+    "section": "one-transaction",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda moves payments into its own service with its own database. What happens to the guarantee `with con:` gave?",
+    "hint": "Can one database's transaction reach into another's?",
+    "choices": [
+      {
+        "text": "It still holds, because both services commit at the same moment",
+        "correct": false,
+        "why": "Two commits at the same moment are still two commits; either can fail alone."
+      },
+      {
+        "text": "It still holds as long as the network is fast",
+        "correct": false,
+        "why": "Speed does not make two databases one."
+      },
+      {
+        "text": "It no longer covers the payment",
+        "correct": true,
+        "why": "Right. The shop needs another way to undo a half-finished order, and lesson 14 is that way, the saga."
+      },
+      {
+        "text": "It holds for the payment and is lost for the stock",
+        "correct": false,
+        "why": "Neither side is special; the boundary is the database."
+      }
+    ]
+  },
+  {
+    "id": "ex-zdt37nfp",
+    "version": 1,
+    "section": "modular-monolith",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a modular monolith?",
+    "hint": "How many deploys, and what rule inside?",
+    "choices": [
+      {
+        "text": "One deployable program, split into modules that own their data",
+        "correct": true,
+        "why": "Right. One deploy, and modules that meet only through public functions."
+      },
+      {
+        "text": "Several small services that all read and write one shared database",
+        "correct": false,
+        "why": "That is a distributed monolith, which lesson 2 warns about."
+      },
+      {
+        "text": "A monolith with every module in a separate container",
+        "correct": false,
+        "why": "Separate containers would make them services."
+      },
+      {
+        "text": "A monolith whose code is in several repositories",
+        "correct": false,
+        "why": "Repositories are about storage of the code, not boundaries at run time."
+      }
+    ]
+  },
+  {
+    "id": "ex-ngsnahwk",
+    "version": 1,
+    "section": "modular-monolith",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which line of Quitanda's `app.py` breaks the modular rule the lesson describes?",
+    "hint": "Which module reads a table it does not own?",
+    "choices": [
+      {
+        "text": "`stock_take` updating `stock`",
+        "correct": false,
+        "why": "The stock module writing its own table is exactly the rule."
+      },
+      {
+        "text": "`catalogue_list` joining `products` with `stock`",
+        "correct": true,
+        "why": "Right. The catalogue reads the stock module's table instead of asking it."
+      },
+      {
+        "text": "`payments_charge` inserting into `payments`",
+        "correct": false,
+        "why": "That is the payments module's own table."
+      },
+      {
+        "text": "`orders_place` calling `stock_take`",
+        "correct": false,
+        "why": "Calling another module's public function is the allowed route."
+      }
+    ]
+  },
+  {
+    "id": "ex-862378yc",
+    "version": 1,
+    "section": "modular-monolith",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each tool to how it enforces module boundaries.",
+    "hint": "Each language has its own.",
+    "pairs": [
+      {
+        "left": "import-linter",
+        "right": "a Python check that fails on forbidden imports"
+      },
+      {
+        "left": "ArchUnit",
+        "right": "tests in Java that assert which packages may depend on which"
+      },
+      {
+        "left": "Go's internal/",
+        "right": "the toolchain refuses an import from outside the parent directory"
+      },
+      {
+        "left": "packwerk",
+        "right": "a Ruby tool that checks dependencies between packages"
+      }
+    ],
+    "right_distractors": [
+      "a load balancer that routes requests per module"
+    ]
+  },
+  {
+    "id": "ex-xg8r0md2",
+    "version": 1,
+    "section": "modular-monolith",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants to split a big ball of mud into services next quarter. What does the lesson suggest as the first step?",
+    "hint": "Where is it cheaper to move a boundary?",
+    "choices": [
+      {
+        "text": "Put each folder of the code in its own container straight away",
+        "correct": false,
+        "why": "The folders of a ball of mud are not boundaries; the services would call each other's tables over a network."
+      },
+      {
+        "text": "Rewrite the whole system from scratch as services, beside the old one",
+        "correct": false,
+        "why": "Lesson 15 explains why big rewrites tend to fail."
+      },
+      {
+        "text": "Turn it into modules that own their data, inside the one program",
+        "correct": true,
+        "why": "Right. A module with its own data and a public surface is a service waiting for a network."
+      },
+      {
+        "text": "Add a second database and let each team choose which to use",
+        "correct": false,
+        "why": "Two shared databases are two balls of mud."
+      }
+    ]
+  },
+  {
+    "id": "ex-ggnzj4rk",
+    "version": 1,
+    "section": "when-it-is-right",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team of six is building a new product whose idea of an order changes every few weeks. What does the lesson recommend?",
+    "hint": "MonolithFirst, and why.",
+    "choices": [
+      {
+        "text": "A monolith, divided into modules, until the boundaries stop moving",
+        "correct": true,
+        "why": "Right. A split along the wrong line costs more than no split."
+      },
+      {
+        "text": "One service per entity from the first day, to be ready for growth",
+        "correct": false,
+        "why": "Each change of idea would then be a change to several APIs."
+      },
+      {
+        "text": "Serverless functions, one per endpoint",
+        "correct": false,
+        "why": "That multiplies the boundaries rather than waiting for them."
+      },
+      {
+        "text": "Two services, one for reads and one for writes",
+        "correct": false,
+        "why": "That is CQRS, lesson 13, a different force."
+      }
+    ]
+  },
+  {
+    "id": "ex-mc7mpb10",
+    "version": 1,
+    "section": "when-it-is-right",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the microservice premium Martin Fowler named in 2015?",
+    "hint": "Paid before any benefit arrives.",
+    "choices": [
+      {
+        "text": "The licence fee charged by the vendors of service mesh products",
+        "correct": false,
+        "why": "It is not a price list; the mesh is lesson 3."
+      },
+      {
+        "text": "The extra speed a system gains by splitting",
+        "correct": false,
+        "why": "Splitting adds latency rather than speed."
+      },
+      {
+        "text": "The fixed cost of running a system as services",
+        "correct": true,
+        "why": "Right: deployment, monitoring and failure handling, paid before any benefit. Below some complexity it is never earned back."
+      },
+      {
+        "text": "The salary difference between backend and platform engineers",
+        "correct": false,
+        "why": "Nothing in the idea is about salaries."
+      }
+    ]
+  },
+  {
+    "id": "ex-1jr5tnwc",
+    "version": 1,
+    "section": "when-it-is-right",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are reasons the lesson gives for keeping a monolith? Choose all that apply.",
+    "hint": "Four of them are in the section.",
+    "choices": [
+      {
+        "text": "One team works on it",
+        "correct": true,
+        "why": "Right: nobody to coordinate deploys with."
+      },
+      {
+        "text": "Atomic transactions across all the data",
+        "correct": true,
+        "why": "Right: four changes or none."
+      },
+      {
+        "text": "Each module can use a different language",
+        "correct": false,
+        "why": "That is a reason to split, not to keep."
+      },
+      {
+        "text": "Function calls instead of network calls",
+        "correct": true,
+        "why": "Right: nanoseconds instead of milliseconds."
+      },
+      {
+        "text": "One thing to deploy, monitor and debug",
+        "correct": true,
+        "why": "Right: operations stay small."
+      }
+    ]
+  },
+  {
+    "id": "ex-jmzhra4b",
+    "version": 1,
+    "section": "where-it-hurts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The catalogue gets a thousand times the traffic of the rest of Quitanda. What happens if the shop is scaled as it is?",
+    "hint": "What does each copy contain?",
+    "choices": [
+      {
+        "text": "Only the catalogue is copied, because it is the only busy module",
+        "correct": false,
+        "why": "A monolith cannot copy part of itself."
+      },
+      {
+        "text": "Every copy carries all four modules, three of them idle",
+        "correct": true,
+        "why": "Right. It works, and it pays for what is not busy."
+      },
+      {
+        "text": "It cannot be scaled at all while it is a monolith",
+        "correct": false,
+        "why": "More copies behind a load balancer work, and are often the cheapest answer."
+      },
+      {
+        "text": "The database is copied with it, one per container",
+        "correct": false,
+        "why": "The copies share one database; the figure has one load balancer and three program copies."
+      }
+    ]
+  },
+  {
+    "id": "ex-mpmq2v2m",
+    "version": 1,
+    "section": "where-it-hurts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Five teams share one monolith and complain that their releases wait for each other. Which first step does the lesson's table point to?",
+    "hint": "The right-hand column, for that force.",
+    "choices": [
+      {
+        "text": "Splitting every module into its own service in one go, next quarter",
+        "correct": false,
+        "why": "The table points at the cheaper step first, and a split of one module when that is not enough."
+      },
+      {
+        "text": "Adding a cache in front of the busiest module so that it answers faster",
+        "correct": false,
+        "why": "That answers uneven load, not teams blocking each other."
+      },
+      {
+        "text": "Adding bulkheads inside the process, one pool of threads per team",
+        "correct": false,
+        "why": "Those fence a fault in; they do not change how releases work."
+      },
+      {
+        "text": "A modular monolith with owners per module and a faster pipeline",
+        "correct": true,
+        "why": "Right. That attacks the release train without paying the premium yet."
+      }
+    ]
+  },
+  {
+    "id": "ex-n8n8jxtw",
+    "version": 1,
+    "section": "where-it-hurts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a single process, what happens to the checkout when the report module leaks memory until the process is killed?",
+    "hint": "How many processes are there?",
+    "choices": [
+      {
+        "text": "It keeps working, because the checkout lives in another module of the code",
+        "correct": false,
+        "why": "Modules share the process; when it dies, all of them do."
+      },
+      {
+        "text": "It goes down with the report, because they share the process",
+        "correct": true,
+        "why": "Right. A fault anywhere is a fault everywhere."
+      },
+      {
+        "text": "It slows down but stays up",
+        "correct": false,
+        "why": "A killed process answers nothing at all."
+      },
+      {
+        "text": "Docker restarts only the report module and leaves the checkout running",
+        "correct": false,
+        "why": "Docker restarts containers, and the whole program is one container."
+      }
+    ]
+  },
+  {
+    "id": "ex-6w1e0rfz",
+    "version": 1,
+    "section": "where-it-hurts",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put these responses to a growing monolith in the order the lesson suggests trying them, cheapest first.",
+    "hint": "The table's right-hand column comes before any split.",
+    "trap": "Splitting before naming a force is the fashion the lesson warns about.",
+    "items": [
+      "Name the force that hurts",
+      "Try the step that keeps the monolith",
+      "Move one module out, for that one reason",
+      "Pay for the split's operations from its first day"
+    ]
+  },
+  {
+    "id": "ex-tkmx6nhy",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's payments module needs a library that only runs on a newer runtime than the rest of the program can use. Which response fits best?",
+    "hint": "A force that asks for running one module apart.",
+    "choices": [
+      {
+        "text": "Upgrade every module's runtime in one release, so that they all match",
+        "correct": false,
+        "why": "Possible, and it makes every team pay for one module's need at once."
+      },
+      {
+        "text": "Split the whole monolith into services",
+        "correct": false,
+        "why": "The force names one module; the split should be that small."
+      },
+      {
+        "text": "Move the payments module out as its own service, and only that one",
+        "correct": true,
+        "why": "Right. One module, moved for one named reason."
+      },
+      {
+        "text": "Run more copies of the monolith",
+        "correct": false,
+        "why": "More copies do not change which runtime each one has."
+      }
+    ]
+  },
+  {
+    "id": "ex-egqvzknw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody says the monolith must be split because \"serious systems use microservices\". What is missing from the argument?",
+    "hint": "The skill the last section names.",
+    "choices": [
+      {
+        "text": "The cost of the cloud bill after the split",
+        "correct": false,
+        "why": "Cost is one force among several; the gap is that none is named."
+      },
+      {
+        "text": "A force: which problem the split solves",
+        "correct": true,
+        "why": "Right. With no force named it is a fashion."
+      },
+      {
+        "text": "A diagram of the target architecture, signed off by the team",
+        "correct": false,
+        "why": "A diagram writes a decision down; it does not justify it."
+      },
+      {
+        "text": "The name of the framework the services would be written in",
+        "correct": false,
+        "why": "Choosing tools comes after deciding there is a reason to split."
+      }
+    ]
+  },
+  {
+    "id": "ex-na56wp02",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each force on a monolith to the cheaper first step the lesson gives for it.",
+    "hint": "The table at the end of the last section.",
+    "pairs": [
+      {
+        "left": "teams blocking each other's deploys",
+        "right": "module owners and a faster pipeline"
+      },
+      {
+        "left": "one module with very different load",
+        "right": "more copies, with a cache before the hot part"
+      },
+      {
+        "left": "one module needing other hardware",
+        "right": "moving that one module out"
+      },
+      {
+        "left": "a fault in one part taking down the rest",
+        "right": "timeouts and bulkheads in the process"
+      }
+    ],
+    "right_distractors": [
+      "rewriting the system as services"
+    ]
+  },
+  {
+    "id": "ex-mk61mdtz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these would a split into services take away from Quitanda, and nothing else in the list would?",
+    "hint": "The section about four changes or none.",
+    "choices": [
+      {
+        "text": "The ability to run more copies of the shop",
+        "correct": false,
+        "why": "Services can run more copies too, one service at a time."
+      },
+      {
+        "text": "The ability to publish the shop on a port",
+        "correct": false,
+        "why": "Every service publishes a port of its own."
+      },
+      {
+        "text": "The ability to keep prices in cents",
+        "correct": false,
+        "why": "A representation of money survives any split."
+      },
+      {
+        "text": "One transaction covering the order, the stock and the payment",
+        "correct": true,
+        "why": "Right. With two databases no `with con:` reaches both."
+      }
+    ]
+  }
+]
