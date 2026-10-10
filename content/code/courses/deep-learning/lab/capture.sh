@@ -21,7 +21,12 @@ quiet() { lab exec "$*" >/dev/null 2>&1 </dev/null; }
 use() {
   local f
   for f in "$@"; do
-    python3 "$COURSE/lab/shown.py" "$COURSE" "$f" "${L:-}" > "/home/ana/dl/$f" || exit 1
+    if ! python3 "$COURSE/lab/shown.py" "$COURSE" "$f" "${L:-}" > "/home/ana/dl/$f" 2>/dev/null; then
+      # DRAFTING ONLY: a module whose lesson is not written yet. Unset in the final run.
+      [ -n "${DL_FALLBACK:-}" ] && [ -f "$DL_FALLBACK/$f" ] || { echo "use: no lesson shows $f" >&2; exit 1; }
+      echo "${L:-?} $f" >> "$DL_FALLBACK/../fallback.log"
+      cp "$DL_FALLBACK/$f" "/home/ana/dl/$f"
+    fi
   done
 }
 block() { printf '##### %s\n' "$1"; }
