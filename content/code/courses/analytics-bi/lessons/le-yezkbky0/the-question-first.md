@@ -16,8 +16,8 @@ schedule.** Write the list before opening the tool. For Lantern's owner, on Mond
 
 Three questions, one reader, once a week. Each chart that does not help answer one of them is a
 candidate for removal, however good it looks. A fourth question — "how is the Black Friday cohort
-doing?" — belongs to a different reader with a different rhythm, and lesson 9 gives it a page of its
-own.
+doing?" — belongs to a different reader with a different rhythm, and lesson 9 gives it an analysis of
+its own.
 
 ## Three kinds of dashboard
 

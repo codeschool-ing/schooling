@@ -18,7 +18,7 @@ segunda:
 
 Três perguntas, um leitor, uma vez por semana. Cada gráfico que não ajuda a responder uma delas é
 candidato a sair, por mais bonito que seja. Uma quarta pergunta — "como vai a coorte da Black
-Friday?" — pertence a outro leitor com outro ritmo, e a aula 9 lhe dá uma página própria.
+Friday?" — pertence a outro leitor com outro ritmo, e a aula 9 lhe dá uma análise própria.
 
 ## Três tipos de painel
 

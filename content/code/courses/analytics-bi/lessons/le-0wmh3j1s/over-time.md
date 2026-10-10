@@ -41,7 +41,7 @@ break the pattern, and each is a question for later rather than a conclusion now
 November 2025 jumps to 636, above the 592 of December after it: the shop ran a Black Friday
 campaign, and lesson 9 follows the customers it brought. January 2026 barely moves. And June 2026
 falls to 513 — **because the data ends on 17 June**. A month cut in half looks like a collapse on
-every chart that draws it as a whole one, and lesson 10 treats it as the misleading picture it is.
+every chart that draws it as a whole one, and lesson 6 treats it as the misleading picture it is.
 
 ## The holes
 

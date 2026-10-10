@@ -42,7 +42,7 @@ meses quebram o padrão, e cada um é uma pergunta para depois, e não uma concl
 Novembro de 2025 salta para 636, acima dos 592 de dezembro que vem depois: a loja fez uma campanha
 de Black Friday, e a aula 9 acompanha os clientes que ela trouxe. Janeiro de 2026 quase não se
 mexe. E junho de 2026 cai para 513 — **porque os dados terminam em 17 de junho**. Um mês cortado
-ao meio parece um colapso em todo gráfico que o desenha como mês inteiro, e a aula 10 o trata como
+ao meio parece um colapso em todo gráfico que o desenha como mês inteiro, e a aula 6 o trata como
 o retrato enganoso que ele é.
 
 ## Os buracos
