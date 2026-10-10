@@ -1,0 +1,1078 @@
+[
+  {
+    "id": "ex-6dzxsd3d",
+    "version": 1,
+    "section": "delegation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You gave a reading app your shop password, and now you want to stop it using your account. What does that cost you?",
+    "hint": "A password is the same key for everybody who holds it.",
+    "choices": [
+      {
+        "text": "Nothing much: you revoke the app's own token on the shop's account settings page",
+        "correct": false,
+        "why": "That is what delegation gives you. With a password there is no token of the app's own to revoke."
+      },
+      {
+        "text": "Uninstalling the app, which deletes the password",
+        "correct": false,
+        "why": "The app may have stored it on its own server, which uninstalling does not reach."
+      },
+      {
+        "text": "A new password, which also cuts off every other app that had the old one",
+        "correct": true,
+        "why": "Right. The password is the only lever, and pulling it stops everything that held it at once."
+      },
+      {
+        "text": "Waiting a few minutes for the app's access to expire on its own, as tokens do",
+        "correct": false,
+        "why": "Access tokens expire; a password does not, so the app keeps working until it is changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-4y2fbta3",
+    "version": 1,
+    "section": "delegation",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each OAuth role to what plays it in this lesson's lab.",
+    "hint": "One file plays two of them.",
+    "pairs": [
+      {
+        "left": "resource owner",
+        "right": "Ana, the one user `idp.py` knows"
+      },
+      {
+        "left": "client",
+        "right": "`shelf-web`, which you play with `curl`"
+      },
+      {
+        "left": "authorization server",
+        "right": "`/authorize` and `/token`"
+      },
+      {
+        "left": "resource server",
+        "right": "`/books/stock` and `/userinfo`"
+      }
+    ],
+    "right_distractors": [
+      "the browser's history"
+    ]
+  },
+  {
+    "id": "ex-atp6kcyg",
+    "version": 1,
+    "section": "delegation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does OAuth trust the browser least of all the parties in a flow?",
+    "hint": "Think about who else can see what passes through it.",
+    "choices": [
+      {
+        "text": "It runs the client's code, so it holds the client's secret",
+        "correct": false,
+        "why": "A web app's secret stays on the app's server; the browser never receives it."
+      },
+      {
+        "text": "Extensions, history and logs see what passes through it",
+        "correct": true,
+        "why": "Right. That is why nothing the browser carries is enough on its own."
+      },
+      {
+        "text": "It cannot keep a cookie between the redirect and the callback",
+        "correct": false,
+        "why": "It can; the client's session cookie survives the whole flow. The problem is who else reads the addresses."
+      },
+      {
+        "text": "It is the resource owner, and owners are never trusted",
+        "correct": false,
+        "why": "The person is the resource owner; the browser only carries messages for them."
+      }
+    ]
+  },
+  {
+    "id": "ex-wkn7pt7v",
+    "version": 1,
+    "section": "code-flow",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the authorization code flow in order.",
+    "hint": "The browser half comes first.",
+    "items": [
+      "The client redirects the browser to `/authorize`",
+      "The person signs in and agrees at the authorization server",
+      "The browser returns to the callback with a code and `state`",
+      "The client checks `state`",
+      "The client exchanges the code at `/token`",
+      "The client calls the API with the access token"
+    ],
+    "trap": "Exchanging the code before checking `state` lets a code from somebody else's session in."
+  },
+  {
+    "id": "ex-ym7z374j",
+    "version": 1,
+    "section": "code-flow",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the authorization server send a code through the browser, and not the access token itself?",
+    "hint": "Where do redirect addresses end up?",
+    "choices": [
+      {
+        "text": "A code is short enough to fit in an address, and a full token is not",
+        "correct": false,
+        "why": "Tokens fit in addresses; the implicit grant put them there. The question is who reads the address."
+      },
+      {
+        "text": "A token would expire before the browser finished following the redirect",
+        "correct": false,
+        "why": "A token lasts minutes, and a redirect takes milliseconds."
+      },
+      {
+        "text": "The browser has somewhere to store a code but nowhere to keep a token",
+        "correct": false,
+        "why": "A browser can keep either; storage is not the issue."
+      },
+      {
+        "text": "Addresses leak, and a leaked code is useless without the second request",
+        "correct": true,
+        "why": "Right. The code works once, for a minute, and only with the client's credentials and the verifier."
+      }
+    ]
+  },
+  {
+    "id": "ex-bpbza4ra",
+    "version": 1,
+    "section": "code-flow",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A client is registered as `https://app.example`, and its authorization server accepts any `redirect_uri` that starts with that string. Which address could then receive a code?",
+    "hint": "Read the comparison as a string, not as a URL.",
+    "choices": [
+      {
+        "text": "`https://app.example.other.test/cb`, on another host",
+        "correct": true,
+        "why": "Right. The prefix matches and the host is different. That is why the comparison has to be exact."
+      },
+      {
+        "text": "Only `https://app.example/cb`, since a URL's host must match",
+        "correct": false,
+        "why": "A prefix check compares characters and knows nothing about hosts."
+      },
+      {
+        "text": "None, because a code is only issued after the client sends its secret",
+        "correct": false,
+        "why": "The secret is checked at `/token`, after the code has already been sent."
+      },
+      {
+        "text": "`http://app.example/cb`, because the scheme is ignored",
+        "correct": false,
+        "why": "`http://` does not start with `https://`, so this one fails the prefix."
+      }
+    ]
+  },
+  {
+    "id": "ex-97mxfvzd",
+    "version": 1,
+    "section": "pkce",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`pkce.py` printed a verifier of 64 characters. How many characters long is its S256 challenge?",
+    "hint": "A SHA-256 is 32 bytes, whatever went in.",
+    "value": 43,
+    "tolerance": 0,
+    "unit": "characters"
+  },
+  {
+    "id": "ex-5pjxj7nh",
+    "version": 1,
+    "section": "pkce",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`idp.py` gives no code unless the request carries `code_challenge_method=___`.",
+    "hint": "The other method sends the verifier itself.",
+    "blanks": [
+      {
+        "accept": [
+          "S256"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2wh2vfjg",
+    "version": 1,
+    "section": "pkce",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A web app on a server already sends its client secret to `/token`. What does PKCE add for it?",
+    "hint": "Think of a code that arrives in the wrong session.",
+    "choices": [
+      {
+        "text": "Nothing at all; PKCE was written for public clients and only applies to them",
+        "correct": false,
+        "why": "RFC 9700 asks every client to use it, and the OAuth 2.1 draft requires it."
+      },
+      {
+        "text": "It replaces the client secret, so the app stops storing a secret anywhere",
+        "correct": false,
+        "why": "The two protect different things, and a confidential client keeps both."
+      },
+      {
+        "text": "A code slipped into another person's session fails on that session's verifier",
+        "correct": true,
+        "why": "Right. The secret proves which client is asking; the verifier proves which sign-in the code came from."
+      },
+      {
+        "text": "It encrypts the code in the redirect, so the browser cannot read it on the way",
+        "correct": false,
+        "why": "The code travels in clear in the address; PKCE adds a proof at `/token`, not encryption."
+      }
+    ]
+  },
+  {
+    "id": "ex-5t02hdrj",
+    "version": 1,
+    "section": "the-idp",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does `idp.py` do that no real authorization server does?",
+    "hint": "It is the one shortcut that lets `curl` drive it.",
+    "choices": [
+      {
+        "text": "Signs every token it issues with RS256 and a 2048-bit RSA key",
+        "correct": false,
+        "why": "RS256 is what most real servers use."
+      },
+      {
+        "text": "Refuses a `redirect_uri` it does not know, without redirecting the browser",
+        "correct": false,
+        "why": "Every correct authorization server does this."
+      },
+      {
+        "text": "Publishes its public key at a JWKS address for APIs and clients",
+        "correct": false,
+        "why": "That is OpenID Connect's standard way of handing out keys."
+      },
+      {
+        "text": "Answers `/authorize` at once, as a user who is always signed in and agrees",
+        "correct": true,
+        "why": "Right. A real one shows a sign-in page and a consent screen the person can refuse."
+      }
+    ]
+  },
+  {
+    "id": "ex-z5dh64kb",
+    "version": 1,
+    "section": "the-idp",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `idp-key.pem` written with permissions `0600`?",
+    "hint": "What could somebody do with a copy of it?",
+    "choices": [
+      {
+        "text": "Python refuses to load a key that others can read",
+        "correct": false,
+        "why": "Python loads it whatever the permissions; the restriction is for people."
+      },
+      {
+        "text": "Whoever reads it signs tokens that every trusting API accepts",
+        "correct": true,
+        "why": "Right. The private key is the server's whole authority."
+      },
+      {
+        "text": "The JWKS endpoint serves this file, so it must not change",
+        "correct": false,
+        "why": "The JWKS carries the public half only, built from the key in memory."
+      },
+      {
+        "text": "So that every restart creates a fresh key",
+        "correct": false,
+        "why": "Permissions decide who reads it; the program reuses the same key at every start."
+      }
+    ]
+  },
+  {
+    "id": "ex-a8sj2ppq",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You ask `/books/stock` with no `Authorization` header. What does `idp.py` answer?",
+    "hint": "The API cannot tell who you are yet.",
+    "choices": [
+      {
+        "text": "403, because no token means no scope",
+        "correct": false,
+        "why": "403 is for a valid token that lacks a scope; here there is no token at all."
+      },
+      {
+        "text": "401, with `WWW-Authenticate: Bearer`",
+        "correct": true,
+        "why": "Right. The header tells the client which kind of credential to bring."
+      },
+      {
+        "text": "302 to `/authorize`",
+        "correct": false,
+        "why": "An API answers with a status; sending a browser to sign in is the client's job."
+      },
+      {
+        "text": "400, because the request is malformed",
+        "correct": false,
+        "why": "The request is well formed; it only lacks a credential."
+      }
+    ]
+  },
+  {
+    "id": "ex-26gq7138",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You exchange a code a second time, with the right verifier and the right secret. What happens?",
+    "hint": "When does `idp.py` take a code out of its table?",
+    "choices": [
+      {
+        "text": "200 and a fresh set of tokens",
+        "correct": false,
+        "why": "That would make a copied code as good as the original, every time."
+      },
+      {
+        "text": "200 and the same tokens as the first exchange",
+        "correct": false,
+        "why": "The server keeps no record of tokens it issued for a code."
+      },
+      {
+        "text": "401 `invalid_client`, because the secret was already used",
+        "correct": false,
+        "why": "A client secret can be used any number of times; it is the code that works once."
+      },
+      {
+        "text": "400 `invalid_grant`",
+        "correct": true,
+        "why": "Right. The first exchange took the code out of the table, so it is unknown now."
+      }
+    ]
+  },
+  {
+    "id": "ex-pkdd2c2r",
+    "version": 1,
+    "section": "by-hand",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Most errors at `/authorize` go back to the client's callback with `error=`. Why does an unregistered `redirect_uri` get a 400 from `idp.py` itself instead?",
+    "hint": "Which address would the redirect go to?",
+    "choices": [
+      {
+        "text": "The address is the thing in doubt, so a redirect would message whoever is there",
+        "correct": true,
+        "why": "Right. The other errors can go back because the address is known to be the client's."
+      },
+      {
+        "text": "A 302 carries a code in its address, but it has no room for an error",
+        "correct": false,
+        "why": "The `invalid_scope` refusal was a 302 carrying `error=invalid_scope`."
+      },
+      {
+        "text": "The callback would call `/authorize` again, and the browser would loop",
+        "correct": false,
+        "why": "A callback does not call `/authorize`; nothing loops."
+      },
+      {
+        "text": "OAuth forbids redirecting for every kind of error at `/authorize`, not just this one",
+        "correct": false,
+        "why": "It forbids them for this one; the others redirect, as the lab showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-b0gmqamg",
+    "version": 1,
+    "section": "scopes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A token granted `openid email` asks for `/books/stock`. What comes back?",
+    "hint": "The token is genuine and in date.",
+    "choices": [
+      {
+        "text": "401 `invalid_token`",
+        "correct": false,
+        "why": "The signature, issuer, audience and time all pass; nothing is wrong with the token itself."
+      },
+      {
+        "text": "200, since any valid token reads the stock",
+        "correct": false,
+        "why": "The endpoint needs `books:read`, and this token was never granted it."
+      },
+      {
+        "text": "403 `insufficient_scope`, naming `books:read`",
+        "correct": true,
+        "why": "Right. A valid token without the scope is 403, and `WWW-Authenticate` names what was missing."
+      },
+      {
+        "text": "400 `invalid_scope`",
+        "correct": false,
+        "why": "That is `/authorize` refusing a request; an API answers 401 or 403."
+      }
+    ]
+  },
+  {
+    "id": "ex-6hdj4f0c",
+    "version": 1,
+    "section": "scopes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does the scope on an access token decide?",
+    "hint": "Lesson 11 is about the other half.",
+    "choices": [
+      {
+        "text": "Which client the token was issued to, and on whose behalf",
+        "correct": false,
+        "why": "That is `client_id`, a separate claim."
+      },
+      {
+        "text": "Exactly what the person is allowed to do inside the API",
+        "correct": false,
+        "why": "The API still applies its own rules; a banned account opens nothing whatever the scope."
+      },
+      {
+        "text": "How long the token stays valid",
+        "correct": false,
+        "why": "That is `exp`, and `expires_in` in the response."
+      },
+      {
+        "text": "An upper limit, which the API's own rules narrow further",
+        "correct": true,
+        "why": "Right. A scope is what the client asked for and the person agreed to, an upper limit and no more."
+      }
+    ]
+  },
+  {
+    "id": "ex-twk79787",
+    "version": 1,
+    "section": "scopes",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The authorization server may grant less than was asked, so a client reads the ___ field of the token response.",
+    "hint": "It was `books:read openid profile` in the first flow.",
+    "blanks": [
+      {
+        "accept": [
+          "scope",
+          "`scope`"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-spaxgp0q",
+    "version": 1,
+    "section": "openid-connect",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each check on an ID token to what it stops.",
+    "hint": "Each one closes a different door.",
+    "pairs": [
+      {
+        "left": "the signature, with the key the `kid` names",
+        "right": "a token anybody wrote"
+      },
+      {
+        "left": "`aud` is this client",
+        "right": "a token made out to somebody else"
+      },
+      {
+        "left": "`nonce` is the one this client sent",
+        "right": "an ID token replayed from an earlier sign-in"
+      },
+      {
+        "left": "`exp` has not passed",
+        "right": "a token kept and used later"
+      }
+    ],
+    "right_distractors": [
+      "a person who typed the wrong password"
+    ]
+  },
+  {
+    "id": "ex-57hnm3wn",
+    "version": 1,
+    "section": "openid-connect",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An app signs people in by calling an API with whatever access token it receives and reading the user id the API returns. What is wrong with that?",
+    "hint": "Who else could hold an access token for the same person?",
+    "choices": [
+      {
+        "text": "Access tokens expire far too quickly to keep anybody signed in for a whole session",
+        "correct": false,
+        "why": "The app would keep its own session after sign-in; lifetime is not the flaw."
+      },
+      {
+        "text": "Another app's token for that person works too, letting that app sign in as them",
+        "correct": true,
+        "why": "Right. An access token's audience is the API, and nothing in it says which app should accept it. An ID token's audience is the app."
+      },
+      {
+        "text": "Nothing is wrong, as long as the API checks every token's signature",
+        "correct": false,
+        "why": "The signature proves the token is genuine, not that it was issued to this app."
+      },
+      {
+        "text": "The user id differs for every client, so it identifies nobody in particular",
+        "correct": false,
+        "why": "The API returns the same subject whichever token brings it; that is what makes the flaw usable."
+      }
+    ]
+  },
+  {
+    "id": "ex-njjbmeyf",
+    "version": 1,
+    "section": "openid-connect",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "OpenID Connect's discovery document is at `/.well-known/___` under the issuer.",
+    "hint": "`check_token.py` reads it first.",
+    "blanks": [
+      {
+        "accept": [
+          "openid-configuration"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fspm683m",
+    "version": 1,
+    "section": "openid-connect",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`check_token.py` refused the access token, given the audience `shelf-web`, with `Audience doesn't match`. What was in the token's `aud`?",
+    "hint": "Who is an access token made out to?",
+    "choices": [
+      {
+        "text": "`shelf-web`, with a different issuer",
+        "correct": false,
+        "why": "An issuer mismatch has its own error; this one is about the audience."
+      },
+      {
+        "text": "Nothing, because access tokens carry no audience",
+        "correct": false,
+        "why": "`idp.py`'s access tokens carry one, and the check read it."
+      },
+      {
+        "text": "`shelf-api`",
+        "correct": true,
+        "why": "Right. Checked with `shelf-api`, the same token passed and showed its scope."
+      },
+      {
+        "text": "The nonce the client sent at `/authorize`",
+        "correct": false,
+        "why": "A nonce goes into the ID token, never into `aud`."
+      }
+    ]
+  },
+  {
+    "id": "ex-0wtnc0cw",
+    "version": 1,
+    "section": "refresh-tokens",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With rotation, a refresh token that was already exchanged comes back to `/token`. What does `idp.py` do?",
+    "hint": "It cannot tell which holder is the real app.",
+    "choices": [
+      {
+        "text": "Refuses it and leaves its replacement working",
+        "correct": false,
+        "why": "Then the thief might be the one holding the replacement. The server ends both."
+      },
+      {
+        "text": "Accepts it once more, since it was valid a moment ago",
+        "correct": false,
+        "why": "A rotated refresh token works once; that is the whole mechanism."
+      },
+      {
+        "text": "Refuses it and ends the whole grant, replacement included",
+        "correct": true,
+        "why": "Right. Both holders lose, and the person signs in again."
+      },
+      {
+        "text": "Revokes every access token already issued in that grant",
+        "correct": false,
+        "why": "It cannot: the first access token still opened the stock list, because the API asks nobody."
+      }
+    ]
+  },
+  {
+    "id": "ex-n59cgd4m",
+    "version": 1,
+    "section": "refresh-tokens",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`idp.py`'s access tokens last 300 seconds. A client keeps working for one hour, refreshing each time a token runs out. How many access tokens does it use in that hour, the first included?",
+    "hint": "An hour is 3600 seconds.",
+    "value": 12,
+    "tolerance": 0,
+    "unit": "tokens"
+  },
+  {
+    "id": "ex-hqnrvx4k",
+    "version": 1,
+    "section": "refresh-tokens",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A single-page app needs to keep a person signed in for days. Which arrangement does the lesson prefer?",
+    "hint": "The best place for the token is the one the page's scripts cannot reach.",
+    "choices": [
+      {
+        "text": "The client secret in the app's JavaScript, to authenticate each refresh",
+        "correct": false,
+        "why": "A secret shipped in JavaScript is in every copy; a public client has none worth the name."
+      },
+      {
+        "text": "A refresh token in `localStorage`, rotated on every use",
+        "correct": false,
+        "why": "The lesson allows this only if the browser must hold it. The preferred answer keeps it out of the browser."
+      },
+      {
+        "text": "The refresh token in the address after `#`, so it never reaches a server",
+        "correct": false,
+        "why": "That is where the implicit grant put tokens, and history and logs can read it."
+      },
+      {
+        "text": "The app's own small server keeps them, and the browser gets a cookie",
+        "correct": true,
+        "why": "Right. A backend for frontend keeps the refresh token where no script in the page can read it."
+      }
+    ]
+  },
+  {
+    "id": "ex-mhks1rdf",
+    "version": 1,
+    "section": "client-credentials",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these were in `idp.py`'s answer to a `client_credentials` request? Choose all that apply.",
+    "hint": "A machine can always ask again, and nobody signed in.",
+    "choices": [
+      {
+        "text": "`access_token`",
+        "correct": true,
+        "why": "Right. That is the point of the request."
+      },
+      {
+        "text": "`refresh_token`",
+        "correct": false,
+        "why": "The client can repeat the request; a refresh token would be a second credential protecting nothing."
+      },
+      {
+        "text": "`expires_in`",
+        "correct": true,
+        "why": "Right. 300, like every access token from this server."
+      },
+      {
+        "text": "`id_token`",
+        "correct": false,
+        "why": "Nobody signed in, so there is nobody for an ID token to describe."
+      }
+    ]
+  },
+  {
+    "id": "ex-v4y2mx4b",
+    "version": 1,
+    "section": "client-credentials",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A nightly job with no person involved asks `/token` for a token with `grant_type=___`.",
+    "hint": "Two words joined by an underscore.",
+    "blanks": [
+      {
+        "accept": [
+          "client_credentials"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-31p4pj1k",
+    "version": 1,
+    "section": "client-credentials",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A support tool uses client credentials to change customers' addresses for them. What does that get wrong?",
+    "hint": "Look at `sub` in a machine token.",
+    "choices": [
+      {
+        "text": "Every change is logged as the tool's own, and no log says for whom",
+        "correct": true,
+        "why": "Right. The token's `sub` is the client, and every record after that is wrong about who."
+      },
+      {
+        "text": "The authorization server refuses, since client credentials carry no scope",
+        "correct": false,
+        "why": "Client credentials tokens carry a scope; `idp.py` granted `books:read`."
+      },
+      {
+        "text": "Each customer must consent on a screen before every single change",
+        "correct": false,
+        "why": "There is no consent in this grant at all; that is part of the problem."
+      },
+      {
+        "text": "The token expires before the change reaches the database and is saved",
+        "correct": false,
+        "why": "Five minutes is plenty for one request."
+      }
+    ]
+  },
+  {
+    "id": "ex-g92thz97",
+    "version": 1,
+    "section": "what-is-gone",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does RFC 9700 say the implicit grant should not be used?",
+    "hint": "Where did it put the token?",
+    "choices": [
+      {
+        "text": "It needs the user's password, typed into the app's own form",
+        "correct": false,
+        "why": "That is the password grant. The implicit grant used the same redirect as the code flow."
+      },
+      {
+        "text": "It put the access token in the redirect, where logs and history read it",
+        "correct": true,
+        "why": "Right. The front channel carried the token itself, and there was no refresh token either."
+      },
+      {
+        "text": "It carried no scopes, so every token it returned opened the whole account",
+        "correct": false,
+        "why": "It carried scopes like any other grant."
+      },
+      {
+        "text": "It requires a client secret, which a browser has no way to keep",
+        "correct": false,
+        "why": "It required no secret; that is part of why it was made for browsers."
+      }
+    ]
+  },
+  {
+    "id": "ex-ambt1jgx",
+    "version": 1,
+    "section": "what-is-gone",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An old tutorial's app posts the user's password to `/token` with `grant_type=password`. What does `idp.py` answer?",
+    "hint": "It is not a grant this server knows.",
+    "choices": [
+      {
+        "text": "200 with an access token and no refresh token",
+        "correct": false,
+        "why": "That is what the grant once returned; this server does not offer it."
+      },
+      {
+        "text": "401 `invalid_client`",
+        "correct": false,
+        "why": "The client authenticated correctly; the grant type is what was refused."
+      },
+      {
+        "text": "400 `unsupported_grant_type`",
+        "correct": true,
+        "why": "Right, with `password is not offered here`."
+      },
+      {
+        "text": "302 to the callback with an error",
+        "correct": false,
+        "why": "`/token` is a direct request and never redirects."
+      }
+    ]
+  },
+  {
+    "id": "ex-sjq3f08p",
+    "version": 1,
+    "section": "saml",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put a SAML sign-in with the browser POST binding in order.",
+    "hint": "The two servers never talk directly.",
+    "items": [
+      "The browser asks the service provider for a page",
+      "The service provider redirects the browser with a `SAMLRequest`",
+      "The person signs in at the identity provider",
+      "The identity provider returns a form holding the signed assertion",
+      "The browser posts the assertion to the service provider",
+      "The service provider checks it and starts a session"
+    ],
+    "trap": "The assertion reaches the service provider through the browser, never from the identity provider directly."
+  },
+  {
+    "id": "ex-2t358xpz",
+    "version": 1,
+    "section": "saml",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`xmlsec1` printed `OK` for an assertion. Which of these must the service provider still check itself? Choose all that apply.",
+    "hint": "`xmlsec1` checks signatures and knows nothing of SAML.",
+    "choices": [
+      {
+        "text": "That the digest of the signed element matches",
+        "correct": false,
+        "why": "That is part of what `OK` reported."
+      },
+      {
+        "text": "That `Audience` names this service provider",
+        "correct": true,
+        "why": "Right. An assertion for another application is validly signed too."
+      },
+      {
+        "text": "That the time now is inside `NotBefore` and `NotOnOrAfter`",
+        "correct": true,
+        "why": "Right. The lab's assertion was outside its window and still printed `OK`."
+      },
+      {
+        "text": "That the assertion's `ID` has not been seen before",
+        "correct": true,
+        "why": "Right. Otherwise the same assertion can be posted twice."
+      },
+      {
+        "text": "That the signature value decodes as base64",
+        "correct": false,
+        "why": "Verifying it required decoding it; `OK` covers that."
+      }
+    ]
+  },
+  {
+    "id": "ex-r26knef9",
+    "version": 1,
+    "section": "saml",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each SAML term to its nearest counterpart in OpenID Connect.",
+    "hint": "The roles map across even though the formats do not.",
+    "pairs": [
+      {
+        "left": "identity provider",
+        "right": "the authorization server"
+      },
+      {
+        "left": "service provider",
+        "right": "the client"
+      },
+      {
+        "left": "assertion",
+        "right": "the ID token"
+      },
+      {
+        "left": "metadata",
+        "right": "discovery and the JWKS"
+      }
+    ],
+    "right_distractors": [
+      "the refresh token"
+    ]
+  },
+  {
+    "id": "ex-3ex8br02",
+    "version": 1,
+    "section": "where-each",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A company's staff sign in to a tool it bought, through the company's identity provider, and the browser posts a signed XML document to the tool. Which protocol is that?",
+    "hint": "Only one of them speaks XML.",
+    "choices": [
+      {
+        "text": "OpenID Connect",
+        "correct": false,
+        "why": "It signs people in too, but with a JWT, not XML."
+      },
+      {
+        "text": "OAuth 2.0 client credentials",
+        "correct": false,
+        "why": "No person signs in with client credentials."
+      },
+      {
+        "text": "SAML 2.0",
+        "correct": true,
+        "why": "Right. An assertion posted through the browser is SAML's POST binding."
+      },
+      {
+        "text": "PKCE",
+        "correct": false,
+        "why": "PKCE is a protection inside the OAuth code flow, not a protocol of its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-022bfyjp",
+    "version": 1,
+    "section": "where-each",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In your first job, a team asks you to add \"Sign in with Google\" to a web app. What is your part, according to this lesson?",
+    "hint": "Somebody else runs the authorization server.",
+    "choices": [
+      {
+        "text": "Writing an authorization server like `idp.py`, but hardened for production use",
+        "correct": false,
+        "why": "Google is the authorization server; writing one is exactly what the lesson says not to do."
+      },
+      {
+        "text": "Setting up a library and the provider correctly, and the checks it runs",
+        "correct": true,
+        "why": "Right. Configuration and those checks are where integrations go wrong."
+      },
+      {
+        "text": "Storing the users' Google passwords, hashed as lesson 10 describes",
+        "correct": false,
+        "why": "The app never sees a Google password; that is the point of delegation."
+      },
+      {
+        "text": "Accepting Google's access token as proof of who signed in",
+        "correct": false,
+        "why": "That is the confusion the OpenID Connect section refused; the ID token is the proof."
+      }
+    ]
+  },
+  {
+    "id": "ex-4e146dpj",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put what a client does with an ID token, before trusting it, in order.",
+    "hint": "It cannot check a signature before it has the key.",
+    "items": [
+      "Read the discovery document to find `jwks_uri`",
+      "Fetch the key the token's `kid` names",
+      "Verify the signature, accepting RS256 only",
+      "Check `iss`, `aud` and `exp`",
+      "Compare `nonce` with the one it sent",
+      "Sign the person in"
+    ],
+    "trap": "Reading claims before the signature is checked means reading what anybody could have written."
+  },
+  {
+    "id": "ex-yry9t664",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A grant is revoked at 10:07:00 because a refresh token came back twice. The thief's newest access token was issued at 10:05:00 and lasts 300 seconds. For how many seconds after the revocation does it still open an API that checks only the signature and the time?",
+    "hint": "Revoking the grant does not reach a token the API checks on its own.",
+    "value": 180,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-tq4p4hhm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A phone app uses the code flow with PKCE and has no client secret. Another app on the phone receives the redirect and the code. What stops it?",
+    "hint": "Which value never passed through the redirect?",
+    "choices": [
+      {
+        "text": "The authorization server's check of `state` on the way back",
+        "correct": false,
+        "why": "`state` is checked by the client that sent it, not by the authorization server."
+      },
+      {
+        "text": "It lacks the verifier, which never left the real app",
+        "correct": true,
+        "why": "Right. The challenge it may have seen cannot be run backwards into the verifier."
+      },
+      {
+        "text": "The `redirect_uri` comparison that `/token` makes",
+        "correct": false,
+        "why": "The other app received the redirect at the registered address, so that comparison passes."
+      },
+      {
+        "text": "Nothing; a client without a secret cannot be protected at all",
+        "correct": false,
+        "why": "That was the situation before RFC 7636; PKCE exists for exactly this client."
+      }
+    ]
+  },
+  {
+    "id": "ex-f5mz9q6d",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You review an OAuth integration. Which of these findings are defects? Choose all that apply.",
+    "hint": "Two of them are what this lesson recommends.",
+    "choices": [
+      {
+        "text": "A `redirect_uri` registered with a wildcard",
+        "correct": true,
+        "why": "Right. Only an exact match keeps codes away from addresses the client does not control."
+      },
+      {
+        "text": "Access tokens that expire after five minutes",
+        "correct": false,
+        "why": "That is the recommended shape: short access tokens, refreshed."
+      },
+      {
+        "text": "The password grant switched on",
+        "correct": true,
+        "why": "Right. RFC 9700 says it must not be used."
+      },
+      {
+        "text": "Refresh tokens rotated on every use",
+        "correct": false,
+        "why": "Rotation is what lets the server notice a stolen copy."
+      },
+      {
+        "text": "The app signs users in by reading the access token",
+        "correct": true,
+        "why": "Right. Signing in is the ID token's job, checked for `aud` and `nonce`."
+      }
+    ]
+  }
+]

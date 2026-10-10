@@ -1,0 +1,951 @@
+[
+  {
+    "id": "ex-cjw3hz0n",
+    "version": 1,
+    "section": "json-types",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A 64-bit double holds every whole number exactly up to 2 to the power of what?",
+    "hint": "The id in the capture was one past that power of two.",
+    "value": 53,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-709r32v7",
+    "version": 1,
+    "section": "json-types",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the catalogue send a price as `{\"amount_cents\": 3990, \"currency\": \"BRL\"}` rather than `39.90`?",
+    "hint": "Multiply both by three.",
+    "choices": [
+      {
+        "text": "Because JSON has no decimal point",
+        "correct": false,
+        "why": "It has one: `39.90` is valid JSON. The trouble is what a reader turns it into."
+      },
+      {
+        "text": "Because whole cents stay exact under arithmetic, and the number alone does not name its currency",
+        "correct": true,
+        "why": "Right. `39.90 * 3` came out as `119.69999999999999`, and `3990 * 3` as `11970`. The currency makes `3990` mean reais."
+      },
+      {
+        "text": "Because an object is smaller to send",
+        "correct": false,
+        "why": "It is larger. The reason is exactness and meaning, not size."
+      },
+      {
+        "text": "Because SQLite stores every price as a whole number of cents, and the API copies its table",
+        "correct": false,
+        "why": "The table does, but the contract is not the table. A client never sees the column."
+      }
+    ]
+  },
+  {
+    "id": "ex-4pevss03",
+    "version": 1,
+    "section": "json-types",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A service gives each user a random 64-bit id and sends it as a JSON number. Users of the web client report that some profile links open somebody else's profile. What is the fix in the contract?",
+    "hint": "How large is a random 64-bit number, and what does a browser parse JSON numbers into?",
+    "choices": [
+      {
+        "text": "Send the id as a string",
+        "correct": true,
+        "why": "Right. Most random 64-bit ids are past 2^53, so a JavaScript client rounds them to a neighbour, which can be another user's id. A string arrives intact; Twitter's `id_str` is this fix."
+      },
+      {
+        "text": "Send the id with a decimal point, as `1234.0`",
+        "correct": false,
+        "why": "It is still a number to the parser, and still becomes a double."
+      },
+      {
+        "text": "Ask the web client to use a 64-bit integer type when it parses the body",
+        "correct": false,
+        "why": "`JSON.parse` has no such option; the precision is lost before the client's code sees the value. The contract has to avoid the problem rather than ask every client to work around it."
+      },
+      {
+        "text": "Switch to sequential ids",
+        "correct": false,
+        "why": "That only postpones it until the count passes 2^53, and it changes every existing id."
+      }
+    ]
+  },
+  {
+    "id": "ex-9qk1z32e",
+    "version": 1,
+    "section": "names-and-shapes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these timestamps names exactly one moment?",
+    "hint": "Look for the offset from UTC.",
+    "choices": [
+      {
+        "text": "`2026-10-10T01:23:39`",
+        "correct": false,
+        "why": "No offset: it is local time somewhere, and the reader has to guess where."
+      },
+      {
+        "text": "`10/10/2026 01:23`",
+        "correct": false,
+        "why": "No offset, and the day and month could be read either way round."
+      },
+      {
+        "text": "`2026-10-10T01:23:39-03:00`",
+        "correct": true,
+        "why": "Right. RFC 3339 with an offset: any reader can turn it into UTC, `04:23:39Z`."
+      },
+      {
+        "text": "`2026-10-10 01:23:39 (server time)`",
+        "correct": false,
+        "why": "Which server, in which zone? The words name no offset."
+      }
+    ]
+  },
+  {
+    "id": "ex-ncsxvx63",
+    "version": 1,
+    "section": "names-and-shapes",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each value of `subtitle` to what the catalogue's contract says it means.",
+    "hint": "Three of them are different answers, and one is a trap.",
+    "pairs": [
+      {
+        "left": "the field is absent",
+        "right": "not part of this message; in a partial update, leave it as it is"
+      },
+      {
+        "left": "`\"subtitle\": null`",
+        "right": "known to have no value"
+      },
+      {
+        "left": "`\"subtitles\": []`",
+        "right": "a list with nothing in it"
+      },
+      {
+        "left": "`\"subtitle\": \"false\"`",
+        "right": "a non-empty string, which most readers treat as true"
+      }
+    ],
+    "right_distractors": [
+      "the same as the field being absent"
+    ]
+  },
+  {
+    "id": "ex-3skr9jv5",
+    "version": 1,
+    "section": "names-and-shapes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The catalogue starts selling in euros, and a client written last year receives `\"currency\": \"EUR\"` for the first time. What should a well-written client do?",
+    "hint": "The contract said the set may grow.",
+    "choices": [
+      {
+        "text": "Fail the request, since the value is not in its list",
+        "correct": false,
+        "why": "That turns the server's new feature into the client's outage."
+      },
+      {
+        "text": "Treat the price as reais, the only currency it knows",
+        "correct": false,
+        "why": "That shows a wrong price with confidence, which is worse than showing none."
+      },
+      {
+        "text": "Ask the server for the version that only has reais",
+        "correct": false,
+        "why": "Adding a value to an enum that was documented as open is not a breaking change, so there is no such version."
+      },
+      {
+        "text": "Treat it as an unknown currency and carry on",
+        "correct": true,
+        "why": "Right. A value it has never seen is \"something else\", not an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-0df0968f",
+    "version": 1,
+    "section": "names-and-shapes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An API already returns `/books` as a bare JSON array, and clients loop over it. It now needs to tell them where the next page is. Which way breaks none of them?",
+    "hint": "Which part of the response can grow without changing the body's type?",
+    "choices": [
+      {
+        "text": "Wrap the array as `{\"items\": [...], \"next\": ...}`",
+        "correct": false,
+        "why": "Right for a new API, and a breaking change for this one: the body stops being an array, and every loop over it fails."
+      },
+      {
+        "text": "Put the next page's address in a `Link` header",
+        "correct": true,
+        "why": "Right. The body keeps its shape and a header is new information old clients ignore. It is also why the catalogue wrapped its lists from the start."
+      },
+      {
+        "text": "Append the address as the last element of the array",
+        "correct": false,
+        "why": "Every client now meets a string where it expected a book."
+      },
+      {
+        "text": "Add a `next` field to every book",
+        "correct": false,
+        "why": "It breaks nothing, and it puts a fact about the page inside each item, where it does not belong."
+      }
+    ]
+  },
+  {
+    "id": "ex-nfb75yms",
+    "version": 1,
+    "section": "validation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A client sends a book with `\"pirce\"` instead of `\"price\"`. What does `additionalProperties: false` in `book.schema.json` make the catalogue do?",
+    "hint": "Without it, an extra field is simply not looked at.",
+    "choices": [
+      {
+        "text": "Refuse the book and name the unexpected field",
+        "correct": true,
+        "why": "Right. And with `price` missing, the same answer also says it is required: both errors in one 422."
+      },
+      {
+        "text": "Create the book and drop `pirce`",
+        "correct": false,
+        "why": "That is what happens without the keyword, and the client believes it set a price."
+      },
+      {
+        "text": "Rename it to `price` and carry on",
+        "correct": false,
+        "why": "A validator never guesses what a client meant; it reports."
+      },
+      {
+        "text": "Answer 500, since the server cannot make sense of a field it does not know",
+        "correct": false,
+        "why": "The server read it fine. The request is wrong, which is a 4xx."
+      }
+    ]
+  },
+  {
+    "id": "ex-2rdm4rst",
+    "version": 1,
+    "section": "validation",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In JSON Schema, the keyword `___` lists the fields an object cannot be accepted without.",
+    "hint": "`stock` is not in that list in `book.schema.json`.",
+    "blanks": [
+      {
+        "accept": [
+          "required"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kp10j6gv",
+    "version": 1,
+    "section": "validation",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these bodies does `book.schema.json` refuse? Choose all that apply.",
+    "hint": "Check the type and the enum of each field, and what `integer` means.",
+    "choices": [
+      {
+        "text": "A correct book whose price has `\"currency\": \"EUR\"`",
+        "correct": true,
+        "why": "Right. The enum holds `BRL` alone today."
+      },
+      {
+        "text": "A correct book with no `stock` field",
+        "correct": false,
+        "why": "`stock` is not in `required`; `catalogue.py` puts 0 there itself."
+      },
+      {
+        "text": "A correct book with `\"amount_cents\": 3990.0`",
+        "correct": false,
+        "why": "It passed in the capture: `integer` means a number with no fractional part."
+      },
+      {
+        "text": "A correct book with the ISBN sent as the number `9786500000078`",
+        "correct": true,
+        "why": "Right. The schema asks for a string; a number fails `type` before `pattern` is even tried."
+      }
+    ]
+  },
+  {
+    "id": "ex-wytr2387",
+    "version": 1,
+    "section": "the-catalogue",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `catalogue.py` a separate program, rather than a new release of `rest.py` under the same `/v1`?",
+    "hint": "Compare the two answers for book 1.",
+    "choices": [
+      {
+        "text": "Because Python cannot run two handlers in one file",
+        "correct": false,
+        "why": "It can; `rest.py` already serves two versions. The reason is the contract."
+      },
+      {
+        "text": "Because its price is an object, which breaks every client reading `price_cents`",
+        "correct": true,
+        "why": "Right. Under the same address that is a breaking change; as a release of `rest.py` it would have gone under `/v2`."
+      },
+      {
+        "text": "Because it uses a different database, so the two programs could not share the same rows",
+        "correct": false,
+        "why": "It uses the same `shelf.db`, through the same `db.py`."
+      },
+      {
+        "text": "Because adding `in_stock` is a breaking change",
+        "correct": false,
+        "why": "A field added to a response breaks no tolerant reader. The price is the change that breaks."
+      }
+    ]
+  },
+  {
+    "id": "ex-t6rf3r51",
+    "version": 1,
+    "section": "the-catalogue",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`book.schema.json` is missing from `~/shelf`. When does `catalogue.py` fail?",
+    "hint": "Where in the file is the schema opened?",
+    "choices": [
+      {
+        "text": "On the first POST",
+        "correct": false,
+        "why": "That would be the case if it opened the file per request. It reads it once, before the server starts."
+      },
+      {
+        "text": "At start-up, before it answers anybody",
+        "correct": true,
+        "why": "Right. The file is read at import time, so the program stops with an error instead of answering half its routes."
+      },
+      {
+        "text": "Never; it skips validation",
+        "correct": false,
+        "why": "Silently skipping the check is the failure the start-up read exists to prevent."
+      },
+      {
+        "text": "On the first GET",
+        "correct": false,
+        "why": "GET never touches the schema, and the server would not have started anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-jbxtv2ch",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which member of a problem details object should a client's code branch on?",
+    "hint": "One is for programs, two are for people.",
+    "choices": [
+      {
+        "text": "`detail`",
+        "correct": false,
+        "why": "It describes this occurrence for a person and may differ every time."
+      },
+      {
+        "text": "`title`",
+        "correct": false,
+        "why": "It is the same for every occurrence, but it is wording, and wording gets edited."
+      },
+      {
+        "text": "`instance`",
+        "correct": false,
+        "why": "It identifies one occurrence, so it is different every time."
+      },
+      {
+        "text": "`type`",
+        "correct": true,
+        "why": "Right. A URI that names the kind of problem and does not change."
+      }
+    ]
+  },
+  {
+    "id": "ex-s7hzb67x",
+    "version": 1,
+    "section": "errors",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each member of a problem details body to what it is for.",
+    "hint": "Ask who reads it, and whether it changes between occurrences.",
+    "pairs": [
+      {
+        "left": "`type`",
+        "right": "names the kind of problem, for code"
+      },
+      {
+        "left": "`title`",
+        "right": "summarises the kind, the same every time"
+      },
+      {
+        "left": "`detail`",
+        "right": "explains this occurrence to a person"
+      },
+      {
+        "left": "`instance`",
+        "right": "identifies this occurrence"
+      }
+    ],
+    "right_distractors": [
+      "carries the stack trace, for debugging"
+    ]
+  },
+  {
+    "id": "ex-qc9d7r3r",
+    "version": 1,
+    "section": "errors",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An error body in the shape of RFC 9457 is sent with the media type `application/___+json`.",
+    "hint": "The word the RFC's title uses for what went wrong.",
+    "blanks": [
+      {
+        "accept": [
+          "problem"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-pp9nvaxy",
+    "version": 1,
+    "section": "errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`catalogue.py` answers a missing book with `\"type\": \"about:blank\"` and status 404. What must the `title` be?",
+    "hint": "`about:blank` says the problem is no more than its status code.",
+    "choices": [
+      {
+        "text": "`there is no book 99`",
+        "correct": false,
+        "why": "That is the `detail`, which describes this occurrence."
+      },
+      {
+        "text": "`Not Found`",
+        "correct": true,
+        "why": "Right. With `about:blank`, the title is the status code's own name."
+      },
+      {
+        "text": "`/v1/books/99`",
+        "correct": false,
+        "why": "That is the `instance`, which says which occurrence it was."
+      },
+      {
+        "text": "`about:blank`",
+        "correct": false,
+        "why": "That is the type. The title says, in words, what the type is."
+      }
+    ]
+  },
+  {
+    "id": "ex-pn0xm3km",
+    "version": 1,
+    "section": "pages",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A collection of books with ids 1 to 10 is listed newest first, three to a page, by offset. A client reads the first page; then books 11 and 12 are added; then it asks for `offset=3`. What is the id of the first book on its second page?",
+    "hint": "Write the list again after the insert and count three positions.",
+    "value": 9,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-fhx10fxg",
+    "version": 1,
+    "section": "pages",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the cursor's second page in the capture not show book 5 again after book 7 was added?",
+    "hint": "What does each one put in the query?",
+    "choices": [
+      {
+        "text": "Because the server remembered which books this particular client had already been shown",
+        "correct": false,
+        "why": "`catalogue.py` keeps no state per client; everything it needs is in the link."
+      },
+      {
+        "text": "Because the cursor asks for ids below 5, a value an insert does not move",
+        "correct": true,
+        "why": "Right. An offset counts positions, and the insert moved every position by one."
+      },
+      {
+        "text": "Because book 7 was not committed yet",
+        "correct": false,
+        "why": "It was: the offset query saw it and was pushed back by it."
+      },
+      {
+        "text": "Because cursors sort in ascending order",
+        "correct": false,
+        "why": "Both walks were newest first, `sort=-id`."
+      }
+    ]
+  },
+  {
+    "id": "ex-49peyp9v",
+    "version": 1,
+    "section": "pages",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put a client's walk through the whole catalogue in order.",
+    "hint": "It never builds a cursor itself.",
+    "items": [
+      "Ask for `/v1/books?limit=2`",
+      "Read the books in `items`",
+      "Take the address in `next`",
+      "Ask for that address",
+      "Stop when `next` is `null`"
+    ],
+    "trap": "Building the next address from an offset is the step the cursor exists to remove."
+  },
+  {
+    "id": "ex-vagydr7z",
+    "version": 1,
+    "section": "pages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`echo WyJpZCIsIDIsIDJd | base64 -d` printed `[\"id\", 2, 2]`. What does it mean that the contract calls the cursor opaque?",
+    "hint": "It was just decoded, so it is not about hiding.",
+    "choices": [
+      {
+        "text": "That it is encrypted",
+        "correct": false,
+        "why": "Base64 is an encoding, and `base64 -d` undid it with no key."
+      },
+      {
+        "text": "That it is valid for a single request and then expires",
+        "correct": false,
+        "why": "Nothing in it expires; the same link gave the same page in the capture."
+      },
+      {
+        "text": "That clients copy it from `next` without building or reading it",
+        "correct": true,
+        "why": "Right. Opaque is a promise about who depends on the format, which leaves the server free to change what is inside. It is not secrecy."
+      },
+      {
+        "text": "That it holds the position of the page as a number, the way an offset does",
+        "correct": false,
+        "why": "It holds the last row's values, which is exactly what makes it unlike an offset."
+      }
+    ]
+  },
+  {
+    "id": "ex-q7j8j6p2",
+    "version": 1,
+    "section": "filters-and-sorting",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `catalogue.py` map sort names to columns through `SORTS`, instead of putting the `sort` parameter into `ORDER BY`?",
+    "hint": "What can a `?` placeholder carry in SQL?",
+    "choices": [
+      {
+        "text": "Because SQLite cannot sort by a text column such as the title",
+        "correct": false,
+        "why": "It sorted by `title` in the capture."
+      },
+      {
+        "text": "Because column names cannot be bound, so the text would go into the SQL",
+        "correct": true,
+        "why": "Right. Only names in the dictionary are accepted, and only the column each one maps to reaches the query."
+      },
+      {
+        "text": "Because sorting a Python dictionary is faster than asking SQLite to sort the rows",
+        "correct": false,
+        "why": "The sorting still happens in SQL. The dictionary decides only which column."
+      },
+      {
+        "text": "Because the query string is case sensitive and the columns are not",
+        "correct": false,
+        "why": "Case has nothing to do with it; the question is what reaches the SQL text."
+      }
+    ]
+  },
+  {
+    "id": "ex-6prhef0e",
+    "version": 1,
+    "section": "filters-and-sorting",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A client asks for `/v1/books?auther_id=1`. Why is a 400 better for it than a 200 with every book?",
+    "hint": "Look at the spelling of the parameter.",
+    "choices": [
+      {
+        "text": "A 200 with every book looks filtered, so the typo goes unnoticed",
+        "correct": true,
+        "why": "Right. The refusal names the parameter it did not recognise, so the client fixes it the first time."
+      },
+      {
+        "text": "Because a 400 is smaller and faster to send than a list of every book",
+        "correct": false,
+        "why": "Speed is not the point; a wrong answer that looks right is."
+      },
+      {
+        "text": "Because unknown parameters are a security risk the server has to block",
+        "correct": false,
+        "why": "An ignored parameter does nothing at all. The harm is a client acting on data it did not ask for."
+      },
+      {
+        "text": "Because HTTP forbids query parameters the server does not know about",
+        "correct": false,
+        "why": "HTTP says nothing about them; it is the contract's decision."
+      }
+    ]
+  },
+  {
+    "id": "ex-yyrfm897",
+    "version": 1,
+    "section": "filters-and-sorting",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You remove the `, id` that `catalogue.py` adds after the sort column, and page through `sort=year` with `limit=1`. Two books share a year. What can go wrong?",
+    "hint": "What does the cursor hold, and what does SQL promise about rows that tie?",
+    "choices": [
+      {
+        "text": "Nothing, because the years come back from SQLite already in ascending order",
+        "correct": false,
+        "why": "The years are; the two books with the same year are not, and SQL may return them either way round."
+      },
+      {
+        "text": "The server refuses the sort as unsortable",
+        "correct": false,
+        "why": "`year` is in `SORTS`; the allowlist has nothing to do with ties."
+      },
+      {
+        "text": "The cursor stops being opaque",
+        "correct": false,
+        "why": "Opacity is about who reads the cursor, not about what is in the ordering."
+      },
+      {
+        "text": "One of the two risks being skipped or repeated, since nothing orders the tie",
+        "correct": true,
+        "why": "Right. With only the year in the cursor, \"after 1891\" jumps past both books of 1891, or the order between them changes between requests."
+      }
+    ]
+  },
+  {
+    "id": "ex-c6zjk5by",
+    "version": 1,
+    "section": "idempotency",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put a POST that survives a lost response in order.",
+    "hint": "The key exists before the first attempt does.",
+    "items": [
+      "The client makes up a new key for this operation",
+      "It sends the POST with the key",
+      "The server creates the book and stores the key with its response, in one transaction",
+      "The response is lost and the client times out",
+      "It sends the same POST with the same key",
+      "The server finds the key and replays the stored 201"
+    ],
+    "trap": "Making a new key for the retry turns it into a second operation, which is what the key was for preventing."
+  },
+  {
+    "id": "ex-gyf74mpf",
+    "version": 1,
+    "section": "idempotency",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A client reuses the key `3f1c9a2e-alienista`, already stored with one book, for a request with a different price. What does the catalogue answer?",
+    "hint": "The fingerprints differ.",
+    "choices": [
+      {
+        "text": "201, with the stored book",
+        "correct": false,
+        "why": "That is the answer to a retry with the same body. Replaying it here would tell the client its new price was taken."
+      },
+      {
+        "text": "201, with a second book",
+        "correct": false,
+        "why": "That would make the key mean nothing."
+      },
+      {
+        "text": "422, and nothing is done",
+        "correct": true,
+        "why": "Right. The same key with a different body is a client bug, and the draft for the header gives it 422."
+      },
+      {
+        "text": "409, until the first request finishes",
+        "correct": false,
+        "why": "409 is for a key whose first request is still running. This one finished long ago."
+      }
+    ]
+  },
+  {
+    "id": "ex-4arxpfyj",
+    "version": 1,
+    "section": "idempotency",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When `catalogue.py` answers a retry from its stored response, it adds the header `___: true`.",
+    "hint": "The same header Stripe sends.",
+    "blanks": [
+      {
+        "accept": [
+          "Idempotent-Replayed"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-52b5q5vq",
+    "version": 1,
+    "section": "idempotency",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shop's API inserts each order into its database and then, in a separate step, writes the idempotency key to a cache. The process crashes between the two steps, and the client retries with the same key. What happens?",
+    "hint": "Orders have no ISBN.",
+    "choices": [
+      {
+        "text": "The retry is refused with 422",
+        "correct": false,
+        "why": "422 needs a stored key with another fingerprint. Here there is no stored key at all."
+      },
+      {
+        "text": "The retry is replayed from the cache",
+        "correct": false,
+        "why": "The crash came before the key reached the cache, so there is nothing to replay."
+      },
+      {
+        "text": "The database refuses the second order as a duplicate",
+        "correct": false,
+        "why": "Only if something in an order is unique, and two orders from one customer can be identical."
+      },
+      {
+        "text": "The server finds no key and creates the order a second time",
+        "correct": true,
+        "why": "Right. That is why `catalogue.py` writes the book and the key in one transaction: either both exist or neither does."
+      }
+    ]
+  },
+  {
+    "id": "ex-eprhma3s",
+    "version": 1,
+    "section": "compatibility",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these changes break a tolerant client? Choose all that apply.",
+    "hint": "A tolerant client reads what it needs and ignores the rest.",
+    "choices": [
+      {
+        "text": "Adding `ships_today` to every book in a response",
+        "correct": false,
+        "why": "It reads only what it needs, so a new field is invisible to it."
+      },
+      {
+        "text": "Renaming `title` to `name`",
+        "correct": true,
+        "why": "Right. Whoever read `title` now reads nothing, however tolerant it is."
+      },
+      {
+        "text": "Making `stock` required in POST bodies",
+        "correct": true,
+        "why": "Right. Old clients never sent it, and their requests are now refused."
+      },
+      {
+        "text": "Adding a `year` filter to `/v1/books`",
+        "correct": false,
+        "why": "Nothing old uses it."
+      }
+    ]
+  },
+  {
+    "id": "ex-awsm92d0",
+    "version": 1,
+    "section": "compatibility",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`in_stock` starts meaning \"can be shipped today\" instead of \"at least one copy\", with the same name and type. Why is this the most dangerous change in the table?",
+    "hint": "Ask what would fail.",
+    "choices": [
+      {
+        "text": "Because booleans cannot be versioned",
+        "correct": false,
+        "why": "Any field can move to a new version; the problem is that nobody sees a reason to."
+      },
+      {
+        "text": "Because the schema check then fails on every response",
+        "correct": false,
+        "why": "It passes: still a boolean, in the same place. That is the problem."
+      },
+      {
+        "text": "Because nothing fails: every client keeps working and acts on a fact that changed",
+        "correct": true,
+        "why": "Right. A rename breaks loudly; a new meaning under an old name breaks quietly. It deserves a new name, `ships_today`."
+      },
+      {
+        "text": "Because it changes the status code",
+        "correct": false,
+        "why": "The status stays 200. Nothing visible changes, which is the danger."
+      }
+    ]
+  },
+  {
+    "id": "ex-nz41ms6r",
+    "version": 1,
+    "section": "compatibility",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A client checks every book it receives against a schema with `additionalProperties: false`, and the catalogue then adds a field. What follows?",
+    "hint": "The capture refused six fields the client never needed.",
+    "choices": [
+      {
+        "text": "It keeps working, and the same rule suits both sides",
+        "correct": false,
+        "why": "It stops working: the capture refused the book with exit 1."
+      },
+      {
+        "text": "It fails; the rule fits what a server accepts, not what a client reads",
+        "correct": true,
+        "why": "Right. On input an unknown field is a client's mistake; on output it is a server's improvement."
+      },
+      {
+        "text": "It fails, and the server should have released a new version for the field",
+        "correct": false,
+        "why": "Adding a field is the change a version is not needed for. The client's strictness is the fault."
+      },
+      {
+        "text": "It keeps working, because the JSON parser drops any field nobody asked for",
+        "correct": false,
+        "why": "The parser keeps every field; it is the schema that refuses them."
+      }
+    ]
+  },
+  {
+    "id": "ex-rp68my81",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put the checks `catalogue.py` makes on a POST in the order it makes them.",
+    "hint": "The cheapest refusals come first, and nothing is stored before the body is known to be good.",
+    "items": [
+      "Is the path `/v1/books`?",
+      "Is the body labelled `application/json`?",
+      "Does the body parse as JSON?",
+      "Does it pass `book.schema.json`?",
+      "Has the idempotency key been seen before?",
+      "Does the database accept the new row?"
+    ],
+    "trap": "Looking up the key before validating would let a malformed body reach the key table's logic."
+  },
+  {
+    "id": "ex-689h4zkn",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After this lesson's captures the shelf holds books 1 to 8. A client walks `/v1/books?limit=3` from the start, following `next`. How many requests does it make before it gets `\"next\": null`, counting the one that returns it?",
+    "hint": "Three, three, and what is left.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-s7sxdq2r",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A client's POST of a book times out. It retries without an idempotency key and gets a 409 with the type `.../duplicate-isbn`. What can it conclude?",
+    "hint": "What does the 409 know about who created the book?",
+    "choices": [
+      {
+        "text": "That its first attempt succeeded and the book it sent is now in the catalogue",
+        "correct": false,
+        "why": "Another client could have created a book with that ISBN; the 409 does not say whose it is."
+      },
+      {
+        "text": "That its first attempt failed",
+        "correct": false,
+        "why": "If it had failed, the ISBN would most likely be free and the retry would have got a 201."
+      },
+      {
+        "text": "That some book has the ISBN, not whether its own request created it",
+        "correct": true,
+        "why": "Right. The `type` answers the question it was asked. A key would have answered the client's real question with the stored 201."
+      },
+      {
+        "text": "That the server is down for the moment and the client should retry later",
+        "correct": false,
+        "why": "A 4xx with a problem body came back, so the server is up; retrying unchanged gets the same 409."
+      }
+    ]
+  },
+  {
+    "id": "ex-eqwftpx3",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each symptom to the rule from this lesson that prevents it.",
+    "hint": "One rule per section.",
+    "pairs": [
+      {
+        "left": "a book shown twice while paging",
+        "right": "pages by cursor, not by offset"
+      },
+      {
+        "left": "a total that is a cent off",
+        "right": "money as integer cents with a currency"
+      },
+      {
+        "left": "a typo in a filter returns the whole catalogue",
+        "right": "refuse query parameters the API does not know"
+      },
+      {
+        "left": "a retried POST creates two orders",
+        "right": "an idempotency key stored with the response"
+      }
+    ],
+    "right_distractors": [
+      "`additionalProperties: false` on every response a client reads"
+    ]
+  }
+]

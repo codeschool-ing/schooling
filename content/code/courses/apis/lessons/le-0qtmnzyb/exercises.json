@@ -1,0 +1,955 @@
+[
+  {
+    "id": "ex-tb8zsnrx",
+    "version": 1,
+    "section": "procedures",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Lesson 1's `GET /v1/books/1` names a book and lets the method say what to do with it. What does a gRPC request name?",
+    "hint": "Think of `Reserve`.",
+    "choices": [
+      {
+        "text": "A procedure on a service",
+        "correct": true,
+        "why": "Right. The request is a call: the service, the method, and a message of arguments."
+      },
+      {
+        "text": "A resource, by its address",
+        "correct": false,
+        "why": "That is REST, the style of lesson 1."
+      },
+      {
+        "text": "The fields the client wants back in this answer",
+        "correct": false,
+        "why": "That is GraphQL, lesson 3."
+      },
+      {
+        "text": "An operation inside an XML envelope described by a WSDL",
+        "correct": false,
+        "why": "That is SOAP, lesson 5."
+      }
+    ]
+  },
+  {
+    "id": "ex-zrdr7y3e",
+    "version": 1,
+    "section": "procedures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Older RPC systems tried to make a remote call look exactly like a local one. What went wrong with that?",
+    "hint": "Ask what a local call cannot do.",
+    "choices": [
+      {
+        "text": "Their binary formats could not be read by a person debugging them",
+        "correct": false,
+        "why": "gRPC is binary too, and that is a cost, not the failure the section names."
+      },
+      {
+        "text": "A function call cannot carry more than one argument across a network",
+        "correct": false,
+        "why": "A message carries as many fields as it needs."
+      },
+      {
+        "text": "Local calls were too slow to imitate",
+        "correct": false,
+        "why": "The opposite: a local call is fast and dependable, and pretending a remote one is like it is the problem."
+      },
+      {
+        "text": "The network failed in ways their code had no plan for",
+        "correct": true,
+        "why": "Right. A remote call fails halfway, runs slow or loses its answer; gRPC builds deadlines and status codes into every call for this reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-65s2h1rv",
+    "version": 1,
+    "section": "procedures",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are true of gRPC and not of lesson 1's REST API? Choose all that apply.",
+    "hint": "Look at the last two rows of the comparison table.",
+    "choices": [
+      {
+        "text": "It runs on HTTP/2 and nothing else",
+        "correct": true,
+        "why": "Right. `curl` in HTTP/1.1 could not even read the answer."
+      },
+      {
+        "text": "The client chooses a path and a method for each request",
+        "correct": false,
+        "why": "That is REST. A gRPC client calls a generated function, and the path is the library's business."
+      },
+      {
+        "text": "The contract file is required, and both sides are generated from it",
+        "correct": true,
+        "why": "Right. In lesson 1 the contract is optional, and lesson 6 writes one."
+      },
+      {
+        "text": "Its errors carry HTTP status codes such as 404",
+        "correct": false,
+        "why": "A failed gRPC call still answers HTTP 200; its own code comes in the trailers."
+      },
+      {
+        "text": "What travels cannot be read without the schema",
+        "correct": true,
+        "why": "Right. `--decode_raw` showed numbers where the names should be."
+      }
+    ]
+  },
+  {
+    "id": "ex-m1dz991x",
+    "version": 1,
+    "section": "protocol-buffers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `int32 copies = 3;`, what identifies the field in the bytes that are sent?",
+    "hint": "Only one of the parts ever leaves the program.",
+    "choices": [
+      {
+        "text": "The name `copies`",
+        "correct": false,
+        "why": "Names stay in the `.proto` and the generated code; that is the JSON habit."
+      },
+      {
+        "text": "Its position in the message, counting from the top of the block",
+        "correct": false,
+        "why": "Fields can be written in any order; position means nothing on the wire."
+      },
+      {
+        "text": "The type and the name together",
+        "correct": false,
+        "why": "The tag carries a wire type, not `int32`, and never the name."
+      },
+      {
+        "text": "The number 3, packed into the tag",
+        "correct": true,
+        "why": "Right. The tag packs the number 3 with the wire type."
+      }
+    ]
+  },
+  {
+    "id": "ex-7ch43y8h",
+    "version": 1,
+    "section": "protocol-buffers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the zero value of `Availability` called `AVAILABILITY_UNSPECIFIED` and not `IN_STOCK`?",
+    "hint": "What does a reader see when the field was never set?",
+    "choices": [
+      {
+        "text": "A field never set reads as zero, and that should not look like good news",
+        "correct": true,
+        "why": "Right. A missing value would otherwise read as `IN_STOCK`."
+      },
+      {
+        "text": "proto3 forbids a real state from using the number zero",
+        "correct": false,
+        "why": "It only requires the first value to be zero; what you call it is the design choice."
+      },
+      {
+        "text": "The compiler sorts values by name, so the zero one must start with A",
+        "correct": false,
+        "why": "Values keep the numbers you give them; nothing is sorted."
+      },
+      {
+        "text": "Zero is kept for errors in every enum, so a real state needs another number",
+        "correct": false,
+        "why": "Zero is the default, not an error; errors are status codes."
+      }
+    ]
+  },
+  {
+    "id": "ex-f2xdtp9n",
+    "version": 1,
+    "section": "protocol-buffers",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a `.proto` file, the word put in front of a field's type to make it a list is ___.",
+    "hint": "`RestockSummary` has one.",
+    "blanks": [
+      {
+        "accept": [
+          "repeated"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6kgwfhk6",
+    "version": 1,
+    "section": "protocol-buffers",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Field numbers from 1 up to which number fit in a one-byte tag?",
+    "hint": "The next one needs two bytes.",
+    "value": 15,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-pys1zbn0",
+    "version": 1,
+    "section": "on-the-wire",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A tag byte is `1a`, which is `00011010` in binary. What field number does it carry?",
+    "hint": "Drop the last three bits.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-cdxypa1h",
+    "version": 1,
+    "section": "on-the-wire",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`od` shows a string field as `12 0c 44 6f 6d …`. What does the `0c` tell the reader?",
+    "hint": "`12` is the tag, and its wire type is 2.",
+    "choices": [
+      {
+        "text": "That this is field number 12",
+        "correct": false,
+        "why": "The field number is in the tag, `12`, which is field 2."
+      },
+      {
+        "text": "How many bytes of the value follow: twelve",
+        "correct": true,
+        "why": "Right. Wire type 2 is a length and then that many bytes, here `Dom Casmurro`."
+      },
+      {
+        "text": "The value itself, the varint 12",
+        "correct": false,
+        "why": "That reading belongs to wire type 0, as in `18 0c` for the copies."
+      },
+      {
+        "text": "Which text encoding the bytes of the string are in",
+        "correct": false,
+        "why": "A `string` is always UTF-8, so nothing on the wire says so."
+      }
+    ]
+  },
+  {
+    "id": "ex-v06w21nd",
+    "version": 1,
+    "section": "on-the-wire",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`copies: 300` was encoded as `18 ac 02`. Which number do the varint bytes `96 01` encode?",
+    "hint": "`96` is `10010110`. The second byte is worth 128 times its value.",
+    "value": 150,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-qjq388sx",
+    "version": 1,
+    "section": "on-the-wire",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `protoc --decode_raw` print for Dom Casmurro's `availability`?",
+    "hint": "Raw means with no `.proto`.",
+    "choices": [
+      {
+        "text": "`availability: IN_STOCK`",
+        "correct": false,
+        "why": "That is `--decode`, which has the schema to name both."
+      },
+      {
+        "text": "`4: IN_STOCK`",
+        "correct": false,
+        "why": "The value's name comes from the schema as much as the field's does."
+      },
+      {
+        "text": "Nothing at all, since enums are dropped when the schema is missing",
+        "correct": false,
+        "why": "Nothing is dropped; the number is all the bytes ever held."
+      },
+      {
+        "text": "`4: 1`",
+        "correct": true,
+        "why": "Right. Field 4, value 1: the bytes hold numbers and nothing else."
+      }
+    ]
+  },
+  {
+    "id": "ex-v24ab15q",
+    "version": 1,
+    "section": "service-and-codegen",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which generated name does `stock_client.py` use to make its calls?",
+    "hint": "The client's side of the service.",
+    "choices": [
+      {
+        "text": "`StockServicer`",
+        "correct": false,
+        "why": "That is the class the server inherits and fills in."
+      },
+      {
+        "text": "`StockStub`",
+        "correct": true,
+        "why": "Right. One method per `rpc`, and calling one sends the call."
+      },
+      {
+        "text": "`add_StockServicer_to_server`",
+        "correct": false,
+        "why": "That connects the server's class to a running server."
+      },
+      {
+        "text": "`StockLevel`",
+        "correct": false,
+        "why": "A message, which the stub returns; it makes no calls."
+      }
+    ]
+  },
+  {
+    "id": "ex-jst18tm5",
+    "version": 1,
+    "section": "service-and-codegen",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody fixes a bug by editing `stock_pb2_grpc.py` by hand. Next week `stock.proto` changes. What becomes of the fix?",
+    "hint": "How are the generated files made again?",
+    "choices": [
+      {
+        "text": "`protoc` refuses to run until the edit is undone",
+        "correct": false,
+        "why": "It never looks at the old file."
+      },
+      {
+        "text": "It is kept, since `protoc` only adds what is new",
+        "correct": false,
+        "why": "The file is written whole every time."
+      },
+      {
+        "text": "It is gone, written over by the next generation without a word",
+        "correct": true,
+        "why": "Right. Generated files are never edited; the fix belongs in the `.proto` or in your own code."
+      },
+      {
+        "text": "Python refuses to import a generated file that was edited",
+        "correct": false,
+        "why": "Python cannot tell; it imports whatever is there."
+      }
+    ]
+  },
+  {
+    "id": "ex-9gxpznzg",
+    "version": 1,
+    "section": "server-and-client",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How does the server's `Reserve` stop two reservations that arrive together from both taking the last copy?",
+    "hint": "Look at the `WHERE` of its `UPDATE`.",
+    "choices": [
+      {
+        "text": "The check and the subtraction are a single `UPDATE` with `stock >= ?`",
+        "correct": true,
+        "why": "Right. The database changes the row for one of them, and the other sees no row changed."
+      },
+      {
+        "text": "gRPC runs one call of each method at a time",
+        "correct": false,
+        "why": "There are eight worker threads, and two calls of one method can run together."
+      },
+      {
+        "text": "The interceptor queues calls that come from the same till",
+        "correct": false,
+        "why": "It only prints the method and the metadata."
+      },
+      {
+        "text": "`context.abort` locks the row until the call ends",
+        "correct": false,
+        "why": "`abort` ends a call with a status; it locks nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-thaw0x0z",
+    "version": 1,
+    "section": "server-and-client",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put one `GetStock` call in order, from the client's command to its output.",
+    "hint": "The interceptor sees a call before its method does.",
+    "items": [
+      "The client calls `stock.GetStock` with a `BookRef`",
+      "The stub encodes the message and sends it to `/shelf.stock.v1.Stock/GetStock`",
+      "The interceptor prints the method and the `x-till` entry",
+      "`GetStock` reads the row and returns a `StockLevel`",
+      "The client prints the decoded `StockLevel`"
+    ],
+    "trap": "The server's log line appears before the method runs, not after."
+  },
+  {
+    "id": "ex-h5320hkh",
+    "version": 1,
+    "section": "four-kinds",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each `rpc` line to its kind of call.",
+    "hint": "Look for the word `stream` and which side it is on.",
+    "pairs": [
+      {
+        "left": "`rpc GetStock(BookRef) returns (StockLevel)`",
+        "right": "unary"
+      },
+      {
+        "left": "`rpc WatchStock(BookRef) returns (stream StockLevel)`",
+        "right": "server streaming"
+      },
+      {
+        "left": "`rpc Restock(stream Delivery) returns (RestockSummary)`",
+        "right": "client streaming"
+      },
+      {
+        "left": "`rpc Talk(stream Line) returns (stream Line)`",
+        "right": "bidirectional"
+      }
+    ],
+    "right_distractors": [
+      "two calls, one in each direction"
+    ]
+  },
+  {
+    "id": "ex-6fgb206z",
+    "version": 1,
+    "section": "four-kinds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The watch printed three levels and then `DEADLINE_EXCEEDED`. How many calls did the client make to `WatchStock`?",
+    "hint": "A stream is not a series of requests.",
+    "choices": [
+      {
+        "text": "Three, one for each level",
+        "correct": false,
+        "why": "That is polling. The server sent each level on the call that was already open."
+      },
+      {
+        "text": "Two: one to open the stream and one to close it",
+        "correct": false,
+        "why": "The deadline closed it; nothing was sent to close it."
+      },
+      {
+        "text": "One",
+        "correct": true,
+        "why": "Right. One call, three messages, one status."
+      },
+      {
+        "text": "Four: three levels and a fourth for the status",
+        "correct": false,
+        "why": "The status ends the same call that carried the levels."
+      }
+    ]
+  },
+  {
+    "id": "ex-s021x5h8",
+    "version": 1,
+    "section": "four-kinds",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A till must send 2,000 scanned barcodes and get back one total once all have arrived. Which kind of call fits?",
+    "hint": "Who sends many messages, and who sends one?",
+    "choices": [
+      {
+        "text": "Server streaming",
+        "correct": false,
+        "why": "That has one request and many answers, the other way round."
+      },
+      {
+        "text": "Bidirectional, because both sides send something",
+        "correct": false,
+        "why": "Both do send, but the server sends once, at the end; nothing needs to run both ways."
+      },
+      {
+        "text": "A unary call per barcode",
+        "correct": false,
+        "why": "Two thousand calls, and no single answer that needs all of them."
+      },
+      {
+        "text": "Client streaming, the shape of `Restock`",
+        "correct": true,
+        "why": "Right. Many messages in, one out, once the client has sent the last."
+      }
+    ]
+  },
+  {
+    "id": "ex-67zb9313",
+    "version": 1,
+    "section": "status-and-deadlines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A till asks to reserve 5 copies of a book that has 2. Which status fits?",
+    "hint": "Would the same request be fine on another day?",
+    "choices": [
+      {
+        "text": "`INVALID_ARGUMENT`, because five is too many",
+        "correct": false,
+        "why": "Five is a valid request; it fails only because of what is on the shelf now."
+      },
+      {
+        "text": "`FAILED_PRECONDITION`",
+        "correct": true,
+        "why": "Right. The request is fine and the system is not in a state to accept it."
+      },
+      {
+        "text": "`NOT_FOUND`, since five copies cannot be found",
+        "correct": false,
+        "why": "The book exists; `NOT_FOUND` is for an ISBN that names nothing."
+      },
+      {
+        "text": "`UNAVAILABLE`",
+        "correct": false,
+        "why": "The server answered; `UNAVAILABLE` is for a service that could not be reached."
+      }
+    ]
+  },
+  {
+    "id": "ex-0wwm9c58",
+    "version": 1,
+    "section": "status-and-deadlines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these failures is worth sending again, unchanged, after a pause?",
+    "hint": "Which one says nothing about the request itself?",
+    "choices": [
+      {
+        "text": "`NOT_FOUND` for an ISBN",
+        "correct": false,
+        "why": "The same question about the same data gets the same answer."
+      },
+      {
+        "text": "`INVALID_ARGUMENT` for zero copies",
+        "correct": false,
+        "why": "The same mistake sent again fails again."
+      },
+      {
+        "text": "`UNAVAILABLE` after the connection was refused",
+        "correct": true,
+        "why": "Right. The request never reached a server, so trying later can work."
+      },
+      {
+        "text": "`UNIMPLEMENTED` for an unknown method",
+        "correct": false,
+        "why": "The method will not appear because you waited."
+      }
+    ]
+  },
+  {
+    "id": "ex-0t3yv699",
+    "version": 1,
+    "section": "status-and-deadlines",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A `Reserve` call ends with `DEADLINE_EXCEEDED`. What does the till know about the copies?",
+    "hint": "The deadline is when the client stopped waiting.",
+    "choices": [
+      {
+        "text": "Nothing for certain: the copies could be gone already",
+        "correct": true,
+        "why": "Right. The server could have taken them just before the deadline, and only asking again, with `GetStock`, tells which."
+      },
+      {
+        "text": "They were not taken, because the call failed",
+        "correct": false,
+        "why": "The call failed for the client; the work may already have been done."
+      },
+      {
+        "text": "They were taken, because a server always finishes what it starts",
+        "correct": false,
+        "why": "The server sees the call cancelled and may stop before the `UPDATE`."
+      },
+      {
+        "text": "They were taken and then put back by gRPC",
+        "correct": false,
+        "why": "gRPC knows nothing about the database; nothing is undone for you."
+      }
+    ]
+  },
+  {
+    "id": "ex-4jgcjbyk",
+    "version": 1,
+    "section": "status-and-deadlines",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Facts about a call rather than about its message, such as `x-till: till-1` or a credential, travel in the call's ___.",
+    "hint": "The interceptor read them from `invocation_metadata`.",
+    "blanks": [
+      {
+        "accept": [
+          "metadata"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-f8wkm19h",
+    "version": 1,
+    "section": "evolving",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which change to `StockLevel` leaves the bytes an old client receives exactly as they were?",
+    "hint": "Which half of a field ever reaches the wire?",
+    "choices": [
+      {
+        "text": "Keeping the name `copies` and moving it to number 6",
+        "correct": false,
+        "why": "On the wire that is field 3 removed and a new field 6 added."
+      },
+      {
+        "text": "Changing `copies` from `int32` to `string`",
+        "correct": false,
+        "why": "The wire type changes, and an old reader misreads it."
+      },
+      {
+        "text": "Renaming `copies` to `count` and keeping number 3",
+        "correct": true,
+        "why": "Right. The name never travels; only code and JSON that used it notice."
+      },
+      {
+        "text": "Removing `copies` and reserving its number",
+        "correct": false,
+        "why": "Compatible, but an old client now reads zero copies for every book."
+      }
+    ]
+  },
+  {
+    "id": "ex-0se891sh",
+    "version": 1,
+    "section": "evolving",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An old till, built with the first `stock.proto`, reads a level from the next release, which removed `title` and added `location = 5`. What does it see?",
+    "hint": "The capture decoded exactly this.",
+    "choices": [
+      {
+        "text": "An error, because the message holds a field it does not know",
+        "correct": false,
+        "why": "Unknown fields are skipped or kept, never an error."
+      },
+      {
+        "text": "The location printed where the title should be",
+        "correct": false,
+        "why": "That happens only if `location` reuses number 2, which `reserved` prevents."
+      },
+      {
+        "text": "The title it last saw, kept from the previous answer",
+        "correct": false,
+        "why": "Each message is read on its own; nothing is carried over."
+      },
+      {
+        "text": "An empty title, and field 5 kept as an unknown field",
+        "correct": true,
+        "why": "Right. Removing a field is compatible on the wire and still a change a screen can show."
+      }
+    ]
+  },
+  {
+    "id": "ex-a27rn2dp",
+    "version": 1,
+    "section": "evolving",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To stop field number 2 from ever being used again in a message, you write `___ 2;` inside it.",
+    "hint": "`protoc` then refuses a file that uses it.",
+    "blanks": [
+      {
+        "accept": [
+          "reserved"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tct85ae1",
+    "version": 1,
+    "section": "http2",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the parts of one unary gRPC call in the order they cross the connection.",
+    "hint": "The result comes last.",
+    "items": [
+      "Request headers with `:path: /shelf.stock.v1.Stock/GetStock`",
+      "Request data: `00`, a four-byte length, the `BookRef`",
+      "Response headers with `:status: 200`",
+      "Response data with the `StockLevel`",
+      "Trailers with `grpc-status: 0`"
+    ],
+    "trap": "`:status: 200` is not the call's result; `grpc-status` is, and it comes after the body."
+  },
+  {
+    "id": "ex-3yvqkfg6",
+    "version": 1,
+    "section": "http2",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A call to a method the warehouse does not have came back as `HTTP/2 200`. Where is the failure?",
+    "hint": "Look past the empty line.",
+    "choices": [
+      {
+        "text": "Nowhere: 200 means it worked",
+        "correct": false,
+        "why": "200 says the HTTP exchange worked, nothing about the call."
+      },
+      {
+        "text": "In the body, as a JSON object with an `error` field",
+        "correct": false,
+        "why": "That was lesson 1's API; gRPC sends no JSON."
+      },
+      {
+        "text": "In the trailers: `grpc-status: 12`",
+        "correct": true,
+        "why": "Right. 12 is `UNIMPLEMENTED`, with `Method not found!` beside it."
+      },
+      {
+        "text": "In the status line, which a gRPC client reads as 501",
+        "correct": false,
+        "why": "The status line said 200, and the client reads the trailers instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-f4n3b8bb",
+    "version": 1,
+    "section": "http2",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can a web page's JavaScript not call the warehouse directly?",
+    "hint": "Where does a gRPC call put its result?",
+    "choices": [
+      {
+        "text": "`fetch()` cannot read the trailers",
+        "correct": true,
+        "why": "Right. The status of every call arrives there, and gRPC-Web moves it into the body for that reason."
+      },
+      {
+        "text": "Browsers do not speak HTTP/2",
+        "correct": false,
+        "why": "They do; what a page cannot do is control the framing or read trailers."
+      },
+      {
+        "text": "Browsers refuse a binary body in a `POST`",
+        "correct": false,
+        "why": "A page can send bytes; uploads do it all the time."
+      },
+      {
+        "text": "Port 50051 is blocked by browsers",
+        "correct": false,
+        "why": "Nothing about the port matters here."
+      }
+    ]
+  },
+  {
+    "id": "ex-60q7mykb",
+    "version": 1,
+    "section": "http2",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A gRPC request body begins `00 00 00 01 2c`. How long is the message that follows?",
+    "hint": "The first byte is the flag; the next four are one number, in hexadecimal.",
+    "value": 300,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-3e0ys1s8",
+    "version": 1,
+    "section": "when-to-choose",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The bookshop wants partners to read its catalogue, mostly from scripts and browsers, and wants HTTP caches to take the load. What fits?",
+    "hint": "Who is on the other end, and what can a cache keep?",
+    "choices": [
+      {
+        "text": "gRPC, because its messages are smaller",
+        "correct": false,
+        "why": "Smaller does not help a browser that cannot call it, or a cache that keeps no `POST`."
+      },
+      {
+        "text": "REST with JSON, as lesson 1 built it, and `GET` for every read",
+        "correct": true,
+        "why": "Right. Strangers, `curl`, browsers and `GET` caching are its home ground."
+      },
+      {
+        "text": "gRPC with a server stream for every read",
+        "correct": false,
+        "why": "Streams solve changing data, not strangers with browsers."
+      },
+      {
+        "text": "gRPC behind a cache that keeps `POST` answers",
+        "correct": false,
+        "why": "HTTP caches do not keep `POST` answers, and every gRPC call is one."
+      }
+    ]
+  },
+  {
+    "id": "ex-tk6sj3hk",
+    "version": 1,
+    "section": "when-to-choose",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation to what fits it.",
+    "hint": "Two of them put something in front of a gRPC service.",
+    "pairs": [
+      {
+        "left": "Ten services of your own, in four languages",
+        "right": "gRPC, one `.proto` for all"
+      },
+      {
+        "left": "A public catalogue that caches should serve",
+        "right": "REST, with `GET`"
+      },
+      {
+        "left": "A web page that must call a gRPC service",
+        "right": "gRPC-Web through a proxy"
+      },
+      {
+        "left": "Partners who want plain JSON from a gRPC service",
+        "right": "a JSON transcoding gateway"
+      }
+    ],
+    "right_distractors": [
+      "a second `.proto` for each partner"
+    ]
+  },
+  {
+    "id": "ex-wmxme8kd",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague wants to move the warehouse to REST with JSON, saying it is the same thing. What would the tills lose? Choose all that apply.",
+    "hint": "Think of the watch, the `.proto` and the timeout.",
+    "choices": [
+      {
+        "text": "Status codes of any kind",
+        "correct": false,
+        "why": "REST has its own, the HTTP codes of lesson 1."
+      },
+      {
+        "text": "One open call that pushes each change as it happens",
+        "correct": true,
+        "why": "Right. REST would poll, or need a second technology beside it."
+      },
+      {
+        "text": "A contract the compiler holds both sides to",
+        "correct": true,
+        "why": "Right. In REST the contract is optional and checked only if somebody writes it, as in lesson 6."
+      },
+      {
+        "text": "The ability to run over HTTP",
+        "correct": false,
+        "why": "Both run over HTTP; gRPC needs HTTP/2 in particular."
+      },
+      {
+        "text": "A deadline that travels with each call to the server",
+        "correct": true,
+        "why": "Right. Over REST the server learns nothing of how long the client will wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-kqevbdg8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`curl` shows `HTTP/2 200` for a `GetStock` call, then the trailer `grpc-status: 5`. What should a till do?",
+    "hint": "Find code 5 in the table of codes.",
+    "choices": [
+      {
+        "text": "Treat it as a success, since HTTP said 200",
+        "correct": false,
+        "why": "200 only says the exchange worked; the call's result is the trailer."
+      },
+      {
+        "text": "Retry after a pause, since 5 is a passing failure",
+        "correct": false,
+        "why": "The passing one is 14, `UNAVAILABLE`."
+      },
+      {
+        "text": "Tell the till the ISBN is unknown, and not retry",
+        "correct": true,
+        "why": "Right. 5 is `NOT_FOUND`, and asking again gets the same answer."
+      },
+      {
+        "text": "Generate the stub again, since 5 means the method is missing",
+        "correct": false,
+        "why": "A missing method is 12, `UNIMPLEMENTED`."
+      }
+    ]
+  },
+  {
+    "id": "ex-j0a4xkgm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The next release removed `title` WITHOUT a `reserved` line, and a year later somebody gives the free number 2 to a new `string location`. Old tills still run. What happens?",
+    "hint": "Nothing here stops the file from compiling.",
+    "choices": [
+      {
+        "text": "`protoc` refuses the file",
+        "correct": false,
+        "why": "It would, with `reserved 2;`, which is exactly what is missing."
+      },
+      {
+        "text": "Old tills fail on an unknown field",
+        "correct": false,
+        "why": "Field 2 is not unknown to them; they know it as `title`."
+      },
+      {
+        "text": "Old tills skip field 2, since its name in the new file changed",
+        "correct": false,
+        "why": "Names do not travel, so nothing tells them it changed."
+      },
+      {
+        "text": "Old tills show the location as the title, with no error",
+        "correct": true,
+        "why": "Right. A string in field 2 is exactly what they expect, so they read it as the title."
+      }
+    ]
+  }
+]

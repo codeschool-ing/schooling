@@ -1,0 +1,624 @@
+{
+  "ex-413tcwbx": {
+    "prompt": "Contra qual ameaça o jeito de guardar senhas desta aula é construído?",
+    "hint": "Pense em quem tem mais tempo.",
+    "choices": [
+      {
+        "text": "Alguém com uma cópia da tabela de usuários, offline",
+        "why": "Certo. Essa pessoa testa palpites offline pelo tempo que quiser, e nada disso passa pelo seu código de login."
+      },
+      {
+        "text": "Um estranho tentando senhas na rota de login",
+        "why": "Essa também existe, e a aula 12 a limita. Aqui a ameaça é uma cópia da tabela, onde rota nenhuma está envolvida."
+      },
+      {
+        "text": "Um usuário que esquece a senha",
+        "why": "Esquecer é um problema de suporte. A decisão de armazenamento é sobre o que um vazamento entrega."
+      },
+      {
+        "text": "Tráfego lido no caminho entre o cliente e o servidor",
+        "why": "Isso é o que o HTTPS defende, na aula 13. Um hash no banco não faz nada por uma senha em trânsito."
+      }
+    ]
+  },
+  "ex-gmah4jb8": {
+    "prompt": "Uma equipe cifra cada senha com AES e guarda a chave no arquivo de configuração da API. Um backup do disco do servidor vaza. O que ele entrega?",
+    "hint": "Onde a chave mora?",
+    "choices": [
+      {
+        "text": "Nada, porque o AES não foi quebrado",
+        "why": "Não é preciso quebrar o AES: a chave está no mesmo backup, e decifrar com ela é o uso normal."
+      },
+      {
+        "text": "Hashes que ainda precisam ser adivinhados um a um",
+        "why": "Cifrar não é calcular hash. O que foi guardado volta inteiro com a chave, sem palpite nenhum."
+      },
+      {
+        "text": "Todas as senhas",
+        "why": "Certo. O programa que confere logins precisa da chave, então ela fica junto dele, e o backup leva as duas coisas."
+      },
+      {
+        "text": "Só as senhas de quem estava logado no momento",
+        "why": "O backup guarda todas as linhas, logadas ou não, e a chave abre todas."
+      }
+    ]
+  },
+  "ex-aq1grk0n": {
+    "prompt": "Ligue o que a coluna guarda ao que uma tabela vazada entrega.",
+    "hint": "Duas delas entregam tudo; a diferença é quando.",
+    "pairs": [
+      {
+        "left": "a própria senha",
+        "right": "todas as senhas, na hora"
+      },
+      {
+        "left": "a senha, cifrada",
+        "right": "todas as senhas, assim que a chave vazar também"
+      },
+      {
+        "left": "o SHA-256 da senha",
+        "right": "as senhas prováveis, a baixo custo"
+      },
+      {
+        "left": "um hash Argon2id com salt",
+        "right": "cada senha a um custo por palpite, por conta"
+      }
+    ],
+    "right_distractors": [
+      "nenhuma senha, seja qual for a escolhida"
+    ]
+  },
+  "ex-1bh1cz7f": {
+    "prompt": "Por que o SHA-256 é a função errada para guardar senhas?",
+    "hint": "Olhe a primeira linha do hashrate.py.",
+    "choices": [
+      {
+        "text": "A saída pode ser revertida com computação suficiente",
+        "why": "Um hash é de mão única, e ninguém reverte o SHA-256. O problema é palpitar e comparar, não reverter."
+      },
+      {
+        "text": "Ele é rápido",
+        "why": "Certo. Ele é feito para ser tão rápido quanto o hardware permite, o que deixa barato cada palpite contra uma tabela vazada."
+      },
+      {
+        "text": "A saída de 256 bits é curta demais para ser única",
+        "why": "256 bits sobram para unicidade. Duas senhas colidindo não é o jeito como um vazamento dá errado."
+      },
+      {
+        "text": "Ele foi quebrado e retirado como padrão",
+        "why": "O SHA-256 é um padrão atual e serve bem para identificar dados. O problema aqui é a velocidade."
+      }
+    ]
+  },
+  "ex-pst0x6pq": {
+    "prompt": "Na execução da aula, o SHA-256 calculou 1.101.475,6 hashes por segundo e o bcrypt no custo 10 calculou 16,0. Quantas vezes mais rápido foi o SHA-256? Responda com precisão de milhar.",
+    "hint": "Divida uma taxa pela outra.",
+    "unit": "vezes"
+  },
+  "ex-d29crpw3": {
+    "prompt": "Um colega diz: uma placa de vídeo calcularia cada linha do hashrate.py milhares de vezes mais rápido, então a comparação não serve. Qual é a melhor resposta?",
+    "hint": "Do que uma placa de vídeo tem pouco por palpite?",
+    "choices": [
+      {
+        "text": "Placas de vídeo não conseguem calcular hashes de senha",
+        "why": "Conseguem; são o que se usa contra tabelas vazadas. A questão é quanto elas ganham."
+      },
+      {
+        "text": "O Python já roda tão rápido quanto qualquer hardware",
+        "why": "Um laço de Python num núcleo é muito mais lento que hardware dedicado, como a aula diz."
+      },
+      {
+        "text": "Só a linha do SHA-256 ficaria mais rápida numa placa dessas",
+        "why": "Toda linha fica mais rápida em hardware dedicado. Só que nem todas ganham pelo mesmo fator."
+      },
+      {
+        "text": "A proporção se mantém, e as linhas que exigem memória ganham menos",
+        "why": "Certo. Cada palpite em andamento precisa do próprio bloco de memória no scrypt e no Argon2id, e é disso que esse hardware tem pouco."
+      }
+    ]
+  },
+  "ex-13cxnb58": {
+    "prompt": "Onde fica guardado o salt de uma senha?",
+    "hint": "Ele não é segredo.",
+    "choices": [
+      {
+        "text": "Num arquivo fora do banco que só o servidor lê",
+        "why": "Isso descreve um pepper, que é secreto e o mesmo para todas as linhas. Um salt não é nenhuma das duas coisas."
+      },
+      {
+        "text": "Em lugar nenhum: é calculado a partir do nome do usuário a cada vez",
+        "why": "Um salt derivado do nome é previsível, e igual em todo site, o que derrota o propósito dele."
+      },
+      {
+        "text": "Na linha, ao lado do hash",
+        "why": "Certo. O bcrypt e o Argon2id até o escrevem dentro do texto guardado; o trabalho dele é ser único, não escondido."
+      },
+      {
+        "text": "No cookie de sessão do navegador do usuário",
+        "why": "O servidor precisa do salt para conferir a senha, inclusive vinda de um navegador novo, então ele o guarda."
+      }
+    ]
+  },
+  "ex-fyjgy99b": {
+    "prompt": "Duas linhas de uma tabela de usuários com SHA-256 sem salt têm o mesmo hash. O que isso diz a quem lê o vazamento?",
+    "hint": "A mesma entrada sempre dá o mesmo SHA-256.",
+    "choices": [
+      {
+        "text": "Os dois usuários escolheram a mesma senha",
+        "why": "Certo. Isso já é um vazamento, e uma tabela calculada de antemão responde às duas linhas."
+      },
+      {
+        "text": "Nada, até que um dos hashes seja revertido",
+        "why": "Não é preciso reverter nada: hashes iguais da mesma função significam entradas iguais."
+      },
+      {
+        "text": "Os dois hashes colidiram por acaso",
+        "why": "Uma colisão por acaso no SHA-256 é algo que ninguém jamais viu. Senhas iguais são a explicação."
+      },
+      {
+        "text": "Uma conta foi criada como cópia da outra",
+        "why": "O hash depende só da senha, não de como a conta foi criada."
+      }
+    ]
+  },
+  "ex-jdnqwxy0": {
+    "prompt": "Quais destas coisas um salt aleatório por senha consegue? Marque todas as que valem.",
+    "hint": "Separe o que deixa as linhas diferentes do que deixa um palpite lento.",
+    "choices": [
+      {
+        "text": "Uma tabela de hashes calculada de antemão para de funcionar",
+        "why": "Certo. Ela precisaria de uma entrada para cada salt possível."
+      },
+      {
+        "text": "Cada palpite contra uma linha só demora mais",
+        "why": "O SHA-256 com salt ainda rodou a mais de um milhão por segundo. O custo por palpite é trabalho do fator de custo."
+      },
+      {
+        "text": "Dois usuários com a mesma senha recebem hashes diferentes",
+        "why": "Certo. Os dois textos do bcrypt para `sunshine` mostraram isso."
+      },
+      {
+        "text": "Um hash não pode ser conferido sem uma chave secreta",
+        "why": "O salt é público e fica na linha. Uma chave secreta é o que um pepper acrescenta."
+      }
+    ]
+  },
+  "ex-450x7khj": {
+    "prompt": "O bcrypt lê no máximo ___ bytes de uma senha e ignora o resto.",
+    "hint": "As duas senhas da transcrição concordavam nessa quantidade de `a`.",
+    "blanks": [
+      {
+        "accept": [
+          "72"
+        ]
+      }
+    ]
+  },
+  "ex-bxkehj57": {
+    "prompt": "Um hash do bcrypt no custo 10 levou 62,651 ms na máquina do laboratório. Mais ou menos quantos milissegundos levaria um hash no custo 13 ali?",
+    "hint": "Cada passo do custo dobra o trabalho.",
+    "unit": "ms"
+  },
+  "ex-zzz36eyq": {
+    "prompt": "Um usuário se cadastra com uma frase longa em português, cheia de letras acentuadas, num serviço que usa o bcrypt 3.2.2 do Ubuntu. O que acontece com a parte depois do 72º byte?",
+    "hint": "Bytes, não caracteres, e esta versão não avisa.",
+    "choices": [
+      {
+        "text": "A biblioteca levanta um erro e o cadastro falha",
+        "why": "Esta versão não recusa; o `True` da transcrição mostra que os bytes a mais foram descartados."
+      },
+      {
+        "text": "Nada se perde, já que o limite conta 72 letras",
+        "why": "O limite conta bytes, e `canção` tinha 6 caracteres e 8 bytes."
+      },
+      {
+        "text": "É ignorada, em silêncio",
+        "why": "Certo. Qualquer coisa depois dele pode mudar e a senha ainda confere."
+      },
+      {
+        "text": "As letras acentuadas viram pontos de interrogação antes do hash",
+        "why": "Os bytes entram no hash como UTF-8, acentos incluídos. O problema é quantos deles são lidos."
+      }
+    ]
+  },
+  "ex-jmqy9jxc": {
+    "prompt": "Para o bcrypt aceitar senhas longas, uma equipe passa cada senha por um SHA-256 simples e entrega o resultado ao bcrypt. O que a folha da OWASP diz disso?",
+    "hint": "A fórmula da folha tem mais dois ingredientes.",
+    "choices": [
+      {
+        "text": "É a correção que a folha recomenda, exatamente como a equipe escreveu",
+        "why": "A folha chama um pré-hash simples de perigoso. A fórmula dela usa uma chave no hash e o codifica."
+      },
+      {
+        "text": "Usar um HMAC com chave secreta, depois base64, antes do bcrypt",
+        "why": "Certo: `bcrypt(base64(hmac-sha384(password, pepper)))`, com o pepper fora do banco."
+      },
+      {
+        "text": "Subir o custo para 14 em vez disso, o que tira o limite",
+        "why": "O custo muda o tempo, não quantos bytes são lidos; 72 continua 72 em qualquer custo."
+      },
+      {
+        "text": "Trocar o prefixo de `$2b$` para `$2y$`",
+        "why": "O prefixo nomeia uma versão do algoritmo. Versão nenhuma lê mais de 72 bytes."
+      }
+    ]
+  },
+  "ex-bt22r1hk": {
+    "prompt": "Ligue cada parâmetro do scrypt ao que ele controla.",
+    "hint": "Uma das descrições da direita é o `dklen`, que não está à esquerda.",
+    "pairs": [
+      {
+        "left": "`N`",
+        "right": "quantos blocos, uma potência de dois"
+      },
+      {
+        "left": "`r`",
+        "right": "o tamanho de um bloco, 128 × r bytes"
+      },
+      {
+        "left": "`p`",
+        "right": "quantas execuções independentes"
+      },
+      {
+        "left": "`maxmem`",
+        "right": "o teto de memória de uma chamada"
+      }
+    ],
+    "right_distractors": [
+      "quantos bytes de hash voltam"
+    ]
+  },
+  "ex-0ybw6vsp": {
+    "prompt": "Quantos MiB um hash do scrypt precisa com `N=2^16` e `r=8`?",
+    "hint": "128 × r × N bytes.",
+    "unit": "MiB"
+  },
+  "ex-t966qzpe": {
+    "prompt": "Por que a aula diz que o `hashlib.scrypt` é o mais difícil de usar direito num sistema novo?",
+    "hint": "Compare o que ele devolve com um texto do bcrypt.",
+    "choices": [
+      {
+        "text": "Ele não exige memória, então o hardware o roda barato",
+        "why": "Ele é justamente o que exige memória; o pico subiu de 29 para 141 MiB com o N."
+      },
+      {
+        "text": "Devolve só bytes e deixa o resto com você",
+        "why": "Certo. O salt, os parâmetros e a comparação ficam com você, e cada um é lugar para um erro que um teste com a senha certa nunca mostra."
+      },
+      {
+        "text": "Dá resultados diferentes em duas máquinas diferentes",
+        "why": "Mesma senha, salt e parâmetros dão os mesmos bytes em qualquer lugar, ou nada conferiria."
+      },
+      {
+        "text": "Não aceita salt, então senhas iguais colidem",
+        "why": "Ele recebe `salt=` como argumento; a transcrição passou um."
+      }
+    ]
+  },
+  "ex-6f9c85k4": {
+    "prompt": "No texto `$argon2id$v=19$m=19456,t=2,p=1$…`, o valor de `m` é uma quantidade de memória medida em ___.",
+    "hint": "19456 deles dão 19 MiB.",
+    "blanks": [
+      {
+        "accept": [
+          "KiB",
+          "kibibytes"
+        ]
+      }
+    ]
+  },
+  "ex-5hsnz0hz": {
+    "prompt": "Com `m=19456` sem mudar, o `p` vai de 1 para 8. O que acontece com a memória que um hash usa?",
+    "hint": "A folha da OWASP avisa sobre ler esse parâmetro errado.",
+    "choices": [
+      {
+        "text": "É multiplicada por oito, para 152 MiB no total",
+        "why": "Essa é a leitura errada contra a qual a folha avisa: o `p` não é um multiplicador."
+      },
+      {
+        "text": "É dividida por oito",
+        "why": "O total continua `m`; cada faixa fica com um oitavo, o que não é a mesma coisa."
+      },
+      {
+        "text": "Dobra, porque as faixas vêm em pares",
+        "why": "Faixas não vêm em pares; só o `m` define o total."
+      },
+      {
+        "text": "Continua em 19 MiB, dividida em oito faixas",
+        "why": "Certo. O `m` é o total, e o `p` só decide quantas faixas o dividem."
+      }
+    ]
+  },
+  "ex-x4sw1bct": {
+    "prompt": "Ponha em ordem os passos para escolher os parâmetros do Argon2id.",
+    "hint": "Um mínimo publicado vem primeiro, o código por último.",
+    "items": [
+      "Partir do mínimo da OWASP, `m=19456 t=2 p=1`",
+      "Medir numa máquina como a que atende os logins",
+      "Subir o `m`, depois o `t`, até um hash levar o que um login pode gastar",
+      "Multiplicar a memória pelos logins esperados ao mesmo tempo",
+      "Escrever o resultado num lugar só e deixar os hashes antigos subirem no login"
+    ],
+    "trap": "Medir num notebook e copiar o número para o servidor é escolher para a máquina errada."
+  },
+  "ex-mzskbgsa": {
+    "prompt": "Os logins usam `m=65536`. O servidor espera 40 logins no mesmo instante. De quantos MiB os hashes precisam nesse instante?",
+    "hint": "65536 KiB são 64 MiB.",
+    "unit": "MiB"
+  },
+  "ex-kj6hcad0": {
+    "prompt": "A folha da OWASP diz que as cinco configurações do Argon2id dão o mesmo nível de defesa. Na máquina do laboratório elas levaram entre 28,368 e 102,377 ms. O que você deve concluir?",
+    "hint": "Defesa e tempo são duas medidas diferentes.",
+    "choices": [
+      {
+        "text": "A configuração mais rápida é mais fraca e deve ser evitada",
+        "why": "A folha as classifica como iguais; mais rápida numa máquina não quer dizer mais fraca."
+      },
+      {
+        "text": "A folha está errada, porque tempo é o que defesa significa",
+        "why": "A memória também é custo, e memória é o que falta ao hardware que roda palpites lado a lado."
+      },
+      {
+        "text": "Defesa igual não é tempo igual, então meça no seu servidor",
+        "why": "Certo. Escolha entre elas, ou acima delas, pelo que um login pode gastar na máquina que o executa."
+      },
+      {
+        "text": "A máquina do laboratório tem defeito e os números podem ser ignorados",
+        "why": "Configurações diferentes pesam de jeitos diferentes na memória e nas passadas; a variação é normal."
+      }
+    ]
+  },
+  "ex-2n5xxaj6": {
+    "prompt": "Depois que o `memory_cost` mudou de 19456 para 47104, por que o hash antigo da Ana ainda conferiu?",
+    "hint": "De onde o `verify` tirou o `m`?",
+    "choices": [
+      {
+        "text": "O `check_needs_rehash` converteu o hash antigo antes",
+        "why": "Ele roda depois de um verify bem-sucedido, e não converte nada sem a senha."
+      },
+      {
+        "text": "O Argon2id ignora a memória na hora de conferir",
+        "why": "Ele usa a memória; usa a guardada, `m=19456`."
+      },
+      {
+        "text": "O comando `sed` reescreveu as linhas guardadas também",
+        "why": "O `sed` editou o `passwords.py` e nada no `shelf.db`."
+      },
+      {
+        "text": "O `verify` leu os parâmetros do texto guardado",
+        "why": "Certo. Cada linha diz como foi feita, então as antigas continuam funcionando e as novas usam os números novos."
+      }
+    ]
+  },
+  "ex-gktccazx": {
+    "prompt": "Depois que os parâmetros mudam no `passwords.py`, quais contas ficam com hashes feitos do jeito novo?",
+    "hint": "O novo hash precisa de algo que só um login fornece.",
+    "choices": [
+      {
+        "text": "Todas, na próxima vez que o programa iniciar",
+        "why": "Iniciar o programa não tem a senha de ninguém, e um hash não pode ser refeito sem ela."
+      },
+      {
+        "text": "As de quem fizer login correto em seguida",
+        "why": "Certo. Só aí a senha está à mão. Uma conta que ninguém usa fica com o hash antigo."
+      },
+      {
+        "text": "Nenhuma, até uma migração do banco reescrevê-las",
+        "why": "Uma migração também não tem senhas. O login faz a atualização, linha por linha."
+      },
+      {
+        "text": "As daquelas pessoas que erram o login",
+        "why": "Um login que falhou tem uma senha errada à mão, e o `login` retorna antes do novo hash."
+      }
+    ]
+  },
+  "ex-tj7jc1ez": {
+    "prompt": "Ponha em ordem o que o `login` do `passwords.py` faz, para uma senha correta.",
+    "hint": "O novo hash vem depois que a resposta é conhecida.",
+    "items": [
+      "Buscar a linha do nome",
+      "Conferir a senha contra o texto guardado",
+      "Perguntar se os parâmetros guardados diferem dos do `HASHER`",
+      "Guardar um hash novo se diferirem",
+      "Retornar `True`"
+    ],
+    "trap": "Conferir o novo hash antes de verificar refaria o hash do que foi digitado, certo ou errado."
+  },
+  "ex-bqf6a1r3": {
+    "prompt": "Ligue cada peça desta aula ao que ela é.",
+    "hint": "Público ou secreto, por linha ou compartilhado.",
+    "pairs": [
+      {
+        "left": "salt",
+        "right": "público, e diferente em cada linha"
+      },
+      {
+        "left": "pepper",
+        "right": "secreto, comum a todas as linhas, guardado fora do banco"
+      },
+      {
+        "left": "hash decoy",
+        "right": "aquilo contra o que um nome desconhecido é conferido"
+      },
+      {
+        "left": "fator de custo",
+        "right": "o que faz um palpite demorar mais"
+      }
+    ],
+    "right_distractors": [
+      "o que permite ler de volta uma senha esquecida"
+    ]
+  },
+  "ex-j5jj2zf1": {
+    "prompt": "Quais destas coisas a NIST SP 800-63B pede das senhas que um serviço aceita? Marque todas as que valem.",
+    "hint": "Comprimento e lista de bloqueio ficaram; composição e expiração saíram.",
+    "choices": [
+      {
+        "text": "Um dígito, uma maiúscula e um símbolo em cada uma",
+        "why": "Regras de composição são exatamente o que ela diz para não impor."
+      },
+      {
+        "text": "Pelo menos 15 caracteres quando ela é o único fator",
+        "why": "Certo, e 8 quando é um de dois fatores."
+      },
+      {
+        "text": "Uma troca forçada a cada 90 dias",
+        "why": "Ela diz para não forçar trocas periódicas, só uma troca quando há evidência de comprometimento."
+      },
+      {
+        "text": "Recusa das que já se sabe que vazaram",
+        "why": "Certo. Uma lista de bloqueio de senhas comuns e vazadas é exigida."
+      },
+      {
+        "text": "Espaço para pelo menos 64 caracteres",
+        "why": "Certo: um máximo de pelo menos 64, para caberem frases."
+      }
+    ]
+  },
+  "ex-3wby3ftc": {
+    "prompt": "Na verificação com k-anonimato no Have I Been Pwned, o que o serviço recebe?",
+    "hint": "Conte os caracteres no endereço.",
+    "choices": [
+      {
+        "text": "O SHA-1 inteiro da senha",
+        "why": "Um hash inteiro de uma senha comum a identifica na hora. Só uma parte é enviada."
+      },
+      {
+        "text": "A própria senha, por HTTPS",
+        "why": "O HTTPS protege o trajeto, não o que o destinatário aprende. O desenho envia muito menos."
+      },
+      {
+        "text": "Cinco caracteres hexadecimais",
+        "why": "Certo: os cinco primeiros do SHA-1, comuns a centenas de senhas. Seu servidor compara os outros 35."
+      },
+      {
+        "text": "O texto do Argon2id guardado na linha",
+        "why": "Esse texto tem salt e é único da linha; lista nenhuma poderia contê-lo."
+      }
+    ]
+  },
+  "ex-5y4wny6c": {
+    "prompt": "Todo hash guardado depende do pepper, então trocá-lo significa que cada usuário precisa escolher uma nova ___.",
+    "hint": "O que o usuário digita no login?",
+    "blanks": [
+      {
+        "accept": [
+          "senha",
+          "frase-senha"
+        ]
+      }
+    ]
+  },
+  "ex-0q9xs1z8": {
+    "prompt": "Por que o `login` confere um nome desconhecido contra o `DECOY`?",
+    "hint": "Compare as barras da figura.",
+    "choices": [
+      {
+        "text": "Para que uma conta inexistente demore o mesmo que uma senha errada",
+        "why": "Certo. Sem ele, a resposta voltaria em menos de um milissegundo e entregaria o nome."
+      },
+      {
+        "text": "Para que nomes desconhecidos sejam cadastrados na hora",
+        "why": "Nada é cadastrado no login; o resultado é `False` de qualquer jeito."
+      },
+      {
+        "text": "Para atrasar usuários que digitam o próprio nome errado",
+        "why": "Atrasar ninguém é o objetivo; o objetivo é igualar o tempo de uma senha errada."
+      },
+      {
+        "text": "Para ter um hash de reserva para o próximo cadastro",
+        "why": "O decoy nunca é guardado para ninguém; ele só existe para ser conferido."
+      }
+    ]
+  },
+  "ex-ejgby7t2": {
+    "prompt": "Uma equipe cola no código um texto decoy fixo, feito com `m=19456`, e um ano depois sobe o `HASHER` para `m=262144`. O que dá errado?",
+    "hint": "O `verify` usa os parâmetros escritos no texto que recebe.",
+    "choices": [
+      {
+        "text": "Nomes desconhecidos voltam a responder mais rápido",
+        "why": "Certo. O decoy continua custando um hash `m=19456` enquanto as linhas reais crescem para `m=262144`, e os dois tempos se afastam."
+      },
+      {
+        "text": "Todo usuário existente fica sem acesso",
+        "why": "As linhas existentes conferem com os próprios parâmetros guardados, com decoy ou sem."
+      },
+      {
+        "text": "O decoy passa a bater com senhas reais",
+        "why": "Ele é o hash de um texto aleatório, sejam quais forem os parâmetros."
+      },
+      {
+        "text": "Nada, já que o tempo do decoy não depende do valor de `m`",
+        "why": "O tempo cresce com o `m`: 40,003 ms em 19456 contra 871,884 ms em 262144 na execução da aula."
+      }
+    ]
+  },
+  "ex-kbj2pdqm": {
+    "prompt": "Ordene por quantos hashes por segundo a máquina do laboratório calculou, do mais rápido ao mais lento.",
+    "hint": "Um deles nem é hash de senha.",
+    "items": [
+      "SHA-256",
+      "Argon2id, `m=19456 t=2 p=1`",
+      "bcrypt, custo 10",
+      "bcrypt, custo 12",
+      "scrypt, `N=2^17 r=8 p=1`"
+    ],
+    "trap": "Os mínimos da OWASP não têm o mesmo tempo: o do scrypt foi a linha mais lenta das seis."
+  },
+  "ex-hd91mvx8": {
+    "prompt": "O que, num hash do bcrypt ou do Argon2id, deixa uma equipe subir o custo depois sem ninguém trocar de senha?",
+    "hint": "As linhas antigas precisam continuar conferindo.",
+    "choices": [
+      {
+        "text": "Um pepper",
+        "why": "O pepper é justamente o que não pode mudar sem todo usuário trocar de senha."
+      },
+      {
+        "text": "Um salt por usuário, guardado na linha ao lado de cada hash",
+        "why": "O salt deixa as linhas diferentes; não diz nada sobre qual custo as fez."
+      },
+      {
+        "text": "Um hash decoy, conferido quando um nome não existe na tabela",
+        "why": "O decoy esconde quais nomes existem. Não tem papel na atualização."
+      },
+      {
+        "text": "Os parâmetros escritos em cada texto guardado",
+        "why": "Certo. O `verify` os lê de volta, cada linha confere com os seus, e o `check_needs_rehash` a atualiza no próximo login correto."
+      }
+    ]
+  },
+  "ex-vztbhyct": {
+    "prompt": "Uma tabela de usuários vazada guarda textos como `$argon2id$v=19$m=19456,t=2,p=1$…`, sem pepper. Quais afirmações são verdadeiras? Marque todas as que valem.",
+    "hint": "O salt está no texto; o custo é por palpite.",
+    "choices": [
+      {
+        "text": "Cada palpite contra uma linha custa um hash Argon2id inteiro",
+        "why": "Certo: 19 MiB e duas passadas para cada palpite."
+      },
+      {
+        "text": "O salt precisa ser descoberto antes de qualquer palpite",
+        "why": "O salt é o quarto campo do texto, à vista."
+      },
+      {
+        "text": "Um palpite testado numa linha não diz nada sobre outra",
+        "why": "Certo. Cada linha tem seu salt, então cada uma é um trabalho à parte."
+      },
+      {
+        "text": "Senhas comuns podem ser procuradas numa tabela calculada de antemão",
+        "why": "Uma tabela calculada de antemão precisaria de uma entrada para cada salt; o salt por linha é o que a derrota."
+      }
+    ]
+  },
+  "ex-k9wr41wj": {
+    "prompt": "Uma ___ secreta de HMAC guardada fora do banco faz com que uma cópia vazada da tabela, sozinha, não consiga testar palpite nenhum.",
+    "hint": "É o que o `openssl dgst -hmac` recebeu.",
+    "blanks": [
+      {
+        "accept": [
+          "chave",
+          "pepper"
+        ]
+      }
+    ]
+  }
+}
