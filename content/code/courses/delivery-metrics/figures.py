@@ -253,7 +253,14 @@ def apply(path):
         return render(found.group(1), lang)
 
     new = FENCE.sub(swap_fence, text)
-    new = PLACEHOLDER.sub(lambda m: render(m.group(1), lang), new)
+    def swap_placeholder(m):
+        if m.group(1) not in FIGURES:
+            # Left in the file, where validate-content and the render walk both refuse
+            # it; said here so the run does not look complete.
+            print(f'{path}: no figure called {m.group(1)}, placeholder left', file=sys.stderr)
+            return m.group(0)
+        return render(m.group(1), lang)
+    new = PLACEHOLDER.sub(swap_placeholder, new)
     if new != text:
         open(path, 'w', encoding='utf-8').write(new)
         return True
@@ -957,6 +964,48 @@ def l06_chain(lang):
                 'whether it worked.',
                 'O trabalho acontece na coluna da esquerda. A do meio é onde você olha para ver se '
                 'funcionou.')
+
+
+# ------------------------------------------------------------------ lesson 7
+
+@figure('l07-split', 7)
+def l07_split(lang):
+    f = Fig('l07-split', 680, 230, T(
+        lang,
+        'Two rows showing the same pipeline run at 17:20 carrying three changes, the first of which failed. In the top row '
+        'it is counted as one deployment; in the bottom row as three deployments at the same '
+        'minute. The changes, the time they reached users and the one failure are identical in '
+        'both rows; only the count differs.',
+        'Duas linhas mostrando a mesma rodada do pipeline às 17h20 levando três mudanças, a primeira com falha. Na de '
+        'cima ela conta como um deploy; na de baixo como três deploys no mesmo minuto. As '
+        'mudanças, a hora em que chegaram aos usuários e a única falha são idênticas nas duas '
+        'linhas; só a contagem muda.'))
+    rows = [(T(lang, 'as recorded', 'como registrado'), 1, 70), (T(lang, 'one per change', 'um por mudança'), 3, 160)]
+    for label, n, y in rows:
+        f.text(20, y, label, size=10.5, anchor='start', weight='600')
+        f.line(160, y, 640, y, stroke='--paper-dim', width=1.2)
+        f.circle(400, y, 5, fill='--phosphor')
+        f.text(400, y + 22, '17:20', size=9.5, mono=True, fill='--paper-dim')
+        for k in range(3):
+            cx = 280 + k * 40
+            bad = k == 0
+            f.rect(cx - 16, y - 34, 32, 20, stroke='--amber' if bad else '--phosphor', fill='--scan', width=1.2, rx=3)
+        boxes = [(256, y - 40, 128, 32)] if n == 1 else [(260 + k * 40, y - 38, 40, 28) for k in range(3)]
+        for bx, by, bw, bh in boxes:
+            f.path(f'M{bx} {by} L{bx + bw} {by} L{bx + bw} {by + bh} L{bx} {by + bh} Z',
+                   stroke='--paper', width=1, dash='4 3')
+        f.text(560, y - 10, T(lang, f'{n} deployment' + ('' if n == 1 else 's'), f'{n} deploy' + ('' if n == 1 else 's')),
+               size=11, weight='600')
+        f.text(560, y + 8, T(lang, f'failure rate {1 / n:.0%}', f'taxa de falha {1 / n:.0%}'.replace('%', '%')),
+               size=10, fill='--paper-dim')
+    f.text(340, 214, T(lang, 'the first change failed; all three reached users at the same minute in both rows',
+                       'a primeira mudança falhou; as três chegaram aos usuários no mesmo minuto nas duas linhas'),
+           size=9.5, fill='--paper-dim')
+    return f, T(lang,
+                'Splitting changes the count, not the event. Lead time and time to restore are '
+                'measured on the changes and the failure, so they do not move.',
+                'Dividir muda a contagem, não o evento. Lead time e tempo para restaurar são medidos '
+                'nas mudanças e na falha, então não se mexem.')
 
 
 # @@LESSONS@@
