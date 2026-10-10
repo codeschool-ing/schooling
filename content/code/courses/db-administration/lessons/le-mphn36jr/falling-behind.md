@@ -61,7 +61,7 @@ VACUUM
 removed nothing, and said why: `removable cutoff: 805` means it could remove only what died before
 transaction 805, and `pg_stat_activity` shows whose number that is. The session in `idle in
 transaction` has a `backend_xmin` of 805, the transaction id that was next when its snapshot was
-taken. The second session's 806 is the `SELECT` that was running in it at that moment.
+taken. The 806 belongs to the second terminal itself, taken by the `SELECT` that was asking.
 
 Autovacuum gets exactly the same answer. On a busy server it keeps visiting the table, because
 `n_dead_tup` stays over the line, and every visit reads the pages and leaves the same dead versions

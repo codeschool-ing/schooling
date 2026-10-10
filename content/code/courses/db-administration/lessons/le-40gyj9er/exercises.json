@@ -1,0 +1,731 @@
+[
+  {
+    "id": "ex-p7abaa6j",
+    "version": 1,
+    "section": "the-lock-queue",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A session ran `BEGIN; SELECT count(*) FROM orders_live;` and the SELECT has returned. When does it release its lock on the table?",
+    "hint": "psql's prompt still shows a star.",
+    "choices": [
+      {
+        "text": "At COMMIT or ROLLBACK",
+        "correct": true,
+        "why": "Right. A lock lasts until the end of the transaction, not the end of the statement."
+      },
+      {
+        "text": "As soon as the SELECT returned its rows",
+        "correct": false,
+        "why": "That is the belief that makes an idle transaction look harmless. pg_locks still showed it granted."
+      },
+      {
+        "text": "After deadlock_timeout, one second later",
+        "correct": false,
+        "why": "deadlock_timeout is when PostgreSQL checks for a deadlock; it releases nothing."
+      },
+      {
+        "text": "When another session asks for a conflicting lock",
+        "correct": false,
+        "why": "Asking does not take it away. The ALTER waited until the COMMIT."
+      }
+    ]
+  },
+  {
+    "id": "ex-thw719kt",
+    "version": 1,
+    "section": "the-lock-queue",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the capture, the third session's `SELECT status …` had `blocked_by` = the ALTER's pid, not the first session's. Why?",
+    "hint": "Which granted or queued lock does an ACCESS SHARE conflict with?",
+    "choices": [
+      {
+        "text": "Because pg_blocking_pids only ever reports the most recent session",
+        "correct": false,
+        "why": "It reports every process that blocks; the ALTER's row named the first session."
+      },
+      {
+        "text": "The first session had already committed by then",
+        "correct": false,
+        "why": "It was idle in transaction with its lock granted, as the same query showed."
+      },
+      {
+        "text": "A SELECT always waits for any ALTER on the same database, whatever the table",
+        "correct": false,
+        "why": "Locks here are per table. Other tables were not affected."
+      },
+      {
+        "text": "Its lock conflicts with the ACCESS EXCLUSIVE queued ahead of it",
+        "correct": true,
+        "why": "Right. Two ACCESS SHARE locks coexist; the queued ALTER is what stands in the way."
+      }
+    ]
+  },
+  {
+    "id": "ex-sett14ht",
+    "version": 1,
+    "section": "the-lock-queue",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In pg_stat_activity, a session that opened a transaction and is waiting for its client to send the next command has the state `idle in ___`.",
+    "hint": "Three words in the state; the last is missing.",
+    "blanks": [
+      {
+        "accept": [
+          "transaction"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-a7fftx64",
+    "version": 1,
+    "section": "the-lock-queue",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague adds a nullable column with no default to a busy table at noon. It is instant on their test copy. On production, the site stops answering for three minutes. Which explanation fits this lesson?",
+    "hint": "What was different on production that the copy did not have?",
+    "choices": [
+      {
+        "text": "The column made PostgreSQL rewrite the table",
+        "correct": false,
+        "why": "A column with no default only edits the catalogue, on production as on the copy."
+      },
+      {
+        "text": "A transaction held the table for three minutes, and every query queued behind the waiting ALTER",
+        "correct": true,
+        "why": "Right. The ALTER itself took milliseconds once it got its lock."
+      },
+      {
+        "text": "Production has more rows, and the time grows with the row count",
+        "correct": false,
+        "why": "For this change the time does not depend on the number of rows."
+      },
+      {
+        "text": "max_connections was too low",
+        "correct": false,
+        "why": "Running out of connections is a consequence of the queue, not its cause."
+      }
+    ]
+  },
+  {
+    "id": "ex-f19c3fww",
+    "version": 1,
+    "section": "lock-timeout",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `SET lock_timeout = '2s'`, what happened to the ALTER while the first session held the table?",
+    "hint": "Read its Time: line.",
+    "choices": [
+      {
+        "text": "It waited two seconds and then ran anyway",
+        "correct": false,
+        "why": "It did not run; the column source was only added later, by the retry script."
+      },
+      {
+        "text": "It cancelled the first session's transaction so it could proceed",
+        "correct": false,
+        "why": "lock_timeout only affects the session that set it. The first session committed normally."
+      },
+      {
+        "text": "It gave up after two seconds with an error",
+        "correct": true,
+        "why": "Right: canceling statement due to lock timeout, and the queue behind it moved."
+      },
+      {
+        "text": "It ran in the background and finished when the lock was free",
+        "correct": false,
+        "why": "PostgreSQL has no background ALTER. A statement either waits or gives up."
+      }
+    ]
+  },
+  {
+    "id": "ex-c2byqr9s",
+    "version": 1,
+    "section": "lock-timeout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A change rewrites a large table and needs about a minute of work. Which setting lets it run but stops it from queueing for long?",
+    "hint": "One counts waiting for a lock, the other counts everything.",
+    "choices": [
+      {
+        "text": "statement_timeout = '2s'",
+        "correct": false,
+        "why": "That counts the whole statement, work included, so it would cancel the rewrite after two seconds."
+      },
+      {
+        "text": "idle_in_transaction_session_timeout = '2s'",
+        "correct": false,
+        "why": "That ends sessions sitting idle inside a transaction, which helps, but it limits other people's sessions, not the ALTER's wait."
+      },
+      {
+        "text": "deadlock_timeout = '2s'",
+        "correct": false,
+        "why": "That is how long to wait before checking for a deadlock. A queue is not a deadlock."
+      },
+      {
+        "text": "lock_timeout = '2s'",
+        "correct": true,
+        "why": "Right. It counts only the wait for the lock; the minute of work is not limited."
+      }
+    ]
+  },
+  {
+    "id": "ex-r2yrefje",
+    "version": 1,
+    "section": "lock-timeout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lock_timeout demonstration, the third session's SELECT reported about 1.2 seconds. Why was it not instant?",
+    "hint": "lock_timeout limits a queue; does it prevent one?",
+    "choices": [
+      {
+        "text": "Reading a million rows to find id 1 takes that long on any machine, lock or no lock",
+        "correct": false,
+        "why": "The same query took a fraction of that once nothing was queued; most of the time was waiting."
+      },
+      {
+        "text": "It queued behind the ALTER until the ALTER gave up",
+        "correct": true,
+        "why": "Right. The queue still formed, and lock_timeout bounded how long it lasted."
+      },
+      {
+        "text": "It had to wait for the first session to commit",
+        "correct": false,
+        "why": "The first session committed after the SELECT returned; it never blocked the SELECT directly."
+      },
+      {
+        "text": "Its own lock_timeout made it wait two seconds first",
+        "correct": false,
+        "why": "Only the second session set lock_timeout, and the setting is a ceiling on waiting, not a delay."
+      }
+    ]
+  },
+  {
+    "id": "ex-bgexztqp",
+    "version": 1,
+    "section": "lock-timeout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In retry-ddl.sh, why does the script sleep for three seconds between attempts, longer than the two seconds each attempt may wait?",
+    "hint": "What happens to the queries that were stuck behind the ALTER?",
+    "choices": [
+      {
+        "text": "PostgreSQL refuses a second ALTER within three seconds of a failed one",
+        "correct": false,
+        "why": "There is no such rule. Retrying at once would work, and would queue everybody again at once."
+      },
+      {
+        "text": "To give autovacuum time to finish the table",
+        "correct": false,
+        "why": "The holder here was a transaction, not autovacuum, and three seconds would not finish a vacuum anyway."
+      },
+      {
+        "text": "So the queued queries run, and the holder may finish, before it queues again",
+        "correct": true,
+        "why": "Right. The gap is the application's time to breathe between attempts."
+      },
+      {
+        "text": "psql needs time to close its previous connection",
+        "correct": false,
+        "why": "Each psql exits completely before the next line of the script runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-7tnp1rda",
+    "version": 1,
+    "section": "cheap-and-expensive",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On PostgreSQL 16, `ALTER TABLE orders_live ADD COLUMN channel text NOT NULL DEFAULT 'web'` took milliseconds on a million rows. Why?",
+    "hint": "Where does the 'web' of an old row come from?",
+    "choices": [
+      {
+        "text": "NOT NULL columns are filled in later, a page at a time, by autovacuum running in the background",
+        "correct": false,
+        "why": "Autovacuum never writes column values. The catalogue supplies them."
+      },
+      {
+        "text": "The default is kept in the catalogue and supplied when old rows are read",
+        "correct": true,
+        "why": "Right, since version 11. The file kept its name: no rewrite."
+      },
+      {
+        "text": "Text columns take no space",
+        "correct": false,
+        "why": "They do, when a value is stored. Here nothing was stored in the rows."
+      },
+      {
+        "text": "Because the table had no indexes yet",
+        "correct": false,
+        "why": "A rewrite without indexes still copies every row; the volatile default proved it on the same table."
+      }
+    ]
+  },
+  {
+    "id": "ex-qkysjc7f",
+    "version": 1,
+    "section": "cheap-and-expensive",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each change to orders_live with what it cost.",
+    "hint": "Look at the file name and the DEBUG lines.",
+    "pairs": [
+      {
+        "left": "ADD COLUMN token uuid DEFAULT gen_random_uuid()",
+        "right": "A rewrite: every row gets its own value"
+      },
+      {
+        "left": "ALTER COLUMN status TYPE varchar(40), from varchar(20)",
+        "right": "A catalogue edit, in milliseconds"
+      },
+      {
+        "left": "ALTER COLUMN total_cents TYPE bigint",
+        "right": "A rewrite: every row changes size"
+      },
+      {
+        "left": "ADD CONSTRAINT … CHECK (total_cents > 0)",
+        "right": "A full scan, no rewrite"
+      }
+    ],
+    "right_distractors": [
+      "A rebuild of every index on the table"
+    ]
+  },
+  {
+    "id": "ex-t79h3nsy",
+    "version": 1,
+    "section": "cheap-and-expensive",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How did the lesson tell, without timing anything, that ALTER COLUMN total_cents TYPE bigint rewrote the table?",
+    "hint": "Two signs, one a function from lesson 4.",
+    "choices": [
+      {
+        "text": "pg_locks showed ShareUpdateExclusiveLock",
+        "correct": false,
+        "why": "It showed AccessExclusiveLock; ShareUpdateExclusiveLock was VALIDATE's lock."
+      },
+      {
+        "text": "The number of rows reported by the ALTER",
+        "correct": false,
+        "why": "ALTER TABLE reports no row count, rewrite or not."
+      },
+      {
+        "text": "The table's size in \\dt+ doubled and stayed doubled until the next VACUUM FULL ran",
+        "correct": false,
+        "why": "A rewrite replaces the file; the old one is removed when the transaction ends."
+      },
+      {
+        "text": "pg_relation_filepath changed, and DEBUG1 said rewriting table",
+        "correct": true,
+        "why": "Right. A rewrite is a new file, and PostgreSQL says so at debug1."
+      }
+    ]
+  },
+  {
+    "id": "ex-7rg12tdf",
+    "version": 1,
+    "section": "cheap-and-expensive",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A migration file runs ten ALTER TABLE statements inside one BEGIN … COMMIT, on ten different tables. The first one rewrites a large table. What does that mean for the other nine tables during the migration?",
+    "hint": "When are locks released?",
+    "choices": [
+      {
+        "text": "Each table is locked only while its own ALTER runs",
+        "correct": false,
+        "why": "Each lock is taken when its ALTER runs, and released only at COMMIT."
+      },
+      {
+        "text": "Each stays closed from its ALTER until the COMMIT, after the slow rewrite and everything else",
+        "correct": true,
+        "why": "Right. One transaction is one long lock on everything it touched."
+      },
+      {
+        "text": "Nothing: they are different tables",
+        "correct": false,
+        "why": "They wait for nothing of the first table, but their own locks last until the end of the shared transaction."
+      },
+      {
+        "text": "PostgreSQL commits each ALTER automatically, as MySQL does",
+        "correct": false,
+        "why": "That is MySQL's behaviour. PostgreSQL's DDL is transactional, as the ROLLBACK showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-4sx3hgkn",
+    "version": 1,
+    "section": "constraints-without-blocking",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Right after `ADD CONSTRAINT total_positive CHECK (total_cents > 0) NOT VALID`, an insert with total_cents = 0 is tried. What happens?",
+    "hint": "NOT VALID is about the rows already there.",
+    "choices": [
+      {
+        "text": "It is accepted until the constraint is validated",
+        "correct": false,
+        "why": "That is the common misreading of NOT VALID. Only the existing rows are unchecked."
+      },
+      {
+        "text": "It waits for VALIDATE CONSTRAINT to run",
+        "correct": false,
+        "why": "Nothing waits; the insert was refused in about a millisecond."
+      },
+      {
+        "text": "It is accepted with a warning",
+        "correct": false,
+        "why": "A check constraint never warns; it refuses or accepts."
+      },
+      {
+        "text": "It is refused",
+        "correct": true,
+        "why": "Right. A NOT VALID constraint is enforced for new rows from the moment it is added."
+      }
+    ]
+  },
+  {
+    "id": "ex-xbq5ysdg",
+    "version": 1,
+    "section": "constraints-without-blocking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "While `VALIDATE CONSTRAINT` held its lock in an open transaction, another session ran an UPDATE on the same table. What happened to the UPDATE?",
+    "hint": "Which lock did pg_locks show for VALIDATE?",
+    "choices": [
+      {
+        "text": "It waited for the COMMIT",
+        "correct": false,
+        "why": "It would have under ACCESS EXCLUSIVE. VALIDATE takes SHARE UPDATE EXCLUSIVE."
+      },
+      {
+        "text": "It failed, because the table was being validated",
+        "correct": false,
+        "why": "It returned UPDATE 1."
+      },
+      {
+        "text": "It ran, but its row was not checked against the constraint",
+        "correct": false,
+        "why": "Every new row version is checked by the constraint, validated or not."
+      },
+      {
+        "text": "It ran at once, because SHARE UPDATE EXCLUSIVE does not conflict with writes",
+        "correct": true,
+        "why": "Right. Its time was the scan for id 2, not a wait."
+      }
+    ]
+  },
+  {
+    "id": "ex-55xe3x0f",
+    "version": 1,
+    "section": "constraints-without-blocking",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps that gave orders_live a primary key without a long ACCESS EXCLUSIVE lock in order.",
+    "hint": "The index first; the NOT NULL proof before the key.",
+    "items": [
+      "CREATE UNIQUE INDEX CONCURRENTLY orders_live_id ON orders_live (id)",
+      "ADD CONSTRAINT id_not_null CHECK (id IS NOT NULL) NOT VALID",
+      "VALIDATE CONSTRAINT id_not_null",
+      "ADD CONSTRAINT orders_live_pkey PRIMARY KEY USING INDEX orders_live_id",
+      "DROP CONSTRAINT id_not_null"
+    ],
+    "trap": "Dropping the check before the key exists throws away the proof that lets the key skip its scan."
+  },
+  {
+    "id": "ex-tas0m0cx",
+    "version": 1,
+    "section": "constraints-without-blocking",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A migration tool runs every step inside BEGIN … COMMIT. A developer adds `CREATE UNIQUE INDEX CONCURRENTLY` to a migration. What happens?",
+    "hint": "One of the two cautions at the end of the section.",
+    "choices": [
+      {
+        "text": "It is refused: no CONCURRENTLY inside a transaction block",
+        "correct": true,
+        "why": "Right. The tool has to be told to run that step outside a transaction."
+      },
+      {
+        "text": "It runs, but without CONCURRENTLY",
+        "correct": false,
+        "why": "PostgreSQL never quietly drops the word; it refuses the statement."
+      },
+      {
+        "text": "It builds an INVALID index that the tool then validates",
+        "correct": false,
+        "why": "An INVALID index is what a failure halfway leaves; there is no validating it, only dropping and rebuilding."
+      },
+      {
+        "text": "It works and holds ACCESS EXCLUSIVE until COMMIT",
+        "correct": false,
+        "why": "It does not get as far as taking a lock."
+      }
+    ]
+  },
+  {
+    "id": "ex-ahcq02ex",
+    "version": 1,
+    "section": "expand-and-contract",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the phases of changing total_cents from integer to bigint in order.",
+    "hint": "Four names: expand, backfill, switch, contract.",
+    "items": [
+      "Add total_cents_new and a trigger that fills it on every write",
+      "Copy the old rows across in batches, committing each",
+      "Rename the columns and drop the trigger in one short transaction",
+      "Drop total_cents_old"
+    ],
+    "trap": "Backfilling before the trigger exists leaves every row written during the backfill without a value."
+  },
+  {
+    "id": "ex-m2wwmtav",
+    "version": 1,
+    "section": "expand-and-contract",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does backfill_total_cents commit after each batch instead of running one UPDATE over the whole table?",
+    "hint": "What does a single huge transaction hold, and for how long?",
+    "choices": [
+      {
+        "text": "Because a procedure cannot update more than 100,000 rows at once",
+        "correct": false,
+        "why": "There is no such limit; 100,000 was the batch the lesson chose."
+      },
+      {
+        "text": "Because the trigger only fires on committed rows",
+        "correct": false,
+        "why": "A trigger fires inside the statement, committed or not."
+      },
+      {
+        "text": "So no transaction locks many rows for long or holds back VACUUM",
+        "correct": true,
+        "why": "Right. Each batch is a short transaction, and the dead rows it leaves can be cleaned as it goes."
+      },
+      {
+        "text": "To make the backfill faster overall",
+        "correct": false,
+        "why": "Batches are usually a little slower overall. They are kinder, not faster."
+      }
+    ]
+  },
+  {
+    "id": "ex-bkffa147",
+    "version": 1,
+    "section": "expand-and-contract",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many batches did CALL backfill_total_cents(100000) commit on orders_live?",
+    "hint": "Count the NOTICE lines.",
+    "value": 11,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-a6y2p0n5",
+    "version": 1,
+    "section": "expand-and-contract",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The check after the backfill uses `IS DISTINCT FROM` rather than `<>`. What would `WHERE total_cents_new <> total_cents` have missed?",
+    "hint": "What is NULL <> 5?",
+    "choices": [
+      {
+        "text": "Rows where the two values differ by more than an integer can hold",
+        "correct": false,
+        "why": "<> compares a bigint and an integer correctly. The gap is NULL."
+      },
+      {
+        "text": "Rows the trigger wrote during the backfill",
+        "correct": false,
+        "why": "Those have equal values, and both operators count them as equal."
+      },
+      {
+        "text": "Rows where total_cents_new is still NULL",
+        "correct": true,
+        "why": "Right. NULL <> 5 is NULL, not true, so the row would not be counted."
+      },
+      {
+        "text": "Nothing: the two are the same for numbers",
+        "correct": false,
+        "why": "They are the same for two non-null numbers. With a NULL they differ."
+      }
+    ]
+  },
+  {
+    "id": "ex-bkwpgej4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You must add `CHECK (status IN ('paid', 'shipped', 'cancelled'))` to a 300-million-row table that is written all day. Which plan follows this lesson?",
+    "hint": "Two statements, each under a different lock.",
+    "choices": [
+      {
+        "text": "ADD CONSTRAINT at night, when traffic is low",
+        "correct": false,
+        "why": "It still scans 300 million rows under ACCESS EXCLUSIVE; low traffic only means fewer people queue."
+      },
+      {
+        "text": "Add a new column with the check, backfill it, and switch",
+        "correct": false,
+        "why": "Expand and contract is for changes that cannot be made cheap. A check can."
+      },
+      {
+        "text": "CREATE INDEX CONCURRENTLY on status first, so that validating the check can use the index instead of the table",
+        "correct": false,
+        "why": "Validating a check reads every row; no index makes that unnecessary."
+      },
+      {
+        "text": "ADD CONSTRAINT … NOT VALID with a lock_timeout, then VALIDATE CONSTRAINT",
+        "correct": true,
+        "why": "Right. A brief strong lock, bounded by the timeout, then a long scan that lets writes continue."
+      }
+    ]
+  },
+  {
+    "id": "ex-t9fhtz7e",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A retry script has failed five times in a row, each time with `canceling statement due to lock timeout`. What is the right next step?",
+    "hint": "What does five failures in a row say about the table?",
+    "choices": [
+      {
+        "text": "Raise lock_timeout to five minutes and run it once more",
+        "correct": false,
+        "why": "That turns the next attempt into exactly the outage the timeout was there to prevent."
+      },
+      {
+        "text": "Look in pg_stat_activity for what has held the table so long",
+        "correct": true,
+        "why": "Right. Something holds it for long periods, and that is the problem to solve first."
+      },
+      {
+        "text": "Run the ALTER without lock_timeout, since the retries proved it is safe",
+        "correct": false,
+        "why": "The retries proved the opposite: the lock is not free."
+      },
+      {
+        "text": "Restart PostgreSQL to clear the locks",
+        "correct": false,
+        "why": "A restart ends every session, which is a worse outage than the one being avoided."
+      }
+    ]
+  },
+  {
+    "id": "ex-xrgvrw4y",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A table's `email` column is `varchar(100)` and must become `varchar(255)`. Which approach is enough?",
+    "hint": "Can a larger limit make any existing row invalid?",
+    "choices": [
+      {
+        "text": "Expand and contract: a new column, a backfill and a switch",
+        "correct": false,
+        "why": "That is a lot of work for a change PostgreSQL makes by editing the catalogue."
+      },
+      {
+        "text": "NOT VALID and VALIDATE, as for a check",
+        "correct": false,
+        "why": "A type change has no NOT VALID form, and this one needs no check of the rows anyway."
+      },
+      {
+        "text": "Wait for a maintenance window, because every type change rewrites the table",
+        "correct": false,
+        "why": "Not every type change rewrites; the lesson measured this exact kind as instant."
+      },
+      {
+        "text": "A plain ALTER COLUMN TYPE varchar(255), with lock_timeout",
+        "correct": true,
+        "why": "Right. Raising the limit is instant, like varchar(20) to varchar(40); the timeout handles the queue."
+      }
+    ]
+  },
+  {
+    "id": "ex-rdq3gs8a",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": false,
+    "prompt": "Which of these keep the ACCESS EXCLUSIVE lock for only a moment on a large table? Choose all that apply.",
+    "hint": "Catalogue edits versus anything that reads or writes every row.",
+    "choices": [
+      {
+        "text": "ADD COLUMN with a constant default",
+        "correct": true,
+        "why": "Yes, since PostgreSQL 11."
+      },
+      {
+        "text": "RENAME COLUMN",
+        "correct": true,
+        "why": "Yes. A catalogue edit, which is why the switch was quick."
+      },
+      {
+        "text": "ADD CONSTRAINT … CHECK … NOT VALID",
+        "correct": true,
+        "why": "Yes. The existing rows are not read."
+      },
+      {
+        "text": "ALTER COLUMN … TYPE bigint, from integer",
+        "correct": false,
+        "why": "A rewrite, under the lock throughout."
+      },
+      {
+        "text": "ADD COLUMN … DEFAULT gen_random_uuid()",
+        "correct": false,
+        "why": "A volatile default rewrites the table."
+      }
+    ]
+  },
+  {
+    "id": "ex-jqjh7h7k",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`SET NOT NULL` skips its scan of the table when a valid ___ constraint already proves the column has no nulls.",
+    "hint": "The kind added NOT VALID and then validated.",
+    "blanks": [
+      {
+        "accept": [
+          "CHECK"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

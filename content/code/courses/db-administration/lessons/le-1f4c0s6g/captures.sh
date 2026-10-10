@@ -116,8 +116,10 @@ on 'sudo grep "idle-in-transaction" /var/log/postgresql/postgresql-16-main.log'
 block pooling
 on 'pgbench --select-only --connect --client=4 --jobs=4 --time=15 bench'
 
-# put back what the lesson changed
-lab as 'dropdb bench && dropuser app && sudo userdel --remove app' >&2
-lab as 'psql -XAtc "SHOW max_connections" shop' >&2
+block cleanup
+on 'dropdb bench'
+on 'dropuser app'
+on 'sudo userdel --remove app'
+on 'psql shop -Atc "SHOW max_connections"'
 
 lab down

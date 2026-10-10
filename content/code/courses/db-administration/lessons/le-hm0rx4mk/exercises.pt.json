@@ -1,0 +1,512 @@
+{
+  "ex-r2j58h2z": {
+    "prompt": "No começo desta lição, quem é dono das tabelas customers e orders?",
+    "hint": "Olhe a coluna Owner do \\dt.",
+    "choices": [
+      {
+        "text": "A ana, que as criou na lição 4",
+        "why": "Ela as criou, sim; o layout.sql da lição 12 as passou a outro papel."
+      },
+      {
+        "text": "O app, que grava nelas",
+        "why": "O app grava linhas e não é dono de nada, de propósito."
+      },
+      {
+        "text": "shop_owner",
+        "why": "Isso. Um papel com o qual ninguém faz login, então não existe senha para apagá-las."
+      },
+      {
+        "text": "O pg_database_owner, como o esquema public",
+        "why": "O pg_database_owner é dono do esquema; as tabelas pertencem a um papel de verdade."
+      }
+    ]
+  },
+  "ex-9k8r73h2": {
+    "prompt": "No SQL de partida, por que o CREATE VIEW vem antes do layout.sql?",
+    "hint": "O que o layout.sql faz com a visão?",
+    "choices": [
+      {
+        "text": "O layout.sql muda o dono da visão e concede nela, então ela precisa existir",
+        "why": "Isso. O ALTER VIEW ... OWNER TO e o GRANT SELECT na visão precisam da visão."
+      },
+      {
+        "text": "Visões precisam ser criadas por um superusuário",
+        "why": "Qualquer papel com CREATE no esquema e SELECT no que ela lê pode criar uma."
+      },
+      {
+        "text": "Ordem é irrelevante em arquivos SQL",
+        "why": "Um script roda de cima para baixo; um comando sobre um objeto ausente o interrompe."
+      },
+      {
+        "text": "O CREATE VIEW revoga o CONNECT do PUBLIC como efeito colateral",
+        "why": "Criar uma visão não mexe em privilégio de banco nenhum."
+      }
+    ]
+  },
+  "ex-jd96eqx4": {
+    "prompt": "A lição 12 rodou `GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO app`. Depois o shop_owner cria refunds. O que o app pode fazer com refunds?",
+    "hint": "Quando o GRANT rodou?",
+    "choices": [
+      {
+        "text": "Tudo o que pode fazer em orders",
+        "why": "O ON ALL TABLES alcançou as tabelas que existiam naquela hora; refunds veio depois."
+      },
+      {
+        "text": "Ler, já que o SELECT é herdado por tabelas novas",
+        "why": "Nenhum privilégio passa sozinho de uma tabela para outra."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso. O insert foi recusado: a lista de acesso estava vazia, só o dono."
+      },
+      {
+        "text": "Tudo, depois que o servidor é recarregado",
+        "why": "Grants são linhas do catálogo; uma recarga não muda nada neles."
+      }
+    ]
+  },
+  "ex-20rh1b0n": {
+    "prompt": "Por que rodar `GRANT ... ON ALL TABLES` de novo depois de cada migração é a mais fraca das três respostas?",
+    "hint": "Duas falhas: uma de memória, uma de alcance.",
+    "choices": [
+      {
+        "text": "Ele trava todas as tabelas enquanto roda",
+        "why": "Esse não é o argumento da lição; o problema é o que ele lembra e o que alcança."
+      },
+      {
+        "text": "Ele é recusado para tabelas criadas por outro papel",
+        "why": "A ana, superusuária, roda sem recusa; os grants são registrados como do dono."
+      },
+      {
+        "text": "Ele não existe no PostgreSQL 16",
+        "why": "Ele existe e rodou na lição 12."
+      },
+      {
+        "text": "Alguém esquece, e cada execução volta a conceder em tabelas que deviam ficar de fora",
+        "why": "Isso. Depende de memória, e é amplo demais toda vez que roda."
+      }
+    ]
+  },
+  "ex-8py4gj51": {
+    "prompt": "Depois que o `ALTER DEFAULT PRIVILEGES` é definido, a refunds, criada antes, recebe os grants?",
+    "hint": "Quando um privilégio padrão é aplicado?",
+    "choices": [
+      {
+        "text": "Não: padrões valem quando um objeto é criado, então a refunds precisa dos grants à mão",
+        "why": "Isso. Dois GRANT deram à refunds o que os padrões dão às tabelas novas."
+      },
+      {
+        "text": "Sim, na hora",
+        "why": "O \\dp refunds continuou vazio logo depois dos dois comandos."
+      },
+      {
+        "text": "Sim, no próximo VACUUM",
+        "why": "O VACUUM não tem nada a ver com privilégios."
+      },
+      {
+        "text": "Sim, no próximo login do app",
+        "why": "Privilégios ficam na tabela, não são carregados com a sessão."
+      }
+    ]
+  },
+  "ex-jdge1rcg": {
+    "prompt": "O que significa `FOR ROLE shop_owner` em `ALTER DEFAULT PRIVILEGES FOR ROLE shop_owner IN SCHEMA public GRANT SELECT ON TABLES TO reporting`?",
+    "hint": "As tabelas novas de quem?",
+    "choices": [
+      {
+        "text": "Tabelas que o shop_owner criar",
+        "why": "Isso. Um privilégio padrão pertence ao papel que cria."
+      },
+      {
+        "text": "O shop_owner recebe o SELECT",
+        "why": "Quem recebe vem depois do TO: o reporting."
+      },
+      {
+        "text": "Só o shop_owner pode rodar este comando",
+        "why": "A ana, superusuária, rodou; o FOR ROLE diz de quem são os objetos cobertos."
+      },
+      {
+        "text": "Toda tabela de que o shop_owner é dono, antiga e nova",
+        "why": "Tabelas antigas não são tocadas, e uma troca de dono também não aplica padrões."
+      }
+    ]
+  },
+  "ex-sdqwkh1y": {
+    "prompt": "A ana cria coupons como ela mesma, não vê grants, e roda `ALTER TABLE coupons OWNER TO shop_owner`. O bruno consegue ler coupons agora?",
+    "hint": "Quando os padrões são aplicados, e o que o OWNER TO faz?",
+    "choices": [
+      {
+        "text": "Sim, os padrões do shop_owner acompanham o novo dono",
+        "why": "Os padrões são aplicados na criação, uma vez; o bruno continuou recusado."
+      },
+      {
+        "text": "Não: a posse mudou e nenhum privilégio padrão foi aplicado",
+        "why": "Isso. Conceda à mão, ou recrie a tabela como shop_owner enquanto ela está vazia."
+      },
+      {
+        "text": "Sim, porque o reporting tem SELECT em toda tabela do public",
+        "why": "Ele tem SELECT nas tabelas que existiam ou foram criadas pelo shop_owner, e coupons não é nenhuma das duas."
+      },
+      {
+        "text": "Não, porque uma tabela que mudou de dono fica travada até um restart",
+        "why": "Não existe tal trava; a recusa é um privilégio que falta."
+      }
+    ]
+  },
+  "ex-76k6zt4b": {
+    "prompt": "Uma administradora roda `ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO reporting` como ela mesma. A ferramenta de deploy faz login como `deployer` e cria tabelas. O que o reporting recebe nelas?",
+    "hint": "Sem FOR ROLE, de quem são as tabelas?",
+    "choices": [
+      {
+        "text": "SELECT, porque o padrão cita o esquema",
+        "why": "O esquema estreita o padrão; não muda de quem são as tabelas cobertas."
+      },
+      {
+        "text": "SELECT, mas só depois que o deployer reconecta",
+        "why": "Reconectar não muda nada sobre de quem são os padrões aplicados."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso. Os padrões foram registrados para as tabelas da própria administradora, e o deployer é outra pessoa."
+      },
+      {
+        "text": "Um erro em todo CREATE TABLE até o FOR ROLE ser acrescentado",
+        "why": "As tabelas são criadas sem reclamação, sem grants, e é por isso que a armadilha é silenciosa."
+      }
+    ]
+  },
+  "ex-yt2sq6ha": {
+    "prompt": "Uma tabela com coluna serial também precisa de `ALTER DEFAULT PRIVILEGES ... GRANT USAGE ON ___ TO app`.",
+    "hint": "O tipo de objeto no plural que o nextval lê.",
+    "blanks": [
+      {
+        "accept": [
+          "SEQUENCES"
+        ]
+      }
+    ]
+  },
+  "ex-zbpmknyw": {
+    "prompt": "Qual hábito único fecha a armadilha do criador de vez?",
+    "hint": "O FOR ROLE cita um papel.",
+    "choices": [
+      {
+        "text": "Rodar ALTER DEFAULT PRIVILEGES depois de cada migração",
+        "why": "Padrões definidos depois que a tabela existe não fazem nada por ela."
+      },
+      {
+        "text": "Dar pg_read_all_data ao reporting",
+        "why": "Isso lê o email também e toda tabela futura, muito mais amplo do que o desenho quer."
+      },
+      {
+        "text": "Rodar toda migração como o papel citado no FOR ROLE, o papel dono",
+        "why": "Isso. Aí toda tabela nova é criada pelo papel cujos padrões existem."
+      },
+      {
+        "text": "Deixar o IN SCHEMA de fora",
+        "why": "Isso amplia os esquemas, não os criadores."
+      }
+    ]
+  },
+  "ex-bqc5nswx": {
+    "prompt": "Qual comando do psql lista os privilégios padrão?",
+    "hint": "Um d a mais que o comando de grants.",
+    "choices": [
+      {
+        "text": "\\dp, que mostra todo grant",
+        "why": "Ele mostra os grants que os objetos já têm, nunca os padrões."
+      },
+      {
+        "text": "\\drg, com as participações de papéis",
+        "why": "Esse lista participações e as opções delas."
+      },
+      {
+        "text": "\\dn+, no esquema que os guarda",
+        "why": "Ele mostra a lista de acesso do próprio esquema, não padrões para as tabelas futuras dele."
+      },
+      {
+        "text": "\\ddp",
+        "why": "Isso. O \\dp mostra o que os objetos têm; o \\ddp, o que os novos vão receber."
+      }
+    ]
+  },
+  "ex-5ysg7yg8": {
+    "prompt": "O \\ddp estava vazio num banco novo. Isso significa que uma função nova não dá nada a ninguém?",
+    "hint": "Os padrões embutidos são linhas?",
+    "choices": [
+      {
+        "text": "Não: o PUBLIC recebe EXECUTE por um padrão embutido que o \\ddp não mostra",
+        "why": "Isso. Revogá-lo fez aparecer uma linha, sem o PUBLIC nela."
+      },
+      {
+        "text": "Sim: uma lista vazia significa nenhum grant",
+        "why": "Os padrões embutidos não são linhas; a linha de funções só apareceu quando alguém a mudou."
+      },
+      {
+        "text": "Sim, desde que o PostgreSQL 15 tirou o EXECUTE do PUBLIC",
+        "why": "A 15 tirou o CREATE do esquema public; o EXECUTE em funções continua com o PUBLIC."
+      },
+      {
+        "text": "Não: funções herdam os privilégios do esquema",
+        "why": "Nada é herdado de um esquema; o padrão vem da ACL embutida da própria função."
+      }
+    ]
+  },
+  "ex-p475ytaq": {
+    "prompt": "Um padrão `IN SCHEMA public` revoga o SELECT do reporting, enquanto um padrão sem esquema o concede. O que uma tabela nova no public dá ao reporting?",
+    "hint": "Um padrão de esquema só acrescenta.",
+    "choices": [
+      {
+        "text": "Nada, porque o padrão mais específico vence",
+        "why": "Padrões por esquema não conseguem tirar o que um global dá."
+      },
+      {
+        "text": "Um erro quando a tabela é criada",
+        "why": "Padrões nunca fazem um CREATE falhar."
+      },
+      {
+        "text": "SELECT",
+        "why": "Isso. Um padrão IN SCHEMA só consegue acrescentar ao que vale em todo lugar."
+      },
+      {
+        "text": "SELECT só nas colunas",
+        "why": "Privilégios padrão não têm forma por coluna."
+      }
+    ]
+  },
+  "ex-bd7mzsgk": {
+    "prompt": "Ordene os passos para remover o intern mantendo a tabela que ele criou.",
+    "hint": "Passe adiante primeiro, limpe depois, e em todo banco.",
+    "items": [
+      "REASSIGN OWNED BY intern TO shop_owner, no shop",
+      "DROP OWNED BY intern, no shop",
+      "Os mesmos dois comandos, conectado ao ana",
+      "DROP ROLE intern"
+    ],
+    "trap": "Rodar o DROP OWNED primeiro apaga a tabela em vez de mantê-la."
+  },
+  "ex-agj9p4a7": {
+    "prompt": "O `DROP ROLE intern` no shop diz `1 object in database ana`. Por que ele não diz qual objeto?",
+    "hint": "Qual catálogo uma sessão consegue ler?",
+    "choices": [
+      {
+        "text": "Por segurança: os nomes de outros bancos são secretos",
+        "why": "Ele citou o banco; o nome do objeto mora no catálogo daquele banco, que a sessão não consegue ler."
+      },
+      {
+        "text": "Uma sessão só enxerga o catálogo do próprio banco",
+        "why": "Isso. A dependência é contada num catálogo compartilhado; o nome está em outro lugar."
+      },
+      {
+        "text": "Porque o objeto no ana é uma tabela temporária",
+        "why": "Era uma tabela comum, notes."
+      },
+      {
+        "text": "Porque o ana é o banco de uma superusuária",
+        "why": "A posse do banco não influi no que o DROP ROLE cita."
+      }
+    ]
+  },
+  "ex-3r6nasqj": {
+    "prompt": "O que faz o `REASSIGN OWNED BY intern TO shop_owner`?",
+    "hint": "A tabela sobrevive.",
+    "choices": [
+      {
+        "text": "Apaga os objetos do intern",
+        "why": "Isso é o DROP OWNED."
+      },
+      {
+        "text": "Torna o intern membro do shop_owner",
+        "why": "Participação é GRANT shop_owner TO intern; o REASSIGN move a posse."
+      },
+      {
+        "text": "Move os privilégios do intern, e só eles, para o shop_owner, em todos os bancos de uma vez",
+        "why": "Ele move posse, não privilégios, e age num banco só."
+      },
+      {
+        "text": "Passa tudo o que o intern possui no banco atual para o shop_owner",
+        "why": "Isso, e só no banco atual."
+      }
+    ]
+  },
+  "ex-8gdsvd19": {
+    "prompt": "Você precisa da lista de todos os privilégios que o reporting tem no shop, rápido. Qual comando a dá, sem mudar nada?",
+    "hint": "Uma recusa pode ser um inventário.",
+    "choices": [
+      {
+        "text": "`DROP ROLE reporting`, que falha e lista o que depende dele",
+        "why": "Isso, desde que o papel tenha algo; senão ele dá certo."
+      },
+      {
+        "text": "`\\du reporting`",
+        "why": "O \\du mostra atributos, não grants em objetos."
+      },
+      {
+        "text": "`REASSIGN OWNED BY reporting TO ana`",
+        "why": "Isso muda posse, se houver, e não imprime lista."
+      },
+      {
+        "text": "`DROP OWNED BY reporting`",
+        "why": "Isso revoga tudo o que listaria, o oposto de não mudar nada."
+      }
+    ]
+  },
+  "ex-0j8db5gm": {
+    "prompt": "O intern tinha concedido SELECT em reports.ideas ao reporting. Depois do REASSIGN OWNED para o shop_owner, o que aconteceu com esse grant?",
+    "hint": "Olhe o \\dp reports.ideas.",
+    "choices": [
+      {
+        "text": "Sobreviveu, com o shop_owner como grantor",
+        "why": "Isso. O reporting continua lendo a tabela."
+      },
+      {
+        "text": "Foi apagado junto com o intern",
+        "why": "O reporting=r/shop_owner continua na lista."
+      },
+      {
+        "text": "Virou um privilégio padrão",
+        "why": "Grants numa tabela existente continuam sendo grants nela."
+      },
+      {
+        "text": "Foi para a outra tabela do intern no ana",
+        "why": "Grants pertencem a um objeto e nunca passam de um banco para outro."
+      }
+    ]
+  },
+  "ex-3h0nf284": {
+    "prompt": "O auditor é membro do pg_read_all_data e de mais nada. Ele consegue fazer login no shop?",
+    "hint": "Por qual porta o pg_read_all_data responde?",
+    "choices": [
+      {
+        "text": "Sim, o pg_read_all_data cobre todo privilégio de que um leitor precisa",
+        "why": "Ele cobre tabelas e esquemas. O has_database_privilege disse f para o CONNECT."
+      },
+      {
+        "text": "Sim, papéis predefinidos pulam o pg_hba.conf",
+        "why": "Nada pula o pg_hba.conf, e a porta do banco é um privilégio, não uma linha do pg_hba.conf."
+      },
+      {
+        "text": "Não: o CONNECT no shop não faz parte dele",
+        "why": "Isso. O shop dá CONNECT só ao app e ao reporting."
+      },
+      {
+        "text": "Não, porque papéis predefinidos não podem ser concedidos a um papel com LOGIN",
+        "why": "O auditor foi criado LOGIN IN ROLE pg_read_all_data sem reclamação."
+      }
+    ]
+  },
+  "ex-pqyqntrn": {
+    "prompt": "Sem o pg_monitor, o que o bruno vê na coluna query da sessão do app no pg_stat_activity?",
+    "hint": "A linha está lá, o conteúdo não.",
+    "choices": [
+      {
+        "text": "`<insufficient privilege>`",
+        "why": "Isso. A existência da sessão é visível; o que ela faz, não."
+      },
+      {
+        "text": "Nada: a linha não aparece",
+        "why": "A linha apareceu, com o pid e o usuário."
+      },
+      {
+        "text": "SELECT pg_sleep(60), como para qualquer um",
+        "why": "Isso precisou do pg_monitor, concedido depois."
+      },
+      {
+        "text": "Um erro: permission denied for view pg_stat_activity",
+        "why": "A visão é legível por todos; ela esconde colunas em vez disso."
+      }
+    ]
+  },
+  "ex-g4qaxp3t": {
+    "prompt": "Ligue cada papel predefinido a quem ele serve.",
+    "hint": "Um deles é um superusuário com outro nome.",
+    "pairs": [
+      {
+        "left": "pg_read_all_data",
+        "right": "Uma ferramenta de backup ou um auditor"
+      },
+      {
+        "left": "pg_monitor",
+        "right": "Um agente de monitoramento"
+      },
+      {
+        "left": "pg_signal_backend",
+        "right": "Um engenheiro de plantão parando consultas descontroladas"
+      },
+      {
+        "left": "pg_execute_server_program",
+        "right": "Quase ninguém: roda programas no servidor"
+      }
+    ]
+  },
+  "ex-ks91e2j3": {
+    "prompt": "Um engenheiro de plantão tem pg_signal_backend. A sessão de manutenção de um superusuário está bloqueando todo mundo. O engenheiro consegue encerrá-la?",
+    "hint": "Contra o que o papel é seguro?",
+    "choices": [
+      {
+        "text": "Sim: o pg_signal_backend encerra qualquer sessão",
+        "why": "Ele alcança sessões de papéis que não são superusuários, e para aí."
+      },
+      {
+        "text": "Sim, com o pg_monitor também",
+        "why": "O pg_monitor mostra consultas; não acrescenta poder de encerrar."
+      },
+      {
+        "text": "Só cancelando a consulta, não encerrando a sessão",
+        "why": "Cancelar a consulta de um superusuário é recusado do mesmo jeito."
+      },
+      {
+        "text": "Não: a sessão de um superusuário fica fora do alcance dele",
+        "why": "Isso, e é o que torna o papel seguro de entregar; esta precisa de um superusuário."
+      }
+    ]
+  },
+  "ex-4yczs997": {
+    "prompt": "Uma tabela de análise nova é criada todo mês pelo papel de migração shop_owner, e o reporting precisa ler cada uma no dia em que ela aparece. O que você define, uma vez?",
+    "hint": "De quem são as tabelas, qual esquema, quem recebe.",
+    "choices": [
+      {
+        "text": "`GRANT SELECT ON ALL TABLES IN SCHEMA public TO reporting`",
+        "why": "Isso cobre as tabelas de hoje e nenhuma do mês que vem."
+      },
+      {
+        "text": "`ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO reporting`, rodado como ana",
+        "why": "Sem FOR ROLE ele cobre as tabelas da ana, e as migrações criam as do shop_owner."
+      },
+      {
+        "text": "`GRANT pg_read_all_data TO reporting`",
+        "why": "Funciona e dá o email e todo o resto também, o que o desenho recusa."
+      },
+      {
+        "text": "`ALTER DEFAULT PRIVILEGES FOR ROLE shop_owner IN SCHEMA public GRANT SELECT ON TABLES TO reporting`",
+        "why": "Isso. Toda tabela que o shop_owner criar ali chega legível."
+      }
+    ]
+  },
+  "ex-d7ep711q": {
+    "prompt": "Um funcionário que é dono de tabelas em três bancos sai. O `DROP ROLE` falha no primeiro banco com `2 objects in database sales`. Qual é o procedimento?",
+    "hint": "O REASSIGN e o DROP OWNED agem num banco só.",
+    "choices": [
+      {
+        "text": "Rodar DROP ROLE com CASCADE",
+        "why": "O DROP ROLE não tem CASCADE; o servidor faz você decidir objeto por objeto."
+      },
+      {
+        "text": "DROP OWNED só no primeiro banco; ele alcança os outros",
+        "why": "Ele age no banco atual; a lição precisou de uma segunda conexão ao ana."
+      },
+      {
+        "text": "ALTER ROLE ... NOLOGIN, já que um papel que é dono de coisas nunca é apagado",
+        "why": "O NOLOGIN é um bom primeiro passo, mas o papel pode ser apagado depois que os objetos são passados adiante."
+      },
+      {
+        "text": "REASSIGN OWNED e depois DROP OWNED em cada banco, depois DROP ROLE",
+        "why": "Isso. O DETAIL de cada DROP ROLE que falha lista os bancos que faltam visitar."
+      }
+    ]
+  },
+  "ex-83cqs8qn": {
+    "prompt": "Quantos papéis predefinidos `pg_` a consulta listou no PostgreSQL 16?",
+    "hint": "Conte as linhas."
+  }
+}

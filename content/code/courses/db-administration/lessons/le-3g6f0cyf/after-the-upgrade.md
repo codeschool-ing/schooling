@@ -131,6 +131,6 @@ ana@db:~$ psql -c "SHOW server_version;" -c "SELECT pg_postmaster_start_time();"
 
 Still 16.15, and its start time has not moved since the minor upgrade at the beginning of the
 recording: nothing in between restarted it, upgraded it or wrote to it. On your server, compare it
-with the start time before this lesson; it should be the same. PostgreSQL 17's programs stay
+with the time you noted in section 04; it should be the same. PostgreSQL 17's programs stay
 installed, which costs some disk space and nothing else; `sudo apt remove postgresql-17` takes them
 away if you prefer, and this course does not need them again.

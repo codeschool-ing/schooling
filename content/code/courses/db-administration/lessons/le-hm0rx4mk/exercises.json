@@ -1,0 +1,750 @@
+[
+  {
+    "id": "ex-r2j58h2z",
+    "version": 1,
+    "section": "starting-here",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At the start of this lesson, who owns the tables customers and orders?",
+    "hint": "Look at the Owner column of \\dt.",
+    "choices": [
+      {
+        "text": "ana, who created them in lesson 4",
+        "correct": false,
+        "why": "She did create them; lesson 12's layout.sql gave them to another role."
+      },
+      {
+        "text": "app, which writes to them",
+        "correct": false,
+        "why": "app writes rows and owns nothing, on purpose."
+      },
+      {
+        "text": "shop_owner",
+        "correct": true,
+        "why": "Right. A role nobody logs in as, so no password exists to drop them with."
+      },
+      {
+        "text": "pg_database_owner, like the public schema",
+        "correct": false,
+        "why": "pg_database_owner owns the schema; the tables belong to a real role."
+      }
+    ]
+  },
+  {
+    "id": "ex-9k8r73h2",
+    "version": 1,
+    "section": "starting-here",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the start-up SQL, why does the CREATE VIEW come before layout.sql?",
+    "hint": "What does layout.sql do to the view?",
+    "choices": [
+      {
+        "text": "layout.sql changes the view's owner and grants on it, so it has to exist",
+        "correct": true,
+        "why": "Right. ALTER VIEW ... OWNER TO and GRANT SELECT ON the view both need the view."
+      },
+      {
+        "text": "Views must be created by a superuser",
+        "correct": false,
+        "why": "Any role with CREATE on the schema and SELECT on what it reads can create one."
+      },
+      {
+        "text": "Order is irrelevant in SQL files",
+        "correct": false,
+        "why": "A script runs top to bottom; a statement on a missing object stops it."
+      },
+      {
+        "text": "CREATE VIEW revokes CONNECT from PUBLIC as a side effect",
+        "correct": false,
+        "why": "Creating a view touches no database privilege."
+      }
+    ]
+  },
+  {
+    "id": "ex-jd96eqx4",
+    "version": 1,
+    "section": "the-next-table",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "lesson 12 ran `GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO app`. shop_owner then creates refunds. What may app do with refunds?",
+    "hint": "When did the GRANT run?",
+    "choices": [
+      {
+        "text": "Everything it may do on orders",
+        "correct": false,
+        "why": "ON ALL TABLES reached the tables that existed then; refunds came later."
+      },
+      {
+        "text": "Read it, since SELECT is inherited by new tables",
+        "correct": false,
+        "why": "No privilege passes from one table to the next by itself."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. The insert was refused: the access list was empty, the owner alone."
+      },
+      {
+        "text": "Everything, once the server is reloaded",
+        "correct": false,
+        "why": "Grants are catalogue rows; a reload changes nothing about them."
+      }
+    ]
+  },
+  {
+    "id": "ex-20rh1b0n",
+    "version": 1,
+    "section": "the-next-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is running `GRANT ... ON ALL TABLES` again after every migration the weakest of the three answers?",
+    "hint": "Two failures: one of memory, one of reach.",
+    "choices": [
+      {
+        "text": "It locks every table while it runs",
+        "correct": false,
+        "why": "That is not the argument the lesson made; the problem is what it remembers and what it reaches."
+      },
+      {
+        "text": "It is refused for tables created by another role",
+        "correct": false,
+        "why": "ana, a superuser, runs it with no refusal; the grants are recorded as the owner's."
+      },
+      {
+        "text": "It does not exist in PostgreSQL 16",
+        "correct": false,
+        "why": "It exists and ran in lesson 12."
+      },
+      {
+        "text": "Somebody forgets it, and each run regrants tables meant to be left out",
+        "correct": true,
+        "why": "Right. It depends on memory, and it is too wide every time it runs."
+      }
+    ]
+  },
+  {
+    "id": "ex-8py4gj51",
+    "version": 1,
+    "section": "the-next-table",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `ALTER DEFAULT PRIVILEGES` is set, does refunds, created before it, get the grants?",
+    "hint": "When is a default privilege applied?",
+    "choices": [
+      {
+        "text": "No: defaults apply when an object is created, so refunds needs its grants by hand",
+        "correct": true,
+        "why": "Right. Two GRANT statements gave refunds what the defaults give new tables."
+      },
+      {
+        "text": "Yes, at once",
+        "correct": false,
+        "why": "\\dp refunds was still empty right after the two statements."
+      },
+      {
+        "text": "Yes, at the next VACUUM",
+        "correct": false,
+        "why": "VACUUM has nothing to do with privileges."
+      },
+      {
+        "text": "Yes, at the next login of app",
+        "correct": false,
+        "why": "Privileges are on the table, not loaded with a session."
+      }
+    ]
+  },
+  {
+    "id": "ex-jdge1rcg",
+    "version": 1,
+    "section": "alter-default-privileges",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `FOR ROLE shop_owner` mean in `ALTER DEFAULT PRIVILEGES FOR ROLE shop_owner IN SCHEMA public GRANT SELECT ON TABLES TO reporting`?",
+    "hint": "Whose new tables?",
+    "choices": [
+      {
+        "text": "Tables shop_owner creates",
+        "correct": true,
+        "why": "Right. A default privilege belongs to the creating role."
+      },
+      {
+        "text": "shop_owner receives the SELECT",
+        "correct": false,
+        "why": "The grantee is after TO: reporting."
+      },
+      {
+        "text": "Only shop_owner may run this statement",
+        "correct": false,
+        "why": "ana, a superuser, ran it; FOR ROLE names whose objects it covers."
+      },
+      {
+        "text": "Every table owned by shop_owner, old and new",
+        "correct": false,
+        "why": "Old tables are untouched, and an owner change applies no defaults either."
+      }
+    ]
+  },
+  {
+    "id": "ex-sdqwkh1y",
+    "version": 1,
+    "section": "alter-default-privileges",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "ana creates coupons as herself, sees no grants, and runs `ALTER TABLE coupons OWNER TO shop_owner`. Can bruno read coupons now?",
+    "hint": "When are defaults applied, and what does OWNER TO do?",
+    "choices": [
+      {
+        "text": "Yes, shop_owner's defaults follow the new owner",
+        "correct": false,
+        "why": "Defaults are applied at creation, once; bruno was still refused."
+      },
+      {
+        "text": "No: ownership moved and no default privilege was applied",
+        "correct": true,
+        "why": "Right. Grant by hand, or recreate the table as shop_owner while it is empty."
+      },
+      {
+        "text": "Yes, because reporting has SELECT on every table in public",
+        "correct": false,
+        "why": "It has SELECT on the tables that existed or were created by shop_owner, and coupons is neither."
+      },
+      {
+        "text": "No, because a table that changed owner is locked until a restart",
+        "correct": false,
+        "why": "There is no such lock; the refusal is a missing privilege."
+      }
+    ]
+  },
+  {
+    "id": "ex-76k6zt4b",
+    "version": 1,
+    "section": "alter-default-privileges",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An administrator runs `ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO reporting` as herself. The deploy tool logs in as `deployer` and creates tables. What does reporting get on them?",
+    "hint": "Without FOR ROLE, whose tables are meant?",
+    "choices": [
+      {
+        "text": "SELECT, because the default names the schema",
+        "correct": false,
+        "why": "The schema narrows the default; it does not change whose tables it covers."
+      },
+      {
+        "text": "SELECT, but only after deployer reconnects",
+        "correct": false,
+        "why": "Reconnecting changes nothing about whose defaults apply."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. The defaults were recorded for the administrator's own tables, and deployer is somebody else."
+      },
+      {
+        "text": "An error on every CREATE TABLE until FOR ROLE is added",
+        "correct": false,
+        "why": "The tables are created without complaint, with no grants, which is why the trap is quiet."
+      }
+    ]
+  },
+  {
+    "id": "ex-yt2sq6ha",
+    "version": 1,
+    "section": "alter-default-privileges",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A table with a serial column also needs `ALTER DEFAULT PRIVILEGES ... GRANT USAGE ON ___ TO app`.",
+    "hint": "The plural object type that nextval reads.",
+    "blanks": [
+      {
+        "accept": [
+          "SEQUENCES"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-zbpmknyw",
+    "version": 1,
+    "section": "alter-default-privileges",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which single habit closes the creator trap for good?",
+    "hint": "FOR ROLE names one role.",
+    "choices": [
+      {
+        "text": "Run ALTER DEFAULT PRIVILEGES after every migration",
+        "correct": false,
+        "why": "Defaults set after a table exists do nothing for it."
+      },
+      {
+        "text": "Give reporting pg_read_all_data",
+        "correct": false,
+        "why": "That reads email too and every future table, which is far wider than the layout wants."
+      },
+      {
+        "text": "Run every migration as the role named in FOR ROLE, the owner role",
+        "correct": true,
+        "why": "Right. Then every new table is created by the role whose defaults exist."
+      },
+      {
+        "text": "Leave IN SCHEMA out",
+        "correct": false,
+        "why": "That widens the schemas, not the creators."
+      }
+    ]
+  },
+  {
+    "id": "ex-bqc5nswx",
+    "version": 1,
+    "section": "reading-them",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which psql command lists default privileges?",
+    "hint": "One more d than the command for grants.",
+    "choices": [
+      {
+        "text": "\\dp, which shows every grant",
+        "correct": false,
+        "why": "It shows grants objects already have, never the defaults."
+      },
+      {
+        "text": "\\drg, with the role memberships",
+        "correct": false,
+        "why": "That lists memberships and their options."
+      },
+      {
+        "text": "\\dn+, on the schema that holds them",
+        "correct": false,
+        "why": "It shows the schema's own access list, not defaults for its future tables."
+      },
+      {
+        "text": "\\ddp",
+        "correct": true,
+        "why": "Right. \\dp shows what objects have; \\ddp what new ones will get."
+      }
+    ]
+  },
+  {
+    "id": "ex-5ysg7yg8",
+    "version": 1,
+    "section": "reading-them",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "\\ddp was empty on a fresh database. Does that mean a new function gives nothing to anybody?",
+    "hint": "Are the built-in defaults rows?",
+    "choices": [
+      {
+        "text": "No: PUBLIC gets EXECUTE by a built-in default \\ddp does not show",
+        "correct": true,
+        "why": "Right. Revoking it made a row appear, without PUBLIC in it."
+      },
+      {
+        "text": "Yes: an empty list means no grants",
+        "correct": false,
+        "why": "Built-in defaults are not rows; the function row appeared only when somebody changed it."
+      },
+      {
+        "text": "Yes, since PostgreSQL 15 removed EXECUTE from PUBLIC",
+        "correct": false,
+        "why": "15 removed CREATE on the public schema; EXECUTE on functions is still PUBLIC's."
+      },
+      {
+        "text": "No: functions inherit the privileges of the schema",
+        "correct": false,
+        "why": "Nothing is inherited from a schema; the default comes from the function's own built-in ACL."
+      }
+    ]
+  },
+  {
+    "id": "ex-p475ytaq",
+    "version": 1,
+    "section": "reading-them",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A default `IN SCHEMA public` revokes SELECT from reporting, while a default with no schema grants it. What does a new table in public give reporting?",
+    "hint": "A schema-level default only adds.",
+    "choices": [
+      {
+        "text": "Nothing, because the more specific default wins",
+        "correct": false,
+        "why": "Per-schema defaults cannot take away what a global one gives."
+      },
+      {
+        "text": "An error when the table is created",
+        "correct": false,
+        "why": "Defaults never make a CREATE fail."
+      },
+      {
+        "text": "SELECT",
+        "correct": true,
+        "why": "Right. A default IN SCHEMA can only add to what applies everywhere."
+      },
+      {
+        "text": "SELECT on the columns only",
+        "correct": false,
+        "why": "Default privileges have no column form."
+      }
+    ]
+  },
+  {
+    "id": "ex-bd7mzsgk",
+    "version": 1,
+    "section": "ownership",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps to remove intern while keeping the table he made.",
+    "hint": "Hand over first, clean up second, and in every database.",
+    "items": [
+      "REASSIGN OWNED BY intern TO shop_owner, in shop",
+      "DROP OWNED BY intern, in shop",
+      "The same two statements, connected to ana",
+      "DROP ROLE intern"
+    ],
+    "trap": "Running DROP OWNED first drops the table instead of keeping it."
+  },
+  {
+    "id": "ex-agj9p4a7",
+    "version": 1,
+    "section": "ownership",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`DROP ROLE intern` in shop reports `1 object in database ana`. Why does it not say which object?",
+    "hint": "Which catalogue can a session read?",
+    "choices": [
+      {
+        "text": "For security: other databases' names are secret",
+        "correct": false,
+        "why": "It named the database; the object's name lives in that database's catalogue, which the session cannot read."
+      },
+      {
+        "text": "A session sees only its own database's catalogue",
+        "correct": true,
+        "why": "Right. The dependency is counted from a shared catalogue; the name is elsewhere."
+      },
+      {
+        "text": "Because the object in ana is a temporary table",
+        "correct": false,
+        "why": "It was an ordinary table, notes."
+      },
+      {
+        "text": "Because ana is a superuser's database",
+        "correct": false,
+        "why": "Ownership of the database plays no part in what DROP ROLE names."
+      }
+    ]
+  },
+  {
+    "id": "ex-3r6nasqj",
+    "version": 1,
+    "section": "ownership",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `REASSIGN OWNED BY intern TO shop_owner` do?",
+    "hint": "The table survives.",
+    "choices": [
+      {
+        "text": "Drops intern's objects",
+        "correct": false,
+        "why": "That is DROP OWNED."
+      },
+      {
+        "text": "Makes intern a member of shop_owner",
+        "correct": false,
+        "why": "Membership is GRANT shop_owner TO intern; REASSIGN moves ownership."
+      },
+      {
+        "text": "Moves intern's privileges, and only those, to shop_owner, in every database at once",
+        "correct": false,
+        "why": "It moves ownership, not privileges, and acts on one database."
+      },
+      {
+        "text": "Gives everything intern owns in the current database to shop_owner",
+        "correct": true,
+        "why": "Right, and only in the current database."
+      }
+    ]
+  },
+  {
+    "id": "ex-8gdsvd19",
+    "version": 1,
+    "section": "ownership",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You need a list of every privilege reporting holds in shop, quickly. Which statement gives it, and changes nothing?",
+    "hint": "A refusal can be an inventory.",
+    "choices": [
+      {
+        "text": "`DROP ROLE reporting`, which fails and lists what depends on it",
+        "correct": true,
+        "why": "Right, as long as the role does hold something; otherwise it succeeds."
+      },
+      {
+        "text": "`\\du reporting`",
+        "correct": false,
+        "why": "\\du shows attributes, not grants on objects."
+      },
+      {
+        "text": "`REASSIGN OWNED BY reporting TO ana`",
+        "correct": false,
+        "why": "That changes ownership, if there is any, and prints no list."
+      },
+      {
+        "text": "`DROP OWNED BY reporting`",
+        "correct": false,
+        "why": "That revokes everything it lists, which is the opposite of changing nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-0j8db5gm",
+    "version": 1,
+    "section": "ownership",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "intern had granted SELECT on reports.ideas to reporting. After REASSIGN OWNED to shop_owner, what happened to that grant?",
+    "hint": "Look at \\dp reports.ideas.",
+    "choices": [
+      {
+        "text": "It survived, with shop_owner as grantor",
+        "correct": true,
+        "why": "Right. reporting still reads the table."
+      },
+      {
+        "text": "It was dropped with intern",
+        "correct": false,
+        "why": "reporting=r/shop_owner is still in the list."
+      },
+      {
+        "text": "It became a default privilege",
+        "correct": false,
+        "why": "Grants on an existing table stay grants on that table."
+      },
+      {
+        "text": "It moved to intern's other table in ana",
+        "correct": false,
+        "why": "Grants belong to one object and never move between databases."
+      }
+    ]
+  },
+  {
+    "id": "ex-3h0nf284",
+    "version": 1,
+    "section": "predefined-roles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "auditor is a member of pg_read_all_data and nothing else. Can it log in to shop?",
+    "hint": "Which door does pg_read_all_data stand in for?",
+    "choices": [
+      {
+        "text": "Yes, pg_read_all_data covers every privilege a reader needs",
+        "correct": false,
+        "why": "It covers tables and schemas. has_database_privilege said f for CONNECT."
+      },
+      {
+        "text": "Yes, predefined roles skip pg_hba.conf",
+        "correct": false,
+        "why": "Nothing skips pg_hba.conf, and the database door is a privilege, not a pg_hba.conf line."
+      },
+      {
+        "text": "No: CONNECT on shop is not part of it",
+        "correct": true,
+        "why": "Right. shop gives CONNECT only to app and reporting."
+      },
+      {
+        "text": "No, because predefined roles cannot be granted to a LOGIN role",
+        "correct": false,
+        "why": "auditor was created LOGIN IN ROLE pg_read_all_data without complaint."
+      }
+    ]
+  },
+  {
+    "id": "ex-pqyqntrn",
+    "version": 1,
+    "section": "predefined-roles",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Without pg_monitor, what does bruno see in the query column for app's session in pg_stat_activity?",
+    "hint": "The row is there, its contents are not.",
+    "choices": [
+      {
+        "text": "`<insufficient privilege>`",
+        "correct": true,
+        "why": "Right. The session's existence is visible; what it does is not."
+      },
+      {
+        "text": "Nothing: the row is absent",
+        "correct": false,
+        "why": "The row appeared, with the pid and the user."
+      },
+      {
+        "text": "SELECT pg_sleep(60), as for anyone",
+        "correct": false,
+        "why": "That needed pg_monitor, granted afterwards."
+      },
+      {
+        "text": "An error: permission denied for view pg_stat_activity",
+        "correct": false,
+        "why": "The view is readable by everybody; it hides columns instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-g4qaxp3t",
+    "version": 1,
+    "section": "predefined-roles",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each predefined role to who it is for.",
+    "hint": "One of them is a superuser by another name.",
+    "pairs": [
+      {
+        "left": "pg_read_all_data",
+        "right": "A backup tool or an auditor"
+      },
+      {
+        "left": "pg_monitor",
+        "right": "A monitoring agent"
+      },
+      {
+        "left": "pg_signal_backend",
+        "right": "An on-call engineer stopping runaway queries"
+      },
+      {
+        "left": "pg_execute_server_program",
+        "right": "Almost nobody: it runs programs on the server"
+      }
+    ]
+  },
+  {
+    "id": "ex-ks91e2j3",
+    "version": 1,
+    "section": "predefined-roles",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An on-call engineer has pg_signal_backend. A superuser's maintenance session is blocking everybody. Can the engineer terminate it?",
+    "hint": "What is the role safe against?",
+    "choices": [
+      {
+        "text": "Yes: pg_signal_backend terminates any session",
+        "correct": false,
+        "why": "It reaches sessions of roles that are not superusers, and stops there."
+      },
+      {
+        "text": "Yes, with pg_monitor as well",
+        "correct": false,
+        "why": "pg_monitor shows queries; it adds no power to terminate."
+      },
+      {
+        "text": "Only by cancelling the query, not by terminating the session",
+        "correct": false,
+        "why": "Cancelling a superuser's query is refused in the same way."
+      },
+      {
+        "text": "No: a superuser's session is out of its reach",
+        "correct": true,
+        "why": "Right, which is what makes the role safe to hand out; this one needs a superuser."
+      }
+    ]
+  },
+  {
+    "id": "ex-4yczs997",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new analytics table is created every month by the migration role shop_owner, and reporting must read each one on the day it appears. What do you set, once?",
+    "hint": "Whose tables, which schema, which grantee.",
+    "choices": [
+      {
+        "text": "`GRANT SELECT ON ALL TABLES IN SCHEMA public TO reporting`",
+        "correct": false,
+        "why": "That covers the tables of today and none of next month's."
+      },
+      {
+        "text": "`ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO reporting`, run as ana",
+        "correct": false,
+        "why": "Without FOR ROLE it covers ana's tables, and the migrations create shop_owner's."
+      },
+      {
+        "text": "`GRANT pg_read_all_data TO reporting`",
+        "correct": false,
+        "why": "It works and gives email and everything else too, which the layout refuses."
+      },
+      {
+        "text": "`ALTER DEFAULT PRIVILEGES FOR ROLE shop_owner IN SCHEMA public GRANT SELECT ON TABLES TO reporting`",
+        "correct": true,
+        "why": "Right. Every table shop_owner creates there arrives readable."
+      }
+    ]
+  },
+  {
+    "id": "ex-d7ep711q",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An employee who owns tables in three databases leaves. `DROP ROLE` fails in the first database with `2 objects in database sales`. What is the procedure?",
+    "hint": "REASSIGN and DROP OWNED act on one database.",
+    "choices": [
+      {
+        "text": "Run DROP ROLE with CASCADE",
+        "correct": false,
+        "why": "DROP ROLE has no CASCADE; the server makes you decide object by object."
+      },
+      {
+        "text": "DROP OWNED in the first database only; it reaches the others",
+        "correct": false,
+        "why": "It acts on the current database; the lesson needed a second connection to ana."
+      },
+      {
+        "text": "ALTER ROLE ... NOLOGIN, since a role that owns things is never dropped",
+        "correct": false,
+        "why": "NOLOGIN is a fine first step, but the role can be dropped once its objects are handed over."
+      },
+      {
+        "text": "REASSIGN OWNED then DROP OWNED in each database, then DROP ROLE",
+        "correct": true,
+        "why": "Right. The DETAIL of each failed DROP ROLE lists the databases left to visit."
+      }
+    ]
+  },
+  {
+    "id": "ex-83cqs8qn",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many predefined `pg_` roles did the query list on PostgreSQL 16?",
+    "hint": "Count the rows.",
+    "value": 14,
+    "tolerance": 0
+  }
+]

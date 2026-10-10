@@ -1,0 +1,717 @@
+[
+  {
+    "id": "ex-381zg830",
+    "version": 1,
+    "section": "what-an-extension-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "You run `CREATE EXTENSION pgcrypto;` connected to the database `ana`. Where can `digest()` now be called?",
+    "hint": "Compare what \\dx showed in ana and in shop.",
+    "choices": [
+      {
+        "text": "In every database on the server, since the files are shared",
+        "correct": false,
+        "why": "The files are shared; the objects are not. shop's \\dx listed plpgsql and nothing else."
+      },
+      {
+        "text": "In ana and in every database created from now on",
+        "correct": false,
+        "why": "New databases copy template1, not ana. Only an extension created in template1 spreads that way."
+      },
+      {
+        "text": "Only in sessions opened after a restart",
+        "correct": false,
+        "why": "pgcrypto is not a preloaded library. Its library is loaded by a backend the first time a function needs it."
+      },
+      {
+        "text": "In ana",
+        "correct": true,
+        "why": "Right. The script ran inside ana, and the objects it created live in ana's catalogues alone."
+      }
+    ]
+  },
+  {
+    "id": "ex-12rv2vm9",
+    "version": 1,
+    "section": "what-an-extension-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`apt` has just upgraded the PostgreSQL package and replaced every file in `/usr/share/postgresql/16/extension`. What changed inside the databases that have pgcrypto installed?",
+    "hint": "Which half of an extension does apt own?",
+    "choices": [
+      {
+        "text": "The objects were rebuilt from the new script at the next restart",
+        "correct": false,
+        "why": "A restart reloads libraries, never SQL objects. The scripts run only on CREATE or ALTER EXTENSION."
+      },
+      {
+        "text": "The extension was dropped and must be created again",
+        "correct": false,
+        "why": "A package update never touches a database's catalogues; the extension is still recorded there."
+      },
+      {
+        "text": "installed_version now matches default_version",
+        "correct": false,
+        "why": "It is the other way round: default_version moved with the files, and installed_version stayed behind."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right. The objects stay as CREATE EXTENSION made them until somebody runs ALTER EXTENSION … UPDATE."
+      }
+    ]
+  },
+  {
+    "id": "ex-c47kxx9f",
+    "version": 1,
+    "section": "what-an-extension-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A role `clerk` has CREATE on the database and is not a superuser. `CREATE EXTENSION pgcrypto` works for it and `CREATE EXTENSION pageinspect` is refused. What decides the difference?",
+    "hint": "One line of the control file.",
+    "choices": [
+      {
+        "text": "`trusted = true` in pgcrypto's control file",
+        "correct": true,
+        "why": "Right. A trusted extension may be created by any role with CREATE on the database; pageinspect is not trusted."
+      },
+      {
+        "text": "pgcrypto was already installed in another database",
+        "correct": false,
+        "why": "Each database is separate; an installation elsewhere grants nothing here."
+      },
+      {
+        "text": "pageinspect needs shared_preload_libraries and a restart first",
+        "correct": false,
+        "why": "The HINT said \"Must be superuser to create this extension\". It was a permission refusal, not a missing library."
+      },
+      {
+        "text": "pgcrypto has no compiled library, so it carries no risk",
+        "correct": false,
+        "why": "It does: pgcrypto.so sits in /usr/lib/postgresql/16/lib. Trust is declared, not inferred from having no C."
+      }
+    ]
+  },
+  {
+    "id": "ex-3dyvadmd",
+    "version": 1,
+    "section": "what-an-extension-is",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each file to what it does for pgcrypto.",
+    "hint": "Name, objects, upgrade, code.",
+    "pairs": [
+      {
+        "left": "pgcrypto.control",
+        "right": "Says the default version, whether it is trusted, and where its library is"
+      },
+      {
+        "left": "pgcrypto--1.3.sql",
+        "right": "Creates the objects of version 1.3"
+      },
+      {
+        "left": "pgcrypto--1.2--1.3.sql",
+        "right": "Moves an installed 1.2 forward to 1.3"
+      },
+      {
+        "left": "pgcrypto.so",
+        "right": "Holds the compiled code the functions call"
+      }
+    ]
+  },
+  {
+    "id": "ex-yt6xd3zr",
+    "version": 1,
+    "section": "what-an-extension-is",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants pg_trgm available in every database the application will create from now on, without anybody remembering a command. What does that?",
+    "hint": "Where does a new database come from?",
+    "choices": [
+      {
+        "text": "Adding pg_trgm to shared_preload_libraries",
+        "correct": false,
+        "why": "That loads a library into processes; it creates no objects in any database."
+      },
+      {
+        "text": "Creating it in the postgres database",
+        "correct": false,
+        "why": "postgres is an ordinary database for connecting to. New databases copy template1."
+      },
+      {
+        "text": "CREATE EXTENSION pg_trgm in template1",
+        "correct": true,
+        "why": "Right. Every database created afterwards is a copy of template1 and carries the extension; existing ones still need it by hand."
+      },
+      {
+        "text": "Installing the package again with apt",
+        "correct": false,
+        "why": "The files are already there. Files on disk create nothing in a database."
+      }
+    ]
+  },
+  {
+    "id": "ex-m8w96qwh",
+    "version": 1,
+    "section": "pg-stat-statements",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `CREATE EXTENSION pg_stat_statements`, querying the view fails with \"must be loaded via shared_preload_libraries\". Why is CREATE EXTENSION not enough?",
+    "hint": "Where does it keep its counts, and when is that sized?",
+    "choices": [
+      {
+        "text": "The extension needs a superuser to read the view",
+        "correct": false,
+        "why": "ana is a superuser. The error names shared_preload_libraries, not a privilege."
+      },
+      {
+        "text": "The view fills only after the next ANALYZE",
+        "correct": false,
+        "why": "ANALYZE gathers table statistics for the planner. It has nothing to do with this view."
+      },
+      {
+        "text": "It hooks every backend and keeps counts in shared memory sized at start",
+        "correct": true,
+        "why": "Right. That can only be arranged when the server starts, so the library must be preloaded and the server restarted."
+      },
+      {
+        "text": "A reload is needed after CREATE EXTENSION",
+        "correct": false,
+        "why": "shared_preload_libraries has context postmaster: a reload marks it pending_restart and changes nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-0am7vqad",
+    "version": 1,
+    "section": "pg-stat-statements",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ALTER SYSTEM SET shared_preload_libraries = 'pg_stat_statement';` (one letter missing) answered ALTER SYSTEM. What happened at the restart, and how was it repaired?",
+    "hint": "Can ALTER SYSTEM run with no server?",
+    "choices": [
+      {
+        "text": "It stayed down; postgresql.auto.conf was corrected by hand",
+        "correct": true,
+        "why": "Right. With the server down there is nothing for ALTER SYSTEM to talk to, so the file it wrote is edited directly."
+      },
+      {
+        "text": "The server skipped the unknown library and started with a warning",
+        "correct": false,
+        "why": "It did not start: the log said FATAL, could not access file \"pg_stat_statement\", and pg_lsclusters said down."
+      },
+      {
+        "text": "It stayed down; ALTER SYSTEM RESET repaired it",
+        "correct": false,
+        "why": "ALTER SYSTEM needs a running server and a connection. Every connection was failing."
+      },
+      {
+        "text": "ALTER SYSTEM should have refused the name, so the restart was fine",
+        "correct": false,
+        "why": "ALTER SYSTEM checks only that the value is a list of names. Nothing reads it until the next start."
+      }
+    ]
+  },
+  {
+    "id": "ex-1mqde0x6",
+    "version": 1,
+    "section": "pg-stat-statements",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The workload ran `WHERE customer_id = :cid` with 200 random customers. Why is it one row in pg_stat_statements and not 200?",
+    "hint": "Look at how the query text is shown.",
+    "choices": [
+      {
+        "text": "It keeps only the first execution of each query text",
+        "correct": false,
+        "why": "calls says 200. Every execution was counted, under one row."
+      },
+      {
+        "text": "pgbench sends one statement and repeats its result",
+        "correct": false,
+        "why": "Each of the 200 runs reached the server and executed; the rows column counts all of them."
+      },
+      {
+        "text": "pg_stat_statements.max is too small to hold 200 rows",
+        "correct": false,
+        "why": "It holds 5000 distinct statements by default; 200 would have fitted easily."
+      },
+      {
+        "text": "Constants are replaced by $1, so they share a shape",
+        "correct": true,
+        "why": "Right. Statements are grouped by their shape after parsing, which is what makes the totals mean something."
+      }
+    ]
+  },
+  {
+    "id": "ex-k4xwfft6",
+    "version": 1,
+    "section": "pg-stat-statements",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Statement A runs 10 times a day at 2 s each. Statement B runs 2 million times a day at 1 ms each. Which leads pg_stat_statements ordered by total_exec_time, and what does that ordering tell you?",
+    "hint": "Multiply first.",
+    "choices": [
+      {
+        "text": "A: it is the slowest, so improving it helps the server most",
+        "correct": false,
+        "why": "A totals 20 s a day. The slowest call is what mean_exec_time ranks, not total."
+      },
+      {
+        "text": "Neither; fast statements are left out of the view",
+        "correct": false,
+        "why": "Every statement is counted, however fast. The customer lookup at a fraction of a millisecond was there."
+      },
+      {
+        "text": "B, with 2000 s; that is where improving saves the server the most time",
+        "correct": true,
+        "why": "Right. Total is calls times mean: 2,000,000 × 1 ms beats 10 × 2 s by a hundred to one."
+      },
+      {
+        "text": "A, because pg_stat_statements weighs each call by its duration",
+        "correct": false,
+        "why": "There is no weighting beyond adding up: total_exec_time is the plain sum of every call's time."
+      }
+    ]
+  },
+  {
+    "id": "ex-qp5kg099",
+    "version": 1,
+    "section": "pgcrypto",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is `encode(digest(password, 'sha256'), 'hex')` a poor way to store passwords?",
+    "hint": "Run it twice on one password, and time a hundred thousand.",
+    "choices": [
+      {
+        "text": "Same password, same hash, and it is very fast to compute",
+        "correct": true,
+        "why": "Right. Equal passwords show as equal values, and a copy of the table can be tested at hundreds of thousands of guesses a second."
+      },
+      {
+        "text": "SHA-256 can be decrypted with the right key",
+        "correct": false,
+        "why": "A hash has no key and cannot be turned back. The weakness is elsewhere."
+      },
+      {
+        "text": "Its output is too long for a text column",
+        "correct": false,
+        "why": "64 hexadecimal characters fit in text without trouble."
+      },
+      {
+        "text": "digest is only available to superusers",
+        "correct": false,
+        "why": "pgcrypto is trusted, and its functions are callable by ordinary roles."
+      }
+    ]
+  },
+  {
+    "id": "ex-0cd5dewg",
+    "version": 1,
+    "section": "pgcrypto",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At login, the typed password is checked with `password_hash = crypt(typed, ___)`, because the stored value carries its own salt and cost.",
+    "hint": "The second argument of crypt is where it finds the salt.",
+    "blanks": [
+      {
+        "accept": [
+          "password_hash"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4t91mjek",
+    "version": 1,
+    "section": "pgcrypto",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A bcrypt hash made with `gen_salt('bf', 12)` costs how many times the work of one made with the default, cost 6?",
+    "hint": "Each step up doubles the work.",
+    "value": 64,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-z2mfmr07",
+    "version": 1,
+    "section": "pgcrypto",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An application inserts users with `crypt('…', gen_salt('bf'))` in its SQL. A DBA turns on `log_statement = 'all'` for an afternoon. What is now in the server log?",
+    "hint": "What travels to the server inside the statement?",
+    "choices": [
+      {
+        "text": "Only the bcrypt values, since hashing happens before logging",
+        "correct": false,
+        "why": "The statement is logged as it arrived, with the literal inside it; the hashing happens when it executes."
+      },
+      {
+        "text": "Nothing, because statements with crypt are never logged",
+        "correct": false,
+        "why": "There is no such exception. log_statement = 'all' means every statement."
+      },
+      {
+        "text": "The salt alone, which is harmless",
+        "correct": false,
+        "why": "gen_salt is called inside the statement; what the log holds is the statement's text, password included."
+      },
+      {
+        "text": "Each new user's password, in plain text",
+        "correct": true,
+        "why": "Right. The password is a literal in the statement, and log_statement writes the statement whole. Hashing in the application avoids it."
+      }
+    ]
+  },
+  {
+    "id": "ex-qsjkmdcw",
+    "version": 1,
+    "section": "postgis",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the PostGIS package name, `postgresql-16-postgis-3`, carry the server's major version?",
+    "hint": "Which server's directories does it fill?",
+    "choices": [
+      {
+        "text": "It is built for that one major version and installs into its directories",
+        "correct": true,
+        "why": "Right. It serves 16 and nothing else; a 17 server needs postgresql-17-postgis-3."
+      },
+      {
+        "text": "PostGIS is a contrib module released with each version",
+        "correct": false,
+        "why": "It is a separate project with its own releases, which is why it was not in pg_available_extensions until installed."
+      },
+      {
+        "text": "The number is the minimum version, and it runs on any later one",
+        "correct": false,
+        "why": "A library compiled for 16 is not loaded by 17; each major version has its own package."
+      },
+      {
+        "text": "It names the cluster, 16/main, that it will be created in",
+        "correct": false,
+        "why": "A package creates nothing in any cluster. CREATE EXTENSION does that, per database."
+      }
+    ]
+  },
+  {
+    "id": "ex-pq5casaw",
+    "version": 1,
+    "section": "postgis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ST_Distance` between São Paulo and Rio answered 3.52 with `geometry` and 361 km with `geography`. What does 3.52 measure?",
+    "hint": "geometry treats the coordinates as a flat plane.",
+    "choices": [
+      {
+        "text": "Hundreds of kilometres",
+        "correct": false,
+        "why": "That would be 352 km, and the true distance is 361. The unit is not a distance on the ground at all."
+      },
+      {
+        "text": "Miles, because geometry uses imperial units",
+        "correct": false,
+        "why": "No unit of length is involved. 361 km is about 224 miles, nowhere near 3.52."
+      },
+      {
+        "text": "Metres, with the points swapped by mistake",
+        "correct": false,
+        "why": "Both queries used the same points in the same order. The type, not the input, changed the answer."
+      },
+      {
+        "text": "Degrees on a flat drawing of the map",
+        "correct": true,
+        "why": "Right. geometry takes longitude and latitude as x and y, so the straight line between them is in degrees."
+      }
+    ]
+  },
+  {
+    "id": "ex-yvn6zgqf",
+    "version": 1,
+    "section": "postgis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A developer inserts Lisbon as `'POINT(38.7223 -9.1393)'`. What happens?",
+    "hint": "Which number comes first in a PostGIS point?",
+    "choices": [
+      {
+        "text": "PostGIS rejects it because latitude must come first",
+        "correct": false,
+        "why": "Longitude comes first, and both values are valid coordinates, so nothing is rejected."
+      },
+      {
+        "text": "PostGIS detects the order and swaps them back",
+        "correct": false,
+        "why": "It cannot know what was meant: 38.7 east, 9.1 south is a real place."
+      },
+      {
+        "text": "It is stored without an error, far from Lisbon",
+        "correct": true,
+        "why": "Right. The text is read as longitude 38.7, latitude -9.1, a point off the coast of East Africa, and every distance from it is wrong."
+      },
+      {
+        "text": "It works, since geography ignores the order",
+        "correct": false,
+        "why": "Order is the whole meaning: the first number is always x, the longitude."
+      }
+    ]
+  },
+  {
+    "id": "ex-pyp195g7",
+    "version": 1,
+    "section": "keeping-them",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "pg_trgm shows `default_version` 1.6 and `installed_version` 1.5 in a database. What brings it to 1.6?",
+    "hint": "The upgrade script is already on disk.",
+    "choices": [
+      {
+        "text": "Restarting the server so it loads the new files",
+        "correct": false,
+        "why": "A restart reloads libraries. The SQL objects stay at 1.5 until an update is run."
+      },
+      {
+        "text": "sudo apt install --reinstall postgresql-16",
+        "correct": false,
+        "why": "The files already say 1.6; that is what default_version reports. The database is what lags."
+      },
+      {
+        "text": "ALTER EXTENSION pg_trgm UPDATE",
+        "correct": true,
+        "why": "Right. It runs pg_trgm--1.5--1.6.sql inside that database."
+      },
+      {
+        "text": "Nothing; it updates itself at the next autovacuum",
+        "correct": false,
+        "why": "Autovacuum cleans tables. Nothing updates an extension on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-2bgkww8h",
+    "version": 1,
+    "section": "keeping-them",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The dump of `ana` was 112 lines though PostGIS alone had created 893 objects. What does that mean for the server that restores it?",
+    "hint": "What did grep find in the dump?",
+    "choices": [
+      {
+        "text": "It needs nothing extra, since the dump is self-contained",
+        "correct": false,
+        "why": "The 893 objects are not in it. Without the extension's files the CREATE EXTENSION line fails."
+      },
+      {
+        "text": "It must restore with --schema-only first",
+        "correct": false,
+        "why": "The flag changes what is dumped, not what the target needs. The missing piece is the package."
+      },
+      {
+        "text": "It must already have the PostGIS package installed",
+        "correct": true,
+        "why": "Right. The dump says CREATE EXTENSION IF NOT EXISTS postgis, and that line needs the files on the new server."
+      },
+      {
+        "text": "The dump has lost the PostGIS objects for good",
+        "correct": false,
+        "why": "Nothing is lost: one line recreates all 893 from the extension's script, as long as the files are there."
+      }
+    ]
+  },
+  {
+    "id": "ex-9dbnpwvw",
+    "version": 1,
+    "section": "keeping-them",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps for carrying a PostGIS database through a major upgrade, 16 to 17, in order.",
+    "hint": "The inventory comes first, the update of the objects last.",
+    "items": [
+      "Run \\dx in every database and list the extensions",
+      "Install postgresql-17-postgis-3 beside the new server",
+      "Perform the upgrade itself",
+      "Run ALTER EXTENSION … UPDATE where installed and default differ"
+    ],
+    "trap": "Installing the package after the upgrade leaves the new server unable to create the extension the dump or the upgrade asks for."
+  },
+  {
+    "id": "ex-r25qeh0w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On a managed service where you are never a superuser, which of these can you expect to install yourself, given CREATE on your database?",
+    "hint": "Think of the trusted line, and of what needs more than a database.",
+    "choices": [
+      {
+        "text": "pgcrypto",
+        "correct": true,
+        "why": "Right. It is trusted, so CREATE on the database is enough, the same as clerk had."
+      },
+      {
+        "text": "pageinspect, to read raw pages",
+        "correct": false,
+        "why": "It is not trusted: the lab refused it to clerk with \"Must be superuser\"."
+      },
+      {
+        "text": "pg_stat_statements, created and then enabled with ALTER SYSTEM",
+        "correct": false,
+        "why": "ALTER SYSTEM and a restart are the provider's; preloading is a server setting you do not hold."
+      },
+      {
+        "text": "Any extension at all, after installing its package with apt",
+        "correct": false,
+        "why": "There is no shell on a managed server, so there is no apt; you choose among the files the provider installed."
+      }
+    ]
+  },
+  {
+    "id": "ex-sx2v91v3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague wants pg_stat_statements on production and plans `ALTER SYSTEM SET shared_preload_libraries = 'pg_stat_statements'` followed by a restart at 2 a.m. What one check costs a second and prevents the worst outcome?",
+    "hint": "What made the lab server stay down?",
+    "choices": [
+      {
+        "text": "Run SELECT pg_reload_conf() and see whether it returns true",
+        "correct": false,
+        "why": "The reload returns true whatever the value is; it reads nothing that only a start reads."
+      },
+      {
+        "text": "Query pg_stat_statements first to see whether it is empty",
+        "correct": false,
+        "why": "Before preloading, that query errors whatever the spelling in the setting."
+      },
+      {
+        "text": "Run CREATE EXTENSION in template1 so the restart picks it up",
+        "correct": false,
+        "why": "CREATE EXTENSION does not touch shared_preload_libraries, and the restart does not read template1."
+      },
+      {
+        "text": "Check that pg_stat_statements.so exists in the library directory",
+        "correct": true,
+        "why": "Right. A name with no matching library stops the server at start, and ls on the file catches a typo first."
+      }
+    ]
+  },
+  {
+    "id": "ex-qx4ymg2f",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these change only files on disk and nothing inside any database? Choose all that apply.",
+    "hint": "Separate the package's half from the database's half.",
+    "choices": [
+      {
+        "text": "sudo apt install -y postgresql-16-postgis-3",
+        "correct": true,
+        "why": "Yes. It puts control files, scripts and libraries in place; no database has PostGIS until CREATE EXTENSION."
+      },
+      {
+        "text": "CREATE EXTENSION pgcrypto",
+        "correct": false,
+        "why": "That runs a script inside the current database and creates objects there."
+      },
+      {
+        "text": "An apt upgrade of postgresql-16 that brings a new pg_trgm default",
+        "correct": true,
+        "why": "Yes. default_version moves; installed_version stays where it was in every database."
+      },
+      {
+        "text": "ALTER EXTENSION pg_trgm UPDATE",
+        "correct": false,
+        "why": "That runs the upgrade script inside the database and changes its objects."
+      }
+    ]
+  },
+  {
+    "id": "ex-x5c57sz7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new service needs random UUID primary keys and nothing else from pgcrypto. What is the leanest setup on PostgreSQL 16?",
+    "hint": "Where did \\df find gen_random_uuid?",
+    "choices": [
+      {
+        "text": "CREATE EXTENSION pgcrypto in the service's database",
+        "correct": false,
+        "why": "That was needed before 13. Now it adds an extension to carry through upgrades for no gain."
+      },
+      {
+        "text": "CREATE EXTENSION \"uuid-ossp\" instead of pgcrypto",
+        "correct": false,
+        "why": "Another extension for the same job; the server already has the function."
+      },
+      {
+        "text": "Generate UUIDs with digest(random()::text, 'md5')",
+        "correct": false,
+        "why": "That is a hash of a weak random number shaped by hand, and it still needs pgcrypto."
+      },
+      {
+        "text": "No extension: gen_random_uuid() is core",
+        "correct": true,
+        "why": "Right. It lives in pg_catalog since PostgreSQL 13, and shop, with no pgcrypto, called it."
+      }
+    ]
+  },
+  {
+    "id": "ex-8sa3wbt1",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each extension to what a DBA would install it for.",
+    "hint": "Statistics, passwords, places, text.",
+    "pairs": [
+      {
+        "left": "pg_stat_statements",
+        "right": "Finding which statements take the server's time"
+      },
+      {
+        "left": "pgcrypto",
+        "right": "Storing a password as a salted bcrypt hash"
+      },
+      {
+        "left": "postgis",
+        "right": "Distances between points on the Earth"
+      },
+      {
+        "left": "pg_trgm",
+        "right": "Similarity between strings of text"
+      }
+    ],
+    "right_distractors": [
+      "Reading raw pages from the disk"
+    ]
+  }
+]

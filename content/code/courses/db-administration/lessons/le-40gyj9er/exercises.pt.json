@@ -1,0 +1,498 @@
+{
+  "ex-p7abaa6j": {
+    "prompt": "Uma sessão rodou `BEGIN; SELECT count(*) FROM orders_live;` e o SELECT já voltou. Quando ela libera o lock na tabela?",
+    "hint": "O prompt do psql ainda mostra uma estrela.",
+    "choices": [
+      {
+        "text": "No COMMIT ou no ROLLBACK",
+        "why": "Isso. Um lock dura até o fim da transação, não até o fim do comando."
+      },
+      {
+        "text": "Assim que o SELECT devolveu as linhas",
+        "why": "Essa é a crença que faz uma transação ociosa parecer inofensiva. O pg_locks ainda o mostrava concedido."
+      },
+      {
+        "text": "Depois do deadlock_timeout, um segundo depois",
+        "why": "O deadlock_timeout é quando o PostgreSQL procura um deadlock; ele não libera nada."
+      },
+      {
+        "text": "Quando outra sessão pede um lock em conflito",
+        "why": "Pedir não o tira de ninguém. O ALTER esperou até o COMMIT."
+      }
+    ]
+  },
+  "ex-thw719kt": {
+    "prompt": "Na captura, o `SELECT status …` da terceira sessão tinha `blocked_by` = o pid do ALTER, não o da primeira sessão. Por quê?",
+    "hint": "Com qual lock concedido ou na fila um ACCESS SHARE conflita?",
+    "choices": [
+      {
+        "text": "Porque o pg_blocking_pids sempre aponta só a sessão mais recente",
+        "why": "Ele aponta todo processo que bloqueia; a linha do ALTER apontava a primeira sessão."
+      },
+      {
+        "text": "A primeira sessão já tinha feito commit nessa hora",
+        "why": "Ela estava idle in transaction com o lock concedido, como a mesma consulta mostrou."
+      },
+      {
+        "text": "Um SELECT sempre espera qualquer ALTER no mesmo banco, qualquer que seja a tabela",
+        "why": "Os locks aqui são por tabela. As outras tabelas não foram afetadas."
+      },
+      {
+        "text": "O lock dele conflita com o ACCESS EXCLUSIVE na fila à frente dele",
+        "why": "Isso. Dois ACCESS SHARE convivem; o ALTER na fila é o que está no caminho."
+      }
+    ]
+  },
+  "ex-sett14ht": {
+    "prompt": "No pg_stat_activity, uma sessão que abriu uma transação e espera o cliente mandar o próximo comando tem o estado `idle in ___`.",
+    "hint": "São três palavras no estado; falta a última.",
+    "blanks": [
+      {
+        "accept": [
+          "transaction"
+        ]
+      }
+    ]
+  },
+  "ex-a7fftx64": {
+    "prompt": "Um colega acrescenta uma coluna sem default e que aceita NULL a uma tabela movimentada ao meio-dia. Na cópia de teste é instantâneo. Em produção, o site para de responder por três minutos. Que explicação se encaixa nesta lição?",
+    "hint": "O que havia em produção que a cópia não tinha?",
+    "choices": [
+      {
+        "text": "A coluna fez o PostgreSQL reescrever a tabela",
+        "why": "Uma coluna sem default só edita o catálogo, em produção como na cópia."
+      },
+      {
+        "text": "Uma transação segurou a tabela por três minutos, e toda consulta fez fila atrás do ALTER que esperava",
+        "why": "Isso. O próprio ALTER levou milissegundos depois de receber o lock."
+      },
+      {
+        "text": "A produção tem mais linhas, e o tempo cresce com o número de linhas",
+        "why": "Para esta mudança o tempo não depende do número de linhas."
+      },
+      {
+        "text": "O max_connections estava baixo demais",
+        "why": "Ficar sem conexões é consequência da fila, não a causa."
+      }
+    ]
+  },
+  "ex-f19c3fww": {
+    "prompt": "Com `SET lock_timeout = '2s'`, o que aconteceu com o ALTER enquanto a primeira sessão segurava a tabela?",
+    "hint": "Leia a linha Time: dele.",
+    "choices": [
+      {
+        "text": "Esperou dois segundos e depois rodou mesmo assim",
+        "why": "Ele não rodou; a coluna source só foi acrescentada depois, pelo script de retentativa."
+      },
+      {
+        "text": "Cancelou a transação da primeira sessão para poder seguir",
+        "why": "O lock_timeout só afeta a sessão que o definiu. A primeira sessão fez commit normalmente."
+      },
+      {
+        "text": "Desistiu depois de dois segundos com um erro",
+        "why": "Isso: canceling statement due to lock timeout, e a fila atrás dele andou."
+      },
+      {
+        "text": "Rodou em segundo plano e terminou quando o lock ficou livre",
+        "why": "O PostgreSQL não tem ALTER em segundo plano. Um comando ou espera ou desiste."
+      }
+    ]
+  },
+  "ex-c2byqr9s": {
+    "prompt": "Uma mudança reescreve uma tabela grande e precisa de cerca de um minuto de trabalho. Qual configuração a deixa rodar mas a impede de ficar muito tempo na fila?",
+    "hint": "Uma conta a espera por lock, a outra conta tudo.",
+    "choices": [
+      {
+        "text": "statement_timeout = '2s'",
+        "why": "Ele conta o comando inteiro, trabalho incluído, então cancelaria a reescrita depois de dois segundos."
+      },
+      {
+        "text": "idle_in_transaction_session_timeout = '2s'",
+        "why": "Isso encerra sessões paradas dentro de uma transação, o que ajuda, mas limita as sessões dos outros, não a espera do ALTER."
+      },
+      {
+        "text": "deadlock_timeout = '2s'",
+        "why": "Isso é quanto esperar antes de procurar um deadlock. Uma fila não é um deadlock."
+      },
+      {
+        "text": "lock_timeout = '2s'",
+        "why": "Isso. Ele conta só a espera pelo lock; o minuto de trabalho não é limitado."
+      }
+    ]
+  },
+  "ex-r2yrefje": {
+    "prompt": "Na demonstração do lock_timeout, o SELECT da terceira sessão relatou cerca de 1,2 segundo. Por que não foi instantâneo?",
+    "hint": "O lock_timeout limita uma fila; ele a impede?",
+    "choices": [
+      {
+        "text": "Ler um milhão de linhas para achar o id 1 leva isso em qualquer máquina, com ou sem lock",
+        "why": "A mesma consulta levou uma fração disso quando nada estava na fila; quase todo o tempo foi espera."
+      },
+      {
+        "text": "Ficou na fila atrás do ALTER até o ALTER desistir",
+        "why": "Isso. A fila ainda se formou, e o lock_timeout limitou quanto ela durou."
+      },
+      {
+        "text": "Precisou esperar a primeira sessão fazer commit",
+        "why": "A primeira sessão fez commit depois que o SELECT voltou; ela nunca bloqueou o SELECT diretamente."
+      },
+      {
+        "text": "O próprio lock_timeout dela a fez esperar dois segundos antes",
+        "why": "Só a segunda sessão definiu lock_timeout, e a configuração é um teto para a espera, não um atraso."
+      }
+    ]
+  },
+  "ex-bgexztqp": {
+    "prompt": "No retry-ddl.sh, por que o script dorme três segundos entre as tentativas, mais do que os dois segundos que cada tentativa pode esperar?",
+    "hint": "O que acontece com as consultas que estavam presas atrás do ALTER?",
+    "choices": [
+      {
+        "text": "O PostgreSQL recusa um segundo ALTER menos de três segundos depois de um que falhou",
+        "why": "Não existe essa regra. Tentar de novo na hora funcionaria, e poria todo mundo na fila de novo na hora."
+      },
+      {
+        "text": "Para dar tempo ao autovacuum de terminar a tabela",
+        "why": "Quem segurava aqui era uma transação, não o autovacuum, e três segundos não terminariam um vacuum mesmo."
+      },
+      {
+        "text": "Para as consultas na fila rodarem, e quem segura talvez terminar, antes de entrar na fila de novo",
+        "why": "Isso. O intervalo é o tempo de a aplicação respirar entre as tentativas."
+      },
+      {
+        "text": "O psql precisa de tempo para fechar a conexão anterior",
+        "why": "Cada psql termina por completo antes de a próxima linha do script rodar."
+      }
+    ]
+  },
+  "ex-7tnp1rda": {
+    "prompt": "No PostgreSQL 16, `ALTER TABLE orders_live ADD COLUMN channel text NOT NULL DEFAULT 'web'` levou milissegundos num milhão de linhas. Por quê?",
+    "hint": "De onde vem o 'web' de uma linha antiga?",
+    "choices": [
+      {
+        "text": "Colunas NOT NULL são preenchidas depois, uma página por vez, pelo autovacuum rodando em segundo plano",
+        "why": "O autovacuum nunca escreve valores de coluna. O catálogo os fornece."
+      },
+      {
+        "text": "O default fica no catálogo e é fornecido quando as linhas antigas são lidas",
+        "why": "Isso, desde a versão 11. O arquivo manteve o nome: nenhuma reescrita."
+      },
+      {
+        "text": "Colunas de texto não ocupam espaço",
+        "why": "Ocupam, quando um valor é guardado. Aqui nada foi guardado nas linhas."
+      },
+      {
+        "text": "Porque a tabela ainda não tinha índices",
+        "why": "Uma reescrita sem índices ainda copia cada linha; o default volátil provou isso na mesma tabela."
+      }
+    ]
+  },
+  "ex-qkysjc7f": {
+    "prompt": "Ligue cada mudança em orders_live ao que ela custou.",
+    "hint": "Olhe o nome do arquivo e as linhas DEBUG.",
+    "pairs": [
+      {
+        "left": "ADD COLUMN token uuid DEFAULT gen_random_uuid()",
+        "right": "Uma reescrita: cada linha recebe um valor próprio"
+      },
+      {
+        "left": "ALTER COLUMN status TYPE varchar(40), vindo de varchar(20)",
+        "right": "Uma edição no catálogo, em milissegundos"
+      },
+      {
+        "left": "ALTER COLUMN total_cents TYPE bigint",
+        "right": "Uma reescrita: cada linha muda de tamanho"
+      },
+      {
+        "left": "ADD CONSTRAINT … CHECK (total_cents > 0)",
+        "right": "Uma leitura completa, sem reescrita"
+      }
+    ],
+    "right_distractors": [
+      "A reconstrução de todos os índices da tabela"
+    ]
+  },
+  "ex-t79h3nsy": {
+    "prompt": "Como a lição soube, sem cronometrar nada, que ALTER COLUMN total_cents TYPE bigint reescreveu a tabela?",
+    "hint": "Dois sinais, um deles uma função da lição 4.",
+    "choices": [
+      {
+        "text": "O pg_locks mostrou ShareUpdateExclusiveLock",
+        "why": "Ele mostrou AccessExclusiveLock; o ShareUpdateExclusiveLock era o lock do VALIDATE."
+      },
+      {
+        "text": "O número de linhas informado pelo ALTER",
+        "why": "O ALTER TABLE não informa contagem de linhas, com reescrita ou sem."
+      },
+      {
+        "text": "O tamanho da tabela no \\dt+ dobrou e ficou dobrado até o próximo VACUUM FULL rodar",
+        "why": "Uma reescrita troca o arquivo; o antigo é removido quando a transação termina."
+      },
+      {
+        "text": "O pg_relation_filepath mudou, e o DEBUG1 disse rewriting table",
+        "why": "Isso. Uma reescrita é um arquivo novo, e o PostgreSQL avisa em debug1."
+      }
+    ]
+  },
+  "ex-7rg12tdf": {
+    "prompt": "Um arquivo de migração roda dez ALTER TABLE dentro de um BEGIN … COMMIT, em dez tabelas diferentes. O primeiro reescreve uma tabela grande. O que isso significa para as outras nove tabelas durante a migração?",
+    "hint": "Quando os locks são liberados?",
+    "choices": [
+      {
+        "text": "Cada tabela fica travada só enquanto o seu próprio ALTER roda",
+        "why": "Cada lock é pego quando o seu ALTER roda, e só é liberado no COMMIT."
+      },
+      {
+        "text": "Cada uma fica fechada do seu ALTER até o COMMIT, depois da reescrita lenta e de todo o resto",
+        "why": "Isso. Uma transação é um lock longo em tudo o que ela tocou."
+      },
+      {
+        "text": "Nada: são tabelas diferentes",
+        "why": "Elas não esperam nada da primeira tabela, mas os seus próprios locks duram até o fim da transação compartilhada."
+      },
+      {
+        "text": "O PostgreSQL faz commit de cada ALTER automaticamente, como o MySQL",
+        "why": "Esse é o comportamento do MySQL. O DDL do PostgreSQL é transacional, como o ROLLBACK mostrou."
+      }
+    ]
+  },
+  "ex-4sx3hgkn": {
+    "prompt": "Logo depois de `ADD CONSTRAINT total_positive CHECK (total_cents > 0) NOT VALID`, tenta-se um insert com total_cents = 0. O que acontece?",
+    "hint": "NOT VALID diz respeito às linhas que já estão lá.",
+    "choices": [
+      {
+        "text": "É aceito até a restrição ser validada",
+        "why": "Essa é a leitura errada mais comum de NOT VALID. Só as linhas existentes ficam sem conferência."
+      },
+      {
+        "text": "Espera o VALIDATE CONSTRAINT rodar",
+        "why": "Nada espera; o insert foi recusado em cerca de um milissegundo."
+      },
+      {
+        "text": "É aceito com um aviso",
+        "why": "Uma restrição check nunca avisa; ela recusa ou aceita."
+      },
+      {
+        "text": "É recusado",
+        "why": "Isso. Uma restrição NOT VALID vale para linhas novas desde o momento em que é acrescentada."
+      }
+    ]
+  },
+  "ex-xbq5ysdg": {
+    "prompt": "Enquanto o `VALIDATE CONSTRAINT` segurava o lock numa transação aberta, outra sessão rodou um UPDATE na mesma tabela. O que aconteceu com o UPDATE?",
+    "hint": "Que lock o pg_locks mostrou para o VALIDATE?",
+    "choices": [
+      {
+        "text": "Esperou o COMMIT",
+        "why": "Esperaria sob ACCESS EXCLUSIVE. O VALIDATE pega SHARE UPDATE EXCLUSIVE."
+      },
+      {
+        "text": "Falhou, porque a tabela estava sendo validada",
+        "why": "Ele devolveu UPDATE 1."
+      },
+      {
+        "text": "Rodou, mas a linha dele não foi conferida pela restrição",
+        "why": "Toda versão nova de linha é conferida pela restrição, validada ou não."
+      },
+      {
+        "text": "Rodou na hora, porque SHARE UPDATE EXCLUSIVE não conflita com escritas",
+        "why": "Isso. O tempo dele foi a leitura para achar o id 2, não espera."
+      }
+    ]
+  },
+  "ex-55xe3x0f": {
+    "prompt": "Ponha em ordem os passos que deram a orders_live uma chave primária sem um lock ACCESS EXCLUSIVE longo.",
+    "hint": "O índice primeiro; a prova de NOT NULL antes da chave.",
+    "items": [
+      "CREATE UNIQUE INDEX CONCURRENTLY orders_live_id ON orders_live (id)",
+      "ADD CONSTRAINT id_not_null CHECK (id IS NOT NULL) NOT VALID",
+      "VALIDATE CONSTRAINT id_not_null",
+      "ADD CONSTRAINT orders_live_pkey PRIMARY KEY USING INDEX orders_live_id",
+      "DROP CONSTRAINT id_not_null"
+    ],
+    "trap": "Remover o check antes de a chave existir joga fora a prova que deixa a chave pular a leitura."
+  },
+  "ex-tas0m0cx": {
+    "prompt": "Uma ferramenta de migração roda cada passo dentro de BEGIN … COMMIT. Um desenvolvedor põe `CREATE UNIQUE INDEX CONCURRENTLY` numa migração. O que acontece?",
+    "hint": "Um dos dois cuidados no fim da seção.",
+    "choices": [
+      {
+        "text": "É recusado: nada de CONCURRENTLY dentro de um bloco de transação",
+        "why": "Isso. A ferramenta precisa ser avisada para rodar esse passo fora de uma transação."
+      },
+      {
+        "text": "Roda, mas sem o CONCURRENTLY",
+        "why": "O PostgreSQL nunca descarta a palavra em silêncio; ele recusa o comando."
+      },
+      {
+        "text": "Constrói um índice INVALID que a ferramenta depois valida",
+        "why": "Um índice INVALID é o que uma falha no meio deixa; não há como validá-lo, só remover e reconstruir."
+      },
+      {
+        "text": "Funciona e segura ACCESS EXCLUSIVE até o COMMIT",
+        "why": "Ele nem chega a pegar um lock."
+      }
+    ]
+  },
+  "ex-ahcq02ex": {
+    "prompt": "Ponha em ordem as fases de mudar total_cents de integer para bigint.",
+    "hint": "Quatro nomes: expandir, preencher, trocar, contrair.",
+    "items": [
+      "Acrescentar total_cents_new e um trigger que a preenche em cada escrita",
+      "Copiar as linhas antigas em lotes, com commit em cada um",
+      "Renomear as colunas e remover o trigger numa transação curta",
+      "Remover total_cents_old"
+    ],
+    "trap": "Preencher antes de o trigger existir deixa sem valor toda linha escrita durante o preenchimento."
+  },
+  "ex-m2wwmtav": {
+    "prompt": "Por que backfill_total_cents faz commit depois de cada lote em vez de rodar um UPDATE só sobre a tabela inteira?",
+    "hint": "O que uma transação enorme segura, e por quanto tempo?",
+    "choices": [
+      {
+        "text": "Porque uma procedure não consegue atualizar mais de 100.000 linhas de uma vez",
+        "why": "Não existe esse limite; 100.000 foi o lote que a lição escolheu."
+      },
+      {
+        "text": "Porque o trigger só dispara em linhas com commit",
+        "why": "Um trigger dispara dentro do comando, com commit ou não."
+      },
+      {
+        "text": "Para nenhuma transação travar muitas linhas por muito tempo nem segurar o VACUUM",
+        "why": "Isso. Cada lote é uma transação curta, e as linhas mortas que ele deixa podem ser limpas pelo caminho."
+      },
+      {
+        "text": "Para deixar o preenchimento mais rápido no total",
+        "why": "Lotes costumam ser um pouco mais lentos no total. São mais gentis, não mais rápidos."
+      }
+    ]
+  },
+  "ex-bkffa147": {
+    "prompt": "Quantos lotes o CALL backfill_total_cents(100000) fez commit em orders_live?",
+    "hint": "Conte as linhas NOTICE."
+  },
+  "ex-a6y2p0n5": {
+    "prompt": "A conferência depois do preenchimento usa `IS DISTINCT FROM` e não `<>`. O que `WHERE total_cents_new <> total_cents` teria deixado passar?",
+    "hint": "Quanto é NULL <> 5?",
+    "choices": [
+      {
+        "text": "Linhas em que os dois valores diferem mais do que um integer comporta",
+        "why": "<> compara um bigint e um integer corretamente. A lacuna é o NULL."
+      },
+      {
+        "text": "Linhas que o trigger escreveu durante o preenchimento",
+        "why": "Essas têm valores iguais, e os dois operadores as contam como iguais."
+      },
+      {
+        "text": "Linhas em que total_cents_new ainda é NULL",
+        "why": "Isso. NULL <> 5 é NULL, não verdadeiro, então a linha não seria contada."
+      },
+      {
+        "text": "Nada: os dois são iguais para números",
+        "why": "São iguais para dois números não nulos. Com um NULL eles diferem."
+      }
+    ]
+  },
+  "ex-bkwpgej4": {
+    "prompt": "Você precisa acrescentar `CHECK (status IN ('paid', 'shipped', 'cancelled'))` a uma tabela de 300 milhões de linhas que recebe escritas o dia todo. Que plano segue esta lição?",
+    "hint": "Dois comandos, cada um sob um lock diferente.",
+    "choices": [
+      {
+        "text": "ADD CONSTRAINT de madrugada, quando o tráfego é baixo",
+        "why": "Ainda lê 300 milhões de linhas sob ACCESS EXCLUSIVE; tráfego baixo só significa menos gente na fila."
+      },
+      {
+        "text": "Acrescentar uma coluna nova com o check, preenchê-la e trocar",
+        "why": "Expandir e contrair é para mudanças que não têm como ficar baratas. Um check tem."
+      },
+      {
+        "text": "CREATE INDEX CONCURRENTLY em status antes, para que a validação do check use o índice em vez da tabela",
+        "why": "Validar um check lê cada linha; nenhum índice torna isso desnecessário."
+      },
+      {
+        "text": "ADD CONSTRAINT … NOT VALID com lock_timeout, depois VALIDATE CONSTRAINT",
+        "why": "Isso. Um lock forte breve, limitado pelo timeout, depois uma leitura longa que deixa as escritas continuarem."
+      }
+    ]
+  },
+  "ex-t9fhtz7e": {
+    "prompt": "Um script de retentativa falhou cinco vezes seguidas, sempre com `canceling statement due to lock timeout`. Qual é o próximo passo certo?",
+    "hint": "O que cinco falhas seguidas dizem sobre a tabela?",
+    "choices": [
+      {
+        "text": "Aumentar o lock_timeout para cinco minutos e rodar mais uma vez",
+        "why": "Isso transforma a próxima tentativa exatamente na queda que o timeout existia para evitar."
+      },
+      {
+        "text": "Procurar no pg_stat_activity o que segura a tabela há tanto tempo",
+        "why": "Isso. Alguma coisa a segura por longos períodos, e esse é o problema a resolver primeiro."
+      },
+      {
+        "text": "Rodar o ALTER sem lock_timeout, já que as tentativas provaram que é seguro",
+        "why": "As tentativas provaram o contrário: o lock não está livre."
+      },
+      {
+        "text": "Reiniciar o PostgreSQL para limpar os locks",
+        "why": "Um restart encerra todas as sessões, o que é uma queda pior que a que se queria evitar."
+      }
+    ]
+  },
+  "ex-xrgvrw4y": {
+    "prompt": "A coluna `email` de uma tabela é `varchar(100)` e precisa virar `varchar(255)`. Que abordagem basta?",
+    "hint": "Um limite maior pode tornar alguma linha existente inválida?",
+    "choices": [
+      {
+        "text": "Expandir e contrair: coluna nova, preenchimento e troca",
+        "why": "É muito trabalho para uma mudança que o PostgreSQL faz editando o catálogo."
+      },
+      {
+        "text": "NOT VALID e VALIDATE, como para um check",
+        "why": "Uma mudança de tipo não tem forma NOT VALID, e esta nem precisa conferir as linhas."
+      },
+      {
+        "text": "Esperar uma janela de manutenção, porque toda mudança de tipo reescreve a tabela",
+        "why": "Nem toda mudança de tipo reescreve; a lição mediu exatamente este tipo como instantâneo."
+      },
+      {
+        "text": "Um ALTER COLUMN TYPE varchar(255) simples, com lock_timeout",
+        "why": "Isso. Aumentar o limite é instantâneo, como varchar(20) para varchar(40); o timeout cuida da fila."
+      }
+    ]
+  },
+  "ex-rdq3gs8a": {
+    "prompt": "Quais destes seguram o lock ACCESS EXCLUSIVE só por um instante numa tabela grande? Marque todos que se aplicam.",
+    "hint": "Edições de catálogo contra qualquer coisa que lê ou escreve cada linha.",
+    "choices": [
+      {
+        "text": "ADD COLUMN com default constante",
+        "why": "Sim, desde o PostgreSQL 11."
+      },
+      {
+        "text": "RENAME COLUMN",
+        "why": "Sim. Uma edição de catálogo, e é por isso que a troca foi rápida."
+      },
+      {
+        "text": "ADD CONSTRAINT … CHECK … NOT VALID",
+        "why": "Sim. As linhas existentes não são lidas."
+      },
+      {
+        "text": "ALTER COLUMN … TYPE bigint, vindo de integer",
+        "why": "Uma reescrita, sob o lock o tempo todo."
+      },
+      {
+        "text": "ADD COLUMN … DEFAULT gen_random_uuid()",
+        "why": "Um default volátil reescreve a tabela."
+      }
+    ]
+  },
+  "ex-jqjh7h7k": {
+    "prompt": "`SET NOT NULL` pula a leitura da tabela quando uma restrição ___ válida já prova que a coluna não tem nulos.",
+    "hint": "O tipo acrescentado NOT VALID e depois validado.",
+    "blanks": [
+      {
+        "accept": [
+          "CHECK"
+        ]
+      }
+    ]
+  }
+}

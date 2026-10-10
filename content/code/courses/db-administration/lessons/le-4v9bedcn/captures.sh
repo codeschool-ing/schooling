@@ -42,13 +42,13 @@ printf 'SHOW block_size;\nSHOW wal_block_size;\nSELECT relpages, pg_relation_siz
 on 'stat --file-system --format="%T, block size %S" /var/lib/postgresql/16/main'
 
 block filesystems
-on 'findmnt --target /var/lib/postgresql/16/main'
+on 'findmnt --target /var/lib/postgresql/16/main --output TARGET,FSTYPE,OPTIONS'
 
 block fsync
 on 'sudo -u postgres /usr/lib/postgresql/16/bin/pg_test_fsync -s 2 -f /var/lib/postgresql/fsync-test'
 on 'sudo mkdir /mnt/ram && sudo mount -t tmpfs -o size=64M tmpfs /mnt/ram && sudo chmod 1777 /mnt/ram'
 on 'sudo -u postgres /usr/lib/postgresql/16/bin/pg_test_fsync -s 2 -f /mnt/ram/fsync-test | head -10'
-lab as 'sudo umount /mnt/ram && sudo rmdir /mnt/ram'
+on 'sudo umount /mnt/ram && sudo rmdir /mnt/ram'
 
 block wal
 on 'sudo du -sh /var/lib/postgresql/16/main/pg_wal'
@@ -78,7 +78,7 @@ on 'sudo tail -n 3 /var/log/postgresql/postgresql-16-main.log'
 printf 'VACUUM filler;\n' | session shop
 on 'sudo tune2fs -m 0 "$(findmnt --noheadings --output SOURCE /srv/small)"'
 on 'df -h /srv/small'
-printf "VACUUM filler;\nSELECT pg_size_pretty(pg_relation_size('filler'));\n" | session shop
+printf "VACUUM filler;\nSELECT pg_size_pretty(pg_relation_size('filler'));\nCHECKPOINT;\n" | session shop
 on 'df -h /srv/small'
 on 'sudo tune2fs -m 5 "$(findmnt --noheadings --output SOURCE /srv/small)"'
 

@@ -126,6 +126,9 @@ shop=# SELECT pg_size_pretty(pg_relation_size('filler'));
 ----------------
  0 bytes
 (1 row)
+
+shop=# CHECKPOINT;
+CHECKPOINT
 ```
 
 ```
@@ -139,6 +142,12 @@ Setting reserved blocks percentage to 5% (819 blocks)
 
 With 3.2 MB to work in, `VACUUM` found every page empty and cut the file to nothing. **Then the
 reserve goes back**, because it is only worth anything while it is unused.
+
+The `CHECKPOINT` matters more than it looks. Until the next checkpoint, crash recovery would start
+from a point before the failed insert and replay it, every page of it, into this same small
+filesystem. An earlier recording of this lesson left it out, crashed the server in the next
+section, and recovery stopped with the same `could not extend file` against this tablespace, this
+time during `WAL redo`. A checkpoint moves recovery's starting point past all of it.
 
 That worked because the dead rows were all there was. On a real server the full filesystem holds
 rows somebody needs, and the ways out are the ones that do not depend on luck:

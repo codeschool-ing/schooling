@@ -39,9 +39,8 @@ ana@db:~$ ls -lh shop.dump
 -rw-rw-r-- 1 ana ana 14M Oct 10 16:41 shop.dump
 ```
 
-The `orders` table and its indexes alone take 107 MB on `main`, and the whole dump is 14 MB. The rows
-compress well, and the indexes are not in it at all:
-a dump carries the `CREATE INDEX` statement and the restore builds the index again.
+The `orders` table and its indexes alone take about 107 MB on `main`, and the whole dump is 14 MB.
+The rows compress well, and the indexes are not in it at all: a dump carries the `CREATE INDEX` statement and the restore builds the index again.
 
 ## Roles first
 
@@ -68,8 +67,8 @@ sys	0m0.046s
 
 `-j 4` runs four jobs at once, loading tables and building indexes side by side; it works only with
 the custom and directory formats, which is another reason to use `-Fc`. On a real database the
-restore is the long half, and the index builds are most of it, so the number of jobs is worth
-rehearsing: up to the number of processors the server has.
+restore is usually the longer half, because it builds every index again, so the number of jobs is
+worth rehearsing: up to the number of processors the server has.
 
 ```
 ana@db:~$ psql -p 5434 shop

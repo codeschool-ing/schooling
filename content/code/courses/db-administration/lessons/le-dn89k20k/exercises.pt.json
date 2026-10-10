@@ -1,0 +1,493 @@
+{
+  "ex-381zg830": {
+    "prompt": "Você roda `CREATE EXTENSION pgcrypto;` conectado ao banco `ana`. Onde o `digest()` pode ser chamado agora?",
+    "hint": "Compare o que o \\dx mostrou no ana e no shop.",
+    "choices": [
+      {
+        "text": "Em todo banco do servidor, já que os arquivos são compartilhados",
+        "why": "Os arquivos são compartilhados; os objetos não. O \\dx do shop listou plpgsql e mais nada."
+      },
+      {
+        "text": "No ana e em todo banco criado daqui em diante",
+        "why": "Bancos novos copiam o template1, não o ana. Só uma extensão criada no template1 se espalha assim."
+      },
+      {
+        "text": "Só em sessões abertas depois de um restart",
+        "why": "O pgcrypto não é uma biblioteca pré-carregada. A biblioteca dele é carregada por um backend na primeira vez que uma função precisa dela."
+      },
+      {
+        "text": "No ana",
+        "why": "Isso. O script rodou dentro do ana, e os objetos que ele criou moram só nos catálogos do ana."
+      }
+    ]
+  },
+  "ex-12rv2vm9": {
+    "prompt": "O `apt` acabou de atualizar o pacote do PostgreSQL e substituiu todos os arquivos de `/usr/share/postgresql/16/extension`. O que mudou dentro dos bancos que têm pgcrypto instalado?",
+    "hint": "Qual metade de uma extensão é do apt?",
+    "choices": [
+      {
+        "text": "Os objetos foram reconstruídos a partir do script novo no próximo restart",
+        "why": "Um restart recarrega bibliotecas, nunca objetos SQL. Os scripts só rodam no CREATE ou no ALTER EXTENSION."
+      },
+      {
+        "text": "A extensão foi removida e precisa ser criada de novo",
+        "why": "Uma atualização de pacote nunca mexe nos catálogos de um banco; a extensão continua registrada lá."
+      },
+      {
+        "text": "installed_version agora é igual a default_version",
+        "why": "É o contrário: default_version andou com os arquivos, e installed_version ficou para trás."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso. Os objetos ficam como o CREATE EXTENSION os fez até alguém rodar ALTER EXTENSION … UPDATE."
+      }
+    ]
+  },
+  "ex-c47kxx9f": {
+    "prompt": "Um papel `clerk` tem CREATE no banco e não é superusuário. `CREATE EXTENSION pgcrypto` funciona para ele e `CREATE EXTENSION pageinspect` é recusado. O que decide a diferença?",
+    "hint": "Uma linha do arquivo de controle.",
+    "choices": [
+      {
+        "text": "`trusted = true` no arquivo de controle do pgcrypto",
+        "why": "Isso. Uma extensão confiável pode ser criada por qualquer papel com CREATE no banco; o pageinspect não é confiável."
+      },
+      {
+        "text": "O pgcrypto já estava instalado em outro banco",
+        "why": "Cada banco é separado; uma instalação em outro lugar não concede nada aqui."
+      },
+      {
+        "text": "O pageinspect precisa de shared_preload_libraries e de um restart antes",
+        "why": "O HINT disse \"Must be superuser to create this extension\". Foi uma recusa de permissão, não uma biblioteca faltando."
+      },
+      {
+        "text": "O pgcrypto não tem biblioteca compilada, então não traz risco",
+        "why": "Tem: o pgcrypto.so fica em /usr/lib/postgresql/16/lib. A confiança é declarada, não deduzida da ausência de C."
+      }
+    ]
+  },
+  "ex-3dyvadmd": {
+    "prompt": "Ligue cada arquivo ao que ele faz pelo pgcrypto.",
+    "hint": "Nome, objetos, atualização, código.",
+    "pairs": [
+      {
+        "left": "pgcrypto.control",
+        "right": "Diz a versão padrão, se é confiável e onde fica a biblioteca"
+      },
+      {
+        "left": "pgcrypto--1.3.sql",
+        "right": "Cria os objetos da versão 1.3"
+      },
+      {
+        "left": "pgcrypto--1.2--1.3.sql",
+        "right": "Leva uma 1.2 instalada para a 1.3"
+      },
+      {
+        "left": "pgcrypto.so",
+        "right": "Guarda o código compilado que as funções chamam"
+      }
+    ]
+  },
+  "ex-yt6xd3zr": {
+    "prompt": "Uma equipe quer o pg_trgm disponível em todo banco que a aplicação criar daqui em diante, sem ninguém precisar lembrar de um comando. O que faz isso?",
+    "hint": "De onde vem um banco novo?",
+    "choices": [
+      {
+        "text": "Pôr o pg_trgm em shared_preload_libraries",
+        "why": "Isso carrega uma biblioteca nos processos; não cria objeto nenhum em banco nenhum."
+      },
+      {
+        "text": "Criá-lo no banco postgres",
+        "why": "O postgres é um banco comum para se conectar. Bancos novos copiam o template1."
+      },
+      {
+        "text": "CREATE EXTENSION pg_trgm no template1",
+        "why": "Isso. Todo banco criado depois é uma cópia do template1 e traz a extensão; os que já existem ainda precisam dela à mão."
+      },
+      {
+        "text": "Instalar o pacote de novo com o apt",
+        "why": "Os arquivos já estão lá. Arquivos no disco não criam nada num banco."
+      }
+    ]
+  },
+  "ex-m8w96qwh": {
+    "prompt": "Depois de `CREATE EXTENSION pg_stat_statements`, consultar a view falha com \"must be loaded via shared_preload_libraries\". Por que o CREATE EXTENSION não basta?",
+    "hint": "Onde ele guarda as contagens, e quando isso é dimensionado?",
+    "choices": [
+      {
+        "text": "A extensão exige um superusuário para ler a view",
+        "why": "A ana é superusuária. O erro cita shared_preload_libraries, não um privilégio."
+      },
+      {
+        "text": "A view só se preenche depois do próximo ANALYZE",
+        "why": "O ANALYZE coleta estatísticas de tabela para o planejador. Não tem nada a ver com esta view."
+      },
+      {
+        "text": "Ele se pendura em todo backend e guarda contagens em memória compartilhada dimensionada na partida",
+        "why": "Isso. Isso só pode ser arranjado quando o servidor sobe, então a biblioteca precisa ser pré-carregada e o servidor reiniciado."
+      },
+      {
+        "text": "Um reload é necessário depois do CREATE EXTENSION",
+        "why": "O shared_preload_libraries tem contexto postmaster: um reload o marca como pending_restart e não muda nada."
+      }
+    ]
+  },
+  "ex-0am7vqad": {
+    "prompt": "`ALTER SYSTEM SET shared_preload_libraries = 'pg_stat_statement';` (com uma letra faltando) respondeu ALTER SYSTEM. O que aconteceu no restart, e como foi consertado?",
+    "hint": "O ALTER SYSTEM roda sem servidor?",
+    "choices": [
+      {
+        "text": "Ficou parado; o postgresql.auto.conf foi corrigido à mão",
+        "why": "Isso. Com o servidor parado não há com quem o ALTER SYSTEM conversar, então o arquivo que ele escreveu é editado direto."
+      },
+      {
+        "text": "O servidor pulou a biblioteca desconhecida e subiu com um aviso",
+        "why": "Ele não subiu: o log disse FATAL, could not access file \"pg_stat_statement\", e o pg_lsclusters disse down."
+      },
+      {
+        "text": "Ficou parado; um ALTER SYSTEM RESET consertou",
+        "why": "O ALTER SYSTEM precisa de um servidor rodando e de uma conexão. Toda conexão estava falhando."
+      },
+      {
+        "text": "O ALTER SYSTEM devia ter recusado o nome, então o restart foi normal",
+        "why": "O ALTER SYSTEM só confere que o valor é uma lista de nomes. Nada o lê até a próxima partida."
+      }
+    ]
+  },
+  "ex-1mqde0x6": {
+    "prompt": "A carga rodou `WHERE customer_id = :cid` com 200 clientes sorteados. Por que é uma linha no pg_stat_statements e não 200?",
+    "hint": "Veja como o texto da consulta aparece.",
+    "choices": [
+      {
+        "text": "Ele guarda só a primeira execução de cada texto de consulta",
+        "why": "O calls diz 200. Toda execução foi contada, numa linha só."
+      },
+      {
+        "text": "O pgbench manda um comando e repete o resultado",
+        "why": "Cada uma das 200 execuções chegou ao servidor e rodou; a coluna rows conta todas."
+      },
+      {
+        "text": "O pg_stat_statements.max é pequeno demais para 200 linhas",
+        "why": "Ele guarda 5000 comandos distintos por padrão; 200 caberiam com folga."
+      },
+      {
+        "text": "As constantes viram $1, então têm a mesma forma",
+        "why": "Isso. Os comandos são agrupados pela forma depois do parse, que é o que dá sentido aos totais."
+      }
+    ]
+  },
+  "ex-k4xwfft6": {
+    "prompt": "O comando A roda 10 vezes por dia, 2 s cada. O comando B roda 2 milhões de vezes por dia, 1 ms cada. Qual lidera o pg_stat_statements ordenado por total_exec_time, e o que essa ordem diz?",
+    "hint": "Multiplique primeiro.",
+    "choices": [
+      {
+        "text": "A: é o mais lento, então melhorá-lo ajuda mais o servidor",
+        "why": "A soma 20 s por dia. A chamada mais lenta é o que mean_exec_time ordena, não o total."
+      },
+      {
+        "text": "Nenhum; comandos rápidos ficam fora da view",
+        "why": "Todo comando é contado, por mais rápido que seja. A busca de cliente em fração de milissegundo estava lá."
+      },
+      {
+        "text": "B, com 2000 s; é onde uma melhoria mais poupa tempo do servidor",
+        "why": "Isso. Total é chamadas vezes média: 2.000.000 × 1 ms ganha de 10 × 2 s por cem a um."
+      },
+      {
+        "text": "A, porque o pg_stat_statements pondera cada chamada pela duração",
+        "why": "Não há ponderação além da soma: total_exec_time é a soma simples do tempo de cada chamada."
+      }
+    ]
+  },
+  "ex-qp5kg099": {
+    "prompt": "Por que `encode(digest(password, 'sha256'), 'hex')` é um jeito ruim de guardar senhas?",
+    "hint": "Rode duas vezes numa senha, e cronometre cem mil.",
+    "choices": [
+      {
+        "text": "Mesma senha, mesmo hash, e é muito rápido de calcular",
+        "why": "Isso. Senhas iguais aparecem como valores iguais, e uma cópia da tabela pode ser testada a centenas de milhares de palpites por segundo."
+      },
+      {
+        "text": "O SHA-256 pode ser decifrado com a chave certa",
+        "why": "Um hash não tem chave e não pode ser desfeito. A fraqueza está em outro lugar."
+      },
+      {
+        "text": "A saída é longa demais para uma coluna text",
+        "why": "64 caracteres hexadecimais cabem em text sem problema."
+      },
+      {
+        "text": "O digest só está disponível para superusuários",
+        "why": "O pgcrypto é confiável, e as suas funções podem ser chamadas por papéis comuns."
+      }
+    ]
+  },
+  "ex-0cd5dewg": {
+    "prompt": "No login, a senha digitada é conferida com `password_hash = crypt(typed, ___)`, porque o valor guardado carrega o próprio salt e o custo.",
+    "hint": "O segundo argumento do crypt é onde ele acha o salt.",
+    "blanks": [
+      {
+        "accept": [
+          "password_hash"
+        ]
+      }
+    ]
+  },
+  "ex-4t91mjek": {
+    "prompt": "Um hash bcrypt feito com `gen_salt('bf', 12)` custa quantas vezes o trabalho de um feito com o padrão, custo 6?",
+    "hint": "Cada passo acima dobra o trabalho."
+  },
+  "ex-z2mfmr07": {
+    "prompt": "Uma aplicação insere usuários com `crypt('…', gen_salt('bf'))` no SQL. Um DBA liga `log_statement = 'all'` por uma tarde. O que está agora no log do servidor?",
+    "hint": "O que viaja até o servidor dentro do comando?",
+    "choices": [
+      {
+        "text": "Só os valores bcrypt, já que o hash acontece antes do log",
+        "why": "O comando é registrado como chegou, com o literal dentro; o hash acontece quando ele executa."
+      },
+      {
+        "text": "Nada, porque comandos com crypt nunca são registrados",
+        "why": "Não existe essa exceção. log_statement = 'all' quer dizer todo comando."
+      },
+      {
+        "text": "Só o salt, que é inofensivo",
+        "why": "O gen_salt é chamado dentro do comando; o que o log guarda é o texto do comando, senha incluída."
+      },
+      {
+        "text": "A senha de cada usuário novo, em texto puro",
+        "why": "Isso. A senha é um literal no comando, e o log_statement escreve o comando inteiro. Calcular o hash na aplicação evita isso."
+      }
+    ]
+  },
+  "ex-qsjkmdcw": {
+    "prompt": "Por que o nome do pacote do PostGIS, `postgresql-16-postgis-3`, carrega a versão maior do servidor?",
+    "hint": "Os diretórios de qual servidor ele preenche?",
+    "choices": [
+      {
+        "text": "Ele é compilado para essa versão maior e instala nos diretórios dela",
+        "why": "Isso. Ele serve o 16 e mais nada; um servidor 17 precisa do postgresql-17-postgis-3."
+      },
+      {
+        "text": "O PostGIS é um módulo contrib lançado com cada versão",
+        "why": "Ele é um projeto separado com lançamentos próprios, e por isso não estava no pg_available_extensions até ser instalado."
+      },
+      {
+        "text": "O número é a versão mínima, e ele roda em qualquer posterior",
+        "why": "Uma biblioteca compilada para o 16 não é carregada pelo 17; cada versão maior tem o seu pacote."
+      },
+      {
+        "text": "Ele nomeia o cluster, 16/main, em que será criado",
+        "why": "Um pacote não cria nada em cluster nenhum. Quem faz isso é o CREATE EXTENSION, por banco."
+      }
+    ]
+  },
+  "ex-pq5casaw": {
+    "prompt": "O `ST_Distance` entre São Paulo e Rio respondeu 3.52 com `geometry` e 361 km com `geography`. O que 3.52 mede?",
+    "hint": "O geometry trata as coordenadas como um plano.",
+    "choices": [
+      {
+        "text": "Centenas de quilômetros",
+        "why": "Isso daria 352 km, e a distância real é 361. A unidade nem é uma distância no chão."
+      },
+      {
+        "text": "Milhas, porque o geometry usa unidades imperiais",
+        "why": "Nenhuma unidade de comprimento está envolvida. 361 km dão cerca de 224 milhas, longe de 3.52."
+      },
+      {
+        "text": "Metros, com os pontos trocados por engano",
+        "why": "As duas consultas usaram os mesmos pontos na mesma ordem. Foi o tipo, e não a entrada, que mudou a resposta."
+      },
+      {
+        "text": "Graus num desenho plano do mapa",
+        "why": "Isso. O geometry toma longitude e latitude como x e y, então a reta entre eles sai em graus."
+      }
+    ]
+  },
+  "ex-yvn6zgqf": {
+    "prompt": "Um desenvolvedor insere Lisboa como `'POINT(38.7223 -9.1393)'`. O que acontece?",
+    "hint": "Qual número vem primeiro num ponto do PostGIS?",
+    "choices": [
+      {
+        "text": "O PostGIS recusa porque a latitude deve vir primeiro",
+        "why": "A longitude vem primeiro, e os dois valores são coordenadas válidas, então nada é recusado."
+      },
+      {
+        "text": "O PostGIS detecta a ordem e troca de volta",
+        "why": "Ele não tem como saber o que se quis: 38,7 leste, 9,1 sul é um lugar real."
+      },
+      {
+        "text": "É gravado sem erro, longe de Lisboa",
+        "why": "Isso. O texto é lido como longitude 38,7, latitude -9,1, um ponto perto da costa leste da África, e toda distância a partir dele sai errada."
+      },
+      {
+        "text": "Funciona, já que o geography ignora a ordem",
+        "why": "A ordem é todo o significado: o primeiro número é sempre x, a longitude."
+      }
+    ]
+  },
+  "ex-pyp195g7": {
+    "prompt": "O pg_trgm mostra `default_version` 1.6 e `installed_version` 1.5 num banco. O que o leva para a 1.6?",
+    "hint": "O script de atualização já está no disco.",
+    "choices": [
+      {
+        "text": "Reiniciar o servidor para carregar os arquivos novos",
+        "why": "Um restart recarrega bibliotecas. Os objetos SQL ficam na 1.5 até rodar uma atualização."
+      },
+      {
+        "text": "sudo apt install --reinstall postgresql-16",
+        "why": "Os arquivos já dizem 1.6; é o que o default_version informa. Quem está atrasado é o banco."
+      },
+      {
+        "text": "ALTER EXTENSION pg_trgm UPDATE",
+        "why": "Isso. Ele roda o pg_trgm--1.5--1.6.sql dentro daquele banco."
+      },
+      {
+        "text": "Nada; ele se atualiza no próximo autovacuum",
+        "why": "O autovacuum limpa tabelas. Nada atualiza uma extensão sozinho."
+      }
+    ]
+  },
+  "ex-2bgkww8h": {
+    "prompt": "O dump do `ana` tinha 112 linhas, embora o PostGIS sozinho tivesse criado 893 objetos. O que isso significa para o servidor que o restaura?",
+    "hint": "O que o grep achou no dump?",
+    "choices": [
+      {
+        "text": "Não precisa de nada a mais, já que o dump é autossuficiente",
+        "why": "Os 893 objetos não estão nele. Sem os arquivos da extensão, a linha CREATE EXTENSION falha."
+      },
+      {
+        "text": "Precisa restaurar com --schema-only antes",
+        "why": "A opção muda o que vai no dump, não o que o destino precisa. A peça que falta é o pacote."
+      },
+      {
+        "text": "Precisa já ter o pacote do PostGIS instalado",
+        "why": "Isso. O dump diz CREATE EXTENSION IF NOT EXISTS postgis, e essa linha precisa dos arquivos no servidor novo."
+      },
+      {
+        "text": "O dump perdeu os objetos do PostGIS de vez",
+        "why": "Nada se perdeu: uma linha recria os 893 a partir do script da extensão, desde que os arquivos estejam lá."
+      }
+    ]
+  },
+  "ex-9dbnpwvw": {
+    "prompt": "Ponha em ordem os passos para levar um banco com PostGIS por um upgrade maior, do 16 para o 17.",
+    "hint": "O inventário vem primeiro, a atualização dos objetos por último.",
+    "items": [
+      "Rodar \\dx em cada banco e listar as extensões",
+      "Instalar o postgresql-17-postgis-3 ao lado do servidor novo",
+      "Fazer o upgrade em si",
+      "Rodar ALTER EXTENSION … UPDATE onde a instalada e a padrão diferem"
+    ],
+    "trap": "Instalar o pacote depois do upgrade deixa o servidor novo incapaz de criar a extensão que o dump ou o upgrade pede."
+  },
+  "ex-r25qeh0w": {
+    "prompt": "Num serviço gerenciado onde você nunca é superusuário, qual destes você pode esperar instalar sozinho, tendo CREATE no seu banco?",
+    "hint": "Pense na linha trusted, e no que precisa de mais que um banco.",
+    "choices": [
+      {
+        "text": "pgcrypto",
+        "why": "Isso. Ele é confiável, então CREATE no banco basta, como o clerk tinha."
+      },
+      {
+        "text": "pageinspect, para ler páginas cruas",
+        "why": "Ele não é confiável: o laboratório o recusou ao clerk com \"Must be superuser\"."
+      },
+      {
+        "text": "pg_stat_statements, criado e depois ligado com ALTER SYSTEM",
+        "why": "O ALTER SYSTEM e o restart são do provedor; pré-carregar é um ajuste do servidor que não está com você."
+      },
+      {
+        "text": "Qualquer extensão, depois de instalar o pacote com apt",
+        "why": "Não há shell num servidor gerenciado, então não há apt; você escolhe entre os arquivos que o provedor instalou."
+      }
+    ]
+  },
+  "ex-sx2v91v3": {
+    "prompt": "Um colega quer o pg_stat_statements em produção e planeja `ALTER SYSTEM SET shared_preload_libraries = 'pg_stat_statements'` seguido de um restart às 2 da manhã. Que verificação custa um segundo e evita o pior resultado?",
+    "hint": "O que fez o servidor do laboratório ficar parado?",
+    "choices": [
+      {
+        "text": "Rodar SELECT pg_reload_conf() e ver se devolve true",
+        "why": "O reload devolve true qualquer que seja o valor; ele não lê o que só a partida lê."
+      },
+      {
+        "text": "Consultar o pg_stat_statements antes para ver se está vazio",
+        "why": "Antes de pré-carregar, essa consulta dá erro qualquer que seja a grafia no ajuste."
+      },
+      {
+        "text": "Rodar CREATE EXTENSION no template1 para o restart pegar",
+        "why": "O CREATE EXTENSION não mexe no shared_preload_libraries, e o restart não lê o template1."
+      },
+      {
+        "text": "Conferir que o pg_stat_statements.so existe no diretório de bibliotecas",
+        "why": "Isso. Um nome sem biblioteca correspondente para o servidor na partida, e um ls no arquivo pega o erro de digitação antes."
+      }
+    ]
+  },
+  "ex-qx4ymg2f": {
+    "prompt": "Quais destes mudam só arquivos no disco e nada dentro de banco nenhum? Marque todos que se aplicam.",
+    "hint": "Separe a metade do pacote da metade do banco.",
+    "choices": [
+      {
+        "text": "sudo apt install -y postgresql-16-postgis-3",
+        "why": "Sim. Ele põe arquivos de controle, scripts e bibliotecas no lugar; nenhum banco tem PostGIS até o CREATE EXTENSION."
+      },
+      {
+        "text": "CREATE EXTENSION pgcrypto",
+        "why": "Isso roda um script dentro do banco atual e cria objetos lá."
+      },
+      {
+        "text": "Um apt upgrade do postgresql-16 que traz um novo padrão de pg_trgm",
+        "why": "Sim. O default_version anda; o installed_version fica onde estava em todo banco."
+      },
+      {
+        "text": "ALTER EXTENSION pg_trgm UPDATE",
+        "why": "Isso roda o script de atualização dentro do banco e muda os seus objetos."
+      }
+    ]
+  },
+  "ex-x5c57sz7": {
+    "prompt": "Um serviço novo precisa de chaves primárias UUID aleatórias e de mais nada do pgcrypto. Qual é a configuração mais enxuta no PostgreSQL 16?",
+    "hint": "Onde o \\df achou o gen_random_uuid?",
+    "choices": [
+      {
+        "text": "CREATE EXTENSION pgcrypto no banco do serviço",
+        "why": "Isso era necessário antes do 13. Agora acrescenta uma extensão a carregar por upgrades sem ganho."
+      },
+      {
+        "text": "CREATE EXTENSION \"uuid-ossp\" em vez do pgcrypto",
+        "why": "Outra extensão para o mesmo serviço; o servidor já tem a função."
+      },
+      {
+        "text": "Gerar UUIDs com digest(random()::text, 'md5')",
+        "why": "Isso é um hash de um número aleatório fraco moldado à mão, e ainda precisa do pgcrypto."
+      },
+      {
+        "text": "Nenhuma extensão: o gen_random_uuid() é nativo",
+        "why": "Isso. Ele mora no pg_catalog desde o PostgreSQL 13, e o shop, sem pgcrypto, o chamou."
+      }
+    ]
+  },
+  "ex-8sa3wbt1": {
+    "prompt": "Ligue cada extensão ao motivo pelo qual um DBA a instalaria.",
+    "hint": "Estatística, senhas, lugares, texto.",
+    "pairs": [
+      {
+        "left": "pg_stat_statements",
+        "right": "Descobrir quais comandos tomam o tempo do servidor"
+      },
+      {
+        "left": "pgcrypto",
+        "right": "Guardar uma senha como um hash bcrypt com salt"
+      },
+      {
+        "left": "postgis",
+        "right": "Distâncias entre pontos na Terra"
+      },
+      {
+        "left": "pg_trgm",
+        "right": "Semelhança entre trechos de texto"
+      }
+    ],
+    "right_distractors": [
+      "Ler páginas cruas do disco"
+    ]
+  }
+}
