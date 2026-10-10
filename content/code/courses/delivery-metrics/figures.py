@@ -1430,6 +1430,45 @@ def l14_phases(lang):
                 'as lojas viveram as duas.')
 
 
+# ------------------------------------------------------------------ lesson 15
+
+@figure('l15-factors', 15)
+def l15_factors(lang):
+    f = Fig('l15-factors', 680, 300, T(
+        lang,
+        'The incident of 30 September in the centre, with six contributing factors around it, '
+        'each joined to it by a line: a retry with no idempotency key; tests with no slow '
+        'provider; a review that did not ask about retries; a release on the busiest afternoon of '
+        'the month; no alert on duplicate charges; and a release to every shop at once. Each is '
+        'labelled with what fixing it would do: prevent, detect or limit.',
+        'O incidente de 30 de setembro no centro, com seis fatores contribuintes em volta, cada '
+        'um ligado a ele por uma linha: um retry sem chave de idempotência; testes sem provedor '
+        'lento; uma revisão que não perguntou sobre retries; um release na tarde mais movimentada '
+        'do mês; nenhum alerta de cobrança duplicada; e um release para todas as lojas de uma vez. '
+        'Cada um traz o que consertá-lo faria: prevenir, detectar ou limitar.'))
+    f.rect(250, 125, 180, 50, stroke='--amber', fill='--panel', width=1.8)
+    f.text(340, 143, T(lang, 'shops charged twice', 'lojas cobradas em dobro'), size=11, weight='600')
+    f.text(340, 161, T(lang, '30 September, 54 minutes', '30 de setembro, 54 minutos'), size=9.5, fill='--paper-dim')
+    factors = T(lang, [('retry with no idempotency key', 'prevent'), ('tests had no slow provider', 'prevent'),
+                       ('review did not ask about retries', 'prevent'), ('released on the month-end afternoon', 'prevent'),
+                       ('no alert on duplicate charges', 'detect'), ('released to every shop at once', 'limit')],
+                [('retry sem chave de idempotência', 'prevenir'), ('testes sem provedor lento', 'prevenir'),
+                 ('revisão não perguntou de retries', 'prevenir'), ('release na tarde do fim do mês', 'prevenir'),
+                 ('nenhum alerta de cobrança duplicada', 'detectar'), ('release para todas as lojas de uma vez', 'limitar')])
+    spots = [(20, 20), (20, 125), (20, 230), (460, 20), (460, 125), (460, 230)]
+    for (text, kind), (x, y) in zip(factors, spots):
+        f.rect(x, y, 200, 50, stroke='--phosphor', fill='--panel', width=1.2)
+        f.text(x + 100, y + 19, text, size=9.5)
+        f.text(x + 100, y + 36, kind, size=9, fill='--paper-dim', italic=True)
+        cx = x + 200 if x < 300 else x
+        f.line(cx, y + 25, 250 if x < 300 else 430, 150, stroke='--paper-dim', width=1)
+    return f, T(lang,
+                'Six threads, any one of which, changed, would have prevented the incident or made '
+                'it much smaller. A root cause is one of them chosen afterwards.',
+                'Seis fios, e mudar qualquer um teria evitado o incidente ou o deixado bem menor. Uma '
+                'causa raiz é um deles escolhido depois.')
+
+
 # @@LESSONS@@
 
 if __name__ == '__main__':
