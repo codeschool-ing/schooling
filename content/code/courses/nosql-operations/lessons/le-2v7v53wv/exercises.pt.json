@@ -1,0 +1,427 @@
+{
+  "ex-d5r8b4kq": {
+    "prompt": "Por que um replica set tem três membros em vez de dois?",
+    "choices": [
+      {
+        "text": "Para que quaisquer dois formem uma maioria que ainda consegue decidir",
+        "why": "Isso. Com dois, um membro que perde o parceiro não distingue queda de cabo cortado, e um de dois não é maioria."
+      },
+      {
+        "text": "Para espalhar as leituras por três máquinas",
+        "why": "As leituras vão ao primário por padrão; o número três tem a ver com decidir, não com carga."
+      },
+      {
+        "text": "Porque cada membro guarda um terço dos dados",
+        "why": "Todo membro guarda tudo. Dividir os dados é sharding, aula 10."
+      },
+      {
+        "text": "Porque o MongoDB se recusa a iniciar um conjunto de dois membros",
+        "why": "Ele permite; só não sobrevive à perda de nenhum dos dois."
+      }
+    ]
+  },
+  "ex-4v9q491w": {
+    "prompt": "Os três contêineres foram iniciados com `--bind_ip_all`. O que aconteceria sem isso?",
+    "choices": [
+      {
+        "text": "Cada `mongod` escutaria só em `127.0.0.1`, e os outros membros não o alcançariam",
+        "why": "Isso. Escutar só no localhost é o padrão, e um replica set conversa pela rede."
+      },
+      {
+        "text": "Os contêineres ficariam acessíveis pela internet, através do próprio endereço da VM",
+        "why": "A opção amplia onde o mongod escuta dentro do contêiner; nenhuma porta é publicada em caso algum."
+      },
+      {
+        "text": "Os nomes dos membros seriam ids de contêiner",
+        "why": "Isso é o que o `--hostname` evita."
+      },
+      {
+        "text": "O `rs.initiate` escolheria o primário ao acaso em vez de fazer uma eleição",
+        "why": "A eleição acontece de qualquer forma; esta opção trata de quem consegue conectar."
+      }
+    ]
+  },
+  "ex-2aagxw2e": {
+    "prompt": "Logo depois do `rs.initiate`, o prompt do `mongo1` dizia `rs0 [direct: secondary]`. Pouco depois dizia `primary`. O que aconteceu no meio?",
+    "choices": [
+      {
+        "text": "Todo membro começa secundário; o `mongo1` venceu a primeira eleição",
+        "why": "Isso. Ninguém é primário por ser citado primeiro; o conjunto elege um."
+      },
+      {
+        "text": "O `mongo1` copiou os dados dos outros dois antes de poder liderar",
+        "why": "Ainda não havia dados, e um primário não nasce de uma cópia."
+      },
+      {
+        "text": "O `mongosh` se reconectou em silêncio a outro contêiner do conjunto",
+        "why": "`direct:` quer dizer que a sessão ficou no `mongo1` o tempo todo."
+      },
+      {
+        "text": "O prompt estava errado no início e se corrigiu",
+        "why": "Ele estava certo nas duas vezes: o estado do membro mudou."
+      }
+    ]
+  },
+  "ex-8dg1r3ac": {
+    "prompt": "O que um secundário copia do primário?",
+    "choices": [
+      {
+        "text": "Os arquivos de dados, a cada poucos segundos",
+        "why": "Esse é o palpite óbvio, e está errado: arquivos não são enviados."
+      },
+      {
+        "text": "As entradas do oplog, aplicadas em ordem",
+        "why": "Isso: `local.oplog.rs`, uma entrada por mudança."
+      },
+      {
+        "text": "As consultas que os clientes mandaram, que ele executa de novo",
+        "why": "Ele copia as mudanças que as consultas fizeram, não as consultas."
+      },
+      {
+        "text": "Só os documentos que os clientes leem dele",
+        "why": "Um secundário copia toda mudança, alguém a leia ou não."
+      }
+    ]
+  },
+  "ex-h27gzdns": {
+    "prompt": "Com os dois secundários congelados, um insert com `w: \"majority\", wtimeout: 3000` falhou com `WriteConcernFailed`. O que o `countDocuments()` mostrou em seguida, e por quê?",
+    "hint": "Um erro de write concern desfaz a escrita?",
+    "choices": [
+      {
+        "text": "O documento foi contado: o erro trata da confirmação, não da escrita",
+        "why": "Isso. Três produtos, o monitor entre eles. A escrita ficou no primário sem promessa nenhuma."
+      },
+      {
+        "text": "Não foi contado, porque uma escrita que falha é desfeita na hora",
+        "why": "Nada é desfeito por um erro de write concern; é isso que torna perigosa uma repetição às cegas."
+      },
+      {
+        "text": "Foi contado duas vezes, uma por tentativa",
+        "why": "Houve uma tentativa; o shell não repetiu."
+      },
+      {
+        "text": "A contagem também falhou, já que os secundários estavam travados",
+        "why": "Leituras no primário não são afetadas por travas nos secundários."
+      }
+    ]
+  },
+  "ex-yrhtfj0b": {
+    "prompt": "Ninguém definiu um write concern no replica set do laboratório. Pelo que espera um `insertOne` simples?",
+    "choices": [
+      {
+        "text": "Só o primário",
+        "why": "Esse era o padrão antes do MongoDB 5.0. A captura mostra `majority`."
+      },
+      {
+        "text": "A maioria dos membros, sem limite de tempo",
+        "why": "Isso: `{ w: 'majority', wtimeout: 0 }`, origem `implicit`."
+      },
+      {
+        "text": "Os três membros, por no máximo três segundos a cada vez",
+        "why": "Três segundos foi o `wtimeout` que a aula escolheu para um insert; o padrão espera a maioria sem limite."
+      },
+      {
+        "text": "Nada: um write concern não definido não é confirmado",
+        "why": "Escritas sem confirmação exigem `w: 0`, pedido explicitamente."
+      }
+    ]
+  },
+  "ex-scntjdm0": {
+    "prompt": "O oplog é uma coleção ___: tem tamanho fixo, e as entradas mais antigas são sobrescritas conforme chegam novas.",
+    "hint": "Uma palavra, o nome em inglês para esse tipo de coleção.",
+    "blanks": [
+      {
+        "accept": [
+          "capped",
+          "limitada"
+        ]
+      }
+    ]
+  },
+  "ex-6yf36gq7": {
+    "prompt": "Na captura, o `mongo2` foi morto às 07:55:23.101 e o `mongo3` foi eleito às 07:55:31.752. Por quantos segundos não houve primário? Responda com duas casas decimais.",
+    "unit": "s"
+  },
+  "ex-rr948mpy": {
+    "prompt": "Um `docker stop` planejado do primário produziu um novo primário em milissegundos; o `docker kill` levou uns nove segundos. O que explica a diferença?",
+    "choices": [
+      {
+        "text": "Um primário que para passa o cargo na hora; um morto fica mudo, e os outros esperam o timeout",
+        "why": "Isso: `stepUpRequestSkipDryRun` contra `electionTimeout`."
+      },
+      {
+        "text": "O `docker kill` também danificou os arquivos de dados, e os secundários que sobraram tiveram de verificá-los antes de eleger alguém",
+        "why": "Os secundários nunca leem os arquivos do membro morto; só percebem o silêncio dele."
+      },
+      {
+        "text": "Um contêiner morto demora mais para liberar o nome na rede",
+        "why": "Nomes não têm nada a ver; o atraso é um timeout que os membros esperam passar."
+      },
+      {
+        "text": "Não houve diferença no servidor; o shell foi mais lento da segunda vez",
+        "why": "Os horários vêm dos próprios servidores."
+      }
+    ]
+  },
+  "ex-bdgf6pjs": {
+    "prompt": "Uma equipe baixa o `electionTimeoutMillis` de dez segundos para um, para acelerar o failover. Que falha nova ela convida?",
+    "hint": "O que mais, além de uma queda, deixa heartbeats sem resposta por um segundo?",
+    "choices": [
+      {
+        "text": "Escritas com `w: 1` deixam de ser confirmadas",
+        "why": "O write concern não é afetado pelo timeout."
+      },
+      {
+        "text": "Eleições de que ninguém precisava, toda vez que a rede trava por pouco tempo",
+        "why": "Isso. Uma pausa curta parece uma queda, e cada eleição desnecessária é um momento próprio sem primário."
+      },
+      {
+        "text": "Os secundários não conseguem mais ler o oplog",
+        "why": "A replicação não depende do timeout de eleição."
+      },
+      {
+        "text": "Um primário que caiu volta como primário, já que o mandato dele não venceu",
+        "why": "Um membro que volta sempre se junta atrás do mandato do primário atual."
+      }
+    ]
+  },
+  "ex-ptb0s6dz": {
+    "prompt": "Quando o `mongo2` morto foi iniciado de novo, em que estado ele voltou?",
+    "choices": [
+      {
+        "text": "Primário de novo, porque era primário antes de morrer",
+        "why": "Nada na configuração o prefere, e o conjunto já tinha um primário."
+      },
+      {
+        "text": "Secundário, alcançando os outros pelo oplog do novo primário",
+        "why": "Isso. O `mongo3` continuou primário."
+      },
+      {
+        "text": "Removido do conjunto até alguém adicioná-lo de novo",
+        "why": "Ele continua na configuração; só volta a participar."
+      },
+      {
+        "text": "Inalcançável, até o conjunto inteiro ser reiniciado junto",
+        "why": "O `rs.status()` o mostrou saudável assim que subiu."
+      }
+    ]
+  },
+  "ex-b0a8jk2f": {
+    "prompt": "Associe cada preferência de leitura ao destino de uma leitura.",
+    "hint": "Uma descrição não serve a nenhuma.",
+    "pairs": [
+      {
+        "left": "primary",
+        "right": "o primário, e um erro quando não há nenhum"
+      },
+      {
+        "left": "secondaryPreferred",
+        "right": "um secundário, e o primário só quando nenhum secundário responde"
+      },
+      {
+        "left": "nearest",
+        "right": "quem responder mais rápido, primário ou não"
+      },
+      {
+        "left": "primaryPreferred",
+        "right": "o primário, e um secundário só enquanto não houver primário"
+      }
+    ],
+    "right_distractors": [
+      "todos os membros ao mesmo tempo, juntando as respostas"
+    ]
+  },
+  "ex-tydd0sad": {
+    "prompt": "Com os dois secundários congelados, o primário devolveu 329.90 e uma leitura com `readPref(\"secondary\")` devolveu 349.90. O que avisou o cliente de que a segunda resposta era velha?",
+    "choices": [
+      {
+        "text": "Um aviso impresso embaixo do resultado",
+        "why": "Nenhum aviso apareceu; as duas leituras deram certo em silêncio."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso. Uma leitura desatualizada tem a mesma cara de uma atual; tolerá-la é trabalho da aplicação, aula 5."
+      },
+      {
+        "text": "Um erro, porque o secundário estava travado",
+        "why": "O `fsyncLock` bloqueia escritas no membro, não leituras."
+      },
+      {
+        "text": "O prompt mudou para `[secondary]` naquela linha",
+        "why": "A sessão continuou conectada ao conjunto; o prompt ainda dizia `primary`."
+      }
+    ]
+  },
+  "ex-a7ben2g3": {
+    "prompt": "No primário, com os dois secundários congelados, `readConcern(\"majority\")` devolveu o preço antigo enquanto `\"local\"` devolveu o novo. O que isso diz sobre `\"majority\"`?",
+    "choices": [
+      {
+        "text": "Ela tem defeito no primário e foi feita para secundários",
+        "why": "Ela fez exatamente o que promete, no primário."
+      },
+      {
+        "text": "Ela devolve o valor mais novo que qualquer membro tenha",
+        "why": "Isso é quase o contrário: o valor mais novo estava num membro só."
+      },
+      {
+        "text": "Ela compra durabilidade, não atualidade: nunca devolve um valor que ainda possa ser desfeito",
+        "why": "Isso. O preço novo estava em um membro de três, então ainda podia sumir."
+      },
+      {
+        "text": "Ela espera até todos os membros terem a última escrita",
+        "why": "Ela não esperou nada; respondeu com o valor confirmado pela maioria."
+      }
+    ]
+  },
+  "ex-b9cesz3h": {
+    "prompt": "O que muda quando o `mongosh` recebe `mongodb://mongo1,mongo2,mongo3/shop?replicaSet=rs0` em vez de rodar `direct` num contêiner?",
+    "choices": [
+      {
+        "text": "Acha o primário sozinho e encaminha cada leitura pela preferência",
+        "why": "Isso: ele se comporta como um driver, e o prompt perde o `direct`."
+      },
+      {
+        "text": "Escreve nos três membros ao mesmo tempo",
+        "why": "As escritas continuam indo só ao primário."
+      },
+      {
+        "text": "Lê dos três membros e devolve o que a maioria deles responder, seja o que for",
+        "why": "Uma leitura vai a um membro; o read concern, e não a conexão, decide o quanto ela precisa estar assentada."
+      },
+      {
+        "text": "Nada, a não ser uma linha de comando mais longa",
+        "why": "A conexão ao conjunto é o que permite às leituras seguirem uma preferência de leitura."
+      }
+    ]
+  },
+  "ex-h65jgha7": {
+    "prompt": "Quinze segundos depois de o `mongo3` ser desconectado, ele se dizia `SECONDARY` e recusou uma escrita. Quem mandou que ele renunciasse?",
+    "choices": [
+      {
+        "text": "O novo primário, que lhe mandou pela rede uma mensagem mandando renunciar",
+        "why": "A rede era justamente o que ele tinha perdido; nenhuma mensagem chegava a ele."
+      },
+      {
+        "text": "O driver, depois que a escrita falhou",
+        "why": "A escrita falhou porque ele já tinha renunciado."
+      },
+      {
+        "text": "Ninguém: viu que não alcançava maioria e renunciou sozinho",
+        "why": "Isso. O único membro que ele alcançava era ele mesmo, um de três."
+      },
+      {
+        "text": "O Docker, quando o contêiner saiu da rede",
+        "why": "O Docker não sabe nada de replica sets; a decisão foi do mongod."
+      }
+    ]
+  },
+  "ex-6gjkcfjx": {
+    "prompt": "O pedido da Ana foi inserido no `mongo3` isolado com `w: 1` e confirmado. Qual configuração teria transformado o pedido sumido num erro visível para ela?",
+    "hint": "Quais escritas sobrevivem a um rollback?",
+    "choices": [
+      {
+        "text": "`readConcern: \"majority\"` no insert",
+        "why": "O read concern governa leituras; a escrita ainda teria sido confirmada por um membro."
+      },
+      {
+        "text": "O write concern padrão, `w: \"majority\"`",
+        "why": "Isso. Dois membros não podiam ser alcançados, então o insert teria esperado e falhado quando o `mongo3` renunciou."
+      },
+      {
+        "text": "Uma preferência de leitura `nearest` na aplicação",
+        "why": "A preferência de leitura nunca afeta para onde vai uma escrita."
+      },
+      {
+        "text": "Um timeout de eleição menor nos três membros",
+        "why": "Um timeout menor estreita a janela; qualquer escrita `w: 1` dentro dela ainda pode ser desfeita."
+      }
+    ]
+  },
+  "ex-v4fj7cvb": {
+    "prompt": "Depois que a rede foi restaurada, onde estava o pedido da Ana?",
+    "choices": [
+      {
+        "text": "Na coleção, junto com o do Bruno",
+        "why": "Só o do Bruno estava lá; o MongoDB não junta duas histórias."
+      },
+      {
+        "text": "Em lugar nenhum: um rollback apaga de vez tudo o que desfaz",
+        "why": "Ele é guardado, e por isso o `bsondump` conseguiu mostrá-lo."
+      },
+      {
+        "text": "Num arquivo BSON em `/data/db/rollback` no `mongo3`",
+        "why": "Isso, e nada o aplica de novo a não ser uma pessoa."
+      },
+      {
+        "text": "No oplog do `mongo2`, esperando para ser reaplicado quando o conjunto reiniciar",
+        "why": "O `mongo2` nunca o recebeu; ele só existia do lado perdedor."
+      }
+    ]
+  },
+  "ex-gdph7nd3": {
+    "prompt": "Ponha em ordem a partição do laboratório, do corte ao rollback.",
+    "items": [
+      "O `mongo3` é desconectado enquanto é primário",
+      "O `mongo3` confirma o pedido da Ana com `w: 1`",
+      "O `mongo3` perde os heartbeats e renuncia",
+      "O `mongo2` é eleito e recebe o pedido do Bruno",
+      "O `mongo3` é reconectado e desfaz o pedido da Ana"
+    ],
+    "trap": "A renúncia de um lado e a eleição do outro esperam o mesmo silêncio."
+  },
+  "ex-5g7smfqc": {
+    "prompt": "Quais destas valem para o conjunto de três membros desta aula? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Uma escrita confirmada pela maioria sobrevive à perda de qualquer membro",
+        "why": "Isso: qualquer primário futuro precisa de maioria, e qualquer maioria a tem."
+      },
+      {
+        "text": "Um membro isolado dos outros dois continua aceitando escritas até ser reconectado",
+        "why": "Ele renunciou em segundos e recusou com `not primary`."
+      },
+      {
+        "text": "Uma leitura num secundário pode devolver um valor mais antigo que o do primário",
+        "why": "Isso: 349.90 contra 329.90."
+      },
+      {
+        "text": "O membro iniciado primeiro é sempre o primário",
+        "why": "O primário mudou duas vezes nesta aula; o conjunto o elege."
+      }
+    ]
+  },
+  "ex-4qs9s2kx": {
+    "prompt": "Um membro que gravou operações que o novo primário nunca recebeu as desfaz quando volta. Isso se chama ___.",
+    "hint": "O diretório `/data/db/` guarda uma pasta com esse nome.",
+    "blanks": [
+      {
+        "accept": [
+          "rollback",
+          "roll back",
+          "roll-back"
+        ]
+      }
+    ]
+  },
+  "ex-f8rm0c4z": {
+    "prompt": "Uma aplicação lê a cesta de um cliente logo depois de ele adicionar um item, e precisa ver esse item. Qual configuração serve?",
+    "choices": [
+      {
+        "text": "`readPref(\"secondary\")`, para tirar carga do primário",
+        "why": "Um secundário ainda pode estar atrás da escrita que acabou de ser confirmada."
+      },
+      {
+        "text": "`readPref(\"nearest\")`, já que o membro mais perto responde mais rápido",
+        "why": "O membro mais perto pode ser um secundário que ainda não aplicou a escrita."
+      },
+      {
+        "text": "Ler do primário, o padrão",
+        "why": "Isso, ou uma sessão causalmente consistente; a aula executou só a primeira."
+      },
+      {
+        "text": "`readConcern(\"majority\")` em qualquer membro",
+        "why": "Majority compra durabilidade, não atualidade; pode devolver a cesta de antes do item."
+      }
+    ]
+  }
+}
