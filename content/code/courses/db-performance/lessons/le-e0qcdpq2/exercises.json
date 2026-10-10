@@ -1,0 +1,641 @@
+[
+  {
+    "id": "ex-mdc0zvkk",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does this course need a database of more than a gigabyte, when a course about SQL works with a hundred rows?",
+    "hint": "Think about what there is to measure in a table that answers in microseconds.",
+    "choices": [
+      {
+        "text": "A small table makes every query fast, so there is nothing to measure",
+        "correct": true,
+        "why": "Right: a bad plan on a hundred rows still costs a fraction of a millisecond."
+      },
+      {
+        "text": "PostgreSQL refuses to build an index on a table smaller than a page",
+        "correct": false,
+        "why": "It builds one on any table. The problem is that nothing would show the difference."
+      },
+      {
+        "text": "The exercises compare row counts that only a large table has",
+        "correct": false,
+        "why": "The counts are incidental. The size exists so that a slow plan is visibly slow."
+      },
+      {
+        "text": "Hosted services refuse small databases",
+        "correct": false,
+        "why": "It is the other way round: their free tiers have a maximum, and this database exceeds most of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-pyy1hpbg",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A student wants to follow the course on a free hosted PostgreSQL service. Which part of the course is the first to stop working?",
+    "hint": "Two things about this course are not about SQL at all.",
+    "choices": [
+      {
+        "text": "Reading execution plans",
+        "correct": false,
+        "why": "Plans read the same anywhere; that is the part a hosted service handles well."
+      },
+      {
+        "text": "Loading the 1.3 GB database, and changing server settings",
+        "correct": true,
+        "why": "Right: the size exceeds most free tiers, and ALTER SYSTEM or a restart is not offered to customers."
+      },
+      {
+        "text": "Connecting with psql",
+        "correct": false,
+        "why": "A hosted service gives you an address and psql connects to it like any other."
+      },
+      {
+        "text": "Writing an ordinary query with a WHERE clause and an ORDER BY",
+        "correct": false,
+        "why": "Plain SQL works everywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-j6hcns4j",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a virtual machine recommended over installing PostgreSQL on the computer you work on, even when that computer runs Ubuntu?",
+    "hint": "Think about what the later lessons do to the server.",
+    "choices": [
+      {
+        "text": "Ubuntu's packages only install inside a virtual machine",
+        "correct": false,
+        "why": "They install on any Ubuntu. The section says installing directly works as printed."
+      },
+      {
+        "text": "A virtual machine runs faster than its host",
+        "correct": false,
+        "why": "It is a slice of that computer and cannot be faster than it."
+      },
+      {
+        "text": "The lessons load the machine and change settings, and that is best done somewhere disposable",
+        "correct": true,
+        "why": "Right: two hundred connections, a full disk and killed processes belong on a machine you can throw away."
+      },
+      {
+        "text": "Only a virtual machine has a hypervisor",
+        "correct": false,
+        "why": "The hypervisor runs the machine; it is not a reason the machine is better for this course."
+      }
+    ]
+  },
+  {
+    "id": "ex-4v9wxyx8",
+    "version": 1,
+    "section": "your-lab",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many gigabytes of memory does the course recommend giving the virtual machine?",
+    "hint": "The second step of the setup.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "GB"
+  },
+  {
+    "id": "ex-sxbr8ba4",
+    "version": 1,
+    "section": "installing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `-v ON_ERROR_STOP=1` change when `psql` runs a file?",
+    "hint": "Without it, psql reports an error and does something next.",
+    "choices": [
+      {
+        "text": "It stops at the first statement that fails",
+        "correct": true,
+        "why": "Right: without it, psql would go on to the next statement and leave a half-built database."
+      },
+      {
+        "text": "It makes the whole file one transaction that is undone on error",
+        "correct": false,
+        "why": "That is `--single-transaction`. ON_ERROR_STOP stops; it does not undo what already ran."
+      },
+      {
+        "text": "It hides the errors so the load finishes",
+        "correct": false,
+        "why": "It does the opposite: it makes the first error final."
+      },
+      {
+        "text": "It retries a failed statement once before giving up",
+        "correct": false,
+        "why": "psql never retries a statement on its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-54ct18yb",
+    "version": 1,
+    "section": "installing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The sizes query shows `4999908` rows for `events`, and `market.sql` inserted exactly five million. What does that tell you?",
+    "hint": "Where does the column come from?",
+    "choices": [
+      {
+        "text": "92 events failed to insert and were skipped silently",
+        "correct": false,
+        "why": "The INSERT reported 5000000 rows. A failed insert would have stopped the load."
+      },
+      {
+        "text": "The count is the server's estimate, from `reltuples`",
+        "correct": true,
+        "why": "Right: VACUUM and ANALYZE keep that estimate from a sample, and it is what the planner uses."
+      },
+      {
+        "text": "Some events were deleted by autovacuum after the load",
+        "correct": false,
+        "why": "Autovacuum removes dead row versions, never live rows."
+      },
+      {
+        "text": "The seed made random() repeat a few timestamps, and duplicates were merged",
+        "correct": false,
+        "why": "Nothing in the table merges duplicates; there is no unique constraint on the time."
+      }
+    ]
+  },
+  {
+    "id": "ex-xy6dp58j",
+    "version": 1,
+    "section": "installing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `market.sql` begin with `SELECT setseed(0.17)`?",
+    "hint": "Your database and the transcripts' should agree.",
+    "choices": [
+      {
+        "text": "So that random() makes the same rows on every machine that runs the file",
+        "correct": true,
+        "why": "Right: a fixed seed turns random() into the same sequence, which is why your counts match the course's."
+      },
+      {
+        "text": "To make the load faster",
+        "correct": false,
+        "why": "The seed changes which numbers come out, not how fast."
+      },
+      {
+        "text": "Because random() returns nothing at all until a seed has been set for the session",
+        "correct": false,
+        "why": "random() works without one; it just gives different numbers each time."
+      },
+      {
+        "text": "To spread the rows evenly across the disk",
+        "correct": false,
+        "why": "Where rows land is decided by the order they are written, not by a seed."
+      }
+    ]
+  },
+  {
+    "id": "ex-q55z3s89",
+    "version": 1,
+    "section": "installing",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are mistakes `market.sql` makes on purpose, because later lessons need them? Choose all that apply.",
+    "hint": "The list after the file.",
+    "choices": [
+      {
+        "text": "No index on `orders.seller_id`",
+        "correct": true,
+        "why": "Right: lesson 2 finds it from the outside."
+      },
+      {
+        "text": "A city that always has the same state",
+        "correct": true,
+        "why": "Right: two columns saying one thing, which lesson 7 needs."
+      },
+      {
+        "text": "Seller 1 holding a quarter of all orders",
+        "correct": true,
+        "why": "Right: the skew lesson 7 reads in the statistics."
+      },
+      {
+        "text": "No primary key on `orders`",
+        "correct": false,
+        "why": "Every table has one; `orders.id` is an identity primary key."
+      },
+      {
+        "text": "Prices stored as floating-point numbers",
+        "correct": false,
+        "why": "Prices are integer cents, `price_cents integer`."
+      }
+    ]
+  },
+  {
+    "id": "ex-a93etq73",
+    "version": 1,
+    "section": "installing",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before `psql market` works for the first time, two commands are needed: `sudo -u postgres createuser --superuser $USER` and `___ market`.",
+    "hint": "The one that makes a database.",
+    "blanks": [
+      {
+        "accept": [
+          "createdb"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-s0nsewy4",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`psql market` answers `FATAL: role \"ana\" does not exist`. What is missing?",
+    "hint": "A role is a database user.",
+    "choices": [
+      {
+        "text": "The server is not running",
+        "correct": false,
+        "why": "A stopped server cannot say anything about roles; it answers `No such file or directory` on the socket."
+      },
+      {
+        "text": "The database `market`",
+        "correct": false,
+        "why": "That would be `database \"market\" does not exist`, and it comes after the role exists."
+      },
+      {
+        "text": "A role named ana",
+        "correct": true,
+        "why": "Right: the server runs and does not know her."
+      },
+      {
+        "text": "The operating system user ana",
+        "correct": false,
+        "why": "She is logged in as ana, so that user exists; the database keeps its own list."
+      }
+    ]
+  },
+  {
+    "id": "ex-v7fbwcf3",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`psql market` fails with `No such file or directory` on the socket, and `pg_lsclusters` shows `down`. You start the service and it goes straight back to `down`. Where do you look next?",
+    "hint": "The last column of pg_lsclusters.",
+    "choices": [
+      {
+        "text": "The server's log file",
+        "correct": true,
+        "why": "Right: a server that will not start writes why at the end of its log."
+      },
+      {
+        "text": "The output of `\\timing`",
+        "correct": false,
+        "why": "psql cannot connect, so it has nothing to time."
+      },
+      {
+        "text": "`market.sql`, for a statement that failed",
+        "correct": false,
+        "why": "A failed load does not stop the server; it leaves it running with a half-built database."
+      },
+      {
+        "text": "The list of roles, for one that is missing",
+        "correct": false,
+        "why": "A missing role is a different, later error; the server has to be up to say it."
+      }
+    ]
+  },
+  {
+    "id": "ex-26znkkg3",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The load was interrupted halfway. What does the lesson tell you to do?",
+    "hint": "Finishing it by hand is the wrong idea.",
+    "choices": [
+      {
+        "text": "Run the rest of `market.sql` from the statement that failed",
+        "correct": false,
+        "why": "A half-built database is hard to reason about; the lesson says not to finish it by hand."
+      },
+      {
+        "text": "Drop the database, create it again and load the whole file",
+        "correct": true,
+        "why": "Right: two commands and two minutes, and the result is known."
+      },
+      {
+        "text": "Run `VACUUM ANALYZE` to repair the tables",
+        "correct": false,
+        "why": "VACUUM cleans and measures; it does not fill tables that were never loaded."
+      },
+      {
+        "text": "Load the file again into the same database",
+        "correct": false,
+        "why": "It stops at the first CREATE TABLE: `relation \"sellers\" already exists`."
+      }
+    ]
+  },
+  {
+    "id": "ex-xy952qyc",
+    "version": 1,
+    "section": "three-suspects",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each slow query from the lesson to the suspect it was.",
+    "hint": "What was changed to make it fast?",
+    "pairs": [
+      {
+        "left": "`WHERE date(placed_at) = '2025-06-01'`",
+        "right": "the query"
+      },
+      {
+        "left": "`WHERE seller_id = 42`",
+        "right": "the schema"
+      },
+      {
+        "left": "the first count of `order_lines` after a restart",
+        "right": "the machine"
+      }
+    ],
+    "right_distractors": [
+      "the network"
+    ]
+  },
+  {
+    "id": "ex-ppfcak21",
+    "version": 1,
+    "section": "three-suspects",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`WHERE date(placed_at) = '2025-06-01'` took 119 ms and the range on `placed_at` took 1.3 ms, with an index on `placed_at` in both cases. Why could the first not use it?",
+    "hint": "What is written in the index?",
+    "choices": [
+      {
+        "text": "The index is in the order of `placed_at`, not of its date",
+        "correct": true,
+        "why": "Right: an index answers questions in the terms it is written in."
+      },
+      {
+        "text": "A function in WHERE disables every index on the table",
+        "correct": false,
+        "why": "Only the index on the wrapped column is out of reach; others stay usable."
+      },
+      {
+        "text": "The first query returned more rows",
+        "correct": false,
+        "why": "Both counted 2801."
+      },
+      {
+        "text": "The first run was cold and the second was warm",
+        "correct": false,
+        "why": "The gap is ninety times, and the lesson attributes it to the query, not the cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-zskcemnf",
+    "version": 1,
+    "section": "three-suspects",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's report runs in 4 seconds on a server whose memory is fully used and swapping. They add an index the report's query does not use. What changes?",
+    "hint": "The fixes do not transfer.",
+    "choices": [
+      {
+        "text": "Nothing for the report, and every write now maintains one more index",
+        "correct": true,
+        "why": "Right: the suspect was the machine, and the index has a cost of its own."
+      },
+      {
+        "text": "The report gets faster because indexes reduce memory use",
+        "correct": false,
+        "why": "An index is more data to keep in memory, not less."
+      },
+      {
+        "text": "The report gets slower, because the planner is forced to use the index",
+        "correct": false,
+        "why": "Nothing forces the planner to use an index; it ignores one that does not help."
+      },
+      {
+        "text": "The swapping stops",
+        "correct": false,
+        "why": "Adding structure does not free memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-bh7qmdg2",
+    "version": 1,
+    "section": "three-suspects",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many milliseconds did building the index on `orders (seller_id)` take in the transcript? Round to the nearest whole number.",
+    "hint": "The line under CREATE INDEX.",
+    "value": 1154,
+    "tolerance": 1,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-jxvt4de6",
+    "version": 1,
+    "section": "first-measurement",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the `Time:` line that `\\timing` prints include?",
+    "hint": "It is measured on your side.",
+    "choices": [
+      {
+        "text": "Only the time the server spent executing the plan, as the server itself counts it",
+        "correct": false,
+        "why": "That is the server's own figure, which lesson 3 reads and which is smaller."
+      },
+      {
+        "text": "Server work, the connection and the rows",
+        "correct": true,
+        "why": "Right: psql measures from sending to the whole answer arriving."
+      },
+      {
+        "text": "The time the query spent waiting for the disk",
+        "correct": false,
+        "why": "Disk time is part of it, but far from all of it."
+      },
+      {
+        "text": "The time psql took to draw the table",
+        "correct": false,
+        "why": "Drawing is not what is measured; the answer arriving is."
+      }
+    ]
+  },
+  {
+    "id": "ex-pnd74mwn",
+    "version": 1,
+    "section": "first-measurement",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before a change a query took 435 ms, measured right after a restart; after the change it took 167 ms, measured on the third run. What can you conclude?",
+    "hint": "Compare like with like.",
+    "choices": [
+      {
+        "text": "The change made it 62% faster",
+        "correct": false,
+        "why": "That is exactly the cold-against-warm comparison the lesson warns about."
+      },
+      {
+        "text": "Nothing yet: a cold run was compared with a warm one",
+        "correct": true,
+        "why": "Right: in the lesson the same query, unchanged, went from 435 to 167 just by warming up."
+      },
+      {
+        "text": "The change made it slower, because the first number is the real one",
+        "correct": false,
+        "why": "Neither number is more real; they measure different conditions."
+      },
+      {
+        "text": "The disk is broken",
+        "correct": false,
+        "why": "A first run after a restart is slower on a healthy disk too."
+      }
+    ]
+  },
+  {
+    "id": "ex-m9n2y4zp",
+    "version": 1,
+    "section": "first-measurement",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson tell you to take the median of several runs rather than the average?",
+    "hint": "What does one slow run do to each?",
+    "choices": [
+      {
+        "text": "The median is always the smaller of the two numbers",
+        "correct": false,
+        "why": "It can be larger or smaller; that is not the reason."
+      },
+      {
+        "text": "An outlier moves it less",
+        "correct": true,
+        "why": "Right: the middle value ignores one outlier."
+      },
+      {
+        "text": "psql reports medians when timing is on",
+        "correct": false,
+        "why": "psql reports one time per statement."
+      },
+      {
+        "text": "Averages need at least ten runs",
+        "correct": false,
+        "why": "An average works on any count; it is just sensitive to outliers."
+      }
+    ]
+  },
+  {
+    "id": "ex-pe8czjkf",
+    "version": 1,
+    "section": "first-measurement",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The recommended virtual machine has 4 GB of memory and the database is 1.3 GB, but `shared_buffers` stays at 128 MB. Where does a warm run find the pages that do not fit in 128 MB?",
+    "hint": "There are three places a page can be.",
+    "choices": [
+      {
+        "text": "Nowhere: every run past 128 MB reads the disk",
+        "correct": false,
+        "why": "The warm runs in the lesson read 432 MB and were not as slow as the cold one."
+      },
+      {
+        "text": "In the operating system's file cache, in free memory",
+        "correct": true,
+        "why": "Right: the operating system keeps recently read file pages in free memory."
+      },
+      {
+        "text": "In psql's memory",
+        "correct": false,
+        "why": "psql receives answers, not table pages."
+      },
+      {
+        "text": "In the index",
+        "correct": false,
+        "why": "An index is itself pages on the disk, cached the same way."
+      }
+    ]
+  },
+  {
+    "id": "ex-h3afwm8a",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the habit the lesson teaches in order.",
+    "hint": "Changing anything comes late.",
+    "items": [
+      "Find which query is slow",
+      "Measure it several times, saying cold or warm",
+      "Name the suspect: query, schema or machine",
+      "Change one thing",
+      "Measure again the same way"
+    ],
+    "trap": "A fix applied before the suspect is named may be a fix for the wrong one, and an after measured differently from the before compares nothing."
+  },
+  {
+    "id": "ex-kmzyb99t",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A query is slow only on Monday mornings, the first time anybody runs it after the weekend's restart, and fast the rest of the week. Which suspect does that point to first?",
+    "hint": "Nothing about the query or the tables changed over the weekend.",
+    "choices": [
+      {
+        "text": "The query, whose wording needs rewriting for the new week",
+        "correct": false,
+        "why": "The same query is fast all week; its wording is not what changes."
+      },
+      {
+        "text": "The schema, which lacks an index",
+        "correct": false,
+        "why": "A missing index would make it slow every time."
+      },
+      {
+        "text": "The machine: the cache is cold after the restart",
+        "correct": true,
+        "why": "Right: the first run reads from the disk, exactly the cold run in the lesson."
+      },
+      {
+        "text": "None of them: on Mondays the tables simply hold more data",
+        "correct": false,
+        "why": "One weekend's orders do not make a query slow once and fast after."
+      }
+    ]
+  }
+]

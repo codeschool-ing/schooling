@@ -1,0 +1,434 @@
+{
+  "ex-mdc0zvkk": {
+    "prompt": "Por que este curso precisa de um banco de mais de um gigabyte, quando um curso de SQL funciona com cem linhas?",
+    "hint": "Pense no que há para medir numa tabela que responde em microssegundos.",
+    "choices": [
+      {
+        "text": "Uma tabela pequena deixa toda consulta rápida, então não há o que medir",
+        "why": "Isso: um plano ruim sobre cem linhas ainda custa uma fração de milissegundo."
+      },
+      {
+        "text": "O PostgreSQL se recusa a criar índice numa tabela menor que uma página",
+        "why": "Ele cria em qualquer tabela. O problema é que nada mostraria a diferença."
+      },
+      {
+        "text": "Os exercícios comparam contagens de linhas que só uma tabela grande tem",
+        "why": "As contagens são acessórias. O tamanho existe para que um plano lento seja visivelmente lento."
+      },
+      {
+        "text": "Serviços hospedados recusam bancos pequenos",
+        "why": "É o contrário: os planos gratuitos têm um máximo, e este banco passa da maioria deles."
+      }
+    ]
+  },
+  "ex-pyy1hpbg": {
+    "prompt": "Uma aluna quer seguir o curso num serviço gratuito de PostgreSQL hospedado. Que parte do curso é a primeira a deixar de funcionar?",
+    "hint": "Duas coisas deste curso não têm nada a ver com SQL.",
+    "choices": [
+      {
+        "text": "Ler planos de execução",
+        "why": "Planos se leem igual em qualquer lugar; é a parte que um serviço hospedado atende bem."
+      },
+      {
+        "text": "Carregar o banco de 1,3 GB, e mudar configurações do servidor",
+        "why": "Isso: o tamanho passa da maioria dos planos gratuitos, e ALTER SYSTEM ou reinício não são oferecidos ao cliente."
+      },
+      {
+        "text": "Conectar com o psql",
+        "why": "Um serviço hospedado dá um endereço e o psql se conecta como a qualquer outro."
+      },
+      {
+        "text": "Escrever uma consulta comum com uma cláusula WHERE e um ORDER BY",
+        "why": "SQL comum funciona em qualquer lugar."
+      }
+    ]
+  },
+  "ex-j6hcns4j": {
+    "prompt": "Por que a máquina virtual é recomendada em vez de instalar o PostgreSQL no computador em que você trabalha, mesmo que ele rode Ubuntu?",
+    "hint": "Pense no que as aulas seguintes fazem com o servidor.",
+    "choices": [
+      {
+        "text": "Os pacotes do Ubuntu só instalam dentro de uma máquina virtual",
+        "why": "Eles instalam em qualquer Ubuntu. A seção diz que instalar direto funciona como está impresso."
+      },
+      {
+        "text": "Uma máquina virtual roda mais rápido que o hospedeiro",
+        "why": "Ela é uma fatia daquele computador e não pode ser mais rápida que ele."
+      },
+      {
+        "text": "As aulas carregam a máquina e mudam configurações, e isso fica melhor num lugar descartável",
+        "why": "Isso: duzentas conexões, disco cheio e processos mortos pertencem a uma máquina que dá para jogar fora."
+      },
+      {
+        "text": "Só uma máquina virtual tem um hipervisor",
+        "why": "O hipervisor roda a máquina; não é motivo para ela ser melhor para este curso."
+      }
+    ]
+  },
+  "ex-4v9wxyx8": {
+    "prompt": "Quantos gigabytes de memória o curso recomenda dar à máquina virtual?",
+    "hint": "O segundo passo da instalação.",
+    "unit": "GB"
+  },
+  "ex-sxbr8ba4": {
+    "prompt": "O que o `-v ON_ERROR_STOP=1` muda quando o `psql` roda um arquivo?",
+    "hint": "Sem ele, o psql relata um erro e faz alguma coisa em seguida.",
+    "choices": [
+      {
+        "text": "Para no primeiro comando que falha",
+        "why": "Isso: sem ele, o psql seguiria para o próximo comando e deixaria um banco montado pela metade."
+      },
+      {
+        "text": "Transforma o arquivo inteiro numa transação desfeita em caso de erro",
+        "why": "Isso é o `--single-transaction`. O ON_ERROR_STOP para; não desfaz o que já rodou."
+      },
+      {
+        "text": "Esconde os erros para a carga terminar",
+        "why": "Faz o contrário: torna o primeiro erro definitivo."
+      },
+      {
+        "text": "Tenta de novo um comando que falhou antes de desistir",
+        "why": "O psql nunca tenta de novo um comando por conta própria."
+      }
+    ]
+  },
+  "ex-54ct18yb": {
+    "prompt": "A consulta de tamanhos mostra `4999908` linhas em `events`, e o `market.sql` inseriu exatamente cinco milhões. O que isso diz?",
+    "hint": "De onde vem a coluna?",
+    "choices": [
+      {
+        "text": "92 eventos falharam ao inserir e foram pulados em silêncio",
+        "why": "O INSERT relatou 5000000 linhas. Um insert com falha teria parado a carga."
+      },
+      {
+        "text": "A contagem é a estimativa do servidor, vinda de `reltuples`",
+        "why": "Isso: VACUUM e ANALYZE mantêm essa estimativa a partir de uma amostra, e é ela que o planejador usa."
+      },
+      {
+        "text": "Alguns eventos foram apagados pelo autovacuum depois da carga",
+        "why": "O autovacuum remove versões mortas de linhas, nunca linhas vivas."
+      },
+      {
+        "text": "A semente fez o random() repetir alguns horários, e as duplicatas foram fundidas",
+        "why": "Nada na tabela funde duplicatas; não há restrição de unicidade no horário."
+      }
+    ]
+  },
+  "ex-xy6dp58j": {
+    "prompt": "Por que o `market.sql` começa com `SELECT setseed(0.17)`?",
+    "hint": "O seu banco e o das transcrições deveriam bater.",
+    "choices": [
+      {
+        "text": "Para que o random() gere as mesmas linhas em toda máquina que roda o arquivo",
+        "why": "Isso: uma semente fixa faz do random() a mesma sequência, e por isso as suas contagens batem com as do curso."
+      },
+      {
+        "text": "Para deixar a carga mais rápida",
+        "why": "A semente muda quais números saem, não a velocidade."
+      },
+      {
+        "text": "Porque o random() não devolve nada até que uma semente tenha sido definida na sessão",
+        "why": "O random() funciona sem semente; só dá números diferentes a cada vez."
+      },
+      {
+        "text": "Para espalhar as linhas por igual no disco",
+        "why": "Onde as linhas ficam é decidido pela ordem de gravação, não por uma semente."
+      }
+    ]
+  },
+  "ex-q55z3s89": {
+    "prompt": "Quais destes são erros que o `market.sql` comete de propósito, porque aulas seguintes precisam deles? Marque todos os que se aplicam.",
+    "hint": "A lista depois do arquivo.",
+    "choices": [
+      {
+        "text": "Nenhum índice em `orders.seller_id`",
+        "why": "Certo: a aula 2 o encontra de fora."
+      },
+      {
+        "text": "Uma cidade que tem sempre o mesmo estado",
+        "why": "Certo: duas colunas dizendo uma coisa só, de que a aula 7 precisa."
+      },
+      {
+        "text": "O vendedor 1 com um quarto de todos os pedidos",
+        "why": "Certo: o desequilíbrio que a aula 7 lê nas estatísticas."
+      },
+      {
+        "text": "Nenhuma chave primária em `orders`",
+        "why": "Toda tabela tem; `orders.id` é chave primária identity."
+      },
+      {
+        "text": "Preços guardados como números de ponto flutuante",
+        "why": "Preços são centavos inteiros, `price_cents integer`."
+      }
+    ]
+  },
+  "ex-a93etq73": {
+    "prompt": "Antes de `psql market` funcionar pela primeira vez, são precisos dois comandos: `sudo -u postgres createuser --superuser $USER` e `___ market`.",
+    "hint": "O que cria um banco.",
+    "blanks": [
+      {
+        "accept": [
+          "createdb"
+        ]
+      }
+    ]
+  },
+  "ex-s0nsewy4": {
+    "prompt": "`psql market` responde `FATAL: role \"ana\" does not exist`. O que está faltando?",
+    "hint": "Um papel é um usuário do banco.",
+    "choices": [
+      {
+        "text": "O servidor não está rodando",
+        "why": "Um servidor parado não diz nada sobre papéis; ele responde `No such file or directory` no socket."
+      },
+      {
+        "text": "O banco `market`",
+        "why": "Isso seria `database \"market\" does not exist`, e vem depois que o papel existe."
+      },
+      {
+        "text": "Um papel chamado ana",
+        "why": "Isso: o servidor roda e não a conhece."
+      },
+      {
+        "text": "O usuário ana do sistema operacional",
+        "why": "Ela está logada como ana, então esse usuário existe; o banco tem a própria lista."
+      }
+    ]
+  },
+  "ex-v7fbwcf3": {
+    "prompt": "`psql market` falha com `No such file or directory` no socket, e `pg_lsclusters` mostra `down`. Você liga o serviço e ele volta direto para `down`. Onde você olha em seguida?",
+    "hint": "A última coluna do pg_lsclusters.",
+    "choices": [
+      {
+        "text": "O arquivo de log do servidor",
+        "why": "Isso: um servidor que não sobe escreve o motivo no fim do log."
+      },
+      {
+        "text": "A saída do `\\timing`",
+        "why": "O psql não consegue se conectar, então não tem o que cronometrar."
+      },
+      {
+        "text": "O `market.sql`, atrás de um comando que falhou",
+        "why": "Uma carga com falha não derruba o servidor; deixa-o rodando com um banco pela metade."
+      },
+      {
+        "text": "A lista de papéis, atrás de um que falta",
+        "why": "Um papel que falta é outro erro, posterior; o servidor precisa estar de pé para dizê-lo."
+      }
+    ]
+  },
+  "ex-26znkkg3": {
+    "prompt": "A carga foi interrompida no meio. O que a aula manda fazer?",
+    "hint": "Terminar à mão é a ideia errada.",
+    "choices": [
+      {
+        "text": "Rodar o resto do `market.sql` a partir do comando que falhou",
+        "why": "Um banco pela metade é difícil de entender; a aula diz para não terminar à mão."
+      },
+      {
+        "text": "Apagar o banco, criá-lo de novo e carregar o arquivo inteiro",
+        "why": "Isso: dois comandos e dois minutos, e o resultado é conhecido."
+      },
+      {
+        "text": "Rodar `VACUUM ANALYZE` para consertar as tabelas",
+        "why": "O VACUUM limpa e mede; não preenche tabelas que nunca foram carregadas."
+      },
+      {
+        "text": "Carregar o arquivo de novo no mesmo banco",
+        "why": "Ele para no primeiro CREATE TABLE: `relation \"sellers\" already exists`."
+      }
+    ]
+  },
+  "ex-xy952qyc": {
+    "prompt": "Ligue cada consulta lenta da aula ao suspeito que ela era.",
+    "hint": "O que foi mudado para ela ficar rápida?",
+    "pairs": [
+      {
+        "left": "`WHERE date(placed_at) = '2025-06-01'`",
+        "right": "a consulta"
+      },
+      {
+        "left": "`WHERE seller_id = 42`",
+        "right": "o esquema"
+      },
+      {
+        "left": "a primeira contagem de `order_lines` depois de um reinício",
+        "right": "a máquina"
+      }
+    ],
+    "right_distractors": [
+      "a rede"
+    ]
+  },
+  "ex-ppfcak21": {
+    "prompt": "`WHERE date(placed_at) = '2025-06-01'` levou 119 ms e a faixa em `placed_at` levou 1,3 ms, com um índice em `placed_at` nos dois casos. Por que a primeira não pôde usá-lo?",
+    "hint": "O que está escrito no índice?",
+    "choices": [
+      {
+        "text": "Ele está ordenado por `placed_at`, não pela data",
+        "why": "Isso: um índice responde perguntas nos termos em que está escrito."
+      },
+      {
+        "text": "Uma função no WHERE desliga todos os índices da tabela",
+        "why": "Só o índice da coluna embrulhada fica fora de alcance; os outros continuam utilizáveis."
+      },
+      {
+        "text": "A primeira consulta devolveu mais linhas",
+        "why": "As duas contaram 2801."
+      },
+      {
+        "text": "A primeira execução foi fria e a segunda quente",
+        "why": "A diferença é de noventa vezes, e a aula a atribui à consulta, não ao cache."
+      }
+    ]
+  },
+  "ex-zskcemnf": {
+    "prompt": "Um relatório de um colega roda em 4 segundos num servidor com a memória toda ocupada e fazendo swap. Ele cria um índice que a consulta do relatório não usa. O que muda?",
+    "hint": "Os consertos não se transferem.",
+    "choices": [
+      {
+        "text": "Nada para o relatório, e toda escrita agora mantém mais um índice",
+        "why": "Isso: o suspeito era a máquina, e o índice tem custo próprio."
+      },
+      {
+        "text": "O relatório fica mais rápido porque índices reduzem o uso de memória",
+        "why": "Um índice é mais dado para manter na memória, não menos."
+      },
+      {
+        "text": "O relatório fica mais lento, porque o planejador é obrigado a usar o índice",
+        "why": "Nada obriga o planejador a usar um índice; ele ignora o que não ajuda."
+      },
+      {
+        "text": "O swap para",
+        "why": "Acrescentar estrutura não libera memória."
+      }
+    ]
+  },
+  "ex-bh7qmdg2": {
+    "prompt": "Quantos milissegundos levou a criação do índice em `orders (seller_id)` na transcrição? Arredonde para o inteiro mais próximo.",
+    "hint": "A linha embaixo do CREATE INDEX.",
+    "unit": "ms"
+  },
+  "ex-jxvt4de6": {
+    "prompt": "O que inclui a linha `Time:` que o `\\timing` imprime?",
+    "hint": "É medida do seu lado.",
+    "choices": [
+      {
+        "text": "Só o tempo que o servidor gastou executando o plano, contado pelo próprio servidor",
+        "why": "Esse é o número do próprio servidor, que a aula 3 lê e que é menor."
+      },
+      {
+        "text": "Trabalho do servidor, conexão e linhas",
+        "why": "Isso: o psql mede do envio até a resposta inteira chegar."
+      },
+      {
+        "text": "O tempo que a consulta passou esperando o disco",
+        "why": "O tempo de disco faz parte, mas está longe de ser tudo."
+      },
+      {
+        "text": "O tempo que o psql levou para desenhar a tabela",
+        "why": "Desenhar não é o que se mede; a chegada da resposta é."
+      }
+    ]
+  },
+  "ex-pnd74mwn": {
+    "prompt": "Antes de uma mudança, uma consulta levou 435 ms, medida logo depois de um reinício; depois da mudança levou 167 ms, medida na terceira execução. O que dá para concluir?",
+    "hint": "Compare igual com igual.",
+    "choices": [
+      {
+        "text": "A mudança a deixou 62% mais rápida",
+        "why": "É exatamente a comparação de frio contra quente de que a aula avisa."
+      },
+      {
+        "text": "Nada ainda: comparou-se uma execução fria com uma quente",
+        "why": "Isso: na aula, a mesma consulta, sem mudança, foi de 435 para 167 só por aquecer."
+      },
+      {
+        "text": "A mudança a deixou mais lenta, porque o primeiro número é o real",
+        "why": "Nenhum dos números é mais real; medem condições diferentes."
+      },
+      {
+        "text": "O disco está com defeito",
+        "why": "Uma primeira execução depois de reinício é mais lenta também num disco saudável."
+      }
+    ]
+  },
+  "ex-m9n2y4zp": {
+    "prompt": "Por que a aula manda ficar com a mediana de várias execuções, e não com a média?",
+    "hint": "O que uma execução lenta faz com cada uma?",
+    "choices": [
+      {
+        "text": "A mediana é sempre o menor dos dois números",
+        "why": "Pode ser maior ou menor; não é esse o motivo."
+      },
+      {
+        "text": "Um ponto fora da curva a move menos",
+        "why": "Isso: o valor do meio ignora um ponto fora da curva."
+      },
+      {
+        "text": "O psql relata medianas quando o timing está ligado",
+        "why": "O psql relata um tempo por comando."
+      },
+      {
+        "text": "Médias precisam de pelo menos dez execuções",
+        "why": "Uma média funciona com qualquer quantidade; só é sensível a pontos fora da curva."
+      }
+    ]
+  },
+  "ex-pe8czjkf": {
+    "prompt": "A máquina virtual recomendada tem 4 GB de memória e o banco tem 1,3 GB, mas `shared_buffers` fica em 128 MB. Onde uma execução quente encontra as páginas que não cabem em 128 MB?",
+    "hint": "Há três lugares onde uma página pode estar.",
+    "choices": [
+      {
+        "text": "Em lugar nenhum: toda execução além de 128 MB lê o disco",
+        "why": "As execuções quentes da aula leram 432 MB e não foram tão lentas quanto a fria."
+      },
+      {
+        "text": "No cache de arquivos do sistema operacional, na memória livre",
+        "why": "Isso: o sistema operacional guarda páginas de arquivo lidas há pouco na memória livre."
+      },
+      {
+        "text": "Na memória do psql",
+        "why": "O psql recebe respostas, não páginas de tabela."
+      },
+      {
+        "text": "No índice",
+        "why": "Um índice é ele mesmo páginas no disco, guardadas do mesmo jeito."
+      }
+    ]
+  },
+  "ex-h3afwm8a": {
+    "prompt": "Ponha na ordem o hábito que a aula ensina.",
+    "hint": "Mudar qualquer coisa vem tarde.",
+    "items": [
+      "Descobrir qual consulta é lenta",
+      "Medi-la várias vezes, dizendo se fria ou quente",
+      "Dar nome ao suspeito: consulta, esquema ou máquina",
+      "Mudar uma coisa",
+      "Medir de novo do mesmo jeito"
+    ],
+    "trap": "Um conserto aplicado antes de nomear o suspeito pode ser conserto do suspeito errado, e um depois medido diferente do antes não compara nada."
+  },
+  "ex-kmzyb99t": {
+    "prompt": "Uma consulta só é lenta nas segundas de manhã, na primeira vez que alguém a roda depois do reinício do fim de semana, e rápida no resto da semana. Para qual suspeito isso aponta primeiro?",
+    "hint": "Nada na consulta ou nas tabelas mudou no fim de semana.",
+    "choices": [
+      {
+        "text": "A consulta, cujo texto precisa ser reescrito para a semana nova",
+        "why": "A mesma consulta é rápida a semana toda; o texto dela não é o que muda."
+      },
+      {
+        "text": "O esquema, que não tem um índice",
+        "why": "Um índice que falta a deixaria lenta toda vez."
+      },
+      {
+        "text": "A máquina: o cache está frio de novo",
+        "why": "Isso: a primeira execução lê do disco, exatamente a execução fria da aula."
+      },
+      {
+        "text": "Nenhum deles: às segundas as tabelas simplesmente têm mais dados",
+        "why": "Os pedidos de um fim de semana não deixam uma consulta lenta uma vez e rápida depois."
+      }
+    ]
+  }
+}
