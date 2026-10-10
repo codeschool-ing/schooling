@@ -32,7 +32,7 @@ between, and the useful decision is where on the line each part of a product sho
 
 A script checks what somebody thought to write down. **The defects scripts miss are the ones nobody
 thought to ask about**, and they are a large share of what reaches customers. Lessons 4 and 5 found
-boxoffice's defects by working systematically from R4, R5 and R6; nothing in those requirements
+boxoffice's defects by working systematically from R4, R5 and R6. Nothing in those requirements
 says what a refused action's message should look like, beyond R7's "a sentence saying what is
 wrong", or how a refund should behave as the evening goes on. A script written from R6 does
 exactly what R6 says and stops there. An explorer keeps going.

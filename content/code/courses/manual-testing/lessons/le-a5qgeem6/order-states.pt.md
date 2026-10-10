@@ -50,7 +50,7 @@ de qualquer um rodar.
 
 ## Três traços
 
-Com pedidos parados agora em quatro estados diferentes, os casos inválidos ficam baratos de alcançar.
+Com pedidos parados agora em três estados finais, os casos inválidos ficam baratos de alcançar.
 Mais uma reserva dá um pedido reservado novo, o 1004; reembolsá-lo é o traço da linha reservado. O
 pedido 1002 está cancelado e o 1003 reembolsado; cancelar qualquer um dos dois é um traço na linha de
 um estado final:
@@ -121,5 +121,5 @@ porta. Ele foi achado aqui porque a tabela de estados transformou os movimentos 
 lista, e o dano de cada um pôs esta célula no topo.
 
 Doze traços não rodaram nesta seção. A seção 06 desta aula pergunta sobre alguns, e o resto vale
-rodar na sua própria máquina: cada um é um botão e uma frase para ler, e um dos dezesseis já mostrou
+rodar na sua própria máquina. Cada um é um botão e uma frase para ler, e um dos dezesseis já mostrou
 que um traço é uma promessa que o boxoffice nem sempre cumpre.

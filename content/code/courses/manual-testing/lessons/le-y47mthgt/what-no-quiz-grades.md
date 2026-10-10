@@ -75,4 +75,4 @@ a case the client runs. And the automation courses that follow this one turn cas
 where the stranger is a script that cannot ask and cannot guess. A case that survives a person who
 has never seen the application is a case that can be turned into a program, handed to a client, or
 attached to a report. **The quiz below grades whether you recognise the faults. The stranger
-grades whether you can avoid them**, and only the stranger's mark is the one that counts.
+grades whether you can avoid them**, and only the stranger's mark counts.

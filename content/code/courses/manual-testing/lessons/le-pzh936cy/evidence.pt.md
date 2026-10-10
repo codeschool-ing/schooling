@@ -4,7 +4,7 @@ version: 1
 ---
 
 Os passos dizem ao leitor como ver a falha. **A evidência deixa que ele a veja sem rodar nada**, e
-isso importa mais vezes do que parece: o desenvolvedor está lendo no celular entre duas reuniões, o
+isso importa com frequência: o desenvolvedor está lendo no celular entre duas reuniões, o
 dono do produto na triagem não tem uma cópia da aplicação, o defeito só acontece na sua máquina. Um
 relato com boa evidência pode ser julgado antes que alguém o reproduza, e um relato sem nenhuma
 espera até alguém ter tempo.

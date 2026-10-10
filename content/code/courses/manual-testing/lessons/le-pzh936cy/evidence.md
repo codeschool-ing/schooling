@@ -4,7 +4,7 @@ version: 1
 ---
 
 Steps tell the reader how to see the failure. **Evidence lets them see it without running
-anything**, and that matters more often than it sounds: the developer is reading on a phone
+anything**, and that matters often: the developer is reading on a phone
 between meetings, the product owner at triage has no copy of the application, the defect only
 happens on your machine. A report whose evidence is good can be judged before anybody reproduces
 it, and a report with none waits until somebody has the time.

@@ -79,7 +79,7 @@ surprising, take it again rather than correcting it by hand.
 Not everything about a machine belongs in a report, and a page of settings hides the one line that
 matters. A fair rule is to record **what could plausibly differ between your machine and the
 reader's**: versions, the zone, the language of the system, how the program was started, and the
-data you began from, which for boxoffice is "a fresh start" and for a real product is the name of a
+data you began from. For boxoffice that is "a fresh start"; for a real product it is the name of a
 data set (lesson 20). If a defect turns out to depend on something outside the block, add that line
 to the block, and every report after it carries it.
 

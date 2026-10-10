@@ -19,7 +19,7 @@ often put at the top of a report, and boxoffice's two runs in lesson 18 show wha
 ```
 
 On 1.0, nine of the fourteen cases that ran passed: 64%. On 1.1, ten of seventeen passed: 59%. A
-reader who sees only the rates concludes that 1.1 is worse. It is not that simple. 1.1 fixed two
+reader who sees only the rates concludes that 1.1 is worse. In fact 1.1 fixed two
 defects, the six-ticket limit and the member discount for big orders, and broke one, the student
 discount. The rate fell because three new cases joined the run, each written to check a defect
 already found, and a new case written from a defect fails on the day it is added.

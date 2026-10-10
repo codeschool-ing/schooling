@@ -22,8 +22,8 @@ uma vez ou ser adiado de propósito.
 
 **Taxa de reabertura.** Dos defeitos marcados como corrigidos, quantos voltaram do reteste? Ela
 responde *nossas correções se sustentam?* Uma taxa alta quer dizer correções que saem sem teste, ou
-relatos tão pouco claros que o desenvolvedor corrige outra coisa, e as duas causas se distinguem
-lendo os relatos reabertos. É uma razão, então precisa de período e de denominador: *6 dos 40
+relatos tão pouco claros que o desenvolvedor corrige outra coisa, e ler os relatos reabertos separa
+as duas causas. É uma razão, então precisa de período e de denominador: *6 dos 40
 corrigidos no último trimestre voltaram, 15%*. O boxoffice tem duas correções até agora, a regra dos
 seis ingressos e o desconto de membro, e nenhuma foi reaberta. Isso dá 0%, e dois é pouco demais
 para significar alguma coisa; o relato honesto disso diz *duas correções, nenhuma reaberta* e não

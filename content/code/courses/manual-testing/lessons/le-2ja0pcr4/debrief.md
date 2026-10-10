@@ -5,8 +5,8 @@ version: 1
 
 A session is not finished when its time box runs out. It is finished after a **debrief**: a short
 conversation, ten or fifteen minutes, between the tester and whoever leads the testing, held as soon
-after the session as possible. Teams that skip it end up with session sheets nobody reads, and the
-notes of a session are written in the tester's shorthand and make full sense for about a day.
+after the session as possible. Teams that skip it end up with session sheets nobody reads. And a
+session's notes are in the tester's shorthand, which makes full sense for about a day.
 **The debrief is where notes turn into decisions**: what gets reported, what gets added to a suite,
 what the next session is.
 

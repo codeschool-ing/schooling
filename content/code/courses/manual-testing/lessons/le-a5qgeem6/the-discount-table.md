@@ -101,7 +101,7 @@ anybody to guess that rule 5 was the dangerous one; it listed all eight, and rul
 Rules 1 and 3 are combinations too, a student who is also a member or buying five, and they passed:
 half price won as R5 says it should. That is a result worth having. It says the problem is not
 "discounts combine wrongly" in general, but specifically the member and quantity discounts, which
-narrows it the way section 04 of lesson 4 narrowed the quantity limit:
+narrows it the way lesson 4 section 04 narrowed the quantity limit:
 
 | | |
 |---|---|

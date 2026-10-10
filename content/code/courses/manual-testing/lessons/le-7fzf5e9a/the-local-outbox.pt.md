@@ -107,9 +107,9 @@ ana@laptop:~/boxoffice$ curl -s 'http://127.0.0.1:8000/confirm?token=8mp9vq2ccu5
 ```
 
 **O link antigo confirmou a conta.** O R3 diz que ele deveria ter respondido "This link is not
-valid." Esse é o defeito 10, e ele vale mais do que parece. O motivo de alguém pedir um segundo link
-muitas vezes é o primeiro ter ido para um lugar que a pessoa não controla, um endereço antigo, uma
-caixa compartilhada, um domínio digitado errado; um primeiro link que continua funcionando pelas 24
+valid." Esse é o defeito 10. Ele importa porque muitas vezes alguém pede um segundo link quando o
+primeiro foi para um lugar que a pessoa não controla: um endereço antigo, uma caixa compartilhada,
+um domínio digitado errado. Um primeiro link que continua funcionando pelas 24
 horas inteiras deixa essa porta aberta depois que a pessoa achou que a tinha fechado. O relatório
 precisa dos passos acima, dos resultados esperado e obtido lado a lado e do bloco de ambiente da aula
 21.

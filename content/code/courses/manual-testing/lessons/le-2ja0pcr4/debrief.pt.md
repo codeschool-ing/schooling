@@ -6,8 +6,8 @@ version: 1
 Uma sessão não termina quando o tempo fixo acaba. Ela termina depois de uma **conversa final**, o
 *debrief* em inglês: uma conversa curta, de dez ou quinze minutos, entre o testador e quem lidera o
 teste, feita o mais perto possível do fim da sessão. Equipes que a pulam acabam com folhas de sessão
-que ninguém lê, e as notas de uma sessão são escritas na abreviação do testador e fazem sentido
-completo por mais ou menos um dia. **A conversa final é onde as notas viram decisões**: o que é
+que ninguém lê. E as notas de uma sessão estão na abreviação do testador, que faz sentido completo
+por mais ou menos um dia. **A conversa final é onde as notas viram decisões**: o que é
 relatado, o que entra numa suíte, qual é a próxima sessão.
 
 ## PROOF

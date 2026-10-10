@@ -66,8 +66,8 @@ Question 6 shows how far that goes. A stranger who cannot work out the correct t
 it, so they look at whatever total appears and decide whether it looks reasonable. Say they book
 three tickets for The Little Prince and the page says R$ 81,00. That looks reasonable. So would
 R$ 90,00, which is what the same three tickets cost without the member discount. The case passes
-either way. **A case whose expected result the runner cannot work out checks
-nothing**, and nothing in its run log says so.
+either way. **A case whose expected result the runner cannot work out checks nothing**, and nothing in its
+run log says so.
 
 ## The rest of this lesson
 

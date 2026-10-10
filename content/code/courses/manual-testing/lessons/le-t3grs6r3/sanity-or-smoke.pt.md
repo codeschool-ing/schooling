@@ -4,7 +4,7 @@ version: 1
 ---
 
 As duas palavras costumam ser usadas como se fossem a mesma coisa, e alguns glossários, entre eles
-edições antigas do da ISTQB, registram *teste de sanidade* como outro nome para *teste de fumaça*.
+edições antigas do glossário da ISTQB, registram *teste de sanidade* como outro nome para *teste de fumaça*.
 As equipes que mantêm as duas palavras separadas usam cada uma para uma pergunta diferente, e este
 curso faz o mesmo, porque **uma versão nova levanta as duas perguntas, e elas são respondidas por
 verificações diferentes**.

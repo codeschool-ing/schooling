@@ -40,14 +40,13 @@ As linhas valem nos dois sentidos, e cada sentido responde a sua própria pergun
 pelo menos dois casos cada, e o R7 tem três, porque toda recusa desta aula é uma frase que o R7
 pediu. R1, R6, R8 e R9 não têm nenhum, e a matriz diz isso sem que ninguém precise lembrar. Essa
 lacuna não é um erro hoje, porque esta aula se propôs a testar do R2 ao R4, e as aulas 4 a 14 testam
-do R6 ao R9. Seria um erro no dia da entrega, e a matriz é como alguém perceberia a
-tempo.
+do R6 ao R9. Seria um erro no dia da entrega, e a matriz é como alguém perceberia a tempo.
 
 **De um caso para os requisitos dele, para trás**, a matriz mostra que todo caso é evidência sobre
 algo que o teatro pediu. Um caso que não aponta requisito nenhum é uma de duas coisas. Ou ele testa
 algo que ninguém quis, e o tempo dele rende mais em outro lugar, ou ele encontrou um requisito que
 ninguém escreveu. A Ana uma vez rascunhou um caso conferindo que toda página tem um link de volta
-para Shows. Nenhuma linha do R1 ao R9 pede esse link, então ela levou a pergunta ao gerente do
+para Shows. Nenhuma linha do R1 ao R9 pede esse link, então ela levou a pergunta à gerente do
 teatro, que quis mantê-lo, e o requisito foi escrito.
 
 ## Quando um requisito muda

@@ -83,7 +83,7 @@ seats left. TC-BOOK-04 passes.
 
 The run is also the first check of the case itself. Reading each step from the page, rather than
 from memory, is the closest a writer can get to being a stranger. It catches a missing step or a
-control named wrongly, and it cannot catch a word the writer understands without noticing. Section
+control named wrongly, but it cannot catch a word the writer understands without noticing. Section
 06 is about the check that can.
 
 ## What it cost

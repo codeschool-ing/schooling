@@ -37,7 +37,7 @@ that the application refuses what it should refuse, and refuses it the way the r
 R7 asks boxoffice to answer wrong input with a sentence saying what is wrong, so every negative
 case on boxoffice has an expected result of that shape.
 
-**A negative case is not a case that fails.** TC-SIGNUP-02 below tries to create an account with an
+**A negative case is not a case that fails.** TC-SIGNUP-02, written in section 04, tries to create an account with an
 e-mail address that is already taken. Its expected result is a refusal, so it passes when
 boxoffice refuses, and fails if boxoffice creates a second account with the same address. The
 input is negative; the verdict is as open as any other.
@@ -66,7 +66,7 @@ Four scenarios do not test R2 to R4 completely, and a list that pretends otherwi
 lesson 1 warned about. Three things are deliberately missing from this lesson.
 
 **Which wrong values to try.** A name of 41 characters, a password of 7, a quantity of 0 or 7 or
-the word *two*: each is a negative case, and choosing which of the endless wrong values are worth a
+the word *two*: each is a negative case. Choosing which of the endless wrong values are worth a
 case is a technique of its own. Lesson 4 is that technique.
 
 **The second half of R3.** A link valid for 24 hours, and a new link that stops the old one from

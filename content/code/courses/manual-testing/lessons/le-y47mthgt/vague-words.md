@@ -56,8 +56,8 @@ press the other.
 
 Controls are named by what the stranger sees on them. boxoffice's button says Book, so the step
 says *press Book*. The field for the number of tickets shows the words Tickets (1 to 6), so the
-step says *the field that reads Tickets (1 to 6)*. Naming the control by
-its words, not its position, keeps the case true when the page is rearranged.
+step says *the field that reads Tickets (1 to 6)*. Naming the control by its words, not its
+position, keeps the case true when the page is rearranged.
 
 ## The opposite mistake
 

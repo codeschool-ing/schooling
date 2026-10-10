@@ -81,15 +81,14 @@ depois o total em negrito.
 | sócio, Hamlet, 4 ingressos | 10%, R$ 288,00 | 10%, R$ 288,00 | passou |
 
 **A sanidade passou, e os dois defeitos podem ser marcados como verificados.** A aula 16 dá nome a
-esse passo na vida de um defeito. O que importa aqui é que a Ana anota o número da versão ao lado do
-resultado, *verificado na 1.1*, porque uma correção é um fato sobre uma versão, e a próxima pode
+esse passo na vida de um defeito. A Ana anota o número da versão ao lado do resultado, *verificado na 1.1*, porque uma correção é um fato sobre uma versão, e a próxima pode
 perdê-la.
 
 Se algum dos retestes tivesse falhado, a versão voltaria agora para o Rui, com a requisição que
 falhou e o que ela respondeu, e ninguém gastaria a tarde numa rodada de regressão de uma versão que
-seria substituída. É todo o motivo de a sanidade rodar primeiro.
+seria substituída.
 
-O que esses seis comandos não dizem é nada sobre o resto do boxoffice. A edição 2 reescreveu a
+Esses seis comandos não dizem nada sobre o resto do boxoffice. A edição 2 reescreveu a
 função que decide todo preço que o teatro cobra, e a verificação de sanidade olhou duas das
 respostas dela: um sócio que reserva cinco, um sócio que reserva quatro. Toda outra combinação de
 descontos passa pelas mesmas três linhas novas e ninguém a experimentou na 1.1. **Essa é a próxima

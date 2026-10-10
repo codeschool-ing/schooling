@@ -6,8 +6,8 @@ version: 1
 É fácil imaginar uma ferramenta de gestão de casos como um arquivo de aço: um lugar para guardar
 casos de teste para que não se percam numa pasta de documentos. Guardar é a menor parte do
 trabalho. **O que uma ferramenta de casos acrescenta é a separação entre o caso, escrito uma vez, e
-as suas execuções, cada vez que ele roda contra uma versão, com os vínculos entre eles e os
-requisitos e defeitos de cada lado.** Tudo o que as quatro ferramentas desta aula vendem é
+as suas execuções, uma para cada vez que ele roda contra uma versão.** Ela liga os dois aos
+requisitos e defeitos de cada lado, e tudo o que as quatro ferramentas desta aula vendem é
 construído sobre essa separação.
 
 ## Quatro coisas que uma ferramenta mantém separadas

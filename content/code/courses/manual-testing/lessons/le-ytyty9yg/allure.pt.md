@@ -12,10 +12,10 @@ não o rodou, e nada nesta seção pede que você o instale.
 
 ## Como ele é alimentado
 
-O Allure não roda testes. Os testes rodam no framework que o time usa, e um **adaptador** para esse
+O Allure não roda testes. Os testes rodam no framework que o time usa. Um **adaptador** para esse
 framework escreve cada resultado numa pasta conforme os testes rodam: o desfecho, os passos que o
-teste percorreu, quanto tempo cada um levou, e qualquer anexo, como uma captura de tela da página
-no momento da falha ou o texto da resposta. Existem adaptadores para os frameworks comuns em várias
+teste percorreu, quanto tempo cada um levou, e qualquer anexo. Um anexo pode ser uma captura de
+tela da página no momento da falha, ou o texto da resposta. Existem adaptadores para os frameworks comuns em várias
 linguagens, e a ferramenta de linha de comando do Allure também lê JUnit XML, o formato da seção 02.
 
 A ferramenta de linha de comando então transforma essa pasta num **site estático**: arquivos HTML
@@ -43,7 +43,7 @@ resultados do boxoffice mostrariam o R5 com três testes e uma falha, que é de 
 rastreabilidade da aula 18.
 
 **Categorias e testes instáveis.** As falhas podem ser separadas em categorias pelas mensagens, de
-modo que vinte falhas com a mesma causa se leiam como um problema só, e um teste que passou numa
+modo que vinte falhas com a mesma causa se leiam como um problema só. Um teste que passou numa
 nova tentativa depois de falhar é marcado como **instável** (*flaky*): um teste cujo resultado não
 merece confiança numa execução só.
 

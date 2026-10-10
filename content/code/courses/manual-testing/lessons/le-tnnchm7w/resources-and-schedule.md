@@ -10,9 +10,9 @@ questions and finishes with the whole plan for boxoffice 1.0 on one page.
 ## People and skills
 
 A plan names who tests, by role if not by name, and what each person needs to know. For a small
-team the answer is short and still worth writing: one tester for two weeks, the developer for an
-hour a day to answer questions and fix what is found, and the theatre's manager for one afternoon
-of acceptance testing at the end, the subject of lesson 12. Writing the manager's afternoon into
+team the answer is short and still worth writing: one tester for two weeks, and the developer for
+an hour a day to answer questions and fix what is found. The theatre's manager gives one afternoon
+to acceptance testing at the end, the subject of lesson 12. Writing the manager's afternoon into
 the plan is what makes it happen; an acceptance test that depends on somebody remembering to ask
 is usually skipped.
 
@@ -22,15 +22,15 @@ has to know how to use one, and if nobody does, the plan says who will learn and
 ## The environment
 
 The **test environment** is everything the application runs on and everything that talks to it
-while it is being tested: the machine, the operating system, the version of the application, the
+while it is being tested. That means the machine, the operating system, the version of the application, the
 browsers and devices, the accounts, the data, and anything outside it, such as a mail server. Each
 of those can make a test pass or fail by itself, which is why lesson 21 is about environments that
 disagree.
 
 For boxoffice the environment is the one section 03 of this lesson set up, with three decisions
 added. The version tested is the file as section 04 shows it, 1.0. The browsers are the four named
-in R8. And e-mail is the outbox, so the plan says that the real mail server is not tested, which
-the scope already did.
+in R8. And e-mail is the outbox, so the plan says that the real mail server is not tested, as
+the scope already does.
 
 ## The schedule
 
@@ -73,6 +73,6 @@ checking them on each new build.
 | suspension | the build does not start, or a quarter of one area's cases fail |
 | deliverables | the cases, the defect reports, a one-page summary at the end (lesson 19) |
 
-Nine rows, and every one of them can be disagreed with. That is what the first section of this
+Ten rows, and every one of them can be disagreed with. That is what the first section of this
 lesson asked of a plan, and a plan this size takes an hour to write and saves the arguments that
 otherwise happen on release day.

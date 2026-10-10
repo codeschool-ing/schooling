@@ -10,9 +10,9 @@ termina com o plano inteiro do boxoffice 1.0 numa página.
 ## Pessoas e habilidades
 
 Um plano diz quem testa, pelo papel se não pelo nome, e o que cada pessoa precisa saber. Para um
-time pequeno a resposta é curta e ainda vale escrever: uma testadora por duas semanas, o
-desenvolvedor uma hora por dia para responder perguntas e corrigir o que for achado, e a gerente do
-teatro uma tarde de teste de aceitação no fim, o assunto da aula 12. Escrever a tarde da gerente no
+time pequeno a resposta é curta e ainda vale escrever: uma testadora por duas semanas, e o
+desenvolvedor uma hora por dia para responder perguntas e corrigir o que for achado. A gerente do
+teatro dá uma tarde ao teste de aceitação no fim, o assunto da aula 12. Escrever a tarde da gerente no
 plano é o que a faz acontecer; um teste de aceitação que depende de alguém lembrar de pedir quase
 sempre é pulado.
 
@@ -22,7 +22,7 @@ tela, alguém precisa saber usar um, e se ninguém sabe, o plano diz quem vai ap
 ## O ambiente
 
 O **ambiente de teste** é tudo em que a aplicação roda e tudo que conversa com ela enquanto é
-testada: a máquina, o sistema operacional, a versão da aplicação, os navegadores e dispositivos, as
+testada. Isso inclui a máquina, o sistema operacional, a versão da aplicação, os navegadores e dispositivos, as
 contas, os dados, e qualquer coisa fora dela, como um servidor de e-mail. Cada um desses pode fazer
 um teste passar ou falhar sozinho, e por isso a aula 21 trata de ambientes que discordam.
 
@@ -73,6 +73,6 @@ usual de conferi-los a cada versão nova.
 | suspensão | a versão não inicia, ou um quarto dos casos de uma área falha |
 | entregas | os casos, os relatórios de defeito, um resumo de uma página no fim (aula 19) |
 
-Nove linhas, e cada uma delas pode ser contestada. É o que a primeira seção desta aula pediu de um
+Dez linhas, e cada uma delas pode ser contestada. É o que a primeira seção desta aula pediu de um
 plano, e um plano deste tamanho leva uma hora para escrever e poupa as discussões que de outro modo
 acontecem no dia da entrega.

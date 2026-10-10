@@ -78,4 +78,4 @@ depois deste transformam casos em programas, onde o estranho é um script que n�
 adivinhar. Um caso que sobrevive a uma pessoa que nunca viu a aplicação é um caso que pode virar
 programa, ir para as mãos de um cliente ou ser anexado a um relatório. **O quiz abaixo corrige se
 você reconhece os defeitos. O estranho corrige se você consegue evitá-los**, e só a nota do estranho
-é a que conta.
+conta.

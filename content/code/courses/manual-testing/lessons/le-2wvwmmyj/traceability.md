@@ -38,9 +38,9 @@ The lines go both ways, and each direction answers its own question.
 
 **From a requirement to its cases, forward**, the matrix shows coverage. R2, R3 and R4 each have at
 least two cases, and R7 has three, because every refusal in this lesson is a sentence R7 asked for.
-R1, R6, R8 and R9 have none, and the matrix says so without anybody having to remember. That gap is not a mistake today, because this lesson set out to test R2 to R4, and
-lessons 4 to 14 test R6 to R9. It would be a mistake on release day, and the
-matrix is how somebody would notice in time.
+R1, R6, R8 and R9 have none, and the matrix says so without anybody having to remember. That gap
+is not a mistake today, because this lesson set out to test R2 to R4, and lessons 4 to 14 test R6
+to R9. It would be a mistake on release day, and the matrix is how somebody would notice in time.
 
 **From a case to its requirements, backward**, the matrix shows that every case is evidence about
 something the theatre asked for. A case that traces to no requirement is one of two things. Either

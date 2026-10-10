@@ -31,13 +31,13 @@ fronteira são 0, 1, 40 e 41. Duas convenções dizem quantos deles testar em vo
 
 Dois valores bastam para a maioria dos campos, e são o que este curso usa. O terceiro valor
 compensa o custo quando a linha é traçada por uma expressão e não por uma comparação simples, como
-um limite calculado a partir de outra coisa, em que um erro pode mover a borda em mais de um; num
+um limite calculado a partir de outra coisa, em que um erro pode mover a borda em mais de um. Num
 limite fixo como 40 ele raramente acha o que os dois primeiros deixaram passar.
 
 "Vizinho mais próximo" depende do que o campo guarda. Para uma contagem de caracteres ou de
 ingressos, é um a mais ou um a menos. Para dinheiro, é um centavo: um vale "de até R$ 100,00" tem
 a linha entre R$ 100,00 e R$ 100,01. Para um horário, é o menor passo que o sistema guarda, um
-minuto ou um segundo, então a linha do "a reserva fecha uma hora antes do início" do R4 cai às
+minuto ou um segundo. A linha do "a reserva fecha uma hora antes do início" do R4 cai às
 19:00 para um espetáculo às 20:00, e os casos ficam um minuto de cada lado dela. Esse precisa do
 relógio movido para ser testado, e a aula 13 mostra como um relógio falso faz isso.
 

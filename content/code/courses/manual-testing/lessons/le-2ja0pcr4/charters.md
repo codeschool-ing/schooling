@@ -57,8 +57,8 @@ boxoffice 1.1, each one a session's worth:
 Charters are kept in a list, fed from the same places as the rest of the testing. The risks of
 lesson 1 say where a session is worth most. The requirements suggest charters too, especially the
 ones whose scripted cases felt thin. A fresh defect is a reason to explore its neighbourhood. And
-earlier sessions end their debriefs with questions that were not on their charter. The tester usually writes them, and the lead decides with the tester which ones run this
-week.
+earlier sessions end their debriefs with questions that were not on their charter. The tester usually writes them, and the lead
+decides with the tester which ones run this week.
 
 ## The time box
 

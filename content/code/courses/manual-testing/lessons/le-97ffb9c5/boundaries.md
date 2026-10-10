@@ -30,15 +30,15 @@ values are 0, 1, 40 and 41. Two conventions say how many of them to test around 
 
 Two values are enough for most fields, and they are what this course uses. The third value earns
 its cost when the line is drawn by an expression rather than a plain comparison, such as a limit
-computed from something else, where a mistake can move the edge by more than one; on a fixed limit
+computed from something else, where a mistake can move the edge by more than one. On a fixed limit
 like 40 it rarely finds what the first two missed.
 
 "Nearest neighbour" depends on what the field holds. For a count of characters or tickets it is one
 more or one less. For money it is one cent: a voucher valid "up to R$ 100,00" has its line between
-R$ 100,00 and R$ 100,01. For a time it is the smallest step the system keeps, a minute or a second,
-so the line in R4's "booking closes one hour before it starts" falls at 19:00 for a show at 20:00,
-and its cases sit a minute either side of it. That one needs the clock moved to test, and lesson 13 shows how a fake clock does
-it.
+R$ 100,00 and R$ 100,01. For a time it is the smallest step the system keeps, a minute or a second.
+The line in R4's "booking closes one hour before it starts" falls at 19:00 for a show at 20:00, and
+its cases sit a minute either side of it. That one needs the clock moved to test, and lesson 13
+shows how a fake clock does it.
 
 ## Running R2's boundaries
 

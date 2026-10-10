@@ -20,7 +20,7 @@ Para acompanhar os defeitos do boxoffice no Trello, você faria uma lista por es
 relato e uma etiqueta por severidade. Funciona, e para um time de duas pessoas pode ser tudo o que
 elas precisam.
 
-O que ele abre mão é da cobrança. **Qualquer cartão pode ser arrastado para qualquer lista por
+Ele abre mão da cobrança. **Qualquer cartão pode ser arrastado para qualquer lista por
 qualquer pessoa**, então nada impede um cartão de ir de *novo* direto para *fechado*, e a regra de
 que só quem testa fecha um defeito mora nos hábitos do time. Campos além dos básicos são possíveis,
 mas soltos, e as contagens da aula 16, idade por severidade ou taxa de reabertura, são mais difíceis

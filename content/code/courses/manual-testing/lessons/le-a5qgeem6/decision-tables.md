@@ -52,9 +52,9 @@ answer is 15%, not 25%.
 ```
 
 Writing that row is already testing. Doing it forces a question out of the requirement for every
-combination, and sometimes the requirement has no answer: if R5 had not said what happens when
-discounts meet, rule 5 would be a blank with nothing to put in it, and the right move is to ask the
-theatre's manager before anybody writes code against a guess. A decision table finds gaps in a
+combination, and sometimes the requirement has no answer. If R5 had not said what happens when
+discounts meet, rule 5 would be a blank with nothing to put in it, and the right move would be to
+ask the theatre's manager before anybody writes code against a guess. A decision table finds gaps in a
 requirement as well as defects in a program, and it finds them earlier.
 
 ## Collapsing a table
@@ -67,7 +67,7 @@ five or more –, discount 50%. The eight rules collapse to five, and five cases
 program which gives a student 50% does so whatever else is true, the way the requirement reads. If
 the program checks the member discount first and returns early, a student who is also a member is
 handled by a different line than a student who is not, and the collapsed table runs only one of
-them. For most rules the bet is reasonable and saves real effort: a rule with five conditions has
+them. For most rules the bet is reasonable and saves real effort: a table with five conditions has
 32 columns. For the price, which lesson 1 put at the top of boxoffice's risk grid as risk A, eight
 cases are cheap and the bet is not worth making. This lesson runs all eight.
 

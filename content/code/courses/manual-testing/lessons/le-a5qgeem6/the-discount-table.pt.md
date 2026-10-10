@@ -101,7 +101,7 @@ estava entre elas.
 As regras 1 e 3 também são combinações, um estudante que é também membro ou que compra cinco, e
 passaram: a meia-entrada venceu, como o R5 manda. Esse resultado vale a pena. Ele diz que o
 problema não é "os descontos se combinam errado" em geral, e sim especificamente os descontos de
-membro e de quantidade, o que delimita o defeito do jeito que a seção 04 da aula 4 delimitou o
+membro e de quantidade, o que delimita o defeito do jeito que a aula 4, seção 04, delimitou o
 limite de quantidade:
 
 | | |

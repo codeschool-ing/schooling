@@ -12,13 +12,13 @@ que o testam.
 ## Por que escrever os cenários primeiro
 
 Um cenário custa uma frase, e um caso custa dez minutos. Essa diferença é o motivo para escrever os
-cenários primeiro. Uma lista de quinze cenários cabe em meia página, e o gerente do teatro a lê em
+cenários primeiro. Uma lista de quinze cenários cabe em meia página, e a gerente do teatro a lê em
 cinco minutos e responde a única pergunta que importa nessa fase: **está faltando alguma coisa?**
 Fazer essa pergunta a cem casos prontos é tarde demais, porque o esforço já foi para o que estava
 lá.
 
 Cenários também vêm nas palavras do usuário, e não nas do testador. *Alguém reserva ingressos para
-o espetáculo de hoje uma hora antes de começar* é um cenário que o gerente reconhece na hora, e o
+o espetáculo de hoje uma hora antes de começar* é um cenário que a gerente reconhece na hora, e a
 gerente é quem sabe que isso acontece todo sábado. Ninguém precisa saber o que é uma pré-condição
 para dizer que falta um cenário.
 
@@ -38,7 +38,7 @@ aplicação recusa o que deve recusar, e recusa do jeito que os requisitos dizem
 boxoffice responda a uma entrada errada com uma frase dizendo o que está errado, então todo caso
 negativo do boxoffice tem um resultado esperado com esse formato.
 
-**Um caso negativo não é um caso que falha.** O TC-SIGNUP-02, mais abaixo, tenta criar uma conta
+**Um caso negativo não é um caso que falha.** O TC-SIGNUP-02, escrito na seção 04, tenta criar uma conta
 com um endereço de e-mail que já está em uso. O resultado esperado dele é uma recusa, então ele
 passa quando o boxoffice recusa, e falha se o boxoffice criar uma segunda conta com o mesmo
 endereço. A entrada é negativa; o veredito está tão em aberto quanto o de qualquer outro.
@@ -67,7 +67,7 @@ Quatro cenários não testam o R2 ao R4 por completo, e uma lista que finge o co
 contra a qual a aula 1 alertou. Três coisas ficam de fora desta aula de propósito.
 
 **Que valores errados tentar.** Um nome de 41 caracteres, uma senha de 7, uma quantidade de 0 ou de
-7 ou a palavra *two*: cada um é um caso negativo, e escolher quais dos infinitos valores errados
+7 ou a palavra *two*: cada um é um caso negativo. Escolher quais dos infinitos valores errados
 valem um caso é uma técnica à parte. A aula 4 é essa técnica.
 
 **A segunda metade do R3.** Um link válido por 24 horas, e um link novo que faz o antigo parar de
@@ -77,5 +77,5 @@ e esses casos são escritos lá.
 **O horário.** O R4 fecha as reservas uma hora antes do espetáculo. A seção 04 da aula 3 mostra por
 que um caso que mexe com o relógio precisa dizer a que horas é executado.
 
-Registrar as omissões é o que as transforma em decisões. Quando o gerente lê esta lista, ele vê que
+Registrar as omissões é o que as transforma em decisões. Quando a gerente lê esta lista, ela vê que
 nomes de 41 caracteres ainda não estão aqui, e por quê.

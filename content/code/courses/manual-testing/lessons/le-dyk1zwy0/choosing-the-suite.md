@@ -13,7 +13,7 @@ misses the defect that mattered.
 ## Three ways to cut it down
 
 **By risk.** Lesson 1 ranked what could go wrong in boxoffice by likelihood and impact, and that
-ranking already says what deserves a rerun first: A, a wrong price; B, a show sold beyond its
+ranking already says what deserves a rerun first. From the top: A, a wrong price; B, a show sold beyond its
 seats; C, a refund that should not happen; D, a confirmation e-mail that never arrives; E, a shows
 table that is hard to read on a phone. When time runs short, the cases at the bottom are the ones
 left out.
@@ -24,7 +24,7 @@ developer, and, where the tester can read it, the change itself. A part nobody t
 depends on can skip a release; a part that was rewritten cannot.
 
 **By history.** Areas that broke before break again: code that is complicated stays complicated,
-and so do the reasons it was got wrong. Every defect found is evidence about likelihood, as
+and so do the reasons people get it wrong. Every defect found is evidence about likelihood, as
 lesson 1 put it, and the parts with the longest list of past defects earn a place in every run.
 
 None of the three is enough alone. Risk alone reruns the same cases whatever changed; change alone

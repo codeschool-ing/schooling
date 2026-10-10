@@ -12,7 +12,7 @@ in a different environment, whether or not anybody gave it a new name.
 
 Lesson 1's plan already had a row for this. Its question "who, and with what?" named the machines,
 the browsers, the data and the accounts, and it listed the outbox as the thing that stands in for a
-mail server. This lesson is about why that row matters more than it looks.
+mail server. This lesson is about why that row matters.
 
 ## The four, and what each one is for
 
@@ -34,7 +34,7 @@ anything can be without being production. Same operating system, same configurat
 of everything, data with the same shape, and the same settings on the machine. A pass in staging is
 worth something exactly to the degree that staging resembles production.
 
-**Production is not a test environment**, and the exception proves the rule. After a release a
+**Production is not a test environment**, with one exception. After a release a
 tester runs a short smoke check there (lesson 8), with an account kept for the purpose, because some
 things exist nowhere else: the real mail server, the real domain, the real card machine. Lesson 1's
 plan left "the real mail server" out of scope for exactly that reason, to be checked once in

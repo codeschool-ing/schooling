@@ -57,6 +57,6 @@ Some heuristics are a single question, short enough to keep on a card beside the
   values the page never offers. The page's buttons are not the only things that can reach the
   server.
 
-None of these finds a defect by itself. What they do is make sure the session is not spent repeating
-the three tests that occurred to you first. Section 05 of this lesson uses two of them on purpose,
+None of these finds a defect by itself. They keep the session from being spent repeating the three
+tests that occurred to you first. Section 05 of this lesson uses two of them on purpose,
 Function and Time from SFDPOT, and one of the small ones, another door.

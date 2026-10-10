@@ -43,8 +43,8 @@ ana@laptop:~/boxoffice$ curl -s -d 'id=1001&action=refund' http://127.0.0.1:8000
 ```
 
 O R6 se sustenta em todas as linhas acima menos uma: usar é recusado enquanto o pedido está
-reservado, pagar e usar funcionam em seguida, pagar e cancelar são recusados depois de usado, e o
-reembolso de um pedido usado é aceito, que é o defeito que a aula 5 já relatou. A Ana escreve
+reservado, pagar e usar funcionam em seguida, pagar e cancelar são recusados depois de usado. A exceção é o
+reembolso de um pedido usado, que é aceito: o defeito que a aula 5 já relatou. A Ana escreve
 *conhecido, visto de novo* ao lado dessa e segue.
 
 O que as linhas acima dizem é outra história. **As recusas estão mal escritas**: *cannot be useed*,
@@ -83,7 +83,7 @@ cancelado.*
 ## Time: o que acontece depois que o espetáculo começou
 
 O T do SFDPOT é a letra que a maioria das sessões pula, e o R6 tem um horário: um pedido pago pode ser
-reembolsado **antes de o espetáculo começar**. A Ana testou reembolsos às duas da tarde, oito horas
+reembolsado **antes de o espetáculo começar**. A Ana testou reembolsos às duas da tarde, seis horas
 antes de The Seagull começar. A pergunta que a missão faz é o que acontece depois que ele começa.
 
 O `BOXOFFICE_NOW` ajusta o relógio da aplicação, e a aula 1 disse para que ele serve. Escrito sem
@@ -117,9 +117,9 @@ ana@laptop:~/boxoffice$ curl -s -d 'id=1001&action=pay' http://127.0.0.1:8000/or
 ```
 
 Depois deixa a aplicação rodando, cuida de outra coisa e volta às oito e um, depois que o
-espetáculo começou. **Esta transcrição pula essa hora**: na gravação do curso, o relógio da aplicação
-em execução foi movido de 18:50 para 20:01 por fora, com um pequeno invólucro que o boxoffice não
-oferece e de que você não precisa. É o controle que a conversa final da seção 06 pede ao Rui. Na sua
+espetáculo começou. **Esta transcrição pula essa hora**: na gravação do curso, um pequeno invólucro moveu o
+relógio da aplicação em execução de 18:50 para 20:01 por fora. O boxoffice não oferece esse
+controle, e você não precisa dele. É o controle que a conversa final da seção 06 pede ao Rui. Na sua
 máquina, a hora é de verdade.
 
 ```

@@ -16,8 +16,9 @@ que uma aula.
 **MailHog** e **Mailpit** são a mesma ideia da caixa de saída do boxoffice, para aplicações que falam
 SMTP. Cada um é um programa pequeno que você inicia na sua máquina ou no servidor de teste. Ele finge
 ser um servidor de e-mail, aceita toda mensagem que a aplicação manda, guarda e mostra as mensagens
-numa página web; nada é entregue a lugar nenhum. As configurações de e-mail da aplicação, que fazem
-parte do ambiente dela, são apontadas para o coletor em vez do servidor real. O Mailpit é o mais novo
+numa página web; nada é entregue a lugar nenhum. Você aponta as configurações de e-mail da
+aplicação, que fazem parte do ambiente dela, para o coletor em vez do servidor real. O Mailpit é o
+mais novo
 dos dois.
 
 É a mais segura das três respostas, e para um ambiente de teste costuma ser a certa: nenhuma mensagem
@@ -32,7 +33,7 @@ invisíveis para ela.
 O **Mailinator** é um serviço de caixas de entrada públicas e descartáveis. Qualquer nome no domínio
 dele recebe e-mail sem conta e sem senha: um formulário de cadastro que recebe
 `vila-test-4471@mailinator.com` manda a confirmação para lá, e a mensagem pode ser lida no site do
-Mailinator digitando o nome. As mensagens são apagadas depois de pouco tempo. A empresa também vende
+Mailinator digitando o nome. O Mailinator apaga as mensagens depois de pouco tempo. A empresa também vende
 versões privadas do serviço para times, que este curso não examinou.
 
 A conveniência é real quando você testa um site de homologação que manda e-mail de verdade e precisa
@@ -52,9 +53,10 @@ a recusá-lo.
 ## Uma caixa real lida por um teste: Gmail Tester
 
 O **Gmail Tester** é um pacote de código aberto para Node.js. Ele entra numa conta real do Gmail pela
-API do Gmail do Google, com credenciais criadas para ele no console de desenvolvedor do Google, para
-que um teste automatizado possa esperar uma mensagem chegar, ler o assunto e o corpo dela e tirar dali
-um link de confirmação. Ele pertence à automação, não ao teste manual; os cursos de automação que vêm
+API do Gmail do Google, com credenciais criadas para ele no console de desenvolvedor do Google. Um
+teste automatizado pode então esperar uma mensagem chegar, ler o assunto e o corpo dela e tirar dali
+um link de confirmação. Ele pertence à automação, não ao teste manual; os cursos de automação que
+vêm
 depois deste na trilha `qa` são onde esse tipo de teste é escrito. Ele está aqui porque a existência
 dele responde a uma pergunta que testadores manuais fazem: um teste consegue conferir uma caixa real?
 Consegue.

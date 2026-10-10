@@ -42,8 +42,8 @@ ana@laptop:~/boxoffice$ curl -s -d 'id=1001&action=refund' http://127.0.0.1:8000
 ```
 
 R6 holds in every row above except one: use is refused while the order is reserved, pay and use
-then work, pay and cancel are refused once it is used, and the refund of a used order is accepted,
-which is the defect lesson 5 already reported. Ana writes *known, seen again* beside that one and
+then work, pay and cancel are refused once it is used. The exception is the refund of a used order, which is
+accepted: the defect lesson 5 already reported. Ana writes *known, seen again* beside that one and
 moves on.
 
 What the rows above say is another matter. **The refusals are worded wrongly**: *cannot be useed*,
@@ -80,7 +80,7 @@ are sentences, and two of them are not English. Seen from reserved, used and can
 ## Time: what happens once the show has started
 
 SFDPOT's T is the letter most sessions skip, and R6 has a time in it: a paid order can be refunded
-**before the show starts**. Ana has tested refunds at two in the afternoon, eight hours before The
+**before the show starts**. Ana has tested refunds at two in the afternoon, six hours before The
 Seagull starts. The question the charter asks is what happens after it starts.
 
 `BOXOFFICE_NOW` sets the application's clock, and lesson 1 said what it is for. Written without an
@@ -114,9 +114,9 @@ ana@laptop:~/boxoffice$ curl -s -d 'id=1001&action=pay' http://127.0.0.1:8000/or
 ```
 
 Then she leaves it running, works on something else, and comes back at a minute past eight, after
-the show has started. **This transcript skips that hour**: for the course's recording, the clock of
-the running application was moved from 18:50 to 20:01 from outside, by a small wrapper that
-boxoffice does not offer and you do not need. It is the control the debrief in section 06 asks Rui
+the show has started. **This transcript skips that hour**: for the course's recording, a small wrapper moved the
+running application's clock from 18:50 to 20:01 from outside. Boxoffice does not offer that
+control, and you do not need it. It is the control the debrief in section 06 asks Rui
 for. On your machine the hour is a real one.
 
 ```

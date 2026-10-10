@@ -63,6 +63,6 @@ Algumas heurísticas são uma pergunta só, curta o bastante para ficar num cart
   inclusive valores que a página nunca oferece. Os botões da página não são as únicas coisas que
   alcançam o servidor.
 
-Nenhuma delas encontra um defeito sozinha. O que elas fazem é garantir que a sessão não seja gasta
-repetindo os três testes que vieram à cabeça primeiro. A seção 05 desta aula usa duas delas de
+Nenhuma delas encontra um defeito sozinha. Elas impedem que a sessão seja gasta repetindo os três
+testes que vieram à cabeça primeiro. A seção 05 desta aula usa duas delas de
 propósito, Function e Time do SFDPOT, e uma das menores, a outra porta.

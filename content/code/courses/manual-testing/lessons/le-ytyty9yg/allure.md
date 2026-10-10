@@ -12,10 +12,10 @@ this section asks you to install it.
 
 ## How it is fed
 
-Allure does not run tests. The tests run in whatever framework the team uses, and an **adapter**
-for that framework writes each result into a folder as the tests run: the outcome, the steps the
-test went through, how long each took, and any attachment, such as a screenshot of the page at the
-moment of failure or the text of the response. Adapters exist for the common frameworks in several
+Allure does not run tests. The tests run in whatever framework the team uses. An **adapter** for
+that framework writes each result into a folder as the tests run: the outcome, the steps the test
+went through, how long each took, and any attachment. An attachment can be a screenshot of
+the page at the moment of failure, or the text of the response. Adapters exist for the common frameworks in several
 languages, and Allure's command-line tool can also read JUnit XML, the format of section 02.
 
 The command-line tool then turns that folder into a **static website**: plain HTML files that can
@@ -40,7 +40,7 @@ report groups them that way as well as by suite. Labelled by requirement, boxoff
 show R5 with three tests and one failure, which is the traceability view of lesson 18 again.
 
 **Categories and flaky tests.** Failures can be sorted into categories by their messages, so that
-twenty failures with the same cause read as one problem, and a test that passed on a retry after
+twenty failures with the same cause read as one problem. A test that passed on a retry after
 failing is marked as **flaky**: a test whose result cannot be trusted on a single run.
 
 ## Who it is for

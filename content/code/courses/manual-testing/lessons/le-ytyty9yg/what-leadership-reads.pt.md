@@ -21,7 +21,7 @@ esconde:
 ```
 
 Na 1.0, nove dos catorze casos que rodaram passaram: 64%. Na 1.1, dez de dezessete passaram: 59%.
-Quem vê só as taxas conclui que a 1.1 é pior. Não é tão simples. A 1.1 corrigiu dois defeitos, o
+Quem vê só as taxas conclui que a 1.1 é pior. Na verdade, a 1.1 corrigiu dois defeitos, o
 limite de seis ingressos e o desconto de sócio em pedidos grandes, e quebrou um, o desconto de
 estudante. A taxa caiu porque três casos novos entraram na execução, cada um escrito para conferir
 um defeito já achado, e um caso novo escrito a partir de um defeito falha no dia em que entra.

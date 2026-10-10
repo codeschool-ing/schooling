@@ -80,16 +80,15 @@ the discount and then the total in bold.
 | member, Hamlet, 4 tickets | 10%, R$ 288,00 | 10%, R$ 288,00 | pass |
 
 **Sanity has passed, and the two defects can be marked as verified.** Lesson 16 names that step in
-a defect's life. What matters here is that Ana writes the build number beside the result, *verified
-on 1.1*, because a fix is a fact about one build and the next build may lose it.
+a defect's life. Ana writes the build number beside the result, *verified on 1.1*, because a fix is a fact about one build and the next build may lose it.
 
 Had either retest failed, the build would go back to Rui now, with the request that failed and
 what it answered, and nobody would spend the afternoon on a regression run of a build that was
-going to be replaced. That is the whole reason sanity runs first.
+going to be replaced.
 
-What these six commands do not say is anything about the rest of boxoffice. Edit 2 rewrote the
+These six commands say nothing about the rest of boxoffice. Edit 2 rewrote the
 function that decides every price the theatre charges, and the sanity check looked at two of its
 answers: a member booking five, a member booking four. Every other combination of discounts goes
-through the same three new lines and has not been tried on 1.1 by anyone. **That is the next
+through the same three new lines, and nobody has tried one on 1.1. **That is the next
 question, and it has a name of its own**: lesson 10 asks it with a regression run on this same
 build. Leave `boxoffice-1.0.py` where it is, because that run needs it.

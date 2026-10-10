@@ -6,8 +6,8 @@ version: 1
 Um plano de teste costuma ser imaginado como um documento longo que alguém escreve porque um
 processo exige, e que ninguém lê depois de aprovado. Muitos planos são exatamente isso. **Para que
 um plano serve é mais estreito e mais útil: ele registra as decisões sobre o teste antes de o teste
-começar**, para que sejam tomadas uma vez, de propósito, por pessoas que enxergam todas ao mesmo
-tempo, em vez de tomadas uma de cada vez por quem estiver testando no dia.
+começar.** Assim elas são tomadas uma vez, de propósito, por pessoas que enxergam todas ao mesmo
+tempo, e não uma de cada vez por quem estiver testando no dia.
 
 Teste sempre tem mais trabalho possível do que tempo. Os nove requisitos da aplicação deste curso
 já permitem mais casos do que alguém rodaria, e um produto real tem centenas de requisitos. Alguém
@@ -56,9 +56,8 @@ critérios de aceitação de cada história e numa página da wiki.
 O formato é a parte barata. O que faz um plano valer o tempo é que **toda resposta nele pode ser
 contestada**. "Vamos testar a fundo" não admite discussão e por isso não decide nada. "Não vamos
 testar no Safari nesta versão, porque 3% das visitas do mês passado usaram ele e a versão não muda
-nenhum layout" admite discussão, e é justamente isso que a torna útil: a dona do produto que sabe que
-o maior patrocinador do teatro usa iPhone agora tem algo a que objetar, antes da versão e não
-depois dela.
+nenhum layout" admite discussão, e é isso que a torna útil. A dona do produto que sabe que o maior
+patrocinador do teatro usa iPhone agora tem algo a que objetar, antes da versão e não depois dela.
 
 ## Um plano não é uma agenda de casos
 
@@ -69,5 +68,5 @@ decisões acima deles mudam muito menos.
 
 A outra confusão é com a **estratégia de teste**. Numa empresa que testa muitos produtos, a
 estratégia é a resposta permanente da organização à pergunta "como": os níveis, as ferramentas, os
-tipos de relatório; e o plano de cada projeto a cita em vez de repeti-la. Um plano sem estratégia
+tipos de relatório. O plano de cada projeto a cita em vez de repeti-la. Um plano sem estratégia
 acima dele simplesmente responde ao "como" por conta própria, que é o caso do boxoffice.

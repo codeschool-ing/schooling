@@ -83,7 +83,7 @@ Toda parte do resultado esperado está lá: reservado, três ingressos, 10% de d
 
 A execução também é a primeira verificação do próprio caso. Ler cada passo na página, e não na
 memória, é o mais perto que um autor chega de ser um estranho. Isso pega um passo faltando ou um
-controle com o nome errado, e não pega uma palavra que o autor entende sem perceber. A seção 06 trata
+controle com o nome errado, mas não pega uma palavra que o autor entende sem perceber. A seção 06 trata
 da verificação que pega.
 
 ## Quanto custou

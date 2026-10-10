@@ -62,7 +62,7 @@ dependiam acabou de ser tirado. Então uma afirmação de regressão é conferid
 anterior quando ela ainda existe, e é por isso que a aula 9 pediu que você guardasse o
 `boxoffice-1.0.py`.
 
-A segunda linha importa tanto quanto na prática. As notas do Rui listam dois defeitos como
+Na prática, a segunda linha importa tanto quanto a primeira. As notas do Rui listam dois defeitos como
 conhecidos e não corrigidos: a página de erro para um campo de ingressos que não é número, e um
 pedido usado que ainda pode ser reembolsado. Uma rodada de regressão na 1.1 encontra os dois de novo
 e eles falham de novo. **Uma falha conhecida é um resultado a registrar, e não um defeito a relatar

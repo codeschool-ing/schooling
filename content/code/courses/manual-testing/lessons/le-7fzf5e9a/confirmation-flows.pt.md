@@ -51,7 +51,7 @@ uma informação sobre essa pessoa. O testador confere se as duas respostas são
 ## Casos, a partir do requisito
 
 Cada uma dessas partes vira um ou mais casos, e todo resultado esperado vem do R3, ou fica marcado
-como pergunta quando o R3 se cala. Essa última coluna é a honesta: **um caso cujo resultado esperado
+como pergunta quando o R3 se cala. Essa marcação é a honesta: **um caso cujo resultado esperado
 ninguém escreveu é uma pergunta para o cliente**, e a aula 12 trata de como fazê-la.
 
 | # | caso | esperado |
@@ -69,7 +69,7 @@ ninguém escreveu é uma pergunta para o cliente**, e a aula 12 trata de como fa
 O caso 9 esconde um clássico. **O link do e-mail é montado pela aplicação a partir das próprias
 configurações**, e o boxoffice o monta com `127.0.0.1` e a porta dele. No servidor do teatro ele
 teria de citar o endereço real do teatro. Um link que aponta para uma máquina de teste, ou para a
-porta errada, parece perfeitamente normal na mensagem e só falha quando alguém clica nele de casa; é
+porta errada, parece perfeitamente normal na mensagem e só falha quando alguém clica nele de casa. É
 o tipo de defeito de que trata a aula 21, que mora no ambiente e não no código.
 
 ## Para onde vai o e-mail enquanto você testa

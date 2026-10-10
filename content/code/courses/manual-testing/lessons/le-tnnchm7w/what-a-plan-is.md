@@ -6,8 +6,8 @@ version: 1
 A test plan is often pictured as a long document that somebody writes because a process asks for
 one, and that nobody reads once it is approved. Plenty of plans are exactly that. **What a plan is
 for is narrower and more useful: it writes down the decisions about testing before the testing
-starts**, so that they are made once, on purpose, by people who can see all of them at the same
-time, instead of being made one at a time by whoever happens to be testing on the day.
+starts.** They are then made once, on purpose, by people who can see all of them at the same time,
+instead of one at a time by whoever happens to be testing on the day.
 
 Testing has more possible work than time, always. The nine requirements of the application in this
 course already allow more cases than anybody would run, and a real product has hundreds of
@@ -57,9 +57,9 @@ story, and in a page on the wiki.
 The format is the cheap part. What makes a plan worth its time is that **every answer in it can be
 disagreed with**. "We will test thoroughly" cannot be argued with and therefore decides nothing.
 "We will not test on Safari for this release, because 3% of last month's visits used it and the
-release changes no layout" can be argued with, and that is exactly what makes it useful: the
-product owner who knows that the theatre's biggest sponsor uses an iPhone now has something to
-object to, before the release instead of after it.
+release changes no layout" can be argued with, and that is what makes it useful. The product
+owner who knows that the theatre's biggest sponsor uses an iPhone now has something to object to,
+before the release instead of after it.
 
 ## A plan is not a schedule of cases
 
@@ -69,6 +69,6 @@ list every case is out of date by the second day, because the cases change every
 requirement does, and the decisions above them change far less often.
 
 The other confusion is with a **test strategy**. In a company that tests many products, the
-strategy is the organisation's standing answer to the "how" question, the levels, the tools, the
-kinds of report, and each project's plan refers to it rather than repeating it. A plan without a
+strategy is the organisation's standing answer to the "how" question: the levels, the tools, the
+kinds of report. Each project's plan refers to it rather than repeating it. A plan without a
 strategy above it simply answers the "how" question itself, which is the case for boxoffice.

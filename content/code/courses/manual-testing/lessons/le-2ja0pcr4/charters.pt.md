@@ -57,8 +57,8 @@ Mais algumas para o boxoffice 1.1, cada uma valendo uma sessão:
 As missões ficam numa lista, alimentada pelos mesmos lugares que o resto do teste. Os riscos da
 aula 1 dizem onde uma sessão vale mais. Os requisitos também sugerem missões, especialmente aqueles
 cujos casos roteirizados pareceram ralos. Um defeito novo é motivo para explorar a vizinhança dele.
-E as sessões anteriores terminam suas conversas finais com perguntas que não estavam na missão. Em geral é o testador quem as escreve, e o líder decide com ele quais rodam nesta
-semana.
+E as sessões anteriores terminam suas conversas finais com perguntas que não estavam na missão. Em geral é o testador
+quem as escreve, e o líder decide com ele quais rodam nesta semana.
 
 ## O tempo fixo
 

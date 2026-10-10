@@ -33,8 +33,8 @@ semana.
 
 Um roteiro confere o que alguém pensou em escrever. **Os defeitos que os roteiros deixam passar são
 os que ninguém pensou em perguntar**, e eles são boa parte do que chega aos clientes. As aulas 4 e 5
-encontraram os defeitos do boxoffice trabalhando de forma sistemática a partir do R4, do R5 e do R6;
-nada nesses requisitos diz como deve ser a mensagem de uma ação recusada, além do "uma frase dizendo
+encontraram os defeitos do boxoffice trabalhando de forma sistemática a partir do R4, do R5 e do R6.
+Nada nesses requisitos diz como deve ser a mensagem de uma ação recusada, além do "uma frase dizendo
 o que está errado" do R7, nem como um reembolso deve se comportar à medida que a noite avança. Um
 roteiro escrito a partir do R6 faz exatamente o que o R6 diz e para aí. Quem explora continua.
 

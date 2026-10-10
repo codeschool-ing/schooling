@@ -13,7 +13,7 @@ defeito que importava.
 ## Três jeitos de reduzi-la
 
 **Por risco.** A aula 1 ordenou o que pode dar errado no boxoffice por probabilidade e impacto, e
-essa ordem já diz o que merece ser rodado de novo primeiro: A, um preço errado; B, um espetáculo
+essa ordem já diz o que merece ser rodado de novo primeiro. Do topo para baixo: A, um preço errado; B, um espetáculo
 vendido além dos lugares; C, um reembolso que não devia acontecer; D, um e-mail de confirmação que
 nunca chega; E, uma tabela de espetáculos difícil de ler no celular. Quando o tempo aperta, os casos
 do fim da lista são os que ficam de fora.

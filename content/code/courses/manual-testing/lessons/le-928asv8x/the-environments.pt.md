@@ -12,7 +12,7 @@ está testando em outro ambiente, tenha alguém dado um nome novo a ele ou não.
 
 O plano da aula 1 já tinha uma linha para isso. A pergunta "quem, e com o quê?" citava as máquinas,
 os navegadores, os dados e as contas, e listava a caixa de saída como o que faz o papel do servidor
-de e-mail. Esta aula trata de por que essa linha pesa mais do que parece.
+de e-mail. Esta aula trata de por que essa linha importa.
 
 ## Os quatro, e para que serve cada um
 
@@ -35,7 +35,7 @@ configuração, mesma versão de tudo, dados com a mesma forma e as mesmas confi
 teste que passa em homologação vale exatamente na medida em que a homologação se parece com a
 produção.
 
-**Produção não é ambiente de teste**, e a exceção confirma a regra. Depois de uma versão, um testador
+**Produção não é ambiente de teste**, com uma exceção. Depois de uma versão, um testador
 roda ali uma verificação de fumaça curta (aula 8), com uma conta mantida para isso, porque algumas
 coisas não existem em nenhum outro lugar: o servidor de e-mail real, o domínio real, a maquininha de
 cartão real. O plano da aula 1 deixou "o servidor de e-mail real" fora do escopo exatamente por isso,

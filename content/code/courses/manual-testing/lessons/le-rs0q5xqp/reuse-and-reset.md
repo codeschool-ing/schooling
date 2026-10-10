@@ -59,8 +59,8 @@ list every time it is asked.
 
 Boxoffice applies the same idea to itself in two places, both set from the environment and both
 met in earlier lessons. `BOXOFFICE_SEED` makes the confirmation links come out the same on every
-run, and `BOXOFFICE_NOW` fixes the clock, which lesson 13 called a fake clock. The transcripts in this
-course were recorded with both set, which is why their dates and links are the same on every
+run, and `BOXOFFICE_NOW` fixes the clock, which lesson 13 called a fake clock. The
+transcripts in this course were recorded with both set, which is why their dates and links are the same on every
 recording. Yours differ in exactly those two things, because you start boxoffice without them.
 
 ## Real systems do not reset by restarting

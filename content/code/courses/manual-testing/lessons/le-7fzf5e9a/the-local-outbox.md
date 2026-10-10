@@ -107,9 +107,9 @@ ana@laptop:~/boxoffice$ curl -s 'http://127.0.0.1:8000/confirm?token=8mp9vq2ccu5
 ```
 
 **The old link confirmed the account.** R3 says it should have answered "This link is not valid."
-That is defect 10, and it is worth more than it looks. The reason somebody asks for a second link is
-often that the first went somewhere they do not control, an old address, a shared inbox, a mistyped
-domain; a first link that keeps working for its full 24 hours keeps that door open after the person
+That is defect 10. It matters because somebody often asks for a second link when the first went
+somewhere they do not control: an old address, a shared inbox, a mistyped domain. A first link that
+keeps working for its full 24 hours keeps that door open after the person
 believed they had shut it. The report needs the steps above, the expected and actual results
 side by side, and the environment block from lesson 21.
 

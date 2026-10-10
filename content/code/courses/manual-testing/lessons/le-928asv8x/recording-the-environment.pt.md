@@ -80,7 +80,7 @@ estranha, tire-a de novo em vez de corrigi-la à mão.
 Nem tudo sobre uma máquina cabe num relatório, e uma página de configurações esconde a única linha que
 importa. Uma regra justa é registrar **o que plausivelmente pode diferir entre a sua máquina e a de
 quem lê**: versões, o fuso, o idioma do sistema, como o programa foi iniciado e os dados de que você
-partiu, que no boxoffice é "um início do zero" e num produto real é o nome de um conjunto de dados
+partiu. No boxoffice isso é "um início do zero"; num produto real é o nome de um conjunto de dados
 (aula 20). Se um defeito acabar dependendo de algo fora do bloco, acrescente essa linha ao bloco, e
 todo relatório depois dele a traz.
 

@@ -50,7 +50,7 @@ which is information about that person. A tester checks that the two answers are
 ## Cases, from the requirement
 
 Each of those parts turns into one or more cases, and every expected result comes from R3, or is
-marked as a question when R3 is silent. That last column is the honest one: **a case whose expected
+marked as a question when R3 is silent. That mark is the honest one: **a case whose expected
 result nobody wrote down is a question for the client**, and lesson 12 is about putting it to them.
 
 | # | case | expected |
@@ -68,7 +68,7 @@ result nobody wrote down is a question for the client**, and lesson 12 is about 
 Case 9 hides a classic. **The link in the e-mail is built by the application from its own
 settings**, and boxoffice builds it from `127.0.0.1` and its port. On the theatre's server it would
 have to name the theatre's real address. A link that points at a test machine, or at the wrong port,
-looks perfectly normal in the message and fails only when somebody clicks it from home; it is the
+looks perfectly normal in the message and fails only when somebody clicks it from home. It is the
 kind of defect lesson 21 is about, one that lives in the environment rather than in the code.
 
 ## Where the e-mail goes while you test

@@ -21,8 +21,8 @@ once or be deferred on purpose.
 
 **Reopen rate.** Of the defects marked fixed, how many came back from the retest? It answers *do
 our fixes hold?* A high rate means fixes go out untested, or reports are unclear enough that the
-developer fixes something other than what was meant, and the two causes are told apart by reading
-the reopened reports. It is a ratio, so it needs a period and a denominator: *6 of the 40 fixed last
+developer fixes something other than what was meant, and reading the reopened reports tells the two
+causes apart. It is a ratio, so it needs a period and a denominator: *6 of the 40 fixed last
 quarter came back, 15%*. boxoffice has two fixes so far, the six-ticket rule and the member
 discount, and neither was reopened. That is 0%, and two is far too few to mean anything; the honest report of it says *two
 fixes, none reopened* and draws no conclusion.
@@ -50,7 +50,7 @@ quietly turns testers against each other, since a defect one of them reports is 
 cannot.
 
 **Total open defects, with no severity.** Thirty trivial wording defects and one critical refund
-defect make thirty-one, and so does thirty-one critical ones. A chart of the total going down can
+defect make thirty-one, and so do thirty-one critical ones. A chart of the total going down can
 mean the team fixed the critical one, or that it closed thirty misspellings and left the refund
 alone.
 

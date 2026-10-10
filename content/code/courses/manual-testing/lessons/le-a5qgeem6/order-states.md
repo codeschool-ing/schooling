@@ -50,7 +50,7 @@ any of them ran.
 
 ## Three dashes
 
-With orders now sitting in four different states, the invalid cases are cheap to reach. One more
+With orders now sitting in three final states, the invalid cases are cheap to reach. One more
 booking gives a fresh reserved order, 1004; refunding it is the dash in the reserved row. Order
 1002 is cancelled and order 1003 refunded; cancelling either is a dash in a final state's row:
 
@@ -115,9 +115,9 @@ to people who will find them taken.
 The happy path, book, pay, use, passed. So did the other two valid paths. A tester who stopped at
 the transitions on the diagram would have reported R6 as working, and the defect would have been
 found by the first customer who noticed that the Refund button still worked on tickets already
-used at the door. It was found here because the state table turned the forbidden moves into a list, and the
-harm of each one put this cell at the top of it.
+used at the door. It was found here because the state table turned the forbidden moves into a
+list, and the harm of each one put this cell at the top of it.
 
 Twelve dashes were not run in this section. Section 06 of this lesson asks about some of them, and
-the rest are worth running on your own machine: each one is a button and a sentence to read, and one
+the rest are worth running on your own machine. Each one is a button and a sentence to read, and one
 of the sixteen has already shown that a dash is a claim boxoffice does not always keep.

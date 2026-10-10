@@ -50,9 +50,9 @@ e então a resposta é 15%, não 25%.
 ```
 
 Escrever essa linha já é testar. Fazer isso arranca uma pergunta do requisito para cada
-combinação, e às vezes o requisito não tem resposta: se o R5 não dissesse o que acontece quando
-descontos se encontram, a regra 5 seria um espaço em branco sem nada para pôr, e o certo é
-perguntar ao gerente do teatro antes de alguém escrever código em cima de um palpite. Uma tabela de
+combinação, e às vezes o requisito não tem resposta. Se o R5 não dissesse o que acontece quando
+descontos se encontram, a regra 5 seria um espaço em branco sem nada para pôr, e o certo seria
+perguntar à gerente do teatro antes de alguém escrever código em cima de um palpite. Uma tabela de
 decisão acha lacunas num requisito além de defeitos num programa, e acha mais cedo.
 
 ## Reduzindo uma tabela
@@ -65,7 +65,7 @@ membro –, cinco ou mais –, desconto 50%. As oito regras viram cinco, e cinco
 50% a um estudante faz isso não importa o que mais seja verdade, como o requisito diz. Se o programa
 conferir primeiro o desconto de membro e sair mais cedo, um estudante que também é membro é tratado
 por uma linha diferente da de um estudante que não é, e a tabela reduzida roda só uma delas. Para a
-maioria das regras a aposta é razoável e economiza esforço de verdade: uma regra com cinco condições
+maioria das regras a aposta é razoável e economiza esforço de verdade: uma tabela com cinco condições
 tem 32 colunas. Para o preço, que a aula 1 pôs no topo da grade de riscos do boxoffice como risco A,
 oito casos são baratos e a aposta não compensa. Esta aula roda as oito.
 

@@ -39,8 +39,8 @@ the product is wrong or the data was not what the case assumed, and only known d
 **It belongs to nobody.** An address a test signs up with may receive mail, so an invented address
 at a real provider may reach a real stranger. Boxoffice's outbox keeps every message, which is why
 this course could be careless and is not: every address in it is at `example.org`, one of a few
-domains reserved for documentation and examples, so no customer can ever own an address there. Lesson 22 is about what happens to test
-e-mail in environments that do send it.
+domains reserved for documentation and examples, so no customer can ever own an address there.
+Lesson 22 is about what happens to test e-mail in environments that do send it.
 
 **It covers what the case is about.** A case about the student discount needs a student booking; a
 case about a full show needs a show with no seats. Data for the case comes from the case, and the
@@ -48,8 +48,8 @@ technique that chose the values chooses the data too.
 
 **It can be put back.** A case that books six tickets for Hamlet leaves Hamlet with six fewer. Run
 it thirteen times and the fourteenth finds two seats left and fails, for a reason that has nothing
-to do with what it checks. Section 05 of this lesson is about getting back to a
-known state, and why boxoffice makes that unusually easy.
+to do with what it checks. Section 05 of this lesson is about getting back to a known
+state, and why boxoffice makes that unusually easy.
 
 ## Data that runs out
 
@@ -57,5 +57,5 @@ Some data is used up by the case that uses it. An order can be paid once; once i
 for paying it cannot run on that order again. Seats run out. An address can be signed up once,
 which section 05 of this lesson runs into. **Consumable data** is the commonest reason a case passes
 on Monday and fails on Tuesday with nothing changed in the product, and the fix is never to edit the
-case until it passes. It is to
-make the case create what it consumes, or to start each run from a state where it exists.
+case until it passes. It is to make the case create what it consumes, or to start each run from a
+state where it exists.

@@ -5,9 +5,9 @@ version: 1
 
 A case management tool is easy to picture as a filing cabinet: somewhere to keep test cases so
 they are not lost in a folder of documents. Keeping them is the smallest part of the job. **What a
-case tool adds is the separation between a case, written once, and its runs, each time it is
-executed against a build, with the links between them and the requirements and defects either
-side.** Everything the four tools in this lesson sell is built on that separation.
+case tool adds is the separation between a case, written once, and its runs, one for each time it
+is executed against a build.** It links both to the requirements and defects on either side, and
+everything the four tools in this lesson sell is built on that separation.
 
 ## Four things a tool keeps apart
 
