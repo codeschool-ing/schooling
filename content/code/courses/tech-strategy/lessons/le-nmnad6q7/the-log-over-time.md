@@ -52,7 +52,7 @@ and why.
 ## Beside the code
 
 Coreto keeps its log in `docs/adr/` inside `coreto-core`, one Markdown file per record, named after
-its number and title: `0006-hold-seats-without-row-locks.md`. That placement buys three things.
+its number and title, as in `0006-hold-seats-without-row-locks.md`. That placement buys three things.
 
 **A record is reviewed with the change it explains.** The pull request that started the move to
 holds without locks carried ADR-0006 in it, and reviewers argued with the context before the code

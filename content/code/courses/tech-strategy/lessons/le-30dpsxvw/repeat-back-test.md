@@ -70,7 +70,7 @@ going round that nobody wrote, and that version will make decisions until it is 
 
 The failures pointed at the page and at how it was delivered, not at the five people.
 
-- The policy moved into the title: *Coreto technical strategy: protect the on-sale first.*
+- The policy moved into the title, which now reads *Coreto technical strategy: protect the on-sale first.*
   Everybody who opens the page, or sees a link to it, reads the policy before anything else.
 - The not list moved above the measures, next to the actions, so that what the company is doing
   and what it is not doing are read together.
