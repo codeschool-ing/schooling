@@ -1,0 +1,621 @@
+[
+  {
+    "id": "ex-bx5rcyym",
+    "version": 1,
+    "section": "what-a-drill-is",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What makes a restore drill different from the restores in lessons 1 to 6?",
+    "hint": "The value is in doing it again.",
+    "choices": [
+      {
+        "text": "It restores over the live database to test it for real",
+        "correct": false,
+        "why": "A drill never touches the live database; it restores somewhere harmless."
+      },
+      {
+        "text": "It uses a logical dump instead of a physical backup",
+        "correct": false,
+        "why": "It uses whatever the real recovery would use, here pgBackRest."
+      },
+      {
+        "text": "Repetition: scheduled, timed, recorded",
+        "correct": true,
+        "why": "Right. A failure shows up in the week it happens, and the timings show a trend."
+      },
+      {
+        "text": "It skips the comparison to save time on large databases",
+        "correct": false,
+        "why": "The comparison is the proof; skipping it turns a drill back into a claim."
+      }
+    ]
+  },
+  {
+    "id": "ex-gj8dxnnr",
+    "version": 1,
+    "section": "what-a-drill-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which question can only a drill answer, among the checks in this course?",
+    "hint": "Lesson 8 needs a number.",
+    "choices": [
+      {
+        "text": "How long a restore of the real data takes",
+        "correct": true,
+        "why": "Right. Only a timed restore of the real data measures it."
+      },
+      {
+        "text": "Whether the archive command succeeded last night",
+        "correct": false,
+        "why": "pg_stat_archiver and check answer that."
+      },
+      {
+        "text": "Whether the repository files match their checksums",
+        "correct": false,
+        "why": "verify answers that."
+      },
+      {
+        "text": "Whether the nightly job exited with 0",
+        "correct": false,
+        "why": "The job's own exit status says that."
+      }
+    ]
+  },
+  {
+    "id": "ex-v21mfbhb",
+    "version": 1,
+    "section": "what-a-drill-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the platform's drill restore to a new, temporary server rather than over the database it tests?",
+    "hint": "Which operation is the destructive one?",
+    "choices": [
+      {
+        "text": "Because the cloud provider forbids restoring over a live instance",
+        "correct": false,
+        "why": "The reason is about risk, not a provider's rule."
+      },
+      {
+        "text": "To save money on storage",
+        "correct": false,
+        "why": "A second server costs more, not less."
+      },
+      {
+        "text": "Because the live database would be faster afterwards",
+        "correct": false,
+        "why": "Speed is not involved."
+      },
+      {
+        "text": "A restore over it destroys what you need if the restore is bad",
+        "correct": true,
+        "why": "Right. The restore is the destructive act, and it would destroy the thing being tested."
+      }
+    ]
+  },
+  {
+    "id": "ex-d1vkqhp7",
+    "version": 1,
+    "section": "the-report",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `\\gexec` do at the end of the first query in `report.sql`?",
+    "hint": "The query returns statements.",
+    "choices": [
+      {
+        "text": "Exports the result to a file",
+        "correct": false,
+        "why": "Writing to a file is \\o or \\copy; \\gexec executes."
+      },
+      {
+        "text": "Runs each returned row as SQL",
+        "correct": true,
+        "why": "Right: it runs each row the query returned as a statement. The query writes one statement per table."
+      },
+      {
+        "text": "Repeats the query every few seconds",
+        "correct": false,
+        "why": "That is \\watch."
+      },
+      {
+        "text": "Runs the query inside a single transaction",
+        "correct": false,
+        "why": "\\gexec does not open a transaction."
+      }
+    ]
+  },
+  {
+    "id": "ex-y9j4dnb7",
+    "version": 1,
+    "section": "the-report",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `report.sql` read `information_schema.tables` instead of naming the shop's tables?",
+    "hint": "What happens the day somebody adds a table?",
+    "choices": [
+      {
+        "text": "Naming tables is not allowed in a report",
+        "correct": false,
+        "why": "It is allowed; lesson 1's verify.sql did it."
+      },
+      {
+        "text": "New tables join the drill unedited",
+        "correct": true,
+        "why": "Right. A report that names tables silently stops covering the database as it grows."
+      },
+      {
+        "text": "information_schema is faster to read than the tables",
+        "correct": false,
+        "why": "It is a catalogue view; speed is not the reason."
+      },
+      {
+        "text": "Tables named directly might be locked during a drill",
+        "correct": false,
+        "why": "Naming them changes nothing about locking."
+      }
+    ]
+  },
+  {
+    "id": "ex-kpahka2y",
+    "version": 1,
+    "section": "the-report",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One row of three million has one character changed in the restored copy, and the total is unchanged. Which report notices?",
+    "hint": "Lesson 1's sums against this lesson's fingerprints.",
+    "choices": [
+      {
+        "text": "Both: any change moves a sum",
+        "correct": false,
+        "why": "A changed name does not move a sum of totals, and two changes can cancel."
+      },
+      {
+        "text": "Neither: one row in three million is below what a report can detect",
+        "correct": false,
+        "why": "The fingerprint detects one character anywhere in any row."
+      },
+      {
+        "text": "Lesson 1's report only, because it sums columns",
+        "correct": false,
+        "why": "A sum over total_cents cannot see a change in another column."
+      },
+      {
+        "text": "This lesson's fingerprint, and not lesson 1's sums",
+        "correct": true,
+        "why": "Right. md5 over every row's text changes with one character; a sum over one column does not see a changed name."
+      }
+    ]
+  },
+  {
+    "id": "ex-jn6pqfv7",
+    "version": 1,
+    "section": "the-report",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "About how many seconds did `report.sql` take on `bigshop`?",
+    "hint": "The real line of time.",
+    "value": 5,
+    "tolerance": 1,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-wcxz3zda",
+    "version": 1,
+    "section": "the-script",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the drill script's steps in order.",
+    "hint": "The moment has to exist before anything is restored to it.",
+    "items": [
+      "Create a restore point and read the live reports",
+      "Wait until the archive has the restore point",
+      "Restore to the second server and start it",
+      "Read the reports on the copy and compare",
+      "Throw the copy away and append a line to drills.csv"
+    ],
+    "trap": "The target is named first; check makes sure it is archived; restore and recovery come next; the proof needs the copy; and the copy goes, with a record, whatever the result."
+  },
+  {
+    "id": "ex-n5hang55",
+    "version": 1,
+    "section": "the-script",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the first drill, which phase took longest, and why?",
+    "hint": "Restore 2.2 s, recovery 2.5 s, proof 6.0 s.",
+    "choices": [
+      {
+        "text": "The proof, because it reads every row on both sides",
+        "correct": true,
+        "why": "Right. Fingerprinting three million rows means reading and sorting them."
+      },
+      {
+        "text": "The restore, because it decompresses every file",
+        "correct": false,
+        "why": "It took 2.2 seconds, the shortest phase."
+      },
+      {
+        "text": "The recovery, because it replays the archive",
+        "correct": false,
+        "why": "2.5 seconds; there was little log to replay."
+      },
+      {
+        "text": "They were equal",
+        "correct": false,
+        "why": "6.0 is more than twice either of the others."
+      }
+    ]
+  },
+  {
+    "id": "ex-zc3bd28p",
+    "version": 1,
+    "section": "the-script",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the script remove the restored copy whatever the result?",
+    "hint": "What is left running otherwise, and with what in it?",
+    "choices": [
+      {
+        "text": "Because pgBackRest refuses to restore twice into the same directory",
+        "correct": false,
+        "why": "It could restore with --delta; that is not the reason."
+      },
+      {
+        "text": "Because a restored copy slows down the live server",
+        "correct": false,
+        "why": "It shares the machine here, and that is not why it is removed."
+      },
+      {
+        "text": "So a failed drill does not leave a server holding the data",
+        "correct": true,
+        "why": "Right. A drill that fails is exactly when a forgotten copy is left behind."
+      },
+      {
+        "text": "So that the next backup is smaller",
+        "correct": false,
+        "why": "Backups come from the live server; the copy has nothing to do with them."
+      }
+    ]
+  },
+  {
+    "id": "ex-ww7mekpw",
+    "version": 1,
+    "section": "the-script",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many seconds did the first drill take in total?",
+    "hint": "The sixth field.",
+    "value": 16.7,
+    "tolerance": 0.1,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-ec22dryw",
+    "version": 1,
+    "section": "moving-targets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The second drill reported `DIFFERENT` although the backup was perfect. What caused it?",
+    "hint": "Compare when each side was read.",
+    "choices": [
+      {
+        "text": "The restore point was created after the reports",
+        "correct": false,
+        "why": "It was created first; the gap was after it."
+      },
+      {
+        "text": "The fingerprint is random and changes each run",
+        "correct": false,
+        "why": "It is md5 of the same rows; it does not change unless the rows do."
+      },
+      {
+        "text": "The backup missed the last segment",
+        "correct": false,
+        "why": "The copy matched the restore point exactly; the live side had moved on."
+      },
+      {
+        "text": "The two sides were read at different moments",
+        "correct": true,
+        "why": "Right. The live side was read after the moment the copy was restored to, and orders inserted in that instant were on one side only."
+      }
+    ]
+  },
+  {
+    "id": "ex-gcw6h6dy",
+    "version": 1,
+    "section": "moving-targets",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is a drill that sometimes fails for its own reasons dangerous?",
+    "hint": "What do people learn from it?",
+    "choices": [
+      {
+        "text": "It uses up the restore server",
+        "correct": false,
+        "why": "The cost is in trust, not machines."
+      },
+      {
+        "text": "It deletes good backups",
+        "correct": false,
+        "why": "A drill never touches the repository's backups."
+      },
+      {
+        "text": "Its failures stop being read",
+        "correct": true,
+        "why": "Right. People learn to ignore its failures, and then miss a real one. A red result has to always mean something."
+      },
+      {
+        "text": "It slows the live server down",
+        "correct": false,
+        "why": "That is a separate concern."
+      }
+    ]
+  },
+  {
+    "id": "ex-kaf2h2rh",
+    "version": 1,
+    "section": "moving-targets",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which method makes the live report and the restored copy describe the same instant on a busy database?",
+    "hint": "One snapshot, and its time.",
+    "choices": [
+      {
+        "text": "One snapshot, restored to its own now()",
+        "correct": true,
+        "why": "Right: read the report in one REPEATABLE READ snapshot and restore to its now(). Every statement sees one instant, and the restore stops there."
+      },
+      {
+        "text": "Run the report twice and keep the second result",
+        "correct": false,
+        "why": "Two moving reads are still moving."
+      },
+      {
+        "text": "Restore to the latest point the archive has",
+        "correct": false,
+        "why": "The latest point keeps moving too."
+      },
+      {
+        "text": "Lock every table during the drill",
+        "correct": false,
+        "why": "That stops the application: an outage to run a check."
+      }
+    ]
+  },
+  {
+    "id": "ex-rvyn9qwg",
+    "version": 1,
+    "section": "moving-targets",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Between `BEGIN` and `COMMIT`, PostgreSQL's `now()` returns the moment the ___ started, which is why it can name a snapshot's time.",
+    "hint": "Not the statement.",
+    "blanks": [
+      {
+        "accept": [
+          "transaction"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wgm3rhja",
+    "version": 1,
+    "section": "how-often",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the interval between drills tell you?",
+    "hint": "A backup breaks the day after a drill.",
+    "choices": [
+      {
+        "text": "How much data a restore loses",
+        "correct": false,
+        "why": "That is the backup and archive's job, lesson 8's RPO."
+      },
+      {
+        "text": "How long a broken backup goes unnoticed, at most",
+        "correct": true,
+        "why": "Right. With monthly drills, up to a month."
+      },
+      {
+        "text": "How long a restore takes",
+        "correct": false,
+        "why": "The drill measures that; the interval does not decide it."
+      },
+      {
+        "text": "How many backups are kept",
+        "correct": false,
+        "why": "That is retention."
+      }
+    ]
+  },
+  {
+    "id": "ex-2vc6yy49",
+    "version": 1,
+    "section": "how-often",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Retention keeps about two weeks of backups and the drill runs monthly. What happens when the drill finds that backups broke three weeks ago?",
+    "hint": "Look at the figure.",
+    "choices": [
+      {
+        "text": "You restore from the last backup before the break",
+        "correct": false,
+        "why": "It expired a week ago; retention reaches back two weeks."
+      },
+      {
+        "text": "You restore from the newest backup, which is fine",
+        "correct": false,
+        "why": "The newest backup is one of the broken ones."
+      },
+      {
+        "text": "Every kept backup is from after the break, so none is good",
+        "correct": true,
+        "why": "Right. The drill interval has to be shorter than the retention window."
+      },
+      {
+        "text": "pgBackRest restores a backup from the expired set",
+        "correct": false,
+        "why": "Expired backups are deleted from the repository."
+      }
+    ]
+  },
+  {
+    "id": "ex-v17gq1ry",
+    "version": 1,
+    "section": "how-often",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Fulls are weekly, two are kept, and you want at least one week of margin between noticing a failure and the last good backup expiring. What is the longest drill interval in days?",
+    "hint": "About fourteen days of retention, minus seven of margin.",
+    "value": 7,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-5111vq24",
+    "version": 1,
+    "section": "how-often",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a quarterly drill by a person who did not set the backups up catch that the weekly script cannot?",
+    "hint": "The script never needs to ask anybody anything.",
+    "choices": [
+      {
+        "text": "Steps only one person knows",
+        "correct": true,
+        "why": "Right: a procedure, a password or a step that lives in one person's head. A script that works says nothing about whether anybody else could do it."
+      },
+      {
+        "text": "A backup damaged by a bad disk",
+        "correct": false,
+        "why": "The weekly script's verify and restore catch that."
+      },
+      {
+        "text": "A restore that is slower than last week",
+        "correct": false,
+        "why": "drills.csv shows that trend."
+      },
+      {
+        "text": "Changes in the fingerprint",
+        "correct": false,
+        "why": "The script compares fingerprints every week."
+      }
+    ]
+  },
+  {
+    "id": "ex-rs9hmasn",
+    "version": 1,
+    "section": "what-drills-find",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Restore times in `drills.csv` rose from 20 minutes in January to 50 in June. The promise is one hour. What is the useful reading?",
+    "hint": "Extend the line.",
+    "choices": [
+      {
+        "text": "Nothing to do while it is under an hour",
+        "correct": false,
+        "why": "At that rate it passes the hour within months, and a restore on that day breaks the promise."
+      },
+      {
+        "text": "The backups are degrading and must be retaken",
+        "correct": false,
+        "why": "Slower is not damaged; the data grew."
+      },
+      {
+        "text": "Drill less often, so the numbers stay stable",
+        "correct": false,
+        "why": "The numbers would still grow; you would just stop seeing them."
+      },
+      {
+        "text": "Act now: the trend will cross the promise soon",
+        "correct": true,
+        "why": "Right. Faster restore hardware, parallel restore, or more frequent fulls, before the day it matters."
+      }
+    ]
+  },
+  {
+    "id": "ex-2pp0dav3",
+    "version": 1,
+    "section": "what-drills-find",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "According to the lesson, what do real drills most often fail on?",
+    "hint": "Usually before the data.",
+    "choices": [
+      {
+        "text": "A damaged backup file",
+        "correct": false,
+        "why": "It happens, and it is the rarest of the list."
+      },
+      {
+        "text": "Something the restore needs that is not with the backup",
+        "correct": true,
+        "why": "Right: a key, a password, a configuration file, a tablespace, an extension."
+      },
+      {
+        "text": "The fingerprint function giving different results on two machines",
+        "correct": false,
+        "why": "md5 is deterministic everywhere."
+      },
+      {
+        "text": "PostgreSQL refusing to replay archived log",
+        "correct": false,
+        "why": "Replay works when the log is there; gaps are a separate, listed failure."
+      }
+    ]
+  },
+  {
+    "id": "ex-znjrmg23",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each drill finding with the kind of failure it is.",
+    "hint": "Only one is the backup itself.",
+    "pairs": [
+      {
+        "left": "The restore server has PostgreSQL 15 installed",
+        "right": "The restore machine is not ready"
+      },
+      {
+        "left": "A segment from March is missing in the repository",
+        "right": "A gap in the archive"
+      },
+      {
+        "left": "Only Ana knows the repository's encryption password",
+        "right": "Something the restore needs is not with the backup"
+      },
+      {
+        "left": "A full backup fails its checksum",
+        "right": "The backup is damaged"
+      }
+    ],
+    "right_distractors": [
+      "The live database is too slow"
+    ]
+  }
+]
