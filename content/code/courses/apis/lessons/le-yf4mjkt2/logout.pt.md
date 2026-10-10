@@ -75,4 +75,4 @@ O mesmo gesto, apagar linhas, cobre cada caso que uma aplicação de verdade pre
 chave primária. Numa máquina só isso não custa quase nada. Com dez servidores atrás de um balanceador
 de carga, todos precisam da mesma tabela: um banco compartilhado, ou um armazenamento como o Redis
 que todos alcancem. Esse armazenamento compartilhado é o argumento a favor dos tokens, e a
-comparação no fim da lição o pesa.
+comparação no fim da aula o pesa.

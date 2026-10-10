@@ -53,7 +53,7 @@ ana@api:~/shelf$ python3 -c 'p = "canção"; print(len(p), len(p.encode()))'
 ```
 
 Uma frase-senha em português chega ao limite bem antes de 72 letras, e frase-senha é exatamente o que
-as regras do fim desta lição incentivam. Três saídas, da folha da OWASP:
+as regras do fim desta aula incentivam. Três saídas, da folha da OWASP:
 
 | escolha | o que significa |
 |---|---|
@@ -76,7 +76,7 @@ argon2.exceptions.VerifyMismatchError: The password does not match the supplied 
 ```
 
 O Argon2id recusa a segunda senha, que é o certo. O erro é o jeito da biblioteca de dizer "não
-confere"; o `passwords.py`, no fim desta lição, o captura e o transforma num login que falhou.
+confere"; o `passwords.py`, no fim desta aula, o captura e o transforma num login que falhou.
 
 **O bcrypt não exige muita memória.** O estado de trabalho dele tem alguns kilobytes, então um
 hardware que roda muitos palpites ao mesmo tempo os acomoda sem dificuldade. Isso, junto com os 72

@@ -8,7 +8,7 @@ cliente.** Um endpoint do `rest.py` roda as mesmas consultas não importa quem c
 `graph.py` pode pedir uma árvore tão larga e tão funda quanto o esquema permitir, e numa livraria em
 que um livro tem autor e um autor tem livros, a árvore não tem fundo.
 
-Então contar requisições, que é como a lição 12 limita um cliente, não mede a carga aqui. Uma
+Então contar requisições, que é como a aula 12 limita um cliente, não mede a carga aqui. Uma
 requisição de cinquenta caracteres, os livros, os autores deles, os livros desses autores e os
 autores deles de novo:
 
@@ -73,7 +73,7 @@ que você escreve todos os clientes.
 
 ## Por que o cache HTTP fica mais difícil
 
-Para qualquer coisa que só enxerga HTTP, as últimas requisições desta lição se parecem: uma escrita
+Para qualquer coisa que só enxerga HTTP, as últimas requisições desta aula se parecem: uma escrita
 que falhou pela metade, uma leitura, duas perguntas sobre o esquema e uma consulta recusada, todas
 com o mesmo método para o mesmo endereço:
 

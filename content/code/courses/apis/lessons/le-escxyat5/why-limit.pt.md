@@ -38,7 +38,7 @@ São três motivos, e eles decidem números diferentes:
 | **justiça entre clientes** | quem pede mais rápido leva mais serviço, seja lá o que tenha pago | uma cota de uso por cliente, não uma para a API inteira |
 | **custo** | cada requisição gasta dinheiro: processamento, tráfego de saída, uma API paga chamada por trás | uma cota por dia ou por mês, muitas vezes por plano |
 
-A segunda linha é o motivo de o limite desta lição ser **por cliente**. Um contador único para a API
+A segunda linha é o motivo de o limite desta aula ser **por cliente**. Um contador único para a API
 inteira protege o servidor e mais nada: quando um cliente ocupado o esgota, todos os outros também são
 recusados, e quem causou o problema derrubou todo mundo com educação em vez de sem ela.
 
@@ -49,7 +49,7 @@ chama este de **API4:2023, Unrestricted Resource Consumption** (consumo irrestri
 por segundo: nenhum teto para o tamanho de um upload, para os registros que uma página devolve ou para
 as operações que uma requisição pode juntar, e nenhum limite para a memória ou o tempo que uma
 requisição pode gastar. O último é dinheiro: um serviço de terceiros que a API paga a cada requisição,
-sem limite de gasto nenhum. A última seção desta lição volta a eles. A lição 13 percorre o resto da lista.
+sem limite de gasto nenhum. A última seção desta aula volta a eles. A aula 13 percorre o resto da lista.
 
 Um limite faz um segundo trabalho que é fácil de não ver. **A recusa também é uma instrução.** Um
 `429` com `Retry-After: 1` diz a um cliente bem escrito exatamente o que fazer, e os cabeçalhos de toda

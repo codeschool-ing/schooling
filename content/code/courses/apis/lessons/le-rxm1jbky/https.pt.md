@@ -8,7 +8,7 @@ servidor é aquele que ele pediu.** O segundo trabalho é o que as pessoas esque
 certificado: uma chave pública e uma lista de nomes, assinadas por uma autoridade em que o cliente já
 confia.
 
-A ideia de que HTTPS só importa na página de login não sobrevive às lições 7 a 9. Todas elas terminam
+A ideia de que HTTPS só importa na página de login não sobrevive às aulas 7 a 9. Todas elas terminam
 com um segredo viajando em toda requisição: uma senha na autenticação Basic, um token, um cookie de
 sessão. Eis o que a autenticação Basic põe no fio, e o que qualquer um que leia esses bytes recupera
 dele:
@@ -29,7 +29,7 @@ observa descobre que servidor foi contatado e quanto foi enviado, mas não o qu�
 
 Uma autoridade pública só assina certificados para nomes da internet pública, e uma VM chamada `api`
 não tem nenhum. Então o laboratório cria a própria autoridade, uma CA, e faz com que ela assine um
-certificado para o servidor. Todo passo é `openssl`, que a lição 1 instalou. Crie um diretório para os
+certificado para o servidor. Todo passo é `openssl`, que a aula 1 instalou. Crie um diretório para os
 arquivos, dentro de `~/shelf`, e entre nele com `cd tls`:
 
 ```

@@ -3,10 +3,10 @@ title: O shelf protegido
 version: 1
 ---
 
-Esta lição acrescenta dois arquivos a `~/shelf` e não muda nada do que já está lá. **O `secure.py` é a
-API de livros com todas as defesas da lição embutidas**, e `site/page.html` é uma página web que a
-chama de outra origem, que é o que torna essas defesas visíveis. O `rest.py` da lição 1 fica como
-estava; você pode começar esta lição a partir do fim da lição 1.
+Esta aula acrescenta dois arquivos a `~/shelf` e não muda nada do que já está lá. **O `secure.py` é a
+API de livros com todas as defesas da aula embutidas**, e `site/page.html` é uma página web que a
+chama de outra origem, que é o que torna essas defesas visíveis. O `rest.py` da aula 1 fica como
+estava; você pode começar esta aula a partir do fim da aula 1.
 
 O `secure.py` atende um tipo de endereço só, um livro em `/v1/books/<id>`, com dois métodos: GET o lê
 e PATCH muda o estoque dele. É pequeno de propósito. Um GET é a requisição que o navegador manda sem
@@ -33,7 +33,7 @@ salvou o `rest.py`:
     },
     {
       "code": "\n\nclass Secure(BaseHTTPRequestHandler):\n    protocol_version = \"HTTP/1.1\"\n    tls = False\n\n    def version_string(self):\n        return \"shelf\"\n\n    def parse_request(self):\n        if not super().parse_request():\n            return False\n        self.raw = self.rfile.read(int(self.headers.get(\"Content-Length\") or 0))\n        return True",
-      "note": "`version_string` é o que a biblioteca põe no cabeçalho `Server`. A API da lição 1 mandava ali a versão exata do Python; esta manda um nome e nada mais. O corpo é lido inteiro antes de qualquer resposta, como no `rest.py`."
+      "note": "`version_string` é o que a biblioteca põe no cabeçalho `Server`. A API da aula 1 mandava ali a versão exata do Python; esta manda um nome e nada mais. O corpo é lido inteiro antes de qualquer resposta, como no `rest.py`."
     },
     {
       "code": "\n    def cors(self):\n        \"\"\"Vary always; Allow-Origin only for a page on the list.\"\"\"\n        headers = getattr(self, \"headers\", None)\n        origin = headers.get(\"Origin\") if headers else None\n        if origin in ORIGINS:\n            return [(\"Access-Control-Allow-Origin\", origin), (\"Vary\", \"Origin\")]\n        return [(\"Vary\", \"Origin\")]",
@@ -49,11 +49,11 @@ salvou o `rest.py`:
     },
     {
       "code": "\n    def book(self):\n        m = re.fullmatch(r\"/v1/books/(\\d+)\", self.path.split(\"?\")[0])\n        return int(m.group(1)) if m else None\n\n    def do_OPTIONS(self):\n        \"\"\"The preflight: may this page send this method with these headers?\"\"\"\n        if self.book() is None:\n            return self.error(404, \"no such resource\")\n        extra = [(\"Allow\", \"GET, PATCH, OPTIONS\")]\n        if self.headers.get(\"Origin\") in ORIGINS:\n            extra += [(\"Access-Control-Allow-Methods\", \"GET, PATCH\"),\n                      (\"Access-Control-Allow-Headers\", \"Content-Type\"),\n                      (\"Access-Control-Max-Age\", \"600\")]\n        self.reply(204, None, extra)",
-      "note": "O **preflight**. Qualquer cliente pode perguntar quais métodos o endereço aceita, e recebe `Allow`. Uma página da lista recebe também os métodos e cabeçalhos que pode enviar, e `Max-Age`, o número de segundos que o navegador dela pode guardar a resposta. Responde **204**, onde a API da lição 1 respondia 501."
+      "note": "O **preflight**. Qualquer cliente pode perguntar quais métodos o endereço aceita, e recebe `Allow`. Uma página da lista recebe também os métodos e cabeçalhos que pode enviar, e `Max-Age`, o número de segundos que o navegador dela pode guardar a resposta. Responde **204**, onde a API da aula 1 respondia 501."
     },
     {
       "code": "\n    def do_GET(self):\n        ident = self.book()\n        if ident is None:\n            return self.error(404, \"no such resource\")\n        with db.connect() as conn:\n            row = conn.execute(\"SELECT id, title, stock FROM books WHERE id = ?\", (ident,)).fetchone()\n        return self.reply(200, dict(row)) if row else self.error(404, f\"no book {ident}\")\n\n    def do_PATCH(self):\n        ident = self.book()\n        if ident is None:\n            return self.error(404, \"no such resource\")\n        if self.headers.get(\"Content-Type\", \"\").split(\";\")[0] != \"application/json\":\n            return self.error(415, \"send the change as application/json\")\n        try:\n            value = json.loads(self.raw)\n        except ValueError:\n            return self.error(400, \"the body is not valid JSON\")\n        if (not isinstance(value, dict) or set(value) != {\"stock\"}\n                or type(value[\"stock\"]) is not int or value[\"stock\"] < 0):\n            return self.error(422, \"send {\\\"stock\\\": n}, n a whole number from 0\")\n        with db.connect() as conn:\n            conn.execute(\"UPDATE books SET stock = ? WHERE id = ?\", (value[\"stock\"], ident))\n            row = conn.execute(\"SELECT id, title, stock FROM books WHERE id = ?\", (ident,)).fetchone()\n        return self.reply(200, dict(row)) if row else self.error(404, f\"no book {ident}\")",
-      "note": "Um livro, lido e alterado. O PATCH aceita um único campo, `stock`, e recusa todo o resto com os códigos que a lição 1 escolheu. Nada nesses dois métodos menciona CORS: a decisão foi tomada uma vez, em `cors`."
+      "note": "Um livro, lido e alterado. O PATCH aceita um único campo, `stock`, e recusa todo o resto com os códigos que a aula 1 escolheu. Nada nesses dois métodos menciona CORS: a decisão foi tomada uma vez, em `cors`."
     },
     {
       "code": "\n    def refuse(self):\n        self.error(405, f\"{self.command} is not allowed here\", [(\"Allow\", \"GET, PATCH, OPTIONS\")])\n\n    do_POST = do_PUT = do_DELETE = refuse",
@@ -139,9 +139,9 @@ page.html
 
 ## Rodando os dois
 
-Cada servidor precisa de um terminal próprio, então esta lição usa três: o primeiro para os seus
+Cada servidor precisa de um terminal próprio, então esta aula usa três: o primeiro para os seus
 comandos, como sempre, e mais dois para os servidores. Se o `rest.py` ainda estiver rodando de uma
-lição anterior, pare-o antes com `Ctrl+C`, porque os dois programas querem a porta 8000. No segundo
+aula anterior, pare-o antes com `Ctrl+C`, porque os dois programas querem a porta 8000. No segundo
 terminal:
 
 ```sh
@@ -184,7 +184,7 @@ Descubra o endereço da VM no terminal do seu próprio computador:
 multipass info api
 ```
 
-A linha que interessa é a `IPv4`. Suponha que ela diga `192.168.64.5`; use o seu onde esta lição
+A linha que interessa é a `IPv4`. Suponha que ela diga `192.168.64.5`; use o seu onde esta aula
 escrever esse. Pare o `secure.py` com `Ctrl+C` e inicie de novo escutando em todos os endereços, e
 confiando na página como o seu navegador vai vê-la:
 
@@ -195,7 +195,7 @@ python3 secure.py --host 0.0.0.0 --origin http://192.168.64.5:8080
 Depois abra `http://192.168.64.5:8080/page.html` no navegador, abra as ferramentas de desenvolvedor
 (`F12` na maioria dos navegadores, ou `Ctrl+Shift+I`; `Cmd+Option+I` no Mac) e escolha a aba Console.
 **Esses três comandos não foram executados para este curso**: a máquina em que ele foi gravado não tem
-endereço fora dela mesma, pelo motivo que a lição 1 explica. O que as próximas seções citam de um
+endereço fora dela mesma, pelo motivo que a aula 1 explica. O que as próximas seções citam de um
 navegador foi gravado com o Chromium no computador de gravação, alcançando o `localhost` da máquina do
 laboratório.
 

@@ -41,7 +41,7 @@ Os outros são práticos, e cada um tem um hábito que responde a ele:
 | o risco | o que acontece | o hábito |
 |---|---|---|
 | editar arquivos gerados | a próxima geração apaga a edição, em silêncio | manter o código gerado num diretório próprio e nunca editá-lo; envolvê-lo em vez disso |
-| um gerador sem versão fixa | o mesmo documento produz código diferente depois de uma atualização | fixar a versão do gerador, como esta lição fixou a do validador |
+| um gerador sem versão fixa | o mesmo documento produz código diferente depois de uma atualização | fixar a versão do gerador, como esta aula fixou a do validador |
 | suporte desigual | `oneOf`, `anyOf`, `additionalProperties` e campos que aceitam null saem diferentes, ou nem saem, de um gerador para outro | ler o que foi gerado para o seu schema mais difícil antes de confiar no resto |
 | um esqueleto gerado uma vez | os handlers são preenchidos, o documento segue em frente, e os dois se desencontram como se nada tivesse sido gerado | gerar de novo as interfaces a cada mudança e implementá-las, em vez de gerar um ponto de partida |
 | tamanho | poucas operações viram dezenas de arquivos e uma dependência nova | numa API pequena, comparar com escrever o cliente à mão |
@@ -50,4 +50,4 @@ Os outros são práticos, e cada um tem um hábito que responde a ele:
 que uma pessoa escreve numa tarde. Gerar um começa a compensar quando a API tem centenas de
 operações, várias linguagens a chamam, ou o documento muda toda semana e ninguém consegue manter um
 cliente escrito à mão em dia. Abaixo disso, o documento continua pagando o que custa como aquilo que
-o teste confere e a página que as pessoas leem, que é o que esta lição construiu.
+o teste confere e a página que as pessoas leem, que é o que esta aula construiu.

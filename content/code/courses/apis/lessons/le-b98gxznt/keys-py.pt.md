@@ -3,9 +3,9 @@ title: keys.py, os livros atrás de uma porta
 version: 1
 ---
 
-Esta lição põe os livros do `shelf` atrás de três tipos de credencial ao mesmo tempo, num arquivo novo,
-o `keys.py`. É um segundo servidor, e não uma mudança no `rest.py`, então a API da lição 1 continua
-como era. Ele não precisa de nada além do `db.py` e do banco ao lado: se você terminou a lição 1, tem
+Esta aula põe os livros do `shelf` atrás de três tipos de credencial ao mesmo tempo, num arquivo novo,
+o `keys.py`. É um segundo servidor, e não uma mudança no `rest.py`, então a API da aula 1 continua
+como era. Ele não precisa de nada além do `db.py` e do banco ao lado: se você terminou a aula 1, tem
 tudo o que ele usa.
 
 ```schooling-figure
@@ -13,10 +13,10 @@ tudo o que ele usa.
 ```
 
 **Cada esquema envia uma coisa diferente, e o servidor guarda uma coisa diferente para cada um.** É a
-lição inteira num desenho, e cada coluna tem uma seção própria mais adiante. O que elas têm em comum é
+aula inteira num desenho, e cada coluna tem uma seção própria mais adiante. O que elas têm em comum é
 a última linha: o que quer que o cliente envie, o `shelf.db` nunca guarda do jeito que chegou.
 
-Salve o arquivo como `~/shelf/keys.py` com o `nano`, do jeito que a lição 1 salvou o `rest.py`:
+Salve o arquivo como `~/shelf/keys.py` com o `nano`, do jeito que a aula 1 salvou o `rest.py`:
 
 ```schooling-example
 {
@@ -25,7 +25,7 @@ Salve o arquivo como `~/shelf/keys.py` com o `nano`, do jeito que a lição 1 sa
   "parts": [
     {
       "code": "# shelf/keys.py\n\"\"\"The books behind three kinds of credential: Basic, bearer tokens and API keys.\n\nAdd a user with `python3 keys.py adduser NAME`, then run `python3 keys.py`;\nit answers on http://127.0.0.1:8000.\n\"\"\"\nimport base64\nimport getpass\nimport hashlib\nimport hmac\nimport json\nimport re\nimport secrets\nimport sys\nimport time\nfrom datetime import datetime, timezone\nfrom http.server import BaseHTTPRequestHandler, ThreadingHTTPServer\n\nimport db",
-      "note": "Só a biblioteca padrão, como o `rest.py`. `hashlib`, `hmac` e `secrets` são os três módulos que fazem o trabalho desta lição: calcular hashes, comparar e sortear valores aleatórios."
+      "note": "Só a biblioteca padrão, como o `rest.py`. `hashlib`, `hmac` e `secrets` são os três módulos que fazem o trabalho desta aula: calcular hashes, comparar e sortear valores aleatórios."
     },
     {
       "code": "\nTABLES = \"\"\"\nCREATE TABLE IF NOT EXISTS users (\n    id       INTEGER PRIMARY KEY,\n    username TEXT NOT NULL UNIQUE,\n    password_hash TEXT NOT NULL\n);\nCREATE TABLE IF NOT EXISTS tokens (\n    hash    TEXT PRIMARY KEY,\n    user_id INTEGER NOT NULL REFERENCES users (id),\n    expires INTEGER NOT NULL\n);\nCREATE TABLE IF NOT EXISTS api_keys (\n    prefix    TEXT PRIMARY KEY,\n    hash      TEXT NOT NULL,\n    name      TEXT NOT NULL,\n    created   TEXT NOT NULL,\n    last_used TEXT\n);\n\"\"\"\nTOKEN_SECONDS = 3600\n\n\ndef connect():\n    conn = db.connect()\n    conn.executescript(TABLES)\n    return conn",
@@ -33,7 +33,7 @@ Salve o arquivo como `~/shelf/keys.py` com o `nano`, do jeito que a lição 1 sa
     },
     {
       "code": "\n\ndef scrypt(password, salt):\n    return hashlib.scrypt(password.encode(), salt=salt, n=2**14, r=8, p=1, dklen=32)\n\n\ndef hash_password(password):\n    salt = secrets.token_bytes(16)\n    return f\"scrypt${salt.hex()}${scrypt(password, salt).hex()}\"\n\n\nDECOY = hash_password(secrets.token_hex(16))\n\n\ndef check_password(username, password):\n    \"\"\"The user's id if the password is theirs, otherwise None, in the same time.\"\"\"\n    with connect() as conn:\n        row = conn.execute(\"SELECT id, password_hash FROM users WHERE username = ?\",\n                           (username,)).fetchone()\n    _, salt, stored = (row[\"password_hash\"] if row else DECOY).split(\"$\")\n    same = hmac.compare_digest(scrypt(password, bytes.fromhex(salt)).hex(), stored)\n    return row[\"id\"] if row and same else None",
-      "note": "A conferência da senha. O scrypt é lento de propósito, e a lição 10 trata de escolhê-lo e de escolher os números dele. `DECOY` é o hash da senha de ninguém: um usuário que não existe é conferido contra ele, e a resposta leva o mesmo tempo nos dois casos."
+      "note": "A conferência da senha. O scrypt é lento de propósito, e a aula 10 trata de escolhê-lo e de escolher os números dele. `DECOY` é o hash da senha de ninguém: um usuário que não existe é conferido contra ele, e a resposta leva o mesmo tempo nos dois casos."
     },
     {
       "code": "\n\ndef sha256(secret):\n    return hashlib.sha256(secret.encode()).hexdigest()\n\n\ndef now():\n    return datetime.now(timezone.utc).strftime(\"%Y-%m-%dT%H:%M:%SZ\")",
@@ -114,7 +114,7 @@ ana@api:~/shelf$ sqlite3 shelf.db 'SELECT * FROM users'
 **Essa linha não pode ser transformada de volta em `river-lamp-42`.** São três campos unidos por `$`:
 o nome da função, um sal aleatório e o resultado. Conferir uma senha é rodar a mesma função sobre o
 que alguém envia, com o mesmo sal, e comparar os resultados. Por que a função é o scrypt, por que o sal
-está ali e o quanto ela deve ser lenta é assunto da lição 10; aqui ela é uma caixa que recebe uma senha
+está ali e o quanto ela deve ser lenta é assunto da aula 10; aqui ela é uma caixa que recebe uma senha
 e responde sim ou não.
 
 Agora suba o servidor no segundo terminal:

@@ -30,7 +30,7 @@ ana:river-lamp-42
 
 **Base64 é uma codificação, não criptografia.** Quem vê esse cabeçalho tem a senha, no tempo de digitar
 `base64 -d`. Por isso o Basic só é aceitável sobre HTTPS, em que a requisição inteira, cabeçalhos
-incluídos, viaja criptografada; a lição 13 trata dessa camada. No `http://127.0.0.1` simples deste
+incluídos, viaja criptografada; a aula 13 trata dessa camada. No `http://127.0.0.1` simples deste
 laboratório ele é seguro só porque a requisição nunca sai da máquina.
 
 ## O que "toda requisição" custa
@@ -47,5 +47,5 @@ A senha não é enviada uma vez. Ela viaja com cada requisição, e isso tem tr�
   um acesso Basic é mudar a senha, o que tira o acesso também de tudo o mais que a usava.
 
 O Basic ainda é a ferramenta certa em alguns lugares: um script num servidor falando com uma API
-interna sobre HTTPS, ou um teste como os desta lição. Onde ele encaixa mal é onde quer que uma pessoa
+interna sobre HTTPS, ou um teste como os desta aula. Onde ele encaixa mal é onde quer que uma pessoa
 entre uma vez e faça muitas requisições depois, e é isso que a próxima seção muda.

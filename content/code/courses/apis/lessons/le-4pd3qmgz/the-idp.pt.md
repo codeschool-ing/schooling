@@ -4,7 +4,7 @@ version: 1
 ---
 
 Para ver um fluxo por dentro você precisa de um servidor de autorização que consiga ler, e os que
-rodam em produção são grandes. O `idp.py` tem 222 linhas que fazem as partes que esta lição ensina:
+rodam em produção são grandes. O `idp.py` tem 222 linhas que fazem as partes que esta aula ensina:
 `/authorize` com PKCE, `/token` para três grants, um ID token, o documento de discovery, uma chave
 pública publicada e dois endpoints que fazem o papel da API. **É um brinquedo para ensinar, e a
 tabela no fim desta seção lista o que ele deixa de fora.**
@@ -24,7 +24,7 @@ Salve-o como `~/shelf/idp.py` do mesmo jeito que salvou o `rest.py`.
   "parts": [
     {
       "code": "# shelf/idp.py\n\"\"\"A teaching authorization server and OpenID provider for shelf.\n\nOne client, one user, and consent that is already given. Run it with\n`python3 idp.py`; it answers on http://127.0.0.1:8000. It is kept small enough\nto read in one sitting, and that is why it must never face a real user.\n\"\"\"\nimport base64\nimport hashlib\nimport hmac\nimport json\nimport os\nimport secrets\nimport time\nfrom http.server import BaseHTTPRequestHandler, ThreadingHTTPServer\nfrom urllib.parse import parse_qs, urlencode, urlsplit\n\nimport jwt\nfrom cryptography.hazmat.primitives import serialization\nfrom cryptography.hazmat.primitives.asymmetric import rsa\n\nimport db",
-      "note": "A biblioteca padrão do Python, o PyJWT para assinar tokens, o `cryptography` para a chave RSA e o `db.py` para os livros. Os três vêm da linha de `apt-get` da lição 1; nada é instalado aqui."
+      "note": "A biblioteca padrão do Python, o PyJWT para assinar tokens, o `cryptography` para a chave RSA e o `db.py` para os livros. Os três vêm da linha de `apt-get` da aula 1; nada é instalado aqui."
     },
     {
       "code": "\nISSUER = \"http://localhost:8000\"\nAPI = \"shelf-api\"\nCLIENT = {\"id\": \"shelf-web\", \"secret\": \"lab-only-secret\",\n          \"redirect_uri\": \"http://127.0.0.1:9000/callback\",\n          \"scopes\": {\"openid\", \"profile\", \"email\", \"books:read\"},\n          \"machine_scopes\": {\"books:read\"}}\nUSER = {\"sub\": \"u-81f3a2\", \"name\": \"Ana Souza\", \"email\": \"ana@shelf.example\"}",
@@ -60,7 +60,7 @@ Salve-o como `~/shelf/idp.py` do mesmo jeito que salvou o `rest.py`.
     },
     {
       "code": "\n    def client_ok(self):\n        auth = self.headers.get(\"Authorization\", \"\")\n        if not auth.startswith(\"Basic \"):\n            return False\n        given = base64.b64decode(auth[6:]).decode(errors=\"replace\")\n        return hmac.compare_digest(given, CLIENT[\"id\"] + \":\" + CLIENT[\"secret\"])",
-      "note": "O cliente prova quem é com HTTP Basic, o esquema da lição 7, e a comparação usa `hmac.compare_digest`, que leva o mesmo tempo quer o primeiro caractere esteja errado, quer o último."
+      "note": "O cliente prova quem é com HTTP Basic, o esquema da aula 7, e a comparação usa `hmac.compare_digest`, que leva o mesmo tempo quer o primeiro caractere esteja errado, quer o último."
     },
     {
       "code": "\n    def do_POST(self):\n        size = int(self.headers.get(\"Content-Length\") or 0)\n        f = {k: v[0] for k, v in parse_qs(self.rfile.read(size).decode()).items()}\n        if urlsplit(self.path).path != \"/token\":\n            return self.refuse(404, \"not_found\", \"no such endpoint\")\n        if not self.client_ok():\n            return self.refuse(401, \"invalid_client\", \"the client did not authenticate\",\n                               [(\"WWW-Authenticate\", 'Basic realm=\"idp\"')])\n        grant = f.get(\"grant_type\")\n        if grant == \"authorization_code\":\n            c = CODES.pop(f.get(\"code\", \"\"), None)\n            if c is None or c[\"expires\"] < time.time():\n                return self.refuse(400, \"invalid_grant\", \"unknown, used or expired code\")\n            if f.get(\"redirect_uri\") != CLIENT[\"redirect_uri\"]:\n                return self.refuse(400, \"invalid_grant\", \"redirect_uri differs from /authorize\")\n            if not hmac.compare_digest(s256(f.get(\"code_verifier\", \"\")), c[\"challenge\"]):\n                return self.refuse(400, \"invalid_grant\", \"code_verifier does not match\")\n            return self.reply(200, issue(c[\"scope\"], USER[\"sub\"], secrets.token_hex(4), c[\"login\"]))\n        if grant == \"refresh_token\":\n            r = REFRESH.get(f.get(\"refresh_token\", \"\"))\n            if r is None or r[\"grant\"] in REVOKED:\n                return self.refuse(400, \"invalid_grant\", \"unknown or revoked refresh token\")\n            if r[\"used\"]:\n                REVOKED.add(r[\"grant\"])\n                return self.refuse(400, \"invalid_grant\", \"refresh token used twice; grant revoked\")\n            r[\"used\"] = True\n            return self.reply(200, issue(r[\"scope\"], r[\"sub\"], r[\"grant\"]))\n        if grant == \"client_credentials\":\n            scope = set(f.get(\"scope\", \"books:read\").split())\n            if not scope <= CLIENT[\"machine_scopes\"]:\n                return self.refuse(400, \"invalid_scope\", \"a machine may ask for books:read only\")\n            return self.reply(200, issue(scope))\n        self.refuse(400, \"unsupported_grant_type\", f\"{grant} is not offered here\")",
@@ -111,13 +111,13 @@ vez de ler a chave.
 | `idp.py` | um servidor de autorização de verdade |
 |---|---|
 | um cliente, escrito no código-fonte | cadastro: muitos clientes, cada um com seus endereços, escopos e credenciais |
-| uma usuária, sempre conectada, consentimento já dado | uma página de entrada, senhas guardadas como a lição 10 descreve, um segundo fator, uma tela de consentimento que o usuário pode recusar |
+| uma usuária, sempre conectada, consentimento já dado | uma página de entrada, senhas guardadas como a aula 10 descreve, um segundo fator, uma tela de consentimento que o usuário pode recusar |
 | um segredo de cliente no código-fonte | segredos gerados por cliente, guardados com hash, trocados periodicamente; ou chaves e certificados em vez de segredos |
 | códigos e refresh tokens em memória, esquecidos a cada reinício | um banco de dados, e revogações que sobrevivem a um reinício |
 | uma chave de assinatura, para sempre | chaves trocadas num calendário, com a chave pública antiga publicada até expirar o último token que ela assinou |
-| HTTP puro no loopback | HTTPS em todo endpoint, já que um token numa conexão sem cifra é legível por todos no caminho (lição 13) |
-| nada conta tentativas que falharam | limites de taxa (lição 12), logs de auditoria e um alerta quando um refresh token é reusado |
+| HTTP puro no loopback | HTTPS em todo endpoint, já que um token numa conexão sem cifra é legível por todos no caminho (aula 13) |
+| nada conta tentativas que falharam | limites de taxa (aula 12), logs de auditoria e um alerta quando um refresh token é reusado |
 | nenhum jeito de revogar um token ou perguntar sobre um | o endpoint de revogação (RFC 7009) e a introspecção (RFC 7662) |
 
 Use-o para ver como as peças se encaixam. **Nunca o ponha, nem nada que você tenha escrito do mesmo
-jeito, na frente de um usuário de verdade**; a última seção desta lição diz o que usar no lugar.
+jeito, na frente de um usuário de verdade**; a última seção desta aula diz o que usar no lugar.

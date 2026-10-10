@@ -100,6 +100,6 @@ deixa quem o leu entrar como qualquer pessoa em todos.
 
 Os algoritmos assimétricos, `RS256` com RSA e `ES256` com curvas elípticas, separam as duas tarefas.
 Uma chave privada assina e fica com o emissor; uma chave pública verifica e pode ser dada a todos os
-serviços, ou publicada. Um serviço que verifica deixa de conseguir emitir. A lição 9 encontra esse
+serviços, ou publicada. Um serviço que verifica deixa de conseguir emitir. A aula 9 encontra esse
 arranjo no OpenID Connect, em que um provedor de identidade publica as chaves públicas que conferem
 os tokens dele.

@@ -43,7 +43,7 @@ nenhuma.
 Por que SHA-256 aqui, se a senha precisou de scrypt? **Uma senha está a um palpite de ser descoberta;
 um token aleatório não.** As pessoas escolhem senhas num conjunto pequeno de palavras prováveis, e um
 hash lento é o que torna caro testá-las. Um token são 256 bits aleatórios que ninguém escolheu, e não
-existe lista de tokens prováveis para testar, então um hash rápido não perde nada. A lição 10 faz a
+existe lista de tokens prováveis para testar, então um hash rápido não perde nada. A aula 10 faz a
 mesma distinção do lado da senha.
 
 ## Validade e revogação
@@ -109,4 +109,4 @@ Este token é **opaco**: não significa nada sozinho, e o servidor precisa procu
 para saber de quem é. Essa busca é o que torna a revogação instantânea, e é também uma leitura no banco
 por requisição. A outra família de tokens é a **autocontida**: o token leva dentro dele o usuário e a
 validade, assinados pelo servidor, então conferi-lo não exige busca, e revogá-lo antes de vencer exige
-algo a mais. JWT é o formato comum, e a lição 8 pesa os dois lado a lado.
+algo a mais. JWT é o formato comum, e a aula 8 pesa os dois lado a lado.

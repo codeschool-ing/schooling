@@ -27,7 +27,7 @@ Uma maior precisa de um parágrafo sobre o que cada erro quer dizer e quando aco
 
 ## Olhando o do shelf
 
-Nada disto foi rodado para a lição: a máquina em que ela foi gravada não tem navegador, e por isso
+Nada disto foi rodado para a aula: a máquina em que ela foi gravada não tem navegador, e por isso
 não há captura de tela aqui. O que vem a seguir é como você pode olhar o seu.
 
 A VM não tem área de trabalho, então o navegador é o do seu próprio computador. O jeito mais rápido
@@ -49,7 +49,7 @@ endereço próprio numa rede que o seu computador compartilha com ela. `multipas
 na linha `IPv4`, e dentro da VM `ip -4 addr` o mostra, seja qual for o hipervisor.
 
 Trocar o `servers` por esse endereço não basta, porque o `rest.py` escuta em `127.0.0.1` dentro da VM,
-que é o loopback da própria VM. A lição 1 escolheu isso para que nada de fora da máquina alcance a
+que é o loopback da própria VM. A aula 1 escolheu isso para que nada de fora da máquina alcance a
 API, e vale para o seu navegador também. Um servidor que deve ser alcançado de fora precisa escutar
 num endereço que o lado de fora alcance: o da própria VM, ou `0.0.0.0` para todos eles. O curso
 deixa o `rest.py` como está.
@@ -58,7 +58,7 @@ E mesmo escutando no endereço certo, a página é servida de uma origem e o she
 navegador pergunta ao shelf, por meio de cabeçalhos CORS, se a página pode ler as respostas dele.
 Para um POST com corpo JSON ele pergunta antes com uma requisição `OPTIONS`, que o `rest.py` responde
 com o 501 que o teste de contrato achou. Essa conversa, e como um servidor deve responder a ela, é a
-lição 13.
+aula 13.
 
 **Então a página é para ler, e o `curl` continua sendo a ferramenta para chamar o shelf neste
 curso.** Ler é o que a página faz melhor, de todo modo. O painel de `POST /books` mostraria os

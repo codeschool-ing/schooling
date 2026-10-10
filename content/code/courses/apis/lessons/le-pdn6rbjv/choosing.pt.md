@@ -16,7 +16,7 @@ cada linha desta tabela é algo que você viu um deles fazer:
 | caches HTTP | funcionam como projetados com `GET` | precisam de `GET` e consultas persistidas |
 | o código de status | leva o resultado | 200 para tudo o que rodou; leia `errors` |
 | trabalho que uma requisição pode causar | fixado pelo endpoint | escolhido pelo cliente, então precisa de limites |
-| o contrato | escrito ao lado do código, lição 6 | o esquema, que o servidor sabe descrever |
+| o contrato | escrito ao lado do código, aula 6 | o esquema, que o servidor sabe descrever |
 | mudanças | uma versão nova no caminho | um esquema que cresce, com `@deprecated` |
 
 ## Onde cada um se encaixa
@@ -36,4 +36,4 @@ publica uma API REST e uma GraphQL, o que é um bom resumo da troca: os mesmos d
 de cliente.
 
 Entre serviços dentro de um mesmo sistema, onde o cliente não é nem a tela nem o estranho, existe uma
-terceira resposta, e a lição 4 trata dela.
+terceira resposta, e a aula 4 trata dela.

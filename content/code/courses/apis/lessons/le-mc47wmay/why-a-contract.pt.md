@@ -23,11 +23,11 @@ formato que um programa consegue ler serve a todos eles:
 no dia em que é escrita. Depois disso, nada percebe quando um campo é renomeado no código e não na
 página, e a página continua se lendo perfeitamente. Um documento que um teste compara com a API em
 execução falha no mesmo commit que o torna falso. É isso que **documentação viva** quer dizer nesta
-lição: documentação que falha quando deixa de ser verdade.
+aula: documentação que falha quando deixa de ser verdade.
 
-No shelf, "cada campo e cada código" é uma lista definida. A lição 1 passou por toda ela, uma seção
+No shelf, "cada campo e cada código" é uma lista definida. A aula 1 passou por toda ela, uma seção
 de cada vez: quatro endereços sob `/v1`, oito operações neles, os sete campos de um livro, os três de
-um autor, e os códigos 200, 201, 204, 400, 404, 405, 409, 415 e 422. Esta lição põe essa lista num
+um autor, e os códigos 200, 201, 204, 400, 404, 405, 409, 415 e 422. Esta aula põe essa lista num
 arquivo só, o `openapi.yaml`, e depois faz programas o lerem.
 
 ## OpenAPI e Swagger
@@ -36,7 +36,7 @@ O formato é a **OpenAPI Specification**, e você vai ouvir chamarem de Swagger 
 frequência, porque esse era o nome dela até 2015. O Swagger começou como uma especificação com
 ferramentas em volta; em 2015 a especificação foi entregue à OpenAPI Initiative, um projeto da Linux
 Foundation, e renomeada. A versão 2.0 é a última chamada Swagger, a 3.0 (2017) é a primeira chamada
-OpenAPI, e a 3.1 (2021) é a que esta lição escreve.
+OpenAPI, e a 3.1 (2021) é a que esta aula escreve.
 
 As ferramentas ficaram com o nome antigo. Por isso hoje as duas palavras querem dizer coisas
 diferentes:
@@ -52,8 +52,8 @@ A primeira linha de um documento diz de que geração ele é. Um arquivo que com
 que não faz mal numa conversa e vale corrigir num ticket, porque uma ferramenta que lê 3.1 pode
 recusar 2.0.
 
-A OpenAPI descreve APIs sobre HTTP, do tipo que a lição 1 construiu. Os outros estilos deste curso
-têm contratos próprios: o schema do GraphQL na lição 3, o arquivo `.proto` do gRPC na lição 4 e o
-WSDL do SOAP na lição 5. A ideia é a mesma nos quatro, e o motivo de ela importar também: **um
+A OpenAPI descreve APIs sobre HTTP, do tipo que a aula 1 construiu. Os outros estilos deste curso
+têm contratos próprios: o schema do GraphQL na aula 3, o arquivo `.proto` do gRPC na aula 4 e o
+WSDL do SOAP na aula 5. A ideia é a mesma nos quatro, e o motivo de ela importar também: **um
 contrato que só uma pessoa consegue ler é um contrato que só uma pessoa consegue conferir**, e
 pessoas conferem de vez em quando.

@@ -4,9 +4,9 @@ version: 1
 ---
 
 O `graph.py` é a livraria de novo, agora como uma API GraphQL. Ele lê o mesmo `shelf.db` pelo mesmo
-`db.py`, então os livros que você alterou na lição 1 são os livros que ele serve. Como o `rest.py`,
+`db.py`, então os livros que você alterou na aula 1 são os livros que ele serve. Como o `rest.py`,
 ele é construído sobre o `http.server` do próprio Python; o que ele acrescenta é o `graphql`, o
-pacote que a lição 1 instalou como `python3-graphql-core`, que analisa uma consulta, confere contra o
+pacote que a aula 1 instalou como `python3-graphql-core`, que analisa uma consulta, confere contra o
 esquema e a executa.
 
 Ele também faz duas coisas que um servidor de verdade não faria em toda requisição. Imprime cada
@@ -23,7 +23,7 @@ segundo terminal. Depois, no primeiro, `nano graph.py`, cole o arquivo abaixo e 
   "parts": [
     {
       "code": "# shelf/graph.py\n\"\"\"The bookshop as a GraphQL API: one address, POST /graphql.\n\nRun it with `python3 graph.py`, or `python3 graph.py --batch` to fetch\nauthors in batches. It answers on http://127.0.0.1:8000.\n\"\"\"\nimport asyncio\nimport inspect\nimport json\nimport sqlite3\nimport sys\nfrom http.server import BaseHTTPRequestHandler, ThreadingHTTPServer\n\nfrom graphql import GraphQLError, build_schema, execute, parse, validate\nfrom graphql.language import FieldNode, FragmentSpreadNode, OperationDefinitionNode\n\nimport db",
-      "note": "A biblioteca padrão de novo, mais o `graphql`, o pacote que a lição 1 instalou como `python3-graphql-core`. `build_schema` transforma o texto do esquema em um objeto; `parse`, `validate` e `execute` são os três passos por que passa toda requisição; as três classes de nó são o que o limite de profundidade procura. O `db.py` é o mesmo que o `rest.py` usa, então as duas APIs leem um só banco."
+      "note": "A biblioteca padrão de novo, mais o `graphql`, o pacote que a aula 1 instalou como `python3-graphql-core`. `build_schema` transforma o texto do esquema em um objeto; `parse`, `validate` e `execute` são os três passos por que passa toda requisição; as três classes de nó são o que o limite de profundidade procura. O `db.py` é o mesmo que o `rest.py` usa, então as duas APIs leem um só banco."
     },
     {
       "code": "\nBATCH = \"--batch\" in sys.argv\nMAX_DEPTH = 5",

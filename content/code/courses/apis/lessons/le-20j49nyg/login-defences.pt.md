@@ -54,4 +54,4 @@ e manda os detalhes para o endereço informado.
 
 O que esta seção não impede é alguém tentar muitas senhas contra uma conta, ou uma senha contra
 muitas. O hash deixa cada tentativa cara para os dois lados, e limitar quantas vezes um cliente pode
-tentar é a lição 12.
+tentar é a aula 12.

@@ -49,7 +49,7 @@ type Author {
 `Book` e `Author` são **tipos objeto**: cada um tem campos, e o tipo de um campo é outro tipo objeto
 ou um **escalar**, um valor único sem campos embaixo. O GraphQL tem cinco escalares embutidos: `Int`,
 `Float`, `String`, `Boolean` e `ID`. `ID` é um identificador, e viaja sempre como texto, mesmo quando
-os ids do banco são números; as respostas desta lição mostram `"id": "1"` onde o `rest.py` mostrava
+os ids do banco são números; as respostas desta aula mostram `"id": "1"` onde o `rest.py` mostrava
 `"id": 1`.
 
 Um campo pode receber **argumentos**, como uma função: `book(id: ID!)` tem um, e
@@ -82,7 +82,7 @@ nenhuma.
 
 ## O contrato, e como ele muda
 
-O esquema é tudo o que um cliente pode pedir, então é o contrato que a lição 1 descreveu para o REST,
+O esquema é tudo o que um cliente pode pedir, então é o contrato que a aula 1 descreveu para o REST,
 numa forma que um programa consegue ler. Ele muda sob a mesma regra: **acrescentar é seguro, e
 remover ou mudar um tipo não é.** O costume do GraphQL não é pôr versões no endereço, e sim manter um
 esquema só e deixá-lo crescer, marcando o que está de saída com a diretiva embutida

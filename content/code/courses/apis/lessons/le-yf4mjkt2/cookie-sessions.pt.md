@@ -13,7 +13,7 @@ não se adivinham.
 ## O arquivo
 
 O `sessions.py` é isso, para o shelf. Salve-o em `~/shelf` com `nano sessions.py`, do jeito que a
-lição 1 salvou o `rest.py`.
+aula 1 salvou o `rest.py`.
 
 ```schooling-example
 {
@@ -26,11 +26,11 @@ lição 1 salvou o `rest.py`.
     },
     {
       "code": "\nLIFETIME = 30 * 60\n\n# The lab's two accounts. Never put a real password in a source file.\nUSERS = [(1, \"ana\", \"correct-horse\"), (2, \"bruno\", \"battery-staple\")]",
-      "note": "Uma sessão dura trinta minutos, contados em segundos. As duas contas trazem a senha no arquivo só porque isto é um laboratório; a lição 10 trata de onde uma senha vai de verdade."
+      "note": "Uma sessão dura trinta minutos, contados em segundos. As duas contas trazem a senha no arquivo só porque isto é um laboratório; a aula 10 trata de onde uma senha vai de verdade."
     },
     {
       "code": "\n\ndef scrypt(password, salt):\n    return hashlib.scrypt(password.encode(), salt=salt, n=2**14, r=8, p=1)\n\n\ndef connect():\n    \"\"\"shelf.db, with the users, sessions and wishlist tables added to it.\"\"\"\n    conn = db.connect()\n    conn.executescript(\"\"\"\n        CREATE TABLE IF NOT EXISTS users (\n            id   INTEGER PRIMARY KEY,\n            name TEXT NOT NULL UNIQUE,\n            salt BLOB NOT NULL,\n            hash BLOB NOT NULL);\n        CREATE TABLE IF NOT EXISTS sessions (\n            id_hash TEXT PRIMARY KEY,\n            user_id INTEGER NOT NULL REFERENCES users (id),\n            csrf    TEXT NOT NULL,\n            expires INTEGER NOT NULL);\n        CREATE TABLE IF NOT EXISTS wishlist (\n            user_id INTEGER NOT NULL REFERENCES users (id),\n            book_id INTEGER NOT NULL REFERENCES books (id),\n            PRIMARY KEY (user_id, book_id));\n    \"\"\")\n    if conn.execute(\"SELECT count(*) FROM users\").fetchone()[0] == 0:\n        for ident, name, password in USERS:\n            salt = secrets.token_bytes(16)\n            conn.execute(\"INSERT INTO users VALUES (?, ?, ?, ?)\",\n                         (ident, name, salt, scrypt(password, salt)))\n        conn.commit()\n    return conn",
-      "note": "Três tabelas se juntam às duas que o `db.py` criou, cada uma criada só se ainda não existir. Uma senha fica guardada como um sal aleatório e o scrypt da senha com esse sal, **nunca como ela mesma**. O `hashlib.scrypt` está na biblioteca padrão, e a lição 10 o compara com bcrypt e Argon2."
+      "note": "Três tabelas se juntam às duas que o `db.py` criou, cada uma criada só se ainda não existir. Uma senha fica guardada como um sal aleatório e o scrypt da senha com esse sal, **nunca como ela mesma**. O `hashlib.scrypt` está na biblioteca padrão, e a aula 10 o compara com bcrypt e Argon2."
     },
     {
       "code": "\n\ndef check_login(conn, name, password):\n    \"\"\"The user's id, or None. A name nobody has costs the same as a wrong password.\"\"\"\n    row = conn.execute(\"SELECT id, salt, hash FROM users WHERE name = ?\", (name,)).fetchone()\n    if row is None:\n        scrypt(password, bytes(16))\n        return None\n    return row[\"id\"] if hmac.compare_digest(scrypt(password, row[\"salt\"]), row[\"hash\"]) else None\n\n\ndef digest(token):\n    return hashlib.sha256(token.encode()).hexdigest()",
@@ -100,7 +100,7 @@ que outra pessoa administra.
 
 O `Max-Age` é um pedido ao cliente, e um cliente pode ignorá-lo, manter o cookie ou copiá-lo para
 algum lugar. Por isso o `sessions.py` guarda o próprio vencimento na linha, e recusa um id passado
-desse horário, diga o cookie o que disser. A regra que atravessa a lição inteira começa aqui: **o
+desse horário, diga o cookie o que disser. A regra que atravessa a aula inteira começa aqui: **o
 servidor impõe; os atributos só ajudam um cliente bem-comportado.**
 
 ## O pote
@@ -157,7 +157,7 @@ e9a4c1c74f4a350137338bca3bc868f54e4db4175ea6a12b689e8c4d9725c341  -
 
 O servidor ainda acha a linha, fazendo o hash do cookie que recebe. O que ele não tem mais é o id
 em si, então uma cópia do banco, um backup que alguém esqueceu numa pasta compartilhada por exemplo,
-dá a quem a lê linhas e nenhum cookie que funcione. SHA-256 basta aqui, enquanto a lição 10 vai
+dá a quem a lê linhas e nenhum cookie que funcione. SHA-256 basta aqui, enquanto a aula 10 vai
 exigir algo bem mais lento para senhas: um id de sessão são 32 bytes aleatórios, e não existe lista
 de valores prováveis para testar.
 

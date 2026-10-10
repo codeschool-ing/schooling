@@ -4,7 +4,7 @@ version: 1
 ---
 
 Lado a lado, os dois são menos diferentes do que as discussões sobre eles sugerem, e as diferenças
-que sobram apontam numa direção clara. A tabela é a lição num lugar só, e o padrão logo abaixo dela
+que sobram apontam numa direção clara. A tabela é a aula num lugar só, e o padrão logo abaixo dela
 é por onde começar.
 
 | | cookie de sessão | JWT |
@@ -20,7 +20,7 @@ que sobram apontam numa direção clara. A tabela é a lição num lugar só, e 
 | XSS | o `HttpOnly` deixa o id fora de alcance | exposto onde quer que um script consiga lê-lo |
 | vazamento do armazenamento do servidor | ids em hash são inúteis | uma chave vazada assina tokens para qualquer um |
 
-Os dois tamanhos são dos tokens desta própria lição, o id de sessão de ana e o token de acesso dela:
+Os dois tamanhos são dos tokens desta própria aula, o id de sessão de ana e o token de acesso dela:
 
 ```
 ana@api:~/shelf$ awk '$6 == "sid" {printf "%s", $7}' kept.txt | wc -c
@@ -48,5 +48,5 @@ precisarem continuar logados.
 
 E quando o usuário entra em outro lugar, com uma conta do Google ou da Microsoft, ou quando um app
 age em nome do usuário com o consentimento dele, os tokens são emitidos por outro sistema e as regras
-para eles têm nome. **A lição 9 é OAuth 2.0 e OpenID Connect**, onde o JWT volta como ID token e
-toda verificação desta lição vale para ele.
+para eles têm nome. **A aula 9 é OAuth 2.0 e OpenID Connect**, onde o JWT volta como ID token e
+toda verificação desta aula vale para ele.

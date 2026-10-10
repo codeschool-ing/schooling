@@ -25,11 +25,11 @@ outra pessoa roda. Em geral é um provedor de identidade hospedado, como Auth0, 
 ID, Google ou AWS Cognito, ou o Keycloak onde a empresa roda o seu; ele é dono das senhas, do
 segundo fator, das telas de consentimento e das chaves de assinatura. A sua aplicação fala com ele
 por uma biblioteca da sua linguagem, certificada onde existe certificação (a OpenID Foundation
-lista as certificadas), que roda o fluxo e faz cada conferência desta lição em código que milhares
+lista as certificadas), que roda o fluxo e faz cada conferência desta aula em código que milhares
 de outros projetos já testaram.
 
 O que sobra para você é configuração e julgamento, e é onde as integrações dão errado. A revisão de
-uma faz estas perguntas, e cada uma tem resposta numa seção desta lição:
+uma faz estas perguntas, e cada uma tem resposta numa seção desta aula:
 
 | pergunta | a seção |
 |---|---|

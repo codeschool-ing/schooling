@@ -25,7 +25,7 @@ ana@api:~/shelf$ curl -s -w '%{http_code}\n' -H 'Authorization: Bearer demo-dora
 ```
 
 O 403 da Carla diz o que falta, e dizer isso é seguro. A função não é segredo, já que o documento
-OpenAPI da lição 6 lista toda rota que uma API tem, e o nome da permissão é o que ela citaria ao
+OpenAPI da aula 6 lista toda rota que uma API tem, e o nome da permissão é o que ela citaria ao
 pedir acesso.
 
 Uma função pode estar fora do alcance de quem é dono do objeto. O pedido 3 é do Bruno, e estorná-lo
@@ -58,5 +58,5 @@ Allow: GET
 ```
 
 Se o `do_DELETE` não estivesse definido, a biblioteca do Python teria respondido por ele com um 501
-e uma página de HTML, como fez com `OPTIONS` na lição 1. Mandar todo método para uma função só é o
+e uma página de HTML, como fez com `OPTIONS` na aula 1. Mandar todo método para uma função só é o
 que faz da tabela de rotas a lista completa do que esta API faz.

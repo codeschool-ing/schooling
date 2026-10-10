@@ -36,7 +36,7 @@ SHA2-256(stdin)= bc4c043da0c136b6bfc363de1b0b9ad1ca9ba6a7537834a76f7c7896d6f125c
 ```
 
 No `passwords.py` isso seria uma função, `hmac.digest(key, password.encode(), "sha256")`, chamada
-antes do `HASHER.hash` e antes do `HASHER.verify`. Ela não está no arquivo nesta lição, porque traz
+antes do `HASHER.hash` e antes do `HASHER.verify`. Ela não está no arquivo nesta aula, porque traz
 um custo de que o arquivo ainda não precisa: **um pepper não pode ser trocado**. Todo hash guardado
 depende dele, então um pepper novo significa todo usuário definindo uma senha nova. A folha da OWASP
 o chama de defesa em profundidade e diz com todas as letras que, sozinho, ele não acrescenta nada.
@@ -57,7 +57,7 @@ ana@api:~$ printf %s sunshine | sha1sum
 ```
 
 e envia só os cinco primeiros caracteres, `8d6e3`, para `https://api.pwnedpasswords.com/range/8d6e3`
-(não executado aqui: a máquina em que esta lição foi gravada não tem rede). A resposta é cada sufixo
+(não executado aqui: a máquina em que esta aula foi gravada não tem rede). A resposta é cada sufixo
 de hash que começa com esses cinco caracteres, centenas deles, cada um com uma contagem, e o seu
 servidor procura os 35 caracteres restantes nessa lista por conta própria. O serviço vê um prefixo
 comum a centenas de senhas e não tem como saber sobre qual você perguntou.

@@ -45,7 +45,7 @@ ouvido `1`.
 
 Quanto uma unidade deve pesar é um julgamento feito a partir de medição: o tempo que cada endpoint
 leva, as linhas que lê, o dinheiro que gasta mais adiante. Uma API GraphQL leva a mesma ideia mais longe
-e cobra cada consulta pelo que ela pede, o que a lição 3 levanta.
+e cobra cada consulta pelo que ela pede, o que a aula 3 levanta.
 
 ## Planos
 

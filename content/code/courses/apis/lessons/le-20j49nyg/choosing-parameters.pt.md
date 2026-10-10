@@ -11,7 +11,7 @@ A regra tentadora é "quanto maior, melhor". Ela falha duas vezes. Cada login se
 enquanto o hash roda, então vinte pessoas entrando ao mesmo tempo precisam de vinte vezes o `m`. E
 cada login custa ao servidor o que custa a um atacante por palpite, então uma configuração que leva
 segundos transforma a rota de login no jeito mais barato de esgotar o servidor. A folha da OWASP avisa
-exatamente sobre isso, e a lição 12 limita quantas vezes um cliente pode pedir.
+exatamente sobre isso, e a aula 12 limita quantas vezes um cliente pode pedir.
 
 O `hashrate.py argon2` mede as cinco configurações da OWASP, o padrão da biblioteca e duas maiores:
 

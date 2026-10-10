@@ -39,10 +39,10 @@ Location: /orders/5
 O total é 7980, dois exemplares a 3990, calculado da tabela `books` em vez de acreditado no corpo.
 **Os campos que quem chama pode escrever são uma lista de permitidos no handler, e um campo fora dela
 é recusado, não descartado em silêncio.** Descartar também manteria o status seguro, e deixaria o
-cliente acreditando que definiu algo que não definiu. O 422 é o código da lição 1 para conteúdo que
+cliente acreditando que definiu algo que não definiu. O 422 é o código da aula 1 para conteúdo que
 quebra uma regra, e a mensagem nomeia os campos, então o erro pode ser achado e corrigido. O
 `rest.py` já fazia o mesmo com livros: a tabela `FIELDS` dele é o motivo de o PATCH com `colour` da
-lição 1 ter sido um 422.
+aula 1 ter sido um 422.
 
 ## Leitura: o que a representação deixa de fora
 

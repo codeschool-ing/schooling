@@ -23,14 +23,14 @@ minutos, e que a loja pode deixar de honrar sem mexer na sua senha. O app nunca 
 2.0 é a RFC 6749, publicada em 2012, e quase todo botão "Conectar sua conta" que você já apertou é
 construído sobre ele.
 
-O bearer token da lição 7 era feito pela API para uso próprio. Aqui há três partes: um serviço
+O bearer token da aula 7 era feito pela API para uso próprio. Aqui há três partes: um serviço
 emite o token, outro o aceita, e uma pessoa concordou com isso no meio.
 
 ## Os quatro papéis
 
-O OAuth dá nome a quatro partes, e todo fluxo desta lição é uma conversa entre algumas delas:
+O OAuth dá nome a quatro partes, e todo fluxo desta aula é uma conversa entre algumas delas:
 
-| papel | na livraria | no laboratório desta lição |
+| papel | na livraria | no laboratório desta aula |
 |---|---|---|
 | **dono do recurso** (*resource owner*) | você, dono das compras | a única usuária que o `idp.py` conhece, a Ana |
 | **cliente** (*client*) | o app de leitura | você, digitando `curl`, cadastrado como `shelf-web` |
@@ -43,7 +43,7 @@ outras coisas que rodam ali: uma extensão, o histórico, um log.
 
 O servidor de autorização e o servidor de recursos são dois trabalhos. Numa empresa são dois
 programas, muitas vezes de duas equipes: a API nunca vê uma senha e o serviço de entrada nunca
-serve um livro. O laboratório desta lição faz os dois num arquivo Python só, para caber num
+serve um livro. O laboratório desta aula faz os dois num arquivo Python só, para caber num
 arquivo, e a metade servidor de recursos confere um token como uma API separada conferiria: com a
 chave pública do servidor de autorização e sem perguntar nada a ele.
 

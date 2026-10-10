@@ -65,7 +65,7 @@ Content-Length: 43
 ```
 
 **403, não 401.** A chave se autenticou perfeitamente; o `keys.py` sabe que está falando com a Livraria
-Parceira. O que ele recusa é a ação. Isso é autorização, na forma mais simples, e a lição 11 constrói o
+Parceira. O que ele recusa é a ação. Isso é autorização, na forma mais simples, e a aula 11 constrói o
 resto.
 
 ## Rotação com duas chaves vivas
@@ -112,4 +112,4 @@ A chave antiga agora recebe 401 como qualquer estranho, e sobra uma chave, com u
 
 Mais uma coisa pertence à chave, e não a uma pessoa: **com que frequência ela pode ser usada**. Um
 parceiro cujo programa tem um defeito que pede todos os livros uma vez por segundo deve ser freado pela
-própria chave, sem frear mais ninguém. A lição 12 conta requisições por chave.
+própria chave, sem frear mais ninguém. A aula 12 conta requisições por chave.

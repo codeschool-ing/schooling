@@ -21,7 +21,7 @@ aceita o que o documento proíbe, e é aí que está a mais séria das duas disc
 ## O teste
 
 Salve-o como `check_contract.py` ao lado dos outros. Ele precisa do `python3-yaml` e do
-`python3-jsonschema`, os dois da lição 1, e de nada da venv.
+`python3-jsonschema`, os dois da aula 1, e de nada da venv.
 
 ```schooling-example
 {
@@ -30,7 +30,7 @@ Salve-o como `check_contract.py` ao lado dos outros. Ele precisa do `python3-yam
   "parts": [
     {
       "code": "# shelf/check_contract.py\n\"\"\"Call the running rest.py and check every answer against openapi.yaml.\n\nStart the server first, then run `python3 check_contract.py`. It exits with 1\nwhen the API and its description disagree anywhere.\n\"\"\"\nimport json\nimport os\nimport re\nimport sys\nimport urllib.error\nimport urllib.request\n\nimport jsonschema\nimport yaml",
-      "note": "Dois pacotes da linha de `apt-get` da lição 1, `python3-yaml` e `python3-jsonschema`, e a biblioteca padrão para o resto. O teste roda com o `python3` do Ubuntu e não precisa de nada da venv."
+      "note": "Dois pacotes da linha de `apt-get` da aula 1, `python3-yaml` e `python3-jsonschema`, e a biblioteca padrão para o resto. O teste roda com o `python3` do Ubuntu e não precisa de nada da venv."
     },
     {
       "code": "\nHERE = os.path.dirname(os.path.abspath(__file__))\nwith open(os.path.join(HERE, \"openapi.yaml\"), encoding=\"utf-8\") as f:\n    SPEC = yaml.safe_load(f)\nBASE = SPEC[\"servers\"][0][\"url\"]\nNEW = {\"isbn\": \"9786500000085\", \"title\": \"Esaú e Jacó\", \"author_id\": 1,\n       \"year\": 1904, \"price_cents\": 3790}\nfailures = 0",
@@ -82,7 +82,7 @@ Salve-o como `check_contract.py` ao lado dos outros. Ele precisa do `python3-yam
 
 ## Rodando
 
-O servidor precisa estar rodando no segundo terminal, como na lição 1: `cd ~/shelf && python3
+O servidor precisa estar rodando no segundo terminal, como na aula 1: `cd ~/shelf && python3
 rest.py`. Depois, no primeiro:
 
 ```
@@ -111,7 +111,7 @@ exit 1
 
 Treze requisições concordaram com o documento e duas não, e o código de saída 1 diz isso a qualquer
 coisa que rode o teste. Os seus ids podem ser diferentes de `7` e `8` se o seu shelf ganhou livros
-depois da lição 1; os vereditos não. O teste também deixou a loja como a encontrou:
+depois da aula 1; os vereditos não. O teste também deixou a loja como a encontrou:
 
 ```
 ana@api:~/shelf$ curl -s localhost:8000/v1/books | jq length
@@ -135,16 +135,16 @@ teria sido recusada na porta.
 Qual lado está errado é uma decisão, não um fato que o teste possa saber. Aqui é o código: o
 documento enuncia a regra da loja e o `rest.py` esqueceu de conferi-la. Num projeto de verdade você
 corrigiria no mesmo dia, acrescentando o pattern às conferências por que toda escrita já passa, e
-aquela linha do teste viraria `ok`. O `rest.py` do shelf fica como está, porque toda lição deste
+aquela linha do teste viraria `ok`. O `rest.py` do shelf fica como está, porque toda aula deste
 curso se apoia nele; a linha que falha fica como uma discordância conhecida pelo resto do curso.
 
 ## A segunda: uma resposta que ninguém descreveu
 
-`OPTIONS /books` recebeu o 501 e a página HTML da lição 1. O documento não tem operação `options`,
+`OPTIONS /books` recebeu o 501 e a página HTML da aula 1. O documento não tem operação `options`,
 então o teste aponta o método como não descrito e nomeia o tipo de mídia que voltou, `text/html`,
 numa API que responde JSON em todo o resto. Esta discordância vai no outro sentido: o documento fica
 calado e o servidor responde mesmo assim. Ou o servidor deveria responder `OPTIONS` direito, assunto
-a que a lição 13 volta por causa dos navegadores, ou o documento deveria descrever o que ele faz.
+a que a aula 13 volta por causa dos navegadores, ou o documento deveria descrever o que ele faz.
 
 ## O que ele não consegue ver
 

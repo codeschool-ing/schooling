@@ -11,7 +11,7 @@ O conselho de costume para aplicações de página única era pôr o token no `l
 raciocínio de que outros sites não o leem. Essa metade é verdade: o armazenamento pertence a uma
 origem. O que fica de fora é que todo script rodando dentro da sua página o lê. Isso inclui um script que
 um atacante conseguiu injetar, o ataque chamado cross-site scripting ou XSS, e qualquer biblioteca
-de terceiros carregada pela página que alguém tenha adulterado. A lição 13 trata de manter
+de terceiros carregada pela página que alguém tenha adulterado. A aula 13 trata de manter
 esses scripts fora. Esta seção trata de quanto eles levam quando entram.
 
 | onde | scripts da página leem | o navegador envia sozinho | o que um script injetado consegue |

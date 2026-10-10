@@ -4,8 +4,8 @@ version: 1
 ---
 
 **Suponha que a tabela de usuários vai vazar e pergunte o que o vazamento entrega.** Essa é a ameaça
-contra a qual esta lição se defende. Não é alguém tentando senhas no seu formulário de login, assunto
-da lição 12; é alguém com uma cópia da tabela, no próprio computador, com todo o tempo do mundo. Um
+contra a qual esta aula se defende. Não é alguém tentando senhas no seu formulário de login, assunto
+da aula 12; é alguém com uma cópia da tabela, no próprio computador, com todo o tempo do mundo. Um
 backup no bucket errado, uma consulta que devolve uma coluna a mais, um disco velho: cada um desses
 já aconteceu com alguém, e nenhum pede licença ao seu código de login.
 
@@ -47,5 +47,5 @@ próxima seção, um milhão desses palpites levou menos de um segundo.
 
 **Um login nunca precisa da senha de volta.** Ele precisa saber se o que alguém digitou é a mesma
 senha que foi definida, e uma função de mão única responde isso: calcular o hash do que foi digitado
-e comparar com o que foi guardado. O resto da lição é sobre deixar essa função cara de executar,
+e comparar com o que foi guardado. O resto da aula é sobre deixar essa função cara de executar,
 única para cada conta e legível mais tarde, quando os parâmetros dela mudarem.

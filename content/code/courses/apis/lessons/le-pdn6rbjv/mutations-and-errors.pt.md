@@ -47,7 +47,7 @@ junto.
 
 ## O que um 200 quer dizer agora
 
-No `rest.py` o código de status levava o resultado, e a lição 1 defendeu que o cliente decide com
+No `rest.py` o código de status levava o resultado, e a aula 1 defendeu que o cliente decide com
 base nele. No GraphQL **um 200 só diz que a consulta rodou.** O terminal do servidor mostra o mesmo
 que um sistema de monitoramento veria, três comandos e um sucesso comum:
 

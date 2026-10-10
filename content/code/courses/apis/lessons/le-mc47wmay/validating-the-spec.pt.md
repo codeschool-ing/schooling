@@ -11,7 +11,7 @@ adiante, responde à segunda. Um arquivo pode passar numa e falhar na outra.
 
 A ferramenta para a primeira é o `openapi-spec-validator`, um programa Python que o Ubuntu não
 empacota. É a única coisa deste curso que não vem do repositório do Ubuntu, e o único download, que a
-lição 1 anunciou quando instalou `python3-venv` e `python3-pip`.
+aula 1 anunciou quando instalou `python3-venv` e `python3-pip`.
 
 ## Um ambiente virtual, e por quê
 
@@ -75,7 +75,7 @@ ana@api:~/shelf$ python3 -c 'import jsonschema; print(jsonschema.__file__)'
 /usr/lib/python3/dist-packages/jsonschema/__init__.py
 ```
 
-Então o teste de contrato, que roda com `python3`, usa o `jsonschema` que a lição 1 instalou com o
+Então o teste de contrato, que roda com `python3`, usa o `jsonschema` que a aula 1 instalou com o
 `apt`, e o validador usa o seu. Apagar o `.venv` remove tudo o que o download trouxe, e nada mais na
 máquina percebe.
 

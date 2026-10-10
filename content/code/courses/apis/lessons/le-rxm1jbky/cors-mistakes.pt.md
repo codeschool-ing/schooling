@@ -80,6 +80,6 @@ ana@api:~/shelf$ curl -s -X PATCH localhost:8000/v1/books/1 -H 'Content-Type: ap
 **As duas funcionaram, porque o CORS só diz ao navegador o que mostrar a uma página; ele nunca impede
 que uma requisição seja respondida.** Um cliente que não é navegador ignora os cabeçalhos, e um
 cliente que quer se comportar mal não é navegador. O que decide se uma requisição pode mudar o estoque
-é autenticação e autorização, as lições 7 a 11, conferidas no servidor em toda requisição, seja qual
+é autenticação e autorização, as aulas 7 a 11, conferidas no servidor em toda requisição, seja qual
 for o `Origin`. O CORS decide uma coisa mais estreita: se o navegador de uma pessoa autenticada vai
 deixar uma página ler a sua API em nome dessa pessoa.

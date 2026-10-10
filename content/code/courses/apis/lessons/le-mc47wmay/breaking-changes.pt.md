@@ -4,7 +4,7 @@ version: 1
 ---
 
 **Com o contrato num arquivo, uma mudança na API é uma mudança nesse arquivo, e dá para lê-la antes
-de ela ir para produção.** A lição 1 traçou a linha: você pode acrescentar a uma API, e não pode
+de ela ir para produção.** A aula 1 traçou a linha: você pode acrescentar a uma API, e não pode
 tirar sem quebrar os clientes que usavam o que você tirou. Um documento transforma essa regra, de
 algo que quem revisa precisa lembrar, em algo que duas versões de um arquivo conseguem mostrar.
 
@@ -24,7 +24,7 @@ exigência de mais numa requisição, em que algum cliente em algum lugar manda 
 
 ## Uma mudança, como diff
 
-A versão 2 da lição 1 trocou `price_cents` por um objeto `price`. Suponha que alguém fizesse uma
+A versão 2 da aula 1 trocou `price_cents` por um objeto `price`. Suponha que alguém fizesse uma
 mudança menor do mesmo tipo no documento da versão 1, renomeando o campo para `price` com um `sed`,
 num arquivo novo:
 
@@ -77,11 +77,11 @@ acima, no arquivo, da linha que mudou.
 Um verificador de mudanças que quebram lê os dois documentos, segue cada `$ref` a partir de cada
 operação e classifica cada diferença com as duas perguntas da figura acima. O oasdiff é um bastante
 usado, escrito em Go, e o openapi-diff é outro; nenhum dos dois está no repositório do Ubuntu, e
-nenhum foi rodado para esta lição. Diante destes dois arquivos, um verificador desse tipo é feito
+nenhum foi rodado para esta aula. Diante destes dois arquivos, um verificador desse tipo é feito
 para apontar como quebra a propriedade removida da resposta e a nova propriedade obrigatória da
 requisição, operação por operação. É dessa lista que quem revisa precisa.
 
 O lugar de rodar um é o mesmo do validador, no CI. Ele compara o documento de um pull request com o
 da branch principal, e faz o build falhar numa mudança que quebra e não vem com uma versão nova.
-É o hábito que a versão 2 da lição 1 pediu, transformado em conferência: uma mudança que quebra é
+É o hábito que a versão 2 da aula 1 pediu, transformado em conferência: uma mudança que quebra é
 permitida, num endereço novo, e a ferramenta garante que ela não aconteceu em nenhum outro lugar.

@@ -6,9 +6,9 @@ version: 1
 **O `limits.py` é uma segunda API na frente dos mesmos livros: ele pede uma chave a toda requisição,
 cobra do balde da chave, e só então lê o banco.** Ele responde em três endereços, `/books`,
 `/books/<id>` e `/search?q=`, e é um programa separado em vez de uma mudança no `rest.py` para que a
-API da lição 1 continue como estava.
+API da aula 1 continue como estava.
 
-Ele só precisa do que a lição 1 montou, o `db.py` em `~/shelf`. Salve o arquivo como
+Ele só precisa do que a aula 1 montou, o `db.py` em `~/shelf`. Salve o arquivo como
 `~/shelf/limits.py` no editor, como fez com o `rest.py`:
 
 ```schooling-example
@@ -22,7 +22,7 @@ Ele só precisa do que a lição 1 montou, o `db.py` em `~/shelf`. Salve o arqui
     },
     {
       "code": "\nKEYS = {\"demo-ana\": \"trial\", \"demo-bia\": \"free\", \"demo-caio\": \"pro\"}\n\nTIERS = {\n    \"trial\": {\"capacity\": 10, \"per_second\": 1, \"daily\": 20},\n    \"free\": {\"capacity\": 10, \"per_second\": 1, \"daily\": 5000},\n    \"pro\": {\"capacity\": 100, \"per_second\": 10, \"daily\": 500000},\n}\n\nCOST = {\"/search\": 5}",
-      "note": "Três **chaves de demonstração**, escritas no arquivo para a lição poder usá-las. Uma chave de verdade é longa, aleatória, emitida por cliente e guardada como hash; a lição 7 mostra como. Cada chave tem um plano, e o plano guarda os números: um balde de 10 reabastecido a 1 por segundo, e uma cota diária. Uma busca custa 5 unidades, todo o resto custa 1."
+      "note": "Três **chaves de demonstração**, escritas no arquivo para a aula poder usá-las. Uma chave de verdade é longa, aleatória, emitida por cliente e guardada como hash; a aula 7 mostra como. Cada chave tem um plano, e o plano guarda os números: um balde de 10 reabastecido a 1 por segundo, e uma cota diária. Uma busca custa 5 unidades, todo o resto custa 1."
     },
     {
       "code": "\n\nclass TokenBucket:\n    \"\"\"Holds up to `capacity` tokens and gains `per_second` more every second.\"\"\"\n\n    def __init__(self, capacity, per_second):\n        self.capacity, self.per_second = capacity, per_second\n        self.tokens, self.last = capacity, time.monotonic()\n\n    def refill(self):\n        now = time.monotonic()\n        self.tokens = min(self.capacity, self.tokens + (now - self.last) * self.per_second)\n        self.last = now\n\n    def take(self, cost):\n        self.refill()\n        if self.tokens < cost:\n            return False\n        self.tokens -= cost\n        return True\n\n    def left(self):\n        self.refill()\n        return math.floor(self.tokens)\n\n    def wait(self, cost):\n        \"\"\"Seconds until `cost` tokens are in the bucket.\"\"\"\n        return max(0, math.ceil((cost - self.tokens) / self.per_second))",
@@ -63,7 +63,7 @@ próprios nomes: `X-RateLimit-Limit`, `X-RateLimit-Remaining` e `X-RateLimit-Res
 com o reset às vezes em segundos e às vezes como uma hora no relógio. O grupo de trabalho de APIs HTTP
 da IETF vem escrevendo um padrão para isso, **RateLimit header fields for HTTP**, e ele ainda é um
 Internet-Draft, não uma RFC. As primeiras versões usavam três campos chamados `RateLimit-Limit`,
-`RateLimit-Remaining` e `RateLimit-Reset`; a versão em vigor quando esta lição foi escrita, em 2026,
+`RateLimit-Remaining` e `RateLimit-Reset`; a versão em vigor quando esta aula foi escrita, em 2026,
 usa dois, e o `limits.py` envia esses:
 
 | campo | exemplo | diz |

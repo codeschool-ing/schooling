@@ -5,7 +5,7 @@ version: 1
 
 **Uma origem são três coisas juntas: o esquema, o host e a porta.** O navegador arquiva cada página
 sob a origem dela, e não deixa uma página ler o que outra origem devolve, a não ser que essa origem
-diga que pode. Essa regra é a política de mesma origem, e o CORS, assunto da maior parte desta lição,
+diga que pode. Essa regra é a política de mesma origem, e o CORS, assunto da maior parte desta aula,
 é o jeito de um servidor dizer "pode".
 
 Pegue a página que a próxima seção entrega, `http://localhost:8080/page.html`. A origem dela é
@@ -43,12 +43,12 @@ São três casos, então:
   continua sem conseguir ler os bytes.
 
 O motivo da regra é a pessoa diante do teclado. O navegador manda os cookies de um site em toda
-requisição a esse site, seja qual for a página que a causou; a lição 8 é sobre esses cookies. Sem a
+requisição a esse site, seja qual for a página que a causou; a aula 8 é sobre esses cookies. Sem a
 política, qualquer página aberta numa aba poderia chamar a API do seu banco em seu nome e ler a
 resposta. **A política protege quem usa o navegador, não o servidor**, e essa diferença está na raiz
 da maioria dos erros de CORS.
 
 Ela também explica quem a aplica. O `curl`, um script Python, um app de celular e outro servidor não
 têm cookies de usuário para proteger nem política para aplicar: leem tudo o que volta. Só o navegador
-aplica a política de mesma origem, e é por isso que os comandos curl das lições anteriores nunca
+aplica a política de mesma origem, e é por isso que os comandos curl das aulas anteriores nunca
 toparam com ela.

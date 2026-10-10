@@ -10,7 +10,7 @@ tentar arrisca nunca criá-lo. Um cabeçalho `Idempotency-Key` desfaz o dilema: 
 operação, e o servidor reconhece uma nova tentativa dela e responde com o que respondeu da primeira
 vez.
 
-A lição 1 mostrou por que o POST é o método com esse problema: PUT e DELETE dizem qual é o estado
+A aula 1 mostrou por que o POST é o método com esse problema: PUT e DELETE dizem qual é o estado
 final, então enviá-los duas vezes não muda nada, enquanto o POST diz "crie mais um". A resposta comum
 é contar com algo único nos dados. Para livros isso funciona pela metade, porque o ISBN é único. Um
 cliente que repete a criação do livro 8, mais abaixo, sem chave, recebe:
@@ -36,7 +36,7 @@ b1a0b623-b2c3-4be8-a499-0dfce682ffe7
 ```
 
 Ele envia a chave na primeira tentativa e **a mesma chave em toda nova tentativa dessa operação**, e
-uma chave nova para a operação seguinte. Esta lição digita uma chave fixa, `3f1c9a2e-alienista`, para
+uma chave nova para a operação seguinte. Esta aula digita uma chave fixa, `3f1c9a2e-alienista`, para
 que as três requisições que a usam possam ser repetidas exatamente. A primeira cria o livro:
 
 ```
@@ -113,4 +113,4 @@ Duas coisas que uma API de produção acrescenta. **Chaves expiram**: a API do S
 este cabeçalho, só remove uma chave depois que ela tem pelo menos 24 horas, tempo suficiente para
 qualquer nova tentativa razoável; o `catalogue.py` as guarda para sempre. E **uma chave pertence a
 um cliente**: dois clientes podem muito bem escolher a mesma string, então a chave é guardada junto
-com quem a enviou, e para isso é preciso saber quem está pedindo, o assunto da lição 7.
+com quem a enviou, e para isso é preciso saber quem está pedindo, o assunto da aula 7.

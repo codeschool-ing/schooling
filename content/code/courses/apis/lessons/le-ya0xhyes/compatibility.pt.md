@@ -6,7 +6,7 @@ version: 1
 **Depois que um cliente depende da sua API, toda mudança é segura ou incompatível, e qual das duas
 ela é depende tanto de como o cliente lê quanto do que você mudou.** Um campo acrescentado a uma
 resposta não quebra ninguém que ignora o que não pediu, e quebra todo cliente que recusa qualquer
-coisa inesperada. A lição 1 deu às mudanças incompatíveis um número de versão; esta seção é sobre
+coisa inesperada. A aula 1 deu às mudanças incompatíveis um número de versão; esta seção é sobre
 precisar desse número menos vezes.
 
 ## O leitor tolerante
@@ -47,7 +47,7 @@ recusa é uma melhoria do servidor que ele transforma em pane.**
 | acrescentar um endpoint, um filtro ou um campo de ordenação | não | nada antigo o usa |
 | acrescentar um valor a um enum numa resposta | não, se o contrato disse que ele pode crescer | um cliente que listou todos os valores falha no novo |
 | remover ou renomear um campo | **sim** | quem o lia passa a não ler nada |
-| mudar o tipo de um campo | **sim** | a versão 2 da lição 1 fez isso com o preço |
+| mudar o tipo de um campo | **sim** | a versão 2 da aula 1 fez isso com o preço |
 | tornar obrigatório um campo opcional da requisição | **sim** | clientes antigos nunca o enviam |
 | apertar a validação, como um `maxLength` menor | **sim** | requisições que eram aceitas passam a ser recusadas |
 | mudar o `type` de um erro | **sim** | os clientes decidem por ele |
@@ -57,7 +57,7 @@ recusa é uma melhoria do servidor que ele transforma em pane.**
 ser enviado hoje" em vez de "pelo menos um exemplar". Toda resposta continua sendo um booleano no
 lugar certo; o schema passa, os testes passam, e todo cliente age sobre um fato que mudou por baixo
 dele. Um significado novo ganha um nome novo, `ships_today`, e o campo antigo mantém o significado
-antigo até ser aposentado do jeito que a lição 1 aposenta uma versão.
+antigo até ser aposentado do jeito que a aula 1 aposenta uma versão.
 
 ## O contrato é o que os clientes usam
 
@@ -69,7 +69,7 @@ lê isso?", e o jeito confiável de saber é perguntar aos clientes, ou fazer co
 que usam. Isso se chama design **orientado ao consumidor** e, quando as expectativas dos clientes
 viram testes que rodam contra o servidor, teste de contrato orientado ao consumidor.
 
-Dois hábitos deixam as mudanças mais seguras, e o resto do curso usa os dois. A lição 6 escreve o
+Dois hábitos deixam as mudanças mais seguras, e o resto do curso usa os dois. A aula 6 escreve o
 contrato inteiro como um documento OpenAPI, que uma ferramenta consegue comparar entre duas versões
 para apontar as linhas da tabela acima. E quando uma mudança incompatível não pode ser evitada, ela
-sai como uma versão nova, ao lado da antiga, como a lição 1 mostrou.
+sai como uma versão nova, ao lado da antiga, como a aula 1 mostrou.

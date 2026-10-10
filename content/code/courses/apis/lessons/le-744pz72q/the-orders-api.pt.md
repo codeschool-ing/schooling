@@ -3,13 +3,13 @@ title: A API de pedidos
 version: 1
 ---
 
-O resto da lição roda sobre um arquivo novo, o `orders.py`: os pedidos da livraria, as pessoas que
+O resto da aula roda sobre um arquivo novo, o `orders.py`: os pedidos da livraria, as pessoas que
 fazem e cuidam deles, e todas as checagens da figura da primeira seção. Ele guarda as tabelas dele
 no `shelf.db`, ao lado dos livros, e não mexe nas duas tabelas que o `rest.py` usa.
 
 **A autenticação aqui é falsa de propósito.** Seis tokens estão escritos no arquivo, um por pessoa e
-mais um para um aplicativo, para que esta lição possa tratar do que acontece depois que um token foi
-conferido. As lições 7 e 8 mostram como um token de verdade é emitido e verificado, e nada neste
+mais um para um aplicativo, para que esta aula possa tratar do que acontece depois que um token foi
+conferido. As aulas 7 e 8 mostram como um token de verdade é emitido e verificado, e nada neste
 arquivo é um jeito de fazer isso.
 
 Salve como `orders.py` em `~/shelf`, do mesmo jeito que o `rest.py`:
@@ -29,7 +29,7 @@ Salve como `orders.py` em `~/shelf`, do mesmo jeito que o `rest.py`:
     },
     {
       "code": "\n# Fixed demo tokens: who each one belongs to, and the scopes it carries.\n# Lessons 7 and 8 are how a real token is issued and checked.\nTOKENS = {\n    \"demo-ana\": (\"ana\", {\"orders:read\", \"orders:create\", \"orders:cancel\"}),\n    \"demo-ana-app\": (\"ana\", {\"orders:read\"}),\n    \"demo-bruno\": (\"bruno\", {\"orders:read\", \"orders:create\", \"orders:cancel\", \"orders:refund\"}),\n    \"demo-carla\": (\"carla\", {\"orders:read\", \"orders:read_all\", \"orders:refund\"}),\n    \"demo-dora\": (\"dora\", {\"orders:read\", \"orders:read_all\", \"orders:refund\", \"people:read\"}),\n    \"demo-eva\": (\"eva\", {\"orders:read\"}),\n}",
-      "note": "Seis tokens fixos, para que esta lição trate do que acontece depois que o token é conferido. Cada um diz de quem é e quais **escopos** carrega. `demo-ana-app` é o token que a Ana deu a um aplicativo que só lê os pedidos dela; `demo-bruno` alega `orders:refund`, que o papel dele não tem."
+      "note": "Seis tokens fixos, para que esta aula trate do que acontece depois que o token é conferido. Cada um diz de quem é e quais **escopos** carrega. `demo-ana-app` é o token que a Ana deu a um aplicativo que só lê os pedidos dela; `demo-bruno` alega `orders:refund`, que o papel dele não tem."
     },
     {
       "code": "\nREFUND_DAYS = 30\n\nSCHEMA = \"\"\"\nCREATE TABLE IF NOT EXISTS people (\n    name TEXT PRIMARY KEY,\n    role TEXT NOT NULL\n);\nCREATE TABLE IF NOT EXISTS orders (\n    id          INTEGER PRIMARY KEY,\n    customer    TEXT NOT NULL REFERENCES people (name),\n    book_id     INTEGER NOT NULL REFERENCES books (id),\n    quantity    INTEGER NOT NULL CHECK (quantity > 0),\n    total_cents INTEGER NOT NULL,\n    status      TEXT NOT NULL,\n    placed_on   TEXT NOT NULL,\n    note        TEXT NOT NULL DEFAULT ''\n);\n\"\"\"\n\n\ndef setup():\n    \"\"\"Create the two tables and put the same people and orders in them.\"\"\"\n    def ago(days):\n        return str(date.today() - timedelta(days=days))\n    with db.connect() as conn:\n        conn.executescript(SCHEMA)\n        conn.executemany(\"INSERT OR IGNORE INTO people VALUES (?, ?)\", [\n            (\"ana\", \"customer\"), (\"bruno\", \"customer\"), (\"carla\", \"staff\"),\n            (\"dora\", \"admin\"), (\"eva\", \"auditor\")])\n        conn.executemany(\"INSERT OR IGNORE INTO orders VALUES (?, ?, ?, ?, ?, ?, ?, ?)\", [\n            (1, \"ana\", 1, 1, 3990, \"placed\", ago(2), \"gift wrap\"),\n            (2, \"ana\", 5, 2, 11980, \"shipped\", ago(10), \"\"),\n            (3, \"bruno\", 6, 1, 6490, \"placed\", ago(1), \"phoned: new address\"),\n            (4, \"bruno\", 2, 1, 4490, \"shipped\", ago(45), \"\")])",
@@ -163,4 +163,4 @@ Com o token da Ana, o mesmo endereço é um 404.
 As datas em `placed_on` são contadas para trás a partir do dia em que o servidor iniciou pela
 primeira vez, então as suas são diferentes destas. As idades são as mesmas para todo mundo, e são as
 idades que a regra de estorno lê. Para voltar aos quatro pedidos como eram no começo, pare o
-servidor, apague o `shelf.db` e inicie de novo, como na lição 1.
+servidor, apague o `shelf.db` e inicie de novo, como na aula 1.

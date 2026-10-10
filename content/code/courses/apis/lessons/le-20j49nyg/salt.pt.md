@@ -44,7 +44,7 @@ linha da Ana não diz nada sobre a da Bia.
 palpites por segundo contra uma linha; o salt só faz cada linha ser um trabalho à parte. O custo por
 palpite é o fator de custo, e os dois trabalham juntos.
 
-Três regras, e as bibliotecas desta lição seguem todas por você:
+Três regras, e as bibliotecas desta aula seguem todas por você:
 
 | regra | por quê |
 |---|---|

@@ -118,7 +118,7 @@ Wt97mTdSbXkGdBkhnqld+SaZcYeGa+LDHEA/wd84WkRov42HxonjuJZnA+A7D6sO
 ms3U2OutI0+LnP+uPqLigw==</ds:SignatureValue>
 ```
 
-O digest é um SHA-256 da própria asserção, então, se o seu arquivo for o da lição byte por byte, o
+O digest é um SHA-256 da própria asserção, então, se o seu arquivo for o da aula byte por byte, o
 seu digest é o de cima. O valor da assinatura depende também da chave, e o seu é outro.
 
 A conferência do provedor de serviço, com o certificado do provedor de identidade:

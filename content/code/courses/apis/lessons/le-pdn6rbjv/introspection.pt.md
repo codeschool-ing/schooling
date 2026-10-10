@@ -38,7 +38,7 @@ Como o servidor sabe se descrever, uma ferramenta não precisa de nada além do 
 ligado a `/graphql` completa nomes de campo enquanto você digita a consulta e sublinha um que não
 existe. Um gerador de código lê o esquema e escreve código de cliente tipado, então um campo removido
 do servidor quebra o build do cliente em vez das telas dos usuários. Uma página de documentação tirada
-da introspecção não tem como ficar para trás do código, porque é o código respondendo. A lição 6
+da introspecção não tem como ficar para trás do código, porque é o código respondendo. A aula 6
 apresenta a resposta do REST para a mesma necessidade, uma descrição da API escrita ao lado dela.
 
 ## Desligar em produção
@@ -50,7 +50,7 @@ anunciá-la.
 
 **O argumento contra** é que esconder um campo não o protege. Uma mutation que qualquer um pode
 chamar continua chamável, publicado o nome ou não, então todo campo ainda precisa das verificações de
-autorização das lições 7 e 11. Esconder também vaza. A recusa de `titel` na seção sobre consultas
+autorização das aulas 7 e 11. Esconder também vaza. A recusa de `titel` na seção sobre consultas
 respondeu `Did you mean 'title'?`, com introspecção ou sem ela, e um estranho paciente consegue
 reconstruir boa parte de um esquema a partir das sugestões.
 

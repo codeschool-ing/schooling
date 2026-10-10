@@ -22,8 +22,8 @@ Três perguntas resolvem a maioria dos casos:
 3. **Com que rapidez o acesso precisa acabar?** Um token acaba sozinho e no logout; uma chave acaba
    quando é revogada; o Basic acaba quando a senha muda, em todo lugar ao mesmo tempo.
 
-O que os três precisam, seja qual for a escolha, é o que as seções anteriores desta lição mostraram:
-HTTPS no caminho (lição 13), um cabeçalho e nunca uma URL, um hash e nunca o segredo no armazenamento,
+O que os três precisam, seja qual for a escolha, é o que as seções anteriores desta aula mostraram:
+HTTPS no caminho (aula 13), um cabeçalho e nunca uma URL, um hash e nunca o segredo no armazenamento,
 uma comparação que leva sempre o mesmo tempo, e uma recusa que não diz nada.
 
 ## Limpando
@@ -43,6 +43,6 @@ rest.py
 shelf.db
 ```
 
-Depois pare o `keys.py` com `Ctrl+C` no segundo terminal. As próximas lições começam de novo pelo
+Depois pare o `keys.py` com `Ctrl+C` no segundo terminal. As próximas aulas começam de novo pelo
 `rest.py`, e os usuários e as tabelas que o `keys.py` acrescentou ao `shelf.db` ficam lá, sem uso por
 ele.

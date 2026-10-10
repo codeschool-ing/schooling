@@ -5,12 +5,12 @@ version: 1
 
 **Uma lista de verificação só vale a pena se toda linha dela puder ser conferida.** "A API é segura"
 não pode; "uma origem desconhecida não recebe `Access-Control-Allow-Origin`" pode, com um comando curl.
-Esta reúne o curso inteiro em linhas do segundo tipo, cada uma com a lição que construiu a defesa.
+Esta reúne o curso inteiro em linhas do segundo tipo, cada uma com a aula que construiu a defesa.
 Percorra-a contra a API implantada, de fora, do jeito que um cliente a vê, e não contra o código.
 
 ## O contrato
 
-| verificação | como você vê | lição |
+| verificação | como você vê | aula |
 |---|---|---|
 | todo erro é um código de status com que o cliente consegue agir, nunca um 200 com um erro dentro | mande cada erro de propósito e leia o código | 1 |
 | campos desconhecidos ou de tipo errado são recusados | um PATCH com um campo a mais responde 422 | 1, 2 |
@@ -20,7 +20,7 @@ Percorra-a contra a API implantada, de fora, do jeito que um cliente a vê, e n�
 
 ## Quem pergunta, e o que pode fazer
 
-| verificação | como você vê | lição |
+| verificação | como você vê | aula |
 |---|---|---|
 | todo endpoint que não é público recusa uma requisição sem credenciais | 401 sem elas | 7 |
 | tokens e sessões expiram, e sair da conta os encerra | use um depois de ele dever ter morrido | 7, 8 |
@@ -30,14 +30,14 @@ Percorra-a contra a API implantada, de fora, do jeito que um cliente a vê, e n�
 
 ## Volume
 
-| verificação | como você vê | lição |
+| verificação | como você vê | aula |
 |---|---|---|
 | cada cliente tem um limite, e passar dele responde 429 dizendo quando tentar de novo | um laço de requisições de um cliente só | 12 |
 | listas são paginadas e têm um tamanho máximo de página | peça um milhão de linhas | 2 |
 
 ## Transporte e navegador
 
-| verificação | como você vê | lição |
+| verificação | como você vê | aula |
 |---|---|---|
 | só HTTPS, com um certificado de uma autoridade em que os clientes já confiam | `curl` sem opções funciona; `http://` simples não serve a API | 13 |
 | `Strict-Transport-Security` em toda resposta HTTPS | o cabeçalho no `curl -si` de qualquer endereço | 13 |
@@ -49,7 +49,7 @@ Percorra-a contra a API implantada, de fora, do jeito que um cliente a vê, e n�
 
 ## Quando a API é o cliente
 
-| verificação | como você vê | lição |
+| verificação | como você vê | aula |
 |---|---|---|
 | todo endereço que a API busca está numa lista de permissões, e endereços privados são recusados | dê a ela `http://127.0.0.1/` e espere uma recusa | 13 |
 | a resposta de todo parceiro é validada antes do uso, com a verificação de TLS ligada | o código que chama o parceiro, e os testes dele | 2, 13 |

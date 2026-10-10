@@ -13,7 +13,7 @@ trabalho, rapidez é qualidade, e o SHA-256 é feito para ser tão rápido quant
 propriedade que o torna bom lá é justamente a que o torna errado aqui.
 
 Meça em vez de acreditar. O `hashrate.py` calcula cada hash de novo e de novo durante dois segundos e
-conta. Salve-o em `~/shelf` do mesmo jeito que os arquivos da lição 1:
+conta. Salve-o em `~/shelf` do mesmo jeito que os arquivos da aula 1:
 
 ```schooling-example
 {
@@ -79,6 +79,6 @@ rodando milhares de palpites lado a lado. As seções sobre esses dois voltam a 
 
 **O custo é pago por palpite, então ele se multiplica pelo tamanho da lista de palpites.** Uma lista
 curta de senhas comuns custa pouco mesmo contra um hash lento, e é por isso que as regras para a
-própria senha, no fim desta lição, continuam importando. Um hash lento transforma um vazamento numa
+própria senha, no fim desta aula, continuam importando. Um hash lento transforma um vazamento numa
 corrida que quem defende pode ganhar: tempo para perceber, avisar os usuários e trocar as senhas
 antes que a maioria delas caia.

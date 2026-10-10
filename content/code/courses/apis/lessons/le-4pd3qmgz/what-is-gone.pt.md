@@ -3,7 +3,7 @@ title: "O que saiu: os grants implicit e password"
 version: 1
 ---
 
-A RFC 6749 definiu quatro grants em 2012. Dois são os que esta lição rodou, o authorization code e o
+A RFC 6749 definiu quatro grants em 2012. Dois são os que esta aula rodou, o authorization code e o
 client credentials. **Os outros dois ainda estão em documentação antiga, em bibliotecas antigas e em
 muita resposta na internet, e os dois agora são recusados.** A RFC 9700, as recomendações de
 segurança do OAuth de 2025, diz que o grant implicit não deve ser usado e que o grant password não

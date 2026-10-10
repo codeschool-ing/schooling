@@ -7,7 +7,7 @@ version: 1
 que um cliente pediu para fazer, com a qual uma pessoa concordou, escrita no token.** É um limite
 superior do que o token abre. Não diz o que a pessoa tem permissão de fazer: um token com
 `books:read` para alguém que a loja baniu continua não abrindo nada, porque a API também confere as
-suas próprias regras. A lição 11 trata dessas regras.
+suas próprias regras. A aula 11 trata dessas regras.
 
 Nomes de escopo são strings que o servidor de autorização inventa. `books:read` é do `idp.py`, e os
 dois-pontos são um costume, não uma sintaxe. Só o OpenID Connect define alguns: `openid`,

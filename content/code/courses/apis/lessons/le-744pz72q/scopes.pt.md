@@ -9,7 +9,7 @@ que ela dá a ele também pudesse fazer pedidos, um bug no aplicativo, ou o toke
 o dinheiro dela. Então o token carrega **escopos**, uma lista do que ele pode ser usado para fazer,
 e a API checa os escopos além da pessoa.
 
-A palavra vem do OAuth, que a lição 9 desenha por inteiro: o aplicativo pede escopos, a Ana aprova,
+A palavra vem do OAuth, que a aula 9 desenha por inteiro: o aplicativo pede escopos, a Ana aprova,
 e o token que o aplicativo recebe lista esses escopos. Esta seção trata do que a API faz com essa
 lista quando chega uma requisição.
 

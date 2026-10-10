@@ -32,7 +32,7 @@ O endereço do passo 1 leva o pedido inteiro. Estes são os parâmetros que o `i
 
 | parâmetro | o que diz | por que está lá |
 |---|---|---|
-| `response_type=code` | "me mande um código" | o único tipo de resposta que o servidor desta lição, e o OAuth 2.1, aceitam |
+| `response_type=code` | "me mande um código" | o único tipo de resposta que o servidor desta aula, e o OAuth 2.1, aceitam |
 | `client_id` | qual app está pedindo | para saber o que o app pode ter e para onde seus códigos podem ir |
 | `redirect_uri` | para onde devolver o navegador | comparado com o cadastrado exatamente, caractere por caractere |
 | `scope` | o que o app quer fazer | o limite superior do que o token vai permitir |

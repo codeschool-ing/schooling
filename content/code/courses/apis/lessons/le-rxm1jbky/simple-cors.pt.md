@@ -77,7 +77,7 @@ E o terminal do servidor imprimiu esta linha para esse mesmo clique:
 ```
 
 **A requisição chegou e foi respondida.** O livro foi lido do banco e enviado; o navegador o recebeu
-e jogou fora. Esse é o custo de uma requisição simples, e é por isso que a regra da lição 1 importa
+e jogou fora. Esse é o custo de uma requisição simples, e é por isso que a regra da aula 1 importa
 aqui: um GET nunca deve mudar nada, porque uma página de qualquer origem consegue fazer um navegador
 mandar um para a sua API.
 
@@ -102,5 +102,5 @@ que quase toda chamada a uma API de verdade feita por uma página passa por pref
 `Access-Control-Allow-Origin` também pode ser `*`: qualquer origem pode ler. Para dados públicos que
 não precisam de credenciais, um catálogo, uma grade de horários, cotações de câmbio, essa é a resposta
 certa, e uma lista de permissões só acrescentaria uma lista para manter. O `secure.py` nomeia origens
-porque o PATCH dele muda alguma coisa e, depois das lições 7 a 9, as requisições de uma API levam
+porque o PATCH dele muda alguma coisa e, depois das aulas 7 a 9, as requisições de uma API levam
 credenciais, e a seção sobre erros mostra o que o `*` faz nesse caso.

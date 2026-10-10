@@ -8,7 +8,7 @@ diz que classe de coisa deu errado; o corpo precisa dizer exatamente o quê, num
 cliente consiga decidir sem interpretar uma frase. A RFC 9457, *Problem Details for HTTP APIs*, é o
 formato padrão para esse corpo, e todo erro que o `catalogue.py` escreve segue esse formato.
 
-O corpo de erro comum é uma mensagem para um humano. O `rest.py` da lição 1, ao receber um livro com
+O corpo de erro comum é uma mensagem para um humano. O `rest.py` da aula 1, ao receber um livro com
 título vazio, ano como texto, preço como float e sem ISBN nem autor:
 
 ```
@@ -105,12 +105,12 @@ ana@api:~/shelf$ curl -s -w '%{http_code}\n' -X POST localhost:8000/v1/books -H 
 400
 ```
 
-O 409 diz qual ISBN já existe e nada sobre como o banco descobriu. O 409 da lição 1 repassava ao
+O 409 diz qual ISBN já existe e nada sobre como o banco descobriu. O 409 da aula 1 repassava ao
 cliente a própria mensagem do SQLite, com o nome da tabela e da coluna; isso é um detalhe interno, e
 a próxima mudança no banco muda a mensagem. O 400 repassa, sim, a mensagem do parser, porque a linha
 e a coluna de um erro de sintaxe são exatamente o que o cliente precisa.
 
-A última reclamação da lição 1 foi a página HTML que a biblioteca do Python mandou para um método que
+A última reclamação da aula 1 foi a página HTML que a biblioteca do Python mandou para um método que
 ninguém tinha escrito. O `catalogue.py` responde a esses métodos ele mesmo, com um 405, um cabeçalho
 `Allow` e um problema:
 

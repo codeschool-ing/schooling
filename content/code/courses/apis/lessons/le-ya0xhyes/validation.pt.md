@@ -8,7 +8,7 @@ version: 1
 obrigatórios, que tipo e que faixa cada um aceita. Uma biblioteca então confere um corpo contra o
 arquivo, e o mesmo arquivo pode ser entregue a quem escreve um cliente.
 
-O `rest.py` da lição 1 conferia na mão, e o jeito como ele respondia mostra o custo. Ele procurava
+O `rest.py` da aula 1 conferia na mão, e o jeito como ele respondia mostra o custo. Ele procurava
 campos desconhecidos, depois tipos errados, depois campos faltando, e respondia no primeiro tipo de
 erro que achava. Um cliente que manda um corpo com quatro erros fica sabendo de um tipo, corrige,
 manda de novo, e fica sabendo do próximo. **Um validador deve relatar todos os erros numa resposta
@@ -110,12 +110,12 @@ ana@api:~/shelf$ jsonschema -i float.json book.schema.json; echo "exit $?"
 exit 0
 ```
 
-Passa. O JSON tem um tipo de número só, como a primeira seção desta lição mostrou, então o JSON
+Passa. O JSON tem um tipo de número só, como a primeira seção desta aula mostrou, então o JSON
 Schema define `integer` como **um número sem parte fracionária**, e `3990.0` não tem. Se isso é
 aceitável é uma questão para o código que o lê. Aqui é: o valor vai para uma coluna `INTEGER`, e o
 SQLite guarda `3990.0` ali como o número inteiro `3990`. Um leitor que o mantivesse como float
 precisaria de uma conferência própria.
 
 O `catalogue.py`, na próxima seção, carrega este schema quando inicia e passa todo corpo de POST por
-ele. A lição 6 põe a mesma linguagem de schema dentro de um documento OpenAPI, onde ela descreve todo
+ele. A aula 6 põe a mesma linguagem de schema dentro de um documento OpenAPI, onde ela descreve todo
 corpo que a API envia e recebe.

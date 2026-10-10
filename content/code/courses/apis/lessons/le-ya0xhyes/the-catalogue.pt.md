@@ -4,9 +4,9 @@ version: 1
 ---
 
 **O `catalogue.py` é a API da mesma livraria escrita de novo pensando no contrato.** Ele serve os
-mesmos livros do mesmo `shelf.db`, pelo `db.py`, e põe em código as decisões desta lição: os formatos
+mesmos livros do mesmo `shelf.db`, pelo `db.py`, e põe em código as decisões desta aula: os formatos
 das seções anteriores, o schema, erros que um programa consegue ler, páginas, filtros e chaves de
-idempotência. Ele não substitui o `rest.py`, que fica como a lição 1 o deixou; fica ao lado dele.
+idempotência. Ele não substitui o `rest.py`, que fica como a aula 1 o deixou; fica ao lado dele.
 
 Ele responde na mesma porta, 8000, então só um dos dois pode rodar de cada vez. No segundo terminal,
 pare o `rest.py` com `Ctrl+C`. Depois, no primeiro, abra o editor com `nano catalogue.py`, cole o
@@ -19,7 +19,7 @@ arquivo abaixo e salve. O botão de copiar leva o programa inteiro, sem as notas
   "parts": [
     {
       "code": "# shelf/catalogue.py\n\"\"\"The bookshop's catalogue, with its contract written down.\n\nStop rest.py first, then run `python3 catalogue.py`; it answers on\nhttp://127.0.0.1:8000.\n\"\"\"\nimport base64\nimport hashlib\nimport json\nimport os\nimport re\nimport sqlite3\nfrom datetime import datetime, timezone\nfrom http.server import BaseHTTPRequestHandler, ThreadingHTTPServer\nfrom urllib.parse import parse_qs, urlencode, urlsplit\n\nimport jsonschema\n\nimport db\n\nHERE = os.path.dirname(os.path.abspath(__file__))\nwith open(os.path.join(HERE, \"book.schema.json\"), encoding=\"utf-8\") as f:\n    BOOK = jsonschema.Draft202012Validator(json.load(f))",
-      "note": "A biblioteca padrão de novo, mais o `jsonschema` do pacote `python3-jsonschema` do Ubuntu, que a lição 1 instalou. O schema é lido **uma vez, na partida**: um `book.schema.json` ausente ou quebrado derruba o servidor antes que ele responda a alguém, em vez de falhar no primeiro POST."
+      "note": "A biblioteca padrão de novo, mais o `jsonschema` do pacote `python3-jsonschema` do Ubuntu, que a aula 1 instalou. O schema é lido **uma vez, na partida**: um `book.schema.json` ausente ou quebrado derruba o servidor antes que ele responda a alguém, em vez de falhar no primeiro POST."
     },
     {
       "code": "\nPROBLEMS = \"https://shelf.example/problems/\"\nSORTS = {\"id\": \"id\", \"title\": \"title\", \"year\": \"year\", \"price\": \"price_cents\"}\nPARAMS = {\"author_id\", \"in_stock\", \"sort\", \"limit\", \"after\"}\nPAGE, MOST = 20, 100",
@@ -79,7 +79,7 @@ arquivo abaixo e salve. O botão de copiar leva o programa inteiro, sem as notas
     },
     {
       "code": "\n    def refuse(self):\n        self.problem(405, None, \"Method Not Allowed\", f\"the catalogue does not take {self.command}\",\n                     [(\"Allow\", \"GET, POST\")])\n\n    do_PUT = do_PATCH = do_DELETE = do_OPTIONS = refuse",
-      "note": "Os métodos que o catálogo não aceita recebem um 405 com `Allow`, no formato de problema, em vez do 501 em HTML que a biblioteca do Python mandou para `OPTIONS` na lição 1."
+      "note": "Os métodos que o catálogo não aceita recebem um 405 com `Allow`, no formato de problema, em vez do 501 em HTML que a biblioteca do Python mandou para `OPTIONS` na aula 1."
     },
     {
       "code": "\n\nif __name__ == \"__main__\":\n    server = ThreadingHTTPServer((\"127.0.0.1\", 8000), Catalogue)\n    print(\"catalogue on http://127.0.0.1:8000\", flush=True)\n    server.serve_forever()",
@@ -114,7 +114,7 @@ Ele tem três rotas:
 
 ## O mesmo livro, duas vezes
 
-O `rest.py` da lição 1 respondia assim pelo primeiro livro:
+O `rest.py` da aula 1 respondia assim pelo primeiro livro:
 
 ```
 ana@api:~/shelf$ curl -s localhost:8000/v1/books/1
@@ -146,5 +146,5 @@ Duas coisas mudaram. O preço é um objeto que carrega a moeda, e `in_stock` é 
 a partir de `stock`. **As duas são mudanças incompatíveis para um cliente do `rest.py`**: quem lê
 `price_cents` não encontra nada. É por isso que o catálogo é um programa separado, e não uma edição
 do `rest.py`. Se fosse a próxima versão da mesma API, teria saído sob `/v2`, como a versão 2 da
-lição 1 fez exatamente para essa mudança no preço. O `catalogue.py` usa `/v1` porque, como API, ele
+aula 1 fez exatamente para essa mudança no preço. O `catalogue.py` usa `/v1` porque, como API, ele
 é novo.

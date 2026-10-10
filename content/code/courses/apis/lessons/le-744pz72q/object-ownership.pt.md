@@ -6,7 +6,7 @@ version: 1
 **A falha de autorização mais comum em APIs é um objeto entregue a alguém a quem ele não pertence.**
 A OWASP, o projeto aberto que publica listas das falhas de segurança web mais frequentes, põe essa
 em primeiro lugar no seu API Security Top 10 de 2023, como **API1:2023 Broken Object Level
-Authorization**, ou BOLA. A lição 13 volta à lista; esta é a primeira entrada dela.
+Authorization**, ou BOLA. A aula 13 volta à lista; esta é a primeira entrada dela.
 
 O formato é sempre o mesmo. O endereço leva um id, `/orders/3`, e o handler lê a linha 3 porque o
 endereço pediu. Quem chamou tem um token válido, tem `orders:read`, e a rota deixa entrar. Todas as
@@ -40,7 +40,7 @@ ana@api:~/shelf$ curl -s -w '%{http_code}\n' -X POST -H 'Authorization: Bearer d
 ```
 
 O segundo cancelamento é um 409, porque um pedido cancelado não pode ser cancelado de novo. Essa é
-uma regra sobre o estado do pedido, não sobre quem pode pedir, e 409 é o código que a lição 1 deu a
+uma regra sobre o estado do pedido, não sobre quem pode pedir, e 409 é o código que a aula 1 deu a
 uma requisição que entra em conflito com o que já existe.
 
 ## Como é uma checagem que falta

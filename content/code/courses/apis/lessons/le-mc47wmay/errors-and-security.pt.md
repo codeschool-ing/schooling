@@ -16,7 +16,7 @@ cada uma com a sua descrição. E cada operação lista os códigos que pode de 
 referência, então `GET /books/{id}` lista 404 e não 409, porque ler um livro não conflita com nada.
 
 O que o corpo de um erro deve conter é uma questão à parte. O do shelf é uma frase num campo chamado
-`error`, e a lição 2 dá aos erros um formato que um programa consegue ler. Existe também um formato
+`error`, e a aula 2 dá aos erros um formato que um programa consegue ler. Existe também um formato
 padrão com um tipo de mídia próprio, `application/problem+json`. Seja qual for o formato, o documento
 o enuncia uma vez em `components` e toda operação aponta para ele.
 
@@ -40,7 +40,7 @@ liste mesmo assim todo código que conseguir.
 
 ## Esquemas de segurança
 
-O shelf não pergunta a ninguém quem é; a lição 7 é onde isso começa. Mas é aqui que um documento
+O shelf não pergunta a ninguém quem é; a aula 7 é onde isso começa. Mas é aqui que um documento
 diria como um cliente prova quem é, e vale reconhecer a forma desde já. Ela tem duas partes: um
 esquema definido uma vez em `components/securitySchemes`, e uma lista `security` que diz onde ele
 vale, para a API inteira no nível de cima ou para uma operação:
@@ -67,9 +67,9 @@ esquema diz só por onde a chave viaja, num cabeçalho chamado `X-Api-Key`. **El
 chave**, e uma chave de verdade escrita num exemplo do documento seria publicada junto com a página
 de documentação.
 
-Os tipos de esquema são poucos, e todos menos um são assunto de uma lição deste curso:
+Os tipos de esquema são poucos, e todos menos um são assunto de uma aula deste curso:
 
-| `type` | o que o cliente envia | lição |
+| `type` | o que o cliente envia | aula |
 |---|---|---|
 | `apiKey` | uma chave num cabeçalho, numa query string ou num cookie | 7 |
 | `http` com `scheme: basic` ou `scheme: bearer` | um cabeçalho `Authorization` com uma senha ou um token | 7 e 8 |
@@ -79,6 +79,6 @@ Os tipos de esquema são poucos, e todos menos um são assunto de uma lição de
 **Descrever um esquema não impõe nada.** O documento pode dizer que `POST /books` precisa de uma
 chave, e o `rest.py` vai continuar aceitando livros de qualquer um, porque o documento é lido por
 pessoas e ferramentas, e o `rest.py` nunca o abre. Os dois se ligam do mesmo jeito que todo o resto
-desta lição: um teste de contrato que manda a requisição sem chave e espera 401. Quando uma API
-confere chaves, que é o assunto da lição 7, essa requisição é uma linha a mais num teste como o
+desta aula: um teste de contrato que manda a requisição sem chave e espera 401. Quando uma API
+confere chaves, que é o assunto da aula 7, essa requisição é uma linha a mais num teste como o
 `check_contract.py`, e o 401 é uma resposta a mais no documento contra o qual ele confere.

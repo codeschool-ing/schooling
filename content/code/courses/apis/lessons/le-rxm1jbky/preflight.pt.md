@@ -103,15 +103,15 @@ Vary: Origin
 {"id": 1, "title": "Dom Casmurro", "stock": 12}
 ```
 
-## Duas coisas que a lição 1 deixou para trás
+## Duas coisas que a aula 1 deixou para trás
 
-O `rest.py` da lição 1 respondia `OPTIONS` com **501** e uma página HTML, porque não define esse
+O `rest.py` da aula 1 respondia `OPTIONS` com **501** e uma página HTML, porque não define esse
 método. O navegador trata um preflight respondido com qualquer coisa que não seja 2xx como recusa,
 então nenhuma página jamais conseguiria mandar um PATCH ao `rest.py`, por mais cabeçalhos que ele
 ganhasse depois. O `secure.py` responde **204**, com `Allow` para qualquer cliente e os cabeçalhos de
 CORS para uma página da lista.
 
-A segunda é o cabeçalho que a lição 7 acrescenta a toda requisição: `Authorization`. Ele não está na
+A segunda é o cabeçalho que a aula 7 acrescenta a toda requisição: `Authorization`. Ele não está na
 lista segura do navegador, então uma página que manda um token dispara um preflight, e o servidor
 precisa nomeá-lo em `Access-Control-Allow-Headers` ao lado de `Content-Type`. Esqueça-o e toda chamada
 autenticada da página falha na pergunta, enquanto o curl funciona perfeitamente.

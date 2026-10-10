@@ -71,13 +71,13 @@ inteiro sem as notas.
 Uma descrição diz aquilo em que os clientes podem confiar, que não é tudo o que o servidor por acaso
 faz. Três coisas que o `rest.py` faz não estão nela:
 
-- As respostas 405. `DELETE /v1/books` recebe um 405 com um cabeçalho `Allow`, como a lição 1
+- As respostas 405. `DELETE /v1/books` recebe um 405 com um cabeçalho `Allow`, como a aula 1
   mostrou, mas o documento não lista nenhum `delete` em `/books`, e um método que ele não lista é um
   que o cliente não deve enviar. Descrever um seria listar o método com um 405 como única resposta,
   o que anuncia uma operação que ninguém consegue usar.
 - A versão 2, pelo motivo acima.
 - O 501 que a biblioteca do Python manda para `OPTIONS`. Ninguém o escolheu, então ninguém pensaria
-  em escrevê-lo, e o teste de contrato desta lição o encontra exatamente por isso.
+  em escrevê-lo, e o teste de contrato desta aula o encontra exatamente por isso.
 
 E uma coisa está nele que o `rest.py` não faz. O `pattern` do ISBN, treze dígitos, é a regra da
 loja: todo livro que o `db.py` criou a segue. O `rest.py` confere que um ISBN é uma string e mais

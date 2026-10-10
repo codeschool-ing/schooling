@@ -17,7 +17,7 @@ Salve como `~/shelf/passwords.py`:
   "parts": [
     {
       "code": "# shelf/passwords.py\n\"\"\"The bookshop's accounts: a password is stored as an Argon2id hash and checked at login.\n\n    python3 passwords.py register NAME    asks for a password and stores its hash\n    python3 passwords.py login NAME       asks for a password and checks it\n\"\"\"\nimport getpass\nimport secrets\nimport sqlite3\nimport sys\n\nfrom argon2 import PasswordHasher\nfrom argon2.exceptions import VerifyMismatchError\n\nimport db",
-      "note": "A biblioteca padrão, o `argon2` do `python3-argon2` e o `db.py` da lição 1, então as contas moram no mesmo `shelf.db` que os livros."
+      "note": "A biblioteca padrão, o `argon2` do `python3-argon2` e o `db.py` da aula 1, então as contas moram no mesmo `shelf.db` que os livros."
     },
     {
       "code": "\nHASHER = PasswordHasher(memory_cost=19456, time_cost=2, parallelism=1)\nDECOY = HASHER.hash(secrets.token_urlsafe(16))\nSHORTEST = 15",
@@ -41,7 +41,7 @@ Salve como `~/shelf/passwords.py`:
     },
     {
       "code": "\n\nif __name__ == \"__main__\":\n    if len(sys.argv) != 3 or sys.argv[1] not in (\"register\", \"login\"):\n        sys.exit(__doc__)\n    command, name = sys.argv[1:]\n    password = ask()\n    if command == \"register\":\n        try:\n            register(name, password)\n        except (ValueError, sqlite3.IntegrityError) as e:\n            sys.exit(f\"not registered: {e}\")\n        print(f\"registered {name}\")\n    elif login(name, password):\n        print(f\"welcome, {name}\")\n    else:\n        sys.exit(\"wrong name or password\")",
-      "note": "Dois comandos. Um nome errado e uma senha errada recebem a mesma frase, pelo motivo que a última seção desta lição dá."
+      "note": "Dois comandos. Um nome errado e uma senha errada recebem a mesma frase, pelo motivo que a última seção desta aula dá."
     }
   ]
 }
@@ -49,9 +49,9 @@ Salve como `~/shelf/passwords.py`:
 
 Cada comando pede a senha. Num terminal você a digita e nada aparece. Nas transcrições abaixo ela
 chega por um pipe vindo do `echo`, para você ver o que foi enviado. Fazer o mesmo deixa a senha no
-histórico do seu shell, o que serve para uma senha inventada para esta lição e para mais nada.
+histórico do seu shell, o que serve para uma senha inventada para esta aula e para mais nada.
 
-O diretório tem os dois arquivos da lição 1 e os dois desta, e também o `shelf.db` se você já rodou o
+O diretório tem os dois arquivos da aula 1 e os dois desta, e também o `shelf.db` se você já rodou o
 `rest.py`:
 
 ```
@@ -119,4 +119,4 @@ mudou, e não vai mudar até a pessoa entrar.
 sempre.** A folha da OWASP diz o remédio para quando isso importa, como depois de abandonar um esquema
 fraco: passado um tempo, apagar os hashes antigos e pedir a esses usuários que definam uma senha nova.
 
-Daqui em diante, o resto desta lição usa o `passwords.py` editado, com `m=47104`.
+Daqui em diante, o resto desta aula usa o `passwords.py` editado, com `m=47104`.

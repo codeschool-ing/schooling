@@ -68,7 +68,7 @@ Três tokens, e cada um tem um leitor diferente. O **access token** é para a AP
 token** é só para o servidor de autorização, e a seção sobre refresh tokens o usa. O **ID token** é
 para o cliente e diz quem entrou; a seção de OpenID Connect o lê. `scope` diz o que foi concedido,
 e `expires_in` diz que o access token dura 300 segundos. Os dois compridos são JWTs, três partes em
-base64url unidas por pontos, que a lição 8 desmontou.
+base64url unidas por pontos, que a aula 8 desmontou.
 
 Guarde os três em variáveis:
 
@@ -144,7 +144,7 @@ Content-Length: 84
 {"error": "invalid_request", "error_description": "unknown client or redirect_uri"}
 ```
 
-**Um 400 e nenhum `Location`.** Todo outro erro desta lição volta ao callback do cliente com um
+**Um 400 e nenhum `Location`.** Todo outro erro desta aula volta ao callback do cliente com um
 parâmetro `error`, porque o servidor sabe que aquele endereço pertence ao cliente. Este não pode:
 o endereço é justamente o que está em dúvida, e redirecionar para ele entregaria a quem estiver lá
 uma mensagem do servidor de autorização.

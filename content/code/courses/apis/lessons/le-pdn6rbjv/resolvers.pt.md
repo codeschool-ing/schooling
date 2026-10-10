@@ -39,7 +39,7 @@ do `graph.py` têm a cara de `one_book(parent, info, id)`.
 | `info` | onde o percurso está: o nome do campo, o caminho, o esquema | `info.context` é como o contexto chega |
 
 O contexto é o lugar de tudo o que pertence à requisição e não a um campo: uma conexão, o usuário
-que enviou a requisição, um cache que não pode durar mais do que ela. A lição 11 trata de decidir o
+que enviou a requisição, um cache que não pode durar mais do que ela. A aula 11 trata de decidir o
 que cada usuário pode ver, e num servidor GraphQL o contexto é onde o resolver encontra esse usuário.
 
 ## O resolver padrão

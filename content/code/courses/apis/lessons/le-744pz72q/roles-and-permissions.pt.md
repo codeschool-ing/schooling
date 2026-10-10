@@ -45,7 +45,7 @@ diz que tem.
 
 De onde o papel é lido também importa. O `orders.py` lê da tabela `people` a cada requisição, então
 uma troca de papel vale a partir da requisição seguinte. Um papel copiado para dentro de um token
-quando ele foi emitido, coisa que um JWT da lição 8 pode carregar, vale até o token expirar: é o
+quando ele foi emitido, coisa que um JWT da aula 8 pode carregar, vale até o token expirar: é o
 preço de não perguntar ao banco.
 
 O RBAC é simples enquanto os papéis são poucos e as regras são sobre tipos de pessoa. Ele aperta

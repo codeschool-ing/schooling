@@ -16,12 +16,12 @@ gigabyte ou rodado a consulta.
 | o que o cliente controla | o limite | respondido com | onde neste curso |
 |---|---|---|---|
 | o tamanho do corpo | um `Content-Length` máximo, conferido antes de ler o corpo | `413 Content Too Large` | aqui, e no proxy em `servers-cache` |
-| quantos itens uma página devolve | um tamanho de página padrão, e um máximo que o cliente não consegue aumentar | a página pedida, cortada, ou `400` | lição 2 |
-| quanto uma consulta pede | uma profundidade máxima ou um custo calculado por consulta | `400`, antes de rodá-la | lição 3 |
-| quantas operações uma requisição carrega | um tamanho máximo de lote | `400` ou `413` | lição 3 |
+| quantos itens uma página devolve | um tamanho de página padrão, e um máximo que o cliente não consegue aumentar | a página pedida, cortada, ou `400` | aula 2 |
+| quanto uma consulta pede | uma profundidade máxima ou um custo calculado por consulta | `400`, antes de rodá-la | aula 3 |
+| quantas operações uma requisição carrega | um tamanho máximo de lote | `400` ou `413` | aula 3 |
 | quanto tempo uma requisição roda | um tempo limite para o trabalho e para a consulta ao banco | `503` ou `504` | `servers-cache` |
-| tentativas de login | poucas por minuto por conta e por endereço, depois um atraso | `429` | lição 10 |
-| dinheiro gasto mais adiante | um limite de gasto no provedor, e uma cota por cliente aqui | `429`, ou o recurso desligado | as cotas desta lição |
+| tentativas de login | poucas por minuto por conta e por endereço, depois um atraso | `429` | aula 10 |
+| dinheiro gasto mais adiante | um limite de gasto no provedor, e uma cota por cliente aqui | `429`, ou o recurso desligado | as cotas desta aula |
 
 ## Duas delas, de perto
 
@@ -36,7 +36,7 @@ byte do corpo ser lido, e um `413` quando passa dele.
 Um formulário de login é o único lugar em que um cliente rápido é quase sempre um atacante, porque
 pessoas digitam senhas devagar. O limite ali é pequeno, cinco ou dez por minuto, contado **por conta em
 que se tenta entrar** além de por endereço, para que palpites espalhados por muitos endereços ainda
-encontrem um contador só. A lição 10 trata de tornar cada palpite caro com um hash lento; o limite trata
+encontrem um contador só. A aula 10 trata de tornar cada palpite caro com um hash lento; o limite trata
 de fazer com que sejam poucos. Os dois são necessários, porque cada um sozinho deixa uma brecha: um hash
 lento sem limite ainda pode ser adivinhado devagar a partir de mil máquinas, e um limite sobre um hash
 rápido é desfeito no primeiro vazamento do banco.

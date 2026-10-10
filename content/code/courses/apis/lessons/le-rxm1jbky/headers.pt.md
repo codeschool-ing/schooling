@@ -38,7 +38,7 @@ carregasse numa tag `<script>`.
 
 Cabeçalhos que só algumas respostas levam protegem só essas respostas, e os erros são os que ninguém
 confere. O `secure.py` manda tudo por `reply`, e sobrescreve `send_error`, o método que a biblioteca
-usa quando responde por conta própria. Um método que ninguém definiu, que o `rest.py` da lição 1
+usa quando responde por conta própria. Um método que ninguém definiu, que o `rest.py` da aula 1
 respondia com uma página HTML e a versão do Python:
 
 ```
@@ -81,10 +81,10 @@ Vary: Origin
 ## Duas escolhas que vale conhecer
 
 `Cache-Control: no-store` em toda resposta é o padrão seguro, não o único certo. Um catálogo que é
-igual para todo mundo fica melhor em cache, e os limites da lição 12 ficam mais fáceis de manter
+igual para todo mundo fica melhor em cache, e os limites da aula 12 ficam mais fáceis de manter
 quando a maioria das requisições nem chega à API. Quais respostas podem ir para cache, e onde, é assunto do
 curso `servers-cache`. O que cabe aqui é que uma resposta sobre uma pessoa em particular,
-um pedido, uma conta, qualquer coisa por trás das lições 7 a 11, é `no-store` a não ser que alguém
+um pedido, uma conta, qualquer coisa por trás das aulas 7 a 11, é `no-store` a não ser que alguém
 tenha decidido outra coisa de propósito.
 
 Você também vai encontrar o `X-Frame-Options: DENY`, o cabeçalho mais antigo que o `frame-ancestors`

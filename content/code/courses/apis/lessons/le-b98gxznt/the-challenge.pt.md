@@ -62,5 +62,5 @@ de login do qual ele não sai: entra, pede, recebe 401, entra de novo.
 Um tipo de credencial não tem esquema próprio. O `keys.py` recebe chaves de API num cabeçalho
 `X-API-Key`, e não em `Authorization`, como muitas APIs fazem, e não existe desafio padrão para esse
 cabeçalho, e é por isso que o 401 acima não fala dele. O cliente descobre que a API aceita chaves pela
-documentação, e o arquivo OpenAPI da lição 6 tem lugar para dizer isso: `securitySchemes` com `type:
+documentação, e o arquivo OpenAPI da aula 6 tem lugar para dizer isso: `securitySchemes` com `type:
 apiKey`, `in: header` e o nome do cabeçalho.

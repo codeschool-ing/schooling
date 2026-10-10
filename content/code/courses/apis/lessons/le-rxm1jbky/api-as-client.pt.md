@@ -3,7 +3,7 @@ title: Quando a API é o cliente
 version: 1
 ---
 
-**Toda lição deste curso até aqui defendeu uma API contra as requisições que ela recebe. A API7 e a
+**Toda aula deste curso até aqui defendeu uma API contra as requisições que ela recebe. A API7 e a
 API10 são sobre as requisições que ela manda.** Uma API que baixa a capa de um livro de uma URL, chama
 um provedor de pagamentos ou lê cotações de câmbio de outra empresa é um cliente, e um cliente tem dois
 jeitos próprios de dar errado: ir aonde não devia, e acreditar no que lhe dizem.
@@ -58,7 +58,7 @@ API.**
 
 As defesas são as que este curso aplica aos próprios clientes, viradas ao contrário:
 
-- validar a resposta contra um schema, com as mesmas ferramentas que a lição 2 usa para requisições,
+- validar a resposta contra um schema, com as mesmas ferramentas que a aula 2 usa para requisições,
   e recusar o que não bate em vez de guardar uma parte;
 - manter a verificação de TLS ligada, sempre, como a seção de HTTPS diz; um cliente que a pula
   conversa com qualquer um que responda;

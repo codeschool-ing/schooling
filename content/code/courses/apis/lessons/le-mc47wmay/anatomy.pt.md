@@ -38,7 +38,7 @@ Dentro de `paths`, cada chave é um endereço, e uma parte entre chaves é um **
 caminho**: `/books/{id}` cobre `/books/1` e `/books/99`. Dentro de cada endereço fica uma
 **operação** por método, com o nome em minúsculas: `get`, `post`, `put`, `patch`, `delete`, mais
 `head`, `options` e `trace`. Um método que não está na lista é um método que o documento não
-descreve, o que é diferente de um método que o servidor recusa, e o teste de contrato desta lição
+descreve, o que é diferente de um método que o servidor recusa, e o teste de contrato desta aula
 esbarra exatamente nessa diferença.
 
 Uma operação traz quatro coisas que vale conhecer pelo nome:
@@ -80,7 +80,7 @@ validador, duas seções adiante, diz isso. Um ponteiro também pode nomear outr
 
 O que fica na ponta de um ponteiro dentro de `schemas` é **JSON Schema** puro. A partir da 3.1, a
 OpenAPI usa o JSON Schema como ele é, a mesma linguagem que o `python3-jsonschema` lê, e é por isso
-que esta lição consegue conferir as respostas do shelf com uma biblioteca que não sabe nada de
+que esta aula consegue conferir as respostas do shelf com uma biblioteca que não sabe nada de
 OpenAPI. A versão 3.0 usava um dialeto próprio que diferia em detalhes, como o jeito de escrever um
 campo que pode ser `null`, e essa diferença é um motivo comum para uma ferramenta feita para a 3.0
 ler errado um arquivo 3.1.

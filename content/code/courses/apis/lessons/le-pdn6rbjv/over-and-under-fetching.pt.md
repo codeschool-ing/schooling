@@ -4,7 +4,7 @@ version: 1
 ---
 
 **Um endpoint REST decide o formato da resposta, e todo cliente recebe esse formato.** Foi isso que
-deixou a API da lição 1 fácil de ler, de pôr em cache e de documentar, e tem um preço que cresce com
+deixou a API da aula 1 fácil de ler, de pôr em cache e de documentar, e tem um preço que cresce com
 o número de telas construídas em cima dela. Uma tela precisa de um conjunto específico de campos de
 um conjunto específico de recursos, e os endpoints foram recortados pelos recursos, não pelas
 telas. Então a tela recebe mais do que precisa de um endpoint, e menos do que precisa de cada um.

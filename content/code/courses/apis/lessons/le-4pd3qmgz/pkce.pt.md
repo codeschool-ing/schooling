@@ -56,7 +56,7 @@ ana@api:~/shelf$ python3 pkce.py
 
 **O cliente precisa lembrar o verifier entre as duas metades do fluxo**, do jeito que um app web o
 guarda na sessão do usuário. No seu terminal, uma variável do shell faz esse papel. O `read` põe as
-duas palavras de uma execução em duas variáveis, e o fluxo desta lição as usa:
+duas palavras de uma execução em duas variáveis, e o fluxo desta aula as usa:
 
 ```
 ana@api:~/shelf$ read VERIFIER CHALLENGE < <(python3 pkce.py)

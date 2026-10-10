@@ -10,7 +10,7 @@ consegue fazer o seu navegador mandar uma requisição ao shelf, com um formulá
 e o seu cookie vai junto.
 
 A outra página não consegue ler a resposta, porque a política de mesma origem do navegador a esconde
-dos scripts da página; a lição 13 trata dessa política. Ela não precisa ler. Uma requisição que
+dos scripts da página; a aula 13 trata dessa política. Ela não precisa ler. Uma requisição que
 acrescenta um livro à lista de desejos, muda um e-mail ou transfere dinheiro já fez o serviço quando a
 resposta volta. Isso é **falsificação de requisição entre sites**, CSRF, e é o preço do cookie
 automático.
@@ -36,7 +36,7 @@ O `SameSite` diz ao navegador quando uma requisição iniciada por outro site po
 O `sessions.py` define `Lax`. Chrome e Edge aplicam `Lax` a um cookie que não diz nada, e os outros
 navegadores não, então ele vem escrito. Um `POST` forjado para `/wishlist` chega, portanto, sem
 cookie, e o servidor responde 401 como responderia a um estranho. O `Lax` ainda envia o cookie quando
-alguém segue um link, o que é mais um motivo, depois da seção sobre métodos da lição 1, para que **um
+alguém segue um link, o que é mais um motivo, depois da seção sobre métodos da aula 1, para que **um
 `GET` nunca mude nada**: um link em outro site para `GET /wishlist/add?book=3` levaria o cookie e
 faria o estrago.
 

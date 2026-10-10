@@ -27,7 +27,7 @@ verificação de senha e o encanamento das requisições, então os dois arquivo
   "parts": [
     {
       "code": "# shelf/tokens.py\n\"\"\"Signing in with a JWT: the token says who you are, and the server's key vouches for it.\n\nRun it with `python3 tokens.py`; it answers on http://127.0.0.1:8000.\n\"\"\"\nimport os\nimport secrets\nimport time\nfrom http.server import ThreadingHTTPServer\n\nimport jwt\n\nimport sessions\nfrom sessions import digest",
-      "note": "O PyJWT, importado como `jwt`, é o pacote `python3-jwt` que a lição 1 instalou. Os usuários, a verificação de senha e o encanamento das requisições são os do `sessions.py`, importados em vez de copiados, para que os dois servidores difiram só no jeito de lembrar de você."
+      "note": "O PyJWT, importado como `jwt`, é o pacote `python3-jwt` que a aula 1 instalou. Os usuários, a verificação de senha e o encanamento das requisições são os do `sessions.py`, importados em vez de copiados, para que os dois servidores difiram só no jeito de lembrar de você."
     },
     {
       "code": "\nISSUER, AUDIENCE = \"shelf\", \"shelf-api\"\nACCESS_LIFETIME = 5 * 60\nREFRESH_LIFETIME = 14 * 24 * 60 * 60\nLEEWAY = 30",
@@ -99,7 +99,7 @@ ana@api:~/shelf$ curl -s localhost:8000/login -H 'Content-Type: application/json
 }
 ```
 
-O `/me` quer o token de acesso em `Authorization: Bearer`, o esquema que a lição 7 apresentou. Sem
+O `/me` quer o token de acesso em `Authorization: Bearer`, o esquema que a aula 7 apresentou. Sem
 token, a resposta é 401, e o `WWW-Authenticate` diz o esquema que o cliente deve usar:
 
 ```
