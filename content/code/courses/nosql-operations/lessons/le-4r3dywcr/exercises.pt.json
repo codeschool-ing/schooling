@@ -1,0 +1,435 @@
+{
+  "ex-rc4dyh02": {
+    "prompt": "O que a palavra \"NoSQL\" nomeia de fato?",
+    "choices": [
+      {
+        "text": "Uma família de bancos que guardam dados sem esquema",
+        "why": "As famílias diferem justamente nisso; o MongoDB pode validar um esquema e o Cassandra exige um."
+      },
+      {
+        "text": "Todo tipo de banco que não é relacional",
+        "why": "Isso. Os produtos com esse nome têm menos em comum entre si do que com o Postgres."
+      },
+      {
+        "text": "Uma linguagem de consulta que substitui o SQL nos produtos",
+        "why": "Cada produto tem a sua interface: mongosh, comandos do Redis, CQL."
+      },
+      {
+        "text": "Bancos projetados para rodar em muitas máquinas",
+        "why": "O Postgres também pode rodar em muitas máquinas, e o Redis muitas vezes é um servidor só."
+      }
+    ]
+  },
+  "ex-91tffq3n": {
+    "prompt": "O Redis e o MongoDB podem guardar o pedido 1001 como um valor só, sob um nome só. Qual diferença entre eles a aula pede que você observe?",
+    "hint": "Duas coisas a observar: a unidade, e algo sobre a unidade.",
+    "choices": [
+      {
+        "text": "Se o servidor lê dentro do valor para responder a uma consulta",
+        "why": "Isso. O MongoDB lê todos os campos; o Redis devolve o valor inteiro e não sabe nada do que tem dentro."
+      },
+      {
+        "text": "Se o valor fica em disco ou só na memória do servidor",
+        "why": "Persistência importa (aula 13), mas não é o que decide quais perguntas cada um responde."
+      },
+      {
+        "text": "Se o pedido inteiro pode ser lido de volta numa requisição só",
+        "why": "Os dois devolvem o pedido inteiro numa requisição; é isso que eles têm em comum."
+      },
+      {
+        "text": "Se o valor é guardado como texto JSON ou num formato binário",
+        "why": "O Redis guardou texto JSON e mesmo assim não leu um campo dele; o formato não é a questão."
+      }
+    ]
+  },
+  "ex-388yh12b": {
+    "prompt": "Uma equipe de análise vai fazer perguntas sobre os pedidos da loja que ninguém consegue listar hoje. Qual propriedade de um armazenamento mais importa para ela?",
+    "choices": [
+      {
+        "text": "A rapidez com que um valor volta quando a chave já é conhecida",
+        "why": "Isso serve perguntas planejadas de antemão, o oposto da situação deles."
+      },
+      {
+        "text": "Quantas linhas uma única partição comporta",
+        "why": "Uma partição responde perguntas sobre uma chave; perguntas não planejadas atravessam partições."
+      },
+      {
+        "text": "Que o servidor veja dentro do que guarda e junte tudo na leitura",
+        "why": "Isso. Ver dentro e juntar na leitura é o que responde uma pergunta que ninguém planejou."
+      },
+      {
+        "text": "Que toda escrita seja confirmada por todas as cópias do dado antes de voltar",
+        "why": "Isso é uma configuração de consistência da aula 1; não diz nada sobre quais perguntas são possíveis."
+      }
+    ]
+  },
+  "ex-jg61wwb5": {
+    "prompt": "Em qual família ler o pedido 1001 de volta é um join montado a partir de várias tabelas a cada leitura?",
+    "choices": [
+      {
+        "text": "Coluna larga, porque cada linha do pedido é uma linha própria",
+        "why": "As linhas são linhas, mas todas ficam na partição da Ana e voltam numa leitura só."
+      },
+      {
+        "text": "Relacional",
+        "why": "Isso. Cada fato é guardado uma vez, e o pedido é remontado de orders, order_lines, customers e products."
+      },
+      {
+        "text": "Grafo",
+        "why": "Um grafo segue as ligações guardadas ao lado de cada nó; ele não junta tabelas."
+      },
+      {
+        "text": "Documento, porque o cliente mora em outro lugar",
+        "why": "O pedido em si, com as linhas, voltou de um documento; a cidade do cliente seria uma segunda leitura, não um join."
+      }
+    ]
+  },
+  "ex-13cn2hx7": {
+    "prompt": "Por que a aula guarda `unit_price` como `Decimal128(\"39.90\")` em vez do número 39.90?",
+    "choices": [
+      {
+        "text": "Porque o MongoDB recusa números com parte fracionária",
+        "why": "Ele aceita, como doubles de ponto flutuante binário, e esse é o problema."
+      },
+      {
+        "text": "Porque um tipo decimal ordena mais rápido num índice",
+        "why": "Velocidade não é o motivo dado; exatidão é."
+      },
+      {
+        "text": "Porque 39.90 não tem forma exata em ponto flutuante binário",
+        "why": "Isso. O Decimal128 guarda dígitos decimais, então 268.80 fica guardado como foi digitado."
+      },
+      {
+        "text": "Porque o Redis e o Cassandra precisam do mesmo tipo para lê-lo",
+        "why": "Cada armazenamento guarda a sua cópia nos seus tipos; nenhum lê os do MongoDB."
+      }
+    ]
+  },
+  "ex-7299eh8j": {
+    "prompt": "`findOne({ _id: 1001 })` devolveu o cliente, a data, as duas linhas e o total. Por que não foi preciso join?",
+    "choices": [
+      {
+        "text": "Porque o mongosh junta coleções no cliente, sem mostrar",
+        "why": "Só uma coleção estava envolvida; nada foi juntado em lugar nenhum."
+      },
+      {
+        "text": "Porque as linhas foram gravadas dentro do pedido",
+        "why": "Isso. A unidade guardada é a unidade lida: um documento, uma busca."
+      },
+      {
+        "text": "Porque o `_id` é indexado e o índice guarda o documento inteiro",
+        "why": "O índice acha o documento; quem guarda as linhas é o documento."
+      },
+      {
+        "text": "Porque o MongoDB não tem como relacionar duas coleções",
+        "why": "Ele tem, o `$lookup`, na aula 8; aqui só não foi preciso."
+      }
+    ]
+  },
+  "ex-x8c1zgkv": {
+    "prompt": "A coleção `orders` cresce para dois milhões de documentos sem índice além do `_id`. O que faz `find({ \"lines.sku\": \"MS-204\" })`?",
+    "hint": "Ver dentro não é o mesmo que ser rápido dentro.",
+    "choices": [
+      {
+        "text": "É recusada até existir um índice em `lines.sku`",
+        "why": "O MongoDB roda; recusar uma varredura é hábito do Cassandra, não do MongoDB."
+      },
+      {
+        "text": "Lê todos os documentos e devolve os que combinam",
+        "why": "Isso. A resposta é correta e o custo cresce com a coleção, até o índice da aula 7."
+      },
+      {
+        "text": "Olha só a primeira linha de cada pedido, já que listas não são pesquisadas",
+        "why": "A consulta achou o pedido 1001 pela segunda linha, o mouse."
+      },
+      {
+        "text": "Devolve um erro, porque campos aninhados precisam de `$lookup`",
+        "why": "A notação de ponto alcança campos aninhados direto; o `$lookup` junta coleções."
+      }
+    ]
+  },
+  "ex-r4zt2395": {
+    "prompt": "Ana pediu às 10:22 em São Paulo, e o `findOne` mostrou `13:22:00.000Z`, porque o MongoDB guarda datas em ___.",
+    "hint": "O Z no fim dá o nome.",
+    "blanks": [
+      {
+        "accept": [
+          "UTC"
+        ]
+      }
+    ]
+  },
+  "ex-0gwsfm8d": {
+    "prompt": "O pedido 1001 é guardado com `SET` como texto JSON. Por que `HGET order:1001 total` responde `WRONGTYPE`?",
+    "choices": [
+      {
+        "text": "Porque o campo se chama `total` no JSON mas `TOTAL` no Redis",
+        "why": "Não existe campo nenhum; para o Redis o valor é uma string só."
+      },
+      {
+        "text": "Porque o `HGET` só lê chaves criadas na mesma sessão",
+        "why": "Chaves não pertencem a sessões."
+      },
+      {
+        "text": "Porque JSON precisa ser guardado com um comando específico de JSON",
+        "why": "O Redis puro não tem tipo JSON; o ponto da aula é que o texto é opaco de qualquer jeito."
+      },
+      {
+        "text": "Porque o valor é uma string, e o servidor nunca leu o JSON dentro dela",
+        "why": "Isso. O `TYPE` disse `string`; campos são coisa de hash."
+      }
+    ]
+  },
+  "ex-b1hx0935": {
+    "prompt": "Num projeto chave-valor, como se responde normalmente \"todo pedido acima de 500 reais\"?",
+    "choices": [
+      {
+        "text": "Por uma segunda estrutura, gravada junto com cada pedido, que já contém a resposta",
+        "why": "Isso: um sorted set de ids de pedidos com o total como score, por exemplo, mantido em dia com os pedidos."
+      },
+      {
+        "text": "Por um `GET` com uma condição sobre o valor",
+        "why": "Nenhum comando do Redis aceita condição sobre um valor."
+      },
+      {
+        "text": "Por um índice que o servidor monta sobre os totais quando chegam",
+        "why": "O servidor não sabe que existe um total; ele guarda bytes."
+      },
+      {
+        "text": "Pedindo as chaves cujo nome combina com `order:*` e um preço",
+        "why": "Um padrão casa nomes de chave, e o total não está no nome."
+      }
+    ]
+  },
+  "ex-9a666ers": {
+    "prompt": "A loja quer que o próprio Redis mantenha a soma dos gastos de um cliente, exata até o centavo. Qual forma de guardar faz isso?",
+    "hint": "Em que tipo o Redis guarda valores, e qual comando soma com exatidão?",
+    "choices": [
+      {
+        "text": "Texto como \"268.80\", somado com `HINCRBYFLOAT`",
+        "why": "Essa aritmética é de ponto flutuante, e uma soma de muitos preços se afasta dos centavos."
+      },
+      {
+        "text": "Centavos inteiros, como 26880, somados com `HINCRBY`, que soma inteiros com exatidão",
+        "why": "Isso. Soma de inteiros é exata, e a aplicação divide por 100 para exibir."
+      },
+      {
+        "text": "Um campo `Decimal128` dentro de um hash",
+        "why": "Esse é o tipo do MongoDB; o Redis guarda todo valor como string."
+      },
+      {
+        "text": "Uma string JSON com o total dentro, reescrita a cada pedido",
+        "why": "Aí quem soma é a aplicação, não o Redis, e dois escritores podem sobrescrever um ao outro."
+      }
+    ]
+  },
+  "ex-njsytyf0": {
+    "prompt": "Quais destas valem para um hash do Redis, como a transcrição mostrou? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Um campo pode ser lido sem ler os outros",
+        "why": "Isso: `HGET order:1001 total` devolveu só o total."
+      },
+      {
+        "text": "Um campo pode guardar outro hash, então as linhas do pedido se aninham",
+        "why": "Um hash tem um nível só; as linhas entraram como texto JSON."
+      },
+      {
+        "text": "Todo valor volta como string, o total inclusive",
+        "why": "Isso: `\"268.80\"`, entre aspas."
+      },
+      {
+        "text": "O servidor consegue devolver todo hash cujo total passa de 500",
+        "why": "Continua não havendo consulta por valor; a chave é a única entrada."
+      }
+    ]
+  },
+  "ex-mk5v6wwk": {
+    "prompt": "O que \"coluna larga\" descreve no Cassandra?",
+    "choices": [
+      {
+        "text": "Linhas agrupadas em partições por uma chave e mantidas ordenadas dentro de cada uma",
+        "why": "Isso. Uma partição de muitas linhas é o \"larga\" do nome."
+      },
+      {
+        "text": "Tabelas que podem ter milhares de colunas",
+        "why": "O nome sugere; o modelo é sobre linhas em partições."
+      },
+      {
+        "text": "Cada coluna da tabela guardada no seu próprio arquivo, como fazem os motores analíticos",
+        "why": "Isso é armazenamento orientado a colunas, outra ideia."
+      },
+      {
+        "text": "Colunas largas o bastante para guardar documentos JSON inteiros",
+        "why": "A largura de um valor não tem nada a ver."
+      }
+    ]
+  },
+  "ex-981cmsqr": {
+    "prompt": "Com `PRIMARY KEY ((customer), ordered_at, sku)`, o que decide qual nó guarda uma linha?",
+    "choices": [
+      {
+        "text": "`ordered_at`, para que cada dia caia num nó próprio",
+        "why": "`ordered_at` é coluna de clustering: ordena as linhas dentro da partição."
+      },
+      {
+        "text": "As três colunas, tomadas juntas como uma chave",
+        "why": "Juntas elas tornam a linha única; só a parte entre os parênteses internos a posiciona."
+      },
+      {
+        "text": "`customer`, a chave de partição",
+        "why": "Isso. Toda linha de um cliente fica na mesma partição, nos mesmos nós."
+      },
+      {
+        "text": "`sku`, já que produtos se espalham por igual",
+        "why": "`sku` é a última coluna de clustering; ordena as linhas dentro de uma data."
+      }
+    ]
+  },
+  "ex-gvyzvmaq": {
+    "prompt": "As três linhas da Ana voltaram com o teclado de agosto primeiro, embora o `SELECT` não tivesse `ORDER BY`. Por quê?",
+    "choices": [
+      {
+        "text": "Porque a linha do teclado foi inserida por último",
+        "why": "A ordem de inserção não decide; ela foi inserida em terceiro e voltou em primeiro."
+      },
+      {
+        "text": "Porque as linhas ficam gravadas na ordem das colunas de clustering, ordered_at e depois sku",
+        "why": "Isso. A ordem na partição é a ordem no disco."
+      },
+      {
+        "text": "Porque o cqlsh ordena todo resultado alfabeticamente",
+        "why": "Por SKU em ordem alfabética, CB-012 viria antes de KB-101; não veio."
+      },
+      {
+        "text": "Por acaso, já que um nó único devolve linhas sem ordem definida",
+        "why": "Dentro de uma partição a ordem é definida, e a aula 3 depende disso."
+      }
+    ]
+  },
+  "ex-7rh66xjw": {
+    "prompt": "Um desenvolvedor acrescenta `ALLOW FILTERING` à consulta \"linhas acima de 500\" porque ela rodou na hora no laboratório. O que acontece num cluster com milhões de partições?",
+    "choices": [
+      {
+        "text": "O mesmo: o filtro usa a ordem de clustering",
+        "why": "`unit_price` não é coluna de chave, então nenhuma ordem ajuda."
+      },
+      {
+        "text": "O Cassandra monta um índice no primeiro uso e o reaproveita",
+        "why": "Nada é montado; toda execução varre."
+      },
+      {
+        "text": "Varre todos os nós para achar poucos resultados",
+        "why": "Isso. A correção usual é uma segunda tabela cuja chave de partição é a pergunta."
+      },
+      {
+        "text": "É recusada de novo, já que a cláusula só funciona num nó",
+        "why": "Ela roda; esse é o perigo. A recusa era o aviso."
+      }
+    ]
+  },
+  "ex-f2enjme7": {
+    "prompt": "Qual destas perguntas é o sinal de que um armazenamento de grafo é a ferramenta certa?",
+    "choices": [
+      {
+        "text": "Qual foi o total de todos os pedidos feitos em setembro, somando todos os clientes?",
+        "why": "Uma soma sobre tudo é uma varredura em qualquer armazenamento, e o de grafo não é o rápido nisso."
+      },
+      {
+        "text": "O que o pedido 1001 continha?",
+        "why": "Um agregado pelo id é leitura de documento ou chave-valor."
+      },
+      {
+        "text": "Qual foi o tempo de resposta do checkout na terça passada à tarde, minuto a minuto?",
+        "why": "Medições num intervalo são série temporal."
+      },
+      {
+        "text": "Como estas duas contas se ligam, por qualquer número de cartões em comum?",
+        "why": "Isso. Um caminho de tamanho desconhecido é o que um grafo percorre barato."
+      }
+    ]
+  },
+  "ex-eqectcbt": {
+    "prompt": "O tempo de resposta do checkout é medido a cada dez segundos em cada um de três servidores. Quantos pontos isso acrescenta num dia?",
+    "hint": "Um servidor dá 8.640.",
+    "unit": "pontos"
+  },
+  "ex-dta2mdmy": {
+    "prompt": "O que é o TimescaleDB, como a aula o descreve?",
+    "choices": [
+      {
+        "text": "Um coletor de métricas que pede os números a cada serviço, num intervalo fixo",
+        "why": "Isso descreve o Prometheus."
+      },
+      {
+        "text": "Uma extensão do Postgres para dados particionados por tempo",
+        "why": "Isso. Tabelas continuam tabelas e SQL continua SQL."
+      },
+      {
+        "text": "Um banco de grafo consultado em Cypher",
+        "why": "Esse é o Neo4j."
+      },
+      {
+        "text": "Um fork do Redis feito depois da troca de licença de 2024",
+        "why": "Esse é o Valkey."
+      }
+    ]
+  },
+  "ex-5hpyg400": {
+    "prompt": "Ponha em ordem a vida de um ponto de série temporal, do primeiro ao último.",
+    "items": [
+      "Gravado com o horário atual",
+      "Lido na resolução total em intervalos recentes",
+      "Agregado em médias de um minuto",
+      "Apagado pela política de retenção"
+    ],
+    "trap": "Um ponto quase nunca muda depois de gravado."
+  },
+  "ex-znbt5jpc": {
+    "prompt": "Associe cada pergunta à família feita para respondê-la.",
+    "hint": "Uma descrição não serve para nenhuma.",
+    "pairs": [
+      {
+        "left": "Me dê o valor guardado sob este nome",
+        "right": "chave-valor"
+      },
+      {
+        "left": "Me dê este pedido inteiro, com as linhas",
+        "right": "documento"
+      },
+      {
+        "left": "Me dê as linhas deste cliente, em ordem de data",
+        "right": "coluna larga"
+      },
+      {
+        "left": "O que está ligado a esta conta, e por onde?",
+        "right": "grafo"
+      }
+    ],
+    "right_distractors": [
+      "armazenamento orientado a colunas"
+    ]
+  },
+  "ex-wdh9s53v": {
+    "prompt": "Um serviço registra todo login de toda conta, e a única pergunta feita é pelos últimos 50 logins de uma conta, do mais novo ao mais velho. Qual forma serve melhor?",
+    "hint": "São medições para agregar, ou linhas para buscar de uma chave?",
+    "choices": [
+      {
+        "text": "Um armazenamento de série temporal, porque todo login tem horário",
+        "why": "Ter horário não faz uma série temporal: nada é agregado nem reduzido, e a pergunta é por conta."
+      },
+      {
+        "text": "Um armazenamento de grafo, já que contas se ligam aos seus logins",
+        "why": "Há um salto só e nenhum caminho a percorrer."
+      },
+      {
+        "text": "Coluna larga, com partição por conta e clustering por tempo",
+        "why": "Isso. Uma partição por conta, linhas já ordenadas; a pergunta é uma fatia só."
+      },
+      {
+        "text": "Um chave-valor com uma string por conta onde se acrescenta cada login",
+        "why": "O valor cresce sem limite e precisa ser lido inteiro para achar os últimos 50."
+      }
+    ]
+  }
+}
