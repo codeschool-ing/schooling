@@ -4,7 +4,7 @@ version: 1
 ---
 
 A short page is easy to build and hard to keep short. Within a month of Caio's page going out with
-its five indicators, three people asked for a number to be added: Otávio wanted delivery cost per
+its five indicators, three people asked for a number to be added. Otávio wanted delivery cost per
 order, Renata wanted the number of online orders shipped the same day, and a store manager wanted
 his store's footfall. **Each request is reasonable on its own, and saying yes to all of them takes
 the page back to forty in a year.** Saying no without a reason makes enemies. What works is a
@@ -46,7 +46,7 @@ Once a quarter, the owner and the analyst take thirty minutes over the page with
 
 Sometimes the person asking outranks the owner of the page and does not want to wait a quarter. The
 routine still helps, because it turns a contest of seniority into a question about the page. Lívia's
-reply to a director is not "no"; it is the scoring row for their indicator, the five it would have to
+reply to a director is not "no". It is the scoring row for their indicator, the five it would have to
 displace, and the question: **which of these would you take off to make room?** Often the answer is
 that the director wants the number on their own page, which is easy. Sometimes the answer is that
 one of the five really should go, and then the page changes for a reason somebody wrote down.

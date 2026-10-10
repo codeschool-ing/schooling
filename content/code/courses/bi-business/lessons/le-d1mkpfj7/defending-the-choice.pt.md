@@ -4,7 +4,7 @@ version: 1
 ---
 
 Uma página curta é fácil de montar e difícil de manter curta. Um mês depois de a página do Caio sair
-com os seus cinco indicadores, três pessoas pediram mais um número: o Otávio queria o custo de
+com os seus cinco indicadores, três pessoas pediram mais um número. O Otávio queria o custo de
 entrega por pedido, a Renata queria o número de pedidos online despachados no mesmo dia, e um gerente
 de loja queria o fluxo de pessoas da loja dele. **Cada pedido é razoável sozinho, e dizer sim a todos
 leva a página de volta a quarenta em um ano.** Dizer não sem motivo cria inimigos. O que funciona é
@@ -45,7 +45,7 @@ Uma vez por trimestre, o dono e a analista passam trinta minutos sobre a página
 
 Às vezes quem pede tem cargo acima do dono da página e não quer esperar um trimestre. A rotina ainda
 ajuda, porque transforma uma disputa de hierarquia numa pergunta sobre a página. A resposta da Lívia
-a um diretor não é "não"; é a linha de notas do indicador dele, os cinco que ele teria de desalojar, e
+a um diretor não é "não". É a linha de notas do indicador dele, os cinco que ele teria de desalojar, e
 a pergunta: **qual destes você tiraria para abrir espaço?** Muitas vezes a resposta é que o diretor
 quer o número na própria página, o que é fácil. Às vezes a resposta é que um dos cinco devia mesmo
 sair, e então a página muda por um motivo que alguém escreveu.
