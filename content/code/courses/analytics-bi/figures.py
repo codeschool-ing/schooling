@@ -649,5 +649,92 @@ def two_cdps(lang):
     return s.render(), cap, same
 
 
+# ---------------------------------------------------------------- lesson 9
+
+def pct(v, lang):
+    t = f'{v:.1f}%'
+    return t.replace('.', ',') if lang == 'pt' else t
+
+
+@figure
+def cohort_grid(lang):
+    """Lesson 9, censoring: the grid as a staircase, with the unknown cells left empty."""
+    rows = [('2025-10', 158, [43.7, 37.3, 29.1, 14.6]), ('2025-11', 355, [31.8, 25.1, 14.1, 8.5]),
+            ('2025-12', 184, [41.3, 32.6, 34.8, None]), ('2026-01', 201, [42.3, 35.3, 28.4, None]),
+            ('2026-02', 203, [48.3, 37.9, 29.1, None]), ('2026-03', 250, [43.6, 33.6, None, None]),
+            ('2026-04', 237, [46.4, None, None, None]), ('2026-05', 258, [None] * 4),
+            ('2026-06', 165, [None] * 4)]
+    s = Svg('cohort-grid', 720, 390, L(lang,
+        'A cohort grid for Lantern, one row per month of first order from October 2025 to June 2026, '
+        'and four columns: the share who ordered again one, two, three and six months later. Older rows '
+        'are full and newer rows have fewer cells, so the filled cells form a staircase; the cells not '
+        'yet reached are drawn as empty dashed boxes. The November 2025 row is outlined: 31.8, 25.1, 14.1 '
+        'and 8.5 percent, below the rows above and below it, which sit near 42, 35, 30 and 12 percent.',
+        'Uma grade de coortes da Lantern, uma linha por mês do primeiro pedido de outubro de 2025 a junho '
+        'de 2026, e quatro colunas: a parcela que comprou de novo um, dois, três e seis meses depois. As '
+        'linhas mais antigas estão cheias e as mais novas têm menos células, então as células preenchidas '
+        'formam uma escada; as células ainda não alcançadas aparecem como caixas vazias tracejadas. A '
+        'linha de novembro de 2025 está contornada: 31,8, 25,1, 14,1 e 8,5 por cento, abaixo das linhas '
+        'acima e abaixo dela, que ficam perto de 42, 35, 30 e 12 por cento.'))
+    x0, y0, cw, ch = 210, 50, 110, 34
+    s.text(30, 30, L(lang, 'cohort', 'coorte'), 10.5, fill='var(--paper-dim)')
+    s.text(150, 30, L(lang, 'size', 'tamanho'), 10.5, fill='var(--paper-dim)', anchor='end')
+    for j, h in enumerate(['m1', 'm2', 'm3', 'm6']):
+        s.text(x0 + j * (cw + 8) + cw / 2, 30, h, 10.5, fill='var(--paper-dim)', anchor='middle', mono=True)
+    for i, (c, n, vals) in enumerate(rows):
+        y = y0 + i * ch
+        s.text(30, y + ch / 2 - 2, c, 10.5, mono=True)
+        s.text(150, y + ch / 2 - 2, f'{n}', 10.5, anchor='end', mono=True, fill='var(--paper-dim)')
+        for j, v in enumerate(vals):
+            x = x0 + j * (cw + 8)
+            if v is None:
+                s.rect(x, y + 2, cw, ch - 8, fill='none', stroke='var(--wire)', sw=1, dash='3 3')
+            else:
+                s.rect(x, y + 2, cw, ch - 8, fill='var(--panel)', stroke='var(--wire)', sw=1)
+                s.rect(x + 6, y + ch - 12, (cw - 12) * v / 50, 3, fill='var(--phosphor)', stroke='none', sw=0, rx=1)
+                s.text(x + cw / 2, y + ch / 2 - 4, pct(v, lang), 10.5, anchor='middle', mono=True)
+    s.rect(20, y0 + ch - 2, 670, ch, fill='none', stroke='var(--amber)', sw=1.5)
+    s.text(x0 + 2 * (cw + 8) + cw, y0 + 9 * ch + 18, L(lang, 'dashed: not happened yet, not zero',
+           'tracejado: ainda não aconteceu, não é zero'), 10, anchor='middle', italic=True, fill='var(--paper-dim)')
+    cap = L(lang, 'A cohort grid is a staircase: the newer the generation, the less of its life has been '
+                  'seen. Black Friday\'s November is the outlined row.',
+            'Uma grade de coortes é uma escada: quanto mais nova a geração, menos da vida dela foi vista. A '
+            'novembro da Black Friday é a linha contornada.')
+    return s.render(), cap, None
+
+
+@figure
+def funnel(lang):
+    """Lesson 9, funnels: the same five steps on desktop and on mobile, as a share of visits."""
+    steps = [('visit', 23321, 36679), ('product_view', 13504, 15382), ('add_to_cart', 5361, 4654),
+             ('checkout', 3431, 2425), ('purchase', 2689, 1541)]
+    s = Svg('funnel', 720, 300, L(lang,
+        'Two funnels side by side, desktop and mobile, five steps each: visit, product view, add to cart, '
+        'checkout and purchase. Each bar is the share of visits that reached the step. Desktop: 100, 57.9, '
+        '23.0, 14.7 and 11.5 percent. Mobile: 100, 41.9, 12.7, 6.6 and 4.2 percent. Mobile is narrower '
+        'at every step, and the largest single loss on both is between product view and add to cart.',
+        'Dois funis lado a lado, desktop e celular, cinco etapas cada: visita, visualização de produto, '
+        'carrinho, checkout e compra. Cada barra é a parcela das visitas que chegou à etapa. Desktop: 100, '
+        '57,9, 23,0, 14,7 e 11,5 por cento. Celular: 100, 41,9, 12,7, 6,6 e 4,2 por cento. O celular é mais '
+        'estreito em todas as etapas, e a maior perda isolada nos dois fica entre ver o produto e pôr no '
+        'carrinho.'))
+    for k, (title, cx) in enumerate([('desktop', 200), (L(lang, 'mobile', 'celular'), 540)]):
+        s.text(cx, 24, title, 12, anchor='middle', weight='600')
+        top = steps[0][1 + k]
+        for i, st in enumerate(steps):
+            v = st[1 + k]
+            share = 100 * v / top
+            w = 300 * share / 100
+            y = 44 + i * 48
+            s.rect(cx - w / 2, y, w, 26, fill='var(--phosphor-dim)', stroke='var(--phosphor)', sw=1, rx=2)
+            s.text(cx, y + 36, f'{st[0]}  ·  {pct(share, lang)}', 10, anchor='middle', mono=True,
+                   fill='var(--paper-dim)')
+    cap = L(lang, 'Each bar is the share of all visits that got that far. Mobile starts with more visits '
+                  'and ends with fewer purchases.',
+            'Cada barra é a parcela de todas as visitas que chegou até ali. O celular começa com mais '
+            'visitas e termina com menos compras.')
+    return s.render(), cap, (['desktop'] if lang == 'pt' else None)
+
+
 if __name__ == '__main__':
     inject()
