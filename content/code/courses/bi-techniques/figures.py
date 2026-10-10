@@ -835,6 +835,50 @@ def l06_snapshot(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 7
+
+@figure('l07-split', 7)
+def l07_split(lang):
+    t = {'en': dict(
+        label='A diagram of an A/B test. Visitors arrive on the left and a coin decides, for each '
+              'one, whether they see the old checkout, A, or the new one, B. Both groups sit inside '
+              'one band labelled the same weeks, holidays and trend. On the right, the difference '
+              'between the two groups is the change plus chance.',
+        vis='visitors', coin='a random split', a='A: the old checkout', b='B: the new checkout',
+        band='the same weeks, the same holidays, the same trend', diff='the difference',
+        eq='= the change + chance',
+        cap='Before-and-after compares two times. An experiment compares two groups at one time, '
+            'so everything the time carries falls on both and cancels.'),
+        'pt': dict(
+        label='Um diagrama de um teste A/B. Os visitantes chegam pela esquerda e uma moeda decide, '
+              'para cada um, se ele vê o checkout antigo, A, ou o novo, B. Os dois grupos ficam '
+              'dentro de uma faixa rotulada as mesmas semanas, feriados e tendência. À direita, a '
+              'diferença entre os dois grupos é a mudança mais o acaso.',
+        vis='visitantes', coin='um sorteio', a='A: o checkout antigo', b='B: o checkout novo',
+        band='as mesmas semanas, os mesmos feriados, a mesma tendência', diff='a diferença',
+        eq='= a mudança + o acaso',
+        cap='Antes e depois compara dois momentos. Um experimento compara dois grupos num mesmo '
+            'momento, então tudo o que o momento carrega cai nos dois e se anula.')}[lang]
+    f = Fig('l07-split', 640, 250, t['label'])
+    f.rect(170, 30, 280, 180, stroke='--wire', fill='--scan', rx=6, dash='4 3')
+    f.text(310, 196, t['band'], size=10, fill='--paper-dim')
+    f.rect(20, 95, 100, 40, stroke='--phosphor', fill='--panel', rx=6)
+    f.text(70, 115, t['vis'], size=11, weight='600')
+    f.text(70, 150, t['coin'], size=10, fill='--paper-dim')
+    f.path('M120 108 C150 108 160 70 196 70', stroke='--paper-dim', width=1.4, arrow=True)
+    f.path('M120 122 C150 122 160 150 196 150', stroke='--paper-dim', width=1.4, arrow=True)
+    f.rect(200, 50, 220, 40, stroke='--phosphor', fill='--panel', rx=6)
+    f.text(310, 70, t['a'], size=11)
+    f.rect(200, 130, 220, 40, stroke='--amber', fill='--panel', rx=6)
+    f.text(310, 150, t['b'], size=11)
+    f.path('M420 70 C450 70 460 108 486 108', stroke='--paper-dim', width=1.4, arrow=True)
+    f.path('M420 150 C450 150 460 122 486 122', stroke='--paper-dim', width=1.4, arrow=True)
+    f.rect(490, 92, 136, 46, stroke='--paper-dim', fill='--panel', rx=6)
+    f.text(558, 107, t['diff'], size=11, weight='600')
+    f.text(558, 124, t['eq'], size=10)
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
