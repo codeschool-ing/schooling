@@ -62,7 +62,7 @@ rows, because one order appears twice.
 
 The two anti joins are the ones people forget, and they answer a question no lookup formula
 answers in one step: *which orders have no freight?* Here, the three collections. Turned the other
-way, *which invoice lines are for orders we have no record of?* None this quarter, and a right anti
+way, *which invoice lines are for orders the web shop has no record of?* None this quarter, and a right anti
 join is how you would find out next quarter.
 
 ## The key that is not unique

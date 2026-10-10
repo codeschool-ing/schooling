@@ -21,16 +21,17 @@ hundreds of possible metrics and needs four KPIs:
 
 | KPI | definition | measure | Jan–Jun 2026 | Jan–Jun 2025 |
 |---|---|---|---|---|
-| **Revenue** | the sum of `Bags` × `Price` over the period | `Revenue` | R$ 15,943 | R$ 17,789 |
-| **Bags** | bags sold in the period | `Bags` | 168 | 218 |
-| **Sales** | sales recorded in the period | `Sales count` | 36 | 36 |
-| **Average sale** | revenue divided by sales | `Average sale` | R$ 443 | R$ 494 |
+| **Revenue** | the sum of `Bags` × `Price` over the period | `Total Revenue` | R$ 15,943 | R$ 17,789 |
+| **Bags** | bags sold in the period | `Bags Sold` | 168 | 218 |
+| **Sales** | sales recorded in the period | `Sales Count` | 36 | 36 |
+| **Average sale** | revenue divided by sales | `Average Sale` | R$ 443 | R$ 494 |
 
 The first three measures are lesson 16's. The fourth is one more line in the same place, built from
-two that already exist:
+two that already exist. Lesson 16's `Average Price` divides revenue by bags; this one divides it by
+sales, because the owner's question is about orders as much as about coffee:
 
 ```dax
-Average sale := DIVIDE ( [Revenue], [Sales count] )
+Average Sale := DIVIDE ( [Total Revenue], [Sales Count] )
 ```
 
 The owner is the person who opens the dashboard, and the frequency is monthly. The comparison is
@@ -40,11 +41,12 @@ the column on the right, and it is the part people leave out.
 
 R$ 15,943 on its own tells the owner nothing. Is that good? Beside R$ 17,789 for the same six
 months of 2025 it says revenue is **10.4% lower** than a year ago, and that is something to act on.
-The `YoY %` measure of lesson 16 is exactly that comparison, and it goes on the screen next to every
+The `Revenue YoY %` measure of lesson 16 is exactly that comparison, and it goes on the screen next to every
 number it applies to.
 
-The comparison has to be **like with like**. January to June 2026 against the whole of 2025 puts
-six months against twelve and shows a fall of 55.2%, which is false and alarming. The same months a
+The comparison has to be **like with like**, the trap lesson 16 met. January to June 2026 against
+the whole of 2025 puts six months against twelve and shows a fall of 55.2%, which is false and
+alarming. The same months a
 year earlier is the fair comparison when nothing else is available, and it is what lesson 16's
 `Revenue LY` computes.
 
@@ -55,10 +57,10 @@ owner agreed to.
 
 ## And one that stays off
 
-Gross margin looks like an obvious fifth KPI: revenue minus what the coffee cost. The `Products`
-sheet has a `Unit cost` column, so the formula is easy to write. But that column holds **one cost
-per product, today's**. Applied to 2025's sales it computes a 2025 margin with 2026 costs, and
-nothing on the screen would say so.
+Gross margin looks like an obvious fifth KPI, and lesson 16 already built `Gross Margin` and
+`Margin %` from the `Unit cost` column of `Products`. But that column holds **one cost per product,
+today's**. On a dashboard whose whole point is this year against last, the 2025 margin would be
+computed with 2026 costs, and nothing on the screen would say so.
 
 A dashboard is believed because it looks finished, so **a KPI the data cannot support honestly stays
 off it** until the data can. Here that means a table of costs with the date each one took effect.

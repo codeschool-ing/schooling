@@ -72,6 +72,6 @@ rótulos do eixo deixem claro o valor inicial.
 
 Todas as barras são uma série, então têm uma cor. Para apontar uma delas, clique nas barras uma vez,
 depois clique só em `Wholesale`, e dê a ela outro preenchimento em **Formatar › Preenchimento da
-Forma**. Use uma segunda cor por um motivo só, e deixe o título nomeá-lo, porque uma cor que só parte
-dos leitores distingue é a falha contra a qual a aula 9 avisou: o título e os rótulos levam o
-sentido, e a cor só o repete.
+Forma**. Use uma segunda cor por um motivo só, e deixe o título nomeá-lo. Alguns leitores não distinguem
+duas cores, a falha contra a qual a aula 9 avisou, então o título e os rótulos levam o sentido e a cor
+só o repete.

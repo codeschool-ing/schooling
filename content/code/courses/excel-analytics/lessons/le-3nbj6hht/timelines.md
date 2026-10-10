@@ -16,8 +16,8 @@ turned dates stored as text into real dates: a column of text dates gives the ti
 offer.
 
 The strip shows months. The menu at its top right switches it between **Years**, **Quarters**,
-**Months** and **Days**. Click one period to select it; drag along the strip, or click one end and
-Shift+click the other, to select a run of them; drag the handles at the ends of a selection to
+**Months** and **Days**. Click one period to select it; drag along the strip to select a run of
+them; drag the handles at the ends of a selection to
 widen or narrow it.
 
 ## The first half of two years

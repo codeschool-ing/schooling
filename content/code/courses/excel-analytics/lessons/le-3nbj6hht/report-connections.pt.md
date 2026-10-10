@@ -46,9 +46,9 @@ tempo se conecta do mesmo jeito, pelas **Conexões de Relatório** dela.
 
 ## Quem está na lista, e quem não está
 
-Uma tabela dinâmica cuja origem é outra coisa que não a tabela `Sales`, como uma cópia das linhas
-colada em outra planilha ou o modelo de dados da aula 15, tem cache próprio e nunca aparece na
-caixa. Quando uma tabela dinâmica falta em **Conexões de Relatório**, quase sempre o motivo é esse, e
+Uma tabela dinâmica montada a partir de qualquer coisa que não a tabela `Sales` tem cache próprio:
+uma feita de uma cópia das linhas colada em outra planilha, por exemplo, ou do modelo de dados da
+aula 15. Ela nunca aparece na caixa. Quando uma tabela dinâmica falta em **Conexões de Relatório**, quase sempre o motivo é esse, e
 o conserto é montá-la de novo a partir da mesma tabela.
 
 ## O que mais um cache compartilhado compartilha

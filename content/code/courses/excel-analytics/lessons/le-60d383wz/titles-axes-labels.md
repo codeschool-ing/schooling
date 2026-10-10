@@ -73,6 +73,6 @@ starting value plain.
 
 All the bars are one series, so they are one colour. To point at one of them, click the bars once,
 then click `Wholesale` alone, and give it a different fill with **Format › Shape Fill**. Use a
-second colour for one reason, and let the title name it, because a colour that only some readers can
-tell apart is the failure lesson 9 warned about: the title and the labels carry the meaning, and the
-colour only repeats it.
+second colour for one reason, and let the title name it. Some readers cannot tell two colours apart,
+the failure lesson 9 warned about, so the title and the labels carry the meaning and the colour only
+repeats it.

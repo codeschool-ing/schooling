@@ -61,7 +61,7 @@ Uma plataforma de BI é para onde vai um painel quando muita gente o lê. O curs
 na aula 4 de lá, e **o Power BI é feito das mesmas peças das aulas 13 a 16**: o Power Query, com a
 mesma linguagem M, para importar e moldar; um modelo de dados com relações; e o DAX, a mesma
 linguagem, para as medidas. O Power BI Desktop consegue até importar as consultas e o modelo de
-dados de uma pasta do Excel. A `Revenue`, a `Revenue LY` e a `YoY %` que você escreveu na aula 16 se
+dados de uma pasta do Excel. A `Total Revenue`, a `Revenue LY` e a `Revenue YoY %` que você escreveu na aula 16 se
 escrevem do mesmo jeito lá.
 
 O que muda é tudo aquilo que a seção sobre entrega da aula 17 precisou contornar:

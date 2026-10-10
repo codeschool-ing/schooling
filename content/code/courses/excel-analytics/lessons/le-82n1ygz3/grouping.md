@@ -3,8 +3,8 @@ title: Grouping dates into quarters, and numbers into bands
 version: 1
 ---
 
-**A pivot groups by the values a field holds, and a date field holds 103 different days.** Put
-`Date` in **Rows** as it is and the pivot has a row for nearly every sale, which is the data again
+**A pivot groups by the values a field holds, and the `Date` field holds 108 different days.** Put
+`Date` in **Rows** as it is and the pivot has a row for every sale, which is the data again
 rather than a summary of it. Grouping tells the pivot to collect the days into years, quarters or
 months first, and to group by those.
 

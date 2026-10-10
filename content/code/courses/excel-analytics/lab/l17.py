@@ -32,14 +32,14 @@ def measures(start, end, channel=None):
     rev_ly = sum(s[4] * s[5] for s in ly)
     bags, bags_ly = sum(s[4] for s in now), sum(s[4] for s in ly)
     return {
-        "Revenue": rev, "Revenue LY": rev_ly,
-        "YoY %": round(100 * (rev - rev_ly) / rev_ly, 1) if rev_ly else None,
-        "Bags": bags, "Bags LY": bags_ly,
+        "Total Revenue": rev, "Revenue LY": rev_ly,
+        "Revenue YoY %": round(100 * (rev - rev_ly) / rev_ly, 1) if rev_ly else None,
+        "Bags Sold": bags, "Bags Sold LY": bags_ly,
         "Bags change %": round(100 * (bags - bags_ly) / bags_ly, 1) if bags_ly else None,
-        "Sales count": len(now), "Sales count LY": len(ly),
-        "Average sale": round(rev / len(now), 2) if now else None,
-        "Average sale LY": round(rev_ly / len(ly), 2) if ly else None,
-        "Average sale change %": round(100 * ((rev / len(now)) / (rev_ly / len(ly)) - 1), 1)
+        "Sales Count": len(now), "Sales Count LY": len(ly),
+        "Average Sale": round(rev / len(now), 2) if now else None,
+        "Average Sale LY": round(rev_ly / len(ly), 2) if ly else None,
+        "Average Sale change %": round(100 * ((rev / len(now)) / (rev_ly / len(ly)) - 1), 1)
         if now and ly else None,
     }
 
@@ -56,8 +56,8 @@ print(f"  Jan-Mar 2026: {measures(*Q1)}")
 print(f"  Apr-Jun 2026: {measures(*Q2)}")
 
 full25 = sum(s[4] * s[5] for s in SALES if s[1].year == 2025)
-print(f"== the wrong comparison: Jan-Jun 2026 {measures(*H1)['Revenue']} against all of 2025 {full25}: "
-      f"{round(100 * (measures(*H1)['Revenue'] - full25) / full25, 1)}%")
+print(f"== the wrong comparison: Jan-Jun 2026 {measures(*H1)['Total Revenue']} against all of 2025 {full25}: "
+      f"{round(100 * (measures(*H1)['Total Revenue'] - full25) / full25, 1)}%")
 
 print("== the monthly chart: revenue per month, 2025 and 2026")
 for m in range(1, 7):

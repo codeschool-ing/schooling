@@ -67,7 +67,7 @@ aparece ao lado de H2 e escolha a opção de substituir todas as células da col
 Os números não mudam, e dá para conferir numa célula vazia fora da tabela:
 
 ```localised
-=SUM(Sales[Revenue])
+=SOMA(Sales[Revenue])
 ```
 
 responde **51494**, os R$ 51.494 da aula 2.

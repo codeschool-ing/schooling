@@ -64,7 +64,7 @@ pagos, 19 foram enviados; três foram retirados na torrefação e não têm linh
 
 As duas anti são as que as pessoas esquecem, e respondem a uma pergunta que nenhuma fórmula de busca
 responde num passo: *quais pedidos não têm frete?* Aqui, as três retiradas. Virada ao contrário,
-*quais linhas da fatura são de pedidos de que não temos registro?* Nenhuma neste trimestre, e uma
+*quais linhas da fatura são de pedidos de que a loja virtual não tem registro?* Nenhuma neste trimestre, e uma
 junção anti direita é como você descobriria no próximo.
 
 ## A chave que não é única

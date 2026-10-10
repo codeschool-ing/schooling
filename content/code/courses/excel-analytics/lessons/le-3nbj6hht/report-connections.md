@@ -44,9 +44,9 @@ connected the same way, through its own **Report Connections**.
 
 ## Who is on the list, and who is not
 
-A pivot table whose source is something other than the table `Sales`, such as a copy of the rows
-pasted onto another sheet or the data model of lesson 15, has a cache of its own, and it never
-appears in the dialog. When a pivot table is missing from **Report Connections**, that is nearly
+A pivot table built from anything other than the table `Sales` has a cache of its own: one built
+from a copy of the rows pasted onto another sheet, say, or from the data model of lesson 15. It
+never appears in the dialog. When a pivot table is missing from **Report Connections**, that is nearly
 always why, and the fix is to build it again from the same table.
 
 ## What else a shared cache shares

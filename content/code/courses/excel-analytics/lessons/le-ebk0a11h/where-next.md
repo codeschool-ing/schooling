@@ -61,7 +61,7 @@ A BI platform is where a dashboard goes when many people read it. The course cov
 lesson 4, and **Power BI is built from the same parts as lessons 13 to 16**: Power Query, with the
 same M language, to import and shape; a data model with relationships; and DAX, the same language,
 for measures. Power BI Desktop can even import an Excel workbook's queries and data model. The
-`Revenue`, `Revenue LY` and `YoY %` you wrote in lesson 16 are written the same way there.
+`Total Revenue`, `Revenue LY` and `Revenue YoY %` you wrote in lesson 16 are written the same way there.
 
 What changes is everything lesson 17's section on sharing had to work around:
 

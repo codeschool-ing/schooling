@@ -152,7 +152,7 @@ def wiring(t):
         s.rect(30, 58 + i * 26, 160, 22, fill="var(--scan)")
         s.mono(38, 69.5 + i * 26, name, size=10.5)
     s.sans(30, 176, t("measures, lesson 16", "medidas, aula 16"), size=10.5, fill="var(--paper-dim)")
-    for i, m in enumerate(["Revenue", "Revenue LY", "YoY %", "Bags", "Sales count", "Average sale"]):
+    for i, m in enumerate(["Total Revenue", "Revenue LY", "Revenue YoY %", "Bags Sold", "Sales Count", "Average Sale"]):
         s.mono(38, 194 + i * 17, m, size=10, fill="var(--phosphor)")
     # Calc.
     s.rect(250, 30, 196, 270, fill="var(--ink)", stroke="var(--paper-dim)", dash="4 3")

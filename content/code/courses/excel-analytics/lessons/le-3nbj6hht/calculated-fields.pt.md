@@ -105,7 +105,7 @@ preços vezes total dos sacos" não é, porque um total de preços não mede nad
 passa no teste precisa ser feita linha a linha primeiro, e **uma fórmula linha a linha mora numa
 coluna da tabela**, como `Revenue` na aula 2; a tabela dinâmica depois soma a coluna.
 
-O mesmo vale para uma função dentro do campo calculado. `=SE(Bags>10; …)` não pergunta se uma venda
+O mesmo vale para uma função dentro do campo calculado. `=SE(Bags>10; …)`, com `SE` (`IF`), não pergunta se uma venda
 passou de dez sacos. Pergunta se o total daquela célula passou, e na linha do total geral ele é 591.
 
 Apague `Revenue 2` antes de seguir: **Campos, Itens e Conjuntos › Campo Calculado**, escolha-o na

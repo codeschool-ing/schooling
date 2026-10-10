@@ -16,8 +16,8 @@ campos cujos valores são datas. É mais um motivo para a aula 6 ter transformad
 texto em datas de verdade: uma coluna de datas em texto não dá nada para a linha do tempo oferecer.
 
 A faixa mostra meses. O menu no canto superior direito dela alterna entre **Anos**, **Trimestres**,
-**Meses** e **Dias**. Clique num período para selecioná-lo; arraste ao longo da faixa, ou clique numa
-ponta e Shift+clique na outra, para selecionar uma sequência; arraste as alças nas pontas de uma
+**Meses** e **Dias**. Clique num período para selecioná-lo; arraste ao longo da faixa para selecionar
+uma sequência; arraste as alças nas pontas de uma
 seleção para alargá-la ou estreitá-la.
 
 ## O primeiro semestre de dois anos

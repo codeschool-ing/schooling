@@ -106,6 +106,8 @@ print("price on the day, row 4:", X("=XLOOKUP(B4,$O$7:$O$8,$P$7:$P$8,,-1)", pric
       [TABLES[("Sales", f"{c}4")] for c in "ADFG"],
       "| row 85:", X("=XLOOKUP(B85,$O$7:$O$8,$P$7:$P$8,,-1)", prices, check=False),
       [TABLES[("Sales", f"{c}85")] for c in "ADFG"])
+print("exercise: price on the day, row 64:", X("=XLOOKUP(B64,$O$7:$O$8,$P$7:$P$8,,-1)", prices, check=False),
+      [TABLES[("Sales", f"{c}64")] for c in "ABDFG"])
 # Do online and shop sales pay the list price of their day? (2025 list = today's less 3)
 listp = {r[0]: r[5] for r in rows("Products")[1:]}
 off = [(r[0], r[5]) for r in rows("Sales")[1:] if r[6] != "Wholesale"
@@ -138,6 +140,11 @@ try:
           "| =SUM(L2:L109)", ev("=SUM(L2:L109)"), "| revenue", b.ev("=SUM(H2:H109)", "Sales", "Z2"))
     print("two MATCHes:", ev('=INDEX(Products!$A$1:$G$7,MATCH("MOG250",Products!$A$1:$A$7,0),'
                             'MATCH("Unit cost",Products!$A$1:$G$1,0))'))
+    print("exercise: SUL1K Grams by two MATCHes:", ev('=INDEX(Products!$A$1:$G$7,MATCH("SUL1K",Products!$A$1:$A$7,0),'
+                                                     'MATCH("Grams",Products!$A$1:$G$1,0))', check=False),
+          "| MATCH over A2:A7 inside INDEX over A1:G7:",
+          ev('=INDEX(Products!$A$1:$G$7,MATCH("MOG250",Products!$A$2:$A$7,0),MATCH("Unit cost",Products!$A$1:$G$1,0))',
+             check=False))
     print("VLOOKUP CER2K:", ev('=VLOOKUP("CER2K",Products!$A$2:$G$7,6,FALSE)'))
     print("=LEN(D2):", ev("=LEN(D2)"), '| =LEN("CER1K "):', ev('=LEN("CER1K ")', check=False))
     col('=IFNA(VLOOKUP(D2,Products!$A$2:$G$7,6,FALSE),"not in Products")', "N")

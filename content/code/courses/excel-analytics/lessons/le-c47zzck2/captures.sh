@@ -9,8 +9,8 @@
 #
 # Nothing here is a terminal the student sees: this course has no terminal.
 # NOT RUN IN EXCEL: pivot tables over the data model, GETPIVOTDATA, slicers
-# and timelines. The measures of lesson 16 (Revenue, Revenue LY, YoY %, Bags,
-# Sales count) are computed in Python from the pasted sales for every slicer
+# and timelines. The measures of lesson 16 (Total Revenue, Revenue LY, Revenue
+# YoY %, Bags Sold, Sales Count) and this lesson's Average Sale are computed in Python from the pasted sales for every slicer
 # and timeline state the lesson describes. The SUMIFS, COUNTIFS and MAX
 # formulas the lesson prints as checks are put, exactly as printed, into a
 # LibreOffice Calc 24.2 workbook holding the pasted tables, with `Sales` made

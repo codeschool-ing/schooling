@@ -55,6 +55,7 @@ added up their `Revenue`. It is the `SUMIFS` above, written once per channel, pl
 with the channels sorted from A to Z. Nothing was typed, so nothing can be mistyped: a pivot never
 forgets a channel, because it lists the channels it finds rather than the ones somebody remembered.
 
-That also means it lists the channels **as they are spelt**. Had lesson 8's `Online ` with a
-trailing space been left in the data, the pivot would show it as a fourth channel, with 115 beside
-it. A pivot is a quick way to see every distinct value of a column, misspellings included.
+That also means it lists the channels **as they are spelt**. Had sale `S1003` been typed as
+`Onlnie`, one of lesson 8's typos, the pivot would show a fourth channel called `Onlnie` with 115
+beside it, and Online would drop to 11,028. A pivot is a quick way to see every distinct value of a
+column, misspellings included.
