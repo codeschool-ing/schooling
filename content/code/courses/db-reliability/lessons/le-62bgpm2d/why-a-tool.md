@@ -29,5 +29,5 @@ three, and so do the failures.
 
 One thing the tool does not change: **it is still a claim until it is restored.** pgBackRest makes
 the copies better, faster and verifiable. It cannot know whether the restored database is the one
-the application needs, and the last section of this lesson finds a place where even its own check
+the application needs, and a later section of this lesson finds a place where even its own check
 has to be read carefully.
