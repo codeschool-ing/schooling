@@ -289,5 +289,57 @@ def bridge(lang):
     return s.render(), cap, None
 
 
+# ---------------------------------------------------------------- lesson 3
+
+@figure
+def star(lang):
+    """Lesson 3, star-schema: the views of semantic.sql and how they join."""
+    s = Svg('star', 720, 330, L(lang,
+        'Lantern\'s semantic layer as a star. Two fact tables sit in the middle: orders, one row '
+        'per order, carrying gross, discount and net revenue; and order lines, one row per product '
+        'in an order, carrying quantity and line value. Around them sit three dimensions: '
+        'customers, joined to orders by customer id; the calendar, joined to orders by the order '
+        'date; and products, joined to order lines by product id. Order lines join to orders by '
+        'order id. Customers take their region from the small state-to-region table beside them.',
+        'A camada semântica da Lantern como uma estrela. Duas tabelas de fato ficam no meio: '
+        'orders, uma linha por pedido, com bruto, desconto e receita líquida; e order lines, uma '
+        'linha por produto num pedido, com quantidade e valor da linha. Em volta ficam três '
+        'dimensões: customers, ligada a orders pelo id do cliente; calendar, ligada a orders pela '
+        'data do pedido; e products, ligada a order lines pelo id do produto. Order lines se liga a '
+        'orders pelo id do pedido. Customers pega a região da pequena tabela de estado para região '
+        'ao lado dela.'))
+    def box(x, y, w, name, kind, cols, fact=False):
+        h = 30 + 15 * len(cols)
+        s.rect(x, y, w, h, stroke='var(--phosphor)' if fact else 'var(--wire)')
+        s.text(x + 10, y + 15, name, 11.5, weight='600', mono=True)
+        s.text(x + w - 10, y + 15, kind, 9.5, anchor='end', fill='var(--paper-dim)')
+        for i, c in enumerate(cols):
+            s.text(x + 10, y + 34 + 15 * i, c, 9.5, mono=True, fill='var(--paper-dim)')
+        return h
+    F, D = L(lang, 'fact', 'fato'), L(lang, 'dimension', 'dimensão')
+    box(250, 110, 200, 'orders', F, ['order_id', 'customer_id', 'order_date', 'net_revenue'], True)
+    box(250, 240, 200, 'order_lines', F, ['order_id', 'product_id', 'line_value'], True)
+    box(20, 95, 170, 'customers', D, ['customer_id', 'state', 'region', 'segment'])
+    box(250, 10, 200, 'calendar', D, ['day', 'month'])
+    box(520, 240, 180, 'products', D, ['product_id', 'category'])
+    box(20, 250, 170, 'state_region', L(lang, 'table', 'tabela'), ['state', 'region'])
+    s.line(250, 160, 192, 160)
+    s.text(221, 148, 'customer_id', 8, anchor='middle', mono=True, fill='var(--paper-dim)')
+    s.line(350, 110, 350, 72)
+    s.text(358, 92, L(lang, 'order_date = day', 'order_date = day'), 8.5, mono=True, fill='var(--paper-dim)')
+    s.line(350, 200, 350, 240)
+    s.text(358, 221, 'order_id', 8.5, mono=True, fill='var(--paper-dim)')
+    s.line(450, 280, 518, 280)
+    s.text(484, 270, 'product_id', 8.5, anchor='middle', mono=True, fill='var(--paper-dim)')
+    s.line(105, 200, 105, 250, dash='4 3')
+    s.text(113, 226, 'state', 8.5, mono=True, fill='var(--paper-dim)')
+    cap = L(lang, 'Every question is a join from a fact to the dimensions it needs, and the join to a '
+                  'dimension never adds rows.',
+            'Toda pergunta é um join de um fato com as dimensões de que precisa, e o join com uma '
+            'dimensão nunca acrescenta linhas.')
+    same = ['dimension', 'fact'] if False else None
+    return s.render(), cap, None
+
+
 if __name__ == '__main__':
     inject()
