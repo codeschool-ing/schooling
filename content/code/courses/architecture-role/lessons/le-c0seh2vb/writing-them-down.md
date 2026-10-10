@@ -101,8 +101,8 @@ A few rules made the page work:
   one they are holding.
 
 The requirements also carry ids, and the ids are for later. An architecture decision record, which
-lesson 5 introduced, cites them in its context — "to meet R1 and R2, Matching offers each load to
-three drivers at once" — so whoever reads the decision in two years can find the requirement that
+lesson 5 introduced, cites them in its context: "to meet R1 and R2, Matching offers each load to
+three drivers at once". Whoever reads the decision in two years can then find the requirement that
 caused it, and whoever changes the requirement can find the decisions that rest on it.
 
 ## Reading it back

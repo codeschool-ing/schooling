@@ -73,9 +73,9 @@ features rarely change the structure, and the qualities nearly always do.**
 Take Helena's request with two different numbers attached. If "fast" means the price appears in
 under two seconds, the work is inside Pricing and the Shipper web app: a cache, perhaps a faster
 query, nothing that crosses a team boundary. If "fast" means a driver has accepted the load within
-fifteen minutes of the request, the work is in how Matching offers loads to drivers, in the Driver
-app, in what the Shipper app shows while it waits, and in the database rule that stops two drivers
-taking the same load. The sentence on the backlog is identical. The architecture is not.
+fifteen minutes of the request, the work is in how Matching offers loads to drivers and in the
+Driver app. It is also in what the Shipper app shows while it waits, and in the database rule that
+stops two drivers taking the same load. The sentence on the backlog is identical. The architecture is not.
 
 This is what Booch's definition from lesson 1 means in practice: the significant decisions are the
 ones that are expensive to change. A quality attribute is what turns a feature into an expensive
@@ -88,16 +88,18 @@ in a report, the wording of a notification: a team handles these in a sprint and
 to know. **An architecturally significant requirement**, the usual name for the other kind, is one
 that shapes the structure, so that changing your mind about it later would be expensive.
 
-Four signs mark one, and a requirement needs only one of them:
+Three signs mark one, and a requirement needs only one of them:
 
 - **It is expensive to change later.** Who owns which data, whether a flow is synchronous, what has
   to survive the loss of a server.
 - **It crosses team boundaries.** At Carreto, anything that touches Matching, the Driver app and the
   Shipper app at once.
-- It carries a **strict quality measure**. Fifteen minutes for nine requests in ten is strict; "the
-  page should feel quick" is not, yet.
-- It carries **high business value or high risk**. Getting it wrong costs customers, money, or a
-  conversation with a regulator.
+- **Its quality measure shapes the structure.** Fifteen minutes for nine requests in ten reshapes how
+  Matching works; a price in under two seconds is met inside Pricing, however strict the number.
+
+A fourth sign says how soon it deserves attention rather than whether it is architectural: **high
+business value or high risk**, where getting it wrong costs customers, money, or a conversation with
+a regulator.
 
 The SEI's Architecture Tradeoff Analysis Method ranks each candidate on two scales at once, its
 importance to the business and how hard or risky it is to achieve, each high, medium or low, in a
@@ -106,13 +108,13 @@ requirement on two axes, business value and architectural impact, is enough to s
 deserve the architect's time.
 
 ```schooling-figure
-@@FIG:l7-grid@@
+{"svg": "<svg viewBox=\"0 0 720 360\" role=\"img\" aria-label=\"A grid with business value on the vertical axis and architectural impact on the horizontal axis. The top-right corner, high on both, is marked architecturally significant and holds three requirements: a driver commits within 15 minutes, a delivery proof is recorded with no signal, and bookings survive a lost server. Outside it: the price shown in under 2 seconds (high value, low impact), a second bank for payouts (high impact, lower value), a new filter on the booking list and exporting bookings to a spreadsheet (low on both).\"><defs><marker id=\"l7grid-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><rect x=\"390\" y=\"40\" width=\"300\" height=\"130\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><path d=\"M390 40 L390 300\" fill=\"none\" stroke=\"var(--wire)\" stroke-width=\"1\" stroke-dasharray=\"4 4\"></path><path d=\"M90 170 L690 170\" fill=\"none\" stroke=\"var(--wire)\" stroke-width=\"1\" stroke-dasharray=\"4 4\"></path><path d=\"M90 300 L90 32\" fill=\"none\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" marker-end=\"url(#l7grid-ah)\"></path><path d=\"M90 300 L698 300\" fill=\"none\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" marker-end=\"url(#l7grid-ah)\"></path><text x=\"90\" y=\"24\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper-dim)\">business value</text><text x=\"690\" y=\"342\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper-dim)\">architectural impact</text><text x=\"100\" y=\"318\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">low</text><text x=\"680\" y=\"318\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">high</text><text x=\"82\" y=\"52\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">high</text><text x=\"82\" y=\"290\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">low</text><text x=\"680\" y=\"58\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--phosphor)\">architecturally significant</text><circle cx=\"420\" cy=\"88\" r=\"5\" fill=\"var(--phosphor)\"></circle><text x=\"432\" y=\"88\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">driver commits within 15 min</text><circle cx=\"430\" cy=\"117\" r=\"5\" fill=\"var(--phosphor)\"></circle><text x=\"442\" y=\"117\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">delivery proof with no signal</text><circle cx=\"402\" cy=\"146\" r=\"5\" fill=\"var(--phosphor)\"></circle><text x=\"414\" y=\"146\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">bookings survive a lost server</text><circle cx=\"120\" cy=\"80\" r=\"5\" fill=\"var(--paper)\"></circle><text x=\"132\" y=\"80\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">price shown in under 2 s</text><circle cx=\"420\" cy=\"225\" r=\"5\" fill=\"var(--paper)\"></circle><text x=\"432\" y=\"225\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">a second bank for payouts</text><circle cx=\"150\" cy=\"212\" r=\"5\" fill=\"var(--paper)\"></circle><text x=\"162\" y=\"212\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">new filter on the booking list</text><circle cx=\"110\" cy=\"262\" r=\"5\" fill=\"var(--paper)\"></circle><text x=\"122\" y=\"262\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--paper)\">export bookings to a spreadsheet</text></svg>", "caption": "Carreto's candidate requirements placed by business value and architectural impact. Only the top-right corner gets the architect's full attention; the price in under two seconds matters a great deal to shippers and still stays inside one team."}
 ```
 
-Only the top-right corner gets the full treatment of the rest of this lesson: questions until it
-has numbers, a scenario written down, and a line on the one page Helena reads and corrects. The
-rest go to the teams that own them, which is where lesson 6 said a decision belongs when it does
-not cross a boundary. The price in under two seconds matters a great deal to shippers, and it is
+Only the top-right corner gets the full treatment of the rest of this lesson now: questions until
+it has numbers, a scenario written down, and a line on the one page Helena reads and corrects. The
+bottom-right corner is architectural too, and waits its turn. The left half goes to the teams that
+own it, which is where lesson 6 said a decision belongs when it does not cross a boundary. The price in under two seconds matters a great deal to shippers, and it is
 still Pricing's to deliver, inside one service.
 
 **The list is short on purpose.** A system Carreto's size has perhaps a dozen architecturally
