@@ -70,7 +70,7 @@ shop=# SELECT count(*) FROM orders;
 **`could not extend file` is an `ERROR`, the severity that ends one statement.** The insert was
 rolled back, the table has no rows, and the server carried on: the next query read a million
 orders from the other disk without noticing anything. The path is the table's file, relative to
-the data directory, and `pg_tblspc/16424` is the tablespace's link from lesson 4, which is how you
+the data directory, and `pg_tblspc/16424` is the tablespace's link, as lesson 4 showed, which is how you
 know which filesystem to look at. The log has the same lines, with the statement that caused them:
 
 ```
