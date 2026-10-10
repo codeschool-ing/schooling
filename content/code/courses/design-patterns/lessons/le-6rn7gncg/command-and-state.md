@@ -4,8 +4,8 @@ version: 1
 ---
 
 **Command turns a request into an object, so it can be stored, queued, logged and undone; state
-gives an object a different behaviour for each situation it can be in, by delegating to an object
-that stands for the situation.** Both replace something that is usually implicit, a method call or
+gives an object a different behaviour in each situation it can be in.** State does it by handing
+each call to an object that stands for the current situation. Both replace something that is usually implicit, a method call or
 a tangle of `if status == ...`, with something you can name and hold.
 
 ## Command: a request you can keep

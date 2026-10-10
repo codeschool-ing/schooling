@@ -4,8 +4,8 @@ version: 1
 ---
 
 **Command transforma um pedido num objeto, para ele poder ser guardado, enfileirado, registrado e
-desfeito; state dá a um objeto um comportamento diferente para cada situação em que ele pode estar,
-delegando a um objeto que representa a situação.** Os dois trocam algo que costuma ficar implícito,
+desfeito; state dá a um objeto um comportamento diferente em cada situação em que ele pode estar.** O state
+faz isso entregando cada chamada a um objeto que representa a situação atual. Os dois trocam algo que costuma ficar implícito,
 uma chamada de método ou um emaranhado de `if status == ...`, por algo que você pode nomear e
 segurar.
 
