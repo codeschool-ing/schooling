@@ -147,8 +147,10 @@ const WINDOW_DOTS = '<span class="win-dots" aria-hidden="true"><i></i><i></i><i>
 
 /* `user@host:path$ ` and `PS <path>> `, which is every prompt the catalogue
    writes. The bare `$ ` has no machine in it and falls through to the shell's
-   own name, which is the only true thing left to say about it. */
-const TAB_UNIX = /^([\w.-]+)@([\w.-]+):(\S*?)[$#] /;
+   own name, which is the only true thing left to say about it. An active
+   virtual environment puts its name in front, `(.venv) ana@lab:~/pydata$ `,
+   and the tab still reads the machine behind it. */
+const TAB_UNIX = /^(?:\([\w.-]+\) )?([\w.-]+)@([\w.-]+):(\S*?)[$#] /;
 const TAB_POWERSHELL = /^(PS [^>\n]*)> /;
 const SHELLS = new Set(['sh', 'bash', 'zsh', 'shell', 'console', 'terminal']);
 
@@ -792,7 +794,7 @@ export const LANGUAGES = Object.keys(COMPILED).concat(Object.keys(ALIAS)).sort()
    rule would find. What is coloured is the line the student typed; the prompt
    is dimmed to the colour of a comment, because that is what it is, chrome in
    front of the command. */
-const PROMPT = /^(?:[\w.-]+@[\w.-]+:\S*[$#]|PS [^>\n]*>|\$) /;
+const PROMPT = /^(?:(?:\([\w.-]+\) )?[\w.-]+@[\w.-]+:\S*[$#]|PS [^>\n]*>|\$) /;
 
 /* Read twice: here to decide how to colour the block, and by `codeBar` above to
    decide what to write on its tab. */
