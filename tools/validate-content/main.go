@@ -779,6 +779,9 @@ var allowedOutsideTheFont = map[rune]string{
 		"at all, so no cut of it would fix this. It opens a line and nothing is aligned to " +
 		"what follows it, so the width the reader's machine gives it moves nothing that means " +
 		"anything",
+	'\u2717': "k6 prints it before every check and threshold that failed, and IBM Plex Mono has " +
+		"no U+2717 at all (it has U+2713, which the terminal cut carries). It opens the line " +
+		"after the indentation and nothing below is aligned to the column it ends in",
 }
 
 // coverage is the set of code points the interface declares a face for.
