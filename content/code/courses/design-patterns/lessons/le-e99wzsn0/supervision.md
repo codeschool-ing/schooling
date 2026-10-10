@@ -4,7 +4,7 @@ version: 1
 ---
 
 **In an actor system, an actor that meets a situation it was not written for does not try to
-recover; it fails, and another actor, its supervisor, decides what happens next.** The usual
+recover.** It fails, and another actor, its supervisor, decides what happens next. The usual
 decision is to replace it with a fresh instance, built from scratch, and let it carry on with the
 next message. Erlang's community calls this *let it crash*, and it sounds reckless until you look at
 what the alternative usually is.
@@ -82,9 +82,9 @@ again.
 Because supervisors are actors, they can be supervised, and an application becomes a tree: a root
 supervisor over a few subsystems, each subsystem's supervisor over its workers. A failure travels
 up the tree only as far as the first supervisor that can deal with it. Erlang's OTP names the usual
-strategies: *one for one* restarts only the child that failed, *one for all* restarts all of a
-supervisor's children when one fails, for children that cannot work without each other, and *rest
-for one* restarts the failed child and every child started after it.
+strategies. *One for one* restarts only the child that failed. *One for all* restarts all of a
+supervisor's children when one fails, for children that cannot work without each other. *Rest for
+one* restarts the failed child and every child started after it.
 
 ## When not to let it crash
 

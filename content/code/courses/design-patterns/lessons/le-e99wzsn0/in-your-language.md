@@ -3,8 +3,8 @@ title: Actors in your language
 version: 1
 ---
 
-**Only one of the four languages of the `backend` track has a mainstream actor library, and the
-language most famous for actors is not among the four.** That is worth knowing before reaching for
+**Only one of the four languages of the `backend` track has a mainstream actor library.** The
+language most famous for actors is not among the four. That is worth knowing before reaching for
 a framework: in JavaScript, Go and Python, the actor model is usually a design you apply with the
 tools the language already has, the way section 04 did with a thread and a queue.
 
@@ -89,7 +89,7 @@ the platform: a worker is an actor without the supervision.
 ## Erlang and Elixir: where the model lives
 
 Neither is a `backend` language here, and both are worth an afternoon. Erlang was built at Ericsson
-in the late 1980s for telephone switches that had to keep running for years, and its processes are
+in the late 1980s for telephone switches that had to keep running for years. Its processes are
 the actor model with every rule enforced: separate memory, copied messages, links that report a
 crash to another process, and OTP's supervisors, whose strategies section 06 named. Elixir runs on
 the same virtual machine with a friendlier syntax. A single machine can hold millions of their

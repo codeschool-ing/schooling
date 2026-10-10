@@ -3,8 +3,8 @@ title: "Building one: a thread and a queue"
 version: 1
 ---
 
-**An actor fits in twenty lines of Python: a `queue.Queue` for the mailbox, a thread that takes one
-message at a time out of it, and a method the thread calls for each message.** Everything the
+**An actor fits in twenty lines of Python.** A `queue.Queue` is the mailbox, a thread takes one
+message at a time out of it, and the thread calls a method for each message. Everything the
 libraries add, from schedulers to clustering, sits around that loop. Writing the loop yourself once
 makes the rules of the last section concrete, and it shows where each guarantee comes from.
 

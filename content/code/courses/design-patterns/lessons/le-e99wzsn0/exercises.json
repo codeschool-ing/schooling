@@ -1,0 +1,574 @@
+[
+ {
+  "id": "ex-dvbjdf5d",
+  "version": 1,
+  "section": "the-shared-state-problem",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "shared.py ends with minus one copy of Iracema. Which line of lend is wrong?",
+  "choices": [
+   {
+    "text": "The check, because it should test for more than one copy",
+    "correct": false,
+    "why": "With one copy on the shelf, testing for more than one would refuse a loan that is allowed."
+   },
+   {
+    "text": "None of them: the bug lives in the whole gap between the check and the act",
+    "correct": true,
+    "why": "Right. Each line is correct; a second thread ran between them."
+   },
+   {
+    "text": "The decrement, because -= on a dictionary is not allowed from a thread",
+    "correct": false,
+    "why": "Any thread may write to the dictionary; that freedom is the problem, not a refusal."
+   }
+  ]
+ },
+ {
+  "id": "ex-23cccd47",
+  "version": 1,
+  "section": "the-shared-state-problem",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each way out of the shared-state problem to what it does.",
+  "pairs": [
+   {
+    "left": "a lock",
+    "right": "lets one thread at a time into the check-and-act"
+   },
+   {
+    "left": "immutability",
+    "right": "never changes shared data, only builds new values"
+   },
+   {
+    "left": "isolation",
+    "right": "gives the data one owner that others send messages to"
+   }
+  ]
+ },
+ {
+  "id": "ex-erhxax4h",
+  "version": 1,
+  "section": "the-shared-state-problem",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Without the sleep, shared.py prints one lend and one refusal on every run you try. What does that tell you?",
+  "choices": [
+   {
+    "text": "The race only exists because of the sleep, so removing it fixes the program",
+    "correct": false,
+    "why": "The sleep only widens the gap; the operating system can switch threads at the same point without it."
+   },
+   {
+    "text": "Little: the bad interleaving is rare, and rare per run is frequent per day of use",
+    "correct": true,
+    "why": "Right. A test that passes here proves nothing, which is why the fix is a design rule."
+   },
+   {
+    "text": "Python runs threads one after the other, so they never overlap",
+    "correct": false,
+    "why": "The run with the sleep shows them overlapping; the interpreter switches threads between steps."
+   }
+  ]
+ },
+ {
+  "id": "ex-gnh33qhh",
+  "version": 1,
+  "section": "actors",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A system holds a million actors on a machine with eight threads. How is that possible?",
+  "choices": [
+   {
+    "text": "It is not: each actor needs a thread of its own",
+    "correct": false,
+    "why": "That confuses running code with owning state; an actor needs a thread only while it has messages."
+   },
+   {
+    "text": "The actors share their state, so one thread can serve many at once",
+    "correct": false,
+    "why": "Sharing state is exactly what actors never do; the threads are shared, the state is not."
+   },
+   {
+    "text": "Most actors are idle; a thread is lent only while one has work",
+    "correct": true,
+    "why": "Right. An actor is a way of owning state; the runtime lends it a thread when there is work."
+   }
+  ]
+ },
+ {
+  "id": "ex-7srvya44",
+  "version": 1,
+  "section": "actors",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "While handling a message, which of these may an actor do? Choose all that apply.",
+  "choices": [
+   {
+    "text": "Send messages to actors whose address it knows",
+    "correct": true,
+    "why": "Right. That is the first of Hewitt's three."
+   },
+   {
+    "text": "Create new actors",
+    "correct": true,
+    "why": "Right. That is the second."
+   },
+   {
+    "text": "Read another actor's state directly, if it only reads",
+    "correct": false,
+    "why": "Reading is still access; the other actor may be changing it at that instant."
+   },
+   {
+    "text": "Decide how it will handle the next message",
+    "correct": true,
+    "why": "Right. That is how an actor's state changes."
+   }
+  ]
+ },
+ {
+  "id": "ex-tmm03jg0",
+  "version": 1,
+  "section": "actors",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Messages for an actor wait in its ___ until it takes them out one at a time.",
+  "blanks": [
+   {
+    "accept": [
+     "mailbox",
+     "mail box",
+     "inbox"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-tzhezqtd",
+  "version": 1,
+  "section": "building-one",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "actor.py keeps the same time.sleep between check and act as shared.py. Why does the shelf no longer go below zero?",
+  "choices": [
+   {
+    "text": "The second Lend waits its turn in the mailbox",
+    "correct": true,
+    "why": "Right. Only the actor's thread runs the check-and-act, one message at a time."
+   },
+   {
+    "text": "queue.Queue takes a lock around the whole of receive",
+    "correct": false,
+    "why": "The queue locks only its own put and get; receive is safe because a single thread runs it."
+   },
+   {
+    "text": "The desks run one after the other in actor.py, not together",
+    "correct": false,
+    "why": "They still run at the same moment; what they do at once is put a message in the queue."
+   }
+  ]
+ },
+ {
+  "id": "ex-apytgdah",
+  "version": 1,
+  "section": "building-one",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "In Shelf.__init__, why is super().__init__() the last line rather than the first?",
+  "choices": [
+   {
+    "text": "Python requires the parent constructor to be called last",
+    "correct": false,
+    "why": "Python allows it anywhere; the order here is a choice with a reason."
+   },
+   {
+    "text": "It starts the thread, and the state has to exist before that",
+    "correct": true,
+    "why": "Right. Started first, the thread could take a message before _copies exists."
+   },
+   {
+    "text": "So that the mailbox is empty when the copies are set",
+    "correct": false,
+    "why": "The mailbox is made by the parent; the risk is the thread, not the queue."
+   },
+   {
+    "text": "To let the subclass replace the mailbox with a bounded one",
+    "correct": false,
+    "why": "Nothing in Shelf touches the mailbox."
+   }
+  ]
+ },
+ {
+  "id": "ex-sbx4v3r2",
+  "version": 1,
+  "section": "building-one",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The north desk sends Lend and the south desk sends GiveBack at the same moment. In which order does the shelf receive them?",
+  "choices": [
+   {
+    "text": "Lend first, because commands to take come before commands to return",
+    "correct": false,
+    "why": "The mailbox knows nothing about meaning; it keeps arrival order."
+   },
+   {
+    "text": "Alphabetically by desk, because the queue sorts its senders",
+    "correct": false,
+    "why": "A queue never sorts; it is first in, first out."
+   },
+   {
+    "text": "Whichever arrives first; order is only promised per sender",
+    "correct": true,
+    "why": "Right. A design needing that order makes one sender wait for the other."
+   }
+  ]
+ },
+ {
+  "id": "ex-mwdydvcg",
+  "version": 1,
+  "section": "tell-and-ask",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the shelf not simply get a method available(title) that returns the count?",
+  "choices": [
+   {
+    "text": "It would read _copies from the caller's thread, the wrong one",
+    "correct": true,
+    "why": "Right. The answer has to come from the actor's own thread, so it comes back as a message."
+   },
+   {
+    "text": "Methods cannot return values from a class that inherits from Actor",
+    "correct": false,
+    "why": "They can; the problem is which thread runs the method."
+   },
+   {
+    "text": "A method call would be slower than sending a message",
+    "correct": false,
+    "why": "A call is faster; it is unsafe, which matters more."
+   }
+  ]
+ },
+ {
+  "id": "ex-8hyvvc85",
+  "version": 1,
+  "section": "tell-and-ask",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Handling Recount, the shelf asks itself and times out after 0.5 s. Why would no answer ever come?",
+  "choices": [
+   {
+    "text": "Available is not a message the shelf knows how to handle",
+    "correct": false,
+    "why": "CountingShelf handles Available; the main thread's asks were answered."
+   },
+   {
+    "text": "Only the shelf's thread answers, and that thread is the one waiting",
+    "correct": true,
+    "why": "Right. The question sits in the mailbox behind the message being handled."
+   },
+   {
+    "text": "Futures cannot be passed inside a frozen dataclass",
+    "correct": false,
+    "why": "Frozen means the field cannot be reassigned; the future inside still works, as the first asks show."
+   }
+  ]
+ },
+ {
+  "id": "ex-ra3btppj",
+  "version": 1,
+  "section": "tell-and-ask",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A desk lends a book by telling, with no ask. Put the steps in order.",
+  "items": [
+   "The desk tells the shelf: lend Iracema to Bia, and reply to me",
+   "The shelf checks and takes a copy in one step",
+   "The shelf tells the desk Lent or Refused",
+   "The desk handles the reply as its next message"
+  ],
+  "trap": "Asking first whether a copy is free and then telling the shelf to lend reopens the gap between check and act."
+ },
+ {
+  "id": "ex-73nm62c8",
+  "version": 1,
+  "section": "supervision",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In supervision.py, Iracema starts with 2 copies and is lent twice, with a crash and restart in between. How many copies does the shelf report after the second loan?",
+  "value": 1,
+  "tolerance": 0,
+  "unit": "copies"
+ },
+ {
+  "id": "ex-6wb5acjt",
+  "version": 1,
+  "section": "supervision",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A restarted shelf forgot a loan. What does the section say should change?",
+  "choices": [
+   {
+    "text": "The supervisor should copy the old shelf's state into the new one",
+    "correct": false,
+    "why": "The old state is the state that led to the crash; restarting clean is the point."
+   },
+   {
+    "text": "State that must survive a crash belongs somewhere durable",
+    "correct": true,
+    "why": "Right. A database or an event log the new instance replays, as in lesson 9."
+   },
+   {
+    "text": "The shelf should catch every exception so that it never needs a restart",
+    "correct": false,
+    "why": "That is the defensive code the section argues against: running on in states nobody designed."
+   }
+  ]
+ },
+ {
+  "id": "ex-67t5vwy8",
+  "version": 1,
+  "section": "supervision",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A member types a title the library does not hold. How should the shelf actor respond?",
+  "choices": [
+   {
+    "text": "Crash, so that the supervisor restarts it with a clean state",
+    "correct": false,
+    "why": "A typo is expected input; crashing would spend a restart and lose state for nothing."
+   },
+   {
+    "text": "Ignore the message, since it cannot be handled",
+    "correct": false,
+    "why": "Ignoring it is a silent failure: the member waits for an answer that never comes."
+   },
+   {
+    "text": "With an ordinary reply saying there is no such title",
+    "correct": true,
+    "why": "Right. Validate expected problems at the edge; let the inside crash on the impossible."
+   }
+  ]
+ },
+ {
+  "id": "ex-knspagyk",
+  "version": 1,
+  "section": "location-transparency",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In location.py, ref.tell(threading.Lock()) raises TypeError at once. What does that show?",
+  "choices": [
+   {
+    "text": "A message must become bytes, so shared state cannot travel",
+    "correct": true,
+    "why": "Right. The rule that messages are values becomes something the transport enforces."
+   },
+   {
+    "text": "The shelf process refused the lock because it already holds one",
+    "correct": false,
+    "why": "The shelf never saw it: the error came from pickling on the sending side."
+   },
+   {
+    "text": "Ref.tell only accepts frozen dataclasses",
+    "correct": false,
+    "why": "Ref.tell sends whatever it is given; None goes through at the end."
+   }
+  ]
+ },
+ {
+  "id": "ex-x6vckksj",
+  "version": 1,
+  "section": "location-transparency",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does an ask without a timeout become more dangerous once the actor runs on another machine?",
+  "choices": [
+   {
+    "text": "Remote actors answer more slowly, so the default wait is too short",
+    "correct": false,
+    "why": "There is no wait limit at all without a timeout; that is the danger."
+   },
+   {
+    "text": "A lost reply now makes it hang, not just a bug",
+    "correct": true,
+    "why": "Right. Networks lose messages, and a silent machine looks like a slow one."
+   },
+   {
+    "text": "Futures cannot cross a network, so the ask fails at once",
+    "correct": false,
+    "why": "Remote systems use a reply address that can cross; the failure is the wait, not the send."
+   },
+   {
+    "text": "The remote supervisor cancels every ask when it restarts the actor",
+    "correct": false,
+    "why": "Nothing cancels the ask; the caller just waits for a reply that will not come."
+   }
+  ]
+ },
+ {
+  "id": "ex-e49csqnt",
+  "version": 1,
+  "section": "location-transparency",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A desk retries GiveBack when no acknowledgement arrives in two seconds. What must the shelf's handler be?",
+  "choices": [
+   {
+    "text": "Faster than two seconds, so the retry never happens",
+    "correct": false,
+    "why": "A lost acknowledgement triggers the retry however fast the handler was."
+   },
+   {
+    "text": "Supervised by the desk, so that the desk can restart it",
+    "correct": false,
+    "why": "Supervision handles crashes; it does nothing about a message arriving twice."
+   },
+   {
+    "text": "Idempotent: the same return handled twice must count once",
+    "correct": true,
+    "why": "Right. A retry after a lost acknowledgement delivers the message twice."
+   }
+  ]
+ },
+ {
+  "id": "ex-gxxcfze9",
+  "version": 1,
+  "section": "in-your-language",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What separates a goroutine reading a channel from an actor with a mailbox?",
+  "choices": [
+   {
+    "text": "A goroutine cannot hold state between messages",
+    "correct": false,
+    "why": "The shelf goroutine keeps its map across requests; that is what makes it actor-like."
+   },
+   {
+    "text": "The channel is shared, and a send waits for a receiver",
+    "correct": true,
+    "why": "Right. An actor has the address, and its tell never waits."
+   },
+   {
+    "text": "Goroutines run in separate processes with separate memory",
+    "correct": false,
+    "why": "Goroutines share one process's memory; Erlang's processes are the ones with separate memory."
+   }
+  ]
+ },
+ {
+  "id": "ex-895mn7m5",
+  "version": 1,
+  "section": "in-your-language",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "In the Akka example, the Lend handler returns shelf(withOneLess(copies, ...)) instead of changing a field. Which idea is that?",
+  "choices": [
+   {
+    "text": "Choosing the behaviour for the next message, with the state built new",
+    "correct": true,
+    "why": "Right. Hewitt's third rule, written literally, with lesson 15's immutability."
+   },
+   {
+    "text": "Restarting the actor after every message, as a supervisor would",
+    "correct": false,
+    "why": "Nothing failed; returning a behaviour is the normal path, and the new state carries the loan."
+   },
+   {
+    "text": "Recursion that grows the stack with each message until it overflows",
+    "correct": false,
+    "why": "The function returns a description of the next behaviour; Akka calls it later, so no stack builds up."
+   }
+  ]
+ },
+ {
+  "id": "ex-fxv7zsry",
+  "version": 1,
+  "section": "drill",
+  "type": "numeric",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "supervision.py is run again with max_restarts=3 and the same six messages. How many of them change the shelf's copies?",
+  "hint": "The three GiveBacks of unknown titles crash; now none of them exhausts the limit.",
+  "value": 3,
+  "tolerance": 0,
+  "unit": "messages"
+ },
+ {
+  "id": "ex-1rjan35c",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A loans actor asks the members actor whether a member may borrow, and the members actor asks the loans actor how many books she holds. What happens under load?",
+  "choices": [
+   {
+    "text": "Nothing bad: each actor handles one message at a time, so no race is possible",
+    "correct": false,
+    "why": "No race inside each actor, but each can block waiting on the other: that is a deadlock, not a race."
+   },
+   {
+    "text": "Each one waits on the other, and both stop handling their mailboxes",
+    "correct": true,
+    "why": "Right. Two actors asking each other deadlock; tell with a reply address avoids it."
+   },
+   {
+    "text": "The supervisor notices the slow replies and restarts both actors",
+    "correct": false,
+    "why": "A supervisor reacts to crashes; a blocked actor has not crashed, unless a timeout turns the hang into an error."
+   },
+   {
+    "text": "Messages are dropped once each mailbox reaches its default size",
+    "correct": false,
+    "why": "The default mailboxes here are unbounded; they grow while both actors wait."
+   }
+  ]
+ },
+ {
+  "id": "ex-f35fwckn",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The kiosks and both desks update a count of visitors today, and it comes out too low at closing time. Which fix matches this lesson?",
+  "choices": [
+   {
+    "text": "Read the count twice before writing it, to check that nobody changed it",
+    "correct": false,
+    "why": "Another writer can still run between the second read and the write; the gap only moves."
+   },
+   {
+    "text": "One counter actor owns the count, and everyone tells it Visited",
+    "correct": true,
+    "why": "Right. Only one thread changes the count, so no update is lost."
+   },
+   {
+    "text": "Give each kiosk its own copy of the count and let them overwrite the total",
+    "correct": false,
+    "why": "Overwriting the total loses every other writer's increments, which is the bug itself."
+   }
+  ]
+ }
+]

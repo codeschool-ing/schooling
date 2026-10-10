@@ -3,8 +3,8 @@ title: "Location transparency: why messages and not calls"
 version: 1
 ---
 
-**Because a sender only ever puts a message in a mailbox, it cannot tell whether the actor behind
-the mailbox is on the same thread, in another process or on another machine.** That is location
+**A sender only ever puts a message in a mailbox, so it cannot tell where the actor behind it
+runs.** It may be on the same thread, in another process or on another machine. That is location
 transparency, and it is the reason the actor model insists on messages even inside one program. A
 design written as actors that tell each other things can be spread across processes later without
 rewriting the senders.
@@ -48,8 +48,8 @@ as shared memory cannot travel.
 Moving an actor to another machine keeps the shape of the code and changes what can go wrong. A
 message to a remote actor can be lost on the way, or the machine can restart with the message
 unread. A reply can be lost after the work was done. So remote actor systems state what they
-guarantee, and by default it is little: Akka delivers a message *at most once*, with no
-acknowledgement unless you build one, and Erlang promises only that messages from one process to
+guarantee, and by default it is little. Akka delivers a message *at most once*,
+with no acknowledgement unless you build one. Erlang promises only that messages from one process to
 another arrive in the order sent, if they arrive.
 
 This is why the patterns of the earlier sections matter more at a distance:

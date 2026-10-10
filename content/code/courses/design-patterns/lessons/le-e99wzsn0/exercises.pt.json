@@ -1,0 +1,372 @@
+{
+ "ex-dvbjdf5d": {
+  "prompt": "O shared.py termina com menos um exemplar de Iracema. Que linha de lend está errada?",
+  "choices": [
+   {
+    "text": "A verificação, porque devia testar mais de um exemplar",
+    "why": "Com um exemplar na estante, testar mais de um recusaria um empréstimo permitido."
+   },
+   {
+    "text": "Nenhuma: o bug está na brecha entre a verificação e a ação",
+    "why": "Isso. Cada linha está correta; uma segunda thread rodou entre elas."
+   },
+   {
+    "text": "O decremento, porque -= num dicionário não é permitido numa thread",
+    "why": "Qualquer thread pode escrever no dicionário; essa liberdade é o problema, não uma recusa."
+   }
+  ]
+ },
+ "ex-23cccd47": {
+  "prompt": "Associe cada saída do problema do estado compartilhado ao que ela faz.",
+  "pairs": [
+   {
+    "left": "um lock",
+    "right": "deixa uma thread de cada vez entrar no verificar-e-agir"
+   },
+   {
+    "left": "imutabilidade",
+    "right": "nunca muda dados compartilhados, só constrói valores novos"
+   },
+   {
+    "left": "isolamento",
+    "right": "dá aos dados um dono a quem os outros mandam mensagens"
+   }
+  ]
+ },
+ "ex-erhxax4h": {
+  "prompt": "Sem o sleep, o shared.py imprime um empréstimo e uma recusa em toda execução que você tenta. O que isso diz?",
+  "choices": [
+   {
+    "text": "A corrida só existe por causa do sleep, então tirá-lo conserta o programa",
+    "why": "O sleep só alarga a brecha; o sistema operacional pode trocar de thread no mesmo ponto sem ele."
+   },
+   {
+    "text": "Pouco: a intercalação ruim é rara, e rara por execução é frequente por dia",
+    "why": "Isso. Um teste que passa aqui não prova nada, e é por isso que a correção é uma regra de projeto."
+   },
+   {
+    "text": "O Python roda threads uma depois da outra, então elas nunca se sobrepõem",
+    "why": "A execução com o sleep mostra as duas se sobrepondo; o interpretador troca de thread entre passos."
+   }
+  ]
+ },
+ "ex-gnh33qhh": {
+  "prompt": "Um sistema tem um milhão de atores numa máquina com oito threads. Como isso é possível?",
+  "choices": [
+   {
+    "text": "Não é: cada ator precisa de uma thread própria",
+    "why": "Isso confunde rodar código com ser dono de estado; um ator só precisa de thread enquanto tem mensagens."
+   },
+   {
+    "text": "Os atores dividem o estado, então uma thread atende muitos ao mesmo tempo",
+    "why": "Dividir estado é justamente o que atores nunca fazem; as threads são divididas, o estado não."
+   },
+   {
+    "text": "A maioria fica parada; só ganha thread quem tem trabalho",
+    "why": "Isso. Um ator é um jeito de ser dono de estado; o runtime lhe empresta uma thread quando há trabalho."
+   }
+  ]
+ },
+ "ex-7srvya44": {
+  "prompt": "Ao tratar uma mensagem, quais destas coisas um ator pode fazer? Marque todas que se aplicam.",
+  "choices": [
+   {
+    "text": "Mandar mensagens a atores cujo endereço conhece",
+    "why": "Isso. É a primeira das três de Hewitt."
+   },
+   {
+    "text": "Criar atores novos",
+    "why": "Isso. É a segunda."
+   },
+   {
+    "text": "Ler o estado de outro ator diretamente, se só ler",
+    "why": "Ler ainda é acesso; o outro ator pode estar mudando o estado naquele instante."
+   },
+   {
+    "text": "Decidir como vai tratar a próxima mensagem",
+    "why": "Isso. É assim que o estado de um ator muda."
+   }
+  ]
+ },
+ "ex-tmm03jg0": {
+  "prompt": "As mensagens para um ator esperam na sua ___ até ele tirá-las uma de cada vez.",
+  "blanks": [
+   {
+    "accept": [
+     "caixa de correio",
+     "caixa postal",
+     "mailbox"
+    ]
+   }
+  ]
+ },
+ "ex-tzhezqtd": {
+  "prompt": "O actor.py mantém o mesmo time.sleep entre verificar e agir que o shared.py. Por que a estante não fica mais abaixo de zero?",
+  "choices": [
+   {
+    "text": "O segundo Lend espera a vez na caixa de correio",
+    "why": "Isso. Só a thread do ator roda o verificar-e-agir, uma mensagem de cada vez."
+   },
+   {
+    "text": "A queue.Queue trava em volta do receive inteiro, do começo ao fim",
+    "why": "A fila trava só o próprio put e get; o receive é seguro porque uma thread só o roda."
+   },
+   {
+    "text": "Os balcões rodam um depois do outro no actor.py, não juntos",
+    "why": "Eles continuam rodando no mesmo instante; o que fazem ao mesmo tempo é pôr uma mensagem na fila."
+   }
+  ]
+ },
+ "ex-apytgdah": {
+  "prompt": "No Shelf.__init__, por que super().__init__() é a última linha e não a primeira?",
+  "choices": [
+   {
+    "text": "O Python exige que o construtor do pai seja chamado por último",
+    "why": "O Python permite em qualquer lugar; a ordem aqui é uma escolha com motivo."
+   },
+   {
+    "text": "Ele inicia a thread, e o estado tem de existir antes disso",
+    "why": "Isso. Iniciada antes, a thread poderia pegar uma mensagem antes de _copies existir."
+   },
+   {
+    "text": "Para a caixa de correio estar vazia quando os exemplares são definidos",
+    "why": "A caixa de correio é criada pelo pai; o risco é a thread, não a fila."
+   },
+   {
+    "text": "Para a subclasse poder trocar a caixa de correio por uma com limite",
+    "why": "Nada em Shelf toca a caixa de correio."
+   }
+  ]
+ },
+ "ex-sbx4v3r2": {
+  "prompt": "O balcão norte manda Lend e o balcão sul manda GiveBack no mesmo instante. Em que ordem a estante os recebe?",
+  "choices": [
+   {
+    "text": "Lend primeiro, porque pegar vem antes de devolver",
+    "why": "A caixa de correio não sabe nada de significado; ela guarda a ordem de chegada."
+   },
+   {
+    "text": "Em ordem alfabética de balcão, porque a fila ordena os remetentes",
+    "why": "Uma fila nunca ordena; é a primeira a entrar, a primeira a sair."
+   },
+   {
+    "text": "O que chegar primeiro; a ordem só é prometida por remetente",
+    "why": "Isso. Um projeto que precisa dessa ordem faz um remetente esperar o outro."
+   }
+  ]
+ },
+ "ex-mwdydvcg": {
+  "prompt": "Por que a estante não ganha simplesmente um método available(title) que devolve a contagem?",
+  "choices": [
+   {
+    "text": "Ele leria _copies na thread de quem chama, que é a errada",
+    "why": "Isso. A resposta tem de vir da própria thread do ator, então volta como mensagem."
+   },
+   {
+    "text": "Métodos não podem devolver valores numa classe que herda de Actor",
+    "why": "Podem; o problema é qual thread roda o método."
+   },
+   {
+    "text": "Uma chamada de método seria mais lenta que uma mensagem",
+    "why": "Uma chamada é mais rápida; ela é insegura, o que pesa mais."
+   }
+  ]
+ },
+ "ex-8hyvvc85": {
+  "prompt": "Ao tratar Recount, a estante pergunta a si mesma e desiste depois de 0,5 s. Por que resposta nenhuma viria?",
+  "choices": [
+   {
+    "text": "Available não é uma mensagem que a estante sabe tratar",
+    "why": "O CountingShelf trata Available; os asks da thread principal foram respondidos."
+   },
+   {
+    "text": "Só a thread da estante responde, e essa thread é a que está esperando",
+    "why": "Isso. A pergunta fica na caixa de correio atrás da mensagem que está sendo tratada."
+   },
+   {
+    "text": "Futures não podem ir dentro de uma dataclass congelada",
+    "why": "Congelada quer dizer que o campo não pode ser reatribuído; o future dentro dela funciona, como os primeiros asks mostram."
+   }
+  ]
+ },
+ "ex-ra3btppj": {
+  "prompt": "Um balcão empresta um livro só com tell, sem ask. Ponha os passos em ordem.",
+  "items": [
+   "O balcão diz à estante: empreste Iracema à Bia, e me responda",
+   "A estante verifica e pega um exemplar num passo só",
+   "A estante diz ao balcão Lent ou Refused",
+   "O balcão trata a resposta como sua próxima mensagem"
+  ],
+  "trap": "Perguntar primeiro se há exemplar livre e depois mandar emprestar reabre a brecha entre verificar e agir."
+ },
+ "ex-73nm62c8": {
+  "prompt": "No supervision.py, Iracema começa com 2 exemplares e é emprestado duas vezes, com uma queda e um reinício no meio. Quantos exemplares a estante informa depois do segundo empréstimo?",
+  "unit": "exemplares"
+ },
+ "ex-6wb5acjt": {
+  "prompt": "Uma estante reiniciada esqueceu um empréstimo. O que a seção diz que deveria mudar?",
+  "choices": [
+   {
+    "text": "O supervisor devia copiar o estado da estante antiga para a nova",
+    "why": "O estado antigo é o que levou à queda; recomeçar limpo é o objetivo."
+   },
+   {
+    "text": "Estado que precisa sobreviver a uma queda deve ficar num lugar durável",
+    "why": "Isso. Um banco de dados ou um log de eventos que a instância nova reexecuta, como na lição 9."
+   },
+   {
+    "text": "A estante devia capturar toda exceção para nunca precisar de reinício",
+    "why": "Esse é o código defensivo contra o qual a seção argumenta: seguir rodando em estados que ninguém projetou."
+   }
+  ]
+ },
+ "ex-67t5vwy8": {
+  "prompt": "Um membro digita um título que a biblioteca não tem. Como o ator da estante deve responder?",
+  "choices": [
+   {
+    "text": "Cair, para o supervisor o reiniciar com estado limpo",
+    "why": "Um erro de digitação é entrada esperada; cair gastaria um reinício e perderia estado à toa."
+   },
+   {
+    "text": "Ignorar a mensagem, já que não dá para tratá-la",
+    "why": "Ignorar é uma falha silenciosa: o membro espera uma resposta que nunca vem."
+   },
+   {
+    "text": "Com uma resposta comum dizendo que o título não existe",
+    "why": "Isso. Valide os problemas esperados na borda; deixe o interior cair diante do impossível."
+   }
+  ]
+ },
+ "ex-knspagyk": {
+  "prompt": "No location.py, ref.tell(threading.Lock()) lança TypeError na hora. O que isso mostra?",
+  "choices": [
+   {
+    "text": "Uma mensagem precisa virar bytes, e estado compartilhado não viaja",
+    "why": "Isso. A regra de que mensagens são valores vira algo que o transporte impõe."
+   },
+   {
+    "text": "O processo da estante recusou o lock porque já segura outro lock",
+    "why": "A estante nem viu: o erro veio do pickle, do lado de quem envia."
+   },
+   {
+    "text": "O Ref.tell só aceita dataclasses congeladas",
+    "why": "O Ref.tell manda o que receber; o None passa no final."
+   }
+  ]
+ },
+ "ex-x6vckksj": {
+  "prompt": "Por que um ask sem timeout fica mais perigoso quando o ator roda em outra máquina?",
+  "choices": [
+   {
+    "text": "Atores remotos respondem mais devagar, então a espera padrão é curta demais",
+    "why": "Sem timeout não há limite de espera nenhum; esse é o perigo."
+   },
+   {
+    "text": "Uma resposta perdida agora o trava, não só um bug",
+    "why": "Isso. Redes perdem mensagens, e uma máquina calada parece uma lenta."
+   },
+   {
+    "text": "Futures não atravessam a rede, então o ask falha na hora",
+    "why": "Sistemas remotos usam um endereço de resposta que atravessa; a falha é a espera, não o envio."
+   },
+   {
+    "text": "O supervisor remoto cancela todo ask quando reinicia o ator",
+    "why": "Nada cancela o ask; quem chamou só espera uma resposta que não vem."
+   }
+  ]
+ },
+ "ex-e49csqnt": {
+  "prompt": "Um balcão reenvia GiveBack quando nenhuma confirmação chega em dois segundos. O que o tratador da estante precisa ser?",
+  "choices": [
+   {
+    "text": "Mais rápido que dois segundos, para o reenvio nunca acontecer",
+    "why": "Uma confirmação perdida dispara o reenvio por mais rápido que o tratador tenha sido."
+   },
+   {
+    "text": "Supervisionado pelo balcão, para o balcão poder reiniciá-lo",
+    "why": "A supervisão trata quedas; não faz nada quanto a uma mensagem chegando duas vezes."
+   },
+   {
+    "text": "Idempotente: a mesma devolução tratada duas vezes conta só uma",
+    "why": "Isso. Um reenvio depois de uma confirmação perdida entrega a mensagem duas vezes."
+   }
+  ]
+ },
+ "ex-gxxcfze9": {
+  "prompt": "O que separa uma goroutine lendo um canal de um ator com caixa de correio?",
+  "choices": [
+   {
+    "text": "Uma goroutine não consegue guardar estado entre mensagens",
+    "why": "A goroutine da estante mantém o map entre pedidos; é isso que a deixa parecida com um ator."
+   },
+   {
+    "text": "O canal é compartilhado, e um envio espera um receptor",
+    "why": "Isso. Um ator tem o endereço, e o tell dele nunca espera."
+   },
+   {
+    "text": "Goroutines rodam em processos separados com memória separada",
+    "why": "Goroutines dividem a memória de um processo; os processos do Erlang é que têm memória separada."
+   }
+  ]
+ },
+ "ex-895mn7m5": {
+  "prompt": "No exemplo do Akka, o tratador de Lend devolve shelf(withOneLess(copies, ...)) em vez de mudar um campo. Que ideia é essa?",
+  "choices": [
+   {
+    "text": "Escolher o comportamento da próxima mensagem, com estado novo",
+    "why": "Isso. A terceira regra de Hewitt, escrita ao pé da letra, com a imutabilidade da lição 15."
+   },
+   {
+    "text": "Reiniciar o ator depois de toda mensagem, como um supervisor faria",
+    "why": "Nada falhou; devolver um comportamento é o caminho normal, e o estado novo carrega o empréstimo."
+   },
+   {
+    "text": "Recursão que cresce a pilha a cada mensagem até estourar",
+    "why": "A função devolve uma descrição do próximo comportamento; o Akka a chama depois, então nenhuma pilha se acumula."
+   }
+  ]
+ },
+ "ex-fxv7zsry": {
+  "prompt": "O supervision.py roda de novo com max_restarts=3 e as mesmas seis mensagens. Quantas delas mudam os exemplares da estante?",
+  "hint": "Os três GiveBack de títulos desconhecidos derrubam a estante; agora nenhum deles esgota o limite.",
+  "unit": "mensagens"
+ },
+ "ex-1rjan35c": {
+  "prompt": "Um ator de empréstimos pergunta ao ator de membros se um membro pode pegar livro, e o ator de membros pergunta ao de empréstimos quantos livros ela tem. O que acontece sob carga?",
+  "choices": [
+   {
+    "text": "Nada de ruim: cada ator trata uma mensagem de cada vez, então nenhuma corrida é possível",
+    "why": "Nenhuma corrida dentro de cada ator, mas cada um pode bloquear esperando o outro: isso é deadlock, não corrida."
+   },
+   {
+    "text": "Cada um espera o outro, e os dois param de tratar as caixas de correio",
+    "why": "Isso. Dois atores que perguntam um ao outro travam; tell com endereço de resposta evita isso."
+   },
+   {
+    "text": "O supervisor percebe as respostas lentas e reinicia os dois atores",
+    "why": "Um supervisor reage a quedas; um ator bloqueado não caiu, a não ser que um timeout transforme o travamento em erro."
+   },
+   {
+    "text": "Mensagens são descartadas quando cada caixa de correio chega ao tamanho padrão",
+    "why": "As caixas de correio padrão aqui não têm limite; elas crescem enquanto os dois atores esperam."
+   }
+  ]
+ },
+ "ex-f35fwckn": {
+  "prompt": "Os totens e os dois balcões atualizam uma contagem de visitantes do dia, e ela sai baixa demais no fechamento. Que correção corresponde a esta lição?",
+  "choices": [
+   {
+    "text": "Ler a contagem duas vezes antes de escrever, para conferir que ninguém mudou",
+    "why": "Outro escritor ainda pode rodar entre a segunda leitura e a escrita; a brecha só muda de lugar."
+   },
+   {
+    "text": "Um ator contador é dono da contagem, e todos lhe dizem Visited",
+    "why": "Isso. Só uma thread muda a contagem, então nenhuma atualização se perde."
+   },
+   {
+    "text": "Dar a cada totem a própria cópia da contagem e deixar que sobrescrevam o total",
+    "why": "Sobrescrever o total perde os incrementos de todos os outros, que é o próprio bug."
+   }
+  ]
+ }
+}

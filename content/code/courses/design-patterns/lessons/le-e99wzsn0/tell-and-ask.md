@@ -3,8 +3,8 @@ title: "Tell and ask: getting an answer back"
 version: 1
 ---
 
-**There are two ways to talk to an actor: tell, which sends a message and carries on, and ask,
-which sends a message carrying a reply address and waits for an answer to arrive there.** Tell is
+**There are two ways to talk to an actor.** Tell sends a message and carries on; ask sends a
+message carrying a reply address and waits for an answer to arrive there. Tell is
 the natural one; the actor model has nothing else built in. Ask is built out of tell, and it is
 where most of the surprises in actor code come from.
 
