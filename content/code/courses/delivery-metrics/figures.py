@@ -911,6 +911,54 @@ def l05_four(lang):
                 'falhando menos e voltando antes.')
 
 
+# ------------------------------------------------------------------ lesson 6
+
+@figure('l06-chain', 6)
+def l06_chain(lang):
+    f = Fig('l06-chain', 680, 260, T(
+        lang,
+        'Three columns joined by arrows. On the left, four families of capabilities: technical, '
+        'architecture, process and flow, culture, marked "change these". In the middle, the four '
+        'DORA metrics, marked "read these". On the right, what the organisation wants: users '
+        'served, a business that works, people who stay. Habits move the metrics, and the '
+        'metrics are associated with the outcomes.',
+        'Três colunas ligadas por setas. À esquerda, quatro famílias de capacidades: técnicas, '
+        'arquitetura, processo e fluxo, cultura, marcadas "mude estas". No meio, as quatro '
+        'métricas DORA, marcadas "leia estas". À direita, o que a organização quer: usuários '
+        'atendidos, um negócio que funciona, pessoas que ficam. Hábitos movem as métricas, e as '
+        'métricas andam junto com os resultados.'))
+    left = T(lang, ['technical', 'architecture', 'process and flow', 'culture'],
+             ['técnicas', 'arquitetura', 'processo e fluxo', 'cultura'])
+    mid = T(lang, ['deployment frequency', 'lead time for changes', 'change failure rate', 'time to restore'],
+            ['frequência de deploy', 'lead time de mudanças', 'taxa de falha', 'tempo para restaurar'])
+    right = T(lang, ['users served', 'a business that works', 'people who stay'],
+              ['usuários atendidos', 'um negócio que funciona', 'pessoas que ficam'])
+    f.text(100, 24, T(lang, 'capabilities: change these', 'capacidades: mude estas'), size=10.5, weight='600')
+    f.text(340, 24, T(lang, 'the four metrics: read these', 'as quatro métricas: leia estas'), size=10.5, weight='600')
+    f.text(580, 24, T(lang, 'what the company wants', 'o que a empresa quer'), size=10.5, weight='600')
+    for k, t in enumerate(left):
+        f.rect(20, 44 + k * 50, 160, 36, stroke='--phosphor', fill='--panel', width=1.2)
+        f.text(100, 62 + k * 50, t, size=10.5)
+    for k, t in enumerate(mid):
+        f.rect(250, 44 + k * 50, 180, 36, stroke='--paper-dim', fill='--panel', width=1.2)
+        f.text(340, 62 + k * 50, t, size=10.5)
+    for k, t in enumerate(right):
+        f.rect(500, 69 + k * 50, 160, 36, stroke='--amber', fill='--panel', width=1.2)
+        f.text(580, 87 + k * 50, t, size=10.5)
+    f.line(186, 137, 244, 137, stroke='--paper-dim', width=1.6, arrow=True)
+    f.line(436, 137, 494, 137, stroke='--paper-dim', width=1.6, arrow=True)
+    f.text(215, 124, T(lang, 'move', 'movem'), size=9.5, fill='--paper-dim', italic=True)
+    f.text(465, 124, T(lang, 'go with', 'andam com'), size=9.5, fill='--paper-dim', italic=True)
+    f.text(340, 250, T(lang, 'a target set on the middle column skips the left one',
+                       'uma meta posta na coluna do meio pula a da esquerda'),
+           size=10, fill='--paper-dim', italic=True)
+    return f, T(lang,
+                'The work happens in the left column. The middle one is where you look to see '
+                'whether it worked.',
+                'O trabalho acontece na coluna da esquerda. A do meio é onde você olha para ver se '
+                'funcionou.')
+
+
 # @@LESSONS@@
 
 if __name__ == '__main__':
