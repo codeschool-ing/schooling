@@ -38,8 +38,7 @@ the expected percentage on the right. **It is lesson 5's decision table for R5, 
 machine can run it** every time the code changes, which is what a person cannot afford to do by
 hand.
 
-Python's own test runner is `unittest`, and it ships with Python, so there is nothing to install.
-Asked to run with no file named, it looks in the current directory for files called `test_*.py`
+Python's own test runner is `unittest`. Asked to run with no file named, it looks in the current directory for files called `test_*.py`
 and runs every test inside them. `-v` prints one line per test instead of one dot. On Windows the
 command starts with `py` or `python` instead of `python3`, as in lesson 1.
 

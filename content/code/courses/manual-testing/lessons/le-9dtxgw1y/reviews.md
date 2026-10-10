@@ -77,9 +77,9 @@ release, it costs an argument at the door with a family holding three half-price
 ## Kinds of review
 
 Reviews range from a colleague reading a page to a meeting with a moderator and a checklist. The
-names in the standards, from least to most formal: an *informal review*, one person reading and
-sending comments; a *walkthrough*, the author leading others through the document; a *technical
-review*, peers judging it against its purpose; and an *inspection*, with defined roles, a
+standards name four, from least to most formal. An *informal review* is one person reading and
+sending comments. In a *walkthrough* the author leads others through the document. A *technical
+review* has peers judging it against its purpose, and an *inspection* has defined roles, a
 checklist, and figures kept about what was found. A theatre's nine requirements need the first
 kind and an hour. A bank's payment rules justify the last.
 

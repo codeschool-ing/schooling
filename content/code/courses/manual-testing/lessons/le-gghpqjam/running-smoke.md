@@ -55,7 +55,7 @@ echo "$failed of 5 checks failed"
 [ "$failed" -eq 0 ]
 ```
 
-Two details carry more than they seem. `${form:+-d "$form"}` adds curl's `-d` and the form only
+Two details are easy to miss. `${form:+-d "$form"}` adds curl's `-d` and the form only
 when the field is not empty, which is how one loop sends both a plain request and a booking. And the
 pattern for the home page, `The Seagull.*Hamlet.*The Little Prince`, asks for all three titles in
 that order on one line, which they are, because boxoffice writes the whole table on one line.
@@ -97,7 +97,7 @@ cases use, and lesson 20 is about keeping test data under control.
 ## Keeping it small
 
 A loop this easy to extend invites extending it. Every check added is a second it takes and one
-more thing that can fail for a reason that is not the build, and a smoke list that grows into
+more thing that can fail for a reason that is not the build. A smoke list that grows into
 thirty checks of discounts and refunds has become a regression suite that runs first, which is
 lesson 10's subject. The test for a new line is the one from section 03: does the build stop being
 worth testing if this fails?

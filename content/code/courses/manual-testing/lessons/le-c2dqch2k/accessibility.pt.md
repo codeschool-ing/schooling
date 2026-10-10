@@ -4,7 +4,7 @@ version: 1
 ---
 
 Acessibilidade costuma ser tratada como uma funcionalidade para um grupo pequeno de usuários,
-acrescentada quando sobra tempo. Os números dizem outra coisa: pessoas que não conseguem usar um
+acrescentada quando sobra tempo. Pessoas que não conseguem usar um
 mouse, que não enxergam a tela, que a enxergam ampliada ou que não distinguem vermelho de verde são
 uma parte de todo público, e o público de um teatro inclui todas elas. O R9 faz disso um requisito
 do boxoffice: toda página utilizável só com o teclado e com um leitor de tela, segundo a **WCAG 2.2

@@ -53,7 +53,7 @@ Funcionalidade: a reserva fecha antes do espetáculo
 ```
 
 As mensagens entre aspas ficam em inglês porque é assim que o boxoffice as escreve na tela. Três
-coisas tornam esses critérios úteis em vez de decorativos.
+coisas tornam esses critérios úteis.
 
 **Cada Então pode ser visto.** "O total é R$ 80,00" está na página do pedido ou não está. Compare com
 um critério que um cliente escreve na primeira tentativa, "estudantes pagam um preço justo":
@@ -91,6 +91,6 @@ um arquivo `.feature` quando o vir, e saber que o formato foi pensado primeiro p
 Não é o teste inteiro. Esses quatro não dizem nada sobre a caixa de saída, o layout no celular ou o
 reembolso de um pedido já usado, e os testes de transição de estado da aula 5 e as telas da aula 7
 continuam importando. Critérios de aceitação são o mínimo do cliente, escrito nas palavras do
-cliente: **passar neles quer dizer que o cliente concordou que o produto dá conta do trabalho, e não
+cliente. **Passar neles quer dizer que o cliente concordou que o produto dá conta do trabalho, e não
 diz nada sobre o que ninguém pensou em escrever.** A próxima seção trata de como uma sessão com o
 cliente acha uma parte disso.

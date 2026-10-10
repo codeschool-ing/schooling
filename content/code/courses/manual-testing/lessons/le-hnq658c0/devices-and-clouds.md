@@ -31,8 +31,7 @@ customers.
 
 **An emulator or simulator** runs a phone's software on the laptop. The Android Emulator, which
 comes with Google's Android Studio, runs Android, and its system images that include Google's apps
-bring the real Chrome for Android. Apple's
-Simulator, which comes with Xcode, runs iOS with Safari's engine, and Xcode runs only on a Mac. The
+bring the real Chrome for Android. Apple's Simulator, which comes with Xcode, runs iOS with Safari's engine, and Xcode runs only on a Mac. The
 engine is the real one; the hardware, the keyboard under a thumb and the speed are still the
 laptop's.
 

@@ -66,8 +66,8 @@ uma pergunta sobre o requisito, e ela vem com o que a pessoa que decide precisa 
 - *o que pode significar*: o limite pode ser proposital, para impedir que um comprador leve um
   espetáculo inteiro, ou um descuido; só o teatro sabe qual.
 
-A última linha importa mais do que parece. **Um achado de validação oferece leituras, não um
-veredito.** O limite de seis pode existir por um bom motivo que ninguém escreveu, e nesse caso a
+**Um achado de validação oferece leituras, não um veredito**, e é para isso que serve a última
+linha. O limite de seis pode existir por um bom motivo que ninguém escreveu, e nesse caso a
 resposta é uma frase no R4 explicando-o e, talvez, um aviso na página dizendo aos grupos que
 telefonem. O trabalho de Ana é garantir que a pergunta foi feita a alguém que pudesse respondê-la, e
 a seção 05 desta aula diz para onde ela a manda.

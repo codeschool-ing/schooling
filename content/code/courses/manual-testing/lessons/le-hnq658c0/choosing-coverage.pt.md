@@ -24,8 +24,8 @@ O teatro já tem um site, e as estatísticas dele dizem o que os visitantes usar
 | todo o resto | 3% |
 
 Sete visitas em dez vêm de um celular, o que transforma os 360 pixels do R8 de detalhe em caso
-principal. E só as duas primeiras linhas somam sete em dez, então um defeito que só aparece no
-Chrome de um celular Android atinge quase metade do público.
+principal. E só a primeira linha já é 46%, então um defeito que só aparece no Chrome
+de um celular Android atinge quase metade do público.
 
 **Dados de público descrevem as pessoas para quem o site antigo funcionava.** Se o site antigo
 estivesse quebrado no Firefox, os usuários do Firefox teriam parado de vir, e as estatísticas

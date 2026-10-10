@@ -89,7 +89,7 @@ the phone-layout risk E of lesson 1's plan, and it is a defect: **the shows tabl
 wide, so a phone scrolls sideways**.
 
 What Ana writes down while it is in front of her is what a report needs, and lesson 15 turns it into
-one: the requirement, R8; the browser and its version, Chromium 141; the width, 360; what she saw; the
+one. Her notes hold the requirement, R8; the browser and its version, Chromium 141; the width, 360; what she saw; the
 measured width, 776; the rule, `table.shows{width:760px}`; and a screenshot, which Chrome's
 responsive bar takes from the menu at its right-hand end. The fix is Rui's.
 

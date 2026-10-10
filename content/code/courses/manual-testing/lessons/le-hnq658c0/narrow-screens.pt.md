@@ -92,7 +92,7 @@ desvio do R8, é o risco E de layout no celular do plano da aula 1, e é um defe
 espetáculos tem 760 pixels de largura, então o celular rola para o lado**.
 
 O que Ana anota enquanto o defeito está diante dela é o que um relatório precisa, e a aula 15 o
-transforma num: o requisito, R8; o navegador e a versão, Chromium 141; a largura, 360; o que ela viu;
+transforma num. As notas dela guardam o requisito, R8; o navegador e a versão, Chromium 141; a largura, 360; o que ela viu;
 a largura medida, 776; a regra, `table.shows{width:760px}`; e uma captura de tela, que a barra
 responsiva do Chrome oferece no menu da ponta direita. A correção é com Rui.
 

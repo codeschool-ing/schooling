@@ -65,7 +65,7 @@ question about the requirement, and it comes with what the person who decides ne
 - *what it might mean*: the limit could be deliberate, to stop one buyer taking a whole show, or
   an oversight; only the theatre knows which.
 
-The last line matters more than it looks. **A validation finding offers readings, not a verdict.**
+**A validation finding offers readings, not a verdict**, which is what the last line is for.
 The limit of six may exist for a good reason that nobody wrote down, and if so the answer is a
 sentence in R4 explaining it and perhaps a note on the page telling groups to phone. Ana's job is
 to make sure the question was asked by somebody who could answer it, and section 05 of this lesson

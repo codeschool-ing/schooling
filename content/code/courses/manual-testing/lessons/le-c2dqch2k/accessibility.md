@@ -4,7 +4,7 @@ version: 1
 ---
 
 Accessibility is often treated as a feature for a small group of users, added when there is time.
-The numbers say otherwise: people who cannot use a mouse, who cannot see the screen, who see it
+People who cannot use a mouse, who cannot see the screen, who see it
 enlarged or who cannot tell red from green are a share of every audience, and a theatre's audience
 includes all of them. R9 makes it a requirement for boxoffice: every page usable with the keyboard
 alone and with a screen reader, to **WCAG 2.2 level AA**, the W3C's Web Content Accessibility
@@ -68,8 +68,8 @@ The fix is one line: a `<label for="quantity">Tickets</label>` and an `id` on th
 ## What the tools see, and what they miss
 
 **axe** is a widely used automated checker, with a free browser extension and a library built into
-many test frameworks, and WAVE and Lighthouse are two others you will meet. Run one on every page: it finds
-missing alternative text, poor contrast and broken structure in seconds.
+many test frameworks, and WAVE and Lighthouse are two others you will meet. Run one on every
+page: it finds missing alternative text, poor contrast and broken structure in seconds.
 
 Then read its result knowing what it is. When this course ran axe-core 4.13 on the booking page,
 with the WCAG 2.2 AA rules, it reported **no violations at all**. It counts the placeholder as the

@@ -6,7 +6,7 @@ version: 1
 Smoke testing is sometimes described as a few minutes of clicking around a new build to see whether
 it feels all right, and sometimes as a small regression suite. Both miss what makes it useful. **A
 smoke test is a short, fixed list of checks, run on every new build before any other testing,
-that touches each major part of the product once on its main path and answers one question: is
+that touches each major part of the product once on its main path. It answers one question: is
 this build stable enough to be worth testing at all?** It does not look for defects in detail. It
 looks for the kind of failure that would waste every other test run on the build.
 

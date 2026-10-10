@@ -10,7 +10,7 @@ requirements, and the testers judge. Acceptance testing asks whether the people 
 product can do their work with it, and they judge. The theatre's manager does not want to know
 whether R5 passes. She wants to know whether she can open the box office on Saturday with this.
 
-The two questions come apart more often than you would think. Lesson 6 called the second one
+The two questions can have different answers. Lesson 6 called the second one
 **validation**: are we building the right thing, as opposed to building the thing right. Acceptance
 testing is validation made formal, with a date, a set of criteria agreed in advance and a decision
 at the end, taken by the client. `qa-fundamentals` placed it at the top of the V model, facing the
@@ -50,7 +50,7 @@ of selling kept ready in case it fails.
 
 ## Who does what
 
-The roles are where most UAT goes wrong, so they are worth stating plainly.
+Most UAT that goes wrong goes wrong over the roles.
 
 **The client decides.** They choose what acceptable means, they run the session or have their users
 run it, and they say yes or no at the end. A UAT in which the testers run the cases and the client

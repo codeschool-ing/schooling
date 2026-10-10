@@ -50,7 +50,7 @@ Feature: booking closes before the show
     And the page says "Booking for this show has closed."
 ```
 
-Three things make these useful rather than decorative.
+Three things make these useful.
 
 **Each Then can be seen.** "The total is R$ 80,00" is on the order page or it is not. Compare a
 criterion a client writes on a first try, "students get a fair price": nobody can fail it, so
@@ -87,6 +87,6 @@ to know that the format was designed for people first.
 
 It is not the whole of testing. These four say nothing about the outbox, the phone layout or the
 refund of a used order, and lesson 5's state-transition tests and lesson 7's screens still matter.
-Acceptance criteria are the client's minimum, written in the client's words: **passing them means
+Acceptance criteria are the client's minimum, written in the client's words. **Passing them means
 the client agreed it does the job, and says nothing about what nobody thought to write down.** The
 next section is about how a session with the client finds some of that.

@@ -45,13 +45,13 @@ Before telling anybody the build is broken, Ana makes sure it is the build. `Cou
 server` is one of the failures lesson 1 section 05 covers: the server was never started, it was
 stopped, or it stopped with an error. The terminal where boxoffice runs answers which. If its last
 line is Ana's own Ctrl-C, or the program was started in another directory, the problem is the lab,
-and the fix is hers; in your own run above it was exactly that, the Ctrl-C you pressed. In Ana's
+and the fix is hers. In your own run above it was exactly that, the Ctrl-C you pressed. In Ana's
 case the build was started properly and its terminal shows it ending with a traceback, so **the
 build does not start**, and that is news for Rui.
 
 The same habit applies to a single failure. A booking check that fails while the other four pass
-is worth one rerun and one look in the browser before it is reported: if the check books a show
-whose booking has closed, the check is wrong, and if it passes on the second run with nothing
+is worth one rerun and one look in the browser before it is reported. If the check books a show
+whose booking has closed, the check is wrong. If it passes on the second run with nothing
 changed, that is a finding of its own, a build that fails sometimes.
 
 ## Then, the plan

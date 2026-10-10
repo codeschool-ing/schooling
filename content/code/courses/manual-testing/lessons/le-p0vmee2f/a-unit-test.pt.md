@@ -38,8 +38,7 @@ esquerda, a porcentagem esperada à direita. **É a tabela de decisão do R5 da 
 jeito que uma máquina consegue rodar** toda vez que o código muda, o que uma pessoa não tem como
 bancar à mão.
 
-O executor de testes do próprio Python é o `unittest`, e ele vem com o Python, então não há nada
-para instalar. Quando roda sem nenhum arquivo nomeado, ele procura no diretório atual arquivos
+O executor de testes do próprio Python é o `unittest`. Quando roda sem nenhum arquivo nomeado, ele procura no diretório atual arquivos
 chamados `test_*.py` e roda todos os testes que houver neles. O `-v` imprime uma linha por teste em
 vez de um ponto. No Windows o comando começa com `py` ou `python` em vez de `python3`, como na aula
 1.

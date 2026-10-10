@@ -75,11 +75,11 @@ discussão na porta com uma família segurando três ingressos de meia. A aula 3
 
 ## Tipos de revisão
 
-Revisões vão de um colega lendo uma página até uma reunião com moderador e lista de verificação. Os
-nomes das normas, do menos ao mais formal: a *revisão informal*, uma pessoa lê e manda comentários;
-o *walkthrough*, o autor conduz os outros pelo documento; a *revisão técnica*, colegas julgam o
-documento diante do seu propósito; e a *inspeção*, com papéis definidos, lista de verificação e
-números guardados sobre o que foi encontrado. Os nove requisitos de um teatro precisam do primeiro
+Revisões vão de um colega lendo uma página até uma reunião com moderador e lista de verificação. As
+normas nomeiam quatro, do menos ao mais formal. Na *revisão informal*, uma pessoa lê e manda
+comentários. No *walkthrough*, o autor conduz os outros pelo documento. Na *revisão técnica*, colegas
+julgam o documento diante do seu propósito, e a *inspeção* tem papéis definidos, lista de verificação
+e números guardados sobre o que foi encontrado. Os nove requisitos de um teatro precisam do primeiro
 tipo e de uma hora. As regras de pagamento de um banco justificam o último.
 
 A mesma leitura serve para coisas além de requisitos. O teste da aula 3, se um estranho conseguiria

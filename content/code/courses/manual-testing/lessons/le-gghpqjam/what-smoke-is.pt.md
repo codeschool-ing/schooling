@@ -7,7 +7,7 @@ O teste de fumaça às vezes é descrito como alguns minutos clicando por uma ve
 ela parece estar bem, e às vezes como uma pequena suíte de regressão. As duas descrições perdem o
 que o torna útil. **Um teste de fumaça é uma lista curta e fixa de checagens, rodada em toda versão
 nova antes de qualquer outro teste, que toca cada parte principal do produto uma vez, no caminho
-principal, e responde a uma pergunta: esta versão está estável o bastante para valer a pena
+principal. Ele responde a uma pergunta: esta versão está estável o bastante para valer a pena
 testá-la?** Ele não procura defeitos em detalhe. Procura o tipo de falha que desperdiçaria todos os
 outros testes rodados nessa versão.
 

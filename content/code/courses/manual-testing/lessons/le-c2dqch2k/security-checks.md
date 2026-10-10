@@ -10,9 +10,9 @@ weaker than it looks, the address that should start with `https` and does not. E
 defender wants to hear about before anybody else finds it, and none of it needs an attack.
 
 One rule comes first, and it is not a formality. **Test only systems you have been given permission
-to test, and only in the ways agreed.** Testing somebody else's system without permission can be a crime in
-many countries, Brazil included, whatever the intention. Everything in this section happens on your own
-copy of boxoffice.
+to test, and only in the ways agreed.** Testing somebody else's
+system without permission can be a crime in many countries, Brazil included, whatever the
+intention. Everything in this section happens on your own copy of boxoffice.
 
 ## The error page that says too much
 
@@ -34,8 +34,8 @@ ValueError: invalid literal for int() with base 10: &#x27;two&#x27;
 
 In a browser the same request shows the traceback as text on a white page. Read it the way a
 stranger would. It gives the **full path of the program** on the server, `/home/ana/boxoffice/`,
-and with it, very likely, the name of the account it runs under. It names the language, quotes **lines of the source
-code** with their line numbers, and shows how the quantity is read and which function reads it.
+and with it, very likely, the name of the account it runs under. It names the language, quotes
+**lines of the source code** with their line numbers, and shows how the quantity is read and which function reads it.
 None of that is a password, and all of it is free knowledge for somebody planning something worse:
 it saves them the guessing. The status code confirms the program failed rather than refused:
 
@@ -117,8 +117,7 @@ with the exact message, the way lesson 12 put the student discount in front of t
 ## Where this goes next
 
 Security testers work from shared lists of what goes wrong most often. The best known is the
-**OWASP Top 10**, maintained by the OWASP Foundation, and information leaking
-through error messages is part of it. Scanners and intercepting proxies exist for the work beyond
+**OWASP Top 10**, maintained by the OWASP Foundation, and information leaking through error messages is part of it. Scanners and intercepting proxies exist for the work beyond
 this section, and they are used with permission, by people trained to use them.
 `security-fundamentals` and `non-functional-testing` are the two courses in this track that teach
 them. For a manual tester the habit is enough: **read every unexpected page as a stranger would,

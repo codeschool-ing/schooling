@@ -57,7 +57,7 @@ Três coisas, e nenhuma pede que você escreva código.
 
 **Você fica sabendo o que já está coberto.** Se os testes de unidade dos desenvolvedores rodam todas
 as linhas da tabela de desconto a cada mudança, então o seu tempo manual com descontos rende mais
-no que esses testes não veem: a página do pedido, a caixa de estudante no celular, um membro que
+em outro lugar, no que esses testes não veem. Isso quer dizer a página do pedido, a caixa de estudante no celular, um membro que
 esqueceu de confirmar a conta. Perguntar "o que os testes de unidade cobrem?" numa reunião de
 planejamento é uma pergunta justa, e a resposta muda o plano da aula 1.
 

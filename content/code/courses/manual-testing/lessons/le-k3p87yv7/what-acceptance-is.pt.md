@@ -11,7 +11,7 @@ pessoas que vão ficar com o produto conseguem trabalhar com ele, e quem julga s
 do teatro não quer saber se o R5 passa. Ela quer saber se consegue abrir a bilheteria no sábado
 com isto.
 
-As duas perguntas se separam mais do que parece. A aula 6 chamou a segunda de **validação**:
+As duas perguntas podem ter respostas diferentes. A aula 6 chamou a segunda de **validação**:
 estamos construindo a coisa certa, em vez de construindo a coisa do jeito certo. O teste de
 aceitação é a validação formalizada, com data, um conjunto de critérios combinado antes e uma
 decisão no fim, tomada pelo cliente. O `qa-fundamentals` o colocou no topo do modelo V, de frente
@@ -51,7 +51,7 @@ Prince pela 1.1, com o jeito antigo de vender pronto para o caso de ela falhar.
 
 ## Quem faz o quê
 
-Os papéis são onde a maioria dos UATs dá errado, então vale dizê-los com todas as letras.
+A maioria dos UATs que dão errado dá errado nos papéis.
 
 **O cliente decide.** Ele escolhe o que significa aceitável, conduz a sessão ou põe seus usuários
 para conduzi-la, e diz sim ou não no fim. Um UAT em que os testadores rodam os casos e o cliente

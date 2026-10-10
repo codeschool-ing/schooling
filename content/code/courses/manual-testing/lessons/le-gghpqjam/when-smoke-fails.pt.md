@@ -46,13 +46,13 @@ Antes de dizer a alguém que a versão está quebrada, Ana se certifica de que �
 connect to server` é uma das falhas que a seção 05 da aula 1 cobre: o servidor nunca foi iniciado,
 foi parado, ou parou com um erro. O terminal onde o boxoffice roda responde qual. Se a última linha
 é o Ctrl-C da própria Ana, ou se o programa foi iniciado em outro diretório, o problema é o
-laboratório, e a correção é dela; na sua própria rodada acima foi exatamente isso, o Ctrl-C que você
+laboratório, e a correção é dela. Na sua própria rodada acima foi exatamente isso, o Ctrl-C que você
 apertou. No caso de Ana a versão foi iniciada direito e o terminal dela mostra o programa terminando
 com um traceback, então **a versão não inicia**, e isso é notícia para Rui.
 
 O mesmo hábito vale para uma falha isolada. Uma checagem de reserva que falha enquanto as outras
-quatro passam merece uma segunda rodada e uma olhada no navegador antes de ser relatada: se a
-checagem reserva um espetáculo cujas reservas já fecharam, a checagem está errada, e se ela passa na
+quatro passam merece uma segunda rodada e uma olhada no navegador antes de ser relatada. Se a
+checagem reserva um espetáculo cujas reservas já fecharam, a checagem está errada. Se ela passa na
 segunda rodada sem nada mudar, isso é um achado à parte, uma versão que falha às vezes.
 
 ## Depois, o plano

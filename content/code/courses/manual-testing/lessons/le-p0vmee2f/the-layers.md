@@ -56,8 +56,8 @@ the page can see.
 Three things, none of which needs you to write code.
 
 **You learn what is already covered.** If the developers' unit tests run every row of the
-discount table on every change, then your manual time on discounts is better spent on what those
-tests cannot see: the order page, the student box on a phone, a member who forgot to confirm.
+discount table on every change, then your manual time on discounts is better spent elsewhere,
+on what those tests cannot see. That means the order page, the student box on a phone, a member who forgot to confirm.
 Asking "what do the unit tests cover?" in a planning meeting is a fair question, and the answer
 changes the plan of lesson 1.
 

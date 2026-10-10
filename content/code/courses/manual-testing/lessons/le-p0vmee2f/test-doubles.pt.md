@@ -53,8 +53,7 @@ Ran 1 test in 0.001s
 OK
 ```
 
-Ele passa, e repare no que ele não precisou: nenhum servidor estava rodando, e nada chegou à caixa
-de saída. O teste conferiu a conversa entre `signup` e o código de e-mail, que era a única coisa de
+Ele passa sem nenhum servidor rodando, e nada chegou à caixa de saída. O teste conferiu a conversa entre `signup` e o código de e-mail, que era a única coisa de
 que ele tratava. O `unittest.mock` está na biblioteca padrão; outras linguagens têm os seus kits, e
 todos fazem isso.
 

@@ -55,7 +55,7 @@ echo "$failed of 5 checks failed"
 [ "$failed" -eq 0 ]
 ```
 
-Dois detalhes carregam mais do que parecem. `${form:+-d "$form"}` acrescenta o `-d` do curl e o
+Dois detalhes passam despercebidos com facilidade. `${form:+-d "$form"}` acrescenta o `-d` do curl e o
 formulário só quando o campo não está vazio, e é assim que um mesmo laço envia tanto um pedido
 simples quanto uma reserva. E o padrão da página inicial, `The Seagull.*Hamlet.*The Little Prince`,
 pede os três títulos naquela ordem numa mesma linha, e eles estão, porque o boxoffice escreve a
@@ -99,7 +99,7 @@ controle.
 ## Mantendo-a pequena
 
 Um laço tão fácil de estender convida a estendê-lo. Cada checagem acrescentada é um segundo a mais e
-mais uma coisa que pode falhar por um motivo que não é a versão, e uma lista de fumaça que cresce até
+mais uma coisa que pode falhar por um motivo que não é a versão. Uma lista de fumaça que cresce até
 trinta checagens de descontos e reembolsos virou uma suíte de regressão que roda primeiro, que é o
 assunto da aula 10. O teste para uma linha nova é o da seção 03: a versão deixa de valer o teste se
 isto falhar?

@@ -24,8 +24,8 @@ The theatre already has a website, and its statistics say what its visitors used
 | everything else | 3% |
 
 Seven visits in ten come from a phone, which turns R8's 360 pixels from a detail into the main
-case. And the first two rows alone are seven in ten, so a defect that only shows in Chrome on an
-Android phone reaches nearly half of the audience.
+case. And the first row alone is 46%, so a defect that only shows in Chrome on an Android phone
+reaches nearly half of the audience.
 
 **Audience data describes the people the old site worked for.** If the old site had been broken in
 Firefox, Firefox users would have stopped coming, and the statistics would show a small Firefox
@@ -67,9 +67,8 @@ Put together, the two inputs give every cell a depth rather than a yes or no:
 
 A **full pass** runs every case. A **short pass** runs lesson 8's smoke list and the cases for the
 highest risks, and then looks at each page at that size: does everything show, can every control be
-reached and used. Three full passes
-and three short ones fit in the time fourteen full passes would not, and every engine and both
-sizes are in it.
+reached and used. Three full passes and three short ones fit in the time fourteen full passes
+would not, and every engine and both sizes are in it.
 
 Two rules are worth keeping beyond this example. **Every engine gets at least one cell**, because
 engines are where the differences are, however small an engine's share. And the cases that carry

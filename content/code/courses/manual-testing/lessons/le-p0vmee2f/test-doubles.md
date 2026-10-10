@@ -52,8 +52,8 @@ Ran 1 test in 0.001s
 OK
 ```
 
-It passes, and look at what it did not need: no server was running, and nothing reached the outbox. The test checked the conversation between `signup` and the mail
-code, which is the one thing it was about. `unittest.mock` is in the standard library; other
+It passes with no server running, and nothing reached the outbox. The test checked the
+conversation between `signup` and the mail code, which is the one thing it was about. `unittest.mock` is in the standard library; other
 languages have their own kits, and they all do this.
 
 ## The fake clock
@@ -86,7 +86,8 @@ ana@laptop:~$ curl -s -d 'email=member@example.org&show=S1&quantity=2' http://12
 ```
 
 The shows are scheduled from the pinned date, so on a computer set to São Paulo time these
-transcripts come out the same whatever today's date is; lesson 21 is about what changes elsewhere. On Windows the variable is set before the command instead:
+transcripts come out the same whatever today's date is; lesson 21 is about what changes elsewhere.
+On Windows the variable is set before the command instead:
 `$env:BOXOFFICE_NOW = "2026-10-10T19:30:00-03:00"` in PowerShell, then `python boxoffice.py`. That
 line was not run for this course. To go back to the real clock, close that terminal, or run
 `Remove-Item Env:BOXOFFICE_NOW`; on Linux and macOS the variable only applied to the one command.
