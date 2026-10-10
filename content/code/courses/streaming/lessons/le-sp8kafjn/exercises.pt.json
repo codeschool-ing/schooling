@@ -1,0 +1,391 @@
+{
+  "ex-ngkk4tyb": {
+    "prompt": "Um processador emite cada janela dois minutos depois do fim dela pelo próprio relógio. O que dá errado quando o tópico é relido no dia seguinte?",
+    "choices": [
+      {
+        "text": "Nada, desde que o relógio do processador esteja sincronizado com NTP",
+        "why": "Um relógio certo ainda mede o momento da releitura, que não tem nada a ver com os eventos."
+      },
+      {
+        "text": "As janelas fecham em momentos sem relação com os eventos, e os resultados mudam",
+        "why": "Isso. É tempo de processamento, com o defeito da lição 9: a resposta depende de quando rodou."
+      },
+      {
+        "text": "Toda janela é emitida duas vezes, uma na execução original e outra na releitura",
+        "why": "Uma releitura começa do zero; o problema é quais eventos cada janela contém."
+      },
+      {
+        "text": "A releitura é recusada pelo Kafka",
+        "why": "O Kafka aceita ser lido de novo; é para isso que serve um log."
+      }
+    ]
+  },
+  "ex-5cqs31e5": {
+    "prompt": "O que um processador de fato sabe que permite estimar até onde o tempo chegou?",
+    "choices": [
+      {
+        "text": "O horário do relógio de parede onde ele roda",
+        "why": "Isso é tempo de processamento, que não diz nada sobre os eventos."
+      },
+      {
+        "text": "Quantos eventos cada partição vai mandar",
+        "why": "Nada diz isso a ele de antemão."
+      },
+      {
+        "text": "Os tempos de evento que já viu",
+        "why": "Isso. Eles andam para a frente, de forma irregular, e são a matéria-prima do watermark."
+      },
+      {
+        "text": "Um sinal que cada caixa manda quando termina um minuto",
+        "why": "Nenhum caixa manda isso; o de Natal nem avisou que estava segurando vendas."
+      }
+    ]
+  },
+  "ex-h7f1jcs8": {
+    "prompt": "A afirmação de um processador \"não espero mais nenhum evento mais antigo que este horário\" se chama ___.",
+    "blanks": [
+      {
+        "accept": [
+          "watermark",
+          "marca d'agua"
+        ]
+      }
+    ]
+  },
+  "ex-svped7hd": {
+    "prompt": "O tempo de evento mais recente visto é 09:12:30 e o limite é de 2 minutos. Quantos segundos depois das 09:10:00 está o watermark?",
+    "unit": "segundos"
+  },
+  "ex-9f6ht93a": {
+    "prompt": "Limite de 3 minutos. Os tempos de evento chegam nesta ordem: 10:00:00, 10:04:00, 10:02:00, 10:06:30, 10:05:00. Quantos minutos depois das 10:00 está o watermark depois do último?",
+    "hint": "O mais recente visto não é o último a chegar.",
+    "unit": "minutos"
+  },
+  "ex-9vt4e3q4": {
+    "prompt": "Uma venda das 09:08:50 chega depois de uma das 09:13:05. Por que o watermark não volta?",
+    "choices": [
+      {
+        "text": "Vendas antigas são descartadas antes de o watermark vê-las",
+        "why": "Se ela é descartada depende do watermark; o watermark vem antes."
+      },
+      {
+        "text": "Reabriria janelas já emitidas",
+        "why": "Isso. É o horário mais recente visto, e ele continua sendo 09:13:05."
+      },
+      {
+        "text": "O watermark só usa o primeiro evento de cada janela",
+        "why": "Ele usa o tempo de evento mais recente visto, seja qual for a janela."
+      },
+      {
+        "text": "O Kafka ordena a partição antes de o processador lê-la",
+        "why": "Uma partição está em ordem de chegada; nada a ordena."
+      }
+    ]
+  },
+  "ex-06s3ksmx": {
+    "prompt": "Quando é possível um watermark perfeito, que nunca erra?",
+    "choices": [
+      {
+        "text": "Quando o limite é maior que o maior atraso que algum evento já teve",
+        "why": "Qualquer limite pode ser vencido por uma origem que segure eventos por mais tempo, como fez Natal."
+      },
+      {
+        "text": "Quando o tópico usa LogAppendTime",
+        "why": "Isso torna o carimbo do broker, mas o tempo do evento dentro ainda pode vir fora de ordem."
+      },
+      {
+        "text": "Quando o processador roda na mesma máquina que o broker",
+        "why": "Onde ele roda não diz nada sobre a ordem dos eventos."
+      },
+      {
+        "text": "Quando uma origem escreve os eventos em ordem, sem guardar nada",
+        "why": "Isso. Aí ela sabe até onde chegou; sistemas reais quase nunca são assim."
+      }
+    ]
+  },
+  "ex-e6mg3fhq": {
+    "prompt": "No `watermark.py` com limite de 2 minutos, depois de qual número de venda as janelas das 09:00 e das 09:05 são emitidas?",
+    "unit": "venda"
+  },
+  "ex-jnrqxe7d": {
+    "prompt": "Sem atraso permitido, a venda 8 (09:08:50) é descartada. O watermark quando ela chegou era 09:11:05. Por que ela está atrasada demais?",
+    "choices": [
+      {
+        "text": "Ela aconteceu mais de dois minutos antes da venda mais recente que o processador viu",
+        "why": "Isso sozinho não a descartaria; o que importa é se a janela dela já foi passada."
+      },
+      {
+        "text": "A janela dela terminou às 09:10, e o watermark já tinha passado disso",
+        "why": "Isso. A janela foi emitida e, sem atraso permitido, esquecida."
+      },
+      {
+        "text": "As vendas de Natal vão para o tópico de atrasadas, diga o watermark o que disser",
+        "why": "As vendas 2 e 5 de Natal foram contadas normalmente."
+      },
+      {
+        "text": "O watermark voltou quando ela chegou",
+        "why": "Ele nunca volta."
+      }
+    ]
+  },
+  "ex-h93h071h": {
+    "prompt": "Com limite de 2 minutos e sem atraso permitido, quantos centavos o programa informa para a janela das 09:05 às 09:10?",
+    "hint": "Vendas 4 e 5; a venda 8 é descartada.",
+    "unit": "centavos"
+  },
+  "ex-sq2c1dzk": {
+    "prompt": "Por que a venda 6 faz o programa emitir duas janelas de uma vez?",
+    "choices": [
+      {
+        "text": "Ela pertence às duas janelas",
+        "why": "Janelas tumbling não se sobrepõem; a venda 6 está em 09:10 às 09:15."
+      },
+      {
+        "text": "O programa emite janelas em pares, a mais antiga das duas primeiro",
+        "why": "A venda 10 emite uma."
+      },
+      {
+        "text": "Ela leva o watermark seis minutos à frente, além do fim de duas janelas",
+        "why": "Isso. De 09:04:20 para 09:10:30."
+      },
+      {
+        "text": "É a primeira venda de uma hora nova, então toda janela aberta é fechada",
+        "why": "Ela é das 09:12; a hora não tem nada a ver."
+      }
+    ]
+  },
+  "ex-qxa9dvvj": {
+    "prompt": "Com 5 minutos de atraso permitido, a venda 8 atualiza a janela das 09:05. A venda 11 (09:04:30) continua descartada. Por quê?",
+    "choices": [
+      {
+        "text": "A janela dela terminou às 09:05, então foi esquecida quando o watermark passou de 09:10",
+        "why": "Isso. Quando ela chegou o watermark estava em 09:19:00."
+      },
+      {
+        "text": "O atraso permitido só vale para a janela sendo emitida naquele momento",
+        "why": "Vale para toda janela, contado do fim de cada uma."
+      },
+      {
+        "text": "Uma janela só pode ser atualizada uma vez",
+        "why": "Não existe esse limite; quantas vendas atrasadas forem podem atualizar uma janela guardada."
+      },
+      {
+        "text": "As vendas de Natal ficam fora das atualizações atrasadas",
+        "why": "A venda 8 também é de Natal, e foi contada."
+      }
+    ]
+  },
+  "ex-14wr58z6": {
+    "prompt": "Atualizações atrasadas vão para um leitor que anexa cada resultado como linha nova e soma a coluna. O que acontece com a janela das 09:05?",
+    "choices": [
+      {
+        "text": "Nada, porque o segundo resultado substitui o primeiro",
+        "why": "Substituir é o que um upsert faz; um anexo guarda os dois."
+      },
+      {
+        "text": "As vendas 4 e 5 são contadas duas vezes",
+        "why": "Isso. Há duas linhas para uma janela, e a soma junta as duas."
+      },
+      {
+        "text": "A venda 8 se perde",
+        "why": "Ela está na segunda linha; o problema é que a primeira também continua lá."
+      },
+      {
+        "text": "O processador se recusa a emitir uma atualização para um leitor que anexa",
+        "why": "O processador não sabe como a saída dele é lida."
+      }
+    ]
+  },
+  "ex-tybmp4kv": {
+    "prompt": "Janelas tumbling de cinco minutos e 30 minutos de atraso permitido. Quantas janelas a mais por chave ficam abertas a cada momento por causa do atraso permitido?",
+    "unit": "janelas"
+  },
+  "ex-d03tnv2g": {
+    "prompt": "Ligue cada configuração de motor ao que ela decide.",
+    "pairs": [
+      {
+        "left": "A desordem limitada do Flink",
+        "right": "quando uma janela é emitida pela primeira vez"
+      },
+      {
+        "left": "O allowedLateness do Flink",
+        "right": "por quanto tempo uma janela emitida é guardada para atualizações"
+      },
+      {
+        "left": "O grace period do Kafka Streams",
+        "right": "os dois: a janela aceita registros até o stream time passar do fim mais o grace"
+      },
+      {
+        "left": "O sideOutputLateData do Flink",
+        "right": "para onde vão os eventos atrasados demais para qualquer janela"
+      }
+    ],
+    "right_distractors": [
+      "quantas partições um tópico tem"
+    ]
+  },
+  "ex-we7s64cd": {
+    "prompt": "O que mandar vendas atrasadas para um tópico próprio dá que descartá-las não dá?",
+    "choices": [
+      {
+        "text": "Elas acabam contadas na janela",
+        "why": "A janela não existe mais; o tópico é um registro, não um jeito de voltar."
+      },
+      {
+        "text": "O processador roda mais rápido, sem ter de descartar nada",
+        "why": "Produzir um registro custa quase o mesmo que descartá-lo."
+      },
+      {
+        "text": "O watermark volta para incluí-las",
+        "why": "Ele nunca volta."
+      },
+      {
+        "text": "Um rastro delas, para contar e inspecionar",
+        "why": "Isso. O dado atrasado deixa de ser invisível."
+      }
+    ]
+  },
+  "ex-qftjqt3q": {
+    "prompt": "O número de eventos atrasados por hora no tópico de atrasadas salta cem vezes numa tarde. Qual é a leitura mais provável?",
+    "choices": [
+      {
+        "text": "O limite está grande demais e deveria diminuir",
+        "why": "Um limite grande demais produz menos eventos atrasados, não mais."
+      },
+      {
+        "text": "O Kafka perdeu o watermark",
+        "why": "O Kafka não guarda o watermark; o processador o calcula."
+      },
+      {
+        "text": "Um caixa, uma rede ou um relógio deu errado",
+        "why": "Isso. Um limite que combina produz um fio constante; um salto é uma mudança no stream."
+      },
+      {
+        "text": "As vendas dobraram naquela tarde",
+        "why": "O dobro de vendas daria o dobro de atrasadas, não cem vezes."
+      }
+    ]
+  },
+  "ex-f9s54ag3": {
+    "prompt": "No dia medido, 292 de 360 vendas tinham distância 0, 311 estavam a até 60 segundos e 322 a até 120. Quantas vendas subir o limite de 1 para 2 minutos salva de chegar atrasada?",
+    "unit": "vendas"
+  },
+  "ex-ejxaewas": {
+    "prompt": "O p85 da distância é 40 segundos e o p90 é 1.847 segundos. O que o salto diz sobre escolher o limite?",
+    "choices": [
+      {
+        "text": "Usar o p90, meia hora, já que 90% é a meta usual",
+        "why": "Isso faz todo resultado esperar meia hora para pegar algumas vendas retidas de Natal."
+      },
+      {
+        "text": "Usar a distância média",
+        "why": "A média mistura as duas populações e não serve a nenhuma."
+      },
+      {
+        "text": "Um limite logo depois do primeiro grupo; o vão mostra que o segundo pede outras ferramentas",
+        "why": "Isso. Atraso permitido, tópico de atrasadas e batch noturno cuidam do grupo de horas."
+      },
+      {
+        "text": "Não usar limite nenhum, já que a maioria das vendas chega em ordem",
+        "why": "Sem limite, toda entrega lenta de segundos vira atrasada."
+      }
+    ]
+  },
+  "ex-0s6bcxnd": {
+    "prompt": "Com limite de 6 minutos em vez de 2, o que as doze vendas ganharam e perderam?",
+    "choices": [
+      {
+        "text": "Não ganharam nada, perderam latência",
+        "why": "A venda 8 foi contada, o que não aconteceu com 2 minutos."
+      },
+      {
+        "text": "Venda 8 contada; janela das 09:05 emitida quatro vendas depois",
+        "why": "Isso. Completude comprada com latência."
+      },
+      {
+        "text": "As duas vendas atrasadas foram contadas, e as janelas foram emitidas nos mesmos momentos",
+        "why": "A venda 11 continuou descartada, e as janelas esperaram mais."
+      },
+      {
+        "text": "Perderam a venda 8, ganharam velocidade",
+        "why": "É o contrário: um limite maior espera mais e perde menos."
+      }
+    ]
+  },
+  "ex-0dc131w3": {
+    "prompt": "Por que um processador usa o MENOR dos watermarks das partições?",
+    "choices": [
+      {
+        "text": "Uma partição atrasada ainda tem eventos anteriores a entregar",
+        "why": "Isso. Não há ordem entre partições, então o tempo só chegou até onde a mais lenta chegou."
+      },
+      {
+        "text": "O menor é mais barato de calcular",
+        "why": "Qualquer um é uma comparação; o motivo é correção."
+      },
+      {
+        "text": "O Kafka exige isso",
+        "why": "O Kafka não tem watermark; o processador escolhe a regra."
+      },
+      {
+        "text": "Para emitir resultados o mais cedo possível",
+        "why": "O menor é o que emite mais tarde, não mais cedo."
+      }
+    ]
+  },
+  "ex-kk8czsv9": {
+    "prompt": "Três partições têm tempos de evento mais recentes 09:21:00, 09:12:30 e 09:17:45. Com limite de 2 minutos, quantos minutos depois das 09:00 está o watermark?",
+    "unit": "minutos"
+  },
+  "ex-0k1az7te": {
+    "prompt": "Um tópico tem 12 partições e as cinco lojas da Ponto Final como chaves. Um job Flink sem configuração de ociosidade o lê e nunca emite uma janela. Qual a causa mais provável?",
+    "choices": [
+      {
+        "text": "O limite é pequeno demais para as lojas, então toda venda é descartada como atrasada",
+        "why": "Um limite pequeno emite cedo e descarta mais; não impede a emissão."
+      },
+      {
+        "text": "Partições sem chave seguram o watermark mínimo em nada",
+        "why": "Isso. Cinco chaves chegam a no máximo cinco das doze partições; o resto fica vazio."
+      },
+      {
+        "text": "Doze partições são demais para o Flink acompanhar um watermark em cada",
+        "why": "O Flink lê milhares; o problema é que algumas estão vazias."
+      },
+      {
+        "text": "Os relógios das lojas estão errados",
+        "why": "Relógios errados dão janelas erradas, não nenhuma."
+      }
+    ]
+  },
+  "ex-kyz2vkf9": {
+    "prompt": "Ponha em ordem o que acontece com a janela das 09:05 às 09:10 (limite de 2 minutos, atraso permitido de 5).",
+    "items": [
+      "As vendas 4 e 5 são contadas nela",
+      "A venda 6 leva o watermark além das 09:10, e ela é emitida com duas vendas",
+      "A venda 8 chega atrasada e a atualiza para três vendas",
+      "A venda 10 leva o watermark além das 09:15, e ela é esquecida"
+    ]
+  },
+  "ex-m5e7y1qc": {
+    "prompt": "A Ponto Final quer vendas a cada cinco minutos num painel que faz upsert, mais totais diários exatos para a contabilidade. Qual desenho combina com a lição?",
+    "choices": [
+      {
+        "text": "Um limite de quatro horas, para os números do painel ficarem exatos sem precisar do batch",
+        "why": "Toda janela esperaria quatro horas; isso é o batch, sem a completude dele."
+      },
+      {
+        "text": "Sem watermark, e o painel lê o tópico pelo tempo de chegada",
+        "why": "Essa é a coluna errada da lição 9."
+      },
+      {
+        "text": "Limite curto com atraso permitido, atrasadas num tópico e o batch noturno para os totais",
+        "why": "Isso. Rápido e quase certo no painel, exato na manhã seguinte nos livros."
+      },
+      {
+        "text": "Emitir cada janela uma vez e descartar as atrasadas em silêncio",
+        "why": "Descartes silenciosos deixam a contabilidade errada sem rastro."
+      }
+    ]
+  }
+}

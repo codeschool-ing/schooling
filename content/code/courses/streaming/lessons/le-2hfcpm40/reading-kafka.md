@@ -28,36 +28,28 @@ ubuntu@stream:~/work$ python tills.py --count 200 --rate 0
 Save this as `~/work/spark_raw.py`:
 
 ```schooling-example
-@file spark_raw.py
-@lang python
---- What it is for, in one line.
-"""spark_raw.py: the sales topic as Spark sees it, before any parsing."""
-import sys
-
-from pyspark.sql import SparkSession
-
---- **A Spark program starts by asking for a session**, and this one is a whole Spark inside your Python process: `local[2]` means two worker threads on this machine and no cluster. The first `config` line is the Kafka connector from the last section. The time zone is set so that Spark prints times as the shops' clocks read them, whatever zone your machine is in.
-spark = (SparkSession.builder.appName("spark-raw").master("local[2]")
-         .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.13:4.1.3")
-         .config("spark.sql.session.timeZone", "America/Sao_Paulo")
-         .config("spark.ui.showConsoleProgress", "false")
-         .getOrCreate())
-spark.sparkContext.setLogLevel("ERROR")
-
---- `readStream` instead of `read` is the whole difference between a stream and a table here. **`startingOffsets` says where to begin the first time this query runs**, and `earliest` means the oldest sale the topic still holds. The schema is printed and flushed at once, so it reaches the screen before anything Spark itself prints.
-raw = (spark.readStream.format("kafka")
-       .option("kafka.bootstrap.servers", "localhost:9092")
-       .option("subscribe", "sales")
-       .option("startingOffsets", "earliest")
-       .load())
-raw.printSchema()
-sys.stdout.flush()
-
---- The value is cast from bytes to text, five columns are kept, and the result goes to the console. `availableNow` makes the query read what is in the topic now and then stop, which section 07 explains.
-query = (raw.withColumn("value", raw.value.cast("string"))
-         .select("key", "value", "partition", "offset", "timestamp")
-         .writeStream.format("console").trigger(availableNow=True).start())
-query.awaitTermination()
+{
+  "file": "spark_raw.py",
+  "language": "python",
+  "parts": [
+    {
+      "code": "\"\"\"spark_raw.py: the sales topic as Spark sees it, before any parsing.\"\"\"\nimport sys\n\nfrom pyspark.sql import SparkSession\n",
+      "note": "What it is for, in one line."
+    },
+    {
+      "code": "spark = (SparkSession.builder.appName(\"spark-raw\").master(\"local[2]\")\n         .config(\"spark.jars.packages\", \"org.apache.spark:spark-sql-kafka-0-10_2.13:4.1.3\")\n         .config(\"spark.sql.session.timeZone\", \"America/Sao_Paulo\")\n         .config(\"spark.ui.showConsoleProgress\", \"false\")\n         .getOrCreate())\nspark.sparkContext.setLogLevel(\"ERROR\")\n",
+      "note": "**A Spark program starts by asking for a session**, and this one is a whole Spark inside your Python process: `local[2]` means two worker threads on this machine and no cluster. The first `config` line is the Kafka connector from the last section. The time zone is set so that Spark prints times as the shops' clocks read them, whatever zone your machine is in."
+    },
+    {
+      "code": "raw = (spark.readStream.format(\"kafka\")\n       .option(\"kafka.bootstrap.servers\", \"localhost:9092\")\n       .option(\"subscribe\", \"sales\")\n       .option(\"startingOffsets\", \"earliest\")\n       .load())\nraw.printSchema()\nsys.stdout.flush()\n",
+      "note": "`readStream` instead of `read` is the whole difference between a stream and a table here. **`startingOffsets` says where to begin the first time this query runs**, and `earliest` means the oldest sale the topic still holds. The schema is printed and flushed at once, so it reaches the screen before anything Spark itself prints."
+    },
+    {
+      "code": "query = (raw.withColumn(\"value\", raw.value.cast(\"string\"))\n         .select(\"key\", \"value\", \"partition\", \"offset\", \"timestamp\")\n         .writeStream.format(\"console\").trigger(availableNow=True).start())\nquery.awaitTermination()",
+      "note": "The value is cast from bytes to text, five columns are kept, and the result goes to the console. `availableNow` makes the query read what is in the topic now and then stop, which section 07 explains."
+    }
+  ]
+}
 ```
 
 Spark writes a great deal about itself on standard error: the libraries it loads, the warnings of

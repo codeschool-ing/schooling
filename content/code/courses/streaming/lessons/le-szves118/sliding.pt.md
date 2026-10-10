@@ -17,7 +17,9 @@ o que está em "os últimos cinco minutos", então essas são as únicas janelas
 Este programa calcula as janelas que **terminam** em cada venda: para cada venda em `t`, a janela de
 `t − 5 minutos` até `t`, com todas as vendas dentro dela, **as duas bordas incluídas**:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python windows.py sliding 5
+```
 
 Dez janelas, uma por venda. As mais cheias têm quatro vendas, e são três: as janelas que terminam às
 09:05:00, às 09:06:20 e às 09:08:50. A que termina às 09:05:00 começa às 09:00:00 e contém a venda 1,

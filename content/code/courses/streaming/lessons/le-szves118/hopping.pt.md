@@ -20,7 +20,9 @@ do avanço**. Aqui são duas. A venda 3, às 09:03:55, está nas janelas que com
 a venda 4, às 09:05:00, está nas que começam às 09:00 e às 09:05, e não na que começa às 08:55, que
 terminou exatamente às 09:05:00.
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python windows.py hopping 10 5
+```
 
 Seis janelas onde a tumbling tinha quatro, e as contagens somam vinte, o dobro das dez vendas,
 porque cada venda foi contada em duas janelas. **Os resultados de uma janela hopping não podem ser

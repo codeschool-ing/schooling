@@ -1,0 +1,691 @@
+[
+  {
+    "id": "ex-bv18nfrb",
+    "version": 1,
+    "section": "topics-and-partitions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a partition of a Kafka topic?",
+    "choices": [
+      {
+        "text": "A log of its own, with offsets that start at 0",
+        "correct": true,
+        "why": "Right. A topic of three partitions is three logs under one name."
+      },
+      {
+        "text": "A copy of the whole topic kept on another node for safety",
+        "correct": false,
+        "why": "That is a replica, which lesson 5 covers. A partition holds a share of the messages, not all of them."
+      },
+      {
+        "text": "A time range of the topic, such as one day of messages",
+        "correct": false,
+        "why": "Time ranges are closer to segments, and they live inside a partition."
+      },
+      {
+        "text": "A filter that a consumer applies when reading",
+        "correct": false,
+        "why": "Partitions are how the data is stored, decided when it is written."
+      }
+    ]
+  },
+  {
+    "id": "ex-6m5eax5e",
+    "version": 1,
+    "section": "topics-and-partitions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two sales of sales are at offset 40 of partition 0 and offset 12 of partition 2. Which was written first?",
+    "choices": [
+      {
+        "text": "The one at offset 12, because its offset is smaller",
+        "correct": false,
+        "why": "Offsets are counted per partition; comparing them across partitions compares two unrelated counters."
+      },
+      {
+        "text": "The one at offset 40, because partition 0 is read first",
+        "correct": false,
+        "why": "No partition is read first; they are read side by side."
+      },
+      {
+        "text": "The offsets do not say",
+        "correct": true,
+        "why": "Right. Kafka keeps no order between partitions."
+      },
+      {
+        "text": "Both at once, since offsets are assigned by one clock for the whole topic",
+        "correct": false,
+        "why": "There is no topic-wide counter or clock; each partition has its own."
+      }
+    ]
+  },
+  {
+    "id": "ex-ggc1j9bj",
+    "version": 1,
+    "section": "topics-and-partitions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In kafka-topics.sh --describe, what does the Leader column say about a partition?",
+    "choices": [
+      {
+        "text": "The node that takes its writes and serves its reads",
+        "correct": true,
+        "why": "Right. With one node, node 1 leads everything."
+      },
+      {
+        "text": "The consumer reading it at the moment",
+        "correct": false,
+        "why": "The describe output is about storage; consumers appear in the consumer-groups tool."
+      },
+      {
+        "text": "The producer that wrote most of its messages",
+        "correct": false,
+        "why": "Kafka does not track producers per partition in that column."
+      },
+      {
+        "text": "The partition that holds the most recent message of the topic",
+        "correct": false,
+        "why": "Leader is a node id, not a partition, and there is no most recent across partitions."
+      }
+    ]
+  },
+  {
+    "id": "ex-ja2cm1e5",
+    "version": 1,
+    "section": "keys-to-partitions",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Who decides which partition a keyed message goes to?",
+    "choices": [
+      {
+        "text": "The broker, when the message arrives",
+        "correct": false,
+        "why": "The broker stores the message in the partition the producer named."
+      },
+      {
+        "text": "The consumer group, when it reads",
+        "correct": false,
+        "why": "By then the message is long stored; reading moves nothing."
+      },
+      {
+        "text": "The controller, which balances the partitions",
+        "correct": false,
+        "why": "The controller keeps the cluster's metadata; it does not route messages."
+      },
+      {
+        "text": "The producer's client library, by hashing the key",
+        "correct": true,
+        "why": "Right. The partitioner runs in the client, before the message is sent."
+      }
+    ]
+  },
+  {
+    "id": "ex-77f3w3dr",
+    "version": 1,
+    "section": "keys-to-partitions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "keys.py with its default settings and Kafka's console producer each sent the key recife to the three-partition topic shops. What happened?",
+    "choices": [
+      {
+        "text": "They chose different partitions",
+        "correct": true,
+        "why": "Right. The Python client's default hash is not Java's murmur2."
+      },
+      {
+        "text": "They chose the same partition, because a key always hashes to one place",
+        "correct": false,
+        "why": "Always to one place for one hash function; these are two."
+      },
+      {
+        "text": "The broker moved the Java message to match the first one",
+        "correct": false,
+        "why": "The broker never moves messages between partitions."
+      },
+      {
+        "text": "The console producer refused, because the key was already taken by another client",
+        "correct": false,
+        "why": "Keys are not reserved; any producer may send any key."
+      }
+    ]
+  },
+  {
+    "id": "ex-jqc2p3hx",
+    "version": 1,
+    "section": "keys-to-partitions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Java service and a Python service both write stock changes keyed by book to one topic. What is the risk, and the fix?",
+    "choices": [
+      {
+        "text": "No risk: the broker sorts each key into one partition",
+        "correct": false,
+        "why": "The broker stores what each client chose, and the two choose differently."
+      },
+      {
+        "text": "One book's changes land in two partitions with no order between them; set partitioner to murmur2_random in the Python client",
+        "correct": true,
+        "why": "Right. Then both clients hash the same way."
+      },
+      {
+        "text": "Messages are lost; give every message a unique key",
+        "correct": false,
+        "why": "Nothing is lost, and unique keys would give up order per book altogether."
+      },
+      {
+        "text": "Duplicates; send without keys",
+        "correct": false,
+        "why": "Different partitions do not duplicate anything, and no key means no order at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-h6c9n812",
+    "version": 1,
+    "section": "keys-to-partitions",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The setting that makes librdkafka hash keys the way the Java client does is partitioner=___ .",
+    "hint": "The name of Java's hash, with _random after it.",
+    "blanks": [
+      {
+        "accept": [
+          "murmur2_random"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-e26xvt8a",
+    "version": 1,
+    "section": "offsets",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "kafka-get-offsets.sh prints sales:1:789 with no --time option. What is 789?",
+    "choices": [
+      {
+        "text": "The offset of the last message in partition 1",
+        "correct": false,
+        "why": "The last message is at 788; 789 is where the next one goes."
+      },
+      {
+        "text": "The offset the next message in partition 1 will get",
+        "correct": true,
+        "why": "Right. The log-end offset."
+      },
+      {
+        "text": "The number of messages consumers have read from partition 1 since the topic was created",
+        "correct": false,
+        "why": "The tool reads the log, not what anybody has read."
+      },
+      {
+        "text": "The size of partition 1 in kilobytes",
+        "correct": false,
+        "why": "It is an offset, a count of positions, not a size."
+      }
+    ]
+  },
+  {
+    "id": "ex-jqws4mdr",
+    "version": 1,
+    "section": "offsets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a thousand sales from tills.py, partition 2 of sales had none. Why?",
+    "choices": [
+      {
+        "text": "Partition 2 was offline",
+        "correct": false,
+        "why": "A partition with no leader would have caused errors, not silence."
+      },
+      {
+        "text": "tills.py writes only to the first two partitions",
+        "correct": false,
+        "why": "tills.py names no partition; it gives a key and lets the partitioner choose."
+      },
+      {
+        "text": "None of the five shop keys hashes to it",
+        "correct": true,
+        "why": "Right. Five keys over three partitions, and two partitions took all five."
+      },
+      {
+        "text": "Retention deleted them before the command ran",
+        "correct": false,
+        "why": "Nothing was deleted: the earliest offsets were all 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-5wtjr6zc",
+    "version": 1,
+    "section": "offsets",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A partition's earliest offset is 7513 and its log-end offset is 20000. How many messages does it hold now, with no compaction?",
+    "value": 12487,
+    "tolerance": 0,
+    "unit": "messages"
+  },
+  {
+    "id": "ex-a7h1a22f",
+    "version": 1,
+    "section": "on-disk",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the name of a segment file like 00000000000000007513.log?",
+    "choices": [
+      {
+        "text": "The time the segment was created",
+        "correct": false,
+        "why": "The time is inside, in the .timeindex; the name is an offset."
+      },
+      {
+        "text": "The offset of the first message in it",
+        "correct": true,
+        "why": "Right. The base offset, padded to twenty digits."
+      },
+      {
+        "text": "The number of bytes written before it was opened",
+        "correct": false,
+        "why": "Bytes are positions inside a file, kept in the .index."
+      },
+      {
+        "text": "A random id the broker gave it to avoid clashes on disk",
+        "correct": false,
+        "why": "Nothing random: two runs of the same data give the same names."
+      }
+    ]
+  },
+  {
+    "id": "ex-xztcmzsg",
+    "version": 1,
+    "section": "on-disk",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a segment have an .index beside its .log?",
+    "choices": [
+      {
+        "text": "To list which consumers have read which messages, and when each of them read them",
+        "correct": false,
+        "why": "The log knows nothing of its readers; their places are stored elsewhere."
+      },
+      {
+        "text": "To keep a second copy of every key in case the log file is damaged on disk",
+        "correct": false,
+        "why": "Copies are replicas on other nodes; the index holds positions, not keys."
+      },
+      {
+        "text": "To sort the messages by key",
+        "correct": false,
+        "why": "Messages stay in the order they were written; nothing sorts them."
+      },
+      {
+        "text": "To find the byte position of an offset without reading the log from its start",
+        "correct": true,
+        "why": "Right. minilog.py had to count every line; Kafka looks up the nearest entry."
+      }
+    ]
+  },
+  {
+    "id": "ex-pwmze0vz",
+    "version": 1,
+    "section": "on-disk",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "kafka-dump-log.sh shows a batch line with count: 150 before the messages. What does it tell you about how they arrived?",
+    "choices": [
+      {
+        "text": "The producer sent 150 messages in one batch, stored as written",
+        "correct": true,
+        "why": "Right. The broker stores the producer's batch whole; lesson 4 changes its size."
+      },
+      {
+        "text": "150 consumers have read them",
+        "correct": false,
+        "why": "The log does not record readers."
+      },
+      {
+        "text": "The broker waited for 150 messages before writing anything to disk",
+        "correct": false,
+        "why": "The grouping comes from the producer, not from the broker waiting."
+      },
+      {
+        "text": "The segment is full after 150 messages",
+        "correct": false,
+        "why": "A segment closes by size or age, and holds many batches."
+      }
+    ]
+  },
+  {
+    "id": "ex-fknv9g3w",
+    "version": 1,
+    "section": "retention",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does retention delete?",
+    "choices": [
+      {
+        "text": "Messages that every consumer group has read",
+        "correct": false,
+        "why": "Retention ignores readers entirely."
+      },
+      {
+        "text": "Single messages older than retention.ms",
+        "correct": false,
+        "why": "It never deletes one message; it deletes the segment once all of it is past the limit."
+      },
+      {
+        "text": "Whole closed segments, oldest first",
+        "correct": true,
+        "why": "Right. And never the active segment."
+      },
+      {
+        "text": "The oldest value of each key",
+        "correct": false,
+        "why": "That is closer to compaction, the next section."
+      }
+    ]
+  },
+  {
+    "id": "ex-hrbmkntt",
+    "version": 1,
+    "section": "retention",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "old-sales had segments starting at offsets 0, 7513 and 14965. Retention deleted the first segment. What did kafka-get-offsets.sh --time earliest print as the offset?",
+    "value": 7513,
+    "tolerance": 0,
+    "unit": "offset"
+  },
+  {
+    "id": "ex-kdw8dx5d",
+    "version": 1,
+    "section": "retention",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You set retention.bytes on a topic and nothing is deleted for three minutes. Why?",
+    "choices": [
+      {
+        "text": "The setting needs a broker restart",
+        "correct": false,
+        "why": "Topic settings apply without a restart; the check is periodic."
+      },
+      {
+        "text": "The broker checks retention every five minutes",
+        "correct": true,
+        "why": "Right. log.retention.check.interval.ms is 300000 by default."
+      },
+      {
+        "text": "Retention waits until every consumer has caught up",
+        "correct": false,
+        "why": "Retention does not look at consumers at all."
+      },
+      {
+        "text": "retention.bytes counts the whole cluster, so the limit is far away",
+        "correct": false,
+        "why": "It is per partition."
+      }
+    ]
+  },
+  {
+    "id": "ex-166cg68p",
+    "version": 1,
+    "section": "retention",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Put what happens to an old segment under retention in order.",
+    "items": [
+      "the active segment reaches segment.bytes and is closed",
+      "a retention check finds the closed segment past the limit",
+      "the log start offset moves past it and its files are renamed .deleted",
+      "a minute later the files are removed from disk"
+    ]
+  },
+  {
+    "id": "ex-3cmnaf7m",
+    "version": 1,
+    "section": "compaction",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which topic suits cleanup.policy=compact?",
+    "choices": [
+      {
+        "text": "The current stock of each book, keyed by book",
+        "correct": true,
+        "why": "Right. A newer value for a key makes the older one useless."
+      },
+      {
+        "text": "Every sale, keyed by shop",
+        "correct": false,
+        "why": "Each sale is a separate fact; compaction would keep one sale per shop."
+      },
+      {
+        "text": "Clicks on the website, with no key",
+        "correct": false,
+        "why": "Compaction works per key, and a topic without keys has nothing to compact by."
+      },
+      {
+        "text": "An audit trail that must keep every change for a year",
+        "correct": false,
+        "why": "Compaction throws away old values, which an audit needs."
+      }
+    ]
+  },
+  {
+    "id": "ex-h3gtk4jn",
+    "version": 1,
+    "section": "compaction",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After compaction, the stock topic held offsets 4, 5, 6 and 7. What happened to offsets 0 to 3?",
+    "choices": [
+      {
+        "text": "They were renumbered, so the message that was at offset 4 is now at offset 0",
+        "correct": false,
+        "why": "Offsets never change; survivors keep theirs."
+      },
+      {
+        "text": "They moved to another segment, where the cleaner keeps the values it replaced",
+        "correct": false,
+        "why": "They were removed; nothing moves between segments."
+      },
+      {
+        "text": "They are a hole: their messages were older values of keys written again later",
+        "correct": true,
+        "why": "Right. bk-01, bk-02 and bk-03 all had later messages."
+      },
+      {
+        "text": "They are still there and the consumer skipped them",
+        "correct": false,
+        "why": "A consumer from the beginning reads everything stored; they are gone."
+      }
+    ]
+  },
+  {
+    "id": "ex-503zg9dn",
+    "version": 1,
+    "section": "compaction",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is a tombstone in a compacted topic?",
+    "choices": [
+      {
+        "text": "A segment marked for deletion by retention, waiting a minute",
+        "correct": false,
+        "why": "Those are the .deleted files of retention."
+      },
+      {
+        "text": "The first offset still stored",
+        "correct": false,
+        "why": "That is the log start offset."
+      },
+      {
+        "text": "A keyed message with no value",
+        "correct": true,
+        "why": "Right. It says the key is deleted; kept for delete.retention.ms, then removed too."
+      },
+      {
+        "text": "A key that the cleaner could not read and left in place",
+        "correct": false,
+        "why": "Tombstones are written on purpose by producers."
+      }
+    ]
+  },
+  {
+    "id": "ex-bpjmzzwh",
+    "version": 1,
+    "section": "compaction",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A new service reads a compacted stock topic from offset 0 to learn each book's stock. The cleaner has not run for an hour. What must the service do?",
+    "choices": [
+      {
+        "text": "Nothing: compaction guarantees one message per key",
+        "correct": false,
+        "why": "It guarantees at least the last one; older ones remain until the cleaner runs."
+      },
+      {
+        "text": "Fold: keep the last value it sees for each key, and drop keys whose last message is a tombstone",
+        "correct": true,
+        "why": "Right. Uncompacted parts still hold old values, so the reader folds."
+      },
+      {
+        "text": "Wait for the cleaner before reading",
+        "correct": false,
+        "why": "The active segment is never compacted, so waiting never finishes the job."
+      },
+      {
+        "text": "Read from the log-end offset instead",
+        "correct": false,
+        "why": "Then it sees only future changes, not the current stock."
+      }
+    ]
+  },
+  {
+    "id": "ex-5d3rddyv",
+    "version": 1,
+    "section": "choosing-partitions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A topic keyed by shop goes from 3 to 4 partitions. What happens to the messages already stored?",
+    "choices": [
+      {
+        "text": "Kafka rehashes them, moving each to the partition its key now hashes to",
+        "correct": false,
+        "why": "Nothing already stored moves."
+      },
+      {
+        "text": "They are deleted, and the producers are asked to send them again",
+        "correct": false,
+        "why": "Nothing is deleted or resent."
+      },
+      {
+        "text": "The change is refused while the topic has data",
+        "correct": false,
+        "why": "Adding is allowed; it is removing that is refused."
+      },
+      {
+        "text": "They stay put; new messages of some shops go elsewhere",
+        "correct": true,
+        "why": "Right. A moved key's old and new messages now sit in two partitions."
+      }
+    ]
+  },
+  {
+    "id": "ex-mr1yw1ss",
+    "version": 1,
+    "section": "choosing-partitions",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each change to a topic with what Kafka does.",
+    "pairs": [
+      {
+        "left": "more partitions",
+        "right": "allowed; some keys move from then on"
+      },
+      {
+        "left": "fewer partitions",
+        "right": "refused"
+      },
+      {
+        "left": "a shorter retention.ms",
+        "right": "old segments go at the next check"
+      },
+      {
+        "left": "cleanup.policy=compact",
+        "right": "older values per key go when the cleaner runs"
+      }
+    ],
+    "right_distractors": [
+      "every message is copied to a new topic"
+    ]
+  },
+  {
+    "id": "ex-x8ps7bx3",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants a topic of customer addresses, keyed by customer, that any new service reads in full, and that does not grow without bound. Which settings?",
+    "choices": [
+      {
+        "text": "cleanup.policy=delete with retention.ms of seven days",
+        "correct": false,
+        "why": "A customer who has not moved in a week would vanish from the topic."
+      },
+      {
+        "text": "cleanup.policy=compact, with tombstones for customers who leave",
+        "correct": true,
+        "why": "Right. The last address per customer stays; deleted customers go."
+      },
+      {
+        "text": "retention.bytes of one mebibyte",
+        "correct": false,
+        "why": "Old customers would be cut off by size."
+      },
+      {
+        "text": "One partition per customer",
+        "correct": false,
+        "why": "Partitions are not per key; the hash shares them out, and millions would cost a fortune."
+      }
+    ]
+  },
+  {
+    "id": "ex-9vmc6ryy",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A topic has 6 partitions and a consumer group of 4 copies of one program. At most how many more copies could join and still each get a partition?",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "copies"
+  }
+]

@@ -10,7 +10,9 @@ ninguém lê; "vendas a cada cinco minutos por loja" é o que o gerente regional
 Janelas por chave são a mesma regra aplicada separadamente dentro de cada chave. Uma janela tumbling
 por loja tem as mesmas bordas para todas as lojas, porque as bordas vêm do relógio:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python windows.py tumbling 5 --by-shop
+```
 
 As dez vendas agora se espalham por nove linhas. Recife tem venda em quatro janelas diferentes e
 Caruaru em uma. A janela das 09:05 às 09:10 de Natal tem duas vendas, a 5 e a 8, e é a única com mais
@@ -20,7 +22,9 @@ chaves continua dez**, porque janelas tumbling não se sobrepõem, com chave ou 
 Para sessões a chave muda mais a resposta, porque uma sessão por loja é feita só das vendas daquela
 loja:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python windows.py session 5 --by-shop
+```
 
 Sete sessões em vez de duas, e nenhuma fusão. A venda 8 juntou duas sessões do stream inteiro, mas
 dentro de Natal ela é simplesmente a terceira de três vendas a menos de cinco minutos uma da outra.

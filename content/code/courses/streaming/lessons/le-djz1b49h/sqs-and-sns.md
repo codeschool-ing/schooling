@@ -28,67 +28,36 @@ The program talks to it with `boto3`, exactly as it would talk to AWS, except fo
 a real account — and at a real bill. Save it as `~/work/sqs_demo.py`:
 
 ```schooling-example
-@file sqs_demo.py
-@lang python
---- **The endpoint and the fake keys are the only things that make this moto rather than AWS.** Both clients, SQS and SNS, go to the same emulator.
-"""sqs_demo.py: SQS and SNS, against the moto emulator on localhost:5000 (not AWS).
-
-    python sqs_demo.py visibility | fifo | fanout
-"""
-import json
-import sys
-import time
-
-import boto3
-
-AWS = dict(endpoint_url="http://localhost:5000", region_name="us-east-1",
-           aws_access_key_id="testing", aws_secret_access_key="testing")
-sqs = boto3.client("sqs", **AWS)
-sns = boto3.client("sns", **AWS)
---- Receive up to ten messages, and ask for how many times each one has been received, which SQS counts for you.
-def receive(url, wait=0):
-    r = sqs.receive_message(QueueUrl=url, MaxNumberOfMessages=10, WaitTimeSeconds=wait,
-                            MessageSystemAttributeNames=["ApproximateReceiveCount"])
-    return r.get("Messages", [])
---- **The visibility timeout, played out.** A queue whose messages hide for 5 seconds; worker A receives one and never deletes it; worker B looks at once, then after 6 seconds.
-def visibility():
-    url = sqs.create_queue(QueueName="labels",
-                           Attributes={"VisibilityTimeout": "5"})["QueueUrl"]
-    sqs.send_message(QueueUrl=url, MessageBody="web-0001")
-    m = receive(url)[0]
-    print(f"worker A got {m['Body']}, and crashes without deleting it")
-    print(f"worker B, at once: {len(receive(url))} messages")
-    time.sleep(6)
-    m = receive(url)[0]
-    count = m["Attributes"]["ApproximateReceiveCount"]
-    print(f"worker B, 6 s later: got {m['Body']}, received {count} times")
-    sqs.delete_message(QueueUrl=url, ReceiptHandle=m["ReceiptHandle"])
-    print(f"after delete: {len(receive(url))} messages")
---- **A FIFO queue**: its name must end in `.fifo`. The group id orders messages, and a deduplication id seen before is dropped. The same sale is sent twice, as a retrying till would.
-def fifo():
-    url = sqs.create_queue(QueueName="stock.fifo",
-                           Attributes={"FifoQueue": "true"})["QueueUrl"]
-    for sale, dedup in [("rec-1 bk-02 -1", "rec-1"), ("rec-1 bk-02 -1", "rec-1"),
-                        ("rec-2 bk-02 -1", "rec-2")]:
-        sqs.send_message(QueueUrl=url, MessageBody=sale, MessageGroupId="recife",
-                         MessageDeduplicationId=dedup)
-        print(f"sent {sale!r} with deduplication id {dedup}")
-    got = [m["Body"] for m in receive(url)]
-    print(f"received {got}")
---- **SNS fan-out.** One topic, two SQS queues subscribed to it, one message published. Raw delivery passes the body as it was published rather than wrapped in SNS's own JSON envelope.
-def fanout():
-    topic = sns.create_topic(Name="sales")["TopicArn"]
-    urls = {}
-    for name in ["stock-updates", "loyalty-points"]:
-        urls[name] = sqs.create_queue(QueueName=name)["QueueUrl"]
-        arn = sqs.get_queue_attributes(QueueUrl=urls[name], AttributeNames=["QueueArn"])
-        sns.subscribe(TopicArn=topic, Protocol="sqs", Endpoint=arn["Attributes"]["QueueArn"],
-                      Attributes={"RawMessageDelivery": "true"})
-    sns.publish(TopicArn=topic, Message=json.dumps({"sale": "rec-000001", "cents": 5490}))
-    for name, url in urls.items():
-        print(f"{name}: {[m['Body'] for m in receive(url)]}")
---- Run the part named on the command line.
-{"visibility": visibility, "fifo": fifo, "fanout": fanout}[sys.argv[1]]()
+{
+  "file": "sqs_demo.py",
+  "language": "python",
+  "parts": [
+    {
+      "code": "\"\"\"sqs_demo.py: SQS and SNS, against the moto emulator on localhost:5000 (not AWS).\n\n    python sqs_demo.py visibility | fifo | fanout\n\"\"\"\nimport json\nimport sys\nimport time\n\nimport boto3\n\nAWS = dict(endpoint_url=\"http://localhost:5000\", region_name=\"us-east-1\",\n           aws_access_key_id=\"testing\", aws_secret_access_key=\"testing\")\nsqs = boto3.client(\"sqs\", **AWS)\nsns = boto3.client(\"sns\", **AWS)",
+      "note": "**The endpoint and the fake keys are the only things that make this moto rather than AWS.** Both clients, SQS and SNS, go to the same emulator."
+    },
+    {
+      "code": "def receive(url, wait=0):\n    r = sqs.receive_message(QueueUrl=url, MaxNumberOfMessages=10, WaitTimeSeconds=wait,\n                            MessageSystemAttributeNames=[\"ApproximateReceiveCount\"])\n    return r.get(\"Messages\", [])",
+      "note": "Receive up to ten messages, and ask for how many times each one has been received, which SQS counts for you."
+    },
+    {
+      "code": "def visibility():\n    url = sqs.create_queue(QueueName=\"labels\",\n                           Attributes={\"VisibilityTimeout\": \"5\"})[\"QueueUrl\"]\n    sqs.send_message(QueueUrl=url, MessageBody=\"web-0001\")\n    m = receive(url)[0]\n    print(f\"worker A got {m['Body']}, and crashes without deleting it\")\n    print(f\"worker B, at once: {len(receive(url))} messages\")\n    time.sleep(6)\n    m = receive(url)[0]\n    count = m[\"Attributes\"][\"ApproximateReceiveCount\"]\n    print(f\"worker B, 6 s later: got {m['Body']}, received {count} times\")\n    sqs.delete_message(QueueUrl=url, ReceiptHandle=m[\"ReceiptHandle\"])\n    print(f\"after delete: {len(receive(url))} messages\")",
+      "note": "**The visibility timeout, played out.** A queue whose messages hide for 5 seconds; worker A receives one and never deletes it; worker B looks at once, then after 6 seconds."
+    },
+    {
+      "code": "def fifo():\n    url = sqs.create_queue(QueueName=\"stock.fifo\",\n                           Attributes={\"FifoQueue\": \"true\"})[\"QueueUrl\"]\n    for sale, dedup in [(\"rec-1 bk-02 -1\", \"rec-1\"), (\"rec-1 bk-02 -1\", \"rec-1\"),\n                        (\"rec-2 bk-02 -1\", \"rec-2\")]:\n        sqs.send_message(QueueUrl=url, MessageBody=sale, MessageGroupId=\"recife\",\n                         MessageDeduplicationId=dedup)\n        print(f\"sent {sale!r} with deduplication id {dedup}\")\n    got = [m[\"Body\"] for m in receive(url)]\n    print(f\"received {got}\")",
+      "note": "**A FIFO queue**: its name must end in `.fifo`. The group id orders messages, and a deduplication id seen before is dropped. The same sale is sent twice, as a retrying till would."
+    },
+    {
+      "code": "def fanout():\n    topic = sns.create_topic(Name=\"sales\")[\"TopicArn\"]\n    urls = {}\n    for name in [\"stock-updates\", \"loyalty-points\"]:\n        urls[name] = sqs.create_queue(QueueName=name)[\"QueueUrl\"]\n        arn = sqs.get_queue_attributes(QueueUrl=urls[name], AttributeNames=[\"QueueArn\"])\n        sns.subscribe(TopicArn=topic, Protocol=\"sqs\", Endpoint=arn[\"Attributes\"][\"QueueArn\"],\n                      Attributes={\"RawMessageDelivery\": \"true\"})\n    sns.publish(TopicArn=topic, Message=json.dumps({\"sale\": \"rec-000001\", \"cents\": 5490}))\n    for name, url in urls.items():\n        print(f\"{name}: {[m['Body'] for m in receive(url)]}\")",
+      "note": "**SNS fan-out.** One topic, two SQS queues subscribed to it, one message published. Raw delivery passes the body as it was published rather than wrapped in SNS's own JSON envelope."
+    },
+    {
+      "code": "{\"visibility\": visibility, \"fifo\": fifo, \"fanout\": fanout}[sys.argv[1]]()",
+      "note": "Run the part named on the command line."
+    }
+  ]
+}
 ```
 
 ## Visibility, and the receive count

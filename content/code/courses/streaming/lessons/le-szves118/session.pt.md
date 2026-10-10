@@ -14,7 +14,9 @@ sessão 1 das dez vendas começa às 09:00:40, e as vendas 2 a 5 chegam cada uma
 da anterior. Então vem uma pausa: das 09:06:20 às 09:12:30 são seis minutos e dez segundos, mais que
 o intervalo.
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python windows.py session 5
+```
 
 O programa imprimiu uma sessão onde o parágrafo acima previa duas, e a linha entre parênteses diz por
 quê. **Um evento atrasado pode juntar duas sessões numa só.** Na ordem de chegada, as vendas 1 a 5
@@ -47,7 +49,9 @@ algo mostrando que esse tempo passou. É de novo a pergunta da lição 11.
 
 A pausa é o projeto inteiro. Diminua para três minutos e o programa acha três sessões:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python windows.py session 3
+```
 
 A primeira sessão agora para às 09:08:50, porque a venda 8 cobre uma pausa de 2 minutos e 30 segundos
 e não a seguinte, de 3 minutos e 40 segundos, e 09:12:30 às 09:14:10 fica por conta própria. Uma pausa

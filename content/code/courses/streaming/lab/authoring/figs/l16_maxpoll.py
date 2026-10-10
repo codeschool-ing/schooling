@@ -29,7 +29,7 @@ def draw(s, t):
         # fast member: working, interrupted by a rebalance band
         s.rect(a + 2 + (0 if k else 6), yf - 11, rb - a - 10 - (0 if k else 6), 22, fill="var(--panel)", stroke="var(--wire)")
         for bx in (xl, rb):
-            s.rect(bx - 6, yf - 16, 12, 32, fill="var(--amber)", stroke="none", rx=2)
+            s.rect(bx - 6, yf - 11, 12, 22, fill="var(--amber)", stroke="none", rx=2)
             s.path(f"M {bx} {ys+22} L {bx} {yf-18}", stroke="var(--amber)", arrow=True, dash="3 3")
     s.text(x0 + 6 * sc, ys - 32, t("6 s: leaves the group"), size=9.5, fill="var(--amber)")
     s.text(x0 + 8 * sc + 4, ys + 36, t("poll, rejoin"), size=9.5, fill="var(--paper-dim)", anchor="start")

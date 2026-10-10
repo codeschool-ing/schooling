@@ -1,0 +1,457 @@
+{
+  "ex-bv18nfrb": {
+    "prompt": "O que é uma partição de um tópico do Kafka?",
+    "choices": [
+      {
+        "text": "Um log próprio, com offsets que começam em 0",
+        "why": "Isso. Um tópico de três partições são três logs sob um nome."
+      },
+      {
+        "text": "Uma cópia do tópico inteiro guardada em outro nó por segurança",
+        "why": "Isso é uma réplica, assunto da lição 5. Uma partição guarda uma parte das mensagens, não todas."
+      },
+      {
+        "text": "Um intervalo de tempo do tópico, como um dia de mensagens",
+        "why": "Intervalos de tempo lembram mais segmentos, e eles ficam dentro de uma partição."
+      },
+      {
+        "text": "Um filtro que o consumidor aplica ao ler",
+        "why": "Partições são como o dado é guardado, decidido quando ele é escrito."
+      }
+    ]
+  },
+  "ex-6m5eax5e": {
+    "prompt": "Duas vendas de sales estão no offset 40 da partição 0 e no offset 12 da partição 2. Qual foi escrita primeiro?",
+    "choices": [
+      {
+        "text": "A do offset 12, porque o offset é menor",
+        "why": "Offsets são contados por partição; compará-los entre partições compara dois contadores sem relação."
+      },
+      {
+        "text": "A do offset 40, porque a partição 0 é lida primeiro",
+        "why": "Nenhuma partição é lida primeiro; elas são lidas lado a lado."
+      },
+      {
+        "text": "Os offsets não dizem",
+        "why": "Isso. O Kafka não mantém ordem entre partições."
+      },
+      {
+        "text": "As duas ao mesmo tempo, já que os offsets são dados por um relógio do tópico inteiro",
+        "why": "Não há contador nem relógio do tópico inteiro; cada partição tem o seu."
+      }
+    ]
+  },
+  "ex-ggc1j9bj": {
+    "prompt": "No kafka-topics.sh --describe, o que a coluna Leader diz sobre uma partição?",
+    "choices": [
+      {
+        "text": "O nó que recebe as escritas e atende às leituras dela",
+        "why": "Isso. Com um nó, o nó 1 lidera tudo."
+      },
+      {
+        "text": "O consumidor que a está lendo no momento",
+        "why": "A saída do describe é sobre armazenamento; consumidores aparecem na ferramenta de consumer groups."
+      },
+      {
+        "text": "O produtor que escreveu a maioria das mensagens dela",
+        "why": "O Kafka não registra produtores por partição nessa coluna."
+      },
+      {
+        "text": "A partição que guarda a mensagem mais recente do tópico",
+        "why": "Leader é o id de um nó, não uma partição, e não existe mais recente entre partições."
+      }
+    ]
+  },
+  "ex-ja2cm1e5": {
+    "prompt": "Quem decide para qual partição vai uma mensagem com chave?",
+    "choices": [
+      {
+        "text": "O broker, quando a mensagem chega",
+        "why": "O broker guarda a mensagem na partição que o produtor indicou."
+      },
+      {
+        "text": "O consumer group, quando lê",
+        "why": "Nessa hora a mensagem já está guardada há muito; ler não move nada."
+      },
+      {
+        "text": "O controller, que equilibra as partições",
+        "why": "O controller guarda os metadados do cluster; não roteia mensagens."
+      },
+      {
+        "text": "A biblioteca cliente do produtor, fazendo o hash da chave",
+        "why": "Isso. O particionador roda no cliente, antes de a mensagem ser enviada."
+      }
+    ]
+  },
+  "ex-77f3w3dr": {
+    "prompt": "O keys.py com as configurações padrão e o console producer do Kafka mandaram a chave recife para o tópico shops, de três partições. O que aconteceu?",
+    "choices": [
+      {
+        "text": "Escolheram partições diferentes",
+        "why": "Isso. O hash padrão do cliente Python não é o murmur2 do Java."
+      },
+      {
+        "text": "Escolheram a mesma partição, porque uma chave sempre cai num lugar só",
+        "why": "Sempre num lugar só para uma função de hash; aqui são duas."
+      },
+      {
+        "text": "O broker moveu a mensagem do Java para acompanhar a primeira",
+        "why": "O broker nunca move mensagens entre partições."
+      },
+      {
+        "text": "O console producer recusou, porque a chave já tinha sido usada por outro cliente",
+        "why": "Chaves não são reservadas; qualquer produtor manda qualquer chave."
+      }
+    ]
+  },
+  "ex-jqc2p3hx": {
+    "prompt": "Um serviço Java e um serviço Python escrevem mudanças de estoque com o livro como chave num tópico. Qual é o risco, e a correção?",
+    "choices": [
+      {
+        "text": "Nenhum risco: o broker separa cada chave numa partição",
+        "why": "O broker guarda o que cada cliente escolheu, e os dois escolhem diferente."
+      },
+      {
+        "text": "As mudanças de um livro caem em duas partições sem ordem entre si; configurar partitioner como murmur2_random no cliente Python",
+        "why": "Isso. Aí os dois clientes fazem o hash do mesmo jeito."
+      },
+      {
+        "text": "Mensagens se perdem; dar uma chave única a cada mensagem",
+        "why": "Nada se perde, e chaves únicas abririam mão da ordem por livro de vez."
+      },
+      {
+        "text": "Duplicatas; mandar sem chave",
+        "why": "Partições diferentes não duplicam nada, e sem chave não há ordem nenhuma."
+      }
+    ]
+  },
+  "ex-h6c9n812": {
+    "prompt": "A configuração que faz o librdkafka fazer o hash das chaves como o cliente Java é partitioner=___ .",
+    "hint": "O nome do hash do Java, com _random depois.",
+    "blanks": [
+      {
+        "accept": [
+          "murmur2_random"
+        ]
+      }
+    ]
+  },
+  "ex-e26xvt8a": {
+    "prompt": "O kafka-get-offsets.sh imprime sales:1:789 sem a opção --time. O que é 789?",
+    "choices": [
+      {
+        "text": "O offset da última mensagem da partição 1",
+        "why": "A última mensagem está no 788; 789 é onde entra a próxima."
+      },
+      {
+        "text": "O offset que a próxima mensagem da partição 1 vai receber",
+        "why": "Isso. O log-end offset."
+      },
+      {
+        "text": "O número de mensagens que os consumidores leram da partição 1 desde que o tópico foi criado",
+        "why": "A ferramenta lê o log, não o que alguém leu."
+      },
+      {
+        "text": "O tamanho da partição 1 em kilobytes",
+        "why": "É um offset, uma contagem de posições, não um tamanho."
+      }
+    ]
+  },
+  "ex-jqws4mdr": {
+    "prompt": "Depois de mil vendas do tills.py, a partição 2 de sales não tinha nenhuma. Por quê?",
+    "choices": [
+      {
+        "text": "A partição 2 estava fora do ar",
+        "why": "Uma partição sem líder teria causado erros, não silêncio."
+      },
+      {
+        "text": "O tills.py só escreve nas duas primeiras partições",
+        "why": "O tills.py não indica partição; ele dá uma chave e deixa o particionador escolher."
+      },
+      {
+        "text": "Nenhuma das cinco chaves de loja cai nela pelo hash",
+        "why": "Isso. Cinco chaves em três partições, e duas partições levaram as cinco."
+      },
+      {
+        "text": "A retenção as apagou antes de o comando rodar",
+        "why": "Nada foi apagado: os offsets mais antigos eram todos 0."
+      }
+    ]
+  },
+  "ex-5wtjr6zc": {
+    "prompt": "O offset mais antigo de uma partição é 7513 e o log-end offset é 20000. Quantas mensagens ela guarda agora, sem compactação?",
+    "unit": "mensagens"
+  },
+  "ex-a7h1a22f": {
+    "prompt": "O que é o nome de um arquivo de segmento como 00000000000000007513.log?",
+    "choices": [
+      {
+        "text": "A hora em que o segmento foi criado",
+        "why": "A hora está dentro, no .timeindex; o nome é um offset."
+      },
+      {
+        "text": "O offset da primeira mensagem nele",
+        "why": "Isso. O offset base, completado até vinte dígitos."
+      },
+      {
+        "text": "O número de bytes escritos antes de ele ser aberto",
+        "why": "Bytes são posições dentro de um arquivo, guardadas no .index."
+      },
+      {
+        "text": "Um id aleatório que o broker deu para evitar conflitos no disco",
+        "why": "Nada aleatório: duas execuções com os mesmos dados dão os mesmos nomes."
+      }
+    ]
+  },
+  "ex-xztcmzsg": {
+    "prompt": "Por que um segmento tem um .index ao lado do .log?",
+    "choices": [
+      {
+        "text": "Para listar quais consumidores leram quais mensagens, e quando cada um deles as leu",
+        "why": "O log não sabe nada dos leitores; os lugares deles ficam em outro lugar."
+      },
+      {
+        "text": "Para guardar uma segunda cópia de cada chave caso o arquivo do log se estrague no disco",
+        "why": "Cópias são réplicas em outros nós; o índice guarda posições, não chaves."
+      },
+      {
+        "text": "Para ordenar as mensagens por chave",
+        "why": "As mensagens ficam na ordem em que foram escritas; nada as ordena."
+      },
+      {
+        "text": "Para achar a posição em bytes de um offset sem ler o log desde o começo",
+        "why": "Isso. O minilog.py tinha de contar toda linha; o Kafka consulta a entrada mais próxima."
+      }
+    ]
+  },
+  "ex-pwmze0vz": {
+    "prompt": "O kafka-dump-log.sh mostra uma linha de lote com count: 150 antes das mensagens. O que ela diz sobre como elas chegaram?",
+    "choices": [
+      {
+        "text": "O produtor mandou 150 mensagens num lote, guardado como foi escrito",
+        "why": "Isso. O broker guarda inteiro o lote do produtor; a lição 4 muda o tamanho dele."
+      },
+      {
+        "text": "150 consumidores as leram",
+        "why": "O log não registra leitores."
+      },
+      {
+        "text": "O broker esperou 150 mensagens antes de escrever qualquer coisa no disco",
+        "why": "O agrupamento vem do produtor, não de o broker esperar."
+      },
+      {
+        "text": "O segmento fica cheio depois de 150 mensagens",
+        "why": "Um segmento fecha por tamanho ou idade, e guarda muitos lotes."
+      }
+    ]
+  },
+  "ex-fknv9g3w": {
+    "prompt": "O que a retenção apaga?",
+    "choices": [
+      {
+        "text": "Mensagens que todo consumer group já leu",
+        "why": "A retenção ignora os leitores por completo."
+      },
+      {
+        "text": "Mensagens avulsas mais velhas que retention.ms",
+        "why": "Ela nunca apaga uma mensagem; apaga o segmento quando ele inteiro passou do limite."
+      },
+      {
+        "text": "Segmentos fechados inteiros, os mais antigos primeiro",
+        "why": "Isso. E nunca o segmento ativo."
+      },
+      {
+        "text": "O valor mais antigo de cada chave",
+        "why": "Isso está mais perto da compactação, a próxima seção."
+      }
+    ]
+  },
+  "ex-hrbmkntt": {
+    "prompt": "O old-sales tinha segmentos começando nos offsets 0, 7513 e 14965. A retenção apagou o primeiro segmento. Que offset o kafka-get-offsets.sh --time earliest imprimiu?",
+    "unit": "offset"
+  },
+  "ex-kdw8dx5d": {
+    "prompt": "Você configura retention.bytes num tópico e nada é apagado por três minutos. Por quê?",
+    "choices": [
+      {
+        "text": "A configuração precisa reiniciar o broker",
+        "why": "Configurações de tópico valem sem reiniciar; a verificação é periódica."
+      },
+      {
+        "text": "O broker verifica a retenção a cada cinco minutos",
+        "why": "Isso. log.retention.check.interval.ms é 300000 por padrão."
+      },
+      {
+        "text": "A retenção espera todo consumidor alcançar o fim",
+        "why": "A retenção nem olha para os consumidores."
+      },
+      {
+        "text": "O retention.bytes conta o cluster inteiro, então o limite está longe",
+        "why": "Ele é por partição."
+      }
+    ]
+  },
+  "ex-166cg68p": {
+    "prompt": "Ponha em ordem o que acontece com um segmento antigo sob retenção.",
+    "items": [
+      "o segmento ativo chega ao segment.bytes e é fechado",
+      "uma verificação de retenção encontra o segmento fechado além do limite",
+      "o log start offset passa dele e os arquivos dele são renomeados para .deleted",
+      "um minuto depois os arquivos são removidos do disco"
+    ]
+  },
+  "ex-3cmnaf7m": {
+    "prompt": "Qual tópico combina com cleanup.policy=compact?",
+    "choices": [
+      {
+        "text": "O estoque atual de cada livro, com o livro como chave",
+        "why": "Isso. Um valor mais novo para uma chave torna o antigo inútil."
+      },
+      {
+        "text": "Toda venda, com a loja como chave",
+        "why": "Cada venda é um fato separado; a compactação guardaria uma venda por loja."
+      },
+      {
+        "text": "Cliques no site, sem chave",
+        "why": "A compactação funciona por chave, e um tópico sem chaves não tem por onde compactar."
+      },
+      {
+        "text": "Uma trilha de auditoria que precisa guardar toda mudança por um ano",
+        "why": "A compactação joga fora valores antigos, que a auditoria precisa."
+      }
+    ]
+  },
+  "ex-h3gtk4jn": {
+    "prompt": "Depois da compactação, o tópico stock guardava os offsets 4, 5, 6 e 7. O que aconteceu com os offsets 0 a 3?",
+    "choices": [
+      {
+        "text": "Foram renumerados, então a mensagem que estava no offset 4 agora está no offset 0",
+        "why": "Offsets nunca mudam; os que sobram mantêm os seus."
+      },
+      {
+        "text": "Foram para outro segmento, onde o cleaner guarda os valores que substituiu",
+        "why": "Foram removidos; nada se move entre segmentos."
+      },
+      {
+        "text": "Viraram um buraco: as mensagens eram valores antigos de chaves escritas de novo depois",
+        "why": "Isso. bk-01, bk-02 e bk-03 tinham mensagens posteriores."
+      },
+      {
+        "text": "Ainda estão lá e o consumidor os pulou",
+        "why": "Um consumidor desde o começo lê tudo o que está guardado; eles sumiram."
+      }
+    ]
+  },
+  "ex-503zg9dn": {
+    "prompt": "O que é um tombstone num tópico compactado?",
+    "choices": [
+      {
+        "text": "Um segmento marcado para apagar pela retenção, esperando um minuto",
+        "why": "Esses são os arquivos .deleted da retenção."
+      },
+      {
+        "text": "O primeiro offset ainda guardado",
+        "why": "Esse é o log start offset."
+      },
+      {
+        "text": "Uma mensagem com chave e sem valor",
+        "why": "Isso. Diz que a chave foi apagada; fica por delete.retention.ms, depois sai também."
+      },
+      {
+        "text": "Uma chave que o cleaner não conseguiu ler e deixou no lugar",
+        "why": "Tombstones são escritos de propósito pelos produtores."
+      }
+    ]
+  },
+  "ex-bpjmzzwh": {
+    "prompt": "Um serviço novo lê um tópico de estoque compactado desde o offset 0 para saber o estoque de cada livro. O cleaner não roda há uma hora. O que o serviço precisa fazer?",
+    "choices": [
+      {
+        "text": "Nada: a compactação garante uma mensagem por chave",
+        "why": "Ela garante pelo menos a última; as antigas ficam até o cleaner rodar."
+      },
+      {
+        "text": "Fazer o fold: ficar com o último valor de cada chave, e descartar chaves cuja última mensagem é um tombstone",
+        "why": "Isso. As partes não compactadas ainda têm valores antigos, então o leitor faz o fold."
+      },
+      {
+        "text": "Esperar o cleaner antes de ler",
+        "why": "O segmento ativo nunca é compactado, então esperar nunca resolve."
+      },
+      {
+        "text": "Ler a partir do log-end offset",
+        "why": "Aí ele só vê mudanças futuras, não o estoque atual."
+      }
+    ]
+  },
+  "ex-5d3rddyv": {
+    "prompt": "Um tópico com a loja como chave passa de 3 para 4 partições. O que acontece com as mensagens já guardadas?",
+    "choices": [
+      {
+        "text": "O Kafka refaz o hash delas, movendo cada uma para a partição que a chave agora indica",
+        "why": "Nada que já está guardado se move."
+      },
+      {
+        "text": "São apagadas, e os produtores recebem o pedido de mandá-las de novo",
+        "why": "Nada é apagado nem reenviado."
+      },
+      {
+        "text": "A mudança é recusada enquanto o tópico tem dados",
+        "why": "Acrescentar é permitido; o que é recusado é remover."
+      },
+      {
+        "text": "Ficam onde estão; mensagens novas de algumas lojas vão para outro lugar",
+        "why": "Isso. As mensagens antigas e novas de uma chave movida passam a ficar em duas partições."
+      }
+    ]
+  },
+  "ex-mr1yw1ss": {
+    "prompt": "Ligue cada mudança num tópico ao que o Kafka faz.",
+    "pairs": [
+      {
+        "left": "mais partições",
+        "right": "permitido; algumas chaves mudam dali em diante"
+      },
+      {
+        "left": "menos partições",
+        "right": "recusado"
+      },
+      {
+        "left": "um retention.ms menor",
+        "right": "segmentos antigos saem na próxima verificação"
+      },
+      {
+        "left": "cleanup.policy=compact",
+        "right": "valores antigos por chave saem quando o cleaner roda"
+      }
+    ],
+    "right_distractors": [
+      "toda mensagem é copiada para um tópico novo"
+    ]
+  },
+  "ex-x8ps7bx3": {
+    "prompt": "Uma equipe quer um tópico de endereços de clientes, com o cliente como chave, que todo serviço novo leia por inteiro, e que não cresça sem limite. Quais configurações?",
+    "choices": [
+      {
+        "text": "cleanup.policy=delete com retention.ms de sete dias",
+        "why": "Um cliente que não se mudou numa semana sumiria do tópico."
+      },
+      {
+        "text": "cleanup.policy=compact, com tombstones para clientes que saem",
+        "why": "Isso. O último endereço por cliente fica; clientes apagados saem."
+      },
+      {
+        "text": "retention.bytes de um mebibyte",
+        "why": "Clientes antigos seriam cortados por tamanho."
+      },
+      {
+        "text": "Uma partição por cliente",
+        "why": "Partições não são por chave; o hash as divide, e milhões custariam uma fortuna."
+      }
+    ]
+  },
+  "ex-9vmc6ryy": {
+    "prompt": "Um tópico tem 6 partições e um consumer group de 4 cópias de um programa. No máximo quantas cópias a mais poderiam entrar e ainda receber uma partição cada?",
+    "unit": "cópias"
+  }
+}

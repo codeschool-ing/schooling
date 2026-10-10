@@ -10,7 +10,9 @@ ou errada.
 A opção `--updates` faz o programa se comportar como um processador que vai contando. Ele lê as vendas
 na ordem em que chegaram e imprime uma janela cada vez que uma venda a muda:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python windows.py tumbling 5 --updates
+```
 
 Leia a janela das 09:05 às 09:10 coluna abaixo. Depois da venda 5 ela tem duas vendas e 12.390
 centavos. Então chegam as vendas 6 e 7, das 09:12 e 09:13, e pelo relógio dos eventos a janela das

@@ -68,9 +68,9 @@ stock           sales           0          0
 `--to-earliest` sends each partition to the oldest message still kept, and the group would read the
 whole topic again. That is rarely what a bug calls for. **`--to-datetime` moves each partition to the
 first message written at or after a moment**, which is how "from Monday at nine" is said. The moment
-here is fifteen seconds after the tills started in the lag section, halfway through the 600 sales;
-yours is a moment of your own clock, in the same format, and the `-03:00` is São Paulo's offset from
-UTC:
+here is fifteen seconds after the tills started in the lag section, halfway through the 600 sales.
+Yours is a moment of your own clock, in the same format; the `-03:00` is São Paulo's offset from UTC,
+and without it the tool reads the time as UTC:
 
 ```
 ubuntu@stream:~/work$ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group stock --reset-offsets --topic sales --to-datetime 2026-10-10T16:37:09.000-03:00 --execute

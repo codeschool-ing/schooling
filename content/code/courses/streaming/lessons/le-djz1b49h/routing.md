@@ -21,41 +21,28 @@ exchange of each type, binds five queues, publishes six messages and then emptie
 see what landed where. Save it as `~/work/rabbit_routes.py`:
 
 ```schooling-example
-@file rabbit_routes.py
-@lang python
---- Which queue is bound to which exchange, and with what. **The empty key on the fanout bindings is there because the call needs one**; a fanout exchange never reads it.
-"""rabbit_routes.py: one message per shop event, three exchange types, and who got what."""
-import pika
-
-conn = pika.BlockingConnection(pika.ConnectionParameters("localhost"))
-ch = conn.channel()
-
-ROUTES = {
-    "direct": [("recife-only", "recife")],
-    "topic": [("all-sales", "sale.*"), ("all-recife", "*.recife")],
-    "fanout": [("audit", ""), ("archive", "")],
+{
+  "file": "rabbit_routes.py",
+  "language": "python",
+  "parts": [
+    {
+      "code": "\"\"\"rabbit_routes.py: one message per shop event, three exchange types, and who got what.\"\"\"\nimport pika\n\nconn = pika.BlockingConnection(pika.ConnectionParameters(\"localhost\"))\nch = conn.channel()\n\nROUTES = {\n    \"direct\": [(\"recife-only\", \"recife\")],\n    \"topic\": [(\"all-sales\", \"sale.*\"), (\"all-recife\", \"*.recife\")],\n    \"fanout\": [(\"audit\", \"\"), (\"archive\", \"\")],\n}",
+      "note": "Which queue is bound to which exchange, and with what. **The empty key on the fanout bindings is there because the call needs one**; a fanout exchange never reads it."
+    },
+    {
+      "code": "for kind, queues in ROUTES.items():\n    ch.exchange_declare(exchange=f\"pf.{kind}\", exchange_type=kind)\n    for queue, key in queues:\n        ch.queue_declare(queue=queue)\n        ch.queue_purge(queue=queue)\n        ch.queue_bind(queue=queue, exchange=f\"pf.{kind}\", routing_key=key)",
+      "note": "Declare the exchanges and queues, empty the queues of anything an earlier run left, and bind each one. All of these are idempotent: running the program twice gives the same layout."
+    },
+    {
+      "code": "for key in [\"recife\", \"natal\"]:\n    ch.basic_publish(exchange=\"pf.direct\", routing_key=key, body=key)\nfor key in [\"sale.recife\", \"sale.natal\", \"refund.recife\"]:\n    ch.basic_publish(exchange=\"pf.topic\", routing_key=key, body=key)\nch.basic_publish(exchange=\"pf.fanout\", routing_key=\"ignored\", body=\"one event\")",
+      "note": "Two messages to the direct exchange, three to the topic exchange, one to the fanout. **The body is the routing key**, so the output shows which key reached which queue."
+    },
+    {
+      "code": "for kind, queues in ROUTES.items():\n    for queue, key in queues:\n        got = []\n        while (m := ch.basic_get(queue=queue, auto_ack=True))[0]:\n            got.append(m[2].decode())\n        print(f\"pf.{kind:7} {queue:12} bound with {key!r:10} got {got}\")\nconn.close()",
+      "note": "`basic_get` pulls one message, or nothing, instead of waiting; a loop of them empties a queue. Handy for a demonstration, wasteful for a consumer, which should use `basic_consume`."
+    }
+  ]
 }
---- Declare the exchanges and queues, empty the queues of anything an earlier run left, and bind each one. All of these are idempotent: running the program twice gives the same layout.
-for kind, queues in ROUTES.items():
-    ch.exchange_declare(exchange=f"pf.{kind}", exchange_type=kind)
-    for queue, key in queues:
-        ch.queue_declare(queue=queue)
-        ch.queue_purge(queue=queue)
-        ch.queue_bind(queue=queue, exchange=f"pf.{kind}", routing_key=key)
---- Two messages to the direct exchange, three to the topic exchange, one to the fanout. **The body is the routing key**, so the output shows which key reached which queue.
-for key in ["recife", "natal"]:
-    ch.basic_publish(exchange="pf.direct", routing_key=key, body=key)
-for key in ["sale.recife", "sale.natal", "refund.recife"]:
-    ch.basic_publish(exchange="pf.topic", routing_key=key, body=key)
-ch.basic_publish(exchange="pf.fanout", routing_key="ignored", body="one event")
---- `basic_get` pulls one message, or nothing, instead of waiting; a loop of them empties a queue. Handy for a demonstration, wasteful for a consumer, which should use `basic_consume`.
-for kind, queues in ROUTES.items():
-    for queue, key in queues:
-        got = []
-        while (m := ch.basic_get(queue=queue, auto_ack=True))[0]:
-            got.append(m[2].decode())
-        print(f"pf.{kind:7} {queue:12} bound with {key!r:10} got {got}")
-conn.close()
 ```
 
 ```

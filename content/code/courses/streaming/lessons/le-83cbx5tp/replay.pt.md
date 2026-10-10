@@ -69,8 +69,8 @@ stock           sales           0          0
 tópico inteiro de novo. Raramente é isso que um bug pede. **`--to-datetime` move cada partição para a
 primeira mensagem escrita naquele instante ou depois**, que é como se diz "a partir de segunda às
 nove". O instante aqui é quinze segundos depois de os caixas começarem na seção de lag, no meio das
-600 vendas; o seu é um instante do seu próprio relógio, no mesmo formato, e o `-03:00` é a diferença
-de São Paulo para o UTC:
+600 vendas. O seu é um instante do seu próprio relógio, no mesmo formato; o `-03:00` é a diferença de
+São Paulo para o UTC, e sem ele a ferramenta lê o horário como UTC:
 
 ```
 ubuntu@stream:~/work$ kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group stock --reset-offsets --topic sales --to-datetime 2026-10-10T16:37:09.000-03:00 --execute

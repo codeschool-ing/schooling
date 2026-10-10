@@ -1,0 +1,513 @@
+{
+  "ex-h8skyf6j": {
+    "prompt": "No modo padrão do Spark, o que acontece com uma venda entre chegar ao tópico e ser contada?",
+    "choices": [
+      {
+        "text": "Ela espera o próximo micro-batch",
+        "why": "Isso. O Spark junta o que chegou desde o último batch e processa a fatia junta."
+      },
+      {
+        "text": "O Spark a conta no instante em que chega, como o laço de poll de um consumidor",
+        "why": "Essa é a imagem errada de que a seção parte: por padrão o Spark trabalha em fatias."
+      },
+      {
+        "text": "Ela espera a noite, quando o Spark relê a tabela inteira",
+        "why": "O Spark nunca roda a consulta de novo sobre a tabela toda; ele é incremental."
+      },
+      {
+        "text": "Ela é copiada para um arquivo e lida por um job batch",
+        "why": "Nada é copiado para arquivo antes; o batch lê o tópico direto."
+      }
+    ]
+  },
+  "ex-4qbkpy3h": {
+    "prompt": "Qual destas consultas obriga o Spark a guardar estado entre micro-batches?",
+    "choices": [
+      {
+        "text": "Manter só as vendas de Natal",
+        "why": "Um filtro: entra uma linha, sai no máximo uma, nada a lembrar."
+      },
+      {
+        "text": "Transformar os bytes do valor em texto",
+        "why": "Uma projeção não precisa de nada dos batches anteriores."
+      },
+      {
+        "text": "Total de centavos por loja por hora",
+        "why": "Isso. Os totais parciais das janelas abertas passam de batch em batch."
+      },
+      {
+        "text": "Descartar a coluna `book`",
+        "why": "Escolher colunas não tem estado."
+      }
+    ]
+  },
+  "ex-vvat9hpe": {
+    "prompt": "Uma busca encontra código Spark construído com objetos `DStream`. O que a seção diz sobre ele?",
+    "choices": [
+      {
+        "text": "É a API antiga, obsoleta, sem noção de tempo do evento",
+        "why": "Isso. O Structured Streaming, o que tem `readStream`, a substituiu."
+      },
+      {
+        "text": "É a camada de baixo nível do Structured Streaming, usada para janelas",
+        "why": "Janelas se escrevem com funções de DataFrame; DStreams são a API antiga."
+      },
+      {
+        "text": "É a API de processamento contínuo da seção 07",
+        "why": "Processamento contínuo é um trigger do Structured Streaming, não DStreams."
+      },
+      {
+        "text": "É o nome em Python do que no Scala se chama DataFrame",
+        "why": "As duas APIs são diferentes, não duas grafias da mesma."
+      }
+    ]
+  },
+  "ex-8g74pbtt": {
+    "prompt": "O que `pip install pyspark==4.1.3` coloca na máquina?",
+    "choices": [
+      {
+        "text": "Só um cliente Python que fala com um servidor Spark instalado à parte a partir do site da Apache",
+        "why": "Não há instalação à parte: o pacote traz as bibliotecas Java do Spark."
+      },
+      {
+        "text": "O próprio Spark, com as bibliotecas Java",
+        "why": "Isso. Ele sobe o Spark dentro do seu programa quando uma sessão é pedida."
+      },
+      {
+        "text": "O Spark e uma cópia do Java 21 para ele rodar",
+        "why": "O Java vem do apt-get da lição 1; o pacote o usa."
+      },
+      {
+        "text": "O Spark e o conector de Kafka",
+        "why": "O conector não está no pacote; ele é baixado no primeiro uso."
+      }
+    ]
+  },
+  "ex-4y3rkr81": {
+    "prompt": "O programa de um colega pede `spark-sql-kafka-0-10_2.12:3.5.1` rodando com pyspark 4.1.3. O que a seção leva você a esperar?",
+    "choices": [
+      {
+        "text": "Funciona, porque o conector só fala com o Kafka",
+        "why": "O conector roda dentro do Spark e tem de bater com as versões de Scala e Spark."
+      },
+      {
+        "text": "O Ivy se recusa a baixá-lo",
+        "why": "O download funciona; o problema começa quando o Spark o carrega."
+      },
+      {
+        "text": "Um erro Java sobre classe ou método faltando na primeira leitura",
+        "why": "Isso. Os dois números discordam do Spark instalado, e o erro não cita versões."
+      },
+      {
+        "text": "Um aviso, depois do qual o Spark escolhe a versão certa sozinho",
+        "why": "O Spark carrega o que recebeu; nada corrige as coordenadas."
+      }
+    ]
+  },
+  "ex-e9d2vwpf": {
+    "prompt": "No diretório de checkpoint, um batch que tem arquivo em `offsets` e nenhum em ___ é um batch que não terminou.",
+    "blanks": [
+      {
+        "accept": [
+          "commits",
+          "commits/"
+        ]
+      }
+    ]
+  },
+  "ex-d0dvb405": {
+    "prompt": "Que tipo o Spark dá à coluna `value` de um tópico Kafka?",
+    "choices": [
+      {
+        "text": "binary",
+        "why": "Isso. A venda é bytes até a consulta converter e interpretar."
+      },
+      {
+        "text": "um struct com os campos da venda",
+        "why": "O Spark não sabe que o valor é JSON; o `from_json` monta o struct depois."
+      },
+      {
+        "text": "string",
+        "why": "Ele precisa ser convertido para string; é para isso o `cast`."
+      },
+      {
+        "text": "map de texto para texto",
+        "why": "Não há interpretação nenhuma antes de a sua consulta fazer."
+      }
+    ]
+  },
+  "ex-sv2qgd38": {
+    "prompt": "Por que uma janela de cinco minutos sobre a coluna `timestamp` do Spark contaria as vendas errado aqui?",
+    "choices": [
+      {
+        "text": "Ela está em UTC e as lojas estão três horas atrás",
+        "why": "O fuso da sessão está definido; o problema é qual momento ela registra."
+      },
+      {
+        "text": "É quando o registro foi enviado",
+        "why": "Isso. O momento da venda é o `at`, dentro do valor."
+      },
+      {
+        "text": "É a hora em que o Spark leu o registro",
+        "why": "É o timestamp do registro no Kafka, definido quando ele foi produzido."
+      },
+      {
+        "text": "Ela fica vazia a não ser que o broker a preencha",
+        "why": "Ela veio preenchida; mostrou a data de hoje."
+      }
+    ]
+  },
+  "ex-zv68d4ry": {
+    "prompt": "Por que a lição roda os programas Spark com `2>spark.log`?",
+    "choices": [
+      {
+        "text": "O Spark se recusa a iniciar quando as mensagens dele vão para um terminal",
+        "why": "Ele inicia de qualquer jeito; é sobre o que você lê."
+      },
+      {
+        "text": "Para que o checkpoint seja gravado no arquivo",
+        "why": "O checkpoint é um diretório próprio."
+      },
+      {
+        "text": "A falação do Spark vai para um arquivo que você lê quando algo falha",
+        "why": "Isso. A tela fica com o que a consulta imprimiu; os erros continuam no arquivo."
+      },
+      {
+        "text": "Ela esconde erros, que são inofensivos num laboratório",
+        "why": "Os erros ficam guardados, no arquivo, e a lição os lê lá."
+      }
+    ]
+  },
+  "ex-mgz56er5": {
+    "prompt": "Ponha os passos da consulta do `spark_sales.py` na ordem em que o programa os aplica.",
+    "items": [
+      "Ler o tópico com readStream",
+      "Interpretar o valor com from_json",
+      "Declarar um watermark de dois minutos em at",
+      "Agrupar por janela de cinco minutos",
+      "Escrever o stream com um modo de saída"
+    ]
+  },
+  "ex-1xbqj0yc": {
+    "prompt": "Ligue cada modo de saída ao que ele imprime depois de um batch.",
+    "pairs": [
+      {
+        "left": "update",
+        "right": "as janelas que aquele batch alterou, totais até ali"
+      },
+      {
+        "left": "complete",
+        "right": "todas as janelas, toda vez"
+      },
+      {
+        "left": "append",
+        "right": "janelas que o watermark fechou, uma vez cada"
+      }
+    ],
+    "right_distractors": [
+      "janelas que não receberam venda naquele batch"
+    ]
+  },
+  "ex-mp60t4j1": {
+    "prompt": "Na execução em append, a venda mais recente vista até o fim do batch 0 era das 09:10:12 e o atraso do watermark é de dois minutos. Em que minuto depois das nove cai o watermark usado pelo batch 1? (Responda em minutos inteiros.)",
+    "unit": "minutos"
+  },
+  "ex-2khxg6v5": {
+    "prompt": "A execução em append nunca imprimiu a janela de 09:30. Um colega conclui que essas vendas se perderam. Qual é a leitura melhor?",
+    "choices": [
+      {
+        "text": "Elas chegaram atrasadas, e o Spark as descartou atrás do watermark",
+        "why": "Nada chegou atrasado; a janela está esperando, não foi descartada."
+      },
+      {
+        "text": "O modo append imprime só as seis primeiras janelas de qualquer consulta",
+        "why": "Não existe esse limite; o que decide é o watermark."
+      },
+      {
+        "text": "Ela espera no estado pelo watermark",
+        "why": "Isso. Ele parou em 09:34:41, e uma venda posterior a liberaria."
+      },
+      {
+        "text": "A partição 2 as guardava, e o Spark nunca a leu",
+        "why": "A partição 2 está vazia; as vendas estão contadas no estado."
+      }
+    ]
+  },
+  "ex-p640an08": {
+    "prompt": "O batch 0 da execução em update mostrou uma janela de 09:10 com uma venda antes de a janela de 09:05 estar completa. Por quê?",
+    "choices": [
+      {
+        "text": "O relógio do caixa andou para trás",
+        "why": "O relógio do caixa só anda para a frente; a ordem quebrou entre partições."
+      },
+      {
+        "text": "Dez registros da partição 0 chegaram mais longe na manhã que quarenta da partição 1",
+        "why": "Isso. A ordem vale dentro de uma partição, não entre elas."
+      },
+      {
+        "text": "O Spark ordena as linhas de cada batch por loja antes de contar, o que põe as vendas de Caruaru na frente",
+        "why": "Não há ordenação; o batch pegou uma fatia de cada partição."
+      },
+      {
+        "text": "O modo update imprime as janelas de cada batch em ordem inversa, as mais novas antes das mais antigas",
+        "why": "A ordem de impressão não é a questão; a janela de fato tinha uma venda até ali."
+      }
+    ]
+  },
+  "ex-bz5sfrnb": {
+    "prompt": "Por que o modo complete não serve bem para contagens por janela de cinco minutos num stream que roda por meses?",
+    "choices": [
+      {
+        "text": "Ele não imprime nada até o stream acabar",
+        "why": "Ele imprime depois de cada batch; o problema é quanto ele guarda."
+      },
+      {
+        "text": "Ele recusa um watermark",
+        "why": "Ele aceita um e não o usa para descartar janelas."
+      },
+      {
+        "text": "O estado dele nunca diminui",
+        "why": "Isso. Ele serve para um resultado que fica pequeno, como um total por loja."
+      },
+      {
+        "text": "Ele conta duas vezes uma janela cada vez que a imprime",
+        "why": "Cada impressão repete o total; não soma a ele."
+      }
+    ]
+  },
+  "ex-y0x12217": {
+    "prompt": "Onde uma consulta de streaming do Spark guarda os offsets que já leu?",
+    "choices": [
+      {
+        "text": "No diretório de checkpoint",
+        "why": "Isso. Não no Kafka, e por isso a lista de grupos veio vazia."
+      },
+      {
+        "text": "Nos commits de um grupo de consumidores no broker",
+        "why": "O Spark se atribui as partições e nunca faz commit; o `--list` não mostrou nada."
+      },
+      {
+        "text": "No `spark.log`",
+        "why": "Esse arquivo é só para onde a lição manda as mensagens do Spark."
+      },
+      {
+        "text": "Na memória, até o programa terminar",
+        "why": "Um reinício os encontrou, então estão em disco."
+      }
+    ]
+  },
+  "ex-5jpf29xw": {
+    "prompt": "A segunda execução com o mesmo checkpoint não imprimiu nada, embora a consulta diga que `startingOffsets` é `earliest`. Por quê?",
+    "choices": [
+      {
+        "text": "A retenção do tópico tinha apagado as vendas antigas",
+        "why": "As vendas ainda estavam lá; o checkpoint dizia que já tinham sido tratadas."
+      },
+      {
+        "text": "`earliest` só vale na primeira execução de uma consulta",
+        "why": "Isso. Depois disso, o checkpoint decide de onde começar."
+      },
+      {
+        "text": "A saída de console é mostrada uma vez por checkpoint",
+        "why": "O batch 6 imprimiu depois com o mesmo checkpoint."
+      },
+      {
+        "text": "O Spark tinha caído na primeira execução",
+        "why": "A primeira execução terminou; os commits foram gravados."
+      }
+    ]
+  },
+  "ex-qryxb735": {
+    "prompt": "O processo morre depois de `offsets/9` ser escrito e antes de `commits/9`. O que o reinício faz?",
+    "choices": [
+      {
+        "text": "Pula o batch 9 e planeja o batch 10 a partir dos offsets mais recentes",
+        "why": "Pular perderia os registros que o batch 9 ia ler."
+      },
+      {
+        "text": "Recomeça do offset mais antigo do tópico",
+        "why": "O checkpoint impede que ele volte tanto."
+      },
+      {
+        "text": "Pergunta ao Kafka o último offset confirmado do grupo",
+        "why": "Não existe grupo; a posição mora no checkpoint."
+      },
+      {
+        "text": "Roda o batch 9 de novo com os mesmos offsets",
+        "why": "Isso. O sink pode então receber o batch 9 duas vezes."
+      }
+    ]
+  },
+  "ex-28cz39mm": {
+    "prompt": "Depois do reinício, a venda de Natal das 09:21 não apareceu em nenhuma saída. O que aconteceu com ela?",
+    "choices": [
+      {
+        "text": "Ela foi para a partição 2, que o Spark ignora",
+        "why": "O Spark lê todas as partições; o motivo é a hora dela."
+      },
+      {
+        "text": "Ela ficou atrás do watermark",
+        "why": "Isso. A janela dela já tinha sido esquecida, e uma venda atrasada some em silêncio."
+      },
+      {
+        "text": "Ela foi somada à janela de 09:35",
+        "why": "A janela de 09:35 cresceu só com a venda do Recife: de 13 para 14."
+      },
+      {
+        "text": "O produtor a rejeitou como malformada",
+        "why": "As duas linhas foram enviadas; só uma mudou uma janela."
+      }
+    ]
+  },
+  "ex-n5ybhyss": {
+    "prompt": "Quais triggers terminam sozinhos depois de ler os dados presentes no início? Escolha todos que se aplicam.",
+    "choices": [
+      {
+        "text": "availableNow",
+        "why": "Sim: vários batches, respeitando limites, e depois para."
+      },
+      {
+        "text": "once",
+        "why": "Sim: um batch, e para; está obsoleto em favor do availableNow."
+      },
+      {
+        "text": "processingTime de cinco segundos",
+        "why": "Ele continua começando batches a cada cinco segundos até ser parado."
+      },
+      {
+        "text": "continuous",
+        "why": "Ele nunca termina; o intervalo é a frequência com que o progresso é salvo."
+      }
+    ]
+  },
+  "ex-xv85kg1y": {
+    "prompt": "Por que o trigger continuous recusou o `spark_sales.py` antes de ler um registro?",
+    "choices": [
+      {
+        "text": "O processamento contínuo não lê do Kafka",
+        "why": "O Kafka é uma das fontes que ele aceita."
+      },
+      {
+        "text": "O diretório de checkpoint já existia, de uma execução anterior da consulta",
+        "why": "Era um diretório novo; a mensagem citou o watermark."
+      },
+      {
+        "text": "A consulta guarda estado, o que o modo contínuo não aceita",
+        "why": "Isso. Ele só aceita consultas linha-entra, linha-sai; o watermark foi a primeira objeção."
+      },
+      {
+        "text": "O Python não consegue pedir esse trigger",
+        "why": "O Python pediu; o Spark analisou a consulta e recusou."
+      }
+    ]
+  },
+  "ex-jnsbjs9s": {
+    "prompt": "Enquanto a consulta ao vivo rodava, quantos megabytes, mais ou menos, o processo do Spark e o nó Kafka ocupavam juntos? (Responda arredondando para a centena.)",
+    "unit": "megabytes"
+  },
+  "ex-mqy9d6cv": {
+    "prompt": "O sink de arquivos recusou o modo update. Por que ele só aceita append?",
+    "choices": [
+      {
+        "text": "Um arquivo escrito nunca é alterado, então só linhas finais podem entrar",
+        "why": "Isso. O update exigiria reescrever linhas que já estão em disco."
+      },
+      {
+        "text": "JSON não consegue guardar números que mudam",
+        "why": "O formato não é a questão; mudar um arquivo já escrito é."
+      },
+      {
+        "text": "O modo update precisa das chaves do Kafka",
+        "why": "O sink de console aceita update sem chave nenhuma."
+      },
+      {
+        "text": "Append é mais rápido em disco",
+        "why": "Velocidade não é o motivo; correção é."
+      }
+    ]
+  },
+  "ex-m30ks611": {
+    "prompt": "Um batch para o sink Kafka é repetido depois de uma queda, e `09:05` com 28 vendas é escrito duas vezes. Qual leitor a jusante sai prejudicado?",
+    "choices": [
+      {
+        "text": "Um que guarda o último valor por chave",
+        "why": "A segunda cópia substitui a primeira pelo mesmo número: sem estrago."
+      },
+      {
+        "text": "O leitor de um tópico compactado",
+        "why": "A compactação guarda o último por chave, que continua sendo 28."
+      },
+      {
+        "text": "O próprio Spark, no batch seguinte",
+        "why": "O Spark não lê de volta a própria saída no Kafka."
+      },
+      {
+        "text": "Um que soma cada registro num total corrente",
+        "why": "Isso. Cada registro é uma contagem inteira, não um incremento, e somar duas vezes dobra."
+      }
+    ]
+  },
+  "ex-1849s8rc": {
+    "prompt": "O que permite ao sink de arquivos ignorar os arquivos deixados por um batch que caiu pela metade?",
+    "choices": [
+      {
+        "text": "As transações do Kafka",
+        "why": "O sink de arquivos não usa o Kafka para escrever."
+      },
+      {
+        "text": "O log `_spark_metadata`, que lista os arquivos de cada batch concluído",
+        "why": "Isso. Arquivos que nenhuma entrada cita não fazem parte da saída."
+      },
+      {
+        "text": "A parte aleatória do nome de cada arquivo, que muda quando um batch roda de novo",
+        "why": "O nome aleatório evita colisões; não diz quais arquivos contam."
+      },
+      {
+        "text": "Arquivos vazios marcam batches que falharam",
+        "why": "Arquivos vazios são normais: uma partição de shuffle sem linhas."
+      }
+    ]
+  },
+  "ex-g0s38t1d": {
+    "prompt": "A Ponto Final quer um estoque por livro, atualizado numa tabela de banco a cada poucos segundos, sem total contado duas vezes depois de uma queda. Que combinação serve, segundo esta lição?",
+    "choices": [
+      {
+        "text": "Modo complete no console, com a consulta reiniciada toda noite depois do fechamento",
+        "why": "O console não guarda nada, e o banco nunca vê as contagens."
+      },
+      {
+        "text": "Trigger continuous para um sink de arquivos",
+        "why": "O continuous recusa estado, e arquivos recusam o modo update."
+      },
+      {
+        "text": "Modo update, um checkpoint e um upsert no foreachBatch",
+        "why": "Isso. Um batch repetido sobrescreve as mesmas linhas e é reconhecido pelo id."
+      },
+      {
+        "text": "Modo append sem watermark, para que cada linha saia assim que chega",
+        "why": "O append precisa de watermark para saber quando um resultado é final."
+      }
+    ]
+  },
+  "ex-aa36ewtr": {
+    "prompt": "Um colega apaga `~/spark/ckpt/update` para arrumar, e roda a consulta em update de novo no mesmo tópico. O que ele vê?",
+    "choices": [
+      {
+        "text": "Nada, como na segunda execução",
+        "why": "Aquele nada veio do checkpoint, que não existe mais."
+      },
+      {
+        "text": "Só as vendas acrescentadas desde a última execução",
+        "why": "Sem checkpoint o Spark não sabe o que a última execução leu."
+      },
+      {
+        "text": "O tópico inteiro contado de novo desde o batch 0",
+        "why": "Isso. O `earliest` volta a valer, como numa consulta nova, e o estado antigo se foi."
+      },
+      {
+        "text": "Um erro, porque falta o id da consulta",
+        "why": "Um diretório ausente é uma consulta nova, não um erro."
+      }
+    ]
+  }
+}

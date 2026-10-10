@@ -50,52 +50,36 @@ durable queue full of non-persistent messages comes back empty.
 The packer's side, as `~/work/rabbit_work.py`:
 
 ```schooling-example
-@file rabbit_work.py
-@lang python
---- A packer, with a name so its output can be told apart, a time per order, and a way to crash on purpose.
-"""rabbit_work.py: a packer. Takes orders off the queue one at a time.
-
-    python rabbit_work.py NAME [--seconds S] [--crash-after N]
-"""
-import argparse
-import json
-import os
-import time
-
-import pika
-
-args = argparse.ArgumentParser()
-args.add_argument("name")
-args.add_argument("--seconds", type=float, default=1)
-args.add_argument("--crash-after", type=int, default=0)
-args = args.parse_args()
---- **`prefetch_count=1` lets the server send this consumer one unacknowledged message at a time.** Without it, RabbitMQ pushes as many as it can, and a slow packer holds orders a free one could be packing.
-conn = pika.BlockingConnection(pika.ConnectionParameters("localhost"))
-ch = conn.channel()
-ch.queue_declare(queue="packing", durable=True)
-ch.basic_qos(prefetch_count=1)
-done = 0
---- The work. `method.redelivered` is the server saying it has handed this message out before.
-def pack(ch, method, properties, body):
-    global done
-    order = json.loads(body)
-    again = " (redelivered)" if method.redelivered else ""
-    print(f"{args.name}: packing {order['order']}{again}", flush=True)
-    time.sleep(args.seconds)
---- With `--crash-after N`, the packer finishes N orders and then dies in the middle of the next one, **after the work and before the acknowledgement**, the worst moment there is. `os._exit` ends the process at once, as a kill would.
-    if args.crash_after and done == args.crash_after:
-        print(f"{args.name}: crashed before acknowledging {order['order']}", flush=True)
-        os._exit(1)
---- **`basic_ack` is the moment the message is deleted.** Until it arrives the server keeps the order, marked as unacknowledged, for this consumer only.
-    ch.basic_ack(delivery_tag=method.delivery_tag)
-    done += 1
---- Register the callback and wait for messages, for ever. Ctrl+C closes the connection politely, which hands back anything not yet acknowledged.
-ch.basic_consume(queue="packing", on_message_callback=pack)
-try:
-    ch.start_consuming()
-except KeyboardInterrupt:
-    print(f"{args.name}: stopped after {done} orders")
-    conn.close()
+{
+  "file": "rabbit_work.py",
+  "language": "python",
+  "parts": [
+    {
+      "code": "\"\"\"rabbit_work.py: a packer. Takes orders off the queue one at a time.\n\n    python rabbit_work.py NAME [--seconds S] [--crash-after N]\n\"\"\"\nimport argparse\nimport json\nimport os\nimport time\n\nimport pika\n\nargs = argparse.ArgumentParser()\nargs.add_argument(\"name\")\nargs.add_argument(\"--seconds\", type=float, default=1)\nargs.add_argument(\"--crash-after\", type=int, default=0)\nargs = args.parse_args()",
+      "note": "A packer, with a name so its output can be told apart, a time per order, and a way to crash on purpose."
+    },
+    {
+      "code": "conn = pika.BlockingConnection(pika.ConnectionParameters(\"localhost\"))\nch = conn.channel()\nch.queue_declare(queue=\"packing\", durable=True)\nch.basic_qos(prefetch_count=1)\ndone = 0",
+      "note": "**`prefetch_count=1` lets the server send this consumer one unacknowledged message at a time.** Without it, RabbitMQ pushes as many as it can, and a slow packer holds orders a free one could be packing."
+    },
+    {
+      "code": "def pack(ch, method, properties, body):\n    global done\n    order = json.loads(body)\n    again = \" (redelivered)\" if method.redelivered else \"\"\n    print(f\"{args.name}: packing {order['order']}{again}\", flush=True)\n    time.sleep(args.seconds)",
+      "note": "The work. `method.redelivered` is the server saying it has handed this message out before."
+    },
+    {
+      "code": "    if args.crash_after and done == args.crash_after:\n        print(f\"{args.name}: crashed before acknowledging {order['order']}\", flush=True)\n        os._exit(1)",
+      "note": "With `--crash-after N`, the packer finishes N orders and then dies in the middle of the next one, **after the work and before the acknowledgement**, the worst moment there is. `os._exit` ends the process at once, as a kill would."
+    },
+    {
+      "code": "    ch.basic_ack(delivery_tag=method.delivery_tag)\n    done += 1",
+      "note": "**`basic_ack` is the moment the message is deleted.** Until it arrives the server keeps the order, marked as unacknowledged, for this consumer only."
+    },
+    {
+      "code": "ch.basic_consume(queue=\"packing\", on_message_callback=pack)\ntry:\n    ch.start_consuming()\nexcept KeyboardInterrupt:\n    print(f\"{args.name}: stopped after {done} orders\")\n    conn.close()",
+      "note": "Register the callback and wait for messages, for ever. Ctrl+C closes the connection politely, which hands back anything not yet acknowledged."
+    }
+  ]
+}
 ```
 
 ## Two packers, and one that dies

@@ -11,7 +11,10 @@ evento cai em exatamente uma.** É a janela que as pessoas querem dizer com "a c
 A regra é uma linha de aritmética. Com os horários em segundos e um tamanho de cinco minutos, 300
 segundos, a janela começa no horário do evento arredondado **para baixo** até um múltiplo do tamanho:
 
-@@fence@@
+```python
+start = t // size * size
+end = start + size
+```
 
 09:03:55 são 32.635 segundos depois da meia-noite; divididos por 300 dão 108,78, arredondado para
 baixo 108 (o `//` do Python divide e arredonda para baixo num passo só), vezes 300 dá 32.400
@@ -64,7 +67,9 @@ desta lição é sobre a qual janela um evento pertence, e isso é aritmética s
 
 Janelas tumbling de cinco minutos:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python windows.py tumbling 5
+```
 
 Quatro janelas, e as dez vendas fecham a conta: 3, 3, 3 e 1. Não há linha para 09:15 às 09:20,
 porque nenhuma venda aconteceu nesse intervalo. **Um motor só cria uma janela quando um evento cai

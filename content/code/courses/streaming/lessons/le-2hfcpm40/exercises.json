@@ -1,0 +1,769 @@
+[
+  {
+    "id": "ex-h8skyf6j",
+    "version": 1,
+    "section": "the-model",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In Spark's default mode, what happens to a sale between reaching the topic and being counted?",
+    "choices": [
+      {
+        "text": "It waits for the next micro-batch",
+        "correct": true,
+        "why": "Right. Spark gathers what arrived since the last batch and processes the slice together."
+      },
+      {
+        "text": "Spark counts it the moment it arrives, like a consumer's poll loop",
+        "correct": false,
+        "why": "That is the wrong picture the section starts from: by default Spark works in slices."
+      },
+      {
+        "text": "It waits for the night, when Spark rereads the whole table",
+        "correct": false,
+        "why": "Spark never reruns the query over the whole table; it is incremental."
+      },
+      {
+        "text": "It is copied to a file and read by a batch job",
+        "correct": false,
+        "why": "Nothing is copied to a file first; the batch reads the topic directly."
+      }
+    ]
+  },
+  {
+    "id": "ex-4qbkpy3h",
+    "version": 1,
+    "section": "the-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these queries needs Spark to keep state between micro-batches?",
+    "choices": [
+      {
+        "text": "Keep only the sales from Natal",
+        "correct": false,
+        "why": "A filter: one row in, at most one row out, nothing to remember."
+      },
+      {
+        "text": "Turn the value's bytes into text",
+        "correct": false,
+        "why": "A projection needs nothing from earlier batches."
+      },
+      {
+        "text": "Total cents per shop per hour",
+        "correct": true,
+        "why": "Right. The running totals of open windows are carried from batch to batch."
+      },
+      {
+        "text": "Drop the `book` column",
+        "correct": false,
+        "why": "Picking columns is stateless."
+      }
+    ]
+  },
+  {
+    "id": "ex-vvat9hpe",
+    "version": 1,
+    "section": "the-model",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A search turns up Spark code built on `DStream` objects. What does the section say about it?",
+    "choices": [
+      {
+        "text": "It is the older API, deprecated, with no notion of event time",
+        "correct": true,
+        "why": "Right. Structured Streaming, the one with `readStream`, replaced it."
+      },
+      {
+        "text": "It is Structured Streaming's low-level layer, used for windows",
+        "correct": false,
+        "why": "Windows are written with DataFrame functions; DStreams are the old API."
+      },
+      {
+        "text": "It is the continuous-processing API from section 07",
+        "correct": false,
+        "why": "Continuous processing is a trigger of Structured Streaming, not DStreams."
+      },
+      {
+        "text": "It is the Python name for what Scala calls a DataFrame",
+        "correct": false,
+        "why": "The two APIs are different, not two spellings of one."
+      }
+    ]
+  },
+  {
+    "id": "ex-8g74pbtt",
+    "version": 1,
+    "section": "installing-spark",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `pip install pyspark==4.1.3` put on the machine?",
+    "choices": [
+      {
+        "text": "Only a Python client that talks to a Spark server installed separately from the Apache site",
+        "correct": false,
+        "why": "No separate install: the package carries Spark's Java libraries itself."
+      },
+      {
+        "text": "Spark itself, Java libraries included",
+        "correct": true,
+        "why": "Right. It starts Spark inside your program when a session is asked for."
+      },
+      {
+        "text": "Spark and a copy of Java 21 for it to run on",
+        "correct": false,
+        "why": "Java comes from lesson 1's apt-get; the package uses it."
+      },
+      {
+        "text": "Spark and its Kafka connector",
+        "correct": false,
+        "why": "The connector is not in the package; it is fetched on first use."
+      }
+    ]
+  },
+  {
+    "id": "ex-4y3rkr81",
+    "version": 1,
+    "section": "installing-spark",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's program asks for `spark-sql-kafka-0-10_2.12:3.5.1` while running pyspark 4.1.3. What does the section lead you to expect?",
+    "choices": [
+      {
+        "text": "It works, because the connector only talks to Kafka",
+        "correct": false,
+        "why": "The connector runs inside Spark and must match its Scala and Spark versions."
+      },
+      {
+        "text": "Ivy refuses to download it",
+        "correct": false,
+        "why": "The download succeeds; the trouble starts when Spark loads it."
+      },
+      {
+        "text": "A Java error about a missing class or method at the first read",
+        "correct": true,
+        "why": "Right. Both numbers disagree with the installed Spark, and the error does not name versions."
+      },
+      {
+        "text": "A warning, after which Spark picks the right version itself",
+        "correct": false,
+        "why": "Spark loads what it was given; nothing corrects the coordinates."
+      }
+    ]
+  },
+  {
+    "id": "ex-e9d2vwpf",
+    "version": 1,
+    "section": "checkpoints",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the checkpoint directory, a batch that has a file in `offsets` and none in ___ is a batch that did not finish.",
+    "blanks": [
+      {
+        "accept": [
+          "commits",
+          "commits/"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-d0dvb405",
+    "version": 1,
+    "section": "reading-kafka",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What type does Spark give the `value` column of a Kafka topic?",
+    "choices": [
+      {
+        "text": "binary",
+        "correct": true,
+        "why": "Right. The sale is bytes until the query casts and parses it."
+      },
+      {
+        "text": "a struct with the sale's fields",
+        "correct": false,
+        "why": "Spark does not know the value is JSON; `from_json` makes the struct later."
+      },
+      {
+        "text": "string",
+        "correct": false,
+        "why": "It has to be cast to a string; that is what `cast` is for."
+      },
+      {
+        "text": "map of text to text",
+        "correct": false,
+        "why": "There is no parsing at all before your query does it."
+      }
+    ]
+  },
+  {
+    "id": "ex-sv2qgd38",
+    "version": 1,
+    "section": "reading-kafka",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why would a five-minute window over Spark's `timestamp` column count the sales wrongly here?",
+    "choices": [
+      {
+        "text": "It is in UTC and the shops are three hours behind",
+        "correct": false,
+        "why": "The session time zone is set; the problem is which moment it records."
+      },
+      {
+        "text": "It is when the record was sent",
+        "correct": true,
+        "why": "Right. The sale's moment is `at`, inside the value."
+      },
+      {
+        "text": "It is the time Spark read the record",
+        "correct": false,
+        "why": "It is Kafka's record timestamp, set when the record was produced."
+      },
+      {
+        "text": "It is empty unless the broker sets it",
+        "correct": false,
+        "why": "It was filled; it showed today's date."
+      }
+    ]
+  },
+  {
+    "id": "ex-zv68d4ry",
+    "version": 1,
+    "section": "reading-kafka",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson run its Spark programs with `2>spark.log`?",
+    "choices": [
+      {
+        "text": "Spark refuses to start when its messages go to a terminal",
+        "correct": false,
+        "why": "It starts either way; this is about what you read."
+      },
+      {
+        "text": "So that the checkpoint is written to the file",
+        "correct": false,
+        "why": "The checkpoint is a directory of its own."
+      },
+      {
+        "text": "Spark's chatter goes to a file you read when something fails",
+        "correct": true,
+        "why": "Right. The screen keeps what the query printed; errors are still in the file."
+      },
+      {
+        "text": "It hides errors, which are harmless in a lab",
+        "correct": false,
+        "why": "The errors are kept, in the file, and the lesson reads them there."
+      }
+    ]
+  },
+  {
+    "id": "ex-mgz56er5",
+    "version": 1,
+    "section": "a-windowed-count",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `spark_sales.py`'s query in the order the program applies them.",
+    "items": [
+      "Read the topic with readStream",
+      "Parse the value with from_json",
+      "Declare a watermark of two minutes on at",
+      "Group by a five-minute window",
+      "Write the stream with an output mode"
+    ]
+  },
+  {
+    "id": "ex-1xbqj0yc",
+    "version": 1,
+    "section": "a-windowed-count",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each output mode to what it prints after a batch.",
+    "pairs": [
+      {
+        "left": "update",
+        "right": "the windows that batch changed, totals so far"
+      },
+      {
+        "left": "complete",
+        "right": "every window, every time"
+      },
+      {
+        "left": "append",
+        "right": "windows the watermark has closed, once each"
+      }
+    ],
+    "right_distractors": [
+      "windows that got no sale in that batch"
+    ]
+  },
+  {
+    "id": "ex-mp60t4j1",
+    "version": 1,
+    "section": "a-windowed-count",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the append run, the latest sale seen by the end of batch 0 was at 09:10:12 and the watermark delay is two minutes. At what minute past nine does the watermark used by batch 1 fall? (Answer in whole minutes.)",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-2khxg6v5",
+    "version": 1,
+    "section": "a-windowed-count",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The append run never printed the 09:30 window. A colleague concludes those sales were lost. What is the better reading?",
+    "choices": [
+      {
+        "text": "They were late, and Spark dropped them behind the watermark",
+        "correct": false,
+        "why": "Nothing was late; the window is waiting, not dropped."
+      },
+      {
+        "text": "Append mode prints only the first six windows of any query",
+        "correct": false,
+        "why": "There is no such limit; what decides is the watermark."
+      },
+      {
+        "text": "It waits in state for the watermark",
+        "correct": true,
+        "why": "Right. It stopped at 09:34:41, and a later sale would release it."
+      },
+      {
+        "text": "Partition 2 held them, and Spark never read it",
+        "correct": false,
+        "why": "Partition 2 is empty; the sales are counted in state."
+      }
+    ]
+  },
+  {
+    "id": "ex-p640an08",
+    "version": 1,
+    "section": "a-windowed-count",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Batch 0 of the update run showed a 09:10 window with one sale before the 09:05 window was complete. Why?",
+    "choices": [
+      {
+        "text": "The till's clock went backwards",
+        "correct": false,
+        "why": "The till's clock only moves forward; the order broke across partitions."
+      },
+      {
+        "text": "Ten records of partition 0 reached further into the morning than forty of partition 1",
+        "correct": true,
+        "why": "Right. Order holds inside a partition, not across them."
+      },
+      {
+        "text": "Spark sorts the rows of every batch by shop before counting, which moves Caruaru's sales first",
+        "correct": false,
+        "why": "No sort happens; the batch took a slice of each partition."
+      },
+      {
+        "text": "Update mode prints the windows of each batch in reverse order, newest first, before older ones",
+        "correct": false,
+        "why": "Order of printing is not the issue; the window really had one sale so far."
+      }
+    ]
+  },
+  {
+    "id": "ex-bz5sfrnb",
+    "version": 1,
+    "section": "a-windowed-count",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is complete mode a poor fit for counts per five-minute window on a stream that runs for months?",
+    "choices": [
+      {
+        "text": "It prints nothing until the stream ends",
+        "correct": false,
+        "why": "It prints after every batch; the problem is how much it keeps."
+      },
+      {
+        "text": "It refuses a watermark",
+        "correct": false,
+        "why": "It accepts one and does not use it to drop windows."
+      },
+      {
+        "text": "Its state never shrinks",
+        "correct": true,
+        "why": "Right. It suits a result that stays small, like a total per shop."
+      },
+      {
+        "text": "It double-counts a window each time it is printed",
+        "correct": false,
+        "why": "Each print repeats the total; it does not add to it."
+      }
+    ]
+  },
+  {
+    "id": "ex-y0x12217",
+    "version": 1,
+    "section": "checkpoints",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does a Spark streaming query keep the offsets it has read?",
+    "choices": [
+      {
+        "text": "In its checkpoint directory",
+        "correct": true,
+        "why": "Right. Not in Kafka, which is why the group list was empty."
+      },
+      {
+        "text": "In a consumer group's commits on the broker",
+        "correct": false,
+        "why": "Spark assigns itself partitions and never commits; `--list` showed nothing."
+      },
+      {
+        "text": "In `spark.log`",
+        "correct": false,
+        "why": "That file is only where the lesson sends Spark's messages."
+      },
+      {
+        "text": "In memory, until the program ends",
+        "correct": false,
+        "why": "A restart found them, so they are on disk."
+      }
+    ]
+  },
+  {
+    "id": "ex-5jpf29xw",
+    "version": 1,
+    "section": "checkpoints",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The second run with the same checkpoint printed nothing, although the query says `startingOffsets` is `earliest`. Why?",
+    "choices": [
+      {
+        "text": "The topic's retention had deleted the old sales",
+        "correct": false,
+        "why": "The sales were still there; the checkpoint said they were done."
+      },
+      {
+        "text": "`earliest` only applies to a query's first run",
+        "correct": true,
+        "why": "Right. After that the checkpoint decides where to start."
+      },
+      {
+        "text": "Console output is shown once per checkpoint",
+        "correct": false,
+        "why": "Batch 6 printed later with the same checkpoint."
+      },
+      {
+        "text": "Spark had crashed during the first run",
+        "correct": false,
+        "why": "The first run finished; its commits were written."
+      }
+    ]
+  },
+  {
+    "id": "ex-qryxb735",
+    "version": 1,
+    "section": "checkpoints",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The process dies after `offsets/9` is written and before `commits/9`. What does the restart do?",
+    "choices": [
+      {
+        "text": "Skips batch 9 and plans batch 10 from the latest offsets",
+        "correct": false,
+        "why": "Skipping would lose the records batch 9 was going to read."
+      },
+      {
+        "text": "Starts again from the topic's earliest offset",
+        "correct": false,
+        "why": "The checkpoint keeps it from going back that far."
+      },
+      {
+        "text": "Asks Kafka for the group's last committed offset",
+        "correct": false,
+        "why": "There is no group; the position lives in the checkpoint."
+      },
+      {
+        "text": "Runs batch 9 again with the same offsets",
+        "correct": true,
+        "why": "Right. The sink may then receive batch 9 twice."
+      }
+    ]
+  },
+  {
+    "id": "ex-28cz39mm",
+    "version": 1,
+    "section": "checkpoints",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the restart, the sale from Natal at 09:21 appeared in no output. What happened to it?",
+    "choices": [
+      {
+        "text": "It went to partition 2, which Spark ignores",
+        "correct": false,
+        "why": "Spark reads every partition; the reason is its time."
+      },
+      {
+        "text": "It fell behind the watermark",
+        "correct": true,
+        "why": "Right. Its window had been forgotten, and a late sale is dropped silently."
+      },
+      {
+        "text": "It was added to the 09:35 window",
+        "correct": false,
+        "why": "The 09:35 window grew by the Recife sale only: 13 to 14."
+      },
+      {
+        "text": "The producer rejected it as malformed",
+        "correct": false,
+        "why": "Both lines were sent; only one changed a window."
+      }
+    ]
+  },
+  {
+    "id": "ex-n5ybhyss",
+    "version": 1,
+    "section": "triggers",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which triggers end by themselves once the data present at the start has been read? Choose all that apply.",
+    "choices": [
+      {
+        "text": "availableNow",
+        "correct": true,
+        "why": "Yes: several batches, respecting limits, then it stops."
+      },
+      {
+        "text": "once",
+        "correct": true,
+        "why": "Yes: one batch, then it stops; it is deprecated in favour of availableNow."
+      },
+      {
+        "text": "processingTime of five seconds",
+        "correct": false,
+        "why": "It keeps starting batches every five seconds until stopped."
+      },
+      {
+        "text": "continuous",
+        "correct": false,
+        "why": "It never ends; the interval is how often progress is saved."
+      }
+    ]
+  },
+  {
+    "id": "ex-xv85kg1y",
+    "version": 1,
+    "section": "triggers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the continuous trigger refuse `spark_sales.py` before reading a record?",
+    "choices": [
+      {
+        "text": "Continuous processing cannot read from Kafka",
+        "correct": false,
+        "why": "Kafka is one of the sources it supports."
+      },
+      {
+        "text": "The checkpoint directory already existed from an earlier run of the query",
+        "correct": false,
+        "why": "It was a new directory; the message named the watermark."
+      },
+      {
+        "text": "The query keeps state, which continuous mode does not support",
+        "correct": true,
+        "why": "Right. It takes row-in, row-out queries only; the watermark was the first objection."
+      },
+      {
+        "text": "Python cannot ask for that trigger",
+        "correct": false,
+        "why": "Python asked for it; Spark analysed the query and refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-jnsbjs9s",
+    "version": 1,
+    "section": "triggers",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "While the live query ran, roughly how many megabytes did the Spark process and the Kafka node hold together? (Answer to the nearest 100.)",
+    "value": 1000,
+    "tolerance": 100,
+    "unit": "megabytes"
+  },
+  {
+    "id": "ex-mqy9d6cv",
+    "version": 1,
+    "section": "sinks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The file sink refused update mode. Why does it accept only append?",
+    "choices": [
+      {
+        "text": "A written file is never changed, so only final rows can go in",
+        "correct": true,
+        "why": "Right. Update would need to rewrite rows already on disk."
+      },
+      {
+        "text": "JSON cannot hold numbers that change",
+        "correct": false,
+        "why": "The format is not the issue; changing a file already written is."
+      },
+      {
+        "text": "Update mode needs Kafka's keys",
+        "correct": false,
+        "why": "The console sink takes update mode with no keys at all."
+      },
+      {
+        "text": "Append is faster on disk",
+        "correct": false,
+        "why": "Speed is not why; correctness is."
+      }
+    ]
+  },
+  {
+    "id": "ex-m30ks611",
+    "version": 1,
+    "section": "sinks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A batch to the Kafka sink is replayed after a crash, and `09:05` with 28 sales is written twice. Which downstream reader is hurt?",
+    "choices": [
+      {
+        "text": "One that keeps the last value per key",
+        "correct": false,
+        "why": "The second copy replaces the first with the same number: no harm."
+      },
+      {
+        "text": "A compacted topic's reader",
+        "correct": false,
+        "why": "Compaction keeps the last per key, which is still 28."
+      },
+      {
+        "text": "Spark itself, on its next batch",
+        "correct": false,
+        "why": "Spark does not read its own output back from Kafka."
+      },
+      {
+        "text": "One that adds each record to a running total",
+        "correct": true,
+        "why": "Right. Each record is a whole count, not an increment, and adding it twice doubles it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1849s8rc",
+    "version": 1,
+    "section": "sinks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What lets the file sink ignore files left by a batch that crashed half-written?",
+    "choices": [
+      {
+        "text": "Kafka's transactions",
+        "correct": false,
+        "why": "The file sink does not use Kafka to write."
+      },
+      {
+        "text": "The `_spark_metadata` log naming each finished batch's files",
+        "correct": true,
+        "why": "Right. Files no entry names are not part of the output."
+      },
+      {
+        "text": "The random part of each file's name, which changes when a batch runs again",
+        "correct": false,
+        "why": "The random name avoids collisions; it does not say which files count."
+      },
+      {
+        "text": "Empty files mark failed batches",
+        "correct": false,
+        "why": "Empty files are normal: a shuffle partition with no rows."
+      }
+    ]
+  },
+  {
+    "id": "ex-g0s38t1d",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ponto Final wants a stock count per book, updated in a database table every few seconds, with no total counted twice after a crash. Which combination fits this lesson?",
+    "choices": [
+      {
+        "text": "Complete mode to the console, with the query restarted every night after closing",
+        "correct": false,
+        "why": "The console keeps nothing, and the database never sees the counts."
+      },
+      {
+        "text": "Continuous trigger to a file sink",
+        "correct": false,
+        "why": "Continuous refuses state, and files refuse update mode."
+      },
+      {
+        "text": "Update mode, a checkpoint, and an upsert in foreachBatch",
+        "correct": true,
+        "why": "Right. A replayed batch overwrites the same rows and can be recognised by its id."
+      },
+      {
+        "text": "Append mode with no watermark, so that every row goes out as soon as it arrives",
+        "correct": false,
+        "why": "Append needs a watermark to know when a result is final."
+      }
+    ]
+  },
+  {
+    "id": "ex-aa36ewtr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A teammate deletes `~/spark/ckpt/update` to tidy up, then runs the update query again on the same topic. What do they see?",
+    "choices": [
+      {
+        "text": "Nothing, as in the second run",
+        "correct": false,
+        "why": "That nothing came from the checkpoint, which is gone."
+      },
+      {
+        "text": "Only the sales added since the last run",
+        "correct": false,
+        "why": "Without a checkpoint Spark has no idea what the last run read."
+      },
+      {
+        "text": "The whole topic counted again from batch 0",
+        "correct": true,
+        "why": "Right. `earliest` applies again, as for a new query, and the old state is gone."
+      },
+      {
+        "text": "An error, because the query's id is missing",
+        "correct": false,
+        "why": "A missing directory is a new query, not an error."
+      }
+    ]
+  }
+]

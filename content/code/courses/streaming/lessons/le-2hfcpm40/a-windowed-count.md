@@ -8,82 +8,40 @@ watermark, is a few lines of Spark. **What takes thought is not the query but th
 after each batch, which rows of the result table leave for the sink. There are three, and the same
 two hundred sales come out of each one differently.
 
-Save this as `~/work/spark_sales.py`. The rest of the lesson runs it with different arguments
-rather than editing it:
+The rest of the lesson runs one program with different arguments rather than editing it. Save it
+as `~/work/spark_sales.py`:
 
 ```schooling-example
-@file spark_sales.py
-@lang python
---- What it counts, and the four arguments the rest of the lesson changes.
-"""spark_sales.py: Ponto Final's sales per five-minute window, counted by Spark.
-
-    python spark_sales.py [--mode M] [--trigger T] [--sink S] [--checkpoint DIR]
-
---mode is update, append or complete. --trigger is available-now, a number
-of seconds, or continuous. --sink is console, kafka or files.
-"""
-import argparse
-import os
-
-from pyspark.sql import SparkSession
-from pyspark.sql import functions as F
-
-args = argparse.ArgumentParser()
-args.add_argument("--mode", default="update")
-args.add_argument("--trigger", default="available-now")
-args.add_argument("--sink", default="console")
-args.add_argument("--checkpoint", default="~/spark/ckpt/sales")
-args = args.parse_args()
-
---- The session from the last section, with one more line. **`spark.sql.shuffle.partitions` is how many pieces a grouping is split into**, and its default of 200 means 200 small tasks and 200 pieces of state per batch, which on one machine is all overhead.
-spark = (SparkSession.builder.appName("spark-sales").master("local[2]")
-         .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.13:4.1.3")
-         .config("spark.sql.session.timeZone", "America/Sao_Paulo")
-         .config("spark.sql.shuffle.partitions", "2")
-         .config("spark.ui.showConsoleProgress", "false")
-         .getOrCreate())
-spark.sparkContext.setLogLevel("ERROR")
-
---- The value is parsed as JSON with a schema written as SQL types, and `at` becomes a timestamp. **`maxOffsetsPerTrigger` caps each batch at 50 records**, so that the two hundred sales already in the topic arrive in four batches and you can watch the count move instead of seeing it all at once.
-SALE = "sale STRING, shop STRING, book STRING, qty INT, cents BIGINT, at TIMESTAMP"
-sales = (spark.readStream.format("kafka")
-         .option("kafka.bootstrap.servers", "localhost:9092")
-         .option("subscribe", "sales")
-         .option("startingOffsets", "earliest")
-         .option("maxOffsetsPerTrigger", 50)
-         .load()
-         .select(F.from_json(F.col("value").cast("string"), SALE).alias("s"))
-         .select("s.*"))
-
---- The query itself. **`withWatermark` says that a sale more than two minutes older than the latest one seen may be ignored**, which is what lets Spark close a window and forget it. Then a tumbling window of five minutes on `at`, a count, a sum, and the window's start and end printed as shop times.
-per_window = (sales.withWatermark("at", "2 minutes")
-              .groupBy(F.window("at", "5 minutes"))
-              .agg(F.count("*").alias("sales"), F.sum("cents").alias("cents"))
-              .select(F.date_format("window.start", "HH:mm").alias("start"),
-                      F.date_format("window.end", "HH:mm").alias("end"), "sales", "cents"))
-
---- Where the rows go. Every sink gets the output mode and a checkpoint directory; section 06 opens the directory, and section 08 is about the Kafka and file sinks, which need the rows in a shape of their own.
-if args.sink == "kafka":
-    per_window = per_window.select(F.col("start").alias("key"),
-                                   F.to_json(F.struct("*")).alias("value"))
-out = (per_window.writeStream.outputMode(args.mode)
-       .option("checkpointLocation", os.path.expanduser(args.checkpoint)))
-if args.sink == "kafka":
-    out = (out.format("kafka").option("kafka.bootstrap.servers", "localhost:9092")
-           .option("topic", "sales-per-window"))
-elif args.sink == "files":
-    out = out.format("json").option("path", os.path.expanduser("~/spark/out"))
-else:
-    out = out.format("console")
-
---- When batches run, which is section 07. Nothing has happened until `start`, which launches the query in the background and returns; `awaitTermination` keeps the program alive until the query ends.
-if args.trigger == "available-now":
-    out = out.trigger(availableNow=True)
-elif args.trigger == "continuous":
-    out = out.trigger(continuous="1 second")
-else:
-    out = out.trigger(processingTime=f"{args.trigger} seconds")
-out.start().awaitTermination()
+{
+  "file": "spark_sales.py",
+  "language": "python",
+  "parts": [
+    {
+      "code": "\"\"\"spark_sales.py: Ponto Final's sales per five-minute window, counted by Spark.\n\n    python spark_sales.py [--mode M] [--trigger T] [--sink S] [--checkpoint DIR]\n\n--mode is update, append or complete. --trigger is available-now, a number\nof seconds, or continuous. --sink is console, kafka or files.\n\"\"\"\nimport argparse\nimport os\n\nfrom pyspark.sql import SparkSession\nfrom pyspark.sql import functions as F\n\nargs = argparse.ArgumentParser()\nargs.add_argument(\"--mode\", default=\"update\")\nargs.add_argument(\"--trigger\", default=\"available-now\")\nargs.add_argument(\"--sink\", default=\"console\")\nargs.add_argument(\"--checkpoint\", default=\"~/spark/ckpt/sales\")\nargs = args.parse_args()\n",
+      "note": "What it counts, and the four arguments the rest of the lesson changes."
+    },
+    {
+      "code": "spark = (SparkSession.builder.appName(\"spark-sales\").master(\"local[2]\")\n         .config(\"spark.jars.packages\", \"org.apache.spark:spark-sql-kafka-0-10_2.13:4.1.3\")\n         .config(\"spark.sql.session.timeZone\", \"America/Sao_Paulo\")\n         .config(\"spark.sql.shuffle.partitions\", \"2\")\n         .config(\"spark.ui.showConsoleProgress\", \"false\")\n         .getOrCreate())\nspark.sparkContext.setLogLevel(\"ERROR\")\n",
+      "note": "The session from the last section, with one more line. **`spark.sql.shuffle.partitions` is how many pieces a grouping is split into**, and its default of 200 means 200 small tasks and 200 pieces of state per batch, which on one machine is all overhead."
+    },
+    {
+      "code": "SALE = \"sale STRING, shop STRING, book STRING, qty INT, cents BIGINT, at TIMESTAMP\"\nsales = (spark.readStream.format(\"kafka\")\n         .option(\"kafka.bootstrap.servers\", \"localhost:9092\")\n         .option(\"subscribe\", \"sales\")\n         .option(\"startingOffsets\", \"earliest\")\n         .option(\"maxOffsetsPerTrigger\", 50)\n         .load()\n         .select(F.from_json(F.col(\"value\").cast(\"string\"), SALE).alias(\"s\"))\n         .select(\"s.*\"))\n",
+      "note": "The value is parsed as JSON with a schema written as SQL types, and `at` becomes a timestamp. **`maxOffsetsPerTrigger` caps each batch at 50 records**, so that the two hundred sales already in the topic arrive in four batches and you can watch the count move instead of seeing it all at once."
+    },
+    {
+      "code": "per_window = (sales.withWatermark(\"at\", \"2 minutes\")\n              .groupBy(F.window(\"at\", \"5 minutes\"))\n              .agg(F.count(\"*\").alias(\"sales\"), F.sum(\"cents\").alias(\"cents\"))\n              .select(F.date_format(\"window.start\", \"HH:mm\").alias(\"start\"),\n                      F.date_format(\"window.end\", \"HH:mm\").alias(\"end\"), \"sales\", \"cents\"))\n",
+      "note": "The query itself. **`withWatermark` says that a sale more than two minutes older than the latest one seen may be ignored**, which is what lets Spark close a window and forget it. Then a tumbling window of five minutes on `at`, a count, a sum, and the window's start and end printed as shop times."
+    },
+    {
+      "code": "if args.sink == \"kafka\":\n    per_window = per_window.select(F.col(\"start\").alias(\"key\"),\n                                   F.to_json(F.struct(\"*\")).alias(\"value\"))\nout = (per_window.writeStream.outputMode(args.mode)\n       .option(\"checkpointLocation\", os.path.expanduser(args.checkpoint)))\nif args.sink == \"kafka\":\n    out = (out.format(\"kafka\").option(\"kafka.bootstrap.servers\", \"localhost:9092\")\n           .option(\"topic\", \"sales-per-window\"))\nelif args.sink == \"files\":\n    out = out.format(\"json\").option(\"path\", os.path.expanduser(\"~/spark/out\"))\nelse:\n    out = out.format(\"console\")\n",
+      "note": "Where the rows go. Every sink gets the output mode and a checkpoint directory; section 06 opens the directory, and section 08 is about the Kafka and file sinks, which need the rows in a shape of their own."
+    },
+    {
+      "code": "if args.trigger == \"available-now\":\n    out = out.trigger(availableNow=True)\nelif args.trigger == \"continuous\":\n    out = out.trigger(continuous=\"1 second\")\nelse:\n    out = out.trigger(processingTime=f\"{args.trigger} seconds\")\nout.start().awaitTermination()",
+      "note": "When batches run, which is section 07. Nothing has happened until `start`, which launches the query in the background and returns; `awaitTermination` keeps the program alive until the query ends."
+    }
+  ]
+}
 ```
 
 Each run below gets a checkpoint directory of its own. A checkpoint belongs to one query, and
