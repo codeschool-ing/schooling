@@ -116,7 +116,7 @@ o `results-1.1.xml` no seu editor ou no navegador em vez de usar o `cat`.
 ## Lendo o arquivo
 
 A primeira linha de dentro resume a execução inteira: **17 testes, 7 falhas, 0 pulados.** Cada caso
-que passou é uma linha vazia, e é por isso que um arquivo de milhares de casos aprovados continua
+que passou é uma linha só, sem nada dentro, e é por isso que um arquivo de milhares de casos aprovados continua
 fácil de varrer atrás dos poucos que não passaram. Cada falha traz a mensagem da célula da
 planilha, o que se viu no lugar do resultado esperado. E o requisito foi para o `classname`, então
 um leitor que agrupa por classe, como a maioria faz, mostra os resultados por requisito: quatro do

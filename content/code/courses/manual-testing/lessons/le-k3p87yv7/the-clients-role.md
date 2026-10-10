@@ -22,8 +22,8 @@ own phone, because half the theatre's customers book on one.
 A sign-up done in advance for an account that has not been confirmed, so that the manager does not
 spend ten minutes of her afternoon on the outbox.
 
-**The cases, in her words.** The four criteria of section 03 of this lesson, printed one per page,
-and five tasks written the way she would say them, such as "sell two tickets for Hamlet to a
+**The cases, in her words.** The four criteria of section 03 of this lesson, printed one per page.
+And five tasks written the way she would say them, such as "sell two tickets for Hamlet to a
 student" and "a customer at the counter wants to cancel the order she made this morning". A task
 says what to achieve and leaves the clicks to her, because how she goes about it is part of what
 is being tested.

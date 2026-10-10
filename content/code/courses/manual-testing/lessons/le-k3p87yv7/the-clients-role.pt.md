@@ -23,7 +23,7 @@ feito de antemão para uma conta ainda não confirmada, para que a gerente não 
 tarde na caixa de saída.
 
 **Os casos, nas palavras dela.** Os quatro critérios da seção 03 desta aula, impressos um por
-página, e cinco tarefas escritas do jeito que ela falaria, como "vender dois ingressos para Hamlet
+página. E cinco tarefas escritas do jeito que ela falaria, como "vender dois ingressos para Hamlet
 a um estudante" e "uma cliente no balcão quer cancelar o pedido que fez de manhã". Uma tarefa diz o
 que alcançar e deixa os cliques com ela, porque o jeito como ela faz é parte do que está sendo
 testado.

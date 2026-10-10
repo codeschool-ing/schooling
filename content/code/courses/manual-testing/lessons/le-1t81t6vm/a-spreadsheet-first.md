@@ -11,7 +11,7 @@ reads it the way a tool would, and then lists the signs that a team has outgrown
 
 ## Boxoffice's cases, as a file
 
-The file below is seventeen cases for boxoffice, the ones this course has run so far, with the
+The file below holds seventeen of the cases this course has run on boxoffice so far, with the
 results of two runs: one on release 1.0 and one on 1.1. It is CSV, comma-separated values, the
 plain-text form every spreadsheet program opens and saves. Create a new file in your `boxoffice`
 directory, paste the block into it with the copy button and save it. Save it as `cases.csv`,

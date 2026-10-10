@@ -12,7 +12,7 @@ sinais de que um time cresceu além dela.
 
 ## Os casos do boxoffice, como arquivo
 
-O arquivo abaixo tem dezessete casos do boxoffice, os que este curso rodou até aqui, com os
+O arquivo abaixo tem dezessete dos casos que este curso rodou no boxoffice até aqui, com os
 resultados de duas execuções: uma na versão 1.0 e uma na 1.1. Ele é CSV, valores separados por
 vírgula, a forma em texto puro que todo programa de planilha abre e salva. Crie um arquivo novo no
 seu diretório `boxoffice`, cole o bloco nele com o botão de copiar e salve. Salve como `cases.csv`,

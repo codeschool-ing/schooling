@@ -19,9 +19,9 @@ problemas.
 Ponha o mouse fora de alcance. Abra `http://127.0.0.1:8000`, clique uma vez na barra de endereço
 para que a página ainda não esteja em foco, e aperte **Tab**. Cada toque leva o foco à próxima coisa
 que você pode usar; **Shift+Tab** volta, **Enter** segue um link ou aperta um botão, **Espaço** marca
-uma caixa e as setas andam dentro de uma lista. No Mac, o Safari pula os links ao tabular até que
-"Pressionar Tab para destacar cada item em uma página web" seja ligado nos ajustes dele; Chrome e
-Firefox não precisam disso.
+uma caixa e as setas andam dentro de uma lista. No Mac, o Safari pula os links ao tabular até que se ligue,
+nos ajustes avançados dele, a opção de usar Tab para destacar cada item da página; Chrome e Firefox
+não precisam disso.
 
 Na página Shows o foco deveria ir aos três links **Book** da tabela, depois aos três links do pé da
 página. Siga o link Book de Hamlet com Enter e, na página de reserva, tabule pelo campo de e-mail,

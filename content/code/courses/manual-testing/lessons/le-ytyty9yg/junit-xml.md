@@ -116,7 +116,7 @@ ana@laptop:~/boxoffice$ cat results-1.1.xml
 ## Reading it
 
 The first line inside says the whole run: **17 tests, 7 failures, 0 skipped.** Every case that
-passed is one empty line, which is why a file of thousands of passing cases is still easy to scan
+passed is a single line with nothing inside it, which is why a file of thousands of passing cases is still easy to scan
 for the few that did not. Every failure carries the message from the spreadsheet cell, the thing
 that was seen instead of the expected result. And the requirement went into `classname`, so a
 reader that groups by class, as most do, shows the results by requirement: four for R6, three for
