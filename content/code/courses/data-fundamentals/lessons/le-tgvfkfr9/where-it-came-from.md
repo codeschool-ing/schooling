@@ -21,7 +21,7 @@ centre of most data platforms; `warehouse-modeling` is how one is designed.
 click, every search — and most of it was not tables. Google published how it spread storage and
 computation across thousands of cheap machines, and Hadoop copied the idea in the open. Data now
 lived in files across a cluster, and processing it meant writing programs, not drawing boxes. That is
-when **"data engineer"** became a common title: the work had become software engineering. Lesson 9 is
+when **"data engineer"** became a common title, because the work had become software engineering. Lesson 9 is
 what spreading data over many machines involves, and why it is hard.
 
 **The cloud, from the mid-2010s.** Warehouses that scale on demand, storage that costs cents per
