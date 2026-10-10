@@ -1158,6 +1158,113 @@ def l10_histogram(lang):
                 'dos futuros já chegou.')
 
 
+# ------------------------------------------------------------------ lesson 11
+
+@figure('l11-horizon', 11)
+def l11_horizon(lang):
+    f = Fig('l11-horizon', 680, 230, T(
+        lang,
+        'A roadmap drawn three ways along a timeline of three quarters. The first quarter holds '
+        'solid bars with dates. The second holds bars whose ends fade, sized only roughly. The '
+        'third holds dashed outlines with no end, in priority order. Confidence falls with '
+        'distance, and the drawing shows it.',
+        'Um roadmap desenhado de três jeitos ao longo de uma linha do tempo de três trimestres. O '
+        'primeiro tem barras sólidas com datas. O segundo tem barras de pontas que se apagam, '
+        'dimensionadas só por alto. O terceiro tem contornos tracejados sem fim, em ordem de '
+        'prioridade. A confiança cai com a distância, e o desenho mostra isso.'))
+    heads = T(lang, ['now: items, forecast with dates', 'next: goals, sized roughly', 'later: directions, in order'],
+              ['agora: itens, previstos com datas', 'depois: metas, por alto', 'mais tarde: direções, em ordem'])
+    for k, h in enumerate(heads):
+        x0 = 20 + k * 220
+        f.text(x0 + 100, 22, h, size=10.5, weight='600')
+        f.line(x0 + 210, 36, x0 + 210, 200, stroke='--wire', width=1, dash='3 3')
+    for r in range(3):
+        y = 50 + r * 46
+        f.bar(30, y, 120 - r * 20, 26, fill='--scan', stroke='--phosphor', width=1.4)
+        f.text(36, y + 13, T(lang, ['invoicing screen', 'card refunds', 'statement export'][r],
+                             ['tela de faturas', 'estorno no cartão', 'exportar extrato'][r]),
+               size=9.5, anchor='start')
+        x = 250 + r * 15
+        f.bar(x, y, 110, 26, fill='--panel', stroke='--paper-dim', width=1.2)
+        for j in range(4):
+            f.bar(x + 110 + j * 9, y + 4, 6, 18, fill='--panel', stroke='--wire', width=1)
+        f.text(x + 6, y + 13, T(lang, ['partial payments', 'tax report', 'multi-store'][r],
+                                ['pagamento parcial', 'relatório fiscal', 'várias lojas'][r]),
+               size=9.5, anchor='start')
+        f.path(f'M{470 + r * 10} {y} L640 {y} M{470 + r * 10} {y + 26} L640 {y + 26} '
+               f'M{470 + r * 10} {y} L{470 + r * 10} {y + 26}', stroke='--paper-dim', width=1.2, dash='4 3')
+        f.text(478 + r * 10, y + 13, T(lang, ['open banking', 'new markets', 'offline mode'][r],
+                                       ['open banking', 'novos mercados', 'modo offline'][r]),
+               size=9.5, anchor='start')
+    f.text(340, 216, T(lang, 'the drawing claims less where the team knows less',
+                       'o desenho afirma menos onde o time sabe menos'), size=10, fill='--paper-dim', italic=True)
+    return f, T(lang,
+                'A date appears on a piece of work only once it has been broken down far enough to '
+                'be forecast.',
+                'Uma data só aparece num trabalho quando ele foi quebrado o bastante para ser previsto.')
+
+
+@figure('l11-burnup', 11)
+def l11_burnup(lang):
+    import random
+    items, _ = billing()
+    history = daily_history(items, date(2026, 8, 17), date(2026, 9, 30))
+    rng = random.Random(11)
+    horizon = 60
+    done_runs, scope_runs = [], []
+    for _ in range(2000):
+        g = rng.uniform(0.1, 0.4)
+        scope, done, d_line, s_line = 30, 0, [], []
+        for _ in range(horizon):
+            n = min(scope - done, rng.choice(history))
+            done += n
+            scope += sum(1 for _ in range(n) if rng.random() < g)
+            d_line.append(done)
+            s_line.append(scope)
+        done_runs.append(d_line)
+        scope_runs.append(s_line)
+    def q(runs, day, p):
+        vals = sorted(r[day] for r in runs)
+        return vals[int(p * (len(vals) - 1))]
+    f = Fig('l11-burnup', 680, 290, T(
+        lang,
+        'A burn-up chart for thirty items starting on 1 October. A rising line shows the total '
+        'scope as new work is found. A shaded fan shows where the finished line is likely to be, '
+        'from the 15th to the 85th percentile of simulated futures, with the median as a line; '
+        'the fan meets the scope line from late October to late November.',
+        'Um gráfico de burn-up para trinta itens a partir de 1º de outubro. Uma linha que sobe '
+        'mostra o escopo total conforme trabalho novo aparece. Um leque sombreado mostra onde a '
+        'linha de terminados provavelmente vai estar, do percentil 15 ao 85 dos futuros '
+        'simulados, com a mediana como linha; o leque encontra a linha de escopo do fim de '
+        'outubro ao fim de novembro.'))
+    p = Plot(f, 60, 40, 640, 240, 0, horizon - 1, 0, 50)
+    p.yaxis([0, 10, 20, 30, 40, 50])
+    p.baseline()
+    xs = list(range(horizon))
+    lo = [q(done_runs, d, 0.15) for d in xs]
+    hi = [q(done_runs, d, 0.85) for d in xs]
+    d = 'M' + ' L'.join(f'{p.sx(x):.1f} {p.sy(v):.1f}' for x, v in zip(xs, hi))
+    d += ' L' + ' L'.join(f'{p.sx(x):.1f} {p.sy(v):.1f}' for x, v in reversed(list(zip(xs, lo))))
+    f.path(d + ' Z', stroke=None, fill='--scan', width=0)
+    p.polyline(xs, [q(done_runs, d, 0.5) for d in xs], stroke='--phosphor', width=1.8)
+    p.polyline(xs, [q(scope_runs, d, 0.5) for d in xs], stroke='--amber', width=1.8, dash='5 3')
+    for k, label in ((0, '1 Oct'), (31, '1 Nov'), (61 - 2, '30 Nov')):
+        lab = T(lang, label, label.replace('Oct', 'out').replace('Nov', 'nov'))
+        f.text(p.sx(min(k, horizon - 1)), 256, lab, size=9.5, fill='--paper-dim')
+    f.text(p.sx(4), p.sy(q(scope_runs, 4, 0.5)) - 18, T(lang, 'total scope, growing', 'escopo total, crescendo'),
+           size=10, anchor='start', fill='--amber')
+    f.text(p.sx(30), p.sy(q(done_runs, 30, 0.5)) + 26, T(lang, 'finished: median and 15th–85th percentile',
+                                                      'terminados: mediana e percentis 15 a 85'),
+           size=10, anchor='start', fill='--phosphor')
+    f.text(60, 18, T(lang, 'items, from 1 October', 'itens, a partir de 1º de outubro'), size=10,
+           anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'The work is done where the fan meets the scope line, and both of them move: the '
+                'scope rises as the work is understood.',
+                'O trabalho termina onde o leque encontra a linha de escopo, e os dois se movem: o '
+                'escopo sobe conforme o trabalho é entendido.')
+
+
 # @@LESSONS@@
 
 if __name__ == '__main__':
