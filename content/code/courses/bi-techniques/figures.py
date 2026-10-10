@@ -879,6 +879,47 @@ def l07_split(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 8
+
+@figure('l08-curve', 8)
+def l08_curve(lang):
+    from statsmodels.stats.power import NormalIndPower
+    from statsmodels.stats.proportion import proportion_effectsize
+    base = 0.042
+    solver = NormalIndPower()
+    need = lambda m: solver.solve_power(effect_size=proportion_effectsize(base + m, base),
+                                        alpha=0.05, power=0.8)
+    xs = np.linspace(0.0028, 0.015, 120)
+    t = {'en': dict(
+        label='A curve of the visitors needed in each group against the lift to detect, from 0.28 '
+              'to 1.5 percentage points on a 4.2% baseline. It falls steeply: about 72,600 visitors '
+              'for 0.3 points, 18,700 for 0.6, 8,600 for 0.9 and 5,000 for 1.2.',
+        x='lift to detect, in percentage points', y='visitors in each group',
+        note='halve the lift, four times the visitors',
+        cap='The sample grows with the square of how small an effect you want to find. Small '
+            'effects belong to large sites.'),
+        'pt': dict(
+        label='Uma curva dos visitantes necessários em cada grupo contra a alta a detectar, de 0,28 '
+              'a 1,5 ponto percentual sobre uma base de 4,2%. Ela cai rápido: cerca de 72.600 '
+              'visitantes para 0,3 ponto, 18.700 para 0,6, 8.600 para 0,9 e 5.000 para 1,2.',
+        x='alta a detectar, em pontos percentuais', y='visitantes em cada grupo',
+        note='metade da alta, quatro vezes os visitantes',
+        cap='A amostra cresce com o quadrado do quão pequeno é o efeito que você quer achar. Efeitos '
+            'pequenos são coisa de site grande.')}[lang]
+    f = Fig('l08-curve', 600, 300, t['label'])
+    p = Plot(f, 80, 40, 570, 240, 0.0, 1.6, 0, 100000)
+    p.yaxis(range(0, 100001, 25000), fmt=lambda v: num(lang, v, 0), label=t['y'])
+    p.xaxis([0.3, 0.6, 0.9, 1.2, 1.5], fmt=lambda v: num(lang, v, 1), label=t['x'])
+    series(p, xs * 100, [need(m) for m in xs], width=2)
+    for m in (0.003, 0.006, 0.009, 0.012):
+        n = need(m)
+        f.circle(p.sx(m * 100), p.sy(n), 4, fill='--amber')
+        f.text(p.sx(m * 100) + 8, p.sy(n) - 8, num(lang, round(n, -2), 0), size=9.5, anchor='start',
+               fill='--paper-dim')
+    f.text(p.sx(0.75), p.sy(60000), t['note'], size=10.5, anchor='start', weight='600')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
