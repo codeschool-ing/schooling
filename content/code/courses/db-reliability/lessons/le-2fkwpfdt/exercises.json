@@ -1,0 +1,633 @@
+[
+  {
+    "id": "ex-9newr200",
+    "version": 1,
+    "section": "the-mistake",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is a point-in-time recovery better than lesson 2's dump for this mistake?",
+    "hint": "What happens to the orders written between the backup and the DELETE?",
+    "choices": [
+      {
+        "text": "It restores faster than a dump of the same size",
+        "correct": false,
+        "why": "It may, but speed is not what this mistake needed."
+      },
+      {
+        "text": "It can bring back the orders written after the DELETE too, without a repair",
+        "correct": false,
+        "why": "Anything after the target is not in the copy; that is what the repair is for."
+      },
+      {
+        "text": "It keeps every change made before the mistake",
+        "correct": true,
+        "why": "Right. The dump would have lost everything between its snapshot and the DELETE."
+      },
+      {
+        "text": "It does not need a backup at all, only the log",
+        "correct": false,
+        "why": "Replay starts from a base backup; the log alone has nowhere to start."
+      }
+    ]
+  },
+  {
+    "id": "ex-zr9fhfw3",
+    "version": 1,
+    "section": "the-mistake",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Right after noticing the mistake, why ask which segment is being written now?",
+    "hint": "The mistake is seconds old.",
+    "choices": [
+      {
+        "text": "Because it is where the mistake is",
+        "correct": true,
+        "why": "Right. A mistake from the last few seconds is in the current segment, so that is where pg_waldump looks."
+      },
+      {
+        "text": "To delete that segment before it is archived",
+        "correct": false,
+        "why": "Deleting log would break the archive and lose the good transactions in it too."
+      },
+      {
+        "text": "To know how many bytes the DELETE took up in the log",
+        "correct": false,
+        "why": "Size is not the question; finding the transaction is."
+      },
+      {
+        "text": "Because a restore can only target the current segment",
+        "correct": false,
+        "why": "A restore can target any point after the backup."
+      }
+    ]
+  },
+  {
+    "id": "ex-pj2b53j9",
+    "version": 1,
+    "section": "the-mistake",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many orders did the mistaken `DELETE` remove?",
+    "hint": "It reported it.",
+    "value": 12059,
+    "tolerance": 0,
+    "unit": "orders"
+  },
+  {
+    "id": "ex-1e8nk7nz",
+    "version": 1,
+    "section": "finding-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did `awk '/desc: DELETE/ {print $8}' | sort | uniq -c` count, over the segment's dump?",
+    "hint": "Field 8 of a record line is the transaction id.",
+    "choices": [
+      {
+        "text": "DELETE statements per table in the database",
+        "correct": false,
+        "why": "pg_waldump knows records, not statements; and the count was by transaction."
+      },
+      {
+        "text": "Commits per second during the day",
+        "correct": false,
+        "why": "Commits are COMMIT records; the filter picked DELETE records."
+      },
+      {
+        "text": "Segments of log written by each session",
+        "correct": false,
+        "why": "Nothing in the dump is counted per session."
+      },
+      {
+        "text": "Deleted rows per transaction",
+        "correct": true,
+        "why": "Right. One transaction, 742, deleted 12059 rows, the number the DELETE reported."
+      }
+    ]
+  },
+  {
+    "id": "ex-2eqs0fzv",
+    "version": 1,
+    "section": "finding-it",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which transaction id did the `DELETE` have?",
+    "hint": "The one with 12059 rows.",
+    "value": 742,
+    "tolerance": 0,
+    "unit": "transaction id"
+  },
+  {
+    "id": "ex-a5afg2jr",
+    "version": 1,
+    "section": "finding-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pg_waldump` printed `error in WAL record … invalid record length … expected at least 24, got 0` before its results. What does it mean here?",
+    "hint": "Is the segment finished?",
+    "choices": [
+      {
+        "text": "The segment is corrupt and the restore will fail",
+        "correct": false,
+        "why": "Nothing is damaged; the restore later used this segment."
+      },
+      {
+        "text": "It hit the end of a segment in use",
+        "correct": true,
+        "why": "Right: it read to the end of what was written, in a segment still in use. The rest of the 16 MB file is still empty, so the dump stops there and says so."
+      },
+      {
+        "text": "The DELETE was too large to log",
+        "correct": false,
+        "why": "All 12059 rows were logged and counted."
+      },
+      {
+        "text": "It needs to run as postgres, not with sudo",
+        "correct": false,
+        "why": "It ran with sudo and read the file; the message is about the content."
+      }
+    ]
+  },
+  {
+    "id": "ex-c5bzts19",
+    "version": 1,
+    "section": "finding-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On a busy server, a segment holds thousands of transactions and several large ones. What narrows the search to the mistake?",
+    "hint": "pg_waldump has options for this.",
+    "choices": [
+      {
+        "text": "Restoring once per transaction until the data looks right",
+        "correct": false,
+        "why": "That works in principle and takes a restore per guess."
+      },
+      {
+        "text": "Its --relation, --start and --end options",
+        "correct": true,
+        "why": "Right: --relation for the table, --start and --end for the stretch of log you know. Roughly when, and which table, cut a busy segment to a handful of candidates."
+      },
+      {
+        "text": "Reading the server's log, which records every statement by default",
+        "correct": false,
+        "why": "By default PostgreSQL does not log statements."
+      },
+      {
+        "text": "Picking the transaction with the most records",
+        "correct": false,
+        "why": "On a busy server, the biggest transaction is often a legitimate batch."
+      }
+    ]
+  },
+  {
+    "id": "ex-3hbw3sqf",
+    "version": 1,
+    "section": "first-try",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first restore stopped with `recovery ended before configured recovery target was reached`. Why?",
+    "hint": "Which segment held transaction 742, and was it in the archive?",
+    "choices": [
+      {
+        "text": "The xid was mistyped",
+        "correct": false,
+        "why": "The target was 742, the right one; the second attempt used the same."
+      },
+      {
+        "text": "--target-exclusive is not allowed with an xid",
+        "correct": false,
+        "why": "It is allowed, and the second attempt used it."
+      },
+      {
+        "text": "The base backup was too old to reach that point",
+        "correct": false,
+        "why": "Age does not stop replay; a missing segment does."
+      },
+      {
+        "text": "The segment with the target was not archived yet",
+        "correct": true,
+        "why": "Right. 742 was in …04, still being written, and the archive ended at …03."
+      }
+    ]
+  },
+  {
+    "id": "ex-fzzrysa9",
+    "version": 1,
+    "section": "first-try",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson call that refusal good news?",
+    "hint": "What would the alternative have been?",
+    "choices": [
+      {
+        "text": "A wrong copy would have looked right",
+        "correct": true,
+        "why": "Right. A copy silently stopped at …03 would have looked recovered and lacked the five good orders, and nobody would have known."
+      },
+      {
+        "text": "Because it proves the backup is valid",
+        "correct": false,
+        "why": "It proves nothing about the backup; it is about the target."
+      },
+      {
+        "text": "Because it means the live server is still running",
+        "correct": false,
+        "why": "The refusal says nothing about the live server."
+      },
+      {
+        "text": "Because it deleted the restored copy automatically",
+        "correct": false,
+        "why": "The copy was left as it was; the next attempt removed it by hand."
+      }
+    ]
+  },
+  {
+    "id": "ex-htw95k21",
+    "version": 1,
+    "section": "first-try",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What made the target segment reach the archive?",
+    "hint": "Lesson 4.",
+    "choices": [
+      {
+        "text": "A restart of the restored server",
+        "correct": false,
+        "why": "The restored server reads the archive; it cannot add to it, and its archiving was off."
+      },
+      {
+        "text": "pgbackrest check on the restored server",
+        "correct": false,
+        "why": "check runs against the stanza's own server, and the segment had to come from the live one."
+      },
+      {
+        "text": "pg_switch_wal() on the live server",
+        "correct": true,
+        "why": "Right. It finished …04, and archive-push sent it."
+      },
+      {
+        "text": "Waiting for the next full backup",
+        "correct": false,
+        "why": "That would have archived it too, eventually; the fix was immediate."
+      }
+    ]
+  },
+  {
+    "id": "ex-8xa7t1zd",
+    "version": 1,
+    "section": "stopping-point",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each recovery target with when to use it.",
+    "hint": "One of them needs preparation in advance.",
+    "pairs": [
+      {
+        "left": "`recovery_target_xid`",
+        "right": "The log has shown you which transaction"
+      },
+      {
+        "left": "`recovery_target_time`",
+        "right": "You know roughly when, and nothing more precise"
+      },
+      {
+        "left": "`recovery_target_lsn`",
+        "right": "You have a position in the log rather than a transaction"
+      },
+      {
+        "left": "`recovery_target_name`",
+        "right": "Somebody created a restore point before the change"
+      }
+    ],
+    "right_distractors": [
+      "You want the latest moment the archive holds"
+    ]
+  },
+  {
+    "id": "ex-8hntr85t",
+    "version": 1,
+    "section": "stopping-point",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `--target-action=pause` give you that `promote` does not?",
+    "hint": "Read-only, waiting.",
+    "choices": [
+      {
+        "text": "A faster recovery",
+        "correct": false,
+        "why": "It is the same replay; it just waits at the end."
+      },
+      {
+        "text": "Writes allowed while paused",
+        "correct": false,
+        "why": "A paused server is still in recovery, read-only."
+      },
+      {
+        "text": "Automatic repair of the live database",
+        "correct": false,
+        "why": "Nothing touches the live database."
+      },
+      {
+        "text": "A look at the copy before anything is decided",
+        "correct": true,
+        "why": "Right. If the target was wrong, you restore again with nothing lost."
+      }
+    ]
+  },
+  {
+    "id": "ex-yhm9sv36",
+    "version": 1,
+    "section": "stopping-point",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many orders did the paused copy hold?",
+    "hint": "Fifty thousand, plus the orders before the DELETE.",
+    "value": 50005,
+    "tolerance": 0,
+    "unit": "orders"
+  },
+  {
+    "id": "ex-x2wdsgka",
+    "version": 1,
+    "section": "stopping-point",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team is about to run a migration that rewrites a large table. What is the cheapest thing to do first, for recovery's sake?",
+    "hint": "Make a future target exact.",
+    "choices": [
+      {
+        "text": "Take a full base backup and wait for it",
+        "correct": false,
+        "why": "Useful and slow; the archive already lets you return to any moment after the last backup."
+      },
+      {
+        "text": "Switch archiving off during the migration",
+        "correct": false,
+        "why": "That removes the very log you would recover with."
+      },
+      {
+        "text": "Run SELECT pg_create_restore_point('before-migration')",
+        "correct": true,
+        "why": "Right. One call, and recovery_target_name gives an exact target if the migration goes wrong."
+      },
+      {
+        "text": "Pause replication",
+        "correct": false,
+        "why": "Replication is lesson 11; it does not make a recovery target exact."
+      }
+    ]
+  },
+  {
+    "id": "ex-g74ppkyc",
+    "version": 1,
+    "section": "timelines",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the restored server was promoted, `pg_control_checkpoint()` reported timeline 2. Why a new timeline?",
+    "hint": "Two histories now continue from one point.",
+    "choices": [
+      {
+        "text": "A new history began where replay stopped",
+        "correct": true,
+        "why": "Right. Recovery stopped before the end of the log, so a new history began there: timeline 2 left timeline 1 before transaction 742."
+      },
+      {
+        "text": "Every restart increases the timeline",
+        "correct": false,
+        "why": "A restart keeps the timeline; only a recovery that ends before the end of the log forks it."
+      },
+      {
+        "text": "pgBackRest numbers each restore",
+        "correct": false,
+        "why": "The timeline is PostgreSQL's, written by the server at promotion."
+      },
+      {
+        "text": "The live server moved to timeline 2 when the copy was made",
+        "correct": false,
+        "why": "The live server is still on timeline 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-yy89t7yf",
+    "version": 1,
+    "section": "timelines",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The file that records where timeline 2 left timeline 1 is called `00000002.___`.",
+    "hint": "It records the fork.",
+    "blanks": [
+      {
+        "accept": [
+          "history"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-c0yt4k9x",
+    "version": 1,
+    "section": "timelines",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `000000020000000000000005`, what do the first eight digits say?",
+    "hint": "Compare it with …0004 on timeline 1.",
+    "choices": [
+      {
+        "text": "The server's port",
+        "correct": false,
+        "why": "Ports are not in segment names."
+      },
+      {
+        "text": "The timeline the segment belongs to",
+        "correct": true,
+        "why": "Right. Same position in the log, a different history, a different name."
+      },
+      {
+        "text": "The day of the month it was written",
+        "correct": false,
+        "why": "Segment names carry no dates."
+      },
+      {
+        "text": "The size of the segment in megabytes",
+        "correct": false,
+        "why": "Every segment is 16 MB; the name does not say so."
+      }
+    ]
+  },
+  {
+    "id": "ex-rz02tfvx",
+    "version": 1,
+    "section": "the-repair",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is replacing the live database with the restored copy the right choice, rather than repairing from it?",
+    "hint": "What happens to everything after the target?",
+    "choices": [
+      {
+        "text": "Whenever the copy holds more rows than the live database",
+        "correct": false,
+        "why": "Row counts do not decide it; trust in what came after does."
+      },
+      {
+        "text": "When the mistake was a DELETE rather than an UPDATE",
+        "correct": false,
+        "why": "Either can be repaired from a copy."
+      },
+      {
+        "text": "When nothing after it is trustworthy",
+        "correct": true,
+        "why": "Right, or when the live server is gone. Otherwise replacing throws away every good write since the mistake."
+      },
+      {
+        "text": "When the restore took less than an hour",
+        "correct": false,
+        "why": "Speed does not change what replacing loses."
+      }
+    ]
+  },
+  {
+    "id": "ex-f8tadq1e",
+    "version": 1,
+    "section": "the-repair",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many orders did the live shop hold after the repair?",
+    "hint": "Fifty thousand, five before, three after.",
+    "value": 50008,
+    "tolerance": 0,
+    "unit": "orders"
+  },
+  {
+    "id": "ex-y6hw6rfy",
+    "version": 1,
+    "section": "by-the-clock",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A support agent says the mistake happened \"at 16:36\" by the clock on their laptop, in another city. What should the time target be built from?",
+    "hint": "Whose clock wrote the commit times?",
+    "choices": [
+      {
+        "text": "The commit times pg_waldump shows, with their offset",
+        "correct": true,
+        "why": "Right. The database's own record of when each transaction committed is the clock that counts."
+      },
+      {
+        "text": "The agent's time, converted to the server's zone",
+        "correct": false,
+        "why": "Better than unconverted, and still a laptop clock; the log has the real time."
+      },
+      {
+        "text": "The agent's time minus one hour, to be safe",
+        "correct": false,
+        "why": "Going earlier is safer, but an hour loses good transactions for nothing."
+      },
+      {
+        "text": "The time the monitoring system showed the drop",
+        "correct": false,
+        "why": "Another clock again, and later than the commit."
+      }
+    ]
+  },
+  {
+    "id": "ex-9sh6gmtq",
+    "version": 1,
+    "section": "by-the-clock",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a target that is too early safer than one that is too late?",
+    "hint": "Which of the two can the repair fix?",
+    "choices": [
+      {
+        "text": "Too early is faster to replay",
+        "correct": false,
+        "why": "Slightly, and that is not the reason."
+      },
+      {
+        "text": "PostgreSQL refuses targets after the last commit",
+        "correct": false,
+        "why": "It refuses targets it cannot reach, which is a different problem."
+      },
+      {
+        "text": "Too late damages the archive",
+        "correct": false,
+        "why": "Replay never writes to the archive."
+      },
+      {
+        "text": "Only too late replays the mistake",
+        "correct": true,
+        "why": "Right. Too early loses changes the repair can bring back from the live server; too late replays the mistake. Missing good changes can be copied from the live server; a replayed mistake makes the copy useless."
+      }
+    ]
+  },
+  {
+    "id": "ex-bqj1as9c",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a point-in-time recovery in order.",
+    "hint": "Find the moment before restoring to it.",
+    "items": [
+      "Find the target transaction or time in the log",
+      "Make sure the archive holds the segment with the target",
+      "Restore to a separate server with archiving off, paused at the target",
+      "Check the copy, then promote and replace or repair"
+    ],
+    "trap": "A target you have not found cannot be restored to; a segment not archived makes the restore fail; and nothing is decided until the paused copy has been checked."
+  },
+  {
+    "id": "ex-vdqjyspz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A restore to `recovery_target_time = '16:36:09'` produced a copy with 37952 orders. What happened?",
+    "hint": "The DELETE committed at 16:36:08.563.",
+    "choices": [
+      {
+        "text": "The archive is missing a segment",
+        "correct": false,
+        "why": "A missing segment would make recovery stop with an error, not give a copy past the mistake."
+      },
+      {
+        "text": "The target was after the DELETE, so it was replayed",
+        "correct": true,
+        "why": "Right. 37952 is the shop with the DELETE and three later orders; the target must be earlier than 16:36:08.563."
+      },
+      {
+        "text": "The copy is correct, and the count includes old orders twice",
+        "correct": false,
+        "why": "Old orders are what is missing, not doubled."
+      },
+      {
+        "text": "Time targets ignore DELETE statements",
+        "correct": false,
+        "why": "Replay applies every record before the target, DELETEs included."
+      }
+    ]
+  }
+]
