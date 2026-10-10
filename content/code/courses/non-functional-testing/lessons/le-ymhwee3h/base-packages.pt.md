@@ -27,8 +27,6 @@ ana@nft:~$ java -version 2>&1 | head -1; sqlite3 --version | cut -d" " -f1; git 
 openjdk version "21.0.12.1" 2026-08-18
 3.45.1
 git version 2.43.0
-boxoffice/seed.py
-boxoffice/app.py
 ```
 
 As suas versões de correção podem ser mais altas que estas, porque o Ubuntu continua publicando

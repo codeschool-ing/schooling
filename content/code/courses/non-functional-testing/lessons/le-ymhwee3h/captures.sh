@@ -20,12 +20,12 @@ source "$(dirname "$0")/../../capture.sh"
 HERE_DIR=$(cd "$(dirname "$0")" && pwd)
 
 machine l1
+shown "$HERE_DIR/the-boxoffice.md" 2>/dev/null
 
 block packages
 run 'grep PRETTY /etc/os-release; python3 --version'
 run 'java -version 2>&1 | head -1; sqlite3 --version | cut -d" " -f1; git --version'
 
-shown "$HERE_DIR/the-boxoffice.md"
 at '~/boxoffice'
 block seed
 run 'python3 seed.py'
