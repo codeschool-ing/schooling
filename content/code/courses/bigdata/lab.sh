@@ -48,7 +48,7 @@ CACHE=/var/cache/bigdata
 as_ana() {
   runuser -u ana -- env -i HOME=/home/ana USER=ana LOGNAME=ana TERM=dumb LANG=C.UTF-8 \
     PATH=/usr/local/bin:/usr/bin:/bin bash -c \
-    "[ -f ~/.sparkrc ] && . ~/.sparkrc; mkdir -p ~/big; cd ~/big && $1"
+    "[ -f ~/.sparkrc ] && . ~/.sparkrc; mkdir -p ~/big; cd ~/big || exit 1; $1"
 }
 
 extract() {

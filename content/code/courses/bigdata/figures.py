@@ -297,6 +297,88 @@ def l01_buckets(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 2
+
+@figure('l02-roles', 2)
+def l02_roles(lang):
+    t = {'en': dict(
+            label='The four roles. The driver, your program, asks the cluster manager for '
+                  'resources. The manager tells its workers to start executors for the '
+                  'application. From then on the driver sends tasks straight to its executors and '
+                  'they send results back; the manager is out of the conversation.',
+            drv='driver', drv2='your program', mgr='cluster manager', mgr2='the master, here',
+            wk='worker', ex='executor', ask='1. asks for cores', start='2. start executors',
+            tasks='3. tasks and results, directly',
+            cap='The master rents out cores and steps aside; the driver and its executors do the '
+                'talking from then on.'),
+         'pt': dict(
+            label='Os quatro papéis. O driver, o seu programa, pede recursos ao gerenciador do '
+                  'cluster. O gerenciador manda os workers iniciarem executores para a aplicação. '
+                  'Dali em diante o driver envia tarefas direto aos executores e eles devolvem '
+                  'resultados; o gerenciador sai da conversa.',
+            drv='driver', drv2='o seu programa', mgr='gerenciador do cluster', mgr2='aqui, o master',
+            wk='worker', ex='executor', ask='1. pede núcleos', start='2. iniciem executores',
+            tasks='3. tarefas e resultados, direto',
+            cap='O master aluga núcleos e sai de cena; dali em diante quem conversa são o driver e '
+                'os seus executores.')}[lang]
+    f = Fig('l02-roles', 720, 340, t['label'])
+    box(f, 20, 40, 170, 56, t['drv'], t['drv2'], stroke='--phosphor')
+    box(f, 280, 40, 190, 56, t['mgr'], t['mgr2'])
+    f.line(190, 68, 278, 68, arrow=True)
+    f.text(234, 58, t['ask'], size=9.5, fill='--paper-dim')
+    xs = [250, 400, 550]
+    for x in xs:
+        f.rect(x - 60, 170, 120, 130, stroke='--wire', fill='--ink', dash='4 3')
+        f.text(x, 186, t['wk'], size=10.5, fill='--paper-dim')
+        box(f, x - 48, 210, 96, 40, t['ex'])
+        f.line(375, 96, x, 168, arrow=True)
+    f.text(560, 130, t['start'], size=9.5, fill='--paper-dim', anchor='start')
+    f.path('M105 96 L105 322 L550 322', stroke='--amber', width=1.4)
+    for x in xs:
+        f.line(x, 322, x, 253, stroke='--amber', width=1.4, arrow=True)
+    f.text(115, 312, t['tasks'], size=9.5, fill='--amber', anchor='start')
+    return f, t['cap']
+
+
+@figure('l02-waves', 2)
+def l02_waves(lang):
+    t = {'en': dict(
+            label='Three cores against time. Thirty tasks of two seconds fill ten waves of three '
+                  'and end at twenty seconds. A thirty-first task needs an eleventh wave in which '
+                  'one core works and two sit idle, and the job ends at twenty-two seconds.',
+            core='core', secs='seconds', extra='task 31', idle='idle',
+            cap='Thirty-one tasks on three cores: the last wave holds one task and two idle cores, '
+                'and costs a whole wave of time.'),
+         'pt': dict(
+            label='Três núcleos ao longo do tempo. Trinta tarefas de dois segundos enchem dez '
+                  'ondas de três e terminam em vinte segundos. Uma trigésima primeira tarefa '
+                  'precisa de uma décima primeira onda, em que um núcleo trabalha e dois ficam '
+                  'parados, e o job termina em vinte e dois segundos.',
+            core='núcleo', secs='segundos', extra='tarefa 31', idle='parado',
+            cap='Trinta e uma tarefas em três núcleos: a última onda tem uma tarefa e dois '
+                'núcleos parados, e custa uma onda inteira de tempo.')}[lang]
+    f = Fig('l02-waves', 720, 210, t['label'])
+    x0, w = 80, 26
+    for c in range(3):
+        y = 30 + c * 40
+        f.text(x0 - 10, y + 14, f"{t['core']} {c + 1}", size=10, anchor='end', fill='--paper-dim')
+        for i in range(10):
+            f.rect(x0 + i * 2 * w + 1, y, 2 * w - 2, 28, stroke='--phosphor', fill='--scan', rx=2)
+        if c == 0:
+            f.rect(x0 + 20 * w + 1, y, 2 * w - 2, 28, stroke='--amber', fill='--panel', rx=2)
+            f.text(x0 + 21 * w, y + 14, t['extra'], size=9, fill='--amber')
+        else:
+            f.rect(x0 + 20 * w + 1, y, 2 * w - 2, 28, stroke='--wire', fill='--ink', rx=2, dash='3 3')
+            f.text(x0 + 21 * w, y + 14, t['idle'], size=9, fill='--paper-dim')
+    y = 160
+    f.line(x0, y, x0 + 22 * w + 10, y, stroke='--paper-dim')
+    for s in range(0, 23, 2):
+        f.line(x0 + s * w, y, x0 + s * w, y + 4, stroke='--paper-dim')
+        f.text(x0 + s * w, y + 14, str(s), size=9.5, fill='--paper-dim', mono=True)
+    f.text(x0 + 11 * w, y + 34, t['secs'], size=10, weight='600')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():

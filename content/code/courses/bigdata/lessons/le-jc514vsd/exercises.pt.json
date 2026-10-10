@@ -1,0 +1,561 @@
+{
+  "ex-swhbp7bg": {
+    "prompt": "Qual papel decide que tarefa roda em qual executor?",
+    "hint": "O master aluga núcleos e não se importa com o que roda neles.",
+    "choices": [
+      {
+        "text": "Cada worker, para os executores que iniciou",
+        "why": "Um worker inicia executores e não roda tarefa nenhuma."
+      },
+      {
+        "text": "O driver",
+        "why": "Isso. Ele tem o plano e manda cada tarefa a um executor por conta própria."
+      },
+      {
+        "text": "Os executores, revezando entre si",
+        "why": "Executores rodam o que recebem; eles não planejam."
+      },
+      {
+        "text": "O master, que é dono dos núcleos",
+        "why": "O master atribui núcleos às aplicações e depois fica fora do job."
+      }
+    ]
+  },
+  "ex-cchgkpee": {
+    "prompt": "Ligue cada papel ao que ele faz.",
+    "hint": "Um planeja, um aluga, um oferece, um trabalha.",
+    "pairs": [
+      {
+        "left": "Driver",
+        "right": "Planeja o job e distribui as tarefas"
+      },
+      {
+        "left": "Gerenciador do cluster",
+        "right": "Distribui núcleos e memória às aplicações"
+      },
+      {
+        "left": "Worker",
+        "right": "Oferece os recursos de uma máquina e inicia processos nela"
+      },
+      {
+        "left": "Executor",
+        "right": "Roda as tarefas de uma aplicação, uma por núcleo"
+      }
+    ]
+  },
+  "ex-htebg2x2": {
+    "prompt": "No YARN, o que faz o papel que o master standalone faz no laboratório?",
+    "hint": "As palavras mudam entre sistemas, os papéis não.",
+    "choices": [
+      {
+        "text": "Nada; o YARN não tem gerenciador central",
+        "why": "Tem um, o ResourceManager, e a aula 12 o roda."
+      },
+      {
+        "text": "O ResourceManager",
+        "why": "Isso. Os NodeManagers fazem o papel dos workers."
+      },
+      {
+        "text": "O driver do Spark, que o YARN chama de master",
+        "why": "O driver mantém o nome em todo gerenciador."
+      },
+      {
+        "text": "O NodeManager que roda em cada máquina",
+        "why": "Esse é o worker do YARN, um por máquina."
+      }
+    ]
+  },
+  "ex-2wx5pptr": {
+    "prompt": "Um job tem 40 tarefas de 3 segundos cada em 4 núcleos. Ignorando o custo fixo, quantos segundos ele leva?",
+    "hint": "Conte as ondas primeiro.",
+    "unit": "segundos"
+  },
+  "ex-t3wzah22": {
+    "prompt": "O mesmo job com 41 tarefas. Ignorando o custo fixo, quantos segundos agora?",
+    "hint": "Uma tarefa a mais pode significar uma onda a mais.",
+    "unit": "segundos"
+  },
+  "ex-d1ja9tqr": {
+    "prompt": "Um job tem exatamente tantas tarefas quanto núcleos, e a fatia de uma tarefa é o dobro das outras. O que acontece?",
+    "hint": "Há outra tarefa para dar aos núcleos parados?",
+    "choices": [
+      {
+        "text": "Nada muda, já que as tarefas rodam ao mesmo tempo",
+        "why": "Elas começam juntas, e o job termina quando a última termina."
+      },
+      {
+        "text": "O job leva o dobro, com núcleos parados esperando",
+        "why": "Isso. Com uma onda só, não há o que redistribuir aos núcleos livres."
+      },
+      {
+        "text": "O agendador a divide",
+        "why": "A tarefa é a unidade; o agendador nunca divide uma."
+      },
+      {
+        "text": "A tarefa grande é morta e repetida num núcleo mais rápido",
+        "why": "Lento não é falho, e nenhum núcleo fica mais rápido com mais dados."
+      }
+    ]
+  },
+  "ex-heept3yt": {
+    "prompt": "Por que dividir um job em um milhão de tarefas de poucos milissegundos é má ideia?",
+    "hint": "O que cada tarefa custa além do trabalho?",
+    "choices": [
+      {
+        "text": "O custo fixo por tarefa domina",
+        "why": "Isso. Agendar, iniciar e reportar são pagos um milhão de vezes."
+      },
+      {
+        "text": "A resposta fica menos precisa",
+        "why": "A resposta é a mesma; só o tempo muda."
+      },
+      {
+        "text": "O Spark as recusa",
+        "why": "Ele roda quantas ondas forem precisas."
+      },
+      {
+        "text": "Cada tarefa precisa do próprio executor e do próprio processo Java",
+        "why": "Um executor roda muitas tarefas uma após a outra."
+      }
+    ]
+  },
+  "ex-55gsmbnn": {
+    "prompt": "Preferir um executor na máquina que guarda a fatia de dados de uma tarefa se chama data ___.",
+    "hint": "Onde os dados estão.",
+    "blanks": [
+      {
+        "accept": [
+          "locality",
+          "localidade"
+        ]
+      }
+    ]
+  },
+  "ex-vaay9a4b": {
+    "prompt": "Enquanto um job roda no cluster do laboratório, quantos processos Java do Spark há na máquina?",
+    "hint": "Master, workers, o driver e os executores."
+  },
+  "ex-enw7cnfq": {
+    "prompt": "O que acontece com os três executores quando o job termina?",
+    "hint": "De quem eles são?",
+    "choices": [
+      {
+        "text": "Terminam junto com a aplicação",
+        "why": "Isso. Executores pertencem a uma aplicação; os workers ficam."
+      },
+      {
+        "text": "Viram workers",
+        "why": "Workers e executores são processos diferentes com funções diferentes."
+      },
+      {
+        "text": "Ficam, prontos para a próxima aplicação",
+        "why": "Os workers ficam. Cada aplicação ganha executores novos."
+      },
+      {
+        "text": "São mantidos até o master ser reiniciado",
+        "why": "O master nem segura executores."
+      }
+    ]
+  },
+  "ex-51pj95q7": {
+    "prompt": "O endpoint de executores lista o driver com `totalCores` 0. Por quê?",
+    "hint": "O que o driver faz com as tarefas?",
+    "choices": [
+      {
+        "text": "O endpoint REST não enxerga os núcleos do driver",
+        "why": "Ele reporta o que o Spark sabe: o driver não tem vagas de tarefa."
+      },
+      {
+        "text": "O driver tinha caído",
+        "why": "É o driver que está respondendo a requisição."
+      },
+      {
+        "text": "O driver não roda tarefas; ele as distribui",
+        "why": "Isso. O trabalho dele é planejar e recolher."
+      },
+      {
+        "text": "O driver cedeu o seu núcleo a um executor quando o job começou",
+        "why": "Núcleos vêm dos workers; o driver nunca teve um para ceder."
+      }
+    ]
+  },
+  "ex-xapwbgs6": {
+    "prompt": "O job de seis tarefas de um colega apareceu `WAITING` com zero núcleos. O que causou isso?",
+    "hint": "Quantos núcleos a primeira aplicação pegou?",
+    "choices": [
+      {
+        "text": "Duas aplicações não rodam num cluster só",
+        "why": "Com um limite na primeira, as duas rodaram juntas."
+      },
+      {
+        "text": "A primeira aplicação pegou todos os núcleos, como o standalone permite por padrão",
+        "why": "Isso. Quem chega primeiro leva, e a primeira chegou sem limite."
+      },
+      {
+        "text": "O segundo job pediu mais memória do que um worker tem",
+        "why": "Ele pediu os mesmos 768 MB; o problema eram os núcleos."
+      },
+      {
+        "text": "O master estava fora do ar",
+        "why": "O master respondeu e mostrou as duas aplicações."
+      }
+    ]
+  },
+  "ex-mycxf93v": {
+    "prompt": "Com `spark.cores.max=2` no job grande, o pequeno terminou em 14 s em vez de 26. O que o grande pagou?",
+    "hint": "Conte as ondas dele em dois núcleos.",
+    "choices": [
+      {
+        "text": "Falhou no meio e precisou ser submetido de novo à mão na manhã seguinte",
+        "why": "Terminou com a resposta certa."
+      },
+      {
+        "text": "Nada, porque um limite só afeta as outras aplicações",
+        "why": "O limite é no próprio job grande; ele rodou em menos núcleos."
+      },
+      {
+        "text": "Os executores dele receberam menos memória cada",
+        "why": "O limite é de núcleos; a memória por executor ficou em 768 MB."
+      },
+      {
+        "text": "Quinze ondas em vez de dez, e uma execução mais longa",
+        "why": "Isso. Um limite é uma decisão sobre quem espera."
+      }
+    ]
+  },
+  "ex-vej6dppq": {
+    "prompt": "Ligue cada mecanismo ao que ele divide.",
+    "hint": "Alguns são entre aplicações, um é dentro de uma.",
+    "pairs": [
+      {
+        "left": "spark.cores.max",
+        "right": "Limita os núcleos de uma aplicação no standalone"
+      },
+      {
+        "left": "Filas do YARN",
+        "right": "Uma fatia garantida do cluster por equipe"
+      },
+      {
+        "left": "spark.scheduler.mode=FAIR",
+        "right": "Jobs de threads diferentes de um driver"
+      },
+      {
+        "left": "Alocação dinâmica",
+        "right": "Devolve executores que a aplicação não está usando"
+      }
+    ]
+  },
+  "ex-mxrxf4j9": {
+    "prompt": "Se cada máquina falha em média uma vez a cada 1.000 dias, quantas falhas por dia um cluster de 5.000 máquinas tem em média?",
+    "hint": "Máquinas vezes a taxa diária."
+  },
+  "ex-wg39r8ab": {
+    "prompt": "Ponha em ordem o que um sistema para muitas máquinas faz diante de uma falha.",
+    "hint": "Não dá para refazer o que não foi identificado.",
+    "items": [
+      "Perceber que uma máquina sumiu",
+      "Saber o que se perdeu com ela",
+      "Refazer só isso, em outro lugar"
+    ]
+  },
+  "ex-bp7c8na4": {
+    "prompt": "Por que um job em 10.000 máquinas não pode simplesmente recomeçar do zero sempre que alguma máquina falha?",
+    "hint": "Com que frequência uma execução de quatro horas veria uma falha?",
+    "choices": [
+      {
+        "text": "Máquinas que falham são sempre mais lentas para religar",
+        "why": "A velocidade de religar não é a questão; a frequência é."
+      },
+      {
+        "text": "Com dez falhas por dia, uma execução longa vive topando com uma",
+        "why": "Isso. Com dez falhas por dia, uma execução de quatro horas costuma pegar uma."
+      },
+      {
+        "text": "O gerenciador do cluster proíbe recomeçar um job do começo",
+        "why": "Nada proíbe; a conta é que torna isso inviável."
+      },
+      {
+        "text": "Os dados se perderiam ao recomeçar",
+        "why": "A entrada continua lá; o que se perde é o trabalho feito."
+      }
+    ]
+  },
+  "ex-s25e7m1j": {
+    "prompt": "Um processo morto pelo sinal 9 é reportado como saindo com o código 128 + 9. Que código aparece?",
+    "hint": "Some."
+  },
+  "ex-n4rc86de": {
+    "prompt": "Uma tarefa manda um e-mail por linha que processa. O executor dela morre no meio e a tarefa é repetida. Qual é o risco?",
+    "hint": "O Spark supõe que rodar uma tarefa duas vezes é inofensivo.",
+    "choices": [
+      {
+        "text": "O job falha, já que efeitos colaterais não são permitidos",
+        "why": "O Spark nem detecta efeitos colaterais."
+      },
+      {
+        "text": "Nenhum; a nova tentativa reaproveita os resultados da primeira",
+        "why": "O trabalho parcial da primeira tentativa morreu com o executor."
+      },
+      {
+        "text": "Algumas pessoas recebem o mesmo e-mail duas vezes",
+        "why": "Isso. A nova tentativa repete o efeito colateral, e o Spark não tem como saber."
+      },
+      {
+        "text": "A tarefa repetida pula as linhas já enviadas",
+        "why": "O Spark não sabe que linhas foram enviadas; ele roda a tarefa inteira de novo."
+      }
+    ]
+  },
+  "ex-rq9rtb1a": {
+    "prompt": "Por que o Spark desiste depois que a mesma tarefa falha quatro vezes?",
+    "hint": "O que sugere uma tarefa que falha em todo lugar?",
+    "choices": [
+      {
+        "text": "O master proíbe mais de quatro executores por tarefa",
+        "why": "O limite é uma configuração do driver, `spark.task.maxFailures`."
+      },
+      {
+        "text": "Os executores ficam sem memória depois de quatro tentativas",
+        "why": "As tentativas não acumulam memória."
+      },
+      {
+        "text": "Quatro é o número de workers do laboratório",
+        "why": "O laboratório tem três workers, e o padrão é quatro em todo lugar."
+      },
+      {
+        "text": "Provavelmente é um bug na tarefa, não uma máquina",
+        "why": "Isso. Repetir um bug só desperdiça o cluster."
+      }
+    ]
+  },
+  "ex-59myw73s": {
+    "prompt": "Depois que um worker morreu, o job ainda deu a resposta certa. Por que ficou mais lento?",
+    "hint": "O que substituiu o worker perdido?",
+    "choices": [
+      {
+        "text": "Nada o substituiu, então rodou em dois núcleos",
+        "why": "Isso. Um executor pode ser reiniciado; uma máquina não aparece do nada."
+      },
+      {
+        "text": "O master esperou sessenta segundos para perceber",
+        "why": "Ele percebeu em segundos, porque a conexão fechou."
+      },
+      {
+        "text": "Toda tarefa recomeçou do zero",
+        "why": "Só a tarefa do executor perdido rodou de novo."
+      },
+      {
+        "text": "Os dados tiveram de ser copiados do worker morto",
+        "why": "A entrada está num disco que todo processo compartilha aqui."
+      }
+    ]
+  },
+  "ex-ca6abbjm": {
+    "prompt": "Num cluster de verdade uma máquina perde energia. Por que o master demora mais para marcá-la como morta do que no laboratório?",
+    "hint": "O que fechou no laboratório quando o processo foi morto?",
+    "choices": [
+      {
+        "text": "Não demora; uma máquina morta é percebida na hora em todo lugar",
+        "why": "Só quando algo avisa o master; a queda de energia não avisa ninguém."
+      },
+      {
+        "text": "A queda de energia é reportada ao master pelo sistema operacional",
+        "why": "Uma máquina sem energia não reporta nada."
+      },
+      {
+        "text": "O master confere os workers só uma vez por minuto",
+        "why": "No laboratório ele percebeu em segundos; a diferença é a conexão fechada."
+      },
+      {
+        "text": "Nenhuma conexão fecha, então ele espera os heartbeats pararem",
+        "why": "Isso. O `spark.worker.timeout` é de sessenta segundos por padrão."
+      }
+    ]
+  },
+  "ex-gzg19sbk": {
+    "prompt": "Por que um cluster dimensionado para os jobs noturnos terminarem bem na hora é um mau plano em mil máquinas?",
+    "hint": "Com que frequência todas as máquinas estão saudáveis?",
+    "choices": [
+      {
+        "text": "Mil máquinas nunca falham à noite",
+        "why": "Falhas não respeitam horário comercial."
+      },
+      {
+        "text": "Jobs que terminam cedo desperdiçam o dinheiro pago por máquinas paradas de madrugada",
+        "why": "A preocupação é o atraso, não a antecedência."
+      },
+      {
+        "text": "O master precisa de uma máquina reserva só dele",
+        "why": "Isso é outra preocupação, sobre o master."
+      },
+      {
+        "text": "Alguma máquina está fora na maioria das noites, então os jobs atrasam",
+        "why": "Isso. A capacidade precisa contar com as máquinas quebradas."
+      }
+    ]
+  },
+  "ex-rwyr50jq": {
+    "prompt": "Depois que o driver foi morto, o master listou a aplicação como `FINISHED`. O que a aula conclui?",
+    "hint": "Quem sabe se o job funcionou?",
+    "choices": [
+      {
+        "text": "Os executores terminaram o job sem o driver",
+        "why": "Os executores saem quando o driver some."
+      },
+      {
+        "text": "O master reiniciou o driver e o job completou",
+        "why": "Nada o reiniciou; o modo client não tem supervisão."
+      },
+      {
+        "text": "O job terminou antes de o kill chegar",
+        "why": "Ele não imprimiu resposta e saiu com status 137."
+      },
+      {
+        "text": "O sucesso se julga pela saída e pelo código de retorno, não pelo master",
+        "why": "Isso. `FINISHED` só quer dizer que não está mais rodando."
+      }
+    ]
+  },
+  "ex-42k6ag7k": {
+    "prompt": "No modo client, onde roda o driver?",
+    "hint": "Feche o notebook e o job morre.",
+    "choices": [
+      {
+        "text": "No master",
+        "why": "O master nunca roda drivers no modo client."
+      },
+      {
+        "text": "Onde o `spark-submit` foi digitado",
+        "why": "Isso. No modo cluster o gerenciador o inicia num worker."
+      },
+      {
+        "text": "Dentro do primeiro executor que inicia",
+        "why": "Executores rodam tarefas, nunca o driver."
+      },
+      {
+        "text": "No worker com mais memória livre",
+        "why": "Isso descreve, mais ou menos, o modo cluster."
+      }
+    ]
+  },
+  "ex-8d4fnr49": {
+    "prompt": "O que o master standalone respondeu a `spark-submit --deploy-mode cluster tasks.py 3 1`?",
+    "hint": "A linguagem fez diferença.",
+    "choices": [
+      {
+        "text": "Recusou: drivers Python não têm suporte desse jeito",
+        "why": "Isso. YARN e Kubernetes rodam drivers Python no modo cluster."
+      },
+      {
+        "text": "Pediu um ZooKeeper",
+        "why": "O ZooKeeper é para masters reserva, não para drivers."
+      },
+      {
+        "text": "Rodou o job em modo client, com um aviso",
+        "why": "Parou com uma exceção; nada rodou."
+      },
+      {
+        "text": "Rodou o driver num worker e o reiniciou ao falhar",
+        "why": "Isso exige `--supervise` e um programa JVM no standalone."
+      }
+    ]
+  },
+  "ex-ywftyqc0": {
+    "prompt": "O único master do laboratório morre enquanto um job roda. O que acontece com esse job?",
+    "hint": "Com quem o driver fala depois que tem executores?",
+    "choices": [
+      {
+        "text": "Morre na hora, como com o driver perdido",
+        "why": "O master sai da conversa depois que os executores existem."
+      },
+      {
+        "text": "Continua, mas executores perdidos não podem ser repostos",
+        "why": "Isso. O driver fala direto com os seus executores."
+      },
+      {
+        "text": "Passa sozinho para um master reserva",
+        "why": "O laboratório não tem reserva; isso exige ZooKeeper."
+      },
+      {
+        "text": "Pausa todas as tarefas até o master voltar e cada worker se registrar de novo",
+        "why": "As tarefas continuam rodando nos executores que ele tem."
+      }
+    ]
+  },
+  "ex-12h67fbk": {
+    "prompt": "O Spark marcou a tarefa 5 como especulável mas nunca lançou uma cópia. Por quê?",
+    "hint": "Onde estavam todos os executores?",
+    "choices": [
+      {
+        "text": "A especulação vem desligada por padrão",
+        "why": "Ela foi ligada com `spark.speculation=true`, e marcou a tarefa."
+      },
+      {
+        "text": "Nenhum núcleo estava livre",
+        "why": "Dois núcleos ficaram parados enquanto a tarefa 5 dormia."
+      },
+      {
+        "text": "Uma cópia nunca roda no host da original, e todos dividiam um",
+        "why": "Isso. A causa mais comum de um straggler é a própria máquina."
+      },
+      {
+        "text": "A tarefa 5 não era lenta o bastante",
+        "why": "Ela passou do limite de uns três segundos e foi marcada."
+      }
+    ]
+  },
+  "ex-m248t1fb": {
+    "prompt": "Uma tarefa está lenta porque a fatia dela guarda os eventos do robô. A especulação ajuda?",
+    "hint": "O que a cópia teria de processar?",
+    "choices": [
+      {
+        "text": "Sim; uma cópia numa máquina saudável termina antes",
+        "why": "A máquina não era o problema; a fatia era."
+      },
+      {
+        "text": "Não, porque a especulação só funciona em jobs Scala",
+        "why": "Funciona para qualquer job; o motivo são os dados."
+      },
+      {
+        "text": "Sim, porque a cópia divide a fatia em duas",
+        "why": "Uma cópia especulativa é a mesma tarefa na mesma fatia."
+      },
+      {
+        "text": "Não; a cópia tem os mesmos dados e é igualmente lenta",
+        "why": "Isso. A especulação cura máquinas doentes, não dados pesados. Aula 8."
+      }
+    ]
+  },
+  "ex-5fzykage": {
+    "prompt": "Ligue cada evento ao que o job faz a respeito.",
+    "hint": "Que processo tem a única cópia do plano?",
+    "pairs": [
+      {
+        "left": "Um executor é morto",
+        "right": "As tarefas dele rodam de novo e um executor novo inicia"
+      },
+      {
+        "left": "Um worker é morto",
+        "right": "As tarefas dele rodam de novo nos núcleos que sobraram"
+      },
+      {
+        "left": "O driver é morto",
+        "right": "O trabalho se perde"
+      },
+      {
+        "left": "Uma tarefa está lenta numa máquina doente",
+        "right": "Uma cópia pode rodar em outro lugar, com especulação ligada"
+      }
+    ]
+  },
+  "ex-k96eamrp": {
+    "prompt": "Ordene o que acontece quando a Ana roda `spark-submit tasks.py 60 1`, do primeiro ao último.",
+    "hint": "Recursos antes de tarefas.",
+    "items": [
+      "O driver inicia e pede núcleos ao master",
+      "Os workers iniciam executores para a aplicação",
+      "O driver manda tarefas aos executores",
+      "Os executores saem junto com a aplicação"
+    ]
+  }
+}

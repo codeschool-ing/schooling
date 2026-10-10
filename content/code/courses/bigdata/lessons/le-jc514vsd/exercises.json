@@ -1,0 +1,838 @@
+[
+  {
+    "id": "ex-swhbp7bg",
+    "version": 1,
+    "section": "four-roles",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which role decides which task runs on which executor?",
+    "hint": "The master rents out cores and does not care what runs on them.",
+    "choices": [
+      {
+        "text": "Each worker, for the executors it started",
+        "correct": false,
+        "why": "A worker starts executors and runs no tasks of its own."
+      },
+      {
+        "text": "The driver",
+        "correct": true,
+        "why": "Right. It holds the plan and sends each task to an executor itself."
+      },
+      {
+        "text": "The executors, by taking turns among themselves",
+        "correct": false,
+        "why": "Executors run what they are given; they do not plan."
+      },
+      {
+        "text": "The master, which owns the cores",
+        "correct": false,
+        "why": "The master assigns cores to applications and then stays out of the job."
+      }
+    ]
+  },
+  {
+    "id": "ex-cchgkpee",
+    "version": 1,
+    "section": "four-roles",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each role to what it does.",
+    "hint": "One plans, one rents, one offers, one works.",
+    "pairs": [
+      {
+        "left": "Driver",
+        "right": "Plans the job and hands out its tasks"
+      },
+      {
+        "left": "Cluster manager",
+        "right": "Hands out cores and memory to applications"
+      },
+      {
+        "left": "Worker",
+        "right": "Offers a machine's resources and starts processes on it"
+      },
+      {
+        "left": "Executor",
+        "right": "Runs one application's tasks, one per core"
+      }
+    ]
+  },
+  {
+    "id": "ex-htebg2x2",
+    "version": 1,
+    "section": "four-roles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On YARN, what plays the part the standalone master plays in the lab?",
+    "hint": "The words change between systems, the roles do not.",
+    "choices": [
+      {
+        "text": "Nothing; YARN has no central manager",
+        "correct": false,
+        "why": "It has one, the ResourceManager, and lesson 12 runs it."
+      },
+      {
+        "text": "The ResourceManager",
+        "correct": true,
+        "why": "Yes. Its NodeManagers play the workers."
+      },
+      {
+        "text": "The Spark driver, which YARN calls the master",
+        "correct": false,
+        "why": "The driver keeps its name on every cluster manager."
+      },
+      {
+        "text": "The NodeManager running on each machine",
+        "correct": false,
+        "why": "That is YARN's worker, one per machine."
+      }
+    ]
+  },
+  {
+    "id": "ex-2wx5pptr",
+    "version": 1,
+    "section": "tasks-and-slots",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A job has 40 tasks of 3 seconds each on 4 cores. Ignoring overhead, how many seconds does it take?",
+    "hint": "Count the waves first.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-t3wzah22",
+    "version": 1,
+    "section": "tasks-and-slots",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The same job with 41 tasks. Ignoring overhead, how many seconds now?",
+    "hint": "One task more can mean one wave more.",
+    "value": 33,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-d1ja9tqr",
+    "version": 1,
+    "section": "tasks-and-slots",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A job has exactly as many tasks as cores, and one task's slice of data is twice as large as the others. What happens?",
+    "hint": "Is there any other task to give the idle cores?",
+    "choices": [
+      {
+        "text": "Nothing changes, since the tasks run at the same time",
+        "correct": false,
+        "why": "They start together, and the job ends when the last one does."
+      },
+      {
+        "text": "The job takes twice as long, with idle cores waiting",
+        "correct": true,
+        "why": "Right. With one wave there is nothing to rebalance onto the free cores."
+      },
+      {
+        "text": "The scheduler splits it",
+        "correct": false,
+        "why": "A task is the unit; the scheduler never splits one."
+      },
+      {
+        "text": "The large task is killed and retried on a faster core",
+        "correct": false,
+        "why": "Slow is not failed, and no core is faster for more data."
+      }
+    ]
+  },
+  {
+    "id": "ex-heept3yt",
+    "version": 1,
+    "section": "tasks-and-slots",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is splitting a job into a million tasks of a few milliseconds each a bad idea?",
+    "hint": "What does each task cost besides its work?",
+    "choices": [
+      {
+        "text": "The fixed cost per task dominates",
+        "correct": true,
+        "why": "Yes. Scheduling, starting and reporting are paid a million times."
+      },
+      {
+        "text": "The answer becomes less precise",
+        "correct": false,
+        "why": "The answer is the same; only the time changes."
+      },
+      {
+        "text": "Spark refuses them",
+        "correct": false,
+        "why": "It runs as many waves as needed."
+      },
+      {
+        "text": "Each task needs its own executor and its own Java process",
+        "correct": false,
+        "why": "An executor runs many tasks one after another."
+      }
+    ]
+  },
+  {
+    "id": "ex-55gsmbnn",
+    "version": 1,
+    "section": "tasks-and-slots",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Preferring an executor on the machine that holds a task's slice of data is called data ___.",
+    "hint": "Where the data is.",
+    "blanks": [
+      {
+        "accept": [
+          "locality"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vaay9a4b",
+    "version": 1,
+    "section": "the-processes",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "While one job runs on the lab's cluster, how many Spark Java processes are on the machine?",
+    "hint": "Master, workers, the driver and the executors.",
+    "value": 8,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-enw7cnfq",
+    "version": 1,
+    "section": "the-processes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What happens to the three executors when the job ends?",
+    "hint": "Whose are they?",
+    "choices": [
+      {
+        "text": "They end with the application",
+        "correct": true,
+        "why": "Right. Executors belong to one application; workers stay."
+      },
+      {
+        "text": "They become workers",
+        "correct": false,
+        "why": "Workers and executors are different processes with different jobs."
+      },
+      {
+        "text": "They stay, ready for the next application",
+        "correct": false,
+        "why": "The workers stay. Each application gets fresh executors."
+      },
+      {
+        "text": "They are kept until the master is restarted",
+        "correct": false,
+        "why": "The master does not hold executors at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-51pj95q7",
+    "version": 1,
+    "section": "the-processes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The executors endpoint lists the driver with `totalCores` 0. Why?",
+    "hint": "What does the driver do with the tasks?",
+    "choices": [
+      {
+        "text": "The REST endpoint cannot see the driver's cores",
+        "correct": false,
+        "why": "It reports what Spark knows: the driver has no task slots."
+      },
+      {
+        "text": "The driver had crashed",
+        "correct": false,
+        "why": "The driver is the one answering the request."
+      },
+      {
+        "text": "The driver runs no tasks; it hands them out",
+        "correct": true,
+        "why": "Yes. Its work is planning and collecting."
+      },
+      {
+        "text": "The driver gave its core to an executor when the job started",
+        "correct": false,
+        "why": "Cores come from workers; the driver never had one to give."
+      }
+    ]
+  },
+  {
+    "id": "ex-xapwbgs6",
+    "version": 1,
+    "section": "sharing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague's six-task job showed `WAITING` with zero cores. What caused it?",
+    "hint": "How many cores did the first application take?",
+    "choices": [
+      {
+        "text": "Two applications cannot run on one cluster",
+        "correct": false,
+        "why": "With a cap on the first, both ran at once."
+      },
+      {
+        "text": "The first application took every core, as standalone allows by default",
+        "correct": true,
+        "why": "Right. First come, first served, and the first came with no cap."
+      },
+      {
+        "text": "The second job asked for more memory than a worker has",
+        "correct": false,
+        "why": "It asked for the same 768 MB; the cores were the problem."
+      },
+      {
+        "text": "The master was down",
+        "correct": false,
+        "why": "The master answered and reported both applications."
+      }
+    ]
+  },
+  {
+    "id": "ex-mycxf93v",
+    "version": 1,
+    "section": "sharing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With `spark.cores.max=2` on the large job, the small job finished in 14 s instead of 26. What did the large job pay?",
+    "hint": "Count its waves on two cores.",
+    "choices": [
+      {
+        "text": "It failed halfway through and had to be resubmitted by hand the next morning",
+        "correct": false,
+        "why": "It finished with the right answer."
+      },
+      {
+        "text": "Nothing, because a cap only affects other applications",
+        "correct": false,
+        "why": "The cap is on the large job itself; it ran on fewer cores."
+      },
+      {
+        "text": "Its executors were given less memory each",
+        "correct": false,
+        "why": "The cap is on cores; memory per executor stayed 768 MB."
+      },
+      {
+        "text": "Fifteen waves instead of ten, and a longer run",
+        "correct": true,
+        "why": "Yes. A cap is a decision about who waits."
+      }
+    ]
+  },
+  {
+    "id": "ex-vej6dppq",
+    "version": 1,
+    "section": "sharing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each mechanism to what it shares.",
+    "hint": "Some are between applications, one is inside one.",
+    "pairs": [
+      {
+        "left": "spark.cores.max",
+        "right": "Caps one application's cores on standalone"
+      },
+      {
+        "left": "YARN queues",
+        "right": "A guaranteed share of the cluster per team"
+      },
+      {
+        "left": "spark.scheduler.mode=FAIR",
+        "right": "Jobs from different threads of one driver"
+      },
+      {
+        "left": "Dynamic allocation",
+        "right": "Gives back executors an application is not using"
+      }
+    ]
+  },
+  {
+    "id": "ex-mxrxf4j9",
+    "version": 1,
+    "section": "failures-are-normal",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "If each machine fails once in 1,000 days on average, how many failures a day does a cluster of 5,000 machines see on average?",
+    "hint": "Machines times the daily rate.",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-wg39r8ab",
+    "version": 1,
+    "section": "failures-are-normal",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put in order what a system for many machines does about a failure.",
+    "hint": "You cannot redo what you have not identified.",
+    "items": [
+      "Notice that a machine is gone",
+      "Know what was lost with it",
+      "Redo only that, somewhere else"
+    ]
+  },
+  {
+    "id": "ex-bp7c8na4",
+    "version": 1,
+    "section": "failures-are-normal",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can a job on 10,000 machines not simply be restarted from the beginning whenever any machine fails?",
+    "hint": "How often would a four-hour run see a failure?",
+    "choices": [
+      {
+        "text": "Machines that fail are always slower to restart",
+        "correct": false,
+        "why": "Restart speed is not the issue; the frequency is."
+      },
+      {
+        "text": "At ten failures a day, a long run keeps meeting one",
+        "correct": true,
+        "why": "Right. At ten failures a day, a four-hour run usually meets one."
+      },
+      {
+        "text": "Restarting a job from the beginning is forbidden by the cluster manager",
+        "correct": false,
+        "why": "Nothing forbids it; the arithmetic makes it hopeless."
+      },
+      {
+        "text": "The data would be lost on restart",
+        "correct": false,
+        "why": "The input is still there; the work done is what is lost."
+      }
+    ]
+  },
+  {
+    "id": "ex-s25e7m1j",
+    "version": 1,
+    "section": "losing-an-executor",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A process killed by signal 9 is reported as exiting with code 128 + 9. What code is printed?",
+    "hint": "Add.",
+    "value": 137,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-n4rc86de",
+    "version": 1,
+    "section": "losing-an-executor",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A task sends one e-mail per row it processes. Its executor dies halfway and the task is retried. What is the risk?",
+    "hint": "Spark assumes running a task twice is harmless.",
+    "choices": [
+      {
+        "text": "The job fails, since side effects are not allowed",
+        "correct": false,
+        "why": "Spark does not detect side effects at all."
+      },
+      {
+        "text": "None; a retry reuses the first attempt's results",
+        "correct": false,
+        "why": "The first attempt's partial work died with the executor."
+      },
+      {
+        "text": "Some people get the same e-mail twice",
+        "correct": true,
+        "why": "Right. The retry repeats the side effect, and Spark cannot know."
+      },
+      {
+        "text": "The retried task skips the rows already e-mailed",
+        "correct": false,
+        "why": "Spark does not know which rows were e-mailed; it reruns the whole task."
+      }
+    ]
+  },
+  {
+    "id": "ex-rq9rtb1a",
+    "version": 1,
+    "section": "losing-an-executor",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Spark give up after the same task fails four times?",
+    "hint": "What does a task that fails everywhere suggest?",
+    "choices": [
+      {
+        "text": "The master forbids more than four executors per task",
+        "correct": false,
+        "why": "The limit is the driver's setting, `spark.task.maxFailures`."
+      },
+      {
+        "text": "The executors run out of memory after four attempts",
+        "correct": false,
+        "why": "Attempts do not accumulate memory."
+      },
+      {
+        "text": "Four is the number of workers in the lab",
+        "correct": false,
+        "why": "The lab has three workers, and the default is four everywhere."
+      },
+      {
+        "text": "It is likely a bug in the task, not a machine",
+        "correct": true,
+        "why": "Yes. Retrying a bug only wastes the cluster."
+      }
+    ]
+  },
+  {
+    "id": "ex-59myw73s",
+    "version": 1,
+    "section": "losing-a-worker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a worker died, the job still gave the right answer. Why was it slower?",
+    "hint": "What replaced the lost worker?",
+    "choices": [
+      {
+        "text": "Nothing replaced it, so it ran on two cores",
+        "correct": true,
+        "why": "Right. An executor can be restarted; a machine cannot be conjured."
+      },
+      {
+        "text": "The master waited sixty seconds before noticing",
+        "correct": false,
+        "why": "It noticed in seconds, because the connection closed."
+      },
+      {
+        "text": "Every task was restarted from the very beginning",
+        "correct": false,
+        "why": "Only the task on the lost executor ran again."
+      },
+      {
+        "text": "The data had to be copied from the dead worker",
+        "correct": false,
+        "why": "The input is on a disk every process shares here."
+      }
+    ]
+  },
+  {
+    "id": "ex-ca6abbjm",
+    "version": 1,
+    "section": "losing-a-worker",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On a real cluster a machine loses power. Why does the master take longer to mark it dead than it did in the lab?",
+    "hint": "What closed in the lab when the process was killed?",
+    "choices": [
+      {
+        "text": "It does not; a dead machine is noticed instantly everywhere",
+        "correct": false,
+        "why": "Only when something tells the master; power loss tells nobody."
+      },
+      {
+        "text": "Power loss is reported to the master by the operating system",
+        "correct": false,
+        "why": "A machine without power reports nothing."
+      },
+      {
+        "text": "The master checks workers only once a minute",
+        "correct": false,
+        "why": "In the lab it noticed in seconds; the difference is the closed connection."
+      },
+      {
+        "text": "No connection closes, so it waits for heartbeats to stop",
+        "correct": true,
+        "why": "Yes. `spark.worker.timeout` is sixty seconds by default."
+      }
+    ]
+  },
+  {
+    "id": "ex-gzg19sbk",
+    "version": 1,
+    "section": "losing-a-worker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a cluster sized so that the nightly jobs finish just in time a bad plan on a thousand machines?",
+    "hint": "How often is every machine healthy?",
+    "choices": [
+      {
+        "text": "A thousand machines never fail at night",
+        "correct": false,
+        "why": "Failures do not keep office hours."
+      },
+      {
+        "text": "Jobs that finish early waste the money paid for machines left idle overnight",
+        "correct": false,
+        "why": "The concern is lateness, not earliness."
+      },
+      {
+        "text": "The master needs a spare machine of its own",
+        "correct": false,
+        "why": "That is a separate concern about the master."
+      },
+      {
+        "text": "Some machine is down on most nights, so jobs run late",
+        "correct": true,
+        "why": "Right. Capacity has to include the machines that are broken."
+      }
+    ]
+  },
+  {
+    "id": "ex-rwyr50jq",
+    "version": 1,
+    "section": "losing-the-driver",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the driver was killed, the master listed the application as `FINISHED`. What does the lesson conclude?",
+    "hint": "Who knows whether the job worked?",
+    "choices": [
+      {
+        "text": "The executors finished the job without the driver",
+        "correct": false,
+        "why": "Executors exit when their driver vanishes."
+      },
+      {
+        "text": "The master restarted the driver and the job completed",
+        "correct": false,
+        "why": "Nothing restarted it; client mode has no supervision."
+      },
+      {
+        "text": "The job finished before the kill reached it",
+        "correct": false,
+        "why": "It printed no answer and its exit status was 137."
+      },
+      {
+        "text": "Success is judged by the output and exit code, not the master",
+        "correct": true,
+        "why": "Right. `FINISHED` only means no longer running."
+      }
+    ]
+  },
+  {
+    "id": "ex-42k6ag7k",
+    "version": 1,
+    "section": "losing-the-driver",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In client mode, where does the driver run?",
+    "hint": "Close the laptop and the job dies.",
+    "choices": [
+      {
+        "text": "On the master",
+        "correct": false,
+        "why": "The master never runs drivers in client mode."
+      },
+      {
+        "text": "Where `spark-submit` was typed",
+        "correct": true,
+        "why": "Yes. In cluster mode the manager starts it on a worker instead."
+      },
+      {
+        "text": "Inside the first executor that starts",
+        "correct": false,
+        "why": "Executors run tasks, never the driver."
+      },
+      {
+        "text": "On the worker with the most free memory",
+        "correct": false,
+        "why": "That describes cluster mode, roughly."
+      }
+    ]
+  },
+  {
+    "id": "ex-8d4fnr49",
+    "version": 1,
+    "section": "losing-the-driver",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the standalone master answer to `spark-submit --deploy-mode cluster tasks.py 3 1`?",
+    "hint": "The language mattered.",
+    "choices": [
+      {
+        "text": "It refused: Python drivers are not supported that way",
+        "correct": true,
+        "why": "Right. YARN and Kubernetes run Python drivers in cluster mode."
+      },
+      {
+        "text": "It asked for ZooKeeper",
+        "correct": false,
+        "why": "ZooKeeper is for standby masters, not for drivers."
+      },
+      {
+        "text": "It ran the job in client mode instead, with a warning",
+        "correct": false,
+        "why": "It stopped with an exception; nothing ran."
+      },
+      {
+        "text": "It ran the driver on a worker and restarted it on failure",
+        "correct": false,
+        "why": "That needs `--supervise` and a JVM program on standalone."
+      }
+    ]
+  },
+  {
+    "id": "ex-ywftyqc0",
+    "version": 1,
+    "section": "losing-the-driver",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The lab's only master dies while a job is running. What happens to that job?",
+    "hint": "Who does the driver talk to once it has executors?",
+    "choices": [
+      {
+        "text": "It dies at once, like a lost driver",
+        "correct": false,
+        "why": "The master is out of the conversation once executors exist."
+      },
+      {
+        "text": "It carries on, but lost executors cannot be replaced",
+        "correct": true,
+        "why": "Right. The driver talks to its executors directly."
+      },
+      {
+        "text": "It moves to a standby master automatically",
+        "correct": false,
+        "why": "The lab has no standby; that needs ZooKeeper."
+      },
+      {
+        "text": "It pauses every task until the master is back and every worker has registered again",
+        "correct": false,
+        "why": "Tasks keep running on the executors it has."
+      }
+    ]
+  },
+  {
+    "id": "ex-12h67fbk",
+    "version": 1,
+    "section": "stragglers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Spark marked task 5 as speculatable but never launched a copy. Why?",
+    "hint": "Where were all the executors?",
+    "choices": [
+      {
+        "text": "Speculation is off by default",
+        "correct": false,
+        "why": "It was turned on with `spark.speculation=true`, and it marked the task."
+      },
+      {
+        "text": "No core was free",
+        "correct": false,
+        "why": "Two cores sat idle while task 5 slept."
+      },
+      {
+        "text": "A copy never runs on the original's host, and all shared one",
+        "correct": true,
+        "why": "Right. The commonest cause of a straggler is its machine."
+      },
+      {
+        "text": "Task 5 was not slow enough to qualify",
+        "correct": false,
+        "why": "It passed the threshold of about three seconds and was marked."
+      }
+    ]
+  },
+  {
+    "id": "ex-m248t1fb",
+    "version": 1,
+    "section": "stragglers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A task is slow because its slice holds the crawler's events. Does speculation help?",
+    "hint": "What would the copy have to process?",
+    "choices": [
+      {
+        "text": "Yes; a copy on a healthy machine finishes sooner",
+        "correct": false,
+        "why": "The machine was not the problem; the slice was."
+      },
+      {
+        "text": "No, because speculation only works on Scala jobs",
+        "correct": false,
+        "why": "It works for any job; the reason is the data."
+      },
+      {
+        "text": "Yes, because the copy splits the slice in two",
+        "correct": false,
+        "why": "A speculative copy is the same task on the same slice."
+      },
+      {
+        "text": "No; the copy has the same data and is just as slow",
+        "correct": true,
+        "why": "Right. Speculation cures sick machines, not heavy data. Lesson 8."
+      }
+    ]
+  },
+  {
+    "id": "ex-5fzykage",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each event to what the job does about it.",
+    "hint": "Which process holds the only copy of the plan?",
+    "pairs": [
+      {
+        "left": "An executor is killed",
+        "right": "Its tasks rerun and a new executor starts"
+      },
+      {
+        "left": "A worker is killed",
+        "right": "Its tasks rerun on the cores that are left"
+      },
+      {
+        "left": "The driver is killed",
+        "right": "The work is lost"
+      },
+      {
+        "left": "One task is slow on a sick machine",
+        "right": "A copy may run elsewhere, with speculation on"
+      }
+    ]
+  },
+  {
+    "id": "ex-k96eamrp",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order what happens when Ana runs `spark-submit tasks.py 60 1`, first to last.",
+    "hint": "Resources before tasks.",
+    "items": [
+      "The driver starts and asks the master for cores",
+      "Workers start executors for the application",
+      "The driver sends tasks to the executors",
+      "The executors exit with the application"
+    ]
+  }
+]
