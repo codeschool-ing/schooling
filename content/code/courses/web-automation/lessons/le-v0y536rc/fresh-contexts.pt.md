@@ -1,23 +1,24 @@
 ---
-title: Why your tests never meet it
+title: Por que os seus testes nunca a encontram
 version: 1
 ---
 
-The obvious test for the offer page sets a new offer and checks that the page shows it. **It
-passes, and the flaw is still there.** That is not luck, and it is not a weak assertion: it is how
-Playwright runs every test, and it is worth understanding before deciding whether to change it.
+O teste óbvio para a página da oferta define uma oferta nova e verifica que a página a mostra.
+**Ele passa, e a falha continua lá.** Não é sorte, nem asserção fraca: é como o Playwright roda todo
+teste, e vale entender isso antes de decidir se muda.
 
-## A new browser for every test
+## Um navegador novo para cada teste
 
-A **browser context** is one browser profile: its own cookies, its own storage and its own HTTP
-cache, cut off from every other context in the same browser. Playwright's reference says it in one
-line: a new context *won't share cookies/cache with other browser contexts*. The `page` a test
-receives lives in a context made for that test and thrown away after it, so **every test is a
-customer on a first visit**, with nothing kept from any test before it. Lesson 10 is about contexts
-in general; here only the cache matters.
+Um **contexto de navegador** é um perfil de navegador: seus próprios cookies, seu próprio
+armazenamento e seu próprio cache HTTP, isolados de todo outro contexto no mesmo navegador. A
+referência do Playwright diz isso numa linha: um contexto novo *won't share cookies/cache with other
+browser contexts*, não divide cookies nem cache com outros. A `page` que um teste recebe vive num
+contexto feito para aquele teste e descartado depois, então **todo teste é um cliente na primeira
+visita**, sem nada guardado de teste anterior. A aula 10 trata de contextos em geral; aqui só o cache
+importa.
 
-Here is that obvious test. `beforeEach` resets the shop before each test, so the offer always starts
-as the mango; the test changes it and opens the page. Save it as `tests/cache.spec.js`:
+Eis o teste óbvio. O `beforeEach` reinicia a loja antes de cada teste, então a oferta sempre começa
+como a manga; o teste a muda e abre a página. Salve-o como `tests/cache.spec.js`:
 
 ```javascript
 import { test, expect } from '@playwright/test';
@@ -43,19 +44,19 @@ Running 1 test using 1 worker
   1 passed (1.6s)
 ```
 
-One test, green. It proves the server hands a new offer to a new visitor, which is true and worth
-knowing. It says nothing about the customer who already had the page open, because no test in this
-file has ever been that customer.
+Um teste, verde. Ele prova que o servidor entrega a oferta nova a um visitante novo, o que é verdade
+e vale saber. Não diz nada sobre o cliente que já estava com a página aberta, porque nenhum teste
+deste arquivo jamais foi esse cliente.
 
-**That is the trade.** An empty cache makes a test repeatable: it cannot pass because of something
-an earlier test left behind, and it does not fail because of it either, which lesson 15 makes the
-rule for all test data. The price is that every test meets the shop the way only a first-time
-visitor does, and a defect that needs a second visit is invisible to the whole suite.
+**Essa é a troca.** Um cache vazio torna o teste repetível: ele não passa por causa de algo que um
+teste anterior deixou, nem falha por isso, e a aula 15 faz disso a regra para todos os dados de
+teste. O preço é que todo teste encontra a loja como só um visitante de primeira vez encontra, e um
+defeito que precisa de uma segunda visita fica invisível para a suíte inteira.
 
-## Writing the returning customer
+## Escrevendo o cliente que volta
 
-To meet the flaw, a test has to be a returning customer **on purpose**: visit, change, visit again,
-all in one context. Add this test at the end of `tests/cache.spec.js`:
+Para encontrar a falha, um teste tem de ser um cliente que volta **de propósito**: visitar, mudar,
+visitar de novo, tudo num contexto só. Acrescente este teste no fim de `tests/cache.spec.js`:
 
 ```javascript
 test('a returning customer sees the new offer', async ({ page, request }) => {
@@ -107,18 +108,19 @@ Running 2 tests using 1 worker
   1 passed (6.9s)
 ```
 
-The second test failed, and its report says why in two lines: it expected `Banana` and received
-`Mango for R$ 3,90`, nine times over five seconds. **That is the flaw, found by a test** for the
-first time, and it took one decision: open the page twice in the same context instead of once.
-The suite cannot stay red over a flaw that is there on purpose, and the next section turns this
-test into one that says so; leave it failing until then.
+O segundo teste falhou, e o relatório diz por que em duas linhas: esperava `Banana` e recebeu
+`Mango for R$ 3,90`, nove vezes em cinco segundos. **É a falha, achada por um teste** pela primeira
+vez, e bastou uma decisão: abrir a página duas vezes no mesmo contexto em vez de uma. A suíte não
+pode ficar vermelha por uma falha que está lá de propósito, e a próxima seção transforma este teste
+num que diz isso; deixe-o falhando até lá.
 
-## Other ways to come back
+## Outras maneiras de voltar
 
-The same page visited twice is one returning customer. There are others, and they do not all keep
-the cache. This script changes the offer once and sends five visitors back to the page, each made a
-different way, with the shop running. One of them uses `launchPersistentContext`, which keeps the
-profile in a folder, here `profile`, the way an ordinary browser keeps yours between launches. Save it as `visitors.mjs`:
+A mesma página visitada duas vezes é um cliente que volta. Há outros, e nem todos guardam o cache.
+Este script muda a oferta uma vez e manda cinco visitantes de volta à página, cada um feito de um
+jeito, com a loja rodando. Um deles usa `launchPersistentContext`, que guarda o perfil numa pasta,
+aqui `profile`, como um navegador comum guarda o seu entre uma abertura e outra. Salve-o como
+`visitors.mjs`:
 
 ```javascript
 // The offer changes once; five visitors come back, and each says what it
@@ -173,18 +175,18 @@ a new context                Banana for R$ 2,90
 the kept profile, reopened   Mango for R$ 3,90
 ```
 
-Three of the five came back to the old offer, and what they share is the cache, not the steps:
+Três dos cinco voltaram à oferta antiga, e o que eles têm em comum é o cache, não os passos:
 
-- **the same page**, and **a new page in the same context**: a context has one cache, whichever
-  page asks;
-- **a kept profile, reopened**: `launchPersistentContext` writes the cache to the folder with
-  everything else, and the second launch read it back. It is the closest a script gets to a person
-  who closes the browser and opens it tomorrow. Delete the `profile` folder after the run;
-- **a new context made from saved state** was shown the new offer. `storageState` carries cookies
-  and local storage, which is what a logged-in session needs, and **not the HTTP cache**. A suite
-  that logs in once and reuses the state in every test still runs every test as a first visit, as
-  far as the cache goes.
+- **a mesma página** e **uma página nova no mesmo contexto**: um contexto tem um cache só, seja qual
+  for a página que pergunta;
+- **um perfil guardado, reaberto**: o `launchPersistentContext` grava o cache na pasta junto com o
+  resto, e a segunda abertura o leu de volta. É o mais perto que um script chega de uma pessoa que
+  fecha o navegador e o abre amanhã. Apague a pasta `profile` depois da execução;
+- **um contexto novo feito do estado salvo** viu a oferta nova. O `storageState` leva cookies e
+  armazenamento local, que é o que uma sessão logada precisa, e **não o cache HTTP**. Uma suíte que
+  faz login uma vez e reaproveita o estado em todo teste ainda roda cada teste como primeira visita,
+  no que diz respeito ao cache.
 
-So a returning customer in a test is either two visits inside one test, or a persistent context
-kept between runs. The first is what the next section builds on, because it needs no folder and
-leaves nothing behind.
+Então um cliente que volta, num teste, é ou duas visitas dentro de um teste, ou um contexto
+persistente mantido entre execuções. A primeira é a base da próxima seção, porque não precisa de
+pasta e não deixa nada para trás.

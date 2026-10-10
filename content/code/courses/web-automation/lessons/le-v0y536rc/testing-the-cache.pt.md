@@ -1,35 +1,34 @@
 ---
-title: Testing the cache on purpose
+title: Testando o cache de propósito
 version: 1
 ---
 
-A cache can be tested two ways, and a suite wants both. **The promise** is the header the server
-sends: cheap to check, exact, and the cause of everything else. **The consequence** is what a
-returning customer sees: slower, and the only proof that the promise does what you think.
+Um cache pode ser testado de dois jeitos, e uma suíte quer os dois. **A promessa** é o cabeçalho que
+o servidor manda: barata de verificar, exata, e causa de todo o resto. **A consequência** é o que um
+cliente que volta vê: mais lenta de testar, e a única prova de que a promessa faz o que você acha.
 
-## The promise, without a browser
+## A promessa, sem navegador
 
-The `request` fixture sends HTTP requests from the test itself, with no browser and **no cache of
-any kind**, so it sees exactly what the server says every time. `response.headers()` returns the
-headers with their names in lower case. A page can read them too, through the response
-`page.waitForResponse` returns, but a page's responses may come out of its cache, which is the very
-thing in doubt; `request` asks the server.
+A fixture `request` manda requisições HTTP do próprio teste, sem navegador e **sem cache de tipo
+nenhum**, então vê exatamente o que o servidor diz, toda vez. O `response.headers()` devolve os
+cabeçalhos com os nomes em minúsculas. Uma página também consegue lê-los, pela resposta que o
+`page.waitForResponse` devolve, mas as respostas de uma página podem sair do cache dela, que é
+justamente o que está em dúvida; a `request` pergunta ao servidor.
 
-## A test that expects to fail
+## Um teste que espera falhar
 
-The returning-customer test from the last section is correct: it describes what the shop should do.
-The shop does not do it yet, and deleting the test would throw the finding away. **`test.fail()`**
-says exactly that: this test is expected to fail, and here is why. The run counts it as passed while
-it fails, and reports it as a failure **the day it passes**, which is the day somebody fixed the
-flaw and the mark has to go. A test switched off with `test.skip()` would say nothing on that day.
+O teste do cliente que volta, da seção anterior, está certo: descreve o que a loja deveria fazer. A
+loja ainda não faz, e apagar o teste jogaria fora o achado. O **`test.fail()`** diz exatamente isso:
+este teste deve falhar, e eis o porquê. A execução o conta como aprovado enquanto ele falha, e o acusa
+como falha **no dia em que passar**, que é o dia em que alguém corrigiu a falha e a marca tem de sair.
+Um teste desligado com `test.skip()` não diria nada nesse dia.
 
-## The whole file
+## O arquivo inteiro
 
-The final version keeps the first test, marks the returning customer, and adds three: the offer's
-header, marked the same way; a static file's header and its `304`, which the shop gets right; and
-the returning customer once more, with routing switched on, which the next section explains. Save it
-as `tests/cache.spec.js`:
-
+A versão final mantém o primeiro teste, marca o cliente que volta e acrescenta três: o cabeçalho da
+oferta, marcado do mesmo jeito; o cabeçalho de um arquivo estático e o seu `304`, que a loja acerta;
+e o cliente que volta mais uma vez, com rotas ligadas, que a próxima seção explica. Salve-o como
+`tests/cache.spec.js`:
 
 ```javascript
 import { test, expect } from '@playwright/test';
@@ -81,8 +80,8 @@ test('routing hides the flaw', async ({ page, request }) => {
 });
 ```
 
-Start the shop in one terminal with its log on, and run the file from another; Playwright finds the
-shop already listening and uses it:
+Inicie a loja num terminal com o log ligado e rode o arquivo de outro; o Playwright encontra a loja
+já escutando e a usa:
 
 ```
 ana@laptop:~/quitanda$ npx playwright test tests/cache.spec.js
@@ -98,11 +97,12 @@ Running 5 tests using 1 worker
   5 passed (6.7s)
 ```
 
-**Two crosses, and five passed.** The `✘` marks the two tests that failed, and the count says
-passed because both failed as they were marked to. Read the cross as *the flaw is still there*.
+**Dois xis, e cinco aprovados.** O `✘` marca os dois testes que falharam, e a contagem diz aprovados
+porque os dois falharam como estavam marcados para falhar. Leia o xis como *a falha ainda está lá*.
 
-The shop's terminal shows what each test did. The first two `GET /api/products` are Playwright
-checking that the shop is up; after that, each test begins with its `POST /api/reset`:
+O terminal da loja mostra o que cada teste fez. Os dois primeiros `GET /api/products` são o
+Playwright conferindo se a loja está de pé; depois disso, cada teste começa com o seu
+`POST /api/reset`:
 
 ```
 ana@laptop:~/quitanda$ QUITANDA_LOG=1 npm start
@@ -140,19 +140,19 @@ GET /style.css 200
 GET /api/offer 200
 ```
 
-- **the returning customer**, the second block, asked for the page and the stylesheet again and got
-  `304` for both, and **never asked for the offer a second time**. That is the flaw, in the
-  server's own words;
-- **the header tests** asked for `/api/offer` once, and for `style.css` twice: the second time with
-  the fingerprint, answered `304`;
-- **the routing test**, the last block, asked for everything again on its second visit, all `200`,
-  with no `304` among them: routing switched the cache off so thoroughly that the browser did not
-  even keep a copy to ask about.
+- **o cliente que volta**, o segundo bloco, pediu de novo a página e a folha de estilos e recebeu
+  `304` para as duas, e **nunca pediu a oferta uma segunda vez**. É a falha, nas palavras do próprio
+  servidor;
+- **os testes de cabeçalho** pediram `/api/offer` uma vez, e `style.css` duas: a segunda com a
+  impressão digital, respondida com `304`;
+- **o teste com rota**, o último bloco, pediu tudo de novo na segunda visita, tudo `200`, sem nenhum
+  `304`: a rota desligou o cache tão completamente que o navegador nem guardou cópia sobre a qual
+  perguntar.
 
-## The day the flaw is fixed
+## O dia em que a falha é corrigida
 
-To see what the marks do, imagine somebody changes `max-age=600` to `no-cache` in
-`app/routes/offer.js` and restarts the shop. This run was made with that change, then put back:
+Para ver o que as marcas fazem, imagine que alguém troca `max-age=600` por `no-cache` em
+`app/routes/offer.js` e reinicia a loja. Esta execução foi feita com essa troca, depois desfeita:
 
 ```
 ana@laptop:~/quitanda$ npx playwright test tests/cache.spec.js
@@ -180,6 +180,7 @@ Running 5 tests using 1 worker
   3 passed (3.2s)
 ```
 
-Every test drew a tick, and two of them are reported as failures anyway, each with the same line:
-**`Expected to fail, but passed.`** That is the run telling whoever fixed the flaw to take the
-`test.fail` lines out, after which the file describes a shop with no flaw in it.
+Todo teste ganhou um visto, e dois deles são acusados como falha mesmo assim, cada um com a mesma
+linha: **`Expected to fail, but passed.`**, esperava falhar, mas passou. É a execução dizendo a quem
+corrigiu a falha que tire as linhas `test.fail`, e depois disso o arquivo descreve uma loja sem essa
+falha.

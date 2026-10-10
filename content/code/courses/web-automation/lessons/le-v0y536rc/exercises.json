@@ -1,0 +1,573 @@
+[
+ {
+  "id": "ex-07vwfbt8",
+  "version": 1,
+  "section": "http-caching",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A response carries `Cache-Control: no-cache`. What may the browser do with it?",
+  "choices": [
+   {
+    "text": "Keep nothing and fetch it again every time",
+    "correct": false,
+    "why": "That is `no-store`. The name `no-cache` misleads exactly this way."
+   },
+   {
+    "text": "Keep it, and ask the server before each use",
+    "correct": true,
+    "why": "Right. It may keep a copy, and the question it asks is answered by a `304` or a `200`."
+   },
+   {
+    "text": "Keep it for a default time the browser chooses",
+    "correct": false,
+    "why": "A time comes from `max-age`; `no-cache` gives the copy no time at all without a check."
+   },
+   {
+    "text": "Use it for the rest of the session without asking",
+    "correct": false,
+    "why": "Using a copy without asking is what `max-age` allows, for as many seconds as it names."
+   }
+  ]
+ },
+ {
+  "id": "ex-8790gzk7",
+  "version": 1,
+  "section": "http-caching",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A browser sends `If-None-Match` with the `ETag` it holds, and the file has not changed. What comes back?",
+  "choices": [
+   {
+    "text": "`200` with the whole file again",
+    "correct": false,
+    "why": "That is the answer when the fingerprint no longer matches."
+   },
+   {
+    "text": "Nothing; the browser does not send the request",
+    "correct": false,
+    "why": "Under `no-cache` the request is sent; it is the body of the answer that is saved."
+   },
+   {
+    "text": "`304 Not Modified`, with no body",
+    "correct": true,
+    "why": "Right. The capture showed it for `style.css`: headers and nothing else."
+   },
+   {
+    "text": "`404`, because the copy is in the browser already",
+    "correct": false,
+    "why": "A `404` says the address does not exist; the file does."
+   }
+  ]
+ },
+ {
+  "id": "ex-8v636k9a",
+  "version": 1,
+  "section": "http-caching",
+  "type": "matching",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Match each header to what it tells the browser.",
+  "pairs": [
+   {
+    "left": "`max-age=600`",
+    "right": "Use the copy without asking for ten minutes"
+   },
+   {
+    "left": "`no-cache`",
+    "right": "Keep a copy, and ask before using it"
+   },
+   {
+    "left": "`no-store`",
+    "right": "Keep no copy at all"
+   },
+   {
+    "left": "`ETag`",
+    "right": "A fingerprint to quote when asking"
+   }
+  ]
+ },
+ {
+  "id": "ex-5zftmy8t",
+  "version": 1,
+  "section": "http-caching",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A site serves `app.3f9c1a.js` with `max-age` set to a year. A new release changes the script. Why do returning visitors still get the new one?",
+  "choices": [
+   {
+    "text": "The browser checks the `ETag` once a day",
+    "correct": false,
+    "why": "Within `max-age` the browser checks nothing; that is the point of it."
+   },
+   {
+    "text": "The new release has a new file name, so a new address",
+    "correct": true,
+    "why": "Right. The cache is keyed by address, and the page now asks for one never seen."
+   },
+   {
+    "text": "A release clears every visitor's cache",
+    "correct": false,
+    "why": "A server has no way to reach into a browser's cache."
+   },
+   {
+    "text": "They do not; they wait a year",
+    "correct": false,
+    "why": "They would, if the name stayed the same. Here it does not."
+   }
+  ]
+ },
+ {
+  "id": "ex-tnnsjkph",
+  "version": 1,
+  "section": "the-stale-offer",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "After the offer changed, the second visit in `stale.mjs` still showed Mango. What did the shop's log show for it?",
+  "choices": [
+   {
+    "text": "A `GET /api/offer` answered with the old offer",
+    "correct": false,
+    "why": "The server had the new offer by then; had it been asked, it would have said Banana."
+   },
+   {
+    "text": "No `GET /api/offer` at all",
+    "correct": true,
+    "why": "Right. The browser answered from its copy, so the request never reached the shop."
+   },
+   {
+    "text": "A `304` for `/api/offer`",
+    "correct": false,
+    "why": "The offer has no `ETag`, and inside `max-age` the browser does not ask anyway."
+   },
+   {
+    "text": "An error, because the page failed to load",
+    "correct": false,
+    "why": "The page loaded and drew an offer: the old one."
+   }
+  ]
+ },
+ {
+  "id": "ex-7fn7p4qk",
+  "version": 1,
+  "section": "the-stale-offer",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The browser reported `200 /api/offer` on every visit. What does that status tell you?",
+  "choices": [
+   {
+    "text": "That the server answered each time",
+    "correct": false,
+    "why": "The server log has the request once; the other answers came from the cache."
+   },
+   {
+    "text": "Nothing about whether the server was asked",
+    "correct": true,
+    "why": "Right. A copy is reported with the status it was stored with, so the server's log is the evidence."
+   },
+   {
+    "text": "That the offer is fresh",
+    "correct": false,
+    "why": "The page said Mango after the change; a `200` and a stale answer go together fine."
+   },
+   {
+    "text": "That the request was revalidated",
+    "correct": false,
+    "why": "A revalidation shows as `304` in the shop's log, and there was none for the offer."
+   }
+  ]
+ },
+ {
+  "id": "ex-qnqpeaeg",
+  "version": 1,
+  "section": "the-stale-offer",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The offer was first fetched at 10:00, and changed on the server at 10:04. For how many more minutes after 10:04 may a browser that kept it show the old one?",
+  "hint": "`max-age=600` counts from when the copy was received.",
+  "value": 6,
+  "tolerance": 0,
+  "unit": "minutes"
+ },
+ {
+  "id": "ex-1yztdfkm",
+  "version": 1,
+  "section": "fresh-contexts",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Why does the first test in `tests/cache.spec.js` pass although the offer is cached for ten minutes?",
+  "choices": [
+   {
+    "text": "The `request` fixture clears the browser's cache",
+    "correct": false,
+    "why": "`request` sends HTTP requests outside the browser; it touches no cache."
+   },
+   {
+    "text": "Its page lives in a new context with an empty cache",
+    "correct": true,
+    "why": "Right. Every test is a first visit, so there is no copy to be stale."
+   },
+   {
+    "text": "Playwright switches off caching in headless mode",
+    "correct": false,
+    "why": "The returning-customer test runs headless too, and it met the cache."
+   },
+   {
+    "text": "`toContainText` retries until the cache expires",
+    "correct": false,
+    "why": "It retries for five seconds; the copy lasts six hundred."
+   }
+  ]
+ },
+ {
+  "id": "ex-xc5vn8ga",
+  "version": 1,
+  "section": "fresh-contexts",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which visitor in `visitors.mjs` was still shown Mango after the change?",
+  "choices": [
+   {
+    "text": "A new context made from the first one's saved storage state",
+    "correct": false,
+    "why": "Storage state carries cookies and local storage, not the HTTP cache."
+   },
+   {
+    "text": "A plain new context",
+    "correct": false,
+    "why": "An empty cache asks the server, which had the new offer."
+   },
+   {
+    "text": "A new page in the same context",
+    "correct": true,
+    "why": "Right. Pages in one context share one cache."
+   },
+   {
+    "text": "None of them; a second `goto` always refetches",
+    "correct": false,
+    "why": "The same page visited again was shown Mango too."
+   }
+  ]
+ },
+ {
+  "id": "ex-0mqrczk3",
+  "version": 1,
+  "section": "fresh-contexts",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team saves a logged-in `storageState` and reuses it in every test so that nobody logs in twice. Does that make their tests returning customers as far as the cache goes?",
+  "choices": [
+   {
+    "text": "Yes; the state includes everything the browser kept",
+    "correct": false,
+    "why": "It includes cookies and local storage. The saved-state visitor was shown the new offer."
+   },
+   {
+    "text": "Yes, but only for files with an `ETag`",
+    "correct": false,
+    "why": "No part of the HTTP cache travels in the state, with a fingerprint or without one."
+   },
+   {
+    "text": "No; each test still starts with an empty cache",
+    "correct": true,
+    "why": "Right. Logged in and first visit at once, which no real customer is."
+   },
+   {
+    "text": "No, because `storageState` disables caching",
+    "correct": false,
+    "why": "It disables nothing; the new context simply starts without a cache."
+   }
+  ]
+ },
+ {
+  "id": "ex-7v162vxm",
+  "version": 1,
+  "section": "fresh-contexts",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the steps of the returning-customer test in order.",
+  "items": [
+   "Reset the shop",
+   "Open the offer page and see the mango",
+   "Set a new offer through the API",
+   "Open the page again in the same context",
+   "Expect the banana"
+  ],
+  "trap": "Setting the offer before the first visit makes it a first-time visitor's test again: nothing old was kept."
+ },
+ {
+  "id": "ex-n8y9bc8h",
+  "version": 1,
+  "section": "testing-the-cache",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What does `test.fail()` do to the returning-customer test?",
+  "choices": [
+   {
+    "text": "It skips the test until the flaw is fixed",
+    "correct": false,
+    "why": "That is `test.skip()`. This test runs every time."
+   },
+   {
+    "text": "It expects a failure, and reports one if the test passes",
+    "correct": true,
+    "why": "Right. Green while the flaw exists, red the day somebody fixes it, which is the reminder to remove the mark."
+   },
+   {
+    "text": "It retries the test until it passes",
+    "correct": false,
+    "why": "Retries are `--retries`; they would never get past a stale copy kept for ten minutes."
+   },
+   {
+    "text": "It turns the failure into a warning that the run ignores",
+    "correct": false,
+    "why": "The run does not ignore it: it counts as passed only while it fails as expected."
+   }
+  ]
+ },
+ {
+  "id": "ex-sjmhhcac",
+  "version": 1,
+  "section": "testing-the-cache",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Why check the `Cache-Control` header with the `request` fixture rather than with a page?",
+  "choices": [
+   {
+    "text": "Because a page cannot read response headers",
+    "correct": false,
+    "why": "It can, through `response.headers()`; the difference is the cache in between."
+   },
+   {
+    "text": "Because `request` keeps no cache, so it always asks the server",
+    "correct": true,
+    "why": "Right. It sees exactly the promise the server makes, in milliseconds, with no browser."
+   },
+   {
+    "text": "Because headers differ between Chromium and other browsers",
+    "correct": false,
+    "why": "The server sends the same headers whichever browser asks."
+   },
+   {
+    "text": "Because `request` follows the cache rules of the browser",
+    "correct": false,
+    "why": "It follows none, which is exactly why it is useful here."
+   }
+  ]
+ },
+ {
+  "id": "ex-z7pv8t3w",
+  "version": 1,
+  "section": "testing-the-cache",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A test that sends `If-None-Match` with the fingerprint of an unchanged file expects the status ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "304"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-2vczjarj",
+  "version": 1,
+  "section": "turning-it-off",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A test intercepts `/api/products` with `page.route` to watch the request. What else changes for that page?",
+  "choices": [
+   {
+    "text": "Nothing; a route that only continues is invisible",
+    "correct": false,
+    "why": "The last test in `tests/cache.spec.js` changes nothing in its route and still passes where the plain one fails."
+   },
+   {
+    "text": "The HTTP cache is switched off",
+    "correct": true,
+    "why": "Right. Playwright's reference says so in a note on `route`, and the routing test shows it."
+   },
+   {
+    "text": "Every request waits for the route to finish",
+    "correct": false,
+    "why": "Only requests that match the pattern go through the handler."
+   },
+   {
+    "text": "The page uses a new context",
+    "correct": false,
+    "why": "The page stays in its context; what goes is its cache."
+   }
+  ]
+ },
+ {
+  "id": "ex-s470a9xc",
+  "version": 1,
+  "section": "turning-it-off",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A test needs the cache off in Firefox as well as Chromium. Which of these does that?",
+  "choices": [
+   {
+    "text": "Playwright's `--disable-cache` flag",
+    "correct": false,
+    "why": "Playwright 1.56 has no such flag."
+   },
+   {
+    "text": "`Network.setCacheDisabled` through a DevTools Protocol session",
+    "correct": false,
+    "why": "Only Chromium speaks that protocol."
+   },
+   {
+    "text": "A new context for the test",
+    "correct": true,
+    "why": "Right. It is the default, and it works the same in every browser Playwright drives."
+   },
+   {
+    "text": "The Disable cache box in DevTools",
+    "correct": false,
+    "why": "It works while the panel is open, by hand, and a test opens no panel."
+   }
+  ]
+ },
+ {
+  "id": "ex-sfw68abd",
+  "version": 1,
+  "section": "turning-it-off",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Tests pass on a laptop and fail on staging, which sits behind a CDN. The failing check is that a just-changed price appears. What is worth asking first?",
+  "choices": [
+   {
+    "text": "Whether Playwright reused a context between tests",
+    "correct": false,
+    "why": "Each test gets a new context in both places; the browser is the same."
+   },
+   {
+    "text": "Whether the CDN kept the old response",
+    "correct": true,
+    "why": "Right. A new context empties the browser's cache, not one outside the browser."
+   },
+   {
+    "text": "Whether staging runs a slower browser",
+    "correct": false,
+    "why": "Slowness delays an answer; it does not bring back an old price."
+   },
+   {
+    "text": "Whether the laptop has Disable cache ticked",
+    "correct": false,
+    "why": "That box acts only while DevTools is open, and tests open none."
+   }
+  ]
+ },
+ {
+  "id": "ex-xjyk55ch",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these visitors met the stale offer in this lesson's runs? Choose all that apply.",
+  "choices": [
+   {
+    "text": "The same page, reloaded",
+    "correct": true,
+    "why": "Right. A reload revalidated the page and reused the offer's copy."
+   },
+   {
+    "text": "A new context with saved storage state",
+    "correct": false,
+    "why": "Saved state carries no cache, so it asked the server."
+   },
+   {
+    "text": "A kept profile, reopened",
+    "correct": true,
+    "why": "Right. A persistent context keeps its cache on disk between launches."
+   },
+   {
+    "text": "A test whose page used `page.route`",
+    "correct": false,
+    "why": "Routing switched its cache off, so it saw the banana."
+   }
+  ]
+ },
+ {
+  "id": "ex-04en4d09",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Somebody fixes `/api/offer` to send `no-cache`. What happens on the next run of `tests/cache.spec.js`, unchanged?",
+  "choices": [
+   {
+    "text": "Everything passes, and the marks can stay",
+    "correct": false,
+    "why": "Two tests are marked to fail; once they pass, Playwright reports them."
+   },
+   {
+    "text": "The two marked tests are reported as failures",
+    "correct": true,
+    "why": "Right. They now pass, which is not what they were marked to do, and that tells you to remove `test.fail`."
+   },
+   {
+    "text": "The routing test starts to fail",
+    "correct": false,
+    "why": "It saw the new offer before the fix and sees it after."
+   },
+   {
+    "text": "The static file test fails, since `no-cache` is now on the offer too",
+    "correct": false,
+    "why": "It reads `style.css`, which the fix does not touch."
+   }
+  ]
+ },
+ {
+  "id": "ex-agday81j",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A tester wants to know whether a defect report about an old price is a cache problem. What is the cheapest first step?",
+  "choices": [
+   {
+    "text": "Read the response's `Cache-Control` header",
+    "correct": true,
+    "why": "Right. One `curl -i` shows the promise the server made, and `max-age` on a price is the answer."
+   },
+   {
+    "text": "Write a test with a new context",
+    "correct": false,
+    "why": "A new context is a first visit, the one case where the cache cannot show."
+   },
+   {
+    "text": "Add `page.route` to the existing test",
+    "correct": false,
+    "why": "That switches the cache off and hides the very thing in question."
+   },
+   {
+    "text": "Run the suite with `--retries 3`",
+    "correct": false,
+    "why": "Each retry is a new context again; none of them is a returning customer."
+   }
+  ]
+ }
+]

@@ -34,13 +34,27 @@ Lesson 1 built the server so that every file in `app/public/` carries `no-cache`
 response headers and `-o /dev/null` throws the body away, with the shop running:
 
 ```
-%%CAP static-200%%
+ana@laptop:~/quitanda$ curl -s -D - -o /dev/null http://localhost:3000/style.css
+HTTP/1.1 200 OK
+Cache-Control: no-cache
+ETag: "39dfe74803f5"
+Content-Type: text/css; charset=utf-8
+Date: Sat, 10 Oct 2026 19:37:12 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
 ```
 
 Ask again quoting that fingerprint, as a browser holding a copy would:
 
 ```
-%%CAP static-304%%
+ana@laptop:~/quitanda$ curl -s -D - -o /dev/null -H 'If-None-Match: "39dfe74803f5"' http://localhost:3000/style.css
+HTTP/1.1 304 Not Modified
+Cache-Control: no-cache
+ETag: "39dfe74803f5"
+Date: Sat, 10 Oct 2026 19:37:12 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
 ```
 
 **A `304` and no body**: the stylesheet was not sent a second time. A browser that gets this answer

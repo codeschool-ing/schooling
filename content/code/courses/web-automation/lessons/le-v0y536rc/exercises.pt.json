@@ -1,0 +1,385 @@
+{
+ "ex-07vwfbt8": {
+  "prompt": "Uma resposta traz `Cache-Control: no-cache`. O que o navegador pode fazer com ela?",
+  "choices": [
+   {
+    "text": "Não guardar nada e buscar de novo toda vez",
+    "why": "Isso é `no-store`. O nome `no-cache` engana exatamente assim."
+   },
+   {
+    "text": "Guardar, e perguntar ao servidor antes de cada uso",
+    "why": "Certo. Pode guardar uma cópia, e a pergunta que faz é respondida com `304` ou `200`."
+   },
+   {
+    "text": "Guardar por um tempo padrão que o navegador escolhe",
+    "why": "Tempo vem do `max-age`; `no-cache` não dá à cópia tempo nenhum sem verificação."
+   },
+   {
+    "text": "Usá-la pelo resto da sessão sem perguntar",
+    "why": "Usar uma cópia sem perguntar é o que o `max-age` permite, pelos segundos que ele diz."
+   }
+  ]
+ },
+ "ex-8790gzk7": {
+  "prompt": "Um navegador manda `If-None-Match` com o `ETag` que tem, e o arquivo não mudou. O que volta?",
+  "choices": [
+   {
+    "text": "`200` com o arquivo inteiro de novo",
+    "why": "Essa é a resposta quando a impressão digital não bate mais."
+   },
+   {
+    "text": "Nada; o navegador não manda a requisição",
+    "why": "Com `no-cache` a requisição é enviada; o que se economiza é o corpo da resposta."
+   },
+   {
+    "text": "`304 Not Modified`, sem corpo",
+    "why": "Certo. A captura mostrou isso para o `style.css`: cabeçalhos e mais nada."
+   },
+   {
+    "text": "`404`, porque a cópia já está no navegador",
+    "why": "Um `404` diz que o endereço não existe; o arquivo existe."
+   }
+  ]
+ },
+ "ex-8v636k9a": {
+  "prompt": "Ligue cada cabeçalho ao que ele diz ao navegador.",
+  "pairs": [
+   {
+    "left": "`max-age=600`",
+    "right": "Use a cópia sem perguntar por dez minutos"
+   },
+   {
+    "left": "`no-cache`",
+    "right": "Guarde uma cópia, e pergunte antes de usar"
+   },
+   {
+    "left": "`no-store`",
+    "right": "Não guarde cópia nenhuma"
+   },
+   {
+    "left": "`ETag`",
+    "right": "Uma impressão digital para citar ao perguntar"
+   }
+  ]
+ },
+ "ex-5zftmy8t": {
+  "prompt": "Um site serve `app.3f9c1a.js` com `max-age` de um ano. Uma nova versão muda o script. Por que quem volta recebe o novo mesmo assim?",
+  "choices": [
+   {
+    "text": "O navegador confere o `ETag` uma vez por dia",
+    "why": "Dentro do `max-age` o navegador não confere nada; é para isso que ele serve."
+   },
+   {
+    "text": "A versão nova tem outro nome de arquivo, logo outro endereço",
+    "why": "Certo. O cache é indexado pelo endereço, e a página agora pede um que nunca viu."
+   },
+   {
+    "text": "Uma versão nova limpa o cache de todos os visitantes",
+    "why": "Um servidor não tem como mexer no cache de um navegador."
+   },
+   {
+    "text": "Não recebem; esperam um ano",
+    "why": "Esperariam, se o nome continuasse o mesmo. Aqui não continua."
+   }
+  ]
+ },
+ "ex-tnnsjkph": {
+  "prompt": "Depois que a oferta mudou, a segunda visita em `stale.mjs` ainda mostrou Mango. O que o log da loja mostrou dela?",
+  "choices": [
+   {
+    "text": "Um `GET /api/offer` respondido com a oferta antiga",
+    "why": "O servidor já tinha a oferta nova; se fosse perguntado, diria Banana."
+   },
+   {
+    "text": "Nenhum `GET /api/offer`",
+    "why": "Certo. O navegador respondeu com a cópia, e a requisição nunca chegou à loja."
+   },
+   {
+    "text": "Um `304` para `/api/offer`",
+    "why": "A oferta não tem `ETag`, e dentro do `max-age` o navegador nem pergunta."
+   },
+   {
+    "text": "Um erro, porque a página não carregou",
+    "why": "A página carregou e desenhou uma oferta: a antiga."
+   }
+  ]
+ },
+ "ex-7fn7p4qk": {
+  "prompt": "O navegador informou `200 /api/offer` em toda visita. O que esse status diz?",
+  "choices": [
+   {
+    "text": "Que o servidor respondeu toda vez",
+    "why": "O log do servidor tem a requisição uma vez; as outras respostas vieram do cache."
+   },
+   {
+    "text": "Nada sobre se o servidor foi perguntado",
+    "why": "Certo. Uma cópia aparece com o status com que foi guardada, e a evidência é o log do servidor."
+   },
+   {
+    "text": "Que a oferta está atualizada",
+    "why": "A página disse Mango depois da mudança; `200` e resposta velha convivem bem."
+   },
+   {
+    "text": "Que a requisição foi revalidada",
+    "why": "Uma revalidação aparece como `304` no log da loja, e não houve nenhuma para a oferta."
+   }
+  ]
+ },
+ "ex-qnqpeaeg": {
+  "prompt": "A oferta foi buscada às 10:00 e mudou no servidor às 10:04. Por quantos minutos depois das 10:04 um navegador que a guardou pode mostrar a antiga?",
+  "hint": "O `max-age=600` conta a partir de quando a cópia chegou.",
+  "unit": "minutos"
+ },
+ "ex-1yztdfkm": {
+  "prompt": "Por que o primeiro teste de `tests/cache.spec.js` passa, embora a oferta fique no cache por dez minutos?",
+  "choices": [
+   {
+    "text": "A fixture `request` limpa o cache do navegador",
+    "why": "A `request` manda requisições HTTP fora do navegador; não mexe em cache nenhum."
+   },
+   {
+    "text": "A página dele vive num contexto novo, com cache vazio",
+    "why": "Certo. Todo teste é uma primeira visita, e não há cópia para estar velha."
+   },
+   {
+    "text": "O Playwright desliga o cache no modo headless",
+    "why": "O teste do cliente que volta também roda headless, e encontrou o cache."
+   },
+   {
+    "text": "O `toContainText` repete até o cache expirar",
+    "why": "Ele repete por cinco segundos; a cópia dura seiscentos."
+   }
+  ]
+ },
+ "ex-xc5vn8ga": {
+  "prompt": "Qual visitante em `visitors.mjs` ainda viu Mango depois da mudança?",
+  "choices": [
+   {
+    "text": "Um contexto novo feito com o estado salvo do primeiro",
+    "why": "O estado salvo leva cookies e armazenamento local, não o cache HTTP."
+   },
+   {
+    "text": "Um contexto novo simples",
+    "why": "Um cache vazio pergunta ao servidor, que tinha a oferta nova."
+   },
+   {
+    "text": "Uma página nova no mesmo contexto",
+    "why": "Certo. As páginas de um contexto dividem um cache."
+   },
+   {
+    "text": "Nenhum; um segundo `goto` sempre busca de novo",
+    "why": "A mesma página visitada de novo também viu Mango."
+   }
+  ]
+ },
+ "ex-0mqrczk3": {
+  "prompt": "Uma equipe salva um `storageState` logado e o reaproveita em todo teste para ninguém logar duas vezes. Isso torna os testes clientes que voltam, no que diz respeito ao cache?",
+  "choices": [
+   {
+    "text": "Sim; o estado inclui tudo o que o navegador guardou",
+    "why": "Inclui cookies e armazenamento local. O visitante com estado salvo viu a oferta nova."
+   },
+   {
+    "text": "Sim, mas só para arquivos com `ETag`",
+    "why": "Nenhuma parte do cache HTTP viaja no estado, com impressão digital ou sem."
+   },
+   {
+    "text": "Não; cada teste ainda começa com o cache vazio",
+    "why": "Certo. Logado e em primeira visita ao mesmo tempo, o que nenhum cliente real é."
+   },
+   {
+    "text": "Não, porque o `storageState` desliga o cache",
+    "why": "Não desliga nada; o contexto novo só começa sem cache."
+   }
+  ]
+ },
+ "ex-7v162vxm": {
+  "prompt": "Ponha em ordem os passos do teste do cliente que volta.",
+  "items": [
+   "Reiniciar a loja",
+   "Abrir a página da oferta e ver a manga",
+   "Definir uma oferta nova pela API",
+   "Abrir a página de novo no mesmo contexto",
+   "Esperar a banana"
+  ],
+  "trap": "Definir a oferta antes da primeira visita volta a ser teste de primeira visita: nada velho foi guardado."
+ },
+ "ex-n8y9bc8h": {
+  "prompt": "O que o `test.fail()` faz com o teste do cliente que volta?",
+  "choices": [
+   {
+    "text": "Pula o teste até a falha ser corrigida",
+    "why": "Isso é `test.skip()`. Este teste roda toda vez."
+   },
+   {
+    "text": "Espera uma falha, e acusa uma se o teste passar",
+    "why": "Certo. Verde enquanto a falha existe, vermelho no dia em que alguém a corrige, o lembrete para tirar a marca."
+   },
+   {
+    "text": "Repete o teste até passar",
+    "why": "Repetições são `--retries`; não passariam de uma cópia velha guardada por dez minutos."
+   },
+   {
+    "text": "Transforma a falha num aviso que a execução ignora",
+    "why": "A execução não ignora: conta como aprovado só enquanto falha como esperado."
+   }
+  ]
+ },
+ "ex-sjmhhcac": {
+  "prompt": "Por que verificar o cabeçalho `Cache-Control` com a fixture `request`, e não com uma página?",
+  "choices": [
+   {
+    "text": "Porque uma página não lê cabeçalhos de resposta",
+    "why": "Lê, por `response.headers()`; a diferença é o cache no meio."
+   },
+   {
+    "text": "Porque a `request` não tem cache, então sempre pergunta ao servidor",
+    "why": "Certo. Vê exatamente a promessa do servidor, em milissegundos, sem navegador."
+   },
+   {
+    "text": "Porque os cabeçalhos mudam entre o Chromium e outros navegadores",
+    "why": "O servidor manda os mesmos cabeçalhos seja qual for o navegador."
+   },
+   {
+    "text": "Porque a `request` segue as regras de cache do navegador",
+    "why": "Não segue nenhuma, e é por isso que serve aqui."
+   }
+  ]
+ },
+ "ex-z7pv8t3w": {
+  "prompt": "Um teste que manda `If-None-Match` com a impressão digital de um arquivo inalterado espera o status ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "304"
+    ]
+   }
+  ]
+ },
+ "ex-2vczjarj": {
+  "prompt": "Um teste intercepta `/api/products` com `page.route` para observar a requisição. O que mais muda para essa página?",
+  "choices": [
+   {
+    "text": "Nada; uma rota que só continua é invisível",
+    "why": "O último teste de `tests/cache.spec.js` não muda nada na rota e ainda passa onde o simples falha."
+   },
+   {
+    "text": "O cache HTTP é desligado",
+    "why": "Certo. A referência do Playwright diz isso numa nota sobre `route`, e o teste com rota mostra."
+   },
+   {
+    "text": "Toda requisição espera a rota terminar",
+    "why": "Só as requisições que casam com o padrão passam pelo tratador."
+   },
+   {
+    "text": "A página passa a usar um contexto novo",
+    "why": "A página fica no seu contexto; o que se perde é o cache."
+   }
+  ]
+ },
+ "ex-s470a9xc": {
+  "prompt": "Um teste precisa do cache desligado no Firefox e no Chromium. Qual destas opções faz isso?",
+  "choices": [
+   {
+    "text": "A flag `--disable-cache` do Playwright",
+    "why": "O Playwright 1.56 não tem essa flag."
+   },
+   {
+    "text": "`Network.setCacheDisabled` por uma sessão do DevTools Protocol",
+    "why": "Só o Chromium fala esse protocolo."
+   },
+   {
+    "text": "Um contexto novo para o teste",
+    "why": "Certo. É o padrão, e funciona igual em todo navegador que o Playwright conduz."
+   },
+   {
+    "text": "A caixa Disable cache do DevTools",
+    "why": "Funciona com o painel aberto, à mão, e um teste não abre painel."
+   }
+  ]
+ },
+ "ex-sfw68abd": {
+  "prompt": "Os testes passam no notebook e falham em homologação, que fica atrás de uma CDN. A verificação que falha é que um preço recém-mudado apareça. O que vale perguntar primeiro?",
+  "choices": [
+   {
+    "text": "Se o Playwright reaproveitou um contexto entre testes",
+    "why": "Cada teste ganha um contexto novo nos dois lugares; o navegador é o mesmo."
+   },
+   {
+    "text": "Se a CDN guardou a resposta antiga",
+    "why": "Certo. Um contexto novo esvazia o cache do navegador, não um fora dele."
+   },
+   {
+    "text": "Se a homologação roda um navegador mais lento",
+    "why": "Lentidão atrasa a resposta; não traz de volta um preço antigo."
+   },
+   {
+    "text": "Se o notebook está com Disable cache marcado",
+    "why": "Essa caixa só age com o DevTools aberto, e testes não abrem nenhum."
+   }
+  ]
+ },
+ "ex-xjyk55ch": {
+  "prompt": "Quais destes visitantes encontraram a oferta velha nas execuções desta aula? Escolha todos os que se aplicam.",
+  "choices": [
+   {
+    "text": "A mesma página, recarregada",
+    "why": "Certo. O recarregamento revalidou a página e reaproveitou a cópia da oferta."
+   },
+   {
+    "text": "Um contexto novo com estado salvo",
+    "why": "Estado salvo não leva cache, então perguntou ao servidor."
+   },
+   {
+    "text": "Um perfil guardado, reaberto",
+    "why": "Certo. Um contexto persistente guarda o cache em disco entre execuções."
+   },
+   {
+    "text": "Um teste cuja página usou `page.route`",
+    "why": "A rota desligou o cache, e ele viu a banana."
+   }
+  ]
+ },
+ "ex-04en4d09": {
+  "prompt": "Alguém corrige `/api/offer` para mandar `no-cache`. O que acontece na próxima execução de `tests/cache.spec.js`, sem mudanças?",
+  "choices": [
+   {
+    "text": "Tudo passa, e as marcas podem ficar",
+    "why": "Dois testes estão marcados para falhar; quando passam, o Playwright os acusa."
+   },
+   {
+    "text": "Os dois testes marcados são acusados como falhas",
+    "why": "Certo. Agora passam, o que não é o que estava marcado, e isso manda tirar o `test.fail`."
+   },
+   {
+    "text": "O teste com rota começa a falhar",
+    "why": "Ele via a oferta nova antes da correção e continua vendo."
+   },
+   {
+    "text": "O teste do arquivo estático falha, já que agora a oferta também tem `no-cache`",
+    "why": "Ele lê o `style.css`, que a correção não toca."
+   }
+  ]
+ },
+ "ex-agday81j": {
+  "prompt": "Uma testadora quer saber se um relato de preço antigo é problema de cache. Qual o primeiro passo mais barato?",
+  "choices": [
+   {
+    "text": "Ler o cabeçalho `Cache-Control` da resposta",
+    "why": "Certo. Um `curl -i` mostra a promessa do servidor, e `max-age` num preço é a resposta."
+   },
+   {
+    "text": "Escrever um teste com contexto novo",
+    "why": "Um contexto novo é primeira visita, o único caso em que o cache não aparece."
+   },
+   {
+    "text": "Pôr `page.route` no teste existente",
+    "why": "Isso desliga o cache e esconde justamente o que está em questão."
+   },
+   {
+    "text": "Rodar a suíte com `--retries 3`",
+    "why": "Cada repetição é de novo um contexto novo; nenhuma é um cliente que volta."
+   }
+  ]
+ }
+}

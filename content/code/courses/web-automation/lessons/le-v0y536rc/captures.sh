@@ -109,5 +109,3 @@ sed -i "s/'max-age=600'/'no-cache'/" app/routes/offer.js
 run 'npx playwright test tests/cache.spec.js' | nocolour
 cp /tmp/l4-offer.js app/routes/offer.js; chown ana:ana app/routes/offer.js
 
-block whole-suite
-run 'npx playwright test' | nocolour
