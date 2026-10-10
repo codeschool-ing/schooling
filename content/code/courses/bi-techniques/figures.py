@@ -920,6 +920,47 @@ def l08_curve(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 9
+
+@figure('l09-daily', 9)
+def l09_daily(lang):
+    v = csv('experiment.csv', parse_dates=['day'])
+    r = v.pivot_table(index='day', columns='group', values='converted', aggfunc='mean') * 100
+    t = {'en': dict(
+        label='Daily conversion of the old and new checkout over the 21 days of the test. In the '
+              'first four days the new line sits well above the old, about 5.4 to 6.8 per cent against '
+              '3.2 to 4.5. '
+              'From the second week the two lines cross and recross around 4 to 5 per cent.',
+        y='conversion, per cent', old='old checkout', new='new checkout', w='week',
+        cap='The new page\'s advantage is concentrated in its first days. An average over the three '
+            'weeks mixes a reaction to novelty with the lasting effect.'),
+        'pt': dict(
+        label='Conversão diária do checkout antigo e do novo nos 21 dias do teste. Nos primeiros '
+              'quatro dias a linha nova fica bem acima da antiga, cerca de 5,4 a 6,8 por cento contra '
+              '3,2 a 4,5. '
+              'Da segunda semana em diante as duas linhas se cruzam e recruzam em torno de 4 a 5 por '
+              'cento.',
+        y='conversão, por cento', old='checkout antigo', new='checkout novo', w='semana',
+        cap='A vantagem da página nova se concentra nos primeiros dias. Uma média das três semanas '
+            'mistura uma reação à novidade com o efeito duradouro.')}[lang]
+    f = Fig('l09-daily', 620, 290, t['label'])
+    p = Plot(f, 60, 40, 600, 220, -0.5, 20.5, 2, 8)
+    p.yaxis(range(2, 9, 2), label=t['y'])
+    f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim', width=1.2)
+    for k in range(3):
+        x = p.sx(k * 7 + 3)
+        f.text(x, p.y1 + 14, f"{t['w']} {k + 1}", size=10, fill='--paper-dim')
+        if k:
+            f.line(p.sx(k * 7 - 0.5), p.y0, p.sx(k * 7 - 0.5), p.y1, stroke='--wire', width=1, dash='3 3')
+    series(p, range(21), r['old'].values, stroke='--paper-dim', width=1.8)
+    series(p, range(21), r['new'].values, stroke='--amber', width=1.8)
+    f.line(80, 262, 104, 262, stroke='--paper-dim', width=1.8)
+    f.text(110, 262, t['old'], size=10, anchor='start')
+    f.line(280, 262, 304, 262, stroke='--amber', width=1.8)
+    f.text(310, 262, t['new'], size=10, anchor='start')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
