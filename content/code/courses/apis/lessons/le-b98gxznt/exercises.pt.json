@@ -1,0 +1,655 @@
+{
+  "ex-mhzm37bw": {
+    "prompt": "A chave de API do parceiro lê os livros, depois pede a lista de chaves e é recusada. A qual pergunta o servidor respondeu não?",
+    "hint": "Ele já sabia quem estava perguntando.",
+    "choices": [
+      {
+        "text": "Quem é quem chama?",
+        "why": "O servidor sabia: a chave bateu com a linha dela, e o `/v1/whoami` dá o nome do parceiro. Essa pergunta teve resposta sim."
+      },
+      {
+        "text": "A chave já venceu?",
+        "why": "As chaves do keys.py não têm validade; duram até serem revogadas. E uma credencial vencida é um 401, não a recusa de uma ação."
+      },
+      {
+        "text": "Quem chama tem permissão para isto?",
+        "why": "Certo. Isso é autorização: quem chama é conhecido, a ação não é permitida, e a resposta é 403."
+      },
+      {
+        "text": "A requisição veio por HTTPS?",
+        "why": "O laboratório usa HTTP simples em 127.0.0.1 o tempo todo, e a mesma chave leu os livros um instante antes."
+      }
+    ]
+  },
+  "ex-apbvv1bn": {
+    "prompt": "Ligue cada termo ao que ele é.",
+    "hint": "Um deles é um nome, e um nome não prova nada.",
+    "pairs": [
+      {
+        "left": "`ana`",
+        "right": "um nome que qualquer um pode digitar"
+      },
+      {
+        "left": "a senha da ana, ou um token emitido para ela",
+        "right": "uma credencial: a prova do nome"
+      },
+      {
+        "left": "autenticação",
+        "right": "descobrir quem está perguntando"
+      },
+      {
+        "left": "autorização",
+        "right": "decidir o que quem chama pode fazer"
+      }
+    ],
+    "right_distractors": [
+      "um esquema que o servidor aceitaria"
+    ]
+  },
+  "ex-m4r5qfy4": {
+    "prompt": "Um funcionário que muda preços e um programa parceiro que lê o catálogo se autenticaram na API de uma loja. O que isso resolve?",
+    "hint": "Duas perguntas, feitas em ordem.",
+    "choices": [
+      {
+        "text": "Que os dois podem mudar preços, já que os dois provaram quem são",
+        "why": "Essa é a imagem do portão único. Provar um nome não abre nada sozinho; quem decide é uma regra sobre o nome e a ação."
+      },
+      {
+        "text": "Quem cada um é, e ainda nada sobre o que cada um pode fazer",
+        "why": "Certo. A autenticação entrega um nome ao servidor; a autorização, na aula 11, decide o que esse nome pode fazer."
+      },
+      {
+        "text": "Que as requisições deles viajam criptografadas",
+        "why": "Autenticação não diz nada sobre o caminho. Criptografia é HTTPS, aula 13, e o Basic sobre HTTP simples mostra que são coisas separadas."
+      },
+      {
+        "text": "Em qual dos dois a loja confia mais",
+        "why": "Confiança é uma regra que alguém escreve sobre cada nome, ou seja, autorização. Autenticar os dois do mesmo jeito não diz nada sobre isso."
+      }
+    ]
+  },
+  "ex-e8x0x5jk": {
+    "prompt": "Depois de `adduser ana`, o que fica na coluna `password_hash` da linha dela?",
+    "hint": "Três campos unidos por `$`.",
+    "choices": [
+      {
+        "text": "A senha, criptografada com uma chave que o keys.py guarda",
+        "why": "Nada no keys.py consegue decifrá-la, porque nada foi criptografado. Um hash é de mão única: o servidor confere uma senha contra ele e nunca recupera a senha."
+      },
+      {
+        "text": "A senha em base64",
+        "why": "Isso é o que viaja num cabeçalho Basic, e qualquer um decodifica. Guardar assim deixaria toda senha a um `base64 -d` de distância."
+      },
+      {
+        "text": "Um token que substitui a senha",
+        "why": "Os tokens ficam na própria tabela, são emitidos no login e vencem. A tabela de usuários guarda o que confere a própria senha."
+      },
+      {
+        "text": "O nome da função, um sal aleatório e o resultado do scrypt",
+        "why": "Certo. Para conferir uma senha, o servidor roda o scrypt de novo com aquele sal e compara os resultados; a aula 10 trata de escolher os três."
+      }
+    ]
+  },
+  "ex-r1tr8atp": {
+    "prompt": "Por que o `rest.py` precisa parar antes de o `python3 keys.py` subir?",
+    "hint": "Veja o endereço em que cada um escuta.",
+    "choices": [
+      {
+        "text": "Os dois escutam em 127.0.0.1:8000",
+        "why": "Certo. Só um programa ocupa uma porta; o segundo não conseguiria subir. Os dados do shelf.db são compartilhados sem problema."
+      },
+      {
+        "text": "O keys.py substitui as tabelas que o rest.py lê",
+        "why": "O keys.py só acrescenta três tabelas com `CREATE TABLE IF NOT EXISTS`; os livros ficam intactos, e o rest.py os lê depois como antes."
+      },
+      {
+        "text": "O rest.py entregaria os livros sem credencial nenhuma e tornaria o keys.py inútil",
+        "why": "Vale numa implantação real, em que a API aberta seria uma porta dos fundos, mas não é o motivo de parar aqui: o conflito é a porta TCP."
+      },
+      {
+        "text": "O SQLite deixa um programa por vez abrir o shelf.db",
+        "why": "O SQLite permite vários leitores ao mesmo tempo; o `sqlite3 shelf.db` rodou ao lado do servidor a aula inteira."
+      }
+    ]
+  },
+  "ex-2r81bnma": {
+    "prompt": "Um 401 traz `WWW-Authenticate: Bearer realm=\"shelf\"`. O que ele diz ao cliente?",
+    "hint": "É um desafio, não uma mensagem de erro.",
+    "choices": [
+      {
+        "text": "Tokens bearer são aceitos para o shelf",
+        "why": "Certo. Cada `WWW-Authenticate` nomeia um esquema que o servidor aceita, e `realm` nomeia o que ele protege."
+      },
+      {
+        "text": "O token que ele enviou venceu e precisa ser renovado",
+        "why": "Esse veio sem credencial nenhuma. Um token recusado acrescenta `error=\"invalid_token\"`, e mesmo assim não diz o motivo."
+      },
+      {
+        "text": "Ele precisa criar uma conta antes de pedir de novo",
+        "why": "Um desafio diz como provar um nome, não como conseguir um. O keys.py nem tem cadastro; usuários entram pela linha de comando."
+      },
+      {
+        "text": "O shelf está fora do ar",
+        "why": "Um servidor fora do ar responde 5xx ou nada. Um 401 é um servidor funcionando perguntando quem você é."
+      }
+    ]
+  },
+  "ex-0fj653qp": {
+    "prompt": "Um cliente com um token válido pede para apagar a conta de outro usuário, o que o usuário dele não pode fazer. Qual status serve?",
+    "hint": "Mandar a mesma credencial de novo mudaria alguma coisa?",
+    "choices": [
+      {
+        "text": "401, para o cliente entrar de novo com mais direitos",
+        "why": "Um 401 aqui manda o cliente para um laço de login: ele entra, recebe os mesmos direitos, pede, e recebe 401 de novo."
+      },
+      {
+        "text": "400, porque a requisição não devia ter sido enviada",
+        "why": "400 diz que a requisição está malformada. Esta está bem formada; o problema é quem a faz."
+      },
+      {
+        "text": "403",
+        "why": "Certo. O servidor sabe quem pede e recusa a ação, e repetir a credencial não muda isso."
+      },
+      {
+        "text": "401 sem `WWW-Authenticate`, já que nenhum outro esquema ajudaria",
+        "why": "Um 401 sem desafio quebra o contrato duas vezes: status errado, e nada dizendo como se autenticar."
+      }
+    ]
+  },
+  "ex-rw2pc8hj": {
+    "prompt": "O cliente responde a um desafio com o cabeçalho `___`: um esquema, um espaço e depois as credenciais.",
+    "hint": "O nome também é impreciso, como o do 401.",
+    "blanks": [
+      {
+        "accept": [
+          "Authorization"
+        ]
+      }
+    ]
+  },
+  "ex-5a2fjhdn": {
+    "prompt": "O keys.py responde com 401 a uma requisição sem credencial. Quantos cabeçalhos `WWW-Authenticate` esse 401 traz?",
+    "hint": "Um por esquema que tem desafio padrão.",
+    "unit": "cabeçalhos"
+  },
+  "ex-fr0cyds4": {
+    "prompt": "O curl enviou `Authorization: Basic YW5hOnJpdmVyLWxhbXAtNDI=`. O que tem quem copiar esse cabeçalho?",
+    "hint": "Tente `base64 -d`.",
+    "choices": [
+      {
+        "text": "Só o nome; a parte da senha está criptografada",
+        "why": "Nada no Basic é criptografado. O `nome:senha` inteiro está em base64 e se decodifica com um comando."
+      },
+      {
+        "text": "Um hash da senha que ainda teria de ser quebrado",
+        "why": "O hash fica na tabela do servidor. O que viaja é a própria senha, codificada."
+      },
+      {
+        "text": "O nome e a senha",
+        "why": "Certo. Base64 é uma codificação, e o `base64 -d` imprimiu `ana:river-lamp-42`. Por isso o Basic precisa de HTTPS."
+      },
+      {
+        "text": "Nada que possam usar sem a chave do servidor",
+        "why": "Base64 não tem chave. Quem tem o cabeçalho tem tudo o que precisa para ser a ana."
+      }
+    ]
+  },
+  "ex-g4jtq1qk": {
+    "prompt": "Quais destas coisas decorrem de o Basic enviar a senha em toda requisição? Escolha todas as que se aplicam.",
+    "hint": "Pense no servidor, no cliente e em tirar o acesso.",
+    "choices": [
+      {
+        "text": "O servidor roda a conferência lenta de senha em toda requisição",
+        "why": "Certo. Cem requisições são cem execuções do scrypt, e alguém espera por cada uma."
+      },
+      {
+        "text": "O cliente precisa guardar a senha enquanto fizer requisições",
+        "why": "Certo. O que conseguir ler onde ela fica consegue ser a ana."
+      },
+      {
+        "text": "O base64 protege a senha em HTTP simples",
+        "why": "Base64 se decodifica com um comando. Só o HTTPS esconde o cabeçalho no caminho."
+      },
+      {
+        "text": "O acesso só termina quando a senha muda",
+        "why": "Certo. O servidor não guarda nada por cliente que possa apagar, então não há logout."
+      },
+      {
+        "text": "O servidor guarda uma linha de sessão que o logout pode apagar",
+        "why": "Essa é a tabela dos tokens bearer. O Basic não deixa nada no servidor entre uma requisição e outra."
+      }
+    ]
+  },
+  "ex-d1mavsjn": {
+    "prompt": "O base64 é uma ___, não criptografia: não tem chave, e o `base64 -d` a desfaz.",
+    "hint": "Um jeito de escrever bytes com caracteres imprimíveis.",
+    "blanks": [
+      {
+        "accept": [
+          "codificação",
+          "codificacao"
+        ]
+      }
+    ]
+  },
+  "ex-6jbmxrpa": {
+    "prompt": "Uma cópia do `shelf.db` vaza, com a tabela `tokens`. Por que as linhas dela não servem para enviar como token?",
+    "hint": "O que o keys.py faz com o que chega depois de `Bearer`?",
+    "choices": [
+      {
+        "text": "As linhas estão criptografadas com uma chave que só o servidor tem",
+        "why": "Nada está criptografado; as linhas são hashes. A segurança vem do que o servidor faz com o que recebe."
+      },
+      {
+        "text": "O hash enviado vira outro hash, que não está na tabela",
+        "why": "Certo. O hash do hash não está em linha nenhuma. É para isso que só o SHA-256 fica guardado."
+      },
+      {
+        "text": "Os tokens vencem no momento em que o arquivo é copiado",
+        "why": "Copiar um arquivo não muda nada no servidor. Os tokens mantêm a validade, de até uma hora."
+      },
+      {
+        "text": "Arquivos SQLite são ilegíveis fora do programa que os criou",
+        "why": "O `sqlite3 shelf.db` leu a tabela na aula. Quem tiver o arquivo consegue lê-lo."
+      }
+    ]
+  },
+  "ex-j1rfaeaj": {
+    "prompt": "O keys.py guarda senhas com scrypt e tokens com SHA-256 puro. O que faz o hash rápido bastar para um token?",
+    "hint": "O que faz um hash lento valer o custo para uma senha?",
+    "choices": [
+      {
+        "text": "Os tokens vencem em uma hora, então um hash vazado não serve depois disso",
+        "why": "A validade limita o token, não o trabalho de adivinhá-lo. Mesmo um token de um ano estaria seguro atrás do SHA-256."
+      },
+      {
+        "text": "O SHA-256 é mais lento que o scrypt",
+        "why": "É o contrário, e de propósito: o scrypt é lento de propósito, e por isso as senhas ficam com ele."
+      },
+      {
+        "text": "Ninguém o escolheu, então não há lista de valores prováveis para testar",
+        "why": "Certo. Um hash lento encarece testar senhas prováveis; 256 bits aleatórios não deixam nada provável para testar."
+      },
+      {
+        "text": "Os tokens nunca saem do servidor",
+        "why": "Saem a cada login: o cliente guarda o token e o envia em cada requisição."
+      }
+    ]
+  },
+  "ex-zcq80g0r": {
+    "prompt": "O `TOKEN_SECONDS` do keys.py é 3600. Por quantos minutos depois do login o token funciona, se ninguém fizer logout?",
+    "hint": "Segundos para minutos.",
+    "unit": "minutos"
+  },
+  "ex-fx9t1cvm": {
+    "prompt": "Ponha em ordem a vida de um token do keys.py.",
+    "hint": "A senha é enviada uma vez, no começo.",
+    "items": [
+      "POST em `/v1/login` com o nome e a senha",
+      "O keys.py guarda o SHA-256 de um token aleatório novo",
+      "O cliente envia `Authorization: Bearer` em cada requisição",
+      "POST em `/v1/logout` apaga a linha do token",
+      "O mesmo token recebe 401 com `error=\"invalid_token\"`"
+    ],
+    "trap": "A linha é gravada antes de o cliente ver o token, e apagá-la é toda a revogação."
+  },
+  "ex-78f8brtx": {
+    "prompt": "Por que a livraria parceira recebe uma chave de API própria em vez do nome e da senha da ana?",
+    "hint": "Pense no dia em que alguém sai, e no que o log diz.",
+    "choices": [
+      {
+        "text": "Uma senha não pode viajar num cabeçalho",
+        "why": "O Basic põe uma no `Authorization` em toda requisição. O motivo é quem a credencial identifica."
+      },
+      {
+        "text": "Para as requisições nomearem o programa dele, e revogar esse acesso não mexer em senha",
+        "why": "Certo. O `/v1/whoami` diz `application`, e revogar a chave não mexe na senha da ana."
+      },
+      {
+        "text": "Chaves nunca vencem, então o parceiro nunca precisa mudar nada",
+        "why": "Durar até ser revogada é a fraqueza da chave, não a vantagem dela, e a rotação faz o parceiro trocá-la sim."
+      },
+      {
+        "text": "A senha da ana apareceria no `/v1/whoami`",
+        "why": "O `/v1/whoami` mostra um tipo e um nome, nunca uma credencial."
+      }
+    ]
+  },
+  "ex-350esy2k": {
+    "prompt": "`shelf_2ff69109` fica guardado como está, sem hash. Para que serve?",
+    "hint": "É a parte da chave que pode ser mostrada.",
+    "choices": [
+      {
+        "text": "Provar que a chave vale sem precisar da parte secreta",
+        "why": "Qualquer um lê um prefixo num log. A prova é a parte secreta, conferida pelo hash."
+      },
+      {
+        "text": "Criptografar a parte secreta antes de guardá-la",
+        "why": "Nada é criptografado. A parte secreta vira hash, e o prefixo não participa disso."
+      },
+      {
+        "text": "Dizer quanto tempo a chave vale antes de vencer",
+        "why": "As chaves do keys.py não têm validade; duram até alguém apagar a linha."
+      },
+      {
+        "text": "Achar a linha e reconhecer a chave em logs",
+        "why": "Certo. É a chave primária que o keys.py procura, e um padrão que uma varredura de segredos acha num repositório público."
+      }
+    ]
+  },
+  "ex-wm83j0fc": {
+    "prompt": "Ponha em ordem a rotação da chave de um parceiro, de modo que ele nunca fique sem uma chave que funcione.",
+    "hint": "A chave antiga é a última coisa a sair.",
+    "items": [
+      "Criar uma segunda chave para o parceiro",
+      "Passar a chave nova ao parceiro",
+      "O parceiro troca a configuração para a chave nova",
+      "Acompanhar o `last_used` da chave antiga parar de avançar",
+      "Revogar a chave antiga pelo prefixo"
+    ],
+    "trap": "Revogar primeiro deixa o parceiro recusado até a chave nova chegar à configuração dele."
+  },
+  "ex-batm2yqq": {
+    "prompt": "Um parceiro perdeu a chave que a ana criou para ele no mês passado e pede que ela seja enviada de novo. O que ela pode fazer com o keys.py?",
+    "hint": "O que o servidor guardou da chave?",
+    "choices": [
+      {
+        "text": "Criar uma chave nova, entregá-la e revogar a perdida",
+        "why": "Certo. Nada mostra a chave antiga de novo, e uma chave que ninguém sabe onde está é melhor revogada."
+      },
+      {
+        "text": "Lê-la de volta na tabela `api_keys` do banco",
+        "why": "A tabela guarda o prefixo e um SHA-256 da chave. A chave em si não está em linha nenhuma."
+      },
+      {
+        "text": "Pedir `GET /v1/keys`, que lista todas as chaves",
+        "why": "Ele lista prefixos, nomes e datas. O aviso na criação dizia: mostrada uma vez."
+      },
+      {
+        "text": "Decodificá-la do hash guardado com `base64 -d`",
+        "why": "Um hash não é uma codificação. O base64 volta; o SHA-256 não."
+      }
+    ]
+  },
+  "ex-8smrcpe3": {
+    "prompt": "O keys.py recusou `?access_token=…` com 401. Por que esse token continua comprometido?",
+    "hint": "Olhe o segundo terminal.",
+    "choices": [
+      {
+        "text": "A linha da requisição foi para o log do servidor",
+        "why": "Certo. Toda requisição é registrada, recusadas incluídas, com query string e tudo, e o token ficou no log enquanto ainda valia."
+      },
+      {
+        "text": "Um 401 confirma a quem chama que o token é válido",
+        "why": "O 401 disse `authentication required`, o mesmo de quando não vem token. Não confirmou nada."
+      },
+      {
+        "text": "O keys.py o copiou para a tabela `tokens`",
+        "why": "Só o `/v1/login` escreve nessa tabela, e escreve hashes."
+      },
+      {
+        "text": "O curl guarda toda URL que busca num arquivo de histórico",
+        "why": "O curl não guarda histórico. O vazamento na captura está do lado do servidor."
+      }
+    ]
+  },
+  "ex-eft7a9w9": {
+    "prompt": "Um token foi colocado numa URL. Onde ele pode ir parar? Escolha todas as que se aplicam.",
+    "hint": "Em qualquer lugar onde um endereço é anotado.",
+    "choices": [
+      {
+        "text": "O log de acesso de um proxy na frente do servidor",
+        "why": "Certo. Todo proxy registra a linha da requisição, e o servidor não limpa o log dos outros."
+      },
+      {
+        "text": "O histórico do navegador",
+        "why": "Certo. Um endereço aberto no navegador fica guardado lá, com token e tudo."
+      },
+      {
+        "text": "O cabeçalho `Authorization` da próxima requisição",
+        "why": "Nada move um parâmetro da query para um cabeçalho sozinho; o cabeçalho é justamente o que o cliente deixou de usar."
+      },
+      {
+        "text": "O cabeçalho `Referer` enviado ao próximo site para onde a página aponta",
+        "why": "Certo. O navegador conta ao próximo site de onde o visitante veio, e esse endereço levava o token."
+      },
+      {
+        "text": "A tabela `tokens`, sem hash",
+        "why": "A tabela guarda hashes, gravados no login, seja lá o que a URL dissesse."
+      }
+    ]
+  },
+  "ex-nk02zk0k": {
+    "prompt": "Um chamado de suporte mostra uma URL com um token vivo do keys.py. O que resolve o vazamento?",
+    "hint": "O chamado não é a única cópia.",
+    "choices": [
+      {
+        "text": "Apagar o chamado",
+        "why": "A mesma URL está em logs e históricos que ninguém vai achar. Só o servidor pode tornar o token inútil."
+      },
+      {
+        "text": "Esperar: ele pode parar de funcionar em uma hora",
+        "why": "Vai parar, e até lá funciona para quem tiver a URL. A validade limita um vazamento que ninguém conhece; este é conhecido."
+      },
+      {
+        "text": "Limpar o token do log do keys.py",
+        "why": "Isso tira uma cópia entre várias, e o token continua funcionando."
+      },
+      {
+        "text": "Revogá-lo com `/v1/logout` e entrar de novo",
+        "why": "Certo. Apagar a linha torna inútil toda cópia, onde quer que esteja, de uma vez."
+      }
+    ]
+  },
+  "ex-nnmrx8sb": {
+    "prompt": "Por que `==` é o jeito errado de comparar uma chave com a guardada?",
+    "hint": "Compare os dois primeiros tempos da captura.",
+    "choices": [
+      {
+        "text": "O tempo dele depende do lugar onde as strings diferem",
+        "why": "Certo. 19,8 ns quando o primeiro caractere diferia, 3,25 µs quando era o último: o tempo depende da resposta."
+      },
+      {
+        "text": "Ele é mais lento que o `compare_digest` em strings longas",
+        "why": "Ele é mais rápido, na captura por muito. A velocidade não é o problema; a velocidade que varia é."
+      },
+      {
+        "text": "Ele pode dizer que duas strings diferentes são iguais",
+        "why": "A resposta dele está sempre certa. O que vaza é quanto tempo ele levou para dá-la."
+      },
+      {
+        "text": "Ele só compara os primeiros 43 caracteres de cada string",
+        "why": "Ele comparou todos os cem mil quando eram iguais até o último."
+      }
+    ]
+  },
+  "ex-4j7xgtqk": {
+    "prompt": "Na captura, `==` levou 19,8 ns quando as strings diferiam no primeiro caractere e 3,25 µs quando diferiam no último. Quantas vezes mais demorou o segundo, aproximadamente?",
+    "hint": "Um µs são mil ns.",
+    "unit": "vezes"
+  },
+  "ex-zhqkkfqb": {
+    "prompt": "Ligue cada linguagem à sua comparação de tempo constante.",
+    "hint": "Um dos nomes da direita é uma igualdade comum, e é a armadilha.",
+    "pairs": [
+      {
+        "left": "Python",
+        "right": "`hmac.compare_digest`"
+      },
+      {
+        "left": "Node.js",
+        "right": "`crypto.timingSafeEqual`"
+      },
+      {
+        "left": "Java",
+        "right": "`MessageDigest.isEqual`"
+      },
+      {
+        "left": "Go",
+        "right": "`subtle.ConstantTimeCompare`"
+      }
+    ],
+    "right_distractors": [
+      "`String.equals`"
+    ]
+  },
+  "ex-bv5zc288": {
+    "prompt": "Suponha que o `check_password` retornasse na hora para um usuário desconhecido e pulasse o `DECOY`. O que os tempos da captura mostrariam?",
+    "hint": "Qual parte da conferência é lenta?",
+    "choices": [
+      {
+        "text": "Nada de novo; a mensagem continuaria a mesma",
+        "why": "As palavras bateriam e o relógio não. Um cronômetro lê uma diferença tão bem quanto uma mensagem."
+      },
+      {
+        "text": "As duas recusas ficariam mais rápidas",
+        "why": "Um usuário conhecido com senha errada ainda roda o scrypt; só o desconhecido pula."
+      },
+      {
+        "text": "A recusa para um nome sem conta seria bem mais rápida, e o tempo entregaria isso",
+        "why": "Certo. O scrypt é a parte lenta; pulá-lo para nomes desconhecidos responde a pergunta proibida pelo relógio."
+      },
+      {
+        "text": "A senha certa passaria a demorar mais que antes",
+        "why": "O caminho da senha certa nunca passa pelo chamariz, então nada muda para ela."
+      }
+    ]
+  },
+  "ex-0p1cbt8b": {
+    "prompt": "Como o log do keys.py identifica um token bearer recusado?",
+    "hint": "`ce6f21ae` foi um.",
+    "choices": [
+      {
+        "text": "Inteiro, para que o token possa ser achado e revogado depois",
+        "why": "Um token inteiro num log é uma credencial num log, legível para quem lê logs."
+      },
+      {
+        "text": "Pela decodificação em base64, que esconde a parte secreta",
+        "why": "Um token não é base64 de nada com sentido, e decodificá-lo não esconderia nada de qualquer forma."
+      },
+      {
+        "text": "Pelo nome do usuário para quem o token foi emitido",
+        "why": "Um token recusado não pertence a ninguém que o servidor conheça; é por isso que foi recusado."
+      },
+      {
+        "text": "Por uma impressão digital: o começo do SHA-256 dele",
+        "why": "Certo. Oito caracteres do hash bastam para casar com uma linha ou um chamado, e não servem como credencial."
+      }
+    ]
+  },
+  "ex-h4632xb0": {
+    "prompt": "A regra para toda linha de log sobre uma credencial: ela nomeia a credencial e nunca a ___.",
+    "hint": "Um nome de usuário, uma impressão digital e um prefixo a nomeiam; uma senha, um token e uma chave estariam dentro dela.",
+    "blanks": [
+      {
+        "accept": [
+          "contém",
+          "contem"
+        ]
+      }
+    ]
+  },
+  "ex-67bkrkej": {
+    "prompt": "Ligue cada caso ao tipo de credencial que combina com ele.",
+    "hint": "Tem alguém ali, e quem o log deve nomear?",
+    "pairs": [
+      {
+        "left": "o programa de um parceiro que sincroniza o estoque toda noite",
+        "right": "uma chave de API"
+      },
+      {
+        "left": "uma pessoa que entra num app e trabalha por uma hora",
+        "right": "um token bearer"
+      },
+      {
+        "left": "um script num servidor interno, sobre HTTPS",
+        "right": "Basic"
+      }
+    ],
+    "right_distractors": [
+      "uma senha na query string"
+    ]
+  },
+  "ex-fb48d6cx": {
+    "prompt": "A integração de um parceiro entra com o nome e a senha de um funcionário, via Basic. O funcionário sai da empresa. O que dá errado?",
+    "hint": "Duas das três perguntas da seção têm uma resposta ruim aqui.",
+    "choices": [
+      {
+        "text": "Nada, desde que o parceiro use HTTPS",
+        "why": "O HTTPS protege a senha no caminho. Não muda de quem é a senha."
+      },
+      {
+        "text": "Encerrar o acesso de quem saiu quebra o parceiro",
+        "why": "Certo. O Basic acaba quando a senha muda, em todo lugar ao mesmo tempo. E toda requisição do parceiro foi registrada como o funcionário, então o log também nunca nomeou o parceiro."
+      },
+      {
+        "text": "O parceiro passa a receber 403 em todas as requisições",
+        "why": "Depois que a senha muda, a credencial não prova nada, o que é um 401, não um 403."
+      },
+      {
+        "text": "O hash scrypt da senha vence junto com a conta",
+        "why": "Hashes não têm validade; a linha fica até alguém mudá-la ou apagá-la."
+      }
+    ]
+  },
+  "ex-1rhdn3yz": {
+    "prompt": "Um token do keys.py vaza num relatório de erro que uma dúzia de pessoas pode ler. O que limita o estrago?",
+    "hint": "A string vazada é o próprio token, não o hash dele.",
+    "choices": [
+      {
+        "text": "Ele fica guardado com hash, então a cópia no relatório é inútil",
+        "why": "O hash protege contra um banco vazado. O relatório tem o token que o cliente envia, e ele funciona."
+      },
+      {
+        "text": "A validade de uma hora, e um logout que apaga a linha agora",
+        "why": "Certo. A validade limita o vazamento que ninguém notou; a revogação encerra o que alguém notou."
+      },
+      {
+        "text": "Ele é comparado com `compare_digest`, então não pode ser reaproveitado",
+        "why": "O `compare_digest` esconde o tempo. Um token enviado de novo é o mesmo token, e é aceito."
+      },
+      {
+        "text": "Ele é base64, então o relatório mostra só uma codificação",
+        "why": "Uma codificação não esconde nada, e um token bearer é usado exatamente como está escrito."
+      }
+    ]
+  },
+  "ex-asngq09r": {
+    "prompt": "Chega uma requisição com o cabeçalho `X-API-Key` pedindo `GET /v1/keys`. Ponha em ordem o que o keys.py faz.",
+    "hint": "A autenticação termina antes de a autorização começar.",
+    "items": [
+      "Ler o cabeçalho `X-API-Key`",
+      "Achar a linha pelo prefixo da chave",
+      "Comparar o SHA-256 da chave com `compare_digest`",
+      "Concluir que quem chama é uma aplicação",
+      "Recusar a ação com 403"
+    ],
+    "trap": "O 403 vem por último: o servidor precisa saber quem pede antes de recusar o pedido."
+  },
+  "ex-09mp73n9": {
+    "prompt": "Uma API responde a um login que falhou com 401, sem `WWW-Authenticate`, e com o corpo `no user called bob`; para depurar, registra todo cabeçalho da requisição. O que precisa mudar? Escolha todas as que se aplicam.",
+    "hint": "Três seções desta aula acham, cada uma, um problema.",
+    "choices": [
+      {
+        "text": "Responder 403 em vez de 401",
+        "why": "Nenhum nome foi provado, então 401 está certo; 403 é para quem o servidor conhece."
+      },
+      {
+        "text": "Dar a mesma mensagem para usuário desconhecido e senha errada",
+        "why": "Certo. `no user called bob` conta a um estranho quem tem conta."
+      },
+      {
+        "text": "Parar de registrar o cabeçalho `Authorization`",
+        "why": "Certo. Registrar todo cabeçalho põe toda senha e todo token no log."
+      },
+      {
+        "text": "Acrescentar um cabeçalho `WWW-Authenticate` ao 401",
+        "why": "Certo. Um 401 sem desafio diz para se autenticar e não diz como."
+      },
+      {
+        "text": "Codificar as linhas do log em base64",
+        "why": "Quem lê o log consegue decodificá-las; a correção é deixar a credencial de fora."
+      }
+    ]
+  }
+}

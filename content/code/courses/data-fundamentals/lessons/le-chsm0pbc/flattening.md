@@ -1,0 +1,69 @@
+---
+title: Flattening nested events into rows
+version: 1
+---
+
+**Most of the tools that answer questions want rows and columns, so semi-structured data is usually
+flattened first: nested objects become columns with longer names, and arrays become rows of a table
+of their own.** Those are two different operations, and confusing them
+is how a count goes wrong.
+
+The objects are the easy half. `bike` holds `id` and `battery`, so the flat row gets two columns,
+`bike.id` and `bike.battery`. One event still makes one row; the names just get longer.
+
+The arrays are the other half. A ride has one to three charges, and a row has room for one value per
+column. Writing them as `charges.0`, `charges.1` and `charges.2` gives a table with a column for every
+position somebody ever reached, mostly empty, and a question like "how much did unlock fees bring in"
+then has to look in all of them. So an array is **exploded** instead: it becomes a second table with
+one row per item, and each row carries the id of the ride it came from.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 300\" role=\"img\" aria-label=\"On the left, the event for ride R000103 with nested bike, start and end objects and a charges array of two items. An arrow labelled flatten leads to a rides table with one row and dotted column names. An arrow labelled explode leads to a charges table with two rows, unlock 100 and minutes 475, both with ride_id R000103.\" data-fig=\"flatten\"><defs><marker id=\"flatten-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><rect x=\"14\" y=\"14\" width=\"206\" height=\"272\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--wire)\" stroke-width=\"1.5\"></rect><text x=\"117\" y=\"32\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--phosphor)\" font-weight=\"600\">one event</text><text x=\"30.0\" y=\"54\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">ride_id: R000103</text><text x=\"30.0\" y=\"71\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">bike:</text><text x=\"42.6\" y=\"88\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">id: B028</text><text x=\"42.6\" y=\"105\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">battery: 21</text><text x=\"30.0\" y=\"122\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">start:</text><text x=\"42.6\" y=\"139\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">station: ST07</text><text x=\"30.0\" y=\"156\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">end:</text><text x=\"42.6\" y=\"173\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">station: ST07</text><text x=\"42.6\" y=\"190\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">minutes: 19</text><text x=\"30.0\" y=\"207\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--amber)\">charges: [</text><text x=\"42.6\" y=\"224\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--amber)\">unlock 100,</text><text x=\"42.6\" y=\"241\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--amber)\">minutes 475</text><text x=\"30.0\" y=\"258\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--amber)\">]</text><text x=\"470\" y=\"32\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--phosphor)\" font-weight=\"600\">rides: one row per ride</text><rect x=\"286\" y=\"46\" width=\"420\" height=\"52\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"328\" y=\"62\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\" font-weight=\"600\">ride_id</text><text x=\"328\" y=\"84\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">R000103</text><text x=\"412\" y=\"62\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\" font-weight=\"600\">bike.id</text><text x=\"412\" y=\"84\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">B028</text><text x=\"496\" y=\"62\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\" font-weight=\"600\">bike.battery</text><text x=\"496\" y=\"84\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">21</text><text x=\"580\" y=\"62\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\" font-weight=\"600\">start.station</text><text x=\"580\" y=\"84\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">ST07</text><text x=\"664\" y=\"62\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\" font-weight=\"600\">end.station</text><text x=\"664\" y=\"84\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">ST07</text><line x1=\"286\" y1=\"72\" x2=\"706\" y2=\"72\" stroke=\"var(--wire)\" stroke-width=\"1\"></line><text x=\"470\" y=\"112\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">… and the other dotted columns</text><line x1=\"220\" y1=\"72\" x2=\"284\" y2=\"72\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" marker-end=\"url(#flatten-ah)\"></line><text x=\"252\" y=\"62\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">flatten</text><text x=\"470\" y=\"168\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11.5\" fill=\"var(--amber)\" font-weight=\"600\">charges: one row per item</text><rect x=\"346\" y=\"182\" width=\"300\" height=\"76\" rx=\"3\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"396\" y=\"198\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\" font-weight=\"600\">ride_id</text><text x=\"496\" y=\"198\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\" font-weight=\"600\">kind</text><text x=\"596\" y=\"198\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"9.5\" fill=\"var(--paper)\" font-weight=\"600\">cents</text><line x1=\"346\" y1=\"208\" x2=\"646\" y2=\"208\" stroke=\"var(--wire)\" stroke-width=\"1\"></line><text x=\"396\" y=\"224\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">R000103</text><text x=\"496\" y=\"224\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">unlock</text><text x=\"596\" y=\"224\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">100</text><text x=\"396\" y=\"246\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">R000103</text><text x=\"496\" y=\"246\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">minutes</text><text x=\"596\" y=\"246\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">475</text><line x1=\"220\" y1=\"230\" x2=\"344\" y2=\"230\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" marker-end=\"url(#flatten-ah)\"></line><text x=\"282\" y=\"220\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">explode</text><text x=\"496\" y=\"276\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">two rows, one ride</text></svg>", "caption": "Flattening and exploding ride R000103. The nested objects become columns of one row; the array becomes a table of its own, one row per charge, each carrying the ride id."}
+```
+
+## Both, in one program
+
+Save this as `flatten.py`. It reads the events file named on the command line:
+
+```schooling-example
+{"language": "python", "file": "shapes/flatten.py", "parts": [{"code": "# shapes/flatten.py\nimport json\nimport sys\n\n\ndef flat(obj, prefix=''):\n    row = {}\n    for key, value in obj.items():\n        if isinstance(value, dict):\n            row.update(flat(value, prefix + key + '.'))\n        elif not isinstance(value, list):\n            row[prefix + key] = value\n    return row\n\n\n", "note": "`flat` walks one event. A nested object is walked again with its own name as a prefix, so `bike` becomes `bike.id` and `bike.battery`. A list is skipped here: it has no single value to put in a column."}, {"code": "events = [json.loads(line) for line in open(sys.argv[1])]\nrides = [flat(e) for e in events]\ncolumns = sorted({name for row in rides for name in row})\nprint(len(rides), 'rides,', len(columns), 'columns:', ' '.join(columns))\nfor row in rides:\n    print(row['ride_id'], row['start.station'], row.get('end.station'), row.get('coupon'))\n\n", "note": "One flat row per event. The columns are not declared anywhere: they are the union of every name seen in the file. The loop prints four of them, and `.get` answers `None` for a field an event does not have."}, {"code": "charges = [{'ride_id': e['ride_id'], **c} for e in events for c in e['charges']]\nprint(len(charges), 'charge rows')\nfor row in charges[:4]:\n    print(row)\nprint('distinct rides among them:', len({c['ride_id'] for c in charges}))\nprint('sum of cents:', sum(c['cents'] for c in charges))\n", "note": "The explode: one row per item of `charges`, each carrying the `ride_id` of the ride it came from, which is what lets the two tables be joined again. Then the two numbers worth checking, how many rides the rows came from and the total."}]}
+```
+
+```
+ana@lab:~/roda/shapes$ python flatten.py rides-2025-09-15.jsonl
+6 rides, 9 columns: app bike.battery bike.id coupon end.minutes end.station ride_id start.at start.station
+R000101 ST10 ST08 None
+R000102 ST04 ST08 None
+R000103 ST07 ST07 PRIMEIRA
+R000104 ST07 None None
+R000105 ST03 ST03 None
+R000106 ST05 ST03 None
+12 charge rows
+{'ride_id': 'R000101', 'kind': 'unlock', 'cents': 100}
+{'ride_id': 'R000101', 'kind': 'minutes', 'cents': 650}
+{'ride_id': 'R000102', 'kind': 'unlock', 'cents': 100}
+{'ride_id': 'R000102', 'kind': 'minutes', 'cents': 350}
+distinct rides among them: 6
+sum of cents: 3425
+```
+
+Six events gave six rows, and the columns were discovered from the data rather than declared: nine
+of them, from `app` to `start.station`, collected from every event in the file. That is schema on read
+again, done by a program. `R000104` has `None` where its end station would be, because the reader
+asked with `.get` and decided that a missing field means an empty value. `coupon` is empty in five
+rows of six.
+
+**The exploded table has twelve rows, for six rides.** That is the trap. Anybody who counts rows in
+it, or joins it back to the rides and then counts, gets twelve, and anybody who adds up a ride-level
+number such as `end.minutes` across it counts most rides two or three times. The line `distinct rides among them: 6` is the
+check worth keeping. The sum of the charges, 3425 cents, is right, because cents belong to the charge
+and each charge is in the table once.
+
+**After an explode, know what one row is.** In `rides` one row is a
+ride; in `charges` one row is a charge. A number computed on the wrong table looks exactly as
+trustworthy as one computed on the right one, the same quiet failure `first.py` showed in lesson 1
+when one ride was counted twice.
+
+Real tools do the same two moves under their own names. Spark calls the second one `explode`, SQL
+engines such as PostgreSQL call it `unnest`, and pyarrow can flatten a nested column into dotted ones. Writing those lines yourself, once, is how the names stop being magic; using them belongs to `pipelines-etl`
+and `sql-databases`.

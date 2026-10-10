@@ -1,0 +1,654 @@
+{
+  "ex-0yhdnfx8": {
+    "prompt": "Antes desta aula, onde estava escrito o contrato do shelf?",
+    "hint": "Toda API tem um, escrito ou não.",
+    "choices": [
+      {
+        "text": "Em lugar nenhum: sem documento, sem contrato",
+        "why": "O contrato existia desde que clientes puderam depender das respostas; o que faltava era uma cópia que um programa conseguisse ler."
+      },
+      {
+        "text": "No shelf.db",
+        "why": "O banco guarda as linhas. Os endereços, os métodos e os códigos de status não estão nele."
+      },
+      {
+        "text": "No código do rest.py, como o comportamento que ele produz",
+        "why": "Certo. Endereços, métodos, campos e códigos estavam todos fixados pelo rest.py, e ler Python ou mandar requisições era o único jeito de conhecê-los."
+      },
+      {
+        "text": "No padrão HTTP",
+        "why": "O HTTP define o que um 404 quer dizer, não quais endereços o shelf tem nem quais campos um livro traz."
+      }
+    ]
+  },
+  "ex-ej9df3gt": {
+    "prompt": "Ligue cada nome ao que ele é.",
+    "hint": "A especificação foi renomeada; as ferramentas ficaram com o nome antigo.",
+    "pairs": [
+      {
+        "left": "OpenAPI",
+        "right": "a especificação que um documento de descrição segue"
+      },
+      {
+        "left": "Swagger UI",
+        "right": "uma ferramenta que mostra um documento como página interativa"
+      },
+      {
+        "left": "`swagger: \"2.0\"`",
+        "right": "a primeira linha de um documento no formato antigo"
+      },
+      {
+        "left": "`openapi: 3.1.0`",
+        "right": "a primeira linha de um documento no formato atual"
+      }
+    ],
+    "right_distractors": [
+      "o servidor que atende as requisições que um documento descreve"
+    ]
+  },
+  "ex-75bz4z9n": {
+    "prompt": "No sentido desta aula, o que torna uma documentação \"viva\"?",
+    "hint": "Pense no que acontece no dia em que o código muda e o documento não.",
+    "choices": [
+      {
+        "text": "Ela é gerada a partir do código a cada build",
+        "why": "Gerar mantém o documento junto do que o código declara, e não diz nada do que o código faz, como o 501 do shelf."
+      },
+      {
+        "text": "Qualquer pessoa pode editar a página e ver a mudança na hora",
+        "why": "Uma página editável continua sendo texto que nada confere; ela pode estar errada e se ler perfeitamente."
+      },
+      {
+        "text": "O seu `info.version` sobe a cada mudança",
+        "why": "Isso registra que a descrição mudou, não se ela ainda é verdade sobre o servidor."
+      },
+      {
+        "text": "Um teste confronta a API em execução com ela",
+        "why": "Certo. No dia em que os dois discordam, o teste falha, então a documentação não consegue ficar errada em silêncio."
+      }
+    ]
+  },
+  "ex-856n2es8": {
+    "prompt": "Dentro de `responses`, um código de status é escrito entre aspas, como `\"200\"`, porque a especificação quer as chaves como ___ e o YAML leria um 200 solto como número.",
+    "hint": "Não um número.",
+    "blanks": [
+      {
+        "accept": [
+          "texto",
+          "strings",
+          "string",
+          "textos"
+        ]
+      }
+    ]
+  },
+  "ex-wrw3j1rq": {
+    "prompt": "Em `$ref: \"#/components/schemas/Book\"`, o que o `#` representa?",
+    "hint": "Cada segmento depois dele é uma chave.",
+    "choices": [
+      {
+        "text": "O começo de um comentário YAML",
+        "why": "Entre aspas ele é só um caractere da string; um comentário teria escondido a referência inteira."
+      },
+      {
+        "text": "A raiz do mesmo documento",
+        "why": "Certo. O ponteiro começa ali e percorre components, depois schemas, depois Book."
+      },
+      {
+        "text": "O endereço-base do servidor, de `servers`",
+        "why": "Referências apontam para dentro de documentos, nunca para a API em execução."
+      },
+      {
+        "text": "O primeiro schema do arquivo, seja qual for o nome",
+        "why": "Um ponteiro é seguido por nome, chave por chave; a posição no arquivo não conta."
+      }
+    ]
+  },
+  "ex-r30n7zvg": {
+    "prompt": "Ponha as chaves em ordem, de fora para dentro, no caminho de `paths` até o schema de uma resposta JSON de `GET /books/{id}`.",
+    "hint": "Endereço, depois método, depois o que volta.",
+    "items": [
+      "`/books/{id}`",
+      "`get`",
+      "`responses`",
+      "`\"200\"`",
+      "`content` e `application/json`",
+      "`schema`"
+    ],
+    "trap": "O código de status fica acima do tipo de mídia: um código pode ter corpos em vários tipos de mídia."
+  },
+  "ex-ee01j217": {
+    "prompt": "Quantas operações o `openapi.yaml` do shelf descreve?",
+    "hint": "Conte pares de método e endereço; `parameters` não é um método.",
+    "unit": "operações"
+  },
+  "ex-nxq7fv05": {
+    "prompt": "O `rest.py` responde a `DELETE /v1/books`, mas o documento não lista `delete` em `/books`. Por quê?",
+    "hint": "O que o rest.py responde a ele?",
+    "choices": [
+      {
+        "text": "A única resposta é um 405, que não serve a cliente nenhum",
+        "why": "Certo. Um documento diz aquilo em que os clientes podem confiar, e um método cuja única resposta é uma recusa não é algo em que se confie."
+      },
+      {
+        "text": "O validador recusa qualquer DELETE escrito sob um endereço de coleção como `/books`",
+        "why": "A OpenAPI deixa qualquer método em qualquer endereço; a escolha foi sobre aquilo em que os clientes podem confiar."
+      },
+      {
+        "text": "A OpenAPI não tem como descrever um 405 nem o cabeçalho `Allow` que vem com ele",
+        "why": "Um 405 pode ser listado como qualquer outro código; o documento escolheu não listar."
+      },
+      {
+        "text": "O HTTP proíbe DELETE numa coleção",
+        "why": "O HTTP não proíbe nada disso; foi o shelf que escolheu não oferecer."
+      }
+    ]
+  },
+  "ex-djbp605b": {
+    "prompt": "Você corrige um erro de digitação no `summary` de `getBook`. Qual número do documento deveria mudar?",
+    "hint": "Um deles é a versão da própria descrição.",
+    "choices": [
+      {
+        "text": "`openapi`, de 3.1.0 para 3.1.1",
+        "why": "Essa é a versão da especificação que o arquivo segue, que não mudou."
+      },
+      {
+        "text": "O `/v1` no fim do endereço do servidor",
+        "why": "Essa é a versão da API, e um erro num resumo não muda nada que um cliente envia ou lê."
+      },
+      {
+        "text": "`info.version`",
+        "why": "Certo. É a versão desta descrição, e ela anda sempre que a descrição anda."
+      },
+      {
+        "text": "Nenhum número: um resumo não faz parte do conteúdo do documento",
+        "why": "O resumo está no documento e na página renderizada, então mudá-lo muda o documento."
+      }
+    ]
+  },
+  "ex-aztyxgq8": {
+    "prompt": "Por que `pip install openapi-spec-validator==0.9.0` falhou no Ubuntu 24.04 antes de a venv existir?",
+    "hint": "Leia a primeira linha do erro.",
+    "choices": [
+      {
+        "text": "O Python do sistema está marcado como gerenciado pelo apt",
+        "why": "Certo. O erro foi `externally-managed-environment`, e a sugestão dele foi um ambiente virtual."
+      },
+      {
+        "text": "Faltou sudo, porque o pip escreve em /usr/lib",
+        "why": "Root não ajudaria; a recusa é sobre quem gerencia o Python do sistema, não sobre permissões."
+      },
+      {
+        "text": "A VM não conseguia alcançar a internet",
+        "why": "O pip recusou antes de baixar qualquer coisa; o mesmo comando dentro da venv baixou sem problema."
+      },
+      {
+        "text": "A versão 0.9.0 não suporta Python 3.12",
+        "why": "Ela instalou e rodou no Python 3.12 da venv logo depois."
+      }
+    ]
+  },
+  "ex-wxxjq4z1": {
+    "prompt": "O pip instalou vinte pacotes para `openapi-spec-validator==0.9.0`. Em quantos desses vinte a versão foi fixada por aquele `==0.9.0`?",
+    "hint": "A fixação nomeia um pacote.",
+    "unit": "pacotes"
+  },
+  "ex-pjxcdmny": {
+    "prompt": "Quais destes o `openapi-spec-validator` aponta? Escolha todos os que se aplicam.",
+    "hint": "Ele lê o documento e as regras da OpenAPI, e mais nada.",
+    "choices": [
+      {
+        "text": "Um caminho `{author}` que nenhum parâmetro declara",
+        "why": "Certo. Ele imprimiu `Path parameter 'author' ... was not resolved`."
+      },
+      {
+        "text": "Um pattern de ISBN que o rest.py não aplica",
+        "why": "O validador nunca vê o rest.py; o documento do shelf passou com essa regra dentro."
+      },
+      {
+        "text": "Um `$ref` para um schema que não existe",
+        "why": "Certo. Um ponteiro que não cai em lugar nenhum é um documento quebrado."
+      },
+      {
+        "text": "Um campo que o documento promete e o servidor nunca envia",
+        "why": "OpenAPI correta prometendo a coisa errada passa; só um teste contra o servidor acha isso."
+      }
+    ]
+  },
+  "ex-c0d9ekkc": {
+    "prompt": "No code-first, o que as pessoas escrevem à mão?",
+    "hint": "O nome diz o que vem primeiro.",
+    "choices": [
+      {
+        "text": "O documento, e depois o código é construído para combinar",
+        "why": "Isso é design-first."
+      },
+      {
+        "text": "O código com anotações; o documento é gerado a partir dele",
+        "why": "Certo. FastAPI, springdoc, swag e as bibliotecas de Node imprimem o documento a partir do código."
+      },
+      {
+        "text": "Os dois, separadamente, e depois um teste de contrato compara um com o outro",
+        "why": "É o que o shelf tem, e não é nenhuma das duas ordens: o documento foi escrito à mão depois do código."
+      },
+      {
+        "text": "Nenhum: um servidor de mentira produz os dois",
+        "why": "Um servidor de mentira lê um documento e responde com os exemplos dele; não escreve nenhum dos dois."
+      }
+    ]
+  },
+  "ex-5gsdvqm8": {
+    "prompt": "Um time gera o documento com o FastAPI. Um handler levanta uma exceção que ninguém esperava, e o framework responde 500 com uma página HTML. O documento gerado menciona essa resposta?",
+    "hint": "O que um gerador lê?",
+    "choices": [
+      {
+        "text": "Não; ele descreve o que o código declara",
+        "why": "Certo. Quem acharia o 500 é um teste de contrato, como ele achou o 501 do shelf, que nenhum handler escreveu."
+      },
+      {
+        "text": "Sim, como uma resposta `default` acrescentada a toda operação",
+        "why": "Nada a acrescenta sozinho, e se alguém acrescentasse, o 500 passaria a estar listado em vez de ser encontrado."
+      },
+      {
+        "text": "Sim, porque um framework documenta todo status que consegue produzir",
+        "why": "Ele documenta o que os handlers declaram; o caminho de uma exceção ninguém declara."
+      },
+      {
+        "text": "Só se o documento gerado for versionado no repositório",
+        "why": "Versionar torna as mudanças visíveis na revisão; não acrescenta uma resposta que o gerador nunca viu."
+      }
+    ]
+  },
+  "ex-a9s9bqc1": {
+    "prompt": "Ligue cada situação ao que ela mostra.",
+    "hint": "Pergunte quem escreveu o quê primeiro.",
+    "pairs": [
+      {
+        "left": "Um time de front-end constrói contra o contrato antes de o back-end existir",
+        "right": "design-first, com um servidor de mentira"
+      },
+      {
+        "left": "Uma troca de nome numa classe de modelo mudou o contrato e ninguém decidiu isso",
+        "right": "a falha típica do code-first"
+      },
+      {
+        "left": "O código parou de combinar com o documento acordado e nada percebeu",
+        "right": "a falha típica do design-first"
+      },
+      {
+        "left": "o `openapi.yaml` do shelf",
+        "right": "escrito à mão, depois do código"
+      }
+    ],
+    "right_distractors": [
+      "gerado a partir do rest.py a cada build"
+    ]
+  },
+  "ex-cv9vcn9n": {
+    "prompt": "O teste criou `9786500000085` como livro 7 e depois `978-65-00000-08-5` como livro 8. Por que o segundo não foi recusado com um 409?",
+    "hint": "O que o banco compara?",
+    "choices": [
+      {
+        "text": "O livro 7 já tinha sido apagado",
+        "why": "Os DELETE vêm depois; o livro 7 ainda existia quando o livro 8 foi criado."
+      },
+      {
+        "text": "O rest.py pula a conferência de unicidade no POST",
+        "why": "O segundo POST sem hífens recebeu o 409, então a conferência roda."
+      },
+      {
+        "text": "O `UNIQUE` compara strings, e as duas strings são diferentes",
+        "why": "Certo. Mesmo livro, texto diferente, então o banco viu dois ISBNs."
+      },
+      {
+        "text": "O pattern do documento desligou a conferência para hífens",
+        "why": "O rest.py nunca lê o documento; nada nele consegue desligar coisa alguma."
+      }
+    ]
+  },
+  "ex-1j6nqaa7": {
+    "prompt": "Ponha em ordem o que o `check_contract.py` faz para uma requisição.",
+    "hint": "Uma conferência acontece antes de qualquer envio.",
+    "items": [
+      "Conferir o corpo contra o schema do `requestBody` da operação",
+      "Enviar a requisição ao rest.py",
+      "Procurar o código de status em `responses`",
+      "Conferir os cabeçalhos obrigatórios",
+      "Conferir o `Content-Type` contra `content`",
+      "Validar o corpo contra o schema da resposta"
+    ],
+    "trap": "Os cabeçalhos e o corpo de uma resposta só podem ser conferidos depois que o código diz a qual resposta eles pertencem."
+  },
+  "ex-bhghezg9": {
+    "prompt": "Um teste de contrato confere só as requisições que ele ___, e por isso `?author_id=abc` passou sem ser visto.",
+    "hint": "O que o próprio teste faz com as requisições.",
+    "blanks": [
+      {
+        "accept": [
+          "envia",
+          "manda",
+          "faz"
+        ]
+      }
+    ]
+  },
+  "ex-c4vkkc0p": {
+    "prompt": "Você acrescenta `check(\"GET\", \"/books?author_id=abc\")` ao `check_contract.py`. O que essa linha imprime?",
+    "hint": "Que partes de uma requisição o script valida?",
+    "choices": [
+      {
+        "text": "`ok`: só corpos são conferidos, e `[]` cabe no schema",
+        "why": "Certo. A resposta foi 200 com um array vazio, que é uma lista de livros válida, então esta conferência aprova justamente o que a seção diz que ela deixa passar."
+      },
+      {
+        "text": "FAIL, porque o documento diz que `author_id` é um inteiro",
+        "why": "Isso exigiria que o script validasse parâmetros; ele valida só corpos de requisição."
+      },
+      {
+        "text": "FAIL, porque 200 não está listado para `GET /books`",
+        "why": "200 é justamente o código que `GET /books` lista."
+      },
+      {
+        "text": "Nada: `operation()` não acha modelo para um caminho com query string",
+        "why": "Ele corta a query string antes de comparar, que é como `?author_id=3` foi conferido."
+      }
+    ]
+  },
+  "ex-2jqsx7dr": {
+    "prompt": "Você troca o `servers` pelo endereço da VM e aperta Try it out no Swagger UI. Por que ainda não há resposta do shelf?",
+    "hint": "Onde o rest.py escuta?",
+    "choices": [
+      {
+        "text": "O Swagger UI só manda requisições GET pelo botão Try it out",
+        "why": "O Try it out manda o método que a operação tiver."
+      },
+      {
+        "text": "O documento não tem `securitySchemes`, então a página se recusa a enviar",
+        "why": "O shelf não precisa de chave; a falta de esquema não impede nada."
+      },
+      {
+        "text": "O rest.py escuta só em 127.0.0.1 dentro da VM",
+        "why": "Certo. A aula 1 escolheu o loopback de propósito, e o curso o deixa ali."
+      },
+      {
+        "text": "O endereço da VM muda a cada requisição",
+        "why": "Ele é estável enquanto a VM roda; `multipass info api` mostra o mesmo a cada vez."
+      }
+    ]
+  },
+  "ex-5cfv6krm": {
+    "prompt": "O que o Swagger UI faz e o Redoc não faz?",
+    "hint": "Um deles é uma referência para ler.",
+    "choices": [
+      {
+        "text": "Ler YAML além de JSON",
+        "why": "Os dois leem o mesmo documento em qualquer das grafias."
+      },
+      {
+        "text": "Mostrar os schemas por trás de cada resposta",
+        "why": "Os dois mostram os schemas; é o centro de uma página de referência."
+      },
+      {
+        "text": "Renderizar o documento sem navegador",
+        "why": "Os dois são JavaScript que roda num navegador."
+      },
+      {
+        "text": "Mandar requisições reais da página",
+        "why": "Certo. O Try it out preenche um formulário e envia; o Redoc só lê."
+      }
+    ]
+  },
+  "ex-9ey8q19g": {
+    "prompt": "O nível de cima diz `security: [{staffKey: []}]` e `GET /books` diz `security: []`. Do que `GET /books` precisa?",
+    "hint": "A lista da própria operação substitui a do nível de cima.",
+    "choices": [
+      {
+        "text": "Da chave de staff, herdada da lista `security` do nível de cima",
+        "why": "A herança só acontece quando a operação não diz nada; aqui ela diz."
+      },
+      {
+        "text": "De nada, e nenhuma outra operação pode ser chamada",
+        "why": "A lista vazia afeta só aquela operação."
+      },
+      {
+        "text": "De qualquer um dos esquemas de `components`",
+        "why": "Definir um esquema o deixa disponível; só uma lista `security` o torna obrigatório."
+      },
+      {
+        "text": "De nada: a lista vazia sobrescreve o nível de cima",
+        "why": "Certo. É assim que a lista de livros continua pública enquanto todo o resto precisa da chave."
+      }
+    ]
+  },
+  "ex-j56cq1hh": {
+    "prompt": "Alguém acrescenta um esquema `apiKey` ao documento do shelf, o exige em `POST /books` e não muda mais nada. Um cliente manda um livro válido sem chave. O que ele recebe?",
+    "hint": "Quem lê o documento?",
+    "choices": [
+      {
+        "text": "401, porque o documento agora exige uma chave",
+        "why": "O documento exige no papel; o rest.py nunca abre o documento."
+      },
+      {
+        "text": "403, porque a chave falta, em vez de estar errada",
+        "why": "Nenhum dos dois códigos pode vir de um servidor que não confere chaves."
+      },
+      {
+        "text": "Uma recusa do validador antes de a requisição ser enviada",
+        "why": "O validador confere documentos, não requisições, e um cliente não o roda."
+      },
+      {
+        "text": "201: descrever um esquema não impõe nada",
+        "why": "Certo. Só um teste de contrato mandando a requisição sem chave mostraria a lacuna."
+      }
+    ]
+  },
+  "ex-8e0w4889": {
+    "prompt": "Ligue cada `type` de esquema de segurança ao que o cliente envia.",
+    "hint": "As aulas 7, 8 e 9 constroem três deles.",
+    "pairs": [
+      {
+        "left": "`apiKey`",
+        "right": "uma chave num cabeçalho, numa query string ou num cookie"
+      },
+      {
+        "left": "`http` com `scheme: bearer`",
+        "right": "um cabeçalho `Authorization` levando um token"
+      },
+      {
+        "left": "`oauth2`",
+        "right": "um token obtido por um dos fluxos do OAuth"
+      },
+      {
+        "left": "`mutualTLS`",
+        "right": "um certificado, durante o handshake do TLS"
+      }
+    ],
+    "right_distractors": [
+      "o cookie de sessão que a página de documentação define"
+    ]
+  },
+  "ex-3dkewpnj": {
+    "prompt": "O que uma resposta `default` custa ao teste de contrato de uma operação?",
+    "hint": "`default` quer dizer todo código não listado.",
+    "choices": [
+      {
+        "text": "Um 500 inesperado conta como listado",
+        "why": "Certo. Um teste que respeita `default` o aprova, porque uma recusa projetada e um acidente parecem iguais para ele."
+      },
+      {
+        "text": "O teste não consegue mais conferir uma resposta de sucesso",
+        "why": "Os códigos listados, o 200 incluído, são conferidos como antes."
+      },
+      {
+        "text": "O validador recusa um documento que tenha um",
+        "why": "`default` é OpenAPI válida; o custo está no que ele esconde, não na validade."
+      },
+      {
+        "text": "Todo corpo de erro precisa virar `application/problem+json`",
+        "why": "`default` pode levar qualquer schema, o `Error` do shelf entre eles."
+      }
+    ]
+  },
+  "ex-a7rzrsr3": {
+    "prompt": "Qual destas mudanças no documento do shelf é segura para os clientes existentes?",
+    "hint": "Uma requisição pode aceitar mais; uma resposta pode dar mais.",
+    "choices": [
+      {
+        "text": "Acrescentar `stock` à lista `required` de `NewBook`",
+        "why": "A requisição agora exige um campo que alguns clientes nunca mandaram."
+      },
+      {
+        "text": "Acrescentar um `cover_url` opcional a `NewBook`",
+        "why": "Certo. A requisição aceita mais, e um cliente que não o manda não é afetado."
+      },
+      {
+        "text": "Remover `stock` de `Book`",
+        "why": "A resposta dá menos, e um cliente que lê o estoque não acha nada."
+      },
+      {
+        "text": "Exigir hífens no pattern de ISBN de `NewBook`",
+        "why": "A requisição exige mais, e todo cliente que manda treze dígitos sem hífens é recusado."
+      }
+    ]
+  },
+  "ex-0pemx4tp": {
+    "prompt": "O `diff` mostrou cinco linhas mudadas depois de renomear `price_cents`. Quantas delas estão em schemas que o cliente envia?",
+    "hint": "`NewBook` e `BookChange` são enviados; `Book` é recebido.",
+    "unit": "linhas"
+  },
+  "ex-g3ptqpg4": {
+    "prompt": "Um campo novo `cover_url` é acrescentado a `Book` e também à lista `required` dele, e o servidor o manda em todo livro. Uma colega diz que mexer em `required` sempre quebra. Esta mudança quebra?",
+    "hint": "Quem lê `Book`?",
+    "choices": [
+      {
+        "text": "Sim: qualquer mudança numa lista `required` quebra os clientes daquele schema",
+        "why": "Isso vale para uma requisição; numa resposta, obrigatório quer dizer uma promessa que o servidor cumpre."
+      },
+      {
+        "text": "Sim, porque os clientes agora precisam mandar `cover_url`",
+        "why": "Os clientes mandam `NewBook`, que não mudou; `Book` é o que eles recebem."
+      },
+      {
+        "text": "Não: numa resposta é o servidor prometendo mais",
+        "why": "Certo. Leitores que ignoram o campo não são afetados, e `Book` não proíbe campos extras."
+      },
+      {
+        "text": "Só se o validador apontar",
+        "why": "O validador julga validade, e as duas versões são válidas."
+      }
+    ]
+  },
+  "ex-9jqxzq3x": {
+    "prompt": "`operationId: createBook` é renomeado para `addBook`; o comportamento HTTP não muda. O que quebra?",
+    "hint": "De onde um cliente gerado tira os nomes?",
+    "choices": [
+      {
+        "text": "Todo cliente que chama `POST /v1/books`",
+        "why": "A requisição e a resposta são as mesmas; um cliente escrito à mão não percebe nada."
+      },
+      {
+        "text": "Nada, já que um `operationId` é só um rótulo",
+        "why": "Para um gerador ele é um nome de função, o que o torna parte de um contrato."
+      },
+      {
+        "text": "O teste de contrato, que procura operações pelo id",
+        "why": "O `check_contract.py` compara por método e caminho e nunca lê `operationId`."
+      },
+      {
+        "text": "Código construído sobre um cliente gerado, quando ele é gerado de novo",
+        "why": "Certo. A função `createBook` some e toda chamada a ela para de compilar."
+      }
+    ]
+  },
+  "ex-aye95et9": {
+    "prompt": "Mantenha o código gerado num diretório próprio e nunca o ___, porque a próxima geração o sobrescreve.",
+    "hint": "O que você faria, senão, para consertar algo nele.",
+    "blanks": [
+      {
+        "accept": [
+          "edite",
+          "altere",
+          "modifique",
+          "mude"
+        ]
+      }
+    ]
+  },
+  "ex-14mezr0g": {
+    "prompt": "Um pull request muda a API do shelf e o documento dela. Ponha as conferências na ordem em que podem rodar, da mais barata para a mais cara.",
+    "hint": "Duas delas não precisam de servidor nenhum.",
+    "items": [
+      "Validar o documento novo com o `openapi-spec-validator`",
+      "Compará-lo com o documento da branch principal em busca de mudanças que quebram",
+      "Subir o servidor com o código novo",
+      "Rodar o teste de contrato contra ele"
+    ],
+    "trap": "Comparar um documento que não é OpenAPI válida não compara nada confiável, então a validade vem primeiro."
+  },
+  "ex-p3e604j7": {
+    "prompt": "Quais destas ferramentas mandam requisições a um servidor em execução? Escolha todas as que se aplicam.",
+    "hint": "Algumas só leem arquivos.",
+    "choices": [
+      {
+        "text": "`openapi-spec-validator`",
+        "why": "Ele lê o documento e as regras da OpenAPI, mais nada."
+      },
+      {
+        "text": "`check_contract.py`",
+        "why": "Certo. Quinze requisições reais, cada resposta comparada com o documento."
+      },
+      {
+        "text": "O Try it out do Swagger UI",
+        "why": "Certo. Ele manda uma requisição real do navegador, e por isso precisa de um servidor que consiga alcançar."
+      },
+      {
+        "text": "Um verificador de mudanças que quebram como o oasdiff",
+        "why": "Ele compara dois documentos e nunca chama uma API."
+      }
+    ]
+  },
+  "ex-vgkjd14f": {
+    "prompt": "Para fazer o teste de contrato passar, uma colega acrescenta uma resposta de erro `default` a toda operação do documento do shelf. A linha do OPTIONS continua falhando?",
+    "hint": "A qual operação esse `default` pertenceria?",
+    "choices": [
+      {
+        "text": "Não: o 501 agora cai no `default`",
+        "why": "Um `default` pertence a uma operação, e o documento não tem operação `options` onde ele fique."
+      },
+      {
+        "text": "Sim, continua não havendo esse método no arquivo",
+        "why": "Certo. O teste falha antes de olhar qualquer resposta; e o `check_contract.py` ignora `default` de todo modo."
+      },
+      {
+        "text": "Não: `default` também cobre métodos que o documento não lista",
+        "why": "Ele cobre códigos de status de uma operação, nunca métodos que faltam."
+      },
+      {
+        "text": "Depende de o servidor ser reiniciado",
+        "why": "O servidor nunca lê o documento, então reiniciá-lo não muda nada aqui."
+      }
+    ]
+  },
+  "ex-d45v4gjb": {
+    "prompt": "Que arquivo deveria mudar para resolver a discordância do ISBN, dado para que serve o documento?",
+    "hint": "O pattern é a regra da loja.",
+    "choices": [
+      {
+        "text": "`openapi.yaml`: tirar o pattern para os dois concordarem",
+        "why": "O teste passaria e a regra da loja sumiria do único lugar onde estava escrita."
+      },
+      {
+        "text": "`check_contract.py`: parar de mandar o ISBN com hífens",
+        "why": "A discordância continuaria lá, agora sem ninguém olhando."
+      },
+      {
+        "text": "`db.py`: acrescentar um CHECK na coluna",
+        "why": "Recusaria a linha, mas um erro do banco não é o 422 que o documento lista para uma regra violada, e o db.py só monta um banco novo."
+      },
+      {
+        "text": "`rest.py`: conferir o pattern junto das outras conferências de campo",
+        "why": "Certo. O documento enuncia a regra, o código a esqueceu, e um 422 na porta é o que o documento promete."
+      }
+    ]
+  }
+}

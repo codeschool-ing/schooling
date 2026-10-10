@@ -1,0 +1,52 @@
+---
+title: Roles and permissions
+version: 1
+---
+
+**A role is a name for a set of permissions, and a person is given a role rather than each
+permission one at a time.** That is role-based access control, RBAC, and it is where most APIs
+start: the shop has customers, staff and an administrator, and what each of them may do is written
+down once. `orders.py` has four roles, six permissions and five people:
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 700 300\" role=\"img\" aria-label=\"Five people, four roles and six permissions in orders.py. Ana and Bruno are customers, Carla is staff, Dora is admin and Eva is an auditor. The customer role grants orders:read, orders:create and orders:cancel. Staff grants orders:read, orders:read_all and orders:refund. Admin grants the same three plus people:read. Auditor is not in the table and grants nothing.\"><defs><marker id=\"l11-rbac-ah\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper-dim)\"></path></marker></defs><text x=\"70\" y=\"22\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--amber)\">people</text><text x=\"300\" y=\"22\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--amber)\">roles</text><text x=\"570\" y=\"22\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--amber)\">permissions</text><rect x=\"20\" y=\"40\" width=\"100\" height=\"32\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"70.0\" y=\"56.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">Ana</text><line x1=\"120\" y1=\"56\" x2=\"248\" y2=\"68\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" marker-end=\"url(#l11-rbac-ah)\"></line><rect x=\"20\" y=\"90\" width=\"100\" height=\"32\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"70.0\" y=\"106.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">Bruno</text><line x1=\"120\" y1=\"106\" x2=\"248\" y2=\"68\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" marker-end=\"url(#l11-rbac-ah)\"></line><rect x=\"20\" y=\"140\" width=\"100\" height=\"32\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"70.0\" y=\"156.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">Carla</text><line x1=\"120\" y1=\"156\" x2=\"248\" y2=\"130\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" marker-end=\"url(#l11-rbac-ah)\"></line><rect x=\"20\" y=\"190\" width=\"100\" height=\"32\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"70.0\" y=\"206.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">Dora</text><line x1=\"120\" y1=\"206\" x2=\"248\" y2=\"192\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" marker-end=\"url(#l11-rbac-ah)\"></line><rect x=\"20\" y=\"240\" width=\"100\" height=\"32\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"70.0\" y=\"256.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">Eva</text><line x1=\"120\" y1=\"256\" x2=\"248\" y2=\"254\" stroke=\"var(--paper-dim)\" stroke-width=\"1.4\" marker-end=\"url(#l11-rbac-ah)\"></line><rect x=\"250\" y=\"52\" width=\"110\" height=\"32\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"305.0\" y=\"68.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">customer</text><line x1=\"360\" y1=\"68\" x2=\"500\" y2=\"54\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.4\"></line><line x1=\"360\" y1=\"68\" x2=\"500\" y2=\"96\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.4\"></line><line x1=\"360\" y1=\"68\" x2=\"500\" y2=\"138\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.4\"></line><rect x=\"250\" y=\"114\" width=\"110\" height=\"32\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"305.0\" y=\"130.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">staff</text><line x1=\"360\" y1=\"130\" x2=\"500\" y2=\"54\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.4\"></line><line x1=\"360\" y1=\"130\" x2=\"500\" y2=\"180\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.4\"></line><line x1=\"360\" y1=\"130\" x2=\"500\" y2=\"222\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.4\"></line><rect x=\"250\" y=\"176\" width=\"110\" height=\"32\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"305.0\" y=\"192.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">admin</text><line x1=\"360\" y1=\"192\" x2=\"500\" y2=\"54\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.4\"></line><line x1=\"360\" y1=\"192\" x2=\"500\" y2=\"180\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.4\"></line><line x1=\"360\" y1=\"192\" x2=\"500\" y2=\"222\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.4\"></line><line x1=\"360\" y1=\"192\" x2=\"500\" y2=\"264\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.4\"></line><rect x=\"250\" y=\"238\" width=\"110\" height=\"32\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--amber)\" stroke-width=\"1.4\" stroke-dasharray=\"4 3\"></rect><text x=\"305.0\" y=\"254.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper)\">auditor</text><rect x=\"500\" y=\"40\" width=\"140\" height=\"28\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"570.0\" y=\"54.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">orders:read</text><rect x=\"500\" y=\"82\" width=\"140\" height=\"28\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"570.0\" y=\"96.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">orders:create</text><rect x=\"500\" y=\"124\" width=\"140\" height=\"28\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"570.0\" y=\"138.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">orders:cancel</text><rect x=\"500\" y=\"166\" width=\"140\" height=\"28\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"570.0\" y=\"180.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">orders:read_all</text><rect x=\"500\" y=\"208\" width=\"140\" height=\"28\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"570.0\" y=\"222.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">orders:refund</text><rect x=\"500\" y=\"250\" width=\"140\" height=\"28\" rx=\"5\" fill=\"var(--panel)\" stroke=\"var(--phosphor)\" stroke-width=\"1.4\"></rect><text x=\"570.0\" y=\"264.0\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10\" fill=\"var(--paper)\">people:read</text><text x=\"305\" y=\"288\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--amber)\">not in ROLES: no permission at all</text></svg>", "caption": "A person has a role; the code only ever asks about the permissions on the right."}
+```
+
+A permission names a thing and an action, `orders:refund`. The colon is only a convention, and
+other APIs write `refund_orders` or `orders.refund`; what matters is that the name says what is
+allowed and not who is usually allowed it. `orders:read_all` is the one that is easy to misread:
+`orders:read` lets a caller read orders, and `find` decides which, while `orders:read_all` is the
+permission that makes "which" mean all of them.
+
+## Check the permission, not the role
+
+The wrong idea is to write the role into the code:
+
+```python
+if role == "admin" or role == "staff":
+    refund(order)
+```
+
+It works on the day it is written. Then the shop takes on somebody in support who should refund
+orders and not see the list of people, and every `if` that mentions `staff` has to be found and
+read again, in every handler. The one nobody found is a bug. Code that asks for the permission
+does not change at all:
+
+```python
+if "orders:refund" in perms:
+    refund(order)
+```
+
+A role `support` is then one line in `ROLES`, with `orders:read`, `orders:read_all` and
+`orders:refund` in it, and no handler learns it exists. **The code asks about permissions; only the
+table knows about roles.** In `orders.py` the word `admin` never appears in a check. The route table
+names `people:read`, and Dora has it because the `admin` row of `ROLES` says so.
+
+Where the role is read from matters too. `orders.py` reads it from the `people` table on every
+request, so a change of role takes effect on the next request. A role copied into a token when it
+was issued, which a JWT from lesson 8 can carry, is believed until the token expires: that is the
+price of not asking the database.
+
+RBAC is simple while the roles are few and the rules are about kinds of people. It strains when the
+rule is about one particular object or one particular moment. "Staff may refund, but only within 30
+days" is not a role, and "Attributes and policies" is about what to do then.

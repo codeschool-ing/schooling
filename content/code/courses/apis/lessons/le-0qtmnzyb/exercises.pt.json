@@ -1,0 +1,644 @@
+{
+  "ex-tb8zsnrx": {
+    "prompt": "O `GET /v1/books/1` da aula 1 nomeia um livro e deixa o método dizer o que fazer com ele. O que uma requisição gRPC nomeia?",
+    "hint": "Pense em `Reserve`.",
+    "choices": [
+      {
+        "text": "Um procedimento de um serviço",
+        "why": "Certo. A requisição é uma chamada: o serviço, o método e uma mensagem com os argumentos."
+      },
+      {
+        "text": "Um recurso, pelo endereço",
+        "why": "Isso é REST, o estilo da aula 1."
+      },
+      {
+        "text": "Os campos que o cliente quer de volta nesta resposta",
+        "why": "Isso é GraphQL, a aula 3."
+      },
+      {
+        "text": "Uma operação dentro de um envelope XML descrito por um WSDL",
+        "why": "Isso é SOAP, a aula 5."
+      }
+    ]
+  },
+  "ex-zrdr7y3e": {
+    "prompt": "Sistemas de RPC mais antigos tentaram fazer uma chamada remota parecer exatamente uma local. O que deu errado nisso?",
+    "hint": "Pergunte o que uma chamada local não consegue fazer.",
+    "choices": [
+      {
+        "text": "Os formatos binários deles não podiam ser lidos por quem depurava",
+        "why": "O gRPC também é binário, e isso é um custo, não a falha que a seção aponta."
+      },
+      {
+        "text": "Uma chamada de função não consegue levar mais de um argumento pela rede",
+        "why": "Uma mensagem leva quantos campos precisar."
+      },
+      {
+        "text": "As chamadas locais eram lentas demais para imitar",
+        "why": "É o contrário: a chamada local é rápida e confiável, e fingir que a remota é igual é o problema."
+      },
+      {
+        "text": "A rede falhava de jeitos para os quais o código não tinha plano",
+        "why": "Certo. Uma chamada remota falha no meio, demora ou perde a resposta; o gRPC põe prazo e código de status em toda chamada por isso."
+      }
+    ]
+  },
+  "ex-65s2h1rv": {
+    "prompt": "Quais destas valem para o gRPC e não para a API REST da aula 1? Marque todas as que se aplicam.",
+    "hint": "Olhe as duas últimas linhas da tabela de comparação.",
+    "choices": [
+      {
+        "text": "Roda sobre HTTP/2 e nada mais",
+        "why": "Certo. O `curl` em HTTP/1.1 nem conseguiu ler a resposta."
+      },
+      {
+        "text": "O cliente escolhe um caminho e um método para cada requisição",
+        "why": "Isso é REST. Um cliente gRPC chama uma função gerada, e o caminho é assunto da biblioteca."
+      },
+      {
+        "text": "O arquivo de contrato é obrigatório, e os dois lados são gerados a partir dele",
+        "why": "Certo. Na aula 1 o contrato é opcional, e a aula 6 escreve um."
+      },
+      {
+        "text": "Os erros dela trazem códigos de status HTTP como 404",
+        "why": "Uma chamada gRPC que falhou ainda responde HTTP 200; o código dela vem nos trailers."
+      },
+      {
+        "text": "O que trafega não pode ser lido sem o schema",
+        "why": "Certo. O `--decode_raw` mostrou números onde deviam estar os nomes."
+      }
+    ]
+  },
+  "ex-m1dz991x": {
+    "prompt": "Em `int32 copies = 3;`, o que identifica o campo nos bytes enviados?",
+    "hint": "Só uma das partes sai do programa.",
+    "choices": [
+      {
+        "text": "O nome `copies`",
+        "why": "Os nomes ficam no `.proto` e no código gerado; esse é o costume do JSON."
+      },
+      {
+        "text": "A posição na mensagem, contando do alto do bloco",
+        "why": "Os campos podem ser escritos em qualquer ordem; a posição não significa nada no fio."
+      },
+      {
+        "text": "O tipo e o nome juntos",
+        "why": "A tag leva um tipo de fio, não `int32`, e nunca o nome."
+      },
+      {
+        "text": "O número 3, dentro da tag",
+        "why": "Certo. A tag junta o número 3 com o tipo de fio."
+      }
+    ]
+  },
+  "ex-7ch43y8h": {
+    "prompt": "Por que o valor zero de `Availability` se chama `AVAILABILITY_UNSPECIFIED` e não `IN_STOCK`?",
+    "hint": "O que um leitor vê quando o campo nunca foi preenchido?",
+    "choices": [
+      {
+        "text": "Um campo nunca preenchido é lido como zero, e isso não deve parecer boa notícia",
+        "why": "Certo. Senão, um valor ausente seria lido como `IN_STOCK`."
+      },
+      {
+        "text": "O proto3 proíbe que um estado de verdade use o número zero",
+        "why": "Ele só exige que o primeiro valor seja zero; o nome que você dá é a escolha de projeto."
+      },
+      {
+        "text": "O compilador ordena os valores pelo nome, então o zero tem de começar com A",
+        "why": "Os valores mantêm os números que você dá; nada é ordenado."
+      },
+      {
+        "text": "O zero fica reservado para erros em todo enum, então um estado de verdade precisa de outro número",
+        "why": "Zero é o padrão, não um erro; erros são códigos de status."
+      }
+    ]
+  },
+  "ex-f2xdtp9n": {
+    "prompt": "Num arquivo `.proto`, a palavra posta antes do tipo de um campo para torná-lo uma lista é ___.",
+    "hint": "O `RestockSummary` tem um.",
+    "blanks": [
+      {
+        "accept": [
+          "repeated"
+        ]
+      }
+    ]
+  },
+  "ex-6kgwfhk6": {
+    "prompt": "Números de campo de 1 até qual número cabem numa tag de um byte?",
+    "hint": "O seguinte precisa de dois bytes.",
+    "unit": ""
+  },
+  "ex-pys1zbn0": {
+    "prompt": "Um byte de tag é `1a`, que é `00011010` em binário. Que número de campo ele traz?",
+    "hint": "Descarte os três últimos bits.",
+    "unit": ""
+  },
+  "ex-cdxypa1h": {
+    "prompt": "O `od` mostra um campo de texto como `12 0c 44 6f 6d …`. O que o `0c` diz a quem lê?",
+    "hint": "`12` é a tag, e o tipo de fio dela é 2.",
+    "choices": [
+      {
+        "text": "Que este é o campo número 12",
+        "why": "O número do campo está na tag, `12`, que é o campo 2."
+      },
+      {
+        "text": "Quantos bytes do valor vêm em seguida: doze",
+        "why": "Certo. O tipo 2 é um comprimento e depois essa quantidade de bytes, aqui `Dom Casmurro`."
+      },
+      {
+        "text": "O próprio valor, o varint 12",
+        "why": "Essa leitura é do tipo 0, como em `18 0c` para os exemplares."
+      },
+      {
+        "text": "Em qual codificação de texto estão os bytes da string",
+        "why": "Uma `string` é sempre UTF-8, então nada no fio precisa dizer."
+      }
+    ]
+  },
+  "ex-v06w21nd": {
+    "prompt": "`copies: 300` foi codificado como `18 ac 02`. Que número os bytes de varint `96 01` codificam?",
+    "hint": "`96` é `10010110`. O segundo byte vale 128 vezes o seu valor.",
+    "unit": ""
+  },
+  "ex-qjq388sx": {
+    "prompt": "O que o `protoc --decode_raw` imprime para o `availability` de Dom Casmurro?",
+    "hint": "Cru quer dizer sem o `.proto`.",
+    "choices": [
+      {
+        "text": "`availability: IN_STOCK`",
+        "why": "Isso é o `--decode`, que tem o schema para dar os dois nomes."
+      },
+      {
+        "text": "`4: IN_STOCK`",
+        "why": "O nome do valor vem do schema tanto quanto o do campo."
+      },
+      {
+        "text": "Nada, porque enums são descartados quando falta o schema",
+        "why": "Nada é descartado; o número é tudo o que os bytes tinham."
+      },
+      {
+        "text": "`4: 1`",
+        "why": "Certo. Campo 4, valor 1: os bytes guardam números e nada mais."
+      }
+    ]
+  },
+  "ex-v24ab15q": {
+    "prompt": "Qual nome gerado o `stock_client.py` usa para fazer as chamadas?",
+    "hint": "O lado cliente do serviço.",
+    "choices": [
+      {
+        "text": "`StockServicer`",
+        "why": "Essa é a classe que o servidor herda e preenche."
+      },
+      {
+        "text": "`StockStub`",
+        "why": "Certo. Um método por `rpc`, e chamar um envia a chamada."
+      },
+      {
+        "text": "`add_StockServicer_to_server`",
+        "why": "Isso liga a classe do servidor a um servidor rodando."
+      },
+      {
+        "text": "`StockLevel`",
+        "why": "Uma mensagem, que o stub devolve; ela não faz chamadas."
+      }
+    ]
+  },
+  "ex-jst18tm5": {
+    "prompt": "Alguém corrige um bug editando o `stock_pb2_grpc.py` à mão. Na semana seguinte o `stock.proto` muda. O que acontece com a correção?",
+    "hint": "Como os arquivos gerados são feitos de novo?",
+    "choices": [
+      {
+        "text": "O `protoc` se recusa a rodar até a edição ser desfeita",
+        "why": "Ele nunca olha o arquivo antigo."
+      },
+      {
+        "text": "Ela é mantida, já que o `protoc` só acrescenta o que é novo",
+        "why": "O arquivo é escrito inteiro toda vez."
+      },
+      {
+        "text": "Some, sobrescrita pela geração seguinte sem aviso",
+        "why": "Certo. Arquivo gerado não se edita; a correção vai no `.proto` ou no seu próprio código."
+      },
+      {
+        "text": "O Python se recusa a importar um arquivo gerado que foi editado",
+        "why": "O Python não tem como saber; importa o que estiver lá."
+      }
+    ]
+  },
+  "ex-9gxpznzg": {
+    "prompt": "Como o `Reserve` do servidor impede que duas reservas chegando juntas levem as duas o último exemplar?",
+    "hint": "Olhe o `WHERE` do `UPDATE` dele.",
+    "choices": [
+      {
+        "text": "A verificação e a subtração são um único `UPDATE` com `stock >= ?`",
+        "why": "Certo. O banco altera a linha para uma delas, e a outra vê que nenhuma linha mudou."
+      },
+      {
+        "text": "O gRPC roda uma chamada de cada método por vez",
+        "why": "São oito threads de trabalho, e duas chamadas do mesmo método podem rodar juntas."
+      },
+      {
+        "text": "O interceptor enfileira as chamadas que vêm do mesmo caixa",
+        "why": "Ele só imprime o método e os metadados."
+      },
+      {
+        "text": "O `context.abort` trava a linha até a chamada acabar",
+        "why": "O `abort` encerra uma chamada com um status; não trava nada."
+      }
+    ]
+  },
+  "ex-thaw0x0z": {
+    "prompt": "Ponha uma chamada `GetStock` em ordem, do comando do cliente até a saída.",
+    "hint": "O interceptor vê a chamada antes do método dela.",
+    "items": [
+      "O cliente chama `stock.GetStock` com um `BookRef`",
+      "O stub codifica a mensagem e a envia para `/shelf.stock.v1.Stock/GetStock`",
+      "O interceptor imprime o método e a entrada `x-till`",
+      "O `GetStock` lê a linha e devolve um `StockLevel`",
+      "O cliente imprime o `StockLevel` decodificado"
+    ],
+    "trap": "A linha de log do servidor aparece antes de o método rodar, não depois."
+  },
+  "ex-h5320hkh": {
+    "prompt": "Ligue cada linha `rpc` ao seu tipo de chamada.",
+    "hint": "Procure a palavra `stream` e de que lado ela está.",
+    "pairs": [
+      {
+        "left": "`rpc GetStock(BookRef) returns (StockLevel)`",
+        "right": "unária"
+      },
+      {
+        "left": "`rpc WatchStock(BookRef) returns (stream StockLevel)`",
+        "right": "streaming do servidor"
+      },
+      {
+        "left": "`rpc Restock(stream Delivery) returns (RestockSummary)`",
+        "right": "streaming do cliente"
+      },
+      {
+        "left": "`rpc Talk(stream Line) returns (stream Line)`",
+        "right": "bidirecional"
+      }
+    ],
+    "right_distractors": [
+      "duas chamadas, uma em cada sentido"
+    ]
+  },
+  "ex-6fgb206z": {
+    "prompt": "O watch imprimiu três níveis e depois `DEADLINE_EXCEEDED`. Quantas chamadas o cliente fez a `WatchStock`?",
+    "hint": "Um stream não é uma série de requisições.",
+    "choices": [
+      {
+        "text": "Três, uma para cada nível",
+        "why": "Isso é polling. O servidor enviou cada nível na chamada que já estava aberta."
+      },
+      {
+        "text": "Duas: uma para abrir o stream e outra para fechá-lo",
+        "why": "O prazo o fechou; nada foi enviado para fechá-lo."
+      },
+      {
+        "text": "Uma",
+        "why": "Certo. Uma chamada, três mensagens, um status."
+      },
+      {
+        "text": "Quatro: três níveis e uma quarta para o status",
+        "why": "O status encerra a mesma chamada que levou os níveis."
+      }
+    ]
+  },
+  "ex-s021x5h8": {
+    "prompt": "Um caixa precisa enviar 2.000 códigos de barras lidos e receber um total só, quando todos tiverem chegado. Que tipo de chamada serve?",
+    "hint": "Quem envia muitas mensagens, e quem envia uma?",
+    "choices": [
+      {
+        "text": "Streaming do servidor",
+        "why": "Esse tem uma requisição e muitas respostas, o contrário."
+      },
+      {
+        "text": "Bidirecional, porque os dois lados enviam algo",
+        "why": "Os dois enviam, mas o servidor envia uma vez, no fim; nada precisa correr nos dois sentidos."
+      },
+      {
+        "text": "Uma chamada unária por código",
+        "why": "Duas mil chamadas, e nenhuma resposta única que dependa de todas."
+      },
+      {
+        "text": "Streaming do cliente, o formato do `Restock`",
+        "why": "Certo. Muitas mensagens entram, uma sai, depois que o cliente enviou a última."
+      }
+    ]
+  },
+  "ex-67zb9313": {
+    "prompt": "Um caixa pede para reservar 5 exemplares de um livro que tem 2. Que status serve?",
+    "hint": "A mesma requisição estaria certa num outro dia?",
+    "choices": [
+      {
+        "text": "`INVALID_ARGUMENT`, porque cinco é demais",
+        "why": "Cinco é uma requisição válida; ela falha só pelo que há na estante agora."
+      },
+      {
+        "text": "`FAILED_PRECONDITION`",
+        "why": "Certo. A requisição está certa e o sistema não está num estado de aceitá-la."
+      },
+      {
+        "text": "`NOT_FOUND`, já que não se encontram cinco exemplares",
+        "why": "O livro existe; `NOT_FOUND` é para um ISBN que não nomeia nada."
+      },
+      {
+        "text": "`UNAVAILABLE`",
+        "why": "O servidor respondeu; `UNAVAILABLE` é para um serviço que não pôde ser alcançado."
+      }
+    ]
+  },
+  "ex-0wwm9c58": {
+    "prompt": "Qual destas falhas vale a pena enviar de novo, sem mudar nada, depois de uma pausa?",
+    "hint": "Qual delas não diz nada sobre a própria requisição?",
+    "choices": [
+      {
+        "text": "`NOT_FOUND` para um ISBN",
+        "why": "A mesma pergunta sobre os mesmos dados recebe a mesma resposta."
+      },
+      {
+        "text": "`INVALID_ARGUMENT` para zero exemplares",
+        "why": "O mesmo erro enviado de novo falha de novo."
+      },
+      {
+        "text": "`UNAVAILABLE` depois de a conexão ser recusada",
+        "why": "Certo. A requisição nunca chegou a um servidor, então tentar depois pode dar certo."
+      },
+      {
+        "text": "`UNIMPLEMENTED` para um método desconhecido",
+        "why": "O método não vai aparecer porque você esperou."
+      }
+    ]
+  },
+  "ex-0t3yv699": {
+    "prompt": "Uma chamada `Reserve` termina com `DEADLINE_EXCEEDED`. O que o caixa sabe sobre os exemplares?",
+    "hint": "O prazo é quando o cliente parou de esperar.",
+    "choices": [
+      {
+        "text": "Nada com certeza: talvez os exemplares já tenham saído",
+        "why": "Certo. O servidor talvez os tenha tirado logo antes do prazo, e só perguntando de novo, com o `GetStock`, se descobre."
+      },
+      {
+        "text": "Não foram tirados, porque a chamada falhou",
+        "why": "A chamada falhou para o cliente; o trabalho pode já ter sido feito."
+      },
+      {
+        "text": "Foram tirados, porque um servidor sempre termina o que começa",
+        "why": "O servidor vê a chamada cancelada e pode parar antes do `UPDATE`."
+      },
+      {
+        "text": "Foram tirados e depois devolvidos pelo gRPC",
+        "why": "O gRPC não sabe nada do banco; nada é desfeito por você."
+      }
+    ]
+  },
+  "ex-4jgcjbyk": {
+    "prompt": "Informações sobre a chamada e não sobre a mensagem, como `x-till: till-1` ou uma credencial, viajam nos ___ da chamada.",
+    "hint": "O interceptor os leu de `invocation_metadata`.",
+    "blanks": [
+      {
+        "accept": [
+          "metadados",
+          "metadata"
+        ]
+      }
+    ]
+  },
+  "ex-f8wkm19h": {
+    "prompt": "Qual mudança no `StockLevel` deixa os bytes que um cliente antigo recebe exatamente como eram?",
+    "hint": "Qual metade de um campo chega ao fio?",
+    "choices": [
+      {
+        "text": "Manter o nome `copies` e passá-lo para o número 6",
+        "why": "No fio, isso é o campo 3 removido e um campo 6 novo."
+      },
+      {
+        "text": "Trocar `copies` de `int32` para `string`",
+        "why": "O tipo de fio muda, e um leitor antigo lê errado."
+      },
+      {
+        "text": "Renomear `copies` para `count` mantendo o número 3",
+        "why": "Certo. O nome nunca trafega; só o código e o JSON que o usavam percebem."
+      },
+      {
+        "text": "Remover `copies` e reservar o número dele",
+        "why": "Compatível, mas um cliente antigo passa a ler zero exemplares para todo livro."
+      }
+    ]
+  },
+  "ex-0se891sh": {
+    "prompt": "Um caixa antigo, feito com o primeiro `stock.proto`, lê um nível da versão seguinte, que tirou `title` e acrescentou `location = 5`. O que ele vê?",
+    "hint": "A captura decodificou exatamente isso.",
+    "choices": [
+      {
+        "text": "Um erro, porque a mensagem tem um campo que ele não conhece",
+        "why": "Campos desconhecidos são pulados ou mantidos, nunca um erro."
+      },
+      {
+        "text": "A localização impressa onde deveria estar o título",
+        "why": "Isso só acontece se `location` reaproveitar o número 2, o que o `reserved` impede."
+      },
+      {
+        "text": "O último título que viu, guardado da resposta anterior",
+        "why": "Cada mensagem é lida sozinha; nada passa de uma para outra."
+      },
+      {
+        "text": "Um título vazio, e o campo 5 guardado como campo desconhecido",
+        "why": "Certo. Remover um campo é compatível no fio e ainda assim uma mudança que uma tela pode mostrar."
+      }
+    ]
+  },
+  "ex-a27rn2dp": {
+    "prompt": "Para impedir que o campo número 2 volte a ser usado numa mensagem, você escreve `___ 2;` dentro dela.",
+    "hint": "Aí o `protoc` recusa um arquivo que o use.",
+    "blanks": [
+      {
+        "accept": [
+          "reserved"
+        ]
+      }
+    ]
+  },
+  "ex-tct85ae1": {
+    "prompt": "Ponha as partes de uma chamada gRPC unária na ordem em que passam pela conexão.",
+    "hint": "O resultado vem por último.",
+    "items": [
+      "Cabeçalhos da requisição com `:path: /shelf.stock.v1.Stock/GetStock`",
+      "Dados da requisição: `00`, um comprimento de quatro bytes, o `BookRef`",
+      "Cabeçalhos da resposta com `:status: 200`",
+      "Dados da resposta com o `StockLevel`",
+      "Trailers com `grpc-status: 0`"
+    ],
+    "trap": "O `:status: 200` não é o resultado da chamada; o `grpc-status` é, e vem depois do corpo."
+  },
+  "ex-3yvqkfg6": {
+    "prompt": "Uma chamada a um método que o depósito não tem voltou como `HTTP/2 200`. Onde está a falha?",
+    "hint": "Olhe depois da linha vazia.",
+    "choices": [
+      {
+        "text": "Em lugar nenhum: 200 quer dizer que deu certo",
+        "why": "O 200 diz que a troca HTTP deu certo, nada sobre a chamada."
+      },
+      {
+        "text": "No corpo, como um objeto JSON com um campo `error`",
+        "why": "Essa era a API da aula 1; o gRPC não envia JSON."
+      },
+      {
+        "text": "Nos trailers: `grpc-status: 12`",
+        "why": "Certo. 12 é `UNIMPLEMENTED`, com `Method not found!` ao lado."
+      },
+      {
+        "text": "Na linha de status, que um cliente gRPC lê como 501",
+        "why": "A linha de status disse 200, e o cliente lê os trailers."
+      }
+    ]
+  },
+  "ex-f4n3b8bb": {
+    "prompt": "Por que o JavaScript de uma página não consegue chamar o depósito diretamente?",
+    "hint": "Onde uma chamada gRPC põe o resultado?",
+    "choices": [
+      {
+        "text": "O `fetch()` não lê os trailers",
+        "why": "Certo. O status de cada chamada chega ali, e o gRPC-Web o move para o corpo por esse motivo."
+      },
+      {
+        "text": "Navegadores não falam HTTP/2",
+        "why": "Falam; o que uma página não consegue é controlar o enquadramento ou ler trailers."
+      },
+      {
+        "text": "Navegadores recusam um corpo binário num `POST`",
+        "why": "Uma página pode enviar bytes; uploads fazem isso o tempo todo."
+      },
+      {
+        "text": "A porta 50051 é bloqueada pelos navegadores",
+        "why": "Nada da porta importa aqui."
+      }
+    ]
+  },
+  "ex-60q7mykb": {
+    "prompt": "O corpo de uma requisição gRPC começa com `00 00 00 01 2c`. Qual o tamanho da mensagem que vem depois?",
+    "hint": "O primeiro byte é a flag; os quatro seguintes são um número, em hexadecimal.",
+    "unit": "bytes"
+  },
+  "ex-3e0ys1s8": {
+    "prompt": "A livraria quer que parceiros leiam o catálogo, quase sempre de scripts e navegadores, e quer que caches HTTP aguentem a carga. O que serve?",
+    "hint": "Quem está do outro lado, e o que um cache consegue guardar?",
+    "choices": [
+      {
+        "text": "gRPC, porque as mensagens são menores",
+        "why": "Menor não ajuda um navegador que não consegue chamá-lo, nem um cache que não guarda `POST`."
+      },
+      {
+        "text": "REST com JSON, como a aula 1 fez, e `GET` para toda leitura",
+        "why": "Certo. Desconhecidos, `curl`, navegadores e cache de `GET` são o terreno dele."
+      },
+      {
+        "text": "gRPC com um stream do servidor para cada leitura",
+        "why": "Streams resolvem dados que mudam, não desconhecidos com navegadores."
+      },
+      {
+        "text": "gRPC atrás de um cache que guarda respostas de `POST`",
+        "why": "Caches HTTP não guardam respostas de `POST`, e toda chamada gRPC é uma."
+      }
+    ]
+  },
+  "ex-tk6sj3hk": {
+    "prompt": "Ligue cada situação ao que serve para ela.",
+    "hint": "Duas delas põem algo na frente de um serviço gRPC.",
+    "pairs": [
+      {
+        "left": "Dez serviços seus, em quatro linguagens",
+        "right": "gRPC, um `.proto` para todos"
+      },
+      {
+        "left": "Um catálogo público que caches devem servir",
+        "right": "REST, com `GET`"
+      },
+      {
+        "left": "Uma página web que precisa chamar um serviço gRPC",
+        "right": "gRPC-Web através de um proxy"
+      },
+      {
+        "left": "Parceiros que querem JSON simples de um serviço gRPC",
+        "right": "um gateway de transcodificação JSON"
+      }
+    ],
+    "right_distractors": [
+      "um segundo `.proto` para cada parceiro"
+    ]
+  },
+  "ex-wmxme8kd": {
+    "prompt": "Um colega quer passar o depósito para REST com JSON, dizendo que dá no mesmo. O que os caixas perderiam? Marque todas as que se aplicam.",
+    "hint": "Pense no watch, no `.proto` e no timeout.",
+    "choices": [
+      {
+        "text": "Códigos de status de qualquer tipo",
+        "why": "O REST tem os seus, os códigos HTTP da aula 1."
+      },
+      {
+        "text": "Uma chamada aberta que empurra cada mudança quando ela acontece",
+        "why": "Certo. O REST faria polling, ou precisaria de outra tecnologia ao lado."
+      },
+      {
+        "text": "Um contrato ao qual o compilador prende os dois lados",
+        "why": "Certo. No REST o contrato é opcional e só é conferido se alguém o escrever, como na aula 6."
+      },
+      {
+        "text": "A capacidade de rodar sobre HTTP",
+        "why": "Os dois rodam sobre HTTP; o gRPC precisa de HTTP/2 em particular."
+      },
+      {
+        "text": "Um prazo que viaja com cada chamada até o servidor",
+        "why": "Certo. No REST o servidor não fica sabendo quanto tempo o cliente vai esperar."
+      }
+    ]
+  },
+  "ex-kqevbdg8": {
+    "prompt": "O `curl` mostra `HTTP/2 200` para uma chamada `GetStock` e depois o trailer `grpc-status: 5`. O que um caixa deve fazer?",
+    "hint": "Procure o código 5 na tabela de códigos.",
+    "choices": [
+      {
+        "text": "Tratar como sucesso, já que o HTTP disse 200",
+        "why": "O 200 só diz que a troca funcionou; o resultado da chamada é o trailer."
+      },
+      {
+        "text": "Tentar de novo após uma pausa, já que 5 é uma falha passageira",
+        "why": "A passageira é a 14, `UNAVAILABLE`."
+      },
+      {
+        "text": "Avisar no caixa que o ISBN não existe, sem tentar de novo",
+        "why": "Certo. 5 é `NOT_FOUND`, e perguntar de novo dá a mesma resposta."
+      },
+      {
+        "text": "Gerar o stub de novo, já que 5 quer dizer que o método não existe",
+        "why": "Método inexistente é 12, `UNIMPLEMENTED`."
+      }
+    ]
+  },
+  "ex-j0a4xkgm": {
+    "prompt": "A versão seguinte tirou `title` SEM uma linha `reserved`, e um ano depois alguém dá o número livre 2 a um novo `string location`. Caixas antigos ainda rodam. O que acontece?",
+    "hint": "Nada aqui impede o arquivo de compilar.",
+    "choices": [
+      {
+        "text": "O `protoc` recusa o arquivo",
+        "why": "Recusaria, com `reserved 2;`, que é justamente o que falta."
+      },
+      {
+        "text": "Os caixas antigos falham com um campo desconhecido",
+        "why": "O campo 2 não é desconhecido para eles; eles o conhecem como `title`."
+      },
+      {
+        "text": "Os caixas antigos pulam o campo 2, já que o nome dele mudou no arquivo novo",
+        "why": "Nomes não trafegam, então nada lhes diz que mudou."
+      },
+      {
+        "text": "Os caixas antigos mostram a localização como título, sem erro",
+        "why": "Certo. Uma string no campo 2 é exatamente o que eles esperam, então a leem como título."
+      }
+    ]
+  }
+}

@@ -1,0 +1,1215 @@
+[
+  {
+    "id": "ex-3fgq26zs",
+    "version": 1,
+    "section": "why-more-than-one",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Roda Livre’s database is slow at six in the evening, and Davi moves it to one machine with twice the cores and memory. What has he done?",
+    "hint": "One machine before, one machine after.",
+    "choices": [
+      {
+        "text": "Scaled out, because the capacity went up without the software changing",
+        "correct": false,
+        "why": "Out means more machines, and then the software has to know there are several."
+      },
+      {
+        "text": "Scaled up, keeping the software exactly as it was, on a larger computer",
+        "correct": true,
+        "why": "Right: a bigger machine, and nothing in the software had to change."
+      },
+      {
+        "text": "Partitioned the database, since the data now has more room",
+        "correct": false,
+        "why": "Partitioning splits data over several machines; there is still one."
+      },
+      {
+        "text": "Replicated it, because the old machine still holds a copy",
+        "correct": false,
+        "why": "Nothing keeps the old machine in step; a replica receives every change."
+      }
+    ]
+  },
+  {
+    "id": "ex-30c8j54y",
+    "version": 1,
+    "section": "why-more-than-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these problems arrives with a second machine, and did not exist with one?",
+    "hint": "Think about what travels between them.",
+    "choices": [
+      {
+        "text": "A disk that fills up with data",
+        "correct": false,
+        "why": "One machine’s disk fills up just as well."
+      },
+      {
+        "text": "A slow query over a large table",
+        "correct": false,
+        "why": "A single machine has slow queries of its own."
+      },
+      {
+        "text": "A request whose reply never comes, leaving the sender unsure whether it was done",
+        "correct": true,
+        "why": "Right: a function call returns or raises; a message over a network just goes quiet."
+      },
+      {
+        "text": "A program with a bug in it",
+        "correct": false,
+        "why": "Bugs need no network."
+      }
+    ]
+  },
+  {
+    "id": "ex-pk7kkcdn",
+    "version": 1,
+    "section": "why-more-than-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The dock sensor stamps a docking at 08:00:00.400, and the app’s server stamps the next unlock of the same bicycle at 08:00:00.100. What explains it?",
+    "hint": "Two stamps, two machines.",
+    "choices": [
+      {
+        "text": "The bicycle was unlocked before it was docked, and the data is right",
+        "correct": false,
+        "why": "A bicycle has to arrive at a dock before it leaves it."
+      },
+      {
+        "text": "The sensor’s clock and the server’s clock disagree",
+        "correct": true,
+        "why": "Right: the sensor runs ahead of the server, and the order in the data is wrong."
+      },
+      {
+        "text": "The network lost the docking message, and the sensor sent it again later",
+        "correct": false,
+        "why": "A resent message keeps the time the sensor stamped on it."
+      },
+      {
+        "text": "The sensor rounds its times to the nearest second",
+        "correct": false,
+        "why": "Both stamps carry milliseconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-y334n0cv",
+    "version": 1,
+    "section": "why-more-than-one",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Roda Livre’s data fits on a laptop. Why does its data team still need to understand distributed systems?",
+    "hint": "Think about what the team rents.",
+    "choices": [
+      {
+        "text": "Because it will need a cluster within a year, as the number of bicycles grows",
+        "correct": false,
+        "why": "Davi’s rule is one machine until it hurts, and nothing says it will hurt."
+      },
+      {
+        "text": "Because a laptop is not allowed to hold customer data",
+        "correct": false,
+        "why": "Where the data is kept is a question of security, not of distribution."
+      },
+      {
+        "text": "The services it rents, like the warehouse, are distributed underneath",
+        "correct": true,
+        "why": "Right: the warehouse, object storage and a message log all are."
+      },
+      {
+        "text": "Because every data engineering job involves running a cluster by hand",
+        "correct": false,
+        "why": "Most teams rent the cluster and never touch a machine of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-a8302zzp",
+    "version": 1,
+    "section": "partitioning",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What decides which partition a row goes to?",
+    "hint": "It is a column.",
+    "choices": [
+      {
+        "text": "The order in which rows arrived, so that each partition fills in turn",
+        "correct": false,
+        "why": "That is the cake picture: every question would then ask every partition."
+      },
+      {
+        "text": "The size of the row in bytes, so that partitions stay the same size",
+        "correct": false,
+        "why": "Size says nothing about which questions the row answers."
+      },
+      {
+        "text": "The machine with the most free disk at the moment of the write",
+        "correct": false,
+        "why": "Then nobody could find the row again without asking every machine."
+      },
+      {
+        "text": "The value of its partition key",
+        "correct": true,
+        "why": "Right: by its range, or by its hash."
+      }
+    ]
+  },
+  {
+    "id": "ex-t1v3mbxk",
+    "version": 1,
+    "section": "partitioning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Rides are partitioned by date, one partition per day. At six on a busy Friday evening, which partition receives the writes?",
+    "hint": "Every new ride has today’s date.",
+    "choices": [
+      {
+        "text": "All of them evenly, because a partition key spreads the writes",
+        "correct": false,
+        "why": "A range key keeps neighbours together, and today’s rides are neighbours."
+      },
+      {
+        "text": "Today’s alone, since every ride starting now carries today’s date",
+        "correct": true,
+        "why": "Right: that is the weakness of range partitioning on a date."
+      },
+      {
+        "text": "The one with the fewest rows, since the database balances new writes",
+        "correct": false,
+        "why": "The key decides, not the current size."
+      },
+      {
+        "text": "Yesterday’s, until midnight creates today’s",
+        "correct": false,
+        "why": "A ride on Friday has Friday’s date."
+      }
+    ]
+  },
+  {
+    "id": "ex-dgx6js0w",
+    "version": 1,
+    "section": "partitioning",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Rides are hash-partitioned by ride id over four machines. Marta asks for every ride of the second week of September. How many partitions are read?",
+    "hint": "Where did the hash put that week’s rides?",
+    "choices": [
+      {
+        "text": "One, the partition that holds that week",
+        "correct": false,
+        "why": "That is range partitioning by date; a hash scatters the week."
+      },
+      {
+        "text": "Two, because a week spans two hash values",
+        "correct": false,
+        "why": "Each ride id gets its own hash; the week is all over the place."
+      },
+      {
+        "text": "All four: a hash scatters that week’s rides everywhere",
+        "correct": true,
+        "why": "Right: neighbouring keys are scattered, so a range question asks everybody."
+      },
+      {
+        "text": "None, because an index on one machine answers it",
+        "correct": false,
+        "why": "The rides themselves are on four machines."
+      }
+    ]
+  },
+  {
+    "id": "ex-p9tj590x",
+    "version": 1,
+    "section": "partitioning",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each term to what it means.",
+    "hint": "Two are about how; two are about what.",
+    "pairs": [
+      {
+        "left": "partition key",
+        "right": "the column whose value picks the partition"
+      },
+      {
+        "left": "shard",
+        "right": "a database’s word for a partition"
+      },
+      {
+        "left": "range partitioning",
+        "right": "consecutive keys kept together"
+      },
+      {
+        "left": "hash partitioning",
+        "right": "neighbouring keys scattered evenly"
+      }
+    ]
+  },
+  {
+    "id": "ex-2xv6748n",
+    "version": 1,
+    "section": "skew",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the capture of `skew.py`, how many rides did ST02 have?",
+    "hint": "The last line of the output.",
+    "value": 3553,
+    "tolerance": 0,
+    "unit": "rides"
+  },
+  {
+    "id": "ex-rda3r1fz",
+    "version": 1,
+    "section": "skew",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Partitioned by hash of the station, partition 3 held 4730 rides. Why did hashing not even it out?",
+    "hint": "Look at what is being hashed.",
+    "choices": [
+      {
+        "text": "MD5 is a weak hash function and sends too many keys to partition 3",
+        "correct": false,
+        "why": "Partition 3 got three stations; the trouble is that one of them is ST02."
+      },
+      {
+        "text": "Every ST02 ride carries the same key, so all of them share one partition",
+        "correct": true,
+        "why": "Right: the same key goes to the same partition, every time."
+      },
+      {
+        "text": "Four partitions are too few; with eight, ST02’s rides would have been split",
+        "correct": false,
+        "why": "With eight, ST02 would still go to exactly one of them."
+      },
+      {
+        "text": "That line of the program used range partitioning by mistake",
+        "correct": false,
+        "why": "It calls `by_hash`; the range row is the one above it."
+      }
+    ]
+  },
+  {
+    "id": "ex-z4fe96g1",
+    "version": 1,
+    "section": "skew",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Switching the partition key to the ride id evened the partitions out. What did it cost?",
+    "hint": "Ask a question about one station.",
+    "choices": [
+      {
+        "text": "Nothing, since ride ids are unique and every question got cheaper",
+        "correct": false,
+        "why": "A question per station got dearer: it now reads four partitions."
+      },
+      {
+        "text": "A question about one station now asks all four partitions",
+        "correct": true,
+        "why": "Right: the even load moved the cost to the station question."
+      },
+      {
+        "text": "The rides of a station are lost when one partition fails",
+        "correct": false,
+        "why": "Losing a partition is replication’s subject, and loses data whatever the key."
+      },
+      {
+        "text": "Ride ids take longer to hash than station ids",
+        "correct": false,
+        "why": "Both are short strings; the difference is not where the cost went."
+      }
+    ]
+  },
+  {
+    "id": "ex-ppqwmdkh",
+    "version": 1,
+    "section": "skew",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Twelve stations hashed into four partitions left partition 0 with a single station. What does that show?",
+    "hint": "Count the keys.",
+    "choices": [
+      {
+        "text": "ST10 is a hot station",
+        "correct": false,
+        "why": "Partition 0 held 544 rides, the fewest of the four."
+      },
+      {
+        "text": "The hash function misbehaves on keys that start with the same letters",
+        "correct": false,
+        "why": "MD5 scatters similar keys well; ride ids start alike too and came out even."
+      },
+      {
+        "text": "Hash partitioning needs a number as its key, not text",
+        "correct": false,
+        "why": "The program hashes text, and it works for ride ids."
+      },
+      {
+        "text": "Twelve keys are too few to share out evenly",
+        "correct": true,
+        "why": "Right: a hash is even over thousands of keys, not over twelve."
+      }
+    ]
+  },
+  {
+    "id": "ex-mdtn5at3",
+    "version": 1,
+    "section": "skew",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Splitting a hot key into `ST02#0` to `ST02#3`, so that its rows land on several partitions, is called ___.",
+    "hint": "A word from cooking.",
+    "blanks": [
+      {
+        "accept": [
+          "salting"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3ma1gydv",
+    "version": 1,
+    "section": "rebalancing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By modulo, how many of the 10,000 rides changed node when the fifth node joined?",
+    "hint": "The `modulo` line of the capture.",
+    "value": 7966,
+    "tolerance": 0,
+    "unit": "rides"
+  },
+  {
+    "id": "ex-a1m53306",
+    "version": 1,
+    "section": "rebalancing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `hash % N`, why do about four keys in five move when N goes from 4 to 5?",
+    "hint": "Compare two remainders.",
+    "choices": [
+      {
+        "text": "The new node copies four fifths of the data so that it starts balanced",
+        "correct": false,
+        "why": "It ends up with a fifth; the rest moved between old nodes."
+      },
+      {
+        "text": "It stays only where the remainder after dividing by 4 equals the one after dividing by 5",
+        "correct": true,
+        "why": "Right: that happens for four numbers in twenty."
+      },
+      {
+        "text": "The hash of every key changes when the number of nodes changes",
+        "correct": false,
+        "why": "The hash depends on the key alone; the remainder is what changes."
+      },
+      {
+        "text": "The old nodes delete their data and load it again from the start",
+        "correct": false,
+        "why": "Keys whose remainder agrees stay put."
+      }
+    ]
+  },
+  {
+    "id": "ex-n79w1ner",
+    "version": 1,
+    "section": "rebalancing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the ring, a new node lands between two others. Which node do the keys it takes come from?",
+    "hint": "Before it joined, where did those keys walk to?",
+    "choices": [
+      {
+        "text": "A fifth from each of the old nodes, so that all stay equal",
+        "correct": false,
+        "why": "Only the arc in front of the new node changes hands."
+      },
+      {
+        "text": "The node before it on the ring",
+        "correct": false,
+        "why": "Keys belong to the first node clockwise after them, and that was never the one before."
+      },
+      {
+        "text": "The next node clockwise",
+        "correct": true,
+        "why": "Right: those keys used to walk on to it, and now meet the new node first."
+      },
+      {
+        "text": "Whichever node holds the most keys at the moment it joins",
+        "correct": false,
+        "why": "Placement follows the hash of the node’s name, not the loads."
+      }
+    ]
+  },
+  {
+    "id": "ex-nehcjqjs",
+    "version": 1,
+    "section": "rebalancing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With one point per node, the arcs of a ring come out uneven. What is done about it?",
+    "hint": "`ring(nodes, points=100)`.",
+    "choices": [
+      {
+        "text": "Nodes are added until the arcs even out by chance",
+        "correct": false,
+        "why": "More nodes means more arcs, still one per node and still uneven."
+      },
+      {
+        "text": "Keys are moved by hand from the busiest node each night",
+        "correct": false,
+        "why": "Then a key’s place would no longer follow from its hash."
+      },
+      {
+        "text": "Each node is put on the ring at many points instead of one",
+        "correct": true,
+        "why": "Right: virtual nodes, whose many small arcs add up close to a fair share."
+      },
+      {
+        "text": "The system goes back to hash modulo N, which is even",
+        "correct": false,
+        "why": "It is even, and it moves four keys in five on every change."
+      }
+    ]
+  },
+  {
+    "id": "ex-91gqtqy6",
+    "version": 1,
+    "section": "rebalancing",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does the ring’s line of the capture show? Choose all that apply.",
+    "hint": "Read the `ring` lines.",
+    "choices": [
+      {
+        "text": "2177 rides moved",
+        "correct": true,
+        "why": "Yes, all of them to `n5`."
+      },
+      {
+        "text": "No ride moved between old nodes",
+        "correct": true,
+        "why": "Yes: `0 between old ones`."
+      },
+      {
+        "text": "Each node ended with exactly 2000 rides",
+        "correct": false,
+        "why": "They ended between 1622 and 2177."
+      },
+      {
+        "text": "More rides moved than with modulo",
+        "correct": false,
+        "why": "Modulo moved 7966."
+      }
+    ]
+  },
+  {
+    "id": "ex-mtsnk19m",
+    "version": 1,
+    "section": "replication",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Somebody runs a `DELETE` on the rides table by mistake. What do the followers do?",
+    "hint": "They replay the leader’s log.",
+    "choices": [
+      {
+        "text": "Keep the rows, since a replica is a backup of the data from before",
+        "correct": false,
+        "why": "That is the wrong picture: a backup is a copy from before, kept apart."
+      },
+      {
+        "text": "Refuse the change, because followers accept writes only from the app",
+        "correct": false,
+        "why": "Followers take every change from the leader’s log."
+      },
+      {
+        "text": "Delete the same rows",
+        "correct": true,
+        "why": "Right: a mistake replicates as faithfully as a correct write."
+      },
+      {
+        "text": "Hold the change until a person approves it",
+        "correct": false,
+        "why": "Nothing in replication waits for a person."
+      }
+    ]
+  },
+  {
+    "id": "ex-azhv0kvk",
+    "version": 1,
+    "section": "replication",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The leader confirms each write at once and the followers catch up afterwards. What goes wrong when the leader dies?",
+    "hint": "What had it not sent yet?",
+    "choices": [
+      {
+        "text": "Every write had been waiting for the slowest follower",
+        "correct": false,
+        "why": "That is the cost of synchronous replication, and this is the other kind."
+      },
+      {
+        "text": "The writes it confirmed but had not sent are lost",
+        "correct": true,
+        "why": "Right: confirmed to the client, never sent to a follower."
+      },
+      {
+        "text": "The followers stop accepting reads until it comes back",
+        "correct": false,
+        "why": "Followers go on answering reads, and one of them is promoted."
+      },
+      {
+        "text": "Reads sent to it had been returning old values",
+        "correct": false,
+        "why": "The leader is the one copy that is never behind."
+      }
+    ]
+  },
+  {
+    "id": "ex-07e23mgw",
+    "version": 1,
+    "section": "replication",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `replica.py`, how many milliseconds behind the leader does the follower run?",
+    "hint": "The first line after the file name.",
+    "value": 800,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-2f9frz9c",
+    "version": 1,
+    "section": "replication",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "ana docks her bicycle, and the app tells her the ride is still running. Which remedy fits?",
+    "hint": "She is the one person who knows the answer.",
+    "choices": [
+      {
+        "text": "Add more followers, so that one of them is current when she reads",
+        "correct": false,
+        "why": "Every follower replays the same log, late."
+      },
+      {
+        "text": "Send her reads to a different follower each time she asks",
+        "correct": false,
+        "why": "Each one may be behind, and by different amounts."
+      },
+      {
+        "text": "Read her own recent changes from the leader, not a follower",
+        "correct": true,
+        "why": "Right: read-your-writes, for a while after she writes."
+      },
+      {
+        "text": "Give her reads a shorter timeout",
+        "correct": false,
+        "why": "The follower answered at once, with the old value."
+      }
+    ]
+  },
+  {
+    "id": "ex-329793dr",
+    "version": 1,
+    "section": "replication",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A leader is cut off from the others but keeps running, and a follower is promoted in its place. What is the danger?",
+    "hint": "How many machines think they are the leader?",
+    "choices": [
+      {
+        "text": "The promoted follower refuses reads until the old leader returns",
+        "correct": false,
+        "why": "A promoted follower serves reads and writes at once."
+      },
+      {
+        "text": "The new leader erases the old leader’s data when it is promoted",
+        "correct": false,
+        "why": "Neither machine can reach the other to erase anything."
+      },
+      {
+        "text": "Two leaders accept writes for the same data at once",
+        "correct": true,
+        "why": "Right: split brain, for as long as the old one believes it leads."
+      },
+      {
+        "text": "None, since a promoted follower always has every write",
+        "correct": false,
+        "why": "With asynchronous replication it is missing the last ones."
+      }
+    ]
+  },
+  {
+    "id": "ex-zcb8zf49",
+    "version": 1,
+    "section": "quorums",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With N = 3, which pair guarantees that a read sees the last write?",
+    "hint": "R + W > N.",
+    "choices": [
+      {
+        "text": "W = 1, R = 2",
+        "correct": false,
+        "why": "R + W = 3, which is not greater than 3: two reads in three."
+      },
+      {
+        "text": "W = 2, R = 1",
+        "correct": false,
+        "why": "R + W = 3 again: one read in three misses."
+      },
+      {
+        "text": "W = 2, R = 2",
+        "correct": true,
+        "why": "Right: 4 is greater than 3, so every read set overlaps the write set."
+      },
+      {
+        "text": "W = 1, R = 1",
+        "correct": false,
+        "why": "The first line of the capture: one read in three."
+      }
+    ]
+  },
+  {
+    "id": "ex-6dm7v97b",
+    "version": 1,
+    "section": "quorums",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With W = 1 and R = 1, how many of the three possible reads saw ST06 in the capture?",
+    "hint": "The first line.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "reads"
+  },
+  {
+    "id": "ex-zpv5xxrj",
+    "version": 1,
+    "section": "quorums",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "N = 3, W = 3, R = 1. One replica goes down. What still works?",
+    "hint": "Count what each side needs.",
+    "choices": [
+      {
+        "text": "Writes, because one replica is enough to confirm them",
+        "correct": false,
+        "why": "W = 3: a write needs every replica, and one is down."
+      },
+      {
+        "text": "Reads and writes, as two replicas are still a majority of three",
+        "correct": false,
+        "why": "A majority is enough only when W asks for a majority."
+      },
+      {
+        "text": "Reads, since a read needs one replica and two are still up",
+        "correct": true,
+        "why": "Right: a read needs one replica; a write needs all three."
+      },
+      {
+        "text": "Neither",
+        "correct": false,
+        "why": "Two replicas are still up, and a read asks one."
+      }
+    ]
+  },
+  {
+    "id": "ex-q15jtdgh",
+    "version": 1,
+    "section": "quorums",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A read is certain to meet the last write when R + W is greater than ___.",
+    "hint": "How many replicas hold each piece of data?",
+    "blanks": [
+      {
+        "accept": [
+          "N"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-12y4w4wp",
+    "version": 1,
+    "section": "failures",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With a one-second timeout, the slow node and the hung node printed the same line. What does that show?",
+    "hint": "One of them would have answered.",
+    "choices": [
+      {
+        "text": "Both nodes had crashed before the probe reached them",
+        "correct": false,
+        "why": "The slow one answered at five seconds."
+      },
+      {
+        "text": "The slow node was hung too, since it answered nothing",
+        "correct": false,
+        "why": "It answered once the client waited long enough."
+      },
+      {
+        "text": "Waiting cannot tell a node that is late from one that will never answer",
+        "correct": true,
+        "why": "Right: it says how long you waited, not what happened."
+      },
+      {
+        "text": "`probe.py` has a bug that hides the real error",
+        "correct": false,
+        "why": "The real error is the silence; there is nothing else to show."
+      }
+    ]
+  },
+  {
+    "id": "ex-xkaqjes3",
+    "version": 1,
+    "section": "failures",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Port 8003 answered `Connection refused` at once. Why is that more informative than a timeout?",
+    "hint": "Somebody had to send it.",
+    "choices": [
+      {
+        "text": "It proves the whole machine is switched off",
+        "correct": false,
+        "why": "A switched-off machine sends nothing back at all."
+      },
+      {
+        "text": "It is a reply, so a running machine sent it back",
+        "correct": true,
+        "why": "Right: the machine is up and nothing listens on that port."
+      },
+      {
+        "text": "It means the network between the two machines is cut",
+        "correct": false,
+        "why": "Across a cut link no reply arrives, and that is a timeout."
+      },
+      {
+        "text": "It shows the node is slow and will answer later",
+        "correct": false,
+        "why": "The slow node was on port 8001, and it timed out like the hung one."
+      }
+    ]
+  },
+  {
+    "id": "ex-89ex2pzj",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each situation on the far side to what it is.",
+    "hint": "Only one of them sends anything back.",
+    "pairs": [
+      {
+        "left": "the process or the machine has stopped",
+        "right": "a crash"
+      },
+      {
+        "left": "both machines fine, the link between them cut",
+        "right": "a network partition"
+      },
+      {
+        "left": "alive and working, three seconds late",
+        "right": "a slow node"
+      },
+      {
+        "left": "a running machine with nothing on the port",
+        "right": "connection refused"
+      }
+    ]
+  },
+  {
+    "id": "ex-dxx303sz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team sets its heartbeat timeout very short, to fail over faster. What happens on a busy day?",
+    "hint": "Busy nodes answer late.",
+    "choices": [
+      {
+        "text": "Nothing changes, since a shorter timeout only finds dead nodes sooner",
+        "correct": false,
+        "why": "It also declares slow nodes dead, and busy days make nodes slow."
+      },
+      {
+        "text": "Healthy leaders that are only slow get replaced",
+        "correct": true,
+        "why": "Right: and each failover adds work to machines already busy."
+      },
+      {
+        "text": "Failovers stop, because heartbeats are then sent less often",
+        "correct": false,
+        "why": "The timeout is how long to wait, not how often to send."
+      },
+      {
+        "text": "Clients see fewer errors, as dead nodes are found sooner",
+        "correct": false,
+        "why": "They see more: every needless failover interrupts them."
+      }
+    ]
+  },
+  {
+    "id": "ex-7p0638as",
+    "version": 1,
+    "section": "retries-and-idempotency",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is idempotent?",
+    "hint": "Do it twice and compare.",
+    "choices": [
+      {
+        "text": "Adding a fare to a customer’s bill",
+        "correct": false,
+        "why": "Twice is two fares."
+      },
+      {
+        "text": "Setting dock 4 at Batel to empty, whatever it was before",
+        "correct": true,
+        "why": "Right: set it twice and it is still empty."
+      },
+      {
+        "text": "Appending a ride to the end of a log file",
+        "correct": false,
+        "why": "Twice is the ride in the log twice."
+      },
+      {
+        "text": "Adding one to a station’s count of rides",
+        "correct": false,
+        "why": "Twice adds two."
+      }
+    ]
+  },
+  {
+    "id": "ex-9cnx1wak",
+    "version": 1,
+    "section": "retries-and-idempotency",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Without a request id, how many cents did the ledger hold for one ride?",
+    "hint": "Three charges of 450.",
+    "value": 1350,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-xqx4g51m",
+    "version": 1,
+    "section": "retries-and-idempotency",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the client in `retry.py` send the same request id on every attempt?",
+    "hint": "What would a new id look like to the ledger?",
+    "choices": [
+      {
+        "text": "So that the server answers faster, having seen the id before",
+        "correct": false,
+        "why": "The id changes what is recorded, not how fast."
+      },
+      {
+        "text": "Because making a new id each time would be slower",
+        "correct": false,
+        "why": "Speed has nothing to do with it; a new id would make a new charge."
+      },
+      {
+        "text": "Because the database limits each ride to one request id",
+        "correct": false,
+        "why": "The `UNIQUE` is on the request, not on the ride."
+      },
+      {
+        "text": "So a retry is recognised as a repeat",
+        "correct": true,
+        "why": "Right: one charge meant, one id, however many attempts."
+      }
+    ]
+  },
+  {
+    "id": "ex-37wxza9w",
+    "version": 1,
+    "section": "retries-and-idempotency",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why add jitter to the backoff between retries?",
+    "hint": "Picture a thousand clients failing at the same moment.",
+    "choices": [
+      {
+        "text": "So clients that failed together retry apart",
+        "correct": true,
+        "why": "Right: otherwise they all come back in the same instant."
+      },
+      {
+        "text": "To make each wait shorter than the one before it",
+        "correct": false,
+        "why": "The backoff doubles; the jitter only scatters it."
+      },
+      {
+        "text": "To hide from the server how many times a client has retried",
+        "correct": false,
+        "why": "The server sees every attempt anyway."
+      },
+      {
+        "text": "To give each attempt a fresh request id",
+        "correct": false,
+        "why": "A fresh id on a retry is the mistake the section warns about."
+      }
+    ]
+  },
+  {
+    "id": "ex-nm4twmef",
+    "version": 1,
+    "section": "retries-and-idempotency",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens when `retry.py` runs without a request id and the first reply is lost.",
+    "hint": "The charge comes before the silence.",
+    "items": [
+      "the service records the charge",
+      "the reply is lost",
+      "the client waits and sends again",
+      "a second charge is recorded"
+    ],
+    "trap": "The charge is recorded before the reply is lost, which is why the retry charges twice."
+  },
+  {
+    "id": "ex-894z2h9h",
+    "version": 1,
+    "section": "retries-and-idempotency",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "An operation whose second run changes nothing is called ___.",
+    "hint": "The property that makes a retry safe.",
+    "blanks": [
+      {
+        "accept": [
+          "idempotent"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-2wqt9eq6",
+    "version": 1,
+    "section": "moving-the-work",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With plan B, how many records crossed the network?",
+    "hint": "Thirty-six partial counts, twelve already home.",
+    "value": 24,
+    "tolerance": 0,
+    "unit": "records"
+  },
+  {
+    "id": "ex-ayyhh20a",
+    "version": 1,
+    "section": "moving-the-work",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can each node compute on its own rides first, for the results to be combined afterwards?",
+    "hint": "Will the pieces add up?",
+    "choices": [
+      {
+        "text": "The median ride length per station",
+        "correct": false,
+        "why": "The median of three medians is not the median of all the rides."
+      },
+      {
+        "text": "The total cents charged per station",
+        "correct": true,
+        "why": "Right: a sum adds up in pieces, like a count."
+      },
+      {
+        "text": "The number of different customers who rode from each station",
+        "correct": false,
+        "why": "A customer seen on two nodes would be counted twice when the pieces are added."
+      },
+      {
+        "text": "The ride length below which 90% of rides fall, per station",
+        "correct": false,
+        "why": "Like a median, it needs the values together, not partial results."
+      }
+    ]
+  },
+  {
+    "id": "ex-n5ed8wee",
+    "version": 1,
+    "section": "moving-the-work",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Plan A sent 19,958 of 30,000 rides across the network. Why about two in three?",
+    "hint": "Three nodes; where does a ride already sit?",
+    "choices": [
+      {
+        "text": "A ride stays put only when its own node counts its station",
+        "correct": true,
+        "why": "Right: with three nodes, that is about one ride in three."
+      },
+      {
+        "text": "One node in three was down, so its rides were sent twice",
+        "correct": false,
+        "why": "Every node was up; the program simulates no failure."
+      },
+      {
+        "text": "The network dropped a third of the messages",
+        "correct": false,
+        "why": "Nothing was lost: the counts matched the direct count."
+      },
+      {
+        "text": "Plan A compresses one ride in three before sending",
+        "correct": false,
+        "why": "Plan A sends each ride as it is; plan B is the one that shrinks."
+      }
+    ]
+  },
+  {
+    "id": "ex-q7szps2s",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a MapReduce job in order.",
+    "hint": "The step that crosses the network is in the middle.",
+    "items": [
+      "map over the data each machine holds",
+      "shuffle the results by key",
+      "reduce each group",
+      "write the combined results"
+    ],
+    "trap": "Map runs where the data already is; only after the shuffle does each key have all its pieces in one place."
+  },
+  {
+    "id": "ex-zp8s2a90",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Rides are stored by hash of the station id. A job counts rides per station. How much has to cross the network for the grouping?",
+    "hint": "Is the question grouped by the partition key?",
+    "choices": [
+      {
+        "text": "Every ride, since a count needs a shuffle",
+        "correct": false,
+        "why": "A count needs a shuffle only when the data sits by another key."
+      },
+      {
+        "text": "About two rides in three, as in plan A",
+        "correct": false,
+        "why": "Plan A’s rides were stored by ride id, which is the reason they moved."
+      },
+      {
+        "text": "One partial count per station per node, as in plan B",
+        "correct": false,
+        "why": "Each station’s rides are on one node; there are no partial counts to combine."
+      },
+      {
+        "text": "Nothing",
+        "correct": true,
+        "why": "Right: each station’s rides are already together on one node."
+      }
+    ]
+  },
+  {
+    "id": "ex-skn5q69w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A leaderless store picks the newest version by the time of the write, taken from each client’s clock. What is the risk?",
+    "hint": "Two clients, two clocks.",
+    "choices": [
+      {
+        "text": "Reads become slower, because comparing times costs more than comparing counters",
+        "correct": false,
+        "why": "The comparison is cheap either way; what it compares is the trouble."
+      },
+      {
+        "text": "A client whose clock is behind writes a value that loses to an older one",
+        "correct": true,
+        "why": "Right: the newer write carries the smaller time, and the read keeps the old value."
+      },
+      {
+        "text": "Nothing changes, as long as R + W is greater than N",
+        "correct": false,
+        "why": "The overlap finds every version; the clock then picks the wrong one."
+      },
+      {
+        "text": "Writes need more replicas to confirm them",
+        "correct": false,
+        "why": "W does not depend on how versions are compared."
+      }
+    ]
+  },
+  {
+    "id": "ex-zj02pvcz",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each term to what it describes.",
+    "hint": "Two are about when the leader answers.",
+    "pairs": [
+      {
+        "left": "synchronous replication",
+        "right": "confirms a write after a follower has it"
+      },
+      {
+        "left": "asynchronous replication",
+        "right": "confirms at once; followers catch up"
+      },
+      {
+        "left": "replication lag",
+        "right": "how far a follower is behind"
+      },
+      {
+        "left": "failover",
+        "right": "promoting a follower when the leader stops"
+      }
+    ]
+  }
+]
