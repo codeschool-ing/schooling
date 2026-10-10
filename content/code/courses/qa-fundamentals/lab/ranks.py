@@ -40,6 +40,7 @@ for q in en:
         h = [i for i, t in enumerate(texts) if HEDGE.search(t)]
         row.append(f'{lang}:{r}' + (f' hedge{h}' if h else ''))
     row.append(f'pos {k}')
+    row.append('| ' + q['choices'][k]['text'][:60])
     print('  '.join(row))
 for lang in tot:
     n = sum(tot[lang].values())
