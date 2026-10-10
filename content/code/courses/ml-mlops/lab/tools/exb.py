@@ -111,6 +111,12 @@ def N(id, section, diff, pen, ppt, value, tol, unit_en, unit_pt, hint=None):
 
 exec(compile(src, SPEC, "exec"))
 
+name = "exam" if EXAM else "exercises"
+with open(os.path.join(OUT, name + ".json"), "w") as f:
+    f.write(json.dumps(EN, indent=2, ensure_ascii=False) + "\n")
+with open(os.path.join(OUT, name + ".pt.json"), "w") as f:
+    f.write(json.dumps(PT, indent=2, ensure_ascii=False) + "\n")
+
 # a report on the tells the checker measures, per language
 for lang in ("en", "pt"):
     ranks = collections.Counter()
@@ -140,8 +146,3 @@ if "-v" in sys.argv:
         print(e["id"], e["section"], *out)
 print("types", dict(collections.Counter(e["type"] for e in EN)), "total", len(EN))
 print("positions", dict(collections.Counter([i for e in EN if e["type"] == "quiz" for i, c in enumerate(e["choices"]) if c["correct"]])))
-name = "exam" if EXAM else "exercises"
-with open(os.path.join(OUT, name + ".json"), "w") as f:
-    f.write(json.dumps(EN, indent=2, ensure_ascii=False) + "\n")
-with open(os.path.join(OUT, name + ".pt.json"), "w") as f:
-    f.write(json.dumps(PT, indent=2, ensure_ascii=False) + "\n")

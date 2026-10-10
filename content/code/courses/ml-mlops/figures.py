@@ -448,6 +448,166 @@ def l02_silhouette(lang):
     return f, t['cap']
 
 
+@figure('l03-overfit', 3)
+def l03_overfit(lang):
+    rows = [('2', 0.734, 0.719), ('4', 0.795, 0.762), ('6', 0.831, 0.751), ('8', 0.871, 0.723),
+            ('12', 0.957, 0.662), ('∞' if False else 'none', 1.000, 0.636)]
+    t = {'en': dict(
+            label='AUC of a decision tree against its maximum depth: 2, 4, 6, 8, 12 and no limit. On '
+                  'the training rows it rises steadily: 0.734, 0.795, 0.831, 0.871, 0.957, 1.000. '
+                  'On the validation rows it rises to 0.762 at depth 4 and then falls: 0.751, '
+                  '0.723, 0.662, 0.636.',
+            x='maximum depth of the tree', train='training rows', valid='validation rows',
+            none='none', best='best on validation',
+            cap='The deeper the tree, the better it remembers the rows it learned from and the '
+                'worse it does on the next month. The gap between the lines is overfitting.'),
+         'pt': dict(
+            label='AUC de uma árvore de decisão contra a sua profundidade máxima: 2, 4, 6, 8, 12 e '
+                  'sem limite. Nas linhas de treino ela sobe sem parar: 0,734, 0,795, 0,831, 0,871, '
+                  '0,957, 1,000. Nas linhas de validação ela sobe até 0,762 na profundidade 4 e '
+                  'depois cai: 0,751, 0,723, 0,662, 0,636.',
+            x='profundidade máxima da árvore', train='linhas de treino', valid='linhas de validação',
+            none='sem limite', best='melhor na validação',
+            cap='Quanto mais funda a árvore, melhor ela lembra as linhas com que aprendeu e pior se '
+                'sai no mês seguinte. A distância entre as linhas é o sobreajuste.')}[lang]
+    f = Fig('l03-overfit', 720, 290, t['label'])
+    p = Plot(f, 80, 40, 560, 230, -0.5, 5.5, 0.6, 1.0)
+    p.yaxis([0.6, 0.7, 0.8, 0.9, 1.0], fmt=lambda v: num(lang, v, 1), label='AUC')
+    labels = [r[0] for r in rows[:-1]] + [t['none']]
+    f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim', width=1.2)
+    for i, lab in enumerate(labels):
+        f.text(p.sx(i), p.y1 + 13, lab, size=9.5, fill='--paper-dim')
+    f.text((p.x0 + p.x1) / 2, p.y1 + 31, t['x'], size=10, weight='600')
+    for k, stroke in ((1, '--paper-dim'), (2, '--phosphor')):
+        d = 'M' + ' L'.join(f'{p.sx(i):.1f} {p.sy(r[k]):.1f}' for i, r in enumerate(rows))
+        f.path(d, stroke=stroke, width=2, dash='5 4' if k == 1 else None)
+        for i, r in enumerate(rows):
+            f.circle(p.sx(i), p.sy(r[k]), 3.5, fill='--amber' if (k == 2 and i == 1) else stroke)
+    f.text(p.sx(1), p.sy(0.762) + 18, t['best'], size=10, fill='--amber', weight='600')
+    f.line(580, 70, 610, 70, stroke='--paper-dim', width=2, dash='5 4')
+    f.text(618, 70, t['train'], size=10.5, anchor='start')
+    f.line(580, 96, 610, 96, stroke='--phosphor', width=2)
+    f.text(618, 96, t['valid'], size=10.5, anchor='start')
+    return f, t['cap']
+
+
+@figure('l03-moment', 3)
+def l03_moment(lang):
+    t = {'en': dict(
+            label='A timeline around the cutoff, 30 November 2025. To its left, the 180 days the '
+                  'features are computed from. To its right, the 90 days the label is computed '
+                  'from. Anything from the right-hand side that reaches a feature is leakage.',
+            cutoff='the cutoff: the moment of prediction', feat='features: 180 days before',
+            lab='label: 90 days after', leak='any of this in a feature is leakage',
+            d=['4 Jun 2025', '30 Nov 2025', '28 Feb 2026'],
+            cap='One date divides every example. What is to its left may describe the member; what '
+                'is to its right may only be the answer.'),
+         'pt': dict(
+            label='Uma linha do tempo em volta do corte, 30 de novembro de 2025. À esquerda, os 180 '
+                  'dias de onde os atributos são calculados. À direita, os 90 dias de onde o rótulo '
+                  'é calculado. Qualquer coisa do lado direito que chegue a um atributo é '
+                  'vazamento.',
+            cutoff='o corte: o momento da predição', feat='atributos: 180 dias antes',
+            lab='rótulo: 90 dias depois', leak='qualquer coisa daqui num atributo é vazamento',
+            d=['4 jun 2025', '30 nov 2025', '28 fev 2026'],
+            cap='Uma data divide cada exemplo. O que está à esquerda pode descrever o membro; o que '
+                'está à direita só pode ser a resposta.')}[lang]
+    f = Fig('l03-moment', 720, 220, t['label'])
+    x0, xc, x1, y = 40, 440, 680, 110
+    f.rect(x0, y - 22, xc - x0, 44, stroke='--phosphor', fill='--scan')
+    f.text((x0 + xc) / 2, y, t['feat'], size=11)
+    f.rect(xc, y - 22, x1 - xc, 44, stroke='--amber', fill='--panel', dash='5 4')
+    f.text((xc + x1) / 2, y, t['lab'], size=11)
+    f.line(xc, 40, xc, 160, stroke='--amber', width=2)
+    f.text(xc, 30, t['cutoff'], size=11, weight='600', fill='--amber')
+    for x, d in zip((x0, xc, x1), t['d']):
+        f.text(x, 150, d, size=9.5, fill='--paper-dim', mono=True,
+               anchor='start' if x == x0 else ('end' if x == x1 else 'middle'))
+    f.path(f'M{(xc + x1) / 2:.1f} 134 C {(xc + x1) / 2:.1f} 190, {(x0 + xc) / 2 + 60:.1f} 190, '
+           f'{(x0 + xc) / 2 + 60:.1f} 134', stroke='--amber', width=1.4, dash='4 3', arrow=True)
+    f.text((x0 + x1) / 2 + 40, 200, t['leak'], size=10, fill='--amber')
+    return f, t['cap']
+
+
+@figure('l03-timeline', 3)
+def l03_timeline(lang):
+    months = ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb']
+    if lang == 'pt':
+        months = ['mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez', 'jan', 'fev']
+    t = {'en': dict(
+            label='A calendar from March 2025 to February 2026. Six training cutoffs, at the ends of '
+                  'March to August, each followed by its 90-day label window; the last window, '
+                  'from 31 August, closes on 29 November. The test cutoff is 30 November, and its '
+                  'own label window runs to 28 February.',
+            train='training cutoffs and their 90 days', test='test cutoff',
+            gap='the newest training label closes 29 Nov',
+            cap='Every training label has to be closed by the test cutoff, because on that night '
+                'in production nothing later exists. The gap is the label window.'),
+         'pt': dict(
+            label='Um calendário de março de 2025 a fevereiro de 2026. Seis cortes de treino, nos '
+                  'fins de março a agosto, cada um seguido da sua janela de rótulo de 90 dias; a '
+                  'última janela, de 31 de agosto, fecha em 29 de novembro. O corte de teste é 30 de '
+                  'novembro, e a janela de rótulo dele vai até 28 de fevereiro.',
+            train='cortes de treino e os seus 90 dias', test='corte de teste',
+            gap='o rótulo de treino mais novo fecha em 29 nov',
+            cap='Todo rótulo de treino precisa estar fechado no corte de teste, porque naquela noite, '
+                'em produção, nada posterior existe. A distância é a janela do rótulo.')}[lang]
+    f = Fig('l03-timeline', 720, 300, t['label'])
+    x0, w = 50, 52
+    for i, m in enumerate(months):
+        f.text(x0 + i * w + w / 2, 30, m, size=10, fill='--paper-dim')
+        f.line(x0 + i * w, 40, x0 + i * w, 250, stroke='--wire', width=0.8)
+    for k in range(6):
+        y = 60 + k * 22
+        xs = x0 + (k + 1) * w
+        f.circle(xs, y, 4, fill='--phosphor')
+        f.rect(xs + 4, y - 6, 3 * w - 4, 12, stroke='--phosphor', fill='--scan', rx=3)
+    xt = x0 + 9 * w
+    f.line(xt, 40, xt, 250, stroke='--amber', width=2)
+    f.circle(xt, 210, 5, fill='--amber')
+    f.rect(xt + 5, 204, 3 * w - 5, 12, stroke='--amber', fill='--panel', rx=3, dash='4 3')
+    f.text(xt - 8, 238, t['test'], size=10.5, anchor='end', fill='--amber', weight='600')
+    f.text(x0, 270, t['train'], size=10.5, anchor='start', fill='--phosphor', weight='600')
+    f.text(xt - 8, 186, t['gap'], size=10, anchor='end', fill='--paper')
+    return f, t['cap']
+
+
+@figure('l03-maturity', 3)
+def l03_maturity(lang):
+    vals = [('2025-10-31', 17.1), ('2025-11-15', 17.0), ('2025-11-30', 16.9), ('2025-12-15', 19.2),
+            ('2025-12-31', 23.2), ('2026-01-15', 30.1), ('2026-01-31', 43.1), ('2026-02-15', 65.5)]
+    t = {'en': dict(
+            label='Share of active members labelled lapsed, by cutoff: 17.1% at 31 October, 17.0% '
+                  'at 15 November, 16.9% at 30 November, then 19.2%, 23.2%, 30.1%, 43.1% and 65.5% '
+                  'at 15 February, as the 90-day window runs past the last day of data.',
+            y='labelled lapsed', closed='window closed', open='window still open',
+            cap='The label is honest until its window reaches past the data. After that, every '
+                'member who has not yet come back is counted as gone.'),
+         'pt': dict(
+            label='Fração de membros ativos rotulados como afastados, por corte: 17,1% em 31 de '
+                  'outubro, 17,0% em 15 de novembro, 16,9% em 30 de novembro, depois 19,2%, 23,2%, '
+                  '30,1%, 43,1% e 65,5% em 15 de fevereiro, à medida que a janela de 90 dias passa '
+                  'do último dia dos dados.',
+            y='rotulados afastados', closed='janela fechada', open='janela ainda aberta',
+            cap='O rótulo é honesto até a janela passar dos dados. Depois disso, todo membro que '
+                'ainda não voltou conta como perdido.')}[lang]
+    f = Fig('l03-maturity', 720, 290, t['label'])
+    p = Plot(f, 70, 40, 690, 220, -0.6, 7.6, 0, 70)
+    p.yaxis([0, 20, 40, 60], fmt=lambda v: f'{v}%', label=t['y'])
+    f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim', width=1.2)
+    for i, (c, v) in enumerate(vals):
+        x = p.sx(i)
+        fill = '--phosphor-dim' if i < 3 else '--amber'
+        f.path(f'M{x - 22:.1f} {p.y1:.1f} L{x - 22:.1f} {p.sy(v):.1f} L{x + 22:.1f} {p.sy(v):.1f} '
+               f'L{x + 22:.1f} {p.y1:.1f} Z', stroke='--phosphor' if i < 3 else '--amber', width=1,
+               fill=fill)
+        f.text(x, p.sy(v) - 9, num(lang, v, 1) + '%', size=9.5)
+        f.text(x, p.y1 + 13, c[2:], size=9, fill='--paper-dim', mono=True)
+    f.text(p.sx(1), p.y1 + 32, t['closed'], size=10, fill='--phosphor', weight='600')
+    f.text(p.sx(5.5), p.y1 + 32, t['open'], size=10, fill='--amber', weight='600')
+    return f, t['cap']
+
+
 
 def main():
     if '--list' in sys.argv:
