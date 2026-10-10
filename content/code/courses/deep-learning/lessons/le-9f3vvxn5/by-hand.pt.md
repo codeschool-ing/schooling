@@ -65,7 +65,7 @@ nove números de uma vez, e a perda caiu de 0,5625 para 0,131. A saída foi de 1
 passando do alvo de 1 para o outro lado: um passo desse tamanho ultrapassa o alvo nesta entrada, que
 é a taxa de aprendizado da aula 2 em ação de novo.
 
-Vale contar o custo. O forward pass fez um produto por peso, e o backward pass fez uns dois: um para
+Conte o custo. O forward pass fez um produto por peso, e o backward pass fez uns dois: um para
 o gradiente do peso e outro para passar o gradiente adiante. **Obter os nove gradientes custou mais ou
 menos dois forward passes, onde a cutucada teria custado dezoito.** A aula 9 monta esta mesma rede no
 PyTorch, e os gradientes automáticos dele imprimem estes mesmos números.

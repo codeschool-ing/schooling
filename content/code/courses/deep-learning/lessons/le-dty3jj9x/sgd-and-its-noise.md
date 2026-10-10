@@ -42,7 +42,15 @@ lesson 3:
 ```
 
 ```
-PENDING noise
+ana@vm:~/dl$ python noise.py
+whole set: loss 2.3051  gradient length 0.6619
+batch 1: loss 2.3243  length 1.1441  cosine with the whole 0.771
+batch 2: loss 2.2481  length 0.9592  cosine with the whole 0.743
+batch 3: loss 2.2744  length 0.8638  cosine with the whole 0.354
+batch 4: loss 2.2323  length 0.7266  cosine with the whole 0.572
+batch 5: loss 2.3406  length 1.0045  cosine with the whole 0.740
+34 batches: cosine from 0.354 to 0.868
+weighted mean of the batch gradients equals the whole: True
 ```
 
 **No batch agrees with the whole set, and every batch roughly agrees.** The cosines run from 0.354

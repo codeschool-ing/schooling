@@ -1,0 +1,370 @@
+{
+  "ex-1pxeszdy": {
+    "prompt": "Entre a época 40 e a 300 do `overfit.py`, a perda de validação sobe enquanto a acurácia de validação fica perto de 0,90. O que explica as duas coisas ao mesmo tempo?",
+    "hint": "Acurácia e entropia cruzada fazem perguntas diferentes sobre as mesmas saídas.",
+    "choices": [
+      {
+        "text": "O conjunto de validação muda de uma época para a outra",
+        "why": "São as mesmas 360 imagens em toda época; o `digits.py` divide uma vez, com semente fixa."
+      },
+      {
+        "text": "Erra as mesmas imagens, com mais confiança a cada época",
+        "why": "Certo. A acurácia só conta qual dígito vence; a perda também cobra pela certeza de uma resposta errada."
+      },
+      {
+        "text": "A taxa de aprendizado é alta demais e a perda diverge",
+        "why": "Uma execução divergindo estragaria a perda de treino também, e aqui ela cai para 0,0010."
+      },
+      {
+        "text": "A acurácia é arredondada em três casas e esconde a queda",
+        "why": "Uma imagem é 1/360, cerca de 0,003, que três casas mostram; a contagem de erros simplesmente muda pouco."
+      }
+    ]
+  },
+  "ex-evhse27f": {
+    "prompt": "Por que o `small.py` corta o treino para 100 imagens mas mantém as 360 de validação?",
+    "hint": "Qual dos dois conjuntos é o instrumento de medida?",
+    "choices": [
+      {
+        "text": "Imagens de validação custam menos para calcular que as de treino",
+        "why": "Toda imagem custa o mesmo forward; a validação só pula o backward."
+      },
+      {
+        "text": "A divisão da aula 1 não pode ser mudada",
+        "why": "O `data(n)` muda a parte de treino à vontade; a aula escolheu deixar a validação inteira."
+      },
+      {
+        "text": "Para deixar o treino com fome mantendo a medida tão boa quanto antes",
+        "why": "Certo. Poucos exemplos causam o sobreajuste; uma validação pequena só deixaria todo número mais ruidoso."
+      },
+      {
+        "text": "Para que a validação tenha mais imagens que o treino, o que o sobreajuste exige",
+        "why": "O sobreajuste precisa de poucos exemplos de treino para muitos parâmetros; o tamanho da validação não participa da causa."
+      }
+    ]
+  },
+  "ex-575h9sz8": {
+    "prompt": "Quantos parâmetros o `small.wide()` tem, segundo o `overfit.py`?",
+    "hint": "64 × 512 + 512, depois 512 × 512 + 512, depois 512 × 10 + 10.",
+    "unit": "parâmetros"
+  },
+  "ex-r483kkwj": {
+    "prompt": "No `SGDDecay.step`, por que `decay * p` é somado ao gradiente em vez de uma penalidade calculada e somada à perda?",
+    "hint": "O que o otimizador usa de fato da perda?",
+    "choices": [
+      {
+        "text": "O passo só precisa do gradiente da penalidade, que é `decay × w`",
+        "why": "Certo. Derivar `decay / 2 × w²` dá `decay × w`, então a soma em si nunca é necessária no treino."
+      },
+      {
+        "text": "Somá-la à perda mudaria a acurácia mas não os pesos",
+        "why": "Um termo na perda muda os pesos pelo seu gradiente; esse gradiente é justamente o que o código soma."
+      },
+      {
+        "text": "O `softmax_cross_entropy` não aceita um termo extra",
+        "why": "Nada impede somar um número ao resultado; ele só seria impresso e nunca usado pelo passo."
+      },
+      {
+        "text": "Os dois dão resultados diferentes com SGD simples",
+        "why": "Para o SGD simples são a mesma atualização; a diferença que a aula cita é para o Adam."
+      }
+    ]
+  },
+  "ex-jqf81pxm": {
+    "prompt": "Você treina com Adam e quer decaimento de pesos. Pela aula, o que usar?",
+    "hint": "O Adam reescala o que quer que chegue no gradiente.",
+    "choices": [
+      {
+        "text": "Adam com `decay × w` somado a cada gradiente, como no `SGDDecay`",
+        "why": "A escala por parâmetro do Adam reescalaria a penalidade também, e ela deixa de ser o puxão L2 que era com SGD."
+      },
+      {
+        "text": "Nenhum decaimento: a escala do Adam já regulariza",
+        "why": "A escala adapta o tamanho dos passos; não puxa pesos para zero nem penaliza o tamanho deles."
+      },
+      {
+        "text": "Um decaimento dez vezes maior, para compensar os passos menores do Adam",
+        "why": "O problema é a forma da penalidade sob a reescala, não o tamanho; um número maior mantém a mesma distorção."
+      },
+      {
+        "text": "O AdamW, que aplica o decaimento nos pesos fora da escala do Adam",
+        "why": "Certo. Isso mantém o puxão para zero proporcional ao peso, como é com SGD."
+      }
+    ]
+  },
+  "ex-adbkwwbh": {
+    "prompt": "No `decay.py`, a condição `p.ndim == 2` aplica o decaimento às matrizes de pesos e deixa os ___ em paz.",
+    "hint": "Os arrays de uma dimensão de cada `Linear`.",
+    "blanks": [
+      {
+        "accept": [
+          "vieses",
+          "viés",
+          "vies",
+          "b"
+        ]
+      }
+    ]
+  },
+  "ex-4hx2q86c": {
+    "prompt": "Por que a camada `Dropout` divide as unidades sobreviventes por `1 - p` durante o treino?",
+    "hint": "Compare a soma que a próxima camada recebe no treino e na avaliação.",
+    "choices": [
+      {
+        "text": "Para deixar os gradientes maiores e o treino mais rápido",
+        "why": "A escala é para igualar a soma do forward; o gradiente é escalado só porque segue a mesma máscara."
+      },
+      {
+        "text": "Para manter exatamente metade das unidades ligadas a cada passo",
+        "why": "Cada unidade é descartada de forma independente, então o número mantido varia; a divisão muda valores, não contagens."
+      },
+      {
+        "text": "Para desfazer o ReLU anterior, que reduz os valores à metade",
+        "why": "O ReLU zera negativos e deixa os positivos como estão; a escala do dropout não tem relação com ele."
+      },
+      {
+        "text": "Para a soma esperada bater com a avaliação, onde nada é descartado",
+        "why": "Certo. Com as sobreviventes escaladas no treino, o caminho de avaliação não tem nada a corrigir."
+      }
+    ]
+  },
+  "ex-878rwyvx": {
+    "prompt": "O `evaluate` de um colega esquece de chamar `net.mode(False)` numa rede com dropout 0,5. O que acontece com os números de validação que ele relata?",
+    "hint": "O que a camada faz quando `training` continua verdadeiro?",
+    "choices": [
+      {
+        "text": "Nada, porque o dropout invertido já faz a escala para a avaliação",
+        "why": "A escala mantém a soma esperada, mas metade das unidades continua sendo tirada ao acaso, e cada resposta fica mais ruidosa."
+      },
+      {
+        "text": "Um erro, porque `mask` não está definido",
+        "why": "Com `training` verdadeiro o forward sorteia uma máscara, então nada fica indefinido; roda e relata números piores em silêncio."
+      },
+      {
+        "text": "Eles vêm de uma rede que perde metade das unidades ocultas ao acaso",
+        "why": "Certo. Os números saem piores, e podem mudar entre duas chamadas com os mesmos pesos."
+      },
+      {
+        "text": "Os números saem melhores que com a troca, já que o dropout regulariza",
+        "why": "O dropout ajuda pelo jeito como treina os pesos; descartar unidades ao medir só joga informação fora."
+      }
+    ]
+  },
+  "ex-6armrdz8": {
+    "prompt": "No `dropout.py`, a execução com `p = 0.0` imprimiu exatamente os números do `overfit.py`. O que isso confere?",
+    "hint": "O que uma camada de dropout que não descarta nada deveria mudar?",
+    "choices": [
+      {
+        "text": "Que dropout em 0,0 regulariza tão bem quanto qualquer outro valor",
+        "why": "Com 0,0 nada é descartado, então nada é regularizado; a igualdade diz que a camada é neutra, não útil."
+      },
+      {
+        "text": "Que a camada não muda nada quando não descarta nada",
+        "why": "Certo. Os mesmos pesos no início, uma máscara de uns, e por isso a mesma execução, número por número."
+      },
+      {
+        "text": "Que o gerador aleatório não é usado durante o treino",
+        "why": "Ele é usado, para sortear a máscara, a cada passo; os sorteios só nunca ficam abaixo de 0,0."
+      },
+      {
+        "text": "Que o `fit` desligou o modo de treino nas 300 épocas",
+        "why": "O `fit` só desliga para avaliar; desligado o tempo todo, as taxas maiores também teriam batido."
+      }
+    ]
+  },
+  "ex-wnm9qx0y": {
+    "prompt": "No `early.py`, o que dá errado se a linha for escrita `best = [p for p, _ in net.params()]`, sem `.copy()`?",
+    "hint": "Quem mais segura esses mesmos arrays?",
+    "choices": [
+      {
+        "text": "O Python dá erro quando os arrays salvos são restaurados no fim da execução",
+        "why": "Atribuir um array a si mesmo é permitido; nada falha, e é isso que torna o defeito perigoso."
+      },
+      {
+        "text": "A execução para na época errada",
+        "why": "A decisão de parar usa `best_loss` e `best_epoch`, que são números comuns e continuam certos."
+      },
+      {
+        "text": "Os pesos salvos continuam mudando, e a última época é restaurada",
+        "why": "Certo. São os próprios arrays do otimizador, e os números impressos batem exatamente com os da última época."
+      },
+      {
+        "text": "A memória acaba por guardar uma cópia a cada época",
+        "why": "Esse seria o custo de copiar, não de deixar de copiar; e só um novo melhor é salvo."
+      }
+    ]
+  },
+  "ex-13s3bfv6": {
+    "prompt": "Você põe a paciência do `early.py` em 1 em vez de 20. Qual o resultado mais provável?",
+    "hint": "A perda de validação não cai suavemente de uma época para a outra.",
+    "choices": [
+      {
+        "text": "Para na primeira época de azar, muitas vezes cedo demais",
+        "why": "Certo. Uma época ruidosa basta para encerrar a execução antes do mínimo de verdade."
+      },
+      {
+        "text": "Guarda pesos piores, porque os restaura mais tarde do que deveria",
+        "why": "Ele restaura a melhor época vista até ali, qualquer que seja a paciência; o risco é ter visto poucas."
+      },
+      {
+        "text": "Nada muda, já que a melhor época é restaurada de qualquer jeito",
+        "why": "A melhor época vista depende de quanto a execução durou, e paciência 1 pode encerrá-la antes do melhor de verdade."
+      },
+      {
+        "text": "Roda as 300 épocas completas",
+        "why": "Isso é o que uma paciência muito grande faria; uma pequena para antes."
+      }
+    ]
+  },
+  "ex-pv3kkea7": {
+    "prompt": "Você treina uma rede para ler letras manuscritas. Qual destas mudanças é segura como aumento de dados?",
+    "hint": "A condição é que o rótulo continue verdadeiro.",
+    "choices": [
+      {
+        "text": "Um espelhamento horizontal",
+        "why": "Um `b` espelhado é um `d`, então a imagem fica com um rótulo que agora está errado."
+      },
+      {
+        "text": "Uma rotação de 180 graus",
+        "why": "De cabeça para baixo, `n` vira `u` e `p` vira `d`; o rótulo deixa de ser verdadeiro."
+      },
+      {
+        "text": "Um deslocamento de um ou dois pixels",
+        "why": "Certo. Uma letra levemente deslocada continua a mesma letra, como um dígito na aula."
+      },
+      {
+        "text": "Trocar as imagens de duas classes",
+        "why": "Isso é rotular dados errado de propósito; a rede aprenderia a troca."
+      }
+    ]
+  },
+  "ex-mh7mnz37": {
+    "prompt": "Com as imagens deslocadas, a acurácia de validação subiu para 0,928, mas a perda de validação terminou mais alta que sem elas. Por que a perda não melhorou?",
+    "hint": "Quão diferentes são as 500 imagens entre si?",
+    "choices": [
+      {
+        "text": "As imagens deslocadas têm rótulos errados",
+        "why": "Um deslocamento de um pixel mantém o dígito, e é por isso que a acurácia melhorou."
+      },
+      {
+        "text": "Cinco vezes mais imagens exigem cinco vezes a taxa de aprendizado",
+        "why": "A taxa define o tamanho de cada passo, e mais dados já significam mais passos por época."
+      },
+      {
+        "text": "Zerar a borda que deu a volta apagou metade de cada dígito",
+        "why": "Ela apaga uma linha ou coluna de uma imagem de 8 por 8, que nesses dígitos já é quase vazia."
+      },
+      {
+        "text": "São os mesmos 100 desenhos, e a rede ainda os decorou",
+        "why": "Certo. A acurácia de treino chegou de novo a 1,000 e a confiança continuou crescendo; outra coisa precisa parar a execução."
+      }
+    ]
+  },
+  "ex-8vhhvdrb": {
+    "prompt": "Por que o `compare.py` inclui uma execução que só muda a semente?",
+    "hint": "Com o que você compararia uma melhora pequena?",
+    "choices": [
+      {
+        "text": "Para medir quanto o acaso sozinho move os números",
+        "why": "Certo. Uma cura que os mova menos que isso não mostrou que fez alguma coisa."
+      },
+      {
+        "text": "Para conferir que a semente não tem efeito no treino",
+        "why": "Tem, e a execução o mede: 0,900 virou 0,908."
+      },
+      {
+        "text": "Para dar à tabela final mais uma configuração para escolher",
+        "why": "Ela não é candidata: é a linha de base de novo, com outra sorte."
+      },
+      {
+        "text": "Porque a parada antecipada precisa de uma segunda semente para comparar",
+        "why": "A parada antecipada compara épocas de uma execução contra a validação; nenhuma segunda semente entra nisso."
+      }
+    ]
+  },
+  "ex-q88ekh1c": {
+    "prompt": "Ligue cada cura àquilo em que ela age.",
+    "hint": "Uma acrescenta dados, duas contêm a rede, uma escolhe um momento.",
+    "pairs": [
+      {
+        "left": "decaimento de pesos",
+        "right": "o tamanho dos pesos"
+      },
+      {
+        "left": "dropout",
+        "right": "unidades contando umas com as outras"
+      },
+      {
+        "left": "parada antecipada",
+        "right": "de qual época são os pesos guardados"
+      },
+      {
+        "left": "imagens deslocadas",
+        "right": "o número de exemplos de treino"
+      }
+    ],
+    "right_distractors": [
+      "a taxa de aprendizado"
+    ]
+  },
+  "ex-yh1e0z7g": {
+    "prompt": "Ponha os passos do laço do `early.py` na ordem em que acontecem numa época, terminando com a linha que só roda depois do laço.",
+    "hint": "Treinar vem antes de medir, e restaurar vem por último.",
+    "items": [
+      "treinar uma época com o `fit`",
+      "ler a perda de validação do histórico",
+      "se for um novo melhor, copiar os parâmetros",
+      "senão, parar se a paciência acabou",
+      "devolver os parâmetros salvos"
+    ]
+  },
+  "ex-qxjnx235": {
+    "prompt": "Quais destas reduzem o sobreajuste mudando a rede ou o treino dela, e não os dados? Escolha todas as que se aplicam.",
+    "hint": "Uma das quatro cria exemplos novos.",
+    "choices": [
+      {
+        "text": "Decaimento de pesos",
+        "why": "Certo: muda o passo, puxando os pesos para zero."
+      },
+      {
+        "text": "Dropout",
+        "why": "Certo: é uma camada da rede, ativa só no treino."
+      },
+      {
+        "text": "Parada antecipada",
+        "why": "Certo: muda quando o treino termina e quais pesos ficam."
+      },
+      {
+        "text": "Deslocar as imagens um pixel",
+        "why": "Essa muda os dados: cria quatro exemplos novos a partir de cada imagem."
+      }
+    ]
+  },
+  "ex-yspxyav3": {
+    "prompt": "No `compare.py`, quantas imagens de validação a mais, em 360, \"all four\" acertou em relação a \"nothing\"? (0,944 contra 0,900.)",
+    "hint": "Multiplique cada acurácia por 360.",
+    "unit": "imagens"
+  },
+  "ex-8nv5q56t": {
+    "prompt": "Uma equipe tem 50.000 imagens rotuladas, uma rede que sobreajusta um pouco, e pode rotular mais 50.000 a um preço modesto. Pelos resultados desta aula, o que ela deveria considerar primeiro?",
+    "hint": "Olhe a última linha do `compare.py`.",
+    "choices": [
+      {
+        "text": "Dropout em 0,8, o ajuste mais forte",
+        "why": "Com 0,8 a rede da aula não conseguia nem ajustar o treino; força não é o objetivo."
+      },
+      {
+        "text": "Rotular as imagens extras",
+        "why": "Certo. Dados reais fizeram mais que as quatro curas juntas, e cada cura é um jeito de fazer com menos o que mais dados fazem."
+      },
+      {
+        "text": "Só aumento de dados, já que foi a melhor cura isolada aqui",
+        "why": "A ordem das curas não se transfere entre problemas, e imagens reais vencem cópias das antigas."
+      },
+      {
+        "text": "Decaimento de 0,1, para puxar os pesos com força",
+        "why": "Com 0,1 a rede da aula caiu para 0,386; o decaimento certo se acha na validação, não se põe alto."
+      }
+    ]
+  }
+}

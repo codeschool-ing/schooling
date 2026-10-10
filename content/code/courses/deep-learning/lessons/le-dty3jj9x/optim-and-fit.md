@@ -84,7 +84,17 @@ A short program puts the two together and trains the digits network with momentu
 ```
 
 ```
-PENDING train
+ana@vm:~/dl$ python train.py
+epoch   1  train loss 1.2015  val loss 0.3860  val acc 0.875
+epoch   2  train loss 0.2865  val loss 0.2014  val acc 0.931
+epoch   3  train loss 0.1590  val loss 0.2189  val acc 0.925
+epoch   4  train loss 0.1596  val loss 0.1243  val acc 0.953
+epoch   5  train loss 0.1136  val loss 0.1915  val acc 0.925
+epoch   6  train loss 0.1447  val loss 0.1363  val acc 0.964
+epoch   7  train loss 0.0946  val loss 0.1449  val acc 0.944
+epoch   8  train loss 0.0728  val loss 0.1320  val acc 0.942
+epoch   9  train loss 0.0622  val loss 0.1258  val acc 0.958
+epoch  10  train loss 0.0581  val loss 0.1032  val acc 0.969
 ```
 
 **Ten epochs take validation accuracy from 0.875 to 0.969**, and two things in the log are worth

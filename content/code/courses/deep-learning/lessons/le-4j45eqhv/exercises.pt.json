@@ -1,0 +1,372 @@
+{
+  "ex-j85z6gq1": {
+    "prompt": "Antes de qualquer treino, a rede alimentada com pixels brutos de 0 a 16 marca perda 15,42, contra 2,45 com pixels de 0 a 1. Por quê?",
+    "hint": "Olhe as somas da primeira camada na mesma tabela.",
+    "choices": [
+      {
+        "text": "Os rótulos estão guardados numa escala diferente da dos pixels",
+        "why": "Os rótulos são os mesmos dígitos de 0 a 9 nas três versões; só os pixels mudaram."
+      },
+      {
+        "text": "As somas se espalham 16 vezes mais, então os logits são grandes e confiantemente errados",
+        "why": "Certo: desvio-padrão de 11,09 em vez de 0,69. Logits grandes deixam o softmax confiante, e uma rede sem treino confiante está confiante na classe errada."
+      },
+      {
+        "text": "O softmax funciona mal com entradas que são números inteiros",
+        "why": "Os pixels são float32 em todas as versões, e o softmax vê logits, não pixels."
+      },
+      {
+        "text": "A perda soma um termo por pixel, e pixels maiores somam mais",
+        "why": "A entropia cruzada tem um termo por imagem, menos o log da probabilidade da classe certa; os pixels nunca entram nela diretamente."
+      }
+    ]
+  },
+  "ex-ce7jamg6": {
+    "prompt": "Na taxa 0,01 os pixels brutos chegam a 0,947 e os pixels de 0 a 1 só a 0,897. O que explica isso?",
+    "hint": "O que a escala das entradas faz com o tamanho de um passo?",
+    "choices": [
+      {
+        "text": "Os níveis de tinta brutos carregam detalhes finos que dividir cada pixel por 16 remove",
+        "why": "Dividir por 16 não perde nada: todo pixel mantém a ordem e a razão com os outros."
+      },
+      {
+        "text": "A execução bruta sofre menos overfitting, como a aula 7 preveria",
+        "why": "Não é overfitting que as separa; a mesma execução bruta desaba para o acaso em 0,3."
+      },
+      {
+        "text": "Entradas maiores dão passos maiores, e uma taxa pequena anda mais",
+        "why": "Certo. A escala funciona como parte da taxa de aprendizado, e é também por isso que a execução bruta quebra em 0,3 onde a outra não quebra."
+      },
+      {
+        "text": "Dividir por 16 arredonda pixels pequenos para zero em float32",
+        "why": "O float32 guarda 1/16 exatamente, e todo nível de 0 a 16 sobrevive à divisão."
+      }
+    ]
+  },
+  "ex-36eyrbjc": {
+    "prompt": "Uma rede numa tabela com renda mensal em reais e idade em anos treina mal em toda taxa testada. Qual a primeira coisa a mudar?",
+    "hint": "Dois atributos, duas unidades, uma taxa de aprendizado.",
+    "choices": [
+      {
+        "text": "Padronizar cada coluna com a média e o desvio do conjunto de treino",
+        "why": "Certo. Renda em milhares ao lado de idade em dezenas não deixa taxa que sirva para as duas; depois de padronizar, as duas colunas ficam em pé de igualdade."
+      },
+      {
+        "text": "Padronizar cada coluna com a média e o desvio de todas as linhas, teste incluído",
+        "why": "A ideia está certa e as estatísticas não: calculá-las com as linhas de teste vaza o conjunto de teste para o treino."
+      },
+      {
+        "text": "Continuar baixando a taxa até a perda cair",
+        "why": "Uma taxa pequena o bastante para a renda é pequena demais para a idade, então uma coluna aprende e a outra mal se mexe."
+      },
+      {
+        "text": "Acrescentar camadas ocultas para a rede ter espaço de reescalar as entradas",
+        "why": "Profundidade não conserta os passos da primeira camada, e esta aula mostra que pilhas mais profundas são mais difíceis de manter estáveis."
+      }
+    ]
+  },
+  "ex-c58vp0tw": {
+    "prompt": "Ponha em ordem o que o `BatchNorm.forward` faz no modo de treino.",
+    "hint": "As médias acumuladas são atualizadas com o que acabou de ser medido.",
+    "items": [
+      "Medir a média e a variância de cada atributo sobre o lote",
+      "Mover as médias acumuladas 10% do caminho em direção a elas",
+      "Subtrair a média e dividir pelo desvio-padrão",
+      "Multiplicar por gamma e somar beta"
+    ]
+  },
+  "ex-4vrre5ra": {
+    "prompt": "Por que o batch norm multiplica por `gamma` e soma `beta` depois de normalizar, se eles podem desfazer a normalização?",
+    "hint": "O que um ReLU faria com uma coluna presa em média 0?",
+    "choices": [
+      {
+        "text": "Eles guardam as estatísticas acumuladas usadas na avaliação",
+        "why": "Essas são `running_mean` e `running_var`, que nenhum gradiente move; `gamma` e `beta` são treinados."
+      },
+      {
+        "text": "Para cada unidade aprender a própria média e dispersão",
+        "why": "Certo. Presa em média 0, um ReLU depois cortaria metade de toda coluna; agora a dispersão é aprendida em vez de ser um acaso dos pesos."
+      },
+      {
+        "text": "Eles substituem a taxa de aprendizado dentro da camada",
+        "why": "A taxa do otimizador continua definindo cada passo, o deles incluído."
+      },
+      {
+        "text": "Sem eles o backward não teria nenhum gradiente para devolver à camada anterior",
+        "why": "O gradiente da entrada existe sem eles; com `gamma` em 1 é a mesma fórmula com `g = grad`."
+      }
+    ]
+  },
+  "ex-380013t4": {
+    "prompt": "Quantos parâmetros treinados tem o `BatchNorm(64)`?",
+    "hint": "Conte só o que `params` declara; as médias acumuladas não são treinadas.",
+    "unit": "parâmetros"
+  },
+  "ex-f2zr4s0p": {
+    "prompt": "Num bloco de `Linear`, depois `BatchNorm`, depois `ReLU`, com que o viés do `Linear` contribui para a saída do bloco no treino?",
+    "hint": "Some uma constante a uma coluna, depois subtraia a média da coluna.",
+    "choices": [
+      {
+        "text": "Move o ponto em que o ReLU começa a deixar valores passarem",
+        "why": "Esse é o trabalho do `beta` aqui; o viés some antes de o ReLU ver qualquer coisa."
+      },
+      {
+        "text": "Dobra o deslocamento que o `beta` aplica",
+        "why": "O viés é somado antes de a média ser subtraída, então não chega à saída para se somar ao `beta`."
+      },
+      {
+        "text": "Nada: subtrair a média do lote o remove",
+        "why": "Certo. Uma constante somada a cada linha de uma coluna desloca a média na mesma medida, e a subtração tira as duas."
+      },
+      {
+        "text": "Mantém o modo de avaliação funcionando quando a média acumulada é zero",
+        "why": "A avaliação subtrai a média acumulada, que aprendeu o viés junto com o resto; o resultado é o mesmo."
+      }
+    ]
+  },
+  "ex-s3pb4skg": {
+    "prompt": "Sem normalização na taxa 0,1, a rede de dez camadas chega a 0,867 na época 10 e cai para 0,356 na época 15. O que essa forma diz?",
+    "hint": "A aula 6 leu curvas pela forma.",
+    "choices": [
+      {
+        "text": "A rede sofreu overfitting no conjunto de treino",
+        "why": "Overfitting faz a validação descer devagar enquanto o treino melhora; uma queda de metade da acurácia em cinco épocas é um passo grande demais."
+      },
+      {
+        "text": "A taxa é alta demais para ela",
+        "why": "Certo. A mesma taxa com batch norm sobe a 0,972, então é a rede sem normalização que não aguenta."
+      },
+      {
+        "text": "Os pesos iniciais foram azarados para esta semente",
+        "why": "As duas execuções partem dos mesmos pesos, e a com batch norm treina."
+      },
+      {
+        "text": "Os dados acabaram, e a rede passou a ver lotes que já tinha visto antes",
+        "why": "Toda época reusa o conjunto de treino inteiro por construção; repeti-lo é o que épocas são."
+      }
+    ]
+  },
+  "ex-xdxjefp7": {
+    "prompt": "Um passo grande triplica todo peso de uma unidade no `Linear` logo antes de uma camada de batch norm. O que acontece com o `xhat` dessa unidade?",
+    "hint": "Somas, média e desvio-padrão escalam juntos.",
+    "choices": [
+      {
+        "text": "Triplica, e tudo depois dele também",
+        "why": "Isso é o que acontece sem normalização, e é o efeito que se multiplica por dez camadas."
+      },
+      {
+        "text": "A variância dele cresce nove vezes",
+        "why": "A variância das somas cresce, e a camada divide pela raiz dela, três, de novo."
+      },
+      {
+        "text": "Não muda",
+        "why": "Certo. As somas, a média e o desvio triplicam, e a razão fica onde estava, e é por isso que as camadas depois veem a mesma escala."
+      },
+      {
+        "text": "Encolhe para um terço",
+        "why": "Dividir por um desvio três vezes maior é compensado por somas três vezes maiores."
+      }
+    ]
+  },
+  "ex-312vx6g9": {
+    "prompt": "O batch norm não torna uma taxa boa muito melhor; o que ele faz é tornar uma taxa grande ___.",
+    "hint": "Compare as duas tabelas em 0,03 e em 0,3.",
+    "blanks": [
+      {
+        "accept": [
+          "segura",
+          "usável",
+          "utilizável",
+          "treinável"
+        ]
+      }
+    ]
+  },
+  "ex-n0kpqq1e": {
+    "prompt": "No modo de treino, toda imagem prevista sozinha recebeu os mesmos logits. Por quê?",
+    "hint": "Quais são a média e a variância de um lote de um?",
+    "choices": [
+      {
+        "text": "As médias acumuladas ainda não tinham lotes de treino suficientes",
+        "why": "O modo de treino não lê as médias acumuladas; ele mede o lote à sua frente."
+      },
+      {
+        "text": "Um lote de um tem variância 0, então o `xhat` é 0 e a camada devolve o `beta`",
+        "why": "Certo. Com variância 0, todo atributo normaliza para 0, e o `beta` é o mesmo vetor para toda imagem."
+      },
+      {
+        "text": "O `gamma` aprendeu a ser zero durante o treino",
+        "why": "No modo de avaliação o mesmo `gamma` dá cinco respostas certas, então não é zero."
+      },
+      {
+        "text": "O softmax satura quando o lote tem uma única imagem",
+        "why": "O softmax trabalha linha a linha e não conhece o tamanho do lote; os logits já eram iguais antes dele."
+      }
+    ]
+  },
+  "ex-c03bqwg5": {
+    "prompt": "Depois de cinco imagens passarem sozinhas no modo de treino, a perda de validação subiu de 0,138 para 0,166 sem que ninguém treinasse a rede. O que mudou?",
+    "hint": "O modo de treino faz duas coisas no `forward`.",
+    "choices": [
+      {
+        "text": "Os pesos se mexeram, porque o `forward` no modo de treino também dá um passo",
+        "why": "Um passo precisa de `backward` e `opt.step()`; o `forward` sozinho nunca mexe em `W`, `gamma` ou `beta`."
+      },
+      {
+        "text": "O `evaluate` reusou logits guardados das chamadas em modo de treino",
+        "why": "O `evaluate` roda um forward novo sobre o conjunto de validação inteiro."
+      },
+      {
+        "text": "O `gamma` encolheu em direção a zero",
+        "why": "O `gamma` é um parâmetro e só o otimizador o move."
+      },
+      {
+        "text": "A variância acumulada, que cada chamada moveu 10% em direção a zero",
+        "why": "Certo: de 0,1114 para 0,0658 no primeiro atributo. A avaliação passa a dividir por um desvio pequeno demais."
+      }
+    ]
+  },
+  "ex-ffzenw7x": {
+    "prompt": "Um modelo em produção dá a uma imagem classes diferentes conforme os outros pedidos que vêm no mesmo lote. Qual a causa mais provável?",
+    "hint": "Qual modo deixa a saída de uma linha depender das outras?",
+    "choices": [
+      {
+        "text": "O arredondamento de ponto flutuante muda de lote para lote",
+        "why": "O arredondamento mexe nos últimos dígitos de um logit, não na classe; o efeito aqui são as estatísticas do lote."
+      },
+      {
+        "text": "O modelo roda em modo de treino, normalizando com as estatísticas de cada lote",
+        "why": "Certo. No modo de avaliação toda linha usa as médias acumuladas, e a resposta de uma imagem não depende da companhia."
+      },
+      {
+        "text": "Os pesos foram salvos antes de o treino terminar",
+        "why": "Pesos salvos cedo dão respostas piores, mas a mesma resposta qualquer que seja o lote."
+      },
+      {
+        "text": "A taxa de aprendizado era alta demais para o tamanho de lote usado em produção",
+        "why": "Servir não dá passos, então a taxa não tem papel nenhum."
+      }
+    ]
+  },
+  "ex-bzt1bk2p": {
+    "prompt": "Ligue cada camada, em cada situação, ao que ela faz.",
+    "hint": "O `alone.py` e a seção de modo de treino e avaliação.",
+    "pairs": [
+      {
+        "left": "BatchNorm, modo de treino, uma imagem",
+        "right": "devolve o `beta`, qualquer que seja a imagem"
+      },
+      {
+        "left": "LayerNorm, uma imagem",
+        "right": "a mesma saída que dá dentro de um lote"
+      },
+      {
+        "left": "BatchNorm, modo de avaliação",
+        "right": "normaliza com as médias acumuladas"
+      },
+      {
+        "left": "RMSNorm",
+        "right": "divide pela raiz da média dos quadrados, sem subtrair a média"
+      }
+    ],
+    "right_distractors": [
+      "normaliza com as estatísticas do próximo lote"
+    ]
+  },
+  "ex-sb6tb2tt": {
+    "prompt": "Por que os transformers usam layer norm e não batch norm?",
+    "hint": "Pense em frases completadas e em escrever um token por vez.",
+    "choices": [
+      {
+        "text": "O layer norm não tem parâmetros para treinar",
+        "why": "Ele tem os mesmos `gamma` e `beta`, um por atributo."
+      },
+      {
+        "text": "Ele só precisa dos atributos de cada token",
+        "why": "Certo. Estatísticas de lote misturariam palavras com preenchimento, e a geração roda um token por vez para um usuário."
+      },
+      {
+        "text": "O batch norm não tem backward através da atenção",
+        "why": "O backward dele é a fórmula que esta aula conferiu, e funciona depois de qualquer camada."
+      },
+      {
+        "text": "O layer norm estabiliza qualquer tipo de rede mais do que o batch norm estabiliza",
+        "why": "Não na rede de dez camadas desta aula: na taxa 1,0 ele falhou onde o batch norm chegou a 0,961."
+      }
+    ]
+  },
+  "ex-5tecsh0k": {
+    "prompt": "Um colega vê o layer norm falhar na taxa 1,0 na rede dos dígitos e conclui que ele não serve para nada. O que há de errado na conclusão?",
+    "hint": "Para que serve o layer norm?",
+    "choices": [
+      {
+        "text": "Ele serve onde estatísticas de lote não fazem sentido, não para imagens",
+        "why": "Certo. Em camadas totalmente conectadas sobre imagens o batch norm é mais forte; o layer norm é o que continua funcionando num lote de um."
+      },
+      {
+        "text": "Nada: uma camada que falha numa taxa não tem uso",
+        "why": "Em 0,1 e 0,3 ele treinou uma rede que falhava sem ele."
+      },
+      {
+        "text": "O layer norm precisa de um `eps` bem maior antes de conseguir treinar em taxas altas",
+        "why": "O `eps` só protege contra divisão por zero; nada na execução aponta para ele."
+      },
+      {
+        "text": "A execução estava em modo de treino, e o layer norm só funciona no modo de avaliação",
+        "why": "O layer norm não tem modo; calcula a mesma coisa no treino e no uso."
+      }
+    ]
+  },
+  "ex-gtdby5z4": {
+    "prompt": "Quais destas coisas as execuções desta aula mostraram? Marque todas as que se aplicam.",
+    "hint": "Confira cada uma contra uma transcrição.",
+    "choices": [
+      {
+        "text": "Pixels brutos de 0 a 16 caíram para o acaso na taxa 0,3",
+        "why": "Sim: 0,089, contra 0,969 dos pixels escalados."
+      },
+      {
+        "text": "Com batch norm, a rede de dez camadas treinou na taxa 1,0",
+        "why": "Sim: terminou em 0,961, onde a rede sem ela teve perda `nan`."
+      },
+      {
+        "text": "O batch norm ganhou da rede sem normalização por larga margem na taxa 0,03",
+        "why": "Não: 0,969 contra 0,961 no fim; os ganhos grandes foram nas taxas mais altas."
+      },
+      {
+        "text": "O layer norm deu a uma imagem a mesma saída sozinha e num lote",
+        "why": "Sim: os mesmos seis números nas duas vezes."
+      },
+      {
+        "text": "Prever no modo de treino mudou os pesos da rede",
+        "why": "Não: mudou a variância acumulada, que não é um peso; nenhum passo foi dado."
+      }
+    ]
+  },
+  "ex-cx82vqf3": {
+    "prompt": "Com `momentum=0.1`, um lote de variância 0 multiplica a variância acumulada por que fator?",
+    "hint": "`(1 - m) * running + m * var`, com `var` em 0."
+  },
+  "ex-b0px4hth": {
+    "prompt": "Uma rede com batch norm treinada com lotes de 2 imagens dá resultados erráticos. Por quê?",
+    "hint": "Quão boa é uma média medida a partir de dois exemplos?",
+    "choices": [
+      {
+        "text": "O batch norm precisa de pelo menos tantos exemplos em cada lote quanto atributos que tem",
+        "why": "Essa regra não existe; ele precisa de duas linhas para uma variância, e de mais para uma estável."
+      },
+      {
+        "text": "Duas imagens dão estatísticas ruidosas, e cada saída depende da parceira",
+        "why": "Certo. Com duas linhas, todo valor normalizado fica perto de +1 ou -1, o que só diz qual do par é o maior."
+      },
+      {
+        "text": "O momentum de 0,1 é alto demais para lotes tão pequenos",
+        "why": "O momentum afeta só as médias acumuladas para a avaliação; a parte errática é o próprio treino."
+      },
+      {
+        "text": "`gamma` e `beta` não recebem gradiente nenhum quando os lotes têm só duas imagens",
+        "why": "Os gradientes deles são somas sobre o lote e existem em qualquer tamanho."
+      }
+    ]
+  }
+}

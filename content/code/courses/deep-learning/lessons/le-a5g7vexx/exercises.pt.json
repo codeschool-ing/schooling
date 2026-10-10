@@ -1,0 +1,372 @@
+{
+  "ex-y66xtby4": {
+    "prompt": "Por que a saída do `filter.py` é 6 por 6, se o dígito é 8 por 8?",
+    "hint": "Conte onde uma janela de 3 pixels pode parar.",
+    "choices": [
+      {
+        "text": "O filtro descarta a borda em branco do dígito",
+        "why": "O tamanho não tem nada a ver com a tinta: uma imagem toda pintada daria 6 por 6 também."
+      },
+      {
+        "text": "Uma janela de largura 3 cabe em 6 lugares ao longo de 8 pixels",
+        "why": "Certo. Ela pode começar nas colunas 0 a 5; começando na 6, precisaria de uma coluna 8 que não existe."
+      },
+      {
+        "text": "O PyTorch reduz pela metade a saída de toda convolução",
+        "why": "Pela metade daria 4, e os laços em NumPy deram 6 antes de o PyTorch ser chamado."
+      },
+      {
+        "text": "O stride dele é 2",
+        "why": "Os laços andam um pixel por vez; com stride 2 e sem padding a resposta seria 3."
+      }
+    ]
+  },
+  "ex-z8sdafb9": {
+    "prompt": "Com o filtro `[[-1, 0, 1]] * 3`, a terceira coluna da saída vai de -5 a -34. O que está sob a janela ali?",
+    "hint": "O filtro subtrai a coluna da esquerda da coluna da direita.",
+    "choices": [
+      {
+        "text": "Uma parte em branco da imagem",
+        "why": "Branco dos dois lados dá zero, como nas linhas de cima da última coluna."
+      },
+      {
+        "text": "A borda esquerda do traço, onde a tinta começa",
+        "why": "Essa é a primeira coluna, de 21 a 48: mais tinta à direita que à esquerda dá uma soma positiva."
+      },
+      {
+        "text": "A borda direita do traço, onde a tinta termina",
+        "why": "Certo. Tinta à esquerda e branco à direita fazem o lado subtraído ganhar."
+      },
+      {
+        "text": "Um trecho tingido por igual de lado a lado",
+        "why": "Tinta por igual se cancela, esquerda contra direita, e dá um número perto de zero."
+      }
+    ]
+  },
+  "ex-b2jx1nvp": {
+    "prompt": "Você quer um filtro que responda forte onde a tinta começa quando se lê a imagem de cima para baixo. Qual?",
+    "hint": "Gire o filtro da aula um quarto de volta.",
+    "choices": [
+      {
+        "text": "`[[1, 0, -1], [1, 0, -1], [1, 0, -1]]`",
+        "why": "Esse é o filtro da aula espelhado: ainda compara esquerda com direita, e dispara onde a tinta termina."
+      },
+      {
+        "text": "`[[-1, -1, -1], [0, 0, 0], [1, 1, 1]]`",
+        "why": "Certo. A linha de baixo é somada e a de cima subtraída, então tinta abaixo de um branco dá uma soma positiva grande."
+      },
+      {
+        "text": "`[[1, 1, 1], [1, 1, 1], [1, 1, 1]]`",
+        "why": "Esse soma o pedaço inteiro: mede quanta tinta há, onde quer que ela esteja."
+      },
+      {
+        "text": "`[[0, -1, 0], [-1, 4, -1], [0, -1, 0]]`",
+        "why": "Esse compara o centro com os quatro vizinhos, um detector de ponto sem direção."
+      }
+    ]
+  },
+  "ex-vw66cmfk": {
+    "prompt": "Uma imagem 28 por 28 passa por `nn.Conv2d(1, 6, kernel_size=5)`, com stride 1 e sem padding. Qual a largura de cada mapa de saída?",
+    "hint": "(n + 2p - k) // s + 1",
+    "unit": "pixels"
+  },
+  "ex-31v11je1": {
+    "prompt": "Um filtro 3 por 3 com stride 2 e sem padding transforma uma imagem 8 por 8 em 3 por 3. O que acontece com a última coluna da imagem?",
+    "hint": "Liste as colunas onde a janela para.",
+    "choices": [
+      {
+        "text": "O PyTorch completa com zeros para que ela seja lida",
+        "why": "O padding só é acrescentado quando você pede, e esta camada tem `padding=0`."
+      },
+      {
+        "text": "Ela nunca é lida",
+        "why": "Certo. A janela para nas colunas 0, 2 e 4; um quarto passo precisaria das colunas 6 a 8."
+      },
+      {
+        "text": "Ela é lida duas vezes, uma por cada uma das duas últimas janelas",
+        "why": "A última janela cobre as colunas 4 a 6, e a coluna 7 fica depois dela."
+      },
+      {
+        "text": "A camada levanta um erro sobre o tamanho",
+        "why": "O `shapes.py` rodou essa configuração e imprimiu `(1, 4, 3, 3)` sem aviso nenhum."
+      }
+    ]
+  },
+  "ex-7akfcrwr": {
+    "prompt": "Com um filtro 3 por 3 e stride 1, um padding de ___ mantém um mapa 8 por 8 em 8 por 8.",
+    "hint": "p = (k - 1) / 2",
+    "blanks": [
+      {
+        "accept": [
+          "1",
+          "um"
+        ]
+      }
+    ]
+  },
+  "ex-em0h9fk9": {
+    "prompt": "Quantos parâmetros o `nn.MaxPool2d(2)` aprende durante o treino?",
+    "hint": "O que o `pool.py` imprimiu?",
+    "choices": [
+      {
+        "text": "Quatro, um para cada posição do bloco 2 por 2",
+        "why": "Pegar o máximo não precisa de peso nenhum."
+      },
+      {
+        "text": "Um para cada canal que ele reduz",
+        "why": "Também não há nada por canal: a mesma regra roda em todo mapa."
+      },
+      {
+        "text": "Nenhum",
+        "why": "Certo: `parameters in MaxPool2d(2): 0`. É uma regra fixa."
+      },
+      {
+        "text": "Tantos quanto a convolução antes dele",
+        "why": "O pooling não tem pesos próprios e não pega emprestado os da convolução."
+      }
+    ]
+  },
+  "ex-294sy724": {
+    "prompt": "No `pool.py`, o ponto andou um pixel e a saída do pooling ficou igual. Um aluno conclui que o max pooling faz a rede ignorar qualquer deslocamento. O que a mesma execução diz contra isso?",
+    "hint": "Olhe a terceira linha sobre o ponto.",
+    "choices": [
+      {
+        "text": "Deslocado dois pixels, passou para o bloco seguinte e a saída mudou",
+        "why": "Certo. O pooling tolera um deslocamento dentro do bloco, e nada além disso."
+      },
+      {
+        "text": "Nada: a saída ficou `[1.0, 0.0, 0.0, 0.0]` em todo deslocamento",
+        "why": "No deslocamento de 2 ela imprimiu `[0.0, 1.0, 0.0, 0.0]`."
+      },
+      {
+        "text": "O average pooling ignora deslocamentos e o max pooling não",
+        "why": "Os dois trabalham bloco a bloco, então os dois mudam quando uma característica cruza um bloco."
+      },
+      {
+        "text": "O max pooling ignorou o ponto, e por isso nada mudou",
+        "why": "Ele manteve o ponto: o 1.0 é o valor do ponto, levado à saída do bloco."
+      }
+    ]
+  },
+  "ex-nvwde6f3": {
+    "prompt": "Quantos parâmetros o `nn.Conv2d(3, 8, kernel_size=5)` tem, contando os vieses?",
+    "hint": "out × in × k × k, mais um viés por filtro.",
+    "unit": "parâmetros"
+  },
+  "ex-8meryaa1": {
+    "prompt": "O `nn.Conv2d(1, 16, kernel_size=3, padding=1)` tem 160 parâmetros nos dígitos 8 por 8. Quantos ele tem em imagens cinza de 64 por 64?",
+    "hint": "Do que um filtro depende?",
+    "choices": [
+      {
+        "text": "10.240, porque a imagem tem 64 vezes mais pixels",
+        "why": "Isso valeria para uma camada densa, que paga por pixel. Um filtro não."
+      },
+      {
+        "text": "160, os mesmos",
+        "why": "Certo. Os mesmos 16 filtros deslizam sobre imagem de qualquer tamanho; o compartilhamento de pesos é a economia."
+      },
+      {
+        "text": "1.280, porque precisa de oito vezes mais filtros para cobrir a largura",
+        "why": "O número de filtros é o 16 escrito na camada; o tamanho da imagem não o muda."
+      },
+      {
+        "text": "Ela não roda nesse tamanho sem ser remontada",
+        "why": "Uma convolução roda em qualquer altura e largura; só os canais de entrada precisam bater."
+      }
+    ]
+  },
+  "ex-crq69e8n": {
+    "prompt": "O peso da segunda camada tem a forma `(32, 16, 3, 3)`. Para o que um dos seus 32 filtros olha, numa posição?",
+    "hint": "O que o 16 conta?",
+    "choices": [
+      {
+        "text": "Um pedaço 3 por 3 de um dos 16 mapas, escolhido ao acaso",
+        "why": "Nada é escolhido: todo filtro tem uma fatia 3 por 3 de pesos para cada mapa que chega."
+      },
+      {
+        "text": "Um pedaço 3 por 3 do dígito original",
+        "why": "A segunda camada nunca vê o dígito; ela lê o que a primeira fez dele."
+      },
+      {
+        "text": "O mesmo lugar 3 por 3 nos 16 mapas da primeira camada",
+        "why": "Certo: 16 × 3 × 3 pesos, uma fatia por canal, somados num número."
+      },
+      {
+        "text": "16 lugares diferentes de um único mapa",
+        "why": "O 16 conta os canais que chegam, não posições."
+      }
+    ]
+  },
+  "ex-7t0bnr05": {
+    "prompt": "O `cnn.make_cnn()` tem 38.282 parâmetros. Onde está a maioria deles?",
+    "hint": "O `compare.py` imprimiu quantos as convoluções têm.",
+    "choices": [
+      {
+        "text": "Nas duas convoluções, que leem a imagem inteira",
+        "why": "Elas têm 4.800, mais ou menos um em oito, porque os seus filtros são compartilhados pela imagem."
+      },
+      {
+        "text": "No max pooling",
+        "why": "O pooling não tem nenhum."
+      },
+      {
+        "text": "Na `Linear(512, 64)`, depois do `Flatten`",
+        "why": "Certo: 512 × 64 + 64 = 32.832 deles."
+      },
+      {
+        "text": "Na última camada, `Linear(64, 10)`",
+        "why": "Essa tem 650, uma fatia pequena do total."
+      }
+    ]
+  },
+  "ex-031sw2r7": {
+    "prompt": "Depois de 30 épocas, a perda de treino da rede convolucional é 0,0070 e a de validação 0,0633. O que a diferença diz?",
+    "hint": "Que conjunto os pesos viram?",
+    "choices": [
+      {
+        "text": "O conjunto de validação é mais difícil que o de treino",
+        "why": "Os dois vêm de um embaralhamento dos mesmos dígitos; a diferença é a quais os pesos foram ajustados."
+      },
+      {
+        "text": "Ela quase decorou as imagens de treino",
+        "why": "Certo, e esse é o assunto da aula 7: uma perda de treino muito abaixo da de validação é o sobreajuste começando."
+      },
+      {
+        "text": "A taxa de aprendizado estava alta demais",
+        "why": "Uma taxa alta demais faz a própria perda de treino pular ou travar; aqui ela caiu suavemente."
+      },
+      {
+        "text": "A perda de validação foi calculada em modo de treino",
+        "why": "O `loop.evaluate` passa para o modo de avaliação, e esta rede nem tem camada que se comporte diferente."
+      }
+    ]
+  },
+  "ex-haxaefht": {
+    "prompt": "Um colega lê a execução e escreve num relatório que a convolução é três pontos melhor que uma rede densa nesses dígitos. O que falta à execução antes que essa frase se sustente?",
+    "hint": "Quantas vezes cada rede foi treinada?",
+    "choices": [
+      {
+        "text": "Uma GPU, para o resultado não ser limitado pelo processador",
+        "why": "Uma placa de vídeo muda o tempo, não a acurácia a que uma semente chega."
+      },
+      {
+        "text": "Mais épocas para a rede densa",
+        "why": "Épocas iguais foram a escolha justa; a dispersão que o relatório precisa conhecer é a entre sementes."
+      },
+      {
+        "text": "Outras sementes, e a dispersão entre elas",
+        "why": "Certo. Uma execução de cada é uma amostra de cada; a aula 18 mede a dispersão."
+      },
+      {
+        "text": "Uma rede densa maior, com o mesmo número de parâmetros",
+        "why": "Essa seria outra pergunta, sobre tamanho. A frase como está fala dessas duas redes, rodadas uma vez."
+      }
+    ]
+  },
+  "ex-37pyxzvn": {
+    "prompt": "Quem escolheu os pesos dos dezesseis filtros da primeira camada da rede treinada?",
+    "hint": "De onde eles partiram?",
+    "choices": [
+      {
+        "text": "O autor, como no `filter.py`",
+        "why": "O filtro do `filter.py` foi escrito à mão; estes nunca foram escritos por ninguém."
+      },
+      {
+        "text": "O PyTorch, que traz um conjunto padrão de filtros de borda",
+        "why": "O PyTorch os inicia ao acaso; nada vem pronto."
+      },
+      {
+        "text": "O treino, a partir de números aleatórios",
+        "why": "Certo. O gradiente os moveu, passo a passo, na direção do que baixava a perda."
+      },
+      {
+        "text": "Os dados, pela média das imagens de treino",
+        "why": "Nenhuma média foi feita; os filtros são o que o gradiente da perda fez deles."
+      }
+    ]
+  },
+  "ex-478bj4h7": {
+    "prompt": "O `filters.py` imprime `largest weight: 0.33 at the start`. Por que 0,33?",
+    "hint": "Quantas entradas cada filtro da primeira camada lê?",
+    "choices": [
+      {
+        "text": "O padrão do PyTorch para 9 entradas é ±1/3",
+        "why": "Certo: 1 sobre a raiz quadrada de 9 entradas."
+      },
+      {
+        "text": "O treino corta todo peso em 0,33 a cada passo",
+        "why": "Depois do treino o maior é 0,57, então nada os cortou."
+      },
+      {
+        "text": "Os dígitos são divididos por 3 antes do treino",
+        "why": "Eles são divididos por 16, e os pesos iniciais não olham os dados."
+      },
+      {
+        "text": "É a semente, 0, mais um terço",
+        "why": "Uma semente escolhe quais números aleatórios saem, não a faixa deles."
+      }
+    ]
+  },
+  "ex-4spkkt2s": {
+    "prompt": "Ponha as camadas do `cnn.make_cnn()` na ordem em que um dígito passa por elas, sem os ReLUs.",
+    "hint": "Siga os comentários de forma: 16 x 8 x 8, 32 x 8 x 8, 32 x 4 x 4, 512.",
+    "items": [
+      "`Conv2d(1, 16)`",
+      "`Conv2d(16, 32)`",
+      "`MaxPool2d(2)`",
+      "`Flatten()`",
+      "`Linear(512, 64)`"
+    ]
+  },
+  "ex-zgr5wa47": {
+    "prompt": "Ligue cada configuração de uma convolução numa imagem 8 por 8 à largura da saída.",
+    "hint": "(8 + 2p - k) // s + 1",
+    "pairs": [
+      {
+        "left": "kernel 3, stride 1, padding 0",
+        "right": "6"
+      },
+      {
+        "left": "kernel 5, stride 1, padding 2",
+        "right": "8"
+      },
+      {
+        "left": "kernel 3, stride 2, padding 0",
+        "right": "3"
+      },
+      {
+        "left": "kernel 5, stride 1, padding 0",
+        "right": "4"
+      }
+    ],
+    "right_distractors": [
+      "5"
+    ]
+  },
+  "ex-0rrwndvd": {
+    "prompt": "Quais destas coisas as execuções desta aula mostraram? Marque todas as que se aplicam.",
+    "hint": "Confira cada uma contra uma transcrição.",
+    "choices": [
+      {
+        "text": "O `F.conv2d` do PyTorch deu os mesmos 36 números que dois laços em NumPy",
+        "why": "Sim: `PyTorch agrees: True`."
+      },
+      {
+        "text": "O max pooling aprendeu 4 parâmetros por bloco",
+        "why": "Não: `parameters in MaxPool2d(2): 0`."
+      },
+      {
+        "text": "A rede convolucional terminou em 0,983 na validação, a densa em 0,953",
+        "why": "Sim, depois de 30 épocas cada, uma semente cada."
+      },
+      {
+        "text": "A rede convolucional tinha menos parâmetros que a densa",
+        "why": "Não: 38.282 contra 4.810. Só as duas convoluções têm 4.800."
+      },
+      {
+        "text": "Uma camada densa no lugar da primeira convolução precisaria de 66.560 parâmetros",
+        "why": "Sim, contra 160 da convolução."
+      }
+    ]
+  }
+}

@@ -1,0 +1,372 @@
+{
+  "ex-qakf3jz0": {
+    "prompt": "Uma camada levanta `mat1 and mat2 must have the same dtype, but got Double and Float` com dados feitos por `np.zeros`. O que resolve?",
+    "hint": "Qual dos dois é Double, e de onde ele veio?",
+    "choices": [
+      {
+        "text": "Chamar `.double()` no tensor de entrada",
+        "why": "Isso deixa a entrada em `float64`, que é o que ela já era; os pesos é que são o lado `float32`."
+      },
+      {
+        "text": "Usar `torch.tensor` em vez de `from_numpy`",
+        "why": "Ele copia o array e mantém o dtype `float64`, então o erro continua."
+      },
+      {
+        "text": "Converter a entrada para `float32`",
+        "why": "Certo: o padrão do NumPy é `float64`, os pesos de uma camada são `float32`, e `.float()` ou `astype(np.float32)` faz os dois concordarem."
+      },
+      {
+        "text": "Mover a entrada para o mesmo dispositivo da camada",
+        "why": "Os dois estão no processador; uma diferença de dispositivo tem outra mensagem, que nomeia os dispositivos."
+      }
+    ]
+  },
+  "ex-t5xmt2xx": {
+    "prompt": "Você faz `t = torch.from_numpy(a)` e depois soma 1 a cada elemento de `a` no NumPy. O que `t` guarda agora?",
+    "hint": "Algo foi copiado?",
+    "choices": [
+      {
+        "text": "Os valores antigos, já que o tensor foi feito antes da mudança",
+        "why": "Isso é o que o `torch.tensor(a)` daria: uma cópia tirada naquele momento."
+      },
+      {
+        "text": "Os valores novos",
+        "why": "Certo. O `from_numpy` divide a memória do array, como o 7.0 do `tensors.py` mostrou."
+      },
+      {
+        "text": "Um erro na próxima leitura, porque o array mudou por baixo dele",
+        "why": "Nada confere isso; o tensor lê a mesma memória e encontra os números novos."
+      },
+      {
+        "text": "Os valores antigos no processador, os novos numa placa de vídeo",
+        "why": "Os dois moram na memória do processador aqui; o dispositivo não tem nada a ver com a divisão."
+      }
+    ]
+  },
+  "ex-2cjmxjkp": {
+    "prompt": "`x` tem formato `(32, 64)`. `x.T.view(-1)` levanta um erro e `x.T.reshape(-1)` funciona. O que há de diferente no resultado do `reshape`?",
+    "hint": "O que a transposta fez com os strides?",
+    "choices": [
+      {
+        "text": "Os números dele estão na ordem original de `x`",
+        "why": "Ele guarda `x.T` lido linha por linha, que é a ordem das colunas de `x`."
+      },
+      {
+        "text": "É uma view, então escrever nele muda `x`",
+        "why": "Uma view era impossível, e é por isso que o `view` falhou; o `reshape` precisou copiar."
+      },
+      {
+        "text": "É uma cópia, numa memória própria",
+        "why": "Certo. Uma linha de `x.T` não é um trecho contínuo de memória, então achatá-la exige mover os números."
+      },
+      {
+        "text": "O dtype dele vira `float64`",
+        "why": "Mudar o formato não mexe no dtype."
+      }
+    ]
+  },
+  "ex-yx6ssgqz": {
+    "prompt": "Um passo para a frente e para trás da rede do `autograd.py` deixa `W2.grad` em `[1.5, 0.0]`. Qual a primeira entrada de `W2.grad` depois de três deles, sem zerar nada no meio?",
+    "hint": "Os pesos não mudaram, e o `backward` soma."
+  },
+  "ex-6dqqhjaa": {
+    "prompt": "Por que a segunda coluna de `W1.grad` é zero no `autograd.py`?",
+    "hint": "Olhe a soma da segunda unidade oculta antes do ReLU.",
+    "choices": [
+      {
+        "text": "O ReLU dessa unidade estava desligado, e nenhum gradiente passou",
+        "why": "Certo. A soma dela era -1, o ReLU deu 0, e o passo para trás de um ReLU não deixa passar nada onde a entrada era negativa."
+      },
+      {
+        "text": "`W1` foi criado sem `requires_grad`, então o autograd o pulou",
+        "why": "Aí `W1.grad` seria `None`, e não uma matriz com uma coluna zerada."
+      },
+      {
+        "text": "O autograd pula pesos cujo valor é negativo",
+        "why": "O sinal de um peso não decide nada; a primeira coluna também tem um peso negativo."
+      },
+      {
+        "text": "O alvo foi atingido para essa unidade",
+        "why": "Uma unidade oculta não tem alvo próprio; quem tem é a saída."
+      }
+    ]
+  },
+  "ex-0847wtm4": {
+    "prompt": "Um passo para a frente aplica uma camada três vezes num laço do Python, com o número de repetições lido dos dados. O autograd consegue derivá-lo?",
+    "hint": "Quando o registro é feito?",
+    "choices": [
+      {
+        "text": "Não, um laço precisa ser desenrolado à mão antes",
+        "why": "O laço se desenrola sozinho enquanto roda: cada volta acrescenta as suas operações ao registro."
+      },
+      {
+        "text": "Não, o autograd lê o código-fonte, e ele precisa de uma estrutura fixa",
+        "why": "Ele não lê o código; ele observa a aritmética."
+      },
+      {
+        "text": "Sim, ele deriva as operações que de fato rodaram",
+        "why": "Certo. O registro é construído durante a execução, então três voltas dão um registro com três cópias das operações da camada."
+      },
+      {
+        "text": "Sim, mas dentro de `torch.no_grad()`",
+        "why": "Dentro do `no_grad` nada é registrado, então nada poderia ser derivado."
+      }
+    ]
+  },
+  "ex-efqq7h1c": {
+    "prompt": "Quantos parâmetros tem o `make_mlp(hidden=128)`, contando os vieses?",
+    "hint": "64 × 128 + 128, depois 128 × 10 + 10.",
+    "unit": "parâmetros"
+  },
+  "ex-0f0t6rg1": {
+    "prompt": "Qual o formato de `nn.Linear(64, 32).weight`?",
+    "hint": "O `modules.py` o imprimiu para a primeira camada.",
+    "choices": [
+      {
+        "text": "(64, 32)",
+        "why": "Esse é o arranjo da aula 1, entradas por saídas; o PyTorch guarda a transposta."
+      },
+      {
+        "text": "(32, 64)",
+        "why": "Certo: saídas por entradas, e é por isso que a camada calcula `x @ weight.T`."
+      },
+      {
+        "text": "(32,)",
+        "why": "Esse é o viés, um número por saída."
+      },
+      {
+        "text": "(2080,)",
+        "why": "2.080 é a contagem de parâmetros da camada, pesos e vieses juntos, não um formato."
+      }
+    ]
+  },
+  "ex-xzbgh5j0": {
+    "prompt": "Uma classe guarda as suas três camadas ocultas em `self.layers = [nn.Linear(64, 64) for _ in range(3)]`, uma lista comum do Python. Ela treina sem erro. O que está errado?",
+    "hint": "Como o `parameters()` encontra as camadas de um módulo?",
+    "choices": [
+      {
+        "text": "Nada, uma lista de camadas é o mesmo que `nn.Sequential`",
+        "why": "Uma lista comum não é registrada, então as camadas dela ficam invisíveis para o `parameters()`."
+      },
+      {
+        "text": "As três camadas faltam em `parameters()` e ficam aleatórias",
+        "why": "Certo. O otimizador nunca as recebe. O `nn.ModuleList` as registra."
+      },
+      {
+        "text": "As três camadas dividem uma matriz de pesos",
+        "why": "A compreensão constrói três objetos `Linear` separados, cada um com seus pesos."
+      },
+      {
+        "text": "O passo para a frente pula a lista",
+        "why": "O `forward` roda o que está escrito nele; as camadas da lista são aplicadas."
+      }
+    ]
+  },
+  "ex-qmpmwyxr": {
+    "prompt": "Ponha em ordem as linhas de um lote do `loop.fit`, como elas rodam.",
+    "hint": "O `loop.py` zera depois de calcular a perda.",
+    "items": [
+      "`loss = F.cross_entropy(model(x[idx]), y[idx])`",
+      "`opt.zero_grad()`",
+      "`loss.backward()`",
+      "`opt.step()`",
+      "`total += loss.item() * len(idx)`"
+    ]
+  },
+  "ex-6vwxd745": {
+    "prompt": "Por que o `opt.zero_grad()` tem de rodar antes do `loss.backward()`, e não entre o `backward` e o `step`?",
+    "hint": "O que cada um dos dois lê ou escreve no `.grad`?",
+    "choices": [
+      {
+        "text": "Porque o `backward` se recusa a rodar enquanto o `.grad` tem números",
+        "why": "Ele roda tranquilo e soma a eles; esse é o problema."
+      },
+      {
+        "text": "Zerar ali esvaziaria os gradientes que o `step` vai ler",
+        "why": "Certo: o `backward` preenche o `.grad` e o `step` o lê, então zerar entre os dois deixa o passo sem nada."
+      },
+      {
+        "text": "Porque o `zero_grad` também reinicia a taxa de aprendizado",
+        "why": "Ele mexe nos gradientes e em mais nada."
+      },
+      {
+        "text": "Porque o `step` constrói o registro que o `backward` lê",
+        "why": "O passo para a frente constrói o registro; o `step` move pesos."
+      }
+    ]
+  },
+  "ex-hg56yqf7": {
+    "prompt": "O `F.cross_entropy` recebe as pontuações brutas da rede, chamadas ___, e aplica o softmax ele mesmo.",
+    "hint": "A palavra que a aula 4 usou para a saída da última camada.",
+    "blanks": [
+      {
+        "accept": [
+          "logits",
+          "logit"
+        ]
+      }
+    ]
+  },
+  "ex-gs6vc0xf": {
+    "prompt": "Ligue cada erro ao sintoma que a execução dele no `bugs.py` mostrou.",
+    "hint": "Leia as cinco transcrições.",
+    "pairs": [
+      {
+        "left": "sem `zero_grad`",
+        "right": "a perda de treino subiu entre a época 5 e a época 10"
+      },
+      {
+        "left": "softmax antes da perda",
+        "right": "a perda ficou perto de 2.29 e quase não andou"
+      },
+      {
+        "left": "sem `eval()`",
+        "right": "duas avaliações da mesma rede deram duas acurácias"
+      },
+      {
+        "left": "a perda guardada como tensor",
+        "right": "o NumPy se recusou a tirar a média das perdas"
+      },
+      {
+        "left": "rótulos de formato `[32, 1]`",
+        "right": "a perda recusou o alvo no primeiro lote"
+      }
+    ]
+  },
+  "ex-jk31beha": {
+    "prompt": "A rede de um colega tem normalização em lote. A acurácia de validação sai um pouco diferente cada vez que ele mede, embora nenhum treino tenha acontecido no meio. O que procurar primeiro?",
+    "hint": "O que muda dentro de uma camada assim quando ela roda no modo de treino?",
+    "choices": [
+      {
+        "text": "Um `torch.no_grad()` faltando em volta da avaliação",
+        "why": "Isso custa memória e tempo e deixa os números como estão."
+      },
+      {
+        "text": "Um `zero_grad()` faltando no laço de treino",
+        "why": "Nenhum passo rodou entre as medições, então os gradientes não moveram nada."
+      },
+      {
+        "text": "Um embaralhamento diferente do conjunto de validação",
+        "why": "A acurácia sobre um conjunto inteiro não depende da ordem das imagens."
+      },
+      {
+        "text": "Um `model.eval()` faltando",
+        "why": "Certo. No modo de treino a normalização em lote usa as estatísticas de cada lote e atualiza as acumuladas, então cada medição muda a seguinte."
+      }
+    ]
+  },
+  "ex-yah0x43s": {
+    "prompt": "Um laço faz o relatório com `total += loss` em vez de `total += loss.item()`. Nenhum erro aparece. O que isso custa?",
+    "hint": "O que o `loss` leva junto com o seu número?",
+    "choices": [
+      {
+        "text": "Memória: o registro de cada lote fica vivo até a época acabar",
+        "why": "Certo. O `total` vira um tensor encadeado ao registro de cada lote, e nenhum deles é liberado."
+      },
+      {
+        "text": "Gradientes errados, porque o `total` entra no próximo backward",
+        "why": "O `backward` é chamado no `loss`, não no `total`, então os gradientes estão certos."
+      },
+      {
+        "text": "Uma média errada, porque tensores arredondam diferente",
+        "why": "A soma é o mesmo número nos dois casos."
+      },
+      {
+        "text": "Passos mais lentos, porque o `step` percorre a cadeia",
+        "why": "O `step` lê o `.grad` e não percorre nada."
+      }
+    ]
+  },
+  "ex-bpkbz1ns": {
+    "prompt": "Uma rede de regressão devolve formato `[64, 1]` e os alvos são `[64]`. O `F.mse_loss` imprime um aviso e o treino roda até o fim. Com o que ela treinou?",
+    "hint": "Faça o broadcasting de `[64, 1]` contra `[64]`.",
+    "choices": [
+      {
+        "text": "A perda certa, já que o aviso é só cosmético",
+        "why": "No exemplo do `bugs.py`, quatro previsões exatas marcaram 2.5 em vez de 0."
+      },
+      {
+        "text": "O primeiro alvo para cada previsão",
+        "why": "O broadcasting junta cada previsão com os 64 alvos, não com um."
+      },
+      {
+        "text": "A média sobre os 4.096 pares previsão-alvo",
+        "why": "Certo. `[64, 1]` contra `[64]` vira `[64, 64]`, e a rede aprende a prever perto da média dos alvos."
+      },
+      {
+        "text": "Nada: a perda é zero e nenhum gradiente flui",
+        "why": "A perda é grande, já que a maioria dos pares são exemplos diferentes."
+      }
+    ]
+  },
+  "ex-0hwq4j35": {
+    "prompt": "O que o `model.state_dict()` guarda?",
+    "hint": "O `load.py` imprimiu o conteúdo dele.",
+    "choices": [
+      {
+        "text": "A classe do modelo e o seu método forward",
+        "why": "O código é o que o state dict deixa de fora, e é por isso que o `make_mlp` teve de construir a rede antes."
+      },
+      {
+        "text": "Os tensores de parâmetros, por nome",
+        "why": "Certo: `0.weight`, `0.bias`, `2.weight`, `2.bias` e os seus números."
+      },
+      {
+        "text": "Os pesos e o histórico de treino",
+        "why": "O histórico é o que o `fit` devolve, e ele não vai a lugar algum a não ser que você o salve."
+      },
+      {
+        "text": "O estado do otimizador junto com os pesos",
+        "why": "O otimizador tem um state dict próprio, salvo à parte."
+      }
+    ]
+  },
+  "ex-rapc1thm": {
+    "prompt": "Um colega salvou um modelo com `torch.save(model)` no mês passado e depois renomeou o módulo que definia a classe dele. Carregar o arquivo agora falha. Por que um state dict teria sobrevivido à renomeação?",
+    "hint": "O que um pickle registra sobre uma classe?",
+    "choices": [
+      {
+        "text": "Um state dict é comprimido, um pickle não",
+        "why": "Os dois passam pelo `torch.save`; compressão não é a diferença."
+      },
+      {
+        "text": "Um state dict guarda uma cópia do código da classe ao lado dos tensores, então uma renomeação não o atinge",
+        "why": "Ele não guarda código algum, e esse é o ponto."
+      },
+      {
+        "text": "Ele nomeia tensores, não a classe, então qualquer código que construa os mesmos formatos o aceita",
+        "why": "Certo. O pickle registrou a classe pelo módulo e pelo nome, e esse endereço mudou."
+      },
+      {
+        "text": "O `torch.load` conserta módulos renomeados num state dict",
+        "why": "Nada é consertado; simplesmente não há nome de módulo num state dict para quebrar."
+      }
+    ]
+  },
+  "ex-p3a8tqde": {
+    "prompt": "Quais destas coisas as execuções desta aula mostraram? Marque todas as que se aplicam.",
+    "hint": "Confira cada uma contra uma transcrição.",
+    "choices": [
+      {
+        "text": "O autograd deu os gradientes da aula 3 para a rede 2-2-1",
+        "why": "Sim: `dW1 [[2.25, 0.0], [4.5, 0.0]]`, os números que a aula 3 calculou à mão."
+      },
+      {
+        "text": "O `torch.from_numpy` fez uma cópia dos dígitos",
+        "why": "Não: o 7.0 escrito no array foi lido de volta pelo tensor."
+      },
+      {
+        "text": "O MLP chegou a 0.950 de acurácia de validação em 30 épocas",
+        "why": "Sim, a última linha do `train.py`, e o `load.py` a reproduziu a partir do arquivo."
+      },
+      {
+        "text": "Softmax antes da perda treinou tão bem quanto o laço correto",
+        "why": "Não: terminou em 0.194 contra 0.914."
+      },
+      {
+        "text": "Uma rede com 64 unidades ocultas recusou o arquivo de 32 unidades",
+        "why": "Sim: `size mismatch for 0.weight`."
+      }
+    ]
+  }
+}

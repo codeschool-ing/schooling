@@ -5,8 +5,9 @@ version: 1
 
 O `byhand.py` dá nome a cada array, o que serve para nove pesos e é impossível para milhares. **O
 módulo abaixo transforma cada uma das quatro regras numa classe com dois métodos, `forward` e
-`backward`, e uma rede numa lista dessas classes.** É tudo com que as aulas 3 a 8 treinam: essas
-aulas acrescentam a ele um otimizador, dropout e normalização, e nenhuma delas muda este arquivo.
+`backward`, e uma rede numa lista dessas classes.** É tudo com que as aulas 3 a 8 treinam. Essas
+aulas acrescentam ao lado dele um otimizador, dropout e normalização, e nenhuma delas muda este
+arquivo.
 Salve-o como `~/dl/tinynet.py`, ao lado do `digits.py` da aula 1:
 
 ```schooling-example

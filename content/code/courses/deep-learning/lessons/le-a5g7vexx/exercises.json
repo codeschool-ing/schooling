@@ -1,0 +1,549 @@
+[
+  {
+    "id": "ex-y66xtby4",
+    "version": 1,
+    "section": "a-filter-by-hand",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is the output of `filter.py` 6 by 6, when the digit is 8 by 8?",
+    "hint": "Count where a 3-pixel window can stand.",
+    "choices": [
+      {
+        "text": "The filter drops the blank border of the digit",
+        "correct": false,
+        "why": "The size has nothing to do with the ink: a full image would give 6 by 6 as well."
+      },
+      {
+        "text": "A 3-wide window fits in 6 places across 8 pixels",
+        "correct": true,
+        "why": "Right. It can start at columns 0 to 5; starting at 6 it would need a column 8 that does not exist."
+      },
+      {
+        "text": "PyTorch halves the size of every convolution's output",
+        "correct": false,
+        "why": "Halving would give 4, and the loops in NumPy gave 6 before PyTorch was called."
+      },
+      {
+        "text": "Its stride is 2",
+        "correct": false,
+        "why": "The loops move one pixel at a time; with stride 2 and no padding the answer would be 3."
+      }
+    ]
+  },
+  {
+    "id": "ex-z8sdafb9",
+    "version": 1,
+    "section": "a-filter-by-hand",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the filter `[[-1, 0, 1]] * 3`, the third column of the output runs from -5 to -34. What is under the window there?",
+    "hint": "The filter subtracts its left column from its right one.",
+    "choices": [
+      {
+        "text": "A blank part of the image",
+        "correct": false,
+        "why": "Blank on both sides gives zero, as in the last column's top rows."
+      },
+      {
+        "text": "The left edge of the stroke, where ink begins",
+        "correct": false,
+        "why": "That is the first column, 21 to 48: more ink on the right than on the left gives a positive sum."
+      },
+      {
+        "text": "The right edge of the stroke, where ink ends",
+        "correct": true,
+        "why": "Right. Ink on the left and blank on the right makes the subtracted side win."
+      },
+      {
+        "text": "A part inked evenly from side to side",
+        "correct": false,
+        "why": "Even ink cancels, left against right, and gives a number near zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-b2jx1nvp",
+    "version": 1,
+    "section": "a-filter-by-hand",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You want a filter that answers strongly where ink begins as you read the image from top to bottom. Which one?",
+    "hint": "Turn the lesson's filter a quarter turn.",
+    "choices": [
+      {
+        "text": "`[[1, 0, -1], [1, 0, -1], [1, 0, -1]]`",
+        "correct": false,
+        "why": "That is the lesson's filter mirrored: it still compares left with right, and fires where ink ends."
+      },
+      {
+        "text": "`[[-1, -1, -1], [0, 0, 0], [1, 1, 1]]`",
+        "correct": true,
+        "why": "Right. The bottom row is added and the top row subtracted, so ink below a blank gives a large positive sum."
+      },
+      {
+        "text": "`[[1, 1, 1], [1, 1, 1], [1, 1, 1]]`",
+        "correct": false,
+        "why": "That adds the whole patch: it measures how much ink there is, wherever it sits."
+      },
+      {
+        "text": "`[[0, -1, 0], [-1, 4, -1], [0, -1, 0]]`",
+        "correct": false,
+        "why": "That compares the centre with its four neighbours, a spot detector with no direction."
+      }
+    ]
+  },
+  {
+    "id": "ex-vw66cmfk",
+    "version": 1,
+    "section": "stride-and-padding",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A 28 by 28 image goes through `nn.Conv2d(1, 6, kernel_size=5)`, with stride 1 and no padding. How wide is each output map?",
+    "hint": "(n + 2p - k) // s + 1",
+    "value": 24,
+    "tolerance": 0,
+    "unit": "pixels"
+  },
+  {
+    "id": "ex-31v11je1",
+    "version": 1,
+    "section": "stride-and-padding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A 3 by 3 filter with stride 2 and no padding turns an 8 by 8 image into 3 by 3. What happens to the image's last column?",
+    "hint": "List the columns where the window stands.",
+    "choices": [
+      {
+        "text": "PyTorch pads it with zeros so that it is read",
+        "correct": false,
+        "why": "Padding is added only when you ask for it, and this layer has `padding=0`."
+      },
+      {
+        "text": "It is never read",
+        "correct": true,
+        "why": "Right. The window stands at columns 0, 2 and 4; a fourth step would need columns 6 to 8."
+      },
+      {
+        "text": "It is read twice, once by each of the last two windows",
+        "correct": false,
+        "why": "The last window covers columns 4 to 6, and column 7 lies past it."
+      },
+      {
+        "text": "The layer raises an error about the size",
+        "correct": false,
+        "why": "`shapes.py` ran this setting and printed `(1, 4, 3, 3)` with no warning at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-7akfcrwr",
+    "version": 1,
+    "section": "stride-and-padding",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With a 3 by 3 filter and stride 1, a padding of ___ keeps an 8 by 8 map at 8 by 8.",
+    "hint": "p = (k - 1) / 2",
+    "blanks": [
+      {
+        "accept": [
+          "1",
+          "one"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-em0h9fk9",
+    "version": 1,
+    "section": "pooling",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many parameters does `nn.MaxPool2d(2)` learn during training?",
+    "hint": "What did `pool.py` print?",
+    "choices": [
+      {
+        "text": "Four, one for each position in its 2 by 2 block",
+        "correct": false,
+        "why": "Taking the maximum needs no weights at all."
+      },
+      {
+        "text": "One for each channel it pools",
+        "correct": false,
+        "why": "There is nothing per channel either: the same rule runs on every map."
+      },
+      {
+        "text": "None",
+        "correct": true,
+        "why": "Right: `parameters in MaxPool2d(2): 0`. It is a fixed rule."
+      },
+      {
+        "text": "As many as the convolution before it",
+        "correct": false,
+        "why": "Pooling has no weights of its own and does not borrow the convolution's."
+      }
+    ]
+  },
+  {
+    "id": "ex-294sy724",
+    "version": 1,
+    "section": "pooling",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In `pool.py` the dot moved one pixel and the pooled output stayed the same. A student concludes that max pooling makes a network ignore any shift. What does the same run say against that?",
+    "hint": "Look at the third line about the dot.",
+    "choices": [
+      {
+        "text": "Moved two pixels, it crossed into the next block and the output moved",
+        "correct": true,
+        "why": "Right. Pooling tolerates a shift inside its block, and no more."
+      },
+      {
+        "text": "Nothing: the output stayed `[1.0, 0.0, 0.0, 0.0]` for every shift",
+        "correct": false,
+        "why": "At a shift of 2 it printed `[0.0, 1.0, 0.0, 0.0]`."
+      },
+      {
+        "text": "Average pooling ignores shifts and max pooling does not",
+        "correct": false,
+        "why": "Both work block by block, so both change when a feature crosses a block."
+      },
+      {
+        "text": "Max pooling ignored the dot, which is why nothing changed",
+        "correct": false,
+        "why": "It kept the dot: the 1.0 is the dot's value, carried into the block's output."
+      }
+    ]
+  },
+  {
+    "id": "ex-nvwde6f3",
+    "version": 1,
+    "section": "channels-and-parameters",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many parameters does `nn.Conv2d(3, 8, kernel_size=5)` have, biases included?",
+    "hint": "out × in × k × k, plus one bias per filter.",
+    "value": 608,
+    "tolerance": 0,
+    "unit": "parameters"
+  },
+  {
+    "id": "ex-8meryaa1",
+    "version": 1,
+    "section": "channels-and-parameters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`nn.Conv2d(1, 16, kernel_size=3, padding=1)` has 160 parameters on the 8 by 8 digits. How many does it have on 64 by 64 grey images?",
+    "hint": "What does a filter depend on?",
+    "choices": [
+      {
+        "text": "10,240, because the image has 64 times as many pixels",
+        "correct": false,
+        "why": "That would be true of a dense layer, which pays per pixel. A filter does not."
+      },
+      {
+        "text": "160, the same",
+        "correct": true,
+        "why": "Right. The same 16 filters slide over any size of image; weight sharing is the saving."
+      },
+      {
+        "text": "1,280, because it needs eight times more filters to cover the width",
+        "correct": false,
+        "why": "The number of filters is the 16 written in the layer; the image size does not change it."
+      },
+      {
+        "text": "It cannot run on that size without being rebuilt",
+        "correct": false,
+        "why": "A convolution runs on any height and width; only the input channels must match."
+      }
+    ]
+  },
+  {
+    "id": "ex-crq69e8n",
+    "version": 1,
+    "section": "channels-and-parameters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The second layer's weight has the shape `(32, 16, 3, 3)`. What does one of its 32 filters look at, at one position?",
+    "hint": "What does the 16 count?",
+    "choices": [
+      {
+        "text": "A 3 by 3 patch of one of the 16 maps, chosen at random",
+        "correct": false,
+        "why": "Nothing is chosen: every filter has a 3 by 3 slice of weights for each map coming in."
+      },
+      {
+        "text": "A 3 by 3 patch of the original digit",
+        "correct": false,
+        "why": "The second layer never sees the digit; it reads what the first layer made of it."
+      },
+      {
+        "text": "The same 3 by 3 place in all 16 maps of the first layer",
+        "correct": true,
+        "why": "Right: 16 × 3 × 3 weights, one slice per channel, added into one number."
+      },
+      {
+        "text": "16 different places of a single map",
+        "correct": false,
+        "why": "The 16 counts the channels coming in, not positions."
+      }
+    ]
+  },
+  {
+    "id": "ex-7t0bnr05",
+    "version": 1,
+    "section": "a-small-cnn",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`cnn.make_cnn()` has 38,282 parameters. Where are most of them?",
+    "hint": "`compare.py` printed how many the convolutions hold.",
+    "choices": [
+      {
+        "text": "In the two convolutions, which read the whole image",
+        "correct": false,
+        "why": "They hold 4,800, about one in eight, because their filters are shared across the image."
+      },
+      {
+        "text": "In the max pooling",
+        "correct": false,
+        "why": "Pooling has none."
+      },
+      {
+        "text": "In `Linear(512, 64)`, after `Flatten`",
+        "correct": true,
+        "why": "Right: 512 × 64 + 64 = 32,832 of them."
+      },
+      {
+        "text": "In the last layer, `Linear(64, 10)`",
+        "correct": false,
+        "why": "That one has 650, a small share of the total."
+      }
+    ]
+  },
+  {
+    "id": "ex-031sw2r7",
+    "version": 1,
+    "section": "a-small-cnn",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After 30 epochs the convolutional network's training loss is 0.0070 and its validation loss 0.0633. What does the gap say?",
+    "hint": "Which set did the weights see?",
+    "choices": [
+      {
+        "text": "The validation set is harder than the training set",
+        "correct": false,
+        "why": "Both come from one shuffle of the same digits; the difference is which ones the weights were fitted to."
+      },
+      {
+        "text": "It has nearly memorised the training images",
+        "correct": true,
+        "why": "Right, and that is lesson 7's subject: a training loss far below the validation loss is overfitting starting."
+      },
+      {
+        "text": "The learning rate was too high",
+        "correct": false,
+        "why": "A rate too high makes the training loss itself jump or stall; here it fell smoothly."
+      },
+      {
+        "text": "The validation loss was computed in training mode",
+        "correct": false,
+        "why": "`loop.evaluate` switches to evaluation mode, and this network has no layer that behaves differently anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-haxaefht",
+    "version": 1,
+    "section": "a-small-cnn",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague reads the run and writes in a report that convolution is three points better than a dense network on these digits. What is the run missing before that sentence holds?",
+    "hint": "How many times was each network trained?",
+    "choices": [
+      {
+        "text": "A GPU, so the result is not limited by the processor",
+        "correct": false,
+        "why": "A graphics card changes the time, not the accuracy a given seed reaches."
+      },
+      {
+        "text": "More epochs for the dense network",
+        "correct": false,
+        "why": "Equal epochs were the fair choice; the gap the report needs to know about is the one between seeds."
+      },
+      {
+        "text": "Other seeds, and the spread between them",
+        "correct": true,
+        "why": "Right. One run each is one sample each; lesson 18 measures the spread."
+      },
+      {
+        "text": "A larger dense network with as many parameters",
+        "correct": false,
+        "why": "That would be a different question, about size. The sentence as written is about these two networks, run once."
+      }
+    ]
+  },
+  {
+    "id": "ex-37pyxzvn",
+    "version": 1,
+    "section": "what-the-filters-learnt",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Who chose the weights of the sixteen filters in the first layer of the trained network?",
+    "hint": "Where did they start?",
+    "choices": [
+      {
+        "text": "The author, as for `filter.py`",
+        "correct": false,
+        "why": "`filter.py`'s filter was written by hand; these were never written by anybody."
+      },
+      {
+        "text": "PyTorch, which ships a standard set of edge filters",
+        "correct": false,
+        "why": "PyTorch starts them at random; nothing is shipped."
+      },
+      {
+        "text": "Training, from random numbers",
+        "correct": true,
+        "why": "Right. The gradient moved them, step by step, towards whatever lowered the loss."
+      },
+      {
+        "text": "The data, by averaging the training images",
+        "correct": false,
+        "why": "No average was taken; the filters are what the loss's gradient made of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-478bj4h7",
+    "version": 1,
+    "section": "what-the-filters-learnt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`filters.py` prints `largest weight: 0.33 at the start`. Why 0.33?",
+    "hint": "How many inputs does each filter of the first layer read?",
+    "choices": [
+      {
+        "text": "PyTorch's default range for 9 inputs is ±1/3",
+        "correct": true,
+        "why": "Right: 1 over the square root of 9 inputs."
+      },
+      {
+        "text": "Training clips every weight at 0.33 at each step",
+        "correct": false,
+        "why": "After training the largest is 0.57, so nothing clipped them."
+      },
+      {
+        "text": "The digits are divided by 3 before training",
+        "correct": false,
+        "why": "They are divided by 16, and the starting weights do not look at the data."
+      },
+      {
+        "text": "It is the seed, 0, plus a third",
+        "correct": false,
+        "why": "A seed picks which random numbers come out, not their range."
+      }
+    ]
+  },
+  {
+    "id": "ex-4spkkt2s",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the layers of `cnn.make_cnn()` in the order a digit goes through them, ReLUs left out.",
+    "hint": "Follow the shape comments: 16 x 8 x 8, 32 x 8 x 8, 32 x 4 x 4, 512.",
+    "items": [
+      "`Conv2d(1, 16)`",
+      "`Conv2d(16, 32)`",
+      "`MaxPool2d(2)`",
+      "`Flatten()`",
+      "`Linear(512, 64)`"
+    ]
+  },
+  {
+    "id": "ex-zgr5wa47",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each setting of a convolution on an 8 by 8 image to the width of its output.",
+    "hint": "(8 + 2p - k) // s + 1",
+    "pairs": [
+      {
+        "left": "kernel 3, stride 1, padding 0",
+        "right": "6"
+      },
+      {
+        "left": "kernel 5, stride 1, padding 2",
+        "right": "8"
+      },
+      {
+        "left": "kernel 3, stride 2, padding 0",
+        "right": "3"
+      },
+      {
+        "left": "kernel 5, stride 1, padding 0",
+        "right": "4"
+      }
+    ],
+    "right_distractors": [
+      "5"
+    ]
+  },
+  {
+    "id": "ex-0rrwndvd",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did this lesson's runs show? Choose all that apply.",
+    "hint": "Check each against a transcript.",
+    "choices": [
+      {
+        "text": "PyTorch's `F.conv2d` gave the same 36 numbers as two NumPy loops",
+        "correct": true,
+        "why": "Yes: `PyTorch agrees: True`."
+      },
+      {
+        "text": "Max pooling learnt 4 parameters per block",
+        "correct": false,
+        "why": "No: `parameters in MaxPool2d(2): 0`."
+      },
+      {
+        "text": "The convolutional network ended at 0.983 on validation, the dense one at 0.953",
+        "correct": true,
+        "why": "Yes, after 30 epochs each, one seed each."
+      },
+      {
+        "text": "The convolutional network had fewer parameters than the dense one",
+        "correct": false,
+        "why": "No: 38,282 against 4,810. Its two convolutions alone hold 4,800."
+      },
+      {
+        "text": "A dense layer replacing the first convolution would need 66,560 parameters",
+        "correct": true,
+        "why": "Yes, against 160 for the convolution."
+      }
+    ]
+  }
+]

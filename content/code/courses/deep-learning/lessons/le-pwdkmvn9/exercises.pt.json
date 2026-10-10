@@ -1,0 +1,361 @@
+{
+  "ex-kbf2csb5": {
+    "prompt": "Em que uma transformação do torchvision usada para augmentation difere das cópias deslocadas da aula 7?",
+    "hint": "Quando a mudança é feita, e ela é guardada?",
+    "choices": [
+      {
+        "text": "Muda também as imagens de validação",
+        "why": "A validação é lida como foi desenhada nas duas abordagens; augmentation é só para o treino."
+      },
+      {
+        "text": "Uma mudança aleatória nova a cada uso da imagem",
+        "why": "Certo. Cada época vê variantes novas, e o conjunto de treino continua do mesmo tamanho."
+      },
+      {
+        "text": "Só funciona em fotografias, não em dígitos 8 por 8",
+        "why": "O `augment.py` a rodou nos dígitos como tensores 1x8x8, sem conversão."
+      },
+      {
+        "text": "Grava cada variante num conjunto de dados maior antes do treino",
+        "why": "Isso foi o que a aula 7 fez; a transformação faz o contrário."
+      }
+    ]
+  },
+  "ex-ekwv0q1k": {
+    "prompt": "`shift(batch)` foi chamado uma vez num lote de quatro dígitos. O que a saída mostrou?",
+    "hint": "Compare os quatro desenhos entre si.",
+    "choices": [
+      {
+        "text": "Cada dígito se moveu numa direção própria",
+        "why": "Isso foi o que a chamada por imagem produziu, com `torch.stack`."
+      },
+      {
+        "text": "O lote foi recusado com erro de formato",
+        "why": "As transformações v2 aceitam dimensões à frente; a chamada rodou."
+      },
+      {
+        "text": "Os quatro se moveram com o mesmo deslocamento",
+        "why": "Certo. Uma chamada é uma amostra para o v2, então um deslocamento é sorteado para o lote inteiro."
+      },
+      {
+        "text": "Nada se moveu, porque a semente era fixa",
+        "why": "Uma semente fixa torna os sorteios repetíveis, não nulos."
+      }
+    ]
+  },
+  "ex-bbax527t": {
+    "prompt": "Um colega faz augmentation com `x_aug = jitter(x[idx])` dentro do laço de treino, onde `x[idx]` é um lote de 32 imagens. Qual é o efeito?",
+    "hint": "Quantos sorteios uma chamada faz?",
+    "choices": [
+      {
+        "text": "Cada uma das 32 imagens recebe o próprio giro e deslocamento aleatórios",
+        "why": "Isso pede uma chamada por imagem; uma chamada no lote sorteia uma vez."
+      },
+      {
+        "text": "O lote inteiro se move junto, então a variedade é bem menor",
+        "why": "Certo. A correção é chamar a transformação por imagem, no `__getitem__` ou com `torch.stack`."
+      },
+      {
+        "text": "Os rótulos são girados junto com as imagens",
+        "why": "Os rótulos são outro tensor, que a chamada nem vê."
+      },
+      {
+        "text": "O treino quebra no primeiro lote",
+        "why": "Roda sem reclamar, e é por isso que esse erro sobrevive."
+      }
+    ]
+  },
+  "ex-r2wv8cba": {
+    "prompt": "O que uma augmentation afirma sobre as imagens que muda?",
+    "hint": "O treino usa o rótulo antigo com a imagem nova.",
+    "choices": [
+      {
+        "text": "Que o rótulo continua certo depois da mudança",
+        "why": "Certo, e para um 6 de cabeça para baixo a afirmação é falsa."
+      },
+      {
+        "text": "Que a imagem fica mais fácil de classificar",
+        "why": "Imagens aumentadas costumam ser mais difíceis; isso faz parte do que ensinam."
+      },
+      {
+        "text": "Que o conjunto de validação vai conter imagens assim",
+        "why": "Ela não diz nada sobre a validação, que é lida como foi desenhada."
+      },
+      {
+        "text": "Que a rede já viu exatamente essa mudança antes",
+        "why": "A ideia é o contrário: uma mudança que ela não viu."
+      }
+    ]
+  },
+  "ex-pzr8s4ad": {
+    "prompt": "No `preserve.py`, quantos dos 6 de validação virados de cabeça para baixo a rede leu como 9?",
+    "hint": "A penúltima linha, a última contagem.",
+    "unit": "imagens"
+  },
+  "ex-170t06ej": {
+    "prompt": "Você classifica radiografias de tórax em que o coração fica do lado esquerdo do paciente. Qual augmentation a regra da aula recusa?",
+    "hint": "Qual mudança um radiologista notaria como errada?",
+    "choices": [
+      {
+        "text": "Um deslocamento de alguns pixels",
+        "why": "Onde a imagem foi enquadrada não muda o diagnóstico."
+      },
+      {
+        "text": "Uma pequena mudança de brilho",
+        "why": "A exposição varia entre aparelhos; um pouco dela mantém o rótulo, a menos que a tarefa seja sobre densidade."
+      },
+      {
+        "text": "Um espelhamento horizontal",
+        "why": "Certo. Ele põe o coração à direita, uma anatomia que é um achado por si só, com o rótulo antigo."
+      },
+      {
+        "text": "Um giro de três graus",
+        "why": "Pacientes nunca ficam perfeitamente retos; um giro pequeno é uma mudança que o rótulo aguenta."
+      }
+    ]
+  },
+  "ex-za6mrs71": {
+    "prompt": "No `augtrain.py`, qual política fez mais estrago, e por quê?",
+    "hint": "Olhe a última linha e pense no 6 e no 9.",
+    "choices": [
+      {
+        "text": "Shift and turn, porque a rede viu variantes demais",
+        "why": "Foi a melhor linha das quatro."
+      },
+      {
+        "text": "Mirror, porque metade das imagens foi mudada",
+        "why": "Fez mal, mas menos que any turn."
+      },
+      {
+        "text": "Any turn: 6 e 9 foram ensinados como os dois",
+        "why": "Certo, e todo dígito precisou ser aprendido em toda orientação com dez exemplos."
+      },
+      {
+        "text": "None, porque sem augmentation ela sobreajustou",
+        "why": "Sem augmentation pontuou acima das duas políticas inseguras."
+      }
+    ]
+  },
+  "ex-9raxpftb": {
+    "prompt": "Por que o `augtrain.py` avalia com `loop.evaluate` nas imagens de validação puras?",
+    "hint": "Que pergunta a validação responde?",
+    "choices": [
+      {
+        "text": "Mede as imagens reais que o modelo vai encontrar",
+        "why": "Certo. Aumentá-la daria nota ao modelo em imagens que ninguém vai mandar."
+      },
+      {
+        "text": "Porque o `loop.evaluate` não aceita transformação",
+        "why": "Daria para escrevê-lo assim; o motivo é o que se mede, não a função."
+      },
+      {
+        "text": "Para deixar a comparação entre políticas mais rápida",
+        "why": "A velocidade não tem nada a ver; o conjunto puro é a coisa certa a medir."
+      },
+      {
+        "text": "Porque a validação aumentada sempre daria nota maior",
+        "why": "Ela costuma dar nota menor, e de todo jeito mede as imagens erradas."
+      }
+    ]
+  },
+  "ex-peq98k94": {
+    "prompt": "Ordene as quatro políticas do `augtrain.py` da melhor acurácia de validação para a pior.",
+    "hint": "Compare a menor das três sementes em cada linha.",
+    "items": [
+      "shift and turn",
+      "none",
+      "mirror",
+      "any turn"
+    ]
+  },
+  "ex-56mz0y8b": {
+    "prompt": "O que o `base.pt` contém?",
+    "hint": "O que o `torch.save` recebe?",
+    "choices": [
+      {
+        "text": "O código da CNN e os pesos, prontos para importar como módulo",
+        "why": "Só tensores são salvos; quem carrega monta `cnn.make_cnn(5)` antes."
+      },
+      {
+        "text": "As 528 imagens de treino dos dígitos de 0 a 4",
+        "why": "Os dados ficam no scikit-learn; o arquivo guarda o que foi aprendido com eles."
+      },
+      {
+        "text": "O state_dict de `cnn.make_cnn(5)`: tensores por nome",
+        "why": "Certo, 37.957 parâmetros, como a aula 9 salvou um."
+      },
+      {
+        "text": "Só a cabeça, a última `Linear(64, 5)`",
+        "why": "Os parâmetros de todas as camadas estão nele; a próxima seção precisa sobretudo do corpo."
+      }
+    ]
+  },
+  "ex-7brddv1g": {
+    "prompt": "Ligue cada parte de `cnn.make_cnn(5)` ao seu papel na transferência de aprendizado.",
+    "hint": "Corpo e cabeça, como a seção os divide.",
+    "pairs": [
+      {
+        "left": "as duas convoluções",
+        "right": "corpo, perto da entrada: peças que qualquer dígito tem"
+      },
+      {
+        "left": "Linear(512, 64)",
+        "right": "corpo, perto da saída: 64 características por imagem"
+      },
+      {
+        "left": "Linear(64, 5)",
+        "right": "cabeça: uma saída por classe antiga"
+      }
+    ],
+    "right_distractors": [
+      "o estado do otimizador, salvo junto"
+    ]
+  },
+  "ex-b11fknw6": {
+    "prompt": "Com 50 imagens dos dígitos de 5 a 9, como a cabeça sobre o corpo congelado se saiu contra o treino do zero?",
+    "hint": "As linhas `head_only` e `scratch` abaixo de 50 imagens.",
+    "choices": [
+      {
+        "text": "Foi claramente melhor, perto de 0,98",
+        "why": "Nenhuma execução da aula chegou lá; o corpo congelado perdeu."
+      },
+      {
+        "text": "Mais ou menos igual, com um ponto de diferença",
+        "why": "Isso foi o começo só com as convoluções e 10 imagens, não a cabeça sozinha."
+      },
+      {
+        "text": "Bem pior: perto de 0,68 contra 0,93 ou mais",
+        "why": "Certo, embora tenha treinado só 325 parâmetros."
+      },
+      {
+        "text": "Não treinou, ficou no acaso",
+        "why": "0,68 está bem acima do 0,2 de chutar entre cinco."
+      }
+    ]
+  },
+  "ex-2srygcrf": {
+    "prompt": "25 das 64 unidades antes da cabeça do `base.pt` ficam em zero para todo dígito de 5 a 9. O que isso diz?",
+    "hint": "Quem moldou essa camada, e para quê?",
+    "choices": [
+      {
+        "text": "Essa camada é de 0 a 4; corte antes para uma tarefa nova",
+        "why": "Certo. Manter só as convoluções trouxe a nota de volta para 0,917 a 0,922."
+      },
+      {
+        "text": "As unidades morreram porque a taxa de aprendizado era alta demais",
+        "why": "Elas disparam para 0 a 4, que marcou 0,989; só ficam caladas nos dígitos novos."
+      },
+      {
+        "text": "A cabeça nova precisa de mais épocas para acordá-las",
+        "why": "A cabeça fica depois delas e não muda o que elas devolvem; estão congeladas."
+      },
+      {
+        "text": "Nada; um ReLU em zero é normal e inofensivo",
+        "why": "Em zero para uma imagem, sim. Em zero para toda imagem nova, a característica se perde para a tarefa."
+      }
+    ]
+  },
+  "ex-62m01cft": {
+    "prompt": "Você tem 300 fotografias de cinco tipos de peça de máquina. Que começo a aula sugere tentar primeiro?",
+    "hint": "O que fez o empréstimo perder aqui, e isso se aplicaria?",
+    "choices": [
+      {
+        "text": "Treinar só do zero, já que a transferência perdeu em todas as execuções desta aula",
+        "why": "Perdeu porque o doador era minúsculo; um doador grande e amplo muda isso."
+      },
+      {
+        "text": "Um corpo do ImageNet congelado com cabeça nova, e uma referência do zero",
+        "why": "Certo. O doador é muito maior que a tarefa, e a referência diz se compensou."
+      },
+      {
+        "text": "Pré-treinar nas 300 fotografias e depois transferir para elas mesmas",
+        "why": "Um doador do tamanho da tarefa é exatamente o caso que falhou."
+      },
+      {
+        "text": "O `base.pt`, já que está treinado",
+        "why": "Ele conhece dígitos cinzentos 8 por 8, nada de fotos de peças."
+      }
+    ]
+  },
+  "ex-hqvjvv29": {
+    "prompt": "O pré-processamento que um modelo pré-treinado espera é montado a partir de `weights.___()`, nunca escrevendo os números à mão.",
+    "hint": "A última linha do `weights.py`.",
+    "blanks": [
+      {
+        "accept": [
+          "transforms"
+        ]
+      }
+    ]
+  },
+  "ex-p2hdvj7n": {
+    "prompt": "Por que imagens passadas a um corpo do ImageNet precisam ser normalizadas com `mean=[0.485, 0.456, 0.406]`?",
+    "hint": "Em que entradas os filtros aprenderam?",
+    "choices": [
+      {
+        "text": "Porque são as médias das suas próprias imagens",
+        "why": "São as do ImageNet, sejam quais forem as suas imagens."
+      },
+      {
+        "text": "Porque o PyTorch recusa entrada não normalizada",
+        "why": "Aceita qualquer coisa; só calcula outra coisa."
+      },
+      {
+        "text": "Os filtros aprenderam com entradas nessa escala",
+        "why": "Certo. Numa outra escala, toda entrada chega a eles deslocada."
+      },
+      {
+        "text": "Para transformar fotos coloridas em cinzentas",
+        "why": "Há um número por canal; os três canais continuam."
+      }
+    ]
+  },
+  "ex-4paj3qpv": {
+    "prompt": "Quais destas coisas as execuções desta aula mostraram? Marque todas as que se aplicam.",
+    "hint": "Confira cada uma contra uma transcrição.",
+    "choices": [
+      {
+        "text": "3 e 6 espelhados quase nunca foram reconhecidos",
+        "why": "Sim: 0,00 para os dois na coluna espelhada."
+      },
+      {
+        "text": "O corpo congelado do `base.pt` superou o treino do zero",
+        "why": "Não: perto de 0,68 contra 0,93 ou mais com 50 imagens."
+      },
+      {
+        "text": "Pequenos deslocamentos e giros subiram a pior de três sementes",
+        "why": "Sim: de 0,886 para 0,928."
+      },
+      {
+        "text": "O `base.pt` chegou a 0,989 na validação de 0 a 4",
+        "why": "Sim, depois de 20 épocas."
+      },
+      {
+        "text": "Os pesos da ResNet-18 foram baixados e testados",
+        "why": "Não: só os metadados foram lidos; o download não foi executado."
+      }
+    ]
+  },
+  "ex-94w14arm": {
+    "prompt": "No `transfer.py`, que parâmetros o otimizador recebe para `head_only`?",
+    "hint": "A compreensão de lista antes do `Adam`.",
+    "choices": [
+      {
+        "text": "Todos os 37.957, com os congelados ignorados pelo Adam",
+        "why": "A lista filtra por `requires_grad`, então os congelados nem chegam a ele."
+      },
+      {
+        "text": "Só os 325 da nova `Linear(64, 5)`",
+        "why": "Certo: uma camada nova nasce com `requires_grad` ligado, e nada mais tem."
+      },
+      {
+        "text": "Os 33.157 das duas camadas lineares novas",
+        "why": "Isso é o `convolutions_only`, que troca a camada 6 também."
+      },
+      {
+        "text": "Nenhum, porque o `base.pt` já está treinado",
+        "why": "A cabeça nova começa aleatória e precisa aprender."
+      }
+    ]
+  }
+}

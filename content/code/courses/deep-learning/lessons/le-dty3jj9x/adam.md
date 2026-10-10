@@ -40,7 +40,13 @@ program below takes its first five steps on three made-up parameters. Save as `~
 ```
 
 ```
-PENDING adam
+ana@vm:~/dl$ python adam_steps.py
+plain SGD at the same rate steps [0.1     0.00001 0.00001]
+step 1: Adam [0.001 0.001 0.001]   uncorrected [0.003162 0.003162 0.003162]
+step 2: Adam [ 0.001     0.001    -0.000053]   uncorrected [ 0.00425   0.004249 -0.000224]
+step 3: Adam [0.001    0.001    0.000336]   uncorrected [0.00495  0.00495  0.001662]
+step 4: Adam [ 0.001     0.001    -0.000053]   uncorrected [ 0.005442  0.005442 -0.000286]
+step 5: Adam [0.001    0.001    0.000204]   uncorrected [0.005797 0.005797 0.001185]
 ```
 
 Three things in that table.

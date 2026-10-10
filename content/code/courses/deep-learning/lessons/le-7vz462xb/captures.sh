@@ -44,6 +44,9 @@ for b in none zero_grad softmax eval item labels; do
   on "python bugs.py $b"
 done
 
+block mse
+on "python -c \"import torch, torch.nn.functional as F; y = torch.arange(4.0); print(F.mse_loss(y.reshape(-1, 1), y), F.mse_loss(y, y))\""
+
 use load.py
 block load
 on 'wc -c mlp.pt'

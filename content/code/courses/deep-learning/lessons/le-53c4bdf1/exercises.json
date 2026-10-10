@@ -1,0 +1,545 @@
+[
+  {
+    "id": "ex-1pxeszdy",
+    "version": 1,
+    "section": "making-it-overfit",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Between epoch 40 and epoch 300 of `overfit.py`, the validation loss rises while the validation accuracy stays near 0.90. What explains both at once?",
+    "hint": "Accuracy and cross-entropy ask different questions about the same outputs.",
+    "choices": [
+      {
+        "text": "The validation set changes from one epoch to the next",
+        "correct": false,
+        "why": "It is the same 360 images every epoch; `digits.py` splits once, with a fixed seed."
+      },
+      {
+        "text": "It misses the same images, with more confidence each epoch",
+        "correct": true,
+        "why": "Right. Accuracy only counts which digit wins; the loss also charges for how sure a wrong answer was."
+      },
+      {
+        "text": "The learning rate is too high and the loss diverges",
+        "correct": false,
+        "why": "A diverging run would wreck the training loss too, and here it falls to 0.0010."
+      },
+      {
+        "text": "Accuracy is rounded to three places and hides the fall",
+        "correct": false,
+        "why": "One image is 1/360, about 0.003, which three places show; the count of misses simply does not change much."
+      }
+    ]
+  },
+  {
+    "id": "ex-evhse27f",
+    "version": 1,
+    "section": "making-it-overfit",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `small.py` cut the training set to 100 images but keep all 360 validation images?",
+    "hint": "Which of the two sets is the measuring instrument?",
+    "choices": [
+      {
+        "text": "Validation images are cheaper to compute on than training images",
+        "correct": false,
+        "why": "Every image costs the same forward pass; validation only skips the backward one."
+      },
+      {
+        "text": "The split of lesson 1 cannot be changed",
+        "correct": false,
+        "why": "`data(n)` changes the training part freely; the lesson chose to leave validation whole."
+      },
+      {
+        "text": "To starve the training while keeping the measurement as good as before",
+        "correct": true,
+        "why": "Right. Few examples cause the overfitting; a small validation set would only make every number noisier."
+      },
+      {
+        "text": "So that validation has more images than training, which overfitting needs",
+        "correct": false,
+        "why": "Overfitting needs few training examples for many parameters; the size of validation plays no part in causing it."
+      }
+    ]
+  },
+  {
+    "id": "ex-575h9sz8",
+    "version": 1,
+    "section": "making-it-overfit",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many parameters does `small.wide()` have, as `overfit.py` printed?",
+    "hint": "64 × 512 + 512, then 512 × 512 + 512, then 512 × 10 + 10.",
+    "value": 301066,
+    "tolerance": 0,
+    "unit": "parameters"
+  },
+  {
+    "id": "ex-r483kkwj",
+    "version": 1,
+    "section": "weight-decay",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `SGDDecay.step`, why is `decay * p` added to the gradient rather than a penalty computed and added to the loss?",
+    "hint": "What does the optimiser actually use from the loss?",
+    "choices": [
+      {
+        "text": "The step needs only the penalty's gradient, which is `decay × w`",
+        "correct": true,
+        "why": "Right. Differentiating `decay / 2 × w²` gives `decay × w`, so the sum itself is never needed while training."
+      },
+      {
+        "text": "Adding it to the loss would change the accuracy but not the weights",
+        "correct": false,
+        "why": "A term in the loss changes the weights through its gradient; that gradient is exactly what the code adds."
+      },
+      {
+        "text": "`softmax_cross_entropy` cannot take an extra term",
+        "correct": false,
+        "why": "Nothing stops you adding a number to its result; it would simply be printed and never used by the step."
+      },
+      {
+        "text": "The two give different results with plain SGD",
+        "correct": false,
+        "why": "For plain SGD they are the same update; the difference the lesson names is for Adam."
+      }
+    ]
+  },
+  {
+    "id": "ex-jqf81pxm",
+    "version": 1,
+    "section": "weight-decay",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You train with Adam and want weight decay. Based on the lesson, what should you use?",
+    "hint": "Adam rescales whatever arrives in the gradient.",
+    "choices": [
+      {
+        "text": "Adam with `decay × w` added to each gradient, as in `SGDDecay`",
+        "correct": false,
+        "why": "Adam's per-parameter scaling would rescale the penalty too, so it stops being the L2 pull it was with SGD."
+      },
+      {
+        "text": "No decay: Adam's scaling already regularises",
+        "correct": false,
+        "why": "The scaling adapts step sizes; it does not pull weights towards zero or penalise their size."
+      },
+      {
+        "text": "A ten times larger decay, to make up for Adam's smaller steps",
+        "correct": false,
+        "why": "The problem is the shape of the penalty under rescaling, not its size; a bigger number keeps the same distortion."
+      },
+      {
+        "text": "AdamW, which applies the decay to the weights outside Adam's scaling",
+        "correct": true,
+        "why": "Right. That keeps the pull towards zero proportional to the weight, as it is with SGD."
+      }
+    ]
+  },
+  {
+    "id": "ex-adbkwwbh",
+    "version": 1,
+    "section": "weight-decay",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `decay.py`, the condition `p.ndim == 2` applies the decay to the weight matrices and leaves the ___ alone.",
+    "hint": "The one-dimensional arrays of each `Linear`.",
+    "blanks": [
+      {
+        "accept": [
+          "biases",
+          "bias",
+          "b"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-4hx2q86c",
+    "version": 1,
+    "section": "dropout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the `Dropout` layer divide the surviving units by `1 - p` during training?",
+    "hint": "Compare the sum the next layer receives in training and in evaluation.",
+    "choices": [
+      {
+        "text": "To make the gradients larger so training is faster",
+        "correct": false,
+        "why": "The scaling is about matching the forward sum; the gradient is scaled only because it follows the same mask."
+      },
+      {
+        "text": "To keep exactly half of the units on at every step",
+        "correct": false,
+        "why": "Each unit is dropped independently, so the number kept varies; the division changes values, not counts."
+      },
+      {
+        "text": "To undo the ReLU before it, which halves the values",
+        "correct": false,
+        "why": "ReLU zeroes negatives and passes positives unchanged; dropout's scale has nothing to do with it."
+      },
+      {
+        "text": "So the expected sum matches evaluation, where nothing is dropped",
+        "correct": true,
+        "why": "Right. With the survivors scaled in training, the evaluation path has nothing to correct."
+      }
+    ]
+  },
+  {
+    "id": "ex-878rwyvx",
+    "version": 1,
+    "section": "dropout",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's own `evaluate` forgets to call `net.mode(False)` on a network with dropout at 0.5. What happens to the validation numbers it reports?",
+    "hint": "What does the layer do when `training` is still true?",
+    "choices": [
+      {
+        "text": "Nothing, because inverted dropout already scales for evaluation",
+        "correct": false,
+        "why": "The scaling keeps the expected sum, but half the units are still removed at random, so each answer is noisier."
+      },
+      {
+        "text": "An error, because `mask` is not defined",
+        "correct": false,
+        "why": "With `training` true, forward draws a mask, so nothing is undefined; it runs and quietly reports worse numbers."
+      },
+      {
+        "text": "They come from a network losing half its hidden units at random",
+        "correct": true,
+        "why": "Right. The numbers come out worse, and can change between two calls on the same weights."
+      },
+      {
+        "text": "The numbers are better than with the switch, since dropout regularises",
+        "correct": false,
+        "why": "Dropout helps by how it trains the weights; dropping units while measuring only throws information away."
+      }
+    ]
+  },
+  {
+    "id": "ex-6armrdz8",
+    "version": 1,
+    "section": "dropout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `dropout.py`, the run with `p = 0.0` printed exactly the numbers of `overfit.py`. What does that check?",
+    "hint": "What should a dropout layer that drops nothing change?",
+    "choices": [
+      {
+        "text": "That dropout at 0.0 is as good a regulariser as any other value",
+        "correct": false,
+        "why": "At 0.0 nothing is dropped, so it regularises nothing; the match says the layer is neutral, not useful."
+      },
+      {
+        "text": "That the layer changes nothing when it drops nothing",
+        "correct": true,
+        "why": "Right. Same weights at the start, a mask of ones, and so the same run, number for number."
+      },
+      {
+        "text": "That the random generator is not used during training",
+        "correct": false,
+        "why": "It is used, to draw the mask, every step; the draws just never fall below 0.0."
+      },
+      {
+        "text": "That `fit` switched training mode off for all 300 epochs",
+        "correct": false,
+        "why": "`fit` turns it off only to evaluate; with it off throughout, the higher rates would have matched too."
+      }
+    ]
+  },
+  {
+    "id": "ex-wnm9qx0y",
+    "version": 1,
+    "section": "early-stopping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `early.py`, what goes wrong if the line is written `best = [p for p, _ in net.params()]`, without `.copy()`?",
+    "hint": "Who else holds those same arrays?",
+    "choices": [
+      {
+        "text": "Python raises an error when the saved arrays are restored at the end",
+        "correct": false,
+        "why": "Assigning an array to itself is legal; nothing fails, which is what makes the bug dangerous."
+      },
+      {
+        "text": "The run stops at the wrong epoch",
+        "correct": false,
+        "why": "The stopping decision uses `best_loss` and `best_epoch`, which are plain numbers and still right."
+      },
+      {
+        "text": "The saved weights keep changing, so the last epoch is restored",
+        "correct": true,
+        "why": "Right. They are the optimiser's own arrays, and the printed numbers then match the last epoch exactly."
+      },
+      {
+        "text": "Memory runs out from keeping a copy at every epoch",
+        "correct": false,
+        "why": "That would be the cost of copying, not of skipping it; and only a new best is saved."
+      }
+    ]
+  },
+  {
+    "id": "ex-13s3bfv6",
+    "version": 1,
+    "section": "early-stopping",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You set the patience of `early.py` to 1 instead of 20. What is the most likely result?",
+    "hint": "Validation loss does not fall smoothly from one epoch to the next.",
+    "choices": [
+      {
+        "text": "It stops at the first unlucky epoch, often far too early",
+        "correct": true,
+        "why": "Right. One noisy epoch is enough to end the run before the real minimum."
+      },
+      {
+        "text": "It keeps worse weights, because it restores them later than it should",
+        "correct": false,
+        "why": "It restores the best epoch seen so far, whatever the patience; the risk is having seen too few."
+      },
+      {
+        "text": "Nothing changes, since the best epoch is restored either way",
+        "correct": false,
+        "why": "The best epoch seen depends on how long the run lasted, and a patience of 1 can end it before the real best."
+      },
+      {
+        "text": "It runs the full 300 epochs",
+        "correct": false,
+        "why": "That is what a very large patience would do; a small one stops sooner."
+      }
+    ]
+  },
+  {
+    "id": "ex-pv3kkea7",
+    "version": 1,
+    "section": "augmentation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You train a network to read handwritten letters. Which of these changes is safe as augmentation?",
+    "hint": "The condition is that the label stays true.",
+    "choices": [
+      {
+        "text": "A horizontal flip, left to right",
+        "correct": false,
+        "why": "A flipped `b` is a `d`, so the image keeps a label that is now wrong."
+      },
+      {
+        "text": "A rotation by 180 degrees",
+        "correct": false,
+        "why": "Turned upside down, `n` becomes `u` and `p` becomes `d`; the label stops being true."
+      },
+      {
+        "text": "A shift of one or two pixels",
+        "correct": true,
+        "why": "Right. A letter moved slightly is still the same letter, as a digit is in the lesson."
+      },
+      {
+        "text": "Swapping the images of two classes",
+        "correct": false,
+        "why": "That is mislabelling data on purpose; the network would learn the swap."
+      }
+    ]
+  },
+  {
+    "id": "ex-mh7mnz37",
+    "version": 1,
+    "section": "augmentation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the shifted images, validation accuracy rose to 0.928 but the validation loss ended higher than without them. Why did the loss not improve?",
+    "hint": "How different are the 500 images from each other?",
+    "choices": [
+      {
+        "text": "The shifted images have wrong labels",
+        "correct": false,
+        "why": "A one-pixel shift keeps the digit, which is why accuracy improved."
+      },
+      {
+        "text": "Five times as many images need five times the learning rate",
+        "correct": false,
+        "why": "The rate sets the size of each step, and more data already means more steps an epoch."
+      },
+      {
+        "text": "Zeroing the wrapped edge erased half of each digit",
+        "correct": false,
+        "why": "It blanks one row or column of an 8 by 8 image, which on these digits is mostly empty already."
+      },
+      {
+        "text": "They are the same 100 drawings, which it memorised again",
+        "correct": true,
+        "why": "Right. Training accuracy reached 1.000 again and confidence kept growing; something else has to stop the run."
+      }
+    ]
+  },
+  {
+    "id": "ex-8vhhvdrb",
+    "version": 1,
+    "section": "what-worked",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `compare.py` include a run that changes nothing but the seed?",
+    "hint": "What would you compare a small improvement with?",
+    "choices": [
+      {
+        "text": "To measure how far chance alone moves the numbers",
+        "correct": true,
+        "why": "Right. A cure that moves them less than that has not shown it did anything."
+      },
+      {
+        "text": "To check that the seed has no effect at all on the training",
+        "correct": false,
+        "why": "It has one, and the run measures it: 0.900 became 0.908."
+      },
+      {
+        "text": "To give the final table one more configuration to choose from",
+        "correct": false,
+        "why": "It is not a candidate: it is the baseline again with different luck."
+      },
+      {
+        "text": "Because early stopping needs a second seed to compare against",
+        "correct": false,
+        "why": "Early stopping compares epochs of one run against the validation set; no second seed is involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-q88ekh1c",
+    "version": 1,
+    "section": "what-worked",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each cure with what it acts on.",
+    "hint": "One adds data, two restrain the network, one chooses a moment.",
+    "pairs": [
+      {
+        "left": "weight decay",
+        "right": "the size of the weights"
+      },
+      {
+        "left": "dropout",
+        "right": "units relying on each other"
+      },
+      {
+        "left": "early stopping",
+        "right": "which epoch's weights are kept"
+      },
+      {
+        "left": "shifted images",
+        "right": "the number of training examples"
+      }
+    ],
+    "right_distractors": [
+      "the learning rate"
+    ]
+  },
+  {
+    "id": "ex-yh1e0z7g",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `early.py`'s loop in the order they happen within one epoch, ending with the line that runs only after the loop.",
+    "hint": "Training comes before measuring, and restoring comes last.",
+    "items": [
+      "train one epoch with `fit`",
+      "read the validation loss from its history",
+      "if it is a new best, copy the parameters",
+      "otherwise, stop if patience has run out",
+      "put the saved parameters back"
+    ]
+  },
+  {
+    "id": "ex-qxjnx235",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these reduce overfitting by changing the network or its training, rather than the data? Choose all that apply.",
+    "hint": "One of the four makes new examples.",
+    "choices": [
+      {
+        "text": "Weight decay",
+        "correct": true,
+        "why": "Right: it changes the step, pulling weights towards zero."
+      },
+      {
+        "text": "Dropout",
+        "correct": true,
+        "why": "Right: it is a layer in the network, active only in training."
+      },
+      {
+        "text": "Early stopping",
+        "correct": true,
+        "why": "Right: it changes when training ends and which weights are kept."
+      },
+      {
+        "text": "Shifting the images by one pixel",
+        "correct": false,
+        "why": "That one changes the data: it makes four new examples out of each image."
+      }
+    ]
+  },
+  {
+    "id": "ex-yspxyav3",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `compare.py`, how many more validation images out of 360 did \"all four\" get right than \"nothing\"? (0.944 against 0.900.)",
+    "hint": "Multiply each accuracy by 360.",
+    "value": 16,
+    "tolerance": 0,
+    "unit": "images"
+  },
+  {
+    "id": "ex-8nv5q56t",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team has 50,000 labelled images, a network that overfits slightly, and can label 50,000 more for a modest price. From this lesson's results, what should they consider first?",
+    "hint": "Look at the last row of `compare.py`.",
+    "choices": [
+      {
+        "text": "Dropout at 0.8, the strongest setting",
+        "correct": false,
+        "why": "At 0.8 the lesson's network could not even fit its training set; strength is not the goal."
+      },
+      {
+        "text": "Labelling the extra images",
+        "correct": true,
+        "why": "Right. Real data did more than all four cures together, and every cure is a way of doing with less what more data does."
+      },
+      {
+        "text": "Augmentation alone, since it was the best single cure here",
+        "correct": false,
+        "why": "The ranking of cures does not carry over between problems, and real images beat copies of old ones."
+      },
+      {
+        "text": "Weight decay at 0.1, to pull the weights hard",
+        "correct": false,
+        "why": "At 0.1 the lesson's network fell to 0.386; the right decay is found on validation, not set high."
+      }
+    ]
+  }
+]

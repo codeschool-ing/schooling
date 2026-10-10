@@ -65,7 +65,7 @@ all nine numbers at once, and the loss fell from 0.5625 to 0.131. The output wen
 0.6381, past the target of 1 on the other side: a step that size overshoots on this input, which is
 lesson 2's learning rate at work again.
 
-The cost is worth counting. The forward pass did one product per weight, and the backward pass did
+Count the cost. The forward pass did one product per weight, and the backward pass did
 about two: one for the weight's gradient and one to pass the gradient on. **Getting all nine
 gradients cost roughly twice a forward pass, where nudging would have cost eighteen.** Lesson 9
 builds this same network in PyTorch, and its automatic gradients print these same numbers.

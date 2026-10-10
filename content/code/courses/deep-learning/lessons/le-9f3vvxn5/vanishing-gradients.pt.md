@@ -72,8 +72,8 @@ classes.** Ela não aprendeu nada.
 **Pelos ReLUs, o gradiente de cada camada fica entre 5.89e-01 e 1.21e+00.** A derivada local do ReLU
 é exatamente 1 onde a unidade está ligada, então ele passa o gradiente para baixo sem encolhê-lo. As
 mesmas dez camadas chegam a 0,850 nas mesmas dez épocas. Isso ainda fica abaixo do 0,939 que as duas
-camadas do `train.py` tinham alcançado na época 10, então a profundidade não sai de graça mesmo quando
-o gradiente chega; a aula 12 mostra uma rede mais funda treinando pior que uma rasa, e o que resolveu
+camadas do `train.py` tinham alcançado na época 10. A profundidade não sai de graça mesmo quando o
+gradiente chega, e a aula 12 mostra uma rede mais funda treinando pior que uma rasa, e o que resolveu
 isso.
 
 **A imagem no espelho é o gradiente que explode.** Se os fatores passam de 1, porque os pesos são

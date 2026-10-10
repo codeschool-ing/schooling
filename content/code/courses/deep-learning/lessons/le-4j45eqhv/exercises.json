@@ -1,0 +1,549 @@
+[
+  {
+    "id": "ex-j85z6gq1",
+    "version": 1,
+    "section": "scaling-the-inputs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before any training, the network fed raw pixels from 0 to 16 scores a loss of 15.42, against 2.45 for pixels from 0 to 1. Why?",
+    "hint": "Look at the first layer's sums in the same table.",
+    "choices": [
+      {
+        "text": "The labels are stored on a different scale from the pixels",
+        "correct": false,
+        "why": "The labels are the same digits 0 to 9 in all three versions; only the pixels changed."
+      },
+      {
+        "text": "Its sums are spread 16 times wider, so the logits are large and confidently wrong",
+        "correct": true,
+        "why": "Right: a standard deviation of 11.09 instead of 0.69. Large logits make softmax confident, and an untrained network confident is confident about the wrong class."
+      },
+      {
+        "text": "Softmax works badly on inputs that are whole numbers",
+        "correct": false,
+        "why": "The pixels are float32 in every version, and softmax sees logits, not pixels."
+      },
+      {
+        "text": "The loss adds one term per pixel, and larger pixels add more",
+        "correct": false,
+        "why": "Cross-entropy has one term per image, minus the log of the right class's probability; pixels never enter it directly."
+      }
+    ]
+  },
+  {
+    "id": "ex-ce7jamg6",
+    "version": 1,
+    "section": "scaling-the-inputs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At rate 0.01 the raw pixels reach 0.947 and the pixels from 0 to 1 only 0.897. What explains it?",
+    "hint": "What does the scale of the inputs do to the size of a step?",
+    "choices": [
+      {
+        "text": "Raw ink levels carry fine detail that dividing every pixel by 16 removes",
+        "correct": false,
+        "why": "Dividing by 16 loses nothing: every pixel keeps its order and its ratio to the others."
+      },
+      {
+        "text": "The raw run overfits less, as lesson 7 would predict",
+        "correct": false,
+        "why": "Overfitting is not what separates them; the same raw run collapses to chance at 0.3."
+      },
+      {
+        "text": "Larger inputs take larger steps, so a small rate goes further",
+        "correct": true,
+        "why": "Right. The scale works as part of the learning rate, which is also why the raw run breaks at 0.3 where the other does not."
+      },
+      {
+        "text": "Dividing by 16 rounds small pixels to zero in float32",
+        "correct": false,
+        "why": "float32 holds 1/16 exactly, and every level from 0 to 16 survives the division."
+      }
+    ]
+  },
+  {
+    "id": "ex-36eyrbjc",
+    "version": 1,
+    "section": "scaling-the-inputs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A network on a table with monthly income in reais and age in years trains badly at every rate tried. What is the first thing to change?",
+    "hint": "Two features, two units, one learning rate.",
+    "choices": [
+      {
+        "text": "Standardise each column with the training set's mean and deviation",
+        "correct": true,
+        "why": "Right. Income in thousands beside age in tens leaves no rate that suits both; after standardising, both columns are on the same footing."
+      },
+      {
+        "text": "Standardise each column with the mean and deviation of all the rows, test included",
+        "correct": false,
+        "why": "The idea is right and the statistics are not: computing them with the test rows leaks the test set into training."
+      },
+      {
+        "text": "Keep lowering the rate until the loss falls",
+        "correct": false,
+        "why": "A rate small enough for income is far too small for age, so one column learns and the other barely moves."
+      },
+      {
+        "text": "Add hidden layers so the network has room to rescale the inputs",
+        "correct": false,
+        "why": "Depth does not fix the first layer's steps, and this lesson shows deeper stacks are harder to keep stable."
+      }
+    ]
+  },
+  {
+    "id": "ex-c58vp0tw",
+    "version": 1,
+    "section": "batch-norm",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put what `BatchNorm.forward` does in training mode in order.",
+    "hint": "The running averages are updated from what was just measured.",
+    "items": [
+      "Measure each feature's mean and variance over the batch",
+      "Move the running averages 10% of the way towards them",
+      "Subtract the mean and divide by the standard deviation",
+      "Multiply by gamma and add beta"
+    ]
+  },
+  {
+    "id": "ex-4vrre5ra",
+    "version": 1,
+    "section": "batch-norm",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does batch norm multiply by `gamma` and add `beta` after normalising, when they could undo the normalisation?",
+    "hint": "What would a ReLU do to a column fixed at mean 0?",
+    "choices": [
+      {
+        "text": "They hold the running statistics used in evaluation",
+        "correct": false,
+        "why": "Those are `running_mean` and `running_var`, which no gradient moves; `gamma` and `beta` are trained."
+      },
+      {
+        "text": "So each unit learns its own mean and spread, as a parameter",
+        "correct": true,
+        "why": "Right. Fixed at mean 0, a ReLU after it would cut half of every column; now the spread is learnt rather than an accident of the weights."
+      },
+      {
+        "text": "They stand in for the learning rate inside the layer",
+        "correct": false,
+        "why": "The optimiser's rate still sets every step, theirs included."
+      },
+      {
+        "text": "Without them the backward pass would have no gradient to send back to the layer",
+        "correct": false,
+        "why": "The input gradient exists without them; with `gamma` at 1 it is the same formula with `g = grad`."
+      }
+    ]
+  },
+  {
+    "id": "ex-380013t4",
+    "version": 1,
+    "section": "batch-norm",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many trained parameters does `BatchNorm(64)` have?",
+    "hint": "Count only what `params` names; the running averages are not trained.",
+    "value": 128,
+    "tolerance": 0,
+    "unit": "parameters"
+  },
+  {
+    "id": "ex-f2zr4s0p",
+    "version": 1,
+    "section": "batch-norm",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In a block of `Linear`, then `BatchNorm`, then `ReLU`, what does the `Linear` layer's bias contribute to the block's output in training?",
+    "hint": "Add a constant to a column, then subtract the column's mean.",
+    "choices": [
+      {
+        "text": "It moves the point where the ReLU starts to pass values",
+        "correct": false,
+        "why": "That is `beta`'s job here; the bias is gone before the ReLU sees anything."
+      },
+      {
+        "text": "It doubles the shift `beta` applies",
+        "correct": false,
+        "why": "The bias is added before the mean is subtracted, so it cannot reach the output to add to `beta`."
+      },
+      {
+        "text": "Nothing: subtracting the batch mean removes it",
+        "correct": true,
+        "why": "Right. A constant added to every row of a column shifts its mean by the same amount, and the subtraction takes both away."
+      },
+      {
+        "text": "It keeps evaluation mode working when the running mean is zero",
+        "correct": false,
+        "why": "Evaluation subtracts the running mean, which learnt the bias in along with everything else; the result is the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-s3pb4skg",
+    "version": 1,
+    "section": "deep-with-and-without",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without normalisation at rate 0.1, the ten-layer network reaches 0.867 at epoch 10 and falls to 0.356 at epoch 15. What does that shape say?",
+    "hint": "Lesson 6 read curves by their shape.",
+    "choices": [
+      {
+        "text": "The network overfit the training set",
+        "correct": false,
+        "why": "Overfitting lets validation drift down slowly while training improves; a drop of half the accuracy in five epochs is a step too large."
+      },
+      {
+        "text": "The rate is too high for it",
+        "correct": true,
+        "why": "Right. The same rate with batch norm climbs to 0.972, so it is the network without normalisation that cannot take it."
+      },
+      {
+        "text": "The starting weights were unlucky for this seed",
+        "correct": false,
+        "why": "Both runs start from the same weights, and the one with batch norm trains."
+      },
+      {
+        "text": "The data ran out, so the network kept seeing batches it had already seen",
+        "correct": false,
+        "why": "Every epoch reuses the whole training set by design; repeating it is what epochs are."
+      }
+    ]
+  },
+  {
+    "id": "ex-xdxjefp7",
+    "version": 1,
+    "section": "deep-with-and-without",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A large step triples every weight of one unit in the `Linear` layer just before a batch norm layer. What happens to that unit's `xhat`?",
+    "hint": "Sums, mean and standard deviation all scale together.",
+    "choices": [
+      {
+        "text": "It triples, and so does everything after it",
+        "correct": false,
+        "why": "That is what happens without normalisation, and it is the effect that multiplies through ten layers."
+      },
+      {
+        "text": "Its variance grows ninefold",
+        "correct": false,
+        "why": "The sums' variance does, and the layer divides by its square root, three, again."
+      },
+      {
+        "text": "It does not change",
+        "correct": true,
+        "why": "Right. The sums, their mean and their deviation all triple, and the ratio stays put, which is why the layers after it see the same scale."
+      },
+      {
+        "text": "It shrinks to a third",
+        "correct": false,
+        "why": "Dividing by a deviation three times larger is cancelled by sums three times larger."
+      }
+    ]
+  },
+  {
+    "id": "ex-312vx6g9",
+    "version": 1,
+    "section": "deep-with-and-without",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Batch norm does not make a good rate much better; what it does is make a large rate ___.",
+    "hint": "Compare the two tables at 0.03 and at 0.3.",
+    "blanks": [
+      {
+        "accept": [
+          "safe",
+          "usable",
+          "workable",
+          "trainable"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-n0kpqq1e",
+    "version": 1,
+    "section": "train-and-eval",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In training mode, every image predicted on its own got the same logits. Why?",
+    "hint": "What are the mean and variance of a batch of one?",
+    "choices": [
+      {
+        "text": "The running averages had not yet been filled in by enough training batches",
+        "correct": false,
+        "why": "Training mode does not read the running averages; it measures the batch in front of it."
+      },
+      {
+        "text": "A batch of one has variance 0, so `xhat` is 0 and the layer outputs `beta`",
+        "correct": true,
+        "why": "Right. With a variance of 0, every feature normalises to 0, and `beta` is the same vector for every image."
+      },
+      {
+        "text": "`gamma` learnt to be zero during training",
+        "correct": false,
+        "why": "In evaluation mode the same `gamma` gives five right answers, so it is not zero."
+      },
+      {
+        "text": "Softmax saturates when the batch holds a single image",
+        "correct": false,
+        "why": "Softmax works row by row and does not know the batch size; the logits were equal before it."
+      }
+    ]
+  },
+  {
+    "id": "ex-c03bqwg5",
+    "version": 1,
+    "section": "train-and-eval",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After five single images went through in training mode, validation loss rose from 0.138 to 0.166 although nobody trained the network. What changed?",
+    "hint": "Training mode does two things in `forward`.",
+    "choices": [
+      {
+        "text": "The weights moved, because `forward` in training mode also takes a step",
+        "correct": false,
+        "why": "A step needs `backward` and `opt.step()`; `forward` alone never touches `W`, `gamma` or `beta`."
+      },
+      {
+        "text": "`evaluate` reused logits cached from the training-mode calls",
+        "correct": false,
+        "why": "`evaluate` runs a fresh forward pass over the whole validation set."
+      },
+      {
+        "text": "`gamma` shrank towards zero",
+        "correct": false,
+        "why": "`gamma` is a parameter and only the optimiser moves it."
+      },
+      {
+        "text": "The running variance, which each call moved 10% towards zero",
+        "correct": true,
+        "why": "Right: from 0.1114 to 0.0658 for the first feature. Evaluation then divides by a deviation that is too small."
+      }
+    ]
+  },
+  {
+    "id": "ex-ffzenw7x",
+    "version": 1,
+    "section": "train-and-eval",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A served model gives one image a different class depending on which other requests are batched with it. What is the most likely cause?",
+    "hint": "Which mode lets one row's output depend on the others?",
+    "choices": [
+      {
+        "text": "Floating-point rounding differs from batch to batch",
+        "correct": false,
+        "why": "Rounding moves the last digits of a logit, not the class; the effect here is the batch statistics."
+      },
+      {
+        "text": "The model is running in training mode, normalising with each batch's statistics",
+        "correct": true,
+        "why": "Right. In evaluation mode every row uses the running averages, and an image's answer does not depend on its company."
+      },
+      {
+        "text": "The weights were saved before training finished",
+        "correct": false,
+        "why": "Weights saved early give worse answers, but the same answer whatever the batch."
+      },
+      {
+        "text": "The learning rate was too high for the batch size used in production",
+        "correct": false,
+        "why": "Serving takes no steps, so the rate plays no part."
+      }
+    ]
+  },
+  {
+    "id": "ex-bzt1bk2p",
+    "version": 1,
+    "section": "layer-norm",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each layer, in each situation, to what it does.",
+    "hint": "`alone.py` and the train-and-eval section.",
+    "pairs": [
+      {
+        "left": "BatchNorm, training mode, one image",
+        "right": "outputs `beta`, whatever the image"
+      },
+      {
+        "left": "LayerNorm, one image",
+        "right": "the same output it gives inside a batch"
+      },
+      {
+        "left": "BatchNorm, evaluation mode",
+        "right": "normalises with the running averages"
+      },
+      {
+        "left": "RMSNorm",
+        "right": "divides by the root mean square, without subtracting the mean"
+      }
+    ],
+    "right_distractors": [
+      "normalises with the statistics of the next batch"
+    ]
+  },
+  {
+    "id": "ex-sb6tb2tt",
+    "version": 1,
+    "section": "layer-norm",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do transformers use layer norm rather than batch norm?",
+    "hint": "Think about padded sentences and writing one token at a time.",
+    "choices": [
+      {
+        "text": "Layer norm has no parameters to train",
+        "correct": false,
+        "why": "It has the same `gamma` and `beta`, one per feature."
+      },
+      {
+        "text": "It needs only each token's own features",
+        "correct": true,
+        "why": "Right. Batch statistics would mix words with padding, and generation runs one token at a time for one user."
+      },
+      {
+        "text": "Batch norm has no backward pass through attention",
+        "correct": false,
+        "why": "Its backward is the formula this lesson checked, and it works after any layer."
+      },
+      {
+        "text": "Layer norm stabilises every kind of network more than batch norm does",
+        "correct": false,
+        "why": "Not on this lesson's ten-layer network: at rate 1.0 it failed where batch norm reached 0.961."
+      }
+    ]
+  },
+  {
+    "id": "ex-5tecsh0k",
+    "version": 1,
+    "section": "layer-norm",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague sees layer norm fail at rate 1.0 on the digits network and concludes it is useless. What is wrong with the conclusion?",
+    "hint": "What is layer norm for?",
+    "choices": [
+      {
+        "text": "It is meant for where batch statistics make no sense, not for images",
+        "correct": true,
+        "why": "Right. On fully connected layers over images batch norm is stronger; layer norm is the one that keeps working on a batch of one."
+      },
+      {
+        "text": "Nothing: a layer that fails at one rate has no use",
+        "correct": false,
+        "why": "At 0.1 and 0.3 it trained a network that failed without it."
+      },
+      {
+        "text": "Layer norm needs a much larger `eps` before it can train at high rates",
+        "correct": false,
+        "why": "`eps` only guards against dividing by zero; nothing in the run points at it."
+      },
+      {
+        "text": "The run was in training mode, and layer norm only works in evaluation mode",
+        "correct": false,
+        "why": "Layer norm has no mode; it computes the same thing in training and in use."
+      }
+    ]
+  },
+  {
+    "id": "ex-gtdby5z4",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did this lesson's runs show? Choose all that apply.",
+    "hint": "Check each against a transcript.",
+    "choices": [
+      {
+        "text": "Raw pixels from 0 to 16 fell to chance at rate 0.3",
+        "correct": true,
+        "why": "Yes: 0.089, against 0.969 for the scaled pixels."
+      },
+      {
+        "text": "With batch norm, the ten-layer network trained at rate 1.0",
+        "correct": true,
+        "why": "Yes: it ended at 0.961, where the network without it had a `nan` loss."
+      },
+      {
+        "text": "Batch norm beat no normalisation by a wide margin at rate 0.03",
+        "correct": false,
+        "why": "No: 0.969 against 0.961 at the end; the large gains were at the higher rates."
+      },
+      {
+        "text": "Layer norm gave an image the same output alone as in a batch",
+        "correct": true,
+        "why": "Yes: the same six numbers both times."
+      },
+      {
+        "text": "Predicting in training mode changed the network's weights",
+        "correct": false,
+        "why": "No: it changed the running variance, which is not a weight; no step was taken."
+      }
+    ]
+  },
+  {
+    "id": "ex-cx82vqf3",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `momentum=0.1`, a batch of variance 0 multiplies the running variance by what factor?",
+    "hint": "`(1 - m) * running + m * var`, with `var` at 0.",
+    "value": 0.9,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-b0px4hth",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A network with batch norm trained with batches of 2 images gives erratic results. Why?",
+    "hint": "How good is a mean measured from two examples?",
+    "choices": [
+      {
+        "text": "Batch norm needs at least as many examples in each batch as it has features",
+        "correct": false,
+        "why": "No such rule exists; it needs two rows for a variance, and more for a steady one."
+      },
+      {
+        "text": "Two images give noisy statistics, so each output hinges on its partner",
+        "correct": true,
+        "why": "Right. With two rows, every normalised value is close to +1 or -1, which says only which of the pair is larger."
+      },
+      {
+        "text": "The momentum of 0.1 is too high for batches that small",
+        "correct": false,
+        "why": "Momentum affects only the running averages for evaluation; the erratic part is training itself."
+      },
+      {
+        "text": "`gamma` and `beta` receive no gradient at all from batches of only two",
+        "correct": false,
+        "why": "Their gradients are sums over the batch and exist for any size."
+      }
+    ]
+  }
+]

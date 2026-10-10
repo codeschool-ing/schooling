@@ -71,8 +71,8 @@ learnt nothing.
 **Through ReLUs, every layer's gradient stays between 5.89e-01 and 1.21e+00.** ReLU's local
 derivative is exactly 1 wherever the unit is on, so it passes the gradient down without shrinking
 it. The same ten layers reach 0.850 in the same ten epochs. That is still below the 0.939 that
-`train.py`'s two layers had reached at epoch 10, so depth is not free even when the gradient
-arrives; lesson 12 shows a deeper network training worse than a shallow one, and what fixed it.
+`train.py`'s two layers had reached at epoch 10. Depth is not free even when the gradient arrives,
+and lesson 12 shows a deeper network training worse than a shallow one, and what fixed it.
 
 **The mirror image is the exploding gradient.** If the factors are above 1, because the weights are
 large, the product grows layer by layer instead, and a step can throw the weights so far that

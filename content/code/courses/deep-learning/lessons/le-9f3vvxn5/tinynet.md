@@ -5,8 +5,8 @@ version: 1
 
 `byhand.py` names every array, which is fine for nine weights and impossible for thousands. **The
 module below turns each of the four rules into a class with two methods, `forward` and `backward`,
-and a network into a list of those classes.** It is the whole of what lessons 3 to 8 train with:
-those lessons add an optimiser, dropout and normalisation to it, and none of them changes this
+and a network into a list of those classes.** It is the whole of what lessons 3 to 8 train with.
+Those lessons add an optimiser, dropout and normalisation beside it, and none of them changes this
 file. Save it as `~/dl/tinynet.py`, beside the `digits.py` from lesson 1:
 
 ```schooling-example

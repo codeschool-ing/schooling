@@ -1,0 +1,549 @@
+[
+  {
+    "id": "ex-qakf3jz0",
+    "version": 1,
+    "section": "tensors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A layer raises `mat1 and mat2 must have the same dtype, but got Double and Float` on data built with `np.zeros`. What fixes it?",
+    "hint": "Which of the two is Double, and where did it come from?",
+    "choices": [
+      {
+        "text": "Calling `.double()` on the input tensor",
+        "correct": false,
+        "why": "That makes the input `float64`, which is what it already was; the weights are the `float32` side."
+      },
+      {
+        "text": "Using `torch.tensor` instead of `from_numpy`",
+        "correct": false,
+        "why": "It copies the array and keeps its `float64` dtype, so the error stays."
+      },
+      {
+        "text": "Converting the input to `float32`",
+        "correct": true,
+        "why": "Right: NumPy's default is `float64`, a layer's weights are `float32`, and `.float()` or `astype(np.float32)` makes them agree."
+      },
+      {
+        "text": "Moving the input to the same device as the layer",
+        "correct": false,
+        "why": "Both are on the processor; a device mismatch has a different message, naming the devices."
+      }
+    ]
+  },
+  {
+    "id": "ex-t5xmt2xx",
+    "version": 1,
+    "section": "tensors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You make `t = torch.from_numpy(a)`, then add 1 to every element of `a` in NumPy. What does `t` hold now?",
+    "hint": "Was anything copied?",
+    "choices": [
+      {
+        "text": "The old values, since the tensor was made before the change",
+        "correct": false,
+        "why": "That is what `torch.tensor(a)` would give: a copy taken at that moment."
+      },
+      {
+        "text": "The new values",
+        "correct": true,
+        "why": "Right. `from_numpy` shares the array's memory, as the 7.0 in `tensors.py` showed."
+      },
+      {
+        "text": "An error on the next read, because the array changed under it",
+        "correct": false,
+        "why": "Nothing checks for that; the tensor reads the same memory and finds the new numbers."
+      },
+      {
+        "text": "The old values on the processor, the new ones on a graphics card",
+        "correct": false,
+        "why": "Both live in the processor's memory here; the device has nothing to do with sharing."
+      }
+    ]
+  },
+  {
+    "id": "ex-2cjmxjkp",
+    "version": 1,
+    "section": "tensors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`x` has shape `(32, 64)`. `x.T.view(-1)` raises an error and `x.T.reshape(-1)` works. What is different about the result of `reshape`?",
+    "hint": "What did the transpose do to the strides?",
+    "choices": [
+      {
+        "text": "Its numbers are in the original order of `x`",
+        "correct": false,
+        "why": "It holds `x.T` read row by row, which is the column order of `x`."
+      },
+      {
+        "text": "It is a view, so writing into it changes `x`",
+        "correct": false,
+        "why": "A view was impossible, which is why `view` failed; `reshape` had to copy."
+      },
+      {
+        "text": "It is a copy in memory of its own",
+        "correct": true,
+        "why": "Right. A row of `x.T` is not one stretch of memory, so flattening it needs the numbers moved."
+      },
+      {
+        "text": "Its dtype changes to `float64`",
+        "correct": false,
+        "why": "Reshaping never touches the dtype."
+      }
+    ]
+  },
+  {
+    "id": "ex-yx6ssgqz",
+    "version": 1,
+    "section": "autograd",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One forward and backward of `autograd.py`'s network leaves `W2.grad` at `[1.5, 0.0]`. What is the first entry of `W2.grad` after three of them, with nothing zeroed in between?",
+    "hint": "The weights did not change, and `backward` adds.",
+    "value": 4.5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-6dqqhjaa",
+    "version": 1,
+    "section": "autograd",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is the second column of `W1.grad` zero in `autograd.py`?",
+    "hint": "Look at the second hidden unit's sum before the ReLU.",
+    "choices": [
+      {
+        "text": "That unit's ReLU was off, so no gradient passed through it",
+        "correct": true,
+        "why": "Right. Its sum was -1, ReLU output 0, and the backward step of a ReLU passes nothing where its input was negative."
+      },
+      {
+        "text": "`W1` was created without `requires_grad`, so autograd skipped it",
+        "correct": false,
+        "why": "Then `W1.grad` would be `None`, not a matrix with a zero column."
+      },
+      {
+        "text": "Autograd skips weights whose value is negative",
+        "correct": false,
+        "why": "The sign of a weight decides nothing; the first column has a negative weight too."
+      },
+      {
+        "text": "The target was reached for that unit",
+        "correct": false,
+        "why": "A hidden unit has no target of its own; only the output does."
+      }
+    ]
+  },
+  {
+    "id": "ex-0847wtm4",
+    "version": 1,
+    "section": "autograd",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A forward pass applies a layer three times in a Python loop, with a number of repetitions read from the data. Can autograd differentiate it?",
+    "hint": "When is the record made?",
+    "choices": [
+      {
+        "text": "No, a loop has to be unrolled by hand first",
+        "correct": false,
+        "why": "The loop unrolls itself as it runs: each pass adds its operations to the record."
+      },
+      {
+        "text": "No, autograd reads the source code, and it needs a fixed structure",
+        "correct": false,
+        "why": "It never reads the code; it watches the arithmetic."
+      },
+      {
+        "text": "Yes, it differentiates whatever operations actually ran",
+        "correct": true,
+        "why": "Right. The record is built during the run, so three passes give a record with three copies of the layer's operations."
+      },
+      {
+        "text": "Yes, but only inside `torch.no_grad()`",
+        "correct": false,
+        "why": "Inside `no_grad` nothing is recorded, so nothing could be differentiated."
+      }
+    ]
+  },
+  {
+    "id": "ex-efqq7h1c",
+    "version": 1,
+    "section": "modules",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How many parameters does `make_mlp(hidden=128)` have, counting the biases?",
+    "hint": "64 × 128 + 128, then 128 × 10 + 10.",
+    "value": 9610,
+    "tolerance": 0,
+    "unit": "parameters"
+  },
+  {
+    "id": "ex-0f0t6rg1",
+    "version": 1,
+    "section": "modules",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the shape of `nn.Linear(64, 32).weight`?",
+    "hint": "`modules.py` printed it for the first layer.",
+    "choices": [
+      {
+        "text": "(64, 32)",
+        "correct": false,
+        "why": "That is lesson 1's layout, inputs by outputs; PyTorch stores the transpose."
+      },
+      {
+        "text": "(32, 64)",
+        "correct": true,
+        "why": "Right: outputs by inputs, which is why the layer computes `x @ weight.T`."
+      },
+      {
+        "text": "(32,)",
+        "correct": false,
+        "why": "That is the bias, one number per output."
+      },
+      {
+        "text": "(2080,)",
+        "correct": false,
+        "why": "2,080 is the layer's parameter count, weights and biases together, not a shape."
+      }
+    ]
+  },
+  {
+    "id": "ex-xzbgh5j0",
+    "version": 1,
+    "section": "modules",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A class keeps its three hidden layers in `self.layers = [nn.Linear(64, 64) for _ in range(3)]`, a plain Python list. It trains without an error. What is wrong?",
+    "hint": "How does `parameters()` find a module's layers?",
+    "choices": [
+      {
+        "text": "Nothing, a list of layers is the same as `nn.Sequential`",
+        "correct": false,
+        "why": "A plain list is not registered, so its layers are invisible to `parameters()`."
+      },
+      {
+        "text": "The three layers are missing from `parameters()` and stay random",
+        "correct": true,
+        "why": "Right. The optimiser never receives them. `nn.ModuleList` registers them."
+      },
+      {
+        "text": "The three layers share one weight matrix",
+        "correct": false,
+        "why": "The comprehension builds three separate `Linear` objects, each with its own weights."
+      },
+      {
+        "text": "The forward pass skips the list",
+        "correct": false,
+        "why": "`forward` runs whatever it is written to run; the list's layers are applied."
+      }
+    ]
+  },
+  {
+    "id": "ex-qmpmwyxr",
+    "version": 1,
+    "section": "the-training-loop",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the lines of one batch of `loop.fit` in the order they run.",
+    "hint": "`loop.py` zeroes after computing the loss.",
+    "items": [
+      "`loss = F.cross_entropy(model(x[idx]), y[idx])`",
+      "`opt.zero_grad()`",
+      "`loss.backward()`",
+      "`opt.step()`",
+      "`total += loss.item() * len(idx)`"
+    ]
+  },
+  {
+    "id": "ex-6vwxd745",
+    "version": 1,
+    "section": "the-training-loop",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `opt.zero_grad()` have to run before `loss.backward()`, and not between `backward` and `step`?",
+    "hint": "What does each of the two read or write in `.grad`?",
+    "choices": [
+      {
+        "text": "Because `backward` refuses to run while `.grad` holds numbers",
+        "correct": false,
+        "why": "It runs happily and adds to them; that is the problem."
+      },
+      {
+        "text": "Zeroing there would empty the gradients `step` is about to read",
+        "correct": true,
+        "why": "Right: `backward` fills `.grad` and `step` reads it, so zeroing between them leaves the step with nothing."
+      },
+      {
+        "text": "Because `zero_grad` also resets the learning rate",
+        "correct": false,
+        "why": "It touches the gradients and nothing else."
+      },
+      {
+        "text": "Because `step` builds the record that `backward` reads",
+        "correct": false,
+        "why": "The forward pass builds the record; `step` moves weights."
+      }
+    ]
+  },
+  {
+    "id": "ex-hg56yqf7",
+    "version": 1,
+    "section": "the-training-loop",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`F.cross_entropy` takes the network's raw scores, called ___, and applies the softmax itself.",
+    "hint": "The word lesson 4 used for the last layer's output.",
+    "blanks": [
+      {
+        "accept": [
+          "logits",
+          "logit"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-gs6vc0xf",
+    "version": 1,
+    "section": "five-classic-bugs",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each mistake to the symptom its run in `bugs.py` showed.",
+    "hint": "Read the five transcripts.",
+    "pairs": [
+      {
+        "left": "no `zero_grad`",
+        "right": "the training loss rose between epoch 5 and epoch 10"
+      },
+      {
+        "left": "softmax before the loss",
+        "right": "the loss sat near 2.29 and barely moved"
+      },
+      {
+        "left": "no `eval()`",
+        "right": "two evaluations of one network gave two accuracies"
+      },
+      {
+        "left": "the loss kept as a tensor",
+        "right": "NumPy refused to average the losses"
+      },
+      {
+        "left": "labels of shape `[32, 1]`",
+        "right": "the loss refused its target at the first batch"
+      }
+    ]
+  },
+  {
+    "id": "ex-jk31beha",
+    "version": 1,
+    "section": "five-classic-bugs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's network has batch normalisation. Its validation accuracy comes out a little different each time they measure it, though no training happened in between. What is the first thing to look for?",
+    "hint": "What changes inside such a layer when it runs in training mode?",
+    "choices": [
+      {
+        "text": "A missing `torch.no_grad()` around the evaluation",
+        "correct": false,
+        "why": "That costs memory and time and leaves the numbers as they are."
+      },
+      {
+        "text": "A missing `zero_grad()` in the training loop",
+        "correct": false,
+        "why": "No step ran between the measurements, so the gradients moved nothing."
+      },
+      {
+        "text": "A different random shuffle of the validation set",
+        "correct": false,
+        "why": "Accuracy over a whole set does not depend on the order of its images."
+      },
+      {
+        "text": "A missing `model.eval()`",
+        "correct": true,
+        "why": "Right. In training mode batch normalisation uses each batch's statistics and updates its running ones, so every measurement changes the next."
+      }
+    ]
+  },
+  {
+    "id": "ex-yah0x43s",
+    "version": 1,
+    "section": "five-classic-bugs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A loop reports with `total += loss` instead of `total += loss.item()`. No error appears. What does it cost?",
+    "hint": "What does `loss` carry along with its number?",
+    "choices": [
+      {
+        "text": "Memory: each batch's record stays alive until the epoch ends",
+        "correct": true,
+        "why": "Right. `total` becomes a tensor chained to every batch's record, and none of them can be freed."
+      },
+      {
+        "text": "Wrong gradients, because `total` is added to the next backward",
+        "correct": false,
+        "why": "`backward` is called on `loss`, not on `total`, so the gradients are right."
+      },
+      {
+        "text": "A wrong average, because tensors round differently",
+        "correct": false,
+        "why": "The sum is the same number either way."
+      },
+      {
+        "text": "Slower steps, because `step` walks the chain",
+        "correct": false,
+        "why": "`step` reads `.grad` and walks nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-bpkbz1ns",
+    "version": 1,
+    "section": "five-classic-bugs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A regression network outputs shape `[64, 1]` and the targets are `[64]`. `F.mse_loss` prints a warning and training runs to the end. What did it train on?",
+    "hint": "Broadcast `[64, 1]` against `[64]`.",
+    "choices": [
+      {
+        "text": "The right loss, since the warning is cosmetic",
+        "correct": false,
+        "why": "In `bugs.py`'s example four exact predictions scored 2.5 instead of 0."
+      },
+      {
+        "text": "The first target for every prediction",
+        "correct": false,
+        "why": "Broadcasting pairs each prediction with all 64 targets, not with one."
+      },
+      {
+        "text": "The mean over all 4,096 prediction-target pairs",
+        "correct": true,
+        "why": "Right. `[64, 1]` against `[64]` becomes `[64, 64]`, and the network learns to predict near the mean of the targets."
+      },
+      {
+        "text": "Nothing: the loss is zero and no gradient flows",
+        "correct": false,
+        "why": "The loss is large, since most pairs are different examples."
+      }
+    ]
+  },
+  {
+    "id": "ex-0hwq4j35",
+    "version": 1,
+    "section": "saving-and-loading",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `model.state_dict()` hold?",
+    "hint": "`load.py` printed its contents.",
+    "choices": [
+      {
+        "text": "The class of the model and its forward method",
+        "correct": false,
+        "why": "The code is what the state dict leaves out, which is why `make_mlp` had to build the network first."
+      },
+      {
+        "text": "The parameter tensors, by name",
+        "correct": true,
+        "why": "Right: `0.weight`, `0.bias`, `2.weight`, `2.bias` and their numbers."
+      },
+      {
+        "text": "The weights and the training history",
+        "correct": false,
+        "why": "The history is what `fit` returns, and it goes nowhere unless you save it yourself."
+      },
+      {
+        "text": "The optimiser's state with the weights",
+        "correct": false,
+        "why": "The optimiser has a state dict of its own, saved separately."
+      }
+    ]
+  },
+  {
+    "id": "ex-rapc1thm",
+    "version": 1,
+    "section": "saving-and-loading",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague saved a model with `torch.save(model)` last month and has since renamed the module that defined its class. Loading the file now fails. Why would a state dict have survived the rename?",
+    "hint": "What does a pickle record about a class?",
+    "choices": [
+      {
+        "text": "A state dict is compressed, a pickle is not",
+        "correct": false,
+        "why": "Both go through `torch.save`; compression is not the difference."
+      },
+      {
+        "text": "A state dict stores a copy of the class's code beside the tensors, so a rename does not reach it",
+        "correct": false,
+        "why": "It stores no code at all, which is the point."
+      },
+      {
+        "text": "It names tensors, not the class, so any code that builds the same shapes takes it",
+        "correct": true,
+        "why": "Right. The pickle recorded the class by module and name, and that address moved."
+      },
+      {
+        "text": "`torch.load` repairs renamed modules in a state dict",
+        "correct": false,
+        "why": "Nothing is repaired; there is simply no module name in a state dict to break."
+      }
+    ]
+  },
+  {
+    "id": "ex-p3a8tqde",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did this lesson's runs show? Choose all that apply.",
+    "hint": "Check each against a transcript.",
+    "choices": [
+      {
+        "text": "Autograd gave lesson 3's gradients for the 2-2-1 network",
+        "correct": true,
+        "why": "Yes: `dW1 [[2.25, 0.0], [4.5, 0.0]]`, the numbers lesson 3 worked out by hand."
+      },
+      {
+        "text": "`torch.from_numpy` made a copy of the digits",
+        "correct": false,
+        "why": "No: the 7.0 written into the array was read back from the tensor."
+      },
+      {
+        "text": "The MLP reached 0.950 validation accuracy in 30 epochs",
+        "correct": true,
+        "why": "Yes, the last line of `train.py`, and `load.py` reproduced it from the file."
+      },
+      {
+        "text": "Softmax before the loss trained as well as the correct loop",
+        "correct": false,
+        "why": "No: it ended at 0.194 against 0.914."
+      },
+      {
+        "text": "A network with 64 hidden units refused the 32-unit file",
+        "correct": true,
+        "why": "Yes: `size mismatch for 0.weight`."
+      }
+    ]
+  }
+]

@@ -1,0 +1,530 @@
+[
+  {
+    "id": "ex-kbf2csb5",
+    "version": 1,
+    "section": "augmentation-in-torchvision",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does a torchvision transform used for augmentation differ from lesson 7's shifted copies?",
+    "hint": "When is the change made, and is it kept?",
+    "choices": [
+      {
+        "text": "It changes the validation images too",
+        "correct": false,
+        "why": "Validation is read as drawn in both approaches; augmentation is for training only."
+      },
+      {
+        "text": "A new random change each time an image is used",
+        "correct": true,
+        "why": "Right. Each epoch sees fresh variants, and the training set on disk stays the same size."
+      },
+      {
+        "text": "It works only on photographs, not on 8 by 8 digits",
+        "correct": false,
+        "why": "`augment.py` ran it on the digits as 1x8x8 tensors with no conversion."
+      },
+      {
+        "text": "It writes every variant into a larger dataset before training",
+        "correct": false,
+        "why": "That is what lesson 7 did; the transform does the opposite."
+      }
+    ]
+  },
+  {
+    "id": "ex-ekwv0q1k",
+    "version": 1,
+    "section": "augmentation-in-torchvision",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`shift(batch)` was called once on a batch of four digits. What did the output show?",
+    "hint": "Compare the four drawings with each other.",
+    "choices": [
+      {
+        "text": "Each digit moved in its own direction",
+        "correct": false,
+        "why": "That is what the per-image call produced, with `torch.stack`."
+      },
+      {
+        "text": "The batch was refused with a shape error",
+        "correct": false,
+        "why": "v2 transforms accept leading dimensions; the call ran."
+      },
+      {
+        "text": "All four moved by the same shift",
+        "correct": true,
+        "why": "Right. One call is one sample to v2, so one shift is drawn for the whole batch."
+      },
+      {
+        "text": "Nothing moved, because the seed was fixed",
+        "correct": false,
+        "why": "A fixed seed makes the draws repeatable, not zero."
+      }
+    ]
+  },
+  {
+    "id": "ex-bbax527t",
+    "version": 1,
+    "section": "augmentation-in-torchvision",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague augments with `x_aug = jitter(x[idx])` inside the training loop, where `x[idx]` is a batch of 32 images. What is the effect?",
+    "hint": "How many draws does one call make?",
+    "choices": [
+      {
+        "text": "Each of the 32 images gets its own random turn and shift",
+        "correct": false,
+        "why": "That needs one call per image; one call on the batch draws once."
+      },
+      {
+        "text": "The whole batch moves as one, so the variety is far smaller",
+        "correct": true,
+        "why": "Right. The fix is to call the transform per image, in `__getitem__` or with `torch.stack`."
+      },
+      {
+        "text": "The labels are turned along with the images",
+        "correct": false,
+        "why": "The labels are a separate tensor the call never sees."
+      },
+      {
+        "text": "Training crashes on the first batch",
+        "correct": false,
+        "why": "It runs without complaint, which is why this mistake survives."
+      }
+    ]
+  },
+  {
+    "id": "ex-r2wv8cba",
+    "version": 1,
+    "section": "what-it-must-preserve",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does an augmentation claim about the images it changes?",
+    "hint": "Training uses the old label with the new image.",
+    "choices": [
+      {
+        "text": "That the label is still right after the change",
+        "correct": true,
+        "why": "Right, and for a 6 turned upside down the claim is false."
+      },
+      {
+        "text": "That the image becomes easier to classify",
+        "correct": false,
+        "why": "Augmented images are usually harder; that is part of what they teach."
+      },
+      {
+        "text": "That the validation set will contain such images",
+        "correct": false,
+        "why": "It says nothing about validation, which is read as drawn."
+      },
+      {
+        "text": "That the network has seen this exact change before",
+        "correct": false,
+        "why": "The point is the opposite: a change it has not seen."
+      }
+    ]
+  },
+  {
+    "id": "ex-pzr8s4ad",
+    "version": 1,
+    "section": "what-it-must-preserve",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `preserve.py`, how many of the validation 6s turned upside down did the network read as 9?",
+    "hint": "The second-to-last line, the last count.",
+    "value": 40,
+    "tolerance": 0,
+    "unit": "images"
+  },
+  {
+    "id": "ex-170t06ej",
+    "version": 1,
+    "section": "what-it-must-preserve",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You classify chest X-rays where the heart sits on the patient's left. Which augmentation does the lesson's rule refuse?",
+    "hint": "Which change would a radiologist notice as wrong?",
+    "choices": [
+      {
+        "text": "A shift of a few pixels",
+        "correct": false,
+        "why": "Where the image is framed does not change the diagnosis."
+      },
+      {
+        "text": "A small change of brightness",
+        "correct": false,
+        "why": "Exposure varies between machines; a little of it keeps the label, unless the task is about density."
+      },
+      {
+        "text": "A horizontal flip",
+        "correct": true,
+        "why": "Right. It puts the heart on the right, an anatomy that is a finding of its own, under the old label."
+      },
+      {
+        "text": "A turn of three degrees",
+        "correct": false,
+        "why": "Patients are never perfectly straight; a small turn is a change the label survives."
+      }
+    ]
+  },
+  {
+    "id": "ex-za6mrs71",
+    "version": 1,
+    "section": "training-with-augmentation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `augtrain.py`, which policy did the most damage, and why?",
+    "hint": "Look at the last row and think of 6 and 9.",
+    "choices": [
+      {
+        "text": "Shift and turn, because the network saw too many variants",
+        "correct": false,
+        "why": "It was the best row of the four."
+      },
+      {
+        "text": "Mirror, because half the images were changed",
+        "correct": false,
+        "why": "It did harm, but less than any turn."
+      },
+      {
+        "text": "Any turn: 6s and 9s were taught as both",
+        "correct": true,
+        "why": "Right, and every digit had to be learnt in every orientation from ten examples."
+      },
+      {
+        "text": "None, because without augmentation it overfitted",
+        "correct": false,
+        "why": "No augmentation scored above both unsafe policies."
+      }
+    ]
+  },
+  {
+    "id": "ex-9raxpftb",
+    "version": 1,
+    "section": "training-with-augmentation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `augtrain.py` evaluate with `loop.evaluate` on the plain validation images?",
+    "hint": "What question is validation answering?",
+    "choices": [
+      {
+        "text": "It measures the real images the model will meet",
+        "correct": true,
+        "why": "Right. Augmenting it would score the model on images nobody will send it."
+      },
+      {
+        "text": "Because `loop.evaluate` cannot take a transform",
+        "correct": false,
+        "why": "It could be written to; the reason is what is measured, not the function."
+      },
+      {
+        "text": "To make the comparison between policies faster",
+        "correct": false,
+        "why": "Speed has nothing to do with it; the plain set is the right thing to measure."
+      },
+      {
+        "text": "Because augmented validation would always score higher",
+        "correct": false,
+        "why": "It would usually score lower, and either way it measures the wrong images."
+      }
+    ]
+  },
+  {
+    "id": "ex-peq98k94",
+    "version": 1,
+    "section": "training-with-augmentation",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order the four policies of `augtrain.py` from the best validation accuracy to the worst.",
+    "hint": "Compare the lowest of the three seeds in each row.",
+    "items": [
+      "shift and turn",
+      "none",
+      "mirror",
+      "any turn"
+    ]
+  },
+  {
+    "id": "ex-56mz0y8b",
+    "version": 1,
+    "section": "pretraining",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `base.pt` contain?",
+    "hint": "What does `torch.save` receive?",
+    "choices": [
+      {
+        "text": "The CNN's code and its weights, ready to import as a module",
+        "correct": false,
+        "why": "Only tensors are saved; the loader builds `cnn.make_cnn(5)` first."
+      },
+      {
+        "text": "The 528 training images of the digits 0 to 4",
+        "correct": false,
+        "why": "The data stays in scikit-learn; the file holds what was learnt from it."
+      },
+      {
+        "text": "The state_dict of `cnn.make_cnn(5)`: tensors by name",
+        "correct": true,
+        "why": "Right, 37,957 parameters, as lesson 9 saved one."
+      },
+      {
+        "text": "Only the head, the last `Linear(64, 5)`",
+        "correct": false,
+        "why": "Every layer's parameters are in it; the next section needs the body most."
+      }
+    ]
+  },
+  {
+    "id": "ex-7brddv1g",
+    "version": 1,
+    "section": "pretraining",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of `cnn.make_cnn(5)` to its role in transfer learning.",
+    "hint": "Body and head, as the section divides them.",
+    "pairs": [
+      {
+        "left": "the two convolutions",
+        "right": "body, near the input: parts any digit has"
+      },
+      {
+        "left": "Linear(512, 64)",
+        "right": "body, near the output: 64 features per image"
+      },
+      {
+        "left": "Linear(64, 5)",
+        "right": "head: one output per old class"
+      }
+    ],
+    "right_distractors": [
+      "the optimiser's state, saved alongside"
+    ]
+  },
+  {
+    "id": "ex-b11fknw6",
+    "version": 1,
+    "section": "feature-extraction",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With 50 images of the digits 5 to 9, how did the head on the frozen body compare with training from scratch?",
+    "hint": "The `head_only` and `scratch` rows under 50 images.",
+    "choices": [
+      {
+        "text": "It was clearly better, around 0.98",
+        "correct": false,
+        "why": "No run in the lesson reached that; the frozen body lost."
+      },
+      {
+        "text": "About the same, within a point",
+        "correct": false,
+        "why": "That was the convolutions-only start with 10 images, not the head alone."
+      },
+      {
+        "text": "Much worse: about 0.68 against 0.93 or more",
+        "correct": true,
+        "why": "Right, though it trained only 325 parameters."
+      },
+      {
+        "text": "It failed to train, stuck at chance",
+        "correct": false,
+        "why": "0.68 is far above the 0.2 of guessing among five."
+      }
+    ]
+  },
+  {
+    "id": "ex-2srygcrf",
+    "version": 1,
+    "section": "feature-extraction",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "25 of the 64 units before `base.pt`'s head stay at zero for every digit from 5 to 9. What does that tell you?",
+    "hint": "Who shaped that layer, and for what?",
+    "choices": [
+      {
+        "text": "That layer fits 0 to 4; cut earlier for a new task",
+        "correct": true,
+        "why": "Right. Keeping only the convolutions brought the score back up to 0.917 to 0.922."
+      },
+      {
+        "text": "The units died because the learning rate was too high",
+        "correct": false,
+        "why": "They fire for 0 to 4, which scored 0.989; they are silent only on the new digits."
+      },
+      {
+        "text": "The new head needs more epochs to wake them",
+        "correct": false,
+        "why": "The head sits after them and cannot change what they output; they are frozen."
+      },
+      {
+        "text": "Nothing; a ReLU at zero is normal and harmless",
+        "correct": false,
+        "why": "At zero for one image, yes. At zero for every new image, the feature is lost to the task."
+      }
+    ]
+  },
+  {
+    "id": "ex-62m01cft",
+    "version": 1,
+    "section": "feature-extraction",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You have 300 photographs of five kinds of machine part. Which start does the lesson suggest trying first?",
+    "hint": "What made borrowing lose here, and would it apply?",
+    "choices": [
+      {
+        "text": "Train from scratch only, since transfer lost in every run of this lesson",
+        "correct": false,
+        "why": "It lost because the donor was tiny; a large, broad donor changes that."
+      },
+      {
+        "text": "A frozen ImageNet body with a new head, plus a from-scratch baseline",
+        "correct": true,
+        "why": "Right. The donor is far larger than the task, and the baseline says whether it paid."
+      },
+      {
+        "text": "Pretrain on the 300 photographs, then transfer to themselves",
+        "correct": false,
+        "why": "A donor no larger than the task is exactly the case that failed."
+      },
+      {
+        "text": "`base.pt`, since it is already trained",
+        "correct": false,
+        "why": "It knows 8 by 8 grey digits, nothing about photographs of parts."
+      }
+    ]
+  },
+  {
+    "id": "ex-hqvjvv29",
+    "version": 1,
+    "section": "the-real-thing",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The preprocessing a pretrained model expects is built from `weights.___()`, never by writing the numbers by hand.",
+    "hint": "The last line of `weights.py`.",
+    "blanks": [
+      {
+        "accept": [
+          "transforms"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-p2hdvj7n",
+    "version": 1,
+    "section": "the-real-thing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must images passed to an ImageNet body be normalised with `mean=[0.485, 0.456, 0.406]`?",
+    "hint": "On what inputs did the filters learn?",
+    "choices": [
+      {
+        "text": "Because those are the means of your own images",
+        "correct": false,
+        "why": "They are ImageNet's, whatever your images are."
+      },
+      {
+        "text": "Because PyTorch refuses unnormalised input",
+        "correct": false,
+        "why": "It accepts anything; it just computes something else."
+      },
+      {
+        "text": "The filters learnt on inputs scaled that way",
+        "correct": true,
+        "why": "Right. Scaled otherwise, every input reaches them shifted."
+      },
+      {
+        "text": "To turn colour photographs into grey ones",
+        "correct": false,
+        "why": "There is one number per channel; the three channels stay."
+      }
+    ]
+  },
+  {
+    "id": "ex-4paj3qpv",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did this lesson's runs show? Choose all that apply.",
+    "hint": "Check each against a transcript.",
+    "choices": [
+      {
+        "text": "Mirrored 3s and 6s were almost never recognised",
+        "correct": true,
+        "why": "Yes: 0.00 for both in the mirrored column."
+      },
+      {
+        "text": "The frozen body of `base.pt` beat training from scratch",
+        "correct": false,
+        "why": "No: about 0.68 against 0.93 or more with 50 images."
+      },
+      {
+        "text": "Small shifts and turns raised the lowest of three seeds",
+        "correct": true,
+        "why": "Yes: from 0.886 to 0.928."
+      },
+      {
+        "text": "`base.pt` reached 0.989 on the validation 0 to 4",
+        "correct": true,
+        "why": "Yes, after 20 epochs."
+      },
+      {
+        "text": "The ResNet-18 weights were downloaded and tested",
+        "correct": false,
+        "why": "No: only their metadata was read; the download was not run."
+      }
+    ]
+  },
+  {
+    "id": "ex-94w14arm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `transfer.py`, which parameters does the optimiser receive for `head_only`?",
+    "hint": "The list comprehension before `Adam`.",
+    "choices": [
+      {
+        "text": "All 37,957, with the frozen ones ignored by Adam",
+        "correct": false,
+        "why": "The list filters on `requires_grad`, so the frozen ones never reach it."
+      },
+      {
+        "text": "Only the 325 of the new `Linear(64, 5)`",
+        "correct": true,
+        "why": "Right: a new layer is born with `requires_grad` on, and nothing else has it."
+      },
+      {
+        "text": "The 33,157 of the two new linear layers",
+        "correct": false,
+        "why": "That is `convolutions_only`, which replaces layer 6 as well."
+      },
+      {
+        "text": "None, because `base.pt` is already trained",
+        "correct": false,
+        "why": "The new head starts random and must learn."
+      }
+    ]
+  }
+]
