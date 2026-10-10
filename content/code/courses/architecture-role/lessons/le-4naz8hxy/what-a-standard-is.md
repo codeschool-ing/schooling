@@ -48,7 +48,7 @@ written with *must* produces arguments in review, because two reviewers read it 
 Renata cut the page to three piles. 38 rules were deleted: they described tools that no longer
 existed, repeated something the language or the framework already enforced, or nobody could say why
 they were there. 14 became guidelines. **9 stayed standards.** Nine is a number a tech lead can
-recite, and that is the point of it.
+recite.
 
 Every one of the nine carries the same four facts: the rule, the reason, the owner and how it is
 checked.

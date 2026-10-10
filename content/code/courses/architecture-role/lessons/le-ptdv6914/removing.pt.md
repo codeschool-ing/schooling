@@ -20,18 +20,18 @@ A última coluna era a difícil. Nove serviços tinham uma resposta clara para e
 
 | serviço | time | por que é separado | veredito |
 |---|---|---|---|
-| monolith | Shipper, Matching, Payments | a maior parte do negócio, um deploy e um banco de dados | manter |
-| tracking-ingest | Tracking | recebe as posições GPS de todo caminhão em movimento, cerca de 270 por segundo no pico | manter |
-| tracking-api | Tracking | serve as posições aos apps e escala separado da ingestão | manter |
-| delivery-proof | Tracking | fotos e assinaturas, uploads grandes mantidos fora do monólito | manter |
+| monolith | Shipper, Payments | a aplicação Django original e o banco dela, a maior parte do negócio | manter |
+| shipper-web | Shipper | o app web dos embarcadores, lançado no próprio ritmo | manter |
+| driver-app | Driver | o app dos motoristas e a API dele, versionada para versões antigas do app ainda em uso | manter |
+| matching | Matching | oferece cada carga aos motoristas um de cada vez, com ciclo de release próprio | manter |
+| tracking | Tracking | recebe as posições GPS de todo caminhão em movimento, cerca de 270 por segundo no pico, em banco próprio | manter |
 | pricing | Pricing | ciclo de release próprio, com regras de cotação mudando toda semana | manter |
 | cte-issuer | Payments | conversa com a autoridade fiscal e isola uma dependência externa lenta | manter |
 | pix-payouts | Payments | guarda as credenciais do banco, isolado por segurança e auditoria | manter |
-| driver-gateway | Driver | a API do app, versionada para versões antigas do app ainda em uso | manter |
 | notifications | Platform | notificações push e SMS para todos os times | manter |
 | pricing-floor | Pricing | guarda a tabela do piso da ANTT; só o pricing chama | fundir no pricing |
 | invoice-pdf | Payments | gera faturas uma vez por dia; só o monólito chama | trazer para o monólito |
-| geo-distance | Matching | embrulha uma biblioteca de rotas; só o monólito chama | virar biblioteca |
+| geo-distance | Matching | embrulha uma biblioteca de rotas; só o matching chama | virar biblioteca |
 | config-service | Platform | configuração feita em casa, duplicando variáveis de ambiente | apagar |
 | load-search | Matching | busca de cargas abertas, feita num hackathon; usada por 4% dos embarcadores | perguntar ao produto |
 
@@ -54,9 +54,9 @@ prática.
 pipeline próprio, imagem base própria para corrigir e lugar próprio na escala de plantão. Virou um
 módulo que o job noturno chama direto.
 
-**geo-distance** embrulha uma biblioteca de rotas de código aberto numa API HTTP, e o monólito o
+**geo-distance** embrulha uma biblioteca de rotas de código aberto numa API HTTP, e o matching o
 chamava cerca de 40.000 vezes por dia. Cada chamada era um salto de rede que podia estourar o tempo,
-para um cálculo que o monólito podia fazer no próprio processo. A biblioteca entrou no monólito como
+para um cálculo que o matching podia fazer no próprio processo. A biblioteca entrou no matching como
 dependência comum.
 
 **config-service** era o terceiro jeito de configurar as coisas na Carreto. Quando ele caía, os

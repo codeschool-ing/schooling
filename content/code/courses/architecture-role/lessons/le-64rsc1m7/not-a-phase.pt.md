@@ -21,7 +21,7 @@ embarcadores vão usar o produto, que funcionalidades vão de fato querer, onde 
 concentrar, o que o regulador vai mudar no ano que vem. Um desenho que fixa tudo isso de antemão é
 um conjunto de palpites, e os palpites são mais difíceis de corrigir justamente quando se mostram
 errados, porque a essa altura já há código construído sobre eles. Um documento de desenho aprovado e
-nunca revisto vira o slide da seção anterior: um plano apresentado como descrição.
+nunca revisto vira o slide da seção 02 desta aula: um plano apresentado como descrição.
 
 ## Nenhum desenho
 
@@ -88,11 +88,11 @@ engenheiros e nenhum cliente, era uma boa decisão: uma coisa para implantar, um
 nada para coordenar. Com cinquenta engenheiros em sete times, a mesma decisão produz as implantações
 de 40 minutos e os choques sobre a tabela `loads` que a seção anterior listou.
 
-Os fundadores não erraram. **O contexto mudou, e ninguém voltou à decisão.** É esse o trabalho de
-verdade que "arquitetura não é uma fase" descreve: manter o registro do que foi decidido e por quê,
-para que uma mudança de contexto possa ser notada e a decisão reaberta de propósito, em vez de
-corroída por acidente. A aula 5 dá a ferramenta para isso, o registro de decisão de arquitetura,
-inclusive o que acontece com ele quando é substituído.
+Os fundadores não erraram. **O contexto mudou, e ninguém voltou à decisão.** É esse o trabalho que
+"arquitetura não é uma fase" descreve: manter o registro do que foi decidido e por quê, para que uma
+mudança de contexto possa ser notada e a decisão reaberta de propósito, em vez de corroída por
+acidente. A aula 5 dá a ferramenta para isso, o registro de decisão de arquitetura, inclusive o que
+acontece com ele quando é substituído.
 
 Então a arquitetura acontece antes do código, durante ele e enquanto o sistema rodar. Não é um
 documento entregue no começo; é um conjunto de decisões que alguém continua decidindo.

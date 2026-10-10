@@ -19,8 +19,8 @@ The trouble is that **most of what the design depends on is not yet known.** How
 use the product, which features they will actually want, where the load will concentrate, what the
 regulator will change next year. A design that fixes all of that in advance is a set of guesses, and
 the guesses are hardest to correct exactly when they turn out wrong, because by then code has been
-built on them. A design document that was approved and never revisited becomes the slide of the
-previous section: a plan presented as a description.
+built on them. A design document that was approved and never revisited becomes the slide from
+section 02 of this lesson: a plan presented as a description.
 
 ## No design at all
 
@@ -88,10 +88,10 @@ nothing to coordinate. With fifty engineers in seven teams, the same decision pr
 deploys and the clashes over the `loads` table that the previous section listed.
 
 The founders were not wrong. **The context moved, and nobody went back to the decision.** That is
-the real job that "architecture is not a phase" describes: keeping a record of what was decided and
-why, so that a change of context can be noticed and the decision reopened on purpose rather than
-eroded by accident. Lesson 5 gives the tool for it, the architecture decision record, including what
-happens to one when it is replaced.
+the job "architecture is not a phase" describes: keeping a record of what was decided and why, so
+that a change of context can be noticed and the decision reopened on purpose rather than eroded by
+accident. Lesson 5 gives the tool for it, the architecture decision record, including what happens
+to one when it is replaced.
 
 So architecture happens before the code, during it, and for as long as the system runs. It is not a
 document handed over at the start; it is a set of decisions that somebody keeps deciding.

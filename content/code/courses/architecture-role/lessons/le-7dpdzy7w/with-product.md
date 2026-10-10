@@ -57,13 +57,13 @@ leaves behind**, in words the decider uses.
 
 Three habits made this work at Carreto:
 
-- **Renata joins discovery, not only planning.** By the time a feature reaches quarterly planning,
+- Renata joins discovery, not only planning. By the time a feature reaches quarterly planning,
   its shape is decided and an architect can only price it. Two weeks earlier, while Helena's team is
   still talking to cooperatives, a question about the one-to-one could change the shape.
-- **Each product brief has a structural paragraph.** One question, answered by whoever on the team
+- Each product brief has a structural paragraph. One question, answered by whoever on the team
   knows best: which assumptions in the system does this feature touch? Most answers are "none". The
   ones that are not are where the architect spends time.
-- **Options, not verdicts.** Renata gives two or three options when she can, including the cheapest
+- Options, not verdicts. Renata gives two or three options when she can, including the cheapest
   honest one. A single proposal invites a yes or a no; options invite a decision.
 
 ## The architect brings ideas too

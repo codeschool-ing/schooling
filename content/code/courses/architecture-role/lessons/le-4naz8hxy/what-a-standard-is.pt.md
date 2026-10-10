@@ -48,7 +48,7 @@ escrita com *deve* gera discussão na revisão, porque dois revisores a leem de 
 Renata dividiu a página em três pilhas. 38 regras foram apagadas: descreviam ferramentas que não
 existiam mais, repetiam algo que a linguagem ou o framework já garantia, ou ninguém sabia dizer por que
 estavam ali. 14 viraram diretrizes. **9 continuaram padrões.** Nove é um número que um tech lead
-consegue recitar, e é para isso que ele serve.
+consegue recitar.
 
 Cada um dos nove traz os mesmos quatro fatos: a regra, o motivo, o dono e como é verificado.
 

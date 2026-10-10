@@ -81,8 +81,8 @@ escolhas, quando a pergunta real é se alguma delas vale mais do que ficar parad
 
 Escrever as opções lado a lado também produziu uma que não estava na lista. **B com uma porta de
 saída**: começar com o provedor, pôr o pagamento atrás de uma interface que Payments controla, e
-mudar para a API do banco quando o volume fizer a diferença de tarifa valer o trabalho. A aula 5
-chamou isso de transformar uma porta de mão única numa porta de mão dupla. O custo extra é a
+mudar para a API do banco quando o volume fizer a diferença de tarifa valer o trabalho. Nos termos da aula 5, isso
+transforma uma porta de mão única numa porta de mão dupla. O custo extra é a
 interface, mais ou menos uma semana, e ela compra o direito de mudar a decisão depois por um preço
 conhecido. A comparação completa entre construir e comprar, ao longo de anos e com custos de saída,
 é o assunto das aulas 8 e 9 de `tech-strategy`, na trilha de tech lead.

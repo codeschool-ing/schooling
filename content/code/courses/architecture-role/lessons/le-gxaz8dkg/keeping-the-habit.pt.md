@@ -42,6 +42,19 @@ leads:
 revisão, pelo pipeline e pelo monitoramento, e cada um deles é parte do custo de um desenho. Um
 branch abandonado depois de três semanas ensina a primeira meia jornada e nada depois dela.
 
+## Diga o que pegou, e devolva o que não conseguir terminar
+
+O código que um arquiteto escreve nas brechas é código que o time não planejou, então ele precisa
+ser visível. Quando Renata pega uma correção do backlog de um time, ela avisa no canal do time e
+põe o cartão no nome dela, para ninguém mais começá-lo e para o tech lead saber onde ele está.
+Quando uma semana de reuniões come as duas manhãs dela, ela avisa isso também.
+
+**Uma tarefa inacabada segurada em silêncio é o caminho crítico entrando pela porta dos fundos.** Se
+algo que ela pegou passa a importar para uma entrega, ou cresce além do que duas meias jornadas
+carregam, ela devolve o trabalho com uma nota de até onde chegou, em vez de prometer terminar na
+semana seguinte. A regra da seção anterior é sobre o que pegar; esta é a mesma regra aplicada ao
+que ela já está segurando.
+
 ## Seja revisado como todo mundo
 
 O código de um arquiteto passa pela revisão do time, segue os padrões do time e pode ser recusado.

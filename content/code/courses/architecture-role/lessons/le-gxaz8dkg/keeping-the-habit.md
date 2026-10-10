@@ -40,6 +40,19 @@ that fits two half-days a week. In practice Renata keeps a short list, agreed wi
 review, the pipeline and the monitoring, and each of those is part of what a design costs. A branch
 abandoned after three weeks teaches the first half-day and nothing after it.
 
+## Say what you picked up, and hand back what you cannot finish
+
+Code an architect writes in the gaps is code a team did not plan for, so it needs to be visible.
+When Renata takes a fix from a team's backlog, she says so in the team's channel and moves the card
+to her name, so nobody else starts it and the tech lead knows where it is. When a week of meetings
+eats both of her mornings, she says that too.
+
+**An unfinished task held quietly is the critical path arriving by the back door.** If something
+she picked up turns out to matter to a release after all, or grows past what two half-days can
+carry, she hands it back with a note on where she got to, rather than promising to finish it next
+week. The rule of the previous section is about what to pick up; this is the same rule applied to
+what she is already holding.
+
 ## Be reviewed like everybody else
 
 An architect's code goes through the team's review, follows the team's standards and can be

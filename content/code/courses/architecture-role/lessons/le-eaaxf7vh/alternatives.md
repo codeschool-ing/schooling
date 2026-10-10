@@ -78,8 +78,8 @@ question is whether either is worth more than standing still.
 
 Writing the options side by side also produced one that was not on the list. **B with an exit
 door**: start with the provider, put the payout behind an interface that Payments owns, and move to
-the bank's API when the volume makes the fee difference worth the work. Lesson 5 called that turning
-a one-way door into a two-way one. The extra cost is the interface, about a week, and it buys the
+the bank's API when the volume makes the fee difference worth the work. In lesson 5's terms, that
+turns a one-way door into a two-way one. The extra cost is the interface, about a week, and it buys the
 right to change the decision later at a known price. The full comparison of building against buying,
 over years and with exit costs, is the subject of `tech-strategy` lessons 8 and 9, in the tech lead
 track.

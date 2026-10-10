@@ -72,8 +72,7 @@ In the spring the Driver team had to make the app work through the dead zones on
 port of Paranaguá, where a driver loses signal for forty minutes. Diego's team had never designed
 offline synchronisation. Renata spent three weeks working with them: two design sessions, a spike
 she paired on with one of Diego's developers, and a review of the ADR his team wrote. She did not
-write the design for them. By the fourth week the team was making the decisions without her, which
-was the point.
+write the design for them. By the fourth week the team was making the decisions without her.
 
 **The measure of enabling work is that it stops being needed.** An architect who stays with a team,
 or whose approval the team waits for, has turned facilitation into a dependency. Lesson 11 is about
@@ -100,7 +99,7 @@ proposals early, because early is when advice is most useful. In its first six m
 offline synchronisation design was one.
 
 Attendance is not the measure. About twelve people come on an ordinary Thursday. What Renata watches
-is which teams bring proposals: by the third month every team had brought at least one, and the
+is which teams bring proposals. By the third month every team had brought at least one. The
 Pricing team, which had brought none in the first two, brought two in a row once its tech lead
 saw that the forum changed proposals without blocking them.
 

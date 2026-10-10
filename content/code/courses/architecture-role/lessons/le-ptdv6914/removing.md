@@ -19,18 +19,18 @@ The last column was the hard one. Nine services had a clear answer to it. Five d
 
 | service | team | why it is separate | verdict |
 |---|---|---|---|
-| monolith | Shipper, Matching, Payments | most of the business, one deploy and one database | keep |
-| tracking-ingest | Tracking | takes GPS positions from every moving truck, about 270 a second at peak | keep |
-| tracking-api | Tracking | serves positions to the apps and scales apart from the ingest | keep |
-| delivery-proof | Tracking | photos and signatures, large uploads kept off the monolith | keep |
+| monolith | Shipper, Payments | the original Django application and its database, most of the business | keep |
+| shipper-web | Shipper | the shippers' web app, released on its own schedule | keep |
+| driver-app | Driver | the drivers' mobile app and its API, versioned for old app versions still in use | keep |
+| matching | Matching | offers each load to drivers one at a time, with its own release cycle | keep |
+| tracking | Tracking | takes GPS positions from every moving truck, about 270 a second at peak, in its own database | keep |
 | pricing | Pricing | its own release cycle, with quote rules changing weekly | keep |
 | cte-issuer | Payments | talks to the tax authority and keeps a slow outside dependency apart | keep |
 | pix-payouts | Payments | holds the bank credentials, isolated for security and audit | keep |
-| driver-gateway | Driver | the mobile app's API, versioned for old app versions still in use | keep |
 | notifications | Platform | push messages and SMS for every team | keep |
 | pricing-floor | Pricing | holds the ANTT floor table; called only by pricing | merge into pricing |
 | invoice-pdf | Payments | renders invoices once a day; called only by the monolith | fold into the monolith |
-| geo-distance | Matching | wraps a routing library; called only by the monolith | make it a library |
+| geo-distance | Matching | wraps a routing library; called only by matching | make it a library |
 | config-service | Platform | homegrown configuration, duplicating environment variables | delete |
 | load-search | Matching | search over open loads, built at a hackathon; used by 4% of shippers | ask product |
 
@@ -52,9 +52,9 @@ inside Pricing, changed by a reviewed pull request, which is what had been happe
 pipeline, its own base image to patch and its own place on the on-call rota. It became a module the
 nightly job calls directly.
 
-**geo-distance** wraps an open-source routing library behind an HTTP API, and the monolith called
-it about 40,000 times a day. Each call was a network hop that could time out, for a calculation the
-monolith could do in-process. The library moved into the monolith as an ordinary dependency.
+**geo-distance** wraps an open-source routing library behind an HTTP API, and matching called it
+about 40,000 times a day. Each call was a network hop that could time out, for a calculation
+matching could do in-process. The library moved into matching as an ordinary dependency.
 
 **config-service** was Carreto's third way to configure things. When it was down, services could
 not start, and it had paged people 11 times in the 90 days. Platform moved every value into the

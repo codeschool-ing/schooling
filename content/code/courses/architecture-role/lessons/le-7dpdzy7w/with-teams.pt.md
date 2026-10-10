@@ -73,8 +73,7 @@ Na primavera o time Driver precisou fazer o app funcionar nas zonas sem sinal da
 de Paranaguá, onde um motorista fica quarenta minutos sem conexão. O time do Diego nunca tinha desenhado
 sincronização offline. Renata passou três semanas trabalhando com eles: duas sessões de desenho, um
 spike que ela fez em par com um dos desenvolvedores do Diego, e uma revisão do ADR que o time escreveu.
-Ela não escreveu o desenho por eles. Na quarta semana o time já tomava as decisões sem ela, e era essa a
-ideia.
+Ela não escreveu o desenho por eles. Na quarta semana o time já tomava as decisões sem ela.
 
 **A medida do trabalho habilitador é ele deixar de ser necessário.** Uma arquiteta que fica num time, ou
 cuja aprovação o time espera, transformou facilitação em dependência. A aula 11 trata do aconselhamento
@@ -102,7 +101,7 @@ porque cedo é quando o conselho é mais útil. Nos primeiros seis meses o fóru
 delas mudaram bastante por causa do que foi dito na sala; o desenho da sincronização offline foi uma.
 
 Presença não é a medida. Umas doze pessoas aparecem numa quinta comum. O que Renata acompanha é quais
-times trazem propostas: no terceiro mês todos os times já tinham trazido pelo menos uma, e o time de
+times trazem propostas. No terceiro mês todos os times já tinham trazido pelo menos uma. O time de
 Pricing, que não tinha trazido nenhuma nos dois primeiros, trouxe duas seguidas quando o tech lead viu
 que o fórum mudava propostas sem bloqueá-las.
 
