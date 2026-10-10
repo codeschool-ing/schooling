@@ -34,15 +34,15 @@
   "prompt": "O que uma conexão CDP dá a uma biblioteca que uma conexão WebDriver clássica não dá?",
   "choices": [
    {
-    "text": "Eventos que o navegador manda sem ser perguntado, como cada resposta e mensagem de console",
+    "text": "Eventos que o navegador manda sozinho, sem ser perguntado",
     "why": "Certo. O WebDriver é uma requisição, uma resposta; o CDP é um WebSocket de mão dupla, e foi assim que o `look.mjs` imprimiu o painel Network."
    },
    {
-    "text": "Acesso a todos os navegadores",
+    "text": "Acesso a todos os navegadores, Safari incluído",
     "why": "O contrário: o WebDriver chega a todo navegador com driver, e o CDP para no Chromium."
    },
    {
-    "text": "Um padrão do W3C que não muda",
+    "text": "Um padrão do W3C que não muda de uma versão do Chrome para a outra",
     "why": "O CDP não é padrão; muda com o Chrome. O WebDriver é que é o padrão."
    },
    {
@@ -63,7 +63,7 @@
     "why": "Certo. O `basket.mjs` é um script comum; nada nele é um teste."
    },
    {
-    "text": "Um gravador que escreve o script enquanto você clica",
+    "text": "Um gravador que escreve o script enquanto você clica na página",
     "why": "Nada foi gravado; cada linha do `basket.mjs` foi escrita à mão."
    },
    {
@@ -109,8 +109,8 @@
     "why": "Os tempos mudam entre execuções; a versão do navegador não."
    },
    {
-    "text": "A instalação dele baixou o Chrome do próprio Puppeteer; a transcrição o apontou para o Chromium do Playwright",
-    "why": "Certo. A máquina das transcrições não conseguia baixar, então o `PUPPETEER_EXECUTABLE_PATH` indicou outro navegador."
+    "text": "Dois navegadores diferentes responderam",
+    "why": "Certo. A instalação dele baixou o Chrome 155 do próprio Puppeteer; a máquina das transcrições não conseguia, então o `PUPPETEER_EXECUTABLE_PATH` apontou o Puppeteer para o Chromium 141 do Playwright."
    }
   ]
  },
@@ -118,8 +118,8 @@
   "prompt": "No `tests/banana.spec.js`, que linha faz o trabalho que o `waitForFunction` fazia no script do Puppeteer?",
   "choices": [
    {
-    "text": "`await page.goto('/')`",
-    "why": "O `goto` espera a página carregar, não a contagem mudar depois de um clique."
+    "text": "`await page.getByTestId('product-banana').getByRole('button', { name: 'Add to basket' }).click()`",
+    "why": "O clique espera o botão antes de clicar, que é o trabalho do `waitForSelector`; ele não espera a contagem mudar depois."
    },
    {
     "text": "`await request.post('/api/reset')`",
@@ -168,7 +168,7 @@
     "why": "Certo. Um elemento aponta para o cartão antigo; o localizador acha o cartão que estiver lá agora."
    },
    {
-    "text": "O Playwright impede a página de redesenhar durante um teste",
+    "text": "O Playwright impede a página de redesenhar enquanto um teste roda",
     "why": "Ele não muda nada na página; os testes veem a página como ela se comporta."
    },
    {
@@ -185,12 +185,12 @@
     "why": "Abandonaria a grade: o Puppeteer não fala o WebDriver clássico."
    },
    {
-    "text": "Jest, porque tem modo de observação",
+    "text": "Jest, porque tem modo de observação de arquivos",
     "why": "O Jest não conduz navegador; o modo de observação roda os testes de novo quando arquivos mudam."
    },
    {
-    "text": "WebdriverIO, que passa para o WebDriver BiDi onde o navegador dá suporte",
-    "why": "Certo. O BiDi mantém o alcance do WebDriver e acrescenta os eventos pelos quais o CDP é conhecido."
+    "text": "WebdriverIO, pelo WebDriver BiDi",
+    "why": "Certo. Ele passa para o BiDi onde o navegador dá suporte, o que mantém o alcance do WebDriver e acrescenta os eventos pelos quais o CDP é conhecido."
    },
    {
     "text": "Nightwatch, porque é feito por uma empresa de nuvem",
@@ -202,7 +202,7 @@
   "prompt": "O que fica por baixo do Nightwatch quando ele fala com um navegador?",
   "choices": [
    {
-    "text": "Puppeteer",
+    "text": "Puppeteer, que conversa com o Chrome por CDP por ele",
     "why": "O Puppeteer é uma biblioteca de CDP; o Nightwatch depende da do Selenium."
    },
    {
@@ -210,7 +210,7 @@
     "why": "Certo. O Nightwatch 3.16.0 depende do `selenium-webdriver` 4.27.0."
    },
    {
-    "text": "Um protocolo próprio",
+    "text": "Um protocolo próprio, escrito para o Nightwatch",
     "why": "O README dele diz que usa a API WebDriver do W3C."
    },
    {
@@ -242,7 +242,7 @@
     "why": "Certo. Um navegador só chega com uma biblioteca como o Puppeteer, por exemplo pelo `jest-puppeteer`."
    },
    {
-    "text": "Clicar os botões pelo jsdom, igual a um navegador",
+    "text": "Clicar os botões no jsdom",
     "why": "O jsdom não é a página da loja num navegador: não tem layout, e o servidor da loja nem entra."
    },
    {
@@ -263,8 +263,8 @@
     "why": "Paralelismo não tem nada a ver; um teste sozinho passaria do mesmo jeito."
    },
    {
-    "text": "O jsdom não tem layout, então nada nele tem tamanho ou posição",
-    "why": "Certo. Transbordar é um fato de layout, e só um navegador de verdade o calcula."
+    "text": "O jsdom não calcula layout",
+    "why": "Certo. Nada no jsdom tem tamanho ou posição; transbordar é um fato de layout, e só um navegador de verdade o calcula."
    },
    {
     "text": "O teste usou um seletor CSS em vez de um papel",
@@ -288,7 +288,7 @@
     "why": "O Jest saiu do Facebook; o Jasmine é outro projeto."
    },
    {
-    "text": "Um padrão do W3C define `describe` e `it`",
+    "text": "Um padrão do W3C define `describe` e `it` para todo executor",
     "why": "O W3C padroniza o WebDriver, não sintaxe de teste."
    }
   ]
@@ -318,11 +318,11 @@
   "prompt": "Do que uma equipe abre mão quando um serviço de fora escreve e roda os testes de ponta a ponta dela?",
   "choices": [
    {
-    "text": "A possibilidade de rodar Playwright",
+    "text": "O direito de rodar Playwright nas próprias máquinas",
     "why": "Os testes são código Playwright; nada impede a equipe de rodar Playwright ela mesma."
    },
    {
-    "text": "Saber, dentro da equipe, o que é testado e por quê",
+    "text": "Saber o que é testado, e por quê",
     "why": "Certo. Esse conhecimento decide para onde vai o esforço de teste, e agora mora com outra pessoa."
    },
    {

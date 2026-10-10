@@ -56,17 +56,17 @@
   "prompt": "What does a CDP connection give a library that a classic WebDriver connection does not?",
   "choices": [
    {
-    "text": "Events the browser sends without being asked, such as each response and console message",
+    "text": "Events the browser sends on its own, unasked",
     "correct": true,
     "why": "Right. WebDriver is one request, one answer; CDP is a two-way WebSocket, which is how `look.mjs` printed the Network panel."
    },
    {
-    "text": "Access to every browser",
+    "text": "Access to every browser, Safari included",
     "correct": false,
     "why": "The opposite: WebDriver reaches every browser with a driver, and CDP stops at Chromium."
    },
    {
-    "text": "A W3C standard that does not change",
+    "text": "A W3C standard that stays the same from one Chrome version to the next",
     "correct": false,
     "why": "CDP is not a standard; it changes with Chrome. WebDriver is the standard."
    },
@@ -164,9 +164,9 @@
     "why": "Timings differ between runs; a browser's version does not."
    },
    {
-    "text": "Their install downloaded Puppeteer's own Chrome; the transcript pointed it at Playwright's Chromium",
+    "text": "Two different browsers answered",
     "correct": true,
-    "why": "Right. The machine the transcripts come from could not download, so `PUPPETEER_EXECUTABLE_PATH` named another browser."
+    "why": "Right. Their install downloaded Puppeteer's own Chrome 155; the transcripts' machine could not, so `PUPPETEER_EXECUTABLE_PATH` pointed Puppeteer at Playwright's Chromium 141."
    }
   ]
  },
@@ -180,9 +180,9 @@
   "prompt": "In `tests/banana.spec.js`, which line does the job that `waitForFunction` did in the Puppeteer script?",
   "choices": [
    {
-    "text": "`await page.goto('/')`",
+    "text": "`await page.getByTestId('product-banana').getByRole('button', { name: 'Add to basket' }).click()`",
     "correct": false,
-    "why": "`goto` waits for the page to load, not for the count to change after a click."
+    "why": "The click waits for the button before clicking, which is `waitForSelector`'s job; it does not wait for the count to change after."
    },
    {
     "text": "`await request.post('/api/reset')`",
@@ -242,7 +242,7 @@
   "prompt": "A page redraws its product cards every few seconds. Why does a Playwright locator cope with that better than a Puppeteer element handle fetched once?",
   "choices": [
    {
-    "text": "A locator caches the element so it never goes stale",
+    "text": "A locator caches the element, so the reference never goes stale",
     "correct": false,
     "why": "It does the opposite: it keeps no element and searches again each time."
    },
@@ -252,7 +252,7 @@
     "why": "Right. A handle points at the old card; the locator finds whichever card is there now."
    },
    {
-    "text": "Playwright stops the page from redrawing during a test",
+    "text": "Playwright stops the page from redrawing while a test runs",
     "correct": false,
     "why": "It changes nothing about the page; tests see the page as it behaves."
    },
@@ -278,14 +278,14 @@
     "why": "It would leave the grid behind: Puppeteer does not speak classic WebDriver."
    },
    {
-    "text": "Jest, because it has a watch mode",
+    "text": "Jest, because it has a watch mode for files",
     "correct": false,
     "why": "Jest drives no browser; the watch mode reruns tests when files change."
    },
    {
-    "text": "WebdriverIO, which moves to WebDriver BiDi where the browser supports it",
+    "text": "WebdriverIO, through WebDriver BiDi",
     "correct": true,
-    "why": "Right. BiDi keeps WebDriver's reach and adds the events CDP is known for."
+    "why": "Right. It moves to BiDi where the browser supports it, which keeps WebDriver's reach and adds the events CDP is known for."
    },
    {
     "text": "Nightwatch, because it is made by a cloud company",
@@ -304,7 +304,7 @@
   "prompt": "What is underneath Nightwatch when it talks to a browser?",
   "choices": [
    {
-    "text": "Puppeteer",
+    "text": "Puppeteer, which talks to Chrome over CDP for it",
     "correct": false,
     "why": "Puppeteer is a CDP library; Nightwatch depends on Selenium's."
    },
@@ -314,7 +314,7 @@
     "why": "Right. Nightwatch 3.16.0 depends on `selenium-webdriver` 4.27.0."
    },
    {
-    "text": "A protocol of its own",
+    "text": "A protocol of its own, written for Nightwatch",
     "correct": false,
     "why": "Its README says it uses the W3C WebDriver API."
    },
@@ -364,7 +364,7 @@
     "why": "Right. A browser arrives only with a library such as Puppeteer, for instance through `jest-puppeteer`."
    },
    {
-    "text": "Click its buttons through jsdom, the same as a browser would",
+    "text": "Click its buttons in jsdom",
     "correct": false,
     "why": "jsdom is not the shop's page in a browser: it has no layout, and the page's own server is not involved."
    },
@@ -395,9 +395,9 @@
     "why": "Parallelism has nothing to do with it; a single test would pass the same way."
    },
    {
-    "text": "jsdom has no layout, so nothing in it has a size or a position",
+    "text": "jsdom computes no layout",
     "correct": true,
-    "why": "Right. Overflow is a layout fact, and only a real browser computes it."
+    "why": "Right. Nothing in jsdom has a size or a position; overflow is a layout fact, and only a real browser computes it."
    },
    {
     "text": "The test used a CSS selector instead of a role",
@@ -431,7 +431,7 @@
     "why": "Jest came out of Facebook; Jasmine is a separate project."
    },
    {
-    "text": "A W3C standard defines `describe` and `it`",
+    "text": "A W3C standard defines both `describe` and `it` for every runner",
     "correct": false,
     "why": "The W3C standardises WebDriver, not test syntax."
    }
@@ -474,14 +474,14 @@
   "prompt": "What does a team give up when an outside service writes and runs its end-to-end tests?",
   "choices": [
    {
-    "text": "The ability to run Playwright at all",
+    "text": "The right to run Playwright on its own machines",
     "correct": false,
     "why": "The tests are Playwright code; nothing stops the team running Playwright itself."
    },
    {
-    "text": "Knowing, inside the team, what is tested and why",
+    "text": "Owning what is tested, and why",
     "correct": true,
-    "why": "Right. That knowledge decides where testing effort goes, and it now lives with somebody else."
+    "why": "Right. Knowing what is tested and why decides where testing effort goes, and it now lives outside the team."
    },
    {
     "text": "Its unit tests, which the service replaces",
