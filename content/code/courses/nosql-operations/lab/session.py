@@ -53,7 +53,11 @@ def read_for(seconds):
         buf += chunk
 
 if tool in ("mongosh", "cqlsh"):
-    PROMPT = re.compile(r"(?:^|(?<=\n)|(?<=> ))((?:[\w-]+ )?(?:\[[^\]\n]+\] )?[\w-]+> |cqlsh(?::[\w]+)?> |   \.\.\. )")
+    # mongosh's own continuation prompt, on a terminal and through a pipe
+    # alike, is "| ": the line typed was not a whole statement yet.
+    MORE = r"|\| " if tool == "mongosh" else ""
+    PROMPT = re.compile(r"(?:^|(?<=\n)|(?<=> ))((?:[\w-]+ )?(?:\[[^\]\n]+\] )?[\w-]+> |cqlsh(?::[\w]+)?> |   \.\.\. %s)" % MORE)
+    ENDS = ("> ", "... ", "| ") if tool == "mongosh" else ("> ", "... ")
 
     def until_prompt(timeout=600):
         buf = b""
@@ -61,7 +65,7 @@ if tool in ("mongosh", "cqlsh"):
         while time.time() - start < timeout:
             buf += read_for(0.5)
             text = buf.decode("utf-8", "replace")
-            if PROMPT.search(text) and text.endswith(("> ", "... ")):
+            if PROMPT.search(text) and text.endswith(ENDS):
                 buf += read_for(0.5)
                 return buf.decode("utf-8", "replace")
             if proc.poll() is not None:

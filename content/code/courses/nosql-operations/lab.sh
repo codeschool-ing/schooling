@@ -67,8 +67,11 @@ reset() { # the daemon as it is before a lesson starts, scratch (x-*) aside
   for c in $(docker ps -a --format '{{.Names}}'); do
     case "$c" in x-*) ;; *) docker rm -f "$c" >/dev/null ;; esac
   done
+  # A volume still in use here belongs to an x-* container (every other one is
+  # gone by now): an anonymous volume an image declares, such as redis's /data.
+  # It is scratch like its container, so a refusal to remove it is left alone.
   for c in $(docker volume ls -q); do
-    case "$c" in x-*) ;; *) docker volume rm -f "$c" >/dev/null ;; esac
+    case "$c" in x-*) ;; *) docker volume rm -f "$c" >/dev/null 2>&1 || docker ps -aq --filter volume="$c" | grep -q . ;; esac
   done
   for c in $(docker network ls --format '{{.Name}}'); do
     case "$c" in bridge|host|none|x-*) ;; *) docker network rm "$c" >/dev/null ;; esac
