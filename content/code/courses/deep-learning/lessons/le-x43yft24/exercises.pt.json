@@ -1,0 +1,355 @@
+{
+  "ex-p6q9d4z2": {
+    "prompt": "O `fit` treina nas 1.077 imagens de treino com lote de 64. Quantos passos tem uma época?",
+    "hint": "Divida, e pense no que acontece com as imagens que sobram.",
+    "unit": "passos"
+  },
+  "ex-qx3qt5xk": {
+    "prompt": "Com lote de 32, o que acontece no `fit` com as imagens que sobram no fim de cada época?",
+    "hint": "Leia o `range` do laço e as primeiras linhas que o `steps.py` imprimiu.",
+    "choices": [
+      {
+        "text": "As 21 que sobram formam um lote curto que recebe um passo inteiro",
+        "why": "Certo. 33 lotes cheios levam 1.056 imagens, e as últimas 21 recebem um passo na mesma taxa, a partir de uma média um pouco mais ruidosa."
+      },
+      {
+        "text": "São descartadas, para que todo passo use exatamente 32",
+        "why": "O `fit` as mantém. Descartar o lote curto é uma opção do `DataLoader` do PyTorch, que a aula 10 usa."
+      },
+      {
+        "text": "Esperam e entram no primeiro lote da época seguinte",
+        "why": "Toda época começa com uma permutação nova das 1.077; nada passa de uma para a outra."
+      },
+      {
+        "text": "Não sobra nenhuma, já que 1.077 é divisível por 32",
+        "why": "32 × 33 dá 1.056, então sobram 21, e 34 passos fazem uma época."
+      }
+    ]
+  },
+  "ex-rdjdazh1": {
+    "prompt": "Por que o `fit` sorteia uma permutação nova no começo de cada época em vez de embaralhar uma vez só?",
+    "hint": "Pense em quais imagens acabam no mesmo lote.",
+    "choices": [
+      {
+        "text": "Para mudar quais imagens ficam no conjunto de validação",
+        "why": "A divisão é feita uma vez pelo `digits.load()`; o `fit` embaralha só o conjunto de treino que recebe."
+      },
+      {
+        "text": "Para que cada época agrupe as imagens em lotes diferentes",
+        "why": "Certo. Toda imagem volta a cada época, em outra companhia, e a rede não vê para sempre as mesmas 34 médias na mesma ordem."
+      },
+      {
+        "text": "Para que nenhuma imagem seja vista duas vezes numa execução",
+        "why": "Toda época vê cada imagem de treino uma vez, então uma execução de dez épocas vê cada uma dez vezes."
+      },
+      {
+        "text": "Porque a perda não pode ser calculada com as imagens na ordem original",
+        "why": "A perda é uma média sobre um lote e não liga para a ordem; o que o embaralhamento muda são os lotes."
+      }
+    ]
+  },
+  "ex-5x78weaj": {
+    "prompt": "Na execução de épocas iguais do `batchsize.py`, por que o lote de 1.077 terminou com acurácia de validação de 0,436?",
+    "hint": "Olhe a coluna de passos.",
+    "choices": [
+      {
+        "text": "O gradiente dele era o mais ruidoso dos três",
+        "why": "Era o menos ruidoso: todo passo usou o conjunto de treino inteiro."
+      },
+      {
+        "text": "Ele processou menos imagens que o lote de 1",
+        "why": "Os três processaram 10.770 imagens; é isso que épocas iguais quer dizer."
+      },
+      {
+        "text": "Dez épocas nesse tamanho são só dez passos",
+        "why": "Certo. Dez movimentos dos pesos a uma taxa de 0,1 é pouco demais, por melhor que seja cada gradiente."
+      },
+      {
+        "text": "Um gradiente sobre o conjunto inteiro aponta para longe do mínimo",
+        "why": "É o gradiente verdadeiro da perda de treino, e com passos iguais o lote inteiro ganhou."
+      }
+    ]
+  },
+  "ex-vnwp2a65": {
+    "prompt": "Duas execuções dão os mesmos 5.000 passos na mesma taxa, uma com lote de 16 e outra com lote de 512. O lote de 512 termina com a menor perda de validação. Quanto isso custou?",
+    "hint": "Conte imagens, não passos.",
+    "choices": [
+      {
+        "text": "32 vezes mais imagens pela rede",
+        "why": "Certo. Passos iguais com 512 em vez de 16 são 32 vezes o trabalho de forward e backward, a mesma troca que o lote inteiro fez na aula."
+      },
+      {
+        "text": "Nada, porque passos iguais são trabalho igual",
+        "why": "Um passo com 512 passa 512 imagens pela rede, e um passo com 16 passa 16."
+      },
+      {
+        "text": "32 vezes mais atualizações dos pesos",
+        "why": "As duas fizeram 5.000 atualizações; o número de passos ficou igual."
+      },
+      {
+        "text": "Uma curva que subiu mais vezes entre épocas",
+        "why": "O lote maior tem a curva mais lisa, como mostraram as 0 subidas em 1.076 do lote inteiro."
+      }
+    ]
+  },
+  "ex-p1ww1mbb": {
+    "prompt": "Nas 1.077 épocas da execução de lote inteiro, a perda de validação não subiu nenhuma vez. Por que essa curva é tão lisa?",
+    "hint": "O que cada passo dessa execução vê?",
+    "choices": [
+      {
+        "text": "Uma taxa de 0,1 é pequena demais para mover a perda",
+        "why": "A perda se moveu bastante: essa execução terminou com acurácia de validação de 0,967."
+      },
+      {
+        "text": "As imagens de validação entravam em cada gradiente",
+        "why": "O `fit` calcula gradientes só no conjunto de treino; a validação é medida, nunca usada para treinar."
+      },
+      {
+        "text": "Todo passo usou o gradiente do conjunto de treino inteiro",
+        "why": "Certo. Sem amostragem no passo não há ruído nele, e uma taxa pequena desce todas as vezes."
+      },
+      {
+        "text": "O `fit` só informa as épocas em que a perda caiu",
+        "why": "O `fit` registra toda época no `history`, e o programa contou as subidas a partir dele."
+      }
+    ]
+  },
+  "ex-8v8k5zzh": {
+    "prompt": "Uma receita publicada treina com lote de 64 e taxa de 0,05. A sua máquina só comporta lote de 16. Pela regra de escala linear, de que taxa você parte?",
+    "hint": "O lote é dividido por quatro."
+  },
+  "ex-6sr1fhzh": {
+    "prompt": "No `batch_lr.py`, o que aconteceu com lote de 256?",
+    "hint": "Há duas linhas para 256.",
+    "choices": [
+      {
+        "text": "Empatou com o lote de 32 nas duas taxas",
+        "why": "Com 0,1 chegou só a 0,903; a taxa precisou ser escalada para empatar."
+      },
+      {
+        "text": "0,903 na taxa antiga, e 0,956 com 0,8",
+        "why": "Certo. Oito vezes o lote e oito vezes a taxa deram o resultado do lote de 32 com 100 passos em vez de 680."
+      },
+      {
+        "text": "As duas taxas divergiram e terminaram no acaso",
+        "why": "Só o lote inteiro com 3,4 terminou no acaso; as duas execuções com 256 aprenderam."
+      },
+      {
+        "text": "A taxa escalada ganhou do lote de 32 por vários pontos",
+        "why": "0,956 contra 0,956: a regra recuperou o resultado, não o melhorou."
+      }
+    ]
+  },
+  "ex-d7zjba4h": {
+    "prompt": "Multiplique o tamanho do lote por k e cada época tem k vezes menos ___, então a regra de escala linear multiplica a taxa por k.",
+    "hint": "O que acontece uma vez por lote?",
+    "blanks": [
+      {
+        "accept": [
+          "passos",
+          "atualizações",
+          "passo",
+          "atualizações dos pesos"
+        ]
+      }
+    ]
+  },
+  "ex-dk3zytk4": {
+    "prompt": "A regra funcionou com 128 e 256. Por que o lote inteiro, na taxa de 3,4 que a regra pede, terminou numa rede chutando?",
+    "hint": "O argumento da regra fez uma suposição sobre cada passo.",
+    "choices": [
+      {
+        "text": "A regra só vale para tamanhos de lote que são potências de dois",
+        "why": "Nada no argumento depende da forma do número; ele trata de quão longe um passo vai."
+      },
+      {
+        "text": "Um gradiente sobre o lote inteiro é ruidoso demais para uma taxa grande",
+        "why": "O gradiente do lote inteiro não tem ruído de amostragem nenhum."
+      },
+      {
+        "text": "Um passo tão longo sai da região que o gradiente descrevia, e 20 passos não recuperam",
+        "why": "Certo. A regra supõe que a direção do passo quase não muda ao longo dele; com 3,4 isso falha, e o warm-up existe exatamente para isso."
+      },
+      {
+        "text": "Vinte épocas foram poucas para ele ver todas as imagens",
+        "why": "Toda época vê todas as imagens; com o lote inteiro cada imagem foi vista vinte vezes."
+      }
+    ]
+  },
+  "ex-m88ab4wm": {
+    "prompt": "Na época 1 do `curve.py`, a perda de treino foi 1,2885 e a de validação 0,6048. Por que a de treino é a maior?",
+    "hint": "Quando cada número é medido?",
+    "choices": [
+      {
+        "text": "As imagens de validação são mais fáceis que as de treino",
+        "why": "Na época 7 as duas perdas estavam quase iguais, o que um conjunto mais fácil não explicaria."
+      },
+      {
+        "text": "A rede sofreu overfitting na primeira época",
+        "why": "O overfitting deixa a perda de treino menor, não maior."
+      },
+      {
+        "text": "A perda de validação é calculada sem o softmax",
+        "why": "O `evaluate` usa o mesmo `softmax_cross_entropy` do treino."
+      },
+      {
+        "text": "Ela faz a média de lotes avaliados enquanto os pesos ainda mudavam",
+        "why": "Certo. Os primeiros lotes encontraram uma rede que não sabia nada; a perda de validação é medida uma vez, depois dos 34 passos."
+      }
+    ]
+  },
+  "ex-q9kcj2ry": {
+    "prompt": "Nas 360 imagens de validação, a acurácia vai de 0,969 para 0,981 entre duas épocas. Quantas imagens a mais foram classificadas certo?",
+    "hint": "Uma imagem é 1/360 do conjunto.",
+    "unit": "imagens"
+  },
+  "ex-h214ypwa": {
+    "prompt": "A sua perda de validação melhorou 0,004 nas últimas dez épocas e se move cerca de 0,02 entre épocas vizinhas. A perda de treino ainda cai. O que a leitura da aula sugere?",
+    "hint": "Compare a melhora com a oscilação.",
+    "choices": [
+      {
+        "text": "Mais épocas compram pouco; pare, por uma regra escolhida antes",
+        "why": "Certo. A melhora do bloco é menor que o ruído dentro dele, e a perda de treino caindo não decide quando parar."
+      },
+      {
+        "text": "O treinamento está instável, então baixe a taxa",
+        "why": "Uma oscilação desse tamanho é ruído comum num conjunto de validação pequeno, como o `curve.py` mostrou numa taxa saudável."
+      },
+      {
+        "text": "Continue treinando enquanto a perda de treino continuar caindo",
+        "why": "A perda de treino cai enquanto você deixar; ela mede o ajuste às imagens de treino."
+      },
+      {
+        "text": "Informe a época com a melhor acurácia de validação isolada",
+        "why": "Uma melhor época isolada é um sorteio de sorte: o 0,981 do `curve.py` foi seguido por 0,967."
+      }
+    ]
+  },
+  "ex-qww7dr31": {
+    "prompt": "Ligue cada forma de curva ao que a produziu no `four.py`.",
+    "hint": "Uma das causas à direita não produziu nenhuma destas formas.",
+    "pairs": [
+      {
+        "left": "As duas perdas altas e próximas, ainda caindo devagar",
+        "right": "Duas unidades ocultas"
+      },
+      {
+        "left": "Perda de treino perto de zero, a de validação virando para cima",
+        "right": "150 imagens de treino"
+      },
+      {
+        "left": "Cai, salta, depois fica plana perto de 2,30",
+        "right": "Uma taxa de 1,5"
+      },
+      {
+        "left": "A perda de treino cai, a acurácia de validação perto de 0,1",
+        "right": "Rótulos embaralhados separados das imagens"
+      }
+    ],
+    "right_distractors": [
+      "Um lote de 1"
+    ]
+  },
+  "ex-59n2z8nb": {
+    "prompt": "Na execução com 150 imagens, a acurácia de validação ficou parada enquanto a perda de validação subia. O que a perda subindo mostra e a acurácia não?",
+    "hint": "A acurácia faz uma pergunta sobre cada imagem; a perda faz duas.",
+    "choices": [
+      {
+        "text": "A rede está decorando as imagens de validação",
+        "why": "Ela nunca treina nelas; decora as 150 imagens de treino."
+      },
+      {
+        "text": "A rede está ficando mais confiante, inclusive nos erros",
+        "why": "Certo. As mesmas imagens continuam certas ou erradas, e as erradas ficam erradas com mais certeza, o que a perda cobra."
+      },
+      {
+        "text": "A taxa está alta demais e os pesos estão divergindo",
+        "why": "A perda de treino foi suavemente a 0,0034; uma execução divergindo não faz isso."
+      },
+      {
+        "text": "A acurácia é medida em menos imagens que a perda",
+        "why": "O `evaluate` calcula as duas nas mesmas 360 imagens."
+      }
+    ]
+  },
+  "ex-609n503p": {
+    "prompt": "As perdas de uma execução de dez classes ficam planas em 2,30 a partir da época 3, e a perda de treino nunca desceu disso. Qual mudança vem primeiro?",
+    "hint": "O que uma perda de ln 10 significa para dez classes?",
+    "choices": [
+      {
+        "text": "Treinar mais, já que a perda ainda não começou a cair",
+        "why": "2,30 é a perda de um chute uniforme; uma rede presa ali não está para começar."
+      },
+      {
+        "text": "Acrescentar regularização, já que a rede está em overfitting",
+        "why": "Overfitting exige uma perda de treino que caia abaixo da de validação; esta nunca caiu."
+      },
+      {
+        "text": "Conferir os rótulos, já que rótulos embaralhados dão exatamente 2,30",
+        "why": "Com rótulos embaralhados a perda de treino ainda caiu, a 1,9098; aqui não caiu."
+      },
+      {
+        "text": "Baixar a taxa: 2,30 é uma rede dando a mesma probabilidade a toda classe",
+        "why": "Certo. É o trecho plano da execução com taxa 1,5, uma rede derrubada até não saber nada."
+      }
+    ]
+  },
+  "ex-kjk07eks": {
+    "prompt": "Quais destas coisas as execuções desta aula mostraram? Marque todas as que se aplicam.",
+    "hint": "Confira cada uma contra uma transcrição.",
+    "choices": [
+      {
+        "text": "Com épocas iguais, um lote de 1 ganhou do lote inteiro",
+        "why": "Sim: 0,969 contra 0,436."
+      },
+      {
+        "text": "Escalar a taxa recuperou a acurácia com lotes de 128 e 256",
+        "why": "Sim: 0,958 e 0,956, contra 0,956 com 32."
+      },
+      {
+        "text": "Com passos iguais, o lote inteiro processou tantas imagens quanto o lote de 1",
+        "why": "Não: 1.159.929 contra 1.077."
+      },
+      {
+        "text": "Rótulos embaralhados deixaram a acurácia de validação perto de 0,1 enquanto a perda de treino caía",
+        "why": "Sim: entre 0,086 e 0,125, com a perda de treino caindo a 1,9098."
+      },
+      {
+        "text": "A menor perda de validação e a maior acurácia do `curve.py` caíram na mesma época",
+        "why": "Não: época 38 para a perda, época 29 para a acurácia."
+      }
+    ]
+  },
+  "ex-7matn8tc": {
+    "prompt": "Ordene estes tamanhos de lote pelo número de passos que uma época sobre as 1.077 imagens de treino leva, do maior número de passos para o menor.",
+    "hint": "Passos por época é a divisão arredondada para cima.",
+    "items": [
+      "lote 10",
+      "lote 50",
+      "lote 200",
+      "lote 600"
+    ]
+  },
+  "ex-8c7xdbwa": {
+    "prompt": "Você copia a taxa de uma receita, ajustada com lote de 64, mas roda com lote de 32 para caber na memória. O que mudou no seu treinamento?",
+    "hint": "Conte os passos, e pergunte de qual lote é essa taxa.",
+    "choices": [
+      {
+        "text": "Nada, desde que o número de épocas seja o mesmo",
+        "why": "Épocas iguais com metade do lote são o dobro de passos, como a tabela de épocas iguais mostrou."
+      },
+      {
+        "text": "O dobro de passos por época, cada um numa taxa feita para o dobro do lote",
+        "why": "Certo. Pela regra linear a taxa também deveria cair pela metade; senão este é outro experimento, diferente do da receita."
+      },
+      {
+        "text": "Metade das imagens por época, então é preciso o dobro de épocas",
+        "why": "Uma época é toda imagem de treino, qualquer que seja o lote; só o número de passos muda."
+      },
+      {
+        "text": "Uma curva mais lisa, já que cada passo faz média de menos imagens",
+        "why": "Menos imagens por passo é um passo mais ruidoso, e uma curva mais serrilhada."
+      }
+    ]
+  }
+}

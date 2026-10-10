@@ -1,0 +1,530 @@
+[
+  {
+    "id": "ex-p6q9d4z2",
+    "version": 1,
+    "section": "steps-and-epochs",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`fit` trains on the 1,077 training images at a batch size of 64. How many steps does one epoch take?",
+    "hint": "Divide, and think about what happens to the images left over.",
+    "value": 17,
+    "tolerance": 0,
+    "unit": "steps"
+  },
+  {
+    "id": "ex-qx3qt5xk",
+    "version": 1,
+    "section": "steps-and-epochs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At a batch of 32, what happens to the images left over at the end of each epoch in `fit`?",
+    "hint": "Read the `range` in the loop and the first lines `steps.py` printed.",
+    "choices": [
+      {
+        "text": "The 21 left form a short batch that gets a full step",
+        "correct": true,
+        "why": "Right. 33 full batches take 1,056 images, and the last 21 get one step at the same rate, from a slightly noisier mean."
+      },
+      {
+        "text": "They are dropped, so every step uses exactly 32",
+        "correct": false,
+        "why": "`fit` keeps them. Dropping the short batch is an option of PyTorch's `DataLoader`, which lesson 10 sets."
+      },
+      {
+        "text": "They wait and are added to the first batch of the next epoch",
+        "correct": false,
+        "why": "Every epoch starts with a fresh permutation of all 1,077; nothing carries over."
+      },
+      {
+        "text": "None are left, since 1,077 divides evenly by 32",
+        "correct": false,
+        "why": "32 × 33 is 1,056, so 21 are left, and 34 steps make an epoch."
+      }
+    ]
+  },
+  {
+    "id": "ex-rdjdazh1",
+    "version": 1,
+    "section": "steps-and-epochs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `fit` draw a new permutation at the start of every epoch instead of shuffling once?",
+    "hint": "Think about which images end up in the same batch.",
+    "choices": [
+      {
+        "text": "To change which images are in the validation set",
+        "correct": false,
+        "why": "The split is made once by `digits.load()`; `fit` shuffles only the training set it is given."
+      },
+      {
+        "text": "So each epoch groups the images into different batches",
+        "correct": true,
+        "why": "Right. Every image comes back each epoch, in different company, so the network does not see the same 34 averages in the same order forever."
+      },
+      {
+        "text": "So that no image is seen twice during a run",
+        "correct": false,
+        "why": "Every epoch sees every training image once, so a run of ten epochs sees each one ten times."
+      },
+      {
+        "text": "Because the loss cannot be computed on images in their original order",
+        "correct": false,
+        "why": "The loss is a mean over a batch and does not care about order; the batches are what the shuffle changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-5x78weaj",
+    "version": 1,
+    "section": "batch-size",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the equal-epochs run of `batchsize.py`, why did the batch of 1,077 end at a validation accuracy of 0.436?",
+    "hint": "Look at the steps column.",
+    "choices": [
+      {
+        "text": "Its gradient was the noisiest of the three",
+        "correct": false,
+        "why": "It was the least noisy: every step used the whole training set."
+      },
+      {
+        "text": "It processed fewer images than the batch of 1",
+        "correct": false,
+        "why": "All three processed 10,770 images; that is what equal epochs means."
+      },
+      {
+        "text": "Ten epochs at that size are only ten steps",
+        "correct": true,
+        "why": "Right. Ten moves of the weights at a rate of 0.1 is too little, however good each gradient is."
+      },
+      {
+        "text": "A gradient over the whole set points away from the minimum",
+        "correct": false,
+        "why": "It is the true gradient of the training loss, and at equal steps the full batch won."
+      }
+    ]
+  },
+  {
+    "id": "ex-vnwp2a65",
+    "version": 1,
+    "section": "batch-size",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two runs take the same 5,000 steps at the same rate, one at a batch of 16 and one at a batch of 512. The batch of 512 ends with the lower validation loss. What did that cost?",
+    "hint": "Count images, not steps.",
+    "choices": [
+      {
+        "text": "32 times as many images through the network",
+        "correct": true,
+        "why": "Right. Equal steps at 512 instead of 16 is 32 times the forward and backward work, the same trade the full batch made in the lesson."
+      },
+      {
+        "text": "Nothing, because equal steps is equal work",
+        "correct": false,
+        "why": "A step at 512 pushes 512 images through the network, and a step at 16 pushes 16."
+      },
+      {
+        "text": "32 times as many updates of the weights",
+        "correct": false,
+        "why": "Both made 5,000 updates; the step count was held equal."
+      },
+      {
+        "text": "A curve that rose more often between epochs",
+        "correct": false,
+        "why": "The larger batch has the smoother curve, as the full batch's 0 rises in 1,076 showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-p1ww1mbb",
+    "version": 1,
+    "section": "batch-size",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Over the 1,077 epochs of the full-batch run, the validation loss never went up once. Why is that curve so smooth?",
+    "hint": "What does each step of that run see?",
+    "choices": [
+      {
+        "text": "A rate of 0.1 is too small to move the loss",
+        "correct": false,
+        "why": "The loss moved a lot: that run ended at a validation accuracy of 0.967."
+      },
+      {
+        "text": "The validation images were part of each gradient",
+        "correct": false,
+        "why": "`fit` computes gradients on the training set only; validation is measured, never trained on."
+      },
+      {
+        "text": "Every step used the gradient of the whole training set",
+        "correct": true,
+        "why": "Right. With no sampling in the step there is no noise in it, and a small rate goes downhill every time."
+      },
+      {
+        "text": "`fit` only reports the epochs where the loss fell",
+        "correct": false,
+        "why": "`fit` records every epoch in `history`, and the program counted the rises from it."
+      }
+    ]
+  },
+  {
+    "id": "ex-8v8k5zzh",
+    "version": 1,
+    "section": "batch-size-and-learning-rate",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A published recipe trains at a batch of 64 with a rate of 0.05. Your machine only fits a batch of 16. By the linear scaling rule, what rate do you start from?",
+    "hint": "The batch is divided by four.",
+    "value": 0.0125,
+    "tolerance": 0.0005
+  },
+  {
+    "id": "ex-6sr1fhzh",
+    "version": 1,
+    "section": "batch-size-and-learning-rate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `batch_lr.py`, what happened at a batch of 256?",
+    "hint": "There are two lines for 256.",
+    "choices": [
+      {
+        "text": "It matched the batch of 32 at either rate",
+        "correct": false,
+        "why": "At 0.1 it reached only 0.903; the rate had to be scaled to match."
+      },
+      {
+        "text": "0.903 at the old rate, and 0.956 at 0.8",
+        "correct": true,
+        "why": "Right. Eight times the batch and eight times the rate gave the batch of 32's result with 100 steps instead of 680."
+      },
+      {
+        "text": "Both rates diverged and ended at chance",
+        "correct": false,
+        "why": "Only the full batch at 3.4 ended at chance; both runs at 256 learnt."
+      },
+      {
+        "text": "The scaled rate beat the batch of 32 by several points",
+        "correct": false,
+        "why": "0.956 against 0.956: the rule recovered the result, it did not improve on it."
+      }
+    ]
+  },
+  {
+    "id": "ex-d7zjba4h",
+    "version": 1,
+    "section": "batch-size-and-learning-rate",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Multiply the batch size by k and each epoch has k times fewer ___, so the linear scaling rule multiplies the rate by k.",
+    "hint": "What happens once per batch?",
+    "blanks": [
+      {
+        "accept": [
+          "steps",
+          "updates",
+          "step",
+          "weight updates"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dk3zytk4",
+    "version": 1,
+    "section": "batch-size-and-learning-rate",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The rule worked at 128 and 256. Why did the full batch at the rule's rate of 3.4 end at a network guessing?",
+    "hint": "The argument for the rule made an assumption about each step.",
+    "choices": [
+      {
+        "text": "The rule holds only for batch sizes that are powers of two",
+        "correct": false,
+        "why": "Nothing in the argument depends on the number's form; it is about how far a step goes."
+      },
+      {
+        "text": "A gradient over the full batch is too noisy for a large rate",
+        "correct": false,
+        "why": "The full batch's gradient has no sampling noise at all."
+      },
+      {
+        "text": "A step that long leaves the region its gradient described, and 20 steps cannot recover",
+        "correct": true,
+        "why": "Right. The rule assumes a step's direction barely changes along it; at 3.4 that fails, and warm-up exists for exactly this."
+      },
+      {
+        "text": "Twenty epochs were too few for it to see every image",
+        "correct": false,
+        "why": "Every epoch sees every image; at the full batch each image was seen twenty times."
+      }
+    ]
+  },
+  {
+    "id": "ex-m88ab4wm",
+    "version": 1,
+    "section": "reading-a-curve",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In epoch 1 of `curve.py` the training loss was 1.2885 and the validation loss 0.6048. Why is the training loss the higher one?",
+    "hint": "When is each number measured?",
+    "choices": [
+      {
+        "text": "The validation images are easier than the training images",
+        "correct": false,
+        "why": "By epoch 7 the two losses were almost equal, which an easier set would not explain."
+      },
+      {
+        "text": "The network overfitted during its first epoch",
+        "correct": false,
+        "why": "Overfitting makes the training loss the lower one, not the higher."
+      },
+      {
+        "text": "The validation loss is computed without the softmax",
+        "correct": false,
+        "why": "`evaluate` uses the same `softmax_cross_entropy` as training."
+      },
+      {
+        "text": "It averages batches scored while the weights were still changing",
+        "correct": true,
+        "why": "Right. The first batches met a network that knew nothing; the validation loss is measured once, after all 34 steps."
+      }
+    ]
+  },
+  {
+    "id": "ex-q9kcj2ry",
+    "version": 1,
+    "section": "reading-a-curve",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On the 360 validation images, validation accuracy goes from 0.969 to 0.981 between two epochs. How many more images were classified correctly?",
+    "hint": "One image is 1/360 of the set.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "images"
+  },
+  {
+    "id": "ex-h214ypwa",
+    "version": 1,
+    "section": "reading-a-curve",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Your validation loss improved by 0.004 over the last ten epochs and moves by about 0.02 between neighbouring epochs. The training loss is still falling. What does the lesson's reading suggest?",
+    "hint": "Compare the improvement with the wobble.",
+    "choices": [
+      {
+        "text": "More epochs buy little; stop, by a rule chosen beforehand",
+        "correct": true,
+        "why": "Right. The block's improvement is smaller than the noise inside it, and the falling training loss does not decide when to stop."
+      },
+      {
+        "text": "Training is unstable, so lower the learning rate",
+        "correct": false,
+        "why": "A wobble of that size is ordinary noise on a small validation set, as `curve.py` showed at a healthy rate."
+      },
+      {
+        "text": "Keep training while the training loss keeps falling",
+        "correct": false,
+        "why": "The training loss falls for as long as you let it; it measures fit to the images trained on."
+      },
+      {
+        "text": "Report the epoch with the single best validation accuracy",
+        "correct": false,
+        "why": "A single best epoch is a lucky draw: `curve.py`'s 0.981 was followed by 0.967."
+      }
+    ]
+  },
+  {
+    "id": "ex-qww7dr31",
+    "version": 1,
+    "section": "four-curves",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each curve shape to what produced it in `four.py`.",
+    "hint": "One cause on the right produced none of these shapes.",
+    "pairs": [
+      {
+        "left": "Both losses high and close, still falling slowly",
+        "right": "Two hidden units"
+      },
+      {
+        "left": "Training loss near zero, validation loss turning up",
+        "right": "150 training images"
+      },
+      {
+        "left": "Falls, jumps, then flat near 2.30",
+        "right": "A rate of 1.5"
+      },
+      {
+        "left": "Training loss falls, validation accuracy near 0.1",
+        "right": "Labels shuffled apart from images"
+      }
+    ],
+    "right_distractors": [
+      "A batch size of 1"
+    ]
+  },
+  {
+    "id": "ex-59n2z8nb",
+    "version": 1,
+    "section": "four-curves",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the run on 150 images, validation accuracy stayed flat while validation loss rose. What does the rising loss show that accuracy does not?",
+    "hint": "Accuracy asks one question about each image; the loss asks two.",
+    "choices": [
+      {
+        "text": "The network is memorising the validation images",
+        "correct": false,
+        "why": "It never trains on them; it memorises the 150 training images."
+      },
+      {
+        "text": "The network is growing more confident, including on its mistakes",
+        "correct": true,
+        "why": "Right. The same images stay right or wrong, and the wrong ones are wrong with more certainty, which the loss charges for."
+      },
+      {
+        "text": "The rate is too high and the weights are diverging",
+        "correct": false,
+        "why": "The training loss went smoothly to 0.0034; a diverging run does not."
+      },
+      {
+        "text": "Accuracy is measured on fewer images than the loss",
+        "correct": false,
+        "why": "`evaluate` computes both on the same 360 images."
+      }
+    ]
+  },
+  {
+    "id": "ex-609n503p",
+    "version": 1,
+    "section": "four-curves",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A ten-class run's losses sit flat at 2.30 from epoch 3 onwards, and the training loss never went below that. Which change comes first?",
+    "hint": "What does a loss of ln 10 mean for ten classes?",
+    "choices": [
+      {
+        "text": "Train longer, since the loss has not started falling yet",
+        "correct": false,
+        "why": "2.30 is the loss of a uniform guess; a network stuck there is not about to start."
+      },
+      {
+        "text": "Add regularisation, since the network is overfitting",
+        "correct": false,
+        "why": "Overfitting needs a training loss that falls below the validation loss; this one never fell."
+      },
+      {
+        "text": "Check the labels, since shuffled labels give exactly 2.30",
+        "correct": false,
+        "why": "With shuffled labels the training loss still fell, to 1.9098; here it did not."
+      },
+      {
+        "text": "Lower the rate: 2.30 is a network giving every class the same probability",
+        "correct": true,
+        "why": "Right. That is the flat part of the rate-1.5 run, a network knocked to knowing nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-kjk07eks",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did this lesson's runs show? Choose all that apply.",
+    "hint": "Check each against a transcript.",
+    "choices": [
+      {
+        "text": "At equal epochs, a batch of 1 beat the full batch",
+        "correct": true,
+        "why": "Yes: 0.969 against 0.436."
+      },
+      {
+        "text": "Scaling the rate recovered the accuracy at batches of 128 and 256",
+        "correct": true,
+        "why": "Yes: 0.958 and 0.956, against 0.956 at 32."
+      },
+      {
+        "text": "At equal steps, the full batch processed as many images as the batch of 1",
+        "correct": false,
+        "why": "No: 1,159,929 against 1,077."
+      },
+      {
+        "text": "Shuffled labels left validation accuracy near 0.1 while training loss fell",
+        "correct": true,
+        "why": "Yes: between 0.086 and 0.125, with the training loss falling to 1.9098."
+      },
+      {
+        "text": "`curve.py`'s lowest validation loss and highest accuracy fell on the same epoch",
+        "correct": false,
+        "why": "No: epoch 38 for the loss, epoch 29 for the accuracy."
+      }
+    ]
+  },
+  {
+    "id": "ex-7matn8tc",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these batch sizes by how many steps one epoch over the 1,077 training images takes, most steps first.",
+    "hint": "Steps per epoch is the division rounded up.",
+    "items": [
+      "batch 10",
+      "batch 50",
+      "batch 200",
+      "batch 600"
+    ]
+  },
+  {
+    "id": "ex-8c7xdbwa",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You copy a recipe's rate, tuned at a batch of 64, but run at a batch of 32 to fit in memory. What changed in your training?",
+    "hint": "Count the steps, and ask whose batch the rate belongs to.",
+    "choices": [
+      {
+        "text": "Nothing, as long as the number of epochs is the same",
+        "correct": false,
+        "why": "Equal epochs at half the batch is twice the steps, as the equal-epochs table showed."
+      },
+      {
+        "text": "Twice the steps an epoch, each at a rate meant for twice the batch",
+        "correct": true,
+        "why": "Right. By the linear rule the rate should be halved too; otherwise this is a different experiment from the recipe's."
+      },
+      {
+        "text": "Half the images an epoch, so twice the epochs are needed",
+        "correct": false,
+        "why": "An epoch is every training image whatever the batch size; only the number of steps changes."
+      },
+      {
+        "text": "A smoother curve, since each step averages fewer images",
+        "correct": false,
+        "why": "Fewer images per step is a noisier step, and a more jagged curve."
+      }
+    ]
+  }
+]
