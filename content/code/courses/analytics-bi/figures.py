@@ -736,5 +736,87 @@ def funnel(lang):
     return s.render(), cap, (['desktop'] if lang == 'pt' else None)
 
 
+# ---------------------------------------------------------------- lesson 10
+
+@figure
+def scales(lang):
+    """Lesson 10, scales: the same five months from zero and from R$ 80,000."""
+    vals = [('01', 87883.56), ('02', 88361.90), ('03', 117964.14), ('04', 119821.78), ('05', 140097.06)]
+    s = Svg('scales', 720, 300, L(lang,
+        'Two bar charts of the same numbers, Lantern\'s net revenue from January to May 2026: 87.9, 88.4, '
+        '118.0, 119.8 and 140.1 thousand reais. On the left the axis starts at zero and May\'s bar is '
+        'about one and a half times January\'s. On the right the axis starts at 80 thousand and May\'s bar '
+        'is more than seven times January\'s.',
+        'Dois gráficos de barras dos mesmos números, a receita líquida da Lantern de janeiro a maio de '
+        '2026: 87,9, 88,4, 118,0, 119,8 e 140,1 mil reais. À esquerda o eixo começa em zero e a barra de '
+        'maio tem cerca de uma vez e meia a de janeiro. À direita o eixo começa em 80 mil e a barra de '
+        'maio tem mais de sete vezes a de janeiro.'))
+    def chart(x0, base, title):
+        top, y0, y1 = 150000, 250, 50
+        def Y(v): return y0 - (y0 - y1) * (v - base) / (top - base)
+        s.text(x0 + 140, 22, title, 11.5, anchor='middle', weight='600')
+        s.line(x0, y0, x0 + 290, y0, stroke='var(--paper-dim)', sw=1)
+        for t in ([0, 50000, 100000, 150000] if base == 0 else [80000, 100000, 120000, 140000]):
+            s.text(x0 - 6, Y(t), f'{t // 1000}k', 9, anchor='end', mono=True, fill='var(--paper-dim)')
+            s.line(x0, Y(t), x0 + 290, Y(t), stroke='var(--wire)', sw=0.5, dash='2 3')
+        for i, (m, v) in enumerate(vals):
+            x = x0 + 18 + i * 54
+            s.rect(x, Y(v), 36, y0 - Y(v), fill='var(--phosphor-dim)', stroke='var(--phosphor)', sw=1, rx=1)
+            s.text(x + 18, y0 + 14, m, 9.5, anchor='middle', mono=True, fill='var(--paper-dim)')
+    chart(60, 0, L(lang, 'axis from zero', 'eixo a partir de zero'))
+    chart(410, 80000, L(lang, 'axis from R$ 80,000', 'eixo a partir de R$ 80.000'))
+    s.text(205, 285, L(lang, 'May ≈ 1.6 × January', 'maio ≈ 1,6 × janeiro'), 10, anchor='middle', italic=True, fill='var(--paper-dim)')
+    s.text(555, 285, L(lang, 'May ≈ 7.6 × January', 'maio ≈ 7,6 × janeiro'), 10, anchor='middle', italic=True, fill='var(--amber)')
+    cap = L(lang, 'Both charts are labelled and correct. Only the left one lets a bar\'s length be read as '
+                  'its size.',
+            'Os dois gráficos estão rotulados e certos. Só o da esquerda deixa ler o comprimento de uma '
+            'barra como o tamanho dela.')
+    return s.render(), cap, None
+
+
+@figure
+def simpson(lang):
+    """Lesson 10, simpsons-paradox: both devices up, the total down."""
+    rows = [('desktop', 11.14, 12.04), (L(lang, 'mobile', 'celular'), 4.06, 4.30), (L(lang, 'all sessions', 'todas as sessões'), 7.37, 6.77)]
+    s = Svg('simpson', 720, 280, L(lang,
+        'Conversion in 2025 and 2026 for three groups, as pairs of dots joined by a line. Desktop rises '
+        'from 11.14 to 12.04 percent. Mobile rises from 4.06 to 4.30 percent. All sessions together fall '
+        'from 7.37 to 6.77 percent. Below, the share of sessions on mobile rises from 53.3 percent in '
+        '2025 to 68.1 percent in 2026.',
+        'Conversão em 2025 e 2026 para três grupos, como pares de pontos ligados por uma linha. O desktop '
+        'sobe de 11,14 para 12,04 por cento. O celular sobe de 4,06 para 4,30 por cento. Todas as sessões '
+        'juntas caem de 7,37 para 6,77 por cento. Embaixo, a parcela de sessões no celular sobe de 53,3 '
+        'por cento em 2025 para 68,1 por cento em 2026.'))
+    x0, x1 = 200, 640
+    def X(v): return x0 + (x1 - x0) * v / 14
+    for t in [0, 2, 4, 6, 8, 10, 12, 14]:
+        s.text(X(t), 30, f'{t}%', 9, anchor='middle', mono=True, fill='var(--paper-dim)')
+        s.line(X(t), 40, X(t), 190, stroke='var(--wire)', sw=0.5, dash='2 3')
+    for i, (name, a, b) in enumerate(rows):
+        y = 70 + i * 50
+        up = b > a
+        col = 'var(--phosphor)' if up else 'var(--amber)'
+        s.text(30, y, name, 11, weight='600' if i == 2 else None)
+        s.line(X(a), y, X(b), y, stroke=col, sw=2)
+        s.circle(X(a), y, 4.5, fill='var(--paper-dim)')
+        s.circle(X(b), y, 5.5, fill=col)
+        s.text(X(a) + (-8 if up else 8), y - 14, pct2(a, lang), 9.5, anchor='end' if up else 'start', mono=True, fill='var(--paper-dim)')
+        s.text(X(b) + (8 if up else -8), y - 14, pct2(b, lang), 9.5, anchor='start' if up else 'end', mono=True, fill=col)
+    s.text(30, 225, L(lang, 'share of sessions on mobile', 'parcela de sessões no celular'), 10.5, fill='var(--paper-dim)')
+    s.text(X(0), 250, L(lang, '2025: 53.3%', '2025: 53,3%'), 10, mono=True, fill='var(--paper-dim)')
+    s.text(X(7), 250, L(lang, '2026: 68.1%', '2026: 68,1%'), 10, mono=True, fill='var(--amber)')
+    s.text(640, 270, L(lang, 'grey: 2025 · coloured: 2026', 'cinza: 2025 · colorido: 2026'), 9.5, anchor='end', italic=True, fill='var(--paper-dim)')
+    cap = L(lang, 'Each device converts better in 2026; the total converts worse, because it is now mostly '
+                  'made of the device that always converted worse.',
+            'Cada aparelho converte melhor em 2026; o total converte pior, porque agora é feito em sua maior '
+            'parte do aparelho que sempre converteu pior.')
+    return s.render(), cap, (['desktop'] if lang == 'pt' else None)
+
+
+def pct2(v, lang):
+    t = f'{v:.2f}%'
+    return t.replace('.', ',') if lang == 'pt' else t
+
+
 if __name__ == '__main__':
     inject()
