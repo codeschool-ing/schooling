@@ -1,0 +1,591 @@
+[
+ {
+  "id": "ex-ncpsf4j0",
+  "version": 1,
+  "section": "kinds-of-tool",
+  "type": "ordering",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Put the layers a browser test passes through in order, from your test code down to the browser.",
+  "items": [
+   "The runner, which finds and runs the test",
+   "The driver library, which turns `click()` into a message",
+   "The protocol, which carries the message",
+   "The browser, which obeys it"
+  ],
+  "trap": "The protocol is not a program you call; the library speaks it on your behalf."
+ },
+ {
+  "id": "ex-6nbwnhdd",
+  "version": 1,
+  "section": "kinds-of-tool",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A tester wants a tool that will test the shop in Safari. Why is a CDP-only library the wrong pick?",
+  "choices": [
+   {
+    "text": "CDP is too slow for a real browser",
+    "correct": false,
+    "why": "Speed is not the limit; CDP talks straight to the browser with no driver in between."
+   },
+   {
+    "text": "Only Chromium-based browsers speak CDP",
+    "correct": true,
+    "why": "Right. CDP is Chrome's internal interface, so it reaches Chrome and Edge and stops there."
+   },
+   {
+    "text": "CDP needs a separate driver program that Apple does not ship for its own browser",
+    "correct": false,
+    "why": "That describes WebDriver, which has `safaridriver`; CDP has no driver at all."
+   },
+   {
+    "text": "CDP cannot run headless, and Safari tests run headless",
+    "correct": false,
+    "why": "Puppeteer runs headless over CDP by default; headless has nothing to do with Safari here."
+   }
+  ]
+ },
+ {
+  "id": "ex-2vkgvrvh",
+  "version": 1,
+  "section": "kinds-of-tool",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What does a CDP connection give a library that a classic WebDriver connection does not?",
+  "choices": [
+   {
+    "text": "Events the browser sends without being asked, such as each response and console message",
+    "correct": true,
+    "why": "Right. WebDriver is one request, one answer; CDP is a two-way WebSocket, which is how `look.mjs` printed the Network panel."
+   },
+   {
+    "text": "Access to every browser",
+    "correct": false,
+    "why": "The opposite: WebDriver reaches every browser with a driver, and CDP stops at Chromium."
+   },
+   {
+    "text": "A W3C standard that does not change",
+    "correct": false,
+    "why": "CDP is not a standard; it changes with Chrome. WebDriver is the standard."
+   },
+   {
+    "text": "The ability to click",
+    "correct": false,
+    "why": "Both click; the difference is what the browser can tell you on its own."
+   }
+  ]
+ },
+ {
+  "id": "ex-g8qhgr6v",
+  "version": 1,
+  "section": "puppeteer",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does Puppeteer give you on its own, without anything else installed around it?",
+  "choices": [
+   {
+    "text": "A runner, assertions and a report",
+    "correct": false,
+    "why": "Those come from a runner such as Jest; Puppeteer has none of them."
+   },
+   {
+    "text": "A library that drives Chrome from a Node script",
+    "correct": true,
+    "why": "Right. `basket.mjs` is a plain script; nothing in it is a test."
+   },
+   {
+    "text": "A recorder that writes the script while you click",
+    "correct": false,
+    "why": "Nothing was recorded; every line of `basket.mjs` was written by hand."
+   },
+   {
+    "text": "A grid of browsers in the cloud",
+    "correct": false,
+    "why": "Puppeteer starts one browser on your machine; grids belong to the WebDriver world of lesson 8."
+   }
+  ]
+ },
+ {
+  "id": "ex-z26518hm",
+  "version": 1,
+  "section": "puppeteer",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does `basket.mjs` call `waitForSelector` before `page.click`?",
+  "choices": [
+   {
+    "text": "Because `page.click` throws if the button is not there yet, and the cards appear after the page loads",
+    "correct": true,
+    "why": "Right. `app.js` draws the cards when `/api/products` answers, after `goto` has already returned."
+   },
+   {
+    "text": "Because a selector must be registered before it is used",
+    "correct": false,
+    "why": "Selectors are plain strings; nothing is registered."
+   },
+   {
+    "text": "To make the browser draw the button",
+    "correct": false,
+    "why": "Waiting draws nothing; the shop's script draws the cards, and the wait only notices when it has."
+   },
+   {
+    "text": "To scroll the button into view",
+    "correct": false,
+    "why": "`page.click` scrolls by itself; the wait is about the button existing."
+   }
+  ]
+ },
+ {
+  "id": "ex-s8axtbk5",
+  "version": 1,
+  "section": "puppeteer",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A colleague's Puppeteer run printed `browser: Chrome/155.0.8059.39`; the transcript in this lesson printed Chrome 141. What explains the difference?",
+  "choices": [
+   {
+    "text": "The colleague has a newer Puppeteer than the one pinned",
+    "correct": false,
+    "why": "Both use 25.13.0; that release is built for Chrome 155, which is the one it downloads."
+   },
+   {
+    "text": "The colleague runs it with a window",
+    "correct": false,
+    "why": "Headed or headless, the browser's version is the same."
+   },
+   {
+    "text": "Version numbers differ on every run",
+    "correct": false,
+    "why": "Timings differ between runs; a browser's version does not."
+   },
+   {
+    "text": "Their install downloaded Puppeteer's own Chrome; the transcript pointed it at Playwright's Chromium",
+    "correct": true,
+    "why": "Right. The machine the transcripts come from could not download, so `PUPPETEER_EXECUTABLE_PATH` named another browser."
+   }
+  ]
+ },
+ {
+  "id": "ex-20s4ey82",
+  "version": 1,
+  "section": "puppeteer-to-playwright",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In `tests/banana.spec.js`, which line does the job that `waitForFunction` did in the Puppeteer script?",
+  "choices": [
+   {
+    "text": "`await page.goto('/')`",
+    "correct": false,
+    "why": "`goto` waits for the page to load, not for the count to change after a click."
+   },
+   {
+    "text": "`await request.post('/api/reset')`",
+    "correct": false,
+    "why": "That empties the basket before the test; it waits for nothing on the page."
+   },
+   {
+    "text": "`await expect(page.getByTestId('basket-count')).toHaveText('1')`",
+    "correct": true,
+    "why": "Right. The assertion keeps asking until the text is 1 or the timeout runs out."
+   },
+   {
+    "text": "None: Playwright does not wait for the count",
+    "correct": false,
+    "why": "It does, inside the assertion; that is why no wait is written by hand."
+   }
+  ]
+ },
+ {
+  "id": "ex-p7nyyvmc",
+  "version": 1,
+  "section": "puppeteer-to-playwright",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these did Playwright add to what Puppeteer offers? Choose every one that applies.",
+  "choices": [
+   {
+    "text": "A test runner with fixtures and a report",
+    "correct": true,
+    "why": "Right. Puppeteer leaves the runner to you."
+   },
+   {
+    "text": "Assertions that retry until the page agrees",
+    "correct": true,
+    "why": "Right. `toHaveText` waits; Puppeteer has no assertions at all."
+   },
+   {
+    "text": "The ability to drive Chromium over CDP",
+    "correct": false,
+    "why": "Puppeteer did that first; it is what both share."
+   },
+   {
+    "text": "A `page.locator()` method that waits before acting",
+    "correct": false,
+    "why": "The Puppeteer you installed has one too; the difference left is the waiting assertion and the runner."
+   }
+  ]
+ },
+ {
+  "id": "ex-by9bnfkr",
+  "version": 1,
+  "section": "puppeteer-to-playwright",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A page redraws its product cards every few seconds. Why does a Playwright locator cope with that better than a Puppeteer element handle fetched once?",
+  "choices": [
+   {
+    "text": "A locator caches the element so it never goes stale",
+    "correct": false,
+    "why": "It does the opposite: it keeps no element and searches again each time."
+   },
+   {
+    "text": "A locator is a description searched for again on every use",
+    "correct": true,
+    "why": "Right. A handle points at the old card; the locator finds whichever card is there now."
+   },
+   {
+    "text": "Playwright stops the page from redrawing during a test",
+    "correct": false,
+    "why": "It changes nothing about the page; tests see the page as it behaves."
+   },
+   {
+    "text": "Locators only use test ids, which survive a redraw",
+    "correct": false,
+    "why": "The test also found the button by its role and name; what matters is the repeated search."
+   }
+  ]
+ },
+ {
+  "id": "ex-aeknhr91",
+  "version": 1,
+  "section": "webdriverio-and-nightwatch",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A team has two hundred tests on a WebDriver grid and wants to listen to the page's network requests as well. Which tool fits without leaving WebDriver behind?",
+  "choices": [
+   {
+    "text": "Puppeteer, because it sees the network through CDP",
+    "correct": false,
+    "why": "It would leave the grid behind: Puppeteer does not speak classic WebDriver."
+   },
+   {
+    "text": "Jest, because it has a watch mode",
+    "correct": false,
+    "why": "Jest drives no browser; the watch mode reruns tests when files change."
+   },
+   {
+    "text": "WebdriverIO, which moves to WebDriver BiDi where the browser supports it",
+    "correct": true,
+    "why": "Right. BiDi keeps WebDriver's reach and adds the events CDP is known for."
+   },
+   {
+    "text": "Nightwatch, because it is made by a cloud company",
+    "correct": false,
+    "why": "Who makes it says nothing about events; Nightwatch sits on `selenium-webdriver` and classic WebDriver."
+   }
+  ]
+ },
+ {
+  "id": "ex-fch5vkks",
+  "version": 1,
+  "section": "webdriverio-and-nightwatch",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What is underneath Nightwatch when it talks to a browser?",
+  "choices": [
+   {
+    "text": "Puppeteer",
+    "correct": false,
+    "why": "Puppeteer is a CDP library; Nightwatch depends on Selenium's."
+   },
+   {
+    "text": "`selenium-webdriver`, so classic WebDriver",
+    "correct": true,
+    "why": "Right. Nightwatch 3.16.0 depends on `selenium-webdriver` 4.27.0."
+   },
+   {
+    "text": "A protocol of its own",
+    "correct": false,
+    "why": "Its README says it uses the W3C WebDriver API."
+   },
+   {
+    "text": "Jasmine",
+    "correct": false,
+    "why": "Jasmine is a framework for writing tests; it talks to no browser."
+   }
+  ]
+ },
+ {
+  "id": "ex-6jpfd02p",
+  "version": 1,
+  "section": "webdriverio-and-nightwatch",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "WebdriverIO opts in to the two-way protocol by itself; the capability `wdio:enforceWebDriverClassic` keeps it on plain WebDriver instead of WebDriver ___ .",
+  "hint": "The name says the connection goes both ways.",
+  "blanks": [
+   {
+    "accept": [
+     "BiDi"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-fgaxwzdy",
+  "version": 1,
+  "section": "jest-and-jasmine",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Without any other package, what can Jest do to the shop's page in a browser?",
+  "choices": [
+   {
+    "text": "Open it in Chromium",
+    "correct": false,
+    "why": "Jest has no driver library; it cannot open a browser."
+   },
+   {
+    "text": "Nothing: Jest drives no browser by itself",
+    "correct": true,
+    "why": "Right. A browser arrives only with a library such as Puppeteer, for instance through `jest-puppeteer`."
+   },
+   {
+    "text": "Click its buttons through jsdom, the same as a browser would",
+    "correct": false,
+    "why": "jsdom is not the shop's page in a browser: it has no layout, and the page's own server is not involved."
+   },
+   {
+    "text": "Record a video of it",
+    "correct": false,
+    "why": "Video belongs to browser runners; lesson 16 covers it in Playwright."
+   }
+  ]
+ },
+ {
+  "id": "ex-pb168tap",
+  "version": 1,
+  "section": "jest-and-jasmine",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A jsdom test clicks the basket's button and passes, yet on a 360-pixel phone the button is pushed off-screen by lesson 7's wide basket. Why did the test not notice?",
+  "choices": [
+   {
+    "text": "The test should have waited for the button",
+    "correct": false,
+    "why": "Waiting would not help: the button was there and clickable in jsdom."
+   },
+   {
+    "text": "Jest runs tests in parallel and missed it",
+    "correct": false,
+    "why": "Parallelism has nothing to do with it; a single test would pass the same way."
+   },
+   {
+    "text": "jsdom has no layout, so nothing in it has a size or a position",
+    "correct": true,
+    "why": "Right. Overflow is a layout fact, and only a real browser computes it."
+   },
+   {
+    "text": "The test used a CSS selector instead of a role",
+    "correct": false,
+    "why": "A role would have found the same button; neither sees where it is drawn."
+   }
+  ]
+ },
+ {
+  "id": "ex-xqvzdn4y",
+  "version": 1,
+  "section": "jest-and-jasmine",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does a simple Jasmine spec usually run in Jest unchanged?",
+  "choices": [
+   {
+    "text": "Both call the same browser driver",
+    "correct": false,
+    "why": "Neither calls a browser driver at all."
+   },
+   {
+    "text": "Jest began by running on Jasmine and kept its syntax",
+    "correct": true,
+    "why": "Right. `describe`, `it` and `expect(...).toBe(...)` came across with it."
+   },
+   {
+    "text": "Both are made by the same company",
+    "correct": false,
+    "why": "Jest came out of Facebook; Jasmine is a separate project."
+   },
+   {
+    "text": "A W3C standard defines `describe` and `it`",
+    "correct": false,
+    "why": "The W3C standardises WebDriver, not test syntax."
+   }
+  ]
+ },
+ {
+  "id": "ex-vntbv3f3",
+  "version": 1,
+  "section": "robot-and-qa-wolf",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each tool to the kind of thing it is.",
+  "pairs": [
+   {
+    "left": "Puppeteer",
+    "right": "A driver library"
+   },
+   {
+    "left": "Jasmine",
+    "right": "A runner with assertions"
+   },
+   {
+    "left": "Robot Framework",
+    "right": "A keyword-driven framework"
+   },
+   {
+    "left": "QA Wolf",
+    "right": "A service that writes and runs your tests"
+   }
+  ]
+ },
+ {
+  "id": "ex-spat1m7w",
+  "version": 1,
+  "section": "robot-and-qa-wolf",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "What does a team give up when an outside service writes and runs its end-to-end tests?",
+  "choices": [
+   {
+    "text": "The ability to run Playwright at all",
+    "correct": false,
+    "why": "The tests are Playwright code; nothing stops the team running Playwright itself."
+   },
+   {
+    "text": "Knowing, inside the team, what is tested and why",
+    "correct": true,
+    "why": "Right. That knowledge decides where testing effort goes, and it now lives with somebody else."
+   },
+   {
+    "text": "Its unit tests, which the service replaces",
+    "correct": false,
+    "why": "The service writes end-to-end tests; unit tests stay where they were."
+   },
+   {
+    "text": "Access to browsers other than Chrome",
+    "correct": false,
+    "why": "Which browsers are covered is a question about Playwright and the contract, not about outsourcing as such."
+   }
+  ]
+ },
+ {
+  "id": "ex-99e146hc",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A Python team whose testers do not program is asked to automate the shop's acceptance tests. By the lesson's order of questions, which choice fits first?",
+  "choices": [
+   {
+    "text": "Puppeteer inside Jest",
+    "correct": false,
+    "why": "Both are JavaScript and both need a programmer; the team is Python and its testers do not program."
+   },
+   {
+    "text": "Robot Framework with the Browser or Selenium library",
+    "correct": true,
+    "why": "Right. It is Python, and keywords are written by people who are not programmers."
+   },
+   {
+    "text": "Nightwatch, for its configuration wizard",
+    "correct": false,
+    "why": "A wizard does not write the tests; they would still be JavaScript."
+   },
+   {
+    "text": "WebdriverIO, for WebDriver BiDi",
+    "correct": false,
+    "why": "A protocol feature answers none of the team's first questions: language and who writes the tests."
+   }
+  ]
+ },
+ {
+  "id": "ex-8wbk1a1g",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team's suite must cover Chrome, Firefox and Safari, and its unit tests live in Jest. A developer proposes Puppeteer inside Jest for the browser tests. What is the strongest objection?",
+  "choices": [
+   {
+    "text": "Puppeteer cannot run inside Jest",
+    "correct": false,
+    "why": "It can; `jest-puppeteer` does exactly that."
+   },
+   {
+    "text": "Jest is too slow for browser tests",
+    "correct": false,
+    "why": "The runner's speed is not what fails here; the browsers are."
+   },
+   {
+    "text": "Puppeteer reaches Chrome and Firefox but not Safari",
+    "correct": true,
+    "why": "Right. CDP stops at Chromium and Puppeteer's BiDi covers Firefox; Safari needs WebDriver or Playwright's WebKit."
+   },
+   {
+    "text": "Puppeteer has no way to click by role",
+    "correct": false,
+    "why": "Its selectors can query by role and name; the reach of its protocols is the problem."
+   }
+  ]
+ },
+ {
+  "id": "ex-xvzj1v7n",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Which of these is a hosted service rather than software you install?",
+  "choices": [
+   {
+    "text": "WebdriverIO",
+    "correct": false,
+    "why": "It is an npm package: a library and a runner."
+   },
+   {
+    "text": "Robot Framework",
+    "correct": false,
+    "why": "It is a Python package you install with pip."
+   },
+   {
+    "text": "Jasmine",
+    "correct": false,
+    "why": "It is an npm package that runs specs."
+   },
+   {
+    "text": "QA Wolf",
+    "correct": true,
+    "why": "Right. Its npm package is deprecated; what it sells is people writing and running tests."
+   }
+  ]
+ }
+]
