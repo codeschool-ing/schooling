@@ -1,21 +1,21 @@
 ---
-title: Your data, and the program that makes it
+title: Seus dados, e o programa que os cria
 version: 1
 ---
 
-**The course works on one data set from beginning to end**, so that by lesson 14 you know it well
-enough to notice when a join has done something wrong to it. It belongs to **Maré Bikes**, a
-bike-share scheme in Recife that does not exist: twenty stations from the old centre to Boa
-Viagem, and every trip anybody took on one of its bikes in 2025.
+**O curso trabalha sobre um único conjunto de dados do começo ao fim**, para que na aula 14 você o
+conheça bem o bastante para perceber quando uma junção fez algo errado com ele. Ele pertence à
+**Maré Bikes**, um sistema de bicicletas compartilhadas no Recife que não existe: vinte estações,
+do centro antigo até Boa Viagem, e cada viagem que alguém fez numa das suas bicicletas em 2025.
 
-You do not download it. You make it, with the program below, and that is a decision rather than a
-convenience. A file from somewhere else is a file you cannot reproduce: if yours differs from the
-course's, nobody can say which is right. A program with a fixed seed writes **the same 33,337 trips
-on every computer**, so every number in every lesson is one you can get yourself. Lesson 8 is
-about how a seed does that.
+Você não o baixa. Você o cria, com o programa abaixo, e isso é uma decisão e não uma comodidade.
+Um arquivo vindo de outro lugar é um arquivo que você não consegue reproduzir: se o seu difere do
+do curso, ninguém sabe dizer qual está certo. Um programa com uma semente fixa escreve **as mesmas
+33.337 viagens em qualquer computador**, então cada número de cada aula é um número que você
+consegue obter. A aula 8 é sobre como uma semente faz isso.
 
-Save it as `make_data.py` inside `pydata`. In JupyterLab, the launcher's **Python File** button
-opens an empty one; paste the program, save it with that name, and close it.
+Salve-o como `make_data.py` dentro de `pydata`. No JupyterLab, o botão **Python File** do
+lançador abre um arquivo vazio; cole o programa, salve com esse nome e feche.
 
 ```py
 """Maré Bikes, 2025: the three files this course reads."""
@@ -76,14 +76,14 @@ trips.to_csv("trips.csv", index=False)
 print(f"{len(stations) + 1} station rows, {len(weather)} days, {n} trips")
 ```
 
-Then run it, in the terminal, inside `pydata` with the environment active:
+Depois rode-o, no terminal, dentro de `pydata` e com o ambiente ativo:
 
 ```
 (.venv) ana@lab:~/pydata$ python make_data.py
 21 station rows, 365 days, 33337 trips
 ```
 
-Three files, and nothing in them you could not read with a text editor:
+Três arquivos, e nada neles que você não consiga ler num editor de texto:
 
 ```
 (.venv) ana@lab:~/pydata$ ls -l
@@ -109,17 +109,16 @@ trip_id,started_at,ended_at,start_station,end_station,plan,bike
 2,2025-01-01 20:08:24,2025-01-01 20:25:16,S20,S07,annual,electric
 ```
 
-| file | one row is | columns |
+| arquivo | uma linha é | colunas |
 |---|---|---|
-| `stations.csv` | a station, as it was named from a date onwards | `station_id`, `name`, `docks`, `valid_from` |
-| `weather.csv` | a day in Recife | `date`, `rain_mm`, `temp_max` |
-| `trips.csv` | one ride, from the dock it left to the dock it reached | `trip_id`, `started_at`, `ended_at`, `start_station`, `end_station`, `plan`, `bike` |
+| `stations.csv` | uma estação, com o nome que teve a partir de uma data | `station_id`, `name`, `docks`, `valid_from` |
+| `weather.csv` | um dia no Recife | `date`, `rain_mm`, `temp_max` |
+| `trips.csv` | uma viagem, da doca de onde saiu até a doca aonde chegou | `trip_id`, `started_at`, `ended_at`, `start_station`, `end_station`, `plan`, `bike` |
 
-`plan` is `annual` for a subscriber and `day` for somebody who bought a day pass; `bike` is
-`classic` or `electric`. A trip with no `ended_at` and no `end_station` is a bike that never came
-back to a dock, and there are a few of them on purpose.
+`plan` é `annual` para um assinante e `day` para quem comprou um passe de um dia; `bike` é
+`classic` ou `electric`. Uma viagem sem `ended_at` e sem `end_station` é uma bicicleta que
+nunca voltou a uma doca, e há algumas de propósito.
 
-There are other things in these files on purpose too, of the kind any real data set has. They are
-not listed here, because finding them is what several lessons are about. The program itself will
-read clearly to you by lesson 16; until then it is enough that it runs, and that it prints what it
-printed here.
+Há outras coisas de propósito nesses arquivos, do tipo que todo conjunto de dados real tem. Elas
+não estão listadas aqui, porque encontrá-las é o assunto de várias aulas. O programa em si vai se
+ler com clareza para você na aula 16; até lá, basta que ele rode e imprima o que imprimiu aqui.

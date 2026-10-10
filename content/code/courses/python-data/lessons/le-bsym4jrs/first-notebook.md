@@ -20,7 +20,7 @@ The page shows what the kernel said **at the moment each cell ran**; the kernel 
 ## Making one
 
 In JupyterLab's launcher, under **Notebook**, choose **Python 3 (ipykernel)**. A tab opens with an
-empty cell and the name `Untitled.ipynb`. Right-click the tab, choose **Rename Notebook**, and call
+empty cell and the name `Untitled.ipynb`. Right-click the tab, choose **Rename Notebook…**, and call
 it `first.ipynb`.
 
 Type into the cell and press **Shift+Enter**:

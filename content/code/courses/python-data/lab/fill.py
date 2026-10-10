@@ -41,7 +41,10 @@ def main():
     if check:
         bodies = []
         for f in files:
-            bodies += re.findall(r"^```\n(.*?)^```$", open(f, encoding="utf-8").read(), re.S | re.M)
+            for m in re.finditer(r"^```([^\n]*)\n(.*?)^```[ \t]*$", open(f, encoding="utf-8").read(),
+                                 re.S | re.M):
+                if not m.group(1).strip():
+                    bodies.append(m.group(2))
         bad = 0
         for name, body in found.items():
             varies = name.endswith("~")

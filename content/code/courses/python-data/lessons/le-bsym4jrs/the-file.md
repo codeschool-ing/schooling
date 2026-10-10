@@ -11,7 +11,35 @@ did not mean to share.
 
 Here is the notebook from the previous section, with its five cells run once each, top to bottom:
 
-@@capture:file-head@@
+```
+(.venv) ana@lab:~/pydata$ ls -l first.ipynb
+-rw-r--r-- 1 ana ana 2503 Oct 10 04:05 first.ipynb
+(.venv) ana@lab:~/pydata$ head -n 24 first.ipynb
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "id": "ed1348ee",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "2"
+      ]
+     },
+     "execution_count": 1,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "1 + 1"
+   ]
+  },
+  {
+```
 
 Every cell is an object with the same keys, in alphabetical order:
 
@@ -26,7 +54,39 @@ Every cell is an object with the same keys, in alphabetical order:
 The outputs are the interesting part. The fourth cell printed a line and then showed a value, and
 the file keeps both, as two outputs of two different kinds:
 
-@@capture:file-outputs@@
+```
+(.venv) ana@lab:~/pydata$ sed -n 69,98p first.ipynb
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "id": "e9bc48ca",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "2025-01-01,0.0,29.9\n",
+      "\n"
+     ]
+    },
+    {
+     "data": {
+      "text/plain": [
+       "'2025-01-01,0.0,29.9\\n'"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "print(lines[1])\n",
+    "lines[1]"
+   ]
+  },
+```
 
 The `stream` is what `print` wrote, newline included. The `execute_result` is the value of the
 last line, stored under `text/plain` as its representation. A DataFrame stores a second version of
@@ -37,7 +97,31 @@ numbers are the same and the table is drawn with lines.
 
 At the end of the file is the notebook's own metadata:
 
-@@capture:file-tail@@
+```
+(.venv) ana@lab:~/pydata$ tail -n 22 first.ipynb
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.12.3"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
+```
 
 `kernelspec` names the kernel the notebook asks for when it opens, and `language_info` records the
 Python that last ran it, `3.12.3` here. Nothing in the file records **which libraries** were

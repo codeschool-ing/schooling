@@ -24,7 +24,7 @@ deleting the folder removes all of it.
 
 | path | what you get | what it costs your computer | the outputs |
 |---|---|---|---|
-| **installed** (recommended) | Python and the folder on the computer you already use | about 450 MB of disk; memory only while JupyterLab is open | match on Ubuntu 24.04; the same numbers elsewhere |
+| **installed** (recommended) | Python and the folder on the computer you already use | about 650 MB of disk; memory only while JupyterLab is open | match on Ubuntu 24.04; the same numbers elsewhere |
 | **a virtual machine** | Ubuntu 24.04 apart from your own system | a few gigabytes of disk, and 2 GB of memory while it runs | match as printed |
 | **online** | a Linux machine, or a notebook, in your browser | nothing on your computer; hours from somebody's allowance | close, not exact |
 
@@ -96,7 +96,14 @@ this course's pandas printed.
 `pip install` takes a minute or two and ends with a long `Successfully installed` line naming
 about a hundred packages, because each of the seven brings what it depends on. Check it:
 
-@@capture:check@@
+```
+(.venv) ana@lab:~/pydata$ python --version
+Python 3.12.3
+(.venv) ana@lab:~/pydata$ python -c "import numpy, pandas, matplotlib, seaborn; print(numpy.__version__, pandas.__version__, matplotlib.__version__, seaborn.__version__)"
+2.5.3 3.0.6 3.11.2 0.13.2
+(.venv) ana@lab:~/pydata$ jupyter lab --version
+4.6.4
+```
 
 ## Starting JupyterLab
 
@@ -105,9 +112,15 @@ jupyter lab
 ```
 
 JupyterLab is a program that serves web pages to your browser, and starting it opens one. The
-terminal keeps printing what the server is doing, and its first lines look like this:
+terminal keeps printing what the server is doing, and among its first lines are these:
 
-@@capture:start@@
+```
+[I 2026-10-10 04:06:02.538 ServerApp] Serving notebooks from local directory: /home/ana/pydata
+[I 2026-10-10 04:06:02.538 ServerApp] Jupyter Server 2.21.1 is running at:
+[I 2026-10-10 04:06:02.538 ServerApp] http://localhost:8888/lab?token=ea4dc1071297d10dd55cd029eda14770290d8dc83041108c
+[I 2026-10-10 04:06:02.538 ServerApp]     http://127.0.0.1:8888/lab?token=ea4dc1071297d10dd55cd029eda14770290d8dc83041108c
+[I 2026-10-10 04:06:02.538 ServerApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+```
 
 Three lines matter. **The address** ends in a long `token`, which is a password the server made up
 for this run and put in the link, so that another program on your computer cannot use it. If your
@@ -117,7 +130,10 @@ busy for as long as JupyterLab runs, so open a second terminal for anything else
 
 It cost this much disk, beside Python itself:
 
-@@capture:size@@
+```
+(.venv) ana@lab:~/pydata$ du -sh .venv
+635M	.venv
+```
 
 ## Starting again
 

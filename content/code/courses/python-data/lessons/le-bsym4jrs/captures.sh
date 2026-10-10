@@ -54,7 +54,7 @@ lab exec 'rm -f stations.csv weather.csv trips.csv'
 block make
 on python make_data.py
 
-block look
+block look~
 on ls -l
 on head -3 stations.csv weather.csv trips.csv
 
@@ -79,7 +79,7 @@ lab raw 'cd oldpy && source .venv/bin/activate && PIP_CERT=/etc/ssl/certs/ca-cer
 lab raw 'rm -rf oldpy'
 
 block port~
-lab exec 'setsid jupyter lab --no-browser </dev/null >/dev/null 2>&1 & sleep 5'
+lab exec 'setsid jupyter lab --no-browser </dev/null >/dev/null 2>&1 & disown; sleep 5' 2>/dev/null
 lab exec 'timeout -s INT -k 2 6 jupyter lab 2>&1' | grep -E 'already in use|is running at|^\S.*http://localhost'
 # Anchored on the interpreter's path, so it cannot match this script's own shell.
 pkill -KILL -u ana -f '^/home/ana/pydata/.venv/bin/python3 /home/ana/pydata/.venv/bin/jupyter-lab' || true
@@ -96,11 +96,11 @@ nbformat.write(nb, 'first.ipynb')
 PY
 jupyter nbconvert --to notebook --execute --inplace --ExecutePreprocessor.record_timing=False first.ipynb >/dev/null 2>&1"
 
-block file-head
+block file-head~
 on ls -l first.ipynb
 on head -n 24 first.ipynb
 
-block file-outputs
+block file-outputs~
 on sed -n 69,98p first.ipynb
 
 block file-tail
