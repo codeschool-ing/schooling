@@ -47,7 +47,7 @@ printf "SELECT name, setting, unit FROM pg_settings WHERE name IN ('autovacuum',
 lab as 'until [ -n "$(psql -XAtc "SELECT last_autoanalyze FROM pg_stat_user_tables WHERE relname = '"'orders_copy'"'" shop)" ]; do sleep 2; done; sleep 3'
 printf "%s\nUPDATE orders_copy SET total_cents = total_cents + 1 WHERE id > 150000 AND id <= 250000;\n" "$S" | session shop
 lab as 'until [ -n "$(psql -XAtc "SELECT last_autovacuum FROM pg_stat_user_tables WHERE relname = '"'orders_copy'"'" shop)" ]; do sleep 2; done; sleep 3'
-printf "%s\n" "$S" | session shop
+printf "SELECT n_dead_tup, last_autovacuum, autovacuum_count FROM pg_stat_user_tables WHERE relname = 'orders_copy';\n" | session shop
 
 block falling-behind
 lab as 'rm -f /tmp/go'
@@ -60,7 +60,7 @@ wait $A
 block falling-behind-a
 cat "$T/a.out"
 block falling-behind-after
-printf "VACUUM (VERBOSE, PROCESS_TOAST false) orders_copy;\n" | session shop
+printf "SELECT count(*) FROM pg_stat_activity WHERE state = 'idle in transaction';\nVACUUM (VERBOSE, PROCESS_TOAST false) orders_copy;\n" | session shop
 
 block wraparound
 printf "SELECT datname, age(datfrozenxid) FROM pg_database;\nSELECT relname, age(relfrozenxid) FROM pg_class WHERE relkind = 'r' ORDER BY 2 DESC LIMIT 3;\nSHOW autovacuum_freeze_max_age;\n" | session shop

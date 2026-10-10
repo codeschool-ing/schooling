@@ -73,24 +73,10 @@ shop=*# COMMIT;
 COMMIT
 ```
 
-And the same command in the second terminal now does its job:
+Back in the second terminal, nobody is idle in a transaction any more, and the same VACUUM does its
+job:
 
-```
-shop=# VACUUM (VERBOSE, PROCESS_TOAST false) orders_copy;
-INFO:  vacuuming "shop.public.orders_copy"
-INFO:  finished vacuuming "shop.public.orders_copy": index scans: 1
-pages: 0 removed, 10417 remain, 1670 scanned (16.03% of total)
-tuples: 100000 removed, 820339 remain, 0 are dead but not yet removable
-removable cutoff: 806, which was 0 XIDs old when operation ended
-frozen: 5 pages from table (0.05% of total) had 44 tuples frozen
-index scan needed: 834 pages from table (8.01% of total) had 99996 dead item identifiers removed
-index "orders_copy_pkey": pages: 3430 in total, 0 newly deleted, 0 currently deleted, 0 reusable
-avg read rate: 222.821 MB/s, avg write rate: 1.120 MB/s
-buffer usage: 5668 hits, 1990 misses, 10 dirtied
-WAL usage: 3892 records, 766 full page images, 2063336 bytes
-system usage: CPU: user: 0.06 s, system: 0.00 s, elapsed: 0.06 s
-VACUUM
-```
+<<<falling-behind-after>>>
 
 `100000 removed`, and `index scans: 1` because there were entries in the primary key to take out
 this time. Nothing about the table changed between the two runs. Only the snapshot went away.

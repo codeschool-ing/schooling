@@ -70,4 +70,4 @@ for its own bookkeeping, and some more for the root user, which the next section
 
 On a real server the new filesystem also gets a line in `/etc/fstab`, like the one in the
 previous section. Without it, the next boot leaves `/srv/wal` empty, the link points at nothing,
-and the cluster refuses to start, which is at least loud.
+and the cluster cannot start, which is at least loud.

@@ -88,15 +88,9 @@ UPDATE 100000
 The worker came, analysed the table and left the 150,000 dead versions where they were. A second
 `UPDATE` of 100,000 rows takes the count to 250,000. A minute later:
 
-```
-shop=# SELECT n_dead_tup, last_autovacuum, last_autoanalyze FROM pg_stat_user_tables WHERE relname = 'orders_copy';
- n_dead_tup |        last_autovacuum        |       last_autoanalyze        
-------------+-------------------------------+-------------------------------
-          0 | 2026-10-10 16:42:43.904485-03 | 2026-10-10 16:41:43.808939-03
-(1 row)
-```
+<<<the-trigger 7>>>
 
-**`last_autovacuum` has a time and `n_dead_tup` is back to 0.** That is the whole mechanism, and on
+**`last_autovacuum` has a time, `autovacuum_count` is 1 and `n_dead_tup` is back to 0.** That is the whole mechanism, and on
 a table of a million rows the defaults are reasonable.
 
 On a table of a billion rows they are not. A fifth of a billion is 200 million dead versions before
