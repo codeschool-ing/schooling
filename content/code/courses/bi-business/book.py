@@ -204,7 +204,7 @@ class Fig:
             if kind == 'text':
                 x, y, s, size, anchor, fill, mono, weight = d
                 t = pick(s, lang)
-                if not mono and lang == 'pt' and re.search(r'[A-Za-zÀ-ÿ]', t):
+                if not mono and lang == 'pt' and re.search(r'[A-Za-zÀ-ÖØ-öø-ÿ]', t):
                     if not isinstance(s, tuple) or s[0] == s[1]:
                         same.append(t)
                 wt = f' font-weight="{weight}"' if weight else ''
