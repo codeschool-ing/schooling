@@ -1784,6 +1784,49 @@ def l18_routes(lang):
                 'Três perguntas decidem para onde vai um sinal. Só uma das quatro saídas acorda alguém.')
 
 
+# ------------------------------------------------------------------ lesson 19
+
+@figure('l19-quarter', 19)
+def l19_quarter(lang):
+    items, _ = billing()
+    import calendar
+    rows = []
+    for m in (7, 8, 9):
+        days = [d for _, d, _ in cycle_days(items, date(2026, m, 1), date(2026, m, calendar.monthrange(2026, m)[1]))]
+        rows.append((m, pctl(days, 50), pctl(days, 85)))
+    names = {6: ('June', 'junho'), 7: ('July', 'julho'), 8: ('August', 'agosto'), 9: ('September', 'setembro')}
+    desc_en = '; '.join(f'{names[m][0]}, median {a} days and 85th percentile {b}' for m, a, b in rows)
+    desc_pt = '; '.join(f'{names[m][1]}, mediana de {a} dias e percentil 85 de {b}' for m, a, b in rows)
+    f = Fig('l19-quarter', 680, 290, T(
+        lang,
+        'Cycle time of the items merged each month, from July to September, as a filled bar for the '
+        'median and a taller outlined bar for the 85th percentile: ' + desc_en + '. A dashed line '
+        'between July and August marks 3 August, when the team changed its rules.',
+        'Tempo de ciclo dos itens integrados em cada mês, de julho a setembro, com uma barra cheia '
+        'para a mediana e uma barra contornada mais alta para o percentil 85: ' + desc_pt + '. Uma '
+        'linha tracejada entre julho e agosto marca 3 de agosto, quando o time mudou as regras.'))
+    p = Plot(f, 70, 50, 640, 240, 0, 3, 0, 40)
+    p.yaxis([0, 10, 20, 30, 40], fmt=lambda t: f'{t} d')
+    p.baseline()
+    for k, (m, med, hi) in enumerate(rows):
+        cx = p.sx(k + 0.5)
+        f.bar(cx - 40, p.sy(hi), 80, p.sy(0) - p.sy(hi), fill='--panel', stroke='--phosphor')
+        f.bar(cx - 40, p.sy(med), 80, p.sy(0) - p.sy(med))
+        f.text(cx, p.sy(hi) - 10, T(lang, f'85th: {hi}', f'p85: {hi}'), size=10, fill='--paper-dim')
+        f.text(cx, p.sy(med) - 10 if hi - med > 4 else p.sy(med) + 12, T(lang, f'median {med}', f'mediana {med}'),
+               size=10, fill='--paper')
+        f.text(cx, 256, T(lang, *names[m]), size=10.5, fill='--paper-dim')
+    f.line(p.sx(1), 44, p.sx(1), 240, stroke='--amber', width=1.4, dash='5 3')
+    f.text(p.sx(1) + 6, 44, T(lang, '3 Aug: one item each, reviews first', '3 ago: um item cada, revisões primeiro'),
+           size=10, anchor='start', fill='--amber')
+    f.text(70, 20, T(lang, 'cycle time of the items merged each month, in days',
+                     'tempo de ciclo dos itens integrados em cada mês, em dias'),
+           size=10, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'The chart that carries the review: the change, its size and its timing, in one picture.',
+                'O gráfico que sustenta a revisão: a mudança, o tamanho dela e quando aconteceu, numa imagem só.')
+
+
 # @@LESSONS@@
 
 if __name__ == '__main__':
