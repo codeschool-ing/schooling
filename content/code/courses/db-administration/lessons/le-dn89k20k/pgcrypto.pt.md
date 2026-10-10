@@ -43,13 +43,13 @@ ana=# SELECT count(digest(i::text, 'sha256')) FROM generate_series(1, 100000) AS
  100000
 (1 row)
 
-Time: 203.704 ms
+Time: 149.499 ms
 
 ana=# \timing off
 Timing is off.
 ```
 
-Cem mil hashes SHA-256 levaram 203.704 ms na máquina da gravação, perto de meio milhão por segundo
+Cem mil hashes SHA-256 levaram 149.499 ms na máquina da gravação, perto de dois terços de milhão por segundo
 a partir de um único comando SQL, num núcleo. Essa velocidade é o motivo de uma tabela de hashes
 simples não ser segura: quem a copia testa candidatas na mesma velocidade.
 
@@ -75,8 +75,8 @@ INSERT 0 2
 ana=# SELECT * FROM app_users;
       email      |                        password_hash                         
 -----------------+--------------------------------------------------------------
- ana@example.com | $2a$06$fGAk.1yz2MNWh7EWRHIYx.MXpM0LnYSM85.IkzRiVL8Ota3mgkG56
- rui@example.com | $2a$06$We7C0Drp7lZMcKMOjNWTT.Vuf88lTY.QF/uJjbtUlVTy8Oc6mg59C
+ ana@example.com | $2a$06$f5boI99NkExsvSRJ89EdVOF/rWxffy2LsNdlC3rsP4Onbx0T6HXSK
+ rui@example.com | $2a$06$Oe/6dSvGLIDc6ZRb7oK3gOY19iFXt4tRamiIjmhHHx13aowXsh7UG
 (2 rows)
 ```
 
@@ -94,7 +94,7 @@ ana=# SELECT crypt('correct horse battery', gen_salt('bf')) IS NOT NULL;
  t
 (1 row)
 
-Time: 7.080 ms
+Time: 5.993 ms
 
 ana=# SELECT crypt('correct horse battery', gen_salt('bf', 12)) IS NOT NULL;
  ?column? 
@@ -102,13 +102,13 @@ ana=# SELECT crypt('correct horse battery', gen_salt('bf', 12)) IS NOT NULL;
  t
 (1 row)
 
-Time: 236.482 ms
+Time: 259.907 ms
 
 ana=# \timing off
 Timing is off.
 ```
 
-7.080 ms no custo padrão, 236.482 ms no 12, na mesma máquina. **Um único hash bcrypt de custo 12
+5.993 ms no custo padrão, 259.907 ms no 12, na mesma máquina. **Um único hash bcrypt de custo 12
 levou mais tempo que os cem mil hashes SHA-256 acima.** A lentidão é o objetivo: um login espera
 essa fração de segundo uma vez, e quem testa palpites contra uma cópia roubada espera essa fração a
 cada palpite. Escolha o maior custo que a sua taxa de logins aguenta.
@@ -158,7 +158,7 @@ não tem pgcrypto, a tem:
 shop=# SELECT gen_random_uuid();
            gen_random_uuid            
 --------------------------------------
- 674a4911-4289-42e8-8f20-9a7ebb43ac98
+ 47a194b3-214f-4601-8c1b-48945f44af34
 (1 row)
 
 shop=# \df gen_random_uuid

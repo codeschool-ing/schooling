@@ -11,7 +11,34 @@ dados, então vale ver qual dos dois o seu servidor usa antes de ler qualquer co
 
 Os parâmetros que decidem isso, e os que o resto desta lição muda, como o pacote os deixou:
 
-@@1@@
+```
+shop=# SELECT name, setting FROM pg_settings
+shop-#  WHERE name IN ('logging_collector', 'log_destination', 'log_line_prefix',
+shop(#                 'log_min_messages', 'log_min_duration_statement', 'log_statement',
+shop(#                 'log_lock_waits', 'log_temp_files', 'log_connections',
+shop(#                 'log_checkpoints', 'log_autovacuum_min_duration')
+shop-#  ORDER BY name;
+            name             |     setting      
+-----------------------------+------------------
+ log_autovacuum_min_duration | 600000
+ log_checkpoints             | on
+ log_connections             | off
+ log_destination             | stderr
+ log_line_prefix             | %m [%p] %q%u@%d 
+ log_lock_waits              | off
+ log_min_duration_statement  | -1
+ log_min_messages            | warning
+ log_statement               | none
+ log_temp_files              | -1
+ logging_collector           | off
+(11 rows)
+
+shop=# SELECT pg_current_logfile();
+ pg_current_logfile 
+--------------------
+ 
+(1 row)
+```
 
 **`logging_collector` está desligado e `log_destination` é `stderr`**: o servidor não faz nada com
 o seu log além de escrevê-lo na saída de erro. O `pg_current_logfile()` só responde por arquivos
@@ -21,7 +48,18 @@ servidor ainda não registra.
 
 ## O arquivo, e quem o abriu
 
-@@2@@
+```
+ana@db:~$ ls -l /var/log/postgresql
+total 4
+-rw-r----- 1 postgres adm 556 Oct 10 16:43 postgresql-16-main.log
+ana@db:~$ sudo ls -l /proc/$(sudo head -1 /var/lib/postgresql/16/main/postmaster.pid)/fd/2
+l-wx------ 1 postgres postgres 64 Oct 10 16:44 /proc/99/fd/2 -> /var/log/postgresql/postgresql-16-main.log
+ana@db:~$ sudo tail -n 4 /var/log/postgresql/postgresql-16-main.log
+2026-10-10 16:43:49.701 -03 [99] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2026-10-10 16:43:49.735 -03 [99] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-10-10 16:43:49.781 -03 [105] LOG:  database system was shut down at 2026-10-10 03:18:41 -03
+2026-10-10 16:43:49.792 -03 [99] LOG:  database system is ready to accept connections
+```
 
 A primeira linha do `postmaster.pid` é o id de processo do postmaster, e `/proc/<pid>/fd/2` é para
 onde aponta a saída de erro dele: **é aquele arquivo**. Não foi o servidor que o escolheu. O
@@ -31,7 +69,11 @@ erro, e todo backend que o postmaster inicia o herda. O arquivo pertence a `post
 
 O journal do systemd tem a unit subindo e nada de dentro do servidor:
 
-@@3@@
+```
+ana@db:~$ sudo journalctl -u postgresql@16-main --no-pager -n 4
+Oct 10 16:43:48 db systemd[1]: Starting postgresql@16-main.service - PostgreSQL Cluster 16-main...
+Oct 10 16:43:51 db systemd[1]: Started postgresql@16-main.service - PostgreSQL Cluster 16-main.
+```
 
 Isso surpreende quem espera a saída de todo serviço no journal. Ela só vai para lá quando um
 servidor escreve na saída de erro e ninguém a redirecionou, e não é assim que o pacote do Ubuntu o

@@ -17,7 +17,7 @@ ana@db:~$ for i in 1 2 3 4 5 6; do psql shop -c "INSERT INTO walfill SELECT * FR
 INSERT 0 1000000
 INSERT 0 1000000
 INSERT 0 1000000
-PANIC:  could not write to file "pg_wal/xlogtemp.549": No space left on device
+PANIC:  could not write to file "pg_wal/xlogtemp.449": No space left on device
 server closed the connection unexpectedly
 	This probably means the server terminated abnormally
 	before or while processing the request.
@@ -38,13 +38,13 @@ ana@db:~$ df -h /srv/wal
 Filesystem      Size  Used Avail Use% Mounted on
 /dev/loop0      488M  449M  3.4M 100% /srv/wal
 ana@db:~$ sudo grep -E "PANIC|terminated by signal|redo done|FATAL|shut down" /var/log/postgresql/postgresql-16-main.log | tail -n 7
-2026-10-10 16:41:09.528 -03 [441] LOG:  database system was shut down at 2026-10-10 16:41:07 -03
-2026-10-10 16:41:29.647 -03 [549] ana@shop PANIC:  could not write to file "pg_wal/xlogtemp.549": No space left on device
-2026-10-10 16:41:29.650 -03 [438] LOG:  server process (PID 549) was terminated by signal 6: Aborted
-2026-10-10 16:41:31.294 -03 [551] LOG:  database system was not properly shut down; automatic recovery in progress
-2026-10-10 16:41:33.305 -03 [551] LOG:  redo done at 0/30FFFF90 system usage: CPU: user: 1.33 s, system: 0.20 s, elapsed: 2.00 s
-2026-10-10 16:41:33.332 -03 [551] FATAL:  could not write to file "pg_wal/xlogtemp.551": No space left on device
-2026-10-10 16:41:33.361 -03 [438] LOG:  database system is shut down
+2026-10-10 16:48:27.282 -03 [339] LOG:  database system was shut down at 2026-10-10 16:48:26 -03
+2026-10-10 16:48:40.247 -03 [449] ana@shop PANIC:  could not write to file "pg_wal/xlogtemp.449": No space left on device
+2026-10-10 16:48:40.252 -03 [336] LOG:  server process (PID 449) was terminated by signal 6: Aborted
+2026-10-10 16:48:40.869 -03 [450] LOG:  database system was not properly shut down; automatic recovery in progress
+2026-10-10 16:48:42.478 -03 [450] LOG:  redo done at 0/33FFFF98 system usage: CPU: user: 1.32 s, system: 0.21 s, elapsed: 1.60 s
+2026-10-10 16:48:42.485 -03 [450] FATAL:  could not write to file "pg_wal/xlogtemp.450": No space left on device
+2026-10-10 16:48:42.505 -03 [336] LOG:  database system is shut down
 ```
 
 Read the log in order. The backend that hit the full disk panicked and was killed. The
@@ -87,12 +87,12 @@ Filesystem      Size  Used Avail Use% Mounted on
 /dev/loop0      2.0G  449M  1.4G  24% /srv/wal
 ana@db:~$ sudo systemctl start postgresql@16-main
 ana@db:~$ sudo tail -n 6 /var/log/postgresql/postgresql-16-main.log
-2026-10-10 16:41:37.840 -03 [634] LOG:  database system was not properly shut down; automatic recovery in progress
-2026-10-10 16:41:37.843 -03 [634] LOG:  redo starts at 0/15891D60
-2026-10-10 16:41:40.045 -03 [634] LOG:  redo done at 0/30FFFF90 system usage: CPU: user: 1.22 s, system: 0.27 s, elapsed: 2.20 s
-2026-10-10 16:41:40.089 -03 [632] LOG:  checkpoint starting: end-of-recovery immediate wait
-2026-10-10 16:41:40.746 -03 [632] LOG:  checkpoint complete: wrote 16285 buffers (99.4%); 0 WAL file(s) added, 0 removed, 28 recycled; write=0.103 s, sync=0.376 s, total=0.658 s; sync files=36, longest=0.164 s, average=0.011 s; distance=449976 kB, estimate=449976 kB; lsn=0/31000058, redo lsn=0/31000058
-2026-10-10 16:41:40.775 -03 [631] LOG:  database system is ready to accept connections
+2026-10-10 16:48:45.901 -03 [524] LOG:  database system was not properly shut down; automatic recovery in progress
+2026-10-10 16:48:45.903 -03 [524] LOG:  redo starts at 0/18F7F9E0
+2026-10-10 16:48:47.673 -03 [524] LOG:  redo done at 0/33FFFF98 system usage: CPU: user: 1.43 s, system: 0.18 s, elapsed: 1.77 s
+2026-10-10 16:48:47.721 -03 [522] LOG:  checkpoint starting: end-of-recovery immediate wait
+2026-10-10 16:48:48.129 -03 [522] LOG:  checkpoint complete: wrote 16386 buffers (100.0%); 0 WAL file(s) added, 0 removed, 28 recycled; write=0.080 s, sync=0.265 s, total=0.409 s; sync files=27, longest=0.186 s, average=0.010 s; distance=442881 kB, estimate=442881 kB; lsn=0/34000058, redo lsn=0/34000058
+2026-10-10 16:48:48.138 -03 [521] LOG:  database system is ready to accept connections
 ana@db:~$ psql shop -c "SELECT count(*) FROM walfill"
   count  
 ---------

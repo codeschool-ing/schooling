@@ -1,0 +1,494 @@
+{
+  "ex-ra7djnk4": {
+    "prompt": "No servidor Ubuntu do curso, o `logging_collector` está desligado. Quem pôs a saída de erro do servidor em /var/log/postgresql/postgresql-16-main.log?",
+    "hint": "Veja como a unit sobe o cluster.",
+    "choices": [
+      {
+        "text": "O processo logger que o servidor sobe na partida",
+        "why": "Esse processo só existe com logging_collector = on, e ele escreve dentro do diretório de dados."
+      },
+      {
+        "text": "O journal do systemd, que repassa cada linha ao arquivo",
+        "why": "O journal só tinha a unit subindo; as linhas do servidor nunca passaram por ele."
+      },
+      {
+        "text": "O logrotate, que cria o arquivo toda semana",
+        "why": "O logrotate corta o arquivo; ele não decide onde o servidor escreve."
+      },
+      {
+        "text": "O pg_ctlcluster, com pg_ctl -l",
+        "why": "Isso. O pg_ctl -l abre o arquivo e o entrega ao postmaster como saída de erro, e todo backend o herda."
+      }
+    ]
+  },
+  "ex-xms5kvan": {
+    "prompt": "Por que `SELECT pg_current_logfile();` não devolveu nada no servidor padrão do Ubuntu, embora um arquivo de log claramente exista?",
+    "hint": "De quais arquivos ela sabe?",
+    "choices": [
+      {
+        "text": "A ana não tem privilégio para ver o caminho",
+        "why": "A ana é superusuária. Depois que o jsonlog foi ligado, a mesma consulta do mesmo papel devolveu um caminho."
+      },
+      {
+        "text": "Ela só informa arquivos que o próprio servidor abriu",
+        "why": "Isso. Com o collector desligado, quem abriu o arquivo foi o pg_ctl, então o servidor não tem o que informar."
+      },
+      {
+        "text": "O log estava vazio naquele momento",
+        "why": "O arquivo tinha linhas de partida, 560 bytes. O tamanho não é o que a função olha."
+      },
+      {
+        "text": "A função precisa de log_destination = 'csvlog'",
+        "why": "Ela respondeu também para jsonlog. O que ela precisa é do collector escrevendo o arquivo."
+      }
+    ]
+  },
+  "ex-mb5tpdqx": {
+    "prompt": "Você herda um servidor e o `/var/log/postgresql/postgresql-16-main.log` termina com \"redirecting log output to logging collector process\" de três semanas atrás. O que você conclui?",
+    "hint": "Leia a linha HINT que vem depois.",
+    "choices": [
+      {
+        "text": "O servidor está quieto há três semanas",
+        "why": "Essa é a armadilha: o log mudou de lugar, e este arquivo parou de crescer no dia em que isso aconteceu."
+      },
+      {
+        "text": "O log está quebrado e o servidor não escreve nada",
+        "why": "A linha diz para onde ele foi, não que parou."
+      },
+      {
+        "text": "O log foi para os arquivos do collector",
+        "why": "Isso. Cada linha desde então está nos arquivos do collector, por padrão em log/ dentro do diretório de dados."
+      },
+      {
+        "text": "O logrotate moveu as linhas mais novas para um arquivo .1",
+        "why": "A rotação mantém as linhas mais novas no arquivo atual. A linha de redirecionamento é do próprio servidor."
+      }
+    ]
+  },
+  "ex-9s4mj34c": {
+    "prompt": "Com `log_line_prefix = '%m [%p] %q%u@%d '`, por que uma linha de checkpoint termina logo depois de `[103]`?",
+    "hint": "Um escape não imprime nada.",
+    "choices": [
+      {
+        "text": "O %q, para processos sem sessão",
+        "why": "Isso. O checkpointer não tem usuário nem banco, então tudo depois do %q fica de fora para ele."
+      },
+      {
+        "text": "Processos de fundo ignoram o log_line_prefix",
+        "why": "Eles usam: a hora e o [103] vêm do %m e do %p."
+      },
+      {
+        "text": "O checkpointer roda como postgres, e esse nome é ocultado",
+        "why": "Nada é ocultado por nome. Ele não tem papel nem banco para imprimir."
+      },
+      {
+        "text": "%u e %d só imprimem depois de um reload",
+        "why": "As linhas de cliente no mesmo arquivo traziam ana@shop sem reload nenhum."
+      }
+    ]
+  },
+  "ex-z5grvmtr": {
+    "prompt": "Nenhum registro de comandos estava configurado, e mesmo assim `SELECT 1/0;` deixou uma linha `STATEMENT:` depois do `ERROR:`. Que parâmetro a escreveu?",
+    "hint": "O padrão dele é error.",
+    "choices": [
+      {
+        "text": "log_statement",
+        "why": "Ele estava em none, como a primeira consulta da lição mostrou."
+      },
+      {
+        "text": "log_min_messages",
+        "why": "Ele decide quais severidades são escritas, não se o comando que falhou vem depois do erro."
+      },
+      {
+        "text": "log_min_error_statement",
+        "why": "Isso. Todo comando que falha em error ou acima é escrito depois da mensagem de erro."
+      },
+      {
+        "text": "log_line_prefix, pelo %q",
+        "why": "O prefixo molda o começo de cada linha; não acrescenta linhas."
+      }
+    ]
+  },
+  "ex-mfzpsdj7": {
+    "prompt": "Para ver qual programa mandou cada comando, o curso acrescentou o escape ___ ao fim do log_line_prefix.",
+    "hint": "Ele imprime o application_name.",
+    "blanks": [
+      {
+        "accept": [
+          "%a"
+        ]
+      }
+    ]
+  },
+  "ex-exjqhy2t": {
+    "prompt": "Um coletor de logs interpreta as linhas com uma expressão regular escrita para `%m [%p] %q%u@%d `. Alguém acrescenta `%h` no meio do prefixo num servidor movimentado. Qual é o resultado provável?",
+    "hint": "Quem depende da forma do prefixo?",
+    "choices": [
+      {
+        "text": "O servidor recusa o prefixo novo até um restart",
+        "why": "O log_line_prefix muda com um reload, e o próprio reload é registrado com o valor novo."
+      },
+      {
+        "text": "As linhas deixam de casar com o padrão do coletor",
+        "why": "Isso. Toda ferramenta que lê o log é escrita contra o prefixo, então mudar o formato quebra o interpretador."
+      },
+      {
+        "text": "Nada, porque o %h é vazio para conexões locais",
+        "why": "Ele imprime [local] para conexões por socket, e de todo modo o arranjo da linha mudou."
+      },
+      {
+        "text": "As linhas antigas do arquivo são reescritas no formato novo",
+        "why": "Um log só recebe acréscimos; nada reescreve o que já foi escrito."
+      }
+    ]
+  },
+  "ex-qm2xv6eb": {
+    "prompt": "Ligue cada parâmetro à linha que ele acrescenta ao log.",
+    "hint": "Cada um só escreve quando o seu evento acontece.",
+    "pairs": [
+      {
+        "left": "log_min_duration_statement",
+        "right": "duration: … ms  statement: …"
+      },
+      {
+        "left": "log_lock_waits",
+        "right": "still waiting for ShareLock … after 1000 ms"
+      },
+      {
+        "left": "log_temp_files",
+        "right": "temporary file: path …, size …"
+      },
+      {
+        "left": "log_connections",
+        "right": "connection authorized: user=… database=…"
+      }
+    ],
+    "right_distractors": [
+      "checkpoint starting: time"
+    ]
+  },
+  "ex-aprdg33z": {
+    "prompt": "Com `log_min_duration_statement = '50ms'`, a varredura completa de orders foi registrada e `SELECT name FROM customers WHERE id = 42` não. Por que esse é o comportamento desejado?",
+    "hint": "Como seria o log se todo comando entrasse?",
+    "choices": [
+      {
+        "text": "Só os lentos valem a leitura; o resto os enterraria",
+        "why": "Isso. Um limiar mantém no log os comandos que merecem uma olhada em vez dos milhões que foram bem."
+      },
+      {
+        "text": "Comandos por chave primária nunca valem registro",
+        "why": "Um que levasse dois segundos valeria, e o limiar o pegaria."
+      },
+      {
+        "text": "A busca foi respondida do cache e nunca executou",
+        "why": "Ela executou e devolveu Customer 42; só ficou abaixo de 50 ms."
+      },
+      {
+        "text": "Registrá-la teria exigido log_statement = 'all'",
+        "why": "Um limiar de 0 também a registraria. O ponto é que 50 ms escolheu não registrar."
+      }
+    ]
+  },
+  "ex-nrjsvmng": {
+    "prompt": "Nas linhas de espera por trava, o que `DETAIL: Process holding the lock: 254. Wait queue: 258.` permite fazer que o pg_stat_activity talvez não permita, uma hora depois?",
+    "hint": "O pg_stat_activity só mostra o que acontece agora.",
+    "choices": [
+      {
+        "text": "Achar o que o 254 rodava, com grep por [254]",
+        "why": "Isso. O pid no prefixo amarra as linhas de quem bloqueou às de quem esperou, depois que as duas sessões já sumiram."
+      },
+      {
+        "text": "Encerrar o processo 254 a partir do log",
+        "why": "O log registra; não age sobre nada. E uma hora depois o 254 provavelmente já sumiu."
+      },
+      {
+        "text": "Provar que houve um deadlock",
+        "why": "Isso foi uma espera simples que terminou com acquired ShareLock; um deadlock tem a sua própria linha ERROR."
+      },
+      {
+        "text": "Aumentar o deadlock_timeout só para o processo 258",
+        "why": "Isso é um ajuste, não algo que a linha de log permite, e só atrasaria a linha."
+      }
+    ]
+  },
+  "ex-qkaqdrqk": {
+    "prompt": "Qual parâmetro de log o curso encontrou já ligado, por padrão, no PostgreSQL 16?",
+    "hint": "Ele escreve uma linha starting e uma complete.",
+    "choices": [
+      {
+        "text": "log_connections",
+        "why": "Estava desligado; a lição o ligou para ver as três linhas de chegada."
+      },
+      {
+        "text": "log_lock_waits",
+        "why": "Estava desligado até a lição o ligar."
+      },
+      {
+        "text": "log_autovacuum_min_duration em 0",
+        "why": "O padrão é 600000 ms, dez minutos, o que na maioria dos servidores não registra nada."
+      },
+      {
+        "text": "log_checkpoints",
+        "why": "Isso. O PostgreSQL 16 o ligou por padrão."
+      }
+    ]
+  },
+  "ex-19jka7ym": {
+    "prompt": "Ao longo de uma semana, a maioria das linhas `checkpoint starting:` de um servidor diz `wal` em vez de `time`. O que isso diz?",
+    "hint": "O que inicia um checkpoint além do relógio?",
+    "choices": [
+      {
+        "text": "Alguém está rodando CHECKPOINT à mão",
+        "why": "Um manual dizia immediate force wait, como no laboratório."
+      },
+      {
+        "text": "O WAL enche antes do timeout",
+        "why": "Isso. O servidor ficou sem espaço de WAL antes de o relógio mandar, que é a pergunta da lição 8 sobre max_wal_size."
+      },
+      {
+        "text": "O arquivamento de WAL está falhando",
+        "why": "Nada na palavra do motivo diz algo sobre arquivamento."
+      },
+      {
+        "text": "O log está sendo escrito no WAL",
+        "why": "O log do servidor e o write-ahead log são arquivos sem relação."
+      }
+    ]
+  },
+  "ex-cnpsc7rp": {
+    "prompt": "Com `log_statement = 'all'`, 10.000 transações do pgbench fizeram o log crescer 8758557 bytes. Cerca de quantos bytes isso dá por transação? (Dê um número inteiro.)",
+    "hint": "Divida.",
+    "unit": "bytes"
+  },
+  "ex-k22hbqmj": {
+    "prompt": "Por que o logcost.sh informou que o log cresceu 0 bytes antes de mudar o log_statement?",
+    "hint": "O que cada parâmetro restante espera?",
+    "choices": [
+      {
+        "text": "O pgbench escreve no próprio log, não no do servidor",
+        "why": "A execução seguinte, com log_statement = 'all', fez o log do servidor crescer megabytes com os comandos do pgbench."
+      },
+      {
+        "text": "O log tinha acabado de ser girado e o stat leu o arquivo novo",
+        "why": "A rotação veio depois na lição; as duas chamadas de stat leram o mesmo arquivo."
+      },
+      {
+        "text": "Nenhum comando foi lento, esperou por trava ou transbordou",
+        "why": "Isso. Esses parâmetros só escrevem quando o seu evento acontece, e nenhum dos 70.000 comandos disparou um."
+      },
+      {
+        "text": "O servidor guarda as linhas e as descarrega nos checkpoints",
+        "why": "As linhas são escritas na hora; a execução seguinte mostrou o crescimento de imediato."
+      }
+    ]
+  },
+  "ex-4a2985dh": {
+    "prompt": "Um auditor pede para saber sempre que uma tabela é criada, alterada ou removida. Qual ajuste responde a isso e pode ficar ligado de vez?",
+    "hint": "Um valor de log_statement registra só mudanças de esquema.",
+    "choices": [
+      {
+        "text": "log_statement = 'all'",
+        "why": "Ele registra esses, e todo outro comando também: gigabytes por dia e todo literal em texto puro."
+      },
+      {
+        "text": "log_min_duration_statement = 0",
+        "why": "Isso registra todo comando com a duração, o que dá ainda mais bytes que 'all'."
+      },
+      {
+        "text": "log_statement = 'ddl'",
+        "why": "Isso. Ele escreve todo CREATE, ALTER e DROP, um punhado de linhas por semana na maioria dos servidores."
+      },
+      {
+        "text": "log_lock_waits = on, já que o ALTER toma uma trava",
+        "why": "Ele só registra esperas maiores que o deadlock_timeout; a maioria dos ALTER nunca apareceria."
+      }
+    ]
+  },
+  "ex-7pq5h5je": {
+    "prompt": "Ordene estas severidades pelo quanto derrubaram junto, da menor para a maior.",
+    "hint": "Um comando, uma sessão, o servidor inteiro.",
+    "items": [
+      "WARNING",
+      "ERROR",
+      "FATAL",
+      "PANIC"
+    ],
+    "trap": "FATAL soa como o fim de tudo, e é uma sessão."
+  },
+  "ex-q04gyy1n": {
+    "prompt": "Aparece uma linha FATAL: `password authentication failed for user \"report\"`. O que parou?",
+    "hint": "Leia a tabela de severidades, não o tom da palavra.",
+    "choices": [
+      {
+        "text": "O servidor inteiro, que precisa ser reiniciado",
+        "why": "Isso é PANIC. FATAL encerra uma sessão."
+      },
+      {
+        "text": "Todas as sessões do papel report",
+        "why": "As outras sessões do report não são afetadas; a linha é sobre uma tentativa."
+      },
+      {
+        "text": "O comando que o report estava rodando",
+        "why": "Um comando que falha é ERROR. Este falhou na porta."
+      },
+      {
+        "text": "Uma tentativa de conexão",
+        "why": "Isso. FATAL encerra uma sessão; aqui a sessão nem começou."
+      }
+    ]
+  },
+  "ex-81qxy8n9": {
+    "prompt": "A configuração do logrotate do Ubuntu para o log do PostgreSQL usa `copytruncate`. Por que não simplesmente renomear o arquivo?",
+    "hint": "Quem mantém o arquivo aberto, e dá para mandá-lo reabrir?",
+    "choices": [
+      {
+        "text": "Renomear exige o servidor parado",
+        "why": "Renomear funciona num arquivo aberto; o problema é para onde as escritas vão depois."
+      },
+      {
+        "text": "O copytruncate comprime o arquivo ao mesmo tempo",
+        "why": "A compressão é o compress e o delaycompress, linhas separadas do mesmo arquivo."
+      },
+      {
+        "text": "Ele não perde linhas, ao contrário de renomear",
+        "why": "É ele que pode perder: linhas escritas entre a cópia e o truncamento não ficam em arquivo nenhum."
+      },
+      {
+        "text": "O servidor continuaria escrevendo no arquivo renomeado",
+        "why": "Isso. Ele mantém o arquivo como saída de erro e não pode ser avisado para reabri-lo, então o conteúdo é copiado e o original esvaziado."
+      }
+    ]
+  },
+  "ex-bmkg0zdv": {
+    "prompt": "Por que mudar para `log_destination = 'jsonlog'` exigiu `logging_collector = on` e um restart?",
+    "hint": "Que processo consegue escrever um formato que não seja texto puro?",
+    "choices": [
+      {
+        "text": "O jsonlog precisa do pacote jq no servidor",
+        "why": "O jq só leu o arquivo depois. O servidor escreve JSON sozinho."
+      },
+      {
+        "text": "O pg_ctlcluster recusa JSON em /var/log/postgresql",
+        "why": "O pg_ctlcluster nunca vê o formato; o arquivo simples apenas não é do collector."
+      },
+      {
+        "text": "Só o logger escreve jsonlog",
+        "why": "Isso. O logging_collector tem contexto postmaster, e csvlog e jsonlog só são escritos através dele."
+      },
+      {
+        "text": "Linhas JSON são maiores e precisam de log_rotation_size maior",
+        "why": "O tamanho de rotação não tem nada a ver com o formato poder ser escrito."
+      }
+    ]
+  },
+  "ex-gtrerkkw": {
+    "prompt": "Um programa de monitoramento precisa contar erros de divisão por zero em muitos servidores, com mensagens do servidor em vários idiomas. Que campo do jsonlog ele deve casar?",
+    "hint": "Que campo é um código e não inglês?",
+    "choices": [
+      {
+        "text": "message",
+        "why": "\"division by zero\" é texto em inglês, e é traduzido quando as mensagens do servidor são."
+      },
+      {
+        "text": "error_severity",
+        "why": "ERROR cobre todo comando que falha, não só este tipo."
+      },
+      {
+        "text": "backend_type",
+        "why": "Ele diz que um client backend escreveu a linha, o que todo erro de cliente compartilha."
+      },
+      {
+        "text": "state_code",
+        "why": "Isso. O SQLSTATE, 22012 aqui, é o mesmo em todo idioma."
+      }
+    ]
+  },
+  "ex-4q1cz4s5": {
+    "prompt": "A 100 transações por segundo, dia e noite, quanto log o `log_statement = 'all'` escreveria por dia, usando os 876 bytes por transação da lição?",
+    "hint": "Um dia tem 86.400 segundos.",
+    "choices": [
+      {
+        "text": "Cerca de 7,6 GB",
+        "why": "Isso. 876 × 100 × 86.400 dá cerca de 7,6 bilhões de bytes, de um ajuste só."
+      },
+      {
+        "text": "Cerca de 88 MB",
+        "why": "Isso é 876 × 100 × 1.000: mil segundos, não um dia."
+      },
+      {
+        "text": "Cerca de 760 GB",
+        "why": "Cem vezes demais: a multiplicação por 100 foi feita duas vezes."
+      },
+      {
+        "text": "Nada a mais, porque os comandos do pgbench são curtos",
+        "why": "Comandos curtos ainda dão 125 bytes por linha com o prefixo."
+      }
+    ]
+  },
+  "ex-krj7kz80": {
+    "prompt": "Usuários dizem que uma página de relatório \"às vezes trava por alguns segundos\". Com os ajustes que esta lição recomenda, que par de linhas você procuraria primeiro?",
+    "hint": "Uma trava pode ser um comando lento ou uma espera atrás de outro.",
+    "choices": [
+      {
+        "text": "connection received e disconnection",
+        "why": "Eles dão a duração da sessão, não por que um comando dentro dela ficou lento ou esperou."
+      },
+      {
+        "text": "checkpoint starting e checkpoint complete",
+        "why": "Checkpoints podem deixar um servidor lento, mas não explicariam uma página; olhe primeiro os comandos da própria página."
+      },
+      {
+        "text": "temporary file e STATEMENT",
+        "why": "Um transbordo é uma causa de lentidão, mas não mostra uma espera; é a terceira linha a conferir, não a primeira."
+      },
+      {
+        "text": "duration, e still waiting",
+        "why": "Isso. A primeira mostra que o comando foi lento; a segunda, com o DETAIL, mostra se ele estava esperando e por quem."
+      }
+    ]
+  },
+  "ex-m8sv879t": {
+    "prompt": "Quais destes valem com um reload, sem restart? Marque todos que se aplicam.",
+    "hint": "Só um parâmetro da lição precisou de systemctl restart.",
+    "choices": [
+      {
+        "text": "log_line_prefix",
+        "why": "Sim. A própria linha do reload mostrou o valor novo."
+      },
+      {
+        "text": "log_min_duration_statement",
+        "why": "Sim. O pg_reload_conf() bastou."
+      },
+      {
+        "text": "logging_collector",
+        "why": "Ele sobe um processo, então precisa de restart."
+      },
+      {
+        "text": "log_statement",
+        "why": "Sim. Ele mudou entre duas execuções do logcost.sh com um reload."
+      }
+    ]
+  },
+  "ex-dbg3k453": {
+    "prompt": "Um servidor guarda o log no mesmo disco pequeno que os dados, com a rotação semanal do Ubuntu. Alguém liga `log_statement = 'all'` na segunda para depurar uma aplicação e esquece. Qual é o risco até o fim de semana?",
+    "hint": "Semanal é uma decisão de tamanho tomada sem olhar o tamanho.",
+    "choices": [
+      {
+        "text": "O logrotate percebe o tamanho e gira antes",
+        "why": "A configuração diz weekly sem linha size ou maxsize; ele não vai olhar."
+      },
+      {
+        "text": "O log enche o disco onde moram os dados",
+        "why": "Isso. Gigabytes por dia sem rotação até domingo, no disco dos dados, é o disco cheio da lição 9 chegando pelo log."
+      },
+      {
+        "text": "O servidor desliga o log_statement quando o disco enche",
+        "why": "Nada desliga um ajuste sozinho; o log só continua crescendo."
+      },
+      {
+        "text": "Só a vazão cai, o que os usuários vão notar primeiro",
+        "why": "Na máquina da gravação a vazão nem mudou de forma mensurável; o disco é o custo que cresce."
+      }
+    ]
+  }
+}

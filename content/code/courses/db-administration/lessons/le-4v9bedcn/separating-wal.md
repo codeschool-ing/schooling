@@ -56,7 +56,7 @@ ana@db:~$ sudo mv /var/lib/postgresql/16/main/pg_wal /srv/wal/pg_wal
 ana@db:~$ sudo -u postgres ln -s /srv/wal/pg_wal /var/lib/postgresql/16/main/pg_wal
 ana@db:~$ sudo systemctl start postgresql@16-main
 ana@db:~$ sudo ls -l /var/lib/postgresql/16/main | grep pg_wal
-lrwxrwxrwx 1 postgres postgres   15 Oct 10 16:41 pg_wal -> /srv/wal/pg_wal
+lrwxrwxrwx 1 postgres postgres   15 Oct 10 16:48 pg_wal -> /srv/wal/pg_wal
 ana@db:~$ df -h /srv/wal
 Filesystem      Size  Used Avail Use% Mounted on
 /dev/loop0      488M  337M  116M  75% /srv/wal

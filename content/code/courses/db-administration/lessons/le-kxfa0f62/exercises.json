@@ -1,0 +1,722 @@
+[
+  {
+    "id": "ex-ra7djnk4",
+    "version": 1,
+    "section": "where-it-goes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On the course's Ubuntu server, `logging_collector` is off. Who put the server's standard error into /var/log/postgresql/postgresql-16-main.log?",
+    "hint": "Look at how the unit starts the cluster.",
+    "choices": [
+      {
+        "text": "The logger process the server starts at boot",
+        "correct": false,
+        "why": "That process exists only with logging_collector = on, and it writes under the data directory."
+      },
+      {
+        "text": "systemd's journal, which forwards each line to the file",
+        "correct": false,
+        "why": "The journal held only the unit starting; the server's lines never went through it."
+      },
+      {
+        "text": "logrotate, which creates the file every week",
+        "correct": false,
+        "why": "logrotate cuts the file; it does not decide where the server writes."
+      },
+      {
+        "text": "pg_ctlcluster, through pg_ctl -l",
+        "correct": true,
+        "why": "Right. pg_ctl -l opens the file and hands it to the postmaster as standard error, and every backend inherits it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xms5kvan",
+    "version": 1,
+    "section": "where-it-goes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `SELECT pg_current_logfile();` return nothing on the default Ubuntu server, though a log file plainly exists?",
+    "hint": "Which files does it know about?",
+    "choices": [
+      {
+        "text": "ana lacks the privilege to see the path",
+        "correct": false,
+        "why": "ana is a superuser. After jsonlog was turned on, the same query from the same role returned a path."
+      },
+      {
+        "text": "It reports only files the server opened itself",
+        "correct": true,
+        "why": "Right. With the collector off, the file was opened by pg_ctl, so the server has nothing to report."
+      },
+      {
+        "text": "The log was empty at that moment",
+        "correct": false,
+        "why": "The file had start-up lines in it, 560 bytes. Its size is not what the function looks at."
+      },
+      {
+        "text": "The function needs log_destination = 'csvlog'",
+        "correct": false,
+        "why": "It answered for jsonlog too. What it needs is the collector writing the file."
+      }
+    ]
+  },
+  {
+    "id": "ex-mb5tpdqx",
+    "version": 1,
+    "section": "where-it-goes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You inherit a server and `/var/log/postgresql/postgresql-16-main.log` ends with \"redirecting log output to logging collector process\" from three weeks ago. What do you conclude?",
+    "hint": "Read the HINT line that follows it.",
+    "choices": [
+      {
+        "text": "The server has been quiet for three weeks",
+        "correct": false,
+        "why": "That is the trap: the log moved, and this file stopped growing on the day it did."
+      },
+      {
+        "text": "Logging is broken and the server is writing nothing",
+        "correct": false,
+        "why": "The line says where it went, not that it stopped."
+      },
+      {
+        "text": "The log moved to the collector's files",
+        "correct": true,
+        "why": "Right. Every line since then is in the collector's files, by default in log/ inside the data directory."
+      },
+      {
+        "text": "logrotate has moved the newer lines into a .1 file",
+        "correct": false,
+        "why": "Rotation keeps the newest lines in the current file. The redirect line is the server's own."
+      }
+    ]
+  },
+  {
+    "id": "ex-9s4mj34c",
+    "version": 1,
+    "section": "the-prefix",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `log_line_prefix = '%m [%p] %q%u@%d '`, why does a checkpoint line end right after `[103]`?",
+    "hint": "One escape prints nothing at all.",
+    "choices": [
+      {
+        "text": "%q, for processes with no session",
+        "correct": true,
+        "why": "Right. The checkpointer has no user or database, so everything after %q is left out for it."
+      },
+      {
+        "text": "Background processes ignore log_line_prefix",
+        "correct": false,
+        "why": "They use it: the time and [103] come from %m and %p."
+      },
+      {
+        "text": "The checkpointer runs as postgres, and that name is hidden",
+        "correct": false,
+        "why": "Nothing is hidden by name. It has no role or database to print."
+      },
+      {
+        "text": "%u and %d print only after a reload",
+        "correct": false,
+        "why": "The client lines in the same file carried ana@shop without any reload."
+      }
+    ]
+  },
+  {
+    "id": "ex-z5grvmtr",
+    "version": 1,
+    "section": "the-prefix",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "No statement logging was configured, yet `SELECT 1/0;` left a `STATEMENT:` line after the `ERROR:`. Which parameter wrote it?",
+    "hint": "Its default is error.",
+    "choices": [
+      {
+        "text": "log_statement",
+        "correct": false,
+        "why": "It was none, as the first query of the lesson showed."
+      },
+      {
+        "text": "log_min_messages",
+        "correct": false,
+        "why": "That decides which severities are written, not whether the failing statement follows the error."
+      },
+      {
+        "text": "log_min_error_statement",
+        "correct": true,
+        "why": "Right. Any statement that fails at error or above is written after its error message."
+      },
+      {
+        "text": "log_line_prefix, through %q",
+        "correct": false,
+        "why": "The prefix shapes the start of each line; it adds no lines."
+      }
+    ]
+  },
+  {
+    "id": "ex-mfzpsdj7",
+    "version": 1,
+    "section": "the-prefix",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To see which program sent each statement, the course added the escape ___ to the end of log_line_prefix.",
+    "hint": "It prints application_name.",
+    "blanks": [
+      {
+        "accept": [
+          "%a"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-exjqhy2t",
+    "version": 1,
+    "section": "the-prefix",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A log shipper parses lines with a regular expression written for `%m [%p] %q%u@%d `. Somebody adds `%h` in the middle of the prefix on a busy server. What is the likely result?",
+    "hint": "Who depends on the prefix's shape?",
+    "choices": [
+      {
+        "text": "The server refuses the new prefix until a restart",
+        "correct": false,
+        "why": "log_line_prefix changes on a reload, and the reload itself is logged with the new value."
+      },
+      {
+        "text": "Lines stop matching the shipper's pattern",
+        "correct": true,
+        "why": "Right. Every tool that reads the log is written against the prefix, so changing its format breaks the parser."
+      },
+      {
+        "text": "Nothing, because %h is empty for local connections",
+        "correct": false,
+        "why": "It prints [local] for socket connections, and anyway the layout of the line has changed."
+      },
+      {
+        "text": "Old lines in the file are rewritten in the new format",
+        "correct": false,
+        "why": "A log is appended to; nothing rewrites what was already written."
+      }
+    ]
+  },
+  {
+    "id": "ex-qm2xv6eb",
+    "version": 1,
+    "section": "what-to-record",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each parameter to the line it adds to the log.",
+    "hint": "Each one writes only when its event happens.",
+    "pairs": [
+      {
+        "left": "log_min_duration_statement",
+        "right": "duration: … ms  statement: …"
+      },
+      {
+        "left": "log_lock_waits",
+        "right": "still waiting for ShareLock … after 1000 ms"
+      },
+      {
+        "left": "log_temp_files",
+        "right": "temporary file: path …, size …"
+      },
+      {
+        "left": "log_connections",
+        "right": "connection authorized: user=… database=…"
+      }
+    ],
+    "right_distractors": [
+      "checkpoint starting: time"
+    ]
+  },
+  {
+    "id": "ex-aprdg33z",
+    "version": 1,
+    "section": "what-to-record",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `log_min_duration_statement = '50ms'`, the full scan of orders was logged and `SELECT name FROM customers WHERE id = 42` was not. Why is that the behaviour you want?",
+    "hint": "What would the log be if every statement went in?",
+    "choices": [
+      {
+        "text": "Only the slow ones are worth reading; the rest would bury them",
+        "correct": true,
+        "why": "Right. A threshold keeps the log to the statements worth a look instead of the millions that were fine."
+      },
+      {
+        "text": "Statements by primary key are never worth logging",
+        "correct": false,
+        "why": "One that took two seconds would be worth it, and the threshold would catch it."
+      },
+      {
+        "text": "The lookup was answered from cache and never executed",
+        "correct": false,
+        "why": "It executed and returned Customer 42; it was simply under 50 ms."
+      },
+      {
+        "text": "Logging it would have needed log_statement = 'all'",
+        "correct": false,
+        "why": "A threshold of 0 would log it too. The point is that 50 ms chose not to."
+      }
+    ]
+  },
+  {
+    "id": "ex-nrjsvmng",
+    "version": 1,
+    "section": "what-to-record",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lock-wait lines, what does `DETAIL: Process holding the lock: 254. Wait queue: 258.` let you do that pg_stat_activity may not, an hour later?",
+    "hint": "pg_stat_activity shows only what is happening now.",
+    "choices": [
+      {
+        "text": "Find what 254 was running, by grepping [254]",
+        "correct": true,
+        "why": "Right. The pid in the prefix ties the blocker's own lines to the waiter's, after both sessions are gone."
+      },
+      {
+        "text": "Kill process 254 from the log",
+        "correct": false,
+        "why": "The log records; it acts on nothing. And an hour later 254 is probably gone."
+      },
+      {
+        "text": "Prove a deadlock happened",
+        "correct": false,
+        "why": "This was a plain wait that ended with acquired ShareLock; a deadlock has its own ERROR line."
+      },
+      {
+        "text": "Raise deadlock_timeout for process 258 alone",
+        "correct": false,
+        "why": "That is a setting, not something the log line enables, and it would only delay the line."
+      }
+    ]
+  },
+  {
+    "id": "ex-qkaqdrqk",
+    "version": 1,
+    "section": "what-to-record",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which logging parameter did the course find already on, by default, in PostgreSQL 16?",
+    "hint": "It writes a starting and a complete line.",
+    "choices": [
+      {
+        "text": "log_connections",
+        "correct": false,
+        "why": "It was off; the lesson turned it on to see the three arrival lines."
+      },
+      {
+        "text": "log_lock_waits",
+        "correct": false,
+        "why": "It was off until the lesson set it."
+      },
+      {
+        "text": "log_autovacuum_min_duration at 0",
+        "correct": false,
+        "why": "Its default is 600000 ms, ten minutes, which on most servers logs nothing."
+      },
+      {
+        "text": "log_checkpoints",
+        "correct": true,
+        "why": "Right. PostgreSQL 16 turned it on by default."
+      }
+    ]
+  },
+  {
+    "id": "ex-19jka7ym",
+    "version": 1,
+    "section": "what-to-record",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Over a week, most `checkpoint starting:` lines on a server say `wal` rather than `time`. What does that tell you?",
+    "hint": "What starts a checkpoint other than the clock?",
+    "choices": [
+      {
+        "text": "Somebody is running CHECKPOINT by hand",
+        "correct": false,
+        "why": "A manual one said immediate force wait, as in the lab."
+      },
+      {
+        "text": "WAL fills up before the timeout",
+        "correct": true,
+        "why": "Right. The server ran out of WAL room before the clock said so, which is lesson 8's question about max_wal_size."
+      },
+      {
+        "text": "WAL archiving is failing",
+        "correct": false,
+        "why": "Nothing in the reason word says anything about archiving."
+      },
+      {
+        "text": "The log is being written to the WAL",
+        "correct": false,
+        "why": "The server log and the write-ahead log are unrelated files."
+      }
+    ]
+  },
+  {
+    "id": "ex-cnpsc7rp",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `log_statement = 'all'`, 10,000 pgbench transactions grew the log by 8758557 bytes. About how many bytes is that per transaction? (Give a whole number.)",
+    "hint": "Divide.",
+    "value": 876,
+    "tolerance": 2,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-k22hbqmj",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did logcost.sh report that the log grew by 0 bytes before log_statement was changed?",
+    "hint": "What does each remaining parameter wait for?",
+    "choices": [
+      {
+        "text": "pgbench writes to its own log, not the server's",
+        "correct": false,
+        "why": "The next run, with log_statement = 'all', grew the server's log by megabytes with pgbench's statements."
+      },
+      {
+        "text": "The log had just been rotated and stat read the new file",
+        "correct": false,
+        "why": "Rotation came later in the lesson; both stat calls read the same file."
+      },
+      {
+        "text": "No statement was slow, waited for a lock or spilled",
+        "correct": true,
+        "why": "Right. Those parameters write only when their event happens, and none of the 70,000 statements triggered one."
+      },
+      {
+        "text": "The server buffers log lines and flushes them at checkpoints",
+        "correct": false,
+        "why": "Lines are written as they happen; the next run showed the growth at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-4a2985dh",
+    "version": 1,
+    "section": "what-it-costs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An auditor asks to know whenever a table is created, altered or dropped. Which setting answers that and can stay on for good?",
+    "hint": "One value of log_statement records only schema changes.",
+    "choices": [
+      {
+        "text": "log_statement = 'all'",
+        "correct": false,
+        "why": "It records those, and every other statement as well: gigabytes a day and every literal in plain text."
+      },
+      {
+        "text": "log_min_duration_statement = 0",
+        "correct": false,
+        "why": "That logs every statement with its duration, which is even more bytes than 'all'."
+      },
+      {
+        "text": "log_statement = 'ddl'",
+        "correct": true,
+        "why": "Right. It writes every CREATE, ALTER and DROP, a handful of lines a week on most servers."
+      },
+      {
+        "text": "log_lock_waits = on, since ALTER takes a lock",
+        "correct": false,
+        "why": "It logs only waits longer than deadlock_timeout; most ALTERs would never appear."
+      }
+    ]
+  },
+  {
+    "id": "ex-7pq5h5je",
+    "version": 1,
+    "section": "reading-a-log",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Order these severities by how much they took down with them, least first.",
+    "hint": "One statement, one session, the whole server.",
+    "items": [
+      "WARNING",
+      "ERROR",
+      "FATAL",
+      "PANIC"
+    ],
+    "trap": "FATAL sounds like the end of everything, and it is one session."
+  },
+  {
+    "id": "ex-q04gyy1n",
+    "version": 1,
+    "section": "reading-a-log",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A FATAL line appears: `password authentication failed for user \"report\"`. What stopped?",
+    "hint": "Read the severity table, not the word's mood.",
+    "choices": [
+      {
+        "text": "The whole server, which must be restarted",
+        "correct": false,
+        "why": "That is PANIC. FATAL ends one session."
+      },
+      {
+        "text": "Every session of the role report",
+        "correct": false,
+        "why": "Other sessions of report are untouched; the line is about one attempt."
+      },
+      {
+        "text": "The statement report was running",
+        "correct": false,
+        "why": "A failed statement is ERROR. This one failed at the door."
+      },
+      {
+        "text": "One connection attempt",
+        "correct": true,
+        "why": "Right. FATAL ends one session; here the session never began."
+      }
+    ]
+  },
+  {
+    "id": "ex-81qxy8n9",
+    "version": 1,
+    "section": "reading-a-log",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ubuntu's logrotate configuration for the PostgreSQL log uses `copytruncate`. Why not simply rename the file?",
+    "hint": "Who holds the file open, and can it be told to reopen it?",
+    "choices": [
+      {
+        "text": "Renaming needs the server stopped",
+        "correct": false,
+        "why": "A rename works on an open file; the problem is where the writes go afterwards."
+      },
+      {
+        "text": "copytruncate compresses the file at the same time",
+        "correct": false,
+        "why": "Compression is compress and delaycompress, separate lines of the same file."
+      },
+      {
+        "text": "It loses no lines, unlike renaming",
+        "correct": false,
+        "why": "It is the one that can: lines written between the copy and the truncation land in neither file."
+      },
+      {
+        "text": "The server would keep writing into the renamed file",
+        "correct": true,
+        "why": "Right. It holds the file as standard error and cannot be told to reopen it, so the contents are copied and the original emptied."
+      }
+    ]
+  },
+  {
+    "id": "ex-bmkg0zdv",
+    "version": 1,
+    "section": "jsonlog",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did switching to `log_destination = 'jsonlog'` need `logging_collector = on` and a restart?",
+    "hint": "Which process can write a format other than plain text?",
+    "choices": [
+      {
+        "text": "jsonlog needs the jq package on the server",
+        "correct": false,
+        "why": "jq only read the file afterwards. The server writes JSON on its own."
+      },
+      {
+        "text": "pg_ctlcluster refuses JSON in /var/log/postgresql",
+        "correct": false,
+        "why": "pg_ctlcluster never sees the format; the plain file is simply not the collector's."
+      },
+      {
+        "text": "Only the logger writes jsonlog",
+        "correct": true,
+        "why": "Right. logging_collector has context postmaster, and csvlog and jsonlog are written only through it."
+      },
+      {
+        "text": "JSON lines are larger and need a bigger log_rotation_size",
+        "correct": false,
+        "why": "Rotation size has nothing to do with whether the format can be written at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-gtrerkkw",
+    "version": 1,
+    "section": "jsonlog",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A monitoring program must count division-by-zero errors across many servers, in several languages of server messages. Which jsonlog field should it match?",
+    "hint": "Which field is a code rather than English?",
+    "choices": [
+      {
+        "text": "message",
+        "correct": false,
+        "why": "\"division by zero\" is English text, and it is translated when the server's messages are."
+      },
+      {
+        "text": "error_severity",
+        "correct": false,
+        "why": "ERROR covers every failed statement, not this one kind."
+      },
+      {
+        "text": "backend_type",
+        "correct": false,
+        "why": "It says a client backend wrote the line, which every client error shares."
+      },
+      {
+        "text": "state_code",
+        "correct": true,
+        "why": "Right. The SQLSTATE, 22012 here, is the same in every language."
+      }
+    ]
+  },
+  {
+    "id": "ex-4q1cz4s5",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At 100 transactions a second, around the clock, about how much log would `log_statement = 'all'` write a day, using the lesson's 876 bytes a transaction?",
+    "hint": "There are 86,400 seconds in a day.",
+    "choices": [
+      {
+        "text": "About 7.6 GB",
+        "correct": true,
+        "why": "Right. 876 × 100 × 86,400 is about 7.6 billion bytes, from one setting."
+      },
+      {
+        "text": "About 88 MB",
+        "correct": false,
+        "why": "That is 876 × 100 × 1,000: a thousand seconds, not a day."
+      },
+      {
+        "text": "About 760 GB",
+        "correct": false,
+        "why": "A factor of a hundred too many: the multiplication by 100 was done twice."
+      },
+      {
+        "text": "Nothing extra, because pgbench statements are short",
+        "correct": false,
+        "why": "Short statements are still 125 bytes a line once the prefix is added."
+      }
+    ]
+  },
+  {
+    "id": "ex-krj7kz80",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Users report that a report page \"sometimes hangs for a few seconds\". With the settings this lesson recommends, which pair of lines would you look for first?",
+    "hint": "A hang can be a slow statement or a wait behind somebody else.",
+    "choices": [
+      {
+        "text": "connection received and disconnection",
+        "correct": false,
+        "why": "They give session length, not why a statement inside it was slow or waiting."
+      },
+      {
+        "text": "checkpoint starting and checkpoint complete",
+        "correct": false,
+        "why": "Checkpoints can slow a server, but they would not explain one page; look at the page's own statements first."
+      },
+      {
+        "text": "temporary file and STATEMENT",
+        "correct": false,
+        "why": "A spill is one cause of slowness, but it cannot show a wait; it is the third line to check, not the first."
+      },
+      {
+        "text": "duration, and still waiting",
+        "correct": true,
+        "why": "Right. The first shows the statement was slow; the second, with its DETAIL, shows whether it was waiting and on whom."
+      }
+    ]
+  },
+  {
+    "id": "ex-m8sv879t",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these take effect with a reload, without a restart? Choose all that apply.",
+    "hint": "Only one parameter in the lesson needed systemctl restart.",
+    "choices": [
+      {
+        "text": "log_line_prefix",
+        "correct": true,
+        "why": "Yes. The reload line itself showed the new value."
+      },
+      {
+        "text": "log_min_duration_statement",
+        "correct": true,
+        "why": "Yes. pg_reload_conf() was enough."
+      },
+      {
+        "text": "logging_collector",
+        "correct": false,
+        "why": "It starts a process, so it needs a restart."
+      },
+      {
+        "text": "log_statement",
+        "correct": true,
+        "why": "Yes. It changed between two logcost.sh runs with a reload."
+      }
+    ]
+  },
+  {
+    "id": "ex-dbg3k453",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server keeps its log on the same small disk as the data, with Ubuntu's weekly rotation. Somebody enables `log_statement = 'all'` on Monday to debug one application and forgets it. What is the risk by the weekend?",
+    "hint": "Weekly is a size decision made without looking at the size.",
+    "choices": [
+      {
+        "text": "logrotate notices the size and rotates early",
+        "correct": false,
+        "why": "The configuration says weekly with no size or maxsize line; it will not look."
+      },
+      {
+        "text": "The log fills the disk the data lives on",
+        "correct": true,
+        "why": "Right. Gigabytes a day with no rotation until Sunday, on the data's disk, is lesson 9's full disk arriving through the log."
+      },
+      {
+        "text": "The server switches log_statement off when the disk fills",
+        "correct": false,
+        "why": "Nothing turns a setting off by itself; the log just keeps growing."
+      },
+      {
+        "text": "Only throughput falls, which the users will notice first",
+        "correct": false,
+        "why": "On the recording machine throughput did not even change measurably; the disk is the cost that grows."
+      }
+    ]
+  }
+]

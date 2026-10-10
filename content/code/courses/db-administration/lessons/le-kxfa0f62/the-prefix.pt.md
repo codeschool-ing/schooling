@@ -8,9 +8,22 @@ quando, em que processo e para quem, e é a parte que torna uma linha encontráv
 Ele é definido por `log_line_prefix`, e o pacote do Ubuntu o configura com algo melhor que o padrão
 do próprio PostgreSQL:
 
-@@1@@
+```
+shop=# SHOW log_line_prefix;
+ log_line_prefix  
+------------------
+ %m [%p] %q%u@%d 
+(1 row)
 
-@@2@@
+shop=# SELECT 1/0;
+ERROR:  division by zero
+```
+
+```
+ana@db:~$ sudo tail -n 2 /var/log/postgresql/postgresql-16-main.log
+2026-10-10 16:44:27.696 -03 [211] ana@shop ERROR:  division by zero
+2026-10-10 16:44:27.696 -03 [211] ana@shop STATEMENT:  SELECT 1/0;
+```
 
 Cada escape com `%` é substituído em toda linha:
 
@@ -39,9 +52,26 @@ Vale estender o prefixo numa direção: **qual programa mandou o comando**. O `%
 `application_name` que o cliente declarou, que o psql preenche sozinho e que a maioria dos drivers
 deixa a aplicação definir. Mudar o prefixo só precisa de um reload:
 
-@@3@@
+```
+shop=# ALTER SYSTEM SET log_line_prefix = '%m [%p] %q%u@%d %a ';
+ALTER SYSTEM
 
-@@4@@
+shop=# SELECT pg_reload_conf();
+ pg_reload_conf 
+----------------
+ t
+(1 row)
+
+shop=# SELECT 1/0;
+ERROR:  division by zero
+```
+
+```
+ana@db:~$ sudo tail -n 3 /var/log/postgresql/postgresql-16-main.log
+2026-10-10 16:44:28.887 -03 [99] LOG:  parameter "log_line_prefix" changed to "%m [%p] %q%u@%d %a "
+2026-10-10 16:44:29.187 -03 [220] ana@shop psql ERROR:  division by zero
+2026-10-10 16:44:29.187 -03 [220] ana@shop psql STATEMENT:  SELECT 1/0;
+```
 
 O próprio reload fica registrado, com o valor novo, e a linha do postmaster não tem usuário por
 causa do `%q`. Num servidor compartilhado por uma aplicação web, um job em lote e uma ferramenta de

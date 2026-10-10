@@ -14,7 +14,46 @@ indexes shows it in four statements. Updating every row once is the extreme case
 a backfill of a new column, a correction applied to every order, a migration that touches the
 whole table.
 
-<<<what-bloat-is>>>
+```
+shop=# CREATE TABLE orders_copy AS SELECT * FROM orders;
+SELECT 1000000
+
+shop=# ALTER TABLE orders_copy ADD PRIMARY KEY (id);
+ALTER TABLE
+
+shop=# CREATE INDEX orders_copy_customer_id ON orders_copy (customer_id);
+CREATE INDEX
+
+shop=# CREATE INDEX orders_copy_created_at ON orders_copy (created_at);
+CREATE INDEX
+
+shop=# VACUUM ANALYZE orders_copy;
+VACUUM
+
+shop=# SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS table_size, pg_size_pretty(pg_indexes_size('orders_copy')) AS indexes;
+ table_size | indexes 
+------------+---------
+ 66 MB      | 37 MB
+(1 row)
+
+shop=# UPDATE orders_copy SET total_cents = total_cents + 1;
+UPDATE 1000000
+
+shop=# VACUUM orders_copy;
+VACUUM
+
+shop=# SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS table_size, pg_size_pretty(pg_indexes_size('orders_copy')) AS indexes;
+ table_size | indexes 
+------------+---------
+ 130 MB     | 75 MB
+(1 row)
+
+shop=# SELECT count(*) FROM orders_copy;
+  count  
+---------
+ 1000000
+(1 row)
+```
 
 The table went from 66 MB to 130 MB and its indexes from 37 MB to 75 MB, for the same million rows.
 Each updated row needed room for its new version, the old pages were full of versions the `UPDATE`
@@ -32,7 +71,31 @@ There is an exception, and it explains why a plain VACUUM sometimes does shrink 
 pages at the very end of the file are cut off.** The new versions went to the end in order of `id`,
 so the highest ids live in the last pages:
 
-<<<truncate>>>
+```
+shop=# DELETE FROM orders_copy WHERE id > 900000;
+DELETE 100000
+
+shop=# VACUUM orders_copy;
+VACUUM
+
+shop=# SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS table_size, pg_size_pretty(pg_indexes_size('orders_copy')) AS indexes;
+ table_size | indexes 
+------------+---------
+ 130 MB     | 75 MB
+(1 row)
+
+shop=# DELETE FROM orders_copy WHERE id > 800000;
+DELETE 100000
+
+shop=# VACUUM orders_copy;
+VACUUM
+
+shop=# SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS table_size, pg_size_pretty(pg_indexes_size('orders_copy')) AS indexes;
+ table_size | indexes 
+------------+---------
+ 117 MB     | 75 MB
+(1 row)
+```
 
 Deleting the top 100,000 ids emptied the last twentieth of the file, since the file holds every row twice over, and VACUUM left it alone. Deleting
 the next 100,000 took the table to 117 MB. VACUUM truncates only when the empty tail is at least

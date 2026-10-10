@@ -15,13 +15,24 @@ no room for that.)
 level where the entries live. Here are the copy's three indexes beside the three of `orders`, which
 hold the same kind of rows and have never seen an `UPDATE`:
 
-<<<index-bloat>>>
+```
+shop=# SELECT i.indexrelid::regclass AS index, pg_size_pretty(s.index_size) AS size, s.avg_leaf_density, s.leaf_fragmentation FROM pg_index i, pgstatindex(i.indexrelid::regclass::text) s WHERE i.indrelid IN ('orders'::regclass, 'orders_copy'::regclass) ORDER BY 1;
+          index          |  size   | avg_leaf_density | leaf_fragmentation 
+-------------------------+---------+------------------+--------------------
+ orders_pkey             | 21 MB   |            90.06 |                  0
+ orders_customer_id      | 9408 kB |            87.53 |              49.96
+ orders_created_at       | 12 MB   |            78.11 |              49.67
+ orders_copy_pkey        | 43 MB   |            45.17 |              49.98
+ orders_copy_customer_id | 15 MB   |            38.01 |              49.97
+ orders_copy_created_at  | 17 MB   |            39.61 |              49.98
+(6 rows)
+```
 
 **`avg_leaf_density` is how full the leaf pages are on average.** An index whose keys arrive in
 ascending order fills each leaf to 90%, the default fill factor for an index, and moves on to the
 next; `orders_pkey` grew that way while `shop.sql` inserted ids 1 to a million, and it is exactly
 at 90. The copy's primary key is at 45%: twice the pages for fewer rows, 43 MB against 21 MB. The
-other two indexes of the copy are as thin.
+copy's other two indexes are thinner still.
 
 The other two indexes of `orders` show why a fixed target is the wrong yardstick. Their keys
 arrived out of order during the load, and an insert into the middle of a full leaf splits it into

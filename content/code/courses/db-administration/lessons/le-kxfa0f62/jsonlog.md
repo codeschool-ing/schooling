@@ -27,7 +27,7 @@ ana@db:~$ sudo systemctl restart postgresql@16-main
 shop=# SELECT pg_current_logfile();
           pg_current_logfile           
 ---------------------------------------
- log/postgresql-2026-10-10_164137.json
+ log/postgresql-2026-10-10_164513.json
 (1 row)
 
 shop=# SELECT 1/0;
@@ -39,6 +39,11 @@ relative to the data directory. And the file Ubuntu set up has stopped growing:
 
 ```
 ana@db:~$ sudo tail -n 5 /var/log/postgresql/postgresql-16-main.log
+2026-10-10 16:45:13.058 -03 [103] LOG:  checkpoint starting: shutdown immediate
+2026-10-10 16:45:13.449 -03 [103] LOG:  checkpoint complete: wrote 15345 buffers (93.7%); 0 WAL file(s) added, 0 removed, 9 recycled; write=0.197 s, sync=0.179 s, total=0.393 s; sync files=321, longest=0.047 s, average=0.001 s; distance=144592 kB, estimate=312465 kB; lsn=0/1E57EF70, redo lsn=0/1E57EF70
+2026-10-10 16:45:13.471 -03 [99] LOG:  database system is shut down
+2026-10-10 16:45:13.668 -03 [417] LOG:  redirecting log output to logging collector process
+2026-10-10 16:45:13.668 -03 [417] HINT:  Future log output will appear in directory "log".
 ```
 
 **The last two lines in `/var/log/postgresql` say where the log went.** That is the trap the first
@@ -48,19 +53,19 @@ that file, sees a clean shutdown and a start, and concludes nothing has happened
 ```
 ana@db:~$ sudo ls -l /var/lib/postgresql/16/main/log
 total 8
--rw------- 1 postgres postgres 2186 Oct 10 16:41 postgresql-2026-10-10_164137.json
--rw------- 1 postgres postgres  165 Oct 10 16:41 postgresql-2026-10-10_164137.log
+-rw------- 1 postgres postgres 2186 Oct 10 16:45 postgresql-2026-10-10_164513.json
+-rw------- 1 postgres postgres  165 Oct 10 16:45 postgresql-2026-10-10_164513.log
 ana@db:~$ sudo sh -c 'tail -n 1 /var/lib/postgresql/16/main/log/*.json' | jq .
 {
-  "timestamp": "2026-10-10 16:41:40.385 -03",
+  "timestamp": "2026-10-10 16:45:16.542 -03",
   "user": "ana",
   "dbname": "shop",
-  "pid": 435,
+  "pid": 440,
   "remote_host": "[local]",
-  "session_id": "6aca94f3.1b3",
+  "session_id": "6aca95cb.1b8",
   "line_num": 1,
   "ps": "SELECT",
-  "session_start": "2026-10-10 16:41:39 -03",
+  "session_start": "2026-10-10 16:45:15 -03",
   "vxid": "3/9",
   "txid": 0,
   "error_severity": "ERROR",

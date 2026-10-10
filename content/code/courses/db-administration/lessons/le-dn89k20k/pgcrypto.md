@@ -43,14 +43,14 @@ ana=# SELECT count(digest(i::text, 'sha256')) FROM generate_series(1, 100000) AS
  100000
 (1 row)
 
-Time: 203.704 ms
+Time: 149.499 ms
 
 ana=# \timing off
 Timing is off.
 ```
 
-A hundred thousand SHA-256 hashes took 203.704 ms on the recording machine, roughly half a million
-a second from one SQL statement on one core. That speed is why a table of plain hashes is not
+A hundred thousand SHA-256 hashes took 149.499 ms on the recording machine, roughly two thirds of a
+million a second from one SQL statement on one core. That speed is why a table of plain hashes is not
 safe: whoever copies it can test candidates just as fast.
 
 ## crypt and gen_salt
@@ -75,8 +75,8 @@ INSERT 0 2
 ana=# SELECT * FROM app_users;
       email      |                        password_hash                         
 -----------------+--------------------------------------------------------------
- ana@example.com | $2a$06$fGAk.1yz2MNWh7EWRHIYx.MXpM0LnYSM85.IkzRiVL8Ota3mgkG56
- rui@example.com | $2a$06$We7C0Drp7lZMcKMOjNWTT.Vuf88lTY.QF/uJjbtUlVTy8Oc6mg59C
+ ana@example.com | $2a$06$f5boI99NkExsvSRJ89EdVOF/rWxffy2LsNdlC3rsP4Onbx0T6HXSK
+ rui@example.com | $2a$06$Oe/6dSvGLIDc6ZRb7oK3gOY19iFXt4tRamiIjmhHHx13aowXsh7UG
 (2 rows)
 ```
 
@@ -94,7 +94,7 @@ ana=# SELECT crypt('correct horse battery', gen_salt('bf')) IS NOT NULL;
  t
 (1 row)
 
-Time: 7.080 ms
+Time: 5.993 ms
 
 ana=# SELECT crypt('correct horse battery', gen_salt('bf', 12)) IS NOT NULL;
  ?column? 
@@ -102,13 +102,13 @@ ana=# SELECT crypt('correct horse battery', gen_salt('bf', 12)) IS NOT NULL;
  t
 (1 row)
 
-Time: 236.482 ms
+Time: 259.907 ms
 
 ana=# \timing off
 Timing is off.
 ```
 
-7.080 ms at the default cost, 236.482 ms at 12, on the same machine. **One bcrypt hash at cost 12
+5.993 ms at the default cost, 259.907 ms at 12, on the same machine. **One bcrypt hash at cost 12
 took longer than the hundred thousand SHA-256 hashes above.** Slow is the point: a login waits that
 fraction of a second once, and anybody testing guesses against a stolen copy waits it for every
 guess. Choose the highest cost your login rate can afford.
@@ -157,7 +157,7 @@ has it:
 shop=# SELECT gen_random_uuid();
            gen_random_uuid            
 --------------------------------------
- 674a4911-4289-42e8-8f20-9a7ebb43ac98
+ 47a194b3-214f-4601-8c1b-48945f44af34
 (1 row)
 
 shop=# \df gen_random_uuid

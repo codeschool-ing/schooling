@@ -40,7 +40,7 @@ shop=# CREATE TABLE filler (id bigint, pad text) TABLESPACE small;
 CREATE TABLE
 
 shop=# INSERT INTO filler SELECT i, repeat('x', 500) FROM generate_series(1, 200000) AS i;
-ERROR:  could not extend file "pg_tblspc/16424/PG_16_202307071/16386/16425": No space left on device
+ERROR:  could not extend file "pg_tblspc/16420/PG_16_202307071/16386/16421": No space left on device
 HINT:  Check free disk space.
 
 shop=# SELECT count(*) FROM filler;
@@ -70,7 +70,7 @@ shop=# SELECT count(*) FROM orders;
 **`could not extend file` is an `ERROR`, the severity that ends one statement.** The insert was
 rolled back, the table has no rows, and the server carried on: the next query read a million
 orders from the other disk without noticing anything. The path is the table's file, relative to
-the data directory, and `pg_tblspc/16424` is the tablespace's link, as lesson 4 showed, which is how you
+the data directory, and `pg_tblspc/16420` is the tablespace's link, as lesson 4 showed, which is how you
 know which filesystem to look at. The log has the same lines, with the statement that caused them:
 
 ```
@@ -78,9 +78,9 @@ ana@db:~$ df -h /srv/small
 Filesystem      Size  Used Avail Use% Mounted on
 /dev/loop1       56M   52M     0 100% /srv/small
 ana@db:~$ sudo tail -n 3 /var/log/postgresql/postgresql-16-main.log
-2026-10-10 16:41:15.038 -03 [498] ana@shop ERROR:  could not extend file "pg_tblspc/16424/PG_16_202307071/16386/16425": No space left on device
-2026-10-10 16:41:15.038 -03 [498] ana@shop HINT:  Check free disk space.
-2026-10-10 16:41:15.038 -03 [498] ana@shop STATEMENT:  INSERT INTO filler SELECT i, repeat('x', 500) FROM generate_series(1, 200000) AS i;
+2026-10-10 16:48:31.928 -03 [396] ana@shop ERROR:  could not extend file "pg_tblspc/16420/PG_16_202307071/16386/16421": No space left on device
+2026-10-10 16:48:31.928 -03 [396] ana@shop HINT:  Check free disk space.
+2026-10-10 16:48:31.928 -03 [396] ana@shop STATEMENT:  INSERT INTO filler SELECT i, repeat('x', 500) FROM generate_series(1, 200000) AS i;
 ```
 
 **The rollback gave nothing back.** The table holds no rows and its file is still 51 MB, because a
@@ -95,7 +95,7 @@ the filesystem. So it should fix this:
 
 ```
 shop=# VACUUM filler;
-ERROR:  could not extend file "pg_tblspc/16424/PG_16_202307071/16386/16425_vm": No space left on device
+ERROR:  could not extend file "pg_tblspc/16420/PG_16_202307071/16386/16421_vm": No space left on device
 HINT:  Check free disk space.
 CONTEXT:  while scanning block 0 of relation "public.filler"
 ```
@@ -134,7 +134,7 @@ CHECKPOINT
 ```
 ana@db:~$ df -h /srv/small
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/loop1       56M   60K   52M   1% /srv/small
+/dev/loop1       56M   60K   55M   1% /srv/small
 ana@db:~$ sudo tune2fs -m 5 "$(findmnt --noheadings --output SOURCE /srv/small)"
 tune2fs 1.47.0 (5-Feb-2023)
 Setting reserved blocks percentage to 5% (819 blocks)

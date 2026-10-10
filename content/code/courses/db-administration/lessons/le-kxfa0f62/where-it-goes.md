@@ -51,14 +51,14 @@ made the default; every other line in that table is a kind of event this server 
 ```
 ana@db:~$ ls -l /var/log/postgresql
 total 4
--rw-r----- 1 postgres adm 560 Oct 10 16:40 postgresql-16-main.log
+-rw-r----- 1 postgres adm 556 Oct 10 16:43 postgresql-16-main.log
 ana@db:~$ sudo ls -l /proc/$(sudo head -1 /var/lib/postgresql/16/main/postmaster.pid)/fd/2
-l-wx------ 1 postgres postgres 64 Oct 10 16:40 /proc/102/fd/2 -> /var/log/postgresql/postgresql-16-main.log
+l-wx------ 1 postgres postgres 64 Oct 10 16:44 /proc/99/fd/2 -> /var/log/postgresql/postgresql-16-main.log
 ana@db:~$ sudo tail -n 4 /var/log/postgresql/postgresql-16-main.log
-2026-10-10 16:40:02.523 -03 [102] LOG:  listening on IPv4 address "127.0.0.1", port 5432
-2026-10-10 16:40:02.526 -03 [102] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-2026-10-10 16:40:02.568 -03 [105] LOG:  database system was shut down at 2026-10-10 03:18:41 -03
-2026-10-10 16:40:02.589 -03 [102] LOG:  database system is ready to accept connections
+2026-10-10 16:43:49.701 -03 [99] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2026-10-10 16:43:49.735 -03 [99] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2026-10-10 16:43:49.781 -03 [105] LOG:  database system was shut down at 2026-10-10 03:18:41 -03
+2026-10-10 16:43:49.792 -03 [99] LOG:  database system is ready to accept connections
 ```
 
 The first line of `postmaster.pid` is the postmaster's process id, and `/proc/<pid>/fd/2` is
@@ -71,8 +71,8 @@ systemd's journal has the unit starting and nothing from inside the server:
 
 ```
 ana@db:~$ sudo journalctl -u postgresql@16-main --no-pager -n 4
-Oct 10 16:40:01 db systemd[1]: Starting postgresql@16-main.service - PostgreSQL Cluster 16-main...
-Oct 10 16:40:04 db systemd[1]: Started postgresql@16-main.service - PostgreSQL Cluster 16-main.
+Oct 10 16:43:48 db systemd[1]: Starting postgresql@16-main.service - PostgreSQL Cluster 16-main...
+Oct 10 16:43:51 db systemd[1]: Started postgresql@16-main.service - PostgreSQL Cluster 16-main.
 ```
 
 That surprises people who expect every service's output in the journal. It is there only when a

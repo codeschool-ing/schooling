@@ -122,6 +122,10 @@ ALTER SYSTEM
 ```
 ana@db:~$ sudo systemctl restart postgresql@16-main
 ana@db:~$ psql shop -c "SHOW shared_preload_libraries"
+ shared_preload_libraries 
+--------------------------
+ 
+(1 row)
 ```
 
 O pacote `postgresql-16-postgis-3` pode continuar instalado: arquivos no disco não fazem nada até um

@@ -25,9 +25,20 @@ baixá-lo para `info` ou `debug1` acrescenta muito mais ruído que respostas.
 
 O log teve uma lição movimentada. Antes de abri-lo, conte o que há nele:
 
-@@1@@
+```
+ana@db:~$ sudo grep -oE '(LOG|ERROR|FATAL|PANIC|WARNING|DETAIL|HINT|CONTEXT|STATEMENT): ' /var/log/postgresql/postgresql-16-main.log | sort | uniq -c | sort -rn
+ 140060 LOG: 
+      9 STATEMENT: 
+      2 ERROR: 
+      2 CONTEXT: 
+      1 DETAIL: 
+ana@db:~$ sudo grep -E 'ERROR|FATAL|PANIC' /var/log/postgresql/postgresql-16-main.log
+2026-10-10 16:44:27.696 -03 [211] ana@shop ERROR:  division by zero
+2026-10-10 16:44:29.187 -03 [220] ana@shop psql ERROR:  division by zero
+```
 
-LOGCOUNT Os dois erros são o `SELECT 1/0` da seção do prefixo, e o `grep` os achou num arquivo onde
+São 140.060 linhas `LOG`, quase todas das duas execuções da seção anterior, com 70.000 comandos cada,
+e dois erros. Os dois erros são o `SELECT 1/0` da seção do prefixo, e o `grep` os achou num arquivo onde
 estavam perdidos entre os comandos da seção anterior. **Num servidor sob pressão, comece por esse
 `grep`**, depois pegue o id de processo do prefixo de uma linha que importa e faça `grep` por
 `[esse pid]` para ver tudo o que aquela sessão escreveu.
@@ -42,12 +53,30 @@ Um log que só cresce enche o disco, e a lição 9 mostra o que o PostgreSQL faz
 No Ubuntu o arquivo é cortado pelo **logrotate**, a mesma ferramenta que gira todos os outros logs
 da máquina, seguindo este arquivo:
 
-@@2@@
+```
+ana@db:~$ cat /etc/logrotate.d/postgresql-common
+/var/log/postgresql/*.log {
+       weekly
+       rotate 10
+       copytruncate
+       delaycompress
+       compress
+       notifempty
+       missingok
+       su root root
+}
+```
 
 Toda semana, dez arquivos antigos guardados, comprimidos a partir do segundo (`delaycompress`).
 Forçar uma rotação agora mostra o resultado:
 
-@@3@@
+```
+ana@db:~$ sudo logrotate -f /etc/logrotate.d/postgresql-common
+ana@db:~$ ls -l /var/log/postgresql
+total 18484
+-rw-r----- 1 postgres adm        0 Oct 10 16:45 postgresql-16-main.log
+-rw-r----- 1 postgres adm 18925723 Oct 10 16:45 postgresql-16-main.log.1
+```
 
 A linha a entender é **`copytruncate`**. O servidor mantém o arquivo aberto como a sua saída de erro
 e não tem como ser avisado para reabri-lo, então o logrotate não pode simplesmente renomear o

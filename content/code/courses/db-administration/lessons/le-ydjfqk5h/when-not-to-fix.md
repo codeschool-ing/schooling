@@ -11,15 +11,52 @@ the next updates have to grow the file again to find room.
 The compact copy from the previous section shows it. Update a fifth of its rows, vacuum, and look;
 then do it twice more, with a different fifth each time:
 
-<<<steady>>>
+```
+shop=# UPDATE orders_copy SET total_cents = total_cents + 1 WHERE id % 5 = 0;
+UPDATE 160000
 
-The first round grew the table from 59 MB to 70 MB, because a compact table has nowhere to put new
+shop=# VACUUM orders_copy;
+VACUUM
+
+shop=# SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS table_size, pg_size_pretty(pg_indexes_size('orders_copy')) AS indexes;
+ table_size | indexes 
+------------+---------
+ 63 MB      | 56 MB
+(1 row)
+
+shop=# UPDATE orders_copy SET total_cents = total_cents + 1 WHERE id % 5 = 1;
+UPDATE 160000
+
+shop=# VACUUM orders_copy;
+VACUUM
+
+shop=# SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS table_size, pg_size_pretty(pg_indexes_size('orders_copy')) AS indexes;
+ table_size | indexes 
+------------+---------
+ 63 MB      | 56 MB
+(1 row)
+
+shop=# UPDATE orders_copy SET total_cents = total_cents + 1 WHERE id % 5 = 2;
+UPDATE 160000
+
+shop=# VACUUM orders_copy;
+VACUUM
+
+shop=# SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS table_size, pg_size_pretty(pg_indexes_size('orders_copy')) AS indexes;
+ table_size | indexes 
+------------+---------
+ 63 MB      | 57 MB
+(1 row)
+```
+
+The first round grew the table from 52 MB to 63 MB, because a compact table has nowhere to put new
 versions except the end. **The second round did not grow it at all**: VACUUM had freed the first
-round's old versions, and the second round's new versions went into that space. The third added a
-megabyte. That is the shape of a healthy table under load, and 70 MB is this table's working size
-for this traffic. Rebuilding it to 59 MB again would buy back 11 MB until the next batch of updates.
+round's old versions, and the second round's new versions went into that space. Nor did the third.
+That is the shape of a healthy table under load, and 63 MB is this table's working size for this
+traffic. Rebuilding it to 52 MB again would buy back 11 MB until the next batch of updates.
 
-The indexes moved further, from 34 MB to 63 MB in the first round, and they stayed there too. Their
+The indexes moved further, from 31 MB to 56 MB in the first round, and stayed within a megabyte of
+that. Their
 compact size after a rebuild was only true until the first wave of updates.
 
 So the useful question is not "how much free space is there" but **whether the free space is larger
@@ -42,4 +79,13 @@ and can be HOT, with no new index entries at all.
 The copy, and the two extensions in `shop`, were for this lesson. The package stays installed;
 removing it is not needed.
 
-<<<cleanup>>>
+```
+shop=# DROP TABLE orders_copy;
+DROP TABLE
+
+shop=# DROP EXTENSION pg_repack;
+DROP EXTENSION
+
+shop=# DROP EXTENSION pgstattuple;
+DROP EXTENSION
+```

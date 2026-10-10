@@ -46,8 +46,8 @@ ana@db:~$ pg_lsclusters
 Ver Cluster Port Status Owner    Data directory              Log file
 16  main    5432 down   postgres /var/lib/postgresql/16/main /var/log/postgresql/postgresql-16-main.log
 ana@db:~$ sudo tail -n 4 /var/log/postgresql/postgresql-16-main.log
-2026-10-10 04:38:49.459 -03 [233] FATAL:  could not access file "pg_stat_statement": No such file or directory
-2026-10-10 04:38:49.460 -03 [233] LOG:  database system is shut down
+2026-10-10 16:46:09.571 -03 [233] FATAL:  could not access file "pg_stat_statement": No such file or directory
+2026-10-10 16:46:09.571 -03 [233] LOG:  database system is shut down
 pg_ctl: could not start server
 Examine the log output.
 ```
@@ -119,9 +119,9 @@ maximum number of tries: 1
 number of transactions per client: 50
 number of transactions actually processed: 200/200
 number of failed transactions: 0 (0.000%)
-latency average = 138.606 ms
-initial connection time = 11.181 ms
-tps = 28.858717 (without initial connection time)
+latency average = 102.582 ms
+initial connection time = 15.554 ms
+tps = 38.993059 (without initial connection time)
 ```
 
 O `-n` pula o vacuum que o pgbench roda por conta própria nas tabelas de teste dele, que o `shop`
@@ -136,10 +136,10 @@ shop-#  ORDER BY total_exec_time DESC
 shop-#  LIMIT 5;
  calls | total_ms | mean_ms | rows |                       query                        
 -------+----------+---------+------+----------------------------------------------------
-   200 |    25217 |  126.09 |  200 | SELECT count(*) FROM orders WHERE status = $1 AND 
-   200 |      178 |    0.89 |  200 | SELECT name, country FROM customers WHERE id = $1
-   200 |       98 |    0.49 | 2000 | SELECT id, status, total_cents FROM orders WHERE c
-     1 |        0 |    0.07 |    1 | SELECT pg_stat_statements_reset()
+   200 |    19739 |   98.69 |  200 | SELECT count(*) FROM orders WHERE status = $1 AND 
+   200 |       25 |    0.13 | 2000 | SELECT id, status, total_cents FROM orders WHERE c
+   200 |       16 |    0.08 |  200 | SELECT name, country FROM customers WHERE id = $1
+     1 |        0 |    0.06 |    1 | SELECT pg_stat_statements_reset()
 (4 rows)
 ```
 
@@ -151,8 +151,8 @@ aplicação manda a mesma consulta com mil valores diferentes, e mil linhas de u
 diriam nada.
 
 **Tempo total e tempo médio respondem perguntas diferentes.** Na máquina da gravação, a contagem
-sobre `orders` rodou 25217 ms ao todo, 126.09 ms por chamada, enquanto a busca do cliente pela chave
-primária levou 0.89 ms por chamada. Ordenada pelo total, a linha do topo é aquela em que uma melhoria
+sobre `orders` rodou 19739 ms ao todo, 98.69 ms por chamada, enquanto a busca do cliente pela chave
+primária levou 0.08 ms por chamada. Ordenada pelo total, a linha do topo é aquela em que uma melhoria
 poupa mais o servidor; ordenada pela média, a linha do topo é a que um usuário espera por mais tempo.
 
 **Os números contam desde o último reset.** Um restart limpo os mantém, gravados em disco no

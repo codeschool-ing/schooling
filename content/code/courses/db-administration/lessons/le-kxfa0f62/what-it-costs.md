@@ -42,10 +42,10 @@ NOTICE:  table "pgbench_history" does not exist, skipping
 NOTICE:  table "pgbench_tellers" does not exist, skipping
 creating tables...
 generating data (client-side)...
-1000000 of 1000000 tuples (100%) done (elapsed 1.11 s, remaining 0.00 s)
+1000000 of 1000000 tuples (100%) done (elapsed 0.72 s, remaining 0.00 s)
 vacuuming...
 creating primary keys...
-done in 1.85 s (drop tables 0.00 s, create tables 0.02 s, client-side generate 1.14 s, vacuum 0.22 s, primary keys 0.47 s).
+done in 1.13 s (drop tables 0.00 s, create tables 0.01 s, client-side generate 0.74 s, vacuum 0.13 s, primary keys 0.25 s).
 ```
 
 The `NOTICE` lines are pgbench making sure no old tables are in the way. Now a script that runs
@@ -67,7 +67,7 @@ Run it once with the logging as it stands:
 ```
 ana@db:~$ bash logcost.sh
 number of transactions actually processed: 10000/10000
-tps = 724.820515 (without initial connection time)
+tps = 1555.658264 (without initial connection time)
 the log grew by 0 bytes
 ```
 
@@ -88,20 +88,30 @@ shop=# SELECT pg_reload_conf();
 
 ```
 ana@db:~$ bash logcost.sh
+number of transactions actually processed: 10000/10000
+tps = 1283.249475 (without initial connection time)
+the log grew by 8758557 bytes
 ana@db:~$ sudo tail -n 7 /var/log/postgresql/postgresql-16-main.log
+2026-10-10 16:45:02.948 -03 [336] ana@bench pgbench LOG:  statement: BEGIN;
+2026-10-10 16:45:02.949 -03 [336] ana@bench pgbench LOG:  statement: UPDATE pgbench_accounts SET abalance = abalance + 4997 WHERE aid = 315396;
+2026-10-10 16:45:02.949 -03 [336] ana@bench pgbench LOG:  statement: SELECT abalance FROM pgbench_accounts WHERE aid = 315396;
+2026-10-10 16:45:02.949 -03 [336] ana@bench pgbench LOG:  statement: UPDATE pgbench_tellers SET tbalance = tbalance + 4997 WHERE tid = 76;
+2026-10-10 16:45:02.949 -03 [336] ana@bench pgbench LOG:  statement: UPDATE pgbench_branches SET bbalance = bbalance + 4997 WHERE bid = 9;
+2026-10-10 16:45:02.949 -03 [336] ana@bench pgbench LOG:  statement: INSERT INTO pgbench_history (tid, bid, aid, delta, mtime) VALUES (76, 9, 315396, 4997, CURRENT_TIMESTAMP);
+2026-10-10 16:45:02.952 -03 [336] ana@bench pgbench LOG:  statement: END;
 ```
 
-**8759002 bytes for 10,000 transactions**: about 876 bytes a transaction, 125 a statement, every
-one of them a line like the three above. The arithmetic is what matters. A modest application
-doing 100 transactions a second, around the clock, would write 876 × 100 × 86,400 bytes, about
-7.6 GB of log a day, from this setting alone.
+**8758557 bytes for 10,000 transactions**: about 876 bytes a transaction, 125 a statement, every one
+of them a line like the seven above, which are one whole transaction from one process. The
+arithmetic is what matters. A modest application doing 100 transactions a second, around the clock,
+would write 876 × 100 × 86,400 bytes, about 7.6 GB of log a day, from this setting alone.
 
-Throughput is the cost people expect, and on the recording machine it did not show: pgbench
-reported 724.8 transactions a second with nothing logged and 798.8 with everything, a difference
-smaller than the run-to-run noise of a machine shared with other work. Writing a line to a file
-the kernel buffers is cheap per line. On a server already short of disk bandwidth, or one whose log
-sits on the same disk as the data, it stops being cheap, and the place it shows is everybody's
-latency.
+Throughput is the cost people expect, and on the recording machine it could not be read off these
+runs: pgbench reported 1555.7 transactions a second with nothing logged, 1283.2 with every statement,
+and 1875.2 in the next run, which also logged every statement. The machine was shared with other
+work, and the noise was larger than the effect. Writing a line to a file the kernel buffers is
+cheap per line. On a server already short of disk bandwidth, or one whose log sits on the same disk
+as the data, it stops being cheap, and the place it shows is everybody's latency.
 
 ## Every statement, with its duration
 
@@ -124,10 +134,14 @@ shop=# SELECT pg_reload_conf();
 
 ```
 ana@db:~$ bash logcost.sh
+number of transactions actually processed: 10000/10000
+tps = 1875.154817 (without initial connection time)
+the log grew by 10159212 bytes
 ana@db:~$ sudo tail -n 1 /var/log/postgresql/postgresql-16-main.log
+2026-10-10 16:45:10.194 -03 [364] ana@bench pgbench LOG:  duration: 2.666 ms  statement: END;
 ```
 
-10159453 bytes, 1.4 MB more than `log_statement = 'all'` for the same run, because every line
+10159212 bytes, 1.4 MB more than `log_statement = 'all'` for the same run, because every line
 carries `duration: … ms` as well. In return each line says how long its statement took, which is
 the version of *log everything* worth having during a short investigation: the slow statement is
 at least labelled.

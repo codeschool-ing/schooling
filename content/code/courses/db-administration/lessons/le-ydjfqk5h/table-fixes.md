@@ -14,7 +14,7 @@ table from start to finish, and that lock conflicts with everything, a plain `SE
 
 Three terminals show it. The first runs the rebuild:
 
-<<<vacuum-full>>>
+<<<vacuum-full 1-2>>>
 
 While it ran, a second terminal tried to count the rows:
 
@@ -26,15 +26,18 @@ terminal, looking at `pg_locks` in the middle of it, saw why:
 <<<vacuum-full-locks>>>
 
 **`granted` is the column to read.** The `VACUUM FULL` holds `AccessExclusiveLock`, granted; the
-`SELECT` asked for `AccessShareLock`, the weakest lock there is, and has not got it. The
-`ShareLock` beside it belongs to the index builds inside the rebuild. On an application, every
+`SELECT` asked for `AccessShareLock`, the weakest lock there is, and has not got it. The two
+`ShareLock` rows belong to the index builds inside the rebuild, one of them in a parallel worker
+with a process of its own. On an application, every
 query that touches the table stacks up behind the first one exactly like that count, for as long as
 the rebuild takes. On the copy that was seconds. On a table of 200 GB it is long enough to be an
 outage.
 
-<<<vacuum-full-after>>>
+Back in the first terminal, once it finished:
 
-The table went from 117 MB to 59 MB and the indexes from 75 MB to 34 MB. That is the whole of the
+<<<vacuum-full 3-4>>>
+
+The table went from 117 MB to 52 MB and the indexes from 75 MB to 31 MB. That is the whole of the
 bloat, returned to the operating system. **Expect to need room for both copies while it runs**: the
 new files are written before the old ones are removed, so a disk that is full because of bloat may
 not have the space to fix it this way.
@@ -55,18 +58,22 @@ extension goes into the database that holds the table:
 sudo apt install -y postgresql-16-repack
 ```
 
-<<<repack 4-5>>>
+<<<repack 4>>>
 
-While it copied, the third terminal looked at the locks again, and then changed a row:
+Then run it from the shell, as a superuser or the role that owns the table:
+
+<<<repack-run 1>>>
+
+While it copied, another terminal looked at the locks, and then changed a row:
 
 <<<repack-locks>>>
 
 `pg_repack` holds `AccessShareLock`, the same lock a `SELECT` takes, so reads and writes carry on.
 The `SIReadLock` is there because it copies at the `SERIALIZABLE` isolation level, to get a
 consistent snapshot. **The `UPDATE` went straight through** and the trigger carried it into the new
-table. The result is the same as `VACUUM FULL`'s:
+table. Back in the shell, the result is the same as `VACUUM FULL`'s:
 
-<<<repack-after>>>
+<<<repack-run 2>>>
 
 Three conditions come with it. **The table needs a primary key** or a unique index on columns that
 are not null, because the replay finds rows by it; `pg_repack` refuses a table without one. It

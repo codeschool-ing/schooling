@@ -1,0 +1,806 @@
+[
+  {
+    "id": "ex-xpgpfnsa",
+    "version": 1,
+    "section": "minor-and-major",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A server goes from 16.2 to 16.15. What happens to the files in its data directory?",
+    "hint": "A minor release never changes the on-disk format.",
+    "choices": [
+      {
+        "text": "pg_upgrade rewrites the catalogue",
+        "correct": false,
+        "why": "That is a major upgrade. Between minor releases the catalogue does not change."
+      },
+      {
+        "text": "They are converted on first access",
+        "correct": false,
+        "why": "PostgreSQL never converts files lazily. There is nothing to convert between minor releases."
+      },
+      {
+        "text": "Nothing; the new programs open the same files after a restart",
+        "correct": true,
+        "why": "Right. 16.15 reads exactly what 16.2 wrote; only the programs and a restart change."
+      },
+      {
+        "text": "They must be dumped and restored",
+        "correct": false,
+        "why": "A dump is one way across a major version. A minor upgrade needs none."
+      }
+    ]
+  },
+  {
+    "id": "ex-smxhf2h2",
+    "version": 1,
+    "section": "minor-and-major",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A server runs 16.2. Which path to 16.15 does the lesson describe?",
+    "hint": "Minor releases are cumulative.",
+    "choices": [
+      {
+        "text": "Install each release from 16.3 to 16.15 in turn, restarting after each one",
+        "correct": false,
+        "why": "Each minor release contains every fix before it, so the ones in between add nothing."
+      },
+      {
+        "text": "Straight to 16.15, reading each release's notes",
+        "correct": true,
+        "why": "Right. 16.15 contains everything in 16.3 to 16.14. You still read the release notes of each."
+      },
+      {
+        "text": "Upgrade to 17 first, then come back",
+        "correct": false,
+        "why": "A major version cannot be undone by installing older programs; the data directory would be 17's."
+      },
+      {
+        "text": "Through 16.10, the last release that changes the format",
+        "correct": false,
+        "why": "No minor release changes the on-disk format, so there is no stepping stone."
+      }
+    ]
+  },
+  {
+    "id": "ex-refvmcm1",
+    "version": 1,
+    "section": "minor-and-major",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each way across a major version to its way back if the new version misbehaves.",
+    "hint": "Which ones leave the old cluster able to start?",
+    "pairs": [
+      {
+        "left": "pg_upgrade with --link",
+        "right": "A backup taken before starting"
+      },
+      {
+        "left": "pg_upgrade copying the files",
+        "right": "Start the old cluster again"
+      },
+      {
+        "left": "Logical replication",
+        "right": "Point the application back at the old server, still running"
+      }
+    ],
+    "right_distractors": [
+      "Run pg_upgrade backwards, from 17 to 16"
+    ]
+  },
+  {
+    "id": "ex-kzg8rd8h",
+    "version": 1,
+    "section": "a-minor-upgrade",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `sudo apt install postgresql-16`, what showed that the server had really been restarted?",
+    "hint": "Two values were asked before and after.",
+    "choices": [
+      {
+        "text": "`pg_postmaster_start_time()` returned a later time",
+        "correct": true,
+        "why": "Right. The postmaster's start time moved, and the log shows the shutdown and the start between."
+      },
+      {
+        "text": "apt printed a line saying the cluster was restarted",
+        "correct": false,
+        "why": "The lesson quotes none of apt's output; the evidence came from the server itself."
+      },
+      {
+        "text": "`pg_lsclusters` showed a new port",
+        "correct": false,
+        "why": "The port stays 5432 through a minor upgrade."
+      },
+      {
+        "text": "The data directory had a new name",
+        "correct": false,
+        "why": "It is /var/lib/postgresql/16/main before and after; nothing in it changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-kzw4ezfy",
+    "version": 1,
+    "section": "a-minor-upgrade",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The log shows `received fast shutdown request` during the upgrade. What does that mean for a client that was in the middle of a transaction?",
+    "hint": "Fast is not smart.",
+    "choices": [
+      {
+        "text": "Rolled back, and disconnected",
+        "correct": true,
+        "why": "Right. A fast shutdown rolls back open transactions and drops every connection; the client reconnects afterwards."
+      },
+      {
+        "text": "The server waits for it to commit before stopping",
+        "correct": false,
+        "why": "That would be a smart shutdown. A fast one does not wait for anybody."
+      },
+      {
+        "text": "Its transaction is carried over into the 16.15 server",
+        "correct": false,
+        "why": "No transaction survives a server restart; there is no process left to hold it."
+      },
+      {
+        "text": "Nothing, because a minor upgrade does not stop the server",
+        "correct": false,
+        "why": "It does stop it, for a few seconds, and the log shows exactly when."
+      }
+    ]
+  },
+  {
+    "id": "ex-p5jv3aey",
+    "version": 1,
+    "section": "a-minor-upgrade",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team finds their PostgreSQL restarted at 06:20 on a Tuesday with nobody logged in. `apt list --upgradable` had shown the new version in `noble-security` the day before. What is the likely cause?",
+    "hint": "What installs security updates by itself on Ubuntu?",
+    "choices": [
+      {
+        "text": "unattended-upgrades installed the minor release",
+        "correct": true,
+        "why": "Right. It installs packages from the security pocket daily, and the package's scripts restart the cluster."
+      },
+      {
+        "text": "Autovacuum restarted it",
+        "correct": false,
+        "why": "Autovacuum never restarts the server."
+      },
+      {
+        "text": "The checkpointer did it",
+        "correct": false,
+        "why": "A checkpoint writes dirty pages; it does not restart anything."
+      },
+      {
+        "text": "The kernel's out-of-memory killer, which every security update triggers",
+        "correct": false,
+        "why": "Security updates do not trigger the OOM killer, and the timing matches the update, not memory."
+      }
+    ]
+  },
+  {
+    "id": "ex-jxczcdm9",
+    "version": 1,
+    "section": "practise-on-a-copy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`sudo pg_createcluster 16 rehearsal --start` gave the new cluster port 5433. Why that port?",
+    "hint": "What already holds 5432?",
+    "choices": [
+      {
+        "text": "Rehearsal clusters always use 5433",
+        "correct": false,
+        "why": "The name means nothing to pg_createcluster; it only looks for a free port."
+      },
+      {
+        "text": "5433 is kept for a second version",
+        "correct": false,
+        "why": "This cluster is 16, like main. No port is tied to a version."
+      },
+      {
+        "text": "It was the next free port after main's 5432",
+        "correct": true,
+        "why": "Right. main holds 5432, so pg_createcluster took the next free port."
+      },
+      {
+        "text": "It copies main's port and adds one",
+        "correct": false,
+        "why": "It writes a fresh configuration; the port is chosen by looking at what is taken."
+      }
+    ]
+  },
+  {
+    "id": "ex-ej8jtmgx",
+    "version": 1,
+    "section": "practise-on-a-copy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Copying main into the rehearsal with `pg_dumpall | psql -p 5433` printed `ERROR: role \"postgres\" already exists`. What does that error mean for the copy?",
+    "hint": "What does a fresh cluster already contain?",
+    "choices": [
+      {
+        "text": "Nothing; one statement failed and the rest ran",
+        "correct": true,
+        "why": "Right. The new cluster already had a postgres role, so only that CREATE ROLE failed."
+      },
+      {
+        "text": "The copy stopped there and must be repeated with --clean",
+        "correct": false,
+        "why": "psql carries on after an error unless told to stop, and the count of orders showed the data arrived."
+      },
+      {
+        "text": "Every role was skipped, so ana does not exist on 5433",
+        "correct": false,
+        "why": "Only the one statement failed; the other roles were created."
+      },
+      {
+        "text": "It now shares main's postgres role",
+        "correct": false,
+        "why": "Each cluster has its own roles. Nothing is shared between clusters."
+      }
+    ]
+  },
+  {
+    "id": "ex-x7a3emtb",
+    "version": 1,
+    "section": "practise-on-a-copy",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague says the rehearsal is pointless because the rehearsal database is only a copy, and copies upgrade exactly like the original. Which reason from the lesson answers them best?",
+    "hint": "Which problems are properties of the server rather than of the rows?",
+    "choices": [
+      {
+        "text": "A copy upgrades faster, so the rehearsal measures nothing",
+        "correct": false,
+        "why": "If the copy has production's size, its times are production's times; that is a reason to rehearse."
+      },
+      {
+        "text": "The rehearsal tests whether the data itself is corrupt",
+        "correct": false,
+        "why": "pg_upgrade does not read the data files at all, so it would not notice corruption."
+      },
+      {
+        "text": "It finds the failures cheaply",
+        "correct": true,
+        "why": "Right. A missing extension build, a renamed setting or too little disk shows up on the copy, where a refusal costs nothing."
+      },
+      {
+        "text": "Upgrading a copy upgrades the original too, through the shared files",
+        "correct": false,
+        "why": "The rehearsal shares no files with main; it was filled by a dump."
+      }
+    ]
+  },
+  {
+    "id": "ex-5atbw8t8",
+    "version": 1,
+    "section": "pg-upgradecluster",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `pg_upgradecluster 16 rehearsal` do when `-m upgrade` is left out?",
+    "hint": "Its default method.",
+    "choices": [
+      {
+        "text": "pg_upgrade with --link",
+        "correct": false,
+        "why": "Linking has to be asked for, and so does pg_upgrade."
+      },
+      {
+        "text": "A dump and restore, its default method when none is given",
+        "correct": true,
+        "why": "Right. dump is the default, correct but as slow as the data is big; -m upgrade chooses pg_upgrade."
+      },
+      {
+        "text": "It refuses and asks for a method",
+        "correct": false,
+        "why": "It has a default and uses it without asking."
+      },
+      {
+        "text": "pg_upgrade copying the files",
+        "correct": false,
+        "why": "That is -m upgrade without --link, which still needs -m upgrade."
+      }
+    ]
+  },
+  {
+    "id": "ex-7y6t5937",
+    "version": 1,
+    "section": "pg-upgradecluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first `pg_upgradecluster` failed at `Checking for presence of required libraries`. In what state did it leave the old cluster?",
+    "hint": "Where is that check relative to the line about re-initdb?",
+    "choices": [
+      {
+        "text": "Unusable, because --link had already linked its files",
+        "correct": false,
+        "why": "Linking comes after every check; nothing had been linked when it failed."
+      },
+      {
+        "text": "Stopped, waiting for the administrator to start it",
+        "correct": false,
+        "why": "pg_upgradecluster printed `Starting old cluster again` and did so."
+      },
+      {
+        "text": "Running again, as before",
+        "correct": true,
+        "why": "Right. The checks run before any file is touched, so it dropped the new cluster and restarted the old one."
+      },
+      {
+        "text": "Half upgraded, with its catalogue in 17's format",
+        "correct": false,
+        "why": "The old catalogue is never rewritten; the new one is built in the new cluster."
+      }
+    ]
+  },
+  {
+    "id": "ex-mgd7ef9t",
+    "version": 1,
+    "section": "pg-upgradecluster",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the --link upgrade, `ls -li` showed the orders table's file in both data directories. What link count did it show?",
+    "hint": "One file, how many names?",
+    "value": 2,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-z72y3crj",
+    "version": 1,
+    "section": "pg-upgradecluster",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After an upgrade with --link, somebody removes the `.old` suffix from `pg_control` and starts the 16 cluster to compare a query with 17. What happens to the data?",
+    "hint": "Whose files are they now?",
+    "choices": [
+      {
+        "text": "16 starts read-only",
+        "correct": false,
+        "why": "There is no such mode; PostgreSQL has no idea another server owns the files."
+      },
+      {
+        "text": "16 and 17 corrupt the pages they share",
+        "correct": true,
+        "why": "Right. The files are shared, 17 has already written into them, and 16 reads and writes the same pages."
+      },
+      {
+        "text": "16 refuses to start",
+        "correct": false,
+        "why": "16's own catalogue is still there in 16's format; the danger is the shared data files."
+      },
+      {
+        "text": "Each cluster gets its own copy the first time it writes",
+        "correct": false,
+        "why": "Hard links are not copy-on-write; a write through either name changes the one file."
+      }
+    ]
+  },
+  {
+    "id": "ex-x7vyz289",
+    "version": 1,
+    "section": "dump-and-restore",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To dump a 16 database for a 17 server, which pg_dump does the lesson use?",
+    "hint": "The wrapper would have picked the other one.",
+    "choices": [
+      {
+        "text": "16's, because the dump must match the server it reads",
+        "correct": false,
+        "why": "A newer pg_dump reads older servers; it is the newer one that knows what 17 needs."
+      },
+      {
+        "text": "Either; the dump format is the same in every version",
+        "correct": false,
+        "why": "The lesson's advice is explicit: the new version's pg_dump. The reverse is not promised to work."
+      },
+      {
+        "text": "pg_dumpall",
+        "correct": false,
+        "why": "pg_dump crosses versions fine. pg_dumpall was used only for the roles."
+      },
+      {
+        "text": "17's, by its full path",
+        "correct": true,
+        "why": "Right. /usr/lib/postgresql/17/bin/pg_dump, because plain pg_dump ran 16's for the cluster on 5432."
+      }
+    ]
+  },
+  {
+    "id": "ex-5671errt",
+    "version": 1,
+    "section": "dump-and-restore",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pg_dump shop` does not contain the role ana, because roles belong to the cluster. They come from `pg_dumpall --___-only`.",
+    "hint": "Not schema, not data.",
+    "blanks": [
+      {
+        "accept": [
+          "globals"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dteambfw",
+    "version": 1,
+    "section": "dump-and-restore",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The restored orders indexes were 37 MB against 42 MB on main. Why?",
+    "hint": "When was each index built, relative to the rows?",
+    "choices": [
+      {
+        "text": "17 compresses indexes and 16 does not",
+        "correct": false,
+        "why": "Neither compresses B-tree indexes; the difference is in how they were built."
+      },
+      {
+        "text": "pg_dump left one of the indexes out",
+        "correct": false,
+        "why": "Every CREATE INDEX was in the dump and the restore built each one."
+      },
+      {
+        "text": "Autovacuum on main had not yet removed the dead rows in them",
+        "correct": false,
+        "why": "shop was loaded once and never updated, so its indexes carry no dead rows."
+      },
+      {
+        "text": "Built in one pass, after the data",
+        "correct": true,
+        "why": "Right. shop.sql created the indexes before loading, so they grew by page splits; the restore built them packed."
+      }
+    ]
+  },
+  {
+    "id": "ex-910vy7py",
+    "version": 1,
+    "section": "logical-replication",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why was the publisher a third 16 cluster rather than main?",
+    "hint": "What does wal_level need?",
+    "choices": [
+      {
+        "text": "Changing wal_level needs a restart",
+        "correct": true,
+        "why": "Right. The lesson leaves main untouched, so the publisher was created with wal_level = logical already set."
+      },
+      {
+        "text": "main has no primary keys",
+        "correct": false,
+        "why": "Both tables of shop have primary keys."
+      },
+      {
+        "text": "shop cannot hold a publication",
+        "correct": false,
+        "why": "The publication was created in a database called shop."
+      },
+      {
+        "text": "Logical replication works only between clusters created on the same day",
+        "correct": false,
+        "why": "Nothing about logical replication depends on when a cluster was created."
+      }
+    ]
+  },
+  {
+    "id": "ex-rbkhg4z2",
+    "version": 1,
+    "section": "logical-replication",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the logical-replication upgrade in the order the lesson ran them.",
+    "hint": "The tables must exist before anything can fill them.",
+    "items": [
+      "Create a publication on the 16 server",
+      "Copy the schema alone into the 17 database",
+      "Create the subscription on 17",
+      "Wait until every table is in state r",
+      "Drop the subscription",
+      "Move every sequence past the largest id in use"
+    ],
+    "trap": "Fixing the sequences before the switch leaves them behind again as new rows arrive from the old server."
+  },
+  {
+    "id": "ex-cv1wf4q5",
+    "version": 1,
+    "section": "logical-replication",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the subscription was dropped, the first insert on 17 failed with `Key (id)=(1) already exists`. What had not been replicated?",
+    "hint": "Rows arrived. What is not a row?",
+    "choices": [
+      {
+        "text": "The orders_pkey index",
+        "correct": false,
+        "why": "The index exists; that is why the duplicate was caught."
+      },
+      {
+        "text": "The sequence's position",
+        "correct": true,
+        "why": "Right. orders_id_seq stood at 1 on the subscriber; setval moved it past the largest id."
+      },
+      {
+        "text": "The rows inserted after the initial copy",
+        "correct": false,
+        "why": "Order 1,000,001 arrived on 17 within a moment."
+      },
+      {
+        "text": "The table's identity column definition, which pg_dump --schema-only leaves out",
+        "correct": false,
+        "why": "The identity column was there; it handed out 1 because its sequence had never moved."
+      }
+    ]
+  },
+  {
+    "id": "ex-f556sejk",
+    "version": 1,
+    "section": "after-the-upgrade",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these does pg_upgrade NOT carry into the new cluster?",
+    "hint": "Its own output says so.",
+    "choices": [
+      {
+        "text": "The planner's statistics about each column's values",
+        "correct": true,
+        "why": "Right. `Optimizer statistics are not transferred by pg_upgrade`; vacuumdb --analyze-in-stages makes them again."
+      },
+      {
+        "text": "The roles and their passwords",
+        "correct": false,
+        "why": "`Restoring global objects in the new cluster` carried them."
+      },
+      {
+        "text": "The indexes",
+        "correct": false,
+        "why": "Index files are linked or copied like table files."
+      },
+      {
+        "text": "The extensions installed in each database",
+        "correct": false,
+        "why": "They came across, at their old version, which is why update_extensions.sql exists."
+      }
+    ]
+  },
+  {
+    "id": "ex-hgk5p8y6",
+    "version": 1,
+    "section": "after-the-upgrade",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pg_dropcluster 16 rehearsal` deleted the old data directory, yet the orders on 17 were all still there. Why?",
+    "hint": "How many names did each file have?",
+    "choices": [
+      {
+        "text": "pg_dropcluster copies shared files to the new cluster before deleting",
+        "correct": false,
+        "why": "It copies nothing; it removes the directory, and the file survives through its other name."
+      },
+      {
+        "text": "17 had already rewritten every table into its own files",
+        "correct": false,
+        "why": "17 rewrote nothing; the inode was the same in both directories."
+      },
+      {
+        "text": "Files in use are skipped",
+        "correct": false,
+        "why": "It deleted the whole old directory; the data survived for another reason."
+      },
+      {
+        "text": "The other name kept each file",
+        "correct": true,
+        "why": "Right. A file is freed when its last link goes, and 17/rehearsal still held one."
+      }
+    ]
+  },
+  {
+    "id": "ex-58tmnaxv",
+    "version": 1,
+    "section": "after-the-upgrade",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the upgrade, `pg_stat_statements` still said version 1.10 until `ALTER EXTENSION pg_stat_statements ___;` moved it to 1.11.",
+    "hint": "One word, the same one update_extensions.sql used.",
+    "blanks": [
+      {
+        "accept": [
+          "UPDATE"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vax8xakn",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A 3 TB database must move to 17 with at most twenty minutes of downtime, and the disk has 1 TB free. Which method fits?",
+    "hint": "Rule out by space first, then by time.",
+    "choices": [
+      {
+        "text": "pg_upgrade copying the files",
+        "correct": false,
+        "why": "Copying needs room for a second 3 TB, and there is 1 TB."
+      },
+      {
+        "text": "pg_upgrade --link, after a backup that is the way back",
+        "correct": true,
+        "why": "Right. Linking needs almost no extra disk and takes about as long at any size; the backup is the way back."
+      },
+      {
+        "text": "A dump and restore, which also removes the bloat",
+        "correct": false,
+        "why": "Dumping and restoring 3 TB takes far longer than twenty minutes of stopped writes."
+      },
+      {
+        "text": "A minor upgrade with apt",
+        "correct": false,
+        "why": "apt cannot take 16 to 17; a major version needs one of the three methods."
+      }
+    ]
+  },
+  {
+    "id": "ex-0n5kcszj",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On the night, `sudo pg_upgradecluster -m upgrade --link 16 main` stops at once with an error before touching anything. The package installed 17 a week ago. What is the first thing to check?",
+    "hint": "What did installing the package create?",
+    "choices": [
+      {
+        "text": "Whether main has been analysed recently",
+        "correct": false,
+        "why": "Statistics play no part in whether the upgrade starts; they are rebuilt afterwards."
+      },
+      {
+        "text": "Whether wal_level is set to logical on main",
+        "correct": false,
+        "why": "That matters for logical replication, not for pg_upgrade."
+      },
+      {
+        "text": "Whether the minor release of 16 is the very latest one",
+        "correct": false,
+        "why": "pg_upgrade does not demand the newest minor release; it compares major versions."
+      },
+      {
+        "text": "Whether the package's empty 17/main is still there",
+        "correct": true,
+        "why": "Right. The package created an empty 17/main, and pg_upgradecluster refuses a target cluster that exists; drop it after checking it is empty."
+      }
+    ]
+  },
+  {
+    "id": "ex-0exhs8ck",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each message to what it is telling you.",
+    "hint": "Each one appeared in this lesson.",
+    "pairs": [
+      {
+        "left": "database files are incompatible with server",
+        "right": "A newer server was given an older major version's data directory"
+      },
+      {
+        "left": "Checking for presence of required libraries ... fatal",
+        "right": "An extension has no build for the new version"
+      },
+      {
+        "left": "could not open file .../global/pg_control",
+        "right": "The old cluster was disabled after a --link upgrade"
+      },
+      {
+        "left": "duplicate key value violates unique constraint \"orders_pkey\"",
+        "right": "A sequence was not moved after logical replication"
+      }
+    ],
+    "right_distractors": [
+      "The disk is full"
+    ]
+  },
+  {
+    "id": "ex-wkf9gxdt",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these must still be done after a successful `pg_upgradecluster -m upgrade --link`? Choose all that apply.",
+    "hint": "Some were done by the wrapper's analyze step.",
+    "choices": [
+      {
+        "text": "Run the ALTER EXTENSION ... UPDATE statements in update_extensions.sql",
+        "correct": true,
+        "why": "Yes. Extensions keep their old version until updated."
+      },
+      {
+        "text": "Test the application against the new cluster",
+        "correct": true,
+        "why": "Yes. Nothing in the upgrade checks your application's queries."
+      },
+      {
+        "text": "Rebuild any physical standby",
+        "correct": true,
+        "why": "Yes. A standby cannot follow a primary of another major version."
+      },
+      {
+        "text": "Run vacuumdb --all --analyze-in-stages by hand",
+        "correct": false,
+        "why": "pg_upgradecluster's analyze step already ran it; last_analyze showed when."
+      },
+      {
+        "text": "Run delete_old_cluster.sh to free the old data files",
+        "correct": false,
+        "why": "On Ubuntu pg_dropcluster removes the old cluster, its configuration and its log, once the new one is checked."
+      }
+    ]
+  },
+  {
+    "id": "ex-8s1ffwxr",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants to move from 16 on Ubuntu to 17 on a new ARM server, and change the cluster's locale while they are at it. Which method can do all of that?",
+    "hint": "pg_upgrade needs both clusters on one machine with compatible settings.",
+    "choices": [
+      {
+        "text": "pg_upgrade --link",
+        "correct": false,
+        "why": "Links only exist inside one filesystem, and pg_upgrade needs compatible settings on one machine."
+      },
+      {
+        "text": "Dump and restore",
+        "correct": true,
+        "why": "Right. A dump is SQL; it does not care about machine, architecture or locale."
+      },
+      {
+        "text": "pg_upgrade copying the files to the new server over the network",
+        "correct": false,
+        "why": "pg_upgrade copies within one machine, and the data files of one architecture are not readable on another."
+      },
+      {
+        "text": "A minor upgrade first, which changes the locale",
+        "correct": false,
+        "why": "A minor upgrade changes the programs and nothing else."
+      }
+    ]
+  }
+]

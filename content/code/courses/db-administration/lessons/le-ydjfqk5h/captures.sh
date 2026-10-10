@@ -48,7 +48,7 @@ lab as 'rm -f /tmp/go'
 printf "#quiet \\\\! while [ ! -e /tmp/go ]; do sleep 0.05; done\n%s\n" "$LOCKS" | session shop > "$T/b.out" &
 B=$!
 lab as 'until [ "$(psql -XAtc "SELECT count(*) FROM pg_stat_activity WHERE datname = '"'shop'"' AND backend_type = '"'client backend'"'" shop)" = 2 ]; do sleep 0.1; done'
-printf "\\\\timing on\nVACUUM FULL orders_copy;\n" | session shop > "$T/v.out" &
+printf "\\\\timing on\nVACUUM FULL orders_copy;\n\\\\timing off\n%s\n" "$SIZE" | session shop > "$T/v.out" &
 V=$!
 lab as 'until [ "$(psql -XAtc "SELECT count(*) FROM pg_locks WHERE mode = '"'AccessExclusiveLock'"' AND granted AND relation = '"'orders_copy'"'::regclass" shop)" = 1 ]; do sleep 0.02; done'
 printf "\\\\timing on\nSELECT count(*) FROM orders_copy;\n" | session shop > "$T/s.out" &
@@ -56,8 +56,6 @@ C=$!
 lab as 'until [ "$(psql -XAtc "SELECT count(*) FROM pg_locks WHERE NOT granted" shop)" = 1 ]; do sleep 0.02; done; touch /tmp/go'
 wait $B $V $C
 cat "$T/v.out"; block vacuum-full-select; cat "$T/s.out"; block vacuum-full-locks; cat "$T/b.out"
-block vacuum-full-after
-printf "%s\n" "$SIZE" | session shop
 
 block repack
 printf "UPDATE orders_copy SET total_cents = total_cents + 1;\nVACUUM orders_copy;\n%s\n" "$SIZE" | session shop
@@ -67,13 +65,11 @@ lab as 'rm -f /tmp/go'
 printf "#quiet \\\\! while [ ! -e /tmp/go ]; do sleep 0.05; done\n%s\n\\\\timing on\nUPDATE orders_copy SET status = 'paid' WHERE id = 3;\n" "$LOCKS" | session shop > "$T/b.out" &
 B=$!
 lab as 'until [ "$(psql -XAtc "SELECT count(*) FROM pg_stat_activity WHERE datname = '"'shop'"' AND backend_type = '"'client backend'"'" shop)" = 2 ]; do sleep 0.1; done'
-( on 'time pg_repack -d shop -t orders_copy' > "$T/r.out" ) &
+( on 'time pg_repack -d shop -t orders_copy'; on "psql shop -c \"$SIZE\"" ) > "$T/r.out" &
 R=$!
 lab as 'until psql -XAtc "SELECT query FROM pg_stat_activity" shop | grep -q "INSERT INTO repack.table_"; do sleep 0.02; done; touch /tmp/go'
 wait $B $R
-cat "$T/r.out"; block repack-locks; cat "$T/b.out"
-block repack-after
-printf "%s\n" "$SIZE" | session shop
+block repack-locks; cat "$T/b.out"; block repack-run; cat "$T/r.out"
 
 block steady
 printf "UPDATE orders_copy SET total_cents = total_cents + 1 WHERE id %% 5 = 0;\nVACUUM orders_copy;\n%s\nUPDATE orders_copy SET total_cents = total_cents + 1 WHERE id %% 5 = 1;\nVACUUM orders_copy;\n%s\nUPDATE orders_copy SET total_cents = total_cents + 1 WHERE id %% 5 = 2;\nVACUUM orders_copy;\n%s\n" "$SIZE" "$SIZE" "$SIZE" | session shop

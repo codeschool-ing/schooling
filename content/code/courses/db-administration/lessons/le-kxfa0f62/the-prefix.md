@@ -21,8 +21,8 @@ ERROR:  division by zero
 
 ```
 ana@db:~$ sudo tail -n 2 /var/log/postgresql/postgresql-16-main.log
-2026-10-10 16:40:30.823 -03 [211] ana@shop ERROR:  division by zero
-2026-10-10 16:40:30.823 -03 [211] ana@shop STATEMENT:  SELECT 1/0;
+2026-10-10 16:44:27.696 -03 [211] ana@shop ERROR:  division by zero
+2026-10-10 16:44:27.696 -03 [211] ana@shop STATEMENT:  SELECT 1/0;
 ```
 
 Each `%` escape is replaced on every line:
@@ -68,9 +68,9 @@ ERROR:  division by zero
 
 ```
 ana@db:~$ sudo tail -n 3 /var/log/postgresql/postgresql-16-main.log
-2026-10-10 16:40:33.278 -03 [102] LOG:  parameter "log_line_prefix" changed to "%m [%p] %q%u@%d %a "
-2026-10-10 16:40:33.578 -03 [220] ana@shop psql ERROR:  division by zero
-2026-10-10 16:40:33.578 -03 [220] ana@shop psql STATEMENT:  SELECT 1/0;
+2026-10-10 16:44:28.887 -03 [99] LOG:  parameter "log_line_prefix" changed to "%m [%p] %q%u@%d %a "
+2026-10-10 16:44:29.187 -03 [220] ana@shop psql ERROR:  division by zero
+2026-10-10 16:44:29.187 -03 [220] ana@shop psql STATEMENT:  SELECT 1/0;
 ```
 
 The reload itself is logged, with the new value, and the line from the postmaster has no user

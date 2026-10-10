@@ -27,17 +27,17 @@ The log has had a busy lesson. Before opening it, count what is in it:
 
 ```
 ana@db:~$ sudo grep -oE '(LOG|ERROR|FATAL|PANIC|WARNING|DETAIL|HINT|CONTEXT|STATEMENT): ' /var/log/postgresql/postgresql-16-main.log | sort | uniq -c | sort -rn
- 140061 LOG: 
+ 140060 LOG: 
       9 STATEMENT: 
       2 ERROR: 
       2 CONTEXT: 
       1 DETAIL: 
 ana@db:~$ sudo grep -E 'ERROR|FATAL|PANIC' /var/log/postgresql/postgresql-16-main.log
-2026-10-10 16:40:30.823 -03 [211] ana@shop ERROR:  division by zero
-2026-10-10 16:40:33.578 -03 [220] ana@shop psql ERROR:  division by zero
+2026-10-10 16:44:27.696 -03 [211] ana@shop ERROR:  division by zero
+2026-10-10 16:44:29.187 -03 [220] ana@shop psql ERROR:  division by zero
 ```
 
-140,061 `LOG` lines, almost all of them the two runs of the previous section at 70,000
+140,060 `LOG` lines, almost all of them the two runs of the previous section at 70,000
 statements each, and two errors. The two errors are the
 `SELECT 1/0` of the prefix section, and `grep` found them in a file where they were lost among the
 statements of the last section. **On a server under pressure, start with this `grep`**, then take
@@ -75,8 +75,8 @@ now shows the result:
 ana@db:~$ sudo logrotate -f /etc/logrotate.d/postgresql-common
 ana@db:~$ ls -l /var/log/postgresql
 total 18484
--rw-r----- 1 postgres adm        0 Oct 10 16:41 postgresql-16-main.log
--rw-r----- 1 postgres adm 18926559 Oct 10 16:41 postgresql-16-main.log.1
+-rw-r----- 1 postgres adm        0 Oct 10 16:45 postgresql-16-main.log
+-rw-r----- 1 postgres adm 18925723 Oct 10 16:45 postgresql-16-main.log.1
 ```
 
 The line to understand is **`copytruncate`**. The server holds the file open as its standard error

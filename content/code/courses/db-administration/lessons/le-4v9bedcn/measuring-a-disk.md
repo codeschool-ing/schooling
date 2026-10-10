@@ -21,55 +21,55 @@ O_DIRECT supported on this platform for open_datasync and open_sync.
 
 Compare file sync methods using one 8kB write:
 (in wal_sync_method preference order, except fdatasync is Linux's default)
-        open_datasync                      1940.579 ops/sec     515 usecs/op
-        fdatasync                           493.815 ops/sec    2025 usecs/op
-        fsync                               608.597 ops/sec    1643 usecs/op
+        open_datasync                      2373.314 ops/sec     421 usecs/op
+        fdatasync                          2191.845 ops/sec     456 usecs/op
+        fsync                              1839.771 ops/sec     544 usecs/op
         fsync_writethrough                              n/a
-        open_sync                          1702.405 ops/sec     587 usecs/op
+        open_sync                          1721.142 ops/sec     581 usecs/op
 
 Compare file sync methods using two 8kB writes:
 (in wal_sync_method preference order, except fdatasync is Linux's default)
-        open_datasync                       656.037 ops/sec    1524 usecs/op
-        fdatasync                           451.037 ops/sec    2217 usecs/op
-        fsync                              1250.452 ops/sec     800 usecs/op
+        open_datasync                       474.004 ops/sec    2110 usecs/op
+        fdatasync                           921.902 ops/sec    1085 usecs/op
+        fsync                              2034.403 ops/sec     492 usecs/op
         fsync_writethrough                              n/a
-        open_sync                          1197.959 ops/sec     835 usecs/op
+        open_sync                           488.275 ops/sec    2048 usecs/op
 
 Compare open_sync with different write sizes:
 (This is designed to compare the cost of writing 16kB in different write
 open_sync sizes.)
-         1 * 16kB open_sync write          1608.762 ops/sec     622 usecs/op
-         2 *  8kB open_sync writes           30.327 ops/sec   32974 usecs/op
-         4 *  4kB open_sync writes           11.614 ops/sec   86104 usecs/op
-         8 *  2kB open_sync writes           79.238 ops/sec   12620 usecs/op
-        16 *  1kB open_sync writes           18.046 ops/sec   55414 usecs/op
+         1 * 16kB open_sync write          1019.868 ops/sec     981 usecs/op
+         2 *  8kB open_sync writes          683.440 ops/sec    1463 usecs/op
+         4 *  4kB open_sync writes          475.429 ops/sec    2103 usecs/op
+         8 *  2kB open_sync writes          206.482 ops/sec    4843 usecs/op
+        16 *  1kB open_sync writes           96.756 ops/sec   10335 usecs/op
 
 Test if fsync on non-write file descriptor is honored:
 (If the times are similar, fsync() can sync data written on a different
 descriptor.)
-        write, fsync, close                1760.753 ops/sec     568 usecs/op
-        write, close, fsync                 833.372 ops/sec    1200 usecs/op
+        write, fsync, close                1934.621 ops/sec     517 usecs/op
+        write, close, fsync                1863.918 ops/sec     537 usecs/op
 
 Non-sync'ed 8kB writes:
-        write                           1851597.114 ops/sec       1 usecs/op
+        write                           2865449.796 ops/sec       0 usecs/op
 ```
 
 **These are the recording machine's numbers and yours will be different.** That machine is a
-container on a virtual disk shared with other machines, so its results are slow and they move from
-one run to the next, which the rows of one table can be seen doing above. Measure your own disk;
-never plan from somebody else's.
+container on a virtual disk shared with other machines, so its results move from one run to the
+next, and a second run would not print this table again. Measure your own disk; never plan from
+somebody else's.
 
 ## Reading it
 
 Each row is one way of asking the kernel to make a write durable, and the names are the values of
 the parameter `wal_sync_method`. The row to read first is **`fdatasync`, Linux's default and what
-your server uses**: 493.815 flushes a second, about two milliseconds each, on this machine. One
+your server uses**: 921.902 flushes a second, about a millisecond each, on this machine. One
 session committing one transaction at a time can therefore never commit faster than that, whatever
 the processor does. Many sessions do better together, because one flush can carry several
 transactions' records at once.
 
 The last row is the contrast. **A write that is not flushed lands in the kernel's memory**, and
-1,851,597 of them fit in a second. Every row above it is slower by that whole distance because it
+2,865,449 of them fit in a second. Every row above it is slower by that whole distance because it
 waits for the disk. A different `wal_sync_method` can be faster on some hardware, and the first
 table is how you would find out; leave the default unless the tool shows a large and repeatable
 difference.
@@ -90,14 +90,14 @@ O_DIRECT supported on this platform for open_datasync and open_sync.
 
 Compare file sync methods using one 8kB write:
 (in wal_sync_method preference order, except fdatasync is Linux's default)
-        open_datasync                   1309761.044 ops/sec       1 usecs/op
-        fdatasync                        823959.133 ops/sec       1 usecs/op
-        fsync                            881695.748 ops/sec       1 usecs/op
+        open_datasync                   2255872.487 ops/sec       0 usecs/op
+        fdatasync                       1867611.442 ops/sec       1 usecs/op
+        fsync                           1943467.909 ops/sec       1 usecs/op
         fsync_writethrough                              n/a
-        open_sync                       1136757.993 ops/sec       1 usecs/op
+        open_sync                       2561443.833 ops/sec       0 usecs/op
 ```
 
-Hundreds of thousands of flushes a second is what a flush to nowhere looks like. **A real disk
+Nearly two million flushes a second is what a flush to nowhere looks like. **A real disk
 that reports numbers in that range is keeping its promise in volatile memory**, and a power cut
 there loses committed transactions with nothing in the log to say so. The legitimate version is a
 controller whose cache has a battery or capacitor behind it, which is fast because it can finish

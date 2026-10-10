@@ -104,12 +104,12 @@ printf 'ana@db:~$ psql shop\n'
 printf "SELECT pid, usename, state, now() - xact_start AS open_for, query\n  FROM pg_stat_activity WHERE state = 'idle in transaction';\nSELECT pg_cancel_backend(pid) FROM pg_stat_activity WHERE state = 'idle in transaction';\nSELECT pid, state FROM pg_stat_activity WHERE usename = 'app';\nSELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'idle in transaction';\nSELECT pid, state FROM pg_stat_activity WHERE usename = 'app';\n" | session shop
 wait $victim
 block victim
-printf 'app@db:~$ psql shop\n'
+printf 'ana@db:~$ sudo -u app psql shop\n'
 cat /tmp/claude-victim-$LAB_NAME.out; rm -f /tmp/claude-victim-$LAB_NAME.out
 
 block timeout
 on "psql shop -c \"ALTER ROLE app SET idle_in_transaction_session_timeout = '10s'\""
-printf 'app@db:~$ psql shop\n'
+printf 'ana@db:~$ sudo -u app psql shop\n'
 printf "BEGIN;\nSELECT count(*) FROM orders WHERE customer_id = 42;\n#sleep 12\nSELECT 1;\n" | slow app shop
 on 'sudo grep "idle-in-transaction" /var/log/postgresql/postgresql-16-main.log'
 
