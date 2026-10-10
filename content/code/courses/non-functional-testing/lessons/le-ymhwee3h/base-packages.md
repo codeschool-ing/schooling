@@ -43,8 +43,8 @@ Everything else is installed in the lesson that first uses it:
 | 5 | k6, one program |
 | 6 | Gatling, unpacked into your home directory, and Locust in a Python virtual environment |
 | 7 | Node.js, then Artillery; and Vegeta, one program |
-| 10 | Lighthouse, with Node.js from lesson 7 |
-| 13 | Playwright and the axe engine, in a project of their own |
+| 10 | Lighthouse, and the Chromium that Playwright downloads for it |
+| 13 | the axe engine, in a Playwright project of its own |
 | 18 | gitleaks, one program |
 | 21 | pip-audit, in the virtual environment from lesson 6 |
 | 22 | Prometheus, from Ubuntu's archive |

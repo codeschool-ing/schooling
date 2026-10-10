@@ -43,8 +43,8 @@ Todo o resto é instalado na aula que o usa primeiro:
 | 5 | k6, um programa só |
 | 6 | Gatling, descompactado na sua pasta pessoal, e Locust num ambiente virtual Python |
 | 7 | Node.js, depois o Artillery; e o Vegeta, um programa só |
-| 10 | Lighthouse, com o Node.js da aula 7 |
-| 13 | Playwright e o motor do axe, num projeto próprio |
+| 10 | Lighthouse, e o Chromium que o Playwright baixa para ele |
+| 13 | o motor do axe, num projeto Playwright próprio |
 | 18 | gitleaks, um programa só |
 | 21 | pip-audit, no ambiente virtual da aula 6 |
 | 22 | Prometheus, do repositório do Ubuntu |
