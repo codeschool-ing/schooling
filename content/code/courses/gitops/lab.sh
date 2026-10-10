@@ -377,6 +377,147 @@ stage3() {
   cd /home/ana
 }
 
+L4=$LAB/lessons/le-c0wcr3vg
+
+# The state at the end of lesson 4, on top of stage2 (Argo CD is skipped: lesson
+# 4 removes it, and nothing after lesson 4 depends on it having been there):
+# Flux bootstrapped through a pull request from the files lesson 4 shows, its
+# read-only account, the Gitea webhook and its Receiver, and the staging message
+# lesson 4 leaves.
+stage4() {
+  export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
+  export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
+  docker exec gitea gitea admin user create --username flux --password change-me-please --email flux@example.org --must-change-password=false >/dev/null
+  docker exec gitea gitea admin user generate-access-token --username flux --token-name cluster --scopes read:repository --raw > /home/ana/flux.token
+  chmod 600 /home/ana/flux.token
+  api PUT /repos/ana/fleet/collaborators/flux '{"permission": "read"}' >/dev/null
+  cd /home/ana/fleet
+  git switch --quiet -c flux
+  mkdir -p clusters/lab/flux-system
+  flux install --export > clusters/lab/flux-system/gotk-components.yaml
+  shown "$L4/bootstrap.md" 'clusters/lab/flux-system/gotk-sync.yaml' > clusters/lab/flux-system/gotk-sync.yaml
+  shown "$L4/bootstrap.md" 'clusters/lab/flux-system/kustomization.yaml' > clusters/lab/flux-system/kustomization.yaml
+  shown "$L4/bootstrap.md" 'clusters/lab/staging.yaml' > clusters/lab/staging.yaml
+  git add clusters
+  commit_at 2026-10-09T17:00:00-03:00 -m "flux: bootstrap the lab cluster"
+  merge flux "flux: bootstrap the lab cluster"
+  kubectl apply --server-side -f clusters/lab/flux-system/gotk-components.yaml >/dev/null
+  kubectl -n flux-system wait --for=condition=Available deployment --all --timeout=180s >/dev/null
+  flux create secret git fleet-auth --url=http://gitea:3000/ana/fleet.git --username=flux --password="$(cat /home/ana/flux.token)" >/dev/null
+  kubectl apply -f clusters/lab/flux-system/gotk-sync.yaml >/dev/null
+  openssl rand -hex 20 > /home/ana/webhook.token && chmod 600 /home/ana/webhook.token
+  kubectl -n flux-system create secret generic webhook-token --from-literal=token="$(cat /home/ana/webhook.token)" >/dev/null
+  git switch --quiet -c webhook
+  shown "$L4/webhook.md" 'clusters/lab/webhook.yaml' > clusters/lab/webhook.yaml
+  git add clusters/lab/webhook.yaml
+  commit_at 2026-10-09T17:15:00-03:00 -m "flux: a receiver for the Gitea webhook"
+  merge webhook "flux: a receiver for the Gitea webhook"
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  local i p
+  for i in $(seq 60); do
+    p=$(kubectl -n flux-system get receiver gitea -o jsonpath='{.status.webhookPath}' 2>/dev/null)
+    [ -n "$p" ] && break; sleep 2
+  done
+  docker exec gitea sed -i '/^\[security\]$/a ALLOWED_HOST_LIST = private' /etc/gitea/app.ini
+  docker restart gitea >/dev/null
+  until curl -fs localhost:3000/api/v1/version >/dev/null; do sleep 1; done
+  api POST /repos/ana/fleet/hooks "{\"type\": \"gitea\", \"events\": [\"push\"], \"active\": true, \"config\": {\"url\": \"http://gitops-control-plane:30082$p\", \"content_type\": \"json\", \"secret\": \"$(cat /home/ana/webhook.token)\"}}" >/dev/null
+  git switch --quiet -c webhook-banner
+  sed -i 's/value: Staging is ready for review./value: Staging is updated by a webhook./' staging/bulletin.yaml
+  commit_at 2026-10-09T17:18:00-03:00 -am "staging: updated by a webhook"
+  merge webhook-banner "staging: updated by a webhook"
+  flux reconcile kustomization staging --with-source >/dev/null 2>&1
+  for i in $(seq 90); do curl -s localhost:8080 | grep -q 'updated by a webhook' && break; sleep 2; done
+  kubectl -n staging rollout status deployment bulletin --timeout=180s >/dev/null
+  cd /home/ana
+}
+
+L5=$LAB/lessons/le-7y364195
+
+# The state at the end of lesson 5, on top of stage4: the bulletin repository
+# with v1.0 and v1.1, the image bulletin:1.1, fleet laid out as apps/ and
+# clusters/, production, both environments on 1.1, CODEOWNERS, and production
+# at three replicas.
+stage5() {
+  export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
+  export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
+  local i
+  cd /home/ana/bulletin
+  git init --quiet && git add index.cgi Dockerfile
+  commit_at 2026-10-09T18:00:00-03:00 -m "bulletin 1.0"
+  api POST /user/repos '{"name": "bulletin", "private": true}' >/dev/null
+  git remote add origin http://localhost:3000/ana/bulletin.git
+  git push --quiet -u origin main && git tag v1.0 && git push --quiet origin v1.0
+  shown "$L5/promotion.md" '~/bulletin/index.cgi' > index.cgi
+  commit_at 2026-10-09T18:30:00-03:00 -am "Show the pod that answered"
+  git tag v1.1 && git push --quiet origin main v1.1
+  docker build --quiet --build-arg VERSION=1.1 -t localhost:5001/bulletin:1.1 . >/dev/null
+  docker push --quiet localhost:5001/bulletin:1.1 >/dev/null
+  cd /home/ana/fleet
+  sed -i 's#"$work/staging"#"$work/apps"#' /home/ana/setup/validate.sh
+  git switch --quiet -c layout
+  mkdir -p apps/bulletin && git mv staging apps/bulletin/staging
+  sed -i 's#  path: ./staging#  path: ./apps/bulletin/staging#' clusters/lab/staging.yaml
+  commit_at 2026-10-09T18:10:00-03:00 -am "fleet: apps/bulletin/staging"
+  merge layout "fleet: apps/bulletin/staging"
+  git switch --quiet -c production
+  mkdir -p apps/bulletin/production
+  shown "$L5/production.md" 'apps/bulletin/production/bulletin.yaml' > apps/bulletin/production/bulletin.yaml
+  shown "$L5/production.md" 'clusters/lab/production.yaml' > clusters/lab/production.yaml
+  sed -i 's#localhost:5001/bulletin:1.0#localhost:5001/bulletin:1.1#; s/  replicas: 2/  replicas: 3/' apps/bulletin/production/bulletin.yaml
+  sed -i 's#localhost:5001/bulletin:1.0#localhost:5001/bulletin:1.1#' apps/bulletin/staging/bulletin.yaml
+  mkdir -p .gitea
+  shown "$L5/ownership.md" '.gitea/CODEOWNERS' > .gitea/CODEOWNERS
+  git add apps clusters .gitea
+  commit_at 2026-10-09T19:20:00-03:00 -m "fleet: production, 1.1 in both environments, owners"
+  merge production "fleet: production, 1.1 in both environments, owners"
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  for i in $(seq 90); do curl -s localhost:8081 | grep -q 'bulletin 1.1' && curl -s localhost:8080 | grep -q 'bulletin 1.1' && break; sleep 2; done
+  kubectl -n production rollout status deployment bulletin --timeout=180s >/dev/null
+  cd /home/ana
+}
+
+L6=$LAB/lessons/le-940fv7yy
+
+# The state at the end of lesson 6, on top of stage5: bulletin as a Kustomize
+# base and two overlays (staging's message "Staging is built by Kustomize."),
+# lesson 6's validate.sh, the chart in charts/bulletin and the preview
+# installed from it by Flux.
+stage6() {
+  export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
+  export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
+  local i f
+  cd /home/ana/fleet
+  git switch --quiet -c kustomize
+  mkdir -p apps/bulletin/base apps/bulletin/preview charts/bulletin/templates
+  for f in base/deployment.yaml base/service.yaml base/kustomization.yaml staging/kustomization.yaml staging/namespace.yaml; do
+    shown "$L6/base-and-overlays.md" "apps/bulletin/$f" > "apps/bulletin/$f"
+  done
+  shown "$L6/patches.md" 'apps/bulletin/production/kustomization.yaml' > apps/bulletin/production/kustomization.yaml
+  sed 's/staging/production/' apps/bulletin/staging/namespace.yaml > apps/bulletin/production/namespace.yaml
+  sed -i 's/  - MESSAGE=Staging is updated by a webhook./  - MESSAGE=Staging is built by Kustomize./' apps/bulletin/staging/kustomization.yaml
+  git rm --quiet apps/bulletin/staging/bulletin.yaml apps/bulletin/production/bulletin.yaml
+  shown "$L6/base-and-overlays.md" '~/setup/validate.sh' > /home/ana/setup/validate.sh
+  for f in Chart.yaml values.yaml templates/deployment.yaml templates/service.yaml; do
+    shown "$L6/helm-charts.md" "charts/bulletin/$f" > "charts/bulletin/$f"
+  done
+  shown "$L6/helm-release.md" 'apps/bulletin/preview/release.yaml' > apps/bulletin/preview/release.yaml
+  shown "$L6/helm-release.md" 'apps/bulletin/preview/kustomization.yaml' > apps/bulletin/preview/kustomization.yaml
+  sed 's/staging/preview/' apps/bulletin/staging/namespace.yaml > apps/bulletin/preview/namespace.yaml
+  sed 's/staging/preview/g' clusters/lab/staging.yaml > clusters/lab/preview.yaml
+  git add apps charts clusters
+  commit_at 2026-10-09T20:20:00-03:00 -m "bulletin: overlays, a chart, and a preview"
+  merge kustomize "bulletin: overlays, a chart, and a preview"
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  for i in $(seq 120); do
+    curl -s localhost:8080 | grep -q 'built by Kustomize' && flux get helmreleases -n preview 2>/dev/null | grep -q True && break
+    sleep 2
+  done
+  kubectl -n staging rollout status deployment bulletin --timeout=180s >/dev/null
+  kubectl -n production rollout status deployment bulletin --timeout=180s >/dev/null
+  cd /home/ana
+}
+
 api() { # METHOD PATH [JSON]: Gitea's API as ana
   curl -fs -X "$1" -H "Authorization: token $(cat /home/ana/ana.token)" \
     -H 'Content-Type: application/json' ${3:+-d "$3"} "http://localhost:3000/api/v1$2"
@@ -417,6 +558,6 @@ down() {
 
 case "${1:-}" in
   merge) shift; merge "$@" ;;
-  tools|images|mirror|up|down|nodes_mirror|gitea|stage1|stage2|stage3) "$1" ;;
+  tools|images|mirror|up|down|nodes_mirror|gitea|stage1|stage2|stage3|stage4|stage5|stage6) "$1" ;;
   *) sed -n '2,12p' "$0"; exit 1 ;;
 esac

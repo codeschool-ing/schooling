@@ -1,0 +1,681 @@
+[
+  {
+    "id": "ex-78t9d09s",
+    "version": 1,
+    "section": "what-varies",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each thing that varies to how it appears in fleet.",
+    "pairs": [
+      {
+        "left": "the application",
+        "right": "An image reference"
+      },
+      {
+        "left": "the configuration",
+        "right": "A file per application and environment"
+      },
+      {
+        "left": "the environment",
+        "right": "A directory"
+      }
+    ],
+    "right_distractors": [
+      "A branch per release"
+    ]
+  },
+  {
+    "id": "ex-htmake4j",
+    "version": 1,
+    "section": "what-varies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When does a repository layout fail, by the lesson's measure?",
+    "choices": [
+      {
+        "text": "When the application and cluster repositories are separate",
+        "correct": false,
+        "why": "That is the layout the lesson recommends."
+      },
+      {
+        "text": "When two environments share an image tag",
+        "correct": false,
+        "why": "Sharing a release is the goal of promotion."
+      },
+      {
+        "text": "When it has more than two top-level directories",
+        "correct": false,
+        "why": "The number of directories is not the measure."
+      },
+      {
+        "text": "When one kind of change needs edits in several places",
+        "correct": true,
+        "why": "Right. One of them is eventually forgotten, and environments drift."
+      }
+    ]
+  },
+  {
+    "id": "ex-c562nwqv",
+    "version": 1,
+    "section": "what-varies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of the three changes most often?",
+    "choices": [
+      {
+        "text": "The application",
+        "correct": true,
+        "why": "Right. Many commits a day, by the developers."
+      },
+      {
+        "text": "The configuration, since every pod restart rewrites it",
+        "correct": false,
+        "why": "A restart changes nothing in Git."
+      },
+      {
+        "text": "They all change at the same pace",
+        "correct": false,
+        "why": "The point of the section is that they do not."
+      },
+      {
+        "text": "The environment, because every release creates one for testing",
+        "correct": false,
+        "why": "Environments come and go rarely in this lesson's model."
+      }
+    ]
+  },
+  {
+    "id": "ex-b74wvqjc",
+    "version": 1,
+    "section": "two-repositories",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where do the application's repository and fleet meet?",
+    "choices": [
+      {
+        "text": "At the image",
+        "correct": true,
+        "why": "Right. CI builds and pushes it; a pull request to fleet references it."
+      },
+      {
+        "text": "At Gitea's branch protection, shared between them",
+        "correct": false,
+        "why": "Protection is per repository, and bulletin has none."
+      },
+      {
+        "text": "At the Kustomization, which reads both repositories",
+        "correct": false,
+        "why": "Flux reads fleet only."
+      },
+      {
+        "text": "At a shared main branch that both repositories merge into",
+        "correct": false,
+        "why": "They are separate repositories with separate histories."
+      }
+    ]
+  },
+  {
+    "id": "ex-00t33rgn",
+    "version": 1,
+    "section": "two-repositories",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which reasons does the lesson give for two repositories? Choose all that apply.",
+    "choices": [
+      {
+        "text": "They have different owners",
+        "correct": true,
+        "why": "Right. Production's rule should not slow down code."
+      },
+      {
+        "text": "They change at different speeds",
+        "correct": true,
+        "why": "Right. Promotions would be buried among code commits."
+      },
+      {
+        "text": "Flux refuses repositories that contain a Dockerfile",
+        "correct": false,
+        "why": "Flux reads paths and ignores what it does not need."
+      },
+      {
+        "text": "Git cannot hold YAML and code in one repository",
+        "correct": false,
+        "why": "It can; a monorepo is a legitimate choice."
+      }
+    ]
+  },
+  {
+    "id": "ex-pvf5hzj8",
+    "version": 1,
+    "section": "two-repositories",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The commit the image bulletin:1.0 was built from carries the Git ___ v1.0 in the bulletin repository.",
+    "blanks": [
+      {
+        "accept": [
+          "tag"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-rmjfxn8x",
+    "version": 1,
+    "section": "directories",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does promoting by merging a staging branch into a production branch go wrong?",
+    "choices": [
+      {
+        "text": "A merge brings every staging commit",
+        "correct": true,
+        "why": "Right. Including the staging-only ones, which then need cherry-picks to keep out."
+      },
+      {
+        "text": "Git refuses merges between long-lived branches",
+        "correct": false,
+        "why": "It merges them; the trouble is what comes along."
+      },
+      {
+        "text": "Flux cannot follow a branch other than main",
+        "correct": false,
+        "why": "A Kustomization's source can follow any branch."
+      },
+      {
+        "text": "Branches cannot hold different replica counts",
+        "correct": false,
+        "why": "They can, which is part of the drift."
+      }
+    ]
+  },
+  {
+    "id": "ex-y78kd8d7",
+    "version": 1,
+    "section": "directories",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With one directory per environment, what does a promotion's diff contain?",
+    "choices": [
+      {
+        "text": "The whole production directory, rewritten",
+        "correct": false,
+        "why": "Only the changed lines appear."
+      },
+      {
+        "text": "Only the release being promoted",
+        "correct": true,
+        "why": "Right. Production's directory changes to say what staging's says about it, and nothing else."
+      },
+      {
+        "text": "Every commit made to staging since the last promotion",
+        "correct": false,
+        "why": "That is what a branch merge carries."
+      },
+      {
+        "text": "Nothing, because Flux copies staging to production",
+        "correct": false,
+        "why": "Nothing copies between directories; a person changes production."
+      }
+    ]
+  },
+  {
+    "id": "ex-xncqyhqv",
+    "version": 1,
+    "section": "the-layout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "staging moved to apps/bulletin/staging in one pull request. Why were no pods recreated?",
+    "choices": [
+      {
+        "text": "The pods were protected by a PodDisruptionBudget",
+        "correct": false,
+        "why": "No budget exists here, and none was needed."
+      },
+      {
+        "text": "Flux ignores moves inside a repository",
+        "correct": false,
+        "why": "It noticed: the revision changed and it applied from the new path."
+      },
+      {
+        "text": "git mv keeps the file's hash, so Flux skipped it",
+        "correct": false,
+        "why": "Flux compares objects with the cluster, not file hashes."
+      },
+      {
+        "text": "The same Kustomization still owned them",
+        "correct": true,
+        "why": "Right. Same objects, same owner, a different directory."
+      }
+    ]
+  },
+  {
+    "id": "ex-69nt3ysd",
+    "version": 1,
+    "section": "the-layout",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A move takes manifests into a directory that a different Kustomization reads. What happens to a PersistentVolumeClaim among them?",
+    "choices": [
+      {
+        "text": "Nothing, because claims are never pruned",
+        "correct": false,
+        "why": "Flux prunes any object it applied that left its path."
+      },
+      {
+        "text": "It is transferred between Kustomizations untouched",
+        "correct": false,
+        "why": "Ownership is not transferred; the first one prunes what left its path."
+      },
+      {
+        "text": "It is deleted and recreated empty",
+        "correct": true,
+        "why": "Right. The first Kustomization prunes it and the second creates a new one."
+      },
+      {
+        "text": "The merge is refused by Gitea",
+        "correct": false,
+        "why": "Gitea knows nothing about Kustomizations."
+      }
+    ]
+  },
+  {
+    "id": "ex-v7ns6xpv",
+    "version": 1,
+    "section": "the-layout",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did validate.sh need changing in this lesson?",
+    "choices": [
+      {
+        "text": "kubeconform needed a newer Kubernetes version",
+        "correct": false,
+        "why": "The version stayed 1.37.0."
+      },
+      {
+        "text": "Gitea renamed the validate context",
+        "correct": false,
+        "why": "The context is whatever the script posts."
+      },
+      {
+        "text": "It checked $work/staging, which the move removed",
+        "correct": true,
+        "why": "Right. Pointed at apps/, it checks every application and environment."
+      },
+      {
+        "text": "The ci token had expired",
+        "correct": false,
+        "why": "Nothing expired."
+      }
+    ]
+  },
+  {
+    "id": "ex-9a9xjwd4",
+    "version": 1,
+    "section": "production",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does dependsOn: staging do for the production Kustomization?",
+    "choices": [
+      {
+        "text": "It reconciles production only while staging is ready",
+        "correct": true,
+        "why": "Right. It orders; it does not promote."
+      },
+      {
+        "text": "It copies staging's image to production",
+        "correct": false,
+        "why": "Production runs what its own directory says."
+      },
+      {
+        "text": "It makes production a namespace inside staging",
+        "correct": false,
+        "why": "Namespaces do not nest."
+      },
+      {
+        "text": "It deletes production when staging is deleted",
+        "correct": false,
+        "why": "Pruning is per Kustomization, not through dependencies."
+      }
+    ]
+  },
+  {
+    "id": "ex-q1nfqd2r",
+    "version": 1,
+    "section": "production",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On which port of your machine does production's bulletin answer?",
+    "value": 8081,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-r2nmxd7a",
+    "version": 1,
+    "section": "promotion",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the promotion of bulletin 1.1.",
+    "items": [
+      "Tag v1.1 in the bulletin repository",
+      "Build and push the image bulletin:1.1",
+      "Merge a pull request moving staging to 1.1",
+      "Check staging",
+      "Merge a pull request moving production to 1.1"
+    ],
+    "trap": "The image exists before any environment names it, and staging runs it before production does."
+  },
+  {
+    "id": "ex-vjas0esw",
+    "version": 1,
+    "section": "promotion",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After bulletin:1.1 was pushed, what did staging run before the first pull request?",
+    "choices": [
+      {
+        "text": "Both, one pod each",
+        "correct": false,
+        "why": "Only the directory's image runs."
+      },
+      {
+        "text": "1.0",
+        "correct": true,
+        "why": "Right. A registry is not a deployment; nothing named 1.1 yet."
+      },
+      {
+        "text": "Neither, while Flux checked the new image",
+        "correct": false,
+        "why": "Flux was not watching the registry."
+      },
+      {
+        "text": "1.1, as soon as the push finished",
+        "correct": false,
+        "why": "The push changes no cluster."
+      }
+    ]
+  },
+  {
+    "id": "ex-22wzd0mr",
+    "version": 1,
+    "section": "promotion",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The diff of the two environments' files showed five differences. Which one was the release in transit?",
+    "choices": [
+      {
+        "text": "The image",
+        "correct": true,
+        "why": "Right. Namespace, replicas, message and port are meant to differ."
+      },
+      {
+        "text": "The nodePort",
+        "correct": false,
+        "why": "Each environment has its own port on purpose."
+      },
+      {
+        "text": "The namespace",
+        "correct": false,
+        "why": "It is what makes them two environments."
+      },
+      {
+        "text": "The replica count",
+        "correct": false,
+        "why": "That difference is deliberate, per environment."
+      }
+    ]
+  },
+  {
+    "id": "ex-2dtdx6sa",
+    "version": 1,
+    "section": "promotion",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Version 1.1 of index.cgi adds a line that prints the name of the ___ that answered.",
+    "blanks": [
+      {
+        "accept": [
+          "pod"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hmawfzns",
+    "version": 1,
+    "section": "ownership",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did CODEOWNERS do when a pull request touched apps/bulletin/production/?",
+    "choices": [
+      {
+        "text": "Refused the merge until Bruno approved",
+        "correct": false,
+        "why": "That needs block_on_official_review_requests in the protection."
+      },
+      {
+        "text": "Requested Bruno's review",
+        "correct": true,
+        "why": "Right. It routes reviews; it does not require them on its own."
+      },
+      {
+        "text": "Moved the pull request to Bruno's fork",
+        "correct": false,
+        "why": "Nothing moved; Bruno was added as a reviewer."
+      },
+      {
+        "text": "Approved the change on Bruno's behalf",
+        "correct": false,
+        "why": "Nothing approves for a person."
+      }
+    ]
+  },
+  {
+    "id": "ex-nphh4g3z",
+    "version": 1,
+    "section": "ownership",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why would ownership by directory be impossible if staging and production shared one file?",
+    "choices": [
+      {
+        "text": "Flux would apply the file twice",
+        "correct": false,
+        "why": "Flux applies what a path holds, once."
+      },
+      {
+        "text": "Nobody could own one without owning the other",
+        "correct": true,
+        "why": "Right. Ownership is by path, and one path would hold both."
+      },
+      {
+        "text": "Gitea limits CODEOWNERS to one entry per file",
+        "correct": false,
+        "why": "The limit is not in Gitea; it is in the layout."
+      },
+      {
+        "text": "CODEOWNERS ignores YAML files",
+        "correct": false,
+        "why": "It matches any path."
+      }
+    ]
+  },
+  {
+    "id": "ex-41gvr971",
+    "version": 1,
+    "section": "many-clusters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the many-clusters layout, what does adding a production region mean?",
+    "choices": [
+      {
+        "text": "A new directory under clusters/",
+        "correct": true,
+        "why": "Right. It points at the same apps/bulletin/production/."
+      },
+      {
+        "text": "A new Gitea server",
+        "correct": false,
+        "why": "One repository describes every cluster."
+      },
+      {
+        "text": "A copy of apps/bulletin/production/ per region",
+        "correct": false,
+        "why": "The configuration is shared, not copied, until two regions need to differ."
+      },
+      {
+        "text": "A new branch for the region",
+        "correct": false,
+        "why": "Environments and clusters are directories, not branches."
+      }
+    ]
+  },
+  {
+    "id": "ex-kckedbqz",
+    "version": 1,
+    "section": "many-clusters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which Argo CD object generates one Application per cluster from a template?",
+    "choices": [
+      {
+        "text": "The root Application",
+        "correct": false,
+        "why": "It applies Application files; it generates none."
+      },
+      {
+        "text": "A Kustomization",
+        "correct": false,
+        "why": "That is Flux's object."
+      },
+      {
+        "text": "An ApplicationSet",
+        "correct": true,
+        "why": "Right. From a list, or from the clusters Argo CD knows."
+      },
+      {
+        "text": "An AppProject",
+        "correct": false,
+        "why": "A project limits what Applications may do."
+      }
+    ]
+  },
+  {
+    "id": "ex-tf8y2q8z",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Kustomization's path no longer exists after a move. What does Flux do to the objects it applied before?",
+    "choices": [
+      {
+        "text": "Moves them to the new path",
+        "correct": false,
+        "why": "Flux does not guess where a path went."
+      },
+      {
+        "text": "Recreates them from the cache",
+        "correct": false,
+        "why": "Nothing is recreated; the Kustomization stays not ready."
+      },
+      {
+        "text": "Leaves them as they are",
+        "correct": true,
+        "why": "Right. It reports kustomization path not found and changes nothing."
+      },
+      {
+        "text": "Prunes them all",
+        "correct": false,
+        "why": "An unreadable path is not taken as an empty one."
+      }
+    ]
+  },
+  {
+    "id": "ex-21d8xwh6",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Before merging a rename of a Kustomization in clusters/, what does the lesson suggest?",
+    "choices": [
+      {
+        "text": "Search for the old name across the directory",
+        "correct": true,
+        "why": "Right. A dependsOn naming the old one would wait for ever."
+      },
+      {
+        "text": "Suspend every Kustomization",
+        "correct": false,
+        "why": "Nothing needs suspending for a rename."
+      },
+      {
+        "text": "Rename the namespace too",
+        "correct": false,
+        "why": "A Kustomization's name and a namespace are unrelated."
+      },
+      {
+        "text": "Delete the old Kustomization by hand first",
+        "correct": false,
+        "why": "Pruning the old one is Flux's job once the file changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-vt0frahx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Production needs a fix that staging does not have yet. In this layout, what is the change?",
+    "choices": [
+      {
+        "text": "A pull request to production's directory",
+        "correct": true,
+        "why": "Right. It can be made, reviewed and owned on its own, and staging catches up after."
+      },
+      {
+        "text": "kubectl edit in production, then a commit",
+        "correct": false,
+        "why": "The reconciler would undo the edit before the commit lands."
+      },
+      {
+        "text": "A hotfix branch merged into main later",
+        "correct": false,
+        "why": "Environments are directories; the branch would be main either way."
+      },
+      {
+        "text": "A new environment called hotfix",
+        "correct": false,
+        "why": "An environment is not needed for one change."
+      }
+    ]
+  }
+]

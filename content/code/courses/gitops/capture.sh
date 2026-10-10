@@ -45,3 +45,16 @@ shown() {
   mkdir -p "$(dirname "$3")"
   printf '%s\n' "$out" > "$3"
 }
+# settle NAMESPACE...: wait until no pod there is terminating. bulletin's httpd
+# runs as PID 1 and ignores SIGTERM, so an old pod lingers for its thirty-second
+# grace period after every rollout, and a pod listing taken in that window shows
+# the last rollout instead of the change being made.
+settle() {
+  local ns i
+  for ns in "$@"; do
+    for i in $(seq 60); do
+      kubectl -n "$ns" get pods 2>/dev/null | grep -q Terminating || break
+      sleep 2
+    done
+  done
+}
