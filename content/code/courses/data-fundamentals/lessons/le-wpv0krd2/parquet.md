@@ -72,6 +72,6 @@ its characters, and 20,000 of them come to 160,049 bytes with their headers. Col
 makes the dictionary work: it is built from one column's values, which are alike, and a row format
 has no such run to build it from.
 
-`SNAPPY` is the compression pyarrow applies when nobody asks for another. Section "compression"
+`SNAPPY` is the compression pyarrow applies when nobody asks for another. Section 09
 compares it with the others. To see a footer for a file somebody else wrote, the same calls work on
 any Parquet file: `pq.ParquetFile(path).metadata`, and `.row_group(i).column(j)` beneath it.

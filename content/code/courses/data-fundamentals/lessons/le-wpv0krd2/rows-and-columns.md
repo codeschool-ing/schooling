@@ -70,4 +70,4 @@ as columns:
 Read down the `start_station` line of the second half: three short codes from a list of twelve,
 side by side. In a month of rides that line is 50,000 codes long and still uses only twelve
 different values, which is exactly the kind of run a columnar file can shrink to almost nothing.
-Section "parquet" measures how far.
+Section 05 measures how far.

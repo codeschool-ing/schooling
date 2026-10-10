@@ -14,7 +14,7 @@ kind of work this course names, and the lesson that names it is beside it.
 | Tuesday | the app team added a field `promo_code` to rides; the nightly copy ignored it | **schema change** in a source | 4, 5 |
 | Wednesday | a ride appeared twice in the rides table after a job was retried | **idempotency**: a step that is safe to run twice | 3, 9 |
 | Wednesday | ana asked why the sensor history is kept as Parquet and not CSV | **a format decision** | 6 |
-| Thursday | the payments provider's API started refusing calls after 100 a minute | **a source's limits**: rate limiting | 4, 7 |
+| Thursday | the payments provider's API started refusing calls after 100 a minute | **a source's limits**: rate limiting | 4 |
 | Thursday | the storage bill went up by a third in a month | **cost** | 2, 7 |
 | Friday | Caio asked for the dock readings as they happen, not the next morning | **batch or stream** | 8 |
 | Friday | a disk on the server holding the raw files filled up | **operations**: the machine under it all | 9 |

@@ -73,4 +73,4 @@ as columns:
 Leia a linha `start_station` da segunda metade: três códigos curtos tirados de uma lista de doze,
 lado a lado. Num mês de viagens essa linha tem 50.000 códigos e continua usando só doze valores
 diferentes, que é exatamente o tipo de sequência que um arquivo colunar consegue encolher a quase
-nada. A seção "parquet" mede quanto.
+nada. A seção 05 mede quanto.

@@ -14,7 +14,7 @@ opção antes que valha a pena discutir os outros.
 
 ## O problema
 
-O que precisa ser verdade quando isto funcionar? As perguntas da seção de habilidades dão a resposta:
+O que precisa ser verdade quando isto funcionar? As perguntas da seção 04 dão a resposta:
 Marta precisa da contagem por estação antes de duas saídas da van por dia, com dados de uma ou duas
 horas. Isso ainda não descarta nada, e já faz um processador de fluxos responder a uma pergunta que
 ninguém fez.

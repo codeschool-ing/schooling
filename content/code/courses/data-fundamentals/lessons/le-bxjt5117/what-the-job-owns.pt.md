@@ -9,7 +9,7 @@ para aprender. Os produtos mudam a cada poucos anos. O que faz alguém ser chama
 não mudou, e é a melhor descrição do trabalho.
 
 A aula 1 deixou Davi conferindo toda manhã se o dia anterior tinha chegado. Aqui está tudo aquilo por
-que ele e Ana respondem na Roda Livre:
+que ele e ana respondem na Roda Livre:
 
 | o que o trabalho tem sob sua responsabilidade | na Roda Livre | como fica quando ninguém é dono |
 |---|---|---|

@@ -64,7 +64,7 @@ without one: SchemaResolutionError: No default value for field kind in Ride
 With a default, September reads perfectly under October's schema: every old ride is a `classic`,
 which happens to be true, because there were no electric bicycles before October. Without one, the
 reader refuses and names the field. **Both outcomes are good ones.** The first is correct and the
-second is loud, and neither produces a wrong number. A schema registry, met in section "avro", can run this
+second is loud, and neither produces a wrong number. A schema registry, met in section 06, can run this
 same check before it accepts a new version of a schema, so a change that would break readers is
 refused on the day it is proposed rather than on the morning it is read.
 

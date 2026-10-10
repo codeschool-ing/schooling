@@ -56,8 +56,8 @@ Ler de volta mostra o custo: `minutes` e `member` voltaram com os tipos com que 
 instante, e em que formato, exatamente como no CSV.
 
 A última linha é o outro custo. Dos 162 bytes dessa única viagem, 75 são os nomes dos campos, com as
-aspas, e eles vão ser escritos de novo na viagem seguinte e na outra. A seção
-"the-same-data-five-ways" mostra quanto isso soma em um mês.
+aspas, e eles vão ser escritos de novo na viagem seguinte e na outra. A seção 08
+mostra quanto isso soma em um mês.
 
 ## Uma lista, ou um objeto por linha
 

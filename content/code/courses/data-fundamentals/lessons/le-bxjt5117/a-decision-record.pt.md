@@ -12,18 +12,18 @@ se ela ainda faz sentido.
 O remédio é curto. Michael Nygard o propôs num texto de 2011, *Documenting Architecture Decisions*: um
 **registro de decisão de arquitetura**, ou ADR (*architecture decision record*), uma página de texto
 para cada decisão importante, guardada no mesmo repositório do código que ela afeta. Aqui está o que
-Davi e Ana escreveram depois da matriz:
+Davi e ana escreveram depois da matriz:
 
 ```localised
 # 3. As tabelas analíticas moram num servidor PostgreSQL que nós rodamos
 
 Situação: aceita, 8 de outubro de 2025
-Decidido por: Davi, Ana. Consultados: Marta, Caio.
+Decidido por: Davi, ana. Consultados: Marta, Caio.
 
 ## Contexto
 Marta precisa da contagem por estação antes das saídas da van às 09:30 e
 às 16:00, com dados de no máximo duas horas. Um ano de leituras das docas
-ocupa menos de 4 GB.
+ocupa menos de 5 GB.
 O time tem duas pessoas. Davi roda PostgreSQL há seis anos; ninguém aqui
 rodou um warehouse gerenciado.
 Notas com pesos para um time de dois: PostgreSQL que rodamos 36, warehouse
@@ -56,7 +56,7 @@ vinte horas num mês.
   do raciocínio sobreviver.
 - **O contexto**: os fatos que eram verdade quando a decisão foi tomada. Esta é a parte que envelhece,
   e é por isso que vale guardar o registro. Quem ler em 2027 pode ver que o time tinha duas pessoas e
-  o dado ocupava 4 GB, e julgar se isso ainda vale.
+  o dado ocupava menos de 5 GB, e julgar se isso ainda vale.
 - **A decisão**, em uma ou duas frases, na voz ativa.
 - **As consequências, inclusive as ruins.** Um registro que só lista vantagens é um discurso de vendas,
   e o próximo engenheiro vai desconfiar dele inteiro. Escrever que Davi fica de plantão é o que torna

@@ -75,7 +75,7 @@ The overlap guarantees that a read meets the newest version. Three things it lea
 you should be able to recognise:
 
 - Something has to say which version is newest. Here it is a counter. A system that uses the
-  time of the write instead is trusting clocks, and the first section of this lesson showed how far
+  time of the write instead is trusting clocks, and section 02 of this lesson showed how far
   to trust those.
 - Two writes at the same moment, from two clients to overlapping replicas, can leave the replicas
   disagreeing about which came last.

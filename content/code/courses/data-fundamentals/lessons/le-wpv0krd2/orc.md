@@ -61,7 +61,7 @@ instants. The moment survives; the zone it was written in does not.
 
 ## Parquet or ORC
 
-Measured on the same data, the two land close together, as section "the-same-data-five-ways" shows.
+Measured on the same data, the two land close together, as section 08 shows.
 The difference that decides most choices is who else reads the file. Delta Lake stores its tables
 only as Parquet; Apache Iceberg can use Parquet, ORC or Avro, and uses Parquet unless told
 otherwise. Hive's transactional tables, the ones that accept updates and deletes, require ORC. So

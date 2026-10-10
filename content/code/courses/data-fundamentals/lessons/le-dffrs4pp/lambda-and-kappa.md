@@ -24,8 +24,8 @@ Marz described it in 2011. Every event goes to two places:
 - a **serving layer** merges the two: the batch answer for everything up to last night, the speed answer
   for today.
 
-At Roda Livre, that is the live count of today's rides, corrected overnight by the job from the batch
-section. Passeio Público's late rides are wrong in the live count on Monday and right in Tuesday's
+At Roda Livre, that is the live count of today's rides, corrected overnight by the job from
+section 03. Passeio Público's late rides are wrong in the live count on Monday and right in Tuesday's
 report, and nobody has to choose an allowed lateness of a day.
 
 The cost is the obvious one. **The same logic is written twice, in two systems, by people who can make
@@ -36,7 +36,7 @@ the morning the two answers disagree, somebody has to find out which code is wro
 
 **The Kappa architecture keeps only the stream path, and reprocesses by replaying the log.** Jay Kreps
 proposed it in 2014, in an article whose title questions Lambda. It rests on the property of the log from
-the stream section: events are kept, in order, and a consumer can read them again from offset 0.
+section 04: events are kept, in order, and a consumer can read them again from offset 0.
 
 So there is one piece of code. When it changes, a second copy of the new version starts from the
 beginning of the log and writes to a new output. Once it has caught up with the present, readers switch

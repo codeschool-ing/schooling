@@ -15,7 +15,7 @@ atrapalhar, e o que ela faz no dia em que muda.
 
 ## Seis tipos, e o que cada um faz de errado primeiro
 
-Esta aula percorre seis tipos de fonte, na ordem em que Davi os encontrou no primeiro mês. A tabela é a
+Esta aula percorre seis tipos de fonte, na ordem em que ana os encontra no primeiro mês dela. A tabela é a
 aula inteira num lugar só; cada linha é uma seção própria.
 
 | tipo | na Roda Livre | de quem é | como se lê | o que dá errado primeiro |

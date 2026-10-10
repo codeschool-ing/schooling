@@ -25,10 +25,10 @@ can drive a tool and cannot tell when it is giving a wrong answer.
 ## The seventh skill: finding out what the question is
 
 **Most expensive mistakes in data engineering are correct answers to the wrong question.** Here is
-the shape of one. Marta asks Ana for "a live map of bicycles per station". Taken literally, that is a
+the shape of one. Marta asks ana for "a live map of bicycles per station". Taken literally, that is a
 stream of dock readings processed as they arrive, which is the most expensive thing in lesson 8.
 
-Ana asks what Marta will do with it. The answer: a van moves bicycles between stations twice a day,
+ana asks what Marta will do with it. The answer: a van moves bicycles between stations twice a day,
 leaving at 09:30 and at 16:00, and the driver needs to know where to take them. So what Marta needs is
 a picture of each station **shortly before each van run**, and a forecast of which ones will run dry
 before the next. That is a batch job twice a day, reading data no more than an hour or two old.

@@ -21,8 +21,8 @@ SCAN_TB = 30.00       # a query engine reading one terabyte
 SERVER_H = 0.60       # one hour of a small server we run ourselves
 PERSON_H = 120.00     # one hour of an engineer's time
 
-# 120 docks, one reading a minute, about 60 bytes a reading, kept a year
-year_gb = 120 * 24 * 60 * 365 * 60 / 1e9
+# 150 docks, one reading a minute, about 60 bytes a reading, kept a year
+year_gb = 150 * 24 * 60 * 365 * 60 / 1e9
 
 
 def month(scans, gb_per_scan, server_hours, person_hours):
@@ -54,28 +54,28 @@ runs, which charges nothing per query and needs ten hours of somebody's month.
 
 ```
 ana@lab:~/roda/choose$ python cost.py
-a year of dock readings: 3.78 GB
+a year of dock readings: 4.73 GB
                        storage  queries   server   people     total
-managed, every 5 min      0.57   980.90     0.00   240.00   1221.46
-managed, once a day       0.57     0.01     0.00   240.00    240.58
-our own server            0.57     0.00   432.00  1200.00   1632.57
+managed, every 5 min      0.71  1226.12     0.00   240.00   1466.83
+managed, once a day       0.71     0.01     0.00   240.00    240.72
+our own server            0.71     0.00   432.00  1200.00   1632.71
 ```
 
 ## Reading the bill
 
-**Storage costs next to nothing in every plan.** A year of readings from 120 docks is 3.78 GB, and
-keeping it costs 0.57 a month. Deleting old data to save on storage, the one-way door from earlier
+**Storage costs next to nothing in every plan.** A year of readings from 150 docks is 4.73 GB, and
+keeping it costs 0.71 a month. Deleting old data to save on storage, the one-way door from earlier
 in this lesson, would save less than a real a month.
 
-**How the engine is used moves the bill by a factor of about a hundred thousand.** The same managed engine,
-at the same unit price, costs 980.90 a month in queries when a dashboard re-reads a year of data
+**How the engine is used moves the bill by a factor of more than a hundred thousand.** The same managed engine,
+at the same unit price, costs 1226.12 a month in queries when a dashboard re-reads a year of data
 every five minutes, and 0.01 when a job reads one day, once. Nothing about the tool differs. The
-first plan answers a question nobody asked every five minutes; the skills section's question, *when
-do you need it?*, is worth nearly a thousand reais a month here.
+first plan answers a question nobody asked every five minutes; section 04's question, *when
+do you need it?*, is worth more than twelve hundred reais a month here.
 
 **People are the largest line of the two sensible plans.** In "managed, once a day" the bill is under
 one real and the two hours of an engineer are 240.00. In "our own server" there is no charge per
-query at all, and the plan is the most expensive of the three, at 1632.57, because ten hours of
+query at all, and the plan is the most expensive of the three, at 1632.71, because ten hours of
 upkeep cost 1200.00. "Self-hosted is cheaper" usually compares one plan's bill with the other plan's
 total.
 

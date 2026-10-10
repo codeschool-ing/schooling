@@ -11,7 +11,8 @@ that avoids both, only a choice of which to pay.
 The bet has a name. A **watermark** is the processor's running estimate of how far event time has got:
 a moment such that it does not expect any more events from before it. When the watermark passes the end
 of a window, the window is sent. An event that turns up afterwards for a window already sent is **late
-data**.
+data**. Lesson 7 used the same word for something simpler, the newest change an incremental copy has
+seen; both mark how far the data has been read, and they are not the same thing.
 
 The simplest watermark, and the one used here, is the newest event time seen so far minus an
 **allowed lateness**. If the newest event happened at 08:40 and the allowed lateness is two minutes, the

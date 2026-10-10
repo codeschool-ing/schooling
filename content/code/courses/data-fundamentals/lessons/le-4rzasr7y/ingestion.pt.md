@@ -41,7 +41,8 @@ desde a última cópia.** A Roda Livre tem as duas, por bons motivos:
 
 A incremental é mais barata e tem um porém que a completa não tem. Ela precisa saber o que "novo"
 quer dizer, e uma linha que muda depois de copiada — uma viagem de segunda estornada na quarta — não
-é nova pela data e se perde. A aula 7 trata exatamente disso, e da sobreposição que a pega.
+é nova pela data e se perde. A aula 7 trata exatamente disso: copiar pelo horário da última mudança
+de cada linha, e a sobreposição que pega uma mudança gravada com atraso.
 
 ## Com que frequência: lote ou fluxo
 

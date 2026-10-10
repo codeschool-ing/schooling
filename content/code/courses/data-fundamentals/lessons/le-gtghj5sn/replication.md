@@ -34,7 +34,7 @@ confirmed write exists on two machines while the others cannot slow anything dow
 How far a follower is behind is its **replication lag**. It is usually small, and it grows when the
 leader is busy or the network is slow, which is exactly when people are reading. The program below
 simulates one leader, one follower and a lag of 800 ms, which is a number chosen for the
-demonstration rather than measured anywhere. Ana docks her bicycle at the end of ride R000123, and
+demonstration rather than measured anywhere. ana docks her bicycle at the end of ride R000123, and
 the app reads the ride back. Save it as `replica.py`:
 
 ```schooling-example

@@ -57,8 +57,8 @@ came back as text. Every reader of this file now has to know that the string is 
 which format, exactly as with CSV.
 
 The last line is the other cost. Of the 162 bytes in that one ride, 75 are the names of its fields,
-with their quotes, and they will be written again for the next ride and the one after it. Section
-"the-same-data-five-ways" shows what that adds up to over a month.
+with their quotes, and they will be written again for the next ride and the one after it. Section 08
+shows what that adds up to over a month.
 
 ## One array, or one object per line
 

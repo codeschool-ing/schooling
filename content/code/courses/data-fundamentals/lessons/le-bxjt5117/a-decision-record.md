@@ -11,17 +11,17 @@ makes sense.
 
 The cure is short. Michael Nygard proposed it in a 2011 post, *Documenting Architecture Decisions*:
 an **architecture decision record**, or ADR, a page of text for each significant decision, kept in the
-same repository as the code it affects. Here is the one Davi and Ana wrote after the matrix:
+same repository as the code it affects. Here is the one Davi and ana wrote after the matrix:
 
 ```localised
 # 3. Analytical tables live in a PostgreSQL server we run
 
 Status: accepted, 8 October 2025
-Decided by: Davi, Ana. Consulted: Marta, Caio.
+Decided by: Davi, ana. Consulted: Marta, Caio.
 
 ## Context
 Marta needs station counts before the 09:30 and 16:00 van runs, from data
-at most two hours old. A year of dock readings is under 4 GB.
+at most two hours old. A year of dock readings is under 5 GB.
 The team is two people. Davi has run PostgreSQL for six years; nobody here
 has run a managed warehouse.
 Scored with weights for a team of two: PostgreSQL we run 36, managed
@@ -51,7 +51,7 @@ than a minute, or when upkeep passes twenty hours in a month.
   of the reasoning survives.
 - **The context**: the facts that were true when the decision was made. This is the part that ages,
   and it is why the record is worth keeping. A reader in 2027 can see that the team was two people
-  and the data was 4 GB, and judge whether that is still the case.
+  and the data was under 5 GB, and judge whether that is still the case.
 - **The decision**, in one or two sentences, in the active voice.
 - **The consequences, bad ones included.** A record that lists only advantages is a sales pitch, and
   the next engineer will distrust all of it. Writing down that Davi is on call is what makes the cost

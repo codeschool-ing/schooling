@@ -75,7 +75,7 @@ A sobreposição garante que uma leitura encontre a versão mais nova. Ela deixa
 que você deve saber reconhecer:
 
 - Alguma coisa precisa dizer qual versão é a mais nova. Aqui é um contador. Um sistema que usa a
-  hora da escrita no lugar dele está confiando em relógios, e a primeira seção desta aula mostrou o
+  hora da escrita no lugar dele está confiando em relógios, e a seção 02 desta aula mostrou o
   quanto dá para confiar neles.
 - Duas escritas no mesmo instante, de dois clientes para réplicas que se sobrepõem, podem deixar
   as réplicas discordando sobre qual veio por último.

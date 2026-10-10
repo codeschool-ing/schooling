@@ -343,7 +343,7 @@ Q('ex-1r0tt406', 'a-pipeline-you-can-read', 'medium',
   C('Every program is written in one file of under ten lines', 'Cada programa é escrito num arquivo de menos de dez linhas',
     'They are under forty, and length is not the point.', 'Eles têm menos de quarenta, e tamanho não é a questão.'),
   C('The report prints which stage produced each of its numbers', 'O relatório imprime que etapa produziu cada número dele',
-    'It prints counts; tracing them is the lineage section’s job.', 'Ele imprime contagens; rastreá-las é trabalho da seção de linhagem.')),
+    'It prints counts; tracing them is section 10’s job.', 'Ele imprime contagens; rastreá-las é trabalho da seção 10.')),
 # ---- run-it-twice
 N('ex-12bvvc6d', 'run-it-twice', 'easy',
   ('After `ingest.py` ran a second time, how many lines did `raw/date=2025-09-15/rides.jsonl` hold?',

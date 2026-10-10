@@ -25,10 +25,10 @@ alguém que sabe pilotar uma ferramenta e não sabe dizer quando ela está dando
 ## A sétima habilidade: descobrir qual é a pergunta
 
 **Os erros mais caros da engenharia de dados são respostas certas para a pergunta errada.** Eis a
-forma de um. Marta pede a Ana "um mapa ao vivo das bicicletas por estação". Ao pé da letra, isso é um
+forma de um. Marta pede a ana "um mapa ao vivo das bicicletas por estação". Ao pé da letra, isso é um
 fluxo de leituras das docas processado à medida que chega, que é a coisa mais cara da aula 8.
 
-Ana pergunta o que Marta vai fazer com ele. A resposta: uma van leva bicicletas de uma estação para
+ana pergunta o que Marta vai fazer com ele. A resposta: uma van leva bicicletas de uma estação para
 outra duas vezes por dia, saindo às 09:30 e às 16:00, e o motorista precisa saber para onde levá-las.
 Então o que Marta precisa é de um retrato de cada estação **pouco antes de cada saída da van**, e de
 uma previsão de quais vão esvaziar antes da próxima. Isso é um job em lote duas vezes por dia, lendo

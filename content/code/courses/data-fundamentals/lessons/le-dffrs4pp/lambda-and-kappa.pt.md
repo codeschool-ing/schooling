@@ -26,8 +26,8 @@ descreveu em 2011. Cada evento vai para dois lugares:
 - uma **camada de serviço** (*serving layer*) junta as duas: a resposta do lote para tudo até a noite
   passada, a da velocidade para hoje.
 
-Na Roda Livre, isso é a contagem ao vivo das viagens de hoje, corrigida de madrugada pelo job da seção
-sobre lote. As viagens atrasadas do Passeio Público estão erradas na contagem ao vivo de segunda e certas
+Na Roda Livre, isso é a contagem ao vivo das viagens de hoje, corrigida de madrugada pelo job da
+seção 03. As viagens atrasadas do Passeio Público estão erradas na contagem ao vivo de segunda e certas
 no relatório de terça, e ninguém precisa escolher um atraso permitido de um dia.
 
 O custo é o óbvio. **A mesma lógica é escrita duas vezes, em dois sistemas, por pessoas que podem cometer
@@ -38,7 +38,7 @@ manhã em que as duas respostas discordam alguém precisa descobrir qual código
 
 **A arquitetura Kappa mantém só o caminho de fluxo, e reprocessa reproduzindo o log.** Jay Kreps a
 propôs em 2014, num artigo cujo título questiona a Lambda. Ela se apoia na propriedade do log vista na
-seção de fluxo: os eventos ficam guardados, em ordem, e um consumidor pode lê-los de novo a partir do
+seção 04: os eventos ficam guardados, em ordem, e um consumidor pode lê-los de novo a partir do
 offset 0.
 
 Então existe um código só. Quando ele muda, uma segunda cópia da versão nova começa do início do log e

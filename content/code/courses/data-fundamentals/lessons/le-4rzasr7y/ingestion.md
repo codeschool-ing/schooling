@@ -40,7 +40,8 @@ the last copy.** Roda Livre has both, for good reasons:
 
 Incremental is cheaper and has a catch that full does not. It has to know what "new" means, and a
 row that changes after it was copied — a ride refunded on Wednesday that started on Monday — is not
-new by date and is missed. Lesson 7 is about exactly that, and the overlap that catches it.
+new by date and is missed. Lesson 7 is about exactly that: copying by the time a row last changed,
+and the overlap that catches a change committed late.
 
 ## How often: batch or stream
 

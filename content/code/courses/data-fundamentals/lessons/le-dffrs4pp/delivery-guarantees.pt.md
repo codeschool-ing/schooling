@@ -18,7 +18,7 @@ desse custo.
   uma resposta perdida. O que um sistema consegue prometer é que o *efeito* aconteça uma vez, e isso
   costuma se chamar **efetivamente uma vez** (*effectively once*).
 
-O `consumer.py` da seção de fluxo é um consumidor pelo menos uma vez: ele grava `rides.json` primeiro e
+O `consumer.py` da seção 04 é um consumidor pelo menos uma vez: ele grava `rides.json` primeiro e
 `offset.txt` depois. A opção `--crash` o para entre os dois, que é onde uma queda de energia, uma
 implantação ou um processo morto por falta de memória pode cair a qualquer momento. Comece de um estado
 vazio e derrube a segunda execução:

@@ -57,7 +57,7 @@ compressed CSV loses on three counts that a size does not show.
 
 **To read one column, it has to be decompressed whole.** gzip turns the file into one continuous
 stream. There is no footer saying where `minutes` is, and there are no column chunks to go to; the
-only way to the last ride is through every byte before it. Section "the-same-data-five-ways" showed
+only way to the last ride is through every byte before it. Section 08 showed
 the Parquet reader going through 3% of its file for the same answer.
 
 **It cannot be split.** A gzip stream has to be decompressed from its first byte, so a file of 50 GB

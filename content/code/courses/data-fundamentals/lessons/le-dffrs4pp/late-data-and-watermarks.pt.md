@@ -11,7 +11,9 @@ mais dela. Nenhuma configuração evita as duas coisas; só dá para escolher qu
 A aposta tem nome. Uma **marca d'água** (*watermark*) é a estimativa contínua do processador de até onde
 o tempo do evento já chegou: um momento tal que ele não espera mais eventos de antes dele. Quando a marca
 d'água passa do fim de uma janela, a janela é enviada. Um evento que aparece depois, para uma janela já
-enviada, é um **dado atrasado** (*late data*).
+enviada, é um **dado atrasado** (*late data*). A aula 7 usou a mesma palavra para algo mais simples, a
+mudança mais recente que uma cópia incremental já viu; as duas marcam até onde o dado foi lido, e não são
+a mesma coisa.
 
 A marca d'água mais simples, e a usada aqui, é o tempo de evento mais recente visto até agora menos um
 **atraso permitido** (*allowed lateness*). Se o evento mais recente aconteceu às 08:40 e o atraso

@@ -14,7 +14,7 @@ without getting in the way, and what it does on the day it changes.
 
 ## Six kinds, and what each one does wrong first
 
-This lesson walks through six kinds of source, in the order Davi met them in his first month. The
+This lesson walks through six kinds of source, in the order ana meets them in her first month. The
 table is the whole lesson in one place; each row is a section of its own.
 
 | kind | at Roda Livre | who owns it | how you read it | what goes wrong first |

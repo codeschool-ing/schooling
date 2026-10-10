@@ -14,7 +14,7 @@ aconteceu. Cada item é um tipo de trabalho a que este curso dá nome, e a aula 
 | terça | o time do aplicativo acrescentou um campo `promo_code` às viagens; a cópia noturna o ignorou | **mudança de esquema** numa fonte | 4, 5 |
 | quarta | uma viagem apareceu duas vezes na tabela de viagens depois que um job foi repetido | **idempotência**: um passo que pode rodar duas vezes sem estrago | 3, 9 |
 | quarta | ana perguntou por que o histórico dos sensores é guardado em Parquet e não em CSV | **uma decisão de formato** | 6 |
-| quinta | a API do provedor de pagamentos passou a recusar chamadas acima de 100 por minuto | **os limites de uma fonte**: limitação de taxa | 4, 7 |
+| quinta | a API do provedor de pagamentos passou a recusar chamadas acima de 100 por minuto | **os limites de uma fonte**: limitação de taxa | 4 |
 | quinta | a conta de armazenamento subiu um terço num mês | **custo** | 2, 7 |
 | sexta | Caio pediu as leituras das docas à medida que acontecem, não na manhã seguinte | **lote ou fluxo** | 8 |
 | sexta | um disco do servidor que guarda os arquivos brutos encheu | **operação**: a máquina por baixo de tudo | 9 |

@@ -22,8 +22,8 @@ SCAN_TB = 30.00       # a query engine reading one terabyte
 SERVER_H = 0.60       # one hour of a small server we run ourselves
 PERSON_H = 120.00     # one hour of an engineer's time
 
-# 120 docks, one reading a minute, about 60 bytes a reading, kept a year
-year_gb = 120 * 24 * 60 * 365 * 60 / 1e9
+# 150 docks, one reading a minute, about 60 bytes a reading, kept a year
+year_gb = 150 * 24 * 60 * 365 * 60 / 1e9
 
 
 def month(scans, gb_per_scan, server_hours, person_hours):
@@ -55,28 +55,28 @@ time roda, que não cobra nada por consulta e precisa de dez horas do mês de al
 
 ```
 ana@lab:~/roda/choose$ python cost.py
-a year of dock readings: 3.78 GB
+a year of dock readings: 4.73 GB
                        storage  queries   server   people     total
-managed, every 5 min      0.57   980.90     0.00   240.00   1221.46
-managed, once a day       0.57     0.01     0.00   240.00    240.58
-our own server            0.57     0.00   432.00  1200.00   1632.57
+managed, every 5 min      0.71  1226.12     0.00   240.00   1466.83
+managed, once a day       0.71     0.01     0.00   240.00    240.72
+our own server            0.71     0.00   432.00  1200.00   1632.71
 ```
 
 ## Lendo a conta
 
-**Armazenamento quase não custa nada em nenhum dos planos.** Um ano de leituras de 120 docas ocupa
-3,78 GB, e guardá-lo custa 0,57 por mês. Apagar dados antigos para economizar armazenamento, a porta
+**Armazenamento quase não custa nada em nenhum dos planos.** Um ano de leituras de 150 docas ocupa
+4,73 GB, e guardá-lo custa 0,71 por mês. Apagar dados antigos para economizar armazenamento, a porta
 de mão única de antes nesta aula, economizaria menos de um real por mês.
 
-**O jeito de usar o motor muda a conta por um fator de cerca de cem mil.** O mesmo motor gerenciado, ao
-mesmo preço unitário, custa 980,90 por mês em consultas quando um painel relê um ano de dados a cada
+**O jeito de usar o motor muda a conta por um fator de mais de cem mil.** O mesmo motor gerenciado, ao
+mesmo preço unitário, custa 1.226,12 por mês em consultas quando um painel relê um ano de dados a cada
 cinco minutos, e 0,01 quando um job lê um dia, uma vez. Nada na ferramenta é diferente. O primeiro
-plano responde a cada cinco minutos uma pergunta que ninguém fez; a pergunta da seção de habilidades,
-*quando você precisa?*, vale quase mil reais por mês aqui.
+plano responde a cada cinco minutos uma pergunta que ninguém fez; a pergunta da seção 04,
+*quando você precisa?*, vale mais de mil e duzentos reais por mês aqui.
 
 **As pessoas são a maior linha dos dois planos sensatos.** Em "managed, once a day" a conta fica abaixo
 de um real e as duas horas de um engenheiro são 240,00. Em "our own server" não há cobrança nenhuma por
-consulta, e o plano é o mais caro dos três, com 1.632,57, porque dez horas de manutenção custam
+consulta, e o plano é o mais caro dos três, com 1.632,71, porque dez horas de manutenção custam
 1.200,00. "Hospedar por conta própria é mais barato" costuma comparar a conta de um plano com o total do
 outro.
 

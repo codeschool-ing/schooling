@@ -58,7 +58,7 @@ comprimido perde em três pontos que um tamanho não mostra.
 
 **Para ler uma coluna, ele precisa ser descomprimido inteiro.** O gzip transforma o arquivo num fluxo
 contínuo. Não há rodapé dizendo onde está `minutes`, e não há pedaços de coluna aonde ir; o único
-caminho até a última viagem passa por todos os bytes antes dela. A seção "the-same-data-five-ways"
+caminho até a última viagem passa por todos os bytes antes dela. A seção 08
 mostrou o leitor de Parquet atravessando 3% do seu arquivo para a mesma resposta.
 
 **Ele não pode ser dividido.** Um fluxo gzip precisa ser descomprimido a partir do primeiro byte,

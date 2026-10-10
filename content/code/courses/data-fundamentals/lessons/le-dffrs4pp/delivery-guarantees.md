@@ -17,7 +17,7 @@ is the name for that cost.
   sender that hears nothing back cannot tell a lost message from a lost reply. What a system can promise
   is that the *effect* happens once, and that is usually called **effectively once**.
 
-`consumer.py` from the stream section is an at-least-once consumer: it writes `rides.json` first and
+`consumer.py` from section 04 is an at-least-once consumer: it writes `rides.json` first and
 commits `offset.txt` second. The `--crash` flag stops it between the two, which is where a power cut, a
 deployment or an out-of-memory kill can land at any moment. Start from an empty state and crash the
 second run:

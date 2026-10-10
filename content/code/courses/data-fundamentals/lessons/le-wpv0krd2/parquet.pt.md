@@ -76,7 +76,7 @@ tamanho e quatro para os caracteres, e 20.000 deles chegam a 160.049 bytes com o
 arranjo colunar que faz o dicionário funcionar: ele é montado com os valores de uma coluna, que são
 parecidos, e um formato de linhas não tem uma sequência assim para montá-lo.
 
-`SNAPPY` é a compressão que o pyarrow aplica quando ninguém pede outra. A seção "compression" a
+`SNAPPY` é a compressão que o pyarrow aplica quando ninguém pede outra. A seção 09 a
 compara com as demais. Para ver o rodapé de um arquivo que outra pessoa gravou, as mesmas chamadas
 funcionam em qualquer arquivo Parquet: `pq.ParquetFile(path).metadata`, e `.row_group(i).column(j)`
 abaixo dele.

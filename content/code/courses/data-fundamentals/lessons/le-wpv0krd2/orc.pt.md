@@ -62,8 +62,8 @@ gravado, não.
 
 ## Parquet ou ORC
 
-Medidos sobre os mesmos dados, os dois ficam perto um do outro, como mostra a seção
-"the-same-data-five-ways". A diferença que decide a maioria das escolhas é quem mais lê o arquivo. O
+Medidos sobre os mesmos dados, os dois ficam perto um do outro, como mostra a seção 08.
+A diferença que decide a maioria das escolhas é quem mais lê o arquivo. O
 Delta Lake guarda as suas tabelas só como Parquet; o Apache Iceberg pode usar Parquet, ORC ou Avro, e
 usa Parquet a menos que lhe digam outra coisa. As tabelas transacionais do Hive, as que aceitam
 atualizações e exclusões, exigem ORC. Então o ORC é a resposta certa onde o ambiente já é do Hive, e

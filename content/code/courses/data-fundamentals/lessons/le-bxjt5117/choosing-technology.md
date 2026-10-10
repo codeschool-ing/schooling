@@ -14,7 +14,7 @@ before the others are worth discussing.
 
 ## The problem
 
-What has to be true when this works? The questions from the skills section give the answer: Marta
+What has to be true when this works? The questions from section 04 give the answer: Marta
 needs station counts before two van runs a day, from data an hour or two old. That rules out nothing
 yet, and it already makes a stream processor answer a question nobody asked.
 

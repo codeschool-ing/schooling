@@ -35,7 +35,7 @@ confirmada exista em duas máquinas enquanto as outras não conseguem atrasar na
 Quanto um seguidor está atrasado é o **atraso de replicação**. Em geral ele é pequeno, e cresce quando
 o líder está ocupado ou a rede está lenta, que é justamente quando as pessoas estão lendo. O programa
 abaixo simula um líder, um seguidor e um atraso de 800 ms, que é um número escolhido para a
-demonstração e não medido em lugar nenhum. Ana devolve a bicicleta no fim da viagem R000123, e o
+demonstração e não medido em lugar nenhum. ana devolve a bicicleta no fim da viagem R000123, e o
 aplicativo lê a viagem de volta. Salve como `replica.py`:
 
 ```schooling-example
@@ -57,7 +57,7 @@ t= 900 ms  read  R000123 from the follower -> docked
 ```
 
 Cinquenta milissegundos depois da escrita, o líder diz `docked` e o seguidor ainda diz `riding`. Em
-900 ms o seguidor alcançou e os dois concordam. Se o aplicativo mandou a leitura de Ana para o
+900 ms o seguidor alcançou e os dois concordam. Se o aplicativo mandou a leitura de ana para o
 seguidor, ela devolveu a bicicleta e ouviu que a viagem ainda estava em andamento.
 
 ```schooling-figure

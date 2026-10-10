@@ -65,8 +65,8 @@ without one: SchemaResolutionError: No default value for field kind in Ride
 Com padrão, setembro é lido perfeitamente com o esquema de outubro: toda viagem antiga é `classic`,
 o que por acaso é verdade, porque não havia bicicletas elétricas antes de outubro. Sem padrão, o
 leitor se recusa e diz o nome do campo. **Os dois resultados são bons.** O primeiro está certo e o
-segundo é barulhento, e nenhum produz um número errado. Um registro de esquemas, visto na seção
-"avro", pode fazer essa mesma conferência antes de aceitar uma versão nova de um esquema, e assim uma
+segundo é barulhento, e nenhum produz um número errado. Um registro de esquemas, visto na seção 06,
+pode fazer essa mesma conferência antes de aceitar uma versão nova de um esquema, e assim uma
 mudança que quebraria os leitores é recusada no dia em que é proposta, e não na manhã em que é lida.
 
 ## CSV: pela posição, e em silêncio
