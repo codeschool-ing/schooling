@@ -13,7 +13,7 @@ being written, the place a block goes is marked `@@capture:NAME@@` on a line of 
 
 so a capture rerun after a change to the lab says which transcript in the prose no longer matches
 it. A block whose name ends in `~` varies by nature, a server's token and its clock: it is
-compared with every digit and every hexadecimal run masked.
+compared with every digit and every hexadecimal run of seven or more masked.
 """
 import glob, os, re, sys
 
@@ -28,7 +28,7 @@ def blocks(path):
     return out
 
 def mask(s):
-    return re.sub(r"\d+", "0", re.sub(r"[0-9a-f]{8,}", "X", s))
+    return re.sub(r"\d+", "0", re.sub(r"[0-9a-f]{7,}", "X", s))
 
 def main():
     args = sys.argv[1:]
