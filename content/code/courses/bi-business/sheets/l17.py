@@ -271,8 +271,8 @@ def risk_figure():
     nx = 540
     notes = [
         (('2025 Q3 and Q4: R$ 185 million', '2025 T3 e T4: R$ 185 milhões'), True),
-        (('lent, no point on the chart yet', 'emprestados, sem ponto no'), False),
-        (('', 'gráfico ainda'), False),
+        (('lent, no point on the', 'emprestados, sem ponto no'), False),
+        (('chart yet', 'gráfico ainda'), False),
         (('At six months, every 2025', 'Aos seis meses, cada safra'), True),
         (('vintage is above every', 'de 2025 está acima de'), False),
         (('2024 one.', 'todas as de 2024.'), False),

@@ -31,7 +31,7 @@ porque todas são comparadas no ponto em que tiveram o mesmo tempo para dar erra
 de `analytics-bi` aplicada a empréstimos.
 
 Digite as safras da Ipê numa aba nova a partir de A1. A coluna B é o valor emprestado em cada trimestre,
-em milhões de reais; C, D e E são a porcentagem dele com 90 dias ou mais de atraso aos 6, 9 e 12 meses
+em milhões de reais. C, D e E são a porcentagem dele com 90 dias ou mais de atraso aos 6, 9 e 12 meses
 de carteira, contados do fim do trimestre, com 12 valendo doze ou mais. **Deixe a célula vazia onde a
 safra ainda não chegou àquela idade**:
 
