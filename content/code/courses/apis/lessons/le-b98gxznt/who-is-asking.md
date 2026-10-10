@@ -25,7 +25,7 @@ token the server issued to her, is what proves it. Everything in this lesson is 
 how it is sent, how the server checks it, what the server keeps and how it is taken away.
 
 shelf makes the split visible in one place. The file this lesson builds lets every caller that
-proves who it is read every book, which is all the authorisation it does, with one exception: an API
+proves who it is read every book. That is all the authorisation it does, with one exception: an API
 key belongs to an application, and an application may not create or delete keys. When a key asks for
 the list of keys, the server knows exactly who is asking and still refuses, and the section on API
 keys shows that answer.
@@ -33,7 +33,8 @@ keys shows that answer.
 Where the line falls in the rest of the course:
 
 - lessons 7 to 10 are about the first question: credentials here, sessions and JWT in lesson 8,
-  handing access to another application and signing in through another provider in lesson 9, and storing passwords in lesson 10;
+  handing access to another application and signing in through another provider in lesson 9, and
+  storing passwords in lesson 10;
 - lesson 11 is the second: roles, permissions and scopes;
 - lessons 12 and 13 are about what happens around both: how often one client may ask, and what
   protects the request on its way.

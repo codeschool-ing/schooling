@@ -31,8 +31,8 @@ auth: bearer ok user='ana'
 127.0.0.1 - - [10/Oct/2026 01:26:08] "GET /v1/books/1?access_token=kvtHDkMYde-nVBH0REgczY99ZtzqEC-Q53SoZ8zOYHc HTTP/1.1" 401 -
 ```
 
-**The refused request put the token in the server's own log.** The server writes the request line
-before it has decided anything, and the request line includes the query string. The header version
+**The refused request put the token in the server's own log.** The server logs every request line,
+refused ones included, with the status beside it, and the request line includes the query string. The header version
 left nothing: `GET /v1/books/1`. The token in that line was valid when it was logged, and it stays
 valid for the rest of its hour, sitting in a file that more people can read than can read the
 database.
@@ -48,5 +48,5 @@ also lands in:
   share.
 
 So the defence is at the source: **the server refuses credentials in the URL, and the documentation
-never shows one there.** A token that has been in a URL is treated as leaked, and the fix is the one
-the section on bearer tokens showed: revoke it with `/v1/logout` and log in again.
+never shows one there.** A token that has been in a URL is treated as leaked. The fix is the one the
+section on bearer tokens showed: revoke it with `/v1/logout` and log in again.

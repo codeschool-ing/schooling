@@ -1,19 +1,19 @@
 ---
-title: Testing the matrix
+title: Testando a matriz
 version: 1
 ---
 
-**Authorisation is a table, every caller against every operation, and in each cell the answer that
-should come back.** So its test is a table too: send every request as every caller, compare each
-status with the one expected, and fail on any difference, in either direction.
+**Autorização é uma tabela, todo chamador contra toda operação, e em cada célula a resposta que deve
+voltar.** Então o teste dela também é uma tabela: mandar toda requisição como todo chamador, comparar
+cada status com o esperado e falhar em qualquer diferença, nas duas direções.
 
-The other direction is the reason to write it. A test of the feature checks that Ana can read her
-order. A test of the authorisation also checks that Ana cannot read Bruno's. Nobody writes that check by
-hand, because nothing looks broken when it fails: the order appears, the page is fine, and only
-Bruno would mind.
+A outra direção é o motivo de escrever esse teste. Um teste da funcionalidade checa que a Ana
+consegue ler o pedido dela. Um teste da autorização checa também que a Ana não consegue ler o do
+Bruno. Ninguém escreve essa checagem à mão, porque nada parece quebrado quando ela falha: o pedido
+aparece, a página está ótima, e só o Bruno se importaria.
 
-`matrix.py` is that test for `orders.py`. It makes its requests with `urllib`, from Python's standard
-library. Save it in `~/shelf`:
+O `matrix.py` é esse teste para o `orders.py`. Ele faz as requisições com o `urllib`, da biblioteca
+padrão do Python. Salve em `~/shelf`:
 
 ```python
 # shelf/matrix.py
@@ -82,9 +82,9 @@ print(f"{checks} checks, {len(wrong)} wrong")
 sys.exit(1 if wrong else 0)
 ```
 
-`EXPECTED` is the specification, written by a person, one row per token. **It is the part to read
-in a review**: somebody who knows what the shop intends can check each cell without reading a line
-of `orders.py`. With `orders.py` running in the second terminal:
+`EXPECTED` é a especificação, escrita por uma pessoa, uma linha por token. **É a parte a ler numa
+revisão**: alguém que sabe o que a loja pretende pode conferir cada célula sem ler uma linha do
+`orders.py`. Com o `orders.py` rodando no segundo terminal:
 
 ```
 ana@api:~/shelf$ python3 matrix.py; echo "exit $?"
@@ -108,13 +108,14 @@ demo-eva        403   403   403   403   403   403
 exit 0
 ```
 
-Forty-two checks, none wrong, and an exit status of 0, so a script or a CI job can run it and stop
-on a failure. Each run places two more orders, Ana's and Bruno's, which changes no cell.
+Quarenta e duas checagens, nenhuma errada, e status de saída 0, então um script ou um job de CI pode
+rodar o teste e parar numa falha. Cada execução faz mais dois pedidos, o da Ana e o do Bruno, o que
+não muda nenhuma célula.
 
-## Breaking it on purpose
+## Quebrando de propósito
 
-A test you have only ever seen pass has not shown you it can fail. Make a copy of `orders.py`
-without the two lines of the ownership check, and look at what went:
+Um teste que você só viu passar ainda não mostrou que consegue falhar. Faça uma cópia do `orders.py`
+sem as duas linhas da checagem de dono, e veja o que saiu:
 
 ```
 ana@api:~/shelf$ sed '/!= me and/,+1d' orders.py > broken.py
@@ -124,8 +125,8 @@ ana@api:~/shelf$ diff orders.py broken.py
 <         return None
 ```
 
-Stop `orders.py` in the second terminal and start the copy there with `python3 broken.py`. Then run
-the matrix again:
+Pare o `orders.py` no segundo terminal e inicie a cópia ali com `python3 broken.py`. Depois rode a
+matriz de novo:
 
 ```
 ana@api:~/shelf$ python3 matrix.py; echo "exit $?"
@@ -152,9 +153,9 @@ demo-bruno: GET /orders/1 answered 200, expected 404
 exit 1
 ```
 
-Three cells changed, each marked with `!`, and the lines under the table say who saw what they
-should not have: Ana and her app read Bruno's order 3, and Bruno read Ana's order 1. The exit status
-is 1. **Every one of those requests answered 200 with a well-formed order**, which is why no test of
-the feature would have noticed.
+Três células mudaram, cada uma marcada com `!`, e as linhas embaixo da tabela dizem quem viu o que
+não devia: a Ana e o aplicativo dela leram o pedido 3 do Bruno, e o Bruno leu o pedido 1 da Ana. O
+status de saída é 1. **Cada uma dessas requisições respondeu 200 com um pedido bem formado**, e é por
+isso que nenhum teste da funcionalidade teria notado.
 
-Stop `broken.py` and start `orders.py` again before you go on; `broken.py` can be deleted.
+Pare o `broken.py` e inicie o `orders.py` de novo antes de seguir; o `broken.py` pode ser apagado.

@@ -5,9 +5,8 @@ version: 1
 
 **A refusal should tell the caller that they are refused, and nothing else.** The tempting refusal
 is the helpful one: "no user called nobody", "wrong password for ana". Together those two messages
-answer a question nobody should be able to ask an API, whether a particular person has an account
-here, and on a bookshop that is a small leak, while on a clinic or a dating site it is the whole of the
-damage.
+answer a question nobody should be able to ask an API: whether a particular person has an account
+here. On a bookshop that is a small leak. On a clinic or a dating site it is the whole of the damage.
 
 `keys.py` answers both cases with the same words and the same code, on a fresh server again:
 
@@ -42,9 +41,9 @@ ana@api:~/shelf$ curl -s -H 'Authorization: Bearer not-a-token' localhost:8000/v
 ```
 
 The same rule reaches past this file. A sign-up form that says "this address is already registered"
-and a password reset that says "no account with that address" answer the forbidden question too, and
-the usual way out is to say the same thing in both cases ("if an account exists, we have sent an
-e-mail") and to tell the owner of the address, rather than the person at the keyboard.
+and a password reset that says "no account with that address" answer the forbidden question too. The
+usual way out is to say the same thing in both cases, "if an account exists, we have sent an e-mail",
+and to tell the owner of the address rather than the person at the keyboard.
 
 ## Logging without leaking
 
@@ -68,7 +67,7 @@ auth: bearer refused token=ce6f21ae
 Every decision has a line, and each line was written to be useful and harmless at once:
 
 - a user name is logged, because "fifty refusals for ana in a minute" is the line somebody looks
-  for. It is a trade-off: a person who types their password into the name field puts it in the log,
+  for. It is a trade-off. A person who types their password into the name field puts it in the log,
   so the log is protected like the database;
 - a token is logged as a **fingerprint**, the first eight characters of its SHA-256. `ce6f21ae` is
   `not-a-token` hashed, enough to match a refusal against a row or a support ticket, and useless as a
@@ -78,5 +77,5 @@ Every decision has a line, and each line was written to be useful and harmless a
 What is never there is as important. **No password, no token, no key, and no `Authorization`
 header.** Python's server logs only the request line, which is why the last section's query string
 was the one way a credential got in. The usual way one gets in by accident is a line of debugging that
-prints every header of a request, left in when the debugging stopped, and the rule that prevents it
-is that **a log line names the credential and never contains it**.
+prints every header of a request, left in when the debugging stopped. The rule that prevents it is
+that **a log line names the credential and never contains it**.

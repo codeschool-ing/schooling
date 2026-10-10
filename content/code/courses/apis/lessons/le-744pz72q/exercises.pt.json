@@ -1,0 +1,656 @@
+{
+  "ex-88zr7qxz": {
+    "prompt": "Chega uma requisição com um token válido da Ana pedindo o pedido 3, que é do Bruno. O que a API já estabeleceu até aqui?",
+    "hint": "Duas perguntas, feitas em ordem.",
+    "choices": [
+      {
+        "text": "Que a Ana pode ler o pedido 3, já que o token dela é válido",
+        "why": "Um token válido responde quem está pedindo. Se a Ana pode ler este pedido é a segunda pergunta, e ela ainda não foi feita."
+      },
+      {
+        "text": "Quem está pedindo, e nada sobre o que ela pode fazer",
+        "why": "Certo. A autenticação está feita; a autorização nem começou."
+      },
+      {
+        "text": "Nada ainda, porque um token não prova nada até o pedido ser lido",
+        "why": "O token é conferido primeiro e prova uma coisa: que a requisição vem da Ana."
+      },
+      {
+        "text": "Que o pedido 3 existe",
+        "why": "Nada olhou os pedidos ainda, e no orders.py essa checagem vem depois da permissão."
+      }
+    ]
+  },
+  "ex-qykr5e7c": {
+    "prompt": "A página da loja esconde o botão de estorno dos clientes. A rota de estorno no servidor confere que o token é válido e mais nada. O que um cliente consegue fazer?",
+    "hint": "Toda requisição deste curso foi digitada com curl.",
+    "choices": [
+      {
+        "text": "Nada, porque o botão não está lá para apertar",
+        "why": "O botão só manda uma requisição. A mesma requisição pode ser digitada sem ele."
+      },
+      {
+        "text": "Só estornar pedidos que já são dele",
+        "why": "Nada no servidor compara o pedido com quem chamou, então o dono também não é checado."
+      },
+      {
+        "text": "Receber um 401, porque o token de um cliente não é aceito nessa rota",
+        "why": "A rota aceita qualquer token válido, inclusive o de um cliente; esse é o defeito."
+      },
+      {
+        "text": "Mandar a requisição de estorno com curl e ela dar certo",
+        "why": "Certo. Esconder é conveniência; o servidor tem que decidir em toda requisição."
+      }
+    ]
+  },
+  "ex-dr60b9hn": {
+    "prompt": "Ponha em ordem as checagens por que passa uma requisição ao orders.py.",
+    "hint": "Quem está pedindo vem antes de qualquer outra coisa ser olhada.",
+    "items": [
+      "O token é um que esta API emitiu?",
+      "Existe rota para este endereço e método?",
+      "A permissão da rota está no conjunto de quem chamou?",
+      "Este pedido é um que quem chamou pode ver?",
+      "A política de estorno permite isso hoje?"
+    ],
+    "trap": "Buscar o pedido antes de conferir o token responderia a um estranho de um jeito diferente para pedidos que existem."
+  },
+  "ex-z9n0tq3s": {
+    "prompt": "Alguém acrescenta no banco uma pessoa com o papel `auditor`, e o código nunca soube desse papel. O que cada versão de `allowed()` responde para `orders:refund`?",
+    "hint": "Uma versão lista recusas; a outra lista concessões.",
+    "choices": [
+      {
+        "text": "As duas respondem False, já que nenhuma função menciona o papel",
+        "why": "Não mencionar o papel é justamente o que faz a lista de recusas responder True: ela só recusa o que nomeia."
+      },
+      {
+        "text": "A lista de recusas responde True e a lista de concessões responde False",
+        "why": "Certo. A lista de recusas cai no True; a lista de concessões encontra um conjunto vazio."
+      },
+      {
+        "text": "As duas quebram com KeyError",
+        "why": "A lista de concessões usa `ROLES.get(role, set())`, que devolve um conjunto vazio em vez de levantar erro."
+      },
+      {
+        "text": "As duas respondem True, porque um papel novo começa com todas as permissões até alguém restringir",
+        "why": "Isso seria permitir por padrão. A lista de concessões começa um papel que não conhece com nada."
+      }
+    ]
+  },
+  "ex-1t1j716s": {
+    "prompt": "Complete a busca para que um papel ausente da tabela não receba permissão nenhuma: `ROLES.get(role, ___)`",
+    "hint": "Uma coleção vazia do mesmo tipo dos valores.",
+    "blanks": [
+      {
+        "accept": [
+          "set()"
+        ]
+      }
+    ]
+  },
+  "ex-h67bkjj2": {
+    "prompt": "Uma linha nova é acrescentada a `ROUTES` com a permissão escrita `order:read` em vez de `orders:read`. O que acontece quando as pessoas a chamam?",
+    "hint": "Procure qual conjunto de papel contém essa string.",
+    "choices": [
+      {
+        "text": "Responde 404 para todo mundo, porque a rota não está registrada",
+        "why": "A rota está na tabela e casa com o endereço. Quem recusa é a checagem de permissão."
+      },
+      {
+        "text": "Todo mundo entra, porque uma permissão que nenhum papel define não é checada",
+        "why": "Essa seria a falha de uma lista de recusas. Aqui a string é procurada no conjunto de quem chama e nunca é achada."
+      },
+      {
+        "text": "Todo mundo recebe 403, e alguém percebe na primeira tentativa",
+        "why": "Certo. Nenhum conjunto tem `order:read`, então a rota falha fechada e fazendo barulho."
+      },
+      {
+        "text": "O servidor responde 500 com um KeyError",
+        "why": "Nada busca a permissão como chave; ela é testada com `in`, que responde False."
+      }
+    ]
+  },
+  "ex-ax794hxw": {
+    "prompt": "A loja quer um papel `support` que estorne pedidos mas não liste pessoas. No orders.py, o que precisa mudar?",
+    "hint": "Onde um papel significa alguma coisa nesse arquivo?",
+    "choices": [
+      {
+        "text": "Uma linha em `ROLES`, e as pessoas que recebem o papel",
+        "why": "Certo. Os handlers perguntam por permissões, então nenhum deles fica sabendo do papel novo."
+      },
+      {
+        "text": "Todo handler que checa `staff`",
+        "why": "Nenhum handler checa nome de papel. É isso que checar permissões compra."
+      },
+      {
+        "text": "Uma linha nova em `ROUTES` para cada estorno que o atendimento vai fazer",
+        "why": "Rotas descrevem endereços, não pessoas. A rota de estorno já nomeia `orders:refund`."
+      },
+      {
+        "text": "O handler de estorno, para deixar `support` passar",
+        "why": "O handler nunca vê um papel; o dispatcher checa a permissão antes de ele rodar."
+      }
+    ]
+  },
+  "ex-kz1f2nr2": {
+    "prompt": "Ligue cada permissão do orders.py ao que ela deixa quem chama fazer.",
+    "hint": "Uma descrição não pertence a nenhuma permissão do arquivo.",
+    "pairs": [
+      {
+        "left": "`orders:read`",
+        "right": "ler pedidos, tantos quanto o `find` permitir"
+      },
+      {
+        "left": "`orders:read_all`",
+        "right": "ver os pedidos de todos os clientes, com as notas"
+      },
+      {
+        "left": "`orders:refund`",
+        "right": "pedir o estorno de um pedido"
+      },
+      {
+        "left": "`people:read`",
+        "right": "listar todo mundo e o papel de cada um"
+      }
+    ],
+    "right_distractors": [
+      "trocar o papel de alguém"
+    ]
+  },
+  "ex-b8487sg6": {
+    "prompt": "A Dora passa de `admin` para `staff`. Numa API o papel é lido de uma tabela a cada requisição; noutra ele foi copiado para dentro de um JWT quando o token dela foi emitido. Quando cada uma deixa de permitir que ela liste pessoas?",
+    "hint": "No que cada API acredita, e até quando?",
+    "choices": [
+      {
+        "text": "As duas ao mesmo tempo, na próxima requisição dela",
+        "why": "O JWT ainda diz `admin`, e a segunda API acredita nele sem perguntar ao banco."
+      },
+      {
+        "text": "As duas quando ela entrar de novo",
+        "why": "A primeira API não espera nada: ela lê a tabela a cada requisição."
+      },
+      {
+        "text": "A do JWT na hora, já que um token assinado é conferido toda vez",
+        "why": "A assinatura é conferida toda vez, e continua sendo uma assinatura válida sobre o papel antigo."
+      },
+      {
+        "text": "A primeira já na chamada seguinte; a segunda só quando aquele token expirar",
+        "why": "Certo. Um papel dentro de um token vale até o token acabar; é o preço de não perguntar."
+      }
+    ]
+  },
+  "ex-seh4gtct": {
+    "prompt": "O orders.py recusa uma requisição sem token. Além do status 401, o que a resposta leva que diz ao cliente o que mandar?",
+    "hint": "Um cabeçalho.",
+    "choices": [
+      {
+        "text": "Um cabeçalho `Location` apontando para uma página de login",
+        "why": "`Location` é para um recurso criado ou movido. Uma API responde 401 ali mesmo."
+      },
+      {
+        "text": "Um cabeçalho `Allow`",
+        "why": "`Allow` lista métodos, e vem com o 405."
+      },
+      {
+        "text": "`WWW-Authenticate`, nomeando um bearer token",
+        "why": "Certo. `WWW-Authenticate: Bearer realm=\"shelf\"` diz que tipo de credencial serviria."
+      },
+      {
+        "text": "Um token de demonstração novo no corpo, pronto para a próxima requisição",
+        "why": "Entregar tokens a quem pede sem ter um tornaria a checagem inútil."
+      }
+    ]
+  },
+  "ex-bdtbwr6a": {
+    "prompt": "O papel da Eva, `auditor`, não está em `ROLES`. O token dela carrega `orders:read`. O que `GET /orders` responde a ela?",
+    "hint": "O conjunto efetivo é o que o papel concede e o token carrega.",
+    "choices": [
+      {
+        "text": "200 com os pedidos dela, porque o token carrega o escopo",
+        "why": "Um escopo só conta onde o papel também concede, e o papel dela não concede nada."
+      },
+      {
+        "text": "401, porque um papel que ninguém definiu torna o token inválido",
+        "why": "O token é um que a API emitiu, então quem está pedindo está respondido. É a segunda pergunta que falha."
+      },
+      {
+        "text": "403, porque o conjunto efetivo dela é vazio",
+        "why": "Certo. Um papel desconhecido dá o conjunto vazio, e o conjunto vazio não tem nada em comum com escopo nenhum."
+      },
+      {
+        "text": "500, de um KeyError no papel desconhecido",
+        "why": "`ROLES.get(role, set())` devolve um conjunto vazio em vez de levantar erro."
+      }
+    ]
+  },
+  "ex-wgb7a1qj": {
+    "prompt": "A Ana tem `orders:read` e pede `/orders/3`, que é do Bruno. Que parte do orders.py a manda embora?",
+    "hint": "O dispatcher deixou ela entrar.",
+    "choices": [
+      {
+        "text": "A checagem de permissão no `dispatch`",
+        "why": "Ela tem `orders:read`, que é tudo o que a rota pede, então o dispatcher deixa passar."
+      },
+      {
+        "text": "O `show`, que tira os campos que ela não pode ler",
+        "why": "O `show` decide quais campos saem, e só depois de o pedido ter sido permitido. Ele nunca recusa um."
+      },
+      {
+        "text": "A checagem de token no `caller`, que amarra cada token aos pedidos de um cliente",
+        "why": "Tokens são amarrados a pessoas, não a pedidos. Essa checagem só responde quem ela é."
+      },
+      {
+        "text": "O `find`, comparando o cliente do pedido com quem chamou",
+        "why": "Certo. O pedido é de outra pessoa e ela não tem `orders:read_all`, então o `find` devolve None e ela recebe 404."
+      }
+    ]
+  },
+  "ex-1ms7gt21": {
+    "prompt": "Quais destes tornam difícil escrever uma falha no nível do objeto? Marque todos que se aplicam.",
+    "hint": "Um deles vale a pena ter e mesmo assim não é a checagem.",
+    "choices": [
+      {
+        "text": "Buscar todo objeto por uma função que recebe quem chamou",
+        "why": "Certo. Um handler não consegue pegar um pedido sem dizer quem quer."
+      },
+      {
+        "text": "Usar UUIDs aleatórios no lugar de ids consecutivos",
+        "why": "Eles dificultam adivinhar os vizinhos, e um id ainda vaza por logs e links; aí só resta a checagem."
+      },
+      {
+        "text": "Filtrar as listagens na consulta por quem chamou",
+        "why": "Certo. As linhas de outra pessoa nem chegam a ser lidas."
+      },
+      {
+        "text": "Testar com pelo menos duas pessoas",
+        "why": "Certo. Um teste que entra como uma pessoa só não consegue pedir o objeto de outra."
+      }
+    ]
+  },
+  "ex-2hya0g0c": {
+    "prompt": "Você revisa `def get_invoice(self, me, perms, ident)`, que roda `SELECT * FROM invoices WHERE id = ?` com `ident`, devolve 404 quando nenhuma linha volta e a linha nos outros casos. A rota exige `invoices:read`. O que você aponta?",
+    "hint": "Que argumento o handler nunca usa?",
+    "choices": [
+      {
+        "text": "Nada: a permissão da rota já limita quem pode chamar",
+        "why": "A permissão diz que quem chama pode ler faturas, não quais."
+      },
+      {
+        "text": "Qualquer um que passe pela rota pega a conta de todos os clientes tentando outros ids",
+        "why": "Certo. O `me` nunca é usado, então nada liga a fatura a quem chamou."
+      },
+      {
+        "text": "O 404 deveria ser 403, para quem chamou saber que a fatura existe",
+        "why": "Dizer a um estranho que uma fatura existe é o vazamento que o 404 evita. O que falta é a checagem de dono."
+      },
+      {
+        "text": "O `SELECT *` expõe colunas; listar as colunas resolveria",
+        "why": "Listar colunas resolve quais campos saem, não de quem é a fatura."
+      }
+    ]
+  },
+  "ex-9avep6bk": {
+    "prompt": "O Bruno é dono do pedido 3, e o token dele carrega `orders:refund`. O que `POST /orders/3/refund` responde a ele?",
+    "hint": "Ser dono do pedido e poder usar a função são duas perguntas.",
+    "choices": [
+      {
+        "text": "200, já que ele é dono do pedido e o token carrega o escopo",
+        "why": "As duas coisas são verdade e nenhuma basta: o papel dele não concede estornos."
+      },
+      {
+        "text": "403, por causa do papel dele, que não concede estornos",
+        "why": "Certo. A autorização por função recusa antes de o dono ser perguntado; a mensagem é `the role customer lacks orders:refund`."
+      },
+      {
+        "text": "404, porque um cliente não pode ver estornos",
+        "why": "Ele pode ver o pedido 3; é dele. A recusa é sobre a função."
+      },
+      {
+        "text": "403 com `insufficient_scope`, porque o token é a metade que recusou",
+        "why": "O token dele carrega o escopo. É o papel que não tem, e a resposta diz isso."
+      }
+    ]
+  },
+  "ex-562ee6p0": {
+    "prompt": "A Dora manda `DELETE /orders/3`. Por que o orders.py responde 405 com `Allow: GET`, em vez de uma página 501 da biblioteca do Python?",
+    "hint": "Olhe a linha depois do `dispatch`.",
+    "choices": [
+      {
+        "text": "Porque a requisição de um administrador sempre é respondida pela própria API",
+        "why": "O papel não tem nada a ver; um cliente recebe o mesmo 405."
+      },
+      {
+        "text": "Porque a tabela de rotas tem uma linha DELETE que recusa",
+        "why": "Não há linha DELETE. O 405 vem de achar o endereço com só um GET."
+      },
+      {
+        "text": "O `do_DELETE` está ligado ao `dispatch`, que não acha rota DELETE ali",
+        "why": "Certo. Todo método passa pela tabela, então a tabela é a lista inteira do que a API faz."
+      },
+      {
+        "text": "Porque a biblioteca do Python responde 405 para qualquer método que não conhece",
+        "why": "Para esses ela responde 501, como o OPTIONS da lição 1 mostrou."
+      }
+    ]
+  },
+  "ex-x2xf2xam": {
+    "prompt": "O corpo do pedido da Ana nomeia `status` e `total_cents` ao lado de `book_id` e `quantity`. O orders.py responde 422. Por que recusar em vez de gravar o pedido e ignorar os dois campos?",
+    "hint": "No que o cliente acreditaria depois?",
+    "choices": [
+      {
+        "text": "Ignorar os campos gravaria o status que ela mandou",
+        "why": "Ignorar mantém o status seguro. O problema é no que o cliente fica acreditando."
+      },
+      {
+        "text": "O cliente acreditaria que definiu um status que não definiu",
+        "why": "Certo. Recusar, nomeando os campos, diz ao cliente o que estava errado."
+      },
+      {
+        "text": "O HTTP exige 422 para qualquer campo desconhecido",
+        "why": "O HTTP não exige isso; 422 é o código que este curso escolheu para conteúdo que quebra uma regra."
+      },
+      {
+        "text": "Para que funcionários definam esses campos na mesma requisição",
+        "why": "Ninguém define esses campos por esta rota; o servidor os calcula."
+      }
+    ]
+  },
+  "ex-0f48x5h4": {
+    "prompt": "A Ana pede dois exemplares do livro 1, cujo `price_cents` é 3990, e manda também `\"total_cents\": 1`. Deixando a recusa de lado, que total um servidor correto grava, em centavos?",
+    "hint": "O servidor lê o preço da tabela de livros.",
+    "unit": "centavos"
+  },
+  "ex-tzdjvjcj": {
+    "prompt": "Uma API manda todas as colunas do pedido como JSON, e a página da loja simplesmente não mostra a `note`. O cliente recebeu a nota?",
+    "hint": "Onde o JSON vai parar?",
+    "choices": [
+      {
+        "text": "Sim; ela chegou ao navegador dele, e as ferramentas de desenvolvedor mostram",
+        "why": "Certo. O que a página não mostra foi enviado mesmo assim. Só a representação pode deixar de fora."
+      },
+      {
+        "text": "Não, porque um campo que a página não desenha nunca é recebido",
+        "why": "A página desenha a partir do que recebeu, e recebeu a linha inteira."
+      },
+      {
+        "text": "Não, desde que a requisição tenha exigido um token válido",
+        "why": "O token diz quem pediu; não faz nada com os campos da resposta."
+      },
+      {
+        "text": "Só se o cliente for dono do pedido",
+        "why": "Ser dono do pedido é o motivo de ele receber o pedido. A nota sai junto de qualquer jeito."
+      }
+    ]
+  },
+  "ex-atg83qbw": {
+    "prompt": "No orders.py, o que decide as permissões que uma requisição realmente tem?",
+    "hint": "O `&` do Python entre dois conjuntos.",
+    "choices": [
+      {
+        "text": "O que o papel e o token permitem, os dois",
+        "why": "Certo. A interseção: um token estreita, e nunca alarga."
+      },
+      {
+        "text": "Os escopos do token",
+        "why": "O token do Bruno alega `orders:refund` e mesmo assim ele não consegue estornar. Escopos sozinhos não decidem nada."
+      },
+      {
+        "text": "O papel, com os escopos do token somados",
+        "why": "Somar deixaria um token alargar o que o dono pode fazer."
+      },
+      {
+        "text": "O papel",
+        "why": "O token do aplicativo da Ana tem o papel dela e mesmo assim não consegue fazer pedido."
+      }
+    ]
+  },
+  "ex-czt911ze": {
+    "prompt": "Quando o papel permite a ação mas o escopo do token não, o orders.py responde 403 com `WWW-Authenticate: Bearer error=\"___\"`.",
+    "hint": "O nome que a RFC 6750 dá a esse erro.",
+    "blanks": [
+      {
+        "accept": [
+          "insufficient_scope"
+        ]
+      }
+    ]
+  },
+  "ex-b5ge28cc": {
+    "prompt": "Para economizar uma consulta, um colega propõe checar só os escopos que o token carrega e tirar a busca do papel. Com os seis tokens do orders.py, o que mudaria?",
+    "hint": "Procure um token que alega mais do que o papel do dono.",
+    "choices": [
+      {
+        "text": "Nada, porque todo token carrega exatamente as permissões do dono",
+        "why": "O do Bruno carrega uma a mais, e o da Eva carrega uma que o papel dela não concede."
+      },
+      {
+        "text": "O aplicativo da Ana poderia fazer pedidos",
+        "why": "O token do aplicativo dela carrega só `orders:read`. Só os escopos ainda recusariam."
+      },
+      {
+        "text": "O Bruno poderia estornar pedidos, e a Eva poderia ler os dela",
+        "why": "Certo. Os dois tokens alegam um escopo que o papel não tem, e só a interseção os barrava."
+      },
+      {
+        "text": "A Carla poderia listar pessoas",
+        "why": "O token dela não carrega `people:read`, então só os escopos também recusariam."
+      }
+    ]
+  },
+  "ex-b85611ws": {
+    "prompt": "O `refund_order` recusa quando `age > REFUND_DAYS`, e `REFUND_DAYS` é 30. Qual é a maior idade, em dias, com que um pedido ainda pode ser estornado?",
+    "hint": "Estritamente maior que.",
+    "unit": "dias"
+  },
+  "ex-4nepzh0a": {
+    "prompt": "A Dora é a administradora e pede o estorno do pedido 4, que tem 45 dias. O que ela recebe, e por quê?",
+    "hint": "A recusa é sobre ela ou sobre o pedido?",
+    "choices": [
+      {
+        "text": "200, porque um administrador está acima da regra de estorno",
+        "why": "Nada no orders.py isenta um papel da política. A regra lê a idade do pedido, não o papel."
+      },
+      {
+        "text": "403, igual à Carla, porque a regra é sobre o pedido",
+        "why": "Certo. A política não é uma permissão que falta a ela; nenhum papel muda a idade do pedido."
+      },
+      {
+        "text": "409, porque o pedido foi enviado",
+        "why": "Um pedido enviado pode ser estornado. 409 é para um que já foi estornado ou cancelado."
+      },
+      {
+        "text": "404, porque o pedido não é dela",
+        "why": "Ela tem `orders:read_all`, então o `find` devolve qualquer pedido a ela."
+      }
+    ]
+  },
+  "ex-xcctd5gb": {
+    "prompt": "Uma política ABAC lê atributos de quatro coisas. Ligue cada atributo ao que ele descreve.",
+    "hint": "O `placed_on` fica guardado no pedido.",
+    "pairs": [
+      {
+        "left": "o papel de quem chama",
+        "right": "a pessoa"
+      },
+      {
+        "left": "`placed_on`",
+        "right": "o objeto"
+      },
+      {
+        "left": "estornar, e não ler",
+        "right": "a ação"
+      },
+      {
+        "left": "a data de hoje",
+        "right": "o ambiente"
+      }
+    ],
+    "right_distractors": [
+      "a assinatura do token"
+    ]
+  },
+  "ex-axea33ht": {
+    "prompt": "Ligue cada requisição ao orders.py ao status que ela recebe.",
+    "hint": "Um dos status nunca é a resposta aqui.",
+    "pairs": [
+      {
+        "left": "nenhum cabeçalho `Authorization`",
+        "right": "401"
+      },
+      {
+        "left": "o token do aplicativo da Ana fazendo um pedido",
+        "right": "403"
+      },
+      {
+        "left": "a Ana pedindo o pedido 3 do Bruno",
+        "right": "404"
+      },
+      {
+        "left": "um DELETE em `/orders/3`",
+        "right": "405"
+      }
+    ],
+    "right_distractors": [
+      "409"
+    ]
+  },
+  "ex-3a67g44z": {
+    "prompt": "Por que o orders.py responde 404, e não 403, quando a Ana pede o pedido do Bruno?",
+    "hint": "Os ids são consecutivos.",
+    "choices": [
+      {
+        "text": "Um 403 diria a ela que o pedido 3 existe",
+        "why": "Certo. Percorrer os ids contando os 403 contaria os pedidos da loja; um 404 não diz a um estranho nada que ele já não tenha mandado."
+      },
+      {
+        "text": "Porque o token da Ana não é válido para aquele pedido",
+        "why": "Tokens não são por pedido; o dela é válido, e um problema de token seria um 401."
+      },
+      {
+        "text": "Porque o 403 é reservado para funções administrativas",
+        "why": "O 403 também é o que respondem um escopo que falta e a política de estorno."
+      },
+      {
+        "text": "Porque o pedido realmente falta na cópia dela do banco",
+        "why": "Há um banco só, e o pedido está nele; o `find` decide que ela não pode vê-lo."
+      }
+    ]
+  },
+  "ex-jsqdt531": {
+    "prompt": "A loja acrescenta `POST /admin/reports/rebuild`, listado no documento OpenAPI dela, exigindo `reports:write`. O papel da Carla não tem essa permissão. Que status ela deve receber?",
+    "hint": "O que se esconderia é um objeto ou uma função?",
+    "choices": [
+      {
+        "text": "404, para ninguém saber que a rota existe",
+        "why": "A rota já está no documento publicado. Escondê-la não esconde nada, e deixa a Carla sem o que pedir."
+      },
+      {
+        "text": "403, nomeando a permissão",
+        "why": "Certo. Uma função que está na documentação não é segredo, e a recusa é algo sobre o qual ela pode agir."
+      },
+      {
+        "text": "401, para o cliente dela buscar um token com mais coisa",
+        "why": "Um token novo para a mesma pessoa encontra o mesmo papel. 401 é para quando não se sabe quem pede."
+      },
+      {
+        "text": "405, porque o método não é permitido para ela",
+        "why": "405 é sobre o endereço e o método, igual para todo mundo. A recusa dela é sobre ela."
+      }
+    ]
+  },
+  "ex-nz9a5a2m": {
+    "prompt": "O `matrix.py` tem 7 linhas em `EXPECTED` e 6 endpoints. Você acrescenta mais um token e mais dois endpoints. Quantas checagens uma execução faz então?",
+    "hint": "Todo token contra todo endpoint.",
+    "unit": "checagens"
+  },
+  "ex-jenmxpr6": {
+    "prompt": "Ponha em ordem os passos que provam que a matriz pega uma checagem de dono que falta.",
+    "hint": "A cópia quebrada precisa da porta que o orders.py está ocupando.",
+    "items": [
+      "Rodar o `matrix.py` contra o `orders.py` e ver 0 erradas",
+      "Escrever o `broken.py` sem as duas linhas da checagem",
+      "Parar o `orders.py` e iniciar o `broken.py`",
+      "Rodar o `matrix.py` de novo e ver 3 erradas, status de saída 1",
+      "Parar o `broken.py` e iniciar o `orders.py` de novo"
+    ],
+    "trap": "Iniciar o `broken.py` com o `orders.py` ainda ocupando a porta 8000 falha, e a matriz testaria o servidor antigo."
+  },
+  "ex-k26hpswh": {
+    "prompt": "O token do aplicativo da Ana manda `POST /orders/2/refund`. O pedido 2 é da Ana. O que volta?",
+    "hint": "Pergunte aos portões em ordem, e ao papel antes do token.",
+    "choices": [
+      {
+        "text": "403 com `insufficient_scope`, porque o token não tem `orders:refund`",
+        "why": "O token não tem, e o papel da Ana também não. O orders.py só culpa o token quando o papel tem a permissão."
+      },
+      {
+        "text": "404, porque a rota de estorno não mostra pedidos de clientes",
+        "why": "A requisição nunca chega ao `find`; ela é recusada no portão da permissão."
+      },
+      {
+        "text": "200, já que o pedido é dela e só tem 10 dias",
+        "why": "Ser dona e a idade do pedido são portões posteriores. Estornar não é função de cliente."
+      },
+      {
+        "text": "403: o papel customer não tem orders:refund",
+        "why": "Certo. Nenhuma das metades concede, e a mensagem nomeia o papel porque é no papel que ela nunca foi concedida."
+      }
+    ]
+  },
+  "ex-zcxvhd1q": {
+    "prompt": "Quais destes erros o `matrix.py`, exatamente como está escrito, pegaria? Marque todos que se aplicam.",
+    "hint": "Ele manda seis requisições por token e compara só o status.",
+    "choices": [
+      {
+        "text": "Apagar a checagem de dono no `find`",
+        "why": "Certo. Três células viraram 200 quando isso foi feito."
+      },
+      {
+        "text": "O `show` mandar a `note` para clientes",
+        "why": "O status continua 200 de qualquer jeito; a matriz nunca lê um corpo."
+      },
+      {
+        "text": "Tirar o `& scopes`, para que um token receba o papel inteiro do dono",
+        "why": "Certo. O token do aplicativo da Ana faria um pedido: 201 onde se espera 403."
+      },
+      {
+        "text": "Remover a regra de 30 dias para estornos",
+        "why": "Nenhuma coluna pede estorno, então nada na tabela depende da regra."
+      }
+    ]
+  },
+  "ex-2f57ea78": {
+    "prompt": "Nenhuma checagem no orders.py compara nome de papel. Cada uma pergunta se uma ___ está no conjunto de quem chama.",
+    "hint": "Algo como `orders:refund`.",
+    "blanks": [
+      {
+        "accept": [
+          "permissão",
+          "permissao"
+        ]
+      }
+    ]
+  },
+  "ex-1m7j2f7d": {
+    "prompt": "A Eva recebe um token novo com todos os escopos que o orders.py usa. O papel dela continua `auditor`. O que ela pode fazer agora?",
+    "hint": "Faça a interseção do conjunto do papel com o do token.",
+    "choices": [
+      {
+        "text": "Nada além de antes: toda requisição continua sendo 403",
+        "why": "Certo. Um papel desconhecido concede o conjunto vazio, e o vazio intersectado com qualquer coisa é vazio."
+      },
+      {
+        "text": "Tudo o que o token lista, já que o papel não concede nada a subtrair",
+        "why": "Não se subtrai do papel; faz-se a interseção com ele. Um papel vazio não deixa nada."
+      },
+      {
+        "text": "Ler os próprios pedidos, a única coisa que todo papel recebe",
+        "why": "Nenhuma permissão é dada a todo papel; `auditor` nem tem linha."
+      },
+      {
+        "text": "Só listar pessoas, como um auditor faria",
+        "why": "O nome do papel não significa nada para o código. Só a linha dele em `ROLES` significaria, e não há."
+      }
+    ]
+  }
+}
