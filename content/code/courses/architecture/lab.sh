@@ -75,7 +75,7 @@ reset() {
 prebuild() { # every service with a build context, under the name compose gives it
   local dir=$1 project
   project=$(basename "$dir")
-  ( cd "$dir" && docker compose config --format json ) | python3 -c '
+  ( cd "$dir" && docker compose --profile "*" config --format json ) | python3 -c '
 import json, sys
 c = json.load(sys.stdin)
 for name, s in c["services"].items():

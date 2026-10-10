@@ -1,0 +1,583 @@
+{
+  "ex-jn9cx5w3": {
+    "prompt": "O que acontece com uma mensagem numa fila depois que o consumidor a confirma?",
+    "hint": "Trabalho a fazer.",
+    "choices": [
+      {
+        "text": "O broker a apaga, já que o trabalho acabou",
+        "why": "Isso. O modelo da fila é trabalho, e trabalho terminado não é guardado."
+      },
+      {
+        "text": "Fica pelos sete dias de retenção",
+        "why": "Esse é o comportamento do log."
+      },
+      {
+        "text": "Vai para o próximo consumidor do grupo, para ser lida duas vezes",
+        "why": "Numa fila cada mensagem vai para um consumidor."
+      },
+      {
+        "text": "É copiada para toda outra fila ligada à exchange",
+        "why": "Cópias são feitas quando a mensagem é publicada, não quando é confirmada."
+      }
+    ]
+  },
+  "ex-frnwy83x": {
+    "prompt": "Uma equipe de analytics quer ler os eventos `OrderPlaced` do mês passado, que três serviços já processaram. Que modelo de broker torna isso possível?",
+    "hint": "Qual dos dois guarda mensagens depois de lidas?",
+    "choices": [
+      {
+        "text": "Uma fila, se a equipe de analytics declarar a sua fila agora",
+        "why": "Uma fila declarada agora só recebe o que for publicado daqui para frente."
+      },
+      {
+        "text": "Um log, com retenção cobrindo um mês",
+        "why": "Isso. Um leitor novo pode começar da mensagem retida mais antiga."
+      },
+      {
+        "text": "Qualquer um, já que os dois guardam mensagens até todo consumidor ler",
+        "why": "Uma fila apaga na confirmação."
+      },
+      {
+        "text": "Nenhum; eventos passados somem nos dois",
+        "why": "Um log os guarda pelo período de retenção."
+      }
+    ]
+  },
+  "ex-fdz8bvkq": {
+    "prompt": "Ligue cada afirmação ao modelo que ela descreve.",
+    "hint": "A tabela no fim da seção.",
+    "pairs": [
+      {
+        "left": "o broker acompanha o estado de cada mensagem",
+        "right": "uma fila"
+      },
+      {
+        "left": "o broker acompanha o offset de cada leitor",
+        "right": "um log"
+      },
+      {
+        "left": "filas da SQS e do Service Bus",
+        "right": "filas, como o RabbitMQ"
+      },
+      {
+        "left": "Kinesis e Event Hubs",
+        "right": "logs, como o Kafka"
+      }
+    ],
+    "right_distractors": [
+      "nenhum dos modelos"
+    ]
+  },
+  "ex-camta4d6": {
+    "prompt": "No laboratório, quantos mebibytes o contêiner do Kafka usava parado, arredondado para o inteiro mais próximo?",
+    "hint": "A linha do `docker stats` para o kafka.",
+    "unit": "MiB"
+  },
+  "ex-gqtwhr7z": {
+    "prompt": "Por que `docker compose up -d` inicia os dois brokers e não o serviço `tools`?",
+    "hint": "Olhe a linha embaixo de `tools` no `compose.yaml`.",
+    "choices": [
+      {
+        "text": "A imagem tools falhou no build",
+        "why": "Ela constrói; só não é iniciada pelo `up`."
+      },
+      {
+        "text": "O Compose inicia no máximo dois serviços por vez",
+        "why": "Não existe esse limite."
+      },
+      {
+        "text": "Ele está num profile, que o `up` pula",
+        "why": "Isso. `docker compose run tools …` o constrói e roda quando um script é necessário."
+      },
+      {
+        "text": "Depende do Kafka, que ainda não está pronto",
+        "why": "Depende do RabbitMQ, e não é por isso que fica de fora."
+      }
+    ]
+  },
+  "ex-2xj5m7sr": {
+    "prompt": "No RabbitMQ, para onde um publicador manda uma mensagem?",
+    "hint": "Nunca para uma fila.",
+    "choices": [
+      {
+        "text": "Direto para a fila do serviço que precisa dela",
+        "why": "Um publicador nunca manda para uma fila."
+      },
+      {
+        "text": "Para o consumidor, que a encaminha para a fila dele",
+        "why": "Consumidores leem de filas; não encaminham."
+      },
+      {
+        "text": "Para uma exchange, com uma chave de roteamento",
+        "why": "Isso. As ligações decidem que filas recebem uma cópia."
+      },
+      {
+        "text": "Para uma partição escolhida pelo hash da chave",
+        "why": "Esse é o modelo do Kafka."
+      }
+    ]
+  },
+  "ex-cyp3w0rg": {
+    "prompt": "Ligue cada tipo de exchange àquilo para onde ele entrega.",
+    "hint": "A segunda tabela.",
+    "pairs": [
+      {
+        "left": "direct",
+        "right": "filas ligadas com exatamente a chave de roteamento"
+      },
+      {
+        "left": "topic",
+        "right": "filas cujo padrão bate, com * e #"
+      },
+      {
+        "left": "fanout",
+        "right": "toda fila ligada, qualquer que seja a chave"
+      }
+    ],
+    "right_distractors": [
+      "a fila com menos mensagens"
+    ]
+  },
+  "ex-js2e2961": {
+    "prompt": "Uma fila está ligada a uma exchange topic com `order.*`. Que chave de roteamento NÃO chega a ela?",
+    "hint": "`*` é exatamente uma palavra.",
+    "choices": [
+      {
+        "text": "`order.placed`",
+        "why": "Uma palavra depois de `order.`, então bate."
+      },
+      {
+        "text": "`order.refunded`",
+        "why": "Uma palavra depois de `order.`, então bate."
+      },
+      {
+        "text": "`order.item.added`",
+        "why": "Isso. São duas palavras depois de `order.`; `order.#` bateria."
+      },
+      {
+        "text": "`order.cancelled`",
+        "why": "Uma palavra depois de `order.`, então bate."
+      }
+    ]
+  },
+  "ex-z1mdnxwz": {
+    "prompt": "A Quitanda acrescenta um serviço de fidelidade que precisa receber todo pedido. O que muda no RabbitMQ, e o que muda no publicador?",
+    "hint": "Quem cria filas e ligações?",
+    "choices": [
+      {
+        "text": "Uma exchange nova para fidelidade, e o publicador manda para as duas",
+        "why": "Uma exchange serve toda fila interessada."
+      },
+      {
+        "text": "Uma fila e uma ligação novas; nada no publicador",
+        "why": "Isso. O publicador só conhece a exchange."
+      },
+      {
+        "text": "Nada no RabbitMQ; o publicador acrescenta uma terceira chave de roteamento",
+        "why": "Sem fila ligada, as mensagens não iriam para lugar nenhum."
+      },
+      {
+        "text": "A fila de e-mail é dividida com a fidelidade, e os dois competem pelas mensagens",
+        "why": "Consumidores concorrentes receberiam cada um alguns pedidos, não todos."
+      }
+    ]
+  },
+  "ex-n6sf53f7": {
+    "prompt": "Dois pedidos foram publicados antes de qualquer fila existir. Que fim eles levaram?",
+    "hint": "A lista de filas depois.",
+    "choices": [
+      {
+        "text": "Esperaram na exchange até as filas serem declaradas",
+        "why": "Uma exchange não guarda mensagens."
+      },
+      {
+        "text": "Foram descartados, e o publicador nunca ficou sabendo",
+        "why": "Isso. Nenhuma ligação bateu, então não foram para lugar nenhum."
+      },
+      {
+        "text": "Foram rejeitados, e o `publish.py` levantou um erro",
+        "why": "O `publish.py` os imprimiu como publicados."
+      },
+      {
+        "text": "Foram entregues ao primeiro consumidor que se conectou",
+        "why": "Mensagens descartadas não chegam a ninguém."
+      }
+    ]
+  },
+  "ex-81g0spfz": {
+    "prompt": "Depois de `publish.py 6 7`, quantas mensagens a fila do depósito guardava?",
+    "hint": "Quatro que ninguém tinha lido, mais seis.",
+    "unit": "mensagens"
+  },
+  "ex-zqjkewyf": {
+    "prompt": "Dois consumidores dividiram a fila do depósito. O que a saída mostrou sobre a ordem?",
+    "hint": "Olhe os pedidos 9 e 10.",
+    "choices": [
+      {
+        "text": "Os pedidos foram tratados estritamente na ordem de publicação",
+        "why": "O pedido 10 apareceu antes do 9."
+      },
+      {
+        "text": "O pedido 10 foi tratado e impresso antes do 9",
+        "why": "Isso. Consumidores concorrentes não mantêm a ordem da fila."
+      },
+      {
+        "text": "Cada consumidor tratou todo pedido, uma vez cada",
+        "why": "Cada pedido foi tratado por um consumidor."
+      },
+      {
+        "text": "Um consumidor tratou todos e o outro nenhum",
+        "why": "Os dois hostnames se alternam na saída."
+      }
+    ]
+  },
+  "ex-0p42d6hh": {
+    "prompt": "O que `prefetch_count=1` muda para os dois consumidores do depósito?",
+    "hint": "Quantas mensagens não confirmadas cada um pode segurar?",
+    "choices": [
+      {
+        "text": "Cada mensagem é entregue aos dois consumidores",
+        "why": "Isso seria duas filas, não dois consumidores."
+      },
+      {
+        "text": "As mensagens são entregues em ordem estrita",
+        "why": "Não faz dois trabalhadores manterem a ordem."
+      },
+      {
+        "text": "Uma mensagem por vez para cada um, a próxima depois da confirmação",
+        "why": "Isso, então o trabalho se espalha em vez de se acumular em quem se conectou primeiro."
+      },
+      {
+        "text": "Só um consumidor pode estar conectado por vez",
+        "why": "Os dois estavam conectados e os dois trabalharam."
+      }
+    ]
+  },
+  "ex-h8taqvjm": {
+    "prompt": "O que decide em que partição uma mensagem do Kafka é escrita?",
+    "hint": "O produtor calcula o hash de alguma coisa.",
+    "choices": [
+      {
+        "text": "O grupo de consumidores que vai lê-la",
+        "why": "Produtores não sabem que grupos vão ler."
+      },
+      {
+        "text": "A chave dela",
+        "why": "Isso: a mesma chave, a mesma partição."
+      },
+      {
+        "text": "A partição com menos mensagens naquele momento",
+        "why": "A posição segue a chave, não a carga."
+      },
+      {
+        "text": "Um padrão de ligação no tópico",
+        "why": "O Kafka não tem ligações."
+      }
+    ]
+  },
+  "ex-v5tky7y1": {
+    "prompt": "Um grupo de consumidores tem quatro consumidores lendo um tópico com três partições. O que faz o quarto consumidor?",
+    "hint": "Uma partição é lida por um consumidor do grupo.",
+    "choices": [
+      {
+        "text": "Fica parado, sem partição, até outro sair",
+        "why": "Isso. O paralelismo é limitado pelo número de partições."
+      },
+      {
+        "text": "Lê uma cópia de toda partição, como reserva",
+        "why": "Um grupo divide partições; não as copia."
+      },
+      {
+        "text": "Divide a partição 0 com outro consumidor",
+        "why": "Uma partição é lida por um consumidor do grupo por vez."
+      },
+      {
+        "text": "Cria uma quarta partição para si",
+        "why": "Consumidores não criam partições."
+      }
+    ]
+  },
+  "ex-1v5vbm2c": {
+    "prompt": "Exatamente que ordem o Kafka promete?",
+    "hint": "Dentro do quê, e entre o quê?",
+    "choices": [
+      {
+        "text": "A ordem do tópico inteiro, para todo consumidor",
+        "why": "Entre partições não há ordem."
+      },
+      {
+        "text": "A ordem das leituras de cada grupo de consumidores",
+        "why": "A promessa é sobre partições, não grupos."
+      },
+      {
+        "text": "A ordem dos timestamps do relógio do produtor",
+        "why": "Timestamps não têm papel na posição."
+      },
+      {
+        "text": "Dentro de uma partição, e nenhuma entre partições",
+        "why": "Isso. Escolher a chave decide o que fica em ordem."
+      }
+    ]
+  },
+  "ex-0kq6g0n0": {
+    "prompt": "A posição de uma mensagem dentro da partição, começando em 0, se chama ___.",
+    "hint": "Cada grupo de consumidores guarda um por partição.",
+    "blanks": [
+      {
+        "accept": [
+          "offset"
+        ]
+      }
+    ]
+  },
+  "ex-9bapy03p": {
+    "prompt": "No laboratório, por que o consumidor imprimiu os pedidos de ana antes do pedido 2 de bruno, embora o pedido 2 tenha sido produzido antes do 3?",
+    "hint": "Em que partições eles estão?",
+    "choices": [
+      {
+        "text": "O Kafka ordena mensagens pela chave antes de entregar",
+        "why": "Não há ordenação; as partições são lidas uma depois da outra."
+      },
+      {
+        "text": "O produtor mandou o pedido 3 primeiro por engano",
+        "why": "O produtor mandou na ordem da entrada."
+      },
+      {
+        "text": "Estão em partições diferentes, e nada ordena entre elas",
+        "why": "Isso. Dentro de cada partição a ordem se manteve."
+      },
+      {
+        "text": "O pedido 2 se perdeu e foi escrito de novo depois",
+        "why": "Nada se perdeu; os offsets 0 a 2 da partição 2 estão todos lá."
+      }
+    ]
+  },
+  "ex-d41jes6k": {
+    "prompt": "Depois dos dois pedidos extras, qual era o lag total do grupo email nas três partições?",
+    "hint": "Some a coluna LAG.",
+    "unit": "mensagens"
+  },
+  "ex-dsaz3t8g": {
+    "prompt": "O lag de um grupo num tópico cresce algumas centenas de mensagens por hora. O que isso diz?",
+    "hint": "Estável ou caindo, contra crescendo.",
+    "choices": [
+      {
+        "text": "O tópico está perdendo mensagens",
+        "why": "As mensagens estão lá; o grupo está atrás delas."
+      },
+      {
+        "text": "O produtor está mandando duplicatas",
+        "why": "Lag conta mensagens não lidas, não duplicatas."
+      },
+      {
+        "text": "O período de retenção é longo demais",
+        "why": "Retenção não muda a velocidade de leitura de um grupo."
+      },
+      {
+        "text": "Os consumidores não estão acompanhando",
+        "why": "Isso, e a mensagem não lida mais antiga envelhece a cada minuto."
+      }
+    ]
+  },
+  "ex-pq0kmhp6": {
+    "prompt": "Ligue cada coluna de `kafka-consumer-groups --describe` ao que ela significa.",
+    "hint": "O parágrafo depois da captura.",
+    "pairs": [
+      {
+        "left": "CURRENT-OFFSET",
+        "right": "onde o grupo vai ler em seguida"
+      },
+      {
+        "left": "LOG-END-OFFSET",
+        "right": "onde a próxima mensagem vai ser escrita"
+      },
+      {
+        "left": "LAG",
+        "right": "quantas mensagens o grupo não leu"
+      }
+    ],
+    "right_distractors": [
+      "quantos consumidores há no grupo"
+    ]
+  },
+  "ex-48yrxsd1": {
+    "prompt": "O grupo novo `warehouse` leu o tópico desde o começo. Quantas mensagens ele leu?",
+    "hint": "Cinco, e depois mais dois.",
+    "unit": "mensagens"
+  },
+  "ex-42dxp8td": {
+    "prompt": "O que a leitura do grupo `warehouse` fez com o grupo `email`?",
+    "hint": "Grupos leem de forma independente.",
+    "choices": [
+      {
+        "text": "Moveu os offsets do grupo email para o fim",
+        "why": "Cada grupo guarda os seus próprios offsets."
+      },
+      {
+        "text": "Removeu as mensagens que o grupo email ainda não tinha lido",
+        "why": "Ler não remove nada de um log."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso. Cada grupo tem a sua posição no mesmo log."
+      },
+      {
+        "text": "Dobrou o lag do grupo email",
+        "why": "O lag depende só da posição do grupo email e do fim do log."
+      }
+    ]
+  },
+  "ex-j75gf54k": {
+    "prompt": "O serviço de e-mail corrigiu um bug e os offsets do grupo dele foram voltados para o começo. O que precisa ser verdade sobre o consumidor de e-mail antes de isso ser seguro?",
+    "hint": "Ele vai agir sobre mensagens velhas como se fossem novas.",
+    "choices": [
+      {
+        "text": "Os consumidores dele precisam estar rodando enquanto os offsets são voltados",
+        "why": "A ferramenta se recusa a voltar um grupo com consumidores ativos."
+      },
+      {
+        "text": "O tópico precisa ter uma partição só",
+        "why": "Voltar funciona com qualquer número de partições."
+      },
+      {
+        "text": "Rodar duas vezes sobre uma mensagem precisa ser seguro",
+        "why": "Isso, idempotência, que é a aula 7."
+      },
+      {
+        "text": "O produtor precisa mandar as mensagens de novo",
+        "why": "As mensagens continuam no log; nada é mandado de novo."
+      }
+    ]
+  },
+  "ex-y9mce87p": {
+    "prompt": "Um consumidor de uma fila SQS leva 45 segundos para tratar uma mensagem, e o tempo de visibilidade é de 30 segundos. O que acontece?",
+    "hint": "O que a mensagem faz quando o tempo passa antes de ela ser apagada?",
+    "choices": [
+      {
+        "text": "A SQS espera o consumidor terminar, quanto tempo levar",
+        "why": "O tempo de visibilidade não espera ninguém."
+      },
+      {
+        "text": "A mensagem é apagada depois de 30 segundos como falha",
+        "why": "Ela volta a ficar visível em vez de apagada."
+      },
+      {
+        "text": "O consumidor é desconectado da fila para sempre",
+        "why": "Nada o desconecta; a mensagem só reaparece."
+      },
+      {
+        "text": "Reaparece, e outro consumidor a trata também",
+        "why": "Isso. O tempo precisa ser maior que o tratamento normal mais lento."
+      }
+    ]
+  },
+  "ex-v1vcdmgh": {
+    "prompt": "A fila para onde vão as mensagens depois de falhar um número definido de vezes, para uma pessoa olhar, se chama fila de mensagens ___.",
+    "hint": "Cartas que ninguém consegue entregar.",
+    "blanks": [
+      {
+        "accept": [
+          "mortas"
+        ]
+      }
+    ]
+  },
+  "ex-pn3e3k5x": {
+    "prompt": "Qual destes mantém a ordem dentro de um grupo de mensagens, como a chave faz no Kafka?",
+    "hint": "Uma fila FIFO e os seus grupos de mensagens.",
+    "choices": [
+      {
+        "text": "Uma fila padrão da SQS",
+        "why": "Filas padrão não prometem ordem."
+      },
+      {
+        "text": "Uma fila FIFO da SQS",
+        "why": "Isso, por grupo de mensagens."
+      },
+      {
+        "text": "Uma exchange fanout do RabbitMQ",
+        "why": "Uma exchange roteia; não ordena."
+      },
+      {
+        "text": "Qualquer fila de mensagens mortas",
+        "why": "Uma fila de mensagens mortas guarda falhas; ordem não é o trabalho dela."
+      }
+    ]
+  },
+  "ex-rgtrbvqr": {
+    "prompt": "Segundo a aula, qual é a primeira pergunta na escolha de um broker?",
+    "hint": "Antes de qualquer nome de produto.",
+    "choices": [
+      {
+        "text": "As mensagens são trabalho a fazer ou um registro do que aconteceu?",
+        "why": "Isso. A resposta escolhe uma família."
+      },
+      {
+        "text": "Que broker tem mais estrelas no GitHub?",
+        "why": "Popularidade não diz nada sobre encaixe."
+      },
+      {
+        "text": "Em que linguagem os serviços estão escritos?",
+        "why": "Os dois brokers têm clientes para toda linguagem comum."
+      },
+      {
+        "text": "Quantas mensagens por segundo vai haver no primeiro dia?",
+        "why": "Volume importa depois; o modelo vem primeiro."
+      }
+    ]
+  },
+  "ex-83361cwr": {
+    "prompt": "Por que a Quitanda põe os eventos de pedido num log e a lista de separação numa fila?",
+    "hint": "Quem quer os pedidos depois, e quem quer uma lista de separação relida?",
+    "choices": [
+      {
+        "text": "Logs são mais rápidos para mensagens pequenas e filas para grandes",
+        "why": "Tamanho não é o motivo dado."
+      },
+      {
+        "text": "A equipe do depósito só conhece RabbitMQ",
+        "why": "O motivo está nas mensagens, não na equipe."
+      },
+      {
+        "text": "Um sistema só pode rodar um broker de cada tipo",
+        "why": "Rodar os dois é normal; esse não é o motivo."
+      },
+      {
+        "text": "Os pedidos vão ser relidos por leitores ainda não escritos; separações são trabalho, com retry por item",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-j34e9ncr": {
+    "prompt": "Ponha as peças por onde passa uma mensagem no RabbitMQ em ordem, do publicador ao consumidor.",
+    "hint": "Exchange, ligação, fila.",
+    "items": [
+      "O publicador a manda com uma chave de roteamento",
+      "A exchange compara a chave com as ligações",
+      "Cada fila que bate guarda uma cópia",
+      "Um consumidor a pega e a confirma"
+    ]
+  },
+  "ex-z1mjwa4n": {
+    "prompt": "A equipe de fraude, criada este mês, precisa de todo `OrderPlaced` da semana passada para treinar um modelo. Hoje os pedidos passam pelo RabbitMQ. O que a aula sugere?",
+    "hint": "Que modelo guarda mensagens para leitores que chegam depois?",
+    "choices": [
+      {
+        "text": "Ligar uma fila nova para fraude; ela vai receber os pedidos da semana passada",
+        "why": "Uma fila só recebe o que for publicado depois de ligada."
+      },
+      {
+        "text": "Publicar os pedidos também num log, com retenção suficiente",
+        "why": "Isso. Um grupo novo pode então começar do passado."
+      },
+      {
+        "text": "Pedir ao serviço de e-mail para repassar a fila dele à fraude",
+        "why": "As mensagens da fila de e-mail foram apagadas quando confirmadas."
+      },
+      {
+        "text": "Voltar os offsets da fila do RabbitMQ para a semana passada",
+        "why": "Filas não têm offsets para voltar."
+      }
+    ]
+  }
+}
