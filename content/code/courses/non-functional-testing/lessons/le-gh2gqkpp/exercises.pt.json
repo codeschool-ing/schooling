@@ -1,0 +1,303 @@
+{
+ "ex-f5mqe6nv": {
+  "prompt": "A execução de oito workers imprimiu uma média de 124.5 ms. Por que isso descreve mal o que os usuários esperaram?",
+  "hint": "Olhe a linha embaixo da tabela.",
+  "choices": [
+   {
+    "text": "Só 2 das 653 requisições levaram um tempo a até 10% dela",
+    "why": "Certo. A média caiu entre as leituras rápidas e as reservas lentas, onde quase ninguém estava."
+   },
+   {
+    "text": "A média deixa de fora as 28 reservas que terminaram em 409",
+    "why": "O measure.py tira a média de toda requisição que mediu, inclusive os 409."
+   },
+   {
+    "text": "Ela foi calculada pelo método da posição mais próxima, como os percentis",
+    "why": "A posição mais próxima é como os percentis foram calculados; uma média é uma soma dividida por uma contagem."
+   },
+   {
+    "text": "Dez segundos é pouco para calcular uma média",
+    "why": "653 valores dão uma média bem estável. O problema é o que a média descreve, não a precisão dela."
+   }
+  ]
+ },
+ "ex-wwazhwcw": {
+  "prompt": "Uma visita a uma página faz 8 requisições, e cada uma, de forma independente, tem 5% de chance de ser mais lenta que o p95. Em que porcentagem das visitas pelo menos uma requisição é mais lenta que o p95? Arredonde para um número inteiro.",
+  "hint": "A chance de as oito ficarem abaixo dele é 0.95 elevado à oitava potência.",
+  "unit": "%"
+ },
+ "ex-rrwmw7m3": {
+  "prompt": "Um requisito diz que o tempo de resposta médio da bilheteria tem de ficar abaixo de 150 ms. Uma versão deixa as consultas a um espetáculo duas vezes mais rápidas e as reservas 20% mais lentas. O que pode acontecer com o teste?",
+  "hint": "A linha all mistura duas operações na proporção que o teste mandou.",
+  "choices": [
+   {
+    "text": "Ela reprova, porque qualquer operação mais lenta reprova uma média",
+    "why": "Uma média é uma soma ponderada; um ganho grande na operação comum pode compensar uma perda na rara."
+   },
+   {
+    "text": "Ela passa enquanto toda reserva fica mais lenta",
+    "why": "Certo. Quatro leituras em cinco ficaram mais rápidas, então a média cai, e o requisito não diz nada sobre as reservas mais lentas."
+   },
+   {
+    "text": "Nada, já que uma média de 150 ms descreve bem as reservas",
+    "why": "As reservas levaram uma mediana de 455.5 ms; a média de todas as requisições não descrevia nenhum dos grupos."
+   },
+   {
+    "text": "Ele fica impossível de testar até alguém escrever o p99 também",
+    "why": "Ele continua perfeitamente testável; só testa a coisa errada."
+   }
+  ]
+ },
+ "ex-d5xqragj": {
+  "prompt": "A linha `all` imprimiu um p95 de 523.9 ms para 653 requisições. Quais destas afirmações decorrem desse número? Escolha todas as que decorrem.",
+  "hint": "Um percentil divide as requisições ordenadas numa parte abaixo dele e numa parte acima.",
+  "choices": [
+   {
+    "text": "Cerca de 95 de cada 100 requisições levaram 523.9 ms ou menos",
+    "why": "Sim. É a definição."
+   },
+   {
+    "text": "Umas 30 requisições, cerca de uma em vinte, levaram mais de 523.9 ms",
+    "why": "Sim. 5% de 653 dá umas 33, e essas são a cauda de que o requisito trata."
+   },
+   {
+    "text": "A requisição mais lenta levou 523.9 ms",
+    "why": "A mais lenta levou 1071.0 ms; esse é o máximo, outra estatística."
+   },
+   {
+    "text": "Uma requisição típica levou cerca de 523.9 ms",
+    "why": "A mediana, 32.0 ms, é a requisição típica. O p95 descreve a ponta lenta."
+   },
+   {
+    "text": "A média da execução foi 95% de 523.9 ms",
+    "why": "Percentis e média são contas sem relação; a média foi 124.5 ms."
+   }
+  ]
+ },
+ "ex-0mf1ygkv": {
+  "prompt": "Vinte tempos de resposta, ordenados, em ms: 18 18 18 18 18 18 19 19 19 20 21 24 32 32 32 37 62 63 64 65. Qual é o p90 deles pelo método da posição mais próxima?",
+  "hint": "0.9 × 20 é a posição, contando a partir de 1.",
+  "unit": "ms"
+ },
+ "ex-3yb51tcz": {
+  "prompt": "Dez tempos de resposta em ms, na ordem em que chegaram: 12 15 11 40 13 14 90 12 16 13. Qual é o p90 deles pelo método da posição mais próxima?",
+  "hint": "Ordene primeiro. Posição 0.9 × 10, contando a partir de 1.",
+  "unit": "ms"
+ },
+ "ex-6wxq0cwq": {
+  "prompt": "Os mesmos dez tempos de resposta, 12 15 11 40 13 14 90 12 16 13 ms. Qual é a média deles, em ms?",
+  "hint": "Some e divida por dez.",
+  "unit": "ms"
+ },
+ "ex-jxmy49wy": {
+  "prompt": "Um teste de carga de 50 requisições informa o p99 pelo método da posição mais próxima. Que requisição é essa?",
+  "hint": "Calcule 0.99 × 50 e arredonde como o método manda.",
+  "choices": [
+   {
+    "text": "A mais lenta das cinquenta",
+    "why": "Certo. 49.5 arredonda para 50, a última posição: com cinquenta valores o p99 é o máximo."
+   },
+   {
+    "text": "A 49ª mais rápida, uma posição abaixo da mais lenta",
+    "why": "Isso seria arredondar para baixo. O método arredonda a posição para cima."
+   },
+   {
+    "text": "Um valor entre as duas mais lentas, por interpolação",
+    "why": "Essa é a definição do k6. A posição mais próxima devolve um valor medido."
+   },
+   {
+    "text": "Nenhuma: um p99 precisa de pelo menos 99 requisições",
+    "why": "O método dá uma resposta para qualquer n; aqui a resposta é o máximo, e por isso diz pouco."
+   }
+  ]
+ },
+ "ex-0xwdcwq3": {
+  "prompt": "No método da posição mais próxima, a posição p/100 × n é arredondada para ___ até um número inteiro, então o resultado é um valor que foi medido.",
+  "hint": "A posição 19.8 virou 20.",
+  "blanks": [
+   {
+    "accept": [
+     "cima"
+    ]
+   }
+  ]
+ },
+ "ex-2qkkkx10": {
+  "prompt": "Um gerador fechado roda 20 workers, cada um mandando a próxima requisição assim que a anterior é respondida. O tempo de resposta médio é 0.25 s. Cerca de quantas requisições por segundo o sistema completa?",
+  "hint": "Lei de Little: requisições dentro do sistema = vazão × tempo que cada uma passa ali.",
+  "unit": "requisições/s"
+ },
+ "ex-73kb4y67": {
+  "prompt": "Na varredura, passar de 8 workers para 32 deixou a vazão perto de 100 requisições por segundo enquanto o p95 subia de 133.0 para 1214.1 ms. O que essa forma diz?",
+  "hint": "Lei de Little, com X travado.",
+  "choices": [
+   {
+    "text": "O gerador mandou quatro vezes mais requisições, e a bilheteria respondeu todas mais devagar",
+    "why": "Ele mandou mais ou menos o mesmo número por segundo; é isso que uma vazão plana quer dizer."
+   },
+   {
+    "text": "Algo está totalmente ocupado, então as requisições extras esperam numa fila",
+    "why": "Certo. X não consegue crescer, então os workers extras aumentam R."
+   },
+   {
+    "text": "O p95 não é confiável acima de oito workers e deve ser ignorado",
+    "why": "Cada execução teve centenas de requisições; o p95 está medindo a fila, que é real."
+   },
+   {
+    "text": "A taxa de erro subiu e escondeu o resto da vazão",
+    "why": "A varredura só consultou espetáculos e não imprimiu falhas; nada ficou escondido."
+   }
+  ]
+ },
+ "ex-eagp02rv": {
+  "prompt": "O k6 informou `http_req_failed` de 3.28% no teste de reserva com assentos sorteados. O que eram essas falhas?",
+  "hint": "Que status de 400 para cima esse script pode receber?",
+  "choices": [
+   {
+    "text": "Timeouts, porque a bilheteria estava sobrecarregada",
+    "why": "Um timeout é possível em geral, mas a execução mostrou um máximo de 1.18 s e as falhas sumiram quando o 409 foi declarado esperado."
+   },
+   {
+    "text": "409: lugares que outra pessoa já ocupava",
+    "why": "Certo. Uma recusa correta, que o teste deveria esperar."
+   },
+   {
+    "text": "404 de espetáculos que não estão mais à venda",
+    "why": "O script só escolhe os espetáculos 981 a 1000, que estão todos à venda."
+   },
+   {
+    "text": "Conexões que o k6 não conseguiu abrir porque noConnectionReuse estava ligado",
+    "why": "Uma conexão nova por requisição custa um pouco de tempo; ela não falha."
+   }
+  ]
+ },
+ "ex-4fafvz81": {
+  "prompt": "Num teste de carga que reserva assentos sorteados, ligue cada resultado a como a taxa de erro deve tratá-lo.",
+  "hint": "Decida o que é esperado antes da execução.",
+  "pairs": [
+   {
+    "left": "201 Created",
+    "right": "um sucesso"
+   },
+   {
+    "left": "409 assento ocupado",
+    "right": "uma resposta esperada, não um erro"
+   },
+   {
+    "left": "503 do servidor",
+    "right": "um erro que o servidor informou"
+   },
+   {
+    "left": "conexão recusada",
+    "right": "um erro sem código de status nenhum"
+   }
+  ],
+  "right_distractors": [
+   "um erro só quando a média está alta"
+  ]
+ },
+ "ex-g4s37dsw": {
+  "prompt": "O servidor ficou congelado por um segundo inteiro, e mesmo assim a execução fechada informou um p99 de 5.8 ms. Por quê?",
+  "hint": "Quantas requisições ela mandou durante aquele segundo?",
+  "choices": [
+   {
+    "text": "O relógio dele começava na hora marcada, então a espera não contava",
+    "why": "Esse é o modo aberto. O modo fechado mede a partir de quando a requisição sai."
+   },
+   {
+    "text": "Ele quase não mandou nada enquanto o servidor estava preso",
+    "why": "Certo. Uma requisição esperou o segundo; as outras nunca foram mandadas. Isso é omissão coordenada."
+   },
+   {
+    "text": "O pkill -STOP só deixou o servidor mais lento em vez de pará-lo",
+    "why": "Ele o congelou: a única requisição em voo levou 1007.7 ms."
+   },
+   {
+    "text": "Um p99 sobre 403 requisições ignora as quatro mais lentas",
+    "why": "A posição 0.99 × 403 arredonda para 399; as quatro acima dela estão na amostra, e só uma delas foi lenta."
+   }
+  ]
+ },
+ "ex-yybsm8zk": {
+  "prompt": "Um painel guarda um p95 por segundo e mostra a média dos últimos dez. Na execução aberta isso deu 189.4 ms, contra 520.0 ms da execução inteira. O que dá o p95 dos dez segundos?",
+  "hint": "Um percentil é lido numa lista ordenada.",
+  "choices": [
+   {
+    "text": "A média dos dez valores, ponderada pelo número de requisições de cada segundo",
+    "why": "Ponderar conserta uma média de médias. Um percentil da união continua não podendo ser montado com os percentis das partes."
+   },
+   {
+    "text": "O maior dos dez valores por segundo",
+    "why": "Esse foi 959.3 ms, o p95 do pior segundo, que é maior que o p95 da execução."
+   },
+   {
+    "text": "Todos os tempos dos dez segundos, ordenados juntos, lidos na posição 0.95 × n",
+    "why": "Certo. Junte os tempos brutos, ou histogramas com as mesmas faixas, e calcule uma vez."
+   },
+   {
+    "text": "A mediana dos dez valores",
+    "why": "Uma mediana de percentis não é melhor que a média deles; aqui daria uns 4 ms."
+   }
+  ]
+ },
+ "ex-d5v7z8k8": {
+  "prompt": "Dois geradores de carga rodaram cada um metade de um teste. Ponha em ordem os passos para informar o p95 do teste inteiro.",
+  "hint": "Nada é calculado até os dados estarem num lugar só.",
+  "items": [
+   "Guardar cada tempo bruto em cada gerador",
+   "Copiar os dois conjuntos de tempos numa lista só",
+   "Ordenar a lista combinada",
+   "Ler o valor na posição 0.95 × n, arredondada para cima"
+  ],
+  "trap": "Tirar a média dos p95 dos dois geradores pula a junção e produz um número que é o p95 de coisa nenhuma."
+ },
+ "ex-99wxj1xs": {
+  "prompt": "Um gerador aberto manda uma requisição a cada 20 ms e mede cada uma a partir da hora marcada. O servidor congela por exatamente um segundo. A requisição marcada para 200 ms depois do início do congelamento é respondida no instante em que o servidor volta, sem tempo nenhum. Que tempo de resposta ela registra, em ms?",
+  "hint": "Ela espera da hora marcada até o servidor voltar.",
+  "unit": "ms"
+ },
+ "ex-jgdcbrfp": {
+  "prompt": "Depois de uma versão, o p95 do teste de reserva caiu de 400 ms para 60 ms, e a taxa de erro subiu de 0.1% para 12%, todos os erros novos 503 respondidos em cerca de um milissegundo. O que o testador deve informar?",
+  "hint": "De que requisições o novo p95 é feito?",
+  "choices": [
+   {
+    "text": "Uma regressão: o servidor agora recusa trabalho rápido, e a latência das reservas bem-sucedidas tem de ser lida à parte",
+    "why": "Certo. Falhas rápidas puxam os percentis para baixo; o p95 melhorou porque uma requisição em oito agora é uma recusa rápida."
+   },
+   {
+    "text": "Uma melhora de latência, e um problema de erro separado para registrar",
+    "why": "As duas coisas são um achado só: a latência melhorou por causa dos erros."
+   },
+   {
+    "text": "Nada ainda, porque 12% está dentro do ruído entre duas execuções",
+    "why": "Ir de 0.1% para 12% são duas ordens de grandeza, muito além do ruído entre execuções."
+   },
+   {
+    "text": "Um problema de 409, já que reservas que falham são conflitos de assento",
+    "why": "São 503, que dizem que o servidor não conseguiu atender, não que o assento estava ocupado."
+   }
+  ]
+ },
+ "ex-zxxkdphc": {
+  "prompt": "O gerador A informa um p95 de 100 ms sobre 9.000 requisições. O gerador B informa um p95 de 900 ms sobre 1.000 requisições do mesmo teste. Qual é o p95 das 10.000?",
+  "hint": "O que você precisaria ter em mãos para calcular?",
+  "choices": [
+   {
+    "text": "180 ms, a média ponderada pela contagem de requisições",
+    "why": "Ponderar acerta uma média de médias; não transforma uma média de percentis em percentil."
+   },
+   {
+    "text": "500 ms, a média dos dois",
+    "why": "Uma média simples de percentis não é percentil de coisa nenhuma."
+   },
+   {
+    "text": "900 ms, o maior dos dois",
+    "why": "B é um décimo das requisições; o p95 combinado pode ficar bem abaixo do p95 dele."
+   },
+   {
+    "text": "Não dá para saber com esses números; junte os tempos",
+    "why": "Certo. Só a amostra junta, ou histogramas com as mesmas faixas, dá esse número."
+   }
+  ]
+ }
+}
