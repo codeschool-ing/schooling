@@ -429,5 +429,129 @@ def four_shapes(lang):
     return s.render(), cap, same
 
 
+# ---------------------------------------------------------------- lesson 6
+
+MONTHS_12 = [('2025-06', 25889.76), ('2025-07', 29827.53), ('2025-08', 38485.73),
+             ('2025-09', 52364.26), ('2025-10', 58003.23), ('2025-11', 90630.78),
+             ('2025-12', 75501.85), ('2026-01', 87883.56), ('2026-02', 88361.90),
+             ('2026-03', 117964.14), ('2026-04', 119821.78), ('2026-05', 140097.06)]
+
+
+@figure
+def dashboard_layout(lang):
+    """Lesson 6, the-layout. Tiles: blocks naked, context, attainment (lesson 6), active
+    customers (lesson 2 block active). Trend: lesson 3 block metabase-sql-run. Regions:
+    lesson 6 block breakdown."""
+    s = Svg('dashboard-layout', 720, 400, L(lang,
+        'A wireframe of Lantern\'s Monday dashboard for May 2026, in four bands. Top: three tiles. '
+        'Net revenue, 140,097.06 reais, up 16.9 percent on April and at 104 percent of target. '
+        'Orders, 855. Active customers in 90 days, 1,308 as of 31 May. Beside them a text card says '
+        'the data ends on 17 June 2026, that June is partial, and that definitions are in the '
+        'semantic layer. Middle: net revenue by month from June 2025 to May 2026, rising from about '
+        '26 thousand to 140 thousand reais, with a peak in November 2025. Below: net revenue by '
+        'region for May, Southeast far ahead of South, Northeast and North. Bottom: a strip for the '
+        'detail table, opened on demand.',
+        'Um esboço do painel de segunda da Lantern para maio de 2026, em quatro faixas. Em cima: '
+        'três cartões. Receita líquida, 140.097,06 reais, 16,9 por cento acima de abril e em 104 por '
+        'cento da meta. Pedidos, 855. Clientes ativos em 90 dias, 1.308 em 31 de maio. Ao lado, um '
+        'cartão de texto diz que os dados terminam em 17 de junho de 2026, que junho é parcial e que '
+        'as definições estão na camada semântica. No meio: receita líquida por mês de junho de 2025 a '
+        'maio de 2026, subindo de cerca de 26 mil para 140 mil reais, com um pico em novembro de '
+        '2025. Abaixo: receita líquida por região em maio, o Sudeste muito à frente do Sul, do '
+        'Nordeste e do Norte. Embaixo: uma faixa para a tabela de detalhe, aberta quando pedida.'))
+    pt = lang == 'pt'
+    def tile(x, title, value, note):
+        s.rect(x, 20, 150, 78)
+        s.text(x + 10, 36, title, 10, fill='var(--paper-dim)')
+        s.text(x + 10, 60, value, 15, weight='600', mono=True)
+        s.text(x + 10, 84, note, 9, fill='var(--phosphor)')
+    tile(20, L(lang, 'Net revenue, May 2026', 'Receita líquida, mai. 2026'), brl(140097.06, lang),
+         L(lang, '+16.9% on April · 104% of target', '+16,9% vs abril · 104% da meta'))
+    tile(180, L(lang, 'Orders, May 2026', 'Pedidos, mai. 2026'), '855', L(lang, 'complete month', 'mês completo'))
+    tile(340, L(lang, 'Active customers, 90 days', 'Clientes ativos, 90 dias'), '1,308' if not pt else '1.308',
+         L(lang, 'as of 31 May', 'em 31 de maio'))
+    s.rect(500, 20, 200, 78, stroke='var(--amber)')
+    s.text(510, 38, L(lang, 'Data until 17 June 2026.', 'Dados até 17 de junho de 2026.'), 10)
+    s.text(510, 56, L(lang, 'June is partial until it closes.', 'Junho é parcial até fechar.'), 10)
+    s.text(510, 74, L(lang, 'Definitions: semantic layer', 'Definições: camada semântica'), 10)
+    s.text(510, 88, L(lang, 'Owner: finance', 'Dono: financeiro'), 9.5, fill='var(--paper-dim)')
+    s.rect(20, 112, 680, 150)
+    s.text(30, 128, L(lang, 'Net revenue by month, last 12 complete months', 'Receita líquida por mês, últimos 12 meses completos'), 10, fill='var(--paper-dim)')
+    top = 145000
+    for i, (m, v) in enumerate(MONTHS_12):
+        x = 50 + i * 54
+        h = 100 * v / top
+        s.rect(x, 245 - h, 30, h, fill='var(--phosphor-dim)', stroke='var(--phosphor)', sw=1, rx=1)
+        s.text(x + 15, 254, m[2:].replace('-', '/') if not pt else m[2:].replace('-', '/'), 8.5, anchor='middle', mono=True, fill='var(--paper-dim)')
+    s.rect(20, 276, 440, 90)
+    s.text(30, 292, L(lang, 'Net revenue by region, May 2026', 'Receita líquida por região, mai. 2026'), 10, fill='var(--paper-dim)')
+    regions = [('Southeast', 106548.18), ('South', 24688.47), ('Northeast', 8094.39), ('North', 766.02)]
+    for i, (r, v) in enumerate(regions):
+        y = 304 + i * 15
+        s.text(100, y + 5, r, 9, anchor='end', mono=True)
+        s.rect(106, y, max(2, 300 * v / 106548.18), 10, fill='var(--phosphor-dim)', stroke='var(--phosphor)', sw=1, rx=1)
+    s.rect(470, 276, 230, 90, dash='4 3')
+    s.text(585, 318, L(lang, 'detail: the orders, on demand', 'detalhe: os pedidos, quando pedido'), 10, anchor='middle', fill='var(--paper-dim)')
+    cap = L(lang, 'Answer first, trend second, breakdown third, detail last; and the caveats on the page, '
+                  'not in somebody\'s head.',
+            'Resposta primeiro, tendência depois, divisão em seguida, detalhe por último; e as ressalvas '
+            'na página, não na cabeça de alguém.')
+    return s.render(), cap, None
+
+
+@figure
+def dashboard_review(lang):
+    """Lesson 6, the-review. Numbers: blocks lag, mtd, north, as-of."""
+    s = Svg('dashboard-review', 720, 300, L(lang,
+        'Two versions of the same June tile row, side by side. On the left, before the review: net '
+        'revenue for June, 75,811.94 reais, shown in red with minus 45.9 percent; a tile for the '
+        'North region as large as any other showing plus 169 percent; a status dot that is only a '
+        'colour; and no date for the data. On the right, after: June to the 17th, 75,811.94 reais, '
+        'minus 7.9 percent against the same days of May; the North folded into a small line reading '
+        'plus 169 percent on 7 orders; the status written in words; and a line saying the data ends '
+        'on 17 June.',
+        'Duas versões da mesma fileira de cartões de junho, lado a lado. À esquerda, antes da revisão: '
+        'receita líquida de junho, 75.811,94 reais, em vermelho com menos 45,9 por cento; um cartão '
+        'da região Norte tão grande quanto os outros mostrando mais 169 por cento; um ponto de status '
+        'que é só uma cor; e nenhuma data para os dados. À direita, depois: junho até o dia 17, '
+        '75.811,94 reais, menos 7,9 por cento contra os mesmos dias de maio; o Norte reduzido a uma '
+        'linha pequena dizendo mais 169 por cento em 7 pedidos; o status escrito em palavras; e uma '
+        'linha dizendo que os dados terminam em 17 de junho.'))
+    pt = lang == 'pt'
+    s.text(180, 18, L(lang, 'before', 'antes'), 12, anchor='middle', weight='600')
+    s.text(540, 18, L(lang, 'after', 'depois'), 12, anchor='middle', weight='600')
+    s.line(360, 10, 360, 290, stroke='var(--wire)', sw=1, dash='3 4')
+    # before
+    s.rect(20, 34, 320, 70, stroke='var(--amber)')
+    s.text(32, 52, L(lang, 'Net revenue, June', 'Receita líquida, junho'), 10, fill='var(--paper-dim)')
+    s.text(32, 78, brl(75811.94, lang), 16, weight='600', mono=True)
+    s.text(328, 78, '−45.9%' if not pt else '−45,9%', 14, anchor='end', mono=True, fill='var(--amber)')
+    s.rect(20, 116, 320, 70)
+    s.text(32, 134, L(lang, 'North', 'Norte'), 10, fill='var(--paper-dim)')
+    s.text(32, 160, '+169%', 16, weight='600', mono=True, fill='var(--phosphor)')
+    s.rect(20, 198, 320, 40)
+    s.circle(42, 218, 8, fill='var(--amber)')
+    s.text(60, 218, L(lang, 'Status', 'Status'), 10, fill='var(--paper-dim)')
+    s.text(180, 262, L(lang, '(no date for the data)', '(sem data para os dados)'), 10, anchor='middle', italic=True, fill='var(--paper-dim)')
+    # after
+    s.rect(380, 34, 320, 70)
+    s.text(392, 52, L(lang, 'Net revenue, 1 to 17 June', 'Receita líquida, 1 a 17 de junho'), 10, fill='var(--paper-dim)')
+    s.text(392, 78, brl(75811.94, lang), 16, weight='600', mono=True)
+    s.text(688, 70, '−7.9%' if not pt else '−7,9%', 13, anchor='end', mono=True)
+    s.text(688, 88, L(lang, 'vs 1 to 17 May', 'vs 1 a 17 de maio'), 9, anchor='end', fill='var(--paper-dim)')
+    s.rect(380, 116, 320, 36)
+    s.text(392, 134, L(lang, 'North: +169% on 7 orders (Feb vs Jan)', 'Norte: +169% em 7 pedidos (fev. vs jan.)'), 10)
+    s.rect(380, 164, 320, 40)
+    s.text(392, 184, L(lang, 'Status: 92% of the target pro rata — short', 'Status: 92% da meta proporcional — abaixo'), 10)
+    s.rect(380, 216, 320, 36, stroke='var(--amber)')
+    s.text(392, 234, L(lang, 'Data until 17 June 2026 · owner: finance', 'Dados até 17 de junho de 2026 · dono: financeiro'), 10)
+    cap = L(lang, 'The same data, reviewed: comparable periods, counts beside rates, words beside colours, '
+                  'and the date the data ends.',
+            'Os mesmos dados, revisados: períodos comparáveis, contagens ao lado das taxas, palavras ao '
+            'lado das cores, e a data em que os dados terminam.')
+    same = ['Status'] if pt else None
+    return s.render(), cap, same
+
+
 if __name__ == '__main__':
     inject()
