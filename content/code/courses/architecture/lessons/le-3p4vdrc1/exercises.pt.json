@@ -1,0 +1,593 @@
+{
+  "ex-32rpn77p": {
+    "prompt": "Ligue cada garantia de entrega ao que uma queda custa com ela.",
+    "hint": "Onde fica a confirmação.",
+    "pairs": [
+      {
+        "left": "no máximo uma vez",
+        "right": "uma mensagem que nunca é processada"
+      },
+      {
+        "left": "pelo menos uma vez",
+        "right": "uma mensagem processada duas vezes"
+      },
+      {
+        "left": "exatamente uma vez, como construída aqui",
+        "right": "só a contabilidade"
+      }
+    ],
+    "right_distractors": [
+      "o broker reinicia"
+    ]
+  },
+  "ex-2b9jnw5a": {
+    "prompt": "Um consumidor confirma cada mensagem assim que a recebe, e depois faz o trabalho. O que uma queda durante o trabalho custa?",
+    "hint": "O broker já a apagou.",
+    "choices": [
+      {
+        "text": "A mensagem é processada duas vezes",
+        "why": "Isso é o que confirmar depois do trabalho arrisca."
+      },
+      {
+        "text": "A mensagem se perde, em silêncio",
+        "why": "Isso: no máximo uma vez. Ninguém vai processá-la."
+      },
+      {
+        "text": "O broker percebe e a entrega a outro consumidor depois de um tempo",
+        "why": "Ela foi confirmada, então o broker a considera feita."
+      },
+      {
+        "text": "Nada, porque o trabalho é repetido automaticamente",
+        "why": "Nada repete um trabalho que o broker acha terminado."
+      }
+    ]
+  },
+  "ex-rcqgv3w5": {
+    "prompt": "Um fornecedor diz que o broker dele entrega exatamente uma vez. Por que a aula diz que isso não pode cobrir o banco do seu consumidor?",
+    "hint": "O que o broker não consegue ver?",
+    "choices": [
+      {
+        "text": "Brokers perdem mensagens mais do que admitem",
+        "why": "O argumento não é sobre perdas."
+      },
+      {
+        "text": "Exatamente uma vez é proibido pelo protocolo AMQP",
+        "why": "Nenhum protocolo proíbe; a brecha está entre dois sistemas."
+      },
+      {
+        "text": "Ele não enxerga dentro da sua transação",
+        "why": "Isso. Uma queda entre o seu commit e a confirmação deixa os dois discordando."
+      },
+      {
+        "text": "Bancos não suportam transações entre tabelas",
+        "why": "Suportam; a brecha é entre o banco e o broker."
+      }
+    ]
+  },
+  "ex-ezzjft4v": {
+    "prompt": "Confirmar depois do trabalho, para uma queda repetir o trabalho em vez de perdê-lo, dá entrega pelo ___ uma vez.",
+    "hint": "O padrão honesto.",
+    "blanks": [
+      {
+        "accept": [
+          "menos"
+        ]
+      }
+    ]
+  },
+  "ex-qp7zwbpj": {
+    "prompt": "No laboratório, o que faz o papel da operadora de cartão?",
+    "hint": "Onde uma cobrança vai parar?",
+    "choices": [
+      {
+        "text": "A fila `charges` do RabbitMQ",
+        "why": "É onde os pedidos esperam, não onde são cobrados."
+      },
+      {
+        "text": "Uma linha no banco SQLite do consumidor",
+        "why": "Isso, então uma cobrança dupla pode ser contada."
+      },
+      {
+        "text": "Uma chamada a uma API de teste na internet",
+        "why": "O laboratório não faz chamada para fora da máquina."
+      },
+      {
+        "text": "A tabela outbox no banco da loja",
+        "why": "O outbox guarda mensagens a mandar, não cobranças."
+      }
+    ]
+  },
+  "ex-2343eqna": {
+    "prompt": "Por que todo script chama `connect()` do `topology.py` antes de fazer qualquer coisa?",
+    "hint": "A aula 6 perdeu duas mensagens por causa da ordem em que as coisas rodaram.",
+    "choices": [
+      {
+        "text": "Para a disposição existir seja quem for o primeiro a rodar",
+        "why": "Isso. Uma publicação nunca cai numa exchange sem fila ligada."
+      },
+      {
+        "text": "O pika se recusa a publicar se a fila não foi declarada no mesmo processo",
+        "why": "O pika publica em exchanges; o motivo é a disposição, não a biblioteca."
+      },
+      {
+        "text": "Declarar uma fila duas vezes apaga as mensagens dela",
+        "why": "Declarar uma fila existente com as mesmas configurações não muda nada."
+      },
+      {
+        "text": "Abre uma conexão separada para cada fila",
+        "why": "Abre uma conexão e um canal."
+      }
+    ]
+  },
+  "ex-jdbdr0g6": {
+    "prompt": "Depois de o consumidor ingênuo cair e rodar de novo, quantos centavos tinham sido cobrados pelo pedido `q-1`, cuja cesta custava 3.290?",
+    "hint": "Duas linhas na lista.",
+    "unit": "centavos"
+  },
+  "ex-w89jkk33": {
+    "prompt": "Por que o RabbitMQ entregou `q-1` uma segunda vez?",
+    "hint": "O que o broker nunca recebeu?",
+    "choices": [
+      {
+        "text": "O publicador a mandou duas vezes",
+        "why": "Foi publicada uma vez, e confirmada uma vez."
+      },
+      {
+        "text": "A cobrança falhou na primeira vez",
+        "why": "A primeira cobrança foi gravada; a lista mostra."
+      },
+      {
+        "text": "A confirmação nunca chegou",
+        "why": "Isso. Para o broker a mensagem nunca foi tratada."
+      },
+      {
+        "text": "A fila está configurada para entregar toda mensagem duas vezes",
+        "why": "Nada na disposição faz isso."
+      }
+    ]
+  },
+  "ex-vkf9yen4": {
+    "prompt": "Um colega propõe pular toda mensagem cuja marca `redelivered` é verdadeira. O que dá errado?",
+    "hint": "Quando mais a marca aparece?",
+    "choices": [
+      {
+        "text": "Nada; a marca quer dizer que foi processada",
+        "why": "A marca quer dizer que foi entregue antes, não que o trabalho aconteceu."
+      },
+      {
+        "text": "O RabbitMQ se recusa a entregar duas vezes depois que um consumidor pula",
+        "why": "O broker não tem essa regra."
+      },
+      {
+        "text": "Toda mensagem tem a marca, então nada é processado",
+        "why": "Primeiras entregas a têm falsa, como o laboratório mostrou."
+      },
+      {
+        "text": "Uma queda antes do trabalho também a ativa, e pular perde o pagamento",
+        "why": "Isso. Só os registros do próprio consumidor distinguem os dois casos."
+      }
+    ]
+  },
+  "ex-x80xhsp3": {
+    "prompt": "Qual destas operações é idempotente?",
+    "hint": "Duas vezes tem o mesmo efeito que uma.",
+    "choices": [
+      {
+        "text": "Somar 3.290 ao saldo de um cliente",
+        "why": "Duas vezes soma 6.580."
+      },
+      {
+        "text": "Definir o preço de um produto como 3.290",
+        "why": "Isso. A segunda vez não muda nada."
+      },
+      {
+        "text": "Tirar uma unidade de café do estoque",
+        "why": "Duas vezes tira duas."
+      },
+      {
+        "text": "Mandar um e-mail de confirmação",
+        "why": "Duas vezes manda dois e-mails."
+      }
+    ]
+  },
+  "ex-fgagfw8e": {
+    "prompt": "O que o consumidor idempotente fez com o `q-2` reentregue?",
+    "hint": "A linha que ele imprimiu.",
+    "choices": [
+      {
+        "text": "Cobrou de novo e imprimiu um aviso",
+        "why": "A lista mostra `q-2` uma vez."
+      },
+      {
+        "text": "A rejeitou para a fila de mensagens mortas como duplicata",
+        "why": "Ela foi confirmada; uma duplicata não é uma falha."
+      },
+      {
+        "text": "Pulou a cobrança e a confirmou",
+        "why": "Isso. A inserção em `processed` falhou na chave."
+      },
+      {
+        "text": "A deixou sem confirmação, então ela ficou na fila",
+        "why": "Ela foi confirmada, então a fila esvaziou."
+      }
+    ]
+  },
+  "ex-vxyvgxf4": {
+    "prompt": "Um consumidor grava o id da mensagem em `processed`, confirma, e depois cobra numa segunda transação. O que uma queda entre as duas custa?",
+    "hint": "Que fato fica gravado sem o outro?",
+    "choices": [
+      {
+        "text": "Uma cobrança dupla, como com o consumidor ingênuo",
+        "why": "O id está registrado, então uma reentrega é pulada."
+      },
+      {
+        "text": "Um pagamento marcado como feito e nunca cobrado",
+        "why": "Isso: no máximo uma vez, só mudado de lugar. Os dois precisam ser uma transação."
+      },
+      {
+        "text": "Nada, já que o id protege contra toda falha",
+        "why": "O id protege só se for gravado junto com o efeito."
+      },
+      {
+        "text": "A mensagem vai para a fila de mensagens mortas",
+        "why": "Uma queda não rejeita uma mensagem."
+      }
+    ]
+  },
+  "ex-fmm1an3t": {
+    "prompt": "Por que `processed` precisa ter linhas antigas apagadas em algum momento, e o que decide quão antigas?",
+    "hint": "Quão atrasada uma duplicata pode chegar?",
+    "choices": [
+      {
+        "text": "O SQLite não guarda mais de um milhão de linhas",
+        "why": "A preocupação é crescimento, não um limite fixo."
+      },
+      {
+        "text": "Ids velhos precisam ser apagados todo dia para serem reutilizados",
+        "why": "Ids não são reutilizados."
+      },
+      {
+        "text": "Nunca precisa apagar, porque as linhas são pequenas",
+        "why": "Uma linha por mensagem cresce sem fim."
+      },
+      {
+        "text": "Cresce para sempre; guarde os ids por mais tempo do que uma duplicata poderia atrasar",
+        "why": "Isso, limitado pela reentrega e por quão para trás alguém poderia reler."
+      }
+    ]
+  },
+  "ex-9s3gg890": {
+    "prompt": "Quem cria uma chave de idempotência, e quando?",
+    "hint": "Ela precisa sobreviver a uma falha que o servidor pode nunca ter visto.",
+    "choices": [
+      {
+        "text": "O servidor, quando chega a primeira tentativa",
+        "why": "Quem chama precisa da chave antes de saber se o servidor viu algo."
+      },
+      {
+        "text": "Quem chama, nova a cada retry",
+        "why": "Uma chave nova a cada retry não identifica nada."
+      },
+      {
+        "text": "Quem chama, uma vez, antes da primeira tentativa",
+        "why": "Isso, e a guarda para todo retry mandar a mesma."
+      },
+      {
+        "text": "O broker, que atribui uma a cada mensagem",
+        "why": "Chamadas HTTP não têm broker; quem chama fornece a chave."
+      }
+    ]
+  },
+  "ex-11m4kyf7": {
+    "prompt": "Ligue o que o servidor encontra para uma chave ao que ele faz.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "uma chave nova",
+        "right": "faz o trabalho e guarda chave e resposta"
+      },
+      {
+        "left": "uma chave guardada com resposta",
+        "right": "devolve a resposta guardada"
+      },
+      {
+        "left": "uma chave ainda em andamento",
+        "right": "responde 409 Conflict"
+      }
+    ],
+    "right_distractors": [
+      "cobra o cartão de novo, com mais cuidado"
+    ]
+  },
+  "ex-h8j9hmvd": {
+    "prompt": "A conexão do checkout cai depois de ele mandar um pedido de pagamento e antes de a resposta chegar. O que torna um retry seguro?",
+    "hint": "Um nome estável para um efeito pretendido.",
+    "choices": [
+      {
+        "text": "Esperar dez segundos antes de tentar de novo",
+        "why": "Tempo não diz ao servidor que ele já viu esse pagamento."
+      },
+      {
+        "text": "Mandar a mesma `Idempotency-Key` de novo",
+        "why": "Isso. O servidor devolve a resposta guardada se tiver cobrado."
+      },
+      {
+        "text": "Perguntar ao banco do cartão se foi cobrado",
+        "why": "O banco não é a API chamada, e é tarde demais para a loja."
+      },
+      {
+        "text": "Tentar de novo com um valor menor",
+        "why": "Um valor diferente é outro pagamento."
+      }
+    ]
+  },
+  "ex-xr80d3h3": {
+    "prompt": "O que `mandatory=True` mudou quando `q-3` foi publicado com a chave `refunds`?",
+    "hint": "Os dois pedidos perdidos da aula 6.",
+    "choices": [
+      {
+        "text": "O broker criou uma fila `refunds` para ele",
+        "why": "Brokers não criam filas para publicadores."
+      },
+      {
+        "text": "O broker o devolveu, e o script ficou sabendo",
+        "why": "Isso, onde os pedidos da aula 6 foram descartados em silêncio."
+      },
+      {
+        "text": "O broker o entregou em `charges` em vez disso",
+        "why": "Não foi para fila nenhuma."
+      },
+      {
+        "text": "Nada; a mensagem continuou descartada em silêncio",
+        "why": "O script imprimiu que ela foi devolvida."
+      }
+    ]
+  },
+  "ex-7y15q25s": {
+    "prompt": "O que uma confirmação do publicador diz ao publicador?",
+    "hint": "Quem assumiu a responsabilidade?",
+    "choices": [
+      {
+        "text": "Que o consumidor processou a mensagem",
+        "why": "Confirmações são só entre publicador e broker."
+      },
+      {
+        "text": "Que o seu próprio banco gravou o pedido",
+        "why": "O broker não sabe nada sobre o banco do publicador."
+      },
+      {
+        "text": "Que o broker assumiu a mensagem",
+        "why": "Isso: guardada em toda fila para onde foi roteada."
+      },
+      {
+        "text": "Que a mensagem vai ser entregue exatamente uma vez",
+        "why": "Confirmações não dizem nada sobre a entrega a consumidores."
+      }
+    ]
+  },
+  "ex-daqhdfmp": {
+    "prompt": "A loja grava um pedido e depois publica a mensagem dele, e cai entre os dois. Qual é o resultado?",
+    "hint": "Que escrita aconteceu?",
+    "choices": [
+      {
+        "text": "Um pagamento de um pedido que não existe",
+        "why": "Essa é a outra ordem das duas escritas."
+      },
+      {
+        "text": "Um pedido que ninguém nunca vai cobrar",
+        "why": "Isso. A mensagem nunca foi mandada."
+      },
+      {
+        "text": "Os dois são desfeitos juntos",
+        "why": "Nenhuma transação cobre o banco e o broker."
+      },
+      {
+        "text": "O broker manda a mensagem quando a loja reinicia",
+        "why": "O broker nunca a recebeu."
+      }
+    ]
+  },
+  "ex-hr2qvspv": {
+    "prompt": "Com o broker parado, o que aconteceu com o pedido `o-1` no laboratório?",
+    "hint": "Duas linhas, uma transação.",
+    "choices": [
+      {
+        "text": "O pedido foi recusado, porque o broker estava fora",
+        "why": "O pedido foi gravado; só o relay falhou."
+      },
+      {
+        "text": "O pedido foi gravado e a mensagem dele se perdeu",
+        "why": "A mensagem esperou no outbox e foi mandada depois."
+      },
+      {
+        "text": "Pedido e mensagem gravados; repassada quando o broker voltou",
+        "why": "Isso, e o consumidor de pagamentos cobrou."
+      },
+      {
+        "text": "O relay ficou tentando num laço até o broker voltar",
+        "why": "O relay relatou a falha e saiu."
+      }
+    ]
+  },
+  "ex-fpvwr4s9": {
+    "prompt": "Por que um sistema com outbox transacional ainda precisa de um consumidor idempotente?",
+    "hint": "E se o relay cair depois da confirmação?",
+    "choices": [
+      {
+        "text": "Porque o outbox manda cada mensagem exatamente uma vez",
+        "why": "Não manda; é esse o ponto."
+      },
+      {
+        "text": "Porque o outbox perde mensagens quando o broker está fora",
+        "why": "O laboratório mostrou que ele as guarda."
+      },
+      {
+        "text": "Não precisa; o outbox torna o trabalho do consumidor seguro sozinho",
+        "why": "O relay ainda pode mandar uma mensagem duas vezes."
+      },
+      {
+        "text": "Uma queda do relay depois da confirmação reenvia a mensagem",
+        "why": "Isso. O outbox dá pelo menos uma vez, e o consumidor absorve a repetição."
+      }
+    ]
+  },
+  "ex-bm16mxm5": {
+    "prompt": "A tabela no próprio banco da loja, gravada na mesma transação do pedido e lida por um relay, se chama ___.",
+    "hint": "Onde a correspondência de saída espera.",
+    "blanks": [
+      {
+        "accept": [
+          "outbox"
+        ]
+      }
+    ]
+  },
+  "ex-67bnf298": {
+    "prompt": "Qual destes mantém todos os eventos de um pedido em ordem, no Kafka?",
+    "hint": "Uma chave, uma partição.",
+    "choices": [
+      {
+        "text": "Mais partições, para os eventos se espalharem por igual",
+        "why": "Espalhar os eventos de um pedido quebra a ordem deles."
+      },
+      {
+        "text": "O id do pedido como chave da mensagem",
+        "why": "Isso: um pedido, uma partição, um consumidor."
+      },
+      {
+        "text": "Uma chave aleatória por mensagem",
+        "why": "Chaves aleatórias espalham um pedido pelas partições."
+      },
+      {
+        "text": "Mais consumidores no grupo",
+        "why": "Consumidores não mudam onde as mensagens foram escritas."
+      }
+    ]
+  },
+  "ex-bg1njdmz": {
+    "prompt": "Quais destes podem entregar os eventos de um pedido fora de ordem? Marque todos que se aplicam.",
+    "hint": "A tabela de causas.",
+    "choices": [
+      {
+        "text": "Consumidores concorrentes numa fila",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma mensagem reentregue depois de uma queda",
+        "why": "Isso."
+      },
+      {
+        "text": "Eventos espalhados por várias partições",
+        "why": "Isso."
+      },
+      {
+        "text": "Um consumidor lendo uma partição",
+        "why": "Esse é o arranjo que mantém a ordem."
+      }
+    ]
+  },
+  "ex-s641x3r3": {
+    "prompt": "Uma equipe não consegue garantir a ordem de `OrderPaid` e `OrderShipped`. O que a aula sugere em vez de brigar com o transporte?",
+    "hint": "E se a ordem não importasse?",
+    "choices": [
+      {
+        "text": "Esperar um minuto antes de aplicar cada evento",
+        "why": "Uma espera estreita a janela; não a fecha."
+      },
+      {
+        "text": "Levar uma versão, aplicar só as mais novas",
+        "why": "Isso. Aí a ordem de chegada deixa de importar."
+      },
+      {
+        "text": "Usar uma fila só para a empresa inteira",
+        "why": "Uma fila só ainda tem reentregas e consumidores concorrentes."
+      },
+      {
+        "text": "Juntar os dois eventos num tipo de mensagem só",
+        "why": "Os eventos descrevem momentos diferentes; juntá-los perde um."
+      }
+    ]
+  },
+  "ex-xa3kkyj9": {
+    "prompt": "O que é uma mensagem envenenada?",
+    "hint": "Falha toda vez.",
+    "choices": [
+      {
+        "text": "Uma mensagem de um atacante",
+        "why": "O nome é sobre falhar, não sobre intenção."
+      },
+      {
+        "text": "Uma mensagem entregue duas vezes",
+        "why": "Isso é uma duplicata, tratada pela idempotência."
+      },
+      {
+        "text": "Uma cujo processamento falha toda vez",
+        "why": "Isso, como um corpo que não é JSON válido."
+      },
+      {
+        "text": "Uma que chegou fora de ordem",
+        "why": "Fora de ordem dá para tratar; envenenada não."
+      }
+    ]
+  },
+  "ex-bx6s1krc": {
+    "prompt": "O banco estourou o tempo enquanto um consumidor tratava uma mensagem. A mensagem deve ir para a fila de mensagens mortas?",
+    "hint": "Transitória ou permanente?",
+    "choices": [
+      {
+        "text": "Sim; toda falha pertence a ela",
+        "why": "Falhas transitórias podem dar certo num retry."
+      },
+      {
+        "text": "Não: tentar de novo depois, com espera",
+        "why": "Isso. A fila de mensagens mortas é para falhas que nunca vão dar certo."
+      },
+      {
+        "text": "Sim, e o consumidor deve parar até uma pessoa olhar",
+        "why": "Um banco lento não precisa de uma pessoa."
+      },
+      {
+        "text": "Não: confirmar e seguir em frente",
+        "why": "Isso perde o pagamento."
+      }
+    ]
+  },
+  "ex-yj7qy62p": {
+    "prompt": "Depois de o `q-4` quebrado ser rejeitado, quantas mensagens `charges.dead` guardava?",
+    "hint": "A última listagem.",
+    "unit": "mensagens"
+  },
+  "ex-vjztzq4q": {
+    "prompt": "Ponha os passos do outbox transacional em ordem, do pedido feito até a cobrança.",
+    "hint": "Uma transação primeiro, o broker depois.",
+    "items": [
+      "O pedido e a linha do outbox são gravados numa transação",
+      "O relay lê a linha não enviada",
+      "O relay publica e o broker confirma",
+      "O relay marca a linha como enviada",
+      "O consumidor idempotente cobra o pedido"
+    ]
+  },
+  "ex-wepzjv0f": {
+    "prompt": "O consumidor de reembolsos da Quitanda soma o valor reembolsado ao crédito do cliente na loja. Que mudança o torna seguro com pelo menos uma vez?",
+    "hint": "Somar não é idempotente.",
+    "choices": [
+      {
+        "text": "Confirmar cada mensagem antes de somar o crédito",
+        "why": "Isso perde reembolsos quando o consumidor cai."
+      },
+      {
+        "text": "Pular mensagens marcadas como reentregues",
+        "why": "Isso perde reembolsos cuja primeira tentativa caiu antes do trabalho."
+      },
+      {
+        "text": "Gravar o id da mensagem junto com a mudança, numa transação",
+        "why": "Isso. Uma repetição falha na chave e não soma nada."
+      },
+      {
+        "text": "Mandar os reembolsos pelo Kafka em vez do RabbitMQ",
+        "why": "O Kafka também é pelo menos uma vez."
+      }
+    ]
+  }
+}

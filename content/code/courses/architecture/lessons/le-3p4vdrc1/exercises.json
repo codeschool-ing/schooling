@@ -1,0 +1,873 @@
+[
+  {
+    "id": "ex-32rpn77p",
+    "version": 1,
+    "section": "three-promises",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each delivery guarantee to what a crash costs under it.",
+    "hint": "Where the acknowledgement sits.",
+    "pairs": [
+      {
+        "left": "at most once",
+        "right": "a message that is never processed"
+      },
+      {
+        "left": "at least once",
+        "right": "a message processed twice"
+      },
+      {
+        "left": "exactly once, as built here",
+        "right": "only the bookkeeping"
+      }
+    ],
+    "right_distractors": [
+      "the broker restarts"
+    ]
+  },
+  {
+    "id": "ex-2b9jnw5a",
+    "version": 1,
+    "section": "three-promises",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A consumer acknowledges each message as soon as it receives it, then does the work. What does a crash during the work cost?",
+    "hint": "The broker already deleted it.",
+    "choices": [
+      {
+        "text": "The message is processed twice",
+        "correct": false,
+        "why": "That is what acknowledging after the work risks."
+      },
+      {
+        "text": "The message is lost, silently",
+        "correct": true,
+        "why": "Right: at most once. Nobody will ever process it."
+      },
+      {
+        "text": "The broker notices and redelivers it to another consumer after a timeout",
+        "correct": false,
+        "why": "It was acknowledged, so the broker considers it done."
+      },
+      {
+        "text": "Nothing, because the work is retried automatically",
+        "correct": false,
+        "why": "Nothing retries work the broker thinks is finished."
+      }
+    ]
+  },
+  {
+    "id": "ex-rcqgv3w5",
+    "version": 1,
+    "section": "three-promises",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A vendor says its broker delivers exactly once. Why does the lesson say that cannot cover your consumer's database?",
+    "hint": "What can the broker not see?",
+    "choices": [
+      {
+        "text": "Brokers lose messages more often than they claim",
+        "correct": false,
+        "why": "The argument is not about losses."
+      },
+      {
+        "text": "Exactly once is forbidden by the AMQP protocol",
+        "correct": false,
+        "why": "No protocol forbids it; the gap is between two systems."
+      },
+      {
+        "text": "It cannot see inside your transaction",
+        "correct": true,
+        "why": "Right. A crash between your commit and its acknowledgement leaves the two disagreeing."
+      },
+      {
+        "text": "Databases do not support transactions across tables",
+        "correct": false,
+        "why": "They do; the gap is between the database and the broker."
+      }
+    ]
+  },
+  {
+    "id": "ex-ezzjft4v",
+    "version": 1,
+    "section": "three-promises",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Acknowledging after the work, so that a crash repeats the work rather than losing it, gives at ___ once delivery.",
+    "hint": "The honest default.",
+    "blanks": [
+      {
+        "accept": [
+          "least"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-qp7zwbpj",
+    "version": 1,
+    "section": "the-payments-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lab, what stands in for the card processor?",
+    "hint": "Where does a charge end up?",
+    "choices": [
+      {
+        "text": "The RabbitMQ queue `charges`",
+        "correct": false,
+        "why": "That is where requests wait, not where they are charged."
+      },
+      {
+        "text": "A row in the consumer's SQLite database",
+        "correct": true,
+        "why": "Right, so a double charge can be counted."
+      },
+      {
+        "text": "A call to a test API on the internet",
+        "correct": false,
+        "why": "The lab makes no call outside the machine."
+      },
+      {
+        "text": "The outbox table in the shop's database",
+        "correct": false,
+        "why": "The outbox holds messages to send, not charges."
+      }
+    ]
+  },
+  {
+    "id": "ex-2343eqna",
+    "version": 1,
+    "section": "the-payments-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does every script call `connect()` from `topology.py` before doing anything?",
+    "hint": "Lesson 6 lost two messages because of the order things ran in.",
+    "choices": [
+      {
+        "text": "So the layout exists whichever script runs first",
+        "correct": true,
+        "why": "Right. A publish can never land on an exchange with no queue bound."
+      },
+      {
+        "text": "Pika refuses to publish unless the queue was declared in the same process",
+        "correct": false,
+        "why": "Pika publishes to exchanges; the reason is the layout, not the library."
+      },
+      {
+        "text": "Declaring a queue twice deletes the messages in it",
+        "correct": false,
+        "why": "Declaring an existing queue with the same settings changes nothing."
+      },
+      {
+        "text": "It opens a separate connection for each queue",
+        "correct": false,
+        "why": "It opens one connection and one channel."
+      }
+    ]
+  },
+  {
+    "id": "ex-jdbdr0g6",
+    "version": 1,
+    "section": "charged-twice",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the naive consumer crashed and ran again, how many cents had been charged for order `q-1`, whose basket cost 3,290?",
+    "hint": "Two rows in the list.",
+    "value": 6580,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-w89jkk33",
+    "version": 1,
+    "section": "charged-twice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did RabbitMQ deliver `q-1` a second time?",
+    "hint": "What did the broker never receive?",
+    "choices": [
+      {
+        "text": "The publisher sent it twice",
+        "correct": false,
+        "why": "It was published once, and confirmed once."
+      },
+      {
+        "text": "The charge failed the first time",
+        "correct": false,
+        "why": "The first charge was committed; the list shows it."
+      },
+      {
+        "text": "The acknowledgement never arrived",
+        "correct": true,
+        "why": "Right. To the broker the message was never handled."
+      },
+      {
+        "text": "The queue is configured to deliver every message twice",
+        "correct": false,
+        "why": "Nothing in the topology does that."
+      }
+    ]
+  },
+  {
+    "id": "ex-vkf9yen4",
+    "version": 1,
+    "section": "charged-twice",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes skipping every message whose `redelivered` flag is true. What goes wrong?",
+    "hint": "When else is the flag set?",
+    "choices": [
+      {
+        "text": "Nothing; the flag means it was processed",
+        "correct": false,
+        "why": "The flag means it was handed out before, not that the work happened."
+      },
+      {
+        "text": "RabbitMQ refuses to deliver a message twice once a consumer skips it",
+        "correct": false,
+        "why": "The broker has no such rule."
+      },
+      {
+        "text": "Every message has the flag set, so nothing is processed",
+        "correct": false,
+        "why": "First deliveries have it false, as the lab showed."
+      },
+      {
+        "text": "A crash before the work also sets it, and skipping loses the payment",
+        "correct": true,
+        "why": "Right. Only the consumer's own records can tell the two cases apart."
+      }
+    ]
+  },
+  {
+    "id": "ex-x80xhsp3",
+    "version": 1,
+    "section": "idempotent-consumer",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these operations is idempotent?",
+    "hint": "Twice has the same effect as once.",
+    "choices": [
+      {
+        "text": "Adding 3,290 to a customer's balance",
+        "correct": false,
+        "why": "Twice adds 6,580."
+      },
+      {
+        "text": "Setting a product's price to 3,290",
+        "correct": true,
+        "why": "Right. The second time changes nothing."
+      },
+      {
+        "text": "Taking one unit of coffee out of stock",
+        "correct": false,
+        "why": "Twice takes two."
+      },
+      {
+        "text": "Sending a confirmation e-mail",
+        "correct": false,
+        "why": "Twice sends two e-mails."
+      }
+    ]
+  },
+  {
+    "id": "ex-fgagfw8e",
+    "version": 1,
+    "section": "idempotent-consumer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the idempotent consumer do with the redelivered `q-2`?",
+    "hint": "The line it printed.",
+    "choices": [
+      {
+        "text": "Charged it again and printed a warning",
+        "correct": false,
+        "why": "The list shows `q-2` once."
+      },
+      {
+        "text": "Rejected it to the dead-letter queue as a duplicate",
+        "correct": false,
+        "why": "It acknowledged it; a duplicate is not a failure."
+      },
+      {
+        "text": "Skipped the charge and acknowledged it",
+        "correct": true,
+        "why": "Right. The insert into `processed` failed on the key."
+      },
+      {
+        "text": "Left it unacknowledged, so it stayed in the queue",
+        "correct": false,
+        "why": "It was acknowledged, so the queue was emptied."
+      }
+    ]
+  },
+  {
+    "id": "ex-vxyvgxf4",
+    "version": 1,
+    "section": "idempotent-consumer",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A consumer writes the message id to `processed`, commits, then charges in a second transaction. What does a crash between the two cost?",
+    "hint": "Which fact gets written without the other?",
+    "choices": [
+      {
+        "text": "A double charge, as with the naive consumer",
+        "correct": false,
+        "why": "The id is recorded, so a redelivery is skipped."
+      },
+      {
+        "text": "A payment marked done and never charged",
+        "correct": true,
+        "why": "Right: at most once, just moved. Both must be one transaction."
+      },
+      {
+        "text": "Nothing, since the id protects against every failure",
+        "correct": false,
+        "why": "The id protects only if it commits with the effect."
+      },
+      {
+        "text": "The message goes to the dead-letter queue",
+        "correct": false,
+        "why": "A crash does not reject a message."
+      }
+    ]
+  },
+  {
+    "id": "ex-fmm1an3t",
+    "version": 1,
+    "section": "idempotent-consumer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why must `processed` eventually have old rows deleted, and what decides how old?",
+    "hint": "How late can a duplicate arrive?",
+    "choices": [
+      {
+        "text": "SQLite cannot hold more than a million rows",
+        "correct": false,
+        "why": "The concern is growth, not a hard limit."
+      },
+      {
+        "text": "Old ids must be deleted daily so they can be reused",
+        "correct": false,
+        "why": "Ids are not reused."
+      },
+      {
+        "text": "It never needs deleting, because rows are small",
+        "correct": false,
+        "why": "A row per message grows without end."
+      },
+      {
+        "text": "It grows for ever; keep ids longer than a duplicate could arrive late",
+        "correct": true,
+        "why": "Right, bounded by redelivery and by how far back anyone might replay."
+      }
+    ]
+  },
+  {
+    "id": "ex-9s3gg890",
+    "version": 1,
+    "section": "idempotency-keys",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Who creates an idempotency key, and when?",
+    "hint": "It has to survive a failure the server may never have seen.",
+    "choices": [
+      {
+        "text": "The server, when the first attempt arrives",
+        "correct": false,
+        "why": "The caller needs the key before it knows whether the server saw anything."
+      },
+      {
+        "text": "The caller, fresh for every retry",
+        "correct": false,
+        "why": "A fresh key per retry identifies nothing."
+      },
+      {
+        "text": "The caller, once, before the first attempt",
+        "correct": true,
+        "why": "Right, and it keeps it so that every retry sends the same."
+      },
+      {
+        "text": "The broker, which assigns one to every message",
+        "correct": false,
+        "why": "HTTP calls have no broker; the caller supplies the key."
+      }
+    ]
+  },
+  {
+    "id": "ex-11m4kyf7",
+    "version": 1,
+    "section": "idempotency-keys",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match what the server finds for a key to what it does.",
+    "hint": "The table in the section.",
+    "pairs": [
+      {
+        "left": "a new key",
+        "right": "does the work and stores key and response"
+      },
+      {
+        "left": "a key stored with a response",
+        "right": "returns the stored response"
+      },
+      {
+        "left": "a key still in progress",
+        "right": "answers 409 Conflict"
+      }
+    ],
+    "right_distractors": [
+      "charges the card again, more carefully"
+    ]
+  },
+  {
+    "id": "ex-h8j9hmvd",
+    "version": 1,
+    "section": "idempotency-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The checkout's connection drops after it sent a payment request and before the answer came. What makes a retry safe?",
+    "hint": "A stable name for one intended effect.",
+    "choices": [
+      {
+        "text": "Waiting ten seconds before retrying",
+        "correct": false,
+        "why": "Time does not tell the server it has seen this payment."
+      },
+      {
+        "text": "Sending the same `Idempotency-Key` again",
+        "correct": true,
+        "why": "Right. The server returns the stored answer if it charged."
+      },
+      {
+        "text": "Asking the card's bank whether it was charged",
+        "correct": false,
+        "why": "The bank is not the API being called, and it is too late for the shop."
+      },
+      {
+        "text": "Retrying with a lower amount",
+        "correct": false,
+        "why": "A different amount is a different payment."
+      }
+    ]
+  },
+  {
+    "id": "ex-xr80d3h3",
+    "version": 1,
+    "section": "the-publisher-side",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did `mandatory=True` change when `q-3` was published with the key `refunds`?",
+    "hint": "Lesson 6's two lost orders.",
+    "choices": [
+      {
+        "text": "The broker created a `refunds` queue for it",
+        "correct": false,
+        "why": "Brokers do not create queues for publishers."
+      },
+      {
+        "text": "The broker returned it, and the script knew",
+        "correct": true,
+        "why": "Right, where lesson 6's orders were dropped in silence."
+      },
+      {
+        "text": "The broker delivered it to `charges` instead",
+        "correct": false,
+        "why": "It went to no queue at all."
+      },
+      {
+        "text": "Nothing; the message was still dropped silently",
+        "correct": false,
+        "why": "The script printed that it was returned."
+      }
+    ]
+  },
+  {
+    "id": "ex-7y15q25s",
+    "version": 1,
+    "section": "the-publisher-side",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a publisher confirm tell the publisher?",
+    "hint": "Who has taken responsibility?",
+    "choices": [
+      {
+        "text": "That the consumer has processed the message",
+        "correct": false,
+        "why": "Confirms are between publisher and broker only."
+      },
+      {
+        "text": "That its own database committed the order",
+        "correct": false,
+        "why": "The broker knows nothing about the publisher's database."
+      },
+      {
+        "text": "That the broker has taken the message",
+        "correct": true,
+        "why": "Right: stored in every queue it was routed to."
+      },
+      {
+        "text": "That the message will be delivered exactly once",
+        "correct": false,
+        "why": "Confirms say nothing about delivery to consumers."
+      }
+    ]
+  },
+  {
+    "id": "ex-daqhdfmp",
+    "version": 1,
+    "section": "the-outbox",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The shop commits an order and then publishes its message, and crashes between the two. What is the result?",
+    "hint": "Which write happened?",
+    "choices": [
+      {
+        "text": "A payment for an order that does not exist",
+        "correct": false,
+        "why": "That is the other order of the two writes."
+      },
+      {
+        "text": "An order nobody will ever charge",
+        "correct": true,
+        "why": "Right. The message was never sent."
+      },
+      {
+        "text": "Both are rolled back together",
+        "correct": false,
+        "why": "No transaction covers the database and the broker."
+      },
+      {
+        "text": "The broker sends the message when the shop restarts",
+        "correct": false,
+        "why": "The broker never received it."
+      }
+    ]
+  },
+  {
+    "id": "ex-hr2qvspv",
+    "version": 1,
+    "section": "the-outbox",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the broker stopped, what happened to order `o-1` in the lab?",
+    "hint": "Two rows, one transaction.",
+    "choices": [
+      {
+        "text": "The order was refused, because the broker was down",
+        "correct": false,
+        "why": "The order was saved; only relaying failed."
+      },
+      {
+        "text": "The order was saved and its message lost",
+        "correct": false,
+        "why": "The message waited in the outbox and was sent later."
+      },
+      {
+        "text": "Order and message saved; relayed once the broker was back",
+        "correct": true,
+        "why": "Right, and the payments consumer charged it."
+      },
+      {
+        "text": "The relay kept retrying in a loop until the broker came back",
+        "correct": false,
+        "why": "The relay reported the failure and exited."
+      }
+    ]
+  },
+  {
+    "id": "ex-fpvwr4s9",
+    "version": 1,
+    "section": "the-outbox",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does a system with a transactional outbox still need an idempotent consumer?",
+    "hint": "What if the relay crashes after the confirm?",
+    "choices": [
+      {
+        "text": "Because the outbox sends each message exactly once",
+        "correct": false,
+        "why": "It does not; that is the point."
+      },
+      {
+        "text": "Because the outbox loses messages when the broker is down",
+        "correct": false,
+        "why": "The lab showed it keeps them."
+      },
+      {
+        "text": "It does not; the outbox makes the consumer's job safe on its own",
+        "correct": false,
+        "why": "The relay can still send a message twice."
+      },
+      {
+        "text": "A relay crash after the confirm resends the message",
+        "correct": true,
+        "why": "Right. The outbox gives at least once, and the consumer absorbs the repeat."
+      }
+    ]
+  },
+  {
+    "id": "ex-bm16mxm5",
+    "version": 1,
+    "section": "the-outbox",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The table in the shop's own database, written in the same transaction as the order and read by a relay, is called the ___.",
+    "hint": "Where outgoing mail waits.",
+    "blanks": [
+      {
+        "accept": [
+          "outbox"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-67bnf298",
+    "version": 1,
+    "section": "ordering",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these keeps all the events of one order in order, in Kafka?",
+    "hint": "One key, one partition.",
+    "choices": [
+      {
+        "text": "More partitions, so that events are spread evenly",
+        "correct": false,
+        "why": "Spreading one order's events breaks their order."
+      },
+      {
+        "text": "The order id as the message key",
+        "correct": true,
+        "why": "Right: one order, one partition, one consumer."
+      },
+      {
+        "text": "A random key per message",
+        "correct": false,
+        "why": "Random keys scatter one order across partitions."
+      },
+      {
+        "text": "More consumers in the group",
+        "correct": false,
+        "why": "Consumers do not change where messages were written."
+      }
+    ]
+  },
+  {
+    "id": "ex-bg1njdmz",
+    "version": 1,
+    "section": "ordering",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can deliver one order's events out of order? Choose all that apply.",
+    "hint": "The table of causes.",
+    "choices": [
+      {
+        "text": "Competing consumers on one queue",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A message redelivered after a crash",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Events spread over several partitions",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "One consumer reading one partition",
+        "correct": false,
+        "why": "That is the arrangement that keeps order."
+      }
+    ]
+  },
+  {
+    "id": "ex-s641x3r3",
+    "version": 1,
+    "section": "ordering",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team cannot guarantee the order of `OrderPaid` and `OrderShipped`. What does the lesson suggest instead of fighting the transport?",
+    "hint": "What if order did not matter?",
+    "choices": [
+      {
+        "text": "Wait a minute before applying each event",
+        "correct": false,
+        "why": "A delay narrows the window; it does not close it."
+      },
+      {
+        "text": "Carry a version, apply only newer ones",
+        "correct": true,
+        "why": "Right. Then the order of arrival stops mattering."
+      },
+      {
+        "text": "Use a single queue for the whole company",
+        "correct": false,
+        "why": "One queue still has redeliveries and competing consumers."
+      },
+      {
+        "text": "Merge the two events into one message type",
+        "correct": false,
+        "why": "The events describe different moments; merging them loses one."
+      }
+    ]
+  },
+  {
+    "id": "ex-xa3kkyj9",
+    "version": 1,
+    "section": "poison-messages",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a poison message?",
+    "hint": "It fails every time.",
+    "choices": [
+      {
+        "text": "A message from an attacker",
+        "correct": false,
+        "why": "The name is about failing, not about intent."
+      },
+      {
+        "text": "A message delivered twice",
+        "correct": false,
+        "why": "That is a duplicate, handled by idempotency."
+      },
+      {
+        "text": "One whose processing fails every time",
+        "correct": true,
+        "why": "Right, such as a body that is not valid JSON."
+      },
+      {
+        "text": "One that arrived out of order",
+        "correct": false,
+        "why": "Out of order can be handled; poison cannot."
+      }
+    ]
+  },
+  {
+    "id": "ex-bx6s1krc",
+    "version": 1,
+    "section": "poison-messages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The database timed out while a consumer handled a message. Should the message go to the dead-letter queue?",
+    "hint": "Transient or permanent?",
+    "choices": [
+      {
+        "text": "Yes; any failure belongs there",
+        "correct": false,
+        "why": "Transient failures may succeed on a retry."
+      },
+      {
+        "text": "No: retry it later, with a delay",
+        "correct": true,
+        "why": "Right. The dead-letter queue is for failures that will never succeed."
+      },
+      {
+        "text": "Yes, and the consumer should stop until a person looks",
+        "correct": false,
+        "why": "One slow database does not need a person."
+      },
+      {
+        "text": "No: acknowledge it and move on",
+        "correct": false,
+        "why": "That loses the payment."
+      }
+    ]
+  },
+  {
+    "id": "ex-yj7qy62p",
+    "version": 1,
+    "section": "poison-messages",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the broken `q-4` was rejected, how many messages did `charges.dead` hold?",
+    "hint": "The last listing.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "messages"
+  },
+  {
+    "id": "ex-vjztzq4q",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the transactional outbox in order, from the order being placed to the charge.",
+    "hint": "One transaction first, the broker later.",
+    "items": [
+      "The order and its outbox row commit in one transaction",
+      "The relay reads the unsent row",
+      "The relay publishes and the broker confirms",
+      "The relay marks the row as sent",
+      "The idempotent consumer charges the order"
+    ]
+  },
+  {
+    "id": "ex-wepzjv0f",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's refund consumer adds the refunded amount to the customer's store credit. Which change makes it safe under at least once?",
+    "hint": "Adding is not idempotent.",
+    "choices": [
+      {
+        "text": "Acknowledge each message before adding the credit",
+        "correct": false,
+        "why": "That loses refunds when the consumer crashes."
+      },
+      {
+        "text": "Skip messages marked as redelivered",
+        "correct": false,
+        "why": "That loses refunds whose first attempt crashed before the work."
+      },
+      {
+        "text": "Record the message id with the change, in one transaction",
+        "correct": true,
+        "why": "Right. A repeat fails on the key and adds nothing."
+      },
+      {
+        "text": "Send refunds through Kafka instead of RabbitMQ",
+        "correct": false,
+        "why": "Kafka is at least once too."
+      }
+    ]
+  }
+]
