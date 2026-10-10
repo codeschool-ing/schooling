@@ -835,6 +835,89 @@ def l05_steps(lang):
     return f, t['cap']
 
 
+@figure('l06-between', 6)
+def l06_between(lang):
+    t = {'en': dict(
+            label='The feature store between the code that computes features and the two readers. '
+                  'features.py, run as of each day, writes snapshots into the offline store. The '
+                  'online store is built from the offline store. Training and batch scoring read the '
+                  'offline store with a point-in-time join; a service reads one member from the '
+                  'online store.',
+            code='features.py, as of each day', store='the feature store',
+            off='offline store', off2='every value, with its day', on='online store',
+            on2='the latest value per member', train='training', train2='as of each row',
+            serve='a service', serve2='one member, now',
+            cap='One computation, two faces. Training asks about the past and a service asks about '
+                'now, and both get values computed by the same code.'),
+         'pt': dict(
+            label='A feature store entre o código que calcula os atributos e os dois leitores. O '
+                  'features.py, rodado em relação a cada dia, grava fotografias no armazenamento '
+                  'offline. O online é montado a partir do offline. O treino e a pontuação em lote '
+                  'leem o offline com uma junção no ponto do tempo; um serviço lê um membro do '
+                  'online.',
+            code='features.py, a cada dia', store='a feature store',
+            off='armazenamento offline', off2='todo valor, com o seu dia', on='armazenamento online',
+            on2='o valor mais novo por membro', train='treino', train2='em relação a cada linha',
+            serve='um serviço', serve2='um membro, agora',
+            cap='Um cálculo, duas faces. O treino pergunta sobre o passado e um serviço pergunta '
+                'sobre agora, e os dois recebem valores calculados pelo mesmo código.')}[lang]
+    f = Fig('l06-between', 720, 290, t['label'])
+    box(f, 20, 115, 160, 56, t['code'].split(',')[0], t['code'].split(', ', 1)[1], stroke='--wire')
+    f.rect(230, 20, 260, 250, stroke='--amber', fill='--panel', dash='5 4')
+    f.text(360, 40, t['store'], size=12, weight='700', fill='--amber')
+    box(f, 255, 62, 210, 70, t['off'], t['off2'], stroke='--phosphor')
+    box(f, 255, 180, 210, 70, t['on'], t['on2'], stroke='--phosphor')
+    f.line(180, 130, 253, 100, stroke='--phosphor', width=1.6, arrow=True)
+    f.line(360, 132, 360, 178, stroke='--phosphor', width=1.6, arrow=True)
+    box(f, 540, 62, 160, 70, t['train'], t['train2'])
+    box(f, 540, 180, 160, 70, t['serve'], t['serve2'])
+    f.line(467, 97, 538, 97, stroke='--phosphor', width=1.6, arrow=True)
+    f.line(467, 215, 538, 215, stroke='--phosphor', width=1.6, arrow=True)
+    return f, t['cap']
+
+
+@figure('l06-asof', 6)
+def l06_asof(lang):
+    t = {'en': dict(
+            label='A timeline of snapshots for member 2: Sundays 16, 23 and 30 November 2025, '
+                  'and Saturday 28 February 2026. A question on Thursday 27 November is answered by '
+                  'the 23 November snapshot; one on 30 November by that day\'s; one on 28 February by '
+                  'that night\'s. No answer comes from a snapshot after its question.',
+            snaps=['16 Nov', '23 Nov', '30 Nov', '28 Feb'], asks=['asked 27 Nov', 'asked 30 Nov',
+                                                               'asked 28 Feb'],
+            snap='snapshots', gap='…',
+            cap='Each question is answered by the newest snapshot on or before it. Newer rows exist '
+                'in the store the whole time, and the join never reaches them.'),
+         'pt': dict(
+            label='Uma linha do tempo de fotografias do membro 2: domingos 16, 23 e 30 de novembro '
+                  'de 2025, e sábado 28 de fevereiro de 2026. Uma pergunta na quinta, 27 de '
+                  'novembro, é respondida pela fotografia de 23 de novembro; uma em 30 de novembro, '
+                  'pela daquele dia; uma em 28 de fevereiro, pela daquela noite. Nenhuma resposta '
+                  'vem de uma fotografia posterior à pergunta.',
+            snaps=['16 nov', '23 nov', '30 nov', '28 fev'], asks=['pergunta em 27 nov',
+                                                               'pergunta em 30 nov',
+                                                               'pergunta em 28 fev'],
+            snap='fotografias', gap='…',
+            cap='Cada pergunta é respondida pela fotografia mais nova até ela. Linhas mais novas '
+                'existem no armazenamento o tempo todo, e a junção nunca chega a elas.')}[lang]
+    f = Fig('l06-asof', 720, 230, t['label'])
+    xs = [80, 230, 380, 640]
+    for a, b in ((40, 46), (114, 196), (264, 346), (414, 606), (674, 690)):
+        f.line(a, 150, b, 150, stroke='--paper-dim', width=1.4)
+    f.text(510, 150, t['gap'], size=14, fill='--paper-dim')
+    f.text(40, 186, t['snap'], size=10.5, anchor='start', fill='--phosphor', weight='600')
+    for x, sname in zip(xs, t['snaps']):
+        f.rect(x - 34, 138, 68, 24, stroke='--phosphor', fill='--scan', rx=4)
+        f.text(x, 150, sname, size=10, mono=True)
+    asks = [(330, 40, xs[1], 'end'), (390, 84, xs[2], 'start'), (640, 60, xs[3], 'end')]
+    for (ax, y, tx, anchor), label in zip(asks, t['asks']):
+        f.circle(ax, y, 4, fill='--amber')
+        f.text(ax + (-8 if anchor == 'end' else 8), y, label, size=10.5, anchor=anchor,
+               fill='--amber', weight='600')
+        f.path(f'M{ax} {y + 5} L{tx} 136', stroke='--amber', width=1.4, dash='4 3', arrow=True)
+    return f, t['cap']
+
+
 
 def main():
     if '--list' in sys.argv:

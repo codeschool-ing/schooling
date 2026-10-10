@@ -1,0 +1,446 @@
+{
+  "ex-a3gjqs7w": {
+    "prompt": "Que causa única o vazamento da tabela de resumo da lição 3 e a diferença da lição 5 compartilham?",
+    "choices": [
+      {
+        "text": "Um atributo mal calculado",
+        "why": "Isso. Calculado em dois lugares, ou para o momento errado; uma feature store é feita para impedir as duas coisas."
+      },
+      {
+        "text": "Os dois usaram regressão logística",
+        "why": "Qualquer algoritmo teria falhado do mesmo jeito."
+      },
+      {
+        "text": "Os dois treinaram com membros de menos para serem estáveis",
+        "why": "Os dois tinham milhares de linhas; tamanho não era a questão."
+      },
+      {
+        "text": "Os dois esqueceram de pôr as colunas numéricas em escala",
+        "why": "O pipeline pôs em escala nas duas vezes."
+      }
+    ]
+  },
+  "ex-qj82pv9a": {
+    "prompt": "Associe cada face da feature store ao que ela responde.",
+    "pairs": [
+      {
+        "left": "armazenamento offline",
+        "right": "como os membros estavam em dias passados"
+      },
+      {
+        "left": "armazenamento online",
+        "right": "como um membro está agora"
+      }
+    ],
+    "right_distractors": [
+      "quais membros vão se afastar no mês que vem",
+      "qual é o rótulo de cada membro"
+    ]
+  },
+  "ex-twr8gqk9": {
+    "prompt": "Uma feature store calcula os atributos?",
+    "choices": [
+      {
+        "text": "Sim, ela substitui o features.py",
+        "why": "O features.py continua fazendo o cálculo."
+      },
+      {
+        "text": "Não: ela roda, guarda e serve a saída do código",
+        "why": "Isso. O cálculo fica num código só."
+      },
+      {
+        "text": "Só para o armazenamento online",
+        "why": "O online é montado a partir do offline; nenhum dos dois calcula."
+      },
+      {
+        "text": "Só quando o modelo pede um atributo que nunca viu",
+        "why": "Nada é calculado sob demanda aqui."
+      }
+    ]
+  },
+  "ex-q9x663jm": {
+    "prompt": "Associe cada parte de uma feature store ao que ela é nesta lição.",
+    "pairs": [
+      {
+        "left": "entidade",
+        "right": "um membro, member_id"
+      },
+      {
+        "left": "carimbo de tempo do evento",
+        "right": "as_of, o dia da fotografia"
+      },
+      {
+        "left": "materialização",
+        "right": "snapshot e backfill"
+      },
+      {
+        "left": "tempo de vida",
+        "right": "MAX_AGE, sete dias"
+      }
+    ],
+    "right_distractors": [
+      "lapsed, o rótulo"
+    ]
+  },
+  "ex-2wfs7aw1": {
+    "prompt": "Por que o carimbo de tempo do evento importa mais que qualquer outra coisa no armazenamento?",
+    "choices": [
+      {
+        "text": "Ele torna o armazenamento online mais rápido",
+        "why": "A velocidade vem do índice, não do carimbo."
+      },
+      {
+        "text": "Ele é a chave com que o modelo é treinado",
+        "why": "O modelo nunca vê uma data."
+      },
+      {
+        "text": "Ele torna a tabela uma história",
+        "why": "Isso. Sem ele o armazenamento é a tabela de resumo da lição 3."
+      },
+      {
+        "text": "Ele decide quais membros estão ativos",
+        "why": "O features.py decide isso, em relação a cada dia."
+      }
+    ]
+  },
+  "ex-ehydf95j": {
+    "prompt": "Por que o snapshot descarta a coluna lapsed antes de gravar?",
+    "choices": [
+      {
+        "text": "Ela é grande demais para guardar",
+        "why": "É um número pequeno por linha."
+      },
+      {
+        "text": "O SQLite não guarda booleanos",
+        "why": "Ele guarda 0 e 1 sem problema."
+      },
+      {
+        "text": "O armazenamento online não tem espaço para ela",
+        "why": "Espaço não é o motivo."
+      },
+      {
+        "text": "Ele é descoberto depois do dia",
+        "why": "Isso. O armazenamento guarda o que se sabia no dia; um rótulo ao lado dos atributos é um vazamento esperando uma consulta."
+      }
+    ]
+  },
+  "ex-02a5ppaf": {
+    "prompt": "O historical usa merge_asof com direction=\"backward\" e tolerância de sete dias. O que direction=\"nearest\" faria?",
+    "choices": [
+      {
+        "text": "Pegar fotografias posteriores também",
+        "why": "Isso. Uma pergunta de quinta receberia os valores do domingo seguinte."
+      },
+      {
+        "text": "Nada diferente, já que as fotografias são semanais",
+        "why": "Uma fotografia mais próxima depois do momento passaria a ser escolhida."
+      },
+      {
+        "text": "Deixar a junção mais rápida",
+        "why": "Velocidade não é o que a direção muda."
+      },
+      {
+        "text": "Descartar todo membro sem fotografia naquele dia",
+        "why": "Ela acharia mais correspondências, não menos."
+      }
+    ]
+  },
+  "ex-mbtmr6gc": {
+    "prompt": "Quantas fotografias semanais o backfill de 2025-06-01 a 2026-02-22 tirou?",
+    "unit": "fotografias"
+  },
+  "ex-xrgsk9r3": {
+    "prompt": "Por que um backfill só está certo porque o features.py calcula em relação ao corte?",
+    "choices": [
+      {
+        "text": "Porque o backfill roda mais rápido assim",
+        "why": "O ponto é correção, não velocidade."
+      },
+      {
+        "text": "Para o passado não ser preenchido com hoje",
+        "why": "Isso. A partir de uma tabela de resumo, o passado seria enchido com os valores de hoje."
+      },
+      {
+        "text": "Porque o armazenamento offline recusa linhas do passado",
+        "why": "Ele aceita qualquer dia que receber."
+      },
+      {
+        "text": "Porque os rótulos são calculados durante o backfill",
+        "why": "Os rótulos são descartados antes de qualquer gravação."
+      }
+    ]
+  },
+  "ex-qyymsyb2": {
+    "prompt": "Um time quer linhas de treino para qualquer dia do passado, não só domingos. Quanto isso custa?",
+    "choices": [
+      {
+        "text": "Nada, o merge_asof já trata qualquer dia",
+        "why": "Ele trata qualquer dia, com até seis dias de atraso."
+      },
+      {
+        "text": "Outro algoritmo para o modelo de afastamento",
+        "why": "O modelo não é afetado."
+      },
+      {
+        "text": "Sete vezes as linhas",
+        "why": "Isso. A cadência é quão velha uma linha de treino pode ser, paga com armazenamento."
+      },
+      {
+        "text": "Abrir mão do armazenamento online",
+        "why": "Os dois são independentes."
+      }
+    ]
+  },
+  "ex-7p5spesy": {
+    "prompt": "Perguntado sobre o membro 2 na quinta, 27 de novembro, qual fotografia responde?",
+    "choices": [
+      {
+        "text": "O domingo, 30 de novembro, a mais próxima",
+        "why": "Ela é posterior ao momento, então nunca é usada."
+      },
+      {
+        "text": "O sábado, 28 de fevereiro, a mais nova do armazenamento",
+        "why": "Esse é o erro da tabela de resumo."
+      },
+      {
+        "text": "Nenhuma: não há fotografia naquele dia",
+        "why": "A junção pega a mais recente antes dele."
+      },
+      {
+        "text": "O domingo, 23 de novembro",
+        "why": "Isso. A mais nova até o momento, com quatro dias de atraso."
+      }
+    ]
+  },
+  "ex-jahvezc2": {
+    "prompt": "Que recência o armazenamento deu ao membro 2 em 2025-11-27?",
+    "unit": "dias"
+  },
+  "ex-x2mvea40": {
+    "prompt": "Em que o atraso da quinta difere de um vazamento?",
+    "choices": [
+      {
+        "text": "Ele é conhecido, e limitado pelo MAX_AGE",
+        "why": "Isso. No máximo seis dias, escrito como MAX_AGE; um vazamento não tem limite nem nome."
+      },
+      {
+        "text": "Não difere; os dois leem o dia errado",
+        "why": "O atraso lê um dia anterior, que era conhecível na época."
+      },
+      {
+        "text": "Atraso só acontece no online",
+        "why": "Ele aconteceu aqui numa junção histórica."
+      },
+      {
+        "text": "Um vazamento é sempre menor",
+        "why": "O da lição 3 foi grande o bastante para levar a AUC a 0,994."
+      }
+    ]
+  },
+  "ex-86yyepwt": {
+    "prompt": "Por que o online() deixa 466 membros de fora?",
+    "choices": [
+      {
+        "text": "Eles nunca estiveram ativos",
+        "why": "Estiveram, em algum domingo desde junho."
+      },
+      {
+        "text": "A linha mais nova é velha demais",
+        "why": "Isso. Servida, descreveria um membro que foi embora como se tivesse visitado ontem."
+      },
+      {
+        "text": "Eles se afastaram, então o rótulo os exclui",
+        "why": "O armazenamento não guarda rótulo nenhum."
+      },
+      {
+        "text": "O SQLite tem um limite de linhas por tabela",
+        "why": "Nenhum de que este armazenamento chegue perto."
+      }
+    ]
+  },
+  "ex-jzq19tr1": {
+    "prompt": "Quantos membros o armazenamento online manteve em 28 de fevereiro?",
+    "unit": "membros"
+  },
+  "ex-ehd1g5vd": {
+    "prompt": "get(8) devolve None. O que o serviço de pontuação deve fazer?",
+    "choices": [
+      {
+        "text": "Calcular na hora os atributos do membro 8 a partir das compras",
+        "why": "Isso é uma segunda implementação, a diferença da lição 5."
+      },
+      {
+        "text": "Usar a última linha do membro 8 do offline, por mais velha que seja",
+        "why": "Isso serve um membro velho como se fosse atual."
+      },
+      {
+        "text": "O que a plataforma decidiu antes e deixou escrito",
+        "why": "Isso. Recusar, usar valores padrão ou cair para uma regra: cada uma é defensável se for escolhida."
+      },
+      {
+        "text": "Quebrar, para alguém perceber",
+        "why": "Quebrar em todo membro esquecido não é uma decisão."
+      }
+    ]
+  },
+  "ex-vqv2cygm": {
+    "prompt": "Por que o features.build é um jeito ruim de responder sobre um membro numa requisição web?",
+    "choices": [
+      {
+        "text": "Ele devolve o rótulo também",
+        "why": "É verdade, mas o problema numa requisição é tempo."
+      },
+      {
+        "text": "Ele não lê SQLite de um servidor web",
+        "why": "Lê; só é lento para um membro."
+      },
+      {
+        "text": "Ele usa outro scaler",
+        "why": "A escala fica dentro do modelo, não no features.build."
+      },
+      {
+        "text": "Ele calcula todos eles a cada vez",
+        "why": "Isso. Ele calcula todos os membros ativos para responder sobre um, porque foi escrito para o treino."
+      }
+    ]
+  },
+  "ex-btj6snbt": {
+    "prompt": "O lookup.py imprime 0,17 ms numa rodada e 0,15 ms em outra. O que um leitor deve tirar dos números?",
+    "choices": [
+      {
+        "text": "A distância de duas ou três ordens de grandeza",
+        "why": "Isso. Os dígitos mudam; a distância entre os dois jeitos não."
+      },
+      {
+        "text": "Que o armazenamento online ficou mais rápido",
+        "why": "Ruído de uma rodada para outra, não uma mudança."
+      },
+      {
+        "text": "Que o SQLite é o armazenamento online certo para qualquer tamanho",
+        "why": "Com cem vezes os membros, outras coisas mudam."
+      },
+      {
+        "text": "Que a medição está errada, já que mudou",
+        "why": "Medições variam um pouco; isso não é um erro."
+      }
+    ]
+  },
+  "ex-pmbkxcfz": {
+    "prompt": "O que o True do reproduce.py mostra?",
+    "choices": [
+      {
+        "text": "As predições do modelo estão certas",
+        "why": "Ele compara atributos, não predições."
+      },
+      {
+        "text": "O armazenamento bate com o features.py",
+        "why": "Isso. Mesmas linhas, depois mesmo modelo e o mesmo 0,793."
+      },
+      {
+        "text": "O armazenamento online está atualizado",
+        "why": "A comparação usa o offline."
+      },
+      {
+        "text": "Nenhum membro se afastou",
+        "why": "530 se afastaram."
+      }
+    ]
+  },
+  "ex-yb1dvf43": {
+    "prompt": "Que AUC de teste o modelo treinado com os valores mais novos atingiu?",
+    "unit": ""
+  },
+  "ex-00bw9g8f": {
+    "prompt": "Juntar os rótulos de 31 de agosto ao armazenamento online perdeu 327 membros. Por quê?",
+    "choices": [
+      {
+        "text": "Os rótulos deles estavam inacabados",
+        "why": "Os rótulos de 31 de agosto fecharam em novembro."
+      },
+      {
+        "text": "Eles tinham linhas duplicadas",
+        "why": "O online tem uma linha por membro."
+      },
+      {
+        "text": "Eles não estão ativos hoje",
+        "why": "Isso. O online não tinha nada para eles, e o atalho também misturou atributos de fevereiro com desfechos de agosto."
+      },
+      {
+        "text": "A junção foi por engano pelo corte",
+        "why": "Ela juntou só pelo member_id."
+      }
+    ]
+  },
+  "ex-8dyb7z9y": {
+    "prompt": "Qual o sinal que a lição diz para vigiar antes de adotar uma feature store?",
+    "choices": [
+      {
+        "text": "Um modelo tirando menos de 0,8",
+        "why": "A nota não tem nada a ver."
+      },
+      {
+        "text": "O armazenamento offline passar de dez megabytes",
+        "why": "Só o tamanho não é motivo."
+      },
+      {
+        "text": "Uma versão nova do scikit-learn",
+        "why": "Bibliotecas mudam; essa não é esta decisão."
+      },
+      {
+        "text": "Dois times calculando o mesmo atributo em dois lugares",
+        "why": "Isso. É a diferença da lição 5 chegando pela organização."
+      }
+    ]
+  },
+  "ex-kzsnsvdk": {
+    "prompt": "O que um produto como o Feast acrescenta ao featurestore.py? Escolha todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "um registro de visões de atributos com donos",
+        "why": "Isso."
+      },
+      {
+        "text": "materialização agendada com alertas",
+        "why": "Isso."
+      },
+      {
+        "text": "monitoramento de atualidade",
+        "why": "Isso."
+      },
+      {
+        "text": "a própria junção no ponto do tempo",
+        "why": "O featurestore.py já faz isso; a ideia é a mesma."
+      }
+    ]
+  },
+  "ex-a0m4yn1g": {
+    "prompt": "Coloque uma noite na Ponto Final em ordem, da carga da loja até um serviço respondendo.",
+    "items": [
+      "a tabela de compras termina de carregar",
+      "o snapshot grava os atributos de hoje no offline",
+      "o online reconstrói os valores mais novos",
+      "um serviço chama get para um membro"
+    ]
+  },
+  "ex-geeecg8f": {
+    "prompt": "Um colega monta um conjunto de treino juntando rótulos a um resumo noturno de membros sem coluna as_of. Que parte de uma feature store teria impedido isso?",
+    "choices": [
+      {
+        "text": "Os carimbos de tempo e a junção no ponto do tempo",
+        "why": "Isso. Sem eles, os valores de hoje encontram os rótulos do ano passado."
+      },
+      {
+        "text": "O índice do armazenamento online",
+        "why": "Índices o deixam rápido, não correto."
+      },
+      {
+        "text": "O tempo de vida",
+        "why": "Ele esconderia linhas velhas, não impediria o futuro de se juntar ao passado."
+      },
+      {
+        "text": "Um registro de donos",
+        "why": "Saber o dono não muda a junção."
+      }
+    ]
+  }
+}

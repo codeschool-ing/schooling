@@ -1,0 +1,676 @@
+[
+  {
+    "id": "ex-a3gjqs7w",
+    "version": 1,
+    "section": "two-problems",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What single cause do lesson 3's summary-table leak and lesson 5's skew share?",
+    "choices": [
+      {
+        "text": "A feature computed badly",
+        "correct": true,
+        "why": "Right. Computed in two places, or for the wrong moment; a feature store is built to prevent both."
+      },
+      {
+        "text": "Both used logistic regression",
+        "correct": false,
+        "why": "Any algorithm would have failed the same way."
+      },
+      {
+        "text": "Both trained on too few members to be stable",
+        "correct": false,
+        "why": "Both had thousands of rows; size was not the issue."
+      },
+      {
+        "text": "Both forgot to scale the numeric columns",
+        "correct": false,
+        "why": "The pipeline scaled them both times."
+      }
+    ]
+  },
+  {
+    "id": "ex-qj82pv9a",
+    "version": 1,
+    "section": "two-problems",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each face of the feature store to what it answers.",
+    "pairs": [
+      {
+        "left": "offline store",
+        "right": "what members looked like on past days"
+      },
+      {
+        "left": "online store",
+        "right": "what one member looks like now"
+      }
+    ],
+    "right_distractors": [
+      "which members will lapse next month",
+      "what the label of each member is"
+    ]
+  },
+  {
+    "id": "ex-twr8gqk9",
+    "version": 1,
+    "section": "two-problems",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Does a feature store compute the features?",
+    "choices": [
+      {
+        "text": "Yes, it replaces features.py",
+        "correct": false,
+        "why": "features.py still does the computing."
+      },
+      {
+        "text": "No: it runs, keeps and serves the code's output",
+        "correct": true,
+        "why": "Right. The computation stays in one piece of code."
+      },
+      {
+        "text": "Only for the online store",
+        "correct": false,
+        "why": "The online store is built from the offline one; neither computes."
+      },
+      {
+        "text": "Only when the model asks for a feature it has never seen",
+        "correct": false,
+        "why": "Nothing is computed on demand here."
+      }
+    ]
+  },
+  {
+    "id": "ex-q9x663jm",
+    "version": 1,
+    "section": "the-parts",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of a feature store to what it is in this lesson.",
+    "pairs": [
+      {
+        "left": "entity",
+        "right": "a member, member_id"
+      },
+      {
+        "left": "event timestamp",
+        "right": "as_of, the snapshot day"
+      },
+      {
+        "left": "materialisation",
+        "right": "snapshot and backfill"
+      },
+      {
+        "left": "time to live",
+        "right": "MAX_AGE, seven days"
+      }
+    ],
+    "right_distractors": [
+      "lapsed, the label"
+    ]
+  },
+  {
+    "id": "ex-2wfs7aw1",
+    "version": 1,
+    "section": "the-parts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the event timestamp matter more than anything else in the store?",
+    "choices": [
+      {
+        "text": "It makes the online store faster",
+        "correct": false,
+        "why": "Speed comes from the index, not the timestamp."
+      },
+      {
+        "text": "It is the key the model is trained on",
+        "correct": false,
+        "why": "The model never sees a date."
+      },
+      {
+        "text": "It makes the table a history",
+        "correct": true,
+        "why": "Right. Without it the store is lesson 3's summary table."
+      },
+      {
+        "text": "It decides which members are active",
+        "correct": false,
+        "why": "features.py decides that, as of each day."
+      }
+    ]
+  },
+  {
+    "id": "ex-ehydf95j",
+    "version": 1,
+    "section": "the-store",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does snapshot drop the lapsed column before writing?",
+    "choices": [
+      {
+        "text": "It is too large to store",
+        "correct": false,
+        "why": "It is one small number per row."
+      },
+      {
+        "text": "SQLite cannot store booleans",
+        "correct": false,
+        "why": "It stores 0 and 1 happily."
+      },
+      {
+        "text": "The online store has no room for it",
+        "correct": false,
+        "why": "Room is not the reason."
+      },
+      {
+        "text": "It is learned after the day",
+        "correct": true,
+        "why": "Right. The store keeps what was known on the day; a label kept beside features is a leak waiting for a query."
+      }
+    ]
+  },
+  {
+    "id": "ex-02a5ppaf",
+    "version": 1,
+    "section": "the-store",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "historical uses merge_asof with direction=\"backward\" and a tolerance of seven days. What would direction=\"nearest\" do?",
+    "choices": [
+      {
+        "text": "Pick later snapshots too",
+        "correct": true,
+        "why": "Right. A Thursday question would get the following Sunday's values."
+      },
+      {
+        "text": "Nothing different, since snapshots are weekly",
+        "correct": false,
+        "why": "A nearer snapshot after the moment would now be chosen."
+      },
+      {
+        "text": "Make the join faster",
+        "correct": false,
+        "why": "Speed is not what direction changes."
+      },
+      {
+        "text": "Drop every member who has no snapshot that day",
+        "correct": false,
+        "why": "It would find more matches, not fewer."
+      }
+    ]
+  },
+  {
+    "id": "ex-mbtmr6gc",
+    "version": 1,
+    "section": "filling-it",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many weekly snapshots did the backfill from 2025-06-01 to 2026-02-22 take?",
+    "value": 39,
+    "tolerance": 0,
+    "unit": "snapshots"
+  },
+  {
+    "id": "ex-xrgsk9r3",
+    "version": 1,
+    "section": "filling-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a backfill only correct because features.py computes as of its cutoff?",
+    "choices": [
+      {
+        "text": "Because the backfill runs faster that way",
+        "correct": false,
+        "why": "Correctness, not speed, is the point."
+      },
+      {
+        "text": "So the past is not refilled from today",
+        "correct": true,
+        "why": "Right. From a summary table, the past would be filled with today's values."
+      },
+      {
+        "text": "Because the offline store refuses rows from the past",
+        "correct": false,
+        "why": "It accepts any day it is given."
+      },
+      {
+        "text": "Because labels are computed during the backfill",
+        "correct": false,
+        "why": "Labels are dropped before anything is stored."
+      }
+    ]
+  },
+  {
+    "id": "ex-qyymsyb2",
+    "version": 1,
+    "section": "filling-it",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants training rows for any day of the past, not only Sundays. What does that cost?",
+    "choices": [
+      {
+        "text": "Nothing, merge_asof already handles any day",
+        "correct": false,
+        "why": "It handles any day, with up to six days of staleness."
+      },
+      {
+        "text": "A different algorithm for the lapse model",
+        "correct": false,
+        "why": "The model is unaffected."
+      },
+      {
+        "text": "Seven times the rows",
+        "correct": true,
+        "why": "Right. Cadence is how stale a training row may be, bought with storage."
+      },
+      {
+        "text": "Dropping the online store",
+        "correct": false,
+        "why": "The two are independent."
+      }
+    ]
+  },
+  {
+    "id": "ex-7p5spesy",
+    "version": 1,
+    "section": "as-of-a-moment",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Asked about member 2 on Thursday 27 November, which snapshot answers?",
+    "choices": [
+      {
+        "text": "Sunday 30 November, the nearest",
+        "correct": false,
+        "why": "That is after the moment, so it is never used."
+      },
+      {
+        "text": "Saturday 28 February, the newest in the store",
+        "correct": false,
+        "why": "That is the summary-table mistake."
+      },
+      {
+        "text": "None: there is no snapshot on that day",
+        "correct": false,
+        "why": "The as-of join takes the latest before it."
+      },
+      {
+        "text": "Sunday 23 November",
+        "correct": true,
+        "why": "Right. The newest on or before the moment, four days stale."
+      }
+    ]
+  },
+  {
+    "id": "ex-jahvezc2",
+    "version": 1,
+    "section": "as-of-a-moment",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What recency did the store give for member 2 as of 2025-11-27?",
+    "value": 15,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-x2mvea40",
+    "version": 1,
+    "section": "as-of-a-moment",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How is the staleness on the Thursday different from a leak?",
+    "choices": [
+      {
+        "text": "It is known, and bounded by MAX_AGE",
+        "correct": true,
+        "why": "Right. At most six days, written as MAX_AGE; a leak has no bound and no name."
+      },
+      {
+        "text": "It is not different; both read the wrong day",
+        "correct": false,
+        "why": "Staleness reads an earlier day, which was knowable then."
+      },
+      {
+        "text": "Staleness only happens online",
+        "correct": false,
+        "why": "It happened here in a historical join."
+      },
+      {
+        "text": "A leak is always smaller",
+        "correct": false,
+        "why": "Lesson 3's was large enough to take AUC to 0.994."
+      }
+    ]
+  },
+  {
+    "id": "ex-86yyepwt",
+    "version": 1,
+    "section": "the-online-store",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does online() leave out 466 members?",
+    "choices": [
+      {
+        "text": "They were never active",
+        "correct": false,
+        "why": "They were, on some Sunday since June."
+      },
+      {
+        "text": "Their newest row is too old",
+        "correct": true,
+        "why": "Right. Served, it would describe a member who is gone as if they visited yesterday."
+      },
+      {
+        "text": "They lapsed, so their label excludes them",
+        "correct": false,
+        "why": "The store holds no labels at all."
+      },
+      {
+        "text": "SQLite has a limit on rows per table",
+        "correct": false,
+        "why": "Not one this store comes near."
+      }
+    ]
+  },
+  {
+    "id": "ex-jzq19tr1",
+    "version": 1,
+    "section": "the-online-store",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many members did the online store keep on 28 February?",
+    "value": 3372,
+    "tolerance": 0,
+    "unit": "members"
+  },
+  {
+    "id": "ex-ehd1g5vd",
+    "version": 1,
+    "section": "the-online-store",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "get(8) returns None. What should the scoring service do?",
+    "choices": [
+      {
+        "text": "Compute member 8's features from the purchases table on the spot",
+        "correct": false,
+        "why": "That is a second implementation, lesson 5's skew."
+      },
+      {
+        "text": "Use member 8's last row from the offline store, however old",
+        "correct": false,
+        "why": "That serves a stale member as if current."
+      },
+      {
+        "text": "Whatever the platform decided in advance and wrote down",
+        "correct": true,
+        "why": "Right. Refuse, use defaults or fall back to a rule: each is defensible if it is chosen."
+      },
+      {
+        "text": "Crash, so somebody notices",
+        "correct": false,
+        "why": "A crash on every forgotten member is not a decision."
+      }
+    ]
+  },
+  {
+    "id": "ex-vqv2cygm",
+    "version": 1,
+    "section": "asking-for-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is features.build a poor way to answer for one member in a web request?",
+    "choices": [
+      {
+        "text": "It returns the label as well",
+        "correct": false,
+        "why": "True, but the problem in a request is time."
+      },
+      {
+        "text": "It cannot read SQLite from a web server",
+        "correct": false,
+        "why": "It can; it is just slow for one member."
+      },
+      {
+        "text": "It uses a different scaler",
+        "correct": false,
+        "why": "Scaling is inside the model, not in features.build."
+      },
+      {
+        "text": "It computes all of them each time",
+        "correct": true,
+        "why": "Right. It computes every active member to answer one, because it was written for training."
+      }
+    ]
+  },
+  {
+    "id": "ex-btj6snbt",
+    "version": 1,
+    "section": "asking-for-one",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "lookup.py prints 0.17 ms on one run and 0.15 ms on another. What should a reader take from the numbers?",
+    "choices": [
+      {
+        "text": "The gap of two or three orders of magnitude",
+        "correct": true,
+        "why": "Right. The digits move; the gap between the two ways does not."
+      },
+      {
+        "text": "That the online store got faster",
+        "correct": false,
+        "why": "Run-to-run noise, not a change."
+      },
+      {
+        "text": "That SQLite is the right online store for any size",
+        "correct": false,
+        "why": "At a hundred times the members, other things change."
+      },
+      {
+        "text": "That the timing is wrong, since it changed",
+        "correct": false,
+        "why": "Timings always vary a little; that is not an error."
+      }
+    ]
+  },
+  {
+    "id": "ex-pmbkxcfz",
+    "version": 1,
+    "section": "reproducible",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does reproduce.py's True show?",
+    "choices": [
+      {
+        "text": "The model's predictions are correct",
+        "correct": false,
+        "why": "It compares features, not predictions."
+      },
+      {
+        "text": "The store matches features.py",
+        "correct": true,
+        "why": "Right. Same rows, then same model and the same 0.793."
+      },
+      {
+        "text": "The online store is up to date",
+        "correct": false,
+        "why": "The comparison uses the offline store."
+      },
+      {
+        "text": "No member lapsed",
+        "correct": false,
+        "why": "530 did."
+      }
+    ]
+  },
+  {
+    "id": "ex-yb1dvf43",
+    "version": 1,
+    "section": "reproducible",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What test AUC did the model trained on the latest values reach?",
+    "value": 0.645,
+    "tolerance": 0,
+    "unit": ""
+  },
+  {
+    "id": "ex-00bw9g8f",
+    "version": 1,
+    "section": "reproducible",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Joining 31 August labels to the online store lost 327 members. Why?",
+    "choices": [
+      {
+        "text": "Their labels were unfinished",
+        "correct": false,
+        "why": "31 August's labels closed in November."
+      },
+      {
+        "text": "They had duplicate rows",
+        "correct": false,
+        "why": "The online store has one row per member."
+      },
+      {
+        "text": "They are not active tonight",
+        "correct": true,
+        "why": "Right. The online store had nothing for them, and the shortcut also mixed February's features with August's outcomes."
+      },
+      {
+        "text": "The merge was an inner join by mistake on the cutoff",
+        "correct": false,
+        "why": "It joined on member_id only."
+      }
+    ]
+  },
+  {
+    "id": "ex-8dyb7z9y",
+    "version": 1,
+    "section": "build-or-adopt",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which is the signal the lesson says to watch for before adopting a feature store?",
+    "choices": [
+      {
+        "text": "A model scoring below 0.8",
+        "correct": false,
+        "why": "Score has nothing to do with it."
+      },
+      {
+        "text": "The offline store passing ten megabytes",
+        "correct": false,
+        "why": "Size alone is no reason."
+      },
+      {
+        "text": "A new version of scikit-learn",
+        "correct": false,
+        "why": "Libraries change; that is not this decision."
+      },
+      {
+        "text": "Two teams computing the same feature in two places",
+        "correct": true,
+        "why": "Right. It is lesson 5's skew arriving through the organisation."
+      }
+    ]
+  },
+  {
+    "id": "ex-kzsnsvdk",
+    "version": 1,
+    "section": "build-or-adopt",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a product such as Feast add over featurestore.py? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "a registry of feature views with owners",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "scheduled materialisation with alerts",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "freshness monitoring",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "the point-in-time join itself",
+        "correct": false,
+        "why": "featurestore.py already does that; the idea is the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-a0m4yn1g",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put a night at Ponto Final in order, from the shop's load to a service answering.",
+    "items": [
+      "the purchases table finishes loading",
+      "snapshot writes tonight's features offline",
+      "online rebuilds the latest values",
+      "a service calls get for one member"
+    ]
+  },
+  {
+    "id": "ex-geeecg8f",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague builds a training set by joining labels to a nightly members summary with no as_of column. Which part of a feature store would have prevented it?",
+    "choices": [
+      {
+        "text": "Event timestamps and the point-in-time join",
+        "correct": true,
+        "why": "Right. Without them, today's values meet last year's labels."
+      },
+      {
+        "text": "The online store's index",
+        "correct": false,
+        "why": "Indexes make it fast, not correct."
+      },
+      {
+        "text": "The time to live",
+        "correct": false,
+        "why": "It would hide stale rows, not stop the future joining the past."
+      },
+      {
+        "text": "A registry of owners",
+        "correct": false,
+        "why": "Knowing the owner does not change the join."
+      }
+    ]
+  }
+]
