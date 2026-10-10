@@ -1,0 +1,472 @@
+{
+  "ex-zkj7f7xx": {
+    "prompt": "Qual destes é uma falha transitória?",
+    "choices": [
+      {
+        "text": "Um show esgotado",
+        "why": "Não é falha de nada."
+      },
+      {
+        "text": "Um cartão recusado por falta de saldo",
+        "why": "A resposta seria a mesma."
+      },
+      {
+        "text": "Um pedido com corpo malformado",
+        "why": "Um 400 continua 400."
+      },
+      {
+        "text": "Uma conexão reiniciada enquanto uma cópia do payments era trocada",
+        "why": "Certo. Tentada de novo um momento depois, funciona."
+      }
+    ]
+  },
+  "ex-np005ejq": {
+    "prompt": "Das quatro perguntas que uma política de novas tentativas responde, qual decide se tentar uma cobrança de novo é seguro?",
+    "choices": [
+      {
+        "text": "Se fazer o trabalho duas vezes equivale a fazê-lo uma",
+        "why": "Certo. Seções 07 e 08."
+      },
+      {
+        "text": "Quais status voltam",
+        "why": "Um timeout nem tem status."
+      },
+      {
+        "text": "Quantas tentativas fazer antes de desistir da venda",
+        "why": "Isso limita custo, não duplicatas."
+      },
+      {
+        "text": "Quanto esperar entre as tentativas",
+        "why": "Esperar não impede uma segunda cobrança."
+      }
+    ]
+  },
+  "ex-d3w6prk5": {
+    "prompt": "Onde a bilheteria cria a chave de idempotência?",
+    "choices": [
+      {
+        "text": "No nginx",
+        "why": "O nginx não sabe nada de vendas."
+      },
+      {
+        "text": "Uma vez por tentativa, dentro do charge_once, para cada pedido ser único",
+        "why": "Aí cada nova tentativa seria uma cobrança nova."
+      },
+      {
+        "text": "No payments, quando a cobrança chega",
+        "why": "O payments não sabe que dois pedidos são uma venda."
+      },
+      {
+        "text": "Uma vez por venda, antes da primeira tentativa",
+        "why": "Certo: toda tentativa leva a mesma."
+      }
+    ]
+  },
+  "ex-nvjtepr8": {
+    "prompt": "O payments responde 402. O que o retryable() diz, e por quê?",
+    "choices": [
+      {
+        "text": "Não vale tentar de novo: a resposta seria a mesma",
+        "why": "Certo. Só nenhuma resposta, 502, 503 e 504."
+      },
+      {
+        "text": "Tentar depois do Retry-After",
+        "why": "402 não é 'agora não'."
+      },
+      {
+        "text": "Abrir o disjuntor na hora",
+        "why": "O disjuntor conta falhas de vendas inteiras."
+      },
+      {
+        "text": "Tentar de novo, porque todo erro HTTP pode passar",
+        "why": "Um 4xx diz que o problema é o próprio pedido."
+      }
+    ]
+  },
+  "ex-2pv4r6xz": {
+    "prompt": "Cada tentativa falha de forma independente com probabilidade 0,1. Com três tentativas, que porcentagem das vendas falha? Responda com uma casa decimal.",
+    "hint": "As três precisam falhar: 0,1 × 0,1 × 0,1.",
+    "unit": "%"
+  },
+  "ex-w0r7szf4": {
+    "prompt": "Indo de uma tentativa para três, o que piorou?",
+    "choices": [
+      {
+        "text": "A fração de vendas que falharam, que subiu com a carga extra",
+        "why": "Caiu a zero."
+      },
+      {
+        "text": "Nada",
+        "why": "A cauda pagou as esperas."
+      },
+      {
+        "text": "A venda mediana, em cerca de um segundo",
+        "why": "A mediana quase não mudou."
+      },
+      {
+        "text": "Os percentis 95 e 99",
+        "why": "Certo: de 55 para 147 ms e de 63 para 244 ms."
+      }
+    ]
+  },
+  "ex-gcte6z5z": {
+    "prompt": "O payments falhou uma chamada em dez, e mesmo assim o disjuntor da aula 9 nunca abriu. Por quê?",
+    "choices": [
+      {
+        "text": "Ele ignora o 503",
+        "why": "Ele conta qualquer falha do charge."
+      },
+      {
+        "text": "Ele conta vendas inteiras, depois das novas tentativas",
+        "why": "Certo, e essas quase nunca falharam."
+      },
+      {
+        "text": "As novas tentativas o zeram",
+        "why": "Só uma venda bem-sucedida zera a contagem."
+      },
+      {
+        "text": "A espera dele era curta demais para aparecer numa execução de dez segundos",
+        "why": "Ele nem chegou a abrir."
+      }
+    ]
+  },
+  "ex-v7gt70r9": {
+    "prompt": "Por que tentar de novo na hora é a pior escolha quando um serviço está sobrecarregado?",
+    "choices": [
+      {
+        "text": "Põe os pedidos que falharam de volta em cima dos novos",
+        "why": "Certo: a sobrecarga cresce."
+      },
+      {
+        "text": "Gasta a chave de idempotência",
+        "why": "A chave pode ser mandada quantas vezes for."
+      },
+      {
+        "text": "Novas tentativas imediatas são recusadas pelo HTTP",
+        "why": "Nada no HTTP as recusa."
+      },
+      {
+        "text": "O conjunto de threads de quem chama fica sem threads",
+        "why": "O problema é a carga de quem é chamado."
+      }
+    ]
+  },
+  "ex-5btdgeay": {
+    "prompt": "A bilheteria esperou 131 ms e depois 194 ms, não 200 e 400. Por quê?",
+    "choices": [
+      {
+        "text": "O teto cai pela metade a cada tentativa",
+        "why": "Ele dobra."
+      },
+      {
+        "text": "O rastro arredonda os tempos para baixo",
+        "why": "O log mostra as esperas escolhidas."
+      },
+      {
+        "text": "O payments mandou um Retry-After",
+        "why": "Ele não mandou nenhum."
+      },
+      {
+        "text": "Cada espera é aleatória, até o teto",
+        "why": "Certo: variação total."
+      }
+    ]
+  },
+  "ex-8w4ahqw6": {
+    "prompt": "O teto é 100 ms × 2ⁿ, limitado a 2 s. Qual é o teto, em ms, para a tentativa 3?",
+    "hint": "2³ = 8.",
+    "unit": "ms"
+  },
+  "ex-nx7cjchx": {
+    "prompt": "O que dá errado com recuo exponencial sem variação quando mil chamadores falham juntos?",
+    "choices": [
+      {
+        "text": "Todos tentam de novo nos mesmos instantes",
+        "why": "Certo: picos sincronizados, cada um do tamanho da falha."
+      },
+      {
+        "text": "Esperam demais e os compradores vão embora",
+        "why": "As esperas são curtas."
+      },
+      {
+        "text": "Metade nunca tenta de novo, porque as esperas se sobrepõem às da outra metade",
+        "why": "Todos tentam de novo; esse é o problema."
+      },
+      {
+        "text": "As esperas crescem sem limite",
+        "why": "Elas têm teto."
+      }
+    ]
+  },
+  "ex-g0vt2y4m": {
+    "prompt": "Com variação total, quanto tempo um chamador espera?",
+    "choices": [
+      {
+        "text": "Um tempo aleatório baseado na espera anterior",
+        "why": "Isso é variação descorrelacionada."
+      },
+      {
+        "text": "Um tempo aleatório entre zero e o teto",
+        "why": "Certo."
+      },
+      {
+        "text": "Metade do teto mais uma metade aleatória",
+        "why": "Isso é variação igual."
+      },
+      {
+        "text": "Exatamente o teto",
+        "why": "Isso é sem variação."
+      }
+    ]
+  },
+  "ex-p105q9gs": {
+    "prompt": "Onde mais a lição da variação vale?",
+    "choices": [
+      {
+        "text": "Uma consulta SQL lenta",
+        "why": "Um chamador, nada para sincronizar."
+      },
+      {
+        "text": "Entradas de cache que expiram todas na hora cheia",
+        "why": "Certo: muitos chamadores reagindo a um momento."
+      },
+      {
+        "text": "Certificados TLS",
+        "why": "Sem relação."
+      },
+      {
+        "text": "Uma chave primária com sequência",
+        "why": "Não é sobre tempo."
+      }
+    ]
+  },
+  "ex-xj9111ea": {
+    "prompt": "Com as chaves desligadas, 34 ingressos foram vendidos e o payments contou 48 cobranças. Quantas cobranças foram feitas além de uma por ingresso vendido?",
+    "unit": "cobranças"
+  },
+  "ex-a64cy3hp": {
+    "prompt": "O que causou as cobranças duplicadas?",
+    "choices": [
+      {
+        "text": "Tentar de novo, depois de um timeout, uma operação que não é segura de repetir",
+        "why": "Certo. As novas tentativas não eram o defeito."
+      },
+      {
+        "text": "O payments cobrando duas vezes sozinho",
+        "why": "Ele cobrou cada pedido que recebeu, uma vez."
+      },
+      {
+        "text": "O nginx reenviando pedidos",
+        "why": "O laço da bilheteria fez isso."
+      },
+      {
+        "text": "O gerador de carga tentando vendas de novo",
+        "why": "O load.py não tenta de novo."
+      }
+    ]
+  },
+  "ex-wpvx7k1g": {
+    "prompt": "O payments leva de 600 a 1200 ms, de forma uniforme; o timeout é de 1 s. Mais ou menos que fração das cobranças estoura o timeout?",
+    "choices": [
+      {
+        "text": "Metade, já que 1 s fica perto do meio do intervalo",
+        "why": "O meio é 900 ms."
+      },
+      {
+        "text": "Um terço",
+        "why": "Certo: de 1000 a 1200 é um terço de 600 a 1200."
+      },
+      {
+        "text": "Todas",
+        "why": "A maioria termina a tempo."
+      },
+      {
+        "text": "Nenhuma",
+        "why": "O topo do intervalo é 1,2 s."
+      }
+    ]
+  },
+  "ex-pg8n14b8": {
+    "prompt": "Uma nova tentativa chega enquanto a primeira com a mesma chave ainda está sendo cobrada. O que este payments faz?",
+    "choices": [
+      {
+        "text": "Espera a primeira e responde com o resultado dela",
+        "why": "Certo. Alguns serviços respondem 409 em vez disso."
+      },
+      {
+        "text": "Começa uma segunda cobrança, já que a primeira não terminou",
+        "why": "É exatamente o que a chave impede."
+      },
+      {
+        "text": "Recusa com 400",
+        "why": "O pedido é válido."
+      },
+      {
+        "text": "Esquece a chave",
+        "why": "Ele a guarda, com a resposta."
+      }
+    ]
+  },
+  "ex-14w8jkt9": {
+    "prompt": "Por que um serviço de pagamento de verdade deveria guardar as chaves na mesma transação que a cobrança?",
+    "choices": [
+      {
+        "text": "A bilheteria as lê de volta",
+        "why": "Só o payments as lê."
+      },
+      {
+        "text": "Para uma queda não cair entre cobrar e lembrar",
+        "why": "Certo."
+      },
+      {
+        "text": "Transações são mais rápidas que memória",
+        "why": "São mais lentas; a questão é atomicidade."
+      },
+      {
+        "text": "Chaves são dados pessoais e precisam ser cifradas no disco",
+        "why": "Chaves aleatórias não levam dado pessoal."
+      }
+    ]
+  },
+  "ex-0ra8mk83": {
+    "prompt": "Qual operação é idempotente por natureza e não precisa de chave?",
+    "choices": [
+      {
+        "text": "Inserir uma linha nova de ingresso com um código novo",
+        "why": "Duas vezes faz dois ingressos."
+      },
+      {
+        "text": "Cobrar R$ 180 de um cartão",
+        "why": "Duas vezes cobra duas vezes."
+      },
+      {
+        "text": "Somar 1 ao vendido do evento",
+        "why": "Duas vezes soma 2."
+      },
+      {
+        "text": "Definir o estado do assento 12 como reservado",
+        "why": "Certo: duas vezes é o mesmo que uma."
+      }
+    ]
+  },
+  "ex-wb0ga014": {
+    "prompt": "A bilheteria manda a mesma chave em toda tentativa no cabeçalho ___.",
+    "blanks": [
+      {
+        "accept": [
+          "Idempotency-Key"
+        ]
+      }
+    ]
+  },
+  "ex-wjsep8ng": {
+    "prompt": "Quatro camadas tentam três vezes cada. Quantos pedidos chegam ao fundo por um clique enquanto ele está fora?",
+    "hint": "3 × 3 × 3 × 3.",
+    "unit": "pedidos"
+  },
+  "ex-gqergnsz": {
+    "prompt": "O que um orçamento de novas tentativas de 10% faz quando tudo está falhando?",
+    "choices": [
+      {
+        "text": "Acaba na hora, e a camada para de acrescentar carga",
+        "why": "Certo."
+      },
+      {
+        "text": "Abre o disjuntor",
+        "why": "São guardas separadas."
+      },
+      {
+        "text": "Tenta cada pedido mais uma vez, e então desiste",
+        "why": "Isso é uma contagem de tentativas."
+      },
+      {
+        "text": "Tenta de novo 10% mais rápido",
+        "why": "Limita quantas, não quão rápido."
+      }
+    ]
+  },
+  "ex-nr329f6g": {
+    "prompt": "Neste curso, qual camada tenta uma cobrança de novo?",
+    "choices": [
+      {
+        "text": "O load.py, o comprador, que roda o laço de novas tentativas para cada venda",
+        "why": "O load.py nunca tenta de novo uma venda."
+      },
+      {
+        "text": "A bilheteria",
+        "why": "Certo; o load.py não tenta de novo uma venda."
+      },
+      {
+        "text": "O nginx",
+        "why": "O nginx só repassa pedidos."
+      },
+      {
+        "text": "O payments",
+        "why": "O payments é quem é chamado."
+      }
+    ]
+  },
+  "ex-93rcx18f": {
+    "prompt": "Por que trabalhadores educados venderam 31% mais ingressos que os impacientes na mesma bilheteria?",
+    "choices": [
+      {
+        "text": "A CPU parou de ser gasta com recusas",
+        "why": "Certo: 7304 recusas caíram para 1638."
+      },
+      {
+        "text": "Pedidos educados são menores e mais rápidos de ler",
+        "why": "Os pedidos são idênticos."
+      },
+      {
+        "text": "Trabalhadores educados pulam o limite de taxa",
+        "why": "O limite estava levantado para os dois."
+      },
+      {
+        "text": "A bilheteria tinha mais vagas para eles",
+        "why": "As duas execuções tinham 8."
+      }
+    ]
+  },
+  "ex-jt5w0nnh": {
+    "prompt": "Por que um trabalhador educado espera o Retry-After vezes um fator aleatório, e não exatamente o Retry-After?",
+    "choices": [
+      {
+        "text": "Para os compradores recusados não voltarem todos no mesmo segundo",
+        "why": "Certo: variação, do lado de quem chama."
+      },
+      {
+        "text": "Para medir a latência direito",
+        "why": "O tempo é medido antes da espera."
+      },
+      {
+        "text": "O Retry-After é só um limite inferior",
+        "why": "Verdade, mas não é por que é aleatório."
+      },
+      {
+        "text": "O sleep do Python é impreciso",
+        "why": "Não é o motivo."
+      }
+    ]
+  },
+  "ex-kvx1wt3f": {
+    "prompt": "Uma equipe acrescenta novas tentativas a uma chamada que cria pedidos. O que precisa vir junto?",
+    "choices": [
+      {
+        "text": "Novas tentativas em toda camada acima também",
+        "why": "Isso as multiplica."
+      },
+      {
+        "text": "Nenhum recuo, para os compradores esperarem menos",
+        "why": "Isso alimenta a sobrecarga."
+      },
+      {
+        "text": "Um timeout mais curto, para as novas tentativas virem antes",
+        "why": "Isso torna duplicatas mais prováveis."
+      },
+      {
+        "text": "Uma chave de idempotência por pedido",
+        "why": "Certo: criar não é idempotente por natureza."
+      }
+    ]
+  }
+}

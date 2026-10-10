@@ -1,0 +1,31 @@
+---
+title: When retries multiply
+version: 1
+---
+
+Retries are added one layer at a time, each by somebody who reasonably wanted their own call to
+succeed. Put them together and they multiply. If a browser tries three times, the gateway behind it
+tries three times, the box office tries three times and its database driver tries three times, then
+one click while the database is down becomes 3 × 3 × 3 × 3 = **81 requests to a database that was
+already failing**. The more layers retry, the more an outage at the bottom is multiplied at the top,
+exactly when the bottom can least take it.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 200\" role=\"img\" aria-label=\"Four layers from left to right: a browser, a gateway, the box office and the database driver, each trying three times. One click becomes 3 requests at the gateway, 9 at the box office, 27 from the driver and 81 at the database.\"><rect x=\"20\" y=\"50\" width=\"120\" height=\"50\" rx=\"4\" fill=\"var(--scan)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"80\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">browser</text><text x=\"80\" y=\"88\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">× 3 tries</text><text x=\"80\" y=\"140\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"18\" fill=\"var(--phosphor)\">1</text><path d=\"M140 75 L158 75\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" fill=\"none\"></path><path d=\"M158 75 L151.7 78.0 L151.7 72.0 Z\" fill=\"var(--paper-dim)\" stroke=\"none\"></path><rect x=\"160\" y=\"50\" width=\"120\" height=\"50\" rx=\"4\" fill=\"var(--scan)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"220\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">gateway</text><text x=\"220\" y=\"88\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">× 3 tries</text><text x=\"220\" y=\"140\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"18\" fill=\"var(--phosphor)\">3</text><path d=\"M280 75 L298 75\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" fill=\"none\"></path><path d=\"M298 75 L291.7 78.0 L291.7 72.0 Z\" fill=\"var(--paper-dim)\" stroke=\"none\"></path><rect x=\"300\" y=\"50\" width=\"120\" height=\"50\" rx=\"4\" fill=\"var(--scan)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"360\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">box office</text><text x=\"360\" y=\"88\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">× 3 tries</text><text x=\"360\" y=\"140\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"18\" fill=\"var(--phosphor)\">9</text><path d=\"M420 75 L438 75\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" fill=\"none\"></path><path d=\"M438 75 L431.7 78.0 L431.7 72.0 Z\" fill=\"var(--paper-dim)\" stroke=\"none\"></path><rect x=\"440\" y=\"50\" width=\"120\" height=\"50\" rx=\"4\" fill=\"var(--scan)\" stroke=\"var(--phosphor)\" stroke-width=\"1.5\"></rect><text x=\"500\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">driver</text><text x=\"500\" y=\"88\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">× 3 tries</text><text x=\"500\" y=\"140\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"18\" fill=\"var(--phosphor)\">27</text><path d=\"M560 75 L578 75\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" fill=\"none\"></path><path d=\"M578 75 L571.7 78.0 L571.7 72.0 Z\" fill=\"var(--paper-dim)\" stroke=\"none\"></path><rect x=\"580\" y=\"50\" width=\"120\" height=\"50\" rx=\"4\" fill=\"var(--scan)\" stroke=\"var(--amber)\" stroke-width=\"1.5\"></rect><text x=\"640\" y=\"70\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper)\">database</text><text x=\"640\" y=\"88\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">down</text><text x=\"640\" y=\"140\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"18\" fill=\"var(--amber)\">81</text><text x=\"360\" y=\"180\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">requests reaching each layer for one click</text></svg>", "caption": "Three attempts at each of four layers: 81 requests for one click."}
+```
+
+Three habits keep this in check.
+
+- **Retry at one layer.** Usually the one closest to the user that still knows whether the operation
+  is safe to repeat. The others fail fast and let the error travel up. In this course the box office
+  retries its call to payments, and `load.py`, the buyer, does not retry a sale.
+- **A retry budget.** Allow retries as a share of normal traffic, say no more than 10% of the calls
+  in the last minute, kept with a token bucket like lesson 9's. When everything is failing, the
+  budget runs out at once and the layer stops adding load; when one call in a hundred fails, it
+  never notices the budget is there.
+- **Stop when the breaker is open.** A breaker that has opened has already concluded the dependency
+  is down. In the box office it wraps the whole retry loop, so an open breaker means no attempt at
+  all, never mind a retry.
+
+And a deadline for the whole request, from lesson 9, bounds the total: retries may only use what is
+left of it, so the box office never keeps retrying for a buyer who stopped waiting.

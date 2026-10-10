@@ -1,0 +1,722 @@
+[
+  {
+    "id": "ex-zkj7f7xx",
+    "version": 1,
+    "section": "transient",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is a transient failure?",
+    "choices": [
+      {
+        "text": "A show that is sold out",
+        "correct": false,
+        "why": "Not a failure of anything."
+      },
+      {
+        "text": "A card declined for lack of funds",
+        "correct": false,
+        "why": "The answer would be the same."
+      },
+      {
+        "text": "A request with a malformed body",
+        "correct": false,
+        "why": "A 400 stays a 400."
+      },
+      {
+        "text": "A connection reset while a copy of payments was being replaced",
+        "correct": true,
+        "why": "Right. Tried again a moment later, it works."
+      }
+    ]
+  },
+  {
+    "id": "ex-np005ejq",
+    "version": 1,
+    "section": "transient",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Of the four questions a retry policy answers, which one decides whether retrying a charge is safe?",
+    "choices": [
+      {
+        "text": "Whether doing the work twice equals doing it once",
+        "correct": true,
+        "why": "Right. Sections 07 and 08."
+      },
+      {
+        "text": "Which statuses come back",
+        "correct": false,
+        "why": "A timeout has no status at all."
+      },
+      {
+        "text": "How many attempts to make before giving up on the sale",
+        "correct": false,
+        "why": "That limits cost, not duplicates."
+      },
+      {
+        "text": "How long to wait between the attempts",
+        "correct": false,
+        "why": "Waiting does not stop a second charge."
+      }
+    ]
+  },
+  {
+    "id": "ex-d3w6prk5",
+    "version": 1,
+    "section": "the-retrying-charge",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does the box office make the idempotency key?",
+    "choices": [
+      {
+        "text": "In nginx",
+        "correct": false,
+        "why": "nginx knows nothing about sales."
+      },
+      {
+        "text": "Once per attempt, inside charge_once, so that each request is unique",
+        "correct": false,
+        "why": "Then each retry would be a new charge."
+      },
+      {
+        "text": "In payments, when the charge arrives",
+        "correct": false,
+        "why": "Payments cannot know two requests are one sale."
+      },
+      {
+        "text": "Once per sale, before the first attempt",
+        "correct": true,
+        "why": "Right: every attempt carries the same one."
+      }
+    ]
+  },
+  {
+    "id": "ex-nvjtepr8",
+    "version": 1,
+    "section": "the-retrying-charge",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Payments answers 402. What does retryable() say, and why?",
+    "choices": [
+      {
+        "text": "Not worth retrying: the answer would be the same",
+        "correct": true,
+        "why": "Right. Only no answer, 502, 503 and 504."
+      },
+      {
+        "text": "Retry after Retry-After",
+        "correct": false,
+        "why": "402 is not 'not now'."
+      },
+      {
+        "text": "Open the breaker at once",
+        "correct": false,
+        "why": "The breaker counts failures of whole sales."
+      },
+      {
+        "text": "Retry, because every HTTP error might pass",
+        "correct": false,
+        "why": "A 4xx says the request itself is the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-2pv4r6xz",
+    "version": 1,
+    "section": "three-attempts",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Each attempt fails independently with probability 0.1. With three attempts, what percentage of sales fail? Give it to one decimal place.",
+    "hint": "All three must fail: 0.1 × 0.1 × 0.1.",
+    "value": 0.1,
+    "tolerance": 0,
+    "unit": "%"
+  },
+  {
+    "id": "ex-w0r7szf4",
+    "version": 1,
+    "section": "three-attempts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Going from one attempt to three, what got worse?",
+    "choices": [
+      {
+        "text": "The share of failed sales, which rose with the extra load",
+        "correct": false,
+        "why": "It fell to zero."
+      },
+      {
+        "text": "Nothing",
+        "correct": false,
+        "why": "The tail paid for the waits."
+      },
+      {
+        "text": "The median sale, by about a second",
+        "correct": false,
+        "why": "The median barely moved."
+      },
+      {
+        "text": "The 95th and 99th percentiles",
+        "correct": true,
+        "why": "Right: 55 to 147 ms and 63 to 244 ms."
+      }
+    ]
+  },
+  {
+    "id": "ex-gcte6z5z",
+    "version": 1,
+    "section": "three-attempts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Payments failed one call in ten, yet lesson 9's breaker never opened. Why?",
+    "choices": [
+      {
+        "text": "It ignores 503",
+        "correct": false,
+        "why": "It counts any failure of charge."
+      },
+      {
+        "text": "It counts whole sales, after their retries",
+        "correct": true,
+        "why": "Right, and those almost never failed."
+      },
+      {
+        "text": "Retries reset it",
+        "correct": false,
+        "why": "Only a successful sale resets the count."
+      },
+      {
+        "text": "Its cooldown was too short to be seen in a ten-second run",
+        "correct": false,
+        "why": "It never opened at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-v7gt70r9",
+    "version": 1,
+    "section": "backoff",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is retrying immediately the worst choice when a service is overloaded?",
+    "choices": [
+      {
+        "text": "It adds the failed requests back on top of the new ones",
+        "correct": true,
+        "why": "Right: the overload grows."
+      },
+      {
+        "text": "It wastes the idempotency key",
+        "correct": false,
+        "why": "The key can be sent any number of times."
+      },
+      {
+        "text": "Immediate retries are refused by HTTP",
+        "correct": false,
+        "why": "Nothing in HTTP refuses them."
+      },
+      {
+        "text": "The client's thread pool runs out of threads",
+        "correct": false,
+        "why": "The problem is the callee's load."
+      }
+    ]
+  },
+  {
+    "id": "ex-5btdgeay",
+    "version": 1,
+    "section": "backoff",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The box office waited 131 ms and then 194 ms, not 200 and 400. Why?",
+    "choices": [
+      {
+        "text": "The ceiling halves after each attempt",
+        "correct": false,
+        "why": "It doubles."
+      },
+      {
+        "text": "The trace rounds times down",
+        "correct": false,
+        "why": "The log reports the chosen waits."
+      },
+      {
+        "text": "Payments sent a Retry-After",
+        "correct": false,
+        "why": "It sent none."
+      },
+      {
+        "text": "Each wait is random, up to the ceiling",
+        "correct": true,
+        "why": "Right: full jitter."
+      }
+    ]
+  },
+  {
+    "id": "ex-8w4ahqw6",
+    "version": 1,
+    "section": "backoff",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The ceiling is 100 ms × 2ⁿ, capped at 2 s. What is the ceiling, in ms, for attempt 3?",
+    "hint": "2³ = 8.",
+    "value": 800,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-nx7cjchx",
+    "version": 1,
+    "section": "jitter",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What goes wrong with exponential backoff and no jitter when a thousand callers fail together?",
+    "choices": [
+      {
+        "text": "They all retry at the same instants",
+        "correct": true,
+        "why": "Right: synchronised spikes, each the size of the failure."
+      },
+      {
+        "text": "They wait too long and the buyers leave",
+        "correct": false,
+        "why": "The waits are short."
+      },
+      {
+        "text": "Half of them never retry, because their waits overlap with the other half's",
+        "correct": false,
+        "why": "All of them retry; that is the problem."
+      },
+      {
+        "text": "The waits grow without limit",
+        "correct": false,
+        "why": "They are capped."
+      }
+    ]
+  },
+  {
+    "id": "ex-g0vt2y4m",
+    "version": 1,
+    "section": "jitter",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With full jitter, how long does a caller wait?",
+    "choices": [
+      {
+        "text": "A random time based on the previous wait",
+        "correct": false,
+        "why": "That is decorrelated jitter."
+      },
+      {
+        "text": "A random time between zero and the ceiling",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Half the ceiling plus a random half",
+        "correct": false,
+        "why": "That is equal jitter."
+      },
+      {
+        "text": "Exactly the ceiling",
+        "correct": false,
+        "why": "That is no jitter."
+      }
+    ]
+  },
+  {
+    "id": "ex-p105q9gs",
+    "version": 1,
+    "section": "jitter",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where else does the jitter lesson apply?",
+    "choices": [
+      {
+        "text": "A single slow SQL query",
+        "correct": false,
+        "why": "One caller, nothing to synchronise."
+      },
+      {
+        "text": "Cache entries that all expire on the hour",
+        "correct": true,
+        "why": "Right: many callers reacting to one moment."
+      },
+      {
+        "text": "TLS certificates",
+        "correct": false,
+        "why": "Not related."
+      },
+      {
+        "text": "A primary key with a sequence",
+        "correct": false,
+        "why": "Not about timing."
+      }
+    ]
+  },
+  {
+    "id": "ex-xj9111ea",
+    "version": 1,
+    "section": "charged-twice",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With keys off, 34 tickets were sold and payments counted 48 charges. How many charges were made beyond one per ticket sold?",
+    "value": 14,
+    "tolerance": 0,
+    "unit": "charges"
+  },
+  {
+    "id": "ex-a64cy3hp",
+    "version": 1,
+    "section": "charged-twice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What caused the duplicate charges?",
+    "choices": [
+      {
+        "text": "Retrying, after a timeout, an operation that is not safe to repeat",
+        "correct": true,
+        "why": "Right. The retries were not the bug."
+      },
+      {
+        "text": "Payments charging twice on its own",
+        "correct": false,
+        "why": "It charged each request it got, once."
+      },
+      {
+        "text": "nginx resending requests",
+        "correct": false,
+        "why": "The box office's retry loop did."
+      },
+      {
+        "text": "The load generator retrying sales",
+        "correct": false,
+        "why": "load.py does not retry."
+      }
+    ]
+  },
+  {
+    "id": "ex-wpvx7k1g",
+    "version": 1,
+    "section": "charged-twice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Payments takes 600 to 1,200 ms, uniformly; the timeout is 1 s. Roughly what share of charges time out?",
+    "choices": [
+      {
+        "text": "Half, since 1 s is near the middle of the range",
+        "correct": false,
+        "why": "The middle is 900 ms."
+      },
+      {
+        "text": "A third",
+        "correct": true,
+        "why": "Right: 1,000 to 1,200 is a third of 600 to 1,200."
+      },
+      {
+        "text": "All of them",
+        "correct": false,
+        "why": "Most finish in time."
+      },
+      {
+        "text": "None",
+        "correct": false,
+        "why": "The top of the range is 1.2 s."
+      }
+    ]
+  },
+  {
+    "id": "ex-pg8n14b8",
+    "version": 1,
+    "section": "idempotency-keys",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A retry arrives while the first attempt with the same key is still being charged. What does this payments do?",
+    "choices": [
+      {
+        "text": "Waits for the first and answers with its result",
+        "correct": true,
+        "why": "Right. Some services answer 409 instead."
+      },
+      {
+        "text": "Starts a second charge, since the first has not finished",
+        "correct": false,
+        "why": "That is exactly what the key prevents."
+      },
+      {
+        "text": "Refuses with 400",
+        "correct": false,
+        "why": "The request is valid."
+      },
+      {
+        "text": "Forgets the key",
+        "correct": false,
+        "why": "It keeps it, with the answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-14w8jkt9",
+    "version": 1,
+    "section": "idempotency-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why should a real payment service store keys in the same transaction as the charge?",
+    "choices": [
+      {
+        "text": "The box office reads them back",
+        "correct": false,
+        "why": "Only payments reads them."
+      },
+      {
+        "text": "So a crash cannot fall between charging and remembering",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Transactions are faster than memory",
+        "correct": false,
+        "why": "They are slower; the point is atomicity."
+      },
+      {
+        "text": "Keys are personal data and must be encrypted at rest",
+        "correct": false,
+        "why": "Random keys carry no personal data."
+      }
+    ]
+  },
+  {
+    "id": "ex-0ra8mk83",
+    "version": 1,
+    "section": "idempotency-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which operation is idempotent by nature and needs no key?",
+    "choices": [
+      {
+        "text": "Insert a new ticket row with a fresh code",
+        "correct": false,
+        "why": "Twice makes two tickets."
+      },
+      {
+        "text": "Charge a card R$ 180",
+        "correct": false,
+        "why": "Twice charges twice."
+      },
+      {
+        "text": "Add 1 to the event's sold count",
+        "correct": false,
+        "why": "Twice adds 2."
+      },
+      {
+        "text": "Set seat 12's state to reserved",
+        "correct": true,
+        "why": "Right: twice is the same as once."
+      }
+    ]
+  },
+  {
+    "id": "ex-wb0ga014",
+    "version": 1,
+    "section": "idempotency-keys",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The box office sends the same key with every attempt in the ___ header.",
+    "blanks": [
+      {
+        "accept": [
+          "Idempotency-Key"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wjsep8ng",
+    "version": 1,
+    "section": "amplification",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Four layers each try three times. How many requests reach the bottom for one click while it is down?",
+    "hint": "3 × 3 × 3 × 3.",
+    "value": 81,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-gqergnsz",
+    "version": 1,
+    "section": "amplification",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a retry budget of 10% do when everything is failing?",
+    "choices": [
+      {
+        "text": "Runs out at once, so the layer stops adding load",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Opens the breaker",
+        "correct": false,
+        "why": "They are separate guards."
+      },
+      {
+        "text": "Retries every request one more time, then gives up",
+        "correct": false,
+        "why": "That is an attempt count."
+      },
+      {
+        "text": "Retries 10% faster",
+        "correct": false,
+        "why": "It limits how many, not how fast."
+      }
+    ]
+  },
+  {
+    "id": "ex-nr329f6g",
+    "version": 1,
+    "section": "amplification",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In this course, which layer retries a charge?",
+    "choices": [
+      {
+        "text": "load.py, the buyer, which runs the retry loop for each sale it makes",
+        "correct": false,
+        "why": "load.py never retries a sale."
+      },
+      {
+        "text": "The box office",
+        "correct": true,
+        "why": "Right; load.py does not retry a sale."
+      },
+      {
+        "text": "nginx",
+        "correct": false,
+        "why": "nginx passes requests through."
+      },
+      {
+        "text": "payments",
+        "correct": false,
+        "why": "Payments is the callee."
+      }
+    ]
+  },
+  {
+    "id": "ex-93rcx18f",
+    "version": 1,
+    "section": "clients-that-wait",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did polite workers sell 31% more tickets than impatient ones on the same box office?",
+    "choices": [
+      {
+        "text": "The CPU stopped being spent on refusals",
+        "correct": true,
+        "why": "Right: 7,304 refusals fell to 1,638."
+      },
+      {
+        "text": "Polite requests are smaller and parse faster",
+        "correct": false,
+        "why": "The requests are identical."
+      },
+      {
+        "text": "Polite workers skip the rate limit",
+        "correct": false,
+        "why": "The limit was lifted for both."
+      },
+      {
+        "text": "The box office had more slots for them",
+        "correct": false,
+        "why": "Both runs had 8."
+      }
+    ]
+  },
+  {
+    "id": "ex-jt5w0nnh",
+    "version": 1,
+    "section": "clients-that-wait",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a polite worker wait Retry-After times a random factor, not exactly Retry-After?",
+    "choices": [
+      {
+        "text": "So refused buyers do not all return in the same second",
+        "correct": true,
+        "why": "Right: jitter, on the caller's side."
+      },
+      {
+        "text": "To measure the latency correctly",
+        "correct": false,
+        "why": "The time is measured before the wait."
+      },
+      {
+        "text": "Retry-After is only a lower bound",
+        "correct": false,
+        "why": "True, but not why it is random."
+      },
+      {
+        "text": "Python's sleep is imprecise",
+        "correct": false,
+        "why": "Not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-kvx1wt3f",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team adds retries to a call that creates orders. What must come with them?",
+    "choices": [
+      {
+        "text": "Retries at every layer above it as well",
+        "correct": false,
+        "why": "That multiplies them."
+      },
+      {
+        "text": "No backoff, so buyers wait less",
+        "correct": false,
+        "why": "That feeds the overload."
+      },
+      {
+        "text": "A shorter timeout, so that the retries happen sooner",
+        "correct": false,
+        "why": "It makes duplicates more likely."
+      },
+      {
+        "text": "An idempotency key per order",
+        "correct": true,
+        "why": "Right: creating is not idempotent by nature."
+      }
+    ]
+  }
+]
