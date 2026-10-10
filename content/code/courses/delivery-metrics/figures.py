@@ -1681,6 +1681,109 @@ def l17_rota(lang):
                 'Ninguém escolheu quem pegaria o fim do mês. O calendário escolheu, e continuou escolhendo as mesmas pessoas.')
 
 
+# ------------------------------------------------------------------ lesson 18
+
+LESSON18 = os.path.join(HERE, 'lessons', 'le-s1dk8vgm')
+
+ALERT_PT = {
+    'database disk over 80%': 'disco do banco acima de 80%',
+    'card provider p99 over 2 s': 'p99 do provedor de cartão acima de 2 s',
+    'statement queue over 500': 'fila de extratos acima de 500',
+    'API CPU over 85%': 'CPU da API acima de 85%',
+    'health check failed once': 'health check falhou uma vez',
+    'TLS certificate expires in 30 d': 'certificado TLS vence em 30 d',
+    'card charge errors over 1%': 'erros de cobrança no cartão acima de 1%',
+    'statement job failed': 'job de extrato falhou',
+    'refunds failing': 'estornos falhando',
+}
+
+
+@figure('l18-actionable', 18)
+def l18_actionable(lang):
+    alerts = lesson_program(LESSON18, 'pages.py')['ALERTS']
+    desc_en = '; '.join(f'{n}, {p} pages, {u} needed' for n, p, u, _ in alerts)
+    desc_pt = '; '.join(f'{ALERT_PT[n]}, {p} acionamentos, {u} necessários' for n, p, u, _ in alerts)
+    f = Fig('l18-actionable', 680, 380, T(
+        lang,
+        'Horizontal bars, one per alert, longest first, each split into the pages that needed a '
+        'person and the pages that did not. ' + desc_en + '. The four longest bars are almost '
+        'entirely pages that needed nobody; the three short bars at the bottom are almost entirely '
+        'pages that did.',
+        'Barras horizontais, uma por alerta, da mais longa para a mais curta, cada uma dividida '
+        'entre os acionamentos que precisaram de alguém e os que não precisaram. ' + desc_pt + '. '
+        'As quatro barras mais longas são quase só acionamentos que não precisaram de ninguém; as '
+        'três barras curtas embaixo são quase só acionamentos que precisaram.'))
+    p = Plot(f, 290, 50, 620, 330, 0, 20, 0, 1)
+    for i, (name, paged, useful, _) in enumerate(alerts):
+        y = 56 + i * 30
+        f.text(280, y + 9, T(lang, name, ALERT_PT[name]), size=10.5, anchor='end')
+        if useful:
+            f.bar(p.sx(0), y, p.sx(useful) - p.sx(0), 18)
+        if paged > useful:
+            f.bar(p.sx(useful), y, p.sx(paged) - p.sx(useful), 18, fill='--panel', stroke='--amber')
+        f.text(p.sx(paged) + 8, y + 9, f'{useful}/{paged}', size=10, anchor='start', fill='--paper-dim')
+    f.line(p.sx(0), 50, p.sx(0), 328, stroke='--paper-dim', width=1)
+    f.bar(290, 352, 14, 10)
+    f.text(310, 357, T(lang, 'needed a person', 'precisou de alguém'), size=10, anchor='start',
+           fill='--paper-dim')
+    f.bar(450, 352, 14, 10, fill='--panel', stroke='--amber')
+    f.text(470, 357, T(lang, 'needed nobody', 'não precisou de ninguém'), size=10, anchor='start',
+           fill='--paper-dim')
+    f.text(290, 24, T(lang, 'pages per alert, 8 July to 6 October', 'acionamentos por alerta, de 8 de julho a 6 de outubro'),
+           size=10, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'The alerts that paged most needed somebody least. The ones worth keeping are short '
+                'bars, and almost all of them is signal.',
+                'Os alertas que mais acionaram foram os que menos precisaram de alguém. Os que valem '
+                'manter são barras curtas, e quase todas são sinal.')
+
+
+@figure('l18-routes', 18)
+def l18_routes(lang):
+    f = Fig('l18-routes', 680, 300, T(
+        lang,
+        'A decision path for a signal. First question: are users hurt, or about to be? If not, it '
+        'goes to a log line or a dashboard. If so, second question: can somebody do something? If '
+        'not, the dashboard again. If so, third question: does it need doing tonight? If not, a '
+        'ticket for working hours. If so, a page, which wakes somebody now and comes with a runbook.',
+        'Um caminho de decisão para um sinal. Primeira pergunta: os usuários estão sendo '
+        'prejudicados, ou estão para ser? Se não, vai para uma linha de log ou um painel. Se sim, '
+        'segunda pergunta: alguém pode fazer algo? Se não, painel de novo. Se sim, terceira '
+        'pergunta: precisa ser feito esta noite? Se não, um chamado para o horário de trabalho. Se '
+        'sim, um acionamento, que acorda alguém agora e vem com um runbook.'))
+    qs = [T(lang, ['users hurt,', 'or about to be?'], ['usuários prejudicados,', 'ou quase?']),
+          T(lang, ['can somebody', 'do something?'], ['alguém pode', 'fazer algo?']),
+          T(lang, ['does it need', 'doing tonight?'], ['precisa ser', 'feito esta noite?'])]
+    xs = [40, 230, 420]
+    for x, q in zip(xs, qs):
+        f.rect(x, 60, 150, 60, stroke='--phosphor', fill='--panel')
+        f.lines(x + 75, 82, q, size=10.5)
+    for a, b in ((190, 230), (380, 420)):
+        f.line(a + 2, 90, b - 2, 90, stroke='--phosphor', arrow=True)
+        f.text((a + b) / 2, 80, T(lang, 'yes', 'sim'), size=10, fill='--phosphor')
+    f.line(572, 90, 600, 90, stroke='--phosphor', arrow=True)
+    f.text(586, 80, T(lang, 'yes', 'sim'), size=10, fill='--phosphor')
+    f.rect(602, 66, 66, 48, stroke='--amber', fill='--scan', width=1.6)
+    f.text(635, 90, T(lang, 'page', 'acionar'), size=11, weight='600')
+    f.rect(40, 200, 340, 50, stroke='--wire', fill='--panel')
+    f.text(210, 225, T(lang, 'log line or dashboard', 'linha de log ou painel'), size=11)
+    f.rect(420, 200, 150, 50, stroke='--wire', fill='--panel')
+    f.text(495, 225, T(lang, 'ticket', 'chamado'), size=11)
+    for x, target in ((115, 198), (305, 198), (495, 198)):
+        f.line(x, 122, x, target, stroke='--paper-dim', arrow=True)
+        f.text(x + 8, 160, T(lang, 'no', 'não'), size=10, anchor='start', fill='--paper-dim')
+    f.text(635, 140, T(lang, 'with a', 'com um'), size=10, fill='--paper-dim')
+    f.text(635, 154, T(lang, 'runbook', 'runbook'), size=10, fill='--paper-dim')
+    f.text(40, 30, T(lang, 'where a signal goes', 'para onde vai um sinal'), size=10, anchor='start',
+           fill='--paper-dim')
+    f.text(40, 280, T(lang, 'a page passes all three; everything else still has a place, just not in a pocket',
+                      'um acionamento passa nas três; todo o resto ainda tem lugar, só não no bolso de alguém'),
+           size=10.5, anchor='start', fill='--paper')
+    return f, T(lang,
+                'Three questions decide where a signal goes. Only one of the four ways out wakes anybody.',
+                'Três perguntas decidem para onde vai um sinal. Só uma das quatro saídas acorda alguém.')
+
+
 # @@LESSONS@@
 
 if __name__ == '__main__':
