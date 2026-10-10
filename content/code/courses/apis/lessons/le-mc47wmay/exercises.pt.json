@@ -4,7 +4,7 @@
     "hint": "Toda API tem um, escrito ou não.",
     "choices": [
       {
-        "text": "Em lugar nenhum, porque uma API não tem contrato até alguém escrever um documento para ela",
+        "text": "Em lugar nenhum: sem documento, sem contrato",
         "why": "O contrato existia desde que clientes puderam depender das respostas; o que faltava era uma cópia que um programa conseguisse ler."
       },
       {
@@ -16,7 +16,7 @@
         "why": "Certo. Endereços, métodos, campos e códigos estavam todos fixados pelo rest.py, e ler Python ou mandar requisições era o único jeito de conhecê-los."
       },
       {
-        "text": "No padrão HTTP, que define o que toda API responde",
+        "text": "No padrão HTTP",
         "why": "O HTTP define o que um 404 quer dizer, não quais endereços o shelf tem nem quais campos um livro traz."
       }
     ]
@@ -127,15 +127,15 @@
     "hint": "O que o rest.py responde a ele?",
     "choices": [
       {
-        "text": "O validador recusa um DELETE numa coleção",
-        "why": "A OpenAPI deixa qualquer método em qualquer endereço; a escolha foi sobre aquilo em que os clientes podem confiar."
-      },
-      {
-        "text": "A única resposta é um 405, então listá-lo anunciaria uma operação que ninguém consegue usar",
+        "text": "A única resposta é um 405, que não serve a cliente nenhum",
         "why": "Certo. Um documento diz aquilo em que os clientes podem confiar, e um método cuja única resposta é uma recusa não é algo em que se confie."
       },
       {
-        "text": "A OpenAPI não tem como descrever um 405",
+        "text": "O validador recusa qualquer DELETE escrito sob um endereço de coleção como `/books`",
+        "why": "A OpenAPI deixa qualquer método em qualquer endereço; a escolha foi sobre aquilo em que os clientes podem confiar."
+      },
+      {
+        "text": "A OpenAPI não tem como descrever um 405 nem o cabeçalho `Allow` que vem com ele",
         "why": "Um 405 pode ser listado como qualquer outro código; o documento escolheu não listar."
       },
       {
@@ -171,12 +171,12 @@
     "hint": "Leia a primeira linha do erro.",
     "choices": [
       {
-        "text": "Faltou sudo",
-        "why": "Root não ajudaria; a recusa é sobre quem gerencia o Python do sistema, não sobre permissões."
-      },
-      {
         "text": "O Python do sistema está marcado como gerenciado pelo apt",
         "why": "Certo. O erro foi `externally-managed-environment`, e a sugestão dele foi um ambiente virtual."
+      },
+      {
+        "text": "Faltou sudo, porque o pip escreve em /usr/lib",
+        "why": "Root não ajudaria; a recusa é sobre quem gerencia o Python do sistema, não sobre permissões."
       },
       {
         "text": "A VM não conseguia alcançar a internet",
@@ -228,7 +228,7 @@
         "why": "Certo. FastAPI, springdoc, swag e as bibliotecas de Node imprimem o documento a partir do código."
       },
       {
-        "text": "Os dois, separadamente, e um teste os compara",
+        "text": "Os dois, separadamente, e depois um teste de contrato compara um com o outro",
         "why": "É o que o shelf tem, e não é nenhuma das duas ordens: o documento foi escrito à mão depois do código."
       },
       {
@@ -242,16 +242,16 @@
     "hint": "O que um gerador lê?",
     "choices": [
       {
-        "text": "Sim, porque um framework documenta todo status que consegue produzir",
-        "why": "Ele documenta o que os handlers declaram; o caminho de uma exceção ninguém declara."
+        "text": "Não; ele descreve o que o código declara",
+        "why": "Certo. Quem acharia o 500 é um teste de contrato, como ele achou o 501 do shelf, que nenhum handler escreveu."
       },
       {
         "text": "Sim, como uma resposta `default` acrescentada a toda operação",
         "why": "Nada a acrescenta sozinho, e se alguém acrescentasse, o 500 passaria a estar listado em vez de ser encontrado."
       },
       {
-        "text": "Não: ele descreve o que o código declara, e quem acharia o 500 é um teste de contrato",
-        "why": "Certo. O mesmo aconteceu com o 501 do shelf, que nenhum handler escreveu."
+        "text": "Sim, porque um framework documenta todo status que consegue produzir",
+        "why": "Ele documenta o que os handlers declaram; o caminho de uma exceção ninguém declara."
       },
       {
         "text": "Só se o documento gerado for versionado no repositório",
@@ -337,7 +337,7 @@
     "hint": "Que partes de uma requisição o script valida?",
     "choices": [
       {
-        "text": "`ok`: o script confere corpos, não parâmetros de query, e `[]` cabe no schema",
+        "text": "`ok`: só corpos são conferidos, e `[]` cabe no schema",
         "why": "Certo. A resposta foi 200 com um array vazio, que é uma lista de livros válida, então esta conferência aprova justamente o que a seção diz que ela deixa passar."
       },
       {
@@ -359,15 +359,15 @@
     "hint": "Onde o rest.py escuta?",
     "choices": [
       {
-        "text": "O Swagger UI só manda requisições GET",
+        "text": "O Swagger UI só manda requisições GET pelo botão Try it out",
         "why": "O Try it out manda o método que a operação tiver."
       },
       {
-        "text": "O documento não tem `securitySchemes`",
+        "text": "O documento não tem `securitySchemes`, então a página se recusa a enviar",
         "why": "O shelf não precisa de chave; a falta de esquema não impede nada."
       },
       {
-        "text": "O rest.py escuta em 127.0.0.1 dentro da VM, que nada de fora alcança",
+        "text": "O rest.py escuta só em 127.0.0.1 dentro da VM",
         "why": "Certo. A lição 1 escolheu o loopback de propósito, e o curso o deixa ali."
       },
       {
@@ -403,20 +403,20 @@
     "hint": "A lista da própria operação substitui a do nível de cima.",
     "choices": [
       {
-        "text": "Da chave de staff, herdada do nível de cima",
+        "text": "Da chave de staff, herdada da lista `security` do nível de cima",
         "why": "A herança só acontece quando a operação não diz nada; aqui ela diz."
       },
       {
-        "text": "De nada: a lista vazia sobrescreve o nível de cima",
-        "why": "Certo. É assim que a lista de livros continua pública enquanto todo o resto precisa da chave."
+        "text": "De nada, e nenhuma outra operação pode ser chamada",
+        "why": "A lista vazia afeta só aquela operação."
       },
       {
         "text": "De qualquer um dos esquemas de `components`",
         "why": "Definir um esquema o deixa disponível; só uma lista `security` o torna obrigatório."
       },
       {
-        "text": "De nada, e nenhuma outra operação pode ser chamada",
-        "why": "A lista vazia afeta só aquela operação."
+        "text": "De nada: a lista vazia sobrescreve o nível de cima",
+        "why": "Certo. É assim que a lista de livros continua pública enquanto todo o resto precisa da chave."
       }
     ]
   },
@@ -433,12 +433,12 @@
         "why": "Nenhum dos dois códigos pode vir de um servidor que não confere chaves."
       },
       {
-        "text": "201: descrever um esquema não impõe nada",
-        "why": "Certo. Só um teste de contrato mandando a requisição sem chave mostraria a lacuna."
-      },
-      {
         "text": "Uma recusa do validador antes de a requisição ser enviada",
         "why": "O validador confere documentos, não requisições, e um cliente não o roda."
+      },
+      {
+        "text": "201: descrever um esquema não impõe nada",
+        "why": "Certo. Só um teste de contrato mandando a requisição sem chave mostraria a lacuna."
       }
     ]
   },
@@ -472,12 +472,12 @@
     "hint": "`default` quer dizer todo código não listado.",
     "choices": [
       {
-        "text": "O teste não consegue mais conferir uma resposta de sucesso",
-        "why": "Os códigos listados, o 200 incluído, são conferidos como antes."
+        "text": "Um 500 inesperado conta como listado",
+        "why": "Certo. Um teste que respeita `default` o aprova, porque uma recusa projetada e um acidente parecem iguais para ele."
       },
       {
-        "text": "Um 500 inesperado conta como listado, então um teste que respeita `default` o aprova",
-        "why": "Certo. Uma recusa projetada e um acidente parecem iguais para ele."
+        "text": "O teste não consegue mais conferir uma resposta de sucesso",
+        "why": "Os códigos listados, o 200 incluído, são conferidos como antes."
       },
       {
         "text": "O validador recusa um documento que tenha um",
@@ -521,7 +521,7 @@
     "hint": "Quem lê `Book`?",
     "choices": [
       {
-        "text": "Sim: qualquer mudança em `required` quebra clientes",
+        "text": "Sim: qualquer mudança numa lista `required` quebra os clientes daquele schema",
         "why": "Isso vale para uma requisição; numa resposta, obrigatório quer dizer uma promessa que o servidor cumpre."
       },
       {
@@ -547,16 +547,16 @@
         "why": "A requisição e a resposta são as mesmas; um cliente escrito à mão não percebe nada."
       },
       {
-        "text": "Código construído sobre um cliente gerado, quando ele é gerado de novo",
-        "why": "Certo. A função `createBook` some e toda chamada a ela para de compilar."
+        "text": "Nada, já que um `operationId` é só um rótulo",
+        "why": "Para um gerador ele é um nome de função, o que o torna parte de um contrato."
       },
       {
         "text": "O teste de contrato, que procura operações pelo id",
         "why": "O `check_contract.py` compara por método e caminho e nunca lê `operationId`."
       },
       {
-        "text": "Nada, já que um `operationId` é só um rótulo",
-        "why": "Para um gerador ele é um nome de função, o que o torna parte de um contrato."
+        "text": "Código construído sobre um cliente gerado, quando ele é gerado de novo",
+        "why": "Certo. A função `createBook` some e toda chamada a ela para de compilar."
       }
     ]
   },
@@ -616,7 +616,7 @@
         "why": "Um `default` pertence a uma operação, e o documento não tem operação `options` onde ele fique."
       },
       {
-        "text": "Sim: o documento continua sem operação `options`",
+        "text": "Sim, continua não havendo esse método no arquivo",
         "why": "Certo. O teste falha antes de olhar qualquer resposta; e o `check_contract.py` ignora `default` de todo modo."
       },
       {

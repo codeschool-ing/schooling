@@ -140,7 +140,7 @@ ana@api:~/shelf$ python3 polite.py demo-bia 3
 giving up after 5 tries
 ```
 
-The ceiling doubled each time, 0.5, 1.0, 2.0, 4.0, while each actual wait was a random point below
+The ceiling doubled each time, `0.5s`, `1.0s`, `2.0s`, `4.0s`, while each actual wait was a random point below
 it. After five tries it stopped. A client that retried forever, at a fixed rate, would be hitting
 the server at full speed the moment it came back up, together with every other client doing the
 same.

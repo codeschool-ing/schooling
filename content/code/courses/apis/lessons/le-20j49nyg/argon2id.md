@@ -48,7 +48,7 @@ ana@api:~/shelf$ python3 -c 'from argon2 import PasswordHasher; ph = PasswordHas
 ```
 
 100 MiB, two passes, eight lanes. The memory is taken for real, as it was for scrypt: the peak of
-the whole process for three values of `m`, where 13 MiB or so is Python itself:
+the whole process for three values of `m`, where about 10 MiB is Python itself:
 
 ```
 ana@api:~/shelf$ for m in 19456 47104 102400; do python3 -c "import resource; from argon2 import PasswordHasher; PasswordHasher(memory_cost=$m, time_cost=2, parallelism=1).hash('x'); print('m=$m', resource.getrusage(resource.RUSAGE_SELF).ru_maxrss // 1024, 'MiB')"; done

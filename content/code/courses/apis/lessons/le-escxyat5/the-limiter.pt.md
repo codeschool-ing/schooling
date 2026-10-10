@@ -1,15 +1,15 @@
 ---
-title: The limiter
+title: O limitador
 version: 1
 ---
 
-**`limits.py` is a second API in front of the same books: it asks every request for a key, charges
-the key's bucket, and only then reads the database.** It answers three addresses, `/books`,
-`/books/<id>` and `/search?q=`, and it is a separate program rather than a change to `rest.py` so
-that the lesson 1 API stays as it was.
+**O `limits.py` é uma segunda API na frente dos mesmos livros: ele pede uma chave a toda requisição,
+cobra do balde da chave, e só então lê o banco.** Ele responde em três endereços, `/books`,
+`/books/<id>` e `/search?q=`, e é um programa separado em vez de uma mudança no `rest.py` para que a
+API da lição 1 continue como estava.
 
-It needs only what lesson 1 set up, `db.py` in `~/shelf`. Save the file as `~/shelf/limits.py` in
-the editor, as you did `rest.py`:
+Ele só precisa do que a lição 1 montou, o `db.py` em `~/shelf`. Salve o arquivo como
+`~/shelf/limits.py` no editor, como fez com o `rest.py`:
 
 ```schooling-example
 {
@@ -18,75 +18,75 @@ the editor, as you did `rest.py`:
   "parts": [
     {
       "code": "# shelf/limits.py\n\"\"\"The books behind an API key, with a rate limit and a daily quota per key.\n\nRun it with `python3 limits.py` for a token bucket, or `python3 limits.py window`\nfor a fixed window. A second argument is the port; the default is 8000.\n\"\"\"\nimport json\nimport math\nimport sys\nimport threading\nimport time\nfrom http.server import BaseHTTPRequestHandler, ThreadingHTTPServer\nfrom urllib.parse import parse_qs, urlsplit\n\nimport db",
-      "note": "The standard library and `db.py` again, and nothing else. `limits.py` reads the same `shelf.db` as `rest.py`; only one of the two can hold port 8000 at a time, so stop `rest.py` before starting this one."
+      "note": "A biblioteca padrão e o `db.py` de novo, e nada mais. O `limits.py` lê o mesmo `shelf.db` que o `rest.py`; só um dos dois pode ocupar a porta 8000 de cada vez, então pare o `rest.py` antes de iniciar este."
     },
     {
       "code": "\nKEYS = {\"demo-ana\": \"trial\", \"demo-bia\": \"free\", \"demo-caio\": \"pro\"}\n\nTIERS = {\n    \"trial\": {\"capacity\": 10, \"per_second\": 1, \"daily\": 20},\n    \"free\": {\"capacity\": 10, \"per_second\": 1, \"daily\": 5000},\n    \"pro\": {\"capacity\": 100, \"per_second\": 10, \"daily\": 500000},\n}\n\nCOST = {\"/search\": 5}",
-      "note": "Three **demo keys**, written into the file so the lesson can use them. A real key is long, random, issued per client and stored hashed; lesson 7 is how. Each key has a tier, and the tier holds the numbers: a bucket of 10 refilled at 1 a second, and a daily quota. A search costs 5 units, everything else 1."
+      "note": "Três **chaves de demonstração**, escritas no arquivo para a lição poder usá-las. Uma chave de verdade é longa, aleatória, emitida por cliente e guardada como hash; a lição 7 mostra como. Cada chave tem um plano, e o plano guarda os números: um balde de 10 reabastecido a 1 por segundo, e uma cota diária. Uma busca custa 5 unidades, todo o resto custa 1."
     },
     {
       "code": "\n\nclass TokenBucket:\n    \"\"\"Holds up to `capacity` tokens and gains `per_second` more every second.\"\"\"\n\n    def __init__(self, capacity, per_second):\n        self.capacity, self.per_second = capacity, per_second\n        self.tokens, self.last = capacity, time.monotonic()\n\n    def refill(self):\n        now = time.monotonic()\n        self.tokens = min(self.capacity, self.tokens + (now - self.last) * self.per_second)\n        self.last = now\n\n    def take(self, cost):\n        self.refill()\n        if self.tokens < cost:\n            return False\n        self.tokens -= cost\n        return True\n\n    def left(self):\n        self.refill()\n        return math.floor(self.tokens)\n\n    def wait(self, cost):\n        \"\"\"Seconds until `cost` tokens are in the bucket.\"\"\"\n        return max(0, math.ceil((cost - self.tokens) / self.per_second))",
-      "note": "The **token bucket**. It stores no list of requests, only a number and the time it was last topped up: `refill` adds what the elapsed time is worth, capped at `capacity`. `take` spends the cost or refuses. `wait` is the arithmetic behind `Retry-After`: the missing tokens divided by the rate, rounded up to whole seconds."
+      "note": "O **balde de fichas** (*token bucket*). Ele não guarda lista de requisições, só um número e a hora em que foi completado pela última vez: `refill` soma o que o tempo decorrido vale, até o teto `capacity`. `take` gasta o custo ou recusa. `wait` é a conta por trás do `Retry-After`: as fichas que faltam divididas pela taxa, arredondadas para cima em segundos inteiros."
     },
     {
       "code": "\n\nclass FixedWindow:\n    \"\"\"Counts up to `limit` in each window of `seconds`; windows start on the clock.\"\"\"\n\n    def __init__(self, limit, seconds):\n        self.limit, self.seconds = limit, seconds\n        self.window, self.used = None, 0\n\n    def roll(self):\n        window = int(time.time() // self.seconds)\n        if window != self.window:\n            self.window, self.used = window, 0\n\n    def take(self, cost):\n        self.roll()\n        if self.used + cost > self.limit:\n            return False\n        self.used += cost\n        return True\n\n    def left(self):\n        self.roll()\n        return self.limit - self.used\n\n    def wait(self, cost):\n        \"\"\"Seconds until this window ends and the count starts again.\"\"\"\n        return math.ceil((self.window + 1) * self.seconds - time.time())",
-      "note": "The **fixed window**, kept for comparison and reused for the daily quota. The window number is the clock divided by its length, so every window starts on a multiple of ten seconds since 1970, and the day starts at midnight UTC. When the number changes, the count goes back to zero."
+      "note": "A **janela fixa**, mantida para comparar e reaproveitada para a cota diária. O número da janela é o relógio dividido pela duração dela, então toda janela começa num múltiplo de dez segundos desde 1970, e o dia começa à meia-noite UTC. Quando o número muda, a contagem volta a zero."
     },
     {
       "code": "\n\nMODE = sys.argv[1] if len(sys.argv) > 1 else \"bucket\"\nPORT = int(sys.argv[2]) if len(sys.argv) > 2 else 8000\nLOCK = threading.Lock()\nLIMITS = {}",
-      "note": "Which limiter runs is the first argument, and the port is the second. Every counter lives in `LIMITS`, a dictionary in this process's memory. The section on more than one server is about what that costs. The lock matters because `ThreadingHTTPServer` answers each request in its own thread, and two threads reading the same bucket at once would both see the last token."
+      "note": "Qual limitador roda é o primeiro argumento, e a porta é o segundo. Todo contador vive em `LIMITS`, um dicionário na memória deste processo. A seção sobre mais de um servidor trata do que isso custa. A trava importa porque o `ThreadingHTTPServer` atende cada requisição numa thread própria, e duas threads lendo o mesmo balde ao mesmo tempo veriam as duas a última ficha."
     },
     {
       "code": "\n\ndef admit(key, cost):\n    \"\"\"(allowed, the RateLimit headers, seconds to wait) for one request.\"\"\"\n    tier = TIERS[KEYS[key]]\n    with LOCK:\n        if key not in LIMITS:\n            rate, size = tier[\"per_second\"], tier[\"capacity\"]\n            burst = TokenBucket(size, rate) if MODE == \"bucket\" else FixedWindow(size, size / rate)\n            LIMITS[key] = burst, FixedWindow(tier[\"daily\"], 86400)\n        burst, day = LIMITS[key]\n        if day.left() < cost:\n            ok, wait, why = False, day.wait(cost), \"daily quota used up\"\n        elif not burst.take(cost):\n            ok, wait, why = False, burst.wait(cost), \"too many requests\"\n        else:\n            day.take(cost)\n            ok, wait, why = True, 0, None\n        policy = (f'\"burst\";q={tier[\"capacity\"]};w={tier[\"capacity\"] // tier[\"per_second\"]}, '\n                  f'\"daily\";q={tier[\"daily\"]};w=86400')\n        state = \", \".join(f'\"{name}\";r={lim.left()};t={lim.wait(lim.left() + 1)}'\n                          for name, lim in ((\"burst\", burst), (\"daily\", day)))\n    return ok, [(\"RateLimit-Policy\", policy), (\"RateLimit\", state)], wait, why",
-      "note": "`admit` decides one request. The daily quota is checked first without spending anything, so a request the bucket then refuses has not used up part of the day. The two headers follow the IETF draft: `RateLimit-Policy` states each policy (`q` units per `w` seconds) and `RateLimit` what is left of it (`r` units for the next `t` seconds)."
+      "note": "`admit` decide uma requisição. A cota diária é conferida primeiro sem gastar nada, então uma requisição que o balde recusa em seguida não consumiu parte do dia. Os dois cabeçalhos seguem o rascunho da IETF: `RateLimit-Policy` declara cada política (`q` unidades a cada `w` segundos) e `RateLimit` o que sobra dela (`r` unidades nos próximos `t` segundos)."
     },
     {
       "code": "\n\nclass Limited(BaseHTTPRequestHandler):\n    protocol_version = \"HTTP/1.1\"\n\n    def reply(self, status, value, headers=()):\n        body = (json.dumps(value, ensure_ascii=False) + \"\\n\").encode()\n        self.send_response(status)\n        self.send_header(\"Content-Type\", \"application/json\")\n        self.send_header(\"Content-Length\", str(len(body)))\n        for name, val in headers:\n            self.send_header(name, val)\n        self.end_headers()\n        self.wfile.write(body)",
-      "note": "`reply` is `rest.py`'s, minus the case with no body: every answer here is JSON."
+      "note": "`reply` é o do `rest.py`, sem o caso de resposta vazia: toda resposta aqui é JSON."
     },
     {
       "code": "\n    def do_GET(self):\n        url = urlsplit(self.path)\n        key = self.headers.get(\"X-API-Key\")\n        if key not in KEYS:\n            return self.reply(401, {\"error\": \"send a valid X-API-Key header\"})\n        top = \"/\" + url.path.split(\"/\")[1]\n        ok, headers, wait, why = admit(key, COST.get(top, 1))\n        if not ok:\n            return self.reply(429, {\"error\": f\"{why}: retry in {wait} s\"},\n                              headers + [(\"Retry-After\", str(wait))])\n        with db.connect() as conn:\n            if url.path == \"/books\":\n                rows = conn.execute(\"SELECT id, title FROM books ORDER BY id\").fetchall()\n                return self.reply(200, [dict(r) for r in rows], headers)\n            if top == \"/books\" and url.path[7:].isdigit():\n                row = conn.execute(\"SELECT id, title, price_cents FROM books WHERE id = ?\",\n                                   (int(url.path[7:]),)).fetchone()\n                if row:\n                    return self.reply(200, dict(row), headers)\n            if url.path == \"/search\":\n                words = parse_qs(url.query).get(\"q\", [\"\"])[0]\n                rows = conn.execute(\"SELECT id, title FROM books WHERE title LIKE ? ORDER BY id\",\n                                    (f\"%{words}%\",)).fetchall()\n                return self.reply(200, [dict(r) for r in rows], headers)\n        return self.reply(404, {\"error\": \"no such resource\"}, headers)",
-      "note": "The order is the design. **No key, no service**: 401 before anything is counted. Then the limit, **before the route is even looked at**, so a request for an address that does not exist costs the same as one that does; otherwise a stream of 404s would be free. A refusal is **429** with `Retry-After`. Only then is the database opened."
+      "note": "A ordem é o projeto. **Sem chave, sem serviço**: 401 antes de qualquer contagem. Depois o limite, **antes mesmo de olhar a rota**, então uma requisição para um endereço que não existe custa o mesmo que uma para um que existe; do contrário, uma enxurrada de 404 sairia de graça. Uma recusa é **429** com `Retry-After`. Só então o banco é aberto."
     },
     {
       "code": "\n\nif __name__ == \"__main__\":\n    server = ThreadingHTTPServer((\"127.0.0.1\", PORT), Limited)\n    print(f\"limits ({MODE}) on http://127.0.0.1:{PORT}\", flush=True)\n    server.serve_forever()",
-      "note": "Like `rest.py`, it listens on 127.0.0.1 only, and on port 8000 unless told otherwise."
+      "note": "Como o `rest.py`, escuta só em 127.0.0.1, e na porta 8000 se nada disser outra coisa."
     }
   ]
 }
 ```
 
-## The headers it sends
+## Os cabeçalhos que ele envia
 
-How a server tells a client about its limits has never been standardised, and every API invented
-its own names: `X-RateLimit-Limit`, `X-RateLimit-Remaining` and `X-RateLimit-Reset` are the most
-common, with the reset sometimes a number of seconds and sometimes a time on the clock. The IETF's
-HTTP API working group has been writing a standard for it, **RateLimit header fields for HTTP**,
-and it is still an Internet-Draft, not an RFC. Its early versions used three fields named
-`RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset`; the version current when this
-lesson was written, in 2026, uses two, and `limits.py` sends those:
+Como um servidor conta a um cliente sobre os limites dele nunca foi padronizado, e cada API inventou os
+próprios nomes: `X-RateLimit-Limit`, `X-RateLimit-Remaining` e `X-RateLimit-Reset` são os mais comuns,
+com o reset às vezes em segundos e às vezes como uma hora no relógio. O grupo de trabalho de APIs HTTP
+da IETF vem escrevendo um padrão para isso, **RateLimit header fields for HTTP**, e ele ainda é um
+Internet-Draft, não uma RFC. As primeiras versões usavam três campos chamados `RateLimit-Limit`,
+`RateLimit-Remaining` e `RateLimit-Reset`; a versão em vigor quando esta lição foi escrita, em 2026,
+usa dois, e o `limits.py` envia esses:
 
-| field | example | says |
+| campo | exemplo | diz |
 |---|---|---|
-| `RateLimit-Policy` | `"burst";q=10;w=10` | each policy by name: `q` units allowed per `w` seconds. It does not change from one answer to the next |
-| `RateLimit` | `"burst";r=8;t=1` | how much is left now: `r` units available for the next `t` seconds |
-| `Retry-After` | `1` | on a refusal only: how many seconds to wait |
+| `RateLimit-Policy` | `"burst";q=10;w=10` | cada política pelo nome: `q` unidades permitidas a cada `w` segundos. Não muda de uma resposta para outra |
+| `RateLimit` | `"burst";r=8;t=1` | quanto sobra agora: `r` unidades disponíveis nos próximos `t` segundos |
+| `Retry-After` | `1` | só numa recusa: quantos segundos esperar |
 
-Because it is a draft, the names can still change, and a client cannot count on any API sending
-them. **`Retry-After` and the status `429` are the parts a client can rely on**: `429 Too Many
-Requests` has been a standard status since 2012, and `Retry-After` is defined by HTTP itself.
+Como é um rascunho, os nomes ainda podem mudar, e um cliente não pode contar com nenhuma API
+enviando-os. **O `Retry-After` e o status `429` são as partes em que um cliente pode confiar**: o `429
+Too Many Requests` é um status padrão desde 2012, e o `Retry-After` é definido pelo próprio HTTP.
 
-## Running it
+## Rodando
 
-Stop `rest.py` with `Ctrl+C` in the second terminal, since both want port 8000, and start this one
-there instead:
+Pare o `rest.py` com `Ctrl+C` no segundo terminal, já que os dois querem a porta 8000, e inicie este
+no lugar dele:
 
 ```sh
 cd ~/shelf && python3 limits.py
 ```
 
-It prints `limits (bucket) on http://127.0.0.1:8000`. A request with no key is refused before
-anything is counted, and one with a key is served:
+Ele imprime `limits (bucket) on http://127.0.0.1:8000`. Uma requisição sem chave é recusada antes de
+qualquer contagem, e uma com chave é atendida:
 
 ```
 ana@api:~/shelf$ curl -s localhost:8000/books
@@ -95,7 +95,7 @@ ana@api:~/shelf$ curl -s -H 'X-API-Key: demo-bia' localhost:8000/books
 [{"id": 1, "title": "Dom Casmurro"}, {"id": 2, "title": "Memórias Póstumas de Brás Cubas"}, {"id": 3, "title": "A Hora da Estrela"}, {"id": 4, "title": "Perto do Coração Selvagem"}, {"id": 5, "title": "Ensaio sobre a Cegueira"}, {"id": 6, "title": "Americanah"}]
 ```
 
-With `-i`, the headers of one book:
+Com `-i`, os cabeçalhos de um livro:
 
 ```
 ana@api:~/shelf$ curl -si -H 'X-API-Key: demo-bia' localhost:8000/books/3
@@ -110,15 +110,15 @@ RateLimit: "burst";r=8;t=1, "daily";r=4998;t=70189
 {"id": 3, "title": "A Hora da Estrela", "price_cents": 3490}
 ```
 
-Two policies in each header, separated by a comma. `burst` is the bucket: ten tokens, ten seconds to
-fill from empty, and eight left: this was the key's second request, too soon after the first for
-a whole token to have come back. `daily` is the quota, 5,000 a day for the free tier, and its `t` is
-the number of seconds until midnight UTC, when the day's count starts again.
+Duas políticas em cada cabeçalho, separadas por vírgula. `burst` é o balde: dez fichas, dez segundos
+para encher a partir de vazio, e oito sobrando: esta foi a segunda requisição da chave, cedo demais
+depois da primeira para uma ficha inteira ter voltado. `daily` é a cota, 5.000 por dia no plano free,
+e o `t` dela é o número de segundos até a meia-noite UTC, quando a contagem do dia recomeça.
 
-The three keys and their tiers:
+As três chaves e os planos delas:
 
-| key | tier | bucket | daily quota |
+| chave | plano | balde | cota diária |
 |---|---|---|---|
-| `demo-ana` | trial | 10, refilled at 1 a second | 20 |
-| `demo-bia` | free | 10, refilled at 1 a second | 5,000 |
-| `demo-caio` | pro | 100, refilled at 10 a second | 500,000 |
+| `demo-ana` | trial | 10, reabastecido a 1 por segundo | 20 |
+| `demo-bia` | free | 10, reabastecido a 1 por segundo | 5.000 |
+| `demo-caio` | pro | 100, reabastecido a 10 por segundo | 500.000 |

@@ -10,7 +10,7 @@
     "hint": "Every API has one, written down or not.",
     "choices": [
       {
-        "text": "Nowhere, because an API has no contract until somebody writes a document for it",
+        "text": "Nowhere: no document, no contract",
         "correct": false,
         "why": "The contract existed the moment clients could depend on the answers; what was missing was a copy a program could read."
       },
@@ -25,7 +25,7 @@
         "why": "Right. Addresses, methods, fields and codes were all fixed by rest.py, and reading Python or sending requests was the only way to learn them."
       },
       {
-        "text": "In the HTTP standard, which defines what every API answers",
+        "text": "In the HTTP standard",
         "correct": false,
         "why": "HTTP defines what a 404 means, not which addresses shelf has or which fields a book carries."
       }
@@ -190,17 +190,17 @@
     "hint": "What does rest.py answer to it?",
     "choices": [
       {
-        "text": "The validator refuses a DELETE on a collection",
-        "correct": false,
-        "why": "OpenAPI lets any method sit on any address; the choice was about what clients may rely on."
-      },
-      {
-        "text": "Its only answer is a 405, so listing it would advertise an operation nobody can use",
+        "text": "Its only answer is a 405, which no client has any use for",
         "correct": true,
         "why": "Right. A document says what clients may rely on, and a method whose one answer is a refusal is not something to rely on."
       },
       {
-        "text": "OpenAPI has no way to describe a 405",
+        "text": "The validator refuses any DELETE written under a collection address such as `/books`",
+        "correct": false,
+        "why": "OpenAPI lets any method sit on any address; the choice was about what clients may rely on."
+      },
+      {
+        "text": "OpenAPI has no way to describe a 405 or the `Allow` header that comes with it",
         "correct": false,
         "why": "A 405 can be listed like any other code; the document chose not to."
       },
@@ -254,14 +254,14 @@
     "hint": "Read the first line of the error.",
     "choices": [
       {
-        "text": "It needed sudo",
-        "correct": false,
-        "why": "Root would not help; the refusal is about who manages the system's Python, not about permissions."
-      },
-      {
         "text": "The system's Python is marked as managed by apt",
         "correct": true,
         "why": "Right. The error was `externally-managed-environment`, and its suggestion was a virtual environment."
+      },
+      {
+        "text": "It needed sudo, because pip writes under /usr/lib",
+        "correct": false,
+        "why": "Root would not help; the refusal is about who manages the system's Python, not about permissions."
       },
       {
         "text": "The VM could not reach the internet",
@@ -341,7 +341,7 @@
         "why": "Right. FastAPI, springdoc, swag and the Node libraries all print the document from the code."
       },
       {
-        "text": "Both, separately, and a test compares them",
+        "text": "Both of them, separately, and a contract test then compares the two",
         "correct": false,
         "why": "That is what shelf has, and it is neither order: the document was written by hand after the code."
       },
@@ -363,9 +363,9 @@
     "hint": "What does a generator read?",
     "choices": [
       {
-        "text": "Yes, because a framework documents every status it can produce",
-        "correct": false,
-        "why": "It documents what handlers declare; an exception path is declared by nobody."
+        "text": "No; it describes what the code declares",
+        "correct": true,
+        "why": "Right. A contract test is what would find the 500, as it found shelf's 501, which no handler wrote."
       },
       {
         "text": "Yes, as a `default` response added to every operation",
@@ -373,9 +373,9 @@
         "why": "Nothing adds it on its own, and if somebody did, the 500 would become listed rather than found."
       },
       {
-        "text": "No: it describes what the code declares, and a contract test is what would find the 500",
-        "correct": true,
-        "why": "Right. The same happened to shelf's 501, which no handler wrote."
+        "text": "Yes, because a framework documents every status it can produce",
+        "correct": false,
+        "why": "It documents what handlers declare; an exception path is declared by nobody."
       },
       {
         "text": "Only if the generated document is committed to the repository",
@@ -498,7 +498,7 @@
     "hint": "Which parts of a request does the script validate?",
     "choices": [
       {
-        "text": "`ok`: the script checks bodies, not query parameters, and `[]` fits the schema",
+        "text": "`ok`: only bodies are checked, and `[]` fits the schema",
         "correct": true,
         "why": "Right. The answer was 200 with an empty array, which is a valid list of books, so this check passes the very thing the section says it misses."
       },
@@ -530,17 +530,17 @@
     "hint": "Where does rest.py listen?",
     "choices": [
       {
-        "text": "Swagger UI sends only GET requests",
+        "text": "Swagger UI sends only GET requests from its Try it out button",
         "correct": false,
         "why": "Try it out sends whatever method the operation has."
       },
       {
-        "text": "The document has no `securitySchemes`",
+        "text": "The document has no `securitySchemes`, so the page refuses to send",
         "correct": false,
         "why": "shelf needs no key; a missing scheme stops nothing."
       },
       {
-        "text": "rest.py listens on 127.0.0.1 inside the VM, which nothing outside it reaches",
+        "text": "rest.py listens only on 127.0.0.1 inside the VM",
         "correct": true,
         "why": "Right. Lesson 1 chose the loopback on purpose, and the course leaves it there."
       },
@@ -594,14 +594,14 @@
     "hint": "An operation's own list replaces the top-level one.",
     "choices": [
       {
-        "text": "The staff key, inherited from the top level",
+        "text": "The staff key, inherited from the top-level `security` list",
         "correct": false,
         "why": "Inheritance happens only when the operation says nothing; here it says something."
       },
       {
-        "text": "Nothing: the empty list overrides the top level",
-        "correct": true,
-        "why": "Right. That is how the list of books stays public while everything else needs the key."
+        "text": "Nothing, and no other operation can be called",
+        "correct": false,
+        "why": "The empty list affects that operation alone."
       },
       {
         "text": "Any one of the schemes in `components`",
@@ -609,9 +609,9 @@
         "why": "Defining a scheme makes it available; only a `security` list makes it required."
       },
       {
-        "text": "Nothing, and no other operation can be called",
-        "correct": false,
-        "why": "The empty list affects that operation alone."
+        "text": "Nothing: the empty list overrides the top level",
+        "correct": true,
+        "why": "Right. That is how the list of books stays public while everything else needs the key."
       }
     ]
   },
@@ -636,14 +636,14 @@
         "why": "Neither code can come from a server that does not check keys."
       },
       {
-        "text": "201: describing a scheme enforces nothing",
-        "correct": true,
-        "why": "Right. Only a contract test sending the request without a key would show the gap."
-      },
-      {
         "text": "A refusal from the validator before the request is sent",
         "correct": false,
         "why": "The validator checks documents, not requests, and a client does not run it."
+      },
+      {
+        "text": "201: describing a scheme enforces nothing",
+        "correct": true,
+        "why": "Right. Only a contract test sending the request without a key would show the gap."
       }
     ]
   },
@@ -689,14 +689,14 @@
     "hint": "`default` means every code not listed.",
     "choices": [
       {
+        "text": "An unexpected 500 counts as listed",
+        "correct": true,
+        "why": "Right. A test honouring `default` passes it, because a designed refusal and an accident look the same to it."
+      },
+      {
         "text": "The test can no longer check a successful answer",
         "correct": false,
         "why": "The listed codes, the 200 included, are checked as before."
-      },
-      {
-        "text": "An unexpected 500 counts as listed, so a test honouring `default` passes it",
-        "correct": true,
-        "why": "Right. A designed refusal and an accident look the same to it."
       },
       {
         "text": "The validator refuses a document that has one",
@@ -766,7 +766,7 @@
     "hint": "Who reads `Book`?",
     "choices": [
       {
-        "text": "Yes: any change to `required` breaks clients",
+        "text": "Yes: any change to a `required` list breaks the clients of that schema",
         "correct": false,
         "why": "That holds for a request; in a response, required means a promise the server keeps."
       },
@@ -803,9 +803,9 @@
         "why": "The request and the answer are what they were; a hand-written client notices nothing."
       },
       {
-        "text": "Code built on a generated client, when it is regenerated",
-        "correct": true,
-        "why": "Right. The function `createBook` disappears and every call to it stops compiling."
+        "text": "Nothing, since an `operationId` is only a label",
+        "correct": false,
+        "why": "To a generator it is a function name, which makes it part of a contract."
       },
       {
         "text": "The contract test, which looks operations up by id",
@@ -813,9 +813,9 @@
         "why": "`check_contract.py` matches by method and path and never reads `operationId`."
       },
       {
-        "text": "Nothing, since an `operationId` is only a label",
-        "correct": false,
-        "why": "To a generator it is a function name, which makes it part of a contract."
+        "text": "Code built on a generated client, when it is regenerated",
+        "correct": true,
+        "why": "Right. The function `createBook` disappears and every call to it stops compiling."
       }
     ]
   },
@@ -905,7 +905,7 @@
         "why": "A `default` belongs to an operation, and the document has no `options` operation for it to sit in."
       },
       {
-        "text": "Yes: the document still has no `options` operation",
+        "text": "Yes, there is still no such method in the file",
         "correct": true,
         "why": "Right. The test fails before it looks at any response; and `check_contract.py` ignores `default` anyway."
       },
