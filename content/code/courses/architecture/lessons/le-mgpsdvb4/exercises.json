@@ -1,0 +1,984 @@
+[
+  {
+    "id": "ex-27ytytq2",
+    "version": 1,
+    "section": "what-eventually-means",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does eventual consistency guarantee?",
+    "hint": "Read the definition for what it leaves out.",
+    "choices": [
+      {
+        "text": "Every read sees the latest write within one second",
+        "correct": false,
+        "why": "No time bound is promised at all."
+      },
+      {
+        "text": "If writes stop, every copy ends with the same value",
+        "correct": true,
+        "why": "Right, and nothing about how long or what is seen meanwhile."
+      },
+      {
+        "text": "Copies never disagree once a write has returned",
+        "correct": false,
+        "why": "That is strong consistency."
+      },
+      {
+        "text": "Writes are applied in the same order on every copy, everywhere",
+        "correct": false,
+        "why": "Order is one of the things it leaves open."
+      }
+    ]
+  },
+  {
+    "id": "ex-s3rx5zdm",
+    "version": 1,
+    "section": "what-eventually-means",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is NOT left open by the definition of eventual consistency?",
+    "hint": "One item is the definition itself.",
+    "choices": [
+      {
+        "text": "How long the copies take to agree",
+        "correct": false,
+        "why": "Left open: \"eventually\" has no bound."
+      },
+      {
+        "text": "What a reader sees in the meantime",
+        "correct": false,
+        "why": "Left open; that is what session guarantees address."
+      },
+      {
+        "text": "That idle copies converge to one value",
+        "correct": true,
+        "why": "Right: convergence is the one thing it promises."
+      },
+      {
+        "text": "Which concurrent write survives",
+        "correct": false,
+        "why": "Left open; the lesson's last-writer-wins section is about it."
+      }
+    ]
+  },
+  {
+    "id": "ex-zzexypry",
+    "version": 1,
+    "section": "what-eventually-means",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these is a copy that can be stale, even though nobody designed it as a copy?",
+    "hint": "Something sits in front of a service and answers for it.",
+    "choices": [
+      {
+        "text": "A primary database that every write goes to",
+        "correct": false,
+        "why": "The primary is the owner, not a copy."
+      },
+      {
+        "text": "A cache in front of the catalogue service",
+        "correct": true,
+        "why": "Right: it answers from what it stored earlier."
+      },
+      {
+        "text": "A synchronous standby that is never read from",
+        "correct": false,
+        "why": "It is never read, so nobody sees it stale."
+      },
+      {
+        "text": "The stock service in the lab, with its versions",
+        "correct": false,
+        "why": "The stock service is the owner of the numbers."
+      }
+    ]
+  },
+  {
+    "id": "ex-7mej2e57",
+    "version": 1,
+    "section": "what-eventually-means",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each term to what it means.",
+    "hint": "One of them is about one person, not about everybody.",
+    "pairs": [
+      {
+        "left": "linearizability",
+        "right": "once a write returns, every read anywhere sees it"
+      },
+      {
+        "left": "eventual consistency",
+        "right": "copies agree once the writes stop"
+      },
+      {
+        "left": "read-your-writes",
+        "right": "a person's reads see that person's own writes"
+      },
+      {
+        "left": "monotonic reads",
+        "right": "a person never sees a version older than one already seen"
+      }
+    ]
+  },
+  {
+    "id": "ex-st30gwfx",
+    "version": 1,
+    "section": "the-stock-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lab, where does the shop get the number it shows on a product page?",
+    "hint": "Look at `do_GET` in `shop.py`.",
+    "choices": [
+      {
+        "text": "It calls the stock service on every request",
+        "correct": false,
+        "why": "Only when `?after=` says its copy is behind."
+      },
+      {
+        "text": "It reads the stock service's database directly",
+        "correct": false,
+        "why": "The stock service keeps its numbers in memory, and no module reads another's data."
+      },
+      {
+        "text": "From its own copy, fed by events",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "From the other shop, which it asks first",
+        "correct": false,
+        "why": "The shops share events, not reads."
+      }
+    ]
+  },
+  {
+    "id": "ex-rz5jpxe2",
+    "version": 1,
+    "section": "the-stock-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Right after `PUT /stock/coffee` with 12, both shops answered \"no copy yet\". What does that show?",
+    "hint": "Three seconds later shop b had it.",
+    "choices": [
+      {
+        "text": "The event was lost and had to be resent",
+        "correct": false,
+        "why": "It arrived without being resent."
+      },
+      {
+        "text": "The shops were misconfigured",
+        "correct": false,
+        "why": "Nothing was misconfigured."
+      },
+      {
+        "text": "The event was still on its way to them",
+        "correct": true,
+        "why": "Right: the window, on a system that works."
+      },
+      {
+        "text": "The broker refused the event",
+        "correct": false,
+        "why": "Then the stock service would have answered 503."
+      }
+    ]
+  },
+  {
+    "id": "ex-0f5hbzzd",
+    "version": 1,
+    "section": "the-stock-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `stock.py` publish the event before keeping the change?",
+    "hint": "Think about a broker that is down.",
+    "choices": [
+      {
+        "text": "To make the shops' copies update a little faster",
+        "correct": false,
+        "why": "The order does not change the copies' speed."
+      },
+      {
+        "text": "So a failed publish changes nothing and returns 503",
+        "correct": true,
+        "why": "Right: the owner never holds a change the copies will never hear about."
+      },
+      {
+        "text": "Because pika needs the exchange to exist first",
+        "correct": false,
+        "why": "pika has no opinion about it."
+      },
+      {
+        "text": "To give the event a version",
+        "correct": false,
+        "why": "The version is computed before either step."
+      }
+    ]
+  },
+  {
+    "id": "ex-tsqg290d",
+    "version": 1,
+    "section": "the-window",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On an idle system, how long was shop b's window in the lab?",
+    "hint": "Count the half-second reads that still said 12.",
+    "choices": [
+      {
+        "text": "About twenty seconds",
+        "correct": false,
+        "why": "That was after the burst of ten changes."
+      },
+      {
+        "text": "About two seconds, its LAG",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Zero; it updated at once",
+        "correct": false,
+        "why": "Four reads in a row still said 12."
+      },
+      {
+        "text": "About a fifth of a second",
+        "correct": false,
+        "why": "That is shop a's time per event."
+      }
+    ]
+  },
+  {
+    "id": "ex-8yaj32w0",
+    "version": 1,
+    "section": "the-window",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A copy handles one event in 0.5 seconds and has 40 events waiting in its queue. Roughly how many seconds old is what it shows for the last change?",
+    "hint": "Queue length times time per event.",
+    "value": 20,
+    "tolerance": 1,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-rynp393b",
+    "version": 1,
+    "section": "the-window",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the window tend to be longest when the most customers are looking?",
+    "hint": "What does a busy afternoon do to the queue?",
+    "choices": [
+      {
+        "text": "Because the broker slows down under load by design",
+        "correct": false,
+        "why": "The broker was not the slow part."
+      },
+      {
+        "text": "Because customers' reads block the consumer",
+        "correct": false,
+        "why": "Reads and the consumer did not compete in the lab."
+      },
+      {
+        "text": "Busier times mean more changes queued for the copy",
+        "correct": true,
+        "why": "Right: window = queue length × time per event."
+      },
+      {
+        "text": "Because the owner holds a lock while customers read",
+        "correct": false,
+        "why": "The owner's lock is held only while publishing."
+      }
+    ]
+  },
+  {
+    "id": "ex-afb47yme",
+    "version": 1,
+    "section": "the-window",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which measure tells you, in time, how far behind a copy is?",
+    "hint": "One of them counts messages, not seconds.",
+    "choices": [
+      {
+        "text": "The number of messages in its queue",
+        "correct": false,
+        "why": "That is in messages; it says nothing about how old they are."
+      },
+      {
+        "text": "The age of the newest event it has applied",
+        "correct": true,
+        "why": "Right, given that each event carries when it was created."
+      },
+      {
+        "text": "The number of requests it answers per second",
+        "correct": false,
+        "why": "Busy and behind are different things."
+      },
+      {
+        "text": "Whether its health check passes",
+        "correct": false,
+        "why": "A copy that is behind is perfectly healthy."
+      }
+    ]
+  },
+  {
+    "id": "ex-t6359e8e",
+    "version": 1,
+    "section": "read-your-writes",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Who is harmed most by the inconsistency window?",
+    "hint": "Who knows what the number should be?",
+    "choices": [
+      {
+        "text": "A customer browsing the catalogue",
+        "correct": false,
+        "why": "They cannot tell 12 from 11."
+      },
+      {
+        "text": "The person who just made the change",
+        "correct": true,
+        "why": "Right: they know the old value is wrong."
+      },
+      {
+        "text": "The stock service, which owns the number",
+        "correct": false,
+        "why": "The owner is never behind itself."
+      },
+      {
+        "text": "The broker that carries the events",
+        "correct": false,
+        "why": "The broker does not read stock."
+      }
+    ]
+  },
+  {
+    "id": "ex-d67gehsh",
+    "version": 1,
+    "section": "read-your-writes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `?after=13` make shop b do when its copy is at version 12?",
+    "hint": "Look at the answer it gave in the lab.",
+    "choices": [
+      {
+        "text": "Wait until version 13 arrives",
+        "correct": false,
+        "why": "It does not wait in this lab."
+      },
+      {
+        "text": "Refuse the request with an error",
+        "correct": false,
+        "why": "It answers."
+      },
+      {
+        "text": "Answer from its copy and warn",
+        "correct": false,
+        "why": "The copy is not used when it is behind."
+      },
+      {
+        "text": "Ask the stock service and say so",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-ax6efx26",
+    "version": 1,
+    "section": "read-your-writes",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is read-your-writes much cheaper than strong consistency?",
+    "hint": "To whom is the promise made?",
+    "choices": [
+      {
+        "text": "It is promised to one person, about their own changes",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It needs no version numbers",
+        "correct": false,
+        "why": "The lab's version of it needs one."
+      },
+      {
+        "text": "It works only while the copy is never behind the owner",
+        "correct": false,
+        "why": "It exists for when the copy lags."
+      },
+      {
+        "text": "It skips the broker",
+        "correct": false,
+        "why": "The events still go through the broker."
+      }
+    ]
+  },
+  {
+    "id": "ex-2bh258ve",
+    "version": 1,
+    "section": "read-your-writes",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "\"After a person writes, send their reads to the owner for the next minute.\" What is the weakness?",
+    "hint": "How long is the window?",
+    "choices": [
+      {
+        "text": "It sends every customer's reads to the owner",
+        "correct": false,
+        "why": "Only the reads of the person who wrote."
+      },
+      {
+        "text": "The minute is a guess; a longer window breaks it",
+        "correct": true,
+        "why": "Right: the window has no bound."
+      },
+      {
+        "text": "The owner is unable to answer reads quickly enough",
+        "correct": false,
+        "why": "The owner answers reads in the lab."
+      },
+      {
+        "text": "It requires a version number in every single event",
+        "correct": false,
+        "why": "That is the other approach."
+      }
+    ]
+  },
+  {
+    "id": "ex-cgtwjyve",
+    "version": 1,
+    "section": "monotonic-reads",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the lab, the customer saw 7 and then 0. Why?",
+    "hint": "Which shop answered each request?",
+    "choices": [
+      {
+        "text": "The real stock went from 7 down to 0 in between",
+        "correct": false,
+        "why": "The owner went from 0 to 7."
+      },
+      {
+        "text": "The second read reached a copy further behind",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Shop b applied an old event twice",
+        "correct": false,
+        "why": "Nothing was resent in that section."
+      },
+      {
+        "text": "The load balancer cached the first answer",
+        "correct": false,
+        "why": "There was no cache; two copies answered."
+      }
+    ]
+  },
+  {
+    "id": "ex-55fww7gk",
+    "version": 1,
+    "section": "monotonic-reads",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which fix gives monotonic reads without tying a person to one copy?",
+    "hint": "The same mechanism as read-your-writes.",
+    "choices": [
+      {
+        "text": "Sticky sessions",
+        "correct": false,
+        "why": "That is the one that ties a person to one copy."
+      },
+      {
+        "text": "Making every copy handle events at the same speed",
+        "correct": false,
+        "why": "Copies are never exactly in step."
+      },
+      {
+        "text": "Sending the highest version seen along with every read",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Removing the slower copy",
+        "correct": false,
+        "why": "Some copy is always the slower one."
+      }
+    ]
+  },
+  {
+    "id": "ex-gf7gty88",
+    "version": 1,
+    "section": "monotonic-reads",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the weakness of sticky sessions for monotonic reads?",
+    "hint": "What happens to the copy a person is stuck to?",
+    "choices": [
+      {
+        "text": "They need a version in every event",
+        "correct": false,
+        "why": "They need no version at all."
+      },
+      {
+        "text": "That copy restarts, and load spreads unevenly",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "They send every read to the owner instead of a copy",
+        "correct": false,
+        "why": "Reads stay on the copy."
+      },
+      {
+        "text": "They are only offered by some brokers",
+        "correct": false,
+        "why": "A load balancer offers them, not a broker."
+      }
+    ]
+  },
+  {
+    "id": "ex-k4t5qej9",
+    "version": 1,
+    "section": "order-and-convergence",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After version 15 was sent again, shop b said 5 and the owner said 4. When would shop b have corrected itself?",
+    "hint": "What would bring a new event?",
+    "choices": [
+      {
+        "text": "After its LAG of two seconds",
+        "correct": false,
+        "why": "The LAG had passed; it had applied the old event."
+      },
+      {
+        "text": "When the broker noticed the duplicate",
+        "correct": false,
+        "why": "The broker does not compare contents."
+      },
+      {
+        "text": "When coffee next changed",
+        "correct": true,
+        "why": "Right: the copy converged on a wrong value."
+      },
+      {
+        "text": "Never; restarting it would keep 5",
+        "correct": false,
+        "why": "A restart empties the in-memory copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-1zesq2w6",
+    "version": 1,
+    "section": "order-and-convergence",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `CHECK_VERSION=1` make the shop do?",
+    "hint": "Read the shop's log after the second resend.",
+    "choices": [
+      {
+        "text": "Ignore an event no newer than the version it holds",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Ask the owner before applying each event",
+        "correct": false,
+        "why": "It never asks the owner while applying."
+      },
+      {
+        "text": "Apply events in the order of their timestamps",
+        "correct": false,
+        "why": "The events carry versions, not timestamps."
+      },
+      {
+        "text": "Reject the resent event at the broker, before delivery",
+        "correct": false,
+        "why": "The broker delivers it; the shop decides."
+      }
+    ]
+  },
+  {
+    "id": "ex-kn8e3gsz",
+    "version": 1,
+    "section": "order-and-convergence",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why must the version come from the owner rather than from each machine's clock?",
+    "hint": "Two clocks can disagree.",
+    "choices": [
+      {
+        "text": "Clocks are too coarse to tell two close events apart",
+        "correct": false,
+        "why": "Resolution is not the main problem."
+      },
+      {
+        "text": "Only the owner orders the changes to that thing",
+        "correct": true,
+        "why": "Right: clocks drift, and the later change can carry the earlier time."
+      },
+      {
+        "text": "Versions are smaller than timestamps",
+        "correct": false,
+        "why": "Size is not the point."
+      },
+      {
+        "text": "The broker rejects messages that carry a timestamp",
+        "correct": false,
+        "why": "It does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-mwkvy0zq",
+    "version": 1,
+    "section": "order-and-convergence",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which event can be applied in any order, any number of times, and still converge?",
+    "hint": "State, or a change?",
+    "choices": [
+      {
+        "text": "\"Two bags of coffee sold\"",
+        "correct": false,
+        "why": "Applied twice, it sells four."
+      },
+      {
+        "text": "\"Coffee went down by one\"",
+        "correct": false,
+        "why": "Still a change; repeats and order matter."
+      },
+      {
+        "text": "\"Coffee is 4, version 18\"",
+        "correct": true,
+        "why": "Right, with a copy that keeps the newest version."
+      },
+      {
+        "text": "\"Restock coffee\"",
+        "correct": false,
+        "why": "A command, not a state."
+      }
+    ]
+  },
+  {
+    "id": "ex-c9zw2c5d",
+    "version": 1,
+    "section": "last-writer-wins",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `MERGE=lww`, what happened to Ana's tea?",
+    "hint": "Look at both baskets five seconds later.",
+    "choices": [
+      {
+        "text": "It stayed in shop a only",
+        "correct": false,
+        "why": "Both copies ended the same."
+      },
+      {
+        "text": "An error said it conflicted",
+        "correct": false,
+        "why": "There was no error at all."
+      },
+      {
+        "text": "It disappeared from both copies without an error",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It replaced the coffee in both",
+        "correct": false,
+        "why": "The later basket, with coffee, won."
+      }
+    ]
+  },
+  {
+    "id": "ex-333jxch9",
+    "version": 1,
+    "section": "last-writer-wins",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For which data is last writer wins a reasonable rule?",
+    "hint": "When does the newer write really replace the older?",
+    "choices": [
+      {
+        "text": "A shopping basket edited on two devices",
+        "correct": false,
+        "why": "Both edits were meant; one is lost."
+      },
+      {
+        "text": "A customer's delivery address",
+        "correct": true,
+        "why": "Right: the newer one is the one they want."
+      },
+      {
+        "text": "A count of units sold",
+        "correct": false,
+        "why": "Each sale counts; dropping one loses money."
+      },
+      {
+        "text": "Comments posted on a product",
+        "correct": false,
+        "why": "Each comment is its own; none replaces another."
+      }
+    ]
+  },
+  {
+    "id": "ex-7qyynb0q",
+    "version": 1,
+    "section": "last-writer-wins",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `MERGE=union`, why did the tea come back after being removed?",
+    "hint": "What did shop b still have when it published?",
+    "choices": [
+      {
+        "text": "Shop a's DELETE failed and left the tea in place",
+        "correct": false,
+        "why": "It answered with coffee only."
+      },
+      {
+        "text": "The broker redelivered an older basket to shop a",
+        "correct": false,
+        "why": "It was shop b's new publish."
+      },
+      {
+        "text": "The version check rejected the removal as too old",
+        "correct": false,
+        "why": "Baskets carry no version."
+      },
+      {
+        "text": "Union cannot tell a removal from a missing item",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-pvtyevsr",
+    "version": 1,
+    "section": "last-writer-wins",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "For most systems, what is the simplest way to avoid reconciling concurrent writes?",
+    "hint": "The last row of the table.",
+    "choices": [
+      {
+        "text": "Use a CRDT for every type of data in the system",
+        "correct": false,
+        "why": "Correct for some data, and far from the simplest."
+      },
+      {
+        "text": "Give each thing one owner; copies only read",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Synchronise every server's clock with NTP first",
+        "correct": false,
+        "why": "Clocks still drift, and both writes were meant."
+      },
+      {
+        "text": "Keep both versions and ask the user to choose",
+        "correct": false,
+        "why": "That is reconciling, not avoiding it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2722skt7",
+    "version": 1,
+    "section": "last-writer-wins",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each way of handling concurrent writes to what it does.",
+    "hint": "Which one loses a write, and which one can bring one back?",
+    "pairs": [
+      {
+        "left": "last writer wins",
+        "right": "keeps the newest stamp, drops the rest"
+      },
+      {
+        "left": "union",
+        "right": "keeps all items; removals can return"
+      },
+      {
+        "left": "siblings",
+        "right": "hands every concurrent version to the reader"
+      },
+      {
+        "left": "CRDT",
+        "right": "a type whose merge is always right for its kind"
+      }
+    ]
+  },
+  {
+    "id": "ex-ecw3xac9",
+    "version": 1,
+    "section": "telling-the-customer",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After the checkout creates an order, what should the next page show?",
+    "hint": "The cheapest read-your-writes.",
+    "choices": [
+      {
+        "text": "The order list, read from a copy",
+        "correct": false,
+        "why": "The copy may not have the order yet."
+      },
+      {
+        "text": "The write's own answer",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A spinner until every copy has it",
+        "correct": false,
+        "why": "Copies have no bound; the spinner might never stop."
+      },
+      {
+        "text": "Nothing, to avoid showing stale data",
+        "correct": false,
+        "why": "A person who sees nothing assumes it failed."
+      }
+    ]
+  },
+  {
+    "id": "ex-wvdqzwm4",
+    "version": 1,
+    "section": "telling-the-customer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A product page shows the coffee count from a copy. What should it say?",
+    "hint": "The exact count belongs at checkout.",
+    "choices": [
+      {
+        "text": "The exact count, refreshed every second",
+        "correct": false,
+        "why": "Still a copy, still possibly behind."
+      },
+      {
+        "text": "Nothing about stock at all",
+        "correct": false,
+        "why": "The approximate number is still useful."
+      },
+      {
+        "text": "An approximate \"only a few left\"",
+        "correct": true,
+        "why": "Right; the owner decides at checkout."
+      },
+      {
+        "text": "The number from the other copy too",
+        "correct": false,
+        "why": "Two copies on one screen is the disagreement made visible."
+      }
+    ]
+  },
+  {
+    "id": "ex-csk1n8s7",
+    "version": 1,
+    "section": "telling-the-customer",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which decision must be made at the owner and not from a copy?",
+    "hint": "Which mistake costs money?",
+    "choices": [
+      {
+        "text": "Showing a product's photo",
+        "correct": false,
+        "why": "Yesterday's photo is harmless."
+      },
+      {
+        "text": "Listing products in a category",
+        "correct": false,
+        "why": "A list a moment old is fine."
+      },
+      {
+        "text": "Showing a basket's item count in the header",
+        "correct": false,
+        "why": "It should match the basket page, but a moment's lag costs nothing."
+      },
+      {
+        "text": "Taking the last bag of coffee when the customer pays",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-8chw8a8n",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lab's late-event experiment in order.",
+    "hint": "Change, change, wait, resend, look.",
+    "items": [
+      "Set the coffee to 5",
+      "Set the coffee to 4",
+      "Wait for both shops to apply the changes",
+      "Send the event for 5 again",
+      "Shop b shows 5 while the owner says 4"
+    ]
+  },
+  {
+    "id": "ex-fa9xvpwb",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's search page is fed from the catalogue by events, and a member of staff complains that a price they changed \"does not save\". What is the most likely cause and fix?",
+    "hint": "Did the change fail, or is the reader looking at a copy?",
+    "choices": [
+      {
+        "text": "The catalogue is losing writes; make its replication synchronous",
+        "correct": false,
+        "why": "The owner had the change."
+      },
+      {
+        "text": "The page reads a copy that is behind; show staff the owner's answer",
+        "correct": true,
+        "why": "Right: read-your-writes."
+      },
+      {
+        "text": "The broker is dropping events; move the events to Kafka instead",
+        "correct": false,
+        "why": "Nothing points at the broker."
+      },
+      {
+        "text": "The price has two owners; resolve it with last writer wins",
+        "correct": false,
+        "why": "There is one owner: the catalogue."
+      }
+    ]
+  }
+]
