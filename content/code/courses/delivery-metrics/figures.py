@@ -1265,6 +1265,61 @@ def l11_burnup(lang):
                 'escopo sobe conforme o trabalho é entendido.')
 
 
+# ------------------------------------------------------------------ lesson 12
+
+def queue_waits():
+    import random
+    rng = random.Random(12)
+    out = []
+    for busy in (0.5, 0.6, 0.7, 0.8, 0.9, 0.95):
+        free_at, arrival, total = 0.0, 0.0, 0.0
+        for _ in range(20000):
+            arrival += rng.expovariate(busy)
+            start = max(arrival, free_at)
+            total += start - arrival
+            free_at = start + rng.expovariate(1.0)
+        out.append((busy, total / 20000))
+    return out
+
+
+@figure('l12-curve', 12)
+def l12_curve(lang):
+    sims = queue_waits()
+    f = Fig('l12-curve', 680, 290, T(
+        lang,
+        'A curve of waiting time against how busy one person is, from 30% to 97%. The curve, '
+        'busy divided by one minus busy, stays under two days up to about 65% and then climbs '
+        'steeply, passing 9 days at 90% and 19 at 95%. Dots mark the six simulated averages, '
+        'which sit close to the curve.',
+        'Uma curva do tempo de espera contra a ocupação de uma pessoa, de 30% a 97%. A curva, '
+        'ocupação dividida por um menos a ocupação, fica abaixo de dois dias até uns 65% e então '
+        'sobe forte, passando de 9 dias em 90% e 19 em 95%. Pontos marcam as seis médias '
+        'simuladas, que ficam perto da curva.'))
+    p = Plot(f, 60, 40, 640, 240, 0.3, 1.0, 0, 25)
+    p.yaxis([0, 5, 10, 15, 20, 25])
+    p.baseline()
+    xs = [0.3 + k * 0.005 for k in range(int((0.96 - 0.3) / 0.005) + 1)]
+    p.polyline(xs, [x / (1 - x) for x in xs], stroke='--phosphor', width=2)
+    for b, w in sims:
+        f.circle(p.sx(b), p.sy(w), 4.5, fill='--amber')
+    for t in (0.3, 0.5, 0.7, 0.9, 1.0):
+        f.text(p.sx(t), 256, f'{t:.0%}', size=9.5, fill='--paper-dim')
+    f.text(350, 276, T(lang, 'how busy the person is: work arriving ÷ work they can do',
+                       'quão ocupada a pessoa está: trabalho que chega ÷ trabalho que ela faz'),
+           size=9.5, fill='--paper-dim')
+    f.text(60, 18, T(lang, 'average days a request waits before work on it starts',
+                     'dias, em média, que um pedido espera antes de começar'),
+           size=10, anchor='start', fill='--paper-dim')
+    f.text(p.sx(0.62), p.sy(9), T(lang, 'the formula: busy ÷ (1 − busy)', 'a fórmula: ocupação ÷ (1 − ocupação)'),
+           size=10, anchor='end', fill='--phosphor')
+    f.text(p.sx(0.62), p.sy(7), T(lang, 'dots: queue.py', 'pontos: queue.py'), size=10, anchor='end', fill='--amber')
+    return f, T(lang,
+                'Waiting is small and almost flat for a long way, and then it is not. The last ten '
+                'points of busyness cost more than the first ninety.',
+                'A espera é pequena e quase plana por um bom trecho, e depois não é mais. Os últimos '
+                'dez pontos de ocupação custam mais que os noventa primeiros.')
+
+
 # @@LESSONS@@
 
 if __name__ == '__main__':
