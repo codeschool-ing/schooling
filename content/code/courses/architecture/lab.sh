@@ -92,6 +92,6 @@ case "${1:-}" in
   tools) tools ;;
   reset) daemon; reset ;;
   prebuild) prebuild "$2" ;;
-  as) shift; sudo -u ana -i bash -c "export TZ=America/Sao_Paulo LC_ALL=C.UTF-8; $*" ;;
+  as) shift; cd / && sudo -u ana -H bash -lc "cd ~ && export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 && $*" ;;
   *) sed -n '2,40p' "$0"; exit 1 ;;
 esac
