@@ -88,13 +88,13 @@ ana@laptop:~/quitanda$ npx playwright test tests/cache.spec.js
 
 Running 5 tests using 1 worker
 
-  ✓  1 tests/cache.spec.js:7:1 › a new offer reaches the page (174ms)
+  ✓  1 tests/cache.spec.js:7:1 › a new offer reaches the page (251ms)
   ✘  2 tests/cache.spec.js:13:1 › a returning customer sees the new offer (5.2s)
-  ✘  3 tests/cache.spec.js:22:1 › the offer is checked with the server before it is reused (11ms)
-  ✓  4 tests/cache.spec.js:28:1 › a static file is reused only when the server agrees (13ms)
-  ✓  5 tests/cache.spec.js:40:1 › routing hides the flaw (185ms)
+  ✘  3 tests/cache.spec.js:22:1 › the offer is checked with the server before it is reused (14ms)
+  ✓  4 tests/cache.spec.js:28:1 › a static file is reused only when the server agrees (20ms)
+  ✓  5 tests/cache.spec.js:40:1 › routing hides the flaw (221ms)
 
-  5 passed (6.7s)
+  5 passed (7.0s)
 ```
 
 **Dois xis, e cinco aprovados.** O `✘` marca os dois testes que falharam, e a contagem diz aprovados
@@ -146,8 +146,8 @@ GET /api/offer 200
 - **os testes de cabeçalho** pediram `/api/offer` uma vez, e `style.css` duas: a segunda com a
   impressão digital, respondida com `304`;
 - **o teste com rota**, o último bloco, pediu tudo de novo na segunda visita, tudo `200`, sem nenhum
-  `304`: a rota desligou o cache tão completamente que o navegador nem guardou cópia sobre a qual
-  perguntar.
+  `304`: com a rota ligada, o navegador nem mandou a requisição condicional que uma
+  cópia guardada teria causado.
 
 ## O dia em que a falha é corrigida
 
@@ -159,11 +159,11 @@ ana@laptop:~/quitanda$ npx playwright test tests/cache.spec.js
 
 Running 5 tests using 1 worker
 
-  ✓  1 tests/cache.spec.js:7:1 › a new offer reaches the page (168ms)
-  ✓  2 tests/cache.spec.js:13:1 › a returning customer sees the new offer (145ms)
-  ✓  3 tests/cache.spec.js:22:1 › the offer is checked with the server before it is reused (43ms)
-  ✓  4 tests/cache.spec.js:28:1 › a static file is reused only when the server agrees (49ms)
-  ✓  5 tests/cache.spec.js:40:1 › routing hides the flaw (236ms)
+  ✓  1 tests/cache.spec.js:7:1 › a new offer reaches the page (195ms)
+  ✓  2 tests/cache.spec.js:13:1 › a returning customer sees the new offer (177ms)
+  ✓  3 tests/cache.spec.js:22:1 › the offer is checked with the server before it is reused (46ms)
+  ✓  4 tests/cache.spec.js:28:1 › a static file is reused only when the server agrees (65ms)
+  ✓  5 tests/cache.spec.js:40:1 › routing hides the flaw (231ms)
 
 
   1) tests/cache.spec.js:13:1 › a returning customer sees the new offer ────────────────────────────
@@ -177,7 +177,7 @@ Running 5 tests using 1 worker
   2 failed
     tests/cache.spec.js:13:1 › a returning customer sees the new offer ─────────────────────────────
     tests/cache.spec.js:22:1 › the offer is checked with the server before it is reused ────────────
-  3 passed (3.2s)
+  3 passed (3.8s)
 ```
 
 Todo teste ganhou um visto, e dois deles são acusados como falha mesmo assim, cada um com a mesma

@@ -78,7 +78,7 @@ ana@laptop:~/quitanda$ curl -s -i http://localhost:3000/api/offer
 HTTP/1.1 200 OK
 Content-Type: application/json
 Cache-Control: max-age=600
-Date: Sat, 10 Oct 2026 19:37:12 GMT
+Date: Sat, 10 Oct 2026 19:52:54 GMT
 Connection: keep-alive
 Keep-Alive: timeout=5
 Transfer-Encoding: chunked

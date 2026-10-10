@@ -4,8 +4,8 @@ version: 1
 ---
 
 The obvious test for the offer page sets a new offer and checks that the page shows it. **It
-passes, and the flaw is still there.** That is not luck, and it is not a weak assertion: it is how
-Playwright runs every test, and it is worth understanding before deciding whether to change it.
+passes, and the flaw is still there.** That is not luck: it is how Playwright
+runs every test, and it is worth understanding before deciding whether to change it.
 
 ## A new browser for every test
 
@@ -38,9 +38,9 @@ ana@laptop:~/quitanda$ npx playwright test tests/cache.spec.js
 
 Running 1 test using 1 worker
 
-  ✓  1 tests/cache.spec.js:7:1 › a new offer reaches the page (188ms)
+  ✓  1 tests/cache.spec.js:7:1 › a new offer reaches the page (271ms)
 
-  1 passed (1.6s)
+  1 passed (1.9s)
 ```
 
 One test, green. It proves the server hands a new offer to a new visitor, which is true and worth
@@ -72,7 +72,7 @@ ana@laptop:~/quitanda$ npx playwright test tests/cache.spec.js
 
 Running 2 tests using 1 worker
 
-  ✓  1 tests/cache.spec.js:7:1 › a new offer reaches the page (201ms)
+  ✓  1 tests/cache.spec.js:7:1 › a new offer reaches the page (221ms)
   ✘  2 tests/cache.spec.js:13:1 › a returning customer sees the new offer (5.2s)
 
 

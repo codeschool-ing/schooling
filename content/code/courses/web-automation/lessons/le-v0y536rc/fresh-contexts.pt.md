@@ -4,7 +4,7 @@ version: 1
 ---
 
 O teste óbvio para a página da oferta define uma oferta nova e verifica que a página a mostra.
-**Ele passa, e a falha continua lá.** Não é sorte, nem asserção fraca: é como o Playwright roda todo
+**Ele passa, e a falha continua lá.** Não é sorte: é como o Playwright roda todo
 teste, e vale entender isso antes de decidir se muda.
 
 ## Um navegador novo para cada teste
@@ -39,9 +39,9 @@ ana@laptop:~/quitanda$ npx playwright test tests/cache.spec.js
 
 Running 1 test using 1 worker
 
-  ✓  1 tests/cache.spec.js:7:1 › a new offer reaches the page (188ms)
+  ✓  1 tests/cache.spec.js:7:1 › a new offer reaches the page (271ms)
 
-  1 passed (1.6s)
+  1 passed (1.9s)
 ```
 
 Um teste, verde. Ele prova que o servidor entrega a oferta nova a um visitante novo, o que é verdade
@@ -73,7 +73,7 @@ ana@laptop:~/quitanda$ npx playwright test tests/cache.spec.js
 
 Running 2 tests using 1 worker
 
-  ✓  1 tests/cache.spec.js:7:1 › a new offer reaches the page (201ms)
+  ✓  1 tests/cache.spec.js:7:1 › a new offer reaches the page (221ms)
   ✘  2 tests/cache.spec.js:13:1 › a returning customer sees the new offer (5.2s)
 
 
