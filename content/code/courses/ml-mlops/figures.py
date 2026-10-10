@@ -362,6 +362,92 @@ def l01_three_kinds(lang):
     return f, t['cap']
 
 
+@figure('l02-four-answers', 2)
+def l02_four_answers(lang):
+    t = {'en': dict(
+            label='Four panels, one per task, each showing what goes in and what comes out. '
+                  'Classification: member 1 goes in, a probability of 0.129 comes out. Regression: '
+                  'member 1 goes in, R$ 283.75 comes out. Clustering: many members go in, and each '
+                  'comes out with a group number. Recommendation: member 2 goes in, a ranked list of '
+                  'five titles comes out.',
+            names=['classification', 'regression', 'clustering', 'recommendation'],
+            ins=['member 1', 'member 1', 'every member', 'member 2'],
+            outs=['p(lapse) = 0.129', 'R$ 283.75', 'group 6', '1. The Harbour of Crime'],
+            more=['2. The Mirror of Crime', '3. The Station of Crime'],
+            notes=['a category, with a probability', 'an amount', 'a number with no name',
+                   'a ranked list, keyed by a pair'],
+            cap='What comes out is what the platform stores. A probability, an amount, a group '
+                'number that only means something within one run, and a list of pairs.'),
+         'pt': dict(
+            label='Quatro painéis, um por tarefa, cada um mostrando o que entra e o que sai. '
+                  'Classificação: entra o membro 1, sai uma probabilidade de 0,129. Regressão: '
+                  'entra o membro 1, sai R$ 283,75. Agrupamento: entram muitos membros, e cada um '
+                  'sai com um número de grupo. Recomendação: entra o membro 2, sai uma lista '
+                  'ordenada de cinco títulos.',
+            names=['classificação', 'regressão', 'agrupamento', 'recomendação'],
+            ins=['membro 1', 'membro 1', 'todos os membros', 'membro 2'],
+            outs=['p(lapse) = 0,129', 'R$ 283,75', 'grupo 6', '1. The Harbour of Crime'],
+            more=['2. The Mirror of Crime', '3. The Station of Crime'],
+            notes=['uma categoria, com probabilidade', 'uma quantia', 'um número sem nome',
+                   'uma lista, por par'],
+            cap='O que sai é o que a plataforma guarda. Uma probabilidade, uma quantia, um número '
+                'de grupo que só significa algo dentro de uma rodada, e uma lista de pares.')}[lang]
+    f = Fig('l02-four-answers', 720, 300, t['label'])
+    for i in range(4):
+        x = 12 + i * 177
+        f.rect(x, 14, 167, 272, stroke='--wire', fill='--panel')
+        f.text(x + 83, 34, t['names'][i], size=12, weight='700', fill='--amber')
+        f.rect(x + 18, 56, 131, 30, stroke='--wire', fill='--scan')
+        f.text(x + 83, 71, t['ins'][i], size=10.5)
+        f.line(x + 83, 88, x + 83, 124, stroke='--phosphor', width=1.6, arrow=True)
+        f.text(x + 83, 262, t['notes'][i], size=9.5, fill='--paper-dim')
+    # outputs
+    f.rect(12 + 10, 128, 147, 32, stroke='--amber', fill='--scan')
+    f.text(12 + 83, 144, t['outs'][0], size=10.5, mono=True)
+    f.rect(189 + 10, 128, 147, 32, stroke='--amber', fill='--scan')
+    f.text(189 + 83, 144, t['outs'][1], size=10.5, mono=True)
+    x = 366
+    for k, (dx, dy, g) in enumerate([(30, 140, '6'), (70, 150, '6'), (110, 138, '2'), (50, 185, '2'),
+                                    (95, 190, '6'), (130, 175, '3'), (35, 220, '3'), (120, 218, '2')]):
+        f.circle(x + dx + 8, dy, 9, fill='--scan', stroke='--phosphor')
+        f.text(x + dx + 8, dy, g, size=9, mono=True)
+    f.text(x + 83, 240, t['outs'][2], size=10, fill='--paper-dim')
+    x = 543
+    for k, s in enumerate([t['outs'][3]] + t['more']):
+        f.rect(x + 8, 128 + k * 30, 151, 24, stroke='--amber' if k == 0 else '--wire', fill='--scan')
+        f.text(x + 83, 140 + k * 30, s, size=9, mono=True)
+    return f, t['cap']
+
+
+@figure('l02-silhouette', 2)
+def l02_silhouette(lang):
+    vals = [(2, 0.129), (3, 0.176), (4, 0.227), (5, 0.258), (6, 0.281), (7, 0.309), (8, 0.322),
+            (9, 0.304), (10, 0.295)]
+    t = {'en': dict(
+            label='The silhouette for k from 2 to 10: 0.129, 0.176, 0.227, 0.258, 0.281, 0.309, '
+                  '0.322, 0.304, 0.295. It rises to a peak at k = 8 and falls after.',
+            x='number of groups, k', y='silhouette', peak='peak at 8',
+            cap='The silhouette climbs until eight groups and falls after: eight is where each '
+                'member is most clearly closer to their own group than to the next.'),
+         'pt': dict(
+            label='A silhueta para k de 2 a 10: 0,129, 0,176, 0,227, 0,258, 0,281, 0,309, 0,322, '
+                  '0,304, 0,295. Ela sobe até um pico em k = 8 e cai depois.',
+            x='número de grupos, k', y='silhueta', peak='pico em 8',
+            cap='A silhueta sobe até oito grupos e cai depois: oito é onde cada membro está mais '
+                'claramente mais perto do próprio grupo do que do seguinte.')}[lang]
+    f = Fig('l02-silhouette', 720, 280, t['label'])
+    p = Plot(f, 80, 40, 680, 220, 1.5, 10.5, 0, 0.4)
+    p.yaxis([0, 0.1, 0.2, 0.3, 0.4], fmt=lambda v: num(lang, v, 1), label=t['y'])
+    p.xaxis(range(2, 11), label=t['x'])
+    d = 'M' + ' L'.join(f'{p.sx(k):.1f} {p.sy(v):.1f}' for k, v in vals)
+    f.path(d, stroke='--phosphor', width=2)
+    for k, v in vals:
+        f.circle(p.sx(k), p.sy(v), 4.5 if k == 8 else 3.5, fill='--amber' if k == 8 else '--phosphor')
+    f.text(p.sx(8), p.sy(0.322) - 16, t['peak'] + ' · ' + num(lang, 0.322, 3), size=10.5,
+           fill='--amber', weight='600')
+    return f, t['cap']
+
+
 
 def main():
     if '--list' in sys.argv:
