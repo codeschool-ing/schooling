@@ -15,8 +15,8 @@
 # differs is where the software comes from, because the machine this was
 # recorded on reaches some places and not others:
 #
-#   - the CLIs (kind, kubectl, argocd, flux, kubeseal, sops, age, cosign,
-#     kustomize, vault) are the released binaries the lessons download, from
+#   - the CLIs (kind, kubectl, kubeconform, argocd, flux, kubeseal, sops, age,
+#     cosign, kustomize, vault) are the released binaries the lessons download, from
 #     the same URLs, checked against the same published checksums. Helm's
 #     binaries live on get.helm.sh, which this machine cannot reach, so helm is
 #     built from its released source with the Go toolchain at the tag below.
@@ -149,6 +149,11 @@ tools() {
   check kustomize_${KUSTOMIZE}_linux_amd64.tar.gz kustomize_checksums.txt
   tar -xzf "$OPT/dl/kustomize_${KUSTOMIZE}_linux_amd64.tar.gz" -C "$OPT/bin" kustomize
 
+  fetch $gh/yannh/kubeconform/releases/download/v0.8.0/kubeconform-linux-amd64.tar.gz kubeconform-linux-amd64.tar.gz
+  fetch $gh/yannh/kubeconform/releases/download/v0.8.0/CHECKSUMS kubeconform_CHECKSUMS
+  check kubeconform-linux-amd64.tar.gz kubeconform_CHECKSUMS
+  tar -xzf "$OPT/dl/kubeconform-linux-amd64.tar.gz" -C "$OPT/bin" kubeconform
+
   fetch https://releases.hashicorp.com/vault/$VAULT/vault_${VAULT}_linux_amd64.zip vault_${VAULT}_linux_amd64.zip
   fetch https://releases.hashicorp.com/vault/$VAULT/vault_${VAULT}_SHA256SUMS vault_SHA256SUMS
   check vault_${VAULT}_linux_amd64.zip vault_SHA256SUMS
@@ -206,7 +211,11 @@ images() {
 mirror() { # copy every cached image into the running registry
   local i
   for i in $(crane catalog $CACHE); do
-    for t in $(crane ls "$CACHE/$i"); do crane copy "$CACHE/$i:$t" "localhost:5001/$i:$t" 2>/dev/null; done
+    for t in $(crane ls "$CACHE/$i"); do
+      crane copy "$CACHE/$i:$t" "localhost:5001/$i:$t" 2>/dev/null
+      # docker.io/busybox is docker.io/library/busybox to a mirror
+      case $i in */*) ;; *) crane copy "$CACHE/$i:$t" "localhost:5001/library/$i:$t" 2>/dev/null ;; esac
+    done
   done
 }
 
@@ -229,7 +238,7 @@ shown() {
     f == 2 { print }' "$1"
 }
 
-up() { # lesson 1's registry and cluster, and lesson 2's Gitea
+up() { # lesson 1's registry and cluster
   down
   docker run -d --restart=always --name registry -p 127.0.0.1:5001:5000 $REGISTRY >/dev/null
   sleep 1; mirror
@@ -240,8 +249,117 @@ up() { # lesson 1's registry and cluster, and lesson 2's Gitea
   docker network connect kind registry
   nodes_mirror
   kubectl wait --for=condition=Ready node --all --timeout=180s >/dev/null
+}
+
+gitea() { # lesson 2's Gitea, started as lesson 2 starts it, and ready
   docker run -d --restart=always --name gitea --network kind -p 127.0.0.1:3000:3000 \
     -e GITEA__security__INSTALL_LOCK=true $GITEA >/dev/null
+  until curl -fs localhost:3000/api/v1/version >/dev/null; do sleep 1; done
+}
+
+L1=$LAB/lessons/le-9qamvn14
+L2=$LAB/lessons/le-7e998tdb
+commit_at() { GIT_AUTHOR_DATE=$1 GIT_COMMITTER_DATE=$1 git commit --quiet "${@:2}"; }
+
+# The state at the end of lesson 1, built from the files lesson 1 shows: the
+# bulletin image 1.0 in the registry, ~/bulletin, ~/fleet and its bare remote
+# with lesson 1's four commits at their dates (so their hashes are lesson 1's),
+# and staging applied.
+stage1() {
+  export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
+  export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
+  rm -rf /home/ana/bulletin /home/ana/fleet /home/ana/fleet.git /home/ana/.reconcile
+  mkdir -p /home/ana/bulletin /home/ana/fleet/staging
+  shown "$L1/the-application.md" '~/bulletin/index.cgi' > /home/ana/bulletin/index.cgi
+  shown "$L1/the-application.md" '~/bulletin/Dockerfile' > /home/ana/bulletin/Dockerfile
+  shown "$L1/a-reconciler.md" '~/setup/reconcile.sh' > /home/ana/setup/reconcile.sh
+  docker build --quiet --build-arg VERSION=1.0 -t localhost:5001/bulletin:1.0 /home/ana/bulletin >/dev/null
+  docker push --quiet localhost:5001/bulletin:1.0 >/dev/null
+  cd /home/ana/fleet
+  shown "$L1/desired-state.md" '~/fleet/staging/bulletin.yaml' > staging/bulletin.yaml
+  git init --quiet --bare /home/ana/fleet.git
+  git init --quiet && git add staging/bulletin.yaml
+  commit_at 2026-10-12T09:00:00-03:00 -m "staging: bulletin 1.0"
+  git remote add origin /home/ana/fleet.git
+  sed -i 's/value: Staging is open for testing./value: Staging has the new banner./' staging/bulletin.yaml
+  commit_at 2026-10-12T09:20:00-03:00 -am "staging: new banner"
+  cp staging/bulletin.yaml /tmp/bulletin.yaml
+  python3 -c "import sys; p=sys.argv[1]; s=open(p).read(); open(p,'w').write(s[:s.rindex('---\n')])" staging/bulletin.yaml
+  commit_at 2026-10-12T09:40:00-03:00 -am "staging: no service"
+  GIT_AUTHOR_DATE=2026-10-12T09:45:00-03:00 GIT_COMMITTER_DATE=2026-10-12T09:45:00-03:00 \
+    git revert --quiet --no-edit HEAD >/dev/null
+  git push --quiet -u origin main
+  kubectl apply -f staging/ >/dev/null
+  kubectl -n staging rollout status deployment bulletin --timeout=180s >/dev/null
+  cd /home/ana
+}
+
+# The state at the end of lesson 2, on top of stage1: Gitea with ana, bruno and
+# ci and their tokens in ~, git's credential file, fleet on the server and
+# protected (one approval, the validate check), kubeconform, validate.sh, and
+# the two changes lesson 2 kept: the "ready for review" banner and 3 replicas.
+# Each goes through `merge`, the flow lesson 2 shows.
+stage2() {
+  export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
+  export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
+  docker rm -f gitea >/dev/null 2>&1 || true
+  gitea
+  local u
+  docker exec gitea gitea admin user create --admin --username ana --password change-me-now --email ana@example.org --must-change-password=false >/dev/null
+  for u in bruno ci; do
+    docker exec gitea gitea admin user create --username $u --password change-me-too --email $u@example.org --must-change-password=false >/dev/null
+  done
+  docker exec gitea gitea admin user generate-access-token --username ana --token-name terminal --scopes write:repository,write:user --raw > /home/ana/ana.token
+  docker exec gitea gitea admin user generate-access-token --username bruno --token-name terminal --scopes write:repository --raw > /home/ana/bruno.token
+  docker exec gitea gitea admin user generate-access-token --username ci --token-name checks --scopes write:repository --raw > /home/ana/ci.token
+  chmod 600 /home/ana/*.token
+  git config --global credential.helper store
+  printf 'http://ana:%s@localhost:3000\n' "$(cat /home/ana/ana.token)" > /home/ana/.git-credentials
+  chmod 600 /home/ana/.git-credentials
+  api POST /user/repos '{"name": "fleet", "private": true}' >/dev/null
+  cd /home/ana/fleet
+  git remote set-url origin http://localhost:3000/ana/fleet.git
+  git push --quiet -u origin main
+  for u in bruno ci; do api PUT /repos/ana/fleet/collaborators/$u '{"permission": "write"}' >/dev/null; done
+  api POST /repos/ana/fleet/branch_protections '{"rule_name": "main", "enable_push": false, "required_approvals": 1, "dismiss_stale_approvals": true, "enable_status_check": true, "status_check_contexts": ["validate"]}' >/dev/null
+  shown "$L2/checks.md" '~/setup/validate.sh' > /home/ana/setup/validate.sh
+  git switch --quiet -c banner-v2
+  sed -i 's/value: Staging has the new banner./value: Staging is ready for review./' staging/bulletin.yaml
+  commit_at 2026-10-13T10:00:00-03:00 -am "staging: ready for review"
+  merge banner-v2 "staging: ready for review"
+  git switch --quiet -c three-replicas
+  sed -i 's/  replicas: 2/  replicas: 3/' staging/bulletin.yaml
+  commit_at 2026-10-13T11:05:00-03:00 -am "staging: three replicas"
+  merge three-replicas "staging: three replicas"
+  kubectl apply -f staging/ >/dev/null
+  kubectl -n staging rollout status deployment bulletin --timeout=180s >/dev/null
+  cd /home/ana
+}
+
+api() { # METHOD PATH [JSON]: Gitea's API as ana
+  curl -fs -X "$1" -H "Authorization: token $(cat /home/ana/ana.token)" \
+    -H 'Content-Type: application/json' ${3:+-d "$3"} "http://localhost:3000/api/v1$2"
+}
+
+# merge BRANCH TITLE: lesson 2's flow for the branch checked out in the current
+# repository: push it, open the pull request as Ana, run validate.sh on its
+# head as the CI, approve as Bruno, merge as Ana, and bring main up to date.
+merge() {
+  local repo n sha
+  repo=$(git remote get-url origin | sed 's#.*localhost:3000/##; s#\.git$##')
+  sha=$(git rev-parse HEAD)
+  git push --quiet -u origin "$1" 2>/dev/null
+  n=$(api POST /repos/$repo/pulls "{\"head\": \"$1\", \"base\": \"main\", \"title\": \"$2\"}" | jq .number)
+  if [ "$repo" = ana/fleet ]; then
+    (cd /home/ana && sh /home/ana/setup/validate.sh "$sha" >/dev/null)
+  else
+    curl -fs -H "Authorization: token $(cat /home/ana/ci.token)" -H 'Content-Type: application/json' \
+      -d '{"state": "success", "context": "validate"}' "http://localhost:3000/api/v1/repos/$repo/statuses/$sha" >/dev/null
+  fi
+  curl -fs -H "Authorization: token $(cat /home/ana/bruno.token)" -H 'Content-Type: application/json' \
+    -d '{"event": "APPROVED", "body": "Approved."}' "http://localhost:3000/api/v1/repos/$repo/pulls/$n/reviews" >/dev/null
+  api POST /repos/$repo/pulls/$n/merge '{"Do": "merge"}' || die "pull request $n of $repo did not merge"
+  git switch --quiet main && git pull --quiet
 }
 
 down() {
@@ -250,6 +368,7 @@ down() {
 }
 
 case "${1:-}" in
-  tools|images|mirror|up|down|nodes_mirror) "$1" ;;
+  merge) shift; merge "$@" ;;
+  tools|images|mirror|up|down|nodes_mirror|gitea|stage1|stage2) "$1" ;;
   *) sed -n '2,12p' "$0"; exit 1 ;;
 esac

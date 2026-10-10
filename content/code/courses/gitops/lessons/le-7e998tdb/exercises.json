@@ -1,0 +1,844 @@
+[
+  {
+    "id": "ex-4xqs73cr",
+    "version": 1,
+    "section": "a-git-server",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Gitea runs with --network kind. Which address does a pod inside the cluster use to reach it?",
+    "choices": [
+      {
+        "text": "http://127.0.0.1:3000",
+        "correct": false,
+        "why": "That is your machine's loopback, which a pod does not share."
+      },
+      {
+        "text": "http://localhost:3000",
+        "correct": false,
+        "why": "Inside a pod, localhost is the pod itself."
+      },
+      {
+        "text": "http://gitea:3000",
+        "correct": true,
+        "why": "Right. On the kind network the container's name resolves, from the node and from its pods."
+      },
+      {
+        "text": "http://kind:3000",
+        "correct": false,
+        "why": "kind is the network's name, not a container on it."
+      }
+    ]
+  },
+  {
+    "id": "ex-6kep4qy3",
+    "version": 1,
+    "section": "a-git-server",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson send the new token into ~/ana.token with --raw > instead of letting it print?",
+    "choices": [
+      {
+        "text": "Because a token in a file expires sooner",
+        "correct": false,
+        "why": "Where a token is stored does not change when it expires."
+      },
+      {
+        "text": "So that git can read it from that exact path on every push",
+        "correct": false,
+        "why": "Git reads ~/.git-credentials, which the lesson writes from the file afterwards."
+      },
+      {
+        "text": "Because Gitea cannot print tokens",
+        "correct": false,
+        "why": "It prints it gladly; --raw prints only the token, for exactly this redirection."
+      },
+      {
+        "text": "So it never appears on the screen",
+        "correct": true,
+        "why": "Right. A token on the screen ends up in scrollback, screenshots and shared terminals."
+      }
+    ]
+  },
+  {
+    "id": "ex-7yg3mvtn",
+    "version": 1,
+    "section": "a-git-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana's token was made with --scopes write:repository,write:user. What can a program holding it not do?",
+    "choices": [
+      {
+        "text": "Administer the Gitea server",
+        "correct": true,
+        "why": "Right. A token carries only the scopes it was given, whatever its owner may do."
+      },
+      {
+        "text": "Create a repository for Ana",
+        "correct": false,
+        "why": "write:repository covers that."
+      },
+      {
+        "text": "Open a pull request on fleet",
+        "correct": false,
+        "why": "That is a repository write as well."
+      },
+      {
+        "text": "Push commits to fleet",
+        "correct": false,
+        "why": "Pushing is writing a repository."
+      }
+    ]
+  },
+  {
+    "id": "ex-fxxw076z",
+    "version": 1,
+    "section": "what-belongs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An autoscaler owns a deployment's replica count, and the manifest in Git says replicas: 2. What happens?",
+    "choices": [
+      {
+        "text": "The autoscaler wins, because it runs inside the cluster",
+        "correct": false,
+        "why": "The agent runs inside the cluster too, and reapplies on every pass."
+      },
+      {
+        "text": "Kubernetes refuses the manifest",
+        "correct": false,
+        "why": "The manifest is valid; the conflict is between two writers."
+      },
+      {
+        "text": "Git wins once and the autoscaler stops",
+        "correct": false,
+        "why": "The autoscaler keeps acting on load; it does not give up."
+      },
+      {
+        "text": "They fight: the autoscaler raises it, the agent puts it back",
+        "correct": true,
+        "why": "Right. One owner per field: leave replicas out of Git, or tell the agent to ignore it."
+      }
+    ]
+  },
+  {
+    "id": "ex-gq8xfc19",
+    "version": 1,
+    "section": "what-belongs",
+    "type": "multiple-choice",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these stay out of the configuration repository? Choose all that apply.",
+    "choices": [
+      {
+        "text": "The rows of the application's database",
+        "correct": true,
+        "why": "Right. That is state the application produces."
+      },
+      {
+        "text": "A database password in clear text",
+        "correct": true,
+        "why": "Right. base64 is not encryption, and history keeps it for ever."
+      },
+      {
+        "text": "The image reference each environment runs",
+        "correct": false,
+        "why": "That is exactly what the repository decides."
+      },
+      {
+        "text": "The replica count of a deployment no autoscaler touches",
+        "correct": false,
+        "why": "With no other owner, Git is the right place for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-9rv4e1my",
+    "version": 1,
+    "section": "what-belongs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two directories in fleet both describe the staging Deployment, with different messages. What does the cluster run?",
+    "choices": [
+      {
+        "text": "The last one applied, flipping each pass",
+        "correct": true,
+        "why": "Right. Two truths that disagree make the cluster alternate on every pass."
+      },
+      {
+        "text": "The one in the directory that sorts first",
+        "correct": false,
+        "why": "Applying both means the later one overwrites the earlier one, every pass."
+      },
+      {
+        "text": "Both, as two separate Deployments",
+        "correct": false,
+        "why": "They name the same object, so there is one Deployment, rewritten twice."
+      },
+      {
+        "text": "Neither, because Git rejects the duplicate",
+        "correct": false,
+        "why": "Git stores files; it has no idea two of them describe one object."
+      }
+    ]
+  },
+  {
+    "id": "ex-5xcwae99",
+    "version": 1,
+    "section": "protecting-main",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the steps of moving a commit that was refused on main onto a branch of its own.",
+    "items": [
+      "git switch -c banner-v2",
+      "git switch main",
+      "git reset --hard origin/main",
+      "git push -u origin banner-v2"
+    ],
+    "trap": "The branch has to exist before main moves back, or the commit is left with no name."
+  },
+  {
+    "id": "ex-bd5mc9db",
+    "version": 1,
+    "section": "protecting-main",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does dismiss_stale_approvals protect against?",
+    "choices": [
+      {
+        "text": "Merging a version the reviewer never saw",
+        "correct": true,
+        "why": "Right. An approval counts for the commits it was given, not for what was pushed after."
+      },
+      {
+        "text": "Two reviewers approving the same pull request",
+        "correct": false,
+        "why": "Two approvals are allowed, and sometimes required."
+      },
+      {
+        "text": "Approvals from people who left the company",
+        "correct": false,
+        "why": "Who may approve is a matter of permissions, not of staleness."
+      },
+      {
+        "text": "A review left open for more than a week",
+        "correct": false,
+        "why": "Time does not dismiss anything; new commits do."
+      }
+    ]
+  },
+  {
+    "id": "ex-c3yryzzx",
+    "version": 1,
+    "section": "protecting-main",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A direct push to main is refused with: Not allowed to push to ___ branch main.",
+    "blanks": [
+      {
+        "accept": [
+          "protected"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-tsd9tpa9",
+    "version": 1,
+    "section": "a-pull-request",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a GitOps setup, what part of a pull request answers why a change was made, a year later?",
+    "choices": [
+      {
+        "text": "The list of files it touches",
+        "correct": false,
+        "why": "That is what, again, not why."
+      },
+      {
+        "text": "The merge commit's hash",
+        "correct": false,
+        "why": "A hash identifies a commit; it explains nothing."
+      },
+      {
+        "text": "Its body",
+        "correct": true,
+        "why": "Right. The diff says what changed; the body is the record of why."
+      },
+      {
+        "text": "The branch name",
+        "correct": false,
+        "why": "A branch is deleted after the merge, and a name is not a reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-0tc8f743",
+    "version": 1,
+    "section": "a-pull-request",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ana is an administrator of Gitea. Why can she not merge her own pull request?",
+    "choices": [
+      {
+        "text": "Her token lacks the merge scope",
+        "correct": false,
+        "why": "She merged pull requests later with the same token, once they were approved."
+      },
+      {
+        "text": "Her own approval does not count",
+        "correct": true,
+        "why": "Right. Gitea refuses an author's approval, and the rule names nobody as exempt."
+      },
+      {
+        "text": "Administrators may never merge anything",
+        "correct": false,
+        "why": "Administrators can merge once the rule is satisfied."
+      },
+      {
+        "text": "The pull request had a merge conflict",
+        "correct": false,
+        "why": "mergeable was true; the refusal named the approvals."
+      }
+    ]
+  },
+  {
+    "id": "ex-4n616bct",
+    "version": 1,
+    "section": "a-pull-request",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What HTTP status code did Gitea answer when Ana tried to merge without an approval?",
+    "value": 405,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-mnj3np9y",
+    "version": 1,
+    "section": "the-review",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does kubectl diff show that git diff does not?",
+    "choices": [
+      {
+        "text": "Who approved the change",
+        "correct": false,
+        "why": "Neither diff knows about approvals."
+      },
+      {
+        "text": "What would change in the live object",
+        "correct": true,
+        "why": "Right. It sends the manifests as a dry run and compares with what the cluster holds."
+      },
+      {
+        "text": "Whether the image exists in the registry",
+        "correct": false,
+        "why": "A dry run does not pull images; lesson 2's broken tag passed it."
+      },
+      {
+        "text": "Which lines of the YAML changed",
+        "correct": false,
+        "why": "That is exactly what git diff already shows."
+      }
+    ]
+  },
+  {
+    "id": "ex-yd41v68d",
+    "version": 1,
+    "section": "the-review",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson keep kubectl diff for the reviewer and not put it in the CI check?",
+    "choices": [
+      {
+        "text": "kubectl diff is too slow for a CI system",
+        "correct": false,
+        "why": "It took a moment here; speed is not the objection."
+      },
+      {
+        "text": "CI systems cannot install kubectl",
+        "correct": false,
+        "why": "They can; the question is what it would be allowed to reach."
+      },
+      {
+        "text": "It needs the cluster's credentials",
+        "correct": true,
+        "why": "Right. Handing CI cluster credentials undoes the pull arrangement for the sake of a check."
+      },
+      {
+        "text": "kubectl diff cannot run without a person typing",
+        "correct": false,
+        "why": "It runs unattended like any command."
+      }
+    ]
+  },
+  {
+    "id": "ex-r87h2802",
+    "version": 1,
+    "section": "the-review",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In kubectl diff, the field metadata.___ going up is Kubernetes saying it will start a rollout.",
+    "blanks": [
+      {
+        "accept": [
+          "generation"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-eab8sz7k",
+    "version": 1,
+    "section": "the-review",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the merge, which credentials did reconcile.sh use to clone fleet from Gitea?",
+    "choices": [
+      {
+        "text": "Bruno's, because he approved",
+        "correct": false,
+        "why": "Approving gives nobody's credentials to the loop."
+      },
+      {
+        "text": "Ana's, from ~/.git-credentials",
+        "correct": true,
+        "why": "Right. That is why lesson 3's agent gets a read-only token of its own."
+      },
+      {
+        "text": "None: fleet is a public repository",
+        "correct": false,
+        "why": "It was created private on purpose."
+      },
+      {
+        "text": "The ci user's token",
+        "correct": false,
+        "why": "validate.sh uses that one, to post statuses."
+      }
+    ]
+  },
+  {
+    "id": "ex-y08ysjrg",
+    "version": 1,
+    "section": "checks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does kubeconform check, as the lesson uses it?",
+    "choices": [
+      {
+        "text": "That a reviewer approved the change",
+        "correct": false,
+        "why": "Approvals are Gitea's business."
+      },
+      {
+        "text": "That the images named in the manifests exist",
+        "correct": false,
+        "why": "It never contacts a registry; the 1.1 tag passed it."
+      },
+      {
+        "text": "Manifests against the schemas",
+        "correct": true,
+        "why": "Right. With -strict it also refuses fields the schema does not know."
+      },
+      {
+        "text": "That the cluster can schedule the pods",
+        "correct": false,
+        "why": "Scheduling is the cluster's job and needs the cluster."
+      }
+    ]
+  },
+  {
+    "id": "ex-ktekc5aj",
+    "version": 1,
+    "section": "checks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does validate.sh post its status with the ci user's token rather than Ana's?",
+    "choices": [
+      {
+        "text": "Because statuses from administrators are ignored",
+        "correct": false,
+        "why": "Gitea counts a status by its context, not by who sent it."
+      },
+      {
+        "text": "Because Ana's token cannot post statuses",
+        "correct": false,
+        "why": "It has write:repository, which would allow it."
+      },
+      {
+        "text": "So a machine's verdict is never mistaken for a person's",
+        "correct": true,
+        "why": "Right. The status names who reported it, and that should be the check."
+      },
+      {
+        "text": "So that the check can approve the pull request",
+        "correct": false,
+        "why": "A status is not an approval, and ci never approves."
+      }
+    ]
+  },
+  {
+    "id": "ex-8fh5v5sc",
+    "version": 1,
+    "section": "checks",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The protection rule requires a commit status whose context is called ___.",
+    "blanks": [
+      {
+        "accept": [
+          "validate"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-v3c2rvyf",
+    "version": 1,
+    "section": "checks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Pull request 2 had a failing check and no approval. Which did the merge refusal name?",
+    "choices": [
+      {
+        "text": "Not allowed to push to protected branch main",
+        "correct": false,
+        "why": "That is the refusal of a direct push, not of a merge."
+      },
+      {
+        "text": "approve your own pull is not allowed",
+        "correct": false,
+        "why": "That refuses a self-approval."
+      },
+      {
+        "text": "Does not have enough approvals",
+        "correct": false,
+        "why": "That was true as well, but not the message this refusal printed."
+      },
+      {
+        "text": "Not all required status checks successful",
+        "correct": true,
+        "why": "Right. It names the first unmet condition it finds, and here that was the check."
+      }
+    ]
+  },
+  {
+    "id": "ex-04cr276f",
+    "version": 1,
+    "section": "rollback",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Staging is merged to an image tag that does not exist. Why does curl still get an answer?",
+    "choices": [
+      {
+        "text": "The loop refused to apply the change",
+        "correct": false,
+        "why": "It applied it; the deployment reported one up-to-date replica."
+      },
+      {
+        "text": "Old pods stay until new ones are ready",
+        "correct": true,
+        "why": "Right. A new pod that never becomes ready replaces nothing."
+      },
+      {
+        "text": "Kubernetes ignores images it cannot pull",
+        "correct": false,
+        "why": "It tries and keeps retrying; the pod sits in ErrImagePull."
+      },
+      {
+        "text": "kubeconform rolled the change back",
+        "correct": false,
+        "why": "kubeconform checks files and never touches the cluster."
+      }
+    ]
+  },
+  {
+    "id": "ex-7p4x70an",
+    "version": 1,
+    "section": "rollback",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is kubectl rollout undo not the fix here?",
+    "choices": [
+      {
+        "text": "Gitea's protection rule blocks it",
+        "correct": false,
+        "why": "The rule protects a branch, not the cluster."
+      },
+      {
+        "text": "rollout undo only works on StatefulSets",
+        "correct": false,
+        "why": "It works on Deployments; it simply does not last."
+      },
+      {
+        "text": "The loop reapplies main on its next pass",
+        "correct": true,
+        "why": "Right. The fix has to go where the truth is, which is Git."
+      },
+      {
+        "text": "It needs the image of the bad version",
+        "correct": false,
+        "why": "Undo goes back to the previous template, which needs nothing new."
+      }
+    ]
+  },
+  {
+    "id": "ex-fm2e9r22",
+    "version": 1,
+    "section": "rollback",
+    "type": "cloze",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To revert a merge commit, git revert needs to be told which parent is the mainline: git revert ___ 1 HEAD.",
+    "blanks": [
+      {
+        "accept": [
+          "-m",
+          "--mainline"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-02f8mq1s",
+    "version": 1,
+    "section": "rollback",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a force-push back to before the bad merge lose that a revert keeps?",
+    "choices": [
+      {
+        "text": "The record that 1.1 was merged, failed and was undone",
+        "correct": true,
+        "why": "Right. History that can be rewritten is not a record."
+      },
+      {
+        "text": "Bruno's account",
+        "correct": false,
+        "why": "Accounts are not part of a branch's history."
+      },
+      {
+        "text": "The commits that came before the bad merge",
+        "correct": false,
+        "why": "A force-push to an earlier commit keeps everything before it."
+      },
+      {
+        "text": "The image 1.0 in the registry",
+        "correct": false,
+        "why": "Git operations do not touch the registry."
+      }
+    ]
+  },
+  {
+    "id": "ex-f5djcxn6",
+    "version": 1,
+    "section": "under-pressure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "During an incident, why is pausing the agent and editing the cluster by hand ruled out?",
+    "choices": [
+      {
+        "text": "It is slower than any pull request",
+        "correct": false,
+        "why": "It is usually faster, which is why it is tempting."
+      },
+      {
+        "text": "The fix is undone on resume",
+        "correct": true,
+        "why": "Right. Cluster and repository disagree, and nothing tracks it."
+      },
+      {
+        "text": "Kubernetes refuses edits while an agent is paused",
+        "correct": false,
+        "why": "Kubernetes takes the edit; the danger is what happens after."
+      },
+      {
+        "text": "Pausing an agent deletes the objects it applied",
+        "correct": false,
+        "why": "Pausing stops it from acting; nothing is deleted."
+      }
+    ]
+  },
+  {
+    "id": "ex-pywbswst",
+    "version": 1,
+    "section": "under-pressure",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which belong to the break-glass path the lesson describes? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A dedicated account allowed to push to main",
+        "correct": true,
+        "why": "Right. Not a person's everyday account."
+      },
+      {
+        "text": "A pull request after the fact explaining the change",
+        "correct": true,
+        "why": "Right. The record is never skipped, only the wait."
+      },
+      {
+        "text": "Turning off the branch protection for the night",
+        "correct": false,
+        "why": "That is a quietly weakened rule, the thing the path replaces."
+      },
+      {
+        "text": "Credentials kept where reading them is itself an event",
+        "correct": true,
+        "why": "Right. A sealed envelope, a vault that logs every read."
+      }
+    ]
+  },
+  {
+    "id": "ex-6vc2vkq8",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each refusal to its cause.",
+    "pairs": [
+      {
+        "left": "invalid username, password or token",
+        "right": "The token matched none on the server"
+      },
+      {
+        "left": "Does not have enough approvals",
+        "right": "The approval was dismissed by a new push"
+      },
+      {
+        "left": "could not read Username",
+        "right": "No stored credential for that address"
+      },
+      {
+        "left": "approve your own pull is not allowed",
+        "right": "The author tried to approve"
+      }
+    ],
+    "right_distractors": [
+      "The branch has a merge conflict"
+    ]
+  },
+  {
+    "id": "ex-n77rybhz",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "~/.git-credentials has a line for http://localhost:3000, and the remote is http://127.0.0.1:3000. What does Git do on a push?",
+    "choices": [
+      {
+        "text": "Uses the stored credential, since both reach Gitea",
+        "correct": false,
+        "why": "Git matches the credential by the name in the URL, not by where it leads."
+      },
+      {
+        "text": "Rewrites the remote to localhost",
+        "correct": false,
+        "why": "Git never rewrites a remote on its own."
+      },
+      {
+        "text": "Asks for a username, because the hosts differ",
+        "correct": true,
+        "why": "Right. To Git they are two servers, and only one has a credential."
+      },
+      {
+        "text": "Pushes anonymously and is refused for being private",
+        "correct": false,
+        "why": "It asks first, because a credential could be supplied."
+      }
+    ]
+  },
+  {
+    "id": "ex-y52gnrcv",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order the life of pull request 2, from the push to the cluster.",
+    "items": [
+      "validate.sh reports failure",
+      "The merge is refused",
+      "Ana pushes the fix",
+      "validate.sh reports success",
+      "Bruno approves",
+      "The merge goes through",
+      "The loop applies three replicas"
+    ],
+    "trap": "The check runs on every new commit, and Bruno approves after the check, on the version that will be merged."
+  },
+  {
+    "id": "ex-csqg4gjd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague says: we have branch protection, so we can give the CI system cluster-admin to run kubectl diff on every pull request. What is wrong with it?",
+    "choices": [
+      {
+        "text": "cluster-admin is not enough to run kubectl diff",
+        "correct": false,
+        "why": "It is more than enough, which is the problem."
+      },
+      {
+        "text": "Every job in CI would again be a step from the cluster's keys",
+        "correct": true,
+        "why": "Right. The protection guards main; it does nothing for a credential CI holds."
+      },
+      {
+        "text": "kubectl diff cannot compare a branch with the cluster",
+        "correct": false,
+        "why": "It compares whatever manifests it is given."
+      },
+      {
+        "text": "Branch protection forbids CI from reading the cluster",
+        "correct": false,
+        "why": "Protection rules govern Git operations, not cluster access."
+      }
+    ]
+  },
+  {
+    "id": "ex-1v2vyj0z",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many pull requests did this lesson merge into fleet's main?",
+    "value": 4,
+    "tolerance": 0
+  }
+]

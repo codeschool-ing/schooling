@@ -1,0 +1,558 @@
+{
+  "ex-4xqs73cr": {
+    "prompt": "O Gitea roda com --network kind. Que endereço um pod dentro do cluster usa para chegar nele?",
+    "choices": [
+      {
+        "text": "http://127.0.0.1:3000",
+        "why": "Esse é o loopback da sua máquina, que um pod não compartilha."
+      },
+      {
+        "text": "http://localhost:3000",
+        "why": "Dentro de um pod, localhost é o próprio pod."
+      },
+      {
+        "text": "http://gitea:3000",
+        "why": "Isso. Na rede do kind o nome do container resolve, do nó e dos pods dele."
+      },
+      {
+        "text": "http://kind:3000",
+        "why": "kind é o nome da rede, não um container nela."
+      }
+    ]
+  },
+  "ex-6kep4qy3": {
+    "prompt": "Por que a aula manda o token novo para o ~/ana.token com --raw > em vez de deixá-lo aparecer?",
+    "choices": [
+      {
+        "text": "Porque um token num arquivo expira mais cedo",
+        "why": "Onde um token fica não muda quando ele expira."
+      },
+      {
+        "text": "Para o git ler desse caminho exato a cada push",
+        "why": "O git lê o ~/.git-credentials, que a aula escreve a partir do arquivo depois."
+      },
+      {
+        "text": "Porque o Gitea não consegue imprimir tokens",
+        "why": "Ele imprime de bom grado; o --raw imprime só o token, justamente para esse redirecionamento."
+      },
+      {
+        "text": "Para ele nunca aparecer na tela",
+        "why": "Isso. Um token na tela acaba no histórico do terminal, em capturas de tela e em terminais compartilhados."
+      }
+    ]
+  },
+  "ex-7yg3mvtn": {
+    "prompt": "O token da Ana foi criado com --scopes write:repository,write:user. O que um programa com ele não consegue fazer?",
+    "choices": [
+      {
+        "text": "Administrar o servidor Gitea",
+        "why": "Isso. Um token carrega só os escopos que recebeu, seja lá o que o dono dele possa fazer."
+      },
+      {
+        "text": "Criar um repositório para a Ana",
+        "why": "O write:repository cobre isso."
+      },
+      {
+        "text": "Abrir um pull request no fleet",
+        "why": "Isso também é escrita no repositório."
+      },
+      {
+        "text": "Enviar commits para o fleet",
+        "why": "Enviar é escrever num repositório."
+      }
+    ]
+  },
+  "ex-fxxw076z": {
+    "prompt": "Um autoscaler é dono do número de réplicas de um deployment, e o manifesto no Git diz replicas: 2. O que acontece?",
+    "choices": [
+      {
+        "text": "O autoscaler vence, porque roda dentro do cluster",
+        "why": "O agente também roda dentro do cluster, e reaplica a cada passada."
+      },
+      {
+        "text": "O Kubernetes recusa o manifesto",
+        "why": "O manifesto é válido; o conflito é entre dois escritores."
+      },
+      {
+        "text": "O Git vence uma vez e o autoscaler para",
+        "why": "O autoscaler continua agindo pela carga; ele não desiste."
+      },
+      {
+        "text": "Brigam: o autoscaler aumenta, o agente devolve",
+        "why": "Isso. Um dono por campo: tire o replicas do Git, ou mande o agente ignorá-lo."
+      }
+    ]
+  },
+  "ex-gq8xfc19": {
+    "prompt": "Quais destes ficam fora do repositório de configuração? Marque todos que se aplicam.",
+    "choices": [
+      {
+        "text": "As linhas do banco de dados da aplicação",
+        "why": "Isso. É estado que a aplicação produz."
+      },
+      {
+        "text": "A senha de um banco em texto puro",
+        "why": "Isso. base64 não é cifra, e o histórico guarda para sempre."
+      },
+      {
+        "text": "A referência de imagem que cada ambiente roda",
+        "why": "É exatamente o que o repositório decide."
+      },
+      {
+        "text": "O número de réplicas de um deployment que nenhum autoscaler toca",
+        "why": "Sem outro dono, o Git é o lugar certo para ele."
+      }
+    ]
+  },
+  "ex-9rv4e1my": {
+    "prompt": "Duas pastas do fleet descrevem, ambas, o Deployment do staging, com mensagens diferentes. O que o cluster roda?",
+    "choices": [
+      {
+        "text": "O último aplicado, alternando a cada passada",
+        "why": "Isso. Duas verdades que discordam fazem o cluster alternar a cada passada."
+      },
+      {
+        "text": "O da pasta que vem primeiro na ordem",
+        "why": "Aplicar os dois quer dizer que o último sobrescreve o primeiro, a cada passada."
+      },
+      {
+        "text": "Os dois, como dois Deployments separados",
+        "why": "Eles citam o mesmo objeto, então há um Deployment, reescrito duas vezes."
+      },
+      {
+        "text": "Nenhum, porque o Git recusa a duplicata",
+        "why": "O Git guarda arquivos; ele não faz ideia de que dois descrevem um objeto."
+      }
+    ]
+  },
+  "ex-5xcwae99": {
+    "prompt": "Ordene os passos para levar um commit recusado na main para um branch próprio.",
+    "items": [
+      "git switch -c banner-v2",
+      "git switch main",
+      "git reset --hard origin/main",
+      "git push -u origin banner-v2"
+    ],
+    "trap": "O branch precisa existir antes de a main voltar, senão o commit fica sem nome."
+  },
+  "ex-bd5mc9db": {
+    "prompt": "Contra o que o dismiss_stale_approvals protege?",
+    "choices": [
+      {
+        "text": "Um merge de uma versão que quem revisou nunca viu",
+        "why": "Isso. Uma aprovação vale para os commits que recebeu, não para o que veio depois."
+      },
+      {
+        "text": "Dois revisores aprovando o mesmo pull request",
+        "why": "Duas aprovações são permitidas, e às vezes exigidas."
+      },
+      {
+        "text": "Aprovações de quem saiu da empresa",
+        "why": "Quem pode aprovar é questão de permissão, não de validade."
+      },
+      {
+        "text": "Uma revisão aberta por mais de uma semana",
+        "why": "O tempo não descarta nada; commits novos descartam."
+      }
+    ]
+  },
+  "ex-c3yryzzx": {
+    "prompt": "Um push direto na main é recusado com: Not allowed to push to ___ branch main.",
+    "blanks": [
+      {
+        "accept": [
+          "protected"
+        ]
+      }
+    ]
+  },
+  "ex-tsd9tpa9": {
+    "prompt": "Num arranjo GitOps, que parte de um pull request responde, um ano depois, por que uma mudança foi feita?",
+    "choices": [
+      {
+        "text": "A lista de arquivos que ele toca",
+        "why": "Isso é o quê, de novo, e não o porquê."
+      },
+      {
+        "text": "O hash do commit de merge",
+        "why": "Um hash identifica um commit; ele não explica nada."
+      },
+      {
+        "text": "O corpo dele",
+        "why": "Isso. O diff diz o que mudou; o corpo é o registro do porquê."
+      },
+      {
+        "text": "O nome do branch",
+        "why": "Um branch é apagado depois do merge, e um nome não é um motivo."
+      }
+    ]
+  },
+  "ex-0tc8f743": {
+    "prompt": "A Ana é administradora do Gitea. Por que ela não consegue fazer o merge do próprio pull request?",
+    "choices": [
+      {
+        "text": "O token dela não tem o escopo de merge",
+        "why": "Ela fez merge de pull requests depois com o mesmo token, quando estavam aprovados."
+      },
+      {
+        "text": "A aprovação dela não conta",
+        "why": "Isso. O Gitea recusa a aprovação de quem é o autor, e a regra não isenta ninguém."
+      },
+      {
+        "text": "Administradores nunca podem fazer merge",
+        "why": "Administradores fazem merge quando a regra está satisfeita."
+      },
+      {
+        "text": "O pull request tinha um conflito",
+        "why": "O mergeable era true; a recusa citou as aprovações."
+      }
+    ]
+  },
+  "ex-4n616bct": {
+    "prompt": "Que código de status HTTP o Gitea respondeu quando a Ana tentou o merge sem aprovação?"
+  },
+  "ex-mnj3np9y": {
+    "prompt": "O que o kubectl diff mostra que o git diff não mostra?",
+    "choices": [
+      {
+        "text": "Quem aprovou a mudança",
+        "why": "Nenhum dos diffs sabe de aprovações."
+      },
+      {
+        "text": "O que mudaria no objeto vivo",
+        "why": "Isso. Ele manda os manifestos como ensaio e compara com o que o cluster tem."
+      },
+      {
+        "text": "Se a imagem existe no registry",
+        "why": "Um ensaio não baixa imagens; a tag quebrada desta aula passou por ele."
+      },
+      {
+        "text": "Quais linhas do YAML mudaram",
+        "why": "É justamente o que o git diff já mostra."
+      }
+    ]
+  },
+  "ex-yd41v68d": {
+    "prompt": "Por que a aula deixa o kubectl diff para quem revisa e não o põe na checagem de CI?",
+    "choices": [
+      {
+        "text": "O kubectl diff é lento demais para um CI",
+        "why": "Levou um instante aqui; velocidade não é a objeção."
+      },
+      {
+        "text": "Sistemas de CI não conseguem instalar o kubectl",
+        "why": "Conseguem; a questão é o que ele poderia alcançar."
+      },
+      {
+        "text": "Ele precisa das credenciais do cluster",
+        "why": "Isso. Dar credenciais do cluster ao CI desfaz o arranjo de pull em troca de uma checagem."
+      },
+      {
+        "text": "O kubectl diff não roda sem alguém digitando",
+        "why": "Ele roda sem ninguém como qualquer comando."
+      }
+    ]
+  },
+  "ex-r87h2802": {
+    "prompt": "No kubectl diff, o campo metadata.___ subindo é o Kubernetes dizendo que vai começar um rollout.",
+    "blanks": [
+      {
+        "accept": [
+          "generation"
+        ]
+      }
+    ]
+  },
+  "ex-eab8sz7k": {
+    "prompt": "Depois do merge, que credenciais o reconcile.sh usou para clonar o fleet do Gitea?",
+    "choices": [
+      {
+        "text": "As do Bruno, porque ele aprovou",
+        "why": "Aprovar não entrega a credencial de ninguém ao laço."
+      },
+      {
+        "text": "As da Ana, do ~/.git-credentials",
+        "why": "Isso. É por isso que o agente da aula 3 recebe um token só de leitura próprio."
+      },
+      {
+        "text": "Nenhuma: o fleet é público",
+        "why": "Ele foi criado privado de propósito."
+      },
+      {
+        "text": "O token do usuário ci",
+        "why": "Esse é o do validate.sh, para publicar status."
+      }
+    ]
+  },
+  "ex-y08ysjrg": {
+    "prompt": "O que o kubeconform verifica, do jeito que a aula o usa?",
+    "choices": [
+      {
+        "text": "Que alguém aprovou a mudança",
+        "why": "Aprovações são assunto do Gitea."
+      },
+      {
+        "text": "Que as imagens citadas nos manifestos existem",
+        "why": "Ele nunca fala com um registry; a tag 1.1 passou por ele."
+      },
+      {
+        "text": "Os manifestos contra os schemas",
+        "why": "Isso. Com -strict ele também recusa campos que o schema não conhece."
+      },
+      {
+        "text": "Que o cluster consegue escalonar os pods",
+        "why": "Escalonar é trabalho do cluster e precisa dele."
+      }
+    ]
+  },
+  "ex-ktekc5aj": {
+    "prompt": "Por que o validate.sh publica o status com o token do usuário ci e não com o da Ana?",
+    "choices": [
+      {
+        "text": "Porque status de administradores são ignorados",
+        "why": "O Gitea conta um status pelo contexto, não por quem o mandou."
+      },
+      {
+        "text": "Porque o token da Ana não publica status",
+        "why": "Ele tem write:repository, que permitiria."
+      },
+      {
+        "text": "Para o veredito de uma máquina nunca passar pelo de uma pessoa",
+        "why": "Isso. O status diz quem o informou, e esse deve ser a checagem."
+      },
+      {
+        "text": "Para a checagem conseguir aprovar o pull request",
+        "why": "Um status não é uma aprovação, e o ci nunca aprova."
+      }
+    ]
+  },
+  "ex-8fh5v5sc": {
+    "prompt": "A regra de proteção exige um status de commit cujo contexto se chama ___.",
+    "blanks": [
+      {
+        "accept": [
+          "validate"
+        ]
+      }
+    ]
+  },
+  "ex-v3c2rvyf": {
+    "prompt": "O pull request 2 tinha uma checagem falhando e nenhuma aprovação. Qual delas a recusa do merge citou?",
+    "choices": [
+      {
+        "text": "Not allowed to push to protected branch main",
+        "why": "Essa é a recusa de um push direto, não de um merge."
+      },
+      {
+        "text": "approve your own pull is not allowed",
+        "why": "Essa recusa uma autoaprovação."
+      },
+      {
+        "text": "Does not have enough approvals",
+        "why": "Também era verdade, mas não foi a mensagem que esta recusa imprimiu."
+      },
+      {
+        "text": "Not all required status checks successful",
+        "why": "Isso. Ela cita a primeira condição não atendida que encontra, e aqui foi a checagem."
+      }
+    ]
+  },
+  "ex-04cr276f": {
+    "prompt": "O staging recebe no merge uma tag de imagem que não existe. Por que o curl ainda recebe resposta?",
+    "choices": [
+      {
+        "text": "O laço se recusou a aplicar",
+        "why": "Ele aplicou; o deployment relatou uma réplica atualizada."
+      },
+      {
+        "text": "Os pods antigos ficam até os novos estarem prontos",
+        "why": "Isso. Um pod novo que nunca fica pronto não substitui nada."
+      },
+      {
+        "text": "O Kubernetes ignora imagens que não consegue baixar",
+        "why": "Ele tenta e continua tentando; o pod fica em ErrImagePull."
+      },
+      {
+        "text": "O kubeconform reverteu a mudança",
+        "why": "O kubeconform confere arquivos e nunca toca no cluster."
+      }
+    ]
+  },
+  "ex-7p4x70an": {
+    "prompt": "Por que o kubectl rollout undo não é a correção aqui?",
+    "choices": [
+      {
+        "text": "A regra de proteção do Gitea o bloqueia",
+        "why": "A regra protege um branch, não o cluster."
+      },
+      {
+        "text": "O rollout undo só funciona em StatefulSets",
+        "why": "Funciona em Deployments; ele só não dura."
+      },
+      {
+        "text": "O laço reaplica a main na passada seguinte",
+        "why": "Isso. A correção tem de ir para onde está a verdade, que é o Git."
+      },
+      {
+        "text": "Ele precisa da imagem da versão ruim",
+        "why": "O undo volta ao template anterior, que não precisa de nada novo."
+      }
+    ]
+  },
+  "ex-fm2e9r22": {
+    "prompt": "Para reverter um commit de merge, o git revert precisa saber qual pai é a linha principal: git revert ___ 1 HEAD.",
+    "blanks": [
+      {
+        "accept": [
+          "-m",
+          "--mainline"
+        ]
+      }
+    ]
+  },
+  "ex-02f8mq1s": {
+    "prompt": "O que um push forçado para antes do merge ruim perde e um revert mantém?",
+    "choices": [
+      {
+        "text": "O registro de que a 1.1 entrou, falhou e foi desfeita",
+        "why": "Isso. Um histórico que pode ser reescrito não é um registro."
+      },
+      {
+        "text": "A conta do Bruno",
+        "why": "Contas não fazem parte do histórico de um branch."
+      },
+      {
+        "text": "Os commits anteriores ao merge ruim",
+        "why": "Um push forçado para um commit anterior mantém tudo antes dele."
+      },
+      {
+        "text": "A imagem 1.0 no registry",
+        "why": "Operações do Git não tocam no registry."
+      }
+    ]
+  },
+  "ex-f5djcxn6": {
+    "prompt": "Num incidente, por que pausar o agente e editar o cluster à mão está descartado?",
+    "choices": [
+      {
+        "text": "É mais lento que qualquer pull request",
+        "why": "Costuma ser mais rápido, e é por isso que tenta."
+      },
+      {
+        "text": "A correção some quando ele volta",
+        "why": "Isso. Cluster e repositório discordam, e nada acompanha."
+      },
+      {
+        "text": "O Kubernetes recusa edições com o agente pausado",
+        "why": "O Kubernetes aceita a edição; o perigo é o que vem depois."
+      },
+      {
+        "text": "Pausar um agente apaga os objetos que ele aplicou",
+        "why": "Pausar faz ele parar de agir; nada é apagado."
+      }
+    ]
+  },
+  "ex-pywbswst": {
+    "prompt": "Quais fazem parte do caminho de emergência que a aula descreve? Marque todos que se aplicam.",
+    "choices": [
+      {
+        "text": "Uma conta dedicada com permissão para push na main",
+        "why": "Isso. Não a conta de uso diário de uma pessoa."
+      },
+      {
+        "text": "Um pull request depois do fato explicando a mudança",
+        "why": "Isso. O registro nunca é pulado, só a espera."
+      },
+      {
+        "text": "Desligar a proteção do branch durante a noite",
+        "why": "Isso é uma regra afrouxada em silêncio, o que o caminho substitui."
+      },
+      {
+        "text": "Credenciais guardadas onde lê-las já é um evento",
+        "why": "Isso. Um envelope lacrado, um cofre que registra cada leitura."
+      }
+    ]
+  },
+  "ex-6vc2vkq8": {
+    "prompt": "Ligue cada recusa à causa dela.",
+    "pairs": [
+      {
+        "left": "invalid username, password or token",
+        "right": "O token não bateu com nenhum do servidor"
+      },
+      {
+        "left": "Does not have enough approvals",
+        "right": "A aprovação foi descartada por um push novo"
+      },
+      {
+        "left": "could not read Username",
+        "right": "Nenhuma credencial guardada para esse endereço"
+      },
+      {
+        "left": "approve your own pull is not allowed",
+        "right": "O autor tentou aprovar"
+      }
+    ],
+    "right_distractors": [
+      "O branch tem um conflito de merge"
+    ]
+  },
+  "ex-n77rybhz": {
+    "prompt": "O ~/.git-credentials tem uma linha para http://localhost:3000, e o remoto é http://127.0.0.1:3000. O que o Git faz num push?",
+    "choices": [
+      {
+        "text": "Usa a credencial guardada, já que os dois chegam no Gitea",
+        "why": "O Git casa a credencial pelo nome na URL, não pelo lugar aonde ela leva."
+      },
+      {
+        "text": "Reescreve o remoto para localhost",
+        "why": "O Git nunca reescreve um remoto sozinho."
+      },
+      {
+        "text": "Pede um usuário, porque os hosts são diferentes",
+        "why": "Isso. Para o Git são dois servidores, e só um tem credencial."
+      },
+      {
+        "text": "Envia como anônimo e é recusado por ser privado",
+        "why": "Ele pergunta antes, porque uma credencial poderia ser dada."
+      }
+    ]
+  },
+  "ex-y52gnrcv": {
+    "prompt": "Ordene a vida do pull request 2, do push até o cluster.",
+    "items": [
+      "O validate.sh informa failure",
+      "O merge é recusado",
+      "A Ana envia a correção",
+      "O validate.sh informa success",
+      "O Bruno aprova",
+      "O merge passa",
+      "O laço aplica três réplicas"
+    ],
+    "trap": "A checagem roda a cada commit novo, e o Bruno aprova depois da checagem, na versão que vai entrar."
+  },
+  "ex-csqg4gjd": {
+    "prompt": "Um colega diz: temos proteção de branch, então podemos dar cluster-admin ao CI para rodar kubectl diff em todo pull request. O que está errado?",
+    "choices": [
+      {
+        "text": "cluster-admin não basta para rodar kubectl diff",
+        "why": "Basta e sobra, e esse é o problema."
+      },
+      {
+        "text": "Todo job do CI voltaria a ficar a um passo das chaves do cluster",
+        "why": "Isso. A proteção guarda a main; ela não faz nada por uma credencial que o CI tem."
+      },
+      {
+        "text": "O kubectl diff não compara um branch com o cluster",
+        "why": "Ele compara os manifestos que receber."
+      },
+      {
+        "text": "A proteção de branch proíbe o CI de ler o cluster",
+        "why": "Regras de proteção governam operações do Git, não o acesso ao cluster."
+      }
+    ]
+  },
+  "ex-1v2vyj0z": {
+    "prompt": "Quantos pull requests esta aula levou para a main do fleet?"
+  }
+}
