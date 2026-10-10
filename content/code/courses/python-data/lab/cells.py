@@ -135,7 +135,7 @@ def run(lesson_dir, result_path):
 
 
 def masked(s):
-    return re.sub(r"\d+", "0", s)
+    return re.sub(r"\d[\d.,]*", "0", s)
 
 
 def same(got, want):
