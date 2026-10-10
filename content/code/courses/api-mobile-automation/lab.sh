@@ -29,6 +29,13 @@
 #     lessons show talks to anything but localhost once a package is installed;
 #   - colour. Maven and a few npm tools colour their output; the escape codes
 #     are removed from what is printed, which is what the reader sees as text;
+#   - the Android SDK. Lesson 14 has the student install it with Android
+#     Studio, which cannot run here, and Google's download host is not
+#     reachable from this sandbox. So ~/Android/Sdk holds platforms 35 and 36,
+#     build-tools 35.0.1, platform-tools and the emulator copied out of the
+#     public container image cimg/android:2025.10, which carries the same
+#     packages Google publishes. No emulator can start here (the sandbox has no
+#     hardware virtualisation), and lesson 14 shows exactly that refusal;
 #   - one capture at a time. Every lesson starts boxoffice on port 8080, so a
 #     lock serialises the captures.
 set -uo pipefail
@@ -38,10 +45,13 @@ lab_files() { # N DIR
   python3 - "$LAB_DIR" "$1" "$2" <<'PY'
 import json, os, re, sys
 course, n, dest = sys.argv[1], int(sys.argv[2]), sys.argv[3]
-lessons = json.load(open(os.path.join(course, "course.json")))["lessons"][:n]
+c = json.load(open(os.path.join(course, "course.json")))
+lessons = [t["id"] for t in c["topics"]][:n]  # lessons 1..N by their number, written or not
 said = re.compile(r"[Ss]ave it as `([^`]+)`:\s*$")
 for lid in lessons:
     d = os.path.join(course, "lessons", lid)
+    if not os.path.exists(os.path.join(d, "lesson.json")):
+        continue
     spec = json.load(open(os.path.join(d, "lesson.json")))
     for sec in spec["sections"]:
         md = os.path.join(d, sec["slug"] + ".md")
@@ -68,9 +78,49 @@ for lid in lessons:
 PY
 }
 
+# lab_appcheck DIR: the app in DIR/tickets, compiled against Android 35 by hand.
+# Gradle and the Android Gradle plugin come from Google's Maven repository, which
+# this sandbox cannot reach, so nothing here can BUILD the app the way Android
+# Studio does. What can be proved is that every file the lessons show compiles:
+# aapt2 links the resources and generates R, and the Kotlin compiler (2.2.21,
+# from Maven Central) compiles the sources against android.jar.
+lab_appcheck() {
+  local app=$1/tickets/app/src/main sdk=/home/ana/Android/Sdk out
+  out=$(mktemp -d)
+  mkdir -p "$out/gen" "$out/java"
+  sed 's#<manifest xmlns:android="http://schemas.android.com/apk/res/android">#<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="example.tickets">#' \
+    "$app/AndroidManifest.xml" > "$out/AndroidManifest.xml"
+  "$sdk/build-tools/35.0.1/aapt2" compile --dir "$app/res" -o "$out/res.zip" || return 1
+  "$sdk/build-tools/35.0.1/aapt2" link -I "$sdk/platforms/android-35/android.jar" \
+    --manifest "$out/AndroidManifest.xml" --java "$out/gen" -o "$out/base.apk" "$out/res.zip" \
+    --min-sdk-version 26 --target-sdk-version 35 || return 1
+  cat > "$out/pom.xml" <<POM
+<project xmlns="http://maven.apache.org/POM/4.0.0"><modelVersion>4.0.0</modelVersion>
+  <groupId>check</groupId><artifactId>tickets</artifactId><version>0</version>
+  <dependencies>
+    <dependency><groupId>org.jetbrains.kotlin</groupId><artifactId>kotlin-stdlib</artifactId><version>2.2.21</version></dependency>
+    <dependency><groupId>android</groupId><artifactId>android</artifactId><version>35</version><scope>system</scope>
+      <systemPath>$sdk/platforms/android-35/android.jar</systemPath></dependency>
+  </dependencies>
+  <build><plugins>
+    <plugin><groupId>org.jetbrains.kotlin</groupId><artifactId>kotlin-maven-plugin</artifactId><version>2.2.21</version>
+      <executions><execution><id>compile</id><goals><goal>compile</goal></goals><configuration>
+        <sourceDirs><sourceDir>$app/java</sourceDir><sourceDir>$out/gen</sourceDir></sourceDirs><jvmTarget>17</jvmTarget>
+      </configuration></execution></executions></plugin>
+    <plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><version>3.13.0</version>
+      <executions><execution><id>java</id><phase>compile</phase><goals><goal>compile</goal></goals></execution></executions>
+      <configuration><release>17</release><compileSourceRoots><root>$out/gen</root></compileSourceRoots></configuration></plugin>
+  </plugins></build></project>
+POM
+  (cd "$out" && mvn -B -q -s /home/ana/.m2/settings.xml compile) || return 1
+  echo "appcheck: $(find "$out/target" -name '*.class' | wc -l) classes compiled from $app"
+  rm -rf "$out"
+}
+
 if [ "${BASH_SOURCE[0]}" = "$0" ]; then
   case "${1:-}" in
     files) lab_files "$2" "$3"; exit $? ;;
+    appcheck) lab_appcheck "$2"; exit $? ;;
     *) sed -n '2,12p' "$0"; exit 2 ;;
   esac
 fi
@@ -98,7 +148,8 @@ prompt() { printf 'ana@laptop:%s$ ' "${LAB_CWD/#$LAB_HOME/\~}"; }
 
 as_ana() {
   runuser -u ana -- env -i HOME=$LAB_HOME USER=ana LOGNAME=ana SHELL=/bin/bash \
-    PATH=/opt/node/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin \
+    PATH=/opt/node/bin:/usr/local/sbin:/usr/sbin:/usr/bin:/sbin:/bin:$LAB_HOME/Android/Sdk/platform-tools:$LAB_HOME/Android/Sdk/emulator \
+    ANDROID_HOME=$LAB_HOME/Android/Sdk \
     LANG=C.UTF-8 TZ=America/Sao_Paulo TERM=dumb NO_COLOR=1 ${LAB_EXTRA:-} \
     HTTPS_PROXY="$LAB_PROXY" https_proxy="$LAB_PROXY" NO_PROXY=localhost,127.0.0.1 no_proxy=localhost,127.0.0.1 \
     bash -c "cd \"$LAB_CWD\" && { $1
