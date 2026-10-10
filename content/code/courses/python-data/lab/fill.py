@@ -6,8 +6,8 @@ THE STUDENT NEVER SEES THIS FILE.
 A lesson's captures.sh prints blocks, each one opened by a line `##### NAME`. While a section is
 being written, the place a block goes is marked `@@capture:NAME@@` on a line of its own, and
 
-    fill.py LESSON_DIR OUTPUT            replaces each marker, in the .md and the .pt.md, with the
-                                         block as an unlabelled fence
+    fill.py LESSON_DIR OUTPUT            replaces each marker in the English .md with the block as
+                                         an unlabelled fence; the .pt.md takes the same fences
     fill.py --check LESSON_DIR OUTPUT    fails unless every block is the body of a fence in some
                                          section of the lesson, byte for byte
 
@@ -53,6 +53,8 @@ def main():
                 print(f"{name}: no fence in {lesson} holds\n{body}")
         sys.exit(1 if bad else 0)
     for f in files:
+        if f.endswith(".pt.md"):
+            continue  # a translation's fences are the English ones, copied across afterwards
         text = open(f, encoding="utf-8").read()
         new = re.sub(r"^@@capture:(\S+?)@@\n",
                      lambda m: "```\n" + found[m.group(1)] + "```\n", text, flags=re.M)
