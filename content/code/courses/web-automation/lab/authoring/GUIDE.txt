@@ -1,0 +1,214 @@
+# Writing one lesson of `web-automation` — the guide every lesson author follows
+
+You are writing ONE lesson of the course `web-automation` (`co-kqqqxb7w`) in the repository at
+`/home/user/schooling`, school `code`, folder `content/code/courses/web-automation/`. Several
+authors write other lessons of the same course AT THE SAME TIME, in the same checkout. Touch only
+your own lesson's folder and your own template folder. Never edit `course.json`, `course.pt.json`,
+`lab.sh`, another lesson, or anything outside `content/code/courses/web-automation/lessons/<your
+lesson id>/` and `/tmp/lab/tpl/LNN/` (NN = your lesson number, two digits). Do not commit, do not
+push, do not run `git add`/`git stash`/`git checkout`: the coordinator commits.
+
+## Read first (all of it, it is the rulebook)
+
+1. `/home/user/schooling/CLAUDE.md` — rules, especially Content, translations, figures.
+2. `docs/CONTENT.md`, `docs/TEACHING.md`, `docs/EXERCISES.md`.
+3. `docs/design/web-automation.md` — the design sheet.
+4. **Lesson 1, finished, is your model** for voice, structure, captures and honesty:
+   `content/code/courses/web-automation/lessons/le-h6bdxpbd/` (every `.md`, `.pt.md`,
+   `lesson.json`, `exercises.json`, `exercises.pt.json`, `captures.sh`), and its templates in
+   `/tmp/lab/tpl/L01/` (the same files before rendering, plus `ex.py`, the exercise source).
+5. `content/code/courses/web-automation/lab.sh` — the lab. Read the header: it says what is staged.
+6. The app the course tests: `content/code/courses/web-automation/lab/quitanda/` (also at
+   `/tmp/lab/q`). It is the AUTHOR's copy. The student gets each file only by a lesson showing it.
+
+## The course in one paragraph
+
+The student builds `~/quitanda`: a tiny Node shop (no dependencies) with deliberate, labelled
+flaws ("A known flaw, on purpose"), plus a Playwright project beside it. Lesson 1 built the base:
+`package.json` (pins `@playwright/test` 1.56.0), `playwright.config.js` (testDir `tests`,
+reporter `list`, baseURL `http://localhost:3000`, `webServer` runs `npm start`),
+`app/http.js`, `app/store.js`, `app/server.js` (never changes; loads every file in
+`app/routes/`), `app/routes/shop.js` (`GET /api/products`, `GET|POST /api/basket`,
+`POST /api/reset`), `app/public/index.html|app.js|style.css`, `tests/smoke.spec.js`, `look.mjs`.
+The basket is ONE list shared by everybody (unmarked flaw, used by lessons 15 and 19). Products:
+banana 590, mango 450, papaya 790, guava 1290, cashew 1590, passion 990, acerola 1890,
+pineapple 690 (cents). Prices are shown by `Intl.NumberFormat('pt-BR', BRL)`, which puts a
+NON-BREAKING SPACE after `R$`. Each card: `<li class="card" id="card-<random>"
+data-testid="product-<id>">` with `<h2>`, `.price`, and a button "Add to basket"; header has
+`[data-testid=basket-count]`, `.basket-total`, a `.menu-toggle` "Menu" button shown under 600 px,
+and a `.toast` role=status that says "Added <name>" for 2 s. `QUITANDA_LOG=1` logs requests.
+
+Files written for later lessons ALREADY EXIST in `lab/quitanda/` and the named lesson must show
+them whole (exact bytes, via `%%FILE path%%`):
+
+| lesson | files it shows | the flaw |
+|---|---|---|
+| 3 `le-0wj3997d` | `app/routes/search.js`, `app/public/search.html`, `app/public/search.js` | `/api/search?q=` waits `max(0, 900-150*len(q))` ms, one request per key, the LAST answer to arrive wins; `#results` has `aria-busy` true while any request is in flight; `#count` says "N found" |
+| 4 `le-v0y536rc` | `app/routes/offer.js`, `app/public/offer.html` | `GET /api/offer` sends `Cache-Control: max-age=600`; `POST /api/offer {id, price}` changes it; a browser that cached it shows the old offer |
+| 5 `le-rjq3kpb4` | `app/public/spa/index.html`, `spa.js`, `sw.js`, `manifest.json` | a History-API SPA at `/spa/` and `/spa/basket`; reloading `/spa/basket` is a 404 (no server fallback); a cache-first service worker for the shell |
+| 6 `le-gw3wp01t` | `app/routes/ssr.js`, `app/public/ssr.js` | `/ssr` is server-rendered with the products in the HTML; the script that wires the buttons is injected after `load` and served 1.5 s late from `/slow/ssr.js`; a click before then does nothing; the script sets `document.body.dataset.ready = 'true'` |
+| 7 `le-0tr80xmk` | `app/routes/deals.js` | `/deals` picks a page by `User-Agent` (`/Mobile/`): adaptive; the CSS flaw `.basket { white-space: nowrap; min-width: 24rem }` overflows a 360 px window (scrollWidth 400 at 360, measured) |
+| 15 `le-1f5vw2mm` | `app/routes/users.js`, `app/public/signup.html` | `POST /api/users {name}` → 201, or 409 if the name exists; `DELETE /api/users?name=` → 204; reset clears users |
+
+If your lesson genuinely needs the app to do something it does not, DO NOT edit those files:
+tell the coordinator in your final report what you need and why, and write around it meanwhile.
+
+## The lab, and how captures work
+
+- Captures run as the user `ana`, HOME `/home/ana`, project `/home/ana/quitanda`, Node 22.22.0,
+  npm 10.9.4, Playwright 1.56.0, Chromium 141.0.7390.37 (build 1194) in
+  `/home/ana/.cache/ms-playwright`. Selenium: selenium-webdriver 4.51.0, chromedriver
+  141.0.7390.122 in `/home/ana/bin`, `google-chrome` there is a link to the same Chromium.
+- **Not available, and never to be faked**: Firefox, WebKit (Playwright's downloads are blocked
+  here), Cypress's binary, Selenium Grid's jar unless you manage to fetch it from Maven Central,
+  any screen (no headed runs, no UI mode, no trace viewer window). A lesson that names them
+  shows the commands and code a student would use and says plainly in the prose "not run for
+  this course" and why. Never invent output, versions, timings, flags or error messages.
+- **The project is built FROM THE LESSONS**: `bash lab.sh stage N` writes every block whose
+  preceding paragraph ends with `as \`PATH\`:` (e.g. "Save it as `tests/search.spec.js`:") from
+  lessons 1..N in course order and section order (a later block at the same path replaces an
+  earlier one), then `npm install`s. So: every file the student saves is shown whole behind such a
+  label; a "bad" version and its fix share a path, fix later. `bash lab.sh files N` lists them.
+  `bash lab.sh fence SECTION.md PATH` prints one labelled block (for a capture that needs a
+  version a later section replaced).
+- Test files: name them for your subject (`tests/search.spec.js`, `tests/cache.spec.js`…); never
+  reuse a path another lesson uses unless you mean to replace it. Everything under `tests/` is run
+  by a plain `npx playwright test`, so in captures ALWAYS run named files
+  (`npx playwright test tests/search.spec.js`), and leave the final state of your test files
+  passing (a deliberately failing version must be followed by its fix at the same path, or not be
+  labelled as a project file at all).
+- **Do not change `playwright.config.js`.** For other settings use CLI flags (`--repeat-each`,
+  `--workers`, `--trace on`, `--retries`, `--headed`…) or, if you must, a separate config file
+  that imports the base one, shown whole and run with `--config`.
+- **Ports and the lock**: everything shares port 3000 and `/home/ana/quitanda`. Every command
+  that touches them, including your own experiments, runs inside the lab lock:
+  `bash -c 'source content/code/courses/web-automation/lab.sh lib; lock; machine; stage N; ...'`.
+  Your `captures.sh` takes the lock itself (copy lesson 1's preamble). Hold it briefly.
+- Helpers in `lab.sh lib`: `run 'cmd'` (prints `ana@laptop:~/quitanda$ cmd`, runs it as ana in the
+  project), `run_in DIR 'cmd'`, `run_npm args…` (npm as root through the proxy, printed as ana),
+  `block NAME` (starts output block `##### NAME`), `start_app [LOG]`/`stop_app`,
+  `bg_ana 'cmd' OUT`/`stop_bg`/`wait_app`, `as_ana 'cmd'` (silent), `lock`, `machine`,
+  `stage N`. Kill nothing by pattern; use `stop_bg`/`stop_app`. Strip a `Terminated` line the
+  way lesson 1 does.
+- npm needs the network and runs as root (`run_npm`). Everything else runs as ana with no
+  network. Never disable TLS verification and never unset the proxy.
+- Timings vary between runs: that is fine, the capture is the run you paste. Never round or edit.
+- `captures.sh` header: what the script produces, what is STAGED and how (copy lesson 1's style),
+  date (2026-10-10 or the day you run it), versions. It never names a file the student does not
+  get… but the student never sees `captures.sh` either: the prose, scripts, questions never name
+  `lab.sh`, `captures.sh` or a path under the course's `lab/`. `validate-content` refuses them.
+
+## Authoring flow (templates → render)
+
+Work in `/tmp/lab/tpl/LNN/`. Write `lesson.json`, each section `slug.md` and `slug.pt.md`, an
+`ex.py` (exercise source, see lesson 1's), and `captures.sh`. In a template, a line that is ONLY
+`%%FILE path%%` becomes that file from `lab/quitanda/` (your own new test files: write them into
+the template directly as the fence body — the lab builds them from your md), and a line that is
+ONLY `%%CAP name%%` becomes the output block `##### name` of your captures. Then:
+
+```sh
+L=content/code/courses/web-automation/lessons/<id>
+/tmp/lab/bin/render /tmp/lab/tpl/LNN $L                 # first pass: files, captures pending
+bash $L/captures.sh > /tmp/lab/LNN.out 2>&1             # as root
+/tmp/lab/bin/render /tmp/lab/tpl/LNN $L /tmp/lab/LNN.out  # fails if a %%CAP%% is unresolved
+rm -f $L/ex.py; python3 /tmp/lab/tpl/LNN/ex.py          # writes exercises.json/.pt.json into $L
+```
+
+(`ex.py` must write into the lesson folder; keep it in the template folder.) Read
+`/tmp/lab/LNN.out` before pasting: if output surprises you, the prose follows the output, never
+the other way round. Re-read every number in your prose against it after every re-run.
+
+Ids: `/tmp/lab/bin/newid se 7`, `newid ex 20`, `newid vd 1` — never invent one by hand.
+
+## Shape of a lesson
+
+- `lesson.json`: `{"id": <lesson id>, "title": <the topic title from course.json>, "sections": [...]}`.
+  First section `intro`, kind `video`, one video `{id: vd-…, version: 1, script, seconds, locales: []}`,
+  with an `intro.md` and `intro.pt.md` holding only front matter (`title`, `version: 1`). Then 4–6
+  `reading` sections, then `drill`, kind `practice`, with `drill.md`/`drill.pt.md` front matter only
+  (`Putting it together` / `Juntando tudo`). **6 to 8 sections in all**; the course budget is ~150
+  for 22 lessons and lesson 1 used 9.
+- Front matter: exactly `title` and `version: 1`. Titles in sentence case.
+- Script: spoken, 60–90 s, median ~13 words per sentence, no bold, marks `{{name}}` where the
+  scene changes, says what the lesson is for. `seconds` ≈ words/2.5.
+- Readings: ~400–800 words each, reading prose median ~19 words a sentence, bold as signposts
+  (house style, ~1 per paragraph or two), British spelling (behaviour, colour, recognise,
+  organise), `you`, no "let's", no "we" for the author. Lead with the shape; name the wrong idea
+  before the right one; every doubtable claim gets a concrete instance, ideally a capture.
+  Forward/backward references name a lesson number ("lesson 13"), never "later". Point at other
+  courses by slug and lesson number where the design says the subject lives there:
+  `javascript` lesson 11 (DOM), 13 (event loop), 14 (async), 16 (fetch), 21 (npm), 22 (DevTools);
+  `manual-testing` 7 (compatibility), 8 (smoke), 10 (regression), 15 (defect report), 20 (test
+  data), 21 (environments); `qa-fundamentals` 3 (cost of a defect), 19 (oracle), 20
+  (prioritisation); `testing-cicd` 1 (layers), 5 (CI); `non-functional-testing` 10 (front-end
+  performance), 12–15 (accessibility); `api-mobile-automation` (API testing, next course).
+  Do not teach another lesson's subject; recognise it, point at it.
+- Code: consider `schooling-example` (see `docs/TEACHING.md`, "Code that is demonstrated") whenever
+  a section walks through a program piece by piece; a whole file the student saves can be an
+  example too (the lab joins its parts' `code` with newlines — each part's code is one or more
+  whole lines; the joined result is the file). Otherwise plain fences. Fence labels: `javascript`,
+  `html`, `css`, `json`, `sh` for commands to type, and NO label for a transcript (prompt on
+  its first line) — never `text`, `bash` is fine, `console` is fine.
+- Figures: 1–3 per lesson where one EARNS its place (a sequence in time, a nesting, a count, two
+  axes) — the race of two responses, a timeline of waits, the WebDriver architecture, a page
+  object's layers. Inline SVG in a `schooling-figure` fence, palette tokens only
+  (`--amber --ink --panel --paper --paper-dim --phosphor --phosphor-dim --scan --wire`), prose
+  labels in `'IBM Plex Sans'`, code labels in `'IBM Plex Mono'`, `role="img"` + `aria-label`,
+  a `caption`. The `.pt.md` figure translates every Sans label, `aria-label` and caption (or lists
+  an identical word in `"same": [...]`). Keep labels inside their boxes (`figure-fit`).
+- Translation: Brazilian Portuguese, natural, not literal. Every fence in `.pt.md` is
+  byte-identical to the English one at the same place (render from the same placeholders);
+  only `schooling-example` notes and figure prose differ. Same `::: track` groups if any (this
+  course is in one track, `qa`; you need none).
+
+## Exercises (~18 per lesson, `ex.py` with `/tmp/lab/bin/exlib.py`)
+
+Spread over sections (each reading section 2–4, drill 2–4), mostly `quiz`, plus at least one each
+of `ordering`, `cloze`, `matching` or `numeric`, `multiple-choice` where it fits. Every option has
+a `why`, including the correct one, and the `why` teaches. Difficulty per `docs/EXERCISES.md`.
+A distractor is a belief somebody holds. The checker (run it!) refuses:
+
+- the correct option at any ONE length rank in more than 45% of the lesson's quiz questions, in
+  EN and in PT separately — run `/tmp/lab/bin/ranks <lesson dir>` and aim for an even spread of
+  ranks 1–4 in both languages; lengthen/shorten distractors to move it;
+- a "read nothing" strategy scoring over 45%;
+- hedges (EN usually, often, can, may, tends, generally, sometimes, typically, might, could;
+  PT geralmente, normalmente, pode, podem, costuma, às vezes, talvez…) only in the correct option —
+  whole words anywhere in the option text;
+- the correct option echoing the prompt's long words (≥6 letters) more than any other;
+- a cloze hole is exactly `___` with spaces around; its accept list is translated; no blank
+  answerable by copying a prompt word;
+- ordering of 2 items, matching of 2 pairs; "all/none of the above".
+Absolutes (never, always, only, all, every, none, must, cannot; PT nunca, sempre, só, todo,
+nada, deve, não pode) should not sit only in wrong options as a habit.
+
+## Checks to run before reporting (all must be clean for YOUR lesson)
+
+```sh
+cd /home/user/schooling
+export GOTOOLCHAIN=local PATH=/usr/local/go1.25.1/bin:$PATH
+/tmp/lab/bin/vc                                   # validate-content, cut to the lessons written
+go run ./tools/check-exercises 2>&1 | grep <lesson id>   # no line starting " - " for your lesson
+go run ./tools/check-figures 2>&1 | tail -3
+node tools/check-highlight/check-highlight.mjs content | tail -2
+PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers node tools/figure-fit/figure-fit.mjs | tail -3
+```
+
+Then a natural-writing pass over your EN and PT prose and the script
+(`.claude/skills/natural-writing/SKILL.md`): cut staging ("not X but Y" aimed at nobody, closers
+that repeat, "the real question is"), inflation, sentences over ~45 words, passive hiding the
+actor. Captures and fences are never touched. Re-run the checks.
+
+## Honesty and safety
+
+- No attack material. Where a lesson touches security (authentication, cookies, data), teach
+  the tester's and defender's side only.
+- A tool you describe but could not run: say so in the prose. A model's output: none in this course.
+- Numbers in prose come from your captures, or are arithmetic the reader can check, or are
+  stated as the vendor's documentation says them (and then say "its documentation says").
+
+## Report back
+
+When done, reply with: the lesson id, the section list, the exercise count by type, the
+figure count, what you staged, anything you could not run, any app change you need, and the
+exact check outputs for your lesson. Keep it short.

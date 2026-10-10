@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 # newid PREFIX [N]: N fresh ids, Crockford base32 (no i l o u), checked against
 # every file in the repository and every id handed out before.
-import secrets, sys, subprocess, os
+import secrets, sys, subprocess, os, fcntl
 alpha = "0123456789abcdefghjkmnpqrstvwxyz"
 prefix, n = sys.argv[1], int(sys.argv[2]) if len(sys.argv) > 2 else 1
 log = "/tmp/lab/ids.txt"
+lk = open("/tmp/lab/ids.lock", "w"); fcntl.flock(lk, fcntl.LOCK_EX)
 used = set(open(log).read().split()) if os.path.exists(log) else set()
 out = []
 while len(out) < n:
     i = prefix + "-" + "".join(secrets.choice(alpha) for _ in range(8))
     if i in used or i in out: continue
-    if subprocess.run(["git", "-C", "/home/user/schooling", "grep", "-q", i], capture_output=True).returncode == 0: continue
+    if subprocess.run(["git", "-C", "/home/user/schooling", "grep", "-q", "--untracked", i], capture_output=True).returncode == 0: continue
     out.append(i)
 with open(log, "a") as f: f.write("\n".join(out) + "\n")
 print("\n".join(out))

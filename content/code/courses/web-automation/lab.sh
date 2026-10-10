@@ -35,8 +35,12 @@
 #     browser; it cannot here either, so chromedriver 141.0.7390.122 comes from
 #     the chromedriver-py wheel on PyPI and sits in ~/bin with a `google-chrome`
 #     link to the same Chromium 141, which is where Selenium Manager looks.
-#   - Cypress. Its binary is a separate download the sandbox cannot reach, and
-#     nothing in lesson 9 was run.
+#   - Cypress. Its binary is a separate download the sandbox cannot reach, so
+#     npm installs the package with CYPRESS_INSTALL_BINARY=0, and nothing in
+#     lesson 9 that needs the binary was run.
+#   - Puppeteer. It downloads its own Chrome when installed; npm installs it
+#     with PUPPETEER_SKIP_DOWNLOAD=1, and a capture that runs it points
+#     PUPPETEER_EXECUTABLE_PATH at the same Chromium 141.
 set -uo pipefail
 COURSE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 export ANA_HOME=/home/ana
@@ -142,7 +146,9 @@ PY
 # runs as root, in ana's directory, and the files are handed to her after.
 npm_in() {
   local dir=$1; shift
-  (cd "$dir" && PATH=$NODE_BIN:$PATH npm "$@")
+  # Cypress and Puppeteer each download a browser when installed, from hosts
+  # this sandbox cannot reach; both downloads are skipped, and said so above.
+  (cd "$dir" && PATH=$NODE_BIN:$PATH CYPRESS_INSTALL_BINARY=0 PUPPETEER_SKIP_DOWNLOAD=1 npm "$@")
   local status=$?
   chown -R ana:ana "$dir"
   return $status
