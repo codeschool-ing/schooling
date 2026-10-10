@@ -113,9 +113,9 @@ teste acima e um relatório de defeito que diga os passos: abrir o endereço dir
 15 de `manual-testing` trata desse relatório.
 
 Para ver a marca fazer o seu trabalho, uma rota pode fazer as vezes da correção. O arquivo abaixo
-responde `/spa/basket` com a página do app, que é o menor fallback que faz o teste passar. Salvo em
-`app/routes/` como `spa-fallback.js` por uma execução, e apagado depois, ele não faz parte do seu
-projeto:
+responde `/spa/basket` com a página do app, que é o menor fallback que faz o teste passar. Ele não faz
+parte do seu projeto: salve-o em `app/routes/` como `spa-fallback.js` por uma execução, e apague-o
+depois:
 
 ```javascript
 // Not part of quitanda: the developer's fix, for one run.

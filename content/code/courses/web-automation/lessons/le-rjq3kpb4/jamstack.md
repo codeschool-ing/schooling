@@ -4,7 +4,7 @@ version: 1
 ---
 
 **JAMstack** is a name for a way of delivering a site: JavaScript, APIs and Markup. The pages are
-built **ahead of time** into plain HTML files by a generator, those files are served from a content
+built **ahead of time** into plain HTML files by a generator. Those files are served from a content
 delivery network, a **CDN**, and anything that has to change per visitor, a basket or a search, is
 fetched from an API by JavaScript in the browser. The name is heard less than it was; the shape is
 everywhere, in documentation sites, shop fronts and marketing pages. Where a page gets its HTML,

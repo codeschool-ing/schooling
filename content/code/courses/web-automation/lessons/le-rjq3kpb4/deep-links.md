@@ -114,9 +114,9 @@ and the tester's part is the test above and a defect report that names the steps
 address directly, see the 404. `manual-testing` lesson 15 is about that report.
 
 To watch the mark do its job, a route can stand in for the fix. The file below answers
-`/spa/basket` with the app's page, which is the smallest fallback that makes the test pass. Saved
-in `app/routes/` as `spa-fallback.js` for one run, and deleted afterwards, it is not part of your
-project:
+`/spa/basket` with the app's page, which is the smallest fallback that makes the test pass. It is not
+part of your project: save it in `app/routes/` as `spa-fallback.js` for one run, and delete it
+afterwards:
 
 ```javascript
 // Not part of quitanda: the developer's fix, for one run.

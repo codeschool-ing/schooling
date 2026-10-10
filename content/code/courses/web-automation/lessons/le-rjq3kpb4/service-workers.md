@@ -94,9 +94,9 @@ Running 2 tests using 1 worker
   2 passed (1.9s)
 ```
 
-Both pass. The first proves three things in order: the reload, with the network gone, was
-answered by the worker, since `fromServiceWorker()` is true; the header and its links, which are in
-the cached `index.html`, are on screen; and the page raised an uncaught `Failed to fetch`, leaving
+Both pass, and the first proves three things in order. The reload, with the network gone, was
+answered by the worker, since `fromServiceWorker()` is true. The header and its links, which are in
+the cached `index.html`, are on screen. And the page raised an uncaught `Failed to fetch`, leaving
 `#view` empty. The second runs the same first steps with workers blocked, and there the reload
 throws.
 

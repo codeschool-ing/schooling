@@ -94,9 +94,9 @@ Running 2 tests using 1 worker
   2 passed (1.9s)
 ```
 
-Os dois passam. O primeiro prova três coisas, em ordem: o recarregamento, sem rede, foi respondido
-pelo worker, já que `fromServiceWorker()` é verdadeiro; o cabeçalho e os seus links, que estão no
-`index.html` guardado, estão na tela; e a página lançou um `Failed to fetch` não tratado, deixando
+Os dois passam, e o primeiro prova três coisas, em ordem. O recarregamento, sem rede, foi respondido
+pelo worker, já que `fromServiceWorker()` é verdadeiro. O cabeçalho e os seus links, que estão no
+`index.html` guardado, estão na tela. E a página lançou um `Failed to fetch` não tratado, deixando
 `#view` vazio. O segundo roda os mesmos primeiros passos com os workers bloqueados, e ali o
 recarregamento lança um erro.
 

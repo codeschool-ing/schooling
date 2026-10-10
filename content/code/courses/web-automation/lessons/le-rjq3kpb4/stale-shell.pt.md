@@ -74,10 +74,10 @@ velha, publicar a nova, abrir de novo no mesmo perfil e verificar o que está na
 encontram, um ambiente de homologação por onde uma versão passa; a aula 21 de `manual-testing` trata
 de ambientes e a aula 5 de `testing-cicd` do pipeline que rodaria isso.
 
-O remédio é do desenvolvedor, e depende do que o app promete. Os comuns são um worker que pergunta
-primeiro à rede pela página e só recorre à cópia sem rede, ou um worker que nomeia o cache por
-versão e apaga as cópias velhas quando uma versão nova assume, muitas vezes com um aviso de que *há
-uma nova versão disponível*. Seja qual for, a pergunta do testador é a mesma que esta seção fez:
+O remédio é do desenvolvedor, e depende do que o app promete. Um remédio comum é um worker que
+pergunta primeiro à rede pela página e só recorre à cópia sem rede. Outro é um worker que nomeia o
+cache por versão e apaga as cópias velhas quando uma versão nova assume, muitas vezes com um aviso
+de que *há uma nova versão disponível*. Seja qual for, a pergunta do testador é a mesma que esta seção fez:
 **depois de um deploy, o que vê quem esteve aqui ontem?**
 
 ## Vendo isso no navegador

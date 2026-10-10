@@ -4,7 +4,7 @@ version: 1
 ---
 
 **JAMstack** é o nome de um jeito de entregar um site: JavaScript, APIs e Markup. As páginas são
-geradas **com antecedência** como arquivos HTML simples por um gerador, esses arquivos são servidos
+geradas **com antecedência** como arquivos HTML simples por um gerador. Esses arquivos são servidos
 por uma rede de distribuição de conteúdo, uma **CDN**, e o que precisa mudar por visitante, uma cesta
 ou uma busca, vem de uma API buscada por JavaScript no navegador. O nome se ouve menos do que já se
 ouviu; o formato está em toda parte, em sites de documentação, vitrines de loja e páginas de

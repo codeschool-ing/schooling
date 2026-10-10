@@ -72,10 +72,10 @@ screen. `spa-look.mjs` just did that by hand. In a team it belongs where two bui
 environment that a release goes through; `manual-testing` lesson 21 is about environments and
 `testing-cicd` lesson 5 about the pipeline that would run it.
 
-The remedy is the developer's, and it depends on what the app promises. The usual ones are a worker
-that asks the network first for the page and falls back to its copy only offline, or a worker that
-names its cache by version and deletes the old copies when a new version takes over, often with a
-banner that says *a new version is available*. Whichever it is, the tester's question is the same
+The remedy is the developer's, and it depends on what the app promises. One usual remedy is a worker
+that asks the network first for the page and falls back to its copy only offline. Another is a
+worker that names its cache by version and deletes the old copies when a new version takes over,
+often with a banner that says *a new version is available*. Whichever it is, the tester's question is the same
 one this section asked: **after a deploy, what does somebody who was here yesterday see?**
 
 ## Seeing it in the browser
