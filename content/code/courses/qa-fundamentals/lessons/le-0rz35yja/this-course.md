@@ -38,12 +38,13 @@ hold them.
 ## Cine Aurora
 
 Every example happens at one place, so that the examples add up. **Cine Aurora** is a three-screen
-cinema in Belo Horizonte, with an online ticket shop. It does not exist. Four people appear, and the
+cinema in Belo Horizonte, with an online ticket shop. It does not exist. Five people appear, and the
 course never needs more:
 
 - **Lia** has just joined as the cinema's first tester. She is the one typing, and the name in every
   transcript;
 - **Rafael** is one of the two developers, and wrote most of the ticket shop;
+- **Tomás** is the other developer, and reviews what Rafael writes, as Rafael reviews him;
 - **Joana** is the product owner: she decides what the shop does and writes the rules down;
 - **Célia** runs the box office, has sold tickets for twenty years, and knows every rule the software
   is trying to follow.

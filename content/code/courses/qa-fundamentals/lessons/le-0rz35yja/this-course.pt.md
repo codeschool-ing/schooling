@@ -38,12 +38,13 @@ discordar; o resto do curso fica mais fácil de aplicar se você as adotar.
 ## O Cine Aurora
 
 Todo exemplo acontece num lugar só, para que os exemplos se somem. O **Cine Aurora** é um cinema de três
-salas em Belo Horizonte, com bilheteria online. Ele não existe. Quatro pessoas aparecem, e o curso nunca
+salas em Belo Horizonte, com bilheteria online. Ele não existe. Cinco pessoas aparecem, e o curso nunca
 precisa de mais:
 
 - **Lia** acabou de entrar como a primeira pessoa de teste do cinema. É ela quem digita, e o nome em toda
   transcrição;
 - **Rafael** é um dos dois desenvolvedores, e escreveu a maior parte da bilheteria;
+- **Tomás** é o outro desenvolvedor, e revisa o que o Rafael escreve, como o Rafael o revisa;
 - **Joana** é a dona do produto: decide o que a bilheteria faz e escreve as regras;
 - **Célia** comanda a bilheteria física, vende ingresso há vinte anos e conhece toda regra que o software
   está tentando seguir.
