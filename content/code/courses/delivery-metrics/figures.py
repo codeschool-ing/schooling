@@ -1058,6 +1058,106 @@ def l09_points(lang):
                 'mais. Não fez um três ser sempre mais longo que um um.')
 
 
+# ------------------------------------------------------------------ lesson 10
+
+def daily_history(items, first, last):
+    merged = [when(i['merged']) for i in items if i['merged']]
+    return [sum(1 for m in merged if m == d) for d in span(first, last)]
+
+
+def howmany_runs(days_ahead, first=date(2026, 8, 17), last=date(2026, 9, 30)):
+    """howmany.py's ten thousand futures, drawn exactly as it draws them."""
+    import random
+    items, _ = billing()
+    history = daily_history(items, first, last)
+    rng = random.Random(2026)
+    return sorted(sum(rng.choice(history) for _ in range(days_ahead)) for _ in range(10000))
+
+
+@figure('l10-sampling', 10)
+def l10_sampling(lang):
+    items, _ = billing()
+    hist = daily_history(items, date(2026, 8, 17), date(2026, 8, 30))
+    f = Fig('l10-sampling', 680, 250, T(
+        lang,
+        'On the left, a row of real days from the history, each a box holding the number of items '
+        'merged that day, weekends showing zero. Arrows draw days from it at random into three '
+        'rows on the right, each a possible future of seven days with its total. Repeating the '
+        'draw ten thousand times gives the spread of totals.',
+        'À esquerda, uma fileira de dias reais do histórico, cada um uma caixa com o número de '
+        'itens integrados naquele dia, fins de semana com zero. Setas sorteiam dias dela para três '
+        'fileiras à direita, cada uma um futuro possível de sete dias com o seu total. Repetir o '
+        'sorteio dez mil vezes dá a dispersão dos totais.'))
+    f.text(150, 20, T(lang, 'the history: real days', 'o histórico: dias reais'), size=10.5, weight='600')
+    for k, v in enumerate(hist):
+        x, y = 20 + (k % 7) * 38, 40 + (k // 7) * 40
+        f.rect(x, y, 32, 28, stroke='--phosphor', fill='--scan', width=1.2, rx=3)
+        f.text(x + 16, y + 14, str(v), size=11, mono=True)
+    import random
+    rng = random.Random(7)
+    f.text(500, 20, T(lang, 'three possible futures', 'três futuros possíveis'), size=10.5, weight='600')
+    for r in range(3):
+        y = 50 + r * 56
+        draw = [rng.choice(hist) for _ in range(7)]
+        for k, v in enumerate(draw):
+            x = 360 + k * 34
+            f.rect(x, y, 28, 26, stroke='--amber', fill='--panel', width=1.2, rx=3)
+            f.text(x + 14, y + 13, str(v), size=10.5, mono=True)
+        f.text(608, y + 13, T(lang, f'= {sum(draw)} items', f'= {sum(draw)} itens'), size=10.5,
+               anchor='start')
+    f.line(292, 110, 350, 110, stroke='--paper-dim', width=1.4, arrow=True)
+    f.text(320, 96, T(lang, 'draw', 'sorteio'), size=9.5, fill='--paper-dim', italic=True)
+    f.text(340, 236, T(lang, '... then ten thousand more, and look at how the totals spread',
+                       '... depois mais dez mil, e veja como os totais se espalham'),
+           size=10, fill='--paper-dim')
+    return f, T(lang,
+                'Every simulated day is a day that really happened, so every interruption and every '
+                'wait is already inside it.',
+                'Todo dia simulado é um dia que aconteceu de verdade, então toda interrupção e toda '
+                'espera já estão dentro dele.')
+
+
+@figure('l10-histogram', 10)
+def l10_histogram(lang):
+    res = howmany_runs(31)
+    q = {p: res[int((100 - p) / 100 * 10000)] for p in (50, 85, 95)}
+    lo, hi = res[0], res[-1]
+    counts = {v: res.count(v) for v in range(lo, hi + 1)}
+    f = Fig('l10-histogram', 680, 280, T(
+        lang,
+        f'A histogram of ten thousand simulated Octobers for the Billing team: items finished in '
+        f'31 days, from {lo} to {hi}. The bars peak in the mid thirties. Lines mark 95% of runs '
+        f'finishing at least {q[95]}, 85% at least {q[85]}, and half at least {q[50]}.',
+        f'Um histograma de dez mil outubros simulados do time de Billing: itens terminados em 31 '
+        f'dias, de {lo} a {hi}. As barras têm pico em meados dos trinta. Linhas marcam 95% das '
+        f'rodadas terminando pelo menos {q[95]}, 85% pelo menos {q[85]}, e metade pelo menos '
+        f'{q[50]}.'))
+    top = max(counts.values())
+    p = Plot(f, 60, 40, 650, 230, lo - 1, hi + 1, 0, top * 1.55)
+    p.baseline()
+    for v, c in counts.items():
+        x0, x1 = p.sx(v - 0.4), p.sx(v + 0.4)
+        f.bar(x0, p.sy(c), x1 - x0, p.sy(0) - p.sy(c),
+              fill='--scan', stroke='--amber' if v < q[85] else '--phosphor', width=1)
+    for v in range(lo - lo % 5, hi + 1, 5):
+        if v >= lo - 1:
+            f.text(p.sx(v), 246, str(v), size=9.5, fill='--paper-dim')
+    for pp, y in ((95, 92), (85, 72), (50, 52)):
+        x = p.sx(q[pp] - 0.5)
+        f.line(x, y + 8, x, 230, stroke='--paper', width=1.2, dash='4 3')
+        f.text(x - 4, y, T(lang, f'{pp}%: at least {q[pp]}', f'{pp}%: pelo menos {q[pp]}'),
+               size=10, anchor='end')
+    f.text(60, 18, T(lang, 'items finished in 31 days, in 10,000 simulated futures',
+                     'itens terminados em 31 dias, em 10.000 futuros simulados'),
+           size=10, anchor='start', fill='--paper-dim')
+    f.text(355, 268, T(lang, 'items finished', 'itens terminados'), size=9.5, fill='--paper-dim')
+    return f, T(lang,
+                'The forecast is the whole shape. The number to promise sits low in it, where most '
+                'futures have already reached.',
+                'A previsão é a forma inteira. O número a prometer fica embaixo dela, onde a maioria '
+                'dos futuros já chegou.')
+
+
 # @@LESSONS@@
 
 if __name__ == '__main__':
