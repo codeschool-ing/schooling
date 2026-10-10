@@ -4,9 +4,9 @@ version: 1
 ---
 
 The function a unit applies to its sum is its **activation**. The perceptron used a step. Almost
-nothing uses one now, and the reason is the subject of the next two lessons: training adjusts each
-weight according to how much a small change in it would change the output, and a step's output does
-not change at all under a small change, except at the one point where it jumps.
+nothing uses one now, for a reason the next two lessons build on. Training adjusts each weight
+according to how much a small change in it would change the output. A step's output does not change
+at all under a small change, except at the one point where it jumps.
 
 Four functions, evaluated at the same seven inputs. Save as `~/dl/activations.py`:
 
@@ -45,9 +45,8 @@ Read the table by column, as a unit would see it.
 | **ReLU** | zero for anything negative, the input itself for anything positive | between the layers of nearly every network since about 2012 |
 
 **The flat ends of sigmoid and tanh are the problem they carry.** Where the curve is flat, a change
-in the sum changes nothing in the output, and lesson 3 measures what that does to a deep network:
-the signal that trains the first layers shrinks every time it passes one, until the first layers
-stop learning. ReLU has no flat end on the positive side. It is also the cheapest function a
+in the sum changes nothing in the output. Lesson 3 measures what that does to a deep network: the
+signal that trains the first layers shrinks every time it passes one, until they stop learning. ReLU has no flat end on the positive side. It is also the cheapest function a
 processor can compute, which matters when it runs billions of times.
 
 Its own weakness is the other side. A unit whose sum is negative for every input outputs zero for

@@ -43,20 +43,20 @@ Read the hidden column. Unit 1 answers *at least one input is on*, which is OR; 
 are*, which is AND. Neither is XOR. The output unit takes OR and subtracts twice AND, and fires on
 `[0 1]` and `[1 0]`: exactly the two cases where OR is on and AND is off.
 
-**This is what depth buys, and it is the whole idea of the course in miniature.** The first layer
+**This is what depth buys.** The first layer
 turned the inputs into features that make the problem easy, and the last layer drew one straight line
 through those features. With 64 pixels instead of two bits, the hidden units of a trained network
 come to answer questions like *is there a stroke across the top* or *is the bottom closed*, and the
 output draws its line through those answers.
 
-Three honest limits on what this shows:
+Three limits on what this shows:
 
-- **The weights were written, not learnt.** A program that finds them from the four examples needs
+- The weights were written, not learnt. A program that finds them from the four examples needs
   a measure of how wrong the network is (lesson 2) and a way to share the blame among layers
   (lesson 3).
-- **The step function only works here because nothing has to be trained.** The next lesson replaces
+- The step function only works here because nothing has to be trained. The next lesson replaces
   it with a function whose slope exists.
-- **Two layers are enough in principle for much more than XOR.** The universal approximation theorem
+- Two layers are enough in principle for much more than XOR. The universal approximation theorem
   says a single hidden layer with enough units can approximate any continuous function. It says
   nothing about how many units that takes or whether training finds them, and in practice deeper
   networks with fewer units per layer learn the same thing with far fewer parameters.

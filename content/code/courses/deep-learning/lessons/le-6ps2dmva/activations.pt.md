@@ -4,9 +4,9 @@ version: 1
 ---
 
 A função que uma unidade aplica à sua soma é a sua **ativação**. O perceptron usava um degrau. Quase
-nada usa um hoje, e o motivo é o assunto das duas próximas aulas: o treinamento ajusta cada peso
-conforme o quanto uma pequena mudança nele mudaria a saída, e a saída de um degrau não muda nada sob
-uma pequena mudança, a não ser no único ponto em que ela salta.
+nada usa um hoje, por um motivo em que as duas próximas aulas se apoiam. O treinamento ajusta cada
+peso conforme o quanto uma pequena mudança nele mudaria a saída. A saída de um degrau não muda nada
+sob uma pequena mudança, a não ser no único ponto em que ela salta.
 
 Quatro funções, calculadas nas mesmas sete entradas. Salve como `~/dl/activations.py`:
 
@@ -45,9 +45,8 @@ Leia a tabela por coluna, como uma unidade a veria.
 | **ReLU** | zero para qualquer negativo, a própria entrada para qualquer positivo | entre as camadas de quase toda rede desde mais ou menos 2012 |
 
 **As pontas planas da sigmoid e da tanh são o problema que elas carregam.** Onde a curva é plana, uma
-mudança na soma não muda nada na saída, e a aula 3 mede o que isso faz com uma rede profunda: o sinal
-que treina as primeiras camadas encolhe cada vez que atravessa uma, até as primeiras camadas pararem
-de aprender. O ReLU não tem ponta plana do lado positivo. É também a função mais barata que um
+mudança na soma não muda nada na saída. A aula 3 mede o que isso faz com uma rede profunda: o sinal
+que treina as primeiras camadas encolhe cada vez que atravessa uma, até elas pararem de aprender. O ReLU não tem ponta plana do lado positivo. É também a função mais barata que um
 processador sabe calcular, o que importa quando ela roda bilhões de vezes.
 
 A fraqueza dele é o outro lado. Uma unidade cuja soma é negativa para toda entrada devolve zero para

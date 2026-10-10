@@ -44,20 +44,20 @@ unidade 2 responde *as duas estão*, que é o AND. Nenhuma das duas é o XOR. A 
 OR e tira duas vezes o AND, e dispara em `[0 1]` e `[1 0]`: exatamente os dois casos em que o OR está
 ligado e o AND desligado.
 
-**É isso que a profundidade compra, e é a ideia inteira do curso em miniatura.** A primeira camada
+**É isso que a profundidade compra.** A primeira camada
 transformou as entradas em características que tornam o problema fácil, e a última desenhou uma reta
 através dessas características. Com 64 pixels em vez de dois bits, as unidades ocultas de uma rede
 treinada passam a responder perguntas como *há um traço atravessando o topo* ou *a parte de baixo é
 fechada*, e a saída desenha a sua reta através dessas respostas.
 
-Três limites honestos do que isto mostra:
+Três limites do que isto mostra:
 
-- **Os pesos foram escritos, não aprendidos.** Um programa que os encontre a partir dos quatro
+- Os pesos foram escritos, não aprendidos. Um programa que os encontre a partir dos quatro
   exemplos precisa de uma medida de quão errada a rede está (aula 2) e de um jeito de dividir a culpa
   entre as camadas (aula 3).
-- **O degrau só funciona aqui porque nada precisa ser treinado.** A próxima aula o troca por uma
+- O degrau só funciona aqui porque nada precisa ser treinado. A próxima aula o troca por uma
   função cuja inclinação existe.
-- **Duas camadas bastam, em princípio, para muito mais que o XOR.** O teorema da aproximação universal
+- Duas camadas bastam, em princípio, para muito mais que o XOR. O teorema da aproximação universal
   diz que uma única camada oculta com unidades suficientes aproxima qualquer função contínua. Ele não
   diz quantas unidades isso exige nem se o treinamento as encontra, e na prática redes mais profundas,
   com menos unidades por camada, aprendem a mesma coisa com muito menos parâmetros.

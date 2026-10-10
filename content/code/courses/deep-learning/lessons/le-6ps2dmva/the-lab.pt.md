@@ -8,11 +8,11 @@ desta seção em diante todo comando é digitado nela.** Todas as transcrições
 numa assim: Ubuntu 24.04, quatro processadores, nenhuma placa de vídeo, um usuário chamado `ana` e
 uma máquina chamada `vm`. O seu prompt vai trazer os seus próprios nomes.
 
-**Nenhuma placa de vídeo é uma escolha, não um pedido de desculpas.** Deep learning é conhecido por
+**Não ter placa de vídeo é proposital.** Deep learning é conhecido por
 consumir horas de GPU, e as aulas 10 e 19 tratam exatamente desse custo. Mas toda rede deste curso é
-pequena o bastante para treinar no processador de um notebook em segundos ou minutos, porque as
-ideias não ficam mais claras num tamanho maior: uma taxa de aprendizado alta demais diverge em 1.797
-imagens do mesmo jeito que diverge em um milhão. Onde uma aula diz algo que só uma placa de vídeo
+pequena o bastante para treinar no processador de um notebook em segundos ou minutos. As ideias não
+ficam mais claras num tamanho maior: uma taxa de aprendizado alta demais diverge em 1.797 imagens do
+mesmo jeito que diverge em um milhão. Onde uma aula diz algo que só uma placa de vídeo
 mostra, ela avisa e diz que aquilo não foi executado.
 
 ## O que roda nela

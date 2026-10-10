@@ -8,11 +8,10 @@ PyTorch on it, and from this section on every command is typed there.** Every tr
 course was recorded on one: Ubuntu 24.04, four processors, no graphics card, a user called `ana`
 and a machine called `vm`. Your prompt will carry your own names.
 
-**No graphics card is a choice, not an apology.** Deep learning is known for eating GPU hours, and
+**Having no graphics card is deliberate.** Deep learning is known for eating GPU hours, and
 lessons 10 and 19 are about exactly that cost. But every network in this course is small enough to
-train on a laptop's processor in seconds or minutes, because the ideas do not get clearer at a
-larger size: a learning rate that is too high diverges on 1,797 images exactly as it does on a
-million. Where a lesson says something only a graphics card can show, it says so and says it was
+train on a laptop's processor in seconds or minutes. The ideas do not get clearer at a larger size:
+a learning rate that is too high diverges on 1,797 images exactly as it does on a million. Where a lesson says something only a graphics card can show, it says so and says it was
 not run.
 
 ## What runs on it
