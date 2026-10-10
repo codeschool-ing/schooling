@@ -1,0 +1,583 @@
+{
+  "ex-xb4s22fd": {
+    "prompt": "O que é acoplamento temporal, numa chamada síncrona?",
+    "hint": "O que precisa ser verdade no mesmo momento?",
+    "choices": [
+      {
+        "text": "Dois serviços implantados no mesmo dia",
+        "why": "Datas de deploy não são o acoplamento de que se fala aqui."
+      },
+      {
+        "text": "Os dois lados precisam estar de pé ao mesmo tempo",
+        "why": "Isso: quem chama pega emprestadas a disponibilidade e a velocidade de quem é chamado pelo tempo da chamada."
+      },
+      {
+        "text": "Dois serviços que dividem o mesmo relógio e fuso horário",
+        "why": "Relógios não têm nada a ver."
+      },
+      {
+        "text": "Uma mensagem que precisa ser processada antes de um prazo definido por quem manda",
+        "why": "Isso é um prazo, outra ideia, da seção de timeouts."
+      }
+    ]
+  },
+  "ex-0567v4ej": {
+    "prompt": "Um serviço faz as chamadas HTTP com `async` e `await`, então nenhuma thread bloqueia enquanto espera. A chamada continua síncrona no sentido deste curso?",
+    "hint": "O formato da conversa, não o código que espera.",
+    "choices": [
+      {
+        "text": "Não, porque nenhuma thread fica bloqueada",
+        "why": "Bloquear é sobre o código; a conversa ainda precisa da resposta agora."
+      },
+      {
+        "text": "Sim: a requisição ainda precisa da resposta para terminar",
+        "why": "Isso. Muda quantas chamadas podem esperar ao mesmo tempo, não o acoplamento."
+      },
+      {
+        "text": "Não, porque o laço de eventos a transforma numa mensagem numa fila",
+        "why": "Um laço de eventos não é um broker; nada fica na fila para depois."
+      },
+      {
+        "text": "Só se quem é chamado também usar `async`",
+        "why": "Em que quem é chamado foi escrito não muda o formato."
+      }
+    ]
+  },
+  "ex-v116x190": {
+    "prompt": "Ligue o estado do serviço que você chama ao que ele faz com você, numa chamada síncrona.",
+    "hint": "A tabela da seção.",
+    "pairs": [
+      {
+        "left": "lento",
+        "right": "você fica lento também"
+      },
+      {
+        "left": "fora do ar",
+        "right": "você falha, a não ser que haja alternativa"
+      },
+      {
+        "left": "sobrecarregado",
+        "right": "você espera, segurando uma thread ou conexão"
+      }
+    ],
+    "right_distractors": [
+      "você fica mais rápido"
+    ]
+  },
+  "ex-c6m9w60s": {
+    "prompt": "Na primeira requisição pela cadeia do laboratório, quantos milissegundos o checkout disse ter levado?",
+    "hint": "O `took_ms` mais de fora.",
+    "unit": "ms"
+  },
+  "ex-pn54ks3c": {
+    "prompt": "Por que o preço informou 242 ms quando o próprio trabalho era de 100 ms?",
+    "hint": "O que o tempo de cada elo inclui?",
+    "choices": [
+      {
+        "text": "O código Python do preço é mais lento que o dos outros",
+        "why": "Os três rodam o mesmo programa."
+      },
+      {
+        "text": "O número está errado; conta o tempo do checkout também",
+        "why": "O preço mede a partir do próprio começo, que é depois de o checkout chamá-lo."
+      },
+      {
+        "text": "Inclui esperar o estoque e o salto até ele",
+        "why": "Isso: os seus 100 ms, os 100 do estoque e a conexão entre eles."
+      },
+      {
+        "text": "O Docker acrescenta um atraso fixo a todo contêiner",
+        "why": "Não existe esse atraso."
+      }
+    ]
+  },
+  "ex-rsy0nbe0": {
+    "prompt": "Um checkout chama quatro serviços um depois do outro, cada um levando 50 ms, e as chamadas não dependem umas das outras. Feitas em paralelo, quanto tempo no mínimo levariam?",
+    "hint": "Em paralelo, a soma vira a mais lenta.",
+    "unit": "ms"
+  },
+  "ex-4h0tvkgg": {
+    "prompt": "Cinco serviços numa cadeia síncrona estão de pé cada um 99% do tempo, de forma independente. Em que porcentagem do tempo a cadeia está de pé? Uma casa decimal.",
+    "hint": "0,99 elevado à quinta potência.",
+    "unit": "%"
+  },
+  "ex-6p288hqq": {
+    "prompt": "Com o estoque parado, o checkout respondeu `502`. Onde estava a causa?",
+    "hint": "Leia a resposta aninhada.",
+    "choices": [
+      {
+        "text": "No checkout, que tinha um bug",
+        "why": "Nada no checkout estava errado."
+      },
+      {
+        "text": "No código do preço, que tratou mal a resposta",
+        "why": "O preço informou corretamente que o estoque estava inalcançável."
+      },
+      {
+        "text": "Lá embaixo: o último elo caiu",
+        "why": "Isso. A falha subiu pela cadeia."
+      },
+      {
+        "text": "Na rede, que perdeu a requisição do checkout",
+        "why": "A requisição do checkout chegou ao preço; a resposta do preço voltou."
+      }
+    ]
+  },
+  "ex-1t48c4d3": {
+    "prompt": "A tabela supõe que os serviços falham de forma independente. Por que a aula chama isso de otimista?",
+    "hint": "O que os serviços muitas vezes dividem?",
+    "choices": [
+      {
+        "text": "Bancos, redes ou deploys compartilhados os fazem cair juntos",
+        "why": "Isso, então cadeias reais podem ser piores que o produto."
+      },
+      {
+        "text": "Na prática serviços nunca falham",
+        "why": "Falham; é isso que a tabela mede."
+      },
+      {
+        "text": "O produto exagera o tempo fora do ar, então cadeias reais são melhores",
+        "why": "Causas compartilhadas pioram, não melhoram."
+      },
+      {
+        "text": "Independência exigiria rodar em continentes diferentes",
+        "why": "Independência aqui é sobre causas de falha, não geografia."
+      }
+    ]
+  },
+  "ex-7gayfdwx": {
+    "prompt": "Quais destes a aula oferece para encurtar a multiplicação de uma cadeia? Marque todos que se aplicam.",
+    "hint": "Três jeitos fecham a seção.",
+    "choices": [
+      {
+        "text": "Menos saltos no caminho",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma alternativa quando uma dependência não responde",
+        "why": "Isso, onde a dependência permite."
+      },
+      {
+        "text": "Um timeout maior em todo lugar",
+        "why": "Isso faz quem chama esperar mais; não diminui a multiplicação."
+      },
+      {
+        "text": "Não esperar, onde a resposta não é necessária agora",
+        "why": "Isso: o estilo assíncrono."
+      }
+    ]
+  },
+  "ex-m7y3e2cb": {
+    "prompt": "Por que um serviço lento é pior para quem o chama do que um parado?",
+    "hint": "Qual dos dois falha na hora?",
+    "choices": [
+      {
+        "text": "Um serviço lento corrompe os dados de quem chama",
+        "why": "O dado fica intacto; o que se perde é tempo."
+      },
+      {
+        "text": "Um parado falha rápido; um lento faz todo mundo esperar",
+        "why": "Isso. Sem timeout, talvez para sempre."
+      },
+      {
+        "text": "Um serviço parado é reiniciado pelo Compose na hora",
+        "why": "Nada reiniciou o estoque no laboratório."
+      },
+      {
+        "text": "Um serviço lento devolve respostas erradas",
+        "why": "Devolveu a resposta certa, atrasada."
+      }
+    ]
+  },
+  "ex-7makepzp": {
+    "prompt": "Com o estoque desacelerado para 5.000 ms e sem timeouts, quantos segundos o cliente esperou, com uma casa decimal?",
+    "hint": "O `time_total` do curl.",
+    "unit": "s"
+  },
+  "ex-pa95h6j7": {
+    "prompt": "Depois de o preço ganhar um timeout de um segundo, o que o cliente recebeu, e quando?",
+    "hint": "A captura da seção.",
+    "choices": [
+      {
+        "text": "Um `200` com a resposta certa, depois de cinco segundos",
+        "why": "Isso foi antes do timeout."
+      },
+      {
+        "text": "Um `504` direto do estoque, na hora",
+        "why": "O cliente não alcança o estoque; o preço desistiu dele."
+      },
+      {
+        "text": "Um `502`, em cerca de 1,2 s",
+        "why": "Isso: o `504` do preço, repassado pelo checkout."
+      },
+      {
+        "text": "Nada: a conexão travou até o curl desistir",
+        "why": "O timeout do preço encerrou a espera."
+      }
+    ]
+  },
+  "ex-cprcz2qg": {
+    "prompt": "O checkout desiste depois de dois segundos, e o preço espera até cinco pelo estoque. O que dá errado?",
+    "hint": "Quem ainda espera a resposta do preço no terceiro segundo?",
+    "choices": [
+      {
+        "text": "Nada; timeouts maiores mais embaixo são mais seguros",
+        "why": "Eles desperdiçam trabalho em requisições pelas quais ninguém espera."
+      },
+      {
+        "text": "O timeout do checkout é ignorado porque o do preço é maior",
+        "why": "O timeout de cada um vale para a sua chamada."
+      },
+      {
+        "text": "O estoque é chamado duas vezes por requisição",
+        "why": "Nada nessa configuração tenta de novo."
+      },
+      {
+        "text": "O preço continua trabalhando em requisições que ninguém espera mais",
+        "why": "Isso. Timeouts precisam encolher descendo a cadeia."
+      }
+    ]
+  },
+  "ex-1ma6t0t3": {
+    "prompt": "Passar o tempo restante junto com cada requisição, para cada elo saber quanto pode gastar, se chama ___ de prazo.",
+    "hint": "O gRPC faz isso em cada chamada.",
+    "blanks": [
+      {
+        "accept": [
+          "propagação"
+        ]
+      }
+    ]
+  },
+  "ex-wwepevnh": {
+    "prompt": "O que o estilo assíncrono compra, segundo a aula?",
+    "hint": "Não é velocidade.",
+    "choices": [
+      {
+        "text": "Processamento mais rápido de cada mensagem",
+        "why": "O trabalho leva o tempo que leva, em outro lugar."
+      },
+      {
+        "text": "A garantia de que cada mensagem é processada exatamente uma vez",
+        "why": "Garantias de entrega são outro assunto, aula 7."
+      },
+      {
+        "text": "Desacoplamento no tempo",
+        "why": "Isso: quem manda não precisa que o destinatário esteja de pé agora."
+      },
+      {
+        "text": "Consistência forte entre quem manda e quem recebe",
+        "why": "Enquanto uma mensagem espera, os dois discordam."
+      }
+    ]
+  },
+  "ex-bcg58tar": {
+    "prompt": "O serviço de e-mail fica fora do ar dez minutos no almoço. Com `OrderPlaced` passando por uma fila, o que acontece com os pedidos?",
+    "hint": "Quem depende de o serviço de e-mail estar de pé?",
+    "choices": [
+      {
+        "text": "Os pedidos seguem; as mensagens esperam o serviço de e-mail",
+        "why": "Isso. As confirmações saem atrasadas, e nada se perde."
+      },
+      {
+        "text": "Os pedidos falham até o serviço de e-mail voltar",
+        "why": "Essa é a versão síncrona."
+      },
+      {
+        "text": "Os pedidos dão certo, e os e-mails desses dez minutos são descartados",
+        "why": "A fila os guarda; não os joga fora."
+      },
+      {
+        "text": "O broker manda os e-mails ele mesmo enquanto o serviço está fora",
+        "why": "Um broker carrega mensagens; não faz o trabalho do destinatário."
+      }
+    ]
+  },
+  "ex-dd2p7kx3": {
+    "prompt": "Uma fila entre uma fonte com picos e um trabalhador constante, para ele ser dimensionado pela média e não pelo pico, se chama ___ de carga por fila.",
+    "hint": "Uma palavra sobre deixar as coisas por igual.",
+    "blanks": [
+      {
+        "accept": [
+          "nivelamento"
+        ]
+      }
+    ]
+  },
+  "ex-bvm5agyx": {
+    "prompt": "Quais destes viram coisas a projetar quando uma conversa fica assíncrona? Marque todos que se aplicam.",
+    "hint": "Quatro custos são listados.",
+    "choices": [
+      {
+        "text": "Quem manda só consegue dizer \"aceito\"",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma mensagem pode chegar duas vezes ou fora de ordem",
+        "why": "Isso, aula 7."
+      },
+      {
+        "text": "Os dois lados discordam enquanto uma mensagem espera",
+        "why": "Isso, aula 9."
+      },
+      {
+        "text": "O destinatário precisa estar de pé sempre que quem manda estiver",
+        "why": "É exatamente isso que o assíncrono tira."
+      }
+    ]
+  },
+  "ex-mp4ctmzr": {
+    "prompt": "O que `202 Accepted` diz ao cliente?",
+    "hint": "Recebida, e ainda não...",
+    "choices": [
+      {
+        "text": "O trabalho terminou e o resultado está no corpo",
+        "why": "Isso seria um `200` com o resultado."
+      },
+      {
+        "text": "Recebida, e ainda não processada",
+        "why": "Isso. O cabeçalho `Location` diz onde o resultado vai estar."
+      },
+      {
+        "text": "A requisição foi recusada e precisa ser mandada de novo depois",
+        "why": "Uma recusa seria um 4xx ou um 503."
+      },
+      {
+        "text": "O servidor está sobrecarregado e a enfileirou sem prometer nada",
+        "why": "O 202 é a promessa de que vai ser processada."
+      }
+    ]
+  },
+  "ex-542xpd7q": {
+    "prompt": "Ponha os passos do pedido de relatório do laboratório em ordem.",
+    "hint": "A captura, de cima para baixo.",
+    "items": [
+      "O cliente manda `POST /reports`",
+      "O servidor responde `202` com `Location: /reports/1`",
+      "Um `GET` nesse endereço acha o trabalho rodando",
+      "Um `GET` posterior o acha pronto, com o resultado"
+    ]
+  },
+  "ex-wg0twsn2": {
+    "prompt": "O contêiner de relatórios reinicia enquanto um relatório está sendo montado. O que o cliente vê, com o `report.py` como está?",
+    "hint": "Onde ficam os trabalhos?",
+    "choices": [
+      {
+        "text": "O relatório, um pouco depois do esperado",
+        "why": "O trabalho se perdeu com a memória do processo."
+      },
+      {
+        "text": "Um `202` de novo, porque o trabalho é reiniciado automaticamente",
+        "why": "Nada lembra que o trabalho existiu."
+      },
+      {
+        "text": "Um `404` no endereço do trabalho",
+        "why": "Isso. Os trabalhos estavam num dicionário; um serviço de verdade os guarda num banco."
+      },
+      {
+        "text": "`{\"status\": \"running\"}` para sempre",
+        "why": "O endereço nem existe mais."
+      }
+    ]
+  },
+  "ex-zkw2cns9": {
+    "prompt": "Fazer polling a cada dois segundos custa demais para um cliente que espera muitos trabalhos. Que alternativa a aula cita?",
+    "hint": "O servidor empurra em vez de ser perguntado.",
+    "choices": [
+      {
+        "text": "Fazer polling a cada cem milissegundos",
+        "why": "Isso custa mais, não menos."
+      },
+      {
+        "text": "Um callback para um endereço que o cliente deu",
+        "why": "Isso, ou uma mensagem numa fila, ou uma conexão mantida, aula 18."
+      },
+      {
+        "text": "Manter o POST original aberto até o trabalho terminar",
+        "why": "Essa é a conexão longa que o padrão existe para evitar."
+      },
+      {
+        "text": "Tornar o trabalho síncrono de novo",
+        "why": "Lento demais para segurar uma conexão era o motivo do padrão."
+      }
+    ]
+  },
+  "ex-4r3t5q47": {
+    "prompt": "Ligue cada mensagem ao seu tipo.",
+    "hint": "Imperativo, passado, ou pergunta.",
+    "pairs": [
+      {
+        "left": "ChargeCard",
+        "right": "comando"
+      },
+      {
+        "left": "PaymentDeclined",
+        "right": "evento"
+      },
+      {
+        "left": "GetPrice",
+        "right": "consulta"
+      }
+    ],
+    "right_distractors": [
+      "transação"
+    ]
+  },
+  "ex-z1j8j6sj": {
+    "prompt": "O serviço de fidelidade escuta `OrderPlaced` e não gosta de um pedido. O que ele pode fazer?",
+    "hint": "Um evento pode ser recusado?",
+    "choices": [
+      {
+        "text": "Recusar o evento, para o pedido ser desfeito",
+        "why": "Um evento afirma algo que já aconteceu."
+      },
+      {
+        "text": "Apagar o evento do broker para ninguém mais ver",
+        "why": "O evento é de todos que escutam; apagá-lo esconde um fato."
+      },
+      {
+        "text": "Reagir, por exemplo mandando um comando próprio",
+        "why": "Isso. Não consegue fazer o pedido não ter acontecido."
+      },
+      {
+        "text": "Nada; ouvintes não podem agir sobre eventos",
+        "why": "Agir sobre eventos é para o que servem ouvintes."
+      }
+    ]
+  },
+  "ex-tyctn37y": {
+    "prompt": "A Quitanda acrescenta um serviço de pontos de fidelidade que reage a `OrderPlaced`. O que precisa mudar no serviço de pedidos?",
+    "hint": "Quem conhece quem, com um evento?",
+    "choices": [
+      {
+        "text": "Uma chamada nova ao serviço de fidelidade depois de cada pedido",
+        "why": "Isso o tornaria um comando, e acoplaria pedidos à fidelidade."
+      },
+      {
+        "text": "Um tipo de evento novo, `OrderPlacedForLoyalty`",
+        "why": "O evento existente já diz o que aconteceu."
+      },
+      {
+        "text": "Nada",
+        "why": "Isso. O destinatário conhece quem manda; pedidos não sabe que fidelidade existe."
+      },
+      {
+        "text": "O banco dele, para guardar os pontos de fidelidade",
+        "why": "Pontos pertencem ao dado do próprio serviço de fidelidade."
+      }
+    ]
+  },
+  "ex-1h3rs648": {
+    "prompt": "Uma equipe manda uma consulta de estoque como mensagem e espera a resposta numa fila de retorno, para não depender do serviço de estoque. O que a aula diz?",
+    "hint": "Continua falhando quando o estoque está fora?",
+    "choices": [
+      {
+        "text": "Remove a dependência, como pretendido",
+        "why": "Quem chama ainda espera, e ainda falha sem o estoque."
+      },
+      {
+        "text": "É uma chamada síncrona com mais peças, escondendo a dependência",
+        "why": "Isso."
+      },
+      {
+        "text": "Consultas nunca devem usar um broker por motivo algum",
+        "why": "O ponto da aula é o porquê, não uma proibição de brokers."
+      },
+      {
+        "text": "É o jeito recomendado de mandar consultas",
+        "why": "A tabela põe consultas na coluna síncrona."
+      }
+    ]
+  },
+  "ex-ybxrc0jz": {
+    "prompt": "Que pergunta a aula diz que decide entre síncrono e assíncrono?",
+    "hint": "Antes de poder seguir.",
+    "choices": [
+      {
+        "text": "Que estilo é mais rápido para esta chamada",
+        "why": "Assíncrono não é mais rápido; é desacoplado."
+      },
+      {
+        "text": "Quem chama precisa do resultado antes de seguir?",
+        "why": "Isso."
+      },
+      {
+        "text": "Que broker a equipe já roda",
+        "why": "O broker decorre da escolha, não o contrário."
+      },
+      {
+        "text": "Quantos serviços estão envolvidos",
+        "why": "Uma conversa entre dois pode ser qualquer um."
+      }
+    ]
+  },
+  "ex-wtv88jn4": {
+    "prompt": "Ligue cada conversa da Quitanda ao estilo que a tabela da aula dá a ela.",
+    "hint": "Quem está esperando, em cada uma?",
+    "pairs": [
+      {
+        "left": "autorizar o cartão no checkout",
+        "right": "comando síncrono"
+      },
+      {
+        "left": "mandar o e-mail de confirmação",
+        "right": "evento assíncrono"
+      },
+      {
+        "left": "montar o relatório do mês",
+        "right": "requisição e resposta assíncronas"
+      },
+      {
+        "left": "mostrar o preço da cesta",
+        "right": "consulta síncrona"
+      }
+    ],
+    "right_distractors": [
+      "uma tabela de banco compartilhada"
+    ]
+  },
+  "ex-0k5yyset": {
+    "prompt": "O serviço do depósito recebe um pedido para separar e responde \"separado\" uns vinte minutos depois. O checkout hoje o chama de forma síncrona e estoura o timeout. O que encaixa?",
+    "hint": "Ninguém no checkout espera vinte minutos.",
+    "choices": [
+      {
+        "text": "Um timeout de vinte e cinco minutos na chamada",
+        "why": "Um checkout aberto por vinte minutos é o problema, não a correção."
+      },
+      {
+        "text": "Tentar a chamada de novo até o depósito responder a tempo",
+        "why": "O depósito não está falhando; é lento por natureza."
+      },
+      {
+        "text": "Um comando numa fila, e um evento `Picked` depois",
+        "why": "Isso: o checkout diz \"aceito\", e o resultado chega como evento."
+      },
+      {
+        "text": "Um depósito mais rápido",
+        "why": "Separar leva o tempo de as pessoas andarem pelos corredores."
+      }
+    ]
+  },
+  "ex-9sd7zh9m": {
+    "prompt": "Que afirmação sobre os dois estilos a aula sustenta?",
+    "hint": "O último parágrafo.",
+    "choices": [
+      {
+        "text": "Assíncrono é o estilo avançado para onde sistemas maduros vão",
+        "why": "A aula rejeita essa hierarquia."
+      },
+      {
+        "text": "Síncrono deve ser evitado entre serviços",
+        "why": "Muitas conversas têm o formato síncrono."
+      },
+      {
+        "text": "Cada um encaixa num tipo diferente de conversa",
+        "why": "Isso. O problema vem de usar um onde o outro encaixa."
+      },
+      {
+        "text": "Um sistema precisa escolher um estilo e usá-lo em todo lugar",
+        "why": "O próprio checkout usa os dois."
+      }
+    ]
+  }
+}
