@@ -1,0 +1,549 @@
+[
+  {
+    "id": "ex-38m8fahc",
+    "version": 1,
+    "section": "the-pattern",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the third choice the lesson offers, besides patching the old system or rewriting it?",
+    "hint": "Fowler, 2004.",
+    "choices": [
+      {
+        "text": "Freeze the old system and build the new one beside it",
+        "correct": false,
+        "why": "That is the rewrite with a freeze, and it still ends in one switch."
+      },
+      {
+        "text": "Buy a product that replaces the old system",
+        "correct": false,
+        "why": "Buying is lesson 8's subject; even a bought system would still need moving to."
+      },
+      {
+        "text": "Replace it piece by piece while it runs",
+        "correct": true,
+        "why": "Right: production runs on a mixture of old and new, and nobody picks a day to switch."
+      },
+      {
+        "text": "Split the monolith into microservices in one programme",
+        "correct": false,
+        "why": "A company-wide split is what the strategy postponed; the pattern moves one slice, not the whole."
+      }
+    ]
+  },
+  {
+    "id": "ex-zk8hzn1b",
+    "version": 1,
+    "section": "the-pattern",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the five moves of the strangler pattern in order.",
+    "hint": "The first move makes every later one possible.",
+    "items": [
+      "Put a facade in front of the old system",
+      "Build the new piece for one slice",
+      "Route that slice to the new piece, keeping the way back",
+      "Repeat until nothing is left on the old path",
+      "Delete the old code"
+    ],
+    "trap": "Building the new piece before the facade leaves no way to send it a single slice, which turns the migration back into one big switch."
+  },
+  {
+    "id": "ex-nszw3d9g",
+    "version": 1,
+    "section": "the-pattern",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the moving target from lesson 6 stop being a problem in a strangler migration?",
+    "hint": "Where do changes to a moved event's holds get made?",
+    "choices": [
+      {
+        "text": "Other teams stop shipping until it ends",
+        "correct": false,
+        "why": "Nobody at Coreto froze; the teams kept shipping throughout the twelve months."
+      },
+      {
+        "text": "The facade translates old changes into new code",
+        "correct": false,
+        "why": "The facade only routes; it never rewrites anybody's changes."
+      },
+      {
+        "text": "Changes to moved slices are made on the new side",
+        "correct": true,
+        "why": "Right: once a slice has moved, the old copy of it no longer changes, so there is nothing to chase."
+      },
+      {
+        "text": "Twelve months is too short for the old code to change",
+        "correct": false,
+        "why": "Eighteen months was enough for the rewrite's target to move; duration is not what solves it."
+      }
+    ]
+  },
+  {
+    "id": "ex-k6v6ynq9",
+    "version": 1,
+    "section": "the-pattern",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team builds a complete new booking service beside the old one, and plans to send all traffic to it over one weekend, with a proxy in front. Is that a strangler migration, by the lesson?",
+    "hint": "A facade is necessary; is it enough?",
+    "choices": [
+      {
+        "text": "No: it is a rewrite with one switch at the end",
+        "correct": true,
+        "why": "Right: building it whole and switching at once brings back the rewrite's cutover risk, whatever sits in front."
+      },
+      {
+        "text": "Yes, because a proxy in front is the facade",
+        "correct": false,
+        "why": "The facade is the first move; the pattern is the slices that follow it, one at a time."
+      },
+      {
+        "text": "Yes, provided the old service is deleted afterwards",
+        "correct": false,
+        "why": "Deleting is the finish line, but this plan skips every step that makes the finish safe."
+      },
+      {
+        "text": "No, because a strangler has to take at least twelve months",
+        "correct": false,
+        "why": "Twelve months was Coreto's duration, not a rule; what matters is moving slice by slice."
+      }
+    ]
+  },
+  {
+    "id": "ex-j18erc38",
+    "version": 1,
+    "section": "seams-and-routing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did Coreto route seat holds by event rather than by a percentage of requests?",
+    "hint": "Two requests for the same seat.",
+    "choices": [
+      {
+        "text": "Percentages are harder to configure in a proxy",
+        "correct": false,
+        "why": "A percentage is the usual default and easy to set; the objection is what it does to one seat."
+      },
+      {
+        "text": "Venues asked to be migrated one at a time",
+        "correct": false,
+        "why": "No venue asked; the key was chosen by what must not be split."
+      },
+      {
+        "text": "Events are easier to count on a progress chart",
+        "correct": false,
+        "why": "The chart counts traffic, not events; counting was not the reason."
+      },
+      {
+        "text": "One seat could be held in two stores at once",
+        "correct": true,
+        "why": "Right: all holds for one event live on one side, so two buyers are never both told a seat is theirs."
+      }
+    ]
+  },
+  {
+    "id": "ex-hwy0ayc8",
+    "version": 1,
+    "section": "seams-and-routing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What happens to the new service's answer during shadow traffic?",
+    "hint": "The old code still answers the buyer.",
+    "choices": [
+      {
+        "text": "It is sent to the buyer whenever the old code fails",
+        "correct": false,
+        "why": "A fallback would make the new code live; shadow answers reach no buyer."
+      },
+      {
+        "text": "It replaces the old answer for small venues only",
+        "correct": false,
+        "why": "Small venues went first for real routing; shadow is the step before routing anything."
+      },
+      {
+        "text": "It is written to coreto-core's tables as a backup copy",
+        "correct": false,
+        "why": "Shadow holds go to a separate store no buyer sees; writing them into live tables would corrupt real holds."
+      },
+      {
+        "text": "It is recorded, compared, then thrown away",
+        "correct": true,
+        "why": "Right: the comparison finds differences before any buyer meets them, as it did with the student half-price limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-bn9b06h5",
+    "version": 1,
+    "section": "seams-and-routing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did Coreto reject the dual write, each confirmation written to both stores in the same request?",
+    "hint": "One write succeeds and the other times out.",
+    "choices": [
+      {
+        "text": "Two stores, two answers, no owner",
+        "correct": true,
+        "why": "Right: in the gap between two writes, a failure leaves two versions of who owns a seat and no owner to settle it."
+      },
+      {
+        "text": "It doubles the database bill for the year",
+        "correct": false,
+        "why": "The lesson's objection is correctness, not cost."
+      },
+      {
+        "text": "Readers of the old tables would stop working",
+        "correct": false,
+        "why": "Readers keep working either way; the chosen design also publishes into the old tables."
+      },
+      {
+        "text": "Confirmations are too rare to be worth two writes",
+        "correct": false,
+        "why": "Confirmations happen on every sale; frequency is not the problem."
+      }
+    ]
+  },
+  {
+    "id": "ex-qneyw1vv",
+    "version": 1,
+    "section": "seams-and-routing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each technique of the migration to what it buys.",
+    "hint": "The table at the end of the section.",
+    "pairs": [
+      {
+        "left": "A seam inside the old system",
+        "right": "One place to cut and to review"
+      },
+      {
+        "left": "Routing by event",
+        "right": "Holds for one event never split"
+      },
+      {
+        "left": "Shadow traffic",
+        "right": "Differences found before buyers meet them"
+      },
+      {
+        "left": "One source of truth and a derived copy",
+        "right": "Readers keep working while they migrate"
+      }
+    ],
+    "right_distractors": [
+      "A cutover on a single weekend"
+    ]
+  },
+  {
+    "id": "ex-tb2hzbj3",
+    "version": 1,
+    "section": "seams-and-routing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Another team strangles its e-mail notifications. Each message is independent of every other. By the lesson's reasoning, what routing key fits?",
+    "hint": "Route by the thing that must not be split. Is there one?",
+    "choices": [
+      {
+        "text": "By event, as Coreto did, since it is the proven key",
+        "correct": false,
+        "why": "Coreto chose events because a seat must not be split; notifications have no such unit."
+      },
+      {
+        "text": "By customer, because customers complain individually",
+        "correct": false,
+        "why": "Complaints do not decide the key; what must not be split does, and nothing here must."
+      },
+      {
+        "text": "No key at all: shadow every message for the whole migration",
+        "correct": false,
+        "why": "Shadow comes before switching; a migration that only shadows never moves anything."
+      },
+      {
+        "text": "By percentage: nothing here must stay together",
+        "correct": true,
+        "why": "Right: the percentage was wrong for seat holds only because two requests could touch one seat."
+      }
+    ]
+  },
+  {
+    "id": "ex-cey5rf5g",
+    "version": 1,
+    "section": "the-last-ten-percent",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Coreto's new service reached 90% of reservation traffic at the end of month 8 and 100% at the end of month 12. How many months did the last 10% take?",
+    "hint": "Count from month 8 to month 12.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "months"
+  },
+  {
+    "id": "ex-m149y2xv",
+    "version": 1,
+    "section": "the-last-ten-percent",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the last 10% of traffic take a third of the migration?",
+    "hint": "Small in traffic, large in work.",
+    "choices": [
+      {
+        "text": "The big on-sales were saved for last",
+        "correct": false,
+        "why": "Big on-sales moved once the load test passed, well before the tail; the tail was the rare paths."
+      },
+      {
+        "text": "The new service slowed down under the extra load",
+        "correct": false,
+        "why": "Nothing in the lesson says the service struggled; the work was in the paths, not the capacity."
+      },
+      {
+        "text": "Rare paths, each with its own work, several owned by other teams",
+        "correct": true,
+        "why": "Right: hand holds at the door, school groups, festival passes and a partner contract each moved the chart by a point or two."
+      },
+      {
+        "text": "The team was moved to other work after month 8",
+        "correct": false,
+        "why": "That is the temptation the lesson warns about; Coreto finished the tail instead."
+      }
+    ]
+  },
+  {
+    "id": "ex-ta9sya4q",
+    "version": 1,
+    "section": "the-last-ten-percent",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson call 90% the most expensive place to stop?",
+    "hint": "Count the systems that would still be running.",
+    "choices": [
+      {
+        "text": "The last 10% carries the most valuable traffic",
+        "correct": false,
+        "why": "The tail was the rare paths, not the valuable ones; the cost of stopping is in running two systems."
+      },
+      {
+        "text": "Both systems run on, and the old debt's interest never reaches zero",
+        "correct": true,
+        "why": "Right: facade, two stores, sync and old locks stay live, and anyone touching the old path still pays the tax."
+      },
+      {
+        "text": "Venues are billed twice while two systems run",
+        "correct": false,
+        "why": "Nothing reaches the venues' bills; the cost lands on Coreto's engineers."
+      },
+      {
+        "text": "The routing table gets too large to maintain",
+        "correct": false,
+        "why": "A table of events is small; the expense is everything the table keeps alive."
+      }
+    ]
+  },
+  {
+    "id": "ex-p1bd76vm",
+    "version": 1,
+    "section": "the-last-ten-percent",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By the lesson, a strangler migration is finished on the day the old code is ___.",
+    "hint": "Share of traffic is not the finish line.",
+    "blanks": [
+      {
+        "accept": [
+          "deleted",
+          "removed",
+          "gone"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-wgbhzkwh",
+    "version": 1,
+    "section": "the-last-ten-percent",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A dashboard has shown \"97% migrated\" for six months, and the team behind it is now on another project. What would the lesson have them report and do?",
+    "hint": "Two numbers, a list and a date.",
+    "choices": [
+      {
+        "text": "Call it done, since 97% is within any reasonable margin",
+        "correct": false,
+        "why": "97% means two systems still run; a migration is done when the old code is gone."
+      },
+      {
+        "text": "Move the rest by percentage to finish faster",
+        "correct": false,
+        "why": "The tail is not volume to shift; it is specific paths, each needing its own work."
+      },
+      {
+        "text": "List what is left, with owners and a delete date",
+        "correct": true,
+        "why": "Right: the second number only falls when something is deleted, and the tail moves once each path has an owner."
+      },
+      {
+        "text": "Rewrite the remaining paths from scratch in one go",
+        "correct": false,
+        "why": "That reintroduces the single cutover lesson 6 argued against, for the paths least understood."
+      }
+    ]
+  },
+  {
+    "id": "ex-hp3vdk7v",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Lesson 1 gave the Reservations team two quarters on the hold path. What percentage of reservation traffic did the new service carry at the end of month 6?",
+    "hint": "Read it off the chart.",
+    "value": 71,
+    "tolerance": 0,
+    "unit": "percent",
+    "accept_units": [
+      "%"
+    ]
+  },
+  {
+    "id": "ex-t54nrk7p",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In what order did Coreto move events to the new service?",
+    "hint": "Chosen by risk.",
+    "choices": [
+      {
+        "text": "Big on-sales first, since that is where the failures were",
+        "correct": false,
+        "why": "That puts the riskiest move first, before the new service had proved anything."
+      },
+      {
+        "text": "Small, then mid-size, then big after the load test",
+        "correct": true,
+        "why": "Right: small mistakes first, and nothing reaches the on-sale path without load evidence, as lesson 1's policy says."
+      },
+      {
+        "text": "Alphabetically by venue, so nobody felt left out",
+        "correct": false,
+        "why": "The order was chosen by risk, not fairness between venues."
+      },
+      {
+        "text": "The events whose holds were already expiring",
+        "correct": false,
+        "why": "Holds expire in minutes for every event; it is why moving them is easy, not how the order was set."
+      }
+    ]
+  },
+  {
+    "id": "ex-ktjsseyp",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these are scaffolding, to be taken down when the migration finishes? Choose all that apply.",
+    "hint": "What exists only because two systems run at once?",
+    "choices": [
+      {
+        "text": "The nightly reconciliation between the two stores",
+        "correct": true,
+        "why": "Yes: with one store left there is nothing to reconcile."
+      },
+      {
+        "text": "The path publishing confirmations into the old tables",
+        "correct": true,
+        "why": "Yes: it exists for readers of the old tables, and they move before the end."
+      },
+      {
+        "text": "The reservation service's own store of holds",
+        "correct": false,
+        "why": "That is the new system, the thing the migration builds; it stays."
+      },
+      {
+        "text": "The load test that replays an on-sale",
+        "correct": false,
+        "why": "It is one of lesson 1's actions and keeps guarding the reservation path after the migration."
+      }
+    ]
+  },
+  {
+    "id": "ex-yj62j9xv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The Reservations team's first month shipped no new service, only one entry point inside the monolith. Why does the lesson say it paid for itself?",
+    "hint": "Two things now had one place.",
+    "choices": [
+      {
+        "text": "One review point, and a place for the facade",
+        "correct": true,
+        "why": "Right: it made lesson 1's review rule workable and gave the facade somewhere to sit."
+      },
+      {
+        "text": "It removed the row locks from the hold path",
+        "correct": false,
+        "why": "Nothing behind the entry point changed; the locks went with the new service."
+      },
+      {
+        "text": "It cut the seat-hold interest to zero",
+        "correct": false,
+        "why": "Interest only stops when the old code is gone; a seam alone leaves the locks in place."
+      },
+      {
+        "text": "It let the partner integration read the new store",
+        "correct": false,
+        "why": "The partner was in the tail and needed a conversation months later."
+      }
+    ]
+  },
+  {
+    "id": "ex-w4sd6qjm",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Halfway through the migration, the new service gets a group-booking rule wrong for one event. What does the strangler pattern let Coreto do that a rewrite would not?",
+    "hint": "How was the event moved in the first place?",
+    "choices": [
+      {
+        "text": "Roll back the whole platform to last month's release",
+        "correct": false,
+        "why": "Nothing that drastic is needed; the mistake is confined to one event."
+      },
+      {
+        "text": "Change one row of the routing table and send that event back",
+        "correct": true,
+        "why": "Right: the move was one row, so the way back is one row, before the event's next on-sale."
+      },
+      {
+        "text": "Ship the fix straight to the old code instead",
+        "correct": false,
+        "why": "The old code already handles group bookings; the fix belongs in the new service, with the event routed back meanwhile."
+      },
+      {
+        "text": "Pause ticket sales until the rule is fixed",
+        "correct": false,
+        "why": "Pausing sales is what the pattern exists to avoid; the old path is still there to serve the event."
+      }
+    ]
+  }
+]
