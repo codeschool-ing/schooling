@@ -39,8 +39,10 @@ block unguarded
 run 'mkdir -p ~/unguarded && cp test_account.py ~/unguarded/'
 run "sed '/# owner check\$/s/^ */&# /' account.py > ~/unguarded/account.py"
 run 'diff account.py ~/unguarded/account.py'
+run 'cd ~/unguarded'
 at '~/unguarded'
 run 'python3 -m unittest test_account'
+run 'cd ~/boxoffice'
 at '~/boxoffice'
 run 'rm -r ~/unguarded'
 

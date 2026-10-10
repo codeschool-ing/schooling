@@ -74,6 +74,7 @@ ana@nft:~/boxoffice$ diff account.py ~/unguarded/account.py
 <             if row[0] != me[0]: return self.refuse(404, "no such booking", me)  # owner check
 ---
 >             # if row[0] != me[0]: return self.refuse(404, "no such booking", me)  # owner check
+ana@nft:~/boxoffice$ cd ~/unguarded
 ana@nft:~/unguarded$ python3 -m unittest test_account
 F.......
 ======================================================================
@@ -85,9 +86,10 @@ Traceback (most recent call last):
 AssertionError: 200 != 404 : a second customer's token read the first customer's booking
 
 ----------------------------------------------------------------------
-Ran 8 tests in 1.463s
+Ran 8 tests in 1.508s
 
 FAILED (failures=1)
+ana@nft:~/unguarded$ cd ~/boxoffice
 ana@nft:~/boxoffice$ rm -r ~/unguarded
 ```
 
