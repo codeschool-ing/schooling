@@ -69,8 +69,8 @@ you type the first code or two in a new column and fills in the rest by guessing
 
 Both are quick, and both leave values rather than formulas. When next month's export arrives, a
 formula column fills down over it, while a Text to Columns split or a Flash Fill has to be done
-again, and Flash Fill's guess has to be checked again too, because it can pick the wrong pattern
-from too few examples. For a one-off list, use them; for data that comes back, write the formula.
+again. Flash Fill's guess also has to be checked again, because it can pick the wrong pattern from
+too few examples. For a one-off list, use them; for data that comes back, write the formula.
 
 ## Joining: &
 

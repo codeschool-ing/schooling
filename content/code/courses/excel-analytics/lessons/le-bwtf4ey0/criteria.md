@@ -49,7 +49,7 @@ lookups bring it alongside each sale.
 ## Dates are numbers, so a date condition is a comparison
 
 Lesson 1 showed that a date is stored as a count of days. A condition on dates is therefore an
-operator and a number, and the safe way to write the number is the `DATE` function, joined to the
+operator and a number. The safe way to write the number is the `DATE` function, joined to the
 operator with `&`:
 
 ```localised

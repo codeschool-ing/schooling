@@ -16,7 +16,8 @@ lado. As aulas anteriores pediram que você apagasse as células auxiliares, da 
 exatamente por isso. Depois, na planilha `Sales`:
 
 1. Clique em qualquer célula dentro dos dados, por exemplo **A1**.
-2. Use **Inserir › Tabela**, ou aperte **Ctrl+T** (no Mac, **Cmd+T**).
+2. Use **Inserir › Tabela**. No Excel em inglês o atalho é **Ctrl+T**; em português ele pode ser
+   outro, conforme a versão, e o menu funciona em todas.
 3. O Excel propõe o intervalo `=$A$1:$H$109` e marca **Minha tabela tem cabeçalhos**. Confira os
    dois e clique em **OK**.
 4. Com uma célula da tabela selecionada, aparece na faixa de opções a guia **Design da Tabela**

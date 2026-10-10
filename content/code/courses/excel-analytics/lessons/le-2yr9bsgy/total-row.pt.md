@@ -5,8 +5,8 @@ version: 1
 
 **A linha de total de uma tabela soma o que está visível, então muda quando você filtra e fica
 parada quando você não filtra.** Isso a torna o jeito mais rápido de responder *quanto, nas linhas
-que estou vendo*, e o lugar errado para guardar um número que alguém vai citar depois, porque um
-filtro não fica escrito em lugar nenhum que o leitor vá olhar.
+que estou vendo*. Também a torna o lugar errado para guardar um número que alguém vai citar depois,
+porque um filtro não fica escrito em lugar nenhum que o leitor vá olhar.
 
 ## Ligando
 

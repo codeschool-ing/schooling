@@ -40,10 +40,10 @@ number out of text that looks like one. They do the same as `VALUE` on a cell li
 `6 un` just as it does, since no arithmetic can read the letters. `VALUE` says what it is for, which
 is the better reason to use it.
 
-When the column is clean apart from its type, with no unit in it, there are two quicker ways that
-leave numbers rather than formulas: the warning triangle on the cell, whose menu offers **Convert to
-Number** for a whole selection; and **Data › Text to Columns** with **Finish** straight away, which
-re-reads every cell of the column as if it had just been typed.
+When the column is clean apart from its type, with no unit in it, two quicker ways leave numbers
+rather than formulas. One is the warning triangle on the cell, whose menu offers **Convert to
+Number** for a whole selection. The other is **Data › Text to Columns** with **Finish** straight
+away, which re-reads every cell of the column as if it had just been typed.
 
 ## Text that must not become a number
 

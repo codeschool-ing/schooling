@@ -50,7 +50,7 @@ trazem para o lado de cada venda.
 ## Datas são números, então uma condição de data é uma comparação
 
 A aula 1 mostrou que uma data é guardada como uma contagem de dias. Uma condição sobre datas é,
-portanto, um operador e um número, e o jeito seguro de escrever o número é a função `DATA` (`DATE`),
+portanto, um operador e um número. O jeito seguro de escrever o número é a função `DATA` (`DATE`),
 colada ao operador com `&`:
 
 ```localised

@@ -4,9 +4,9 @@ version: 1
 ---
 
 **A table's total row adds up what is visible, so it changes when you filter and stays put when
-you do not.** That makes it the quickest way to answer *how much, for the rows I am looking at*,
-and the wrong place to keep a number anybody will quote later, because a filter is not written down
-anywhere a reader will look.
+you do not.** That makes it the quickest way to answer *how much, for the rows I am looking at*.
+It also makes it the wrong place to keep a number anybody will quote later, because a filter is not
+written down anywhere a reader will look.
 
 ## Switching it on
 

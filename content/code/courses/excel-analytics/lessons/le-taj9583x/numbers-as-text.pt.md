@@ -41,10 +41,10 @@ de um texto que parece número. Fazem o mesmo que `VALOR` numa célula como `12`
 do mesmo jeito, já que nenhuma conta lê as letras. `VALOR` diz para que serve, e esse é o melhor
 motivo para usá-la.
 
-Quando a coluna está limpa a não ser pelo tipo, sem unidade nenhuma, há dois jeitos mais rápidos que
-deixam números em vez de fórmulas: o triângulo de aviso da célula, cujo menu oferece **Converter em
-Número** para uma seleção inteira; e **Dados › Texto para Colunas** com **Concluir** de cara, que
-relê cada célula da coluna como se tivesse acabado de ser digitada.
+Quando a coluna está limpa a não ser pelo tipo, sem unidade nenhuma, dois jeitos mais rápidos
+deixam números em vez de fórmulas. Um é o triângulo de aviso da célula, cujo menu oferece
+**Converter em Número** para uma seleção inteira. O outro é **Dados › Texto para Colunas** com
+**Concluir** de cara, que relê cada célula da coluna como se tivesse acabado de ser digitada.
 
 ## Texto que não pode virar número
 

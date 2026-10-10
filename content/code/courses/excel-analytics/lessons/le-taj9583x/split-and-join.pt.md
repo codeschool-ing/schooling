@@ -65,13 +65,13 @@ o padrão com `PROCURAR`, que funciona em toda versão.
 
 Dois comandos fazem o mesmo corte à mão. **Dados › Texto para Colunas**, com **Delimitado** e o
 hífen como separador, divide a coluna em duas no lugar. **Dados › Preenchimento Relâmpago** (Flash
-Fill), ou **Ctrl+E**, observa você digitar o primeiro código ou dois numa coluna nova e preenche o
+Fill), cujo atalho no Excel em inglês é **Ctrl+E**, observa você digitar o primeiro código ou dois numa coluna nova e preenche o
 resto adivinhando o padrão.
 
 Os dois são rápidos, e os dois deixam valores em vez de fórmulas. Quando a exportação do mês
 seguinte chega, uma coluna de fórmulas se preenche por cima dela, enquanto um Texto para Colunas ou
-um Preenchimento Relâmpago precisa ser feito de novo, e o palpite do Preenchimento Relâmpago precisa
-ser conferido de novo também, porque ele pode tirar o padrão errado de poucos exemplos. Para uma
+um Preenchimento Relâmpago precisa ser feito de novo. O palpite do Preenchimento Relâmpago também
+precisa ser conferido de novo, porque ele pode tirar o padrão errado de poucos exemplos. Para uma
 lista avulsa, use-os; para dados que voltam, escreva a fórmula.
 
 ## Juntando: &
