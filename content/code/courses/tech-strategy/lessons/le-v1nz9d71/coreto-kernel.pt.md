@@ -52,8 +52,8 @@ temporada de aberturas.
 2. **Construir o teste de carga antes de mudar o código.** O time de Plataforma constrói um teste
    repetível que reproduz o tráfego de uma abertura, para que toda mudança no caminho possa ser
    medida contra ele.
-3. **Pagar a dívida da reserva de assentos.** O time novo passa os dois primeiros trimestres
-   tirando as travas de linha do caminho da reserva, medido pelo teste de carga.
+3. **Pagar a dívida da reserva de assentos.** O time novo passa os dois primeiros trimestres no
+   caminho da reserva, começando pelas travas de linha, e mede cada mudança com o teste de carga.
 4. **Congelar o caminho durante as aberturas.** Nenhum deploy no módulo de reservas nas 24 horas
    antes de uma grande abertura, por regra e não por pedido.
 

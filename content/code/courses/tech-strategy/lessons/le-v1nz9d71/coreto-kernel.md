@@ -47,8 +47,8 @@ on-sale season.
    Reservations team from 1 March. Changes to the seat-hold code need their review.
 2. **Build the load test before changing the code.** The Platform team builds a repeatable test
    that replays an on-sale's traffic, so every change to the path can be measured against it.
-3. **Pay down the seat-hold debt.** The new team spends its first two quarters removing the row
-   locks from the hold path, measured by the load test.
+3. **Pay down the seat-hold debt.** The new team spends its first two quarters on the hold
+   path, starting with the row locks, and measures every change with the load test.
 4. **Freeze the path during on-sales.** No deploys to the reservation module in the 24 hours
    before a big on-sale, by rule rather than by asking.
 
