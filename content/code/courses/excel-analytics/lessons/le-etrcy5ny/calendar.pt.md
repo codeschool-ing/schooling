@@ -4,10 +4,9 @@ version: 1
 ---
 
 **`Sales[Date]` não é um calendário.** Ela guarda os 108 dias em que algo foi vendido, e nada sobre
-os outros 622 dias de 2025 e 2026. Um relatório precisa desses dias também: um mês sem venda é um
-mês que o relatório deve mostrar vazio, e não omitir, e as comparações da aula 16, como este ano
-contra o mesmo período do ano passado, são calculadas sobre todos os dias de um período, com venda ou
-sem. Então o modelo ganha uma quarta tabela, `Calendar`, com uma linha para cada dia e as colunas
+os outros 622 dias de 2025 e 2026. Um relatório precisa desses dias também. Um mês sem venda deve
+aparecer vazio, e não sumir, e as comparações da aula 16, como este ano contra o mesmo período do
+ano passado, são calculadas sobre todos os dias de um período, com venda ou sem. Então o modelo ganha uma quarta tabela, `Calendar`, com uma linha para cada dia e as colunas
 pelas quais um relatório agrupa.
 
 | coluna | guarda | para 15 de agosto de 2025 |

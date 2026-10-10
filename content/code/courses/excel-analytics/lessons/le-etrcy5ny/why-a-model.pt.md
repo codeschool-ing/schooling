@@ -18,7 +18,7 @@ venda. A próxima pessoa a abrir a pasta não consegue distinguir as colunas reg
 ## O que é o modelo de dados
 
 O **modelo de dados** é um pequeno banco de dados que mora dentro da pasta de trabalho. Você põe
-tabelas nele, diz qual coluna de uma tabela aponta para qual coluna de outra, e daí em diante uma
+tabelas nele e diz qual coluna de uma tabela aponta para qual coluna de outra. Daí em diante, uma
 tabela dinâmica criada sobre o modelo pode tirar as linhas de `Products`, as colunas de um
 calendário e os números de `Sales`, tudo ao mesmo tempo. Nada é copiado: o modelo segue os
 ponteiros cada vez que soma uma célula.

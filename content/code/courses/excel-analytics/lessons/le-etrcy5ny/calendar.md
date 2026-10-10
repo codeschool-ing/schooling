@@ -4,10 +4,9 @@ version: 1
 ---
 
 **`Sales[Date]` is not a calendar.** It holds the 108 days on which something was sold, and nothing
-about the other 622 days of 2025 and 2026. A report needs those days too: a month with no sale is a
-month the report should show as empty rather than leave out, and the comparisons of lesson 16, such
-as this year against the same period last year, are computed over every day of a period, sold on
-or not. So the model gets a fourth table, `Calendar`, with one row for every day and the columns a
+about the other 622 days of 2025 and 2026. A report needs those days too. A month with no sale should
+show as empty rather than vanish, and the comparisons of lesson 16, such as this year against the
+same period last year, are computed over every day of a period, sold on or not. So the model gets a fourth table, `Calendar`, with one row for every day and the columns a
 report groups by.
 
 | column | holds | for 15 August 2025 |

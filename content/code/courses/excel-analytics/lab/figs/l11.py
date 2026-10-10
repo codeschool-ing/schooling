@@ -101,13 +101,13 @@ def item(t):
            size=10.5, fill="var(--amber)")
     s.sans(40, 210, t(f"the real total is {_n(t, total)}", f"o total real é {_n(t, total)}"),
            size=10.5, fill="var(--paper-dim)")
-    x0 = 480
+    x0 = 505
     s.sans(x0, 18, t("a group: Online and Shop under Direct", "um grupo: Online e Shop sob Direct"),
            size=12, weight="600")
     right = [head, ["Direct", _n(t, direct)], ["\u00a0\u00a0\u00a0Online", _n(t, by["Online"])],
              ["\u00a0\u00a0\u00a0Shop", _n(t, by["Shop"])], ["Wholesale", _n(t, by["Wholesale"])],
              [t("Grand Total", "Total Geral"), _n(t, total)]]
-    s.grid(x0, 34, [130, 120], right, rowh=26, anchors={1: "end"},
+    s.grid(x0, 34, [120, 115], right, rowh=26, anchors={1: "end"},
            fills={(1, 0): "var(--scan)", (1, 1): "var(--scan)", (4, 0): "var(--scan)", (4, 1): "var(--scan)",
                   (5, 0): "var(--scan)", (5, 1): "var(--scan)"},
            colours={(5, 1): "var(--phosphor)"})

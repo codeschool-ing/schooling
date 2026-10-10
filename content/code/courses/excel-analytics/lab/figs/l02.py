@@ -132,10 +132,17 @@ def mixed(t):
            anchors={1: "end", 3: "end", 4: "end", 5: "end"})
     kx = x0 + sum(w[:5])
     ky = y0 + 6 * rh
-    # arrow left to F7, arrow up to K1
-    s.arrow(kx + 4, ky + rh - 4, x0 + w[0] + w[1] - 4, ky + rh - 4, stroke="var(--phosphor)", sw=1.4)
-    s.arrow(kx + 9, ky + 4, kx + 9, y0 + rh - 2, stroke="var(--amber)", sw=1.4)
-    nx = x0 + sum(w) + 28
+    # Two routes from K7, drawn outside the cells: under the grid to F7, and up
+    # the right-hand side to K1.
+    fx = x0 + w[0] + w[1] / 2
+    s.path(f"M{kx + w[5] / 2:.1f} {ky + rh:.1f} L{kx + w[5] / 2:.1f} {ky + rh + 14:.1f} "
+           f"L{fx:.1f} {ky + rh + 14:.1f}", stroke="var(--phosphor)", sw=1.4)
+    s.arrow(fx, ky + rh + 14, fx, ky + rh + 1, stroke="var(--phosphor)", sw=1.4)
+    rx = kx + w[5] + 12
+    s.path(f"M{kx + w[5]:.1f} {ky + rh / 2:.1f} L{rx:.1f} {ky + rh / 2:.1f} L{rx:.1f} {y0 + rh / 2:.1f}",
+           stroke="var(--amber)", sw=1.4)
+    s.arrow(rx, y0 + rh / 2, kx + w[5] + 1, y0 + rh / 2, stroke="var(--amber)", sw=1.4)
+    nx = x0 + sum(w) + 36
     s.mono(nx, 66, "K7: =ARRED($F7*(1-K$1);0)" if pt else "K7: =ROUND($F7*(1-K$1),0)", size=11.5,
            fill="var(--paper)")
     s.mono(nx, 92, "$F7", size=11.5, fill="var(--phosphor)", weight="600")

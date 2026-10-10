@@ -148,7 +148,7 @@ for y in (2025, 2026):
 print("== by Sales[Channel]")
 for ch in ("Online", "Shop", "Wholesale"):
     c = ctx(Channel=ch)
-    print(ch, "Revenue", total_revenue(c), "Sales", sales_count(c), "Customers Buying", customers_buying(c),
+    print(ch, "Revenue", total_revenue(c), "Bags", bags_sold(c), "Sales", sales_count(c), "Customers Buying", customers_buying(c),
           "Online Revenue", online_revenue(c), "Channel Share", pct(channel_share(c)),
           "Avg price", round(average_price(c), 2), "Margin %", pct(margin_pct(c)))
 print("grand total row: Online Revenue", online_revenue(ctx()), "Channel Share", pct(channel_share(ctx())))
@@ -176,6 +176,10 @@ for code in ("CER1K", "SUL1K", None):
     rat = sum(s["Revenue"] for s in vv) / sum(s["Bags"] for s in vv)
     print(code or "all", "rows", len(vv), "AVERAGE(Price)", round(avg, 2), "Revenue/Bags", round(rat, 2))
 
+for g in ("1K", "250"):
+    vv = [s for s in sales if s["Product"].endswith(g)]
+    print("bags per sale,", g, round(sum(s["Bags"] for s in vv) / len(vv), 2), "rows", len(vv),
+          "bags", sum(s["Bags"] for s in vv), "avg price", round(sum(s["Price"] for s in vv) / len(vv), 2))
 print("== a per-row Margin % column summed by a pivot")
 row_pct = [(s["Revenue"] - s["Bags"] * s["Unit cost"]) / s["Revenue"] for s in sales]
 print("sum of 108 row percentages:", f"{100 * sum(row_pct):.1f}%", "average:", f"{100 * sum(row_pct) / len(row_pct):.1f}%")

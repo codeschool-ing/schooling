@@ -15,8 +15,12 @@ dela e escolha **Dados › Da Tabela/Intervalo**. O editor abre numa consulta ta
 com as **108 linhas** e as oito colunas da tabela, `Revenue` incluída. A primeira etapa diz:
 
 ```powerquery
-.
+Source = Excel.CurrentWorkbook(){[Name="Sales"]}[Content]
 ```
+
+Se a coluna `Date` mostrar a hora `00:00:00` ao lado de cada dia, ela foi tipada como **Data/Hora**;
+defina-a como **Data** com o ícone de tipo à esquerda do cabeçalho, já que uma venda tem dia e não
+hora.
 
 Essa linha é o motivo para usar uma tabela e não um intervalo. Ela nomeia a tabela, não as células,
 então quando uma venda é acrescentada abaixo da última linha e a tabela cresce até a linha 110, a
@@ -50,7 +54,9 @@ A consulta lê **108 linhas** e sete colunas: a cópia original foi salva na aul
 acrescentar `Revenue`. As etapas são diferentes das da tabela:
 
 ```powerquery
-.
+Source = Excel.Workbook(File.Contents("C:\Users\you\Documents\cafe-serra-original.xlsx"), null, true),
+Sales_Sheet = Source{[Item="Sales",Kind="Sheet"]}[Data],
+#"Promoted Headers" = Table.PromoteHeaders(Sales_Sheet, [PromoteAllScalars=true])
 ```
 
 Uma planilha não é uma tabela, então a primeira linha chega como dado e uma etapa **Cabeçalhos

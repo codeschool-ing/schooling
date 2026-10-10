@@ -39,7 +39,7 @@ mensagem da primeira vez, a célula mostra 0, e a barra de status, no pé da jan
 Referências Circulares** lista todas as células presas numa. O mesmo acontece com `=SOMA(H:H)`
 escrita em qualquer lugar da coluna H, que é o jeito mais comum de isso aparecer.
 
-A cura é a regra da aula 1, seção 06: **total mora fora dos dados.** Numa célula ao lado, como L2,
+A cura é a regra da aula 1 seção 06: **total mora fora dos dados.** Numa célula ao lado, como L2,
 ou depois de um espaço, ou em outra planilha. Apague H110.
 
 O Excel tem uma opção que deixa fórmulas circulares recalcularem em ciclo, **Habilitar cálculo

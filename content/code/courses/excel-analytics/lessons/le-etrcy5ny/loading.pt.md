@@ -46,7 +46,7 @@ as linhas da tabela como uma grade, com a contagem de registros embaixo:
 | `Customers` | 11 |
 
 Uma linha faltando costuma ser uma tabela que não chega até o fim dos dados, porque uma linha foi
-colada abaixo dela, e não dentro. A aula 7 seção 04 trata disso: uma tabela cresce quando você digita
+colada abaixo dela, e não dentro. A aula 7 trata disso: uma tabela cresce quando você digita
 na linha logo abaixo dela, e não quando um bloco chega duas linhas mais para baixo.
 
 ## O tipo de cada coluna

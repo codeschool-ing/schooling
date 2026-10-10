@@ -62,6 +62,6 @@ pasta de trabalho é onde o Excel começa a sofrer.
 
 Uma pasta de trabalho com modelo de dados precisa do Excel para Windows para atualizar ou mudar o
 modelo, como diz a tabela da seção 03 da aula 1. O que um leitor num Mac ou no navegador consegue
-fazer com ela, em visualizar e filtrar, mudou de uma versão para outra, então **abra o arquivo no
+fazer com ela, em visualizar e filtrar, mudou de uma versão para outra. Então **abra o arquivo no
 Excel do leitor antes de mandar**, e não depois que ele responder dizendo que os cartões estão
 vazios.

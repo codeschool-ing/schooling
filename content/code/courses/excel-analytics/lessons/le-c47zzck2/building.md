@@ -93,8 +93,8 @@ error. `GETPIVOTDATA` asks for a value by name and finds it wherever it is.
 
 There is a second way to the same cells. **PivotTable Analyze › OLAP Tools › Convert to Formulas**
 turns a pivot from the data model into one `CUBEVALUE` formula per cell, which can then be moved
-anywhere. A cube formula follows a slicer when it is given the slicer's name, shown in **Slicer
-Settings** as the name to use in formulas:
+anywhere. A cube formula follows a slicer when it is given the slicer's name, which **Slicer
+Settings** shows as the name to use in formulas:
 
 ```localised
 =CUBEVALUE("ThisWorkbookDataModel", "[Measures].[Revenue]", Slicer_Channel)

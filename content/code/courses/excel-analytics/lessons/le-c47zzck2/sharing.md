@@ -61,5 +61,5 @@ working on one workbook is where Excel starts to strain.
 
 A workbook with a data model needs Excel for Windows to refresh the model or change it, as the
 table in lesson 1 section 03 says. What a reader on a Mac or in a browser can do with one, in
-viewing and filtering, has changed between versions, so **open the file in the reader's Excel before
+viewing and filtering, has changed between versions. So **open the file in the reader's Excel before
 you send it**, not after they write back to say the cards are empty.

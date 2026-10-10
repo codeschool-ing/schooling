@@ -140,6 +140,5 @@ try:
     b.set("Sales", "H2", "=E2*F2")
     b.fill("Sales", "H2", "H109")
     print("=SUM(Sales!H2:H109):", b.ev(calc(quoted(L, "=SUM(Sales!H2:H109)"))))
-    print("=YEAR(DATE(2025,1,1)) check:", b.ev("=YEAR(DATE(2025,1,1))"))
 finally:
     b.close()

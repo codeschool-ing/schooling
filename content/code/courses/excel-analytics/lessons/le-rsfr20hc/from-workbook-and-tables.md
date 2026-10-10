@@ -18,6 +18,9 @@ rows** and eight columns of the table, `Revenue` included. Its first step reads:
 Source = Excel.CurrentWorkbook(){[Name="Sales"]}[Content]
 ```
 
+If the `Date` column shows a time of `00:00:00` beside every day, it was typed **Date/Time**; set
+it to **Date** with the type icon at the left of its header, since a sale has a day and no hour.
+
 That line is the reason to use a table rather than a range. It names the table, not the cells, so
 when a sale is added under the last row and the table grows to row 110, the query reads 109 rows
 at the next refresh without anyone touching it. Pointed at a plain range, the same command first

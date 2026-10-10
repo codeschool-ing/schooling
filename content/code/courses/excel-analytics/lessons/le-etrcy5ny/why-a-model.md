@@ -16,8 +16,8 @@ next person to open the workbook cannot tell the recorded columns from the fetch
 
 ## What the data model is
 
-The **data model** is a small database that lives inside the workbook. You put tables into it, you
-tell it which column of one table points at which column of another, and from then on a pivot table
+The **data model** is a small database that lives inside the workbook. You put tables into it and
+tell it which column of one table points at which column of another. From then on, a pivot table
 built on the model can take its rows from `Products`, its columns from a calendar and its numbers
 from `Sales`, all at once. Nothing is copied: the model follows the pointers each time it adds up a
 cell.

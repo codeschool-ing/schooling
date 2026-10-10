@@ -20,6 +20,9 @@ def calc(f):
 
 
 b = Book()
+# Excel compares text ignoring case (`="a"="A"` is TRUE); a new Calc document
+# compares it case-sensitively unless told otherwise.
+b.doc.IgnoreCase = True
 try:
     sh = b.sheet("Sales")
     sh.getCellRangeByName("H1").setString("Revenue")

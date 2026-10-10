@@ -25,9 +25,9 @@ cada tabela como uma caixa com as colunas listadas. Arraste `Product` da caixa `
 `Products` e um asterisco na ponta de `Sales`. Faça o mesmo de `Sales[Customer]` para
 `Customers[Customer]`.
 
-Há dois outros caminhos para o mesmo resultado, e eles fazem a mesma linha: **Design › Criar
-Relação** (*Create Relationship*) na janela do Power Pivot, que pede as duas tabelas e as duas
-colunas numa caixa de diálogo, e **Dados › Relações › Nova** no próprio Excel. Use o que você
+Dois outros comandos fazem a mesma linha. **Design › Criar Relação** (*Create Relationship*), na
+janela do Power Pivot, pede as duas tabelas e as duas colunas numa caixa de diálogo, e **Dados ›
+Relações › Nova** faz o mesmo a partir do próprio Excel. Use o que você
 encontrar; o diagrama é o que mostra o modelo inteiro de uma vez, e vale abri-lo depois de qualquer
 mudança.
 

@@ -25,9 +25,9 @@ listed. Drag `Product` from the `Sales` box and drop it on `Code` in the `Produc
 appears between the two boxes, with a `1` at the `Products` end and an asterisk at the `Sales`
 end. Do the same from `Sales[Customer]` to `Customers[Customer]`.
 
-There are two other ways to the same result, and they make the same line: **Design › Create
-Relationship** in the Power Pivot window, which asks for the two tables and the two columns in a
-dialog, and **Data › Relationships › New** in Excel itself. Use whichever you find; the diagram is
+Two other commands make the same line. **Design › Create Relationship** in the Power Pivot window
+asks for the two tables and the two columns in a dialog, and **Data › Relationships › New** does the
+same from Excel itself. Use whichever you find; the diagram is
 the one that shows you the whole model at once, and it is worth opening after any change.
 
 ## The rules a relationship has to obey

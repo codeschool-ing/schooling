@@ -44,7 +44,7 @@ table's rows as a grid with a record count beneath it:
 | `Customers` | 11 |
 
 A missing row is usually a table that does not reach the bottom of its data, because a row was
-pasted below it rather than into it. Lesson 7 section 04 is about that: a table grows when you type
+pasted below it rather than into it. Lesson 7 is about that: a table grows when you type
 in the row directly beneath it, and not when a block arrives two rows further down.
 
 ## The type of every column
