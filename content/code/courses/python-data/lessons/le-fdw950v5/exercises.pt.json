@@ -1,0 +1,332 @@
+{
+  "ex-7fwfy9p3": {
+    "prompt": "Por qual lado o NumPy alinha dois formatos antes do broadcasting?",
+    "hint": "Os comprimentos ausentes ficam do outro lado.",
+    "choices": [
+      {
+        "text": "Pela esquerda",
+        "why": "Nunca; é por isso que (52,) falha contra (52, 7)."
+      },
+      {
+        "text": "Pela direita",
+        "why": "Isso."
+      },
+      {
+        "text": "Pelo lado que fizer os formatos casarem",
+        "why": "O NumPy nunca adivinha."
+      },
+      {
+        "text": "Pelo eixo mais longo",
+        "why": "O comprimento não entra no alinhamento."
+      }
+    ]
+  },
+  "ex-pxsf4prd": {
+    "prompt": "`weeks` é `(52, 7)` e `by_position` é `(7,)`. O que `weeks - by_position` faz?",
+    "hint": "7 encontra 7; o eixo ausente estica.",
+    "choices": [
+      {
+        "text": "Tira de cada dia da semana a média dele",
+        "why": "Isso."
+      },
+      {
+        "text": "Subtrai de cada semana a média dela",
+        "why": "Isso precisa de um (52, 1)."
+      },
+      {
+        "text": "Levanta um erro de broadcasting",
+        "why": "7 contra 7 está certo."
+      },
+      {
+        "text": "Subtrai só das sete primeiras semanas",
+        "why": "A linha se repete pelas 52."
+      }
+    ]
+  },
+  "ex-wtgkf4bb": {
+    "prompt": "O que `keepdims=True` muda em `weeks.mean(axis=1, keepdims=True)`?",
+    "hint": "Compare os formatos.",
+    "choices": [
+      {
+        "text": "Os valores das médias",
+        "why": "Os valores são os mesmos."
+      },
+      {
+        "text": "Mantém a tabela original e acrescenta uma coluna",
+        "why": "Devolve só as médias."
+      },
+      {
+        "text": "O formato: `(52, 1)` em vez de `(52,)`",
+        "why": "Isso, que é o que o deixa fazer broadcasting contra cada linha."
+      },
+      {
+        "text": "Pula os valores faltantes",
+        "why": "Isso é `np.nanmean`."
+      }
+    ]
+  },
+  "ex-xqgmdree": {
+    "prompt": "O broadcasting de `(52, 1)` contra `(1, 7)` dá quantos elementos?",
+    "hint": "Cada 1 estica até o comprimento do outro."
+  },
+  "ex-bx2nv832": {
+    "prompt": "`operands could not be broadcast together with shapes (52,7) (52,)`. Qual par de comprimentos falhou?",
+    "hint": "O par mais à direita.",
+    "choices": [
+      {
+        "text": "52 e 52",
+        "why": "Esses não são comparados; o alinhamento é pela direita."
+      },
+      {
+        "text": "7 e 52",
+        "why": "Isso."
+      },
+      {
+        "text": "52 e nada",
+        "why": "Um comprimento ausente conta como 1, o que está certo."
+      },
+      {
+        "text": "7 e 1",
+        "why": "Não há 1 em nenhum dos formatos aqui."
+      }
+    ]
+  },
+  "ex-6bh61gmr": {
+    "prompt": "`weeks @ by_position[:5]` falha com uma mensagem de `matmul`. Por que isso não é um erro de broadcasting?",
+    "hint": "`@` não é elemento a elemento.",
+    "choices": [
+      {
+        "text": "Porque os arrays têm dtypes diferentes",
+        "why": "Os dois são float64."
+      },
+      {
+        "text": "Porque `@` só funciona em tabelas quadradas, e `weeks` não é",
+        "why": "Funciona em quaisquer formatos cujos comprimentos internos combinem."
+      },
+      {
+        "text": "`@` multiplica matrizes: os internos têm de combinar",
+        "why": "Isso: 7 e 5."
+      },
+      {
+        "text": "É um; o NumPy só o nomeia diferente",
+        "why": "Operação diferente, regra diferente."
+      }
+    ]
+  },
+  "ex-a0tw9pbd": {
+    "prompt": "Qual destes NÃO transforma um array `x` de `(52,)` em `(52, 1)`?",
+    "hint": "Onde vai o eixo novo?",
+    "choices": [
+      {
+        "text": "`x[:, np.newaxis]`",
+        "why": "Isso dá (52, 1)."
+      },
+      {
+        "text": "`x.reshape(-1, 1)`",
+        "why": "Isso dá (52, 1)."
+      },
+      {
+        "text": "`x[np.newaxis, :]`",
+        "why": "Isso: dá (1, 52)."
+      },
+      {
+        "text": "`x[:, None]`",
+        "why": "`None` é `np.newaxis`; (52, 1)."
+      }
+    ]
+  },
+  "ex-xr2jzxsa": {
+    "prompt": "Depois de `deviation = weeks - weekly_flat[:, np.newaxis]`, por que conferir que cada linha soma perto de zero?",
+    "hint": "O que um alinhamento errado daria?",
+    "choices": [
+      {
+        "text": "Para arredondar os desvios",
+        "why": "A conferência não arredonda nada."
+      },
+      {
+        "text": "Confirma a subtração certa em cada semana",
+        "why": "Isso."
+      },
+      {
+        "text": "Porque o NumPy exige que linhas somem zero antes de gravar",
+        "why": "Não há tal exigência."
+      },
+      {
+        "text": "Para tirar os valores faltantes da tabela",
+        "why": "As primeiras 364 temperaturas não têm nenhum."
+      }
+    ]
+  },
+  "ex-c53zgm77": {
+    "prompt": "Uma previsão de formato `(7, 1)` menos valores reais de formato `(7,)` dá o quê?",
+    "hint": "Os dois esticam.",
+    "choices": [
+      {
+        "text": "Sete erros, um por dia",
+        "why": "Isso exige que os dois sejam (7,)."
+      },
+      {
+        "text": "Um erro de broadcasting",
+        "why": "O 1 estica; a regra permite."
+      },
+      {
+        "text": "Uma tabela 7 × 7, sem aviso",
+        "why": "Isso: toda previsão menos todo real."
+      },
+      {
+        "text": "Sete erros, mas em ordem inversa",
+        "why": "A ordem não é a questão; o formato é."
+      }
+    ]
+  },
+  "ex-n79s1zj5": {
+    "prompt": "Dos 49 números da tabela 7 × 7 acidental, quantos comparam um dia consigo mesmo?",
+    "hint": "A diagonal."
+  },
+  "ex-gsfxxefe": {
+    "prompt": "Qual linha sozinha teria transformado o 7 × 7 silencioso num erro na hora?",
+    "hint": "Torne a expectativa explícita.",
+    "choices": [
+      {
+        "text": "`assert error.shape == actual.shape`",
+        "why": "Isso."
+      },
+      {
+        "text": "`np.abs(error).mean()`",
+        "why": "Foi aí que o estrago aconteceu, em silêncio."
+      },
+      {
+        "text": "`error = error.round(2)`",
+        "why": "Arredondar mantém o formato."
+      },
+      {
+        "text": "`np.isclose(error, 0).all()`",
+        "why": "Isso testa valores, e não se espera que uma previsão seja exata."
+      }
+    ]
+  },
+  "ex-xn9cnd5b": {
+    "prompt": "Por que `(known - known.mean(axis=0)) / known.std(axis=0)` não precisa de eixo novo?",
+    "hint": "Formatos (359, 2) e (2,).",
+    "choices": [
+      {
+        "text": "Porque z-scores são calculados por linha",
+        "why": "Aqui são por coluna."
+      },
+      {
+        "text": "Porque `std` devolve um escalar",
+        "why": "Com axis=0 devolve um por coluna."
+      },
+      {
+        "text": "Um valor por coluna já se alinha pela direita",
+        "why": "Isso: 2 encontra 2."
+      },
+      {
+        "text": "Porque a tabela só tem duas colunas",
+        "why": "Funcionaria com qualquer número de colunas."
+      }
+    ]
+  },
+  "ex-kx34ng6s": {
+    "prompt": "O dia mais chuvoso tem z-score 5,08 na chuva e o mais quente 2,21 na temperatura. O que isso diz?",
+    "hint": "Desvios-padrão da média da coluna.",
+    "choices": [
+      {
+        "text": "Choveu 5,08 mm naquele dia",
+        "why": "Choveu 45,9 mm; 5,08 está em desvios-padrão."
+      },
+      {
+        "text": "A chuva mais forte do Recife ficou mais longe do normal do que o pior calor",
+        "why": "Isso."
+      },
+      {
+        "text": "Chuva e temperatura são correlacionadas",
+        "why": "Dois máximos não dizem nada sobre correlação."
+      },
+      {
+        "text": "O dia mais quente ficou 2,21 graus acima da média",
+        "why": "2,21 desvios-padrão, de 1,03 grau cada."
+      }
+    ]
+  },
+  "ex-68phnx8c": {
+    "prompt": "`docks[:, np.newaxis] - docks` com cinco estações dá uma tabela 5 × 5. O que há na diagonal?",
+    "hint": "Cada estação contra si mesma.",
+    "choices": [
+      {
+        "text": "As docas de cada estação",
+        "why": "Cada uma menos ela mesma."
+      },
+      {
+        "text": "Zeros",
+        "why": "Isso."
+      },
+      {
+        "text": "A maior diferença",
+        "why": "Essa fica fora da diagonal."
+      },
+      {
+        "text": "`nan`, já que uma estação não se compara consigo",
+        "why": "Compara; a resposta é 0."
+      }
+    ]
+  },
+  "ex-edbvzxb2": {
+    "prompt": "`day_totals` é `(3,)` e `hour_share` é `(6,)`. O que `day_totals * hour_share` faz?",
+    "hint": "Alinhe pela direita.",
+    "choices": [
+      {
+        "text": "Monta a tabela 3 × 6 de contagens esperadas",
+        "why": "Isso precisa de `day_totals[:, np.newaxis]`."
+      },
+      {
+        "text": "Monta a tabela 6 × 3",
+        "why": "Isso precisa de um eixo novo em `hour_share`."
+      },
+      {
+        "text": "Multiplica os três primeiros de `hour_share` e ignora o resto",
+        "why": "O NumPy nunca corta para casar."
+      },
+      {
+        "text": "Levanta um erro de broadcasting, 3 contra 6",
+        "why": "Isso: a regra protegendo você."
+      }
+    ]
+  },
+  "ex-v7km80j9": {
+    "prompt": "Associe cada par de formatos ao formato da soma.",
+    "hint": "Da direita para a esquerda; 1 estica.",
+    "pairs": [
+      {
+        "left": "`(52, 7)` e `(7,)`",
+        "right": "`(52, 7)`"
+      },
+      {
+        "left": "`(5, 1)` e `(5,)`",
+        "right": "`(5, 5)`"
+      },
+      {
+        "left": "`(3, 1)` e `(6,)`",
+        "right": "`(3, 6)`"
+      },
+      {
+        "left": "`(52, 7)` e `(52,)`",
+        "right": "Um erro"
+      }
+    ],
+    "right_distractors": [
+      "`(52,)`"
+    ]
+  },
+  "ex-z4w1jqww": {
+    "prompt": "Ponha as três perguntas de um erro de broadcasting na ordem em que a aula as faz.",
+    "hint": "Diagnostique antes de corrigir.",
+    "items": [
+      "Quais são os dois formatos?",
+      "Qual eixo deveria casar?",
+      "Esse eixo está à direita nos dois?",
+      "Acrescentar um eixo de comprimento 1 onde falta"
+    ],
+    "trap": "Acrescentar um eixo antes de saber qual deveria casar é como se faz o (n, n) silencioso."
+  }
+}

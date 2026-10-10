@@ -1,0 +1,490 @@
+[
+  {
+    "id": "ex-7fwfy9p3",
+    "version": 1,
+    "section": "the-rule",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "From which side does NumPy line up two shapes before broadcasting?",
+    "hint": "Missing lengths are on the other side.",
+    "choices": [
+      {
+        "text": "From the left",
+        "correct": false,
+        "why": "It never does; that is why (52,) fails against (52, 7)."
+      },
+      {
+        "text": "From the right",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Whichever side makes the shapes match",
+        "correct": false,
+        "why": "NumPy never guesses."
+      },
+      {
+        "text": "From the longest axis",
+        "correct": false,
+        "why": "Length plays no part in the alignment."
+      }
+    ]
+  },
+  {
+    "id": "ex-pxsf4prd",
+    "version": 1,
+    "section": "the-rule",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`weeks` is `(52, 7)` and `by_position` is `(7,)`. What does `weeks - by_position` do?",
+    "hint": "7 meets 7; the missing axis stretches.",
+    "choices": [
+      {
+        "text": "Subtracts each weekday's mean from that weekday, in every week",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Subtracts each week's mean from its days",
+        "correct": false,
+        "why": "That needs a (52, 1)."
+      },
+      {
+        "text": "Raises a broadcasting error",
+        "correct": false,
+        "why": "7 against 7 is fine."
+      },
+      {
+        "text": "Subtracts only from the first seven weeks",
+        "correct": false,
+        "why": "The row repeats down all 52."
+      }
+    ]
+  },
+  {
+    "id": "ex-wtgkf4bb",
+    "version": 1,
+    "section": "the-rule",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `keepdims=True` change in `weeks.mean(axis=1, keepdims=True)`?",
+    "hint": "Compare the shapes.",
+    "choices": [
+      {
+        "text": "The values of the means",
+        "correct": false,
+        "why": "The values are the same."
+      },
+      {
+        "text": "It keeps the original table and adds a column",
+        "correct": false,
+        "why": "It returns only the means."
+      },
+      {
+        "text": "The shape: `(52, 1)` instead of `(52,)`",
+        "correct": true,
+        "why": "Right, which is what lets it broadcast against each row."
+      },
+      {
+        "text": "It skips the missing values",
+        "correct": false,
+        "why": "That is `np.nanmean`."
+      }
+    ]
+  },
+  {
+    "id": "ex-xqgmdree",
+    "version": 1,
+    "section": "the-rule",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Broadcasting `(52, 1)` against `(1, 7)` gives what number of elements?",
+    "hint": "Each 1 stretches to the other's length.",
+    "value": 364,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-bx2nv832",
+    "version": 1,
+    "section": "reading-the-error",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`operands could not be broadcast together with shapes (52,7) (52,)`. Which pair of lengths failed?",
+    "hint": "The rightmost pair.",
+    "choices": [
+      {
+        "text": "52 and 52",
+        "correct": false,
+        "why": "Those are not compared; alignment is from the right."
+      },
+      {
+        "text": "7 and 52",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "52 and nothing",
+        "correct": false,
+        "why": "A missing length counts as 1, which is fine."
+      },
+      {
+        "text": "7 and 1",
+        "correct": false,
+        "why": "There is no 1 in either shape here."
+      }
+    ]
+  },
+  {
+    "id": "ex-6bh61gmr",
+    "version": 1,
+    "section": "reading-the-error",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`weeks @ by_position[:5]` fails with a `matmul` message. Why is that not a broadcasting error?",
+    "hint": "`@` is not elementwise.",
+    "choices": [
+      {
+        "text": "Because the arrays have different dtypes",
+        "correct": false,
+        "why": "Both are float64."
+      },
+      {
+        "text": "Because `@` only works on square tables, and `weeks` is not square",
+        "correct": false,
+        "why": "It works on any shapes whose inner lengths agree."
+      },
+      {
+        "text": "`@` multiplies matrices and needs the inner lengths to agree",
+        "correct": true,
+        "why": "Right: 7 and 5."
+      },
+      {
+        "text": "It is one; NumPy names it differently",
+        "correct": false,
+        "why": "Different operation, different rule."
+      }
+    ]
+  },
+  {
+    "id": "ex-a0tw9pbd",
+    "version": 1,
+    "section": "adding-an-axis",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of these does NOT turn a `(52,)` array `x` into `(52, 1)`?",
+    "hint": "Where does the new axis go?",
+    "choices": [
+      {
+        "text": "`x[:, np.newaxis]`",
+        "correct": false,
+        "why": "That gives (52, 1)."
+      },
+      {
+        "text": "`x.reshape(-1, 1)`",
+        "correct": false,
+        "why": "That gives (52, 1)."
+      },
+      {
+        "text": "`x[np.newaxis, :]`",
+        "correct": true,
+        "why": "Right: it gives (1, 52)."
+      },
+      {
+        "text": "`x[:, None]`",
+        "correct": false,
+        "why": "`None` is `np.newaxis`; (52, 1)."
+      }
+    ]
+  },
+  {
+    "id": "ex-xr2jzxsa",
+    "version": 1,
+    "section": "adding-an-axis",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `deviation = weeks - weekly_flat[:, np.newaxis]`, why check that each row sums to about zero?",
+    "hint": "What would a wrong alignment give?",
+    "choices": [
+      {
+        "text": "To round the deviations",
+        "correct": false,
+        "why": "Nothing is rounded by the check."
+      },
+      {
+        "text": "It confirms each week's own mean was subtracted from it",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because NumPy requires rows to sum to zero before saving",
+        "correct": false,
+        "why": "No such requirement."
+      },
+      {
+        "text": "To remove the missing values from the table",
+        "correct": false,
+        "why": "The first 364 temperatures have none."
+      }
+    ]
+  },
+  {
+    "id": "ex-c53zgm77",
+    "version": 1,
+    "section": "the-silent-one",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A forecast of shape `(7, 1)` minus actual values of shape `(7,)` gives what?",
+    "hint": "Both stretch.",
+    "choices": [
+      {
+        "text": "Seven errors, one per day",
+        "correct": false,
+        "why": "That needs both to be (7,)."
+      },
+      {
+        "text": "A broadcasting error",
+        "correct": false,
+        "why": "1 stretches; the rule allows it."
+      },
+      {
+        "text": "A 7 × 7 table, with no warning",
+        "correct": true,
+        "why": "Right: every forecast minus every actual."
+      },
+      {
+        "text": "Seven errors, but in reverse order",
+        "correct": false,
+        "why": "Order is not the issue; shape is."
+      }
+    ]
+  },
+  {
+    "id": "ex-n79s1zj5",
+    "version": 1,
+    "section": "the-silent-one",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Of the 49 numbers in the accidental 7 × 7 error table, how many compare a day with itself?",
+    "hint": "The diagonal.",
+    "value": 7,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-gsfxxefe",
+    "version": 1,
+    "section": "the-silent-one",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which single line would have turned the silent 7 × 7 into an error at once?",
+    "hint": "Make the expectation explicit.",
+    "choices": [
+      {
+        "text": "`assert error.shape == actual.shape`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`np.abs(error).mean()`",
+        "correct": false,
+        "why": "That is where the damage happened, silently."
+      },
+      {
+        "text": "`error = error.round(2)`",
+        "correct": false,
+        "why": "Rounding keeps the shape."
+      },
+      {
+        "text": "`np.isclose(error, 0).all()`",
+        "correct": false,
+        "why": "That tests values, and a forecast is not expected to be exact."
+      }
+    ]
+  },
+  {
+    "id": "ex-xn9cnd5b",
+    "version": 1,
+    "section": "centring-and-scaling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `(known - known.mean(axis=0)) / known.std(axis=0)` need no new axis?",
+    "hint": "Shapes (359, 2) and (2,).",
+    "choices": [
+      {
+        "text": "Because z-scores are computed per row",
+        "correct": false,
+        "why": "They are per column here."
+      },
+      {
+        "text": "Because `std` returns a scalar",
+        "correct": false,
+        "why": "With axis=0 it returns one per column."
+      },
+      {
+        "text": "One value per column lines up from the right",
+        "correct": true,
+        "why": "Right: 2 meets 2."
+      },
+      {
+        "text": "Because the table has only two columns",
+        "correct": false,
+        "why": "It would work with any number of columns."
+      }
+    ]
+  },
+  {
+    "id": "ex-kx34ng6s",
+    "version": 1,
+    "section": "centring-and-scaling",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The wettest day has a z-score of 5.08 for rain and the hottest day 2.21 for temperature. What does that say?",
+    "hint": "Standard deviations from the column's mean.",
+    "choices": [
+      {
+        "text": "It rained 5.08 mm that day",
+        "correct": false,
+        "why": "It rained 45.9 mm; 5.08 is in standard deviations."
+      },
+      {
+        "text": "Recife's heaviest rain stood further from normal than its worst heat",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Rain and temperature are correlated",
+        "correct": false,
+        "why": "Two maxima say nothing about correlation."
+      },
+      {
+        "text": "The hottest day was 2.21 degrees above average",
+        "correct": false,
+        "why": "2.21 standard deviations, of 1.03 degrees each."
+      }
+    ]
+  },
+  {
+    "id": "ex-68phnx8c",
+    "version": 1,
+    "section": "outer-products",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`docks[:, np.newaxis] - docks` with five stations gives a 5 × 5 table. What is on its diagonal?",
+    "hint": "Each station against itself.",
+    "choices": [
+      {
+        "text": "The docks of each station",
+        "correct": false,
+        "why": "Each minus itself."
+      },
+      {
+        "text": "Zeros",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The largest difference",
+        "correct": false,
+        "why": "That is off the diagonal."
+      },
+      {
+        "text": "`nan`, since a station cannot be compared with itself",
+        "correct": false,
+        "why": "It can; the answer is 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-edbvzxb2",
+    "version": 1,
+    "section": "outer-products",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`day_totals` is `(3,)` and `hour_share` is `(6,)`. What does `day_totals * hour_share` do?",
+    "hint": "Line them up from the right.",
+    "choices": [
+      {
+        "text": "Builds the 3 × 6 table of expected counts",
+        "correct": false,
+        "why": "That needs `day_totals[:, np.newaxis]`."
+      },
+      {
+        "text": "Builds the 6 × 3 table",
+        "correct": false,
+        "why": "That needs a new axis on `hour_share`."
+      },
+      {
+        "text": "Multiplies the first three of `hour_share` and ignores the rest",
+        "correct": false,
+        "why": "NumPy never truncates to match."
+      },
+      {
+        "text": "Raises a broadcasting error, 3 against 6",
+        "correct": true,
+        "why": "Right: the rule protecting you."
+      }
+    ]
+  },
+  {
+    "id": "ex-v7km80j9",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each pair of shapes to the shape of their sum.",
+    "hint": "Right to left; 1 stretches.",
+    "pairs": [
+      {
+        "left": "`(52, 7)` and `(7,)`",
+        "right": "`(52, 7)`"
+      },
+      {
+        "left": "`(5, 1)` and `(5,)`",
+        "right": "`(5, 5)`"
+      },
+      {
+        "left": "`(3, 1)` and `(6,)`",
+        "right": "`(3, 6)`"
+      },
+      {
+        "left": "`(52, 7)` and `(52,)`",
+        "right": "An error"
+      }
+    ],
+    "right_distractors": [
+      "`(52,)`"
+    ]
+  },
+  {
+    "id": "ex-z4w1jqww",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the three questions for a broadcasting error in the order the lesson asks them.",
+    "hint": "Diagnose before you fix.",
+    "items": [
+      "What are the two shapes?",
+      "Which axis is meant to match?",
+      "Is that axis on the right of both?",
+      "Add a length-1 axis where it is missing"
+    ],
+    "trap": "Adding an axis before knowing which one is meant is how the silent (n, n) is made."
+  }
+]
