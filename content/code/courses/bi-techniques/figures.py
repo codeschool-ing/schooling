@@ -961,6 +961,59 @@ def l09_daily(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 10
+
+@figure('l10-cases', 10)
+def l10_cases(lang):
+    from statsmodels.stats.proportion import confint_proportions_2indep
+    v = csv('experiment.csv', parse_dates=['day'])
+
+    def interval(d):
+        g = d.groupby('group')['converted'].agg(['sum', 'count'])
+        lo, hi = confint_proportions_2indep(g.loc['new', 'sum'], g.loc['new', 'count'],
+                                            g.loc['old', 'sum'], g.loc['old', 'count'])
+        est = g.loc['new', 'sum'] / g.loc['new', 'count'] - g.loc['old', 'sum'] / g.loc['old', 'count']
+        return est * 100, lo * 100, hi * 100
+
+    t = {'en': dict(
+        label='Six confidence intervals for a lift in percentage points, drawn against a line at zero '
+              'and a line at the MDE of 0.6. Four illustrate the cases: entirely above the MDE; above '
+              'zero and reaching below the MDE; around zero and below the MDE; around zero and reaching '
+              'above the MDE. The last two are Panela\'s: all three weeks, +0.03 to +0.76; weeks 2 and '
+              '3, −0.36 to +0.51.',
+        rows=['large and real', 'real, size unclear', 'too small to matter', 'cannot tell',
+              'Panela, three weeks', 'Panela, weeks 2 and 3'],
+        x='lift, percentage points', mde='MDE',
+        cap='The same test reads differently against zero and against the smallest effect worth '
+            'having. The first four rows are drawn for illustration; the last two are Panela\'s.'),
+        'pt': dict(
+        label='Seis intervalos de confiança para uma alta em pontos percentuais, desenhados contra uma '
+              'linha no zero e uma no MDE de 0,6. Quatro ilustram os casos: inteiro acima do MDE; acima '
+              'de zero e chegando abaixo do MDE; em volta do zero e abaixo do MDE; em volta do zero e '
+              'chegando acima do MDE. Os dois últimos são da Panela: as três semanas, +0,03 a +0,76; '
+              'semanas 2 e 3, −0,36 a +0,51.',
+        rows=['grande e real', 'real, tamanho incerto', 'pequeno demais para importar',
+              'não dá para dizer', 'Panela, três semanas', 'Panela, semanas 2 e 3'],
+        x='alta, pontos percentuais', mde='MDE',
+        cap='O mesmo teste se lê diferente contra o zero e contra o menor efeito que vale ter. As '
+            'quatro primeiras linhas são desenhadas para ilustrar; as duas últimas são da Panela.')}[lang]
+    rows = [(1.0, 0.7, 1.3), (0.4, 0.15, 0.7), (0.05, -0.2, 0.3), (0.3, -0.3, 0.9)]
+    rows += [interval(v), interval(v[v['day'] >= '2025-03-17'])]
+    f = Fig('l10-cases', 640, 330, t['label'])
+    p = Plot(f, 200, 30, 620, 270, -0.6, 1.5, 0, 1)
+    p.xaxis([-0.5, 0, 0.5, 1.0, 1.5], fmt=lambda v: ('+' if v > 0 else '') + num(lang, v, 1), label=t['x'])
+    f.line(p.sx(0), p.y0, p.sx(0), p.y1, stroke='--paper', width=1.2)
+    f.line(p.sx(0.6), p.y0, p.sx(0.6), p.y1, stroke='--amber', width=1.4, dash='5 4')
+    f.text(p.sx(0.6), p.y0 - 8, t['mde'], size=10, fill='--amber', weight='600')
+    for i, (est, lo, hi) in enumerate(rows):
+        y = p.y0 + 20 + i * 38
+        col = '--phosphor' if i >= 4 else '--paper-dim'
+        f.line(p.sx(lo), y, p.sx(hi), y, stroke=col, width=3, cap='round')
+        f.circle(p.sx(est), y, 4.5, fill='--panel', stroke=col, width=2)
+        f.text(p.x0 - 12, y, t['rows'][i], size=10.5, anchor='end', weight='600' if i >= 4 else None)
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
