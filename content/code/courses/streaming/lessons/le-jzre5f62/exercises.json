@@ -1,0 +1,709 @@
+[
+  {
+    "id": "ex-f8z46sn9",
+    "version": 1,
+    "section": "three-clocks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A sale is rung up at 10:21, stored by Kafka at 14:00 and read by a report next week. Which of its times never changes, however often it is read?",
+    "choices": [
+      {
+        "text": "The time Kafka stored it, because the log never rewrites a record",
+        "correct": false,
+        "why": "Ingestion time is fixed too once written, but it is the log's time, not the sale's; send the sale again and it changes."
+      },
+      {
+        "text": "Its event time",
+        "correct": true,
+        "why": "Right. 10:21 belongs to the sale; the other two belong to the machinery."
+      },
+      {
+        "text": "Its processing time, once the first reader has handled it",
+        "correct": false,
+        "why": "Processing time is every moment anybody reads it; next week's report gives it another."
+      },
+      {
+        "text": "None of them, since every clock drifts",
+        "correct": false,
+        "why": "Drift makes a clock wrong, not a recorded time mutable."
+      }
+    ]
+  },
+  {
+    "id": "ex-456tb8p9",
+    "version": 1,
+    "section": "three-clocks",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A topic has `message.timestamp.type=LogAppendTime`. A producer passes `timestamp=` with 2 March 2026 on a record it sends today. What timestamp does the record carry?",
+    "choices": [
+      {
+        "text": "2 March 2026, because the producer set it",
+        "correct": false,
+        "why": "That is CreateTime's behaviour. LogAppendTime throws the producer's value away."
+      },
+      {
+        "text": "Both, in two fields of the record",
+        "correct": false,
+        "why": "A record has one timestamp field; the topic decides what goes in it."
+      },
+      {
+        "text": "Today's date, from the clock of the consumer that reads it",
+        "correct": false,
+        "why": "The consumer's clock is processing time, and it is never written into the record."
+      },
+      {
+        "text": "The broker's clock at the moment it appended the record",
+        "correct": true,
+        "why": "Right. The console consumer then labels it LogAppendTime."
+      }
+    ]
+  },
+  {
+    "id": "ex-2m6djfpw",
+    "version": 1,
+    "section": "three-clocks",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the default `message.timestamp.type`, which is ___, a record keeps whatever timestamp the producer gave it.",
+    "blanks": [
+      {
+        "accept": [
+          "CreateTime"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9bamtbj1",
+    "version": 1,
+    "section": "three-clocks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`tills.py` sends a sale whose `at` says 2 March, and the consumer prints `CreateTime:` with a number that decodes to the day you ran it. What explains the gap?",
+    "choices": [
+      {
+        "text": "The broker overwrote the producer's value, as it does on every topic",
+        "correct": false,
+        "why": "Only a LogAppendTime topic does that, and `clocks` keeps CreateTime."
+      },
+      {
+        "text": "The till's clock is invented; the client stamped the machine's real one",
+        "correct": true,
+        "why": "Right. `tills.py` sets no timestamp, so the client writes its own present."
+      },
+      {
+        "text": "The consumer converted the time to its own time zone, which moved the date",
+        "correct": false,
+        "why": "A time zone moves a time by hours, not by seven months."
+      },
+      {
+        "text": "A wrong clock in the virtual machine",
+        "correct": false,
+        "why": "The machine's clock was right; it was the shop clock that was made up."
+      }
+    ]
+  },
+  {
+    "id": "ex-4b4ne8cj",
+    "version": 1,
+    "section": "skew",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A sale happened at 10:45:00 and reached Kafka at 14:00:00. What is its skew, in minutes?",
+    "hint": "Arrival minus event.",
+    "value": 195,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-h08zhd41",
+    "version": 1,
+    "section": "skew",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `late_tills.py` pass `timestamp=` to `produce` instead of leaving it out?",
+    "choices": [
+      {
+        "text": "Kafka refuses a record with no timestamp",
+        "correct": false,
+        "why": "A producer that sets none gets its own present stamped by the client."
+      },
+      {
+        "text": "It sends a whole day in seconds, so the present would be wrong",
+        "correct": true,
+        "why": "Right. It writes the time each sale would have been sent, which a live till gets for free."
+      },
+      {
+        "text": "To make the topic delete the records after seven days",
+        "correct": false,
+        "why": "Retention is the opposite worry: March stamps would be deleted at once, hence retention.ms=-1."
+      },
+      {
+        "text": "So that the console consumer prints the sales in event order",
+        "correct": false,
+        "why": "The consumer prints in log order whatever the stamps say."
+      }
+    ]
+  },
+  {
+    "id": "ex-ptj0rt3j",
+    "version": 1,
+    "section": "skew",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A delivery company's vans send their scans over the phone network, and the skew plot shows a thin band near the diagonal plus a few rows of points far above it. What are the rows most likely to be?",
+    "choices": [
+      {
+        "text": "Scans that were made twice",
+        "correct": false,
+        "why": "A duplicate is a second dot, not a dot moved up; height is the delay."
+      },
+      {
+        "text": "Vans whose clocks run slow",
+        "correct": false,
+        "why": "A slow clock moves dots consistently by a fixed amount; a flat row means many events arriving at one moment."
+      },
+      {
+        "text": "Vans that lost signal and sent what they held on reconnecting",
+        "correct": true,
+        "why": "Right. Like Natal's till: many events from a span of time, one arrival time."
+      },
+      {
+        "text": "Scans that arrived before they were made",
+        "correct": false,
+        "why": "Those would sit below the diagonal, and only a lying clock puts them there."
+      }
+    ]
+  },
+  {
+    "id": "ex-3t4bcc05",
+    "version": 1,
+    "section": "out-of-order",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In arrival order, five sales have event times 09:00:10, 09:00:40, 09:00:25, 09:01:30, 09:00:50. How far out of order, in seconds, is the last one?",
+    "hint": "Compare it with the latest event time seen before it.",
+    "value": 40,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-dst3tbc2",
+    "version": 1,
+    "section": "out-of-order",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the same five sales, 09:00:10, 09:00:40, 09:00:25, 09:01:30, 09:00:50 in arrival order, how many arrived out of order?",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "sales"
+  },
+  {
+    "id": "ex-nb96a78m",
+    "version": 1,
+    "section": "out-of-order",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "68 of the 360 sales arrived out of order. Why is that not the same as the 38 Natal held back?",
+    "choices": [
+      {
+        "text": "Thirty were ordinary sales slowed by seconds on the way",
+        "correct": true,
+        "why": "Right. Slow deliveries from every shop, up to 92 seconds behind."
+      },
+      {
+        "text": "The awk count is wrong, because it compares strings instead of times",
+        "correct": false,
+        "why": "jq turns each `at` into seconds first; awk compares numbers."
+      },
+      {
+        "text": "Natal's sales were counted twice, once when held and once when sent",
+        "correct": false,
+        "why": "Each sale is one record, counted once."
+      },
+      {
+        "text": "The other thirty came from a second partition read in parallel",
+        "correct": false,
+        "why": "The `late` topic has one partition, chosen so that arrival order is one order."
+      }
+    ]
+  },
+  {
+    "id": "ex-k0ryd1n4",
+    "version": 1,
+    "section": "out-of-order",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why would waiting two minutes before counting fix one group of out-of-order sales and not the other?",
+    "choices": [
+      {
+        "text": "Two minutes is longer than the slow deliveries and nowhere near Natal's hours",
+        "correct": true,
+        "why": "Right. The distribution has two populations, and one wait cannot serve both."
+      },
+      {
+        "text": "Natal's sales are in another partition, which no wait can reach",
+        "correct": false,
+        "why": "They are in the same single partition; the problem is how late they are."
+      },
+      {
+        "text": "Waiting only helps sales from the same shop",
+        "correct": false,
+        "why": "The slow deliveries come from every shop, and a wait helps all of them."
+      },
+      {
+        "text": "A wait reorders events by key, and Natal has no key",
+        "correct": false,
+        "why": "Every sale is keyed by its shop, Natal's included."
+      }
+    ]
+  },
+  {
+    "id": "ex-kqhpvdgm",
+    "version": 1,
+    "section": "counting-by-arrival",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Counted by arrival, the 14:00 hour has 93 sales; by event time, 54. Which number belongs in the manager's report of sales per hour?",
+    "choices": [
+      {
+        "text": "93, because those are the sales the system received in that hour",
+        "correct": false,
+        "why": "That answers a question about the pipeline, not about the shops."
+      },
+      {
+        "text": "54",
+        "correct": true,
+        "why": "Right. The hour belongs to the sale, and 39 of those 93 happened earlier."
+      },
+      {
+        "text": "Their average, 73.5, to split the difference",
+        "correct": false,
+        "why": "An average of two answers to two questions answers neither."
+      },
+      {
+        "text": "Neither, until the till in Natal is replaced",
+        "correct": false,
+        "why": "The till did nothing wrong; it was offline."
+      }
+    ]
+  },
+  {
+    "id": "ex-taze42dh",
+    "version": 1,
+    "section": "counting-by-arrival",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Event times, in arrival order: 10:58, 11:02, 10:59, 11:05, 10:57, 11:10. All arrive between 11:00 and 11:15. Counted by event time, how many fall in the 10:00 hour?",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "sales"
+  },
+  {
+    "id": "ex-4nz2p16j",
+    "version": 1,
+    "section": "counting-by-arrival",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `per_minute.py` use the record's timestamp as processing time instead of its own clock?",
+    "choices": [
+      {
+        "text": "Reading after the fact, its own clock would put every sale in one minute",
+        "correct": true,
+        "why": "Right. The record's timestamp is when a reader keeping up would have seen it."
+      },
+      {
+        "text": "Python cannot read the system clock inside a Kafka consumer",
+        "correct": false,
+        "why": "It can; doing so would just measure the moment of the rerun."
+      },
+      {
+        "text": "The record's timestamp is the event time",
+        "correct": false,
+        "why": "In `late` it is the time of sending; the event time is `at`."
+      },
+      {
+        "text": "The broker's clock is more accurate than the virtual machine's",
+        "correct": false,
+        "why": "They are the same machine here; accuracy is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-kxyg9pec",
+    "version": 1,
+    "section": "counting-by-arrival",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At 11:00, a processor reports the 10:00 hour by event time as 55 sales. At 14:30 it reports the same hour as 62. Which statement is right?",
+    "choices": [
+      {
+        "text": "The second report is a duplicate count of seven sales",
+        "correct": false,
+        "why": "Nothing was counted twice; seven sales of that hour had not arrived yet."
+      },
+      {
+        "text": "The processor should have counted by arrival to avoid changing its answer",
+        "correct": false,
+        "why": "By arrival the answer never changes and is wrong for good."
+      },
+      {
+        "text": "Event-time counts are only final once late events are in",
+        "correct": true,
+        "why": "Right. The processor cannot know when that is, which is lesson 11's subject."
+      },
+      {
+        "text": "The first report was wrong because the clock in Natal was wrong",
+        "correct": false,
+        "why": "Natal's clock was right; its sales were late."
+      }
+    ]
+  },
+  {
+    "id": "ex-npdr3wqk",
+    "version": 1,
+    "section": "clocks-lie",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Since Kafka 4.0, what happens by default to a record on a `CreateTime` topic stamped two hours in the future?",
+    "choices": [
+      {
+        "text": "It is stored, and its timestamp is replaced by the broker's",
+        "correct": false,
+        "why": "That is what a LogAppendTime topic does."
+      },
+      {
+        "text": "It is stored unchanged, as every timestamp is",
+        "correct": false,
+        "why": "before Kafka 4.0 that was the default; now the limit is an hour ahead."
+      },
+      {
+        "text": "It is refused",
+        "correct": true,
+        "why": "Right. `message.timestamp.after.max.ms` is an hour, and the producer gets `Invalid timestamp`."
+      },
+      {
+        "text": "It is stored and moved to the end of the partition",
+        "correct": false,
+        "why": "A log appends at the end anyway; nothing is moved."
+      }
+    ]
+  },
+  {
+    "id": "ex-hybqn966",
+    "version": 1,
+    "section": "clocks-lie",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "By default, how many minutes ahead of the broker's clock may a record's timestamp be before a `CreateTime` topic refuses it?",
+    "value": 60,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-bg0d1sjf",
+    "version": 1,
+    "section": "clocks-lie",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "One till's clock is an hour fast. Why is that worse for an event-time pipeline than a till an hour slow?",
+    "choices": [
+      {
+        "text": "A fast clock's sales are refused by the broker and lost",
+        "correct": false,
+        "why": "An hour is inside the broker's tolerance, so they are stored."
+      },
+      {
+        "text": "A slow clock is corrected by NTP and a fast one is not",
+        "correct": false,
+        "why": "NTP corrects either direction."
+      },
+      {
+        "text": "Its sales push the latest time seen forward, so honest sales look late",
+        "correct": true,
+        "why": "Right. One fast source moves everybody's sense of time; a slow one only makes its own sales late."
+      },
+      {
+        "text": "Fast clocks make the sales arrive sooner",
+        "correct": false,
+        "why": "The clock changes the stamp, not the network."
+      }
+    ]
+  },
+  {
+    "id": "ex-0mr65ra4",
+    "version": 1,
+    "section": "clocks-lie",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A sale's `at` is 15:20 and the broker appended it at 15:02. What can a pipeline conclude?",
+    "choices": [
+      {
+        "text": "The sale is late by eighteen minutes",
+        "correct": false,
+        "why": "Late means arriving after it happened; this arrived before."
+      },
+      {
+        "text": "The till's clock is wrong, since nothing arrives before it happens",
+        "correct": true,
+        "why": "Right. Keeping both clocks is what makes this visible."
+      },
+      {
+        "text": "The broker's clock is wrong, since the till is closer to the sale",
+        "correct": false,
+        "why": "Either could be wrong, but the broker's is the one you run and sync."
+      },
+      {
+        "text": "Kafka will refuse the record",
+        "correct": false,
+        "why": "Kafka never reads `at`; and eighteen minutes is inside its tolerance anyway."
+      }
+    ]
+  },
+  {
+    "id": "ex-8np8a50m",
+    "version": 1,
+    "section": "which-time",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each question to the clock it should be answered with.",
+    "pairs": [
+      {
+        "left": "Sales per hour for the manager",
+        "right": "event time"
+      },
+      {
+        "left": "Sales the pipeline handles per second",
+        "right": "processing time"
+      },
+      {
+        "left": "How far behind the consumer is",
+        "right": "both, subtracted"
+      },
+      {
+        "left": "A card used in two cities ten minutes apart",
+        "right": "event time, between two purchases"
+      }
+    ],
+    "right_distractors": [
+      "ingestion time, because it never changes"
+    ]
+  },
+  {
+    "id": "ex-69e5papa",
+    "version": 1,
+    "section": "which-time",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "When is `LogAppendTime` a reasonable stand-in for event time?",
+    "choices": [
+      {
+        "text": "When the sources have no clock worth trusting",
+        "correct": true,
+        "why": "Right. It is stamped by a clock you run, and in a well-behaved stream close to the event."
+      },
+      {
+        "text": "When some sources go offline for hours",
+        "correct": false,
+        "why": "Then it is hours wrong: Natal's sales were appended at 14:00."
+      },
+      {
+        "text": "When results must be the same in every replay and match event time exactly",
+        "correct": false,
+        "why": "It is the same in every replay, but it never matches event time exactly."
+      },
+      {
+        "text": "Never: it is processing time under another name",
+        "correct": false,
+        "why": "Processing time changes with every read; ingestion time is fixed once appended."
+      }
+    ]
+  },
+  {
+    "id": "ex-3ga49dv9",
+    "version": 1,
+    "section": "which-time",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these are costs of counting by event time rather than processing time? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Results are not final at the end of their period",
+        "correct": true,
+        "why": "Yes: they wait until the processor decides nothing more will come."
+      },
+      {
+        "text": "Open counts are kept as state, per key",
+        "correct": true,
+        "why": "Yes: an open hour's running count has to live somewhere."
+      },
+      {
+        "text": "Each event needs a trustworthy time inside it",
+        "correct": true,
+        "why": "Yes: a lying device clock becomes a wrong result."
+      },
+      {
+        "text": "Kafka refuses records whose event time is old",
+        "correct": false,
+        "why": "Kafka never reads the event time inside the value, and before.max allows any age by default."
+      },
+      {
+        "text": "Replays give different answers",
+        "correct": false,
+        "why": "That is processing time's flaw; event time gives the same answer every replay."
+      }
+    ]
+  },
+  {
+    "id": "ex-3k497sh3",
+    "version": 1,
+    "section": "timestamps-in-kafka",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`kafka-get-offsets.sh --time` for 13:00 on `late` returns an offset. What does replaying from it give you?",
+    "choices": [
+      {
+        "text": "Every sale that happened after 13:00, and nothing earlier",
+        "correct": false,
+        "why": "Natal's morning sales arrived at 14:00, after that offset."
+      },
+      {
+        "text": "Exactly the sales of the 13:00 hour",
+        "correct": false,
+        "why": "A search finds a starting position, not a set of events, and reading goes on past 14:00."
+      },
+      {
+        "text": "Only the records whose timestamp is after 13:00, skipping the rest",
+        "correct": false,
+        "why": "A consumer reads every record from the position on; it does not filter by timestamp."
+      },
+      {
+        "text": "Everything that arrived from 13:00 on",
+        "correct": true,
+        "why": "Right. In `late` the stamp is the time of sending, so the search is by arrival."
+      }
+    ]
+  },
+  {
+    "id": "ex-53axg4jm",
+    "version": 1,
+    "section": "timestamps-in-kafka",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A topic keeps the default seven-day retention, and a producer stamps each record with the sale's event time. A batch of sales from three weeks ago arrives. What happens to them?",
+    "choices": [
+      {
+        "text": "They are kept for seven days from now",
+        "correct": false,
+        "why": "Retention is measured with the record's timestamp, not with the time it was written."
+      },
+      {
+        "text": "They are refused by the broker",
+        "correct": false,
+        "why": "before.max allows any age by default."
+      },
+      {
+        "text": "They are deleted at the next retention check",
+        "correct": true,
+        "why": "Right, if they are alone in their segment: its newest stamp is already past the limit."
+      },
+      {
+        "text": "They are moved to the start of the partition",
+        "correct": false,
+        "why": "A log appends; nothing moves to the start."
+      }
+    ]
+  },
+  {
+    "id": "ex-0msc4kyy",
+    "version": 1,
+    "section": "timestamps-in-kafka",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Each segment of a partition has a `.log` file and, beside it, a `.___` file that maps timestamps to offsets.",
+    "blanks": [
+      {
+        "accept": [
+          "timeindex"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-z58q55fc",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One of Natal's held sales: put its times in the order they occur.",
+    "items": [
+      "The customer pays at the till in Natal",
+      "The till's line comes back and it sends the sale",
+      "The broker appends the record to the partition",
+      "A consumer keeping up handles it",
+      "An analyst replays the topic the next month"
+    ]
+  },
+  {
+    "id": "ex-06vfgbdd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ponto Final wants an alert when a shop sells nothing for an hour. Which design avoids the false alarm of 2 March?",
+    "choices": [
+      {
+        "text": "Count by event time and alert as soon as an hour has no sales",
+        "correct": false,
+        "why": "At 11:20 the event-time hour is just as empty: the sales are still in the till."
+      },
+      {
+        "text": "Count by arrival and raise the threshold to two hours",
+        "correct": false,
+        "why": "Natal was quiet for three hours and forty minutes; the alarm still fires, later."
+      },
+      {
+        "text": "Alert on silence from the till itself, which is a pipeline question, separate from sales per hour",
+        "correct": true,
+        "why": "Right. Nothing arrived from Natal, which is true and worth knowing; whether it sold is a different question."
+      },
+      {
+        "text": "Switch the topic to LogAppendTime",
+        "correct": false,
+        "why": "Ingestion time also says 14:00 for Natal's sales."
+      }
+    ]
+  }
+]
