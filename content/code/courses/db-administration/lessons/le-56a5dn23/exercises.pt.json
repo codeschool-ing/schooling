@@ -1,0 +1,508 @@
+{
+  "ex-gn9m16fj": {
+    "prompt": "Por que o shop.sql calcula cada valor a partir do número da linha em vez de chamar random()?",
+    "hint": "Pense em comparar a sua tela com a do curso.",
+    "choices": [
+      {
+        "text": "O random() não existe no PostgreSQL 16",
+        "why": "Existe. Foi evitado de propósito."
+      },
+      {
+        "text": "Aritmética é mais rápida que random()",
+        "why": "Velocidade não é o motivo; a carga leva uns catorze segundos de qualquer jeito."
+      },
+      {
+        "text": "Para seus números baterem com os do curso",
+        "why": "Isso. Mesmas linhas, mesmos números."
+      },
+      {
+        "text": "Valores aleatórios quebrariam a chave estrangeira",
+        "why": "Um cliente aleatório entre 1 e 50.000 a satisfaria do mesmo jeito."
+      }
+    ]
+  },
+  "ex-1921h4dd": {
+    "prompt": "O `\\dt+` mostra orders com 65 MB e o `\\di+` mostra seus três índices com 12 MB, 9408 kB e 21 MB. O que isso diz?",
+    "hint": "Some os índices.",
+    "choices": [
+      {
+        "text": "Os índices estão corrompidos",
+        "why": "Nada aqui sugere dano; é o tamanho comum de três índices B-tree."
+      },
+      {
+        "text": "Índices custam espaço de verdade",
+        "why": "Isso. Uns 42 MB de índice para 65 MB de tabela."
+      },
+      {
+        "text": "A tabela é quase só páginas vazias",
+        "why": "Ela acabou de ser carregada; ainda não há linhas mortas."
+      },
+      {
+        "text": "O \\dt+ está contando os índices duas vezes",
+        "why": "O \\dt+ mostra a tabela sem os índices."
+      }
+    ]
+  },
+  "ex-b1p2jdcs": {
+    "prompt": "Ponha em ordem os passos para refazer o shop exatamente como era.",
+    "hint": "Remover, criar vazio, encher.",
+    "items": [
+      "dropdb shop",
+      "createdb shop",
+      "psql shop -f shop.sql"
+    ],
+    "trap": "Rodar o arquivo num shop que já existe falha no primeiro CREATE TABLE: as tabelas já estão lá."
+  },
+  "ex-efgk8ag9": {
+    "prompt": "Ligue cada entrada do diretório de dados ao que ela guarda.",
+    "hint": "Um por banco, um compartilhado, um log, um registro de commits.",
+    "pairs": [
+      {
+        "left": "base/",
+        "right": "um subdiretório por banco"
+      },
+      {
+        "left": "global/",
+        "right": "tabelas que todos os bancos compartilham"
+      },
+      {
+        "left": "pg_wal/",
+        "right": "toda mudança, anotada antes"
+      },
+      {
+        "left": "pg_xact/",
+        "right": "se cada transação fez commit"
+      }
+    ],
+    "right_distractors": [
+      "a configuração do servidor"
+    ]
+  },
+  "ex-w51pjqar": {
+    "prompt": "Logo depois de carregar o shop, o pg_wal tinha 337M e o base 153M. Qual a leitura certa?",
+    "hint": "Toda mudança vai primeiro para o log.",
+    "choices": [
+      {
+        "text": "Algo está errado: o log nunca deveria passar dos dados",
+        "why": "Depois de uma carga grande isso acontece, por um tempo."
+      },
+      {
+        "text": "A carga passou pelo log antes",
+        "why": "Isso. É limitado, e a lição 7 diz pelo quê."
+      },
+      {
+        "text": "Os segmentos antigos já podem ser apagados",
+        "why": "Nunca à mão. Quem decide quando um segmento não é mais necessário é o servidor."
+      },
+      {
+        "text": "O pg_wal guarda uma segunda cópia de cada tabela",
+        "why": "Ele guarda um registro de mudanças, não cópias de tabelas."
+      }
+    ]
+  },
+  "ex-kavrw8jj": {
+    "prompt": "Um servidor foi morto com kill -9 e o postmaster.pid continua no diretório de dados. O que acontece na próxima subida?",
+    "hint": "O arquivo registra um id de processo.",
+    "choices": [
+      {
+        "text": "Verifica aquele processo antes",
+        "why": "Isso. O arquivo só bloqueia um servidor que esteja de fato rodando."
+      },
+      {
+        "text": "Ele se recusa a subir até alguém apagar o arquivo",
+        "why": "Ele verifica o processo antes; apagar o arquivo à mão é o hábito perigoso."
+      },
+      {
+        "text": "Ele sobe um segundo servidor ao lado do antigo",
+        "why": "Dois servidores num diretório é exatamente o que o arquivo existe para impedir."
+      },
+      {
+        "text": "Ele recria o cluster do zero",
+        "why": "Nada é recriado; a recuperação de queda reaplica o log."
+      }
+    ]
+  },
+  "ex-d5g13n1p": {
+    "prompt": "O arquivo que registra qual versão maior criou um diretório de dados se chama ___.",
+    "hint": "O nome diz, em maiúsculas.",
+    "blanks": [
+      {
+        "accept": [
+          "PG_VERSION"
+        ]
+      }
+    ]
+  },
+  "ex-5f2pkttp": {
+    "prompt": "Qual o jeito certo de achar o arquivo que guarda uma tabela?",
+    "hint": "Pergunte ao servidor.",
+    "choices": [
+      {
+        "text": "Procurar um arquivo com o nome da tabela em base/",
+        "why": "Nenhum arquivo leva o nome de uma tabela."
+      },
+      {
+        "text": "SELECT pg_relation_filepath('a_tabela')",
+        "why": "Isso. O número pode mudar, então consulte toda vez."
+      },
+      {
+        "text": "Pegar o arquivo mais novo do diretório do banco",
+        "why": "O mais novo é o que mudou por último, o que não diz nada sobre qual tabela é."
+      },
+      {
+        "text": "Somar 12 ao oid do banco",
+        "why": "Não há aritmética entre os dois números."
+      }
+    ]
+  },
+  "ex-zgx3cyfr": {
+    "prompt": "Qual fork de uma tabela só aparece depois do primeiro VACUUM?",
+    "hint": "Dois bits por página.",
+    "choices": [
+      {
+        "text": "O mapa de visibilidade, _vm",
+        "why": "Isso. É o VACUUM que o preenche."
+      },
+      {
+        "text": "O fork principal",
+        "why": "Ele guarda as linhas, então existe desde o primeiro insert."
+      },
+      {
+        "text": "O mapa de espaço livre, _fsm",
+        "why": "Ele já estava lá depois da carga."
+      },
+      {
+        "text": "O arquivo do índice",
+        "why": "Um índice é uma relação própria, não um fork da tabela."
+      }
+    ]
+  },
+  "ex-ewst38xw": {
+    "prompt": "O fork principal de orders tem 68.272.128 bytes e uma página tem 8192 bytes. Quantas páginas ele tem?",
+    "hint": "Divida.",
+    "unit": "páginas"
+  },
+  "ex-7z0rtz6b": {
+    "prompt": "Alguém pergunta o tamanho de orders. Qual função responde com a tabela, seus mapas e todos os índices juntos?",
+    "hint": "A que tem total no nome.",
+    "choices": [
+      {
+        "text": "pg_total_relation_size",
+        "why": "Isso: 108 MB aqui."
+      },
+      {
+        "text": "pg_relation_size",
+        "why": "Esse é só o fork principal: 65 MB."
+      },
+      {
+        "text": "pg_table_size",
+        "why": "Esse soma os mapas e o TOAST, mas nenhum índice."
+      },
+      {
+        "text": "pg_indexes_size",
+        "why": "Esse é só a soma dos índices."
+      }
+    ]
+  },
+  "ex-zv7b8xxb": {
+    "prompt": "Uma tabela de 3,5 GB mora em base/16386. Quantos arquivos guardam o fork principal dela?",
+    "hint": "O segment_size é 1GB.",
+    "choices": [
+      {
+        "text": "Quatro: o número, depois .1, .2 e .3",
+        "why": "Isso. Três gigabytes cheios e metade de um quarto."
+      },
+      {
+        "text": "Um, de 3,5 GB",
+        "why": "Nenhum arquivo passa do segment_size."
+      },
+      {
+        "text": "Três, e o resto vai no mapa de espaço livre",
+        "why": "O mapa de espaço livre não guarda linhas."
+      },
+      {
+        "text": "Depende do tamanho de bloco do sistema de arquivos",
+        "why": "A divisão é do PostgreSQL, fixada na compilação."
+      }
+    ]
+  },
+  "ex-pw10nkby": {
+    "prompt": "Depois do TRUNCATE scratch, o pg_relation_filepath deu outro número. Por que o TRUNCATE é instantâneo numa tabela de qualquer tamanho?",
+    "hint": "Ele não mexeu nas linhas antigas.",
+    "choices": [
+      {
+        "text": "Ele marca todas as linhas como apagadas numa passada",
+        "why": "Isso é o DELETE, e leva tempo proporcional às linhas."
+      },
+      {
+        "text": "Ele adia o trabalho para o próximo VACUUM",
+        "why": "Nada sobra para o VACUUM: o arquivo antigo some no commit."
+      },
+      {
+        "text": "Troca por um arquivo novo vazio",
+        "why": "Isso. O oid fica; o relfilenode muda."
+      },
+      {
+        "text": "A tabela era pequena",
+        "why": "Seria igualmente rápido com um bilhão de linhas."
+      }
+    ]
+  },
+  "ex-fghm0q4s": {
+    "prompt": "No Ubuntu, onde fica o pg_hba.conf do cluster 16/main?",
+    "hint": "Onde todo outro serviço guarda a configuração.",
+    "choices": [
+      {
+        "text": "/var/lib/postgresql/16/main",
+        "why": "Esse é o lugar da origem, e o diretório de dados."
+      },
+      {
+        "text": "/usr/lib/postgresql/16",
+        "why": "Ali ficam os programas."
+      },
+      {
+        "text": "/etc/postgresql/16/main",
+        "why": "Isso. Debian e Ubuntu mantêm o diretório de dados só com dados."
+      },
+      {
+        "text": "/var/run/postgresql",
+        "why": "Ali fica o socket."
+      }
+    ]
+  },
+  "ex-nt5g9q1x": {
+    "prompt": "Você mantém um segundo cluster para ensaios e não quer que ele rode depois de cada reboot. O que você muda?",
+    "hint": "Uma palavra num arquivo pequeno.",
+    "choices": [
+      {
+        "text": "Apagar o postmaster.pid dele",
+        "why": "Isso não muda nada no boot, e nunca se faz à mão."
+      },
+      {
+        "text": "Pôr manual no start.conf",
+        "why": "Isso. auto, manual ou disabled."
+      },
+      {
+        "text": "Apagá-lo com pg_dropcluster e recriar quando precisar",
+        "why": "Isso apaga dados, configuração e log dele."
+      },
+      {
+        "text": "Editar o pg_ctl.conf",
+        "why": "Ali ficam opções extras do pg_ctl, não se ele sobe."
+      }
+    ]
+  },
+  "ex-m1s2wtah": {
+    "prompt": "O que o `sudo pg_dropcluster --stop 16 main` apaga? Marque todos que se aplicam.",
+    "hint": "Os três lugares onde um cluster mora no Ubuntu.",
+    "choices": [
+      {
+        "text": "/var/lib/postgresql/16/main",
+        "why": "Sim, o diretório de dados."
+      },
+      {
+        "text": "/etc/postgresql/16/main",
+        "why": "Sim, a configuração dele."
+      },
+      {
+        "text": "O log dele em /var/log/postgresql",
+        "why": "Sim, o log também."
+      },
+      {
+        "text": "O pacote postgresql-16",
+        "why": "Os programas ficam; o pg_createcluster faz um cluster novo na hora."
+      },
+      {
+        "text": "Outros clusters da máquina",
+        "why": "Só o nomeado."
+      }
+    ]
+  },
+  "ex-532e1zc4": {
+    "prompt": "O que tirar a configuração do diretório de dados torna possível?",
+    "hint": "Pense em substituir o diretório de dados.",
+    "choices": [
+      {
+        "text": "Rodar duas versões maiores num diretório de dados",
+        "why": "Nenhum diretório de dados serve duas versões maiores."
+      },
+      {
+        "text": "Trocar os dados, mantendo os ajustes",
+        "why": "Isso. O diretório de dados vira só dados."
+      },
+      {
+        "text": "Editar ajustes sem sudo",
+        "why": "Os arquivos continuam sendo do postgres."
+      },
+      {
+        "text": "Subir o servidor sem postmaster.pid",
+        "why": "O postmaster.pid continua sendo escrito no diretório de dados."
+      }
+    ]
+  },
+  "ex-m5nkacfc": {
+    "prompt": "O que o ALTER TABLE customers SET TABLESPACE fast faz enquanto roda?",
+    "hint": "Os arquivos mudam de lugar.",
+    "choices": [
+      {
+        "text": "Muda um ponteiro; os arquivos ficam onde estão",
+        "why": "O caminho novo está no diretório novo: os dados foram copiados."
+      },
+      {
+        "text": "Move a tabela e todos os índices",
+        "why": "Só a tabela mudou; cada índice precisa do seu ALTER INDEX."
+      },
+      {
+        "text": "Copia a tabela em segundo plano sem travas",
+        "why": "Ele segura uma trava que bloqueia todos até a cópia acabar."
+      },
+      {
+        "text": "Copia a tabela, bloqueando todos enquanto isso",
+        "why": "Isso. Nada para 4,5 MB, uma indisponibilidade para 200 GB."
+      }
+    ]
+  },
+  "ex-cy2np21k": {
+    "prompt": "Como o cluster lembra onde está o tablespace fast depois de reiniciar?",
+    "hint": "Olhe no pg_tblspc.",
+    "choices": [
+      {
+        "text": "Um link simbólico em pg_tblspc, com o oid do tablespace no nome",
+        "why": "Isso. Ele aponta para /srv/pg/fast."
+      },
+      {
+        "text": "Uma linha no postgresql.conf",
+        "why": "Nenhuma configuração foi escrita."
+      },
+      {
+        "text": "Uma entrada no /etc/fstab",
+        "why": "O fstab monta discos; não sabe nada de tablespaces."
+      },
+      {
+        "text": "Ele varre o /srv na subida",
+        "why": "Nada é varrido; o link é seguido."
+      }
+    ]
+  },
+  "ex-sw7r6ta9": {
+    "prompt": "Um servidor de nuvem tem um só tipo de volume de rede para todo disco. Um colega quer um tablespace para a tabela mais quente. Qual a objeção mais forte?",
+    "hint": "O que o tablespace compraria aqui?",
+    "choices": [
+      {
+        "text": "Tablespaces estão obsoletos no PostgreSQL 16",
+        "why": "Eles são plenamente suportados."
+      },
+      {
+        "text": "Um tablespace não pode guardar uma tabela com índice",
+        "why": "Tabelas e índices vão para tablespaces."
+      },
+      {
+        "text": "Só superusuários leem uma tabela num tablespace",
+        "why": "Os privilégios são os mesmos onde quer que estejam os arquivos."
+      },
+      {
+        "text": "Não há lugar mais rápido para pô-la",
+        "why": "Isso. Todo o custo, nenhum ganho."
+      }
+    ]
+  },
+  "ex-qnvy4hg1": {
+    "prompt": "O disco está quase cheio e o pg_wal é o maior diretório. O que você deve fazer primeiro?",
+    "hint": "O servidor decide quais segmentos ainda precisa.",
+    "choices": [
+      {
+        "text": "Apagar os arquivos mais antigos do pg_wal",
+        "why": "O cluster pode nunca mais subir."
+      },
+      {
+        "text": "Compactar o pg_wal com gzip",
+        "why": "O servidor acharia segmentos que não consegue ler."
+      },
+      {
+        "text": "Descobrir por que cresceu",
+        "why": "Isso. A lição 7 diz por quê; a lição 24 escreve o runbook."
+      },
+      {
+        "text": "Mover o pg_wal para o /tmp",
+        "why": "Mover arquivos à mão por baixo do servidor é o mesmo erro."
+      }
+    ]
+  },
+  "ex-wcxqr895": {
+    "prompt": "Por que um `cp -a` do diretório de dados de um servidor rodando não é um backup?",
+    "hint": "Os arquivos mudam enquanto o cp lê.",
+    "choices": [
+      {
+        "text": "O cp não lê arquivos do postgres",
+        "why": "Com sudo ele lê. O problema é quando."
+      },
+      {
+        "text": "A cópia mistura momentos que nenhuma recuperação reconcilia",
+        "why": "Isso. Parado, ou com ferramentas feitas para isso."
+      },
+      {
+        "text": "O cp não copia links simbólicos",
+        "why": "O -a copia; esse não é o problema."
+      },
+      {
+        "text": "A cópia é grande demais",
+        "why": "O tamanho não tem nada a ver."
+      }
+    ]
+  },
+  "ex-gkdrj1dq": {
+    "prompt": "Um servidor se recusa a subir dizendo que outro servidor pode estar rodando no diretório de dados. O ps não mostra processo postgres. Qual a leitura certa?",
+    "hint": "Leia a mensagem inteira antes de mexer em qualquer coisa.",
+    "choices": [
+      {
+        "text": "Apagar o postmaster.pid e subir de novo",
+        "why": "Se outra coisa tem aquele pid, você acabou de permitir dois servidores num diretório."
+      },
+      {
+        "text": "Reinstalar o pacote",
+        "why": "Não há nada errado com os programas."
+      },
+      {
+        "text": "Ler o log antes e conferir de quem é aquele pid",
+        "why": "Isso. O log nomeia o que achou, e isso decide o próximo passo."
+      },
+      {
+        "text": "Mudar as permissões do diretório de dados para 777",
+        "why": "O servidor passaria a recusar por um segundo motivo."
+      }
+    ]
+  },
+  "ex-4zb5qn3q": {
+    "prompt": "O número que o arquivo de uma tabela leva no disco, que o TRUNCATE muda enquanto o oid fica, é o ___ dela.",
+    "hint": "Relação, arquivo, nó.",
+    "blanks": [
+      {
+        "accept": [
+          "relfilenode"
+        ]
+      }
+    ]
+  },
+  "ex-n2sr2ez9": {
+    "prompt": "Ligue cada pergunta ao comando que a responde.",
+    "hint": "Servidor para significado, shell para bytes.",
+    "pairs": [
+      {
+        "left": "Qual arquivo é a tabela orders?",
+        "right": "SELECT pg_relation_filepath('orders')"
+      },
+      {
+        "left": "Quanto pesa cada parte do cluster?",
+        "right": "sudo du -h -d1 /var/lib/postgresql/16/main"
+      },
+      {
+        "left": "Onde o cluster guarda o log?",
+        "right": "pg_lsclusters"
+      },
+      {
+        "left": "Quais tablespaces existem?",
+        "right": "\\db"
+      }
+    ]
+  }
+}

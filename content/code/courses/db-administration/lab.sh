@@ -154,6 +154,7 @@ stage() { # where lesson N starts: what the lessons before it left behind
   [ "$n" -ge 4 ] || return 0
   # Lesson 3: a superuser role for ana, as the setup makes it.
   in_vm su - postgres -c "createuser --superuser ana" >/dev/null
+  as_ana "createdb ana"
   [ "$n" -ge 5 ] || return 0
   # Lesson 4: the course's database, from the generator that lesson prints.
   STAGE_LESSON=4 stage_shop
