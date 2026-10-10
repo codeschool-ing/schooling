@@ -1,0 +1,653 @@
+[
+  {
+    "id": "ex-hz6y15d8",
+    "version": 1,
+    "section": "restored-or-not",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A nightly backup job has reported success every night for a year. What has that established?",
+    "hint": "What does an exit code describe: the program, or what it left behind?",
+    "choices": [
+      {
+        "text": "That last night's copy can rebuild the database",
+        "correct": false,
+        "why": "Only a restore establishes that. The job's status is a statement about the job."
+      },
+      {
+        "text": "That a program ran each night and did not report an error",
+        "correct": true,
+        "why": "Right. Whether the bytes it left can become a database again is a separate question, answered by restoring them."
+      },
+      {
+        "text": "That every copy is complete, because a partial dump exits with an error",
+        "correct": false,
+        "why": "A dump of the wrong database is complete, exits cleanly and is useless. Completeness of the wrong thing is not a backup."
+      },
+      {
+        "text": "That the copies are stored somewhere the database cannot take with it",
+        "correct": false,
+        "why": "The job knows nothing about where its output ends up living, or what else lives there."
+      }
+    ]
+  },
+  {
+    "id": "ex-5s79caha",
+    "version": 1,
+    "section": "restored-or-not",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In 2017 GitLab had five ways to get its production database back, and none worked as intended. What would have found every one of those failures in advance?",
+    "hint": "Some of the five had never been set up for that server at all.",
+    "choices": [
+      {
+        "text": "Alerting on the exit code of every backup job",
+        "correct": false,
+        "why": "The failing dump's reports were being sent and rejected, and two of the mechanisms had no job to alert on: they had never been configured."
+      },
+      {
+        "text": "Keeping more copies of each kind of backup, in more places",
+        "correct": false,
+        "why": "More copies of a dump that fails, or of a snapshot nobody enabled, are more of nothing."
+      },
+      {
+        "text": "Restoring from each of them recently and checking the result",
+        "correct": true,
+        "why": "Right. A restore exercises every link at once, including the ones nobody remembered existed."
+      },
+      {
+        "text": "Snapshotting by hand more often",
+        "correct": false,
+        "why": "That snapshot is what saved them. It was taken for another reason, and it is not what was broken."
+      }
+    ]
+  },
+  {
+    "id": "ex-tw0cyfg0",
+    "version": 1,
+    "section": "restored-or-not",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these failures would a backup job's exit code never reveal? Choose all that apply.",
+    "hint": "Ask of each one whether any program in the job sees it go wrong.",
+    "choices": [
+      {
+        "text": "The job dumps a database that still exists but is no longer the one in use",
+        "correct": true,
+        "why": "Right. Every program succeeds; the copy is complete and of the wrong thing."
+      },
+      {
+        "text": "pg_dump, run on its own in the job, cannot connect to the server",
+        "correct": false,
+        "why": "On its own, with nothing after it in a pipe, pg_dump exits with an error and the job sees it."
+      },
+      {
+        "text": "The copies are written to the same disk as the database",
+        "correct": true,
+        "why": "Right. Writing to that disk succeeds every night, until the disk fails and takes both."
+      },
+      {
+        "text": "Restoring takes longer than the business is willing to wait",
+        "correct": true,
+        "why": "Right. Nothing in the backup job measures how long the reverse journey takes."
+      }
+    ]
+  },
+  {
+    "id": "ex-3jpwy6cd",
+    "version": 1,
+    "section": "restored-or-not",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team restores its backup into a test server every quarter and checks it with a report. The database has to be back within two hours of a disaster, and the last drill took nine. Which describes them?",
+    "hint": "Two different things can work or fail: the copy, and the recovery.",
+    "choices": [
+      {
+        "text": "Their backups have failed the drill",
+        "correct": false,
+        "why": "The drill restored the data and the report matched, so the copies are good. What failed is the time."
+      },
+      {
+        "text": "Their backups work and their recovery does not",
+        "correct": true,
+        "why": "Right. A copy that comes back too slowly to matter is a working backup and a failed recovery. Lesson 8 makes the two hours a number somebody signs."
+      },
+      {
+        "text": "They are covered, because the drill restored the data and checked it",
+        "correct": false,
+        "why": "Seven hours past the agreed limit is not covered: the business waits nine hours either way."
+      },
+      {
+        "text": "They need to take backups more often",
+        "correct": false,
+        "why": "More frequent copies reduce how much data is lost, not how long the restore takes."
+      }
+    ]
+  },
+  {
+    "id": "ex-p8h6wac0",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the course recommend a virtual machine rather than installing PostgreSQL on the computer you work on?",
+    "hint": "Think about what the course asks you to do to the server.",
+    "choices": [
+      {
+        "text": "PostgreSQL does not run on Windows or macOS",
+        "correct": false,
+        "why": "It runs on both. The recommendation is about what you do to it, not whether it runs."
+      },
+      {
+        "text": "The platform connects to it to check your exercises",
+        "correct": false,
+        "why": "The platform runs nothing on your machine and connects to nothing. The lab is entirely yours."
+      },
+      {
+        "text": "You will break it on purpose, and that has to cost nothing",
+        "correct": true,
+        "why": "Right. Throwing a virtual machine away costs nothing, and a snapshot puts it back in seconds."
+      },
+      {
+        "text": "It runs faster than an installed server",
+        "correct": false,
+        "why": "If anything it is a little slower. Speed is not the reason."
+      }
+    ]
+  },
+  {
+    "id": "ex-2wt8se75",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A student plans to take this course against a managed PostgreSQL service from a cloud provider. What would they be missing?",
+    "hint": "What does a managed service keep to itself?",
+    "choices": [
+      {
+        "text": "A client that can connect and run queries",
+        "correct": false,
+        "why": "Every managed service accepts psql. Querying is the part it does give you."
+      },
+      {
+        "text": "Room for a database the size of the shop",
+        "correct": false,
+        "why": "The shop is half a megabyte compressed; any service holds it."
+      },
+      {
+        "text": "The ability to run pg_dump against it from your own computer",
+        "correct": false,
+        "why": "pg_dump is an ordinary client and works against managed services. It is the server side that is missing."
+      },
+      {
+        "text": "Its files, its replication and the right to kill it",
+        "correct": true,
+        "why": "Right. Those are what the course is about, and a managed service keeps all three. Lesson 21 is the lesson you could take there."
+      }
+    ]
+  },
+  {
+    "id": "ex-tsyz4wtn",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The course runs several PostgreSQL servers on one machine. Which failure can this lab only simulate?",
+    "hint": "What do servers on one computer share?",
+    "choices": [
+      {
+        "text": "A cable cut between the primary and its standby",
+        "correct": true,
+        "why": "Right. Servers on one machine share a network card, so a cut is simulated by blocking a port, and the lessons say so when they do it."
+      },
+      {
+        "text": "A primary that crashes halfway through writing a transaction",
+        "correct": false,
+        "why": "Killing the process does exactly that, for real."
+      },
+      {
+        "text": "A table dropped by mistake in the middle of the afternoon",
+        "correct": false,
+        "why": "That is as real on one machine as on fifty: one statement."
+      },
+      {
+        "text": "A replica that falls behind its primary",
+        "correct": false,
+        "why": "Lag is real here; lesson 13 produces it and measures it."
+      }
+    ]
+  },
+  {
+    "id": "ex-sa4g7j9v",
+    "version": 1,
+    "section": "installing",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many rows does `shop.sql` put in the `orders` table?",
+    "hint": "The second generate_series.",
+    "value": 50000,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-qvbt3ccd",
+    "version": 1,
+    "section": "installing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `shop.sql` compute customers and totals with a multiplication and a remainder rather than with `random()`?",
+    "hint": "What do later lessons compare the restored shop against?",
+    "choices": [
+      {
+        "text": "Because random() would be too slow on fifty thousand rows",
+        "correct": false,
+        "why": "It would take well under a second. Speed is not what the choice protects."
+      },
+      {
+        "text": "So every run produces the same rows, anywhere",
+        "correct": true,
+        "why": "Right. A restored shop is compared against counts and sums the lessons print, and those only mean something if your shop and the recorded one are identical."
+      },
+      {
+        "text": "Because PostgreSQL has no random number function",
+        "correct": false,
+        "why": "It has random(). The script avoids it on purpose."
+      },
+      {
+        "text": "So that the totals look like real prices from a real shop",
+        "correct": false,
+        "why": "They look like nothing in particular. They are scattered, and repeatable."
+      }
+    ]
+  },
+  {
+    "id": "ex-s44gpg6g",
+    "version": 1,
+    "section": "installing",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Of the columns `pg_lsclusters` prints, the course returns most to the data directory and the ___, which is the first place to look when a server refuses to start.",
+    "hint": "The right-hand column.",
+    "blanks": [
+      {
+        "accept": [
+          "log",
+          "log file",
+          "logfile"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cje8qyyn",
+    "version": 1,
+    "section": "first-restore",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`pg_restore -d shop_restored shop.dump` printed nothing at all. What does that tell you about `shop_restored`?",
+    "hint": "Compare it with what a nightly job's green tick tells you.",
+    "choices": [
+      {
+        "text": "That shop_restored is identical to shop, row for row",
+        "correct": false,
+        "why": "Identical is what the report establishes. pg_restore only said it met no error."
+      },
+      {
+        "text": "That pg_restore met no error, and nothing more",
+        "correct": true,
+        "why": "Right. Silence is the same evidence as a green job, which is why the report exists."
+      },
+      {
+        "text": "That nothing was restored, since a restore prints each table",
+        "correct": false,
+        "why": "pg_restore is quiet when it succeeds. Silence is not emptiness."
+      },
+      {
+        "text": "That the restore carries on in the background",
+        "correct": false,
+        "why": "pg_restore returns when it has finished; nothing runs on afterwards."
+      }
+    ]
+  },
+  {
+    "id": "ex-p3pnv9ag",
+    "version": 1,
+    "section": "first-restore",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does every query in `verify.sql` end in an ORDER BY or return a single row?",
+    "hint": "What would diff see if two identical databases returned rows in different orders?",
+    "choices": [
+      {
+        "text": "Because diff needs sorted input before it will compare two files",
+        "correct": false,
+        "why": "diff compares line by line in whatever order it is given. Sorted input is not a requirement."
+      },
+      {
+        "text": "So that the largest tables are compared first",
+        "correct": false,
+        "why": "The order is about rows within a query, not which table comes first."
+      },
+      {
+        "text": "Two identical copies could print rows in different orders",
+        "correct": true,
+        "why": "Right. PostgreSQL may return unordered rows in any order, and a drill that fails on that is a drill nobody trusts."
+      },
+      {
+        "text": "So that the report runs faster on large tables",
+        "correct": false,
+        "why": "Sorting costs time; it is there for correctness, not speed."
+      }
+    ]
+  },
+  {
+    "id": "ex-4s6sg9jx",
+    "version": 1,
+    "section": "first-restore",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In a restored copy, one order in the middle of the table has its total changed from 1500 to 1510 cents, and nothing else differs. Which lines of the report change?",
+    "hint": "Which queries read total_cents?",
+    "choices": [
+      {
+        "text": "The orders line's count",
+        "correct": false,
+        "why": "The number of orders is the same: no row was added or removed."
+      },
+      {
+        "text": "The indexes line",
+        "correct": false,
+        "why": "A changed value does not add or remove an index."
+      },
+      {
+        "text": "None: the report counts rows and cannot see a changed value",
+        "correct": false,
+        "why": "It sums total_cents precisely so that it can see one."
+      },
+      {
+        "text": "The orders sum, and the sum for that customer's city",
+        "correct": true,
+        "why": "Right. Both sums read total_cents, so both move by ten. The counts and max(id) stay put."
+      }
+    ]
+  },
+  {
+    "id": "ex-dm64m5qx",
+    "version": 1,
+    "section": "first-restore",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After one order was deleted from `shop_restored`, the report's orders line read `49999|50000|524979229` against the live `50000|50000|524985000`. What was the deleted order's total, in cents?",
+    "hint": "Subtract.",
+    "value": 5771,
+    "tolerance": 0,
+    "unit": "cents"
+  },
+  {
+    "id": "ex-fjjxb6b9",
+    "version": 1,
+    "section": "first-restore",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `-X` do in `psql -X -A -t shop -f verify.sql`?",
+    "hint": "The report should not depend on who runs it.",
+    "choices": [
+      {
+        "text": "It skips your personal ~/.psqlrc settings",
+        "correct": true,
+        "why": "Right. A ~/.psqlrc that prints NULL differently, or turns on timing, would make two people's reports differ for the same data, so -X leaves it out."
+      },
+      {
+        "text": "It prints values separated by a bar, with no padding",
+        "correct": false,
+        "why": "That is -A, the unaligned output."
+      },
+      {
+        "text": "It runs the whole file inside one transaction",
+        "correct": false,
+        "why": "That is -1, or --single-transaction."
+      },
+      {
+        "text": "It leaves out the column headers and the row count",
+        "correct": false,
+        "why": "That is -t, tuples only."
+      }
+    ]
+  },
+  {
+    "id": "ex-shgq6qnk",
+    "version": 1,
+    "section": "silent-failure",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`pg_dump shpo | gzip > shop.sql.gz` failed to find the database, and `echo $?` printed 0. Why?",
+    "hint": "Whose exit status does a pipeline report?",
+    "choices": [
+      {
+        "text": "pg_dump exits with 0 when the database does not exist",
+        "correct": false,
+        "why": "It exits with an error; that status is simply not the one the shell reports."
+      },
+      {
+        "text": "gzip swallowed pg_dump's error message along with its output",
+        "correct": false,
+        "why": "The message reached the screen. It is the status that was lost, not the text."
+      },
+      {
+        "text": "A pipeline reports its last program's status, and gzip succeeded",
+        "correct": true,
+        "why": "Right. gzip compressed what it was given, which was nothing, and did it perfectly."
+      },
+      {
+        "text": "The shell ignores errors written to the terminal",
+        "correct": false,
+        "why": "No such rule. The shell reports the last program's status, and pg_dump was not the last."
+      }
+    ]
+  },
+  {
+    "id": "ex-a2dtjp93",
+    "version": 1,
+    "section": "silent-failure",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many bytes was the `shop.sql.gz` that the failed pipeline left behind?",
+    "hint": "ls -l printed it.",
+    "value": 20,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-ngdd006e",
+    "version": 1,
+    "section": "silent-failure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A backup script starts with `set -euo pipefail`. Which failure does it still report as success?",
+    "hint": "pipefail catches programs that fail. Which of these involves no failing program?",
+    "choices": [
+      {
+        "text": "pg_dump cannot connect to the server",
+        "correct": false,
+        "why": "pg_dump exits with an error, pipefail passes it on, and set -e stops the script."
+      },
+      {
+        "text": "The disk fills up while gzip is writing",
+        "correct": false,
+        "why": "gzip fails to write and exits with an error, which the job now sees."
+      },
+      {
+        "text": "pg_dump copies a database the application stopped using",
+        "correct": true,
+        "why": "Right. Every program succeeds. Only a restore, checked against what the real data answers, notices."
+      },
+      {
+        "text": "The out-of-memory killer stops pg_dump",
+        "correct": false,
+        "why": "A killed process exits with a failing status, and pipefail reports it."
+      }
+    ]
+  },
+  {
+    "id": "ex-18syh64t",
+    "version": 1,
+    "section": "silent-failure",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the three checks every backup job in this course ends with in order, cheapest first.",
+    "hint": "One of them needs a second server.",
+    "items": [
+      "Every program in the job succeeded",
+      "The output exists and is not much smaller than the last one",
+      "The copy has been restored somewhere and checked"
+    ],
+    "trap": "Exit codes cost nothing to read; a size comparison costs a file listing; a restore costs a server and time, and is the only one that proves the copy."
+  },
+  {
+    "id": "ex-tawyq04y",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each message with what it means.",
+    "hint": "Read the part after FATAL.",
+    "pairs": [
+      {
+        "left": "`role \"ana\" does not exist`",
+        "right": "The server runs and has no role with your name"
+      },
+      {
+        "left": "`database \"ana\" does not exist`",
+        "right": "You are known, and asked for a database nobody created"
+      },
+      {
+        "left": "`Peer authentication failed for user \"postgres\"`",
+        "right": "You are not the computer's postgres user"
+      },
+      {
+        "left": "`No such file or directory`",
+        "right": "No server is listening on the socket"
+      }
+    ],
+    "right_distractors": [
+      "The password you typed was wrong"
+    ]
+  },
+  {
+    "id": "ex-1hkfxq8v",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pg_lsclusters` says the main cluster is down, and `sudo pg_ctlcluster 16 main start` fails. Where is the reason?",
+    "hint": "pg_lsclusters names a file for each cluster.",
+    "choices": [
+      {
+        "text": "In the log named in pg_lsclusters' last column",
+        "correct": true,
+        "why": "Right. The server writes why it refused to start, a full disk or a bad setting, to that log."
+      },
+      {
+        "text": "In the message psql printed when it could not connect",
+        "correct": false,
+        "why": "psql only knows nothing answered. Why the server is not there is in the server's own log."
+      },
+      {
+        "text": "In the ~/.psqlrc file psql reads every time it starts",
+        "correct": false,
+        "why": "That file configures your psql client; it cannot stop a server starting."
+      },
+      {
+        "text": "In the output of createuser",
+        "correct": false,
+        "why": "createuser talks to a running server. With none running, it has nothing to say about why."
+      }
+    ]
+  },
+  {
+    "id": "ex-fgcy0xzd",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes checking backups by alerting when a night's file is more than 10% smaller than the previous night's. Which failure would that check never catch?",
+    "hint": "Which failure produces a file of a steady, normal size?",
+    "choices": [
+      {
+        "text": "A typo that leaves a twenty-byte file",
+        "correct": false,
+        "why": "Twenty bytes against half a megabyte is a drop of nearly 100%; the alert fires the first night."
+      },
+      {
+        "text": "A steady-sized dump of the wrong database",
+        "correct": true,
+        "why": "Right. A steady size is exactly what the check expects, so a steady wrong copy passes it every night."
+      },
+      {
+        "text": "A dump cut short halfway because the disk filled",
+        "correct": false,
+        "why": "Half the size is a 50% drop, well past the threshold."
+      },
+      {
+        "text": "A dump that stops after the first of two tables",
+        "correct": false,
+        "why": "Losing the bigger table shrinks the file far past 10%."
+      }
+    ]
+  },
+  {
+    "id": "ex-f91nx89x",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You join a team whose database is backed up nightly. The backups have never been restored. What is the first useful thing to do?",
+    "hint": "Which single action tests every link of the chain?",
+    "choices": [
+      {
+        "text": "Add set -o pipefail to the top of the backup script",
+        "correct": false,
+        "why": "Worth doing, and it only catches failing programs. It says nothing about whether last night's copy restores."
+      },
+      {
+        "text": "Restore last night's copy elsewhere and compare it",
+        "correct": true,
+        "why": "Right. Until that happens, nobody knows whether the team has a backup at all."
+      },
+      {
+        "text": "Increase how often the job runs",
+        "correct": false,
+        "why": "More copies of something never restored are more unknowns."
+      },
+      {
+        "text": "Move the copies to a different disk",
+        "correct": false,
+        "why": "Also worth doing later. First find out whether what you would be moving is a backup."
+      }
+    ]
+  }
+]
