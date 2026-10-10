@@ -18,9 +18,10 @@
 #     lesson has the student start it with `npm start` in another terminal;
 #   - in "breaks" and "strict", the earlier versions of tests/locators.spec.js
 #     are put back for one run with `lab.sh fence`, and the final one after;
-#   - the Playwright runs have FORCE_COLOR=0 in their environment, which the
-#     printed command does not show: the test runner colours its error
-#     messages, and a page cannot. Nothing else in the output changes.
+#   - the test runner colours its error messages with terminal escape codes,
+#     and a page cannot show colour, so the Playwright runs go through a sed
+#     that deletes the codes (`ESC [ digits m`) and nothing else. Playwright
+#     forces colour on in its workers, so FORCE_COLOR=0 does not remove them.
 #
 # Recorded 2026-10-10 on Ubuntu 24.04 with Node 22.22.0, npm 10.9.4,
 # Playwright 1.56.0 and Chromium 141.0.7390.37, TZ=America/Sao_Paulo.
@@ -34,10 +35,10 @@ stage 2 || exit 1
 P=$REPO_DEFAULT
 cd "$P" || exit 1
 
-# A Playwright run as ana, printed as she typed it, without colour codes.
+# A Playwright run as ana, printed as she typed it, with the colour codes
+# taken out.
 run_plain() {
-  printf 'ana@laptop:~/quitanda$ %s\n' "$*"
-  as_ana "cd '$P' && FORCE_COLOR=0 $*" 2>&1
+  run "$@" | sed 's/\x1b\[[0-9;]*m//g'
 }
 # Put back the version of a file that SECTION.md labels, for one run.
 version_of() {
@@ -63,7 +64,7 @@ block count-xpath
 run "node count.mjs '//h2[text()=\"Mango\"]' '//li[h2=\"Mango\"]//button' '//h2[.=\"Mango\"]/following-sibling::button' '//button/ancestor::li[h2=\"Mango\"]'"
 
 block count-xpath-brittle
-run "node count.mjs '//p[text()=\"R\$ 5,90\"]' '//p[contains(., \"5,90\")]' '/html/body/main/ul/li[1]/button' 'xpath=(//li)[2]//h2'"
+run "node count.mjs '//p[text()=\"R\$ 5,90\"]' '//p[contains(., \"5,90\")]' 'xpath=/html/body/main/ul/li[1]/button' 'xpath=(//li)[2]//h2'"
 
 block count-id
 run "node count.mjs '[data-testid=\"product-banana\"]' '#card-4821' '[id^=\"card-\"]'"

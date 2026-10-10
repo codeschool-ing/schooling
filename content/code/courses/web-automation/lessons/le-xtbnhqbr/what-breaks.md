@@ -6,7 +6,7 @@ version: 1
 **A locator breaks when it leans on something that changes for reasons that have nothing to do
 with what the test checks.** The test then fails on a page that works, somebody spends an
 afternoon finding out that nothing is wrong, and the next red result is believed a little less.
-Four things change that way more than anything else: values the page generates, positions,
+Four kinds of handle change that way all the time: values the page generates, positions,
 classes that exist for styling, and long chains that need every step to hold.
 
 ## A value the page generates
@@ -20,8 +20,8 @@ way these do:
 %%CAP count-id%%
 ```
 
-A different number from the one the previous section printed, and the old one finds nothing.
-`app.js` draws it with `Math.random()` every time the page loads. Frameworks do the same thing for
+The Banana card has a different `id` from the one printed at the start of this lesson, and the
+example finds nothing. `app.js` draws the number with `Math.random()` every time the page loads. Frameworks do the same thing for
 their own reasons: a component library that numbers its fields, a styling tool that names classes
 after a hash of their rules. **Anything a program made up while drawing the page is a value the
 next drawing can make up differently.**
@@ -30,7 +30,7 @@ next drawing can make up differently.**
 
 Three tests of the Banana card, each by a handle somebody could reasonably pick. The first copies
 the `id` from the Elements panel. The second takes the first card in the list. The third does the
-same after one line of JavaScript, run inside the page, has put another card at the top of the
+same after a few lines of JavaScript, run inside the page, have put another card at the top of the
 list: that is what the shop would look like the day a new fruit came into season. Save it as
 `tests/locators.spec.js`:
 
@@ -66,8 +66,8 @@ Run that file alone, by name:
 
 **The first test never passed, not even once.** The `id` it copied was right for the page in your
 browser, at the moment you looked; the run opened a fresh page, which drew a fresh number. Playwright
-waited the five seconds an assertion waits by default and reported `element(s) not found`. Nothing in
-that message says the shop is fine.
+waited the five seconds an assertion waits by default and reported `element(s) not found`. The message
+reads like a missing card, and the card is there.
 
 **The second test passed, and the third is the same locator.** On the page as it is, the first
 card is the Banana. With one more card at the top, the locator still finds exactly one heading, it

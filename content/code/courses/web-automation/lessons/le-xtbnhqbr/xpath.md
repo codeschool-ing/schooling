@@ -5,9 +5,9 @@ version: 1
 
 **XPath is a language for paths through a tree**, written for XML and understood by every browser
 for HTML too. It reads like a path to a file: steps separated by slashes, each step a tag, and
-conditions in square brackets. Where CSS can only look down from the element it starts at, XPath
-can step to a parent, an ancestor or a sibling, and it can compare **text**. That is the one thing
-it does that CSS cannot, and it is also where most of its breakages come from.
+conditions in square brackets. It can walk from any node to its parent, its ancestors or its
+siblings, in either direction, and it can compare **text**. The text is the one thing it does that
+CSS cannot do at all, and it is also where most of its breakages come from.
 
 ## The pieces
 
@@ -24,8 +24,9 @@ it does that CSS cannot, and it is also where most of its breakages come from.
 | `following-sibling::button` | a `button` after this node, under the same parent |
 | `[2]` | the second, counted among the siblings the step selected |
 
-`count.mjs` passes any string that starts with `//` to Playwright as XPath. One that starts with a
-bracket has to say so with `xpath=` in front, or Playwright reads it as CSS.
+Playwright, and so `count.mjs`, treats a string that starts with `//` as XPath. One that starts
+with a single slash or a parenthesis has to say so with `xpath=` in front, or Playwright reads it as
+CSS and stops at the first character it cannot parse.
 
 ## Up, across and by text
 

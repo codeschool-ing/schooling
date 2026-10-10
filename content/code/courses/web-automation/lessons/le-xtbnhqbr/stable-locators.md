@@ -79,7 +79,7 @@ you cannot see.
 A locator can start from another one. `page.getByTestId('product-mango').getByRole('button')` is
 the button inside that card; `filter({ hasText: 'Mango' })` keeps only the matches that contain
 the text. This version finds the card the way a customer does, the list item that says Mango, then
-the button inside it, and writes the price with the character it really has, ` `. Save it as
+the button inside it, and writes the price with the character it really has, `\u00a0`. Save it as
 `tests/locators.spec.js`:
 
 ```javascript
@@ -103,7 +103,7 @@ test('add a mango, by role and name', async ({ page }) => {
 test('a price, and the space nobody can see', async ({ page }) => {
   const price = page.getByTestId('product-banana').getByText('R$');
   await expect(price).toHaveText('R$ 5,90 / dozen');
-  expect(await price.textContent()).toBe('R$ 5,90 / dozen');
+  expect(await price.textContent()).toBe('R$\u00a05,90 / dozen');
 });
 ```
 
@@ -123,12 +123,11 @@ test('a price, and the space nobody can see', async ({ page }) => {
 | 6 | XPath by position or from the root | almost any change | nothing a customer sees |
 | — | generated `id` or class | the next load, or the next build | nothing at all |
 
-**The top of the list is where teams disagree.** A test id never changes by accident: it means
+**The top of the list is where teams disagree.** A test id does not change by accident: it means
 nothing to a designer or a translator, and it survives the day the shop is translated into
-Portuguese, when every role name on the page changes. That is also its weakness. If the button lost its
-text, `getByTestId('product-mango').locator('button')` would still click it and pass, while a test
+Portuguese, when every role name on the page changes. That is also its weakness. If the button lost
+its text, `getByTestId('product-mango').locator('button')` would still click it and pass, while a test
 that asks for the role and the name *Add to basket* would fail, and that failure is a real defect
-for a customer using a screen reader;
-`non-functional-testing` lessons 12 to 15 are about that kind of testing. The ordering here puts
+for a customer using a screen reader; `non-functional-testing` lessons 12 to 15 are about that kind of testing. The ordering here puts
 what the customer meets first, and uses the test id where the customer's words do not pick out
 one element: eight cards with the same button are the shop's example.
