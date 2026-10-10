@@ -1,0 +1,669 @@
+{
+  "ex-21g7yxfs": {
+    "prompt": "Num pipeline baseado em push, o que guarda uma credencial capaz de mudar o cluster?",
+    "choices": [
+      {
+        "text": "Só a pessoa que fez o merge da mudança",
+        "why": "O merge não precisa de credencial do cluster; quem precisa é o job que roda depois dele."
+      },
+      {
+        "text": "O sistema de CI que roda o job de deploy",
+        "why": "Isso. Para empurrar para o cluster o job precisa de uma chave dele, e tudo o mais que roda nesse CI fica perto dela."
+      },
+      {
+        "text": "Ninguém, porque o registry aplica a imagem",
+        "why": "Um registry guarda imagens. Ele não muda um cluster."
+      },
+      {
+        "text": "Um agente que roda dentro do cluster",
+        "why": "Esse é o arranjo de pull, em que a chave nunca sai do cluster."
+      }
+    ]
+  },
+  "ex-8xkeka9h": {
+    "prompt": "Uma hora depois de um deploy por push, alguém escala um deployment à mão. Num arranjo de push, quando isso é percebido?",
+    "choices": [
+      {
+        "text": "Só se uma publicação seguinte a sobrescrever",
+        "why": "Isso. O pipeline agiu uma vez e acabou; nada olha de novo até a próxima execução."
+      },
+      {
+        "text": "Dentro de um intervalo, porque o pipeline fica verificando",
+        "why": "Um pipeline de push roda uma vez por mudança. Verificar em intervalos é o que um reconciliador faz."
+      },
+      {
+        "text": "Na hora, porque o kubectl recusa mudanças manuais",
+        "why": "O kubectl aceita uma escala manual como qualquer outra mudança."
+      },
+      {
+        "text": "No fim do job de CI que fez o deploy",
+        "why": "Esse job terminou uma hora antes da mudança."
+      }
+    ]
+  },
+  "ex-0xx56pc5": {
+    "prompt": "Quais destes são custos do arranjo de pull, como a aula os lista? Marque todos que se aplicam.",
+    "choices": [
+      {
+        "text": "Quem escreve no repositório consegue mudar a produção",
+        "why": "Isso. O repositório vira o que precisa ser guardado."
+      },
+      {
+        "text": "O agente precisa ser instalado, atualizado e vigiado",
+        "why": "Isso. É mais um programa rodando no cluster."
+      },
+      {
+        "text": "O sistema de CI precisa de uma credencial mais forte do cluster",
+        "why": "É o contrário: no pull, o CI não precisa de nenhuma."
+      },
+      {
+        "text": "Uma mudança vale quando o agente olhar de novo",
+        "why": "Isso. O atraso é o intervalo, ou o tempo de perceber uma mudança."
+      }
+    ]
+  },
+  "ex-wp23jeyy": {
+    "prompt": "Ponha os quatro princípios do OpenGitOps na ordem em que a aula os lista.",
+    "items": [
+      "Declarativo",
+      "Versionado e imutável",
+      "Puxado automaticamente",
+      "Reconciliado continuamente"
+    ],
+    "trap": "Descrever o estado vem primeiro, guardá-lo em segundo, buscá-lo em terceiro, e o laço que nunca para por último."
+  },
+  "ex-zdctzbgh": {
+    "prompt": "Ligue cada princípio ao que ele proíbe.",
+    "pairs": [
+      {
+        "left": "Declarativo",
+        "right": "Um deploy que é uma lista de comandos"
+      },
+      {
+        "left": "Versionado e imutável",
+        "right": "Uma tag que amanhã significa outra coisa"
+      },
+      {
+        "left": "Puxado automaticamente",
+        "right": "Um pipeline de fora com as chaves do cluster"
+      },
+      {
+        "left": "Reconciliado continuamente",
+        "right": "Uma mudança manual que dura até alguém notar"
+      }
+    ],
+    "right_distractors": [
+      "Um cluster com mais de um namespace"
+    ]
+  },
+  "ex-rfahj030": {
+    "prompt": "Um sistema que guarda o estado desejado num registry OCI versionado, e não no Git, atende os princípios?",
+    "choices": [
+      {
+        "text": "Sim, mas só se o registry também rodar CI",
+        "why": "Rodar CI não tem nada a ver com onde o estado fica."
+      },
+      {
+        "text": "Não: o segundo princípio cita o Git explicitamente",
+        "why": "Ele diz versionado e imutável. O Git não está em nenhum dos quatro."
+      },
+      {
+        "text": "Sim: ele pede versionado, não Git",
+        "why": "Isso. O Git é a escolha comum, não uma exigência, e o Flux lê estado desejado de um registry OCI."
+      },
+      {
+        "text": "Não, porque um agente só consegue puxar do Git",
+        "why": "Um agente puxa de um registry ou de um bucket também."
+      }
+    ]
+  },
+  "ex-zryps5j8": {
+    "prompt": "Por que as ferramentas de GitOps cresceram em volta do Kubernetes e não de outra plataforma?",
+    "choices": [
+      {
+        "text": "Os controladores dele já reconciliam; o GitOps estende o laço",
+        "why": "Isso. Um Deployment compara réplicas desejadas com réplicas rodando; o GitOps leva o 'desejado' um passo para fora."
+      },
+      {
+        "text": "O Kubernetes tem um servidor Git embutido na API",
+        "why": "Não tem; os agentes leem o Git de fora."
+      },
+      {
+        "text": "Só o Kubernetes deixa um agente rodar dentro do cluster que ele gerencia",
+        "why": "Agentes rodam em qualquer plataforma; o que o Kubernetes oferece é uma API declarativa movida a laços."
+      },
+      {
+        "text": "Os princípios exigem manifestos do Kubernetes",
+        "why": "Os princípios não citam plataforma nenhuma."
+      }
+    ]
+  },
+  "ex-yhyk0c1k": {
+    "prompt": "Um commit do Git é identificado por um ___ calculado do conteúdo e dos pais dele, por isso nomeia uma única árvore de arquivos para sempre.",
+    "blanks": [
+      {
+        "accept": [
+          "hash",
+          "sha",
+          "sha-1",
+          "sha1",
+          "checksum"
+        ]
+      }
+    ]
+  },
+  "ex-hjag51nm": {
+    "prompt": "Que caminho a aula recomenda para o laboratório?",
+    "choices": [
+      {
+        "text": "O Docker Desktop no Windows ou no macOS",
+        "why": "Ele roda o kind, mas lá os nomes dos containers da rede do Docker não são alcançáveis do seu terminal."
+      },
+      {
+        "text": "Um cluster compartilhado pelos alunos do curso",
+        "why": "O curso não fornece cluster nenhum; você monta o seu."
+      },
+      {
+        "text": "Uma VM Ubuntu criada com o Multipass",
+        "why": "Isso. Tudo foi escrito para Linux, e a VM se comporta igual em qualquer máquina."
+      },
+      {
+        "text": "Uma VM na nuvem alugada por hora",
+        "why": "Funciona e custa dinheiro a cada hora; é citada, não recomendada."
+      }
+    ]
+  },
+  "ex-80tdeet9": {
+    "prompt": "Quantos GiB de memória a aula pede para a VM do Multipass?"
+  },
+  "ex-77d9302w": {
+    "prompt": "O sha256sum --check imprime FAILED para o binário do kind que você baixou. O que a aula manda fazer?",
+    "choices": [
+      {
+        "text": "Editar o arquivo de checksum para bater com o download",
+        "why": "Isso faz a verificação concordar com o que chegou, e anula a verificação."
+      },
+      {
+        "text": "Apagar e baixar de novo",
+        "why": "Isso. Uma verificação que falha quer dizer que o arquivo não é o que o projeto publicou; nunca instale assim mesmo."
+      },
+      {
+        "text": "Instalar mesmo assim, já que a versão bateu",
+        "why": "A versão no nome não diz nada sobre os bytes que chegaram."
+      },
+      {
+        "text": "Rodar com sudo para pular a verificação",
+        "why": "O sudo muda quem roda o programa, não se ele é o programa certo."
+      }
+    ]
+  },
+  "ex-2h55mfd3": {
+    "prompt": "Por que o nó precisa de um hosts.toml dizendo que localhost:5001 é http://registry:5000?",
+    "choices": [
+      {
+        "text": "Porque o registry recusa conexões de localhost",
+        "why": "Ele aceita; o seu próprio push usou localhost:5001."
+      },
+      {
+        "text": "Para o registry ficar alcançável do seu próprio terminal",
+        "why": "Seu terminal já chega nele pela porta publicada."
+      },
+      {
+        "text": "No nó, localhost é o próprio nó",
+        "why": "Isso. O mesmo nome quer dizer dois lugares, e o arquivo diz ao containerd qual é o certo."
+      },
+      {
+        "text": "Porque o containerd não baixa imagens sem TLS",
+        "why": "O arquivo diz http de propósito, e o containerd aceita para esse host."
+      }
+    ]
+  },
+  "ex-94a7t05j": {
+    "prompt": "O que os dois extraPortMappings do cluster.yaml dão a você?",
+    "choices": [
+      {
+        "text": "curl localhost:8080 e 8081 chegam nas portas 30080 e 30081 do cluster",
+        "why": "Isso. Cada um liga uma porta da sua máquina a uma porta do nó, e nenhum port-forward é necessário."
+      },
+      {
+        "text": "Dois nós extras, um para staging e outro para produção",
+        "why": "Nós ficam em nodes; o arquivo tem um."
+      },
+      {
+        "text": "Acesso à API do Kubernetes de outros computadores",
+        "why": "A API é alcançada pelo kubeconfig, e o listenAddress mantém essas portas locais de qualquer forma."
+      },
+      {
+        "text": "Um segundo registry na porta 8081",
+        "why": "O registry é um container próprio, na 5001."
+      }
+    ]
+  },
+  "ex-8shm0e56": {
+    "prompt": "De onde vem o número de versão do bulletin?",
+    "choices": [
+      {
+        "text": "Do commit do Git que fez o deploy",
+        "why": "Nada na imagem sabe qual commit fez o deploy."
+      },
+      {
+        "text": "De um argumento de build gravado na imagem",
+        "why": "Isso. bulletin:1.0 diz 1.0 onde quer que rode."
+      },
+      {
+        "text": "Da variável MESSAGE do manifesto",
+        "why": "A MESSAGE é a segunda linha, a mensagem."
+      },
+      {
+        "text": "De um arquivo em /secrets lido a cada requisição",
+        "why": "É dali que vem o token."
+      }
+    ]
+  },
+  "ex-02wfb4ap": {
+    "prompt": "Por que o index.cgi imprime os doze primeiros caracteres do SHA-256 do token, e não o token?",
+    "choices": [
+      {
+        "text": "O SHA-256 decifra o token para exibir",
+        "why": "Um hash não se reverte, e é por isso que pode ser mostrado."
+      },
+      {
+        "text": "Distingue dois tokens sem revelar nenhum",
+        "why": "Isso. A impressão digital muda quando o token muda, e não serve para nada a quem lê a página."
+      },
+      {
+        "text": "O token é comprido demais para caber numa linha",
+        "why": "O tamanho não tem nada a ver; um segredo não se imprime."
+      },
+      {
+        "text": "O httpd se recusa a mandar texto de /secrets",
+        "why": "O httpd manda o que o script imprimir."
+      }
+    ]
+  },
+  "ex-emxaacad": {
+    "prompt": "Um arquivo montado em /secrets/token é trocado com o pod rodando. Quando a página do bulletin mostra a nova impressão digital?",
+    "choices": [
+      {
+        "text": "Quando uma nova imagem for construída",
+        "why": "O token não está na imagem."
+      },
+      {
+        "text": "Nunca, porque o httpd guarda a página em cache",
+        "why": "Não existe index.html para guardar; o script produz cada resposta."
+      },
+      {
+        "text": "Quando o pod for reiniciado",
+        "why": "Seria assim com um programa que lê o arquivo uma vez ao iniciar; este lê a cada requisição."
+      },
+      {
+        "text": "Na próxima requisição",
+        "why": "Isso. Um script CGI roda de novo a cada requisição e lê o arquivo toda vez."
+      }
+    ]
+  },
+  "ex-nrfgz94y": {
+    "prompt": "O que o staging/bulletin.yaml descreve?",
+    "choices": [
+      {
+        "text": "O que está rodando no cluster agora",
+        "why": "Ele é o desejo, e o cluster pode estar diferente dele."
+      },
+      {
+        "text": "Os comandos que criam o staging, em ordem",
+        "why": "Não há comandos nele; a ordem é só a ordem em que os objetos precisam existir."
+      },
+      {
+        "text": "O que deve ser verdade no cluster",
+        "why": "Isso. Ele nomeia objetos e campos, e não diz nada sobre como chegar lá."
+      },
+      {
+        "text": "Como construir a imagem do bulletin",
+        "why": "Isso é o Dockerfile, no outro repositório."
+      }
+    ]
+  },
+  "ex-s3hzaee4": {
+    "prompt": "O ~/fleet.git, criado com git init --bare, faz o papel de quê?",
+    "choices": [
+      {
+        "text": "Do servidor Git que a aula 2 monta",
+        "why": "Isso. Um repositório bare não tem arquivos de trabalho, que é o que um servidor guarda."
+      },
+      {
+        "text": "De um backup dos objetos do cluster",
+        "why": "Ele guarda a descrição, nada lido do cluster."
+      },
+      {
+        "text": "Do registry de imagens",
+        "why": "O registry guarda imagens; o repositório guarda manifestos."
+      },
+      {
+        "text": "De uma segunda cópia do ~/fleet para editar",
+        "why": "Você edita no ~/fleet; o repositório bare não tem arquivos para editar."
+      }
+    ]
+  },
+  "ex-vtqpq8p6": {
+    "prompt": "O primeiro objeto do staging/bulletin.yaml é o ___, porque os outros dois vivem dentro dele.",
+    "blanks": [
+      {
+        "accept": [
+          "namespace"
+        ]
+      }
+    ]
+  },
+  "ex-knb66bea": {
+    "prompt": "Você edita o staging/bulletin.yaml no ~/fleet e salva, sem commit. O que o reconcile.sh faz?",
+    "choices": [
+      {
+        "text": "Para de rodar até o arquivo ser commitado",
+        "why": "Ele continua rodando e aplica o que foi enviado por último."
+      },
+      {
+        "text": "Aplica o arquivo salvo na próxima passada",
+        "why": "Ele nunca lê o ~/fleet; ele lê o ~/.reconcile, puxado do remoto."
+      },
+      {
+        "text": "Faz o commit da mudança por você",
+        "why": "Ele só puxa; nunca escreve no repositório."
+      },
+      {
+        "text": "Nada, até você fazer push",
+        "why": "Isso. O que está no seu disco e não está no repositório não existe para ele."
+      }
+    ]
+  },
+  "ex-qk3ps69y": {
+    "prompt": "Quantos segundos o reconcile.sh espera entre uma passada e outra?",
+    "unit": "segundos"
+  },
+  "ex-4jz8x08k": {
+    "prompt": "Depois do push, o laço imprimiu deployment.apps/bulletin configured. Por que isso começou um rollout?",
+    "choices": [
+      {
+        "text": "O template do pod mudou, e template novo quer dizer pods novos",
+        "why": "Isso. A MESSAGE fica no template, então mudá-la substitui os pods."
+      },
+      {
+        "text": "O laço apaga e recria o deployment",
+        "why": "Ele aplica; o Kubernetes compara e corrige."
+      },
+      {
+        "text": "A tag da imagem mudou de 1.0 para 1.1",
+        "why": "A imagem continuou 1.0; só a mensagem mudou."
+      },
+      {
+        "text": "Todo apply reinicia os pods em que toca",
+        "why": "Um apply que não muda nada deixa os pods em paz, e por isso a maioria das passadas não imprime nada."
+      }
+    ]
+  },
+  "ex-fhktcn17": {
+    "prompt": "O que a aula chama de drift (desvio)?",
+    "choices": [
+      {
+        "text": "Uma mudança no cluster que ninguém commitou",
+        "why": "Isso. Uma escala manual, uma edição para testar algo, uma remoção por engano."
+      },
+      {
+        "text": "O atraso entre um push e a próxima passada do laço",
+        "why": "Isso é o intervalo, que é esperado."
+      },
+      {
+        "text": "Uma nova versão de uma imagem no registry",
+        "why": "Uma imagem nova não muda nada até um manifesto citá-la."
+      },
+      {
+        "text": "Um commit que ainda não foi enviado",
+        "why": "Isso é uma mudança local; o cluster não entra."
+      }
+    ]
+  },
+  "ex-s2hasbqs": {
+    "prompt": "Durante um incidente você roda kubectl scale --replicas=5 com o reconciliador rodando. O que acontece?",
+    "choices": [
+      {
+        "text": "Volta para os 2 do arquivo dentro de um intervalo",
+        "why": "Isso. O próximo apply devolve o campo; o jeito rápido de mudar é um commit rápido."
+      },
+      {
+        "text": "Fica em 5 até alguém editar o arquivo",
+        "why": "O laço aplica o arquivo em toda passada, então o 5 dura no máximo um intervalo."
+      },
+      {
+        "text": "O Git registra a escala como um novo commit",
+        "why": "Nada escreve o estado do cluster de volta no Git."
+      },
+      {
+        "text": "O reconciliador para, porque o cluster mudou",
+        "why": "Ele nem observa mudanças; aplica num cronômetro."
+      }
+    ]
+  },
+  "ex-9v3ztaed": {
+    "prompt": "Você tira o Service do arquivo e faz push. Por que o kubectl get service ainda lista o Service?",
+    "choices": [
+      {
+        "text": "O laço ainda não passou",
+        "why": "O bloco esperou além de uma passada, e o laço já tinha aplicado o arquivo menor."
+      },
+      {
+        "text": "O kubectl apply -f só conhece os objetos dos arquivos que recebe",
+        "why": "Isso. Nada registra o que foi aplicado antes, então nada apaga o que sumiu. Isso é pruning."
+      },
+      {
+        "text": "O commit foi rejeitado pelo repositório bare",
+        "why": "O push funcionou, e o laço relatou o commit novo."
+      },
+      {
+        "text": "Services não podem ser apagados enquanto pods os usam",
+        "why": "Podem; só que nada pediu."
+      }
+    ]
+  },
+  "ex-2xzzrw4n": {
+    "prompt": "Que limites do reconciliador em shell a aula cita? Marque todos que se aplicam.",
+    "choices": [
+      {
+        "text": "Não consegue aplicar um Deployment",
+        "why": "Ele aplicou um em toda passada."
+      },
+      {
+        "text": "O estado dele é uma linha de saída numa máquina",
+        "why": "Isso. As ferramentas de verdade guardam como objetos que qualquer um consulta."
+      },
+      {
+        "text": "Nunca apaga objetos retirados do Git",
+        "why": "Isso. Isso é pruning, que a aula 3 liga."
+      },
+      {
+        "text": "Roda com credenciais do cluster inteiro",
+        "why": "Isso. A aula 11 restringe."
+      }
+    ]
+  },
+  "ex-yx209f4m": {
+    "prompt": "Logo depois de instalar o Docker, o docker ps diz permission denied em /var/run/docker.sock. O que resolve?",
+    "choices": [
+      {
+        "text": "Sair da sessão e entrar de novo",
+        "why": "Isso. A participação em grupos é lida no login, e a instalação colocou você no grupo docker."
+      },
+      {
+        "text": "Reinstalar o Docker",
+        "why": "A instalação funcionou; o terminal só é anterior ao grupo novo."
+      },
+      {
+        "text": "Rodar todo comando com sudo daqui em diante",
+        "why": "Funciona e deixa arquivos de root na sua pasta pessoal."
+      },
+      {
+        "text": "Apagar o /var/run/docker.sock",
+        "why": "Isso remove o socket do daemon e quebra o Docker para todo mundo."
+      }
+    ]
+  },
+  "ex-agydmpvf": {
+    "prompt": "Ligue cada mensagem à causa.",
+    "pairs": [
+      {
+        "left": "address already in use",
+        "right": "Outra coisa escuta na 8080"
+      },
+      {
+        "left": "dial tcp [::1]:5001: connect: connection refused",
+        "right": "O nó não sabe onde fica localhost:5001"
+      },
+      {
+        "left": "localhost:5001/bulletin:1.1: not found",
+        "right": "Essa tag nunca foi enviada"
+      },
+      {
+        "left": "node(s) already exist for a cluster",
+        "right": "Já existe um cluster chamado gitops"
+      }
+    ],
+    "right_distractors": [
+      "O registry exige TLS"
+    ]
+  },
+  "ex-teq1h1y8": {
+    "prompt": "Os pods estão Running, mas curl localhost:8080 diz Connection refused. O cluster foi criado de um arquivo sem extraPortMappings. O que resolve?",
+    "choices": [
+      {
+        "text": "Mudar o Service para o tipo LoadBalancer",
+        "why": "Nada na sua máquina levaria a ele também."
+      },
+      {
+        "text": "Apagar e recriar com o YAML desta aula",
+        "why": "Isso. O mapeamento de portas é fixado quando o container do nó é criado."
+      },
+      {
+        "text": "Pôr o mapeamento no arquivo e rodar kubectl apply",
+        "why": "O cluster.yaml é lido pelo kind na criação, não pelo cluster."
+      },
+      {
+        "text": "Reiniciar o container do registry",
+        "why": "O registry não está no caminho entre o curl e os pods."
+      }
+    ]
+  },
+  "ex-gk9dey6c": {
+    "prompt": "Um time guarda todos os manifestos no Git e faz deploy rodando kubectl apply num job de CI. Isso é GitOps?",
+    "choices": [
+      {
+        "text": "Sim, porque os manifestos são versionados no Git",
+        "why": "Versionado é um princípio de quatro."
+      },
+      {
+        "text": "Sim, desde que o job rode a cada merge",
+        "why": "Isso é deploy contínuo, que é outra questão."
+      },
+      {
+        "text": "Não: nada puxa o estado nem fica reconciliando",
+        "why": "Isso. Faltam o terceiro e o quarto princípios."
+      },
+      {
+        "text": "Não, porque o GitOps proíbe pipelines de CI",
+        "why": "O GitOps mantém o CI para construir e testar; só tira o cluster das mãos dele."
+      }
+    ]
+  },
+  "ex-t14awj5n": {
+    "prompt": "Como um time que publica uma vez por semana ainda usa GitOps?",
+    "choices": [
+      {
+        "text": "Com um merge semanal na produção",
+        "why": "Isso. O GitOps é como uma mudança chega ao cluster; quando ela entra é outra decisão."
+      },
+      {
+        "text": "Deixando os manifestos de produção fora do Git",
+        "why": "Aí a produção não seria reconciliada."
+      },
+      {
+        "text": "Pausando o agente seis dias de cada sete",
+        "why": "Um agente pausado também para de corrigir desvios."
+      },
+      {
+        "text": "Não consegue: o GitOps faz deploy de cada commit na hora",
+        "why": "Só vai para o cluster o que entra no caminho que o agente lê."
+      }
+    ]
+  },
+  "ex-xyfmcw37": {
+    "prompt": "Um manifesto quebrado entra no merge. O que o GitOps muda no que acontece em seguida?",
+    "choices": [
+      {
+        "text": "A quebra é um commit, e a reversão é aplicada pelo mesmo laço",
+        "why": "Isso. Ele não impede a quebra; ele faz do caminho de volta um commit comum."
+      },
+      {
+        "text": "O agente se recusa a aplicar um manifesto que quebraria o serviço",
+        "why": "Um agente aplica um manifesto quebrado tão fielmente quanto um bom."
+      },
+      {
+        "text": "Nada, porque o cluster ignora manifestos que não consegue ler",
+        "why": "Um manifesto legível ainda pode descrever algo quebrado."
+      },
+      {
+        "text": "O sistema de CI reverte o cluster por conta própria",
+        "why": "No GitOps o CI não tem acesso ao cluster."
+      }
+    ]
+  },
+  "ex-aj2jbp6x": {
+    "prompt": "A produção está falhando e a correção é subir as réplicas de 2 para 6. Um reconciliador aplica o repositório a cada 3 minutos. Qual é a mudança mais rápida que dura?",
+    "choices": [
+      {
+        "text": "kubectl scale, e um commit na semana que vem",
+        "why": "A escala dura até a próxima passada, três minutos no máximo."
+      },
+      {
+        "text": "Um commit de uma linha no campo replicas, com merge e push",
+        "why": "Isso. Uma escala manual seria desfeita em até três minutos; o commit é o que o laço mantém."
+      },
+      {
+        "text": "kubectl scale, e depois parar o reconciliador de vez",
+        "why": "Isso troca um incidente por um cluster que ninguém reconcilia."
+      },
+      {
+        "text": "Editar os pods direto com kubectl edit",
+        "why": "Os pods pertencem ao deployment, que os substitui, e o laço reseta o deployment."
+      }
+    ]
+  },
+  "ex-fsm18vh6": {
+    "prompt": "Ordene o que acontece quando a mensagem muda, do editor até a página nova.",
+    "items": [
+      "Você faz o commit da mudança",
+      "Você faz push para o remoto",
+      "O laço puxa o commit novo",
+      "O kubectl apply relata o deployment configurado",
+      "Pods novos sobem com a mensagem nova"
+    ],
+    "trap": "Nada chega ao cluster antes de chegar ao remoto, e nada chega ao remoto antes do commit."
+  },
+  "ex-gcch8c4w": {
+    "prompt": "O CI constrói o bulletin 1.1 e envia para o registry, e ninguém mexe no repositório fleet. O que roda no staging?",
+    "choices": [
+      {
+        "text": "O 1.1, na próxima passada do reconciliador",
+        "why": "O reconciliador lê o repositório, não o registry."
+      },
+      {
+        "text": "O 1.1, assim que o push termina",
+        "why": "Um push num registry não muda cluster nenhum."
+      },
+      {
+        "text": "Continua o 1.0",
+        "why": "Isso. O registry tem a imagem, mas o estado desejado ainda diz 1.0, e só ele é aplicado."
+      },
+      {
+        "text": "Nenhum dos dois, porque as tags entram em conflito",
+        "why": "Duas tags de uma imagem convivem sem conflito."
+      }
+    ]
+  }
+}

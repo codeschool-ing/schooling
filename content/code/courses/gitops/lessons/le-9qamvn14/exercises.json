@@ -1,0 +1,995 @@
+[
+  {
+    "id": "ex-21g7yxfs",
+    "version": 1,
+    "section": "push-and-pull",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In a push-based pipeline, what holds a credential that can change the cluster?",
+    "choices": [
+      {
+        "text": "Only the developer who merged the change",
+        "correct": false,
+        "why": "The merge needs no cluster credential at all; the job that runs after it does."
+      },
+      {
+        "text": "The CI system that runs the deploy job",
+        "correct": true,
+        "why": "Right. To push into the cluster, the job needs a key to it, and so does everything else that runs in that CI."
+      },
+      {
+        "text": "Nobody, because the registry applies the image",
+        "correct": false,
+        "why": "A registry stores images. It never changes a cluster."
+      },
+      {
+        "text": "An agent that runs inside the cluster",
+        "correct": false,
+        "why": "That is the pull arrangement, where the key never leaves the cluster."
+      }
+    ]
+  },
+  {
+    "id": "ex-8xkeka9h",
+    "version": 1,
+    "section": "push-and-pull",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An hour after a push deploy, somebody scales a deployment by hand. In a push setup, when is that noticed?",
+    "choices": [
+      {
+        "text": "Only if a later deploy overwrites it",
+        "correct": true,
+        "why": "Right. The pipeline acted once and is gone; nothing looks again until the next run."
+      },
+      {
+        "text": "Within one interval, because the pipeline keeps checking",
+        "correct": false,
+        "why": "A push pipeline runs once per change. Checking on an interval is what a reconciler does."
+      },
+      {
+        "text": "Immediately, because kubectl refuses manual changes",
+        "correct": false,
+        "why": "kubectl accepts a manual scale like any other change."
+      },
+      {
+        "text": "At the end of the CI job that deployed it",
+        "correct": false,
+        "why": "That job finished an hour before the change."
+      }
+    ]
+  },
+  {
+    "id": "ex-0xx56pc5",
+    "version": 1,
+    "section": "push-and-pull",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are costs of the pull arrangement, as the lesson lists them? Choose all that apply.",
+    "choices": [
+      {
+        "text": "Whoever can write to the repository can change production",
+        "correct": true,
+        "why": "Right. The repository becomes the thing to guard."
+      },
+      {
+        "text": "The agent has to be installed, upgraded and watched",
+        "correct": true,
+        "why": "Right. It is one more program running in the cluster."
+      },
+      {
+        "text": "The CI system needs a stronger cluster credential",
+        "correct": false,
+        "why": "The reverse: in pull, the CI system needs none."
+      },
+      {
+        "text": "A change takes effect when the agent next looks",
+        "correct": true,
+        "why": "Right. The delay is the interval, or the time to notice a change."
+      }
+    ]
+  },
+  {
+    "id": "ex-wp23jeyy",
+    "version": 1,
+    "section": "four-principles",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the four OpenGitOps principles in the order the lesson lists them.",
+    "items": [
+      "Declarative",
+      "Versioned and immutable",
+      "Pulled automatically",
+      "Continuously reconciled"
+    ],
+    "trap": "Describing the state comes first, keeping it second, fetching it third, and the loop that never stops last."
+  },
+  {
+    "id": "ex-zdctzbgh",
+    "version": 1,
+    "section": "four-principles",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each principle to what it forbids.",
+    "pairs": [
+      {
+        "left": "Declarative",
+        "right": "A deploy that is a list of commands"
+      },
+      {
+        "left": "Versioned and immutable",
+        "right": "A tag that means something else tomorrow"
+      },
+      {
+        "left": "Pulled automatically",
+        "right": "A pipeline outside holding the cluster's keys"
+      },
+      {
+        "left": "Continuously reconciled",
+        "right": "A manual change that lasts until noticed"
+      }
+    ],
+    "right_distractors": [
+      "A cluster with more than one namespace"
+    ]
+  },
+  {
+    "id": "ex-rfahj030",
+    "version": 1,
+    "section": "four-principles",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Does a system that stores its desired state in a versioned OCI registry, not in Git, meet the principles?",
+    "choices": [
+      {
+        "text": "Yes, but only if the registry also runs CI",
+        "correct": false,
+        "why": "Running CI has nothing to do with where the state is kept."
+      },
+      {
+        "text": "No: the second principle names Git explicitly",
+        "correct": false,
+        "why": "It says versioned and immutable. Git is not in any of the four."
+      },
+      {
+        "text": "Yes: it asks for versioned, not for Git",
+        "correct": true,
+        "why": "Right. Git is the common choice, not a requirement, and Flux can read desired state from an OCI registry."
+      },
+      {
+        "text": "No, because only Git can be pulled by an agent",
+        "correct": false,
+        "why": "An agent can pull from a registry or a bucket as well."
+      }
+    ]
+  },
+  {
+    "id": "ex-zryps5j8",
+    "version": 1,
+    "section": "four-principles",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did the GitOps tooling grow around Kubernetes rather than some other platform?",
+    "choices": [
+      {
+        "text": "Its controllers already reconcile; GitOps extends the loop",
+        "correct": true,
+        "why": "Right. A Deployment compares replicas wanted with replicas running; GitOps moves the 'wanted' one step outwards."
+      },
+      {
+        "text": "Kubernetes has a Git server built into its API",
+        "correct": false,
+        "why": "It has no Git server; the agents read Git from outside."
+      },
+      {
+        "text": "Only Kubernetes lets an agent run inside the cluster it manages",
+        "correct": false,
+        "why": "Agents run on any platform; what Kubernetes offers is a declarative API driven by loops."
+      },
+      {
+        "text": "The principles require Kubernetes manifests",
+        "correct": false,
+        "why": "The principles name no platform at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-yhyk0c1k",
+    "version": 1,
+    "section": "four-principles",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Git commit is identified by a ___ computed from its content and its parents, so it names one tree of files for ever.",
+    "blanks": [
+      {
+        "accept": [
+          "hash",
+          "sha",
+          "sha-1",
+          "sha1",
+          "checksum"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hjag51nm",
+    "version": 1,
+    "section": "your-lab",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which path does the lesson recommend for the lab?",
+    "choices": [
+      {
+        "text": "Docker Desktop on Windows or macOS",
+        "correct": false,
+        "why": "It runs kind, but container names on Docker's network are not reachable from your terminal there."
+      },
+      {
+        "text": "A cluster shared by the course's students",
+        "correct": false,
+        "why": "The course provides no cluster; you build your own."
+      },
+      {
+        "text": "An Ubuntu VM made with Multipass",
+        "correct": true,
+        "why": "Right. Everything is written for Linux, and the VM behaves the same on every host."
+      },
+      {
+        "text": "A cloud VM rented by the hour",
+        "correct": false,
+        "why": "It works and costs money for every hour; it is named, not recommended."
+      }
+    ]
+  },
+  {
+    "id": "ex-80tdeet9",
+    "version": 1,
+    "section": "your-lab",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many GiB of memory does the lesson ask the Multipass VM for?",
+    "value": 8,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-77d9302w",
+    "version": 1,
+    "section": "the-cluster",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "sha256sum --check prints FAILED for the kind binary you downloaded. What does the lesson tell you to do?",
+    "choices": [
+      {
+        "text": "Edit the checksum file to match the download",
+        "correct": false,
+        "why": "That makes the check agree with whatever arrived, which defeats it."
+      },
+      {
+        "text": "Delete it and download it again",
+        "correct": true,
+        "why": "Right. A failed check means the file is not the one the project published; never install it anyway."
+      },
+      {
+        "text": "Install it anyway, since the version number matched",
+        "correct": false,
+        "why": "The version in the name says nothing about the bytes you received."
+      },
+      {
+        "text": "Run it with sudo so the check is skipped",
+        "correct": false,
+        "why": "sudo changes who runs a program, not whether it is the right program."
+      }
+    ]
+  },
+  {
+    "id": "ex-2h55mfd3",
+    "version": 1,
+    "section": "the-cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the node need a hosts.toml saying that localhost:5001 is http://registry:5000?",
+    "choices": [
+      {
+        "text": "Because the registry refuses connections from localhost",
+        "correct": false,
+        "why": "It accepts them; your own push used localhost:5001."
+      },
+      {
+        "text": "To make the registry reachable from your own terminal",
+        "correct": false,
+        "why": "Your terminal already reaches it through the published port."
+      },
+      {
+        "text": "In the node, localhost is the node",
+        "correct": true,
+        "why": "Right. The same name means two places, and the file tells containerd which one is meant."
+      },
+      {
+        "text": "Because containerd cannot pull images without TLS",
+        "correct": false,
+        "why": "The file says http on purpose, and containerd accepts it for that host."
+      }
+    ]
+  },
+  {
+    "id": "ex-94a7t05j",
+    "version": 1,
+    "section": "the-cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What do the two extraPortMappings in cluster.yaml give you?",
+    "choices": [
+      {
+        "text": "curl localhost:8080 and 8081 reach the cluster's ports 30080 and 30081",
+        "correct": true,
+        "why": "Right. Each maps a port on your machine to a port on the node, so no port-forward is needed."
+      },
+      {
+        "text": "Two extra nodes, one for staging and one for production",
+        "correct": false,
+        "why": "Nodes are listed under nodes; the file has one."
+      },
+      {
+        "text": "Access to the Kubernetes API from other computers",
+        "correct": false,
+        "why": "The API is reached through the kubeconfig, and listenAddress keeps these ports local anyway."
+      },
+      {
+        "text": "A second registry on port 8081",
+        "correct": false,
+        "why": "The registry is a container of its own on 5001."
+      }
+    ]
+  },
+  {
+    "id": "ex-8shm0e56",
+    "version": 1,
+    "section": "the-application",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does bulletin's version number come from?",
+    "choices": [
+      {
+        "text": "The Git commit that deployed it",
+        "correct": false,
+        "why": "Nothing in the image knows which commit deployed it."
+      },
+      {
+        "text": "A build argument baked into the image",
+        "correct": true,
+        "why": "Right. bulletin:1.0 says 1.0 wherever it runs."
+      },
+      {
+        "text": "The MESSAGE variable in the manifest",
+        "correct": false,
+        "why": "MESSAGE is the second line, the message."
+      },
+      {
+        "text": "A file in /secrets read on every request",
+        "correct": false,
+        "why": "That is where the token comes from."
+      }
+    ]
+  },
+  {
+    "id": "ex-02wfb4ap",
+    "version": 1,
+    "section": "the-application",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does index.cgi print the first twelve characters of the token's SHA-256 instead of the token?",
+    "choices": [
+      {
+        "text": "SHA-256 decrypts the token for display",
+        "correct": false,
+        "why": "A hash cannot be reversed, which is exactly why it is safe to show."
+      },
+      {
+        "text": "It tells two tokens apart without revealing either",
+        "correct": true,
+        "why": "Right. The fingerprint changes when the token does, and is useless to whoever reads the page."
+      },
+      {
+        "text": "The token is too long to fit on one line",
+        "correct": false,
+        "why": "Length has nothing to do with it; a secret is never printed."
+      },
+      {
+        "text": "httpd refuses to send text from /secrets",
+        "correct": false,
+        "why": "httpd sends whatever the script prints."
+      }
+    ]
+  },
+  {
+    "id": "ex-emxaacad",
+    "version": 1,
+    "section": "the-application",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A file mounted at /secrets/token is replaced while the pod runs. When does bulletin's page show the new fingerprint?",
+    "choices": [
+      {
+        "text": "When a new image is built",
+        "correct": false,
+        "why": "The token is not in the image."
+      },
+      {
+        "text": "Never, because httpd caches the page",
+        "correct": false,
+        "why": "There is no index.html to cache; the script produces each answer."
+      },
+      {
+        "text": "When the pod is restarted",
+        "correct": false,
+        "why": "That would be true of a program that read the file once at start; this one reads it per request."
+      },
+      {
+        "text": "On the next request",
+        "correct": true,
+        "why": "Right. A CGI script runs again for every request and reads the file each time."
+      }
+    ]
+  },
+  {
+    "id": "ex-nrfgz94y",
+    "version": 1,
+    "section": "desired-state",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does staging/bulletin.yaml describe?",
+    "choices": [
+      {
+        "text": "What is running in the cluster right now",
+        "correct": false,
+        "why": "It is the wish, and the cluster may differ from it."
+      },
+      {
+        "text": "The commands that create staging, in order",
+        "correct": false,
+        "why": "It contains no commands; the order is only the order the objects must exist in."
+      },
+      {
+        "text": "What should be true in the cluster",
+        "correct": true,
+        "why": "Right. It names objects and their fields, and says nothing about how to get there."
+      },
+      {
+        "text": "How to build the bulletin image",
+        "correct": false,
+        "why": "That is the Dockerfile, in the other repository."
+      }
+    ]
+  },
+  {
+    "id": "ex-s3hzaee4",
+    "version": 1,
+    "section": "desired-state",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is ~/fleet.git, made with git init --bare, standing in for?",
+    "choices": [
+      {
+        "text": "The Git server that lesson 2 sets up",
+        "correct": true,
+        "why": "Right. A bare repository has no working files, which is what a server keeps."
+      },
+      {
+        "text": "A backup of the cluster's objects",
+        "correct": false,
+        "why": "It holds the description, not anything read from the cluster."
+      },
+      {
+        "text": "The image registry",
+        "correct": false,
+        "why": "The registry holds images; the repository holds manifests."
+      },
+      {
+        "text": "A second copy of ~/fleet to edit in",
+        "correct": false,
+        "why": "You edit in ~/fleet; the bare repository has no files to edit."
+      }
+    ]
+  },
+  {
+    "id": "ex-vtqpq8p6",
+    "version": 1,
+    "section": "desired-state",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The first object in staging/bulletin.yaml is the ___, because the other two live inside it.",
+    "blanks": [
+      {
+        "accept": [
+          "namespace"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-knb66bea",
+    "version": 1,
+    "section": "a-reconciler",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You edit staging/bulletin.yaml in ~/fleet and save it, without committing. What does reconcile.sh do?",
+    "choices": [
+      {
+        "text": "It refuses to run until the file is committed",
+        "correct": false,
+        "why": "It keeps running and applies what was last pushed."
+      },
+      {
+        "text": "It applies your saved file on the next pass",
+        "correct": false,
+        "why": "It never reads ~/fleet; it reads ~/.reconcile, pulled from the remote."
+      },
+      {
+        "text": "It commits the change for you",
+        "correct": false,
+        "why": "It only pulls; it never writes to the repository."
+      },
+      {
+        "text": "Nothing until you push",
+        "correct": true,
+        "why": "Right. What is on your disk and not in the repository does not exist for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-qk3ps69y",
+    "version": 1,
+    "section": "a-reconciler",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many seconds does reconcile.sh wait between passes?",
+    "value": 15,
+    "tolerance": 0,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-4jz8x08k",
+    "version": 1,
+    "section": "a-reconciler",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the push, the loop printed deployment.apps/bulletin configured. Why did that start a rollout?",
+    "choices": [
+      {
+        "text": "The pod template changed, and a new template means new pods",
+        "correct": true,
+        "why": "Right. MESSAGE is in the template, so changing it replaces the pods."
+      },
+      {
+        "text": "The loop deletes and recreates the deployment",
+        "correct": false,
+        "why": "It applies; Kubernetes compares and patches."
+      },
+      {
+        "text": "The image tag changed from 1.0 to 1.1",
+        "correct": false,
+        "why": "The image stayed 1.0; only the message changed."
+      },
+      {
+        "text": "Every apply restarts the pods it touches",
+        "correct": false,
+        "why": "An apply that changes nothing leaves the pods alone, which is why most passes print nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-fhktcn17",
+    "version": 1,
+    "section": "drift",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the lesson call drift?",
+    "choices": [
+      {
+        "text": "A change to the cluster nobody committed",
+        "correct": true,
+        "why": "Right. A manual scale, an edit to test something, a deletion by mistake."
+      },
+      {
+        "text": "The delay between a push and the next pass of the loop",
+        "correct": false,
+        "why": "That is the interval, which is expected."
+      },
+      {
+        "text": "A new version of an image in the registry",
+        "correct": false,
+        "why": "A new image changes nothing until a manifest names it."
+      },
+      {
+        "text": "A commit that has not been pushed yet",
+        "correct": false,
+        "why": "That is a local change; the cluster is not involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-s2hasbqs",
+    "version": 1,
+    "section": "drift",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "During an incident you run kubectl scale --replicas=5 while the reconciler runs. What happens?",
+    "choices": [
+      {
+        "text": "It is back to the file's 2 within one interval",
+        "correct": true,
+        "why": "Right. The next apply puts the field back; the way to change it quickly is a quick commit."
+      },
+      {
+        "text": "It stays at 5 until somebody edits the file",
+        "correct": false,
+        "why": "The loop applies the file on every pass, so 5 lasts one interval at most."
+      },
+      {
+        "text": "Git records the scale as a new commit",
+        "correct": false,
+        "why": "Nothing writes the cluster's state back into Git."
+      },
+      {
+        "text": "The reconciler stops, because the cluster changed",
+        "correct": false,
+        "why": "It does not watch for changes at all; it applies on a timer."
+      }
+    ]
+  },
+  {
+    "id": "ex-9v3ztaed",
+    "version": 1,
+    "section": "drift",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You delete the Service from the file and push. Why does kubectl get service still list it?",
+    "choices": [
+      {
+        "text": "The loop has not passed yet",
+        "correct": false,
+        "why": "The prune block waited past a pass, and the loop had already applied the shorter file."
+      },
+      {
+        "text": "kubectl apply -f only knows the objects in the files it is given",
+        "correct": true,
+        "why": "Right. Nothing records what was applied before, so nothing deletes what disappeared. That is pruning."
+      },
+      {
+        "text": "The commit was rejected by the bare repository",
+        "correct": false,
+        "why": "The push succeeded, and the loop reported the new commit."
+      },
+      {
+        "text": "Services cannot be deleted while pods use them",
+        "correct": false,
+        "why": "They can; nothing asked for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2xzzrw4n",
+    "version": 1,
+    "section": "drift",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which limits of the shell reconciler does the lesson name? Choose all that apply.",
+    "choices": [
+      {
+        "text": "It cannot apply a Deployment",
+        "correct": false,
+        "why": "It applied one on every pass."
+      },
+      {
+        "text": "Its state is a line of output on one machine",
+        "correct": true,
+        "why": "Right. The real tools keep it as objects anybody can query."
+      },
+      {
+        "text": "It never deletes objects removed from Git",
+        "correct": true,
+        "why": "Right. That is pruning, which lesson 3 turns on."
+      },
+      {
+        "text": "It runs with credentials for the whole cluster",
+        "correct": true,
+        "why": "Right. Lesson 11 narrows them."
+      }
+    ]
+  },
+  {
+    "id": "ex-yx209f4m",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Right after installing Docker, docker ps says permission denied on /var/run/docker.sock. What fixes it?",
+    "choices": [
+      {
+        "text": "Logging out and back in",
+        "correct": true,
+        "why": "Right. Group membership is read at login, and the install added you to the docker group."
+      },
+      {
+        "text": "Reinstalling Docker",
+        "correct": false,
+        "why": "The installation worked; the terminal just predates your new group."
+      },
+      {
+        "text": "Running every command with sudo from now on",
+        "correct": false,
+        "why": "It works and leaves root-owned files in your home directory."
+      },
+      {
+        "text": "Deleting /var/run/docker.sock",
+        "correct": false,
+        "why": "That removes the daemon's socket and breaks Docker for everyone."
+      }
+    ]
+  },
+  {
+    "id": "ex-agydmpvf",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each message to its cause.",
+    "pairs": [
+      {
+        "left": "address already in use",
+        "right": "Something else listens on 8080"
+      },
+      {
+        "left": "dial tcp [::1]:5001: connect: connection refused",
+        "right": "The node does not know where localhost:5001 is"
+      },
+      {
+        "left": "localhost:5001/bulletin:1.1: not found",
+        "right": "That tag was never pushed"
+      },
+      {
+        "left": "node(s) already exist for a cluster",
+        "right": "A cluster called gitops exists"
+      }
+    ],
+    "right_distractors": [
+      "The registry needs TLS"
+    ]
+  },
+  {
+    "id": "ex-teq1h1y8",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The pods are Running, but curl localhost:8080 says Connection refused. The cluster was made from a file without extraPortMappings. What fixes it?",
+    "choices": [
+      {
+        "text": "Change the Service to type LoadBalancer",
+        "correct": false,
+        "why": "Nothing on your machine would lead to it either."
+      },
+      {
+        "text": "Delete it and recreate it from this lesson's YAML",
+        "correct": true,
+        "why": "Right. Port mappings are fixed when the node container is created."
+      },
+      {
+        "text": "Add the mappings to the file and run kubectl apply",
+        "correct": false,
+        "why": "cluster.yaml is read by kind at creation, not by the cluster."
+      },
+      {
+        "text": "Restart the registry container",
+        "correct": false,
+        "why": "The registry is not in the path between curl and the pods."
+      }
+    ]
+  },
+  {
+    "id": "ex-gk9dey6c",
+    "version": 1,
+    "section": "what-it-is-not",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A team keeps every manifest in Git and deploys by running kubectl apply from a CI job. Is it GitOps?",
+    "choices": [
+      {
+        "text": "Yes, because the manifests are versioned in Git",
+        "correct": false,
+        "why": "Versioned is one principle of four."
+      },
+      {
+        "text": "Yes, as long as the CI job runs on every merge",
+        "correct": false,
+        "why": "That is continuous deployment, which is a different question."
+      },
+      {
+        "text": "No: nothing pulls the state or keeps reconciling it",
+        "correct": true,
+        "why": "Right. The third and fourth principles are missing."
+      },
+      {
+        "text": "No, because GitOps forbids CI pipelines",
+        "correct": false,
+        "why": "GitOps keeps CI for building and testing; it only takes the cluster away from it."
+      }
+    ]
+  },
+  {
+    "id": "ex-t14awj5n",
+    "version": 1,
+    "section": "what-it-is-not",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How can a team that releases once a week still use GitOps?",
+    "choices": [
+      {
+        "text": "With a weekly merge to production",
+        "correct": true,
+        "why": "Right. GitOps is how a change reaches the cluster; when it is merged is a separate decision."
+      },
+      {
+        "text": "By keeping production manifests outside Git",
+        "correct": false,
+        "why": "Then production would not be reconciled at all."
+      },
+      {
+        "text": "By pausing the agent for six days out of seven",
+        "correct": false,
+        "why": "A paused agent stops correcting drift too."
+      },
+      {
+        "text": "It cannot: GitOps deploys every commit at once",
+        "correct": false,
+        "why": "Only what is merged into the path the agent reads gets deployed."
+      }
+    ]
+  },
+  {
+    "id": "ex-xyfmcw37",
+    "version": 1,
+    "section": "what-it-is-not",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A broken manifest is merged. What does GitOps change about what happens next?",
+    "choices": [
+      {
+        "text": "The break is a commit, and its revert is applied by the same loop",
+        "correct": true,
+        "why": "Right. It does not stop the break; it makes the way back an ordinary commit."
+      },
+      {
+        "text": "The agent refuses to apply a manifest that would break the service",
+        "correct": false,
+        "why": "An agent applies a broken manifest as faithfully as a good one."
+      },
+      {
+        "text": "Nothing, because the cluster ignores manifests it cannot parse",
+        "correct": false,
+        "why": "A manifest that parses can still describe something broken."
+      },
+      {
+        "text": "The CI system rolls the cluster back on its own",
+        "correct": false,
+        "why": "In GitOps the CI system has no access to the cluster."
+      }
+    ]
+  },
+  {
+    "id": "ex-aj2jbp6x",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Production is failing and the fix is to raise replicas from 2 to 6. A reconciler applies the repository every 3 minutes. What is the fastest change that lasts?",
+    "choices": [
+      {
+        "text": "kubectl scale, then a commit next week",
+        "correct": false,
+        "why": "The scale lasts until the next pass, at most three minutes."
+      },
+      {
+        "text": "A one-line commit to the replicas field, merged and pushed",
+        "correct": true,
+        "why": "Right. A manual scale would be undone within three minutes; the commit is what the loop keeps."
+      },
+      {
+        "text": "kubectl scale, followed by stopping the reconciler for good",
+        "correct": false,
+        "why": "That trades one incident for a cluster nobody reconciles."
+      },
+      {
+        "text": "Editing the pods directly with kubectl edit",
+        "correct": false,
+        "why": "Pods belong to the deployment, which replaces them, and the loop resets the deployment."
+      }
+    ]
+  },
+  {
+    "id": "ex-fsm18vh6",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order what happens when the message changes, from your editor to the new page.",
+    "items": [
+      "You commit the change",
+      "You push it to the remote",
+      "The loop pulls the new commit",
+      "kubectl apply reports the deployment configured",
+      "New pods start with the new message"
+    ],
+    "trap": "Nothing reaches the cluster before it reaches the remote, and nothing reaches the remote before the commit."
+  },
+  {
+    "id": "ex-gcch8c4w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "CI builds bulletin 1.1 and pushes it to the registry, and nobody touches the fleet repository. What runs in staging?",
+    "choices": [
+      {
+        "text": "1.1, on the reconciler's next pass",
+        "correct": false,
+        "why": "The reconciler reads the repository, not the registry."
+      },
+      {
+        "text": "1.1, as soon as the push finishes",
+        "correct": false,
+        "why": "A push to a registry changes no cluster."
+      },
+      {
+        "text": "Still 1.0",
+        "correct": true,
+        "why": "Right. The registry holds the image, but the desired state still names 1.0, and only that is applied."
+      },
+      {
+        "text": "Neither, because the tags now conflict",
+        "correct": false,
+        "why": "Two tags of one image coexist without conflict."
+      }
+    ]
+  }
+]
