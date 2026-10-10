@@ -1,0 +1,501 @@
+{
+  "ex-tszpzk8p": {
+    "prompt": "Que trava a maioria das formas de ALTER TABLE toma?",
+    "choices": [
+      {
+        "text": "ACCESS EXCLUSIVE",
+        "why": "Certo. Conflita com tudo, leituras inclusive."
+      },
+      {
+        "text": "ACCESS SHARE, a trava de um SELECT comum",
+        "why": "Essa é a mais fraca."
+      },
+      {
+        "text": "Nenhuma trava",
+        "why": "Todo comando numa tabela toma uma trava."
+      },
+      {
+        "text": "ROW EXCLUSIVE, a mesma trava que um INSERT toma na tabela em que grava",
+        "why": "Essa é a trava dos escritores; mudanças de esquema precisam da mais forte."
+      }
+    ]
+  },
+  "ex-pcvph8tc": {
+    "prompt": "A aula nomeia duas coisas que tornam perigosa uma mudança de esquema numa tabela movimentada. Qual par?",
+    "choices": [
+      {
+        "text": "A versão do PostgreSQL e a velocidade do disco",
+        "why": "Mudam os números, não o mecanismo."
+      },
+      {
+        "text": "O número de réplicas",
+        "why": "Réplicas seguem a mudança; não a bloqueiam."
+      },
+      {
+        "text": "O tamanho do arquivo de migração e o número de índices",
+        "why": "Nenhum dos dois decide por quanto tempo a tabela fica bloqueada."
+      },
+      {
+        "text": "A trava de que precisa, e o trabalho que faz enquanto a segura",
+        "why": "Certo. Esperar a trava e segurá-la durante uma reescrita param as escritas."
+      }
+    ]
+  },
+  "ex-b4zzy5p8": {
+    "prompt": "Na captura, quatro INSERTs esperaram embora a trava deles não conflite com a transação longa. Por quê?",
+    "choices": [
+      {
+        "text": "O disco estava ocupado com a contagem",
+        "why": "O pg_stat_activity mostrou-os esperando um Lock."
+      },
+      {
+        "text": "O PostgreSQL pausa toda escrita durante qualquer mudança de esquema, por segurança, até ela confirmar",
+        "why": "É a fila, não uma pausa global; com lock_timeout as vendas voltaram."
+      },
+      {
+        "text": "A transação longa tinha travado toda linha da tabela",
+        "why": "Ela só leu; um SELECT toma ACCESS SHARE, não travas de linha."
+      },
+      {
+        "text": "A trava deles conflita com o ALTER que espera na frente deles",
+        "why": "Certo. Travas são concedidas em ordem; um pedido que conflita com um que espera também espera."
+      }
+    ]
+  },
+  "ex-yr7y5xcd": {
+    "prompt": "Quantos segundos o ALTER TABLE ADD COLUMN informou na captura da fila de travas, arredondado para uma casa decimal?",
+    "unit": "segundos"
+  },
+  "ex-cwte5b1p": {
+    "prompt": "O que transformou uma mudança de dois milissegundos numa parada de dezoito segundos?",
+    "choices": [
+      {
+        "text": "A réplica se recusando a aplicar a mudança",
+        "why": "Nada na captura envolve a réplica."
+      },
+      {
+        "text": "Uma transação longa que já segurava uma trava na tabela",
+        "why": "Certo. A mudança a esperou, e todo mundo esperou a mudança."
+      },
+      {
+        "text": "O valor padrão da coluna, que precisou ser gravado em toda linha",
+        "why": "A coluna não tinha; foi só catálogo."
+      },
+      {
+        "text": "Vendas demais chegando de uma vez para um processador dar conta",
+        "why": "Quatro trabalhadores é carga leve."
+      }
+    ]
+  },
+  "ex-j2d9d3jg": {
+    "prompt": "Ordene os eventos da fila de travas como aconteceram.",
+    "items": [
+      "Uma transação longa lê a tabela",
+      "O ALTER TABLE pede ACCESS EXCLUSIVE e espera",
+      "INSERTs novos entram na fila atrás do ALTER",
+      "A transação longa confirma e a fila se esvazia"
+    ]
+  },
+  "ex-5qc8bz9q": {
+    "prompt": "O que SET lock_timeout = '2s' faz ao ALTER TABLE que vem depois?",
+    "choices": [
+      {
+        "text": "Desiste depois de 2 s",
+        "why": "Certo, e nada muda."
+      },
+      {
+        "text": "Ele roda por no máximo 2 s",
+        "why": "Isso é o statement_timeout."
+      },
+      {
+        "text": "Ele cancela a transação longa depois de 2 s para que o ALTER consiga a trava",
+        "why": "Ele desiste do próprio comando; nunca cancela outra pessoa."
+      },
+      {
+        "text": "Ele tenta de novo a cada 2 s",
+        "why": "Tentar de novo é tarefa da ferramenta, não da configuração."
+      }
+    ]
+  },
+  "ex-3cb2223b": {
+    "prompt": "Com lock_timeout em 2 s, a venda mais lenta levou cerca de 1,2 s. Por que não 2 s?",
+    "choices": [
+      {
+        "text": "A transação longa terminou antes da hora, soltando a trava antes do limite",
+        "why": "Ela dormiu vinte segundos."
+      },
+      {
+        "text": "O lock_timeout corta pela metade a espera dos escritores",
+        "why": "Essa regra não existe."
+      },
+      {
+        "text": "As vendas começaram um segundo depois de o ALTER começar a esperar",
+        "why": "Certo. Esperaram do início delas até o ALTER desistir."
+      },
+      {
+        "text": "O load.py arredonda latências para baixo",
+        "why": "Ele imprime uma casa decimal de milissegundos."
+      }
+    ]
+  },
+  "ex-phfkkq41": {
+    "prompt": "Qual configuração teria encerrado, depois de um tempo definido, o BEGIN esquecido da seção 03?",
+    "choices": [
+      {
+        "text": "lock_timeout",
+        "why": "Esse limita a espera por uma trava."
+      },
+      {
+        "text": "idle_in_transaction_session_timeout",
+        "why": "Certo."
+      },
+      {
+        "text": "deadlock_timeout",
+        "why": "Esse decide quando as verificações de deadlock rodam."
+      },
+      {
+        "text": "statement_timeout",
+        "why": "Uma sessão parada não está rodando comando."
+      }
+    ]
+  },
+  "ex-6e3g3e98": {
+    "prompt": "Depois de ADD COLUMN printed_at timestamptz DEFAULT clock_timestamp(), o filenode mudou de 16395 para 16418. O que isso mostra?",
+    "choices": [
+      {
+        "text": "A coluna foi guardada numa tabela separada",
+        "why": "Colunas moram nas linhas da tabela."
+      },
+      {
+        "text": "A tabela foi movida para outro disco",
+        "why": "Mesmo tablespace, arquivo novo."
+      },
+      {
+        "text": "Uma reescrita",
+        "why": "Certo: toda linha precisava do próprio valor."
+      },
+      {
+        "text": "Um índice foi acrescentado",
+        "why": "Um índice tem filenode próprio; o da tabela mudou."
+      }
+    ]
+  },
+  "ex-9j28qjp9": {
+    "prompt": "Por que ADD COLUMN printed boolean NOT NULL DEFAULT false levou 2 ms em dois milhões de linhas?",
+    "choices": [
+      {
+        "text": "A coluna foi acrescentada só na réplica",
+        "why": "Mudanças de esquema vão para o primário."
+      },
+      {
+        "text": "A tabela estava vazia naquele momento, porque a reescrita anterior tinha movido as linhas",
+        "why": "Tinha dois milhões de linhas."
+      },
+      {
+        "text": "Um padrão constante fica no catálogo, então nenhuma linha é gravada",
+        "why": "Certo, desde o PostgreSQL 11."
+      },
+      {
+        "text": "Booleanos não ocupam espaço",
+        "why": "Ocupam um byte; o ponto é que nenhum é gravado."
+      }
+    ]
+  },
+  "ex-va27tffc": {
+    "prompt": "Ligue cada mudança a por quanto tempo ela segura ACCESS EXCLUSIVE numa tabela grande.",
+    "pairs": [
+      {
+        "left": "acrescentar uma coluna que aceita nulo",
+        "right": "um instante"
+      },
+      {
+        "left": "acrescentar uma coluna com padrão volátil",
+        "right": "uma reescrita completa"
+      },
+      {
+        "left": "SET NOT NULL sem check válido",
+        "right": "uma leitura completa"
+      },
+      {
+        "left": "mudar int para bigint",
+        "right": "uma reescrita e os índices reconstruídos"
+      }
+    ]
+  },
+  "ex-96dfgfv6": {
+    "prompt": "O que um CREATE INDEX comum bloqueia enquanto constrói?",
+    "choices": [
+      {
+        "text": "Escritas na tabela",
+        "why": "Certo. Ele segura SHARE, que deixa leituras passarem."
+      },
+      {
+        "text": "Outros bancos",
+        "why": "Travas são por tabela."
+      },
+      {
+        "text": "Nada, porque índices são construídos em segundo plano por um processo separado",
+        "why": "Isso é o CONCURRENTLY, e nem ele é tarefa de fundo."
+      },
+      {
+        "text": "Leituras da tabela",
+        "why": "SHARE não conflita com ACCESS SHARE."
+      }
+    ]
+  },
+  "ex-n5hd6wrn": {
+    "prompt": "O CREATE INDEX CONCURRENTLY levou 5,1 s em vez de 4,4 s. Para onde foi o tempo extra?",
+    "choices": [
+      {
+        "text": "Gravar o índice duas vezes, uma para as leituras e outra para as escritas que chegaram",
+        "why": "Ele é construído uma vez, depois alcança."
+      },
+      {
+        "text": "Esperar as vendas pararem",
+        "why": "As vendas seguiram no ritmo normal."
+      },
+      {
+        "text": "Travar cada linha",
+        "why": "Não toma travas de linha."
+      },
+      {
+        "text": "Outra passagem e esperas",
+        "why": "Certo. Mais lento para construir, invisível aos escritores."
+      }
+    ]
+  },
+  "ex-k9gf3azv": {
+    "prompt": "Um CREATE UNIQUE INDEX CONCURRENTLY falha numa duplicata. O que fica para trás, e o que você faz?",
+    "choices": [
+      {
+        "text": "Uma tabela travada até reiniciar",
+        "why": "Nenhuma trava fica depois da falha."
+      },
+      {
+        "text": "Nada; uma construção que falha se limpa",
+        "why": "Uma construção concorrente deixa o índice inválido."
+      },
+      {
+        "text": "Um índice válido sem unicidade",
+        "why": "Ele fica marcado INVALID, não rebaixado."
+      },
+      {
+        "text": "Um índice inválido que deixa as escritas lentas; descartá-lo com concurrently e construir de novo",
+        "why": "Certo. Não serve consulta e custa toda escrita."
+      }
+    ]
+  },
+  "ex-gfney7qp": {
+    "prompt": "Por que um renomear é feito em vários passos em vez de um ALTER TABLE … RENAME?",
+    "choices": [
+      {
+        "text": "O RENAME exige parar a réplica",
+        "why": "Réplicas o aplicam como qualquer mudança."
+      },
+      {
+        "text": "O RENAME reescreve a tabela e os índices sob a trava mais forte, o que leva horas",
+        "why": "Renomear é só catálogo e instantâneo."
+      },
+      {
+        "text": "Durante uma implantação, versões velhas e novas do programa rodam juntas",
+        "why": "Certo. Um renomear de um passo quebra a versão que não o esperava."
+      },
+      {
+        "text": "O PostgreSQL proíbe renomear uma coluna que tem dados",
+        "why": "Ele permite."
+      }
+    ]
+  },
+  "ex-5bnwssrf": {
+    "prompt": "Ponha os passos de expandir e contrair em ordem.",
+    "items": [
+      "Acrescentar a coluna nova",
+      "Implantar uma versão que escreve as duas",
+      "Preencher as linhas antigas",
+      "Implantar uma versão que lê a coluna nova",
+      "Parar de escrever a coluna velha e descartá-la"
+    ]
+  },
+  "ex-rtz12kaw": {
+    "prompt": "Qual passo de expandir e contrair a aula diz que as pessoas pulam?",
+    "choices": [
+      {
+        "text": "Ler a coluna nova, o passo em que o programa troca",
+        "why": "Esse é o ponto do exercício; não é o esquecido."
+      },
+      {
+        "text": "Expandir",
+        "why": "Nada funciona sem ele."
+      },
+      {
+        "text": "Preencher",
+        "why": "Pulá-lo deixa NULLs em que o próximo passo tropeça."
+      },
+      {
+        "text": "Contrair",
+        "why": "Certo. Uma coluna velha que toda versão escreve e nenhuma lê é o resultado."
+      }
+    ]
+  },
+  "ex-k6vk241s": {
+    "prompt": "Por que o procedimento de preenchimento faz COMMIT depois de cada lote?",
+    "choices": [
+      {
+        "text": "Para deixar o procedimento mais rápido, já que transações menores custam menos para confirmar",
+        "why": "Os commits e pausas o deixam mais lento, de propósito."
+      },
+      {
+        "text": "O PostgreSQL limita uma transação a 50 000 linhas",
+        "why": "Esse limite não existe."
+      },
+      {
+        "text": "Porque as vendas precisam das mesmas linhas",
+        "why": "As vendas inserem linhas novas."
+      },
+      {
+        "text": "Travas curtas, pouco log de cada vez",
+        "why": "Certo, e uma rodada interrompida mantém o que terminou."
+      }
+    ]
+  },
+  "ex-mjbp1sjk": {
+    "prompt": "Durante um preenchimento, o replay_lag da réplica continua crescendo. O que a aula diz para mudar?",
+    "choices": [
+      {
+        "text": "Aumentar o lote para terminar antes",
+        "why": "Lotes maiores são rajadas maiores de log."
+      },
+      {
+        "text": "Aumentar a pausa entre os lotes",
+        "why": "Certo. A réplica precisa de tempo para aplicar cada lote."
+      },
+      {
+        "text": "Rodar o preenchimento na réplica",
+        "why": "Réplicas recusam escritas."
+      },
+      {
+        "text": "Trocar por um UPDATE",
+        "why": "Isso é uma rajada enorme."
+      }
+    ]
+  },
+  "ex-hm2fj00k": {
+    "prompt": "Com batch = 50 000 e dois milhões de linhas, mais ou menos quantos lotes o backfill_gate roda?",
+    "unit": "lotes"
+  },
+  "ex-3gh5hnve": {
+    "prompt": "Por que acrescentar CHECK (gate IS NOT NULL) NOT VALID e depois validá-lo, em vez de SET NOT NULL direto?",
+    "choices": [
+      {
+        "text": "SET NOT NULL não é permitido numa coluna acrescentada depois com ALTER TABLE",
+        "why": "É permitido; o custo é a leitura sob a trava mais forte."
+      },
+      {
+        "text": "Restrições NOT VALID são mais rápidas de conferir em linhas novas",
+        "why": "Linhas novas são conferidas do mesmo jeito."
+      },
+      {
+        "text": "A leitura roda sob uma trava mais fraca",
+        "why": "Certo. O SET NOT NULL então acha o check válido e pula a própria leitura."
+      },
+      {
+        "text": "O VALIDATE corrige as linhas NULL",
+        "why": "Ele só confere; falha se alguma for NULL."
+      }
+    ]
+  },
+  "ex-v336gkgp": {
+    "prompt": "O SET NOT NULL pulou a leitura e mesmo assim levou 1,1 s. O que ele esperava?",
+    "choices": [
+      {
+        "text": "O VALIDATE que tinha acabado de terminar",
+        "why": "Ele já tinha confirmado; nada dele restava."
+      },
+      {
+        "text": "Uma leitura da tabela",
+        "why": "O check válido o fez pular a leitura."
+      },
+      {
+        "text": "Um autovacuum na tabela, cancelado depois do deadlock_timeout",
+        "why": "Certo. O log disse canceling autovacuum task."
+      },
+      {
+        "text": "A réplica",
+        "why": "Nada na captura espera a réplica."
+      }
+    ]
+  },
+  "ex-194s90b6": {
+    "prompt": "Uma restrição acrescentada com as palavras NOT ___ confere só linhas novas, até ser validada.",
+    "blanks": [
+      {
+        "accept": [
+          "VALID"
+        ]
+      }
+    ]
+  },
+  "ex-cw1bsx54": {
+    "prompt": "Por que a aula chama uma migração de volta de perigosa em produção?",
+    "choices": [
+      {
+        "text": "Ferramentas de migração as recusam",
+        "why": "A maioria as suporta."
+      },
+      {
+        "text": "Dado descartado não volta",
+        "why": "Certo. Um erro se corrige com uma migração nova."
+      },
+      {
+        "text": "São mais lentas que as de ida, porque o banco precisa reproduzir o histórico",
+        "why": "Velocidade não é o problema; dado perdido é."
+      },
+      {
+        "text": "Elas rodam sem transação",
+        "why": "Esse não é o motivo dado."
+      }
+    ]
+  },
+  "ex-4ya6bn68": {
+    "prompt": "Qual item da lista de conferência a aula diz que as equipes pulam?",
+    "choices": [
+      {
+        "text": "Definir o lock_timeout",
+        "why": "Importante, e não é o citado."
+      },
+      {
+        "text": "Construir índices com concurrently, mesmo em tabelas pequenas onde não faz diferença",
+        "why": "Não é o citado."
+      },
+      {
+        "text": "Escrever a migração num arquivo",
+        "why": "As equipes fazem isso."
+      },
+      {
+        "text": "Cronometrá-la numa cópia da produção, no tamanho da produção",
+        "why": "Certo. Teria pegado todo o resto."
+      }
+    ]
+  },
+  "ex-ytd0p5sd": {
+    "prompt": "Uma equipe precisa acrescentar uma coluna obrigatória com um valor calculado de outras duas, numa tabela de 300 milhões de linhas. Qual plano segue a aula?",
+    "choices": [
+      {
+        "text": "Parar a bilheteria por uma noite",
+        "why": "A aula é sobre como não fazer isso."
+      },
+      {
+        "text": "Um ALTER TABLE com um DEFAULT calculado das duas colunas",
+        "why": "Um padrão não lê outras colunas, e um volátil reescreveria a tabela."
+      },
+      {
+        "text": "Acrescentá-la NOT NULL com padrão constante, depois corrigir os valores num UPDATE",
+        "why": "O UPDATE único é a rajada que a seção 08 evita."
+      },
+      {
+        "text": "Acrescentá-la aceitando nulo, gravá-la no código novo, preencher em lotes, depois check NOT VALID, validar, SET NOT NULL",
+        "why": "Certo: todo passo curto sob a trava forte."
+      }
+    ]
+  }
+}
