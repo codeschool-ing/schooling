@@ -1,0 +1,609 @@
+[
+  {
+    "id": "ex-a875sqx1",
+    "version": 1,
+    "section": "rdb",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Redis runs with snapshots only. A snapshot finished, then two orders were written and acknowledged, then the container was killed with `docker kill`. What does the restarted Redis hold?",
+    "choices": [
+      {
+        "text": "Everything, because each `OK` meant the order was on disk",
+        "correct": false,
+        "why": "With snapshots, `OK` means the write is in memory. The lesson's two orders came back missing."
+      },
+      {
+        "text": "What was saved before, and nothing after",
+        "correct": true,
+        "why": "Right. `rdb_changes_since_last_save` had counted exactly those two before the kill."
+      },
+      {
+        "text": "Nothing, because a killed Redis deletes its snapshot on the way out",
+        "correct": false,
+        "why": "A killed process does nothing on the way out; the file stays and is loaded."
+      },
+      {
+        "text": "The two orders only, replayed from the log of recent writes",
+        "correct": false,
+        "why": "There is no log with snapshots only; that is the append-only file of the next section."
+      }
+    ]
+  },
+  {
+    "id": "ex-60mrvzjd",
+    "version": 1,
+    "section": "rdb",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is restarting with `docker stop` a poor test of how much a snapshot setup loses?",
+    "choices": [
+      {
+        "text": "`docker stop` removes the named volume along with the container, so nothing can be compared",
+        "correct": false,
+        "why": "It removes nothing; `docker start` brought every key back."
+      },
+      {
+        "text": "`docker stop` sends `SIGKILL`, which no program can catch",
+        "correct": false,
+        "why": "It sends `SIGTERM` and waits; `SIGKILL` is `docker kill`."
+      },
+      {
+        "text": "Redis hears `SIGTERM` and saves a final snapshot first",
+        "correct": true,
+        "why": "Right, so nothing is ever lost that way. The restarts persistence exists for are the ones that give no warning."
+      },
+      {
+        "text": "The snapshot rules are reset to empty on every stop",
+        "correct": false,
+        "why": "The rules are configuration; a stop does not touch them."
+      }
+    ]
+  },
+  {
+    "id": "ex-15s4wgj3",
+    "version": 1,
+    "section": "rdb",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the default rule `300 100`, Redis snapshots after 300 seconds if at least 100 keys changed. 80 keys change in the five minutes after a snapshot and no other rule fires. If the process is killed at that moment, how many of those changes are lost?",
+    "hint": "Did the rule fire?",
+    "value": 80,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-1n1h47mw",
+    "version": 1,
+    "section": "rdb",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An instance of 20 GB that is writing heavily needs far more memory than 20 GB for a few seconds every time a snapshot starts. What explains it?",
+    "hint": "`BGSAVE` forks.",
+    "choices": [
+      {
+        "text": "The snapshot is built whole in memory first, as a second copy, and only then written to disk in one go",
+        "correct": false,
+        "why": "The child writes as it goes, from the frozen copy; no second dataset is built."
+      },
+      {
+        "text": "Pages the parent changes during the write are copied, and a busy instance changes many",
+        "correct": true,
+        "why": "Right: copy-on-write. `rdb_last_cow_size` reports how much was copied."
+      },
+      {
+        "text": "Redis compresses the snapshot, and compression needs a buffer the size of the data",
+        "correct": false,
+        "why": "Compression works on small pieces; it does not need a copy of everything."
+      },
+      {
+        "text": "Clients are paused and their writes queue up in memory until the snapshot ends",
+        "correct": false,
+        "why": "The parent keeps serving clients; that is the point of the fork."
+      }
+    ]
+  },
+  {
+    "id": "ex-m3178r95",
+    "version": 1,
+    "section": "aof",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `appendonly yes` and `appendfsync everysec`, three keys were written and the container killed at once with `docker kill`. All three came back. Why did the last second not matter?",
+    "choices": [
+      {
+        "text": "Because `everysec` waits one second before answering each write",
+        "correct": false,
+        "why": "It answers at once; the flush happens in the background."
+      },
+      {
+        "text": "The bytes were already with the operating system, which outlived Redis",
+        "correct": true,
+        "why": "Right. A killed process does not take the page cache with it; a machine losing power would."
+      },
+      {
+        "text": "Because Docker saves a container's memory to disk when it is killed, and gives it back on start",
+        "correct": false,
+        "why": "Docker saves nothing; the data came back from the log on the volume."
+      },
+      {
+        "text": "Because the snapshot rules also ran in the background and covered the last second",
+        "correct": false,
+        "why": "The log says the data came from the append-only files, not from a snapshot."
+      }
+    ]
+  },
+  {
+    "id": "ex-sd0k3xng",
+    "version": 1,
+    "section": "aof",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each file in `appendonlydir` to what it holds.",
+    "pairs": [
+      {
+        "left": "`appendonly.aof.manifest`",
+        "right": "which files make up the log, and in what order"
+      },
+      {
+        "left": "`appendonly.aof.1.base.rdb`",
+        "right": "the dataset as it was when this log began"
+      },
+      {
+        "left": "`appendonly.aof.1.incr.aof`",
+        "right": "every write command since then, in the client protocol"
+      }
+    ],
+    "right_distractors": [
+      "the configuration Redis was started with"
+    ]
+  },
+  {
+    "id": "ex-8rfp9ppr",
+    "version": 1,
+    "section": "aof",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Ten thousand `INCR`s on one key took the incremental file from 136 bytes to 330,188. What did `BGREWRITEAOF` do about it?",
+    "choices": [
+      {
+        "text": "It compressed the incremental file in place",
+        "correct": false,
+        "why": "The old pair was deleted, not compressed."
+      },
+      {
+        "text": "It wrote a new base from memory, with the counter's value, and started an empty incremental file",
+        "correct": true,
+        "why": "Right. The value already includes the increments, so they are not needed; the sequence went to 2."
+      },
+      {
+        "text": "It went through the incremental file, removed every duplicate command, and kept one of each in the same order",
+        "correct": false,
+        "why": "Nothing of the old incremental file was kept."
+      },
+      {
+        "text": "It turned the log off and fell back to snapshots",
+        "correct": false,
+        "why": "The log stayed on; only its files changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-wgbkm9jj",
+    "version": 1,
+    "section": "aof",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To start the official image with the append-only file on, add `--___ yes` after the image name.",
+    "hint": "One word, the setting's name.",
+    "blanks": [
+      {
+        "accept": [
+          "appendonly"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-1vgx8jgz",
+    "version": 1,
+    "section": "durability-of-each",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The machine running Redis loses power. Which setting loses the most acknowledged writes?",
+    "choices": [
+      {
+        "text": "`appendfsync everysec`",
+        "correct": false,
+        "why": "About one second of writes."
+      },
+      {
+        "text": "`appendfsync no`, which leaves the flush to the operating system",
+        "correct": false,
+        "why": "Whatever the operating system had not flushed, up to about 30 seconds on Linux: more than everysec, less than minutes."
+      },
+      {
+        "text": "Snapshots only, with the default rules",
+        "correct": true,
+        "why": "Right. Everything since the last snapshot, which can be minutes or an hour of writes."
+      },
+      {
+        "text": "`appendfsync always`",
+        "correct": false,
+        "why": "Nothing acknowledged: each write was flushed before its reply."
+      }
+    ]
+  },
+  {
+    "id": "ex-m9pve5y2",
+    "version": 1,
+    "section": "durability-of-each",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lesson's benchmark, `always` cost far more with one client than with 50. Why does it hurt less with many clients?",
+    "choices": [
+      {
+        "text": "With 50 clients, Redis turns `always` into `everysec` on its own",
+        "correct": false,
+        "why": "The setting does not change; every write is still flushed before its reply."
+      },
+      {
+        "text": "One flush covers every write that arrived together, so its cost is shared",
+        "correct": true,
+        "why": "Right. One client pays a whole flush for every single write."
+      },
+      {
+        "text": "With 50 clients most writes are rejected, and rejected writes are not flushed",
+        "correct": false,
+        "why": "Every request succeeded; the CSV reports a rate of successful `SET`s."
+      },
+      {
+        "text": "Several clients write to several files at once",
+        "correct": false,
+        "why": "There is one incremental file; all clients' writes go into it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ehmzp4d1",
+    "version": 1,
+    "section": "durability-of-each",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague measured `always` on a laptop's SSD and found it cost 10%, and wants to turn it on in production, which runs on a cloud volume. What should happen first?",
+    "choices": [
+      {
+        "text": "Nothing: a 10% cost on one disk is a 10% cost on any disk",
+        "correct": false,
+        "why": "The cost is the time a flush takes, which differs by orders of magnitude between disks."
+      },
+      {
+        "text": "Turn on `everysec` as well, so that both protect the data",
+        "correct": false,
+        "why": "`appendfsync` takes one value; the two are alternatives."
+      },
+      {
+        "text": "Run the same benchmark on the production machine",
+        "correct": true,
+        "why": "Right, with a client count like production's. The lesson's ratio was one machine's; the decision needs the machine that will serve it."
+      },
+      {
+        "text": "Turn snapshots off to pay for it",
+        "correct": false,
+        "why": "Snapshots cost a fork now and then, not a flush per write; that does not offset it."
+      }
+    ]
+  },
+  {
+    "id": "ex-65k0dpme",
+    "version": 1,
+    "section": "durability-of-each",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order these settings from the one that loses the most acknowledged writes when the machine loses power to the one that loses the least.",
+    "items": [
+      "No persistence",
+      "Snapshots only, every few minutes",
+      "`appendfsync no`",
+      "`appendfsync everysec`",
+      "`appendfsync always`"
+    ],
+    "trap": "`no` leaves it to the operating system, which flushes about every 30 seconds."
+  },
+  {
+    "id": "ex-p7jt1waw",
+    "version": 1,
+    "section": "both-and-neither",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An instance with snapshots only is restarted with `--appendonly yes` added to its command. `DBSIZE` answers 0. What happened?",
+    "choices": [
+      {
+        "text": "The new flag deleted `dump.rdb` at start",
+        "correct": false,
+        "why": "The file was still there, 128 bytes, until the next save overwrote it."
+      },
+      {
+        "text": "Redis loaded only the new, empty log and never read the snapshot",
+        "correct": true,
+        "why": "Right. And the next clean stop saved the empty dataset over the snapshot."
+      },
+      {
+        "text": "The snapshot was from another version and was refused",
+        "correct": false,
+        "why": "Same image, same version; the log shows no attempt to read it at all."
+      },
+      {
+        "text": "Redis is still loading, and `DBSIZE` counts only what has been loaded so far",
+        "correct": false,
+        "why": "While loading, Redis answers `LOADING` errors, not a count."
+      }
+    ]
+  },
+  {
+    "id": "ex-xp37pre1",
+    "version": 1,
+    "section": "both-and-neither",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the safe way to turn the append-only file on for an instance that has data and only snapshots?",
+    "choices": [
+      {
+        "text": "Restart it with `--appendonly yes` and then run `BGREWRITEAOF`",
+        "correct": false,
+        "why": "By then the restart has loaded an empty log; the rewrite would save the emptiness."
+      },
+      {
+        "text": "`CONFIG SET appendonly yes` on the running server, wait for the rewrite, then make it permanent",
+        "correct": true,
+        "why": "Right. The base file is written from what is in memory, so the next start loads the data."
+      },
+      {
+        "text": "Copy `dump.rdb` into `appendonlydir` and restart",
+        "correct": false,
+        "why": "Without a manifest naming it, Redis does not read it."
+      },
+      {
+        "text": "Stop it with `docker stop` first, so the final snapshot is safe",
+        "correct": false,
+        "why": "The snapshot is safe; the restart that follows is what ignores it."
+      }
+    ]
+  },
+  {
+    "id": "ex-jfc63z5s",
+    "version": 1,
+    "section": "both-and-neither",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every write to the shop's Redis now fails with `MISCONF`. Where should the operator look first?",
+    "choices": [
+      {
+        "text": "At the disk the snapshots are written to, which the log line names in full",
+        "correct": true,
+        "why": "Right. A failed snapshot stops writes until one succeeds; a full disk is the common cause."
+      },
+      {
+        "text": "At the clients, which are sending commands Redis does not understand",
+        "correct": false,
+        "why": "An unknown command answers `ERR unknown command`; `MISCONF` is about saving."
+      },
+      {
+        "text": "At `maxmemory`, because the instance is full",
+        "correct": false,
+        "why": "A full instance answers `OOM`, which is lesson 14."
+      },
+      {
+        "text": "At the replicas, which have stopped acknowledging",
+        "correct": false,
+        "why": "Replicas play no part in `MISCONF`; there are none here."
+      }
+    ]
+  },
+  {
+    "id": "ex-90692f4b",
+    "version": 1,
+    "section": "both-and-neither",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A Redis holds only rendered pages that the application can build again. Which persistence fits?",
+    "choices": [
+      {
+        "text": "`appendfsync always`, so no page is lost",
+        "correct": false,
+        "why": "A lost page is rebuilt; paying a flush per write buys nothing."
+      },
+      {
+        "text": "None: `--save \"\"` and the log off",
+        "correct": true,
+        "why": "Right. It starts empty and at once, and spends no forks or disk on copies."
+      },
+      {
+        "text": "Both snapshots and the log, to be safe",
+        "correct": false,
+        "why": "Safe for data nobody needs back; the cost is real and the benefit is not."
+      },
+      {
+        "text": "Snapshots every minute",
+        "correct": false,
+        "why": "Every fork costs memory, for pages that can be built again."
+      }
+    ]
+  },
+  {
+    "id": "ex-khxhz147",
+    "version": 1,
+    "section": "both-and-neither",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which `INFO persistence` fields say that Redis is failing to save? Choose all that apply.",
+    "choices": [
+      {
+        "text": "`rdb_last_bgsave_status:err`",
+        "correct": true,
+        "why": "Right: the last snapshot failed."
+      },
+      {
+        "text": "`aof_last_write_status:err`",
+        "correct": true,
+        "why": "Right: a write to the log failed."
+      },
+      {
+        "text": "`loading:1`",
+        "correct": false,
+        "why": "That is a restart still reading its file."
+      },
+      {
+        "text": "`rdb_bgsave_in_progress:1`",
+        "correct": false,
+        "why": "A snapshot running is normal; it says nothing about the outcome."
+      },
+      {
+        "text": "`aof_enabled:0`",
+        "correct": false,
+        "why": "The log being off is a choice, not a failure."
+      }
+    ]
+  },
+  {
+    "id": "ex-9k84w9n1",
+    "version": 1,
+    "section": "rdb",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With snapshots only, `INFO persistence` reports `rdb_changes_since_last_save:2`. What does that tell the operator?",
+    "choices": [
+      {
+        "text": "Two writes would be lost if Redis crashed now",
+        "correct": true,
+        "why": "Right. Those two are in memory and in no file."
+      },
+      {
+        "text": "Two snapshots have failed since the last one that worked",
+        "correct": false,
+        "why": "Failures show in `rdb_last_bgsave_status`; this field counts writes."
+      },
+      {
+        "text": "Two keys were too large for the snapshot and were skipped",
+        "correct": false,
+        "why": "A snapshot holds every key; nothing is skipped for size."
+      },
+      {
+        "text": "The next snapshot starts in two seconds, when a save rule fires",
+        "correct": false,
+        "why": "It is a count of changes, not a countdown."
+      }
+    ]
+  },
+  {
+    "id": "ex-9gqhkcgy",
+    "version": 1,
+    "section": "aof",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody ran `FLUSHALL` by mistake on an instance with the append-only file on. Nothing has been rewritten or restarted since. What brings the data back?",
+    "choices": [
+      {
+        "text": "Run `BGREWRITEAOF`, so the log is rebuilt from what it held",
+        "correct": false,
+        "why": "A rewrite is built from memory, which is now empty: it would make the loss permanent."
+      },
+      {
+        "text": "Stop Redis, delete the `FLUSHALL` at the end of the incremental file, and start it again",
+        "correct": true,
+        "why": "Right. The replay then rebuilds everything up to the command before it."
+      },
+      {
+        "text": "Nothing, because `FLUSHALL` deletes the log files too",
+        "correct": false,
+        "why": "It is appended to the log like any other write; the files stay."
+      },
+      {
+        "text": "Restart with the log off, so that Redis loads `dump.rdb` instead",
+        "correct": false,
+        "why": "With save rules on, `FLUSHALL` also saves an empty snapshot, and any older one is older than the log."
+      }
+    ]
+  },
+  {
+    "id": "ex-n0evtdah",
+    "version": 1,
+    "section": "durability-of-each",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An instance with `appendfsync everysec` takes 5,000 writes a second, steadily. The machine loses power. By the table's figure for `everysec`, about how many acknowledged writes are lost?",
+    "hint": "About one second of writes.",
+    "value": 5000,
+    "tolerance": 1000
+  },
+  {
+    "id": "ex-6yk73mrf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The shop keeps its idempotency keys in a Redis with `appendfsync everysec`. Which event can lose a key that was acknowledged?",
+    "choices": [
+      {
+        "text": "`docker kill` on the container",
+        "correct": false,
+        "why": "The lesson killed it that way and lost nothing."
+      },
+      {
+        "text": "`docker stop` on the container",
+        "correct": false,
+        "why": "A clean stop flushes everything first."
+      },
+      {
+        "text": "A `BGREWRITEAOF` started by hand while the shop is busy writing keys",
+        "correct": false,
+        "why": "The rewrite is built from memory, which holds the key."
+      },
+      {
+        "text": "The machine losing power within a second of the write being acknowledged",
+        "correct": true,
+        "why": "Right. That second in the page cache is the window `everysec` accepts."
+      }
+    ]
+  },
+  {
+    "id": "ex-71mbc7sa",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With both snapshots and the append-only file on, a restarting Redis loads the ___ and ignores `dump.rdb`.",
+    "hint": "Three letters.",
+    "blanks": [
+      {
+        "accept": [
+          "AOF"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
