@@ -4,9 +4,8 @@ version: 1
 ---
 
 A training loop with a mistake in it rarely stops. **Most of the mistakes below run to the end and
-print numbers**, and the numbers are what has to be read. Each one is here because it is common
-enough to have its own question on every PyTorch forum, and each was run, so its symptom is a
-transcript rather than a description. Save as `~/dl/bugs.py`:
+print numbers**, and the numbers are what has to be read. Each one below is common, and each
+was run, so its symptom is a transcript rather than a description. Save as `~/dl/bugs.py`:
 
 ```schooling-example
 {
@@ -32,13 +31,19 @@ transcript rather than a description. Save as `~/dl/bugs.py`:
 First the correct loop, to have something to compare with:
 
 ```
-PENDING bug-none
+ana@vm:~/dl$ python bugs.py none
+epoch  5  train loss 0.7894
+epoch 10  train loss 0.3120
+eval() and no_grad():  val acc 0.914  recorded False
 ```
 
 ## 1. Forgetting `zero_grad`
 
 ```
-PENDING bug-zero_grad
+ana@vm:~/dl$ python bugs.py zero_grad
+epoch  5  train loss 2.6018
+epoch 10  train loss 3.8694
+eval() and no_grad():  val acc 0.200  recorded False
 ```
 
 **The loss goes up, from 2.6018 at epoch 5 to 3.8694 at epoch 10, and the accuracy ends at 0.200.**
@@ -50,10 +55,13 @@ almost normal curve, which is the harder case to spot.
 ## 2. Softmax before the loss
 
 ```
-PENDING bug-softmax
+ana@vm:~/dl$ python bugs.py softmax
+epoch  5  train loss 2.2955
+epoch 10  train loss 2.2804
+eval() and no_grad():  val acc 0.194  recorded False
 ```
 
-**The loss sits near 2.29 and the accuracy at 0.194.** `F.cross_entropy` takes raw scores, the
+**The loss stays near 2.3, at 2.2955 and then 2.2804, and the accuracy ends at 0.194.** `F.cross_entropy` takes raw scores, the
 logits, and applies the softmax itself. Given probabilities instead, it applies a second softmax to
 numbers that all lie between 0 and 1, and the result is close to even across the ten classes
 whatever the network says. The gradient that reaches the weights is squeezed accordingly, and
@@ -62,12 +70,17 @@ training barely moves. A last layer with `nn.Softmax` in it does the same damage
 ## 3. Evaluating in training mode, with the record running
 
 ```
-PENDING bug-eval
+ana@vm:~/dl$ python bugs.py eval
+epoch  5  train loss 1.2932
+epoch 10  train loss 0.8318
+no eval(), no no_grad():  val acc 0.742  recorded True
+no eval(), no no_grad():  val acc 0.728  recorded True
+eval() and no_grad():  val acc 0.908  recorded False
 ```
 
 This network has dropout, which lesson 7 wrote by hand: in training mode it zeroes half the hidden
 units at random. **Measured twice in training mode, the same network on the same images scored 0.742
-and then 0.731**, and both are below the 0.906 it scores in evaluation mode. A score that changes
+and then 0.728**, and both are below the 0.908 it scores in evaluation mode. A score that changes
 when nothing changed is the symptom. A network with batch normalisation, lesson 8's subject, gets it
 worse, since every evaluation in training mode also moves its running statistics.
 
@@ -78,11 +91,25 @@ nothing else, so it shows up only when the validation set is large.
 ## 4. Keeping the loss as a tensor
 
 ```
-PENDING bug-item
+ana@vm:~/dl$ python bugs.py item
+Traceback (most recent call last):
+  File "/home/ana/dl/bugs.py", line 38, in <module>
+    print(f"epoch {epoch:2d}  train loss {np.mean(losses):.4f}")
+                                          ^^^^^^^^^^^^^^^
+  File "/home/ana/dl/.venv/lib/python3.12/site-packages/numpy/_core/fromnumeric.py", line 3862, in mean
+    return _methods._mean(a, axis=axis, dtype=dtype,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ana/dl/.venv/lib/python3.12/site-packages/numpy/_core/_methods.py", line 116, in _mean
+    arr = asanyarray(a)
+          ^^^^^^^^^^^^^
+  File "/home/ana/dl/.venv/lib/python3.12/site-packages/torch/_tensor.py", line 1255, in __array__
+    return self.numpy()
+           ^^^^^^^^^^^^
+RuntimeError: Can't call numpy() on Tensor that requires grad. Use tensor.detach().numpy() instead.
 ```
 
 `losses.append(loss)` kept each batch's loss as a tensor, together with its record. The training
-ran, and it was the report that failed: NumPy cannot turn a tensor that requires a gradient into an
+ran, and it was the first report, at epoch 5, that failed: NumPy cannot turn a tensor that requires a gradient into an
 array, and says to `detach()` it first. **Write `loss.item()` wherever a loss is kept for
 reporting.** The error is the lucky version. `total += loss` raises nothing, adds every batch's
 record to one growing chain, and holds all of them in memory until the epoch ends.
@@ -90,7 +117,15 @@ record to one growing chain, and holds all of them in memory until the epoch end
 ## 5. Labels in the wrong shape
 
 ```
-PENDING bug-labels
+ana@vm:~/dl$ python bugs.py labels
+Traceback (most recent call last):
+  File "/home/ana/dl/bugs.py", line 31, in <module>
+    loss = F.cross_entropy(logits, y[idx])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/ana/dl/.venv/lib/python3.12/site-packages/torch/nn/functional.py", line 3561, in cross_entropy
+    return torch._C._nn.cross_entropy_loss(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: 0D or 1D target tensor expected, multi-target not supported
 ```
 
 `F.cross_entropy` wants one class number per example, shape `[32]`, and the labels were `[32, 1]`.
@@ -98,7 +133,9 @@ This one stops at the first batch, with a message naming the target. **The silen
 bug lives in regression**, where predictions come out as a column and targets as a row:
 
 ```
-PENDING mse
+ana@vm:~/dl$ python -c "import torch, torch.nn.functional as F; y = torch.arange(4.0); print(F.mse_loss(y.reshape(-1, 1), y), F.mse_loss(y, y))"
+<string>:1: UserWarning: Using a target size (torch.Size([4])) that is different to the input size (torch.Size([4, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+tensor(2.5000) tensor(0.)
 ```
 
 The four predictions equal the four targets, so the loss should be 0, and it is 2.5. `F.mse_loss`

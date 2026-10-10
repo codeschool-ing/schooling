@@ -41,10 +41,12 @@ Sequential(
 )
 ```
 
-Para compará-la de forma justa com a rede densa da aula 9, treine as duas do mesmo jeito: a mesma
-divisão, a mesma semente, Adam a 0,001, lotes de 32, 30 épocas. O programa precisa do `digits.py` da
-aula 1 e do `tdigits.py` e do `loop.py` da aula 9 ao lado. O `tdigits.load(images=True)` entrega as
-mesmas imagens como grades 1 por 8 por 8 em vez de filas de 64. Salve como `~/dl/compare.py`:
+Uma comparação com a rede densa da aula 9 só vale alguma coisa se as duas forem treinadas do mesmo
+jeito, e se o tamanho da rede não estiver fazendo o trabalho. Por isso o programa abaixo treina três: a
+da aula 9, uma densa alargada até ter mais ou menos tantos parâmetros quanto a convolucional, e o
+`cnn.py`. Ele precisa do `digits.py` da aula 1 e do `tdigits.py` e do `loop.py` da aula 9 ao lado. O
+`tdigits.load(images=True)` entrega as mesmas imagens como grades 1 por 8 por 8 em vez de filas de 64.
+Salve como `~/dl/compare.py`:
 
 ```schooling-example
 {
@@ -52,15 +54,19 @@ mesmas imagens como grades 1 por 8 por 8 em vez de filas de 64. Salve como `~/dl
   "file": "compare.py",
   "parts": [
     {
-      "code": "\"\"\"compare: lesson 9's dense network against cnn.py, trained the same way on the same digits.\"\"\"\nimport torch\nimport torch.nn as nn\n\nimport cnn\nimport loop\nimport tdigits\n\n\ndef count(model):\n    return sum(p.numel() for p in model.parameters())"
+      "code": "\"\"\"compare: lesson 9's dense network, a wider one, and cnn.py, trained the same way on the same digits.\"\"\"\nimport torch\nimport torch.nn as nn\n\nimport cnn\nimport loop\nimport tdigits"
     },
     {
-      "code": "torch.manual_seed(0)\nmlp = nn.Sequential(nn.Linear(64, 64), nn.ReLU(), nn.Linear(64, 10))\ntrain, val, _ = tdigits.load()\nprint(f\"dense: {count(mlp)} parameters\")\nloop.fit(mlp, torch.optim.Adam(mlp.parameters(), lr=1e-3), train, val, epochs=30, every=10)",
-      "note": "A rede da aula 9 como era: 64 pixels numa fila, 64 unidades ocultas, 10 saídas, Adam a 0,001."
+      "code": "def run(name, make, images):\n    torch.manual_seed(0)\n    model = make()\n    train, val, _ = tdigits.load(images=images)\n    print(f\"{name}: {sum(p.numel() for p in model.parameters())} parameters\")\n    loop.fit(model, torch.optim.Adam(model.parameters(), lr=1e-3), train, val, epochs=30, every=10)\n    return model",
+      "note": "Uma receita para as três: a mesma semente antes de os pesos serem criados, a mesma divisão, Adam a 0,001, lotes de 32, 30 épocas. `images` diz se os dígitos chegam como filas de 64 ou como grades 1 por 8 por 8."
     },
     {
-      "code": "torch.manual_seed(0)\nnet = cnn.make_cnn()\ntrain, val, _ = tdigits.load(images=True)\nprint(f\"convolutional: {count(net)} parameters, {count(net[:4])} of them in the two convolutions\")\nloop.fit(net, torch.optim.Adam(net.parameters(), lr=1e-3), train, val, epochs=30, every=10)\ntorch.save(net.state_dict(), \"cnn.pt\")",
-      "note": "As mesmas imagens como grades 1 por 8 por 8, a mesma semente, otimizador, taxa, tamanho de lote e épocas. `net[:4]` são as quatro primeiras camadas, as duas convoluções e os seus ReLUs. Os pesos treinados são salvos para a última seção."
+      "code": "run(\"dense, lesson 9\", lambda: nn.Sequential(nn.Linear(64, 64), nn.ReLU(), nn.Linear(64, 10)), False)\nrun(\"dense, 512 wide\", lambda: nn.Sequential(nn.Linear(64, 512), nn.ReLU(), nn.Linear(512, 10)), False)",
+      "note": "A rede da aula 9 como era, e a mesma forma com 512 unidades ocultas em vez de 64, o que lhe dá mais ou menos tantos parâmetros quanto a rede convolucional."
+    },
+    {
+      "code": "net = run(\"convolutional\", cnn.make_cnn, True)\nprint(sum(p.numel() for p in net[:4].parameters()), \"of them in the two convolutions\")\ntorch.save(net.state_dict(), \"cnn.pt\")",
+      "note": "`net[:4]` são as quatro primeiras camadas, as duas convoluções e os seus ReLUs. Os pesos treinados são salvos para a última seção."
     }
   ]
 }
@@ -78,17 +84,23 @@ epoch  20  train loss 0.0180  val loss 0.0757  val acc 0.978
 epoch  30  train loss 0.0070  val loss 0.0633  val acc 0.983
 ```
 
-**A rede convolucional termina em 0,983 no conjunto de validação, contra 0,953 da densa**, e já estava
-em 0,953 na época 10. A perda de validação dela, 0,0633, é menos da metade dos 0,1471 da rede densa.
+**Contra a rede da aula 9, a convolucional ganha com folga**: 0,983 no conjunto de validação contra
+0,953, e já estava em 0,953 na época 10. Mas ela tem 38.282 parâmetros contra 4.810 da densa, e essa
+diferença sozinha poderia explicar o resultado.
 
-As contagens de parâmetros merecem uma leitura cuidadosa, porque a rede convolucional tem 38.282 e a
-densa 4.810, quase oito vezes menos. **A maior parte da diferença não está nas convoluções.** As duas
-convoluções têm 4.800 parâmetros, mais ou menos o orçamento inteiro da rede densa; os outros 33.482
-ficam nas camadas densas depois do `Flatten`, a maioria na `Linear(512, 64)`. O ganho veio de para onde
-os parâmetros olham, não de haver mais deles.
+**A rede densa mais larga responde a isso, e tira a maior parte da diferença.** Com 38.410 parâmetros, mais ou
+menos o mesmo orçamento, ela chega a 0,978. Nesses dígitos, a maior parte dos três pontos veio do
+tamanho, e o que sobra para a convolução é meio ponto, com uma execução de cada. A perda de validação
+dela ainda é a menor das três, 0,0633 contra 0,0742, então a rede convolucional também é a mais
+confiante quando acerta; mas uma diferença tão pequena cabe no que outra semente poderia mover, e a
+aula 18 trata de separar uma coisa da outra.
 
-Duas cautelas antes de ler mais do que isso. **É uma semente para cada rede**, e uma diferença de três
-pontos entre execuções isoladas pode encolher ou crescer com outra; a aula 18 pergunta se uma diferença
-é maior que a dispersão entre sementes. E a perda de treino da rede convolucional caiu para 0,0070,
-muito abaixo da perda de validação: ela quase decorou as 1.077 imagens de treino, que é o assunto da
-aula 7.
+O motivo é o tamanho da imagem. **Um dígito 8 por 8 tem 64 pixels, poucos o bastante para uma camada
+densa bancar um peso de cada um deles para cada unidade**, e as formas que ela precisa aprender têm
+poucos lugares onde ficar. A seção sobre canais mostrou onde isso acaba: numa fotografia 224 por 224, a
+camada densa custa 120.847.089.664 parâmetros e a convolução 448. A convolução se paga à medida que as
+imagens crescem, e é por isso que as redes da aula 12 são convolucionais; aqui ela já empata com uma
+rede densa do seu tamanho tendo só 4.800 parâmetros na parte que olha a imagem.
+
+Mais uma coisa a notar na transcrição: a perda de treino da rede convolucional caiu para 0,0070, muito
+abaixo da perda de validação. Ela quase decorou as 1.077 imagens de treino, que é o assunto da aula 7.

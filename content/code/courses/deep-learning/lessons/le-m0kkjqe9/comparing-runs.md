@@ -49,8 +49,8 @@ would mark every later run as dirty.
 
 ## Reading the report
 
-The six seed-0 runs made so far collapsed into one per configuration, and the dirty run from the
-previous section is out of the report with a count beside it. What is left is three groups of five.
+The seed-0 run from the previous section and its repeat here became one, and the dirty run is out of
+the report with a count beside it. What is left is three groups of five.
 
 **The wider layer changed nothing measurable.** Its mean, 0.9200, sits 0.0011 below the narrower
 one's 0.9211, which is less than half an image, against a standard deviation near 0.006 for each.

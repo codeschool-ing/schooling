@@ -48,9 +48,9 @@ a Linear doing the same -> 120847089664
 
 **The first layer has 160 parameters**: 16 filters of 1 × 3 × 3 weights, plus one bias each. A dense
 layer that turned the same 64 pixels into the same 1,024 outputs would need 66,560. **The second layer
-has 4,640**, 32 × 16 × 9 + 32, against 2,099,200 for the dense one. On a photograph the gap stops
-being a ratio and becomes a wall: 448 for the convolution, and 120,847,089,664 for a dense layer, a
-number no machine would hold.
+has 4,640**, 32 × 16 × 9 + 32, against 2,099,200 for the dense one. On a photograph the gap grows
+beyond any use: 448 for the convolution, and 120,847,089,664 for a dense layer, far more weights than
+the memory of a machine like this one could hold.
 
 **The count does not depend on the size of the image.** The same 448 parameters run on a photograph of
 any size, because the filter is the same at every position. That is weight sharing, and it is the

@@ -41,7 +41,7 @@ Inside a git repository, MLflow notes the commit of the code that started the ru
 
 ## Weights & Biases
 
-A hosted service, free for individuals within limits, paid for teams. The same shape: `wandb.init`
+A hosted service, with a free plan for individual use and paid plans for teams. The same shape: `wandb.init`
 opens a run with its configuration, `log` sends metrics, and the service keeps the runs, draws the
 curves, and records the machine and the libraries. The runs live on the company's servers, which is
 the convenience and also the thing to check before sending anything confidential.

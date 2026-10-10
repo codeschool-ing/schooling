@@ -56,5 +56,5 @@ point.
 
 The spread is also not a fixed property of the data. A higher learning rate, a different batch size
 or more epochs can widen it or narrow it, so it belongs to a configuration. That is why the
-comparison later in the lesson runs every configuration on several seeds, instead of measuring the
+comparison two sections on runs every configuration on several seeds, instead of measuring the
 spread once and assuming it.

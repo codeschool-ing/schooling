@@ -1,0 +1,596 @@
+[
+  {
+    "id": "ex-8gk4rzzv",
+    "version": 1,
+    "section": "seeds",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`exp.run` calls `torch.manual_seed(seed)` just before building the network. What does that line fix?",
+    "hint": "Look at what is drawn from PyTorch's generator right after it.",
+    "choices": [
+      {
+        "text": "Which images go into the training set",
+        "correct": false,
+        "why": "The split comes from `digits.load(seed=0)`, a separate seed that this lesson never changes."
+      },
+      {
+        "text": "The starting weights",
+        "correct": true,
+        "why": "Right. `build` draws them from the generator the seed has just reset."
+      },
+      {
+        "text": "The learning rate the optimiser starts from",
+        "correct": false,
+        "why": "The rate is a setting in the config, never drawn at random."
+      },
+      {
+        "text": "Whether the run gives the same accuracy on any computer",
+        "correct": false,
+        "why": "A seed repeats a run on the same machine and libraries; across machines the arithmetic can differ."
+      }
+    ]
+  },
+  {
+    "id": "ex-36c3hm8f",
+    "version": 1,
+    "section": "seeds",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`seeds.py` trained seed 0 twice and printed `True` for every weight being equal. What does that show?",
+    "hint": "`torch.equal` compares to the last bit.",
+    "choices": [
+      {
+        "text": "That seed 0 is the best seed for this configuration",
+        "correct": false,
+        "why": "Seed 0 was one draw among many; the next section shows others doing better."
+      },
+      {
+        "text": "That the network has stopped learning after ten epochs",
+        "correct": false,
+        "why": "Two runs being equal says nothing about whether either kept improving."
+      },
+      {
+        "text": "That every random choice in training came from the seed",
+        "correct": true,
+        "why": "Right. If anything had been left unseeded, some weight would have differed."
+      },
+      {
+        "text": "That the accuracy, 0.9167, is the accuracy of the configuration",
+        "correct": false,
+        "why": "It is the accuracy of one seed. The configuration's is a range."
+      }
+    ]
+  },
+  {
+    "id": "ex-54g4c16p",
+    "version": 1,
+    "section": "seeds",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's training script calls `torch.manual_seed(0)` at the top, but shuffles the batches with `random.shuffle` from Python's own library. Run twice, it gives two different accuracies. Why?",
+    "hint": "How many generators are in that program?",
+    "choices": [
+      {
+        "text": "Python's `random` has its own generator, which nothing seeded",
+        "correct": true,
+        "why": "Right. Each generator needs its own seed; here the batch order is still drawn fresh every run."
+      },
+      {
+        "text": "`manual_seed` only works on a graphics card",
+        "correct": false,
+        "why": "It fixed the weights on the processor in `seeds.py`."
+      },
+      {
+        "text": "Seed 0 is reserved and gives a random start",
+        "correct": false,
+        "why": "Seed 0 repeated itself to the last bit in this lesson."
+      },
+      {
+        "text": "Shuffling changes nothing, so the difference is the threads",
+        "correct": false,
+        "why": "Batch order is one of the three random things the lesson lists, and it moves the result."
+      }
+    ]
+  },
+  {
+    "id": "ex-5mpj3ehf",
+    "version": 1,
+    "section": "the-spread",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`spread.py` printed 329 correct images for its worst seed and 333 for its best. How many images apart were the best and worst runs?",
+    "hint": "Subtract.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "images"
+  },
+  {
+    "id": "ex-t0v1y53p",
+    "version": 1,
+    "section": "the-spread",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does validation accuracy on these digits move in steps of about 0.0028?",
+    "hint": "Count the validation set.",
+    "choices": [
+      {
+        "text": "Because `float32` cannot hold finer values",
+        "correct": false,
+        "why": "`float32` holds far finer differences; the step comes from counting images."
+      },
+      {
+        "text": "One image is 1/360 of the set",
+        "correct": true,
+        "why": "Right. Accuracy is a count of correct images divided by 360, so it moves one image at a time."
+      },
+      {
+        "text": "The learning rate sets the size of every change",
+        "correct": false,
+        "why": "The rate moves weights, not the granularity of a count."
+      },
+      {
+        "text": "`loop.evaluate` rounds to three decimals",
+        "correct": false,
+        "why": "It returns the full number; only the printing rounds."
+      }
+    ]
+  },
+  {
+    "id": "ex-m9jx9h23",
+    "version": 1,
+    "section": "the-spread",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team reports that a new configuration reached 0.94 validation accuracy, from one run, against 0.92 for the old one, also from one run. What is the first thing to ask?",
+    "hint": "What else differs between two single runs?",
+    "choices": [
+      {
+        "text": "Whether 0.94 was computed with `float64`",
+        "correct": false,
+        "why": "Precision does not move accuracy by two points."
+      },
+      {
+        "text": "Which of the two ran on more threads",
+        "correct": false,
+        "why": "Threads change last digits; the larger question is the seed."
+      },
+      {
+        "text": "Whether the test set agrees",
+        "correct": false,
+        "why": "Reading test to decide between them would spend it on a choice."
+      },
+      {
+        "text": "How much each configuration moves across seeds",
+        "correct": true,
+        "why": "Right. Until the spread is known, two points may be two seeds rather than two settings."
+      }
+    ]
+  },
+  {
+    "id": "ex-wdm9yqwf",
+    "version": 1,
+    "section": "what-a-run-records",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `track.py` append one JSON line per run instead of keeping a single JSON array?",
+    "hint": "What happens to the file if a run crashes while writing?",
+    "choices": [
+      {
+        "text": "JSON arrays cannot hold dictionaries",
+        "correct": false,
+        "why": "They can; the trouble is having to rewrite the whole file."
+      },
+      {
+        "text": "Appending never rewrites earlier runs, so a crash cannot lose them",
+        "correct": true,
+        "why": "Right. An array has to be read and rewritten whole on every run."
+      },
+      {
+        "text": "It makes the file smaller",
+        "correct": false,
+        "why": "The size is about the same; what changes is how it is written."
+      },
+      {
+        "text": "PyTorch can only read JSON Lines",
+        "correct": false,
+        "why": "PyTorch never reads `runs.jsonl`; `report.py` reads it with the `json` module."
+      }
+    ]
+  },
+  {
+    "id": "ex-j3rp911s",
+    "version": 1,
+    "section": "what-a-run-records",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A record says `\"commit\": \"…\", \"dirty\": true`. What does it tell you about the code that produced the number?",
+    "hint": "What does `git status --porcelain` report?",
+    "choices": [
+      {
+        "text": "It is exactly the named commit",
+        "correct": false,
+        "why": "That is what `false` would say."
+      },
+      {
+        "text": "The commit failed and the run is invalid",
+        "correct": false,
+        "why": "The commit exists; the files on disk differed from it when the run started."
+      },
+      {
+        "text": "It is the named commit plus edits nobody saved in git",
+        "correct": true,
+        "why": "Right, and those edits cannot be recovered from the record, so the run cannot be repeated."
+      },
+      {
+        "text": "The data changed since the last run",
+        "correct": false,
+        "why": "The data has its own fingerprint in `data`; `dirty` is only about the code."
+      }
+    ]
+  },
+  {
+    "id": "ex-rsmnxa9k",
+    "version": 1,
+    "section": "what-a-run-records",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what makes a run that somebody else can repeat.",
+    "hint": "The record names the commit, so the commit comes before the run.",
+    "items": [
+      "Change the code",
+      "Commit the change",
+      "Run with a seed, from the command line",
+      "Append the record, then read the report"
+    ]
+  },
+  {
+    "id": "ex-nn72zwte",
+    "version": 1,
+    "section": "what-a-run-records",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two runs have the same config, seed, commit and library versions, and different accuracies. `data.sha256` differs between them. What most likely happened?",
+    "hint": "What does the fingerprint hash?",
+    "choices": [
+      {
+        "text": "A different number of threads",
+        "correct": false,
+        "why": "Threads are recorded separately and do not change the data's bytes."
+      },
+      {
+        "text": "The training images were not the same bytes",
+        "correct": true,
+        "why": "Right. A different split seed, or a data set that changed, changes the hash with the code untouched."
+      },
+      {
+        "text": "Somebody edited `exp.py` without committing",
+        "correct": false,
+        "why": "That would show as `dirty: true`, and leave the data's hash alone."
+      },
+      {
+        "text": "The seed was ignored",
+        "correct": false,
+        "why": "A seed that was ignored changes weights, not the bytes of the training set."
+      }
+    ]
+  },
+  {
+    "id": "ex-2edpn6p6",
+    "version": 1,
+    "section": "comparing-runs",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On seed 0, the 64-unit layer beat the 32-unit one, 0.9194 to 0.9167. What did five seeds say?",
+    "hint": "Compare the means with the standard deviations.",
+    "choices": [
+      {
+        "text": "The wider layer is better by about a point",
+        "correct": false,
+        "why": "The means were 0.9200 and 0.9211: no point, and in the other direction."
+      },
+      {
+        "text": "No measurable difference",
+        "correct": true,
+        "why": "Right. The means differ by less than half an image, well inside the spread."
+      },
+      {
+        "text": "The wider layer is worse, so the narrow one should be kept for its accuracy",
+        "correct": false,
+        "why": "A gap of 0.0011 against a spread near 0.006 shows no difference either way."
+      },
+      {
+        "text": "Seed 0 is the fair seed to compare on",
+        "correct": false,
+        "why": "No seed is fairer than another; seed 4 said the opposite of seed 0."
+      }
+    ]
+  },
+  {
+    "id": "ex-8xjm4qh9",
+    "version": 1,
+    "section": "comparing-runs",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `report.py` group runs by configuration and commit, not by configuration alone?",
+    "hint": "What else can change a result with the settings untouched?",
+    "choices": [
+      {
+        "text": "Git refuses to read a file with two commits in it",
+        "correct": false,
+        "why": "`report.py` reads JSON and never calls git."
+      },
+      {
+        "text": "So that seeds are not counted twice",
+        "correct": false,
+        "why": "That is done by keying each group on the seed, a separate step."
+      },
+      {
+        "text": "The same settings on different code are a different experiment",
+        "correct": true,
+        "why": "Right. Mixing commits would average two programs as if they were one."
+      },
+      {
+        "text": "Dirty runs have no commit",
+        "correct": false,
+        "why": "They do have one; they are left out for having edits on top of it."
+      }
+    ]
+  },
+  {
+    "id": "ex-gf5w4cst",
+    "version": 1,
+    "section": "comparing-runs",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Configuration A scores 0.930, 0.925, 0.935, 0.928, 0.932 over five seeds, and B scores 0.931, 0.940, 0.926, 0.938, 0.929 on the same seeds. What can you conclude?",
+    "hint": "Do the ranges overlap?",
+    "choices": [
+      {
+        "text": "B is better, because its best run is the highest of all",
+        "correct": false,
+        "why": "One high run is the single-seed comparison again, with a different seed."
+      },
+      {
+        "text": "Not enough: the ranges overlap almost entirely",
+        "correct": true,
+        "why": "Right. A's worst, 0.925, and B's worst, 0.926, sit together; more seeds are the next step."
+      },
+      {
+        "text": "A is better, because its runs vary less",
+        "correct": false,
+        "why": "A smaller spread is not a higher accuracy."
+      },
+      {
+        "text": "B is better, so read the test set to confirm it",
+        "correct": false,
+        "why": "Using the test set to decide a comparison spends it on a choice."
+      }
+    ]
+  },
+  {
+    "id": "ex-fft7th58",
+    "version": 1,
+    "section": "determinism",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Floating-point addition rounds after every step, so changing the ___ of a sum can change its result.",
+    "hint": "`order.py` added the same three numbers in two groupings.",
+    "blanks": [
+      {
+        "accept": [
+          "order",
+          "grouping"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9zzhfv2c",
+    "version": 1,
+    "section": "determinism",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `threads.py`, one thread and four gave identical weights. Why does `track.py` record the number of threads anyway?",
+    "hint": "What did `order.py` show for a million numbers?",
+    "choices": [
+      {
+        "text": "Because more threads give a higher accuracy",
+        "correct": false,
+        "why": "Threads change speed and rounding, not what the network can learn."
+      },
+      {
+        "text": "Because PyTorch ignores the seed on four threads",
+        "correct": false,
+        "why": "The seed held on four threads, as the identical weights show."
+      },
+      {
+        "text": "A larger network's sums are split by thread, and their rounding differs",
+        "correct": true,
+        "why": "Right. The million-number sum changed on four threads, and over many steps that grows."
+      },
+      {
+        "text": "Because a run on one thread cannot be repeated",
+        "correct": false,
+        "why": "One thread is the easiest case to repeat."
+      }
+    ]
+  },
+  {
+    "id": "ex-9rt7jxc9",
+    "version": 1,
+    "section": "determinism",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A run on a graphics card with a fixed seed gives 0.9611, then 0.9583 on the next try, on the same machine. Which change is aimed at exactly that?",
+    "hint": "Same machine, same seed: what is still free to vary?",
+    "choices": [
+      {
+        "text": "A different seed for each run",
+        "correct": false,
+        "why": "That adds variation; it does not remove the one that is there."
+      },
+      {
+        "text": "Recording the library versions",
+        "correct": false,
+        "why": "Worth doing, but the versions were the same on both tries."
+      },
+      {
+        "text": "More epochs, so both runs converge to the same point",
+        "correct": false,
+        "why": "Training longer does not bring two different paths to one point."
+      },
+      {
+        "text": "`torch.use_deterministic_algorithms(True)` and the settings beside it",
+        "correct": true,
+        "why": "Right. On a card some operations add in the order the hardware finishes, and these settings forbid that, at a cost in speed."
+      }
+    ]
+  },
+  {
+    "id": "ex-t7h7x7g5",
+    "version": 1,
+    "section": "the-tools",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each tool to what the lesson says about it.",
+    "hint": "One is a file, one is hosted, one is open source, one is a viewer.",
+    "pairs": [
+      {
+        "left": "runs.jsonl",
+        "right": "one line per run, enough for one person and one machine"
+      },
+      {
+        "left": "MLflow",
+        "right": "open source, on your own machine or a team server"
+      },
+      {
+        "left": "Weights & Biases",
+        "right": "a hosted service that keeps the runs on its servers"
+      },
+      {
+        "left": "TensorBoard",
+        "right": "draws curves, and leaves the config and code version to you"
+      }
+    ]
+  },
+  {
+    "id": "ex-a40m6wcg",
+    "version": 1,
+    "section": "the-tools",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these does moving from `runs.jsonl` to a tracking tool give you, according to the lesson?",
+    "hint": "The tools sell what grows around the record.",
+    "choices": [
+      {
+        "text": "Runs that no longer need a seed",
+        "correct": false,
+        "why": "Every tool records the seed you give it; none removes the need for one."
+      },
+      {
+        "text": "Plots of many runs, shared between people and machines",
+        "correct": true,
+        "why": "Right. The record is the same idea; the tools add viewing, sharing and storage."
+      },
+      {
+        "text": "A decision on which configuration is better",
+        "correct": false,
+        "why": "The comparison against the spread is still yours to make."
+      },
+      {
+        "text": "Determinism on a graphics card",
+        "correct": false,
+        "why": "That comes from PyTorch's settings, not from the tracker."
+      }
+    ]
+  },
+  {
+    "id": "ex-2cpybzd1",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did this lesson's runs show? Choose all that apply.",
+    "hint": "Check each against a transcript.",
+    "choices": [
+      {
+        "text": "Seed 0 run twice gave identical weights",
+        "correct": true,
+        "why": "Yes: `every weight equal to the first run's: True`."
+      },
+      {
+        "text": "The 64-unit layer beat the 32-unit one on every seed",
+        "correct": false,
+        "why": "No: it won on seed 0 and lost on seed 4."
+      },
+      {
+        "text": "A learning rate of 0.05 beat 0.01 on every seed",
+        "correct": true,
+        "why": "Yes: its worst seed, 0.9500, beat the other configurations' best."
+      },
+      {
+        "text": "A sum of a million numbers changed with the number of threads",
+        "correct": true,
+        "why": "Yes: four threads gave different last digits from one or two."
+      },
+      {
+        "text": "A run with uncommitted edits was counted in the report",
+        "correct": false,
+        "why": "No: `left out: 1 run(s) from uncommitted code`."
+      }
+    ]
+  },
+  {
+    "id": "ex-ddxcdcvs",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You want to know whether adding dropout helps this network. Which plan follows the lesson?",
+    "hint": "Seeds, commit, validation, test.",
+    "choices": [
+      {
+        "text": "Run each version once on seed 0 and keep the higher",
+        "correct": false,
+        "why": "That compares one seed; the 64-unit layer looked better that way and was not."
+      },
+      {
+        "text": "Commit, run both on the same five seeds, compare on validation",
+        "correct": true,
+        "why": "Right, and only then read the test set, once, for the one you chose."
+      },
+      {
+        "text": "Edit `exp.py`, run five seeds without committing, then commit the winner",
+        "correct": false,
+        "why": "Those runs are dirty: the record cannot say which code produced them."
+      },
+      {
+        "text": "Compare both on the test set, which is the honest measure",
+        "correct": false,
+        "why": "Test is for reporting a choice already made; choosing on it overstates the result."
+      }
+    ]
+  }
+]

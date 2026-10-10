@@ -19,7 +19,7 @@ The layer does four things to each feature, which is one column of the batch:
 4. during training, it keeps running averages of the mean and variance for later.
 
 **Step 3 gives back what step 2 took.** A column forced to mean 0 and variance 1 has lost options:
-a ReLU after it would cut half of every column, always. With `gamma` and `beta` the network can learn
+a ReLU after it would cut about half of every column, always. With `gamma` and `beta` the network can learn
 any mean and spread for each unit, and the spread is now a parameter the network chose rather than
 an accident of the weights before it. Step 4 exists because a prediction made after training may
 arrive alone, with no batch to measure. Save as `~/dl/batchnorm.py`:
@@ -99,7 +99,8 @@ nudging by 1e-5 in float64 can measure.
 which is where the original paper put it. In that place the `Linear` layer's bias does nothing.
 Subtracting the batch mean removes any constant added just before, and `beta` does the bias's job
 after it. tinynet's `Linear` always has a bias, and here it costs 64 numbers that never move the
-result. PyTorch lets you switch it off, which lesson 9 shows.
+result. PyTorch's `nn.Linear` takes
+`bias=False` for exactly this case.
 
 One property explains most of what the layer does for training. **Multiply a unit's weights by any
 positive number and its sums, their mean and their standard deviation all grow by that number, so

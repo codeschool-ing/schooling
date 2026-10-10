@@ -38,7 +38,13 @@ part for you**, and the way to trust it is to give it the same network and compa
 ```
 
 ```
-PENDING autograd
+ana@vm:~/dl$ python autograd.py
+out 1.75  L 0.5625
+recorded: PowBackward0 <- SubBackward0
+dW2 [1.5, 0.0]  db2 1.5
+dW1 [[2.25, 0.0], [4.5, 0.0]]  db1 [2.25, 0.0]
+again, not zeroed: dW2 [3.0, 0.0]
+under no_grad: False None
 ```
 
 **The numbers are lesson 3's.** The output is 1.75 against a target of 1, the loss 0.5625, the

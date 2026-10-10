@@ -30,7 +30,17 @@ activations. Reading them back therefore takes the code that builds the network 
 ```
 
 ```
-PENDING load
+ana@vm:~/dl$ wc -c mlp.pt
+11829 mlp.pt
+ana@vm:~/dl$ python load.py
+0.weight  (32, 64)
+0.bias    (32,)
+2.weight  (10, 32)
+2.bias    (10,)
+fresh:   val loss 2.3180  val acc 0.097
+loaded:  val loss 0.1461  val acc 0.950
+Error(s) in loading state_dict for Sequential:
+size mismatch for 0.weight: copying a param with shape torch.Size([32, 64]) from checkpoint, the shape in current model is torch.Size([64, 64]).
 ```
 
 The file is 11,829 bytes, the 2,410 numbers at four bytes each plus the names and the format's own
@@ -46,7 +56,7 @@ half of it. That strictness is why the state dict, and not the whole model, is t
 ## Why not save the whole model
 
 `torch.save(model)` also works, and it stores the model by pickling it, which records a reference to
-the class by its module and name, `mlp` and `make_mlp`'s `Sequential` here, and not the class's code.
+the class by its module and name, and not the class's code.
 A rename or a move of that code breaks every file saved that way. Loading a pickle also runs code
 chosen by whoever wrote the file, which is why `torch.load` now defaults to `weights_only=True` and
 accepts only tensors and plain containers, a state dict among them.

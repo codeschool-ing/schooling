@@ -108,6 +108,7 @@ não é uma coisa sensata de medir**, e modelos de sequência são esse caso por
 - a mesma camada normaliza o vetor de cada palavra do mesmo jeito no treino e no uso, então não há
   modo para esquecer.
 
-O bloco transformer da aula 15 põe um layer norm antes da atenção e antes da parte feed-forward.
+O bloco transformer da aula 15 tem um layer norm junto de cada uma das suas duas partes, a
+atenção e a rede feed-forward.
 Muitos modelos de linguagem recentes usam uma variante chamada RMSNorm, que não subtrai a média e
 divide só pela raiz da média dos quadrados.

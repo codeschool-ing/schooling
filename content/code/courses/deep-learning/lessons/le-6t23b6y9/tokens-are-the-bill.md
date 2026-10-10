@@ -4,8 +4,8 @@ version: 1
 ---
 
 A model is limited and charged by tokens, never by words or characters. **Its context, the text it
-can read at once, is a number of tokens; its time per step grows with the number of tokens; and a
-provider that sells access to one prices it per token.** So the question that matters about a
+can read at once, is a number of tokens.** Its time per step grows with the number of tokens, and a
+provider that sells access to one prices it per token. So the question that matters about a
 tokenizer is how many tokens your text becomes, and the answer depends on what the tokenizer was
 trained on.
 
@@ -59,13 +59,13 @@ still wins, with no sentence to have memorised**, because the pieces it breaks i
 The last two lines turn tokens into consequences with two invented numbers, and the program says
 they are invented. With a context of 512 tokens, the model reads 37 of these English sentences at
 once, and only 17 of the Portuguese ones. At a price of 2.00 per million tokens, a million English
-sentences cost 27.33 and a million Portuguese ones 57.33. The numbers are made up, the ratio is not:
-**whatever the price and whatever the context, both scale with the token count**, so a language the
+sentences cost 27.33 and a million Portuguese ones 57.33. The numbers are made up, the ratio is not.
+**Whatever the price and whatever the context, both scale with the token count.** A language the
 tokenizer handles badly is read in smaller pieces and billed more for the same meaning.
 
 The tokenizers of real language models are trained on far more text and in many languages, so their
 gap between English and Portuguese is much smaller than this one. It is rarely zero, and this lesson
 did not measure one, because the lab cannot download them. The way to know for your own text is the
 one used here: encode a sample and count. Lesson 15's attention compares every token with every
-other, so its cost grows with the square of the count, and a text twice as long in tokens is about
-four times the work in that part of the model.
+other, so its cost grows with the square of the count. A text twice as long in tokens is about four
+times the work in that part of the model.

@@ -1,0 +1,407 @@
+{
+  "ex-8gk4rzzv": {
+    "prompt": "O `exp.run` chama `torch.manual_seed(seed)` logo antes de construir a rede. O que essa linha fixa?",
+    "hint": "Veja o que é sorteado do gerador do PyTorch logo depois dela.",
+    "choices": [
+      {
+        "text": "Quais imagens vão para o conjunto de treino",
+        "why": "A divisão vem de `digits.load(seed=0)`, uma semente separada que esta aula nunca muda."
+      },
+      {
+        "text": "Os pesos iniciais",
+        "why": "Certo. O `build` os sorteia do gerador que a semente acabou de reiniciar."
+      },
+      {
+        "text": "A taxa de aprendizado de onde o otimizador parte",
+        "why": "A taxa é um ajuste da config, nunca sorteada."
+      },
+      {
+        "text": "Se a execução dá a mesma acurácia em qualquer computador",
+        "why": "Uma semente repete uma execução na mesma máquina e bibliotecas; entre máquinas a aritmética pode diferir."
+      }
+    ]
+  },
+  "ex-36c3hm8f": {
+    "prompt": "O `seeds.py` treinou a semente 0 duas vezes e imprimiu `True` para todos os pesos iguais. O que isso mostra?",
+    "hint": "`torch.equal` compara até o último bit.",
+    "choices": [
+      {
+        "text": "Que a semente 0 é a melhor semente para esta configuração",
+        "why": "A semente 0 foi um sorteio entre muitos; a seção seguinte mostra outras se saindo melhor."
+      },
+      {
+        "text": "Que a rede parou de aprender depois de dez épocas",
+        "why": "Duas execuções iguais não dizem nada sobre se alguma continuava melhorando."
+      },
+      {
+        "text": "Que toda escolha aleatória do treino veio da semente",
+        "why": "Certo. Se algo tivesse ficado sem semente, algum peso teria diferido."
+      },
+      {
+        "text": "Que a acurácia, 0,9167, é a acurácia da configuração",
+        "why": "É a acurácia de uma semente. A da configuração é uma faixa."
+      }
+    ]
+  },
+  "ex-54g4c16p": {
+    "prompt": "O script de treino de um colega chama `torch.manual_seed(0)` no início, mas embaralha os lotes com `random.shuffle`, da biblioteca do próprio Python. Rodado duas vezes, dá duas acurácias diferentes. Por quê?",
+    "hint": "Quantos geradores existem nesse programa?",
+    "choices": [
+      {
+        "text": "O `random` do Python tem o próprio gerador, que nada fixou",
+        "why": "Certo. Cada gerador precisa da própria semente; aqui a ordem dos lotes continua sorteada de novo a cada execução."
+      },
+      {
+        "text": "O `manual_seed` só funciona numa placa de vídeo",
+        "why": "Ele fixou os pesos no processador, no `seeds.py`."
+      },
+      {
+        "text": "A semente 0 é reservada e dá um início aleatório",
+        "why": "A semente 0 se repetiu até o último bit nesta aula."
+      },
+      {
+        "text": "Embaralhar não muda nada, então a diferença são as threads",
+        "why": "A ordem dos lotes é uma das três coisas sorteadas que a aula lista, e ela move o resultado."
+      }
+    ]
+  },
+  "ex-5mpj3ehf": {
+    "prompt": "O `spread.py` imprimiu 329 imagens certas na pior semente e 333 na melhor. Quantas imagens separam a melhor e a pior execução?",
+    "hint": "Subtraia.",
+    "unit": "imagens"
+  },
+  "ex-t0v1y53p": {
+    "prompt": "Por que a acurácia de validação nestes dígitos anda em degraus de cerca de 0,0028?",
+    "hint": "Conte o conjunto de validação.",
+    "choices": [
+      {
+        "text": "Porque o `float32` não consegue guardar valores mais finos",
+        "why": "O `float32` guarda diferenças muito menores; o degrau vem de contar imagens."
+      },
+      {
+        "text": "Uma imagem é 1/360 do conjunto",
+        "why": "Certo. A acurácia é uma contagem de imagens certas dividida por 360, então anda uma imagem por vez."
+      },
+      {
+        "text": "A taxa de aprendizado define o tamanho de toda mudança",
+        "why": "A taxa move pesos, não a granularidade de uma contagem."
+      },
+      {
+        "text": "O `loop.evaluate` arredonda para três casas",
+        "why": "Ele devolve o número inteiro; só a impressão arredonda."
+      }
+    ]
+  },
+  "ex-m9jx9h23": {
+    "prompt": "Uma equipe relata que uma configuração nova chegou a 0,94 de acurácia de validação, numa execução, contra 0,92 da antiga, também numa execução. Qual a primeira coisa a perguntar?",
+    "hint": "O que mais difere entre duas execuções únicas?",
+    "choices": [
+      {
+        "text": "Se o 0,94 foi calculado com `float64`",
+        "why": "A precisão não move a acurácia em dois pontos."
+      },
+      {
+        "text": "Qual das duas rodou com mais threads",
+        "why": "Threads mudam últimos dígitos; a pergunta maior é a semente."
+      },
+      {
+        "text": "Se o conjunto de teste concorda",
+        "why": "Ler o teste para decidir entre as duas gastaria o teste numa escolha."
+      },
+      {
+        "text": "Quanto cada configuração varia entre sementes",
+        "why": "Certo. Enquanto a dispersão não é conhecida, dois pontos podem ser duas sementes em vez de duas configurações."
+      }
+    ]
+  },
+  "ex-wdm9yqwf": {
+    "prompt": "Por que o `track.py` acrescenta uma linha JSON por execução em vez de manter um único array JSON?",
+    "hint": "O que acontece com o arquivo se uma execução cai durante a escrita?",
+    "choices": [
+      {
+        "text": "Arrays JSON não conseguem guardar dicionários",
+        "why": "Conseguem; o problema é ter de reescrever o arquivo inteiro."
+      },
+      {
+        "text": "Acrescentar nunca reescreve execuções anteriores, então uma queda não as perde",
+        "why": "Certo. Um array tem de ser lido e reescrito inteiro a cada execução."
+      },
+      {
+        "text": "Deixa o arquivo menor",
+        "why": "O tamanho é quase o mesmo; o que muda é como ele é escrito."
+      },
+      {
+        "text": "O PyTorch só sabe ler JSON Lines",
+        "why": "O PyTorch nunca lê o `runs.jsonl`; o `report.py` o lê com o módulo `json`."
+      }
+    ]
+  },
+  "ex-j3rp911s": {
+    "prompt": "Um registro diz `\"commit\": \"…\", \"dirty\": true`. O que isso diz sobre o código que produziu o número?",
+    "hint": "O que o `git status --porcelain` relata?",
+    "choices": [
+      {
+        "text": "É exatamente o commit citado",
+        "why": "É isso que `false` diria."
+      },
+      {
+        "text": "O commit falhou e a execução é inválida",
+        "why": "O commit existe; os arquivos no disco diferiam dele quando a execução começou."
+      },
+      {
+        "text": "É o commit citado mais edições que ninguém guardou no git",
+        "why": "Certo, e essas edições não podem ser recuperadas a partir do registro, então a execução não pode ser repetida."
+      },
+      {
+        "text": "Os dados mudaram desde a última execução",
+        "why": "Os dados têm a própria impressão digital em `data`; o `dirty` é só sobre o código."
+      }
+    ]
+  },
+  "ex-rsmnxa9k": {
+    "prompt": "Ponha em ordem o que faz uma execução que outra pessoa consegue repetir.",
+    "hint": "O registro cita o commit, então o commit vem antes da execução.",
+    "items": [
+      "Mudar o código",
+      "Fazer o commit da mudança",
+      "Rodar com uma semente, pela linha de comando",
+      "Acrescentar o registro e depois ler o relatório"
+    ]
+  },
+  "ex-nn72zwte": {
+    "prompt": "Duas execuções têm a mesma config, semente, commit e versões de bibliotecas, e acurácias diferentes. O `data.sha256` difere entre elas. O que mais provavelmente aconteceu?",
+    "hint": "Do que a impressão digital tira o hash?",
+    "choices": [
+      {
+        "text": "Um número diferente de threads",
+        "why": "As threads são registradas à parte e não mudam os bytes dos dados."
+      },
+      {
+        "text": "As imagens de treino não eram os mesmos bytes",
+        "why": "Certo. Outra semente de divisão, ou um conjunto de dados que mudou, muda o hash com o código intacto."
+      },
+      {
+        "text": "Alguém editou o `exp.py` sem fazer commit",
+        "why": "Isso apareceria como `dirty: true`, e deixaria em paz o hash dos dados."
+      },
+      {
+        "text": "A semente foi ignorada",
+        "why": "Uma semente ignorada muda pesos, não os bytes do conjunto de treino."
+      }
+    ]
+  },
+  "ex-2edpn6p6": {
+    "prompt": "Na semente 0, a camada de 64 unidades venceu a de 32, 0,9194 a 0,9167. O que cinco sementes disseram?",
+    "hint": "Compare as médias com os desvios padrão.",
+    "choices": [
+      {
+        "text": "A camada mais larga é melhor por cerca de um ponto",
+        "why": "As médias foram 0,9200 e 0,9211: ponto nenhum, e na outra direção."
+      },
+      {
+        "text": "Nenhuma diferença mensurável",
+        "why": "Certo. As médias diferem por menos de meia imagem, bem dentro da dispersão."
+      },
+      {
+        "text": "A camada mais larga é pior, então a estreita deve ficar pela acurácia",
+        "why": "Uma distância de 0,0011 contra uma dispersão perto de 0,006 não mostra diferença para lado nenhum."
+      },
+      {
+        "text": "A semente 0 é a semente justa para comparar",
+        "why": "Nenhuma semente é mais justa que outra; a semente 4 disse o contrário da semente 0."
+      }
+    ]
+  },
+  "ex-8xjm4qh9": {
+    "prompt": "Por que o `report.py` agrupa as execuções por configuração e commit, e não só por configuração?",
+    "hint": "O que mais pode mudar um resultado com as configurações intactas?",
+    "choices": [
+      {
+        "text": "O git se recusa a ler um arquivo com dois commits",
+        "why": "O `report.py` lê JSON e nunca chama o git."
+      },
+      {
+        "text": "Para que sementes não sejam contadas duas vezes",
+        "why": "Isso é feito usando a semente como chave dentro do grupo, um passo à parte."
+      },
+      {
+        "text": "As mesmas configurações sobre outro código são outro experimento",
+        "why": "Certo. Misturar commits faria a média de dois programas como se fossem um."
+      },
+      {
+        "text": "Execuções sujas não têm commit",
+        "why": "Elas têm um; ficam de fora por terem edições por cima dele."
+      }
+    ]
+  },
+  "ex-gf5w4cst": {
+    "prompt": "A configuração A marca 0,930, 0,925, 0,935, 0,928, 0,932 em cinco sementes, e B marca 0,931, 0,940, 0,926, 0,938, 0,929 nas mesmas sementes. O que se pode concluir?",
+    "hint": "Os intervalos se sobrepõem?",
+    "choices": [
+      {
+        "text": "B é melhor, porque a melhor execução dela é a mais alta de todas",
+        "why": "Uma execução alta é de novo a comparação de uma semente só, com outra semente."
+      },
+      {
+        "text": "Não o bastante: os intervalos se sobrepõem quase inteiros",
+        "why": "Certo. A pior de A, 0,925, e a pior de B, 0,926, ficam juntas; mais sementes são o próximo passo."
+      },
+      {
+        "text": "A é melhor, porque as execuções dela variam menos",
+        "why": "Uma dispersão menor não é uma acurácia maior."
+      },
+      {
+        "text": "B é melhor, então leia o teste para confirmar",
+        "why": "Usar o teste para decidir uma comparação o gasta numa escolha."
+      }
+    ]
+  },
+  "ex-fft7th58": {
+    "prompt": "A soma em ponto flutuante arredonda a cada passo, então mudar a ___ de uma soma pode mudar o resultado.",
+    "hint": "O `order.py` somou os mesmos três números em dois agrupamentos.",
+    "blanks": [
+      {
+        "accept": [
+          "ordem",
+          "agrupamento"
+        ]
+      }
+    ]
+  },
+  "ex-9zzhfv2c": {
+    "prompt": "No `threads.py`, uma thread e quatro deram pesos idênticos. Por que o `track.py` registra o número de threads mesmo assim?",
+    "hint": "O que o `order.py` mostrou para um milhão de números?",
+    "choices": [
+      {
+        "text": "Porque mais threads dão uma acurácia maior",
+        "why": "Threads mudam velocidade e arredondamento, não o que a rede consegue aprender."
+      },
+      {
+        "text": "Porque o PyTorch ignora a semente com quatro threads",
+        "why": "A semente valeu com quatro threads, como mostram os pesos idênticos."
+      },
+      {
+        "text": "As somas de uma rede maior são divididas por thread, e o arredondamento delas difere",
+        "why": "Certo. A soma de um milhão de números mudou com quatro threads, e ao longo de muitos passos isso cresce."
+      },
+      {
+        "text": "Porque uma execução numa thread não pode ser repetida",
+        "why": "Uma thread é o caso mais fácil de repetir."
+      }
+    ]
+  },
+  "ex-9rt7jxc9": {
+    "prompt": "Uma execução numa placa de vídeo com semente fixa dá 0,9611, e 0,9583 na tentativa seguinte, na mesma máquina. Que mudança mira exatamente isso?",
+    "hint": "Mesma máquina, mesma semente: o que ainda está livre para variar?",
+    "choices": [
+      {
+        "text": "Uma semente diferente para cada execução",
+        "why": "Isso acrescenta variação; não remove a que já existe."
+      },
+      {
+        "text": "Registrar as versões das bibliotecas",
+        "why": "Vale fazer, mas as versões eram as mesmas nas duas tentativas."
+      },
+      {
+        "text": "Mais épocas, para as duas execuções convergirem ao mesmo ponto",
+        "why": "Treinar mais não leva dois caminhos diferentes a um ponto só."
+      },
+      {
+        "text": "`torch.use_deterministic_algorithms(True)` e os ajustes ao lado dele",
+        "why": "Certo. Numa placa algumas operações somam na ordem em que o hardware termina, e esses ajustes proíbem isso, com custo em velocidade."
+      }
+    ]
+  },
+  "ex-t7h7x7g5": {
+    "prompt": "Ligue cada ferramenta ao que a aula diz dela.",
+    "hint": "Uma é um arquivo, uma é hospedada, uma é de código aberto, uma é um visualizador.",
+    "pairs": [
+      {
+        "left": "runs.jsonl",
+        "right": "uma linha por execução, basta para uma pessoa e uma máquina"
+      },
+      {
+        "left": "MLflow",
+        "right": "código aberto, na sua máquina ou num servidor da equipe"
+      },
+      {
+        "left": "Weights & Biases",
+        "right": "um serviço hospedado que guarda as execuções nos servidores dele"
+      },
+      {
+        "left": "TensorBoard",
+        "right": "desenha curvas, e deixa a config e a versão do código por sua conta"
+      }
+    ]
+  },
+  "ex-a40m6wcg": {
+    "prompt": "Qual destas coisas a troca do `runs.jsonl` por uma ferramenta de rastreamento dá, segundo a aula?",
+    "hint": "As ferramentas vendem o que cresce em volta do registro.",
+    "choices": [
+      {
+        "text": "Execuções que não precisam mais de semente",
+        "why": "Toda ferramenta registra a semente que você dá; nenhuma tira a necessidade dela."
+      },
+      {
+        "text": "Gráficos de muitas execuções, compartilhados entre pessoas e máquinas",
+        "why": "Certo. O registro é a mesma ideia; as ferramentas acrescentam visualização, compartilhamento e armazenamento."
+      },
+      {
+        "text": "Uma decisão sobre qual configuração é melhor",
+        "why": "A comparação contra a dispersão continua sendo sua."
+      },
+      {
+        "text": "Determinismo numa placa de vídeo",
+        "why": "Isso vem dos ajustes do PyTorch, não do rastreador."
+      }
+    ]
+  },
+  "ex-2cpybzd1": {
+    "prompt": "Quais destas coisas as execuções desta aula mostraram? Marque todas as que se aplicam.",
+    "hint": "Confira cada uma contra uma transcrição.",
+    "choices": [
+      {
+        "text": "A semente 0 rodada duas vezes deu pesos idênticos",
+        "why": "Sim: `every weight equal to the first run's: True`."
+      },
+      {
+        "text": "A camada de 64 unidades venceu a de 32 em todas as sementes",
+        "why": "Não: ganhou na semente 0 e perdeu na semente 4."
+      },
+      {
+        "text": "Uma taxa de aprendizado de 0,05 venceu a de 0,01 em todas as sementes",
+        "why": "Sim: a pior semente dela, 0,9500, superou a melhor das outras configurações."
+      },
+      {
+        "text": "Uma soma de um milhão de números mudou com o número de threads",
+        "why": "Sim: quatro threads deram últimos dígitos diferentes dos de uma ou duas."
+      },
+      {
+        "text": "Uma execução com edições sem commit entrou no relatório",
+        "why": "Não: `left out: 1 run(s) from uncommitted code`."
+      }
+    ]
+  },
+  "ex-ddxcdcvs": {
+    "prompt": "Você quer saber se acrescentar dropout ajuda esta rede. Qual plano segue a aula?",
+    "hint": "Sementes, commit, validação, teste.",
+    "choices": [
+      {
+        "text": "Rodar cada versão uma vez na semente 0 e ficar com a maior",
+        "why": "Isso compara uma semente; a camada de 64 unidades pareceu melhor assim e não era."
+      },
+      {
+        "text": "Commit, rodar as duas nas mesmas cinco sementes, comparar na validação",
+        "why": "Certo, e só então ler o teste, uma vez, para a escolhida."
+      },
+      {
+        "text": "Editar o `exp.py`, rodar cinco sementes sem commit, e depois fazer o commit da vencedora",
+        "why": "Essas execuções são sujas: o registro não consegue dizer que código as produziu."
+      },
+      {
+        "text": "Comparar as duas no teste, que é a medida honesta",
+        "why": "O teste é para relatar uma escolha já feita; escolher nele exagera o resultado."
+      }
+    ]
+  }
+}

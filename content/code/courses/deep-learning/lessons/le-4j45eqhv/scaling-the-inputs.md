@@ -6,9 +6,9 @@ version: 1
 A common belief is that the scale of the inputs is a detail the network absorbs: if the pixels are
 16 times larger, the first layer learns weights 16 times smaller and nothing else changes. **The
 weights would get there in the end, but the scale decides how training gets there, and it can stop
-it from arriving at all.** The gradient of a first-layer weight is its input times the gradient
-arriving from above, so inputs 16 times larger make every step on those weights 16 times larger, and
-each of those steps moves the layer's sums 16 times as far again.
+it from arriving at all.** The gradient of a first-layer weight is its input times the gradient arriving from above,
+so inputs 16 times larger make every step on those weights 16 times larger. Each of those steps then
+moves the layer's sums 16 times as far again.
 
 `digits.py` from lesson 1 divides the ink levels by 16. The program below undoes that and also tries
 a third version, standardised, in which every pixel has mean 0 and standard deviation 1 over the
@@ -60,7 +60,7 @@ guessed evenly among ten classes would score ln 10, about 2.30, so this one star
 wrong. tinynet's `Linear` draws its starting weights for inputs of about unit size, and inputs of 16
 break that assumption at once.
 
-The table needs reading with care. At rate 0.01 the raw pixels reach 0.947 against 0.897 for the
+At rate 0.01 the raw pixels reach 0.947 against 0.897 for the
 pixels between 0 and 1, which looks like a win for doing nothing. It is the larger steps: at a small
 rate, the run whose steps are 16 times bigger gets further in 20 epochs. At 0.3 and 1.0 the raw run
 ends at 0.089 and 0.111, about one right answer in ten, while the scaled one climbs to 0.969 and

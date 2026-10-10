@@ -5,10 +5,9 @@ version: 1
 
 Uma crença comum é que a escala das entradas é um detalhe que a rede absorve: se os pixels forem 16
 vezes maiores, a primeira camada aprende pesos 16 vezes menores e nada mais muda. **Os pesos chegariam
-lá no fim, mas a escala decide como o treino chega lá, e pode impedir que ele chegue.** O gradiente de
-um peso da primeira camada é a entrada vezes o gradiente que vem de cima, então entradas 16 vezes
-maiores tornam cada passo nesses pesos 16 vezes maior, e cada um desses passos move as somas da camada
-16 vezes mais longe ainda.
+lá no fim, mas a escala decide como o treino chega lá, e pode impedir que ele chegue.** O gradiente de um peso da primeira camada é a entrada vezes o gradiente que vem de cima,
+então entradas 16 vezes maiores tornam cada passo nesses pesos 16 vezes maior. Cada um desses passos,
+por sua vez, move as somas da camada 16 vezes mais longe.
 
 O `digits.py` da aula 1 divide os níveis de tinta por 16. O programa abaixo desfaz isso e testa
 também uma terceira versão, padronizada, em que cada pixel tem média 0 e desvio-padrão 1 no conjunto
@@ -60,7 +59,7 @@ chutasse por igual entre dez classes marcaria ln 10, cerca de 2,30, então esta 
 errada. O `Linear` do tinynet sorteia os pesos iniciais pensando em entradas de tamanho perto de 1, e
 entradas de 16 quebram essa suposição de cara.
 
-A tabela pede leitura cuidadosa. Na taxa 0,01 os pixels brutos chegam a 0,947 contra 0,897 dos pixels
+Na taxa 0,01 os pixels brutos chegam a 0,947 contra 0,897 dos pixels
 entre 0 e 1, o que parece uma vitória de quem não fez nada. São os passos maiores: numa taxa pequena,
 a execução com passos 16 vezes maiores anda mais em 20 épocas. Em 0,3 e 1,0 a execução bruta termina
 em 0,089 e 0,111, mais ou menos uma resposta certa em dez, enquanto a escalada sobe até 0,969 e 0,978.

@@ -18,7 +18,7 @@ A camada faz quatro coisas com cada atributo, que é uma coluna do lote:
 4. durante o treino, guarda médias acumuladas da média e da variância para depois.
 
 **O passo 3 devolve o que o passo 2 tirou.** Uma coluna forçada a média 0 e variância 1 perdeu
-opções: um ReLU depois dela cortaria metade de toda coluna, sempre. Com `gamma` e `beta` a rede pode
+opções: um ReLU depois dela cortaria cerca de metade de toda coluna, sempre. Com `gamma` e `beta` a rede pode
 aprender qualquer média e dispersão para cada unidade, e a dispersão passa a ser um parâmetro que a
 rede escolheu em vez de um acaso dos pesos anteriores. O passo 4 existe porque uma previsão feita
 depois do treino pode chegar sozinha, sem lote para medir. Salve como `~/dl/batchnorm.py`:
@@ -97,8 +97,8 @@ float64 conseguem medir.
 **A camada fica entre um `Linear` e a sua ativação**: `Linear`, depois `BatchNorm`, depois `ReLU`,
 que é onde o artigo original a pôs. Nesse lugar o viés do `Linear` não faz nada. Subtrair a média do
 lote remove qualquer constante somada logo antes, e o `beta` faz o trabalho do viés depois dela. O
-`Linear` do tinynet sempre tem viés, e aqui ele custa 64 números que nunca mudam o resultado. O PyTorch
-permite desligá-lo, o que a aula 9 mostra.
+`Linear` do tinynet sempre tem viés, e aqui ele custa 64 números que nunca mudam o resultado. O `nn.Linear` do
+PyTorch aceita `bias=False` exatamente para esse caso.
 
 Uma propriedade explica quase tudo o que a camada faz pelo treino. **Multiplique os pesos de uma
 unidade por qualquer número positivo e as somas, a média delas e o desvio-padrão delas crescem todos

@@ -108,6 +108,6 @@ not a sensible thing to measure**, and sequence models are that case for three r
 - the same layer normalises each word's vector the same way in training and in use, so there is no
   mode to forget.
 
-The transformer block of lesson 15 puts a layer norm before its attention and before its feed-forward
-part. Many recent language models use a variant called RMSNorm, which skips subtracting the mean and
+The transformer block of lesson 15 has a layer norm beside each of its two parts, the attention
+and the feed-forward network. Many recent language models use a variant called RMSNorm, which skips subtracting the mean and
 divides by the root of the mean square alone.

@@ -4,8 +4,8 @@ version: 1
 ---
 
 Nobody tells a model that Monday and Friday are both days. **It is given one task, to guess a missing
-token from the tokens around it, and the table of embeddings is adjusted by backpropagation like any
-other weight.** Tokens that keep turning up in the same company end up with similar rows, because
+token from the tokens around it.** The table of embeddings is adjusted by backpropagation like any
+other weight. Tokens that keep turning up in the same company end up with similar rows, because
 similar rows are the cheapest way to make the same guesses about them. That idea, that a word is
 known by the words around it, is older than neural networks; word2vec made it famous in 2013.
 

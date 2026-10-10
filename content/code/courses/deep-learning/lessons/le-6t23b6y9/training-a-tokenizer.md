@@ -49,8 +49,8 @@ step up shortens the text: 1,886 tokens at 300, 1,002 at 500, 758 at 700.
 ```
 
 **The first merges buy the most.** Going from 256 to 300 entries removes 1,375 tokens; going from
-600 to 700 removes 100. At 800 and 1,000 the trainer stops at 700 entries, because the pre-tokenizer
-cut the text at spaces and punctuation before any merging, a merge never crosses that cut, and by 700
+600 to 700 removes 100. At 800 and 1,000 the trainer stops at 700 entries. The pre-tokenizer cut
+the text at spaces and punctuation before any merging, a merge never crosses that cut, and by 700
 every word of the corpus is already a single token. The 758 left are the words and punctuation marks
 themselves.
 

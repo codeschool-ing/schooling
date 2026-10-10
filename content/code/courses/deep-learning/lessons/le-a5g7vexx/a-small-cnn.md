@@ -41,10 +41,12 @@ Sequential(
 )
 ```
 
-To compare it fairly with lesson 9's dense network, train both in the same way: the same split, the
-same seed, Adam at 0.001, batches of 32, 30 epochs. The program needs the `digits.py` from lesson 1
-and the `tdigits.py` and `loop.py` from lesson 9 beside it. `tdigits.load(images=True)` hands over
-the same images as 1 by 8 by 8 grids instead of rows of 64. Save as `~/dl/compare.py`:
+A comparison with lesson 9's dense network is only worth something if both are trained the same way,
+and if the size of the network is not doing the work. So the program below trains three: lesson 9's,
+a dense one widened to about as many parameters as the convolutional one, and `cnn.py`. It needs the
+`digits.py` from lesson 1 and the `tdigits.py` and `loop.py` from lesson 9 beside it.
+`tdigits.load(images=True)` hands over the same images as 1 by 8 by 8 grids instead of rows of 64.
+Save as `~/dl/compare.py`:
 
 ```schooling-example
 {
@@ -52,15 +54,19 @@ the same images as 1 by 8 by 8 grids instead of rows of 64. Save as `~/dl/compar
   "file": "compare.py",
   "parts": [
     {
-      "code": "\"\"\"compare: lesson 9's dense network against cnn.py, trained the same way on the same digits.\"\"\"\nimport torch\nimport torch.nn as nn\n\nimport cnn\nimport loop\nimport tdigits\n\n\ndef count(model):\n    return sum(p.numel() for p in model.parameters())"
+      "code": "\"\"\"compare: lesson 9's dense network, a wider one, and cnn.py, trained the same way on the same digits.\"\"\"\nimport torch\nimport torch.nn as nn\n\nimport cnn\nimport loop\nimport tdigits"
     },
     {
-      "code": "torch.manual_seed(0)\nmlp = nn.Sequential(nn.Linear(64, 64), nn.ReLU(), nn.Linear(64, 10))\ntrain, val, _ = tdigits.load()\nprint(f\"dense: {count(mlp)} parameters\")\nloop.fit(mlp, torch.optim.Adam(mlp.parameters(), lr=1e-3), train, val, epochs=30, every=10)",
-      "note": "Lesson 9's network as it was: 64 pixels in a row, 64 hidden units, 10 outputs, Adam at 0.001."
+      "code": "def run(name, make, images):\n    torch.manual_seed(0)\n    model = make()\n    train, val, _ = tdigits.load(images=images)\n    print(f\"{name}: {sum(p.numel() for p in model.parameters())} parameters\")\n    loop.fit(model, torch.optim.Adam(model.parameters(), lr=1e-3), train, val, epochs=30, every=10)\n    return model",
+      "note": "One recipe for all three: the same seed before the weights are made, the same split, Adam at 0.001, batches of 32, 30 epochs. `images` says whether the digits arrive as rows of 64 or as 1 by 8 by 8 grids."
     },
     {
-      "code": "torch.manual_seed(0)\nnet = cnn.make_cnn()\ntrain, val, _ = tdigits.load(images=True)\nprint(f\"convolutional: {count(net)} parameters, {count(net[:4])} of them in the two convolutions\")\nloop.fit(net, torch.optim.Adam(net.parameters(), lr=1e-3), train, val, epochs=30, every=10)\ntorch.save(net.state_dict(), \"cnn.pt\")",
-      "note": "The same images as 1 by 8 by 8 grids, the same seed, optimiser, rate, batch size and epochs. `net[:4]` is the first four layers, the two convolutions and their ReLUs. The trained weights are saved for the last section."
+      "code": "run(\"dense, lesson 9\", lambda: nn.Sequential(nn.Linear(64, 64), nn.ReLU(), nn.Linear(64, 10)), False)\nrun(\"dense, 512 wide\", lambda: nn.Sequential(nn.Linear(64, 512), nn.ReLU(), nn.Linear(512, 10)), False)",
+      "note": "Lesson 9's network as it was, and the same shape with 512 hidden units instead of 64, which gives it about as many parameters as the convolutional network."
+    },
+    {
+      "code": "net = run(\"convolutional\", cnn.make_cnn, True)\nprint(sum(p.numel() for p in net[:4].parameters()), \"of them in the two convolutions\")\ntorch.save(net.state_dict(), \"cnn.pt\")",
+      "note": "`net[:4]` is the first four layers, the two convolutions and their ReLUs. The trained weights are saved for the last section."
     }
   ]
 }
@@ -78,18 +84,24 @@ epoch  20  train loss 0.0180  val loss 0.0757  val acc 0.978
 epoch  30  train loss 0.0070  val loss 0.0633  val acc 0.983
 ```
 
-**The convolutional network ends at 0.983 on the validation set, against 0.953 for the dense one**,
-and it was already at 0.953 by epoch 10. Its validation loss, 0.0633, is less than half the dense
-network's 0.1471.
+**Against lesson 9's network the convolutional one wins clearly**: 0.983 on the validation set
+against 0.953, and it was already at 0.953 by epoch 10. But it has 38,282 parameters to the dense
+network's 4,810, and that difference alone could explain the result.
 
-The parameter counts deserve a careful reading, because the convolutional network has 38,282 and the
-dense one 4,810, nearly eight times fewer. **Most of the difference is not in the convolutions.** The
-two convolutions hold 4,800 parameters, about the dense network's whole budget; the other 33,482 sit
-in the dense layers after `Flatten`, mostly in `Linear(512, 64)`. The gain came from where the
-parameters look, not from having more of them.
+**The wider dense network answers that, and it takes most of the gap away.** With 38,410 parameters, about
+the same budget, it reaches 0.978. On these digits most of the three points came from size, and what
+is left for the convolution is half a point, from one run each. Its validation loss is still the
+lowest of the three, 0.0633 against 0.0742, so the convolutional network is also the more confident
+when it is right; but a gap that small is within what another seed could move, and lesson 18 is
+about telling the two apart.
 
-Two cautions before reading more into it. **This is one seed for each network**, and a gap of three
-points between single runs can shrink or grow with another; lesson 18 asks whether a difference is
-larger than the spread between seeds. And the convolutional network's training loss fell to 0.0070,
-far below its validation loss: it has nearly memorised the 1,077 training images, which is lesson
-7's subject.
+The reason is the size of the image. **An 8 by 8 digit is 64 pixels, few enough for a dense layer to
+afford a weight from each of them to each unit**, and the shapes it has to learn have only a few
+places to sit. The section on channels showed where that stops: on a 224 by 224 photograph the dense
+layer costs 120,847,089,664 parameters and the convolution 448. Convolution earns its place as images
+grow, which is why the networks of lesson 12 are convolutional, and here it already does as well as a
+dense network of its size with only 4,800 parameters in the part that looks at the image.
+
+One more thing to notice in the transcript: the convolutional network's training loss fell to 0.0070,
+far below its validation loss. It has nearly memorised the 1,077 training images, which is lesson 7's
+subject.

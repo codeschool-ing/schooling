@@ -49,9 +49,9 @@ a Linear doing the same -> 120847089664
 
 **A primeira camada tem 160 parâmetros**: 16 filtros de 1 × 3 × 3 pesos, mais um viés cada. Uma camada
 densa que transformasse os mesmos 64 pixels nas mesmas 1.024 saídas precisaria de 66.560. **A segunda
-camada tem 4.640**, 32 × 16 × 9 + 32, contra 2.099.200 da densa. Numa fotografia, a diferença deixa de
-ser uma proporção e vira um muro: 448 para a convolução, e 120.847.089.664 para uma camada densa, um
-número que nenhuma máquina guardaria.
+camada tem 4.640**, 32 × 16 × 9 + 32, contra 2.099.200 da densa. Numa fotografia, a diferença cresce
+além de qualquer uso: 448 para a convolução, e 120.847.089.664 para uma camada densa, muito mais pesos
+do que a memória de uma máquina como esta conseguiria guardar.
 
 **A contagem não depende do tamanho da imagem.** Os mesmos 448 parâmetros rodam numa fotografia de
 qualquer tamanho, porque o filtro é o mesmo em toda posição. Isso é compartilhamento de pesos, e é toda

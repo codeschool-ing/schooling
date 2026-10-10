@@ -1,5 +1,5 @@
 ---
-title: Modules: layers that hold their own parameters
+title: Modules, the layers that keep their own parameters
 version: 1
 ---
 
@@ -48,7 +48,19 @@ Then look at it from the outside. Save as `~/dl/modules.py`:
 ```
 
 ```
-PENDING modules
+ana@vm:~/dl$ python modules.py
+Sequential(
+  (0): Linear(in_features=64, out_features=32, bias=True)
+  (1): ReLU()
+  (2): Linear(in_features=32, out_features=10, bias=True)
+)
+0.weight  (32, 64)   2048
+0.bias    (32,)        32
+2.weight  (10, 32)    320
+2.bias    (10,)        10
+parameters: 2410
+as a class: 2410
+output for 5 images: (5, 10)  by hand: True
 ```
 
 ## Counting
