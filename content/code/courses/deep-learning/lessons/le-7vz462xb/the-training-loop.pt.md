@@ -98,8 +98,7 @@ epoch  30  train loss 0.1205  val loss 0.1461  val acc 0.950
 
 **A acurácia de validação chega a 0.950 depois de 30 épocas**, e a perda de treino cai em toda
 linha, de 0.7931 na época 5 para 0.1205. É um SGD simples com taxa 0.1 numa rede de 2.410
-parâmetros, então o número é uma linha de base e não um teto: os otimizadores da aula 5 e uma camada
-oculta mais larga o mexeriam.
+parâmetros, então o número é uma linha de base para comparar, e não um teto.
 
 A execução também deixou `mlp.pt` em `~/dl`, o arquivo que a última seção lê. A aula 10 troca o
 fatiamento de `order` por um `DataLoader`, e a aula 11 treina uma rede convolucional com este mesmo

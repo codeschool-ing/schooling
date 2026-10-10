@@ -98,8 +98,7 @@ epoch  30  train loss 0.1205  val loss 0.1461  val acc 0.950
 
 **The validation accuracy reaches 0.950 after 30 epochs**, and the training loss falls on every line,
 from 0.7931 at epoch 5 to 0.1205. That is a plain SGD at a rate of 0.1 on a network of 2,410
-parameters, so the number is a baseline and not a ceiling: the optimisers of lesson 5 and a wider
-hidden layer would both move it.
+parameters, so the number is a baseline to compare against, not a ceiling.
 
 The run also left `mlp.pt` in `~/dl`, the file the last section reads. Lesson 10 replaces the
 slicing of `order` with a `DataLoader`, and lesson 11 trains a convolutional network with this same
