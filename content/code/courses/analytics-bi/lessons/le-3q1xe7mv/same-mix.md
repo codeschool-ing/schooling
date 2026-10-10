@@ -44,6 +44,6 @@ errors, as lesson 9 would compute it, and mobile's 0.24 points about one. So the
 fall is the mix; the website is no worse and probably a little better*, not *the website improved*.
 
 This is called **standardisation**, or a mix-adjusted rate, and it is the honest form of a comparison
-between two periods whose populations differ. It needs the groups to be chosen for a reason — device here,
-because the rates differ so much between them — and it needs the reader to be told which mix was held
+between two periods whose populations differ. It needs the groups to be chosen for a reason: device here,
+because the rates differ so much between them. And the reader needs to be told which mix was held
 still, because the two answers above differ by more than a point.

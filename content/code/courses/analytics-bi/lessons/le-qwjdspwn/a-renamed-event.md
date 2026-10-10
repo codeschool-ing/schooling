@@ -25,7 +25,7 @@ lantern-# GROUP BY p.step, p.event ORDER BY p.step;
 
 On desktop the funnel narrows the way it always has. On mobile, **not one session added anything to a
 cart**, and yet twelve reached checkout and eight bought. Read naively, the cart step converts 0% and
-the checkout step converts from nothing; read on a dashboard of conversion rates, mobile's
+the checkout step converts from nothing. On a dashboard of conversion rates, mobile's
 product-to-cart rate falls from its usual level to zero on the day of a release, and somebody spends a
 morning looking for the bug in the cart.
 

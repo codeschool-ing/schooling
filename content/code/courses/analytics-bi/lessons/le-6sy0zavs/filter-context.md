@@ -39,8 +39,8 @@ lantern-# ORDER BY c.region NULLS LAST;
 
 **That is all filter context is**: the `WHERE` comes from the slicer, the `GROUP BY` from the rows of
 the matrix, and the join from the relationships. The DAX measure says only `SUM`; the visual supplies
-the rest. The total is not the sum of the cells added up by the visual — it is the measure evaluated
-again with the region filter removed — which is why, for a measure that is not a plain sum, a total
+the rest. The total is not the visual adding up the cells. It is the measure evaluated
+again with the region filter removed, which is why, for a measure that is not a plain sum, a total
 can look as though it does not add up and still be right.
 
 The practical consequence: **a measure is written once and gives the right answer in every visual**,

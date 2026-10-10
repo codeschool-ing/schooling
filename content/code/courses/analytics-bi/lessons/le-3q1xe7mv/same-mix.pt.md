@@ -45,6 +45,6 @@ leitura segura é *a queda é a mistura; o site não piorou e provavelmente melh
 melhorou*.
 
 Isso se chama **padronização**, ou taxa ajustada pela mistura, e é a forma honesta de comparar dois
-períodos cujas populações diferem. Ela exige que os grupos sejam escolhidos por um motivo — aparelho aqui,
-porque as taxas diferem muito entre eles — e exige que o leitor saiba qual mistura foi segurada, porque as
+períodos cujas populações diferem. Ela exige que os grupos sejam escolhidos por um motivo: aparelho aqui,
+porque as taxas diferem muito entre eles. E o leitor precisa saber qual mistura foi segurada, porque as
 duas respostas acima diferem em mais de um ponto.

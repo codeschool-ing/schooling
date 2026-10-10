@@ -23,9 +23,9 @@ choices matter:
 
 ## Say what is filtered
 
-The reader should be able to tell, without opening anything, what the page is showing: the filters'
-current values visible at the top, the period in each card's title — *Net revenue, May 2026* rather
-than *Net revenue* — and a card that does not respond to a filter saying so in its title.
+The reader should be able to tell, without opening anything, what the page is showing. So the filters'
+current values are visible at the top, each card's title carries its period (*Net revenue, May 2026*
+rather than *Net revenue*), and a card that does not respond to a filter says so in its title.
 
 **And a filter must not silently drop rows.** A region filter built on `customers` excludes orders
 whose customer is not in the table — for Lantern's layer, the test account, on purpose. A filter on a

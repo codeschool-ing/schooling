@@ -25,7 +25,7 @@ lantern-# GROUP BY p.step, p.event ORDER BY p.step;
 
 No desktop o funil afunila como sempre. No celular, **nenhuma sessão pôs nada no carrinho**, e mesmo
 assim doze chegaram ao checkout e oito compraram. Lido ingenuamente, o carrinho converte 0% e o checkout
-converte a partir do nada; lido num painel de taxas de conversão, a taxa de produto para carrinho no
+converte a partir do nada. Num painel de taxas de conversão, a taxa de produto para carrinho no
 celular cai do nível de costume para zero no dia de uma versão nova, e alguém passa uma manhã procurando
 o bug no carrinho.
 

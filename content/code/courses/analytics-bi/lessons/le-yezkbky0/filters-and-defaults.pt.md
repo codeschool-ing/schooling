@@ -23,9 +23,9 @@ escolhas importam:
 
 ## Diga o que está filtrado
 
-O leitor deveria conseguir dizer, sem abrir nada, o que a página está mostrando: os valores atuais dos
-filtros visíveis no alto, o período no título de cada cartão — *Receita líquida, maio de 2026* em vez
-de *Receita líquida* — e um cartão que não responde a um filtro dizendo isso no título.
+O leitor deveria conseguir dizer, sem abrir nada, o que a página está mostrando. Então os valores atuais
+dos filtros ficam visíveis no alto, o título de cada cartão traz o período (*Receita líquida, maio de
+2026* em vez de *Receita líquida*), e um cartão que não responde a um filtro diz isso no título.
 
 **E um filtro não pode tirar linhas em silêncio.** Um filtro de região montado sobre `customers` exclui
 os pedidos cujo cliente não está na tabela — na camada da Lantern, a conta de teste, de propósito. Um

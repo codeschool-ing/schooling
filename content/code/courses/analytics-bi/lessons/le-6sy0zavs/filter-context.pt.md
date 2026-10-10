@@ -40,7 +40,7 @@ lantern-# ORDER BY c.region NULLS LAST;
 
 **Contexto de filtro é só isso**: o `WHERE` vem do filtro da página, o `GROUP BY` das linhas da
 matriz, e o join dos relacionamentos. A medida em DAX diz só `SUM`; o visual fornece o resto. O total
-não é a soma das células feita pelo visual — é a medida avaliada de novo sem o filtro de região —, e
+não é a soma das células feita pelo visual. É a medida avaliada de novo sem o filtro de região, e
 é por isso que, para uma medida que não é uma soma simples, um total pode parecer não fechar e mesmo
 assim estar certo.
 
