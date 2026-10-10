@@ -1827,6 +1827,56 @@ def l19_quarter(lang):
                 'O gráfico que sustenta a revisão: a mudança, o tamanho dela e quando aconteceu, numa imagem só.')
 
 
+# ------------------------------------------------------------------ lesson 20
+
+@figure('l20-two-hands', 20)
+def l20_two_hands(lang):
+    f = Fig('l20-two-hands', 680, 330, T(
+        lang,
+        'One number in the centre: pages per person last quarter, Rafa 54 and Caio 6. An arrow to '
+        'the left leads to the team\'s monthly review, which finds one person carrying half the '
+        'pager, leads to runbooks and a fairer rota, and loops back: the number stays honest. An '
+        'arrow to the right leads to a performance review, where people stop passing problems on and '
+        'stop writing pages down, and the number changes while the problem stays: the number is lost.',
+        'Um número no centro: acionamentos por pessoa no último trimestre, Rafa 54 e Caio 6. Uma '
+        'seta para a esquerda leva à revisão mensal do time, que acha uma pessoa carregando metade '
+        'do pager, leva a runbooks e a uma escala mais justa, e volta ao início: o número continua '
+        'honesto. Uma seta para a direita leva a uma avaliação de desempenho, onde as pessoas param '
+        'de repassar problemas e de registrar acionamentos, e o número muda enquanto o problema '
+        'fica: o número se perde.'))
+    f.rect(250, 40, 180, 64, stroke='--paper', fill='--panel', width=1.6)
+    f.lines(340, 60, T(lang, ['pages per person', 'Rafa 54 · Caio 6'], ['acionamentos por pessoa', 'Rafa 54 · Caio 6']),
+            size=11)
+    left = T(lang, [['in the team\'s', 'monthly review'], ['one person carries', 'half the pager'],
+                    ['runbooks, a call,', 'a fairer rota']],
+             [['na revisão mensal', 'do time'], ['uma pessoa carrega', 'metade do pager'],
+              ['runbooks, chamada,', 'escala mais justa']])
+    right = T(lang, [['in a performance', 'review'], ['people stop passing on', 'and writing down'],
+                     ['the number changes;', 'the problem stays']],
+              [['numa avaliação', 'de desempenho'], ['param de repassar', 'e de registrar'],
+               ['o número muda;', 'o problema fica']])
+    for col, x, stroke in ((left, 30, '--phosphor'), (right, 470, '--amber')):
+        for k, rows in enumerate(col):
+            y = 130 + k * 62
+            f.rect(x, y, 180, 46, stroke=stroke, fill='--panel')
+            f.lines(x + 90, y + 16, rows, size=10.5)
+            if k:
+                f.line(x + 90, y - 15, x + 90, y - 2, stroke=stroke, arrow=True)
+    f.path('M250 72 L120 72 L120 128', stroke='--phosphor', width=1.4, arrow=True)
+    f.path('M430 72 L560 72 L560 128', stroke='--amber', width=1.4, arrow=True)
+    f.path('M210 276 L240 276 L240 90 L248 90', stroke='--phosphor', width=1.2, dash='4 3', arrow=True)
+    f.text(30, 312, T(lang, 'the number stays honest', 'o número continua honesto'), size=10.5,
+           anchor='start', fill='--phosphor')
+    f.text(650, 312, T(lang, 'the number is lost', 'o número se perde'), size=10.5, anchor='end',
+           fill='--amber')
+    f.text(340, 20, T(lang, 'one number, two uses', 'um número, dois usos'), size=10, fill='--paper-dim')
+    return f, T(lang,
+                'The number does not decide its own use. On the left it gets more accurate every month; '
+                'on the right it stops meaning anything within a quarter.',
+                'O número não decide o próprio uso. À esquerda ele fica mais preciso a cada mês; à '
+                'direita deixa de significar qualquer coisa em um trimestre.')
+
+
 # @@LESSONS@@
 
 if __name__ == '__main__':
