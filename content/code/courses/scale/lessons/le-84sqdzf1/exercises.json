@@ -1,0 +1,799 @@
+[
+  {
+    "id": "ex-m3ggxegp",
+    "version": 1,
+    "section": "why-a-standard",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Before OpenTelemetry, what did moving to another monitoring vendor cost a team?",
+    "choices": [
+      {
+        "text": "Changing the load balancer in front of the services",
+        "correct": false,
+        "why": "The balancer has nothing to do with it."
+      },
+      {
+        "text": "Nothing, since every vendor already read the same format on the wire",
+        "correct": false,
+        "why": "There was no shared format; that is what OTLP became."
+      },
+      {
+        "text": "A new database for the traces",
+        "correct": false,
+        "why": "Storage was the vendor's; the code was the cost."
+      },
+      {
+        "text": "Rewriting the instrumentation in every service",
+        "correct": true,
+        "why": "Right. The recording code was tied to the product that stored it."
+      }
+    ]
+  },
+  {
+    "id": "ex-3mpjmje6",
+    "version": 1,
+    "section": "why-a-standard",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is not part of OpenTelemetry?",
+    "choices": [
+      {
+        "text": "Agreed attribute names such as http.route",
+        "correct": false,
+        "why": "Those are its semantic conventions."
+      },
+      {
+        "text": "A store for traces",
+        "correct": true,
+        "why": "Right. Storage and screens are Jaeger's, Tempo's or a vendor's."
+      },
+      {
+        "text": "A protocol for sending telemetry, OTLP",
+        "correct": false,
+        "why": "OTLP is its protocol."
+      },
+      {
+        "text": "A Collector that receives, processes and forwards telemetry",
+        "correct": false,
+        "why": "The Collector is one of its parts."
+      }
+    ]
+  },
+  {
+    "id": "ex-hqbddvmm",
+    "version": 1,
+    "section": "the-pieces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every service could send spans straight to Jaeger. Why put a Collector between them?",
+    "choices": [
+      {
+        "text": "The Collector draws the trace pages",
+        "correct": false,
+        "why": "Jaeger draws them."
+      },
+      {
+        "text": "Jaeger refuses OTLP sent by an SDK",
+        "correct": false,
+        "why": "Jaeger accepts OTLP; the lab just routes through the Collector."
+      },
+      {
+        "text": "Without it, every request would wait for its spans to be stored",
+        "correct": false,
+        "why": "The SDK already sends in the background, Collector or not."
+      },
+      {
+        "text": "It is the one place that changes when the back end changes",
+        "correct": true,
+        "why": "Right, and where sampling and attribute removal are set once."
+      }
+    ]
+  },
+  {
+    "id": "ex-rfckfnzd",
+    "version": 1,
+    "section": "the-pieces",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What turns a trace's spans into a tree?",
+    "choices": [
+      {
+        "text": "The parent id each span carries",
+        "correct": true,
+        "why": "Right. The root's is empty."
+      },
+      {
+        "text": "The order the spans reach Jaeger in",
+        "correct": false,
+        "why": "Spans arrive in any order; section 07 shows batches that mix them."
+      },
+      {
+        "text": "The service name in each span's resource",
+        "correct": false,
+        "why": "A service has many spans at many levels."
+      },
+      {
+        "text": "Their start times, sorted by Jaeger",
+        "correct": false,
+        "why": "Time orders siblings; it cannot say who is whose parent."
+      }
+    ]
+  },
+  {
+    "id": "ex-fe1zdf5t",
+    "version": 1,
+    "section": "the-pieces",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each span of a sale to its kind.",
+    "pairs": [
+      {
+        "left": "POST /events/{id}/tickets, in the box office",
+        "right": "SERVER"
+      },
+      {
+        "left": "charge, the call to payments",
+        "right": "CLIENT"
+      },
+      {
+        "left": "sign, work inside the box office",
+        "right": "INTERNAL"
+      }
+    ]
+  },
+  {
+    "id": "ex-6sng5knn",
+    "version": 1,
+    "section": "a-second-service",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does propagate.extract(self.headers) do in payments.py?",
+    "choices": [
+      {
+        "text": "Reads the caller's span from the header, so payments' span becomes its child",
+        "correct": true,
+        "why": "Right. That is how a trace crosses a process."
+      },
+      {
+        "text": "Copies the box office's spans into payments' memory",
+        "correct": false,
+        "why": "Only an identity travels, never the other side's spans."
+      },
+      {
+        "text": "Sends the finished span to the Collector",
+        "correct": false,
+        "why": "The batch processor does that."
+      },
+      {
+        "text": "Checks the request's card number",
+        "correct": false,
+        "why": "It reads tracing context, nothing of the sale."
+      }
+    ]
+  },
+  {
+    "id": "ex-pt9r9088",
+    "version": 1,
+    "section": "a-second-service",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does payments get into a container without a Dockerfile of its own?",
+    "choices": [
+      {
+        "text": "It uses the box office's image with another command",
+        "correct": true,
+        "why": "Right: compose.yaml sets command to python payments.py."
+      },
+      {
+        "text": "It is pulled as a ready image from a registry",
+        "correct": false,
+        "why": "It is built from the same Dockerfile."
+      },
+      {
+        "text": "It runs on the lab machine outside Docker",
+        "correct": false,
+        "why": "It is a service in compose.yaml."
+      },
+      {
+        "text": "Compose generates one",
+        "correct": false,
+        "why": "Compose builds what it is given."
+      }
+    ]
+  },
+  {
+    "id": "ex-rfdfby3w",
+    "version": 1,
+    "section": "tracing-the-box-office",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do the sale's spans nest under the request's span with no ids passed by hand?",
+    "choices": [
+      {
+        "text": "A span started inside another's with block becomes its child",
+        "correct": true,
+        "why": "Right. The open span is the current one."
+      },
+      {
+        "text": "Jaeger nests the spans that overlap in time when it draws the page",
+        "correct": false,
+        "why": "Jaeger uses parent ids, not overlaps."
+      },
+      {
+        "text": "They share the route as an attribute",
+        "correct": false,
+        "why": "Attributes describe; they do not link."
+      },
+      {
+        "text": "The tracer gives every span of one thread the same parent",
+        "correct": false,
+        "why": "Then sign and charge would be siblings of the request."
+      }
+    ]
+  },
+  {
+    "id": "ex-0awgv3qb",
+    "version": 1,
+    "section": "tracing-the-box-office",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the sale call payments before opening its transaction?",
+    "choices": [
+      {
+        "text": "OpenTelemetry refuses a CLIENT span inside a database span",
+        "correct": false,
+        "why": "Spans of any kind can nest."
+      },
+      {
+        "text": "So the row's lock is not held during a slow call",
+        "correct": true,
+        "why": "Right. Lesson 1 showed what a held lock costs at the hot row."
+      },
+      {
+        "text": "The transaction would otherwise be read from the replica",
+        "correct": false,
+        "why": "Writes go to the primary either way."
+      },
+      {
+        "text": "Payments needs the seat number first",
+        "correct": false,
+        "why": "It is sent no seat at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-h79j9a7y",
+    "version": 1,
+    "section": "tracing-the-box-office",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What would an instrumentation library for psycopg add?",
+    "choices": [
+      {
+        "text": "Spans inside PostgreSQL's own processes",
+        "correct": false,
+        "why": "It wraps the client calls in the service."
+      },
+      {
+        "text": "A replacement for the Collector inside the database",
+        "correct": false,
+        "why": "It runs in the service, beside the SDK."
+      },
+      {
+        "text": "Faster queries",
+        "correct": false,
+        "why": "It records; it does not tune."
+      },
+      {
+        "text": "A span per query, without code in each handler",
+        "correct": true,
+        "why": "Right. Same kind of span as the hand-made ones."
+      }
+    ]
+  },
+  {
+    "id": "ex-tknqtrpj",
+    "version": 1,
+    "section": "the-collector",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In collector.yaml, what does the batch processor do?",
+    "choices": [
+      {
+        "text": "Writes a log line per span",
+        "correct": false,
+        "why": "The debug exporter writes one per batch."
+      },
+      {
+        "text": "Keeps one trace in ten",
+        "correct": false,
+        "why": "That is sampling, section 10."
+      },
+      {
+        "text": "Assembles the spans of each trace into a tree before forwarding it to Jaeger",
+        "correct": false,
+        "why": "Jaeger builds the trees."
+      },
+      {
+        "text": "Groups spans for up to a second before passing them on",
+        "correct": true,
+        "why": "Right: fewer, bigger requests to Jaeger."
+      }
+    ]
+  },
+  {
+    "id": "ex-17jyyzfk",
+    "version": 1,
+    "section": "the-collector",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the path of a span in order, from the code that creates it to the page that shows it.",
+    "items": [
+      "the with block ends in app.py",
+      "the batch span processor collects it",
+      "the OTLP exporter sends the batch to port 4318",
+      "the Collector's batch processor groups it",
+      "Jaeger stores it"
+    ]
+  },
+  {
+    "id": "ex-9jj77jx6",
+    "version": 1,
+    "section": "the-collector",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The team moves from Jaeger to a hosted tracing service. What changes?",
+    "choices": [
+      {
+        "text": "The traceparent header's format",
+        "correct": false,
+        "why": "It is a W3C standard, vendor-free."
+      },
+      {
+        "text": "The exporters in collector.yaml",
+        "correct": true,
+        "why": "Right. The services keep sending OTLP to the Collector."
+      },
+      {
+        "text": "Every span's name, to match the vendor's conventions",
+        "correct": false,
+        "why": "Names follow OpenTelemetry's conventions, which vendors read."
+      },
+      {
+        "text": "telemetry.py, in both services, and their images",
+        "correct": false,
+        "why": "They send to the Collector, whose address stays."
+      }
+    ]
+  },
+  {
+    "id": "ex-5aw5j2qz",
+    "version": 1,
+    "section": "reading-a-trace",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the first sale, charge started at 0.1 ms and payments' span at 14.7 ms. What was that gap?",
+    "choices": [
+      {
+        "text": "The UPDATE waiting for the row's lock",
+        "correct": false,
+        "why": "The UPDATE came after the charge, at 54.4 ms."
+      },
+      {
+        "text": "Payments charging the card",
+        "correct": false,
+        "why": "That is payments' own 23.2 ms span."
+      },
+      {
+        "text": "Connecting and sending: work neither service's spans cover",
+        "correct": true,
+        "why": "Right. A minute later the same gap was 1.8 ms."
+      },
+      {
+        "text": "The Collector holding the span for its batch",
+        "correct": false,
+        "why": "Batching happens after spans end; it does not move their times."
+      }
+    ]
+  },
+  {
+    "id": "ex-jwqswh7p",
+    "version": 1,
+    "section": "reading-a-trace",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first sale took 68.6 ms and its charge 38.3 ms. What percentage of the sale was the charge? Round to a whole number.",
+    "hint": "38.3 ÷ 68.6 × 100.",
+    "value": 56,
+    "tolerance": 1,
+    "unit": "%"
+  },
+  {
+    "id": "ex-6qxbwwv6",
+    "version": 1,
+    "section": "reading-a-trace",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The Collector's debug lines showed batches of 6 and 3 spans, while the sale's tree had 6. Why don't they line up?",
+    "choices": [
+      {
+        "text": "Each batch is one trace, and two traces were in flight",
+        "correct": false,
+        "why": "Batches are not cut by trace."
+      },
+      {
+        "text": "The debug exporter counts services instead of spans",
+        "correct": false,
+        "why": "It prints both, as resource spans and spans."
+      },
+      {
+        "text": "The Collector dropped three spans of the sale",
+        "correct": false,
+        "why": "Jaeger had all six."
+      },
+      {
+        "text": "A batch holds whatever spans arrived in its second",
+        "correct": true,
+        "why": "Right. The Collector forwards spans; Jaeger assembles traces."
+      }
+    ]
+  },
+  {
+    "id": "ex-frjz44pg",
+    "version": 1,
+    "section": "reading-a-trace",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The read took 14.5 ms and its SELECT 13.9 ms. What does that tell you a histogram could not?",
+    "choices": [
+      {
+        "text": "That the query was nearly all of that one read",
+        "correct": true,
+        "why": "Right: where one request's time went."
+      },
+      {
+        "text": "That reads are fast at the 95th percentile",
+        "correct": false,
+        "why": "That is what the histogram said."
+      },
+      {
+        "text": "How many reads there were that minute",
+        "correct": false,
+        "why": "A counter says that."
+      },
+      {
+        "text": "That the replica lags behind the primary",
+        "correct": false,
+        "why": "A query's duration says nothing of lag."
+      }
+    ]
+  },
+  {
+    "id": "ex-2zpx6c67",
+    "version": 1,
+    "section": "propagation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Traces stop at one service and start again as new ones after it. What is the likeliest cause?",
+    "choices": [
+      {
+        "text": "Jaeger's storage is full",
+        "correct": false,
+        "why": "That loses spans, not the link between them."
+      },
+      {
+        "text": "The Collector's batch timeout is too short",
+        "correct": false,
+        "why": "Batching does not change ids."
+      },
+      {
+        "text": "The two services use different languages",
+        "correct": false,
+        "why": "The header is the same in every language."
+      },
+      {
+        "text": "Something in between drops the traceparent header",
+        "correct": true,
+        "why": "Right: a proxy, a queue or a hand-written client."
+      }
+    ]
+  },
+  {
+    "id": "ex-7tdsvta6",
+    "version": 1,
+    "section": "propagation",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In 00-5bd86167ca0ed7a647e37c1ebe501aac-b78031cb62daec0c-03, the field b78031cb62daec0c is the ___ id.",
+    "blanks": [
+      {
+        "accept": [
+          "parent",
+          "parent span"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-hzsdnnyn",
+    "version": 1,
+    "section": "propagation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A call arrives at payments with flags 00, the sampled bit off. What does payments do with its span?",
+    "choices": [
+      {
+        "text": "It records it, because payments makes its own decision with its own ratio",
+        "correct": false,
+        "why": "Parent-based samplers follow the parent's decision."
+      },
+      {
+        "text": "It refuses the request",
+        "correct": false,
+        "why": "Sampling never affects the answer."
+      },
+      {
+        "text": "It records it and starts a new trace",
+        "correct": false,
+        "why": "It continues the caller's trace id."
+      },
+      {
+        "text": "It does not record it, following the caller's decision",
+        "correct": true,
+        "why": "Right, under the parent-based sampler. A trace is kept or dropped whole."
+      }
+    ]
+  },
+  {
+    "id": "ex-axqn0nz0",
+    "version": 1,
+    "section": "propagation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A client sent its own traceparent to the box office. Whose trace id did Jaeger file the sale under?",
+    "choices": [
+      {
+        "text": "The client's, 0af7651916cd43dd8448eb211c80319c",
+        "correct": true,
+        "why": "Right. The box office continued the trace it was given."
+      },
+      {
+        "text": "The one nginx adds to every request it forwards",
+        "correct": false,
+        "why": "nginx is not instrumented here and adds nothing."
+      },
+      {
+        "text": "A new one, generated by the box office",
+        "correct": false,
+        "why": "It continues traces it receives."
+      },
+      {
+        "text": "A new one, generated by payments",
+        "correct": false,
+        "why": "Payments continues the box office's."
+      }
+    ]
+  },
+  {
+    "id": "ex-qk053v8z",
+    "version": 1,
+    "section": "logs-and-traces",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What joins a log line to its trace?",
+    "choices": [
+      {
+        "text": "The trace id written in the line",
+        "correct": true,
+        "why": "Right. The same 32 digits Jaeger files it under."
+      },
+      {
+        "text": "Its timestamp, matched against the span's start",
+        "correct": false,
+        "why": "Hundreds of requests share a millisecond."
+      },
+      {
+        "text": "The host name of the copy that wrote it",
+        "correct": false,
+        "why": "One copy serves many requests."
+      },
+      {
+        "text": "The route and the status, which identify one request",
+        "correct": false,
+        "why": "Thousands of requests share a route and a status."
+      }
+    ]
+  },
+  {
+    "id": "ex-sgbwnk4v",
+    "version": 1,
+    "section": "logs-and-traces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is an exemplar?",
+    "choices": [
+      {
+        "text": "A sample trace Jaeger keeps for each operation",
+        "correct": false,
+        "why": "Exemplars live with metrics."
+      },
+      {
+        "text": "A log line copied into a span as an event",
+        "correct": false,
+        "why": "That is a span event."
+      },
+      {
+        "text": "The first request after a restart",
+        "correct": false,
+        "why": "Not a term here."
+      },
+      {
+        "text": "A trace id attached to one observation of a histogram",
+        "correct": true,
+        "why": "Right: from a slow percentile to one slow request."
+      }
+    ]
+  },
+  {
+    "id": "ex-r6bf3640",
+    "version": 1,
+    "section": "sampling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does head sampling keep or drop a trace whole, rather than some of its spans?",
+    "choices": [
+      {
+        "text": "Jaeger refuses incomplete traces",
+        "correct": false,
+        "why": "It stores whatever spans arrive."
+      },
+      {
+        "text": "Later services read the decision in traceparent's flags",
+        "correct": true,
+        "why": "Right. Half a trace is a tree with holes."
+      },
+      {
+        "text": "Each span is sampled with the same random number",
+        "correct": false,
+        "why": "The decision is made once, by the first service."
+      },
+      {
+        "text": "The Collector drops the rest of a trace once it sees a gap",
+        "correct": false,
+        "why": "The Collector here does not sample at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-0agm34fa",
+    "version": 1,
+    "section": "sampling",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With parentbased_traceidratio at 0.1, about how many of 200 reads should be traced?",
+    "hint": "The capture got 22.",
+    "value": 20,
+    "tolerance": 0,
+    "unit": "traces"
+  },
+  {
+    "id": "ex-kmbczmrb",
+    "version": 1,
+    "section": "sampling",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does tail sampling need that head sampling does not?",
+    "choices": [
+      {
+        "text": "Every span of a trace at one Collector, held until it decides",
+        "correct": true,
+        "why": "Right: memory, and routing by trace id."
+      },
+      {
+        "text": "A sampler in every service",
+        "correct": false,
+        "why": "Head sampling is the one in the services."
+      },
+      {
+        "text": "A ratio below 1%",
+        "correct": false,
+        "why": "Its policies are about errors and latency."
+      },
+      {
+        "text": "A W3C header of its own",
+        "correct": false,
+        "why": "It decides in the Collector; no header is involved."
+      }
+    ]
+  },
+  {
+    "id": "ex-ddckg0z1",
+    "version": 1,
+    "section": "sampling",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Traces are sampled at 1%. What happens to the request counter of lesson 7?",
+    "choices": [
+      {
+        "text": "It counts one request in a hundred",
+        "correct": false,
+        "why": "Metrics are not sampled."
+      },
+      {
+        "text": "It stops being updated until the sampler is turned off again",
+        "correct": false,
+        "why": "The sampler knows nothing of metrics."
+      },
+      {
+        "text": "It still counts every request",
+        "correct": true,
+        "why": "Right. Sampling applies to traces, not to metrics."
+      },
+      {
+        "text": "It counts the traced ones twice",
+        "correct": false,
+        "why": "Tracing and counting are separate."
+      }
+    ]
+  },
+  {
+    "id": "ex-s68aa9g9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Sales are slow at the 95th percentile, and payments' own spans are fast. Where do you look next in a slow sale's trace?",
+    "choices": [
+      {
+        "text": "At the gaps between the box office's spans and payments'",
+        "correct": true,
+        "why": "Right. Time that no span covers is connection and network."
+      },
+      {
+        "text": "At the Collector's batch size",
+        "correct": false,
+        "why": "Batching does not slow a request."
+      },
+      {
+        "text": "At the request counter",
+        "correct": false,
+        "why": "It says how many, not where."
+      },
+      {
+        "text": "At payments' span again, over many more samples than before",
+        "correct": false,
+        "why": "It was already fast."
+      }
+    ]
+  }
+]
