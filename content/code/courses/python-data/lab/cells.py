@@ -28,6 +28,9 @@ A fence labelled `py` is shown and never run — a file's contents, a line writt
 A cell with no output fence after it must print nothing; one that does fails `apply`, because a
 lesson that shows code and hides what it printed is a lesson with a gap in it.
 
+A warning names the file the kernel compiled the cell into, `/tmp/ipykernel_<pid>/<hash>.py`;
+the process id changes on every run, so it is the one part of a warning that is not compared.
+
 Timings are the one thing that cannot repeat byte for byte. A cell whose code contains `timeit`
 or `perf_counter` is compared with its digits masked, and `--write` leaves its recorded text
 alone when the mask agrees, so a rerun does not churn every number in the lesson.
@@ -135,6 +138,12 @@ def masked(s):
     return re.sub(r"\d+", "0", s)
 
 
+def same(got, want):
+    """Equal, or equal but for the kernel's process id in the path of a warning's source."""
+    pid = re.compile(r"/tmp/ipykernel_\d+/")
+    return got == want or pid.sub("/tmp/ipykernel_0/", got) == pid.sub("/tmp/ipykernel_0/", want)
+
+
 def apply(lesson_dir, result_path, write):
     with open(result_path, encoding="utf-8") as f:
         results = {(r["section"], r["cell"]): r for r in json.load(f)}
@@ -145,7 +154,7 @@ def apply(lesson_dir, result_path, write):
         if results[(slug, n)]["pictures"] and not got.strip():
             got = ""
         want = shown if shown is not None else ""
-        if got == want:
+        if same(got, want):
             continue
         if TIMED.search(code) and masked(got) == masked(want):
             continue
