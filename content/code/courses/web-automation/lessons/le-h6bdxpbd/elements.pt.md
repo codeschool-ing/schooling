@@ -52,7 +52,7 @@ nos elementos em volta, decidem como um teste consegue achá-lo de novo:
 
 **Recarregue a página e olhe esse `id` de novo.** O número é outro, porque o `app.js` o sorteia a
 cada vez, e o comentário ao lado dessa linha o chama de falha conhecida. Um teste que achasse o
-cartão pelo `id` passaria uma vez e falharia em todas as execuções seguintes. A aula 2 trata de
+cartão pelo `id` copiado deste painel falharia já na primeira execução, porque a página que ele abre sorteia outro número. A aula 2 trata de
 distinguir essas quatro coisas, e de por que a última é a armadilha.
 
 ## Testando um localizador antes de escrevê-lo

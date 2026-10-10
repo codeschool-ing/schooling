@@ -51,7 +51,7 @@ it, and on the elements around it, decide how a test can find it again:
 
 **Reload the page and look at that `id` again.** It has a different number, because `app.js`
 draws it at random each time, and the comment beside that line calls it a known flaw. A test that
-found the card by its `id` would pass once and fail on every run after it. Lesson 2 is about
+copied the card's `id` from this panel would fail on its very first run, because the page it opens draws a new number. Lesson 2 is about
 telling these four apart, and about why the last one is the trap.
 
 ## Trying a locator before writing it
