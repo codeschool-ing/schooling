@@ -1008,6 +1008,56 @@ def l07_split(lang):
                 'nas mudanças e na falha, então não se mexem.')
 
 
+# ------------------------------------------------------------------ lesson 9
+
+@figure('l09-points', 9)
+def l09_points(lang):
+    items, _ = billing()
+    def group(lo, hi):
+        out = {}
+        for i in items:
+            if i['merged'] and lo <= i['started'] <= hi:
+                out.setdefault(int(i['points']), []).append(
+                    (when(i['merged']) - when(i['started'])).days)
+        return out
+    panels = [(T(lang, 'started in June and July', 'começados em junho e julho'), group('2026-06-01', '2026-07-31')),
+              (T(lang, 'started from 3 August', 'começados a partir de 3 de agosto'), group('2026-08-03', '2026-09-30'))]
+    f = Fig('l09-points', 680, 300, T(
+        lang,
+        'Two strip charts of cycle time in days against the story points each item was given, '
+        'one dot per item. For items started in June and July, every points value spreads over '
+        'weeks and the groups overlap almost completely. For items started from 3 August, all '
+        'groups sit lower and rise slightly with points, and still overlap.',
+        'Dois gráficos de faixa do tempo de ciclo em dias contra os story points de cada item, '
+        'um ponto por item. Para itens começados em junho e julho, todo valor de pontos se '
+        'espalha por semanas e os grupos se sobrepõem quase por completo. Para itens começados a '
+        'partir de 3 de agosto, todos os grupos ficam mais baixos e sobem um pouco com os pontos, '
+        'e ainda se sobrepõem.'))
+    for k, (title, g) in enumerate(panels):
+        x0 = 60 + k * 320
+        p = Plot(f, x0, 40, x0 + 260, 250, 0, 5, 0, 60)
+        p.yaxis([0, 20, 40, 60], fmt=(str if k == 0 else (lambda t: '')))
+        p.baseline()
+        f.text(x0 + 130, 24, title, size=10.5, weight='600')
+        for j, pts in enumerate([1, 2, 3, 5, 8]):
+            cx = p.sx(j + 0.5)
+            f.text(cx, 266, str(pts), size=10, fill='--paper-dim')
+            seen = {}
+            for d in sorted(g.get(pts, [])):
+                n = seen.get(d, 0)
+                seen[d] = n + 1
+                f.circle(cx - 8 + (n % 5) * 4, p.sy(d), 2.6,
+                         fill='--phosphor' if k == 0 else '--amber')
+    f.text(340, 290, T(lang, 'story points given to the item; cycle time in days up the side',
+                       'story points dados ao item; tempo de ciclo em dias na vertical'),
+           size=9.5, fill='--paper-dim')
+    return f, T(lang,
+                'Removing the waiting made every item faster and made the estimates matter a little '
+                'more. It did not make a three reliably longer than a one.',
+                'Tirar a espera deixou todo item mais rápido e fez as estimativas importarem um pouco '
+                'mais. Não fez um três ser sempre mais longo que um um.')
+
+
 # @@LESSONS@@
 
 if __name__ == '__main__':
