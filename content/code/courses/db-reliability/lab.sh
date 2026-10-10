@@ -66,7 +66,8 @@ stop_everything() {
   for c in $(pg_lsclusters -h 2>/dev/null | awk '$1==16{print $2}'); do
     pg_dropcluster --stop 16 "$c" 2>/dev/null || true
   done
-  rm -rf /var/lib/postgresql/16/* /var/log/postgresql/*
+  find /var/lib/postgresql -mindepth 1 -maxdepth 1 -exec rm -rf {} +
+  rm -rf /var/log/postgresql/*
   rm -rf /var/lib/pgbackrest/* /var/log/pgbackrest/* /var/spool/pgbackrest /tmp/pgbackrest
   rm -rf /var/lib/etcd/default /var/lib/etcd/*
   printf '[demo]\npg1-path=/var/lib/postgresql/14/demo\n' > /etc/pgbackrest.conf

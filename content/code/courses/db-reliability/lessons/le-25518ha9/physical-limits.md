@@ -61,6 +61,6 @@ kinds: **they fail differently**, and a failure that defeats one is usually visi
 ## The question it leaves open
 
 A base backup is still one moment, the instant its copy ended. A disk that fails sixteen hours
-after the nightly base backup loses sixteen hours, exactly as a dump does; only faster to restore.
+after the nightly base backup loses sixteen hours, exactly as a dump does, and is only faster to restore.
 Lesson 4 keeps the write-ahead log the server writes between backups, and the base backup becomes
 the starting point of a recovery that can stop anywhere after it.

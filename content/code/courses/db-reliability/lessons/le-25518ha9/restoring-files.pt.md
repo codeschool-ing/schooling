@@ -1,12 +1,12 @@
 ---
-title: Restoring a base backup
+title: Restaurando um base backup
 version: 1
 ---
 
-Restoring a physical backup has four steps, and none of them involves SQL: stop the server that
-will receive it, put the files where its data directory is, give them to the user the server runs
-as, and start it. The target is the second server from lesson 2, on port 5433, whose own data is
-about to be replaced entirely.
+Restaurar um backup físico tem quatro passos, e nenhum envolve SQL: parar o servidor que vai
+recebê-lo, pôr os arquivos onde fica o diretório de dados dele, entregá-los ao usuário com que o
+servidor roda e subi-lo. O destino é o segundo servidor da lição 2, na porta 5433, cujos dados
+estão prestes a ser substituídos por inteiro.
 
 ```
 ana@vm:~$ sudo pg_ctlcluster 16 restore stop
@@ -24,16 +24,17 @@ ana@vm:~$ sudo tail -n 6 /var/log/postgresql/postgresql-16-restore.log
 2026-10-10 04:14:59.421 -03 [4292] LOG:  database system is ready to accept connections
 ```
 
-`cp -a` keeps the files' times and permissions, and the next two lines fix the rest: the backup
-was written by you, and a PostgreSQL server refuses to start on a directory that anyone but its own
-user can read. The `chmod 700` is not a formality, and leaving it out is the commonest way this
-restore fails, with a message in the log saying exactly that.
+O `cp -a` preserva os horários e as permissões dos arquivos, e as duas linhas seguintes cuidam do
+resto: o backup foi escrito por você, e um servidor PostgreSQL se recusa a subir num diretório que
+qualquer um além do próprio usuário dele consegue ler. O `chmod 700` não é formalidade, e
+esquecê-lo é o jeito mais comum de essa restauração falhar, com uma mensagem no log dizendo
+exatamente isso.
 
-The log is where the restore can be watched. Its positions are one segment past the label shown two sections back, `0/2D…` rather than `0/2C…`, because this is the backup taken again after the tampering. The server found `backup_label`, replayed the
-write-ahead log from the backup's start point to its end point (`completed backup recovery`), and
-reported **`consistent recovery state reached`**: the copy is now one moment, the moment the backup
-ended. Then it ran a checkpoint and opened. Those lines are the physical equivalent of
-`pg_restore` exiting with 0, and they deserve the same suspicion:
+O log é onde dá para acompanhar a restauração. As posições estão um segmento adiante do label mostrado duas seções atrás, `0/2D…` em vez de `0/2C…`, porque este é o backup tirado de novo depois da adulteração. O servidor encontrou o `backup_label`, reaplicou o
+write-ahead log do ponto de início do backup até o ponto final (`completed backup recovery`) e
+informou **`consistent recovery state reached`**: a cópia agora é um único momento, o momento em
+que o backup terminou. Depois ele rodou um checkpoint e abriu. Essas linhas são o equivalente físico
+do `pg_restore` saindo com 0, e merecem a mesma desconfiança:
 
 ```
 ana@vm:~$ psql -X -A -t shop -f verify.sql > live.txt
@@ -54,11 +55,11 @@ ana@vm:~$ psql -p 5433 -l
 (5 rows)
 ```
 
-The report agrees, and the list of databases shows the difference from lesson 2 at a glance:
-**the whole server came back**, `bigshop` included, without anybody naming it. There was no
-`createdb`, no globals file and no role to create first, because roles live in the data directory
-like everything else and were copied with it.
+O relatório bate, e a lista de bancos mostra num relance a diferença em relação à lição 2:
+**o servidor inteiro voltou**, `bigshop` incluído, sem ninguém precisar nomeá-lo. Não houve
+`createdb`, nem arquivo de globais, nem papel para criar antes, porque os papéis ficam no diretório
+de dados como todo o resto e foram copiados junto.
 
-That is the shape of every physical restore in this course. Lesson 5's tool automates the copying,
-and lesson 6 adds one setting that tells the server to keep replaying past the end of the backup,
-up to a moment you choose.
+Esse é o formato de toda restauração física deste curso. A ferramenta da lição 5 automatiza a
+cópia, e a lição 6 acrescenta uma configuração que diz ao servidor para continuar reaplicando depois
+do fim do backup, até um momento que você escolhe.
