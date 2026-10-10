@@ -523,32 +523,81 @@ api() { # METHOD PATH [JSON]: Gitea's API as ana
     -H 'Content-Type: application/json' ${3:+-d "$3"} "http://localhost:3000/api/v1$2"
 }
 
+L7=$LAB/lessons/le-ht1257q2
+
+# The state at the end of lesson 7, on top of stage6: production pinned by the
+# digest of bulletin:1.1, the chart published as localhost:5001/charts/bulletin
+# 0.1.0 and the preview installed from it, the image automation proposing
+# staging releases through image-updates, and staging on bulletin 1.2.
+stage7() {
+  export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
+  export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
+  local i digest
+  cd /home/ana/fleet
+  digest=$(curl -sI -H 'Accept: application/vnd.oci.image.index.v1+json' localhost:5001/v2/bulletin/manifests/1.1 | tr -d '\r' | awk 'tolower($1) == "docker-content-digest:" { print $2 }')
+  git switch --quiet -c artefacts
+  sed -i "s#  newTag: \"1.1\"#  digest: $digest#" apps/bulletin/production/kustomization.yaml
+  helm package charts/bulletin >/dev/null && helm push bulletin-0.1.0.tgz oci://localhost:5001/charts --plain-http >/dev/null 2>&1
+  rm -f bulletin-0.1.0.tgz
+  sed -i 's/-skip HelmRelease /-skip HelmRelease,OCIRepository /' /home/ana/setup/validate.sh
+  shown "$L7/charts-as-artefacts.md" 'apps/bulletin/preview/release.yaml' > apps/bulletin/preview/release.yaml
+  docker exec gitea gitea admin user create --username image-bot --password change-me-please --email image-bot@example.org --must-change-password=false >/dev/null
+  docker exec gitea gitea admin user generate-access-token --username image-bot --token-name automation --scopes write:repository --raw > /home/ana/image-bot.token
+  chmod 600 /home/ana/image-bot.token
+  api PUT /repos/ana/fleet/collaborators/image-bot '{"permission": "write"}' >/dev/null
+  flux create secret git fleet-writer-auth --url=http://gitea:3000/ana/fleet.git --username=image-bot --password="$(cat /home/ana/image-bot.token)" >/dev/null 2>&1
+  flux install --export --components-extra=image-reflector-controller,image-automation-controller > clusters/lab/flux-system/gotk-components.yaml
+  shown "$L7/new-tags-automatically.md" 'clusters/lab/image-automation.yaml' > clusters/lab/image-automation.yaml
+  sed -i 's/  newTag: "1.1"$/  newTag: "1.1" # {"$imagepolicy": "flux-system:bulletin:tag"}/' apps/bulletin/staging/kustomization.yaml
+  git add apps clusters
+  commit_at 2026-10-09T21:20:00-03:00 -m "artefacts: production by digest, the published chart, image automation"
+  merge artefacts "artefacts: production by digest, the published chart, image automation"
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  cd /home/ana/bulletin
+  git tag v1.2 && git push --quiet origin v1.2
+  docker build --quiet --build-arg VERSION=1.2 -t localhost:5001/bulletin:1.2 . >/dev/null
+  docker push --quiet localhost:5001/bulletin:1.2 >/dev/null
+  cd /home/ana/fleet
+  for i in $(seq 150); do git ls-remote origin image-updates | grep -q . && break; sleep 2; done
+  git fetch --quiet && git switch --quiet -c image-updates origin/image-updates
+  merge image-updates "staging: bulletin 1.2"
+  for i in $(seq 120); do curl -s localhost:8080 | grep -q 'bulletin 1.2' && curl -s localhost:8081 | grep -q 'bulletin 1.1' && break; sleep 2; done
+  cd /home/ana
+}
+
 # merge BRANCH TITLE: lesson 2's flow for the branch checked out in the current
 # repository: push it, open the pull request as Ana, run validate.sh on its
 # head as the CI, approve as Bruno, merge as Ana, and bring main up to date.
 merge() {
-  local repo n sha
+  local repo n sha i
   repo=$(git remote get-url origin | sed 's#.*localhost:3000/##; s#\.git$##')
   sha=$(git rev-parse HEAD)
-  git push --quiet -u origin "$1" 2>/dev/null
-  n=$(api POST /repos/$repo/pulls "{\"head\": \"$1\", \"base\": \"main\", \"title\": \"$2\"}" | jq .number)
+  git push --quiet -u origin "$1" || die "could not push $1 to $repo"
+  n=$(api POST /repos/$repo/pulls "{\"head\": \"$1\", \"base\": \"main\", \"title\": \"$2\"}" | jq .number) \
+    || die "could not open a pull request for $1 in $repo"
   if [ "$repo" = ana/fleet ]; then
-    (cd /home/ana && sh /home/ana/setup/validate.sh "$sha" >/dev/null)
+    (cd /home/ana && sh /home/ana/setup/validate.sh "$sha" >/dev/null) || die "validate.sh failed on $sha"
   else
-    curl -fs -H "Authorization: token $(cat /home/ana/ci.token)" -H 'Content-Type: application/json' \
-      -d '{"state": "success", "context": "validate"}' "http://localhost:3000/api/v1/repos/$repo/statuses/$sha" >/dev/null
+    curl -fsS -H "Authorization: token $(cat /home/ana/ci.token)" -H 'Content-Type: application/json' \
+      -d '{"state": "success", "context": "validate"}' "http://localhost:3000/api/v1/repos/$repo/statuses/$sha" >/dev/null \
+      || die "could not post a status on $sha"
   fi
-  curl -fs -H "Authorization: token $(cat /home/ana/bruno.token)" -H 'Content-Type: application/json' \
-    -d '{"event": "APPROVED", "body": "Approved."}' "http://localhost:3000/api/v1/repos/$repo/pulls/$n/reviews" >/dev/null
+  curl -fsS -H "Authorization: token $(cat /home/ana/bruno.token)" -H 'Content-Type: application/json' \
+    -d '{"event": "APPROVED", "body": "Approved."}' "http://localhost:3000/api/v1/repos/$repo/pulls/$n/reviews" >/dev/null \
+    || die "bruno could not approve pull request $n of $repo"
   # Gitea checks a new pull request for conflicts in the background, and
   # refuses a merge until it has; so the merge is retried for a while.
-  local i
   for i in $(seq 20); do
     api POST /repos/$repo/pulls/$n/merge '{"Do": "merge"}' >/dev/null && break
     [ "$i" = 20 ] && die "pull request $n of $repo did not merge"
     sleep 1
   done
-  git switch --quiet main && git pull --quiet
+  git switch --quiet main || die "could not switch to main"
+  for i in $(seq 5); do
+    git pull --quiet && return 0
+    sleep 2
+  done
+  die "could not pull main of $repo after merging pull request $n"
 }
 
 down() {
@@ -558,6 +607,6 @@ down() {
 
 case "${1:-}" in
   merge) shift; merge "$@" ;;
-  tools|images|mirror|up|down|nodes_mirror|gitea|stage1|stage2|stage3|stage4|stage5|stage6) "$1" ;;
+  tools|images|mirror|up|down|nodes_mirror|gitea|stage1|stage2|stage3|stage4|stage5|stage6|stage7) "$1" ;;
   *) sed -n '2,12p' "$0"; exit 1 ;;
 esac
