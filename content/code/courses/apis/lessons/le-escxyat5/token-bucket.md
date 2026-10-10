@@ -4,15 +4,14 @@ version: 1
 ---
 
 **A token bucket gives each client a bucket that holds up to a fixed number of tokens and refills
-at a fixed rate; every request takes a token, and a request that finds the bucket empty is
-refused.** Two numbers describe it, and they say two different things:
+at a fixed rate.** Every request takes a token, and a request that finds the bucket empty is refused. Two numbers describe it, and they say two different things:
 
 | number | in `limits.py`'s free tier | what it decides |
 |---|---|---|
 | **capacity** | 10 tokens | the largest burst a client can send at once, after being quiet |
 | **refill rate** | 1 token a second | the pace a client can keep up forever |
 
-That split is the point. A real client is bursty: a page loads and asks for six things at once, then
+The split matters because a real client is bursty: a page loads and asks for six things at once, then
 nothing for a minute. A fixed window of one request per second would refuse five of the six, while
 a bucket of ten refilled at one a second accepts all six and still holds any client to one a
 second on average.

@@ -5,7 +5,7 @@ version: 1
 
 **A limiter is only believed once it has refused something, so this section sends more than the
 limit and reads every answer.** A shell loop of curl would do, but its timing is whatever the shell
-manages, and the point here is the timing. This small client sends a number of requests a fixed
+manages, and here the timing is what is being measured. This small client sends a number of requests a fixed
 gap apart and prints, for each, when it was sent, the status, what the `RateLimit` header said was
 left, and `Retry-After` when there was one. Save it as `~/shelf/burst.py`:
 

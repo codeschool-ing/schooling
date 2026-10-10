@@ -35,7 +35,7 @@ has a line of code; Prism is a well-known one. The price is two artefacts that c
 nothing but a test to notice when they do.
 
 **Code-first** removes the drift between the routes and the document, because one is printed from
-the other. Every language of the back-end track has a way to do it, none of them run here:
+the other. Every language of the back-end track has a way to do it, and none of them is run here:
 
 | your language | a common way to generate the document |
 |---|---|
@@ -48,10 +48,10 @@ the other. Every language of the back-end track has a way to do it, none of them
 
 "The document is generated, so it is always right." It is always right about what the code
 **declares**: the routes, the parameter types, the response model a handler names. It knows
-nothing about what the code **does** when something goes wrong. An exception the framework turns
-into a 500 with an HTML page, a library answering a method nobody wrote a handler for, a field set
-to `null` on one path through the code: none of them is declared, so none of them is in the
-document.
+nothing about what the code **does** when something goes wrong. Take an exception the framework
+turns into a 500 with an HTML page, or a library answering a method nobody wrote a handler for, or
+a field set to `null` on one path through the code. None of them is declared, so none of them is
+in the document.
 
 shelf has one of those already. The 501 that Python's library sends to `OPTIONS` is in no handler of
 `rest.py`, and a generator reading `rest.py` would have left it out just as the hand-written

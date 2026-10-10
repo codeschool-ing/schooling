@@ -3,8 +3,8 @@ title: O fluxo authorization code
 version: 1
 ---
 
-O fluxo que mais importa tem duas metades. **A primeira passa pelo navegador e termina num código;
-a segunda vai direto do cliente ao servidor de autorização e troca o código por tokens.** Tudo o
+O fluxo que mais importa tem duas metades. **A primeira passa pelo navegador e termina num código.
+A segunda vai direto do cliente ao servidor de autorização e troca o código por tokens.** Tudo o
 que o navegador carrega pode ser lido por outra pessoa, então nada do que ele carrega basta sozinho.
 
 ```schooling-figure

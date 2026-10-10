@@ -3,15 +3,15 @@ title: Refresh tokens e rotação
 version: 1
 ---
 
-**Um access token é conferido pela API com uma chave pública e nenhuma conversa**, e é isso que o
-torna rápido; é também por isso que ninguém consegue chamá-lo de volta: uma API que nunca pergunta
+**Um access token é conferido pela API com uma chave pública e nenhuma conversa.** É isso que o
+torna rápido, e é também por isso que ninguém consegue chamá-lo de volta: uma API que nunca pergunta
 ao servidor de autorização não fica sabendo que um token foi retirado. O estrago que um access
 token roubado pode fazer é limitado por uma coisa só, a validade dele, e por isso ela é curta. Os do
 `idp.py` duram 300 segundos.
 
 Uma pessoa não deveria entrar de novo a cada cinco minutos, e o **refresh token** é a resposta. Ele
 dura muito, vai só para o servidor de autorização e nunca para uma API, e compra um access token
-novo sem a pessoa:
+novo sem a pessoa. O `jq 'del(.access_token)'` imprime a resposta sem o access token comprido:
 
 ```
 ana@api:~/shelf$ echo $RT

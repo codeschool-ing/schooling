@@ -79,9 +79,9 @@ operação e classifica cada diferença com as duas perguntas da figura acima. O
 usado, escrito em Go, e o openapi-diff é outro; nenhum dos dois está no repositório do Ubuntu, e
 nenhum foi rodado para esta lição. Diante destes dois arquivos, um verificador desse tipo é feito
 para apontar como quebra a propriedade removida da resposta e a nova propriedade obrigatória da
-requisição, operação por operação, que é a lista de que quem revisa de fato precisa.
+requisição, operação por operação. É dessa lista que quem revisa precisa.
 
-O lugar de rodar um é o mesmo do validador: no CI, comparando o documento de um pull request com o
-da branch principal, e fazendo o build falhar numa mudança que quebra e não vem com uma versão nova.
+O lugar de rodar um é o mesmo do validador, no CI. Ele compara o documento de um pull request com o
+da branch principal, e faz o build falhar numa mudança que quebra e não vem com uma versão nova.
 É o hábito que a versão 2 da lição 1 pediu, transformado em conferência: uma mudança que quebra é
 permitida, num endereço novo, e a ferramenta garante que ela não aconteceu em nenhum outro lugar.

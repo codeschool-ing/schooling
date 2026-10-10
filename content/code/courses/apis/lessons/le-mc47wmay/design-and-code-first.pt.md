@@ -49,10 +49,10 @@ outro. Toda linguagem da trilha de back-end tem um jeito de fazer isso, e nenhum
 
 "O documento é gerado, então está sempre certo." Ele está sempre certo sobre o que o código
 **declara**: as rotas, os tipos dos parâmetros, o modelo de resposta que um handler nomeia. Ele não
-sabe nada do que o código **faz** quando algo dá errado. Uma exceção que o framework transforma num
-500 com uma página HTML, uma biblioteca respondendo a um método para o qual ninguém escreveu handler,
-um campo que vira `null` num dos caminhos do código: nada disso é declarado, então nada disso está no
-documento.
+sabe nada do que o código **faz** quando algo dá errado. Pense numa exceção que o framework
+transforma num 500 com uma página HTML, numa biblioteca respondendo a um método para o qual ninguém
+escreveu handler, num campo que vira `null` num dos caminhos do código. Nada disso é declarado, então
+nada disso está no documento.
 
 O shelf já tem um desses. O 501 que a biblioteca do Python manda para `OPTIONS` não está em nenhum
 handler do `rest.py`, e um gerador lendo o `rest.py` o teria deixado de fora, como o documento escrito

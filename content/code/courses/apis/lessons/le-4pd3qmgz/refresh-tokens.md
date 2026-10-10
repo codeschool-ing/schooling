@@ -3,14 +3,15 @@ title: Refresh tokens, and rotation
 version: 1
 ---
 
-**An access token is checked by the API with a public key and no conversation**, which is what
+**An access token is checked by the API with a public key and no conversation.** That is what
 makes it fast, and it is also why nobody can call one back: an API that never asks the
 authorization server cannot hear that a token was withdrawn. The damage a stolen access token can
-do is bounded by one thing, its lifetime, so it is kept short. `idp.py`'s last 300 seconds.
+do is bounded by one thing, its lifetime, so it is kept short. Those from `idp.py` last 300
+seconds.
 
 A person should not sign in every five minutes, and the **refresh token** is the answer. It is long
 lived, it goes only to the authorization server and never to an API, and it buys a new access token
-without the person:
+without the person. `jq 'del(.access_token)'` prints the answer without the long access token:
 
 ```
 ana@api:~/shelf$ echo $RT

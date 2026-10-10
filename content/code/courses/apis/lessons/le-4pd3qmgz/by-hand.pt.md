@@ -9,7 +9,7 @@ precisa.** O servidor no segundo terminal é o servidor de autorização e a API
 `~/shelf`, no terminal onde `VERIFIER` e `CHALLENGE` foram definidos na seção do PKCE; se você
 abriu um novo desde então, rode de novo a linha do `read` daquela seção.
 
-## Passo 1: o redirecionamento para /authorize
+## O redirecionamento para /authorize
 
 Um cliente de verdade gera um `state` novo, e um `nonce` novo para o OpenID Connect, a cada
 entrada. Depois, as partes do endereço que nunca mudam vão para uma variável, para os comandos
@@ -34,7 +34,7 @@ Location: http://127.0.0.1:9000/callback?code=27pQ9sZu0wzrzQYmThN7DbGjWZMjV52T&s
 
 Isso são os passos 2, 3 e 4 do desenho do fluxo de uma vez, porque a usuária do `idp.py` está
 sempre conectada e sempre concordou. **O `Location` é o callback do cliente, levando o código e o
-mesmo `state` que a requisição enviou**: compare-o com o `STATE` que você gerou. Nada escuta na
+mesmo `state` que a requisição enviou**; `echo $STATE` imprime o que você gerou. Nada escuta na
 porta 9000. Num navegador, o endereço carregaria a página do cliente, que leria o código dele.
 
 Você precisa do código numa variável. O jeito mais simples é pedir de novo e guardar só o código,
@@ -46,7 +46,7 @@ ana@api:~/shelf$ CODE=$(curl -s -o /dev/null -w '%{redirect_url}' "$AUTH&scope=o
 oIbY0jbm8Xka3l5qbtbpE3tDwg1ZZu3L
 ```
 
-## Passo 2: a troca em /token
+## A troca em /token
 
 O código vai para `/token` com o verifier, o mesmo `redirect_uri` e as credenciais do próprio
 cliente, que o `-u` envia como HTTP Basic. O `tee` guarda a resposta em `tokens.json`, e o `jq` a
@@ -76,7 +76,7 @@ Guarde os três em variáveis:
 ana@api:~/shelf$ AT=$(jq -r .access_token tokens.json); RT=$(jq -r .refresh_token tokens.json); IDT=$(jq -r .id_token tokens.json)
 ```
 
-## Passo 3: chamando a API
+## Chamando a API
 
 O access token vai no cabeçalho `Authorization`, e a API responde:
 

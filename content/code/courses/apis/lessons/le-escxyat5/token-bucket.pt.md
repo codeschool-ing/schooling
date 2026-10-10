@@ -4,15 +4,15 @@ version: 1
 ---
 
 **Um balde de fichas (*token bucket*) dá a cada cliente um balde que guarda até um número fixo de
-fichas e é reabastecido a uma taxa fixa; cada requisição leva uma ficha, e uma requisição que encontra
-o balde vazio é recusada.** Dois números o descrevem, e eles dizem duas coisas diferentes:
+fichas e é reabastecido a uma taxa fixa.** Cada requisição leva uma ficha, e uma requisição que
+encontra o balde vazio é recusada. Dois números o descrevem, e eles dizem duas coisas diferentes:
 
 | número | no plano free do `limits.py` | o que ele decide |
 |---|---|---|
 | **capacidade** | 10 fichas | a maior rajada que um cliente pode mandar de uma vez, depois de ficar quieto |
 | **taxa de reposição** | 1 ficha por segundo | o ritmo que um cliente pode manter para sempre |
 
-Essa divisão é o ponto. Um cliente de verdade é irregular: uma página carrega e pede seis coisas de uma
+A divisão importa porque um cliente de verdade é irregular: uma página carrega e pede seis coisas de uma
 vez, depois nada por um minuto. Uma janela fixa de uma requisição por segundo recusaria cinco das seis,
 enquanto um balde de dez reabastecido a uma por segundo aceita as seis e ainda segura qualquer cliente
 em uma por segundo, na média.

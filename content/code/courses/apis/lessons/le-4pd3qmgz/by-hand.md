@@ -9,7 +9,7 @@ server in the second terminal is the authorization server and the API. Every com
 `~/shelf`, in the terminal where `VERIFIER` and `CHALLENGE` are set from the PKCE section; if you
 opened a new one since, run the `read` line from that section again.
 
-## Step 1: the redirect to /authorize
+## The redirect to /authorize
 
 A real client makes a fresh `state`, and a fresh `nonce` for OpenID Connect, for every sign-in.
 Then the parts of the address that never change go in a variable, to keep the commands readable:
@@ -31,9 +31,9 @@ Content-Length: 0
 Location: http://127.0.0.1:9000/callback?code=27pQ9sZu0wzrzQYmThN7DbGjWZMjV52T&state=512a38221f3037e5
 ```
 
-That is steps 2, 3 and 4 of the flow's drawing at once, because `idp.py`'s user is always signed in and has
-always agreed. **The `Location` is the client's callback, carrying the code and the same `state`
-the request sent**: compare it with the `STATE` you made. Nothing listens on port 9000. In a
+That is steps 2, 3 and 4 of the flow's drawing at once, because `idp.py`'s user is always signed
+in and has always agreed. **The `Location` is the client's callback, carrying the code and the same
+`state` the request sent**; `echo $STATE` prints the one you made. Nothing listens on port 9000. In a
 browser the address would load the client's page, which would read the code from it.
 
 You need the code in a variable. The simplest way is to ask again and keep only the code, which
@@ -45,7 +45,7 @@ ana@api:~/shelf$ CODE=$(curl -s -o /dev/null -w '%{redirect_url}' "$AUTH&scope=o
 oIbY0jbm8Xka3l5qbtbpE3tDwg1ZZu3L
 ```
 
-## Step 2: the exchange at /token
+## The exchange at /token
 
 The code goes to `/token` with the verifier, the same `redirect_uri`, and the client's own
 credentials, which `-u` sends as HTTP Basic. `tee` keeps the answer in `tokens.json`, and `jq`
@@ -75,7 +75,7 @@ Keep the three in variables:
 ana@api:~/shelf$ AT=$(jq -r .access_token tokens.json); RT=$(jq -r .refresh_token tokens.json); IDT=$(jq -r .id_token tokens.json)
 ```
 
-## Step 3: calling the API
+## Calling the API
 
 The access token goes in the `Authorization` header, and the API answers:
 

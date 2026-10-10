@@ -45,11 +45,11 @@ recusados, e quem causou o problema derrubou todo mundo com educação em vez de
 ## O nome que a OWASP dá ao limite que falta
 
 O OWASP API Security Top 10 é uma lista dos jeitos como APIs são de fato quebradas, e a edição de 2023
-chama este de **API4:2023, Unrestricted Resource Consumption** (consumo irrestrito de recursos). Os
-exemplos dela vão além de requisições por segundo: nenhum teto para o tamanho de um upload, para
-quantos registros uma página devolve, para quantas operações uma requisição pode juntar, para a memória
-ou o tempo que uma requisição pode gastar, e nenhum limite de gasto num serviço de terceiros que a API
-chama a cada requisição. A última seção desta lição volta a eles. A lição 13 percorre o resto da lista.
+chama este de **API4:2023, Unrestricted Resource Consumption** (consumo irrestrito de recursos). Os exemplos dela vão além de requisições
+por segundo: nenhum teto para o tamanho de um upload, para os registros que uma página devolve ou para
+as operações que uma requisição pode juntar, e nenhum limite para a memória ou o tempo que uma
+requisição pode gastar. O último é dinheiro: um serviço de terceiros que a API paga a cada requisição,
+sem limite de gasto nenhum. A última seção desta lição volta a eles. A lição 13 percorre o resto da lista.
 
 Um limite faz um segundo trabalho que é fácil de não ver. **A recusa também é uma instrução.** Um
 `429` com `Retry-After: 1` diz a um cliente bem escrito exatamente o que fazer, e os cabeçalhos de toda

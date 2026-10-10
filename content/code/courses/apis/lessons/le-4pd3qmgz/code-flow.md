@@ -4,7 +4,7 @@ version: 1
 ---
 
 The flow that matters most has two halves. **The first half runs through the browser and ends
-with a code; the second runs straight from the client to the authorization server and turns the
+with a code. The second runs straight from the client to the authorization server and turns the
 code into tokens.** Anything the browser carries may be read by somebody else, so nothing it
 carries is enough on its own.
 

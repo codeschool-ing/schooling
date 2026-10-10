@@ -84,6 +84,6 @@ Retry-After: 70124
 **As duas recusas trazem o mesmo status e conselhos diferentes.** "Too many requests: retry in 1 s"
 diz a um programa para desacelerar. "Daily quota used up", com uma espera de quase um dia, diz a uma
 pessoa para mudar de plano ou voltar amanhã, e um cliente que recua por horas sozinho precisa ser feito
-para esperar isso. Algumas APIs respondem a uma cota esgotada com `403` em vez de `429`, e o rascunho
-que define o `RateLimit` dá nome a um tipo de problema para isso, `quota-exceeded`; o que importa é que
-as duas sejam distinguidas na resposta, e não deixadas para o cliente adivinhar pelo tamanho da espera.
+para esperar isso. Algumas APIs respondem a uma cota esgotada com `403` em vez de `429`, e o rascunho que define o
+`RateLimit` dá nome a um tipo de problema para isso, `quota-exceeded`. Qualquer que seja a escolha da
+API, a resposta tem de distinguir as duas, em vez de deixar o cliente adivinhar pelo tamanho da espera.

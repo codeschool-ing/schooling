@@ -46,10 +46,10 @@ refused too, and the one that caused it has taken everybody down politely instea
 ## OWASP's name for the missing limit
 
 The OWASP API Security Top 10 is a list of the ways APIs actually get broken, and its 2023 edition
-names this one **API4:2023, Unrestricted Resource Consumption**. Its examples go past requests per
-second: no ceiling on the size of an upload, on how many records one page returns, on how many
-operations one request may batch together, on the memory or the time a request may take, and no
-spending limit on a third-party service the API calls for each request. The last section of this
+names this one **API4:2023, Unrestricted Resource Consumption**. Its examples go past requests per second:
+no ceiling on the size of an upload, on the records one page returns or on the operations one
+request may batch together, and no bound on the memory or time a request may take. The last is money:
+a third-party service the API pays for on every request, with no spending limit on it. The last section of this
 lesson comes back to those. Lesson 13 walks through the rest of the list.
 
 A limit does a second job that is easy to miss. **The refusal is also an instruction.** A `429`

@@ -164,5 +164,5 @@ errado. Nada na execução acima conseguiria ver isso.
 Escrever mais requisições à mão ajuda, e a outra abordagem também: ferramentas que leem o documento e
 geram as requisições elas mesmas, muitas, apontadas para cada borda que os schemas descrevem. O
 Schemathesis é uma, e o Dredd outra; nenhuma é rodada neste curso. Elas acham mais do que uma lista
-feita à mão, e acham contra o mesmo documento, que é o que importa. O documento é o único lugar onde o
+feita à mão, e conferem contra o mesmo documento. O documento é o único lugar onde o
 contrato está enunciado, e toda conferência, à mão ou gerada, é uma conferência contra ele.

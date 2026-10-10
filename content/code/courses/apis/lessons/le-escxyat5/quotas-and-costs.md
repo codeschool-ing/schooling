@@ -84,6 +84,6 @@ Retry-After: 70124
 **The two refusals carry the same status and different advice.** "Too many requests: retry in 1 s"
 tells a program to slow down. "Daily quota used up" with a wait of most of a day tells a person to
 upgrade or come back tomorrow, and a client that backs off for hours on its own has to be built to
-expect it. Some APIs answer a spent quota with `403` instead of `429`, and the draft that defines
-`RateLimit` names a problem type for it, `quota-exceeded`; what matters is that the two are told
-apart in the answer, not left for the client to guess from the length of the wait.
+expect it. Some APIs answer a spent quota with `403` instead of `429`, and the draft that defines `RateLimit`
+names a problem type for it, `quota-exceeded`. Whichever an API picks, the answer has to tell the
+two apart, rather than leave the client to guess from the length of the wait.

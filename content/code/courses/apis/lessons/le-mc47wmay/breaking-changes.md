@@ -78,10 +78,10 @@ A breaking-change checker reads both documents, follows every `$ref` from each o
 classifies each difference with the two questions of the figure above. oasdiff is a widely used
 one, written in Go, and openapi-diff another; neither is in Ubuntu's archive, and neither was run
 for this lesson. Given these two files, a checker of that kind is built to report the removed
-response property and the new required request property as breaking, by operation, which is the
-list a reviewer actually needs.
+response property and the new required request property as breaking, operation by operation. That
+is the list a reviewer needs.
 
-The place to run one is the same as the validator's: in CI, comparing the document in a pull request
-with the one on the main branch, and failing the build on a breaking change that does not come
-with a new version. That is the habit lesson 1's version 2 asked for, made into a check: a breaking
+The place to run one is the same as the validator's, in CI. It compares the document in a pull
+request with the one on the main branch, and fails the build on a breaking change that does not
+come with a new version. That is the habit lesson 1's version 2 asked for, made into a check: a breaking
 change is allowed, at a new address, and the tool makes sure it did not happen anywhere else.

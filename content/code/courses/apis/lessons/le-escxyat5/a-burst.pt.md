@@ -5,7 +5,7 @@ version: 1
 
 **Só se acredita num limitador depois que ele recusa alguma coisa, então esta seção envia mais do que o
 limite e lê cada resposta.** Um laço de curl no shell serviria, mas o tempo dele é o que o shell
-conseguir, e o ponto aqui é o tempo. Este cliente pequeno envia um número de requisições com um
+conseguir, e aqui é o tempo que está sendo medido. Este cliente pequeno envia um número de requisições com um
 intervalo fixo entre elas e imprime, para cada uma, quando foi enviada, o status, o que o cabeçalho
 `RateLimit` disse que sobrava, e o `Retry-After` quando havia um. Salve como `~/shelf/burst.py`:
 

@@ -166,5 +166,5 @@ Nothing in the run above could see it.
 Writing more requests by hand helps, and so does the other approach: tools that read the document
 and generate the requests themselves, many of them, aimed at every edge the schemas describe.
 Schemathesis is one and Dredd another; neither is run in this course. They find more than a hand
-list does, and they find it against the same document, which is the point. The document is the one
-place the contract is stated, and every check, by hand or generated, is a check against it.
+list does, and they check against the same document. The document is the one place the contract is
+stated, and every check, by hand or generated, is a check against it.
