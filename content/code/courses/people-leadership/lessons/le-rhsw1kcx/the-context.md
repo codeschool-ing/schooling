@@ -11,7 +11,7 @@ will solve it in a way that is reasonable and wrong.
 ## Intent, from an older trade
 
 Armies worked this out long before software. Orders that specify every movement fail as soon as
-the situation changes, which in a battle is immediately, so the Prussian army in the nineteenth
+the situation changes, which in a battle is immediately. So the Prussian army in the nineteenth
 century started writing orders around the commander's **intent**: what the operation was for, so
 that an officer whose plan had fallen apart could still act in the direction intended. Modern
 militaries call it mission command, and the idea transfers almost unchanged.

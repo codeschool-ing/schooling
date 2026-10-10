@@ -31,7 +31,7 @@ the manager cannot.
 Renata asked Thiago how on-call was going in their third one-to-one. He said it was fine. Two
 months later, in the ten-minute meeting from lesson 5, he told her that he had been sleeping badly
 before every on-call week, that he had been paged at three in the morning twice for an alert he did
-not understand, and that he had not said anything because everybody else seemed to manage.
+not understand. He had not said anything because everybody else seemed to manage.
 
 Nothing in the first answer was false. On-call was functioning: he answered the pages, he fixed what
 he could, and the incidents were resolved. **"Fine" described the outcome, and the cost of the

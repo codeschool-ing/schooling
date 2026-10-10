@@ -30,7 +30,7 @@ contrário piora, porque a pessoa enxerga mesmo que a gestora não enxergue.
 A Renata perguntou ao Thiago como estava o plantão na terceira 1:1 deles. Ele disse que estava tudo
 bem. Dois meses depois, na reunião de dez minutos da aula 5, ele contou que dormia mal antes de toda
 semana de plantão, que tinha sido acionado às três da manhã duas vezes por um alerta que não
-entendia, e que não tinha dito nada porque todo mundo parecia dar conta.
+entendia. Não tinha dito nada porque todo mundo parecia dar conta.
 
 Nada na primeira resposta era falso. O plantão funcionava: ele atendia os chamados, corrigia o que
 conseguia, e os incidentes eram resolvidos. **"Tudo bem" descrevia o resultado, e o custo do

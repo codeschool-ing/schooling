@@ -3,7 +3,7 @@ title: The shared document, and whose topics come first
 version: 1
 ---
 
-The single most effective change to a drifted one-to-one is a shared document. **Both people can
+The change that does most for a drifted one-to-one is a shared document. **Both people can
 add topics during the week, the person's topics come first, and the manager's go at the bottom.**
 It takes five minutes to set up and it changes who the meeting belongs to, because it makes the
 agenda visible and gives the person a place to put things before they forget them.

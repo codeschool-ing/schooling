@@ -42,7 +42,7 @@ mais.
 
 ## O que você não pode perguntar
 
-Algumas perguntas não são só inúteis, são discriminatórias, e em muitos países ilegais. No Brasil, a
+Algumas perguntas são piores que inúteis: discriminam, e em muitos países são ilegais. No Brasil, a
 Lei 9.029, de 1995, proíbe práticas discriminatórias no acesso ao emprego, inclusive exigir teste de
 gravidez, e a Constituição proíbe discriminação por motivos como sexo, idade, cor e estado civil. A
 maioria dos países tem equivalentes.

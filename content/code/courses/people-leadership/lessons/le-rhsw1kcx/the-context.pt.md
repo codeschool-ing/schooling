@@ -11,7 +11,7 @@ resolvê-la de um jeito razoável e errado.
 ## Intenção, de um ofício mais antigo
 
 Exércitos descobriram isso muito antes do software. Ordens que especificam cada movimento falham
-assim que a situação muda, o que numa batalha é imediatamente, então o exército prussiano do século
+assim que a situação muda, o que numa batalha é imediatamente. Por isso o exército prussiano do século
 XIX passou a escrever ordens em torno da **intenção** do comandante: para que a operação servia, para
 que um oficial cujo plano tivesse desmoronado ainda pudesse agir na direção pretendida. Os exércitos
 modernos chamam isso de comando de missão, e a ideia se transfere quase sem mudanças.

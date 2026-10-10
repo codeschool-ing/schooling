@@ -31,7 +31,7 @@ trabalho de volta.
 O apoio que funciona é a estrutura de pontos de verificação da aula 3, combinada no começo, mais
 alguém a quem perguntar. Quando o Thiago liderou o primeiro projeto pequeno dele, a integração de um
 novo provedor de SMS para os lembretes, a Renata marcou um ponto de verificação depois de dois dias e
-pontos semanais depois disso, e a Yara aceitou ser a pessoa a quem ele podia perguntar qualquer coisa
+pontos semanais depois disso. A Yara aceitou ser a pessoa a quem ele podia perguntar qualquer coisa
 sem que chegasse à Renata. **A pessoa precisa de um lugar seguro para dizer "não sei fazer isso"**, e
 esse lugar em geral não é a gestora dela.
 

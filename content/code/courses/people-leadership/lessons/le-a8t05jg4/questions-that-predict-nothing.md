@@ -42,7 +42,7 @@ more.
 
 ## What you must not ask
 
-Some questions are not only useless but discriminatory, and in many countries unlawful. In Brazil,
+Some questions are worse than useless: they discriminate, and in many countries they are unlawful. In Brazil,
 Law 9.029 of 1995 prohibits discriminatory practices in access to employment, including requiring
 pregnancy tests, and the Constitution prohibits discrimination on grounds such as sex, age, colour and
 marital status. Most countries have equivalents.

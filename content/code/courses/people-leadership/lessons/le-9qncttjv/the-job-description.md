@@ -40,8 +40,8 @@ Then a separate list, labelled plainly as not required: experience with Python, 
 with on-call. **Three musts, not fourteen**, because every extra must removes candidates who could
 have done the job, and it removes them unevenly.
 
-That last point has evidence behind it. A widely cited internal report at Hewlett-Packard, often
-repeated since, suggested that men apply when they meet some of the requirements and women when they
+That last point has evidence behind it. An internal report at Hewlett-Packard, repeated in many
+articles since, suggested that men apply when they meet some of the requirements and women when they
 meet nearly all of them; the exact figures are disputed, but the effect of a long must list on who
 applies is consistent with other findings. In 2011, Danielle Gaucher, Justin Friesen and Aaron Kay
 showed that job adverts worded with masculine-coded language, words such as "dominant" and

@@ -18,7 +18,7 @@ def scale():
              ('2', [T('+ a real example', '+ um exemplo real')]),
              ('3', [T('+ in the listener’s terms,', '+ nos termos de quem ouve,'),
                     T('trade-off as outcomes', 'trade-off como resultados')]),
-             ('4', [T('+ adapted when not followed,', '+ adaptou quando não entenderam,'),
+             ('4', [T('+ adapted when not followed,', '+ adaptou se não entenderam,'),
                     T('knows what was decided', 'sabe o que foi decidido')])]
     for i, (n, lines) in enumerate(steps):
         x = 30 + i * 170
