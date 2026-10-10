@@ -1,0 +1,889 @@
+[
+  {
+    "id": "ex-r2er8dbb",
+    "version": 1,
+    "section": "over-and-under-fetching",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A book's page needs the book, its author's name and the author's other books, and `rest.py` makes the client ask three times. What is that called?",
+    "choices": [
+      {
+        "text": "Over-fetching",
+        "correct": false,
+        "why": "That is the opposite half: an answer carrying fields the screen never shows."
+      },
+      {
+        "text": "Under-fetching",
+        "correct": true,
+        "why": "Right. No single address has all three, and the client makes up the difference with more requests."
+      },
+      {
+        "text": "Versioning",
+        "correct": false,
+        "why": "Versions are about changing a contract; nothing changed here."
+      },
+      {
+        "text": "The N+1 problem inside the database",
+        "correct": false,
+        "why": "Close, but the requests here cross the network from the client; the database side is the N+1 graph.py shows later."
+      }
+    ]
+  },
+  {
+    "id": "ex-bb2hhz2x",
+    "version": 1,
+    "section": "over-and-under-fetching",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A page shows every book of `rest.py` with its author's name, fetched the obvious way: the list, then one request per book. With the six books of `db.py`, how many requests did the server log?",
+    "hint": "One for the list, then one per book, repeats included.",
+    "value": 7,
+    "tolerance": 0,
+    "unit": "requests"
+  },
+  {
+    "id": "ex-gzt2q2xa",
+    "version": 1,
+    "section": "over-and-under-fetching",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the REST book page, why could the client not send the request for the author at the same time as the request for the book?",
+    "choices": [
+      {
+        "text": "HTTP/1.1 sends one request per connection at a time",
+        "correct": false,
+        "why": "A client may open several connections; the obstacle was not the protocol."
+      },
+      {
+        "text": "rest.py refuses two requests from one client at once",
+        "correct": false,
+        "why": "It runs a thread per request and refuses nothing of the kind."
+      },
+      {
+        "text": "The author's address is only known from the book",
+        "correct": true,
+        "why": "Right. `author_id` arrives in the first answer, so the second request waits a full round trip."
+      },
+      {
+        "text": "The author had to be cached before it could be asked for",
+        "correct": false,
+        "why": "No cache is involved; the second request depends on data, not on a cache."
+      }
+    ]
+  },
+  {
+    "id": "ex-1j3c54k2",
+    "version": 1,
+    "section": "the-schema",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A schema declares `tags: [String]!`. Which of these answers breaks that promise?",
+    "hint": "Read the outer `!` and the inner type separately.",
+    "choices": [
+      {
+        "text": "`\"tags\": []`",
+        "correct": false,
+        "why": "An empty list is still a list, and the list is what the `!` promises."
+      },
+      {
+        "text": "`\"tags\": [\"new\", null]`",
+        "correct": false,
+        "why": "`String` inside the brackets has no `!`, so an item may be null."
+      },
+      {
+        "text": "`\"tags\": null`",
+        "correct": true,
+        "why": "Right. The `!` outside the brackets says the list itself is never null."
+      },
+      {
+        "text": "`\"tags\": [\"new\"]`",
+        "correct": false,
+        "why": "A list of one string satisfies both halves of the type."
+      }
+    ]
+  },
+  {
+    "id": "ex-8bzhqn6s",
+    "version": 1,
+    "section": "the-schema",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In GraphQL's schema language, a type followed by ___ promises that the value is never null.",
+    "hint": "One character.",
+    "blanks": [
+      {
+        "accept": [
+          "!"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-174yn7w0",
+    "version": 1,
+    "section": "the-schema",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`graph.py`'s `Book` has a `priceCents` field, while the table has a `price_cents` column and an `author_id` the schema does not show. What does that say about GraphQL?",
+    "choices": [
+      {
+        "text": "The schema should mirror the table, and graph.py has a bug",
+        "correct": false,
+        "why": "That is the belief the section corrects: matching the table is not the schema's job."
+      },
+      {
+        "text": "It describes the API's types, not the table",
+        "correct": true,
+        "why": "Right. GraphQL queries the API's types, and resolvers decide where each value comes from."
+      },
+      {
+        "text": "GraphQL renames columns to camelCase by itself",
+        "correct": false,
+        "why": "Nothing renames anything by itself; `price_cents` needed a resolver of its own."
+      },
+      {
+        "text": "Columns left out of a schema are deleted from the database",
+        "correct": false,
+        "why": "The schema never touches the table; `author_id` is still there for the resolvers to use."
+      }
+    ]
+  },
+  {
+    "id": "ex-a5qpctc1",
+    "version": 1,
+    "section": "graph-py",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson stop `rest.py` before starting `graph.py`?",
+    "choices": [
+      {
+        "text": "Both listen on 127.0.0.1:8000, and one port takes one server",
+        "correct": true,
+        "why": "Right. The second one to start would fail to bind the address."
+      },
+      {
+        "text": "Two programs cannot open shelf.db together",
+        "correct": false,
+        "why": "SQLite lets several readers open one file; the clash is the port."
+      },
+      {
+        "text": "graph.py imports rest.py",
+        "correct": false,
+        "why": "It imports `db.py` and `graphql`, never `rest.py`."
+      },
+      {
+        "text": "REST and GraphQL use different versions of HTTP",
+        "correct": false,
+        "why": "Both servers speak HTTP/1.1, set by `protocol_version`."
+      }
+    ]
+  },
+  {
+    "id": "ex-r509erdd",
+    "version": 1,
+    "section": "graph-py",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The book page as one GraphQL query, `{ book(id: 2) { title author { name books { title } } } }`. How many SQL queries did `graph.py` report in `extensions`?",
+    "hint": "One per resolver that reaches the database.",
+    "value": 3,
+    "tolerance": 0,
+    "unit": "queries"
+  },
+  {
+    "id": "ex-ayjdvvmn",
+    "version": 1,
+    "section": "queries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You want the titles of books 1 and 5 in one request. `{ book(id: 1) { title } book(id: 5) { title } }` is refused. What fixes it?",
+    "hint": "Two answers would land under one key.",
+    "choices": [
+      {
+        "text": "A fragment",
+        "correct": false,
+        "why": "A fragment reuses a set of fields; both answers would still be called `book`."
+      },
+      {
+        "text": "Variables for the two ids",
+        "correct": false,
+        "why": "Variables move the values out of the text; the two fields still collide."
+      },
+      {
+        "text": "Two requests; GraphQL asks one thing at a time",
+        "correct": false,
+        "why": "One request may ask for many fields, which is the point of GraphQL."
+      },
+      {
+        "text": "Aliases, such as `first:` and `fifth:`",
+        "correct": true,
+        "why": "Right. Each alias names its own key in the answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-4ba7myxx",
+    "version": 1,
+    "section": "queries",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each part of a query to what it is for.",
+    "pairs": [
+      {
+        "left": "an alias, `fifth:`",
+        "right": "renames a field in the answer"
+      },
+      {
+        "left": "a fragment, `...card`",
+        "right": "reuses one set of fields in several places"
+      },
+      {
+        "left": "a variable, `$id`",
+        "right": "carries a value outside the query text"
+      },
+      {
+        "left": "an operation name, `Page`",
+        "right": "identifies the operation in logs and tools"
+      }
+    ],
+    "right_distractors": [
+      "limits how deep the query may go"
+    ]
+  },
+  {
+    "id": "ex-hqzgn16r",
+    "version": 1,
+    "section": "queries",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`{ book(id: 1) { author } }` is refused with 400. Why?",
+    "choices": [
+      {
+        "text": "Book 1 has no author",
+        "correct": false,
+        "why": "Book 1 is Machado's, and the refusal came before any SQL ran."
+      },
+      {
+        "text": "`author` is an object with fields to name",
+        "correct": true,
+        "why": "Right. A query goes down to scalars; there is no way to ask for a whole object."
+      },
+      {
+        "text": "Arguments belong on the root fields of a query",
+        "correct": false,
+        "why": "Any field may take arguments; `books(authorId:)` and `book(id:)` both do."
+      },
+      {
+        "text": "The id must be sent as a variable",
+        "correct": false,
+        "why": "Variables are good practice and not a rule; `book(id: 1)` ran fine elsewhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-8nf0m3nz",
+    "version": 1,
+    "section": "queries",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A GraphQL request's JSON body holds the query's text under `query` and the values for `$id` under the key ___.",
+    "blanks": [
+      {
+        "accept": [
+          "variables"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-v95sgn9b",
+    "version": 1,
+    "section": "resolvers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When `Book.author` runs in `graph.py`, what is its `parent`?",
+    "choices": [
+      {
+        "text": "The book's row, as a dict",
+        "correct": true,
+        "why": "Right. The parent is what the field above returned, and `author_id` is in it."
+      },
+      {
+        "text": "The whole query text",
+        "correct": false,
+        "why": "The query arrives parsed, through `info`, never as the parent."
+      },
+      {
+        "text": "The database connection",
+        "correct": false,
+        "why": "The connection is in the context, shared by the request's resolvers."
+      },
+      {
+        "text": "The author, already fetched by the server",
+        "correct": false,
+        "why": "Fetching the author is this resolver's job; nobody did it before."
+      }
+    ]
+  },
+  {
+    "id": "ex-q70c212k",
+    "version": 1,
+    "section": "resolvers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`graph.py` has a resolver for `priceCents` and none for `title`. Why?",
+    "choices": [
+      {
+        "text": "`title` is a string, and strings are returned without any code",
+        "correct": false,
+        "why": "The type does not decide it; `isbn` is a string and `stock` an Int, and neither has a function."
+      },
+      {
+        "text": "Integer fields always need a resolver of their own",
+        "correct": false,
+        "why": "`year` and `stock` are integers answered by the default resolver."
+      },
+      {
+        "text": "The default resolver looks for a key with the field's name",
+        "correct": true,
+        "why": "Right. The column is `price_cents`, so the row's dict has `title` and has no `priceCents`."
+      },
+      {
+        "text": "Prices are computed, not stored",
+        "correct": false,
+        "why": "The price is stored in cents; the resolver only reads it under another name."
+      }
+    ]
+  },
+  {
+    "id": "ex-05c372ba",
+    "version": 1,
+    "section": "resolvers",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`graph.py`'s schema has 15 fields across `Query`, `Mutation`, `Book` and `Author`, and the file attaches 7 resolver functions. How many fields are answered by the default resolver?",
+    "value": 8,
+    "tolerance": 0,
+    "unit": "fields"
+  },
+  {
+    "id": "ex-mf43nwv2",
+    "version": 1,
+    "section": "n-plus-one",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A shop has 100 books by 30 authors. Without `--batch`, how many SQL queries does `{ books { title author { name } } }` cost?",
+    "hint": "Six books cost seven here.",
+    "choices": [
+      {
+        "text": "31",
+        "correct": false,
+        "why": "That counts each author once, which is what the loader achieves, not the plain resolver."
+      },
+      {
+        "text": "2",
+        "correct": false,
+        "why": "Two is the batched figure: the list and one `IN` query."
+      },
+      {
+        "text": "101",
+        "correct": true,
+        "why": "Right. One for the list and one per book, repeats included: N+1."
+      },
+      {
+        "text": "1",
+        "correct": false,
+        "why": "One would mean the server turns the query into a single SQL statement, and it does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-16g07fgn",
+    "version": 1,
+    "section": "n-plus-one",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens to the authors of a list of books when `graph.py` runs with `--batch`.",
+    "hint": "Nothing is fetched until every book has asked.",
+    "items": [
+      "Each book's `author` resolver calls `load` with an id",
+      "`load` hands back a promise and schedules `fetch`",
+      "The event loop is free, so `fetch` runs",
+      "One `WHERE id IN (…)` query brings every author",
+      "Each promise is kept, and the authors' `name` fields are resolved"
+    ],
+    "trap": "Fetching inside `load` would bring back the N+1: the point is to wait until the ids are all in."
+  },
+  {
+    "id": "ex-a2jtaszh",
+    "version": 1,
+    "section": "n-plus-one",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With the loader on, `{ books { author { books { author { name } } } } }` still cost 8 SQL queries. What is left to fix?",
+    "choices": [
+      {
+        "text": "The loader should be shared between requests",
+        "correct": false,
+        "why": "That would make it a cache across users, and it would not reduce this one request's queries."
+      },
+      {
+        "text": "`Author.books` still runs one query per author",
+        "correct": true,
+        "why": "Right. Six of the eight are books by author; a loader fixes the field it was written for."
+      },
+      {
+        "text": "The authors on the last level are fetched a second time",
+        "correct": false,
+        "why": "They cost nothing: every one had already been promised in this request."
+      },
+      {
+        "text": "The depth limit should be lowered to 3",
+        "correct": false,
+        "why": "That refuses the query rather than making it cheaper."
+      }
+    ]
+  },
+  {
+    "id": "ex-n14j0fvp",
+    "version": 1,
+    "section": "mutations-and-errors",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One mutation sets book 1's stock to 10 (field `a`) and book 2's to -1 (field `b`). The answer is 200, with `a` filled, `b` null and one error. What is in the database now?",
+    "choices": [
+      {
+        "text": "Neither change; the error rolled the request back",
+        "correct": false,
+        "why": "Nothing made the two fields one transaction, so the first write stayed."
+      },
+      {
+        "text": "Both changes, since the status was 200",
+        "correct": false,
+        "why": "The database's CHECK refused -1; 200 only says the query ran."
+      },
+      {
+        "text": "Book 2 changed and book 1 did not",
+        "correct": false,
+        "why": "The other way round: `a` is the one that succeeded."
+      },
+      {
+        "text": "Book 1 at 10, book 2 as it was",
+        "correct": true,
+        "why": "Right. Each field committed on its own: a partial success."
+      }
+    ]
+  },
+  {
+    "id": "ex-cvqxm5k9",
+    "version": 1,
+    "section": "mutations-and-errors",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these is true of a GraphQL answer with status 200? Choose all that apply.",
+    "hint": "The status says the query ran, and that is all.",
+    "choices": [
+      {
+        "text": "It may carry an `errors` list",
+        "correct": true,
+        "why": "Right. The failed `setStock` came back with a 200."
+      },
+      {
+        "text": "Part of `data` may be null because a field failed",
+        "correct": true,
+        "why": "Right. `b` was null with its error beside it."
+      },
+      {
+        "text": "It proves every field succeeded",
+        "correct": false,
+        "why": "That is what a 200 meant for `rest.py`, and what it stops meaning here."
+      },
+      {
+        "text": "A dashboard counting 4xx and 5xx sees its errors",
+        "correct": false,
+        "why": "It sees an ordinary success; the errors are in the body."
+      }
+    ]
+  },
+  {
+    "id": "ex-rbvjt8qt",
+    "version": 1,
+    "section": "mutations-and-errors",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Suppose `setStock` were declared `Book!` and the request held one field, the one that sets a stock of -1. What would the answer carry?",
+    "hint": "A non-null field cannot hold the null.",
+    "choices": [
+      {
+        "text": "`\"data\": {\"setStock\": null}` and the error",
+        "correct": false,
+        "why": "That is what the nullable `Book` allows; `Book!` forbids exactly this null."
+      },
+      {
+        "text": "`\"data\": null` and the error",
+        "correct": true,
+        "why": "Right. The null climbs to the nearest field that allows one, and here that is `data` itself."
+      },
+      {
+        "text": "A 500 with no body",
+        "correct": false,
+        "why": "The server did not fail; GraphQL reports the field's error in the body."
+      },
+      {
+        "text": "The book with its old stock and no error",
+        "correct": false,
+        "why": "The refusal is still reported; the schema decides where the null lands, not whether it does."
+      }
+    ]
+  },
+  {
+    "id": "ex-pjkvbgnw",
+    "version": 1,
+    "section": "introspection",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team turns introspection off on its public server and calls the schema protected. What is wrong with that?",
+    "choices": [
+      {
+        "text": "Introspection cannot be turned off in graphql-core",
+        "correct": false,
+        "why": "It can: `NoSchemaIntrospectionCustomRule` is a validation rule for exactly that."
+      },
+      {
+        "text": "Turning it off slows down the validation of each query a client sends",
+        "correct": false,
+        "why": "It is one more validation rule; the cost is not the issue."
+      },
+      {
+        "text": "Hidden fields stay callable, and errors leak their names",
+        "correct": true,
+        "why": "Right. Each field still needs authorisation, and `Did you mean 'title'?` answers without introspection."
+      },
+      {
+        "text": "Clients will stop receiving `data`",
+        "correct": false,
+        "why": "Ordinary queries run as before; only `__schema` and `__type` are refused."
+      }
+    ]
+  },
+  {
+    "id": "ex-tjgfz3b3",
+    "version": 1,
+    "section": "introspection",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each tool to what it does with the schema it reads by introspection.",
+    "pairs": [
+      {
+        "left": "an editor",
+        "right": "completes field names as you type"
+      },
+      {
+        "left": "a code generator",
+        "right": "writes typed client code"
+      },
+      {
+        "left": "a documentation page",
+        "right": "describes the API without falling behind"
+      }
+    ],
+    "right_distractors": [
+      "decides who may call a mutation"
+    ]
+  },
+  {
+    "id": "ex-0822pfmq",
+    "version": 1,
+    "section": "protecting-the-server",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "By `graph.py`'s count, how many levels deep is `{ book(id: 1) { title author { books { title } } } }`?",
+    "hint": "Count the fields on the longest path down to a leaf.",
+    "value": 4,
+    "tolerance": 0,
+    "unit": "levels"
+  },
+  {
+    "id": "ex-e5apnkqv",
+    "version": 1,
+    "section": "protecting-the-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does limiting each client to so many requests a minute protect a GraphQL server less than a REST one?",
+    "choices": [
+      {
+        "text": "One request costs one SQL query, or twenty-three",
+        "correct": true,
+        "why": "Right. The client chooses the work, so a count of requests does not measure it."
+      },
+      {
+        "text": "GraphQL clients send fewer requests, so the limit is never reached",
+        "correct": false,
+        "why": "Fewer requests is true and beside the point: each one can be far heavier."
+      },
+      {
+        "text": "POST requests cannot be counted by a server",
+        "correct": false,
+        "why": "Every request is counted the same way; the access log listed each POST."
+      },
+      {
+        "text": "Rate limits only work with status codes other than 200",
+        "correct": false,
+        "why": "A rate limit counts requests, not statuses."
+      }
+    ]
+  },
+  {
+    "id": "ex-1qbssyek",
+    "version": 1,
+    "section": "protecting-the-server",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When every query a client will send is registered on the server in advance, and the client sends only an id with the variables, those are called ___ queries.",
+    "blanks": [
+      {
+        "accept": [
+          "persisted"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-9yqkscfw",
+    "version": 1,
+    "section": "protecting-the-server",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You add `graph.py`'s depth limit of 5 to a server your team explores with a GraphQL editor. What breaks first?",
+    "hint": "Measure the query tools send.",
+    "choices": [
+      {
+        "text": "Mutations, because they are written at the root",
+        "correct": false,
+        "why": "A mutation's depth counts like any query's; `setStock` with two fields is two levels."
+      },
+      {
+        "text": "Queries using variables",
+        "correct": false,
+        "why": "Variables do not add depth; only fields do."
+      },
+      {
+        "text": "The editor's own schema query, which is 13 levels deep",
+        "correct": true,
+        "why": "Right. Servers with a depth limit exempt introspection or measure it apart for this reason."
+      },
+      {
+        "text": "Queries with fragments",
+        "correct": false,
+        "why": "The limit follows a fragment into its fields; a shallow fragment passes."
+      }
+    ]
+  },
+  {
+    "id": "ex-6ctfda3t",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A bank publishes an API for partners it will never meet, who call it from many languages, often with `curl`. Which fits best?",
+    "choices": [
+      {
+        "text": "GraphQL with persisted queries",
+        "correct": false,
+        "why": "Persisted queries need every client registered in advance, and strangers' clients are not yours."
+      },
+      {
+        "text": "REST",
+        "correct": true,
+        "why": "Right. Addresses, status codes, HTTP caching and a fixed cost per request suit callers you cannot see."
+      },
+      {
+        "text": "GraphQL with introspection turned off",
+        "correct": false,
+        "why": "Hiding the schema makes a public API harder to use and protects nothing."
+      },
+      {
+        "text": "A backend for frontend",
+        "correct": false,
+        "why": "A BFF serves your own screens; partners are not one of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-qefdtn5e",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "One team writes a web app, an Android app and an iPhone app over the same services, and each screen changes every few weeks. What does a GraphQL layer in front of the services give them?",
+    "choices": [
+      {
+        "text": "Free HTTP caching of every answer",
+        "correct": false,
+        "why": "The opposite: one address and POST make HTTP caching harder."
+      },
+      {
+        "text": "No more need to limit what a query costs",
+        "correct": false,
+        "why": "The client chooses the work, so limits matter more, not less."
+      },
+      {
+        "text": "Each screen asks for its own slice without a new endpoint",
+        "correct": true,
+        "why": "Right. And since every client is theirs, persisted queries can fix the list of operations."
+      },
+      {
+        "text": "Status codes that report each field's outcome",
+        "correct": false,
+        "why": "A 200 covers the whole answer; each field's outcome is in `errors`."
+      }
+    ]
+  },
+  {
+    "id": "ex-htn6e8hh",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what `graph.py` does with one `POST /graphql`.",
+    "hint": "Every check that needs no database comes before any SQL.",
+    "items": [
+      "Read the body and check its `Content-Type`",
+      "Parse the query text",
+      "Validate the query against the schema",
+      "Measure its depth against `MAX_DEPTH`",
+      "Run the resolvers, counting SQL",
+      "Answer 200 with `data`, any `errors` and `extensions`"
+    ],
+    "trap": "Validation needs a parsed query, and the depth is measured on a query already known to be valid."
+  },
+  {
+    "id": "ex-a27br88j",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these requests does `graph.py` answer with a 400? Choose all that apply.",
+    "hint": "A 400 means nothing ran.",
+    "choices": [
+      {
+        "text": "`{ books { titel } }`",
+        "correct": true,
+        "why": "Right. Validation refuses a field the schema does not have."
+      },
+      {
+        "text": "A mutation setting a stock of -1",
+        "correct": false,
+        "why": "It ran, so it is a 200 with the error in `errors`."
+      },
+      {
+        "text": "A query six levels deep",
+        "correct": true,
+        "why": "Right. The depth limit refuses it before any SQL."
+      },
+      {
+        "text": "A `GET /graphql?query=…`",
+        "correct": false,
+        "why": "That is a 405 with `Allow: POST`."
+      }
+    ]
+  },
+  {
+    "id": "ex-mey1ssj1",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each thing seen in this lesson to what caused it.",
+    "pairs": [
+      {
+        "left": "`sqlQueries: 7` for six books and their authors",
+        "right": "a resolver running once per item"
+      },
+      {
+        "left": "400 and `Did you mean 'title'?`",
+        "right": "validation against the schema"
+      },
+      {
+        "left": "200 with `b` null and an error",
+        "right": "a resolver raising an error"
+      },
+      {
+        "left": "`IN (1, 2, 3, 4)` in the server's terminal",
+        "right": "the loader batching ids"
+      }
+    ],
+    "right_distractors": [
+      "an HTTP cache answering"
+    ]
+  },
+  {
+    "id": "ex-aadvz46d",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team replaces its REST list page with one GraphQL query. The page loads faster, and the database's query count goes up. What happened?",
+    "choices": [
+      {
+        "text": "The N+1 moved from the network into the server's resolvers",
+        "correct": true,
+        "why": "Right. The round trips are gone and the per-item lookups remain; a loader is the fix."
+      },
+      {
+        "text": "GraphQL sends each field as a separate HTTP request",
+        "correct": false,
+        "why": "It was one request; the extra queries happen inside the server."
+      },
+      {
+        "text": "Introspection queries run with every request",
+        "correct": false,
+        "why": "Introspection only runs when a client asks for `__schema` or `__type`."
+      },
+      {
+        "text": "The schema forced extra fields into the answer",
+        "correct": false,
+        "why": "A query returns exactly the fields it names, no more."
+      }
+    ]
+  }
+]

@@ -1,0 +1,702 @@
+{
+ "ex-c37rrbcw": {
+  "prompt": "A página é `http://localhost:8080/page.html`. Ligue cada endereço ao que o navegador conclui dele.",
+  "hint": "Uma origem é o esquema, o host e a porta, comparados como estão escritos.",
+  "pairs": [
+   {
+    "left": "`http://localhost:8080/other.html`",
+    "right": "mesma origem: só o caminho muda"
+   },
+   {
+    "left": "`http://localhost:8000/v1/books/1`",
+    "right": "outra origem: a porta muda"
+   },
+   {
+    "left": "`https://localhost:8080/page.html`",
+    "right": "outra origem: o esquema muda"
+   },
+   {
+    "left": "`http://127.0.0.1:8080/page.html`",
+    "right": "outra origem: o host muda"
+   }
+  ],
+  "right_distractors": [
+   "mesma origem: os dois nomes levam à mesma máquina"
+  ]
+ },
+ "ex-tefbv5y2": {
+  "prompt": "O que a política de mesma origem impede um script de uma origem de fazer com outra origem?",
+  "hint": "A requisição não é a parte que ela protege.",
+  "choices": [
+   {
+    "text": "Ler a resposta de uma requisição que ele causou",
+    "why": "Certo. A requisição pode muito bem sair; a resposta é o que o navegador esconde do script."
+   },
+   {
+    "text": "Mostrar uma imagem dela dentro da página, com `<img>`",
+    "why": "Incorporar é permitido. O que o script não consegue é ler os bytes da imagem."
+   },
+   {
+    "text": "Enviar a ela uma requisição de qualquer tipo, até um GET",
+    "why": "Formulários, imagens e scripts vão para outras origens desde muito antes do CORS, e uma requisição simples ainda sai sem perguntar."
+   },
+   {
+    "text": "Abrir um link para ela",
+    "why": "Seguir um link é navegação, e a página nova simplesmente pertence à outra origem."
+   }
+  ]
+ },
+ "ex-zccgdybg": {
+  "prompt": "Uma API é chamada só por apps de celular e por outros servidores. Um desenvolvedor diz que a política de mesma origem mantém estranhos fora dela. O que está errado nisso?",
+  "hint": "Quem aplica a política?",
+  "choices": [
+   {
+    "text": "A política vale para apps também, mas só sobre HTTPS",
+    "why": "Nenhum programa além do navegador a aplica, nem sobre HTTP nem sobre HTTPS."
+   },
+   {
+    "text": "Nada: o servidor recusa uma origem desconhecida",
+    "why": "O secure.py respondeu a uma origem desconhecida com 200 e o livro; e esses clientes nem mandam `Origin`."
+   },
+   {
+    "text": "Ela só mantém estranhos fora com o CORS desligado",
+    "why": "O CORS relaxa a política, e nenhum dos dois faz nada com um cliente que não é navegador."
+   },
+   {
+    "text": "Só navegadores aplicam a política",
+    "why": "Certo. Um app ou um servidor lê tudo o que volta. A política protege a pessoa diante de um navegador, e esses clientes não têm essa pessoa para proteger."
+   }
+  ]
+ },
+ "ex-f25ecmce": {
+  "prompt": "Por que a aula põe o `page.html` em `~/shelf/site` e inicia o `python3 -m http.server` ali, em vez de em `~/shelf`?",
+  "hint": "O que esse servidor entrega?",
+  "choices": [
+   {
+    "text": "O `http.server` não inicia onde há arquivos Python",
+    "why": "Ele inicia em qualquer lugar, e o perigo é justamente esse."
+   },
+   {
+    "text": "Ele serve todo arquivo abaixo dele, `shelf.db` incluído",
+    "why": "Certo. Qualquer um que alcançasse a porta 8080 baixaria o banco e, depois, as chaves privadas."
+   },
+   {
+    "text": "São os dois diretórios que fazem da página e da API duas origens",
+    "why": "Uma origem é esquema, host e porta; diretórios não contam, e o que difere aqui são as portas."
+   },
+   {
+    "text": "A porta 8080 serve arquivos HTML e recusa o resto",
+    "why": "Uma porta não sabe nada de tipos de arquivo; o `http.server` manda qualquer arquivo pedido."
+   }
+  ]
+ },
+ "ex-p1en519g": {
+  "prompt": "O `secure.py` roda na VM com os padrões. No seu computador, o navegador abre `http://127.0.0.1:8000/v1/books/1` e a conexão é recusada. Por quê?",
+  "hint": "Que máquina o navegador entende por esse endereço?",
+  "choices": [
+   {
+    "text": "O CORS recusa conexões de origens fora da lista",
+    "why": "O CORS não recusa conexão nenhuma; ele decide o que a página pode ler depois que a resposta chega."
+   },
+   {
+    "text": "Um navegador precisa de HTTPS para alcançar uma VM",
+    "why": "HTTP simples alcança uma VM como qualquer outra máquina; o problema é o endereço."
+   },
+   {
+    "text": "O `secure.py` aceita conexões do curl e não de navegadores",
+    "why": "Ele não sabe que programa se conecta. Ele escuta num endereço, e esse é o loopback da própria VM."
+   },
+   {
+    "text": "Ali ele é o seu computador, não a VM",
+    "why": "Certo. Nada escuta na porta 8000 do seu computador, e o 127.0.0.1 da VM é o loopback de outra máquina. O servidor precisa escutar no endereço de rede da VM."
+   }
+  ]
+ },
+ "ex-rekwn8bc": {
+  "prompt": "Para ser alcançável pelo navegador do seu computador, o `secure.py` é iniciado com `--host ___`, o endereço que representa todos os endereços da VM.",
+  "hint": "Quatro números, todos iguais.",
+  "blanks": [
+   {
+    "accept": [
+     "0.0.0.0"
+    ]
+   }
+  ]
+ },
+ "ex-7j8zvzhy": {
+  "prompt": "O curl manda `GET /v1/books/1` ao `secure.py` com `Origin: http://127.0.0.1:8080`, uma origem fora da lista. O que volta?",
+  "hint": "Compare as duas transcrições cabeçalho por cabeçalho.",
+  "choices": [
+   {
+    "text": "200 e o livro, sem `Access-Control-Allow-Origin`",
+    "why": "Certo. As duas respostas traziam o livro, e nada além daquele cabeçalho as diferenciava."
+   },
+   {
+    "text": "200 com o corpo vazio, para a página não ver nada",
+    "why": "O corpo era o livro inteiro nas duas transcrições. Escondê-lo é trabalho do navegador."
+   },
+   {
+    "text": "403 Forbidden, com um erro que nomeia a origem",
+    "why": "O servidor não recusa nada por causa do `Origin`; ele deixa um cabeçalho de fora."
+   },
+   {
+    "text": "Nenhuma resposta: a conexão fecha antes de a requisição ser lida",
+    "why": "A requisição foi lida e respondida, e o log também mostrou um 200 para a versão dela feita pelo navegador."
+   }
+  ]
+ },
+ "ex-80rdfer7": {
+  "prompt": "Quais destas requisições de uma página o navegador envia sem preflight? Marque todas as que se aplicam.",
+  "hint": "Um formulário HTML poderia tê-la enviado?",
+  "choices": [
+   {
+    "text": "Um GET sem cabeçalhos definidos pelo script",
+    "why": "Certo. É a requisição que o \"Read it\" enviou, e ela saiu direto."
+   },
+   {
+    "text": "Um PATCH com corpo JSON",
+    "why": "PATCH não é um método simples, e `application/json` não é um tipo simples: dois motivos para perguntar antes."
+   },
+   {
+    "text": "Um POST de campos de formulário, `application/x-www-form-urlencoded`",
+    "why": "Certo. Um formulário sempre pôde mandar exatamente isso, então o CORS não põe pergunta na frente."
+   },
+   {
+    "text": "Um GET levando um cabeçalho `Authorization`",
+    "why": "O método é simples, mas o cabeçalho não está na lista segura, então o navegador pergunta antes."
+   },
+   {
+    "text": "Um POST cujo corpo é `application/json`",
+    "why": "POST é um método simples, mas esse `Content-Type` não é um dos três que um formulário envia."
+   }
+  ]
+ },
+ "ex-nykk3bp7": {
+  "prompt": "Uma API oferece `GET /v1/books/1/sell`, que tira um exemplar do estoque. Uma página de uma origem fora da lista o chama com `fetch`. O que acontece com o estoque?",
+  "hint": "Um GET é perguntado antes?",
+  "choices": [
+   {
+    "text": "Igual: o navegador se recusa a enviá-lo",
+    "why": "Um GET simples sai sem perguntar, como o log mostrou para a página bloqueada."
+   },
+   {
+    "text": "Igual: o preflight é recusado antes",
+    "why": "Um GET sem cabeçalhos especiais não tem preflight nenhum."
+   },
+   {
+    "text": "Um a menos, e a página lê o número novo na resposta",
+    "why": "A requisição passa, mas a resposta não nomeia origem, então a página não lê nada dela."
+   },
+   {
+    "text": "Um a menos; só a resposta é escondida da página",
+    "why": "Certo. Por isso um GET não deve mudar nada: qualquer página de qualquer origem faz um navegador enviar um."
+   }
+  ]
+ },
+ "ex-f2w1s3ge": {
+  "prompt": "Ponha em ordem o que acontece quando a página da lista aperta \"Set the stock to 11\".",
+  "hint": "O script chama uma vez; o navegador faz duas requisições.",
+  "items": [
+   "O script chama `fetch` com PATCH e corpo JSON",
+   "O navegador envia `OPTIONS` com `Origin` e `Access-Control-Request-Method`",
+   "O `secure.py` responde 204, nomeando a origem, os métodos e os cabeçalhos",
+   "O navegador envia o PATCH",
+   "O `secure.py` responde 200 com `Access-Control-Allow-Origin`",
+   "O script lê o estoque novo"
+  ],
+  "trap": "O PATCH não sai até a resposta ao OPTIONS chegar e permiti-lo."
+ },
+ "ex-qa7c2mxp": {
+  "prompt": "Ligue cada assunto de um preflight ao cabeçalho da resposta que o resolve.",
+  "hint": "Um cabeçalho da resposta não responde a pergunta nenhuma.",
+  "pairs": [
+   {
+    "left": "qual página está perguntando",
+    "right": "`Access-Control-Allow-Origin`"
+   },
+   {
+    "left": "o método que o script quer",
+    "right": "`Access-Control-Allow-Methods`"
+   },
+   {
+    "left": "os cabeçalhos que o script definiu",
+    "right": "`Access-Control-Allow-Headers`"
+   },
+   {
+    "left": "por quanto tempo a resposta pode ser lembrada",
+    "right": "`Access-Control-Max-Age`"
+   }
+  ],
+  "right_distractors": [
+   "`Vary`"
+  ]
+ },
+ "ex-czyke212": {
+  "prompt": "Uma página manda `Authorization: Bearer …` com o PATCH. A resposta do preflight nomeia a origem certa e `Access-Control-Allow-Headers: Content-Type`. O que acontece?",
+  "hint": "O navegador compara o que pediu com o que foi permitido.",
+  "choices": [
+   {
+    "text": "O PATCH não é enviado, embora o curl com o mesmo token funcione",
+    "why": "Certo. O cabeçalho que o script definiu não estava entre os permitidos, então o navegador para na pergunta."
+   },
+   {
+    "text": "O PATCH sai sem o cabeçalho e recebe um 401",
+    "why": "Um navegador não corta uma requisição para ela caber; ele recusa a requisição inteira na pergunta."
+   },
+   {
+    "text": "O PATCH funciona: `Authorization` está na lista segura",
+    "why": "Não está na lista segura, e é por isso que ele causa um preflight."
+   },
+   {
+    "text": "O servidor responde 401 ao preflight, que veio sem token",
+    "why": "Um preflight não leva credenciais, e o `secure.py` o responde com 204. A recusa é do navegador."
+   }
+  ]
+ },
+ "ex-0jk9zh95": {
+  "prompt": "A página carregada de `127.0.0.1:8080` apertou \"Set the stock to 11\". Segundo o log do servidor, quantas requisições esse clique fez chegar ao servidor?",
+  "hint": "Olhe a última linha do log.",
+  "unit": "requisições"
+ },
+ "ex-bkesq2xh": {
+  "prompt": "Um servidor permite uma origem quando ela termina em `shelf.example`. Qual destas origens também passa?",
+  "hint": "Leia o teste como comparação de strings, letra por letra.",
+  "choices": [
+   {
+    "text": "`https://shelf.example.org`",
+    "why": "Termina em `.org`, então o teste a recusa. O buraco está na outra ponta do nome."
+   },
+   {
+    "text": "`https://shelf.example:8443`",
+    "why": "A porta faz parte da string da origem, então ela já não termina em `shelf.example`."
+   },
+   {
+    "text": "`https://notshelf.example`",
+    "why": "Certo. Termina nas letras certas, e é um domínio que qualquer um registra. Um conjunto de origens exatas não tem esse buraco."
+   },
+   {
+    "text": "`http://localhost:8080`",
+    "why": "Não termina em `shelf.example`, então o teste a recusa."
+   }
+  ]
+ },
+ "ex-q5v1vmy8": {
+  "prompt": "Uma API nomeia as origens permitidas corretamente, mas não manda `Vary: Origin` em resposta nenhuma, e há um cache compartilhado na frente dela. A página A, da lista, pede um livro; depois a página B, também da lista, pede o mesmo livro. O que B recebe?",
+  "hint": "O que o cache guardou, cabeçalhos incluídos?",
+  "choices": [
+   {
+    "text": "A própria resposta, porque caches ignoram cabeçalhos de CORS",
+    "why": "Um cache guarda a resposta inteira, cabeçalhos incluídos, e sem `Vary` acha que uma cópia serve a toda página."
+   },
+   {
+    "text": "Uma recusa, porque o cache entrega a B a resposta que nomeia A",
+    "why": "Certo. B é recusada por um motivo que não consegue ver. `Vary: Origin` faz o cache guardar uma cópia por origem."
+   },
+   {
+    "text": "A própria resposta: cada página dispara o próprio preflight",
+    "why": "Um GET simples não tem preflight, e uma resposta em cache é servida sem perguntar ao servidor."
+   },
+   {
+    "text": "Um 500, já que um cache não guarda respostas com cabeçalhos de CORS",
+    "why": "Caches guardam essas respostas sem problema. O problema é exatamente esse."
+   }
+  ]
+ },
+ "ex-xw7fkh10": {
+  "prompt": "Quais destas coisas impedem o programa de um estranho de mudar o estoque pelo PATCH do `secure.py`? Marque todas as que se aplicam.",
+  "hint": "O curl mudou o estoque dizendo vir de uma origem em que ninguém confia.",
+  "choices": [
+   {
+    "text": "Uma lista menor de origens permitidas",
+    "why": "O CORS diz ao navegador o que mostrar à página; um programa que não é navegador o ignora."
+   },
+   {
+    "text": "Um token, conferido em toda requisição",
+    "why": "Certo. A autenticação funciona seja qual for o cliente, navegador ou não, coisa que o CORS não faz."
+   },
+   {
+    "text": "Recusar toda requisição sem cabeçalho `Origin`",
+    "why": "Um programa manda o `Origin` que quiser, então o cabeçalho não prova nada sobre quem enviou."
+   },
+   {
+    "text": "Uma verificação de que o papel de quem chama pode mudar o estoque",
+    "why": "Certo. Isso é autorização, a aula 11, e o servidor a faz em toda requisição."
+   }
+  ]
+ },
+ "ex-0s7rgfc0": {
+  "prompt": "Sobre HTTP simples, uma requisição leva `Authorization: Basic YW5hOmNvcnJlY3QtaG9yc2U=`. O que alguém que lê os bytes no caminho descobre com isso?",
+  "hint": "Do que o `base64 -d` precisou?",
+  "choices": [
+   {
+    "text": "O nome de usuário e a senha",
+    "why": "Certo. O `base64 -d` não precisou de nada além do cabeçalho, e imprimiu `ana:correct-horse`."
+   },
+   {
+    "text": "Nada, sem a chave com que o base64 foi cifrado",
+    "why": "Base64 não tem chave; é um jeito de escrever bytes como texto."
+   },
+   {
+    "text": "O nome de usuário; a senha ali dentro é um hash",
+    "why": "Nada no cabeçalho é hash. As duas metades voltaram de uma só decodificação."
+   },
+   {
+    "text": "O tamanho da senha, e nada mais",
+    "why": "A senha inteira está ali, escrita em outro alfabeto."
+   }
+  ]
+ },
+ "ex-78x8494r": {
+  "prompt": "Ponha em ordem os passos que deram ao `secure.py` um certificado que o curl aceita.",
+  "hint": "A autoridade existe antes de poder assinar algo.",
+  "items": [
+   "Criar a chave da CA e o certificado autoassinado dela",
+   "Criar a chave do servidor e uma requisição de assinatura de certificado",
+   "Escrever `DNS:localhost, IP:127.0.0.1` em `server.ext`",
+   "Assinar a requisição com a chave da CA e o `server.ext`",
+   "Iniciar o `secure.py --tls` e chamá-lo com `curl --cacert`"
+  ],
+  "trap": "Os nomes precisam estar escritos antes da assinatura, porque ela os cobre."
+ },
+ "ex-7v7h5c73": {
+  "prompt": "O script de um colega falha com `curl: (60) SSL certificate problem`, e ele acrescenta `-k` para passar. Do que ele abriu mão?",
+  "hint": "O TLS faz dois trabalhos.",
+  "choices": [
+   {
+    "text": "A cifragem: com `-k` a requisição viaja em texto puro",
+    "why": "O `-k` mantém a cifragem e para de conferir o certificado, o que é pior porque tudo parece normal."
+   },
+   {
+    "text": "Saber quem está do outro lado",
+    "why": "Certo. A conexão é cifrada até quem respondeu, e agora nada diz quem é."
+   },
+   {
+    "text": "Nada que importe na rede da própria empresa",
+    "why": "Toda rede tem outras máquinas, e agora nada as diferencia do servidor."
+   },
+   {
+    "text": "O HSTS, que o `-k` desliga para aquele host",
+    "why": "O curl só aplica HSTS com `--hsts`; o `-k` é sobre conferir o certificado."
+   }
+  ]
+ },
+ "ex-7wpzjghb": {
+  "prompt": "O `secure.py` manda `Strict-Transport-Security: max-age=31536000`. Por quantos dias um navegador fica só no HTTPS para esse host?",
+  "hint": "Um dia tem 86400 segundos.",
+  "unit": "dias"
+ },
+ "ex-325hzjyz": {
+  "prompt": "Ligue cada cabeçalho que o `secure.py` manda ao que ele diz ao navegador.",
+  "hint": "Cada um proíbe alguma coisa.",
+  "pairs": [
+   {
+    "left": "`X-Content-Type-Options: nosniff`",
+    "right": "acredite no `Content-Type`, nunca adivinhe"
+   },
+   {
+    "left": "`Cache-Control: no-store`",
+    "right": "não guarde cópia desta resposta"
+   },
+   {
+    "left": "`Referrer-Policy: no-referrer`",
+    "right": "não diga nada sobre este endereço ao sair dele"
+   },
+   {
+    "left": "`Content-Security-Policy: frame-ancestors 'none'`",
+    "right": "não deixe página nenhuma pôr isto num frame"
+   }
+  ],
+  "right_distractors": [
+   "mande cookies só por HTTPS"
+  ]
+ },
+ "ex-h6s8mqdb": {
+  "prompt": "Uma API só responde em JSON. Por que ela ainda manda `Content-Security-Policy: default-src 'none'`?",
+  "hint": "Pense numa resposta que acaba onde não devia.",
+  "choices": [
+   {
+    "text": "Sem ele, navegadores recusam JSON de outra origem",
+    "why": "Ler JSON de outra origem é questão do CORS; o CSP não entra nisso."
+   },
+   {
+    "text": "Ele impede outras origens de mandar requisições à API",
+    "why": "Um CSP limita o que um documento carrega. Requisições à API não são assunto dele, e nem o CORS as impede."
+   },
+   {
+    "text": "Ele cifra o JSON para que só páginas permitidas o leiam",
+    "why": "Um cabeçalho não cifra nada; quem faz isso é o TLS, para todo byte."
+   },
+   {
+    "text": "Uma resposta exibida como página não carrega nem executa nada",
+    "why": "Certo. JSON não precisa de nada, então proibir tudo não custa nada, e desarma o único caso em que uma resposta é renderizada."
+   }
+  ]
+ },
+ "ex-9ae26tvw": {
+  "prompt": "O cabeçalho `Server` do `secure.py` diz `shelf` e nenhuma versão. O que isso muda?",
+  "hint": "A versão em si é uma falha?",
+  "choices": [
+   {
+    "text": "Corrige as falhas conhecidas do Python em que roda",
+    "why": "O software continua o mesmo; só atualizá-lo corrige as falhas."
+   },
+   {
+    "text": "Deixa de dizer a todo cliente quais falhas conhecidas tentar primeiro",
+    "why": "Certo. Tira um anúncio, não uma vulnerabilidade. Manter o software atualizado é a correção."
+   },
+   {
+    "text": "Faz o servidor recusar clientes que perguntam a versão",
+    "why": "Ninguém pergunta; o cabeçalho sai em toda resposta, sem pedido."
+   },
+   {
+    "text": "Nada, já que só navegadores leem esse cabeçalho",
+    "why": "Todo cliente o recebe, e scanners o leem antes de qualquer outra coisa."
+   }
+  ]
+ },
+ "ex-nhd66v0g": {
+  "prompt": "Ligue cada risco de API da OWASP à defesa que este curso construiu para ele.",
+  "hint": "A tabela da seção tem uma coluna de aulas.",
+  "pairs": [
+   {
+    "left": "API1 Broken Object Level Authorization",
+    "right": "conferir quem chama contra cada objeto, aula 11"
+   },
+   {
+    "left": "API4 Unrestricted Resource Consumption",
+    "right": "um limite por cliente, aula 12"
+   },
+   {
+    "left": "API8 Security Misconfiguration",
+    "right": "CORS, cabeçalhos e TLS em toda resposta, aula 13"
+   },
+   {
+    "left": "API9 Improper Inventory Management",
+    "right": "um contrato escrito de todo endpoint, aula 6"
+   }
+  ],
+  "right_distractors": [
+   "hash lento de senhas, aula 10"
+  ]
+ },
+ "ex-eqchbvez": {
+  "prompt": "Uma conta comum chama `DELETE /v1/admin/users/7`, e o usuário 7 é apagado. Que risco é esse?",
+  "hint": "A própria função devia ter sido recusada.",
+  "choices": [
+   {
+    "text": "API2 Broken Authentication",
+    "why": "A conta era quem dizia ser. O que ninguém conferiu foi o que ela podia fazer."
+   },
+   {
+    "text": "API1 Broken Object Level Authorization",
+    "why": "API1 é uma função permitida usada no objeto errado. Aqui uma conta comum nunca deveria chegar à função."
+   },
+   {
+    "text": "API6 Unrestricted Access to Sensitive Business Flows",
+    "why": "API6 é um fluxo permitido usado demais. Aqui uma chamada bastou, numa função que a conta não devia alcançar."
+   },
+   {
+    "text": "API5 Broken Function Level Authorization",
+    "why": "Certo. Toda função administrativa precisa conferir o papel ou o escopo, seja quem for que chama."
+   }
+  ]
+ },
+ "ex-hyfps6x2": {
+  "prompt": "Um cliente manda `PATCH /v1/users/me` com `{\"role\": \"admin\"}` e vira administrador. Que defesa faltou?",
+  "hint": "O objeto era do próprio cliente. O campo não era dele para definir.",
+  "choices": [
+   {
+    "text": "Regras de escrita por campo (API3)",
+    "why": "Certo. Mudar o próprio perfil é permitido; mudar aquela propriedade dele, não, e a escrita tem de recusar o campo."
+   },
+   {
+    "text": "Um limite de taxa nas requisições PATCH (API4)",
+    "why": "Uma requisição bastou; volume não teve nada a ver."
+   },
+   {
+    "text": "CORS no endpoint de usuários (API8)",
+    "why": "O curl manda isso sem navegador nenhum, então o CORS não entra."
+   },
+   {
+    "text": "Conferir a assinatura do token (API2)",
+    "why": "O cliente era exatamente quem dizia ser. O problema é o que ele podia escrever."
+   }
+  ]
+ },
+ "ex-jkm08bya": {
+  "prompt": "Por que um servidor buscar um endereço que o cliente forneceu é mais perigoso do que o cliente buscá-lo?",
+  "hint": "Onde cada um está na rede?",
+  "choices": [
+   {
+    "text": "O download do servidor prende uma thread por mais tempo",
+    "why": "Essa é a preocupação da API4, e um timeout resolve. SSRF é sobre aonde a requisição pode ir."
+   },
+   {
+    "text": "O navegador do cliente aplica CORS e o servidor não",
+    "why": "Verdade, e fora de questão: o perigo é a posição do servidor na rede, não um cabeçalho."
+   },
+   {
+    "text": "Ele está dentro de uma rede que o cliente não vê",
+    "why": "Certo. De lá ele alcança `127.0.0.1`, o banco de dados e `169.254.169.254`, com a posição e a confiança do servidor."
+   },
+   {
+    "text": "Um endereço longo pode estourar o parser do servidor",
+    "why": "Entrada longa é outro problema, menor. Um endereço curto pode alcançar o banco de dados."
+   }
+  ]
+ },
+ "ex-6sqrrehp": {
+  "prompt": "O shelf precisa baixar uma capa de um endereço que o cliente envia. Quais verificações devem ficar na frente desse download? Marque todas as que se aplicam.",
+  "hint": "A seção lista quatro.",
+  "choices": [
+   {
+    "text": "Só hosts de uma lista de permissões, por `https`",
+    "why": "Certo. Uma lista de destinos, comparada exatamente, é a primeira verificação e a mais forte."
+   },
+   {
+    "text": "Redirecionamentos seguidos à vontade, já que o primeiro endereço foi conferido",
+    "why": "Um redirecionamento é um segundo endereço, e o cliente pode tê-lo escolhido também. Cada um é conferido de novo."
+   },
+   {
+    "text": "O nome resolvido, e qualquer endereço que não seja público recusado",
+    "why": "Certo. O `is_global` disse `False` para o loopback, a rede privada e o endereço de metadados."
+   },
+   {
+    "text": "`169.254.169.254` liberado, por não ser rede privada",
+    "why": "É link-local, onde as nuvens guardam os metadados, e o `is_global` disse `False` para ele."
+   },
+   {
+    "text": "Um timeout e um limite de tamanho",
+    "why": "Certo. Uma resposta lenta ou enorme não pode prender as threads da API."
+   }
+  ]
+ },
+ "ex-jnkgmxje": {
+  "prompt": "A API de um parceiro manda ao shelf um livro cujo `price_cents` é `\"free\"` em vez de um número. O que o shelf deve fazer?",
+  "hint": "Trate como trataria a requisição de um cliente.",
+  "choices": [
+   {
+    "text": "Guardar como veio, já que o parceiro assinou contrato",
+    "why": "Um contrato não impede um bug nem uma invasão. O que for guardado entra com a autoridade do próprio shelf."
+   },
+   {
+    "text": "Recusar, porque ela quebra o schema combinado",
+    "why": "Certo. A resposta de um parceiro é entrada, e é validada como entrada."
+   },
+   {
+    "text": "Guardar os campos que fazem parse e descartar o preço",
+    "why": "Meia resposta guardada é um registro em que ninguém confia. Recuse inteira e diga por quê."
+   },
+   {
+    "text": "Perguntar de novo com a verificação de TLS desligada",
+    "why": "O problema é o formato, não a conexão, e a verificação fica ligada aconteça o que acontecer."
+   }
+  ]
+ },
+ "ex-k72p0gkk": {
+  "prompt": "Qual destas é uma linha que dá para conferir numa API em produção, de fora?",
+  "hint": "Um comando curl deve resolver.",
+  "choices": [
+   {
+    "text": "A API segue boas práticas de segurança em todo endpoint",
+    "why": "Verdadeiro ou falso, nenhuma requisição mostra isso. É uma esperança, não uma verificação."
+   },
+   {
+    "text": "O time leva segurança a sério",
+    "why": "Uma afirmação sobre pessoas; nada na API a responde."
+   },
+   {
+    "text": "Origens desconhecidas não recebem `Access-Control-Allow-Origin`",
+    "why": "Certo. Um curl com um cabeçalho `Origin` resolve, hoje e depois de toda mudança."
+   },
+   {
+    "text": "O código foi revisado por alguém experiente antes de lançar",
+    "why": "Vale a pena, e é invisível de fora: a revisão não deixa nada numa resposta."
+   }
+  ]
+ },
+ "ex-kp8hpv9v": {
+  "prompt": "A lista é percorrida de novo depois de toda ___ na API, porque um cabeçalho perdido numa refatoração não falha teste nenhum nem quebra página nenhuma.",
+  "hint": "Não uma vez antes do lançamento.",
+  "blanks": [
+   {
+    "accept": [
+     "mudança",
+     "alteração",
+     "implantação",
+     "versão"
+    ]
+   }
+  ]
+ },
+ "ex-q2saje7q": {
+  "prompt": "Uma página servida em `https://localhost:8080` chama o `secure.py`, cuja lista de origens ainda é a padrão. O navegador se recusa a mostrar qualquer resposta a ela. Por quê?",
+  "hint": "Escreva a origem da página e a da lista.",
+  "choices": [
+   {
+    "text": "O HSTS proíbe requisições entre origens",
+    "why": "O HSTS só decide que um host é acessado por HTTPS; não diz nada sobre origens."
+   },
+   {
+    "text": "O certificado não cobre a porta 8080",
+    "why": "Certificados nomeiam hosts, não portas, e a recusa aqui é do CORS, não do TLS."
+   },
+   {
+    "text": "`https` não é `http`; a origem está fora da lista",
+    "why": "Certo. O esquema faz parte da origem, e a lista só tem `http://localhost:8080`."
+   },
+   {
+    "text": "Uma página servida por HTTPS não pode chamar servidor nenhum",
+    "why": "Pode; navegadores impedem uma página HTTPS de chamar HTTP simples, mas essa é outra regra, e não é ela que recusa aqui."
+   }
+  ]
+ },
+ "ex-yvh8wknt": {
+  "prompt": "Uma página com usuário autenticado lê os pedidos dele numa API, com cookies (`credentials: \"include\"`). Quais cabeçalhos na resposta da API fazem isso funcionar sem abrir para outros sites? Marque todos os que se aplicam.",
+  "hint": "Credenciais mudam o que o navegador aceita.",
+  "choices": [
+   {
+    "text": "`Access-Control-Allow-Origin: *`",
+    "why": "Navegadores recusam `*` numa resposta com credenciais; deixaria todo site ler os pedidos de todo usuário."
+   },
+   {
+    "text": "`Access-Control-Allow-Origin` com a origem exata da página",
+    "why": "Certo. Uma origem, de uma lista, comparada inteira."
+   },
+   {
+    "text": "`Access-Control-Allow-Credentials: true`",
+    "why": "Certo. Sem ele o navegador esconde da página uma resposta com credenciais."
+   },
+   {
+    "text": "`Access-Control-Allow-Origin` copiado do `Origin` da requisição",
+    "why": "Isso nomeia toda origem que pergunta, o que é `*` sem a proteção do navegador."
+   },
+   {
+    "text": "`Vary: Origin`",
+    "why": "Certo. A resposta depende do `Origin`, e um cache precisa saber disso."
+   }
+  ]
+ },
+ "ex-qzy6xhgc": {
+  "prompt": "Testando, uma desenvolvedora abre o `page.html` direto do disco, um endereço `file://`, e recebe um erro de CORS. Ela acrescenta `null` às origens permitidas e funciona. O que mais ela permitiu?",
+  "hint": "Quem mais manda `Origin: null`?",
+  "choices": [
+   {
+    "text": "Toda origem, porque `null` funciona como curinga",
+    "why": "`*` é o curinga. `null` é um valor que alguns tipos de página mandam."
+   },
+   {
+    "text": "Páginas abertas do próprio disco, e nada mais",
+    "why": "`Origin: null` não diz nada sobre de onde a página veio, e vários tipos de página o mandam."
+   },
+   {
+    "text": "Qualquer `iframe` com sandbox que alguém ponha em qualquer site",
+    "why": "Certo. Um frame com sandbox também manda `Origin: null`, e qualquer um pode publicar um."
+   },
+   {
+    "text": "Requisições do curl, que manda `null` por padrão",
+    "why": "O curl não manda `Origin` a não ser que alguém peça, e de qualquer forma ignora o CORS."
+   }
+  ]
+ }
+}

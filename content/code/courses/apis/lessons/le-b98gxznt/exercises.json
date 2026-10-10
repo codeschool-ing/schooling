@@ -1,0 +1,960 @@
+[
+  {
+    "id": "ex-mhzm37bw",
+    "version": 1,
+    "section": "who-is-asking",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The partner's API key reads the books, then asks for the list of keys and is refused. Which question did the server answer with no?",
+    "hint": "It had already worked out who was asking.",
+    "choices": [
+      {
+        "text": "Who is this caller?",
+        "correct": false,
+        "why": "The server knew: the key matched its row, and `/v1/whoami` names the partner. That question was answered yes."
+      },
+      {
+        "text": "Has the key expired yet?",
+        "correct": false,
+        "why": "keys.py's keys have no expiry; they last until revoked. And an expired credential is a 401, not a refusal of one action."
+      },
+      {
+        "text": "Is this caller allowed to do this?",
+        "correct": true,
+        "why": "Right. That is authorisation: a known caller, an action it may not take, and a 403."
+      },
+      {
+        "text": "Was the request sent over HTTPS?",
+        "correct": false,
+        "why": "The lab is plain HTTP on 127.0.0.1 throughout, and the same key read the books a moment before."
+      }
+    ]
+  },
+  {
+    "id": "ex-apbvv1bn",
+    "version": 1,
+    "section": "who-is-asking",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each term to what it is.",
+    "hint": "One of them is a name, and a name proves nothing.",
+    "pairs": [
+      {
+        "left": "`ana`",
+        "right": "a name anybody can type"
+      },
+      {
+        "left": "ana's password, or a token issued to her",
+        "right": "a credential: proof of the name"
+      },
+      {
+        "left": "authentication",
+        "right": "finding out who is asking"
+      },
+      {
+        "left": "authorisation",
+        "right": "deciding what that caller may do"
+      }
+    ],
+    "right_distractors": [
+      "a scheme the server would accept"
+    ]
+  },
+  {
+    "id": "ex-m4r5qfy4",
+    "version": 1,
+    "section": "who-is-asking",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An employee who changes prices and a partner program that reads the catalogue have both authenticated to a shop's API. What does that settle?",
+    "hint": "Two questions, asked in order.",
+    "choices": [
+      {
+        "text": "That both may change prices, since both proved who they are",
+        "correct": false,
+        "why": "This is the single-gate picture. Proving a name opens nothing by itself; a rule about the name and the action decides."
+      },
+      {
+        "text": "Who each one is, and nothing yet about what each may do",
+        "correct": true,
+        "why": "Right. Authentication hands the server a name; authorisation, lesson 11, decides what that name may do."
+      },
+      {
+        "text": "That their requests are encrypted on the way",
+        "correct": false,
+        "why": "Authentication says nothing about the wire. Encryption is HTTPS, lesson 13, and Basic over plain HTTP shows the two are separate."
+      },
+      {
+        "text": "Which of the two the shop trusts more",
+        "correct": false,
+        "why": "Trust is a rule somebody writes about each name, which is authorisation. Authenticating both equally says nothing about it."
+      }
+    ]
+  },
+  {
+    "id": "ex-e8x0x5jk",
+    "version": 1,
+    "section": "keys-py",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After `adduser ana`, what is in the `password_hash` column of her row?",
+    "hint": "Three fields joined by `$`.",
+    "choices": [
+      {
+        "text": "The password, encrypted with a key that keys.py keeps",
+        "correct": false,
+        "why": "Nothing in keys.py can decrypt it, because nothing was encrypted. A hash is one-way: the server can check a password against it and never get the password back."
+      },
+      {
+        "text": "The password in base64",
+        "correct": false,
+        "why": "That is what travels in a Basic header, and anybody can decode it. Storing it would put every password one `base64 -d` away."
+      },
+      {
+        "text": "A token that stands in for the password",
+        "correct": false,
+        "why": "Tokens live in their own table, are issued at login and expire. The users table holds what checks the password itself."
+      },
+      {
+        "text": "The function's name, a random salt, and the scrypt result",
+        "correct": true,
+        "why": "Right. To check a password the server runs scrypt again with that salt and compares the results; lesson 10 is about choosing all three."
+      }
+    ]
+  },
+  {
+    "id": "ex-r1tr8atp",
+    "version": 1,
+    "section": "keys-py",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `rest.py` have to be stopped before `python3 keys.py` starts?",
+    "hint": "Look at the address each one listens on.",
+    "choices": [
+      {
+        "text": "Both listen on 127.0.0.1:8000",
+        "correct": true,
+        "why": "Right. Only one program can hold a port; the second would fail to start. The data in shelf.db is shared without trouble."
+      },
+      {
+        "text": "keys.py replaces the tables that rest.py reads",
+        "correct": false,
+        "why": "keys.py only adds three tables with `CREATE TABLE IF NOT EXISTS`; the books are untouched, and rest.py reads them later as before."
+      },
+      {
+        "text": "rest.py would hand out the books without any credential and so make keys.py pointless",
+        "correct": false,
+        "why": "True of a real deployment, where the open API would be a back door, but not why it must stop here: the clash is the port."
+      },
+      {
+        "text": "SQLite lets one program open shelf.db at a time",
+        "correct": false,
+        "why": "SQLite allows many readers at once; `sqlite3 shelf.db` ran beside the server all through the lesson."
+      }
+    ]
+  },
+  {
+    "id": "ex-2r81bnma",
+    "version": 1,
+    "section": "the-challenge",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A 401 carries `WWW-Authenticate: Bearer realm=\"shelf\"`. What is it telling the client?",
+    "hint": "It is a challenge, not an error message.",
+    "choices": [
+      {
+        "text": "Bearer tokens are accepted for shelf",
+        "correct": true,
+        "why": "Right. Each `WWW-Authenticate` names a scheme the server takes, and `realm` names what it protects."
+      },
+      {
+        "text": "The token it sent has expired and must be renewed",
+        "correct": false,
+        "why": "That one came with no credential at all. A refused token adds `error=\"invalid_token\"`, and even then does not say why."
+      },
+      {
+        "text": "It has to create an account before it asks again",
+        "correct": false,
+        "why": "A challenge says how to prove a name, not how to get one. keys.py has no sign-up at all; users are added from the command line."
+      },
+      {
+        "text": "The realm called shelf is down for maintenance",
+        "correct": false,
+        "why": "A server that is down answers 5xx or nothing. A 401 is a working server asking who you are."
+      }
+    ]
+  },
+  {
+    "id": "ex-0fj653qp",
+    "version": 1,
+    "section": "the-challenge",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A client with a valid token asks to delete another user's account, which its user may not do. Which status fits?",
+    "hint": "Would sending the same credential again change anything?",
+    "choices": [
+      {
+        "text": "401, so the client signs in again with more rights",
+        "correct": false,
+        "why": "A 401 here sends the client round a login loop: it signs in, gets the same token's rights, asks, and gets a 401 again."
+      },
+      {
+        "text": "400, because the request should not have been sent",
+        "correct": false,
+        "why": "400 says the request is malformed. This one is well formed; what is wrong is who is making it."
+      },
+      {
+        "text": "403",
+        "correct": true,
+        "why": "Right. The server knows who is asking and refuses the action, and repeating the credential will not change it."
+      },
+      {
+        "text": "401 without `WWW-Authenticate`, since no other scheme would help",
+        "correct": false,
+        "why": "A 401 without a challenge breaks the contract twice: wrong status, and nothing saying how to authenticate."
+      }
+    ]
+  },
+  {
+    "id": "ex-rw2pc8hj",
+    "version": 1,
+    "section": "the-challenge",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A client answers a challenge with the `___` header: a scheme, a space, then the credentials.",
+    "hint": "Its name is a misnomer too, like 401's.",
+    "blanks": [
+      {
+        "accept": [
+          "Authorization"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-5a2fjhdn",
+    "version": 1,
+    "section": "the-challenge",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "keys.py answers a request with no credential with a 401. How many `WWW-Authenticate` headers does that 401 carry?",
+    "hint": "One per scheme that has a standard challenge.",
+    "value": 2,
+    "tolerance": 0,
+    "unit": "headers"
+  },
+  {
+    "id": "ex-fr0cyds4",
+    "version": 1,
+    "section": "basic",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "curl sent `Authorization: Basic YW5hOnJpdmVyLWxhbXAtNDI=`. What does somebody who copies that header have?",
+    "hint": "Try `base64 -d`.",
+    "choices": [
+      {
+        "text": "Only the name; the password part is encrypted",
+        "correct": false,
+        "why": "Nothing in Basic is encrypted. The whole `name:password` is base64, and it decodes in one command."
+      },
+      {
+        "text": "A hash of the password that would still have to be cracked",
+        "correct": false,
+        "why": "The hash lives in the server's table. What travels is the password itself, encoded."
+      },
+      {
+        "text": "The name and the password",
+        "correct": true,
+        "why": "Right. base64 is an encoding, and `base64 -d` printed `ana:river-lamp-42`. That is why Basic needs HTTPS."
+      },
+      {
+        "text": "Nothing they can use without the server's key",
+        "correct": false,
+        "why": "base64 has no key. Anybody with the header has everything needed to be ana."
+      }
+    ]
+  },
+  {
+    "id": "ex-g4jtq1qk",
+    "version": 1,
+    "section": "basic",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these follow from Basic sending the password with every request? Choose all that apply.",
+    "hint": "Think about the server, the client and taking access away.",
+    "choices": [
+      {
+        "text": "The server runs its slow password check on every request",
+        "correct": true,
+        "why": "Right. A hundred requests are a hundred scrypt runs, on both sides of the wait."
+      },
+      {
+        "text": "The client must keep the password for as long as it makes requests",
+        "correct": true,
+        "why": "Right. Whatever can read where it is kept can be ana."
+      },
+      {
+        "text": "The base64 keeps the password safe on plain HTTP",
+        "correct": false,
+        "why": "base64 decodes in one command. Only HTTPS hides the header on the way."
+      },
+      {
+        "text": "Access ends only when the password changes",
+        "correct": true,
+        "why": "Right. The server keeps nothing per client that it could delete, so there is no logout."
+      },
+      {
+        "text": "The server keeps a session row that logout can delete",
+        "correct": false,
+        "why": "That is the bearer token's table. Basic leaves nothing on the server between requests."
+      }
+    ]
+  },
+  {
+    "id": "ex-d1mavsjn",
+    "version": 1,
+    "section": "basic",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "base64 is an ___, not encryption: it has no key, and `base64 -d` turns it back.",
+    "hint": "A way of writing bytes with printable characters.",
+    "blanks": [
+      {
+        "accept": [
+          "encoding"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6jbmxrpa",
+    "version": 1,
+    "section": "bearer-tokens",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A copy of `shelf.db` leaks, `tokens` table included. Why can the rows in it not be sent as tokens?",
+    "hint": "What does keys.py do with whatever arrives after `Bearer`?",
+    "choices": [
+      {
+        "text": "The rows are encrypted with a key only the server has",
+        "correct": false,
+        "why": "Nothing is encrypted; the rows are hashes. Their safety comes from what the server does with what it is sent."
+      },
+      {
+        "text": "A sent hash is hashed again, and that is in no row",
+        "correct": true,
+        "why": "Right. The hash of the hash is in no row. That is the point of storing only the SHA-256."
+      },
+      {
+        "text": "Tokens expire the moment the file is copied",
+        "correct": false,
+        "why": "Copying a file changes nothing on the server. The tokens keep their expiry, up to an hour away."
+      },
+      {
+        "text": "SQLite files are unreadable outside the program that made them",
+        "correct": false,
+        "why": "`sqlite3 shelf.db` read the table in the lesson. The file is readable by anyone who has it."
+      }
+    ]
+  },
+  {
+    "id": "ex-j1rfaeaj",
+    "version": 1,
+    "section": "bearer-tokens",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "keys.py stores passwords with scrypt and tokens with plain SHA-256. What makes the fast hash enough for a token?",
+    "hint": "What makes a slow hash worth its cost for a password?",
+    "choices": [
+      {
+        "text": "Tokens expire within the hour, so a leaked hash is useless after that",
+        "correct": false,
+        "why": "The expiry limits the token, not the work of guessing it. Even a token that lived a year would be safe behind SHA-256."
+      },
+      {
+        "text": "SHA-256 is slower than scrypt",
+        "correct": false,
+        "why": "The other way round, and by design: scrypt is slow on purpose, and that is why passwords get it."
+      },
+      {
+        "text": "Nobody chose it, so there is no list of likely values to try",
+        "correct": true,
+        "why": "Right. A slow hash makes guessing likely passwords expensive; 256 random bits leave nothing likely to guess."
+      },
+      {
+        "text": "Tokens never leave the server",
+        "correct": false,
+        "why": "They leave it on every login: the client holds the token and sends it with each request."
+      }
+    ]
+  },
+  {
+    "id": "ex-zcq80g0r",
+    "version": 1,
+    "section": "bearer-tokens",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`TOKEN_SECONDS` in keys.py is 3600. For how many minutes after a login does the token work, if nobody logs out?",
+    "hint": "Seconds to minutes.",
+    "value": 60,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-fx9t1cvm",
+    "version": 1,
+    "section": "bearer-tokens",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the life of one keys.py token in order.",
+    "hint": "The password is sent once, at the start.",
+    "items": [
+      "POST `/v1/login` with the name and the password",
+      "keys.py stores the SHA-256 of a new random token",
+      "The client sends `Authorization: Bearer` with each request",
+      "POST `/v1/logout` deletes the token's row",
+      "The same token gets a 401 with `error=\"invalid_token\"`"
+    ],
+    "trap": "The row is written before the client sees the token, and deleting it is the whole of revocation."
+  },
+  {
+    "id": "ex-78f8brtx",
+    "version": 1,
+    "section": "api-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the partner bookshop get its own API key rather than ana's name and password?",
+    "hint": "Think about the day somebody leaves, and about what the log says.",
+    "choices": [
+      {
+        "text": "A password cannot travel in a header",
+        "correct": false,
+        "why": "Basic puts one in `Authorization` on every request. The reason is who the credential names."
+      },
+      {
+        "text": "So the requests name its program, and revoking that access touches no password",
+        "correct": true,
+        "why": "Right. `/v1/whoami` says `application`, and revoking the key leaves ana's password alone."
+      },
+      {
+        "text": "Keys never expire, so the partner never has to change anything",
+        "correct": false,
+        "why": "Lasting until revoked is the key's weakness, not its selling point, and rotation means the partner does change it."
+      },
+      {
+        "text": "ana's password would be shown by `/v1/whoami`",
+        "correct": false,
+        "why": "`/v1/whoami` shows a kind and a name, never a credential."
+      }
+    ]
+  },
+  {
+    "id": "ex-350esy2k",
+    "version": 1,
+    "section": "api-keys",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`shelf_2ff69109` is stored as it is, unhashed. What is it for?",
+    "hint": "It is the part of the key that is safe to show.",
+    "choices": [
+      {
+        "text": "Proving the key valid without needing the secret part",
+        "correct": false,
+        "why": "Anybody can read a prefix in a log. The proof is the secret part, checked by its hash."
+      },
+      {
+        "text": "Encrypting the secret part before it is stored",
+        "correct": false,
+        "why": "Nothing is encrypted. The secret part is hashed, and the prefix is not involved in that."
+      },
+      {
+        "text": "Saying how long the key lives before it expires",
+        "correct": false,
+        "why": "keys.py's keys have no expiry; they last until somebody deletes the row."
+      },
+      {
+        "text": "Finding the row, and spotting the key in logs",
+        "correct": true,
+        "why": "Right. It is the primary key keys.py looks up, and a pattern a secret scanner can spot in a public repository."
+      }
+    ]
+  },
+  {
+    "id": "ex-wm83j0fc",
+    "version": 1,
+    "section": "api-keys",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the rotation of a partner's key in order, so the partner never has a moment without a working key.",
+    "hint": "The old key is the last thing to go.",
+    "items": [
+      "Create a second key for the partner",
+      "Pass the new key to the partner",
+      "The partner switches its configuration to the new key",
+      "Watch the old key's `last_used` stop moving",
+      "Revoke the old key by its prefix"
+    ],
+    "trap": "Revoking first leaves the partner refused until the new key reaches its configuration."
+  },
+  {
+    "id": "ex-batm2yqq",
+    "version": 1,
+    "section": "api-keys",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A partner lost the key ana made for them last month and asks for it to be sent again. What can she do with keys.py?",
+    "hint": "What did the server keep of the key?",
+    "choices": [
+      {
+        "text": "Make a new key, pass it on, revoke the lost one",
+        "correct": true,
+        "why": "Right. Nothing can show the old key again, and a key nobody can account for is better revoked."
+      },
+      {
+        "text": "Read it from the `api_keys` table",
+        "correct": false,
+        "why": "The table holds the prefix and a SHA-256 of the key. The key itself is in no row."
+      },
+      {
+        "text": "Ask `GET /v1/keys`, which lists every key",
+        "correct": false,
+        "why": "It lists prefixes, names and dates. The note on creation said it: shown once."
+      },
+      {
+        "text": "Decode it from the stored hash with `base64 -d`",
+        "correct": false,
+        "why": "A hash is not an encoding. base64 turns back; SHA-256 does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-8smrcpe3",
+    "version": 1,
+    "section": "where-it-travels",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "keys.py refused `?access_token=…` with a 401. Why is that token still compromised?",
+    "hint": "Look at the second terminal.",
+    "choices": [
+      {
+        "text": "Its request line went into the server's log",
+        "correct": true,
+        "why": "Right. Every request is logged, refused ones included, query string and all, and the token sat in the log while it was still valid."
+      },
+      {
+        "text": "A 401 confirms to the caller that the token is valid",
+        "correct": false,
+        "why": "The 401 said `authentication required`, the same as for no token. It confirmed nothing."
+      },
+      {
+        "text": "keys.py copied it into the `tokens` table",
+        "correct": false,
+        "why": "Only `/v1/login` writes that table, and it writes hashes."
+      },
+      {
+        "text": "curl keeps every URL it fetches in a history file",
+        "correct": false,
+        "why": "curl keeps no history. The leak in the capture is on the server's side."
+      }
+    ]
+  },
+  {
+    "id": "ex-eft7a9w9",
+    "version": 1,
+    "section": "where-it-travels",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A token was put in a URL. Where can it end up? Choose all that apply.",
+    "hint": "Anywhere an address is written down.",
+    "choices": [
+      {
+        "text": "The access log of a proxy in front of the server",
+        "correct": true,
+        "why": "Right. Every proxy logs the request line, and the server cannot scrub somebody else's log."
+      },
+      {
+        "text": "The browser's history",
+        "correct": true,
+        "why": "Right. An address opened in a browser is kept there, token and all."
+      },
+      {
+        "text": "The `Authorization` header of the next request",
+        "correct": false,
+        "why": "Nothing moves a query parameter into a header on its own; the header is what the client chose not to use."
+      },
+      {
+        "text": "The `Referer` header sent to the next site the page links to",
+        "correct": true,
+        "why": "Right. The browser tells the next site where the visitor came from, and that address carried the token."
+      },
+      {
+        "text": "The `tokens` table, unhashed",
+        "correct": false,
+        "why": "The table holds hashes, written at login, whatever the URL said."
+      }
+    ]
+  },
+  {
+    "id": "ex-nk02zk0k",
+    "version": 1,
+    "section": "where-it-travels",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A support ticket shows a URL with a live keys.py token in it. What fixes the leak?",
+    "hint": "The ticket is not the only copy.",
+    "choices": [
+      {
+        "text": "Deleting the ticket",
+        "correct": false,
+        "why": "The same URL is in logs and histories nobody will find. Only the server can make the token worthless."
+      },
+      {
+        "text": "Waiting: it may stop working within the hour",
+        "correct": false,
+        "why": "It will, and until then it works for whoever has the URL. An expiry bounds a leak nobody knows about; this one is known."
+      },
+      {
+        "text": "Scrubbing the token out of keys.py's log",
+        "correct": false,
+        "why": "That removes one copy of several, and the token still works."
+      },
+      {
+        "text": "Revoking it with `/v1/logout`, then logging in again",
+        "correct": true,
+        "why": "Right. Deleting the row makes every copy, wherever it is, worthless at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-nnmrx8sb",
+    "version": 1,
+    "section": "comparing-secrets",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `==` the wrong way to compare a key with the stored one?",
+    "hint": "Compare the first two timings in the capture.",
+    "choices": [
+      {
+        "text": "Its time depends on where the strings differ",
+        "correct": true,
+        "why": "Right. 19.8 nsec when the first character differed, 3.25 usec when the last did: the time depends on the answer."
+      },
+      {
+        "text": "It is slower than `compare_digest` on long strings",
+        "correct": false,
+        "why": "It is faster, in the capture by a long way. Speed is not the problem; varying speed is."
+      },
+      {
+        "text": "It can say two different strings are equal",
+        "correct": false,
+        "why": "Its answer is always right. What leaks is how long it took to give it."
+      },
+      {
+        "text": "It compares only the first 43 characters of each string",
+        "correct": false,
+        "why": "It compared all hundred thousand when they were equal up to the last one."
+      }
+    ]
+  },
+  {
+    "id": "ex-4j7xgtqk",
+    "version": 1,
+    "section": "comparing-secrets",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the capture, `==` took 19.8 nsec when the strings differed in the first character and 3.25 usec when they differed in the last. About how many times longer was the second?",
+    "hint": "One usec is a thousand nsec.",
+    "value": 164,
+    "tolerance": 15,
+    "unit": "times"
+  },
+  {
+    "id": "ex-zhqkkfqb",
+    "version": 1,
+    "section": "comparing-secrets",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each language to its constant-time comparison.",
+    "hint": "One of the right-hand names is an ordinary equality, and it is the trap.",
+    "pairs": [
+      {
+        "left": "Python",
+        "right": "`hmac.compare_digest`"
+      },
+      {
+        "left": "Node.js",
+        "right": "`crypto.timingSafeEqual`"
+      },
+      {
+        "left": "Java",
+        "right": "`MessageDigest.isEqual`"
+      },
+      {
+        "left": "Go",
+        "right": "`subtle.ConstantTimeCompare`"
+      }
+    ],
+    "right_distractors": [
+      "`String.equals`"
+    ]
+  },
+  {
+    "id": "ex-bv5zc288",
+    "version": 1,
+    "section": "saying-nothing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Suppose `check_password` returned at once for an unknown user and skipped `DECOY`. What would the capture's timings show?",
+    "hint": "Which part of the check is slow?",
+    "choices": [
+      {
+        "text": "Nothing new; the message would still be the same",
+        "correct": false,
+        "why": "The words would match and the clock would not. A stopwatch reads a difference as well as a message does."
+      },
+      {
+        "text": "Both refusals would get quicker",
+        "correct": false,
+        "why": "A known user with a wrong password still runs scrypt; only the unknown one skips it."
+      },
+      {
+        "text": "The unknown user's refusal would be far quicker, so the time would say the name has no account",
+        "correct": true,
+        "why": "Right. scrypt is the slow part; skipping it for unknown names answers the forbidden question by the clock."
+      },
+      {
+        "text": "The right password would take longer than before",
+        "correct": false,
+        "why": "The right password's path never touches the decoy, so nothing changes for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-0p1cbt8b",
+    "version": 1,
+    "section": "saying-nothing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How does keys.py's log name a refused bearer token?",
+    "hint": "`ce6f21ae` was one.",
+    "choices": [
+      {
+        "text": "In full, so that the token can be found and revoked later",
+        "correct": false,
+        "why": "A full token in a log is a credential in a log, readable by whoever reads logs."
+      },
+      {
+        "text": "By its base64 decoding, which hides the secret part",
+        "correct": false,
+        "why": "A token is not base64 of anything meaningful, and decoding it would hide nothing anyway."
+      },
+      {
+        "text": "By the name of the user the token was issued to",
+        "correct": false,
+        "why": "A refused token belongs to nobody the server knows; that is why it was refused."
+      },
+      {
+        "text": "By a fingerprint: the start of its SHA-256",
+        "correct": true,
+        "why": "Right. Eight characters of the hash are enough to match a row or a ticket, and useless as a credential."
+      }
+    ]
+  },
+  {
+    "id": "ex-h4632xb0",
+    "version": 1,
+    "section": "saying-nothing",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The rule for every log line about a credential: it names the credential and never ___ it.",
+    "hint": "A user name, a fingerprint and a prefix name one; a password, a token and a key would be in it.",
+    "blanks": [
+      {
+        "accept": [
+          "contains"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-67bkrkej",
+    "version": 1,
+    "section": "choosing",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each caller to the credential that fits it.",
+    "hint": "Is somebody there, and who should the log name?",
+    "pairs": [
+      {
+        "left": "a partner's program syncing stock every night",
+        "right": "an API key"
+      },
+      {
+        "left": "a person who signs in to an app and works for an hour",
+        "right": "a bearer token"
+      },
+      {
+        "left": "a script on an internal server, over HTTPS",
+        "right": "Basic"
+      }
+    ],
+    "right_distractors": [
+      "a password in the query string"
+    ]
+  },
+  {
+    "id": "ex-fb48d6cx",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A partner's integration logs in with an employee's name and password over Basic. The employee leaves. What goes wrong?",
+    "hint": "Two of the three questions in the section have a bad answer here.",
+    "choices": [
+      {
+        "text": "Nothing, as long as the partner uses HTTPS",
+        "correct": false,
+        "why": "HTTPS protects the password on the way. It does not change whose password it is."
+      },
+      {
+        "text": "Ending the leaver's access breaks the partner",
+        "correct": true,
+        "why": "Right. Basic ends when the password changes, everywhere at once. And every request the partner made was logged as the employee, so the log never named the partner either."
+      },
+      {
+        "text": "The partner gets 403 on every request from then on",
+        "correct": false,
+        "why": "After the password changes the credential proves nothing, which is a 401, not a 403."
+      },
+      {
+        "text": "The password's scrypt hash expires with the account",
+        "correct": false,
+        "why": "Hashes have no expiry; the row stays until somebody changes or deletes it."
+      }
+    ]
+  },
+  {
+    "id": "ex-1rhdn3yz",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A keys.py token leaks in a crash report that a dozen people can read. What limits the damage?",
+    "hint": "The leaked string is the token itself, not its hash.",
+    "choices": [
+      {
+        "text": "It is stored hashed, so the copy in the report is useless",
+        "correct": false,
+        "why": "The hash protects against a leaked database. The report holds the token the client sends, and it works."
+      },
+      {
+        "text": "Its expiry within the hour, and a logout that deletes its row now",
+        "correct": true,
+        "why": "Right. Expiry bounds the leak nobody noticed; revocation ends the one somebody did."
+      },
+      {
+        "text": "It is compared with `compare_digest`, so it cannot be replayed",
+        "correct": false,
+        "why": "`compare_digest` hides timing. A token sent again is the same token, and it is accepted."
+      },
+      {
+        "text": "It is base64, so the report shows only an encoding",
+        "correct": false,
+        "why": "An encoding hides nothing, and a bearer token is used exactly as written."
+      }
+    ]
+  },
+  {
+    "id": "ex-asngq09r",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A request arrives with an `X-API-Key` header and asks for `GET /v1/keys`. Put what keys.py does in order.",
+    "hint": "Authentication finishes before authorisation starts.",
+    "items": [
+      "Read the `X-API-Key` header",
+      "Find the row by the key's prefix",
+      "Compare the SHA-256 of the key with `compare_digest`",
+      "Conclude the caller is an application",
+      "Refuse the action with 403"
+    ],
+    "trap": "The 403 comes last: the server has to know who is asking before it can refuse what they ask."
+  },
+  {
+    "id": "ex-09mp73n9",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An API answers a failed login with 401, no `WWW-Authenticate`, and the body `no user called bob`; for debugging it logs every request header. What should change? Choose all that apply.",
+    "hint": "Three sections of this lesson each find one problem.",
+    "choices": [
+      {
+        "text": "Answer 403 instead of 401",
+        "correct": false,
+        "why": "No name was proved, so 401 is right; 403 is for a caller the server knows."
+      },
+      {
+        "text": "Give the same message for an unknown user and a wrong password",
+        "correct": true,
+        "why": "Right. `no user called bob` tells a stranger who has an account."
+      },
+      {
+        "text": "Stop logging the `Authorization` header",
+        "correct": true,
+        "why": "Right. Logging every header puts every password and token in the log."
+      },
+      {
+        "text": "Add a `WWW-Authenticate` header to the 401",
+        "correct": true,
+        "why": "Right. A 401 without a challenge says authenticate and not how."
+      },
+      {
+        "text": "Encode the log lines in base64",
+        "correct": false,
+        "why": "Anybody reading the log can decode them; the fix is to leave the credential out."
+      }
+    ]
+  }
+]

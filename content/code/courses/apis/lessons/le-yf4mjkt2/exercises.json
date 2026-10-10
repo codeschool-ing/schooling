@@ -1,0 +1,962 @@
+[
+  {
+    "id": "ex-9dwz3v1z",
+    "version": 1,
+    "section": "two-places",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "After ana logs in to `sessions.py`, what does her client hold that the server can use to recognise her?",
+    "hint": "It is meaningless on its own.",
+    "choices": [
+      {
+        "text": "Her name and expiry, signed with the server key",
+        "correct": false,
+        "why": "That is what a JWT holds. In a session the claims stay on the server, in the row."
+      },
+      {
+        "text": "A random id",
+        "correct": true,
+        "why": "Right. The id is a key to a row the server keeps; it carries no information of its own."
+      },
+      {
+        "text": "A hash of her password, so she need not type it again",
+        "correct": false,
+        "why": "A password hash never leaves the server. Sending one would make the hash itself a password."
+      },
+      {
+        "text": "A copy of her row from the sessions table",
+        "correct": false,
+        "why": "The row stays on the server; the client gets only the id that finds it, and the table even stores that id hashed."
+      }
+    ]
+  },
+  {
+    "id": "ex-gxczaz8h",
+    "version": 1,
+    "section": "two-places",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague says the team moved from session cookies to JWTs \"because cookies are less secure\". What does this lesson say the move actually changed?",
+    "hint": "Both are presented on every request.",
+    "choices": [
+      {
+        "text": "Where the login state lives",
+        "correct": true,
+        "why": "Right. A session keeps it in a row on the server; a token carries it, signed. Neither is secure or insecure by kind."
+      },
+      {
+        "text": "It removed the bearer secret: a JWT proves identity in itself, so nothing can be stolen",
+        "correct": false,
+        "why": "A JWT is a bearer credential too: whoever presents it is treated as its owner, exactly like a session id."
+      },
+      {
+        "text": "It moved HTTPS from optional to required",
+        "correct": false,
+        "why": "Both need HTTPS for the same reason: anyone who reads either one on the wire can use it."
+      },
+      {
+        "text": "It moved the credential from a cookie into a header",
+        "correct": false,
+        "why": "That is the carrier, and it is independent of the choice: a JWT can travel in a cookie and a session id in a header."
+      }
+    ]
+  },
+  {
+    "id": "ex-e0nr7g6n",
+    "version": 1,
+    "section": "two-places",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each job to how it is done when nothing extra is added to either model.",
+    "hint": "One model looks up, the other computes.",
+    "pairs": [
+      {
+        "left": "checking a session cookie",
+        "right": "look the id up in a table"
+      },
+      {
+        "left": "checking a JWT",
+        "right": "recompute the signature with the key"
+      },
+      {
+        "left": "ending a session",
+        "right": "delete the row"
+      },
+      {
+        "left": "ending a JWT",
+        "right": "wait for its exp"
+      }
+    ],
+    "right_distractors": [
+      "ask the browser to delete its copy"
+    ]
+  },
+  {
+    "id": "ex-mskafb7d",
+    "version": 1,
+    "section": "cookie-sessions",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each attribute of `sessions.py`'s `Set-Cookie` to what it tells the client.",
+    "hint": "None of them is sent back to the server.",
+    "pairs": [
+      {
+        "left": "`HttpOnly`",
+        "right": "never show it to the page's scripts"
+      },
+      {
+        "left": "`Secure`",
+        "right": "send it over HTTPS only"
+      },
+      {
+        "left": "`SameSite=Lax`",
+        "right": "leave it off requests other sites start, apart from following a link"
+      },
+      {
+        "left": "`Max-Age=1800`",
+        "right": "forget it after half an hour"
+      }
+    ],
+    "right_distractors": [
+      "send it to every subdomain as well"
+    ]
+  },
+  {
+    "id": "ex-xkfah44m",
+    "version": 1,
+    "section": "cookie-sessions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The `sessions` table stores `id_hash`, the SHA-256 of the cookie's value, and not the value itself. What does that protect against?",
+    "hint": "Think of who might read the database without being the server.",
+    "choices": [
+      {
+        "text": "A stolen cookie being used from another machine",
+        "correct": false,
+        "why": "A stolen cookie still works: the server hashes what it receives and finds the row. The hash protects the table, not the cookie."
+      },
+      {
+        "text": "Someone guessing a valid id",
+        "correct": false,
+        "why": "The 32 random bytes are what make guessing hopeless; hashing them adds nothing there."
+      },
+      {
+        "text": "A leaked copy of the database, such as a forgotten backup, giving its reader working cookies",
+        "correct": true,
+        "why": "Right. The reader gets hashes, and a hash cannot be turned back into an id the server would accept."
+      },
+      {
+        "text": "The cookie expiring before the row does",
+        "correct": false,
+        "why": "Expiry is the `expires` column and `Max-Age`; the hash has nothing to do with time."
+      }
+    ]
+  },
+  {
+    "id": "ex-5a5pqmwt",
+    "version": 1,
+    "section": "cookie-sessions",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`sessions.py` answered a login with `Set-Cookie: sid=…; Path=/; Max-Age=1800; …`. After how many minutes does a well-behaved client drop the cookie?",
+    "hint": "`Max-Age` counts seconds.",
+    "value": 30,
+    "tolerance": 0,
+    "unit": "minutes"
+  },
+  {
+    "id": "ex-9t17w2em",
+    "version": 1,
+    "section": "cookie-sessions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The login to `shop.test`, a name `--resolve` pointed at the same server, received `Set-Cookie: sid=…; Secure; …`, and curl's jar stayed empty. Why?",
+    "hint": "The same server gave localhost a cookie curl kept.",
+    "choices": [
+      {
+        "text": "It arrived over plain HTTP to a host that is not localhost",
+        "correct": true,
+        "why": "Right. curl, like browsers, counts localhost as secure; `shop.test` over `http://` is not."
+      },
+      {
+        "text": "`HttpOnly` hides the cookie from programs such as curl, which are not browsers",
+        "correct": false,
+        "why": "`HttpOnly` hides a cookie from a page's JavaScript. curl stored the localhost cookie with the same flag."
+      },
+      {
+        "text": "`SameSite=Lax` blocks cookies for a host name the client has never visited before",
+        "correct": false,
+        "why": "SameSite is about requests other sites start. This was a direct login, and curl does not apply SameSite anyway."
+      },
+      {
+        "text": "The server only sets cookies for requests addressed to localhost",
+        "correct": false,
+        "why": "The `Set-Cookie` header is in the answer. The server sent it; the client chose not to keep it."
+      }
+    ]
+  },
+  {
+    "id": "ex-c7zcc7p4",
+    "version": 1,
+    "section": "logout",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the logout, `kept.txt` still held ana's old `sid`, and `/me` answered `sign in first`. What made the copy useless?",
+    "hint": "Look at the table, not at the jar.",
+    "choices": [
+      {
+        "text": "`Max-Age=0` in the logout answer",
+        "correct": false,
+        "why": "`Max-Age=0` asks a client to drop its cookie. `kept.txt` was never told and kept it; the refusal came from elsewhere."
+      },
+      {
+        "text": "The missing CSRF token",
+        "correct": false,
+        "why": "`/me` is a GET and needs no CSRF token. It refused because no live session matched."
+      },
+      {
+        "text": "curl deleting the cookie from its jar",
+        "correct": false,
+        "why": "curl emptied `jar.txt`, not the copy. Deleting a client's cookie is housekeeping; the copy shows it."
+      },
+      {
+        "text": "The server deleted the row",
+        "correct": true,
+        "why": "Right. With the row gone the id is a key to nothing, wherever copies of it are."
+      }
+    ]
+  },
+  {
+    "id": "ex-h2g101vv",
+    "version": 1,
+    "section": "logout",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the logout in `sessions.py` in the order it happens.",
+    "hint": "The server acts before it answers.",
+    "items": [
+      "The client sends `POST /logout` with the cookie and `X-CSRF-Token`",
+      "The server finds the session by the hash of the cookie",
+      "The server deletes that row",
+      "The server answers 204 with `sid=; Max-Age=0`",
+      "The client drops the cookie from its jar"
+    ],
+    "trap": "Dropping the cookie comes last and matters least: the row was already gone."
+  },
+  {
+    "id": "ex-z5ddjx4k",
+    "version": 1,
+    "section": "logout",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Bruno changes his password because he thinks someone else has been signing in as him. With sessions stored as rows, what should the server do?",
+    "hint": "The other person may already be signed in.",
+    "choices": [
+      {
+        "text": "Nothing more: every session expires within thirty minutes anyway",
+        "correct": false,
+        "why": "Thirty minutes is a long time for an intruder, and a session can be renewed. The fix is available now, so use it."
+      },
+      {
+        "text": "Delete every session of his except the one he is using",
+        "correct": true,
+        "why": "Right. The intruder's session is one of those rows; deleting it signs them out at once."
+      },
+      {
+        "text": "Send `Max-Age=0` in the answer to the password change",
+        "correct": false,
+        "why": "That reaches only Bruno's own browser, and it would log him out while leaving the intruder signed in."
+      },
+      {
+        "text": "Delete only the session he changed the password from",
+        "correct": false,
+        "why": "That is the one session known to be his. The intruder's rows would survive untouched."
+      }
+    ]
+  },
+  {
+    "id": "ex-kf251pqe",
+    "version": 1,
+    "section": "csrf",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A page on another site cannot read shelf's answers. Why can it still harm ana's account through CSRF?",
+    "hint": "What does the browser add without asking?",
+    "choices": [
+      {
+        "text": "It can read ana's cookie with JavaScript and send it to itself",
+        "correct": false,
+        "why": "A page cannot read another site's cookies at all, and `HttpOnly` hides them even from shelf's own pages. CSRF needs no reading."
+      },
+      {
+        "text": "The same-origin policy does not apply to forms",
+        "correct": false,
+        "why": "It does: the page still cannot read the answer. The harm happens without reading it."
+      },
+      {
+        "text": "Cookies with `Secure` are sent to every site",
+        "correct": false,
+        "why": "`Secure` restricts a cookie to HTTPS; it never widens where it goes."
+      },
+      {
+        "text": "The browser attaches ana's cookie, and the request does its work before any answer",
+        "correct": true,
+        "why": "Right. Adding a book or changing an address is done by the time the answer arrives; reading it is unnecessary."
+      }
+    ]
+  },
+  {
+    "id": "ex-js1c0w4h",
+    "version": 1,
+    "section": "csrf",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The cookie attribute `SameSite=___` leaves the cookie off a `POST` that another site starts, but still sends it when the user follows a link.",
+    "hint": "Not the strictest of the three values.",
+    "blanks": [
+      {
+        "accept": [
+          "Lax"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ds9jdm06",
+    "version": 1,
+    "section": "csrf",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these, set in `sessions.py`, can stop a forged `POST /wishlist` started by another site's page? Choose all that apply.",
+    "hint": "One works in the browser, one in the server.",
+    "choices": [
+      {
+        "text": "`SameSite=Lax` on the cookie",
+        "correct": true,
+        "why": "Right. The browser sends that cross-site POST without the cookie, so the server sees a stranger."
+      },
+      {
+        "text": "The `X-CSRF-Token` check",
+        "correct": true,
+        "why": "Right. The other page cannot read the token and a form cannot set the header, so the request gets 403."
+      },
+      {
+        "text": "`HttpOnly` on the cookie",
+        "correct": false,
+        "why": "`HttpOnly` keeps scripts from reading the cookie. The forged request never reads it; the browser attaches it."
+      },
+      {
+        "text": "Storing the session id as a hash",
+        "correct": false,
+        "why": "The hash protects a copy of the table. A forged request carries the real cookie, which hashes to the real row."
+      }
+    ]
+  },
+  {
+    "id": "ex-j2qcfcx2",
+    "version": 1,
+    "section": "jwt-decoded",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Who can read the payload of the access token `tokens.py` issued to ana?",
+    "hint": "`basenc` read it without any key.",
+    "choices": [
+      {
+        "text": "Only a server holding `jwt.key`",
+        "correct": false,
+        "why": "The key is needed to sign, and to check a signature. Reading the payload is decoding base64url, which needs nothing."
+      },
+      {
+        "text": "Nobody: the payload is encrypted",
+        "correct": false,
+        "why": "A signed JWT is encoded, not encrypted. The encrypted format, JWE, is a different thing and rarely used."
+      },
+      {
+        "text": "Anyone holding the token",
+        "correct": true,
+        "why": "Right. That is why a payload carries identifiers and times, never secrets."
+      },
+      {
+        "text": "Only ana and shelf, named in `sub` and `aud`",
+        "correct": false,
+        "why": "Claims say who the token is about and for; they do not restrict who can decode it."
+      }
+    ]
+  },
+  {
+    "id": "ex-7k4sgfs5",
+    "version": 1,
+    "section": "jwt-decoded",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The payload part of ana's token was 159 characters of base64url, with the padding dropped. How many `=` must be added before a strict decoder accepts it?",
+    "hint": "Base64 works in groups of four characters.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "characters"
+  },
+  {
+    "id": "ex-85w446tn",
+    "version": 1,
+    "section": "jwt-decoded",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`basenc --base64url -d` printed the whole payload and then `basenc: invalid input`. What was it complaining about?",
+    "hint": "The JSON came out complete.",
+    "choices": [
+      {
+        "text": "The characters `-` and `_`, which base64 does not use",
+        "correct": false,
+        "why": "Plain `base64` would object to those, but `--base64url` is the alphabet that has them. The complaint was at the end."
+      },
+      {
+        "text": "The signature, which is not valid base64url",
+        "correct": false,
+        "why": "`cut -d. -f2` passed only the payload; the signature never reached the decoder."
+      },
+      {
+        "text": "A payload encrypted with `jwt.key`, which `basenc` cannot open",
+        "correct": false,
+        "why": "If it were encrypted, the JSON would not have appeared. It was readable because it is only encoded."
+      },
+      {
+        "text": "The missing `=` padding at the end",
+        "correct": true,
+        "why": "Right. JWTs drop it, so a part whose length is not a multiple of four looks cut short."
+      }
+    ]
+  },
+  {
+    "id": "ex-v17pz4j3",
+    "version": 1,
+    "section": "signing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`sed` changed one letter so the payload said `\"sub\":\"2\"`, and kept the old signature. Why could whoever made that edit not simply fix the signature too?",
+    "hint": "`hs256.py` computed it in five lines.",
+    "choices": [
+      {
+        "text": "The signature is encrypted",
+        "correct": false,
+        "why": "It is an HMAC written in base64url; anyone can read it, and reading it reveals nothing about the key."
+      },
+      {
+        "text": "The server keeps a copy of every signature it issued and compares",
+        "correct": false,
+        "why": "Nothing is stored at issue. The server recomputes the signature from the token and the key on every request."
+      },
+      {
+        "text": "Computing it needs the 32 bytes in `jwt.key`",
+        "correct": true,
+        "why": "Right. With the key anyone can sign anything, which is why the key is the secret and the signature is not."
+      },
+      {
+        "text": "Base64url cannot encode a changed payload of the same length",
+        "correct": false,
+        "why": "It encoded it fine; `cut` and `basenc` read `\"sub\":\"2\"` back out of the edited token."
+      }
+    ]
+  },
+  {
+    "id": "ex-16xnjj63",
+    "version": 1,
+    "section": "signing",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of verifying an HS256 token by hand, as `hs256.py` does, in order.",
+    "hint": "The signature is computed over the text as it appears in the token.",
+    "items": [
+      "Split the token at its two dots",
+      "Join header and payload with the dot, exactly as written",
+      "Compute HMAC-SHA256 of that text with the key",
+      "Write the result in base64url without padding",
+      "Compare it with the third part using `compare_digest`"
+    ],
+    "trap": "Decoding the payload is not a step: the HMAC is computed over the encoded text."
+  },
+  {
+    "id": "ex-mw1928fy",
+    "version": 1,
+    "section": "signing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Ten internal services verify HS256 tokens, so each holds the same key. One of them is breached and its configuration leaks. What can the attacker now do?",
+    "hint": "What else does the key that verifies do?",
+    "choices": [
+      {
+        "text": "Read the payloads of every token, which were unreadable before the leak",
+        "correct": false,
+        "why": "Payloads were always readable; that needs no key."
+      },
+      {
+        "text": "Mint tokens for any user that all ten services accept",
+        "correct": true,
+        "why": "Right. With HS256 the key that verifies also signs. RS256 or ES256 would have given each service only a public key, which cannot sign."
+      },
+      {
+        "text": "Forge tokens accepted by the breached service only",
+        "correct": false,
+        "why": "The key is the same everywhere, so a token it signs is good everywhere."
+      },
+      {
+        "text": "Nothing lasting: tokens expire in five minutes",
+        "correct": false,
+        "why": "Short lifetimes limit a stolen token. A stolen key lets the attacker mint a fresh token whenever one expires."
+      }
+    ]
+  },
+  {
+    "id": "ex-3mt23n2n",
+    "version": 1,
+    "section": "claims",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each registered claim to what it says.",
+    "hint": "Seven names, three letters each.",
+    "pairs": [
+      {
+        "left": "`sub`",
+        "right": "who the token is about"
+      },
+      {
+        "left": "`aud`",
+        "right": "who it is meant for"
+      },
+      {
+        "left": "`iss`",
+        "right": "who made it"
+      },
+      {
+        "left": "`jti`",
+        "right": "the token's own id"
+      },
+      {
+        "left": "`exp`",
+        "right": "when it stops being valid"
+      }
+    ],
+    "right_distractors": [
+      "which algorithm signed it"
+    ]
+  },
+  {
+    "id": "ex-p0yjz390",
+    "version": 1,
+    "section": "claims",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`tokens.issue(1, now=time.time() - 310)` made a token whose lifetime is 300 seconds, and `/me` accepted it. Why?",
+    "hint": "Look at what `verify` passes besides the key.",
+    "choices": [
+      {
+        "text": "It expired ten seconds earlier, within the thirty seconds of leeway",
+        "correct": true,
+        "why": "Right. Leeway forgives small clock differences between machines; at 600 seconds the same call was refused."
+      },
+      {
+        "text": "PyJWT does not check `exp` unless asked",
+        "correct": false,
+        "why": "It checks `exp` whenever the token has one, and the 600-second token was refused for it."
+      },
+      {
+        "text": "`nbf` was set, and that overrides `exp`",
+        "correct": false,
+        "why": "`nbf` is the earliest moment a token is valid. It has no say over when it stops."
+      },
+      {
+        "text": "Tokens made by importing `tokens.py` skip the checks",
+        "correct": false,
+        "why": "Importing gives the same `issue` the server uses, and the server checked this token as it checks any other."
+      }
+    ]
+  },
+  {
+    "id": "ex-7akds0qn",
+    "version": 1,
+    "section": "claims",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`tokens.py` gives an access token 300 seconds and verifies with `leeway=30`. About how many seconds after a token was issued does `/me` start refusing it as expired?",
+    "hint": "The leeway is added on top of the lifetime.",
+    "value": 330,
+    "tolerance": 1,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-1d8qjw1p",
+    "version": 1,
+    "section": "claims",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A token whose header says `\"alg\": \"none\"` and whose third part is empty reached `/me`. Which argument in `verify` made the API refuse it?",
+    "hint": "The refusal said `The specified alg value is not allowed`.",
+    "choices": [
+      {
+        "text": "`audience=AUDIENCE`",
+        "correct": false,
+        "why": "The token even carried `\"aud\": \"shelf-api\"`. It was refused before any claim was read."
+      },
+      {
+        "text": "`options={\"require\": [...]}`",
+        "correct": false,
+        "why": "The token did lack `exp`, but the algorithm check comes first, and the message names the algorithm."
+      },
+      {
+        "text": "`leeway=LEEWAY`",
+        "correct": false,
+        "why": "Leeway only stretches the time checks; it has nothing to say about how a token is signed."
+      },
+      {
+        "text": "`algorithms=[\"HS256\"]`",
+        "correct": true,
+        "why": "Right. The server, not the token, decides how a token must be signed, and `none` is not on its list."
+      }
+    ]
+  },
+  {
+    "id": "ex-c9xz3jc7",
+    "version": 1,
+    "section": "revocation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The login's refresh token was presented a second time, and `tokens.py` deleted the whole family. What still worked afterwards?",
+    "hint": "Which of them was never stored?",
+    "choices": [
+      {
+        "text": "The second refresh token, issued before the reuse",
+        "correct": false,
+        "why": "It was in the family and was deleted with it: `unknown or expired refresh token`."
+      },
+      {
+        "text": "Nothing at all: the whole sign-in was revoked",
+        "correct": false,
+        "why": "Every refresh token was, but `/me` still answered ana with the access token already issued."
+      },
+      {
+        "text": "The access token from the first refresh, until its `exp`",
+        "correct": true,
+        "why": "Right. Nothing about it was stored, so there was nothing to delete. Only its expiry ends it."
+      },
+      {
+        "text": "The first refresh token, for whoever presented it first",
+        "correct": false,
+        "why": "It had been spent at the first refresh; the second presentation is what revealed the copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-9gqs3za3",
+    "version": 1,
+    "section": "revocation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`logout` in `tokens.py` deletes denylist rows whose `exp` has passed. Why is it safe to forget those revoked tokens?",
+    "hint": "What would happen to such a token without the denylist?",
+    "choices": [
+      {
+        "text": "Past its `exp`, the token is refused anyway",
+        "correct": true,
+        "why": "Right. The denylist only has to cover the window between revocation and expiry, which is what keeps it small."
+      },
+      {
+        "text": "A revoked token's refresh token is deleted too, so it cannot come back",
+        "correct": false,
+        "why": "Refreshing makes a new access token with a new `jti`; it never brings an old one back. The old one could still be replayed until its `exp`."
+      },
+      {
+        "text": "The client has thrown it away by then",
+        "correct": false,
+        "why": "What a client does is not something the server can rely on; a copy elsewhere is the whole reason for the denylist."
+      },
+      {
+        "text": "`jti` values are reused after the token expires",
+        "correct": false,
+        "why": "They are 16 random hex digits, drawn fresh for every token."
+      }
+    ]
+  },
+  {
+    "id": "ex-acfwt9mr",
+    "version": 1,
+    "section": "revocation",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants JWT logout to take effect immediately and also wants no lookup of any kind on each request. What can they have?",
+    "hint": "Immediate means the server remembers the logout.",
+    "choices": [
+      {
+        "text": "Both, with refresh token rotation on every sign-out",
+        "correct": false,
+        "why": "Rotation protects refresh tokens. The access token already issued stays valid until `exp`, as `/me` showed."
+      },
+      {
+        "text": "Both, by setting `exp` to the moment the user logs out of the application",
+        "correct": false,
+        "why": "`exp` is inside a token already signed and in the client's hands; changing it would break the signature."
+      },
+      {
+        "text": "Only one: revoking early needs state that the server checks every time",
+        "correct": true,
+        "why": "Right. Without a lookup the best they get is a short lifetime, which bounds the delay without removing it."
+      },
+      {
+        "text": "Both, by deleting the token from the client's storage as it logs out",
+        "correct": false,
+        "why": "That removes one copy. Any other copy is still signed and still unexpired."
+      }
+    ]
+  },
+  {
+    "id": "ex-rz2121zz",
+    "version": 1,
+    "section": "storage",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An attacker manages to run a script inside shelf's page. What changes if the credential is in an `HttpOnly` cookie instead of `localStorage`?",
+    "hint": "Both cases are bad; one is bounded.",
+    "choices": [
+      {
+        "text": "It acts while the tab is open, and cannot carry the credential off",
+        "correct": true,
+        "why": "Right. From `localStorage` it could copy the token and use it from another machine until it expired."
+      },
+      {
+        "text": "Nothing changes, because the script runs on the same origin as the page",
+        "correct": false,
+        "why": "Same origin means the script can read `localStorage`. It still cannot read an `HttpOnly` cookie."
+      },
+      {
+        "text": "The script can no longer make requests as the user",
+        "correct": false,
+        "why": "It can, while the page is open: the browser attaches the cookie to its requests."
+      },
+      {
+        "text": "CSRF stops being possible",
+        "correct": false,
+        "why": "The other way round: a cookie is attached automatically, which is exactly what CSRF needs."
+      }
+    ]
+  },
+  {
+    "id": "ex-pyq83a9z",
+    "version": 1,
+    "section": "storage",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why should a token never be put in a URL, such as `/me?token=eyJ…`?",
+    "hint": "Think of where addresses end up.",
+    "choices": [
+      {
+        "text": "URLs cannot hold a dot",
+        "correct": false,
+        "why": "They can, and base64url was chosen so that a token is safe in one. The problem is where URLs are copied."
+      },
+      {
+        "text": "Logs, history and the `Referer` header keep addresses, and none of them is secret",
+        "correct": true,
+        "why": "Right. A bearer credential written into any of them works for whoever reads it."
+      },
+      {
+        "text": "The server cannot verify a signature that arrives in a query string instead of a header",
+        "correct": false,
+        "why": "It could read and verify it from anywhere. Where it is visible to others is the issue."
+      },
+      {
+        "text": "A query string is sent only with `GET`",
+        "correct": false,
+        "why": "A query string can go with any method; that is not the risk."
+      }
+    ]
+  },
+  {
+    "id": "ex-zjk67g6c",
+    "version": 1,
+    "section": "comparison",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team builds a web application whose pages call only its own API, on the same host. Which does this lesson recommend as the starting point?",
+    "hint": "A browser talking to its own API.",
+    "choices": [
+      {
+        "text": "JWTs kept in `localStorage` and sent in the `Authorization` header on each call",
+        "correct": false,
+        "why": "That trades CSRF for exposure to any injected script, and revocation gets harder. Nothing here crosses a boundary."
+      },
+      {
+        "text": "A session cookie with `HttpOnly`, `Secure`, `SameSite`, plus a CSRF token",
+        "correct": true,
+        "why": "Right. Revoked by deleting a row, nothing readable in the browser, and the lookup is cheap."
+      },
+      {
+        "text": "OAuth 2.0 with an external provider",
+        "correct": false,
+        "why": "That is for signing in with somebody else's accounts or acting on a user's behalf, lesson 9; it is not a default for an app's own login."
+      },
+      {
+        "text": "API keys, one per user",
+        "correct": false,
+        "why": "API keys identify programs, as lesson 7 showed; a person in a browser logs in."
+      }
+    ]
+  },
+  {
+    "id": "ex-m5ywhvq5",
+    "version": 1,
+    "section": "comparison",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Ana's session id was 43 characters and her access token 240. How many more characters does the token add to every request?",
+    "hint": "A subtraction.",
+    "value": 197,
+    "tolerance": 0,
+    "unit": "characters"
+  },
+  {
+    "id": "ex-5p7acncg",
+    "version": 1,
+    "section": "comparison",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An orders service has to know which user sent each request, and the team does not want it to call the login service on every request. What fits best?",
+    "hint": "The request crosses a boundary between services.",
+    "choices": [
+      {
+        "text": "Share the session table with the orders service",
+        "correct": false,
+        "why": "That is a lookup on every request by another name, and it ties the two services to one database."
+      },
+      {
+        "text": "Forward the user's password with each request",
+        "correct": false,
+        "why": "Every service would then hold passwords, the worst thing to spread around."
+      },
+      {
+        "text": "Send the session cookie to the orders service",
+        "correct": false,
+        "why": "It would still have to ask the login service what the id means."
+      },
+      {
+        "text": "A short-lived signed token it verifies with a public key",
+        "correct": true,
+        "why": "Right. The orders service checks the signature alone, and with RS256 or ES256 it cannot mint tokens itself."
+      }
+    ]
+  },
+  {
+    "id": "ex-jpp77sfb",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these take effect at once, so that a copy of the credential made earlier stops working on the next request? Choose all that apply.",
+    "hint": "Ask, for each, whether the server keeps a record it checks.",
+    "choices": [
+      {
+        "text": "Deleting the session's row in `sessions.py`",
+        "correct": true,
+        "why": "Right. The next lookup finds nothing, whoever sends the id."
+      },
+      {
+        "text": "Putting the token's `jti` on the denylist that `verify` reads",
+        "correct": true,
+        "why": "Right. `token revoked` came back on the very next request."
+      },
+      {
+        "text": "Sending `Max-Age=0` for the session cookie",
+        "correct": false,
+        "why": "That asks one client to drop its cookie; `kept.txt` shows a copy surviving it."
+      },
+      {
+        "text": "Rotating the refresh token after a reuse",
+        "correct": false,
+        "why": "The refresh family dies, and the access token already issued keeps working until its `exp`."
+      }
+    ]
+  },
+  {
+    "id": "ex-2hrqfwgk",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team moves its JWT from `localStorage` into an `HttpOnly` cookie, so that its pages' scripts cannot read it. Which defence from this lesson does the token now need that it did not need before?",
+    "hint": "What does a browser do with a cookie that it never did with a header?",
+    "choices": [
+      {
+        "text": "Pinning `algorithms=[\"HS256\"]`",
+        "correct": false,
+        "why": "That was needed all along, wherever the token travels."
+      },
+      {
+        "text": "Hashing the token before storing it",
+        "correct": false,
+        "why": "The server stores nothing of an access token; there is no table to protect."
+      },
+      {
+        "text": "`SameSite` and a CSRF token",
+        "correct": true,
+        "why": "Right. A cookie is attached automatically, so another site can make the browser send it. In a header, page code had to add it."
+      },
+      {
+        "text": "A shorter `exp`, because cookies are easier to steal",
+        "correct": false,
+        "why": "An `HttpOnly` cookie is harder for a script to steal than `localStorage`; the new exposure is forged requests, not theft."
+      }
+    ]
+  },
+  {
+    "id": "ex-kswg5k06",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Both `sessions.py` and `tokens.py` store each random token they hand out only as its SHA-256 ___, so a copy of `shelf.db` contains nothing a client could present.",
+    "hint": "The column is called `id_hash`.",
+    "blanks": [
+      {
+        "accept": [
+          "hash",
+          "digest"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]
