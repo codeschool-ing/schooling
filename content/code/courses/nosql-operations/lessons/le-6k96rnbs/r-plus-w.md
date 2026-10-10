@@ -46,7 +46,7 @@ each with a lesson that covers it:
 
 `QUORUM` counts replicas across the whole cluster. With two data centres of three copies each, RF
 is 6 and a quorum is 4, so **every `QUORUM` request waits for at least one answer from the other
-data centre**: the cross-ocean round trip of lesson 1's PACELC, paid on every query. Two more levels
+data centre**: the cross-ocean round trip of lesson 1's PACELC, paid on every query. Other levels
 exist for that shape:
 
 | level | what it waits for | used for |
