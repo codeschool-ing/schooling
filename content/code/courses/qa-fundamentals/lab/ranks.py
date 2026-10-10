@@ -45,3 +45,22 @@ for q in en:
 for lang in tot:
     n = sum(tot[lang].values())
     print(lang, ' '.join(f'r{k}={v}({100*v//n}%)' for k, v in sorted(tot[lang].items())))
+
+# The strategies check-exercises scores: longest and shortest, with and without
+# the options that carry an absolute. Printed as wins out of quiz questions.
+ABS = re.compile(r'\b(never|always|only|all|must|none|every|cannot|nothing|no one|nobody|nunca|sempre|só|somente|todos?|todas?|nenhum|nenhuma|nada|deve|não pode|ninguém)\b', re.I)
+for lang in ('en', 'pt'):
+    wins = collections.Counter()
+    n = 0
+    for q in en:
+        if q['type'] != 'quiz':
+            continue
+        n += 1
+        texts = [c['text'] for c in q['choices']] if lang == 'en' else [c['text'] for c in pt[q['id']]['choices']]
+        k = [c['correct'] for c in q['choices']].index(True)
+        clean = [i for i, s in enumerate(texts) if not ABS.search(s)] or list(range(len(texts)))
+        for name, pool, f in (('long', range(len(texts)), max), ('short', range(len(texts)), min),
+                              ('long-clean', clean, max), ('short-clean', clean, min)):
+            if f(pool, key=lambda i: len(texts[i])) == k:
+                wins[name] += 1
+    print(lang, 'strategies:', ' '.join(f'{s}={v}/{n}' for s, v in sorted(wins.items())), '(ceiling 45%)')
