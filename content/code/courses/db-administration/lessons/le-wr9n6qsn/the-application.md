@@ -155,8 +155,8 @@ None of these is visible until the application runs against the new server:
 | `LAST_INSERT_ID()` | `INSERT … RETURNING id` |
 | a `TINYINT(1)` compared with `= 1` | a `boolean`, compared with `= true` or used bare |
 
-**So the migration is rehearsed with the application, not only with the data.** Run its test suite
-against a migrated copy, then replay a day of its real queries if you can capture them, and fix
+**So the application is rehearsed too, against a migrated copy.** Run its test suite
+there, then replay a day of its real queries if you can capture them, and fix
 what fails before the night. Oracle's PL/SQL and SQL Server's T-SQL make this part larger: stored
 procedures are a program in the source engine's language, and ora2pg converts some of it and leaves
 the rest marked for a person.

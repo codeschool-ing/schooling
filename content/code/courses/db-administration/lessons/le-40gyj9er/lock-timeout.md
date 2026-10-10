@@ -56,7 +56,7 @@ for part of those two seconds, and that is the price: `lock_timeout` does not st
 forming, it limits how long it lasts. Two seconds of slow pages is an incident nobody reports.
 Twenty minutes is the one that wakes you.
 
-`lock_timeout` is not `statement_timeout`. The first counts only the time spent waiting for a lock;
+**`lock_timeout` is not `statement_timeout`.** The first counts only the time spent waiting for a lock;
 the second counts the whole statement, work included. **A rewrite that needs a minute of work and
 gets its lock at once is fine under a two-second `lock_timeout`**, and would be killed by a
 two-second `statement_timeout`.

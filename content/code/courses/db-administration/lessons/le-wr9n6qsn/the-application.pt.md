@@ -158,8 +158,8 @@ Nada disto aparece até a aplicação rodar contra o servidor novo:
 | `LAST_INSERT_ID()` | `INSERT … RETURNING id` |
 | um `TINYINT(1)` comparado com `= 1` | um `boolean`, comparado com `= true` ou usado sozinho |
 
-**Então a migração é ensaiada com a aplicação, e não só com os dados.** Rode a suíte de testes dela
-contra uma cópia migrada, depois reproduza um dia das consultas reais dela se conseguir capturá-las,
+**Então a aplicação também é ensaiada, contra uma cópia migrada.** Rode a suíte de testes dela
+ali, depois reproduza um dia das consultas reais dela se conseguir capturá-las,
 e conserte o que falhar antes da noite. O PL/SQL do Oracle e o T-SQL do SQL Server aumentam essa
 parte: stored procedures são um programa na linguagem do engine de origem, e o ora2pg converte parte
 dele e deixa o resto marcado para uma pessoa.

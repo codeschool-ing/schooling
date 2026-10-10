@@ -56,7 +56,7 @@ esperou, por parte desses dois segundos, e esse é o preço: o `lock_timeout` n�
 formar, ele limita quanto ela dura. Dois segundos de páginas lentas são um incidente que ninguém
 reporta. Vinte minutos são o que acorda você.
 
-`lock_timeout` não é `statement_timeout`. O primeiro conta só o tempo esperando por um lock; o
+**`lock_timeout` não é `statement_timeout`.** O primeiro conta só o tempo esperando por um lock; o
 segundo conta o comando inteiro, trabalho incluído. **Uma reescrita que precisa de um minuto de
 trabalho e recebe o lock na hora passa bem com um `lock_timeout` de dois segundos**, e seria morta
 por um `statement_timeout` de dois segundos.

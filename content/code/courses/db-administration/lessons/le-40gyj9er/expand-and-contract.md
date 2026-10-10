@@ -70,8 +70,8 @@ Row 5 was written and has both values. Row 6 has not been touched yet, and its n
 
 ## Backfill, in batches
 
-One `UPDATE orders_live SET total_cents_new = total_cents` would do the backfill in one statement,
-and it would be one transaction that locks every row it changes until the end, writes a million new
+One `UPDATE orders_live SET total_cents_new = total_cents` would do the backfill in one statement.
+It would also be one transaction that locks every row it changes until the end, writes a million new
 row versions at once and holds back `VACUUM` the whole time (lesson 14). **Batches keep each
 transaction small**: a range of ids, commit, the next range. A procedure can commit between batches,
 which a function cannot. Save this as `backfill.sql`:
