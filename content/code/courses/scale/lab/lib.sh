@@ -2,6 +2,7 @@
 # terminal on the lab shows it: the prompt, what was typed, what came back.
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8 HOME=/home/ana USER=ana LOGNAME=ana
 export COMPOSE_PROGRESS=plain DOCKER_CLI_HINTS=false
+SCRIPT=$(realpath "$0")
 LAB=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/lab.sh
 block() { printf '##### %s\n' "$1"; }
 here() { pwd | sed "s|^$HOME|~|"; }
@@ -13,6 +14,6 @@ shown() { printf 'ana@lab:%s$ %s\n' "$(here)" "$*"; }
 # with names only those (each block then has to set up what it needs).
 captures() {
   local names=("$@")
-  [ ${#names[@]} -eq 0 ] && mapfile -t names < <(grep -o '^cap_[a-z0-9_]*' "$0" | sed 's/^cap_//')
+  [ ${#names[@]} -eq 0 ] && mapfile -t names < <(grep -o '^cap_[a-z0-9_]*' "$SCRIPT" | sed 's/^cap_//')
   for n in "${names[@]}"; do n=${n//-/_}; block "${n//_/-}"; "cap_$n"; done
 }
