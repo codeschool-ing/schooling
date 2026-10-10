@@ -67,6 +67,18 @@ def lesson5():
     return rows, show, ['D2', 'D3', 'D4', 'D5', 'E2']
 
 
+def lesson5_growing(step=2):
+    rows = [['Sprint', 'Interest (h)', 'Paid so far (h)'], [1, 31, '=B2']]
+    for k in range(3, 16):
+        rows.append([k - 1, f'=B{k - 1}+{step}', f'=C{k - 1}+B{k}'])
+    return rows, ['=INDEX(A2:A15,MATCH(TRUE(),C2:C15>320,0))'], ['C2', 'C3', 'C4', 'C10', 'C11']
+
+
+def lesson5_flat():
+    rows, show, _ = lesson5_growing(0)
+    return rows, show, ['C11', 'C12']
+
+
 def lesson8():
     rows = [['Option', 'Year 1', 'Year 2', 'Year 3', 'Three years']]
     for k, (name, f) in enumerate((('Build', S.build_search), ('Buy', S.buy_search),
@@ -131,9 +143,10 @@ def lesson13():
     return rows, show, ['D2', 'D3', 'D4', 'D5']
 
 
-SHEETS = {'1': lesson1, '1t': lesson1_trouble, '5': lesson5, '8': lesson8, '9': lesson9,
+SHEETS = {'1': lesson1, '1t': lesson1_trouble, '5': lesson5, '5g': lesson5_growing, '5f': lesson5_flat, '8': lesson8, '9': lesson9,
           '10': lesson10, '11': lesson11, '12': lesson12, '13': lesson13}
-NAMES = {'1t': 'lesson 1, the trouble section'}
+NAMES = {'1t': 'lesson 1, the trouble section', '5g': 'lesson 5, the growing debt',
+         '5f': 'lesson 5, the same sheet with the 2 set to 0'}
 
 
 def run(n, tmp):

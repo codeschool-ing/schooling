@@ -179,14 +179,16 @@ def lesson(n):
         p(f'  flat: crosses the principal after sprint {-(-pr // it)}')
     if n == 6:
         h = REWRITE_ENGINEERS * REWRITE_MONTHS * MONTH_HOURS
-        p(f'rewrite: {h} h, {brl(h * HOUR)}')
+        p(f'inputs: {REWRITE_ENGINEERS} engineers x {REWRITE_MONTHS} months x {MONTH_HOURS} h; '
+          f'saves {REWRITE_INTEREST_SAVED} h a sprint')
+        p(f'rewrite: {h} h, {brl(h * HOUR)}; {h * HOUR / (DEBTS[0][1] * HOUR):.0f}x the seat-hold principal')
         saved = REWRITE_INTEREST_SAVED * HOUR
         p(f'saves {brl(saved)} a sprint; payback {h / REWRITE_INTEREST_SAVED:.0f} sprints, '
           f'{h / REWRITE_INTEREST_SAVED / SPRINTS_A_YEAR:.1f} years after it ships')
         h2 = h * OVERRUN
         p(f'with a {OVERRUN}x overrun: {h2:.0f} h, {brl(h2 * HOUR)}, '
           f'{REWRITE_MONTHS * OVERRUN:.0f} months, payback '
-          f'{h2 / REWRITE_INTEREST_SAVED / SPRINTS_A_YEAR:.1f} years')
+          f'{h2 / REWRITE_INTEREST_SAVED / SPRINTS_A_YEAR:.1f} years ({h2 / REWRITE_INTEREST_SAVED:.0f} sprints)')
     if n == 7:
         for m, s in enumerate(STRANGLER):
             p(f'month {m:2}: {s}% new')
