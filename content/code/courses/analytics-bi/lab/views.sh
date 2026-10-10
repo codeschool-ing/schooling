@@ -13,4 +13,13 @@ views_up_to() {
   if [ "$n" -ge 2 ]; then
     python3 "$fence" "$L/le-j8nbfcaw/three-revenues.md" 'CREATE VIEW order_revenue' | bash "$here/lab.sh" exec 'psql -qX -v ON_ERROR_STOP=1 lantern' 9>&-
   fi
+  if [ "$n" -ge 3 ]; then
+    python3 "$fence" "$L/le-h13c3qmk/building-the-layer.md" '-- semantic.sql' > /tmp/abi-semantic.sql
+    chmod 644 /tmp/abi-semantic.sql
+    bash "$here/lab.sh" exec 'psql -qX -v ON_ERROR_STOP=1 lantern -f /tmp/abi-semantic.sql' 9>&-
+    bash "$here/lab.sh" exec "psql -qX lantern -c 'DROP ROLE IF EXISTS metabase'" 9>&-
+    { python3 "$fence" "$L/le-h13c3qmk/a-role-for-tools.md" 'CREATE ROLE metabase'
+      python3 "$fence" "$L/le-h13c3qmk/a-role-for-tools.md" 'GRANT USAGE ON SCHEMA semantic'; } \
+      | bash "$here/lab.sh" exec 'psql -qX -v ON_ERROR_STOP=1 lantern' 9>&-
+  fi
 }

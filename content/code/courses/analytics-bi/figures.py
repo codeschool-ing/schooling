@@ -341,5 +341,48 @@ def star(lang):
     return s.render(), cap, None
 
 
+# ---------------------------------------------------------------- lesson 4
+
+@figure
+def pbi_model(lang):
+    """Lesson 4, the-model: the relationships, their cardinality and direction."""
+    s = Svg('pbi-model', 720, 300, L(lang,
+        'The model as Power BI draws it: five tables joined by four relationships. Customers and '
+        'calendar each join orders; orders joins order lines; products joins order lines. Every '
+        'relationship is many to one, with the one side at the dimension or at orders. An arrow on '
+        'each line shows the single filter direction, from the one side to the many side: from '
+        'customers and calendar into orders, from orders into order lines, from products into '
+        'order lines. No arrow goes from order lines back to orders.',
+        'O modelo como o Power BI o desenha: cinco tabelas ligadas por quatro relacionamentos. '
+        'Customers e calendar se ligam a orders; orders se liga a order lines; products se liga a '
+        'order lines. Todo relacionamento é muitos para um, com o lado um na dimensão ou em orders. '
+        'Uma seta em cada linha mostra a direção única do filtro, do lado um para o lado muitos: de '
+        'customers e calendar para orders, de orders para order lines, de products para order '
+        'lines. Nenhuma seta volta de order lines para orders.'))
+    def box(x, y, name, fact=False):
+        s.rect(x, y, 140, 44, stroke='var(--phosphor)' if fact else 'var(--wire)')
+        s.text(x + 70, y + 22, name, 11.5, anchor='middle', mono=True, weight='600')
+    box(20, 40, 'customers'); box(20, 200, 'calendar')
+    box(290, 120, 'orders', True)
+    box(560, 40, 'order_lines', True); box(560, 210, 'products')
+    def rel(x1, y1, x2, y2, one_at_start=True):
+        s.line(x1, y1, x2, y2, arrow=True)
+        s.text(x1 + (8 if x2 > x1 else -8), y1 - 8, '1', 11, anchor='middle', mono=True, fill='var(--amber)')
+        s.text(x2 + (-12 if x2 > x1 else 12), y2 - 10, '*', 13, anchor='middle', mono=True, fill='var(--amber)')
+    rel(160, 70, 288, 132)
+    rel(160, 214, 288, 154)
+    rel(430, 132, 558, 70)
+    s.line(630, 210, 630, 86, arrow=True)
+    s.text(642, 196, '1', 11, mono=True, fill='var(--amber)')
+    s.text(642, 100, '*', 13, mono=True, fill='var(--amber)')
+    s.text(360, 270, L(lang, 'a filter travels the way the arrows point, and no further',
+                       'um filtro anda para onde as setas apontam, e não além'), 10.5, anchor='middle',
+           italic=True, fill='var(--paper-dim)')
+    cap = L(lang, 'Many to one, single direction: a slicer on products reaches order lines and stops '
+                  'there.',
+            'Muitos para um, direção única: um filtro em products chega a order lines e para ali.')
+    return s.render(), cap, None
+
+
 if __name__ == '__main__':
     inject()
