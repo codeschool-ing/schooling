@@ -58,7 +58,11 @@ kiosk(OneTitle(), "secas")
 
 ```
 ana@laptop:~/patterns/solid-2$ python3 fake_kiosk.py
-placeholder
+Traceback (most recent call last):
+  File "/home/ana/patterns/solid-2/fake_kiosk.py", line 10, in <module>
+    kiosk(OneTitle(), "secas")
+          ^^^^^^^^^^
+TypeError: Can't instantiate abstract class OneTitle without an implementation for abstract methods 'add_title', 'export_csv', 'give_back', 'lend', 'remove_title'
 ```
 
 Python refuses to make the stand-in, and names five methods the kiosk will never call. **To test a
