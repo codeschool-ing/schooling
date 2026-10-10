@@ -1,0 +1,366 @@
+{
+  "ex-1vkc8r5h": {
+    "prompt": "Por que esses antipadrões são invisíveis no notebook de quem desenvolve?",
+    "hint": "Onde está o banco?",
+    "choices": [
+      {
+        "text": "Notebooks têm discos mais rápidos que servidores",
+        "why": "Discos não eram o custo."
+      },
+      {
+        "text": "O banco está na mesma máquina",
+        "why": "Isso: idas e voltas quase não custam."
+      },
+      {
+        "text": "ORMs se comportam diferente em desenvolvimento",
+        "why": "O mesmo código roda."
+      },
+      {
+        "text": "Notebooks não rodam PostgreSQL",
+        "why": "Rodam."
+      }
+    ]
+  },
+  "ex-tyg2qgwz": {
+    "prompt": "Associe cada antipadrão ao que o código faz.",
+    "hint": "Vezes demais, coisa demais, pesado demais.",
+    "pairs": [
+      {
+        "left": "I/O tagarela",
+        "right": "muitas requisições pequenas onde uma bastaria"
+      },
+      {
+        "left": "busca desnecessária",
+        "right": "busca mais dados do que usa"
+      },
+      {
+        "left": "banco ocupado",
+        "right": "faz o banco repetir ou fazer trabalho que não precisa"
+      }
+    ]
+  },
+  "ex-h8wxsdqp": {
+    "prompt": "O que o `latency.py` representa?",
+    "hint": "Um milissegundo em cada direção.",
+    "choices": [
+      {
+        "text": "Um disco lento no servidor do banco",
+        "why": "Ele atrasa a rede, não o disco."
+      },
+      {
+        "text": "Um banco sob carga pesada",
+        "why": "O próprio banco não é tocado."
+      },
+      {
+        "text": "A rede entre duas zonas",
+        "why": "Isso."
+      },
+      {
+        "text": "Um driver Python lento",
+        "why": "O driver não muda."
+      }
+    ]
+  },
+  "ex-x987d411": {
+    "prompt": "Quantas consultas o `history-n1` mandou para o cliente c-7?",
+    "hint": "Uma mais uma por pedido.",
+    "unit": "consultas"
+  },
+  "ex-pzt55nyr": {
+    "prompt": "Para onde foi a maior parte dos 45 milissegundos do `history-n1`?",
+    "hint": "Cada consulta era minúscula.",
+    "choices": [
+      {
+        "text": "Executando as consultas no PostgreSQL",
+        "why": "Cada uma rodou em bem menos de um milissegundo."
+      },
+      {
+        "text": "Idas e voltas",
+        "why": "Isso: dez delas."
+      },
+      {
+        "text": "Convertendo linhas em objetos Python",
+        "why": "Eram 45 linhas pequenas."
+      },
+      {
+        "text": "Iniciando o contêiner",
+        "why": "O cronômetro começa na primeira consulta."
+      }
+    ]
+  },
+  "ex-k9vg6z1n": {
+    "prompt": "Como um ORM costuma produzir uma consulta N+1?",
+    "hint": "Quando uma relação é carregada?",
+    "choices": [
+      {
+        "text": "Fazendo join de toda tabela em toda consulta",
+        "why": "Isso é o contrário."
+      },
+      {
+        "text": "Fazendo cache agressivo demais",
+        "why": "Um cache reduz consultas."
+      },
+      {
+        "text": "Carregamento sob demanda",
+        "why": "Isso."
+      },
+      {
+        "text": "Repetindo consultas que falharam",
+        "why": "Não é a causa."
+      }
+    ]
+  },
+  "ex-1a3z61zy": {
+    "prompt": "Que correção mantém duas consultas mas tira o N?",
+    "hint": "`ANY`.",
+    "choices": [
+      {
+        "text": "Um join",
+        "why": "Isso faz uma consulta só."
+      },
+      {
+        "text": "`WHERE order_id = ANY(...)` com todos os ids",
+        "why": "Isso: carregamento antecipado."
+      },
+      {
+        "text": "Um pool de conexões maior",
+        "why": "As consultas continuam em sequência."
+      },
+      {
+        "text": "Um índice em `orders.customer`",
+        "why": "Acelera a primeira consulta, não a contagem."
+      }
+    ]
+  },
+  "ex-c510e1nz": {
+    "prompt": "O que o `SELECT *` trouxe que a lista do catálogo nunca mostra?",
+    "hint": "20 KB por produto.",
+    "choices": [
+      {
+        "text": "Os preços",
+        "why": "A lista os mostra."
+      },
+      {
+        "text": "Produtos a mais",
+        "why": "Os mesmos cinquenta."
+      },
+      {
+        "text": "As descrições",
+        "why": "Isso."
+      },
+      {
+        "text": "O histórico de pedidos",
+        "why": "Não está naquela tabela."
+      }
+    ]
+  },
+  "ex-m7qsy0tw": {
+    "prompt": "Mais ou menos quantas vezes mais bytes o `catalogue-star` moveu que o `catalogue-columns`?",
+    "hint": "1.000.775 ÷ 775.",
+    "unit": "vezes"
+  },
+  "ex-hm1dk1qw": {
+    "prompt": "Por que algumas equipes proíbem `SELECT *` no código da aplicação?",
+    "hint": "A coluna do ano que vem.",
+    "choices": [
+      {
+        "text": "É mais lento de interpretar",
+        "why": "Interpretar não é o custo."
+      },
+      {
+        "text": "O PostgreSQL avisa sobre isso",
+        "why": "Não avisa."
+      },
+      {
+        "text": "Quebra quando uma coluna é renomeada",
+        "why": "Colunas nomeadas também quebram."
+      },
+      {
+        "text": "Uma coluna grande futura entra",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-64x4cc0s": {
+    "prompt": "O que o `pg_stat_statements` mostrou sobre a página inicial?",
+    "hint": "Chamadas.",
+    "choices": [
+      {
+        "text": "Faltava um índice na consulta",
+        "why": "Ele mostrou contagens e tempo, não planos."
+      },
+      {
+        "text": "Uma resposta, 100 execuções",
+        "why": "Isso."
+      },
+      {
+        "text": "A consulta devolveu linhas erradas",
+        "why": "As linhas estavam certas."
+      },
+      {
+        "text": "O proxy era o gargalo",
+        "why": "Ele não vê o proxy."
+      }
+    ]
+  },
+  "ex-b9ymg1qq": {
+    "prompt": "Por que um cache de um minuto é aceitável para os mais vendidos?",
+    "hint": "Trinta dias.",
+    "choices": [
+      {
+        "text": "Caches são sempre aceitáveis",
+        "why": "Não para um preço no checkout."
+      },
+      {
+        "text": "Uma resposta de um minuto parece igual a um visitante",
+        "why": "Isso."
+      },
+      {
+        "text": "O banco não consegue calculá-la mais rápido",
+        "why": "É rápida; o problema é a repetição."
+      },
+      {
+        "text": "O PostgreSQL a guarda em cache de qualquer jeito",
+        "why": "Rodou a consulta cem vezes."
+      }
+    ]
+  },
+  "ex-vatmyg1m": {
+    "prompt": "O que `Rows Removed by Filter: 7996` disse?",
+    "hint": "Quatro linhas eram desejadas.",
+    "choices": [
+      {
+        "text": "A consulta apagou 7.996 linhas",
+        "why": "É uma leitura."
+      },
+      {
+        "text": "7.996 linhas falharam numa restrição",
+        "why": "Não é restrição."
+      },
+      {
+        "text": "Leu todo item para achar quatro",
+        "why": "Isso: sem índice."
+      },
+      {
+        "text": "O filtro está errado",
+        "why": "Devolveu os quatro certos."
+      }
+    ]
+  },
+  "ex-s9j7tyxv": {
+    "prompt": "Por que formatar JSON ou texto não deveria ser feito no banco?",
+    "hint": "Que CPU é a mais escassa?",
+    "choices": [
+      {
+        "text": "A CPU dele é a mais escassa",
+        "why": "Isso."
+      },
+      {
+        "text": "O SQL não consegue produzir JSON",
+        "why": "Consegue."
+      },
+      {
+        "text": "Não é permitido pela LGPD",
+        "why": "Não é questão legal."
+      },
+      {
+        "text": "O resultado não pode ser indexado",
+        "why": "Não é o motivo."
+      }
+    ]
+  },
+  "ex-3p0vjynt": {
+    "prompt": "Associe cada medição ao antipadrão que ela acha.",
+    "hint": "Contagem, tamanho, tempo.",
+    "pairs": [
+      {
+        "left": "consultas por requisição",
+        "right": "I/O tagarela"
+      },
+      {
+        "left": "bytes por requisição",
+        "right": "busca desnecessária"
+      },
+      {
+        "left": "tempo do banco por consulta",
+        "right": "banco ocupado"
+      }
+    ]
+  },
+  "ex-qysnetzt": {
+    "prompt": "Como um N+1 aparece num trace?",
+    "hint": "Muitos spans iguais.",
+    "choices": [
+      {
+        "text": "Um span muito longo",
+        "why": "Isso é uma consulta lenta."
+      },
+      {
+        "text": "Um pente de spans de banco iguais",
+        "why": "Isso."
+      },
+      {
+        "text": "Um span com erro",
+        "why": "N+1 não é um erro."
+      },
+      {
+        "text": "Nenhum span de banco",
+        "why": "Há muitos."
+      }
+    ]
+  },
+  "ex-a1t2z2ff": {
+    "prompt": "O que é instanciação imprópria?",
+    "hint": "Abertura de conexão toda vez.",
+    "choices": [
+      {
+        "text": "Criar objetos no módulo errado",
+        "why": "Não é o significado."
+      },
+      {
+        "text": "Subir contêineres demais",
+        "why": "Não é o significado."
+      },
+      {
+        "text": "Uma classe com construtores demais",
+        "why": "Não é o significado."
+      },
+      {
+        "text": "Cliente novo por requisição",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-jf19fr91": {
+    "prompt": "Ponha em ordem a primeira hora de costume com um banco ocupado.",
+    "hint": "Ordenar, explicar, corrigir, medir de novo.",
+    "items": [
+      "Ordenar as consultas por tempo total no `pg_stat_statements`",
+      "Rodar `EXPLAIN ANALYZE` nas do topo",
+      "Acrescentar o índice, o cache ou o modelo de leitura de que precisam",
+      "Medir de novo"
+    ]
+  },
+  "ex-96gnjx5f": {
+    "prompt": "A página da cesta da Quitanda leva 2 segundos em produção e 40 ms num notebook, e o código não mudou. Qual a causa mais provável?",
+    "hint": "O que é diferente entre os dois?",
+    "choices": [
+      {
+        "text": "O Python de produção é mais antigo",
+        "why": "Diferença de versão raramente custa 50 vezes."
+      },
+      {
+        "text": "I/O tagarela numa rede de verdade",
+        "why": "Isso."
+      },
+      {
+        "text": "A página desenha imagens maiores",
+        "why": "Imagens não entram no tempo do servidor."
+      },
+      {
+        "text": "O log está ligado em produção",
+        "why": "Não basta para 2 segundos."
+      }
+    ]
+  }
+}
