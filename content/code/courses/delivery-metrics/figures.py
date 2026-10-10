@@ -1361,6 +1361,75 @@ def l13_roles(lang):
                 'não se dobra é que quem coordena não depura ao mesmo tempo.')
 
 
+# ------------------------------------------------------------------ lesson 14
+
+def incident_events():
+    """The first time of each kind in timeline.py's TIMELINE, in minutes, read from lesson 14."""
+    program = subprocess.run([sys.executable, os.path.join(HERE, 'lab', 'extract.py'),
+                              os.path.join(HERE, 'lessons', 'le-dkwpznqv'), 'timeline.py'],
+                             capture_output=True, text=True, check=True).stdout
+    text = re.search(r'TIMELINE = """(.*?)"""', program, re.S).group(1)
+    events = {}
+    for line in text.strip().splitlines():
+        clock, kind, _ = line.split(maxsplit=2)
+        h, m = clock.split(':')
+        events.setdefault(kind, int(h) * 60 + int(m))
+    return events
+
+
+@figure('l14-phases', 14)
+def l14_phases(lang):
+    e = incident_events()
+    phases = [('impact', 'detect', T(lang, 'nobody knew', 'ninguém sabia'), '--amber'),
+              ('detect', 'declare', T(lang, 'to declare', 'até declarar'), '--paper-dim'),
+              ('declare', 'decide', T(lang, 'to decide', 'até decidir'), '--paper-dim'),
+              ('decide', 'restore', T(lang, 'rollback', 'rollback'), '--phosphor'),
+              ('restore', 'resolve', T(lang, 'refunding every shop', 'estornando cada loja'), '--paper-dim')]
+    f = Fig('l14-phases', 680, 220, T(
+        lang,
+        'A timeline of the incident of 30 September from 17:21 to 21:10, in phases: '
+        f'{e["detect"] - e["impact"]} minutes before anybody knew, {e["declare"] - e["detect"]} to '
+        f'declare, {e["decide"] - e["declare"]} to decide, {e["restore"] - e["decide"]} to restore '
+        f'by rolling back, and {e["resolve"] - e["restore"]} to refund every shop. The shops were '
+        f'being harmed for the first {e["restore"] - e["impact"]} minutes.',
+        'Uma linha do tempo do incidente de 30 de setembro, das 17h21 às 21h10, em fases: '
+        f'{e["detect"] - e["impact"]} minutos sem ninguém saber, {e["declare"] - e["detect"]} até '
+        f'declarar, {e["decide"] - e["declare"]} até decidir, {e["restore"] - e["decide"]} até '
+        f'restaurar com o rollback, e {e["resolve"] - e["restore"]} até estornar cada loja. As '
+        f'lojas foram prejudicadas nos primeiros {e["restore"] - e["impact"]} minutos.'))
+    t0, t1 = e['impact'], e['resolve']
+    sx = lambda t: 30 + (t - t0) / (t1 - t0) * 620
+    for k, (a, b, label, colour) in enumerate(phases):
+        x0, x1 = sx(e[a]), sx(e[b])
+        f.bar(x0, 80, x1 - x0, 34, fill='--scan', stroke=colour, width=1.4)
+        mins = e[b] - e[a]
+        if x1 - x0 > 60:
+            f.text((x0 + x1) / 2, 97, T(lang, f'{label}: {mins} min', f'{label}: {mins} min'), size=10)
+        else:
+            mid = (x0 + x1) / 2
+            if k < 3:
+                y = 30 + k * 16
+                f.line(mid, 78, mid, y + 6, stroke=colour, width=1)
+            else:
+                y = 140
+                f.line(mid, 116, mid, y - 6, stroke=colour, width=1)
+            f.text(mid - 3, y, T(lang, f'{label}: {mins} min', f'{label}: {mins} min'), size=9.5,
+                   anchor='start')
+    for name, t in (('17:21', e['impact']), ('18:15', e['restore']), ('21:10', e['resolve'])):
+        f.line(sx(t), 118, sx(t), 160, stroke='--paper-dim', width=1, dash='3 3')
+        f.text(sx(t), 172, name, size=9.5, mono=True, fill='--paper-dim')
+    f.text(sx(e['impact']) + 4, 196, T(lang, 'shops being double-charged', 'lojas sendo cobradas em dobro'),
+           size=10, anchor='start', fill='--amber')
+    f.line(sx(e['impact']), 188, sx(e['restore']), 188, stroke='--amber', width=2)
+    f.text(650, 20, T(lang, 'the incident of 30 September, phase by phase', 'o incidente de 30 de setembro, fase a fase'),
+           size=10, anchor='end', fill='--paper-dim')
+    return f, T(lang,
+                'Restoring took under an hour and resolving took four. DORA counts the first; the '
+                'shops lived through both.',
+                'Restaurar levou menos de uma hora e resolver levou quatro. O DORA conta a primeira; '
+                'as lojas viveram as duas.')
+
+
 # @@LESSONS@@
 
 if __name__ == '__main__':
