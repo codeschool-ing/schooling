@@ -1320,6 +1320,47 @@ def l12_curve(lang):
                 'dez pontos de ocupação custam mais que os noventa primeiros.')
 
 
+# ------------------------------------------------------------------ lesson 13
+
+@figure('l13-roles', 13)
+def l13_roles(lang):
+    f = Fig('l13-roles', 680, 260, T(
+        lang,
+        'The incident commander at the top, coordinating three roles below: the technical lead, '
+        'who investigates and fixes; the communications lead, who tells support, leadership and '
+        'users; and the scribe, who writes the timeline. Arrows run from the commander to each '
+        'role, and from the communications lead out to the three audiences.',
+        'A comandante do incidente no topo, coordenando três papéis abaixo: o líder técnico, que '
+        'investiga e corrige; o líder de comunicação, que informa suporte, liderança e usuários; '
+        'e o escriba, que escreve a linha do tempo. Setas vão da comandante a cada papel, e do '
+        'líder de comunicação para os três públicos.'))
+    f.rect(250, 20, 180, 52, stroke='--amber', fill='--panel', width=1.6)
+    f.text(340, 38, T(lang, 'incident commander', 'comandante do incidente'), size=11, weight='600')
+    f.text(340, 56, T(lang, 'decides, coordinates; does not debug', 'decide, coordena; não depura'),
+           size=9.5, fill='--paper-dim')
+    roles = T(lang, [('technical lead', 'investigates and fixes'), ('communications lead', 'tells everybody else'),
+                     ('scribe', 'writes it down, with times')],
+              [('líder técnico', 'investiga e corrige'), ('líder de comunicação', 'informa todo o resto'),
+               ('escriba', 'anota tudo, com horário')])
+    for k, (name, what) in enumerate(roles):
+        x = 30 + k * 220
+        f.rect(x, 120, 180, 52, stroke='--phosphor', fill='--panel', width=1.3)
+        f.text(x + 90, 138, name, size=10.5, weight='600')
+        f.text(x + 90, 156, what, size=9.5, fill='--paper-dim')
+        f.line(340, 74, x + 90, 116, stroke='--paper-dim', width=1.2, arrow=True)
+    aud = T(lang, ['support', 'leadership', 'users'], ['suporte', 'liderança', 'usuários'])
+    for k, a in enumerate(aud):
+        x = 210 + k * 90
+        f.rect(x, 210, 80, 30, stroke='--wire', fill='--panel', width=1.1)
+        f.text(x + 40, 225, a, size=10)
+        f.line(340, 174, x + 40, 206, stroke='--paper-dim', width=1, arrow=True)
+    return f, T(lang,
+                'Four responsibilities, which may be held by one person or six. The one rule that '
+                'does not bend is that whoever coordinates does not also debug.',
+                'Quatro responsabilidades, que podem estar com uma pessoa ou com seis. A regra que '
+                'não se dobra é que quem coordena não depura ao mesmo tempo.')
+
+
 # @@LESSONS@@
 
 if __name__ == '__main__':
