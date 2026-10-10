@@ -1,0 +1,665 @@
+[
+  {
+    "id": "ex-ztz88m88",
+    "version": 1,
+    "section": "one-machine",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What do PostgreSQL's WAL, InnoDB's redo log and SQL Server's transaction log have in common?",
+    "hint": "Look at the change-log row.",
+    "choices": [
+      {
+        "text": "They are the same file format",
+        "correct": false,
+        "why": "Each engine has its own format; the idea is shared, not the bytes."
+      },
+      {
+        "text": "Backup tools are what read them",
+        "correct": false,
+        "why": "The server itself reads them after a crash."
+      },
+      {
+        "text": "Changes land there before the data files",
+        "correct": true,
+        "why": "Right. The idea is shared; the names differ."
+      },
+      {
+        "text": "They store each table's current rows",
+        "correct": false,
+        "why": "The rows are in the data files; the log holds changes."
+      }
+    ]
+  },
+  {
+    "id": "ex-mjwntph8",
+    "version": 1,
+    "section": "one-machine",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a new connection add a line to `ps` for PostgreSQL but not for MySQL?",
+    "hint": "Process or thread.",
+    "choices": [
+      {
+        "text": "Processes versus threads",
+        "correct": true,
+        "why": "Right. One line per process."
+      },
+      {
+        "text": "MySQL hides its connections from the operating system",
+        "correct": false,
+        "why": "Nothing is hidden: threads exist, and ps lists them when asked with -L."
+      },
+      {
+        "text": "MySQL refuses connections from the same machine",
+        "correct": false,
+        "why": "sudo mysql connected from the same machine."
+      },
+      {
+        "text": "PostgreSQL forks once for each query",
+        "correct": false,
+        "why": "Per connection, not per query."
+      }
+    ]
+  },
+  {
+    "id": "ex-rsmrwh4t",
+    "version": 1,
+    "section": "one-machine",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each engine to the name of its page cache.",
+    "hint": "One of them puts it inside a larger shared area.",
+    "pairs": [
+      {
+        "left": "PostgreSQL",
+        "right": "shared buffers"
+      },
+      {
+        "left": "MySQL (InnoDB)",
+        "right": "buffer pool"
+      },
+      {
+        "left": "Oracle",
+        "right": "buffer cache, in the SGA"
+      }
+    ],
+    "right_distractors": [
+      "undo tablespace"
+    ]
+  },
+  {
+    "id": "ex-djqxj5g7",
+    "version": 1,
+    "section": "one-machine",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague says MySQL needs no change log because it has the binary log. What is wrong with that?",
+    "hint": "MySQL writes two logs.",
+    "choices": [
+      {
+        "text": "Nothing; the binary log is InnoDB's change log",
+        "correct": false,
+        "why": "InnoDB has its own redo log; the binary log sits beside it."
+      },
+      {
+        "text": "InnoDB keeps a redo log beside the binary log",
+        "correct": true,
+        "why": "Right. Redo for crash repair, binlog for replication and recovery."
+      },
+      {
+        "text": "The binary log was removed in MySQL 8.0",
+        "correct": false,
+        "why": "The capture lists binlog.000001 to binlog.000003 on 8.0."
+      },
+      {
+        "text": "Change logs are a PostgreSQL idea",
+        "correct": false,
+        "why": "All four write one."
+      }
+    ]
+  },
+  {
+    "id": "ex-2a9ep8md",
+    "version": 1,
+    "section": "the-words",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In MySQL, what does `CREATE SCHEMA billing` create?",
+    "hint": "Two words, one thing.",
+    "choices": [
+      {
+        "text": "A database, listed by SHOW DATABASES",
+        "correct": true,
+        "why": "Right. Schema and database are synonyms there."
+      },
+      {
+        "text": "A namespace inside the current database",
+        "correct": false,
+        "why": "That is what PostgreSQL does. MySQL has no level between server and tables."
+      },
+      {
+        "text": "A user called billing",
+        "correct": false,
+        "why": "That would be Oracle's link between schema and user."
+      },
+      {
+        "text": "An error: MySQL does not have schemas",
+        "correct": false,
+        "why": "The statement succeeds; the word is accepted."
+      }
+    ]
+  },
+  {
+    "id": "ex-ypweq702",
+    "version": 1,
+    "section": "the-words",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In Oracle, what happens when you create a user called sales?",
+    "hint": "Schema and user.",
+    "choices": [
+      {
+        "text": "A role waiting to be granted",
+        "correct": false,
+        "why": "The user and its schema exist at once; privileges are separate."
+      },
+      {
+        "text": "A pluggable database called sales is created",
+        "correct": false,
+        "why": "A PDB is created separately and is a larger thing."
+      },
+      {
+        "text": "An empty schema called sales comes with it",
+        "correct": true,
+        "why": "Right. A table belongs to the user who owns it."
+      },
+      {
+        "text": "A login on the instance and nothing in any database",
+        "correct": false,
+        "why": "That is SQL Server's split, not Oracle's."
+      }
+    ]
+  },
+  {
+    "id": "ex-417t193c",
+    "version": 1,
+    "section": "the-words",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody can log in to a SQL Server instance but is refused by the database shop. What is the likely cause?",
+    "hint": "Two identities.",
+    "choices": [
+      {
+        "text": "Their password expired",
+        "correct": false,
+        "why": "Then the login would have failed."
+      },
+      {
+        "text": "shop is in another schema",
+        "correct": false,
+        "why": "A database is not inside a schema; it is the other way round."
+      },
+      {
+        "text": "Their login has no user in shop",
+        "correct": true,
+        "why": "Right. A login gets into the instance; a user gets into a database."
+      },
+      {
+        "text": "The instance is in single-user mode for maintenance",
+        "correct": false,
+        "why": "Then they could not have logged in either."
+      }
+    ]
+  },
+  {
+    "id": "ex-7n4mzcj5",
+    "version": 1,
+    "section": "the-words",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "On PostgreSQL, a report needs to join a table in database shop with one in database billing. What is true?",
+    "hint": "A connection is to exactly one database.",
+    "choices": [
+      {
+        "text": "It works if both are on the same cluster",
+        "correct": false,
+        "why": "Same cluster or not, a plain query sees one database."
+      },
+      {
+        "text": "A plain query cannot do it",
+        "correct": true,
+        "why": "Right. Schemas join freely; databases do not."
+      },
+      {
+        "text": "It works as in MySQL, with database.table",
+        "correct": false,
+        "why": "In PostgreSQL that dotted name is schema.table."
+      },
+      {
+        "text": "A superuser may run it, others may not",
+        "correct": false,
+        "why": "Privilege is not the obstacle; the connection is."
+      }
+    ]
+  },
+  {
+    "id": "ex-esqj58qg",
+    "version": 1,
+    "section": "the-words",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each engine to what its outermost box is called.",
+    "hint": "The figure's first row.",
+    "pairs": [
+      {
+        "left": "PostgreSQL",
+        "right": "cluster"
+      },
+      {
+        "left": "SQL Server",
+        "right": "instance"
+      },
+      {
+        "left": "Oracle",
+        "right": "CDB"
+      },
+      {
+        "left": "MySQL",
+        "right": "server"
+      }
+    ]
+  },
+  {
+    "id": "ex-r754azgq",
+    "version": 1,
+    "section": "side-by-side",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why did `sudo mysql` connect with no password on Ubuntu?",
+    "hint": "Same idea as sudo -u postgres psql.",
+    "choices": [
+      {
+        "text": "root has no password in a fresh MySQL",
+        "correct": false,
+        "why": "There is no password to be empty: auth_socket never asks for one."
+      },
+      {
+        "text": "sudo passes the password along by itself",
+        "correct": false,
+        "why": "sudo knows nothing about MySQL passwords."
+      },
+      {
+        "text": "The kernel tells MySQL who is on the socket",
+        "correct": true,
+        "why": "Right. The peer check under another name."
+      },
+      {
+        "text": "MySQL trusts local connections",
+        "correct": false,
+        "why": "Only root@localhost uses auth_socket; the other accounts use passwords."
+      }
+    ]
+  },
+  {
+    "id": "ex-g342f8rt",
+    "version": 1,
+    "section": "side-by-side",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In /var/lib/mysql, which entry plays the part pg_wal plays for PostgreSQL?",
+    "hint": "Redo.",
+    "choices": [
+      {
+        "text": "ibdata1",
+        "correct": false,
+        "why": "InnoDB's shared space, not its log."
+      },
+      {
+        "text": "binlog.000001",
+        "correct": false,
+        "why": "The binary log, a second log for replication."
+      },
+      {
+        "text": "mysql.ibd",
+        "correct": false,
+        "why": "That holds MySQL's own system tables."
+      },
+      {
+        "text": "#innodb_redo",
+        "correct": true,
+        "why": "Right. The redo log is the change log."
+      }
+    ]
+  },
+  {
+    "id": "ex-k947fvk9",
+    "version": 1,
+    "section": "side-by-side",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "MySQL lists root with host localhost. What does the host column change?",
+    "hint": "An account is two names.",
+    "choices": [
+      {
+        "text": "Nothing; it is a comment",
+        "correct": false,
+        "why": "It is part of the account's identity."
+      },
+      {
+        "text": "It limits root to the binary log",
+        "correct": false,
+        "why": "Host has nothing to do with logs."
+      },
+      {
+        "text": "It decides which database is the default",
+        "correct": false,
+        "why": "The default database is chosen on connection, not by host."
+      },
+      {
+        "text": "It is part of the account",
+        "correct": true,
+        "why": "Right. user@host is the account."
+      }
+    ]
+  },
+  {
+    "id": "ex-8t2fpwnc",
+    "version": 1,
+    "section": "side-by-side",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After `CREATE SCHEMA billing` in the PostgreSQL database ana, why does `\\l` not list billing?",
+    "hint": "\\l lists one level; \\dn another.",
+    "choices": [
+      {
+        "text": "The schema was created in another cluster",
+        "correct": false,
+        "why": "It went into the database the session was connected to."
+      },
+      {
+        "text": "It sits one level lower",
+        "correct": true,
+        "why": "Right. \\dn shows it."
+      },
+      {
+        "text": "The schema needs a commit to appear",
+        "correct": false,
+        "why": "psql commits each statement by itself."
+      },
+      {
+        "text": "Schemas are hidden from \\l for safety",
+        "correct": false,
+        "why": "\\dn showed it to ana, and would to anyone."
+      }
+    ]
+  },
+  {
+    "id": "ex-sep2qtxa",
+    "version": 1,
+    "section": "side-by-side",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On Ubuntu, MySQL's error log is the file ___ in /var/log/mysql.",
+    "hint": "Two words with a dot.",
+    "blanks": [
+      {
+        "accept": [
+          "error.log"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-fajrtgsz",
+    "version": 1,
+    "section": "sql-server-and-oracle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Oracle have no autovacuum?",
+    "hint": "Where old row versions live.",
+    "choices": [
+      {
+        "text": "Its tables are append-only",
+        "correct": false,
+        "why": "Oracle tables change like any other."
+      },
+      {
+        "text": "RMAN removes dead rows during backups",
+        "correct": false,
+        "why": "RMAN backs up; it does not clean tables."
+      },
+      {
+        "text": "Old row versions go to undo, not the table",
+        "correct": true,
+        "why": "Right. Nothing is left in the table for a vacuum to remove."
+      },
+      {
+        "text": "It runs VACUUM FULL at night",
+        "correct": false,
+        "why": "There is no such command in Oracle."
+      }
+    ]
+  },
+  {
+    "id": "ex-yqvcmxdp",
+    "version": 1,
+    "section": "sql-server-and-oracle",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "SQL Server's recovery model FULL keeps the transaction log for point-in-time restore. What decides the same thing on PostgreSQL?",
+    "hint": "Keeping the log after the server is done with it.",
+    "choices": [
+      {
+        "text": "Archiving the WAL",
+        "correct": true,
+        "why": "Right. db-reliability's lessons 4 and 6."
+      },
+      {
+        "text": "Running ANALYZE more often",
+        "correct": false,
+        "why": "ANALYZE gathers statistics; it keeps no log."
+      },
+      {
+        "text": "Setting fsync = off",
+        "correct": false,
+        "why": "That risks the data; it keeps nothing."
+      },
+      {
+        "text": "Creating a tablespace for the log",
+        "correct": false,
+        "why": "Where the log lives does not decide whether it is kept."
+      }
+    ]
+  },
+  {
+    "id": "ex-r5e20s2h",
+    "version": 1,
+    "section": "sql-server-and-oracle",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each term to its nearest PostgreSQL counterpart.",
+    "hint": "Memory, maintenance, log.",
+    "pairs": [
+      {
+        "left": "Oracle's PGA",
+        "right": "work memory per session"
+      },
+      {
+        "left": "SQL Server's index fragmentation",
+        "right": "index bloat"
+      },
+      {
+        "left": "SQL Server's transaction log",
+        "right": "the write-ahead log"
+      },
+      {
+        "left": "Oracle's alert log",
+        "right": "the server's log file"
+      }
+    ]
+  },
+  {
+    "id": "ex-d92a1ak3",
+    "version": 1,
+    "section": "why-postgresql-here",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does PostgreSQL answer to `SELECT '1abc' = 1`?",
+    "hint": "Strict about types.",
+    "choices": [
+      {
+        "text": "An error",
+        "correct": true,
+        "why": "Right. It will not guess."
+      },
+      {
+        "text": "true, with a warning",
+        "correct": false,
+        "why": "That is MySQL's answer."
+      },
+      {
+        "text": "false",
+        "correct": false,
+        "why": "It does not compare at all; the conversion fails first."
+      },
+      {
+        "text": "NULL",
+        "correct": false,
+        "why": "NULL would mean unknown; here it refuses."
+      }
+    ]
+  },
+  {
+    "id": "ex-pb1taj9c",
+    "version": 1,
+    "section": "why-postgresql-here",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which reason given for using PostgreSQL in this course is specific to learning administration?",
+    "hint": "Settings, statistics and logs in front of you.",
+    "choices": [
+      {
+        "text": "It is the fastest of the four engines",
+        "correct": false,
+        "why": "The course makes no such claim."
+      },
+      {
+        "text": "It shows its working",
+        "correct": true,
+        "why": "Right. A file you can read, a view you can query."
+      },
+      {
+        "text": "It needs less configuration",
+        "correct": false,
+        "why": "Lesson 5 is about its configuration."
+      },
+      {
+        "text": "Oracle and SQL Server are being retired",
+        "correct": false,
+        "why": "Both are sold and widely used."
+      }
+    ]
+  },
+  {
+    "id": "ex-z59gfv8k",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A manager asks for \"a new database for the invoicing service\" on a MySQL server. What do you create?",
+    "hint": "Which level does the word mean there?",
+    "choices": [
+      {
+        "text": "A second mysqld on another port",
+        "correct": false,
+        "why": "That is a second server, much more than was asked."
+      },
+      {
+        "text": "One more entry in SHOW DATABASES",
+        "correct": true,
+        "why": "Right. On MySQL the word means that level."
+      },
+      {
+        "text": "A user called invoicing that owns its tables",
+        "correct": false,
+        "why": "That is the Oracle reading."
+      },
+      {
+        "text": "A tablespace called invoicing",
+        "correct": false,
+        "why": "A tablespace is about where files live, not a namespace."
+      }
+    ]
+  },
+  {
+    "id": "ex-73tr08cv",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server runs out of disk because its change log keeps growing. Which lesson's ideas carry over if the engine is SQL Server?",
+    "hint": "The change log row.",
+    "choices": [
+      {
+        "text": "Lesson 12, on GRANT",
+        "correct": false,
+        "why": "Privileges do not fill a disk."
+      },
+      {
+        "text": "Lesson 18, on extensions",
+        "correct": false,
+        "why": "Extensions are not involved."
+      },
+      {
+        "text": "Lesson 7, on the write-ahead log",
+        "correct": true,
+        "why": "Right. Same mechanism, another name."
+      },
+      {
+        "text": "Lesson 22, on schema changes",
+        "correct": false,
+        "why": "It is SQL Server's change log."
+      }
+    ]
+  },
+  {
+    "id": "ex-d359kpd1",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Order PostgreSQL's levels from the outermost to the innermost.",
+    "hint": "Server first, rows last.",
+    "items": [
+      "cluster",
+      "database",
+      "schema",
+      "table"
+    ],
+    "trap": "Schema before database is MySQL's mix-up carried over: in PostgreSQL schemas live inside a database."
+  }
+]
