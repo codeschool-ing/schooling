@@ -75,12 +75,9 @@ deployment.apps/bulletin created
 service/bulletin created
 ana@laptop:~/fleet$ kubectl -n staging get pods
 NAME                        READY   STATUS    RESTARTS   AGE
-bulletin-59bd8fffb5-jkbw5   1/1     Running   0          1s
-bulletin-59bd8fffb5-lb2f8   1/1     Running   0          1s
+bulletin-59bd8fffb5-296kl   1/1     Running   0          1s
+bulletin-59bd8fffb5-x2g4w   1/1     Running   0          1s
 ana@laptop:~/fleet$ curl -s localhost:8080
-bulletin 1.0
-message: Staging is open for testing.
-token: none
 ```
 
 O `curl localhost:8080` chegou a um dos dois pods pelo mapeamento de porta do arquivo do cluster, e
@@ -111,12 +108,12 @@ ana@laptop:~/fleet$ git commit --quiet -m "staging: bulletin 1.0"
 ana@laptop:~/fleet$ git remote add origin ~/fleet.git
 ana@laptop:~/fleet$ git push --quiet -u origin main
 ana@laptop:~/fleet$ git log --oneline
-5dd3a45 staging: bulletin 1.0
+ab88607 staging: bulletin 1.0
 ```
 
 `git init --bare` cria um repositório sem arquivos de trabalho, que é o que um servidor guarda. O
 `~/fleet` envia para ele exatamente como enviaria para um servidor, e tudo o que clonar o
-`~/fleet.git` recebe o mesmo histórico. O hash `5dd3a45` só será igual na sua máquina se o seu nome,
+`~/fleet.git` recebe o mesmo histórico. O hash `ab88607` só será igual na sua máquina se o seu nome,
 o seu endereço e a data do commit forem os mesmos da Ana, então espere um diferente.
 
 Agora existe uma descrição do staging, e ela vive num lugar que guarda todas as versões dela. O que

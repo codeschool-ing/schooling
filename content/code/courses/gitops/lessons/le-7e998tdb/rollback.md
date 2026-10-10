@@ -36,13 +36,13 @@ The loop applied it, and the deployment started a rollout that cannot finish:
 ```
 ana@laptop:~/fleet$ kubectl -n staging get pods
 NAME                        READY   STATUS         RESTARTS   AGE
-bulletin-54b57cfbcf-p667z   0/1     ErrImagePull   0          33s
-bulletin-657dd4685b-4gfmw   1/1     Running        0          79s
-bulletin-657dd4685b-xfh6g   1/1     Running        0          80s
-bulletin-657dd4685b-z5hg9   1/1     Running        0          64s
+bulletin-54b57cfbcf-kdbfd   0/1     ErrImagePull   0          33s
+bulletin-657dd4685b-9jd2v   1/1     Running        0          80s
+bulletin-657dd4685b-nnltr   1/1     Running        0          65s
+bulletin-657dd4685b-zhsk9   1/1     Running        0          79s
 ana@laptop:~/fleet$ kubectl -n staging get deployment bulletin
 NAME       READY   UP-TO-DATE   AVAILABLE   AGE
-bulletin   3/3     1            3           94s
+bulletin   3/3     1            3           104s
 ana@laptop:~/fleet$ curl -s localhost:8080
 bulletin 1.0
 message: Staging is ready for review.
@@ -65,8 +65,8 @@ other change:
 ana@laptop:~/fleet$ git switch --quiet main && git pull --quiet
 ana@laptop:~/fleet$ git switch --quiet -c revert-1.1
 ana@laptop:~/fleet$ git revert --no-edit -m 1 HEAD
-[revert-1.1 ab2c952] Revert "Merge pull request 'staging: bulletin 1.1' (#3) from staging-1.1 into main"
- Date: Tue Oct 13 14:20:00 2026 -0300
+[revert-1.1 15f3ce9] Revert "Merge pull request 'staging: bulletin 1.1' (#3) from staging-1.1 into main"
+ Date: Fri Oct 9 14:20:00 2026 -0300
  1 file changed, 1 insertion(+), 1 deletion(-)
 ana@laptop:~/fleet$ git push --quiet -u origin revert-1.1
 remote: 
@@ -91,28 +91,28 @@ put the cluster back:
 ana@laptop:~/fleet$ git switch --quiet main && git pull --quiet
 ana@laptop:~/fleet$ kubectl -n staging get pods
 NAME                        READY   STATUS    RESTARTS   AGE
-bulletin-657dd4685b-4gfmw   1/1     Running   0          101s
-bulletin-657dd4685b-xfh6g   1/1     Running   0          102s
-bulletin-657dd4685b-z5hg9   1/1     Running   0          86s
+bulletin-657dd4685b-9jd2v   1/1     Running   0          102s
+bulletin-657dd4685b-nnltr   1/1     Running   0          87s
+bulletin-657dd4685b-zhsk9   1/1     Running   0          101s
 ana@laptop:~/fleet$ git log --oneline --first-parent -4
-404ce6c Merge pull request 'Revert staging to bulletin 1.0' (#4) from revert-1.1 into main
-0a11e7a Merge pull request 'staging: bulletin 1.1' (#3) from staging-1.1 into main
-4bb78f9 Merge pull request 'staging: three replicas' (#2) from three-replicas into main
-efa3978 Merge pull request 'staging: ready for review' (#1) from banner-v2 into main
+b53ba28 Merge pull request 'Revert staging to bulletin 1.0' (#4) from revert-1.1 into main
+e702151 Merge pull request 'staging: bulletin 1.1' (#3) from staging-1.1 into main
+3782a32 Merge pull request 'staging: three replicas' (#2) from three-replicas into main
+e1e3fc8 Merge pull request 'staging: ready for review' (#1) from banner-v2 into main
 ```
 
 The loop, all this time, applied each merge on the pass after it landed: the three replicas, the
 broken image, and the revert.
 
 ```
-01:51:12 at 4bb78f9
+02:01:51 at 3782a32
 deployment.apps/bulletin configured
-01:51:28 at 4bb78f9
-01:51:43 at 0a11e7a
+02:02:07 at 3782a32
+02:02:22 at e702151
 deployment.apps/bulletin configured
-01:51:59 at 0a11e7a
-01:52:15 at 0a11e7a
-01:52:30 at 404ce6c
+02:02:38 at e702151
+02:02:53 at e702151
+02:03:09 at b53ba28
 deployment.apps/bulletin configured
 ```
 

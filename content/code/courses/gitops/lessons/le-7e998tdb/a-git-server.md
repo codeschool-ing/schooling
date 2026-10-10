@@ -81,10 +81,10 @@ And `~/fleet` changes its remote from the bare repository to the server, and sen
 ana@laptop:~/fleet$ git remote set-url origin http://localhost:3000/ana/fleet.git
 ana@laptop:~/fleet$ git push --quiet -u origin main
 ana@laptop:~/fleet$ git ls-remote origin
-f990998d0c04ea06c327242565667cd2529b864e	HEAD
-f990998d0c04ea06c327242565667cd2529b864e	refs/heads/main
+7cb8cafeab5734b248a9d1ed4c6cabdc9e7b35fc	HEAD
+7cb8cafeab5734b248a9d1ed4c6cabdc9e7b35fc	refs/heads/main
 ana@laptop:~/fleet$ git log --oneline -1
-f990998 Revert "staging: no service"
+7cb8caf Revert "staging: no service"
 ```
 
 `git ls-remote` asks the server what it has, and `main` points at the same commit as on your

@@ -77,7 +77,7 @@ run 'curl -s -H "$AS_ANA" -H "$JSON" -d '"'"'{"rule_name": "main", "enable_push"
 
 block rejected
 sed -i 's/value: Staging has the new banner./value: Staging is ready for review./' staging/bulletin.yaml
-at 2026-10-13T10:00:00-03:00 run 'git commit --quiet -am "staging: ready for review"'
+at 2026-10-09T10:00:00-03:00 run 'git commit --quiet -am "staging: ready for review"'
 run 'git push'
 
 block rescue
@@ -145,7 +145,7 @@ block bad
 run 'git switch --quiet -c three-replicas'
 sed -i 's/  replicas: 2/  replicas: three/' staging/bulletin.yaml
 run "git diff | grep '^[-+] '"
-at 2026-10-13T11:00:00-03:00 run 'git commit --quiet -am "staging: three replicas"'
+at 2026-10-09T11:00:00-03:00 run 'git commit --quiet -am "staging: three replicas"'
 run 'git push --quiet -u origin three-replicas'
 run 'curl -s -H "$AS_ANA" -H "$JSON" -d '"'"'{"head": "three-replicas", "base": "main", "title": "staging: three replicas", "body": "Load testing starts on Monday."}'"'"' $API/pulls | jq .number'
 run 'sh ~/setup/validate.sh $(git rev-parse HEAD)'
@@ -153,7 +153,7 @@ run 'curl -s -w " %{http_code}\n" -H "$AS_ANA" -H "$JSON" -d '"'"'{"Do": "merge"
 
 block fixed
 sed -i 's/  replicas: three/  replicas: 3/' staging/bulletin.yaml
-at 2026-10-13T11:05:00-03:00 run 'git commit --quiet -am "staging: replicas is a number"'
+at 2026-10-09T11:05:00-03:00 run 'git commit --quiet -am "staging: replicas is a number"'
 run 'git push --quiet'
 run 'sh ~/setup/validate.sh $(git rev-parse HEAD)'
 run 'curl -s -H "$AS_BRUNO" -H "$JSON" -d '"'"'{"event": "APPROVED", "body": "Three it is."}'"'"' $API/pulls/2/reviews | jq -r .state'
@@ -166,7 +166,7 @@ run 'kubectl -n staging get deployment bulletin'
 block bad-image
 run 'git switch --quiet -c staging-1.1'
 sed -i 's#localhost:5001/bulletin:1.0#localhost:5001/bulletin:1.1#' staging/bulletin.yaml
-at 2026-10-13T14:00:00-03:00 run 'git commit --quiet -am "staging: bulletin 1.1"'
+at 2026-10-09T14:00:00-03:00 run 'git commit --quiet -am "staging: bulletin 1.1"'
 run 'git push --quiet -u origin staging-1.1'
 run 'curl -s -H "$AS_ANA" -H "$JSON" -d '"'"'{"head": "staging-1.1", "base": "main", "title": "staging: bulletin 1.1", "body": "The new release, for QA."}'"'"' $API/pulls | jq .number'
 run 'sh ~/setup/validate.sh $(git rev-parse HEAD)'
@@ -182,7 +182,7 @@ run 'curl -s localhost:8080'
 block revert
 run 'git switch --quiet main && git pull --quiet'
 run 'git switch --quiet -c revert-1.1'
-at 2026-10-13T14:20:00-03:00 run 'git revert --no-edit -m 1 HEAD'
+at 2026-10-09T14:20:00-03:00 run 'git revert --no-edit -m 1 HEAD'
 run 'git push --quiet -u origin revert-1.1'
 run 'curl -s -H "$AS_ANA" -H "$JSON" -d '"'"'{"head": "revert-1.1", "base": "main", "title": "Revert staging to bulletin 1.0", "body": "1.1 was never built. Back to 1.0 until it is."}'"'"' $API/pulls | jq .number'
 run 'sh ~/setup/validate.sh $(git rev-parse HEAD)'
@@ -205,13 +205,13 @@ run 'curl -s -w " %{http_code}\n" -H "Authorization: token 0123456789abcdef" $AP
 block fail-stale
 run 'git switch --quiet -c banner-v3'
 sed -i 's/value: Staging is ready for review./value: Staging is in use by QA./' staging/bulletin.yaml
-at 2026-10-13T15:00:00-03:00 run 'git commit --quiet -am "staging: in use by QA"'
+at 2026-10-09T15:00:00-03:00 run 'git commit --quiet -am "staging: in use by QA"'
 run 'git push --quiet -u origin banner-v3'
 run 'curl -s -H "$AS_ANA" -H "$JSON" -d '"'"'{"head": "banner-v3", "base": "main", "title": "staging: in use by QA"}'"'"' $API/pulls | jq .number'
 run 'sh ~/setup/validate.sh $(git rev-parse HEAD)'
 run 'curl -s -H "$AS_BRUNO" -H "$JSON" -d '"'"'{"event": "APPROVED", "body": "OK."}'"'"' $API/pulls/5/reviews | jq -r .state'
 sed -i 's/value: Staging is in use by QA./value: Staging is in use by QA until Friday./' staging/bulletin.yaml
-at 2026-10-13T15:05:00-03:00 run 'git commit --quiet -am "staging: until Friday"'
+at 2026-10-09T15:05:00-03:00 run 'git commit --quiet -am "staging: until Friday"'
 run 'git push --quiet'
 run 'sh ~/setup/validate.sh $(git rev-parse HEAD)'
 run 'curl -s -w " %{http_code}\n" -H "$AS_ANA" -H "$JSON" -d '"'"'{"Do": "merge"}'"'"' $API/pulls/5/merge'

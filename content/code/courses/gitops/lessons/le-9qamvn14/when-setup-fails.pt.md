@@ -42,7 +42,7 @@ aqui um pequeno servidor web que alguém deixou rodando na 8080, o nó não cons
 
 ```
 ana@laptop:~/setup$ kind create cluster --name gitops --config cluster.yaml 2>&1 | grep 'already in use'
-docker: Error response from daemon: failed to set up container networking: driver failed programming external connectivity on endpoint gitops-control-plane (25207e6238bdb17d0edf869e3eefc74d3391545e607f54156d9834c29b5e4a2f): failed to bind host port 127.0.0.1:8080/tcp: address already in use
+docker: Error response from daemon: failed to set up container networking: driver failed programming external connectivity on endpoint gitops-control-plane (cbab3fd820ca2af4161529a79f7a5a4e21f918da9786fd017789f9ce0c49ce98): failed to bind host port 127.0.0.1:8080/tcp: address already in use
 ```
 
 O kind imprime uma página de saída quando a criação falha, e o `grep` fica com a única linha que
@@ -62,14 +62,14 @@ ana@laptop:~/setup$ kubectl create deployment probe --image=localhost:5001/bulle
 deployment.apps/probe created
 ana@laptop:~/setup$ kubectl get pods
 NAME                     READY   STATUS             RESTARTS   AGE
-probe-7c47477fcc-zgsbb   0/1     ImagePullBackOff   0          25s
+probe-7c47477fcc-gwv66   0/1     ImagePullBackOff   0          26s
 ana@laptop:~/setup$ kubectl describe pods -l app=probe | tail -n 6
-  Normal   Scheduled  25s                default-scheduler  Successfully assigned default/probe-7c47477fcc-zgsbb to gitops-control-plane
-  Normal   BackOff    25s                kubelet            spec.containers{bulletin}: Back-off pulling image "localhost:5001/bulletin:1.0"
-  Warning  Failed     25s                kubelet            spec.containers{bulletin}: Error: ImagePullBackOff
-  Normal   Pulling    10s (x2 over 25s)  kubelet            spec.containers{bulletin}: Pulling image "localhost:5001/bulletin:1.0"
-  Warning  Failed     10s (x2 over 25s)  kubelet            spec.containers{bulletin}: Failed to pull image "localhost:5001/bulletin:1.0": failed to pull and unpack image "localhost:5001/bulletin:1.0": failed to resolve reference "localhost:5001/bulletin:1.0": failed to do request: Head "https://localhost:5001/v2/bulletin/manifests/1.0": dial tcp 127.0.0.1:5001: connect: connection refused
-  Warning  Failed     10s (x2 over 25s)  kubelet            spec.containers{bulletin}: Error: ErrImagePull
+  Normal   Scheduled  26s                default-scheduler  Successfully assigned default/probe-7c47477fcc-gwv66 to gitops-control-plane
+  Normal   BackOff    24s                kubelet            spec.containers{bulletin}: Back-off pulling image "localhost:5001/bulletin:1.0"
+  Warning  Failed     24s                kubelet            spec.containers{bulletin}: Error: ImagePullBackOff
+  Normal   Pulling    14s (x2 over 25s)  kubelet            spec.containers{bulletin}: Pulling image "localhost:5001/bulletin:1.0"
+  Warning  Failed     14s (x2 over 25s)  kubelet            spec.containers{bulletin}: Failed to pull image "localhost:5001/bulletin:1.0": failed to pull and unpack image "localhost:5001/bulletin:1.0": failed to resolve reference "localhost:5001/bulletin:1.0": failed to do request: Head "https://localhost:5001/v2/bulletin/manifests/1.0": dial tcp 127.0.0.1:5001: connect: connection refused
+  Warning  Failed     14s (x2 over 25s)  kubelet            spec.containers{bulletin}: Error: ErrImagePull
 ```
 
 `ImagePullBackOff` é o resumo e o evento embaixo dele é o motivo: o nó tentou `localhost:5001` **nele
@@ -83,14 +83,14 @@ ana@laptop:~/setup$ kubectl create deployment probe --image=localhost:5001/bulle
 deployment.apps/probe created
 ana@laptop:~/setup$ kubectl get pods
 NAME                     READY   STATUS             RESTARTS   AGE
-probe-57f8b4b4fd-w2j8f   0/1     ImagePullBackOff   0          20s
+probe-57f8b4b4fd-mvzjj   0/1     ImagePullBackOff   0          20s
 ana@laptop:~/setup$ kubectl describe pods -l app=probe | tail -n 6
-  Normal   Scheduled  20s               default-scheduler  Successfully assigned default/probe-57f8b4b4fd-w2j8f to gitops-control-plane
+  Normal   Scheduled  20s               default-scheduler  Successfully assigned default/probe-57f8b4b4fd-mvzjj to gitops-control-plane
   Normal   BackOff    19s               kubelet            spec.containers{bulletin}: Back-off pulling image "localhost:5001/bulletin:1.1"
   Warning  Failed     19s               kubelet            spec.containers{bulletin}: Error: ImagePullBackOff
-  Normal   Pulling    7s (x2 over 19s)  kubelet            spec.containers{bulletin}: Pulling image "localhost:5001/bulletin:1.1"
-  Warning  Failed     7s (x2 over 19s)  kubelet            spec.containers{bulletin}: Failed to pull image "localhost:5001/bulletin:1.1": rpc error: code = NotFound desc = failed to pull and unpack image "localhost:5001/bulletin:1.1": failed to resolve reference "localhost:5001/bulletin:1.1": localhost:5001/bulletin:1.1: not found
-  Warning  Failed     7s (x2 over 19s)  kubelet            spec.containers{bulletin}: Error: ErrImagePull
+  Normal   Pulling    5s (x2 over 20s)  kubelet            spec.containers{bulletin}: Pulling image "localhost:5001/bulletin:1.1"
+  Warning  Failed     5s (x2 over 20s)  kubelet            spec.containers{bulletin}: Failed to pull image "localhost:5001/bulletin:1.1": rpc error: code = NotFound desc = failed to pull and unpack image "localhost:5001/bulletin:1.1": failed to resolve reference "localhost:5001/bulletin:1.1": localhost:5001/bulletin:1.1: not found
+  Warning  Failed     5s (x2 over 20s)  kubelet            spec.containers{bulletin}: Error: ErrImagePull
 ```
 
 `not found` quer dizer que o nó chegou ao registry, e o registry não tem essa tag. Aqui o manifesto

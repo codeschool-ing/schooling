@@ -279,14 +279,14 @@ stage1() {
   shown "$L1/desired-state.md" '~/fleet/staging/bulletin.yaml' > staging/bulletin.yaml
   git init --quiet --bare /home/ana/fleet.git
   git init --quiet && git add staging/bulletin.yaml
-  commit_at 2026-10-12T09:00:00-03:00 -m "staging: bulletin 1.0"
+  commit_at 2026-10-08T09:00:00-03:00 -m "staging: bulletin 1.0"
   git remote add origin /home/ana/fleet.git
   sed -i 's/value: Staging is open for testing./value: Staging has the new banner./' staging/bulletin.yaml
-  commit_at 2026-10-12T09:20:00-03:00 -am "staging: new banner"
+  commit_at 2026-10-08T09:20:00-03:00 -am "staging: new banner"
   cp staging/bulletin.yaml /tmp/bulletin.yaml
   python3 -c "import sys; p=sys.argv[1]; s=open(p).read(); open(p,'w').write(s[:s.rindex('---\n')])" staging/bulletin.yaml
-  commit_at 2026-10-12T09:40:00-03:00 -am "staging: no service"
-  GIT_AUTHOR_DATE=2026-10-12T09:45:00-03:00 GIT_COMMITTER_DATE=2026-10-12T09:45:00-03:00 \
+  commit_at 2026-10-08T09:40:00-03:00 -am "staging: no service"
+  GIT_AUTHOR_DATE=2026-10-08T09:45:00-03:00 GIT_COMMITTER_DATE=2026-10-08T09:45:00-03:00 \
     git revert --quiet --no-edit HEAD >/dev/null
   git push --quiet -u origin main
   kubectl apply -f staging/ >/dev/null
@@ -325,11 +325,11 @@ stage2() {
   shown "$L2/checks.md" '~/setup/validate.sh' > /home/ana/setup/validate.sh
   git switch --quiet -c banner-v2
   sed -i 's/value: Staging has the new banner./value: Staging is ready for review./' staging/bulletin.yaml
-  commit_at 2026-10-13T10:00:00-03:00 -am "staging: ready for review"
+  commit_at 2026-10-09T10:00:00-03:00 -am "staging: ready for review"
   merge banner-v2 "staging: ready for review"
   git switch --quiet -c three-replicas
   sed -i 's/  replicas: 2/  replicas: 3/' staging/bulletin.yaml
-  commit_at 2026-10-13T11:05:00-03:00 -am "staging: three replicas"
+  commit_at 2026-10-09T11:05:00-03:00 -am "staging: three replicas"
   merge three-replicas "staging: three replicas"
   kubectl apply -f staging/ >/dev/null
   kubectl -n staging rollout status deployment bulletin --timeout=180s >/dev/null

@@ -14,7 +14,7 @@ executado. Um script que parou no meio não deixa registro do que pretendia alca
 
 **2. Versionado e imutável.** O estado desejado é guardado de um jeito que preserva todas as
 versões, e uma versão, depois de escrita, não muda. O Git faz as duas coisas: um commit tem um hash
-calculado do conteúdo e dos pais dele, então o commit `5dd3a45` quer dizer exatamente uma árvore de
+calculado do conteúdo e dos pais dele, então o commit `ab88607` quer dizer exatamente uma árvore de
 arquivos, para sempre. "Voltar atrás" vira "apontar para uma versão anterior", e "o que mudou na
 terça" tem uma resposta exata.
 

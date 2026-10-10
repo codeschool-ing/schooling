@@ -18,16 +18,16 @@ ana@laptop:~/fleet$ kubectl -n staging scale deployment bulletin --replicas=5
 deployment.apps/bulletin scaled
 ana@laptop:~/fleet$ kubectl -n staging get deployment bulletin
 NAME       READY   UP-TO-DATE   AVAILABLE   AGE
-bulletin   2/5     5            2           24s
+bulletin   2/5     5            2           23s
 ana@laptop:~/fleet$ kubectl -n staging get deployment bulletin
 NAME       READY   UP-TO-DATE   AVAILABLE   AGE
-bulletin   2/2     2            2           41s
+bulletin   2/2     2            2           40s
 ```
 
 And in the second terminal:
 
 ```
-01:33:10 at 1949f7b
+01:59:58 at 9e1d64a
 deployment.apps/bulletin configured
 ```
 
@@ -55,14 +55,14 @@ ana@laptop:~/fleet$ git diff --stat
 ana@laptop:~/fleet$ git commit --quiet -am "staging: no service"
 ana@laptop:~/fleet$ git push --quiet
 ana@laptop:~/fleet$ kubectl -n staging get service
-NAME       TYPE       CLUSTER-IP   EXTERNAL-IP   PORT(S)        AGE
-bulletin   NodePort   10.96.95.6   <none>        80:30080/TCP   58s
+NAME       TYPE       CLUSTER-IP     EXTERNAL-IP   PORT(S)        AGE
+bulletin   NodePort   10.96.27.140   <none>        80:30080/TCP   57s
 ```
 
 And the loop, on its next pass:
 
 ```
-01:33:26 at a10aba9
+02:00:13 at 8d318a8
 ```
 
 It applied what was left and said nothing, and the service is still there, because

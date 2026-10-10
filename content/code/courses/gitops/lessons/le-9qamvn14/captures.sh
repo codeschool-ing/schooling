@@ -136,7 +136,7 @@ run 'git init --quiet --bare ~/fleet.git'
 cd /home/ana/fleet
 run 'git init --quiet'
 run 'git add staging/bulletin.yaml'
-at 2026-10-12T09:00:00-03:00 run 'git commit --quiet -m "staging: bulletin 1.0"'
+at 2026-10-08T09:00:00-03:00 run 'git commit --quiet -m "staging: bulletin 1.0"'
 run 'git remote add origin ~/fleet.git'
 run 'git push --quiet -u origin main'
 run 'git log --oneline'
@@ -149,7 +149,7 @@ LOOP=$!
 sleep 5
 sed -i 's/value: Staging is open for testing./value: Staging has the new banner./' staging/bulletin.yaml
 run "git diff | grep '^[-+] '"
-at 2026-10-12T09:20:00-03:00 run 'git commit --quiet -am "staging: new banner"'
+at 2026-10-08T09:20:00-03:00 run 'git commit --quiet -am "staging: new banner"'
 run 'git push --quiet'
 quiet 'sleep 17'
 quiet 'kubectl -n staging rollout status deployment bulletin --timeout=120s'
@@ -174,7 +174,7 @@ import sys; p = sys.argv[1]; s = open(p).read()
 open(p, 'w').write(s[:s.rindex('---\n')])
 PY
 run 'git diff --stat'
-at 2026-10-12T09:40:00-03:00 run 'git commit --quiet -am "staging: no service"'
+at 2026-10-08T09:40:00-03:00 run 'git commit --quiet -am "staging: no service"'
 run 'git push --quiet'
 quiet 'sleep 17'
 run 'kubectl -n staging get service'
@@ -182,6 +182,6 @@ run 'kubectl -n staging get service'
 block prune-loop
 tail -n +$((seen + 1)) $LOG
 
-at 2026-10-12T09:45:00-03:00 git revert --quiet --no-edit HEAD >/dev/null
+at 2026-10-08T09:45:00-03:00 git revert --quiet --no-edit HEAD >/dev/null
 git push --quiet
 kill $LOOP

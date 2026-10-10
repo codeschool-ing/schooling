@@ -79,7 +79,7 @@ docker run -d --restart=always --name registry -p 127.0.0.1:5001:5000 registry:3
 
 ```
 ana@laptop:~/setup$ docker run -d --restart=always --name registry -p 127.0.0.1:5001:5000 registry:3.1.2
-15cda3b455ca5ccbee1f6be74339f4d5698f3f50dcb23014b9d39bff7fab31c5
+7d43605a77f0cfcebd1b132c2f41bbba566daa27b4db7a440c7808d85f648951
 ana@laptop:~/setup$ curl -s localhost:5001/v2/_catalog
 {"repositories":[]}
 ```
@@ -131,9 +131,9 @@ para o registry, e os próximos comandos o usam.
 ```
 ana@laptop:~/setup$ time kind create cluster --name gitops --config cluster.yaml --quiet
 
-real	0m16.115s
-user	0m1.663s
-sys	0m1.481s
+real	0m15.876s
+user	0m1.622s
+sys	0m1.331s
 ana@laptop:~/setup$ kind get clusters
 gitops
 ana@laptop:~/setup$ kubectl config current-context

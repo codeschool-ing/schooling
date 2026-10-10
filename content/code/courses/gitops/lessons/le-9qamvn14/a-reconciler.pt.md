@@ -55,13 +55,13 @@ E isto foi o que o segundo terminal imprimiu enquanto isso:
 
 ```
 ana@laptop:~$ sh ~/setup/reconcile.sh ~/fleet.git staging
-01:32:39 at 5dd3a45
-01:32:55 at 1949f7b
+01:59:27 at ab88607
+01:59:42 at 9e1d64a
 deployment.apps/bulletin configured
 ```
 
-A saída conta a história. No começo o laço está em `5dd3a45` e não muda nada, porque o cluster já
-combina. Na passada depois do push ele está em `1949f7b` e relata
+A saída conta a história. No começo o laço está em `ab88607` e não muda nada, porque o cluster já
+combina. Na passada depois do push ele está em `9e1d64a` e relata
 `deployment.apps/bulletin configured`: o template mudou, então o Kubernetes começou um rollout. Segundos depois o `curl` recebe
 a mensagem nova de um pod novo.
 

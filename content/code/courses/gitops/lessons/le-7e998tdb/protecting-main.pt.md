@@ -71,7 +71,7 @@ Switched to branch 'main'
 Your branch is ahead of 'origin/main' by 1 commit.
   (use "git push" to publish your local commits)
 ana@laptop:~/fleet$ git reset --hard origin/main
-HEAD is now at f990998 Revert "staging: no service"
+HEAD is now at 7cb8caf Revert "staging: no service"
 ```
 
 e a `main` volta a combinar com o servidor, enquanto a mudança espera no `banner-v2` pelo pull

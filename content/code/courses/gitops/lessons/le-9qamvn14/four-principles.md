@@ -14,7 +14,7 @@ script that ran halfway leaves no record of what it meant to achieve.
 
 **2. Versioned and immutable.** The desired state is stored in a way that keeps every version, and
 a version, once written, does not change. Git does both: a commit has a hash computed from its
-content and its parents, so the commit `5dd3a45` means exactly one tree of files, for ever. "Roll
+content and its parents, so the commit `ab88607` means exactly one tree of files, for ever. "Roll
 back" becomes "point at an earlier version", and "what changed on Tuesday" has an exact answer.
 
 **3. Pulled automatically.** Software agents pull the desired state from the source. Nobody runs a

@@ -54,13 +54,13 @@ And this is what the second terminal printed meanwhile:
 
 ```
 ana@laptop:~$ sh ~/setup/reconcile.sh ~/fleet.git staging
-01:32:39 at 5dd3a45
-01:32:55 at 1949f7b
+01:59:27 at ab88607
+01:59:42 at 9e1d64a
 deployment.apps/bulletin configured
 ```
 
-The output tells the story. At first the loop is at `5dd3a45` and changes nothing, because the
-cluster already matches. On the pass after the push it is at `1949f7b` and reports
+The output tells the story. At first the loop is at `ab88607` and changes nothing, because the
+cluster already matches. On the pass after the push it is at `9e1d64a` and reports
 `deployment.apps/bulletin configured`: the template changed, so Kubernetes started a rollout. A few
 seconds later `curl` gets the new message from a new pod.
 

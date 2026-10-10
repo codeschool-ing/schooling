@@ -58,9 +58,9 @@ Construa, experimente e envie:
 
 ```
 ana@laptop:~/bulletin$ docker build --quiet --build-arg VERSION=1.0 -t localhost:5001/bulletin:1.0 .
-sha256:7528cb6ac23fab00f1a692e4cfd28c8e5c46c4fe68f785291b5ec67381533391
+sha256:18a3c2c67bc3617fd719c80fcf32fc820b23a436d9bd51e04ca660a97afdf28b
 ana@laptop:~/bulletin$ docker run -d --rm --name try -p 127.0.0.1:9090:8080 -e MESSAGE="Hello from Docker." localhost:5001/bulletin:1.0
-875a2b93f2d16c09968c1244c64bf6f5d814e4b9f8b93c25aa387b61c494fad2
+7fb07b00c41d02b14ac3b7806dbea5e985a866914be15c661b53ec551b1259ea
 ana@laptop:~/bulletin$ curl -s localhost:9090
 bulletin 1.0
 message: Hello from Docker.
@@ -69,11 +69,11 @@ ana@laptop:~/bulletin$ docker stop try
 try
 ana@laptop:~/bulletin$ docker push localhost:5001/bulletin:1.0
 The push refers to repository [localhost:5001/bulletin]
-be444a2440bf: Pushed
 44136fa355b3: Pushed
-68fe9bff2ad4: Pushed
 791c5bdd85b8: Pushed
-1.0: digest: sha256:7528cb6ac23fab00f1a692e4cfd28c8e5c46c4fe68f785291b5ec67381533391 size: 855
+f698af0560ba: Pushed
+68fe9bff2ad4: Pushed
+1.0: digest: sha256:18a3c2c67bc3617fd719c80fcf32fc820b23a436d9bd51e04ca660a97afdf28b size: 855
 ana@laptop:~/bulletin$ curl -s localhost:5001/v2/_catalog
 {"repositories":["bulletin"]}
 ```

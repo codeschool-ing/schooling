@@ -49,9 +49,9 @@ ana@laptop:~/fleet$ curl -s -w "%{http_code}\n" -H "$AS_ANA" -H "$JSON" -d '{"Do
 200
 ana@laptop:~/fleet$ git pull --quiet
 ana@laptop:~/fleet$ git log --oneline -3
-efa3978 Merge pull request 'staging: ready for review' (#1) from banner-v2 into main
-ac58dd1 staging: ready for review
-f990998 Revert "staging: no service"
+e1e3fc8 Merge pull request 'staging: ready for review' (#1) from banner-v2 into main
+19332a9 staging: ready for review
+7cb8caf Revert "staging: no service"
 ```
 
 A revisão fica registrada no pull request com o nome do Bruno e o comentário dele, e o merge passa. A
@@ -72,7 +72,7 @@ aula 3 recebe um token só de leitura próprio. Segundos depois, no segundo term
 
 ```
 ana@laptop:~$ sh ~/setup/reconcile.sh http://localhost:3000/ana/fleet.git staging
-01:50:57 at efa3978
+02:01:35 at e1e3fc8
 deployment.apps/bulletin configured
 ```
 

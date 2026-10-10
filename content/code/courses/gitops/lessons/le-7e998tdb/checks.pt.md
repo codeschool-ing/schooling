@@ -97,7 +97,7 @@ remote:
 ana@laptop:~/fleet$ curl -s -H "$AS_ANA" -H "$JSON" -d '{"head": "three-replicas", "base": "main", "title": "staging: three replicas", "body": "Load testing starts on Monday."}' $API/pulls | jq .number
 2
 ana@laptop:~/fleet$ sh ~/setup/validate.sh $(git rev-parse HEAD)
-/tmp/tmp.EcfvHQ4Lh5/staging/bulletin.yaml - Deployment bulletin is invalid: problem validating schema. Check JSON formatting: jsonschema validation failed with 'https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.37.0-standalone-strict/deployment-apps-v1.json#' - at '/spec/replicas': got string, want null or integer
+/tmp/tmp.sE5nDXT75h/staging/bulletin.yaml - Deployment bulletin is invalid: problem validating schema. Check JSON formatting: jsonschema validation failed with 'https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.37.0-standalone-strict/deployment-apps-v1.json#' - at '/spec/replicas': got string, want null or integer
 Summary: 3 resources found in 1 file - Valid: 2, Invalid: 1, Errors: 0, Skipped: 0
 validate: failure
 ana@laptop:~/fleet$ curl -s -w " %{http_code}\n" -H "$AS_ANA" -H "$JSON" -d '{"Do": "merge"}' $API/pulls/2/merge
@@ -125,7 +125,7 @@ ana@laptop:~/fleet$ curl -s -w "%{http_code}\n" -H "$AS_ANA" -H "$JSON" -d '{"Do
 ana@laptop:~/fleet$ git switch --quiet main && git pull --quiet
 ana@laptop:~/fleet$ kubectl -n staging get deployment bulletin
 NAME       READY   UP-TO-DATE   AVAILABLE   AGE
-bulletin   3/3     3            3           47s
+bulletin   3/3     3            3           57s
 ```
 
 O status ficou verde no commit novo, o Bruno aprovou o que de fato vai entrar, e o merge passou.
