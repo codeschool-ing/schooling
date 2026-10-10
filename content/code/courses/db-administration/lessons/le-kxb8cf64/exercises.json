@@ -1,0 +1,709 @@
+[
+  {
+    "id": "ex-p3xnjge7",
+    "version": 1,
+    "section": "the-drift",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson compare two servers by querying `pg_settings` instead of diffing their configuration files?",
+    "hint": "Count the places a value can come from.",
+    "choices": [
+      {
+        "text": "The configuration files are unreadable without sudo, so a query is the only way an ordinary user can see them",
+        "correct": false,
+        "why": "postgresql.conf is readable by anybody on Ubuntu; the lesson ran wc on it as ana. Permissions are not the reason."
+      },
+      {
+        "text": "diff cannot compare files that live on two different machines",
+        "correct": false,
+        "why": "Copying one file across is trivial. The problem is what the files leave out, not where they are."
+      },
+      {
+        "text": "pg_settings is faster to read than a file of eight hundred lines",
+        "correct": false,
+        "why": "Speed has nothing to do with it; a diff of eight hundred lines takes no time at all."
+      },
+      {
+        "text": "Files are one source among several",
+        "correct": true,
+        "why": "Right. postgresql.auto.conf and settings kept in the catalogue never show up in a diff of /etc, and the running server knows the result of all of them."
+      }
+    ]
+  },
+  {
+    "id": "ex-az85fyn3",
+    "version": 1,
+    "section": "the-drift",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lesson's diff, main had `lc_messages = C.UTF-8` and staging had `lc_messages = C`. Where did that difference come from?",
+    "hint": "Nobody typed a locale anywhere.",
+    "choices": [
+      {
+        "text": "Somebody ran ALTER SYSTEM on staging",
+        "correct": false,
+        "why": "Nothing was ever run on staging. An ALTER SYSTEM would also have shown postgresql.auto.conf as the source."
+      },
+      {
+        "text": "The environment each cluster was created in",
+        "correct": true,
+        "why": "Right. pg_createcluster takes the locale from the environment of the command that runs it, and the installer and sudo from a shell had different ones."
+      },
+      {
+        "text": "PostgreSQL 16 uses C for every cluster after the first one on a machine",
+        "correct": false,
+        "why": "There is no such rule; a second cluster made from a UTF-8 environment gets a UTF-8 locale."
+      },
+      {
+        "text": "The staging cluster's port, 5433, selects a different locale table",
+        "correct": false,
+        "why": "A port decides where clients connect, and nothing about language or sorting."
+      }
+    ]
+  },
+  {
+    "id": "ex-2z9a96sh",
+    "version": 1,
+    "section": "the-drift",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`ALTER DATABASE shop SET random_page_cost = 1.1` was run on main, yet the diff of `settings.sql` output did not show it. Why?",
+    "hint": "Which database did `psql -f settings.sql` connect to?",
+    "choices": [
+      {
+        "text": "It needs a restart before pg_settings shows it",
+        "correct": false,
+        "why": "random_page_cost needs no restart. The setting was in force, just not for the database the query ran in."
+      },
+      {
+        "text": "The query excludes the source 'database'",
+        "correct": false,
+        "why": "settings.sql excludes default, override and client only. A per-database value would have appeared had the query run inside shop."
+      },
+      {
+        "text": "ALTER DATABASE writes to postgresql.auto.conf, which the diff ignored",
+        "correct": false,
+        "why": "ALTER DATABASE writes to the catalogue, not to any file. The diff did show the postgresql.auto.conf value, work_mem."
+      },
+      {
+        "text": "The query ran in the database ana",
+        "correct": true,
+        "why": "Right. A setting attached to shop applies only to connections to shop; \\drds lists it from anywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-k4jzhv3k",
+    "version": 1,
+    "section": "the-drift",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The psql command that lists settings attached to databases and roles, which no configuration file holds, is \\___.",
+    "hint": "d, then the initials of role, database, settings.",
+    "blanks": [
+      {
+        "accept": [
+          "drds"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-6s7fxhs0",
+    "version": 1,
+    "section": "one-file-per-concern",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does the lesson put the shop's settings in conf.d/50-shop.conf rather than editing postgresql.conf?",
+    "hint": "Think of the file the next major version generates.",
+    "choices": [
+      {
+        "text": "PostgreSQL ignores edits to postgresql.conf on Ubuntu",
+        "correct": false,
+        "why": "It reads them like any other line. The trouble is finding and carrying them, not whether they work."
+      },
+      {
+        "text": "Files in conf.d are read before postgresql.conf, so they set the defaults",
+        "correct": false,
+        "why": "They are read after it, which is why a value in them wins over the main file."
+      },
+      {
+        "text": "A changed line is lost among eight hundred",
+        "correct": true,
+        "why": "Right. A small file of your own can be compared, reviewed and copied whole; an edit inside a generated template cannot."
+      },
+      {
+        "text": "postgresql.conf belongs to the postgres user and cannot be committed to git",
+        "correct": false,
+        "why": "Ownership has nothing to do with git; any file can be copied into a repository."
+      }
+    ]
+  },
+  {
+    "id": "ex-n70defdx",
+    "version": 1,
+    "section": "one-file-per-concern",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "conf.d holds `20-logging.conf` with `log_min_duration_statement = 1s` and `90-local.conf` with `log_min_duration_statement = 250ms`. postgresql.auto.conf is empty. What does the server run with?",
+    "hint": "Name order, and the later one wins.",
+    "choices": [
+      {
+        "text": "250ms",
+        "correct": true,
+        "why": "Right. 90-local.conf sorts after 20-logging.conf, so its line is read later and wins."
+      },
+      {
+        "text": "1s, because the lower number has priority",
+        "correct": false,
+        "why": "The number only sets the reading order, and a later value replaces an earlier one."
+      },
+      {
+        "text": "Neither: the server refuses a parameter set in two files",
+        "correct": false,
+        "why": "Setting a parameter twice is allowed; pg_file_settings marks the earlier one as not applied."
+      },
+      {
+        "text": "Whichever file was modified most recently",
+        "correct": false,
+        "why": "Modification times play no part; the order is the order of the names."
+      }
+    ]
+  },
+  {
+    "id": "ex-ea6z0mas",
+    "version": 1,
+    "section": "one-file-per-concern",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At 3 a.m. somebody runs `ALTER SYSTEM SET work_mem = '128MB'` and goes back to bed. Next week the repository's 50-shop.conf is changed to `work_mem = 32MB` and deployed. What does the server run with, and why?",
+    "hint": "Which file is read last of all?",
+    "choices": [
+      {
+        "text": "32MB, because the newest change wins",
+        "correct": false,
+        "why": "Order of reading decides, not order of time. postgresql.auto.conf is read after every conf.d file."
+      },
+      {
+        "text": "128MB: postgresql.auto.conf overrides conf.d",
+        "correct": true,
+        "why": "Right. Until somebody runs ALTER SYSTEM RESET, the emergency value hides the repository's, which is why the rule is to move it into the repo the same day."
+      },
+      {
+        "text": "32MB, because provision.sh deletes postgresql.auto.conf before reloading",
+        "correct": false,
+        "why": "The script touches only 50-shop.conf and pg_hba.conf. It knows nothing about postgresql.auto.conf."
+      },
+      {
+        "text": "The reload fails because two files disagree about work_mem",
+        "correct": false,
+        "why": "Disagreement between files is normal; the later one simply wins."
+      }
+    ]
+  },
+  {
+    "id": "ex-h88m5c5p",
+    "version": 1,
+    "section": "one-file-per-concern",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does provision.sh add one exact line to the end of pg_hba.conf instead of copying a file of its own, as it does for the parameters?",
+    "hint": "In pg_hba.conf, what does position mean?",
+    "choices": [
+      {
+        "text": "PostgreSQL 16 cannot include files from pg_hba.conf",
+        "correct": false,
+        "why": "It can; version 16 added include directives there. Ubuntu's file simply does not use them."
+      },
+      {
+        "text": "pg_hba.conf is reloaded separately and must stay one file",
+        "correct": false,
+        "why": "The same reload rereads both, and one file is not a requirement of the server."
+      },
+      {
+        "text": "Lines appended at the end take priority over earlier ones",
+        "correct": false,
+        "why": "The opposite: the first line that matches decides. The end is safe only because nothing earlier matches 10.0.0.0/24."
+      },
+      {
+        "text": "Ubuntu's file uses no include, and line order is the meaning",
+        "correct": true,
+        "why": "Right. The first matching line decides, so a line is placed where nothing above it matches the same connections."
+      }
+    ]
+  },
+  {
+    "id": "ex-v2svxyby",
+    "version": 1,
+    "section": "a-provisioning-script",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does it mean that provision.sh is idempotent?",
+    "hint": "Run it once, run it again.",
+    "choices": [
+      {
+        "text": "It restarts the server whenever a parameter requires it",
+        "correct": false,
+        "why": "It never restarts; it reports RESTART NEEDED and leaves the decision to a person."
+      },
+      {
+        "text": "It undoes everything it did if any step fails",
+        "correct": false,
+        "why": "set -e stops it at the first failure; nothing is rolled back. That would be a transaction, not idempotence."
+      },
+      {
+        "text": "It runs the same way on any Linux distribution",
+        "correct": false,
+        "why": "It assumes Ubuntu's paths and apt. Portability is a different property."
+      },
+      {
+        "text": "Running it twice is the same as running it once",
+        "correct": true,
+        "why": "Right. A second run finds nothing missing and changes nothing, which is what 'nothing to change' reported."
+      }
+    ]
+  },
+  {
+    "id": "ex-a9zw93rz",
+    "version": 1,
+    "section": "a-provisioning-script",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A first draft of the script appends the pg_hba.conf line with `echo \"$HBA\" >> \"$ETC/pg_hba.conf\"` and no check. What happens on the third run?",
+    "hint": "What did grep -qxF prevent?",
+    "choices": [
+      {
+        "text": "echo refuses to write a line that already exists in the file",
+        "correct": false,
+        "why": "echo knows nothing about what a file already holds. Checking is the script's job."
+      },
+      {
+        "text": "PostgreSQL rejects the duplicate on reload and keeps the old file",
+        "correct": false,
+        "why": "Duplicate lines are legal in pg_hba.conf; the first match decides and the rest are never reached."
+      },
+      {
+        "text": "The file holds the line three times",
+        "correct": true,
+        "why": "Right. Every run appends it again. The server tolerates the copies, and the file stops describing anything a person meant."
+      },
+      {
+        "text": "set -e stops the script because the line exists",
+        "correct": false,
+        "why": "Appending succeeds whether or not the line is there, so set -e has nothing to stop."
+      }
+    ]
+  },
+  {
+    "id": "ex-xcpngkc7",
+    "version": 1,
+    "section": "a-provisioning-script",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The first run ended with `RESTART NEEDED for: listen_addresses, shared_buffers`. Why does the script print this instead of restarting?",
+    "hint": "What does a restart do to the people connected?",
+    "choices": [
+      {
+        "text": "A script cannot restart a systemd service",
+        "correct": false,
+        "why": "It already runs systemctl reload; restart would be one word away. It is a decision, not a limitation."
+      },
+      {
+        "text": "Those two parameters are applied by the next reload",
+        "correct": false,
+        "why": "They are read only at start; no reload applies them, which is why pending_restart flagged them."
+      },
+      {
+        "text": "Restarting would undo the role and database it just created",
+        "correct": false,
+        "why": "Roles and databases are in the data directory and survive any restart."
+      },
+      {
+        "text": "A restart drops every connection, so when is a person's call",
+        "correct": true,
+        "why": "Right. On a fresh machine now is fine; on a busy server it waits for a quiet hour."
+      }
+    ]
+  },
+  {
+    "id": "ex-be2w133h",
+    "version": 1,
+    "section": "a-provisioning-script",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a configuration change, as the lesson made the work_mem change, in order.",
+    "hint": "The server is the last thing to hear about it.",
+    "items": [
+      "Edit conf.d/50-shop.conf in the repository",
+      "Read the change with git diff",
+      "Commit it with the reason in the message",
+      "Run provision.sh, which copies the file and reloads"
+    ],
+    "trap": "Editing the deployed file first is the drift the lesson is about."
+  },
+  {
+    "id": "ex-hv776qk2",
+    "version": 1,
+    "section": "checking-the-running-server",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is the difference between `pg_settings` and `pg_file_settings`?",
+    "hint": "One is the server, one is the disk.",
+    "choices": [
+      {
+        "text": "pg_settings is per database, pg_file_settings is for the whole cluster",
+        "correct": false,
+        "why": "Both describe the cluster; what separates them is running values against file contents."
+      },
+      {
+        "text": "Running values against what the files say now",
+        "correct": true,
+        "why": "Right. pg_file_settings rereads the files each time you query it, so it shows lines the server refused."
+      },
+      {
+        "text": "pg_file_settings only lists postgresql.auto.conf",
+        "correct": false,
+        "why": "It lists every configuration file the server reads, including conf.d; the lesson's query read 50-shop.conf."
+      },
+      {
+        "text": "pg_settings updates only after a restart",
+        "correct": false,
+        "why": "A reload updates it for every parameter that a reload can change."
+      }
+    ]
+  },
+  {
+    "id": "ex-tkprsgxy",
+    "version": 1,
+    "section": "checking-the-running-server",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the hand edit with `log_min_duraton_statement`, `systemctl reload` printed nothing. What did the server do with the correct `work_mem = 64MB` line above the typo?",
+    "hint": "Read the last line of the log.",
+    "choices": [
+      {
+        "text": "Applied it, and skipped only the misspelt line",
+        "correct": false,
+        "why": "The log said 'no changes were applied': a file with an error is refused whole, and SHOW work_mem stayed at 32MB."
+      },
+      {
+        "text": "Applied it after a restart, since work_mem needs one",
+        "correct": false,
+        "why": "work_mem needs only a reload; the change from 16MB to 32MB took effect without a restart."
+      },
+      {
+        "text": "Nothing: the file was refused whole",
+        "correct": true,
+        "why": "Right. The server kept running on the previous values; only the log and pg_file_settings said so."
+      },
+      {
+        "text": "Stopped the server until the file is fixed",
+        "correct": false,
+        "why": "A reload with errors leaves the server running on its old values. The danger is that it looks fine."
+      }
+    ]
+  },
+  {
+    "id": "ex-rec10f5p",
+    "version": 1,
+    "section": "checking-the-running-server",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "pg_settings showed `shared_buffers` with setting 131072 and unit 8kB. How many megabytes is that?",
+    "hint": "Multiply, then divide by 1024.",
+    "value": 1024,
+    "tolerance": 0,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-zbgz6vjz",
+    "version": 1,
+    "section": "checking-the-running-server",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A server's pg_settings shows `pending_restart = t` for max_connections, and pg_file_settings shows no errors. What has happened?",
+    "hint": "pending_restart compares the file with what is running.",
+    "choices": [
+      {
+        "text": "A file was changed and reloaded; the value waits for a start",
+        "correct": true,
+        "why": "Right. The file is sound and the server read it, but max_connections is taken only at start."
+      },
+      {
+        "text": "The file has a typo that pg_file_settings could not detect",
+        "correct": false,
+        "why": "A typo would have shown as an error and stopped the reload applying anything, so pending_restart would not have been set."
+      },
+      {
+        "text": "The server crashed and came back with defaults",
+        "correct": false,
+        "why": "A start reads every file, so after one nothing would be pending."
+      },
+      {
+        "text": "ALTER DATABASE set max_connections for one database",
+        "correct": false,
+        "why": "max_connections cannot be set per database; it is a property of the whole server."
+      }
+    ]
+  },
+  {
+    "id": "ex-r38m7yhe",
+    "version": 1,
+    "section": "the-tools",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each tool or object to what it manages.",
+    "hint": "One logs in, one talks to a provider, one is a file.",
+    "pairs": [
+      {
+        "left": "Ansible",
+        "right": "Servers you reach over SSH"
+      },
+      {
+        "left": "Terraform",
+        "right": "A managed service, through the provider's API"
+      },
+      {
+        "left": "provision.sh",
+        "right": "One kind of server, from one repository"
+      },
+      {
+        "left": "aws_db_parameter_group",
+        "right": "The parameters of an RDS PostgreSQL"
+      }
+    ],
+    "right_distractors": [
+      "The rows inside the shop database"
+    ]
+  },
+  {
+    "id": "ex-2tqd22qt",
+    "version": 1,
+    "section": "the-tools",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A team manages work_mem with Ansible's `community.postgresql.postgresql_set`. An engineer fixes an incident with `ALTER SYSTEM SET work_mem`. What happens on Ansible's next run?",
+    "hint": "Which file does that module manage?",
+    "choices": [
+      {
+        "text": "It sets its own value back and reports changed",
+        "correct": true,
+        "why": "Right. The engineer edited the tool's file; a fix that should stay has to go into the playbook."
+      },
+      {
+        "text": "Nothing: Ansible manages conf.d and never sees postgresql.auto.conf",
+        "correct": false,
+        "why": "postgresql_set works through ALTER SYSTEM itself, so postgresql.auto.conf is exactly the file it manages."
+      },
+      {
+        "text": "Ansible fails, because two writers disagree",
+        "correct": false,
+        "why": "It reports changed and moves on; a module does not refuse a value it was told to set."
+      },
+      {
+        "text": "The server keeps both, applying the higher one",
+        "correct": false,
+        "why": "A parameter has one value; there is no rule that prefers the larger."
+      }
+    ]
+  },
+  {
+    "id": "ex-nn1ybzsq",
+    "version": 1,
+    "section": "the-tools",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On a managed service there is no shell and no conf.d. What does Terraform keep under version control instead?",
+    "hint": "The service itself, described as resources.",
+    "choices": [
+      {
+        "text": "A copy of the provider's postgresql.conf",
+        "correct": false,
+        "why": "The provider never hands you the file; you describe parameters through its API."
+      },
+      {
+        "text": "Its resources, parameters included",
+        "correct": true,
+        "why": "Right. The instance, its version and a parameter group are resources in files, and terraform plan lists every difference from what the provider reports."
+      },
+      {
+        "text": "A nightly dump of every database",
+        "correct": false,
+        "why": "Backups are data, not configuration, and db-reliability covers them."
+      },
+      {
+        "text": "The SQL of every ALTER SYSTEM run on the service",
+        "correct": false,
+        "why": "Terraform describes the end state, not a history of commands."
+      }
+    ]
+  },
+  {
+    "id": "ex-tcastekq",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague's provisioning script prints `wrote 50-shop.conf` and `reloaded` on every run, including the second. What is the most likely cause?",
+    "hint": "What makes the comparison fail every time?",
+    "choices": [
+      {
+        "text": "The server needs a restart that never happens",
+        "correct": false,
+        "why": "A pending restart would print RESTART NEEDED, not cause the file to be rewritten."
+      },
+      {
+        "text": "Something else rewrites the deployed file between runs",
+        "correct": true,
+        "why": "Right, or the script writes something that differs each time, such as a date. Either way the second run is the alarm."
+      },
+      {
+        "text": "reload changes the file's owner, so cmp sees a difference",
+        "correct": false,
+        "why": "cmp compares contents only, and a reload rewrites no file."
+      },
+      {
+        "text": "Idempotent scripts report every step as a reminder",
+        "correct": false,
+        "why": "An idempotent script reports what it changed, and the lesson's said 'nothing to change' on its second run."
+      }
+    ]
+  },
+  {
+    "id": "ex-01b2hvvg",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After running provision.sh on the course server, where `shop` already exists and belongs to `ana`, who owns the database `shop`?",
+    "hint": "What exactly does the database step check?",
+    "choices": [
+      {
+        "text": "shop_owner",
+        "correct": false,
+        "why": "The step only creates the database when the name is missing; it never changes an owner."
+      },
+      {
+        "text": "postgres, because the script runs as postgres",
+        "correct": false,
+        "why": "Running as postgres does not transfer anything; nothing in the script runs ALTER DATABASE."
+      },
+      {
+        "text": "ana",
+        "correct": true,
+        "why": "Right. The check asks whether a database called shop exists, and it does. A script checks what it was written to check."
+      },
+      {
+        "text": "Nobody: the script stops with an error because shop exists",
+        "correct": false,
+        "why": "The check finds shop and skips the step without error."
+      }
+    ]
+  },
+  {
+    "id": "ex-zkq81ew8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The query `SELECT ... FROM pg_file_settings WHERE error IS NOT NULL` returns no rows, yet `SHOW work_mem` disagrees with 50-shop.conf. Where do you look next?",
+    "hint": "The files are sound. What can override them?",
+    "choices": [
+      {
+        "text": "The log, for a failed reload",
+        "correct": false,
+        "why": "A failed reload would show as an error in pg_file_settings, and there is none."
+      },
+      {
+        "text": "Re-run provision.sh until the values agree",
+        "correct": false,
+        "why": "The script rewrites 50-shop.conf, which is already right; it never touches what overrides it."
+      },
+      {
+        "text": "sourcefile in pg_settings, then \\drds",
+        "correct": true,
+        "why": "Right. A later file such as postgresql.auto.conf, or a setting attached to the database or role, would explain it, and those two show where."
+      },
+      {
+        "text": "Restart the server so it rereads every file",
+        "correct": false,
+        "why": "A restart reads the same files and the same catalogue, and the value would come back."
+      }
+    ]
+  },
+  {
+    "id": "ex-q1mtma4n",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these are drift the settings.sql query against one database can miss? Choose all that apply.",
+    "hint": "What does a connection to the database ana see?",
+    "choices": [
+      {
+        "text": "ALTER DATABASE shop SET work_mem",
+        "correct": true,
+        "why": "Yes. It applies only inside shop."
+      },
+      {
+        "text": "ALTER ROLE app SET statement_timeout",
+        "correct": true,
+        "why": "Yes. It applies only to sessions of that role."
+      },
+      {
+        "text": "ALTER SYSTEM SET work_mem, after a reload",
+        "correct": false,
+        "why": "That one showed up: work_mem = 64MB was in the diff."
+      },
+      {
+        "text": "A line in a conf.d file, after a reload",
+        "correct": false,
+        "why": "A reloaded file value is in pg_settings for every database."
+      }
+    ]
+  },
+  {
+    "id": "ex-vxs4jdyw",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After ALTER SYSTEM has fixed an emergency and the value has been committed to the repository, `ALTER SYSTEM ___ work_mem` removes it from postgresql.auto.conf.",
+    "hint": "The opposite of SET.",
+    "blanks": [
+      {
+        "accept": [
+          "RESET"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

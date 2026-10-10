@@ -91,7 +91,7 @@ shop=# SHOW segment_size;
 (1 row)
 ```
 
-Four functions, four answers, and the difference between them is the difference between the forks:
+Four functions, four answers, and the difference between them is the difference between the forks.
 `pg_relation_size` is the main fork alone, `pg_table_size` adds the free space and visibility maps
 (and any TOAST storage for long values), `pg_indexes_size` is every index, and
 `pg_total_relation_size` is all of it — **108 MB for a table `\dt+` calls 65 MB**. When somebody asks

@@ -76,9 +76,9 @@ undo_002
 ```
 
 A mesma ideia, um diretório que pertence ao usuário do próprio servidor, com outros móveis. O
-`ibdata1` e os arquivos `undo_` são o espaço compartilhado do InnoDB e o seu undo log; o
-`#innodb_redo` é o redo log, o equivalente do `pg_wal`; os arquivos `binlog.` são o binary log que a
-seção anterior descreveu; e cada database é um subdiretório, como em `base/` no PostgreSQL, só que o
+`ibdata1` e os arquivos `undo_` são o espaço compartilhado do InnoDB e o seu undo log. O
+`#innodb_redo` é o redo log, o equivalente do `pg_wal`, e os arquivos `binlog.` são o binary log que a
+seção anterior descreveu. Cada database é um subdiretório, como em `base/` no PostgreSQL, só que o
 MySQL usa o nome do database em vez de um número.
 
 O `sudo mysql` conectou sem senha pelo mesmo motivo que o `sudo -u postgres psql` conecta no

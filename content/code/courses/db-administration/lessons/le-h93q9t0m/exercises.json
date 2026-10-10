@@ -1,0 +1,726 @@
+[
+  {
+    "id": "ex-9vpc3q63",
+    "version": 1,
+    "section": "log-first",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At the moment `COMMIT` returns, where is the new row guaranteed to be on disk?",
+    "hint": "The lesson searched two places with grep.",
+    "choices": [
+      {
+        "text": "In a segment file under pg_wal, and nowhere else on disk yet",
+        "correct": true,
+        "why": "Right. The commit waits for the log to reach the disk, and grep found the row there."
+      },
+      {
+        "text": "In the table's own file under base/",
+        "correct": false,
+        "why": "grep counted zero matches in the table's file after the commit: the page was still dirty in memory."
+      },
+      {
+        "text": "In both the table's file and the log, written together",
+        "correct": false,
+        "why": "Writing both at every commit is exactly the scattered write the log exists to avoid."
+      },
+      {
+        "text": "Nowhere yet; it is still only in shared memory",
+        "correct": false,
+        "why": "Then a power cut after COMMIT would lose it. The log record is on disk before the answer comes back."
+      }
+    ]
+  },
+  {
+    "id": "ex-4p5vs41s",
+    "version": 1,
+    "section": "log-first",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is flushing the log at every commit cheaper than flushing the changed table pages?",
+    "hint": "Think about where on the disk each write lands.",
+    "choices": [
+      {
+        "text": "The log is appended at its end, in one sequential write",
+        "correct": true,
+        "why": "Right. One small sequential write instead of pages scattered across many files."
+      },
+      {
+        "text": "The log is compressed and the pages are not",
+        "correct": false,
+        "why": "Nothing is compressed by default; wal_compression is off. The difference is the shape of the write."
+      },
+      {
+        "text": "The log lives in memory and is never written to disk",
+        "correct": false,
+        "why": "The log is written to pg_wal, and grep found the row in a segment file there."
+      },
+      {
+        "text": "Table pages are written by the session itself, which is slower than a background process",
+        "correct": false,
+        "why": "It is the other way round: the session flushes the log, and background processes write the pages."
+      }
+    ]
+  },
+  {
+    "id": "ex-cccqbkpv",
+    "version": 1,
+    "section": "log-first",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each process to what it writes.",
+    "hint": "Two write the log, two write table pages.",
+    "pairs": [
+      {
+        "left": "the session running COMMIT",
+        "right": "its own WAL records, before COMMIT returns"
+      },
+      {
+        "left": "walwriter",
+        "right": "the WAL buffers, every wal_writer_delay"
+      },
+      {
+        "left": "checkpointer",
+        "right": "every dirty page, at a checkpoint"
+      },
+      {
+        "left": "background writer",
+        "right": "a few dirty pages ahead of their memory being needed"
+      }
+    ]
+  },
+  {
+    "id": "ex-9ghx0cc7",
+    "version": 1,
+    "section": "log-first",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The background writer is about to write a dirty page of `orders` whose last change is described at LSN 0/5000. The log is flushed only to 0/4000. What happens first?",
+    "hint": "No page may reach its file before its description reaches the log.",
+    "choices": [
+      {
+        "text": "The page is written, and the log catches up at the next commit",
+        "correct": false,
+        "why": "A crash between the two would leave a page on disk whose change the log does not describe."
+      },
+      {
+        "text": "The page is skipped until a checkpoint writes it",
+        "correct": false,
+        "why": "The checkpointer obeys the same rule; skipping does not remove the need to flush the log first."
+      },
+      {
+        "text": "The server writes a full-page image of it into the log instead",
+        "correct": false,
+        "why": "Full-page images go with the first change after a checkpoint, not with a page write."
+      },
+      {
+        "text": "The log is flushed to at least 0/5000",
+        "correct": true,
+        "why": "Right. That ordering is the write-ahead rule, enforced by the server before every page write."
+      }
+    ]
+  },
+  {
+    "id": "ex-55p7d5xx",
+    "version": 1,
+    "section": "looking-at-wal",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is an LSN such as `0/1584F1C0`?",
+    "hint": "pg_wal_lsn_diff subtracts two of them and answers in bytes.",
+    "choices": [
+      {
+        "text": "A transaction id",
+        "correct": false,
+        "why": "Transaction ids are the tx field in pg_waldump, 784 in the lesson. Many records share one."
+      },
+      {
+        "text": "The name of the current segment file",
+        "correct": false,
+        "why": "That is what pg_walfile_name turns an LSN into; the name has 24 digits, the LSN two halves."
+      },
+      {
+        "text": "A timestamp in the server's internal clock format",
+        "correct": false,
+        "why": "It is a position, not a time. The COMMIT record carries its time separately."
+      },
+      {
+        "text": "A byte position in the log",
+        "correct": true,
+        "why": "Right. Written in hexadecimal; subtracting two gives the bytes between them."
+      }
+    ]
+  },
+  {
+    "id": "ex-dc6qqdy0",
+    "version": 1,
+    "section": "looking-at-wal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pg_waldump` printed `blkref #0: rel 1663/16386/16420 blk 0`. Which file of the data directory did that record change?",
+    "hint": "Tablespace, database, file; and 1663 is the default tablespace.",
+    "choices": [
+      {
+        "text": "base/16386/16420",
+        "correct": true,
+        "why": "Right. The same path pg_relation_filepath gave for notes, block 0 of it."
+      },
+      {
+        "text": "pg_wal/000000010000000000000016",
+        "correct": false,
+        "why": "The record lives in pg_wal; blkref names the page it describes, which is elsewhere."
+      },
+      {
+        "text": "base/1663/16420",
+        "correct": false,
+        "why": "1663 is the tablespace, not a database. The database is the middle number."
+      },
+      {
+        "text": "global/16420",
+        "correct": false,
+        "why": "global holds tables shared by every database. A table of shop lives under base and shop's oid."
+      }
+    ]
+  },
+  {
+    "id": "ex-wdq2pwyn",
+    "version": 1,
+    "section": "looking-at-wal",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of the three records of one `INSERT` made the transaction durable?",
+    "hint": "Without it, recovery treats the other two as belonging to a transaction that never finished.",
+    "choices": [
+      {
+        "text": "The Heap INSERT, because it holds the row",
+        "correct": false,
+        "why": "The row's record alone belongs to an unfinished transaction until the commit record follows it."
+      },
+      {
+        "text": "The Transaction COMMIT",
+        "correct": true,
+        "why": "Right. Once that record is on disk, the transaction survives any crash."
+      },
+      {
+        "text": "The Btree INSERT_LEAF",
+        "correct": false,
+        "why": "That one puts the key into the index. It says nothing about whether the transaction finished."
+      },
+      {
+        "text": "None of them; durability comes from the table file",
+        "correct": false,
+        "why": "The table file did not contain the row when the commit returned. Durability came from the log."
+      }
+    ]
+  },
+  {
+    "id": "ex-5syd4tq0",
+    "version": 1,
+    "section": "looking-at-wal",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "On Ubuntu, `pg_waldump` is not on the PATH; it lives in /usr/lib/postgresql/16/___ with the server's own programs.",
+    "hint": "The usual directory name for programs.",
+    "blanks": [
+      {
+        "accept": [
+          "bin",
+          "bin/"
+        ],
+        "ignore_case": false,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-311q6wq0",
+    "version": 1,
+    "section": "how-much",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `pg_waldump`, a record shows `len (rec/tot): 65/ 2877` and ends in `FPW`. What makes up most of the 2877?",
+    "hint": "FPW stands for full-page write.",
+    "choices": [
+      {
+        "text": "The old and new versions of the row",
+        "correct": false,
+        "why": "The second update of the same row was 78 bytes in total. Row versions are small."
+      },
+      {
+        "text": "Every index entry the update had to change",
+        "correct": false,
+        "why": "It was a HOT update, which changes no index; index entries would be records of their own."
+      },
+      {
+        "text": "An image of the whole page, minus its unused middle",
+        "correct": true,
+        "why": "Right. The record is 65 bytes; the rest is the page, minus its empty middle."
+      },
+      {
+        "text": "Padding up to the next 8 kB boundary",
+        "correct": false,
+        "why": "Records are not padded to a page; 2877 is not a multiple of anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-xhjzgm45",
+    "version": 1,
+    "section": "how-much",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Right after a CHECKPOINT, the lesson's first update of one order wrote 9176 bytes of WAL. How many bytes did the identical second update, made straight after it, write?",
+    "hint": "No page image the second time.",
+    "value": 120,
+    "tolerance": 0,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-twpp97cm",
+    "version": 1,
+    "section": "how-much",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the first change to a page after a checkpoint carry an image of the whole page?",
+    "hint": "What would a crash halfway through writing that page leave behind?",
+    "choices": [
+      {
+        "text": "So that replicas receive the page without asking for it",
+        "correct": false,
+        "why": "Replicas replay the same records, but the image is there for recovery from a torn page, on any server."
+      },
+      {
+        "text": "A torn page cannot be repaired by a small record",
+        "correct": true,
+        "why": "Right. Recovery restores the image first, then applies the small records after it."
+      },
+      {
+        "text": "Because the checkpoint deleted the page's earlier records",
+        "correct": false,
+        "why": "Old segments are recycled, but the page itself is on disk after a checkpoint; the risk is the next write tearing it."
+      },
+      {
+        "text": "To let VACUUM read the page from the log instead of the table",
+        "correct": false,
+        "why": "Nothing reads pages from the log during normal work; the log is read at recovery and by replicas."
+      }
+    ]
+  },
+  {
+    "id": "ex-t0cp9rhq",
+    "version": 1,
+    "section": "how-much",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly job rewrites one column of a 40 GB table, just after the checkpoint the job forces before it starts. Using the lesson's measurements, roughly how much WAL should you plan for?",
+    "hint": "66 MB of table wrote 234 MB the first time.",
+    "choices": [
+      {
+        "text": "About 40 GB, the size of the table",
+        "correct": false,
+        "why": "The 66 MB copy wrote 234 MB, three and a half times its size: row records plus page images."
+      },
+      {
+        "text": "Well over 100 GB, several times the table",
+        "correct": true,
+        "why": "Right. At the lesson's ratio, about three and a half times the table, page images included."
+      },
+      {
+        "text": "A few megabytes, since only one column changes",
+        "correct": false,
+        "why": "Each row's update record carries the new row version, so the whole row is written again, a million times over."
+      },
+      {
+        "text": "Under 40 GB, because the forced checkpoint removes the page images",
+        "correct": false,
+        "why": "A checkpoint right before is what makes every first change carry an image."
+      }
+    ]
+  },
+  {
+    "id": "ex-rpvgyqkt",
+    "version": 1,
+    "section": "what-depends-on-it",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each reader of the log to what it does with it.",
+    "hint": "One mechanism, four uses.",
+    "pairs": [
+      {
+        "left": "crash recovery",
+        "right": "replays since the last checkpoint, at start-up"
+      },
+      {
+        "left": "a replica",
+        "right": "replays records as they arrive, for ever"
+      },
+      {
+        "left": "point-in-time recovery",
+        "right": "replays archived segments up to a chosen moment"
+      },
+      {
+        "left": "logical decoding",
+        "right": "turns records back into row changes"
+      }
+    ],
+    "right_distractors": [
+      "rebuilds indexes that were corrupted"
+    ]
+  },
+  {
+    "id": "ex-6v9x9xs9",
+    "version": 1,
+    "section": "what-depends-on-it",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague proposes `wal_level = minimal` to make bulk loads faster on a primary. What does the team give up?",
+    "hint": "Which readers need more than crash recovery needs?",
+    "choices": [
+      {
+        "text": "Crash recovery",
+        "correct": false,
+        "why": "minimal still records everything crash recovery needs. That is the level's whole definition."
+      },
+      {
+        "text": "Nothing; it only changes how fast the walwriter wakes",
+        "correct": false,
+        "why": "That is wal_writer_delay. wal_level decides what the records contain."
+      },
+      {
+        "text": "Full-page writes, which minimal turns off",
+        "correct": false,
+        "why": "full_page_writes is a separate setting and stays on at every wal_level."
+      },
+      {
+        "text": "Any replica or archive built from this log",
+        "correct": true,
+        "why": "Right. Some bulk operations skip the log entirely, so nothing downstream sees them."
+      }
+    ]
+  },
+  {
+    "id": "ex-v1aqyqz0",
+    "version": 1,
+    "section": "what-depends-on-it",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The disk is full and `pg_wal` is the largest directory on it. What should you not do?",
+    "hint": "Which files might hold the only copy of committed changes?",
+    "choices": [
+      {
+        "text": "Delete the oldest segment files by hand",
+        "correct": true,
+        "why": "Right. They may hold changes not yet in the table files, and the server reads them at its next start."
+      },
+      {
+        "text": "Look for an inactive replication slot",
+        "correct": false,
+        "why": "That is the first check lesson 24 builds into the runbook, and it is safe."
+      },
+      {
+        "text": "Read the server log for the last checkpoint line",
+        "correct": false,
+        "why": "Reading changes nothing, and that line says what was recycled."
+      },
+      {
+        "text": "Free space elsewhere on the same filesystem",
+        "correct": false,
+        "why": "Removing files that are not the database's is a fair way to buy time."
+      }
+    ]
+  },
+  {
+    "id": "ex-9ghzwgye",
+    "version": 1,
+    "section": "wal-size",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a checkpoint logged `25 recycled`, `du` showed `pg_wal` exactly as large as before. Why?",
+    "hint": "What does recycling do to a file?",
+    "choices": [
+      {
+        "text": "du counts files that were deleted but still open",
+        "correct": false,
+        "why": "du counts what is in the directory. Nothing was deleted: the line said 0 removed."
+      },
+      {
+        "text": "The checkpoint failed and kept every segment",
+        "correct": false,
+        "why": "It logged checkpoint complete. A failed one would not report what it recycled."
+      },
+      {
+        "text": "max_wal_size reserves its full 1 GB in advance",
+        "correct": false,
+        "why": "The directory was 417M, well under 1 GB. Nothing is reserved; segments are kept or removed."
+      },
+      {
+        "text": "The files were renamed to be written over later",
+        "correct": true,
+        "why": "Right. Recycled segments stay on disk under future names; removed ones would have freed space."
+      }
+    ]
+  },
+  {
+    "id": "ex-9w414nde",
+    "version": 1,
+    "section": "wal-size",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A replica was decommissioned last month. Since then `pg_wal` on the primary has grown every day. What is the likeliest cause?",
+    "hint": "A promise that outlives whoever it was made to.",
+    "choices": [
+      {
+        "text": "max_wal_size is too small",
+        "correct": false,
+        "why": "Too small a max_wal_size causes frequent checkpoints, not a directory that only grows."
+      },
+      {
+        "text": "An inactive replication slot",
+        "correct": true,
+        "why": "Right. The slot holds every segment from its position on, connected or not."
+      },
+      {
+        "text": "wal_level was left at replica",
+        "correct": false,
+        "why": "replica is the default and holds nothing back; it only decides what records contain."
+      },
+      {
+        "text": "The walwriter stopped, so segments are never closed",
+        "correct": false,
+        "why": "Segments are trimmed at checkpoints, by the checkpointer; the walwriter does not remove anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-3r9jnv83",
+    "version": 1,
+    "section": "wal-size",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To check for a forgotten slot, query the view pg_replication___ and look for a row whose active column is false.",
+    "hint": "The view lists every slot.",
+    "blanks": [
+      {
+        "accept": [
+          "_slots"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cfc7w39z",
+    "version": 1,
+    "section": "wal-size",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You set `max_slot_wal_keep_size = 50GB` on a primary with one replica. The replica is switched off for a week and the primary writes 80 GB of WAL meanwhile. What happens?",
+    "hint": "The setting trades one failure for another.",
+    "choices": [
+      {
+        "text": "The primary stops accepting writes at 50 GB",
+        "correct": false,
+        "why": "The limit is on what the slot may hold, not on writes; the primary keeps working."
+      },
+      {
+        "text": "The primary's disk fills with 80 GB of WAL",
+        "correct": false,
+        "why": "That is what happens with the default of -1. The setting exists to prevent it."
+      },
+      {
+        "text": "The slot is given up and the replica must be rebuilt",
+        "correct": true,
+        "why": "Right. The disk is protected, and the replica pays for it."
+      },
+      {
+        "text": "The replica catches up from the 50 GB that was kept",
+        "correct": false,
+        "why": "It needs every record since it stopped; with 30 GB of them gone it cannot replay past the gap."
+      }
+    ]
+  },
+  {
+    "id": "ex-rpbyvq2y",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put in order what happens to one `UPDATE` that commits and later reaches its table file.",
+    "hint": "Memory first, the table file last.",
+    "items": [
+      "the page is changed in shared buffers",
+      "a record describing the change goes into the WAL buffers",
+      "the log is flushed to pg_wal",
+      "COMMIT returns to the client",
+      "a checkpoint writes the page to its file"
+    ],
+    "trap": "COMMIT returning before the flush would be synchronous_commit = off, which lesson 8 measures."
+  },
+  {
+    "id": "ex-rm3c31n7",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You run `pg_wal_lsn_diff` around a one-row `UPDATE` twice, with no checkpoint between, and get 8300 bytes then 90. A colleague runs the same pair and gets 90 then 90. What best explains the difference?",
+    "hint": "What had happened to that page since the last checkpoint, on each server?",
+    "choices": [
+      {
+        "text": "On their server the page had changed already since the checkpoint",
+        "correct": true,
+        "why": "Right. The image is taken once per page per checkpoint cycle; their first update was not the first change."
+      },
+      {
+        "text": "The colleague has full_page_writes off",
+        "correct": false,
+        "why": "Possible in principle, but the setting is on by default, and the ordinary reason needs no misconfiguration."
+      },
+      {
+        "text": "Their disk writes in 8 kB pieces",
+        "correct": false,
+        "why": "PostgreSQL does not look at the disk to decide; the image rule depends only on the checkpoint."
+      },
+      {
+        "text": "Their wal_level is minimal",
+        "correct": false,
+        "why": "minimal still logs updates with full-page images; it only lets some bulk operations skip the log."
+      }
+    ]
+  },
+  {
+    "id": "ex-vbpxzwdp",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two servers have the same data. Server A checkpoints every 30 seconds, server B every 15 minutes, under the same steady write load. Which writes more WAL per hour?",
+    "hint": "Every checkpoint restarts the image rule for every page.",
+    "choices": [
+      {
+        "text": "Server A",
+        "correct": true,
+        "why": "Right. Each of its checkpoints makes the next change of every page carry a full image again."
+      },
+      {
+        "text": "Server B, because its checkpoints are larger",
+        "correct": false,
+        "why": "A checkpoint writes table pages, not log. The log volume grows with images, which follow checkpoints."
+      },
+      {
+        "text": "Both write the same, since the load is the same",
+        "correct": false,
+        "why": "The same rows change, but how many changes are a page's first since a checkpoint differs."
+      }
+    ]
+  },
+  {
+    "id": "ex-3dkcwjng",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these read the write-ahead log? Choose all that apply.",
+    "hint": "One mechanism, used four ways.",
+    "choices": [
+      {
+        "text": "A start-up after a crash",
+        "correct": true,
+        "why": "Yes. It replays from the last checkpoint's redo point."
+      },
+      {
+        "text": "A streaming replica",
+        "correct": true,
+        "why": "Yes. It is a server replaying a log that keeps arriving."
+      },
+      {
+        "text": "A SELECT on the primary",
+        "correct": false,
+        "why": "Queries read pages from shared buffers and table files, never from pg_wal."
+      },
+      {
+        "text": "A restore to a chosen moment",
+        "correct": true,
+        "why": "Yes. A base backup plus archived segments, replayed to a record."
+      },
+      {
+        "text": "autovacuum deciding which table to visit",
+        "correct": false,
+        "why": "It decides from the statistics views, lesson 14, not from the log."
+      }
+    ]
+  },
+  {
+    "id": "ex-6j9mdkq9",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pg_walfile_name(pg_current_wal_lsn())` answered `000000010000000000000015`. What does the leading `00000001` say?",
+    "hint": "It changes when history branches.",
+    "choices": [
+      {
+        "text": "The timeline",
+        "correct": true,
+        "why": "Right. It changes when a server is recovered to an earlier point or a replica is promoted."
+      },
+      {
+        "text": "The database's oid",
+        "correct": false,
+        "why": "Segments belong to the whole cluster, every database at once; the name carries no database."
+      },
+      {
+        "text": "The first segment since the last restart",
+        "correct": false,
+        "why": "Segment numbers continue across restarts; the last 16 digits are the segment number."
+      },
+      {
+        "text": "The segment's version of the WAL format",
+        "correct": false,
+        "why": "The format version is inside the files, not in their names."
+      }
+    ]
+  },
+  {
+    "id": "ex-thyjkhte",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To measure the WAL one statement writes, store the position before it with `SELECT pg_current_wal_lsn() AS before \\gset`, run it, then call pg_wal_lsn___(pg_current_wal_lsn(), :'before').",
+    "hint": "The function subtracts.",
+    "blanks": [
+      {
+        "accept": [
+          "_diff"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  }
+]

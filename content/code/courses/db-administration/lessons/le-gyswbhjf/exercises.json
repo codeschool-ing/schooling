@@ -1,0 +1,699 @@
+[
+  {
+    "id": "ex-0f6d1y4h",
+    "version": 1,
+    "section": "why-rebuild",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Of the three reasons to rebuild an index, which one leaves the index giving right answers?",
+    "hint": "One of them only costs space.",
+    "choices": [
+      {
+        "text": "Corruption from a failing disk",
+        "correct": false,
+        "why": "A corrupt index can miss rows or return rows that do not match, with no error."
+      },
+      {
+        "text": "A collation change after an operating-system upgrade",
+        "correct": false,
+        "why": "The entries are in the old order and are searched with the new one, so lookups miss rows."
+      },
+      {
+        "text": "Bloat",
+        "correct": true,
+        "why": "Right. A bloated index is mostly empty pages, and every entry in it is still correct."
+      },
+      {
+        "text": "None of them; an index that needs rebuilding is wrong by definition",
+        "correct": false,
+        "why": "Bloat makes an index larger and slower, not wrong."
+      }
+    ]
+  },
+  {
+    "id": "ex-x98qk68s",
+    "version": 1,
+    "section": "why-rebuild",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A server moves from Ubuntu 18.04 to 20.04 with `pg_upgrade`, and the database uses `en_US.UTF-8`. What is the risk to its indexes on text columns?",
+    "hint": "glibc 2.27 against 2.31.",
+    "choices": [
+      {
+        "text": "pg_upgrade refuses to run until they are dropped",
+        "correct": false,
+        "why": "It runs; it has no way to know that the collation rules changed underneath."
+      },
+      {
+        "text": "Old order, new rules: lookups miss rows",
+        "correct": true,
+        "why": "Right. pg_upgrade carries the index files across as they are; the rules changed in glibc 2.28."
+      },
+      {
+        "text": "None: pg_upgrade rebuilds every index",
+        "correct": false,
+        "why": "It is a dump and restore, or logical replication, that builds every index again. pg_upgrade copies or links the files."
+      },
+      {
+        "text": "They become larger, because glibc 2.31 stores longer keys",
+        "correct": false,
+        "why": "The keys stored are the column's values; the collation decides their order, not their size."
+      }
+    ]
+  },
+  {
+    "id": "ex-fr0p4155",
+    "version": 1,
+    "section": "why-rebuild",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A connection prints `database \"shop\" has a collation version mismatch`. Put the repair in order.",
+    "hint": "The HINT names them in order.",
+    "items": [
+      "Connect to shop",
+      "REINDEX DATABASE shop",
+      "ALTER DATABASE shop REFRESH COLLATION VERSION",
+      "Connect again: no warning"
+    ],
+    "trap": "Refreshing the version first only silences the warning and leaves the indexes in the old order."
+  },
+  {
+    "id": "ex-e8xkhh1h",
+    "version": 1,
+    "section": "why-rebuild",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Two servers run the same PostgreSQL 16 with `en_US.UTF-8`. One has glibc 2.27, the other 2.39. A logical replica copies data from the first to the second. Which statement holds?",
+    "hint": "What does logical replication send: files, or rows?",
+    "choices": [
+      {
+        "text": "The second server's indexes are built locally, under its own rules",
+        "correct": true,
+        "why": "Right. Logical replication sends rows, and each server builds its own indexes."
+      },
+      {
+        "text": "The second server inherits the first one's broken indexes",
+        "correct": false,
+        "why": "That is a physical copy: a streaming replica or pg_upgrade carries the files."
+      },
+      {
+        "text": "Replication refuses to start between different glibc versions",
+        "correct": false,
+        "why": "Nothing in logical replication compares the C libraries of the two machines."
+      },
+      {
+        "text": "Both servers sort text identically, since the collation has the same name",
+        "correct": false,
+        "why": "The name is the same and the rules are not: that is exactly the 2.28 change."
+      }
+    ]
+  },
+  {
+    "id": "ex-gc5jk3x8",
+    "version": 1,
+    "section": "reindex-and-its-lock",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "While `REINDEX INDEX orders_created_at` runs, a `SELECT ... WHERE customer_id = 42` waits, although it never uses that index. Why?",
+    "hint": "What happens before the query runs?",
+    "choices": [
+      {
+        "text": "The planner opens every index of the table",
+        "correct": true,
+        "why": "Right. Opening one takes AccessShareLock, and that conflicts with REINDEX's AccessExclusiveLock on the index."
+      },
+      {
+        "text": "REINDEX locks the whole table against reads",
+        "correct": false,
+        "why": "On the table it holds ShareLock, which lets reads through. The wait is on the index."
+      },
+      {
+        "text": "The SELECT is waiting for disk, since REINDEX reads the table",
+        "correct": false,
+        "why": "pg_locks showed a lock not granted, with blocked_by naming the REINDEX. That is a lock wait."
+      },
+      {
+        "text": "customer_id has a foreign key to customers",
+        "correct": false,
+        "why": "A SELECT does not check foreign keys; it would block the same way without one."
+      }
+    ]
+  },
+  {
+    "id": "ex-84r0ghh6",
+    "version": 1,
+    "section": "reindex-and-its-lock",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each row of `pg_locks` during the plain REINDEX to the terminal that held it.",
+    "hint": "Granted or not, and which mode.",
+    "pairs": [
+      {
+        "left": "AccessExclusiveLock on orders_created_at, granted",
+        "right": "The REINDEX"
+      },
+      {
+        "left": "RowExclusiveLock on orders, not granted",
+        "right": "The UPDATE"
+      },
+      {
+        "left": "AccessShareLock on orders_created_at, not granted",
+        "right": "The SELECT on customer_id"
+      }
+    ],
+    "right_distractors": [
+      "Autovacuum"
+    ]
+  },
+  {
+    "id": "ex-pmb3j3qy",
+    "version": 1,
+    "section": "reindex-and-its-lock",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What happens to the file of an index after `REINDEX`?",
+    "hint": "pg_relation_filepath, before and after.",
+    "choices": [
+      {
+        "text": "It is replaced by a new file with a new number",
+        "correct": true,
+        "why": "Right. base/16386/16411 became another number, like a table rewritten in lesson 4."
+      },
+      {
+        "text": "The same file is overwritten in place",
+        "correct": false,
+        "why": "The path changed, so it is a different file; the old one is removed at commit."
+      },
+      {
+        "text": "It moves to the pg_wal directory until the next checkpoint",
+        "correct": false,
+        "why": "pg_wal holds the write-ahead log, not index files."
+      },
+      {
+        "text": "It keeps its name and only shrinks",
+        "correct": false,
+        "why": "It may shrink, but the number in its name changed."
+      }
+    ]
+  },
+  {
+    "id": "ex-dz5qn4g0",
+    "version": 1,
+    "section": "reindex-and-its-lock",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A 6 GB index on a table written all day needs rebuilding. Why is a plain `REINDEX` at 3 p.m. a bad idea, even if reads matter more than writes?",
+    "hint": "Who queues behind it, and for how long?",
+    "choices": [
+      {
+        "text": "Only writes wait, so the reads are fine",
+        "correct": false,
+        "why": "That is what the documentation's sentence seems to say; the planner's lock on every index makes reads wait too."
+      },
+      {
+        "text": "REINDEX cannot run while anyone is connected",
+        "correct": false,
+        "why": "It runs; it just makes the others wait."
+      },
+      {
+        "text": "Nearly every query queues for minutes",
+        "correct": true,
+        "why": "Right. The table's ShareLock stops writes, and the index's AccessExclusiveLock stops queries at planning."
+      },
+      {
+        "text": "A 6 GB index cannot be rebuilt without first dropping it",
+        "correct": false,
+        "why": "REINDEX rebuilds it in place, whatever its size; the size only decides how long the lock lasts."
+      }
+    ]
+  },
+  {
+    "id": "ex-kh6mrf70",
+    "version": 1,
+    "section": "concurrently",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What did the timings say about `REINDEX CONCURRENTLY` against a plain `REINDEX` on the same index?",
+    "hint": "Two runs, one after the other.",
+    "choices": [
+      {
+        "text": "It was faster, because it runs in parallel with the others",
+        "correct": false,
+        "why": "Concurrently means beside other sessions, not faster. It did more work."
+      },
+      {
+        "text": "They took the same time; only the lock differs",
+        "correct": false,
+        "why": "The concurrent one took half as long again on the recording machine."
+      },
+      {
+        "text": "The concurrent one failed, since it cannot run on orders",
+        "correct": false,
+        "why": "It ran fine; it only refuses system catalogs and transaction blocks."
+      },
+      {
+        "text": "It took longer",
+        "correct": true,
+        "why": "Right. It reads the table twice and stops to wait for other transactions."
+      }
+    ]
+  },
+  {
+    "id": "ex-tcmebhbz",
+    "version": 1,
+    "section": "concurrently",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pg_stat_activity` shows a `REINDEX CONCURRENTLY` waiting on `Lock` / `virtualxid`, blocked by a session in `idle in transaction`. What is it waiting for?",
+    "hint": "virtualxid names a transaction.",
+    "choices": [
+      {
+        "text": "For that transaction to end",
+        "correct": true,
+        "why": "Right. A write that began before the new index existed has to finish first."
+      },
+      {
+        "text": "For a lock on the index that the idle session holds",
+        "correct": false,
+        "why": "The idle session held only a row lock and RowExclusiveLock on the table; the wait is on its transaction id."
+      },
+      {
+        "text": "For autovacuum to finish on the table",
+        "correct": false,
+        "why": "blocked_by named the idle session, not an autovacuum worker."
+      },
+      {
+        "text": "For a checkpoint",
+        "correct": false,
+        "why": "A checkpoint is never a lock anybody waits on in pg_stat_activity."
+      }
+    ]
+  },
+  {
+    "id": "ex-kzxwahrs",
+    "version": 1,
+    "section": "concurrently",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`\\d orders` shows `\"orders_created_at_ccold\" btree (created_at) INVALID`. What do you do?",
+    "hint": "Which side of the swap did it fail on?",
+    "choices": [
+      {
+        "text": "Drop it: the rebuild worked",
+        "correct": true,
+        "why": "Right. _ccold is the old copy, left after the swap; the new index already has the original name."
+      },
+      {
+        "text": "Drop it and run REINDEX CONCURRENTLY again",
+        "correct": false,
+        "why": "That is the cure for _ccnew. After a _ccold the rebuild is done, and repeating it costs another build."
+      },
+      {
+        "text": "Rename it back to orders_created_at",
+        "correct": false,
+        "why": "That name already belongs to the new, valid index."
+      },
+      {
+        "text": "Leave it; invalid indexes are dropped at the next VACUUM",
+        "correct": false,
+        "why": "Nothing drops them for you. They stay until somebody does."
+      }
+    ]
+  },
+  {
+    "id": "ex-n2v0edx8",
+    "version": 1,
+    "section": "concurrently",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Every invalid index in a database is found with `SELECT indexrelid::regclass FROM pg_index WHERE NOT ___;`",
+    "hint": "A column of pg_index, true for a usable index.",
+    "blanks": [
+      {
+        "accept": [
+          "indisvalid"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cekbwqrg",
+    "version": 1,
+    "section": "concurrently",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly `REINDEX CONCURRENTLY` has been running for six hours on an index that takes ten minutes to build. What do you check first?",
+    "hint": "It waits for others.",
+    "choices": [
+      {
+        "text": "Whether the disk is full",
+        "correct": false,
+        "why": "A full disk makes the build fail with an error, not wait for hours."
+      },
+      {
+        "text": "The table's statistics, which may be stale",
+        "correct": false,
+        "why": "The build reads the whole table whatever the statistics say; they do not slow it down."
+      },
+      {
+        "text": "What it waits on, in pg_stat_activity",
+        "correct": true,
+        "why": "Right. Look for its wait_event and blocked_by; an idle in transaction session holds it indefinitely."
+      },
+      {
+        "text": "Whether a plain REINDEX would be faster, and cancel it",
+        "correct": false,
+        "why": "Cancelling leaves a _ccnew to clean up, and the plain one would block everybody. Find the cause first."
+      }
+    ]
+  },
+  {
+    "id": "ex-d7cwx299",
+    "version": 1,
+    "section": "create-index-concurrently",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After a failed `CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS`, the same statement run again answers `CREATE INDEX`. What does that prove?",
+    "hint": "What does IF NOT EXISTS look at?",
+    "choices": [
+      {
+        "text": "The duplicates were removed in between",
+        "correct": false,
+        "why": "Nobody touched the data. The NOTICE said it was skipping."
+      },
+      {
+        "text": "Nothing about the index; only that the name exists",
+        "correct": true,
+        "why": "Right. It skipped because the invalid leftover has the name; pg_index showed indisvalid false."
+      },
+      {
+        "text": "The second run built a valid index",
+        "correct": false,
+        "why": "It built nothing; indisvalid was f afterwards."
+      },
+      {
+        "text": "PostgreSQL retried the build in the background",
+        "correct": false,
+        "why": "Nothing retries a failed build. The leftover stays until it is dropped."
+      }
+    ]
+  },
+  {
+    "id": "ex-x88r4kss",
+    "version": 1,
+    "section": "create-index-concurrently",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which lock does a plain `CREATE INDEX` take on the table, and what does it stop?",
+    "hint": "The same one REINDEX held on orders.",
+    "choices": [
+      {
+        "text": "AccessExclusiveLock: nothing can touch the table",
+        "correct": false,
+        "why": "That is VACUUM FULL's lock, or a column type change. CREATE INDEX lets reads through."
+      },
+      {
+        "text": "ShareLock: writes wait until the build ends",
+        "correct": true,
+        "why": "Right. Reads go on; inserts, updates and deletes queue."
+      },
+      {
+        "text": "ShareUpdateExclusiveLock: only VACUUM waits",
+        "correct": false,
+        "why": "That is the concurrent build's lock, the one that lets writes go on."
+      },
+      {
+        "text": "No lock at all, since the index is new",
+        "correct": false,
+        "why": "The table is being read in full and must not change during it."
+      }
+    ]
+  },
+  {
+    "id": "ex-jpm44w0s",
+    "version": 1,
+    "section": "create-index-concurrently",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An invalid index shows `indisready = t`. Why is it worse to leave than one with `indisready = f`?",
+    "hint": "ready for what?",
+    "choices": [
+      {
+        "text": "Writes pay for it; reads never use it",
+        "correct": true,
+        "why": "Right. It costs on every insert and update and gives nothing back."
+      },
+      {
+        "text": "Queries use it and get wrong answers",
+        "correct": false,
+        "why": "An invalid index is never chosen by the planner, ready or not."
+      },
+      {
+        "text": "It blocks REINDEX on the other indexes",
+        "correct": false,
+        "why": "Other indexes are rebuilt independently of it."
+      },
+      {
+        "text": "It cannot be dropped concurrently",
+        "correct": false,
+        "why": "DROP INDEX CONCURRENTLY removes it like any other."
+      }
+    ]
+  },
+  {
+    "id": "ex-23t6gvad",
+    "version": 1,
+    "section": "amcheck",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`bt_index_check` returns an empty value for an index. What does that mean?",
+    "hint": "How does it report a problem?",
+    "choices": [
+      {
+        "text": "The index was skipped because it is in use",
+        "correct": false,
+        "why": "It takes only a SELECT's lock and checks indexes in use."
+      },
+      {
+        "text": "It found nothing wrong",
+        "correct": true,
+        "why": "Right. A problem is raised as an error; silence is the pass."
+      },
+      {
+        "text": "The extension is not installed",
+        "correct": false,
+        "why": "Without the extension the function does not exist, and calling it is an error."
+      },
+      {
+        "text": "The index is empty",
+        "correct": false,
+        "why": "The value is empty because the function returns void, whatever the index holds."
+      }
+    ]
+  },
+  {
+    "id": "ex-ncfkm6qy",
+    "version": 1,
+    "section": "amcheck",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `heapallindexed => true` add to `bt_index_check`?",
+    "hint": "It found the lying function.",
+    "choices": [
+      {
+        "text": "It also checks the links between levels of the tree",
+        "correct": false,
+        "why": "That is bt_index_parent_check, which takes a stronger lock."
+      },
+      {
+        "text": "It repairs the entries it finds missing",
+        "correct": false,
+        "why": "amcheck only reports. The repair is a REINDEX, or fixing the cause."
+      },
+      {
+        "text": "It confirms that every row of the table has its entry in the index",
+        "correct": true,
+        "why": "Right. That is the corruption that makes a query miss rows."
+      },
+      {
+        "text": "It checks GIN and GiST indexes too",
+        "correct": false,
+        "why": "In version 16 amcheck checks B-tree indexes and tables, not GIN or GiST."
+      }
+    ]
+  },
+  {
+    "id": "ex-kr60tszb",
+    "version": 1,
+    "section": "amcheck",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`bt_index_check(..., heapallindexed => true)` reports that a heap tuple lacks its index entry, on an index over an expression. Before reaching for REINDEX, what do you look at?",
+    "hint": "What did the order_day example teach?",
+    "choices": [
+      {
+        "text": "The table's statistics",
+        "correct": false,
+        "why": "Statistics guide plans; they cannot make an index miss an entry."
+      },
+      {
+        "text": "Whether a function in the expression is marked IMMUTABLE while depending on a setting",
+        "correct": true,
+        "why": "Right. Rebuilding an index on a lying function only moves the breakage to the other setting."
+      },
+      {
+        "text": "The disk, first and only",
+        "correct": false,
+        "why": "A disk is one cause, but on an expression index the expression itself is the first suspect."
+      },
+      {
+        "text": "Whether autovacuum has run since the index was built",
+        "correct": false,
+        "why": "Vacuum removes dead entries; it never removes the entry of a live row."
+      }
+    ]
+  },
+  {
+    "id": "ex-ff6b96nh",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A REINDEX CONCURRENTLY failed in the night. Put the morning's steps in order.",
+    "hint": "Find, read the suffix, clean, retry, check.",
+    "items": [
+      "SELECT the invalid indexes from pg_index",
+      "See that the leftover ends in _ccnew",
+      "DROP INDEX CONCURRENTLY the _ccnew",
+      "Run REINDEX INDEX CONCURRENTLY again",
+      "Check pg_index shows nothing invalid"
+    ],
+    "trap": "Running the REINDEX again before dropping the _ccnew leaves the old leftover where it was, still maintained on every write if it got that far."
+  },
+  {
+    "id": "ex-t6pz1yqw",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each situation to the right tool.",
+    "hint": "Busy table, quiet table, a question, or a new index.",
+    "pairs": [
+      {
+        "left": "A bloated index on a table written all day",
+        "right": "REINDEX INDEX CONCURRENTLY"
+      },
+      {
+        "left": "Every index of a database nobody is using, after a glibc change",
+        "right": "REINDEX DATABASE"
+      },
+      {
+        "left": "Suspicion that an index misses rows",
+        "right": "bt_index_check with heapallindexed"
+      },
+      {
+        "left": "A new index on a live table",
+        "right": "CREATE INDEX CONCURRENTLY"
+      }
+    ]
+  },
+  {
+    "id": "ex-4xzrm9a4",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A migration tool runs `CREATE INDEX CONCURRENTLY IF NOT EXISTS orders_status ON orders (status);` inside a transaction it opens for every migration. What happens?",
+    "hint": "Where can CONCURRENTLY not run?",
+    "choices": [
+      {
+        "text": "It runs as a plain CREATE INDEX and blocks writes",
+        "correct": false,
+        "why": "PostgreSQL never silently drops the word; it refuses the statement."
+      },
+      {
+        "text": "It builds the index and commits with the transaction",
+        "correct": false,
+        "why": "A concurrent build needs several commits of its own, so it cannot share one."
+      },
+      {
+        "text": "IF NOT EXISTS makes it skip, since the transaction has not committed",
+        "correct": false,
+        "why": "There is no index of that name to find; the refusal comes first."
+      },
+      {
+        "text": "It is refused: it cannot run inside a transaction block",
+        "correct": true,
+        "why": "Right. Each of its steps commits on its own, which a surrounding transaction would prevent."
+      }
+    ]
+  },
+  {
+    "id": "ex-4nqm3rg8",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You must rebuild an index on a busy table during the day, and a report session keeps transactions open for an hour at a time. What is the likely outcome of `REINDEX INDEX CONCURRENTLY`?",
+    "hint": "Who waits for whom?",
+    "choices": [
+      {
+        "text": "It blocks the report session until it finishes",
+        "correct": false,
+        "why": "Its lock lets reads and writes go on; it never makes the report wait."
+      },
+      {
+        "text": "It finishes as quickly as on a quiet table",
+        "correct": false,
+        "why": "The waits between steps last as long as the oldest open transaction."
+      },
+      {
+        "text": "It cancels the report's transaction to get its lock",
+        "correct": false,
+        "why": "PostgreSQL never cancels another session to let a REINDEX through."
+      },
+      {
+        "text": "It waits for those transactions to end, while everybody else carries on",
+        "correct": true,
+        "why": "Right. Nobody waits for it, and it waits for the transactions that were running before each step."
+      }
+    ]
+  },
+  {
+    "id": "ex-xmeykqks",
+    "version": 1,
+    "section": "why-rebuild",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "From which glibc version on does en_US.UTF-8 put 1-1 before 11, the change that breaks text indexes built on older systems?",
+    "hint": "Ubuntu 18.04 had the version just before it.",
+    "value": 2.28,
+    "tolerance": 0
+  }
+]

@@ -1,0 +1,496 @@
+{
+  "ex-9vpc3q63": {
+    "prompt": "No momento em que o `COMMIT` responde, onde a linha nova com certeza está no disco?",
+    "hint": "A lição procurou em dois lugares com grep.",
+    "choices": [
+      {
+        "text": "Num arquivo de segmento em pg_wal, e em nenhum outro lugar do disco ainda",
+        "why": "Isso. O commit espera o log chegar ao disco, e o grep achou a linha lá."
+      },
+      {
+        "text": "No próprio arquivo da tabela em base/",
+        "why": "O grep contou zero ocorrências no arquivo da tabela depois do commit: a página continuava suja na memória."
+      },
+      {
+        "text": "No arquivo da tabela e no log, gravados juntos",
+        "why": "Gravar os dois a cada commit é exatamente a escrita espalhada que o log existe para evitar."
+      },
+      {
+        "text": "Em lugar nenhum ainda; está só na memória compartilhada",
+        "why": "Aí uma queda de energia depois do COMMIT a perderia. O registro do log está no disco antes da resposta."
+      }
+    ]
+  },
+  "ex-4p5vs41s": {
+    "prompt": "Por que gravar o log a cada commit é mais barato que gravar as páginas de tabela alteradas?",
+    "hint": "Pense em onde no disco cada escrita cai.",
+    "choices": [
+      {
+        "text": "O log é acrescentado no fim, numa escrita sequencial",
+        "why": "Isso. Uma escrita sequencial pequena em vez de páginas espalhadas por muitos arquivos."
+      },
+      {
+        "text": "O log é comprimido e as páginas não",
+        "why": "Nada é comprimido por padrão; o wal_compression está desligado. A diferença é o formato da escrita."
+      },
+      {
+        "text": "O log mora na memória e nunca é gravado no disco",
+        "why": "O log é gravado em pg_wal, e o grep achou a linha num arquivo de segmento lá."
+      },
+      {
+        "text": "As páginas de tabela são gravadas pela própria sessão, o que é mais lento que um processo de fundo",
+        "why": "É o contrário: a sessão grava o log, e processos de fundo gravam as páginas."
+      }
+    ]
+  },
+  "ex-cccqbkpv": {
+    "prompt": "Ligue cada processo ao que ele grava.",
+    "hint": "Dois gravam o log, dois gravam páginas de tabela.",
+    "pairs": [
+      {
+        "left": "a sessão que roda o COMMIT",
+        "right": "os próprios registros de WAL, antes de o COMMIT responder"
+      },
+      {
+        "left": "walwriter",
+        "right": "os buffers de WAL, a cada wal_writer_delay"
+      },
+      {
+        "left": "checkpointer",
+        "right": "toda página suja, num checkpoint"
+      },
+      {
+        "left": "background writer",
+        "right": "algumas páginas sujas antes de a memória delas ser precisa"
+      }
+    ]
+  },
+  "ex-9ghx0cc7": {
+    "prompt": "O background writer vai gravar uma página suja de `orders` cuja última alteração está descrita no LSN 0/5000. O log só está gravado até 0/4000. O que acontece primeiro?",
+    "hint": "Nenhuma página chega ao arquivo antes de a descrição dela chegar ao log.",
+    "choices": [
+      {
+        "text": "A página é gravada, e o log alcança no próximo commit",
+        "why": "Uma queda entre as duas deixaria no disco uma página cuja alteração o log não descreve."
+      },
+      {
+        "text": "A página é pulada até um checkpoint gravá-la",
+        "why": "O checkpointer obedece à mesma regra; pular não tira a necessidade de gravar o log antes."
+      },
+      {
+        "text": "O servidor escreve uma imagem da página inteira no log em vez disso",
+        "why": "As imagens de página inteira vão com a primeira alteração depois de um checkpoint, não com a gravação da página."
+      },
+      {
+        "text": "O log é gravado até pelo menos 0/5000",
+        "why": "Isso. Essa ordem é a regra do write-ahead, garantida pelo servidor antes de toda gravação de página."
+      }
+    ]
+  },
+  "ex-55p7d5xx": {
+    "prompt": "O que é um LSN como `0/1584F1C0`?",
+    "hint": "O pg_wal_lsn_diff subtrai dois deles e responde em bytes.",
+    "choices": [
+      {
+        "text": "Um id de transação",
+        "why": "Os ids de transação são o campo tx no pg_waldump, 784 na lição. Muitos registros compartilham um."
+      },
+      {
+        "text": "O nome do arquivo de segmento atual",
+        "why": "É nisso que o pg_walfile_name transforma um LSN; o nome tem 24 dígitos, o LSN duas metades."
+      },
+      {
+        "text": "Um horário no formato interno do relógio do servidor",
+        "why": "É uma posição, não um horário. O registro de COMMIT leva o horário à parte."
+      },
+      {
+        "text": "Uma posição em bytes no log",
+        "why": "Isso. Escrita em hexadecimal; subtrair duas dá os bytes entre elas."
+      }
+    ]
+  },
+  "ex-dc6qqdy0": {
+    "prompt": "O `pg_waldump` mostrou `blkref #0: rel 1663/16386/16420 blk 0`. Que arquivo do diretório de dados esse registro alterou?",
+    "hint": "Tablespace, banco, arquivo; e 1663 é o tablespace padrão.",
+    "choices": [
+      {
+        "text": "base/16386/16420",
+        "why": "Isso. O mesmo caminho que o pg_relation_filepath deu para notes, o bloco 0 dele."
+      },
+      {
+        "text": "pg_wal/000000010000000000000016",
+        "why": "O registro mora em pg_wal; o blkref aponta a página que ele descreve, que fica em outro lugar."
+      },
+      {
+        "text": "base/1663/16420",
+        "why": "1663 é o tablespace, não um banco. O banco é o número do meio."
+      },
+      {
+        "text": "global/16420",
+        "why": "global guarda tabelas compartilhadas por todos os bancos. Uma tabela do shop mora em base e no oid do shop."
+      }
+    ]
+  },
+  "ex-wdq2pwyn": {
+    "prompt": "Qual dos três registros de um `INSERT` tornou a transação durável?",
+    "hint": "Sem ele, a recuperação trata os outros dois como de uma transação que nunca terminou.",
+    "choices": [
+      {
+        "text": "O INSERT do Heap, porque ele guarda a linha",
+        "why": "O registro da linha sozinho pertence a uma transação inacabada até o registro de commit vir depois."
+      },
+      {
+        "text": "O COMMIT do Transaction",
+        "why": "Isso. Quando esse registro está no disco, a transação sobrevive a qualquer queda."
+      },
+      {
+        "text": "O INSERT_LEAF do Btree",
+        "why": "Esse põe a chave no índice. Não diz nada sobre se a transação terminou."
+      },
+      {
+        "text": "Nenhum; a durabilidade vem do arquivo da tabela",
+        "why": "O arquivo da tabela não continha a linha quando o commit respondeu. A durabilidade veio do log."
+      }
+    ]
+  },
+  "ex-5syd4tq0": {
+    "prompt": "No Ubuntu, o `pg_waldump` não está no PATH; ele mora em /usr/lib/postgresql/16/___ com os programas do próprio servidor.",
+    "hint": "O nome de costume para um diretório de programas.",
+    "blanks": [
+      {
+        "accept": [
+          "bin",
+          "bin/"
+        ]
+      }
+    ]
+  },
+  "ex-311q6wq0": {
+    "prompt": "No `pg_waldump`, um registro mostra `len (rec/tot): 65/ 2877` e termina em `FPW`. O que forma a maior parte dos 2877?",
+    "hint": "FPW quer dizer full-page write.",
+    "choices": [
+      {
+        "text": "As versões antiga e nova da linha",
+        "why": "A segunda atualização da mesma linha teve 78 bytes no total. Versões de linha são pequenas."
+      },
+      {
+        "text": "Toda entrada de índice que a atualização teve de mudar",
+        "why": "Foi uma atualização HOT, que não muda índice; entradas de índice seriam registros próprios."
+      },
+      {
+        "text": "Uma imagem da página inteira, menos o meio sem uso",
+        "why": "Isso. O registro tem 65 bytes; o resto é a página, menos o meio vazio dela."
+      },
+      {
+        "text": "Preenchimento até a próxima fronteira de 8 kB",
+        "why": "Registros não são preenchidos até uma página; 2877 não é múltiplo de nada."
+      }
+    ]
+  },
+  "ex-xhjzgm45": {
+    "prompt": "Logo depois de um CHECKPOINT, a primeira atualização de um pedido na lição escreveu 9176 bytes de WAL. Quantos bytes a segunda atualização idêntica, feita logo em seguida, escreveu?",
+    "hint": "Nenhuma imagem de página na segunda vez.",
+    "unit": "bytes"
+  },
+  "ex-twpp97cm": {
+    "prompt": "Por que a primeira alteração de uma página depois de um checkpoint leva uma imagem da página inteira?",
+    "hint": "O que uma queda no meio da gravação dessa página deixaria?",
+    "choices": [
+      {
+        "text": "Para que as réplicas recebam a página sem pedir",
+        "why": "As réplicas refazem os mesmos registros, mas a imagem existe para recuperar de uma página rasgada, em qualquer servidor."
+      },
+      {
+        "text": "Uma página rasgada não se conserta com um registro pequeno",
+        "why": "Isso. A recuperação restaura a imagem primeiro, depois aplica os registros pequenos seguintes."
+      },
+      {
+        "text": "Porque o checkpoint apagou os registros anteriores da página",
+        "why": "Os segmentos antigos são reciclados, mas a página em si está no disco depois de um checkpoint; o risco é a próxima gravação rasgá-la."
+      },
+      {
+        "text": "Para o VACUUM ler a página do log em vez da tabela",
+        "why": "Nada lê páginas do log no trabalho normal; o log é lido na recuperação e pelas réplicas."
+      }
+    ]
+  },
+  "ex-t0cp9rhq": {
+    "prompt": "Um job noturno reescreve uma coluna de uma tabela de 40 GB, logo depois do checkpoint que o job força antes de começar. Pelas medições da lição, para mais ou menos quanto WAL você deve se planejar?",
+    "hint": "66 MB de tabela escreveram 234 MB na primeira vez.",
+    "choices": [
+      {
+        "text": "Uns 40 GB, o tamanho da tabela",
+        "why": "A cópia de 66 MB escreveu 234 MB, três vezes e meia o tamanho: registros de linha mais imagens de página."
+      },
+      {
+        "text": "Bem mais de 100 GB, várias vezes a tabela",
+        "why": "Isso. Na proporção da lição, umas três vezes e meia a tabela, com as imagens de página."
+      },
+      {
+        "text": "Alguns megabytes, já que só uma coluna muda",
+        "why": "O registro de atualização de cada linha leva a nova versão da linha, então a linha inteira é escrita de novo, um milhão de vezes."
+      },
+      {
+        "text": "Menos de 40 GB, porque o checkpoint forçado tira as imagens de página",
+        "why": "Um checkpoint logo antes é justamente o que faz toda primeira alteração levar uma imagem."
+      }
+    ]
+  },
+  "ex-rpvgyqkt": {
+    "prompt": "Ligue cada leitor do log ao que ele faz com o log.",
+    "hint": "Um mecanismo, quatro usos.",
+    "pairs": [
+      {
+        "left": "recuperação de queda",
+        "right": "refaz desde o último checkpoint, na subida"
+      },
+      {
+        "left": "uma réplica",
+        "right": "refaz os registros conforme chegam, para sempre"
+      },
+      {
+        "left": "recuperação para um ponto no tempo",
+        "right": "refaz segmentos arquivados até um momento escolhido"
+      },
+      {
+        "left": "decodificação lógica",
+        "right": "transforma registros de volta em alterações de linha"
+      }
+    ],
+    "right_distractors": [
+      "reconstrói índices que se corromperam"
+    ]
+  },
+  "ex-6v9x9xs9": {
+    "prompt": "Um colega propõe `wal_level = minimal` para deixar cargas em massa mais rápidas num primário. Do que a equipe abre mão?",
+    "hint": "Quais leitores precisam de mais do que a recuperação de queda precisa?",
+    "choices": [
+      {
+        "text": "Da recuperação de queda",
+        "why": "O minimal ainda registra tudo o que a recuperação de queda precisa. Essa é a definição inteira do nível."
+      },
+      {
+        "text": "Nada; só muda a frequência com que o walwriter acorda",
+        "why": "Isso é o wal_writer_delay. O wal_level decide o que os registros contêm."
+      },
+      {
+        "text": "Os full-page writes, que o minimal desliga",
+        "why": "O full_page_writes é uma configuração à parte e fica ligado em todo wal_level."
+      },
+      {
+        "text": "De qualquer réplica ou arquivo construídos a partir deste log",
+        "why": "Isso. Algumas operações em massa pulam o log por completo, então nada adiante as vê."
+      }
+    ]
+  },
+  "ex-v1aqyqz0": {
+    "prompt": "O disco está cheio e o `pg_wal` é o maior diretório nele. O que você não deve fazer?",
+    "hint": "Que arquivos podem guardar a única cópia de alterações confirmadas?",
+    "choices": [
+      {
+        "text": "Apagar à mão os arquivos de segmento mais antigos",
+        "why": "Isso. Eles talvez guardem alterações que ainda não estão nos arquivos das tabelas, e o servidor os lê na próxima subida."
+      },
+      {
+        "text": "Procurar um slot de replicação inativo",
+        "why": "Essa é a primeira verificação que a lição 24 põe no runbook, e é segura."
+      },
+      {
+        "text": "Ler no log do servidor a última linha de checkpoint",
+        "why": "Ler não muda nada, e essa linha diz o que foi reciclado."
+      },
+      {
+        "text": "Liberar espaço em outro lugar do mesmo sistema de arquivos",
+        "why": "Remover arquivos que não são do banco é um jeito justo de ganhar tempo."
+      }
+    ]
+  },
+  "ex-9ghzwgye": {
+    "prompt": "Depois de um checkpoint registrar `25 recycled`, o `du` mostrou o `pg_wal` exatamente do mesmo tamanho. Por quê?",
+    "hint": "O que reciclar faz com um arquivo?",
+    "choices": [
+      {
+        "text": "O du conta arquivos apagados mas ainda abertos",
+        "why": "O du conta o que está no diretório. Nada foi apagado: a linha disse 0 removed."
+      },
+      {
+        "text": "O checkpoint falhou e manteve todos os segmentos",
+        "why": "Ele registrou checkpoint complete. Um que falhasse não relataria o que reciclou."
+      },
+      {
+        "text": "O max_wal_size reserva o 1 GB inteiro de antemão",
+        "why": "O diretório tinha 417M, bem abaixo de 1 GB. Nada é reservado; os segmentos são mantidos ou removidos."
+      },
+      {
+        "text": "Os arquivos foram renomeados para serem sobrescritos depois",
+        "why": "Isso. Segmentos reciclados ficam no disco com nomes futuros; os removidos teriam liberado espaço."
+      }
+    ]
+  },
+  "ex-9w414nde": {
+    "prompt": "Uma réplica foi desativada no mês passado. Desde então o `pg_wal` do primário cresce todo dia. Qual é a causa mais provável?",
+    "hint": "Uma promessa que dura mais que aquele a quem foi feita.",
+    "choices": [
+      {
+        "text": "O max_wal_size é pequeno demais",
+        "why": "Um max_wal_size pequeno demais causa checkpoints frequentes, não um diretório que só cresce."
+      },
+      {
+        "text": "Um slot de replicação inativo",
+        "why": "Isso. O slot segura todo segmento a partir da posição dele, conectado ou não."
+      },
+      {
+        "text": "O wal_level ficou em replica",
+        "why": "replica é o padrão e não segura nada; só decide o que os registros contêm."
+      },
+      {
+        "text": "O walwriter parou, então os segmentos nunca são fechados",
+        "why": "Os segmentos são aparados nos checkpoints, pelo checkpointer; o walwriter não remove nada."
+      }
+    ]
+  },
+  "ex-3r9jnv83": {
+    "prompt": "Para procurar um slot esquecido, consulte a visão pg_replication___ e procure uma linha cuja coluna active seja falsa.",
+    "hint": "A visão lista todos os slots.",
+    "blanks": [
+      {
+        "accept": [
+          "_slots"
+        ]
+      }
+    ]
+  },
+  "ex-cfc7w39z": {
+    "prompt": "Você configura `max_slot_wal_keep_size = 50GB` num primário com uma réplica. A réplica fica desligada por uma semana e o primário escreve 80 GB de WAL enquanto isso. O que acontece?",
+    "hint": "A configuração troca uma falha por outra.",
+    "choices": [
+      {
+        "text": "O primário para de aceitar escritas em 50 GB",
+        "why": "O limite é sobre o que o slot pode segurar, não sobre as escritas; o primário continua funcionando."
+      },
+      {
+        "text": "O disco do primário enche com 80 GB de WAL",
+        "why": "Isso é o que acontece com o padrão -1. A configuração existe para evitar isso."
+      },
+      {
+        "text": "O slot é abandonado e a réplica precisa ser reconstruída",
+        "why": "Isso. O disco fica protegido, e a réplica paga por isso."
+      },
+      {
+        "text": "A réplica se atualiza a partir dos 50 GB guardados",
+        "why": "Ela precisa de todo registro desde que parou; sem 30 GB deles não consegue refazer além do buraco."
+      }
+    ]
+  },
+  "ex-rpbyvq2y": {
+    "prompt": "Ponha em ordem o que acontece com um `UPDATE` que é confirmado e depois chega ao arquivo da tabela.",
+    "hint": "Memória primeiro, arquivo da tabela por último.",
+    "items": [
+      "a página é alterada nos shared buffers",
+      "um registro que descreve a alteração vai para os buffers de WAL",
+      "o log é gravado em pg_wal",
+      "o COMMIT responde ao cliente",
+      "um checkpoint grava a página no arquivo"
+    ],
+    "trap": "O COMMIT responder antes da gravação seria o synchronous_commit = off, que a lição 8 mede."
+  },
+  "ex-rm3c31n7": {
+    "prompt": "Você roda o `pg_wal_lsn_diff` em volta de um `UPDATE` de uma linha duas vezes, sem checkpoint entre elas, e obtém 8300 bytes e depois 90. Um colega roda o mesmo par e obtém 90 e 90. O que explica melhor a diferença?",
+    "hint": "O que tinha acontecido com aquela página desde o último checkpoint, em cada servidor?",
+    "choices": [
+      {
+        "text": "No servidor dele a página já tinha mudado desde o checkpoint",
+        "why": "Isso. A imagem é tirada uma vez por página por ciclo de checkpoint; a primeira atualização dele não foi a primeira alteração."
+      },
+      {
+        "text": "O colega está com full_page_writes desligado",
+        "why": "Possível em princípio, mas a configuração vem ligada, e o motivo comum não precisa de configuração errada."
+      },
+      {
+        "text": "O disco dele grava em pedaços de 8 kB",
+        "why": "O PostgreSQL não olha o disco para decidir; a regra da imagem depende só do checkpoint."
+      },
+      {
+        "text": "O wal_level dele é minimal",
+        "why": "O minimal ainda registra atualizações com imagens de página; só deixa algumas operações em massa pularem o log."
+      }
+    ]
+  },
+  "ex-vbpxzwdp": {
+    "prompt": "Dois servidores têm os mesmos dados. O servidor A faz checkpoint a cada 30 segundos, o B a cada 15 minutos, sob a mesma carga de escrita constante. Qual escreve mais WAL por hora?",
+    "hint": "Cada checkpoint reinicia a regra da imagem para todas as páginas.",
+    "choices": [
+      {
+        "text": "O servidor A",
+        "why": "Isso. Cada checkpoint dele faz a próxima alteração de toda página levar uma imagem inteira de novo."
+      },
+      {
+        "text": "O servidor B, porque os checkpoints dele são maiores",
+        "why": "Um checkpoint grava páginas de tabela, não log. O volume do log cresce com as imagens, que seguem os checkpoints."
+      },
+      {
+        "text": "Os dois escrevem o mesmo, já que a carga é a mesma",
+        "why": "As mesmas linhas mudam, mas quantas alterações são a primeira de uma página desde um checkpoint muda."
+      }
+    ]
+  },
+  "ex-3dkcwjng": {
+    "prompt": "Quais destes leem o write-ahead log? Marque todos que se aplicam.",
+    "hint": "Um mecanismo, usado de quatro jeitos.",
+    "choices": [
+      {
+        "text": "Uma subida depois de uma queda",
+        "why": "Sim. Ela refaz a partir do ponto de redo do último checkpoint."
+      },
+      {
+        "text": "Uma réplica por streaming",
+        "why": "Sim. É um servidor refazendo um log que não para de chegar."
+      },
+      {
+        "text": "Um SELECT no primário",
+        "why": "Consultas leem páginas dos shared buffers e dos arquivos das tabelas, nunca do pg_wal."
+      },
+      {
+        "text": "Uma restauração para um momento escolhido",
+        "why": "Sim. Um backup base mais segmentos arquivados, refeitos até um registro."
+      },
+      {
+        "text": "O autovacuum decidindo qual tabela visitar",
+        "why": "Ele decide pelas visões de estatística, lição 14, não pelo log."
+      }
+    ]
+  },
+  "ex-6j9mdkq9": {
+    "prompt": "O `pg_walfile_name(pg_current_wal_lsn())` respondeu `000000010000000000000015`. O que diz o `00000001` do começo?",
+    "hint": "Ele muda quando a história se ramifica.",
+    "choices": [
+      {
+        "text": "A timeline",
+        "why": "Isso. Ela muda quando um servidor é recuperado para um ponto anterior ou uma réplica é promovida."
+      },
+      {
+        "text": "O oid do banco",
+        "why": "Os segmentos pertencem ao cluster inteiro, todos os bancos de uma vez; o nome não leva banco."
+      },
+      {
+        "text": "O primeiro segmento desde o último reinício",
+        "why": "Os números de segmento continuam depois de reinícios; os 16 últimos dígitos são o número do segmento."
+      },
+      {
+        "text": "A versão do formato de WAL do segmento",
+        "why": "A versão do formato fica dentro dos arquivos, não nos nomes."
+      }
+    ]
+  },
+  "ex-thyjkhte": {
+    "prompt": "Para medir o WAL que um comando escreve, guarde a posição antes com `SELECT pg_current_wal_lsn() AS before \\gset`, rode o comando e depois chame pg_wal_lsn___(pg_current_wal_lsn(), :'before').",
+    "hint": "A função subtrai.",
+    "blanks": [
+      {
+        "accept": [
+          "_diff"
+        ]
+      }
+    ]
+  }
+}

@@ -73,6 +73,10 @@ printf "ALTER SYSTEM RESET work_mem;\nALTER DATABASE shop RESET random_page_cost
 on 'sudo pg_dropcluster --stop 16 staging'
 on 'pg_lsclusters'
 
+block main-file
+on 'wc -l /etc/postgresql/16/main/postgresql.conf'
+on "grep -n '^include_dir' /etc/postgresql/16/main/postgresql.conf"
+
 block repo
 lab as 'git config --global user.name "Ana" && git config --global user.email ana@example.com && git config --global init.defaultBranch main'
 on 'mkdir -p shop-db/conf.d'

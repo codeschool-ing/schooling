@@ -1,0 +1,479 @@
+{
+  "ex-0f6d1y4h": {
+    "prompt": "Das três razões para reconstruir um índice, qual deixa o índice dando respostas certas?",
+    "hint": "Uma delas só custa espaço.",
+    "choices": [
+      {
+        "text": "Corrupção de um disco falhando",
+        "why": "Um índice corrompido pode perder linhas ou devolver linhas que não batem, sem erro."
+      },
+      {
+        "text": "Uma mudança de collation depois de um upgrade do sistema operacional",
+        "why": "As entradas estão na ordem antiga e são buscadas com a nova, então buscas perdem linhas."
+      },
+      {
+        "text": "Inchaço",
+        "why": "Isso. Um índice inchado é quase só páginas vazias, e toda entrada nele continua correta."
+      },
+      {
+        "text": "Nenhuma; um índice que precisa ser reconstruído está errado por definição",
+        "why": "O inchaço deixa um índice maior e mais lento, não errado."
+      }
+    ]
+  },
+  "ex-x98qk68s": {
+    "prompt": "Um servidor passa do Ubuntu 18.04 para o 20.04 com `pg_upgrade`, e o banco usa `en_US.UTF-8`. Qual o risco para os índices em colunas de texto?",
+    "hint": "glibc 2.27 contra 2.31.",
+    "choices": [
+      {
+        "text": "O pg_upgrade se recusa a rodar até eles serem apagados",
+        "why": "Ele roda; não tem como saber que as regras da collation mudaram por baixo."
+      },
+      {
+        "text": "Ordem antiga, regras novas: buscas perdem linhas",
+        "why": "Isso. O pg_upgrade leva os arquivos de índice como estão; as regras mudaram na glibc 2.28."
+      },
+      {
+        "text": "Nenhum: o pg_upgrade reconstrói todo índice",
+        "why": "É um dump e restore, ou a replicação lógica, que constrói todo índice de novo. O pg_upgrade copia ou liga os arquivos."
+      },
+      {
+        "text": "Ficam maiores, porque a glibc 2.31 guarda chaves mais longas",
+        "why": "As chaves guardadas são os valores da coluna; a collation decide a ordem, não o tamanho."
+      }
+    ]
+  },
+  "ex-fr0p4155": {
+    "prompt": "Uma conexão imprime `database \"shop\" has a collation version mismatch`. Ponha o conserto em ordem.",
+    "hint": "O HINT os nomeia em ordem.",
+    "items": [
+      "Conectar em shop",
+      "REINDEX DATABASE shop",
+      "ALTER DATABASE shop REFRESH COLLATION VERSION",
+      "Conectar de novo: sem aviso"
+    ],
+    "trap": "Atualizar a versão primeiro só cala o aviso e deixa os índices na ordem antiga."
+  },
+  "ex-e8xkhh1h": {
+    "prompt": "Dois servidores rodam o mesmo PostgreSQL 16 com `en_US.UTF-8`. Um tem glibc 2.27, o outro 2.39. Uma réplica lógica copia dados do primeiro para o segundo. Que afirmação vale?",
+    "hint": "O que a replicação lógica envia: arquivos, ou linhas?",
+    "choices": [
+      {
+        "text": "Os índices do segundo servidor são construídos ali, com as regras dele",
+        "why": "Isso. A replicação lógica envia linhas, e cada servidor constrói os seus índices."
+      },
+      {
+        "text": "O segundo servidor herda os índices quebrados do primeiro",
+        "why": "Isso é uma cópia física: uma réplica por streaming ou o pg_upgrade levam os arquivos."
+      },
+      {
+        "text": "A replicação se recusa a começar entre versões diferentes da glibc",
+        "why": "Nada na replicação lógica compara as bibliotecas C das duas máquinas."
+      },
+      {
+        "text": "Os dois servidores ordenam texto igual, já que a collation tem o mesmo nome",
+        "why": "O nome é o mesmo e as regras não: essa é exatamente a mudança da 2.28."
+      }
+    ]
+  },
+  "ex-gc5jk3x8": {
+    "prompt": "Enquanto `REINDEX INDEX orders_created_at` roda, um `SELECT ... WHERE customer_id = 42` espera, embora nunca use aquele índice. Por quê?",
+    "hint": "O que acontece antes de a consulta rodar?",
+    "choices": [
+      {
+        "text": "O planejador abre todos os índices da tabela",
+        "why": "Isso. Abrir um pega AccessShareLock, que conflita com o AccessExclusiveLock do REINDEX no índice."
+      },
+      {
+        "text": "O REINDEX trava a tabela inteira contra leituras",
+        "why": "Na tabela ele segura ShareLock, que deixa leituras passarem. A espera é no índice."
+      },
+      {
+        "text": "O SELECT está esperando o disco, já que o REINDEX lê a tabela",
+        "why": "A pg_locks mostrou um lock não concedido, com blocked_by apontando o REINDEX. É espera de lock."
+      },
+      {
+        "text": "customer_id tem uma chave estrangeira para customers",
+        "why": "Um SELECT não confere chaves estrangeiras; travaria do mesmo jeito sem uma."
+      }
+    ]
+  },
+  "ex-84r0ghh6": {
+    "prompt": "Ligue cada linha da `pg_locks` durante o REINDEX comum ao terminal que a segurava.",
+    "hint": "Concedido ou não, e qual modo.",
+    "pairs": [
+      {
+        "left": "AccessExclusiveLock em orders_created_at, concedido",
+        "right": "O REINDEX"
+      },
+      {
+        "left": "RowExclusiveLock em orders, não concedido",
+        "right": "O UPDATE"
+      },
+      {
+        "left": "AccessShareLock em orders_created_at, não concedido",
+        "right": "O SELECT em customer_id"
+      }
+    ],
+    "right_distractors": [
+      "O autovacuum"
+    ]
+  },
+  "ex-pmb3j3qy": {
+    "prompt": "O que acontece com o arquivo de um índice depois do `REINDEX`?",
+    "hint": "pg_relation_filepath, antes e depois.",
+    "choices": [
+      {
+        "text": "É substituído por um arquivo novo com outro número",
+        "why": "Isso. base/16386/16411 virou outro número, como uma tabela reescrita na lição 4."
+      },
+      {
+        "text": "O mesmo arquivo é sobrescrito no lugar",
+        "why": "O caminho mudou, então é outro arquivo; o antigo é removido no commit."
+      },
+      {
+        "text": "Vai para o diretório pg_wal até o próximo checkpoint",
+        "why": "O pg_wal guarda o log de escrita antecipada, não arquivos de índice."
+      },
+      {
+        "text": "Mantém o nome e só encolhe",
+        "why": "Pode encolher, mas o número no nome mudou."
+      }
+    ]
+  },
+  "ex-dz5qn4g0": {
+    "prompt": "Um índice de 6 GB numa tabela escrita o dia inteiro precisa ser reconstruído. Por que um `REINDEX` comum às 15h é má ideia, mesmo que leituras importem mais que escritas?",
+    "hint": "Quem entra na fila atrás dele, e por quanto tempo?",
+    "choices": [
+      {
+        "text": "Só as escritas esperam, então as leituras estão bem",
+        "why": "É o que a frase da documentação parece dizer; o lock do planejador em todo índice faz leituras esperarem também."
+      },
+      {
+        "text": "O REINDEX não pode rodar enquanto alguém estiver conectado",
+        "why": "Ele roda; só faz os outros esperarem."
+      },
+      {
+        "text": "Quase toda consulta fica minutos na fila",
+        "why": "Isso. O ShareLock na tabela para as escritas, e o AccessExclusiveLock no índice para as consultas no planejamento."
+      },
+      {
+        "text": "Um índice de 6 GB não pode ser reconstruído sem antes ser apagado",
+        "why": "O REINDEX o reconstrói no lugar, seja qual for o tamanho; o tamanho só decide quanto dura o lock."
+      }
+    ]
+  },
+  "ex-kh6mrf70": {
+    "prompt": "O que as medições disseram sobre `REINDEX CONCURRENTLY` contra um `REINDEX` comum no mesmo índice?",
+    "hint": "Duas execuções, uma depois da outra.",
+    "choices": [
+      {
+        "text": "Foi mais rápido, porque roda em paralelo com os outros",
+        "why": "Concorrente quer dizer ao lado das outras sessões, não mais rápido. Fez mais trabalho."
+      },
+      {
+        "text": "Levaram o mesmo tempo; só o lock muda",
+        "why": "O concorrente levou metade a mais na máquina da gravação."
+      },
+      {
+        "text": "O concorrente falhou, já que não pode rodar em orders",
+        "why": "Rodou normalmente; só recusa catálogos do sistema e blocos de transação."
+      },
+      {
+        "text": "Levou mais tempo",
+        "why": "Isso. Ele lê a tabela duas vezes e para para esperar outras transações."
+      }
+    ]
+  },
+  "ex-tcmebhbz": {
+    "prompt": "A `pg_stat_activity` mostra um `REINDEX CONCURRENTLY` esperando em `Lock` / `virtualxid`, bloqueado por uma sessão em `idle in transaction`. Pelo que ele espera?",
+    "hint": "virtualxid nomeia uma transação.",
+    "choices": [
+      {
+        "text": "Pelo fim daquela transação",
+        "why": "Isso. Uma escrita que começou antes de o índice novo existir precisa terminar primeiro."
+      },
+      {
+        "text": "Por um lock no índice que a sessão parada segura",
+        "why": "A sessão parada só segurava um lock de linha e RowExclusiveLock na tabela; a espera é no id da transação."
+      },
+      {
+        "text": "Pelo autovacuum terminar na tabela",
+        "why": "O blocked_by apontou a sessão parada, não um worker do autovacuum."
+      },
+      {
+        "text": "Por um checkpoint",
+        "why": "Um checkpoint nunca é um lock que alguém espera na pg_stat_activity."
+      }
+    ]
+  },
+  "ex-kzxwahrs": {
+    "prompt": "O `\\d orders` mostra `\"orders_created_at_ccold\" btree (created_at) INVALID`. O que você faz?",
+    "hint": "Em que lado da troca ele falhou?",
+    "choices": [
+      {
+        "text": "Apagá-lo: a reconstrução deu certo",
+        "why": "Isso. _ccold é a cópia antiga, deixada depois da troca; o índice novo já tem o nome original."
+      },
+      {
+        "text": "Apagá-lo e rodar REINDEX CONCURRENTLY de novo",
+        "why": "Essa é a cura do _ccnew. Depois de um _ccold a reconstrução está feita, e repeti-la custa outra construção."
+      },
+      {
+        "text": "Renomeá-lo de volta para orders_created_at",
+        "why": "Esse nome já pertence ao índice novo, válido."
+      },
+      {
+        "text": "Deixá-lo; índices inválidos são apagados no próximo VACUUM",
+        "why": "Nada os apaga por você. Ficam até alguém apagar."
+      }
+    ]
+  },
+  "ex-n2v0edx8": {
+    "prompt": "Todo índice inválido de um banco é achado com `SELECT indexrelid::regclass FROM pg_index WHERE NOT ___;`",
+    "hint": "Uma coluna da pg_index, verdadeira para um índice utilizável.",
+    "blanks": [
+      {
+        "accept": [
+          "indisvalid"
+        ]
+      }
+    ]
+  },
+  "ex-cekbwqrg": {
+    "prompt": "Um `REINDEX CONCURRENTLY` noturno roda há seis horas num índice que leva dez minutos para construir. O que você confere primeiro?",
+    "hint": "Ele espera pelos outros.",
+    "choices": [
+      {
+        "text": "Se o disco está cheio",
+        "why": "Um disco cheio faz a construção falhar com erro, não esperar horas."
+      },
+      {
+        "text": "As estatísticas da tabela, que podem estar velhas",
+        "why": "A construção lê a tabela inteira seja o que for que as estatísticas digam; elas não a atrasam."
+      },
+      {
+        "text": "Pelo que ele espera, na pg_stat_activity",
+        "why": "Isso. Procure o wait_event e o blocked_by; uma sessão idle in transaction o segura indefinidamente."
+      },
+      {
+        "text": "Se um REINDEX comum seria mais rápido, e cancelá-lo",
+        "why": "Cancelar deixa um _ccnew para limpar, e o comum bloquearia todo mundo. Ache a causa primeiro."
+      }
+    ]
+  },
+  "ex-d7cwx299": {
+    "prompt": "Depois de um `CREATE UNIQUE INDEX CONCURRENTLY IF NOT EXISTS` que falhou, o mesmo comando rodado de novo responde `CREATE INDEX`. O que isso prova?",
+    "hint": "Para o que o IF NOT EXISTS olha?",
+    "choices": [
+      {
+        "text": "As duplicatas foram removidas no meio",
+        "why": "Ninguém mexeu nos dados. O NOTICE disse que estava pulando."
+      },
+      {
+        "text": "Nada sobre o índice; só que o nome existe",
+        "why": "Isso. Pulou porque a sobra inválida tem o nome; a pg_index mostrou indisvalid falso."
+      },
+      {
+        "text": "A segunda execução construiu um índice válido",
+        "why": "Não construiu nada; indisvalid era f depois."
+      },
+      {
+        "text": "O PostgreSQL tentou de novo a construção em segundo plano",
+        "why": "Nada tenta de novo uma construção que falhou. A sobra fica até ser apagada."
+      }
+    ]
+  },
+  "ex-x88r4kss": {
+    "prompt": "Que lock um `CREATE INDEX` comum pega na tabela, e o que ele impede?",
+    "hint": "O mesmo que o REINDEX segurava em orders.",
+    "choices": [
+      {
+        "text": "AccessExclusiveLock: nada pode tocar a tabela",
+        "why": "Esse é o lock do VACUUM FULL, ou de uma mudança de tipo de coluna. O CREATE INDEX deixa leituras passarem."
+      },
+      {
+        "text": "ShareLock: escritas esperam até a construção terminar",
+        "why": "Isso. Leituras continuam; inserts, updates e deletes entram na fila."
+      },
+      {
+        "text": "ShareUpdateExclusiveLock: só o VACUUM espera",
+        "why": "Esse é o lock da construção concorrente, o que deixa escritas continuarem."
+      },
+      {
+        "text": "Nenhum lock, já que o índice é novo",
+        "why": "A tabela está sendo lida inteira e não pode mudar durante isso."
+      }
+    ]
+  },
+  "ex-jpm44w0s": {
+    "prompt": "Um índice inválido mostra `indisready = t`. Por que deixá-lo é pior do que um com `indisready = f`?",
+    "hint": "pronto para quê?",
+    "choices": [
+      {
+        "text": "Escritas pagam por ele; leituras nunca o usam",
+        "why": "Isso. Custa em todo insert e update e não devolve nada."
+      },
+      {
+        "text": "Consultas o usam e recebem respostas erradas",
+        "why": "Um índice inválido nunca é escolhido pelo planejador, pronto ou não."
+      },
+      {
+        "text": "Ele bloqueia o REINDEX dos outros índices",
+        "why": "Os outros índices são reconstruídos independentemente dele."
+      },
+      {
+        "text": "Não pode ser apagado de forma concorrente",
+        "why": "O DROP INDEX CONCURRENTLY o remove como qualquer outro."
+      }
+    ]
+  },
+  "ex-23t6gvad": {
+    "prompt": "O `bt_index_check` devolve um valor vazio para um índice. O que isso quer dizer?",
+    "hint": "Como ele relata um problema?",
+    "choices": [
+      {
+        "text": "O índice foi pulado porque está em uso",
+        "why": "Ele pega só o lock de um SELECT e confere índices em uso."
+      },
+      {
+        "text": "Não achou nada errado",
+        "why": "Isso. Um problema vira erro; o silêncio é a aprovação."
+      },
+      {
+        "text": "A extensão não está instalada",
+        "why": "Sem a extensão a função não existe, e chamá-la é um erro."
+      },
+      {
+        "text": "O índice está vazio",
+        "why": "O valor é vazio porque a função não devolve nada, seja o que for que o índice tenha."
+      }
+    ]
+  },
+  "ex-ncfkm6qy": {
+    "prompt": "O que `heapallindexed => true` acrescenta ao `bt_index_check`?",
+    "hint": "Foi ela que achou a função mentirosa.",
+    "choices": [
+      {
+        "text": "Confere também os elos entre os níveis da árvore",
+        "why": "Esse é o bt_index_parent_check, que pega um lock mais forte."
+      },
+      {
+        "text": "Conserta as entradas que acha faltando",
+        "why": "O amcheck só relata. O conserto é um REINDEX, ou corrigir a causa."
+      },
+      {
+        "text": "Confirma que toda linha da tabela tem a sua entrada no índice",
+        "why": "Isso. Essa é a corrupção que faz uma consulta perder linhas."
+      },
+      {
+        "text": "Confere índices GIN e GiST também",
+        "why": "Na versão 16 o amcheck confere índices B-tree e tabelas, não GIN nem GiST."
+      }
+    ]
+  },
+  "ex-kr60tszb": {
+    "prompt": "O `bt_index_check(..., heapallindexed => true)` relata que uma tupla da tabela não tem entrada no índice, num índice sobre uma expressão. Antes de partir para o REINDEX, o que você olha?",
+    "hint": "O que o exemplo do order_day ensinou?",
+    "choices": [
+      {
+        "text": "As estatísticas da tabela",
+        "why": "Estatísticas guiam planos; não fazem um índice perder uma entrada."
+      },
+      {
+        "text": "Se uma função da expressão está marcada IMMUTABLE mas depende de uma configuração",
+        "why": "Isso. Reconstruir um índice sobre uma função mentirosa só muda a quebra para a outra configuração."
+      },
+      {
+        "text": "O disco, primeiro e só ele",
+        "why": "Um disco é uma causa, mas num índice sobre expressão a própria expressão é a primeira suspeita."
+      },
+      {
+        "text": "Se o autovacuum rodou desde que o índice foi construído",
+        "why": "O vacuum remove entradas mortas; nunca remove a entrada de uma linha viva."
+      }
+    ]
+  },
+  "ex-ff6b96nh": {
+    "prompt": "Um REINDEX CONCURRENTLY falhou de madrugada. Ponha os passos da manhã em ordem.",
+    "hint": "Achar, ler o sufixo, limpar, tentar de novo, conferir.",
+    "items": [
+      "SELECT dos índices inválidos na pg_index",
+      "Ver que a sobra termina em _ccnew",
+      "DROP INDEX CONCURRENTLY no _ccnew",
+      "Rodar REINDEX INDEX CONCURRENTLY de novo",
+      "Conferir que a pg_index não mostra nada inválido"
+    ],
+    "trap": "Rodar o REINDEX de novo antes de apagar o _ccnew deixa a sobra antiga onde estava, ainda mantida em toda escrita se tiver chegado lá."
+  },
+  "ex-t6pz1yqw": {
+    "prompt": "Ligue cada situação à ferramenta certa.",
+    "hint": "Tabela movimentada, tabela quieta, uma pergunta, ou um índice novo.",
+    "pairs": [
+      {
+        "left": "Um índice inchado numa tabela escrita o dia inteiro",
+        "right": "REINDEX INDEX CONCURRENTLY"
+      },
+      {
+        "left": "Todo índice de um banco que ninguém está usando, depois de uma mudança de glibc",
+        "right": "REINDEX DATABASE"
+      },
+      {
+        "left": "Suspeita de que um índice perde linhas",
+        "right": "bt_index_check com heapallindexed"
+      },
+      {
+        "left": "Um índice novo numa tabela em uso",
+        "right": "CREATE INDEX CONCURRENTLY"
+      }
+    ]
+  },
+  "ex-4xzrm9a4": {
+    "prompt": "Uma ferramenta de migração roda `CREATE INDEX CONCURRENTLY IF NOT EXISTS orders_status ON orders (status);` dentro de uma transação que ela abre para toda migração. O que acontece?",
+    "hint": "Onde o CONCURRENTLY não pode rodar?",
+    "choices": [
+      {
+        "text": "Roda como um CREATE INDEX comum e bloqueia escritas",
+        "why": "O PostgreSQL nunca ignora a palavra em silêncio; ele recusa o comando."
+      },
+      {
+        "text": "Constrói o índice e confirma junto com a transação",
+        "why": "Uma construção concorrente precisa de vários commits próprios, então não pode dividir um."
+      },
+      {
+        "text": "O IF NOT EXISTS faz pular, já que a transação não confirmou",
+        "why": "Não existe índice com esse nome para achar; a recusa vem antes."
+      },
+      {
+        "text": "É recusado: não pode rodar dentro de um bloco de transação",
+        "why": "Isso. Cada passo dele confirma por conta própria, o que uma transação em volta impediria."
+      }
+    ]
+  },
+  "ex-4nqm3rg8": {
+    "prompt": "Você precisa reconstruir um índice numa tabela movimentada durante o dia, e uma sessão de relatórios mantém transações abertas por uma hora seguida. Qual o resultado provável do `REINDEX INDEX CONCURRENTLY`?",
+    "hint": "Quem espera por quem?",
+    "choices": [
+      {
+        "text": "Bloqueia a sessão de relatórios até terminar",
+        "why": "O lock dele deixa leituras e escritas continuarem; nunca faz o relatório esperar."
+      },
+      {
+        "text": "Termina tão rápido quanto numa tabela quieta",
+        "why": "As esperas entre os passos duram o tanto que dura a transação aberta mais antiga."
+      },
+      {
+        "text": "Cancela a transação do relatório para pegar o lock",
+        "why": "O PostgreSQL nunca cancela outra sessão para deixar um REINDEX passar."
+      },
+      {
+        "text": "Espera aquelas transações terminarem, enquanto todo mundo continua",
+        "why": "Isso. Ninguém espera por ele, e ele espera as transações que rodavam antes de cada passo."
+      }
+    ]
+  },
+  "ex-xmeykqks": {
+    "prompt": "A partir de qual versão da glibc o en_US.UTF-8 põe 1-1 antes de 11, a mudança que quebra índices de texto construídos em sistemas mais antigos?",
+    "hint": "O Ubuntu 18.04 tinha a versão logo antes dela."
+  }
+}

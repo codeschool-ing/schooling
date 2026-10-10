@@ -1,0 +1,483 @@
+{
+  "ex-p3xnjge7": {
+    "prompt": "Por que a lição compara dois servidores consultando o `pg_settings` em vez de comparar os arquivos de configuração?",
+    "hint": "Conte os lugares de onde um valor pode vir.",
+    "choices": [
+      {
+        "text": "Os arquivos de configuração são ilegíveis sem sudo, então uma consulta é o único jeito de um usuário comum vê-los",
+        "why": "O postgresql.conf é legível por qualquer um no Ubuntu; a lição rodou wc nele como ana. Permissão não é o motivo."
+      },
+      {
+        "text": "O diff não consegue comparar arquivos que estão em duas máquinas diferentes",
+        "why": "Copiar um arquivo de uma máquina para outra é trivial. O problema é o que os arquivos deixam de fora, não onde eles estão."
+      },
+      {
+        "text": "O pg_settings é mais rápido de ler que um arquivo de oitocentas linhas",
+        "why": "Velocidade não tem nada a ver; um diff de oitocentas linhas não leva tempo nenhum."
+      },
+      {
+        "text": "Arquivos são uma fonte entre várias",
+        "why": "Isso. O postgresql.auto.conf e os ajustes guardados no catálogo nunca aparecem num diff do /etc, e o servidor em execução conhece o resultado de todos."
+      }
+    ]
+  },
+  "ex-az85fyn3": {
+    "prompt": "No diff da lição, o main tinha `lc_messages = C.UTF-8` e o staging tinha `lc_messages = C`. De onde veio essa diferença?",
+    "hint": "Ninguém digitou um locale em lugar nenhum.",
+    "choices": [
+      {
+        "text": "Alguém rodou ALTER SYSTEM no staging",
+        "why": "Nada foi rodado no staging. Um ALTER SYSTEM também teria mostrado o postgresql.auto.conf como origem."
+      },
+      {
+        "text": "O ambiente em que cada cluster foi criado",
+        "why": "Isso. O pg_createcluster tira o locale do ambiente do comando que o roda, e o instalador e o sudo a partir de um shell tinham ambientes diferentes."
+      },
+      {
+        "text": "O PostgreSQL 16 usa C para todo cluster depois do primeiro numa máquina",
+        "why": "Não existe essa regra; um segundo cluster criado num ambiente UTF-8 recebe um locale UTF-8."
+      },
+      {
+        "text": "A porta do cluster de staging, 5433, seleciona outra tabela de locale",
+        "why": "A porta decide onde os clientes conectam, e nada sobre idioma ou ordenação."
+      }
+    ]
+  },
+  "ex-2z9a96sh": {
+    "prompt": "`ALTER DATABASE shop SET random_page_cost = 1.1` foi rodado no main, e mesmo assim o diff da saída do `settings.sql` não mostrou. Por quê?",
+    "hint": "A qual banco o `psql -f settings.sql` conectou?",
+    "choices": [
+      {
+        "text": "Ele precisa de restart antes de o pg_settings mostrá-lo",
+        "why": "O random_page_cost não precisa de restart. O ajuste estava valendo, só não para o banco em que a consulta rodou."
+      },
+      {
+        "text": "A consulta exclui a origem 'database'",
+        "why": "O settings.sql exclui só default, override e client. Um valor por banco teria aparecido se a consulta rodasse dentro do shop."
+      },
+      {
+        "text": "O ALTER DATABASE escreve no postgresql.auto.conf, que o diff ignorou",
+        "why": "O ALTER DATABASE escreve no catálogo, não em arquivo. O diff mostrou, sim, o valor do postgresql.auto.conf, o work_mem."
+      },
+      {
+        "text": "A consulta rodou no banco ana",
+        "why": "Isso. Um ajuste preso ao shop só vale para conexões ao shop; o \\drds o lista de qualquer lugar."
+      }
+    ]
+  },
+  "ex-k4jzhv3k": {
+    "prompt": "O comando do psql que lista os ajustes presos a bancos e papéis, que nenhum arquivo de configuração guarda, é \\___.",
+    "hint": "d, e depois as iniciais de role, database, settings.",
+    "blanks": [
+      {
+        "accept": [
+          "drds"
+        ]
+      }
+    ]
+  },
+  "ex-6s7fxhs0": {
+    "prompt": "Por que a lição põe os ajustes do shop em conf.d/50-shop.conf em vez de editar o postgresql.conf?",
+    "hint": "Pense no arquivo que a próxima versão maior gera.",
+    "choices": [
+      {
+        "text": "O PostgreSQL ignora edições no postgresql.conf no Ubuntu",
+        "why": "Ele as lê como qualquer outra linha. O problema é achá-las e carregá-las adiante, não se funcionam."
+      },
+      {
+        "text": "Os arquivos em conf.d são lidos antes do postgresql.conf, então definem os padrões",
+        "why": "Eles são lidos depois dele, e é por isso que um valor neles vence o arquivo principal."
+      },
+      {
+        "text": "Uma linha mudada se perde entre oitocentas",
+        "why": "Isso. Um arquivo pequeno seu pode ser comparado, revisado e copiado inteiro; uma edição dentro de um modelo gerado não."
+      },
+      {
+        "text": "O postgresql.conf pertence ao usuário postgres e não pode ser commitado no git",
+        "why": "Dono de arquivo não tem nada a ver com git; qualquer arquivo pode ser copiado para um repositório."
+      }
+    ]
+  },
+  "ex-n70defdx": {
+    "prompt": "O conf.d tem `20-logging.conf` com `log_min_duration_statement = 1s` e `90-local.conf` com `log_min_duration_statement = 250ms`. O postgresql.auto.conf está vazio. Com qual valor o servidor roda?",
+    "hint": "Ordem dos nomes, e o que vem depois vence.",
+    "choices": [
+      {
+        "text": "250ms",
+        "why": "Isso. 90-local.conf vem depois de 20-logging.conf na ordem dos nomes, então a linha dele é lida depois e vence."
+      },
+      {
+        "text": "1s, porque o número menor tem prioridade",
+        "why": "O número só define a ordem de leitura, e um valor posterior substitui um anterior."
+      },
+      {
+        "text": "Nenhum: o servidor recusa um parâmetro definido em dois arquivos",
+        "why": "Definir um parâmetro duas vezes é permitido; o pg_file_settings marca o anterior como não aplicado."
+      },
+      {
+        "text": "O do arquivo modificado mais recentemente",
+        "why": "A data de modificação não entra; a ordem é a ordem dos nomes."
+      }
+    ]
+  },
+  "ex-ea6z0mas": {
+    "prompt": "Às 3 da manhã alguém roda `ALTER SYSTEM SET work_mem = '128MB'` e volta a dormir. Na semana seguinte o 50-shop.conf do repositório muda para `work_mem = 32MB` e é instalado. Com qual valor o servidor roda, e por quê?",
+    "hint": "Qual arquivo é lido por último de todos?",
+    "choices": [
+      {
+        "text": "32MB, porque a mudança mais nova vence",
+        "why": "Decide a ordem de leitura, não a ordem no tempo. O postgresql.auto.conf é lido depois de todo arquivo do conf.d."
+      },
+      {
+        "text": "128MB: o postgresql.auto.conf passa por cima do conf.d",
+        "why": "Isso. Até alguém rodar ALTER SYSTEM RESET, o valor de emergência esconde o do repositório, e por isso a regra é levá-lo ao repositório no mesmo dia."
+      },
+      {
+        "text": "32MB, porque o provision.sh apaga o postgresql.auto.conf antes do reload",
+        "why": "O script mexe só no 50-shop.conf e no pg_hba.conf. Ele não sabe nada do postgresql.auto.conf."
+      },
+      {
+        "text": "O reload falha porque dois arquivos discordam sobre o work_mem",
+        "why": "Discordância entre arquivos é normal; o posterior simplesmente vence."
+      }
+    ]
+  },
+  "ex-h88m5c5p": {
+    "prompt": "Por que o provision.sh acrescenta uma linha exata no fim do pg_hba.conf em vez de copiar um arquivo próprio, como faz com os parâmetros?",
+    "hint": "No pg_hba.conf, o que a posição significa?",
+    "choices": [
+      {
+        "text": "O PostgreSQL 16 não consegue incluir arquivos a partir do pg_hba.conf",
+        "why": "Consegue; a versão 16 acrescentou diretivas de include ali. O arquivo do Ubuntu só não as usa."
+      },
+      {
+        "text": "O pg_hba.conf é recarregado à parte e precisa ser um arquivo só",
+        "why": "O mesmo reload relê os dois, e um arquivo só não é exigência do servidor."
+      },
+      {
+        "text": "Linhas acrescentadas no fim têm prioridade sobre as anteriores",
+        "why": "O contrário: a primeira linha que casa decide. O fim só é seguro porque nada antes casa com 10.0.0.0/24."
+      },
+      {
+        "text": "O arquivo do Ubuntu não usa include, e a ordem das linhas é o significado",
+        "why": "Isso. A primeira linha que casa decide, então a linha vai onde nada acima dela casa com as mesmas conexões."
+      }
+    ]
+  },
+  "ex-v2svxyby": {
+    "prompt": "O que quer dizer o provision.sh ser idempotente?",
+    "hint": "Rode uma vez, rode de novo.",
+    "choices": [
+      {
+        "text": "Ele reinicia o servidor sempre que um parâmetro exige",
+        "why": "Ele nunca reinicia; relata RESTART NEEDED e deixa a decisão para uma pessoa."
+      },
+      {
+        "text": "Ele desfaz tudo o que fez se algum passo falhar",
+        "why": "O set -e o para na primeira falha; nada é desfeito. Isso seria uma transação, não idempotência."
+      },
+      {
+        "text": "Ele roda do mesmo jeito em qualquer distribuição Linux",
+        "why": "Ele supõe os caminhos e o apt do Ubuntu. Portabilidade é outra propriedade."
+      },
+      {
+        "text": "Rodá-lo duas vezes é o mesmo que rodá-lo uma",
+        "why": "Isso. Uma segunda execução não acha nada faltando e não muda nada, que é o que o 'nothing to change' relatou."
+      }
+    ]
+  },
+  "ex-a9zw93rz": {
+    "prompt": "Um primeiro rascunho do script acrescenta a linha do pg_hba.conf com `echo \"$HBA\" >> \"$ETC/pg_hba.conf\"` e sem conferência. O que acontece na terceira execução?",
+    "hint": "O que o grep -qxF evitava?",
+    "choices": [
+      {
+        "text": "O echo se recusa a escrever uma linha que já existe no arquivo",
+        "why": "O echo não sabe nada do que o arquivo já tem. Conferir é trabalho do script."
+      },
+      {
+        "text": "O PostgreSQL rejeita a duplicata no reload e mantém o arquivo antigo",
+        "why": "Linhas duplicadas são legais no pg_hba.conf; a primeira que casa decide e as outras nunca são alcançadas."
+      },
+      {
+        "text": "O arquivo fica com a linha três vezes",
+        "why": "Isso. Toda execução a acrescenta de novo. O servidor tolera as cópias, e o arquivo deixa de descrever o que alguém quis."
+      },
+      {
+        "text": "O set -e para o script porque a linha existe",
+        "why": "Acrescentar dá certo com a linha lá ou não, então o set -e não tem o que parar."
+      }
+    ]
+  },
+  "ex-xcpngkc7": {
+    "prompt": "A primeira execução terminou com `RESTART NEEDED for: listen_addresses, shared_buffers`. Por que o script imprime isso em vez de reiniciar?",
+    "hint": "O que um restart faz com quem está conectado?",
+    "choices": [
+      {
+        "text": "Um script não consegue reiniciar um serviço do systemd",
+        "why": "Ele já roda systemctl reload; restart estaria a uma palavra. É uma decisão, não uma limitação."
+      },
+      {
+        "text": "Esses dois parâmetros são aplicados pelo próximo reload",
+        "why": "Eles só são lidos na subida; nenhum reload os aplica, e por isso o pending_restart os marcou."
+      },
+      {
+        "text": "Reiniciar desfaria o papel e o banco que ele acabou de criar",
+        "why": "Papéis e bancos estão no diretório de dados e sobrevivem a qualquer restart."
+      },
+      {
+        "text": "Um restart derruba todas as conexões, então quando é decisão de uma pessoa",
+        "why": "Isso. Numa máquina nova agora serve; num servidor ocupado ele espera uma hora tranquila."
+      }
+    ]
+  },
+  "ex-be2w133h": {
+    "prompt": "Ponha em ordem os passos de uma mudança de configuração, como a lição fez a mudança do work_mem.",
+    "hint": "O servidor é o último a saber.",
+    "items": [
+      "Editar o conf.d/50-shop.conf no repositório",
+      "Ler a mudança com git diff",
+      "Fazer o commit com o motivo na mensagem",
+      "Rodar o provision.sh, que copia o arquivo e faz o reload"
+    ],
+    "trap": "Editar primeiro o arquivo instalado é o desvio de que a lição trata."
+  },
+  "ex-hv776qk2": {
+    "prompt": "Qual a diferença entre o `pg_settings` e o `pg_file_settings`?",
+    "hint": "Um é o servidor, o outro é o disco.",
+    "choices": [
+      {
+        "text": "O pg_settings é por banco, o pg_file_settings é do cluster inteiro",
+        "why": "Os dois descrevem o cluster; o que os separa é valor em execução contra conteúdo de arquivo."
+      },
+      {
+        "text": "Valores em execução contra o que os arquivos dizem agora",
+        "why": "Isso. O pg_file_settings relê os arquivos a cada consulta, então mostra linhas que o servidor recusou."
+      },
+      {
+        "text": "O pg_file_settings só lista o postgresql.auto.conf",
+        "why": "Ele lista todo arquivo de configuração que o servidor lê, inclusive o conf.d; a consulta da lição leu o 50-shop.conf."
+      },
+      {
+        "text": "O pg_settings só atualiza depois de um restart",
+        "why": "Um reload o atualiza para todo parâmetro que um reload pode mudar."
+      }
+    ]
+  },
+  "ex-tkprsgxy": {
+    "prompt": "Depois da edição à mão com `log_min_duraton_statement`, o `systemctl reload` não imprimiu nada. O que o servidor fez com a linha correta `work_mem = 64MB` acima do erro?",
+    "hint": "Leia a última linha do log.",
+    "choices": [
+      {
+        "text": "Aplicou, e pulou só a linha errada",
+        "why": "O log disse 'no changes were applied': um arquivo com erro é recusado inteiro, e o SHOW work_mem ficou em 32MB."
+      },
+      {
+        "text": "Aplicou depois de um restart, já que o work_mem precisa de um",
+        "why": "O work_mem só precisa de reload; a mudança de 16MB para 32MB valeu sem restart."
+      },
+      {
+        "text": "Nada: o arquivo foi recusado inteiro",
+        "why": "Isso. O servidor continuou com os valores anteriores; só o log e o pg_file_settings disseram isso."
+      },
+      {
+        "text": "Parou o servidor até o arquivo ser corrigido",
+        "why": "Um reload com erros deixa o servidor rodando com os valores antigos. O perigo é que tudo parece bem."
+      }
+    ]
+  },
+  "ex-rec10f5p": {
+    "prompt": "O pg_settings mostrou o `shared_buffers` com setting 131072 e unidade 8kB. Quantos megabytes são?",
+    "hint": "Multiplique, depois divida por 1024.",
+    "unit": "MB"
+  },
+  "ex-zbgz6vjz": {
+    "prompt": "O pg_settings de um servidor mostra `pending_restart = t` para max_connections, e o pg_file_settings não mostra erros. O que aconteceu?",
+    "hint": "O pending_restart compara o arquivo com o que está rodando.",
+    "choices": [
+      {
+        "text": "Um arquivo mudou e houve reload; o valor espera uma subida",
+        "why": "Isso. O arquivo está são e o servidor o leu, mas o max_connections só é lido na subida."
+      },
+      {
+        "text": "O arquivo tem um erro que o pg_file_settings não conseguiu detectar",
+        "why": "Um erro teria aparecido como error e impedido o reload de aplicar qualquer coisa, então o pending_restart não teria sido marcado."
+      },
+      {
+        "text": "O servidor caiu e voltou com os padrões",
+        "why": "Uma subida lê todos os arquivos, então depois de uma nada ficaria pendente."
+      },
+      {
+        "text": "Um ALTER DATABASE definiu max_connections para um banco",
+        "why": "O max_connections não pode ser definido por banco; é uma propriedade do servidor inteiro."
+      }
+    ]
+  },
+  "ex-r38m7yhe": {
+    "prompt": "Ligue cada ferramenta ou objeto ao que ele gerencia.",
+    "hint": "Um entra na máquina, um conversa com um provedor, um é um arquivo.",
+    "pairs": [
+      {
+        "left": "Ansible",
+        "right": "Servidores que você alcança por SSH"
+      },
+      {
+        "left": "Terraform",
+        "right": "Um serviço gerenciado, pela API do provedor"
+      },
+      {
+        "left": "provision.sh",
+        "right": "Um tipo de servidor, a partir de um repositório"
+      },
+      {
+        "left": "aws_db_parameter_group",
+        "right": "Os parâmetros de um RDS PostgreSQL"
+      }
+    ],
+    "right_distractors": [
+      "As linhas dentro do banco shop"
+    ]
+  },
+  "ex-2tqd22qt": {
+    "prompt": "Uma equipe gerencia o work_mem com o `community.postgresql.postgresql_set` do Ansible. Uma engenheira resolve um incidente com `ALTER SYSTEM SET work_mem`. O que acontece na próxima execução do Ansible?",
+    "hint": "Qual arquivo esse módulo gerencia?",
+    "choices": [
+      {
+        "text": "Ele põe o próprio valor de volta e relata changed",
+        "why": "Isso. A engenheira editou o arquivo da ferramenta; uma correção que deve ficar tem de ir para o playbook."
+      },
+      {
+        "text": "Nada: o Ansible gerencia o conf.d e nunca vê o postgresql.auto.conf",
+        "why": "O postgresql_set trabalha pelo próprio ALTER SYSTEM, então o postgresql.auto.conf é exatamente o arquivo que ele gerencia."
+      },
+      {
+        "text": "O Ansible falha, porque dois escritores discordam",
+        "why": "Ele relata changed e segue; um módulo não recusa um valor que mandaram definir."
+      },
+      {
+        "text": "O servidor mantém os dois, aplicando o maior",
+        "why": "Um parâmetro tem um valor; não existe regra que prefira o maior."
+      }
+    ]
+  },
+  "ex-nn1ybzsq": {
+    "prompt": "Num serviço gerenciado não há shell nem conf.d. O que o Terraform mantém sob controle de versão no lugar?",
+    "hint": "O próprio serviço, descrito como recursos.",
+    "choices": [
+      {
+        "text": "Uma cópia do postgresql.conf do provedor",
+        "why": "O provedor nunca entrega o arquivo; você descreve os parâmetros pela API dele."
+      },
+      {
+        "text": "Os recursos dele, parâmetros incluídos",
+        "why": "Isso. A instância, a versão e um parameter group são recursos em arquivos, e o terraform plan lista toda diferença em relação ao que o provedor relata."
+      },
+      {
+        "text": "Um dump noturno de todos os bancos",
+        "why": "Backup é dado, não configuração, e é assunto de db-reliability."
+      },
+      {
+        "text": "O SQL de todo ALTER SYSTEM rodado no serviço",
+        "why": "O Terraform descreve o estado final, não um histórico de comandos."
+      }
+    ]
+  },
+  "ex-tcastekq": {
+    "prompt": "O script de provisionamento de um colega imprime `wrote 50-shop.conf` e `reloaded` em toda execução, inclusive na segunda. Qual a causa mais provável?",
+    "hint": "O que faz a comparação falhar toda vez?",
+    "choices": [
+      {
+        "text": "O servidor precisa de um restart que nunca acontece",
+        "why": "Um restart pendente imprimiria RESTART NEEDED, não faria o arquivo ser reescrito."
+      },
+      {
+        "text": "Outra coisa reescreve o arquivo instalado entre as execuções",
+        "why": "Isso, ou o script escreve algo que muda a cada vez, como uma data. De qualquer jeito, a segunda execução é o alarme."
+      },
+      {
+        "text": "O reload muda o dono do arquivo, então o cmp vê uma diferença",
+        "why": "O cmp compara só conteúdo, e um reload não reescreve arquivo nenhum."
+      },
+      {
+        "text": "Scripts idempotentes relatam todo passo como lembrete",
+        "why": "Um script idempotente relata o que mudou, e o da lição disse 'nothing to change' na segunda execução."
+      }
+    ]
+  },
+  "ex-01b2hvvg": {
+    "prompt": "Depois de rodar o provision.sh no servidor do curso, onde o `shop` já existe e pertence a `ana`, quem é o dono do banco `shop`?",
+    "hint": "O que exatamente o passo do banco confere?",
+    "choices": [
+      {
+        "text": "shop_owner",
+        "why": "O passo só cria o banco quando o nome falta; ele nunca muda um dono."
+      },
+      {
+        "text": "postgres, porque o script roda como postgres",
+        "why": "Rodar como postgres não transfere nada; nada no script roda ALTER DATABASE."
+      },
+      {
+        "text": "ana",
+        "why": "Isso. A conferência pergunta se existe um banco chamado shop, e existe. Um script confere o que foi escrito para conferir."
+      },
+      {
+        "text": "Ninguém: o script para com erro porque o shop existe",
+        "why": "A conferência acha o shop e pula o passo sem erro."
+      }
+    ]
+  },
+  "ex-zkq81ew8": {
+    "prompt": "A consulta `SELECT ... FROM pg_file_settings WHERE error IS NOT NULL` não devolve nada, e mesmo assim o `SHOW work_mem` discorda do 50-shop.conf. Onde você olha em seguida?",
+    "hint": "Os arquivos estão sãos. O que pode passar por cima deles?",
+    "choices": [
+      {
+        "text": "O log, atrás de um reload que falhou",
+        "why": "Um reload que falhou apareceria como erro no pg_file_settings, e não há nenhum."
+      },
+      {
+        "text": "Rodar o provision.sh de novo até os valores baterem",
+        "why": "O script reescreve o 50-shop.conf, que já está certo; ele nunca mexe no que passa por cima dele."
+      },
+      {
+        "text": "O sourcefile no pg_settings, depois o \\drds",
+        "why": "Isso. Um arquivo posterior como o postgresql.auto.conf, ou um ajuste preso ao banco ou ao papel, explicaria, e esses dois mostram onde."
+      },
+      {
+        "text": "Reiniciar o servidor para ele reler todos os arquivos",
+        "why": "Um restart lê os mesmos arquivos e o mesmo catálogo, e o valor voltaria."
+      }
+    ]
+  },
+  "ex-q1mtma4n": {
+    "prompt": "Quais destes são desvios que a consulta settings.sql contra um banco pode deixar passar? Marque todos que se aplicam.",
+    "hint": "O que uma conexão ao banco ana enxerga?",
+    "choices": [
+      {
+        "text": "ALTER DATABASE shop SET work_mem",
+        "why": "Sim. Ele só vale dentro do shop."
+      },
+      {
+        "text": "ALTER ROLE app SET statement_timeout",
+        "why": "Sim. Ele só vale para sessões daquele papel."
+      },
+      {
+        "text": "ALTER SYSTEM SET work_mem, depois de um reload",
+        "why": "Esse apareceu: work_mem = 64MB estava no diff."
+      },
+      {
+        "text": "Uma linha num arquivo do conf.d, depois de um reload",
+        "why": "Um valor de arquivo recarregado está no pg_settings para todo banco."
+      }
+    ]
+  },
+  "ex-vxs4jdyw": {
+    "prompt": "Depois que o ALTER SYSTEM resolveu uma emergência e o valor foi commitado no repositório, `ALTER SYSTEM ___ work_mem` o tira do postgresql.auto.conf.",
+    "hint": "O contrário de SET.",
+    "blanks": [
+      {
+        "accept": [
+          "RESET"
+        ]
+      }
+    ]
+  }
+}

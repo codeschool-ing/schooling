@@ -67,7 +67,7 @@ ana@db:~$ systemctl status postgresql@16-main --no-pager
 The unit is `postgresql@16-main`: one **template**, `postgresql@.service`, with the cluster's
 version and name after the `@`. A second cluster would be a second instance of the same template.
 There is also a plain `postgresql.service`, which does nothing of its own and passes `start`,
-`stop` and `restart` to every cluster on the machine; `sudo systemctl restart postgresql` is the
+`stop` and `restart` to every cluster on the machine. `sudo systemctl restart postgresql` is the
 short form you will see in most instructions, and on a machine with one cluster the two mean the
 same thing.
 

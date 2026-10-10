@@ -1,0 +1,502 @@
+{
+  "ex-318w8gad": {
+    "prompt": "De onde o planejador tira o número de linhas que espera que uma condição como `status = 'cancelled'` encontre?",
+    "hint": "Ele decide antes de ler a tabela.",
+    "choices": [
+      {
+        "text": "De uma contagem rápida das linhas que casam, feita ao planejar",
+        "why": "Contar as linhas é o trabalho que o plano existe para organizar; o planejador nunca faz isso para escolher um."
+      },
+      {
+        "text": "Do índice na coluna, que sabe quantas linhas tem por valor",
+        "why": "Um índice guarda entradas, não uma contagem por valor. orders não tem índice em status e ainda assim teve estimativa."
+      },
+      {
+        "text": "Do resumo que o ANALYZE escreveu por último em pg_class e pg_statistic",
+        "why": "Isso. O pg_class e o pg_statistic o guardam, e a estimativa é aritmética sobre eles."
+      },
+      {
+        "text": "Da última vez que a mesma consulta rodou",
+        "why": "O PostgreSQL não guarda lembrança de resultados passados para planejar. Todo plano parte do resumo."
+      }
+    ]
+  },
+  "ex-zvt55dkk": {
+    "prompt": "A `pg_stats` mostra `n_distinct = -0.5` para uma coluna. O que isso diz?",
+    "hint": "Um número negativo não é uma contagem.",
+    "choices": [
+      {
+        "text": "A estimativa falhou",
+        "why": "Um ANALYZE que falhou não deixa linha nenhuma. O negativo é uma forma de propósito."
+      },
+      {
+        "text": "Metade dos valores é nula",
+        "why": "Isso seria null_frac = 0.5, outra coluna."
+      },
+      {
+        "text": "Uma fração: metade das linhas é distinta",
+        "why": "Isso. Um n_distinct negativo é uma fração das linhas; -1 é uma coluna única."
+      },
+      {
+        "text": "A coluna tem exatamente dois valores distintos",
+        "why": "Dois valores seriam escritos como 2. O sinal muda o significado, não vira o inverso."
+      }
+    ]
+  },
+  "ex-56984dfh": {
+    "prompt": "Uma tabela tem `reltuples = 2.000.000` e a `pg_stats` diz que o valor `refunded` tem frequência 0.015. Quantas linhas o planejador estima para `status = 'refunded'`?",
+    "hint": "A mesma aritmética dos pedidos cancelados.",
+    "unit": "linhas"
+  },
+  "ex-97kj4gxh": {
+    "prompt": "Você roda `ANALYZE orders` duas vezes seguidas e a frequência de `cancelled` passa de 0.1995 para 0.2009. O que explica isso?",
+    "hint": "Nada mudou na tabela.",
+    "choices": [
+      {
+        "text": "O autovacuum mudou algumas linhas entre as duas execuções",
+        "why": "O autovacuum nunca muda os valores de uma tabela; ele remove versões mortas e analisa."
+      },
+      {
+        "text": "Cada ANALYZE tira uma nova amostra aleatória",
+        "why": "Isso. Cada ANALYZE lê 30.000 linhas diferentes, então os últimos dígitos mudam."
+      },
+      {
+        "text": "A segunda execução contou todas as linhas e a primeira amostrou",
+        "why": "As duas amostram do mesmo jeito. A contagem de linhas vem das páginas, as frequências da amostra."
+      },
+      {
+        "text": "Um bug de estatísticas que um upgrade menor corrige",
+        "why": "É como amostragem se comporta, em toda versão."
+      }
+    ]
+  },
+  "ex-dkgpm5qs": {
+    "prompt": "No plano velho, o scan de `orders_copy` diz `rows=1` estimado e `rows=300000` real. Por que uma?",
+    "hint": "Some as frequências que o resumo tinha.",
+    "choices": [
+      {
+        "text": "O planejador não sabia que a tabela tinha crescido",
+        "why": "Sabia: o tamanho no disco é conferido ao planejar. O que faltava era o que as linhas novas continham."
+      },
+      {
+        "text": "O índice em status foi criado antes da importação",
+        "why": "Um índice é atualizado a cada insert, e não guarda estatística nenhuma sobre uma coluna simples."
+      },
+      {
+        "text": "Os três valores do resumo já somavam a tabela inteira, sem espaço para pending",
+        "why": "Isso. 0.601 + 0.2015 + 0.1974 dá 1, então um quarto valor recebe a menor estimativa que existe."
+      },
+      {
+        "text": "Um é o padrão para qualquer coluna de texto",
+        "why": "Sem estatística nenhuma o padrão para igualdade é meio por cento, como o restore mostrou."
+      }
+    ]
+  },
+  "ex-h5m8jnxr": {
+    "prompt": "Por que a estimativa de uma linha deixou a consulta lenta, e não só errada no papel?",
+    "hint": "Olhe o loops= do lado de customers.",
+    "choices": [
+      {
+        "text": "Um plano feito para um pedido rodou 300.000 vezes",
+        "why": "Isso. Um nested loop é o melhor plano para uma linha e um plano ruim para 300.000."
+      },
+      {
+        "text": "Leu a tabela inteira em vez do índice",
+        "why": "O plano velho usou, sim, o índice em status. O custo estava no join."
+      },
+      {
+        "text": "Uma estimativa errada faz o executor ficar mais lento",
+        "why": "O executor nunca lê a estimativa. Ele roda o plano que recebe, tão rápido quanto esse plano permite."
+      },
+      {
+        "text": "A tabela ficou travada esperando o ANALYZE",
+        "why": "Nada estava esperando: o autovacuum estava desligado na cópia, e nenhum ANALYZE rodava."
+      }
+    ]
+  },
+  "ex-8m66mawk": {
+    "prompt": "Qual coluna da `pg_stat_user_tables` diz o quanto uma tabela mudou desde que o resumo foi escrito?",
+    "hint": "Ela contou 300.000 depois da importação.",
+    "choices": [
+      {
+        "text": "n_live_tup",
+        "why": "Isso é quantas linhas a tabela tem agora, 1.300.000. Não diz nada sobre quando chegaram."
+      },
+      {
+        "text": "n_dead_tup, que conta as linhas mudadas desde o vacuum",
+        "why": "O n_dead_tup conta versões mortas de linha, assunto da lição 14. Um insert não deixa nenhuma."
+      },
+      {
+        "text": "last_analyze, comparado com a hora da mudança",
+        "why": "O last_analyze diz quando, não quanto. Uma tabela analisada há uma semana pode ter mudado uma linha."
+      },
+      {
+        "text": "n_mod_since_analyze",
+        "why": "Isso. Inserts, updates e deletes desde o último ANALYZE, manual ou automático."
+      }
+    ]
+  },
+  "ex-32wcnrps": {
+    "prompt": "Um job noturno apaga os pedidos com mais de dois anos, cerca de 40% da tabela, e um relatório roda dez minutos depois. O que o job deveria fazer diferente?",
+    "hint": "Um delete é uma mudança como um insert.",
+    "choices": [
+      {
+        "text": "Nada: deletes não afetam as estatísticas",
+        "why": "Tirar 40% das linhas muda toda frequência e todo intervalo. O n_mod_since_analyze conta deletes também."
+      },
+      {
+        "text": "Rodar REINDEX em todo índice da tabela",
+        "why": "Reconstruir índices é assunto da lição 17 e não mexe no resumo que o planejador lê."
+      },
+      {
+        "text": "Esperar o autovacuum, que analisa uma tabela imediatamente depois de um delete grande",
+        "why": "O autovacuum chega dentro do seu naptime na melhor das hipóteses, e um relatório pode ter sido planejado antes."
+      },
+      {
+        "text": "Terminar com ANALYZE nessa tabela",
+        "why": "Isso. O resumo ainda descreve as linhas apagadas até alguma coisa analisar a tabela."
+      }
+    ]
+  },
+  "ex-cyd9ct1s": {
+    "prompt": "É seguro rodar `ANALYZE orders` enquanto a aplicação lê e escreve nessa tabela?",
+    "hint": "Que lock ele pega?",
+    "choices": [
+      {
+        "text": "Sim: o lock dele deixa leituras e escritas continuarem",
+        "why": "Isso. Ele só espera por mudanças de estrutura, VACUUM ou outro ANALYZE."
+      },
+      {
+        "text": "Não: ele trava a tabela para escrita até terminar",
+        "why": "Esse é um CREATE INDEX comum, ou um REINDEX, como a lição 17 mostra. O ANALYZE pega um lock mais fraco."
+      },
+      {
+        "text": "Só fora de uma transação, como o VACUUM",
+        "why": "O VACUUM se recusa a rodar num bloco de transação; o ANALYZE não."
+      },
+      {
+        "text": "Só numa réplica",
+        "why": "Uma réplica nem consegue rodar ANALYZE: ela é só leitura, e recebe as estatísticas do primário pela replicação."
+      }
+    ]
+  },
+  "ex-a4gbfntg": {
+    "prompt": "Com as configurações padrão, quantas linhas precisam mudar numa tabela de 4.000.000 de linhas antes que o autovacuum a analise?",
+    "hint": "50 mais um décimo.",
+    "unit": "linhas"
+  },
+  "ex-qhb742t2": {
+    "prompt": "Uma tabela de 100 milhões de linhas recebe toda semana um lote de 5 milhões com um valor de status novo. Qual o problema de deixar o autoanalyze no padrão?",
+    "hint": "Calcule a linha.",
+    "choices": [
+      {
+        "text": "O autovacuum a analisa vezes demais",
+        "why": "O contrário: o scale factor deixa a linha muito alta numa tabela desse tamanho."
+      },
+      {
+        "text": "ANALYZE em 100 milhões de linhas leva horas",
+        "why": "Ele lê uma amostra de 30.000 linhas seja qual for o tamanho, então leva segundos."
+      },
+      {
+        "text": "O lote nunca cruza a linha",
+        "why": "Isso. A linha é 10.000.050 linhas, então um lote de 5 milhões sozinho não dispara."
+      },
+      {
+        "text": "O autovacuum pula tabelas acima de um limite de tamanho",
+        "why": "Não existe esse limite. O gatilho é a única razão para uma tabela ser pulada."
+      }
+    ]
+  },
+  "ex-safaz710": {
+    "prompt": "Quais destes o autovacuum nunca analisa por você? Marque todos que se aplicam.",
+    "hint": "Pense em quem consegue ver a tabela, e no que guarda as linhas.",
+    "choices": [
+      {
+        "text": "Uma tabela temporária que uma sessão acabou de carregar",
+        "why": "Sim. Só a sessão que a criou consegue lê-la, então nenhum worker consegue."
+      },
+      {
+        "text": "A tabela-mãe de uma tabela particionada",
+        "why": "Sim. As partições são analisadas; as estatísticas do todo vêm de um ANALYZE que você roda."
+      },
+      {
+        "text": "Uma tabela que mudou 20% depois de um update em massa",
+        "why": "Isso cruza 50 + 10%, então o autovacuum chega nela, dentro do seu naptime."
+      },
+      {
+        "text": "Uma tabela com um scale factor menor definido nela",
+        "why": "Uma configuração por tabela faz o autovacuum analisá-la mais cedo, não nunca."
+      }
+    ]
+  },
+  "ex-5nwzw9mt": {
+    "prompt": "O servidor caiu ontem à noite e se recuperou. Hoje de manhã uma tabela que mudou muito ontem tem um `last_autoanalyze` de antes da queda. Que explicação serve?",
+    "hint": "Onde vivem os contadores?",
+    "choices": [
+      {
+        "text": "A queda perdeu o pg_statistic, então a tabela não tem resumo",
+        "why": "O pg_statistic é uma tabela comum e sobrevive a uma queda junto com o resto dos dados."
+      },
+      {
+        "text": "O contador de mudanças dela recomeçou do zero, e o autovacuum vê mudança de menos",
+        "why": "Isso. Os contadores ficam na memória e são gravados num desligamento limpo; depois de uma queda, zeram."
+      },
+      {
+        "text": "O autovacuum fica desligado depois de uma queda até alguém religá-lo",
+        "why": "O autovacuum sobe com o servidor, com queda ou sem."
+      },
+      {
+        "text": "A recuperação reaplica o ANALYZE, o que zerou o last_autoanalyze",
+        "why": "A recuperação reaplica as mudanças do WAL nos dados; não roda ANALYZE."
+      }
+    ]
+  },
+  "ex-knnrx2n8": {
+    "prompt": "Com `default_statistics_target` em 250, quantas linhas o ANALYZE põe na amostra?",
+    "hint": "300 por unidade.",
+    "unit": "linhas"
+  },
+  "ex-6t4mcc3x": {
+    "prompt": "Você define `STATISTICS 1000` só em `total_cents`. O que acontece com a amostra do próximo `ANALYZE orders`?",
+    "hint": "O ANALYZE VERBOSE imprimiu isso.",
+    "choices": [
+      {
+        "text": "O ANALYZE lê total_cents inteira e amostra o resto",
+        "why": "O ANALYZE lê linhas, não colunas, então uma amostra serve a todas."
+      },
+      {
+        "text": "Cresce para 300.000 linhas para a tabela inteira",
+        "why": "Isso. O maior alvo entre as colunas decide a amostra, e toda coluna é calculada a partir dela."
+      },
+      {
+        "text": "Nada até default_statistics_target ser aumentado também",
+        "why": "A configuração por coluna vence o padrão para aquela coluna na hora."
+      },
+      {
+        "text": "Fica em 30.000 linhas; só o histograma cresce",
+        "why": "O VERBOSE imprimiu 300000 rows in sample depois da mudança."
+      }
+    ]
+  },
+  "ex-7s3mp03s": {
+    "prompt": "Um colega propõe subir `default_statistics_target` para 1000 no servidor inteiro, porque uma consulta sobre `product_id` está mal estimada. Qual a melhor jogada?",
+    "hint": "Quem paga por um alvo maior?",
+    "choices": [
+      {
+        "text": "Concordar: um alvo maior é sempre melhor",
+        "why": "Custa em todo ANALYZE de toda tabela e em todo plano que percorre as listas mais longas."
+      },
+      {
+        "text": "Baixar o scale factor do autoanalyze em vez disso",
+        "why": "Isso deixa o resumo mais recente, não mais detalhado. Um resumo novo com entradas de menos continua errado."
+      },
+      {
+        "text": "Pôr um alvo maior só naquela coluna",
+        "why": "Isso. Todo ANALYZE e todo plano pagam pelo alvo, então ele vai onde uma estimativa errada foi vista."
+      },
+      {
+        "text": "Criar um índice em product_id, que substitui as estatísticas",
+        "why": "Um índice numa coluna simples não traz estatísticas próprias; a estimativa ainda vem da pg_stats."
+      }
+    ]
+  },
+  "ex-g5x937wq": {
+    "prompt": "Para devolver uma coluna ao alvo padrão do servidor, você escreve `ALTER TABLE orders ALTER COLUMN total_cents SET STATISTICS ___;`",
+    "hint": "O attstattarget mostrou isso para todas as outras colunas.",
+    "blanks": [
+      {
+        "accept": [
+          "-1"
+        ]
+      }
+    ]
+  },
+  "ex-dc18v744": {
+    "prompt": "Logo depois do `pg_restore`, o `orders` restaurado recebe `rows=5000` para `status = 'cancelled'`. De onde vem 5000?",
+    "hint": "A pg_stats não tinha linhas.",
+    "choices": [
+      {
+        "text": "Um chute fixo: meio por cento das linhas, seja o que for",
+        "why": "Isso. Sem estatísticas, supõe-se que uma igualdade casa com 0,5% da tabela."
+      },
+      {
+        "text": "As estatísticas trazidas no dump",
+        "why": "O pg_dump copia o esquema e as linhas, não o pg_statistic; a contagem de linhas da pg_stats era 0."
+      },
+      {
+        "text": "Um primeiro ANALYZE rápido que o pg_restore roda no fim",
+        "why": "O pg_restore não roda ANALYZE. Para isso serviu o vacuumdb."
+      },
+      {
+        "text": "A primeira passada do autovacuum no banco novo",
+        "why": "O autovacuum não tinha chegado: o last_autoanalyze mostraria, e a pg_stats não estaria vazia."
+      }
+    ]
+  },
+  "ex-b3m4kqq0": {
+    "prompt": "Por que `vacuumdb --analyze-in-stages` analisa cada tabela três vezes em vez de uma?",
+    "hint": "Alvos 1, 10 e o padrão.",
+    "choices": [
+      {
+        "text": "Para conferir que as três amostras concordam",
+        "why": "Nada as compara. Cada etapa só substitui o resumo que a anterior escreveu."
+      },
+      {
+        "text": "Para que existam estimativas grosseiras em segundos e a aplicação volte antes de a passada completa terminar",
+        "why": "Isso. Custa mais no total e faz os primeiros planos utilizáveis chegarem mais cedo."
+      },
+      {
+        "text": "Porque um ANALYZE não consegue ler uma tabela grande inteira",
+        "why": "O ANALYZE lê uma amostra em todas as etapas; nenhuma das três lê a tabela inteira."
+      },
+      {
+        "text": "Porque no total é mais rápido do que um ANALYZE",
+        "why": "No total é mais lento; o vacuumdb --analyze-only faz uma passada quando ninguém está esperando."
+      }
+    ]
+  },
+  "ex-3d0t9ky2": {
+    "prompt": "Ligue cada evento ao que ele faz com as estatísticas do planejador no PostgreSQL 16.",
+    "hint": "Quais mantêm o pg_statistic, e quais começam sem ele?",
+    "pairs": [
+      {
+        "left": "Um upgrade menor, de 16.2 para 16.15",
+        "right": "Mantém: mesmo diretório de dados"
+      },
+      {
+        "left": "pg_upgrade de 16 para 17",
+        "right": "Deixa para trás; imprime o comando do vacuumdb"
+      },
+      {
+        "left": "pg_dump e pg_restore",
+        "right": "Nenhuma linha na pg_stats até algo analisar"
+      },
+      {
+        "left": "CREATE INDEX em lower(email)",
+        "right": "As estatísticas da expressão esperam o próximo ANALYZE"
+      }
+    ]
+  },
+  "ex-hrq3pcs1": {
+    "prompt": "Você adiciona `CREATE INDEX ON customers (lower(email))`. Que passo faz o planejador estimar `lower(email) = '…'` com estatísticas reais?",
+    "hint": "O CREATE INDEX não as coleta.",
+    "choices": [
+      {
+        "text": "REINDEX no índice novo",
+        "why": "Reconstruir o índice escreve as mesmas entradas de novo e não coleta nada."
+      },
+      {
+        "text": "ANALYZE customers",
+        "why": "Isso. O próximo ANALYZE da tabela coleta estatísticas da expressão indexada."
+      },
+      {
+        "text": "Nada; a criação do índice as junta enquanto lê todas as linhas",
+        "why": "A criação lê todas as linhas e não guarda nada do que o ANALYZE escreveria."
+      },
+      {
+        "text": "SET STATISTICS em email",
+        "why": "Isso muda quanto é guardado para a coluna email, não para a expressão."
+      }
+    ]
+  },
+  "ex-qqftjjqq": {
+    "prompt": "Uma importação em lote numa tabela grande, feita com cuidado. Ponha os passos em ordem.",
+    "hint": "O resumo é escrito por último, antes de alguém ler.",
+    "items": [
+      "BEGIN",
+      "INSERT do lote",
+      "ANALYZE da tabela",
+      "COMMIT",
+      "Deixar os relatórios rodarem"
+    ],
+    "trap": "ANALYZE depois que os relatórios já foram planejados os deixa com o resumo velho."
+  },
+  "ex-r0q8abaa": {
+    "prompt": "O plano de uma consulta mostra `rows=12` estimado e `rows=12` real no scan, e ela continua lenta. O que isso diz sobre estatísticas?",
+    "hint": "Como um resumo velho apareceria no plano?",
+    "choices": [
+      {
+        "text": "Elas não são o problema desta consulta",
+        "why": "Isso. Estatística velha aparece como distância entre estimado e real; onde concordam, procure em outro lugar."
+      },
+      {
+        "text": "Rodar ANALYZE mesmo assim; resolve a maioria das consultas lentas",
+        "why": "A estimativa já está certa, então um resumo novo não muda nada no plano."
+      },
+      {
+        "text": "O alvo de estatísticas está baixo demais",
+        "why": "Um alvo baixo também aparece como estimativa errada. Esta está exata."
+      },
+      {
+        "text": "O autovacuum está atrasado nesta tabela",
+        "why": "Talvez, mas o plano diz que o resumo usado estava certo para esta condição."
+      }
+    ]
+  },
+  "ex-30ae1696": {
+    "prompt": "Depois de uma migração do MySQL no fim de semana, toda consulta está lenta na segunda, e `last_analyze` e `last_autoanalyze` da `pg_stat_user_tables` estão nulos em toda tabela. Qual a primeira coisa a rodar?",
+    "hint": "Muitas tabelas, uma aplicação esperando.",
+    "choices": [
+      {
+        "text": "REINDEX DATABASE",
+        "why": "Os índices acabaram de ser criados pela carga. O que falta é o resumo."
+      },
+      {
+        "text": "Subir default_statistics_target para 1000 e esperar o autovacuum",
+        "why": "Um alvo maior deixa cada ANALYZE mais lento, e o autovacuum vai uma tabela de cada vez."
+      },
+      {
+        "text": "vacuumdb --analyze-in-stages",
+        "why": "Isso. Estatísticas grosseiras em todo lugar em segundos, o resumo completo atrás."
+      },
+      {
+        "text": "VACUUM FULL nas maiores tabelas",
+        "why": "Tabelas recém-carregadas não têm inchaço para tirar, e o VACUUM FULL as trava enquanto reescreve."
+      }
+    ]
+  },
+  "ex-begwf984": {
+    "prompt": "Para mostrar estatísticas velhas, a lição desligou o autovacuum em `orders_copy`. O que teria acontecido com ele ligado?",
+    "hint": "300.000 mudanças contra uma linha de 50 + 10%.",
+    "choices": [
+      {
+        "text": "Um plano bom desde o início, já que o autovacuum analisa durante o INSERT",
+        "why": "O autovacuum trabalha entre comandos, depois que a mudança é confirmada e o launcher passa."
+      },
+      {
+        "text": "Um plano ruim para sempre, já que inserts não contam para o gatilho",
+        "why": "Inserts contam, como updates e deletes: o n_mod_since_analyze chegou a 300.000 só com inserts."
+      },
+      {
+        "text": "O mesmo plano ruim, mas só até o autovacuum chegar, em cerca de um minuto",
+        "why": "Isso. A janela existe de qualquer jeito; desligar o autovacuum só a manteve aberta."
+      },
+      {
+        "text": "Um erro, porque não se consulta uma tabela enquanto o autovacuum trabalha nela",
+        "why": "A análise do autovacuum pega um lock que deixa leituras e escritas continuarem."
+      }
+    ]
+  },
+  "ex-t1f7xv1t": {
+    "prompt": "Ligue cada sintoma à correção que responde a ele.",
+    "hint": "Recente, detalhado, ou se existe.",
+    "pairs": [
+      {
+        "left": "Estimativas erradas logo depois de uma importação noturna",
+        "right": "ANALYZE no fim do job de importação"
+      },
+      {
+        "left": "Uma tabela enorme que os lotes nunca levam além da linha do autoanalyze",
+        "right": "Um autovacuum_analyze_scale_factor menor nessa tabela"
+      },
+      {
+        "left": "Uma coluna desigual mal estimada, embora recém-analisada",
+        "right": "SET STATISTICS nessa coluna"
+      },
+      {
+        "left": "Toda tabela vazia na pg_stats depois de um upgrade",
+        "right": "vacuumdb --analyze-in-stages"
+      }
+    ]
+  }
+}

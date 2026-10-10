@@ -1,0 +1,742 @@
+[
+  {
+    "id": "ex-318w8gad",
+    "version": 1,
+    "section": "what-the-planner-knows",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does the planner get the number of rows it expects a condition like `status = 'cancelled'` to match?",
+    "hint": "It decides before reading the table.",
+    "choices": [
+      {
+        "text": "From a quick count of the matching rows, made while planning",
+        "correct": false,
+        "why": "Counting the rows is the work the plan exists to organise; the planner never does it to choose one."
+      },
+      {
+        "text": "From the index on the column, which knows its own row count per value",
+        "correct": false,
+        "why": "An index stores entries, not a count per value. orders has no index on status and still got its estimate."
+      },
+      {
+        "text": "From the summary that ANALYZE last wrote into pg_class and pg_statistic",
+        "correct": true,
+        "why": "Right. pg_class and pg_statistic hold it, and the estimate is arithmetic on them."
+      },
+      {
+        "text": "From the last time the same query ran",
+        "correct": false,
+        "why": "PostgreSQL keeps no memory of past results for planning. Every plan starts from the summary."
+      }
+    ]
+  },
+  {
+    "id": "ex-zvt55dkk",
+    "version": 1,
+    "section": "what-the-planner-knows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`pg_stats` shows `n_distinct = -0.5` for a column. What does it say?",
+    "hint": "A negative number is not a count.",
+    "choices": [
+      {
+        "text": "The estimate failed",
+        "correct": false,
+        "why": "A failed ANALYZE leaves no row at all. Negative is a deliberate form."
+      },
+      {
+        "text": "Half of the values are null",
+        "correct": false,
+        "why": "That would be null_frac = 0.5, a separate column."
+      },
+      {
+        "text": "A share: half the rows are distinct",
+        "correct": true,
+        "why": "Right. A negative n_distinct is a fraction of the rows; -1 is a unique column."
+      },
+      {
+        "text": "The column has exactly two distinct values",
+        "correct": false,
+        "why": "Two values would be written as 2. The sign changes the meaning, not the inverse."
+      }
+    ]
+  },
+  {
+    "id": "ex-56984dfh",
+    "version": 1,
+    "section": "what-the-planner-knows",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A table has `reltuples = 2,000,000` and `pg_stats` says the value `refunded` has a frequency of 0.015. How many rows does the planner estimate for `status = 'refunded'`?",
+    "hint": "The same arithmetic as the cancelled orders.",
+    "value": 30000,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-97kj4gxh",
+    "version": 1,
+    "section": "what-the-planner-knows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You run `ANALYZE orders` twice in a row and the frequency of `cancelled` moves from 0.1995 to 0.2009. What explains it?",
+    "hint": "Nothing changed in the table.",
+    "choices": [
+      {
+        "text": "Autovacuum changed some rows between the two runs",
+        "correct": false,
+        "why": "Autovacuum never changes the values in a table; it removes dead versions and analyses."
+      },
+      {
+        "text": "Each ANALYZE draws a new random sample",
+        "correct": true,
+        "why": "Right. Each ANALYZE reads a different 30,000 rows, so the last digits move."
+      },
+      {
+        "text": "The second run counted every row and the first one sampled",
+        "correct": false,
+        "why": "Both runs sample in the same way. The count of rows comes from the pages, the frequencies from the sample."
+      },
+      {
+        "text": "A statistics bug that a minor upgrade fixes",
+        "correct": false,
+        "why": "It is how sampling behaves, on every version."
+      }
+    ]
+  },
+  {
+    "id": "ex-dkgpm5qs",
+    "version": 1,
+    "section": "stale-numbers",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the stale plan, the scan of `orders_copy` says `rows=1` estimated and `rows=300000` actual. Why one?",
+    "hint": "Add up the frequencies the summary held.",
+    "choices": [
+      {
+        "text": "The planner did not know the table had grown",
+        "correct": false,
+        "why": "It did: the size on disk is checked when planning. What it lacked was what the new rows contained."
+      },
+      {
+        "text": "The index on status was built before the import",
+        "correct": false,
+        "why": "An index is kept up to date on every insert, and it holds no statistics on a plain column."
+      },
+      {
+        "text": "The summary's three values already added up to the whole table, leaving no room for pending",
+        "correct": true,
+        "why": "Right. 0.601 + 0.2015 + 0.1974 is 1, so a fourth value gets the smallest estimate there is."
+      },
+      {
+        "text": "One is the default for any text column",
+        "correct": false,
+        "why": "With no statistics at all the default for equality is half a percent, as the restore showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-h5m8jnxr",
+    "version": 1,
+    "section": "stale-numbers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the estimate of one row make the query slow, rather than just wrong on paper?",
+    "hint": "Look at loops= on the customers side.",
+    "choices": [
+      {
+        "text": "A plan made for one order ran 300,000 times",
+        "correct": true,
+        "why": "Right. A nested loop is the best plan for one row and a poor one for 300,000."
+      },
+      {
+        "text": "It read the whole table instead of the index",
+        "correct": false,
+        "why": "The stale plan did use the index on status. The cost was in the join."
+      },
+      {
+        "text": "A wrong estimate makes the executor slow down",
+        "correct": false,
+        "why": "The executor never reads the estimate. It runs whatever plan it is given, as fast as that plan allows."
+      },
+      {
+        "text": "The table was locked while it waited for ANALYZE",
+        "correct": false,
+        "why": "Nothing was waiting: autovacuum was off for the copy, and no ANALYZE was running."
+      }
+    ]
+  },
+  {
+    "id": "ex-8m66mawk",
+    "version": 1,
+    "section": "stale-numbers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which column of `pg_stat_user_tables` tells you how much a table has changed since its summary was written?",
+    "hint": "It counted 300,000 after the import.",
+    "choices": [
+      {
+        "text": "n_live_tup",
+        "correct": false,
+        "why": "That is how many rows the table has now, 1,300,000. It says nothing about when they arrived."
+      },
+      {
+        "text": "n_dead_tup, which counts the rows changed since vacuum",
+        "correct": false,
+        "why": "n_dead_tup counts dead row versions, lesson 14's subject. An insert leaves none."
+      },
+      {
+        "text": "last_analyze, compared with the time of the change",
+        "correct": false,
+        "why": "last_analyze says when, not how much. A table analysed a week ago may have changed by one row."
+      },
+      {
+        "text": "n_mod_since_analyze",
+        "correct": true,
+        "why": "Right. Inserts, updates and deletes since the last ANALYZE, by hand or automatic."
+      }
+    ]
+  },
+  {
+    "id": "ex-32wcnrps",
+    "version": 1,
+    "section": "stale-numbers",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A nightly job deletes the orders older than two years, about 40% of the table, and a report runs ten minutes later. What should the job do differently?",
+    "hint": "A delete is a change like an insert.",
+    "choices": [
+      {
+        "text": "Nothing: deletes do not affect the statistics",
+        "correct": false,
+        "why": "Removing 40% of the rows changes every frequency and every range. n_mod_since_analyze counts deletes too."
+      },
+      {
+        "text": "Run REINDEX on every index of the table",
+        "correct": false,
+        "why": "Rebuilding indexes is lesson 17's subject and does not touch the summary the planner reads."
+      },
+      {
+        "text": "Wait for autovacuum, which analyses a table immediately after a big delete",
+        "correct": false,
+        "why": "Autovacuum arrives within its naptime at best, and a report ten minutes later may already have been planned before it."
+      },
+      {
+        "text": "End with ANALYZE on that table",
+        "correct": true,
+        "why": "Right. The summary still describes the deleted rows until something analyses the table."
+      }
+    ]
+  },
+  {
+    "id": "ex-cyd9ct1s",
+    "version": 1,
+    "section": "stale-numbers",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Is it safe to run `ANALYZE orders` while the application is reading and writing that table?",
+    "hint": "Which lock does it take?",
+    "choices": [
+      {
+        "text": "Yes: its lock lets reads and writes go on",
+        "correct": true,
+        "why": "Right. It waits only for structural changes, VACUUM or another ANALYZE."
+      },
+      {
+        "text": "No: it locks the table for writes until it finishes",
+        "correct": false,
+        "why": "That is a plain CREATE INDEX, or a REINDEX, as lesson 17 shows. ANALYZE takes a weaker lock."
+      },
+      {
+        "text": "Only outside a transaction, like VACUUM",
+        "correct": false,
+        "why": "VACUUM refuses to run in a transaction block; ANALYZE does not."
+      },
+      {
+        "text": "Only on a replica",
+        "correct": false,
+        "why": "A replica cannot run ANALYZE at all: it is read-only, and it receives the primary's statistics through replication."
+      }
+    ]
+  },
+  {
+    "id": "ex-a4gbfntg",
+    "version": 1,
+    "section": "autoanalyze",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the default settings, how many rows must change in a table of 4,000,000 rows before autovacuum analyses it?",
+    "hint": "50 plus a tenth.",
+    "value": 400050,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-qhb742t2",
+    "version": 1,
+    "section": "autoanalyze",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A table of 100 million rows receives a batch of 5 million rows with a new status value every week. What is the problem with leaving autoanalyze at its defaults?",
+    "hint": "Work out the line.",
+    "choices": [
+      {
+        "text": "Autovacuum analyses it too often",
+        "correct": false,
+        "why": "The opposite: the scale factor makes the line very high on a table this size."
+      },
+      {
+        "text": "ANALYZE on 100 million rows takes hours",
+        "correct": false,
+        "why": "It reads a sample of 30,000 rows whatever the size, so it takes seconds."
+      },
+      {
+        "text": "The batch never crosses the line",
+        "correct": true,
+        "why": "Right. The line is 10,000,050 rows, so a 5 million batch alone does not trigger it."
+      },
+      {
+        "text": "Autovacuum skips tables over a size limit",
+        "correct": false,
+        "why": "There is no such limit. The trigger is the only reason a table is skipped."
+      }
+    ]
+  },
+  {
+    "id": "ex-safaz710",
+    "version": 1,
+    "section": "autoanalyze",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": false,
+    "prompt": "Which of these does autovacuum never analyse for you? Choose all that apply.",
+    "hint": "Think about who can see the table, and what holds the rows.",
+    "choices": [
+      {
+        "text": "A temporary table a session just loaded",
+        "correct": true,
+        "why": "Yes. Only the session that made it can read it, so no worker can."
+      },
+      {
+        "text": "The parent of a partitioned table",
+        "correct": true,
+        "why": "Yes. Its partitions are analysed; the statistics for the whole come from an ANALYZE you run."
+      },
+      {
+        "text": "A table that changed by 20% after a bulk update",
+        "correct": false,
+        "why": "That crosses 50 + 10%, so autovacuum gets to it, within its naptime."
+      },
+      {
+        "text": "A table with a lower scale factor set on it",
+        "correct": false,
+        "why": "A per-table setting makes autovacuum analyse it sooner, not never."
+      }
+    ]
+  },
+  {
+    "id": "ex-5nwzw9mt",
+    "version": 1,
+    "section": "autoanalyze",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The server crashed last night and recovered. This morning a table that changed a lot yesterday has a `last_autoanalyze` from before the crash. Which explanation fits?",
+    "hint": "Where do the counters live?",
+    "choices": [
+      {
+        "text": "The crash lost pg_statistic, so the table has no summary",
+        "correct": false,
+        "why": "pg_statistic is an ordinary table and survives a crash with the rest of the data."
+      },
+      {
+        "text": "Its change counter started again from zero, so autovacuum sees too little change",
+        "correct": true,
+        "why": "Right. The counters are kept in memory and written at a clean shutdown; after a crash they reset."
+      },
+      {
+        "text": "Autovacuum stays off after a crash until somebody restarts it",
+        "correct": false,
+        "why": "Autovacuum starts with the server, crash or not."
+      },
+      {
+        "text": "Crash recovery replays ANALYZE, which reset last_autoanalyze",
+        "correct": false,
+        "why": "Recovery replays the WAL's changes to data; it runs no ANALYZE."
+      }
+    ]
+  },
+  {
+    "id": "ex-knnrx2n8",
+    "version": 1,
+    "section": "statistics-target",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `default_statistics_target` at 250, how many rows does ANALYZE put in its sample?",
+    "hint": "300 per unit.",
+    "value": 75000,
+    "tolerance": 0,
+    "unit": "rows"
+  },
+  {
+    "id": "ex-6t4mcc3x",
+    "version": 1,
+    "section": "statistics-target",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You set `STATISTICS 1000` on `total_cents` only. What happens to the sample of the next `ANALYZE orders`?",
+    "hint": "ANALYZE VERBOSE printed it.",
+    "choices": [
+      {
+        "text": "ANALYZE reads total_cents in full and samples the rest",
+        "correct": false,
+        "why": "ANALYZE reads rows, not columns, so one sample serves every column."
+      },
+      {
+        "text": "It grows to 300,000 rows for the whole table",
+        "correct": true,
+        "why": "Right. The largest target of any column decides the sample, and every column is computed from it."
+      },
+      {
+        "text": "Nothing until default_statistics_target is raised too",
+        "correct": false,
+        "why": "The per-column setting wins over the default for that column at once."
+      },
+      {
+        "text": "It stays at 30,000 rows; only the histogram grows",
+        "correct": false,
+        "why": "VERBOSE printed 300000 rows in sample after the change."
+      }
+    ]
+  },
+  {
+    "id": "ex-7s3mp03s",
+    "version": 1,
+    "section": "statistics-target",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A colleague proposes raising `default_statistics_target` to 1000 for the whole server, because one query on `product_id` is badly estimated. What is the better move?",
+    "hint": "Who pays for a bigger target?",
+    "choices": [
+      {
+        "text": "Agree: a bigger target is always better",
+        "correct": false,
+        "why": "It costs on every ANALYZE of every table and every plan that walks the longer lists."
+      },
+      {
+        "text": "Lower the autovacuum analyze scale factor instead",
+        "correct": false,
+        "why": "That makes the summary more recent, not more detailed. A fresh summary with too few entries is still wrong."
+      },
+      {
+        "text": "Set a bigger target on that one column",
+        "correct": true,
+        "why": "Right. Every ANALYZE and every plan pays for the target, so it goes where an estimate was seen to be wrong."
+      },
+      {
+        "text": "Add an index on product_id, which replaces the statistics",
+        "correct": false,
+        "why": "An index on a plain column carries no statistics of its own; the estimate still comes from pg_stats."
+      }
+    ]
+  },
+  {
+    "id": "ex-g5x937wq",
+    "version": 1,
+    "section": "statistics-target",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To put a column back on the server's default target, you write `ALTER TABLE orders ALTER COLUMN total_cents SET STATISTICS ___;`",
+    "hint": "attstattarget showed it for every other column.",
+    "blanks": [
+      {
+        "accept": [
+          "-1"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-dc18v744",
+    "version": 1,
+    "section": "after-a-load-or-upgrade",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Right after `pg_restore`, the restored `orders` gets `rows=5000` for `status = 'cancelled'`. Where does 5000 come from?",
+    "hint": "pg_stats had no rows.",
+    "choices": [
+      {
+        "text": "A fixed guess: half a percent of the rows, whatever they hold",
+        "correct": true,
+        "why": "Right. With no statistics, equality is assumed to match 0.5% of the table."
+      },
+      {
+        "text": "The statistics carried over in the dump",
+        "correct": false,
+        "why": "pg_dump copies the schema and the rows, not pg_statistic; the count of pg_stats rows was 0."
+      },
+      {
+        "text": "A first quick ANALYZE that pg_restore runs at the end",
+        "correct": false,
+        "why": "pg_restore runs no ANALYZE. That is what vacuumdb was for."
+      },
+      {
+        "text": "Autovacuum's first pass over the new database",
+        "correct": false,
+        "why": "Autovacuum had not reached it: last_autoanalyze would show it, and pg_stats would not be empty."
+      }
+    ]
+  },
+  {
+    "id": "ex-b3m4kqq0",
+    "version": 1,
+    "section": "after-a-load-or-upgrade",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does `vacuumdb --analyze-in-stages` analyse every table three times instead of once?",
+    "hint": "Targets 1, 10 and the default.",
+    "choices": [
+      {
+        "text": "To check that the three samples agree",
+        "correct": false,
+        "why": "Nothing compares them. Each stage simply replaces the summary the last one wrote."
+      },
+      {
+        "text": "So that rough estimates exist within seconds and the application comes back before the full pass ends",
+        "correct": true,
+        "why": "Right. It costs more in total and makes the first usable plans arrive sooner."
+      },
+      {
+        "text": "Because one ANALYZE cannot read a large table in full",
+        "correct": false,
+        "why": "ANALYZE reads a sample at every stage; none of the three reads the whole table."
+      },
+      {
+        "text": "Because it is faster in total than one ANALYZE",
+        "correct": false,
+        "why": "It is slower in total; vacuumdb --analyze-only does one pass when nobody is waiting."
+      }
+    ]
+  },
+  {
+    "id": "ex-3d0t9ky2",
+    "version": 1,
+    "section": "after-a-load-or-upgrade",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each event to what it does to the planner's statistics on PostgreSQL 16.",
+    "hint": "Which ones keep pg_statistic, and which start without it?",
+    "pairs": [
+      {
+        "left": "A minor upgrade, 16.2 to 16.15",
+        "right": "Keeps them: same data directory"
+      },
+      {
+        "left": "pg_upgrade from 16 to 17",
+        "right": "Leaves them behind; it prints the vacuumdb command"
+      },
+      {
+        "left": "pg_dump and pg_restore",
+        "right": "No pg_stats rows until something analyses"
+      },
+      {
+        "left": "CREATE INDEX on lower(email)",
+        "right": "Expression statistics wait for the next ANALYZE"
+      }
+    ]
+  },
+  {
+    "id": "ex-hrq3pcs1",
+    "version": 1,
+    "section": "after-a-load-or-upgrade",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "You add `CREATE INDEX ON customers (lower(email))`. Which step makes the planner estimate `lower(email) = '…'` from real statistics?",
+    "hint": "CREATE INDEX does not collect them.",
+    "choices": [
+      {
+        "text": "REINDEX the new index",
+        "correct": false,
+        "why": "Rebuilding the index writes the same entries again and collects nothing."
+      },
+      {
+        "text": "ANALYZE customers",
+        "correct": true,
+        "why": "Right. The next ANALYZE of the table collects statistics for the indexed expression."
+      },
+      {
+        "text": "Nothing; the index build gathers them while it reads every row",
+        "correct": false,
+        "why": "The build reads every row and keeps none of what ANALYZE would write."
+      },
+      {
+        "text": "SET STATISTICS on email",
+        "correct": false,
+        "why": "That changes how much is kept for the column email, not for the expression."
+      }
+    ]
+  },
+  {
+    "id": "ex-qqftjjqq",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A batch import of a large table, done carefully. Put the steps in order.",
+    "hint": "The summary is written last, before anybody reads.",
+    "items": [
+      "BEGIN",
+      "INSERT the batch",
+      "ANALYZE the table",
+      "COMMIT",
+      "Let the reports run"
+    ],
+    "trap": "ANALYZE after the reports have already been planned leaves them on the old summary."
+  },
+  {
+    "id": "ex-r0q8abaa",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A query's plan shows `rows=12` estimated and `rows=12` actual on its scan, and it is still slow. What does that tell you about statistics?",
+    "hint": "What would a stale summary look like in the plan?",
+    "choices": [
+      {
+        "text": "They are not this query's problem",
+        "correct": true,
+        "why": "Right. Stale statistics show as a gap between estimate and actual; where they agree, look elsewhere."
+      },
+      {
+        "text": "Run ANALYZE anyway; it fixes most slow queries",
+        "correct": false,
+        "why": "The estimate is already right, so a new summary changes nothing in the plan."
+      },
+      {
+        "text": "The statistics target is too low",
+        "correct": false,
+        "why": "A low target shows as a wrong estimate too. This one is exact."
+      },
+      {
+        "text": "Autovacuum is behind on this table",
+        "correct": false,
+        "why": "Maybe, but the plan says the summary it used was right for this condition."
+      }
+    ]
+  },
+  {
+    "id": "ex-30ae1696",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After a weekend migration from MySQL, every query is slow on Monday, and `pg_stat_user_tables.last_analyze` and `last_autoanalyze` are null for every table. What is the first thing to run?",
+    "hint": "Many tables, an application waiting.",
+    "choices": [
+      {
+        "text": "REINDEX DATABASE",
+        "correct": false,
+        "why": "The indexes were just built by the load. What is missing is the summary."
+      },
+      {
+        "text": "Raise default_statistics_target to 1000 and wait for autovacuum",
+        "correct": false,
+        "why": "A bigger target makes each ANALYZE slower, and autovacuum goes one table at a time."
+      },
+      {
+        "text": "vacuumdb --analyze-in-stages",
+        "correct": true,
+        "why": "Right. Rough statistics everywhere within seconds, the full summary behind them."
+      },
+      {
+        "text": "VACUUM FULL on the largest tables",
+        "correct": false,
+        "why": "Freshly loaded tables have no bloat to remove, and VACUUM FULL locks them while it rewrites."
+      }
+    ]
+  },
+  {
+    "id": "ex-begwf984",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "To show stale statistics, the lesson switched autovacuum off on `orders_copy`. What would have happened with it on?",
+    "hint": "300,000 changes against a line of 50 + 10%.",
+    "choices": [
+      {
+        "text": "A good plan from the start, since autovacuum analyses during the INSERT",
+        "correct": false,
+        "why": "Autovacuum works between statements, after the change is committed and the launcher visits."
+      },
+      {
+        "text": "A bad plan forever, since inserts do not count towards the trigger",
+        "correct": false,
+        "why": "Inserts count, like updates and deletes: n_mod_since_analyze reached 300,000 from inserts alone."
+      },
+      {
+        "text": "The same bad plan, but only until autovacuum arrived, within about a minute",
+        "correct": true,
+        "why": "Right. The window exists either way; switching autovacuum off only held it open."
+      },
+      {
+        "text": "An error, because a table cannot be queried while autovacuum works on it",
+        "correct": false,
+        "why": "Autovacuum's analysis takes a lock that lets reads and writes go on."
+      }
+    ]
+  },
+  {
+    "id": "ex-t1f7xv1t",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Match each symptom to the fix that answers it.",
+    "hint": "Recent, detailed, or present at all.",
+    "pairs": [
+      {
+        "left": "Estimates wrong right after a nightly import",
+        "right": "ANALYZE at the end of the import job"
+      },
+      {
+        "left": "A huge table that batches never push past autoanalyze's line",
+        "right": "A lower autovacuum_analyze_scale_factor on that table"
+      },
+      {
+        "left": "One skewed column estimated badly, though freshly analysed",
+        "right": "SET STATISTICS on that column"
+      },
+      {
+        "left": "Every table empty in pg_stats after an upgrade",
+        "right": "vacuumdb --analyze-in-stages"
+      }
+    ]
+  }
+]

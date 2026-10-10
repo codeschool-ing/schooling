@@ -22,10 +22,14 @@
 # printed is each run of lines typed into one terminal, in the order they were
 # typed, with the output each statement produced when it finished.
 #
-# STAGED: nothing about the database. The collation section shows `sort` from
-# glibc 2.39, the version on Ubuntu 24.04; the result glibc 2.27 and earlier
-# give is quoted from the PostgreSQL wiki's page on locale data changes and
-# was not run here, and the prose says so.
+# STAGED: the collation section shows `sort` from glibc 2.39, the version on
+# Ubuntu 24.04; the order glibc 2.27 and earlier gave is quoted from the
+# PostgreSQL wiki's page on locale data changes and was not run here. The
+# version-mismatch warning is produced by editing the collation version
+# recorded for a throwaway database, coll_check, by hand, since the machine
+# has only one glibc; the lesson says so, and that the edit is never made on a
+# database anybody keeps. The recording machine's cluster was created under
+# C.UTF-8, so coll_check is made with en_US.UTF-8 to have a version at all.
 set -uo pipefail
 cd "$(dirname "$0")"
 . ../../lab/capture.sh
@@ -150,8 +154,8 @@ ACTIVITY="SELECT pid, wait_event_type, wait_event, pg_blocking_pids(pid) AS bloc
 
 block glibc
 on 'ldd --version | head -1'
-on "printf '1-1\n11\n' | LC_COLLATE=en_US.UTF-8 sort"
-on "printf '1-1\n11\n' | LC_COLLATE=C sort"
+on "printf 'B\na\n11\n1-1\n' | LC_COLLATE=C sort"
+on "printf 'B\na\n11\n1-1\n' | LC_COLLATE=en_US.UTF-8 sort"
 
 block collversion
 session shop <<'EOF'
@@ -239,18 +243,19 @@ session shop <<'EOF'
 CREATE EXTENSION amcheck;
 SELECT c.relname, bt_index_check(c.oid, heapallindexed => true) FROM pg_index i JOIN pg_class c ON c.oid = i.indexrelid JOIN pg_am am ON am.oid = c.relam WHERE am.amname = 'btree' AND c.relnamespace = 'public'::regnamespace;
 EOF
-on 'pg_amcheck --heapallindexed shop; echo "exit status $?"'
+on '/usr/lib/postgresql/16/bin/pg_amcheck --heapallindexed shop && echo clean'
 
 block lie
 session shop <<'EOF'
 CREATE FUNCTION order_day(ts timestamptz) RETURNS date LANGUAGE sql IMMUTABLE AS $$ SELECT ts::date $$;
 CREATE TABLE day_check AS SELECT id, created_at FROM orders WHERE id <= 100000;
+SET TimeZone = 'America/Sao_Paulo';
 CREATE INDEX day_check_day ON day_check (order_day(created_at));
 ANALYZE day_check;
 SELECT bt_index_check('day_check_day', heapallindexed => true);
 SET TimeZone = 'UTC';
-SELECT count(*) FROM day_check WHERE order_day(created_at) = '2026-01-02';
-SELECT count(*) FROM day_check WHERE created_at::date = '2026-01-02';
+EXPLAIN (COSTS OFF) SELECT min(created_at), max(created_at) FROM day_check WHERE order_day(created_at) = '2026-01-02';
+SELECT min(created_at), max(created_at) FROM day_check WHERE order_day(created_at) = '2026-01-02';
 SELECT bt_index_check('day_check_day', heapallindexed => true);
 RESET TimeZone;
 DROP TABLE day_check;

@@ -34,8 +34,8 @@ lab reset 14
 lab as 'until [ "$(psql -XAtc "SELECT count(*) FROM pg_stat_user_tables WHERE last_autovacuum IS NOT NULL" shop)" = 2 ]; do sleep 2; done'
 
 block dead-rows
-printf "CREATE TABLE orders_copy AS SELECT * FROM orders;\nALTER TABLE orders_copy ADD PRIMARY KEY (id);\nVACUUM ANALYZE orders_copy;\nSELECT ctid, xmin, xmax, id, status FROM orders_copy WHERE id = 7;\nUPDATE orders_copy SET status = 'shipped' WHERE id = 7;\nSELECT ctid, xmin, xmax, id, status FROM orders_copy WHERE id = 7;\nCREATE EXTENSION pageinspect;\nSELECT lp, t_xmin, t_xmax, t_ctid FROM heap_page_items(get_raw_page('orders_copy', 0)) WHERE lp BETWEEN 6 AND 8;\n" | session shop
-printf "BEGIN;\nUPDATE orders_copy SET status = 'shipped' WHERE id = 8;\nROLLBACK;\n#quiet \\\\! sleep 2\nSELECT n_live_tup, n_dead_tup FROM pg_stat_user_tables WHERE relname = 'orders_copy';\n" | session shop
+printf "CREATE TABLE orders_copy AS SELECT * FROM orders;\nALTER TABLE orders_copy ADD PRIMARY KEY (id);\nVACUUM ANALYZE orders_copy;\nCREATE EXTENSION pageinspect;\nSELECT ctid, xmin, xmax, id, status FROM orders_copy WHERE id = 7;\nBEGIN;\nUPDATE orders_copy SET status = 'shipped' WHERE id = 7;\nSELECT ctid, xmin, xmax, id, status FROM orders_copy WHERE id = 7;\nSELECT lp, t_xmin, t_xmax, t_ctid FROM heap_page_items(get_raw_page('orders_copy', 0)) WHERE lp BETWEEN 6 AND 8;\nCOMMIT;\n" | session shop
+printf "BEGIN;\nUPDATE orders_copy SET status = 'shipped' WHERE id = 500000;\nROLLBACK;\n#quiet \\\\! sleep 11\nSELECT n_live_tup, n_dead_tup FROM pg_stat_user_tables WHERE relname = 'orders_copy';\n" | session shop
 
 block what-vacuum-does
 V="SELECT pg_size_pretty(pg_relation_size('orders_copy')) AS size, * FROM pg_visibility_map_summary('orders_copy');"
@@ -43,7 +43,7 @@ printf "CREATE EXTENSION pg_visibility;\nUPDATE orders_copy SET total_cents = to
 
 block the-trigger
 S="SELECT n_dead_tup, last_autovacuum, last_autoanalyze FROM pg_stat_user_tables WHERE relname = 'orders_copy';"
-printf "SELECT relname, last_analyze, last_autovacuum, autovacuum_count FROM pg_stat_user_tables WHERE relname IN ('customers', 'orders');\nSELECT reltuples, 50 + 0.2 * reltuples AS vacuum_after, 50 + 0.1 * reltuples AS analyze_after FROM pg_class WHERE relname = 'orders';\nUPDATE orders_copy SET total_cents = total_cents + 1 WHERE id <= 150000;\n" | session shop
+printf "SELECT name, setting, unit FROM pg_settings WHERE name IN ('autovacuum', 'autovacuum_naptime', 'autovacuum_max_workers', 'autovacuum_vacuum_threshold', 'autovacuum_vacuum_scale_factor', 'autovacuum_vacuum_insert_threshold', 'autovacuum_vacuum_insert_scale_factor', 'autovacuum_vacuum_cost_limit', 'autovacuum_vacuum_cost_delay');\nSELECT relname, last_analyze, last_autovacuum, autovacuum_count FROM pg_stat_user_tables WHERE relname IN ('customers', 'orders');\nSELECT reltuples, 50 + 0.2 * reltuples AS vacuum_after, 50 + 0.1 * reltuples AS analyze_after FROM pg_class WHERE relname = 'orders';\nUPDATE orders_copy SET total_cents = total_cents + 1 WHERE id <= 150000;\n" | session shop
 lab as 'until [ -n "$(psql -XAtc "SELECT last_autoanalyze FROM pg_stat_user_tables WHERE relname = '"'orders_copy'"'" shop)" ]; do sleep 2; done; sleep 3'
 printf "%s\nUPDATE orders_copy SET total_cents = total_cents + 1 WHERE id > 150000 AND id <= 250000;\n" "$S" | session shop
 lab as 'until [ -n "$(psql -XAtc "SELECT last_autovacuum FROM pg_stat_user_tables WHERE relname = '"'orders_copy'"'" shop)" ]; do sleep 2; done; sleep 3'
@@ -81,7 +81,6 @@ lab as 'until [ "$(sudo -u postgres psql -p 5433 -XAtc "SELECT max(age(datfrozen
 block wraparound-after
 on 'sudo -u postgres psql -p 5433 -c "SELECT datname, datallowconn, age(datfrozenxid) FROM pg_database;"'
 on 'sudo -u postgres psql -p 5433 -c "CREATE TABLE t (i int);"'
-on 'sudo grep "automatic aggressive vacuum to prevent wraparound" /var/log/postgresql/postgresql-16-wrap.log | head -n 2'
 on 'sudo pg_dropcluster --stop 16 wrap'
 lab as 'rm -f vacuum.log'
 

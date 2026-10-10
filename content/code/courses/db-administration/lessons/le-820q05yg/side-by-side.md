@@ -76,8 +76,8 @@ undo_002
 ```
 
 The same idea, a directory owned by the server's own user, with different furniture. `ibdata1` and
-the `undo_` files are InnoDB's shared space and its undo log; `#innodb_redo` is the redo log, the
-counterpart of `pg_wal`; the `binlog.` files are the binary log the last section described; and each
+the `undo_` files are InnoDB's shared space and its undo log. `#innodb_redo` is the redo log, the
+counterpart of `pg_wal`, and the `binlog.` files are the binary log the last section described. Each
 database is a subdirectory, as under PostgreSQL's `base/`, except that MySQL names it after the
 database rather than by a number.
 
