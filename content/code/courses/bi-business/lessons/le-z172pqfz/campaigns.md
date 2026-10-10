@@ -4,7 +4,7 @@ version: 1
 ---
 
 Every campaign report answers a question nobody asked. "The spring campaign brought 1,512 orders
-and R$ 574,560 in sales" counts the orders placed by the people who received it. **The question
+and R$ 529,200 in sales" counts the orders placed by the people who received it. **The question
 the money depends on is how many of those orders the campaign caused**, and the customers who were
 going to buy a hose that week anyway are in the 1,512 too.
 
@@ -35,7 +35,7 @@ below:
 | 1 | Group | Customers | Orders |
 | 2 | Campaign | 36000 | 1512 |
 | 3 | Holdout | 4000 | 136 |
-| 4 | Average ticket | 380 | |
+| 4 | Average ticket | 350 | |
 | 5 | Discount | 0.15 | |
 | 6 | Sending cost | 3600 | |
 
@@ -61,7 +61,7 @@ predicts for 36,000 customers:
 ```
 
 ```schooling-figure
-{"svg": "<svg viewBox=\"0 0 720 260\" role=\"img\" aria-label=\"One horizontal bar for the 1512 orders placed by the campaign group. The larger part, 1224 orders, is what the holdout says the group would have placed anyway; the smaller part, 288 orders, is what the campaign added.\" data-fig=\"l18-holdout\"><text x=\"40.0\" y=\"40.0\" text-anchor=\"start\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"13\" font-weight=\"600\" fill=\"var(--paper)\">1,512 orders from the campaign group, two weeks</text><path d=\"M40.0 60.0 H558.1 V116.0 H40.0 Z\" fill=\"var(--scan)\" stroke=\"none\" stroke-width=\"0\"></path><path d=\"M558.1 60.0 H680.0 V116.0 H558.1 Z\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></path><rect x=\"40.0\" y=\"60.0\" width=\"640.0\" height=\"56.0\" fill=\"none\" stroke=\"var(--paper-dim)\" stroke-width=\"1\"></rect><text x=\"40.0\" y=\"140.0\" text-anchor=\"start\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">1,224 would have happened anyway</text><text x=\"40.0\" y=\"158.0\" text-anchor=\"start\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">the holdout bought at 3.40%: 36,000 × 3.40%</text><text x=\"680.0\" y=\"140.0\" text-anchor=\"end\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">288 caused by the campaign</text><text x=\"680.0\" y=\"158.0\" text-anchor=\"end\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">4.20% − 3.40% = 0.80 points</text><text x=\"360.0\" y=\"214.0\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">the 15% discount went to all 1,512; the campaign changed what 288 did</text><text x=\"360.0\" y=\"236.0\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper-dim)\">cost per incremental order: R$ 312, against R$ 59 per campaign order</text></svg>", "caption": "The campaign group's orders split by what the holdout shows. Most of them would have come anyway, and they were given the discount too."}
+{"svg": "<svg viewBox=\"0 0 720 260\" role=\"img\" aria-label=\"One horizontal bar for the 1512 orders placed by the campaign group. The larger part, 1224 orders, is what the holdout says the group would have placed anyway; the smaller part, 288 orders, is what the campaign added.\" data-fig=\"l18-holdout\"><text x=\"40.0\" y=\"40.0\" text-anchor=\"start\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"13\" font-weight=\"600\" fill=\"var(--paper)\">1,512 orders from the campaign group, two weeks</text><path d=\"M40.0 60.0 H558.1 V116.0 H40.0 Z\" fill=\"var(--scan)\" stroke=\"none\" stroke-width=\"0\"></path><path d=\"M558.1 60.0 H680.0 V116.0 H558.1 Z\" fill=\"var(--amber)\" stroke=\"none\" stroke-width=\"0\"></path><rect x=\"40.0\" y=\"60.0\" width=\"640.0\" height=\"56.0\" fill=\"none\" stroke=\"var(--paper-dim)\" stroke-width=\"1\"></rect><text x=\"40.0\" y=\"140.0\" text-anchor=\"start\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">1,224 would have happened anyway</text><text x=\"40.0\" y=\"158.0\" text-anchor=\"start\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">the holdout bought at 3.40%: 36,000 × 3.40%</text><text x=\"680.0\" y=\"140.0\" text-anchor=\"end\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">288 caused by the campaign</text><text x=\"680.0\" y=\"158.0\" text-anchor=\"end\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"11\" fill=\"var(--paper-dim)\">4.20% − 3.40% = 0.80 points</text><text x=\"360.0\" y=\"214.0\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper)\">the 15% discount went to all 1,512; the campaign changed what 288 did</text><text x=\"360.0\" y=\"236.0\" text-anchor=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"12\" fill=\"var(--paper-dim)\">cost per incremental order: R$ 288, against R$ 55 per campaign order</text></svg>", "caption": "The campaign group's orders split by what the holdout shows. Most of them would have come anyway, and they were given the discount too."}
 ```
 
 ## What each order cost
@@ -70,26 +70,27 @@ The campaign's cost is the discount on every order placed with the coupon, plus 
 reais:
 
 ```localised
-=C2*B4*B5+B6      89784
+=C2*B4*B5+B6      82980
 ```
 
 **The discount went to all 1,512 orders, including the 1,224 that needed no persuading.** That is
 the cost a campaign report hides, because it divides by the wrong number:
 
 ```localised
-=ROUND((C2*B4*B5+B6)/C2,1)      59.4
-=ROUND((C2*B4*B5+B6)/(B2*(C2/B2-C3/B3)),0)      312
+=ROUND((C2*B4*B5+B6)/C2,1)      54.9
+=ROUND((C2*B4*B5+B6)/(B2*(C2/B2-C3/B3)),0)      288
 ```
 
-R$ 59 per order is what the report said. **R$ 312 per order the campaign actually caused** is what
-Varanda paid. On an average ticket of R$ 380, that is 82% of each incremental sale, before the cost
+R$ 55 per order is what the report said. **R$ 288 per order the campaign actually caused** is what
+Varanda paid; that it matches the 288 orders is a coincidence of these numbers. On the online
+shop's average ticket of R$ 350, it is 82.3% of each incremental sale, before the cost
 of the goods themselves:
 
 ```localised
-=ROUND((C2*B4*B5+B6)/(B2*(C2/B2-C3/B3))/B4*100,1)      82
+=ROUND((C2*B4*B5+B6)/(B2*(C2/B2-C3/B3))/B4*100,1)      82.3
 ```
 
-A garden retailer whose gross margin is anywhere near 82% does not exist. The campaign lost money
+A garden retailer whose gross margin is anywhere near 82.3% does not exist. The campaign lost money
 on every order it caused, and it would have been reported as a success.
 
 ## What the holdout cannot do alone

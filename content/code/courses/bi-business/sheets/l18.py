@@ -31,7 +31,7 @@ DAYS = 28
 
 # The spring e-mail campaign: 40,000 online customers, 10% held out at random.
 CAMPAIGN = dict(customers=36000, orders=1512, hold_customers=4000, hold_orders=136,
-                ticket=380, discount=0.15, sending=3600)
+                ticket=350, discount=0.15, sending=3600)
 
 # One supplier, eight purchase orders for the hose reel, August to October 2025:
 # units ordered, units received, days late (0 = on or before the promised date).
