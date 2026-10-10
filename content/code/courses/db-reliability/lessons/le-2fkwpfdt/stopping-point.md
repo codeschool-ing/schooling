@@ -57,7 +57,7 @@ shop=# SELECT count(*), min(placed_at), max(id) FROM orders;
 
 **50005 orders**: the fifty thousand from before, plus the five that arrived before the `DELETE`,
 and the oldest is from 1 January again. The three orders after the `DELETE` are not here, because
-they came after the target; that is the next section's problem.
+they came after the target; that is a problem for the repair, two sections on.
 
 If the copy were wrong (the target one transaction too early, or too late) the cure is cheap at
 this point: stop the server, restore again with a different target. Nothing has been decided yet.
