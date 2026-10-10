@@ -67,7 +67,7 @@ AssertionError: "Bia [60 chars]$ 2,0\nCaio Lima <caio@example.org>: film (DVD[14
 
 
 ----------------------------------------------------------------------
-Ran 2 tests in 0.002s
+Ran 2 tests in 0.001s
 
 FAILED (failures=2)
 ```

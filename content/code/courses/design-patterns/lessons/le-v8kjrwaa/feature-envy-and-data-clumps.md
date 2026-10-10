@@ -48,7 +48,7 @@ don't ask* means.
 ana@laptop:~/patterns/refactoring$ python3 -m unittest
 ..
 ----------------------------------------------------------------------
-Ran 2 tests in 0.001s
+Ran 2 tests in 0.000s
 
 OK
 ```

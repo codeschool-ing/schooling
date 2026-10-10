@@ -23,7 +23,10 @@ as well.
 
 ```
 ana@laptop:~/patterns/cqrs$ python3 cqs.py
-placeholder
+debugging, which copy is next? C1
+lent C2 | left on the shelf: 1
+debugging, which copy is next? C1
+lent C1 | left on the shelf: 2
 ```
 
 The first half lent **C2**, not C1, and left one copy where two should be. The debugging line asked

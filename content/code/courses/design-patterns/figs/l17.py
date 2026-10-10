@@ -89,5 +89,5 @@ def restarts():
     f.text(380, 185, '1', size=11, mono=True, weight='600', fill='--amber')
     f.text(380, 210, T('not 0: the first loan was forgotten', 'não 0: o primeiro empréstimo foi esquecido'),
            size=9.5, fill='--amber', italic=True)
-    return f, T('Each restart starts from the catalogue. The shelf survives three bad messages, and the second loan shows the price: the fresh shelf knows nothing of the first.',
-                'Cada reinício parte do catálogo. A estante sobrevive a três mensagens ruins, e o segundo empréstimo mostra o preço: a estante nova não sabe nada do primeiro.')
+    return f, T('Each restart starts from the catalogue. The supervisor restarts the shelf twice and gives up at the third crash, and the second loan shows the price: the fresh shelf knows nothing of the first.',
+                'Cada reinício parte do catálogo. O supervisor reinicia a estante duas vezes e desiste na terceira queda, e o segundo empréstimo mostra o preço: a estante nova não sabe nada do primeiro.')

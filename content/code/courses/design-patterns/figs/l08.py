@@ -47,3 +47,41 @@ def split():
     f.text(220, 271, T('rows', 'linhas'), size=9.5, fill='--paper-dim')
     return f, T('Commands go through the rules and change the write model; an event carries the change to the read model, which answers every query.',
                 'Os comandos passam pelas regras e mudam o modelo de escrita; um evento leva a mudança ao modelo de leitura, que responde a toda consulta.')
+
+
+@figure('l08-lag', 8)
+def lag():
+    f = Fig('l08-lag', 720, 270, T(
+        'A timeline of the asynchronous run of lag.py, left to right. Upper lane, the write model: '
+        'C1 is lent to Bia, then C2 to Caio, and after each the write model knows the new number of '
+        'copies on the shelf, 1 and then 0. Lower lane, the read model: it still says 2 after both '
+        'loans, because the two events are waiting in the outbox. When the worker runs, it applies '
+        'both and the read model says 0. The stretch between the first loan and the worker run is '
+        'the window in which a query sees the old value.',
+        'Uma linha do tempo da execução assíncrona de lag.py, da esquerda para a direita. Faixa de '
+        'cima, o modelo de escrita: C1 é emprestado à Bia, depois C2 ao Caio, e depois de cada um o '
+        'modelo de escrita sabe o novo número de exemplares na estante, 1 e depois 0. Faixa de baixo, '
+        'o modelo de leitura: ele continua dizendo 2 depois dos dois empréstimos, porque os dois '
+        'eventos estão esperando na caixa de saída. Quando o worker roda, aplica os dois e o modelo '
+        'de leitura diz 0. O trecho entre o primeiro empréstimo e a execução do worker é a janela '
+        'em que uma consulta vê o valor antigo.'))
+    f.text(20, 70, T('write model', 'modelo de escrita'), size=11, weight='600', anchor='start')
+    f.text(20, 170, T('read model', 'modelo de leitura'), size=11, weight='600', anchor='start')
+    f.line(230, 170, 570, 170, stroke='--scan', width=40)
+    f.arrow([(140, 70), (700, 70)], stroke='--paper-dim', width=1.2)
+    f.arrow([(140, 170), (700, 170)], stroke='--paper-dim', width=1.2)
+    f.text(690, 248, T('time', 'tempo'), size=10, fill='--paper-dim', anchor='end')
+    for x, label, shelf in ((230, 'lend C1', '1'), (380, 'lend C2', '0')):
+        f.circle(x, 70, 5, fill='--phosphor')
+        f.text(x, 48, label, size=10, mono=True)
+        f.text(x + 40, 88, T(f'on shelf {shelf}', f'na estante {shelf}'), size=10, fill='--paper-dim')
+        f.arrow([(x, 76), (x, 108)], stroke='--amber', width=1.2, dash='4 3')
+        f.text(x, 120, T('event queued', 'evento na fila'), size=9.5, fill='--amber', italic=True)
+    f.text(160, 188, T('on shelf 2', 'na estante 2'), size=10, fill='--paper-dim')
+    f.text(400, 205, T('stale: on shelf 2, events waiting', 'desatualizado: na estante 2, eventos esperando'),
+           size=10, fill='--amber', italic=True)
+    f.circle(570, 170, 5, fill='--amber')
+    f.text(570, 140, T('worker applies both', 'o worker aplica os dois'), size=10, fill='--amber')
+    f.text(630, 188, T('on shelf 0', 'na estante 0'), size=10, fill='--paper-dim')
+    return f, T('The write model is right at once; the read model is right after the worker has run. The shaded stretch is the lag a reader can see.',
+                'O modelo de escrita fica certo na hora; o de leitura, depois que o worker roda. O trecho sombreado é o atraso que um leitor consegue ver.')

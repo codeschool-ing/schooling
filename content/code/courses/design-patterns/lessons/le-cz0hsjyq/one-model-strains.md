@@ -37,7 +37,11 @@ is all of that in one class, the way it usually starts:
 
 ```
 ana@laptop:~/patterns/cqrs$ python3 strained.py
-placeholder
+Dom Casmurro         Machado de Assis     on shelf 1  waiting 0
+Vidas Secas          Graciliano Ramos     on shelf 0  waiting 1
+A Hora da Estrela    Clarice Lispector    on shelf 1  waiting 0
+(visited 12 copy records for 3 titles)
+['Dom Casmurro, due 2026-03-16']
 ```
 
 The screen is right: one *Dom Casmurro* is on the shelf, the only *Vidas Secas* is out with Caio and
