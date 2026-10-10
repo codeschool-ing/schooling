@@ -1,0 +1,577 @@
+{
+  "ex-920e54v7": {
+    "prompt": "Por que 'escolha dois entre consistência, disponibilidade e tolerância a partição' é um resumo enganoso do CAP?",
+    "choices": [
+      {
+        "text": "Vale só para bancos",
+        "why": "Qualquer estado replicado a enfrenta, um cache ou uma fila inclusive."
+      },
+      {
+        "text": "Partições acontecem quer você as escolha ou não",
+        "why": "Certo. A escolha real é o que fazer durante uma."
+      },
+      {
+        "text": "Consistência e disponibilidade não podem coexistir",
+        "why": "Sem partição elas coexistem, a maior parte do tempo."
+      },
+      {
+        "text": "Um sistema pode na verdade ter os três se as réplicas estiverem perto o bastante umas das outras",
+        "why": "Proximidade encurta partições; não tira a escolha durante uma."
+      }
+    ]
+  },
+  "ex-jyqjvcs2": {
+    "prompt": "O que consistência quer dizer no CAP?",
+    "choices": [
+      {
+        "text": "Leituras são rápidas e previsíveis",
+        "why": "Velocidade é a latência do PACELC, não a consistência do CAP."
+      },
+      {
+        "text": "Toda leitura vê a escrita concluída mais recente",
+        "why": "Certo: linearizabilidade, como se houvesse uma cópia."
+      },
+      {
+        "text": "Uma transação mantém as regras e restrições do banco",
+        "why": "Isso é o C do ACID, uma ideia diferente e mais fraca."
+      },
+      {
+        "text": "Toda réplica roda a mesma versão do software",
+        "why": "Versões são irrelevantes para a definição."
+      }
+    ]
+  },
+  "ex-4t19a4kv": {
+    "prompt": "Durante uma partição, uma cópia recebe uma leitura que não consegue conferir com o outro lado. Qual par são as únicas opções dela?",
+    "choices": [
+      {
+        "text": "Responder com o que tem, ou pedir ao cliente que tente outra cópia do lado de lá",
+        "why": "Redirecionar é uma recusa desta cópia; o lado de lá pode estar inalcançável para o cliente também."
+      },
+      {
+        "text": "Promover-se, ou desligar",
+        "why": "Nenhuma das duas responde este pedido."
+      },
+      {
+        "text": "Esperar a partição acabar, ou chutar",
+        "why": "Esperar é recusar por um tempo; 'chutar' é responder com o que tem."
+      },
+      {
+        "text": "Responder com o que tem, ou recusar",
+        "why": "Certo. A informação de que precisaria está do outro lado."
+      }
+    ]
+  },
+  "ex-rkc00any": {
+    "prompt": "Tornar a réplica síncrona subiu a latência média do pgbench de 2,008 ms para 2,778 ms numa máquina. O que cada commit passou a esperar?",
+    "choices": [
+      {
+        "text": "O pgbench se reconectar",
+        "why": "As conexões ficaram abertas; o tempo de conexão inicial aparece à parte."
+      },
+      {
+        "text": "A réplica responder ao cliente",
+        "why": "Quem responde ao cliente é o primário."
+      },
+      {
+        "text": "Uma trava na cópia da linha na réplica, segura até a transação do primário acabar",
+        "why": "Réplicas não tomam travas pelas transações do primário."
+      },
+      {
+        "text": "A réplica gravar a mudança no log dela",
+        "why": "Certo. Uma ida e volta e uma gravação em disco na réplica."
+      }
+    ]
+  },
+  "ex-580m3av5": {
+    "prompt": "Por que réplicas síncronas costumam ficar perto do primário, e as distantes ficam assíncronas?",
+    "choices": [
+      {
+        "text": "O PostgreSQL recusa réplicas síncronas em outras regiões",
+        "why": "Ele não tem noção de regiões."
+      },
+      {
+        "text": "Uma réplica síncrona soma a sua ida e volta a todo commit",
+        "why": "Certo. Entre continentes isso passa de cem milissegundos por commit."
+      },
+      {
+        "text": "Réplicas distantes não conseguem receber o WAL",
+        "why": "Recebem; só não deveriam ser esperadas."
+      },
+      {
+        "text": "A replicação síncrona só funciona numa rede local",
+        "why": "Funciona em qualquer lugar; o que muda é o custo."
+      }
+    ]
+  },
+  "ex-ngzwh5m9": {
+    "prompt": "Ordene as configurações do synchronous_commit da que volta mais cedo à que espera mais.",
+    "items": [
+      "off",
+      "local",
+      "on",
+      "remote_apply"
+    ]
+  },
+  "ex-5yqcj66w": {
+    "prompt": "Com a réplica síncrona e cortada, o curl desistiu de uma venda depois de 5 segundos. Dez segundos depois de a rede voltar, o que era verdade?",
+    "choices": [
+      {
+        "text": "A venda tinha sido desfeita quando o curl desconectou",
+        "why": "A transação já esperava no COMMIT; a captura mostra sold = 1."
+      },
+      {
+        "text": "O ingresso tinha sido vendido",
+        "why": "Certo. O commit estava esperando, não cancelado; tempo esgotado não é falha."
+      },
+      {
+        "text": "A venda ainda esperava o comprador tentar de novo",
+        "why": "Ela terminou sozinha quando a réplica a ouviu."
+      },
+      {
+        "text": "O primário tinha vendido o lugar duas vezes",
+        "why": "Um pedido, uma venda: sold foi de 0 para 1."
+      }
+    ]
+  },
+  "ex-mdgxzm2y": {
+    "prompt": "Durante a partição síncrona, uma consulta no próprio primário mostrou sold = 0. Por quê?",
+    "choices": [
+      {
+        "text": "O commit que espera não fica visível até a réplica confirmar",
+        "why": "Certo. Ninguém, nem o primário, vê uma venda que não está nas duas máquinas."
+      },
+      {
+        "text": "A venda nunca chegou ao primário",
+        "why": "O pg_stat_activity a mostrou esperando no COMMIT lá."
+      },
+      {
+        "text": "O UPDATE falhou em silêncio",
+        "why": "Depois apareceu sold = 1."
+      },
+      {
+        "text": "A consulta foi mandada à réplica por engano",
+        "why": "Ela rodou com docker compose exec db."
+      }
+    ]
+  },
+  "ex-pn6vqs08": {
+    "prompt": "Com uma réplica assíncrona cortada, o que a bilheteria mostrou para o show 1 enquanto durou a partição?",
+    "choices": [
+      {
+        "text": "999 999, lido do primário",
+        "why": "As páginas leem da réplica."
+      },
+      {
+        "text": "Um erro, porque a réplica não alcançava o primário para conferir o número",
+        "why": "Uma réplica assíncrona responde sem conferir; é a escolha disponível."
+      },
+      {
+        "text": "Nada; o pedido esgotou o tempo",
+        "why": "A captura mostra uma resposta na hora."
+      },
+      {
+        "text": "Um milhão de lugares restantes, embora um tivesse sido vendido",
+        "why": "Certo. A réplica continuou respondendo com o que sabia por último."
+      }
+    ]
+  },
+  "ex-6hmv5y5t": {
+    "prompt": "Por que a aula deu à replicação uma rede própria?",
+    "choices": [
+      {
+        "text": "Para deixar a replicação mais rápida",
+        "why": "As duas redes são o mesmo tipo de ponte."
+      },
+      {
+        "text": "O Docker permite um banco por rede",
+        "why": "Ele permite qualquer número."
+      },
+      {
+        "text": "O tráfego de replicação precisa ser cifrado numa rede separada",
+        "why": "Nada no laboratório o cifra; a separação é para o experimento."
+      },
+      {
+        "text": "Para cortar os bancos um do outro enquanto os clientes ainda alcançam os dois",
+        "why": "Certo. Essa é a definição de partição de que o teorema trata."
+      }
+    ]
+  },
+  "ex-0brrvm4x": {
+    "prompt": "Entre o que a metade do 'senão' do PACELC escolhe?",
+    "choices": [
+      {
+        "text": "Leituras e escritas",
+        "why": "As duas acontecem em qualquer escolha."
+      },
+      {
+        "text": "Latência e consistência",
+        "why": "Certo. A troca de todo dia, sem partição."
+      },
+      {
+        "text": "Disponibilidade e consistência",
+        "why": "Essa é a metade da partição."
+      },
+      {
+        "text": "Partições e réplicas",
+        "why": "Nenhuma das duas é uma escolha nesse sentido."
+      }
+    ]
+  },
+  "ex-de16jdnp": {
+    "prompt": "Um banco responde toda leitura da cópia mais próxima e nunca espera as outras, com partição ou sem. Como o PACELC o classifica?",
+    "choices": [
+      {
+        "text": "PC/EL",
+        "why": "Ele responde durante uma partição, então não é PC."
+      },
+      {
+        "text": "PA/EC",
+        "why": "Ele nunca espera, então não escolhe consistência no senão."
+      },
+      {
+        "text": "PA/EL",
+        "why": "Certo. Disponível durante uma partição, baixa latência no resto."
+      },
+      {
+        "text": "PC/EC",
+        "why": "Esse espera acordo nos dois casos."
+      }
+    ]
+  },
+  "ex-p5q5q1y8": {
+    "prompt": "Pelas capturas, em quantos milissegundos uma réplica síncrona atrasou cada transação do pgbench em média? Responda com duas casas decimais.",
+    "hint": "2,778 − 2,008",
+    "unit": "ms"
+  },
+  "ex-486b8rs6": {
+    "prompt": "Com N = 5 réplicas, que par de W e R garante que uma leitura veja toda escrita concluída?",
+    "choices": [
+      {
+        "text": "W = 2, R = 3",
+        "why": "5 não é mais que 5."
+      },
+      {
+        "text": "W = 1, R = 1",
+        "why": "A mais rápida, e não promete nada."
+      },
+      {
+        "text": "W = 3, R = 3",
+        "why": "Certo. 3 + 3 = 6 > 5."
+      },
+      {
+        "text": "W = 2, R = 2",
+        "why": "4 não é mais que 5; os dois podem se desencontrar."
+      }
+    ]
+  },
+  "ex-j65yjg91": {
+    "prompt": "Com N = 3, W = 3, R = 1 e uma réplica fora, o que acontece?",
+    "choices": [
+      {
+        "text": "As escritas falham e as leituras continuam funcionando",
+        "why": "Certo. São precisas três confirmações e só duas réplicas estão de pé."
+      },
+      {
+        "text": "As duas falham",
+        "why": "Uma réplica basta para R = 1."
+      },
+      {
+        "text": "As leituras falham e as escritas continuam funcionando",
+        "why": "Isso é W = 1, R = 3."
+      },
+      {
+        "text": "As duas funcionam, porque 3 + 1 > 3",
+        "why": "A regra da sobreposição não diz nada sobre disponibilidade."
+      }
+    ]
+  },
+  "ex-pkj9t25y": {
+    "prompt": "Por que W + R > N é necessário mas não suficiente para leituras corretas?",
+    "choices": [
+      {
+        "text": "Duas escritas concorrentes podem alcançar maiorias diferentes, deixando indefinido qual é a mais nova",
+        "why": "Certo. O quórum acha as versões; algo ainda precisa ordená-las."
+      },
+      {
+        "text": "N também precisa ser ímpar",
+        "why": "N ímpar ajuda maiorias; não ordena escritas concorrentes."
+      },
+      {
+        "text": "Leituras são mais lentas que escritas",
+        "why": "Velocidade não tem relação com correção aqui."
+      },
+      {
+        "text": "Réplicas podem mentir sobre a versão",
+        "why": "O modelo supõe réplicas honestas; o problema existe mesmo assim."
+      }
+    ]
+  },
+  "ex-9bwf28me": {
+    "prompt": "Com N = 3, a configuração W = 2, R = 2 se chama quórum de ___ .",
+    "blanks": [
+      {
+        "accept": [
+          "maioria"
+        ]
+      }
+    ]
+  },
+  "ex-4ycgxhbq": {
+    "prompt": "O que a consistência eventual promete?",
+    "choices": [
+      {
+        "text": "Leituras nunca devolvem um valor mais velho que o cliente viu antes",
+        "why": "Isso é leituras monotônicas, uma garantia à parte."
+      },
+      {
+        "text": "Toda cópia concorda em até um segundo, sob qualquer carga e através de qualquer partição",
+        "why": "Nenhum limite de tempo faz parte da promessa."
+      },
+      {
+        "text": "Se as escritas pararem, toda cópia acaba com o mesmo valor",
+        "why": "Certo, e nada sobre quanto tempo ou o que as leituras veem no meio."
+      },
+      {
+        "text": "Conflitos são resolvidos pela última escrita",
+        "why": "Ela não diz nada sobre como as cópias se reconciliam."
+      }
+    ]
+  },
+  "ex-mcjt4drx": {
+    "prompt": "Um usuário recarrega a página de um show duas vezes e a contagem de lugares sobe um. Qual garantia foi quebrada?",
+    "choices": [
+      {
+        "text": "Linearizabilidade da própria venda",
+        "why": "A venda estava certa; as leituras discordaram."
+      },
+      {
+        "text": "Ler as próprias escritas",
+        "why": "O usuário não escreveu nada; outra pessoa comprou."
+      },
+      {
+        "text": "Leituras monotônicas",
+        "why": "Certo. A segunda leitura veio de uma cópia mais atrasada."
+      },
+      {
+        "text": "Escritas monotônicas",
+        "why": "Isso trata da ordem das próprias escritas de um cliente."
+      }
+    ]
+  },
+  "ex-xgkrtzgd": {
+    "prompt": "Ligue cada garantia ao sintoma de quebrá-la.",
+    "pairs": [
+      {
+        "left": "ler as próprias escritas",
+        "right": "meu ingresso não está na minha página"
+      },
+      {
+        "left": "leituras monotônicas",
+        "right": "uma contagem que volta entre recargas"
+      },
+      {
+        "left": "escritas monotônicas",
+        "right": "um renomear aplicado antes do criar"
+      },
+      {
+        "left": "prefixo consistente",
+        "right": "uma resposta mostrada antes da mensagem"
+      }
+    ]
+  },
+  "ex-24eg1ebc": {
+    "prompt": "No merge.py, o pôster foi escrito 10 ms depois do disco, e mesmo assim o disco venceu pela última escrita. Por quê?",
+    "choices": [
+      {
+        "text": "O disco foi posto primeiro, então vence",
+        "why": "A primeira escrita vence seria outra regra; esta escolheu o carimbo maior."
+      },
+      {
+        "text": "A união foi usada por engano",
+        "why": "A união é a segunda linha, com os dois itens."
+      },
+      {
+        "text": "A última escrita vence prefere a primeira réplica em ordem alfabética",
+        "why": "Ela compara carimbos, mais nada."
+      },
+      {
+        "text": "O relógio de B estava 40 ms atrasado, então a escrita posterior teve carimbo anterior",
+        "why": "Certo. O LWW confia em relógios, e relógios discordam."
+      }
+    ]
+  },
+  "ex-926n0mtt": {
+    "prompt": "Um contador em 100 é incrementado em 3 de um lado de uma partição e em 2 do outro, guardado como um número só. O que a última escrita pode informar depois?",
+    "choices": [
+      {
+        "text": "100",
+        "why": "Cada lado manteve os próprios incrementos."
+      },
+      {
+        "text": "105",
+        "why": "Isso exige o contador por réplica."
+      },
+      {
+        "text": "103 ou 102",
+        "why": "Certo. As vendas de um lado são esquecidas de qualquer jeito."
+      },
+      {
+        "text": "Um erro",
+        "why": "O LWW nunca dá erro; ele descarta."
+      }
+    ]
+  },
+  "ex-g21e3xwr": {
+    "prompt": "Para qual valor a última escrita vence é uma junção razoável?",
+    "choices": [
+      {
+        "text": "Os itens de um carrinho, postos em dois aparelhos durante uma queda",
+        "why": "Acréscimos dos dois lados deveriam sobreviver."
+      },
+      {
+        "text": "Um saldo bancário",
+        "why": "Perder um depósito não é aceitável."
+      },
+      {
+        "text": "O nome de exibição de um usuário",
+        "why": "Certo. É trocado inteiro e só a última versão importa."
+      },
+      {
+        "text": "O número de ingressos vendidos de um show",
+        "why": "Incrementos concorrentes se perderiam."
+      }
+    ]
+  },
+  "ex-4c50sp7m": {
+    "prompt": "Qual propriedade da junção de um CRDT torna inofensiva uma mensagem entregue duas vezes?",
+    "choices": [
+      {
+        "text": "Comutatividade",
+        "why": "Essa torna a ordem das junções irrelevante."
+      },
+      {
+        "text": "Linearizabilidade",
+        "why": "Isso é um modelo de consistência, não uma propriedade de junção."
+      },
+      {
+        "text": "Idempotência",
+        "why": "Certo. Juntar o mesmo estado de novo não muda nada."
+      },
+      {
+        "text": "Associatividade",
+        "why": "Essa torna o agrupamento das junções irrelevante."
+      }
+    ]
+  },
+  "ex-fb0zqf7p": {
+    "prompt": "Dois lados vendem cada um o último lugar de um show, e a contagem de vendidos é um G-counter. Qual é o resultado da junção?",
+    "choices": [
+      {
+        "text": "A capacidade, porque o G-counter limita no maior valor",
+        "why": "Ele soma as entradas; nada o limita."
+      },
+      {
+        "text": "Uma das duas vendas é descartada",
+        "why": "Nada é descartado; os dois incrementos sobrevivem."
+      },
+      {
+        "text": "Um conflito que a junção relata para uma pessoa resolver",
+        "why": "CRDTs nunca relatam conflitos; essa é a graça e o limite deles."
+      },
+      {
+        "text": "Capacidade mais um: convergido e errado",
+        "why": "Certo. Um CRDT converge; não consegue manter uma regra de 'nunca mais que'."
+      }
+    ]
+  },
+  "ex-v89p3wfq": {
+    "prompt": "Um G-counter tem entradas a: 7, b: 4 numa réplica e a: 5, b: 9 em outra. Que total a junção dá?",
+    "hint": "Pegue o maior de cada entrada, depois some.",
+    "unit": ""
+  },
+  "ex-hwy4ye15": {
+    "prompt": "Qual operação da bilheteria precisa de coordenação no momento da escrita?",
+    "choices": [
+      {
+        "text": "Vender um lugar",
+        "why": "Certo. 'No máximo a capacidade' é uma invariante."
+      },
+      {
+        "text": "Pôr um item no carrinho, que se junta por união quando os dois lados escreveram durante uma partição",
+        "why": "Uma união se junta sem coordenação."
+      },
+      {
+        "text": "Contar visitas à página",
+        "why": "Uma contagem um pouco baixa não machuca ninguém."
+      },
+      {
+        "text": "Mostrar a lista de shows",
+        "why": "Uma lista desatualizada é inofensiva."
+      }
+    ]
+  },
+  "ex-pp77qskt": {
+    "prompt": "Por onde a aula diz para começar ao escolher consistência ou disponibilidade para uma operação?",
+    "choices": [
+      {
+        "text": "Pelo padrão do banco em uso",
+        "why": "Os padrões descrevem o banco, não a sua operação."
+      },
+      {
+        "text": "Pela opção mais rápida, acrescentando consistência só quando aparecer um bug em produção",
+        "why": "Bugs de leitura desatualizada não registram nada; esperar um aparecer é esperar para sempre."
+      },
+      {
+        "text": "Pelo que uma resposta desatualizada custa a uma pessoa",
+        "why": "Certo. Depois, procure invariantes."
+      },
+      {
+        "text": "Pela prova do teorema",
+        "why": "A prova diz que existe uma escolha, não qual."
+      }
+    ]
+  },
+  "ex-w427dpxk": {
+    "prompt": "Um sistema tem um primário com uma réplica síncrona, e serve páginas de uma segunda réplica, assíncrona. Durante uma partição entre o primário e as duas réplicas, o que acontece?",
+    "choices": [
+      {
+        "text": "As vendas dão certo na réplica assíncrona",
+        "why": "Réplicas recusam escritas."
+      },
+      {
+        "text": "As vendas dão certo, e as páginas mostram os números novos na hora",
+        "why": "A réplica síncrona não consegue confirmar, então as vendas esperam."
+      },
+      {
+        "text": "Tudo para até a partição acabar, inclusive as páginas",
+        "why": "A réplica assíncrona ainda responde leituras."
+      },
+      {
+        "text": "As vendas esperam, e as páginas continuam carregando com números velhos",
+        "why": "Certo. Consistente nas escritas, disponível nas leituras, como a bilheteria da aula."
+      }
+    ]
+  },
+  "ex-7xpzte85": {
+    "prompt": "Por que tentar de novo uma venda depois de um tempo esgotado é perigoso, por esta aula?",
+    "choices": [
+      {
+        "text": "A segunda tentativa sempre esgota o tempo também",
+        "why": "Depois da partição ela daria certo, e venderia um segundo ingresso."
+      },
+      {
+        "text": "Tempos esgotados corrompem o banco",
+        "why": "Nada foi corrompido; a venda terminou limpa."
+      },
+      {
+        "text": "O curl não consegue mandar o mesmo pedido duas vezes",
+        "why": "Consegue, e esse é o problema."
+      },
+      {
+        "text": "A primeira tentativa ainda estava em andamento e terminou depois de o cliente desistir",
+        "why": "Certo. A aula 10 torna a nova tentativa segura."
+      }
+    ]
+  }
+}
