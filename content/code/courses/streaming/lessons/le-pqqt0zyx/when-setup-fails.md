@@ -74,7 +74,7 @@ kill it ten seconds later. The script checks first:
 ubuntu@stream:~/work$ ./cluster.sh start
 node 1: port 9092 is taken by another program
 ubuntu@stream:~/work$ ss -ltnp | grep 9092
-bash: line 1: ss: command not found
+LISTEN 0      5            0.0.0.0:9092       0.0.0.0:*    users:(("python",pid=4644,fd=3))
 ```
 
 `ss -ltnp | grep 9092` names the program that holds it, if it is yours. Here it was a Python web
