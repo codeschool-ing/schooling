@@ -496,6 +496,103 @@ def l02_decomposition(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 3
+
+@figure('l03-weights', 3)
+def l03_weights(lang):
+    t = {'en': dict(
+        label='Bars showing the weight each of the last ten weeks gets in simple exponential '
+              'smoothing, for three values of alpha. With alpha 0.9 the latest week takes 0.9 and '
+              'the rest almost nothing. With 0.5 the weights halve each week. With 0.1 they start '
+              'at 0.1 and fall slowly, so old weeks still count.',
+        x='weeks ago', y='weight', cap='The same rule with three memories. Every past week '
+            'counts, and each counts a fixed fraction less than the week after it; alpha is how '
+            'big that fraction is.'),
+        'pt': dict(
+        label='Barras com o peso que cada uma das dez últimas semanas recebe na suavização '
+              'exponencial simples, para três valores de alpha. Com alpha 0,9 a última semana '
+              'leva 0,9 e o resto quase nada. Com 0,5 os pesos caem pela metade a cada semana. Com '
+              '0,1 eles começam em 0,1 e caem devagar, então semanas antigas ainda contam.',
+        x='semanas atrás', y='peso', cap='A mesma regra com três memórias. Toda semana passada '
+            'conta, e cada uma conta uma fração fixa a menos que a semana seguinte; alpha é o '
+            'tamanho dessa fração.')}[lang]
+    f = Fig('l03-weights', 640, 250, t['label'])
+    alphas = [0.9, 0.5, 0.1]
+    for k, a in enumerate(alphas):
+        x0 = 50 + k * 200
+        p = Plot(f, x0, 50, x0 + 170, 190, -0.5, 9.5, 0, 1)
+        f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim', width=1.2)
+        for i in range(10):
+            wgt = a * (1 - a) ** i
+            xa, xb = p.sx(i - 0.35), p.sx(i + 0.35)
+            f.path(f'M{xa:.1f} {p.y1:.1f} L{xa:.1f} {p.sy(wgt):.1f} L{xb:.1f} {p.sy(wgt):.1f} '
+                   f'L{xb:.1f} {p.y1:.1f} Z', stroke='--phosphor', width=1, fill='--phosphor-dim')
+        for i in (0, 9):
+            f.text(p.sx(i), p.y1 + 13, str(i + 1), size=9.5, fill='--paper-dim')
+        f.text((p.x0 + p.x1) / 2, 30, 'alpha = ' + num(lang, a, 1), size=11, weight='600')
+        if k == 0:
+            for v in (0, 0.5, 1):
+                f.text(p.x0 - 6, p.sy(v), num(lang, v, 1), size=9, anchor='end', fill='--paper-dim')
+            f.text(p.x0 - 30, p.y0 - 20, t['y'], size=10, anchor='start', weight='600')
+        f.text((p.x0 + p.x1) / 2, p.y1 + 32, t['x'], size=10, fill='--paper-dim')
+    return f, t['cap']
+
+
+@figure('l03-forecasts', 3)
+def l03_forecasts(lang):
+    from statsmodels.tsa.holtwinters import ExponentialSmoothing
+    from statsmodels.tsa.statespace.sarimax import SARIMAX
+    w = daily().resample('W-SUN').sum()['2023-01-08':'2025-12-28']
+    train, test = w[:'2024-12-29'], w['2025-01-05':'2025-06-29']
+    hw = ExponentialSmoothing(train, trend='add', seasonal='mul', seasonal_periods=52).fit()
+    ar = SARIMAX(train, order=(1, 0, 1), seasonal_order=(0, 1, 0, 52), trend='c').fit(disp=False)
+    h = len(test)
+    first = pd.Timestamp('2024-07-07')
+    show = w[first:'2025-06-29']
+    t = {'en': dict(
+        label='Weekly orders from July 2024 to June 2025 as a line, with two forecasts made at the '
+              'end of 2024 drawn over the first 26 weeks of 2025: Holt-Winters and seasonal ARIMA. '
+              'Both follow the actual weeks closely and both dip in mid-February, where Carnival had '
+              'been in 2024, while the actual dip came in March.',
+        y='orders per week', act='actual', hw='Holt-Winters', ar='seasonal ARIMA',
+        cut='forecast made here', carn='both expect Carnival here',
+        cap='Two families, one set of training weeks, and forecasts that track 2025 closely and '
+            'make the same mistake in February: both learnt last year\'s Carnival.'),
+        'pt': dict(
+        label='Pedidos semanais de julho de 2024 a junho de 2025 como uma linha, com duas previsões '
+              'feitas no fim de 2024 desenhadas sobre as 26 primeiras semanas de 2025: Holt-Winters '
+              'e ARIMA sazonal. As duas seguem bem as semanas reais e as duas caem em meados de '
+              'fevereiro, onde o Carnaval tinha ficado em 2024, enquanto a queda real veio em março.',
+        y='pedidos por semana', act='real', hw='Holt-Winters', ar='ARIMA sazonal',
+        cut='previsão feita aqui', carn='as duas esperam o Carnaval aqui',
+        cap='Duas famílias, um mesmo conjunto de semanas de treino, e previsões que acompanham bem '
+            '2025 e erram igual em fevereiro: as duas aprenderam o Carnaval do ano passado.')}[lang]
+    f = Fig('l03-forecasts', 640, 310, t['label'])
+    p = Plot(f, 70, 40, 620, 240, 0, (show.index[-1] - first).days, 6000, 12000)
+    p.yaxis(range(6000, 12001, 2000), fmt=lambda v: num(lang, v, 0), label=t['y'])
+    f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim', width=1.2)
+    for d in pd.date_range(first, show.index[-1], freq='MS'):
+        if d.month in (7, 10, 1, 4):
+            x = p.sx((d - first).days)
+            f.line(x, p.y1, x, p.y1 + 4, stroke='--paper-dim', width=1)
+            f.text(x, p.y1 + 14, f"{MONTHS[lang][d.month - 1]} {d.year}", size=9.5, fill='--paper-dim')
+    xs = lambda idx: [(d - first).days for d in idx]
+    series(p, xs(show.index), show.values, stroke='--paper', width=1.6)
+    series(p, xs(test.index), hw.forecast(h).values, stroke='--phosphor', width=1.8, dash='5 3')
+    series(p, xs(test.index), ar.forecast(h).values, stroke='--amber', width=1.8, dash='2 3')
+    cx = p.sx((pd.Timestamp('2024-12-29') - first).days)
+    f.line(cx, p.y0, cx, p.y1, stroke='--wire', width=1.2, dash='3 3')
+    f.text(cx - 4, p.y0 + 4, t['cut'], size=9.5, anchor='end', fill='--paper-dim')
+    fx = p.sx((pd.Timestamp('2025-02-16') - first).days)
+    f.text(fx, p.sy(6900), t['carn'], size=9.5, fill='--paper-dim')
+    for i, (lab, col, dash) in enumerate([(t['act'], '--paper', None), (t['hw'], '--phosphor', '5 3'),
+                                          (t['ar'], '--amber', '2 3')]):
+        x0 = 90 + i * 170
+        f.line(x0, 288, x0 + 24, 288, stroke=col, width=1.8, dash=dash)
+        f.text(x0 + 30, 288, lab, size=10, anchor='start')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():

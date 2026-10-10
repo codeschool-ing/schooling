@@ -1,0 +1,572 @@
+[
+  {
+    "id": "ex-yt0emnwp",
+    "version": 1,
+    "section": "simple-smoothing",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In simple exponential smoothing with alpha 0.5, what weight does the week before last get? Answer as a decimal.",
+    "hint": "alpha × (1 − alpha).",
+    "value": 0.25,
+    "tolerance": 0.001
+  },
+  {
+    "id": "ex-t384mkbg",
+    "version": 1,
+    "section": "simple-smoothing",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Simple exponential smoothing with alpha equal to 1 is the same as which forecast?",
+    "choices": [
+      {
+        "text": "The mean of the whole history",
+        "correct": false,
+        "why": "That is where alpha close to 0 leads."
+      },
+      {
+        "text": "The naive forecast",
+        "correct": true,
+        "why": "Right. All the weight is on the last week."
+      },
+      {
+        "text": "A seven-day moving average of the most recent days",
+        "correct": false,
+        "why": "A moving average weighs a window equally; smoothing never does."
+      },
+      {
+        "text": "The seasonal naive forecast, which repeats the same week of last year",
+        "correct": false,
+        "why": "Simple smoothing knows nothing of seasons."
+      }
+    ]
+  },
+  {
+    "id": "ex-hgtb2sg7",
+    "version": 1,
+    "section": "simple-smoothing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "statsmodels' simple smoothing forecast 8,893 orders for every week of 2025. Why the same number every week?",
+    "choices": [
+      {
+        "text": "The model only has a level, and the forecast of any future week is the level now",
+        "correct": true,
+        "why": "Right. No trend and no season means nothing to make the weeks differ."
+      },
+      {
+        "text": "alpha was chosen badly",
+        "correct": false,
+        "why": "Any alpha gives a flat forecast; it only changes the height."
+      },
+      {
+        "text": "A bug in forecast(1)",
+        "correct": false,
+        "why": "It asked for one week because every week would have been the same."
+      },
+      {
+        "text": "2025 had no seasons",
+        "correct": false,
+        "why": "2025 had the same seasons; the model cannot represent them."
+      }
+    ]
+  },
+  {
+    "id": "ex-q0zazq10",
+    "version": 1,
+    "section": "simple-smoothing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the last week of 2024, a Christmas week of 7,743 orders, the level is 8,033 with alpha 0.9 and 9,171 with alpha 0.1. Which forecast for the first normal week of 2025 should worry you more?",
+    "choices": [
+      {
+        "text": "The one with 0.1, because it ignores the latest data",
+        "correct": false,
+        "why": "It does not ignore it; it weighs it like one week among many, which is right for a holiday week."
+      },
+      {
+        "text": "Neither; both are levels",
+        "correct": false,
+        "why": "They differ by over a thousand orders, and one was dragged down by Christmas."
+      },
+      {
+        "text": "Both equally, since smoothing cannot handle holidays at any alpha",
+        "correct": false,
+        "why": "Neither handles them, but a long memory is barely moved by one."
+      },
+      {
+        "text": "The one with 0.9",
+        "correct": true,
+        "why": "Right. A short memory has just learnt a holiday as if it were the new level."
+      }
+    ]
+  },
+  {
+    "id": "ex-gk0kvg2v",
+    "version": 1,
+    "section": "holt-winters",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each smoothing weight of Holt-Winters to what it smooths.",
+    "pairs": [
+      {
+        "left": "alpha",
+        "right": "the level"
+      },
+      {
+        "left": "beta",
+        "right": "the trend, the level's change per week"
+      },
+      {
+        "left": "gamma",
+        "right": "the seasonal indices"
+      }
+    ],
+    "right_distractors": [
+      "the noise"
+    ]
+  },
+  {
+    "id": "ex-jw6hdmk0",
+    "version": 1,
+    "section": "holt-winters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Holt-Winters fitted gamma = 0.000 on Panela's weeks. What does that mean?",
+    "choices": [
+      {
+        "text": "There is no season",
+        "correct": false,
+        "why": "The season is there and is used in every forecast; it just does not change."
+      },
+      {
+        "text": "The fit failed and fell back to a default",
+        "correct": false,
+        "why": "Zero is a legitimate optimum: the season was stable."
+      },
+      {
+        "text": "The seasonal indices were estimated once and never updated",
+        "correct": true,
+        "why": "Right. Zero weight on new data means the season stays as first estimated."
+      },
+      {
+        "text": "The season is additive after all, so the multiplicative indices were switched off",
+        "correct": false,
+        "why": "gamma is a memory, not a switch between model types."
+      }
+    ]
+  },
+  {
+    "id": "ex-bnf61f5s",
+    "version": 1,
+    "section": "holt-winters",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Holt-Winters forecast 7,669 orders for the week ending 16 February 2025, and 8,767 happened. By how many orders was it too low?",
+    "value": 1098,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-79pt0y78",
+    "version": 1,
+    "section": "holt-winters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did Holt-Winters forecast the week ending 16 February 2025 so low?",
+    "choices": [
+      {
+        "text": "Orders were rising faster than the trend expected",
+        "correct": false,
+        "why": "The neighbouring weeks were forecast well; one week alone was off."
+      },
+      {
+        "text": "Its seasonal index remembers Carnival in that week of 2024",
+        "correct": true,
+        "why": "Right. Carnival moved to March in 2025, and the index cannot know."
+      },
+      {
+        "text": "February is always a quiet month in Brazil, and the model learnt that",
+        "correct": false,
+        "why": "That would lower every February week, not one."
+      },
+      {
+        "text": "alpha was too small",
+        "correct": false,
+        "why": "The level was fine for the weeks around it."
+      }
+    ]
+  },
+  {
+    "id": "ex-qq0fc0se",
+    "version": 1,
+    "section": "arima-in-brief",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each part of ARIMA to what it does.",
+    "pairs": [
+      {
+        "left": "AR",
+        "right": "uses the last few values"
+      },
+      {
+        "left": "I",
+        "right": "differences the series until it is stationary"
+      },
+      {
+        "left": "MA",
+        "right": "uses the last few forecast errors"
+      }
+    ],
+    "right_distractors": [
+      "averages a window of days"
+    ]
+  },
+  {
+    "id": "ex-4g82p6jw",
+    "version": 1,
+    "section": "arima-in-brief",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does seasonal_order=(0, 1, 0, 52) do to weekly data?",
+    "choices": [
+      {
+        "text": "Subtracts the same week of last year from each week",
+        "correct": true,
+        "why": "Right. One seasonal difference."
+      },
+      {
+        "text": "Adds a 52-week moving average",
+        "correct": false,
+        "why": "The MA in ARIMA is about errors, and the 0 says there is none here."
+      },
+      {
+        "text": "Fits one autoregressive term per week of the year, 52 in total",
+        "correct": false,
+        "why": "The seasonal AR order is the first number, and it is 0."
+      },
+      {
+        "text": "Removes the last 52 weeks",
+        "correct": false,
+        "why": "Differencing loses the first season, not the last, and it transforms rather than removes."
+      }
+    ]
+  },
+  {
+    "id": "ex-hx97cjbx",
+    "version": 1,
+    "section": "arima-in-brief",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A colleague says the MA term of their ARIMA model is a moving average of the last weeks' orders. What is wrong?",
+    "choices": [
+      {
+        "text": "Nothing",
+        "correct": false,
+        "why": "The name misleads exactly this way."
+      },
+      {
+        "text": "It is a moving average of the last weeks' forecasts",
+        "correct": false,
+        "why": "Close, but it is the errors, not the forecasts."
+      },
+      {
+        "text": "MA is the differencing step, the I in the name",
+        "correct": false,
+        "why": "Differencing is the I."
+      },
+      {
+        "text": "The MA term uses past forecast errors, not past values",
+        "correct": true,
+        "why": "Right. Past values are the AR term's."
+      }
+    ]
+  },
+  {
+    "id": "ex-f36fx0ce",
+    "version": 1,
+    "section": "arima-in-brief",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does ARIMA difference a growing series before modelling it?",
+    "choices": [
+      {
+        "text": "Differencing removes holidays",
+        "correct": false,
+        "why": "A seasonal difference brings last year's holiday along, as the Carnival forecast shows."
+      },
+      {
+        "text": "To make the numbers smaller",
+        "correct": false,
+        "why": "Size is not the issue; changing behaviour is."
+      },
+      {
+        "text": "Its two other terms assume behaviour that does not change over time",
+        "correct": true,
+        "why": "Right. Its differences can be stationary when its level is not."
+      },
+      {
+        "text": "It is optional and only speeds the fit up",
+        "correct": false,
+        "why": "Without it the model describes a series the data is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-63c12vke",
+    "version": 1,
+    "section": "prophet-in-brief",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are pieces Prophet fits? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "A trend that bends at changepoints",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Holidays from a list of dates",
+        "correct": true,
+        "why": "Right, which is how it handles one that moves."
+      },
+      {
+        "text": "Autoregressive terms on the last weeks",
+        "correct": false,
+        "why": "That is ARIMA's idea, not Prophet's."
+      },
+      {
+        "text": "Smooth yearly and weekly seasons",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-7pt8x8k6",
+    "version": 1,
+    "section": "prophet-in-brief",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of Prophet's pieces would have stopped the February forecast error of this lesson?",
+    "choices": [
+      {
+        "text": "Changepoints, because the series bent",
+        "correct": false,
+        "why": "The trend was fine; the problem was one week of the season."
+      },
+      {
+        "text": "The holiday list",
+        "correct": true,
+        "why": "Right. Carnival gets its own effect on its own dates, wherever they fall."
+      },
+      {
+        "text": "A weekly season",
+        "correct": false,
+        "why": "The data is already weekly; the error was in the yearly pattern."
+      },
+      {
+        "text": "Extra regressors such as a marketing budget",
+        "correct": false,
+        "why": "Nothing about marketing explains a holiday that moved."
+      }
+    ]
+  },
+  {
+    "id": "ex-9cgens38",
+    "version": 1,
+    "section": "prophet-in-brief",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Was Prophet run anywhere in this course?",
+    "choices": [
+      {
+        "text": "No",
+        "correct": true,
+        "why": "Right. It is described, not installed, and lesson 6 does its holiday part with statsmodels."
+      },
+      {
+        "text": "Yes, in lesson 3",
+        "correct": false,
+        "why": "Lesson 3 describes it and says plainly that nothing in that section was run."
+      },
+      {
+        "text": "Yes, but only in the virtual machine path of lesson 1",
+        "correct": false,
+        "why": "No path of lesson 1 installs it."
+      },
+      {
+        "text": "Only its holiday component, inside statsmodels",
+        "correct": false,
+        "why": "statsmodels does not contain Prophet; lesson 6 builds the same idea with its own tools."
+      }
+    ]
+  },
+  {
+    "id": "ex-pz09hepx",
+    "version": 1,
+    "section": "better-than-what",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each baseline to the series it is hard to beat on.",
+    "pairs": [
+      {
+        "left": "naive",
+        "right": "a series that wanders"
+      },
+      {
+        "left": "seasonal naive",
+        "right": "a series dominated by a stable season"
+      },
+      {
+        "left": "mean",
+        "right": "noise around a fixed level"
+      }
+    ],
+    "right_distractors": [
+      "a series with a moving holiday"
+    ]
+  },
+  {
+    "id": "ex-t3ss2mq6",
+    "version": 1,
+    "section": "better-than-what",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An ARIMA model a colleague spent a week tuning does worse than repeating the same week of last year, on weeks it never saw. What should happen?",
+    "choices": [
+      {
+        "text": "Use the ARIMA anyway, because it is the more sophisticated model",
+        "correct": false,
+        "why": "Sophistication that loses to a free baseline is cost without accuracy."
+      },
+      {
+        "text": "Average the two and report the average",
+        "correct": false,
+        "why": "Averaging can help, but only if it beats the baseline too, which is the same test again."
+      },
+      {
+        "text": "Tune the ARIMA on the test weeks until it wins",
+        "correct": false,
+        "why": "Then the test weeks are training weeks, and nothing has been tested."
+      },
+      {
+        "text": "Use the seasonal naive forecast",
+        "correct": true,
+        "why": "Right. A method that cannot beat the baseline should not be used."
+      }
+    ]
+  },
+  {
+    "id": "ex-jm3tznsp",
+    "version": 1,
+    "section": "better-than-what",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What have forecasting competitions over thousands of real series found again and again?",
+    "choices": [
+      {
+        "text": "ARIMA beats exponential smoothing",
+        "correct": false,
+        "why": "No family wins in general."
+      },
+      {
+        "text": "Prophet beats both classical families on business data",
+        "correct": false,
+        "why": "The lesson says the opposite of a general winner, and Prophet's own documentation names where it is weak."
+      },
+      {
+        "text": "Simple methods and averages of methods are hard to beat",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "More parameters always mean a better forecast",
+        "correct": false,
+        "why": "More parameters can fit the past better and forecast worse."
+      }
+    ]
+  },
+  {
+    "id": "ex-6kzm9w75",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "To check a forecast honestly, it is compared with weeks the model never ___ during fitting.",
+    "blanks": [
+      {
+        "accept": [
+          "saw",
+          "seen"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-06hhs98w",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of the lesson's Holt-Winters program in order.",
+    "items": [
+      "add the days into weeks",
+      "split off 2025 as the test",
+      "fit trend, season and the three weights on 2023 and 2024",
+      "forecast the weeks of 2025",
+      "compare with what happened"
+    ]
+  },
+  {
+    "id": "ex-6egsr11a",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team has two years of daily orders, a weekly and a yearly season, and a dozen holidays that move every year. Which family suits it best to start with, after the baselines?",
+    "choices": [
+      {
+        "text": "ARIMA, because it has short-term momentum",
+        "correct": false,
+        "why": "Nothing in the description is about momentum, and two seasons plus moving holidays is ARIMA's hardest case."
+      },
+      {
+        "text": "A model with seasons and a holiday list, such as Prophet",
+        "correct": true,
+        "why": "Right. Several seasons and many moving holidays is the case it was built for."
+      },
+      {
+        "text": "Simple exponential smoothing",
+        "correct": false,
+        "why": "It has no season at all."
+      },
+      {
+        "text": "Holt-Winters with a 365-day season",
+        "correct": false,
+        "why": "One fixed period cannot learn holidays that move."
+      }
+    ]
+  }
+]

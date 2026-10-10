@@ -21,8 +21,8 @@
 #             fixed seeds, so it is the same on every computer.
 #
 # NOT RUN HERE: Prophet, which lesson 3 describes and does not install (it
-# brings a C++ toolchain with it), and R. The lessons say so where they name
-# them.
+# fits with a separate engine, Stan), and R. The lessons say so where they
+# name them.
 #
 #   sudo bash lab.sh up              create ana and ~/bi with panela.py only
 #   sudo bash lab.sh ready           up, then the virtual environment and data
