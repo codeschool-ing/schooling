@@ -689,6 +689,113 @@ def l05_sigmoid(lang):
     return fig, cap
 
 
+# ------------------------------------------------------------------ lesson 6
+
+def moons():
+    from sklearn.datasets import make_moons
+    from sklearn.model_selection import train_test_split
+    X, y = make_moons(n_samples=600, noise=0.25, random_state=0)
+    return train_test_split(X, y, random_state=0)
+
+
+def contour_paths(score, level, xlim, ylim, p, n=160):
+    """The level line of score(x, y) as SVG path data, through matplotlib's contour."""
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    xs, ys = np.linspace(*xlim, n), np.linspace(*ylim, n)
+    gx, gy = np.meshgrid(xs, ys)
+    z = score(np.c_[gx.ravel(), gy.ravel()]).reshape(gx.shape)
+    fig = plt.figure()
+    cs = plt.contour(gx, gy, z, levels=[level])
+    out = []
+    for path in cs.allsegs[0]:
+        if len(path) > 2:
+            out.append('M' + ' L'.join(f'{p.sx(a):.1f} {p.sy(b):.1f}' for a, b in path))
+    plt.close(fig)
+    return out
+
+
+def moon_panel(fig, p, X, y, paths, label):
+    fig.rect(p.x0, p.y0, p.x1 - p.x0, p.y1 - p.y0, stroke='--wire', fill='--panel', width=1, rx=0)
+    for (a, b), c in zip(X, y):
+        if p.xmin <= a <= p.xmax and p.ymin <= b <= p.ymax:
+            fig.circle(p.sx(a), p.sy(b), 2, fill='--phosphor' if c else '--amber')
+    for d in paths:
+        fig.path(d, stroke='--paper', width=2)
+    fig.text((p.x0 + p.x1) / 2, p.y0 - 10, label, size=11, weight='600')
+
+
+@figure('l06-svm', 6)
+def l06_svm(lang):
+    from sklearn.svm import SVC
+    X_train, X_test, y_train, y_test = moons()
+    svm = SVC(kernel='rbf', C=1).fit(X_train, y_train)
+    fig = Fig('l06-svm', 600, 330, T(lang,
+        'Two interlocking crescents of training points in two colours, with the rbf support vector '
+        'machine boundary curving between them and the support vectors circled; they all sit near '
+        'the boundary.',
+        'Duas meias-luas encaixadas de pontos de treino em duas cores, com a fronteira da máquina de '
+        'vetores de suporte rbf curvando entre elas e os vetores de suporte circulados; todos ficam '
+        'perto da fronteira.'))
+    xl, yl = (-1.6, 2.6), (-1.1, 1.6)
+    p = Plot(fig, 40, 30, 560, 290, *xl, *yl)
+    fig.rect(p.x0, p.y0, p.x1 - p.x0, p.y1 - p.y0, stroke='--wire', fill='--panel', width=1, rx=0)
+    for (a, b), c in zip(X_train, y_train):
+        fig.circle(p.sx(a), p.sy(b), 2.2, fill='--phosphor' if c else '--amber')
+    for i in svm.support_:
+        a, b = X_train[i]
+        if xl[0] <= a <= xl[1] and yl[0] <= b <= yl[1]:
+            fig.circle(p.sx(a), p.sy(b), 5, fill=None, stroke='--paper', width=1)
+    for d in contour_paths(svm.decision_function, 0, xl, yl, p):
+        fig.path(d, stroke='--paper', width=2.2)
+    fig.text(p.x0, 16, T(lang, f'{len(svm.support_)} support vectors circled; every other point could be removed',
+                         f'{len(svm.support_)} vetores de suporte circulados; qualquer outro ponto poderia sair'),
+             size=10.5, anchor='start', fill='--paper-dim')
+    cap = T(lang, 'The boundary is decided by the circled points alone, the ones on the edge of the '
+                  'margin or past it.',
+            'A fronteira é decidida só pelos pontos circulados, os que estão na borda da margem ou '
+            'além dela.')
+    return fig, cap
+
+
+@figure('l06-boundaries', 6)
+def l06_boundaries(lang):
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.naive_bayes import GaussianNB
+    from sklearn.neighbors import KNeighborsClassifier
+    from sklearn.svm import SVC
+    X_train, X_test, y_train, y_test = moons()
+    models = [(T(lang, 'logistic regression', 'regressão logística'), LogisticRegression()),
+              (T(lang, '15 nearest neighbours', '15 vizinhos mais próximos'), KNeighborsClassifier(15)),
+              (T(lang, 'Gaussian naive Bayes', 'naive Bayes gaussiano'), GaussianNB()),
+              (T(lang, 'rbf support vector machine', 'máquina de vetores de suporte rbf'), SVC(kernel='rbf'))]
+    fig = Fig('l06-boundaries', 660, 470, T(lang,
+        'Four small panels of the same crescents, each with one model\'s boundary: a straight line for '
+        'logistic regression, a wiggly curve for nearest neighbours, a nearly straight line for '
+        'Gaussian naive Bayes, and a smooth curve following the crescents for the support vector '
+        'machine.',
+        'Quatro painéis pequenos das mesmas meias-luas, cada um com a fronteira de um modelo: uma reta '
+        'na regressão logística, uma curva ondulada nos vizinhos mais próximos, uma linha quase reta '
+        'no naive Bayes gaussiano, e uma curva suave que segue as meias-luas na máquina de vetores de '
+        'suporte.'))
+    xl, yl = (-1.6, 2.6), (-1.1, 1.6)
+    for i, (name, m) in enumerate(models):
+        m.fit(X_train, y_train)
+        acc = m.score(X_test, y_test)
+        col, row = i % 2, i // 2
+        x0, y0 = 20 + col * 325, 30 + row * 225
+        p = Plot(fig, x0, y0, x0 + 300, y0 + 180, *xl, *yl)
+        score = m.decision_function if hasattr(m, 'decision_function') else (lambda Z, m=m: m.predict_proba(Z)[:, 1] - 0.5)
+        moon_panel(fig, p, X_train, y_train, contour_paths(score, 0, xl, yl, p),
+                   f'{name}: {acc:.1%}'.replace('.', ',') if lang == 'pt' else f'{name}: {acc:.1%}')
+    cap = T(lang, 'The same training points, four shapes of boundary. The percentages are right answers '
+                  'on the test points.',
+            'Os mesmos pontos de treino, quatro formas de fronteira. As porcentagens são acertos nos '
+            'pontos de teste.')
+    return fig, cap
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
