@@ -64,16 +64,17 @@ requests. They granted 8 and refused 3; each refusal came with a cheaper way to 
 standard, such as reading a value through an existing `api.py` function the requester had not found.
 
 Of the 8 granted, 4 were closed before their date by fixing the code, 2 were renewed once, 1 is
-Bruno's and still open, and 1 changed a standard. That last one was a nightly job in Payments that reconciles payouts
-with the bank partner's statement. It asked to be let off `/healthz` and `/metrics`, and the reason
+Bruno's and still open, and 1 changed a standard. That last one was a nightly job in Payments that
+reconciles payouts with the bank partner's statement. It asked to be let off `/healthz` and `/metrics`, and the reason
 was good: a job that runs for twenty minutes at 2 a.m. and then exits has no requests to report on
 and nothing for a health check to probe. The request showed that the standard had been written with
 web services in mind. Paula rewrote it as two rules, one for services and one for scheduled jobs,
 which report how each run ended to the job monitor.
 
-**Several exceptions against one standard are a finding about the standard, not about the teams.**
-The rule was written against a picture of the system, and the requests are the places where the
-picture was wrong. An owner who refuses all of them protects the wording and loses the people.
+**An exception whose reason would hold for every case of its kind is a finding about the standard,
+not about the team.** The rule was written against a picture of the system, and requests like this
+one show where the picture was wrong. An owner who refuses them protects the wording and loses the
+people.
 
 ## Measuring adoption
 

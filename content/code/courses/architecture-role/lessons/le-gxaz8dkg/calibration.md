@@ -1,5 +1,5 @@
 ---
-title: Calibration: knowing what a design costs to build
+title: Calibration, or knowing what a design costs to build
 version: 1
 ---
 
