@@ -796,6 +796,89 @@ def l06_boundaries(lang):
     return fig, cap
 
 
+# ------------------------------------------------------------------ lesson 7
+
+@figure('l07-depth', 7)
+def l07_depth(lang):
+    from sklearn.tree import DecisionTreeClassifier
+    churn = churn_frame()
+    tr, te = churn[churn['snapshot'] < '2025-07-01'], churn[churn['snapshot'] >= '2025-07-01']
+    cut = 40 / (0.3 * 480)
+    def nv(rows, chance):
+        send = chance >= cut
+        return 0.3 * 480 * ((rows['churned'] == 1).to_numpy() & send).sum() - 40 * send.sum()
+    depths = list(range(1, 21))
+    a, b = [], []
+    for d in depths:
+        t = DecisionTreeClassifier(max_depth=d, random_state=0).fit(tr[NUM], tr['churned'])
+        a.append(nv(tr, t.predict_proba(tr[NUM])[:, 1]) / 1000)
+        b.append(nv(te, t.predict_proba(te[NUM])[:, 1]) / 1000)
+    fig = Fig('l07-depth', 640, 300, T(lang,
+        'Net value in thousands of reais against tree depth from 1 to 20. The training curve climbs '
+        'steadily; the test curve rises to a peak at depth 7 and then falls below zero.',
+        'Valor líquido em milhares de reais contra a profundidade da árvore, de 1 a 20. A curva de '
+        'treino sobe sem parar; a de teste sobe até um pico na profundidade 7 e depois cai abaixo de '
+        'zero.'))
+    lo = min(min(b), 0)
+    hi = max(a)
+    p = Plot(fig, 70, 30, 560, 250, 1, 20, -40, 200)
+    p.yaxis([-40, 0, 40, 80, 120, 160, 200], label=T(lang, 'net value, thousands of reais', 'valor líquido, milhares de reais'))
+    p.xaxis([1, 5, 10, 15, 20], label=T(lang, 'max_depth', 'max_depth'))
+    for vals, col, name in [(a, '--paper-dim', T(lang, 'training months', 'meses de treino')),
+                            (b, '--phosphor', T(lang, 'test months', 'meses de teste'))]:
+        d = 'M' + ' L'.join(f'{p.sx(x):.1f} {p.sy(max(min(v, 200), -40)):.1f}' for x, v in zip(depths, vals))
+        fig.path(d, stroke=col, width=2.2)
+        fig.text(p.x1 + 6, p.sy(max(min(vals[-1], 200), -40)), name, size=10, anchor='start', fill=col)
+    best = int(np.argmax(b))
+    fig.circle(p.sx(depths[best]), p.sy(b[best]), 4, fill='--amber')
+    fig.text(p.sx(depths[best]), p.sy(b[best]) - 14, T(lang, f'peak: depth {depths[best]}', f'pico: profundidade {depths[best]}'),
+             size=10, fill='--amber')
+    cap = T(lang, 'Past depth 7 every extra level helps the training months and hurts the test months.',
+            'Depois da profundidade 7, cada nível a mais ajuda os meses de treino e prejudica os de teste.')
+    return fig, cap
+
+
+@figure('l07-steps', 7)
+def l07_steps(lang):
+    from sklearn.linear_model import LinearRegression
+    from sklearn.tree import DecisionTreeRegressor
+    d = deliveries_frame()
+    train = d[d['date'] < '2025-10-01']
+    f_tree = ['distance_km', 'items', 'hour', 'rain', 'driver_months']
+    f_line = ['distance_km', 'items', 'rush', 'rain', 'driver_months']
+    tree = DecisionTreeRegressor(min_samples_leaf=100, random_state=0).fit(train[f_tree], train['minutes'])
+    line = LinearRegression().fit(train[f_line], train['minutes'])
+    km = np.linspace(0, 60, 241)
+    base = pd.DataFrame({'distance_km': km, 'items': 17, 'hour': 15, 'rush': 0, 'rain': 0, 'driver_months': 30})
+    yt, yl = tree.predict(base[f_tree]), line.predict(base[f_line])
+    fig = Fig('l07-steps', 640, 300, T(lang,
+        'Predicted minutes against distance from 0 to 60 km, for a dry delivery of 17 items at 3 pm. '
+        'The line rises steadily the whole way. The tree is a staircase that goes flat at about 16 km, '
+        'where deliveries become rare, and stays flat past 29 km, the longest training delivery.',
+        'Minutos previstos contra a distância de 0 a 60 km, para uma entrega sem chuva de 17 itens às '
+        '15h. A reta sobe sem parar o caminho todo. A árvore é uma escada que fica plana perto dos 16 km, '
+        'onde as entregas ficam raras, e continua plana além dos 29 km, a entrega de treino mais longa.'))
+    p = Plot(fig, 60, 30, 560, 250, 0, 60, 0, 180)
+    p.yaxis([0, 30, 60, 90, 120, 150, 180], label=T(lang, 'predicted minutes', 'minutos previstos'))
+    p.xaxis([0, 10, 20, 30, 40, 50, 60], label=T(lang, 'distance, km', 'distância, km'))
+    edge = train['distance_km'].max()
+    x, w = p.sx(edge), p.sx(60) - p.sx(edge)
+    fig.path(f'M{x:.1f} {p.y0:.1f} L{x + w:.1f} {p.y0:.1f} L{x + w:.1f} {p.y1:.1f} L{x:.1f} {p.y1:.1f} Z',
+             stroke=None, fill='--scan', width=0)
+    fig.line(x, p.y0, x, p.y1, stroke='--paper-dim', width=1, dash='4 3')
+    fig.text((p.sx(edge) + p.sx(60)) / 2, p.y0 + 14, T(lang, 'beyond any training delivery', 'além de toda entrega de treino'),
+             size=10, fill='--paper-dim')
+    for ys, col in [(yl, '--paper'), (yt, '--phosphor')]:
+        fig.path('M' + ' L'.join(f'{p.sx(x):.1f} {p.sy(y):.1f}' for x, y in zip(km, ys)), stroke=col, width=2.2)
+    fig.text(p.x1 + 6, p.sy(yl[-1]), T(lang, 'the line', 'a reta'), size=10.5, anchor='start', fill='--paper')
+    fig.text(p.x1 + 6, p.sy(yt[-1]), T(lang, 'the tree', 'a árvore'), size=10.5, anchor='start', fill='--phosphor')
+    cap = T(lang, 'Inside the data the two roughly agree. Outside it, the tree stops learning anything '
+                  'and repeats its last step.',
+            'Dentro dos dados os dois quase concordam. Fora deles, a árvore para de aprender e repete o '
+            'último degrau.')
+    return fig, cap
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
