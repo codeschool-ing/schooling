@@ -1,6 +1,6 @@
 ---
 title: O que faz um alerta valer a pena
-version: 1
+version: 2
 ---
 
 As quatro regras têm uma estrutura comum, e a estrutura é o que uma equipe escreve para todo alerta que
@@ -19,9 +19,9 @@ mantém:
 
 ## Para onde ele manda
 
-A aula 11 disse que um alerta que acorda alguém precisa de precisão acima de tudo. O alarme falso em três
-dias da regra de Wilson serve para uma mensagem no canal da equipe e é demais para um chamado às três da
-manhã. A maioria dos alertas de qualidade pertence ao primeiro lugar: uma alta nas recusas é problema para
+A aula 11 disse que um alerta que acorda alguém precisa de precisão acima de tudo. A regra de Wilson não
+deu alarme falso em dois dias e meio, o que serve para uma mensagem no canal da equipe e diz pouco demais
+para um chamado às três da manhã: uns poucos dias de histórico não prometem o mês seguinte. A maioria dos alertas de qualidade pertence ao primeiro lugar: uma alta nas recusas é problema para
 a manhã, não uma pane. O que chama alguém no meio da noite é o assistente falhando de vez, os erros e
 timeouts da aula 4, que não têm problema de definição nenhum.
 
@@ -34,8 +34,9 @@ abre deveria estar a um clique da árvore de trace da aula 1.
 A mesma estrutura vale para todo sinal que o curso montou:
 
 - **Polegares para baixo e reformulações**, os da aula 5, com uma janela mais longa, porque são menos.
-- **Custo por requisição**, o da aula 3, contra a sua própria linha de base: a versão que de repente fica
-  cara é uma regressão tanto quanto a que de repente fica ruim, como a aula 14 viu.
+- **Custo por requisição**, o da aula 3, contra a sua própria linha de base: uma mudança brusca para
+  qualquer lado merece um olhar, porque na aula 14 as versões que quebraram casos eram as mais
+  baratas.
 - **Latência**, a da aula 4, nos percentis lentos e não na mediana.
 - **A nota amostrada do juiz**, a da aula 9, sempre com o seu n, e só num critério que a aula 10 mostrou
   que o juiz consegue ver.

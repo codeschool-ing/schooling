@@ -94,7 +94,7 @@
   },
   {
     "id": "ex-6s184dnm",
-    "version": 1,
+    "version": 2,
     "section": "two-shapes",
     "type": "quiz",
     "difficulty": "medium",
@@ -117,9 +117,9 @@
         "why": "It could write text; the transfer has nothing to say beyond its name."
       },
       {
-        "text": "Because labllm does not support arguments",
+        "text": "Because Ollama does not support tools without arguments",
         "correct": false,
-        "why": "Every other tool in the lesson takes arguments through labllm."
+        "why": "It does: the triage agent called one, and the transfer happened."
       }
     ]
   },
@@ -151,7 +151,7 @@
   },
   {
     "id": "ex-vxq9mddm",
-    "version": 1,
+    "version": 2,
     "section": "an-orchestrator",
     "type": "quiz",
     "difficulty": "medium",
@@ -166,7 +166,7 @@
       {
         "text": "Only the question the orchestrator wrote",
         "correct": true,
-        "why": "Right. 'Has order M-1043 shipped?' is its whole knowledge of the conversation."
+        "why": "Right. 'Did my order M-1043 ship yet?' is its whole knowledge of the conversation."
       },
       {
         "text": "The customer's message and the catalogue specialist's answer",
@@ -225,14 +225,14 @@
   },
   {
     "id": "ex-0pgq62js",
-    "version": 1,
+    "version": 2,
     "section": "what-it-cost",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "How many more input tokens did the orchestrated run use than the single agent, for the same answer?",
-    "hint": "1385 and 897.",
-    "value": 488,
+    "prompt": "How many more input tokens did the orchestrated run use than the single agent, on the same question?",
+    "hint": "1435 and 714.",
+    "value": 721,
     "tolerance": 0,
     "unit": "tokens"
   },
@@ -269,12 +269,12 @@
   },
   {
     "id": "ex-4k0pjn8z",
-    "version": 1,
+    "version": 2,
     "section": "handoff",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "The triage agent's only request produced one output token. Why so few?",
+    "prompt": "The triage agent's only request produced 14 output tokens. Why so few?",
     "choices": [
       {
         "text": "Because the decision is the tool's name, and its input is empty",
@@ -282,7 +282,7 @@
         "why": "Right. transfer_to_orders takes no arguments, so the reply is a name and {}."
       },
       {
-        "text": "Because max_tokens was set to one",
+        "text": "Because max_tokens was set to fourteen",
         "correct": false,
         "why": "max_tokens was 200."
       },
@@ -292,9 +292,9 @@
         "why": "Nothing failed; the transfer happened on the first request."
       },
       {
-        "text": "Because labllm counts tool names as zero tokens",
+        "text": "Because Ollama counts tool names as zero tokens",
         "correct": false,
-        "why": "The output count covers the tool input; the decision itself is cheap."
+        "why": "The count covers the call, name included; the call is simply short."
       }
     ]
   },
@@ -393,32 +393,32 @@
   },
   {
     "id": "ex-kz1gydjs",
-    "version": 1,
-    "section": "telephone-game",
+    "version": 2,
+    "section": "an-orchestrator",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Without --evidence, why did the orchestrator tell the customer both orders were on their way?",
+    "prompt": "In section 04, the catalogue specialist found a science fiction book and the orchestrator's reply left it out. Where was it lost?",
     "choices": [
       {
-        "text": "Because get_order returned the wrong status for M-1048",
+        "text": "In find_books, which returned nothing for science fiction",
         "correct": false,
-        "why": "It returned cancelled, correctly. The specialist's summary dropped it."
+        "why": "It returned The Time Machine, and the specialist named it."
       },
       {
-        "text": "It saw only the summary, and the summary hid the cancellation",
+        "text": "In the orchestrator's last step, where it put the answers together",
         "correct": true,
-        "why": "Right. Nothing else crossed the boundary, so it had no way to tell."
+        "why": "Right. Both answers reached it as tool results; it wrote only about the order."
       },
       {
-        "text": "Because the orchestrator called get_order itself and misread the result",
+        "text": "In the catalogue specialist, which never answered",
         "correct": false,
-        "why": "The orchestrator has no shop tools; it only asks specialists."
+        "why": "It answered, and its answer is printed under its call."
       },
       {
-        "text": "Because the specialist lied",
+        "text": "In the customer's question, which asked only about the order",
         "correct": false,
-        "why": "Its sentence is defensible word by word; it lost a fact, it did not invent one."
+        "why": "The question asked both things, and the orchestrator asked both specialists."
       }
     ]
   },
@@ -455,32 +455,32 @@
   },
   {
     "id": "ex-6qcm01fv",
-    "version": 1,
+    "version": 2,
     "section": "telephone-game",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "With --evidence, what changed in the specialist's behaviour?",
+    "prompt": "With --evidence, what reaches the orchestrator that did not before?",
     "choices": [
       {
-        "text": "It wrote a more careful summary that mentioned the cancelled order",
+        "text": "A more careful summary, because the specialist knows it will be checked",
         "correct": false,
-        "why": "Its sentence was word for word the same, as the last command printed."
+        "why": "The specialist's prompt is unchanged; it does not know evidence is attached."
       },
       {
-        "text": "It made two extra tool calls to double-check the statuses",
+        "text": "Two extra tool calls the specialist makes to double-check",
         "correct": false,
-        "why": "It made the same two calls as before."
+        "why": "It makes the same calls; the host only appends their results."
       },
       {
-        "text": "It refused to answer without evidence",
+        "text": "A refusal to answer without evidence",
         "correct": false,
-        "why": "It answered exactly as before."
+        "why": "Nothing refuses; the answer simply carries more."
       },
       {
-        "text": "Nothing",
+        "text": "The specialist's calls and the start of each result, appended by the host",
         "correct": true,
-        "why": "Right. The specialist did not improve; the boundary did."
+        "why": "Right. The boundary changed, not the specialist."
       }
     ]
   },

@@ -1,31 +1,16 @@
 ---
 title: O ambiente é uma lista
-version: 1
+version: 2
 ---
 
-A aula 12 descobriu que um hospedeiro entregava aos servidores o ambiente inteiro, chaves de API incluídas. O `mcp_host.py` entrega a cada servidor exatamente o que o `ENV` nomeia. A primeira versão dessa lista tinha só `PATH` e `HOME`. Rodando de novo com aquela lista, que é o que o `host_minimal.py` é:
+A aula 12 descobriu que um hospedeiro entregava aos servidores o ambiente inteiro, chaves de API inclusive. O `mcp_host.py` entrega a cada servidor exatamente o que o `ENV` nomeia, e a lista tem duas entradas: `PATH`, com o `bin` do ambiente virtual na frente, e `HOME`. O `PATH` está ali por um motivo fácil de não ver: o comando é `python`, e o processo do servidor procura esse nome no `PATH` que recebe, não no seu. Sem o ambiente virtual nele, `python` é o que o sistema tiver, se tiver, e esse Python não tem o `mcp`. Nada mais é preciso, porque nada no `shop.py` lê uma variável: o `search_help` chega ao Ollama num endereço fixo.
+
+Uma pergunta para a central de ajuda, e depois a saída de erro dos servidores:
 
 ```
-ana@lab:~/agents$ grep -v MINILM_DIR mcp_host.py | sed 's/"HOME": "\/home\/ana",   # all/"HOME": "\/home\/ana"}   # all/' > host_minimal.py; python host_minimal.py 'How do I send a book back?' 2> host.err; tail -1 host.err
-step 1: shop__search_help {"query": "send a book back"}
-  error: Error executing tool search_help
-step 2: read_help {"uri": "help://h14"}
-  result: # How to return a book  You have 30 days from delivery to return a printed book in the condition you received 
-answer: You have 30 days from delivery to return a printed book. Start the return from the order in your account, print the prepaid label and drop the parcel at any post office; returns are free.
-mcp.server.mcpserver.exceptions.UnexpectedToolError: Error executing tool search_help
+{block("help")}
 ```
 
-O `search_help` falhou com *"Error executing tool search_help"*. O `host.err` é para onde foi a saída de erro dos servidores, e a última linha dele mostra que o servidor registrou uma queda, com o traceback acima. O motivo não estava na mensagem que o modelo recebeu: o `search_help` faz o embedding da consulta com o modelo MiniLM de `embeddings-vectors`, e o módulo que o carrega acha o diretório do modelo pelo `MINILM_DIR`. Sem a variável, ele procurou num diretório padrão que não existe neste laboratório. O modelo seguiu e leu o `help://h14` mesmo assim, porque as regras do curso roteirizaram esse próximo passo; um modelo real talvez não seguisse.
+A busca funcionou, e o modelo respondeu só pelos títulos: mandou o cliente para uma aba "Help" e para o artigo de livros danificados, numa pergunta sobre devoluções. Ele poderia ter lido `help://h14` com o `read_help`; este modelo, como a aula 1 descobriu, não chama uma segunda ferramenta depois de um resultado de ferramenta. O erro ali não foi do hospedeiro, e a próxima seção mostra a metade do hospedeiro na leitura de um artigo.
 
-Com o `MINILM_DIR` na lista:
-
-```
-ana@lab:~/agents$ python mcp_host.py "How do I send a book back?" 2> host.err
-step 1: shop__search_help {"query": "send a book back"}
-  result: {"result": [{"title": "How to return a book", "uri": "help://h14"}, {"title": "Damaged books on arrival", "uri
-step 2: read_help {"uri": "help://h14"}
-  result: # How to return a book  You have 30 days from delivery to return a printed book in the condition you received 
-answer: You have 30 days from delivery to return a printed book. Start the return from the order in your account, print the prepaid label and drop the parcel at any post office; returns are free.
-```
-
-Duas lições de uma falha. **Um ambiente mínimo tem de ser completo**: liste o que cada servidor precisa, e teste as ferramentas que precisam disso. E **a queda de um servidor é contada ao log dele, não ao cliente**, como a aula 14 explicou; um hospedeiro que joga fora a saída de erro dos servidores (as aulas 11 e 12 jogaram, com `2> /dev/null`) jogou fora o único lugar onde estava o motivo.
+O `host.err` está vazio. É para lá que vai a saída de erro dos dois servidores, porque o `2> host.err` cobre também os filhos do hospedeiro, e quando um servidor cai o traceback vai para lá e para nenhum outro lugar: o cliente recebe *"Error executing tool …"*, como a aula 14 mostrou. Daí saem duas regras. **Um ambiente mínimo tem de ser completo**: liste o que cada servidor precisa e teste as ferramentas que precisam disso. E **guarde a saída de erro dos servidores**: um hospedeiro que a joga fora (as aulas 11 e 12 jogaram, com `2> /dev/null`) jogou fora o único lugar onde uma queda se explica.

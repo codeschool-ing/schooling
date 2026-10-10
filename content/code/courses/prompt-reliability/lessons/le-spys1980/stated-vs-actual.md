@@ -1,14 +1,15 @@
 ---
 title: Stated and actual
-version: 1
+version: 2
 ---
 
-Ask a model how sure it is and it will tell you, in a number with two decimal places. The number
-looks like a probability. **It is text the model wrote**, like the category beside it, and nothing
+Ask a model how sure it is and it will tell you, in a number with a decimal point. The number looks
+like a probability. **It is text the model wrote**, like the category beside it, and nothing
 guarantees it was computed from anything. Calibration is the question of whether that number
 matches how often the model is right when it says it.
 
-The prompt for this lesson adds a fourth field:
+Lesson 6 saved a prompt with a fourth field, `prompts/v9-confidence.txt`. These are its lines about
+confidence:
 
 ```
 ana@lab:~/triage$ grep -n confidence prompts/v9-confidence.txt
@@ -18,52 +19,65 @@ ana@lab:~/triage$ grep -n confidence prompts/v9-confidence.txt
 21:Output: {"category": "account", "urgency": "low", "summary": "Asks how to change the account name.", "confidence": 0.85}
 ```
 
-The instruction asks for a number from 0 to 1, and the three examples show what one looks like.
+The instruction asks for a number from 0 to 1, and the three examples show 0.9, 0.95 and 0.85.
 
-## How the stand-in decides what to say
+## What it said
 
-```
-ana@lab:~/triage$ grep -n -A6 "^def confidence" promptlab/standin.py
-242:def confidence(sc, label):
-243-    """What it SAYS its confidence is. It is worked out from how much evidence
-244-    it found FOR its answer, and never looks at the evidence for the others:
-245-    a message full of billing words gets a confident billing, even when it is
-246-    just as full of words for returns. That is the course's choice, made so
-247-    that lesson 21 has an overconfident model to calibrate."""
-248-    return min(0.99, round(0.62 + 0.1 * max(0.0, sc[label]), 2))
-```
-
-The stand-in states 0.62, plus a tenth of the score it found **for the label it chose**, and never
-more than 0.99. It does not look at the scores of the other labels. A message with strong evidence
-for two labels gets a confident answer for whichever one won, and that is the flaw the docstring
-says was put there on purpose. It is one plausible way for a model to be overconfident, and it
-gives this lesson something to measure.
-
-## One confident mistake
+Run it over the seventy cases:
 
 ```
 ana@lab:~/triage$ pl run prompts/v9-confidence.txt cases/all.jsonl --out runs/v9.jsonl
-70 calls, prompt c31bed19, written to runs/v9.jsonl
+70 calls, prompt c31bed19, llama3.2:3b, written to runs/v9.jsonl
 ana@lab:~/triage$ pl check runs/v9.jsonl
 check      pass  fail
 json         70     0
 fields       70     0
 labels       70     0
-category     56    14
-urgency      47    23
-all          47    23
-ana@lab:~/triage$ grep h04 cases/all.jsonl
-{"id": "h04", "message": "I'd like to return the atlas, but the courier you use doesn't collect from my area.", "expect": {"category": "returns", "urgency": "normal"}}
-ana@lab:~/triage$ pl show runs/v9.jsonl h04
-│ {"category": "delivery", "urgency": "normal", "summary": "They'd like to return the atlas, but the courier you use doesn't collect from their area.", "confidence": 0.97}
-stop: end, tokens in 287, out 54
+category     52    18
+urgency      37    33
+all          37    33
 ```
 
-Fifty-six of seventy categories are right, 80%. `h04` is one of the fourteen that are not, and it
-was stated at **0.97**. The customer wants to return an atlas and cannot because the courier does
-not collect from their area. A person called that returns. The stand-in found `courier` and
-`collect`, two delivery words, and `return`, one returns word. It chose delivery and stated its
-confidence from the delivery evidence alone, as if the returns evidence were not in the message.
+Fifty-two of seventy categories are right, 74%. Now look at the numbers it stated, all seventy of
+them:
 
-One confident mistake is an anecdote. Whether the stand-in is overconfident in general is a
-question about all seventy answers at once, and the next section asks it.
+```
+ana@lab:~/triage$ grep -o 'confidence\\": [0-9.]*' runs/v9.jsonl | sort | uniq -c
+      1 confidence\": 0.0
+     46 confidence\": 0.8
+     22 confidence\": 0.9
+      1 confidence\": 0.95
+```
+
+**Four different values, and 68 of the 70 replies say 0.8 or 0.9.** The examples showed 0.9, 0.95
+and 0.85, and the model wrote numbers next to them. Whether it chose between 0.8 and 0.9 for any
+reason the message gave is the question the rest of this lesson measures.
+
+## One confident mistake, one strange zero
+
+```
+ana@lab:~/triage$ grep h03 cases/all.jsonl
+{"id": "h03", "message": "My account shows an order I never placed and my card has been charged for it.", "expect": {"category": "billing", "urgency": "high"}}
+ana@lab:~/triage$ pl show runs/v9.jsonl h03
+│ {"category": "account", "urgency": "high", "summary": "Wants to know about a suspicious order on their account.", "confidence": 0.9}
+stop: stop, tokens in 291, out 38, 4.6 s
+```
+
+A charge for an order the customer never placed. The person who labelled it called that billing:
+money taken that should not have been. The model called it account and stated 0.9, the higher of the
+two values it almost always uses.
+
+```
+ana@lab:~/triage$ pl show runs/v9.jsonl t35
+│ {"category": "other", "urgency": "low", "summary": "Compliments the shop and its service.", "confidence": 0.0}
+stop: stop, tokens in 290, out 35, 4.2 s
+```
+
+A thank-you note, labelled `other`, right, and stated at **0.0**. A confidence of zero on a right
+answer is either a model that is never sure about praise or a model that read the field as
+something else, how much of a problem the message is, perhaps. The run cannot tell you which, and
+that is the point: the field is a number the model wrote, and what it means is whatever the model
+meant.
+
+One confident mistake is an anecdote. Whether the stated numbers mean anything is a question about
+all seventy answers at once, and the next section asks it.

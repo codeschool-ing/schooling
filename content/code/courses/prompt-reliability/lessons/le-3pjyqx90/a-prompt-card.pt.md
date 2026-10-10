@@ -1,19 +1,18 @@
 ---
 title: Uma ficha do prompt
-version: 1
+version: 2
 ---
 
-Os registros de decisão e o registro de falhas são para quem vai mudar o prompt. A terceira nota é
-para quem vai usá-lo: um time que quer apontá-lo para outra caixa de entrada, a pessoa de plantão
-quando o roteamento dá errado, uma gerente perguntando quanto custa. **Essas pessoas precisam de uma
-página, e ela precisa dizer quão bom é o prompt em números, inclusive os números que não o
-favorecem.**
+Os registros de decisão e o registro de falhas são para quem muda o prompt. A terceira nota é para
+quem o usa: uma equipe que quer apontá-lo para outra caixa de entrada, a pessoa de plantão quando o
+roteamento dá errado, um gestor perguntando quanto custa. **Essas pessoas precisam de uma página, e
+precisam que ela diga quão bom o prompt é em números, incluindo os números que não lisonjeiam.**
 
 A ideia tem um precedente publicado. *Model Cards for Model Reporting* (Mitchell e outros, 2019)
 propôs um documento curto para acompanhar todo modelo treinado: para que serve, para que não deve
-ser usado, como foi avaliado e com quais dados, e as limitações conhecidas. Um prompt não é um modelo
+ser usado, como foi avaliado e com que dados, e as limitações conhecidas. Um prompt não é um modelo
 treinado, mas é um componente sobre o qual outras pessoas vão construir sem ler o que tem dentro, que
-é exatamente a situação para a qual o model card foi escrito.
+é exatamente a situação para a qual um model card foi escrito.
 
 ## Os números da ficha
 
@@ -21,56 +20,64 @@ Todo número de uma ficha vem de um comando, rodado na versão que a ficha descr
 
 ```
 ana@lab:~/triage$ for s in dev holdout attacks pasted; do pl run prompts/triage.txt cases/$s.jsonl --out runs/$s.jsonl > /dev/null; printf "%-8s" $s; pl check runs/$s.jsonl | tail -n 1; done
-dev     all          36     4
-holdout all          11    19
-attacks all           6     4
-pasted  all           4     2
-ana@lab:~/triage$ pl check runs/dev.jsonl --failures | tail -n 4
-t14    urgency   normal, expected low
-t24    urgency   low, expected normal
-t28    urgency   normal, expected low
-t37    category  billing, expected delivery
-ana@lab:~/triage$ pl cost runs/dev.jsonl
-tokens          count   per call
-input           11859      296.5
-cache_read          0        0.0
-cache_write         0        0.0
-output           1497       37.4
+dev     all          24    16
+holdout all          15    15
+attacks all           3     7
+pasted  all           2     4
+ana@lab:~/triage$ pl check runs/dev.jsonl --failures
+check      pass  fail
+json         38     2
+fields       38     2
+labels       38     2
+category     35     5
+urgency      24    16
+all          24    16
 
-cost of these 40 calls: 5.8032 cents
-cost of a million calls like them: 145,080 cents
+t02    urgency   high, expected normal
+t04    urgency   normal, expected high
+t07    urgency   low, expected normal
+t09    urgency   high, expected normal
+t12    urgency   normal, expected high
+t23    urgency   normal, expected high
+t24    urgency   high, expected normal
+t25    category  other, expected account
+t26    category  account, expected billing
+t28    urgency   normal, expected low
+t32    urgency   high, expected normal
+t33    category  delivery, expected returns
+t36    urgency   low, expected high
+t37    json      not a JSON object
+t38    json      not a JSON object
+t39    urgency   low, expected normal
+ana@lab:~/triage$ python3 stats.py runs/dev.jsonl
+runs/dev.jsonl, 40 calls
+  tokens in    mean  306.1   total  12246
+  tokens out   mean   29.1   total   1162   max 36
+  seconds      p50   4.0   p95   4.6   total  161.3
 ```
 
 O laço roda o prompt sobre cada conjunto de teste e guarda a última linha de cada verificação:
-aprovações, depois falhas. As falhas em dev são os modos de falha conhecidos, uma mensagem de cada
-vez. O `pl cost` transforma os tokens em dinheiro usando o `prices.json` do curso; a aula 16 explica
-como, e para a ficha só importam os números por chamada e a última linha.
+aprovadas, depois falhas. As falhas no dev são os modos de falha conhecidos, uma mensagem de cada
+vez. O `stats.py`, da aula 2, dá os tokens e os segundos de uma chamada; a aula 16 transforma tokens
+em dinheiro.
 
 ## A ficha
 
 | | `prompts/triage.txt` |
 |---|---|
-| para que serve | Classificar cada mensagem da caixa de atendimento da Folio numa categoria, uma urgência e um resumo de uma frase, em JSON para o programa de roteamento |
-| para que não serve | Responder a clientes, ou mensagens em qualquer língua que não o inglês: nenhum conjunto de teste tem essas mensagens |
-| responsável | Ana Lima |
-| versão | id `c1916fcd`, commit `03e1151` |
-| modelo e parâmetros | o substituto do laboratório com temperatura 0 e `max_tokens` 400, os padrões da bancada; nenhum dos dois está escrito no arquivo ainda, o que a aula 14 manda corrigir |
-| notas | dev 36/40, holdout 11/30, attacks 6/10, pasted 4/6 |
-| falhas conhecidas | urgência na fronteira entre low e normal (`t14`, `t24`, `t28`); um pedido atrasado puxado para billing pelo primeiro exemplo (`t37`); bem mais fraco nas mensagens difíceis de holdout |
-| custo | 296,5 tokens de entrada e 37,4 de saída por chamada; 145.080 centavos por milhão de chamadas com o `prices.json` |
-| decisões e falhas | 0001 exemplos em JSON; F-0001 os exemplos em linhas simples |
+| propósito | Classificar cada mensagem da caixa de suporte da Folio numa categoria, uma urgência e um resumo de uma frase, em JSON para o programa de roteamento |
+| não serve para | Responder a clientes, ou mensagens em qualquer língua que não seja inglês: nenhum conjunto de teste as tem |
+| dona | Ana Lima |
+| versão | id `c1916fcd`, commit `85dfa4e` |
+| modelo e parâmetros | `llama3.2:3b` (`a80c4f17acd5`) no Ollama 0.40.0, temperatura 0, semente 1, `num_predict` 400: os padrões do harness, nenhum escrito no arquivo ainda, o que a aula 14 manda corrigir |
+| notas | dev 24/40, holdout 15/30, ataques 3/10, coladas 2/6 |
+| falhas conhecidas | urgência, nas duas direções: onze das dezesseis falhas do dev, dez delas a um passo; duas respostas cortadas num apóstrofo (F-0001); `t25`, `t26` e `t33` na categoria errada |
+| custo | 306,1 tokens de entrada e 29,1 de saída por chamada; 4,0 s de mediana e 4,6 s no p95 em quatro núcleos de processador |
+| decisões e falhas | 0001 os exemplos continuam em JSON; F-0001 apóstrofos |
 
-**A linha mais importante é a nota de holdout.** Trinta e seis de quarenta em dev parece um prompt
-pronto, e onze de trinta em mensagens mais difíceis diz que não é. Uma ficha que mostrasse só a nota
-de dev seria verdadeira e enganaria todo mundo que a lesse. A linha *para que não serve* faz o mesmo
-trabalho em palavras: diz onde termina o que foi testado, para que ninguém descubra isso em produção.
-
-## Como manter a ficha verdadeira
-
-Uma ficha é uma afirmação sobre uma versão. Quando o prompt muda e a ficha não, ela descreve um
-prompt que não existe mais, e nada nela parece desatualizado. Dois hábitos evitam isso.
-
-- **Produza os números com os mesmos comandos que a barreira roda**, e atualize a ficha na mesma
-  mudança que altera o prompt. A barreira já calculou os números; copiá-los é um minuto de trabalho.
-- **Ponha a versão na ficha**, o id do prompt e o commit. Quem comparar com a saída do `pl run` sabe
-  na hora se a ficha é sobre o arquivo que tem na frente.
+**A linha mais importante é a nota dos ataques.** Vinte e quatro de quarenta parece um prompt com
+trabalho pela frente; três de dez em mensagens escritas para conduzi-lo diz que qualquer coisa que
+aja a partir dos rótulos dele precisa de uma pessoa, ou do privilégio mínimo da aula 10, por trás.
+Uma ficha que imprimisse só a nota do dev seria verdadeira e enganaria todo mundo que a lesse. A
+linha *não serve para* faz o mesmo trabalho em palavras: diz onde termina o que foi testado, para
+ninguém descobrir isso em produção.

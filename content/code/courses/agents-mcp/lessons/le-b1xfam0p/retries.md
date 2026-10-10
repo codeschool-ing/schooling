@@ -1,26 +1,71 @@
 ---
 title: When the provider fails
-version: 1
+version: 2
 ---
 
 Model APIs fail in ordinary ways: a rate limit (HTTP 429), an internal error (500), a server too busy to answer (Anthropic's 529, *overloaded*). Most of these pass in a second or two, and the right response is to wait and try again. **The question for an agent is who does the retrying**, because there are three candidates: the SDK, the adapter and the loop.
 
-labllm can fail on request. `/lab/config` takes the status to return and how many times, and it answers only from the machine itself. Here it fails twice, then three times:
+To watch who retries, put something in front of Ollama that fails on purpose. `flaky.py` answers the first N requests the way Anthropic's API answers when it is overloaded, with a 529 and the same error body, and passes every later request on to Ollama. It prints each status it sends. Save it as `~/agents/flaky.py`:
+
+```python
+"""flaky.py N: answer the first N requests on port 11437 with 529 Overloaded, then pass the rest on to Ollama."""
+import http.client
+import json
+import sys
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+left = int(sys.argv[1])
+
+
+class Flaky(BaseHTTPRequestHandler):
+    def do_POST(self):
+        global left
+        body = self.rfile.read(int(self.headers.get("Content-Length", 0)))
+        if left > 0:
+            left -= 1
+            status = 529
+            data = json.dumps({"type": "error", "error": {"type": "overloaded_error", "message": "Overloaded"}}).encode()
+        else:
+            upstream = http.client.HTTPConnection("127.0.0.1", 11434, timeout=900)
+            upstream.request("POST", self.path, body, {"Content-Type": "application/json"})
+            reply = upstream.getresponse()
+            status, data = reply.status, reply.read()
+        print(status, flush=True)
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(data)))
+        self.end_headers()
+        self.wfile.write(data)
+
+    def log_message(self, *args):
+        pass
+
+
+ThreadingHTTPServer(("127.0.0.1", 11437), Flaky).serve_forever()
+```
+
+Run it once letting two requests fail, and once letting three:
 
 ```
-ana@lab:~/agents$ curl -s -X POST http://127.0.0.1:8600/lab/config -d "{\"fail_next\": 529, \"fail_count\": 2}"; echo
-{"rpm": 50, "fail_next": 529, "fail_count": 2}
-ana@lab:~/agents$ python run.py "Can I return the copy of Dracula I bought in September? My order is M1047." | head -n 1
-answered after 4 steps, 2401 tokens
-ana@lab:~/agents$ tail -n 6 /var/log/labllm/requests.jsonl | python -c 'import json, sys; print(*[json.loads(l)["status"] for l in sys.stdin])'
-529 529 200 200 200 200
-ana@lab:~/agents$ curl -s -X POST http://127.0.0.1:8600/lab/config -d "{\"fail_next\": 529, \"fail_count\": 3}"; echo
-{"rpm": 50, "fail_next": 529, "fail_count": 3}
-ana@lab:~/agents$ python run.py "Can I return the copy of Dracula I bought in September? My order is M1047." 2>&1 | tail -n 1
-anthropic.OverloadedError: Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}, 'request_id': 'req_lab_0023'}
+ana@lab:~/agents$ python flaky.py 2 > flaky.log &
+ana@lab:~/agents$ ANTHROPIC_BASE_URL=http://127.0.0.1:11437 python run.py "Can I return the copy of Dracula I bought in September? My order is M1047." | head -n 1
+answered after 2 steps, 726 tokens
+ana@lab:~/agents$ cat flaky.log
+529
+529
+200
+200
+ana@lab:~/agents$ pkill -f "^python flaky.py"
+ana@lab:~/agents$ python flaky.py 3 > flaky.log &
+ana@lab:~/agents$ ANTHROPIC_BASE_URL=http://127.0.0.1:11437 python run.py "Can I return the copy of Dracula I bought in September? My order is M1047." 2>&1 | tail -n 1
+anthropic.OverloadedError: Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}}
+ana@lab:~/agents$ cat flaky.log
+529
+529
+529
 ```
 
-With two failures, the run answered as if nothing had happened: `answered after 4 steps, 2401 tokens`, the same as without failures. labllm's log shows what happened underneath: `529 529 200`, and then the three other requests of the run. **The anthropic SDK retried twice, by itself, and told nobody.** Its default is `max_retries=2`, with an exponential backoff starting at half a second, and it retries 408, 409, 429 and every 5xx status. With three failures the retries ran out, and the run ended with `anthropic.OverloadedError`, a 529.
+With two failures, the run answered as if nothing had happened: `answered after 2 steps, 726 tokens`. `flaky.py`'s log shows what happened underneath: `529 529 200 200`, two refusals and then the run's two real requests. **The anthropic SDK retried twice, by itself, and told nobody.** Its default is `max_retries=2`, with an exponential backoff starting at half a second, and it retries 408, 409, 429 and every 5xx status. With three failures the retries ran out after three attempts, and the run ended with `anthropic.OverloadedError`, a 529.
 
 ## Decide which layer retries
 

@@ -1,10 +1,10 @@
 ---
 title: A week of latency, in percentiles
-version: 1
+version: 2
 ---
 
-`latency.py` takes every successful model call of the replayed week, and every request, and prints
-the three clocks as percentiles:
+`latency.py` takes every successful model call of the week lesson 3 replayed, which is still in
+`spans.jsonl`, and every request, and prints the three clocks as percentiles:
 
 ```python
 """latency.py: the week's successful model calls and requests, as percentiles."""
@@ -26,32 +26,31 @@ for name, xs in rows.items():
 ```
 
 ```
-ana@lab:~/obs$ python replay.py
-replayed 1127 requests from data/traffic.jsonl: 1345 asked, 0 failed, 483 feedback events
-ana@lab:~/obs$ python latency.py
+ana@dev:~/obs$ python latency.py
                       n   mean    p50    p90    p95    p99    max   ms
-whole request      1345   1253   1056   2541   2962   4846   6343
-model call         1108   1438   1324   2591   3045   4862   6282
-first token        1108    353    290    399    444   4257   4460
-each token after   1108     26     26     35     38     48     54
+whole request       311   3317   2962   6078   8447   9838  11164
+model call          265   3721   3099   6022   8996   9684  11003
+first token         265    744    748   1346   1431   1954   2190
+each token after    265    102    101    109    110    120    123
 ```
 
 ## Why not the mean
 
-Read the `first token` row. The median is 290 ms and the 95th percentile 444: nineteen calls in
-twenty saw the first token in under half a second. Then **the 99th percentile is 4,257 ms** and the
-maximum 4,460. One call in a hundred waited almost ten times as long as a typical one. The mean, 353,
-sits between the two and describes nobody: it is too high for the typical call and absurdly low for
-the slow one.
+Read the `model call` row. The median is 3,099 ms and the 95th percentile 8,996: nineteen calls in
+twenty finished in under nine seconds, and the slowest took eleven. The mean, 3,721, sits above the
+median, pulled up by the slow few, and describes nobody: it is too high for the typical call and far
+too low for the slow one.
 
-That shape, a tight body and a long thin tail, is what latency looks like nearly everywhere, and it is
-why latency is reported in percentiles. `observability` lesson 6 builds the histograms that make
-percentiles cheap to compute at scale; here a sorted list of a thousand numbers is enough.
+That shape, a body and a long thin tail to one side, is what latency looks like nearly everywhere,
+and it is why latency is reported in percentiles. `observability` lesson 6 builds the histograms
+that make percentiles cheap to compute at scale; here a sorted list of a few hundred numbers is
+enough.
 
-The tail is labobs' **cold start**: with a probability of one in a hundred, a request waits four extra
-seconds before its first token. A real provider's tail has other causes, a request routed to a busy
-machine, a model being loaded, a long queue at the hour everybody's batch jobs start, and the same
-look in a percentile table.
+The tail here has one cause, and the next section finds it: **the long answers**. What it does not
+have is the cause a production tail usually has. A model that has to be loaded into memory first, a
+request routed to a busy machine, a queue at the hour everybody's batch jobs start: none of those
+happened. The model never left memory during a week replayed in seventeen minutes, and nothing else
+was asking. The last section of this lesson makes the first of them happen on purpose.
 
 ## Which percentile to watch
 
@@ -63,5 +62,5 @@ session.
 
 The `whole request` row is the model call plus everything around it, and its tail is the same tail,
 from the same cause, because the model is nearly all of it. The `each token after` row is the second
-clock: 26 ms at the median, 48 at p99. It varies far less than the first token, and that is
-characteristic: what is slow and unpredictable is getting started.
+clock: 101 ms at the median, 120 at p99. It hardly varies at all, and that is characteristic of a
+model with a machine to itself: once it has started, it writes at its own pace.

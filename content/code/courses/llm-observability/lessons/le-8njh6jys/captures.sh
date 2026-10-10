@@ -8,94 +8,73 @@
 #   sudo bash ../../lab.sh up        # once
 #   sudo bash captures.sh
 #
-# What is STAGED rather than typed, and not shown in the lesson: the lab
-# (lab.sh reset), starting Helicone and Phoenix (lab.sh helicone, lab.sh
-# phoenix, as root), copying the course's programs into ~/obs from
-# ../../lab/code, and a five-second wait after the replay for Phoenix to
-# receive the last batch. The programs this lesson writes are put below and
-# shown in full.
+# What is STAGED rather than typed, and not shown: ~/obs rebuilt as lesson 1
+# leaves it (lab.sh reset); the programs lessons 1 to 7 show, read out of the
+# lessons that show them whole (stage); stopping any Phoenix left from an
+# earlier run and removing its data, so that every capture starts from an
+# empty one; starting Phoenix and flaky.py in the background with the
+# commands the lesson shows, waiting for Phoenix to answer, and five seconds
+# after the replay for it to receive the last batch.
 #
-# HELICONE IS REAL, self-hosted from its all-in-one image at the digest pinned
-# in ../../lab.sh. Its gateway refuses to forward to the lab's provider, which
-# is the lesson's point; nothing was sent through it to any real provider,
-# because no key for one existed. ARIZE PHOENIX IS REAL, version 20.18.0, run
-# from its Python package. Arize AX, the hosted product, was not run. Replies
-# come from extract-1, the lab's stand-in model.
+# ARIZE PHOENIX IS REAL, version 20.18.0, installed with the pip line the
+# lesson shows. Arize AX, the hosted product, is not run. HELICONE IS NOT RUN:
+# its self-hosted image is a 3.5 GB download, measured from its registry
+# manifest at the digest helicone/helicone-all-in-one@sha256:4da15718dd49...;
+# the gateway in this lesson's transcript is lesson 4's flaky.py, which is not
+# Helicone. Every reply comes from llama3.2:3b (a80c4f17acd5) through Ollama
+# 0.40.0, at temperature 0, taken 2026-10-08 on 4 cores and 15 GB with no GPU;
+# the week and its customers are simulated, as lessons 2 and 3 say.
 #
-# Recorded on Ubuntu 24.04, Python 3.11, Docker 29.8, TZ=America/Sao_Paulo, on
-# 2026-10-06.
+# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 set -uo pipefail
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-CODE=$(cd "$(dirname "$LAB_SH")" && pwd)/lab/code
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@lab:~/obs$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-use() { for f in "$@"; do put "$f" < "$CODE/$f"; done; }
-block() { printf '##### %s\n' "$1"; }
+. ../../lab/capture.sh
 exec 9>/var/tmp/llmobs-capture.lock; flock 9
-lab reset >/dev/null
-lab langfuse-down >/dev/null
-lab helicone >/dev/null
-lab phoenix >/dev/null
-use telemetry.py redact.py assistant.py replay.py tree.py costs.py
-lab exec 'python assistant.py "warm up" >/dev/null; rm -f spans.jsonl'
 
-put via_gateway.py <<'PY'
-"""via_gateway.py: one call through Helicone's gateway, asking it to forward to the lab's provider."""
-from openai import OpenAI
+quiet lab reset
+quiet lab exec 'pkill -f "bin/[p]hoenix serve" || true; pkill -f "^python [f]laky.py" || true; rm -rf ~/.phoenix ~/phoenix.log; sleep 1'
+stage telemetry.py le-6wxafmfh/the-chain.md
+stage assistant.py le-6wxafmfh/the-chain.md
+stage tree.py le-6wxafmfh/the-chain.md
+stage traffic.py le-pdj3wk00/what-customers-type.md
+stage replay.py le-3s3pd3qk/replaying-a-week.md
+stage flaky.py le-9gey5ayh/failures.md
+stage px_spans.py le-8njh6jys/phoenix.md
+stage px_thumbs.py le-8njh6jys/annotations.md
+quiet lab exec 'python traffic.py data/traffic.jsonl'
+quiet lab exec 'SPANS=/dev/null python assistant.py "How long is a gift card valid?" >/dev/null; rm -f spans.jsonl feedback.jsonl'
 
-client = OpenAI(base_url="http://127.0.0.1:8585/v1/gateway/oai/v1", default_headers={
-    "Helicone-Target-Url": "http://127.0.0.1:8600",   # where the gateway should forward the request
-    "Helicone-User-Id": "d89d2eeb16257c0f",           # what Helicone files the request under
-    "Helicone-Property-Feature": "help",
-})
-try:
-    client.chat.completions.create(model="extract-1", messages=[{"role": "user", "content": "How long is a gift card valid?"}])
-except Exception as e:
-    print(f"{type(e).__name__}: {e}")
-PY
+block gateway
+quiet lab exec 'rm -f flaky.log; (setsid python flaky.py > /dev/null 2>&1 < /dev/null &); sleep 2'
+on 'OPENAI_BASE_URL=http://127.0.0.1:11435/v1 python assistant.py "How long is a gift card valid?"'
+on 'cat flaky.log'
+T=$(lab exec 'python -c "import json; print(json.loads(open(\"spans.jsonl\").readlines()[-1])[\"trace\"][:8])"')
+on "python tree.py $T"
+quiet lab exec 'pkill -f "^python [f]laky.py" || true; rm -f spans.jsonl flaky.log'
 
-put px_spans.py <<'PY'
-"""px_spans.py: the spans Phoenix holds, read back through its client, as a table per span name."""
-from phoenix.client import Client
+block pip
+python3 "$COURSE/lab/fences.py" block "$COURSE/lessons/le-8njh6jys/phoenix.md" 'pip install arize-phoenix==20.18.0' \
+  | quiet lab exec 'bash -e -s'
+on 'du -sh ~/llmobs'
+on 'pip list 2>/dev/null | grep -E "^opentelemetry-sdk "'
 
-spans = Client(base_url="http://127.0.0.1:6006").spans.get_spans_dataframe(project_identifier="default", limit=5000)
-print(len(spans), "spans;", spans["context.trace_id"].nunique(), "traces")
-print(spans["span_kind"].value_counts().to_string())
-spans["ms"] = (spans["end_time"] - spans["start_time"]).dt.total_seconds() * 1000
-table = spans.groupby("name").agg(spans=("name", "size"), kind=("span_kind", "first"), median_ms=("ms", "median"),
-                                  prompt_tokens=("attributes.llm.token_count.prompt", "sum"))
-print(table.round(0).to_string())
-PY
-
-put px_thumbs.py <<'PY'
-"""px_thumbs.py: each thumb in feedback.jsonl, as an annotation on its trace's root span in Phoenix."""
-import json
-
-import pandas as pd
-from phoenix.client import Client
-
-root = {s["trace"]: s["span"] for s in map(json.loads, open("spans.jsonl")) if s["parent"] is None}
-thumbs = [f for f in map(json.loads, open("feedback.jsonl")) if f["kind"] == "thumbs"]
-rows = pd.DataFrame({"span_id": [root[f["trace"]] for f in thumbs], "label": [f["value"] for f in thumbs],
-                     "score": [1 if f["value"] == "up" else 0 for f in thumbs]})
-client = Client(base_url="http://127.0.0.1:6006")
-client.spans.log_span_annotations_dataframe(dataframe=rows, annotation_name="thumbs", annotator_kind="HUMAN", sync=True)
-got = client.spans.get_span_annotations_dataframe(span_ids=rows["span_id"], project_identifier="default")
-print(len(rows), "sent;", len(got), "read back:", got["result.label"].value_counts().to_dict())
-PY
-
-block helicone
-on 'curl -s http://127.0.0.1:8585/healthcheck; echo'
-on 'python via_gateway.py'
-
-block phoenix
+python3 "$COURSE/lab/fences.py" block "$COURSE/lessons/le-8njh6jys/phoenix.md" \
+  'PHOENIX_HOST=127.0.0.1 PHOENIX_TELEMETRY_ENABLED=false phoenix serve > ~/phoenix.log 2>&1 &' \
+  | quiet lab exec 'bash -s'
+for _ in $(seq 120); do
+  lab exec 'curl -sf -o /dev/null http://127.0.0.1:6006/' >/dev/null 2>&1 && break
+  sleep 2
+done
+block health
 on 'curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:6006/'
+on 'curl -s -o /dev/null -w "%{http_code}\n" http://$(hostname -I | cut -d" " -f1):6006/'
+
+block replay
 on 'OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://127.0.0.1:6006/v1/traces python replay.py --from 2026-10-04 --to 2026-10-05'
 sleep 5
+block spans
 on 'python px_spans.py'
 
 block annotations
 on 'python px_thumbs.py'
+quiet lab exec 'pkill -f "bin/[p]hoenix serve" || true'

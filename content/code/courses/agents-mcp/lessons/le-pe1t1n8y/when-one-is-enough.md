@@ -1,9 +1,9 @@
 ---
 title: When one agent is enough
-version: 1
+version: 2
 ---
 
-Section 05 measured the split at three times the requests for the same answer. Section 08 showed a fact lost at the boundary. Neither result means multi-agent systems are wrong; they mean a split has to pay for itself. A short checklist, in the order the questions usually settle it:
+Section 05 measured the split at three times the requests for a worse answer. Sections 04 and 08 showed what goes missing at a boundary. Neither result means multi-agent systems are wrong; they mean a split has to pay for itself. A short checklist, in the order the questions usually settle it:
 
 **Does one agent's context get too large?** If a single agent's conversation stays well within its window and its cost per request is acceptable, the first reason to split is absent. If long sub-tasks flood the conversation with results the later steps do not need, specialists with their own conversations are the cure.
 

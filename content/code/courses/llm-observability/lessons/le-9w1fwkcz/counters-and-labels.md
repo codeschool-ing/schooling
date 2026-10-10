@@ -1,12 +1,17 @@
 ---
 title: Counters and labels
-version: 1
+version: 2
 ---
 
 A metrics system such as Prometheus does not read spans. It scrapes **counters**: numbers that only go
 up, each with a set of **labels**, and computes rates from how fast they rise. `exposition.py` counts
 the same week's replies into one counter and prints it in Prometheus's text format, which is what a
-scrape would receive:
+scrape would receive. Its library, `prometheus-client`, came into the environment with Phoenix in
+lesson 7; if you skipped that lesson, install it:
+
+```sh
+pip install prometheus-client==0.26.0
+```
 
 ```python
 """exposition.py: the same replies as the counters a metrics system scrapes, in Prometheus's text format."""
@@ -24,22 +29,22 @@ print(generate_latest(registry).decode(), end="")
 ```
 
 ```
-ana@lab:~/obs$ python exposition.py
+ana@dev:~/obs$ python exposition.py
 # HELP assistant_replies_total Customer replies, by what kind of reply they were.
 # TYPE assistant_replies_total counter
-assistant_replies_total{feature="help",outcome="refused",release="2026.09.4"} 114.0
-assistant_replies_total{feature="help",outcome="answered",release="2026.09.4"} 481.0
-assistant_replies_total{feature="order",outcome="answered",release="2026.09.4"} 123.0
-assistant_replies_total{feature="order",outcome="refused",release="2026.09.4"} 71.0
-assistant_replies_total{feature="order",outcome="answered",release="2026.10.1"} 37.0
-assistant_replies_total{feature="help",outcome="refused",release="2026.10.1"} 99.0
-assistant_replies_total{feature="help",outcome="answered",release="2026.10.1"} 232.0
-assistant_replies_total{feature="order",outcome="refused",release="2026.10.1"} 64.0
+assistant_replies_total{feature="order",outcome="answered",release="2026.09.4"} 23.0
+assistant_replies_total{feature="help",outcome="answered",release="2026.09.4"} 80.0
+assistant_replies_total{feature="help",outcome="refused",release="2026.09.4"} 22.0
+assistant_replies_total{feature="order",outcome="refused",release="2026.09.4"} 9.0
+assistant_replies_total{feature="help",outcome="answered",release="2026.10.1"} 63.0
+assistant_replies_total{feature="help",outcome="refused",release="2026.10.1"} 43.0
+assistant_replies_total{feature="order",outcome="refused",release="2026.10.1"} 14.0
+assistant_replies_total{feature="order",outcome="answered",release="2026.10.1"} 22.0
 ```
 
-The labels are the dimensions lessons 3 and 5 broke everything down by: feature, release, outcome. A dashboard divides one series by
-another to draw the refusal share per feature and per release, and the order questions under 2026.10.1
-come out at 64 refused of 101, the "almost two in three" lesson 5 found.
+The labels are the dimensions lessons 3 and 5 broke everything down by: feature, release, outcome. A
+dashboard divides one series by another to draw the refusal share per feature and per release, and
+the order questions under 2026.10.1 come out at 14 refused of 36, the 39% lesson 5 found.
 
 **What is never a label** matters as much. Each distinct combination of labels is a separate series
 the metrics system stores for as long as it keeps anything, so a label with many values multiplies the

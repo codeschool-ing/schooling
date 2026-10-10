@@ -1,6 +1,6 @@
 ---
 title: Anotações
-version: 1
+version: 2
 ---
 
 A palavra do Phoenix para nota é **anotação** (annotation): um rótulo, um número, ou os dois, com uma
@@ -30,12 +30,13 @@ print(len(rows), "sent;", len(got), "read back:", got["result.label"].value_coun
 ```
 
 ```
-ana@lab:~/obs$ python px_thumbs.py
-20 sent; 20 read back: {'up': 11, 'down': 9}
+ana@dev:~/obs$ python px_thumbs.py
+4 sent; 4 read back: {'up': 4}
 ```
 
-Vinte polegares de domingo, onze para cima e nove para baixo, agora nos spans que julgam. Nas telas do
-Phoenix eles aparecem ao lado de cada trace, e um filtro pode listar os traces com polegar para baixo.
+Quatro polegares de domingo, os quatro para cima, agora nos spans que julgam. Os poucos clientes que
+avaliaram uma resposta naquele dia gostaram do que receberam. Nas telas do Phoenix eles aparecem ao
+lado de cada trace, e um filtro pode listar os traces com polegar para baixo.
 
 A ligação foi por id duas vezes: o polegar levava o id de trace, e o `spans.jsonl` o transformou no id
 do span raiz, os dois escritos pelo OpenTelemetry quando o pedido rodou e idênticos no Phoenix. Os mesmos

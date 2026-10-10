@@ -1,99 +1,87 @@
 ---
 title: O que uma métrica pronta pergunta
-version: 1
+version: 2
 ---
 
-A maior parte das métricas de cada framework é avaliada por modelo: um prompt mandado a um modelo à sua
-escolha, e aritmética sobre o que volta. O `builtin.py` aponta a answer relevancy do DeepEval para o
-juiz do laboratório:
+A maioria das métricas de cada framework é avaliada por modelo: um prompt mandado a um modelo à sua
+escolha, e aritmética sobre o que volta. O DeepEval chega a um modelo que fala a API da OpenAI, o
+Ollama inclusive, pela classe `LocalModel`. O `builtin.py` roda duas métricas do DeepEval, relevância da
+resposta e fidelidade, na resposta que a aula 8 achou, a que diz a um cliente que ele paga o frete da
+devolução. Inicie antes o `flaky.py` da aula 4, com `python flaky.py &` em `~/obs`: as métricas chegam ao
+modelo por ele, e o log dele conta as chamadas.
 
 ```python
-"""builtin.py: one of DeepEval's own metrics, answer relevancy, pointed at the lab's judge."""
-from deepeval.metrics import AnswerRelevancyMetric
-from deepeval.models import OpenAIModel
+"""builtin.py: two of DeepEval's own metrics on the reply lesson 8 found, with the local model as their judge.
+
+The model is reached through flaky.py, lesson 4's proxy, so that flaky.log
+counts the calls each metric makes.
+"""
+import json
+import os
+import time
+
+from deepeval.metrics import AnswerRelevancyMetric, FaithfulnessMetric
+from deepeval.models import LocalModel
 from deepeval.test_case import LLMTestCase
 
-metric = AnswerRelevancyMetric(model=OpenAIModel(model="judge-1"), async_mode=False)
-case = LLMTestCase(input="How much is express delivery?",
-                   actual_output="Express delivery is not free at any order value. [1]")
-try:
+text = {c["id"]: c["text"] for c in json.load(open("data/index.json"))["chunks"]}
+model = LocalModel(model="llama3.2:3b", base_url="http://127.0.0.1:11435/v1", api_key="ollama", temperature=0)
+case = LLMTestCase(input="Who pays for the return postage?",
+                   actual_output="According to [1], the customer pays for the return postage.",
+                   retrieval_context=[text["returns-policy:how-to-start-a-return"]])
+calls = lambda: sum(1 for _ in open("flaky.log")) if os.path.exists("flaky.log") else 0
+for metric in (AnswerRelevancyMetric(model=model, async_mode=False), FaithfulnessMetric(model=model, async_mode=False)):
+    before, started = calls(), time.monotonic()
     metric.measure(case)
-except Exception as e:
-    print(type(e).__name__, e)
+    print(f"{type(metric).__name__}: score {metric.score}, {calls() - before} model calls, "
+          f"{time.monotonic() - started:.0f} s")
+    for step in ("statements", "claims", "truths"):
+        if getattr(metric, step, None):
+            print(f"  {step}: {getattr(metric, step)}")
+    print("  verdicts:", [v.verdict for v in metric.verdicts])
+    print("  reason:", metric.reason)
 ```
 
 ```
-ana@lab:~/obs$ python builtin.py
+ana@dev:~/obs$ python builtin.py
 
-BadRequestError Error code: 400 - {'error': {'message': 'judge-1 needs a system prompt naming a Criterion and <question> and <reply>', 'type': 'invalid_request_error', 'code': None}}
+
+AnswerRelevancyMetric: score 1.0, 3 model calls, 9 s
+  statements: ['According to [1], the customer pays for the return postage.']
+  verdicts: [<Verdict.YES: 'yes'>]
+  reason: The score is 1.00 because there are no irrelevant statements in the actual output, making it a perfect answer that directly addresses the question.
+FaithfulnessMetric: score 0.0, 4 model calls, 15 s
+  claims: ['According to [1], the customer pays for the return postage.']
+  truths: ['Returns are free', "You can return an item by choosing 'Return an item' in your account", 'A prepaid label is emailed to you for returns', 'You can drop the parcel at any post office']
+  verdicts: [<Verdict.NO: 'no'>]
+  reason: The score is 0.00 because there are no contradictions in the actual output to justify a higher faithfulness score.
 ```
 
-O judge-1 recusa, porque só responde a prompts que nomeiam um critério e levam uma pergunta e uma
-resposta entre tags, o formato que o `judge.py` manda. **Nenhuma métrica avaliada por modelo de nenhum
-dos dois frameworks roda neste laboratório**, e esta aula não finge o contrário. O que a recusa dá é uma
-olhada no que a métrica perguntou, porque o labobs registra toda requisição que recebe, recusada ou não:
+Os dois veredictos estão certos. A resposta é sobre quem paga o frete, então é relevante, e diz o
+contrário da fonte, então não é fiel. E os passos impressos embaixo de cada nota mostram como uma
+métrica chega ao número, que é a parte que vale aprender:
 
-```python
-"""last_request.py: the last request the lab's model server received, as its log recorded it."""
-import json
+- **A relevância da resposta** pediu ao modelo que quebrasse a resposta em **afirmações**
+  (*statements*), depois se cada uma é relevante para a pergunta, e dividiu os sins pelo total. Uma
+  afirmação, um sim, 1,0.
+- **A fidelidade** pediu as **alegações** da resposta (*claims*) e as **verdades** do texto recuperado
+  (*truths*), depois se cada alegação tem apoio nas verdades. "The customer pays" contra "Returns are
+  free": não, e a nota é 0.
 
-last = json.loads(open("/var/log/labgen/requests.jsonl").read().splitlines()[-1])
-body = last["request"]
-print("model ", body["model"], "  status", last["status"])
-for m in body["messages"]:
-    text = m["content"] if isinstance(m["content"], str) else m["content"][0]["text"]
-    print(f"{m['role']}:\n{text}")
-```
+Três coisas nessa saída importam mais que as notas:
 
-```
-ana@lab:~/obs$ python last_request.py
-model  judge-1   status 400
-user:
-Given the text, breakdown and generate a list of statements presented. Ambiguous statements and single words can be considered as statements, but only if outside of a coherent statement.
+- **Cada métrica são várias chamadas de modelo por resposta**: três para relevância e quatro para
+  fidelidade aqui, nove e quinze segundos nesta máquina. O preço de uma métrica de framework é o
+  preço de todas as suas chamadas, que a aula 9 ensinou a contar, e uma métrica em toda resposta de
+  uma semana é esse tanto de chamadas vezes a semana.
+- **O motivo é uma chamada separada, e pode estar errado quando a nota está certa.** A fidelidade deu 0
+  e explicou com "there are no contradictions in the actual output", o contrário do que o próprio
+  veredicto achou. O juiz da aula 9 fez o mesmo. Leia os passos, não a frase do final.
+- **Os prompts estão no pacote instalado**, um arquivo de texto por passo, em
+  `deepeval/metrics/answer_relevancy/templates/` e nos vizinhos, e dá para lê-los antes da primeira
+  execução. O prompt das afirmações trabalha a partir de um exemplo sobre um notebook; um modelo pequeno
+  que segue o exemplo de perto demais quebra uma resposta de outro jeito, e a nota se mexe com a quebra.
+  Uma equipe que adota uma métrica de framework lê os prompts dela como lê uma função que chama.
 
-Example:
-Example text: 
-Our new laptop model features a high-resolution Retina display for crystal-clear visuals. It also includes a fast-charging battery, giving you up to 12 hours of usage on a single charge. For security, we’ve added fingerprint authentication and an encrypted SSD. Plus, every purchase comes with a one-year warranty and 24/7 customer support.
-
-
-
-{
-  "statements": [
-    "The new laptop model has a high-resolution Retina display.",
-    "It includes a fast-charging battery with up to 12 hours of usage.",
-    "Security features include fingerprint authentication and an encrypted SSD.",
-    "Every purchase comes with a one-year warranty.",
-    "24/7 customer support is included."
-  ]
-}
-===== END OF EXAMPLE ======
-
-**
-IMPORTANT: Please make sure to only return in valid and parseable JSON format, with the "statements" key mapping to a list of strings. No words or explanation are needed. Ensure all strings are closed appropriately. Repair any invalid JSON before you output it.
-**
-
-Text:
-Express delivery is not free at any order value. [1]
-
-JSON:
-```
-
-Esse é o primeiro dos três passos da métrica. A answer relevancy do DeepEval pede a um modelo que
-quebre a resposta em **afirmações** (*statements*), depois pergunta se cada afirmação é relevante para
-o input, depois divide as relevantes pelo total. O que o log mostra é o primeiro passo, palavra por
-palavra: uma instrução, um exemplo resolvido sobre um notebook, um pedido de JSON, e a resposta.
-
-Três coisas nele importam mais que a redação:
-
-- **Cada métrica são várias chamadas de modelo por resposta.** Esta faz pelo menos duas, e o preço da
-  métrica de um framework é o preço de todas as suas chamadas, que a aula 9 ensinou a contar. O span que
-  uma chamada dessas gera, se o cliente do juiz estiver instrumentado, diz quantas.
-- **O exemplo faz parte do instrumento.** Um juiz que segue de perto o exemplo do notebook quebra
-  "Express delivery is not free at any order value" de um jeito diferente de um que não segue, e a nota
-  se mexe com a quebra. Trocar o modelo de juiz muda como o prompt é seguido.
-- **O prompt está no pacote instalado**, e pode ser lido antes da primeira execução. Uma equipe que
-  adota uma métrica de framework lê o prompt dela do jeito que lê uma função que chama.
-
-Para rodar esta métrica de verdade, o modelo é um argumento: `OpenAIModel(model=...)`, ou qualquer classe
-que o DeepEval aceite para outro provedor. O método da aula 10 vale então sem mudança: rodá-la nas
-sessenta respostas rotuladas e medir o kappa dela antes de acreditar num número que ela relate.
+O método da aula 10 vale então sem mudança: rode a métrica nas quarenta e oito respostas rotuladas e
+meça-a contra pessoas antes de acreditar num número que ela relata.

@@ -1,6 +1,6 @@
 ---
 title: O que muda quando o programa age
-version: 1
+version: 2
 ---
 
 Entregar o caminho a um modelo não sai de graça, e os custos são fáceis de dizer agora que o `agent.py` rodou.
@@ -17,4 +17,4 @@ Entregar o caminho a um modelo não sai de graça, e os custos são fáceis de d
 
 ## O teste também muda
 
-Um teste que roda a pergunta da Bia uma vez e compara a resposta prova que um caminho funciona. Neste laboratório é exatamente isso que ele prova, porque o modelo substituto sempre responde do mesmo jeito. **Um modelo real pode escolher outro caminho na execução seguinte**, então um agente é testado com muitas entradas e muitas execuções, contra propriedades e não contra strings exatas: a resposta cita a data real do pedido; nenhum reembolso foi emitido; a execução parou dentro do limite. A aula 7 escreve testes assim, e a aula 18 mede uma taxa de sucesso.
+Um teste que roda a pergunta da Bia uma vez e compara a resposta prova que uma execução foi de um jeito. A pergunta da Bia foi feita duas vezes nesta aula, uma na seção 05 e outra pelo gravador, e as duas respostas discordam: a primeira não sabia o prazo de devolução, a segunda disse que pedido entregue não pode ser devolvido de jeito nenhum. As duas estão erradas, com palavras diferentes. **Um modelo pode escolher outro caminho, ou o mesmo caminho com outra conclusão, na execução seguinte**, então um agente é testado com muitas entradas e muitas execuções, contra propriedades e não contra strings exatas: a resposta cita a data real do pedido; nenhum reembolso foi emitido; a execução parou dentro do limite. A aula 7 escreve testes assim, e a aula 18 mede uma taxa de sucesso.

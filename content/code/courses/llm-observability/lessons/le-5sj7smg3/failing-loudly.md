@@ -1,34 +1,58 @@
 ---
 title: A gate that fails loudly
-version: 1
+version: 2
 ---
 
 The candidate that changed both the model and the floor:
 
 ```
-ana@lab:~/obs$ CANDIDATE=2026.10.4 python -m pytest -q --tb=line -p no:cacheprovider tests
-.FFF.....                                                                [100%]Running teardown with pytest sessionfinish...
+ana@dev:~/obs$ CANDIDATE=2026.10.4 python -m pytest -q --tb=line -p no:cacheprovider tests
+FF........                                                               [100%]Running teardown with pytest sessionfinish...
 
 =================================== FAILURES ===================================
-E   AssertionError: checks the candidate newly fails: {'e38': ['short_enough']}
-    assert not {'e38': ['short_enough']}
-/home/ana/obs/tests/test_regression.py:31: AssertionError: checks the candidate newly fails: {'e38': ['short_enough']}
-E   AssertionError: cost 0.00944242 -> 0.0416189, +341%, over the +25% budget: make it cheaper, or accept it in gate.json with the reason
-    assert 3.407653970062759 <= 0.25
-/home/ana/obs/tests/test_regression.py:43: AssertionError: cost 0.00944242 -> 0.0416189, +341%, over the +25% budget: make it cheaper, or accept it in gate.json with the reason
-E   AssertionError: median_ms 94.9369 -> 1037.31, +993%, over the +25% budget: make it cheaper, or accept it in gate.json with the reason
-    assert 9.9262832086127 <= 0.25
-/home/ana/obs/tests/test_regression.py:43: AssertionError: median_ms 94.9369 -> 1037.31, +993%, over the +25% budget: make it cheaper, or accept it in gate.json with the reason
+E   AssertionError: 2026.10.4 breaks ['e03', 'e09', 'e10', 'e11', 'e13', 'e18', 'e31'] against 2026.10.1: read each one, then fix the candidate or accept the case in gate.json with the reason
+    assert not ['e03', 'e09', 'e10', 'e11', 'e13', 'e18', ...]
+/home/ana/obs/tests/test_regression.py:23: AssertionError: 2026.10.4 breaks ['e03', 'e09', 'e10', 'e11', 'e13', 'e18', 'e31'] against 2026.10.1: read each one, then fix the candidate or accept the case in gate.json with the reason
+E   AssertionError: 2026.10.4 newly fails a check on ['e02', 'e03', 'e04', 'e05', 'e06', 'e07', 'e08', 'e10', 'e11', 'e12', 'e13', 'e15', 'e16', 'e17', 'e18', 'e19', 'e26', 'e28', 'e29', 'e32']: python regress.py production candidate names each one. Read each reply, then fix the candidate or accept the case in gate.json with the reason
+    assert not ['e02', 'e03', 'e04', 'e05', 'e06', 'e07', ...]
+/home/ana/obs/tests/test_regression.py:30: AssertionError: 2026.10.4 newly fails a check on ['e02', 'e03', 'e04', 'e05', 'e06', 'e07', 'e08', 'e10', 'e11', 'e12', 'e13', 'e15', 'e16', 'e17', 'e18', 'e19', 'e26', 'e28', 'e29', 'e32']: python regress.py production candidate names each one. Read each reply, then fix the candidate or accept the case in gate.json with the reason
 =========================== short test summary info ============================
+FAILED tests/test_regression.py::test_no_case_that_production_answers_is_broken
 FAILED tests/test_regression.py::test_no_check_newly_fails - AssertionError: ...
-FAILED tests/test_regression.py::test_within_budget[cost] - AssertionError: c...
-FAILED tests/test_regression.py::test_within_budget[median_ms] - AssertionErr...
-3 failed, 6 passed in 83.29s (0:01:23)
+2 failed, 8 passed in 190.92s (0:03:10)
 ```
 
-Three failures, each with its own sentence: the check e38 now fails, the cost is up 341%, the median
-latency is up nearly tenfold. Nothing in `gate.json` accepts them, so the pull request that proposes
-this release cannot merge until somebody changes the candidate or writes down why each is acceptable.
+Two failures, and the second is one line naming twenty cases. That is as much as a test message should
+carry. Which check each case fails is a question for `regress.py`, which reads the two runs the gate
+has just made:
+
+```
+ana@dev:~/obs$ python regress.py production candidate | head -12
+data/eval-v2.jsonl sha256 8763ed310b27: 2026.10.1 -> 2026.10.4
+               both right  both wrong  fixed  broken
+  dev                  8           6      4       4
+  held-out             5           2      0       3
+exact McNemar p = 0.5488 on 11 changed verdicts
+  broken e10 dev      How long does a pickup point keep my parcel?
+  broken e11 dev      On how many devices can I read my e-books?
+  broken e13 dev      Can I listen to an audiobook without an internet connect
+  broken e31 dev      Order MG-00000003 - I want to return it. Who pays for th
+  broken e03 held-out How long after my return arrives will I get the refund?
+  broken e09 held-out When is a standard parcel considered lost?
+  broken e18 held-out What happens if my order costs more than my gift card ho
+EXIT 0
+```
+
+Nothing in `gate.json` accepts any of it, so the pull request that proposes this release cannot merge
+until somebody changes the candidate or writes down, case by case, why each is acceptable. Twenty-seven
+sentences would be a strange thing to write for a release, and that is the point: the effort of
+accepting a change grows with how much it breaks.
+
+**The budgets passed**, because 2026.10.4 is cheaper than production and, on this run, no more than
+25% slower. In lesson 14 the same comparison measured it 17% slower, and an earlier run of this
+same gate measured 30%, and failed. A median over 32 replies on one machine moves by that much from run to run, so a
+latency budget set near the noise passes and fails at random. Either the budget is wider than the
+noise, or the measurement is made of more requests.
 
 ## A gate that cannot pass by not running
 
@@ -37,8 +61,8 @@ did not run. A variable missing in a new pipeline, a skip added during an outage
 condition that is false on a branch nobody tested. Here is the gate with no candidate named:
 
 ```
-ana@lab:~/obs$ python -m pytest -q --tb=line -p no:cacheprovider tests
-EEEE.....                                                                [100%]Running teardown with pytest sessionfinish...
+ana@dev:~/obs$ python -m pytest -q --tb=line -p no:cacheprovider tests
+EEEE......                                                               [100%]Running teardown with pytest sessionfinish...
 
 ==================================== ERRORS ====================================
 _______ ERROR at setup of test_no_case_that_production_answers_is_broken _______
@@ -54,7 +78,7 @@ ERROR tests/test_regression.py::test_no_case_that_production_answers_is_broken
 ERROR tests/test_regression.py::test_no_check_newly_fails - pytest.UsageError...
 ERROR tests/test_regression.py::test_within_budget[cost] - pytest.UsageError:...
 ERROR tests/test_regression.py::test_within_budget[median_ms] - pytest.UsageE...
-5 passed, 4 errors in 4.89s
+6 passed, 4 errors in 6.21s
 ```
 
 **Four errors, not four skips.** pytest reports an error at setup as a failure of the run: the summary

@@ -1,70 +1,70 @@
 [
   {
     "id": "ex-339yt1ey",
-    "version": 1,
-    "section": "the-lab",
+    "version": 2,
+    "section": "your-machine",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "Which of these in the lab is NOT a real piece of software doing its real job?",
+    "prompt": "Why does the course recommend installing Ollama on the computer you use every day rather than in a virtual machine?",
     "choices": [
       {
-        "text": "OpenTelemetry's SDK",
+        "text": "Ollama will not start inside a virtual machine",
         "correct": false,
-        "why": "The SDK is the real one, and so is every span it writes."
+        "why": "It starts; inside a VM it runs on the processor only."
       },
       {
-        "text": "PostgreSQL with pgvector, which holds the chunks",
-        "correct": false,
-        "why": "The database and its similarity search are real."
-      },
-      {
-        "text": "The openai Python SDK the assistant calls through",
-        "correct": false,
-        "why": "The SDK is real and unmodified; only the server it talks to is the lab's."
-      },
-      {
-        "text": "extract-1, the model that answers the customers",
+        "text": "A VM takes a fixed share of memory and hides the GPU",
         "correct": true,
-        "why": "Right. It copies sentences by written rules; it is a stand-in for a language model."
+        "why": "Right. A model wants all the memory and the graphics card it can get."
+      },
+      {
+        "text": "The course's programs only run on the host's own Python",
+        "correct": false,
+        "why": "The same steps run inside the VM exactly as written."
+      },
+      {
+        "text": "A virtual machine needs a paid licence for the hypervisor",
+        "correct": false,
+        "why": "VirtualBox and UTM cost nothing; the reason is the computer's resources."
       }
     ]
   },
   {
     "id": "ex-z81m8np4",
-    "version": 1,
-    "section": "the-lab",
+    "version": 2,
+    "section": "installing",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why do the timings in this course come from rules written by the course?",
+    "prompt": "Ollama ignores the API key. Why does the course set OPENAI_API_KEY at all?",
     "choices": [
       {
-        "text": "No provider was reachable, so the stand-in imitates the wait",
+        "text": "The SDK refuses to start without one",
         "correct": true,
-        "why": "Right. labobs imitates the shape of a provider's waiting, by numbers written at the top of labobs.py."
+        "why": "Right. So it is set to a word that says where it goes."
       },
       {
-        "text": "Because real providers answer instantly, and the course wanted a delay to study",
+        "text": "Ollama checks it against an account on ollama.com",
         "correct": false,
-        "why": "They do not: a first token takes time, and each token after it takes more."
+        "why": "Ollama asks nobody; it needs no account and ignores the key."
       },
       {
-        "text": "Because a model call cannot be timed from inside the SDK that makes it",
+        "text": "It picks which of the downloaded models answers",
         "correct": false,
-        "why": "It is measured in every span of this lesson."
+        "why": "The model is named in every request, not in the key."
       },
       {
-        "text": "Because OpenTelemetry rounds every duration to whole seconds",
+        "text": "It encrypts the requests between the SDK and Ollama",
         "correct": false,
-        "why": "It records nanoseconds; nothing is rounded."
+        "why": "It is a word sent in a header; it encrypts nothing."
       }
     ]
   },
   {
     "id": "ex-vszke4vz",
     "version": 1,
-    "section": "the-lab",
+    "section": "the-project",
     "type": "cloze",
     "difficulty": "easy",
     "drillable": true,
@@ -112,12 +112,12 @@
   },
   {
     "id": "ex-dc2740pn",
-    "version": 1,
+    "version": 2,
     "section": "one-call",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "one_call.py's span had status UNSET and finish reason stop, and the reply said gift cards last one year. What does that show?",
+    "prompt": "one_call.py's span had status UNSET and finish reason stop, and the reply said the model knew nothing about a Marginalia gift card. What does that show?",
     "choices": [
       {
         "text": "That the span was written wrongly and the attributes cannot be trusted",
@@ -130,7 +130,7 @@
         "why": "An error would have set the status to ERROR; this one is UNSET."
       },
       {
-        "text": "That a successful call and a right answer are different facts",
+        "text": "That a successful call and a useful answer are different facts",
         "correct": true,
         "why": "Right. The trace records what happened; whether it was right takes evaluation, lessons 8 to 13."
       },
@@ -219,13 +219,13 @@
   },
   {
     "id": "ex-4d3btga7",
-    "version": 1,
+    "version": 2,
     "section": "the-chain",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "In the delivery question's trace, how many milliseconds did the chat extract-1 span take?",
-    "value": 723,
+    "prompt": "In the return-postage question's trace, how many milliseconds did the chat llama3.2:3b span take?",
+    "value": 2990,
     "tolerance": 0,
     "unit": "ms"
   },
@@ -293,30 +293,30 @@
   },
   {
     "id": "ex-znpjpz63",
-    "version": 1,
+    "version": 2,
     "section": "reading-a-trace",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "The delivery answer was wrong. Which attribute pointed at the reason?",
+    "prompt": "The return-postage answer was wrong. Which attribute cleared the retrieval step of blame?",
     "choices": [
       {
-        "text": "gen_ai.usage.output_tokens = 13",
+        "text": "gen_ai.usage.output_tokens = 14, a short reply",
         "correct": false,
-        "why": "A short reply is not a wrong one."
+        "why": "A short reply is not a wrong one, and says nothing about the search."
       },
       {
-        "text": "app.time_to_first_token_ms",
+        "text": "app.time_to_first_token_ms = 1663, a slow start",
         "correct": false,
         "why": "Time says nothing about which sources the model read."
       },
       {
-        "text": "app.search.kept = 1",
+        "text": "app.search.chunks, naming the section on returns",
         "correct": true,
-        "why": "Right. Only one chunk cleared the floor, and it was about express delivery."
+        "why": "Right. The one chunk the model was given is the one that says returns are free."
       },
       {
-        "text": "gen_ai.operation.name = chat",
+        "text": "gen_ai.operation.name = chat, on the model call",
         "correct": false,
         "why": "Every model call here is a chat."
       }
@@ -324,7 +324,7 @@
   },
   {
     "id": "ex-p406mdv4",
-    "version": 1,
+    "version": 2,
     "section": "reading-a-trace",
     "type": "quiz",
     "difficulty": "medium",
@@ -344,7 +344,7 @@
       {
         "text": "No chunk cleared the floor",
         "correct": true,
-        "why": "Right. The refusal came from the code, cost no model tokens, and took 46 ms."
+        "why": "Right. The refusal came from the code, cost no model tokens, and took 44 ms."
       },
       {
         "text": "The span exporter dropped the span on its way to the file",
@@ -541,12 +541,12 @@
   },
   {
     "id": "ex-9ekafz5t",
-    "version": 1,
+    "version": 2,
     "section": "trace-ids",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "How many spans did the gift card trace have in spans.jsonl?",
+    "prompt": "How many spans did the return-postage trace have in spans.jsonl?",
     "value": 6,
     "tolerance": 0,
     "unit": "spans"
@@ -584,7 +584,7 @@
   },
   {
     "id": "ex-s7p507bk",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "matching",
     "difficulty": "medium",
@@ -597,10 +597,10 @@
       },
       {
         "left": "search",
-        "right": "the query against the chunks in PostgreSQL"
+        "right": "the arithmetic over the chunks in the index"
       },
       {
-        "left": "chat extract-1",
+        "left": "chat llama3.2:3b",
         "right": "one attempt at the model"
       },
       {
@@ -658,6 +658,99 @@
         "text": "The provider refused twice and the third attempt was answered",
         "correct": true,
         "why": "Right. One span per attempt is exactly what the assistant's retry loop writes."
+      }
+    ]
+  },
+  {
+    "id": "ex-31efrjk9",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "ollama list answers: could not connect to ollama server. What is wrong?",
+    "choices": [
+      {
+        "text": "The background service never started, or has stopped",
+        "correct": true,
+        "why": "Right. The command works; the server it talks to is not there. Start the service, or run ollama serve."
+      },
+      {
+        "text": "The model llama3.2:3b has not been downloaded yet",
+        "correct": false,
+        "why": "Then the list would come back empty, not fail to connect."
+      },
+      {
+        "text": "The Python environment is not active in this terminal",
+        "correct": false,
+        "why": "ollama is not a Python program; the environment changes nothing for it."
+      },
+      {
+        "text": "Another program is already listening on the port",
+        "correct": false,
+        "why": "That is what a second ollama serve says, and it means a server IS running."
+      }
+    ]
+  },
+  {
+    "id": "ex-d2xgfnyb",
+    "version": 1,
+    "section": "the-project",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two of the seven documents can never reach the model. What keeps them out?",
+    "choices": [
+      {
+        "text": "Their front matter: superseded, and internal",
+        "correct": true,
+        "why": "Right. The assistant searches only chunks that are current and public."
+      },
+      {
+        "text": "Their similarity is always below the floor",
+        "correct": false,
+        "why": "Their scores are never computed against a question; they are dropped first."
+      },
+      {
+        "text": "index.py skips them when it builds the index",
+        "correct": false,
+        "why": "They are in the index; the assistant drops them when it loads it."
+      },
+      {
+        "text": "The model is told in its instructions to ignore them",
+        "correct": false,
+        "why": "A model can disobey an instruction; these are never sent at all."
+      }
+    ]
+  },
+  {
+    "id": "ex-2bmw54zw",
+    "version": 1,
+    "section": "when-setup-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A program stops with openai.APIConnectionError: Connection error, after a pause of a few seconds. Where should you look first?",
+    "choices": [
+      {
+        "text": "At whether Ollama's server is still running",
+        "correct": true,
+        "why": "Right. Nothing answered at OPENAI_BASE_URL; ollama list says so in one line."
+      },
+      {
+        "text": "At the API key, which Ollama has started to check",
+        "correct": false,
+        "why": "Ollama ignores the key; a refused key is an error with a status code."
+      },
+      {
+        "text": "At the model, which ran out of tokens mid-answer",
+        "correct": false,
+        "why": "That ends with a finish reason, not a failed connection."
+      },
+      {
+        "text": "At the prompt, which is too long for the model",
+        "correct": false,
+        "why": "A long prompt is answered or refused by a server that is there."
       }
     ]
   }

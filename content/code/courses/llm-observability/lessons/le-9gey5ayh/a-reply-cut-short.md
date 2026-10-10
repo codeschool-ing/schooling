@@ -1,6 +1,6 @@
 ---
 title: A reply cut short
-version: 1
+version: 2
 ---
 
 A streamed reply can stop in the middle. The connection drops, a proxy times out a long response, the
@@ -8,26 +8,30 @@ provider restarts the machine generating it. What arrives is a beginning, and th
 chunk, no finish reason, no usage.
 
 The assistant treats a stream with no finish reason as a failed attempt (`IncompleteReply`), records
-how many pieces it got, and tries again. labobs can be told to cut the next stream after six pieces:
+how many pieces it got, and tries again. flaky.py can be told to cut the next stream after six
+pieces, with the SDK still pointed at it from the previous section:
 
 ```
-ana@lab:~/obs$ rm -f spans.jsonl; python assistant.py "How long is a gift card valid?"
-A gift card is valid for two years from the day it was bought. [1] Gift cards are valid for two years from purchase and cannot be exchanged for cash. [2]
-trace 3a3d425f632e77475611cb4af2f6aa74
-ana@lab:~/obs$ python tree.py --attrs | grep -E " ms |ERROR|partial|attempts"
-      0   2,313 ms  ask
-      0      43 ms    embed
-     44       4 ms    search
-     48   2,264 ms    generate
+ana@dev:~/obs$ curl -s -X POST 127.0.0.1:11435/flaky -d '{"cut_after": 6}'; echo
+{"fail_rate": 0, "fail": 0, "status": 503, "cut_after": 6, "seed": 7}
+ana@dev:~/obs$ rm -f spans.jsonl; python assistant.py "How long is a gift card valid?"
+According to [1], a gift card is valid for two years from the day it was bought.
+trace 756285d53ceba6e75566de58790eaa52
+ana@dev:~/obs$ python tree.py --attrs | grep -E " ms |ERROR|partial|attempts"
+      0   4,373 ms  ask
+      1      26 ms    embed
+     27       0 ms    search
+     28   4,345 ms    generate
                        app.attempts = 2
-     48     410 ms      chat extract-1  ERROR IncompleteReply: stream ended after 6 pieces with no finish reason
+     28   1,433 ms      chat llama3.2:3b  ERROR IncompleteReply: stream ended after 6 pieces with no finish reason
                          app.partial_pieces = 6
-    959   1,353 ms      chat extract-1
-  2,312       0 ms    check_citations
+  1,961   2,411 ms      chat llama3.2:3b
+  4,372       0 ms    check_citations
 ```
 
-The customer got the right answer, after 2,313 ms, where the second attempt alone took 1,353. The first attempt delivered
-six pieces in 410 ms and stopped; the second, after the backoff, delivered the whole reply.
+The customer got the right answer, after 4,373 ms, where the second attempt alone took 2,411. The
+first attempt delivered six pieces in 1,433 ms and stopped; the second, after the backoff, delivered
+the whole reply.
 
 ## What the customer saw depends on the screen
 

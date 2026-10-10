@@ -1,216 +1,216 @@
 [
   {
     "id": "ex-qbmjg35j",
-    "version": 1,
+    "version": 2,
     "section": "where-the-time-goes",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "Where does the latency that `pl latency` reports come from, in this lab?",
-    "hint": "Read `LATENCY` in `model.py`.",
+    "prompt": "Where do the seconds that `stats.py` reports come from?",
+    "hint": "Not a formula.",
     "choices": [
       {
-        "text": "A timer around each call to the stand-in, measured on your machine",
+        "text": "Ollama's price list, converted into time",
         "correct": false,
-        "why": "It is not measured: two runs print the same numbers."
+        "why": "Ollama has no price list."
       },
       {
-        "text": "The provider's published latency table for the model",
+        "text": "The number of tokens multiplied by a constant",
         "correct": false,
-        "why": "No provider is involved; the numbers are the course's."
+        "why": "Tokens and seconds are recorded separately."
       },
       {
-        "text": "Arithmetic on declared numbers",
+        "text": "The wall clock around each call",
         "correct": true,
-        "why": "Right: per call, per input token, per output token, plus jitter."
+        "why": "Right: `call()` records them."
       },
       {
-        "text": "The length of the prompt file in bytes, read from disk",
+        "text": "A table of declared latencies in the harness",
         "correct": false,
-        "why": "Bytes on disk play no part; tokens do."
+        "why": "Nothing is declared; they are measured."
       }
     ]
   },
   {
     "id": "ex-9z8eqyr4",
-    "version": 1,
+    "version": 2,
     "section": "where-the-time-goes",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Using `LATENCY` and the per-call tokens of `v3-examples` (238.5 in, 37.4 out), what is the latency of an average call before jitter, in milliseconds?",
-    "hint": "300 + 0.4 × input + 20 × output.",
-    "value": 1143.4,
-    "tolerance": 1,
-    "unit": "ms"
+    "prompt": "`v1-bare`'s median call took 12.4 seconds and `v2-json`'s took 4.0. How many times longer is that? One decimal place.",
+    "hint": "Divide.",
+    "value": 3.1,
+    "tolerance": 0.05
   },
   {
     "id": "ex-6ykxz3z9",
-    "version": 1,
+    "version": 2,
     "section": "where-the-time-goes",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "`v3-examples` sends three times the input of `v2-json`, yet its p95 is lower. Why?",
-    "hint": "Compare the output columns.",
+    "prompt": "`v3-examples` sends more than twice the input of `v2-json`, yet its median is only a tenth of a second slower. Why?",
+    "hint": "Reading against writing.",
     "choices": [
       {
-        "text": "The examples are cached between calls, so after the first call the stand-in reads them for free",
-        "correct": false,
-        "why": "Neither prompt turns the cache on."
-      },
-      {
-        "text": "It writes fewer output tokens, and each costs fifty times an input token",
+        "text": "Reading is one pass; the outputs were the same length",
         "correct": true,
-        "why": "Right: 37.4 against 39.9 a call, and a longest answer of 46 against 50."
+        "why": "Right: 30.6 against 30.8 tokens written."
       },
       {
-        "text": "Input tokens cost nothing in the stand-in",
+        "text": "Ollama skips the examples when it reads the prompt",
         "correct": false,
-        "why": "They cost 0.4 ms each: 64 ms more for v3."
+        "why": "It reads every token."
       },
       {
-        "text": "Jitter",
+        "text": "The examples are cached on the disk between runs",
         "correct": false,
-        "why": "Jitter is at most 150 ms and cannot explain a consistent shape."
+        "why": "Lesson 17 measures what a cache keeps; it is not the disk."
+      },
+      {
+        "text": "Longer prompts make the model write faster",
+        "correct": false,
+        "why": "Writing speed per token does not rise."
       }
     ]
   },
   {
     "id": "ex-kqytxmec",
-    "version": 1,
+    "version": 2,
     "section": "where-the-time-goes",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "`pl latency` printed `p95 1341 ms` for forty calls. What does that say?",
-    "hint": "The percentile takes a position in the sorted list.",
+    "prompt": "`stats.py` printed `p95 5.0` for forty calls. What does that say?",
+    "hint": "One in twenty.",
     "choices": [
       {
-        "text": "The average of the forty calls, added up and divided, was 1341 ms",
+        "text": "The average call took 5.0 seconds to finish",
         "correct": false,
-        "why": "That would be a mean; `pl latency` prints none."
+        "why": "That would be a mean, which it does not print."
       },
       {
-        "text": "95 of the forty calls took 1341 ms",
+        "text": "The slowest of the forty calls took 5.0 seconds",
         "correct": false,
-        "why": "There were only forty calls; 95 is a percentage."
+        "why": "That is the maximum."
       },
       {
-        "text": "Only two calls of the forty were slower than 1341 ms",
+        "text": "95% of the time was spent writing",
+        "correct": false,
+        "why": "It is a percentile of calls, not a share of time."
+      },
+      {
+        "text": "95 calls in 100 took at most 5.0 s",
         "correct": true,
-        "why": "Right: the 38th of forty in order."
-      },
-      {
-        "text": "The slowest of all the forty calls in the run took 1341 ms",
-        "correct": false,
-        "why": "The slowest is `max`, 1371 ms."
+        "why": "Right: on forty calls, two were slower."
       }
     ]
   },
   {
     "id": "ex-bpm5xvp6",
-    "version": 1,
+    "version": 2,
+    "section": "what-a-call-costs",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "`cost.py` reports 4.8168 cents for forty calls of `v3-examples`. How much is one call, in cents? Five decimal places.",
+    "hint": "Divide by forty.",
+    "value": 0.12042,
+    "tolerance": 5e-06
+  },
+  {
+    "id": "ex-cwxn96d5",
+    "version": 2,
     "section": "what-a-call-costs",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "`pl cost` reports 5.1072 cents for forty calls of `v3-examples`. How much is one call, in cents?",
-    "hint": "Divide by forty.",
-    "value": 0.12768,
-    "tolerance": 1e-05,
-    "unit": "cents"
-  },
-  {
-    "id": "ex-cwxn96d5",
-    "version": 1,
-    "section": "what-a-call-costs",
-    "type": "numeric",
-    "difficulty": "hard",
-    "drillable": true,
-    "prompt": "At the lab's prices (300 cents a million input tokens, 1500 a million output tokens), what do 1000 calls cost if each reads 200 tokens and writes 40, in cents?",
-    "hint": "Per call: 200 × 300 + 40 × 1500 millionths of a cent.",
+    "prompt": "At the course's prices (300 cents a million input tokens, 1500 a million output tokens), what do 1000 calls cost if each reads 200 tokens and writes 40? In cents.",
+    "hint": "Multiply integers, divide once.",
     "value": 120,
-    "tolerance": 0,
-    "unit": "cents"
+    "tolerance": 0
   },
   {
     "id": "ex-7yeafp89",
-    "version": 1,
+    "version": 2,
     "section": "what-a-call-costs",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why does the harness multiply integers and round only once, at the end?",
+    "prompt": "Why does `cost.py` multiply integers and round only once, at the end?",
     "hint": "`0.1 + 0.2`.",
     "choices": [
       {
-        "text": "Integers are faster to multiply than floats",
+        "text": "Rounding twice would give a negative number",
         "correct": false,
-        "why": "Speed is not the reason given."
+        "why": "It gives a slightly wrong one."
       },
       {
-        "text": "A float cannot hold most decimal fractions exactly, so sums of them drift, and a bill must not",
+        "text": "Binary floats cannot hold most decimal fractions",
         "correct": true,
-        "why": "Right. Whole tokens times whole prices is exact; one stated rounding at the end."
+        "why": "Right: sums of them drift."
       },
       {
-        "text": "Python has no floating-point numbers",
+        "text": "Integers are faster for a computer to multiply",
         "correct": false,
-        "why": "It does: `0.1 + 0.2` is one."
+        "why": "Speed is not the reason."
       },
       {
-        "text": "Providers forbid fractions of a cent",
+        "text": "Prices are only published as whole numbers",
         "correct": false,
-        "why": "Per-token prices are fractions of a cent; that is why the unit is millionths."
+        "why": "They are whole cents per million here; that is not the reason."
       }
     ]
   },
   {
     "id": "ex-kcyn7zsw",
-    "version": 1,
+    "version": 2,
     "section": "what-a-call-costs",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Output was under 14% of the tokens of the `v3-examples` run. Why was it 44% of the cost?",
-    "hint": "Read `prices.json`.",
+    "prompt": "Output was 11% of the tokens of the `v3-examples` run. Why was it 38% of the cost?",
+    "hint": "The two prices.",
     "choices": [
       {
-        "text": "Output tokens are longer words than input tokens, so the stand-in counts each of them twice",
+        "text": "Ollama charges for output and not for input",
         "correct": false,
-        "why": "A token is a token; the count is not doubled."
+        "why": "Ollama charges nothing; these are the course's prices."
       },
       {
-        "text": "The harness rounds output costs up and input costs down",
+        "text": "The cost includes the seconds each call took",
         "correct": false,
-        "why": "It rounds once, at the end, on the total."
+        "why": "`cost.py` reads only tokens."
       },
       {
-        "text": "Each costs five times as much",
+        "text": "Output costs five times as much",
         "correct": true,
-        "why": "Right: 1500 cents a million against 300."
+        "why": "Right: 1500 against 300."
       },
       {
-        "text": "The cache was writing them on every call",
+        "text": "Output tokens are longer than input tokens",
         "correct": false,
-        "why": "The cache was off: `cache_write` is 0."
+        "why": "A token is a token; the price differs."
       }
     ]
   },
   {
     "id": "ex-db7gmse4",
-    "version": 1,
+    "version": 2,
     "section": "what-a-call-costs",
     "type": "cloze",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Tokens are whole and prices are whole cents per million, so tokens times price is an exact count of ___ of a cent.",
-    "hint": "One cent divided a million ways.",
+    "prompt": "The prices in `prices.json` are whole cents per ___ tokens, so tokens times price is a whole number.",
+    "hint": "Read the note in the file.",
     "blanks": [
       {
         "accept": [
-          "millionths"
+          "million",
+          "1000000",
+          "1,000,000",
+          "a million"
         ],
         "ignore_case": true,
         "ignore_accents": true
@@ -219,349 +219,347 @@
   },
   {
     "id": "ex-cftkz9zw",
-    "version": 1,
+    "version": 2,
     "section": "cutting-cost",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "`--set max_tokens=30` on `v3-examples` cut the p95 from 1341 ms to 1138. What happened to the score, and why?",
-    "hint": "Look at `stop:` in `t01`.",
+    "prompt": "`--set num_predict=20` on `v3-examples` cut the p95 from 5.0 seconds to 3.1. What happened to the replies, and why?",
+    "hint": "How long was a good answer?",
     "choices": [
       {
-        "text": "Unchanged, because the model wrote shorter answers to fit",
-        "correct": false,
-        "why": "A cap does not make the model write less; it stops it."
-      },
-      {
-        "text": "It fell to 1 of 40: replies were cut mid-string and stopped being JSON",
+        "text": "All forty were cut off before they finished",
         "correct": true,
-        "why": "Right. `stop: max_tokens` says the cap, not the model, ended the reply."
+        "why": "Right: a cap is not a way to ask for less."
       },
       {
-        "text": "It rose, because shorter is better",
+        "text": "They became shorter and stayed valid",
         "correct": false,
-        "why": "It fell from 36 to 1."
+        "why": "They stopped mid-string."
       },
       {
-        "text": "It fell a little, and only on the long messages whose summaries ran past the cap",
+        "text": "Only the ones that were wrong were cut",
         "correct": false,
-        "why": "It fell on 35 of the 36 that had passed."
+        "why": "The cap cuts any reply longer than twenty tokens."
+      },
+      {
+        "text": "The model rewrote them to fit in twenty tokens",
+        "correct": false,
+        "why": "It does not know the cap is there."
       }
     ]
   },
   {
     "id": "ex-0sw1mrsf",
-    "version": 1,
+    "version": 2,
     "section": "cutting-cost",
     "type": "quiz",
-    "difficulty": "medium",
+    "difficulty": "easy",
     "drillable": true,
-    "prompt": "The longest good answer to `v3-examples` was 46 tokens. Where should its output cap sit?",
-    "hint": "A cap is a ceiling, not a target.",
+    "prompt": "The longest good answer to `v3-examples` was 38 tokens. Where should its output cap sit?",
+    "hint": "A ceiling for runaways.",
     "choices": [
       {
-        "text": "At 30, to force every answer to be shorter and cheaper",
+        "text": "At 20, to save money on every reply",
         "correct": false,
-        "why": "That cut every reply mid-string."
+        "why": "That cut all forty."
       },
       {
-        "text": "At exactly 46, to the token",
+        "text": "At exactly 30.6, the mean output",
         "correct": false,
-        "why": "Leaves no room for a good answer a little longer than any seen."
+        "why": "Half the replies are longer than the mean."
       },
       {
-        "text": "Above 46, to stop only runaway replies",
+        "text": "There should be no cap at all",
+        "correct": false,
+        "why": "A runaway reply costs time and money."
+      },
+      {
+        "text": "Above 38 tokens",
         "correct": true,
-        "why": "Right: it saves money only on replies that were going wrong."
-      },
-      {
-        "text": "Nowhere: caps never save anything at all",
-        "correct": false,
-        "why": "They save on runaway replies."
+        "why": "Right."
       }
     ]
   },
   {
     "id": "ex-34rkgx0d",
-    "version": 1,
+    "version": 2,
     "section": "cutting-cost",
     "type": "multiple-choice",
-    "difficulty": "easy",
+    "difficulty": "medium",
     "drillable": true,
     "prompt": "Which of these are ways the lesson gives to make calls cheaper? Choose all that apply.",
-    "hint": "Fewer tokens, cheaper tokens, or waiting.",
+    "hint": "Four levers.",
     "choices": [
       {
-        "text": "Fewer examples in the prompt",
+        "text": "Send fewer tokens",
         "correct": true,
-        "why": "Yes: fewer input tokens on every call."
+        "why": "Yes."
       },
       {
-        "text": "Asking for a shorter summary",
+        "text": "Have fewer written",
         "correct": true,
-        "why": "Yes: fewer output tokens, the dearer kind."
+        "why": "Yes."
       },
       {
-        "text": "Sending work that can wait through a batch interface",
+        "text": "Pay less per call by waiting, in a batch",
         "correct": true,
-        "why": "Yes, where a provider sells one."
+        "why": "Yes."
       },
       {
-        "text": "Rounding each call's cost down to the cent",
+        "text": "Raise the temperature",
         "correct": false,
-        "why": "That changes the report, not the bill, and breaks the arithmetic."
+        "why": "That changes what is written, not its price."
       }
     ]
   },
   {
     "id": "ex-bphmx6pa",
-    "version": 1,
+    "version": 2,
     "section": "cutting-cost",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why does the lesson give no numbers for routing easy messages to a cheaper model?",
-    "hint": "What would there be to route between?",
+    "prompt": "Lesson 1 found `llama3.2:1b` passing 9 of 40 where `llama3.2:3b` passed 28. What would a route sending easy messages to the small model need before it shipped?",
+    "hint": "It is a version.",
     "choices": [
       {
-        "text": "The lab's stand-in is a single model with one price, so any number would be invented",
+        "text": "A higher temperature for the small model",
+        "correct": false,
+        "why": "That is not what decides a route."
+      },
+      {
+        "text": "A run of the whole route, compared message by message",
         "correct": true,
-        "why": "Right. The method carries over: route, then compare on the same test sets."
+        "why": "Right: like any other change."
       },
       {
-        "text": "Routing never saves money",
+        "text": "Nothing, since easy messages cannot go wrong",
         "correct": false,
-        "why": "It does where a cheaper model is good enough for some messages."
+        "why": "Which messages are easy is the rule being tested."
       },
       {
-        "text": "Providers forbid it",
+        "text": "A larger test set built from the small model's replies",
         "correct": false,
-        "why": "Nothing forbids sending different messages to different models."
-      },
-      {
-        "text": "Routing cannot be tested",
-        "correct": false,
-        "why": "It is tested like any version: run the pipeline over the test sets."
+        "why": "Labels come from people."
       }
     ]
   },
   {
     "id": "ex-qfrz5gqa",
-    "version": 1,
+    "version": 2,
     "section": "cutting-cost",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
     "prompt": "Which work suits a provider's batch interface?",
-    "hint": "Results come back later.",
+    "hint": "Nobody waiting.",
     "choices": [
       {
-        "text": "Sorting a customer's message while they wait on the support page",
+        "text": "Answering a customer in a live chat",
         "correct": false,
-        "why": "Somebody is waiting; a batch returns results later."
+        "why": "A batch may take hours."
       },
       {
-        "text": "Re-sorting last year's archive",
+        "text": "Checking a password reset before it is sent",
+        "correct": false,
+        "why": "Somebody is waiting."
+      },
+      {
+        "text": "Re-sorting last year's archive overnight",
         "correct": true,
-        "why": "Right: nobody is watching, so later is fine."
+        "why": "Right."
       },
       {
-        "text": "A chat reply that the customer expects within a few seconds",
+        "text": "Sorting the message a customer just sent",
         "correct": false,
-        "why": "A batch can take hours."
-      },
-      {
-        "text": "Any call that has failed once and needs to be retried quickly",
-        "correct": false,
-        "why": "Quickly is exactly what a batch does not promise."
+        "why": "Somebody is waiting for that one."
       }
     ]
   },
   {
     "id": "ex-r906781b",
-    "version": 1,
+    "version": 2,
     "section": "trade-offs",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Removing the examples gave `fixed 1, broken 3` and a sign test of 0.625. What does that p value tell you?",
-    "hint": "Four messages changed.",
+    "prompt": "Removing the examples broke nine messages and fixed one, p = 0.021. What does that p value tell you?",
+    "hint": "How lopsided?",
     "choices": [
       {
-        "text": "Forty messages are too few to tell the two prompts apart by count; it does not say they are equal",
+        "text": "A split that lopsided is unlikely by chance",
         "correct": true,
-        "why": "Right: even four out of four would only have reached 0.125."
+        "why": "Right: the examples were doing something."
       },
       {
-        "text": "The prompts are equally good",
+        "text": "The cheaper prompt is 2.1% worse",
         "correct": false,
-        "why": "No evidence of a difference is not evidence of no difference."
+        "why": "p is not a size of effect."
       },
       {
-        "text": "The cheaper prompt is better",
+        "text": "There is no difference between the prompts",
         "correct": false,
-        "why": "It passed fewer."
+        "why": "That would be a large p."
       },
       {
-        "text": "The run should be repeated until p falls below 0.05",
+        "text": "The examples cost 2.1% of the tokens",
         "correct": false,
-        "why": "At temperature 0 the stand-in gives the same answers every time."
+        "why": "p says nothing about tokens."
       }
     ]
   },
   {
     "id": "ex-xakkrbyp",
-    "version": 1,
+    "version": 2,
     "section": "trade-offs",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
     "prompt": "Why does the lesson prefer the p95 to the mean when judging latency?",
-    "hint": "Who notices a slow call?",
+    "hint": "Who feels it?",
     "choices": [
       {
-        "text": "The mean is harder to compute when the calls arrive from many different machines",
+        "text": "The mean cannot be computed on forty calls",
         "correct": false,
-        "why": "It is easier, and that is not the reason."
+        "why": "It can; it hides the tail."
       },
       {
-        "text": "The p95 is always the larger number, so it is the safer one to quote in any report",
+        "text": "The p95 is always lower than the mean",
         "correct": false,
-        "why": "The point is what the reader experiences, not which number is larger."
+        "why": "It is usually higher."
       },
       {
-        "text": "A person waiting feels the slow calls, and the mean blends them away",
+        "text": "Ollama reports only percentiles",
+        "correct": false,
+        "why": "`stats.py` computes them from the run file."
+      },
+      {
+        "text": "A person waiting feels the slow calls",
         "correct": true,
-        "why": "Right: the mean can fall while the slow calls get slower."
-      },
-      {
-        "text": "The stand-in has no mean",
-        "correct": false,
-        "why": "`pl latency` simply does not print one."
+        "why": "Right: the mean can fall while the tail rises."
       }
     ]
   },
   {
     "id": "ex-7mdf2k3n",
-    "version": 1,
+    "version": 2,
     "section": "trade-offs",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "From the two `pl cost` lines, how many cents a million calls did removing the examples save (127,680 against 85,043)?",
+    "prompt": "From the two `cost.py` lines, how many cents a million calls did removing the examples save (120,420 against 79,582.5)?",
     "hint": "Subtract.",
-    "value": 42637,
-    "tolerance": 0,
-    "unit": "cents"
+    "value": 40837.5,
+    "tolerance": 0.01
   },
   {
     "id": "ex-dt7pt9q0",
-    "version": 1,
+    "version": 2,
     "section": "trade-offs",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Three of the cheaper prompt's replies were not JSON. Why does the lesson weigh that more than a wrong urgency?",
-    "hint": "What does the routing program do with each?",
+    "prompt": "Removing the examples left format at 39 of 40 and took urgencies from 28 to 20. What were the examples paying for?",
+    "hint": "Which checks moved?",
     "choices": [
       {
-        "text": "Because a JSON failure costs the provider more tokens to produce than an ordinary wrong label",
+        "text": "Nothing, since the totals are within noise",
         "correct": false,
-        "why": "The cost is in what happens next, not in the tokens."
+        "why": "p = 0.021 says otherwise."
       },
       {
-        "text": "Because the sign test counts them twice",
-        "correct": false,
-        "why": "Each message counts once."
-      },
-      {
-        "text": "Because they are slower to generate than the JSON replies",
-        "correct": false,
-        "why": "Speed is not the problem with them."
-      },
-      {
-        "text": "It routes nothing",
+        "text": "Judgement, not format",
         "correct": true,
-        "why": "Right: a wrong urgency still routes the message; an unreadable reply needs a retry or a person."
+        "why": "Right: the categories and urgencies fell."
+      },
+      {
+        "text": "Format, since JSON broke without them",
+        "correct": false,
+        "why": "Format held at 39 of 40."
+      },
+      {
+        "text": "Speed, since the prompt became slower",
+        "correct": false,
+        "why": "It became faster."
       }
     ]
   },
   {
     "id": "ex-wg74h6m9",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "ordering",
     "difficulty": "medium",
     "drillable": true,
     "prompt": "Put the lesson's order for cutting cost in sequence, first step first.",
-    "hint": "Free savings first, trades last.",
+    "hint": "Free cuts first.",
     "items": [
       "Remove what earns nothing",
       "Shorten the output",
-      "Trade answers for money, with the broken messages named",
-      "Write the decision down"
+      "Trade answers for money, in writing"
     ]
   },
   {
     "id": "ex-3wr1f86h",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "matching",
     "difficulty": "medium",
     "drillable": true,
     "prompt": "Match each change to what the lab showed it did.",
-    "hint": "One effect each.",
+    "hint": "One each.",
     "pairs": [
       {
-        "left": "Taking out the three examples",
-        "right": "A third cheaper, three replies not JSON"
+        "left": "Adding three examples to `v2-json`",
+        "right": "Twice the input, the same median"
       },
       {
-        "left": "`max_tokens` set to 30",
-        "right": "Faster, and 1 of 40 passing"
+        "left": "The bare prompt's long answers",
+        "right": "Three times the median"
       },
       {
-        "left": "Three times the input, slightly less output",
-        "right": "A median 44 ms higher and a lower p95"
+        "left": "A cap of 20 tokens",
+        "right": "All forty cut off"
       },
       {
-        "left": "Integers instead of floats for money",
-        "right": "An exact total, rounded once"
+        "left": "Removing the examples",
+        "right": "A third cheaper, nine broken"
       }
     ],
     "right_distractors": [
-      "A cache hit on every call"
+      "Every reply valid and faster"
     ]
   },
   {
     "id": "ex-f3sga4pm",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
     "prompt": "A colleague halves the summary's length and reports the mean latency fell by 8%. What would you ask for before accepting it?",
-    "hint": "A saving is a change; latency is felt in the tail.",
+    "hint": "Tail and answers.",
     "choices": [
       {
-        "text": "Nothing: shorter output is always better",
+        "text": "A run at a higher temperature",
         "correct": false,
-        "why": "It may break answers, and the mean may hide the tail."
+        "why": "That measures something else."
       },
       {
-        "text": "The comparison on every test set, with the broken messages, and the p95",
+        "text": "The model's price list",
+        "correct": false,
+        "why": "Price does not say what broke."
+      },
+      {
+        "text": "The p95, and the messages the change broke",
         "correct": true,
-        "why": "Right: score unchanged, tokens down, and the slow calls not slower."
+        "why": "Right: a saving says what it cost."
       },
       {
-        "text": "A rerun at a higher temperature, to see whether the latency still falls by the same amount",
+        "text": "Nothing: 8% is a clear improvement",
         "correct": false,
-        "why": "Temperature is a separate change and tells you nothing about this one."
-      },
-      {
-        "text": "The provider's price list",
-        "correct": false,
-        "why": "The prices did not change; the question is what the change did."
+        "why": "A mean hides the tail, and the score is not mentioned."
       }
     ]
   }

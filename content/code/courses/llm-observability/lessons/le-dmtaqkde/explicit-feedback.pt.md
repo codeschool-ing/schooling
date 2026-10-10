@@ -1,6 +1,6 @@
 ---
 title: Polegar para cima e para baixo
-version: 1
+version: 2
 ---
 
 O sinal de qualidade mais direto que existe: perguntar ao cliente. Um polegar embaixo de cada resposta,
@@ -10,8 +10,8 @@ declara no topo:
 
 ```
   - A reply is RIGHT if it contains one of its topic's facts, or, for a topic
-    the documents do not answer, if it is the refusal.
-  - 18% of customers rate a reply. A wrong reply gets a thumbs down 85% of the
+    the documents do not answer, if it contains the refusal.
+  - 25% of customers rate a reply. A wrong reply gets a thumbs down 85% of the
     time; a right one gets a thumbs up 92% of the time.
   - After a wrong reply, 45% ask again in other words, 40 to 120 seconds
     later, in the same session. If that is wrong too, 60% ask for a person.
@@ -27,10 +27,10 @@ Cada clique é uma linha no `feedback.jsonl`, e ela traz **o id de trace da resp
 que a tela recebeu junto com a resposta:
 
 ```
-ana@lab:~/obs$ head -3 feedback.jsonl
-{"trace": "65c96d256fe5e0df9f7b25467de00a60", "request": "r0012", "at": "2026-09-28T06:29:39", "kind": "thumbs", "value": "down"}
-{"trace": "731748f8ee9c32611a7403e01688fd78", "request": "r0025", "at": "2026-09-28T08:35:26", "kind": "rephrase", "value": "Who pays for the return postage?"}
-{"trace": "d7409c1f4b1d04d3e047ea703eca81fd", "request": "r0021", "at": "2026-09-28T08:02:28", "kind": "thumbs", "value": "down"}
+ana@dev:~/obs$ head -3 feedback.jsonl
+{"trace": "a97ca428c676540ebab912432abec13c", "request": "r009", "at": "2026-09-28T09:29:35", "kind": "thumbs", "value": "up"}
+{"trace": "9d3fe5c38cadad8bdb8f799e9374929c", "request": "r010", "at": "2026-09-28T09:40:12", "kind": "thumbs", "value": "up"}
+{"trace": "2f467df1fd3622649fbdc311f53d6ddf", "request": "r011", "at": "2026-09-28T10:10:13", "kind": "thumbs", "value": "down"}
 ```
 
 A ligação é exata, por id, como a aula 1 disse que tinha de ser: um cliente que perguntou duas vezes
@@ -57,27 +57,28 @@ for rel, c in sorted(seen.items()):
 ```
 
 ```
-ana@lab:~/obs$ python signals.py
+ana@dev:~/obs$ python signals.py
 release    requests  rated  down  down % rephrased  person  per 100 requests
-2026.09.4       789    123    44     36%      15.7     4.4
-2026.10.1       432     68    35     51%      21.8     9.0
+2026.09.4       134     32     5     16%       6.7     0.0
+2026.10.1       141     26     4     15%      12.8     2.8
 ```
 
-Sob a versão antiga, **36% dos polegares foram para baixo**; sob a nova, **51%**. Essa seria a
-manchete, e vale ter cuidado com ela.
+Sob a versão antiga, **16% dos polegares foram para baixo**; sob a nova, **15%**. Só pelos
+polegares, a versão que recusou quase o dobro de perguntas de ajuda não mudou nada, e vale ter
+cuidado com isso.
 
 ## O que um polegar mede, e o que não mede
 
-**Pouca gente avalia.** 123 avaliações numa versão e 68 na outra, de 789 e 432 pedidos. Nesses tamanhos
-uma diferença de quinze pontos provavelmente é real, mas um painel mostrando a taxa de polegar para
-baixo de um dia sobre vinte avaliações vai pular só com o ruído. A aula 9 põe uma margem de erro numa
-taxa assim.
+**Pouca gente avalia.** 32 avaliações numa versão e 26 na outra, de 134 e 141 pedidos: nove
+polegares para baixo na semana inteira. Nesses tamanhos, uma diferença de dois ou três polegares é
+ruído, para qualquer lado, e um painel que mostre a taxa de polegares para baixo de um dia sobre
+cinco avaliações vai pular só com o ruído. A aula 9 põe uma margem de erro numa taxa assim.
 
-**Quem avalia não é quem pergunta.** Aqui são 18% sorteados, porque a regra manda. Em produtos reais, as
-pessoas avaliam mais quando estão irritadas, ou mais quando estão encantadas, e a mistura muda com a
-tela: um polegar sempre visível atrai um público diferente de um que aparece depois de uma pausa. Uma
-taxa de polegar para baixo mede a experiência de quem avalia, e é segura para comparar duas versões da
-mesma tela, não dois produtos.
+**Quem avalia não é quem pergunta.** Aqui é um quarto sorteado, porque a regra manda. Em produtos
+reais, as pessoas avaliam mais quando estão irritadas, ou mais quando estão encantadas, e a mistura
+muda com a tela: um polegar sempre visível atrai um público diferente de um que aparece depois de
+uma pausa. Uma taxa de polegares para baixo é uma medida da experiência de quem avalia, e é seguro
+compará-la entre duas versões da mesma tela, não entre dois produtos.
 
 **Um polegar diz que algo estava errado, não o quê.** Um polegar para baixo numa recusa, num fato errado
 e numa resposta lenta parecem iguais. O valor dele é apontar traces que valem ser lidos, e ser

@@ -1,7 +1,7 @@
 [
   {
     "id": "ex-1qfzamta",
-    "version": 1,
+    "version": 2,
     "section": "three-words",
     "type": "quiz",
     "difficulty": "easy",
@@ -12,7 +12,7 @@
       {
         "text": "An agent runs on a larger and more capable model than an assistant does",
         "correct": false,
-        "why": "Both can use the same model. The lab's assistant and agent call the same scripted-1."
+        "why": "Both can use the same model. The assistant and the agent in this lesson both call llama3.2:3b."
       },
       {
         "text": "The model chooses the next step, inside a loop",
@@ -64,7 +64,7 @@
   },
   {
     "id": "ex-vpp7p54y",
-    "version": 1,
+    "version": 2,
     "section": "three-words",
     "type": "quiz",
     "difficulty": "medium",
@@ -74,7 +74,7 @@
       {
         "text": "Whether its documentation calls it one",
         "correct": false,
-        "why": "Names are marketing. The lab's agent.py is forty lines and calls itself nothing."
+        "why": "Names are marketing. This lesson's agent.py is forty lines and calls itself nothing."
       },
       {
         "text": "Whether it has more than one tool",
@@ -126,64 +126,64 @@
   },
   {
     "id": "ex-4q04n3gb",
-    "version": 1,
+    "version": 2,
     "section": "one-task-three-ways",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "The assistant's draft ends with `[For the support team: I cannot see orders. Check the delivery date before sending this.]` Why is that line right?",
+    "prompt": "The assistant's draft tells Bia she has until 24 October. Which part of that answer did nothing in the program check?",
     "choices": [
       {
-        "text": "Because a model has to add a warning to everything it writes for a customer",
+        "text": "The thirty days, which the model may have remembered wrongly",
         "correct": false,
-        "why": "A warning on everything is noise. This one names the single fact the draft could not check."
+        "why": "The thirty days are in the help centre the assistant was given, word for word."
       },
       {
-        "text": "Because the 30 days in the draft were the model's guess and not the help centre's rule",
+        "text": "The steps for sending the parcel back, which no tool returned",
         "correct": false,
-        "why": "The 30 days are in the help centre the assistant was given. The date is what it took on trust."
+        "why": "They are in the same article: the prepaid label and the post office."
       },
       {
-        "text": "Because assistant.py sent the model no help-centre articles to work from",
+        "text": "That returns are free",
         "correct": false,
-        "why": "assistant.py puts all 40 articles in the system prompt. That is why its input was 2250 tokens."
+        "why": "The article says so. The draft repeated it rather than inventing it."
       },
       {
-        "text": "The date came from Bia, unchecked",
+        "text": "The delivery date, which came from Bia's message and was never compared with the order",
         "correct": true,
-        "why": "Right. The assistant had the help centre and the message, not the order. The person who acts is the check."
+        "why": "Right. The assistant had the help centre and the message, not the order. The person who sends the draft is the check."
       }
     ]
   },
   {
     "id": "ex-4ztvpymz",
-    "version": 1,
+    "version": 2,
     "section": "one-task-three-ways",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Asked about M-1043, the agent searched for `tracking a parcel`. Asked about M-1042, it searched for `return a book`. What made the two searches different?",
-    "hint": "Look at what step 1 returned in each run.",
+    "prompt": "Asked which ways she can pay, the agent searched the help centre. Asked about M-1043, it looked the order up. What made the first steps different?",
+    "hint": "Look at what each message named.",
     "choices": [
       {
-        "text": "search_help picked the article to match the order's status",
+        "text": "search_help ranked the payment article first for both questions",
         "correct": false,
-        "why": "search_help only ranks articles against the query it is given. It never sees the order."
+        "why": "search_help only ranks articles against the query it is given. It was not called for M-1043."
       },
       {
-        "text": "The model read get_order's result first",
+        "text": "The model read the message and chose a tool to match it",
         "correct": true,
-        "why": "Right. `shipped` in one result and `delivered` in the other led to different next steps. That is the loop at work."
+        "why": "Right. One message named an order and the other did not. The same agent.py took two paths."
       },
       {
-        "text": "Two programs, one per question",
+        "text": "Two programs, one written for each kind of question",
         "correct": false,
-        "why": "Both runs were the same agent.py. Nothing in it mentions tracking or returns."
+        "why": "Both runs were the same agent.py. Nothing in it mentions orders or payments."
       },
       {
-        "text": "A missing help article",
+        "text": "The order lookup failed, so the agent fell back on the search",
         "correct": false,
-        "why": "The agent never asked for one: it chose a different query before searching."
+        "why": "Nothing failed. Each run's first step succeeded and was followed by an answer."
       }
     ]
   },
@@ -282,7 +282,7 @@
   },
   {
     "id": "ex-tnp7kqff",
-    "version": 1,
+    "version": 2,
     "section": "the-parts",
     "type": "quiz",
     "difficulty": "medium",
@@ -295,9 +295,9 @@
         "why": "The model sent back a block naming the tool and its arguments. It has no access to shop.db."
       },
       {
-        "text": "labllm, the stand-in provider, before it writes its reply",
+        "text": "Ollama, between reading the request and writing its reply",
         "correct": false,
-        "why": "labllm returns text and tool_use blocks like any provider. It never touches the shop's data."
+        "why": "Ollama runs the model and returns text and tool_use blocks. It never touches the shop's database."
       },
       {
         "text": "The Anthropic SDK, automatically, as soon as a tool_use block arrives",
@@ -313,32 +313,32 @@
   },
   {
     "id": "ex-kpxj78f6",
-    "version": 1,
+    "version": 2,
     "section": "the-parts",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "The input tokens of the three requests for Bia's question were 180, 303 and 498. Why does each request carry more than the last?",
+    "prompt": "Through the recorder, Bia's question took two requests: 270 input tokens, then 239. The second carried the first's messages plus a tool call and its result. Why is it smaller?",
     "choices": [
       {
-        "text": "Each request resends the whole conversation, every earlier call and result included",
+        "text": "The template wrote the tool descriptions only into the first request",
         "correct": true,
-        "why": "Right. The conversation is the agent's state, and it travels in full every time."
+        "why": "Right. llama3.2's template puts the tools inside the last message only when that message is the user's, and the second ended with a tool result."
       },
       {
-        "text": "The provider stores earlier steps and charges for the memory",
+        "text": "Ollama cached the first request",
         "correct": false,
-        "why": "The API keeps nothing between requests. Everything the model knows is in the request."
+        "why": "The cached tokens are a column of their own. The input column counts the whole prompt either way."
       },
       {
-        "text": "The tool definitions are added once more per step",
+        "text": "The SDK dropped Bia's message once the model had answered it",
         "correct": false,
-        "why": "They are sent each time, at the same size. They cannot explain the growth."
+        "why": "The recorder shows the request: Bia's message is still the first entry of messages."
       },
       {
-        "text": "The system prompt grows",
+        "text": "The system prompt is sent only with the first request of a conversation",
         "correct": false,
-        "why": "SYSTEM is a constant in agent.py. It is identical in all three requests."
+        "why": "SYSTEM is passed to every call in agent.py's loop, identical each time."
       }
     ]
   },
@@ -406,7 +406,7 @@
   },
   {
     "id": "ex-qshy3j98",
-    "version": 1,
+    "version": 2,
     "section": "what-acting-changes",
     "type": "quiz",
     "difficulty": "hard",
@@ -421,7 +421,7 @@
       {
         "text": "Because the help centre will have changed by the time the next run happens",
         "correct": false,
-        "why": "The weakness is there even with the help centre frozen, as it is in the lab."
+        "why": "The weakness is there even with the help centre frozen, as make_shop.py writes it."
       },
       {
         "text": "One run tests one path, and a real model picks again",
@@ -437,125 +437,125 @@
   },
   {
     "id": "ex-0h50hccj",
-    "version": 1,
+    "version": 2,
     "section": "the-lab",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "In this course's lab, where do the model's replies come from?",
+    "prompt": "In this course, where do the model's replies come from?",
     "choices": [
       {
-        "text": "From Anthropic's API, reached through the key stored in /etc/agents.env",
+        "text": "From Anthropic's API, reached with the key in ollama.env",
         "correct": false,
-        "why": "That key is the lab's own and opens nothing anywhere else. No provider is reached."
+        "why": "The key in ollama.env is a placeholder. The base URL beside it sends every request to Ollama."
       },
       {
-        "text": "From a small language model that labllm runs on the same machine",
+        "text": "From all-minilm, the model the help-centre search uses",
         "correct": false,
-        "why": "labllm runs no language model at all. It reads rules."
+        "why": "all-minilm turns text into vectors for search_help. It writes no replies."
       },
       {
-        "text": "From all-MiniLM-L6-v2, the embedding model the lab downloads",
-        "correct": false,
-        "why": "That model is real and runs here, but it turns text into vectors for search_help. It writes no replies."
-      },
-      {
-        "text": "From rules the course wrote",
+        "text": "From llama3.2:3b, which Ollama runs on your own computer and serves to the libraries",
         "correct": true,
-        "why": "Right. labllm speaks the providers' wire formats and chooses each reply from the rules in lab/scripted."
+        "why": "Right. The anthropic and openai libraries are pointed at Ollama, which answers in their formats."
+      },
+      {
+        "text": "From a copy of the model downloaded inside each program",
+        "correct": false,
+        "why": "The programs hold no model. They send requests to Ollama over HTTP, on 127.0.0.1."
       }
     ]
   },
   {
     "id": "ex-kvw90syn",
-    "version": 1,
+    "version": 2,
     "section": "the-lab",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Which part of what this course shows would change if labllm were replaced by a real provider?",
+    "prompt": "You switch from Ollama to a provider's paid API. What do you change in this lesson's agent.py?",
     "choices": [
       {
-        "text": "The words of the replies and which tools get called",
+        "text": "The loop, because a paid model returns tool calls in another shape",
+        "correct": false,
+        "why": "The anthropic library returns the same blocks from either. The loop reads them the same way."
+      },
+      {
+        "text": "The tools, because a paid model needs shop.py on its own servers",
+        "correct": false,
+        "why": "No model ever runs a tool. agent.py runs shop.py on your machine whatever answers."
+      },
+      {
+        "text": "The model's name in the program, and the key and base URL in the environment",
         "correct": true,
-        "why": "Right. Those are the course's rules. The programs, tools and limits around them would stay as they are."
+        "why": "Right. The program names llama3.2:3b; the key and the base URL come from the environment."
       },
       {
-        "text": "The SDK calls, written for labllm",
+        "text": "Nothing: the library picks a model",
         "correct": false,
-        "why": "They are the providers' own SDKs, unmodified. Only the base URL and the key point them at the lab."
-      },
-      {
-        "text": "The tool results, faked by the lab",
-        "correct": false,
-        "why": "The tool results are real: shop.py reads shop.db and runs the embedding model."
-      },
-      {
-        "text": "Nothing at all",
-        "correct": false,
-        "why": "labllm copies the wire, not the behaviour. A real model would choose its own steps and words."
+        "why": "The program names its model. A provider has no model called llama3.2:3b."
       }
     ]
   },
   {
     "id": "ex-kytg2x6q",
-    "version": 1,
+    "version": 2,
     "section": "when-setup-fails",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "`sudo bash lab.sh up` stops at once with `embeddings-vectors' lab is required beside this course`. What is wrong?",
+    "prompt": "A program stops with `AttributeError: module 'math' has no attribute 'sumprod'` when it searches the help centre. What is wrong?",
     "choices": [
       {
-        "text": "The embeddings-vectors lab has to be built and running before this one starts",
+        "text": "The help centre's vectors were never computed",
         "correct": false,
-        "why": "Nothing of that lab has to run. Two of its files and its model runner are read, nothing more."
+        "why": "shop.py computes them on the first search. This error comes before any vector is used."
       },
       {
-        "text": "Only one directory was copied over",
+        "text": "The Python that runs it is older than 3.12, the first to have math.sumprod",
         "correct": true,
-        "why": "Right. The lab takes minilm.py and the help centre from ../embeddings-vectors/lab."
+        "why": "Right. math.sumprod arrived in 3.12, and a virtual environment keeps the Python it was made with."
       },
       {
-        "text": "The model failed its checksum",
+        "text": "Ollama is not running, so all-minilm cannot answer",
         "correct": false,
-        "why": "That fails later, in sha256sum, with a different message."
+        "why": "That fails with a connection error from urllib, not with a missing attribute."
       },
       {
-        "text": "pip could not reach PyPI",
+        "text": "numpy is missing",
         "correct": false,
-        "why": "pip runs after this check, and its failure prints pip's own error."
+        "why": "shop.py does not use numpy. The multiplication is the standard library's."
       }
     ]
   },
   {
     "id": "ex-ngndsjd3",
-    "version": 1,
+    "version": 2,
     "section": "when-setup-fails",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Every program fails to connect to port 8600, and `/run/labllm.out` says the address is already in use. What do you check first?",
+    "prompt": "In a new terminal, agent.py stops with `Could not resolve authentication method`. What do you check first?",
     "choices": [
       {
-        "text": "Whether the API key written in /etc/agents.env is still a valid one",
-        "correct": false,
-        "why": "A wrong key gets a 401 from labllm. Here labllm never started."
-      },
-      {
-        "text": "Whether a firewall rule is blocking traffic on the loopback interface",
-        "correct": false,
-        "why": "The error is from bind, on the server side. A firewall does not say the address is in use."
-      },
-      {
-        "text": "Which process holds 8600, with `ss -ltnp`",
+        "text": "Whether the environment was activated in this terminal",
         "correct": true,
-        "why": "Right. Something else holds the port, for instance an earlier labllm that was never stopped."
+        "why": "Right. ollama.env reaches a shell through .venv/bin/activate, and a new terminal starts without it."
       },
       {
-        "text": "Whether Python 3.11 is installed",
+        "text": "Whether llama3.2:3b was pulled into Ollama",
         "correct": false,
-        "why": "labllm does not reach the point of binding a port without Python."
+        "why": "A missing model is an error from Ollama about the model. Here no request was sent."
+      },
+      {
+        "text": "Whether a firewall blocks traffic on the loopback interface",
+        "correct": false,
+        "why": "The library stopped before connecting to anything, for want of a key."
+      },
+      {
+        "text": "Whether the API key in ollama.env is still valid",
+        "correct": false,
+        "why": "Ollama checks no key. The library found none at all, which is a different problem."
       }
     ]
   },

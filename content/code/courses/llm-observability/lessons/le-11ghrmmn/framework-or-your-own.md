@@ -1,6 +1,6 @@
 ---
 title: A framework, your own code, or both
-version: 1
+version: 2
 ---
 
 After lessons 8 to 12 the course has both: checks written in a few lines each, and two frameworks that
@@ -24,6 +24,6 @@ whose docstring is its whole definition.
 3. **A framework's built-in metric is read before it is run.** Its prompt is in the installed package,
    and reading it says what it will reward.
 
-Lesson 14 uses these metrics to compare two versions of the assistant, and lesson 15 makes the
-comparison a test that can fail a build. Both work with the course's own checks or with a framework's,
-and both use the sixty labelled replies to say which checks can be believed.
+Lesson 14 compares versions of the assistant on the evaluation set, with lesson 8's facts and
+checks, and lesson 15 makes the comparison a test that can fail a build. A metric from this lesson
+or a framework's can join them once the forty-eight labelled replies have said it can be believed.

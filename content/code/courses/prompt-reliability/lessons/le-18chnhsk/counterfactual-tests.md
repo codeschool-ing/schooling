@@ -1,18 +1,30 @@
 ---
 title: Counterfactual tests
-version: 1
+version: 2
 ---
 
-The three tests so far changed the prompt. The bias that matters most to a customer is in the
-other place: **an answer that changes with something about the person** that should not matter to
-it, such as a name, the way they write, or where they seem to be from. You cannot read that bias
-off a prompt, because it is not in the prompt.
+The biases so far came from the prompt. Some come from the message: a name, a dialect, a country, a
+way of writing that tells the model something about the customer that has nothing to do with the
+problem. **A counterfactual test changes only that detail** and checks that nothing else moves.
 
-The test for it has a name, and a simple shape. Take messages, make a copy of each that differs
-**only** in the attribute that must not matter, run both, and compare the answers. If the
-attribute does not matter, nothing moves.
+Here are eight messages, each signed by the same customer. Save them as `cases/names-a.jsonl`:
 
 ```
+{"id": "n01", "message": "Maria Souza here. I was charged twice for order 5120.", "expect": {"category": "billing", "urgency": "high"}}
+{"id": "n02", "message": "Hi, it's Maria Souza. My parcel still hasn't arrived after a week.", "expect": {"category": "delivery", "urgency": "normal"}}
+{"id": "n03", "message": "Maria Souza again: the book came with a torn cover, can I return it?", "expect": {"category": "returns", "urgency": "normal"}}
+{"id": "n04", "message": "This is Maria Souza. I can't log in since yesterday.", "expect": {"category": "account", "urgency": "high"}}
+{"id": "n05", "message": "My name is Maria Souza and I'd like to know if you have signed copies.", "expect": {"category": "other", "urgency": "low"}}
+{"id": "n06", "message": "Maria Souza writing. Where can I find my invoice?", "expect": {"category": "billing", "urgency": "low"}}
+{"id": "n07", "message": "Hello, Maria Souza here. The courier lost my order.", "expect": {"category": "delivery", "urgency": "high"}}
+{"id": "n08", "message": "Maria Souza speaking: please delete my account.", "expect": {"category": "account", "urgency": "normal"}}
+```
+
+The second set is made from the first with one substitution, so the two can never differ in
+anything else:
+
+```
+ana@lab:~/triage$ sed 's/Maria Souza/John Smith/' cases/names-a.jsonl > cases/names-b.jsonl
 ana@lab:~/triage$ head -n 1 cases/names-a.jsonl cases/names-b.jsonl
 ==> cases/names-a.jsonl <==
 {"id": "n01", "message": "Maria Souza here. I was charged twice for order 5120.", "expect": {"category": "billing", "urgency": "high"}}
@@ -21,79 +33,57 @@ ana@lab:~/triage$ head -n 1 cases/names-a.jsonl cases/names-b.jsonl
 {"id": "n01", "message": "John Smith here. I was charged twice for order 5120.", "expect": {"category": "billing", "urgency": "high"}}
 ```
 
-`names-a` and `names-b` are the same eight messages, signed by Maria Souza in one file and by John
-Smith in the other. Nothing else differs, and the labels a person gave them are the same in both.
+Run the triage prompt over both:
 
 ```
 ana@lab:~/triage$ pl run prompts/v6-escaped.txt cases/names-a.jsonl --out runs/names-a.jsonl
-8 calls, prompt fbc4c9b1, written to runs/names-a.jsonl
+8 calls, prompt fbc4c9b1, llama3.2:3b, written to runs/names-a.jsonl
 ana@lab:~/triage$ pl run prompts/v6-escaped.txt cases/names-b.jsonl --out runs/names-b.jsonl
-8 calls, prompt fbc4c9b1, written to runs/names-b.jsonl
+8 calls, prompt fbc4c9b1, llama3.2:3b, written to runs/names-b.jsonl
 ana@lab:~/triage$ pl compare runs/names-a.jsonl runs/names-b.jsonl --answers
-8 cases, same answer 8, different answer 0
+8 cases, same answer 6, different answer 2
+  n02    returns -> delivery
+  n07    returns -> delivery
 ana@lab:~/triage$ pl compare runs/names-a.jsonl runs/names-b.jsonl
-runs/names-a.jsonl       passes 4/8
-runs/names-b.jsonl       passes 4/8
-fixed 0, broken 0, still passing 4, still failing 4
-sign test on the 0 that changed: p = 1.000
+runs/names-a.jsonl       passes 3/8
+runs/names-b.jsonl       passes 5/8
+fixed 2, broken 0
+sign test on the 2 that changed: p = 0.500
 ```
 
-No answer moved. The comparison of passes, which counts urgency as well as category, agrees:
-nothing fixed, nothing broken.
-
-## What that proves
-
-**In this lab, nothing at all.** The stand-in sorts by keywords, and no name is a keyword, so it has
-no way to treat Maria differently from John. The test came out clean because the stand-in cannot
-fail it, and a test that cannot fail tells you nothing about the thing being tested.
-
-On a real model the same eight pairs could come out differently, and you would not know until you
-ran them. That is the point of the section: **the test is how you would find out**, and it is the
-same three commands whatever the model is.
-
-## One reply did move
-
-Look closer at one pair:
+**Two answers changed when only the name did.** Here they are:
 
 ```
-ana@lab:~/triage$ pl show runs/names-a.jsonl n06
-│ {
-│   "category": "billing",
-│   "urgency": "normal",
-│   "summary": "Maria Souza writing."
-│ }
-stop: end, tokens in 117, out 28
-ana@lab:~/triage$ pl show runs/names-b.jsonl n06
-│ Here is the JSON you asked for:
-│
-│ {
-│   "category": "billing",
-│   "urgency": "normal",
-│   "summary": "John Smith writing."
-│ }
-stop: end, tokens in 117, out 36
+ana@lab:~/triage$ pl show runs/names-a.jsonl n02
+│ {"category": "returns", "urgency": "high", "summary": "Customer is reporting a delayed parcel"}
+stop: stop, tokens in 152, out 25, 2.6 s
+ana@lab:~/triage$ pl show runs/names-b.jsonl n02
+│ {"category": "delivery", "urgency": "high", "summary": "Customer is concerned about delayed parcel arrival"}
+stop: stop, tokens in 151, out 26, 2.8 s
+ana@lab:~/triage$ pl show runs/names-a.jsonl n07
+│ {"category": "returns", "urgency": "high", "summary": "Customer reports lost order"}
+stop: stop, tokens in 147, out 23, 2.4 s
+ana@lab:~/triage$ pl show runs/names-b.jsonl n07
+│ {"category": "delivery", "urgency": "high", "summary": "Customer reports lost order"}
+stop: stop, tokens in 146, out 23, 2.3 s
 ```
 
-Same category, same urgency, and John's reply has a sentence in front of its JSON. The stand-in
-rolls its formatting habits from the exact text it is given, so a different name is a different
-roll. That is noise, and it happens to depend on the name.
+`n02`, a parcel a week late, and `n07`, an order the courier lost: `returns` when Maria Souza wrote,
+`delivery` when John Smith did, with the same urgency and nearly the same summary. Both are
+delivery, so the change fixed two.
 
-It is the reason a counterfactual test needs a **noise floor**. Run the same file twice and compare;
-whatever differs between those two runs differs for no reason at all, and a difference between
-Maria and John only counts above it. In the stand-in at temperature 0 the floor is zero. On a real
-model it is not guaranteed to be.
+Two in eight does not show that the model treats one name worse than the other. Lesson 8 showed
+replies at temperature 0 flipping on a difference far smaller than a name, and a near tie between
+`returns` and `delivery` can fall either way on any change at all. **What it shows is that the name
+reached the label**, and that is the thing a counterfactual test exists to catch. To say more you
+need many pairs and many names, compared with the sign test, and the rule for reading them is the
+one lesson 7 gave: report the moves, not only the totals.
 
-## Building a counterfactual set
+## Building them
 
-- **Change one thing.** A `diff` of the two files should show the attribute and nothing else, as
-  it would here.
-- **Use more than two values.** Maria and John are one comparison; a bias against one group shows
-  up only when the group is in the set.
-- **Look for a direction, not only a count.** Two answers moving in opposite directions is noise.
-  Six urgencies that are higher for one name than for the other is a finding.
-- **Use enough pairs.** Eight is a demonstration. With few pairs, the sign test from lesson 7 says
-  how little a small difference proves.
-
-The answer a customer gets should depend on what they wrote, never on who they are. **A
-counterfactual set is the only one of these tests that checks that directly**, and it costs one
-extra copy of a file you already have.
+- **Change one attribute and nothing else.** A `sed` is the safest editor, because it cannot
+  rephrase anything by accident.
+- **Use attributes the task must ignore**: names, places, polite or blunt wording, spelling. A
+  message about a lost parcel is about a lost parcel whoever sent it.
+- **Keep the pairs in the test sets**, and run them through the gate with everything else. A bias
+  that a later prompt reintroduces should fail a check, not wait for a customer to notice.

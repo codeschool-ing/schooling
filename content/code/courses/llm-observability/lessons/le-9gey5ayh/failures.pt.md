@@ -1,6 +1,6 @@
 ---
 title: Falhas, e as novas tentativas que as escondem
-version: 1
+version: 2
 ---
 
 Um fornecedor recusa pedidos. Ele está sobrecarregado (503, ou o 529 da Anthropic), está limitando a
@@ -8,22 +8,134 @@ taxa desta chave (429), ou algo do lado dele quebrou (500). A maioria disso se r
 por isso que todo SDK tenta de novo, e por isso que uma falha no fornecedor em geral não é uma falha
 para o cliente. A pergunta para o monitoramento é se alguém ainda consegue vê-la.
 
-O labobs pode ser instruído a recusar uma parte dos pedidos ao acaso. Com 30% recusados:
+O Ollama no seu próprio computador não faz nada disso, a não ser que algo esteja muito errado, e uma
+aula não pode esperar pela tarde ruim de um fornecedor. Então o `flaky.py` fica entre o assistente e o
+Ollama e falha de propósito, quando mandado. É um proxy pequeno, escrito só com a biblioteca padrão do
+Python: todo pedido que recebe ele repassa ao Ollama e devolve a resposta, a não ser que tenha sido
+mandado recusá-lo ou cortar o stream no meio. Salve-o em `~/obs`:
+
+```python
+"""flaky.py: a proxy in front of Ollama that fails on purpose, for lesson 4.
+
+    python flaky.py                      # listens on 127.0.0.1:11435, forwards to 127.0.0.1:11434
+    curl -s -X POST 127.0.0.1:11435/flaky -d '{"fail_rate": 0.3}'
+
+A real provider refuses requests and drops streams on days nobody chooses.
+This one does it when told to, so the assistant's retries can be watched.
+Only requests for a chat completion are touched; embeddings go straight through.
+POST /flaky sets any of: fail_rate (share of chat requests refused at random),
+fail (refuse the next N), status (what a refusal answers, 503 by default),
+cut_after (end the next stream after N pieces, without a finish), seed.
+Every request it forwards or refuses is one line in flaky.log.
+"""
+import json
+import random
+import urllib.error
+import urllib.request
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+UPSTREAM = "http://127.0.0.1:11434"
+config = {"fail_rate": 0.0, "fail": 0, "status": 503, "cut_after": None, "seed": 7}
+rng = random.Random(config["seed"])
+count = 0
+
+
+class Proxy(BaseHTTPRequestHandler):
+    def log_message(self, *args):
+        pass
+
+    def log(self, status):
+        with open("flaky.log", "a") as f:
+            f.write(json.dumps({"n": count, "path": self.path, "status": status}) + "\n")
+
+    def answer(self, status, body):
+        data = json.dumps(body).encode()
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(data)))
+        self.end_headers()
+        self.wfile.write(data)
+
+    def do_POST(self):
+        global count, rng
+        body = self.rfile.read(int(self.headers.get("Content-Length", 0)))
+        if self.path == "/flaky":
+            config.update(json.loads(body or b"{}"))
+            rng = random.Random(config["seed"])
+            return self.answer(200, config)
+        count += 1
+        chat = self.path.endswith("/chat/completions")
+        if chat and (config["fail"] > 0 or rng.random() < config["fail_rate"]):
+            config["fail"] = max(0, config["fail"] - 1)
+            self.log(config["status"])
+            return self.answer(config["status"], {"error": {
+                "message": "flaky.py refused this request on purpose", "type": "overloaded_error"}})
+        request = urllib.request.Request(UPSTREAM + self.path, body, {"Content-Type": "application/json"})
+        try:
+            upstream = urllib.request.urlopen(request)
+        except urllib.error.HTTPError as e:
+            self.log(e.code)
+            return self.answer(e.code, json.loads(e.read() or b"{}"))
+        self.log(upstream.status)
+        self.send_response(upstream.status)
+        self.send_header("Content-Type", upstream.headers["Content-Type"])
+        self.send_header("Connection", "close")
+        self.end_headers()
+        cut, pieces = config["cut_after"], 0
+        for line in upstream:
+            if cut is not None and line.startswith(b"data: {"):
+                pieces += 1
+                if pieces > cut:
+                    config["cut_after"] = None
+                    break
+            self.wfile.write(line)
+            self.wfile.flush()
+        self.close_connection = True
+
+
+ThreadingHTTPServer(("127.0.0.1", 11435), Proxy).serve_forever()
+```
+
+Inicie-o num segundo terminal, com o ambiente ativo, e deixe-o rodando:
+
+```sh
+python flaky.py
+```
+
+De volta ao primeiro terminal, aponte o SDK para ele em vez do Ollama, e mande-o recusar três pedidos
+de chat em cada dez, ao acaso. O `ten.py` então faz dez das perguntas da semana, uma linha cada:
+
+```python
+"""ten.py: ten questions through the assistant, one line each."""
+import json
+
+import assistant
+import telemetry
+
+telemetry.setup()
+for q in [x["phrasings"][0] for x in json.load(open("data/topics.json"))[:10]]:
+    try:
+        reply, _, trace = assistant.ask(q)
+        print(f"{trace[:8]}  ok      {reply[:60]}")
+    except Exception as e:
+        print(f"{'':8}  FAILED  {type(e).__name__}: {e}")
+```
 
 ```
-ana@lab:~/obs$ curl -s -X POST http://127.0.0.1:8600/lab/config -d "{\"fail_rate\": 0.3}"; echo
-{"fail": 0, "status": 429, "seed": 7, "slow_rate": 0.01, "fail_rate": 0.3, "fail_status": 503, "cut_after": null}
-ana@lab:~/obs$ rm -f spans.jsonl; python ten.py
-4115d849  ok      You have 30 days from delivery to return a printed book in t
-6baa11fa  ok      Express delivery is not free at any order value. [1]
-6f924a7e  ok      We refund within three working days of the return reaching o
-959c4df5  ok      Express delivery is not free at any order value. [1]
-d91cac9c  ok      You can use the same account on up to six devices at a time.
-6436fc01  ok      A gift card is valid for two years from the day it was bough
-331a29ae  ok      Kindle readers cannot open our e-books, because Amazon's dev
-90c747d8  ok      I could not find that in our documents.
-3111c5fa  ok      A standard parcel whose tracking has not changed for 10 work
-9ff6b156  ok      I could not find that in our documents.
+ana@dev:~/obs$ export OPENAI_BASE_URL=http://127.0.0.1:11435/v1
+ana@dev:~/obs$ curl -s -X POST 127.0.0.1:11435/flaky -d '{"fail_rate": 0.3}'; echo
+{"fail_rate": 0.3, "fail": 0, "status": 503, "cut_after": null, "seed": 7}
+ana@dev:~/obs$ rm -f spans.jsonl; python ten.py
+4b9557ba  ok      You have 30 days from the date of delivery to return a print
+81c6bd42  ok      According to source [1], express delivery costs R$ 29.90.
+a13fa2e0  ok      According to [1], we refund within three working days of the
+e5f2bca5  ok      According to [1], standard delivery is free on orders over R
+42a9eacc  ok      You can read your e-books on up to six devices at the same t
+b60268f5  ok      According to [1], a gift card is valid for two years from th
+6219b0fe  ok      I could not find that in our documents.
+1f352d57  ok      I could not find that in our documents.
+d6617692  ok      According to [1], a standard parcel is considered lost when 
+11aa7cdf  ok      According to [1], the customer pays for the return postage.
 ```
 
 Dez perguntas, dez respostas. Nada do que o cliente viu falhou. O `errors.py` lê os spans:
@@ -43,55 +155,56 @@ print(f"requests {len(asks)}, failed {sum(s['status'] == 'ERROR' for s in asks)}
 ```
 
 ```
-ana@lab:~/obs$ python errors.py
-attempts 10, failed 2
-requests by attempts needed: {1: 6, 2: 2}
+ana@dev:~/obs$ python errors.py
+attempts 17, failed 8
+requests by attempts needed: {1: 3, 2: 4, 3: 2}
 requests 10, failed 0
 ```
 
-**Duas das dez tentativas falharam, e nenhum dos dez pedidos falhou.** Seis pedidos precisaram de uma
-tentativa, dois precisaram de duas, e dois recusaram antes de qualquer chamada a modelo. Um dos traces
-com nova tentativa:
+**Oito das dezessete tentativas falharam, e nenhum dos dez pedidos falhou.** Três pedidos precisaram
+de uma tentativa, quatro precisaram de duas, dois precisaram de três, e um foi recusado pela busca
+antes de qualquer chamada a modelo. Um dos traces com nova tentativa:
 
 ```
-ana@lab:~/obs$ python tree.py 6baa11fa
-trace 6baa11fae7dec0ff4b543047a8106bf2   start(ms) took(ms)
-      0   1,185 ms  ask
-      0      47 ms    embed
-     48       3 ms    search
-     51   1,134 ms    generate
-     51      48 ms      chat extract-1  ERROR InternalServerError: Error code: 503 - {'error': {'message': 'The server is overloaded', 'type': 'overloaded_error', 'code': None}}
-    599     585 ms      chat extract-1
-  1,185       0 ms    check_citations
-ana@lab:~/obs$ python tree.py --attrs 6baa11fa | grep -E "ERROR|attempts"
+ana@dev:~/obs$ python tree.py 81c6bd42
+trace 81c6bd425c703c9d91087c4a37d4f72e   start(ms) took(ms)
+      0   3,807 ms  ask
+      0     175 ms    embed
+    175       0 ms    search
+    175   3,631 ms    generate
+    175       9 ms      chat llama3.2:3b  ERROR InternalServerError: Error code: 503 - {'error': {'message': 'flaky.py refused this request on purpose', 'type': 'overloaded_error'}}
+    685   3,121 ms      chat llama3.2:3b
+  3,807       0 ms    check_citations
+ana@dev:~/obs$ python tree.py --attrs 81c6bd42 | grep -E "ERROR|attempts"
                        app.attempts = 2
-     51      48 ms      chat extract-1  ERROR InternalServerError: Error code: 503 - {'error': {'message': 'The server is overloaded', 'type': 'overloaded_error', 'code': None}}
+    175       9 ms      chat llama3.2:3b  ERROR InternalServerError: Error code: 503 - {'error': {'message': 'flaky.py refused this request on purpose', 'type': 'overloaded_error'}}
 ```
 
-A primeira tentativa foi recusada com um 503 em 48 ms. O assistente esperou meio segundo, o seu
-primeiro recuo, e pediu de novo; a segunda tentativa foi respondida. O pedido levou 1.185 ms, meio
+A primeira tentativa foi recusada com um 503 em 9 ms. O assistente esperou meio segundo, o seu
+primeiro recuo, e pediu de novo; a segunda tentativa foi respondida. O pedido levou 3.807 ms, meio
 segundo deles esperando para tentar de novo, e o cliente só viu uma resposta mais lenta.
 
 ## Duas taxas de erro
 
 A semana precisa das duas, e elas significam coisas diferentes:
 
-- **A taxa de erro por tentativa**, chamadas a modelo que falharam sobre todas as chamadas: 2 em 10
-  aqui. É a saúde do fornecedor. Quando sobe, o fornecedor está num dia ruim, e as novas tentativas
+- **A taxa de erro por tentativa**, chamadas a modelo que falharam sobre todas as chamadas: 8 em 17
+  aqui, mais que os três em dez pedidos ao flaky.py, como uma amostra pequena tirada ao acaso muitas
+  vezes fica. É a saúde do fornecedor. Quando sobe, o fornecedor está num dia ruim, e as novas tentativas
   estão absorvendo.
 - **A taxa de erro por pedido**, pedidos que chegaram ao cliente como erro: 0 em 10. É a experiência
   do cliente. Quando sobe, as novas tentativas se esgotaram.
 
 Um alerta só na segunda dispara quando já é tarde demais. Um alerta só na primeira dispara a cada
 soluço do fornecedor que as novas tentativas absorveram e ninguém percebeu. **Uma taxa de erro por
-tentativa subindo com a taxa por pedido estável é um aviso; as duas subindo é um incidente.** A aula 16
-transforma isso em regras.
+tentativa subindo com a taxa por pedido estável é um aviso; as duas subindo é um incidente.** A aula
+16 monta regras desse tipo para as recusas, e o mesmo formato serve aqui.
 
 ## Uma nova tentativa que o trace não vê
 
 O assistente tenta de novo no próprio código para que cada tentativa seja um span. A maior parte do
 código deixa isso para o SDK, cujo padrão é duas novas tentativas. O `sdk_retry.py` faz uma chamada
-desse jeito, com um span em volta, enquanto o labobs recusa os dois próximos pedidos:
+desse jeito, com um span em volta, enquanto o flaky.py recusa os dois próximos pedidos:
 
 ```python
 """sdk_retry.py: the SDK retrying inside one span, where the trace cannot see it."""
@@ -101,23 +214,24 @@ import telemetry
 
 telemetry.setup()
 client = OpenAI(max_retries=2)
-with telemetry.span("chat extract-1", **{"gen_ai.request.model": "extract-1"}):
-    client.chat.completions.create(model="extract-1", messages=[{"role": "user", "content": "How long is a gift card valid?"}])
+with telemetry.span("chat llama3.2:3b", **{"gen_ai.request.model": "llama3.2:3b"}):
+    client.chat.completions.create(model="llama3.2:3b", temperature=0, max_tokens=60,
+                                   messages=[{"role": "user", "content": "How long is a gift card valid?"}])
 ```
 
 ```
-ana@lab:~/obs$ rm -f spans.jsonl; python sdk_retry.py; python tree.py
-trace d1ed988996915d550df75b7bf41c8866   start(ms) took(ms)
-      0   1,835 ms  chat extract-1
-ana@lab:~/obs$ tail -3 /var/log/labgen/requests.jsonl | python -c "import json, sys; [print(json.loads(l)[\"n\"], json.loads(l)[\"status\"]) for l in sys.stdin]"
-2362 503
-2363 503
-2364 200
+ana@dev:~/obs$ rm -f spans.jsonl; python sdk_retry.py; python tree.py
+trace d0a37dc5e36ef0ffd41382477b17df5a   start(ms) took(ms)
+      0   8,096 ms  chat llama3.2:3b
+ana@dev:~/obs$ tail -3 flaky.log
+{"n": 28, "path": "/v1/chat/completions", "status": 503}
+{"n": 29, "path": "/v1/chat/completions", "status": 503}
+{"n": 30, "path": "/v1/chat/completions", "status": 200}
 ```
 
-O trace mostra **um span de 1.835 ms, e nenhum erro**. O log do labobs mostra o que aconteceu: os
-pedidos 2362 e 2363 foram recusados com 503, e o 2364 foi respondido. O SDK esperou, tentou de novo
-duas vezes e devolveu sucesso, e de dentro da aplicação nada disso é visível. O span não está errado, a
+O trace mostra **um span de 8.096 ms, e nenhum erro**. O log do flaky.py mostra o que aconteceu: os
+pedidos 28 e 29 foram recusados com 503, e o 30 foi respondido. O SDK esperou, tentou de novo duas
+vezes e devolveu sucesso, e de dentro da aplicação nada disso é visível. O span não está errado, a
 chamada deu certo mesmo, mas uma semana disso mostraria um fornecedor ficando mais lento quando na
 verdade ele estava falhando um terço das vezes.
 

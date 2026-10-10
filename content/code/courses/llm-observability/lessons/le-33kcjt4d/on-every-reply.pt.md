@@ -1,6 +1,6 @@
 ---
 title: Em toda resposta, em produção
-version: 1
+version: 2
 ---
 
 Uma regra custa microssegundos e nenhum token, então pode rodar em **toda** resposta, não numa amostra.
@@ -28,79 +28,104 @@ for c in checks.CHECKS:
 ```
 
 ```
-ana@lab:~/obs$ python check_run.py current
-cites_every_sentence    30/30 pass   
-citations_exist         30/30 pass   
-numbers_in_sources      30/30 pass   
-no_personal_data        30/30 pass   
-refusal_is_exact        30/30 pass   
-short_enough            30/30 pass   
+ana@dev:~/obs$ python check_run.py current
+cites_every_sentence    24/24 pass   
+citations_exist         24/24 pass   
+numbers_in_sources      24/24 pass   
+no_personal_data        24/24 pass   
+refusal_is_exact        24/24 pass   
+short_enough            24/24 pass   
 ```
 
 E o `check_week.py` faz o mesmo na semana reproduzida, lendo cada resposta do seu span raiz e as fontes
-dos ids de trechos no span de busca, que acham o texto no banco:
+dos ids de trechos no span de busca, que acham o texto no
+`data/index.json`. Ele imprime um exemplo de cada tipo de falha:
 
 ```python
 """check_week.py: the checks on every reply of the replayed week, from the spans, per release."""
 import json
 from collections import Counter, defaultdict
 
-import psycopg
-
 import checks
 
-text = dict(psycopg.connect().execute("SELECT id, text FROM chunks").fetchall())
+text = {c["id"]: c["text"] for c in json.load(open("data/index.json"))["chunks"]}
 by_trace = defaultdict(dict)
 for s in map(json.loads, open("spans.jsonl")):
     by_trace[s["trace"]][s["name"]] = s["attributes"]
-seen, failed = Counter(), defaultdict(Counter)
+seen, failed, example = Counter(), defaultdict(Counter), {}
 for spans in by_trace.values():
     root = spans["ask"]
     if root["app.feature"] == "summary":
         continue
-    sources = [{"id": c, "text": text[c]} for c in spans["search"]["app.search.chunks"]]
+    sources = [{"id": c, "text": text[c]} for c in spans["search"].get("app.search.chunks", [])]
     release = root["app.release"]
     seen[release] += 1
-    for name, ok, _ in checks.run(root["app.reply"], sources):
+    for name, ok, why in checks.run(root["app.reply"], sources):
         failed[release][name] += not ok
+        if not ok:
+            example.setdefault(name, f"{why}: {root['app.reply'][:70]}")
 print(f"{'check':22}" + "".join(f"{r:>12}" for r in sorted(seen)))
 for c in checks.CHECKS:
     print(f"{c.__name__:22}" + "".join(f"{failed[r][c.__name__]:6} fail" for r in sorted(seen)))
 print(f"{'replies':22}" + "".join(f"{seen[r]:12}" for r in sorted(seen)))
+for name, e in example.items():
+    print(f"  {name}: {e}")
 ```
 
 ```
-ana@lab:~/obs$ python check_week.py
+ana@dev:~/obs$ python check_week.py
 check                    2026.09.4   2026.10.1
-cites_every_sentence       0 fail     0 fail
+cites_every_sentence      21 fail    18 fail
 citations_exist            0 fail     0 fail
-numbers_in_sources         0 fail     0 fail
+numbers_in_sources        16 fail    14 fail
 no_personal_data           0 fail     0 fail
-refusal_is_exact           0 fail     0 fail
+refusal_is_exact           2 fail     0 fail
 short_enough               0 fail     0 fail
-replies                        789         432
+replies                        134         141
+  cites_every_sentence: 1 sentence(s) with no citation: According to [1], a standard parcel is considered lost when its tracki
+  numbers_in_sources: not in any source: ['3']: According to [1], you can return a printed book within 30 days from de
+  refusal_is_exact: not the agreed refusal: According to [1], "Returns are free: we e-mail you a prepaid label, an
 ```
 
-**Nenhuma falha, em trinta respostas ou em 1.221.** Isso é o extract-1: ele copia frases das fontes e
-cita cada uma, então não consegue quebrar essas regras. Um modelo de verdade as quebra de vez em quando:
-uma citação a uma fonte que não recebeu, uma frase sem citação, um número do seu treino. Os zeros aqui
-são uma propriedade do substituto, e a aula não finge o contrário.
+**As vinte e quatro respostas da execução passam em tudo. A semana não.** De 275 respostas a clientes,
+39 têm uma frase sem citação, 30 um número que não está em fonte nenhuma, e duas uma recusa com palavras
+próprias. A execução e a semana são o mesmo assistente sob as mesmas regras; o que muda é o que as
+pessoas digitaram. O conjunto de avaliação faz perguntas limpas, e os clientes da semana escreveram
+sobre as próprias encomendas e as próprias datas.
 
-## Por que vale rodar uma regra que nunca dispara
+Leia os exemplos, porque cada tipo é uma descoberta diferente:
 
-Porque o dia em que ela dispara é o dia em que algo mudou. Uma versão nova do modelo, um prompt novo,
-uma atualização de biblioteca que formata citações de outro jeito: cada um pode começar a quebrar uma
-regra da noite para o dia, e a regra é o alarme. Uma verificação com um longo histórico de aprovações
-deixa de ser uma medição e vira um **fio de disparo**, e o valor de um fio de disparo não está em quantas
-vezes ele dispara.
+- **As frases sem citação são o modelo raciocinando sobre o cliente.** "Since you received the book 3
+  weeks ago, which is less than 30 days, you should be able to return it." Nada nos documentos diz isso,
+  então não há o que citar, e 27 das 39 estão em pedidos de `order`, os que tratam de uma encomenda em
+  particular. Se a Marginalia quer essa frase é uma decisão sobre o produto, não um fato que a regra
+  resolve; o trabalho da regra é tornar a decisão visível.
+- **A maioria dos números soltos é do próprio cliente.** Dos 30, 24 são um `3` ou um `12` que o cliente
+  digitou: "a book I got 3 weeks ago", "after 12 working days". São alarmes falsos, e a correção é na
+  regra: aceitar um número que aparece na pergunta além das fontes.
+- **Os outros seis são a aritmética do modelo, e ela está errada.** "It's been two weeks, which is
+  equivalent to 14 working days." Duas semanas são dez dias úteis. O número veio do nada, a regra o
+  pegou, e nenhum cliente lendo a resposta pegaria.
+- **As duas recusas com outras palavras são uma resposta duas vezes**, à pergunta sobre o frete da
+  devolução: ela diz que o cliente paga, e depois "I could not find any information in [2] that
+  contradicts this". A regra disparou nas palavras, e a resposta por baixo delas é a contradição que a
+  aula 1 achou.
 
-Duas coisas tornam um fio de disparo útil em vez de ignorado:
+É isso que rodar uma regra em toda resposta compra: não uma nota, uma **lista de lugares para olhar**,
+separada por tipo. Uma regra com alarmes falsos se conserta como qualquer programa, e uma regra quieta
+num conjunto limpo e barulhenta no tráfego real está dizendo onde o conjunto é limpo demais.
 
-- **Ele é registrado onde o trace está.** O resultado de cada verificação vai para o trace como uma
+## Tornando uma regra digna de rodar
+
+Duas coisas tornam a lista útil em vez de ignorada:
+
+- **Ela é registrada onde o trace está.** O resultado de cada verificação vai para o trace como uma
   nota, como os polegares nas aulas 6 e 7, com tipo de anotador `CODE`. Uma resposta que falha numa
   verificação fica então a um clique do seu prompt e das suas fontes.
-- **A taxa dele é acompanhada, não as falhas avulsas.** Uma resposta em dez mil com uma citação solta é
-  ruído. Uma em cinquenta, a partir do dia de uma versão, é o alerta da aula 16.
+- **A taxa dela é acompanhada, não as falhas avulsas.** Umas poucas frases sem citação por dia são um
+  hábito do assistente. Um salto, a partir do dia de uma versão, é o alerta da aula 16: uma versão nova
+  do modelo, um prompt novo ou uma atualização de biblioteca podem começar a quebrar uma regra da noite
+  para o dia, e a regra é o alarme.
 
 ## O que roda onde
 

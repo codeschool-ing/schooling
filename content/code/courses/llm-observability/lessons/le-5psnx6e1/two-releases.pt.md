@@ -1,45 +1,53 @@
 ---
 title: As duas versões, medidas
-version: 1
+version: 2
 ---
 
-Os mesmos cinco números para o conjunto de avaliação respondido por cada versão, das execuções da aula
+As mesmas cinco métricas para o conjunto de avaliação respondido por cada versão, das execuções da aula
 10:
 
 ```
-ana@lab:~/obs$ python metrics.py old new
+ana@dev:~/obs$ python metrics.py old new
 run  release     ctx precision      ctx recall    faithfulness       relevance     correctness
-old  2026.09.4     0.91 (n=20)     0.73 (n=26)     1.00 (n=30)     1.00 (n=30)     0.63 (n=30)
-new  2026.10.1     0.94 (n=16)     0.56 (n=26)     1.00 (n=30)     1.00 (n=30)     0.53 (n=30)
+old  2026.09.4     1.00 (n=19)     1.00 (n=19)     0.46 (n=24)     0.67 (n=24)     0.92 (n=24)
+new  2026.10.1     1.00 (n=17)     0.89 (n=19)     0.45 (n=24)     0.58 (n=24)     0.67 (n=24)
 ```
 
-**Duas das cinco não se mexem, e as duas são 1,00.** Não são duas versões perfeitas. A fidelidade é
-1,00 porque o extract-1 copia frases das suas fontes, então toda frase tem apoio por construção; a aula
-8 de `rag` achou o mesmo com uma regra. A relevância é 1,00 porque o judge-1 no limiar de 0,40 aprova
-toda resposta que lê, o que a aula 10 mediu e a seção anterior explicou. **Uma métrica que não consegue
-cair não diz nada quando não cai.** Antes de pôr um número ao lado de uma versão, alguém precisa tê-lo
-visto falhar numa resposta que merecia.
+**A correção cai de 0,92 para 0,67**, 22 e 16 certas de 24, e essa é a versão que a aula 5 ligou ao
+piso. Os quatro números ao lado dizem para onde foram as seis respostas perdidas, e cada um pede leitura
+cuidadosa.
 
-**As três com referência se mexem, e se mexem juntas.** A correção cai de 0,63 para 0,53, os mesmos 19
-e 16 certos em 30 que a aula 8 contou. A context recall cai mais, de 0,73 para 0,56: o piso de 0,62
-descarta trechos que tinham a resposta, e em quatro perguntas descarta todos, então o modelo nunca os vê
-e recusa. E a context precision **sobe**, de 0,91 para 0,94, porque os trechos que sobrevivem ao piso
-mais alto são mais vezes os certos.
+**O context precision é 1,00 nas duas.** Sempre que o modelo recebeu alguma coisa, o trecho gold estava
+lá e no topo. Não foi na busca que as respostas erraram.
 
-Esse último par é a troca da seção anterior, na busca em vez de num juiz. **O piso é um limiar**: subir
-o piso comprou precisão com revocação, e a revocação era a que importava, porque um modelo não usa um
-trecho que nunca recebeu. Uma equipe olhando só a context precision teria relatado a versão como uma
-melhora.
+**O context recall cai de 1,00 para 0,89**: na versão nova, duas perguntas que têm resposta, o
+parcelamento e o direito de arrependimento, não receberam trecho nenhum, porque nenhum passou o piso mais
+alto. São duas das seis. As outras quatro não são de recuperação: nas duas versões o modelo recebeu o
+trecho certo para o e-book baixado e para o Kindle e recusou mesmo assim, e na nova fez o mesmo com o
+exemplar autografado. **Context recall de 1,00 não quer dizer que a resposta chegou ao cliente**; quer
+dizer que chegou ao modelo.
+
+**A fidelidade é 0,46 e 0,45**, a nota do próprio juiz, e quase não se mexe. É baixa porque este juiz
+dá notas baixas; a aula 10 mediu quanto se pode confiar nele, e a nota de fidelidade dele nunca foi
+medida. **Uma métrica que ninguém conferiu contra pessoas é um número com um nome.**
+
+**A relevância cai de 0,67 para 0,58**: as recusas decididas pelo gabarito, e os veredictos do juiz em
+todo o resto. Ela se mexe pelo motivo certo, as recusas a mais, e continua feita de um juiz que reprovou
+onze respostas boas na aula 10.
+
+Então dois dos cinco números explicam a versão, a correção e o context recall, e são os dois com uma
+referência por trás. Os dois que não precisam de referência, os que uma equipe consegue rodar em
+produção, são aqueles em que este juiz é pior.
 
 ## Ler o n de uma métrica
 
 Todo número leva a sua contagem, e as contagens diferem de propósito:
 
-- **A context recall é sobre 26 perguntas** nas duas execuções: as quatro sem seção gold não têm nada a
+- **A context recall é sobre 19 perguntas** nas duas execuções: as cinco sem trecho gold não têm nada a
   recuperar, e ficam de fora em vez de contar como zero ou um.
-- **A context precision é sobre 20 e 16**: só as perguntas em que o modelo recebeu alguma coisa. A versão
-  nova recusou mais quatro perguntas sem trechos, então a sua precisão é calculada sobre menos
-  recuperações, e melhores.
+- **A context precision é sobre 19 e 17**: só as perguntas em que o modelo recebeu alguma coisa. A
+  versão nova não deu nada a mais duas perguntas, então a sua precisão é calculada sobre menos
+  recuperações.
 
 Uma média sem o seu n esconde exatamente isso. Duas precisões calculadas sobre conjuntos diferentes de
 perguntas não são a mesma medição, e um painel que as mostra lado a lado sem as contagens convida à

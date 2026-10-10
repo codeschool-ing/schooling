@@ -1,6 +1,6 @@
 ---
 title: Por que esta plataforma não corrige com um
-version: 1
+version: 2
 ---
 
 Você está lendo isto numa plataforma que corrige toda resposta que você dá. Como ela faz isso merece
@@ -24,15 +24,14 @@ motivo numa frase. O corretor de álgebra confere expressões em pontos fixos, e
 um aluno que ouviu que acertou na terça e errou na quinta não tem como descobrir qual foi o engano.
 
 **Um juiz com viés de posição é a terça e a quinta desse aluno.** Troque a ordem de duas respostas e
-seis vereditos em dezesseis mudam. Deixe uma resposta mais longa e o juiz a prefere. Um modelo
-sorteado acima da temperatura 0 acrescenta um terceiro jeito de dar duas respostas a uma pergunta.
+doze vereditos em dezesseis mudam. Faça a mesma pergunta duas vezes com temperatura 0 e um veredito
+em dezesseis mudou mesmo assim. Todo veredito que sobreviveu à troca foi para a resposta mais longa.
 Nada disso é aceitável no único lugar onde ninguém confere o veredito depois, e uma prova é esse
 lugar: um certificado se apoia nela.
 
 ## Onde um juiz merece o lugar
 
-A questão, então, é onde um juiz fica. **Use um juiz onde os
-erros dele são baratos e alguma outra coisa os pega:**
+**Use um juiz onde os erros dele são baratos e alguma outra coisa os pega:**
 
 - Ordenar rascunhos: cinco respostas candidatas, ordenadas para uma pessoa que edita a primeira.
   Uma ordem errada custa a essa pessoa alguns segundos.

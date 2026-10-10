@@ -33,7 +33,7 @@ In **1 track** — `ai`(9).
 
 | | |
 |---|---|
-| runtime | **an API key with a bill attached** — a metered third party, not a machine, a language runtime to build servers and clients in, and a network between them |
+| runtime | **a local model in Ollama** — `llama3.2:3b` (2.0 GB on disk, about 3.5 GB of memory loaded), `qwen2.5:3b` where the Claude Code CLI needs a model that calls tools — a Python virtual environment to build servers and clients in, and a network namespace for the remote server, on the student's own machine or an Ubuntu Server 24.04 VM. A paid API key is an alternative the setup lesson names, never a requirement |
 | browser · database | no · no |
 | exercises **blocked** | **~500 (70%)** |
 | exercises that would **improve** | the remainder |

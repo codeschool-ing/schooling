@@ -1,6 +1,6 @@
 ---
 title: Cost per feature
-version: 1
+version: 2
 ---
 
 A bill with one number on it says how much and never why. The first cut that explains anything is by
@@ -39,25 +39,26 @@ print(f"{'total':18} {len(rows):8} {sum(r['input'] for r in rows):8} {sum(r['out
 ```
 
 ```
-ana@lab:~/obs$ python bill.py --by feature
+ana@dev:~/obs$ python bill.py --by feature
 feature            requests    input  output  cost US$  per 1k  share  features
-help                    926   205752   30907    0.5776    0.62  70.2%  help
-order                   295    66232    9514    0.1851    0.63  22.5%  order
-summary                 124     9088    6242    0.0602    0.49   7.3%  summary
-total                  1345   281072   46663    0.8228    0.61
+help                    207    36359    4192    0.0896    0.43  62.5%  help
+order                    68    13491    2262    0.0378    0.56  26.4%  order
+summary                  36     3390    1551    0.0160    0.44  11.1%  summary
+total                   311    53240    8005    0.1434    0.46
 ```
 
-The `help` feature is 70% of the cost and 69% of the requests: no surprise. The three features cost
-about the same per request, between 0.49 and 0.63 dollars per thousand, which is also not what anyone
-would have guessed. The support team's summaries were expected to be the expensive ones, because they
-send a whole conversation, and they are the cheapest: the conversations in this week are four lines
-long and the summaries are at most forty words. The guess was about conversations in general, the
-measurement about these ones.
+The `help` feature is 62% of the cost and 67% of the requests: no surprise. Per request, `order` is
+the dearest, 0.56 dollars per thousand against 0.43 and 0.44, because a customer writing about their
+own order writes more, and every word of it goes into the prompt. The support team's summaries were
+expected to be the expensive ones, because they send a whole conversation, and they cost about what a
+help question does: the conversations in this week are three or four lines long and the summaries are
+at most forty words. The guess was about conversations in general, the measurement about these
+ones.
 
-**A cost per feature is the number a product decision is made with.** "The assistant costs 0.82 a
-week" invites nothing. "Order questions cost as much each as help questions and are refused twice as
-often" invites a conversation about whether the order feature should exist in this form, which the
-next lessons will have.
+**A cost per feature is the number a product decision is made with.** "The assistant costs 0.14 a
+week" invites nothing. "Order questions cost a third more each than help questions" invites a
+conversation about whether the order feature should exist in this form, which the next lessons will
+have.
 
 ## An average hides a spread
 
@@ -82,20 +83,20 @@ for feature, c in by.items():
 ```
 
 ```
-ana@lab:~/obs$ python spread.py
+ana@dev:~/obs$ python spread.py
 feature  requests no model call   cost of one request in millionths of a dollar
                                      min median    p95    max
-help          926           175        0    610   1360   1400
-summary       124             0      382    510    594    594
-order         295            62        0    592   1249   1378
+summary        36             0      374    436    582    582
+order          68             8        1    563    940   1172
+help          207            38        0    428    939   1268
 ```
 
-**The minimum is zero** in two features because of the refusals lesson 1 found: when nothing clears
-the floor, the assistant answers without calling the model, and the request costs only its embedding,
-a fraction of a millionth. 175 of the 926 help requests and 62 of the 295 order requests cost
-nothing in model tokens. A summary always calls the model, so its minimum is 382.
+**The minimum is zero, or one,** in two features because of the refusals lesson 1 found. When
+nothing clears the floor, the assistant answers without calling the model, and the request costs
+only its embedding, a fraction of a millionth. 38 of the 207 help requests and 8 of the 68 order
+requests cost nothing in model tokens. A summary always calls the model, so its minimum is 374.
 
-**The 95th percentile is more than twice the median** in `help` and `order`, and it is not the
+**The 95th percentile is twice the median** in `help`, and well above it in `order`, and it is not the
 answer that makes it so. A request with three sources in its prompt pays for three chunks of text; a
 request with one pays for one. The cost of a request is set mostly by **how much was retrieved**, which
 is `k` and the floor, settings in `releases.json` that nobody would think of as a cost decision.

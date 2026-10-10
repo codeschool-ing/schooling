@@ -1,6 +1,6 @@
 ---
 title: Three libraries, side by side
-version: 1
+version: 2
 ---
 
 Lessons 8, 9 and 10 ran the same agent, the same tools and the same refund in three libraries. They agree on the vocabulary (an agent is a model, instructions and tools; a run is a loop; a person can be put in front of a call) and they differ on almost every default:
@@ -9,7 +9,7 @@ Lessons 8, 9 and 10 ran the same agent, the same tools and the same refund in th
 |---|---|---|---|
 | where the loop runs | your process | the Claude Code CLI, a subprocess | your process |
 | a tool is | a decorated function | an `@tool` in an in-process MCP server | a plain function |
-| a tool result sent as | text, via `str()` | the text the tool wrote | a JSON object |
+| a tool result sent as | text, via `str()` | the text the tool wrote | JSON, as text in a `tool` message |
 | a tool raises | a generic "try again" sentence | not tried in lesson 9 | the run ends, unless a callback answers |
 | built-in tools offered | none | Claude Code's twenty, unless `tools=[]` | none |
 | a person approves | `needs_approval`, state saved and resumed | `can_use_tool`, while the run waits | `require_confirmation`, between two runs |

@@ -1,9 +1,9 @@
 ---
 title: Um hospedeiro num arquivo
-version: 1
+version: 2
 ---
 
-O suporte a MCP de uma biblioteca toma as decisões do hospedeiro por você, e a aula 12 mostrou três bibliotecas tomando-as de três jeitos. O `mcp_host.py` as toma ele mesmo, em código: o laço da aula 7, agora com servidores MCP no lugar de funções locais, e o `Client` do SDK `mcp` para cada conexão. Ele fala com o modelo pela API de Messages da Anthropic, que o labllm responde.
+O suporte a MCP de uma biblioteca toma as decisões do hospedeiro por você, e a aula 12 mostrou três bibliotecas tomando-as de três jeitos. O `mcp_host.py` as toma ele mesmo, em código: o laço da aula 7, agora com servidores MCP no lugar de funções locais, e o `Client` do SDK `mcp` para cada conexão. Ele fala com o modelo pela API de Messages da Anthropic, que o Ollama responde.
 
 ```schooling-example
 {
@@ -14,7 +14,7 @@ O suporte a MCP de uma biblioteca toma as decisões do hospedeiro por você, e a
       "code": "\"\"\"A host: one model, two MCP servers, and every decision about them written down.\"\"\"\nimport asyncio\nimport json\nimport sys\nfrom contextlib import AsyncExitStack\n\nimport anthropic\nfrom mcp import Client, StdioServerParameters\nfrom mcp.types import ElicitResult\n\nSYSTEM = \"You are the support agent of the MCP client lesson. Use the tools; never guess.\"\nMAX_STEPS = 6\n"
     },
     {
-      "code": "ENV = {\"PATH\": \"/opt/agents/bin:/usr/bin:/bin\", \"HOME\": \"/home/ana\",   # all a server process inherits:\n       \"MINILM_DIR\": \"/opt/agents/share/all-MiniLM-L6-v2\"}             # search_help's embedding model\n",
+      "code": "ENV = {\"PATH\": \"/home/ana/agents/.venv/bin:/usr/bin:/bin\", \"HOME\": \"/home/ana\"}   # all a server process inherits\n",
       "note": "**O que um processo de servidor herda, como lista.** Nada do shell da ana chega a um servidor se não estiver nomeado aqui. Seção 04."
     },
     {
@@ -50,7 +50,7 @@ O suporte a MCP de uma biblioteca toma as decisões do hospedeiro por você, e a
       "note": "**Uma ferramenta que o próprio hospedeiro oferece**, para ler artigos de ajuda. Seção 05."
     },
     {
-      "code": "        for step in range(1, MAX_STEPS + 1):\n            reply = model.messages.create(model=\"scripted-1\", max_tokens=1024, system=SYSTEM,\n                                          tools=tools, messages=messages)\n            messages.append({\"role\": \"assistant\", \"content\": reply.content})\n            calls = [b for b in reply.content if b.type == \"tool_use\"]\n            if not calls:\n                print(\"answer:\", reply.content[0].text)\n                return\n            results = []\n            for call in calls:\n                print(f\"step {step}: {call.name} {json.dumps(call.input)}\")\n                text, failed = await run(call, clients, needs_person)\n                print(f\"  {'error' if failed else 'result'}: {text[:110]}\".replace(\"\\n\", \" \"))\n                results.append({\"type\": \"tool_result\", \"tool_use_id\": call.id, \"content\": text, \"is_error\": failed})\n            messages.append({\"role\": \"user\", \"content\": results})\n        print(f\"stopped: {MAX_STEPS} steps without an answer\")\n\n\n",
+      "code": "        for step in range(1, MAX_STEPS + 1):\n            reply = model.messages.create(model=\"llama3.2:3b\", max_tokens=1024, system=SYSTEM,\n                                          tools=tools, messages=messages)\n            messages.append({\"role\": \"assistant\", \"content\": reply.content})\n            calls = [b for b in reply.content if b.type == \"tool_use\"]\n            if not calls:\n                print(\"answer:\", reply.content[0].text)\n                return\n            results = []\n            for call in calls:\n                print(f\"step {step}: {call.name} {json.dumps(call.input)}\")\n                text, failed = await run(call, clients, needs_person)\n                print(f\"  {'error' if failed else 'result'}: {text[:110]}\".replace(\"\\n\", \" \"))\n                results.append({\"type\": \"tool_result\", \"tool_use_id\": call.id, \"content\": text, \"is_error\": failed})\n            messages.append({\"role\": \"user\", \"content\": results})\n        print(f\"stopped: {MAX_STEPS} steps without an answer\")\n\n\n",
       "note": "**O laço da aula 7**, com limite de passos."
     },
     {

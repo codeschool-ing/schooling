@@ -1,6 +1,6 @@
 ---
 title: What a reason gives the next reader
-version: 1
+version: 2
 ---
 
 The measurement could not separate the two prompts. The argument for the guide does not rest on it
@@ -17,8 +17,6 @@ ana@lab:~/triage$ grep -n refund prompts/v8-rules.txt
 16:- Do not mention refunds unless the customer does.
 17:- A refund is billing.
 18:- A refund for a returned book is returns.
-ana@lab:~/triage$ pl check runs/rules.jsonl --failures | grep h01
-h01    category  returns, expected billing
 ```
 
 Read as written, line 18 settles it: a refund for a returned book is returns. The person who
@@ -27,7 +25,8 @@ put money back on a card. **The rule list gives a confident wrong answer** to th
 authors did not think of, and adding a fourteenth rule for it would only move the edge to the next
 case.
 
-The guide does not mention this case either. What it gives is a question to ask of any case:
+The guide does not mention this case either. What it gives a reader is a question to ask of any
+case:
 
 ```
 ana@lab:~/triage$ grep -n "goes to" prompts/v8-guide.txt
@@ -39,9 +38,24 @@ ana@lab:~/triage$ grep -n "goes to" prompts/v8-guide.txt
 
 Who can fix a refund paid to the wrong card? Not the warehouse. Line 10 says money charged wrongly
 goes to the accounts desk. **A rule with its reason can be applied to a case nobody listed**; a rule
-without one can only be matched against the cases it names. In the stand-in `h01` comes back as
-returns under the guide too, because the stand-in does not read reasons, which is the previous
-section's point and not a verdict on this one.
+without one can only be matched against the cases it names.
+
+That is what the reason gives a person. Whether the model applies it is a separate question, and
+here it did not:
+
+```
+ana@lab:~/triage$ pl show runs/rules.jsonl h01
+│ {"category": "returns", "urgency": "high", "summary": "Refunded the wrong card for returned paperback"}
+stop: stop, tokens in 228, out 27, 3.2 s
+ana@lab:~/triage$ pl show runs/guide.jsonl h01
+│ {"category": "returns", "urgency": "high", "summary": "Refund was made to the wrong card for returned paperback"}
+stop: stop, tokens in 282, out 30, 3.9 s
+```
+
+`returns` under both prompts, and `high` under both, where a person said `normal`. The model matched
+*returned* and *refunded* to the returns line and stopped there. A reason is something a reader
+**can** use, which is not the same as a reader using it, and on `llama3.2:3b` this one did not. A
+stronger model might; that is a run, not an assumption.
 
 ## Which rule may go
 
@@ -59,8 +73,8 @@ the reason says what changed and the line can go.
 
 Anthropic's prompt engineering documentation for Claude recommends exactly this: give the model the
 context and the motivation behind an instruction, and say what to do rather than only what not to
-do. It presents that as guidance, not as a measured gain, and it is the hypothesis the previous section
-showed you how to test on your own cases.
+do. It presents that as guidance, not as a measured gain, and the previous section measured it on
+one small model and seventy messages without finding a difference.
 
 Not every line needs a reason. The label lists and the JSON shape are contracts, as lesson 3 put it,
 and a contract is stated, not argued. **Reasons belong where the reader has to use judgement**:

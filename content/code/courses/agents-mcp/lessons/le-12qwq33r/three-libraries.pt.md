@@ -1,6 +1,6 @@
 ---
 title: Três bibliotecas, lado a lado
-version: 1
+version: 2
 ---
 
 As aulas 8, 9 e 10 rodaram o mesmo agente, as mesmas ferramentas e o mesmo reembolso em três bibliotecas. Elas concordam no vocabulário (um agente é um modelo, instruções e ferramentas; uma execução é um laço; uma pessoa pode ser posta na frente de uma chamada) e divergem em quase todo padrão:
@@ -9,7 +9,7 @@ As aulas 8, 9 e 10 rodaram o mesmo agente, as mesmas ferramentas e o mesmo reemb
 |---|---|---|---|
 | onde o laço roda | no seu processo | no CLI do Claude Code, um subprocesso | no seu processo |
 | uma ferramenta é | uma função decorada | um `@tool` num servidor MCP no processo | uma função simples |
-| o resultado vai como | texto, via `str()` | o texto que a ferramenta escreveu | um objeto JSON |
+| o resultado vai como | texto, via `str()` | o texto que a ferramenta escreveu | JSON, como texto numa mensagem `tool` |
 | uma ferramenta levanta erro | uma frase genérica de "tente de novo" | não testado na aula 9 | a execução termina, a menos que um callback responda |
 | ferramentas embutidas oferecidas | nenhuma | as vinte do Claude Code, a menos que `tools=[]` | nenhuma |
 | uma pessoa aprova | `needs_approval`, estado salvo e retomado | `can_use_tool`, enquanto a execução espera | `require_confirmation`, entre duas execuções |

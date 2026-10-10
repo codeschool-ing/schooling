@@ -1,6 +1,6 @@
 ---
 title: The trace id is a handle
-version: 1
+version: 2
 ---
 
 `assistant.py` prints a trace id under every reply. In production it goes further than the terminal:
@@ -10,13 +10,17 @@ value that joins all of those to the record of what happened.
 
 ## Finding a trace again
 
-After this lesson's three questions, the file holds sixteen spans from three traces:
+One more question, the one a customer might ask about a gift card, and the file holds sixteen spans
+from three traces:
 
 ```
-ana@lab:~/obs$ wc -l spans.jsonl
+ana@dev:~/obs$ python assistant.py "How long is a gift card valid?"
+According to [1], a gift card is valid for two years from the day it was bought.
+trace 7816f4d9ea7282a767b310a42b569fd3
+ana@dev:~/obs$ wc -l spans.jsonl
 16 spans.jsonl
-ana@lab:~/obs$ python -c "import json; print(sorted({json.loads(l)[\"trace\"] for l in open(\"spans.jsonl\")}))"
-['1a218c3902fa97519a4b28d0bd1f155f', '8caa5cd5a78cdc79d1b3e420a1e2399f', 'ce0b5661415f1a83fc75d4de2668184a']
+ana@dev:~/obs$ python -c "import json; print(sorted({json.loads(l)[\"trace\"] for l in open(\"spans.jsonl\")}))"
+['5ea30205e6a9ef29c4b98b45d1595ab9', '7816f4d9ea7282a767b310a42b569fd3', 'b0f29bf4b40469cb859c35e290b1bcec']
 ```
 
 A trace id is 32 hexadecimal characters, and nobody reads that out on the telephone. The first
@@ -24,22 +28,23 @@ eight are enough to find one trace among thousands, which is what a support scre
 reference:
 
 ```
-ana@lab:~/obs$ grep -c 8caa5cd5 spans.jsonl
+ana@dev:~/obs$ grep -c 5ea30205 spans.jsonl
 6
-ana@lab:~/obs$ python tree.py 8caa5cd5
-trace 8caa5cd5a78cdc79d1b3e420a1e2399f   start(ms) took(ms)
-      0   1,237 ms  ask
-      0      51 ms    embed
-     52       5 ms    search
-     57   1,180 ms    generate
-     57   1,180 ms      chat extract-1
-  1,237       0 ms    check_citations
+ana@dev:~/obs$ python tree.py 5ea30205
+trace 5ea30205e6a9ef29c4b98b45d1595ab9   start(ms) took(ms)
+      0   3,021 ms  ask
+      0      25 ms    embed
+     26       4 ms    search
+     31   2,990 ms    generate
+     31   2,990 ms      chat llama3.2:3b
+  3,021       0 ms    check_citations
 ```
 
-A customer writes in to say the assistant gave a strange answer to their gift card question. If the
-screen showed them a reference, the support team types it and gets the tree above: the release, the
-chunks, the reply, the time. Without it, they search by time and by words, among everybody else who
-asked about gift cards that afternoon.
+A customer writes in to say the assistant told them they would have to pay for the postage of a
+return, and the website says returns are free. If the screen showed them a reference, the support
+team types it and gets the tree above, and with `--attrs` everything section 08 read: the release,
+the chunk, the reply, the time. Without it, they search by time and by words, among everybody else
+who asked about returns that afternoon.
 
 ## What gets joined by it
 

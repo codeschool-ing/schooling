@@ -1,6 +1,6 @@
 ---
 title: Tirar antes de escrever
-version: 1
+version: 2
 ---
 
 O lugar mais seguro para remover algo é **antes que seja registrado**: uma vez que um valor está num
@@ -44,17 +44,16 @@ E no `assistant.py`, os dois atributos que carregam texto são escritos através
 Uma das perguntas sobre pedido da semana, feita à mão:
 
 ```
-ana@lab:~/obs$ python assistant.py --feature order --user u021 "Hi, I am Joana Prado (joana.prado@example.com). My order MG-20481937 has not arrived after 12 working days. Is it lost?"
+ana@dev:~/obs$ python assistant.py --feature order --user u021 "Hi, I am Joana Prado (joana.prado@example.com). My order MG-20481937 has not arrived after 12 working days. Is it lost?"
 I could not find that in our documents.
-trace 31b9488c6865b9bd1722d976e1ce6a0c
-ana@lab:~/obs$ python tree.py --attrs | grep -E "app.question|app.reply|user.hash"
-                     user.hash = "d6aad8d0fb204820"
+trace 78614786547d03a25236b322d8f142da
+ana@dev:~/obs$ python tree.py --attrs | grep -E "app.question|app.reply|user.hash"
+                     user.hash = "5735c1a8554810c6"
                      app.question = "Hi, I am Joana Prado ([email]). My order [order] has not arrived after 12 working days. Is it lost?"
-                     app.reply = "I could not find that in our documents."
 ```
 
 O endereço e o número do pedido sumiram da pergunta, trocados pelo nome do que estava lá. A resposta é
-uma recusa, então não tinha nada a remover. E o usuário é `d6aad8d0fb204820` em vez de `u021`, que é o
+uma recusa, então não tinha nada a remover. E o usuário é `5735c1a8554810c6` em vez de `u021`, que é o
 pseudônimo que a última seção desta aula explica.
 
 **Um marcador que diz o que substituiu vale mais do que um espaço em branco.** `[email]` mantém a
@@ -68,9 +67,10 @@ Escrever uma remoção não é o mesmo que saber que ela rodou. A conferência �
 guardados um valor que foi enviado:
 
 ```
-ana@lab:~/obs$ grep -c "joana.prado@example.com" spans.jsonl
+                     app.reply = "I could not find that in our documents."
+ana@dev:~/obs$ grep -c "joana.prado@example.com" spans.jsonl
 0
-ana@lab:~/obs$ grep -c "Joana Prado" spans.jsonl
+ana@dev:~/obs$ grep -c "Joana Prado" spans.jsonl
 1
 ```
 

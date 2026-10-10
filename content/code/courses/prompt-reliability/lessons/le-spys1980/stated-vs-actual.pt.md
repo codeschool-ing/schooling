@@ -1,14 +1,15 @@
 ---
 title: Declarado e real
-version: 1
+version: 2
 ---
 
-Pergunte a um modelo quão seguro ele está e ele responde, com um número de duas casas decimais. O
+Pergunte a um modelo o quanto ele tem certeza e ele vai dizer, num número com ponto decimal. O
 número parece uma probabilidade. **É texto que o modelo escreveu**, como a categoria ao lado, e
-nada garante que tenha sido calculado a partir de alguma coisa. Calibração é saber se
-esse número bate com a frequência com que o modelo acerta quando o diz.
+nada garante que foi calculado a partir de alguma coisa. Calibração é a pergunta sobre se esse
+número bate com a frequência com que o modelo acerta quando o diz.
 
-O prompt desta aula acrescenta um quarto campo:
+A aula 6 salvou um prompt com um quarto campo, o `prompts/v9-confidence.txt`. Estas são as linhas
+dele sobre confiança:
 
 ```
 ana@lab:~/triage$ grep -n confidence prompts/v9-confidence.txt
@@ -18,53 +19,64 @@ ana@lab:~/triage$ grep -n confidence prompts/v9-confidence.txt
 21:Output: {"category": "account", "urgency": "low", "summary": "Asks how to change the account name.", "confidence": 0.85}
 ```
 
-A instrução pede um número de 0 a 1, e os três exemplos mostram como ele fica.
+A instrução pede um número de 0 a 1, e os três exemplos mostram 0.9, 0.95 e 0.85.
 
-## Como o substituto decide o que dizer
+## O que ele disse
 
-```
-ana@lab:~/triage$ grep -n -A6 "^def confidence" promptlab/standin.py
-242:def confidence(sc, label):
-243-    """What it SAYS its confidence is. It is worked out from how much evidence
-244-    it found FOR its answer, and never looks at the evidence for the others:
-245-    a message full of billing words gets a confident billing, even when it is
-246-    just as full of words for returns. That is the course's choice, made so
-247-    that lesson 21 has an overconfident model to calibrate."""
-248-    return min(0.99, round(0.62 + 0.1 * max(0.0, sc[label]), 2))
-```
-
-O substituto declara 0,62, mais um décimo da pontuação que encontrou **para o rótulo que escolheu**,
-e nunca mais que 0,99. Ele não olha a pontuação dos outros rótulos. Uma mensagem com evidência forte
-para dois rótulos recebe uma resposta confiante para o que venceu, e essa é a falha que a docstring
-diz ter sido posta lá de propósito. É um jeito plausível de um modelo ser confiante demais, e dá a
-esta aula algo para medir.
-
-## Um erro confiante
+Rode-o sobre os setenta casos:
 
 ```
 ana@lab:~/triage$ pl run prompts/v9-confidence.txt cases/all.jsonl --out runs/v9.jsonl
-70 calls, prompt c31bed19, written to runs/v9.jsonl
+70 calls, prompt c31bed19, llama3.2:3b, written to runs/v9.jsonl
 ana@lab:~/triage$ pl check runs/v9.jsonl
 check      pass  fail
 json         70     0
 fields       70     0
 labels       70     0
-category     56    14
-urgency      47    23
-all          47    23
-ana@lab:~/triage$ grep h04 cases/all.jsonl
-{"id": "h04", "message": "I'd like to return the atlas, but the courier you use doesn't collect from my area.", "expect": {"category": "returns", "urgency": "normal"}}
-ana@lab:~/triage$ pl show runs/v9.jsonl h04
-│ {"category": "delivery", "urgency": "normal", "summary": "They'd like to return the atlas, but the courier you use doesn't collect from their area.", "confidence": 0.97}
-stop: end, tokens in 287, out 54
+category     52    18
+urgency      37    33
+all          37    33
 ```
 
-Cinquenta e seis das setenta categorias estão certas, 80%. `h04` é uma das catorze que não estão, e
-foi declarada com **0,97**. O cliente quer devolver um atlas e não consegue, porque a transportadora
-não faz coleta na região dele. Uma pessoa chamou isso de returns. O substituto achou `courier` e
-`collect`, duas palavras de delivery, e `return`, uma palavra de returns. Escolheu delivery e
-declarou a confiança só com a evidência de delivery, como se a evidência de returns não estivesse na
-mensagem.
+Cinquenta e duas das setenta categorias estão certas, 74%. Agora veja os números que ele declarou,
+todos os setenta:
 
-Um erro confiante é uma anedota. Se o substituto é confiante demais em geral é uma pergunta sobre as
-setenta respostas de uma vez, e a próxima seção a faz.
+```
+ana@lab:~/triage$ grep -o 'confidence\\": [0-9.]*' runs/v9.jsonl | sort | uniq -c
+      1 confidence\": 0.0
+     46 confidence\": 0.8
+     22 confidence\": 0.9
+      1 confidence\": 0.95
+```
+
+**Quatro valores diferentes, e 68 das 70 respostas dizem 0.8 ou 0.9.** Os exemplos mostravam 0.9,
+0.95 e 0.85, e o modelo escreveu números parecidos. Se ele escolheu entre 0.8 e 0.9 por algum motivo
+que a mensagem deu é a pergunta que o resto desta aula mede.
+
+## Um erro confiante, um zero estranho
+
+```
+ana@lab:~/triage$ grep h03 cases/all.jsonl
+{"id": "h03", "message": "My account shows an order I never placed and my card has been charged for it.", "expect": {"category": "billing", "urgency": "high"}}
+ana@lab:~/triage$ pl show runs/v9.jsonl h03
+│ {"category": "account", "urgency": "high", "summary": "Wants to know about a suspicious order on their account.", "confidence": 0.9}
+stop: stop, tokens in 291, out 38, 4.6 s
+```
+
+Uma cobrança por um pedido que o cliente nunca fez. A pessoa que rotulou chamou isso de billing:
+dinheiro tirado que não deveria ter sido. O modelo chamou de account e declarou 0.9, o maior dos
+dois valores que ele quase sempre usa.
+
+```
+ana@lab:~/triage$ pl show runs/v9.jsonl t35
+│ {"category": "other", "urgency": "low", "summary": "Compliments the shop and its service.", "confidence": 0.0}
+stop: stop, tokens in 290, out 35, 4.2 s
+```
+
+Um bilhete de agradecimento, rotulado `other`, certo, e declarado com **0.0**. Uma confiança zero
+numa resposta certa é ou um modelo que nunca tem certeza sobre elogios ou um modelo que leu o campo
+como outra coisa, o quanto a mensagem é um problema, talvez. A execução não diz qual, e é esse o
+ponto: o campo é um número que o modelo escreveu, e o que ele quer dizer é o que o modelo quis dizer.
+
+Um erro confiante é uma anedota. Se os números declarados querem dizer alguma coisa é uma pergunta
+sobre as setenta respostas de uma vez, e a próxima seção a faz.

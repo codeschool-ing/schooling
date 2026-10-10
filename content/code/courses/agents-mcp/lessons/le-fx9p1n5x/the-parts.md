@@ -1,6 +1,6 @@
 ---
 title: What an agent is made of
-version: 1
+version: 2
 ---
 
 Take `agent.py` apart and there are five pieces. Every agent in this course, and every agent SDK in lessons 8 to 10, is the same five pieces with more code around them.
@@ -17,23 +17,116 @@ Take `agent.py` apart and there are five pieces. Every agent in this course, and
 
 ## The model never acts
 
-The picture to get rid of is a model reaching into a database. In the run for Bia, `scripted-1` sent back a block that said, in effect, *"call get_order with order_id M-1042"*. `agent.py` read that block, looked `get_order` up in `RUN`, called `shop.get_order("M-1042")` on ana's machine and put the result in the conversation. **The model asked; the host acted.** Every permission an agent has is therefore a permission its host grants, which is why lesson 17 is about the host and not about the model.
+The picture to get rid of is a model reaching into a database. In the run for Bia, `llama3.2:3b` sent back a block that said, in effect, *"call get_order with order_id M-1042"*. `agent.py` read that block, looked `get_order` up in `RUN`, called `shop.get_order("M-1042")` on ana's machine and put the result in the conversation. **The model asked; the host acted.** Every permission an agent has is therefore a permission its host grants, which is why lesson 17 is about the host and not about the model.
 
 ## The conversation travels in full
 
-A model API keeps nothing between requests. So each step sends everything again: the system prompt, the tool definitions, Bia's message, every earlier call and every earlier result. labllm logs every request, and here are the token counts for the four runs in this lesson:
+A model API keeps nothing between requests. So each step sends everything again: the system prompt, the tool definitions, Bia's message, every earlier call and every earlier result. To see it, put a recorder between the program and Ollama. This one listens on port 11435, passes each request on to 11434 unchanged, and writes it down. Save it as `~/agents/recorder.py`; later lessons use it whenever they ask what a program actually sent.
+
+```python
+"""recorder.py: stands between your programs and Ollama, and writes down every request.
+
+Point a program at http://127.0.0.1:11435 instead of 11434 and it works as
+before, while each request lands in requests.jsonl as one JSON line: the path,
+the body the program sent, the status, how long the reply took, and the tokens
+the reply says it used. A line is written when the reply is complete, so a
+request the program gave up on still appears, marked client_left.
+"""
+import http.client
+import json
+import time
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+LOG = "requests.jsonl"
+
+
+def usage_in(raw):
+    """Tokens from a JSON reply, or from a stream's events: in (all of the prompt), of those cached, and out."""
+    found = {}
+    for line in raw.decode(errors="replace").splitlines():
+        line = line.removeprefix("data:").strip()
+        if not line.startswith("{"):
+            continue
+        event = json.loads(line)
+        u = event.get("usage") or (event.get("message") or {}).get("usage")
+        if not u:
+            continue
+        if "prompt_tokens" in u:   # OpenAI's shape: the cached tokens are part of prompt_tokens
+            cached = (u.get("prompt_tokens_details") or {}).get("cached_tokens") or 0
+            found.update(input_tokens=u["prompt_tokens"], cached_tokens=cached, output_tokens=u["completion_tokens"])
+        else:                      # Anthropic's shape: input_tokens leaves the cached ones out
+            if "input_tokens" in u:   # a stream's last event may carry the output count alone
+                cached = u.get("cache_read_input_tokens") or 0
+                found.update(input_tokens=u["input_tokens"] + cached, cached_tokens=cached)
+            found["output_tokens"] = u.get("output_tokens", found.get("output_tokens"))
+    return found
+
+
+class Recorder(BaseHTTPRequestHandler):
+    def do_POST(self):
+        body = self.rfile.read(int(self.headers.get("Content-Length", 0)))
+        started = time.monotonic()
+        upstream = http.client.HTTPConnection("127.0.0.1", 11434, timeout=900)
+        upstream.request(self.command, self.path, body, {"Content-Type": "application/json"})
+        reply = upstream.getresponse()
+        self.send_response(reply.status)
+        self.send_header("Content-Type", reply.getheader("Content-Type", "application/json"))
+        self.send_header("Connection", "close")
+        self.end_headers()
+        raw, client_left = b"", False
+        while chunk := reply.read1(65536):
+            raw += chunk
+            if not client_left:
+                try:
+                    self.wfile.write(chunk)
+                    self.wfile.flush()
+                except (BrokenPipeError, ConnectionResetError):
+                    client_left = True   # the program gave up on this request; it was still sent
+        record = {"path": self.path, "request": json.loads(body or b"{}"), "status": reply.status,
+                  "ms": round(1000 * (time.monotonic() - started)), "usage": usage_in(raw)}
+        if client_left:
+            record["client_left"] = True
+        with open(LOG, "a") as log:
+            log.write(json.dumps(record) + "\n")
+
+    do_GET = do_POST
+
+    def log_message(self, *args):
+        pass
+
+
+ThreadingHTTPServer(("127.0.0.1", 11435), Recorder).serve_forever()
+```
+
+Start it in the background, and run Bia's question again with `ANTHROPIC_BASE_URL` pointed at the recorder for that one command:
 
 ```
-ana@lab:~/agents$ python -c 'import json; [print(r["n"], r["rule"], r["usage"]["input_tokens"], r["usage"]["output_tokens"]) for r in map(json.loads, open("/var/log/labllm/requests.jsonl"))]'
-3 l01-assistant 2250 83
-4 l01-agent-return-1 180 10
-5 l01-agent-return-2 303 8
-6 l01-agent-return-3 498 68
-7 l01-agent-late-1 169 10
-8 l01-agent-late-2 330 8
-9 l01-agent-late-3 545 48
-10 l01-agent-pay-1 160 7
-11 l01-agent-pay-2 366 49
+ana@lab:~/agents$ python recorder.py &
+ana@lab:~/agents$ ANTHROPIC_BASE_URL=http://127.0.0.1:11435 python agent.py "Hi, I am Bia. My order M-1042 arrived on 24 September. Can I still send it back?"
+[1] get_order({"order_id": "M-1042"})
+[2] answer: Hi Bia, 
+
+Unfortunately, since your order M-1042 was delivered on September 24th, you will not be able to return it. Our return policy typically applies to orders that have not been shipped or are still in the processing stage. 
+
+However, I recommend contacting our customer service team to see if there are any exceptions or alternatives we can offer. We're here to help and would like to ensure you're satisfied with your purchase.
+ana@lab:~/agents$ python -c 'import json; [print(n, r["usage"]["input_tokens"], r["usage"]["cached_tokens"], r["usage"]["output_tokens"], r["ms"]) for n, r in enumerate(map(json.loads, open("requests.jsonl")), 1)]'
+1 270 239 18 2451
+2 239 238 92 9552
 ```
 
-The columns are the request number, the rule labllm answered with, input tokens and output tokens. For Bia's question the input grew from 180 to 303 to 498, because each request carried the previous one plus a call and a result. **The assistant's single request was the largest of all, 2250 tokens**, because it carried the whole help centre whether the question needed it or not; the agent carried only the three articles it asked for. Neither is cheaper as a rule. Lesson 18 measures when each wins, and it starts from this growth.
+The columns are the request number, its input tokens, how many of those Ollama already had in its cache from an earlier request, the output tokens and the milliseconds it took. The second request carried everything the first did plus the model's call and the order it got back, so it should be the larger of the two. **It is smaller: 239 tokens against 270.** Something the program sent did not reach the model.
+
+The model never reads JSON. Ollama turns each request into one long text in the format the model was trained on, using a template that ships with the model, and the template decides what goes in:
+
+```
+ana@lab:~/agents$ ollama show llama3.2:3b --template | grep -n Tools
+7:{{- if .Tools }}When you receive a tool call response, use the output to format an answer to the orginal user question.
+14:{{- if and $.Tools $last }}
+20:{{ range $.Tools }}
+```
+
+Line 14 is the whole story. The tool descriptions are written into the conversation only **inside the last message, when that message is the user's**. In the first request it was Bia's, so the model saw both tools and asked for one. In the second, the last message was a tool result, so the tools were left out, and a model that cannot see a tool cannot ask for it. That is why Bia's agent made one call and then had to answer from what it had, and it will happen to every agent in this course that runs on `llama3.2:3b`: **one tool call per turn of the user's, and never two in a row.**
+
+Two lessons come out of it, and neither is about this model. A model only knows what the request carries after the provider has turned it into text, so "I sent the tools" and "the model saw the tools" are different claims, and only a measurement like the one above tells them apart. And the template is part of the model you chose: a paid API's model, or a bigger local one, takes several steps without blinking, and this one cannot. Where a lesson needs an agent to take several steps in a row to show a mechanism, it uses a stand-in model whose replies are written out in the lesson, and it says so where it does.
+
+Neither the assistant nor the agent is cheaper as a rule: the assistant carried the whole help centre in one request, and the agent carries a little more in each step. Lesson 18 measures when each wins, and it starts from this growth.

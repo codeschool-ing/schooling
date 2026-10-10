@@ -63,12 +63,12 @@
   },
   {
     "id": "ex-zct2we2v",
-    "version": 1,
+    "version": 2,
     "section": "react-in-text",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "In react_text.py's first run, why did the program never call get_order?",
+    "prompt": "In react_text.py's first run, step 3 asked for a search, and the search never ran. Why?",
     "choices": [
       {
         "text": "Because get_order raised an error that the program swallowed",
@@ -81,20 +81,20 @@
         "why": "`Action: get_order[M-1047]` matches the format exactly."
       },
       {
-        "text": "Because labllm refused the request",
+        "text": "Because Ollama refused the request",
         "correct": false,
-        "why": "The request succeeded: stop_reason was end_turn."
+        "why": "The request succeeded: stop_reason was end_turn, and a reply came back."
       },
       {
         "text": "The same reply held an Answer line, and the parser checks for that first",
         "correct": true,
-        "why": "Right. The model kept writing past its action, invented an observation, answered, and the parser believed it."
+        "why": "Right. The model kept writing past its action, invented an observation, copied a real one and answered, and the parser believed the answer."
       }
     ]
   },
   {
     "id": "ex-h9spy577",
-    "version": 1,
+    "version": 2,
     "section": "react-in-text",
     "type": "quiz",
     "difficulty": "easy",
@@ -104,12 +104,12 @@
       {
         "text": "2026-09-18",
         "correct": true,
-        "why": "Right. get_order returned it in the second run, and the answer was built on it."
+        "why": "Right. It is in the order get_order returns, and no answer in the section used it."
       },
       {
-        "text": "2026-08-20",
+        "text": "2026-10-06",
         "correct": false,
-        "why": "That date appears only in the observation the model wrote for itself. No tool returned it."
+        "why": "That is the day shop.py's calendar stops on, not a delivery."
       },
       {
         "text": "2026-09-15",
@@ -156,7 +156,7 @@
   },
   {
     "id": "ex-pskqn3wb",
-    "version": 1,
+    "version": 2,
     "section": "the-stop-sequence",
     "type": "quiz",
     "difficulty": "medium",
@@ -169,9 +169,9 @@
         "why": "Right. The model has no way to know the program meant to write that line itself."
       },
       {
-        "text": "Because labllm has a bug that adds invented lines",
+        "text": "Because Ollama added a line the model never wrote",
         "correct": false,
-        "why": "The course wrote that reply on purpose to show what happens; a real model does this on its own."
+        "why": "Ollama returns what the model generated. The stop sequence prevented the line, which shows the model was writing it."
       },
       {
         "text": "Because the prompt asked it to",
@@ -368,13 +368,13 @@
   },
   {
     "id": "ex-rh7bejks",
-    "version": 1,
+    "version": 2,
     "section": "reading-a-trace",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
     "prompt": "In the M-1047 trace, how many input tokens did the last request carry?",
-    "value": 544,
+    "value": 322,
     "tolerance": 0,
     "unit": "tokens"
   },
@@ -411,14 +411,14 @@
   },
   {
     "id": "ex-7j7avctn",
-    "version": 1,
+    "version": 2,
     "section": "what-goes-back",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "get_order's full result for M-1047 is 105 tokens and the three fields the question needs are 27. In a run where that observation is sent in 4 more requests after the one that received it, how many tokens does trimming it save across those 4 requests?",
+    "prompt": "get_order's full result for M-1047 is 105 tokens and the three fields the question needs are 28. In a run where that observation is sent in 4 more requests after the one that received it, how many tokens does trimming it save across those 4 requests?",
     "hint": "Each later request carries the observation again.",
-    "value": 312,
+    "value": 308,
     "tolerance": 0,
     "unit": "tokens"
   },
@@ -486,7 +486,7 @@
   },
   {
     "id": "ex-w3q6pbdg",
-    "version": 1,
+    "version": 2,
     "section": "when-the-loop-loops",
     "type": "quiz",
     "difficulty": "medium",
@@ -504,12 +504,12 @@
         "why": "search_help remembers nothing between calls."
       },
       {
-        "text": "labllm marked the reply as a repeat",
+        "text": "standin.py marked the reply as a repeat",
         "correct": false,
-        "why": "labllm returns replies; it does not judge them."
+        "why": "The stand-in returns the replies it was given. It judges nothing."
       },
       {
-        "text": "A set of name and sorted arguments",
+        "text": "A set of the calls so far: name and sorted arguments",
         "correct": true,
         "why": "Right. The same name with the same arguments was already in the set."
       }
@@ -594,16 +594,16 @@
   },
   {
     "id": "ex-zse67dxr",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "cloze",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "In react_text.py's second run, steps 1 and 2 report `stop_reason: ___`.",
+    "prompt": "In react_text.py's second run, the reply stops at the action, and Ollama still reports `stop_reason: ___`.",
     "blanks": [
       {
         "accept": [
-          "stop_sequence"
+          "end_turn"
         ],
         "ignore_case": true,
         "ignore_accents": true

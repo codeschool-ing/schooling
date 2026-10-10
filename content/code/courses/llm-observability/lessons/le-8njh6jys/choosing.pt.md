@@ -1,6 +1,6 @@
 ---
 title: Um SDK, um proxy, ou os dois
-version: 1
+version: 2
 ---
 
 As aulas 6 e 7 já puseram quatro ferramentas diante do mesmo assistente. As diferenças entre elas que
@@ -12,7 +12,7 @@ importam são menos do que as listas de funcionalidades sugerem.
 | vê as etapas entre chamadas a modelo | sim | sim | não | sim |
 | vê chamadas que ninguém instrumentou | não | não | sim, se toda chamada passar por ele | não |
 | pode agir sobre pedidos: cache, limite, nova tentativa | não | não | sim | não |
-| onde roda, neste laboratório | auto-hospedado, seis contêineres | não rodado | auto-hospedado, uma imagem, recusou repassar | um pacote Python |
+| onde rodou neste curso | na sua máquina, seis contêineres | não rodado; o SDK dele contra um gravador | não rodado; uma imagem, 3,5 GB para baixar | na sua máquina, um pacote Python |
 | licença | código aberto | serviço proprietário | código aberto | código aberto |
 
 **Um SDK e um proxy respondem a perguntas diferentes**, e um sistema grande muitas vezes tem os dois: um

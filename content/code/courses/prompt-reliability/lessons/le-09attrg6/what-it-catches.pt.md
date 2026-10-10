@@ -1,95 +1,115 @@
 ---
 title: O que ele pega
-version: 1
+version: 2
 ---
 
-Rode o prompt delimitado e escapado com temperatura 0 e peça ao substituto que confira cada
-resposta:
+Rode o prompt delimitado e escapado com temperatura 0 e peça ao modelo para conferir cada resposta
+que deu:
 
 ```
 ana@lab:~/triage$ pl run prompts/v6-escaped.txt cases/all.jsonl --out runs/v6.jsonl
-70 calls, prompt fbc4c9b1, written to runs/v6.jsonl
-ana@lab:~/triage$ pl selfcheck runs/v6.jsonl
-t26  wrong  WRONG: the answer is not valid JSON
-t37  right  WRONG: it could also be other
-t39  wrong  WRONG: the answer is not valid JSON
-h01  wrong  OK
-h04  wrong  OK
-h07  right  WRONG: it could also be account
-h11  wrong  OK
-h13  wrong  WRONG: it could also be billing
-h14  wrong  OK
-h15  wrong  WRONG: it could also be other
-h16  wrong  WRONG: it could also be delivery
-h19  wrong  WRONG: it could also be billing
-h20  wrong  WRONG: it could also be billing
-h26  wrong  OK
-h27  wrong  OK
-h28  wrong  WRONG: it could also be other
-h30  right  WRONG: it could also be billing
+70 calls, prompt fbc4c9b1, llama3.2:3b, written to runs/v6.jsonl
+ana@lab:~/triage$ python3 selfcheck.py runs/v6.jsonl
+t01    wrong WRONG The answer is not valid JSON because it is missing the nec
+t02    right WRONG The reason is that the category "delivery" is not specific
+t04    right WRONG The answer is not valid JSON because it is missing the nec
+t05    right WRONG The answer is not valid JSON because it is missing the req
+t06    wrong WRONG The answer is not valid JSON because it is missing the req
+t07    right WRONG The answer is not valid JSON because it is missing a closi
+t08    right WRONG The answer is not valid JSON because it is missing the req
+t09    right WRONG The reason is that the JSON object is missing a closing br
+t11    right WRONG The reason is that the JSON object is missing a closing br
+t13    right WRONG The answer is not valid JSON because it is missing the req
+t14    right WRONG The reason is that the JSON is missing a closing bracket a
+t16    right WRONG The answer is not valid JSON because it is missing a closi
+t17    right WRONG The reason is that the JSON object is missing a closing br
+t18    right WRONG The answer is not valid JSON because it is missing the req
+t19    wrong WRONG The answer is not valid JSON because it is missing the req
+t21    right WRONG The reason is that the JSON is missing a closing bracket a
+t22    wrong WRONG The answer is not valid JSON because it is missing the req
+t23    right WRONG The reason is that the JSON object is missing a closing br
+t25    wrong OK
+t26    wrong WRONG The answer is not valid JSON because it is missing the req
+t27    right WRONG The answer is not valid JSON because it is missing the req
+t28    right WRONG The answer is not valid JSON because it is missing the req
+t31    wrong WRONG The answer is missing a colon (:) between the key "categor
+t32    right WRONG The answer is not valid JSON because it is missing the nec
+t36    right WRONG The answer is not valid JSON because it is missing a closi
+t37    wrong OK
+t38    wrong OK
+t39    wrong OK
+h01    wrong OK
+h02    right WRONG The answer is not valid JSON because it is missing the req
+h03    wrong WRONG The answer is not valid JSON because it is missing the req
+h05    wrong WRONG The answer is not valid JSON because it is missing the req
+h06    wrong OK
+h07    wrong WRONG The answer is not valid JSON because it is missing the req
+h08    right WRONG The answer is not valid JSON because it is missing the nec
+h11    wrong WRONG The reason is that the JSON object is missing a closing br
+h12    wrong WRONG The reason is that the JSON answer is missing the "descrip
+h13    right WRONG The answer is not valid JSON because it is missing a closi
+h15    right WRONG The reason is that the JSON object is missing a closing br
+h16    right WRONG The reason is that the JSON answer is missing the "descrip
+h17    wrong WRONG The reason is that the JSON object is missing a required k
+h18    right WRONG The answer is not valid JSON because it is missing the req
+h19    right WRONG The answer is not valid JSON because it is missing the req
+h21    wrong OK
+h22    wrong WRONG The reason is that the answer is missing the "description"
+h23    wrong WRONG The reason is that the JSON object is missing a required k
+h24    wrong WRONG The reason is that the category "returns" is not the corre
+h25    right WRONG The answer is not valid JSON because it is missing a closi
+h26    wrong OK
+h27    wrong WRONG The reason is that the JSON is missing a closing bracket a
+h28    wrong WRONG The reason is that the category is missing a value. In JSO
+h29    right WRONG The reason is that the JSON object is missing a closing br
+h30    wrong WRONG The answer is missing the "message" key, which is present 
 
-               really wrong  really right
-flagged                   8             3
-not flagged               6            53
-precision 0.73   recall 0.57
+                 really wrong  really right
+flagged                    18            27
+not flagged                 8            17
+precision 0.40   recall 0.69
 ```
 
-O `pl selfcheck` lista cada resposta que foi marcada ou estava errada, e depois a tabela. Das
-setenta respostas, catorze estavam mesmo erradas. A verificação marcou onze, e oito delas estavam
-entre as catorze.
+Das setenta respostas, 26 estavam de fato erradas. O revisor marcou 45, e 18 delas estavam entre as
+26.
 
-Dois números resumem a tabela. A **precisão** pergunta quantas marcações estavam certas: 8 de 11,
-0,73. A **revocação** pergunta quantos erros foram marcados: 8 de 14, 0,57. Uma verificação com
-precisão alta e revocação baixa é quieta e confiável quando fala; uma com o contrário faz barulho e
+Dois números resumem a tabela. A **precisão** pergunta quantas marcações estavam certas: 18 de 45,
+0,40. A **revocação** pergunta quantos erros foram marcados: 18 de 26, 0,69. Uma verificação com
+precisão alta e revocação baixa é quieta e confiável quando fala; uma com o contrário é barulhenta e
 pega mais. Nenhum dos dois números quer dizer algo sem o outro.
 
-## Lendo a tabela
+## Contra uma moeda
 
-Duas das oito marcações certas são `t26` e `t39`, respostas que não são JSON. Qualquer programa
-teria achado essas, e a última seção desta aula acha.
+Esses dois números precisam de uma referência, e a honesta é uma verificação que não lê nada. Marque
+45 das setenta respostas ao acaso, e em média as marcações caem em respostas erradas na mesma
+proporção que as respostas erradas têm na execução inteira: 26 de 70, uma precisão de 0,37. A revocação
+seria 45 de 70, 0,64. **Os 0,40 e 0,69 do revisor mal passam de uma verificação que joga uma
+moeda**, que é o que a tabela diz quando lida por colunas: ele marcou 18 das 26 respostas erradas,
+69%, e 27 das 44 certas, 61%.
 
-As outras seis são erros de rótulo, e todas foram pegas do mesmo jeito, com *it could also be*. O
-revisor duvidou dessas respostas porque os dois melhores rótulos dele estavam próximos. Veja o que
-ele sugeriu no lugar, contra o que a pessoa disse:
+## O que ele disse
 
-```
-ana@lab:~/triage$ grep -E '"(h13|h15|h16|h19|h20|h28)"' cases/all.jsonl | grep -o '"category": "[a-z]*"'
-"category": "returns"
-"category": "account"
-"category": "returns"
-"category": "account"
-"category": "delivery"
-"category": "billing"
-```
-
-Returns, account, returns, account, delivery, billing. O revisor sugeriu billing, other, delivery,
-billing, billing e other. **Nenhuma das seis alternativas dele é o rótulo da pessoa.** Ele sabia
-que a resposta era duvidosa e não sabia qual deveria ser, o que é uma marcação útil e uma correção
-inútil.
-
-## O que ele deixa passar
-
-Seis respostas erradas voltaram com OK. Aqui está uma:
+Leia os motivos, não só as marcações. Quase todos são sobre o formato, e quase todos são falsos.
+Aqui está o `t07`, que o revisor disse *not valid JSON because it is missing a closing bracket*:
 
 ```
-ana@lab:~/triage$ grep h27 cases/all.jsonl
-{"id": "h27", "message": "Someone used my gift card balance before I did.", "expect": {"category": "account", "urgency": "high"}}
-ana@lab:~/triage$ pl show runs/v6.jsonl h27
-│ {
-│   "category": "billing",
-│   "urgency": "normal",
-│   "summary": "Someone used their gift card balance before they did."
-│ }
-stop: end, tokens in 116, out 34
+ana@lab:~/triage$ pl show runs/v6.jsonl t07
+│ {"category": "delivery", "urgency": "high", "summary": "Customer disputes delivery address"}
+stop: stop, tokens in 151, out 23, 2.9 s
 ```
 
-Um estranho gastou o saldo do cartão-presente do cliente. A pessoa que rotulou chamou isso de
-problema de conta, alguém entrando no que é dele. O substituto lê `card`, uma palavra de billing, e
-diz billing. Quando pedem que confira, ele lê `card` de novo e concorda consigo mesmo. **Um erro que
-o modelo cometeria de novo é um erro que a verificação dele não enxerga**, e cada um dos seis que
-passaram é desse tipo.
+É analisável, tem todos os campos, e a categoria está certa. O revisor recebeu uma pergunta de sim
+ou não sobre este texto e respondeu com um defeito que o texto não tem. A mesma frase, *missing a
+closing bracket* ou *missing the required field*, aparece na maioria das 45 marcações, em respostas
+certas e erradas. **Uma marcação que vem com um motivo não fica mais confiável por ter um**: o
+motivo é gerado como todo o resto, e aqui é quase sempre inventado.
 
-Os três alarmes falsos são o mesmo mecanismo pelo outro lado: `t37`, `h07` e `h30` foram
-respondidas corretamente, e em casos limítrofes, então o revisor duvidou delas mesmo assim. Uma
-marcação aqui quer dizer *este foi um caso limítrofe*. Vale saber disso, desde que ninguém a leia
-como *isto está errado*.
+E as respostas que estavam de fato quebradas? O `t38` nem é JSON, e o revisor disse OK. A última
+seção desta aula volta a ele.
+
+## O que escapou
+
+Oito respostas erradas voltaram OK: `t25`, `t37`, `t38`, `t39`, `h01`, `h06`, `h21` e `h26`. Sete
+são erros de rótulo, e o revisor leu a mensagem e o rótulo errado e concordou. **Um erro que o
+modelo cometeria de novo é um erro que a própria verificação dele não enxerga**, porque a verificação
+lê com o mesmo conhecimento com que a resposta foi escrita.

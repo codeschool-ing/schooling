@@ -1,6 +1,6 @@
 ---
 title: Uma resposta interrompida
-version: 1
+version: 2
 ---
 
 Uma resposta em streaming pode parar no meio. A conexão cai, um proxy encerra por tempo uma resposta
@@ -8,28 +8,30 @@ longa, o fornecedor reinicia a máquina que a gerava. O que chega é um começo,
 pedaço final, nenhum motivo de parada, nenhum uso.
 
 O assistente trata um stream sem motivo de parada como uma tentativa que falhou (`IncompleteReply`),
-registra quantos pedaços recebeu, e tenta de novo. O labobs pode ser instruído a cortar o próximo
-stream depois de seis pedaços:
+registra quantos pedaços recebeu, e tenta de novo. O flaky.py pode ser instruído a cortar o próximo
+stream depois de seis pedaços, com o SDK ainda apontado para ele desde a seção anterior:
 
 ```
-ana@lab:~/obs$ rm -f spans.jsonl; python assistant.py "How long is a gift card valid?"
-A gift card is valid for two years from the day it was bought. [1] Gift cards are valid for two years from purchase and cannot be exchanged for cash. [2]
-trace 3a3d425f632e77475611cb4af2f6aa74
-ana@lab:~/obs$ python tree.py --attrs | grep -E " ms |ERROR|partial|attempts"
-      0   2,313 ms  ask
-      0      43 ms    embed
-     44       4 ms    search
-     48   2,264 ms    generate
+ana@dev:~/obs$ curl -s -X POST 127.0.0.1:11435/flaky -d '{"cut_after": 6}'; echo
+{"fail_rate": 0, "fail": 0, "status": 503, "cut_after": 6, "seed": 7}
+ana@dev:~/obs$ rm -f spans.jsonl; python assistant.py "How long is a gift card valid?"
+According to [1], a gift card is valid for two years from the day it was bought.
+trace 756285d53ceba6e75566de58790eaa52
+ana@dev:~/obs$ python tree.py --attrs | grep -E " ms |ERROR|partial|attempts"
+      0   4,373 ms  ask
+      1      26 ms    embed
+     27       0 ms    search
+     28   4,345 ms    generate
                        app.attempts = 2
-     48     410 ms      chat extract-1  ERROR IncompleteReply: stream ended after 6 pieces with no finish reason
+     28   1,433 ms      chat llama3.2:3b  ERROR IncompleteReply: stream ended after 6 pieces with no finish reason
                          app.partial_pieces = 6
-    959   1,353 ms      chat extract-1
-  2,312       0 ms    check_citations
+  1,961   2,411 ms      chat llama3.2:3b
+  4,372       0 ms    check_citations
 ```
 
-O cliente recebeu a resposta certa, depois de 2.313 ms, quando a segunda tentativa sozinha levou 1.353.
-A primeira tentativa entregou seis pedaços em 410 ms e parou; a segunda, depois do recuo, entregou a
-resposta inteira.
+O cliente recebeu a resposta certa, depois de 4.373 ms, quando a segunda tentativa sozinha levou
+2.411. A primeira tentativa entregou seis pedaços em 1.433 ms e parou; a segunda, depois do recuo,
+entregou a resposta inteira.
 
 ## O que o cliente viu depende da tela
 

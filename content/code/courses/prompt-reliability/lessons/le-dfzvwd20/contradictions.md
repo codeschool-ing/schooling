@@ -1,6 +1,6 @@
 ---
 title: Two instructions that disagree
-version: 1
+version: 2
 ---
 
 Two lines of `v2-long.txt` are about how long the summary should be. They were written for
@@ -16,68 +16,46 @@ Line 4 wants a summary the team can scan. Line 16, added later by somebody whose
 that the summary left things out, wants the problem in full detail. **Nobody can obey both, so the
 model chooses, and you do not get a say in how.**
 
-The stand-in's way of choosing is written in its opening comment: between an instruction to be
-brief and one to be thorough, the one written last wins. Line 16 comes after line 4, so it
-decides every summary. A message with two sentences shows it:
+Here are two messages under the short prompt, which asks for one sentence, and under the long one:
 
 ```
 ana@lab:~/triage$ grep t17 cases/dev.jsonl
 {"id": "t17", "message": "My order was dispatched ten days ago and still hasn't arrived. I need it for a birthday on Saturday.", "expect": {"category": "delivery", "urgency": "high"}}
 ana@lab:~/triage$ pl show runs/v2.jsonl t17
-│ {
-│   "category": "delivery",
-│   "urgency": "high",
-│   "summary": "Their order was dispatched ten days ago and still hasn't arrived."
-│ }
-stop: end, tokens in 87, out 38
+│ {"category": "delivery", "urgency": "high", "summary": "Order has not arrived ten days after dispatch and is needed for a birthday on Saturday"}
+stop: stop, tokens in 114, out 35, 3.6 s
 ana@lab:~/triage$ pl show runs/long.jsonl t17
-│ {
-│   "category": "delivery",
-│   "urgency": "high",
-│   "summary": "Their order was dispatched ten days ago and still hasn't arrived. They need it for a birthday on Saturday."
-│ }
-stop: end, tokens in 185, out 47
+│ {"category": "delivery", "urgency": "high", "summary": "Order has not arrived 10 days after dispatch and is needed for a birthday on Saturday"}
+stop: stop, tokens in 211, out 36, 4.2 s
+ana@lab:~/triage$ pl show runs/v2.jsonl t23
+│ {"category": "returns", "urgency": "high", "summary": "Customer is reporting a damaged parcel with ruined books and wants to initiate a return process."}
+stop: stop, tokens in 106, out 36, 4.0 s
+ana@lab:~/triage$ pl show runs/long.jsonl t23
+│ {"category": "returns", "urgency": "high", "summary": "Received damaged parcel with water-soaked books"}
+stop: stop, tokens in 203, out 27, 3.2 s
 ```
 
-Under `v2-json.txt`, which asks for one sentence, the summary is the first sentence of the
-message. Under the long prompt it is the whole message, moved into the third person. Line 16 gave
-a reason, that the team reads the summary instead of the message. **The summary it produced is
-the message**, so the team now reads it twice, and the queue line 4 wanted to keep scannable is
-as long as the inbox.
+`t17` came back almost word for word the same under both prompts. `t23` came back **shorter**
+under the prompt that asks for full detail: the short prompt wrote *"Customer is reporting a damaged
+parcel with ruined books and wants to initiate a return process"*, the long one *"Received damaged
+parcel with water-soaked books"*. On that message line 4 won. Over all forty, the mean reply grew
+from 30.6 tokens to 33.6, so on some others line 16 did.
+
+**That is what a contradiction buys: no rule at all.** Which of two conflicting instructions a model
+follows depends on the model, on the wording, on where each one sits and on the message in front of
+it, and it can change when the model is updated. You cannot read the answer off the prompt, and
+you cannot read it off one reply either: `t23` alone says brevity won, the mean says detail did.
 
 ## What it costs
 
-The longer summaries are paid for as output, and output is what the model writes one token at a
-time:
-
-```
-ana@lab:~/triage$ pl latency runs/v2.jsonl
-calls 40
-p50 1186 ms   p95 1397 ms   max 1468 ms
-output tokens: mean 39.9, max 50
-ana@lab:~/triage$ pl latency runs/long.jsonl
-calls 40
-p50 1306 ms   p95 1475 ms   max 1504 ms
-output tokens: mean 42.7, max 54
-```
-
-The mean reply grew from 39.9 tokens to 42.7, and the longest from 50 to 54. The median call took
-1,306 ms instead of 1,186. Those gaps are small because the test set's messages are short, one or
-two sentences each, so full detail adds a sentence at most. An inbox with paragraphs in it would widen them. The lab's latencies are the course's numbers,
-computed rather than timed. The
-direction is the point: **a contradiction is not settled once, it is settled again on every call,
-and paid for each time.**
-
-## On a real model
-
-A real model has no written rule like the stand-in's. Which of two conflicting instructions it
-follows depends on the model, on the wording, and on where each one sits, and it can change when
-the provider updates the model. That is a practitioner's observation rather than a measured rate,
-and it is the reason a contradiction is worse than either of its halves. **Either instruction
-alone gives you an answer you chose; both together give you one the model chose**, and you find
-out which by reading replies.
+The disagreement is settled again on every call, by whatever the model happens to weigh most on
+that message, and you pay for it in two ways. The extra output is small here, three tokens a reply,
+because the test set's messages are short and full detail adds a clause at most; an inbox with
+paragraphs in it would widen the gap. The larger cost is that **a summary's length is no longer
+something you decided**, so nothing downstream can rely on it.
 
 The guides Anthropic and OpenAI publish on writing prompts both open on the same advice: be clear
-and direct about what you want. A prompt that asks for two incompatible things is the plainest
-way of not being clear, and the fix is not a third line saying which one wins. It is deciding,
-and deleting the other.
+and direct about what you want. A prompt that asks for two incompatible things is the plainest way
+of not being clear, and the fix is not a third line saying which one wins. **Either instruction alone
+gives you an answer you chose; both together give you one the model chose.** Decide, and delete the
+other.

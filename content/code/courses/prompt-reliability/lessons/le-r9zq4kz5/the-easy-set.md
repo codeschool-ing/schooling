@@ -1,94 +1,81 @@
 ---
 title: The easy set
-version: 1
+version: 2
 ---
 
 `cases/dev.jsonl` has the weakness every first test set has. **It was written by the person who
 wrote the prompt**, at the same time, with the same picture of the inbox in mind. The prompt was
 then improved, version after version, by watching that set's score go up.
 
-`cases/holdout.jsonl` was written later, from harder messages, and the prompt never saw it while it
-was being changed:
+`cases/holdout.jsonl`, saved in lesson 5, was written later, from harder messages, and no prompt in
+this course was changed while looking at it:
 
 ```
 ana@lab:~/triage$ head -n 3 cases/holdout.jsonl
 {"id": "h01", "message": "I returned the paperback but you refunded the wrong card.", "expect": {"category": "billing", "urgency": "normal"}}
 {"id": "h02", "message": "The delivery driver left my parcel with a neighbour I don't know. Can you find out who has it?", "expect": {"category": "delivery", "urgency": "normal"}}
 {"id": "h03", "message": "My account shows an order I never placed and my card has been charged for it.", "expect": {"category": "billing", "urgency": "high"}}
-ana@lab:~/triage$ pl check runs/v3.jsonl --failures
-check      pass  fail
-json         40     0
-fields       40     0
-labels       40     0
-category     39     1
-urgency      36     4
-all          36     4
-
-t14    urgency   normal, expected low
-t24    urgency   low, expected normal
-t28    urgency   normal, expected low
-t37    category  billing, expected delivery
 ana@lab:~/triage$ pl run prompts/v3-examples.txt cases/holdout.jsonl --out runs/v3-holdout.jsonl
-30 calls, prompt 1d9c6ec4, written to runs/v3-holdout.jsonl
+30 calls, prompt 1d9c6ec4, llama3.2:3b, written to runs/v3-holdout.jsonl
 ana@lab:~/triage$ pl check runs/v3-holdout.jsonl --failures
 check      pass  fail
 json         30     0
 fields       30     0
 labels       30     0
-category     17    13
-urgency      11    19
-all          11    19
+category     18    12
+urgency      14    16
+all          14    16
 
 h01    category  returns, expected billing
-h03    urgency   normal, expected high
-h04    category  delivery, expected returns
-h06    urgency   normal, expected high
+h02    urgency   high, expected normal
+h03    category  account, expected billing
+h05    category  account, expected billing
+h06    category  returns, expected delivery
 h07    category  account, expected billing
-h09    urgency   normal, expected low
-h10    urgency   normal, expected low
+h08    category  billing, expected returns
 h11    category  delivery, expected account
-h13    category  billing, expected returns
-h14    category  billing, expected other
-h15    category  billing, expected account
-h16    category  other, expected returns
-h19    category  billing, expected account
-h20    category  billing, expected delivery
-h22    urgency   normal, expected high
-h24    urgency   normal, expected high
-h26    category  billing, expected other
+h15    urgency   low, expected normal
+h16    category  delivery, expected returns
+h17    urgency   high, expected normal
+h19    category  other, expected account
+h21    category  returns, expected delivery
+h23    category  billing, expected returns
 h27    category  billing, expected account
-h30    category  billing, expected other
+h29    urgency   high, expected normal
 ```
 
-The same prompt passes 36 of 40 on the set it was written against, 90%, and 11 of 30 on the one it
-was not, 37%. Every reply still parses. What fails is the judgement: `h01` is a refund to the wrong
+The same prompt passes 28 of 40 on the set it was written against, 70%, and 14 of 30 on the one it
+was not, 47%. Every reply still parses. What fails is the judgement: `h01` is a refund to the wrong
 card, a billing problem written in the words of a return, and `h03`, a charge for an order nobody
-placed, comes back as normal urgency. **The dev score measured how well the prompt handles
-messages like the ones its author imagined**, and the author imagined the easy ones.
-
-In the stand-in that gap is mechanical: it sorts by keywords, and the holdout was written with the
-wrong keywords on purpose. A real model reads better than that, but the habit the gap comes from is
-not about the model. Whoever wrote both the prompt and the cases wrote cases the prompt handles.
+placed, comes back as `account`, the noun the message opens with. Twelve categories wrong in thirty,
+against four wrong categories, and one unparseable reply, in forty on dev. **The dev score measured
+how well the prompt handles messages like the ones its author imagined**, and the author imagined
+the easier ones.
 
 ## A set you tune against stops measuring
 
-Every change you keep because the dev score rose is a change fitted to those forty messages. Two
-fixes for the format problem show what that costs:
+Every change you keep because the dev score rose is a change fitted to those forty messages, and the
+holdout is where you find out whether it was fitted to anything else. Here it is asked of the
+comparison from the first section, `v4` against `v3`:
 
 ```
 ana@lab:~/triage$ pl run prompts/v4-only-json.txt cases/holdout.jsonl --out runs/v4-holdout.jsonl
-30 calls, prompt 651820d7, written to runs/v4-holdout.jsonl
+30 calls, prompt 651820d7, llama3.2:3b, written to runs/v4-holdout.jsonl
 ana@lab:~/triage$ pl compare runs/v4-holdout.jsonl runs/v3-holdout.jsonl
-runs/v4-holdout.jsonl    passes 11/30
-runs/v3-holdout.jsonl    passes 11/30
-fixed 1, broken 1, still passing 10, still failing 18
-broken: h07
-sign test on the 2 that changed: p = 1.000
+runs/v4-holdout.jsonl    passes 4/30
+runs/v3-holdout.jsonl    passes 14/30
+fixed 10, broken 0
+sign test on the 10 that changed: p = 0.002
 ```
 
-On dev, `v3` beat `v4` by 36 to 34. On the holdout they tie at 11, one message fixed and one broken.
-Whatever made `v3` better on dev is not visible on messages it was not chosen against, and nobody
-choosing between the two by the dev score could have known.
+On dev, `v3` beat `v4` by 28 to 20. On the holdout it wins by 14 to 4, ten messages fixed and none
+broken, p = 0.002. **This time the holdout confirms the choice**: whatever the three examples
+taught, it was not something about those forty messages. That is the other half of a holdout's job,
+and the more common one. It does not exist to overturn decisions; it exists so that a decision
+it does not overturn has been tested on something it was not made on.
+
+The opposite case needs a change that won on dev by fitting dev, and the next section builds exactly
+that.
 
 ## Keep a holdout, and look at it rarely
 

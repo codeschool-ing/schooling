@@ -1,6 +1,6 @@
 ---
 title: A description is a prompt
-version: 1
+version: 2
 ---
 
 The description is the only explanation the model gets, and it is read at the moment of choosing. **Writing it is prompt engineering**, with the difference that a bad one does not produce a bad paragraph; it produces a wrong call, or no call where one was needed.
@@ -12,7 +12,7 @@ Compare the two descriptions of `get_order` this course has used:
 | lesson 1 | Look up one Marginalia order by its id, such as M-1042: status, dates, lines and amounts in cents. |
 | this lesson | Look up one Marginalia order by its id, which is M- followed by four digits, such as M-1042. Returns status, dates, lines and amounts in cents. |
 
-Both say what the tool does and what comes back. The second also states the id's format in words, which the schema enforces with a pattern. **Saying it in the description prevents the mistake; enforcing it in the schema catches it when the description was not enough.** Section 05 shows the second half working, because the course's stand-in was written to ignore the first.
+Both say what the tool does and what comes back. The second also states the id's format in words, which the schema enforces with a pattern. **Saying it in the description prevents the mistake; enforcing it in the schema catches it when the description was not enough.** Section 05 shows both halves: `llama3.2:3b`, told the format, turned the customer's `1043` into `M-1043` by itself, and a stand-in written to ignore the description runs into the pattern instead.
 
 ## What a good description says
 

@@ -1,369 +1,368 @@
 {
   "ex-0bp493fe": {
     "prompt": "O que um cache de prompt guarda?",
-    "hint": "A resposta continua sendo escrita do zero toda vez.",
+    "hint": "Não respostas.",
     "choices": [
       {
-        "text": "As respostas de chamadas anteriores, para que uma pergunta repetida seja respondida de memória",
-        "why": "Nada da resposta é guardado; ela é gerada a cada chamada."
+        "text": "A conversa que o cliente teve antes",
+        "why": "Ele não sabe nada de conversas."
+      },
+      {
+        "text": "Uma cópia comprimida dos pesos do modelo",
+        "why": "Os pesos já estão carregados."
       },
       {
         "text": "O trabalho de ler o começo de um prompt",
-        "why": "Certo: uma chamada seguinte que comece com os mesmos tokens pula essa parte."
+        "why": "Certo: a resposta continua sendo escrita do zero."
       },
       {
-        "text": "A conversa inteira com um cliente",
-        "why": "Ele não guarda conversa; casa prefixos de prompts."
-      },
-      {
-        "text": "A mensagem do cliente, para economizar tokens",
-        "why": "A mensagem é a parte que varia, e a menos reaproveitável."
+        "text": "As respostas a prompts que ele já viu",
+        "why": "Respostas são escritas toda vez."
       }
     ]
   },
   "ex-ezgs2wth": {
-    "prompt": "No substituto, o primeiro bloco de um prompt difere do de todas as chamadas anteriores, mas os blocos 2 a 7 batem exatamente com os de uma delas. Quantos tokens são lidos do cache?",
-    "hint": "A sequência de blocos que batem começa no primeiro.",
+    "prompt": "Sem nada no cache, o `v8-guide.txt` levou 5009 ms para ler 287 tokens; a chamada seguinte leu 288 em 813. Por que a coluna `read tokens` quase não se mexe?",
+    "hint": "Contagem ou trabalho?",
     "choices": [
       {
-        "text": "192, os seis blocos que batem",
-        "why": "Um bloco só é lido quando todos os anteriores bateram."
+        "text": "A contagem fica a mesma; só o trabalho é poupado",
+        "why": "Certo: é no tempo que o cache aparece."
       },
       {
-        "text": "224, já que o prompt inteiro vai para o cache",
-        "why": "O bloco 1 difere, então nada depois dele é reaproveitado."
+        "text": "O cache estava desligado na segunda chamada",
+        "why": "Estava ligado, e o tempo diz isso."
       },
       {
-        "text": "Nenhum",
-        "why": "Certo: o primeiro bloco encerra a sequência antes de ela começar."
+        "text": "A segunda mensagem era mais curta que a primeira",
+        "why": "Era um token mais longa."
       },
       {
-        "text": "32, só o primeiro bloco",
-        "why": "O primeiro bloco é justamente o que difere."
+        "text": "O guia foi pulado e trocado pelo hash dele",
+        "why": "Nada é trocado; a leitura dele é reaproveitada."
       }
     ]
   },
   "ex-sg8er8x3": {
-    "prompt": "Abaixo de quantos tokens o substituto nunca guarda um prompt no cache?",
-    "hint": "`MINIMUM` no `model.py`.",
-    "unit": "tokens"
+    "prompt": "Depois de quantos minutos ociosos o Ollama descarrega um modelo, com cache e tudo, por padrão?",
+    "hint": "O `ollama ps` da aula 1."
   },
   "ex-nxnx6yd5": {
-    "prompt": "Que afirmação sobre os caches dos provedores reais a aula faz?",
-    "hint": "Alguns guardam sozinhos; outros onde você marca.",
+    "prompt": "Que afirmação a aula faz sobre os caches dos provedores reais?",
+    "hint": "Detalhes de quem?",
     "choices": [
       {
-        "text": "Todos usam blocos de 32 tokens e mínimo de 64, exatamente como o substituto",
-        "why": "Esses números são do curso, não de algum provedor."
+        "text": "Todos fazem cache automático, sem marcador",
+        "why": "Alguns precisam de um marcador, como `cache_control`."
       },
       {
-        "text": "Eles guardam conversas inteiras, então as mensagens anteriores do cliente nunca são enviadas duas vezes",
-        "why": "Eles guardam um prefixo do prompt."
+        "text": "Eles guardam respostas além de prompts",
+        "why": "Um cache de prompt guarda leitura, não respostas."
       },
       {
-        "text": "Casam um prefixo, com tamanhos, mínimos, prazos e preços próprios",
-        "why": "Certo: leia a documentação do seu provedor para o modelo que você chama."
+        "text": "Cobram o mesmo por token em cache e token comum",
+        "why": "Leituras do cache custam menos."
       },
       {
-        "text": "Nunca cobram pela gravação",
-        "why": "A aula não diz nada tão absoluto; os preços são definidos por eles."
+        "text": "Todo detalhe que importa é deles",
+        "why": "Certo: leia a documentação e meça."
       }
     ]
   },
   "ex-w1f0m904": {
-    "prompt": "Por que ligar o cache para o `v1-bare` não mudou nada no `pl cost`?",
-    "hint": "Veja a entrada por chamada.",
+    "prompt": "A metade de escrita de cada chamada, uns três segundos, não mexeu quando o guia estava no cache. Por quê?",
+    "hint": "No que o cache mexe?",
     "choices": [
       {
-        "text": "Com 36,5 tokens por chamada, nenhum prompt chegou ao mínimo de 64 tokens do cache",
-        "why": "Certo: um prompt abaixo do mínimo nunca vai para o cache."
+        "text": "O Ollama só põe a escrita no cache com placa de vídeo",
+        "why": "A escrita nunca vai para o cache."
       },
       {
-        "text": "O `--set` não liga o cache",
-        "why": "Liga; `cache` é um dos parâmetros."
+        "text": "Um cache só mexe no prompt",
+        "why": "Certo: todo token da resposta continua sendo escrito."
       },
       {
-        "text": "O prompt nu não tem JSON",
-        "why": "Formato não tem nada a ver com cache."
+        "text": "A escrita já estava no cache de uma execução anterior",
+        "why": "Respostas nunca vão para o cache."
       },
       {
-        "text": "O cache só funciona em holdout",
-        "why": "Ele funciona em qualquer conjunto."
+        "text": "As respostas eram curtas demais para o cache",
+        "why": "O tamanho não é o motivo."
       }
     ]
   },
   "ex-0nddvqkv": {
-    "prompt": "O `v17-message-first` leu 0 tokens do cache em quarenta chamadas. Por quê?",
-    "hint": "O que há no primeiro bloco dele?",
+    "prompt": "Com a mensagem primeiro, toda chamada leu por uns quatro segundos e meio. Por quê?",
+    "hint": "O que duas chamadas têm em comum?",
     "choices": [
       {
-        "text": "O cache estava desligado",
-        "why": "Ele gravou 9312 tokens, então estava ligado."
+        "text": "O cache é desligado para esse prompt",
+        "why": "Nada o desliga."
       },
       {
-        "text": "O primeiro bloco contém a mensagem",
-        "why": "Certo, e um bloco só é lido quando todos os anteriores bateram."
+        "text": "A mensagem precisa ser lida duas vezes",
+        "why": "É lida uma vez, como o guia."
       },
       {
-        "text": "O prompt ficou abaixo do mínimo de 64 tokens do cache",
-        "why": "São uns 250 tokens por chamada, bem acima de 64."
+        "text": "Duas chamadas só têm em comum a tag de abertura",
+        "why": "Certo: um cache casa um começo."
       },
       {
-        "text": "O guia era longo demais para caber nos blocos do cache",
-        "why": "O tamanho não atrapalha; a posição sim."
+        "text": "O guia fica mais longo quando vem em segundo",
+        "why": "É o mesmo texto."
       }
     ]
   },
   "ex-dqf6wq7y": {
-    "prompt": "O `v17-static-first` leu 8736 tokens do cache; toda chamada menos a primeira leu o mesmo número. Quantos tokens cada uma dessas chamadas leu?",
-    "hint": "Quarenta chamadas, e a primeira não tinha o que ler.",
-    "unit": "tokens"
+    "prompt": "Qual foi a chamada mediana com a mensagem primeiro, em segundos?",
+    "hint": "`stats.py`."
   },
   "ex-btk9t77q": {
-    "prompt": "Qual a regra para ordenar um prompt com cache?",
-    "hint": "O cache casa a partir do começo.",
+    "prompt": "Qual é a regra para ordenar um prompt com cache?",
+    "hint": "O fixo, depois o que varia.",
     "choices": [
       {
-        "text": "A parte fixa primeiro, o que varia por último",
-        "why": "Certo: o prefixo compartilhado é o que pode ser reaproveitado."
+        "text": "As partes fixas primeiro, o que varia por último",
+        "why": "Certo."
       },
       {
-        "text": "A mensagem primeiro, para o modelo lê-la enquanto está fresca",
-        "why": "Essa é a ordem que não leu nada do cache."
+        "text": "A mensagem primeiro, para o modelo lê-la fresca",
+        "why": "Isso pôs o guia fora do alcance do cache."
       },
       {
-        "text": "Ordem alfabética das seções",
-        "why": "A ordem importa pelo que é compartilhado, não pelo alfabeto."
+        "text": "A parte mais curta primeiro, para poupar tokens",
+        "why": "O tamanho não é a regra."
       },
       {
-        "text": "Não faz diferença para um cache",
-        "why": "Fez a diferença entre 3.0302 e 6.0216 centavos."
+        "text": "As seções em ordem alfabética",
+        "why": "Ordene pelo que varia."
       }
     ]
   },
   "ex-xnbgk38e": {
-    "prompt": "Um bloco só é lido do cache quando todos os blocos ___ dele também bateram.",
-    "hint": "A posição dele em relação aos blocos que vêm primeiro.",
+    "prompt": "Um cache reaproveita o mais longo ___ guardado que casa com o prompt novo, token por token desde o primeiro.",
+    "hint": "Não o fim.",
     "blanks": [
       {
         "accept": [
-          "antes"
+          "começo",
+          "prefixo"
         ]
       }
     ]
   },
   "ex-458hp0z3": {
-    "prompt": "Com o cache ligado, o `v17-static-first` pagou 10139 tokens de entrada, como o `v8-guide` sem cache. O que o cache mudou?",
-    "hint": "827, 8736 e 576.",
+    "prompt": "Com o cache, o `v8-guide.txt` leu os mesmos 285,1 tokens por chamada que sem ele. O que o cache mudou?",
+    "hint": "Contagem contra custo.",
     "choices": [
       {
-        "text": "O número de tokens que o modelo leu",
-        "why": "Os dois leram 10139."
+        "text": "Quantos tokens o modelo leu",
+        "why": "A contagem não mexeu."
       },
       {
-        "text": "Os tokens de saída, que o cache encurtou",
-        "why": "A saída foi 1536 nos dois; um cache só mexe no prompt."
+        "text": "Quantos tokens o modelo escreveu",
+        "why": "A escrita não é tocada."
       },
       {
-        "text": "Quanto cada token custou",
-        "why": "Certo: a maioria foi lida por um décimo do preço."
+        "text": "Que respostas o modelo deu",
+        "why": "É isso que a próxima seção confere."
       },
       {
-        "text": "As respostas, que ficaram mais curtas e por isso mais baratas",
-        "why": "As respostas foram idênticas, mensagem por mensagem."
+        "text": "O tempo de ler cada token",
+        "why": "Certo: os mesmos tokens, lidos uma vez."
       }
     ]
   },
   "ex-krwfsczn": {
-    "prompt": "Com os preços do laboratório, quanto custa gravar um bloco de 32 tokens no cache, em milionésimos de centavo?",
-    "hint": "32 × 375."
+    "prompt": "A primeira chamada leu 287 tokens em 5009 ms; uma chamada com cache leu mais ou menos o mesmo em 750. Quantos milissegundos de leitura o cache poupou por chamada, aproximadamente?",
+    "hint": "Subtraia."
   },
   "ex-4t7e9jyw": {
-    "prompt": "Com os preços do laboratório, a partir de qual uso um bloco em cache passa a custar menos que lê-lo comum toda vez?",
-    "hint": "Gravado uma vez a 375, depois lido a 30; comum é 300 cada vez.",
+    "prompt": "Onde um provedor cobra a mais para escrever um prefixo no cache, quando o cache custa mais que não usar cache?",
+    "hint": "Quantas vezes ele é lido de volta?",
     "choices": [
       {
-        "text": "Desde o primeiro",
-        "why": "Uma vez: 375 contra 300. Um prefixo usado uma vez custa mais com cache."
+        "text": "Quando a temperatura está acima de 0",
+        "why": "O sorteio não mexe no prompt."
       },
       {
-        "text": "A partir do segundo",
-        "why": "Certo: 375 + 30 = 405 contra 600."
+        "text": "Quando nada guardado é usado de novo",
+        "why": "Certo: escrito, nunca lido."
       },
       {
-        "text": "A partir do décimo, porque uma leitura custa um décimo da entrada comum",
-        "why": "O décimo é o preço da leitura, não o ponto de equilíbrio."
+        "text": "Quando o prompt é mais longo que a resposta",
+        "why": "É quando o cache mais compensa."
       },
       {
-        "text": "Nunca, porque a gravação sempre custa mais do que economiza",
-        "why": "A execução com o guia primeiro economizou 43%."
+        "text": "Quando o cache é lido mais de duas vezes",
+        "why": "Leituras repetidas são onde ele poupa."
       }
     ]
   },
   "ex-kq22txyn": {
-    "prompt": "O `v17-message-first` custou mais com o cache do que as mesmas chamadas sem ele. Por quê?",
-    "hint": "O que aconteceu com os 9312 tokens no cache?",
+    "prompt": "As execuções com a mensagem primeiro levaram 286,0 segundos contra 152,7. Em que foi gasto o tempo a mais?",
+    "hint": "Metade de cada chamada.",
     "choices": [
       {
-        "text": "As respostas dele eram mais longas",
-        "why": "A saída foi 1521 tokens contra 1536; mais curta, não mais longa."
+        "text": "Carregando o modelo em toda chamada",
+        "why": "O modelo ficou carregado."
       },
       {
-        "text": "O cache cobra uma taxa por chamada além dos preços por token",
-        "why": "Não há taxa por chamada no `prices.json`."
+        "text": "Mandando o prompt pela rede",
+        "why": "O Ollama está na mesma máquina."
       },
       {
-        "text": "Ler do cache custa mais que a entrada comum",
-        "why": "Uma leitura custa um décimo da entrada comum, e ele nem leu nada."
+        "text": "Relendo o guia",
+        "why": "Certo: fora do alcance do cache."
       },
       {
-        "text": "Nada gravado foi lido",
-        "why": "Certo: 9312 × 75 milionésimos de centavo por nada."
+        "text": "Escrevendo respostas mais longas",
+        "why": "As respostas tinham quase o mesmo tamanho."
       }
     ]
   },
   "ex-e51n5z5m": {
-    "prompt": "Um time põe a data no topo de um prompt com cache: *Today is 14 August.* O que acontece com o cache?",
-    "hint": "Quando a data muda?",
+    "prompt": "Uma equipe põe a data no topo de um prompt com cache: *Today is 14 August.* O que acontece com o cache?",
+    "hint": "O que vem depois da mudança?",
     "choices": [
       {
-        "text": "Nada, porque a data é curta",
-        "why": "Tamanho não importa; posição importa."
+        "text": "Tudo depois da data vira novo",
+        "why": "Certo: ponha-a no fim."
       },
       {
-        "text": "Todo bloco depois da data é novo a cada dia, e o guia é gravado de novo todo dia",
-        "why": "Certo. Ponha a data no fim, com a mensagem."
+        "text": "Nada, já que uma data é curta",
+        "why": "O tamanho não importa; a posição sim."
       },
       {
-        "text": "Só o bloco da data é regravado a cada dia; o guia depois dele continua sendo lido",
-        "why": "Um bloco só bate se tudo antes dele bater."
+        "text": "O cache guarda a data e a pula",
+        "why": "Um começo diferente encerra a correspondência."
       },
       {
-        "text": "O cache recusa prompts com datas",
-        "why": "Ele não recusa nada; só para de casar."
+        "text": "O modelo ignora a data",
+        "why": "Ele a lê; o cache é que não passa dela."
       }
     ]
   },
   "ex-sdxsejf2": {
-    "prompt": "O `pl compare` do `v8-guide` contra o `v17-static-first` imprimiu `fixed 0, broken 0`. O que isso estabelece?",
-    "hint": "Mesmo template, cache desligado e ligado.",
+    "prompt": "A aula 8 viu que, com temperatura 0, uma resposta lida do zero e uma lida do cache diferiram. O que isso quer dizer aqui?",
+    "hint": "A mesma aritmética, outro caminho.",
     "choices": [
       {
-        "text": "O cache melhorou o prompt",
-        "why": "Nada foi corrigido."
+        "text": "O cache guarda respostas erradas",
+        "why": "Ele não guarda resposta nenhuma."
       },
       {
-        "text": "Ligar o cache não mudou o resultado de nenhuma mensagem",
-        "why": "Certo: custo e tempo mudaram, as respostas não."
+        "text": "A temperatura 0 é ignorada com o cache ligado",
+        "why": "É aplicada; o caminho é que difere."
       },
       {
-        "text": "Os dois prompts usam modelos diferentes",
-        "why": "Mesmo modelo, mesmo template."
+        "text": "O cache precisa ser desligado para classificação",
+        "why": "A aula diz para medir, não para desligar."
       },
       {
-        "text": "O cache está quebrado e não rodou em nenhuma das quarenta chamadas",
-        "why": "Ele leu 8736 tokens; rodou."
+        "text": "Dois valores quase iguais trocam por outro caminho",
+        "why": "Certo: meça, não presuma."
       }
     ]
   },
   "ex-mc6bpdxm": {
-    "prompt": "Um exemplo novo é inserido perto do topo de um guia com cache. Por que blocos cujo texto não mudou deixam de ser lidos?",
-    "hint": "Os blocos são cortados por posição, a partir do começo.",
+    "prompt": "Um exemplo novo é inserido perto do topo de um guia com cache. Por que o texto depois dele é lido de novo, se não mudou?",
+    "hint": "Onde a correspondência termina?",
     "choices": [
       {
-        "text": "Ele desloca todos os tokens seguintes, e cada bloco depois dele passa a ter outros tokens",
-        "why": "Certo, e a chave de cada bloco cobre também todos os anteriores."
+        "text": "O modelo relê tudo o que vem depois de um exemplo",
+        "why": "É o cache, não o modelo."
       },
       {
-        "text": "O cache é apagado a cada commit",
-        "why": "O cache não sabe nada de commits."
+        "text": "Ela acaba no primeiro token diferente",
+        "why": "Certo: tudo depois dele é novo."
       },
       {
         "text": "Exemplos nunca vão para o cache",
-        "why": "Exemplos fixos são justamente para o que serve um cache."
+        "why": "Vão como qualquer outra coisa."
       },
       {
-        "text": "O prompt ficou longo demais",
-        "why": "O tamanho não é o problema; o deslocamento é."
+        "text": "O cache só guarda a última linha",
+        "why": "Guarda prompts inteiros."
       }
     ]
   },
   "ex-5vxbzn4a": {
-    "prompt": "Levar a mensagem para a frente mudou quais respostas passavam (5 corrigidas, 3 quebradas). O que a captura diz que causou isso?",
-    "hint": "As quarenta categorias concordam, e toda diferença está em `json`.",
+    "prompt": "Pôr a mensagem primeiro quebrou cinco mensagens e não consertou nenhuma, p = 0.062. O que a aula conclui?",
+    "hint": "Dois custos.",
     "choices": [
       {
-        "text": "O cache devolveu respostas velhas",
-        "why": "Um cache não guarda respostas, e com e sem cache tudo bateu."
+        "text": "Nenhuma diferença, já que p está acima de 0,05",
+        "why": "Parou pouco antes de chamar de acaso; não foi melhor."
       },
       {
-        "text": "A reordenação mudou o texto, e os hábitos de formatação do substituto caíram em outras mensagens",
-        "why": "Certo: mesma taxa, outras mensagens. Reordenar é mudar o prompt."
+        "text": "Prompts com a mensagem primeiro são sempre piores",
+        "why": "Este conjunto, este modelo."
       },
       {
-        "text": "O modelo entendeu mal o guia quando ele veio em segundo",
-        "why": "Toda categoria e urgência bateu; só o embrulho mudou."
+        "text": "É um prompt novo, a testar pela trava",
+        "why": "Certo: mais lento e pior aqui, e passa pela trava."
       },
       {
-        "text": "O teste do sinal provou que a ordem com a mensagem primeiro é melhor",
-        "why": "Com 0.727 ele não provou nada."
+        "text": "O cache causou as cinco quebras",
+        "why": "Reordenar mudou o texto que o modelo leu."
       }
     ]
   },
   "ex-va3kg95m": {
-    "prompt": "Ordene as partes de um prompt de triagem com cache, da primeira à última.",
-    "hint": "Fixo primeiro, variável por último.",
+    "prompt": "Ponha as partes de um prompt de triagem com cache em ordem, da primeira à última.",
+    "hint": "O fixo primeiro.",
     "items": [
-      "As instruções e o guia das categorias",
-      "Os exemplos fixos",
-      "A data de hoje",
+      "O papel e a tarefa",
+      "O guia das categorias",
+      "Os exemplos",
       "A mensagem do cliente"
     ]
   },
   "ex-mkv18sv2": {
-    "prompt": "Associe cada execução ao que o cache fez nela.",
-    "hint": "Leia as linhas `cache_read` e `cache_write`.",
+    "prompt": "Ligue cada execução ao que o cache fez nela.",
+    "hint": "Uma para cada.",
     "pairs": [
       {
-        "left": "`v17-static-first`",
-        "right": "Leu 8736, gravou 576"
+        "left": "Guia primeiro, primeira chamada",
+        "right": "Leu o prompt inteiro, 5009 ms"
       },
       {
-        "left": "`v17-message-first`",
-        "right": "Não leu nada, gravou 9312"
+        "left": "Guia primeiro, chamadas seguintes",
+        "right": "Leu só a mensagem, em menos de um segundo"
       },
       {
-        "left": "`v1-bare` com o cache ligado",
-        "right": "Nada: abaixo do mínimo"
+        "left": "Mensagem primeiro, da primeira vez",
+        "right": "Leu tudo, em toda chamada"
       },
       {
-        "left": "`v8-guide`",
-        "right": "Cache desligado: os 10139 tokens como entrada comum"
+        "left": "Mensagem primeiro, as mesmas cinco de novo",
+        "right": "Achou os prompts inteiros guardados"
       }
     ],
     "right_distractors": [
-      "Leu tudo, não gravou nada"
+      "Guardou as respostas"
     ]
   },
   "ex-ft1cxasx": {
-    "prompt": "Um colega liga o cache e leva os exemplos para o fim do prompt no mesmo commit. A conta cai e a nota cai dois pontos. O que deve acontecer em seguida?",
-    "hint": "Duas mudanças, uma delas no texto.",
+    "prompt": "Um colega move os exemplos para o fim do prompt por causa do cache, e a nota cai dois. O que você pede?",
+    "hint": "Uma mudança, dois efeitos.",
     "choices": [
       {
-        "text": "Manter: cache nunca muda respostas, então os dois pontos só podem ser ruído dos hábitos do substituto",
-        "why": "Mover os exemplos mudou o texto, e isso pode mudar respostas."
+        "text": "Cada mudança rodada sozinha, pela trava",
+        "why": "Certo: a ordem é uma mudança no texto."
       },
       {
-        "text": "Desligar o cache de novo",
-        "why": "O cache é a parte com menos chance de ter mexido na nota."
+        "text": "Nada: o cache nunca muda respostas",
+        "why": "A ordem mudou o texto."
       },
       {
-        "text": "Separar: o cache sozinho, depois a reordenação pela barreira, com as mensagens quebradas nomeadas",
-        "why": "Certo: um cache só deve mudar o custo; reordenar é mudar o prompt."
+        "text": "Uma temperatura mais alta para recuperar os dois",
+        "why": "Isso acrescenta variação."
       },
       {
-        "text": "Levar a mensagem para o topo também",
-        "why": "Isso custaria ao cache tudo o que vem depois."
+        "text": "Desligar o cache para restaurar a nota",
+        "why": "O cache não mexeu na nota; a ordem sim."
       }
     ]
   }

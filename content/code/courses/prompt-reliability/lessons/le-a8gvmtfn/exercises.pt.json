@@ -1,375 +1,373 @@
 {
   "ex-qbmjg35j": {
-    "prompt": "De onde vem a latência que o `pl latency` informa, neste laboratório?",
-    "hint": "Leia `LATENCY` no `model.py`.",
+    "prompt": "De onde vêm os segundos que o `stats.py` relata?",
+    "hint": "Não de uma fórmula.",
     "choices": [
       {
-        "text": "Um cronômetro em volta de cada chamada ao substituto, medido na sua máquina",
-        "why": "Ela não é medida: duas execuções imprimem os mesmos números."
+        "text": "Da tabela de preços do Ollama, convertida em tempo",
+        "why": "O Ollama não tem tabela de preços."
       },
       {
-        "text": "A tabela de latência publicada pelo provedor do modelo",
-        "why": "Nenhum provedor está envolvido; os números são do curso."
+        "text": "Do número de tokens multiplicado por uma constante",
+        "why": "Tokens e segundos são registrados à parte."
       },
       {
-        "text": "Aritmética sobre números declarados",
-        "why": "Certo: por chamada, por token de entrada, por token de saída, mais variação."
+        "text": "Do relógio em volta de cada chamada",
+        "why": "Certo: o `call()` os registra."
       },
       {
-        "text": "O tamanho do arquivo do prompt em bytes, lido do disco",
-        "why": "Bytes no disco não entram; tokens entram."
+        "text": "De uma tabela de latências declaradas no harness",
+        "why": "Nada é declarado; eles são medidos."
       }
     ]
   },
   "ex-9z8eqyr4": {
-    "prompt": "Usando `LATENCY` e os tokens por chamada do `v3-examples` (238,5 de entrada, 37,4 de saída), qual a latência de uma chamada média antes da variação, em milissegundos?",
-    "hint": "300 + 0,4 × entrada + 20 × saída.",
-    "unit": "ms"
+    "prompt": "A chamada mediana do `v1-bare` levou 12,4 segundos e a do `v2-json` 4,0. Quantas vezes mais longa ela é? Uma casa decimal.",
+    "hint": "Divida."
   },
   "ex-6ykxz3z9": {
-    "prompt": "O `v3-examples` envia o triplo da entrada do `v2-json`, e mesmo assim o p95 dele é menor. Por quê?",
-    "hint": "Compare as colunas de saída.",
+    "prompt": "O `v3-examples` manda mais que o dobro da entrada do `v2-json`, e a mediana dele é só um décimo de segundo mais lenta. Por quê?",
+    "hint": "Ler contra escrever.",
     "choices": [
       {
-        "text": "Os exemplos ficam em cache entre as chamadas, então depois da primeira o substituto os lê de graça",
-        "why": "Nenhum dos dois prompts liga o cache."
+        "text": "Ler é uma passada; as saídas tinham o mesmo tamanho",
+        "why": "Certo: 30,6 contra 30,8 tokens escritos."
       },
       {
-        "text": "Ele escreve menos tokens de saída, e cada um custa cinquenta vezes um de entrada",
-        "why": "Certo: 37,4 contra 39,9 por chamada, e resposta mais longa de 46 contra 50."
+        "text": "O Ollama pula os exemplos quando lê o prompt",
+        "why": "Ele lê todo token."
       },
       {
-        "text": "Tokens de entrada não custam nada no substituto",
-        "why": "Custam 0,4 ms cada: 64 ms a mais para a v3."
+        "text": "Os exemplos ficam guardados no disco entre execuções",
+        "why": "A aula 17 mede o que um cache guarda; não é o disco."
       },
       {
-        "text": "A variação",
-        "why": "A variação é de no máximo 150 ms e não explica uma forma consistente."
+        "text": "Prompts mais longos fazem o modelo escrever mais rápido",
+        "why": "A velocidade de escrita por token não sobe."
       }
     ]
   },
   "ex-kqytxmec": {
-    "prompt": "O `pl latency` imprimiu `p95 1341 ms` para quarenta chamadas. O que isso diz?",
-    "hint": "O percentil pega uma posição na lista ordenada.",
+    "prompt": "O `stats.py` imprimiu `p95 5.0` para quarenta chamadas. O que isso diz?",
+    "hint": "Uma em vinte.",
     "choices": [
       {
-        "text": "A média das quarenta chamadas, somadas e divididas, foi 1341 ms",
-        "why": "Isso seria uma média; o `pl latency` não imprime nenhuma."
+        "text": "A chamada média levou 5,0 segundos para terminar",
+        "why": "Isso seria uma média, que ele não imprime."
       },
       {
-        "text": "95 das quarenta chamadas levaram 1341 ms",
-        "why": "Só houve quarenta chamadas; 95 é uma porcentagem."
+        "text": "A mais lenta das quarenta chamadas levou 5,0 segundos",
+        "why": "Isso é o máximo."
       },
       {
-        "text": "Só duas das quarenta chamadas foram mais lentas que 1341 ms",
-        "why": "Certo: a 38ª de quarenta, em ordem."
+        "text": "95% do tempo foi gasto escrevendo",
+        "why": "É um percentil de chamadas, não uma fatia do tempo."
       },
       {
-        "text": "A mais lenta de todas as quarenta chamadas da execução levou 1341 ms",
-        "why": "A mais lenta é o `max`, 1371 ms."
+        "text": "95 em 100 chamadas levaram até 5,0 s",
+        "why": "Certo: em quarenta, duas foram mais lentas."
       }
     ]
   },
   "ex-bpm5xvp6": {
-    "prompt": "O `pl cost` informa 5.1072 centavos para quarenta chamadas do `v3-examples`. Quanto custa uma chamada, em centavos?",
-    "hint": "Divida por quarenta.",
-    "unit": "centavos"
+    "prompt": "O `cost.py` relata 4,8168 centavos para quarenta chamadas do `v3-examples`. Quanto custa uma chamada, em centavos? Cinco casas decimais.",
+    "hint": "Divida por quarenta."
   },
   "ex-cwxn96d5": {
-    "prompt": "Com os preços do laboratório (300 centavos o milhão de tokens de entrada, 1500 o milhão de saída), quanto custam 1000 chamadas que leem 200 tokens e escrevem 40 cada, em centavos?",
-    "hint": "Por chamada: 200 × 300 + 40 × 1500 milionésimos de centavo.",
-    "unit": "centavos"
+    "prompt": "Com os preços do curso (300 centavos por milhão de tokens de entrada, 1500 por milhão de saída), quanto custam 1000 chamadas se cada uma lê 200 tokens e escreve 40? Em centavos.",
+    "hint": "Multiplique inteiros, divida uma vez."
   },
   "ex-7yeafp89": {
-    "prompt": "Por que a bancada multiplica inteiros e só arredonda uma vez, no final?",
+    "prompt": "Por que o `cost.py` multiplica inteiros e arredonda só uma vez, no fim?",
     "hint": "`0.1 + 0.2`.",
     "choices": [
       {
-        "text": "Inteiros são mais rápidos de multiplicar que floats",
-        "why": "Velocidade não é o motivo dado."
+        "text": "Arredondar duas vezes daria um número negativo",
+        "why": "Daria um número um pouco errado."
       },
       {
-        "text": "Um float não guarda a maioria das frações decimais com exatidão, então as somas desviam, e uma fatura não pode",
-        "why": "Certo. Tokens inteiros vezes preços inteiros é exato; um arredondamento declarado no final."
+        "text": "Floats binários não guardam a maioria das frações decimais",
+        "why": "Certo: somas deles derivam."
       },
       {
-        "text": "O Python não tem números de ponto flutuante",
-        "why": "Tem: `0.1 + 0.2` é um."
+        "text": "Inteiros são mais rápidos de multiplicar",
+        "why": "A velocidade não é o motivo."
       },
       {
-        "text": "Os provedores proíbem frações de centavo",
-        "why": "Preços por token são frações de centavo; por isso a unidade é o milionésimo."
+        "text": "Preços só são publicados como números inteiros",
+        "why": "Aqui são centavos inteiros por milhão; não é esse o motivo."
       }
     ]
   },
   "ex-kcyn7zsw": {
-    "prompt": "A saída foi menos de 14% dos tokens da execução do `v3-examples`. Por que foi 44% do custo?",
-    "hint": "Leia o `prices.json`.",
+    "prompt": "A saída foi 11% dos tokens da execução do `v3-examples`. Por que foi 38% do custo?",
+    "hint": "Os dois preços.",
     "choices": [
       {
-        "text": "Tokens de saída são palavras mais longas que os de entrada, e o substituto conta cada um duas vezes",
-        "why": "Um token é um token; a contagem não dobra."
+        "text": "O Ollama cobra pela saída e não pela entrada",
+        "why": "O Ollama não cobra nada; estes são os preços do curso."
       },
       {
-        "text": "A bancada arredonda o custo de saída para cima e o de entrada para baixo",
-        "why": "Ela arredonda uma vez, no final, sobre o total."
+        "text": "O custo inclui os segundos de cada chamada",
+        "why": "O `cost.py` só lê tokens."
       },
       {
-        "text": "Cada um custa cinco vezes mais",
-        "why": "Certo: 1500 centavos o milhão contra 300."
+        "text": "Cada token de saída custa cinco vezes mais",
+        "why": "Certo: 1500 contra 300."
       },
       {
-        "text": "O cache estava gravando a cada chamada",
-        "why": "O cache estava desligado: `cache_write` é 0."
+        "text": "Um token de saída é mais longo que um de entrada",
+        "why": "Um token é um token; o preço é que difere."
       }
     ]
   },
   "ex-db7gmse4": {
-    "prompt": "Tokens são inteiros e preços são centavos inteiros por milhão, então tokens vezes preço é uma contagem exata de ___ de centavo.",
-    "hint": "Um centavo dividido em um milhão.",
+    "prompt": "Os preços do `prices.json` são centavos inteiros por ___ de tokens, então tokens vezes preço é um número inteiro.",
+    "hint": "Leia a nota do arquivo.",
     "blanks": [
       {
         "accept": [
-          "milionésimos"
+          "milhão",
+          "1000000",
+          "1.000.000",
+          "um milhão"
         ]
       }
     ]
   },
   "ex-cftkz9zw": {
-    "prompt": "`--set max_tokens=30` no `v3-examples` baixou o p95 de 1341 ms para 1138. O que aconteceu com a nota, e por quê?",
-    "hint": "Veja o `stop:` em `t01`.",
+    "prompt": "O `--set num_predict=20` no `v3-examples` baixou o p95 de 5,0 segundos para 3,1. O que aconteceu com as respostas, e por quê?",
+    "hint": "Que tamanho tinha uma boa resposta?",
     "choices": [
       {
-        "text": "Ficou igual, porque o modelo escreveu respostas mais curtas para caber",
-        "why": "Um limite não faz o modelo escrever menos; ele o interrompe."
+        "text": "As quarenta foram cortadas no meio",
+        "why": "Certo: um teto não é um jeito de pedir menos."
       },
       {
-        "text": "Caiu para 1 de 40: as respostas foram cortadas no meio e deixaram de ser JSON",
-        "why": "Certo. `stop: max_tokens` diz que foi o limite, e não o modelo, que encerrou a resposta."
+        "text": "Ficaram mais curtas e continuaram válidas",
+        "why": "Pararam no meio de uma string."
       },
       {
-        "text": "Subiu, porque mais curto é melhor",
-        "why": "Caiu de 36 para 1."
+        "text": "Só as erradas foram cortadas",
+        "why": "O teto corta qualquer resposta com mais de vinte tokens."
       },
       {
-        "text": "Caiu um pouco, e só nas mensagens longas cujo resumo passou do limite de tokens",
-        "why": "Caiu em 35 das 36 que passavam."
+        "text": "O modelo as reescreveu para caber em vinte tokens",
+        "why": "Ele não sabe que o teto existe."
       }
     ]
   },
   "ex-0sw1mrsf": {
-    "prompt": "A resposta boa mais longa do `v3-examples` tinha 46 tokens. Onde o limite de saída dele deve ficar?",
-    "hint": "Um limite é um teto, não uma meta.",
+    "prompt": "A resposta boa mais longa do `v3-examples` tinha 38 tokens. Onde deve ficar o teto de saída dele?",
+    "hint": "Um teto para a que dispara.",
     "choices": [
       {
-        "text": "Em 30, para forçar toda resposta a ser mais curta e mais barata",
-        "why": "Isso cortou toda resposta no meio."
+        "text": "Em 20, para economizar em toda resposta",
+        "why": "Isso cortou as quarenta."
       },
       {
-        "text": "Exatamente em 46, no token",
-        "why": "Não deixa espaço para uma resposta boa um pouco mais longa que as já vistas."
+        "text": "Exatamente em 30,6, a média de saída",
+        "why": "Metade das respostas é maior que a média."
       },
       {
-        "text": "Acima de 46, para parar só as que disparam",
-        "why": "Certo: ele só economiza nas respostas que já iam mal."
+        "text": "Não deve haver teto nenhum",
+        "why": "Uma resposta que dispara custa tempo e dinheiro."
       },
       {
-        "text": "Em lugar nenhum: limites nunca economizam nada",
-        "why": "Eles economizam nas respostas que disparam."
+        "text": "Em algum ponto acima de 38 tokens",
+        "why": "Certo: um teto para a resposta que dispara."
       }
     ]
   },
   "ex-34rkgx0d": {
-    "prompt": "Quais destes são jeitos que a aula dá para baratear as chamadas? Marque todos que se aplicam.",
-    "hint": "Menos tokens, tokens mais baratos, ou esperar.",
+    "prompt": "Quais destes são jeitos que a aula dá de deixar chamadas mais baratas? Marque todos os que se aplicam.",
+    "hint": "Quatro alavancas.",
     "choices": [
       {
-        "text": "Menos exemplos no prompt",
-        "why": "Sim: menos tokens de entrada em toda chamada."
+        "text": "Mandar menos tokens",
+        "why": "Sim."
       },
       {
-        "text": "Pedir um resumo mais curto",
-        "why": "Sim: menos tokens de saída, os mais caros."
+        "text": "Fazer escrever menos",
+        "why": "Sim."
       },
       {
-        "text": "Mandar o que pode esperar por uma interface de lotes",
-        "why": "Sim, onde o provedor vende uma."
+        "text": "Pagar menos por chamada esperando, num lote",
+        "why": "Sim."
       },
       {
-        "text": "Arredondar o custo de cada chamada para baixo, no centavo",
-        "why": "Isso muda o relatório, não a conta, e quebra a aritmética."
+        "text": "Subir a temperatura",
+        "why": "Isso muda o que é escrito, não o preço."
       }
     ]
   },
   "ex-bphmx6pa": {
-    "prompt": "Por que a aula não dá números para rotear mensagens fáceis para um modelo mais barato?",
-    "hint": "Entre o que haveria para rotear?",
+    "prompt": "A aula 1 viu o `llama3.2:1b` aprovar 9 de 40 onde o `llama3.2:3b` aprovou 28. Do que uma rota que mandasse as mensagens fáceis para o modelo pequeno precisaria antes de ser publicada?",
+    "hint": "É uma versão.",
     "choices": [
       {
-        "text": "O substituto do laboratório é um modelo só, com um preço só, então qualquer número seria inventado",
-        "why": "Certo. O método vale: rotear e comparar nos mesmos conjuntos de teste."
+        "text": "Uma temperatura mais alta para o modelo pequeno",
+        "why": "Não é isso que decide uma rota."
       },
       {
-        "text": "Roteamento nunca economiza",
-        "why": "Economiza onde um modelo mais barato basta para algumas mensagens."
+        "text": "Uma execução da rota inteira, comparada mensagem a mensagem",
+        "why": "Certo: como qualquer outra mudança."
       },
       {
-        "text": "Os provedores proíbem",
-        "why": "Nada proíbe mandar mensagens diferentes para modelos diferentes."
+        "text": "Nada, já que mensagens fáceis não dão errado",
+        "why": "Quais mensagens são fáceis é justamente a regra testada."
       },
       {
-        "text": "Roteamento não pode ser testado",
-        "why": "Ele é testado como qualquer versão: rode o pipeline sobre os conjuntos."
+        "text": "Um conjunto de teste maior feito com as respostas do modelo pequeno",
+        "why": "Rótulos vêm de pessoas."
       }
     ]
   },
   "ex-qfrz5gqa": {
-    "prompt": "Que trabalho combina com a interface de lotes de um provedor?",
-    "hint": "Os resultados voltam depois.",
+    "prompt": "Que trabalho combina com a interface de lote de um provedor?",
+    "hint": "Ninguém esperando.",
     "choices": [
       {
-        "text": "Classificar a mensagem de um cliente enquanto ele espera na página de atendimento",
-        "why": "Alguém está esperando; um lote devolve os resultados depois."
-      },
-      {
-        "text": "Reclassificar o arquivo do ano passado",
-        "why": "Certo: ninguém está olhando, então depois serve."
-      },
-      {
-        "text": "Uma resposta de chat que o cliente espera em poucos segundos",
+        "text": "Responder a um cliente num chat ao vivo",
         "why": "Um lote pode levar horas."
       },
       {
-        "text": "Qualquer chamada que falhou uma vez e precisa ser repetida rápido",
-        "why": "Rápido é justamente o que um lote não promete."
+        "text": "Conferir uma troca de senha antes de enviá-la",
+        "why": "Alguém está esperando."
+      },
+      {
+        "text": "Reclassificar o arquivo do ano passado durante a noite",
+        "why": "Certo."
+      },
+      {
+        "text": "Classificar a mensagem que um cliente acabou de mandar",
+        "why": "Alguém está esperando por essa."
       }
     ]
   },
   "ex-r906781b": {
-    "prompt": "Tirar os exemplos deu `fixed 1, broken 3` e um teste do sinal de 0.625. O que esse valor p diz?",
-    "hint": "Quatro mensagens mudaram.",
+    "prompt": "Tirar os exemplos quebrou nove mensagens e consertou uma, p = 0.021. O que esse p diz?",
+    "hint": "Quão desequilibrado?",
     "choices": [
       {
-        "text": "Quarenta mensagens são poucas para distinguir os dois prompts pela contagem; não diz que são iguais",
-        "why": "Certo: nem quatro de quatro passariam de 0.125."
+        "text": "Uma divisão tão desequilibrada é improvável por acaso",
+        "why": "Certo: os exemplos estavam fazendo alguma coisa."
       },
       {
-        "text": "Os prompts são igualmente bons",
-        "why": "Ausência de evidência de diferença não é evidência de ausência."
+        "text": "Que o prompt mais barato é 2,1% pior",
+        "why": "p não é um tamanho de efeito."
       },
       {
-        "text": "O prompt mais barato é melhor",
-        "why": "Ele passou em menos."
+        "text": "Que não há diferença entre os prompts",
+        "why": "Isso seria um p grande."
       },
       {
-        "text": "A execução deve ser repetida até p cair abaixo de 0.05",
-        "why": "Com temperatura 0 o substituto dá as mesmas respostas toda vez."
+        "text": "Que os exemplos custam 2,1% dos tokens",
+        "why": "p não diz nada sobre tokens."
       }
     ]
   },
   "ex-xakkrbyp": {
-    "prompt": "Por que a aula prefere o p95 à média para julgar latência?",
-    "hint": "Quem percebe uma chamada lenta?",
+    "prompt": "Por que a aula prefere o p95 à média para julgar a latência?",
+    "hint": "Quem sente?",
     "choices": [
       {
-        "text": "A média é mais difícil de calcular quando as chamadas vêm de muitas máquinas diferentes",
-        "why": "É mais fácil, e esse não é o motivo."
+        "text": "A média não pode ser calculada em quarenta chamadas",
+        "why": "Pode; ela esconde a cauda."
       },
       {
-        "text": "O p95 é sempre o número maior, então é o mais seguro para citar em qualquer relatório",
-        "why": "A questão é o que o leitor vive, não qual número é maior."
+        "text": "O p95 é sempre menor que a média",
+        "why": "Costuma ser maior."
       },
       {
-        "text": "Quem espera sente as chamadas lentas, e a média as dilui",
-        "why": "Certo: a média pode cair enquanto as lentas ficam mais lentas."
+        "text": "O Ollama só relata percentis",
+        "why": "O `stats.py` os calcula a partir do arquivo de execução."
       },
       {
-        "text": "O substituto não tem média",
-        "why": "O `pl latency` só não imprime uma."
+        "text": "Quem espera sente as chamadas lentas",
+        "why": "Certo: a média pode cair enquanto a cauda sobe."
       }
     ]
   },
   "ex-7mdf2k3n": {
-    "prompt": "Pelas duas linhas do `pl cost`, quantos centavos por milhão de chamadas a retirada dos exemplos economizou (127.680 contra 85.043)?",
-    "hint": "Subtraia.",
-    "unit": "centavos"
+    "prompt": "Pelas duas linhas do `cost.py`, quantos centavos por milhão de chamadas tirar os exemplos economizou (120.420 contra 79.582,5)?",
+    "hint": "Subtraia."
   },
   "ex-dt7pt9q0": {
-    "prompt": "Três respostas do prompt mais barato não eram JSON. Por que a aula pesa isso mais que uma urgência errada?",
-    "hint": "O que o programa de roteamento faz com cada uma?",
+    "prompt": "Tirar os exemplos manteve o formato em 39 de 40 e levou as urgências de 28 para 20. O que os exemplos estavam pagando?",
+    "hint": "Que verificações se mexeram?",
     "choices": [
       {
-        "text": "Porque uma falha de JSON custa ao provedor mais tokens para produzir que um rótulo errado comum",
-        "why": "O custo está no que vem depois, não nos tokens."
+        "text": "Nada, já que os totais estão dentro do ruído",
+        "why": "p = 0.021 diz o contrário."
       },
       {
-        "text": "Porque o teste do sinal as conta duas vezes",
-        "why": "Cada mensagem conta uma vez."
+        "text": "Julgamento, não formato",
+        "why": "Certo: as categorias e as urgências caíram."
       },
       {
-        "text": "Porque são mais lentas de gerar que as respostas em JSON",
-        "why": "Velocidade não é o problema delas."
+        "text": "Formato, já que o JSON quebrou sem eles",
+        "why": "O formato ficou em 39 de 40."
       },
       {
-        "text": "Não encaminha nada",
-        "why": "Certo: uma urgência errada ainda encaminha; uma resposta ilegível pede nova tentativa ou uma pessoa."
+        "text": "Velocidade, já que o prompt ficou mais lento",
+        "why": "Ficou mais rápido."
       }
     ]
   },
   "ex-wg74h6m9": {
-    "prompt": "Ponha em sequência a ordem da aula para cortar custo, do primeiro passo ao último.",
-    "hint": "Economias de graça primeiro, trocas por último.",
+    "prompt": "Ponha em sequência a ordem da aula para cortar custo, o primeiro passo primeiro.",
+    "hint": "Os cortes de graça primeiro.",
     "items": [
       "Tirar o que não rende nada",
       "Encurtar a saída",
-      "Trocar respostas por dinheiro, com as mensagens quebradas nomeadas",
-      "Registrar a decisão por escrito"
+      "Trocar respostas por dinheiro, por escrito"
     ]
   },
   "ex-3wr1f86h": {
-    "prompt": "Associe cada mudança ao que o laboratório mostrou que ela fez.",
-    "hint": "Um efeito cada.",
+    "prompt": "Ligue cada mudança ao que o laboratório mostrou que ela fez.",
+    "hint": "Uma para cada.",
     "pairs": [
       {
-        "left": "Tirar os três exemplos",
-        "right": "Um terço mais barato, três respostas fora de JSON"
+        "left": "Acrescentar três exemplos ao `v2-json`",
+        "right": "O dobro da entrada, a mesma mediana"
       },
       {
-        "left": "`max_tokens` em 30",
-        "right": "Mais rápido, e 1 de 40 passando"
+        "left": "As respostas longas do prompt seco",
+        "right": "Três vezes a mediana"
       },
       {
-        "left": "O triplo de entrada, um pouco menos de saída",
-        "right": "Mediana 44 ms maior e p95 menor"
+        "left": "Um teto de 20 tokens",
+        "right": "As quarenta cortadas"
       },
       {
-        "left": "Inteiros em vez de floats para dinheiro",
-        "right": "Um total exato, arredondado uma vez"
+        "left": "Tirar os exemplos",
+        "right": "Um terço mais barato, nove quebradas"
       }
     ],
     "right_distractors": [
-      "Um acerto de cache em toda chamada"
+      "Toda resposta válida e mais rápida"
     ]
   },
   "ex-f3sga4pm": {
-    "prompt": "Uma colega corta o resumo pela metade e informa que a latência média caiu 8%. O que você pediria antes de aceitar?",
-    "hint": "Uma economia é uma mudança; latência se sente na cauda.",
+    "prompt": "Um colega corta pela metade o tamanho do resumo e relata que a latência média caiu 8%. O que você pediria antes de aceitar?",
+    "hint": "A cauda e as respostas.",
     "choices": [
       {
-        "text": "Nada: saída mais curta é sempre melhor",
-        "why": "Ela pode quebrar respostas, e a média pode esconder a cauda."
+        "text": "Uma execução com temperatura mais alta",
+        "why": "Isso mede outra coisa."
       },
       {
-        "text": "A comparação em cada conjunto de teste, com as mensagens quebradas, e o p95",
-        "why": "Certo: nota igual, tokens a menos, e as chamadas lentas não mais lentas."
+        "text": "A tabela de preços do modelo",
+        "why": "O preço não diz o que quebrou."
       },
       {
-        "text": "Uma nova execução com temperatura maior, para ver se a latência ainda cai o mesmo tanto",
-        "why": "Temperatura é outra mudança e não diz nada sobre esta."
+        "text": "O p95, e as mensagens que a mudança quebrou",
+        "why": "Certo: uma economia diz o que custou."
       },
       {
-        "text": "A tabela de preços do provedor",
-        "why": "Os preços não mudaram; a pergunta é o que a mudança fez."
+        "text": "Nada: 8% é uma melhora clara",
+        "why": "Uma média esconde a cauda, e a nota nem foi citada."
       }
     ]
   }

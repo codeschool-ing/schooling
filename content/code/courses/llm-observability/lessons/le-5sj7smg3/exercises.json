@@ -151,13 +151,13 @@
   },
   {
     "id": "ex-8p539cez",
-    "version": 1,
+    "version": 2,
     "section": "the-gate-as-tests",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
     "prompt": "Run against 2026.09.4, how many cases did the gate say 2026.10.1 breaks?",
-    "value": 5,
+    "value": 7,
     "tolerance": 0,
     "unit": "cases"
   },
@@ -194,7 +194,7 @@
   },
   {
     "id": "ex-9kaws560",
-    "version": 1,
+    "version": 2,
     "section": "a-decision-in-a-file",
     "type": "quiz",
     "difficulty": "medium",
@@ -207,7 +207,7 @@
         "why": "Right. The budgets are relative to a broken release."
       },
       {
-        "text": "extract-1 got more expensive overnight",
+        "text": "llama3.2:3b got more expensive overnight",
         "correct": false,
         "why": "Both ran at today's price."
       },
@@ -217,9 +217,9 @@
         "why": "The set test passed."
       },
       {
-        "text": "The candidate used extract-2",
+        "text": "The candidate used llama3.2:1b",
         "correct": false,
-        "why": "It uses extract-1."
+        "why": "It uses llama3.2:3b, as production does."
       }
     ]
   },
@@ -256,18 +256,18 @@
   },
   {
     "id": "ex-embgpva9",
-    "version": 1,
+    "version": 2,
     "section": "a-decision-in-a-file",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
     "prompt": "What cost increase, as a share, did gate.json accept for 2026.10.3?",
-    "value": 1.0,
+    "value": 0.75,
     "tolerance": 0.001
   },
   {
     "id": "ex-9tryhx7f",
-    "version": 1,
+    "version": 2,
     "section": "a-decision-in-a-file",
     "type": "quiz",
     "difficulty": "hard",
@@ -275,7 +275,7 @@
     "prompt": "2026.10.5 comes next, with the same costs as 2026.10.3. Which budget is it held to?",
     "choices": [
       {
-        "text": "The 100% accepted for 2026.10.3, since the costs match",
+        "text": "The 75% accepted for 2026.10.3, since the costs match",
         "correct": false,
         "why": "Acceptance is per candidate."
       },
@@ -298,12 +298,12 @@
   },
   {
     "id": "ex-nvqpgecf",
-    "version": 1,
+    "version": 2,
     "section": "a-decision-in-a-file",
     "type": "cloze",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "Each accepted exception in gate.json carries a ceiling, up_to, and a reason, ___.",
+    "prompt": "Each accepted budget in gate.json carries a ceiling, up_to, and a reason, ___.",
     "blanks": [
       {
         "accept": [
@@ -347,13 +347,13 @@
   },
   {
     "id": "ex-psrv014v",
-    "version": 1,
+    "version": 2,
     "section": "failing-loudly",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
     "prompt": "How many tests failed for 2026.10.4, the change of model and floor?",
-    "value": 3,
+    "value": 2,
     "tolerance": 0,
     "unit": "tests"
   },
@@ -420,6 +420,37 @@
     ]
   },
   {
+    "id": "ex-jptebcty",
+    "version": 1,
+    "section": "failing-loudly",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "2026.10.4's latency budget passed on one run and failed on another, with nothing changed. What follows?",
+    "choices": [
+      {
+        "text": "A budget near the noise passes at random",
+        "correct": true,
+        "why": "Right. Widen it past the noise, or measure more requests."
+      },
+      {
+        "text": "Rerun the gate until the budget passes",
+        "correct": false,
+        "why": "A gate rerun until it passes is a gate that passes."
+      },
+      {
+        "text": "Latency cannot be given a budget at all",
+        "correct": false,
+        "why": "It can, wider than the noise."
+      },
+      {
+        "text": "The machine was broken on the slower run",
+        "correct": false,
+        "why": "Nothing was broken; a median over 32 replies moves."
+      }
+    ]
+  },
+  {
     "id": "ex-408mrtf9",
     "version": 1,
     "section": "the-workflow",
@@ -452,7 +483,7 @@
   },
   {
     "id": "ex-w3nr8dp3",
-    "version": 1,
+    "version": 2,
     "section": "the-workflow",
     "type": "quiz",
     "difficulty": "medium",
@@ -460,9 +491,9 @@
     "prompt": "Why do the set's tests come first in the workflow?",
     "choices": [
       {
-        "text": "Forks get no secrets, and these need none",
+        "text": "They need no model, so they fail fast",
         "correct": true,
-        "why": "Right. Forks get no secrets."
+        "why": "Right. A broken set fails in seconds, before anything is downloaded."
       },
       {
         "text": "They take the longest",
@@ -514,12 +545,12 @@
   },
   {
     "id": "ex-8z9jjv62",
-    "version": 1,
+    "version": 2,
     "section": "the-workflow",
     "type": "cloze",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "The evaluation key is stored as a GitHub ___, scoped to evaluation, with its own spending limit.",
+    "prompt": "On the online path, the evaluation key is stored as a GitHub ___, scoped to evaluation, with its own spending limit.",
     "blanks": [
       {
         "accept": [
@@ -532,17 +563,17 @@
   },
   {
     "id": "ex-18q4bzta",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "ordering",
     "difficulty": "medium",
     "drillable": true,
     "prompt": "Put the gate's runs in this lesson in the order they happened.",
     "items": [
-      "2026.10.1 against 2026.09.4: one failure",
-      "2026.10.3: two budget failures",
-      "2026.10.3 with the decision in gate.json: passes",
-      "2026.10.4: three failures",
+      "2026.10.1 against 2026.09.4: two failures",
+      "2026.10.3: four failures",
+      "2026.10.3 with the decisions in gate.json: passes",
+      "2026.10.4: two failures naming 27 cases",
       "no candidate: four errors"
     ]
   },
@@ -579,13 +610,13 @@
   },
   {
     "id": "ex-pveed5bm",
-    "version": 1,
+    "version": 2,
     "section": "drill",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
     "prompt": "How many tests did the gate pass with no candidate named?",
-    "value": 5,
+    "value": 6,
     "tolerance": 0,
     "unit": "tests"
   }

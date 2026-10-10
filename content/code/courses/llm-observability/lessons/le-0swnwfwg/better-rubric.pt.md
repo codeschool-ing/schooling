@@ -1,85 +1,86 @@
 ---
-title: Uma rubrica com as respostas escritas nela
-version: 1
+title: Uma rubrica com as respostas escritas
+version: 2
 ---
 
-As discordâncias da versão 1 não eram erros a corrigir; eram perguntas que a rubrica não tinha
-respondido. A Ana e o Bruno passaram por elas juntos e escreveram as respostas na versão 2:
+As discordâncias da versão 1 não eram erros a corrigir; eram uma pergunta que a rubrica não tinha
+respondido. A Ana e o Bruno as repassaram juntos e escreveram a resposta na versão 2:
 
-```
-ana@lab:~/obs$ cat data/rubrics/relevance-v2.md
+```sh
+cat > data/rubrics/relevance-v2.md <<'EOF'
 # Relevance, version 2
 
-Read the customer's question and the assistant's reply. Relevance asks only
-whether the reply is about what was asked. Whether it is true is faithfulness,
-and whether it is the right answer is correctness: grade neither here.
+Read the customer's question, the assistant's reply and the sources it was
+given. Relevance asks whether the reply gives the customer what they asked
+for. Whether what it says is true is faithfulness: grade that apart.
 
 - pass: the reply gives what the question asks for, even among other
-  sentences.
-  e.g. "Above what order value is standard delivery free?" answered with a
-  sentence on express delivery and then "standard ... free on orders over 40".
+  sentences, and even if it is wrong.
+  e.g. "Who pays for the return postage?" answered with "the customer pays
+  for the return postage" passes here, and fails faithfulness.
 - pass: the reply is the agreed refusal, "I could not find that in our
-  documents." It answers the question by saying there is no answer here.
-  Whether it should have refused is correctness.
-- fail: the reply is about the question's subject and does not give what was
-  asked for.
-  e.g. "How much is express delivery?" answered with "Express delivery is not
-  free at any order value."
+  documents.", and the shop's documents do not answer the question.
+  e.g. "Can I place an order by phone?"
+- fail: the reply is the agreed refusal, and the shop's documents do answer
+  the question. The customer asked something the shop has written down and
+  was told it had not.
+  e.g. "Can I pay in instalments?" answered with the refusal.
 - fail: the reply answers a different question, even one that shares the
   question's words.
-  e.g. "Above what order value is standard delivery free?" answered with
-  "Express delivery is not free at any order value."
-
-When the reply gives a condition from which the answer follows, and the customer
-would have to work it out, write that down beside the label: it is the case this
-version does not settle.
+EOF
 ```
 
-Três coisas mudaram, e cada uma é uma técnica que vale reaproveitar.
+Três coisas mudaram, e cada uma é uma técnica que vale reusar.
 
-- **O critério diz o que ele não é.** Fidelidade e correção são nomeadas e postas de lado, para que
-  quem avalia e nota uma resposta errada não a reprove por relevância. Isso decide a recusa: uma recusa
-  é sobre a pergunta, e se devia ter sido uma recusa é correção, que a aula 8 mediu contra os fatos.
+- **O critério diz o que ele não é.** A fidelidade é nomeada e posta de lado, para que quem nota uma
+  resposta errada não a reprove em relevância. A e02 na versão nova é a âncora exatamente disso.
+- **A recusa é decidida, e decidida nos dois sentidos.** Uma recusa a uma pergunta que os documentos não
+  respondem dá ao cliente a verdade, e passa. Uma recusa a uma pergunta que eles respondem deixa o
+  cliente sem nada, e reprova.
 - **Toda regra tem um exemplo.** Uma **âncora** é uma resposta real com o seu veredicto, e resolve numa
-  linha o que um parágrafo de definição deixaria em aberto. As âncoras aqui são as próprias respostas
-  em que as pessoas discordaram.
-- **A rubrica diz o que ela não resolve.** O último parágrafo nomeia o caso para o qual a equipe não
-  conseguiu combinar uma regra, e pede a quem avalia que o marque em vez de adivinhar.
+  linha o que um parágrafo de definição deixaria em aberto. As âncoras aqui são respostas das
+  execuções.
 
-As mesmas sessenta respostas, rotuladas de novo pela versão 2:
+As mesmas quarenta e oito respostas, rotuladas de novo contra a versão 2:
 
 ```
-ana@lab:~/obs$ python agree.py relevance-v2/ana relevance-v2/bruno
-60 replies; rows relevance-v2/ana, columns relevance-v2/bruno
+ana@dev:~/obs$ python agree.py relevance-v2/ana relevance-v2/bruno
+48 replies; rows relevance-v2/ana, columns relevance-v2/bruno
           pass  fail
-  pass      51     2
-  fail       0     7
-agreement 96.7%   by chance 76.8%   kappa 0.86
-apart on 2: 0 refusals, 2 other replies
-  e05 2026.09.4  pass / fail  An e-book can be refunded within 14 days of purchase if yo
-  e05 2026.10.1  pass / fail  An e-book can be refunded within 14 days of purchase if yo
+  pass      41     3
+  fail       0     4
+agreement 93.8%   by chance 79.5%   kappa 0.69
+apart on 3: 3 refusals, 0 other replies
+  e12 2026.09.4  pass / fail  I could not find that in our documents.
+  e12 2026.10.1  pass / fail  I could not find that in our documents.
+  e19 2026.10.1  pass / fail  I could not find that in our documents.
 ```
 
-**Kappa de 0,86, e duas discordâncias restantes**, as duas na mesma resposta: e05, o e-book baixado
-ontem, em cada versão. É o caso que o último parágrafo da rubrica descreve. A Ana aprovou, porque a
-resposta decorre do que ela diz; o Bruno reprovou, porque um cliente não deveria ter de deduzi-la. Eles
-conversaram e combinaram aprovar, e esse veredicto é o terceiro conjunto de rótulos,
-`relevance-v2/agreed`. Resolver por conversa os casos que restam, e guardar o resultado como um
-conjunto próprio, chama-se **adjudicação**.
+**Kappa 0,69, e três discordâncias restantes**, todas recusas que a Ana aprovou e o Bruno reprovou: a
+pergunta do Kindle nas duas versões, e o direito de arrependimento na nova. A versão 2 pede a quem
+avalia que saiba se os documentos da loja respondem a uma pergunta, e a Ana, desenvolvedora, não sabia
+que a página de formatos de e-book diz que eles não abrem num Kindle, nem que a política de devoluções
+traz os sete dias legais. O Bruno, do atendimento, sabia. Eles conferiram juntos e reprovaram as três,
+e esse veredicto é o terceiro conjunto de rótulos, `relevance-v2/agreed`. Resolver os casos que sobram
+conversando, e guardar o resultado como um conjunto próprio, se chama **adjudicação**.
 
-## Do que uma referência precisa
+A lição para a próxima rodada não está nas palavras da rubrica mas no que ela pede a quem avalia: um
+critério que precisa dos documentos precisa dos documentos ao lado de quem avalia, ou dos fatos do
+gabarito, que é de onde vem a regra da próxima seção.
 
-Os rótulos combinados agora podem medir um juiz, porque se apoiam numa rubrica que duas pessoas leem
-do mesmo jeito. Três propriedades tornaram isso possível, e elas são a lista de conferência de qualquer
+## O que uma referência precisa
+
+Os rótulos acordados agora podem medir um juiz, porque se apoiam numa rubrica que duas pessoas leram do
+mesmo jeito. Três propriedades tornaram isso possível, e são a lista de conferência de qualquer
 conjunto de rótulos de referência:
 
-1. **Cada rótulo nomeia a resposta por um id estável** e a rubrica pela sua versão.
-2. **A concordância entre as pessoas foi medida**, e é alta o bastante para os rótulos significarem
-   alguma coisa.
-3. **As discordâncias que restaram foram resolvidas e guardadas** como um conjunto próprio, para que os
+1. **Cada rótulo nomeia a resposta por um id estável** e a rubrica pela versão.
+2. **A concordância entre pessoas foi medida**, e é alta o bastante para os rótulos significarem algo.
+3. **As discordâncias restantes foram resolvidas e guardadas** como um conjunto próprio, para que os
    rótulos individuais continuem sendo o que cada pessoa disse.
 
-Duas pessoas em sessenta respostas é a menor versão disso que ainda mede alguma coisa. Uma equipe que
-rotula com regularidade dá a uma pessoa nova algumas dezenas de respostas já combinadas, confere o kappa
-dela contra a referência antes de confiar nos seus rótulos, e repete uma pequena sobreposição entre
-avaliadores a cada rodada, porque as pessoas mudam de critério à medida que a rubrica fica familiar.
+Dois avaliadores em quarenta e oito respostas é a menor versão disso que ainda mede alguma coisa. Uma
+equipe que rotula com regularidade dá a uma pessoa nova algumas dezenas de respostas já acordadas, e
+confere o kappa dela contra a referência antes de confiar nos seus rótulos. Também repete uma pequena
+sobreposição entre avaliadores a cada rodada, porque as pessoas derivam à medida que a rubrica fica
+familiar.

@@ -1,6 +1,6 @@
 ---
 title: Setting the cap from a measurement
-version: 1
+version: 2
 ---
 
 A cap catches a reply that runs away, and it does that job only if ordinary replies never reach it.
@@ -8,83 +8,143 @@ So **the place to start is the longest ordinary reply, measured**:
 
 ```
 ana@lab:~/triage$ pl run prompts/v4-only-json.txt cases/all.jsonl --out runs/v4-all.jsonl
-70 calls, prompt 651820d7, written to runs/v4-all.jsonl
-ana@lab:~/triage$ pl latency runs/v4-all.jsonl
-calls 70
-p50 1159 ms   p95 1390 ms   max 1473 ms
-output tokens: mean 38.0, max 50
+70 calls, prompt 651820d7, llama3.2:3b, written to runs/v4-all.jsonl
+ana@lab:~/triage$ python3 stats.py runs/v4-all.jsonl
+runs/v4-all.jsonl, 70 calls
+  tokens in    mean  121.3   total   8491
+  tokens out   mean   29.1   total   2038   max 38
+  seconds      p50   3.4   p95   4.4   total  243.2
 ```
 
-Over all seventy messages, the development set and the holdout together, the longest reply was 50
-tokens and the mean 38.0. A cap of 50 would pass every one of them today. **A cap at exactly the
-measured maximum has no headroom**, and the prompt will not stay the same. Lesson 21's version asks
-for a fourth field, a confidence score, and here it is under a cap of 50:
+Over all seventy messages, the development set and the holdout together, the longest reply was 38
+tokens and the mean 29.1. A cap of 38 would pass every one of them today. **A cap at exactly the
+measured maximum has no headroom**, and the prompt will not stay the same.
+
+## The prompt grows a field
+
+Lesson 21 asks the model how sure it is, in a fourth field. Save its prompt as
+`prompts/v9-confidence.txt`:
 
 ```
-ana@lab:~/triage$ pl run prompts/v9-confidence.txt cases/dev.jsonl --set max_tokens=50 --out runs/v9-50.jsonl
-40 calls, prompt c31bed19, written to runs/v9-50.jsonl
-ana@lab:~/triage$ pl check runs/v9-50.jsonl --failures
+You sort customer messages for Folio, an online bookshop.
+
+Read the message and answer in JSON with four fields:
+- "category": one of billing, delivery, returns, account, other
+- "urgency": one of low, normal, high
+- "summary": one sentence saying what the customer needs
+- "confidence": how sure you are of the category, from 0 to 1
+
+<example>
+Message: I paid for express delivery but the order came by normal post.
+Output: {"category": "billing", "urgency": "normal", "summary": "Wants the express delivery charge back.", "confidence": 0.9}
+</example>
+
+<example>
+Message: The book came with water damage on every page.
+Output: {"category": "returns", "urgency": "normal", "summary": "Wants a replacement for a damaged book.", "confidence": 0.95}
+</example>
+
+<example>
+Message: Can I change the name on my account?
+Output: {"category": "account", "urgency": "low", "summary": "Asks how to change the account name.", "confidence": 0.85}
+</example>
+
+Message: {{message}}
+```
+
+A fourth field is a change to the contract as well as to the prompt: `judge()` in `pl.py` refuses
+any key it does not know, so it would fail every one of these replies on `fields`. Lesson 3 said the
+check is the reader's needs written down, and the reader now needs one more key. Allow it with one
+edit, which every later lesson relies on:
+
+```sh
+sed -i 's/and k != "summary"/and k not in ("summary", "confidence")/' pl.py
+```
+
+Now run the new prompt under the old maximum as its cap, 38:
+
+```
+ana@lab:~/triage$ pl run prompts/v9-confidence.txt cases/dev.jsonl --set num_predict=38 --out runs/v9-38.jsonl
+40 calls, prompt c31bed19, llama3.2:3b, written to runs/v9-38.jsonl
+ana@lab:~/triage$ pl check runs/v9-38.jsonl --failures
 check      pass  fail
-json         38     2
-fields       38     2
-labels       38     2
-category     38     2
-urgency      36     4
-all          36     4
+json         33     7
+fields       33     7
+labels       33     7
+category     28    12
+urgency      19    21
+all          19    21
 
-t14    urgency   normal, expected low
-t24    json      cut off at max_tokens
-t28    urgency   normal, expected low
-t37    json      cut off at max_tokens
-ana@lab:~/triage$ pl show runs/v9-50.jsonl t37
-│ {"category": "billing", "urgency": "normal", "summary": "The book they ordered says 'in stock' but their order still says 'awaiting dispatch' after a week.", "confidence":
-stop: max_tokens, tokens in 287, out 50
-ana@lab:~/triage$ pl show runs/v9-50.jsonl t24
-│ {"category": "delivery", "urgency": "low", "summary": "Asks: is it possible to change the delivery address on an order I placed an hour ago?", "confidence": 0.97
-stop: max_tokens, tokens in 282, out 50
+t01    json      cut off at num_predict
+t02    urgency   high, expected normal
+t03    json      cut off at num_predict
+t06    json      cut off at num_predict
+t07    urgency   high, expected normal
+t09    urgency   high, expected normal
+t11    json      cut off at num_predict
+t17    json      cut off at num_predict
+t19    json      cut off at num_predict
+t21    json      cut off at num_predict
+t22    category  other, expected billing
+t23    urgency   normal, expected high
+t24    urgency   high, expected normal
+t25    category  other, expected account
+t26    category  account, expected billing
+t28    urgency   high, expected low
+t32    urgency   high, expected normal
+t33    category  delivery, expected returns
+t36    urgency   normal, expected high
+t37    category  billing, expected delivery
+t39    urgency   low, expected normal
 ```
 
-Two replies are cut. Now look at the `all` line: 36, and below, with the cap at 100, it is 36 again.
-Both cut replies were already wrong for another reason, `t37` on its category and `t24` on its
-urgency, so **the total did not move and the cut was hidden inside it**. Only the `json` line and the
-stop reasons show it. The day somebody fixes the urgency rule, `t24` becomes right and stays failed,
-and the fix looks smaller than it was.
+**Seven replies are cut**, every one of them a reply that would have passed. The extra field made
+replies longer, and nobody adding a field thinks to check the cap. Here is the same prompt with the
+cap at twice the old maximum:
 
 ```
-ana@lab:~/triage$ pl run prompts/v9-confidence.txt cases/dev.jsonl --set max_tokens=100 --out runs/v9-100.jsonl
-40 calls, prompt c31bed19, written to runs/v9-100.jsonl
-ana@lab:~/triage$ pl check runs/v9-100.jsonl
+ana@lab:~/triage$ pl run prompts/v9-confidence.txt cases/dev.jsonl --set num_predict=76 --out runs/v9-76.jsonl
+40 calls, prompt c31bed19, llama3.2:3b, written to runs/v9-76.jsonl
+ana@lab:~/triage$ pl check runs/v9-76.jsonl
 check      pass  fail
 json         40     0
 fields       40     0
 labels       40     0
-category     39     1
-urgency      36     4
-all          36     4
-ana@lab:~/triage$ pl latency runs/v9-100.jsonl
-calls 40
-p50 1413 ms   p95 1532 ms   max 1591 ms
-output tokens: mean 45.4, max 54
+category     35     5
+urgency      26    14
+all          26    14
+ana@lab:~/triage$ python3 stats.py runs/v9-76.jsonl
+runs/v9-76.jsonl, 40 calls
+  tokens in    mean  288.1   total  11526
+  tokens out   mean   36.6   total   1463   max 43
+  seconds      p50   4.3   p95   4.9   total  172.9
+ana@lab:~/triage$ pl compare runs/v9-38.jsonl runs/v9-76.jsonl
+runs/v9-38.jsonl         passes 19/40
+runs/v9-76.jsonl         passes 26/40
+fixed 7, broken 0
+sign test on the 7 that changed: p = 0.016
 ```
 
-With a cap of 100 nothing is cut, and the longest reply is now 54 tokens. One extra field moved the
-maximum from 50 to 54, and nobody adding a field thinks to check the cap. Twice the measured maximum,
-here 100, is this course's habit rather than a law. It costs nothing on a reply that stops before it,
-because what a provider charges for is the tokens written, and `pl cost` adds up the same thing. The
-rule underneath the habit: the cap sits so far above every reply you have measured that **only a
-reply gone wrong can reach it**, and you measure again whenever the prompt changes.
+With a cap of 76 nothing is cut, the longest reply is now 43 tokens, and the seven come back: fixed
+7, broken 0. One extra field moved the maximum from 38 to 43, and a cap that had no room to spare
+turned seven right answers into seven exceptions.
+
+Twice the measured maximum, here 76, is this course's habit rather than a law. It costs nothing on
+a reply that stops before it, because a model writes, and a provider charges for, the tokens of the
+reply and not the cap. The rule underneath the habit: the cap sits so far above every reply you have
+measured that **only a reply gone wrong can reach it**, and you measure again whenever the prompt
+changes.
 
 ## A cut reply is a failure
 
-`t24` is one closing brace short of valid JSON. A reader that repairs replies, adding the missing
-brace and parsing the result, would accept it, and on that message it would even get the whole
-answer. On `t37`, cut after `"confidence":`, the same repair has no value to close. On a reply cut
-inside its summary, like `t01` under the cap of thirty, it would accept a sentence with its end
-missing, and nothing downstream would know.
+A reply cut after its last field is one closing brace short of valid JSON. A reader that repairs
+replies, adding the missing brace and parsing the result, would accept it, and on that message it
+would even get the whole answer. On a reply cut after `"confidence":`, the same repair has no value
+to close. On a reply cut inside its summary, like `t01` under the cap of 25, it would accept a
+sentence with its end missing, and nothing downstream would know.
 
 `prompt-engineering` repaired invalid output in its lesson 19. A cut reply is the one case where
-repair is the wrong tool. **Every reply that stopped at `max_tokens` is a failure, whether or not what
-is left of it parses.** The reader looks at the stop reason before it parses anything, logs the
-reply, and treats it as the harness does: as a reply that did not arrive. Counting those stops is
-also how you learn a cap has drifted into ordinary traffic, long before anybody reads a truncated
-summary.
+repair is the wrong tool. **Every reply that stopped at the cap is a failure, whether or not what is
+left of it parses.** The reader looks at the stop reason before it parses anything, logs the reply,
+and treats it as the harness does: as a reply that did not arrive. Counting those stops is also how
+you learn a cap has drifted into ordinary traffic, long before anybody reads a truncated summary.

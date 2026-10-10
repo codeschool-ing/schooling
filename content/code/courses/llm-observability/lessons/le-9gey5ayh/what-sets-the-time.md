@@ -1,6 +1,6 @@
 ---
 title: What sets the time
-version: 1
+version: 2
 ---
 
 A percentile says how slow; it does not say why. For a model call, two things are worth checking first,
@@ -34,34 +34,39 @@ print(f"first token over 3 s: {len(cold)} of {len(chats)} calls")
 ```
 
 ```
-ana@lab:~/obs$ python drivers.py
+ana@dev:~/obs$ python drivers.py
 whole call, by output tokens
-     0 to   19    361 calls  median    555 ms
-    20 to   39    154 calls  median    997 ms
-    40 to   59    318 calls  median   1603 ms
-    60 to   79    128 calls  median   2146 ms
-    80 to   99    147 calls  median   2498 ms
+     0 to   19    112 calls  median   2095 ms
+    20 to   39     63 calls  median   3250 ms
+    40 to   59     72 calls  median   4929 ms
+    60 to   79      3 calls  median   8068 ms
+    80 to   99     15 calls  median   9482 ms
 first token, by input tokens
-     0 to   99    124 calls  median    236 ms
-   100 to  199    214 calls  median    247 ms
-   200 to  299    304 calls  median    288 ms
-   300 to  399    466 calls  median    329 ms
-first token over 3 s: 16 of 1108 calls
+     0 to   99     21 calls  median    237 ms
+   100 to  199    109 calls  median    744 ms
+   200 to  299    125 calls  median    829 ms
+   300 to  399     10 calls  median   1358 ms
+first token over 3 s: 0 of 265 calls
 ```
 
-**The whole call follows the output.** From under 20 tokens to 80 or more, the median goes from 555 ms
-to 2,498, a near-straight line of about 25 ms a token. That is the second clock, multiplied. A long
-answer is a slow answer, whatever else is true.
+**The whole call follows the output.** From under 20 tokens to 80 or more, the median goes from
+2,095 ms to 9,482, a near-straight line of about 100 ms a token. That is the second clock,
+multiplied. A long answer is a slow answer, whatever else is true.
 
-**The first token follows the input, slowly.** From under 100 input tokens to over 300, the median
-first token goes from 236 to 329 ms. Reading is much faster than writing, so a prompt three times as
-long costs a tenth of a second, not three times as much. With prompts of tens of thousands of tokens,
-as in an agent carrying a long history, the same slope adds up to seconds.
+**The first token follows the input.** From 100 input tokens to over 300, the median first token
+goes from 744 ms to 1,358. Reading is faster than writing, but on four cores not by as much as on a
+provider's hardware: a prompt three times as long costs more than half a second. The smallest
+prompts, under 100 tokens, are the support team's summaries, and they come back fastest for a second
+reason besides their size. Only two conversations recur all week, and Ollama keeps what it computed
+for the start of the last prompt and reuses it when the next one starts the same way; that is the
+cache count lesson 1's instrumented span reported. With prompts of tens of thousands of tokens, as
+in an agent carrying a long history, the same slope adds up to minutes on a machine like this one.
 
-And **sixteen calls in 1,108 waited over three seconds** for their first token, in every group. Their
-slowness has nothing to do with their size, which is the signature of a cause outside the request: the
-provider, the network, a queue. They are the tail of the previous section, and no change to the
-prompt will remove them.
+And **not one call in 265 waited over three seconds** for its first token. In production that line
+is rarely empty: a few calls wait far longer than their size explains, in every group, which is the
+signature of a cause outside the request, the provider, the network, a queue. Here the model had the
+machine to itself and never left memory, so there were none. When there are, no change to the prompt
+will remove them.
 
 ## What this decides
 
@@ -73,7 +78,7 @@ answered:
 |---|---|---|
 | cheaper | the input: fewer sources, a shorter system prompt | input tokens are most of the bill |
 | feel faster | the time to the first token: shorter prompt, a nearer region, streaming to the screen | it is the empty-screen wait |
-| finish sooner | the output: ask for shorter answers, cap `max_tokens` | every token adds its 25 ms |
+| finish sooner | the output: ask for shorter answers, cap `max_tokens` | every token adds its 100 ms |
 | hurt less in the tail | timeouts and a retry, the last sections | the tail is not caused by the request |
 
 `prompt-reliability` lesson 16 and `agents-mcp` lesson 18 pull these levers on their own systems and

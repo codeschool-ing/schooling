@@ -1,6 +1,6 @@
 ---
 title: Two meanings of precision and recall
-version: 1
+version: 2
 ---
 
 **Precision** and **recall** turn up in two places in evaluating a model, and they mean the same
@@ -15,7 +15,7 @@ It adds the version that evaluation frameworks report under the names **context 
 **About a detector.** Anything that flags replies as bad is a detector: a rule from lesson 8, a judge
 from lesson 9, an alert from lesson 16. Of the replies it flagged, how many were bad: precision. Of the
 replies that were bad, how many did it flag: recall. Lesson 10 gave this course its first set of
-replies whose badness is known, the sixty with agreed labels, so a detector can now be scored.
+replies whose badness is known, the forty-eight with agreed labels, so a detector can now be scored.
 
 The two meanings share a shape: a set that was chosen, a set that should have been, and the overlap.
 

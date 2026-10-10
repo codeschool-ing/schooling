@@ -1,6 +1,6 @@
 ---
 title: stdio, where standard output belongs to the protocol
-version: 1
+version: 2
 ---
 
 Over **stdio** the framing is one message per line: `raw.py` writes `json.dumps(message) + "\n"` and reads one line back for each request. Nothing else marks where a message ends. That makes standard output a channel with exactly one use: **everything the server writes there must be a protocol message**, and anything meant for a person (logs, warnings, a traceback) goes to standard error. `raw.py` keeps the server's standard error apart in `server.err`.
@@ -27,6 +27,13 @@ def get_order(order_id: str) -> str:
 
 if __name__ == "__main__":
     server.run()
+```
+
+The two messages, `noisy.jsonl`:
+
+```json
+{"jsonrpc": "2.0", "id": 1, "method": "server/discover", "params": {"_meta": {"io.modelcontextprotocol/protocolVersion": "2026-07-28", "io.modelcontextprotocol/clientCapabilities": {}}}}
+{"jsonrpc": "2.0", "id": 2, "method": "tools/call", "params": {"name": "get_order", "arguments": {"order_id": "M-1043"}, "_meta": {"io.modelcontextprotocol/protocolVersion": "2026-07-28", "io.modelcontextprotocol/clientCapabilities": {}}}}
 ```
 
 ```

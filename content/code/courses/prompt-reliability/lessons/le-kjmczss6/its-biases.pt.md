@@ -1,50 +1,60 @@
 ---
 title: Ordem e comprimento
-version: 1
+version: 2
 ---
 
-O kappa diz que o juiz é fraco. Não diz por quê. Os dois vieses que o substituto declara podem ser
-medidos de fora, sem ler o código dele, e é assim que você os encontraria num juiz real.
+O kappa diz que o juiz é fraco. Não diz por quê. Dois vieses são conhecidos em modelos juízes, e
+cada um pode ser medido de fora, sem ler nada além dos vereditos, que é como você os acharia em
+qualquer juiz.
 
 ## Posição
 
-`--swap` faz cada pergunta duas vezes, a segunda com as respostas na ordem inversa, e traduz a
-segunda resposta de volta:
+O `--swap` faz cada pergunta duas vezes, a segunda com as respostas na outra ordem, e traduz a
+segunda resposta de volta para a resposta que ela escolheu:
 
 ```
-ana@lab:~/triage$ pl judge cases/pairs.jsonl --swap
-j01  human b  judge a  swapped a
+ana@lab:~/triage$ python3 judge.py cases/pairs.jsonl --swap
+j01  human b  judge b  swapped a  FLIP
 j02  human b  judge b  swapped b
-j03  human a  judge a  swapped b  FLIP
+j03  human a  judge b  swapped a  FLIP
 j04  human a  judge a  swapped a
-j05  human b  judge b  swapped b
-j06  human a  judge a  swapped a
-j07  human b  judge a  swapped b  FLIP
-j08  human a  judge a  swapped b  FLIP
-j09  human b  judge b  swapped b
-j10  human a  judge a  swapped b  FLIP
-j11  human b  judge a  swapped b  FLIP
-j12  human a  judge a  swapped a
-j13  human b  judge a  swapped b  FLIP
+j05  human b  judge b  swapped a  FLIP
+j06  human a  judge b  swapped a  FLIP
+j07  human b  judge b  swapped a  FLIP
+j08  human a  judge b  swapped a  FLIP
+j09  human b  judge b  swapped ?  FLIP
+j10  human a  judge b  swapped a  FLIP
+j11  human b  judge b  swapped a  FLIP
+j12  human a  judge ?  swapped a  FLIP
+j13  human b  judge b  swapped a  FLIP
 j14  human b  judge b  swapped b
-j15  human a  judge b  swapped b
+j15  human a  judge b  swapped a  FLIP
 j16  human a  judge b  swapped b
 
-agrees with the human on 10 of 16
-Cohen's kappa 0.25
-changes its mind when the order is swapped: 6 of 16
-agrees AND keeps its verdict: 7 of 16
+agrees with the human on 9 of 16
+Cohen's kappa 0.18
+changes its mind when the order is swapped: 12 of 16
+agrees AND keeps its verdict: 3 of 16
 ```
 
-Seis de dezesseis vereditos viram: `j03`, `j07`, `j08`, `j10`, `j11` e `j13`. Em todos o juiz
-escolheu `a` quando `a` vinha primeiro e `b` quando `b` vinha primeiro. **Um veredito que muda quando
-só a ordem muda é um veredito sobre a ordem.** Três desses seis, `j03`, `j08` e `j10`, tinham
-concordado com a pessoa na primeira execução, e essa concordância foi um acaso de posição.
+**Doze de dezesseis vereditos mudam.** Leia as duas colunas juntas: na primeira ordem o juiz
+escolheu `b`, a resposta mostrada em segundo, treze vezes; com a ordem trocada escolheu `a`, que agora
+era a mostrada em segundo, doze vezes. O que quer que ele esteja lendo, está lendo sobretudo a
+posição. **Um veredito que muda quando só a ordem muda é um veredito sobre a ordem.** Dos oito
+pares em que ele concordou com a pessoa na primeira execução, só três mantêm o veredito nas duas
+ordens.
+
+Olhe a coluna `judge` também. Ela é a primeira pergunta feita de novo, o mesmo prompt com
+temperatura 0, e deveria ser a execução de cima linha por linha. Não é: o `j05` foi `?` da primeira
+vez e `b` desta vez, então a concordância foi de 8 para 9 e o kappa de 0,11 para 0,18. É o achado da
+aula 8 sobre a temperatura 0, dentro de um instrumento de medida. Um juiz cujo veredito sobre um par
+depende do que lhe perguntaram logo antes é um juiz cujos números têm uma margem, e dezesseis pares
+não bastam para ver de que tamanho.
 
 ## Comprimento
 
-Os dez vereditos que sobrevivem à troca concordam com a pessoa sete vezes. Os três que sobrevivem e
-continuam errados são `j01`, `j15` e `j16`:
+Quatro vereditos sobrevivem à troca: `j02`, `j04`, `j14` e `j16`. Estes são os comprimentos das
+respostas:
 
 ```
 ana@lab:~/triage$ python3 -c 'import json; [print(p["id"], p["human"], len(p["a"]), len(p["b"])) for p in map(json.loads, open("cases/pairs.jsonl"))]'
@@ -64,37 +74,43 @@ j13 b 211 113
 j14 b 37 220
 j15 a 107 187
 j16 a 92 209
+```
+
+Nos quatro, o juiz escolheu a resposta mais longa: 158 caracteres contra 22 no `j02`, 134 contra 23
+no `j04`, 220 contra 37 no `j14`, 209 contra 92 no `j16`. A pessoa concordou três vezes, porque em
+três desses pares a resposta longa era a útil. O `j16` é o quarto:
+
+```
 ana@lab:~/triage$ grep '"j16"' cases/pairs.jsonl
 {"id": "j16", "message": "Do you buy second-hand books?", "a": "We don't, sorry, but the Bookswap in Market Street does, and it's two minutes from the shop.", "b": "Thank you for thinking of us! We're always delighted to hear from book lovers. Second-hand books are a wonderful way to give stories a new life, and there are many good places in town where you can sell yours.", "human": "a"}
 ```
 
-Nos três a pessoa escolheu a resposta mais curta e o juiz a mais longa: 274 caracteres contra 137 em
-`j01`, 187 contra 107 em `j15`, 209 contra 92 em `j16`. Em `j16`, `a` responde à pergunta e manda o
-cliente a um lugar útil; `b` é calorosa e não diz nada. **Nenhuma troca pega esse viés, porque a
-resposta mais longa é mais longa nas duas ordens.**
+O `a` responde à pergunta e manda o cliente a um lugar útil; o `b` é caloroso e não diz nada.
+**Nenhuma troca consegue pegar esse viés, porque a resposta mais longa é mais longa nas duas
+ordens.** Quatro vereditos estáveis são pouquíssimos para medi-lo: o conjunto tem nove pares em que
+a resposta mais longa é a pior, e só o `j16` sobreviveu à troca.
 
-```schooling-figure
-{"svg": "<svg viewBox=\"0 0 720 250\" role=\"img\" aria-label=\"Duas barras de 16 pares. Julgando numa ordem só, o juiz concorda com a pessoa em 10 e discorda em 6. Julgando nas duas ordens, ele muda de veredito com a ordem em 6; dos 10 que mantém, concorda em 7 e discorda em 3, e nos três escolheu a resposta mais longa.\"><text x=\"20\" y=\"22\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">o juiz do substituto em 16 pares com veredito humano</text><text x=\"138\" y=\"64\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">uma ordem</text><rect x=\"150\" y=\"50\" width=\"298\" height=\"28\" rx=\"2\" fill=\"var(--phosphor)\"></rect><rect x=\"450\" y=\"50\" width=\"178\" height=\"28\" rx=\"2\" fill=\"var(--amber)\"></rect><text x=\"640\" y=\"64\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">16</text><text x=\"138\" y=\"126\" text-anchor=\"end\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">as duas ordens</text><rect x=\"150\" y=\"112\" width=\"208\" height=\"28\" rx=\"2\" fill=\"var(--phosphor)\"></rect><rect x=\"360\" y=\"112\" width=\"88\" height=\"28\" rx=\"2\" fill=\"var(--amber)\"></rect><rect x=\"450\" y=\"112\" width=\"178\" height=\"28\" rx=\"2\" fill=\"var(--wire)\"></rect><text x=\"640\" y=\"126\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"10.5\" fill=\"var(--paper-dim)\">16</text><path d=\"M360 146 L360 152 L448 152 L448 146\" stroke=\"var(--paper-dim)\" stroke-width=\"1\" fill=\"none\"></path><text x=\"404.0\" y=\"166\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10\" fill=\"var(--paper-dim)\">as três: a resposta mais longa</text><rect x=\"150\" y=\"208\" width=\"12\" height=\"12\" rx=\"2\" fill=\"var(--phosphor)\"></rect><text x=\"168\" y=\"214\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">concorda com a pessoa</text><rect x=\"330\" y=\"208\" width=\"12\" height=\"12\" rx=\"2\" fill=\"var(--amber)\"></rect><text x=\"348\" y=\"214\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">discorda</text><rect x=\"510\" y=\"208\" width=\"12\" height=\"12\" rx=\"2\" fill=\"var(--wire)\"></rect><text x=\"528\" y=\"214\" text-anchor=\"start\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" fill=\"var(--paper)\">muda com a ordem</text></svg>", "caption": "Trocar a ordem remove os vereditos que dependiam da posição. Os três que sobrevivem e continuam errados são aqueles em que o juiz preferiu a resposta mais longa, o que nenhuma troca pega."}
-```
+## O que a literatura achou
 
-## O que a literatura encontrou
-
-Os vieses do substituto foram postos ali de propósito, e foram escolhidos porque se descobriu que
-juízes reais os têm. *Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena* (Zheng e outros, 2023)
-documentou o viés de posição, a preferência pela resposta numa certa posição, e o viés de verbosidade,
-a preferência pela resposta mais longa, em modelos de linguagem usados como juízes. O mesmo artigo
-relatou que os vereditos de um modelo forte concordavam com as preferências humanas mais ou menos com a
-mesma frequência com que as pessoas concordavam entre si, o que explica por que a técnica se espalhou, e por que os
-vieses dela importam.
+*Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena* (Zheng e outros, 2023) documentou o viés
+de posição, uma preferência pela resposta numa certa posição, e o viés de prolixidade, uma
+preferência pela resposta mais longa, em modelos de linguagem usados como juízes. O mesmo artigo
+relatou que os vereditos de um modelo forte concordavam com preferências humanas mais ou menos tanto
+quanto pessoas concordavam entre si, que é por que a técnica se espalhou, e por que os vieses dela
+importam. Um modelo de três bilhões de parâmetros não é o modelo forte que aquele artigo mediu, e
+esta aula mostra como fica essa diferença.
 
 ## O que os reduz
 
-- **Pergunte nas duas ordens e fique só com os vereditos que concordam.** Trate uma virada como
-  ausência de veredito. Aqui isso deixa dez vereditos, sete certos, em vez de dezesseis com dez certos.
-- **Calibre contra pessoas antes**, na tarefa que o juiz vai fazer, e informe o kappa em vez da
+- **Pergunte nas duas ordens e fique só com os vereditos que concordam.** Trate uma troca como
+  nenhum veredito. Aqui isso deixa quatro vereditos, três deles certos, em vez de dezesseis com
+  oito certos.
+- **Calibre contra pessoas primeiro**, na tarefa que o juiz vai fazer, e relate o kappa em vez da
   concordância bruta.
-- **Meça a preferência por comprimento diretamente.** Conte com que frequência o juiz escolhe a
-  resposta mais longa e compare com a frequência das pessoas; aqui o juiz escolheu a mais longa nos
-  três erros estáveis.
-- **Mantenha uma pessoa lendo uma amostra** dos vereditos do juiz enquanto ele estiver em uso, porque
-  os hábitos de um juiz podem mudar quando o modelo dele muda.
+- **Meça a preferência por comprimento diretamente.** Conte quantas vezes o juiz escolhe a resposta
+  mais longa, e compare com quantas vezes as pessoas escolhem.
+- **Leia as respostas do juiz, não só as letras dele.** Um juiz mandado responder *A ou B e nada
+  mais* ainda respondeu com nenhuma das duas duas vezes, e o parser dele tem de dizer o que faz
+  nesse caso.
+- **Mantenha uma pessoa lendo uma amostra** dos vereditos do juiz enquanto ele estiver em uso,
+  porque os hábitos de um juiz podem mudar quando o modelo dele muda.

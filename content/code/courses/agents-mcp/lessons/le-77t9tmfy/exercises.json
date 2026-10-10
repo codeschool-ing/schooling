@@ -155,7 +155,7 @@
   },
   {
     "id": "ex-k82qmcsd",
-    "version": 1,
+    "version": 2,
     "section": "schemas-that-refuse",
     "type": "quiz",
     "difficulty": "medium",
@@ -180,7 +180,7 @@
       {
         "text": "That shop.db is out of date",
         "correct": false,
-        "why": "M-9999 was never an order in the lab's data."
+        "why": "M-9999 was never an order: make_shop.py writes M-1041 to M-1048."
       }
     ]
   },
@@ -260,22 +260,22 @@
   },
   {
     "id": "ex-vx54md2d",
-    "version": 1,
+    "version": 2,
     "section": "validate-before-running",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "find_books was asked for five mysteries and returned one. Why is that the right behaviour?",
+    "prompt": "find_books returned one mystery, whether three or five were asked for. Why is that the right behaviour?",
     "choices": [
       {
         "text": "Because the validator capped max_results at one",
         "correct": false,
-        "why": "The validator allows 1 to 10. Five passed."
+        "why": "The validator allows 1 to 10. Five passed, and three is the default."
       },
       {
-        "text": "Because labllm trimmed the result to save tokens",
+        "text": "Because Ollama trimmed the result to save tokens",
         "correct": false,
-        "why": "labllm never touches tool results; it only answers requests."
+        "why": "Ollama never sees a tool run. The host calls find_books and sends what it returns."
       },
       {
         "text": "Only one is in stock",
@@ -285,7 +285,7 @@
       {
         "text": "Because the catalogue has only one mystery",
         "correct": false,
-        "why": "books.jsonl has more mysteries; Marginalia stocks few of them."
+        "why": "The shop prices three mysteries; it stocks only one of them."
       }
     ]
   },
@@ -353,7 +353,7 @@
   },
   {
     "id": "ex-tvq9q6vd",
-    "version": 1,
+    "version": 2,
     "section": "errors-as-results",
     "type": "quiz",
     "difficulty": "easy",
@@ -363,12 +363,12 @@
       {
         "text": "Retried with M-9998, the closest id",
         "correct": false,
-        "why": "It guessed nothing; it asked the customer."
+        "why": "It guessed no other id; it asked the customer."
       },
       {
         "text": "Asked the customer to check the number",
         "correct": true,
-        "why": "Right. That reply was written by the course, and it is what a good one looks like."
+        "why": "Right. It said the order does not exist and asked for something to find it by, which is what an error result makes possible."
       },
       {
         "text": "Crashed the run with an exception that the host printed",
@@ -384,32 +384,32 @@
   },
   {
     "id": "ex-ry04pdcs",
-    "version": 1,
+    "version": 2,
     "section": "three-wires",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "A loop checks `finish_reason` to decide whether to run tools. Why does that loop never run Gemini's tools?",
+    "prompt": "A loop checks the finish reason to decide whether to run tools. Why does that loop never run tools called through Ollama's own /api/chat?",
     "choices": [
       {
-        "text": "Because Gemini does not support tool calls through its API",
+        "text": "Because Ollama's own API does not support tool calls",
         "correct": false,
-        "why": "It does: wires.py got a function_call back."
+        "why": "It does: wires.py got a call back from /api/chat."
       },
       {
-        "text": "Because Gemini returns tool calls in a separate request that the loop never makes",
+        "text": "Because the call arrives in a second reply the loop never reads",
         "correct": false,
-        "why": "The call is in the same reply, among the parts."
+        "why": "The call is in the same message, in tool_calls."
       },
       {
-        "text": "A reply with a function call still ends with STOP",
+        "text": "A reply with a call still ends with done_reason stop",
         "correct": true,
-        "why": "Right. The loop has to look for function_call parts instead of trusting the finish reason."
+        "why": "Right. The loop has to look for the calls themselves, as it must with Gemini's STOP."
       },
       {
-        "text": "Because finish_reason is only an OpenAI field",
+        "text": "Because done_reason is only filled in when streaming",
         "correct": false,
-        "why": "Gemini has finishReason too; it just does not say a tool was called."
+        "why": "wires.py did not stream, and done_reason came back as stop."
       }
     ]
   },
@@ -472,12 +472,12 @@
   },
   {
     "id": "ex-z75qgf5n",
-    "version": 1,
+    "version": 2,
     "section": "parallel-calls",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "With `--drop-one`, the next request failed with a 400. What was wrong with it?",
+    "prompt": "With `--drop-one`, Anthropic's API would refuse the next request with a 400; the stand-in accepted it. What is wrong with that request?",
     "choices": [
       {
         "text": "The two calls should have been made in separate replies",
@@ -492,7 +492,7 @@
       {
         "text": "The model's reply was not appended",
         "correct": false,
-        "why": "It was; that is why the API could see a call with no result."
+        "why": "It was; that is why the call with no result is in the conversation at all."
       },
       {
         "text": "A tool_use id had no tool_result with that id in the next message",

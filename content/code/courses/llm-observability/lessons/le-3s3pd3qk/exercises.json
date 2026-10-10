@@ -32,44 +32,44 @@
   },
   {
     "id": "ex-51a5rp55",
-    "version": 1,
+    "version": 2,
     "section": "replaying-a-week",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "The traffic file had 1,127 requests. How many questions did the assistant receive during the replay?",
-    "value": 1345,
+    "prompt": "The traffic file had 284 requests. How many questions did the assistant receive during the replay?",
+    "value": 311,
     "tolerance": 0,
     "unit": "questions"
   },
   {
     "id": "ex-3wc8fdat",
-    "version": 1,
+    "version": 2,
     "section": "replaying-a-week",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "The replayed embedding took 268 ms where lesson 1's took 56. What does the lesson conclude?",
+    "prompt": "The first trace of the week is a summary, and the customer's name is in its reply. Why did redaction not remove it?",
     "choices": [
       {
-        "text": "The embedding model got slower during the week",
+        "text": "Redaction runs only on questions, never on replies",
         "correct": false,
-        "why": "Nothing changed in the model; the load did."
+        "why": "Both app.question and app.reply go through redact()."
       },
       {
-        "text": "Monday traffic is heavier than the lab's",
+        "text": "The summary feature skips redaction to keep summaries useful",
         "correct": false,
-        "why": "The replay's concurrency is fixed at eight whatever the day."
+        "why": "Every feature's text goes through the same function."
       },
       {
-        "text": "The clock offset adds time to every span it stamps",
+        "text": "The model invented the name, so it was not in the question",
         "correct": false,
-        "why": "The offset moves start and end alike, so durations are untouched."
+        "why": "It was in the conversation, and the model repeated it."
       },
       {
-        "text": "It is the replay running eight requests at once",
+        "text": "Names have no shape that redact.py's patterns match",
         "correct": true,
-        "why": "Right. labembed answers one at a time, so concurrent requests queue there."
+        "why": "Right. The order number went; the name stayed, in the question and in the reply."
       }
     ]
   },
@@ -137,29 +137,29 @@
   },
   {
     "id": "ex-kfvvmxna",
-    "version": 1,
+    "version": 2,
     "section": "tokens-to-money",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "At extract-1's September prices (2.00 input, 8.00 output, dollars per million), what do 1,000 input and 100 output tokens cost, in millionths of a dollar?",
+    "prompt": "At the price of llama3.2:3b before 30 September (2.00 input, 8.00 output, dollars per million), what do 1,000 input and 100 output tokens cost, in millionths of a dollar?",
     "value": 2800,
     "tolerance": 0,
     "unit": "millionths of a dollar"
   },
   {
     "id": "ex-q705g33b",
-    "version": 1,
+    "version": 2,
     "section": "tokens-to-money",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "In the priced request, input was 95% of the tokens and 83% of the cost. What does that say about where to save?",
+    "prompt": "In the priced request, input was 90% of the tokens and 69% of the cost. What does that say about where to save?",
     "choices": [
       {
         "text": "Shorter answers save the most, because output tokens cost four times as much",
         "correct": false,
-        "why": "Output is only 17% of this request's cost, however dear each token is."
+        "why": "Output is only 31% of this request's cost, however dear each token is."
       },
       {
         "text": "A shorter prompt saves more than a shorter answer",
@@ -169,7 +169,7 @@
       {
         "text": "Nothing: the embedding dominates",
         "correct": false,
-        "why": "The embedding was 0.00000006 of 0.00060806."
+        "why": "The embedding was 0.00000018 of 0.00081418."
       },
       {
         "text": "The cost is fixed per request",
@@ -180,12 +180,12 @@
   },
   {
     "id": "ex-4hy0f7x1",
-    "version": 1,
+    "version": 2,
     "section": "per-feature",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "The summaries were expected to be the most expensive feature and turned out the cheapest. Why?",
+    "prompt": "The summaries were expected to be the most expensive feature and cost about what a help question does. Why?",
     "choices": [
       {
         "text": "This week's conversations are short and the summaries are capped at forty words",
@@ -195,12 +195,12 @@
       {
         "text": "Summaries use a cheaper model",
         "correct": false,
-        "why": "They use extract-1 like the rest."
+        "why": "They use llama3.2:3b like the rest."
       },
       {
         "text": "Summaries are cached",
         "correct": false,
-        "why": "Nothing in the lab caches them."
+        "why": "Nothing in the assistant caches them."
       },
       {
         "text": "Staff requests are not billed",
@@ -211,7 +211,7 @@
   },
   {
     "id": "ex-hjbfvsst",
-    "version": 1,
+    "version": 2,
     "section": "per-feature",
     "type": "quiz",
     "difficulty": "medium",
@@ -221,7 +221,7 @@
       {
         "text": "Some help requests are free by contract",
         "correct": false,
-        "why": "There is no such contract in the lab."
+        "why": "There is no such contract."
       },
       {
         "text": "The model answers short questions for free, below a minimum number of tokens",
@@ -242,12 +242,12 @@
   },
   {
     "id": "ex-d9qz6e98",
-    "version": 1,
+    "version": 2,
     "section": "per-feature",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "The 95th percentile cost of a help request is more than twice the median. Which setting drives that most?",
+    "prompt": "The 95th percentile cost of a help request is twice the median. Which setting drives that most?",
     "choices": [
       {
         "text": "The model's maximum output tokens, which caps how long a reply can be",
@@ -257,7 +257,7 @@
       {
         "text": "The temperature",
         "correct": false,
-        "why": "extract-1 has none, and temperature does not change token counts much anyway."
+        "why": "The assistant asks at temperature 0, and temperature does not change token counts much anyway."
       },
       {
         "text": "k and the floor, which decide how many sources go into the prompt",
@@ -273,12 +273,12 @@
   },
   {
     "id": "ex-hj4tjdm6",
-    "version": 1,
+    "version": 2,
     "section": "per-user",
     "type": "quiz",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "Who were the three heaviest users of the week?",
+    "prompt": "Who were the two heaviest users of the week?",
     "choices": [
       {
         "text": "The support team",
@@ -286,7 +286,7 @@
         "why": "Right. The feature column said what they were without saying who."
       },
       {
-        "text": "Three customers scripting the assistant against its API every night",
+        "text": "Two customers scripting the assistant against its API every night",
         "correct": false,
         "why": "Their only feature was summary, which customers do not use."
       },
@@ -304,7 +304,7 @@
   },
   {
     "id": "ex-kpbtd3ff",
-    "version": 1,
+    "version": 2,
     "section": "per-user",
     "type": "quiz",
     "difficulty": "medium",
@@ -317,7 +317,7 @@
         "why": "A list of features reverses nothing."
       },
       {
-        "text": "Without it, the heaviest users looked like three customers to investigate",
+        "text": "Without it, the heaviest users looked like two customers to investigate",
         "correct": true,
         "why": "Right. Who they are stays hidden; what they did is enough."
       },
@@ -335,12 +335,12 @@
   },
   {
     "id": "ex-36s0a9cr",
-    "version": 1,
+    "version": 2,
     "section": "per-user",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "The lab's per-user curve is flat. Why should a real one not be assumed flat?",
+    "prompt": "The replayed week's per-user curve is flat. Why should a real one not be assumed flat?",
     "choices": [
       {
         "text": "Real users always cost the same as each other",
@@ -353,7 +353,7 @@
         "why": "A pseudonym is stable; heavy users still add up under it."
       },
       {
-        "text": "The lab's traffic picks a user at random for every request; real use concentrates",
+        "text": "The simulated week picks who asks at random every time; real use concentrates",
         "correct": true,
         "why": "Right. The flatness is a property of how the week was generated."
       },
@@ -366,22 +366,22 @@
   },
   {
     "id": "ex-fh7jgkz2",
-    "version": 1,
+    "version": 2,
     "section": "over-time",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "The cost per 1,000 requests fell from 0.80 on Wednesday to 0.59 on Thursday. What caused it?",
+    "prompt": "The cost per 1,000 requests fell from 0.66 on Tuesday to 0.55 on Wednesday. What caused it?",
     "choices": [
       {
         "text": "The new release raised the floor",
         "correct": false,
-        "why": "That was Friday at 10:00."
+        "why": "That was Thursday at 10:00."
       },
       {
         "text": "Fewer customers asked questions",
         "correct": false,
-        "why": "Thursday had 208 requests, Wednesday 207; volume does not change cost per request anyway."
+        "why": "Wednesday had 45 requests, Tuesday 47; volume does not change cost per request anyway."
       },
       {
         "text": "The cache started working",
@@ -389,21 +389,21 @@
         "why": "There is no cache in this assistant."
       },
       {
-        "text": "The price cut of 1 October",
+        "text": "The price cut of 30 September",
         "correct": true,
-        "why": "Right. Tokens per request stayed the same; the price per token fell 25%."
+        "why": "Right. The price per token fell 25%; tokens per request moved only with the day's noise."
       }
     ]
   },
   {
     "id": "ex-be13e7aj",
-    "version": 1,
+    "version": 2,
     "section": "over-time",
     "type": "numeric",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Under release 2026.10.1, how many input tokens did a request carry on average (68,839 over 466)?",
-    "value": 148,
+    "prompt": "Under release 2026.10.1, how many input tokens did a request carry on average (21,450 over 161)?",
+    "value": 133,
     "tolerance": 1,
     "unit": "tokens"
   },
@@ -440,12 +440,12 @@
   },
   {
     "id": "ex-ftpm6d6n",
-    "version": 1,
+    "version": 2,
     "section": "over-time",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "Why is the fall in cost after Friday's release not good news?",
+    "prompt": "Why is the fall in cost after Thursday's release not good news?",
     "choices": [
       {
         "text": "Because the price went back up",
@@ -465,7 +465,7 @@
       {
         "text": "Because weekends are always cheaper",
         "correct": false,
-        "why": "Friday itself fell, before the weekend, and per request, not in total."
+        "why": "Thursday itself fell, before the weekend, and per request, not in total."
       }
     ]
   },
@@ -595,12 +595,12 @@
   },
   {
     "id": "ex-jdsfjckx",
-    "version": 1,
+    "version": 2,
     "section": "budgets",
     "type": "quiz",
     "difficulty": "medium",
     "drillable": true,
-    "prompt": "No feature crossed its budget from Thursday on. What does the lesson say that means?",
+    "prompt": "Help and order stopped crossing their budgets from Wednesday on. What does the lesson say that means?",
     "choices": [
       {
         "text": "The team got better at spending",
@@ -608,7 +608,7 @@
         "why": "Nobody did anything to save money that week."
       },
       {
-        "text": "The budgets were raised on Thursday morning",
+        "text": "The budgets were raised on Wednesday morning",
         "correct": false,
         "why": "budgets.json was the same all week."
       },
@@ -620,7 +620,7 @@
       {
         "text": "Weekends have no traffic",
         "correct": false,
-        "why": "Saturday and Sunday had 153 and 143 requests."
+        "why": "Saturday and Sunday had 36 and 34 requests."
       }
     ]
   },

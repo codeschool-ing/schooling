@@ -1,6 +1,6 @@
 ---
 title: The failures that are answers
-version: 1
+version: 2
 ---
 
 Lesson 4 counted errors: requests the provider refused and requests the customer saw fail. In this week
@@ -35,26 +35,27 @@ for (feature, release), c in sorted(by.items()):
 ```
 
 ```
-ana@lab:~/obs$ python outcomes.py
+ana@dev:~/obs$ python outcomes.py
 feature  release    requests  answered  refused refused % dangling
-help     2026.09.4       595       481      114       19%        0
-help     2026.10.1       331       232       99       30%        0
-order    2026.09.4       194       123       71       37%        0
-order    2026.10.1       101        37       64       63%        0
-summary  2026.09.4        90        90        0        0%        0
-summary  2026.10.1        34        34        0        0%        0
+help     2026.09.4       102        80       22       22%        0
+help     2026.10.1       105        62       43       41%        0
+order    2026.09.4        32        23        9       28%        0
+order    2026.10.1        36        22       14       39%        0
+summary  2026.09.4        16        16        0        0%        0
+summary  2026.10.1        20        20        0        0%        0
 ```
 
-**No dangling citations all week.** That is extract-1: it cites only the sources it was given, by
-construction. A real model invents a `[4]` when given three sources often enough that this column is
-worth keeping.
+**No dangling citations all week.** `llama3.2:3b` cited only sources it was given, in every one of
+its 265 answers. That is worth knowing and worth checking again after every change of model or
+prompt: a model given three sources and inventing a `[4]` is a known failure, and this column is the
+only place it would show.
 
-**The refusal rate rose with the release, in both features.** Help went from 19% refused to 30%. Order
-went from 37% to **63%**: under the new floor, nearly two in three customers asking about their own order
-were told the documents had nothing for them. A refusal is the right answer to a question the documents
-do not answer, and four topics in this week's traffic are like that. It is the wrong answer to the rest.
-A rate is not right or wrong by itself, but a rate that jumps on the day of a release is a release that
-changed what customers get.
+**The refusal rate rose with the release, in both features.** Help went from 22% refused to **41%**:
+under the new floor, two in five customers asking a question were told the documents had nothing for
+them. Order went from 28% to 39%. A refusal is the right answer to a question the documents do not
+answer, and four topics in this week's traffic are like that. It is the wrong answer to the rest. A
+rate is not right or wrong by itself, but a rate that jumps on the day of a release is a release
+that changed what customers get.
 
-**And the order feature refused more than help even before.** 37% under the old floor, against 19%.
+**And the order feature refused more than help even before.** 28% under the old floor, against 22%.
 The next section finds out why, from two traces.

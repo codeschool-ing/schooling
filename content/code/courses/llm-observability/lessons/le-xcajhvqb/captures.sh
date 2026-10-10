@@ -8,122 +8,44 @@
 #   sudo bash ../../lab.sh up        # once
 #   sudo bash captures.sh
 #
-# What is STAGED rather than typed, and not shown in the lesson: the lab
-# (lab.sh reset), copying the course's programs into ~/obs from
-# ../../lab/code, and building version 2 of the evaluation set, which lesson
-# 13 shows. The programs and the file this lesson writes are put below and
-# shown in full.
+# What is STAGED rather than typed, and not shown: ~/obs rebuilt as lesson 1
+# leaves it (lab.sh reset); the programs, the price list and the evaluation
+# set lessons 1 to 14 show, read out of the lessons that show them whole
+# (stage, put); and version 2 of the set, built by lesson 13's buildset.py.
 #
-# The candidates are releases the course wrote. extract-2 is the lab's second
-# version of its stand-in model (rule 3 at the top of ../../lab/labobs.py),
-# not a language model: what changing to it does here is what its three
-# numbers do, and the lesson says so. Its price is the course's, from
-# prices.json. The runs are made now, so every reply is priced at today's
-# prices, whatever release produced it.
+# The three candidates are releases the course wrote, each a line of
+# releases.json that a team could have proposed. Every reply is
+# llama3.2:3b's (a80c4f17acd5) or llama3.2:1b's (baf6a787fdff) through
+# Ollama 0.40.0, at temperature 0, taken on the day this ran. The runs are made
+# now, so every reply is priced at today's prices, whatever release produced
+# it.
 #
-# Recorded on Ubuntu 24.04, Python 3.11, TZ=America/Sao_Paulo, on 2026-10-06.
+# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 set -uo pipefail
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-CODE=$(cd "$(dirname "$LAB_SH")" && pwd)/lab/code
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@lab:~/obs$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-use() { for f in "$@"; do put "$f" < "$CODE/$f"; done; }
-block() { printf '##### %s\n' "$1"; }
+. ../../lab/capture.sh
 exec 9>/var/tmp/llmobs-capture.lock; flock 9
-lab reset >/dev/null
-use telemetry.py redact.py assistant.py checks.py evalrun.py facts.py costs.py docs.py buildset.py
-lab exec 'python buildset.py >/dev/null'
 
-put releases.json <<'JSON'
-{
-  "2026.09.4": {"from": "2026-09-01T00:00:00", "model": "extract-1", "k": 3, "floor": 0.5},
-  "2026.10.1": {"from": "2026-10-02T10:00:00", "model": "extract-1", "k": 3, "floor": 0.62},
-  "2026.10.2": {"from": "2099-01-01T00:00:00", "model": "extract-2", "k": 3, "floor": 0.62},
-  "2026.10.3": {"from": "2099-01-01T00:00:00", "model": "extract-1", "k": 3, "floor": 0.5},
-  "2026.10.4": {"from": "2099-01-01T00:00:00", "model": "extract-2", "k": 3, "floor": 0.5}
-}
-JSON
-
-put regress.py <<'PY'
-"""regress.py: a candidate release against the current one, case by case, on the same evaluation set.
-
-    python regress.py BASE CANDIDATE        # runs/BASE.jsonl and runs/CANDIDATE.jsonl
-"""
-import hashlib
-import json
-import math
-import statistics
-import sys
-
-import checks
-import costs
-from facts import normalised
-
-SET = "data/eval-v2.jsonl"
-body = open(SET, "rb").read()
-cases = {c["id"]: c for c in map(json.loads, body.decode().splitlines())}
-spent = {r["trace"]: r for r in costs.requests("eval-spans.jsonl")}
-
-
-def load(name):
-    run = {r["id"]: r for r in map(json.loads, open(f"runs/{name}.jsonl"))}
-    if {i: r["question"] for i, r in run.items()} != {i: c["question"] for i, c in cases.items()}:
-        sys.exit(f"runs/{name}.jsonl did not ask the questions of {SET}: refusing to compare")
-    return run
-
-
-def grade(r):
-    """Right by lesson 8's facts, and the set of lesson 8's checks the reply fails."""
-    return normalised(r["reply"], cases[r["id"]]["facts"]), {n for n, ok, _ in checks.run(r["reply"], r["sources"]) if not ok}
-
-
-def mcnemar(broken, fixed):
-    """Exact two-sided p: how often chance alone would split this many changed verdicts at least this unevenly."""
-    n = broken + fixed
-    tail = sum(math.comb(n, k) for k in range(min(broken, fixed) + 1)) / 2 ** n
-    return min(1.0, 2 * tail)
-
-
-base_name, cand_name = sys.argv[1:3]
-base, cand = load(base_name), load(cand_name)
-release = lambda run: next(iter(run.values()))["release"]
-print(f"{SET} sha256 {hashlib.sha256(body).hexdigest()[:12]}: {release(base)} -> {release(cand)}")
-print("               both right  both wrong  fixed  broken")
-moved = {"fixed": [], "broken": []}
-for split in ("dev", "held-out"):
-    count = dict.fromkeys(("both right", "both wrong", "fixed", "broken"), 0)
-    for i, c in cases.items():
-        if c["split"] != split:
-            continue
-        was, now = grade(base[i])[0], grade(cand[i])[0]
-        key = "both right" if was and now else "both wrong" if not (was or now) else "fixed" if now else "broken"
-        count[key] += 1
-        if key in moved:
-            moved[key].append(i)
-    print(f"  {split:9} {count['both right']:12}{count['both wrong']:12}{count['fixed']:7}{count['broken']:8}")
-print(f"exact McNemar p = {mcnemar(len(moved['broken']), len(moved['fixed'])):.4f}"
-      f" on {len(moved['broken']) + len(moved['fixed'])} changed verdicts")
-for key in ("broken", "fixed"):
-    for i in moved[key]:
-        print(f"  {key:6} {i} {cases[i]['split']:8} {cases[i]['question'][:56]}")
-new_fails = [(i, sorted(grade(cand[i])[1] - grade(base[i])[1])) for i in cases]
-print("checks newly failing:", ", ".join(f"{i} {n}" for i, ns in new_fails for n in ns) or "none")
-print(f"replies changed: {sum(base[i]['reply'] != cand[i]['reply'] for i in cases)} of {len(cases)}")
-for label, f in (("output tokens", lambda r: spent[r["trace"]]["output"]), ("cost US$", lambda r: spent[r["trace"]]["cost"]),
-                 ("median ms", None)):
-    if f is None:
-        b, n = (statistics.median(spent[r["trace"]]["ms"] for r in run.values()) for run in (base, cand))
-        print(f"{label:14} {b:10.0f} -> {n:10.0f}   {(n - b) / b:+.0%}")
-    else:
-        b, n = (sum(f(r) for r in run.values()) for run in (base, cand))
-        print(f"{label:14} {b:10} -> {n:10}   {(n - b) / b:+.0%}")
-PY
-
-block candidates
-on 'cat releases.json'
+L14=$COURSE/lessons/le-xcajhvqb
+quiet lab reset
+stage telemetry.py le-6wxafmfh/the-chain.md
+stage assistant.py le-6wxafmfh/the-chain.md
+stage evalrun.py le-33kcjt4d/exact-and-normalised.md
+stage facts.py le-33kcjt4d/exact-and-normalised.md
+stage checks.py le-33kcjt4d/rules-for-the-form.md
+stage costs.py le-3s3pd3qk/tokens-to-money.md
+stage docs.py le-6b7d05dk/versioning.md
+stage buildset.py le-6b7d05dk/versioning.md
+stage regress.py le-xcajhvqb/the-release-that-shipped.md
+python3 "$COURSE/lab/fences.py" block "$COURSE/lessons/le-3s3pd3qk/tokens-to-money.md" '{' | put prices.json
+python3 "$COURSE/lab/fences.py" block "$COURSE/lessons/le-33kcjt4d/exact-and-normalised.md" \
+  '{"id": "e01", "question": "How many days do I have to return a printed book?", "gold": ["returns-policy:the-return-window"], "facts": ["30 days"]}' \
+  | put data/eval.jsonl
+python3 "$COURSE/lab/fences.py" block "$COURSE/lessons/le-6b7d05dk/cases-from-traffic.md" \
+  '{"id": "e25", "question": "right of withdrawal days", "gold": ["returns-policy:the-right-of-withdrawal"], "facts": ["seven days", "7 days"], "source": "traffic 2026-09-28 to 10-04, doubted", "added": "2026-10-08"}' \
+  | put data/eval-additions.jsonl
+quiet lab exec 'python buildset.py'
+python3 "$COURSE/lab/fences.py" block "$L14/what-changed.md" '{' | put releases.json
 
 block runs
 on 'for r in 2026.09.4 2026.10.1 2026.10.2 2026.10.3 2026.10.4; do python evalrun.py $r --set data/eval-v2.jsonl --release $r; done'

@@ -1,6 +1,6 @@
 ---
 title: Quando um pedido falha
-version: 1
+version: 2
 ---
 
 O MCP tem dois jeitos de informar uma falha, e eles querem dizer coisas diferentes. Um **erro de protocolo** é um `error` JSON-RPC: o pedido em si não pôde ser tratado. Um **erro de execução de ferramenta** é um resultado comum com `isError: true`: o pedido estava certo, e a ferramenta falhou. O segundo tipo é feito para o modelo ler e agir.
@@ -29,6 +29,12 @@ ana@lab:~/agents$ python raw.py shop_mcp.py 330 < errors.jsonl
 
 Agora o próprio envelope. Uma versão que o servidor não suporta:
 
+O arquivo, `old-version.jsonl`:
+
+```json
+{"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {"_meta": {"io.modelcontextprotocol/protocolVersion": "1999-01-01", "io.modelcontextprotocol/clientCapabilities": {}}}}
+```
+
 ```
 ana@lab:~/agents$ python raw.py shop_mcp.py < old-version.jsonl
 > {"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {"_meta": {"io.modelcontextprotocol/protocolVersion": "1999-01-01", "io.modelcontextprotocol/clientCapabilities": {}}}}
@@ -36,6 +42,13 @@ ana@lab:~/agents$ python raw.py shop_mcp.py < old-version.jsonl
 ```
 
 `-32022`, **Unsupported protocol version**, com as versões que o servidor suporta. A especificação diz que um cliente deve escolher uma delas e tentar de novo. E um pedido sem `_meta` nenhum, seguido de um correto na mesma conexão:
+
+O arquivo, `no-meta.jsonl`:
+
+```json
+{"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}}
+{"jsonrpc": "2.0", "id": 2, "method": "tools/list", "params": {"_meta": {"io.modelcontextprotocol/protocolVersion": "2026-07-28", "io.modelcontextprotocol/clientCapabilities": {}}}}
+```
 
 ```
 ana@lab:~/agents$ python raw.py shop_mcp.py 260 < no-meta.jsonl

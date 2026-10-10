@@ -5,7 +5,7 @@
     "choices": [
       {
         "text": "Um agente roda num modelo maior e mais capaz do que o de um assistente",
-        "why": "Os dois podem usar o mesmo modelo. O assistente e o agente do laboratório chamam o mesmo scripted-1."
+        "why": "Os dois podem usar o mesmo modelo. O assistente e o agente desta aula chamam o mesmo llama3.2:3b."
       },
       {
         "text": "O modelo escolhe o próximo passo, dentro de um laço",
@@ -47,7 +47,7 @@
     "choices": [
       {
         "text": "Se a documentação o chama assim",
-        "why": "Nomes são marketing. O agent.py do laboratório tem quarenta linhas e não se chama de nada."
+        "why": "Nomes são marketing. O agent.py desta aula tem quarenta linhas e não se chama de nada."
       },
       {
         "text": "Se ele tem mais de uma ferramenta",
@@ -85,45 +85,45 @@
     ]
   },
   "ex-4q04n3gb": {
-    "prompt": "O rascunho do assistente termina com `[For the support team: I cannot see orders. Check the delivery date before sending this.]` Por que essa linha está certa?",
+    "prompt": "O rascunho do assistente diz à Bia que ela tem até 24 de outubro. Que parte dessa resposta nada no programa conferiu?",
     "choices": [
       {
-        "text": "Porque um modelo tem de pôr um aviso em tudo o que escreve para um cliente",
-        "why": "Aviso em tudo é ruído. Este nomeia o único fato que o rascunho não pôde conferir."
+        "text": "Os trinta dias, que o modelo pode ter lembrado errado",
+        "why": "Os trinta dias estão na central de ajuda que o assistente recebeu, palavra por palavra."
       },
       {
-        "text": "Porque os 30 dias do rascunho foram palpite do modelo, e não regra da central de ajuda",
-        "why": "Os 30 dias estão na central de ajuda que o assistente recebeu. A data é o que ele aceitou sem conferir."
+        "text": "Os passos para mandar o pacote de volta, que nenhuma ferramenta devolveu",
+        "why": "Estão no mesmo artigo: a etiqueta pré-paga e a agência dos correios."
       },
       {
-        "text": "Porque o assistant.py não mandou ao modelo nenhum artigo da central de ajuda",
-        "why": "O assistant.py põe os 40 artigos no prompt de sistema. É por isso que a entrada dele teve 2250 tokens."
+        "text": "Que a devolução é grátis",
+        "why": "O artigo diz isso. O rascunho repetiu, não inventou."
       },
       {
-        "text": "A data veio da Bia, sem conferência",
-        "why": "Certo. O assistente tinha a central de ajuda e a mensagem, não o pedido. A pessoa que age é a verificação."
+        "text": "A data de entrega, que veio da mensagem da Bia e nunca foi comparada com o pedido",
+        "why": "Certo. O assistente tinha a central de ajuda e a mensagem, não o pedido. Quem envia o rascunho é a conferência."
       }
     ]
   },
   "ex-4ztvpymz": {
-    "prompt": "Perguntado sobre o M-1043, o agente buscou `tracking a parcel`. Perguntado sobre o M-1042, buscou `return a book`. O que fez as duas buscas serem diferentes?",
-    "hint": "Veja o que o passo 1 devolveu em cada execução.",
+    "prompt": "Perguntado sobre as formas de pagamento, o agente buscou na central de ajuda. Perguntado sobre o M-1043, consultou o pedido. O que fez os primeiros passos serem diferentes?",
+    "hint": "Veja o que cada mensagem citava.",
     "choices": [
       {
-        "text": "O search_help escolheu o artigo de acordo com o status do pedido",
-        "why": "O search_help só ordena artigos pela consulta que recebe. Ele nunca vê o pedido."
+        "text": "O search_help pôs o artigo de pagamento em primeiro nas duas perguntas",
+        "why": "O search_help só ordena artigos pela consulta que recebe. Ele não foi chamado para o M-1043."
       },
       {
-        "text": "O modelo leu antes o resultado do get_order",
-        "why": "Certo. `shipped` num resultado e `delivered` no outro levaram a passos diferentes. É o laço trabalhando."
+        "text": "O modelo leu a mensagem e escolheu uma ferramenta de acordo",
+        "why": "Certo. Uma mensagem citava um pedido e a outra não. O mesmo agent.py seguiu dois caminhos."
       },
       {
-        "text": "Dois programas, um por pergunta",
-        "why": "As duas execuções foram o mesmo agent.py. Nada nele menciona rastreio ou devolução."
+        "text": "Dois programas, um escrito para cada tipo de pergunta",
+        "why": "As duas execuções foram o mesmo agent.py. Nada nele fala de pedidos ou pagamentos."
       },
       {
-        "text": "Um artigo de ajuda faltando",
-        "why": "O agente nunca pediu um: escolheu outra consulta antes de buscar."
+        "text": "A consulta do pedido falhou, e o agente recorreu à busca",
+        "why": "Nada falhou. O primeiro passo de cada execução deu certo e foi seguido de uma resposta."
       }
     ]
   },
@@ -198,8 +198,8 @@
         "why": "O modelo devolveu um bloco nomeando a ferramenta e os argumentos. Ele não tem acesso ao shop.db."
       },
       {
-        "text": "O labllm, o fornecedor substituto, antes de escrever a resposta",
-        "why": "O labllm devolve texto e blocos tool_use como qualquer fornecedor. Ele nunca toca nos dados da loja."
+        "text": "O Ollama, entre ler o pedido e escrever a resposta",
+        "why": "O Ollama roda o modelo e devolve texto e blocos tool_use. Ele nunca toca no banco da loja."
       },
       {
         "text": "O SDK da Anthropic, automaticamente, assim que chega um bloco tool_use",
@@ -212,23 +212,23 @@
     ]
   },
   "ex-kpxj78f6": {
-    "prompt": "Os tokens de entrada dos três pedidos da pergunta da Bia foram 180, 303 e 498. Por que cada pedido carrega mais que o anterior?",
+    "prompt": "Pelo gravador, a pergunta da Bia levou dois pedidos: 270 tokens de entrada, depois 239. O segundo levava as mensagens do primeiro mais uma chamada de ferramenta e o resultado. Por que ele é menor?",
     "choices": [
       {
-        "text": "Cada pedido reenvia a conversa inteira, com todas as chamadas e resultados anteriores",
-        "why": "Certo. A conversa é o estado do agente, e ela viaja inteira toda vez."
+        "text": "O template escreveu as descrições das ferramentas só no primeiro pedido",
+        "why": "Certo. O template do llama3.2 põe as ferramentas dentro da última mensagem só quando ela é do usuário, e o segundo terminava num resultado de ferramenta."
       },
       {
-        "text": "O fornecedor guarda os passos anteriores e cobra pela memória",
-        "why": "A API não guarda nada entre pedidos. Tudo o que o modelo sabe está no pedido."
+        "text": "O Ollama guardou o primeiro pedido em cache",
+        "why": "Os tokens em cache são uma coluna à parte. A coluna de entrada conta o prompt inteiro de qualquer jeito."
       },
       {
-        "text": "As definições das ferramentas entram mais uma vez por passo",
-        "why": "Elas são enviadas toda vez, com o mesmo tamanho. Não explicam o crescimento."
+        "text": "O SDK descartou a mensagem da Bia depois que o modelo respondeu",
+        "why": "O gravador mostra o pedido: a mensagem da Bia continua sendo a primeira de messages."
       },
       {
-        "text": "O prompt de sistema cresce",
-        "why": "O SYSTEM é uma constante no agent.py. Ele é idêntico nos três pedidos."
+        "text": "O prompt de sistema só vai no primeiro pedido de uma conversa",
+        "why": "O SYSTEM é passado em toda chamada do laço do agent.py, igual toda vez."
       }
     ]
   },
@@ -283,7 +283,7 @@
       },
       {
         "text": "Porque a central de ajuda terá mudado quando acontecer a próxima execução",
-        "why": "A fraqueza existe mesmo com a central de ajuda congelada, como está no laboratório."
+        "why": "A fraqueza existe mesmo com a central de ajuda congelada, como o make_shop.py a escreve."
       },
       {
         "text": "Uma execução testa um caminho, e um modelo real escolhe de novo",
@@ -296,86 +296,86 @@
     ]
   },
   "ex-0h50hccj": {
-    "prompt": "No laboratório deste curso, de onde vêm as respostas do modelo?",
+    "prompt": "Neste curso, de onde vêm as respostas do modelo?",
     "choices": [
       {
-        "text": "Da API da Anthropic, acessada pela chave guardada em /etc/agents.env",
-        "why": "Essa chave é do próprio laboratório e não abre nada em outro lugar. Nenhum fornecedor é acessado."
+        "text": "Da API da Anthropic, acessada com a chave do ollama.env",
+        "why": "A chave do ollama.env é um marcador. A URL base ao lado dela manda todo pedido para o Ollama."
       },
       {
-        "text": "De um modelo de linguagem pequeno que o labllm roda na mesma máquina",
-        "why": "O labllm não roda modelo de linguagem nenhum. Ele lê regras."
+        "text": "Do all-minilm, o modelo que a busca da central de ajuda usa",
+        "why": "O all-minilm transforma texto em vetores para o search_help. Ele não escreve respostas."
       },
       {
-        "text": "Do all-MiniLM-L6-v2, o modelo de embeddings que o laboratório baixa",
-        "why": "Esse modelo é real e roda aqui, mas transforma texto em vetores para o search_help. Ele não escreve respostas."
+        "text": "Do llama3.2:3b, que o Ollama roda no seu próprio computador e serve às bibliotecas",
+        "why": "Certo. As bibliotecas anthropic e openai apontam para o Ollama, que responde nos formatos delas."
       },
       {
-        "text": "De regras que o curso escreveu",
-        "why": "Certo. O labllm fala os formatos dos fornecedores e escolhe cada resposta pelas regras em lab/scripted."
+        "text": "De uma cópia do modelo baixada dentro de cada programa",
+        "why": "Os programas não têm modelo nenhum. Eles mandam pedidos ao Ollama por HTTP, em 127.0.0.1."
       }
     ]
   },
   "ex-kvw90syn": {
-    "prompt": "Qual parte do que este curso mostra mudaria se o labllm fosse trocado por um fornecedor de verdade?",
+    "prompt": "Você troca o Ollama pela API paga de um fornecedor. O que muda no agent.py desta aula?",
     "choices": [
       {
-        "text": "As palavras das respostas e quais ferramentas são chamadas",
-        "why": "Certo. Isso são as regras do curso. Os programas, as ferramentas e os limites em volta ficariam como estão."
+        "text": "O laço, porque um modelo pago devolve as chamadas de ferramenta em outro formato",
+        "why": "A biblioteca anthropic devolve os mesmos blocos nos dois casos. O laço os lê do mesmo jeito."
       },
       {
-        "text": "As chamadas do SDK, escritas para o labllm",
-        "why": "São os SDKs dos próprios fornecedores, sem modificação. Só a URL base e a chave os apontam para o laboratório."
+        "text": "As ferramentas, porque um modelo pago precisa do shop.py nos servidores dele",
+        "why": "Nenhum modelo roda ferramenta. O agent.py roda o shop.py na sua máquina, seja quem for que responda."
       },
       {
-        "text": "Os resultados das ferramentas, simulados pelo laboratório",
-        "why": "Os resultados das ferramentas são reais: o shop.py lê o shop.db e roda o modelo de embeddings."
+        "text": "O nome do modelo no programa, e a chave e a URL base no ambiente",
+        "why": "Certo. O programa nomeia o llama3.2:3b; a chave e a URL base vêm do ambiente."
       },
       {
-        "text": "Nada",
-        "why": "O labllm copia o protocolo, não o comportamento. Um modelo real escolheria os próprios passos e palavras."
+        "text": "Nada: a biblioteca escolhe um modelo",
+        "why": "O programa nomeia o modelo. Nenhum fornecedor tem um modelo chamado llama3.2:3b."
       }
     ]
   },
   "ex-kytg2x6q": {
-    "prompt": "O `sudo bash lab.sh up` para na hora com `embeddings-vectors' lab is required beside this course`. O que está errado?",
+    "prompt": "Um programa para com `AttributeError: module 'math' has no attribute 'sumprod'` ao buscar na central de ajuda. O que está errado?",
     "choices": [
       {
-        "text": "O laboratório do embeddings-vectors precisa estar montado e rodando antes de este começar",
-        "why": "Nada daquele laboratório precisa rodar. Dois arquivos dele e o executor do modelo são lidos, nada mais."
+        "text": "Os vetores da central de ajuda nunca foram calculados",
+        "why": "O shop.py os calcula na primeira busca. Este erro vem antes de qualquer vetor ser usado."
       },
       {
-        "text": "Só um diretório foi copiado",
-        "why": "Certo. O laboratório pega o minilm.py e a central de ajuda de ../embeddings-vectors/lab."
+        "text": "O Python que o roda é anterior ao 3.12, o primeiro a ter math.sumprod",
+        "why": "Certo. O math.sumprod chegou no 3.12, e um ambiente virtual fica com o Python com que foi criado."
       },
       {
-        "text": "O modelo falhou no checksum",
-        "why": "Isso falha depois, no sha256sum, com outra mensagem."
+        "text": "O Ollama não está rodando, então o all-minilm não responde",
+        "why": "Isso falha com um erro de conexão do urllib, não com um atributo que falta."
       },
       {
-        "text": "O pip não alcançou o PyPI",
-        "why": "O pip roda depois desta verificação, e a falha dele imprime o erro do próprio pip."
+        "text": "Falta o numpy",
+        "why": "O shop.py não usa numpy. A multiplicação é da biblioteca padrão."
       }
     ]
   },
   "ex-ngndsjd3": {
-    "prompt": "Todo programa falha ao conectar na porta 8600, e o `/run/labllm.out` diz que o endereço já está em uso. O que você confere primeiro?",
+    "prompt": "Num terminal novo, o agent.py para com `Could not resolve authentication method`. O que você confere primeiro?",
     "choices": [
       {
-        "text": "Se a chave de API escrita em /etc/agents.env ainda é válida",
-        "why": "Uma chave errada recebe 401 do labllm. Aqui o labllm nem começou."
+        "text": "Se o ambiente foi ativado neste terminal",
+        "why": "Certo. O ollama.env chega ao shell pelo .venv/bin/activate, e um terminal novo começa sem ele."
       },
       {
-        "text": "Se uma regra de firewall está bloqueando o tráfego na interface de loopback",
-        "why": "O erro é do bind, do lado do servidor. Um firewall não diz que o endereço está em uso."
+        "text": "Se o llama3.2:3b foi baixado no Ollama",
+        "why": "Modelo faltando é um erro do Ollama sobre o modelo. Aqui nenhum pedido foi enviado."
       },
       {
-        "text": "Qual processo ocupa a 8600, com `ss -ltnp`",
-        "why": "Certo. Outra coisa ocupa a porta, por exemplo um labllm anterior que nunca foi parado."
+        "text": "Se um firewall bloqueia o tráfego na interface de loopback",
+        "why": "A biblioteca parou antes de se conectar a qualquer coisa, por falta de chave."
       },
       {
-        "text": "Se o Python 3.11 está instalado",
-        "why": "O labllm nem chega a abrir uma porta sem Python."
+        "text": "Se a chave de API do ollama.env ainda vale",
+        "why": "O Ollama não confere chave nenhuma. A biblioteca não encontrou chave alguma, que é outro problema."
       }
     ]
   },

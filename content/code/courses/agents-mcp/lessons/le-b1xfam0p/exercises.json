@@ -156,7 +156,7 @@
   },
   {
     "id": "ex-8c5qmd2s",
-    "version": 1,
+    "version": 2,
     "section": "the-model-adapter",
     "type": "quiz",
     "difficulty": "hard",
@@ -179,9 +179,9 @@
         "why": "Reply has stop."
       },
       {
-        "text": "Because tests have to use labllm",
+        "text": "Because tests have to talk to Ollama",
         "correct": false,
-        "why": "Tests use FakeModel and no labllm."
+        "why": "Tests use FakeModel; no model runs at all."
       }
     ]
   },
@@ -248,7 +248,7 @@
   },
   {
     "id": "ex-ayrgzpq5",
-    "version": 1,
+    "version": 2,
     "section": "every-failure-is-a-result",
     "type": "quiz",
     "difficulty": "medium",
@@ -258,22 +258,22 @@
       {
         "text": "Because the refund amount was larger than what was left to refund",
         "correct": false,
-        "why": "3890 cents is less than the 7780 left on M-1047."
+        "why": "10000 cents is more than the order's 7780, but the call never got as far as shop.refund's own check."
       },
       {
-        "text": "Because the schema refused the reason",
+        "text": "Because the model changed its mind and answered instead",
         "correct": false,
-        "why": "The reason has no length rule in minagent's schema, and passed."
+        "why": "It answered after its call was refused, not instead of making one."
       },
       {
-        "text": "Because labllm blocked the call",
+        "text": "Because Ollama blocked the call",
         "correct": false,
-        "why": "labllm only returned the model's request; the host decided."
+        "why": "Ollama only returned the model's request; the host decided."
       },
       {
-        "text": "It is a write, and nobody confirmed it",
+        "text": "Its cents arrived as a string, and the schema refused it",
         "correct": true,
-        "why": "Right. run.py passes no confirm callback, so call refuses every write."
+        "why": "Right. '10000' is not an integer, so call returned an error before the write guard or the function."
       }
     ]
   },
@@ -310,17 +310,17 @@
   },
   {
     "id": "ex-exgmf3p1",
-    "version": 1,
-    "section": "every-failure-is-a-result",
+    "version": 2,
+    "section": "testing-without-a-model",
     "type": "quiz",
     "difficulty": "hard",
     "drillable": true,
-    "prompt": "The stuck run's handoff said 'Nothing found yet.' Where does that sentence come from?",
+    "prompt": "In test_three_steps_of_only_errors_stop_the_run, the outcome ends with a handoff. If it said 'Nothing found yet.', where would that sentence come from?",
     "choices": [
       {
         "text": "From the model's last reply, which admitted it had found nothing",
         "correct": false,
-        "why": "The model's last reply was a tool call; stop builds the handoff."
+        "why": "The fake model's replies are all tool calls; stop builds the handoff."
       },
       {
         "text": "From the plan, which had no done steps",
@@ -333,27 +333,27 @@
         "why": "Right. The handoff lists successful calls, and there were none."
       },
       {
-        "text": "From labllm's error message",
+        "text": "From the fake model's last reply",
         "correct": false,
-        "why": "labllm returned replies, not errors, in that run."
+        "why": "FakeModel replays the calls the test wrote; none of them is a sentence."
       }
     ]
   },
   {
     "id": "ex-bthf2s02",
-    "version": 1,
+    "version": 2,
     "section": "retries",
     "type": "numeric",
     "difficulty": "easy",
     "drillable": true,
-    "prompt": "With labllm set to fail twice, how many requests answered 529 before the first 200 in the log?",
+    "prompt": "With flaky.py set to fail twice, how many requests answered 529 before the first 200 in its log?",
     "value": 2,
     "tolerance": 0,
     "unit": "requests"
   },
   {
     "id": "ex-9x807xna",
-    "version": 1,
+    "version": 2,
     "section": "retries",
     "type": "quiz",
     "difficulty": "medium",
@@ -371,9 +371,9 @@
         "why": "Right. max_retries defaults to 2, with backoff, for 408, 409, 429 and 5xx."
       },
       {
-        "text": "labllm, which answers 200 after failing the configured number of times",
+        "text": "flaky.py, which answers 200 after failing the number of times it was given",
         "correct": false,
-        "why": "labllm fails as told; something had to send the requests again."
+        "why": "flaky.py fails as told and forwards what comes after; something had to send the requests again."
       },
       {
         "text": "ana, by hand",
@@ -427,7 +427,7 @@
   },
   {
     "id": "ex-6qrn7eag",
-    "version": 1,
+    "version": 2,
     "section": "the-trace",
     "type": "quiz",
     "difficulty": "medium",
@@ -440,14 +440,14 @@
         "why": "The function never ran, cached or not."
       },
       {
-        "text": "Because labllm answered it instead of the host",
+        "text": "Because Ollama answered it instead of the host",
         "correct": false,
-        "why": "Tools run in the host; labllm never runs a tool."
+        "why": "Tools run in the host; Ollama never runs a tool."
       },
       {
         "text": "Because the trace rounds anything under a second down to zero",
         "correct": false,
-        "why": "The trace records milliseconds; other steps show 1 ms and 1053 ms."
+        "why": "The trace records milliseconds; the model's steps show thousands of them."
       },
       {
         "text": "The schema refused M1047 first",
@@ -489,7 +489,7 @@
   },
   {
     "id": "ex-jc68yt5x",
-    "version": 1,
+    "version": 2,
     "section": "testing-without-a-model",
     "type": "quiz",
     "difficulty": "medium",
@@ -502,9 +502,9 @@
         "why": "Right. FakeModel is eight lines that replay replies the test wrote."
       },
       {
-        "text": "labllm runs inside pytest during the tests",
+        "text": "Ollama runs inside pytest during the tests",
         "correct": false,
-        "why": "No labllm runs during the tests."
+        "why": "No model runs during the tests."
       },
       {
         "text": "The anthropic SDK has a test mode that returns canned replies",

@@ -1,24 +1,25 @@
 ---
 title: The loop, closed
-version: 1
+version: 2
 ---
 
-Put the course's pieces in the order they would have run on Friday 2 October, if they had been in place:
+Put the course's pieces in the order they would have run on Thursday 1 October, if they had been in place:
 
-1. **10:00.** 2026.10.1 goes out. It never passed lesson 15's gate, which would have stopped it on five
+1. **10:00.** 2026.10.1 goes out. It never passed lesson 15's gate, which would have stopped it on seven
    broken cases.
-2. **14:00.** The Wilson rule fires: refusals over the last six hours are surely above the baseline. The
+2. **15:00.** The Wilson rule fires: refusals over the last 24 hours are surely above the baseline. The
    alert names the release and links to the traces of the refused replies.
-3. **The traces** show the search keeping fewer chunks: in lesson 1's tree, the search span of a refused
-   reply has `app.search.kept` at 0 and `app.search.floor` at 0.62.
-4. **The production signals** of lesson 5 say who is affected: order questions most, refused nearly two
-   times in three, with the thumbs following.
+3. **The traces** show the search keeping fewer chunks: in lesson 1's tree, the search span of 38 of
+   the 57 refused replies has `app.search.kept` at 0, under `app.search.floor` at 0.55.
+4. **The production signals** of lesson 5 say who is affected: help and order questions alike, refused
+   about two times in five where it was one in four.
 5. **The harvest** of lesson 13 turns the week's doubted questions into cases, among them the keyword
    phrasings and the order messages the set never had.
 6. **The regression test** of lesson 14 compares a fix with production on the set, case by case: the floor
-   put back fixes all five broken cases.
-7. **The gate** of lesson 15 holds the fix to its budgets, and a person writes down why the cost may
-   rise: production was cheap because it refused.
+   put back fixes seven cases and breaks two, both by name.
+7. **The gate** of lesson 15 holds the fix to every case and to its budgets, and a person writes down why
+   the two cases, the four uncited sentences and the higher cost are acceptable: production was cheap
+   because it refused.
 8. **2026.10.3 goes out**, and the panel of this lesson would show the share of refusals falling back to
    the baseline. The alert would resolve because the problem did.
 

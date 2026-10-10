@@ -1,19 +1,19 @@
 ---
 title: What the split cost
-version: 1
+version: 2
 ---
 
-`tally.py` reads labllm's log and adds up requests and tokens per agent, telling the agents apart by a phrase in each one's system prompt. The log was emptied before each run.
+`tally.py` reads the recorder's `requests.jsonl` and adds up requests and tokens per agent, telling the agents apart by a phrase in each one's system prompt. The file was removed before each run.
 
 ```python
-"""Requests and tokens since the log was emptied, per agent, told apart by their system prompts."""
+"""Requests and tokens since requests.jsonl was emptied, per agent, told apart by their system prompts."""
 import json
 from collections import defaultdict
 
 WHO = {"orchestrator": "orchestrator", "orders specialist": "orders", "catalogue specialist": "catalogue",
        "triage agent": "triage", "working alone": "agent"}
 rows = defaultdict(lambda: [0, 0, 0])
-for line in open("/var/log/labllm/requests.jsonl"):
+for line in open("requests.jsonl"):
     r = json.loads(line)
     who = next(name for key, name in WHO.items() if key in (r["request"].get("system") or ""))
     rows[who][0] += 1
@@ -29,25 +29,26 @@ For the orchestrated run of section 04:
 
 ```
 ana@lab:~/agents$ python tally.py
-orchestrator  requests 2   input   434   output   82
-orders        requests 2   input   549   output   34
-catalogue     requests 2   input   402   output   42
-total         requests 6   input  1385   output  158
+orchestrator  requests 2   input   499   output   88
+orders        requests 2   input   523   output   45
+catalogue     requests 2   input   413   output   59
+total         requests 6   input  1435   output  192
 ```
 
 And for the same question answered by one agent with all three tools:
 
 ```
+ana@lab:~/agents$ rm requests.jsonl
 ana@lab:~/agents$ python multi.py "Did my order M-1043 ship yet? Also, can you suggest a science fiction book you have in stock?" --single
 agent -> get_order({"order_id": "M-1043"})
 agent -> find_books({"genre": "science fiction"})
-agent: Yes, order M-1043 has shipped; its tracking code is BR5512340003. For science fiction, we have The Time Machine (24.90) and The War of the Worlds (25.90), both by H. G. Wells, in stock.
+agent: Your order M-1043 has shipped. The tracking number is BR5512340003. As for a science fiction book recommendation, I suggest "The Time Machine" by H. G. Wells, which is currently in stock.
 ana@lab:~/agents$ python tally.py
-agent         requests 2   input   897   output   73
-total         requests 2   input   897   output   73
+agent         requests 2   input   714   output   79
+total         requests 2   input   714   output   79
 ```
 
-The single agent asked for both tools in one reply and answered in its second request: **2 requests and 897 input tokens, against 6 requests and 1385**. The answers are word for word the same, because the course scripted them that way; with a real model they could differ, and the split would have to earn its cost by being better, not just by being different.
+The single agent asked for both tools in one reply and answered in its second request: **2 requests and 714 input tokens, against 6 requests and 1435**. And it answered both questions, where the orchestrated run lost the book. On this question the split bought nothing and cost three times the requests; for it to earn that cost, its answers would have to be better, and here they were worse.
 
 Where the extra cost comes from is visible in the table. Each specialist paid for its own system prompt and its own tool definitions twice, once per request. The orchestrator paid to send both questions and to read both answers. **None of that work answered the customer**; it is the price of the boundary.
 

@@ -1,6 +1,6 @@
 ---
 title: Os mesmos spans, mandados para o Langfuse
-version: 1
+version: 2
 ---
 
 O Langfuse recebe traces do OpenTelemetry em `/api/public/otel`, autenticados com as duas chaves do
@@ -10,8 +10,8 @@ lê os cabeçalhos de `OTEL_EXPORTER_OTLP_TRACES_HEADERS`. Duas variáveis de am
 domingo vai para o arquivo e para o Langfuse:
 
 ```
-ana@lab:~/obs$ export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=$LANGFUSE_HOST/api/public/otel/v1/traces OTEL_EXPORTER_OTLP_TRACES_HEADERS="Authorization=Basic $(printf %s $LANGFUSE_PUBLIC_KEY:$LANGFUSE_SECRET_KEY | base64 -w0)"; python replay.py --from 2026-10-04 --to 2026-10-05
-replayed 118 requests from data/traffic.jsonl: 143 asked, 0 failed, 54 feedback events
+ana@dev:~/obs$ export OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=$LANGFUSE_BASE_URL/api/public/otel/v1/traces OTEL_EXPORTER_OTLP_TRACES_HEADERS="Authorization=Basic $(printf %s $LANGFUSE_PUBLIC_KEY:$LANGFUSE_SECRET_KEY | base64 -w0)"; python replay.py --from 2026-10-04 --to 2026-10-05
+replayed 32 requests from data/traffic.jsonl: 34 asked, 0 failed, 7 feedback events
 ```
 
 O `lf.py` faz algumas perguntas à API pública do Langfuse e imprime uma linha por resposta, para que um
@@ -30,7 +30,7 @@ AUTH = {"Authorization": "Basic " + base64.b64encode(KEY.encode()).decode()}
 
 
 def get(path):
-    request = urllib.request.Request(os.environ["LANGFUSE_HOST"] + path, headers=AUTH)
+    request = urllib.request.Request(os.environ["LANGFUSE_BASE_URL"] + path, headers=AUTH)
     return json.load(urllib.request.urlopen(request))
 
 
@@ -53,20 +53,23 @@ elif what == "scores":
 ```
 
 ```
-ana@lab:~/obs$ python lf.py traces 2026-10-04 1
-2026-10-04T03:03:25 cfac41be ask user None session s1010 cost 0 input None
-ana@lab:~/obs$ python lf.py observations cfac41be15f2ff86f623946c9fb05cdd
-EMBEDDING  embed            model lab-minilm  usage {'input': 9, 'total': 9}  cost 0
-GENERATION ask              model extract-1  usage {}  cost 0
+ana@dev:~/obs$ python lf.py traces 2026-10-04 1
+2026-10-04T04:46:31 6f657657 ask user None session s253 cost 0 input None
+ana@dev:~/obs$ python lf.py observations 40070c68d30ca27981bb60d5a853480f
+EMBEDDING  embed            model all-minilm  usage {'input': 5, 'total': 5}  cost 0
+GENERATION ask              model llama3.2:3b  usage {}  cost 0
+GENERATION chat llama3.2:3b model llama3.2:3b  usage {'input': 160, 'output': 16, 'total': 176}  cost 0
 SPAN       search           model None  usage {}  cost 0
-GENERATION chat extract-1   model extract-1  usage {'input': 336, 'output': 69, 'total': 405}  cost 0
 SPAN       generate         model None  usage {}  cost 0
 SPAN       check_citations  model None  usage {}  cost 0
 ```
 
-O trace chegou, com as suas observações: a palavra do Langfuse para spans. O horário está em UTC, três
-horas à frente de São Paulo, então 03:03 na tela são três minutos depois da meia-noite na loja. E o
-Langfuse leu os nossos nomes e decidiu o que cada span é.
+Os traces chegaram, com as suas observações: a palavra do Langfuse para spans. O primeiro do domingo
+é "Can I place an order by phone?", que os documentos não respondem e que o assistente recusou sem
+chamar o modelo, então o segundo comando pergunta pelo primeiro trace que chegou até ele. Ele
+precisa do id inteiro, e `grep -m1 '"name": "chat' spans.jsonl` imprime o primeiro span de chat com
+o id. Os horários estão em UTC, três horas à frente de São Paulo, então 04:46 na tela é um quarto
+para as duas da madrugada na loja. E o Langfuse leu os nossos nomes e decidiu o que cada span é.
 
 **O embedding virou um `EMBEDDING`, e a chamada ao modelo uma `GENERATION`**, com as contagens de tokens
 lidas de `gen_ai.usage.*`. É a convenção da aula 1 dando retorno: ninguém disse ao Langfuse o que esses
@@ -77,12 +80,12 @@ atributos significam.
 que lê a convenção ao pé da letra. Um painel que contasse gerações contaria agora cada pedido duas
 vezes.
 
-**A sessão foi achada, e o usuário não.** `session.id` é um nome que o Langfuse lê; `user.hash`, que a
-aula 2 escolheu como o nome da convenção semântica para um pseudônimo, não está entre os nomes que ele
-procura. Nem `app.question`, então o trace não tem entrada.
+**A sessão foi achada, e o usuário não.** `session.id` é um nome que o Langfuse lê; `user.hash`, o
+nome que a aula 2 deu ao pseudônimo, não está entre os nomes que ele procura. Nem `app.question`,
+então o trace não tem entrada.
 
-**E todo custo é 0.** O Langfuse dá preço a uma geração a partir de uma tabela de modelos que conhece,
-e o extract-1 não é um modelo de que ele tenha ouvido falar.
+**E todo custo é 0.** O Langfuse dá preço a uma geração a partir de uma tabela de modelos que
+conhece, e o `llama3.2:3b` na sua própria máquina não é um para o qual ele tenha preço.
 
 Nada disso é defeito de nenhum dos dois programas. É o que acontece sempre que dois softwares se
 encontram por uma convenção ainda nova: cada um lê os nomes que conhece, e os que não conhece são

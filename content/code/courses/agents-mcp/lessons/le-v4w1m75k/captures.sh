@@ -8,27 +8,22 @@
 #   sudo bash captures.sh
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab
-# (lab.sh reset); tools.py, which is lesson 4's, written again unchanged; and
-# agent.py, which the lesson shows in full.
+# (lab.sh reset); tools.py (lesson 4's) and standin.py (lesson 3's), written
+# again unchanged; and the files ana wrote (put below), which the lesson shows
+# in full, each checked by lab/shown.py.
 #
-# THE MODEL'S PLANS, CALLS AND ANSWERS IN THIS LESSON WERE WRITTEN BY THE
-# COURSE, as rules in lab/scripted/05-*.json. The budget, the limits, the
-# validation, the tools and the outcomes the host prints are real. The time a
-# request takes is labllm's rule (200 ms, then 40 ms a token), so the run
-# stopped by --max-seconds stops where that rule puts it.
+# THE MODEL IS REAL: llama3.2:3b (a80c4f17acd5) in Ollama 0.40.0, with an
+# 8192-token context, on 4 CPUs and no graphics chip, captured on 2026-10-08.
+# Its plans, calls and words are what it wrote that day, and the times are
+# this machine's. Where a run shows the stand-in instead, its replies are the
+# JSON file the lesson shows beside it.
 #
-# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo, with LAB_TODAY=2026-10-06.
-set -uo pipefail
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
+# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-block() { printf '##### %s\n' "$1"; }
-exec 9>/var/tmp/agents-capture.lock; flock 9
-lab reset >/dev/null
+. ../../lab/capture.sh
+lab exec 'ollama run llama3.2:3b hello' < /dev/null >/dev/null 2>&1
 sed -n "/^put tools.py <<'PY'$/,/^PY$/p" ../le-77t9tmfy/captures.sh | sed '1d;$d' | put tools.py
+put standin.py < ../../lab/work/standin.py
 
 put agent.py <<'PY'
 """An agent that keeps a written plan, answers through finish, and runs inside a budget set by the host."""
@@ -37,6 +32,8 @@ import json
 import time
 
 import anthropic
+
+from jsonschema import Draft202012Validator
 
 from tools import TOOLS as SHOP_TOOLS, run_tool
 
@@ -55,6 +52,7 @@ PLAN_TOOLS = [
                                      "sources": {"type": "array", "items": {"type": "string"}}}}},
 ]
 TOOLS = [t for t in SHOP_TOOLS if t["name"] != "issue_refund"] + PLAN_TOOLS
+CHECK = {t["name"]: Draft202012Validator(t["input_schema"]) for t in PLAN_TOOLS}
 SYSTEM = ("You are Marginalia's support agent. Keep a plan with update_plan before you start and whenever "
           "it changes. Use the tools to find facts. When you know the answer, call finish.")
 MARKS = {"todo": " ", "done": "x", "dropped": "-"}
@@ -78,18 +76,22 @@ def run(task, max_steps, max_tokens, max_seconds):
             return stopped(f"token budget: {used} of {max_tokens} used", plan)
         if time.monotonic() - started >= max_seconds:
             return stopped(f"time budget: {max_seconds} s", plan)
-        reply = client.messages.create(model="scripted-1", max_tokens=1024, system=SYSTEM,
+        reply = client.messages.create(model="llama3.2:3b", max_tokens=1024, system=SYSTEM,
                                        tools=TOOLS, messages=messages)
-        used += reply.usage.input_tokens + reply.usage.output_tokens
+        used += reply.usage.input_tokens + (reply.usage.cache_read_input_tokens or 0) + reply.usage.output_tokens
         messages.append({"role": "assistant", "content": reply.content})
         results = []
         for block in reply.content:
             if block.type != "tool_use":
                 continue
-            if block.name == "finish":
+            problem = next(CHECK[block.name].iter_errors(block.input), None) if block.name in CHECK else None
+            if problem:
+                text, is_error = f"invalid arguments: {problem.message}", True
+                print(f"[{step}] {block.name} -> ERROR {text}")
+            elif block.name == "finish":
                 return {"status": "answered", "steps": step, "tokens": used,
                         "answer": block.input["answer"], "sources": block.input["sources"]}
-            if block.name == "update_plan":
+            elif block.name == "update_plan":
                 plan = block.input["steps"]
                 print(f"[{step}] plan")
                 for s in plan:
@@ -119,11 +121,57 @@ GIFT="I need a gift for my nephew, who loves adventure stories. And is my order 
 block plan
 on "python agent.py \"$GIFT\""
 block step-limit
-on "python agent.py \"$GIFT\" --max-steps 3"
+on "python agent.py \"$GIFT\" --max-steps 1"
 block token-budget
-on "python agent.py \"$GIFT\" --max-tokens 1500"
+on "python agent.py \"$GIFT\" --max-tokens 500"
 block time-budget
-on "python agent.py \"$GIFT\" --max-seconds 1"
-on "tail -n 1 /var/log/labllm/requests.jsonl | python -c 'import json, sys; r = json.loads(sys.stdin.read()); print(r[\"usage\"][\"output_tokens\"], \"output tokens in\", r[\"ms\"], \"ms\")'"
+recorder
+say 'export ANTHROPIC_BASE_URL=http://127.0.0.1:11435'
+on "python agent.py \"$GIFT\" --max-seconds 2"
+on "python -c 'import json; [print(r[\"usage\"][\"output_tokens\"], \"output tokens in\", r[\"ms\"], \"ms\") for r in map(json.loads, open(\"requests.jsonl\"))]'"
 block replan
+on 'python agent.py "Is my order M-1049 delivered, and can I still return it?"'
+
+put plan.json <<'JSON'
+{"adventure stories": [
+  {"tool": "update_plan", "input": {"steps": [
+    {"step": "Look up order M-1045", "status": "todo"},
+    {"step": "Find adventure books in stock", "status": "todo"},
+    {"step": "Answer both questions", "status": "todo"}]}},
+  {"tool": "get_order", "input": {"order_id": "M-1045"}},
+  [{"tool": "update_plan", "input": {"steps": [
+    {"step": "Look up order M-1045", "status": "done"},
+    {"step": "Find adventure books in stock", "status": "todo"},
+    {"step": "Answer both questions", "status": "todo"}]}},
+   {"tool": "find_books", "input": {"genre": "adventure"}}],
+  {"tool": "finish", "input": {
+    "answer": "Your order M-1045 is packed and will leave our warehouse soon; the tracking link comes by email when it ships. For a nephew who likes adventure, we have Moby-Dick by Herman Melville at 49.90 and The Count of Monte Cristo by Alexandre Dumas at 59.90 in stock.",
+    "sources": ["get_order M-1045", "find_books adventure"]}}
+ ],
+ "M-1049": [
+  {"tool": "update_plan", "input": {"steps": [
+    {"step": "Look up order M-1049", "status": "todo"},
+    {"step": "Check the return window", "status": "todo"},
+    {"step": "Answer", "status": "todo"}]}},
+  {"tool": "get_order", "input": {"order_id": "M-1049"}},
+  {"tool": "update_plan", "input": {"steps": [
+    {"step": "Look up order M-1049", "status": "done"},
+    {"step": "Check the return window", "status": "dropped"},
+    {"step": "Ask the customer for the order number", "status": "todo"}]}},
+  {"tool": "finish", "input": {
+    "answer": "I cannot find an order M-1049, so I cannot check its return window yet. Could you send the order number from your confirmation email? It starts with M- and has four digits.",
+    "sources": ["get_order M-1049"]}}
+ ]
+}
+JSON
+
+block standin-plan
+quiet
+on 'python standin.py plan.json &'
+sleep 1
+say 'export ANTHROPIC_BASE_URL=http://127.0.0.1:11436'
+on "python agent.py \"$GIFT\""
+block standin-step-limit
+on "python agent.py \"$GIFT\" --max-steps 3"
+block standin-replan
 on 'python agent.py "Is my order M-1049 delivered, and can I still return it?"'

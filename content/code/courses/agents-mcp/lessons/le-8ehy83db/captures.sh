@@ -8,32 +8,20 @@
 #   sudo bash captures.sh
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab
-# (lab.sh reset); the files ana wrote (put below), which the lesson shows in
-# full; and emptying labllm's log before the runs whose requests are counted,
-# done as root because the log belongs to the labllm user.
+# (lab.sh reset), and the files ana wrote (put below), which the lessons show
+# in full, each checked by lab/shown.py.
 #
-# THE MODEL'S WORDS AND DECISIONS IN THIS LESSON WERE WRITTEN BY THE COURSE,
-# as rules in lab/scripted/18-cost.json. The token counts, the times, the cache
-# accounting, the refusals and the SDK's retries are real MEASUREMENTS OF
-# labllm, whose rules for each (time per token, the window, the cache) are its
-# own and are written at the top of lab/labllm.py; the lesson says where they
-# differ from a real provider's. The failures in the last block are simulated
-# by labllm's /lab/config, which no real provider has. Timings vary by a few
-# milliseconds from run to run.
+# THE MODELS ARE REAL: llama3.2:3b (a80c4f17acd5) and llama3.2:1b in Ollama
+# 0.40.0 with an 8192-token context, on this machine's CPU, captured on
+# 2026-10-08. The token counts, the times, the cache reads, the truncation and
+# the SDK's retries are real measurements. The 529s come from flaky.py, which
+# lesson 7 shows whole. Times vary from run to run and from machine to
+# machine; the lesson says so.
 #
-# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo, with LAB_TODAY=2026-10-06.
-set -uo pipefail
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
+# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-block() { printf '##### %s\n' "$1"; }
-fresh_log() { : > /var/log/labllm/requests.jsonl; }
-STATUSES="python -c 'import json; print(\" \".join(str(json.loads(l)[\"status\"]) for l in open(\"/var/log/labllm/requests.jsonl\")))'"
-exec 9>/var/tmp/agents-capture.lock; flock 9
-lab reset >/dev/null
+. ../../lab/capture.sh
+lab exec 'ollama run llama3.2:3b hello; ollama run llama3.2:1b hello' < /dev/null >/dev/null 2>&1
 lab exec 'python -c "import shop; shop.search_help(\"warm up\")"' >/dev/null
 
 put cost_run.py <<'PY'
@@ -92,8 +80,9 @@ for step in range(1, 7):
     results = []
     for call in calls:
         t0 = time.perf_counter()
+        print(f"       tool {call.name} {json.dumps(call.input)}", end="", flush=True)
         out = json.dumps(RUN[call.name](call.input))
-        print(f"       tool {call.name}: {(time.perf_counter() - t0) * 1000:.0f} ms")
+        print(f": {(time.perf_counter() - t0) * 1000:.0f} ms")
         results.append({"type": "tool_result", "tool_use_id": call.id, "content": out})
     messages.append({"role": "user", "content": results})
 print(f"total {totals['input']:7} {totals['cache_write']:8} {totals['cache_read']:7} {totals['output']:7} "
@@ -101,55 +90,85 @@ print(f"total {totals['input']:7} {totals['cache_write']:8} {totals['cache_read'
 PY
 
 put limits.py <<'PY'
-"""Four limits a provider enforces, met one at a time."""
-import json
+"""Three limits, met one at a time: the reply's length, the context window, and a server too busy to answer."""
 import sys
 import time
-import urllib.request
 
 import anthropic
 
 client = anthropic.Anthropic()
+SYSTEM = "You answer Marginalia's customers in the cost lesson."
 ASK = [{"role": "user", "content": "Say hello to a customer."}]
-
-
-def lab_config(**settings):
-    """labllm's own switch for simulated failures (lab only; a real provider has no such thing)."""
-    req = urllib.request.Request("http://127.0.0.1:8600/lab/config", data=json.dumps(settings).encode(),
-                                 headers={"Content-Type": "application/json"})
-    urllib.request.urlopen(req).read()
-
 
 what = sys.argv[1]
 t0 = time.perf_counter()
 try:
     if what == "max-tokens":
-        r = client.messages.create(model="scripted-1", max_tokens=8, system="You answer Marginalia's customers in the cost lesson.", messages=ASK)
+        r = client.messages.create(model="llama3.2:3b", max_tokens=8, system=SYSTEM, messages=ASK)
         print(r.stop_reason, repr(r.content[0].text))
-    if what == "window":
-        huge = "word " * 210_000
-        client.messages.create(model="scripted-1", max_tokens=1024, messages=[{"role": "user", "content": huge}])
-    if what in ("overloaded", "overloaded-3"):
-        lab_config(fail_next=529, fail_count=2 if what == "overloaded" else 3)
-        r = client.messages.create(model="scripted-1", max_tokens=64, system="You answer Marginalia's customers in the cost lesson.", messages=ASK)
+    if what == "window":                      # about six times the 8192 tokens Ollama was given
+        huge = "word " * 50_000 + "\nWhat is the last line of this message?"
+        r = client.messages.create(model="llama3.2:3b", max_tokens=32, messages=[{"role": "user", "content": huge}])
+        print(r.stop_reason, "input_tokens:", r.usage.input_tokens, repr(r.content[0].text))
+    if what == "overloaded":                  # run with ANTHROPIC_BASE_URL at lesson 7's flaky.py
+        r = client.messages.create(model="llama3.2:3b", max_tokens=64, system=SYSTEM, messages=ASK)
         print("answered:", r.content[0].text)
 except anthropic.APIStatusError as e:
     print(f"{type(e).__name__} {e.status_code}: {e.message[:120]}")
 print(f"{(time.perf_counter() - t0) * 1000:.0f} ms")
 PY
 
-block run
-on 'python cost_run.py scripted-1'
+put flaky.py <<'PY'
+"""flaky.py N: answer the first N requests on port 11437 with 529 Overloaded, then pass the rest on to Ollama."""
+import http.client
+import json
+import sys
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
-block mini
-on 'python cost_run.py scripted-mini'
+left = int(sys.argv[1])
+
+
+class Flaky(BaseHTTPRequestHandler):
+    def do_POST(self):
+        global left
+        body = self.rfile.read(int(self.headers.get("Content-Length", 0)))
+        if left > 0:
+            left -= 1
+            status = 529
+            data = json.dumps({"type": "error", "error": {"type": "overloaded_error", "message": "Overloaded"}}).encode()
+        else:
+            upstream = http.client.HTTPConnection("127.0.0.1", 11434, timeout=900)
+            upstream.request("POST", self.path, body, {"Content-Type": "application/json"})
+            reply = upstream.getresponse()
+            status, data = reply.status, reply.read()
+        print(status, flush=True)
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(data)))
+        self.end_headers()
+        self.wfile.write(data)
+
+    def log_message(self, *args):
+        pass
+
+
+ThreadingHTTPServer(("127.0.0.1", 11437), Flaky).serve_forever()
+PY
+
+block run
+on 'python cost_run.py llama3.2:3b'
+
+block again
+on 'python cost_run.py llama3.2:3b'
 
 block cache
-on 'python cost_run.py scripted-1 --cache'
-on 'python cost_run.py scripted-1 --cache'
+on 'python cost_run.py llama3.2:3b --cache'
 
 block stamp
-on 'python cost_run.py scripted-1 --cache --stamp'
+on 'python cost_run.py llama3.2:3b --cache --stamp'
+
+block mini
+on 'python cost_run.py llama3.2:1b'
 
 block max-tokens
 on 'python limits.py max-tokens'
@@ -158,7 +177,5 @@ block window
 on 'python limits.py window'
 
 block overloaded
-fresh_log
-on "python limits.py overloaded; $STATUSES"
-fresh_log
-on "python limits.py overloaded-3; $STATUSES"
+on 'python flaky.py 2 > flaky.log & sleep 1; ANTHROPIC_BASE_URL=http://127.0.0.1:11437 python limits.py overloaded; kill $!; echo $(cat flaky.log)'
+on 'python flaky.py 3 > flaky.log & sleep 1; ANTHROPIC_BASE_URL=http://127.0.0.1:11437 python limits.py overloaded; kill $!; echo $(cat flaky.log)'

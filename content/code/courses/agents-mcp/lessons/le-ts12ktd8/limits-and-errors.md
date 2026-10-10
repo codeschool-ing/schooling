@@ -1,33 +1,34 @@
 ---
 title: Limits, and what a failure says
-version: 1
+version: 2
 ---
 
 ## The step limit raises
 
 ```
-ana@lab:~/agents$ python oa_run.py "Where is my order M-1043?" 2
-stopped: Max turns (2) exceeded
+ana@lab:~/agents$ python oa_run.py "Where is my order M-1043?" 1
+stopped: Max turns (1) exceeded
 ```
 
-With `max_turns=2`, the run that needs three requests stopped and raised `MaxTurnsExceeded`. Compare lesson 5 and lesson 7, where a limit produced an outcome with a reason and a handoff. **The SDK's choice is an exception**, so the program decides what the customer sees: `oa_run.py` catches it and prints a line. A program that does not catch it crashes on the first long run, which is a reason to wrap every `Runner.run` in the handling lesson 5 described.
+With `max_turns=1`, the run that needs two requests stopped and raised `MaxTurnsExceeded`. Compare lesson 5 and lesson 7, where a limit produced an outcome with a reason and a handoff. **The SDK's choice is an exception**, so the program decides what the customer sees: `oa_run.py` catches it and prints a line. A program that does not catch it crashes on the first long run, which is a reason to wrap every `Runner.run` in the handling lesson 5 described.
 
 ## The default error message hides the error
 
-Two runs that each hit a failing tool call: an order that does not exist, and an id the course's stand-in sends without its prefix. Then the last line prints what the model actually received as each tool result:
+Two runs that each meet a failing tool call: an order that does not exist, and an id the customer wrote without its prefix. Then the last command prints what the model actually received as each tool result:
 
 ```
+ana@lab:~/agents$ rm requests.jsonl
 ana@lab:~/agents$ python oa_run.py "What happened to my order M-9999?" | tail -n 1
-answer: I cannot find an order M-9999. Could you check the number in your confirmation email?
+I apologize for the inconvenience, but I don't have any information on an order with the ID M-9999. Can you please provide more details or context about your order, such as the date or time you placed it, or the status you were expecting? I'll do my best to assist you in tracking down the status of your order.
 ana@lab:~/agents$ python oa_run.py "Where is my order 1044?" | tail -n 1
-answer: Order M-1044 was delivered on 14 August 2026.
-ana@lab:~/agents$ python -c 'import json; [print(m["content"][:150]) for r in map(json.loads, open("/var/log/labllm/requests.jsonl")) for m in r["request"]["messages"][-1:] if m["role"] == "tool"]'
+Using the OpenAI Agents SDK, I don't have direct access to the system's database to retrieve the status of order 1044. However, I can suggest that you contact our customer service team directly to inquire about the status of your order. They will be able to provide you with the most up-to-date information. You can reach them at [insert contact information]. Is there anything else I can help you with?
+ana@lab:~/agents$ python -c 'import json; [print(i["output"][:150]) for r in map(json.loads, open("requests.jsonl")) for i in r["request"]["input"][-1:] if i.get("type") == "function_call_output"]'
 An error occurred while running the tool. Please try again.
 An error occurred while running the tool. Please try again.
-{'id': 'M-1044', 'customer_id': 'c-103', 'placed_on': '2026-08-11', 'status': 'delivered', 'delivered_on': '2026-08-14', 'shipping': 0, 'tracking': 'B
+An error occurred while running the tool. Please try again.
 ```
 
-Both failures reached the model as the same sentence: *"An error occurred while running the tool. Please try again."* Nothing says whether the order is missing or the id is malformed. The scripted model answered sensibly because the course wrote it to; **a real model told "try again" would most likely try the same call again**, and lesson 4's whole argument was that an error has to say what failed.
+Every failure reached the model as the same sentence: *"An error occurred while running the tool. Please try again."* Three times, because for `1044` the model tried twice. Nothing says whether the order is missing or the id is malformed, and the answers show it: for M-9999 the model asked the customer for details, for 1044 it said it had **no access to the database** at all, which is false, and sent the customer to somebody else. Lesson 4's whole argument was that an error has to say what failed.
 
 The fix is one argument. `failure_error_function` decides what the model reads when a tool raises:
 
@@ -52,14 +53,14 @@ The fix is one argument. `failure_error_function` decides what the model reads w
 ```
 
 ```
+ana@lab:~/agents$ rm requests.jsonl
 ana@lab:~/agents$ python oa_run.py "What happened to my order M-9999?" | tail -n 1
-answer: I cannot find an order M-9999. Could you check the number in your confirmation email?
+answer: I apologize for the inconvenience. It appears that I couldn't find any information on an order with the ID M-9999. Can you please provide more context or details about your order, such as the date of purchase or the store where you made the purchase? I'll do my best to help you find the status of your order.
 ana@lab:~/agents$ python oa_run.py "Where is my order 1044?" | tail -n 1
-answer: Order M-1044 was delivered on 14 August 2026.
-ana@lab:~/agents$ python -c 'import json; [print(m["content"][:150]) for r in map(json.loads, open("/var/log/labllm/requests.jsonl")) for m in r["request"]["messages"][-1:] if m["role"] == "tool"]'
+Would you like me to attempt to find your order using our internal systems?
+ana@lab:~/agents$ python -c 'import json; [print(i["output"][:150]) for r in map(json.loads, open("requests.jsonl")) for i in r["request"]["input"][-1:] if i.get("type") == "function_call_output"]'
 LookupError: no order M-9999
 ModelBehaviorError: Invalid JSON input for tool get_order
-{'id': 'M-1044', 'customer_id': 'c-103', 'placed_on': '2026-08-11', 'status': 'delivered', 'delivered_on': '2026-08-14', 'shipping': 0, 'tracking': 'B
 ```
 
-Now the missing order says `LookupError: no order M-9999`, which a model can act on. The malformed id says `ModelBehaviorError: Invalid JSON input for tool get_order`: better than nothing, and still vaguer than lesson 4's `'1043' does not match '^M-[0-9]{4}$'`, because the SDK's validation error does not name the field or the rule. A tool that cares can take the argument as a plain `str` and check the pattern itself, raising a `ValueError` whose message says exactly what was wrong.
+Now the missing order says `LookupError: no order M-9999`, which a model can act on, and the answer is about a missing order. The malformed id says `ModelBehaviorError: Invalid JSON input for tool get_order`: better than nothing, and still vaguer than lesson 4's `'1043' does not match '^M-[0-9]{4}$'`, because the SDK's validation error does not name the field or the rule. The model's reply to it was a question back to the customer, not a corrected call. A tool that cares can take the argument as a plain `str` and check the pattern itself, raising a `ValueError` whose message says exactly what was wrong.

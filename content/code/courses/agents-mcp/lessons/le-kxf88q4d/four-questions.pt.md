@@ -1,6 +1,6 @@
 ---
 title: Quatro perguntas antes de construir um
-version: 1
+version: 2
 ---
 
 Antes de escrever um laço, responda quatro perguntas sobre a tarefa. Levam cinco minutos, e cada uma tem uma resposta que descarta um agente.
@@ -11,7 +11,7 @@ Antes de escrever um laço, responda quatro perguntas sobre a tarefa. Levam cinc
 
 **3. O resultado pode ser conferido?** A resposta de um agente vale tanto quanto a capacidade de alguém de dizer se ela está certa. Código que compila e passa nos testes é verificável. Um valor de reembolso pode ser comparado com o pedido. "Este é um bom resumo das novas condições do fornecedor?" exige uma pessoa, e se essa pessoa precisa ler as fontes de qualquer jeito, o agente poupou menos do que parecia.
 
-**4. O volume e o prazo permitem?** Na seção 05, o agente do laboratório gasta 9,9 s de tempo de modelo e 2551 tokens de entrada em três mensagens, enquanto o roteador gasta 1,0 s e 130 tokens em quatro. Para uma pergunta de pesquisa por dia isso é irrelevante. Para cada mensagem de uma fila de suporte movimentada, é a conta e é a fila.
+**4. O volume e o prazo permitem?** Na seção 05, o agente gasta 37,4 s de tempo de modelo e 1641 tokens de entrada em três mensagens, enquanto o roteador gasta 2,0 s e 234 tokens em quatro. Para uma pergunta de pesquisa por dia isso é irrelevante. Para cada mensagem de uma fila de suporte movimentada, é a conta e é a fila.
 
 | resposta | aponta para |
 |---|---|

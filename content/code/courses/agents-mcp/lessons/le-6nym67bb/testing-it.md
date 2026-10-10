@@ -70,7 +70,7 @@ async def test_the_prompt_carries_its_arguments():
 ```
 ana@lab:~/agents$ python -m pytest -q -W ignore::DeprecationWarning test_marginalia_mcp.py
 .......                                                                  [100%]
-7 passed in 1.09s
+7 passed in 0.80s
 ```
 
 Seven tests, about a second. Each one is a sentence about the server that should stay true:

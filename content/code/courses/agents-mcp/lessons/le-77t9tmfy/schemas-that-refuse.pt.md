@@ -1,6 +1,6 @@
 ---
 title: Um esquema que recusa
-version: 1
+version: 2
 ---
 
 A crença errada é que um esquema é documentação para o modelo: ele lista os argumentos e seus tipos, e o modelo os preenche. Os fornecedores o usam assim, sim. **No hospedeiro ele também é uma verificação, e um esquema que não recusa nada não verifica nada.** `{"type": "object", "properties": {"order_id": {"type": "string"}}}` aceita `{"order_id": "the book I bought last week"}`, e `{}`, e `{"order_id": "M-1043", "delete": true}`.
@@ -38,4 +38,4 @@ Cada recusa nomeia o argumento e a regra que ele quebrou, em palavras com que um
 
 Rígido onde um erro custa algo, solto onde não custa. Um id de pedido tem uma forma só, então um padrão não custa nada e pega todo erro de digitação. Uma consulta de busca em texto livre não deveria ter padrão: ali ele recusa perguntas legítimas. `additionalProperties: false` vale a pena em todo lugar, porque um argumento que a função não espera é invenção de um modelo ou alguém sondando por um.
 
-Alguns fornecedores também oferecem um modo estrito, que restringe a geração do modelo para que os argumentos sempre batam com o esquema. Ele é útil, e não substitui a verificação do hospedeiro. É uma promessa do fornecedor, aceita um subconjunto do JSON Schema, e o hospedeiro continua sendo o último lugar que pode recusar uma chamada antes de ela rodar. O labllm não implementa esse modo, então este curso não o mostra.
+Alguns fornecedores também oferecem um modo estrito, que restringe a geração do modelo para que os argumentos sempre batam com o esquema. Ele é útil, e não substitui a verificação do hospedeiro. É uma promessa do fornecedor, aceita um subconjunto do JSON Schema, e o hospedeiro continua sendo o último lugar que pode recusar uma chamada antes de ela rodar. Este curso não o usa: a checagem que vale aprender é a do hospedeiro, que funciona seja qual for a oferta do fornecedor.

@@ -1,10 +1,10 @@
 ---
 title: Uma semana de latência, em percentis
-version: 1
+version: 2
 ---
 
-O `latency.py` pega cada chamada a modelo bem-sucedida da semana reproduzida, e cada pedido, e imprime
-os três relógios como percentis:
+O `latency.py` pega cada chamada a modelo bem-sucedida da semana que a aula 3 reproduziu, que ainda
+está no `spans.jsonl`, e cada pedido, e imprime os três relógios como percentis:
 
 ```python
 """latency.py: the week's successful model calls and requests, as percentiles."""
@@ -26,31 +26,32 @@ for name, xs in rows.items():
 ```
 
 ```
-ana@lab:~/obs$ python replay.py
-replayed 1127 requests from data/traffic.jsonl: 1345 asked, 0 failed, 483 feedback events
-ana@lab:~/obs$ python latency.py
+ana@dev:~/obs$ python latency.py
                       n   mean    p50    p90    p95    p99    max   ms
-whole request      1345   1253   1056   2541   2962   4846   6343
-model call         1108   1438   1324   2591   3045   4862   6282
-first token        1108    353    290    399    444   4257   4460
-each token after   1108     26     26     35     38     48     54
+whole request       311   3317   2962   6078   8447   9838  11164
+model call          265   3721   3099   6022   8996   9684  11003
+first token         265    744    748   1346   1431   1954   2190
+each token after    265    102    101    109    110    120    123
 ```
 
 ## Por que não a média
 
-Leia a linha `first token`. A mediana é 290 ms e o percentil 95 é 444: dezenove chamadas em vinte viram
-o primeiro token em menos de meio segundo. Aí **o percentil 99 é 4.257 ms** e o máximo 4.460. Uma
-chamada em cem esperou quase dez vezes mais que uma típica. A média, 353, fica entre os dois e não
-descreve ninguém: é alta demais para a chamada típica e absurdamente baixa para a lenta.
+Leia a linha `model call`. A mediana é 3.099 ms e o percentil 95 é 8.996: dezenove chamadas em vinte
+terminaram em menos de nove segundos, e a mais lenta levou onze. A média, 3.721, fica acima da
+mediana, puxada pelas poucas lentas, e não descreve ninguém: é alta demais para a chamada típica e
+baixa demais para a lenta.
 
-Essa forma, um corpo apertado e uma cauda longa e fina, é a cara da latência em quase todo lugar, e é
-por isso que latência se relata em percentis. A aula 6 do `observability` constrói os histogramas que
-tornam percentis baratos de calcular em escala; aqui uma lista ordenada de mil números basta.
+Essa forma, um corpo e uma cauda longa e fina para um lado, é a cara da latência quase em todo
+lugar, e é por isso que a latência é informada em percentis. A aula 6 do `observability` constrói os
+histogramas que tornam percentis baratos de calcular em escala; aqui uma lista ordenada de algumas
+centenas de números basta.
 
-A cauda é a **partida a frio** do labobs: com probabilidade de uma em cem, um pedido espera quatro
-segundos a mais antes do primeiro token. A cauda de um fornecedor real tem outras causas, um pedido
-encaminhado para uma máquina ocupada, um modelo sendo carregado, uma fila longa na hora em que os jobs
-em lote de todo mundo começam, e a mesma cara numa tabela de percentis.
+A cauda aqui tem uma causa, e a próxima seção a acha: **as respostas longas**. O que ela não tem é a
+causa que uma cauda de produção costuma ter. Um modelo que precisa ser carregado na memória
+primeiro, um pedido mandado para uma máquina ocupada, uma fila na hora em que os jobs de todo mundo
+começam: nada disso aconteceu, porque o modelo nunca saiu da memória durante uma semana reproduzida
+em dezessete minutos e nada mais estava pedindo. A última seção desta aula faz a primeira dessas
+acontecer de propósito.
 
 ## Qual percentil acompanhar
 
@@ -60,7 +61,7 @@ primeiro. Um cliente que faz dez perguntas numa sessão tem uma chance em dez de
 de p99 pelo menos uma vez, então o percentil 99 não é um cliente raro, é uma *chamada* rara numa sessão
 comum.
 
-A linha `whole request` é a chamada ao modelo mais tudo em volta, e a cauda dela é a mesma cauda, pela
-mesma causa, porque o modelo é quase tudo. A linha `each token after` é o segundo relógio: 26 ms na
-mediana, 48 no p99. Ele varia muito menos que o primeiro token, e isso é característico: o que é lento
-e imprevisível é começar.
+A linha `whole request` é a chamada ao modelo mais tudo em volta, e a cauda dela é a mesma cauda,
+pela mesma causa, porque o modelo é quase tudo. A linha `each token after` é o segundo relógio: 101
+ms na mediana, 120 no p99. Ele quase não varia, e isso é característico de um modelo com uma máquina
+só para ele: depois que começa, escreve no próprio ritmo.

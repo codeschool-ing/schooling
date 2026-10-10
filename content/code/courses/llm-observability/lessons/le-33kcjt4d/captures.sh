@@ -8,140 +8,50 @@
 #   sudo bash ../../lab.sh up        # once
 #   sudo bash captures.sh
 #
-# What is STAGED rather than typed, and not shown in the lesson: the lab
-# (lab.sh reset), copying the course's programs into ~/obs from
-# ../../lab/code, and the replay of the week, which lesson 3 shows.
-# evalrun.py and checks.py are shown in the lesson; the programs it writes are
-# put below and shown in full.
+# What is STAGED rather than typed, and not shown: ~/obs rebuilt as lesson 1
+# leaves it (lab.sh reset); the programs and the evaluation set lessons 1 to 8
+# show, read out of the lessons that show them whole (stage, put); and the
+# week lesson 3 replays (lab.sh week), kept from that lesson's capture or
+# replayed again if anything that decides it has changed.
 #
-# Every reply comes from extract-1, the lab's stand-in model, which copies
-# sentences from its sources by rules (rag's lab/labgen.py). data/eval.jsonl is
-# rag's test set, written by that course. The three replies in normalise.py
-# are WRITTEN BY THE COURSE to show what a comparison does with a paraphrase;
-# no model wrote them, and the lesson says so.
+# data/eval.jsonl IS WRITTEN BY THE COURSE: its questions, the facts a right
+# reply contains and the chunks that hold them, checked against the documents
+# lesson 1 builds. The replies in normalise.py and broken.py are WRITTEN BY
+# THE COURSE to show what a comparison and a rule do; no model wrote them, and
+# the lesson says so. Every other reply comes from llama3.2:3b (a80c4f17acd5)
+# through Ollama 0.40.0, at temperature 0, taken 2026-10-08 on 4 cores and
+# 15 GB with no GPU.
 #
-# Recorded on Ubuntu 24.04, Python 3.11, TZ=America/Sao_Paulo, on 2026-10-06.
+# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 set -uo pipefail
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-CODE=$(cd "$(dirname "$LAB_SH")" && pwd)/lab/code
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@lab:~/obs$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-use() { for f in "$@"; do put "$f" < "$CODE/$f"; done; }
-block() { printf '##### %s\n' "$1"; }
+. ../../lab/capture.sh
 exec 9>/var/tmp/llmobs-capture.lock; flock 9
-lab reset >/dev/null
-use telemetry.py redact.py assistant.py replay.py tree.py costs.py evalrun.py checks.py
-lab exec 'python assistant.py "warm up" >/dev/null; rm -f spans.jsonl; python replay.py >/dev/null'
 
-put facts.py <<'PY'
-"""facts.py: a run graded against the facts of the evaluation set, two ways."""
-import json
-import re
-import sys
-
-REFUSAL = "I could not find that in our documents."
-cases = {c["id"]: c for c in map(json.loads, open("data/eval.jsonl"))}
-
-
-def exact(reply, facts):
-    return reply == REFUSAL if not facts else any(f in reply for f in facts)
-
-
-def normalised(reply, facts):
-    squash = lambda t: re.sub(r"\s+", " ", re.sub(r"[^\w\s.]", " ", t.lower())).strip()
-    return reply == REFUSAL if not facts else any(squash(f) in squash(reply) for f in facts)
-
-
-if __name__ == "__main__":
-    run = [json.loads(line) for line in open(f"runs/{sys.argv[1]}.jsonl")]
-    for name, grade in (("exact", exact), ("normalised", normalised)):
-        right = [r["id"] for r in run if grade(r["reply"], cases[r["id"]]["facts"])]
-        print(f"{name:10} {len(right)}/{len(run)} right")
-    wrong = [r for r in run if not normalised(r["reply"], cases[r["id"]]["facts"])]
-    for r in wrong:
-        print(f"  {r['id']}  {r['question'][:52]:52}  {r['reply'][:60]}")
-PY
-
-put normalise.py <<'PY'
-"""normalise.py: three replies the course wrote, against one fact, compared two ways."""
-from facts import exact, normalised
-
-fact = ["30 days from delivery"]
-for reply in ["You have 30 days from delivery to return a printed book. [1]",
-              "You have 30 days  from Delivery to return it. [1]",
-              "You have thirty days after delivery to return it. [1]"]:
-    print(f"exact {exact(reply, fact)!s:5}  normalised {normalised(reply, fact)!s:5}  {reply}")
-PY
-
-put check_run.py <<'PY'
-"""check_run.py: every check in checks.py on every reply of a run, counted, and the failures listed."""
-import json
-import sys
-from collections import Counter
-
-import checks
-
-run = [json.loads(line) for line in open(f"runs/{sys.argv[1]}.jsonl")]
-failed, examples = Counter(), {}
-for r in run:
-    for name, ok, why in checks.run(r["reply"], r["sources"]):
-        if not ok:
-            failed[name] += 1
-            examples.setdefault(name, f"{r['id']}: {why}")
-for c in checks.CHECKS:
-    print(f"{c.__name__:22} {len(run) - failed[c.__name__]:3}/{len(run)} pass   {examples.get(c.__name__, '')}")
-PY
-
-put check_week.py <<'PY'
-"""check_week.py: the checks on every reply of the replayed week, from the spans, per release."""
-import json
-from collections import Counter, defaultdict
-
-import psycopg
-
-import checks
-
-text = dict(psycopg.connect().execute("SELECT id, text FROM chunks").fetchall())
-by_trace = defaultdict(dict)
-for s in map(json.loads, open("spans.jsonl")):
-    by_trace[s["trace"]][s["name"]] = s["attributes"]
-seen, failed = Counter(), defaultdict(Counter)
-for spans in by_trace.values():
-    root = spans["ask"]
-    if root["app.feature"] == "summary":
-        continue
-    sources = [{"id": c, "text": text[c]} for c in spans["search"]["app.search.chunks"]]
-    release = root["app.release"]
-    seen[release] += 1
-    for name, ok, _ in checks.run(root["app.reply"], sources):
-        failed[release][name] += not ok
-print(f"{'check':22}" + "".join(f"{r:>12}" for r in sorted(seen)))
-for c in checks.CHECKS:
-    print(f"{c.__name__:22}" + "".join(f"{failed[r][c.__name__]:6} fail" for r in sorted(seen)))
-print(f"{'replies':22}" + "".join(f"{seen[r]:12}" for r in sorted(seen)))
-PY
-
-put broken.py <<'PY'
-"""broken.py: five replies the course wrote, each breaking one rule, through every check."""
-import checks
-
-source = [{"id": "shipping-and-delivery:ca3796df6832",
-           "text": "standard three to five working days 4.90, free on orders over 40 express next working day 9.90"}]
-for reply in ["Standard delivery is free on orders over 40.",
-              "Standard delivery is free on orders over 40. [2]",
-              "Express delivery costs 12.90. [1]",
-              "Joana, we sent the details to joana.prado@example.com. [1]",
-              "Sorry, I could not find anything about that."]:
-    failed = [f"{name}: {why}" for name, ok, why in checks.run(reply, source) if not ok]
-    print(f"{reply}\n    {'; '.join(failed) or 'passes every check'}")
-PY
+L8=le-33kcjt4d
+quiet lab reset
+stage telemetry.py le-6wxafmfh/the-chain.md
+stage assistant.py le-6wxafmfh/the-chain.md
+stage tree.py le-6wxafmfh/the-chain.md
+stage traffic.py le-pdj3wk00/what-customers-type.md
+stage replay.py le-3s3pd3qk/replaying-a-week.md
+stage evalrun.py $L8/exact-and-normalised.md
+stage facts.py $L8/exact-and-normalised.md
+stage normalise.py $L8/exact-and-normalised.md
+stage checks.py $L8/rules-for-the-form.md
+stage broken.py $L8/rules-for-the-form.md
+stage check_run.py $L8/on-every-reply.md
+stage check_week.py $L8/on-every-reply.md
+python3 "$COURSE/lab/fences.py" block "$COURSE/lessons/$L8/exact-and-normalised.md" \
+  '{"id": "e01", "question": "How many days do I have to return a printed book?", "gold": ["returns-policy:the-return-window"], "facts": ["30 days"]}' \
+  | put data/eval.jsonl
+quiet lab exec 'python traffic.py data/traffic.jsonl'
+quiet lab exec 'SPANS=/dev/null python assistant.py "How long is a gift card valid?" >/dev/null; rm -f spans.jsonl feedback.jsonl'
+quiet lab week
 
 block run
 on 'python evalrun.py current'
-on 'head -c 600 runs/current.jsonl; echo'
+on 'head -c 700 runs/current.jsonl; echo'
 
 block facts
 on 'python facts.py current'

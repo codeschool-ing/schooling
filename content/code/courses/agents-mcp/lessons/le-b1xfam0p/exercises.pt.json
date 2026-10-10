@@ -120,8 +120,8 @@
         "why": "O Reply tem stop."
       },
       {
-        "text": "Porque os testes precisam usar o labllm",
-        "why": "Os testes usam o FakeModel e nenhum labllm."
+        "text": "Porque os testes precisam falar com o Ollama",
+        "why": "Os testes usam o FakeModel; nenhum modelo roda."
       }
     ]
   },
@@ -174,20 +174,20 @@
     "prompt": "Na execução do reembolso, por que o shop.refund nunca rodou?",
     "choices": [
       {
-        "text": "Porque o valor do reembolso era maior que o saldo a reembolsar",
-        "why": "3890 centavos é menos que os 7780 que sobram no M-1047."
+        "text": "Porque o valor do reembolso era maior do que restava para reembolsar",
+        "why": "10000 centavos é mais que os 7780 do pedido, mas a chamada nem chegou à conferência do próprio shop.refund."
       },
       {
-        "text": "Porque o esquema recusou o motivo",
-        "why": "O motivo não tem regra de tamanho no esquema do minagent, e passou."
+        "text": "Porque o modelo mudou de ideia e respondeu no lugar",
+        "why": "Ele respondeu depois que a chamada foi recusada, não em vez de fazê-la."
       },
       {
-        "text": "Porque o labllm bloqueou a chamada",
-        "why": "O labllm só devolveu o pedido do modelo; quem decidiu foi o hospedeiro."
+        "text": "Porque o Ollama bloqueou a chamada",
+        "why": "O Ollama só devolveu o pedido do modelo; quem decidiu foi o hospedeiro."
       },
       {
-        "text": "É uma escrita, e ninguém a confirmou",
-        "why": "Certo. O run.py não passa callback de confirmação, então o call recusa toda escrita."
+        "text": "O cents chegou como texto, e o esquema o recusou antes de qualquer outra coisa",
+        "why": "Certo. '10000' não é inteiro, então o call devolveu um erro antes da guarda de escrita e da função."
       }
     ]
   },
@@ -213,11 +213,11 @@
     ]
   },
   "ex-exgmf3p1": {
-    "prompt": "A passagem da execução travada disse 'Nothing found yet.' De onde vem essa frase?",
+    "prompt": "No test_three_steps_of_only_errors_stop_the_run, o resultado termina com uma passagem para uma pessoa. Se ela dissesse 'Nothing found yet.', de onde viria essa frase?",
     "choices": [
       {
         "text": "Da última resposta do modelo, que admitiu não ter achado nada",
-        "why": "A última resposta do modelo foi uma chamada; quem monta a passagem é o stop."
+        "why": "As respostas do modelo falso são todas chamadas de ferramenta; quem monta a passagem é o stop."
       },
       {
         "text": "Do plano, que não tinha passos feitos",
@@ -228,13 +228,13 @@
         "why": "Certo. A passagem lista as chamadas bem-sucedidas, e não houve nenhuma."
       },
       {
-        "text": "Da mensagem de erro do labllm",
-        "why": "O labllm devolveu respostas, não erros, naquela execução."
+        "text": "Da última resposta do modelo falso",
+        "why": "O FakeModel repete as chamadas que o teste escreveu; nenhuma delas é uma frase."
       }
     ]
   },
   "ex-bthf2s02": {
-    "prompt": "Com o labllm configurado para falhar duas vezes, quantos pedidos responderam 529 antes do primeiro 200 no log?",
+    "prompt": "Com o flaky.py configurado para falhar duas vezes, quantos pedidos responderam 529 antes do primeiro 200 no log dele?",
     "unit": "pedidos"
   },
   "ex-9x807xna": {
@@ -249,8 +249,8 @@
         "why": "Certo. O max_retries padrão é 2, com espera crescente, para 408, 409, 429 e 5xx."
       },
       {
-        "text": "O labllm, que responde 200 depois de falhar o número configurado de vezes",
-        "why": "O labllm falha como mandaram; alguém precisou mandar os pedidos de novo."
+        "text": "O flaky.py, que responde 200 depois de falhar o número de vezes que recebeu",
+        "why": "O flaky.py falha como mandado e repassa o que vem depois; alguém precisou mandar os pedidos de novo."
       },
       {
         "text": "A ana, à mão",
@@ -291,12 +291,12 @@
         "why": "A função nem rodou, com cache ou sem."
       },
       {
-        "text": "Porque o labllm a respondeu no lugar do hospedeiro",
-        "why": "Ferramentas rodam no hospedeiro; o labllm nunca roda ferramenta."
+        "text": "Porque o Ollama respondeu no lugar do hospedeiro",
+        "why": "Ferramentas rodam no hospedeiro; o Ollama nunca roda ferramenta."
       },
       {
         "text": "Porque o rastro arredonda para zero tudo abaixo de um segundo",
-        "why": "O rastro registra milissegundos; outros passos mostram 1 ms e 1053 ms."
+        "why": "O rastro registra milissegundos; os passos do modelo mostram milhares deles."
       },
       {
         "text": "O esquema recusou M1047 antes",
@@ -333,8 +333,8 @@
         "why": "Certo. O FakeModel são oito linhas que repetem respostas que o teste escreveu."
       },
       {
-        "text": "O labllm roda dentro do pytest durante os testes",
-        "why": "Nenhum labllm roda durante os testes."
+        "text": "O Ollama roda dentro do pytest durante os testes",
+        "why": "Nenhum modelo roda durante os testes."
       },
       {
         "text": "O SDK da anthropic tem um modo de teste que devolve respostas prontas",

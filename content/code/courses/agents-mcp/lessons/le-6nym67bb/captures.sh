@@ -9,25 +9,18 @@
 #
 # What is STAGED rather than typed, and not shown in the lesson: the lab
 # (lab.sh reset), and the files ana wrote (put below), which the lesson shows
-# in full.
+# in full, each checked by lab/shown.py.
 #
 # NO MODEL TAKES PART IN THIS LESSON. The server (mcp 2.3.0), the in-process
 # client the scripts and tests use to talk to it, pytest 9.1.1, and every
-# result are real. pytest's one DeprecationWarning, raised by an installed
-# library (opentelemetry) and not by the code here, is silenced with
+# result are real; the help-centre search asks Ollama's all-minilm for its
+# vectors, as shop.py does everywhere. pytest's one DeprecationWarning, raised
+# by an installed library and not by the code here, is silenced with
 # -W ignore::DeprecationWarning on the command line.
 #
-# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo, with LAB_TODAY=2026-10-06.
-set -uo pipefail
-export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
+# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 cd "$(dirname "$0")"
-LAB_SH=${LAB_SH:-../../lab.sh}
-lab() { bash "$LAB_SH" "$@"; }
-on() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
-block() { printf '##### %s\n' "$1"; }
-exec 9>/var/tmp/agents-capture.lock; flock 9
-lab reset >/dev/null
+. ../../lab/capture.sh
 lab exec 'python -c "import shop; shop.search_help(\"warm up\")"' >/dev/null
 
 put marginalia_mcp.py <<'PY'
@@ -93,7 +86,7 @@ def help_article(article_id: str) -> str:
     if article_id not in HELP:
         raise ResourceNotFoundError(f"no help article {article_id}")
     a = HELP[article_id]
-    return f"# {a['title']}\n\n{a['body']}\n\n(updated {a['updated']})"
+    return f"# {a['title']}\n\n{a['body']}"
 
 
 @server.prompt()

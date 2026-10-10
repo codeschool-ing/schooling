@@ -6,40 +6,54 @@
 # this lesson was copied from running it, so the next person can run it and see
 # what moved.
 #
-#   sudo bash ../../lab.sh up        # once: the machine, the SDKs, labllm
+#   sudo bash ../../lab.sh up        # once: ana, ~/agents, the venv, the models
 #   sudo bash captures.sh
 #
 # A line that starts with ana@lab:~/agents$ is what ana typed and what it
 # printed. What is STAGED rather than typed, and not shown in the lesson: the
-# lab itself (lab.sh reset), and the files ana wrote (put below), whose
-# contents the lesson shows in full.
+# lab itself (lab.sh reset), and the files ana wrote (put below). Every put
+# is checked by ../../lab/shown.py against the lesson's fences before it runs.
 #
-# THE MODEL'S WORDS AND DECISIONS IN THIS LESSON WERE WRITTEN BY THE COURSE.
-# The draft the assistant writes, which tool the agent calls with which
-# arguments, and its final answers are rules in lab/scripted/01-*.json. The
-# programs, the SDK, the requests, the tool results and the search are real.
+# THE MODEL IS REAL: llama3.2:3b (a80c4f17acd5) in Ollama 0.40.0, with an
+# 8192-token context, captured on 2026-10-07. Its words, and which tool it
+# called, are what it said that day; a second run may word them differently.
 #
-# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo, with LAB_TODAY=2026-10-06.
+# Recorded on Ubuntu 24.04, TZ=America/Sao_Paulo.
 set -uo pipefail
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
 cd "$(dirname "$0")"
 LAB_SH=${LAB_SH:-../../lab.sh}
+SHOWN=${SHOWN:-../../lab/shown.py}
 lab() { bash "$LAB_SH" "$@"; }
 # on 'command': what ana typed in ~/agents, and what it printed.
 on() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "$*" 2>&1 || true; }
-# put PATH: a file ana wrote in ~/agents, from stdin. Its content is shown in the lesson.
-put() { lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'"; }
+# put PATH: a file ana wrote in ~/agents, from stdin. It must be shown whole in a lesson.
+put() {
+  local t; t=$(mktemp); cat > "$t"
+  python3 "$SHOWN" "$t" || { rm -f "$t"; exit 1; }
+  lab exec "mkdir -p \"\$(dirname '$1')\" && cat > '$1'" < "$t"; rm -f "$t"
+}
+# on_tty 'command': the same, for a program that draws for a terminal (ollama run's
+# spinner). Its control codes are removed, leaving what a terminal shows.
+on_tty() { printf 'ana@lab:~/agents$ %s\n' "$*"; lab exec "$*" < /dev/null 2>&1 | python3 -c '
+import re, sys
+t = re.sub(r"\x1b\[[0-9;?]*[A-Za-z]|[\u2800-\u28ff] ?", "", sys.stdin.read())
+print(t.strip("\n"))' || true; }
 block() { printf '##### %s\n' "$1"; }
 # One capture at a time: every run rebuilds ~/agents from nothing.
 exec 9>/var/tmp/agents-capture.lock; flock 9
 lab reset >/dev/null
 
 block lab-check
-on 'curl -s http://127.0.0.1:8600/; echo'
+on 'python --version'
+on 'ollama --version'
+on 'ollama list'
+on 'python make_shop.py'
 on 'ls data'
-on 'du -sh /opt/agents/share /opt/agents/lib'
-on 'du -sh /opt/agents/lib/python3.11/site-packages/claude_agent_sdk'
 on 'python -c "import shop; print(shop.get_order(\"M-1042\"))"'
+on_tty 'ollama run llama3.2:3b "Say hello in five words."'
+on 'ollama ps'
+on 'du -sh .venv'
 
 put automation.py <<'PY'
 """Automation: the programmer wrote the path, and the program follows it."""
@@ -79,7 +93,7 @@ handbook = "\n\n".join(f"# {a['title']}\n{a['body']}" for a in articles)
 
 client = anthropic.Anthropic()
 reply = client.messages.create(
-    model="scripted-1",
+    model="llama3.2:3b",
     max_tokens=1024,
     system="You draft replies for Marginalia's support team. The help centre follows.\n\n" + handbook,
     messages=[{"role": "user", "content": sys.argv[1]}],
@@ -116,7 +130,7 @@ SYSTEM = "You answer Marginalia's customers. Use the tools to find facts, and ne
 client = anthropic.Anthropic()
 messages = [{"role": "user", "content": sys.argv[1]}]
 for step in range(1, 6):
-    reply = client.messages.create(model="scripted-1", max_tokens=1024, system=SYSTEM,
+    reply = client.messages.create(model="llama3.2:3b", max_tokens=1024, system=SYSTEM,
                                    tools=TOOLS, messages=messages)
     messages.append({"role": "assistant", "content": reply.content})
     if reply.stop_reason != "tool_use":
@@ -139,4 +153,18 @@ block agent-pay
 on 'python agent.py "Which ways can I pay?"'
 
 block requests
-on "python -c 'import json; [print(r[\"n\"], r[\"rule\"], r[\"usage\"][\"input_tokens\"], r[\"usage\"][\"output_tokens\"]) for r in map(json.loads, open(\"/var/log/labllm/requests.jsonl\"))]'"
+on 'python recorder.py &'
+sleep 1
+on 'ANTHROPIC_BASE_URL=http://127.0.0.1:11435 python agent.py "Hi, I am Bia. My order M-1042 arrived on 24 September. Can I still send it back?"'
+on "python -c 'import json; [print(n, r[\"usage\"][\"input_tokens\"], r[\"usage\"][\"cached_tokens\"], r[\"usage\"][\"output_tokens\"], r[\"ms\"]) for n, r in enumerate(map(json.loads, open(\"requests.jsonl\")), 1)]'"
+lab exec 'pkill -u ana -f "python recorder.py"' || true
+
+block template
+on 'ollama show llama3.2:3b --template | grep -n Tools'
+
+block failures
+on 'ANTHROPIC_BASE_URL=http://127.0.0.1:11435 python agent.py "Which ways can I pay?" 2>&1 | tail -n 1'
+on 'env -u ANTHROPIC_API_KEY -u ANTHROPIC_BASE_URL python agent.py "Which ways can I pay?" 2>&1 | tail -n 1'
+on 'python3.11 -c "import shop; print(shop.search_help(\"returns\"))" 2>&1 | tail -n 1'
+on_tty 'ollama run llama3.2:3x "Hello"'
+on 'ollama ps'

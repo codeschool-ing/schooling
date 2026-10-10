@@ -124,7 +124,7 @@
       },
       {
         "text": "Que o shop.db está desatualizado",
-        "why": "O M-9999 nunca foi um pedido nos dados do laboratório."
+        "why": "O M-9999 nunca foi um pedido: o make_shop.py escreve do M-1041 ao M-1048."
       }
     ]
   },
@@ -175,15 +175,15 @@
     "unit": "pedidos"
   },
   "ex-vx54md2d": {
-    "prompt": "O find_books recebeu um pedido de cinco mistérios e devolveu um. Por que esse é o comportamento certo?",
+    "prompt": "O find_books devolveu um romance policial, pedindo três ou cinco. Por que esse é o comportamento certo?",
     "choices": [
       {
         "text": "Porque o validador limitou o max_results a um",
-        "why": "O validador permite de 1 a 10. Cinco passou."
+        "why": "O validador aceita de 1 a 10. Cinco passou, e três é o padrão."
       },
       {
-        "text": "Porque o labllm cortou o resultado para economizar tokens",
-        "why": "O labllm nunca toca em resultados de ferramenta; ele só responde pedidos."
+        "text": "Porque o Ollama cortou o resultado para economizar tokens",
+        "why": "O Ollama nunca vê uma ferramenta rodar. O hospedeiro chama o find_books e manda o que ele devolve."
       },
       {
         "text": "Só um está em estoque",
@@ -191,7 +191,7 @@
       },
       {
         "text": "Porque o catálogo só tem um mistério",
-        "why": "O books.jsonl tem mais mistérios; a Marginalia tem poucos em estoque."
+        "why": "A loja tem preço para três policiais; tem estoque de só um."
       }
     ]
   },
@@ -242,11 +242,11 @@
     "choices": [
       {
         "text": "Tentou de novo com M-9998, o id mais próximo",
-        "why": "Ele não chutou nada; perguntou ao cliente."
+        "why": "Ele não chutou outro id; perguntou ao cliente."
       },
       {
         "text": "Pediu ao cliente que conferisse o número",
-        "why": "Certo. Essa resposta foi escrita pelo curso, e é a cara de uma boa resposta."
+        "why": "Certo. Ele disse que o pedido não existe e pediu alguma coisa para encontrá-lo, que é o que um resultado de erro torna possível."
       },
       {
         "text": "Derrubou a execução com uma exceção que o hospedeiro imprimiu",
@@ -259,23 +259,23 @@
     ]
   },
   "ex-ry04pdcs": {
-    "prompt": "Um laço confere o `finish_reason` para decidir se roda ferramentas. Por que esse laço nunca roda as ferramentas do Gemini?",
+    "prompt": "Um laço confere o motivo de término para decidir se roda ferramentas. Por que esse laço nunca roda as ferramentas chamadas pelo /api/chat do próprio Ollama?",
     "choices": [
       {
-        "text": "Porque o Gemini não aceita chamadas de ferramenta pela API",
-        "why": "Aceita: o wires.py recebeu um function_call de volta."
+        "text": "Porque a API do próprio Ollama não aceita chamadas de ferramenta",
+        "why": "Aceita: o wires.py recebeu uma chamada do /api/chat."
       },
       {
-        "text": "Porque o Gemini devolve chamadas num pedido separado que o laço nunca faz",
-        "why": "A chamada vem na mesma resposta, entre as partes."
+        "text": "Porque a chamada chega numa segunda resposta que o laço nunca lê",
+        "why": "A chamada vem na mesma mensagem, em tool_calls."
       },
       {
-        "text": "Uma resposta com chamada de função também termina com STOP",
-        "why": "Certo. O laço precisa procurar partes function_call em vez de confiar no motivo de término."
+        "text": "Uma resposta com chamada ainda termina com done_reason stop",
+        "why": "Certo. O laço precisa procurar as próprias chamadas, como precisa com o STOP do Gemini."
       },
       {
-        "text": "Porque finish_reason só existe na OpenAI",
-        "why": "O Gemini também tem finishReason; só não diz que uma ferramenta foi chamada."
+        "text": "Porque o done_reason só é preenchido em streaming",
+        "why": "O wires.py não usou streaming, e o done_reason voltou como stop."
       }
     ]
   },
@@ -321,7 +321,7 @@
     ]
   },
   "ex-z75qgf5n": {
-    "prompt": "Com `--drop-one`, o pedido seguinte falhou com 400. O que havia de errado nele?",
+    "prompt": "Com `--drop-one`, a API da Anthropic recusaria o pedido seguinte com um 400; o dublê o aceitou. O que há de errado nesse pedido?",
     "choices": [
       {
         "text": "As duas chamadas deviam ter vindo em respostas separadas",
@@ -333,7 +333,7 @@
       },
       {
         "text": "A resposta do modelo não foi anexada",
-        "why": "Foi; é por isso que a API conseguiu ver uma chamada sem resultado."
+        "why": "Foi; é por isso que a chamada sem resultado está na conversa."
       },
       {
         "text": "Um id de tool_use não tinha tool_result com aquele id na mensagem seguinte",
