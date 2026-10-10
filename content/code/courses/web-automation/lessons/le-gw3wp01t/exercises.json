@@ -1,0 +1,510 @@
+[
+ {
+  "id": "ex-vqd02bbq",
+  "version": 1,
+  "section": "what-arrives",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "`curl -s http://localhost:3000/ | grep -c '<h2>'` prints `0`, and the same question to `/ssr` finds eight. Why?",
+  "choices": [
+   {
+    "text": "curl runs no script, and only `/ssr` has the products in its HTML",
+    "correct": true,
+    "why": "Right. The home page's list is built by `app.js` in a browser; `/ssr` arrives with it written in."
+   },
+   {
+    "text": "The home page was still loading when curl read it, so the list was cut short",
+    "correct": false,
+    "why": "curl waits for the whole response; the products are simply not in it, however long you wait."
+   },
+   {
+    "text": "`/` writes its product headings as `<h1>`, which this grep does not count",
+    "correct": false,
+    "why": "Its cards use `<h2>` too, once a browser has drawn them; the HTML has no cards at all."
+   },
+   {
+    "text": "curl is refused by the home page",
+    "correct": false,
+    "why": "The server answers curl like any client; the answer just holds an empty list."
+   }
+  ]
+ },
+ {
+  "id": "ex-10cta8nw",
+  "version": 1,
+  "section": "what-arrives",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "On a slow phone, what does a person see first on the server-rendered page that they do not see on the client-rendered one?",
+  "choices": [
+   {
+    "text": "A spinner while the products are fetched",
+    "correct": false,
+    "why": "No product request is needed on `/ssr`: the products are in the document."
+   },
+   {
+    "text": "Working buttons, before the HTML",
+    "correct": false,
+    "why": "Nothing comes before the HTML, and the buttons work only after `/slow/ssr.js` has run."
+   },
+   {
+    "text": "The products, as soon as the HTML arrives",
+    "correct": true,
+    "why": "Right. They are written into the document, so they show without waiting for any script."
+   },
+   {
+    "text": "Nothing different; the two pages are identical on screen at every moment",
+    "correct": false,
+    "why": "They end up alike, but `/` shows an empty list until its script has run and asked."
+   }
+  ]
+ },
+ {
+  "id": "ex-hdst9k2s",
+  "version": 1,
+  "section": "what-arrives",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "When the browser builds the content from data a script fetched, the page uses ___ -side rendering.",
+  "blanks": [
+   {
+    "accept": [
+     "client"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-fk6jq1ry",
+  "version": 1,
+  "section": "hydration",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The first test clicks Banana's button on `/ssr` and the click raises no error, yet the basket stays at 0. Why did Playwright click without complaint?",
+  "choices": [
+   {
+    "text": "The button was visible, stable and enabled, which is all its checks look at",
+    "correct": true,
+    "why": "Right. Nothing on the outside of a button says whether it has a click handler."
+   },
+   {
+    "text": "It clicks without checking anything",
+    "correct": false,
+    "why": "It checks actionability before every click; the button simply passed."
+   },
+   {
+    "text": "The button was covered by the toast",
+    "correct": false,
+    "why": "`/ssr` has no toast, and a covered button would have made Playwright wait."
+   },
+   {
+    "text": "The click was sent to the wrong card",
+    "correct": false,
+    "why": "Any card would have done; no button had a handler yet."
+   }
+  ]
+ },
+ {
+  "id": "ex-k6axkb6b",
+  "version": 1,
+  "section": "hydration",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In `app/routes/ssr.js`, for how many milliseconds does the server hold back `/slow/ssr.js`?",
+  "hint": "Look at the argument to `pause`.",
+  "value": 1500,
+  "tolerance": 0,
+  "unit": "ms"
+ },
+ {
+  "id": "ex-xhchfe33",
+  "version": 1,
+  "section": "hydration",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Suppose the server's pause were cut to 20 ms. What would the test that clicks at once most likely become?",
+  "choices": [
+   {
+    "text": "A test that always passes, because 20 ms is shorter than any click",
+    "correct": false,
+    "why": "It would still click with no wait for the handler; a busy machine could still lose the race."
+   },
+   {
+    "text": "A test that still always fails, because the click comes before any script",
+    "correct": false,
+    "why": "With the gap that short, the script would often run before the click."
+   },
+   {
+    "text": "A flaky test, passing or failing with the machine's speed",
+    "correct": true,
+    "why": "Right. The race is still there, only narrower, which is the shape of lesson 14's flaky tests."
+   },
+   {
+    "text": "A test that errors before it reaches the click",
+    "correct": false,
+    "why": "Nothing before the click depends on the pause."
+   }
+  ]
+ },
+ {
+  "id": "ex-vktat48n",
+  "version": 1,
+  "section": "waiting-for-ready",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does `await expect(button).toBeEnabled()` before the click not fix the test on `/ssr`?",
+  "choices": [
+   {
+    "text": "It waits too long and the test times out",
+    "correct": false,
+    "why": "It does not wait at all: the button is enabled from the start."
+   },
+   {
+    "text": "The button is enabled from the start",
+    "correct": true,
+    "why": "Right. A wait helps only if what it watches changes when the page becomes ready."
+   },
+   {
+    "text": "Playwright has no such assertion for buttons",
+    "correct": false,
+    "why": "It has it; it just watches the wrong property for this page."
+   },
+   {
+    "text": "It only works on `<input>` elements, not buttons",
+    "correct": false,
+    "why": "It works on buttons too."
+   }
+  ]
+ },
+ {
+  "id": "ex-a0n7dj85",
+  "version": 1,
+  "section": "waiting-for-ready",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these wait for something that happens only after `ssr.js` has run? Choose all that apply.",
+  "choices": [
+   {
+    "text": "`expect(page.locator('body')).toHaveAttribute('data-ready', 'true')`",
+    "correct": true,
+    "why": "Right. The script sets the attribute as its last line."
+   },
+   {
+    "text": "`page.waitForResponse('**/slow/ssr.js')`",
+    "correct": false,
+    "why": "It fires when status and headers arrive, before the script has run."
+   },
+   {
+    "text": "`expect(page.getByTestId('basket-count')).toHaveText('1')` after a click",
+    "correct": true,
+    "why": "Right. Only a wired button can change the count, so this can only pass after the script ran."
+   },
+   {
+    "text": "`expect(button).toBeEnabled()`",
+    "correct": false,
+    "why": "The buttons are enabled in the server's HTML, before any script."
+   }
+  ]
+ },
+ {
+  "id": "ex-vbsw50ra",
+  "version": 1,
+  "section": "waiting-for-ready",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The developers agree to send the buttons `disabled` and enable each one in `ssr.js`. What happens to the first test, the one that clicks at once?",
+  "choices": [
+   {
+    "text": "It passes unchanged: the click now waits for the button to be enabled",
+    "correct": true,
+    "why": "Right. Actionability already includes enabled, so the page's honesty does the waiting."
+   },
+   {
+    "text": "It fails sooner, because Playwright treats a click on a disabled button as an error",
+    "correct": false,
+    "why": "Playwright waits for a disabled button to become enabled before it gives up."
+   },
+   {
+    "text": "It still fails, and now needs the marker as well",
+    "correct": false,
+    "why": "The run in the section passed with no change to the test."
+   },
+   {
+    "text": "It passes only with `--workers 1`",
+    "correct": false,
+    "why": "Workers decide how many tests run at once, not how a click waits."
+   }
+  ]
+ },
+ {
+  "id": "ex-5tnb5t42",
+  "version": 1,
+  "section": "javascript-off",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "With `test.use({ javaScriptEnabled: false })`, how many products does `/ssr` show, and how many does `/` show?",
+  "choices": [
+   {
+    "text": "Eight and eight",
+    "correct": false,
+    "why": "`/` needs `app.js` to draw anything, and it never runs."
+   },
+   {
+    "text": "Eight and none",
+    "correct": true,
+    "why": "Right. The server wrote `/ssr`'s products into the HTML; `/` waits for a script that never runs."
+   },
+   {
+    "text": "None and none",
+    "correct": false,
+    "why": "Switching scripts off does not remove what is already in the HTML."
+   },
+   {
+    "text": "None and eight",
+    "correct": false,
+    "why": "That is the two pages swapped."
+   }
+  ]
+ },
+ {
+  "id": "ex-7zrq0zx4",
+  "version": 1,
+  "section": "javascript-off",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The test `/ssr lists its eight products without a script` passes. A colleague wants to rename it `the shop works without JavaScript`. What is wrong with that?",
+  "choices": [
+   {
+    "text": "Nothing; both names describe the same check on the same page with JavaScript off",
+    "correct": false,
+    "why": "One claims content, the other claims behaviour, and only content was checked."
+   },
+   {
+    "text": "Test names may not contain the word JavaScript",
+    "correct": false,
+    "why": "Playwright accepts any string as a name; the problem is what it claims."
+   },
+   {
+    "text": "The new name would make the test fail, because Playwright matches it against the page",
+    "correct": false,
+    "why": "A name changes nothing in what runs; it changes what a reader believes."
+   },
+   {
+    "text": "The buttons do nothing without a script, and the test never presses one",
+    "correct": true,
+    "why": "Right. A test proves what it asserts; this one asserts that products are listed."
+   }
+  ]
+ },
+ {
+  "id": "ex-s4spb74j",
+  "version": 1,
+  "section": "javascript-off",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the second test, `/ lists nothing without a script`, carry a comment saying it is a fact and not a requirement?",
+  "choices": [
+   {
+    "text": "Playwright skips tests that have no comment",
+    "correct": false,
+    "why": "Comments are ignored by the runner; they are for people."
+   },
+   {
+    "text": "So nobody mistakes it for a requirement",
+    "correct": true,
+    "why": "Right. The day the team wants products without JavaScript, this test is the one to turn round."
+   },
+   {
+    "text": "Because the test fails and the comment explains why",
+    "correct": false,
+    "why": "It passes; the comment explains what its passing means."
+   },
+   {
+    "text": "To turn the check off when it runs on build servers",
+    "correct": false,
+    "why": "A comment turns nothing off."
+   }
+  ]
+ },
+ {
+  "id": "ex-vp8yts21",
+  "version": 1,
+  "section": "choosing-the-layer",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A test that asks only for the `request` fixture checks `/ssr`. What does it never do?",
+  "choices": [
+   {
+    "text": "Send an HTTP request",
+    "correct": false,
+    "why": "Sending requests is all it does."
+   },
+   {
+    "text": "Use the config's `baseURL` to turn `/ssr` into a full address",
+    "correct": false,
+    "why": "It does: `request.get('/ssr')` resolves against it."
+   },
+   {
+    "text": "Open a page, so no script on it ever runs",
+    "correct": true,
+    "why": "Right. It reads the HTML as text, which is why it is fast and why it cannot see `/`'s products."
+   },
+   {
+    "text": "Read the response body",
+    "correct": false,
+    "why": "`.text()` reads it; that is how the test finds the headings."
+   }
+  ]
+ },
+ {
+  "id": "ex-zpt2k0yr",
+  "version": 1,
+  "section": "choosing-the-layer",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team checks `/ssr` only with HTTP tests that read its HTML. Which defect from this lesson would get past them?",
+  "choices": [
+   {
+    "text": "A product missing from the HTML that the server sends for `/ssr`",
+    "correct": false,
+    "why": "That is exactly what the HTML test compares against the API."
+   },
+   {
+    "text": "The second and a half when the buttons ignore clicks",
+    "correct": true,
+    "why": "Right. The HTML was right throughout; the defect is in what happens after it arrives."
+   },
+   {
+    "text": "A price written in the wrong format inside one of the cards",
+    "correct": false,
+    "why": "The price is in the HTML, so a test that reads it can check it."
+   },
+   {
+    "text": "The route answering `404`",
+    "correct": false,
+    "why": "Any HTTP test sees the status first."
+   }
+  ]
+ },
+ {
+  "id": "ex-wxtrcm7n",
+  "version": 1,
+  "section": "choosing-the-layer",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each question to the cheapest test in this lesson that can answer it.",
+  "pairs": [
+   {
+    "left": "Does the HTML of `/ssr` name every product?",
+    "right": "A request with no browser"
+   },
+   {
+    "left": "Does a click on `/ssr` add to the basket?",
+    "right": "A browser test that waits for the marker"
+   },
+   {
+    "left": "Does `/ssr` show its products when scripts are off?",
+    "right": "A browser with `javaScriptEnabled: false`"
+   },
+   {
+    "left": "Are the products drawn on `/`?",
+    "right": "A browser that runs `app.js`"
+   }
+  ]
+ },
+ {
+  "id": "ex-2474s8f9",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put what happens on `/ssr` in order, from the request to a click that works.",
+  "items": [
+   "The HTML arrives with the eight products in it",
+   "The `load` event fires and `page.goto` returns",
+   "The inline script asks for `/slow/ssr.js`",
+   "`ssr.js` runs and sets `data-ready`"
+  ],
+  "trap": "The script is asked for only after `load`, so `goto` returns before it has even been requested."
+ },
+ {
+  "id": "ex-qcgg6p0r",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Another shop renders on the server and sets no ready marker. Its buttons are enabled from the start. What should a tester do first?",
+  "choices": [
+   {
+    "text": "Add a fixed two-second wait before every click",
+    "correct": false,
+    "why": "It slows every test and still fails the day the script takes longer."
+   },
+   {
+    "text": "Retry each click until the basket changes",
+    "correct": false,
+    "why": "A retried click can count twice once the handler arrives between tries."
+   },
+   {
+    "text": "Wait for `networkidle` before each click and move on",
+    "correct": false,
+    "why": "Its documentation discourages it for tests, and a page that polls never goes quiet."
+   },
+   {
+    "text": "Ask for the buttons to start disabled",
+    "correct": true,
+    "why": "Right. It fixes the page for people too, and Playwright's own check then does the waiting."
+   }
+  ]
+ },
+ {
+  "id": "ex-rrwat3jw",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`npx playwright test tests/ssr.spec.js --repeat-each 5` with two workers once failed with `Received: \"2\"`. What is the likeliest cause?",
+  "choices": [
+   {
+    "text": "Two copies ran at once and shared the shop's one basket",
+    "correct": true,
+    "why": "Right. One copy's click landed in the other's count; lesson 15 is about that."
+   },
+   {
+    "text": "The marker was set before the buttons were wired",
+    "correct": false,
+    "why": "`ssr.js` sets it on its last line, after the loop."
+   },
+   {
+    "text": "The reset in `beforeEach` failed",
+    "correct": false,
+    "why": "A failed reset would leave old items, not add one more during the test."
+   },
+   {
+    "text": "Playwright clicked twice",
+    "correct": false,
+    "why": "`click()` clicks once; the second item came from another copy of the test."
+   }
+  ]
+ }
+]

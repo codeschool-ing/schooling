@@ -41,7 +41,16 @@ for a new browser context. Print one from the copy installed in your project rat
 a table in a blog post, because the list changes between versions:
 
 ```
-%%CAP descriptor%%
+ana@laptop:~/quitanda$ node -p "require('@playwright/test').devices['iPhone 13']"
+{
+  userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.0 Mobile/15E148 Safari/604.1',
+  viewport: { width: 390, height: 664 },
+  screen: { width: 390, height: 844 },
+  deviceScaleFactor: 3,
+  isMobile: true,
+  hasTouch: true,
+  defaultBrowserType: 'webkit'
+}
 ```
 
 Six options, and each one changes something different:
@@ -100,19 +109,26 @@ await browser.close();
 With the shop started in another terminal:
 
 ```
-%%CAP viewport-root%%
+ana@laptop:~/quitanda$ node viewport.mjs
+desktop, 1280 wide  {"screen":1280,"innerWidth":1280,"scrollWidth":1280,"devicePixelRatio":1,"touch":false}
+desktop, 390 wide   {"screen":390,"innerWidth":390,"scrollWidth":400,"devicePixelRatio":1,"touch":false}
+iPhone 13           {"screen":390,"innerWidth":400,"scrollWidth":400,"devicePixelRatio":3,"touch":true}
 ```
 
 The narrow desktop window and the phone have the same screen, 390, and differ in everything else:
 three times the pixels, a finger for a pointer, and a window of **400**, wider than the screen it
-is on. The page is 400 wide, and a phone that is honouring the viewport tag widens its window to
-fit what is there rather than cut it off. The desktop window does not, which is the first sign
-that the two are different tests. The overflow section is about where those 400 pixels come from.
+is on. The page is 400 wide in both. The desktop window stays at 390 and the page scrolls sideways
+inside it; the phone, honouring the viewport tag, widens its window to fit what is there. Same
+page, same screen, two different measurements, which is the first sign that the two are different
+tests. The overflow section is about where those 400 pixels come from.
 
 The same script on the deals page, which the adaptive section adds to the shop:
 
 ```
-%%CAP viewport-deals%%
+ana@laptop:~/quitanda$ node viewport.mjs /deals
+desktop, 1280 wide  {"screen":1280,"innerWidth":1280,"scrollWidth":1280,"devicePixelRatio":1,"touch":false,"says":"Weekly deals, in a table."}
+desktop, 390 wide   {"screen":390,"innerWidth":390,"scrollWidth":390,"devicePixelRatio":1,"touch":false,"says":"Weekly deals, in a table."}
+iPhone 13           {"screen":390,"innerWidth":980,"scrollWidth":980,"devicePixelRatio":3,"touch":true,"says":"Tap a deal to call the shop."}
 ```
 
 **The phone lays this page out 980 pixels wide.** Its HTML has no viewport tag, so the phone falls

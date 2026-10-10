@@ -41,14 +41,24 @@ The server reads every file in `app/routes/` when it starts, so restart the shop
 `curl`, which calls itself `curl` and a version number, gets the desktop page:
 
 ```
-%%CAP curl-deals%%
+ana@laptop:~/quitanda$ curl -si http://localhost:3000/deals
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=utf-8
+Vary: User-Agent
+Date: Sat, 10 Oct 2026 19:36:08 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+<!doctype html><title>Deals</title><h1>Deals</h1><p>Weekly deals, in a table.</p>
 ```
 
 and the same request carrying the iPhone 13's name, read out of Playwright's descriptor, gets the
 other one:
 
 ```
-%%CAP curl-deals-phone%%
+ana@laptop:~/quitanda$ curl -s -A "$(node -p "require('@playwright/test').devices['iPhone 13'].userAgent")" http://localhost:3000/deals
+<!doctype html><title>Deals</title><h1>Deals</h1><p>Tap a deal to call the shop.</p>
 ```
 
 **Same address, same server, a different page**, chosen by the word `Mobile` somewhere in a
@@ -84,7 +94,19 @@ test.describe('an iPhone', () => {
 ```
 
 ```
-%%CAP deals-describe%%
+ana@laptop:~/quitanda$ npx playwright test tests/deals.spec.js
+Cannot use({ defaultBrowserType }) in a describe group, because it forces a new worker.
+Make it top-level in the test file or put in the configuration file.
+
+   at deals.spec.js:4
+
+  2 |
+  3 | test.describe('an iPhone', () => {
+> 4 |   test.use(devices['iPhone 13']);
+    |        ^
+  5 |
+  6 |   test('gets the page for a phone', async ({ page }) => {
+  7 |     await page.goto('/deals');
 ```
 
 The descriptor carries `defaultBrowserType: 'webkit'`, and a browser engine is chosen when a worker
@@ -121,7 +143,14 @@ test.describe('a desktop browser in a phone-sized window', () => {
 ```
 
 ```
-%%CAP deals%%
+ana@laptop:~/quitanda$ npx playwright test tests/deals.spec.js
+
+Running 2 tests using 1 worker
+
+  ✓  1 tests/deals.spec.js:10:3 › an iPhone, emulated in Chromium › gets the page for a phone (122ms)
+  ✓  2 tests/deals.spec.js:20:3 › a desktop browser in a phone-sized window › gets the page for a desktop (86ms)
+
+  2 passed (1.7s)
 ```
 
 ## A guess has edges
@@ -130,7 +159,21 @@ The server's rule is a guess about devices, and a guess can be tested for where 
 Playwright's own list marks some devices `isMobile` whose `User-Agent` has no `Mobile` in it:
 
 ```
-%%CAP tablets%%
+ana@laptop:~/quitanda$ node -p "Object.entries(require('@playwright/test').devices).filter(([name, d]) => d.isMobile && !/Mobile/.test(d.userAgent)).map(([name]) => name)"
+[
+  'Blackberry PlayBook',
+  'Blackberry PlayBook landscape',
+  'Galaxy Tab S4',
+  'Galaxy Tab S4 landscape',
+  'Galaxy Tab S9',
+  'Galaxy Tab S9 landscape',
+  'Kindle Fire HDX',
+  'Kindle Fire HDX landscape',
+  'Nexus 10',
+  'Nexus 10 landscape',
+  'Nexus 7',
+  'Nexus 7 landscape'
+]
 ```
 
 Twelve entries, six tablets held two ways each, and every one of them gets the desktop page. That may be what the shop wants, a

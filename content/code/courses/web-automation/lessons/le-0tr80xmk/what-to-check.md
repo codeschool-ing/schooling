@@ -37,7 +37,8 @@ Most phones in Playwright's list have a `landscape` entry beside them, and turni
 side can carry it across a breakpoint:
 
 ```
-%%CAP landscape%%
+ana@laptop:~/quitanda$ node -p "require('@playwright/test').devices['iPhone 13 landscape'].viewport"
+{ width: 750, height: 342 }
 ```
 
 On its side the iPhone 13 is 750 wide, so it gets the shop's desktop layout, links and no Menu
@@ -59,8 +60,8 @@ import { test, expect } from '@playwright/test';
 // pixels, or has enough space around it. The robot measures the size.
 // Whether the space is enough, a person judged, and wrote down here.
 const judged = {
-  Shop: '20 px tall, with the 16 px gap of the open menu below it',
-  Search: '20 px tall, with the same gap above it',
+  Shop: 'under 24 px tall, with the 1rem gap of the open menu below it',
+  Search: 'under 24 px tall, with the same gap above it',
 };
 
 test('every target on a phone is 24 by 24, or was judged', async ({ page }) => {
@@ -78,11 +79,17 @@ test('every target on a phone is 24 by 24, or was judged', async ({ page }) => {
 ```
 
 ```
-%%CAP targets%%
+ana@laptop:~/quitanda$ npx playwright test tests/targets.spec.js
+
+Running 1 test using 1 worker
+
+  ✓  1 tests/targets.spec.js:11:1 › every target on a phone is 24 by 24, or was judged (367ms)
+
+  1 passed (1.6s)
 ```
 
-The two links of the open menu are 20 pixels tall, and the column they sit in has `gap: 1rem`
-between them. Every button in the shop is above 24 in both directions. The `:visible` in the
+The two links of the open menu are the only targets under 24 pixels, and the
+column they sit in has `gap: 1rem` between them, which is what the person judged. Every button in the shop is above 24 in both directions. The `:visible` in the
 selector keeps out what is not on screen: in a window wider than 600 the hidden Menu button has a
 box of 0 by 0, and an element nobody can see is nobody's target.
 
@@ -91,8 +98,8 @@ box of 0 by 0, and an element nobody can see is nobody's target.
 **Whether the page looks right.** A robot can say the basket line is 400 pixels wide; it cannot say
 whether the phone layout is pleasant, whether the Menu button is where a thumb expects it, or
 whether a heading that wraps onto three lines reads badly. Screenshots compared against a reviewed
-copy are the robot's nearest approach, and lesson 16 shows what they catch and what they cost. Lesson 22 is about the tests that cost more than the
-defects they find, and a test asserting what a page looks like is often one of them.
+copy are the robot's nearest approach, and lesson 16 shows what they catch and what they cost.
+Lesson 22 is about the tests that cost more than the defects they find, and a test asserting what a page looks like is often one of them.
 
 So the split is the one this lesson has followed throughout: **the robot measures what has one
 right answer** (a width, a count, a header, which page arrived) and a person looks at the rest, on

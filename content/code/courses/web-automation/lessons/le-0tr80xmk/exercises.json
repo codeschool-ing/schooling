@@ -1,0 +1,541 @@
+[
+ {
+  "id": "ex-j1trx6h0",
+  "version": 1,
+  "section": "viewport",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What does the line `<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">` change on a phone?",
+  "choices": [
+   {
+    "text": "The layout uses the phone's own width",
+    "correct": true,
+    "why": "Right. Without it the deals page was laid out 980 wide under the iPhone descriptor."
+   },
+   {
+    "text": "It makes the server send the phone version",
+    "correct": false,
+    "why": "The tag is read by the browser after the page arrives; the server chose the page already."
+   },
+   {
+    "text": "It sets the device pixel ratio to 1 for every page",
+    "correct": false,
+    "why": "The ratio belongs to the screen; under the iPhone descriptor it stayed 3 on every page."
+   },
+   {
+    "text": "Nothing on a phone; it only matters on desktops",
+    "correct": false,
+    "why": "The other way round: a desktop browser ignores it, and a phone obeys it."
+   }
+  ]
+ },
+ {
+  "id": "ex-2x27g8a3",
+  "version": 1,
+  "section": "viewport",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A window 390 wide and the iPhone 13 descriptor both report a screen of 390. Which difference did `viewport.mjs` measure on the shop's main page?",
+  "choices": [
+   {
+    "text": "None: both reported the same innerWidth",
+    "correct": false,
+    "why": "The phone reported 400, the desktop window 390."
+   },
+   {
+    "text": "The phone's window was 400, wider than its screen",
+    "correct": true,
+    "why": "Right. A phone honouring the viewport tag widens its window to fit a page that is 400 wide."
+   },
+   {
+    "text": "The desktop window had a device pixel ratio of 3",
+    "correct": false,
+    "why": "It was 1; the ratio of 3 came with the descriptor."
+   },
+   {
+    "text": "The phone could not load the page without WebKit",
+    "correct": false,
+    "why": "It loaded in Chromium; the script drops `defaultBrowserType` on purpose."
+   }
+  ]
+ },
+ {
+  "id": "ex-f6t1kyrp",
+  "version": 1,
+  "section": "viewport",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "An iPhone 13 is 390 CSS pixels wide with a device pixel ratio of 3. How many device pixels wide is its screen?",
+  "hint": "Multiply.",
+  "value": 1170,
+  "tolerance": 0,
+  "unit": "pixels"
+ },
+ {
+  "id": "ex-mbcepkdn",
+  "version": 1,
+  "section": "breakpoints",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`style.css` has `@media (max-width: 600px)`. Which pair of widths tests the line itself?",
+  "choices": [
+   {
+    "text": "390 and 1280",
+    "correct": false,
+    "why": "Those test two layouts far from the line; a mistake at the line passes both."
+   },
+   {
+    "text": "599 and 600",
+    "correct": false,
+    "why": "Both are inside `max-width: 600px`, so both get the phone layout."
+   },
+   {
+    "text": "600 and 601",
+    "correct": true,
+    "why": "Right. 600 is the last phone width and 601 the first desktop one."
+   },
+   {
+    "text": "601 and 602",
+    "correct": false,
+    "why": "Both are outside the rule, so both get the desktop layout."
+   }
+  ]
+ },
+ {
+  "id": "ex-wbfjyak1",
+  "version": 1,
+  "section": "breakpoints",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A test at 1280 px asserts `await expect(page.getByRole('button', { name: 'Menu' })).toBeHidden()`. Somebody renames the button *Navigation*. What happens?",
+  "choices": [
+   {
+    "text": "It fails, because the name no longer matches",
+    "correct": false,
+    "why": "A locator that matches nothing counts as hidden, so the assertion holds."
+   },
+   {
+    "text": "It still passes, proving nothing",
+    "correct": true,
+    "why": "Right. That is why the lesson's file adds `includeHidden: true` and `toHaveCount(1)`."
+   },
+   {
+    "text": "It times out waiting for the Menu button to appear on the page",
+    "correct": false,
+    "why": "`toBeHidden` waits for hidden, and nothing matching is hidden at once."
+   },
+   {
+    "text": "Playwright reports a strict mode violation",
+    "correct": false,
+    "why": "Strict mode complains about two matches, not about none."
+   }
+  ]
+ },
+ {
+  "id": "ex-fpjbjgrv",
+  "version": 1,
+  "section": "breakpoints",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which question is `page.setViewportSize` the right tool for, where `test.use({ viewport })` is not?",
+  "choices": [
+   {
+    "text": "What a phone's touch screen does to the page",
+    "correct": false,
+    "why": "Both change only the window; touch comes with `hasTouch`."
+   },
+   {
+    "text": "What this width gets when the page opens",
+    "correct": false,
+    "why": "Either answers that; `test.use` is the plain way to."
+   },
+   {
+    "text": "What a page does when the window changes while it is open",
+    "correct": true,
+    "why": "Right. It resizes a page already open, in the middle of a test."
+   },
+   {
+    "text": "Which page the server sends",
+    "correct": false,
+    "why": "The width never reaches the server; neither option changes what it sends."
+   }
+  ]
+ },
+ {
+  "id": "ex-89he6d5q",
+  "version": 1,
+  "section": "overflow",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Under the iPhone 13 descriptor, why would `expect(scrollWidth).toBeLessThanOrEqual(innerWidth)` pass on the shop?",
+  "choices": [
+   {
+    "text": "Because the iPhone layout hides the basket",
+    "correct": false,
+    "why": "The basket line shows at every width; the Menu button hides the links, not the basket."
+   },
+   {
+    "text": "innerWidth grew to 400, the page's own width",
+    "correct": true,
+    "why": "Right. The phone widened its window to fit, so the page is compared with itself. Compare with the width you asked for."
+   },
+   {
+    "text": "Because scrollWidth is in device pixels",
+    "correct": false,
+    "why": "Both are CSS pixels; the ratio of 3 does not enter."
+   },
+   {
+    "text": "It would not; it fails at 400 against 390",
+    "correct": false,
+    "why": "That is the comparison with the width asked for; innerWidth reported 400 too."
+   }
+  ]
+ },
+ {
+  "id": "ex-hehxa99s",
+  "version": 1,
+  "section": "overflow",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The overflow test fails at 360 and 390 and the defect is reported, not fixed. Why does the lesson choose `test.fail` over `expect(scrollWidth).toBe(400)`?",
+  "choices": [
+   {
+    "text": "Because `toBe(400)` would fail on the day of the fix, reported as a regression",
+    "correct": false,
+    "why": "True of `toBe(400)`, and only half the reason: it also calls the defect correct."
+   },
+   {
+    "text": "It keeps measuring, and turns red the day the defect is fixed",
+    "correct": true,
+    "why": "Right. 'Expected to fail, but passed' is the signal to take the mark off."
+   },
+   {
+    "text": "Because `test.fail` skips the test, which is quicker",
+    "correct": false,
+    "why": "It runs the test in full; skipping is the first of the three choices."
+   },
+   {
+    "text": "Because a known defect must not appear in the report",
+    "correct": false,
+    "why": "The list still draws the two failures with a cross on every run."
+   }
+  ]
+ },
+ {
+  "id": "ex-513fct3w",
+  "version": 1,
+  "section": "overflow",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "The full width of the page, which the overflow test compares with the window, is `document.documentElement.___` .",
+  "blanks": [
+   {
+    "accept": [
+     "scrollWidth"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-mkf9jtm8",
+  "version": 1,
+  "section": "adaptive",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A desktop Chromium in a window 390 wide asks for `/deals`. Which page does it get?",
+  "choices": [
+   {
+    "text": "The phone page, because the window is phone-sized",
+    "correct": false,
+    "why": "The server never sees the width; it reads the `User-Agent`."
+   },
+   {
+    "text": "The desktop page",
+    "correct": true,
+    "why": "Right. Its `User-Agent` has no `Mobile` in it, whatever the window."
+   },
+   {
+    "text": "Whichever page a cache kept last",
+    "correct": false,
+    "why": "`Vary: User-Agent` tells caches to keep the two apart."
+   },
+   {
+    "text": "A 404, since `/deals` needs a phone",
+    "correct": false,
+    "why": "Both kinds of browser get a page; `curl` got the desktop one."
+   }
+  ]
+ },
+ {
+  "id": "ex-xn644dty",
+  "version": 1,
+  "section": "adaptive",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`test.use(devices['iPhone 13'])` inside a `describe` block stops the run before any test. Why?",
+  "choices": [
+   {
+    "text": "It asks for WebKit, set per worker",
+    "correct": true,
+    "why": "Right. Playwright refuses `defaultBrowserType` in a block; the lesson leaves it out."
+   },
+   {
+    "text": "WebKit is not installed on this machine",
+    "correct": false,
+    "why": "The error comes before any browser starts, and names `defaultBrowserType`."
+   },
+   {
+    "text": "Device descriptors only work in `viewport.mjs`",
+    "correct": false,
+    "why": "The fixed test file uses the same descriptor, minus one option."
+   },
+   {
+    "text": "The iPhone's viewport is too small for the shop",
+    "correct": false,
+    "why": "Size has nothing to do with it; the message is about the browser type."
+   }
+  ]
+ },
+ {
+  "id": "ex-tds6pez3",
+  "version": 1,
+  "section": "adaptive",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A server answers phones and desktops with different HTML at one address but sends no `Vary: User-Agent`. What can go wrong?",
+  "choices": [
+   {
+    "text": "Phones fall back to a layout 980 pixels wide",
+    "correct": false,
+    "why": "That is a missing viewport tag, a different defect."
+   },
+   {
+    "text": "Browsers refuse to show the page",
+    "correct": false,
+    "why": "Browsers show it; the trouble is in what a cache does between them."
+   },
+   {
+    "text": "A cache mixes the two pages up",
+    "correct": true,
+    "why": "Right. The defect then comes and goes with whoever asked first."
+   },
+   {
+    "text": "The `User-Agent` stops being sent",
+    "correct": false,
+    "why": "Browsers send it with every request whatever the server answers."
+   }
+  ]
+ },
+ {
+  "id": "ex-f7d46eqa",
+  "version": 1,
+  "section": "adaptive",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Everything in `tests/deals.spec.js` passes. Which claim does that support?",
+  "choices": [
+   {
+    "text": "The deals page works in Safari on an iPhone",
+    "correct": false,
+    "why": "It ran in Chromium wearing an iPhone's name; WebKit was not run."
+   },
+   {
+    "text": "A request with the iPhone's `User-Agent` gets the phone page",
+    "correct": true,
+    "why": "Right. That is what the server decides from, and what the test controlled."
+   },
+   {
+    "text": "Every tablet gets the phone page as well",
+    "correct": false,
+    "why": "Twelve of Playwright's entries are tablets without `Mobile`, and they get the desktop page."
+   },
+   {
+    "text": "The page is fast enough on a phone's network",
+    "correct": false,
+    "why": "Emulation copies no processor and no network."
+   }
+  ]
+ },
+ {
+  "id": "ex-qfcrh030",
+  "version": 1,
+  "section": "what-to-check",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each check to the kind of page it belongs to, or to both.",
+  "pairs": [
+   {
+    "left": "Widths either side of `max-width: 600px`",
+    "right": "Responsive"
+   },
+   {
+    "left": "`Vary: User-Agent` on the answer",
+    "right": "Adaptive"
+   },
+   {
+    "left": "No sideways scroll at 360",
+    "right": "Both, on every page sent"
+   },
+   {
+    "left": "A narrow desktop window gets the desktop page",
+    "right": "Adaptive, and only adaptive"
+   }
+  ]
+ },
+ {
+  "id": "ex-05xqfqpv",
+  "version": 1,
+  "section": "what-to-check",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`tests/targets.spec.js` lists *Shop* and *Search* as judged. What did the robot do, and what did a person do?",
+  "choices": [
+   {
+    "text": "The robot applied all of 2.5.8, and the person typed in its result",
+    "correct": false,
+    "why": "The robot only measured size; the spacing alternative needs judgement."
+   },
+   {
+    "text": "The robot measured boxes; a person judged the spacing",
+    "correct": true,
+    "why": "Right. A new small target fails until somebody looks at it too."
+   },
+   {
+    "text": "The robot fixed the links' size",
+    "correct": false,
+    "why": "A test measures; it changes nothing in the page."
+   },
+   {
+    "text": "Nothing: the links are above 24 pixels",
+    "correct": false,
+    "why": "They are under 24, which is why they are listed."
+   }
+  ]
+ },
+ {
+  "id": "ex-qgrbgr0b",
+  "version": 1,
+  "section": "what-to-check",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Turned on its side, the iPhone 13 descriptor is 750 wide. What does that mean for the shop?",
+  "choices": [
+   {
+    "text": "It keeps the phone layout, because it is still a phone",
+    "correct": false,
+    "why": "The stylesheet asks only about width, and 750 is past 600."
+   },
+   {
+    "text": "The server sends it the desktop deals page",
+    "correct": false,
+    "why": "Its `User-Agent` still says `Mobile`; orientation does not change the name."
+   },
+   {
+    "text": "It gets the desktop layout, in a window 342 high",
+    "correct": true,
+    "why": "Right. It crosses the breakpoint, and whether that layout fits is worth a test."
+   },
+   {
+    "text": "Nothing changes, since orientation is not emulated",
+    "correct": false,
+    "why": "Playwright has a landscape entry with its own viewport."
+   }
+  ]
+ },
+ {
+  "id": "ex-2vw1r64m",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put a responsive check of a new page in order.",
+  "items": [
+   "Read the breakpoints off its stylesheet",
+   "Pick the widths either side of each one",
+   "Assert what shows and hides at each width",
+   "Check that nothing scrolls sideways at each width"
+  ],
+  "trap": "The widths come from the stylesheet, so reading it comes first."
+ },
+ {
+  "id": "ex-evhbkgf0",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A site serves an adaptive phone page. Your tests emulate an iPhone and pass. What should you still check?",
+  "choices": [
+   {
+    "text": "Nothing; an adaptive page needs no responsive checks",
+    "correct": false,
+    "why": "Each page the server can send is a page with a layout of its own."
+   },
+   {
+    "text": "Only the desktop page, at 1280",
+    "correct": false,
+    "why": "The phone page needs checks too: the deals one is laid out at 980."
+   },
+   {
+    "text": "The phone page's own viewport tag and overflow",
+    "correct": true,
+    "why": "Right. The deals phone page has no viewport tag, so a phone lays it out 980 wide."
+   },
+   {
+    "text": "The phone page in a desktop window at 390 px",
+    "correct": false,
+    "why": "A desktop window would be given the desktop page instead."
+   }
+  ]
+ },
+ {
+  "id": "ex-mx0k0ghf",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these can a robot check with one right answer? Choose all that apply.",
+  "choices": [
+   {
+    "text": "The page is no wider than a 360 px window",
+    "correct": true,
+    "why": "Right. Two numbers, compared."
+   },
+   {
+    "text": "The phone layout is pleasant to use",
+    "correct": false,
+    "why": "That is judgement; a person looks, on a real phone."
+   },
+   {
+    "text": "The phone request gets `Vary: User-Agent`",
+    "correct": true,
+    "why": "Right. A header has one value."
+   },
+   {
+    "text": "The Menu button sits where a thumb expects it",
+    "correct": false,
+    "why": "Where a thumb expects it is a person's call."
+   }
+  ]
+ }
+]

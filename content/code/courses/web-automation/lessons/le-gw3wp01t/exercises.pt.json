@@ -1,0 +1,342 @@
+{
+ "ex-vqd02bbq": {
+  "prompt": "`curl -s http://localhost:3000/ | grep -c '<h2>'` imprime `0`, e a mesma pergunta a `/ssr` acha oito. Por quê?",
+  "choices": [
+   {
+    "text": "O curl não roda script, e só `/ssr` tem os produtos no HTML",
+    "why": "Certo. A lista da página inicial é montada pelo `app.js` num navegador; `/ssr` já chega com ela escrita."
+   },
+   {
+    "text": "A página inicial ainda estava carregando quando o curl a leu, e a lista veio cortada",
+    "why": "O curl espera a resposta inteira; os produtos só não estão nela, por mais que se espere."
+   },
+   {
+    "text": "`/` escreve os títulos de produto como `<h1>`, que este grep não conta",
+    "why": "Os cartões dela também usam `<h2>`, depois que um navegador os desenha; o HTML não tem cartão nenhum."
+   },
+   {
+    "text": "A página inicial recusa o curl",
+    "why": "O servidor responde ao curl como a qualquer cliente; a resposta só traz uma lista vazia."
+   }
+  ]
+ },
+ "ex-10cta8nw": {
+  "prompt": "Num celular lento, o que uma pessoa vê primeiro na página renderizada no servidor e não vê na renderizada no cliente?",
+  "choices": [
+   {
+    "text": "Um indicador girando enquanto os produtos são buscados",
+    "why": "Em `/ssr` não há requisição de produtos: eles estão no documento."
+   },
+   {
+    "text": "Botões funcionando, antes do HTML",
+    "why": "Nada vem antes do HTML, e os botões só funcionam depois que o `/slow/ssr.js` rodou."
+   },
+   {
+    "text": "Os produtos, assim que o HTML chega",
+    "why": "Certo. Eles estão escritos no documento, então aparecem sem esperar script nenhum."
+   },
+   {
+    "text": "Nada diferente; as duas páginas são idênticas na tela em todo momento",
+    "why": "Elas terminam parecidas, mas `/` mostra uma lista vazia até o script dela rodar e pedir."
+   }
+  ]
+ },
+ "ex-hdst9k2s": {
+  "prompt": "Quando o navegador monta o conteúdo a partir de dados que um script buscou, a página usa renderização no ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "cliente"
+    ]
+   }
+  ]
+ },
+ "ex-fk6jq1ry": {
+  "prompt": "O primeiro teste clica no botão da banana em `/ssr` e o clique não dá erro, mas a cesta fica em 0. Por que o Playwright clicou sem reclamar?",
+  "choices": [
+   {
+    "text": "O botão estava visível, parado e habilitado, que é tudo o que as verificações olham",
+    "why": "Certo. Nada no lado de fora de um botão diz se ele tem uma função de clique."
+   },
+   {
+    "text": "Ele clica sem verificar nada",
+    "why": "Ele verifica a acionabilidade antes de todo clique; o botão simplesmente passou."
+   },
+   {
+    "text": "O botão estava coberto pelo aviso",
+    "why": "`/ssr` não tem aviso, e um botão coberto teria feito o Playwright esperar."
+   },
+   {
+    "text": "O clique foi para o cartão errado",
+    "why": "Qualquer cartão serviria; nenhum botão tinha função ainda."
+   }
+  ]
+ },
+ "ex-k6axkb6b": {
+  "prompt": "Em `app/routes/ssr.js`, por quantos milissegundos o servidor segura o `/slow/ssr.js`?",
+  "hint": "Olhe o argumento de `pause`.",
+  "unit": "ms"
+ },
+ "ex-xhchfe33": {
+  "prompt": "Suponha que a pausa do servidor caísse para 20 ms. O que o teste que clica na hora provavelmente viraria?",
+  "choices": [
+   {
+    "text": "Um teste que sempre passa, porque 20 ms é menos do que qualquer clique leva",
+    "why": "Ele ainda clicaria sem esperar a função; uma máquina ocupada ainda poderia perder a corrida."
+   },
+   {
+    "text": "Um teste que ainda falha sempre, porque o clique vem antes de qualquer script",
+    "why": "Com uma lacuna tão curta, o script muitas vezes rodaria antes do clique."
+   },
+   {
+    "text": "Um teste intermitente, que passa ou falha conforme a velocidade da máquina",
+    "why": "Certo. A corrida continua lá, só mais estreita, que é a forma dos testes intermitentes da aula 14."
+   },
+   {
+    "text": "Um teste que dá erro antes de chegar ao clique",
+    "why": "Nada antes do clique depende da pausa."
+   }
+  ]
+ },
+ "ex-vktat48n": {
+  "prompt": "Por que `await expect(button).toBeEnabled()` antes do clique não conserta o teste em `/ssr`?",
+  "choices": [
+   {
+    "text": "Ele espera demais e o teste estoura o tempo",
+    "why": "Ele nem espera: o botão está habilitado desde o início."
+   },
+   {
+    "text": "O botão já vem habilitado",
+    "why": "Certo. Uma espera só ajuda se o que ela observa muda quando a página fica pronta."
+   },
+   {
+    "text": "O Playwright não tem essa asserção para botões",
+    "why": "Tem; ela só observa a propriedade errada para esta página."
+   },
+   {
+    "text": "Ela só funciona em elementos `<input>`",
+    "why": "Funciona em botões também."
+   }
+  ]
+ },
+ "ex-a0n7dj85": {
+  "prompt": "Quais destas esperam algo que só acontece depois que o `ssr.js` rodou? Escolha todas as que se aplicam.",
+  "choices": [
+   {
+    "text": "`expect(page.locator('body')).toHaveAttribute('data-ready', 'true')`",
+    "why": "Certo. O script põe o atributo na última linha."
+   },
+   {
+    "text": "`page.waitForResponse('**/slow/ssr.js')`",
+    "why": "Dispara quando o status e os cabeçalhos chegam, antes de o script rodar."
+   },
+   {
+    "text": "`expect(page.getByTestId('basket-count')).toHaveText('1')` depois de um clique",
+    "why": "Certo. Só um botão com função muda a contagem, então isto só passa depois que o script rodou."
+   },
+   {
+    "text": "`expect(button).toBeEnabled()`",
+    "why": "Os botões estão habilitados no HTML do servidor, antes de qualquer script."
+   }
+  ]
+ },
+ "ex-vbsw50ra": {
+  "prompt": "Os desenvolvedores aceitam enviar os botões `disabled` e habilitar cada um no `ssr.js`. O que acontece com o primeiro teste, o que clica na hora?",
+  "choices": [
+   {
+    "text": "Passa sem mudança: o clique agora espera o botão ficar habilitado",
+    "why": "Certo. A acionabilidade já inclui estar habilitado, então a honestidade da página faz a espera."
+   },
+   {
+    "text": "Falha mais cedo, porque o Playwright trata o clique num botão desabilitado como erro",
+    "why": "O Playwright espera um botão desabilitado ficar habilitado antes de desistir."
+   },
+   {
+    "text": "Ainda falha, e agora precisa da marca também",
+    "why": "A execução da seção passou sem mudança no teste."
+   },
+   {
+    "text": "Só passa com `--workers 1`",
+    "why": "Os workers decidem quantos testes rodam juntos, não como um clique espera."
+   }
+  ]
+ },
+ "ex-5tnb5t42": {
+  "prompt": "Com `test.use({ javaScriptEnabled: false })`, quantos produtos `/ssr` mostra, e quantos `/` mostra?",
+  "choices": [
+   {
+    "text": "Oito e oito",
+    "why": "`/` precisa do `app.js` para desenhar algo, e ele nunca roda."
+   },
+   {
+    "text": "Oito e nenhum",
+    "why": "Certo. O servidor escreveu os produtos de `/ssr` no HTML; `/` espera um script que nunca roda."
+   },
+   {
+    "text": "Nenhum e nenhum",
+    "why": "Desligar os scripts não tira o que já está no HTML."
+   },
+   {
+    "text": "Nenhum e oito",
+    "why": "São as duas páginas trocadas."
+   }
+  ]
+ },
+ "ex-7zrq0zx4": {
+  "prompt": "O teste `/ssr lists its eight products without a script` passa. Um colega quer renomeá-lo para `the shop works without JavaScript`. O que há de errado nisso?",
+  "choices": [
+   {
+    "text": "Nada; os dois nomes descrevem a mesma verificação na mesma página sem JavaScript",
+    "why": "Um afirma conteúdo, o outro comportamento, e só o conteúdo foi verificado."
+   },
+   {
+    "text": "Nomes de teste não podem conter a palavra JavaScript",
+    "why": "O Playwright aceita qualquer texto como nome; o problema é o que ele afirma."
+   },
+   {
+    "text": "O nome novo faria o teste falhar, porque o Playwright o compara com a página",
+    "why": "Um nome não muda nada no que roda; muda o que quem lê acredita."
+   },
+   {
+    "text": "Os botões não fazem nada sem script, e o teste nunca aperta um",
+    "why": "Certo. Um teste prova o que afirma; este afirma que os produtos estão listados."
+   }
+  ]
+ },
+ "ex-s4spb74j": {
+  "prompt": "Por que o segundo teste, `/ lists nothing without a script`, tem um comentário dizendo que é um fato e não um requisito?",
+  "choices": [
+   {
+    "text": "O Playwright pula testes sem comentário",
+    "why": "O executor ignora comentários; eles são para pessoas."
+   },
+   {
+    "text": "Para ninguém tomá-lo por requisito",
+    "why": "Certo. No dia em que a equipe quiser produtos sem JavaScript, este é o teste a virar."
+   },
+   {
+    "text": "Porque o teste falha e o comentário explica por quê",
+    "why": "Ele passa; o comentário explica o que esse passar significa."
+   },
+   {
+    "text": "Para desligar a verificação nos servidores de build",
+    "why": "Um comentário não desliga nada."
+   }
+  ]
+ },
+ "ex-vp8yts21": {
+  "prompt": "Um teste que pede só a fixture `request` verifica `/ssr`. O que ele nunca faz?",
+  "choices": [
+   {
+    "text": "Enviar uma requisição HTTP",
+    "why": "Enviar requisições é tudo o que ele faz."
+   },
+   {
+    "text": "Usar o `baseURL` da configuração para completar o endereço `/ssr`",
+    "why": "Usa: `request.get('/ssr')` é resolvido a partir dele."
+   },
+   {
+    "text": "Abrir uma página, então nenhum script dela roda",
+    "why": "Certo. Ele lê o HTML como texto, por isso é rápido e por isso não vê os produtos de `/`."
+   },
+   {
+    "text": "Ler o corpo da resposta",
+    "why": "O `.text()` o lê; é assim que o teste acha os títulos."
+   }
+  ]
+ },
+ "ex-zpt2k0yr": {
+  "prompt": "Uma equipe verifica `/ssr` só com testes HTTP que leem o HTML. Que defeito desta aula passaria por eles?",
+  "choices": [
+   {
+    "text": "Um produto faltando no HTML que o servidor envia para `/ssr`",
+    "why": "É exatamente o que o teste de HTML compara com a API."
+   },
+   {
+    "text": "O segundo e meio em que os botões ignoram cliques",
+    "why": "Certo. O HTML esteve certo o tempo todo; o defeito está no que acontece depois que ele chega."
+   },
+   {
+    "text": "Um preço escrito no formato errado dentro de um dos cartões",
+    "why": "O preço está no HTML, então um teste que o lê consegue verificá-lo."
+   },
+   {
+    "text": "A rota respondendo `404`",
+    "why": "Qualquer teste HTTP vê o status primeiro."
+   }
+  ]
+ },
+ "ex-wxtrcm7n": {
+  "prompt": "Ligue cada pergunta ao teste mais barato desta aula que consegue respondê-la.",
+  "pairs": [
+   {
+    "left": "O HTML de `/ssr` nomeia todos os produtos?",
+    "right": "Uma requisição sem navegador"
+   },
+   {
+    "left": "Um clique em `/ssr` põe na cesta?",
+    "right": "Um teste de navegador que espera a marca"
+   },
+   {
+    "left": "`/ssr` mostra os produtos com scripts desligados?",
+    "right": "Um navegador com `javaScriptEnabled: false`"
+   },
+   {
+    "left": "Os produtos são desenhados em `/`?",
+    "right": "Um navegador que roda o `app.js`"
+   }
+  ]
+ },
+ "ex-2474s8f9": {
+  "prompt": "Ponha em ordem o que acontece em `/ssr`, da requisição a um clique que funciona.",
+  "items": [
+   "O HTML chega com os oito produtos",
+   "O evento `load` dispara e o `page.goto` retorna",
+   "O script embutido pede `/slow/ssr.js`",
+   "O `ssr.js` roda e põe `data-ready`"
+  ],
+  "trap": "O script só é pedido depois do `load`, então o `goto` retorna antes de ele sequer ser pedido."
+ },
+ "ex-qcgg6p0r": {
+  "prompt": "Outra loja renderiza no servidor e não põe marca de pronto. Os botões vêm habilitados desde o início. O que quem testa deve fazer primeiro?",
+  "choices": [
+   {
+    "text": "Pôr uma espera fixa de dois segundos antes de todo clique",
+    "why": "Deixa todo teste mais lento e ainda falha no dia em que o script demorar mais."
+   },
+   {
+    "text": "Repetir cada clique até a contagem da cesta mudar",
+    "why": "Um clique repetido pode contar duas vezes se a função chegar entre as tentativas."
+   },
+   {
+    "text": "Esperar `networkidle` antes de cada clique e seguir",
+    "why": "A documentação o desaconselha para testes, e uma página que consulta o servidor nunca fica quieta."
+   },
+   {
+    "text": "Pedir botões desabilitados até a função existir",
+    "why": "Certo. Corrige a página para as pessoas também, e a verificação do próprio Playwright faz a espera."
+   }
+  ]
+ },
+ "ex-rrwat3jw": {
+  "prompt": "`npx playwright test tests/ssr.spec.js --repeat-each 5` com dois workers falhou uma vez com `Received: \"2\"`. Qual a causa mais provável?",
+  "choices": [
+   {
+    "text": "Duas cópias rodaram juntas e dividiram a cesta única da loja",
+    "why": "Certo. O clique de uma cópia caiu na contagem da outra; a aula 15 trata disso."
+   },
+   {
+    "text": "A marca foi posta antes de os botões terem função",
+    "why": "O `ssr.js` a põe na última linha, depois do laço."
+   },
+   {
+    "text": "A reinicialização do `beforeEach` falhou",
+    "why": "Uma reinicialização falha deixaria itens antigos, e não somaria um durante o teste."
+   },
+   {
+    "text": "O Playwright clicou duas vezes",
+    "why": "O `click()` clica uma vez; o segundo item veio de outra cópia do teste."
+   }
+  ]
+ }
+}

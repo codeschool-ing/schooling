@@ -1,34 +1,35 @@
 ---
-title: The page that scrolls sideways
+title: A página que rola para o lado
 version: 1
 ---
 
-On a phone, a page is meant to scroll in one direction: down. **A page wider than the window
-scrolls sideways as well**, and whatever sits off to the right is out of sight until somebody
-thinks to drag the page across, which most people never do. It is the commonest way a responsive
-layout breaks, and the cheapest one for a robot to find: two numbers, compared.
+Num celular, uma página deve rolar numa direção só: para baixo. **Uma página mais larga que a
+janela também rola para o lado**, e o que fica à direita some de vista até alguém pensar em
+arrastar a página, coisa que a maioria das pessoas nunca faz. É o jeito mais comum de um layout
+responsivo quebrar, e o mais barato para um robô achar: dois números, comparados.
 
-## The flaw in the shop
+## A falha da loja
 
-Lesson 1's stylesheet carries a line marked as a known flaw, and this lesson is the one it was
-waiting for:
+A folha de estilos da aula 1 traz uma linha marcada como falha conhecida, e esta é a aula que ela
+esperava:
 
 ```css
 /* A known flaw, on purpose: this line refuses to wrap. */
 .basket { margin: 0 0 0 auto; white-space: nowrap; min-width: 24rem; text-align: right; }
 ```
 
-`white-space: nowrap` keeps *Basket: 0 items · R$ 0,00* on one line whatever happens, and
-`min-width: 24rem` makes the paragraph at least 384 CSS pixels wide, at the browser's usual 16
-pixels to a rem. Add the header's padding of 1rem on the left and the line needs 400 pixels. In a
-desktop window nobody notices. In a window 360 wide, the page grows by 40 pixels to the right.
+`white-space: nowrap` mantém *Basket: 0 items · R$ 0,00* numa linha só aconteça o que acontecer, e
+`min-width: 24rem` deixa o parágrafo com pelo menos 384 pixels CSS de largura, nos 16 pixels por
+rem de costume do navegador. Some o espaçamento de 1rem do cabeçalho à esquerda e a linha precisa de
+400 pixels. Numa janela de computador ninguém percebe. Numa janela de 360, a página cresce 40
+pixels para a direita.
 
-## The check
+## A verificação
 
-A page's full width is `document.documentElement.scrollWidth`. If it is larger than the window,
-the page scrolls sideways. The test sets the width, waits for the eight cards so that it measures
-the finished page rather than the empty one lesson 1 described, and compares. It goes in the same
-file as the breakpoints, below them. Save it as `tests/responsive.spec.js`:
+A largura total de uma página é `document.documentElement.scrollWidth`. Se ela for maior que a
+janela, a página rola para o lado. O teste define a largura, espera os oito cartões para medir a
+página pronta e não a vazia que a aula 1 descreveu, e compara. Ele vai no mesmo arquivo dos
+breakpoints, abaixo deles. Salve-o como `tests/responsive.spec.js`:
 
 ```javascript
 import { test, expect } from '@playwright/test';
@@ -80,8 +81,8 @@ for (const width of [360, 390, 768]) {
 }
 ```
 
-The three widths are a small phone, the iPhone 13 of the last two sections, and a tablet held
-upright. Run it:
+As três larguras são um celular pequeno, o iPhone 13 das duas últimas seções e um tablet em pé.
+Rode:
 
 ```
 ana@laptop:~/quitanda$ npx playwright test tests/responsive.spec.js
@@ -143,41 +144,41 @@ Running 7 tests using 1 worker
   5 passed (4.1s)
 ```
 
-**400 at 360, and 400 at 390.** The same number twice is itself a finding: the page is 400 wide
-whatever the window, so something in it has a fixed minimum, which points straight at
-`min-width`. At 768 there is room, and it passes.
+**400 em 360, e 400 em 390.** O mesmo número duas vezes já é uma descoberta: a página tem 400 de
+largura qualquer que seja a janela, então algo nela tem um mínimo fixo, o que aponta direto para o
+`min-width`. Em 768 há espaço, e passa.
 
-**Compare with the width the test asked for, never with `innerWidth`.** The `viewport` section
-measured it: under the iPhone 13 descriptor the shop reported a window of 400 inside a screen of
-390, because a phone honouring the viewport tag widens its window to fit the page. A check written
-as `scrollWidth <= innerWidth` would compare 400 with 400 under that descriptor and pass on the
-exact page this test exists to catch.
+**Compare com a largura que o teste pediu, nunca com `innerWidth`.** A seção sobre a viewport mediu
+isso: com o descritor do iPhone 13 a loja informou uma janela de 400 dentro de uma tela de 390,
+porque um celular que respeita a tag viewport alarga a janela para caber a página. Uma verificação
+escrita como `scrollWidth <= innerWidth` compararia 400 com 400 nesse descritor e passaria
+justamente na página que este teste existe para pegar.
 
-## Why this check is worth more than the others
+## Por que esta verificação vale mais que as outras
 
-Most of what makes a responsive layout good is a matter of looking: whether a column is too
-narrow, whether the spacing is pleasant. A sideways scroll has **one right answer, a number, at
-every width**, and it catches a whole family of causes with one test: a fixed width, a long word or
-address that does not break, a wide table, an image without a maximum width. Lesson 1's flaw is
-one line. The same test would find any of the others without knowing which it was looking for.
+Quase tudo o que faz um layout responsivo ser bom é questão de olhar: se uma coluna está estreita
+demais, se o espaçamento agrada. Uma rolagem lateral tem **uma resposta certa, um número, em toda
+largura**, e pega uma família inteira de causas com um teste só: uma largura fixa, uma palavra ou
+um endereço longo que não quebra, uma tabela larga, uma imagem sem largura máxima. A falha da aula
+1 é uma linha. O mesmo teste acharia qualquer uma das outras sem saber qual estava procurando.
 
-## What to leave in the file
+## O que deixar no arquivo
 
-The test has found a real defect, and the defect is not yours to fix in a test. Somebody reports it
-(`manual-testing` lesson 15 is about what the report needs); until it is fixed, the file has to
-say something. There are three choices, and two are worse than they look:
+O teste achou um defeito de verdade, e consertá-lo não cabe a um teste. Alguém o relata (a aula 15
+de `manual-testing` trata do que o relato precisa ter); até o conserto, o arquivo tem de dizer
+alguma coisa. Há três escolhas, e duas são piores do que parecem:
 
-- **Skip the two widths.** The suite goes green and stops measuring: if the basket grows another
-  hundred pixels, or if somebody fixes it, nothing tells you.
-- **Assert the defect**, `expect(scrollWidth).toBe(400)`. The suite goes green and now calls the
-  defect correct. A font change that makes it 401 fails a test about nothing, and the fix fails
-  too, as a regression.
-- **Mark the widths as expected to fail**, with `test.fail(condition, description)`. The check
-  still runs on every width. Playwright reports an expected failure as a pass, and **fails the test
-  the day it passes**, which is the day somebody fixed the CSS and the mark has to come off.
+- **Pular as duas larguras.** A suíte fica verde e para de medir: se a linha da cesta crescer mais
+  cem pixels, ou se alguém a consertar, nada avisa você.
+- **Afirmar o defeito**, `expect(scrollWidth).toBe(400)`. A suíte fica verde e agora chama o
+  defeito de correto. Uma troca de fonte que o leve a 401 derruba um teste sobre nada, e o conserto
+  também falha, como regressão.
+- **Marcar as larguras como falha esperada**, com `test.fail(condition, description)`. A verificação
+  continua rodando em toda largura. O Playwright conta uma falha esperada como aprovada e **reprova o
+  teste no dia em que ele passa**, que é o dia em que alguém consertou o CSS e a marca tem de sair.
 
-The third keeps the test honest in both directions, and it writes the defect into the file where
-the next reader meets it. The file as it stays. Save it as `tests/responsive.spec.js`:
+A terceira mantém o teste honesto nas duas direções, e escreve o defeito no arquivo, onde o próximo
+leitor o encontra. O arquivo como fica. Salve-o como `tests/responsive.spec.js`:
 
 ```javascript
 import { test, expect } from '@playwright/test';
@@ -251,8 +252,9 @@ Running 7 tests using 1 worker
   7 passed (2.6s)
 ```
 
-Seven passed, and the list still draws the two known failures with a cross, so they stay visible
-in every run. Here is the same file the day the two declarations in `.basket` are deleted:
+Sete passaram, e a lista ainda desenha as duas falhas conhecidas com um X, então elas continuam
+visíveis em toda execução. Este é o mesmo arquivo no dia em que as duas declarações de `.basket`
+são apagadas:
 
 ```
 ana@laptop:~/quitanda$ npx playwright test tests/responsive.spec.js
@@ -282,7 +284,7 @@ Running 7 tests using 1 worker
   5 passed (4.1s)
 ```
 
-**Expected to fail, but passed.** The suite is red until somebody removes 360 and 390 from
-`overflows`, which is the moment the fix gets noticed and the test goes back to guarding the line.
-`test.fail` is for a failure you understand and expect on every run. A test that fails only
-sometimes is lesson 14's subject, and this mark is the wrong tool for it.
+**Expected to fail, but passed.** A suíte fica vermelha até alguém tirar 360 e 390 de `overflows`,
+que é o momento em que o conserto é notado e o teste volta a vigiar a linha. `test.fail` é para uma
+falha que você entende e espera em toda execução. Um teste que falha só às vezes é o tema da aula
+14, e esta marca é a ferramenta errada para ele.

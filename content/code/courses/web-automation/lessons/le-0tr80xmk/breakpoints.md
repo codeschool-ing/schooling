@@ -73,7 +73,16 @@ for (const width of [601, 1280]) {
 ```
 
 ```
-%%CAP breakpoints%%
+ana@laptop:~/quitanda$ npx playwright test tests/responsive.spec.js
+
+Running 4 tests using 1 worker
+
+  ✓  1 tests/responsive.spec.js:10:5 › 360 px wide › the links hide behind the Menu button (213ms)
+  ✓  2 tests/responsive.spec.js:10:5 › 600 px wide › the links hide behind the Menu button (161ms)
+  ✓  3 tests/responsive.spec.js:27:5 › 601 px wide › the links show and the Menu button does not (121ms)
+  ✓  4 tests/responsive.spec.js:27:5 › 1280 px wide › the links show and the Menu button does not (107ms)
+
+  4 passed (2.0s)
 ```
 
 **Four passed**, and the titles say which width each one ran at, because the `describe` block is
