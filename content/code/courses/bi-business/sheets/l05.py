@@ -17,12 +17,12 @@ OPEX = [
 ]
 
 # The online shop's funnel, 2025.
-VISITS, CARTS, ORDERS = 6480000, 498900, 124000
-NEW_CUSTOMERS = 79600        # first ever online order placed in 2025 (41,200 of them in Jan-Jun)
+VISITS, CARTS, ORDERS = 3568000, 214100, 44600
+NEW_CUSTOMERS = 28400        # first ever online order placed in 2025 (13,200 of them in Jan-Jun)
 ONLINE_MARKETING = 2150      # thousands of reais, part of the marketing line
 
 # A store's own funnel: Contagem, 2025, from the door counter and the tills.
-CONTAGEM_VISITORS, CONTAGEM_RECEIPTS = 211500, 51480
+CONTAGEM_VISITORS, CONTAGEM_RECEIPTS = 117500, 28600
 
 # Stock and deliveries.
 AVG_STOCK = 9480             # thousands of reais at cost, average of the twelve month-ends
@@ -64,7 +64,7 @@ def funnel():
     return B.report('lesson 5 — the online funnel, 2025', rows, [],
                     ['=ROUND(B3/B2*100,1)',            # visits to carts
                      '=ROUND(B4/B3*100,1)',            # carts to orders
-                     '=ROUND(B4/B2*100,1)',            # visits to orders: conversion
+                     '=ROUND(B4/B2*100,2)',            # visits to orders: conversion
                      '=ROUND(B5*1000/B4,2)',           # average ticket, reais
                      '=ROUND(B7*1000/B6,2)'])          # acquisition cost per new customer
 
@@ -158,13 +158,13 @@ def flows():
 
 def funnel_fig():
     f = B.Fig('l05-funnel', 720, 300, (
-        'The online shop\'s funnel for 2025 as three bars of shrinking length: 6.48 million visits, '
-        '498,900 carts, 124,000 orders. Between visits and carts, 7.7%; between carts and orders, '
-        '24.9%; from visit to order, 1.9%.',
-        'O funil da loja online em 2025 como três barras cada vez mais curtas: 6,48 milhões de '
-        'visitas, 498.900 carrinhos, 124.000 pedidos. De visita para carrinho, 7,7%; de carrinho '
-        'para pedido, 24,9%; de visita para pedido, 1,9%.'))
-    steps = [(('visits', 'visitas'), VISITS, ('6.48 million', '6,48 milhões')),
+        'The online shop\'s funnel for 2025 as three bars of shrinking length: 3,568,000 visits, '
+        '214,100 carts, 44,600 orders. Between visits and carts, 6.0%; between carts and orders, '
+        '20.8%; from visit to order, 1.25%.',
+        'O funil da loja online em 2025 como três barras cada vez mais curtas: 3.568.000 '
+        'visitas, 214.100 carrinhos, 44.600 pedidos. De visita para carrinho, 6,0%; de carrinho '
+        'para pedido, 20,8%; de visita para pedido, 1,25%.'))
+    steps = [(('visits', 'visitas'), VISITS, (B.fmt(VISITS), B.fmt(VISITS, 'pt'))),
              (('carts', 'carrinhos'), CARTS, (B.fmt(CARTS), B.fmt(CARTS, 'pt'))),
              (('orders', 'pedidos'), ORDERS, (B.fmt(ORDERS), B.fmt(ORDERS, 'pt')))]
     x0, full, top, gap = 150, 420, 34, 84
@@ -174,11 +174,11 @@ def funnel_fig():
         f.text(x0 - 14, y + 26, lab, size=13, anchor='end', weight=600)
         f.bar(x0, y, w, 40, fill='--phosphor')
         f.text(x0 + w + 10, y + 26, txt, size=12, fill='--paper', mono=True)
-    rates = [(top + 62, ('7.7% of visits put something in a cart', '7,7% das visitas põem algo no carrinho')),
-             (top + 62 + gap, ('24.9% of carts become orders', '24,9% dos carrinhos viram pedido'))]
+    rates = [(top + 62, ('6.0% of visits put something in a cart', '6,0% das visitas põem algo no carrinho')),
+             (top + 62 + gap, ('20.8% of carts become orders', '20,8% dos carrinhos viram pedido'))]
     for y, t in rates:
         f.text(x0 + 6, y, t, size=12, fill='--paper-dim')
-    f.text(360, 288, ('1.9% of visits end in an order', '1,9% das visitas terminam num pedido'),
+    f.text(360, 288, ('1.25% of visits end in an order', '1,25% das visitas terminam num pedido'),
            size=13, anchor='middle', fill='--amber', weight=600)
     B.place(LESSON, f, (
         'The online funnel, 2025. Each step loses most of the one before it; the conversion rate is '
@@ -190,8 +190,8 @@ def funnel_fig():
 def literal():
     """The formulas sections show with the numbers typed in."""
     return B.report('lesson 5 — the formulas shown with their numbers typed in', [['x']], [],
-                    ['=ROUND(15610*1000/124000,2)', '=ROUND(2150*1000/79600,2)',
-                     '=ROUND(51480/211500*100,1)', '=ROUND(12480*1000/51480,2)', '=6000/10',
+                    ['=ROUND(15610*1000/44600,2)', '=ROUND(2150*1000/28400,2)',
+                     '=ROUND(28600/117500*100,1)', '=ROUND(12480*1000/28600,2)', '=ROUND(436.36/350*100,0)', '=6000/10',
                      '=ROUND((14600-949)/14600*100,1)', '=ROUND(103/410*100,1)',
                      '=ROUND(103/410/12*100,1)', '=ROUND(23500/870000*100,1)'])
 
