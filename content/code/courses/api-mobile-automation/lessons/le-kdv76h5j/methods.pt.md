@@ -63,7 +63,7 @@ Keep-Alive: timeout=5
 ```
 
 O boxoffice recusa, e a recusa se contradiz: o cabeçalho `allow` diz que `GET` pode, e o padrão é
-explícito em que **todo servidor de uso geral deve suportar `GET` e `HEAD`** (RFC 9110, seção 9.1).
+explícito em que **todo servidor de uso geral deve suportar `GET` e `HEAD`** (RFC 9110, §9.1).
 Isso é um defeito, e um defeito típico: nada em tela alguma vai mostrá-lo, ninguém escreveu um caso
 para ele, e ele foi achado fazendo à API uma pergunta que mais ninguém faz.
 

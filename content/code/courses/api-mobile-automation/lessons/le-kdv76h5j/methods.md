@@ -63,7 +63,7 @@ Keep-Alive: timeout=5
 
 boxoffice refuses it, and the refusal contradicts itself: the `allow` header says `GET` is fine,
 and the standard is explicit that **every general-purpose server must support `GET` and `HEAD`**
-(RFC 9110, section 9.1). This is a defect, and a typical one: nothing on any screen will ever show
+(RFC 9110, §9.1). This is a defect, and a typical one: nothing on any screen will ever show
 it, nobody wrote a case for it, and it was found by asking the API a question nobody else asks.
 
 If you took `manual-testing`, this is the moment to write it up the way that course taught: what

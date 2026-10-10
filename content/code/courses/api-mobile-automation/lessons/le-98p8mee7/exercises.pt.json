@@ -1,0 +1,484 @@
+{
+  "ex-nv4br685": {
+    "prompt": "Como você cancela o pedido ord-1001 no boxoffice?",
+    "hint": "O endereço nomeia a coisa; o método diz o que fazer com ela.",
+    "choices": [
+      {
+        "text": "POST /v1/orders/ord-1001/cancel",
+        "why": "Isso põe um verbo no caminho, a imagem de API como lista de funções; o boxoffice não tem esse endereço."
+      },
+      {
+        "text": "DELETE /v1/orders/ord-1001",
+        "why": "Certo. O pedido é um recurso no próprio endereço, e DELETE é o verbo."
+      },
+      {
+        "text": "GET /v1/cancelOrder?id=ord-1001",
+        "why": "Um GET não deve mudar nada, e o caminho nomeia uma ação em vez de um recurso."
+      },
+      {
+        "text": "PUT /v1/orders/ord-1001 com um corpo dizendo que o status é cancelado",
+        "why": "Algumas APIs funcionam assim; a tabela de endereços do boxoffice não dá PUT a nada."
+      }
+    ]
+  },
+  "ex-0vxgjs83": {
+    "prompt": "Você lê o ord-1001 com um token e recebe 200. A requisição seguinte, para o mesmo endereço e do mesmo terminal, não leva token. O que o boxoffice responde?",
+    "hint": "O que o servidor guarda entre duas requisições?",
+    "choices": [
+      {
+        "text": "200, já que reconhece o cliente da requisição anterior",
+        "why": "Essa é a imagem do site em que você está logado; o boxoffice não guarda memória da conversa."
+      },
+      {
+        "text": "200 até acabarem os quinze minutos do token",
+        "why": "A vida do token só importa para requisições que o levam; esta não leva nada."
+      },
+      {
+        "text": "401, no bearer token",
+        "why": "Certo. Cada requisição é julgada pelo que leva, e esta não leva credencial."
+      },
+      {
+        "text": "404, porque sem token o pedido não existe",
+        "why": "O boxoffice confere o token primeiro e responde 401 antes de procurar o pedido."
+      }
+    ]
+  },
+  "ex-4g9e3g7m": {
+    "prompt": "Por que a ausência de estado torna uma API mais fácil de testar do que uma sequência de telas?",
+    "hint": "Do que depende a resposta a uma requisição?",
+    "choices": [
+      {
+        "text": "Uma requisição vai sozinha, e a resposta depende só dela e dos dados",
+        "why": "Certo. Nenhuma requisição anterior precisa ser repetida para chegar ao estado de que o teste precisa."
+      },
+      {
+        "text": "O servidor esquece os dados entre requisições, então nenhum teste afeta outro",
+        "why": "O servidor esquece a conversa, não os dados: um pedido criado continua criado, que é o problema da lição 12."
+      },
+      {
+        "text": "Nada é guardado, então toda resposta volta mais rápido",
+        "why": "Velocidade não é o que a ausência de estado dá a um teste; independência é."
+      },
+      {
+        "text": "Depois da primeira requisição, um teste não precisa mais de token",
+        "why": "O contrário: toda requisição precisa do token, porque nada passa de uma para outra."
+      }
+    ]
+  },
+  "ex-d1dewzh0": {
+    "prompt": "Um teste roda `jq '.payment == null'` num pedido para provar que ele não tem o campo payment. O que há de errado nesse teste?",
+    "hint": "Rode-o num pedido em que o campo existe com o valor null.",
+    "choices": [
+      {
+        "text": "O jq dá erro quando um campo falta, então o teste quebra",
+        "why": "O jq responde null para um campo ausente, sem reclamar; o problema é esse."
+      },
+      {
+        "text": "Ausente e null são a mesma coisa em JSON",
+        "why": "São diferentes: um diz que nada foi mandado, o outro diz que o valor é vazio."
+      },
+      {
+        "text": "Ele passa também com o campo presente e null",
+        "why": "Certo. Só o `has(\"payment\")` separa os dois casos."
+      },
+      {
+        "text": "O jq só compara null com ===, que ele não tem",
+        "why": "O == do jq compara null direito; a comparação funciona, só faz a pergunta errada."
+      }
+    ]
+  },
+  "ex-vg9x68mv": {
+    "prompt": "Em JSON, um campo ___ não foi mandado, o que não é o mesmo que um campo mandado com o valor null.",
+    "hint": "O contrário de presente.",
+    "blanks": [
+      {
+        "accept": [
+          "ausente",
+          "faltando"
+        ]
+      }
+    ]
+  },
+  "ex-hz1fhgpb": {
+    "prompt": "Um pedido é de 3 lugares do sh-103, cujo price_cents é 6500. Qual deveria ser o total_cents?",
+    "hint": "Centavos inteiros, multiplicados.",
+    "unit": "centavos"
+  },
+  "ex-19d3cmtz": {
+    "prompt": "Uma API manda `\"starts_at\": \"2026-11-08T18:00:00\"`, sem deslocamento. Um app num celular configurado em UTC e outro num celular no horário de São Paulo mostram esse valor. O que acontece?",
+    "hint": "A seção 03 leu o mesmo texto com dois valores de TZ.",
+    "choices": [
+      {
+        "text": "Os dois o tratam como horário de São Paulo, já que o teatro fica lá",
+        "why": "Nada no texto diz São Paulo; cada celular preenche o próprio fuso."
+      },
+      {
+        "text": "Os dois o recusam, porque a ISO 8601 exige deslocamento",
+        "why": "A ISO 8601 permite hora local sem deslocamento; a leitura funciona, e esse é o perigo."
+      },
+      {
+        "text": "Os dois o leem como UTC e concordam",
+        "why": "Não foi isso que aconteceu na seção 03: a leitura dependeu do fuso da máquina."
+      },
+      {
+        "text": "Eles leem dois momentos com três horas de diferença",
+        "why": "Certo. Sem deslocamento, o mesmo texto significa um instante diferente em cada máquina."
+      }
+    ]
+  },
+  "ex-8k3zx4sh": {
+    "prompt": "Outra API manda ids de pedido como números, como 9007199254740993, e o app em JavaScript dela vive abrindo o pedido 9007199254740992. O que conserta isso na origem?",
+    "hint": "O que um número em JavaScript consegue guardar exatamente?",
+    "choices": [
+      {
+        "text": "Declarar o id como inteiro de 64 bits no JSON",
+        "why": "O JSON não tem tipos inteiros para declarar; todo número é só um número, e o app continua lendo ponto flutuante."
+      },
+      {
+        "text": "Mandar o id como string JSON",
+        "why": "Certo. Uma string nunca vira número, então nenhum dígito muda."
+      },
+      {
+        "text": "Fazer o app somar um a todo id que recebe",
+        "why": "Isso conserta um id por sorte e quebra todo id que estava exato."
+      },
+      {
+        "text": "Mandá-lo com ponto decimal, como 9007199254740993.0",
+        "why": "2.0 e 2 são o mesmo número JSON; o ponto decimal não muda nada na precisão."
+      }
+    ]
+  },
+  "ex-xc60d1bg": {
+    "prompt": "Por que o boxoffice manda preços como `\"price_cents\": 8000` em vez de `\"price\": 80.00`?",
+    "hint": "O que imprimiu 80.10 vezes 3?",
+    "choices": [
+      {
+        "text": "O JSON não consegue carregar ponto decimal",
+        "why": "Consegue: 0.1 é JSON válido. O problema é como ele é lido."
+      },
+      {
+        "text": "Centavos inteiros são exatos, e frações de real lidas como ponto flutuante binário não",
+        "why": "Certo. 80.10 vezes 3 deu 240.29999999999998."
+      },
+      {
+        "text": "Um número inteiro ocupa menos bytes na rede",
+        "why": "8000 e 80.00 têm quase o mesmo tamanho; tamanho não é o motivo."
+      },
+      {
+        "text": "O banco que recebe os pagamentos recusa decimais",
+        "why": "No laboratório o boxoffice cobra localmente; a escolha é sobre aritmética, não regra de banco."
+      }
+    ]
+  },
+  "ex-kkfjs1gc": {
+    "prompt": "O openapi.yaml diz que campos desconhecidos são recusados, e o boxoffice os aceita. O que quem testa conclui?",
+    "hint": "Quem decide qual dos dois está errado?",
+    "choices": [
+      {
+        "text": "O código está certo, porque é o código que roda",
+        "why": "Então todo teste passaria para sempre; o contrato é o que foi prometido."
+      },
+      {
+        "text": "Um dos dois está errado, e a discordância é um achado a relatar",
+        "why": "Certo. A equipe pode corrigir o código ou o documento; o trabalho de quem testa é tornar a discordância visível."
+      },
+      {
+        "text": "Nada, já que documentos sempre ficam atrás do código",
+        "why": "Essa é a crença que a seção pede para abandonar: um contrato atrasado já é um defeito."
+      },
+      {
+        "text": "O documento está certo, então o código é um defeito",
+        "why": "Às vezes é o documento que está errado; a equipe decide, com o achado na frente."
+      }
+    ]
+  },
+  "ex-qz7y9g99": {
+    "prompt": "Ligue cada parte do openapi.yaml ao que ela guarda.",
+    "hint": "O passeio da seção pela operação de pedido.",
+    "pairs": [
+      {
+        "left": "paths",
+        "right": "todo endereço, e o que cada método faz ali"
+      },
+      {
+        "left": "components",
+        "right": "as peças que vários caminhos compartilham"
+      },
+      {
+        "left": "responses",
+        "right": "as respostas permitidas, indexadas por código de status"
+      },
+      {
+        "left": "requestBody",
+        "right": "o que o cliente pode mandar no corpo"
+      }
+    ],
+    "right_distractors": [
+      "o código-fonte do servidor"
+    ]
+  },
+  "ex-fx6m0vyn": {
+    "prompt": "Um endpoint responde 500 a uma requisição que o contrato descreve, e o corpo é um Problem com a forma perfeita. A resposta respeita o contrato?",
+    "hint": "A forma do corpo é a promessa inteira?",
+    "choices": [
+      {
+        "text": "Sim, porque o corpo tem todos os campos que Problem exige",
+        "why": "A forma é metade da promessa; o código de status precisa ser um que a operação lista."
+      },
+      {
+        "text": "Não: o 500 não está entre os códigos que ela lista",
+        "why": "Certo. Um código que falta na lista é um que o cliente ouviu que nunca veria."
+      },
+      {
+        "text": "Sim: todo contrato permite um 5xx quando o servidor falha",
+        "why": "Este lista 502 e 504 para o provedor de pagamento, e nenhum 500 em lugar nenhum."
+      },
+      {
+        "text": "Só se o detail explicar o que falhou",
+        "why": "O detail é para pessoas; ele não transforma um código fora da lista num código listado."
+      }
+    ]
+  },
+  "ex-11rhr48n": {
+    "prompt": "Em quais campos de um corpo problem details um programa deveria se basear para decidir?",
+    "hint": "Quais são escritos para pessoas?",
+    "choices": [
+      {
+        "text": "status",
+        "why": "Certo. Ele repete o código de status dentro do corpo."
+      },
+      {
+        "text": "type",
+        "why": "Certo. Ele nomeia o tipo de problema, para programas distinguirem tipos."
+      },
+      {
+        "text": "detail",
+        "why": "É uma frase para uma pessoa, e o texto dela vai mudar um dia."
+      },
+      {
+        "text": "title",
+        "why": "Um resumo curto para pessoas; programas deveriam usar o type que ele resume."
+      }
+    ]
+  },
+  "ex-x0z40ptv": {
+    "prompt": "Um teste confere se o content-type de toda resposta começa com `application/json`. O que acontece quando ele roda contra os erros do boxoffice?",
+    "hint": "A seção 05 imprimiu o rótulo com o -w do curl.",
+    "choices": [
+      {
+        "text": "Passa, porque problem+json é um tipo de JSON",
+        "why": "É JSON, mas o texto `application/problem+json` não começa com `application/json`."
+      },
+      {
+        "text": "Falha só no endpoint de token",
+        "why": "O endpoint de token é o único lugar em que os erros são rotulados application/json."
+      },
+      {
+        "text": "Falha nos erros com problem",
+        "why": "Certo. Eles dizem application/problem+json, e a verificação deveria aceitar esse rótulo."
+      },
+      {
+        "text": "Falha em toda resposta, erros e sucessos",
+        "why": "As respostas de sucesso são rotuladas application/json e passam."
+      }
+    ]
+  },
+  "ex-qdxe970d": {
+    "prompt": "O endpoint de token responde `{\"error\":\"invalid_client\"}`, e não problem details. Isso é um defeito?",
+    "hint": "Que padrão rege esse endpoint, e o que o contrato diz?",
+    "choices": [
+      {
+        "text": "Não: o OAuth prescreve essa forma ali, e o contrato diz isso",
+        "why": "Certo. Uma segunda forma tudo bem quando está documentada; as bibliotecas de OAuth esperam esta."
+      },
+      {
+        "text": "Sim: todo erro de uma API deve seguir a RFC 9457",
+        "why": "A RFC 9457 é uma escolha da API; o endpoint de token do OAuth tem uma forma própria obrigatória."
+      },
+      {
+        "text": "Sim, porque é rotulado application/json",
+        "why": "Esse rótulo combina exatamente com o corpo; o rótulo não é o problema."
+      },
+      {
+        "text": "Não, já que um endpoint pode responder erros em qualquer forma",
+        "why": "Uma forma não documentada seria um defeito; esta está bem porque está escrita."
+      }
+    ]
+  },
+  "ex-7awmh915": {
+    "prompt": "O contrato diz que seats é um inteiro de 1 a 6. Quais destes valores são casos de borda dessa regra?",
+    "hint": "Os valores de cada lado de cada borda.",
+    "choices": [
+      {
+        "text": "0",
+        "why": "Certo: logo abaixo do menor valor válido."
+      },
+      {
+        "text": "1",
+        "why": "Certo: o menor valor válido."
+      },
+      {
+        "text": "3",
+        "why": "Um bom valor para a classe válida, e em borda nenhuma."
+      },
+      {
+        "text": "6",
+        "why": "Certo: o maior valor válido."
+      },
+      {
+        "text": "7",
+        "why": "Certo: logo acima do maior valor válido."
+      },
+      {
+        "text": "120",
+        "why": "Esse é o tamanho do espetáculo, outra regra; para esta é só mais um valor acima de 6."
+      }
+    ]
+  },
+  "ex-gjmm2brq": {
+    "prompt": "O boxoffice respondeu `{\"show_id\":\"sh-101\",\"seats\":2.0}` com 201. O que o relatório deveria dizer?",
+    "hint": "Quantos números são 2 e 2.0 em JSON?",
+    "choices": [
+      {
+        "text": "Defeito: um decimal foi aceito onde o contrato diz inteiro",
+        "why": "2.0 não é decimal em nenhum sentido que o JSON conheça; é o número 2, que a regra permite."
+      },
+      {
+        "text": "Nada: é o inteiro 2",
+        "why": "Certo. O caso passou, e relatá-lo custaria credibilidade."
+      },
+      {
+        "text": "Defeito: deveria ter respondido 400, porque o corpo está malformado",
+        "why": "O corpo é JSON válido; 400 é para um corpo que nem dá para ler."
+      },
+      {
+        "text": "Defeito: a resposta mostra seats como 2, e não como o 2.0 que foi mandado",
+        "why": "Os dois escrevem o mesmo número, então a resposta não mudou o valor."
+      }
+    ]
+  },
+  "ex-2bs60pnz": {
+    "prompt": "Ponha em ordem os passos que vão de uma cláusula do contrato a um relatório de defeito.",
+    "hint": "A resposta esperada vem antes de a requisição ser mandada.",
+    "items": [
+      "ler uma cláusula do contrato",
+      "derivar os casos que ela dá, cada um com a resposta esperada",
+      "mandar cada caso",
+      "comparar cada resposta com a esperada",
+      "registrar a requisição, a resposta, a cláusula e a transcrição"
+    ]
+  },
+  "ex-36axk6rm": {
+    "prompt": "O boxoffice ignorou o campo price_cents que recebeu e cobrou o preço real. Por que aceitar o campo em silêncio ainda é um risco?",
+    "hint": "Pense no programa que o mandou.",
+    "choices": [
+      {
+        "text": "Uma versão futura do boxoffice pode cobrar o preço que o cliente mandou",
+        "why": "Isso seria outro defeito; o risco existe hoje, com o código como está."
+      },
+      {
+        "text": "O campo a mais torna o JSON inválido",
+        "why": "O JSON é válido; só o contrato proíbe o campo."
+      },
+      {
+        "text": "Cada campo desconhecido deixa o servidor mais lento",
+        "why": "Um campo ignorado não custa nada mensurável; o risco é um mal-entendido."
+      },
+      {
+        "text": "O cliente acredita que o campo foi obedecido",
+        "why": "Certo. Um 201 diz a ele que tudo passou, inclusive o que foi ignorado."
+      }
+    ]
+  },
+  "ex-fff05y0b": {
+    "prompt": "O corpo `null` recebeu um 500 cujo corpo não trazia stack trace. Um colega diz que isso torna a resposta aceitável. O que você responde?",
+    "hint": "A seção 05 listou quatro verificações para um erro, em ordem.",
+    "choices": [
+      {
+        "text": "Concordo: um erro que não vaza nada atende ao contrato",
+        "why": "Não vazar é a quarta verificação; a primeira, o código de status, já falhou."
+      },
+      {
+        "text": "A verificação de vazamento passou, e a do código falhou: deveria ser um 4xx",
+        "why": "Certo. Um 500 culpa o servidor pelo erro do cliente e convida a uma nova tentativa inútil."
+      },
+      {
+        "text": "Concordo, porque null não é JSON válido, então qualquer resposta serve",
+        "why": "null é um documento JSON completo e válido; só não é um objeto."
+      },
+      {
+        "text": "Discordo: o corpo deveria ter trazido o stack trace, para ajudar o cliente",
+        "why": "O stack trace pertence ao log do servidor; mandá-lo aos clientes é o vazamento que a quarta verificação proíbe."
+      }
+    ]
+  },
+  "ex-87dp68ph": {
+    "prompt": "Um endpoint novo recebe `?row=` com uma letra de A a P. Seguindo a seção 06, que conjunto de casos você manda para row?",
+    "hint": "Bordas, o tipo errado de valor, e o parâmetro deixado de fora.",
+    "choices": [
+      {
+        "text": "Toda letra de A a P, uma requisição cada",
+        "why": "Dezesseis casos numa classe só, e nenhum fora dela: é nas bordas que os limites quebram."
+      },
+      {
+        "text": "Só A e P, já que o resto se comporta igual",
+        "why": "Essas são as bordas válidas; faltam os valores logo fora delas e os tipos errados."
+      },
+      {
+        "text": "A, P, as letras logo fora delas, um dígito, e nenhum row",
+        "why": "Certo. As duas bordas dos dois lados, um valor do tipo errado, e o parâmetro ausente."
+      },
+      {
+        "text": "Uma letra aleatória a cada execução, para com o tempo cobrir todas",
+        "why": "Um teste cuja entrada muda a cada execução não pode ser comparado de uma execução para outra, e ele pula as bordas."
+      }
+    ]
+  },
+  "ex-e4f037xw": {
+    "prompt": "Ligue cada caso da seção 06 ao que ele mostrou.",
+    "hint": "A tabela no fim da seção.",
+    "pairs": [
+      {
+        "left": "price_cents a mais no corpo",
+        "right": "201 onde o contrato diz 422"
+      },
+      {
+        "left": "null como corpo",
+        "right": "500 onde o contrato só permite 4xx"
+      },
+      {
+        "left": "date=8-11-2026",
+        "right": "um 200 vazio onde o contrato diz 400"
+      },
+      {
+        "left": "seats: 2.0",
+        "right": "201, como prometido"
+      }
+    ],
+    "right_distractors": [
+      "415, porque o tipo estava errado"
+    ]
+  },
+  "ex-vwxrhb05": {
+    "prompt": "Um teste de `GET /v1/orders/ord-1001` passa quando roda depois de outros e falha quando roda primeiro, num boxoffice recém-iniciado. Que afirmação explica isso?",
+    "hint": "A ausência de estado é sobre a conversa. O que mais o servidor guarda?",
+    "choices": [
+      {
+        "text": "O boxoffice lembra o token do teste que rodou antes",
+        "why": "Nenhuma requisição herda nada da anterior; o token precisa estar em toda requisição."
+      },
+      {
+        "text": "O pedido só existe se uma requisição anterior o criou",
+        "why": "Certo. A ausência de estado cobre a conversa, não os dados; a lição 12 trata de testes que compartilham dados."
+      },
+      {
+        "text": "Uma API REST responde diferente dependendo da ordem das requisições",
+        "why": "As respostas dependem dos dados, não da ordem; a ordem só importa aqui pelo que foi criado."
+      },
+      {
+        "text": "A primeira requisição depois de reiniciar é sempre recusada",
+        "why": "Um boxoffice novo responde a primeira requisição como qualquer outra; o que falta é o pedido."
+      }
+    ]
+  }
+}
