@@ -25,7 +25,8 @@ As médias aparecem aqui com duas casas; a tabela dinâmica mostra tantas quanta
 da célula deixar. A contagem e a média também têm fórmulas:
 
 ```localised
-=COUNTIFS(Sales[Channel], "Online")
+=CONT.SES(Sales[Channel]; "Online")
+=MÉDIASES(Sales[Revenue]; Sales[Channel]; "Wholesale")
 ```
 
 **47** e **1.019,24**. As três linhas da tabela contam uma história juntas: o atacado são menos

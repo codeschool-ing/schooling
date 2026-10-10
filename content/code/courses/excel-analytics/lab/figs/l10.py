@@ -158,24 +158,24 @@ def cache(t):
         s.grid(x, y, w, [["Sale", "Bags", "Revenue"], ["S1001", bags, rev], ["S1002", "17", "1972"], ["…", "…", "…"]],
                rowh=22, anchors={1: "end", 2: "end"}, colours={(1, 1): col, (1, 2): col})
     mini(30, 60, t("table Sales, now", "tabela Sales, agora"), "15", "1560", "var(--phosphor)")
-    mini(300, 60, t("pivot cache: a copy", "cache: uma cópia"), "14", "1456", "var(--amber)")
+    mini(340, 60, t("pivot cache: a copy", "cache: uma cópia"), "14", "1456", "var(--amber)")
     # Pivot result.
-    s.sans(560, 48, t("pivot", "tabela dinâmica"), size=11.5, weight="600")
-    s.grid(560, 60, [80, 80], [["Channel", t("Sum", "Soma")], ["Wholesale", fmt(t, 38731)]], rowh=22,
+    s.sans(590, 48, t("pivot", "tabela dinâmica"), size=11.5, weight="600")
+    s.grid(590, 60, [80, 80], [["Channel", t("Sum", "Soma")], ["Wholesale", fmt(t, 38731)]], rowh=22,
            anchors={1: "end"}, colours={(1, 1): "var(--amber)"})
-    s.arrow(300 + sum(w) + 8, 93, 552, 93, stroke="var(--paper-dim)")
+    s.arrow(340 + sum(w) + 8, 93, 582, 93, stroke="var(--paper-dim)")
     # Formula.
-    s.sans(560, 168, t("formula", "fórmula"), size=11.5, weight="600")
-    s.rect(560, 180, 160, 22, fill="var(--panel)")
-    s.mono(714, 191.5, fmt(t, 38835), size=10.5, anchor="end", fill="var(--phosphor)")
-    s.mono(560, 216, "=SUMIFS(Sales[Revenue], …)", size=9.5, fill="var(--paper-dim)")
-    s.path(f"M{30 + sum(w) / 2} {60 + 4 * 22 + 6} L{30 + sum(w) / 2} 191 L552 191", stroke="var(--phosphor)", sw=1.6)
-    s.arrow(545, 191, 553, 191, stroke="var(--phosphor)")
+    s.sans(590, 168, t("formula", "fórmula"), size=11.5, weight="600")
+    s.rect(590, 180, 160, 22, fill="var(--panel)")
+    s.mono(744, 191.5, fmt(t, 38835), size=10.5, anchor="end", fill="var(--phosphor)")
+    s.mono(590, 216, "=SUMIFS(Sales[Revenue], …)", size=9.5, fill="var(--paper-dim)")
+    s.path(f"M{30 + sum(w) / 2} {60 + 4 * 22 + 6} L{30 + sum(w) / 2} 191 L582 191", stroke="var(--phosphor)", sw=1.6)
+    s.arrow(575, 191, 583, 191, stroke="var(--phosphor)")
     s.sans(30 + sum(w) / 2 + 8, 176, t("reads the table, recalculates at once", "lê a tabela, recalcula na hora"),
            size=10.5, fill="var(--phosphor)")
     # Refresh arrow.
-    s.arrow(30 + sum(w) + 8, 82, 292, 82, stroke="var(--amber)")
-    s.sans(30 + sum(w) + 16, 70, t("Refresh copies again", "Atualizar copia de novo"), size=10.5, fill="var(--amber)")
+    s.arrow(30 + sum(w) + 8, 82, 332, 82, stroke="var(--amber)")
+    s.sans(30 + sum(w) + 12, 70, t("Refresh copies again", "Atualizar copia de novo"), size=10.5, fill="var(--amber)")
     s.sans(30, 262, t("Until somebody refreshes, the pivot and the formula disagree, and both are right about",
                       "Até alguém atualizar, a tabela dinâmica e a fórmula discordam, e as duas estão certas sobre"),
            size=10.5, fill="var(--paper-dim)")

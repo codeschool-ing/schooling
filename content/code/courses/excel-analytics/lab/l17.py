@@ -98,3 +98,22 @@ try:
     print(f"  =COUNTA(Sales[Sale]): {b.ev('=COUNTA(Sales[Sale])')}")
 finally:
     b.close()
+
+print("== against lesson 14's budget, January to June 2026")
+import os
+import re as _re
+_t = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "lessons", "le-sapssdn5", "unpivot.md"),
+          encoding="utf-8").read()
+_csv = _re.search(r"```\n(Channel,2026-01.*?)\n```", _t, _re.S).group(1).split("\n")
+_months = _csv[0].split(",")[1:]
+budget = {}
+for line in _csv[1:]:
+    f = line.split(",")
+    budget[f[0]] = sum(int(v) for m, v in zip(_months, f[1:]) if m <= "2026-06")
+tot_b = sum(budget.values())
+tot_a = measures(*H1)["Total Revenue"]
+print(f"  total: budget {tot_b}, actual {tot_a}, {100 * tot_a / tot_b:.1f}% of budget, "
+      f"{100 * (tot_a - tot_b) / tot_b:+.1f}%")
+for ch, bud in budget.items():
+    act = measures(*H1, ch)["Total Revenue"]
+    print(f"  {ch}: budget {bud}, actual {act}, {100 * act / bud:.1f}% of budget")

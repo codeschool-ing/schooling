@@ -15,6 +15,8 @@
 # formulas the lesson prints as checks are put, exactly as printed, into a
 # LibreOffice Calc 24.2 workbook holding the pasted tables, with `Sales` made
 # a table that carries lesson 2's Revenue column (lab.sh says why not Excel).
+# The budget comparison reads budget-2026.csv out of lesson 14 and adds its
+# January-June columns per channel.
 #
 # Recorded on Ubuntu 24.04 with LibreOffice 24.2.7.2, TZ=America/Sao_Paulo,
 # on 2026-10-10.

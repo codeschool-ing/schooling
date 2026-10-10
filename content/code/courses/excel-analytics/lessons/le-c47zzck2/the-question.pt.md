@@ -50,10 +50,17 @@ junho de 2026 contra o ano inteiro de 2025 põe seis meses contra doze e mostra 
 meses um ano antes são a comparação justa quando não há outra, e é o que a medida `Revenue LY` da
 aula 16 calcula.
 
-Um KPI completo também tem uma **meta**, um número com que alguém se comprometeu. Os dados da Café
-Serra não têm meta, então o ano anterior faz esse papel. Um painel que tenha meta deve mostrá-la,
-porque "10,4% abaixo do ano passado" e "2% acima do plano" podem ser verdade ao mesmo tempo, e o
-plano é o que a dona combinou.
+Um KPI completo também tem uma **meta**, um número com que alguém se comprometeu, e a Café Serra
+tem uma: o orçamento que a aula 14 transformou em linhas. Para janeiro a junho ele previa
+R$ 19.800, e a receita chegou a R$ 15.943, 80,5% disso. Por canal o quadro se divide: `Online` fez
+R$ 4.295 contra um orçamento de R$ 3.900, `Wholesale` R$ 11.128 contra R$ 15.000, e `Shop` R$ 520
+contra R$ 900. "10,4% abaixo do ano passado" e "19,5% abaixo do plano" são verdade ao mesmo tempo,
+e o plano é o que a dona combinou.
+
+O orçamento fica numa consulta própria, fora do modelo que as aulas 15 e 16 montaram sobre `Sales`.
+Levá-lo aos cartões significa carregá-lo no modelo e relacioná-lo a `Calendar` pelo mês, que é o
+método da aula 15 aplicado a mais uma tabela. O painel desta aula compara com o ano anterior, e a
+coluna do orçamento é a primeira coisa que vale acrescentar a ele.
 
 ## E um que fica de fora
 

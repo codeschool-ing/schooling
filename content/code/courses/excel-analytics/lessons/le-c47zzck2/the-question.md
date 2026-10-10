@@ -50,10 +50,17 @@ alarming. The same months a
 year earlier is the fair comparison when nothing else is available, and it is what lesson 16's
 `Revenue LY` computes.
 
-A KPI in the full sense also has a **target**, a number somebody committed to. Café Serra's data
-has none, so last year stands in for one. A dashboard that has a target should show it, because
-"10.4% below last year" and "2% above the plan" can both be true at once, and the plan is what the
+A KPI in the full sense also has a **target**, a number somebody committed to, and Café Serra has
+one: the budget that lesson 14 turned into rows. For January to June it planned R$ 19,800, and
+revenue reached R$ 15,943, 80.5% of it. By channel the picture splits: `Online` made R$ 4,295
+against a budget of R$ 3,900, `Wholesale` R$ 11,128 against R$ 15,000, and `Shop` R$ 520 against
+R$ 900. "10.4% below last year" and "19.5% below the plan" are both true, and the plan is what the
 owner agreed to.
+
+The budget sits in a query of its own, outside the model that lessons 15 and 16 built on `Sales`.
+Putting it on the cards means loading it into the model and relating it to `Calendar` by month,
+which is lesson 15's method applied to one more table. The dashboard of this lesson compares with
+last year, and the budget column is the first thing worth adding to it.
 
 ## And one that stays off
 

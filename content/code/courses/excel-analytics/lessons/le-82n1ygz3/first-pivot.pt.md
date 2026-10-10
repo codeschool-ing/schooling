@@ -42,7 +42,8 @@ aula 1 que toda tabela dinâmica seria conferida com uma fórmula. Numa célula 
 planilha:
 
 ```localised
-=SUMIFS(Sales[Revenue], Sales[Channel], "Wholesale")
+=SOMASES(Sales[Revenue]; Sales[Channel]; "Wholesale")
+=SOMA(Sales[Revenue])
 ```
 
 **38.731** e **51.494**, os mesmos da tabela dinâmica. Dois mecanismos diferentes, um escrito por você
