@@ -608,7 +608,7 @@
         "why": "Right. Escape it as \\, or use a values file."
       },
       {
-        "text": "The chart truncates messages",
+        "text": "The chart truncates every message after its first word",
         "correct": false,
         "why": "The chart prints whatever value it gets."
       },
@@ -644,7 +644,7 @@
         "why": "Patches change objects; they never create the target."
       },
       {
-        "text": "Applies the patch to the first Service it finds",
+        "text": "Applies the patch to the first Service it finds instead",
         "correct": false,
         "why": "It matches by kind and name, and found none."
       }
@@ -757,6 +757,316 @@
         "text": "A new base for qa",
         "correct": false,
         "why": "The base is what all environments share; qa is one more overlay."
+      }
+    ]
+  },
+  {
+    "id": "ex-qfw5w65v",
+    "version": 1,
+    "section": "base-and-overlays",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which file in an overlay lists the base as a resource?",
+    "choices": [
+      {
+        "text": "namespace.yaml, next to it",
+        "correct": false,
+        "why": "It only names the namespace."
+      },
+      {
+        "text": "kustomization.yaml",
+        "correct": true,
+        "why": "Right. resources names ../base."
+      },
+      {
+        "text": "deployment.yaml",
+        "correct": false,
+        "why": "The Deployment lives in the base."
+      },
+      {
+        "text": "Chart.yaml",
+        "correct": false,
+        "why": "That belongs to a Helm chart."
+      }
+    ]
+  },
+  {
+    "id": "ex-y2ensw8r",
+    "version": 1,
+    "section": "base-and-overlays",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does kubectl diff use --field-manager=kustomize-controller?",
+    "choices": [
+      {
+        "text": "To let kubectl write to the cluster",
+        "correct": false,
+        "why": "diff never writes."
+      },
+      {
+        "text": "To compare as Flux applies",
+        "correct": true,
+        "why": "Right. Otherwise your apply would change nothing Flux owns."
+      },
+      {
+        "text": "Because kustomize-controller must approve the diff",
+        "correct": false,
+        "why": "Nothing approves a diff."
+      },
+      {
+        "text": "To make the diff run faster",
+        "correct": false,
+        "why": "It changes ownership, not speed."
+      }
+    ]
+  },
+  {
+    "id": "ex-v07and18",
+    "version": 1,
+    "section": "patches",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is /spec/ports/0/nodePort a fragile path to patch?",
+    "choices": [
+      {
+        "text": "nodePort is read-only",
+        "correct": false,
+        "why": "It can be set."
+      },
+      {
+        "text": "A port added at the front would move the patch onto it",
+        "correct": true,
+        "why": "Right. Position is a weak join."
+      },
+      {
+        "text": "JSON patches are deprecated",
+        "correct": false,
+        "why": "They are fully supported."
+      },
+      {
+        "text": "Service ports can only change by recreating the Service",
+        "correct": false,
+        "why": "They can be patched, as the overlays do."
+      }
+    ]
+  },
+  {
+    "id": "ex-zmrjdf1g",
+    "version": 1,
+    "section": "generators",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a ConfigMap read at start need configMapGenerator to take effect?",
+    "choices": [
+      {
+        "text": "The new name changes the pod template",
+        "correct": true,
+        "why": "Right. Otherwise pods keep the old values."
+      },
+      {
+        "text": "The kubelet only mounts hashed names",
+        "correct": false,
+        "why": "It mounts any ConfigMap."
+      },
+      {
+        "text": "Kubernetes deletes plain ConfigMaps on change",
+        "correct": false,
+        "why": "It updates them in place."
+      },
+      {
+        "text": "Flux ignores ConfigMaps without a hash",
+        "correct": false,
+        "why": "It applies them like anything else."
+      }
+    ]
+  },
+  {
+    "id": "ex-814n8k6f",
+    "version": 1,
+    "section": "helm-charts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which command checks a chart's structure without a cluster?",
+    "choices": [
+      {
+        "text": "helm history",
+        "correct": false,
+        "why": "It shows a release's revisions."
+      },
+      {
+        "text": "helm list",
+        "correct": false,
+        "why": "It lists releases in a cluster."
+      },
+      {
+        "text": "helm install",
+        "correct": false,
+        "why": "It installs into a cluster."
+      },
+      {
+        "text": "helm lint",
+        "correct": true,
+        "why": "Right. The check to put in a chart's CI."
+      }
+    ]
+  },
+  {
+    "id": "ex-9k8fkfxn",
+    "version": 1,
+    "section": "helm-charts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a template, what is .Values?",
+    "choices": [
+      {
+        "text": "values.yaml plus the overrides",
+        "correct": true,
+        "why": "Right. The installation's answers win."
+      },
+      {
+        "text": "Only the chart's values.yaml",
+        "correct": false,
+        "why": "Overrides are merged in."
+      },
+      {
+        "text": "The Chart.yaml metadata",
+        "correct": false,
+        "why": "That is .Chart."
+      },
+      {
+        "text": "The live object's fields",
+        "correct": false,
+        "why": "Templates never read the cluster."
+      }
+    ]
+  },
+  {
+    "id": "ex-ybab5es9",
+    "version": 1,
+    "section": "helm-release",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why should you know which tool installed a chart before typing helm rollback in an incident?",
+    "choices": [
+      {
+        "text": "helm rollback deletes the namespace",
+        "correct": false,
+        "why": "It reverts to an earlier revision."
+      },
+      {
+        "text": "helm rollback needs Gitea's approval",
+        "correct": false,
+        "why": "Helm knows nothing about Gitea."
+      },
+      {
+        "text": "Only Argo CD keeps a release history",
+        "correct": false,
+        "why": "Flux's releases keep Helm's history."
+      },
+      {
+        "text": "Only Flux makes real Helm releases",
+        "correct": true,
+        "why": "Right. helm list shows nothing for Argo CD's."
+      }
+    ]
+  },
+  {
+    "id": "ex-vy3w8ftg",
+    "version": 1,
+    "section": "helm-release",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does Helm store a release Flux installed?",
+    "choices": [
+      {
+        "text": "In the fleet repository",
+        "correct": false,
+        "why": "Git holds the HelmRelease, not Helm's record."
+      },
+      {
+        "text": "In the source controller's artifact for the chart",
+        "correct": false,
+        "why": "That holds the chart, not the release."
+      },
+      {
+        "text": "In a file on your laptop",
+        "correct": false,
+        "why": "Nothing about it is on your laptop."
+      },
+      {
+        "text": "In a Secret in the release's namespace",
+        "correct": true,
+        "why": "Right. Where helm list finds it."
+      }
+    ]
+  },
+  {
+    "id": "ex-w6n52xfj",
+    "version": 1,
+    "section": "choosing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A third-party chart lacks a value for one change you need. What does the lesson suggest?",
+    "choices": [
+      {
+        "text": "Patch Helm's output with Kustomize",
+        "correct": true,
+        "why": "Right. Flux's postRenderers and Argo CD both support it."
+      },
+      {
+        "text": "Render it once and stop using Helm",
+        "correct": false,
+        "why": "That throws away what the chart gives you."
+      },
+      {
+        "text": "Fork the chart and maintain your copy",
+        "correct": false,
+        "why": "That is a large cost for one change."
+      },
+      {
+        "text": "Edit the live objects by hand",
+        "correct": false,
+        "why": "The agent would undo it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ggq3zgm4",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a build that succeeds prove?",
+    "choices": [
+      {
+        "text": "That the cluster will accept it",
+        "correct": false,
+        "why": "Admission and quotas decide that later."
+      },
+      {
+        "text": "That every patch matched",
+        "correct": false,
+        "why": "A patch can match nothing silently."
+      },
+      {
+        "text": "That the pods will be ready",
+        "correct": false,
+        "why": "Readiness is decided in the cluster."
+      },
+      {
+        "text": "That the files are well formed",
+        "correct": true,
+        "why": "Right. Not that they say what you meant."
       }
     ]
   }

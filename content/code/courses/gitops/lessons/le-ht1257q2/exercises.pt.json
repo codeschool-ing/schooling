@@ -489,5 +489,214 @@
       "O Flux aplica o staging"
     ],
     "trap": "O registry vem primeiro, depois os controladores que o leem, depois o Git, depois o cluster."
+  },
+  "ex-d2dy0xft": {
+    "prompt": "O que um manifest de imagem lista?",
+    "choices": [
+      {
+        "text": "Os comandos do Dockerfile",
+        "why": "Não estão no manifest."
+      },
+      {
+        "text": "A imagem de cada plataforma, uma entrada por vez",
+        "why": "Isso é o index."
+      },
+      {
+        "text": "A config e as camadas",
+        "why": "Isso. Nada tem nome além de digest e tamanho."
+      },
+      {
+        "text": "As tags que apontam para ele",
+        "why": "As tags apontam; ele não as lista."
+      }
+    ]
+  },
+  "ex-pffn6tzm": {
+    "prompt": "Um Deployment cita bulletin:stable. O que dois pods dele, iniciados com uma hora de diferença, podem rodar?",
+    "choices": [
+      {
+        "text": "A tag que foi enviada por último para o registry",
+        "why": "Rodam o que stable significava no download."
+      },
+      {
+        "text": "Nada; o Kubernetes recusa tags",
+        "why": "O Kubernetes aceita tags."
+      },
+      {
+        "text": "Sempre a mesma imagem",
+        "why": "Só se a tag não se moveu entre os downloads."
+      },
+      {
+        "text": "Códigos diferentes sob a mesma referência",
+        "why": "Isso. Cada nó resolve a tag quando baixa."
+      }
+    ]
+  },
+  "ex-kv7jq0tj": {
+    "prompt": "O que bulletin:1.1@sha256:... significa para o Kubernetes?",
+    "choices": [
+      {
+        "text": "O digest decide; a tag é para pessoas",
+        "why": "Isso. A tag é ignorada no download."
+      },
+      {
+        "text": "Baixa pela tag e confere o digest depois",
+        "why": "O que se baixa é o digest."
+      },
+      {
+        "text": "É recusado pelo API server por ser ambíguo",
+        "why": "O Kubernetes aceita."
+      },
+      {
+        "text": "Baixa os dois e fica com o mais novo",
+        "why": "Há uma imagem só para baixar."
+      }
+    ]
+  },
+  "ex-aakz5qyx": {
+    "prompt": "Quando o helm push --plain-http é aceitável?",
+    "choices": [
+      {
+        "text": "Na produção, para ganhar tempo",
+        "why": "Nunca na produção."
+      },
+      {
+        "text": "Para charts mas não para imagens",
+        "why": "O transporte é o mesmo para os dois."
+      },
+      {
+        "text": "Sempre que o push falha com TLS",
+        "why": "É aí que se corrige o TLS."
+      },
+      {
+        "text": "Só em localhost",
+        "why": "Isso. Em qualquer outro lugar, o registry ganha TLS."
+      }
+    ]
+  },
+  "ex-3923st5x": {
+    "prompt": "Por que o release da preview foi da revisão 1 para a 2 com os mesmos valores?",
+    "choices": [
+      {
+        "text": "Os valores foram reaplicados a cada hora",
+        "why": "O intervalo não cria revisões."
+      },
+      {
+        "text": "Alguém rodou helm upgrade à mão",
+        "why": "Ninguém rodou; o Flux atualizou."
+      },
+      {
+        "text": "O chart agora vem do registry",
+        "why": "Isso. Um artefato de chart novo é uma revisão nova."
+      },
+      {
+        "text": "O namespace foi recriado",
+        "why": "O namespace ficou."
+      }
+    ]
+  },
+  "ex-jwwnhw5v": {
+    "prompt": "Associe as palavras do Nexus às do Artifactory.",
+    "pairs": [
+      {
+        "left": "hosted",
+        "right": "local"
+      },
+      {
+        "left": "proxy",
+        "right": "remote"
+      },
+      {
+        "left": "group",
+        "right": "virtual"
+      }
+    ],
+    "right_distractors": [
+      "mirror"
+    ]
+  },
+  "ex-2798rxsm": {
+    "prompt": "Por que o ImagePolicy usa um filtro com ordem numérica em vez de uma faixa semver?",
+    "choices": [
+      {
+        "text": "A semver do Flux quer três números",
+        "why": "Isso. A faixa não casaria com nada."
+      },
+      {
+        "text": "Faixas semver estão obsoletas no Flux",
+        "why": "Têm suporte."
+      },
+      {
+        "text": "A ordem numérica é mais rápida",
+        "why": "Velocidade não é o motivo."
+      },
+      {
+        "text": "Políticas semver não leem registries em localhost",
+        "why": "O endereço não importa."
+      }
+    ]
+  },
+  "ex-zmtk52zc": {
+    "prompt": "Para onde a automação de imagens envia o commit, e por quê?",
+    "choices": [
+      {
+        "text": "Para a main, para poupar um passo",
+        "why": "Ninguém faz push na main."
+      },
+      {
+        "text": "Para o diretório da produção",
+        "why": "A produção não tem marca."
+      },
+      {
+        "text": "Para o image-updates",
+        "why": "Isso. Só o merge muda o staging."
+      },
+      {
+        "text": "Para lugar nenhum; ela edita o cluster direto",
+        "why": "Ela escreve no Git."
+      }
+    ]
+  },
+  "ex-rp5g185j": {
+    "prompt": "Um pod cita um digest que o registry não tem. O que ele faz?",
+    "choices": [
+      {
+        "text": "Baixa o digest mais parecido",
+        "why": "Não existe parecido."
+      },
+      {
+        "text": "Sobe com uma imagem vazia",
+        "why": "Nada sobe."
+      },
+      {
+        "text": "Volta para a tag",
+        "why": "Não há tag na referência."
+      },
+      {
+        "text": "Fica em ErrImagePull",
+        "why": "Isso. Um digest bate com o conteúdo ou não bate."
+      }
+    ]
+  },
+  "ex-xse3k4x7": {
+    "prompt": "O que um gerenciador de repositórios acrescenta que um registry OCI simples não tem?",
+    "choices": [
+      {
+        "text": "Digests",
+        "why": "Digests fazem parte do próprio OCI."
+      },
+      {
+        "text": "A capacidade de guardar e servir imagens de contêiner",
+        "why": "Qualquer registry OCI guarda imagens."
+      },
+      {
+        "text": "Suporte a charts do Helm",
+        "why": "Registries OCI também guardam charts."
+      },
+      {
+        "text": "Outros formatos, proxies e retenção",
+        "why": "Isso. O que uma empresa precisa em volta dos artefatos."
+      }
+    ]
   }
 }

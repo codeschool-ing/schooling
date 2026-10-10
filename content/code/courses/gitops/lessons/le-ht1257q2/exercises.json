@@ -729,5 +729,310 @@
       "Flux applies staging"
     ],
     "trap": "The registry comes first, then the controllers that read it, then Git, then the cluster."
+  },
+  {
+    "id": "ex-d2dy0xft",
+    "version": 1,
+    "section": "inside-an-image",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does an image manifest list?",
+    "choices": [
+      {
+        "text": "The Dockerfile's commands",
+        "correct": false,
+        "why": "They are not in the manifest."
+      },
+      {
+        "text": "Every platform's image, one entry each",
+        "correct": false,
+        "why": "That is the index."
+      },
+      {
+        "text": "Its config and layers",
+        "correct": true,
+        "why": "Right. Nothing is named except by digest and size."
+      },
+      {
+        "text": "The tags pointing at it",
+        "correct": false,
+        "why": "Tags point at it; it does not list them."
+      }
+    ]
+  },
+  {
+    "id": "ex-pffn6tzm",
+    "version": 1,
+    "section": "tags-move",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A Deployment names bulletin:stable. What can two of its pods, started an hour apart, run?",
+    "choices": [
+      {
+        "text": "Whichever tag was pushed to the registry most recently",
+        "correct": false,
+        "why": "They run whatever stable meant at pull time."
+      },
+      {
+        "text": "Nothing; tags are refused by Kubernetes",
+        "correct": false,
+        "why": "Kubernetes accepts tags."
+      },
+      {
+        "text": "Always the same image",
+        "correct": false,
+        "why": "Only if the tag did not move between pulls."
+      },
+      {
+        "text": "Different code under the same reference",
+        "correct": true,
+        "why": "Right. Each node resolves the tag when it pulls."
+      }
+    ]
+  },
+  {
+    "id": "ex-kv7jq0tj",
+    "version": 1,
+    "section": "pinning-by-digest",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does bulletin:1.1@sha256:... mean to Kubernetes?",
+    "choices": [
+      {
+        "text": "The digest decides; the tag is for people",
+        "correct": true,
+        "why": "Right. The tag is ignored for pulling."
+      },
+      {
+        "text": "It pulls by the tag and checks the digest later",
+        "correct": false,
+        "why": "The digest is what is pulled."
+      },
+      {
+        "text": "It is refused by the API server as ambiguous",
+        "correct": false,
+        "why": "Kubernetes accepts it."
+      },
+      {
+        "text": "It pulls both and keeps the newer",
+        "correct": false,
+        "why": "There is only one image to pull."
+      }
+    ]
+  },
+  {
+    "id": "ex-aakz5qyx",
+    "version": 1,
+    "section": "charts-as-artefacts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When is helm push --plain-http acceptable?",
+    "choices": [
+      {
+        "text": "In production, to save time",
+        "correct": false,
+        "why": "Never in production."
+      },
+      {
+        "text": "For charts but not images",
+        "correct": false,
+        "why": "The transport is the same for both."
+      },
+      {
+        "text": "Whenever the push fails with TLS",
+        "correct": false,
+        "why": "That is when to fix TLS."
+      },
+      {
+        "text": "On localhost only",
+        "correct": true,
+        "why": "Right. Anywhere else, the registry gets TLS."
+      }
+    ]
+  },
+  {
+    "id": "ex-3923st5x",
+    "version": 1,
+    "section": "charts-as-artefacts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the preview's release go from revision 1 to 2 with the same values?",
+    "choices": [
+      {
+        "text": "The values were reapplied on every hourly reconciliation",
+        "correct": false,
+        "why": "The interval does not make revisions."
+      },
+      {
+        "text": "Somebody ran helm upgrade by hand",
+        "correct": false,
+        "why": "Nobody did; Flux upgraded it."
+      },
+      {
+        "text": "Its chart now comes from the registry",
+        "correct": true,
+        "why": "Right. A new chart artifact is a new revision."
+      },
+      {
+        "text": "The namespace was recreated",
+        "correct": false,
+        "why": "The namespace stayed."
+      }
+    ]
+  },
+  {
+    "id": "ex-jwwnhw5v",
+    "version": 1,
+    "section": "repository-managers",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match Nexus's words to Artifactory's.",
+    "pairs": [
+      {
+        "left": "hosted",
+        "right": "local"
+      },
+      {
+        "left": "proxy",
+        "right": "remote"
+      },
+      {
+        "left": "group",
+        "right": "virtual"
+      }
+    ],
+    "right_distractors": [
+      "mirror"
+    ]
+  },
+  {
+    "id": "ex-2798rxsm",
+    "version": 1,
+    "section": "new-tags-automatically",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the ImagePolicy use a filter with numerical order instead of a semver range?",
+    "choices": [
+      {
+        "text": "Flux's semver wants three numbers",
+        "correct": true,
+        "why": "Right. The range would match nothing."
+      },
+      {
+        "text": "Semver ranges are deprecated in Flux",
+        "correct": false,
+        "why": "They are supported."
+      },
+      {
+        "text": "Numerical order is faster",
+        "correct": false,
+        "why": "Speed is not the reason."
+      },
+      {
+        "text": "Semver policies cannot read registries on localhost",
+        "correct": false,
+        "why": "The address is irrelevant."
+      }
+    ]
+  },
+  {
+    "id": "ex-zmtk52zc",
+    "version": 1,
+    "section": "new-tags-automatically",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where does the image automation push its commit, and why?",
+    "choices": [
+      {
+        "text": "To main, to save a step",
+        "correct": false,
+        "why": "Nobody pushes to main."
+      },
+      {
+        "text": "To production's directory",
+        "correct": false,
+        "why": "Production has no marker."
+      },
+      {
+        "text": "To image-updates",
+        "correct": true,
+        "why": "Right. Only the merge changes staging."
+      },
+      {
+        "text": "Nowhere; it edits the cluster directly",
+        "correct": false,
+        "why": "It writes to Git."
+      }
+    ]
+  },
+  {
+    "id": "ex-rp5g185j",
+    "version": 1,
+    "section": "when-it-fails",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A pod names a digest the registry does not hold. What does it do?",
+    "choices": [
+      {
+        "text": "Pulls the closest digest",
+        "correct": false,
+        "why": "There is no such thing as close."
+      },
+      {
+        "text": "Starts with an empty image",
+        "correct": false,
+        "why": "Nothing starts."
+      },
+      {
+        "text": "Falls back to the tag",
+        "correct": false,
+        "why": "There is no tag in the reference."
+      },
+      {
+        "text": "Stays in ErrImagePull",
+        "correct": true,
+        "why": "Right. A digest matches content or it does not."
+      }
+    ]
+  },
+  {
+    "id": "ex-xse3k4x7",
+    "version": 1,
+    "section": "what-an-artefact-is",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a repository manager add that a bare OCI registry lacks?",
+    "choices": [
+      {
+        "text": "Digests",
+        "correct": false,
+        "why": "Digests are part of OCI itself."
+      },
+      {
+        "text": "The ability to store and serve container images",
+        "correct": false,
+        "why": "Any OCI registry stores images."
+      },
+      {
+        "text": "Helm chart support",
+        "correct": false,
+        "why": "OCI registries hold charts too."
+      },
+      {
+        "text": "Other formats, proxies and retention",
+        "correct": true,
+        "why": "Right. What a company needs around its artefacts."
+      }
+    ]
   }
 ]
