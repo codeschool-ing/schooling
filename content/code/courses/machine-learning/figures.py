@@ -534,6 +534,43 @@ def l03_gap(lang):
     return fig, cap
 
 
+# ------------------------------------------------------------------ lesson 4
+
+@figure('l04-timeline', 4)
+def l04_timeline(lang):
+    fig = Fig('l04-timeline', 660, 210, T(lang,
+        'A timeline for C00001, the first row of churn.csv. The snapshot and the credit decision are on '
+        '1 July 2024; the cancellation comes on 14 July 2024; the export is on 1 January 2026. A '
+        'bracket from the cancellation to the export is what days_since_last_order counted.',
+        'Uma linha do tempo para o C00001, a primeira linha do churn.csv. O retrato e a decisão do crédito são '
+        'em 1º de julho de 2024; o cancelamento vem em 14 de julho de 2024; a exportação é em 1º de '
+        'janeiro de 2026. Um colchete do cancelamento à exportação é o que o days_since_last_order '
+        'contou.'))
+    y = 100
+    xs, xc, xe = 90, 190, 590
+    fig.line(40, y, 620, y, stroke='--paper-dim', width=1.5, arrow=True)
+    for x, top, col in [(xs, T(lang, '1 Jul 2024', '1º jul 2024'), '--phosphor'),
+                        (xc, T(lang, '14 Jul 2024', '14 jul 2024'), '--amber'),
+                        (xe, T(lang, '1 Jan 2026', '1º jan 2026'), '--paper')]:
+        fig.circle(x, y, 6, fill=col)
+        fig.text(x, y - 22, top, size=10.5, mono=True)
+    fig.text(xs - 14, y + 26, T(lang, 'snapshot: the credit is decided', 'retrato: o crédito é decidido'), size=10.5,
+             anchor='start', fill='--phosphor')
+    fig.text(xc + 30, y - 52, T(lang, 'cancels: cancel_reason is written', 'cancela: cancel_reason é escrito'),
+             size=10.5, anchor='start', fill='--amber')
+    fig.line(xc, y - 10, xc + 26, y - 46, stroke='--amber', width=1)
+    fig.text(xe, y + 26, T(lang, 'the file is exported', 'o arquivo é exportado'), size=10.5)
+    fig.path(f'M{xc} {y + 52} L{xc} {y + 60} L{xe} {y + 60} L{xe} {y + 52}', stroke='--amber', width=1.4)
+    fig.text((xc + xe) / 2, y + 78, T(lang, 'what days_since_last_order counted: 536 days',
+                                      'o que o days_since_last_order contou: 536 dias'), size=10.5,
+             fill='--amber')
+    cap = T(lang, 'Everything to the right of the snapshot was unknown on the day the credit was '
+                  'decided, and both leaking columns live there.',
+            'Tudo à direita do retrato era desconhecido no dia em que o crédito foi decidido, e as '
+            'duas colunas que vazam moram ali.')
+    return fig, cap
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
