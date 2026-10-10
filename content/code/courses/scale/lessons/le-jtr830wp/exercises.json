@@ -1,0 +1,798 @@
+[
+  {
+    "id": "ex-rghbdwz7",
+    "version": 1,
+    "section": "more-than-it-can-do",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Going from 8 to 128 workers, what happened to the box office's sales per second?",
+    "choices": [
+      {
+        "text": "They grew about sixteen times, with the workers",
+        "correct": false,
+        "why": "More workers brought no more sales."
+      },
+      {
+        "text": "They doubled, then halved",
+        "correct": false,
+        "why": "112, 105, 104."
+      },
+      {
+        "text": "They stayed near 105",
+        "correct": true,
+        "why": "Right. The CPU was already busy at 8."
+      },
+      {
+        "text": "They fell to zero once the database refused connections",
+        "correct": false,
+        "why": "Most sales still went through: 1003 of 1149."
+      }
+    ]
+  },
+  {
+    "id": "ex-n02sb8eq",
+    "version": 1,
+    "section": "more-than-it-can-do",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did 146 sales fail with a 500 at 128 workers?",
+    "choices": [
+      {
+        "text": "PostgreSQL ran out of connections",
+        "correct": true,
+        "why": "Right: a thread per connection, each opening its own database connection, past the limit of 100."
+      },
+      {
+        "text": "nginx closed connections it had kept for too long",
+        "correct": false,
+        "why": "The log names PostgreSQL."
+      },
+      {
+        "text": "Payments refused the charges",
+        "correct": false,
+        "why": "Payments was healthy in that run."
+      },
+      {
+        "text": "The CPU of the box office reached 100%",
+        "correct": false,
+        "why": "That made it slow, not wrong; it was at 100% with 8 workers too."
+      }
+    ]
+  },
+  {
+    "id": "ex-aj3wznj6",
+    "version": 1,
+    "section": "more-than-it-can-do",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A closed loop of 32 workers gets about 105 answers a second. Roughly how many milliseconds does each request take? Round to the nearest ten.",
+    "hint": "Workers divided by rate, in seconds; then times 1000.",
+    "value": 300,
+    "tolerance": 10,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-gfam9pw0",
+    "version": 1,
+    "section": "the-guards",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which guard answers 'should we still be calling a dependency that keeps failing'?",
+    "choices": [
+      {
+        "text": "The rate limit per buyer, counted in Redis",
+        "correct": false,
+        "why": "That is about how often one caller asks."
+      },
+      {
+        "text": "The circuit breaker",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The listen backlog",
+        "correct": false,
+        "why": "It bounds waiting connections, not calls out."
+      },
+      {
+        "text": "Load shedding, with its 32 slots",
+        "correct": false,
+        "why": "That is about how much work at once."
+      }
+    ]
+  },
+  {
+    "id": "ex-f0q7rvnh",
+    "version": 1,
+    "section": "the-guards",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In this lesson's app.py, why do database connections belong to a slot rather than to a thread?",
+    "choices": [
+      {
+        "text": "Threads are created before Redis answers",
+        "correct": false,
+        "why": "Redis has nothing to do with the database connections."
+      },
+      {
+        "text": "psycopg refuses to share a connection between threads",
+        "correct": false,
+        "why": "Slots do pass connections between threads, one at a time."
+      },
+      {
+        "text": "The slots are bounded, so the connections are too",
+        "correct": true,
+        "why": "Right. Threads are one per connection and nothing bounds them."
+      },
+      {
+        "text": "A slot's connection is faster to open",
+        "correct": false,
+        "why": "It is opened the same way, once."
+      }
+    ]
+  },
+  {
+    "id": "ex-sjpyftct",
+    "version": 1,
+    "section": "rate-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With rate 2 and burst 5, why did the bot buy six tickets in its first second?",
+    "choices": [
+      {
+        "text": "Five were in the full bucket and one dripped in meanwhile",
+        "correct": true,
+        "why": "Right. Then two a second."
+      },
+      {
+        "text": "Redis rounds the tokens up",
+        "correct": false,
+        "why": "The script compares tokens >= 1 exactly."
+      },
+      {
+        "text": "The first request of a buyer is free",
+        "correct": false,
+        "why": "Every purchase takes a token."
+      },
+      {
+        "text": "The burst is counted per copy, and nginx spread the requests",
+        "correct": false,
+        "why": "There was one copy, and the bucket is in Redis."
+      }
+    ]
+  },
+  {
+    "id": "ex-2sjjfqat",
+    "version": 1,
+    "section": "rate-limits",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Rate 2 a second, burst 5. A buyer with a full bucket tries as fast as it can for 10 seconds. About how many purchases go through?",
+    "hint": "The burst, plus the rate times the seconds.",
+    "value": 25,
+    "tolerance": 1,
+    "unit": "purchases"
+  },
+  {
+    "id": "ex-rjmj6yv2",
+    "version": 1,
+    "section": "rate-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is wrong with a fixed window of 120 a minute, counted per clock minute?",
+    "choices": [
+      {
+        "text": "It needs Redis",
+        "correct": false,
+        "why": "Any shared counter would do; so does the bucket."
+      },
+      {
+        "text": "It queues the requests over the limit instead of refusing them",
+        "correct": false,
+        "why": "That is the leaky bucket."
+      },
+      {
+        "text": "120 at 10:00:59 and 120 more at 10:01:00 are both allowed",
+        "correct": true,
+        "why": "Right: twice the limit in two seconds."
+      },
+      {
+        "text": "It cannot send Retry-After to the caller",
+        "correct": false,
+        "why": "It can: the time until the next minute."
+      }
+    ]
+  },
+  {
+    "id": "ex-pczgzqay",
+    "version": 1,
+    "section": "rate-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With the bucket kept in each copy's memory and three copies behind nginx, what would the bot get?",
+    "choices": [
+      {
+        "text": "A third of the rate",
+        "correct": false,
+        "why": "Each copy would allow the full rate."
+      },
+      {
+        "text": "About three times the rate",
+        "correct": true,
+        "why": "Right: three buckets."
+      },
+      {
+        "text": "Nothing at all, since the buckets would disagree",
+        "correct": false,
+        "why": "Each would allow its own share."
+      },
+      {
+        "text": "The same rate, since nginx sends a buyer to one copy",
+        "correct": false,
+        "why": "nginx spreads requests, not buyers."
+      }
+    ]
+  },
+  {
+    "id": "ex-1wfdhgn4",
+    "version": 1,
+    "section": "rate-limits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "If Redis is down, the box office lets sales through. Why is failing open the choice here?",
+    "choices": [
+      {
+        "text": "Redis stores the sales",
+        "correct": false,
+        "why": "Sales are in PostgreSQL."
+      },
+      {
+        "text": "The limit is about fairness, and refusing every sale would turn a Redis outage into a box office outage",
+        "correct": true,
+        "why": "Right. A limit protecting something fragile might fail closed."
+      },
+      {
+        "text": "A closed limit would charge buyers twice",
+        "correct": false,
+        "why": "It would refuse them, not charge them."
+      },
+      {
+        "text": "The Lua script runs in the box office when Redis is down",
+        "correct": false,
+        "why": "It runs only inside Redis."
+      }
+    ]
+  },
+  {
+    "id": "ex-430kbbma",
+    "version": 1,
+    "section": "load-shedding",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does load shedding protect against that a per-buyer limit does not?",
+    "choices": [
+      {
+        "text": "Many buyers, each inside their own limit",
+        "correct": true,
+        "why": "Right: everybody together."
+      },
+      {
+        "text": "Slow queries on the replica, caused by a missing index",
+        "correct": false,
+        "why": "Shedding refuses work; it does not speed up queries."
+      },
+      {
+        "text": "A bot buying faster than two a second",
+        "correct": false,
+        "why": "That is the per-buyer limit's job."
+      },
+      {
+        "text": "A payment service that hangs",
+        "correct": false,
+        "why": "Timeouts and the breaker handle that."
+      }
+    ]
+  },
+  {
+    "id": "ex-pz73km22",
+    "version": 1,
+    "section": "load-shedding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With 32 slots and 128 workers, what changed compared with no guard?",
+    "choices": [
+      {
+        "text": "load.py's workers waited for Retry-After",
+        "correct": false,
+        "why": "load.py ignores it."
+      },
+      {
+        "text": "Failures became 503s at the door and the database stayed under its limit",
+        "correct": true,
+        "why": "Right: 33 connections, no 500s."
+      },
+      {
+        "text": "The box office sold twice as many tickets",
+        "correct": false,
+        "why": "1017 against 1003."
+      },
+      {
+        "text": "The median latency fell to 70 ms",
+        "correct": false,
+        "why": "It stayed near a second."
+      }
+    ]
+  },
+  {
+    "id": "ex-rqzmv60f",
+    "version": 1,
+    "section": "load-shedding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why did the median request still take about a second with load shedding on?",
+    "choices": [
+      {
+        "text": "32 slots were too many for one CPU",
+        "correct": false,
+        "why": "Fewer slots would refuse more, with the same workers coming back."
+      },
+      {
+        "text": "The 503s took a second each",
+        "correct": false,
+        "why": "A refusal does no work behind the door."
+      },
+      {
+        "text": "Refused workers asked again at once, so the wait before the door stayed full",
+        "correct": true,
+        "why": "Right. A refusal lowers load only if the caller backs off."
+      },
+      {
+        "text": "Redis was slow to answer",
+        "correct": false,
+        "why": "The buyer limit was raised for that run."
+      }
+    ]
+  },
+  {
+    "id": "ex-k89v5bmx",
+    "version": 1,
+    "section": "backpressure",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is backpressure?",
+    "choices": [
+      {
+        "text": "Retrying a request that failed",
+        "correct": false,
+        "why": "That is lesson 10."
+      },
+      {
+        "text": "A full stage making the one before it slow down",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Compressing responses when the network is busy",
+        "correct": false,
+        "why": "Not related."
+      },
+      {
+        "text": "Adding copies of a service when its latency grows past its objective",
+        "correct": false,
+        "why": "That is scaling out."
+      }
+    ]
+  },
+  {
+    "id": "ex-q82m4src",
+    "version": 1,
+    "section": "backpressure",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is an unbounded queue in front of a service dangerous?",
+    "choices": [
+      {
+        "text": "Queues lose messages",
+        "correct": false,
+        "why": "The danger is keeping them."
+      },
+      {
+        "text": "Nothing upstream learns of the overload while latency and memory grow",
+        "correct": true,
+        "why": "Right, and it fills with work nobody is still waiting for."
+      },
+      {
+        "text": "It sends Retry-After with a wrong value",
+        "correct": false,
+        "why": "It sends nothing upstream."
+      },
+      {
+        "text": "It refuses requests too early",
+        "correct": false,
+        "why": "It refuses nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-d01c0a3w",
+    "version": 1,
+    "section": "backpressure",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each mechanism to the form of backpressure it is.",
+    "pairs": [
+      {
+        "left": "request_queue_size = 128",
+        "right": "a bounded queue"
+      },
+      {
+        "left": "429 with Retry-After",
+        "right": "a refusal that says when to come back"
+      },
+      {
+        "left": "load.py's workers",
+        "right": "a closed loop"
+      },
+      {
+        "left": "TCP's receive window",
+        "right": "flow control in the protocol"
+      }
+    ]
+  },
+  {
+    "id": "ex-n257gh38",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The box office gave up on payments after 1 s; payments' span took 5.6 s. What does that show?",
+    "choices": [
+      {
+        "text": "Jaeger measured the wrong span of the two in that trace",
+        "correct": false,
+        "why": "Both spans are right; they measure different things."
+      },
+      {
+        "text": "A timeout ends the wait, not the work",
+        "correct": true,
+        "why": "Right: the card was charged while the buyer saw 502."
+      },
+      {
+        "text": "Payments was retried four times",
+        "correct": false,
+        "why": "There is no retry in this lesson."
+      },
+      {
+        "text": "The timeout was ignored by urllib",
+        "correct": false,
+        "why": "The box office's span ended at 1 s."
+      }
+    ]
+  },
+  {
+    "id": "ex-ghgb4bgv",
+    "version": 1,
+    "section": "timeouts",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Payments normally answers in 20 to 40 ms. Which timeout fits best?",
+    "choices": [
+      {
+        "text": "Five minutes, so that no charge is ever lost",
+        "correct": false,
+        "why": "The answer would arrive for nobody."
+      },
+      {
+        "text": "One second",
+        "correct": true,
+        "why": "Right: far above normal, below a buyer's patience."
+      },
+      {
+        "text": "None, so urllib decides",
+        "correct": false,
+        "why": "urllib then waits forever."
+      },
+      {
+        "text": "30 ms, the usual time, so slow calls are cut at once",
+        "correct": false,
+        "why": "It would fail calls that would have succeeded."
+      }
+    ]
+  },
+  {
+    "id": "ex-1hsg625g",
+    "version": 1,
+    "section": "timeouts",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Payments hangs, the timeout is 1 s and the box office has 32 slots. At most how many sales a second can the box office finish (all of them failing)?",
+    "hint": "Each sale holds a slot for the whole timeout.",
+    "value": 32,
+    "tolerance": 0,
+    "unit": "sales a second"
+  },
+  {
+    "id": "ex-gjwbjt0h",
+    "version": 1,
+    "section": "circuit-breaker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Once the breaker opened, sales failed in under 2 ms. What did that buy the box office?",
+    "choices": [
+      {
+        "text": "Sales that succeed without payments",
+        "correct": false,
+        "why": "They fail; they fail fast."
+      },
+      {
+        "text": "Spans that Jaeger can store",
+        "correct": false,
+        "why": "Not its purpose."
+      },
+      {
+        "text": "Slots no longer held for a second by sales that cannot succeed",
+        "correct": true,
+        "why": "Right, and payments got no new calls while struggling."
+      },
+      {
+        "text": "A lower rate limit for each buyer, enforced while payments is down",
+        "correct": false,
+        "why": "The breaker has nothing to do with buyers."
+      }
+    ]
+  },
+  {
+    "id": "ex-22nw21g8",
+    "version": 1,
+    "section": "circuit-breaker",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The breaker opens after five failures in a row. Why did it open after the fourth sale of the loop?",
+    "choices": [
+      {
+        "text": "Each copy counts separately and there were two",
+        "correct": false,
+        "why": "There was one copy."
+      },
+      {
+        "text": "A timeout counts as two failures",
+        "correct": false,
+        "why": "Each failure counts once."
+      },
+      {
+        "text": "The gauge rounds up",
+        "correct": false,
+        "why": "The gauge only reports the state."
+      },
+      {
+        "text": "The sale of section 07 was the first failure",
+        "correct": true,
+        "why": "Right: one plus four."
+      }
+    ]
+  },
+  {
+    "id": "ex-p7ea3rm4",
+    "version": 1,
+    "section": "circuit-breaker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these should a breaker around payments count as a failure?",
+    "choices": [
+      {
+        "text": "A sale refused because the show is sold out",
+        "correct": false,
+        "why": "That is the box office's answer, not payments' health."
+      },
+      {
+        "text": "A timeout",
+        "correct": true,
+        "why": "Right: it says payments is unhealthy."
+      },
+      {
+        "text": "A card declined for lack of funds",
+        "correct": false,
+        "why": "That is payments working correctly."
+      },
+      {
+        "text": "A buyer refused with 429 by the rate limit",
+        "correct": false,
+        "why": "Payments was never called."
+      }
+    ]
+  },
+  {
+    "id": "ex-y0w96ph1",
+    "version": 1,
+    "section": "half-open",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the breaker's path in order, from healthy back to healthy.",
+    "items": [
+      "closed, calls go through",
+      "five failures in a row",
+      "open, calls fail at once",
+      "the cooldown passes",
+      "half-open, one test call succeeds",
+      "closed again"
+    ]
+  },
+  {
+    "id": "ex-av5nsery",
+    "version": 1,
+    "section": "half-open",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does a half-open breaker let only one call through?",
+    "choices": [
+      {
+        "text": "Calling with every request would undo the point of opening",
+        "correct": true,
+        "why": "Right: one test, the rest wait for its result."
+      },
+      {
+        "text": "The lock in Breaker allows one thread",
+        "correct": false,
+        "why": "The lock guards the state; the call runs outside it."
+      },
+      {
+        "text": "One call is enough to fill the 32 slots",
+        "correct": false,
+        "why": "One call holds one slot."
+      },
+      {
+        "text": "Payments accepts one connection at a time",
+        "correct": false,
+        "why": "It is a threaded server."
+      }
+    ]
+  },
+  {
+    "id": "ex-p3y1ce5k",
+    "version": 1,
+    "section": "half-open",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why do busy services prefer a failure rate over a window to 'five in a row'?",
+    "choices": [
+      {
+        "text": "A steady 30% failure rate never makes five in a row likely, yet matters",
+        "correct": true,
+        "why": "Right, and one unlucky call among thousands counts for little."
+      },
+      {
+        "text": "It keeps one breaker for all dependencies",
+        "correct": false,
+        "why": "Still one per dependency."
+      },
+      {
+        "text": "It needs no cooldown",
+        "correct": false,
+        "why": "It still waits before testing."
+      },
+      {
+        "text": "It opens faster on the first failure",
+        "correct": false,
+        "why": "It needs a minimum of calls first."
+      }
+    ]
+  },
+  {
+    "id": "ex-jk0yj56s",
+    "version": 1,
+    "section": "where-guards-go",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why put rate limits at the edge rather than in each service?",
+    "choices": [
+      {
+        "text": "Redis only runs at the edge",
+        "correct": false,
+        "why": "Redis runs wherever it is put."
+      },
+      {
+        "text": "The earlier a request is refused, the cheaper",
+        "correct": true,
+        "why": "Right: it never reaches a service."
+      },
+      {
+        "text": "The edge knows what each service is short of",
+        "correct": false,
+        "why": "Only the service knows that; that is why shedding stays inside."
+      },
+      {
+        "text": "Services cannot read headers",
+        "correct": false,
+        "why": "The box office reads X-Buyer."
+      }
+    ]
+  },
+  {
+    "id": "ex-dx90nnxr",
+    "version": 1,
+    "section": "where-guards-go",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is a virtual waiting room?",
+    "choices": [
+      {
+        "text": "A retry loop in the browser",
+        "correct": false,
+        "why": "It is a line, not a loop."
+      },
+      {
+        "text": "A Redis key per buyer",
+        "correct": false,
+        "why": "That is the rate limit."
+      },
+      {
+        "text": "A page shown while the breaker is open",
+        "correct": false,
+        "why": "That is about payments, not admission."
+      },
+      {
+        "text": "A visible line in place of a refusal",
+        "correct": true,
+        "why": "Right: admitted at the rate the box office can serve."
+      }
+    ]
+  },
+  {
+    "id": "ex-f8ca0na1",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An on-sale opens. Buyers get 503s in milliseconds, payments' error count is zero, the box office's CPU is full. Which guard is acting?",
+    "choices": [
+      {
+        "text": "Load shedding",
+        "correct": true,
+        "why": "Right: full slots, payments healthy."
+      },
+      {
+        "text": "The timeout on the call to payments",
+        "correct": false,
+        "why": "That takes a second and answers 502."
+      },
+      {
+        "text": "The rate limit, which answers 503 to bots",
+        "correct": false,
+        "why": "The rate limit answers 429."
+      },
+      {
+        "text": "The circuit breaker, after five failed charges",
+        "correct": false,
+        "why": "Payments has no errors."
+      }
+    ]
+  }
+]

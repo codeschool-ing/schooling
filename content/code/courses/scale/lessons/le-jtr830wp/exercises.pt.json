@@ -1,0 +1,532 @@
+{
+  "ex-rghbdwz7": {
+    "prompt": "Indo de 8 para 128 trabalhadores, o que aconteceu com as vendas por segundo da bilheteria?",
+    "choices": [
+      {
+        "text": "Cresceram umas dezesseis vezes, com os trabalhadores",
+        "why": "Mais trabalhadores não trouxeram mais vendas."
+      },
+      {
+        "text": "Dobraram, depois caíram pela metade",
+        "why": "112, 105, 104."
+      },
+      {
+        "text": "Ficaram perto de 105",
+        "why": "Certo. A CPU já estava ocupada com 8."
+      },
+      {
+        "text": "Caíram a zero quando o banco recusou conexões",
+        "why": "A maioria das vendas passou: 1003 de 1149."
+      }
+    ]
+  },
+  "ex-n02sb8eq": {
+    "prompt": "Por que 146 vendas falharam com 500 com 128 trabalhadores?",
+    "choices": [
+      {
+        "text": "O PostgreSQL ficou sem conexões",
+        "why": "Certo: uma thread por conexão, cada uma abrindo a própria conexão com o banco, além do limite de 100."
+      },
+      {
+        "text": "O nginx fechou conexões que guardou por tempo demais",
+        "why": "O log cita o PostgreSQL."
+      },
+      {
+        "text": "O payments recusou as cobranças",
+        "why": "O payments estava saudável naquela execução."
+      },
+      {
+        "text": "A CPU da bilheteria chegou a 100%",
+        "why": "Isso a deixou lenta, não errada; ela estava em 100% com 8 trabalhadores também."
+      }
+    ]
+  },
+  "ex-aj3wznj6": {
+    "prompt": "Um ciclo fechado de 32 trabalhadores recebe cerca de 105 respostas por segundo. Mais ou menos quantos milissegundos cada pedido leva? Arredonde para a dezena mais próxima.",
+    "hint": "Trabalhadores divididos pela taxa, em segundos; depois vezes 1000.",
+    "unit": "ms"
+  },
+  "ex-gfam9pw0": {
+    "prompt": "Qual guarda responde 'devemos continuar chamando uma dependência que não para de falhar'?",
+    "choices": [
+      {
+        "text": "O limite de taxa por comprador, contado no Redis",
+        "why": "Esse é sobre com que frequência um chamador pede."
+      },
+      {
+        "text": "O disjuntor",
+        "why": "Certo."
+      },
+      {
+        "text": "A fila de escuta",
+        "why": "Ela limita conexões esperando, não chamadas para fora."
+      },
+      {
+        "text": "O descarte de carga, com as 32 vagas",
+        "why": "Esse é sobre quanto trabalho ao mesmo tempo."
+      }
+    ]
+  },
+  "ex-f0q7rvnh": {
+    "prompt": "No app.py desta aula, por que as conexões com o banco pertencem a uma vaga e não a uma thread?",
+    "choices": [
+      {
+        "text": "As threads são criadas antes de o Redis responder",
+        "why": "O Redis não tem nada a ver com as conexões com o banco."
+      },
+      {
+        "text": "O psycopg se recusa a dividir uma conexão entre threads",
+        "why": "As vagas passam conexões entre threads, uma de cada vez."
+      },
+      {
+        "text": "As vagas são limitadas, então as conexões também",
+        "why": "Certo. Há uma thread por conexão e nada as limita."
+      },
+      {
+        "text": "A conexão de uma vaga abre mais rápido",
+        "why": "Ela é aberta do mesmo jeito, uma vez."
+      }
+    ]
+  },
+  "ex-sjpyftct": {
+    "prompt": "Com taxa 2 e rajada 5, por que o robô comprou seis ingressos no primeiro segundo?",
+    "choices": [
+      {
+        "text": "Cinco estavam no balde cheio e uma pingou nesse meio-tempo",
+        "why": "Certo. Depois duas por segundo."
+      },
+      {
+        "text": "O Redis arredonda as fichas para cima",
+        "why": "O script compara fichas >= 1 exatamente."
+      },
+      {
+        "text": "O primeiro pedido de um comprador é grátis",
+        "why": "Toda compra leva uma ficha."
+      },
+      {
+        "text": "A rajada é contada por cópia, e o nginx espalhou os pedidos",
+        "why": "Havia uma cópia, e o balde fica no Redis."
+      }
+    ]
+  },
+  "ex-2sjjfqat": {
+    "prompt": "Taxa 2 por segundo, rajada 5. Um comprador com o balde cheio tenta o mais rápido que pode por 10 segundos. Cerca de quantas compras passam?",
+    "hint": "A rajada, mais a taxa vezes os segundos.",
+    "unit": "compras"
+  },
+  "ex-rjmj6yv2": {
+    "prompt": "O que há de errado com uma janela fixa de 120 por minuto, contados por minuto do relógio?",
+    "choices": [
+      {
+        "text": "Precisa do Redis",
+        "why": "Qualquer contador compartilhado serve; o balde também precisa."
+      },
+      {
+        "text": "Enfileira os pedidos acima do limite em vez de recusá-los",
+        "why": "Esse é o balde furado."
+      },
+      {
+        "text": "120 às 10:00:59 e mais 120 às 10:01:00 são permitidos",
+        "why": "Certo: o dobro do limite em dois segundos."
+      },
+      {
+        "text": "Não consegue mandar Retry-After a quem chama",
+        "why": "Consegue: o tempo até o próximo minuto."
+      }
+    ]
+  },
+  "ex-pczgzqay": {
+    "prompt": "Com o balde guardado na memória de cada cópia e três cópias atrás do nginx, o que o robô ganharia?",
+    "choices": [
+      {
+        "text": "Um terço da taxa",
+        "why": "Cada cópia permitiria a taxa inteira."
+      },
+      {
+        "text": "Cerca de três vezes a taxa",
+        "why": "Certo: três baldes."
+      },
+      {
+        "text": "Nada, já que os baldes discordariam",
+        "why": "Cada um permitiria a sua parte."
+      },
+      {
+        "text": "A mesma taxa, já que o nginx manda um comprador a uma cópia",
+        "why": "O nginx espalha pedidos, não compradores."
+      }
+    ]
+  },
+  "ex-1wfdhgn4": {
+    "prompt": "Se o Redis cai, a bilheteria deixa as vendas passarem. Por que falhar aberto é a escolha aqui?",
+    "choices": [
+      {
+        "text": "O Redis guarda as vendas",
+        "why": "As vendas ficam no PostgreSQL."
+      },
+      {
+        "text": "O limite é sobre justiça, e recusar toda venda transformaria uma queda do Redis numa queda da bilheteria",
+        "why": "Certo. Um limite que protege algo frágil poderia falhar fechado."
+      },
+      {
+        "text": "Um limite fechado cobraria compradores duas vezes",
+        "why": "Ele os recusaria, não cobraria."
+      },
+      {
+        "text": "O script Lua roda na bilheteria quando o Redis cai",
+        "why": "Ele só roda dentro do Redis."
+      }
+    ]
+  },
+  "ex-430kbbma": {
+    "prompt": "Contra o que o descarte de carga protege que um limite por comprador não protege?",
+    "choices": [
+      {
+        "text": "Muitos compradores, cada um dentro do próprio limite",
+        "why": "Certo: todo mundo junto."
+      },
+      {
+        "text": "Consultas lentas na réplica, causadas por um índice faltando",
+        "why": "O descarte recusa trabalho; não acelera consultas."
+      },
+      {
+        "text": "Um robô comprando mais rápido que duas por segundo",
+        "why": "Esse é o trabalho do limite por comprador."
+      },
+      {
+        "text": "Um serviço de pagamento que trava",
+        "why": "Timeouts e o disjuntor cuidam disso."
+      }
+    ]
+  },
+  "ex-pz73km22": {
+    "prompt": "Com 32 vagas e 128 trabalhadores, o que mudou em relação a nenhuma guarda?",
+    "choices": [
+      {
+        "text": "Os trabalhadores do load.py esperaram o Retry-After",
+        "why": "O load.py o ignora."
+      },
+      {
+        "text": "As falhas viraram 503 na porta e o banco ficou abaixo do limite",
+        "why": "Certo: 33 conexões, nenhum 500."
+      },
+      {
+        "text": "A bilheteria vendeu o dobro de ingressos",
+        "why": "1017 contra 1003."
+      },
+      {
+        "text": "A latência mediana caiu para 70 ms",
+        "why": "Ficou perto de um segundo."
+      }
+    ]
+  },
+  "ex-rqzmv60f": {
+    "prompt": "Por que o pedido mediano ainda levou cerca de um segundo com o descarte ligado?",
+    "choices": [
+      {
+        "text": "32 vagas eram demais para uma CPU",
+        "why": "Menos vagas recusariam mais, com os mesmos trabalhadores voltando."
+      },
+      {
+        "text": "Os 503 levavam um segundo cada",
+        "why": "Uma recusa não faz trabalho atrás da porta."
+      },
+      {
+        "text": "Os trabalhadores recusados pediram de novo na hora, então a espera antes da porta continuou cheia",
+        "why": "Certo. Uma recusa só diminui a carga se quem chama recua."
+      },
+      {
+        "text": "O Redis demorou a responder",
+        "why": "O limite por comprador foi aumentado naquela execução."
+      }
+    ]
+  },
+  "ex-k89v5bmx": {
+    "prompt": "O que é contrapressão?",
+    "choices": [
+      {
+        "text": "Tentar de novo um pedido que falhou",
+        "why": "Isso é a aula 10."
+      },
+      {
+        "text": "Uma etapa cheia fazendo a anterior ir mais devagar",
+        "why": "Certo."
+      },
+      {
+        "text": "Comprimir respostas quando a rede está ocupada",
+        "why": "Sem relação."
+      },
+      {
+        "text": "Acrescentar cópias de um serviço quando a latência passa do objetivo",
+        "why": "Isso é escalar horizontalmente."
+      }
+    ]
+  },
+  "ex-q82m4src": {
+    "prompt": "Por que uma fila sem limite na frente de um serviço é perigosa?",
+    "choices": [
+      {
+        "text": "Filas perdem mensagens",
+        "why": "O perigo é guardá-las."
+      },
+      {
+        "text": "Nada antes dela fica sabendo da sobrecarga enquanto latência e memória crescem",
+        "why": "Certo, e ela se enche de trabalho que ninguém está mais esperando."
+      },
+      {
+        "text": "Manda Retry-After com um valor errado",
+        "why": "Ela não manda nada para trás."
+      },
+      {
+        "text": "Recusa pedidos cedo demais",
+        "why": "Ela não recusa nada."
+      }
+    ]
+  },
+  "ex-d01c0a3w": {
+    "prompt": "Ligue cada mecanismo à forma de contrapressão que ele é.",
+    "pairs": [
+      {
+        "left": "request_queue_size = 128",
+        "right": "uma fila limitada"
+      },
+      {
+        "left": "429 com Retry-After",
+        "right": "uma recusa que diz quando voltar"
+      },
+      {
+        "left": "os trabalhadores do load.py",
+        "right": "um ciclo fechado"
+      },
+      {
+        "left": "a janela de recepção do TCP",
+        "right": "controle de fluxo no protocolo"
+      }
+    ]
+  },
+  "ex-n257gh38": {
+    "prompt": "A bilheteria desistiu do payments depois de 1 s; o span do payments levou 5,6 s. O que isso mostra?",
+    "choices": [
+      {
+        "text": "O Jaeger mediu o span errado dos dois naquele rastro",
+        "why": "Os dois spans estão certos; medem coisas diferentes."
+      },
+      {
+        "text": "Um timeout acaba com a espera, não com o trabalho",
+        "why": "Certo: o cartão foi cobrado enquanto o comprador viu 502."
+      },
+      {
+        "text": "O payments foi chamado de novo quatro vezes",
+        "why": "Não há nova tentativa nesta aula."
+      },
+      {
+        "text": "O timeout foi ignorado pelo urllib",
+        "why": "O span da bilheteria terminou em 1 s."
+      }
+    ]
+  },
+  "ex-ghgb4bgv": {
+    "prompt": "O payments normalmente responde em 20 a 40 ms. Qual timeout combina melhor?",
+    "choices": [
+      {
+        "text": "Cinco minutos, para que nenhuma cobrança se perca",
+        "why": "A resposta chegaria para ninguém."
+      },
+      {
+        "text": "Um segundo",
+        "why": "Certo: bem acima do normal, abaixo da paciência de um comprador."
+      },
+      {
+        "text": "Nenhum, para o urllib decidir",
+        "why": "O urllib então espera para sempre."
+      },
+      {
+        "text": "30 ms, o tempo de costume, para cortar chamadas lentas na hora",
+        "why": "Derrubaria chamadas que teriam dado certo."
+      }
+    ]
+  },
+  "ex-1hsg625g": {
+    "prompt": "O payments trava, o timeout é de 1 s e a bilheteria tem 32 vagas. No máximo quantas vendas por segundo a bilheteria consegue terminar (todas falhando)?",
+    "hint": "Cada venda segura uma vaga pelo timeout inteiro.",
+    "unit": "vendas por segundo"
+  },
+  "ex-gjwbjt0h": {
+    "prompt": "Depois que o disjuntor abriu, as vendas falharam em menos de 2 ms. O que isso comprou para a bilheteria?",
+    "choices": [
+      {
+        "text": "Vendas que dão certo sem o payments",
+        "why": "Elas falham; falham rápido."
+      },
+      {
+        "text": "Spans que o Jaeger consegue guardar",
+        "why": "Não é o propósito dele."
+      },
+      {
+        "text": "Vagas que não ficam presas um segundo a vendas sem chance",
+        "why": "Certo, e o payments não recebeu chamadas novas enquanto sofria."
+      },
+      {
+        "text": "Um limite de taxa menor para cada comprador, enquanto o payments está fora",
+        "why": "O disjuntor não tem nada a ver com compradores."
+      }
+    ]
+  },
+  "ex-22nw21g8": {
+    "prompt": "O disjuntor abre depois de cinco falhas seguidas. Por que ele abriu depois da quarta venda do laço?",
+    "choices": [
+      {
+        "text": "Cada cópia conta separado e havia duas",
+        "why": "Havia uma cópia."
+      },
+      {
+        "text": "Um timeout conta como duas falhas",
+        "why": "Cada falha conta uma vez."
+      },
+      {
+        "text": "O medidor arredonda para cima",
+        "why": "O medidor só informa o estado."
+      },
+      {
+        "text": "A venda da seção 07 foi a primeira falha",
+        "why": "Certo: uma mais quatro."
+      }
+    ]
+  },
+  "ex-p7ea3rm4": {
+    "prompt": "Qual destes um disjuntor em volta do payments deveria contar como falha?",
+    "choices": [
+      {
+        "text": "Uma venda recusada porque o show esgotou",
+        "why": "Essa é a resposta da bilheteria, não a saúde do payments."
+      },
+      {
+        "text": "Um timeout",
+        "why": "Certo: diz que o payments não está saudável."
+      },
+      {
+        "text": "Um cartão recusado por falta de saldo",
+        "why": "Isso é o payments funcionando direito."
+      },
+      {
+        "text": "Um comprador recusado com 429 pelo limite de taxa",
+        "why": "O payments nem foi chamado."
+      }
+    ]
+  },
+  "ex-y0w96ph1": {
+    "prompt": "Ponha em ordem o caminho do disjuntor, de saudável a saudável de novo.",
+    "items": [
+      "fechado, as chamadas passam",
+      "cinco falhas seguidas",
+      "aberto, as chamadas falham na hora",
+      "a espera passa",
+      "meio aberto, uma chamada de teste dá certo",
+      "fechado de novo"
+    ]
+  },
+  "ex-av5nsery": {
+    "prompt": "Por que um disjuntor meio aberto deixa passar só uma chamada?",
+    "choices": [
+      {
+        "text": "Chamar a cada pedido desfaria o motivo de abrir",
+        "why": "Certo: um teste, o resto espera o resultado."
+      },
+      {
+        "text": "A trava do Breaker permite uma thread",
+        "why": "A trava protege o estado; a chamada roda fora dela."
+      },
+      {
+        "text": "Uma chamada basta para encher as 32 vagas",
+        "why": "Uma chamada segura uma vaga."
+      },
+      {
+        "text": "O payments aceita uma conexão por vez",
+        "why": "É um servidor com threads."
+      }
+    ]
+  },
+  "ex-p3y1ce5k": {
+    "prompt": "Por que serviços movimentados preferem uma taxa de falhas numa janela a 'cinco seguidas'?",
+    "choices": [
+      {
+        "text": "Com 30% de erros constantes, cinco em fila são raros, e isso importa",
+        "why": "Certo, e uma chamada azarada entre milhares pesa pouco."
+      },
+      {
+        "text": "Mantém um disjuntor para todas as dependências",
+        "why": "Continua um por dependência."
+      },
+      {
+        "text": "Não precisa de espera",
+        "why": "Ainda espera antes de testar."
+      },
+      {
+        "text": "Abre mais rápido na primeira falha",
+        "why": "Precisa de um mínimo de chamadas antes."
+      }
+    ]
+  },
+  "ex-jk0yj56s": {
+    "prompt": "Por que pôr limites de taxa na borda em vez de em cada serviço?",
+    "choices": [
+      {
+        "text": "O Redis só roda na borda",
+        "why": "O Redis roda onde for colocado."
+      },
+      {
+        "text": "Quanto mais cedo um pedido é recusado, mais barato",
+        "why": "Certo: ele nunca chega a um serviço."
+      },
+      {
+        "text": "A borda sabe do que cada serviço está precisando",
+        "why": "Só o serviço sabe; por isso o descarte fica dentro."
+      },
+      {
+        "text": "Serviços não conseguem ler cabeçalhos",
+        "why": "A bilheteria lê o X-Buyer."
+      }
+    ]
+  },
+  "ex-dx90nnxr": {
+    "prompt": "O que é uma sala de espera virtual?",
+    "choices": [
+      {
+        "text": "Um laço de novas tentativas no navegador",
+        "why": "É uma fila, não um laço."
+      },
+      {
+        "text": "Uma chave do Redis por comprador",
+        "why": "Esse é o limite de taxa."
+      },
+      {
+        "text": "Uma página mostrada enquanto o disjuntor está aberto",
+        "why": "Isso é sobre o payments, não sobre admissão."
+      },
+      {
+        "text": "Uma fila visível no lugar de uma recusa",
+        "why": "Certo: admitidos no ritmo que a bilheteria consegue atender."
+      }
+    ]
+  },
+  "ex-f8ca0na1": {
+    "prompt": "Uma abertura de vendas começa. Compradores recebem 503 em milissegundos, a contagem de erros do payments é zero, a CPU da bilheteria está cheia. Qual guarda está agindo?",
+    "choices": [
+      {
+        "text": "O descarte de carga",
+        "why": "Certo: vagas cheias, payments saudável."
+      },
+      {
+        "text": "O timeout da chamada ao payments",
+        "why": "Esse leva um segundo e responde 502."
+      },
+      {
+        "text": "O limite de taxa, que responde 503 aos robôs",
+        "why": "O limite de taxa responde 429."
+      },
+      {
+        "text": "O disjuntor, depois de cinco cobranças falhas",
+        "why": "O payments não tem erros."
+      }
+    ]
+  }
+}
