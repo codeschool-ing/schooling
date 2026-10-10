@@ -1,0 +1,621 @@
+[
+  {
+    "id": "ex-csfft85b",
+    "version": 1,
+    "section": "growth",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where does the lesson get the growth rate of `orders` from?",
+    "hint": "The database already contains its own history.",
+    "choices": [
+      {
+        "text": "From counting orders by month of `placed_at`",
+        "correct": true,
+        "why": "Right: every dated row records when it arrived."
+      },
+      {
+        "text": "From the size of the table in yesterday's backup",
+        "correct": false,
+        "why": "One backup is one snapshot; growth needs a history, which the rows already carry."
+      },
+      {
+        "text": "From a forecast written by the business",
+        "correct": false,
+        "why": "The lesson measures rather than asks."
+      },
+      {
+        "text": "From `pg_stat_statements`",
+        "correct": false,
+        "why": "It counts statements since a reset, not rows over three years."
+      }
+    ]
+  },
+  {
+    "id": "ex-k0q26hp7",
+    "version": 1,
+    "section": "growth",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The monthly counts go up by roughly the same two to three thousand orders each month. What kind of growth is that, and why does it matter?",
+    "hint": "A fixed amount against a fixed percentage.",
+    "choices": [
+      {
+        "text": "Exponential, so the disk fills in months",
+        "correct": false,
+        "why": "Exponential would curve upwards; these steps are about the same size."
+      },
+      {
+        "text": "Seasonal, so it cannot be forecast",
+        "correct": false,
+        "why": "February's dip is the short month; the trend underneath is plain."
+      },
+      {
+        "text": "Linear: a straight-line forecast works",
+        "correct": true,
+        "why": "Right: a shop growing by a percentage would need the curve instead."
+      },
+      {
+        "text": "None: the counts are random",
+        "correct": false,
+        "why": "They rise steadily month after month."
+      }
+    ]
+  },
+  {
+    "id": "ex-tmvf5p8q",
+    "version": 1,
+    "section": "growth",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is 130 bytes per order more than the five columns of an order would suggest?",
+    "hint": "What was divided by what?",
+    "choices": [
+      {
+        "text": "PostgreSQL stores numbers as text",
+        "correct": false,
+        "why": "Integers and timestamps are stored in fixed binary widths."
+      },
+      {
+        "text": "It counts indexes, row overhead and free space",
+        "correct": true,
+        "why": "Right: pg_total_relation_size divided by the rows includes all of that."
+      },
+      {
+        "text": "Because the estimate of rows is too low",
+        "correct": false,
+        "why": "reltuples for orders was exactly 2000000."
+      },
+      {
+        "text": "Because deleted orders still take space",
+        "correct": false,
+        "why": "Nothing was deleted from orders."
+      }
+    ]
+  },
+  {
+    "id": "ex-apmta9ke",
+    "version": 1,
+    "section": "growth",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A forecast of the disk is made from `orders` and `order_lines` alone. By roughly how much is it wrong on this database?",
+    "hint": "Which table grows fastest in bytes?",
+    "choices": [
+      {
+        "text": "Not at all: events are not part of the database's size",
+        "correct": false,
+        "why": "events is the largest table of all."
+      },
+      {
+        "text": "By about 10%",
+        "correct": false,
+        "why": "events add 217 MB a month against 39 for the other two."
+      },
+      {
+        "text": "By a factor of about six, because events grow more than everything else",
+        "correct": true,
+        "why": "Right: 256 MB a month in total against 39 for orders and lines."
+      },
+      {
+        "text": "By a factor of a hundred",
+        "correct": false,
+        "why": "The ratio is about 256 to 39."
+      }
+    ]
+  },
+  {
+    "id": "ex-4gzwyba4",
+    "version": 1,
+    "section": "growth",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A disk has 20 GB free and the database grows by 256 MB a month. Roughly how many months until it is full? (1 GB = 1024 MB)",
+    "hint": "Free space divided by growth.",
+    "value": 80,
+    "tolerance": 1,
+    "unit": "months"
+  },
+  {
+    "id": "ex-rft82d25",
+    "version": 1,
+    "section": "growth",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these take disk space that a forecast built from row counts does not see? Choose all that apply.",
+    "hint": "The last paragraph of the growth section.",
+    "choices": [
+      {
+        "text": "The write-ahead log",
+        "correct": true,
+        "why": "Right: it grows with the writes, not as rows."
+      },
+      {
+        "text": "Temporary files from a large sort",
+        "correct": true,
+        "why": "Right: they appear while a query runs."
+      },
+      {
+        "text": "A backup written to the same disk",
+        "correct": true,
+        "why": "Right: it grows with the database without being in it."
+      },
+      {
+        "text": "The rows of `orders`",
+        "correct": false,
+        "why": "Those are exactly what the forecast counts."
+      }
+    ]
+  },
+  {
+    "id": "ex-mxy2pvkc",
+    "version": 1,
+    "section": "headroom",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `pgbench -R 600` change about how the workload is sent?",
+    "hint": "Real users do not wait for the server to be ready.",
+    "choices": [
+      {
+        "text": "It sends 600 transactions and stops",
+        "correct": false,
+        "why": "That would be a transaction count; -R is a rate."
+      },
+      {
+        "text": "It sets a pace, as users arrive, and counts the wait",
+        "correct": true,
+        "why": "Right: when the server falls behind, the schedule lag is part of the latency."
+      },
+      {
+        "text": "It caps each transaction at 600 ms",
+        "correct": false,
+        "why": "Nothing is cut off; the rate is what is fixed."
+      },
+      {
+        "text": "It runs 600 clients",
+        "correct": false,
+        "why": "Clients are -c; the run used eight."
+      }
+    ]
+  },
+  {
+    "id": "ex-2cg796dd",
+    "version": 1,
+    "section": "headroom",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At 1050 transactions a second the server delivered `tps = 1042` with an average latency of 133 ms. What happened?",
+    "hint": "It did not fail.",
+    "choices": [
+      {
+        "text": "It kept up by making everybody queue",
+        "correct": true,
+        "why": "Right: the rate was met, and the price was waiting."
+      },
+      {
+        "text": "It dropped the transactions it could not handle",
+        "correct": false,
+        "why": "No transaction failed; they waited."
+      },
+      {
+        "text": "The disk filled during the run",
+        "correct": false,
+        "why": "Nothing in the run points at the disk; the latency grew with the rate."
+      },
+      {
+        "text": "pgbench mismeasured, because 1050 is above the maximum",
+        "correct": false,
+        "why": "1050 is below the measured maximum of 1099."
+      }
+    ]
+  },
+  {
+    "id": "ex-astkfnjt",
+    "version": 1,
+    "section": "headroom",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The server's maximum is 1100 transactions a second. Your manager asks to run it at 1000, \"since we still have 10% headroom\". What does the lesson's measurement say about that?",
+    "hint": "Read the percentiles, not the average.",
+    "choices": [
+      {
+        "text": "It is fine: 10% is the usual safety margin",
+        "correct": false,
+        "why": "At 1000 the slowest users already waited over half a second."
+      },
+      {
+        "text": "Past the knee: p99 was 621 ms",
+        "correct": true,
+        "why": "Right: headroom is distance from the knee, not from the maximum."
+      },
+      {
+        "text": "It will fail with errors above 1000",
+        "correct": false,
+        "why": "It did not fail at 1050; it queued."
+      },
+      {
+        "text": "The average of 62 ms is acceptable, so yes",
+        "correct": false,
+        "why": "62 ms was the median; the tail is what users complain about."
+      }
+    ]
+  },
+  {
+    "id": "ex-zrcfdpfm",
+    "version": 1,
+    "section": "headroom",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In the rated runs, what was the average latency, in milliseconds, at 900 transactions a second? Round to the nearest whole number.",
+    "hint": "The third rated run.",
+    "value": 29,
+    "tolerance": 1,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-88gd407q",
+    "version": 1,
+    "section": "headroom",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The point on the curve where the latency stops growing slowly and starts growing fast is called the ___.",
+    "hint": "A joint of the leg.",
+    "blanks": [
+      {
+        "accept": [
+          "knee"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-r4m62nn0",
+    "version": 1,
+    "section": "headroom",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At 600 a second the median transaction took 0.7 ms and the 99th percentile 93.5 ms. What does the gap say?",
+    "hint": "The queue does not delay everybody equally.",
+    "choices": [
+      {
+        "text": "The log file was corrupted during the run",
+        "correct": false,
+        "why": "The numbers are consistent with a mix of cheap and expensive queries."
+      },
+      {
+        "text": "Half the workload failed",
+        "correct": false,
+        "why": "No transaction failed in these runs."
+      },
+      {
+        "text": "A few wait behind slow ones",
+        "correct": true,
+        "why": "Right: the average hides the people who waited."
+      },
+      {
+        "text": "The server is out of disk",
+        "correct": false,
+        "why": "Disk space has nothing to do with this spread."
+      }
+    ]
+  },
+  {
+    "id": "ex-2bxpnj8y",
+    "version": 1,
+    "section": "the-walls",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What happens to a client that asks for a connection when `max_connections` are already in use?",
+    "hint": "Refused or queued?",
+    "choices": [
+      {
+        "text": "It waits until one is free",
+        "correct": false,
+        "why": "The server keeps no queue for connections."
+      },
+      {
+        "text": "It is refused with an error",
+        "correct": true,
+        "why": "Right: lesson 16 shows the error and what to do instead."
+      },
+      {
+        "text": "The oldest connection is closed to make room",
+        "correct": false,
+        "why": "Nothing is closed to make room."
+      },
+      {
+        "text": "The server raises the limit automatically",
+        "correct": false,
+        "why": "max_connections is fixed at start-up."
+      }
+    ]
+  },
+  {
+    "id": "ex-fdbefww2",
+    "version": 1,
+    "section": "the-walls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A table with a few thousand rows has an `integer` key whose sequence is near 2147483647. How is that possible?",
+    "hint": "Does a sequence give numbers back?",
+    "choices": [
+      {
+        "text": "The sequence counts bytes, not rows",
+        "correct": false,
+        "why": "It hands out one number per call."
+      },
+      {
+        "text": "Somebody set the sequence by hand to a high value",
+        "correct": false,
+        "why": "Possible, but the lesson names a reason that needs nobody's mistake."
+      },
+      {
+        "text": "Deletes and rollbacks spent numbers too",
+        "correct": true,
+        "why": "Right: a sequence never gives a number back."
+      },
+      {
+        "text": "`integer` sequences count by two",
+        "correct": false,
+        "why": "They count by one unless told otherwise."
+      }
+    ]
+  },
+  {
+    "id": "ex-g3dkgs1p",
+    "version": 1,
+    "section": "the-walls",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson call the transaction counter \"the wall that almost never arrives\"?",
+    "hint": "Who is built to prevent it?",
+    "choices": [
+      {
+        "text": "Autovacuum freezes rows before it wraps",
+        "correct": true,
+        "why": "Right: it arrives only when something stops VACUUM from freezing."
+      },
+      {
+        "text": "Because the counter is 64 bits",
+        "correct": false,
+        "why": "It is 32 bits, which is why it wraps after about four billion."
+      },
+      {
+        "text": "Because a restart of the server resets it to zero",
+        "correct": false,
+        "why": "A restart changes nothing about transaction ids."
+      },
+      {
+        "text": "Because only replicas have one",
+        "correct": false,
+        "why": "Every server has it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2evxgthc",
+    "version": 1,
+    "section": "the-walls",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each wall to how it shows up when it is reached.",
+    "hint": "Some refuse, some fail one statement.",
+    "pairs": [
+      {
+        "left": "connections",
+        "right": "a new client is refused"
+      },
+      {
+        "left": "an `integer` column",
+        "right": "the INSERT that crossed it fails"
+      },
+      {
+        "left": "the transaction counter",
+        "right": "new transactions are refused until a vacuum catches up"
+      },
+      {
+        "left": "the disk",
+        "right": "writes stop being accepted"
+      }
+    ],
+    "right_distractors": [
+      "queries get slower, gradually"
+    ]
+  },
+  {
+    "id": "ex-g3m00xex",
+    "version": 1,
+    "section": "the-walls",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why does the lesson suggest alerting on an `integer` sequence a year before it runs out?",
+    "hint": "How long does the fix take?",
+    "choices": [
+      {
+        "text": "Sequences slow down gradually as they get close to the limit",
+        "correct": false,
+        "why": "They do not; they stop."
+      },
+      {
+        "text": "The fix rewrites the table; it needs planning and a window",
+        "correct": true,
+        "why": "Right: the alert must leave time for a calm migration."
+      },
+      {
+        "text": "Because the law requires a year's notice",
+        "correct": false,
+        "why": "No law is involved."
+      },
+      {
+        "text": "Because autovacuum resets sequences once a year",
+        "correct": false,
+        "why": "Autovacuum never touches sequences."
+      }
+    ]
+  },
+  {
+    "id": "ex-rqz874ks",
+    "version": 1,
+    "section": "alerts",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the lesson say an alert should measure, instead of a percentage?",
+    "hint": "A distance divided by a speed.",
+    "choices": [
+      {
+        "text": "The time left before the wall",
+        "correct": true,
+        "why": "Right: how far from the limit, divided by how fast it is approaching."
+      },
+      {
+        "text": "The absolute size of the database in gigabytes",
+        "correct": false,
+        "why": "A size says nothing about when it will matter."
+      },
+      {
+        "text": "The number of alerts already sent today",
+        "correct": false,
+        "why": "That measures the alerting, not the database."
+      },
+      {
+        "text": "The average query time across the whole application",
+        "correct": false,
+        "why": "An average hides the slow tail and says nothing about walls."
+      }
+    ]
+  },
+  {
+    "id": "ex-44nyesz3",
+    "version": 1,
+    "section": "alerts",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of turning `capacity.sql` into an alert in order.",
+    "hint": "A snapshot, then a trend, then a threshold.",
+    "items": [
+      "Run capacity.sql on a schedule",
+      "Keep each run's rows somewhere else",
+      "Compute each wall's growth per day from two runs",
+      "Divide what is left by that growth",
+      "Fire when the time left is under the fix's duration plus a margin"
+    ],
+    "trap": "A trend needs two kept snapshots; the threshold comes last because it depends on the time left."
+  },
+  {
+    "id": "ex-kagkpws9",
+    "version": 1,
+    "section": "alerts",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A disk has 90 GB left and grows by 3 GB a day. Ordering and attaching a bigger disk takes two weeks. How many days of margin are left beyond the fix's two weeks?",
+    "hint": "Time left minus the fix.",
+    "value": 16,
+    "tolerance": 0,
+    "unit": "days"
+  },
+  {
+    "id": "ex-9mmj9vv6",
+    "version": 1,
+    "section": "alerts",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A query took 10 ms yesterday and 40 ms today; nothing is near any wall. Should it raise an alert?",
+    "hint": "Level against change.",
+    "choices": [
+      {
+        "text": "No: 40 ms is fast",
+        "correct": false,
+        "why": "The level is fine; the change is the signal."
+      },
+      {
+        "text": "No: alerts are only for walls",
+        "correct": false,
+        "why": "The lesson names two alerts that are not about walls."
+      },
+      {
+        "text": "Yes: a fourfold change is the first sign of stale statistics or a plan outgrown",
+        "correct": true,
+        "why": "Right: alert on change as well as level."
+      },
+      {
+        "text": "Yes, but only if the disk is above 80%",
+        "correct": false,
+        "why": "The disk has nothing to do with this query's change."
+      }
+    ]
+  },
+  {
+    "id": "ex-99378680",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The database holds 400 GB on a 1 TB disk and grows by 5 GB a week; a second server's disk is 70% full after five years of slow growth. Which needs attention first?",
+    "hint": "Time left, not percentage.",
+    "choices": [
+      {
+        "text": "The second: 70% is higher than 40%",
+        "correct": false,
+        "why": "Five years to reach 70% leaves years more."
+      },
+      {
+        "text": "Neither: both are under 80%",
+        "correct": false,
+        "why": "A percentage threshold is the alert the lesson argues against."
+      },
+      {
+        "text": "The first: about 120 weeks left",
+        "correct": true,
+        "why": "Right: 600 GB at 5 GB a week is about 120 weeks; still calm, but the nearer of the two."
+      },
+      {
+        "text": "Both equally, because both will fill",
+        "correct": false,
+        "why": "Equal urgency ignores the rates."
+      }
+    ]
+  }
+]

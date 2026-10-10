@@ -1,0 +1,373 @@
+{
+  "ex-yqyym8t1": {
+    "prompt": "Antes do índice novo, por que o plano dos últimos dez pedidos de um cliente tinha um `Sort`?",
+    "hint": "Em que ordem o `orders_customer_id_idx` entrega as linhas?",
+    "choices": [
+      {
+        "text": "Ele as entrega por cliente, não por tempo",
+        "why": "Isso: as linhas tinham de ser ordenadas por placed_at depois para pegar as dez mais novas."
+      },
+      {
+        "text": "Porque LIMIT sempre força uma ordenação, sejam quais forem os índices",
+        "why": "Depois do índice novo o plano tinha LIMIT e nenhum Sort."
+      },
+      {
+        "text": "A tabela não tinha passado por vacuum",
+        "why": "O vacuum não muda a ordem em que um índice devolve linhas."
+      },
+      {
+        "text": "O planejador o escolheu porque as estatísticas estavam velhas e errou quantas linhas o cliente tinha",
+        "why": "Estimou 11 e achou 10; o sort estava lá por causa da ordem, não de um erro de estimativa."
+      }
+    ]
+  },
+  "ex-nns5fjm3": {
+    "prompt": "Por que a aula roda o antes três vezes, trinta segundos cada, em vez de uma?",
+    "hint": "Aula 1 seção 06.",
+    "choices": [
+      {
+        "text": "Porque o pgbench recusa execuções de menos de noventa segundos",
+        "why": "Ele roda pelo que o -T disser."
+      },
+      {
+        "text": "Para ver o ruído",
+        "why": "Isso: três execuções de um banco sem mudança são três números, e o espalhamento deles é o ruído."
+      },
+      {
+        "text": "Para aquecer o cache antes de criar o índice",
+        "why": "Aquecer é efeito colateral; o motivo é medir o espalhamento."
+      },
+      {
+        "text": "Porque o placar só conta depois de três execuções terminarem",
+        "why": "O placar conta desde a primeira chamada."
+      }
+    ]
+  },
+  "ex-ef8cmh05": {
+    "prompt": "Pela conta do servidor, quantos milissegundos por chamada o índice novo economizou? Use as duas médias, 0,107 e 0,089.",
+    "hint": "Subtraia.",
+    "unit": "ms"
+  },
+  "ex-6z3785fa": {
+    "prompt": "Depois do índice, o plano não tem `Sort` e a execução foi de 0,261 para 0,194 ms. O que mais mudou no plano?",
+    "hint": "Conte os buffers.",
+    "choices": [
+      {
+        "text": "A varredura para em dez linhas e toca 13 buffers em vez de 16",
+        "why": "Isso: as linhas saem em ordem, então dez bastam."
+      },
+      {
+        "text": "Lê a tabela inteira",
+        "why": "Lê dez linhas pelo índice novo."
+      },
+      {
+        "text": "Usa os dois índices juntos num bitmap",
+        "why": "Usa um Index Scan no índice novo."
+      },
+      {
+        "text": "Virou um plano paralelo",
+        "why": "Nenhum worker paralelo aparece."
+      }
+    ]
+  },
+  "ex-g34njnnq": {
+    "prompt": "A latência de customer-orders variou de 0,836 a 0,857 ms antes e de 0,794 a 0,800 ms depois. O que a aula conclui?",
+    "hint": "As faixas se sobrepõem?",
+    "choices": [
+      {
+        "text": "A mudança é real",
+        "why": "Isso: o pior depois é melhor que o melhor antes."
+      },
+      {
+        "text": "Nada, porque três execuções não provam nada sobre mudança alguma",
+        "why": "Três execuções cujas faixas não se sobrepõem são o mais perto de prova que a regra permite."
+      },
+      {
+        "text": "A mudança a deixou mais lenta",
+        "why": "Os números do depois são menores."
+      },
+      {
+        "text": "A diferença é ruído, já que é menor que um milissegundo",
+        "why": "Tamanho não é o teste; a sobreposição com o espalhamento entre execuções é."
+      }
+    ]
+  },
+  "ex-kkc1n5d3": {
+    "prompt": "A latência de place-order foi de 8,156 a 8,794 ms antes e de 8,212 a 8,357 ms depois. O que se pode dizer do custo do índice novo nas escritas?",
+    "hint": "\"Não demonstrado\" não é \"zero\".",
+    "choices": [
+      {
+        "text": "Não custa nada nas escritas",
+        "why": "A medida é grossa demais para mostrar, o que é diferente de mostrar que é zero."
+      },
+      {
+        "text": "Deixou as escritas mais rápidas",
+        "why": "O depois cabe dentro da faixa do antes; nada se conclui."
+      },
+      {
+        "text": "Não demonstrado: some no ruído",
+        "why": "Isso: é preciso outra medida, e a próxima seção a usa."
+      },
+      {
+        "text": "Dobrou o custo de cada escrita, escondido pelo cache",
+        "why": "Um dobro ficaria muito fora da faixa."
+      }
+    ]
+  },
+  "ex-s11139fx": {
+    "prompt": "Escolhendo a execução do antes de 1134 transações por segundo e a do depois de 1200, que percentual de vazão a mais a mudança parece dar? Arredonde para o inteiro mais próximo.",
+    "hint": "(1200 − 1134) ÷ 1134.",
+    "unit": "%"
+  },
+  "ex-3wfv1bjs": {
+    "prompt": "Ponha em ordem a regra da aula para chamar uma mudança de real.",
+    "hint": "A resposta \"não demonstrado\" é permitida.",
+    "items": [
+      "Rodar o antes pelo menos três vezes",
+      "Fazer a mudança",
+      "Rodar o depois do mesmo jeito, pelo menos três vezes",
+      "Comparar as duas faixas",
+      "Chamá-la de real só se não se sobrepuserem"
+    ],
+    "trap": "O antes tem de existir antes da mudança; o veredicto precisa das duas faixas."
+  },
+  "ex-t3hfh7rp": {
+    "prompt": "O índice novo tem 60 MB e o de `customer_id` sozinho tem 18 MB, embora acrescente só uma coluna de 8 bytes. Por quê?",
+    "hint": "Quantos pedidos cada cliente tem?",
+    "choices": [
+      {
+        "text": "O índice antigo compartilha valores repetidos; as chaves novas são únicas",
+        "why": "Isso: um valor que se repete é guardado uma vez com uma lista; cliente e momento juntos nunca se repetem."
+      },
+      {
+        "text": "Índices DESC são guardados duas vezes",
+        "why": "Um índice decrescente é guardado uma vez, na outra ordem."
+      },
+      {
+        "text": "Porque timestamps são guardados como textos longos",
+        "why": "timestamptz são 8 bytes binários."
+      },
+      {
+        "text": "Porque o índice novo também guarda total_cents e status de cada pedido",
+        "why": "Só customer_id e placed_at estão nele."
+      }
+    ]
+  },
+  "ex-w8f52yrg": {
+    "prompt": "Onde se pagam os 60 MB do índice novo? Marque todos os que se aplicam.",
+    "hint": "Três lugares.",
+    "choices": [
+      {
+        "text": "No disco",
+        "why": "Certo."
+      },
+      {
+        "text": "Em cada backup",
+        "why": "Certo."
+      },
+      {
+        "text": "Na memória, disputando com as tabelas",
+        "why": "Certo: shared_buffers e o cache do sistema operacional."
+      },
+      {
+        "text": "Na tabela de comandos do pg_stat_statements",
+        "why": "O placar guarda comandos, não índices."
+      }
+    ]
+  },
+  "ex-74wvgh9q": {
+    "prompt": "Por que a aula conta \"pessoas\" como custo de um índice?",
+    "hint": "A aula 11 encontrou o resultado depois de três anos.",
+    "choices": [
+      {
+        "text": "Cada índice precisa de uma licença por desenvolvedor",
+        "why": "O PostgreSQL não tem licença assim."
+      },
+      {
+        "text": "Porque alguém tem de reconstruir cada índice à mão toda noite",
+        "why": "Índices são mantidos automaticamente conforme as linhas mudam."
+      },
+      {
+        "text": "A próxima pessoa precisa entendê-lo antes de mudar a tabela",
+        "why": "Isso: um índice sem registro de por que existe é um que ninguém ousa remover."
+      },
+      {
+        "text": "Porque usuários notam cada índice novo na tela",
+        "why": "Ninguém vê um índice na tela."
+      }
+    ]
+  },
+  "ex-stwbn6t1": {
+    "prompt": "Cada pessoa que abre a lista de pedidos economiza 0,046 ms. Por que a aula diz que ninguém vê isso?",
+    "hint": "Que demora uma pessoa percebe?",
+    "choices": [
+      {
+        "text": "É duas mil vezes menor do que uma pessoa percebe",
+        "why": "Isso: pessoas percebem por volta de um décimo de segundo."
+      },
+      {
+        "text": "Porque o navegador arredonda todos os tempos para milissegundos inteiros",
+        "why": "Arredondamento não é o motivo; o tamanho é."
+      },
+      {
+        "text": "A página está em cache",
+        "why": "As leituras da carga vão ao banco toda vez."
+      },
+      {
+        "text": "Porque o pgbench mede algo que usuários nunca vivem",
+        "why": "A latência do pgbench é o mais perto da espera de um usuário que este laboratório tem."
+      }
+    ]
+  },
+  "ex-mc2nnw0w": {
+    "prompt": "Um comando roda 200 vezes por segundo e uma mudança economiza 0,5 ms por chamada. Quantos milissegundos de servidor ela economiza por segundo?",
+    "hint": "Chamadas vezes economia.",
+    "unit": "ms"
+  },
+  "ex-p3gq67kv": {
+    "prompt": "O índice de seller_id economizou cerca de 870 ms de servidor por segundo e o de customer-orders cerca de 10 ms. Os dois eram uma linha de `CREATE INDEX`. O que fez a diferença?",
+    "hint": "Economia por chamada vezes chamadas.",
+    "choices": [
+      {
+        "text": "O índice do vendedor está numa tabela menor",
+        "why": "Os dois estão em orders."
+      },
+      {
+        "text": "A economia por chamada: 24 ms contra 0,018",
+        "why": "Isso: mesmo a 36 chamadas por segundo contra 575, a economia maior por chamada vence."
+      },
+      {
+        "text": "O índice do vendedor foi criado primeiro, então ficou com a memória",
+        "why": "A ordem de criação não decide o que um índice economiza."
+      },
+      {
+        "text": "Porque o pg_stat_statements conta painéis em dobro",
+        "why": "Todo comando é contado uma vez por chamada."
+      }
+    ]
+  },
+  "ex-6adq0zkp": {
+    "prompt": "Em que versão deste banco manter o índice novo seria a decisão certa?",
+    "hint": "A conta é a mesma; os números mudam.",
+    "choices": [
+      {
+        "text": "Uma em que a lista do cliente lidera o placar e o servidor está perto do joelho",
+        "why": "Isso: aí a economia é grande no total e o tempo de processador é escasso."
+      },
+      {
+        "text": "Qualquer uma, já que uma consulta mais rápida é sempre melhor",
+        "why": "O ponto da aula é que mais rápido não vale automaticamente o que custa."
+      },
+      {
+        "text": "Uma com mais disco livre",
+        "why": "Disco é um custo; o benefício ainda tem de ser grande o bastante."
+      },
+      {
+        "text": "Uma em que a busca por etiqueta já foi consertada pelo índice da aula 8",
+        "why": "Isso deixa a lista do cliente relativamente maior, mas não vale 60 MB por si só."
+      }
+    ]
+  },
+  "ex-93pj0s2h": {
+    "prompt": "Por que rodar o `pg_get_indexdef` antes de apagar o índice?",
+    "hint": "Alguém pode precisar dele de volta.",
+    "choices": [
+      {
+        "text": "Para guardar o comando exato que o reconstrói",
+        "why": "Isso: um índice apagado sem a definição não volta depressa."
+      },
+      {
+        "text": "O DROP INDEX se recusa a rodar sem ele",
+        "why": "O DROP INDEX só precisa do nome."
+      },
+      {
+        "text": "Libera a memória que o índice usava",
+        "why": "Ele só imprime uma definição."
+      },
+      {
+        "text": "Faz o DROP acontecer concorrentemente, sem bloquear escritas",
+        "why": "Isso é o DROP INDEX CONCURRENTLY."
+      }
+    ]
+  },
+  "ex-k25nxywt": {
+    "prompt": "A linha do registro de mudança que as pessoas deixam de fora, e a que torna o resultado conferível, é a linha ___.",
+    "hint": "Como os números foram obtidos.",
+    "blanks": [
+      {
+        "accept": [
+          "medida"
+        ]
+      }
+    ]
+  },
+  "ex-cxg5ycv6": {
+    "prompt": "Ligue cada linha do registro de mudança ao que ela guarda.",
+    "hint": "Seis linhas.",
+    "pairs": [
+      {
+        "left": "mudança",
+        "right": "o comando exato, do pg_get_indexdef"
+      },
+      {
+        "left": "medida",
+        "right": "a carga, as execuções e o reset entre elas"
+      },
+      {
+        "left": "custo",
+        "right": "o espaço e o trabalho a mais nas escritas"
+      },
+      {
+        "left": "decisão",
+        "right": "o que se fez, e os números em que se apoia"
+      }
+    ],
+    "right_distractors": [
+      "o nome de quem propôs"
+    ]
+  },
+  "ex-bxhzavv5": {
+    "prompt": "Apagar o índice levou 76 ms com uma trava `ACCESS EXCLUSIVE`. Numa tabela movimentada, para o que a aula aponta?",
+    "hint": "Uma forma do DROP INDEX.",
+    "choices": [
+      {
+        "text": "Apagá-lo à noite, quando não há ninguém para notar a trava",
+        "why": "Noite é horário, não um jeito de evitar a trava."
+      },
+      {
+        "text": "`DROP INDEX CONCURRENTLY`",
+        "why": "Isso: não bloqueia escritas, ao preço de demorar mais."
+      },
+      {
+        "text": "Truncar a tabela antes",
+        "why": "Isso apaga todos os pedidos."
+      },
+      {
+        "text": "Reiniciar o servidor para que a trava não seja necessária",
+        "why": "Um reinício é uma parada, não um jeito de contornar uma trava."
+      }
+    ]
+  },
+  "ex-4wsrxebh": {
+    "prompt": "Um colega mostra uma execução antes a 950 transações por segundo e uma depois a 1010, e chama o índice dele de ganho de 6%. O que você pede primeiro?",
+    "hint": "Os próprios dados desta aula tiveram um \"ganho\" de 6% entre duas execuções.",
+    "choices": [
+      {
+        "text": "O tamanho do índice",
+        "why": "Custo importa, mas primeiro descubra se há algum ganho."
+      },
+      {
+        "text": "Mais execuções de cada, para comparar as faixas",
+        "why": "Isso: uma execução de cada não separa ganho de ruído."
+      },
+      {
+        "text": "Um servidor maior, para ver se o ganho cresce junto",
+        "why": "Isso muda duas coisas de uma vez."
+      },
+      {
+        "text": "Nada mais: 6% é uma grande melhora para um índice",
+        "why": "Nesta aula, duas execuções do mesmo banco diferiram 6%."
+      }
+    ]
+  }
+}
