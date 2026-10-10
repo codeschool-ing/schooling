@@ -53,7 +53,7 @@ Compare duas versões da conclusão da Lívia:
 | | a frase |
 |---|---|
 | afirma demais | "Outubro caiu porque a campanha foi para novembro." |
-| honesta | "A queda de outubro está só nos pedidos online, com o tíquete igual, e bate com os onze dias de campanha de outubro de 2024; os dias comuns cresceram 12,4%. Conferimos calendário, preços, estoque e o pipeline de dados, e nada disso mudou. Outubro e novembro juntos cresceram 3,9%, abaixo dos 5,7% do ano, e essa diferença ainda não está explicada." |
+| honesta | "A queda de outubro está só nos pedidos online, com o tíquete igual, e bate com os onze dias de campanha de outubro de 2024; os dias comuns cresceram 13,1%. Conferimos calendário, preços, estoque e o pipeline de dados, e nada disso mudou. Outubro e novembro juntos cresceram 3,9%, abaixo dos 5,7% do ano, e essa diferença ainda não está explicada." |
 
 A segunda é mais longa e é a que a Helena consegue usar. Ela diz **o que foi encontrado, com o que
 isso é compatível, o que foi conferido e descartado, e o que continua em aberto**. "Compatível com"

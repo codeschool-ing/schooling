@@ -3,7 +3,7 @@ title: Listing the suspects
 version: 1
 ---
 
-By now the question is narrow: why were 580 fewer online orders paid in October 2025 than in
+By now the question is narrow: why were 828 fewer online orders paid in October 2025 than in
 October 2024, at the same average ticket? A narrow question still has several possible answers,
 and the habit that separates a diagnosis from a story is **writing all of them down before testing
 any**. The first explanation somebody likes tends to be the last one anybody checks.
@@ -16,9 +16,9 @@ evidence that bears on each:
 | suspect | what would show it | what Varanda's data said |
 |---|---|---|
 | the calendar | fewer weekend days or a holiday on a weekday | 8 weekend days in both Octobers; the 12 October holiday fell on a weekend both years |
-| prices | a different average ticket | R$ 500 in both Octobers |
+| prices | a different average ticket | R$ 350 in both Octobers |
 | stock | best-sellers out of stock on the site | no product in the online top 20 out of stock for more than a day |
-| the data itself | the site's own count of orders disagreeing with the database's | both say 2,160 paid orders |
+| the data itself | the site's own count of orders disagreeing with the database's | both say 3,086 paid orders |
 | campaigns | a campaign in one October and not the other | the yearly online campaign ran 21–31 October 2024, and 3–13 November 2025 |
 
 **The data itself is on the list on purpose.** A pipeline that stops copying orders for three days
@@ -40,20 +40,20 @@ campaign days. Type the orders in a small table:
 | | A | B | C |
 |---|---|---|---|
 | 1 | | days | orders |
-| 2 | Oct 2024, 1–20, no campaign | 20 | 1240 |
-| 3 | Oct 2024, 21–31, campaign | 11 | 1500 |
-| 4 | Oct 2025, 1–31, no campaign | 31 | 2160 |
+| 2 | Oct 2024, 1–20, no campaign | 20 | 1760 |
+| 3 | Oct 2024, 21–31, campaign | 11 | 2154 |
+| 4 | Oct 2025, 1–31, no campaign | 31 | 3086 |
 
 and divide each by its days:
 
 ```localised
-=ROUND(C2/B2,1)      62
-=ROUND(C3/B3,1)      136.4
-=ROUND(C4/B4,1)      69.7
+=ROUND(C2/B2,1)      88
+=ROUND(C3/B3,1)      195.8
+=ROUND(C4/B4,1)      99.5
 ```
 
-October 2025's ordinary days averaged 69.7 orders, 12.4% more than the 62 of October 2024's
-ordinary days. The campaign days of 2024 averaged 136.4. **October 2025 did not lose customers; it
+October 2025's ordinary days averaged 99.5 orders, 13.1% more than the 88 of October 2024's
+ordinary days. The campaign days of 2024 averaged 195.8. **October 2025 did not lose customers; it
 lost eleven campaign days.**
 
 **Second, by putting October and November together.** If the campaign only moved, what October lost

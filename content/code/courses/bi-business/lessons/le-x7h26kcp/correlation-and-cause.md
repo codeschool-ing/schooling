@@ -50,7 +50,7 @@ Compare two versions of Lívia's finding:
 | | the sentence |
 |---|---|
 | overclaims | "October fell because the campaign moved to November." |
-| honest | "October's fall is in online orders only, at an unchanged ticket, and it matches the eleven campaign days of October 2024; ordinary days grew 12.4%. We checked the calendar, prices, stock and the data pipeline, and none changed. October and November together grew 3.9%, below the year's 5.7%, and that gap is not yet explained." |
+| honest | "October's fall is in online orders only, at an unchanged ticket, and it matches the eleven campaign days of October 2024; ordinary days grew 13.1%. We checked the calendar, prices, stock and the data pipeline, and none changed. October and November together grew 3.9%, below the year's 5.7%, and that gap is not yet explained." |
 
 The second is longer and it is the one Helena can act on. It says **what was found, what it is
 consistent with, what was checked and ruled out, and what is still open**. "Consistent with" is not
