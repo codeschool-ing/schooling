@@ -8,6 +8,8 @@
 #   put NAME              a file the student saved in ~/work, from stdin (shown in the lesson)
 #   block NAME            a marker between transcripts; the lesson quotes one block per fence
 set -uo pipefail
+# One lab, several authors: a capture holds the lab for as long as it runs.
+exec 9>/var/tmp/lab.lock; flock 9
 export TZ=America/Sao_Paulo LC_ALL=C.UTF-8
 LAB_SH=${LAB_SH:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/lab.sh}
 lab() { bash "$LAB_SH" "$@"; }

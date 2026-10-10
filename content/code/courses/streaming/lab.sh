@@ -10,6 +10,7 @@
 # extracts every one of them. Nothing here is a second copy of any of it.
 #
 #   sudo bash lab.sh tools          once: a fresh ~ubuntu, then every install section
+#   sudo bash lab.sh install LESSON SECTION.md   one install section, nothing else
 #   sudo bash lab.sh files          the student's programs, from the lessons, into ~/work
 #   sudo bash lab.sh reset [1|3]    nothing running, a new cluster of N nodes, started
 #   sudo bash lab.sh run 'command'  as ubuntu, in ~/work, in a login shell
@@ -31,6 +32,11 @@ export TZ=America/Sao_Paulo
 # The sections whose `sh` fences install software, in the order a student meets them.
 TOOLS="
 le-pqqt0zyx your-lab.md
+le-94k5phwh installing-a-registry.md
+le-2hfcpm40 installing-spark.md
+le-wc22exj7 installing-flink.md
+le-504hnm11 installing-debezium.md
+le-djz1b49h installing-rabbitmq.md
 "
 
 as_ubuntu() { runuser -u ubuntu -- env -i HOME=$U USER=ubuntu LOGNAME=ubuntu TERM=dumb TZ=$TZ LC_ALL=C.UTF-8 \
@@ -86,11 +92,18 @@ case "${1:-}" in
     rm -rf $U/kafka $U/venv $U/work $U/kafka-data $U/kafka_2.13-* $U/.cache
     cp /etc/skel/.profile $U/.profile && chown ubuntu:ubuntu $U/.profile
     for entry in $(echo "$TOOLS" | awk 'NF{print $1"/"$2}'); do
+      [ -f "$L/$entry" ] || continue
       while IFS= read -r -d '' body; do
         echo "== $entry"; as_ubuntu "cd ~ && set -e
 $body"
       done < <(fences "$L/$entry")
     done ;;
+  install)
+    # install LESSON SECTION.md: one install section, without touching anything else.
+    while IFS= read -r -d '' body; do
+      echo "== $2/$3"; as_ubuntu "cd ~ && set -e
+$body"
+    done < <(fences "$L/$2/$3") ;;
   files) files ;;
   reset)
     n=${2:-1}

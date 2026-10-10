@@ -8,7 +8,8 @@ If the mapping is lost, ids are recovered from the existing JSON by prompt.
 import json, os, subprocess, sys
 spec, outdir = sys.argv[1], sys.argv[2]
 exam = "--exam" in sys.argv
-IDS = "/var/tmp/lab/exids.json"
+os.makedirs("/var/tmp/lab/exids", exist_ok=True)
+IDS = "/var/tmp/lab/exids/" + os.path.basename(spec) + (".exam" if exam else "") + ".json"
 ids = json.load(open(IDS)) if os.path.exists(IDS) else {}
 base = "exam" if exam else "exercises"
 old = {}
