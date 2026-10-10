@@ -19,7 +19,7 @@ def grid():
         'informado: Marcos e os gerentes de loja, com Bruno Teixeira. Embaixo à esquerda, '
         'monitorar: Renata Sá e as transportadoras. Uma seta leva os gerentes de loja para cima e '
         'para a direita, com a legenda: quando o bônus deles depender disso.'))
-    L, T, W, H = 70, 20, 300, 190      # each quadrant
+    L, T, W, H = 110, 20, 280, 190      # each quadrant
     quads = [
         (L, T, ('keep satisfied', 'manter satisfeito'), '--amber',
          [('Helena Prado, CEO', 'Helena Prado, CEO'), ('Otávio Lins, CFO', 'Otávio Lins, CFO')]),
@@ -38,13 +38,14 @@ def grid():
         for k, n in enumerate(names):
             f.text(x + 16, y + 62 + 26 * k, n, size=12)
     # the move
-    f.arrow(L + W + 160, T + H + 136, L + W + 200, T + H - 40, stroke='--amber', sw=2)
-    f.text(L + W + 206, T + H - 6, ('once their bonus', 'quando o bônus deles'), size=11,
+    f.arrow(L + W + 200, T + H + 120, L + W + 240, T + H - 40, stroke='--amber', sw=2)
+    f.text(L + W + 26, T + H + 150, ('moves up once their', 'sobem quando o bônus'), size=11,
            fill='--paper-dim')
-    f.text(L + W + 206, T + H + 8, ('depends on it', 'depender disso'), size=11, fill='--paper-dim')
+    f.text(L + W + 26, T + H + 164, ('bonus depends on it', 'deles depender disso'), size=11,
+           fill='--paper-dim')
     # axes
-    f.arrow(40, T + 2 * H + 10, 40, T, stroke='--paper-dim')
-    f.text(30, T + H + 5, ('power', 'poder'), size=12, anchor='end', fill='--paper-dim')
+    f.arrow(80, T + 2 * H + 10, 80, T, stroke='--paper-dim')
+    f.text(72, T + H + 5, ('power', 'poder'), size=12, anchor='end', fill='--paper-dim')
     f.arrow(L, T + 2 * H + 30, L + 2 * W + 10, T + 2 * H + 30, stroke='--paper-dim')
     f.text(L + W + 5, T + 2 * H + 50, ('interest', 'interesse'), size=12, anchor='middle',
            fill='--paper-dim')
@@ -89,7 +90,7 @@ def four_views():
     py = [y + 140 - (v - 74) * 5 for v in pts]
     f.path('M' + ' L'.join(f'{a:.1f} {b:.1f}' for a, b in zip(px, py)), stroke='--phosphor', sw=2)
     f.line(x + 176, y + 140 - 11 * 5, x + 300, y + 140 - 11 * 5, stroke='--amber', sw=1, dash='4 3')
-    f.text(x + 300, y + 140 - 11 * 5 - 6, ('goal', 'objetivo'), size=11, anchor='end', fill='--paper-dim')
+    f.text(x + 176, y + 140 - 11 * 5 - 6, ('goal 85', 'objetivo 85'), size=11, fill='--paper-dim')
     f.text(x + 180, y + 160, ('Feb', 'fev'), size=11, fill='--paper-dim')
     f.text(x + 292, y + 160, ('May', 'mai'), size=11, anchor='end', fill='--paper-dim')
     # Caio: bars by region against the threshold
@@ -100,9 +101,9 @@ def four_views():
         by = y + 60 + 24 * k
         f.text(x + 14, by + 12, name, size=11)
         f.bar(x + 110, by, (v - 60) * 6, 14, fill='--amber' if v < 76 else '--phosphor')
-        f.text(x + 116 + (v - 60) * 6, by + 12, str(v), size=11)
-    f.line(x + 110 + 16 * 6, y + 54, x + 110 + 16 * 6, y + 160, stroke='--paper-dim', sw=1, dash='4 3')
-    f.text(x + 112 + 16 * 6, y + 170, ('threshold 76', 'limite 76'), size=11, fill='--paper-dim')
+        f.text(x + 120 + (v - 60) * 6 + (8 if v < 80 else 0), by + 12, str(v), size=11)
+    f.line(x + 110 + 16 * 6, y + 54, x + 110 + 16 * 6, y + 150, stroke='--paper-dim', sw=1, dash='4 3')
+    f.text(x + 112 + 16 * 6, y + 162, ('threshold 76', 'limite 76'), size=11, fill='--paper-dim')
     # Marcos: a list of orders
     x, y = 20, 210
     rows = [('6214', ('route 3', 'rota 3'), ('2 h left', 'faltam 2 h')),
@@ -121,11 +122,11 @@ def four_views():
     f.text(x + 14, y + 120, ('parcels', 'pacotes'), size=11)
     for k, (mine, rest) in enumerate(((75, 72), (95, 91))):
         by = y + 58 + 50 * k
-        f.bar(x + 100, by - 2, (mine - 50) * 4.4, 12, fill='--phosphor')
-        f.text(x + 106 + (mine - 50) * 4.4, by + 9, ('Contagem ' + str(mine), 'Contagem ' + str(mine)),
+        f.bar(x + 100, by - 2, (mine - 50) * 3.2, 12, fill='--phosphor')
+        f.text(x + 106 + (mine - 50) * 3.2, by + 9, ('Contagem ' + str(mine), 'Contagem ' + str(mine)),
                size=11)
-        f.bar(x + 100, by + 14, (rest - 50) * 4.4, 12, fill='--wire')
-        f.text(x + 106 + (rest - 50) * 4.4, by + 25, (('others ' + str(rest)), ('outras ' + str(rest))),
+        f.bar(x + 100, by + 14, (rest - 50) * 3.2, 12, fill='--wire')
+        f.text(x + 106 + (rest - 50) * 3.2, by + 25, (('others ' + str(rest)), ('outras ' + str(rest))),
                size=11)
     f.text(x + 14, y + 160, ('February, by kind, never the bare total', 'fevereiro, por tipo, nunca o total nu'), size=11,
            fill='--paper-dim')

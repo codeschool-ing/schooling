@@ -240,7 +240,7 @@ def risk_figure():
     # vintage curves
     f.text(24, 164, ('Vintages: share 90+ days overdue, by months on book',
                      'Safras: parcela com 90+ dias de atraso, por meses de carteira'), size=12, weight=600)
-    x0, x1, y0, y1 = 80, 470, 400, 186
+    x0, x1, y0, y1 = 80, 430, 400, 186
     lo, hi = 0, 6
     ages = [6, 9, 12]
     sx = lambda i: x0 + i * (x1 - x0) / 2
@@ -266,7 +266,7 @@ def risk_figure():
             f.bar(sx(i) - 3, sy(r) - 3, 6, 6, fill=col)
     f.text(sx(0) - 14, sy(3.4) - 2, ('2025 Q2', '2025 T2'), size=11, anchor='end')
     f.text(sx(1) - 14, sy(4.7) - 2, ('2025 Q1', '2025 T1'), size=11, anchor='end')
-    f.text(x1 + 12, sy(4.75) + 18, ('2024, four quarters', '2024, quatro trimestres'), size=11)
+    f.text(x1 + 12, sy(5.0) - 4, ('2024, four quarters', '2024, quatro trimestres'), size=11)
     # the note on the right
     nx = 540
     notes = [
@@ -312,15 +312,15 @@ def fraud_figure():
     node(360, 14, 220, ('card payments in December', 'pagamentos com cartão em dezembro'), n(CARD_TX))
     node(190, 110, 180, ('fraud', 'fraude'), n(FRAUD))
     node(530, 110, 180, ('good', 'legítimos'), n(legit))
-    node(100, 206, 160, ('fraud flagged', 'fraude sinalizada'), n(caught), hot=True)
-    node(280, 206, 160, ('fraud missed', 'fraude que passou'), n(FRAUD - caught))
-    node(440, 206, 160, ('good flagged', 'legítimos sinalizados'), n(blocked), hot=True)
-    node(620, 206, 160, ('good let through', 'legítimos liberados'), n(legit - blocked))
+    node(95, 206, 150, ('fraud flagged', 'fraude sinalizada'), n(caught), hot=True)
+    node(270, 206, 150, ('fraud missed', 'fraude que passou'), n(FRAUD - caught))
+    node(450, 206, 150, ('good flagged', 'legítimos sinalizados'), n(blocked), hot=True)
+    node(625, 206, 150, ('good let through', 'legítimos liberados'), n(legit - blocked))
     f.line(360, 66, 360, 88)
     f.line(190, 88, 530, 88)
     f.line(190, 88, 190, 108)
     f.line(530, 88, 530, 108)
-    for cx, a, b in ((190, 100, 280), (530, 440, 620)):
+    for cx, a, b in ((190, 95, 270), (530, 450, 625)):
         f.line(cx, 162, cx, 184)
         f.line(a, 184, b, 184)
         f.line(a, 184, a, 204)
