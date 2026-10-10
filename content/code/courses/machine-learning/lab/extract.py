@@ -23,7 +23,9 @@ def blocks(text):
         lang, body = m.group(1), m.group(2)
         if lang == "schooling-example":
             ex = json.loads(body)
-            yield "example", ex.get("file"), "".join(p["code"] if p["code"].endswith("\n") else p["code"] + "\n" for p in ex["parts"])
+            # ui/app/copy.js joins the parts with one newline, so a blank line
+            # between two parts is a part whose code ends in "\n"
+            yield "example", ex.get("file"), "\n".join(p["code"] for p in ex["parts"]) + "\n"
         elif lang in ("schooling-figure", "schooling-block"):
             continue
         else:

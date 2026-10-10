@@ -271,7 +271,7 @@ def T(lang, en, pt):
 
 @figure('l01-four-outcomes', 1)
 def l01_four_outcomes(lang):
-    fig = Fig('l01-four-outcomes', 620, 300, T(lang,
+    fig = Fig('l01-four-outcomes', 620, 285, T(lang,
         'A two by two grid. Columns: what the subscriber did, cancelled or stayed. Rows: what the '
         'model said, cancel or stay. The four cells are true positive, false positive, false '
         'negative and true negative, each with what it means for the R$ 40 credit.',
@@ -307,6 +307,97 @@ def l01_four_outcomes(lang):
     cap = T(lang, 'Two ways to be right and two ways to be wrong, and the two wrong ones do not '
                   'cost the same.',
             'Dois jeitos de acertar e dois de errar, e os dois erros não custam o mesmo.')
+    return fig, cap
+
+
+# ------------------------------------------------------------------ lesson 2
+
+def money(lang, v):
+    s = f'{abs(v):,.0f}'
+    if lang == 'pt':
+        s = s.replace(',', '.')
+    return ('−' if v < 0 else '') + 'R$ ' + s
+
+
+@figure('l02-ceiling', 2)
+def l02_ceiling(lang):
+    test = data('churn.csv', parse_dates=['snapshot'])
+    test = test[test['snapshot'] >= '2025-07-01']
+    leavers = int(test['churned'].sum())
+    ceiling = leavers * (0.3 * 480 - 40)
+    model = 21672      # first_model.py, as captured beside this figure
+    rule = -576        # rule.py
+    bars = [(T(lang, 'send nobody', 'não mandar a ninguém'), 0),
+            (T(lang, 'the best rule', 'a melhor regra'), rule),
+            (T(lang, 'the first model', 'o primeiro modelo'), model),
+            (T(lang, f'perfect: all {leavers:,} leavers', f'perfeito: os {leavers:,} que saíram'.replace(',', '.')), ceiling)]
+    fig = Fig('l02-ceiling', 640, 200, T(lang,
+        f'Horizontal bars of net value over the six test months: sending nobody R$ 0, the best rule '
+        f'{money(lang, rule)}, the first model {money(lang, model)}, and a perfect model '
+        f'{money(lang, ceiling)}.',
+        f'Barras horizontais do valor líquido nos seis meses de teste: não mandar a ninguém R$ 0, a '
+        f'melhor regra {money(lang, rule)}, o primeiro modelo {money(lang, model)} e um modelo '
+        f'perfeito {money(lang, ceiling)}.'))
+    x0, x1 = 230, 560
+    sx = lambda v: x0 + (v / ceiling) * (x1 - x0)
+    fig.line(sx(0), 22, sx(0), 182, stroke='--paper-dim', width=1)
+    for i, (name, v) in enumerate(bars):
+        y = 30 + 40 * i
+        fig.text(x0 - 12, y + 11, name, size=11, anchor='end')
+        a, b = sorted([sx(0), sx(v)])
+        if b - a >= 1:
+            fig.rect(a, y, b - a, 22, stroke='--phosphor' if v > 0 else '--amber',
+                     fill='--phosphor-dim' if i == 2 else ('--scan' if v <= 0 else '--panel'), rx=2)
+        fig.text(max(b, sx(0)) + 8, y + 11, money(lang, v), size=10.5, anchor='start', mono=True)
+    cap = T(lang, f'The model is worth about {model / ceiling:.0%} of what a perfect one would be, '
+                  'and far more than anything simpler.',
+            f'O modelo vale cerca de {model / ceiling:.0%} do que valeria um perfeito, e muito mais '
+            'do que qualquer coisa mais simples.'.replace('.0%', '%'))
+    return fig, cap
+
+
+@figure('l02-bootstrap', 2)
+def l02_bootstrap(lang):
+    test = pd.read_csv('/home/ana/ml/first_model_scores.csv')
+    model = test['chance'] >= 40 / (0.3 * 480)
+    rule = (test['skips_90d'] >= 3) & (test['complaints_90d'] >= 1)
+    y = (test['churned'] == 1).to_numpy()
+    m, r = model.to_numpy(), rule.to_numpy()
+    def nv(idx, send):
+        return 0.3 * 480 * (y[idx] & send[idx]).sum() - 40 * send[idx].sum()
+    rng = np.random.default_rng(0)
+    rows = test.groupby('customer_id').indices
+    people = list(rows)
+    gaps = []
+    for _ in range(1000):
+        drawn = rng.choice(len(people), len(people))
+        idx = np.concatenate([rows[people[i]] for i in drawn])
+        gaps.append(nv(idx, m) - nv(idx, r))
+    gaps = np.array(gaps)
+    low, high = np.percentile(gaps, [2.5, 97.5])
+    fig = Fig('l02-bootstrap', 640, 250, T(lang,
+        'A histogram of 1,000 bootstrap differences between the model and the rule, all of them '
+        f'positive, centred near {money(lang, float(np.median(gaps)))}, with the zero line well to '
+        'the left of every bar.',
+        'Um histograma de 1.000 diferenças bootstrap entre o modelo e a regra, todas positivas, '
+        f'centradas perto de {money(lang, float(np.median(gaps)))}, com a linha do zero bem à '
+        'esquerda de todas as barras.'))
+    edges = list(range(0, 32001, 1000))
+    counts = histogram(gaps, edges)
+    p = Plot(fig, 60, 30, 610, 200, 0, 32000, 0, max(counts) * 1.15)
+    step = 50 if max(counts) > 120 else 25
+    p.yaxis(list(range(0, int(max(counts) * 1.15) + 1, step)), label=T(lang, 'resamples', 'reamostras'))
+    p.bars(edges, counts, highlight=lambda i: not (low <= edges[i] < high + 1000))
+    p.xaxis([0, 8000, 16000, 24000, 32000], fmt=lambda v: money(lang, v),
+            label=T(lang, 'model minus rule, in reais', 'modelo menos regra, em reais'))
+    p.vline(0)
+    fig.text(p.sx(0) + 8, 110, T(lang, 'no difference', 'sem diferença'), size=10, anchor='start',
+             fill='--amber')
+    cap = T(lang, 'A thousand resampled test sets. The gap moves by thousands of reais from one to '
+                  'the next, and never reaches zero. The bars in the other colour are the 5% outside the '
+                  'interval.',
+            'Mil conjuntos de teste reamostrados. A diferença muda milhares de reais de um para '
+            'outro, e nunca chega a zero. As barras da outra cor são os 5% fora do intervalo.')
     return fig, cap
 
 
