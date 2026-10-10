@@ -1469,6 +1469,117 @@ def l15_factors(lang):
                 'causa raiz é um deles escolhido depois.')
 
 
+# ------------------------------------------------------------------ lesson 16
+
+LESSON16 = os.path.join(HERE, 'lessons', 'le-fa920eqc')
+
+
+@functools.lru_cache(maxsize=None)
+def lesson_program(lesson, name):
+    """Run a program read out of a lesson, silently, and return what it defined."""
+    program = subprocess.run([sys.executable, os.path.join(HERE, 'lab', 'extract.py'), lesson, name],
+                             capture_output=True, text=True, check=True).stdout
+    scope = {'__name__': name, 'print': lambda *a, **k: None}
+    exec(compile(program, name, 'exec'), scope)
+    return scope
+
+
+@figure('l16-burndown', 16)
+def l16_burndown(lang):
+    v = lesson_program(LESSON16, 'budget.py')
+    days, budget = v['days'], v['budget']
+    left, spent = [100.0], 0
+    for _, _, bad in days:
+        spent += bad
+        left.append(100 * (1 - spent / budget))
+    f = Fig('l16-burndown', 680, 290, T(
+        lang,
+        'A line showing how much of September\'s error budget was left at the end of each day. It '
+        'falls slowly from 100% to about 90% in the first two weeks, drops to 53% on 16 September, '
+        'when the card provider was slow for an hour, drifts down to 47% by the 29th, and falls '
+        'through zero to minus 101% on 30 September, the day of the incident.',
+        'Uma linha mostrando quanto do orçamento de erro de setembro sobrava no fim de cada dia. '
+        'Ela cai devagar de 100% para uns 90% nas duas primeiras semanas, despenca para 53% em 16 '
+        'de setembro, quando o provedor de cartão ficou lento por uma hora, desce até 47% no dia 29 '
+        'e atravessa o zero até menos 101% em 30 de setembro, o dia do incidente.'))
+    p = Plot(f, 70, 40, 640, 250, 0, 30, -120, 100)
+    p.yaxis([-100, -50, 0, 50, 100], fmt=lambda t: f'{t}%')
+    p.baseline()
+    f.line(p.sx(0), p.sy(0), p.sx(30), p.sy(0), stroke='--amber', width=1.4, dash='5 3')
+    p.polyline(list(range(31)), left, stroke='--phosphor', width=2)
+    for k in (1, 8, 15, 22, 29):
+        lab = T(lang, f'{k} Sep', f'{k} set')
+        f.text(p.sx(k - 0.5), 266, lab, size=9.5, fill='--paper-dim')
+    f.text(p.sx(26), p.sy(0) - 10, T(lang, 'budget spent', 'orçamento gasto'), size=10,
+           anchor='end', fill='--amber')
+    f.text(p.sx(16) + 6, p.sy(left[16]) + 18, T(lang, '16 Sep: the provider slow for an hour',
+                                               '16 set: o provedor lento por uma hora'),
+           size=10, anchor='start', fill='--paper')
+    f.text(p.sx(30) - 8, p.sy(left[30]), T(lang, '30 Sep: the incident', '30 set: o incidente'),
+           size=10, anchor='end', fill='--paper')
+    f.text(70, 18, T(lang, 'error budget left at the end of each day, card charges, September',
+                     'orçamento de erro restante no fim de cada dia, cobranças no cartão, setembro'),
+           size=10, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'Two weeks of ordinary days spent less than a tenth of the budget. One slow hour '
+                'spent more than a third, and one afternoon spent more than the whole month.',
+                'Duas semanas de dias comuns gastaram menos de um décimo do orçamento. Uma hora '
+                'lenta gastou mais de um terço, e uma tarde gastou mais que o mês inteiro.')
+
+
+@figure('l16-burn', 16)
+def l16_burn(lang):
+    v = lesson_program(LESSON16, 'burn.py')
+    buckets, burn = v['buckets'], v['burn']
+    f = Fig('l16-burn', 680, 310, T(
+        lang,
+        'Bars show the burn rate of card charges in each five minutes from 15:00 to 21:00 on '
+        '30 September, and a line shows the burn rate over the last hour. Both stay under 7 until '
+        '17:20, when the release goes out; the bars jump to about 80 and the hourly line climbs '
+        'through the paging threshold of 14.4 at 17:30, eight minutes before a shop calls. The '
+        'bars drop back after the rollback at 18:15, and the hourly line follows an hour later.',
+        'Barras mostram o burn rate das cobranças no cartão a cada cinco minutos, das 15:00 às '
+        '21:00 de 30 de setembro, e uma linha mostra o burn rate da última hora. As duas ficam '
+        'abaixo de 7 até as 17:20, quando sai o release; as barras saltam para uns 80 e a linha da '
+        'hora atravessa o limite de acionamento de 14,4 às 17:30, oito minutos antes de uma loja '
+        'ligar. As barras caem depois do rollback às 18:15, e a linha da hora acompanha uma hora '
+        'depois.'))
+    p = Plot(f, 60, 80, 640, 270, 0, 360, 0, 100)
+    p.yaxis([0, 25, 50, 75, 100])
+    p.baseline()
+    w = p.sx(5) - p.sx(0)
+    for i, _ in enumerate(buckets):
+        r = min(burn(i, 5), 100)
+        f.bar(p.sx(5 * i) + 0.5, p.sy(r), w - 1, p.sy(0) - p.sy(r), fill='--phosphor-dim',
+              stroke='--phosphor-dim', width=0.5)
+    p.polyline([5 * i + 5 for i in range(len(buckets))], [burn(i, 60) for i in range(len(buckets))],
+               stroke='--phosphor', width=2)
+    f.line(p.sx(0), p.sy(14.4), p.sx(360), p.sy(14.4), stroke='--amber', width=1.4, dash='5 3')
+    f.text(p.sx(360) - 2, p.sy(14.4) - 9, T(lang, 'page at 14.4', 'aciona em 14,4'), size=10,
+           anchor='end', fill='--amber')
+    marks = [(140, '--paper-dim'), (150, '--amber'), (158, '--paper'), (195, '--paper-dim')]
+    for m, c in marks:
+        f.line(p.sx(m), p.y0 - 4, p.sx(m), p.y1, stroke=c, width=1, dash='3 3')
+    f.text(p.sx(140) - 4, p.y0 - 10, T(lang, '17:20 release', '17:20 release'), size=10,
+           anchor='end', fill='--paper-dim')
+    f.text(p.sx(158) + 4, p.y0 - 38, T(lang, '17:30 the page fires', '17:30 o acionamento dispara'),
+           size=10, anchor='start', fill='--amber')
+    f.text(p.sx(158) + 4, p.y0 - 24, T(lang, '17:38 a shop calls', '17:38 uma loja liga'), size=10,
+           anchor='start', fill='--paper')
+    f.text(p.sx(195) + 4, p.y0 - 10, T(lang, '18:15 rollback', '18:15 rollback'), size=10,
+           anchor='start', fill='--paper-dim')
+    for k in range(0, 361, 60):
+        f.text(p.sx(k), 286, f'{15 + k // 60}:00', size=9.5, fill='--paper-dim')
+    f.text(60, 18, T(lang, 'burn rate, card charges, 30 September: bars every 5 minutes, line over the last hour',
+                     'burn rate, cobranças no cartão, 30 de setembro: barras a cada 5 minutos, linha na última hora'),
+           size=10, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'The hourly line crosses the threshold ten minutes after the release, and the short '
+                'window is what lets the page stop soon after the rollback.',
+                'A linha da hora cruza o limite dez minutos depois do release, e a janela curta é o '
+                'que deixa o acionamento parar logo depois do rollback.')
+
+
 # @@LESSONS@@
 
 if __name__ == '__main__':
