@@ -72,6 +72,8 @@ try:
     q("=SUM(Sales[Bags])")
     q('=SUMIFS(Sales[Revenue], Sales[Channel], "Wholesale")')
     q("=ROWS(Sales[Sale])")
+    print("   drill: =AVERAGEIFS(Sales[Revenue], Sales[Channel], \"Wholesale\") ->",
+          b.ev('=AVERAGEIFS(Sales[Revenue], Sales[Channel], "Wholesale")', "Sales", "K1"))
     import datetime
     b.doc.Sheets.insertNewByName("Report", b.doc.Sheets.getCount())
     rp = b.sheet("Report")
