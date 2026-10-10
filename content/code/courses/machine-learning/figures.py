@@ -506,7 +506,7 @@ def l03_gap(lang):
     x0, w, y0 = 90, 52, 50
     for m in range(10):
         fig.text(x0 + m * w + w / 2, 30, M[m], size=9.5, fill='--paper-dim')
-        fig.line(x0 + m * w, 38, x0 + m * w, 220, stroke='--wire', width=1)
+        fig.line(x0 + m * w, 38, x0 + m * w, 44, stroke='--wire', width=1)
     for i in range(6):
         y = y0 + i * 28
         known = i < 4
@@ -515,7 +515,10 @@ def l03_gap(lang):
         fig.rect(x0 + i * w + 12, y + 2, 3 * w - 14, 14, stroke='--phosphor' if known else '--amber',
                  fill='--phosphor-dim' if known else '--scan', rx=2)
     xt = x0 + 6 * w
-    fig.line(xt, 40, xt, 222, stroke='--paper', width=2)
+    for i in range(7):                       # the line, in the gaps between the bars
+        top = 40 if i == 0 else y0 + (i - 1) * 28 + 18
+        bottom = y0 + i * 28 if i < 6 else 222
+        fig.line(xt, top, xt, bottom, stroke='--paper', width=2)
     fig.text(xt + 6, 236, T(lang, '1 July: fit the model', '1º de julho: ajustar o modelo'), size=10.5,
              anchor='start', weight='600')
     fig.text(x0 + 2 * w, 236, T(lang, 'answer known: may train', 'resposta conhecida: pode treinar'),
