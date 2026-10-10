@@ -58,8 +58,8 @@ message you will see instead.
 
 ## The three images, and the network between them
 
-Pull the images once. Each is a few hundred megabytes, and only the first pull downloads anything;
-the lab already had them, which is why its pull answers `up to date`:
+Pull the images once. Together they are about 2 GB, and only the first pull downloads anything; the
+lab already had them, which is why its pull answers `up to date`:
 
 ```sh
 docker pull mongo:8.0

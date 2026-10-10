@@ -101,6 +101,6 @@ você acrescente `--volumes`, a opção que apaga dados.
 ## Recomeçar
 
 Nada aqui é precioso ainda. `docker rm -f mongo redis cassandra` e as três linhas de `docker run`
-devolvem o laboratório ao estado que a próxima aula espera, e `multipass delete vm` seguido de
-`multipass purge` joga fora a máquina inteira para você montar outra. Uma segunda instalação é um
+devolvem o laboratório ao estado que a próxima aula espera. `multipass delete vm` seguido de
+`multipass purge` joga fora a máquina inteira, para você montar outra. Uma segunda instalação é um
 preço pequeno por saber exatamente onde você está pisando.

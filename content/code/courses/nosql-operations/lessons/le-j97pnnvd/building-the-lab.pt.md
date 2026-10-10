@@ -57,8 +57,8 @@ seção tem a mensagem que você vai ver no lugar.
 
 ## As três imagens, e a rede entre elas
 
-Baixe as imagens uma vez. Cada uma tem algumas centenas de megabytes, e só o primeiro pull baixa
-alguma coisa; o laboratório já as tinha, e por isso o pull dele responde `up to date`:
+Baixe as imagens uma vez. Juntas somam cerca de 2 GB, e só o primeiro pull baixa alguma coisa; o
+laboratório já as tinha, e por isso o pull dele responde `up to date`:
 
 ```sh
 docker pull mongo:8.0
