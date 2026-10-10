@@ -572,7 +572,9 @@ merge() {
   local repo n sha i
   repo=$(git remote get-url origin | sed 's#.*localhost:3000/##; s#\.git$##')
   sha=$(git rev-parse HEAD)
-  git push --quiet -u origin "$1" || die "could not push $1 to $repo"
+  # Gitea answers a push to a new branch with a link to open a pull request,
+  # on stderr; it is kept, and shown only if the push fails.
+  git push --quiet -u origin "$1" 2>/tmp/lab-push.err || { cat /tmp/lab-push.err >&2; die "could not push $1 to $repo"; }
   n=$(api POST /repos/$repo/pulls "{\"head\": \"$1\", \"base\": \"main\", \"title\": \"$2\"}" | jq .number) \
     || die "could not open a pull request for $1 in $repo"
   if [ "$repo" = ana/fleet ]; then

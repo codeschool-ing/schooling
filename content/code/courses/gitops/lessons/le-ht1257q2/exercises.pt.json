@@ -1,0 +1,493 @@
+{
+  "ex-w11xxhb5": {
+    "prompt": "Que propriedades fazem um artefato merecer o nome, como a aula lista? Marque todas que se aplicam.",
+    "choices": [
+      {
+        "text": "É imutável",
+        "why": "Isso. Os bytes por trás de uma referência não mudam."
+      },
+      {
+        "text": "É reconstruído para cada ambiente",
+        "why": "O contrário: construído uma vez, baixado em todo lugar."
+      },
+      {
+        "text": "É endereçável",
+        "why": "Isso. Um nome quer dizer exatamente esses bytes."
+      },
+      {
+        "text": "Tem proveniência",
+        "why": "Isso. Alguém sabe dizer o que o produziu."
+      }
+    ]
+  },
+  "ex-gh2a82d9": {
+    "prompt": "Num arranjo GitOps, o que o Git e o registry guardam?",
+    "choices": [
+      {
+        "text": "O Git guarda as imagens; o registry guarda os manifestos",
+        "why": "Imagens são grandes demais para o Git, e manifestos são para o Git."
+      },
+      {
+        "text": "O Git diz qual artefato; o registry o guarda",
+        "why": "Isso. Se algum dos dois mentir, o cluster roda algo que ninguém decidiu."
+      },
+      {
+        "text": "Os dois guardam a mesma coisa, por redundância",
+        "why": "Guardam coisas diferentes que apontam uma para a outra."
+      },
+      {
+        "text": "O registry decide que tag cada ambiente roda",
+        "why": "Quem decide é o Git; o registry só guarda."
+      }
+    ]
+  },
+  "ex-sdqxadj7": {
+    "prompt": "Ordene por onde uma referência a bulletin:1.1 passa, de cima para baixo.",
+    "items": [
+      "A tag",
+      "O index",
+      "O manifest de imagem para linux/amd64",
+      "As camadas"
+    ],
+    "trap": "A tag aponta para o index, que lista manifests, que listam camadas."
+  },
+  "ex-shrpx75t": {
+    "prompt": "O que era o segundo manifest no index do bulletin:1.1?",
+    "choices": [
+      {
+        "text": "Uma cópia do primeiro manifest, por redundância",
+        "why": "Registries não duplicam manifests."
+      },
+      {
+        "text": "A mesma imagem para arm64",
+        "why": "A plataforma era unknown; nem é uma imagem."
+      },
+      {
+        "text": "Um atestado que o Docker acrescentou no build",
+        "why": "Isso. Um registro de como a imagem foi construída, que a aula 8 lê."
+      },
+      {
+        "text": "O chart do Helm que publica a imagem",
+        "why": "O chart mora num repositório próprio."
+      }
+    ]
+  },
+  "ex-d1trph1x": {
+    "prompt": "Muda um byte do index.cgi e a imagem é reconstruída. Que digests mudam?",
+    "choices": [
+      {
+        "text": "Só o da tag",
+        "why": "Uma tag não tem digest próprio; ela aponta para um."
+      },
+      {
+        "text": "O da camada, o do manifest e o do index",
+        "why": "Isso. Cada documento lista o de baixo pelo digest, então a mudança sobe até o topo."
+      },
+      {
+        "text": "Só o da camada",
+        "why": "O manifest lista o digest da camada, então muda também."
+      },
+      {
+        "text": "Nenhum, já que a tag continua 1.1",
+        "why": "A tag passaria a apontar para um index novo."
+      }
+    ]
+  },
+  "ex-sn5kwhsc": {
+    "prompt": "O registry devolve o hash daquilo para onde uma tag aponta no cabeçalho Docker-Content-___.",
+    "blanks": [
+      {
+        "accept": [
+          "Digest"
+        ]
+      }
+    ]
+  },
+  "ex-nq8n21ne": {
+    "prompt": "Depois do segundo push de stable, o que o digest da primeira imagem ainda nomeava?",
+    "choices": [
+      {
+        "text": "Nada, porque o push a apagou",
+        "why": "Enviar uma tag não apaga nada."
+      },
+      {
+        "text": "As duas, mescladas",
+        "why": "Imagens nunca são mescladas."
+      },
+      {
+        "text": "A imagem 1.0",
+        "why": "Isso. Um digest nunca se move; só a tag se moveu."
+      },
+      {
+        "text": "A imagem 1.1",
+        "why": "É para ela que stable aponta agora."
+      }
+    ]
+  },
+  "ex-xnnhcm98": {
+    "prompt": "Ordene as defesas contra uma tag de versão movida, da mais fraca para a mais forte.",
+    "items": [
+      "Uma regra do time",
+      "Imutabilidade de tag no registry",
+      "Um digest no Git"
+    ],
+    "trap": "Uma regra depende de pessoas; a imutabilidade depende da configuração do registry; um digest não depende de nada."
+  },
+  "ex-12z6e342": {
+    "prompt": "O que confirma que a produção roda exatamente os bytes que o Git cita?",
+    "choices": [
+      {
+        "text": "O Flux informa READY True",
+        "why": "Pronto diz que o apply funcionou, não quais bytes rodam."
+      },
+      {
+        "text": "A tag 1.1 ainda existe",
+        "why": "A tag pode se mover sem afetar uma referência por digest."
+      },
+      {
+        "text": "O imageID do container é igual ao digest",
+        "why": "Isso. O nó baixou pelo digest e informa o mesmo."
+      },
+      {
+        "text": "O pod está Running",
+        "why": "Um pod rodando não diz nada sobre quais bytes."
+      }
+    ]
+  },
+  "ex-yga26fkm": {
+    "prompt": "Que regra a aula sugere para tags e digests?",
+    "choices": [
+      {
+        "text": "Tags no staging, digests na produção",
+        "why": "Isso. O staging experimenta releases; a produção os mantém."
+      },
+      {
+        "text": "latest no staging, uma tag de versão na produção",
+        "why": "latest se move por definição, e esse é o problema."
+      },
+      {
+        "text": "Tags em todo lugar, com uma regra do time",
+        "why": "Uma regra é a mais fraca das defesas."
+      },
+      {
+        "text": "Digests em todo lugar, tags em nenhum",
+        "why": "Funciona, a um custo de legibilidade onde releases são experimentados."
+      }
+    ]
+  },
+  "ex-gzj3vber": {
+    "prompt": "Qual é o preço de um digest no manifesto?",
+    "choices": [
+      {
+        "text": "Downloads mais lentos",
+        "why": "Baixar pelo digest é tão rápido quanto pela tag."
+      },
+      {
+        "text": "Quem revisa não lê o release",
+        "why": "Isso. O título e o corpo do pull request precisam dizer qual release é."
+      },
+      {
+        "text": "O Flux não consegue aplicar",
+        "why": "O Flux aplica o que o overlay montar."
+      },
+      {
+        "text": "O Kubernetes recusa digests em Deployments",
+        "why": "Ele os aceita onde aceita uma imagem."
+      }
+    ]
+  },
+  "ex-03x4tk4w": {
+    "prompt": "O que muda quando o chart da prévia vem de um registry OCI em vez de um caminho no fleet?",
+    "choices": [
+      {
+        "text": "O chart não precisa mais de templates",
+        "why": "Um chart empacotado são os mesmos templates num tarball."
+      },
+      {
+        "text": "O chart é publicado uma vez, com versão e digest",
+        "why": "Isso. Mudá-lo vira publicar uma versão e mudar uma tag no Git."
+      },
+      {
+        "text": "O Helm para de criar releases",
+        "why": "O Flux continua instalando um release do Helm."
+      },
+      {
+        "text": "Os valores não podem mais ser sobrescritos",
+        "why": "O HelmRelease continuou sobrescrevendo a mensagem."
+      }
+    ]
+  },
+  "ex-f5ja5cv5": {
+    "prompt": "Por que o OCIRepository cita registry:5000 enquanto o helm push usou localhost:5001?",
+    "choices": [
+      {
+        "text": "localhost:5001 recusa artefatos OCI",
+        "why": "Ele aceitou o chart do seu terminal."
+      },
+      {
+        "text": "O Flux só lê da porta 5000",
+        "why": "O Flux lê qualquer porta que receber."
+      },
+      {
+        "text": "registry:5000 é um segundo registry",
+        "why": "É o mesmo container, na porta dele."
+      },
+      {
+        "text": "Dentro do cluster, localhost é o próprio pod",
+        "why": "Isso. O nome do container é o endereço que funciona de lá."
+      }
+    ]
+  },
+  "ex-4m3ew8wk": {
+    "prompt": "Ligue cada termo do Nexus ao do Artifactory.",
+    "pairs": [
+      {
+        "left": "hosted",
+        "right": "local"
+      },
+      {
+        "left": "proxy",
+        "right": "remote"
+      },
+      {
+        "left": "group",
+        "right": "virtual"
+      }
+    ],
+    "right_distractors": [
+      "shared"
+    ]
+  },
+  "ex-fse90rt5": {
+    "prompt": "Por que um repositório proxy muda como uma empresa trabalha?",
+    "choices": [
+      {
+        "text": "Ele dispensa um sistema de CI",
+        "why": "Os builds continuam rodando; eles buscam pelo proxy."
+      },
+      {
+        "text": "Ele assina todo pacote que guarda",
+        "why": "Guardar não é assinar."
+      },
+      {
+        "text": "Ele livra pacotes públicos de licenças",
+        "why": "As licenças viajam com o pacote."
+      },
+      {
+        "text": "Os builds não dependem mais do público",
+        "why": "Isso. A empresa guarda uma cópia própria de todo artefato de terceiros que usa."
+      }
+    ]
+  },
+  "ex-p51zxg5f": {
+    "prompt": "Por que este curso não roda o Nexus na parte prática?",
+    "choices": [
+      {
+        "text": "A edição gratuita pede a quem instala que aceite uma licença",
+        "why": "Isso. Essa aceitação é do aluno, não de um curso."
+      },
+      {
+        "text": "O Nexus não roda num container",
+        "why": "Ele rodou num na máquina de gravação."
+      },
+      {
+        "text": "O Nexus não guarda imagens Docker",
+        "why": "Guarda, num repositório de formato Docker."
+      },
+      {
+        "text": "O Nexus não tem API",
+        "why": "A API REST dele criou um repositório no teste."
+      }
+    ]
+  },
+  "ex-zm7kv02n": {
+    "prompt": "Onde a automação de imagens do Flux escreve a tag nova neste curso?",
+    "choices": [
+      {
+        "text": "No cluster, pulando o Git",
+        "why": "A automação escreve no Git; o Flux aplica o Git."
+      },
+      {
+        "text": "No branch image-updates",
+        "why": "Isso. Um pull request a partir dele passa pela checagem e pela revisão."
+      },
+      {
+        "text": "No repositório bulletin",
+        "why": "Ela escreve no fleet, onde a tag é citada."
+      },
+      {
+        "text": "Direto na main",
+        "why": "Ninguém faz push na main, a automação inclusive."
+      }
+    ]
+  },
+  "ex-07bwsk6a": {
+    "prompt": "Por que a automação ganha uma conta e um GitRepository próprios em vez de usar os do flux?",
+    "choices": [
+      {
+        "text": "Dois GitRepositories deixam as sincronizações mais rápidas",
+        "why": "Velocidade não tem nada a ver."
+      },
+      {
+        "text": "Os controladores de imagem não leem Secrets",
+        "why": "Eles leem o que o GitRepository deles cita."
+      },
+      {
+        "text": "Para só a automação guardar uma credencial de escrita",
+        "why": "Isso. A sincronização do Flux mantém o token só de leitura."
+      },
+      {
+        "text": "O Gitea só permite um token por conta",
+        "why": "Uma conta pode ter muitos tokens."
+      }
+    ]
+  },
+  "ex-he13fr2r": {
+    "prompt": "O comentário depois do newTag que diz à automação o que reescrever cita a política como {\"$___\": \"flux-system:bulletin:tag\"}.",
+    "blanks": [
+      {
+        "accept": [
+          "imagepolicy"
+        ]
+      }
+    ]
+  },
+  "ex-h9f8e654": {
+    "prompt": "Por que a automação nunca propõe um release para a produção?",
+    "choices": [
+      {
+        "text": "O overlay da produção não tem marca",
+        "why": "Isso. A automação só reescreve o que está marcado."
+      },
+      {
+        "text": "O CODEOWNERS bloqueia o bot",
+        "why": "A posse encaminha revisões; não impede um push num branch."
+      },
+      {
+        "text": "A política exclui o namespace da produção",
+        "why": "Políticas escolhem tags; não sabem nada de namespaces."
+      },
+      {
+        "text": "A produção está fixada pela tag",
+        "why": "Está fixada pelo digest, e não tem marca de qualquer jeito."
+      }
+    ]
+  },
+  "ex-4kxm1z5g": {
+    "prompt": "Que regra o GitOps acrescenta à política de retenção de um registry?",
+    "choices": [
+      {
+        "text": "Manter o que o Git ainda cita",
+        "why": "Isso. Todo commit para o qual um revert pode voltar cita um artefato que ainda precisa existir."
+      },
+      {
+        "text": "Nunca apagar nada",
+        "why": "Isso é um registry que cresce para sempre."
+      },
+      {
+        "text": "Apagar na hora todo manifest sem tag",
+        "why": "Manifests sem tag podem ser o que um digest no Git cita."
+      },
+      {
+        "text": "Manter só a tag mais nova",
+        "why": "Um revert apontaria para uma mais antiga."
+      }
+    ]
+  },
+  "ex-qx91fbfs": {
+    "prompt": "O registry aceitou um DELETE com 202. O que ele conferiu antes?",
+    "choices": [
+      {
+        "text": "Nada sobre quem usa a imagem",
+        "why": "Isso. O mesmo pedido no digest da produção passaria."
+      },
+      {
+        "text": "Que nenhuma tag ainda aponta para ela",
+        "why": "A tag foi junto com o manifest."
+      },
+      {
+        "text": "Que o coletor de lixo tinha rodado",
+        "why": "O coletor roda depois das exclusões, não antes."
+      },
+      {
+        "text": "Que nenhum cluster a roda",
+        "why": "O registry não sabe nada de clusters."
+      }
+    ]
+  },
+  "ex-bvj2tqmy": {
+    "prompt": "A lista feita com kubectl kustomize deixou de fora uma imagem em uso. Qual, e por quê?",
+    "choices": [
+      {
+        "text": "A do staging, porque a automação a reescreve",
+        "why": "A tag do staging está na lista."
+      },
+      {
+        "text": "A da base, porque não tem tag",
+        "why": "A base aparece, sem tag."
+      },
+      {
+        "text": "A da produção, porque está fixada por digest",
+        "why": "A referência por digest está na lista."
+      },
+      {
+        "text": "A da prévia, definida nos valores do chart",
+        "why": "Isso. O Kustomize vê o HelmRelease, não o que o chart gera."
+      }
+    ]
+  },
+  "ex-tq207392": {
+    "prompt": "O helm push falha com um servidor que respondeu HTTP a um cliente HTTPS. Qual é a correção certa para um registry na rede?",
+    "choices": [
+      {
+        "text": "Outra versão do chart",
+        "why": "A versão não tem nada a ver com o transporte."
+      },
+      {
+        "text": "Enviar com o docker",
+        "why": "O problema de transporte seria o mesmo."
+      },
+      {
+        "text": "--plain-http em todo cliente",
+        "why": "Isso manda credenciais e charts às claras pela rede."
+      },
+      {
+        "text": "TLS no registry",
+        "why": "Isso. O --plain-http só é aceitável em localhost."
+      }
+    ]
+  },
+  "ex-w4919hqe": {
+    "prompt": "O CI enviou o bulletin:1.3 e a automação não abriu nada por um tempo. Que objeto você leria primeiro?",
+    "choices": [
+      {
+        "text": "A proteção de branch do Gitea",
+        "why": "A proteção não impede um push no image-updates."
+      },
+      {
+        "text": "O ImagePolicy",
+        "why": "Isso. Se ele não escolheu a 1.3, nada adiante mudaria."
+      },
+      {
+        "text": "O overlay da produção",
+        "why": "A produção não tem marca e não participa."
+      },
+      {
+        "text": "O HelmRelease da prévia",
+        "why": "A prévia não faz parte da automação de imagens."
+      }
+    ]
+  },
+  "ex-3yw2z9m7": {
+    "prompt": "Ordene como o bulletin 1.2 chegou ao staging.",
+    "items": [
+      "O CI envia a imagem 1.2",
+      "O ImageRepository lista a tag nova",
+      "O ImagePolicy escolhe a 1.2",
+      "A automação envia um commit para o image-updates",
+      "Um pull request é conferido, aprovado e entra",
+      "O Flux aplica o staging"
+    ],
+    "trap": "O registry vem primeiro, depois os controladores que o leem, depois o Git, depois o cluster."
+  }
+}
