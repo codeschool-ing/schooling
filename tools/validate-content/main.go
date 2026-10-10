@@ -779,6 +779,18 @@ var allowedOutsideTheFont = map[rune]string{
 		"at all, so no cut of it would fix this. It opens a line and nothing is aligned to " +
 		"what follows it, so the width the reader's machine gives it moves nothing that means " +
 		"anything",
+	// Flux's command prints its progress with these four at the start of a line:
+	// ► when it asks for something, ◎ while it waits, ✔ when it is done, ✗ when it
+	// gave up. Like the dot above, each opens a line and nothing after it is
+	// aligned to anything, and rewriting them would be editing a transcript.
+	'\u25ba': "`flux` prints it before an action it starts (`► annotating Kustomization`). It " +
+		"opens a line and nothing is aligned to what follows it",
+	'\u25ce': "`flux` prints it while it waits (`◎ waiting for Kustomization reconciliation`). " +
+		"It opens a line and nothing is aligned to what follows it",
+	'\u2714': "`flux` prints it when a step is done (`✔ applied revision`). It opens a line " +
+		"and nothing is aligned to what follows it",
+	'\u2717': "`flux` prints it when it gives up (`✗ context deadline exceeded`). It opens a " +
+		"line and nothing is aligned to what follows it",
 }
 
 // coverage is the set of code points the interface declares a face for.
