@@ -80,7 +80,7 @@ palavras ocupam as mesmas vagas: `On ___ the`, `the ___ sells`, `The ___ eats`. 
 nítidos, porque o corpus os cita mais: `baker` quinze vezes. `pears` achou duas outras frutas, atrás de
 uma palavra que não tem nada a ver com fruta.
 
-`red` falhou, e vale dizer claramente por quê. **Ela aparece três vezes, em três molduras diferentes**:
+`red` falhou, e o corpus diz por quê. **Ela aparece três vezes, em três molduras diferentes**:
 `apples are red,`, `cherries are red,` e `the wheel red.`. `Monday` aparece cinco vezes, quatro delas
 logo depois de `on`, a vaga que todo outro dia da semana ocupa. Três exemplos que discordam sobre a
 companhia de uma palavra não bastam para a linha dela assentar em lugar nenhum. A tabela de um modelo

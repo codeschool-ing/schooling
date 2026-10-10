@@ -80,7 +80,7 @@ words fill the same slots: `On ___ the`, `the ___ sells`, `The ___ eats`. The tr
 because the corpus names them most: `baker` fifteen times. `pears` found two other fruits, behind a word that
 has nothing to do with fruit.
 
-`red` failed, and it is worth being plain about why. **It appears three times, in three different
+`red` failed, and the corpus says why. **It appears three times, in three different
 frames**: `apples are red,`, `cherries are red,` and `the wheel red.`. `Monday` appears five times,
 four of them straight after `on`, the slot every other day of the week fills. Three examples that disagree about the company a word keeps are
 not enough for its row to settle anywhere. A language model's table is trained the same way on
