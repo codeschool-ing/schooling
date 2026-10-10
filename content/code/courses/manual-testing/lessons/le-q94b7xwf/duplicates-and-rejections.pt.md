@@ -12,8 +12,8 @@ causa.
 
 ## Um duplicado é a mesma causa, não as mesmas palavras
 
-O relato desta semana diz que pagar um pedido já pago responde *"cannot be payed"*. A aula 11
-relatou *"cannot be useed"*. Palavras diferentes, botões diferentes. Antes de decidir, a Ana
+O relato desta semana diz que pagar um pedido já pago responde *"cannot be payed"*. O relato da aula
+11 tem *"cannot be useed"* no título. Palavras diferentes, botões diferentes. Antes de decidir, a Ana
 reproduz os dois numa 1.1 recém-iniciada:
 
 ```
@@ -35,8 +35,8 @@ As duas mensagens são montadas do mesmo jeito: o nome da ação com *ed* colado
 *use* viram *payed* e *useed*. Uma única frase do programa monta toda recusa, então **uma correção
 conserta as duas, e um reteste confere as duas**. Esse é o teste de um duplicado: corrigir o
 primeiro relato corrigiria o segundo? Aqui corrigiria, então o relato novo é fechado como duplicado
-e ligado ao da aula 11, e a única coisa útil que ele traz, a forma *payed*, é copiada para o
-original para que o reteste a cubra.
+e ligado ao da aula 11. A sessão da aula 11 já tinha encontrado *payed* também, então os passos do
+original cobrem as duas formas, e não há nada a copiar.
 
 O caso oposto parece mais semelhante e não é. *Um pedido usado pode ser reembolsado* e *um
 reembolso é aceito depois que o espetáculo começou* tratam de reembolso, estão na mesma página e

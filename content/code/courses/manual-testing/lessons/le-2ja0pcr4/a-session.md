@@ -24,7 +24,22 @@ R6 names four states an order can reach after it is reserved and four actions. A
 the simplest one the charter allows: book an order and press the button R6 says should not work
 yet. A reserved order cannot be used at the door, because nobody has paid for it.
 
-@@cap:orders@@
+```
+ana@laptop:~/boxoffice$ curl -s -d 'email=member@example.org&show=S2&quantity=2' http://127.0.0.1:8000/book | grep msg
+<p class="msg">Order 1001 reserved.</p>
+ana@laptop:~/boxoffice$ curl -s -d 'id=1001&action=use' http://127.0.0.1:8000/order | grep msg
+<p class="msg">An order that is reserved cannot be useed.</p>
+ana@laptop:~/boxoffice$ curl -s -d 'id=1001&action=pay' http://127.0.0.1:8000/order | grep msg
+<p class="msg">Order is now paid.</p>
+ana@laptop:~/boxoffice$ curl -s -d 'id=1001&action=use' http://127.0.0.1:8000/order | grep msg
+<p class="msg">Order is now used.</p>
+ana@laptop:~/boxoffice$ curl -s -d 'id=1001&action=pay' http://127.0.0.1:8000/order | grep msg
+<p class="msg">An order that is used cannot be payed.</p>
+ana@laptop:~/boxoffice$ curl -s -d 'id=1001&action=cancel' http://127.0.0.1:8000/order | grep msg
+<p class="msg">An order that is used cannot be canceled.</p>
+ana@laptop:~/boxoffice$ curl -s -d 'id=1001&action=refund' http://127.0.0.1:8000/order | grep msg
+<p class="msg">Order is now refunded.</p>
+```
 
 R6 holds in every row above except one: use is refused while the order is reserved, pay and use
 then work, pay and cancel are refused once it is used, and the refund of a used order is accepted,
@@ -39,7 +54,16 @@ have looked; it was the first thing on screen. Her note: *refusal message = "can
 So she tries the one state whose name the application spells for her, by cancelling a fresh order
 and then trying to pay it:
 
-@@cap:cancelled@@
+```
+ana@laptop:~/boxoffice$ curl -s -d 'email=member@example.org&show=S3&quantity=1' http://127.0.0.1:8000/book | grep msg
+<p class="msg">Order 1002 reserved.</p>
+ana@laptop:~/boxoffice$ curl -s -d 'id=1002&action=cancel' http://127.0.0.1:8000/order | grep msg
+<p class="msg">Order is now cancelled.</p>
+ana@laptop:~/boxoffice$ curl -s -d 'id=1002&action=pay' http://127.0.0.1:8000/order | grep msg
+<p class="msg">An order that is cancelled cannot be payed.</p>
+ana@laptop:~/boxoffice$ curl -s -d 'id=1002&action=dance' http://127.0.0.1:8000/order | grep msg
+<p class="msg">An order that is cancelled cannot be danceed.</p>
+```
 
 *An order that is cancelled cannot be payed.* The same sentence spells the state `cancelled`, with
 two l's, and builds the action word from `pay`. **That is the mechanism showing**: the state names
@@ -63,16 +87,22 @@ Seagull starts. The question the charter asks is what happens after it starts.
 offset it is read as the machine's own local time, so the same command works anywhere. Ana stops
 the application and starts it again at half past eight in the evening:
 
-@@cap:frozen-start@@
+```
+ana@laptop:~/boxoffice$ BOXOFFICE_NOW=2026-10-10T20:30 python3 boxoffice.py
+boxoffice 1.1 on http://127.0.0.1:8000  (Ctrl-C stops it)
+```
 
-@@cap:frozen@@
+```
+ana@laptop:~/boxoffice$ curl -s -d 'email=member@example.org&show=S1&quantity=2' http://127.0.0.1:8000/book | grep msg
+<p class="msg">Booking for this show has closed.</p><form method="post" action="/book">
+```
 
 That is correct: R4 closes booking an hour before the show, and The Seagull starts at 20:00. But it
 leaves Ana with nothing to refund, because a restart empties the application, and an order for
 tonight can only be made before 19:00. **A fixed clock cannot move with an order in hand.** She
-writes it as an obstacle, *the application cannot move its clock while it keeps its orders*, and
-sets the question up the slow way, on the real clock: in the evening, without `BOXOFFICE_NOW`, she
-starts boxoffice, books two tickets for The Seagull and pays.
+writes it as an obstacle, *the application cannot move its clock while it keeps its orders*. Then
+she sets the question up the slow way, on the real clock. In the evening, without `BOXOFFICE_NOW`,
+she starts boxoffice, books two tickets for The Seagull and pays.
 
 @@cap:evening+evening-book@@
 

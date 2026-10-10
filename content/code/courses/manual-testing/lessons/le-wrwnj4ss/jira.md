@@ -16,10 +16,10 @@ a number: if the theatre's project were called BOX, the traceback report of less
 Jira turns it into a link.
 
 Each issue has an **issue type**, and a software project usually has at least *bug*, *story*,
-*task* and *epic*. A defect is a bug. Its fields include a **summary**, a **description**,
-**priority**, **environment**, **attachments**, **labels**, the **components** of the product it
-touches, and the versions it **affects** and is **fixed** in. An administrator can add **custom
-fields**, and **severity is the usual one**: Jira's own priority field is there from the start, and
+*task* and *epic*. A defect is a bug. Its fields include a summary, a description, priority,
+environment, attachments, labels, the components of the product it touches, and the versions it
+affects and is fixed in. An administrator can add custom fields, and **severity is the usual
+one**: Jira's own priority field is there from the start, and
 a severity field is something each team adds and defines. A team that does not add it ends up
 writing severity into the priority, which is the one confusion lesson 15 spent a section untangling.
 

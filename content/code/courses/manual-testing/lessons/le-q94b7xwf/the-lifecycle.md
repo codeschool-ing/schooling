@@ -84,7 +84,7 @@ decision somebody can disagree with, the second is a decision nobody took.
 
 ## Who moves what
 
-The figure's colours carry the rule worth remembering: **the tester moves a report into the
+The figure's colours carry the rule worth remembering. **The tester moves a report into the
 lifecycle and out of it, and nobody else closes a defect on the tester's behalf.** A developer who
 marks their own fix *closed* has skipped the one check that does not depend on their own reading of
 the report. When a team is short of people, the state that disappears first is *ready for retest*,

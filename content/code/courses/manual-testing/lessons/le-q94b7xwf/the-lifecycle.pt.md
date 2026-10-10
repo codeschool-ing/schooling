@@ -87,7 +87,7 @@ discordar, o segundo é uma decisão que ninguém tomou.
 
 ## Quem move o quê
 
-As cores da figura carregam a regra que vale guardar: **quem testa põe o relato no ciclo e o tira
+As cores da figura carregam a regra que vale guardar. **Quem testa põe o relato no ciclo e o tira
 dele, e ninguém mais fecha um defeito no lugar de quem testa.** Um desenvolvedor que marca a
 própria correção como *fechada* pulou a única conferência que não depende da leitura dele do
 relato. Quando falta gente no time, o estado que some primeiro é *pronto para reteste*, e os

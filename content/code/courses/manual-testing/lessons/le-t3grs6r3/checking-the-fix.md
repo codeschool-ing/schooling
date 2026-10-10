@@ -80,7 +80,7 @@ the discount and then the total in bold.
 | member, Hamlet, 4 tickets | 10%, R$ 288,00 | 10%, R$ 288,00 | pass |
 
 **Sanity has passed, and the two defects can be marked as verified.** Lesson 16 names that step in
-a defect's life; what matters here is that Ana writes the build number beside the result, *verified
+a defect's life. What matters here is that Ana writes the build number beside the result, *verified
 on 1.1*, because a fix is a fact about one build and the next build may lose it.
 
 Had either retest failed, the build would go back to Rui now, with the request that failed and

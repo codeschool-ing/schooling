@@ -3,8 +3,8 @@ title: A reproduction a stranger can replay
 version: 1
 ---
 
-The steps of a report are usually written from memory, in the order things happened, and they
-carry everything that happened: the page you opened first, the show you looked at and changed your
+The steps of a report are usually written from memory, in the order things happened. They carry
+everything that happened: the page you opened first, the show you looked at and changed your
 mind about, the account you signed in with because it was the one in your browser. **A
 reproduction is the shortest path from a known state to the failure**, with nothing on it the
 failure does not need. Every extra step is one more place for the reader to do something slightly

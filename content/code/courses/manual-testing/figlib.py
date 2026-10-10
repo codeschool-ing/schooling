@@ -212,7 +212,7 @@ def prose_labels(svg):
         if 'Plex Sans' not in m.group(1):
             continue
         t = re.sub(r'<[^>]+>', '', m.group(2))
-        t = (t.replace('&lt;', '<').replace('&gt;', '>').replace('&quot;', '"')
+        t = (t.replace('&lt;', '<').replace('&gt;', '>')
              .replace('&amp;', '&'))
         t = ' '.join(t.split())
         if t and re.search(r'[^\W\d_]', t):

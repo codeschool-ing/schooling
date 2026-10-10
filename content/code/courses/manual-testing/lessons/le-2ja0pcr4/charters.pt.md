@@ -54,11 +54,10 @@ Mais algumas para o boxoffice 1.1, cada uma valendo uma sessão:
 
 ## De onde vêm as missões
 
-As missões ficam numa lista, e a lista é alimentada pelos mesmos lugares que o resto do teste: os
-riscos da aula 1, que dizem onde uma sessão vale mais; os requisitos, especialmente aqueles cujos
-casos roteirizados pareceram ralos; os defeitos, porque um defeito novo é motivo para explorar a
-vizinhança dele; e as sessões anteriores, cujas conversas finais terminam com perguntas que não
-estavam na missão. Em geral é o testador quem as escreve, e o líder decide com ele quais rodam nesta
+As missões ficam numa lista, alimentada pelos mesmos lugares que o resto do teste. Os riscos da
+aula 1 dizem onde uma sessão vale mais. Os requisitos também sugerem missões, especialmente aqueles
+cujos casos roteirizados pareceram ralos. Um defeito novo é motivo para explorar a vizinhança dele.
+E as sessões anteriores terminam suas conversas finais com perguntas que não estavam na missão. Em geral é o testador quem as escreve, e o líder decide com ele quais rodam nesta
 semana.
 
 ## O tempo fixo

@@ -3,8 +3,8 @@ title: Uma reprodução que um estranho consegue repetir
 version: 1
 ---
 
-Os passos de um relato costumam ser escritos de memória, na ordem em que as coisas aconteceram, e
-carregam tudo o que aconteceu: a página que você abriu primeiro, o espetáculo que olhou e trocou, a
+Os passos de um relato costumam ser escritos de memória, na ordem em que as coisas aconteceram.
+Eles carregam tudo o que aconteceu: a página que você abriu primeiro, o espetáculo que olhou e trocou, a
 conta em que entrou porque era a que estava no navegador. **Uma reprodução é o caminho mais curto
 de um estado conhecido até a falha**, sem nada que a falha não precise. Cada passo a mais é mais um
 lugar onde o leitor faz algo ligeiramente diferente e vê outra coisa.

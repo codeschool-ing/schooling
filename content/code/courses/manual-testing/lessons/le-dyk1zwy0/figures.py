@@ -31,7 +31,7 @@ def discount_rules(lang):
                   'verificação de sanidade da aula 9 olhou só as regras 3 e 4, e a rodada de regressão '
                   'da aula 10 olhou as oito.',
             cap='A tabela de desconto na 1.1. As quatro regras que falham são exatamente as quatro com '
-                'estudante, e a verificação de sanidade tinha olhado duas regras sem nenhum.'),
+                'estudante, e a verificação de sanidade tinha olhado duas regras sem estudante nenhum.'),
     }[lang]
     f = Fig('l10-discount-rules', 700, 260, t['label'])
     x0, cw = 178, 64
@@ -57,7 +57,6 @@ def discount_rules(lang):
         f.circle(x + cw / 2, 232, 5, fill='--paper-dim')
     for k, name in enumerate(t['rows']):
         f.text(x0 - 14, rows_y[k], name, size=10, anchor='end', weight='600' if k >= 3 else None)
-    f.line(x0 + 3, 127, x0 + 8 * cw - 3, 127, stroke='--wire', width=1, dash='3 3')
     f.text(x0 - 14, 206, t['checks'][0], size=10, anchor='end', fill='--phosphor')
     f.text(x0 - 14, 232, t['checks'][1], size=10, anchor='end', fill='--paper-dim')
     return f, t['cap']

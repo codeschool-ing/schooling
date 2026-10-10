@@ -7,8 +7,8 @@ A defect report is often written as a message to a colleague: *"booking is broke
 letters, can you look?"* It reads fine to the person who wrote it, because they remember the rest.
 **A report is written for somebody who was not there**: a developer next week, a tester on another
 team, or you in three months with the details forgotten. Everything that reader needs to see the
-failure again, and to judge how much it matters, has to be on the page, because the one person who
-could answer their questions is the person they are trying not to interrupt.
+failure again, and to judge how much it matters, has to be on the page. The one person who could
+answer their questions is the person they are trying not to interrupt.
 
 That is the same test lesson 3 applied to a case, turned the other way round. A case says *do this
 and you should see that*. A report says *I did this, I should have seen that, and I saw something
@@ -63,7 +63,7 @@ typed the word. Here is the report Ana writes for it, against 1.1:
 
 Nothing in it is an opinion until the severity, and even that has a scale behind it, which section
 04 of this lesson gives. Nothing in it guesses at the cause either. The traceback names a line of
-code, and the developer will read it there; a report that says *"the int() call needs a
+code, and the developer will read it there. A report that says *"the int() call needs a
 try/except"* has started fixing a program its writer does not own, and is wrong as often as it is
 right.
 

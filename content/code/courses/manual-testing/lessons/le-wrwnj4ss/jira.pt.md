@@ -17,10 +17,10 @@ e de um número: se o projeto do teatro se chamasse BOX, o relato do traceback d
 teste, e o Jira a transforma em link.
 
 Cada item tem um **tipo**, e um projeto de software costuma ter pelo menos *bug*, *story*, *task* e
-*epic*. Um defeito é um bug. Os campos dele incluem um **resumo** (*summary*), uma **descrição**,
-**prioridade**, **ambiente** (*environment*), **anexos**, **rótulos** (*labels*), os
-**componentes** do produto que ele toca, e as versões que ele **afeta** e em que é **corrigido**. Um
-administrador pode criar **campos personalizados**, e **a severidade é o mais comum deles**: o campo
+*epic*. Um defeito é um bug. Os campos dele incluem um resumo (*summary*), uma descrição,
+prioridade, ambiente (*environment*), anexos, rótulos (*labels*), os componentes do produto que ele
+toca, e as versões que ele afeta e em que é corrigido. Um administrador pode criar campos
+personalizados, e **a severidade é o mais comum deles**: o campo
 de prioridade do próprio Jira vem desde o início, e um campo de severidade é algo que cada time cria
 e define. Um time que não o cria acaba escrevendo a severidade na prioridade, que é justamente a
 confusão que a aula 15 gastou uma seção desfazendo.

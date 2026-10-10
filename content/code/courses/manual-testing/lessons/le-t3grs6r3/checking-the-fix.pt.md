@@ -81,7 +81,7 @@ depois o total em negrito.
 | sócio, Hamlet, 4 ingressos | 10%, R$ 288,00 | 10%, R$ 288,00 | passou |
 
 **A sanidade passou, e os dois defeitos podem ser marcados como verificados.** A aula 16 dá nome a
-esse passo na vida de um defeito; o que importa aqui é que a Ana anota o número da versão ao lado do
+esse passo na vida de um defeito. O que importa aqui é que a Ana anota o número da versão ao lado do
 resultado, *verificado na 1.1*, porque uma correção é um fato sobre uma versão, e a próxima pode
 perdê-la.
 

@@ -8,8 +8,8 @@ digita letras, dá uma olhada?"* Para quem escreveu, faz todo sentido, porque es
 resto. **Um relato é escrito para alguém que não estava lá**: um desenvolvedor na semana que vem,
 um testador de outro time, ou você mesmo daqui a três meses, já sem os detalhes. Tudo o que esse
 leitor precisa para ver a falha de novo, e para julgar o quanto ela importa, tem de estar na
-página, porque a única pessoa que poderia responder às perguntas dele é justamente quem ele está
-tentando não interromper.
+página. A única pessoa que poderia responder às perguntas dele é justamente quem ele está tentando
+não interromper.
 
 É o mesmo teste que a aula 3 aplicou a um caso, virado ao contrário. Um caso diz *faça isto e você
 deve ver aquilo*. Um relato diz *eu fiz isto, devia ter visto aquilo e vi outra coisa*. Os campos
@@ -65,7 +65,7 @@ a 1.1:
 
 Nada aqui é opinião até a severidade, e mesmo ela tem uma escala por trás, que a seção 04 desta
 aula apresenta. Nada aqui chuta a causa, também. O traceback aponta uma linha de código, e o
-desenvolvedor vai lê-la lá; um relato que diz *"a chamada int() precisa de um try/except"* começou a
+desenvolvedor vai lê-la lá. Um relato que diz *"a chamada int() precisa de um try/except"* começou a
 consertar um programa que não é de quem escreveu, e erra tanto quanto acerta.
 
 ## O que um relato deixa de fora

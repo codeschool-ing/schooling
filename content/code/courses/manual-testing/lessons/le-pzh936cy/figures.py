@@ -16,7 +16,7 @@ def severity_priority(lang):
             pri_note=['next build', 'this release', 'when convenient'],
             xl='severity: how much harm', yl='priority: how soon',
             names=['student discount ignored', 'a used order refunded', 'traceback on a word',
-                   'shows table 760 px wide', '"cannot be useed"'],
+                   'shows table 760 px wide', '“cannot be useed”'],
             label='A grid with severity along the bottom, trivial, minor, major and critical, and '
                   'priority up the side, P3 at the bottom to P1 at the top. A, the student discount '
                   'ignored, and B, a used order refunded, sit at critical and P1. C, the traceback on '
@@ -30,7 +30,7 @@ def severity_priority(lang):
             pri_note=['próximo build', 'nesta versão', 'quando der'],
             xl='severidade: quanto estrago', yl='prioridade: quando',
             names=['desconto de estudante ignorado', 'pedido usado reembolsado', 'traceback com uma palavra',
-                   'tabela com 760 px de largura', '"cannot be useed"'],
+                   'tabela com 760 px de largura', '“cannot be useed”'],
             label='Uma grade com a severidade ao longo da base, trivial, menor, maior e crítica, e a '
                   'prioridade subindo pela lateral, P3 embaixo até P1 no alto. A, o desconto de '
                   'estudante ignorado, e B, o pedido usado reembolsado, ficam em crítica e P1. C, o '

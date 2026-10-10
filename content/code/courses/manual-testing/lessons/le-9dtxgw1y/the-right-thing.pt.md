@@ -11,10 +11,10 @@ um deles para o lugar errado é o jeito de um bom achado sumir.
 
 | o que você encontrou | o que é | para onde vai | quem decide |
 |---|---|---|---|
-| o boxoffice faz algo que R1 a R9 dizem que não pode | um defeito | um relato de defeito que cita o requisito, aula 15 | o time, na triagem, aula 16 |
+| o boxoffice faz algo que R1 a R9 dizem que não pode | um defeito | um relatório de defeito que cita o requisito, aula 15 | o time, na triagem, aula 16 |
 | um requisito admite duas leituras | uma ambiguidade | uma pergunta ao dono do requisito, antes de os casos serem escritos | o dono |
 | o boxoffice atende ao requisito e o requisito não atende à necessidade | um achado de validação | o mesmo dono, com a jornada que o mostra | o dono |
-| o boxoffice se afasta do requisito e o desvio parece melhor | um defeito, por enquanto | um relato de defeito que diz isso, e uma proposta de mudança no requisito | o dono |
+| o boxoffice se afasta do requisito e o desvio parece melhor | um defeito, por enquanto | um relatório de defeito que diz isso, e uma proposta de mudança no requisito | o dono |
 
 O dono aqui é a gerente do teatro, que escreveu R1 a R9. Numa organização maior é quem ocupa esse
 papel: um product owner, um analista de negócios, o representante do cliente.
@@ -23,14 +23,14 @@ papel: um product owner, um analista de negócios, o representante do cliente.
 
 **Relatar um achado de validação como defeito.** Ana registra "o boxoffice recusa um grupo escolar"
 no sistema de defeitos. Rui lê o R4, vê que o boxoffice faz exatamente o que ele diz e fecha o
-relato como funcionando conforme especificado. Ele está certo, e a pergunta sobre grupos escolares
+relatório como funcionando conforme especificado. Ele está certo, e a pergunta sobre grupos escolares
 agora está fechada junto, numa ferramenta que a gerente nunca lê. A aula 16 trata de rejeições
 como essa, e a maioria delas está certa sobre o produto e calada sobre o requisito.
 
 **Testar contra o que você acha que o teatro quer.** O erro oposto é mais silencioso. Ana decide
 que meia, obviamente, é por ingresso, escreve os casos esperando R$ 152,00 para a família da seção
 03 e relata um defeito quando o boxoffice cobra R$ 120,00. Agora o resultado esperado do caso dela
-é a opinião dela, e Rui tem um relato dizendo que o código está errado diante de uma regra que
+é a opinião dela, e Rui tem um relatório dizendo que o código está errado diante de uma regra que
 ninguém escreveu. A aula 1 disse que um testador testa contra algo escrito; quando o que está
 escrito não está claro, a saída é fazer com que seja reescrito, e não preencher a lacuna por conta
 própria.
@@ -46,7 +46,7 @@ que a gerente tivesse gostado. Isso ainda entra como defeito, com uma frase dize
 melhoria, porque **um requisito que não descreve mais o produto torna errado todo teste que vier
 depois**. O próximo testador, ou a própria Ana na aula 10 rodando a suíte de regressão, relataria o
 mesmo desvio de novo, e os casos que citam o R6 esperariam algo que o produto não faz mais. Ou o
-produto volta ao R6, ou o R6 muda para bater com o produto. Quem escolhe é o dono, e o relato é o
+produto volta ao R6, ou o R6 muda para bater com o produto. Quem escolhe é o dono, e o relatório é o
 caminho pelo qual a escolha chega até ele.
 
 ## O que acontece quando a resposta chega

@@ -11,8 +11,8 @@ code that was right. Both exits need the same skill, which is telling a symptom 
 
 ## A duplicate is the same cause, not the same words
 
-This week's report says that paying a paid order answers *"cannot be payed"*. Lesson 11 reported
-*"cannot be useed"*. Different words, different buttons. Before deciding, Ana reproduces both on a
+This week's report says that paying a paid order answers *"cannot be payed"*. Lesson 11's report is
+titled by *"cannot be useed"*. Different words, different buttons. Before deciding, Ana reproduces both on a
 fresh 1.1:
 
 ```
@@ -33,8 +33,8 @@ ana@laptop:~/boxoffice$ curl -s -d 'id=1002&action=use' http://127.0.0.1:8000/or
 The two messages are built the same way: the name of the action with *ed* glued on. *Paid* and
 *used* come out as *payed* and *useed*. One sentence in the program makes every refusal, so **one fix mends both, and one retest checks both**. That is the
 test for a duplicate: would fixing the first report fix the second? Here it would, so the new report
-is closed as a duplicate and linked to lesson 11's, and its one useful addition, the *payed*
-wording, is copied into the original so the retest covers it.
+is closed as a duplicate and linked to lesson 11's. Lesson 11's session already met *payed* too, so
+the original's steps cover both, and nothing needs copying across.
 
 The opposite case looks more alike and is not. *A used order can be refunded* and *a refund is
 accepted after the show has started* are both about refunds, both on the same page, both answered
