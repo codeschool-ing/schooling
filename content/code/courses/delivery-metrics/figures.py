@@ -759,6 +759,57 @@ def l03_ageing(lang):
                 'coluna; em setembro um ponto fica sozinho, muito acima de todo o resto.')
 
 
+# ------------------------------------------------------------------ lesson 4
+
+@figure('l04-before-after', 4)
+def l04_before_after(lang):
+    items, _ = billing()
+    a = [c for m, c, s in cycle_days(items, date(2026, 6, 1), date(2026, 7, 31))]
+    b = [c for m, c, s in cycle_days(items, date(2026, 9, 1), date(2026, 9, 30))]
+    f = Fig('l04-before-after', 680, 310, T(
+        lang,
+        f'Two dot histograms of cycle time in days, one dot per item. June and July, {len(a)} '
+        f'items, spread from {min(a)} to {max(a)} days with the median at {pctl(a, 50)} and the '
+        f'85th percentile at {pctl(a, 85)}. September, {len(b)} items, packed between {min(b)} '
+        f'and {max(b)} days with the median at {pctl(b, 50)} and the 85th percentile at '
+        f'{pctl(b, 85)}.',
+        f'Dois histogramas de pontos do tempo de ciclo em dias, um ponto por item. Junho e julho, '
+        f'{len(a)} itens, espalhados de {min(a)} a {max(a)} dias, com mediana em {pctl(a, 50)} e '
+        f'percentil 85 em {pctl(a, 85)}. Setembro, {len(b)} itens, concentrados entre {min(b)} e '
+        f'{max(b)} dias, com mediana em {pctl(b, 50)} e percentil 85 em {pctl(b, 85)}.'))
+    x0, x1, top = 150, 650, 50
+    sx = lambda d: x0 + d / 50 * (x1 - x0)
+    rows = [(T(lang, 'June and July', 'junho e julho'), a, 110, '--phosphor'),
+            (T(lang, 'September', 'setembro'), b, 262, '--amber')]
+    for label, vals, base, colour in rows:
+        f.line(x0, base, x1, base, stroke='--paper-dim', width=1)
+        f.text(x0 - 12, base - 10, label, size=10.5, anchor='end')
+        f.text(x0 - 12, base + 6, T(lang, f'{len(vals)} items', f'{len(vals)} itens'), size=9.5,
+               anchor='end', fill='--paper-dim')
+        seen = {}
+        for v in sorted(vals):
+            k = v // 2
+            n = seen.get(k, 0)
+            seen[k] = n + 1
+            f.circle(sx(k * 2 + 1), base - 6 - n * 8, 3.2, fill=colour)
+        for q in (50, 85):
+            x = sx(pctl(vals, q))
+            f.line(x, base + 2, x, base + 12, stroke='--paper', width=1.4)
+            f.text(x, base + 22, T(lang, f'{"median" if q == 50 else "85th"} {pctl(vals, q)}',
+                                   f'{"mediana" if q == 50 else "p85"} {pctl(vals, q)}'),
+                   size=9, fill='--paper-dim')
+    for t in range(0, 51, 10):
+        f.text(sx(t), 300, str(t), size=9, fill='--paper-dim')
+    f.text(x0, 20, T(lang, 'cycle time in days, one dot per item merged',
+                     'tempo de ciclo em dias, um ponto por item integrado'),
+           size=10, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'The same team before and after the limit: fewer items open, about the same '
+                'number finished, and each one done in a quarter of the time.',
+                'O mesmo time antes e depois do limite: menos itens abertos, mais ou menos o mesmo '
+                'número terminado, e cada um pronto em um quarto do tempo.')
+
+
 # @@LESSONS@@
 
 if __name__ == '__main__':
