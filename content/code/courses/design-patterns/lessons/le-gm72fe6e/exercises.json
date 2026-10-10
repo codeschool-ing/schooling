@@ -1,0 +1,586 @@
+[
+ {
+  "id": "ex-ygfg5zbk",
+  "version": 1,
+  "section": "fragile-base-class",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The first counting.py put four titles on the shelf and printed counted: 7. Where did the extra three come from?",
+  "choices": [
+   {
+    "text": "super() ran both the parent's add_all and the child's",
+    "correct": false,
+    "why": "super() runs the parent's version only; the child's add_all ran once, because main called it once."
+   },
+   {
+    "text": "Shelf.add_all calls self.add, and self is the child",
+    "correct": true,
+    "why": "Right. Each of the three self-calls landed in CountingShelf.add, which counted the titles a second time."
+   },
+   {
+    "text": "The counter was also incremented by __len__ each time the program asked how many titles there were",
+    "correct": false,
+    "why": "__len__ only reads the list; nothing in it touches added."
+   },
+   {
+    "text": "Python called __init__ a second time, once for each class in the hierarchy",
+    "correct": false,
+    "why": "__init__ ran once per object, and it sets the counter to zero rather than adding to it."
+   }
+  ]
+ },
+ {
+  "id": "ex-se5azpam",
+  "version": 1,
+  "section": "fragile-base-class",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "With the second shelf.py (add_all extends the list) and the second counting.py (only add is overridden), a program adds 2 titles one at a time with add, then 5 at once with add_all. What does counted print?",
+  "hint": "Which of the two calls still passes through the child's add?",
+  "value": 2,
+  "tolerance": 0,
+  "unit": "titles"
+ },
+ {
+  "id": "ex-32s1a1kj",
+  "version": 1,
+  "section": "fragile-base-class",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "CountingShelf overrides only add and relies on Shelf.add_all looping over self.add. Which change to Shelf leaves its count right?",
+  "choices": [
+   {
+    "text": "add_all calls a new add_many, which extends the list",
+    "correct": false,
+    "why": "Then batch titles never pass through add, and the child stops counting them, as in the third run."
+   },
+   {
+    "text": "Renaming the private list _titles to _items",
+    "correct": true,
+    "why": "Right. The child never touches the list, and the self-call it depends on is unchanged."
+   },
+   {
+    "text": "Making add call self.add_all([title]), so all storing goes through one method",
+    "correct": false,
+    "why": "add_all loops back into add, which calls add_all again: the child's first add never returns."
+   }
+  ]
+ },
+ {
+  "id": "ex-fqgxr3e7",
+  "version": 1,
+  "section": "class-explosion",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "explosion.py ends at 36 subclasses for four axes. A fifth axis arrives: the loan can be ordinary or express, two options. How many subclasses does one-class-per-combination need now?",
+  "value": 72,
+  "tolerance": 0,
+  "unit": "classes"
+ },
+ {
+  "id": "ex-zj3mg5xk",
+  "version": 1,
+  "section": "class-explosion",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does the class explosion go unnoticed in the early life of a design?",
+  "choices": [
+   {
+    "text": "Because Python generates the combined classes on its own until there are more than ten",
+    "correct": false,
+    "why": "Python generates nothing; every class in that design is written by somebody."
+   },
+   {
+    "text": "Because the first axis is always added with composition",
+    "correct": false,
+    "why": "In the program the first axis is a hierarchy too; the two designs simply cost the same at that size."
+   },
+   {
+    "text": "With two axes of two options, both designs cost four",
+    "correct": true,
+    "why": "Right. A product and a sum agree at 2 × 2 and 2 + 2; they part at the third axis, twelve against seven."
+   },
+   {
+    "text": "Because a class only becomes expensive once it has more than one method",
+    "correct": false,
+    "why": "The cost counted here is the number of classes and where a change has to be made, whatever their size."
+   }
+  ]
+ },
+ {
+  "id": "ex-ssx4yg6w",
+  "version": 1,
+  "section": "class-explosion",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The catalogue team wants Book and Film at the top of the loan classes; the fines office wants the fine rule there. How does a composed design settle it?",
+  "choices": [
+   {
+    "text": "Neither goes on top: item and fine rule each become a field",
+    "correct": true,
+    "why": "Right. A loan has an item and has a fine rule, and neither axis has to be nested inside the other."
+   },
+   {
+    "text": "The team that owns more classes wins, since its axis multiplies less",
+    "correct": false,
+    "why": "Which axis is on top does not change the product; composition removes the choice instead of making it."
+   },
+   {
+    "text": "It uses two hierarchies and multiple inheritance to join them",
+    "correct": false,
+    "why": "That still declares one class per combination, which is the explosion again with more parents."
+   }
+  ]
+ },
+ {
+  "id": "ex-qj58rwkq",
+  "version": 1,
+  "section": "delegation",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "CountedShelf counted 4 with both versions of shelf.py. What protects it from the self-call in the first version?",
+  "choices": [
+   {
+    "text": "It overrides add_all, which stops the parent's version from running",
+    "correct": false,
+    "why": "Its add_all does run the inner shelf's add_all; what matters is whose add that one then calls."
+   },
+   {
+    "text": "Inside the held shelf, self is that Shelf, so its self.add never reaches the wrapper",
+    "correct": true,
+    "why": "Right. A held object calls its own methods on itself, never on the object holding it."
+   },
+   {
+    "text": "Python skips method lookup for objects stored in fields",
+    "correct": false,
+    "why": "Lookup happens as usual; it starts from the inner object's class, which is Shelf."
+   }
+  ]
+ },
+ {
+  "id": "ex-cjhvrhpz",
+  "version": 1,
+  "section": "delegation",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A CountedShelf forwards with __getattr__ instead of writing its methods out. Shelf later gains add_many. What happens to titles added through it?",
+  "choices": [
+   {
+    "text": "They raise AttributeError, since the wrapper never defined add_many",
+    "correct": false,
+    "why": "__getattr__ exists precisely to answer for attributes the wrapper lacks, so the call goes through."
+   },
+   {
+    "text": "They are counted twice, as in the first counting.py",
+    "correct": false,
+    "why": "Nothing in the wrapper counts them at all; the inner shelf never calls back into it."
+   },
+   {
+    "text": "They are shelved and never counted, with no error anywhere",
+    "correct": true,
+    "why": "Right. Automatic forwarding offers every new method without anybody deciding, and that one bypasses the counter."
+   },
+   {
+    "text": "Python refuses to load counted.py until add_many is written out by hand",
+    "correct": false,
+    "why": "Python checks nothing of the kind; the program runs and the report is quietly wrong."
+   }
+  ]
+ },
+ {
+  "id": "ex-e280j5v5",
+  "version": 1,
+  "section": "delegation",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "An object that holds another and forwards calls to it, adding what it needs on the way, is using ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "delegation"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-rws6ss79",
+  "version": 1,
+  "section": "swapping-behaviour",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "During the amnesty week every open loan must stop charging. Why is that one loop of assignments in fines.py?",
+  "choices": [
+   {
+    "text": "Each loan holds its fine rule in a field, and a field can be reassigned",
+    "correct": true,
+    "why": "Right. Replacing the part changes the behaviour of an object that already exists."
+   },
+   {
+    "text": "Amnesty is a subclass of Loan, so the loans become amnesty loans",
+    "correct": false,
+    "why": "Amnesty is a fine rule with no parent at all; the loans stay Loan objects."
+   },
+   {
+    "text": "Python can change an object's class, and the program does that for each loan",
+    "correct": false,
+    "why": "Assigning __class__ is possible and the section advises against it; fines.py assigns a policy instead."
+   }
+  ]
+ },
+ {
+  "id": "ex-72aqepgd",
+  "version": 1,
+  "section": "swapping-behaviour",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A student's loan is due on 16 March and holds GraceDays(3, PerDay(75)). It comes back on 23 March. What is the fine, in cents?",
+  "hint": "Seven days late, before the grace days.",
+  "value": 300,
+  "tolerance": 0,
+  "unit": "cents"
+ },
+ {
+  "id": "ex-1qzjvpgk",
+  "version": 1,
+  "section": "swapping-behaviour",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In test_fines.py the Recording rule answers 999 cents, which no real rule would. What does that number let the test check?",
+  "choices": [
+   {
+    "text": "That the loan rejects implausible fines from its policy",
+    "correct": false,
+    "why": "The loan rejects nothing; the test asserts that 999 comes straight back."
+   },
+   {
+    "text": "That the loan returns its policy's answer instead of computing its own",
+    "correct": true,
+    "why": "Right. A value no real computation produces can only have come from the double."
+   },
+   {
+    "text": "That fines above 900 cents trigger the library's maximum",
+    "correct": false,
+    "why": "No maximum exists in fines.py; the number was chosen for being impossible, not meaningful."
+   },
+   {
+    "text": "That unittest can compare integers of three digits",
+    "correct": false,
+    "why": "assertEqual compares any integers; the size of this one is about telling sources apart."
+   }
+  ]
+ },
+ {
+  "id": "ex-c00set4x",
+  "version": 1,
+  "section": "when-inheritance-fits",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these are inheritance in the places the lesson says it fits? Choose every one that applies.",
+  "choices": [
+   {
+    "text": "class ReservationExpired(LibraryError)",
+    "correct": true,
+    "why": "Yes. One axis, and anywhere that catches LibraryError should catch this too."
+   },
+   {
+    "text": "class ReadyNotice(Notice), filling in the abstract body",
+    "correct": true,
+    "why": "Yes. The parent declared the hole and owns the algorithm around it."
+   },
+   {
+    "text": "class LoanTest(unittest.TestCase)",
+    "correct": true,
+    "why": "Yes. A framework designed for thousands of children, with documented hooks."
+   },
+   {
+    "text": "class CountingShelf(Shelf), overriding add and add_all",
+    "correct": false,
+    "why": "Shelf was not written to be extended and never documented its self-calls; that is the fragile base class."
+   },
+   {
+    "text": "class StudentFilmLoan(FilmLoan), overriding fine",
+    "correct": false,
+    "why": "Two axes vary there, which is why its fine had to be copied from StudentLoan."
+   }
+  ]
+ },
+ {
+  "id": "ex-wr9g4033",
+  "version": 1,
+  "section": "when-inheritance-fits",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Notice.render calls self.body, and Shelf.add_all called self.add. Why is the first safe for children and the second was not?",
+  "choices": [
+   {
+    "text": "Because body returns a string and add returns nothing",
+    "correct": false,
+    "why": "The return type has nothing to do with it; a hidden self-call is fragile whatever it returns."
+   },
+   {
+    "text": "Because an ABC can only ever have one child class",
+    "correct": false,
+    "why": "Notice has two children in fits.py, and an ABC can have any number."
+   },
+   {
+    "text": "That self-call is the declared and enforced contract",
+    "correct": true,
+    "why": "Right. A self-call is dangerous when it is an accident of implementation and safe when it is documented."
+   }
+  ]
+ },
+ {
+  "id": "ex-qravgbj6",
+  "version": 1,
+  "section": "when-inheritance-fits",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each language to how a class is kept from being subclassed.",
+  "pairs": [
+   {
+    "left": "Java",
+    "right": "final on the class, refused by the compiler"
+   },
+   {
+    "left": "Kotlin",
+    "right": "closed by default unless marked open"
+   },
+   {
+    "left": "Python",
+    "right": "typing.final, enforced by a type checker only"
+   },
+   {
+    "left": "TypeScript",
+    "right": "no way to forbid it"
+   }
+  ]
+ },
+ {
+  "id": "ex-k8tyzhz4",
+  "version": 1,
+  "section": "mixins",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Book and Film in mixins.py inherit the same four mixins, yet one prints a shelf label and the other a barcode. Why?",
+  "choices": [
+   {
+    "text": "Their parents are listed in a different order, and Python runs the first label in the method resolution order",
+    "correct": true,
+    "why": "Right. Swapping two names in the parentheses changed what the class does, and nothing warned."
+   },
+   {
+    "text": "Film overrides label itself",
+    "correct": false,
+    "why": "Film defines only __init__; both labels come from mixins."
+   },
+   {
+    "text": "Python picks the mixin whose label uses fields the object has",
+    "correct": false,
+    "why": "Python never looks inside a method to choose it; both objects have title, shelf and code anyway."
+   }
+  ]
+ },
+ {
+  "id": "ex-fceq48ky",
+  "version": 1,
+  "section": "mixins",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Member(JsonMixin) fails with 'Member' object has no attribute 'as_dict'. What does that error show about the mixins?",
+  "choices": [
+   {
+    "text": "That json.dumps cannot serialise objects with a name field",
+    "correct": false,
+    "why": "json.dumps was never reached; the call failed one step earlier, looking for as_dict."
+   },
+   {
+    "text": "That a mixin may only be used by a class with an __init__ of its own",
+    "correct": false,
+    "why": "Member has an __init__; what it lacks is a method another mixin was supposed to bring."
+   },
+   {
+    "text": "JsonMixin relies on a method that only a different parent provides",
+    "correct": true,
+    "why": "Right. It is the fragile base class between siblings, found only when the method is first called."
+   },
+   {
+    "text": "That Member needed to inherit from Book as well",
+    "correct": false,
+    "why": "A member is not a book; what it needed was the as_dict ability, from AsDictMixin."
+   }
+  ]
+ },
+ {
+  "id": "ex-cm8c8888",
+  "version": 1,
+  "section": "mixins",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "In Go, a struct embeds two types that both have a Label method, and code calls s.Label(). What happens?",
+  "choices": [
+   {
+    "text": "The type embedded first wins, as in Python's method resolution order",
+    "correct": false,
+    "why": "Go has no resolution order for this case; it refuses to guess."
+   },
+   {
+    "text": "The type embedded last wins, as with TypeScript mixin functions",
+    "correct": false,
+    "why": "That is TypeScript's rule; Go treats the clash as an error."
+   },
+   {
+    "text": "The compiler refuses the call as an ambiguous selector",
+    "correct": true,
+    "why": "Right. The clash that Python resolved silently in mixins.py cannot compile in Go."
+   },
+   {
+    "text": "The program panics at run time the first time Label is called",
+    "correct": false,
+    "why": "Go catches it earlier, at compile time, when the call is written."
+   }
+  ]
+ },
+ {
+  "id": "ex-sdyfe7m6",
+  "version": 1,
+  "section": "refactor-to-composition",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the steps of turning the loan hierarchy into composition in the order the section takes them.",
+  "items": [
+   "Pin the behaviour with tests that go through open_loan",
+   "Name what varies between the subclasses",
+   "Give the parent a field for each varying thing",
+   "Make open_loan pass parts instead of picking a class",
+   "Delete the subclasses nothing constructs any more"
+  ],
+  "trap": "Deleting the subclasses before the factory stops naming them breaks every caller at once; they go last."
+ },
+ {
+  "id": "ex-9jbv5fet",
+  "version": 1,
+  "section": "refactor-to-composition",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why do the tests in test_loans.py go through open_loan instead of constructing StudentLoan and FilmLoan directly?",
+  "choices": [
+   {
+    "text": "Because unittest cannot import classes, only functions",
+    "correct": false,
+    "why": "unittest imports anything Python can; test_fines.py imports the Loan class."
+   },
+   {
+    "text": "So that they never name the classes the refactoring deletes",
+    "correct": true,
+    "why": "Right. Tests written against the door every caller uses survive a change behind it."
+   },
+   {
+    "text": "Because open_loan is faster than calling a constructor",
+    "correct": false,
+    "why": "It is slightly slower, if anything; speed was not the reason."
+   }
+  ]
+ },
+ {
+  "id": "ex-hgh11k53",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A teammate wants an AuditedShelf that writes a log line for every title added. Shelf comes from a published package. Which design does this lesson argue for?",
+  "choices": [
+   {
+    "text": "Subclass Shelf and override only add, since add_all calls it",
+    "correct": false,
+    "why": "That relies on an undocumented self-call; the second shelf.py removed exactly that and the count went to 1."
+   },
+   {
+    "text": "Hold a Shelf and forward everything with __getattr__, so new methods keep working",
+    "correct": false,
+    "why": "New methods would keep working and go unlogged, which is the failure the audit exists to prevent."
+   },
+   {
+    "text": "Hold a Shelf and write out each method it offers, logging in each one",
+    "correct": true,
+    "why": "Right. It depends only on what Shelf's methods do, and a new method is something the wrapper decides to offer."
+   },
+   {
+    "text": "Copy Shelf's source into the project and add the logging to it",
+    "correct": false,
+    "why": "That forks the package: every fix upstream has to be copied by hand from then on."
+   }
+  ]
+ },
+ {
+  "id": "ex-0r20zbp2",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The library starts lending e-readers for 21 days, with the student grace days as usual. In the composed loans.py, what has to change?",
+  "choices": [
+   {
+    "text": "open_loan learns one more loan length, and nothing else changes",
+    "correct": true,
+    "why": "Right. Length and fine rule are separate parts, so the new item reuses GraceDays unchanged."
+   },
+   {
+    "text": "Two new classes, EReaderLoan and StudentEReaderLoan",
+    "correct": false,
+    "why": "That is what the old hierarchy would have needed; the composed one has no class per kind of loan."
+   },
+   {
+    "text": "A subclass of GraceDays that knows about e-readers",
+    "correct": false,
+    "why": "The grace rule does not care what was lent; it only sees days late."
+   },
+   {
+    "text": "A rewrite of test_loans.py, because every one of its tests names a loan class",
+    "correct": false,
+    "why": "None of them names a class; they all go through open_loan, which is why they survived the refactoring."
+   }
+  ]
+ },
+ {
+  "id": "ex-e1pckp59",
+  "version": 1,
+  "section": "drill",
+  "type": "cloze",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A correct change inside a parent breaks a subclass that relied on the parent calling its own methods. This is called the fragile ___ class problem.",
+  "blanks": [
+   {
+    "accept": [
+     "base"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ }
+]

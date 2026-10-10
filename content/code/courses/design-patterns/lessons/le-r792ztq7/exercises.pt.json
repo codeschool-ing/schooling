@@ -1,0 +1,379 @@
+{
+ "ex-fe7nszmh": {
+  "prompt": "Em reserve.py, por que move_hold deixou Bia sem lugar na fila?",
+  "choices": [
+   {
+    "text": "A chave estrangeira apagou a reserva dela quando o insert citou um sócio que não existe",
+    "why": "Uma chave estrangeira recusa a linha ruim; ela não apagou nada. O delete era um comando do próprio programa."
+   },
+   {
+    "text": "O delete já estava gravado quando o insert falhou",
+    "why": "Isso. Sem transação em volta, cada comando é gravado sozinho, então a falha só conseguia desfazer a si mesma."
+   },
+   {
+    "text": "O SQLite não suporta transações num banco em memória",
+    "why": "Suporta: move_hold_atomically rodou no mesmo tipo de banco e desfez tudo."
+   },
+   {
+    "text": "O CHECK de place recusou o número do lugar dela",
+    "why": "O lugar dela era 1, que o CHECK aceita; o erro impresso foi o da chave estrangeira."
+   }
+  ]
+ },
+ "ex-sz4yxnqa": {
+  "prompt": "Associe cada letra do ACID a onde a seção a encontra, ou não, em reserve.py.",
+  "pairs": [
+   {
+    "left": "Atomicidade",
+    "right": "o ROLLBACK devolveu o delete"
+   },
+   {
+    "left": "Consistência",
+    "right": "a chave estrangeira recusou m-009"
+   },
+   {
+    "left": "Durabilidade",
+    "right": "ausente, porque o banco vive na memória"
+   },
+   {
+    "left": "Isolamento",
+    "right": "só aparece na próxima seção"
+   }
+  ]
+ },
+ "ex-fd22yh02": {
+  "prompt": "Uma função em Go chama db.Exec(\"BEGIN\"), depois o delete e o insert, depois db.Exec(\"COMMIT\"), tudo num *sql.DB. O que está errado?",
+  "choices": [
+   {
+    "text": "Nada; o database/sql percebe o BEGIN e mantém as chamadas seguintes dentro dele",
+    "why": "Ele não lê o seu SQL; entrega a cada chamada a conexão que o pool tiver livre."
+   },
+   {
+    "text": "Cada chamada pega a conexão livre do pool, fora da transação",
+    "why": "Isso. Uma transação pertence a uma conexão, e é por isso que BeginTx devolve um Tx para rodar os comandos."
+   },
+   {
+    "text": "O Go não tem como rodar BEGIN como SQL",
+    "why": "O Exec envia; o problema é qual conexão recebe e qual recebe a chamada seguinte."
+   }
+  ]
+ },
+ "ex-bydsxajq": {
+  "prompt": "A primeira execução de desks.py termina com available=0 e loans=2. O que aconteceu?",
+  "choices": [
+   {
+    "text": "O balcão B gravou uma contagem calculada a partir de um valor que o balcão A já tinha mudado",
+    "why": "Isso. Os dois leram 1 e os dois gravaram 1 - 1; a segunda gravação substituiu a primeira. É a atualização perdida."
+   },
+   {
+    "text": "O SQLite descartou o UPDATE do balcão A porque duas conexões gravaram ao mesmo tempo",
+    "why": "Os dois UPDATE rodaram um depois do outro, numa thread. Nada foi descartado; o balcão B só gravou o mesmo 0."
+   },
+   {
+    "text": "Um insert em loans falhou em silêncio",
+    "why": "Os dois inserts deram certo; é por isso que há dois empréstimos."
+   }
+  ]
+ },
+ "ex-1rvp82bn": {
+  "prompt": "Três balcões seguem o padrão de no_transaction num título com 2 exemplares: os três leem primeiro, depois cada um grava seen - 1 e registra um empréstimo. Quanto diz available no fim?",
+  "hint": "Todo balcão viu o mesmo número.",
+  "unit": "exemplares"
+ },
+ "ex-hetp26ba": {
+  "prompt": "O lend de desks.py, ler e depois gravar, roda dentro de uma transação num PostgreSQL deixado no nível padrão. Dois balcões se sobrepõem. O que acontece?",
+  "choices": [
+   {
+    "text": "O segundo balcão recebe database is locked, como na execução plain_begin",
+    "why": "Isso é o SQLite, que é serializável. O PostgreSQL vem em read committed."
+   },
+   {
+    "text": "O PostgreSQL aborta a segunda transação com um erro de serialização",
+    "why": "Isso exige REPEATABLE READ ou acima; o nível padrão deixa o segundo UPDATE passar."
+   },
+   {
+    "text": "A atualização se perde, a menos que a leitura diga FOR UPDATE",
+    "why": "Isso. O read committed espera o primeiro UPDATE e depois aplica o segundo por cima."
+   },
+   {
+    "text": "Nada dá errado: toda transação serializa as próprias leituras e escritas",
+    "why": "Uma transação agrupa os próprios comandos; se ela fica protegida de outra é assunto do nível de isolamento."
+   }
+  ]
+ },
+ "ex-6nsy9nbz": {
+  "prompt": "A primeira visita de Caio em uow.py chama uow.lend e sai do bloco with. Por que nada é gravado?",
+  "choices": [
+   {
+    "text": "O SQLite recusou o empréstimo porque a cesta tinha um título só",
+    "why": "Nenhum SQL rodou: lend só acrescenta a uma lista."
+   },
+   {
+    "text": "Só o commit grava, e o __exit__ descarta o que nunca foi gravado",
+    "why": "Isso. Esquecer o commit não grava nada, que é o lado seguro de esquecer."
+   },
+   {
+    "text": "Dom Casmurro já não tinha exemplar a essa altura",
+    "why": "O estoque ainda mostrava 2 depois da cesta recusada de Bia."
+   }
+  ]
+ },
+ "ex-7tsyb96e": {
+  "prompt": "Ponha em ordem o que acontece dentro de commit para a cesta de Bia com Dom Casmurro, Vidas Secas e Iracema.",
+  "items": [
+   "BEGIN IMMEDIATE pega a trava de escrita",
+   "Dom Casmurro e Vidas Secas têm a contagem baixada e os empréstimos inseridos",
+   "O UPDATE de Iracema muda zero linhas",
+   "NoCopyLeft é levantada",
+   "ROLLBACK desfaz os dois empréstimos já aplicados"
+  ],
+  "trap": "Os dois primeiros empréstimos chegam sim ao banco dentro da transação; é o rollback que impede que sejam vistos."
+ },
+ "ex-tj3qmgj6": {
+  "prompt": "Em vez de uma unidade de trabalho, checkout chama um auxiliar lend_one que faz commit a cada título. Bia pede três títulos e o terceiro não tem exemplar. Com o que ela sai?",
+  "choices": [
+   {
+    "text": "Nada, porque o erro desfaz o empréstimo inteiro",
+    "why": "Não sobra nada para desfazer: cada um dos dois primeiros foi gravado quando lend_one terminou."
+   },
+   {
+    "text": "Os dois primeiros títulos",
+    "why": "Isso. Cada commit encerrou a própria transação, então a cesta foi emprestada aos pedaços."
+   },
+   {
+    "text": "Os três, com o estoque do terceiro abaixo de zero",
+    "why": "O UPDATE condicional recusa quando não sobra exemplar; essa parte continua funcionando."
+   },
+   {
+    "text": "Só o terceiro, que o banco guardou como a mudança mais recente",
+    "why": "O terceiro é o que falhou; é o único título que ela não pode levar."
+   }
+  ]
+ },
+ "ex-8t6ddgz6": {
+  "prompt": "Na execução CP de branches.py, o link está fora. Por que Centro ainda empresta o exemplar a Bia?",
+  "choices": [
+   {
+    "text": "É a primária, e a contagem dela é a verdade",
+    "why": "Isso. O CP recusa do lado que não tem certeza, e a primária tem."
+   },
+   {
+    "text": "O modo CP só recusa depois de o link ficar fora por um tempo",
+    "why": "Não há temporizador no programa; a Vila Madalena recusa na hora."
+   },
+   {
+    "text": "Bia pediu primeiro, e o primeiro pedido numa partição é sempre aceito",
+    "why": "A ordem não é a regra. Se Caio tivesse pedido primeiro na Vila Madalena, ainda seria recusado."
+   }
+  ]
+ },
+ "ex-v3tewjep": {
+  "prompt": "Alguém resume o CAP como \"escolha dois dos três\". O que a seção diz que está errado nisso?",
+  "choices": [
+   {
+    "text": "São quatro propriedades, não três",
+    "why": "O CAP tem três letras; o erro está no que escolher significa."
+   },
+   {
+    "text": "Todo sistema real precisa abrir mão da disponibilidade",
+    "why": "A execução AP abre mão da consistência; as duas respostas existem."
+   },
+   {
+    "text": "Partição não é opcional; a escolha só existe enquanto uma está acontecendo",
+    "why": "Isso. Não dá para escolher pular partições, então a escolha de verdade é o que cada lado faz durante uma."
+   },
+   {
+    "text": "Está certo, mas só para bancos com mais de dois nós",
+    "why": "A biblioteca tem duas filiais e a escolha é igualmente real ali."
+   }
+  ]
+ },
+ "ex-5avzcq65": {
+  "prompt": "O nome que a literatura dá ao C do CAP, toda leitura vendo a escrita mais recente como se houvesse uma cópia só, é ___ .",
+  "blanks": [
+   {
+    "accept": [
+     "linearizabilidade",
+     "linearizability"
+    ]
+   }
+  ]
+ },
+ "ex-t6gvavsh": {
+  "prompt": "Em latency.py, ONE_WAY_MS passa a 80 e LOCAL_MS continua 3. Quanto Bia espera no modo sync, em milissegundos?",
+  "hint": "A confirmação também precisa voltar.",
+  "unit": "ms"
+ },
+ "ex-6ef2ew87": {
+  "prompt": "Na execução async, uma leitura da réplica aos 40 ms diz 16 de março. O que é isso?",
+  "choices": [
+   {
+    "text": "Uma partição: a réplica está inalcançável",
+    "why": "Nada está quebrado no programa; a mudança só ainda está a caminho."
+   },
+   {
+    "text": "Consistência eventual: uma leitura velha sem falha nenhuma",
+    "why": "Isso. É o preço de todo dia de dizer \"pronto\" a Bia aos 3 ms."
+   },
+   {
+    "text": "Uma atualização perdida, como a primeira execução de desks.py",
+    "why": "Nada foi sobrescrito: aos 80 ms a réplica mostra 30 de março."
+   },
+   {
+    "text": "Um defeito na réplica, que devia ter aplicado a mudança antes",
+    "why": "A réplica não pode ter uma mudança que ainda não chegou; 55 ms de viagem fazem parte do projeto."
+   }
+  ]
+ },
+ "ex-k8ev9kcy": {
+  "prompt": "Um banco responde leituras da réplica mais próxima quando a rede está saudável, e recusa escritas no lado isolado da primária durante uma partição. Que rótulo PACELC serve?",
+  "choices": [
+   {
+    "text": "PA/EL",
+    "why": "Recusar no lado isolado é escolher C durante a partição, não A."
+   },
+   {
+    "text": "PC/EL",
+    "why": "Isso. C na partição, latência no resto: as duas metades da árvore são escolhidas separadamente."
+   },
+   {
+    "text": "PC/EC",
+    "why": "Responder da réplica mais próxima, sem esperar, é o lado L do Else."
+   },
+   {
+    "text": "PA/EC",
+    "why": "As duas metades estão ao contrário."
+   }
+  ]
+ },
+ "ex-ap8e89b6": {
+  "prompt": "Que operação da biblioteca a seção aceita em qualquer filial enquanto o link está fora?",
+  "choices": [
+   {
+    "text": "Emprestar o último exemplar, desde que cada filial guarde registro",
+    "why": "Guardar registro é o que levou a dois empréstimos para um exemplar na execução AP."
+   },
+   {
+    "text": "Fazer uma reserva",
+    "why": "Isso. Uma fila ordenada por horário de chegada resolve o conflito por regra, sem uma pessoa."
+   },
+   {
+    "text": "Pagar uma multa, já que o valor é conhecido de antemão",
+    "why": "Dinheiro cobrado duas vezes pede estorno, que é uma pessoa consertando; multas vão para a primária."
+   }
+  ]
+ },
+ "ex-sw5vksah": {
+  "prompt": "Quais destas operações a seção manda para a primária, pagando pela consistência? Marque todas as que se aplicam.",
+  "choices": [
+   {
+    "text": "Emprestar o último exemplar",
+    "why": "Isso. Dois sócios com a promessa de um livro é um erro que uma pessoa precisa consertar."
+   },
+   {
+    "text": "Mostrar \"disponível\" no catálogo online",
+    "why": "Alguns segundos de atraso não prejudicam ninguém; a leitura vai a uma réplica ou ao modelo de leitura da lição 8."
+   },
+   {
+    "text": "Pagar uma multa",
+    "why": "Isso. Dinheiro, e todas as letras do ACID junto."
+   },
+   {
+    "text": "Contar os \"mais procurados da semana\"",
+    "why": "Uma contagem errada por pouco é inofensiva; a seção não lhe dá transação nenhuma."
+   }
+  ]
+ },
+ "ex-ddytv14w": {
+  "prompt": "Uma operação nova: um sócio dá nota de 1 a 5 a um livro, e a página mostra a média. O link entre as filiais cai. O que o teste da seção sugere?",
+  "choices": [
+   {
+    "text": "Aceitar nas duas filiais e somar as notas quando o link voltar a funcionar",
+    "why": "Isso. Toda nota conta uma vez, seja qual for a filial que a ouviu, então uma regra resolve e ninguém precisa receber telefonema."
+   },
+   {
+    "text": "Recusar na Vila Madalena, como no empréstimo do último exemplar",
+    "why": "O empréstimo é recusado porque só uma pessoa conserta dois empréstimos para um exemplar; duas notas não conflitam com nada."
+   },
+   {
+    "text": "Rodar toda nota dentro de BEGIN IMMEDIATE na primária, para nenhuma se perder",
+    "why": "Isso compra uma consistência de que ninguém precisa e faz toda nota esperar atrás dos empréstimos."
+   }
+  ]
+ },
+ "ex-0zf7x972": {
+  "prompt": "Associe cada problema desta lição à ferramenta que o resolveu.",
+  "pairs": [
+   {
+    "left": "Uma reserva movida pela metade e perdida",
+    "right": "uma transação com ROLLBACK"
+   },
+   {
+    "left": "Dois balcões emprestam um exemplar",
+    "right": "o UPDATE condicional"
+   },
+   {
+    "left": "Um auxiliar faz commit no meio de um empréstimo",
+    "right": "uma unidade de trabalho"
+   },
+   {
+    "left": "Uma réplica mostra a data antiga depois do \"pronto\"",
+    "right": "replicação síncrona"
+   }
+  ]
+ },
+ "ex-cvfy0gev": {
+  "prompt": "Cada filial na execução AP tem dados que satisfazem todas as restrições, e mesmo assim as duas discordam. Que afirmação é verdadeira?",
+  "choices": [
+   {
+    "text": "A execução quebra o ACID, porque existem dois empréstimos para um exemplar",
+    "why": "As transações de cada filial foram válidas; nenhum banco quebrou uma regra que recebeu."
+   },
+   {
+    "text": "Os dois Cs falham, já que são a mesma propriedade vista de dois lados",
+    "why": "São propriedades diferentes; a seção as põe em colunas separadas por isso."
+   },
+   {
+    "text": "O C do ACID vale em cada nó; o do CAP falha entre eles",
+    "why": "Isso. Dados válidos por nó, e cópias que discordam: as duas letras medem coisas diferentes."
+   },
+   {
+    "text": "Nenhum C se aplica, porque a rede estava fora",
+    "why": "Uma partição é justamente quando o C do CAP se decide, e o ACID vale em cada nó de qualquer jeito."
+   }
+  ]
+ },
+ "ex-r3e5hm75": {
+  "prompt": "O catálogo online lê \"disponível: 1\" de uma réplica. Um sócio vê, vai até o balcão, e o exemplar acabou de sair. O que a biblioteca deve fazer?",
+  "choices": [
+   {
+    "text": "Passar o catálogo para leituras síncronas na primária",
+    "why": "Até uma página atual fica velha no instante em que o sócio se levanta; o custo não compraria nada no balcão."
+   },
+   {
+    "text": "Nada: a página trocou consistência por latência, e o balcão continua conferindo na primária",
+    "why": "Isso. O empréstimo em si é onde a consistência é paga, e ele recusou corretamente."
+   },
+   {
+    "text": "Tratar como atualização perdida e pôr BEGIN IMMEDIATE na página",
+    "why": "Nada foi sobrescrito; uma leitura só estava velha. Uma trava no caminho de leitura faria toda visita esperar na fila."
+   },
+   {
+    "text": "Segurar o exemplar para quem estiver com a página aberta",
+    "why": "Isso transforma toda visita numa escrita na primária, a escolha mais cara da tabela."
+   }
+  ]
+ },
+ "ex-rh0rs4b4": {
+  "prompt": "Depois do UPDATE condicional, o programa lê o ___ do cursor para saber se um exemplar foi mesmo retirado.",
+  "blanks": [
+   {
+    "accept": [
+     "rowcount",
+     "cursor.rowcount",
+     "cur.rowcount"
+    ]
+   }
+  ]
+ }
+}

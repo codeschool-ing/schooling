@@ -1,0 +1,584 @@
+[
+ {
+  "id": "ex-4e65g8xg",
+  "version": 1,
+  "section": "push-and-pull",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In pull_push.py, why does the line \"Iracema is back\" never appear in the pull half?",
+  "choices": [
+   {
+    "text": "The generator raised an error on the third title and the loop swallowed it",
+    "correct": false,
+    "why": "Nothing raised; the transcript shows no error, and a for loop does not swallow exceptions."
+   },
+   {
+    "text": "Nobody asked for a third book",
+    "correct": true,
+    "why": "Right. A generator runs only as far as the next value somebody requests, and islice stopped after two."
+   },
+   {
+    "text": "The desk printed it, but after the push half had started, so it scrolled away",
+    "correct": false,
+    "why": "The output is in order and complete; the push half prints its own three lines about the desk."
+   }
+  ]
+ },
+ {
+  "id": "ex-dnh4b6qa",
+  "version": 1,
+  "section": "push-and-pull",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each way of getting values to what gives you them.",
+  "pairs": [
+   {
+    "left": "one value, pulled",
+    "right": "a function call"
+   },
+   {
+    "left": "many values, pulled",
+    "right": "a generator"
+   },
+   {
+    "left": "one value, pushed later",
+    "right": "a promise or future"
+   },
+   {
+    "left": "many values, pushed",
+    "right": "an observable"
+   }
+  ]
+ },
+ {
+  "id": "ex-fed7kqsq",
+  "version": 1,
+  "section": "push-and-pull",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Which of these sources is a poor fit for pulling, so that a reactive design suits it?",
+  "choices": [
+   {
+    "text": "A CSV file of last year's loans, read row by row",
+    "correct": false,
+    "why": "A file waits for the next read; an ordinary loop over it is simpler and never holds more than it asked for."
+   },
+   {
+    "text": "A database cursor over the members table",
+    "correct": false,
+    "why": "A cursor fetches when asked, so the consumer can set the pace, which is the strength of pull."
+   },
+   {
+    "text": "Messages arriving on a socket from the self-service kiosks",
+    "correct": true,
+    "why": "Right. The kiosks send when a member uses them; the program cannot ask them to wait, which is the case push exists for."
+   },
+   {
+    "text": "A list of titles already in memory",
+    "correct": false,
+    "why": "Everything is there before you start; looping over it is pull at its simplest."
+   }
+  ]
+ },
+ {
+  "id": "ex-99cna1fx",
+  "version": 1,
+  "section": "observables",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "returns = of(\"Dom Casmurro\", \"Vidas Secas\") runs, and nothing else yet. What has been printed by the observable?",
+  "choices": [
+   {
+    "text": "Nothing: no one has subscribed",
+    "correct": true,
+    "why": "Right. An observable is a description; the producer runs inside subscribe."
+   },
+   {
+    "text": "Both titles, because of() pushes its values as soon as it is called",
+    "correct": false,
+    "why": "of() only builds an Observable around a producer; the transcript prints \"built; nothing has happened yet\" first."
+   },
+   {
+    "text": "The first title, held until a subscriber arrives",
+    "correct": false,
+    "why": "Nothing is held: there is no buffer in Observable, only a function waiting to be called."
+   }
+  ]
+ },
+ {
+  "id": "ex-vj6n35rp",
+  "version": 1,
+  "section": "observables",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The careless producer calls on_next(\"O Cortiço\") after on_complete(). Why does the subscriber never see it?",
+  "choices": [
+   {
+    "text": "Python stops a function at the first call to a method named on_complete",
+    "correct": false,
+    "why": "The producer keeps running; the call happens and the sink decides what to do with it."
+   },
+   {
+    "text": "The sink closed at the completion and ignores every later signal",
+    "correct": true,
+    "why": "Right. The rule about endings is kept by Sink for every producer, so no producer has to remember it."
+   },
+   {
+    "text": "Titles are deduplicated, and O Cortiço was already sent",
+    "correct": false,
+    "why": "Nothing deduplicates, and O Cortiço had not been sent; the producer sent Iracema before completing."
+   },
+   {
+    "text": "subscribe returned before the producer could send it",
+    "correct": false,
+    "why": "The producer runs entirely inside subscribe, synchronously; it did send it, to a closed sink."
+   }
+  ]
+ },
+ {
+  "id": "ex-va7eqpw6",
+  "version": 1,
+  "section": "observables",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A stream sends any number of values, then at most one ending: on_error or on____ , never both.",
+  "blanks": [
+   {
+    "accept": [
+     "_complete"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-w8gybjmx",
+  "version": 1,
+  "section": "operators",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the run of operators.py, what is printed immediately after \"source: Vidas Secas, 3 days late\"?",
+  "choices": [
+   {
+    "text": "\"source: Iracema, 0 days late\", because the source sends all four before the operators run",
+    "correct": false,
+    "why": "That is how three list comprehensions would behave. A stream sends each value down the whole chain first."
+   },
+   {
+    "text": "\"fines so far: 150 cents\"",
+    "correct": true,
+    "why": "Right. The value goes through filter_, map_ and scan before the source moves on."
+   },
+   {
+    "text": "\"fines so far: 3 cents\", because scan runs before map_",
+    "correct": false,
+    "why": "The operators run in the order written in pipe: filter_, then map_, then scan."
+   }
+  ]
+ },
+ {
+  "id": "ex-ea7ksfxk",
+  "version": 1,
+  "section": "operators",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A fifth return is added to operators.py after O Cortiço: (\"Senhora\", 2). What is the last running total printed, in cents?",
+  "hint": "The total before it was 400.",
+  "value": 500,
+  "tolerance": 0,
+  "unit": "cents"
+ },
+ {
+  "id": "ex-nxd0yfab",
+  "version": 1,
+  "section": "operators",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "fines = Observable(produce).pipe(filter_(...), map_(...), scan(...)) runs. What has happened to the source?",
+  "choices": [
+   {
+    "text": "It ran once, and the results are cached for the first subscriber",
+    "correct": false,
+    "why": "There is no cache anywhere in the chain; each subscription runs the source again."
+   },
+   {
+    "text": "It ran as far as filter_ and is waiting",
+    "correct": false,
+    "why": "Nothing ran at all, not even the source; pipe only nests one description in another."
+   },
+   {
+    "text": "Nothing has run yet; pipe only built a description",
+    "correct": true,
+    "why": "Right. Subscribing to fines is what runs the subscriptions upstream and starts the source."
+   }
+  ]
+ },
+ {
+  "id": "ex-r0n693ze",
+  "version": 1,
+  "section": "hot-and-cold",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In the hot half of hot_cold.py, what is the first title Bia sees?",
+  "choices": [
+   {
+    "text": "Dom Casmurro, replayed to her when she subscribes",
+    "correct": false,
+    "why": "A plain Subject keeps no history; replaying is what ReplaySubject adds."
+   },
+   {
+    "text": "Vidas Secas, the next title after she joined",
+    "correct": true,
+    "why": "Right. She joined after Dom Casmurro went past, and a hot stream sends only what happens from then on."
+   },
+   {
+    "text": "None: a subscriber that joins late receives nothing at all",
+    "correct": false,
+    "why": "Joining late costs only what was already sent; Bia receives the next two titles."
+   }
+  ]
+ },
+ {
+  "id": "ex-g18btcgk",
+  "version": 1,
+  "section": "hot-and-cold",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these sources are hot? Choose all that apply.",
+  "choices": [
+   {
+    "text": "Key presses in the search box of the catalogue page",
+    "correct": true,
+    "why": "Right. The user types whether or not anything is listening."
+   },
+   {
+    "text": "An HTTP request for the list of new acquisitions",
+    "correct": false,
+    "why": "Each subscription sends its own request, which is the cold behaviour that surprises people who subscribe twice."
+   },
+   {
+    "text": "Scans from the barcode reader at the returns desk",
+    "correct": true,
+    "why": "Right. Books pass under the reader on their own schedule."
+   },
+   {
+    "text": "of(\"Dom Casmurro\", \"Iracema\")",
+    "correct": false,
+    "why": "of() runs its producer for every subscriber from the first value, which is the definition of cold."
+   }
+  ]
+ },
+ {
+  "id": "ex-6bfk7a8d",
+  "version": 1,
+  "section": "hot-and-cold",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A page shows the member's loans in two places, and the server log shows two identical requests per page view. What is the likely fix?",
+  "choices": [
+   {
+    "text": "Make the server answer faster, so that the second request finds the first one's cache",
+    "correct": false,
+    "why": "Speed does not change how many times a cold observable runs; there would still be two requests."
+   },
+   {
+    "text": "Share one subscription to the request between both places on that page",
+    "correct": true,
+    "why": "Right. The request is cold, so each subscriber starts its own; an operator such as share makes it one run with two listeners."
+   },
+   {
+    "text": "Turn the request into a Subject that the page pushes values into",
+    "correct": false,
+    "why": "A Subject is hot, but somebody still has to make the request and push the answer; share does that wiring for you."
+   },
+   {
+    "text": "Unsubscribe the second place as soon as the first one gets its answer",
+    "correct": false,
+    "why": "By then both requests have been sent; the second place would also show nothing."
+   }
+  ]
+ },
+ {
+  "id": "ex-sf43x27w",
+  "version": 1,
+  "section": "backpressure",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Values arrive faster than they are handled, on average, all day, and an unbounded queue sits between. What happens?",
+  "choices": [
+   {
+    "text": "The queue and each value's wait keep growing until memory runs out",
+    "correct": true,
+    "why": "Right. A queue absorbs a burst, never a rate; flood.py's oldest scan was already five seconds old after ten."
+   },
+   {
+    "text": "The queue smooths the rate out, so values are handled late but the backlog stays level",
+    "correct": false,
+    "why": "It stays level only if the average rate in equals the rate out; flood.py grows by three every second."
+   },
+   {
+    "text": "Python raises queue.Full once the queue reaches its default size",
+    "correct": false,
+    "why": "An unbounded queue has no size to reach; queue.Full exists only when maxsize is set."
+   }
+  ]
+ },
+ {
+  "id": "ex-466qa7mp",
+  "version": 1,
+  "section": "backpressure",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In flood.py, scans arrive at 5 a second and the catalogue handles 2. How many scans are waiting after 20 seconds?",
+  "value": 60,
+  "tolerance": 0,
+  "unit": "scans"
+ },
+ {
+  "id": "ex-mr2v9n54",
+  "version": 1,
+  "section": "backpressure",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A Reactive Streams subscriber calls request(1) after handling each value. What does that give it that blocking.py gets by blocking a thread?",
+  "choices": [
+   {
+    "text": "Values in a guaranteed order, which a queue cannot promise",
+    "correct": false,
+    "why": "queue.Queue is first in, first out; blocking.py handled all twelve in order."
+   },
+   {
+    "text": "A producer that never sends more than the subscriber said it could take",
+    "correct": true,
+    "why": "Right. Demand is the same backpressure without a waiting thread: the publisher holds its next value until a request arrives."
+   },
+   {
+    "text": "A way to make the barcode scanner at the desk read more slowly",
+    "correct": false,
+    "why": "Demand works only when the producer can hold back; the scanner cannot, which is why section 07 exists."
+   },
+   {
+    "text": "Lost values counted automatically by the library",
+    "correct": false,
+    "why": "With demand nothing is lost; counting losses belongs to the drop and latest strategies."
+   }
+  ]
+ },
+ {
+  "id": "ex-q32p73mg",
+  "version": 1,
+  "section": "strategies",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each kind of data to the strategy the section recommends for a full queue.",
+  "pairs": [
+   {
+    "left": "loans being returned at the desk",
+    "right": "block, or a bounded buffer with an alarm"
+   },
+   {
+    "left": "copies of a book on the shelf, sent on every change",
+    "right": "latest"
+   },
+   {
+    "left": "page views for a weekly report",
+    "right": "drop, with the drops counted"
+   }
+  ]
+ },
+ {
+  "id": "ex-9tyhvgz2",
+  "version": 1,
+  "section": "strategies",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In strategies.py, drop and latest each handled about a third of the scans. What does latest give that drop does not?",
+  "choices": [
+   {
+    "text": "It loses fewer scans",
+    "correct": false,
+    "why": "It loses more: eight against drop's seven."
+   },
+   {
+    "text": "The catalogue always works on the newest scan, ending with scan 12",
+    "correct": true,
+    "why": "Right. Drop keeps the old scans and throws the new ones away, so its last handled scan is 10 and scan 12 is lost."
+   },
+   {
+    "text": "A queue that can hold more than two scans when it needs to",
+    "correct": false,
+    "why": "Latest holds one at most; growing past the capacity is what buffer does."
+   }
+  ]
+ },
+ {
+  "id": "ex-g0cwygxh",
+  "version": 1,
+  "section": "strategies",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Block and buffer both handled all twelve scans and finished at tick 36. Where did block put the cost that buffer kept in memory?",
+  "choices": [
+   {
+    "text": "Nowhere: block is simply the better strategy",
+    "correct": false,
+    "why": "The difference between the rates has to go somewhere, and block only works on a producer that can wait."
+   },
+   {
+    "text": "In lost scans, counted in the lost column",
+    "correct": false,
+    "why": "Block lost none; its lost column is 0, like buffer's."
+   },
+   {
+    "text": "In the producer's time: the scanner finished at tick 31 instead of 12",
+    "correct": true,
+    "why": "Right. The difference between the two rates has to live somewhere: in a growing queue, or in a producer that waits."
+   }
+  ]
+ },
+ {
+  "id": "ex-pmzpwwpx",
+  "version": 1,
+  "section": "in-your-language",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does RxJS have no request(n), when Reactor builds everything on it?",
+  "choices": [
+   {
+    "text": "JavaScript is single-threaded, so a producer can never be faster than its consumer",
+    "correct": false,
+    "why": "One thread does not stop events piling up; that is why RxJS ships throttleTime and sampleTime."
+   },
+   {
+    "text": "Most browser sources are hot and cannot be slowed, so it offers lossy operators instead",
+    "correct": true,
+    "why": "Right. A user does not click more slowly because a handler is busy."
+   },
+   {
+    "text": "It was written before Reactive Streams existed and has not caught up",
+    "correct": false,
+    "why": "The section says it was decided on purpose: demand would have little to slow down in a browser."
+   }
+  ]
+ },
+ {
+  "id": "ex-zc8kyxzx",
+  "version": 1,
+  "section": "in-your-language",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In Go, a send to a buffered channel is wrapped in select with a default case that increments dropped. Which strategy is that?",
+  "choices": [
+   {
+    "text": "block, because channels always block",
+    "correct": false,
+    "why": "A plain send blocks; default runs exactly when the send would have to wait."
+   },
+   {
+    "text": "latest, because the newest scan replaces the one in the channel",
+    "correct": false,
+    "why": "Nothing is taken out of the channel; the new scan is the one that goes."
+   },
+   {
+    "text": "drop, counted",
+    "correct": true,
+    "why": "Right. When the channel is full, the new scan is discarded, and the counter makes the loss visible."
+   },
+   {
+    "text": "buffer, because the channel was made with a capacity",
+    "correct": false,
+    "why": "The capacity is a bound; an unbounded buffer would never reach the default case."
+   }
+  ]
+ },
+ {
+  "id": "ex-r5afz6yn",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "fines.subscribe(...) is called in operators.py. Put what happens in order.",
+  "items": [
+   "scan's producer subscribes to the observable map_ returned",
+   "map_'s producer subscribes to filter_'s observable",
+   "filter_'s producer subscribes to the source",
+   "The source pushes Dom Casmurro into filter_'s callback",
+   "Vidas Secas reaches the subscriber as 150"
+  ],
+  "trap": "Subscriptions run upstream, from the end of the chain to the source, before any value comes down."
+ },
+ {
+  "id": "ex-vww6ec8q",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A screen in the reading room shows how many study desks are free, from a sensor stream that changes many times a minute. Screens are switched on at any time of day. Which design fits?",
+  "choices": [
+   {
+    "text": "A cold observable that reads the sensors from the start for every screen, with a buffer so no change is lost",
+    "correct": false,
+    "why": "The sensors are hot and the past is worthless here; buffering every change only makes the screen show old counts."
+   },
+   {
+    "text": "Hot, holding the current value for any newcomer, and latest for anyone who falls behind",
+    "correct": true,
+    "why": "Right. Like a BehaviorSubject: a screen switched on at noon needs the count now, and only the newest count matters."
+   },
+   {
+    "text": "A plain Subject, and block so that the sensors wait for the slowest screen",
+    "correct": false,
+    "why": "A plain Subject gives a late screen nothing until the next change, and sensors cannot be made to wait."
+   }
+  ]
+ },
+ {
+  "id": "ex-93w5ajzn",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Fine payments arrive from the bank as events, sometimes in bursts of hundreds. The handler records each one in the database. Which choice is wrong here?",
+  "choices": [
+   {
+    "text": "Latest, so the handler always works on the newest payment",
+    "correct": true,
+    "why": "Right, that is the wrong one. A payment is a fact: replacing one with the next loses money a member really paid."
+   },
+   {
+    "text": "A bounded buffer with an alarm when it fills",
+    "correct": false,
+    "why": "That one is sound: bursts end, nothing is lost, and the alarm says when they do not."
+   },
+   {
+    "text": "Demand, if the bank's interface lets the handler ask for payments in batches",
+    "correct": false,
+    "why": "That one is sound too: when the producer can hold back, letting the consumer set the pace loses nothing."
+   }
+  ]
+ }
+]
