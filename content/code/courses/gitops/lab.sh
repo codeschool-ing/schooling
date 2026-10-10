@@ -212,8 +212,9 @@ images() {
   crane manifest "$CACHE/external-secrets/external-secrets:$ESO" >/dev/null 2>&1 || {
     rm -rf "$OPT/src/eso" && mkdir -p "$OPT/src/eso"
     git clone -q --depth 1 --branch $ESO https://github.com/external-secrets/external-secrets "$OPT/src/eso/src"
-    # its go.mod asks for a newer Go than the one that builds the rest
-    (cd "$OPT/src/eso/src" && GOTOOLCHAIN=go1.26.9 CGO_ENABLED=0 go build -o "$OPT/src/eso/external-secrets" .)
+    # its go.mod asks for a newer Go than the one that builds the rest, and
+    # every provider is behind a build tag, which upstream's Makefile sets
+    (cd "$OPT/src/eso/src" && GOTOOLCHAIN=go1.26.9 CGO_ENABLED=0 go build -tags all_providers -o "$OPT/src/eso/external-secrets" .)
     cp "$LAB/lab/external-secrets.Dockerfile" "$OPT/src/eso/Dockerfile"
     docker build -q -t $CACHE/external-secrets/external-secrets:$ESO "$OPT/src/eso" >/dev/null
     docker push -q --platform linux/amd64 $CACHE/external-secrets/external-secrets:$ESO >/dev/null
@@ -682,7 +683,8 @@ PY
   shown "$L9/vault.md" '~/vault/vault.hcl' > /home/ana/vault/vault.hcl
   docker run -d --name vault --network kind -p 127.0.0.1:8200:8200 -v /home/ana/vault:/vault/config:ro -v vault-data:/vault/file hashicorp/vault:$VAULT server >/dev/null
   export VAULT_ADDR=http://127.0.0.1:8200
-  for i in $(seq 30); do vault status >/dev/null 2>&1; [ $? -eq 2 ] && break; sleep 1; done
+  # `vault status` exits 2 while sealed, which is the state being waited for
+  for i in $(seq 60); do rc=0; vault status >/dev/null 2>&1 || rc=$?; [ $rc = 2 ] && break; sleep 1; done
   vault operator init -key-shares=1 -key-threshold=1 -format=json > /home/ana/vault-init.json && chmod 600 /home/ana/vault-init.json
   vault operator unseal "$(jq -r '.unseal_keys_b64[0]' /home/ana/vault-init.json)" >/dev/null
   export VAULT_TOKEN=$(jq -r .root_token /home/ana/vault-init.json)
@@ -759,6 +761,66 @@ stage10() {
   cd /home/ana
 }
 
+L11=$LAB/lessons/le-3bf0n568
+
+# The state at the end of lesson 11, on top of stage10: PostgreSQL beside
+# Vault with the database secrets engine and a root password nobody knows,
+# image-bot's token rotated, and staging applied as staging-applier, after a
+# pull request that reached past staging was refused and reverted.
+stage11() {
+  export GIT_AUTHOR_NAME='Ana Lima' GIT_AUTHOR_EMAIL=ana@example.org
+  export GIT_COMMITTER_NAME='Ana Lima' GIT_COMMITTER_EMAIL=ana@example.org
+  local i
+  export VAULT_ADDR=http://127.0.0.1:8200 VAULT_TOKEN=$(jq -r .root_token /home/ana/vault-init.json)
+  docker image inspect postgres:17-alpine >/dev/null 2>&1 || {
+    docker pull -q "$CACHE/postgres:17-alpine" >/dev/null && docker tag "$CACHE/postgres:17-alpine" postgres:17-alpine
+  }
+  docker rm -fv postgres >/dev/null 2>&1 || true
+  docker run -d --name postgres --network kind -e POSTGRES_PASSWORD=initial-password -e POSTGRES_DB=bulletin postgres:17-alpine >/dev/null
+  for i in $(seq 60); do docker exec postgres pg_isready -q 2>/dev/null && break; sleep 1; done
+  sleep 2
+  vault secrets enable database >/dev/null
+  vault write database/config/bulletin plugin_name=postgresql-database-plugin \
+    connection_url='postgresql://{{username}}:{{password}}@postgres:5432/bulletin?sslmode=disable' \
+    allowed_roles=bulletin-readonly username=postgres password=initial-password >/dev/null
+  shown "$L11/dynamic-credentials.md" '~/vault/readonly.sql' > /home/ana/vault/readonly.sql
+  vault write database/roles/bulletin-readonly db_name=bulletin creation_statements=@/home/ana/vault/readonly.sql default_ttl=1h max_ttl=24h >/dev/null
+  vault write -f database/rotate-root/bulletin >/dev/null
+  docker exec gitea gitea admin user generate-access-token --username image-bot --token-name automation-2 --scopes write:repository --raw > /home/ana/image-bot-2.token
+  chmod 600 /home/ana/image-bot-2.token
+  flux create secret git fleet-writer-auth --url=http://gitea:3000/ana/fleet.git --username=image-bot --password="$(cat /home/ana/image-bot-2.token)" >/dev/null 2>&1
+  curl -fsS -o /dev/null -u image-bot:change-me-please -X DELETE http://localhost:3000/api/v1/users/image-bot/tokens/automation
+  mv /home/ana/image-bot-2.token /home/ana/image-bot.token
+  cd /home/ana/fleet
+  git switch --quiet -c staging-applier
+  shown "$L11/flux-impersonation.md" 'clusters/lab/staging-applier.yaml' > clusters/lab/staging-applier.yaml
+  sed -i 's/^spec:$/spec:\n  serviceAccountName: staging-applier/' clusters/lab/staging.yaml
+  git add clusters
+  commit_at 2026-10-10T02:20:00-03:00 -m "staging: applied as staging-applier"
+  merge staging-applier "staging: applied as staging-applier"
+  git switch --quiet -c staging-applier-extra
+  shown "$L11/flux-impersonation.md" 'clusters/lab/staging-applier-extra.yaml' > clusters/lab/staging-applier-extra.yaml
+  git add clusters
+  commit_at 2026-10-10T02:25:00-03:00 -m "staging-applier: its namespace and its sealed secrets"
+  merge staging-applier-extra "staging-applier: its namespace and its sealed secrets"
+  git switch --quiet -c staging-debug
+  shown "$L11/flux-impersonation.md" 'apps/bulletin/staging/debug.yaml' > apps/bulletin/staging/debug.yaml
+  sed -i 's/^resources:$/resources:\n- debug.yaml/' apps/bulletin/staging/kustomization.yaml
+  git add apps
+  commit_at 2026-10-10T02:30:00-03:00 -m "staging: a debugging account"
+  merge staging-debug "staging: a debugging account"
+  git switch --quiet -c revert-staging-debug
+  GIT_AUTHOR_DATE=2026-10-10T02:35:00-03:00 GIT_COMMITTER_DATE=2026-10-10T02:35:00-03:00 git revert --no-edit HEAD^2 >/dev/null
+  merge revert-staging-debug 'Revert "staging: a debugging account"'
+  flux reconcile kustomization flux-system --with-source >/dev/null 2>&1
+  flux reconcile kustomization staging >/dev/null 2>&1
+  for i in $(seq 60); do
+    kubectl -n flux-system get kustomization staging -o jsonpath='{.status.conditions[?(@.type=="Ready")].status}' | grep -q True && break
+    sleep 2
+  done
+  cd /home/ana
+}
+
 # merge BRANCH TITLE: lesson 2's flow for the branch checked out in the current
 # repository: push it, open the pull request as Ana, run validate.sh on its
 # head as the CI, approve as Bruno, merge as Ana, and bring main up to date.
@@ -804,6 +866,6 @@ down() {
 
 case "${1:-}" in
   merge) shift; merge "$@" ;;
-  tools|images|mirror|up|down|nodes_mirror|gitea|stage1|stage2|stage3|stage4|stage5|stage6|stage7|stage8|stage9|stage10) "$1" ;;
+  tools|images|mirror|up|down|nodes_mirror|gitea|stage1|stage2|stage3|stage4|stage5|stage6|stage7|stage8|stage9|stage10|stage11) "$1" ;;
   *) sed -n '2,12p' "$0"; exit 1 ;;
 esac

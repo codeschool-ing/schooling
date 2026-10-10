@@ -1,0 +1,34 @@
+---
+title: Identidade de carga, sem chave
+version: 1
+---
+
+**A nuvem confia no cluster do jeito que o Vault confiou na aula 9, só que mais de longe.** O
+Kubernetes assina todo token de ServiceAccount com uma chave própria, e pode publicar a metade
+pública num endereço, como um emissor OpenID Connect. Uma conta de nuvem instruída a confiar nesse
+emissor passa a aceitar um token de ServiceAccount como prova de identidade, troca-o por credenciais
+de nuvem de vida curta e aplica a elas as próprias permissões. Nada de longa duração chega ao
+cluster.
+
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 290\" xmlns=\"http://www.w3.org/2000/svg\" role=\"img\" aria-label=\"Federação de identidade de cargas. O Kubernetes assina um token de ServiceAccount e publica as chaves públicas como um emissor OpenID Connect. O pod apresenta o token ao serviço de tokens da nuvem. A nuvem confere a assinatura com as chaves publicadas, acha o mapeamento dessa ServiceAccount para uma identidade da nuvem e devolve credenciais de vida curta. O pod então lê o segredo com essas credenciais, sob as permissões da identidade da nuvem.\"><rect x=\"0\" y=\"0\" width=\"720\" height=\"290\" fill=\"var(--ink)\"/><rect x=\"20\" y=\"40\" width=\"190\" height=\"70\" rx=\"6\" fill=\"var(--panel)\" stroke=\"var(--wire)\"/><text x=\"115.0\" y=\"70.55\" text-anchor=\"middle\" font-family=\"IBM Plex Sans\" font-size=\"13\" fill=\"var(--paper)\">Kubernetes</text><text x=\"115.0\" y=\"88.55\" text-anchor=\"middle\" font-family=\"IBM Plex Sans\" font-size=\"12\" fill=\"var(--paper-dim)\">assina tokens de ServiceAccount</text><rect x=\"20\" y=\"190\" width=\"190\" height=\"70\" rx=\"6\" fill=\"var(--panel)\" stroke=\"var(--wire)\"/><text x=\"115.0\" y=\"220.55\" text-anchor=\"middle\" font-family=\"IBM Plex Sans\" font-size=\"13\" fill=\"var(--paper)\">pod</text><text x=\"115.0\" y=\"238.55\" text-anchor=\"middle\" font-family=\"IBM Plex Sans\" font-size=\"12\" fill=\"var(--paper-dim)\">ServiceAccount bulletin</text><line x1=\"115\" y1=\"110\" x2=\"115.0\" y2=\"180.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\"/><polygon points=\"115,188 119.5,180.0 110.5,180.0\" fill=\"var(--paper-dim)\"/><text x=\"125\" y=\"152\" text-anchor=\"start\" font-family=\"IBM Plex Sans\" font-size=\"11\" fill=\"var(--paper-dim)\">um token assinado</text><rect x=\"300\" y=\"40\" width=\"190\" height=\"70\" rx=\"6\" fill=\"var(--panel)\" stroke=\"var(--wire)\"/><text x=\"395.0\" y=\"70.55\" text-anchor=\"middle\" font-family=\"IBM Plex Sans\" font-size=\"13\" fill=\"var(--paper)\">emissor OIDC</text><text x=\"395.0\" y=\"88.55\" text-anchor=\"middle\" font-family=\"IBM Plex Sans\" font-size=\"12\" fill=\"var(--paper-dim)\">as chaves públicas, publicadas</text><line x1=\"210\" y1=\"75\" x2=\"290.0\" y2=\"75.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\"/><polygon points=\"298,75 290.0,70.5 290.0,79.5\" fill=\"var(--paper-dim)\"/><text x=\"254\" y=\"66\" text-anchor=\"middle\" font-family=\"IBM Plex Sans\" font-size=\"11\" fill=\"var(--paper-dim)\">publica</text><rect x=\"300\" y=\"190\" width=\"190\" height=\"70\" rx=\"6\" fill=\"var(--scan)\" stroke=\"var(--phosphor)\"/><text x=\"395.0\" y=\"220.55\" text-anchor=\"middle\" font-family=\"IBM Plex Sans\" font-size=\"13\" fill=\"var(--paper)\">o serviço de tokens da nuvem</text><text x=\"395.0\" y=\"238.55\" text-anchor=\"middle\" font-family=\"IBM Plex Sans\" font-size=\"12\" fill=\"var(--paper-dim)\">confere, mapeia, troca</text><line x1=\"210\" y1=\"215\" x2=\"290.0\" y2=\"215.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\"/><polygon points=\"298,215 290.0,210.5 290.0,219.5\" fill=\"var(--paper-dim)\"/><text x=\"254\" y=\"206\" text-anchor=\"middle\" font-family=\"IBM Plex Sans\" font-size=\"11\" fill=\"var(--paper-dim)\">o token</text><line x1=\"298\" y1=\"240\" x2=\"220.0\" y2=\"240.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" stroke-dasharray=\"4 4\"/><polygon points=\"212,240 220.0,244.5 220.0,235.5\" fill=\"var(--paper-dim)\"/><text x=\"254\" y=\"256\" text-anchor=\"middle\" font-family=\"IBM Plex Sans\" font-size=\"11\" fill=\"var(--paper-dim)\">credenciais de vida curta</text><line x1=\"395\" y1=\"188\" x2=\"395.0\" y2=\"120.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\" stroke-dasharray=\"4 4\"/><polygon points=\"395,112 390.5,120.0 399.5,120.0\" fill=\"var(--paper-dim)\"/><text x=\"405\" y=\"152\" text-anchor=\"start\" font-family=\"IBM Plex Sans\" font-size=\"11\" fill=\"var(--paper-dim)\">busca as chaves</text><rect x=\"560\" y=\"190\" width=\"140\" height=\"70\" rx=\"6\" fill=\"var(--panel)\" stroke=\"var(--wire)\"/><text x=\"630.0\" y=\"220.55\" text-anchor=\"middle\" font-family=\"IBM Plex Sans\" font-size=\"13\" fill=\"var(--paper)\">cofre de segredos</text><text x=\"630.0\" y=\"238.55\" text-anchor=\"middle\" font-family=\"IBM Plex Sans\" font-size=\"12\" fill=\"var(--paper-dim)\">permissões próprias</text><line x1=\"490\" y1=\"225\" x2=\"550.0\" y2=\"225.0\" stroke=\"var(--paper-dim)\" stroke-width=\"1.5\"/><polygon points=\"558,225 550.0,220.5 550.0,229.5\" fill=\"var(--paper-dim)\"/></svg>", "caption": "A nuvem nunca guarda uma senha para o pod: ela confere um token que o cluster assinou, com chaves que o cluster publicou, e liga a ServiceAccount a uma identidade dela.", "same": ["Kubernetes", "pod", "ServiceAccount bulletin"]}
+```
+
+Cada nuvem dá um nome diferente ao arranjo e pede um mapeamento diferente:
+
+| | o mapeamento, de ServiceAccount para identidade da nuvem | onde fica escrito |
+|---|---|---|
+| **AWS** | um role IAM cuja política de confiança nomeia o emissor do cluster e a ServiceAccount; chamado IRSA, ou EKS Pod Identity na forma mais nova | a política de confiança do role, ou uma associação no EKS |
+| **Google Cloud** | Workload Identity Federation: um vínculo IAM que dá à ServiceAccount, como principal, um papel no segredo | o vínculo, no projeto ou no segredo |
+| **Azure** | Workload Identity: uma credencial federada numa identidade gerenciada, nomeando o emissor e a ServiceAccount | a identidade gerenciada |
+
+Duas consequências importam num repositório GitOps. **O lado da nuvem é infraestrutura como
+código**, no mesmo Terraform que criou o cluster, e o curso `iac` é onde ele mora; o lado do cluster
+é uma ServiceAccount, às vezes com uma anotação nomeando a identidade da nuvem, e mora no `fleet`
+como todo o resto. E **a permissão é por ServiceAccount**, então o `bulletin` da produção pode ter
+um segredo e mais nada, o mesmo formato da política do Vault da aula 9. Uma ServiceAccount
+compartilhada por toda carga de um namespace compartilharia com elas todas as permissões, que é o
+assunto da aula 11.
+
+O laboratório não tem conta de nuvem, então nada disto foi executado para o curso; os cofres da
+seção anterior são onde isto seria usado, e o cofre do Vault é a mesma troca na sua própria máquina.
