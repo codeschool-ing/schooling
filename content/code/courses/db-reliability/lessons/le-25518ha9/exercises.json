@@ -1,0 +1,640 @@
+[
+  {
+    "id": "ex-nz3tpz5w",
+    "version": 1,
+    "section": "files-not-rows",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a cold backup (stop the server, copy the directory, start it) cost?",
+    "hint": "What is the server doing while cp runs?",
+    "choices": [
+      {
+        "text": "Its consistency, since the files are copied one after another",
+        "correct": false,
+        "why": "With the server stopped nothing changes during the copy, so every file is from the same moment."
+      },
+      {
+        "text": "The write-ahead log, which a cold copy leaves behind on the server",
+        "correct": false,
+        "why": "The copy took pg_wal too: 689 of its 991 MB."
+      },
+      {
+        "text": "An outage for as long as the copy takes",
+        "correct": true,
+        "why": "Right. The copy is perfect, and nobody can use the database while it is taken."
+      },
+      {
+        "text": "Nothing; it is the free version of a base backup",
+        "correct": false,
+        "why": "It costs the one thing most databases cannot spare: being down."
+      }
+    ]
+  },
+  {
+    "id": "ex-hbc1fvb7",
+    "version": 1,
+    "section": "files-not-rows",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The cold copy was 991 MB. How many of those megabytes were the `pg_wal` directory?",
+    "hint": "The second du.",
+    "value": 689,
+    "tolerance": 0,
+    "unit": "MB"
+  },
+  {
+    "id": "ex-fspfcxjk",
+    "version": 1,
+    "section": "files-not-rows",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Somebody backs up a busy server with `cp -a` of its data directory, and the copy starts without errors. What can be wrong with it?",
+    "hint": "When was each file copied?",
+    "choices": [
+      {
+        "text": "Each file is from a different moment",
+        "correct": true,
+        "why": "Right. Without the log written during the copy, nothing repairs the files into one moment."
+      },
+      {
+        "text": "Nothing: a copy that starts cleanly is consistent",
+        "correct": false,
+        "why": "It started because crash recovery found nothing it recognised as wrong. That is not the same as consistent."
+      },
+      {
+        "text": "The files belong to the wrong user and the server will refuse them",
+        "correct": false,
+        "why": "cp -a keeps owners and permissions, and the scenario says it started."
+      },
+      {
+        "text": "Its indexes are missing, because cp skips them",
+        "correct": false,
+        "why": "cp copies every file; the indexes are there, possibly pointing at rows that are not."
+      }
+    ]
+  },
+  {
+    "id": "ex-5rhwrj6x",
+    "version": 1,
+    "section": "files-not-rows",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What would a crash recovery need in order to repair a copy made by `cp` on a running server?",
+    "hint": "The server already writes it.",
+    "choices": [
+      {
+        "text": "A list of which files cp copied first",
+        "correct": false,
+        "why": "The order alone tells recovery nothing about what changed in between."
+      },
+      {
+        "text": "A second copy taken immediately after the first",
+        "correct": false,
+        "why": "Two inconsistent copies do not make a consistent one."
+      },
+      {
+        "text": "The checksums of every file at the moment the copy started",
+        "correct": false,
+        "why": "Checksums say whether bytes changed, not what to do about it."
+      },
+      {
+        "text": "All the log written while the copy ran, and a bit before",
+        "correct": true,
+        "why": "Right. That stretch of write-ahead log is what pg_basebackup collects and backup_label points at."
+      }
+    ]
+  },
+  {
+    "id": "ex-m1wmy6xr",
+    "version": 1,
+    "section": "base-backup",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of `pg_basebackup -X stream -c fast` in the order it reported them.",
+    "hint": "The log position comes from a checkpoint.",
+    "items": [
+      "Wait for a checkpoint",
+      "Note the write-ahead log start point",
+      "Copy the files while a receiver collects the log",
+      "Note the end point and write the manifest"
+    ],
+    "trap": "The checkpoint fixes the point recovery starts from; the files are copied while the log streams; the end point says how far recovery has to go."
+  },
+  {
+    "id": "ex-zj102rnf",
+    "version": 1,
+    "section": "base-backup",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `-c fast` not the default for `pg_basebackup`?",
+    "hint": "What does an immediate checkpoint do on a busy server?",
+    "choices": [
+      {
+        "text": "It skips the checkpoint, which makes the backup unsafe",
+        "correct": false,
+        "why": "It asks for the checkpoint immediately; it does not skip it."
+      },
+      {
+        "text": "A burst of writes that a busy server feels",
+        "correct": true,
+        "why": "Right. The default spreads the checkpoint's writes out, and the backup waits for it instead."
+      },
+      {
+        "text": "It only works with -X stream",
+        "correct": false,
+        "why": "The two are independent; -c chooses the checkpoint, -X the log."
+      },
+      {
+        "text": "It produces a backup without a manifest",
+        "correct": false,
+        "why": "The manifest is written either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-5tm2n4sq",
+    "version": 1,
+    "section": "base-backup",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `backup_label` tell the server that starts on the copy?",
+    "hint": "Its first line.",
+    "choices": [
+      {
+        "text": "Who took the backup, when and why, for the record",
+        "correct": false,
+        "why": "The LABEL line is a name. What matters to the server is the start location."
+      },
+      {
+        "text": "Where recovery must start in the log",
+        "correct": true,
+        "why": "Right. The server replays from START WAL LOCATION instead of trusting its control file."
+      },
+      {
+        "text": "Which databases the backup contains",
+        "correct": false,
+        "why": "A base backup contains all of them; the label does not list databases."
+      },
+      {
+        "text": "The password of the role that took it",
+        "correct": false,
+        "why": "No password is in it."
+      }
+    ]
+  },
+  {
+    "id": "ex-em38x2eg",
+    "version": 1,
+    "section": "base-backup",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With `-X ___`, `pg_basebackup` collects the write-ahead log over a second connection while the files are copied.",
+    "hint": "The word for the way a replica receives the log.",
+    "blanks": [
+      {
+        "accept": [
+          "stream"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-3bq4yf3v",
+    "version": 1,
+    "section": "verifying",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "One line of text was appended to `global/pg_control` in the backup. How did `pg_verifybackup` notice?",
+    "hint": "Look at its error.",
+    "choices": [
+      {
+        "text": "The server refused to start on the copy",
+        "correct": false,
+        "why": "pg_verifybackup never starts a server; it reads the files."
+      },
+      {
+        "text": "It read pg_control and found an invalid state",
+        "correct": false,
+        "why": "It does not interpret the file; it compares it with what the manifest says."
+      },
+      {
+        "text": "The write-ahead log no longer matched the file",
+        "correct": false,
+        "why": "The error named the file's size, not the log."
+      },
+      {
+        "text": "Its size differed from the manifest's",
+        "correct": true,
+        "why": "Right. 8201 bytes on disk against 8192 recorded when the server sent it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xkrdm7dh",
+    "version": 1,
+    "section": "verifying",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A base backup passes `pg_verifybackup`. What has that established?",
+    "hint": "Whose bytes are compared with whose?",
+    "choices": [
+      {
+        "text": "The bytes are what the server sent",
+        "correct": true,
+        "why": "Right, and the log the copy needs is there too. One class of failure is ruled out; a restore is still the only proof it works."
+      },
+      {
+        "text": "That the database inside is free of corruption",
+        "correct": false,
+        "why": "A page damaged on the server is copied faithfully and verifies perfectly."
+      },
+      {
+        "text": "That a server will start on it and answer queries",
+        "correct": false,
+        "why": "Only starting one establishes that."
+      },
+      {
+        "text": "That it matches the live server as it is now",
+        "correct": false,
+        "why": "It is compared with the manifest written when it was taken, not with the server today."
+      }
+    ]
+  },
+  {
+    "id": "ex-vgaxq527",
+    "version": 1,
+    "section": "verifying",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is `pg_verifybackup` typed as `/usr/lib/postgresql/16/bin/pg_verifybackup`?",
+    "hint": "Where does Ubuntu put the less common PostgreSQL programs?",
+    "choices": [
+      {
+        "text": "Because it has to run as root",
+        "correct": false,
+        "why": "It ran as ana. The full path is about where the program is, not who runs it."
+      },
+      {
+        "text": "Because the name is shared with another program",
+        "correct": false,
+        "why": "No other program has that name."
+      },
+      {
+        "text": "Ubuntu keeps it out of the PATH",
+        "correct": true,
+        "why": "Right. Ubuntu wraps the common tools in /usr/bin and leaves the rest in /usr/lib/postgresql/16/bin."
+      },
+      {
+        "text": "Because version 16 renamed it",
+        "correct": false,
+        "why": "It has had this name since PostgreSQL 13."
+      }
+    ]
+  },
+  {
+    "id": "ex-591k0pwk",
+    "version": 1,
+    "section": "restoring-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A restore copies the base backup into the data directory and gives it to postgres, but skips `chmod 700`. What happens?",
+    "hint": "PostgreSQL is particular about who can read its files.",
+    "choices": [
+      {
+        "text": "The server starts, and anyone on the machine can read the data",
+        "correct": false,
+        "why": "PostgreSQL checks the directory's permissions at start and refuses rather than run exposed."
+      },
+      {
+        "text": "The server starts read-only until the permissions are fixed",
+        "correct": false,
+        "why": "There is no such mode; it does not start."
+      },
+      {
+        "text": "Nothing; cp -a already set them",
+        "correct": false,
+        "why": "The backup was written by ana with ordinary permissions; the restore has to tighten them."
+      },
+      {
+        "text": "The server refuses to start, and says why in its log",
+        "correct": true,
+        "why": "Right. A data directory readable by others is refused, and the log names the permissions."
+      }
+    ]
+  },
+  {
+    "id": "ex-saqhkv94",
+    "version": 1,
+    "section": "restoring-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which log line says the restored copy has become one consistent moment?",
+    "hint": "Before it, the copy is still being repaired.",
+    "choices": [
+      {
+        "text": "`database system is ready to accept connections`",
+        "correct": false,
+        "why": "That comes later, after the checkpoint; consistency was reached before it."
+      },
+      {
+        "text": "`checkpoint starting: end-of-recovery immediate wait`",
+        "correct": false,
+        "why": "That checkpoint follows recovery; it does not mark consistency."
+      },
+      {
+        "text": "`consistent recovery state reached at 0/2D000100`",
+        "correct": true,
+        "why": "Right. Replaying up to the backup's end point is what makes the copy consistent."
+      },
+      {
+        "text": "`redo starts at`, the first replay line",
+        "correct": false,
+        "why": "That is where repair begins, not where it is finished."
+      }
+    ]
+  },
+  {
+    "id": "ex-0n89bx21",
+    "version": 1,
+    "section": "restoring-files",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Restoring the base backup needed no `createdb`, no globals file and no roles created first. Why?",
+    "hint": "Where do roles live on disk?",
+    "choices": [
+      {
+        "text": "Roles are in the data directory, so the copy carried them",
+        "correct": true,
+        "why": "Right. The whole server comes back, roles, every database and their owners."
+      },
+      {
+        "text": "pg_basebackup dumps the globals for you",
+        "correct": false,
+        "why": "It dumps nothing. It copies files, and roles are files like everything else."
+      },
+      {
+        "text": "The restore server already had the same roles from lesson 2",
+        "correct": false,
+        "why": "Its data directory was deleted and replaced; nothing of it survived."
+      },
+      {
+        "text": "Physical restores skip ownership entirely",
+        "correct": false,
+        "why": "Ownership is restored exactly as it was, because the catalogue files are copied."
+      }
+    ]
+  },
+  {
+    "id": "ex-3fg5w4rv",
+    "version": 1,
+    "section": "snapshots",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A storage snapshot of the single volume holding a running server's data directory and log is taken. What state is it in?",
+    "hint": "As if something had happened at that instant.",
+    "choices": [
+      {
+        "text": "Inconsistent, like a cp of a running server",
+        "correct": false,
+        "why": "A cp reads files at different moments; a snapshot captures them all at one."
+      },
+      {
+        "text": "Crash-consistent: as if the power had been cut, which PostgreSQL recovers from",
+        "correct": true,
+        "why": "Right. Every file is from the same instant, and the log repairs the rest on start."
+      },
+      {
+        "text": "Clean, as if the server had been shut down",
+        "correct": false,
+        "why": "Nothing flushed or closed; it is the state after a crash, not after a shutdown."
+      },
+      {
+        "text": "Unusable without pg_backup_start",
+        "correct": false,
+        "why": "A single atomic snapshot is safe without it; the log makes crash recovery work."
+      }
+    ]
+  },
+  {
+    "id": "ex-700tz0rd",
+    "version": 1,
+    "section": "snapshots",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Data and write-ahead log live on two cloud disks. A script snapshots one, then the other, 400 ms later. What is the problem, and the fix?",
+    "hint": "One crash, or two?",
+    "choices": [
+      {
+        "text": "None: 400 ms is too short to matter",
+        "correct": false,
+        "why": "Any writes in those 400 ms make the log describe a history the data copy does not have."
+      },
+      {
+        "text": "The log snapshot is unnecessary; take only the data volume",
+        "correct": false,
+        "why": "Without the log, crash recovery has nothing to repair the data with."
+      },
+      {
+        "text": "The two are two crashes at two moments; snapshot them as one atomic group",
+        "correct": true,
+        "why": "Right, or wrap the snapshots in pg_backup_start and pg_backup_stop and keep the label."
+      },
+      {
+        "text": "Run fsfreeze on both volumes and the gap disappears",
+        "correct": false,
+        "why": "fsfreeze makes each volume clean on its own; it does not make two snapshots one instant."
+      }
+    ]
+  },
+  {
+    "id": "ex-y44re1f0",
+    "version": 1,
+    "section": "snapshots",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is a snapshot of your running virtual machine not a backup in this course's sense, although PostgreSQL would recover from it?",
+    "hint": "Where does the snapshot live?",
+    "choices": [
+      {
+        "text": "It lives on the computer it protects",
+        "correct": true,
+        "why": "Right. One failed disk or one deleted machine takes both. Lesson 9 is about that."
+      },
+      {
+        "text": "Because it is not crash-consistent",
+        "correct": false,
+        "why": "It is: the whole disk is one volume, captured at one instant."
+      },
+      {
+        "text": "Because PostgreSQL cannot read a hypervisor's format",
+        "correct": false,
+        "why": "Restoring the snapshot gives the machine back its disk; PostgreSQL never sees a format."
+      },
+      {
+        "text": "Because it is taken far too often to be useful",
+        "correct": false,
+        "why": "Frequency is not the issue; location is."
+      }
+    ]
+  },
+  {
+    "id": "ex-1241qase",
+    "version": 1,
+    "section": "physical-limits",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many seconds did `pg_basebackup` take for the whole 318 MB server?",
+    "hint": "The real line.",
+    "value": 1.3,
+    "tolerance": 0.1,
+    "unit": "seconds"
+  },
+  {
+    "id": "ex-1vxdhjk4",
+    "version": 1,
+    "section": "physical-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the physical restore not slow down with the number of indexes, as lesson 2's logical restore did?",
+    "hint": "What happened to the indexes in each?",
+    "choices": [
+      {
+        "text": "The physical restore skipped the indexes and rebuilt them later",
+        "correct": false,
+        "why": "Nothing is rebuilt later; the indexes arrive as finished files."
+      },
+      {
+        "text": "Base backups compress indexes better than dumps",
+        "correct": false,
+        "why": "Compression is not the difference. A dump does not contain indexes at all, only the commands to build them."
+      },
+      {
+        "text": "The restore server had more memory for sorting",
+        "correct": false,
+        "why": "Both restores ran on the same machine."
+      },
+      {
+        "text": "The indexes came back as files, already built",
+        "correct": true,
+        "why": "Right. Its time depends on the bytes and the disk, not on what has to be rebuilt."
+      }
+    ]
+  },
+  {
+    "id": "ex-tctz93pg",
+    "version": 1,
+    "section": "physical-limits",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can a base backup of a PostgreSQL 16 server NOT do? Choose all that apply.",
+    "hint": "Think about version, scope and damage.",
+    "choices": [
+      {
+        "text": "Start on PostgreSQL 17",
+        "correct": true,
+        "why": "Right. A physical copy starts only on the same major version."
+      },
+      {
+        "text": "Restore one table without restoring the server",
+        "correct": true,
+        "why": "Right. Getting one table back means restoring the whole server somewhere else first."
+      },
+      {
+        "text": "Restore every database on the server at once",
+        "correct": false,
+        "why": "That is exactly what it does: the whole server comes back."
+      },
+      {
+        "text": "Detect a damaged page that was copied from the server",
+        "correct": true,
+        "why": "Right. The bytes match the manifest; the damage comes along unremarked."
+      }
+    ]
+  },
+  {
+    "id": "ex-p2h6btyt",
+    "version": 1,
+    "section": "physical-limits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A base backup is taken nightly at 02:00. A disk fails at 18:00. How much data is lost?",
+    "hint": "A base backup is still one moment.",
+    "choices": [
+      {
+        "text": "Nothing, because a base backup copies the log too",
+        "correct": false,
+        "why": "It copies the log written during the backup, which ends a minute after 02:00."
+      },
+      {
+        "text": "Sixteen hours, as with a nightly dump",
+        "correct": true,
+        "why": "Right. Faster to restore, same loss. Lesson 4 keeps the log in between."
+      },
+      {
+        "text": "Only the minutes the backup took",
+        "correct": false,
+        "why": "Everything after the backup's end point is outside it."
+      },
+      {
+        "text": "Eight hours, half the gap",
+        "correct": false,
+        "why": "There is no halfway: the backup holds 02:00 and nothing later."
+      }
+    ]
+  },
+  {
+    "id": "ex-paefc6fw",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team keeps only base backups, verified nightly with `pg_verifybackup`. A bug in a disk controller has been silently damaging pages of one table for a week. What do they find on the day they need a restore?",
+    "hint": "What does a physical copy do with damage, and what does verification check?",
+    "choices": [
+      {
+        "text": "A clean copy from before the damage started",
+        "correct": false,
+        "why": "Only if they still keep a backup older than a week, and nothing in their checks would have told them which one."
+      },
+      {
+        "text": "A week of backups that verify perfectly and carry the damage",
+        "correct": true,
+        "why": "Right. A dump would have failed on the bad pages; keeping both kinds is how a failure shows up in one of them."
+      },
+      {
+        "text": "The verification failing every night for a week, unnoticed",
+        "correct": false,
+        "why": "Verification compares the copy with what the server sent, which matched. It passed every night."
+      },
+      {
+        "text": "A restore that refuses to start",
+        "correct": false,
+        "why": "A damaged table page does not stop a server starting; it surfaces when the table is read."
+      }
+    ]
+  }
+]
