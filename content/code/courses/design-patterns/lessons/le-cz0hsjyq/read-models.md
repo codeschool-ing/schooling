@@ -44,9 +44,9 @@ waiting count 1, and the last line shows it fall back to 0 when Dani borrowed th
 That last line works only because `CopyLent` carries `was_reserved`. Without it, the projector would
 see "C3 was lent to dani" and have no way to know whether a reservation was used up: the queue lives
 in the write model, which the projector must not read. **A read model can show only what the events
-say.** When a screen needs a fact, the fix is in the event, and adding a field to an event is a
-design decision about the write side's vocabulary, which lesson 9 treats with the care it needs
-once events are stored for years.
+say.** When a screen needs a fact, the fix is in the event. Adding a field to an event is a design
+decision about the write side's vocabulary, and lesson 9 treats it with the care it needs once
+events are stored for years.
 
 ## One write model, many read models
 

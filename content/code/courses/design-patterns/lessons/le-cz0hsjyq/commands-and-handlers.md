@@ -29,7 +29,7 @@ command can be refused, while an event reports a fact that is already true.
 ```
 
 The second lending of C3 is the interesting one. Caio returns it on 19 March, three days late, so
-the fine is 150 cents; Dani then asks for it and is refused because Bia reserved the title first;
+the fine is 150 cents. Dani then asks for it and is refused, because Bia reserved the title first.
 Bia gets it, and her event says `was_reserved=True`:
 
 ```
@@ -63,8 +63,8 @@ could only ever go up.
 The dispatch table `HANDLERS` maps a command's type to a function, which is the whole of what a
 *command bus* in a framework does, plus middleware for logging, permissions and transactions around
 each call. In Java that is often an interface `CommandHandler<C>` with one class per command,
-registered in a Spring context; in TypeScript a discriminated union of command types and a `switch`
-on the `type` field; in Go a type switch, `switch c := cmd.(type)`. Python's `match` statement, which
+registered in a Spring context. In TypeScript it is a discriminated union of command types and a
+`switch` on the `type` field, and in Go a type switch, `switch c := cmd.(type)`. Python's `match` statement, which
 the next section uses on events, would serve here as well.
 
 A handler that returns nothing makes some people uneasy: how does the screen show "B1 is due on the

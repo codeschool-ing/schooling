@@ -54,10 +54,10 @@ database view, level 1 of the three levels, may be all it ever needs.
 
 ## The cases that do
 
-The signs are the ones the first section listed, measured rather than imagined: queries walking
-structures built for writes and getting slower with the data; screens forcing fields into the rules'
-model; read traffic that is many times the write traffic and would scale separately; or several
-screens that each need the same facts in a different shape, like `Availability` and `MemberLoans`.
+The signs are the ones the first section listed, measured rather than imagined. Queries walk
+structures built for writes and get slower with the data. Screens force fields into the rules'
+model. Read traffic is many times the write traffic and would scale separately. Or several screens
+each need the same facts in a different shape, like `Availability` and `MemberLoans`.
 When those appear in one part of the system, split that part. The loan desk might qualify, and the
 member's profile page beside it still would not.
 
