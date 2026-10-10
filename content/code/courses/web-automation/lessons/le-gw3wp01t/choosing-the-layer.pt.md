@@ -36,10 +36,20 @@ test('the HTML of / names none of them', async ({ request }) => {
 ```
 
 ```
-%%CAP ssr-html%%
+ana@laptop:~/quitanda$ npx playwright test tests/ssr-html.spec.js
+
+Running 2 tests using 1 worker
+
+  ✓  1 tests/ssr-html.spec.js:4:1 › the HTML of /ssr names every product the API lists (50ms)
+  ✓  2 tests/ssr-html.spec.js:12:1 › the HTML of / names none of them (15ms)
+
+  2 passed (1.2s)
 ```
 
-HTML_SENTENCE
+Os dois passam, em 50 ms e 15 ms, contra 121 ms e 103 ms dos dois testes da seção anterior, que
+abriram uma página cada um e não rodaram nada nela. Numa página deste tamanho a diferença é de
+poucas dezenas de milissegundos; o que uma requisição também poupa são todos os jeitos de um teste
+de navegador falhar por conta própria.
 
 O segundo teste mostra o limite desta camada. O HTML de `/` não tem nada para verificar, então a
 pergunta "os produtos estão na página inicial" não tem resposta sem um navegador que rode o
@@ -64,10 +74,21 @@ utilizável.
 Os três arquivos desta aula, juntos:
 
 ```
-%%CAP all%%
+ana@laptop:~/quitanda$ npx playwright test tests/ssr.spec.js tests/no-script.spec.js tests/ssr-html.spec.js
+
+Running 5 tests using 2 workers
+
+  ✓  2 tests/ssr-html.spec.js:4:1 › the HTML of /ssr names every product the API lists (63ms)
+  ✓  3 tests/ssr-html.spec.js:12:1 › the HTML of / names none of them (32ms)
+  ✓  1 tests/no-script.spec.js:6:1 › /ssr lists its eight products without a script (174ms)
+  ✓  5 tests/no-script.spec.js:13:1 › / lists nothing without a script (105ms)
+  ✓  4 tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready (2.0s)
+
+  5 passed (3.6s)
 ```
 
-ALL_SENTENCE
+Cinco testes em dois workers. O que espera a página levou 2,0 s, e cada um dos outros quatro levou
+entre 32 ms e 174 ms.
 
 A regra por baixo desta seção, verificar cada coisa na camada mais barata que consegue vê-la e
 guardar o navegador para o que só um navegador vê, é a pirâmide de testes da aula 21, e a aula 1 de

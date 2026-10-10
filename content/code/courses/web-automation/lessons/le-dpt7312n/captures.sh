@@ -57,6 +57,8 @@ run 'npx playwright test tests/contexts.spec.js'
 
 block waiting
 run 'npx playwright test tests/waiting.spec.js'
+block waiting-repeat
+run 'npx playwright test tests/waiting.spec.js --repeat-each 10 --workers 1'
 block waiting-fail
 cp tests/waiting.spec.js /tmp/l10-waiting.spec.js
 sed -n '/^```javascript$/,/^```$/p' "$HERE/auto-waiting.md" | awk 'BEGIN{n=0} /^```javascript$/{n++; next} /^```$/{next} n==2' > /tmp/l10-failing.js
@@ -71,6 +73,10 @@ block trace-ls
 run 'ls test-results'
 block trace-unzip
 run "unzip -l test-results/contexts-two-shoppers-*/trace.zip"
+
+block trace-network
+run "unzip -p test-results/contexts-two-shoppers-*/trace.zip 0-trace.network | grep -o '\"url\":\"[^\"]*\"' | sort | uniq -c"
+run "unzip -p test-results/contexts-two-shoppers-*/trace.zip 2-trace.network | grep -o '\"url\":\"[^\"]*\"' | sort | uniq -c"
 
 block report-run
 run 'npx playwright test tests/smoke.spec.js --reporter=list,html'

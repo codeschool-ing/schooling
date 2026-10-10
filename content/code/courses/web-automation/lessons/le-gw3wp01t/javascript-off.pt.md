@@ -38,10 +38,19 @@ test('/ lists nothing without a script', async ({ page }) => {
 ```
 
 ```
-%%CAP no-script%%
+ana@laptop:~/quitanda$ npx playwright test tests/no-script.spec.js
+
+Running 2 tests using 1 worker
+
+  ✓  1 tests/no-script.spec.js:6:1 › /ssr lists its eight products without a script (121ms)
+  ✓  2 tests/no-script.spec.js:13:1 › / lists nothing without a script (103ms)
+
+  2 passed (1.4s)
 ```
 
-NOSCRIPT_SENTENCE
+Os dois passam, e dizem coisas opostas sobre as duas páginas. `/ssr` lista os oito produtos sem
+script; `/` não lista nenhum, e a lista dela ainda diz `aria-busy="true"`, porque nada rodou para
+mudar isso.
 
 ## O que o primeiro teste prova
 

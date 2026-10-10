@@ -94,13 +94,22 @@ O `curl` faz a primeira coisa que um navegador faz, pedir o documento, e nada de
 script nenhum. Conte os títulos de produto no que `/` envia:
 
 ```
-%%CAP curl-csr%%
+ana@laptop:~/quitanda$ curl -s http://localhost:3000/ | grep -c '<h2>'
+0
 ```
 
 Nenhum. Faça a mesma pergunta a `/ssr` e imprima as linhas em vez de contá-las:
 
 ```
-%%CAP curl-ssr%%
+ana@laptop:~/quitanda$ curl -s http://localhost:3000/ssr | grep '<h2>'
+        <h2>Banana</h2>
+        <h2>Mango</h2>
+        <h2>Papaya</h2>
+        <h2>Guava</h2>
+        <h2>Cashew fruit</h2>
+        <h2>Passion fruit</h2>
+        <h2>Acerola</h2>
+        <h2>Pineapple</h2>
 ```
 
 Os oito, na ordem em que a loja os lista, dentro do próprio documento.

@@ -36,10 +36,19 @@ test('the HTML of / names none of them', async ({ request }) => {
 ```
 
 ```
-%%CAP ssr-html%%
+ana@laptop:~/quitanda$ npx playwright test tests/ssr-html.spec.js
+
+Running 2 tests using 1 worker
+
+  ✓  1 tests/ssr-html.spec.js:4:1 › the HTML of /ssr names every product the API lists (50ms)
+  ✓  2 tests/ssr-html.spec.js:12:1 › the HTML of / names none of them (15ms)
+
+  2 passed (1.2s)
 ```
 
-HTML_SENTENCE
+Both pass, in 50 ms and 15 ms, against 121 ms and 103 ms for the two tests of the previous section,
+which each opened a page and ran nothing on it. On a page this small the gap is a few dozen
+milliseconds; what a request also saves is every way a browser test can fail on its own account.
 
 The second test shows the limit of this layer. The HTML of `/` holds nothing to check, so the
 question "are the products on the home page" has no answer without a browser that runs `app.js`,
@@ -63,10 +72,21 @@ writes the right content, and a browser test for the moment the page becomes usa
 All three files of this lesson, together:
 
 ```
-%%CAP all%%
+ana@laptop:~/quitanda$ npx playwright test tests/ssr.spec.js tests/no-script.spec.js tests/ssr-html.spec.js
+
+Running 5 tests using 2 workers
+
+  ✓  2 tests/ssr-html.spec.js:4:1 › the HTML of /ssr names every product the API lists (63ms)
+  ✓  3 tests/ssr-html.spec.js:12:1 › the HTML of / names none of them (32ms)
+  ✓  1 tests/no-script.spec.js:6:1 › /ssr lists its eight products without a script (174ms)
+  ✓  5 tests/no-script.spec.js:13:1 › / lists nothing without a script (105ms)
+  ✓  4 tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready (2.0s)
+
+  5 passed (3.6s)
 ```
 
-ALL_SENTENCE
+Five tests on two workers. The one that waits for the page took 2.0 s, and each of the other four
+took between 32 ms and 174 ms.
 
 The rule underneath this section, checking each thing at the cheapest layer that can see it and
 keeping the browser for what only a browser can see, is the testing pyramid of lesson 21, and

@@ -95,13 +95,22 @@ leave the rest out.
 runs no script. Count the product headings in what `/` sends:
 
 ```
-%%CAP curl-csr%%
+ana@laptop:~/quitanda$ curl -s http://localhost:3000/ | grep -c '<h2>'
+0
 ```
 
 None. Ask `/ssr` the same question and print the lines instead of counting them:
 
 ```
-%%CAP curl-ssr%%
+ana@laptop:~/quitanda$ curl -s http://localhost:3000/ssr | grep '<h2>'
+        <h2>Banana</h2>
+        <h2>Mango</h2>
+        <h2>Papaya</h2>
+        <h2>Guava</h2>
+        <h2>Cashew fruit</h2>
+        <h2>Passion fruit</h2>
+        <h2>Acerola</h2>
+        <h2>Pineapple</h2>
 ```
 
 All eight, in the order the store lists them, inside the document itself.

@@ -212,3 +212,73 @@ actor. Captures and fences are never touched. Re-run the checks.
 When done, reply with: the lesson id, the section list, the exercise count by type, the
 figure count, what you staged, anything you could not run, any app change you need, and the
 exact check outputs for your lesson. Keep it short.
+
+## Learned while writing lessons 1–11 (read this too)
+
+- **Colour codes**: Playwright forces colour on in its workers (`FORCE_COLOR=1` in workerHost),
+  so an `expect` failure's output carries ANSI escapes. Strip exactly `ESC[…m` with sed in
+  `captures.sh`, and say so in its header. Lessons 2, 3, 5 and 7 do it.
+- **The shared basket**: tests that add to the basket and run in parallel see each other's
+  additions (lesson 6 saw a count of 2 under `--repeat-each`). Before lesson 15, run such
+  captures with `--workers 1`, and say why; lessons 15 and 19 are about this.
+- **`test.fail()`** is how this course keeps a test that documents a known app defect in the
+  project (lessons 3, 5, 7 chose it, and say its weakness: any failure satisfies it). Lesson 14
+  owns flaky tests and quarantine; refer back to these.
+- Facts established by captures in earlier lessons, which later lessons may cite by lesson:
+  lesson 2: a test using the card id copied from DevTools fails on its FIRST run; `button`
+  matches 9 elements (the hidden Menu button); Playwright's strict-mode error suggests
+  `#card-NNNN > button` — the random id. Lesson 3: reading results at once → 0, sleeping 1 s →
+  3 (the stale "p" answer), waiting for `aria-busy="false"` exposes the defect. Lesson 7: the
+  iPhone 13 descriptor gives innerWidth 400 on `/`. Lesson 11: removing Puppeteer's waits gave
+  basket 0,0,0,1,1 over five runs.
+- Project files that exist after lesson 11 (do not reuse these paths unless replacing on purpose):
+  lesson 11 puppeteer                package.json
+  lesson  1 the-shop                 playwright.config.js
+  lesson  1 the-shop                 app/http.js
+  lesson  1 the-shop                 app/store.js
+  lesson  1 the-shop                 app/server.js
+  lesson  1 the-shop                 app/routes/shop.js
+  lesson  1 the-page                 app/public/index.html
+  lesson  1 the-page                 app/public/app.js
+  lesson  1 the-page                 app/public/style.css
+  lesson  1 the-page                 tests/smoke.spec.js
+  lesson  1 network                  look.mjs
+  lesson  2 the-tree                 count.mjs
+  lesson  2 stable-locators          tests/locators.spec.js
+  lesson  3 what-async-means         at-load.mjs
+  lesson  3 the-search-page          app/routes/search.js
+  lesson  3 the-search-page          app/public/search.html
+  lesson  3 the-search-page          app/public/search.js
+  lesson  3 the-race                 race.mjs
+  lesson  3 the-defect               tests/search.spec.js
+  lesson  4 the-stale-offer          app/routes/offer.js
+  lesson  4 the-stale-offer          app/public/offer.html
+  lesson  4 the-stale-offer          stale.mjs
+  lesson  4 testing-the-cache        tests/cache.spec.js
+  lesson  4 fresh-contexts           visitors.mjs
+  lesson  5 one-page                 app/public/spa/index.html
+  lesson  5 one-page                 app/public/spa/spa.js
+  lesson  5 one-page                 app/public/spa/manifest.json
+  lesson  5 one-page                 app/public/spa/sw.js
+  lesson  5 one-page                 spa-look.mjs
+  lesson  5 deep-links               tests/spa.spec.js
+  lesson  5 service-workers          tests/offline.spec.js
+  lesson  6 what-arrives             app/routes/ssr.js
+  lesson  6 hydration                app/public/ssr.js
+  lesson  6 waiting-for-ready        tests/ssr.spec.js
+  lesson  6 javascript-off           tests/no-script.spec.js
+  lesson  6 choosing-the-layer       tests/ssr-html.spec.js
+  lesson  7 viewport                 viewport.mjs
+  lesson  7 overflow                 tests/responsive.spec.js
+  lesson  7 adaptive                 app/routes/deals.js
+  lesson  7 adaptive                 tests/deals.spec.js
+  lesson  7 what-to-check            tests/targets.spec.js
+  lesson  9 installing               cypress.config.js
+  lesson  9 a-first-spec             cypress/e2e/shop.cy.js
+  lesson  9 intercept                cypress/e2e/network.cy.js
+  lesson  9 limits                   origins.mjs
+  lesson 10 browsers                 browsers.config.js
+  lesson 10 contexts                 tests/contexts.spec.js
+  lesson 10 auto-waiting             tests/waiting.spec.js
+  lesson 11 puppeteer                puppeteer/basket.mjs
+  lesson 11 puppeteer-to-playwright  tests/banana.spec.js

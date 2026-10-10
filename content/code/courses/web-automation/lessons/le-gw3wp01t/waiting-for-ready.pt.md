@@ -61,10 +61,21 @@ test('a click on /ssr adds to the basket once the page is ready', async ({ page 
 ```
 
 ```
-%%CAP ready%%
+ana@laptop:~/quitanda$ npx playwright test tests/ssr.spec.js --repeat-each 5 --workers 1
+
+Running 5 tests using 1 worker
+
+  ✓  1 tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready (2.1s)
+  ✓  2 tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready (2.1s)
+  ✓  3 tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready (2.1s)
+  ✓  4 tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready (2.2s)
+  ✓  5 tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready (2.0s)
+
+  5 passed (15.0s)
 ```
 
-READY_SENTENCE
+Cinco aprovações em cinco, cada uma levando pouco mais de dois segundos, um segundo e meio dos quais
+é a pausa do servidor. O teste espera exatamente o que a página precisa, e nada mais.
 
 ## A correção melhor é da página
 
@@ -92,7 +103,13 @@ Faça as duas, ponha de volta a primeira versão de `tests/ssr.spec.js` da seç�
 na hora, e rode-a:
 
 ```
-%%CAP disabled%%
+ana@laptop:~/quitanda$ npx playwright test tests/ssr.spec.js
+
+Running 1 test using 1 worker
+
+  ✓  1 tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket (2.0s)
+
+  1 passed (3.2s)
 ```
 
 **O teste que falhou cinco vezes em cinco passa, e nenhuma linha dele mudou.** Depois, desfaça as

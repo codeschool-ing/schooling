@@ -61,10 +61,21 @@ test('a click on /ssr adds to the basket once the page is ready', async ({ page 
 ```
 
 ```
-%%CAP ready%%
+ana@laptop:~/quitanda$ npx playwright test tests/ssr.spec.js --repeat-each 5 --workers 1
+
+Running 5 tests using 1 worker
+
+  ✓  1 tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready (2.1s)
+  ✓  2 tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready (2.1s)
+  ✓  3 tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready (2.1s)
+  ✓  4 tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready (2.2s)
+  ✓  5 tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket once the page is ready (2.0s)
+
+  5 passed (15.0s)
 ```
 
-READY_SENTENCE
+Five passes out of five, each taking a little over two seconds, a second and a half of which is the
+server's pause. The test waits exactly as long as the page needs and no longer.
 
 ## The better fix belongs to the page
 
@@ -92,7 +103,13 @@ Make both, put back the first version of `tests/ssr.spec.js` from the previous s
 that clicks at once, and run it:
 
 ```
-%%CAP disabled%%
+ana@laptop:~/quitanda$ npx playwright test tests/ssr.spec.js
+
+Running 1 test using 1 worker
+
+  ✓  1 tests/ssr.spec.js:8:1 › a click on /ssr adds to the basket (2.0s)
+
+  1 passed (3.2s)
 ```
 
 **The test that failed five times out of five passes, and not one line of it changed.** Undo the
