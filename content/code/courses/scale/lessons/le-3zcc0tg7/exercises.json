@@ -1,0 +1,683 @@
+[
+  {
+    "id": "ex-zsn7mm7w",
+    "version": 1,
+    "section": "degrade-not-fail",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What is graceful degradation?",
+    "choices": [
+      {
+        "text": "Slowing every request equally under load",
+        "correct": false,
+        "why": "That is choosing not to choose."
+      },
+      {
+        "text": "Deciding what the system does without each dependency",
+        "correct": true,
+        "why": "Right, so a failure takes away only what needs it."
+      },
+      {
+        "text": "Adding copies of each service when the load grows past its plan",
+        "correct": false,
+        "why": "That is scaling."
+      },
+      {
+        "text": "Retrying until the dependency answers",
+        "correct": false,
+        "why": "That is lesson 10, and it has limits."
+      }
+    ]
+  },
+  {
+    "id": "ex-qqtax2f5",
+    "version": 1,
+    "section": "degrade-not-fail",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each dependency to what the box office does without it.",
+    "pairs": [
+      {
+        "left": "the replica",
+        "right": "read from the primary"
+      },
+      {
+        "left": "the primary",
+        "right": "answer from memory and pause sales"
+      },
+      {
+        "left": "Redis",
+        "right": "sell without the per-buyer limit"
+      },
+      {
+        "left": "payments",
+        "right": "refuse sales at once, keep reads"
+      }
+    ]
+  },
+  {
+    "id": "ex-43xpc37r",
+    "version": 1,
+    "section": "degrade-not-fail",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The box office is short of capacity. What should go first?",
+    "choices": [
+      {
+        "text": "The purchase button",
+        "correct": false,
+        "why": "That is the core."
+      },
+      {
+        "text": "Recommendations on a show page",
+        "correct": true,
+        "why": "Right: optional before core."
+      },
+      {
+        "text": "Showing seats left, even from a cache that says how old it is",
+        "correct": false,
+        "why": "That is important and cheap to degrade, not to remove."
+      },
+      {
+        "text": "Nothing; everything slows down together",
+        "correct": false,
+        "why": "That is the failure the practice avoids."
+      }
+    ]
+  },
+  {
+    "id": "ex-k7y1apse",
+    "version": 1,
+    "section": "the-fallbacks",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In what order does read_event try its sources?",
+    "choices": [
+      {
+        "text": "Primary, replica, memory",
+        "correct": false,
+        "why": "Reads start at the replica."
+      },
+      {
+        "text": "Replica, primary, memory",
+        "correct": true,
+        "why": "Right, then 503."
+      },
+      {
+        "text": "Replica, memory, primary",
+        "correct": false,
+        "why": "The primary has fresh data; it comes before memory."
+      },
+      {
+        "text": "Memory, replica, primary",
+        "correct": false,
+        "why": "Memory is the last resort."
+      }
+    ]
+  },
+  {
+    "id": "ex-aaq6vn1d",
+    "version": 1,
+    "section": "the-fallbacks",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why could lesson 2's replica not start again after being stopped?",
+    "choices": [
+      {
+        "text": "Docker deletes the replica's data on stop",
+        "correct": false,
+        "why": "Stop keeps the container's data; that was the problem."
+      },
+      {
+        "text": "The primary refused replication connections after a restart",
+        "correct": false,
+        "why": "The log names pg_basebackup and a non-empty directory."
+      },
+      {
+        "text": "The healthcheck ran before PostgreSQL started",
+        "correct": false,
+        "why": "PostgreSQL never started."
+      },
+      {
+        "text": "pg_basebackup refuses a data directory that is not empty, and the loop retried forever",
+        "correct": true,
+        "why": "Right. Now it copies only when there is nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-0wxd53ez",
+    "version": 1,
+    "section": "a-replica-down",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Reads fall back to the primary when the replica is down. What is the risk?",
+    "choices": [
+      {
+        "text": "Reads on the primary block sales, which wait behind them for the row",
+        "correct": false,
+        "why": "Plain reads take no row locks."
+      },
+      {
+        "text": "It was sized for writes, not reads too",
+        "correct": true,
+        "why": "Right: then the outage has only moved."
+      },
+      {
+        "text": "The primary's data is older",
+        "correct": false,
+        "why": "They are the newest."
+      },
+      {
+        "text": "Buyers see an error",
+        "correct": false,
+        "why": "They see a normal answer."
+      }
+    ]
+  },
+  {
+    "id": "ex-y0q26apj",
+    "version": 1,
+    "section": "no-database",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With both databases down, why was show 2 a 503 while show 1 answered?",
+    "choices": [
+      {
+        "text": "Memory keeps only one show, the most recent read",
+        "correct": false,
+        "why": "It keeps every show this copy read."
+      },
+      {
+        "text": "The replica held show 2 and the primary show 1",
+        "correct": false,
+        "why": "Both hold every show."
+      },
+      {
+        "text": "Show 2 was sold out",
+        "correct": false,
+        "why": "Section 07 sold out show 7."
+      },
+      {
+        "text": "This copy had never read show 2",
+        "correct": true,
+        "why": "Right: a cache only returns what it has seen."
+      }
+    ]
+  },
+  {
+    "id": "ex-tcrcyv2b",
+    "version": 1,
+    "section": "no-database",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why are sales paused, rather than answered from memory, when the primary is down?",
+    "choices": [
+      {
+        "text": "Payments needs the primary",
+        "correct": false,
+        "why": "Payments has its own state."
+      },
+      {
+        "text": "Only the primary knows which seats are free",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The rate limit lives in the primary",
+        "correct": false,
+        "why": "It lives in Redis."
+      },
+      {
+        "text": "Memory is too slow for sales",
+        "correct": false,
+        "why": "Memory is fast; it is not the truth."
+      }
+    ]
+  },
+  {
+    "id": "ex-qcjy7tm1",
+    "version": 1,
+    "section": "no-database",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When the databases came back, who switched the box office back to the replica?",
+    "choices": [
+      {
+        "text": "An operator, through a flag set in the console once the alert cleared",
+        "correct": false,
+        "why": "There is no flag."
+      },
+      {
+        "text": "A restart of the box office",
+        "correct": false,
+        "why": "It was not restarted."
+      },
+      {
+        "text": "Prometheus, after its alert fired",
+        "correct": false,
+        "why": "Prometheus only observes."
+      },
+      {
+        "text": "Nobody: every read tries the replica first",
+        "correct": true,
+        "why": "Right: coming back is automatic."
+      }
+    ]
+  },
+  {
+    "id": "ex-ntad9122",
+    "version": 1,
+    "section": "other-dependencies",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With Redis stopped, the sale went through. What was lost meanwhile?",
+    "choices": [
+      {
+        "text": "The breaker's state, which lives in Redis",
+        "correct": false,
+        "why": "The breaker is in each copy's memory."
+      },
+      {
+        "text": "The idempotency of the charge",
+        "correct": false,
+        "why": "Keys are in payments."
+      },
+      {
+        "text": "The per-buyer limit",
+        "correct": true,
+        "why": "Right, and the log says so."
+      },
+      {
+        "text": "Nothing",
+        "correct": false,
+        "why": "Bots can now buy faster."
+      }
+    ]
+  },
+  {
+    "id": "ex-dxn6zb6v",
+    "version": 1,
+    "section": "other-dependencies",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With payments down and the breaker open, how long did a read take?",
+    "choices": [
+      {
+        "text": "About a second, the timeout",
+        "correct": false,
+        "why": "Reads never call payments."
+      },
+      {
+        "text": "Ten seconds, the breaker's cooldown",
+        "correct": false,
+        "why": "Reads do not pass the breaker."
+      },
+      {
+        "text": "2.5 ms, as usual",
+        "correct": true,
+        "why": "Right: nothing it needs was down."
+      },
+      {
+        "text": "It failed with 503",
+        "correct": false,
+        "why": "The breaker only guards charges."
+      }
+    ]
+  },
+  {
+    "id": "ex-88dd75dq",
+    "version": 1,
+    "section": "charged-for-nothing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What did the box office do wrong on a sold-out show from lesson 8 to lesson 10?",
+    "choices": [
+      {
+        "text": "Refused to charge at all",
+        "correct": false,
+        "why": "It charged first."
+      },
+      {
+        "text": "Sold more seats than the show's capacity when two sales raced",
+        "correct": false,
+        "why": "The UPDATE's condition prevented that."
+      },
+      {
+        "text": "Charged the buyer, then answered 409",
+        "correct": true,
+        "why": "Right: the charge came before the seat check."
+      },
+      {
+        "text": "Answered 500",
+        "correct": false,
+        "why": "It answered 409."
+      }
+    ]
+  },
+  {
+    "id": "ex-77wpzvje",
+    "version": 1,
+    "section": "charged-for-nothing",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which order closes the last-seat window completely?",
+    "choices": [
+      {
+        "text": "Reserve with an expiry, charge, confirm; release if the charge fails",
+        "correct": true,
+        "why": "Right: a saga, each step with a compensation."
+      },
+      {
+        "text": "Charge, then reserve",
+        "correct": false,
+        "why": "That is the original defect."
+      },
+      {
+        "text": "Hold the row lock during the charge",
+        "correct": false,
+        "why": "Lesson 1 showed what that costs."
+      },
+      {
+        "text": "Check the seats twice before charging",
+        "correct": false,
+        "why": "The window stays between the checks and the UPDATE."
+      }
+    ]
+  },
+  {
+    "id": "ex-car2rje4",
+    "version": 1,
+    "section": "charged-for-nothing",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why had the sold-out defect never shown up?",
+    "choices": [
+      {
+        "text": "Payments hid the charges from the logs",
+        "correct": false,
+        "why": "The charges were counted."
+      },
+      {
+        "text": "No show in the lab had sold out",
+        "correct": true,
+        "why": "Right: an unrun path is an untested one."
+      },
+      {
+        "text": "The 409 was cached",
+        "correct": false,
+        "why": "Nothing caches sales."
+      },
+      {
+        "text": "It only happens with three copies",
+        "correct": false,
+        "why": "One copy does it."
+      }
+    ]
+  },
+  {
+    "id": "ex-2bz1yb40",
+    "version": 1,
+    "section": "littles-law",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A closed loop of 64 workers gets 128 answers a second. What is the average time per request, in ms?",
+    "hint": "W = L ÷ λ.",
+    "value": 500,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-wrb2f643",
+    "version": 1,
+    "section": "littles-law",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "100 sales a second, each spending 1 s waiting on a slow payments. How many sales are in flight on average?",
+    "hint": "L = λ × W.",
+    "value": 100,
+    "tolerance": 0,
+    "unit": "sales"
+  },
+  {
+    "id": "ex-0wsxb95b",
+    "version": 1,
+    "section": "littles-law",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Traffic stays the same, but a downstream service doubles its latency. What happens upstream?",
+    "choices": [
+      {
+        "text": "Throughput halves and nothing else moves",
+        "correct": false,
+        "why": "With the same arrivals, L grows first."
+      },
+      {
+        "text": "Fewer threads are needed",
+        "correct": false,
+        "why": "More, for the same rate."
+      },
+      {
+        "text": "Twice as many requests are in flight",
+        "correct": true,
+        "why": "Right: L grows with W."
+      },
+      {
+        "text": "Nothing, since upstream does no extra work",
+        "correct": false,
+        "why": "It holds threads, slots and connections longer."
+      }
+    ]
+  },
+  {
+    "id": "ex-9q2gxqzj",
+    "version": 1,
+    "section": "utilisation",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "For a 10 ms request in an M/M/1 queue, what is the average time at 90% utilisation?",
+    "choices": [
+      {
+        "text": "1,000 ms",
+        "correct": false,
+        "why": "That would be 99% busy."
+      },
+      {
+        "text": "19 ms",
+        "correct": false,
+        "why": "That would be proportional growth."
+      },
+      {
+        "text": "100 ms",
+        "correct": true,
+        "why": "Right: 10 ÷ (1 − 0.9)."
+      },
+      {
+        "text": "11 ms",
+        "correct": false,
+        "why": "Waiting grows much faster than the load."
+      }
+    ]
+  },
+  {
+    "id": "ex-t54hykce",
+    "version": 1,
+    "section": "utilisation",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Service time 20 ms, utilisation 75%. What is the average time in an M/M/1 queue, in ms?",
+    "hint": "S ÷ (1 − ρ).",
+    "value": 80,
+    "tolerance": 0,
+    "unit": "ms"
+  },
+  {
+    "id": "ex-ghzkwx3d",
+    "version": 1,
+    "section": "utilisation",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What utilisation does capacity planning usually aim for at the expected peak?",
+    "choices": [
+      {
+        "text": "100%",
+        "correct": false,
+        "why": "Then the queue never empties."
+      },
+      {
+        "text": "95%, so nothing is wasted",
+        "correct": false,
+        "why": "That is where the curve is vertical."
+      },
+      {
+        "text": "20%, to leave real headroom",
+        "correct": false,
+        "why": "Safe, but about three times the cost."
+      },
+      {
+        "text": "60 to 70%",
+        "correct": true,
+        "why": "Right, with 80% as the alarm."
+      }
+    ]
+  },
+  {
+    "id": "ex-nc392vbx",
+    "version": 1,
+    "section": "planning-an-on-sale",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "2,000 reads a second at 1.1 ms each and 150 sales a second at 10 ms each. How many CPUs of work is that, to one decimal place?",
+    "hint": "2.2 + 1.5.",
+    "value": 3.7,
+    "tolerance": 0.05,
+    "unit": "CPUs"
+  },
+  {
+    "id": "ex-888ks549",
+    "version": 1,
+    "section": "planning-an-on-sale",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "3.5 CPUs of work at the peak, a 70% target, one-CPU copies, and N + 1. How many copies?",
+    "hint": "3.5 ÷ 0.7, then one more.",
+    "value": 6,
+    "tolerance": 0,
+    "unit": "copies"
+  },
+  {
+    "id": "ex-ry256s28",
+    "version": 1,
+    "section": "planning-an-on-sale",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Four copies with 32 slots each meet a primary that allows 100 connections. Which is a fix?",
+    "choices": [
+      {
+        "text": "24 slots per copy, or a pooler like PgBouncer",
+        "correct": true,
+        "why": "Right: 96, or many slots on few connections."
+      },
+      {
+        "text": "A longer timeout on charges",
+        "correct": false,
+        "why": "Unrelated to connections."
+      },
+      {
+        "text": "More copies",
+        "correct": false,
+        "why": "More copies need more connections."
+      },
+      {
+        "text": "Turn off the replica",
+        "correct": false,
+        "why": "The replica is a different server."
+      }
+    ]
+  },
+  {
+    "id": "ex-x8vgpg01",
+    "version": 1,
+    "section": "planning-an-on-sale",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "If the first minute had 20,000 buyers instead of 6,000, why would more copies not be enough?",
+    "choices": [
+      {
+        "text": "Every sale updates one show's row, which tops out near 138 a second",
+        "correct": true,
+        "why": "Right: lesson 1's hot row."
+      },
+      {
+        "text": "Prometheus would fall behind",
+        "correct": false,
+        "why": "Monitoring does not cap sales."
+      },
+      {
+        "text": "nginx accepts four copies at most",
+        "correct": false,
+        "why": "There is no such limit."
+      },
+      {
+        "text": "Copies cannot share Redis",
+        "correct": false,
+        "why": "They share it; that was lesson 9."
+      }
+    ]
+  },
+  {
+    "id": "ex-2e46fvqf",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A plan says 3 copies at 70%. The day before, one copy's host is retired. What does N + 1 say?",
+    "choices": [
+      {
+        "text": "Run 3 and turn on retries everywhere",
+        "correct": false,
+        "why": "Retries add load."
+      },
+      {
+        "text": "Run 2 at 105%",
+        "correct": false,
+        "why": "Over 100% the queue grows without end."
+      },
+      {
+        "text": "Run 3 and raise the timeout",
+        "correct": false,
+        "why": "A timeout adds no capacity."
+      },
+      {
+        "text": "Run 4, so that losing one still leaves 70%",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  }
+]
