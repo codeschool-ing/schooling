@@ -1,0 +1,420 @@
+{
+  "ex-mjxe8n7z": {
+    "prompt": "Num cluster de três nós, o que decide qual nó guarda uma partição?",
+    "choices": [
+      {
+        "text": "O token que o hash da chave dá, e quem é dono desse intervalo",
+        "why": "Isso. O Murmur3 transforma a chave num token e o anel diz quem é dono daquele ponto."
+      },
+      {
+        "text": "O nó ao qual o cliente estava conectado quando gravou a linha",
+        "why": "Esse nó é só o coordenador; ele repassa a escrita aos donos."
+      },
+      {
+        "text": "A ordem alfabética das chaves, dividida por igual entre os nós",
+        "why": "As linhas voltaram na ordem dos tokens, carla antes de bruno antes de ana; o hash espalha vizinhos."
+      },
+      {
+        "text": "O nó com mais disco livre no momento da escrita",
+        "why": "O lugar é função só da chave, então qualquer nó o calcula sem perguntar."
+      }
+    ]
+  },
+  "ex-h02b5g8n": {
+    "prompt": "O `nodetool ring` lista o token de um nó como `8538878424377726911` e o token da linha de cima como `8141555572029014120`. De quais chaves de partição esse nó é dono?",
+    "hint": "Um nó é dono do intervalo que termina no seu token.",
+    "choices": [
+      {
+        "text": "As que têm token acima de 8141555572029014120 e até 8538878424377726911",
+        "why": "Isso. O token da Ana, 8413089589345688709, está nesse intervalo, por isso ela está nesse nó."
+      },
+      {
+        "text": "As que têm token a partir de 8538878424377726911 até a próxima linha",
+        "why": "Esse é o intervalo do próximo nó: a posse termina num token, não começa nele."
+      },
+      {
+        "text": "Só a chave cujo token é exatamente 8538878424377726911",
+        "why": "Um token marca o fim de um intervalo inteiro de chaves, não uma chave."
+      },
+      {
+        "text": "Todas as chaves, já que o token só diz para onde vai a primeira cópia",
+        "why": "Com uma cópia por partição, cada chave tem exatamente um dono."
+      }
+    ]
+  },
+  "ex-1a7htfc6": {
+    "prompt": "Os três nós do laboratório têm 16 tokens cada. Quantas linhas com `Normal` o `nodetool ring` imprime para o cluster?"
+  },
+  "ex-2973hg3a": {
+    "prompt": "Um quarto nó entra num cluster em que cada nó tem 16 intervalos pequenos espalhados pelo anel. Comparado a um intervalo grande por nó, o que muda?",
+    "hint": "Pense de onde vêm os intervalos do nó novo.",
+    "choices": [
+      {
+        "text": "Ele pega pedaços pequenos de cada nó existente, e a carga se equilibra",
+        "why": "Isso. Com um intervalo por nó ele dividiria o intervalo de um vizinho e deixaria os outros como estavam."
+      },
+      {
+        "text": "Ele precisa esperar os outros moverem todas as partições para rebalancear em ordem alfabética",
+        "why": "As chaves são postas por token, nunca em ordem alfabética."
+      },
+      {
+        "text": "Nada, porque tokens são só um índice e não decidem onde os dados ficam",
+        "why": "Os tokens são o lugar; o getendpoints calcula o nó a partir deles."
+      },
+      {
+        "text": "Ele divide ao meio o intervalo de um vizinho, e por isso 16 tokens são mais lentos de adicionar",
+        "why": "Isso é o que acontece com um token por nó, o caso que os 16 evitam."
+      }
+    ]
+  },
+  "ex-2f5qckbe": {
+    "prompt": "Por que o laço da aula espera cada nó ficar `UN` antes de iniciar o próximo?",
+    "choices": [
+      {
+        "text": "Porque o `docker run` recusa iniciar dois contêineres da mesma imagem ao mesmo tempo",
+        "why": "O Docker não tem essa regra; a espera é pelo Cassandra."
+      },
+      {
+        "text": "Um nó que entra pega sua parte do anel dos outros, uma entrada de cada vez",
+        "why": "Isso. O Cassandra espera as entradas uma depois da outra."
+      },
+      {
+        "text": "Porque c2 e c3 precisam dos dados do c1 copiados antes de poder iniciar",
+        "why": "Não há dados ainda quando o cluster é montado; é o anel que é repartido."
+      },
+      {
+        "text": "Porque cada contêiner precisa dos 4 GB inteiros enquanto inicia",
+        "why": "Com o heap pequeno cada nó usa uns 500 MB, e o laço é sobre entrar no anel, não sobre memória."
+      }
+    ]
+  },
+  "ex-aec9aag6": {
+    "prompt": "`orders_by_customer` é criada `WITH CLUSTERING ORDER BY (ordered_at DESC, order_id ASC)`. O que `SELECT ... WHERE customer = 'ana@example.com' LIMIT 1` devolve?",
+    "choices": [
+      {
+        "text": "O pedido mais recente da Ana, lido como a primeira linha da partição dela",
+        "why": "Isso: A-1006, de 8 de abril. A ordem guardada é do mais novo para o mais antigo."
+      },
+      {
+        "text": "O primeiro pedido que a Ana fez",
+        "why": "Essa seria a resposta com ASC; DESC põe o mais novo no topo."
+      },
+      {
+        "text": "Qualquer um dos pedidos da Ana, já que sem ORDER BY as linhas não têm ordem",
+        "why": "Dentro de uma partição as linhas têm a ordem de clustering, no disco."
+      },
+      {
+        "text": "Um erro, porque LIMIT exige um ORDER BY",
+        "why": "LIMIT funciona sozinho e pega as linhas na ordem guardada."
+      }
+    ]
+  },
+  "ex-njbhrkd5": {
+    "prompt": "Uma tabela é `PRIMARY KEY (customer, ordered_at)`. Um cliente faz dois pedidos no mesmo milissegundo, e os dois inserts dão certo. O que fica na tabela depois?",
+    "hint": "O que um INSERT faz com uma chave que já existe?",
+    "choices": [
+      {
+        "text": "Duas linhas, porque cada INSERT acrescenta uma linha",
+        "why": "Um INSERT com uma chave primária existente substitui aquela linha."
+      },
+      {
+        "text": "Uma linha, com o segundo pedido, sem erro nenhum",
+        "why": "Isso. É por isso que a aula acrescenta order_id como última coluna de clustering."
+      },
+      {
+        "text": "Uma linha, e o segundo INSERT falha com erro de chave duplicada",
+        "why": "O Cassandra não confere antes de gravar; os dois inserts dão certo."
+      },
+      {
+        "text": "Duas linhas em partições diferentes, uma por pedido",
+        "why": "A chave de partição é o cliente, a mesma para os dois."
+      }
+    ]
+  },
+  "ex-ymwcgrxb": {
+    "prompt": "Associe cada parte de `PRIMARY KEY (customer, ordered_at, order_id)` ao que ela decide.",
+    "pairs": [
+      {
+        "left": "customer",
+        "right": "quais nós guardam as linhas"
+      },
+      {
+        "left": "ordered_at",
+        "right": "a ordem das linhas na partição, e os intervalos que se pode pedir"
+      },
+      {
+        "left": "order_id",
+        "right": "o que separa dois pedidos no mesmo instante"
+      }
+    ],
+    "right_distractors": [
+      "qual réplica responde uma leitura com ONE"
+    ]
+  },
+  "ex-c6h91hnz": {
+    "prompt": "Qual `ORDER BY` o Cassandra recusa em `orders_by_customer`, com a partição nomeada?",
+    "choices": [
+      {
+        "text": "ORDER BY ordered_at ASC",
+        "why": "Inverter a ordem de clustering é permitido: lê a partição de trás para frente."
+      },
+      {
+        "text": "ORDER BY total DESC",
+        "why": "Isso: total não é coluna de clustering, e só essas servem para ordenar."
+      },
+      {
+        "text": "ORDER BY ordered_at DESC",
+        "why": "Essa é a própria ordem guardada."
+      },
+      {
+        "text": "ORDER BY ordered_at DESC, order_id ASC",
+        "why": "Isso repete exatamente a ordem de clustering da tabela."
+      }
+    ]
+  },
+  "ex-f8ytfkq4": {
+    "prompt": "Uma consulta com `ALLOW FILTERING` devolveu os três pedidos certos em milissegundos no laboratório. Por que ainda é má escolha para a tela principal da aplicação?",
+    "choices": [
+      {
+        "text": "Porque não há garantia de que o resultado esteja correto",
+        "why": "A resposta estava certa; a recusa é sobre custo."
+      },
+      {
+        "text": "O custo cresce com o tamanho da tabela, não com o da resposta",
+        "why": "Isso. Ela mandou pedidos para os 49 intervalos; com oitenta milhões de linhas cada pedido varre a sua parte."
+      },
+      {
+        "text": "Porque ALLOW FILTERING foi removido no Cassandra 5.0 e vai parar de funcionar",
+        "why": "Ele rodou no 5.0.9 do laboratório."
+      },
+      {
+        "text": "Porque só lê os dados do próprio coordenador e perde o resto",
+        "why": "O rastreio mostra que ele pergunta também ao c2 e ao c3."
+      }
+    ]
+  },
+  "ex-h1zyjvdy": {
+    "prompt": "Depois de `CREATE INDEX ... USING 'sai'` em `status`, o rastreio de `WHERE status = 'shipped'` ainda mostra `Submitting range requests on 49 ranges`. O que isso diz?",
+    "hint": "Onde mora um índice secundário?",
+    "choices": [
+      {
+        "text": "O índice não foi usado, e a consulta voltou a filtrar",
+        "why": "Ele foi usado: não precisou de ALLOW FILTERING, e cada nó leu só as partições que batiam."
+      },
+      {
+        "text": "O índice ainda está sendo construído, e uma segunda execução irá a um nó só",
+        "why": "Um índice SAI pronto ainda precisa ser consultado em todos os nós."
+      },
+      {
+        "text": "Cada nó indexa só os próprios dados, então todos ainda precisam ser consultados",
+        "why": "Isso. O SAI barateia a parte de cada nó; não consegue apontar o coordenador para um nó só."
+      },
+      {
+        "text": "O coordenador sempre divide toda consulta em 49 intervalos, com índice ou sem",
+        "why": "Uma consulta que nomeia a chave de partição foi uma leitura de partição única, sem intervalos."
+      }
+    ]
+  },
+  "ex-sys0rkd7": {
+    "prompt": "Ponha em ordem o método da aula para projetar uma tabela no Cassandra.",
+    "items": [
+      "Anotar a consulta que a tela vai rodar, com seus parâmetros",
+      "Fazer do parâmetro que sempre vem com = a chave de partição",
+      "Fazer daquilo por que a consulta ordena ou recorta as colunas de clustering",
+      "Acrescentar o que torna a linha única como última coluna de clustering",
+      "Conferir que a partição não pode crescer sem limite"
+    ],
+    "trap": "A consulta vem primeiro; a tabela é a resposta a ela."
+  },
+  "ex-kevq694d": {
+    "prompt": "O depósito precisa de \"todos os pedidos feitos num dado dia\". O que a aula faz?",
+    "choices": [
+      {
+        "text": "Acrescenta um índice SAI em ordered_at a orders_by_customer",
+        "why": "Todos os nós ainda seriam consultados, para a consulta principal do depósito."
+      },
+      {
+        "text": "Cria orders_by_day, por dia, e grava cada pedido nas duas tabelas",
+        "why": "Isso. Uma tabela por consulta, e os pedidos do dia são uma partição."
+      },
+      {
+        "text": "Roda a consulta existente com ALLOW FILTERING num intervalo de ordered_at",
+        "why": "Isso lê todas as partições de todos os nós para responder sobre um dia."
+      },
+      {
+        "text": "Troca a chave de partição de orders_by_customer para o dia",
+        "why": "Aí a consulta da página da conta quebraria; cada pergunta fica com sua tabela."
+      }
+    ]
+  },
+  "ex-9tnk5nyc": {
+    "prompt": "Uma consulta numa coluna fora da chave primária é recusada a menos que termine com ALLOW ___.",
+    "blanks": [
+      {
+        "accept": [
+          "FILTERING"
+        ]
+      }
+    ]
+  },
+  "ex-1cmmxam7": {
+    "prompt": "Em `PRIMARY KEY ((customer, month), viewed_at)`, o que fazem os parênteses internos?",
+    "choices": [
+      {
+        "text": "Fazem das duas colunas a chave de partição",
+        "why": "Isso: uma partição por cliente por mês."
+      },
+      {
+        "text": "Fazem de month uma coluna de clustering ordenada antes de viewed_at",
+        "why": "Sem os parênteses internos month seria de clustering; com eles faz parte da chave de partição."
+      },
+      {
+        "text": "São um agrupamento opcional, sem efeito nenhum em como as linhas são guardadas",
+        "why": "Mudam onde cada linha mora."
+      },
+      {
+        "text": "Criam um índice secundário em month",
+        "why": "Índices se criam com CREATE INDEX, nunca pelos parênteses da chave."
+      }
+    ]
+  },
+  "ex-81aeqwwt": {
+    "prompt": "A partição sem baldes da Ana chegou a cerca de 1,1 MB em 90 dias com uma visualização a cada cinco minutos. No mesmo ritmo, cerca de quantos MB ela terá depois de 10 anos (3650 dias)?",
+    "hint": "Divida 3650 por 90.",
+    "unit": "MB"
+  },
+  "ex-fj3y4zeb": {
+    "prompt": "Um sensor grava uma leitura por segundo em `readings (sensor, at)` com `sensor` como chave de partição. Que mudança o raciocínio da aula indica?",
+    "choices": [
+      {
+        "text": "Acrescentar um dia ou uma hora à chave de partição, para que cada partição pare de crescer",
+        "why": "Isso. O ritmo decide o balde; um sensor por segundo precisa de um pequeno."
+      },
+      {
+        "text": "Acrescentar um índice SAI em at, para leituras recentes continuarem rápidas",
+        "why": "Um índice não diminui a partição; ela segue crescendo nos mesmos nós."
+      },
+      {
+        "text": "Aumentar o número de tokens por nó para dividir a partição entre nós",
+        "why": "Uma partição nunca é dividida: mora inteira nos donos do seu token."
+      },
+      {
+        "text": "Nada, já que uma partição só vira problema acima de 100 MB",
+        "why": "Com uma escrita por segundo essa partição passa da orientação em semanas, e não para."
+      }
+    ]
+  },
+  "ex-smwz02nh": {
+    "prompt": "No `tablestats` do laboratório, qual nó guardava a única partição de `views_by_customer`, e o que os outros dois guardavam dela?",
+    "choices": [
+      {
+        "text": "Inteira no c2; c1 e c3 não tinham nenhuma linha daquela tabela",
+        "why": "Isso. Com uma cópia e uma partição, um nó carrega todo o histórico da Ana."
+      },
+      {
+        "text": "Cada nó guardava um terço dela, dividida por mês",
+        "why": "Essa era a tabela com baldes, cuja chave inclui o mês."
+      },
+      {
+        "text": "O c1 guardava, porque o c1 coordenou o COPY",
+        "why": "O coordenador repassa as linhas aos donos do token delas."
+      },
+      {
+        "text": "Os três guardavam uma cópia completa, como réplicas",
+        "why": "O keyspace tem uma cópia nesta aula; a aula 17 aumenta."
+      }
+    ]
+  },
+  "ex-c0vbdgeh": {
+    "prompt": "O que os baldes custam para a aplicação?",
+    "choices": [
+      {
+        "text": "Toda escrita fica mais lenta, já que o Cassandra precisa calcular o mês",
+        "why": "A aplicação fornece o mês; a escrita tem o mesmo tamanho."
+      },
+      {
+        "text": "Uma consulta por linhas recentes nomeia um mês, e pede o anterior quando precisa de mais",
+        "why": "Isso: um laço na aplicação em vez de uma consulta só."
+      },
+      {
+        "text": "Meses antigos não podem mais ser lidos quando o balde fecha",
+        "why": "Um balde fechado ainda é uma partição que se lê; só para de crescer."
+      },
+      {
+        "text": "Os dados ocupam três vezes o espaço em disco",
+        "why": "As mesmas linhas são guardadas uma vez, divididas em partições menores."
+      }
+    ]
+  },
+  "ex-dm0th1m2": {
+    "prompt": "Quais destas consultas vão a uma só partição em `orders_by_customer`, `orders_by_day` e nas tabelas desta aula? Marque todas as que se aplicam.",
+    "choices": [
+      {
+        "text": "Os pedidos da Ana em março, de orders_by_customer",
+        "why": "Isso: cliente nomeado, intervalo na primeira coluna de clustering."
+      },
+      {
+        "text": "Todos os pedidos enviados, pelo índice SAI",
+        "why": "O SAI ainda pergunta a todos os nós."
+      },
+      {
+        "text": "Os pedidos de 2 de março, de orders_by_day",
+        "why": "Isso: o dia é a chave de partição."
+      },
+      {
+        "text": "As visualizações da Ana em fevereiro, de views_by_customer_month",
+        "why": "Isso: cliente e mês juntos nomeiam a partição."
+      },
+      {
+        "text": "Todo pedido acima de 1000, com ALLOW FILTERING",
+        "why": "Ele lê os 49 intervalos."
+      }
+    ]
+  },
+  "ex-909yxp5j": {
+    "prompt": "Associe cada comando ao que ele mostrou nesta aula.",
+    "pairs": [
+      {
+        "left": "nodetool getendpoints",
+        "right": "o nó que guarda uma dada chave de partição"
+      },
+      {
+        "left": "nodetool ring",
+        "right": "cada token e o nó dono dele"
+      },
+      {
+        "left": "nodetool tablestats",
+        "right": "a maior partição que um nó gravou em disco"
+      },
+      {
+        "left": "TRACING ON",
+        "right": "quantos nós e intervalos uma consulta alcançou"
+      }
+    ],
+    "right_distractors": [
+      "quais consultas são recusadas antes de rodar"
+    ]
+  },
+  "ex-a8pdwv5x": {
+    "prompt": "Um colega propõe `PRIMARY KEY (status, ordered_at)` para uma tabela de pedidos, para a loja listar pedidos por status. O que esta aula prevê?",
+    "hint": "Quantos valores diferentes o status tem?",
+    "choices": [
+      {
+        "text": "Poucas partições, uma por status, crescendo para sempre em poucos nós",
+        "why": "Isso. Três status quer dizer três partições com todo pedido que a loja já recebeu."
+      },
+      {
+        "text": "Uma distribuição uniforme entre os nós, já que o hash espalha qualquer chave que receba",
+        "why": "O hash espalha chaves diferentes; com três valores há três partições para espalhar."
+      },
+      {
+        "text": "Uma recusa já no CREATE TABLE, porque status não é único por pedido",
+        "why": "A chave de partição não precisa ser única; a unicidade vem da chave primária inteira."
+      },
+      {
+        "text": "O mesmo resultado que um índice SAI em status",
+        "why": "O SAI mantém as linhas na chave real e pergunta a todos; isto as empilha em três partições."
+      }
+    ]
+  }
+}
