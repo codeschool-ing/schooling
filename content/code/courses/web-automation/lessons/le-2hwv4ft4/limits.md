@@ -26,7 +26,13 @@ running inside the page, and once from Playwright's own process. Save it as `ori
 With the shop started:
 
 ```
-%%CAP origins%%
+ana@laptop:~/quitanda$ node origins.mjs
+asked from inside the page:
+  http://localhost:3000/  Quitanda
+  http://127.0.0.1:3000/  SecurityError: Failed to read a named property 'document' from 'Window': Blocked a frame with origin "http://localhost:3000" from accessing a cross-origin frame.
+asked from outside, through the driver:
+  http://localhost:3000/  Quitanda
+  http://127.0.0.1:3000/  Quitanda
 ```
 
 **The same server, asked the same question, answered once and refused once.** From inside the page,
@@ -83,10 +89,15 @@ is **Cypress Cloud**, a service the runner can send its results to. Two of `cypr
 lead there, and the package's help text, which runs without the binary, says what they are for:
 
 ```
-%%CAP run-help%%
+ana@laptop:~/quitanda$ npx cypress run --help | grep -E -- '--(browser|parallel|record) '
+  -b, --browser <browser-name-or-path>                        runs Cypress in the browser with the given name. if a filesystem path is supplied, Cypress will attempt to use the browser at that path.
+  --parallel                                                  enables concurrent runs and automatic load balancing of specs across multiple machines or processes
+  --record [bool]                                             records the run. sends test results, screenshots and videos to Cypress Cloud.
+ana@laptop:~/quitanda$ grep '"license"' node_modules/cypress/package.json
+  "license": "MIT",
 ```
 
-`--record` sends the run to Cloud, and `--parallel`, which splits the specs across several machines,
-works through the same service. Nothing in this course needs either. Lesson 19 splits a suite
+`--record` sends the run to Cloud, and `--parallel` balances the specs across machines or
+processes; its documentation runs it through the same service, together with `--record`. Nothing in this course needs either. Lesson 19 splits a suite
 across workers with Playwright, which does that on one machine with no service at all. The prices
 and the free allowance are Cypress's to set and change, so they are not quoted here.

@@ -45,13 +45,24 @@ recorded with the download switched off. `CYPRESS_INSTALL_BINARY=0` is the switc
 real one: a build server that only runs Playwright uses it to keep the download out of every run.
 
 ```
-%%CAP npm-install%%
+ana@laptop:~/quitanda$ CYPRESS_INSTALL_BINARY=0 npm install
+
+added 191 packages, and audited 192 packages in 3s
+
+54 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
 ```
 
 The package is there. Ask it what is installed and it says so, half by half:
 
 ```
-%%CAP cypress-version%%
+ana@laptop:~/quitanda$ npx cypress --version
+Cypress package version: 16.1.1
+Cypress binary version: not installed
+Electron version: not found
+Bundled Node version: not found
 ```
 
 **`not installed` on the second line is the state a failed download leaves behind**, and it is
@@ -65,7 +76,19 @@ run here, so it is not shown.
 quickest way to find out whether the download worked, and with no binary it says this:
 
 ```
-%%CAP cypress-verify%%
+ana@laptop:~/quitanda$ npx cypress verify
+No version of Cypress is installed in: /home/ana/.cache/Cypress/16.1.1/Cypress
+
+Please reinstall Cypress by running: cypress install
+
+----------
+
+Cypress executable not found at: /home/ana/.cache/Cypress/16.1.1/Cypress/Cypress
+
+----------
+
+Platform: linux-x64 (Ubuntu - 24.04.5 LTS)
+Cypress Version: 16.1.1
 ```
 
 Read it from the line that names the problem: **no version of Cypress is installed** in a folder
@@ -78,7 +101,12 @@ machine that cannot reach the download server at all. On a build server, where t
 is set, Cypress prints its progress as plain lines rather than a spinner, which is the form shown:
 
 ```
-%%CAP cypress-install-fails%%
+ana@laptop:~/quitanda$ CI=1 npx cypress install
+Installing Cypress (version: 16.1.1)
+
+[STARTED] [16:34:05]  Downloading Cypress    
+[FAILED] [16:34:05] getaddrinfo ENOTFOUND download.cypress.io
+getaddrinfo ENOTFOUND download.cypress.io
 ```
 
 `ENOTFOUND` means the name `download.cypress.io` could not be looked up: no network, or a network
@@ -90,10 +118,10 @@ these names appears in the package's own code; none of them was exercised here.
 
 ## Telling Cypress where things are
 
-Cypress reads `cypress.config.js` at the project's root. Three settings are all this lesson
-needs: the shop's address, so a test can write `cy.visit('/')`; where the spec files are, so
-Cypress never wanders into the Playwright tests in `tests/`; and that this project has no support
-file, the file Cypress otherwise loads before every spec for shared commands. Because
+Cypress reads `cypress.config.js` at the project's root. This lesson needs three settings. The
+first is the shop's address, so a test can write `cy.visit('/')`. The second is where the spec files are, so
+Cypress never wanders into the Playwright tests in `tests/`. The third says this project has no
+support file, the file Cypress otherwise loads before every spec for shared commands. Because
 `package.json` says `"type": "module"`, the file uses `import` and `export`, like the rest of the
 project. Save it as `cypress.config.js`:
 

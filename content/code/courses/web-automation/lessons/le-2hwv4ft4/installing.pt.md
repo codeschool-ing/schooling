@@ -44,13 +44,24 @@ gravadas com o download desligado. `CYPRESS_INSTALL_BINARY=0` é a chave, e ela 
 servidor de build que só roda Playwright a usa para tirar o download de toda execução.
 
 ```
-%%CAP npm-install%%
+ana@laptop:~/quitanda$ CYPRESS_INSTALL_BINARY=0 npm install
+
+added 191 packages, and audited 192 packages in 3s
+
+54 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
 ```
 
 O pacote está lá. Pergunte o que está instalado e ele responde, metade por metade:
 
 ```
-%%CAP cypress-version%%
+ana@laptop:~/quitanda$ npx cypress --version
+Cypress package version: 16.1.1
+Cypress binary version: not installed
+Electron version: not found
+Bundled Node version: not found
 ```
 
 **`not installed` na segunda linha é o estado que um download que falhou deixa para trás**, e é
@@ -64,7 +75,19 @@ aqui, então não aparece.
 É o jeito mais rápido de saber se o download deu certo, e sem o binário ele diz isto:
 
 ```
-%%CAP cypress-verify%%
+ana@laptop:~/quitanda$ npx cypress verify
+No version of Cypress is installed in: /home/ana/.cache/Cypress/16.1.1/Cypress
+
+Please reinstall Cypress by running: cypress install
+
+----------
+
+Cypress executable not found at: /home/ana/.cache/Cypress/16.1.1/Cypress/Cypress
+
+----------
+
+Platform: linux-x64 (Ubuntu - 24.04.5 LTS)
+Cypress Version: 16.1.1
 ```
 
 Leia a partir da linha que nomeia o problema: **nenhuma versão do Cypress está instalada** numa
@@ -78,7 +101,12 @@ variável `CI` está definida, o Cypress imprime o progresso em linhas simples e
 e é essa a forma mostrada:
 
 ```
-%%CAP cypress-install-fails%%
+ana@laptop:~/quitanda$ CI=1 npx cypress install
+Installing Cypress (version: 16.1.1)
+
+[STARTED] [16:34:05]  Downloading Cypress    
+[FAILED] [16:34:05] getaddrinfo ENOTFOUND download.cypress.io
+getaddrinfo ENOTFOUND download.cypress.io
 ```
 
 `ENOTFOUND` quer dizer que o nome `download.cypress.io` não pôde ser resolvido: sem rede, ou numa
@@ -90,10 +118,10 @@ nenhum deles foi exercitado aqui.
 
 ## Dizendo ao Cypress onde estão as coisas
 
-O Cypress lê `cypress.config.js` na raiz do projeto. Três configurações bastam para esta aula: o
-endereço da loja, para que um teste possa escrever `cy.visit('/')`; onde ficam os arquivos de spec,
-para que o Cypress nunca entre nos testes do Playwright em `tests/`; e que este projeto não tem
-arquivo de suporte, o arquivo que o Cypress carregaria antes de cada spec com comandos
+O Cypress lê `cypress.config.js` na raiz do projeto. Esta aula precisa de três configurações. A
+primeira é o endereço da loja, para que um teste possa escrever `cy.visit('/')`. A segunda é onde ficam os arquivos de
+spec, para que o Cypress nunca entre nos testes do Playwright em `tests/`. A terceira diz que este
+projeto não tem arquivo de suporte, o arquivo que o Cypress carregaria antes de cada spec com comandos
 compartilhados. Como o `package.json` diz `"type": "module"`, o arquivo usa `import` e `export`,
 como o resto do projeto. Salve-o como `cypress.config.js`:
 

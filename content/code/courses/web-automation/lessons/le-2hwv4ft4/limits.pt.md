@@ -26,7 +26,13 @@ que roda dentro da página, e outra do próprio processo do Playwright. Salve-o 
 Com a loja iniciada:
 
 ```
-%%CAP origins%%
+ana@laptop:~/quitanda$ node origins.mjs
+asked from inside the page:
+  http://localhost:3000/  Quitanda
+  http://127.0.0.1:3000/  SecurityError: Failed to read a named property 'document' from 'Window': Blocked a frame with origin "http://localhost:3000" from accessing a cross-origin frame.
+asked from outside, through the driver:
+  http://localhost:3000/  Quitanda
+  http://127.0.0.1:3000/  Quitanda
 ```
 
 **O mesmo servidor, a mesma pergunta, respondida uma vez e recusada outra.** De dentro da página, o
@@ -84,10 +90,15 @@ do `cypress run` levam até lá, e o texto de ajuda do pacote, que roda sem o bi
 servem:
 
 ```
-%%CAP run-help%%
+ana@laptop:~/quitanda$ npx cypress run --help | grep -E -- '--(browser|parallel|record) '
+  -b, --browser <browser-name-or-path>                        runs Cypress in the browser with the given name. if a filesystem path is supplied, Cypress will attempt to use the browser at that path.
+  --parallel                                                  enables concurrent runs and automatic load balancing of specs across multiple machines or processes
+  --record [bool]                                             records the run. sends test results, screenshots and videos to Cypress Cloud.
+ana@laptop:~/quitanda$ grep '"license"' node_modules/cypress/package.json
+  "license": "MIT",
 ```
 
-`--record` manda a execução para o Cloud, e `--parallel`, que divide os specs entre várias máquinas,
-funciona pelo mesmo serviço. Nada neste curso precisa de nenhuma das duas. A aula 19 divide uma
+`--record` manda a execução para o Cloud, e `--parallel` distribui os specs entre máquinas ou
+processos; a documentação o faz funcionar pelo mesmo serviço, junto com `--record`. Nada neste curso precisa de nenhuma das duas. A aula 19 divide uma
 suíte entre workers com o Playwright, que faz isso numa máquina só, sem serviço nenhum. Os preços e a
 cota gratuita são a Cypress que define e muda, então não são citados aqui.

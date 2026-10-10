@@ -34,7 +34,19 @@ then the spec. On the machine these lessons come from, with no binary, the first
 this and stopped, before any test:
 
 ```
-%%CAP cypress-run-missing%%
+ana@laptop:~/quitanda$ npx cypress run --spec cypress/e2e/shop.cy.js
+No version of Cypress is installed in: /home/ana/.cache/Cypress/16.1.1/Cypress
+
+Please reinstall Cypress by running: cypress install
+
+----------
+
+Cypress executable not found at: /home/ana/.cache/Cypress/16.1.1/Cypress/Cypress
+
+----------
+
+Platform: linux-x64 (Ubuntu - 24.04.5 LTS)
+Cypress Version: 16.1.1
 ```
 
 That is the same message `cypress verify` gave in the last section; it is all a run without the
