@@ -63,7 +63,50 @@ test('waiting until the page is no longer busy', async ({ page }) => {
 ```
 
 ```
-%%CAP v2%%
+ana@laptop:~/quitanda$ npx playwright test tests/search.spec.js
+
+Running 3 tests using 1 worker
+
+  ✓  1 tests/search.spec.js:7:1 › an assertion that retries (194ms)
+  ✓  2 tests/search.spec.js:12:1 › waiting for the answer to "papaya" (162ms)
+  ✘  3 tests/search.spec.js:19:1 › waiting until the page is no longer busy (6.0s)
+
+
+  1) tests/search.spec.js:19:1 › waiting until the page is no longer busy ──────────────────────────
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('#results li')
+    Timeout: 5000ms
+    - Expected  - 0
+    + Received  + 2
+
+      Array [
+        "Papaya",
+    +   "Passion fruit",
+    +   "Pineapple",
+      ]
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for locator('#results li')
+        9 × locator resolved to 3 elements
+
+
+      20 |   await page.getByLabel('Fruit').pressSequentially('papaya');
+      21 |   await expect(page.locator('#results')).toHaveAttribute('aria-busy', 'false');
+    > 22 |   await expect(page.locator('#results li')).toHaveText(['Papaya']);
+         |                                             ^
+      23 |   await expect(page.locator('#count')).toHaveText('1 found');
+      24 | });
+      25 |
+        at /home/ana/quitanda/tests/search.spec.js:22:45
+
+    Error Context: test-results/search-waiting-until-the-page-is-no-longer-busy/error-context.md
+
+  1 failed
+    tests/search.spec.js:19:1 › waiting until the page is no longer busy ───────────────────────────
+  2 passed (7.9s)
 ```
 
 **Os dois primeiros passaram, bem abaixo de um segundo, e o terceiro falhou depois de repetir por

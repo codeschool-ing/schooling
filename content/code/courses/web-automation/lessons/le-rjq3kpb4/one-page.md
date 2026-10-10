@@ -164,7 +164,15 @@ await context.close();
 With the shop started in one terminal, the first run:
 
 ```
-%%CAP spa-look-1%%
+ana@laptop:~/quitanda$ node spa-look.mjs
+   15 ms  document   /spa/  from the server
+   22 ms  stylesheet /style.css  from the server
+   23 ms  script     /spa/spa.js  from the server
+   41 ms  fetch      /api/products  from the server
+  128 ms  heading: Fruit
+  187 ms  service worker ready; click Basket
+  227 ms  fetch      /api/basket  from the server
+  248 ms  heading: Basket, address: http://localhost:3000/spa/basket
 ```
 
 The first four lines are an ordinary page load: the document, the stylesheet and the script, then
@@ -214,10 +222,60 @@ test('Basket opens the basket on a slow network', async ({ page }) => {
 ```
 
 ```
-%%CAP naive%%
+ana@laptop:~/quitanda$ npx playwright test tests/spa.spec.js
+
+Running 2 tests using 1 worker
+
+  ✘  1 tests/spa.spec.js:3:1 › Basket opens the basket (173ms)
+  ✘  2 tests/spa.spec.js:10:1 › Basket opens the basket on a slow network (186ms)
+
+
+  1) tests/spa.spec.js:3:1 › Basket opens the basket ───────────────────────────────────────────────
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Basket"
+    Received: "Fruit"
+
+       5 |   await page.getByRole('link', { name: 'Basket' }).click();
+       6 |   await page.waitForURL('**/spa/basket');
+    >  7 |   expect(await page.locator('h1').textContent()).toBe('Basket');
+         |                                                  ^
+       8 | });
+       9 |
+      10 | test('Basket opens the basket on a slow network', async ({ page }) => {
+        at /home/ana/quitanda/tests/spa.spec.js:7:50
+
+    Error Context: test-results/spa-Basket-opens-the-basket/error-context.md
+
+  2) tests/spa.spec.js:10:1 › Basket opens the basket on a slow network ────────────────────────────
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Basket"
+    Received: "Fruit"
+
+      16 |   await page.getByRole('link', { name: 'Basket' }).click();
+      17 |   await page.waitForURL('**/spa/basket');
+    > 18 |   expect(await page.locator('h1').textContent()).toBe('Basket');
+         |                                                  ^
+      19 | });
+      20 |
+        at /home/ana/quitanda/tests/spa.spec.js:18:50
+
+    Error Context: test-results/spa-Basket-opens-the-basket-on-a-slow-network/error-context.md
+
+  2 failed
+    tests/spa.spec.js:3:1 › Basket opens the basket ────────────────────────────────────────────────
+    tests/spa.spec.js:10:1 › Basket opens the basket on a slow network ─────────────────────────────
 ```
 
-%%PROSE naive%%
+Both fail, with the same message: the heading the test read was `Fruit`, at an address that
+already said `/spa/basket`. The second fails every time, because the basket's answer is held back
+for half a second and the test reads the heading long before it arrives. The first is a race
+between the test and a server on the same machine, and it can go either way from one run to the
+next; this time it lost. A test that passes on your laptop and fails on a slower build server is
+lesson 14's subject, and this is one of the commonest ways to write one.
 
 **The address is a fact about the URL, and the heading is a fact about the page.** The fix is to
 wait for the thing the test is about, with an assertion that retries until it holds. The version
@@ -259,7 +317,14 @@ test('Basket opens the basket on a slow network', async ({ page }) => {
 ```
 
 ```
-%%CAP fixed%%
+ana@laptop:~/quitanda$ npx playwright test tests/spa.spec.js
+
+Running 2 tests using 1 worker
+
+  ✓  1 tests/spa.spec.js:3:1 › Basket opens the basket without loading a page (196ms)
+  ✓  2 tests/spa.spec.js:18:1 › Basket opens the basket on a slow network (1.0s)
+
+  2 passed (2.6s)
 ```
 
 `toBeVisible` and `toHaveAttribute` are **web-first assertions**: they ask the page again until the

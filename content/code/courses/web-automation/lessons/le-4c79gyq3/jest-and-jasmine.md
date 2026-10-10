@@ -11,7 +11,7 @@ library doing the driving.
 
 ## Jasmine
 
-Jasmine describes itself as "a simple JavaScript testing framework for browsers and Node", and it
+Jasmine describes itself as "a simple JavaScript testing framework for browsers and Node". It
 gave JavaScript the shape most of its tests still have: `describe` for a group, `it` for one
 test, `expect(value).toBe(other)` for a check, and **spies** for watching whether a function was
 called. The test reads like a sentence, the style called behaviour-driven. The `jasmine` package,

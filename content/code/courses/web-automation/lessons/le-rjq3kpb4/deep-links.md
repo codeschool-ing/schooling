@@ -18,7 +18,9 @@ and clicks.
 Lesson 1's `look.mjs` takes an address as its argument. Given this one, with the shop started:
 
 ```
-%%CAP look-basket%%
+ana@laptop:~/quitanda$ node look.mjs http://localhost:3000/spa/basket
+   12 ms  404 GET /spa/basket  (document)
+   13 ms  console.error: Failed to load resource: the server responded with a status of 404 (Not Found)
 ```
 
 **One line, a 404 for the document**, and nothing after it: no stylesheet, no script, because the
@@ -86,10 +88,21 @@ test('the basket opens from its own address', async ({ page }) => {
 ```
 
 ```
-%%CAP deep-link%%
+ana@laptop:~/quitanda$ npx playwright test tests/spa.spec.js
+
+Running 3 tests using 1 worker
+
+  ✓  1 tests/spa.spec.js:3:1 › Basket opens the basket without loading a page (204ms)
+  ✓  2 tests/spa.spec.js:18:1 › Basket opens the basket on a slow network (1.0s)
+  ✘  3 tests/spa.spec.js:30:1 › the basket opens from its own address (107ms)
+
+  3 passed (2.8s)
 ```
 
-%%PROSE deep-link%%
+Three tests, and the summary says `3 passed`, although the third line carries a `✘`. The cross
+is the truth about the test: it failed. The summary counts it as passed because it failed as
+declared. Read both, because a run that says `3 passed` can still carry a known defect, and the
+mark is where the suite says which.
 
 ## The fix is the server's
 
@@ -122,10 +135,28 @@ export const routes = [{
 ```
 
 ```
-%%CAP fallback%%
+ana@laptop:~/quitanda$ npx playwright test tests/spa.spec.js
+
+Running 3 tests using 1 worker
+
+  ✓  1 tests/spa.spec.js:3:1 › Basket opens the basket without loading a page (191ms)
+  ✓  2 tests/spa.spec.js:18:1 › Basket opens the basket on a slow network (1.0s)
+  ✓  3 tests/spa.spec.js:30:1 › the basket opens from its own address (101ms)
+
+
+  1) tests/spa.spec.js:30:1 › the basket opens from its own address ────────────────────────────────
+
+    Expected to fail, but passed.
+
+  1 failed
+    tests/spa.spec.js:30:1 › the basket opens from its own address ─────────────────────────────────
+  2 passed (2.5s)
 ```
 
-%%PROSE fallback%%
+With the fallback in place, the third test passes, its line gets a tick, and the run fails:
+`Expected to fail, but passed.`, with `1 failed` in the summary. That red is the message the mark
+exists to send: the defect is fixed, so delete the `test.fail` line. With the route file deleted
+again, the shop is back to its 404.
 
 A real fallback answers **every** unknown address under `/spa/`, and that has a consequence of its
 own: `/spa/nonsense` then answers 200, and the only thing that says *not found* is the app's own

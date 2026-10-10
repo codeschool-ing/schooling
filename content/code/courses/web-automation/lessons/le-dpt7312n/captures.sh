@@ -34,7 +34,7 @@ machine
 stage 10 || exit 1
 P=$REPO_DEFAULT
 cd "$P" || exit 1
-exec > >(sed -u 's/\x1b\[[0-9;]*m//g')
+exec > >(sed -u 's/\x1b\[[0-9;]*[A-Za-z]//g')
 
 block protocol-methods
 run "DEBUG=pw:protocol npx playwright test tests/smoke.spec.js 2>&1 | grep SEND | grep -o '\"method\":\"[A-Za-z.]*\"' | head -8"
@@ -73,6 +73,6 @@ block trace-unzip
 run "unzip -l test-results/contexts-two-shoppers-*/trace.zip"
 
 block report-run
-run 'npx playwright test tests/smoke.spec.js --reporter html'
+run 'npx playwright test tests/smoke.spec.js --reporter=list,html'
 block report-ls
 run 'ls playwright-report'

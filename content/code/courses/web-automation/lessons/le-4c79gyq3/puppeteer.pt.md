@@ -6,7 +6,7 @@ version: 1
 **O Puppeteer é uma biblioteca de condução e nada mais.** O README dele o chama de "a JavaScript
 library which provides a high-level API to control Chrome or Firefox over the DevTools Protocol or
 WebDriver BiDi": uma biblioteca JavaScript com uma API de alto nível para controlar o Chrome ou o
-Firefox. Não tem executor, não tem asserções e não sabe o que é um arquivo de teste: você escreve
+Firefox. Não tem executor, não tem asserções e não sabe o que é um arquivo de teste. Você escreve
 um script Node, e o script faz o que diz. Ele vem do Google, das pessoas que fazem as ferramentas de
 desenvolvedor do Chrome, e é aí que está a força dele. Pelo CDP ele vê tudo o que o DevTools vê, e
 por isso as equipes o usam para trabalhos que nem são testes: uma captura de tela ou um PDF de uma
@@ -39,14 +39,21 @@ O `package.json` do projeto agora fixa quatro ferramentas: o Playwright desde a 
 e instale:
 
 ```
-%%CAP npm-install%%
+ana@laptop:~/quitanda$ npm install
+
+added 212 packages, and audited 213 packages in 5s
+
+56 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
 ```
 
 **Na sua máquina este passo também baixa um navegador.** Como no Playwright, cada versão do
 Puppeteer é feita para uma versão do Chrome, e instalá-la baixa essa versão para
 `~/.cache/puppeteer`. Para a 25.13.0, o código-fonte dele indica o Chrome 155.0.8059.39. O README
-avisa que alguns gerenciadores de pacotes pulam os scripts de instalação, e aí nada é baixado e a
-primeira execução falha; este comando baixa à mão:
+avisa que alguns gerenciadores de pacotes pulam os scripts de instalação. Aí nada é baixado, a
+primeira execução falha, e este comando baixa o navegador à mão:
 
 ```sh
 npx puppeteer browsers install
@@ -69,7 +76,9 @@ tem. Crie uma pasta para ele com `mkdir puppeteer`. Salve-o como `puppeteer/bask
 Com a loja iniciada por `npm start` num terminal, rode-o em outro:
 
 ```
-%%CAP basket%%
+ana@laptop:~/quitanda$ node puppeteer/basket.mjs
+browser: Chrome/141.0.7390.37
+basket: 1
 ```
 
 **Toda espera nesse script é escrita à mão**, e cada uma representa algo que a loja faz depois da
@@ -82,10 +91,20 @@ contagem.
 Apague a chamada a `waitForFunction`, as três linhas dela, e rode o script cinco vezes:
 
 ```
-%%CAP no-wait%%
+ana@laptop:~/quitanda$ for i in 1 2 3 4 5; do node puppeteer/basket.mjs | grep basket; done
+basket: 0
+basket: 0
+basket: 0
+basket: 1
+basket: 1
 ```
 
-PROSE_NO_WAIT
+**Três execuções disseram 0 e duas disseram 1**, com o mesmo script contra a mesma loja. O clique
+foi enviado todas as vezes. O que mudou entre as execuções foi se a resposta de `POST /api/basket`
+já tinha voltado quando o `$eval` leu a contagem, e nesta máquina a leitura ganhou três vezes de
+cinco. A sua divisão vai ser outra, e cinco a zero para qualquer lado também é possível. Um script
+que acerta em algumas execuções e erra em outras é o pior que uma suíte de testes pode ter, porque
+rodar de novo faz a falha parecer que sumiu.
 
 Nada no script estava errado do jeito que um revisor perceberia: cada linha faz o que diz. O que
 falta é uma linha dizendo *e agora espere a loja*. A aula 3 trata dessa corrida entre um teste e uma

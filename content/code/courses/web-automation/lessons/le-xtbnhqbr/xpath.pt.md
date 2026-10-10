@@ -31,7 +31,17 @@ Playwright o lê como CSS e para no primeiro caractere que não consegue analisa
 ## Para cima, para o lado e pelo texto
 
 ```
-%%CAP count-xpath%%
+ana@laptop:~/quitanda$ node count.mjs '//h2[text()="Mango"]' '//li[h2="Mango"]//button' '//h2[.="Mango"]/following-sibling::button' '//button/ancestor::li[h2="Mango"]'
+  1  //h2[text()="Mango"]
+       <h2>Mango</h2>
+  1  //li[h2="Mango"]//button
+       <button type="button">Add to basket</button>
+  1  //h2[.="Mango"]/following-sibling::button
+       <button type="button">Add to basket</button>
+  1  //button/ancestor::li[h2="Mango"]
+       <li class="card" id="card-5291" data-testid="product-mango"><h2>Mango</h2>
+           <p class="price">R$&nbsp;4,50 <small>/ each</small></p>
+           <button type="button">Add to basket</button></li>
 ```
 
 As quatro acham um elemento, e cada uma o acha pela palavra *Mango*. A primeira é o próprio
@@ -51,7 +61,13 @@ O mesmo poder faz expressões que quebram, ou que acham a coisa errada, por moti
 adivinharia lendo a expressão:
 
 ```
-%%CAP count-xpath-brittle%%
+ana@laptop:~/quitanda$ node count.mjs '//p[text()="R$ 5,90"]' '//p[contains(., "5,90")]' 'xpath=/html/body/main/ul/li[1]/button' 'xpath=(//li)[2]//h2'
+  0  //p[text()="R$ 5,90"]
+  2  //p[contains(., "5,90")]
+  1  xpath=/html/body/main/ul/li[1]/button
+       <button type="button">Add to basket</button>
+  1  xpath=(//li)[2]//h2
+       <h2>Mango</h2>
 ```
 
 - **`//p[text()="R$ 5,90"]` não acha nada**, e a tela mostra esse preço. Dois motivos, ambos

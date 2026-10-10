@@ -1,0 +1,511 @@
+[
+ {
+  "id": "ex-yydj1vvy",
+  "version": 1,
+  "section": "one-page",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In the first run of `spa-look.mjs`, what did clicking **Basket** ask the server for?",
+  "choices": [
+   {
+    "text": "A new document for `/spa/basket`, then its script",
+    "correct": false,
+    "why": "That is a multi-page navigation; the transcript shows no document after the click."
+   },
+   {
+    "text": "Only the basket's data, in one fetch",
+    "correct": true,
+    "why": "Right. One line after the click, `fetch /api/basket`; the script drew the view itself."
+   },
+   {
+    "text": "Nothing: the basket was already in the page",
+    "correct": false,
+    "why": "The view needs the basket's current contents, and the script fetches them."
+   },
+   {
+    "text": "The stylesheet again, because the view changed and it needed new styles",
+    "correct": false,
+    "why": "The stylesheet loaded once with the document and stays for every view."
+   }
+  ]
+ },
+ {
+  "id": "ex-kc5krnpm",
+  "version": 1,
+  "section": "one-page",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The slow-network version of the first test fails with `Received: \"Fruit\"`. Why?",
+  "choices": [
+   {
+    "text": "`page.route` blocked the basket's request",
+    "correct": false,
+    "why": "It held it for half a second and then let it through with `route.continue()`."
+   },
+   {
+    "text": "`waitForURL` returned at `pushState`, before the basket arrived",
+    "correct": true,
+    "why": "Right. The address changes first; the test read the heading while the old view was still there."
+   },
+   {
+    "text": "The fruit view's answer arrived after the basket's and overwrote it",
+    "correct": false,
+    "why": "Two views racing can do that, but here the basket was held back and the heading was read before it came."
+   },
+   {
+    "text": "The app has no heading called Basket",
+    "correct": false,
+    "why": "The fixed version finds it; `spa.js` draws `<h1>Basket</h1>`."
+   }
+  ]
+ },
+ {
+  "id": "ex-gbpnzejx",
+  "version": 1,
+  "section": "one-page",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In the app's click handler, `history.___` puts the new address in the bar without loading a page.",
+  "hint": "It is a method of the History API.",
+  "blanks": [
+   {
+    "accept": [
+     "pushState"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-8n1g4agn",
+  "version": 1,
+  "section": "one-page",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A SPA's search page rewrites the address to `?q=mango` on every key and then fetches results. Which wait tells a test the results for mango are on screen?",
+  "choices": [
+   {
+    "text": "`page.waitForURL('**q=mango')`",
+    "correct": false,
+    "why": "The address changes before the fetch, exactly as `pushState` did in the basket test."
+   },
+   {
+    "text": "`page.waitForLoadState('load')` after typing",
+    "correct": false,
+    "why": "No page loads in a SPA; the `load` event fired once, long before."
+   },
+   {
+    "text": "A web-first assertion on the result list",
+    "correct": true,
+    "why": "Right. The signal that the page is ready is on the page, and the assertion retries until it holds."
+   },
+   {
+    "text": "Waiting until a request of type `document` is seen",
+    "correct": false,
+    "why": "In a SPA none comes after the first load; the wait would time out."
+   }
+  ]
+ },
+ {
+  "id": "ex-h09wrb9p",
+  "version": 1,
+  "section": "deep-links",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Why does clicking **Basket** work, while reloading `/spa/basket` gives a 404?",
+  "choices": [
+   {
+    "text": "The service worker deletes the view when the page reloads",
+    "correct": false,
+    "why": "The 404 comes from the server, and it happens with no worker installed at all."
+   },
+   {
+    "text": "A reload asks the server for it, and the server has no such file",
+    "correct": true,
+    "why": "Right. The address exists only inside `spa.js`; a click never reaches the server."
+   },
+   {
+    "text": "`pushState` works once per page",
+    "correct": false,
+    "why": "It works on every click; the back button relies on that."
+   },
+   {
+    "text": "The basket is empty, so the server refuses to show it",
+    "correct": false,
+    "why": "An empty basket shows `R$ 0,00` when reached by a click."
+   }
+  ]
+ },
+ {
+  "id": "ex-ac1vhgfc",
+  "version": 1,
+  "section": "deep-links",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The deep-link test is marked `test.fail()`. A developer adds the fallback to the server. What does the next run report for that test?",
+  "choices": [
+   {
+    "text": "A pass, so the mark can stay where it is",
+    "correct": false,
+    "why": "A marked test that passes is reported as failed, which is what makes the mark come off."
+   },
+   {
+    "text": "A failure: expected to fail, but passed",
+    "correct": true,
+    "why": "Right. The run in the section shows it, with `1 failed` at the bottom."
+   },
+   {
+    "text": "A skip",
+    "correct": false,
+    "why": "`test.fail()` never skips; `test.skip()` is a different mark."
+   },
+   {
+    "text": "A failure saying the status was 404",
+    "correct": false,
+    "why": "With the fallback the status is 200; the failure is about the mark."
+   }
+  ]
+ },
+ {
+  "id": "ex-jkmjgn7q",
+  "version": 1,
+  "section": "deep-links",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these ask the server for `/spa/basket` as a document?",
+  "choices": [
+   {
+    "text": "Reloading while on the basket",
+    "correct": true,
+    "why": "Right. A reload asks the server for the address in the bar."
+   },
+   {
+    "text": "Opening a bookmark of the basket",
+    "correct": true,
+    "why": "Right. A bookmark is an address typed for you."
+   },
+   {
+    "text": "Clicking Basket in the app's header",
+    "correct": false,
+    "why": "The click handler cancels that navigation and calls `pushState`."
+   },
+   {
+    "text": "Pasting the address into a new tab",
+    "correct": true,
+    "why": "Right. A new tab has no app loaded to intercept anything."
+   }
+  ]
+ },
+ {
+  "id": "ex-k00bjybj",
+  "version": 1,
+  "section": "service-workers",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In the second run of `spa-look.mjs`, which of these still came from the server?",
+  "choices": [
+   {
+    "text": "`/spa/`, the document itself",
+    "correct": false,
+    "why": "The document came from the service worker on the second run."
+   },
+   {
+    "text": "`/spa/spa.js`, because scripts are never cached",
+    "correct": false,
+    "why": "It is in the worker's list, and the transcript says it came from the worker."
+   },
+   {
+    "text": "`/api/products`",
+    "correct": true,
+    "why": "Right. The worker leaves everything under `/api/` to the network."
+   },
+   {
+    "text": "`/style.css`, which lives outside `/spa/`",
+    "correct": false,
+    "why": "The page is in the worker's scope, so its requests pass through the worker wherever they point."
+   }
+  ]
+ },
+ {
+  "id": "ex-4cbdzp61",
+  "version": 1,
+  "section": "service-workers",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "With the `navigator.serviceWorker.ready` line deleted, the offline test fails with `ERR_INTERNET_DISCONNECTED`. Why?",
+  "choices": [
+   {
+    "text": "`setOffline` switches the worker off too",
+    "correct": false,
+    "why": "The full test goes offline the same way and the worker answers the reload."
+   },
+   {
+    "text": "The reload came before the worker was installed",
+    "correct": true,
+    "why": "Right. It installs in the background after the page loads, and the wait is what knows when."
+   },
+   {
+    "text": "Playwright blocks service workers unless a test allows them",
+    "correct": false,
+    "why": "The default is `'allow'`; `'block'` is what the second test opts into."
+   },
+   {
+    "text": "The cache only fills on a second visit",
+    "correct": false,
+    "why": "The worker fills it when it installs, during the first visit."
+   }
+  ]
+ },
+ {
+  "id": "ex-rxz7zv0x",
+  "version": 1,
+  "section": "service-workers",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the steps of the offline test in order.",
+  "items": [
+   "Open `/spa/` once",
+   "Wait for `navigator.serviceWorker.ready`",
+   "Call `context.setOffline(true)`",
+   "Reload and check the worker answered"
+  ],
+  "trap": "Going offline before the worker is ready leaves nothing to answer the reload."
+ },
+ {
+  "id": "ex-xqqvqc38",
+  "version": 1,
+  "section": "stale-shell",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The server had `Fresh fruit` in `spa.js`, and the third run still showed `Fruit`. What explains it?",
+  "choices": [
+   {
+    "text": "The `no-cache` header told the browser to keep its copy",
+    "correct": false,
+    "why": "`no-cache` means check first, and the browser never asked: the worker answered."
+   },
+   {
+    "text": "The worker answered from the copy it keeps in Cache Storage",
+    "correct": true,
+    "why": "Right. The server's log shows no request for `spa.js` at all."
+   },
+   {
+    "text": "The HTTP cache kept `spa.js` for ten minutes",
+    "correct": false,
+    "why": "That is lesson 4's offer, with `max-age=600`; static files here say `no-cache`."
+   },
+   {
+    "text": "`curl` and the browser reached different servers",
+    "correct": false,
+    "why": "One server, on port 3000; its log shows the browser's two API requests."
+   }
+  ]
+ },
+ {
+  "id": "ex-26qptv19",
+  "version": 1,
+  "section": "stale-shell",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A suite passes after every deploy, yet users report yesterday's page. Why can both be true?",
+  "choices": [
+   {
+    "text": "Headless Chromium has no Cache Storage",
+    "correct": false,
+    "why": "The headless runs in this lesson used it: `spa-look.mjs` is headless."
+   },
+   {
+    "text": "Tests ignore responses that come from a cache",
+    "correct": false,
+    "why": "A test sees whatever the page shows, cached or not."
+   },
+   {
+    "text": "Playwright blocks service workers unless told",
+    "correct": false,
+    "why": "The default is `'allow'`; the offline test relies on it."
+   },
+   {
+    "text": "Every test is a first visit, in a fresh context",
+    "correct": true,
+    "why": "Right. A first visit always gets the new build; the stale shell lives in the returning visitor."
+   }
+  ]
+ },
+ {
+  "id": "ex-krcp95a0",
+  "version": 1,
+  "section": "stale-shell",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "How many requests does the server's log show for the third run of `spa-look.mjs`?",
+  "hint": "Count the lines that start with `GET`.",
+  "value": 2,
+  "tolerance": 0,
+  "unit": "requests"
+ },
+ {
+  "id": "ex-nq9rfsyy",
+  "version": 1,
+  "section": "jamstack",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A suite runs against the development server and never meets the deep-link 404. What does the lesson suggest?",
+  "choices": [
+   {
+    "text": "Point it at the built files, served as they are",
+    "correct": true,
+    "why": "Right. Users get the built folder; the development server is kinder than production."
+   },
+   {
+    "text": "Mark every deep-link test with `test.fail()`",
+    "correct": false,
+    "why": "The tests pass there; marking them would hide nothing and find nothing."
+   },
+   {
+    "text": "Remove the test, since it passes",
+    "correct": false,
+    "why": "It passes on a server users never meet."
+   },
+   {
+    "text": "Add the same fallback to production by hand after every release",
+    "correct": false,
+    "why": "The fallback is the developer's change; the tester's job is to find whether it is there."
+   }
+  ]
+ },
+ {
+  "id": "ex-maqbe4v3",
+  "version": 1,
+  "section": "jamstack",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A test compares a price from the API with the price on a page generated yesterday, and they differ. What is the first thing to suspect?",
+  "choices": [
+   {
+    "text": "The CDN rounded the price",
+    "correct": false,
+    "why": "A CDN keeps copies of files; it does not change what is in them."
+   },
+   {
+    "text": "The page is as old as the build that made it",
+    "correct": true,
+    "why": "Right. A price changed this morning is yesterday's price in yesterday's page."
+   },
+   {
+    "text": "The API sends cents and the page shows reais",
+    "correct": false,
+    "why": "That is formatting, and it would differ on every page, not only the old ones."
+   },
+   {
+    "text": "A service worker answered the API request from its copy",
+    "correct": false,
+    "why": "Nothing in the scenario has a worker, and the page's price is in the HTML, not fetched."
+   }
+  ]
+ },
+ {
+  "id": "ex-crq479d4",
+  "version": 1,
+  "section": "drill",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each piece to what it does.",
+  "pairs": [
+   {
+    "left": "`history.pushState`",
+    "right": "Changes the address with no request"
+   },
+   {
+    "left": "Service worker",
+    "right": "Answers requests from its own copy"
+   },
+   {
+    "left": "Manifest",
+    "right": "Names the installed app and where it starts"
+   },
+   {
+    "left": "Fallback",
+    "right": "Sends the app's page for unknown app addresses"
+   }
+  ]
+ },
+ {
+  "id": "ex-t7nv4hws",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "The app gains a view at `/spa/orders`. Which test catches a missing server fallback for it on the first day?",
+  "choices": [
+   {
+    "text": "Click from `/spa/` to Orders and check the heading",
+    "correct": false,
+    "why": "The click never reaches the server, so it passes with no fallback."
+   },
+   {
+    "text": "Check that the click to Orders sends no document request",
+    "correct": false,
+    "why": "That checks the SPA's navigation, which works with or without a fallback."
+   },
+   {
+    "text": "Open `/spa/orders` directly and expect 200",
+    "correct": true,
+    "why": "Right. Only a direct open asks the server for the address."
+   },
+   {
+    "text": "Run the offline test against the orders view",
+    "correct": false,
+    "why": "Offline, the worker answers or nobody does; the server's rule is never asked."
+   }
+  ]
+ },
+ {
+  "id": "ex-69rq0x9z",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A test fakes an empty basket with `page.route('**/api/basket', …)`, but on an app whose worker caches `/api/` it sometimes sees the real basket. What should change first?",
+  "choices": [
+   {
+    "text": "A longer timeout on the route",
+    "correct": false,
+    "why": "The route is not slow; it is never asked when the worker answers."
+   },
+   {
+    "text": "`serviceWorkers: 'block'` for that test",
+    "correct": true,
+    "why": "Right. Playwright's documentation recommends it when intercepting: the route does not see what a worker answers."
+   },
+   {
+    "text": "`context.setOffline(true)` before the route",
+    "correct": false,
+    "why": "Offline, the worker still answers from its copy, which is the problem."
+   },
+   {
+    "text": "`page.waitForURL` before reading the basket",
+    "correct": false,
+    "why": "The address is not the question; who answered the request is."
+   }
+  ]
+ }
+]

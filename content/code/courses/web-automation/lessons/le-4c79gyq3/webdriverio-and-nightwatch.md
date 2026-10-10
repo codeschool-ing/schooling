@@ -15,8 +15,8 @@ shape, the same banana test as the last section, so you can compare them on the 
 ## WebdriverIO
 
 Its npm package describes it as a "next-gen browser and mobile automation test framework for
-Node.js", and the two halves are separate: `webdriverio` is the library, usable from a plain
-script, and `@wdio/cli` is the runner, which runs your tests under a framework you choose:
+Node.js", and the two halves are separate. `webdriverio` is the library, usable from a plain
+script. `@wdio/cli` is the runner, which runs your tests under a framework you choose:
 Mocha, Jasmine or Cucumber, each an `@wdio/` package of its own. The current release is 10.0.2,
 and it asks for Node 22.19 or later.
 

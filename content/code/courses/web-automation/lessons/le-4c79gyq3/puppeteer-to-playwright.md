@@ -23,7 +23,13 @@ test('a banana goes into the basket', async ({ page, request }) => {
 ```
 
 ```
-%%CAP banana%%
+ana@laptop:~/quitanda$ npx playwright test tests/banana.spec.js
+
+Running 1 test using 1 worker
+
+  ✓  1 tests/banana.spec.js:3:1 › a banana goes into the basket (264ms)
+
+  1 passed (1.6s)
 ```
 
 Four lines inside the test, and not one wait written by hand. Side by side:

@@ -28,7 +28,11 @@ With the shop running in another terminal (`npm start`), ask it for the Banana c
 attribute the card carries for tests:
 
 ```
-%%CAP count-banana%%
+ana@laptop:~/quitanda$ node count.mjs '[data-testid="product-banana"]'
+  1  [data-testid="product-banana"]
+       <li class="card" id="card-3031" data-testid="product-banana"><h2>Banana</h2>
+           <p class="price">R$&nbsp;5,90 <small>/ dozen</small></p>
+           <button type="button">Add to basket</button></li>
 ```
 
 One match, and the card as the browser holds it after `app.js` built it.

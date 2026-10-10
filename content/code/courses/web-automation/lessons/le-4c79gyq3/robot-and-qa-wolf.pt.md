@@ -77,7 +77,7 @@ A lista de recursos é a última coisa que decide. Em ordem, as perguntas que em
 4. **Quem escreve os testes?** Programadores, testadores que não programam, ou ninguém de dentro da
    empresa.
 
-Uma equipe que responde a essas quatro em geral já escolheu antes de abrir a tabela de comparação,
-e isso não é falha de julgamento: **uma ferramenta que a equipe já conhece, nos navegadores que
+Uma equipe que responde a essas quatro em geral já escolheu antes de abrir a tabela de comparação.
+Isso não é falha de julgamento: **uma ferramenta que a equipe já conhece, nos navegadores que
 precisa cobrir, vence uma melhor que ninguém vai manter.** A aula 22 faz o mesmo tipo de pergunta
 sobre quais testes valem a pena escrever.

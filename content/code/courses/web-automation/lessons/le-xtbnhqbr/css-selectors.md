@@ -33,7 +33,14 @@ slip in the whole language.
 `count.mjs` takes any number of selectors. The tags and classes first:
 
 ```
-%%CAP count-css%%
+ana@laptop:~/quitanda$ node count.mjs 'li' '.card' 'button' 'button:visible' '.card button' '.card small' '.card > small'
+  8  li
+  8  .card
+  9  button
+  8  button:visible
+  8  .card button
+  8  .card small
+  0  .card > small
 ```
 
 Three things in that list are worth a second look:
@@ -53,7 +60,17 @@ Three things in that list are worth a second look:
 Now attributes, positions and `:has`:
 
 ```
-%%CAP count-attr%%
+ana@laptop:~/quitanda$ node count.mjs '[data-testid]' '[data-testid^="product-"]' '[data-testid="product-mango"] h2' '.card:nth-child(2) h2' 'li:nth-child(9)' '.card:has(small)' '[role="status"]'
+  9  [data-testid]
+  8  [data-testid^="product-"]
+  1  [data-testid="product-mango"] h2
+       <h2>Mango</h2>
+  1  .card:nth-child(2) h2
+       <h2>Mango</h2>
+  0  li:nth-child(9)
+  8  .card:has(small)
+  1  [role="status"]
+       <p role="status" class="toast"></p>
 ```
 
 `[data-testid]` finds 9 because the basket's counter in the header carries one as well;
@@ -78,7 +95,11 @@ selector carries more ids and classes wins, which is called **specificity**, and
 stylesheets learn to add pieces until their rule wins. A test selector gains nothing from that:
 
 ```
-%%CAP count-long%%
+ana@laptop:~/quitanda$ node count.mjs 'main > ul#products > li.card:nth-child(2) > h2' '[data-testid="product-mango"] h2'
+  1  main > ul#products > li.card:nth-child(2) > h2
+       <h2>Mango</h2>
+  1  [data-testid="product-mango"] h2
+       <h2>Mango</h2>
 ```
 
 Both find the same heading. The first also needs the list to be a `ul` directly inside `main`, to

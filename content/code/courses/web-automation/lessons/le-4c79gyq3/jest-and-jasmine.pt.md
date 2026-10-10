@@ -12,7 +12,7 @@ com uma biblioteca de condução fazendo a condução.
 ## Jasmine
 
 O Jasmine se descreve como "a simple JavaScript testing framework for browsers and Node", um
-framework de testes simples para navegadores e Node, e deu ao JavaScript a forma que a maioria dos
+framework de testes simples para navegadores e Node. Ele deu ao JavaScript a forma que a maioria dos
 testes ainda tem: `describe` para um grupo, `it` para um teste, `expect(value).toBe(other)` para uma
 verificação, e **spies** (espiões) para observar se uma função foi chamada. O teste se lê como uma
 frase, o estilo chamado orientado a comportamento. O pacote `jasmine`, na 7.0.0, roda specs no Node;

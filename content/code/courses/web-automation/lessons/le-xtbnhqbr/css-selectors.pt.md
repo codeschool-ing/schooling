@@ -34,7 +34,14 @@ deslize mais comum da linguagem inteira.
 O `count.mjs` aceita quantos seletores você quiser. Primeiro as tags e as classes:
 
 ```
-%%CAP count-css%%
+ana@laptop:~/quitanda$ node count.mjs 'li' '.card' 'button' 'button:visible' '.card button' '.card small' '.card > small'
+  8  li
+  8  .card
+  9  button
+  8  button:visible
+  8  .card button
+  8  .card small
+  0  .card > small
 ```
 
 Três coisas nessa lista merecem um segundo olhar:
@@ -54,7 +61,17 @@ Três coisas nessa lista merecem um segundo olhar:
 Agora atributos, posições e `:has`:
 
 ```
-%%CAP count-attr%%
+ana@laptop:~/quitanda$ node count.mjs '[data-testid]' '[data-testid^="product-"]' '[data-testid="product-mango"] h2' '.card:nth-child(2) h2' 'li:nth-child(9)' '.card:has(small)' '[role="status"]'
+  9  [data-testid]
+  8  [data-testid^="product-"]
+  1  [data-testid="product-mango"] h2
+       <h2>Mango</h2>
+  1  .card:nth-child(2) h2
+       <h2>Mango</h2>
+  0  li:nth-child(9)
+  8  .card:has(small)
+  1  [role="status"]
+       <p role="status" class="toast"></p>
 ```
 
 `[data-testid]` acha 9 porque o contador da cesta, no cabeçalho, também tem um;
@@ -80,7 +97,11 @@ quem escreve folhas de estilos aprende a acrescentar peças até a sua regra ven
 teste não ganha nada com isso:
 
 ```
-%%CAP count-long%%
+ana@laptop:~/quitanda$ node count.mjs 'main > ul#products > li.card:nth-child(2) > h2' '[data-testid="product-mango"] h2'
+  1  main > ul#products > li.card:nth-child(2) > h2
+       <h2>Mango</h2>
+  1  [data-testid="product-mango"] h2
+       <h2>Mango</h2>
 ```
 
 Os dois acham o mesmo título. O primeiro ainda precisa que a lista seja um `ul` diretamente dentro

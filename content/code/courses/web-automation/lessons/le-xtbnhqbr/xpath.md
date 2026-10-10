@@ -31,7 +31,17 @@ CSS and stops at the first character it cannot parse.
 ## Up, across and by text
 
 ```
-%%CAP count-xpath%%
+ana@laptop:~/quitanda$ node count.mjs '//h2[text()="Mango"]' '//li[h2="Mango"]//button' '//h2[.="Mango"]/following-sibling::button' '//button/ancestor::li[h2="Mango"]'
+  1  //h2[text()="Mango"]
+       <h2>Mango</h2>
+  1  //li[h2="Mango"]//button
+       <button type="button">Add to basket</button>
+  1  //h2[.="Mango"]/following-sibling::button
+       <button type="button">Add to basket</button>
+  1  //button/ancestor::li[h2="Mango"]
+       <li class="card" id="card-5291" data-testid="product-mango"><h2>Mango</h2>
+           <p class="price">R$&nbsp;4,50 <small>/ each</small></p>
+           <button type="button">Add to basket</button></li>
 ```
 
 All four find one element, and each finds it through the word *Mango*. The first is the heading
@@ -51,7 +61,13 @@ The same power makes expressions that break, or that match the wrong thing, for 
 would guess from reading them:
 
 ```
-%%CAP count-xpath-brittle%%
+ana@laptop:~/quitanda$ node count.mjs '//p[text()="R$ 5,90"]' '//p[contains(., "5,90")]' 'xpath=/html/body/main/ul/li[1]/button' 'xpath=(//li)[2]//h2'
+  0  //p[text()="R$ 5,90"]
+  2  //p[contains(., "5,90")]
+  1  xpath=/html/body/main/ul/li[1]/button
+       <button type="button">Add to basket</button>
+  1  xpath=(//li)[2]//h2
+       <h2>Mango</h2>
 ```
 
 - **`//p[text()="R$ 5,90"]` finds nothing**, and the screen shows that price. Two reasons, both

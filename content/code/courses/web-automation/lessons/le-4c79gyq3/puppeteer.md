@@ -38,14 +38,21 @@ from lesson 8, Cypress from lesson 9, and Puppeteer. Save it as `package.json`:
 and install:
 
 ```
-%%CAP npm-install%%
+ana@laptop:~/quitanda$ npm install
+
+added 212 packages, and audited 213 packages in 5s
+
+56 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
 ```
 
 **On your machine this step also downloads a browser.** Like Playwright, each Puppeteer release is
 built against one Chrome build, and installing it fetches that build into `~/.cache/puppeteer`. For
 25.13.0 its source names Chrome 155.0.8059.39. Its README warns that some package managers skip
-install scripts, and then nothing is downloaded and the first run fails; this command fetches it
-by hand:
+install scripts. Then nothing is downloaded, the first run fails, and this command fetches the
+browser by hand:
 
 ```sh
 npx puppeteer browsers install
@@ -68,7 +75,9 @@ holds. Make a folder for it with `mkdir puppeteer`. Save it as `puppeteer/basket
 With the shop started by `npm start` in one terminal, run it in another:
 
 ```
-%%CAP basket%%
+ana@laptop:~/quitanda$ node puppeteer/basket.mjs
+browser: Chrome/141.0.7390.37
+basket: 1
 ```
 
 **Every wait in that script is written by hand**, and each one stands for something the shop does
@@ -81,10 +90,20 @@ waits for the count.
 Delete the `waitForFunction` call, all three of its lines, and run the script five times:
 
 ```
-%%CAP no-wait%%
+ana@laptop:~/quitanda$ for i in 1 2 3 4 5; do node puppeteer/basket.mjs | grep basket; done
+basket: 0
+basket: 0
+basket: 0
+basket: 1
+basket: 1
 ```
 
-PROSE_NO_WAIT
+**Three runs said 0 and two said 1**, from the same script against the same shop. The click was
+sent every time. What changed between runs is whether the answer to `POST /api/basket` had come
+back before `$eval` read the count, and on this machine the read won three times out of five. Your
+split will differ, and five to nothing either way is possible. A script that is right on some runs
+and wrong on others is the worst kind a test suite can hold, because a rerun makes the failure
+look like it went away.
 
 Nothing in the script was wrong in the sense a reviewer would spot: every line does what it says.
 What is missing is a line saying *and now wait for the shop*. Lesson 3 is about this race between a

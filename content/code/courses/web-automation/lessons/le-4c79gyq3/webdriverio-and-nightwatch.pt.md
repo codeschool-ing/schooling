@@ -15,8 +15,8 @@ ferramenta, o mesmo teste da banana da seção anterior, para você compará-los
 ## WebdriverIO
 
 O pacote npm dele se descreve como um "next-gen browser and mobile automation test framework for
-Node.js", um framework de automação de navegador e de celular, e as duas metades são separadas: o
-`webdriverio` é a biblioteca, que dá para usar num script comum, e o `@wdio/cli` é o executor, que
+Node.js", um framework de automação de navegador e de celular, e as duas metades são separadas. O
+`webdriverio` é a biblioteca, que dá para usar num script comum. O `@wdio/cli` é o executor, que
 roda os seus testes sob um framework que você escolhe: Mocha, Jasmine ou Cucumber, cada um num
 pacote `@wdio/` próprio. A versão atual é a 10.0.2, e ela pede o Node 22.19 ou posterior.
 

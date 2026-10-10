@@ -23,8 +23,8 @@ milliseconds, which is why there can be one per test.
 
 The `page` every test so far received was made from a context Playwright created for that test.
 A test can also ask for the `browser` itself and make as many contexts as it needs, which is how
-one test plays two people. This file does it four times: two contexts that share nothing, two
-shoppers in the shop, and a pair of tests showing that the ordinary `page` is isolated too. Save it
+one test plays two people. This file has four tests: two contexts that share nothing, two shoppers
+in the shop, and a pair showing that the ordinary `page` is isolated too. Save it
 as `tests/contexts.spec.js`:
 
 ```javascript
@@ -84,13 +84,13 @@ test('two shoppers, one basket: the shop\'s flaw', async ({ browser }) => {
   await bia.close();
 });
 
-test('the page fixture: storage written in one test…', async ({ page }) => {
+test('the page fixture: storage written in one test', async ({ page }) => {
   await page.goto('/');
   await page.evaluate(() => localStorage.setItem('shopper', 'ana'));
   expect(await page.evaluate(() => localStorage.getItem('shopper'))).toBe('ana');
 });
 
-test('…is gone in the next, in the same browser', async ({ page }) => {
+test('the next test in the same browser starts without it', async ({ page }) => {
   await page.goto('/');
   expect(await page.evaluate(() => localStorage.getItem('shopper'))).toBeNull();
 });

@@ -70,7 +70,14 @@ test('typed key by key, the list settles on papaya', async ({ page }) => {
 ```
 
 ```
-%%CAP v3%%
+ana@laptop:~/quitanda$ npx playwright test tests/search.spec.js
+
+Running 2 tests using 1 worker
+
+  ✓  1 tests/search.spec.js:7:1 › one request: filling the box finds papaya (161ms)
+  ✘  2 tests/search.spec.js:13:1 › typed key by key, the list settles on papaya (6.1s)
+
+  2 passed (7.7s)
 ```
 
 **Leia as marcas e o resumo separadamente.** A marca ao lado de cada teste diz o que o teste fez: o
@@ -88,13 +95,43 @@ perguntou e descartar qualquer resposta a uma pergunta que a caixa não tem mais
 como substituta do ouvinte em `app/public/search.js`:
 
 ```javascript
-%%CAP fixed-listener%%
+input.addEventListener('input', async () => {
+  const asked = input.value;
+  waiting += 1;
+  results.setAttribute('aria-busy', 'true');
+  const response = await fetch('/api/search?q=' + encodeURIComponent(asked));
+  const found = await response.json();
+  waiting -= 1;
+  if (waiting === 0) results.setAttribute('aria-busy', 'false');
+  // The fix: an answer to a question the box no longer asks is dropped.
+  if (asked !== input.value) return;
+  results.replaceChildren(...found.map((p) => {
+    const li = document.createElement('li');
+    li.textContent = p.name;
+    return li;
+  }));
+  count.textContent = `${found.length} found`;
+});
 ```
 
 Com essa mudança, o mesmo arquivo de testes:
 
 ```
-%%CAP v3-fixed%%
+ana@laptop:~/quitanda$ npx playwright test tests/search.spec.js
+
+Running 2 tests using 1 worker
+
+  ✓  1 tests/search.spec.js:7:1 › one request: filling the box finds papaya (166ms)
+  ✓  2 tests/search.spec.js:14:1 › typed key by key, the list settles on papaya (1.0s)
+
+
+  1) tests/search.spec.js:14:1 › typed key by key, the list settles on papaya ──────────────────────
+
+    Expected to fail, but passed.
+
+  1 failed
+    tests/search.spec.js:14:1 › typed key by key, the list settles on papaya ───────────────────────
+  1 passed (2.5s)
 ```
 
 **As marcas e o resumo trocaram de lugar.** O segundo teste passou, então leva `✓`, e como foi

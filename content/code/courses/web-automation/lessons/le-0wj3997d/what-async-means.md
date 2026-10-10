@@ -62,7 +62,18 @@ await browser.close();
 With the shop started, run it as it is, and then holding the products back for half a second:
 
 ```
-%%CAP at-load%%
+ana@laptop:~/quitanda$ node at-load.mjs
+   57 ms  the load event
+   67 ms  answered /api/products
+   85 ms  answered /api/basket
+   89 ms  goto returned: 8 products
+   97 ms  one appeared: 8 products
+ana@laptop:~/quitanda$ node at-load.mjs 500
+   51 ms  the load event
+   79 ms  goto returned: 0 products
+  555 ms  answered /api/products
+  562 ms  answered /api/basket
+  888 ms  one appeared: 8 products
 ```
 
 On this machine the shop answers in a few milliseconds, so in the first run the products arrived

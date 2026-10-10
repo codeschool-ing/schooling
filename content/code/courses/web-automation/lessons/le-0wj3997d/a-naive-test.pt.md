@@ -46,7 +46,56 @@ test('fills the box, sleeps a second, then reads', async ({ page }) => {
 ```
 
 ```
-%%CAP v1%%
+ana@laptop:~/quitanda$ npx playwright test tests/search.spec.js
+
+Running 4 tests using 1 worker
+
+  ✘  1 tests/search.spec.js:7:1 › reads the list as soon as the typing ends (184ms)
+  ✓  2 tests/search.spec.js:12:1 › sleeps half a second, then reads (673ms)
+  ✘  3 tests/search.spec.js:18:1 › sleeps a whole second, then reads (1.2s)
+  ✓  4 tests/search.spec.js:24:1 › fills the box, sleeps a second, then reads (1.2s)
+
+
+  1) tests/search.spec.js:7:1 › reads the list as soon as the typing ends ──────────────────────────
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 0
+
+       7 | test('reads the list as soon as the typing ends', async ({ page }) => {
+       8 |   await page.getByLabel('Fruit').pressSequentially('papaya');
+    >  9 |   expect(await page.locator('#results li').count()).toBe(1);
+         |                                                     ^
+      10 | });
+      11 |
+      12 | test('sleeps half a second, then reads', async ({ page }) => {
+        at /home/ana/quitanda/tests/search.spec.js:9:53
+
+    Error Context: test-results/search-reads-the-list-as-soon-as-the-typing-ends/error-context.md
+
+  2) tests/search.spec.js:18:1 › sleeps a whole second, then reads ─────────────────────────────────
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 1
+    Received: 3
+
+      19 |   await page.getByLabel('Fruit').pressSequentially('papaya');
+      20 |   await page.waitForTimeout(1000);
+    > 21 |   expect(await page.locator('#results li').count()).toBe(1);
+         |                                                     ^
+      22 | });
+      23 |
+      24 | test('fills the box, sleeps a second, then reads', async ({ page }) => {
+        at /home/ana/quitanda/tests/search.spec.js:21:53
+
+    Error Context: test-results/search-sleeps-a-whole-second-then-reads/error-context.md
+
+  2 failed
+    tests/search.spec.js:7:1 › reads the list as soon as the typing ends ───────────────────────────
+    tests/search.spec.js:18:1 › sleeps a whole second, then reads ──────────────────────────────────
+  2 passed (6.3s)
 ```
 
 ## Quatro vereditos, uma página

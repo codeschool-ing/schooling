@@ -23,7 +23,25 @@ With the shop started, the word typed with no pause between keys, which is what 
 unless told otherwise:
 
 ```
-%%CAP race-0%%
+ana@laptop:~/quitanda$ node race.mjs
+   54 ms  asked    "p"
+   56 ms  asked    "pa"
+   61 ms  asked    "pap"
+   66 ms  asked    "papa"
+   70 ms  asked    "papay"
+   73 ms  asked    "papaya"
+   82 ms  answered "papaya"
+   85 ms    shows  1 found: Papaya  (aria-busy=true)
+  223 ms  answered "papay"
+  224 ms    shows  1 found: Papaya  (aria-busy=true)
+  370 ms  answered "papa"
+  371 ms    shows  1 found: Papaya  (aria-busy=true)
+  517 ms  answered "pap"
+  518 ms    shows  1 found: Papaya  (aria-busy=true)
+  663 ms  answered "pa"
+  664 ms    shows  2 found: Papaya, Passion fruit  (aria-busy=true)
+  804 ms  answered "p"
+  804 ms    shows  3 found: Papaya, Passion fruit, Pineapple  (aria-busy=false)
 ```
 
 Read it from the top. All six questions leave before the first answer comes back. The answer to
@@ -42,7 +60,25 @@ outstanding.
 The same word, with 200 milliseconds between keys, which is an ordinary typing pace:
 
 ```
-%%CAP race-200%%
+ana@laptop:~/quitanda$ node race.mjs papaya 200
+   55 ms  asked    "p"
+  259 ms  asked    "pa"
+  464 ms  asked    "pap"
+  671 ms  asked    "papa"
+  808 ms  answered "p"
+  810 ms    shows  3 found: Papaya, Passion fruit, Pineapple  (aria-busy=true)
+  861 ms  answered "pa"
+  863 ms    shows  2 found: Papaya, Passion fruit  (aria-busy=true)
+  873 ms  asked    "papay"
+  918 ms  answered "pap"
+  919 ms    shows  1 found: Papaya  (aria-busy=true)
+  973 ms  answered "papa"
+  975 ms    shows  1 found: Papaya  (aria-busy=true)
+ 1029 ms  answered "papay"
+ 1030 ms    shows  1 found: Papaya  (aria-busy=false)
+ 1077 ms  asked    "papaya"
+ 1082 ms  answered "papaya"
+ 1082 ms    shows  1 found: Papaya  (aria-busy=false)
 ```
 
 Now each answer arrives before the next one, because each question left 200 ms after its

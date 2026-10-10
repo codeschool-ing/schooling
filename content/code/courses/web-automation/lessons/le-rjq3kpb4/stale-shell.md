@@ -20,23 +20,42 @@ Open `app/public/spa/spa.js` in your editor and change the heading of the fruit 
 `Fresh fruit`, as a developer's next release might. Start the shop, and the server has the new file:
 
 ```
-%%CAP stale-curl%%
+ana@laptop:~/quitanda$ curl -s http://localhost:3000/spa/spa.js | grep -n 'Fresh fruit'
+9:    view.innerHTML = '<h1>Fresh fruit</h1><ul></ul>';
 ```
 
 Now start the shop with its log on, and run `spa-look.mjs` a third time, still with the profile of
 the earlier runs:
 
 ```
-%%CAP stale%%
+ana@laptop:~/quitanda$ QUITANDA_LOG=1 npm start
+ana@laptop:~/quitanda$ node spa-look.mjs
+   20 ms  document   /spa/  from the service worker
+   40 ms  stylesheet /style.css  from the service worker
+   40 ms  script     /spa/spa.js  from the service worker
+   70 ms  fetch      /api/products  from the server
+   95 ms  heading: Fruit
+  104 ms  service worker ready; click Basket
+  137 ms  fetch      /api/basket  from the server
+  157 ms  heading: Basket, address: http://localhost:3000/spa/basket
 ```
 
 And the server's side of it:
 
 ```
-%%CAP stale-log%%
+
+> start
+> node app/server.js
+
+quitanda is listening on http://localhost:3000
+GET /api/products 200
+GET /api/basket 200
 ```
 
-%%PROSE stale%%
+`Fruit`. The document, the stylesheet and the script all came from the service worker, and the
+server's log has two lines, both under `/api/`: nobody asked the server for `spa.js`, and in this
+run the browser did not ask for `sw.js` either. The release is on the server, and this visitor does
+not see it.
 
 Change the heading back to `Fruit` before going on, so the next lessons find the file as they
 expect it.

@@ -17,7 +17,13 @@ again, then for `#card-4821`, the example lesson 1 gave, and then for any `id` t
 way these do:
 
 ```
-%%CAP count-id%%
+ana@laptop:~/quitanda$ node count.mjs '[data-testid="product-banana"]' '#card-4821' '[id^="card-"]'
+  1  [data-testid="product-banana"]
+       <li class="card" id="card-7541" data-testid="product-banana"><h2>Banana</h2>
+           <p class="price">R$&nbsp;5,90 <small>/ dozen</small></p>
+           <button type="button">Add to basket</button></li>
+  0  #card-4821
+  8  [id^="card-"]
 ```
 
 The Banana card has a different `id` from the one printed at the start of this lesson, and the
@@ -61,7 +67,70 @@ test('banana, by its position, after one more fruit', async ({ page }) => {
 Run that file alone, by name:
 
 ```
-%%CAP breaks%%
+ana@laptop:~/quitanda$ npx playwright test tests/locators.spec.js
+
+Running 3 tests using 1 worker
+
+  ✘  1 tests/locators.spec.js:3:1 › banana, by the id the Elements panel showed (5.1s)
+  ✓  2 tests/locators.spec.js:8:1 › banana, by its position (214ms)
+  ✘  3 tests/locators.spec.js:13:1 › banana, by its position, after one more fruit (5.2s)
+
+
+  1) tests/locators.spec.js:3:1 › banana, by the id the Elements panel showed ──────────────────────
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator: locator('#card-4821 h2')
+    Expected: "Banana"
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for locator('#card-4821 h2')
+
+
+      3 | test('banana, by the id the Elements panel showed', async ({ page }) => {
+      4 |   await page.goto('/');
+    > 5 |   await expect(page.locator('#card-4821 h2')).toHaveText('Banana');
+        |                                               ^
+      6 | });
+      7 |
+      8 | test('banana, by its position', async ({ page }) => {
+        at /home/ana/quitanda/tests/locators.spec.js:5:47
+
+    Error Context: test-results/locators-banana-by-the-id-the-Elements-panel-showed/error-context.md
+
+  2) tests/locators.spec.js:13:1 › banana, by its position, after one more fruit ───────────────────
+
+    Error: expect(locator).toHaveText(expected) failed
+
+    Locator:  locator('#products > li:nth-child(1) h2')
+    Expected: "Banana"
+    Received: "Jabuticaba"
+    Timeout:  5000ms
+
+    Call log:
+      - Expect "toHaveText" with timeout 5000ms
+      - waiting for locator('#products > li:nth-child(1) h2')
+        9 × locator resolved to <h2>Jabuticaba</h2>
+          - unexpected value "Jabuticaba"
+
+
+      18 |     list.insertAdjacentHTML('afterbegin', '<li class="card"><h2>Jabuticaba</h2></li>');
+      19 |   });
+    > 20 |   await expect(page.locator('#products > li:nth-child(1) h2')).toHaveText('Banana');
+         |                                                                ^
+      21 | });
+      22 |
+        at /home/ana/quitanda/tests/locators.spec.js:20:64
+
+    Error Context: test-results/locators-banana-by-its-position-after-one-more-fruit/error-context.md
+
+  2 failed
+    tests/locators.spec.js:3:1 › banana, by the id the Elements panel showed ───────────────────────
+    tests/locators.spec.js:13:1 › banana, by its position, after one more fruit ────────────────────
+  1 passed (13.0s)
 ```
 
 **The first test never passed, not even once.** The `id` it copied was right for the page in your

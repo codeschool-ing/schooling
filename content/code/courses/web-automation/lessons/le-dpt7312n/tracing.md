@@ -59,6 +59,8 @@ tests that failed. Lesson 16 picks between them.
 
 The `list` reporter this course uses prints one line per test. The **HTML reporter** writes a
 whole site instead: every test, its steps, its errors, and a link to its trace when there is one.
+Reporters can be combined, so `--reporter=list,html` keeps the lines in the terminal and writes the
+site as well:
 
 ```
 %%CAP report-run%%

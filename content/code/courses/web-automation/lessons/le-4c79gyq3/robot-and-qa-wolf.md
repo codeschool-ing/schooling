@@ -72,7 +72,7 @@ Feature lists are the last thing that decides it. In order, the questions that u
 4. **Who writes the tests?** Programmers, testers who do not program, or nobody inside the
    company.
 
-A team that answers those four has usually chosen before the comparison table is open, and that
-is no failure of judgement: **a tool the team already knows, on the browsers it must cover, beats
+A team that answers those four has usually chosen before the comparison table is open. That is
+no failure of judgement: **a tool the team already knows, on the browsers it must cover, beats
 a better one nobody will maintain.** Lesson 22 asks the same kind of question about which tests
 are worth writing at all.

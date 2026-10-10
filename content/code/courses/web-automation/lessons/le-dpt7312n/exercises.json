@@ -1,0 +1,533 @@
+[
+ {
+  "id": "ex-f1jc4p33",
+  "version": 1,
+  "section": "architecture",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Where does the code of a Playwright test run?",
+  "choices": [
+   {
+    "text": "In a Node process outside the browser",
+    "correct": true,
+    "why": "Right. The test stays in Node and reaches the browser over one connection."
+   },
+   {
+    "text": "Inside the page, beside the shop's own scripts",
+    "correct": false,
+    "why": "That is Cypress's arrangement, from lesson 9; Playwright keeps the test out of the page."
+   },
+   {
+    "text": "In a driver program such as chromedriver",
+    "correct": false,
+    "why": "A driver program is Selenium's middle step, from lesson 8; Playwright has none."
+   },
+   {
+    "text": "On a Playwright server on the internet",
+    "correct": false,
+    "why": "Nothing leaves your machine: the test, the browser and the shop all run on it."
+   }
+  ]
+ },
+ {
+  "id": "ex-dhshhmrt",
+  "version": 1,
+  "section": "architecture",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`look.mjs` printed every response the moment it arrived, without asking the browser in a loop. What in Playwright's design makes that possible?",
+  "choices": [
+   {
+    "text": "The browser sends events up the connection unasked",
+    "correct": true,
+    "why": "Right. Commands go down and events come up on the same open connection."
+   },
+   {
+    "text": "Playwright polls the page every few milliseconds",
+    "correct": false,
+    "why": "Polling is what a one-way protocol forces on a tool; the connection here is two-way."
+   },
+   {
+    "text": "The test runs inside the page and sees each request",
+    "correct": false,
+    "why": "The test runs in Node, outside the page."
+   },
+   {
+    "text": "The shop logs each request to Playwright",
+    "correct": false,
+    "why": "The shop's log goes to its own terminal; it knows nothing about Playwright."
+   }
+  ]
+ },
+ {
+  "id": "ex-8w4mch6m",
+  "version": 1,
+  "section": "architecture",
+  "type": "matching",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Match each tool, or browser, to how a test reaches it.",
+  "pairs": [
+   {
+    "left": "Selenium WebDriver",
+    "right": "One HTTP request per command, to a driver"
+   },
+   {
+    "left": "Cypress",
+    "right": "The test is loaded into the browser itself"
+   },
+   {
+    "left": "Playwright with Chromium",
+    "right": "One open connection speaking CDP"
+   },
+   {
+    "left": "Playwright with Firefox",
+    "right": "A patched build with its own protocol"
+   }
+  ]
+ },
+ {
+  "id": "ex-4zdbqk87",
+  "version": 1,
+  "section": "browsers",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`tests/contexts.spec.js` holds four tests. How many test runs does `npx playwright test --config browsers.config.js tests/contexts.spec.js` start, with all three browsers installed?",
+  "hint": "Every project runs every test.",
+  "value": 12,
+  "tolerance": 0,
+  "unit": "runs"
+ },
+ {
+  "id": "ex-d56vqk9r",
+  "version": 1,
+  "section": "browsers",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "`npx playwright test --config browsers.config.js --project chromium tests/smoke.spec.js` answers `Project(s) \"tests/smoke.spec.js\" not found`. What is wrong?",
+  "choices": [
+   {
+    "text": "The file is missing from `tests/`",
+    "correct": false,
+    "why": "The message is about a project name, and the name it quotes is the file."
+   },
+   {
+    "text": "`--project` swallowed the file name as a second project",
+    "correct": true,
+    "why": "Right. Write `--project=chromium`, or put the files before the option."
+   },
+   {
+    "text": "`browsers.config.js` has no project called chromium",
+    "correct": false,
+    "why": "The same message lists the available projects, and chromium is the first."
+   },
+   {
+    "text": "A separate config cannot be combined with --project",
+    "correct": false,
+    "why": "It can; the run with `--project=chromium` worked with the same config."
+   }
+  ]
+ },
+ {
+  "id": "ex-t8bm93sy",
+  "version": 1,
+  "section": "browsers",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team's users all browse with Google Chrome, and a defect appears only there. Which project setting puts that browser under the tests?",
+  "choices": [
+   {
+    "text": "`devices['Desktop Chrome']`",
+    "correct": false,
+    "why": "That describes a window and a user agent and still runs Playwright's own Chromium."
+   },
+   {
+    "text": "`channel: 'chrome'`",
+    "correct": true,
+    "why": "Right. A channel runs the branded browser installed on the computer."
+   },
+   {
+    "text": "`npx playwright install firefox`",
+    "correct": false,
+    "why": "That downloads Playwright's patched Firefox, which is not Chrome at all."
+   },
+   {
+    "text": "Nothing: Chromium and Chrome are one program",
+    "correct": false,
+    "why": "They share an engine and differ in what Google adds, which is where such a defect can live."
+   }
+  ]
+ },
+ {
+  "id": "ex-zvqw0pjw",
+  "version": 1,
+  "section": "contexts",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "What is a browser context?",
+  "choices": [
+   {
+    "text": "A fresh profile inside one browser",
+    "correct": true,
+    "why": "Right. Its own cookies, storage and cache, like a private window."
+   },
+   {
+    "text": "A second browser process started for each test",
+    "correct": false,
+    "why": "The browser is started once per worker; contexts are made inside it in milliseconds."
+   },
+   {
+    "text": "Another name for a tab",
+    "correct": false,
+    "why": "A tab is a page, and a context can hold several pages."
+   },
+   {
+    "text": "The settings in `playwright.config.js`",
+    "correct": false,
+    "why": "The configuration supplies options to contexts; it is not one."
+   }
+  ]
+ },
+ {
+  "id": "ex-ezttp0tg",
+  "version": 1,
+  "section": "contexts",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Ana and Bia each have a context of their own. Bia opens the shop having added nothing, and her basket says 1. Why?",
+  "choices": [
+   {
+    "text": "Bia's context shares Ana's localStorage",
+    "correct": false,
+    "why": "The first test showed the opposite: Bia's page read `null`."
+   },
+   {
+    "text": "The shop keeps one basket on the server for everybody",
+    "correct": true,
+    "why": "Right. A context isolates what the browser keeps, and the basket is not in the browser."
+   },
+   {
+    "text": "A cookie from Ana's context leaked to Bia",
+    "correct": false,
+    "why": "Both printed `[]`: the shop sets no cookie at all."
+   },
+   {
+    "text": "The reset in `beforeEach` did not run",
+    "correct": false,
+    "why": "It ran; the banana was added after it, by Ana, in the same test."
+   }
+  ]
+ },
+ {
+  "id": "ex-krpzk7vf",
+  "version": 1,
+  "section": "contexts",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "A test writes a value into `localStorage` through the `page` fixture. The next test in the file reads it. What does it get?",
+  "choices": [
+   {
+    "text": "The value, because the browser is the same",
+    "correct": false,
+    "why": "The browser is the same; the context is not, and storage belongs to the context."
+   },
+   {
+    "text": "`null`, because each test gets its own context",
+    "correct": true,
+    "why": "Right. That is Playwright's default, and the last test of the file shows it."
+   },
+   {
+    "text": "An error, because storage is cleared by force",
+    "correct": false,
+    "why": "Nothing is cleared; the new context simply never had the value."
+   },
+   {
+    "text": "The value, unless the tests run in two workers",
+    "correct": false,
+    "why": "Even in one worker each test has a new context."
+   }
+  ]
+ },
+ {
+  "id": "ex-j133swnz",
+  "version": 1,
+  "section": "contexts",
+  "type": "multiple-choice",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these does a new browser context start without? Choose all that apply.",
+  "choices": [
+   {
+    "text": "The cookies another context received",
+    "correct": true,
+    "why": "Right. Cookies belong to the context that received them."
+   },
+   {
+    "text": "Values written to `localStorage` in another context",
+    "correct": true,
+    "why": "Right. Bia's page read `null` where Ana's read `ana`."
+   },
+   {
+    "text": "Lines added to the shop's basket by another context",
+    "correct": false,
+    "why": "The basket is on the server, and every context sees the same one."
+   },
+   {
+    "text": "Files cached by another context",
+    "correct": true,
+    "why": "Right. The cache is part of the profile a context isolates."
+   }
+  ]
+ },
+ {
+  "id": "ex-t1xs599s",
+  "version": 1,
+  "section": "contexts",
+  "type": "ordering",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Order these from the one that holds the others to the one held.",
+  "items": [
+   "browser",
+   "context",
+   "page"
+  ],
+  "trap": "A context is inside a browser, not the other way round: one browser holds many contexts."
+ },
+ {
+  "id": "ex-enjq142y",
+  "version": 1,
+  "section": "auto-waiting",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Straight after clicking Add to basket, `await count.textContent()` returned `0`, and `await expect(count).toHaveText('1')` then passed. Why did they disagree?",
+  "choices": [
+   {
+    "text": "The click failed the first time and was retried",
+    "correct": false,
+    "why": "One click, one request; only the reading differed."
+   },
+   {
+    "text": "`textContent()` reads the page once; the assertion reads until it matches",
+    "correct": true,
+    "why": "Right. The snapshot came before the shop's answer; the assertion waited for it."
+   },
+   {
+    "text": "The count is drawn inside a frame that a plain read of the page cannot reach",
+    "correct": false,
+    "why": "There is no frame; the read reached the element and got its text at that instant."
+   },
+   {
+    "text": "`toHaveText` ignores digits",
+    "correct": false,
+    "why": "It compared `1` with `1`; the earlier failing run shows it comparing digits exactly."
+   }
+  ]
+ },
+ {
+  "id": "ex-0m93vrvt",
+  "version": 1,
+  "section": "auto-waiting",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "With the configuration this course uses, an assertion on a locator gives up after ___ seconds, and a whole test after ___ seconds.",
+  "blanks": [
+   {
+    "accept": [
+     "5",
+     "five"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   },
+   {
+    "accept": [
+     "30",
+     "thirty"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-fqzatjb2",
+  "version": 1,
+  "section": "auto-waiting",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A click fails with `Test timeout of 30000ms exceeded` and a call log that only ever says `waiting for getByRole('button', { name: 'Checkout' })`. What is the first thing to suspect?",
+  "choices": [
+   {
+    "text": "The locator matches nothing on the page",
+    "correct": true,
+    "why": "Right. It never resolved; a button that existed but was covered or disabled would have been found first."
+   },
+   {
+    "text": "The action timeout of five seconds is too short",
+    "correct": false,
+    "why": "Five seconds is the assertion's clock; the click waited thirty, the whole test."
+   },
+   {
+    "text": "The button was found but held the wrong text",
+    "correct": false,
+    "why": "A found element shows as `locator resolved to` in the call log."
+   },
+   {
+    "text": "The browser crashed during the test",
+    "correct": false,
+    "why": "A crashed browser fails with a different message, not a call log still waiting."
+   }
+  ]
+ },
+ {
+  "id": "ex-ygyn2p3v",
+  "version": 1,
+  "section": "tracing",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "After `npx playwright test --trace on`, where is each test's trace?",
+  "choices": [
+   {
+    "text": "Printed in the terminal, in the summary at the end of the run",
+    "correct": false,
+    "why": "The run's output does not mention the trace at all."
+   },
+   {
+    "text": "In `playwright-report/`, inside the HTML report",
+    "correct": false,
+    "why": "That folder is written by the HTML reporter; traces go elsewhere."
+   },
+   {
+    "text": "A `trace.zip` in a folder per test, in `test-results/`",
+    "correct": true,
+    "why": "Right. Each folder is named after the file and the test."
+   },
+   {
+    "text": "On Playwright's website",
+    "correct": false,
+    "why": "Nothing is uploaded; the trace is a file on your disk."
+   }
+  ]
+ },
+ {
+  "id": "ex-xyb0djyh",
+  "version": 1,
+  "section": "tracing",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the steps of reading a failing test's trace in order.",
+  "items": [
+   "Run the test with `--trace on`",
+   "Find its folder in `test-results/`",
+   "Open its `trace.zip` with `npx playwright show-trace`"
+  ],
+  "trap": "There is nothing to open before a run has recorded it."
+ },
+ {
+  "id": "ex-4ae3fz5h",
+  "version": 1,
+  "section": "tracing",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Recording a trace of every test costs disk and time. What does Playwright's documentation suggest for a suite that runs on a build server?",
+  "choices": [
+   {
+    "text": "Never record traces on a server",
+    "correct": false,
+    "why": "The server is where nobody watches, so it is where a trace earns its place."
+   },
+   {
+    "text": "`trace: 'on-first-retry'`, recording when a failed test is retried",
+    "correct": true,
+    "why": "Right. Passing tests cost nothing, and a failure leaves its evidence."
+   },
+   {
+    "text": "Screenshots only",
+    "correct": false,
+    "why": "A trace holds screenshots and also the actions, requests and console, which is why it is worth more."
+   },
+   {
+    "text": "`--trace on` for every run",
+    "correct": false,
+    "why": "That is the costly setting the question starts from."
+   }
+  ]
+ },
+ {
+  "id": "ex-b1eyxnf0",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Two tests in different files each add a banana and expect the count to read 1. Alone, each passes. With two workers, one fails reading 2. Which change would make both pass?",
+  "choices": [
+   {
+    "text": "Give each test its own browser context",
+    "correct": false,
+    "why": "They already have one each; the basket is on the server, out of a context's reach."
+   },
+   {
+    "text": "Run them one at a time, with one worker",
+    "correct": true,
+    "why": "Right, for now: the shared basket is the cause, and lessons 15 and 19 deal with it properly."
+   },
+   {
+    "text": "Raise the assertion timeout to thirty seconds",
+    "correct": false,
+    "why": "Waiting longer does not turn a 2 into a 1."
+   },
+   {
+    "text": "Run them in Firefox as well",
+    "correct": false,
+    "why": "A second engine runs the same tests against the same basket."
+   }
+  ]
+ },
+ {
+  "id": "ex-dscz9v9f",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A test passes in the chromium project and fails in webkit on a teammate's machine. Your machine has only Chromium. What is the most useful next step?",
+  "choices": [
+   {
+    "text": "Delete the webkit project, since Chromium passes",
+    "correct": false,
+    "why": "That hides the one finding the project exists to make."
+   },
+   {
+    "text": "Ask for the trace of the failing webkit run",
+    "correct": true,
+    "why": "Right. The trace holds the actions, the page and the network of that run, and opening it needs no WebKit."
+   },
+   {
+    "text": "Run the chromium project again until it fails",
+    "correct": false,
+    "why": "The failure is in another engine; repeating this one measures nothing new."
+   },
+   {
+    "text": "Change `devices['Desktop Safari']` to `devices['Desktop Chrome']`",
+    "correct": false,
+    "why": "That turns the webkit project into a second Chromium run."
+   }
+  ]
+ }
+]

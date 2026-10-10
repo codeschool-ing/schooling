@@ -55,7 +55,63 @@ test('a price, and the space nobody can see', async ({ page }) => {
 ```
 
 ```
-%%CAP strict%%
+ana@laptop:~/quitanda$ npx playwright test tests/locators.spec.js
+
+Running 3 tests using 1 worker
+
+  ✓  1 tests/locators.spec.js:7:1 › banana, by its test id (241ms)
+  ✘  2 tests/locators.spec.js:12:1 › add a mango, by role and name (201ms)
+  ✘  3 tests/locators.spec.js:17:1 › a price, and the space nobody can see (210ms)
+
+
+  1) tests/locators.spec.js:12:1 › add a mango, by role and name ───────────────────────────────────
+
+    Error: locator.click: Error: strict mode violation: getByRole('button', { name: 'Add to basket' }) resolved to 8 elements:
+        1) <button type="button">Add to basket</button> aka getByTestId('product-banana').getByRole('button', { name: 'Add to basket' })
+        2) <button type="button">Add to basket</button> aka getByTestId('product-mango').getByRole('button', { name: 'Add to basket' })
+        3) <button type="button">Add to basket</button> aka getByTestId('product-papaya').getByRole('button', { name: 'Add to basket' })
+        4) <button type="button">Add to basket</button> aka getByTestId('product-guava').getByRole('button', { name: 'Add to basket' })
+        5) <button type="button">Add to basket</button> aka getByTestId('product-cashew').getByRole('button', { name: 'Add to basket' })
+        6) <button type="button">Add to basket</button> aka getByTestId('product-passion').getByRole('button', { name: 'Add to basket' })
+        7) <button type="button">Add to basket</button> aka locator('#card-9158 > button')
+        8) <button type="button">Add to basket</button> aka locator('#card-7101 > button')
+
+    Call log:
+      - waiting for getByRole('button', { name: 'Add to basket' })
+
+
+      11 |
+      12 | test('add a mango, by role and name', async ({ page }) => {
+    > 13 |   await page.getByRole('button', { name: 'Add to basket' }).click();
+         |                                                             ^
+      14 |   await expect(page.getByRole('status')).toHaveText('Added Mango');
+      15 | });
+      16 |
+        at /home/ana/quitanda/tests/locators.spec.js:13:61
+
+    Error Context: test-results/locators-add-a-mango-by-role-and-name/error-context.md
+
+  2) tests/locators.spec.js:17:1 › a price, and the space nobody can see ───────────────────────────
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "R$ 5,90 / dozen"
+    Received: "R$ 5,90 / dozen"
+
+      18 |   const price = page.getByTestId('product-banana').getByText('R$');
+      19 |   await expect(price).toHaveText('R$ 5,90 / dozen');
+    > 20 |   expect(await price.textContent()).toBe('R$ 5,90 / dozen');
+         |                                     ^
+      21 | });
+      22 |
+        at /home/ana/quitanda/tests/locators.spec.js:20:37
+
+    Error Context: test-results/locators-a-price-and-the-space-nobody-can-see/error-context.md
+
+  2 failed
+    tests/locators.spec.js:12:1 › add a mango, by role and name ────────────────────────────────────
+    tests/locators.spec.js:17:1 › a price, and the space nobody can see ────────────────────────────
+  1 passed (3.0s)
 ```
 
 **The second test is Playwright refusing to guess.** Eight buttons are called *Add to basket*,
@@ -108,7 +164,15 @@ test('a price, and the space nobody can see', async ({ page }) => {
 ```
 
 ```
-%%CAP stable%%
+ana@laptop:~/quitanda$ npx playwright test tests/locators.spec.js
+
+Running 3 tests using 1 worker
+
+  ✓  1 tests/locators.spec.js:7:1 › banana, by its test id (202ms)
+  ✓  2 tests/locators.spec.js:12:1 › add a mango, by role and name (215ms)
+  ✓  3 tests/locators.spec.js:18:1 › a price, and the space nobody can see (131ms)
+
+  3 passed (2.1s)
 ```
 
 ## A ranking, and its reasons

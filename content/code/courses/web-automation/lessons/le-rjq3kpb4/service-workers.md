@@ -27,7 +27,15 @@ Run `spa-look.mjs` a second time. The profile in `.spa-profile` still has the wo
 installed, so this is a returning visitor:
 
 ```
-%%CAP spa-look-2%%
+ana@laptop:~/quitanda$ node spa-look.mjs
+   16 ms  document   /spa/  from the service worker
+   26 ms  stylesheet /style.css  from the service worker
+   31 ms  script     /spa/spa.js  from the service worker
+   59 ms  fetch      /api/products  from the server
+   79 ms  heading: Fruit
+   87 ms  service worker ready; click Basket
+  120 ms  fetch      /api/basket  from the server
+  124 ms  heading: Basket, address: http://localhost:3000/spa/basket
 ```
 
 Compare it with the first run. The document, the stylesheet and the script now come **from the
@@ -76,10 +84,21 @@ test.describe('with service workers blocked', () => {
 ```
 
 ```
-%%CAP offline%%
+ana@laptop:~/quitanda$ npx playwright test tests/offline.spec.js
+
+Running 2 tests using 1 worker
+
+  ✓  1 tests/offline.spec.js:3:1 › the shell opens offline once the worker has it (166ms)
+  ✓  2 tests/offline.spec.js:19:3 › with service workers blocked › the same reload finds nothing to answer it (121ms)
+
+  2 passed (1.9s)
 ```
 
-%%PROSE offline%%
+Both pass. The first proves three things in order: the reload, with the network gone, was
+answered by the worker, since `fromServiceWorker()` is true; the header and its links, which are in
+the cached `index.html`, are on screen; and the page raised an uncaught `Failed to fetch`, leaving
+`#view` empty. The second runs the same first steps with workers blocked, and there the reload
+throws.
 
 **The second line is the one that matters.** The worker installs in the background after the page
 has loaded, and nothing on the page says when it is done. `navigator.serviceWorker.ready` is a
@@ -87,10 +106,53 @@ promise the browser keeps for exactly that, and `page.evaluate` waits for it. He
 with that line deleted:
 
 ```
-%%CAP no-ready%%
+ana@laptop:~/quitanda$ npx playwright test tests/offline.spec.js
+
+Running 2 tests using 1 worker
+
+  ✘  1 tests/offline.spec.js:3:1 › the shell opens offline once the worker has it (1.2s)
+  ✓  2 tests/offline.spec.js:18:3 › with service workers blocked › the same reload finds nothing to answer it (111ms)
+
+
+  1) tests/offline.spec.js:3:1 › the shell opens offline once the worker has it ────────────────────
+
+    Error: page.reload: net::ERR_INTERNET_DISCONNECTED
+    Call log:
+      - waiting for navigation until "load"
+
+
+       5 |   await context.setOffline(true);
+       6 |   const error = page.waitForEvent('pageerror');
+    >  7 |   const response = await page.reload();
+         |                               ^
+       8 |   expect(response.fromServiceWorker()).toBe(true);
+       9 |   await expect(page.getByRole('link', { name: 'Basket' })).toBeVisible();
+      10 |   // The fruit is not in the shell: /api/products goes to the network, and fails.
+        at /home/ana/quitanda/tests/offline.spec.js:7:31
+
+    Error: page.waitForEvent: Test ended.
+    =========================== logs ===========================
+    waiting for event "pageerror"
+    ============================================================
+
+      4 |   await page.goto('/spa/');
+      5 |   await context.setOffline(true);
+    > 6 |   const error = page.waitForEvent('pageerror');
+        |                      ^
+      7 |   const response = await page.reload();
+      8 |   expect(response.fromServiceWorker()).toBe(true);
+      9 |   await expect(page.getByRole('link', { name: 'Basket' })).toBeVisible();
+        at /home/ana/quitanda/tests/offline.spec.js:6:22
+
+  1 failed
+    tests/offline.spec.js:3:1 › the shell opens offline once the worker has it ─────────────────────
+  1 passed (3.5s)
 ```
 
-%%PROSE no-ready%%
+The reload fails with `net::ERR_INTERNET_DISCONNECTED`, the error the blocked test expects,
+because at that moment there was no worker yet to answer it. The second error underneath follows
+from the first: the test ended while `waitForEvent('pageerror')` was still waiting, and Playwright
+reports the promise left behind. Read a failure from the top.
 
 **And the test says what offline means for this app**: the shell, and nothing else. The worker keeps
 no copy of `/api/products`, so the script's fetch fails, the error goes uncaught, and `#view` stays

@@ -29,7 +29,11 @@ Com a loja rodando em outro terminal (`npm start`), peça o cartão da banana pe
 cartão traz para os testes:
 
 ```
-%%CAP count-banana%%
+ana@laptop:~/quitanda$ node count.mjs '[data-testid="product-banana"]'
+  1  [data-testid="product-banana"]
+       <li class="card" id="card-3031" data-testid="product-banana"><h2>Banana</h2>
+           <p class="price">R$&nbsp;5,90 <small>/ dozen</small></p>
+           <button type="button">Add to basket</button></li>
 ```
 
 Um resultado, e o cartão como o navegador o guarda depois que o `app.js` o montou.

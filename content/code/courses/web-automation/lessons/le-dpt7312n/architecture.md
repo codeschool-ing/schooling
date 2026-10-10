@@ -18,8 +18,8 @@ has to ask, and ask again.
 
 Lesson 9 ran Cypress, which goes the other way. The test is loaded **into the browser**, beside the
 page under test, and runs in the same JavaScript world. Nothing crosses a process boundary, which
-is fast, and also why a Cypress test cannot easily hold two tabs or two browsers at once: it lives
-in one.
+is fast, and it is also why Cypress's own documentation lists a second tab among the things it
+does not support: the test lives in one.
 
 Playwright sits between the two. The test stays outside, in Node, and Playwright keeps **one
 connection open** to the browser for as long as it runs. Commands go down it; the browser sends
