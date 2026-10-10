@@ -1,0 +1,394 @@
+{
+ "ex-xhch4g45": {
+  "prompt": "Em entities.py, por que as duas sócias chamadas Ana Souza não são iguais?",
+  "choices": [
+   {
+    "text": "Os telefones são diferentes",
+    "why": "As duas têm +55 11 5550-0114; o programa as faz idênticas de propósito."
+   },
+   {
+    "text": "Os ids são diferentes",
+    "why": "Isso. m-014 e m-203 são duas sócias, digam o que disserem os atributos."
+   },
+   {
+    "text": "O Python compara os dois objetos pelos endereços na memória",
+    "why": "Esse é o padrão, e Member o sobrescreve com __eq__."
+   }
+  ]
+ },
+ "ex-q3a6cb0y": {
+  "prompt": "entities.py põe ana, before e other_ana num conjunto. Se Member não tivesse __eq__ e __hash__ próprios, quantos elementos o conjunto teria?",
+  "hint": "Sem eles, o Python compara objetos pela identidade na memória.",
+  "unit": "elementos"
+ },
+ "ex-bfnwcctr": {
+  "prompt": "Uma equipe deixa o banco atribuir o id de cada sócio no INSERT. Que problema a seção aponta?",
+  "choices": [
+   {
+    "text": "As sequências acabam depois de alguns milhões de linhas",
+    "why": "Esgotamento não é a questão levantada; o momento é."
+   },
+   {
+    "text": "Dois sócios poderiam acabar com o mesmo id",
+    "why": "Uma sequência não repete; o problema é antes de ela ser consultada."
+   },
+   {
+    "text": "Até ser salvo, o sócio não tem identidade para comparar nem para ser referido",
+    "why": "Isso. Uma entidade precisa do id desde o momento em que existe."
+   },
+   {
+    "text": "Nada, desde que toda entidade seja salva logo depois de criada",
+    "why": "Mesmo salva na hora, ela não entra num conjunto nem é citada por outro agregado antes de o INSERT voltar."
+   }
+  ]
+ },
+ "ex-mek9t88j": {
+  "prompt": "money.py imprime True e depois False para fine == Money(175) e fine is Money(175). Por que o False é inofensivo?",
+  "choices": [
+   {
+    "text": "Para um valor, qual objeto ele é nunca importa",
+    "why": "Isso. Valores iguais são intercambiáveis; só uma entidade se importa com identidade."
+   },
+   {
+    "text": "É um defeito da dataclass congelada que o Python vai corrigir",
+    "why": "is compara identidade, e dois objetos criados à parte são dois objetos. Nada está quebrado."
+   },
+   {
+    "text": "Porque o segundo Money tem outra moeda",
+    "why": "Os dois são BRL, o padrão; o == logo acima é True."
+   }
+  ]
+ },
+ "ex-yy9yeq48": {
+  "prompt": "Por que a seção dá um tipo ao dinheiro em vez de passar ints por aí?",
+  "choices": [
+   {
+    "text": "Um int não guarda quantias acima de alguns milhões de centavos",
+    "why": "O int do Python não tem esse limite; o motivo é onde as regras moram."
+   },
+   {
+    "text": "Para as regras do dinheiro morarem num lugar só",
+    "why": "Isso. Misturar moedas e meio centavo são recusados uma vez, em Money."
+   },
+   {
+    "text": "Dataclasses deixam a aritmética mais rápida que ints simples",
+    "why": "Deixam mais lenta, se for o caso; velocidade não é a questão."
+   },
+   {
+    "text": "Porque uma coluna de banco não guarda uma quantia inteira",
+    "why": "SqliteMembers guarda owed como INTEGER sem problema."
+   }
+  ]
+ },
+ "ex-q2edj23d": {
+  "prompt": "Associe cada linguagem a como ela costuma escrever um objeto de valor.",
+  "pairs": [
+   {
+    "left": "Python",
+    "right": "@dataclass(frozen=True)"
+   },
+   {
+    "left": "Java",
+    "right": "um record"
+   },
+   {
+    "left": "Go",
+    "right": "uma struct pequena passada por valor"
+   },
+   {
+    "left": "TypeScript",
+    "right": "campos readonly mais um método equals"
+   }
+  ]
+ },
+ "ex-m3rdedwa": {
+  "prompt": "Por que Member.loans devolve uma tupla em vez da própria lista?",
+  "choices": [
+   {
+    "text": "Tuplas usam menos memória, e sócios são carregados com frequência",
+    "why": "Memória não é o motivo; a tupla fecha uma porta."
+   },
+   {
+    "text": "Para nenhum código acrescentar empréstimo sem passar por borrow",
+    "why": "Isso. Tupla não tem append, então a regra dos cinco empréstimos não pode ser contornada por ali."
+   },
+   {
+    "text": "Porque uma dataclass não pode conter uma lista",
+    "why": "Member não é uma dataclass, e dataclasses podem ter listas."
+   }
+  ]
+ },
+ "ex-p6fya9x9": {
+  "prompt": "Um filme é emprestado em 2 de março de 2026 e volta em 20 de março. Pelas regras de member.py, que multa é cobrada, em centavos?",
+  "hint": "Um filme sai por 7 dias.",
+  "unit": "centavos"
+ },
+ "ex-4zhnf3yz": {
+  "prompt": "Um script de migração precisa importar empréstimos antigos. Ele os escreve direto em member._loans. O que o raciocínio da seção diz disso?",
+  "choices": [
+   {
+    "text": "Tudo bem, porque migrações rodam uma vez só",
+    "why": "Rodar uma vez basta para carregar um sócio com sete empréstimos, e a raiz nunca vê."
+   },
+   {
+    "text": "Ele deve passar pela raiz, como qualquer outro caminho",
+    "why": "Isso. Passar por borrow, ou por uma fábrica, é o que mantém cinco empréstimos como máximo."
+   },
+   {
+    "text": "O Python vai levantar erro porque _loans é privado",
+    "why": "O sublinhado é uma convenção; a escrita vai dar certo em silêncio."
+   }
+  ]
+ },
+ "ex-74z0jfs4": {
+  "prompt": "Em copies.py, o exemplar extra é oferecido a Bia quando ela já tem cinco empréstimos. O que acontece com o exemplar?",
+  "choices": [
+   {
+    "text": "Ele nem é tocado, porque lend confere o sócio primeiro",
+    "why": "lend muda o exemplar primeiro e o sócio depois."
+   },
+   {
+    "text": "Ele fica com Bia, e Caio é recusado",
+    "why": "A transcrição mostra on loan to: None, e Caio fica com ele."
+   },
+   {
+    "text": "Ele sai no nome dela e volta quando ela é recusada",
+    "why": "Isso. Uma correção feita por código depois de a primeira mudança já ter acontecido."
+   }
+  ]
+ },
+ "ex-r3yt5zqc": {
+  "prompt": "Copy.on_loan_to guarda o ___ do sócio, uma string como m-002, e nunca o objeto Member.",
+  "blanks": [
+   {
+    "accept": [
+     "id",
+     "identificador"
+    ]
+   }
+  ]
+ },
+ "ex-8q15czjk": {
+  "prompt": "Uma regra nova: as reservas e os empréstimos de um sócio juntos não podem passar de oito. Reservas são um agregado próprio. O que a seção sugere perguntar primeiro?",
+  "choices": [
+   {
+    "text": "Ela precisa valer a cada instante, ou logo?",
+    "why": "Isso. A maioria das regras entre fronteiras acaba sendo de \"logo\", e aí um evento e um handler resolvem."
+   },
+   {
+    "text": "Como fundir as reservas no agregado Member imediatamente",
+    "why": "Essa é uma resposta se a regra precisar valer a cada instante, e deixa o agregado maior; pergunte antes."
+   },
+   {
+    "text": "Qual dos dois agregados deveria guardar uma referência ao outro objeto",
+    "why": "Agregados se referem uns aos outros pelo id; guardar o objeto é a segunda porta."
+   }
+  ]
+ },
+ "ex-62z5ytyh": {
+  "prompt": "Por que existe um MemberRepository e nenhum LoanRepository?",
+  "choices": [
+   {
+    "text": "Empréstimos ficam num arquivo em vez do banco",
+    "why": "Empréstimos têm uma tabela própria em SqliteMembers."
+   },
+   {
+    "text": "Ninguém o escreveu ainda",
+    "why": "A ausência é deliberada, e a seção argumenta a favor dela."
+   },
+   {
+    "text": "Um empréstimo nunca vem sem o seu sócio",
+    "why": "Isso. Repositórios existem por raiz de agregado."
+   }
+  ]
+ },
+ "ex-d9rtjwdr": {
+  "prompt": "Por que InMemoryMembers guarda cópias profundas em vez dos sócios que recebe?",
+  "choices": [
+   {
+    "text": "Para uma mudança só contar depois de salva, como num banco",
+    "why": "Isso. Senão um teste passaria para um código que esqueceu de chamar save."
+   },
+   {
+    "text": "Cópias profundas fazem os testes rodarem mais rápido",
+    "why": "Copiar é mais lento; as cópias compram realismo."
+   },
+   {
+    "text": "Dicionários do Python não guardam objetos que mudam depois",
+    "why": "Guardam; é exatamente isso que deixaria o dublê tolerante demais."
+   },
+   {
+    "text": "Porque SqliteMembers faz o mesmo com as linhas",
+    "why": "O SQLite guarda linhas, não objetos; as cópias imitam esse comportamento."
+   }
+  ]
+ },
+ "ex-czp5azed": {
+  "prompt": "Um colega acrescenta a SqliteMembers um método lend_directly(member_id, copy_id) que insere uma linha de empréstimo. O que está errado?",
+  "choices": [
+   {
+    "text": "Tudo bem; é mais rápido do que carregar o sócio",
+    "why": "Mais rápido, e pula as duas regras do sócio."
+   },
+   {
+    "text": "Muda o agregado pelas costas da raiz, pulando os dois limites",
+    "why": "Isso. Um repositório busca e salva agregados inteiros; ele não faz mudanças de negócio."
+   },
+   {
+    "text": "Devia estar em InMemoryMembers também, para as duas classes baterem com o protocolo",
+    "why": "Acrescentá-lo às duas poria a segunda porta nos dois lugares."
+   }
+  ]
+ },
+ "ex-v351x2e8": {
+  "prompt": "Por que Member registra LoanStarted em vez de mandar ele mesmo o SMS de recibo?",
+  "choices": [
+   {
+    "text": "O gateway de SMS não aceita mensagens de objetos",
+    "why": "O gateway não é a questão; as dependências do sócio são."
+   },
+   {
+    "text": "Eventos são mais rápidos de enviar que SMS",
+    "why": "O SMS continua sendo enviado, por um handler; a velocidade não muda."
+   },
+   {
+    "text": "O sócio diz o que aconteceu; as reações ficam em outro lugar",
+    "why": "Isso. Acrescentar uma reação é uma linha em HANDLERS, e member.py não muda."
+   }
+  ]
+ },
+ "ex-wnrpzdxf": {
+  "prompt": "Ponha em ordem os passos de handlers.run.",
+  "items": [
+   "Carregar o sócio do repositório",
+   "Pedir ao sócio para pegar ou devolver",
+   "Retirar os eventos do sócio",
+   "Salvar o sócio",
+   "Publicar os eventos para os handlers"
+  ],
+  "trap": "Salvar antes de retirar guardaria os eventos na cópia em memória e os entregaria de novo no próximo get."
+ },
+ "ex-t3zdr211": {
+  "prompt": "Publicar depois de salvar pode falhar e deixar um empréstimo salvo sem evento enviado. Quando a seção diz que isso não é aceitável, e o que oferece?",
+  "choices": [
+   {
+    "text": "Em qualquer caso; publique antes de salvar",
+    "why": "Publicar primeiro manda recibos de empréstimos que um salvamento fracassado perde."
+   },
+   {
+    "text": "Quando outro agregado depende dele: gravá-lo num outbox na mesma transação",
+    "why": "Isso. Uma tarefa separada publica a partir do outbox e marca os eventos como enviados."
+   },
+   {
+    "text": "Quando o evento é um recibo: tentar o SMS três vezes",
+    "why": "Um recibo perdido é o caso que a seção chama de aceitável."
+   }
+  ]
+ },
+ "ex-aj36ank9": {
+  "prompt": "Com FinePolicy e o Carnaval fechado em 16 e 17 de fevereiro de 2026, um livro com devolução em 15 de fevereiro volta em 18 de fevereiro. Qual é a multa, em centavos?",
+  "hint": "Conte os dias depois da devolução em que a biblioteca abriu.",
+  "unit": "centavos"
+ },
+ "ex-d748qjhr": {
+  "prompt": "Por que a regra dos dias fechados ganha um FinePolicy próprio em vez de um método em Loan?",
+  "choices": [
+   {
+    "text": "Ela precisa do calendário da biblioteca, que nenhum empréstimo ou sócio sozinho deveria guardar",
+    "why": "Isso. Uma regra sem dono natural ganha casa própria."
+   },
+   {
+    "text": "Serviços são sempre melhores que métodos em entidades",
+    "why": "Essa crença é o modelo de domínio anêmico contra o qual a seção alerta."
+   },
+   {
+    "text": "Loan é uma dataclass, e dataclasses não podem ter métodos",
+    "why": "Money é uma dataclass com vários métodos."
+   }
+  ]
+ },
+ "ex-a0atq3me": {
+  "prompt": "Quais destes são serviços de aplicação, e não de domínio, nos termos da seção? Marque todos que se aplicam.",
+  "choices": [
+   {
+    "text": "lend_copy em repositories.py",
+    "why": "Isso. Carregar, pedir, salvar: ele coordena e não decide nada."
+   },
+   {
+    "text": "FinePolicy.fine_for em closures.py",
+    "why": "Ele decide algo que uma bibliotecária reconheceria: um serviço de domínio."
+   },
+   {
+    "text": "run em handlers.py",
+    "why": "Isso. Ele carrega, salva e publica; toda decisão é do sócio."
+   },
+   {
+    "text": "Member.borrow em member.py",
+    "why": "Esse é um método da raiz do agregado, não um serviço de tipo nenhum."
+   }
+  ]
+ },
+ "ex-1z691mgv": {
+  "prompt": "Associe cada peça do empréstimo ao padrão tático que ela é.",
+  "pairs": [
+   {
+    "left": "Money(175)",
+    "right": "objeto de valor"
+   },
+   {
+    "left": "Member com seus empréstimos",
+    "right": "agregado"
+   },
+   {
+    "left": "SqliteMembers",
+    "right": "repositório"
+   },
+   {
+    "left": "FineCharged",
+    "right": "evento de domínio"
+   },
+   {
+    "left": "FinePolicy",
+    "right": "serviço de domínio"
+   }
+  ]
+ },
+ "ex-bkzznrx7": {
+  "prompt": "As aquisições registram \"2 exemplares do ISBN 978-65-5555-001-6 a BRL 49.90\". No empréstimo, o exemplar C-0107 está com Bia. Como modelar cada um?",
+  "choices": [
+   {
+    "text": "Os dois são entidades em todo lugar, já que um exemplar é uma coisa física",
+    "why": "Física ou não, as aquisições se importam com uma quantidade, não com qual exemplar é qual."
+   },
+   {
+    "text": "O do balcão é entidade; o 2 do pedido é só um valor",
+    "why": "Isso. O mesmo conceito pode ser um ou outro, dependendo do contexto."
+   },
+   {
+    "text": "Os dois são valores, porque cada um tem um ISBN que o identifica",
+    "why": "Dois exemplares dividem um ISBN; C-0107 e C-0108 não são intercambiáveis no balcão."
+   }
+  ]
+ },
+ "ex-fmdv4dd4": {
+  "prompt": "Emprestar um exemplar muda o Copy e o Member. Que projeto segue as duas regras da seção sobre fronteiras?",
+  "choices": [
+   {
+    "text": "Pôr cada Copy dentro do Member que o tem, para uma transação cobrir os dois",
+    "why": "Aí um exemplar precisa ser procurado dentro de quem o tiver, e o agregado cresce sem limite."
+   },
+   {
+    "text": "Dar ao Copy uma referência ao objeto Member, para ele chamar borrow direto",
+    "why": "Guardar o objeto é a segunda porta; a regra é referir pelo id."
+   },
+   {
+    "text": "Transações próprias, ligadas por ids, consertadas por eventos",
+    "why": "Isso. Um agregado por transação, pelo id, e \"logo\" em vez de \"a cada instante\" entre eles."
+   },
+   {
+    "text": "Travar as duas tabelas durante todo o empréstimo, sempre",
+    "why": "Essa é a trava maior que a seção reserva para regras que precisam valer a cada instante; emprestar não é uma delas."
+   }
+  ]
+ }
+}

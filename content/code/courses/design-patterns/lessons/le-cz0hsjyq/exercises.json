@@ -1,0 +1,561 @@
+[
+ {
+  "id": "ex-qrgwy1c7",
+  "version": 1,
+  "section": "one-model-strains",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In strained.py, which data do the three command methods never read?",
+  "choices": [
+   {
+    "text": "holder, who has each copy and until when",
+    "correct": false,
+    "why": "lend reads holder to refuse a copy that is out and to count a member's loans."
+   },
+   {
+    "text": "titles: the names and authors",
+    "correct": true,
+    "why": "Right. No rule needs a name; only the screens do, which is the first sign of two models in one class."
+   },
+   {
+    "text": "waiting, the queue of members per title",
+    "correct": false,
+    "why": "The reservation rule reads it: a reserved title goes to the first member in the queue."
+   }
+  ]
+ },
+ {
+  "id": "ex-72gbmyvv",
+  "version": 1,
+  "section": "one-model-strains",
+  "type": "numeric",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The availability screen of strained.py visits every copy record once per title. With 40 titles and 100 copies, how many visits does one page view make?",
+  "value": 4000,
+  "tolerance": 0,
+  "unit": "visits"
+ },
+ {
+  "id": "ex-5frhsews",
+  "version": 1,
+  "section": "one-model-strains",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "The website wants \"most borrowed this year\". What happens to the single Library class?",
+  "choices": [
+   {
+    "text": "Nothing, because a query never changes a class",
+    "correct": false,
+    "why": "The query needs a counter that something must keep, and the only place loans happen is lend."
+   },
+   {
+    "text": "lend gains a counter that no rule reads",
+    "correct": true,
+    "why": "Right. The rule method starts carrying screen data, which is the widening the section describes."
+   },
+   {
+    "text": "The class has to be split into one class per screen before the count can be kept anywhere",
+    "correct": false,
+    "why": "It can be kept in the one class, and usually is at first; the cost is that the class widens."
+   }
+  ]
+ },
+ {
+  "id": "ex-6pzjpqmt",
+  "version": 1,
+  "section": "cqs",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In cqs.py, why did the first shelf lend C2 instead of C1?",
+  "choices": [
+   {
+    "text": "The debugging line called take, which removed C1",
+    "correct": true,
+    "why": "Right. Asking a question that is also a command performs the command."
+   },
+   {
+    "text": "The list was sorted in reverse by pop",
+    "correct": false,
+    "why": "pop(0) takes from the front and sorts nothing; C1 was simply gone already."
+   },
+   {
+    "text": "print runs its arguments twice",
+    "correct": false,
+    "why": "print evaluates each argument once; once was enough to take a copy."
+   }
+  ]
+ },
+ {
+  "id": "ex-t3e4mqke",
+  "version": 1,
+  "section": "cqs",
+  "type": "cloze",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Meyer's rule: a method is either a command, which changes state, or a ___, which only answers.",
+  "blanks": [
+   {
+    "accept": [
+     "query"
+    ],
+    "ignore_case": true,
+    "ignore_accents": true
+   }
+  ]
+ },
+ {
+  "id": "ex-6rra7b77",
+  "version": 1,
+  "section": "cqs",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Two requests run if shelf.next_copy() == \"C1\": shelf.remove(\"C1\") at the same moment. What is the right design?",
+  "choices": [
+   {
+    "text": "Keep the two calls, as the rule asks",
+    "correct": false,
+    "why": "Both requests can see C1 free between the two calls; the rule bends exactly here."
+   },
+   {
+    "text": "One atomic method that takes the copy and returns it",
+    "correct": true,
+    "why": "Right. When answer and change must happen together, combining them is correct, as with LoadOrStore or INSERT … RETURNING."
+   },
+   {
+    "text": "Call next_copy twice before removing, to be sure",
+    "correct": false,
+    "why": "Asking twice narrows nothing; the other request can still act between the last question and the removal."
+   },
+   {
+    "text": "Log every call to remove so the double loan can be undone",
+    "correct": false,
+    "why": "A log finds the problem afterwards; the design should make it impossible."
+   }
+  ]
+ },
+ {
+  "id": "ex-tz0nd6jx",
+  "version": 1,
+  "section": "the-split",
+  "type": "quiz",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Which of these does CQRS itself require?",
+  "choices": [
+   {
+    "text": "Two databases and a message bus between them",
+    "correct": false,
+    "why": "Those are one way to place the models; the smallest version runs in one process on one file."
+   },
+   {
+    "text": "Event sourcing on the write side",
+    "correct": false,
+    "why": "Often paired with it, never required; lesson 9 is a separate decision."
+   },
+   {
+    "text": "One model for commands and another for queries",
+    "correct": true,
+    "why": "Right. Where they live and how the second is kept current are further choices."
+   }
+  ]
+ },
+ {
+  "id": "ex-p7j2947v",
+  "version": 1,
+  "section": "the-split",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why is it acceptable to copy the author's name into every row of the read model?",
+  "choices": [
+   {
+    "text": "SQLite stores repeated text only once, so nothing is really duplicated",
+    "correct": false,
+    "why": "It stores each row's value; the duplication is real and deliberate."
+   },
+   {
+    "text": "The read model is derived, so a drift is repaired by rebuilding it",
+    "correct": true,
+    "why": "Right. Nothing the library knows lives only there."
+   },
+   {
+    "text": "Authors rarely change their names",
+    "correct": false,
+    "why": "Rarely is not never, and titles get corrected; the copy is safe because it can be recomputed, not because it stays put."
+   },
+   {
+    "text": "Normalisation is a rule for write models in Python, not for read models",
+    "correct": false,
+    "why": "Language has nothing to do with it; the difference is between source data and derived data."
+   }
+  ]
+ },
+ {
+  "id": "ex-ksgyz5k3",
+  "version": 1,
+  "section": "the-split",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Put the three levels of separation in order, from the least to the most separated.",
+  "items": [
+   "Separate code over the same tables",
+   "Separate read tables, updated in the same transaction",
+   "A separate store, updated after the write commits"
+  ],
+  "trap": "Staleness appears only at the third level; the second already has its own tables and is never stale."
+ },
+ {
+  "id": "ex-84aj2w5k",
+  "version": 1,
+  "section": "commands-and-handlers",
+  "type": "matching",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "Match each name from commands.py to what it is.",
+  "pairs": [
+   {
+    "left": "LendCopy",
+    "right": "a command: a request that may be refused"
+   },
+   {
+    "left": "CopyLent",
+    "right": "an event: a fact that is already true"
+   },
+   {
+    "left": "Lending.lend",
+    "right": "a handler: checks the rules and makes the change"
+   },
+   {
+    "left": "HANDLERS",
+    "right": "the dispatch from a command's type to its handler"
+   }
+  ]
+ },
+ {
+  "id": "ex-d6kqxcwj",
+  "version": 1,
+  "section": "commands-and-handlers",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Dani's LendCopy is refused. What do the listeners receive?",
+  "choices": [
+   {
+    "text": "A CopyLent with member set to None",
+    "correct": false,
+    "why": "No event is built at all: the refusal raises before the change and before _publish."
+   },
+   {
+    "text": "Nothing",
+    "correct": true,
+    "why": "Right. A refused command changes nothing and tells nobody."
+   },
+   {
+    "text": "An event named LendRefused, so the screens can show it",
+    "correct": false,
+    "why": "commands.py defines no such event; the refusal reaches only the caller, as an exception."
+   }
+  ]
+ },
+ {
+  "id": "ex-3j6h5qed",
+  "version": 1,
+  "section": "commands-and-handlers",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A new rule: a member with an unpaid fine cannot borrow. In the split version, where does the change go?",
+  "choices": [
+   {
+    "text": "Into Availability, which hides copies from that member",
+    "correct": false,
+    "why": "A read model must never enforce a rule; it may be stale and it is not consulted by the handler."
+   },
+   {
+    "text": "Into every screen that offers a Lend button",
+    "correct": false,
+    "why": "Screens may grey out a button, and a client that skips the screen would still borrow."
+   },
+   {
+    "text": "Into Lending.lend and its tests, with what it needs to know about fines",
+    "correct": true,
+    "why": "Right. Rules live on the write side, and no screen's code is near the change."
+   }
+  ]
+ },
+ {
+  "id": "ex-kjh21kj1",
+  "version": 1,
+  "section": "read-models",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Why does CopyLent carry was_reserved?",
+  "choices": [
+   {
+    "text": "So the waiting count drops without reading the queue",
+    "correct": true,
+    "why": "Right. A read model can show only what the events say, and the queue lives on the write side."
+   },
+   {
+    "text": "Because Lending uses it later to decide the next loan",
+    "correct": false,
+    "why": "Lending has the queue itself; the field exists for readers."
+   },
+   {
+    "text": "Because a frozen dataclass needs at least five fields",
+    "correct": false,
+    "why": "A frozen dataclass can have any number of fields, including none."
+   },
+   {
+    "text": "To let the projector call Lending and ask about the queue",
+    "correct": false,
+    "why": "That call is exactly what the field avoids; a projector reading the write model rebuilds the coupling."
+   }
+  ]
+ },
+ {
+  "id": "ex-r1a0w89j",
+  "version": 1,
+  "section": "read-models",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "A third screen, \"most borrowed this year\", is wanted. What changes in Lending?",
+  "choices": [
+   {
+    "text": "A counter in lend, as in the strained class",
+    "correct": false,
+    "why": "That was the cost before the split; now a projector counts the CopyLent events."
+   },
+   {
+    "text": "A new event, BookPopular, published on every tenth loan of a title",
+    "correct": false,
+    "why": "Popularity is a reading of loans, not a fact the rules decide; CopyLent already says everything needed."
+   },
+   {
+    "text": "Nothing; a new projector counts CopyLent",
+    "correct": true,
+    "why": "Right. A new read model is added without touching the write side."
+   }
+  ]
+ },
+ {
+  "id": "ex-dk9fgbzj",
+  "version": 1,
+  "section": "read-models",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "In the last line of the read_model.py transcript, what is the waiting count for T2 after Dani borrows the copy?",
+  "value": 0,
+  "tolerance": 0
+ },
+ {
+  "id": "ex-whqxzb5q",
+  "version": 1,
+  "section": "sync-and-async-projection",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "In the asynchronous run of lag.py, the screen says 2 copies while both are out. Can the desk lend C2 a second time?",
+  "choices": [
+   {
+    "text": "Yes, because the screen is what the desk trusts when it decides to lend",
+    "correct": false,
+    "why": "The desk may be misled, but the command goes to Lending, which knew at once."
+   },
+   {
+    "text": "No: Lending refuses, because the rule reads the write model",
+    "correct": true,
+    "why": "Right. Stale reads waste trips; they break nothing as long as no rule reads a read model."
+   },
+   {
+    "text": "Only if the worker runs between the two loans",
+    "correct": false,
+    "why": "The worker affects only the screen; the refusal does not depend on it."
+   },
+   {
+    "text": "It depends on how many events are queued in the outbox",
+    "correct": false,
+    "why": "The outbox feeds the read model and is never consulted by a handler."
+   }
+  ]
+ },
+ {
+  "id": "ex-vkqrpa7b",
+  "version": 1,
+  "section": "sync-and-async-projection",
+  "type": "matching",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Bia borrows a book and the next page does not show it. Match each remedy to how it works.",
+  "pairs": [
+   {
+    "left": "Show the command's result",
+    "right": "the screen prints what it sent, and refreshes later"
+   },
+   {
+    "left": "Wait for the position",
+    "right": "the screen waits until the projection has applied the event count it was given"
+   },
+   {
+    "left": "Project synchronously for one screen",
+    "right": "her own loans are updated inside the command"
+   }
+  ]
+ },
+ {
+  "id": "ex-8s25fbyk",
+  "version": 1,
+  "section": "sync-and-async-projection",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A search index of all loans takes seconds to update and sometimes goes down. How should it be projected?",
+  "choices": [
+   {
+    "text": "Asynchronously, so writes do not wait for it or fail with it",
+    "correct": true,
+    "why": "Right. A slow or fragile read model is the case for running the projection later."
+   },
+   {
+    "text": "Synchronously, so that it stays current",
+    "correct": false,
+    "why": "Then every loan waits seconds and fails whenever the index is down."
+   },
+   {
+    "text": "Neither: the handler should query the write model for searches",
+    "correct": false,
+    "why": "That puts the screens back into the write model, the strain the lesson started from."
+   }
+  ]
+ },
+ {
+  "id": "ex-vwmve4hn",
+  "version": 1,
+  "section": "when-not-to",
+  "type": "quiz",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Which of these is the clearest case for leaving CQRS out?",
+  "choices": [
+   {
+    "text": "A screen that reads facts in a shape the rules never use",
+    "correct": false,
+    "why": "That is one of the signs for it."
+   },
+   {
+    "text": "A profile page that edits a record and then shows that same record",
+    "correct": true,
+    "why": "Right. Both models would have the same shape, so the split doubles the code for nothing."
+   },
+   {
+    "text": "A catalogue read thousands of times for every loan",
+    "correct": false,
+    "why": "Reads far outnumbering writes, and scaling apart, is a reason to split."
+   },
+   {
+    "text": "Several screens wanting the same loans, each in a different shape of its own",
+    "correct": false,
+    "why": "That is Availability and MemberLoans, the case the read models were built for."
+   }
+  ]
+ },
+ {
+  "id": "ex-447dy49s",
+  "version": 1,
+  "section": "when-not-to",
+  "type": "numeric",
+  "difficulty": "easy",
+  "drillable": true,
+  "prompt": "From the wc -l transcript, how many lines do commands.py and read_model.py have together?",
+  "value": 183,
+  "tolerance": 0,
+  "unit": "lines"
+ },
+ {
+  "id": "ex-yhnr3e7b",
+  "version": 1,
+  "section": "drill",
+  "type": "multiple-choice",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "Which of these break the lesson's rules? Choose all that apply.",
+  "choices": [
+   {
+    "text": "A handler that checks availability by querying the read model",
+    "correct": true,
+    "why": "Right. A rule reading a possibly stale model turns lag into a correctness bug."
+   },
+   {
+    "text": "A projector that calls Lending to find out who was waiting",
+    "correct": true,
+    "why": "Right. If a reader needs the fact, the event should carry it."
+   },
+   {
+    "text": "A read model that repeats the author in every row",
+    "correct": false,
+    "why": "That is normal: read models are derived and denormalised on purpose."
+   },
+   {
+    "text": "A command that returns the id of the loan it created",
+    "correct": false,
+    "why": "A bend the cqs section allows; returning the next screen is what it forbids."
+   },
+   {
+    "text": "A method that both returns the next copy and removes it, used in a debug print",
+    "correct": true,
+    "why": "Right. That is take from cqs.py, and the print lent a book."
+   }
+  ]
+ },
+ {
+  "id": "ex-qsgrbamq",
+  "version": 1,
+  "section": "drill",
+  "type": "ordering",
+  "difficulty": "medium",
+  "drillable": true,
+  "prompt": "Bia lends a copy in the asynchronous arrangement. Put the steps in order.",
+  "items": [
+   "handle passes LendCopy to Lending.lend",
+   "Lending checks the rules and records the loan",
+   "CopyLent is appended to the outbox",
+   "The worker applies CopyLent to the availability table"
+  ],
+  "trap": "The event is published only after the rules pass and the change is made; the read model is last."
+ },
+ {
+  "id": "ex-y02czhnf",
+  "version": 1,
+  "section": "drill",
+  "type": "quiz",
+  "difficulty": "hard",
+  "drillable": true,
+  "prompt": "A team adds CQRS with asynchronous projection to a small admin app whose screens each edit one record. What should they expect?",
+  "choices": [
+   {
+    "text": "Faster screens, since each read now comes from a table built for that one screen",
+    "correct": false,
+    "why": "The reads were already of one record; a table per screen of the same shape buys no speed."
+   },
+   {
+    "text": "More code, and edits that vanish from the screen for a moment after saving",
+    "correct": true,
+    "why": "Right. They pay for events, projectors and the stale window, and get nothing back on screens that mirror their writes."
+   },
+   {
+    "text": "No real change, since CQRS is a naming convention",
+    "correct": false,
+    "why": "It is two models and the machinery between them; the costs are real."
+   }
+  ]
+ }
+]
