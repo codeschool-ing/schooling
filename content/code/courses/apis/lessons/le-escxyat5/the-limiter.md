@@ -101,11 +101,11 @@ With `-i`, the headers of one book:
 ana@api:~/shelf$ curl -si -H 'X-API-Key: demo-bia' localhost:8000/books/3
 HTTP/1.1 200 OK
 Server: BaseHTTP/0.6 Python/3.12.3
-Date: Sat, 10 Oct 2026 04:30:11 GMT
+Date: Sat, 10 Oct 2026 04:48:44 GMT
 Content-Type: application/json
 Content-Length: 61
 RateLimit-Policy: "burst";q=10;w=10, "daily";q=5000;w=86400
-RateLimit: "burst";r=8;t=1, "daily";r=4998;t=70189
+RateLimit: "burst";r=8;t=1, "daily";r=4998;t=69076
 
 {"id": 3, "title": "A Hora da Estrela", "price_cents": 3490}
 ```

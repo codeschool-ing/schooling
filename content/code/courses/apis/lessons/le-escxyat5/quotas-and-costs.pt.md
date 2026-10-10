@@ -34,7 +34,7 @@ ana@api:~/shelf$ curl -s -H 'X-API-Key: demo-bia' 'localhost:8000/search?q=Cora'
 [{"id": 4, "title": "Perto do Coração Selvagem"}]
 ana@api:~/shelf$ python3 burst.py demo-bia '/search?q=a' 3
   0.00s  200  burst r=0  daily r=4990
-  0.04s  429  burst r=0  daily r=4990  Retry-After: 5
+  0.03s  429  burst r=0  daily r=4990  Retry-After: 5
   0.04s  429  burst r=0  daily r=4990  Retry-After: 5
 ```
 
@@ -60,7 +60,7 @@ ana@api:~/shelf$ python3 burst.py demo-ana '/search?q=a' 5 5
   5.00s  200  burst r=4  daily r=10
  10.00s  200  burst r=4  daily r=5
  15.00s  200  burst r=4  daily r=0
- 20.00s  429  burst r=9  daily r=0  Retry-After: 70129
+ 20.00s  429  burst r=9  daily r=0  Retry-After: 69020
 ```
 
 Quatro buscas gastaram as vinte unidades, e a quinta foi recusada com o balde tendo nove fichas
@@ -71,14 +71,14 @@ foi, no corpo:
 ana@api:~/shelf$ curl -si -H 'X-API-Key: demo-ana' localhost:8000/books/1
 HTTP/1.1 429 Too Many Requests
 Server: BaseHTTP/0.6 Python/3.12.3
-Date: Sat, 10 Oct 2026 04:31:16 GMT
+Date: Sat, 10 Oct 2026 04:49:45 GMT
 Content-Type: application/json
 Content-Length: 51
 RateLimit-Policy: "burst";q=10;w=10, "daily";q=20;w=86400
-RateLimit: "burst";r=10;t=1, "daily";r=0;t=70124
-Retry-After: 70124
+RateLimit: "burst";r=10;t=1, "daily";r=0;t=69015
+Retry-After: 69015
 
-{"error": "daily quota used up: retry in 70124 s"}
+{"error": "daily quota used up: retry in 69015 s"}
 ```
 
 **As duas recusas trazem o mesmo status e conselhos diferentes.** "Too many requests: retry in 1 s"

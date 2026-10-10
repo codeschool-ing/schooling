@@ -48,7 +48,7 @@ servidor aceitou a requisição como qualquer outra. O segundo terminal mostra d
 veio de verdade:
 
 ```
-127.0.0.1 - - [10/Oct/2026 01:30:11] "GET /v1/books/1 HTTP/1.1" 200 -
+127.0.0.1 - - [10/Oct/2026 01:48:43] "GET /v1/books/1 HTTP/1.1" 200 -
 ```
 
 **O `X-Forwarded-For` só é confiável quando o seu próprio proxy o escreveu**: o proxy sobrescreve o

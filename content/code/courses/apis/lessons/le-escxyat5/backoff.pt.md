@@ -102,24 +102,24 @@ Catorze requisições, contra um balde de dez:
 
 ```
 ana@api:~/shelf$ python3 polite.py demo-bia 14
-  0.04s  request 1: 200
-  0.04s  request 2: 200
+  0.03s  request 1: 200
+  0.03s  request 2: 200
   0.04s  request 3: 200
   0.04s  request 4: 200
-  0.05s  request 5: 200
-  0.05s  request 6: 200
-  0.05s  request 7: 200
+  0.04s  request 5: 200
+  0.04s  request 6: 200
+  0.04s  request 7: 200
   0.05s  request 8: 200
-  0.06s  request 9: 200
-  0.06s  request 10: 200
-         429, Retry-After: 1, waiting 1.07s
-  1.13s  request 11: 200
-         429, Retry-After: 1, waiting 1.20s
-  2.33s  request 12: 200
-         429, Retry-After: 1, waiting 1.42s
-  3.76s  request 13: 200
-         429, Retry-After: 1, waiting 1.31s
-  5.07s  request 14: 200
+  0.05s  request 9: 200
+  0.05s  request 10: 200
+         429, Retry-After: 1, waiting 1.05s
+  1.11s  request 11: 200
+         429, Retry-After: 1, waiting 1.29s
+  2.41s  request 12: 200
+         429, Retry-After: 1, waiting 1.04s
+  3.45s  request 13: 200
+         429, Retry-After: 1, waiting 1.39s
+  4.85s  request 14: 200
 ```
 
 Catorze respostas e catorze `200`. Dez foram de uma vez, saindo do balde; cada uma das outras quatro foi
@@ -132,11 +132,11 @@ esperar:
 
 ```
 ana@api:~/shelf$ python3 polite.py demo-bia 3
-         no answer, backing off, up to 0.5s, waiting 0.08s
-         no answer, backing off, up to 1.0s, waiting 0.75s
-         no answer, backing off, up to 2.0s, waiting 1.40s
-         no answer, backing off, up to 4.0s, waiting 0.19s
-  2.46s  request 1: no answer
+         no answer, backing off, up to 0.5s, waiting 0.10s
+         no answer, backing off, up to 1.0s, waiting 0.85s
+         no answer, backing off, up to 2.0s, waiting 0.85s
+         no answer, backing off, up to 4.0s, waiting 0.39s
+  2.23s  request 1: no answer
 giving up after 5 tries
 ```
 

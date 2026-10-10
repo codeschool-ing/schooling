@@ -20,9 +20,9 @@ from a shell loop:
 ana@api:~/shelf$ time (for i in $(seq 100); do curl -s -o /dev/null -w '%{http_code}\n' localhost:8000/v1/books; done | sort | uniq -c)
     100 200
 
-real	0m1.878s
-user	0m0.500s
-sys	0m0.422s
+real	0m1.153s
+user	0m0.507s
+sys	0m0.428s
 ```
 
 A hundred answers and a hundred `200`s. Six books is a cheap thing to read; a search over a million

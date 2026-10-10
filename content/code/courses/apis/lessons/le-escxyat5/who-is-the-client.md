@@ -47,7 +47,7 @@ documentation, and the server accepted the request as it would any other. The se
 shows where the request really came from:
 
 ```
-127.0.0.1 - - [10/Oct/2026 01:30:11] "GET /v1/books/1 HTTP/1.1" 200 -
+127.0.0.1 - - [10/Oct/2026 01:48:43] "GET /v1/books/1 HTTP/1.1" 200 -
 ```
 
 **`X-Forwarded-For` is only trustworthy when your own proxy wrote it**: the proxy overwrites or

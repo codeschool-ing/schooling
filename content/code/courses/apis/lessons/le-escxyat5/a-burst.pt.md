@@ -61,17 +61,17 @@ ana@api:~/shelf$ python3 burst.py demo-bia /books 15
   0.00s  200  burst r=9  daily r=4999
   0.05s  200  burst r=8  daily r=4998
   0.05s  200  burst r=7  daily r=4997
-  0.05s  200  burst r=6  daily r=4996
-  0.05s  200  burst r=5  daily r=4995
-  0.05s  200  burst r=4  daily r=4994
+  0.06s  200  burst r=6  daily r=4996
+  0.06s  200  burst r=5  daily r=4995
+  0.06s  200  burst r=4  daily r=4994
   0.06s  200  burst r=3  daily r=4993
-  0.06s  200  burst r=2  daily r=4992
+  0.07s  200  burst r=2  daily r=4992
   0.07s  200  burst r=1  daily r=4991
   0.07s  200  burst r=0  daily r=4990
   0.07s  429  burst r=0  daily r=4990  Retry-After: 1
-  0.07s  429  burst r=0  daily r=4990  Retry-After: 1
-  0.07s  429  burst r=0  daily r=4990  Retry-After: 1
-  0.07s  429  burst r=0  daily r=4990  Retry-After: 1
+  0.08s  429  burst r=0  daily r=4990  Retry-After: 1
+  0.08s  429  burst r=0  daily r=4990  Retry-After: 1
+  0.08s  429  burst r=0  daily r=4990  Retry-After: 1
   0.08s  429  burst r=0  daily r=4990  Retry-After: 1
 ```
 
@@ -83,11 +83,11 @@ inteira:
 ana@api:~/shelf$ curl -si -H 'X-API-Key: demo-bia' localhost:8000/books/1
 HTTP/1.1 429 Too Many Requests
 Server: BaseHTTP/0.6 Python/3.12.3
-Date: Sat, 10 Oct 2026 04:30:12 GMT
+Date: Sat, 10 Oct 2026 04:48:44 GMT
 Content-Type: application/json
 Content-Length: 45
 RateLimit-Policy: "burst";q=10;w=10, "daily";q=5000;w=86400
-RateLimit: "burst";r=0;t=1, "daily";r=4990;t=70188
+RateLimit: "burst";r=0;t=1, "daily";r=4990;t=69076
 Retry-After: 1
 
 {"error": "too many requests: retry in 1 s"}
@@ -112,7 +112,7 @@ rajada seguinte é recusada:
 ana@api:~/shelf$ sleep 3; python3 burst.py demo-bia /books 5
   0.00s  200  burst r=2  daily r=4989
   0.03s  200  burst r=1  daily r=4988
-  0.04s  200  burst r=0  daily r=4987
+  0.03s  200  burst r=0  daily r=4987
   0.04s  429  burst r=0  daily r=4987  Retry-After: 1
   0.04s  429  burst r=0  daily r=4987  Retry-After: 1
 ```
@@ -120,11 +120,11 @@ ana@api:~/shelf$ sleep 3; python3 burst.py demo-bia /books 5
 O segundo terminal imprimiu uma linha por requisição, e as recusas aparecem nele como `429`:
 
 ```
-127.0.0.1 - - [10/Oct/2026 01:30:12] "GET /books HTTP/1.1" 200 -
-127.0.0.1 - - [10/Oct/2026 01:30:12] "GET /books HTTP/1.1" 200 -
-127.0.0.1 - - [10/Oct/2026 01:30:12] "GET /books HTTP/1.1" 429 -
-127.0.0.1 - - [10/Oct/2026 01:30:12] "GET /books HTTP/1.1" 429 -
-127.0.0.1 - - [10/Oct/2026 01:30:12] "GET /books HTTP/1.1" 429 -
+127.0.0.1 - - [10/Oct/2026 01:48:44] "GET /books HTTP/1.1" 200 -
+127.0.0.1 - - [10/Oct/2026 01:48:44] "GET /books HTTP/1.1" 200 -
+127.0.0.1 - - [10/Oct/2026 01:48:44] "GET /books HTTP/1.1" 429 -
+127.0.0.1 - - [10/Oct/2026 01:48:44] "GET /books HTTP/1.1" 429 -
+127.0.0.1 - - [10/Oct/2026 01:48:44] "GET /books HTTP/1.1" 429 -
 ```
 
 **Os `429` desse log são dados.** Uma chave recusada o dia inteiro precisa de uma conversa ou de um
@@ -149,16 +149,16 @@ ana@api:~/shelf$ python3 burst.py demo-bia /books 24 0.25
   2.00s  200  burst r=2  daily r=4991
   2.25s  200  burst r=2  daily r=4990
   2.50s  200  burst r=1  daily r=4989
-  2.76s  200  burst r=0  daily r=4988
-  3.01s  429  burst r=0  daily r=4988  Retry-After: 1
-  3.26s  200  burst r=0  daily r=4987
-  3.51s  429  burst r=0  daily r=4987  Retry-After: 1
-  3.76s  429  burst r=0  daily r=4987  Retry-After: 1
-  4.01s  429  burst r=0  daily r=4987  Retry-After: 1
-  4.26s  200  burst r=0  daily r=4986
-  4.51s  429  burst r=0  daily r=4986  Retry-After: 1
-  4.76s  429  burst r=0  daily r=4986  Retry-After: 1
-  5.01s  429  burst r=0  daily r=4986  Retry-After: 1
+  2.75s  200  burst r=0  daily r=4988
+  3.00s  429  burst r=0  daily r=4988  Retry-After: 1
+  3.25s  200  burst r=0  daily r=4987
+  3.50s  429  burst r=0  daily r=4987  Retry-After: 1
+  3.75s  429  burst r=0  daily r=4987  Retry-After: 1
+  4.00s  429  burst r=0  daily r=4987  Retry-After: 1
+  4.25s  200  burst r=0  daily r=4986
+  4.50s  429  burst r=0  daily r=4986  Retry-After: 1
+  4.75s  429  burst r=0  daily r=4986  Retry-After: 1
+  5.00s  429  burst r=0  daily r=4986  Retry-After: 1
   5.26s  200  burst r=0  daily r=4985
   5.51s  429  burst r=0  daily r=4985  Retry-After: 1
   5.76s  429  burst r=0  daily r=4985  Retry-After: 1
@@ -188,20 +188,20 @@ ana@api:~/shelf$ python3 burst.py --edge demo-bia /books 30 0.1
   1.30s  200  burst r=6  daily r=4986
   1.40s  200  burst r=5  daily r=4985
   1.50s  200  burst r=4  daily r=4984
-  1.60s  200  burst r=3  daily r=4983
-  1.70s  200  burst r=2  daily r=4982
-  1.82s  200  burst r=1  daily r=4981
-  1.92s  200  burst r=0  daily r=4980
-  2.02s  429  burst r=0  daily r=4980  Retry-After: 9
-  2.12s  429  burst r=0  daily r=4980  Retry-After: 9
-  2.22s  429  burst r=0  daily r=4980  Retry-After: 9
-  2.32s  429  burst r=0  daily r=4980  Retry-After: 9
-  2.42s  429  burst r=0  daily r=4980  Retry-After: 9
-  2.52s  429  burst r=0  daily r=4980  Retry-After: 9
-  2.62s  429  burst r=0  daily r=4980  Retry-After: 9
-  2.72s  429  burst r=0  daily r=4980  Retry-After: 9
-  2.82s  429  burst r=0  daily r=4980  Retry-After: 9
-  2.92s  429  burst r=0  daily r=4980  Retry-After: 9
+  1.61s  200  burst r=3  daily r=4983
+  1.71s  200  burst r=2  daily r=4982
+  1.81s  200  burst r=1  daily r=4981
+  1.91s  200  burst r=0  daily r=4980
+  2.01s  429  burst r=0  daily r=4980  Retry-After: 9
+  2.11s  429  burst r=0  daily r=4980  Retry-After: 9
+  2.21s  429  burst r=0  daily r=4980  Retry-After: 9
+  2.31s  429  burst r=0  daily r=4980  Retry-After: 9
+  2.41s  429  burst r=0  daily r=4980  Retry-After: 9
+  2.51s  429  burst r=0  daily r=4980  Retry-After: 9
+  2.61s  429  burst r=0  daily r=4980  Retry-After: 9
+  2.71s  429  burst r=0  daily r=4980  Retry-After: 9
+  2.81s  429  burst r=0  daily r=4980  Retry-After: 9
+  2.91s  429  burst r=0  daily r=4980  Retry-After: 9
 ```
 
 Vinte aceitas em menos de dois segundos, com um limite de dez a cada dez segundos: as dez primeiras no
@@ -217,11 +217,11 @@ ana@api:~/shelf$ python3 burst.py --edge demo-bia /books 30 0.1
   0.30s  200  burst r=6  daily r=4996
   0.40s  200  burst r=5  daily r=4995
   0.50s  200  burst r=4  daily r=4994
-  0.61s  200  burst r=3  daily r=4993
-  0.71s  200  burst r=2  daily r=4992
-  0.81s  200  burst r=1  daily r=4991
-  0.91s  200  burst r=0  daily r=4990
-  1.01s  429  burst r=0  daily r=4990  Retry-After: 1
+  0.60s  200  burst r=3  daily r=4993
+  0.70s  200  burst r=2  daily r=4992
+  0.80s  200  burst r=1  daily r=4991
+  0.90s  200  burst r=0  daily r=4990
+  1.00s  429  burst r=0  daily r=4990  Retry-After: 1
   1.11s  200  burst r=0  daily r=4989
   1.21s  429  burst r=0  daily r=4989  Retry-After: 1
   1.31s  429  burst r=0  daily r=4989  Retry-After: 1
@@ -240,7 +240,7 @@ ana@api:~/shelf$ python3 burst.py --edge demo-bia /books 30 0.1
   2.61s  429  burst r=0  daily r=4988  Retry-After: 1
   2.71s  429  burst r=0  daily r=4988  Retry-After: 1
   2.81s  429  burst r=0  daily r=4988  Retry-After: 1
-  2.92s  429  burst r=0  daily r=4988  Retry-After: 1
+  2.91s  429  burst r=0  daily r=4988  Retry-After: 1
 ```
 
 Doze aceitas: as dez guardadas, depois uma por segundo. O balde não tem fronteira porque não tem

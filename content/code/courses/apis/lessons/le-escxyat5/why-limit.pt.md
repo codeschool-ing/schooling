@@ -19,9 +19,9 @@ Nada no `rest.py` impede nada disso. Cem requisições, uma depois da outra, num
 ana@api:~/shelf$ time (for i in $(seq 100); do curl -s -o /dev/null -w '%{http_code}\n' localhost:8000/v1/books; done | sort | uniq -c)
     100 200
 
-real	0m1.878s
-user	0m0.500s
-sys	0m0.422s
+real	0m1.153s
+user	0m0.507s
+sys	0m0.428s
 ```
 
 Cem respostas e cem `200`. Seis livros são baratos de ler; uma busca em um milhão de linhas, um PDF
