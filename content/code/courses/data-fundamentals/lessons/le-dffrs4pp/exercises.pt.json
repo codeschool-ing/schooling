@@ -1,0 +1,831 @@
+{
+  "ex-3wd3qfev": {
+    "prompt": "O que separa o processamento em lote do processamento de fluxo, segundo esta aula?",
+    "hint": "Olhe para a entrada, não para o relógio.",
+    "choices": [
+      {
+        "text": "A rapidez com que cada um produz um resultado",
+        "why": "A velocidade decorre da diferença; um job em lote de cinco minutos continua sendo lote."
+      },
+      {
+        "text": "Qual linguagem e qual produto são usados para escrever cada um",
+        "why": "Os dois formatos são escritos em Python nesta aula."
+      },
+      {
+        "text": "Em quantas máquinas o processamento é distribuído",
+        "why": "Uma máquina roda os dois aqui; distribuição é assunto da aula 9."
+      },
+      {
+        "text": "Se o dado que ele lê tem fim",
+        "why": "Isso: dado limitado pode ser esperado, dado ilimitado não."
+      }
+    ]
+  },
+  "ex-eca32jh2": {
+    "prompt": "Um job roda a cada cinco minutos e conta as viagens que começaram nos cinco minutos anteriores. O que ele é?",
+    "hint": "Ele espera um pedaço fechar e então lê tudo.",
+    "choices": [
+      {
+        "text": "Um processador de fluxo, porque cinco minutos é quase tempo real",
+        "why": "Frequência não faz um fluxo; ele continua processando pedaços fechados."
+      },
+      {
+        "text": "Nenhum dos dois, já que uma janela tão curta não é um lote",
+        "why": "Um lote pode ter qualquer tamanho, de um dia a poucos segundos."
+      },
+      {
+        "text": "Um job em lote, rodado sobre janelas curtas que já fecharam",
+        "why": "Isso: pedaços limitados, cada um processado depois de fechar."
+      },
+      {
+        "text": "Um processador de fluxo configurado para esperar cinco minutos",
+        "why": "Ele não lê nada entre execuções; é iniciado por agendamento."
+      }
+    ]
+  },
+  "ex-g1ffdvfw": {
+    "prompt": "Qual destes é um dado ilimitado?",
+    "hint": "Pergunte se daria para esperar por tudo.",
+    "choices": [
+      {
+        "text": "A exportação de viagens de setembro",
+        "why": "Setembro acabou; a exportação tem uma última linha."
+      },
+      {
+        "text": "Um arquivo que a equipe de manutenção enviou ontem",
+        "why": "Um arquivo já enviado está terminado."
+      },
+      {
+        "text": "As leituras que os sensores das docas não param de mandar",
+        "why": "Isso: elas continuam enquanto a empresa existir."
+      },
+      {
+        "text": "O arquivo `docks.jsonl` escrito pelo `sensors.py`",
+        "why": "O programa parou de escrever, então o arquivo é limitado; a aula o lê como se não fosse."
+      }
+    ]
+  },
+  "ex-1evtasfr": {
+    "prompt": "Dado que tem fim, de modo que dá para esperar por todo ele, se chama dado ___.",
+    "hint": "É com ele que o processamento em lote trabalha.",
+    "blanks": [
+      {
+        "accept": [
+          "limitado",
+          "bounded"
+        ]
+      }
+    ]
+  },
+  "ex-8asyeb6f": {
+    "prompt": "Quantas viagens o job rodado \"como se fosse\" 01:00 de terça contou para a segunda?",
+    "hint": "A primeira execução, antes do backfill.",
+    "unit": "viagens"
+  },
+  "ex-n3e6epfz": {
+    "prompt": "Por que o job da 01:00 deixou de contar duas viagens de segunda?",
+    "hint": "Compare quando aconteceram com quando chegaram.",
+    "choices": [
+      {
+        "text": "Ainda não tinham chegado ao servidor quando o job rodou à 01:00",
+        "why": "Isso: o Passeio Público as mandou às 07:02 de terça."
+      },
+      {
+        "text": "O job filtrou por `arrived` em vez de `event_time`, por engano",
+        "why": "Ele filtra o dia por `event_time`; o `asof` só limita o que já tinha chegado."
+      },
+      {
+        "text": "As duas viagens começaram depois da meia-noite e são de terça",
+        "why": "Elas começaram na manhã de segunda, às 09:21 e às 09:36."
+      },
+      {
+        "text": "O CSV foi acrescentado, não substituído",
+        "why": "Acrescentar somaria viagens, não perderia; e ele é substituído."
+      }
+    ]
+  },
+  "ex-2qccfg6y": {
+    "prompt": "O que é um backfill?",
+    "hint": "É sobre o passado.",
+    "choices": [
+      {
+        "text": "Rodar de novo um job em lote para janelas que já tinham sido processadas",
+        "why": "Isso, por dado atrasado, bug corrigido ou coluna nova."
+      },
+      {
+        "text": "Preencher os buracos de uma tabela com valores estimados a partir das linhas vizinhas",
+        "why": "Isso é imputação, uma técnica de limpeza, e ela inventa dado."
+      },
+      {
+        "text": "Copiar um banco de dados para uma segunda máquina, como cópia de segurança",
+        "why": "Isso é backup ou réplica; nada é recalculado."
+      },
+      {
+        "text": "Mandar os eventos atrasados de um fluxo para um arquivo separado",
+        "why": "Esse é um jeito de tratar dado atrasado num fluxo."
+      }
+    ]
+  },
+  "ex-bdg2qt9g": {
+    "prompt": "O que tornou o backfill seguro de rodar? Marque todas as que se aplicam.",
+    "hint": "Duas coisas, ambas da aula 3.",
+    "choices": [
+      {
+        "text": "O job substitui o arquivo de cada dia em vez de acrescentar",
+        "why": "Sim: rodar duas vezes deixa uma resposta."
+      },
+      {
+        "text": "Os eventos brutos foram guardados depois da primeira execução",
+        "why": "Sim: um backfill lê o passado de novo."
+      },
+      {
+        "text": "O job rodou em menos de um segundo",
+        "why": "Velocidade o torna rápido, não seguro."
+      },
+      {
+        "text": "O job foi iniciado por um orquestrador",
+        "why": "Aqui ele foi iniciado à mão, e ainda assim era seguro."
+      }
+    ]
+  },
+  "ex-4b81t0qx": {
+    "prompt": "A contagem de segunda é publicada pela primeira vez à 01:00 de terça. Qual é a descrição honesta mais curta desse atraso?",
+    "hint": "Uma máquina mais rápida o encurtaria?",
+    "choices": [
+      {
+        "text": "Ele vem de o job ser lento, e uma máquina maior tiraria quase todo ele",
+        "why": "O job leva instantes; a espera é pelo fechamento da janela."
+      },
+      {
+        "text": "É um erro de agendamento que um orquestrador corrigiria",
+        "why": "O agendamento está certo: o job precisa rodar depois de o dia acabar."
+      },
+      {
+        "text": "Ele é causado pelos eventos atrasados do Passeio Público",
+        "why": "O atraso existe toda noite, com queda ou sem."
+      },
+      {
+        "text": "Faz parte do projeto: a janela precisa fechar antes de ser contada",
+        "why": "Isso: uma janela de um dia termina à meia-noite, e a resposta vem depois."
+      }
+    ]
+  },
+  "ex-wq9mjfn0": {
+    "prompt": "Depois de duas execuções de `consumer.py 300`, que número o `offset.txt` guardava?",
+    "hint": "A posição do próximo evento a ler.",
+    "unit": ""
+  },
+  "ex-x8q7he9v": {
+    "prompt": "Um offset gravado de 600 quer dizer o quê?",
+    "hint": "Os offsets começam em 0.",
+    "choices": [
+      {
+        "text": "O evento 600 foi o último processado",
+        "why": "O último lido foi o 599; o 600 é onde começar."
+      },
+      {
+        "text": "O próximo evento a ler está na posição 600",
+        "why": "Isso: o offset gravado é onde a próxima execução começa."
+      },
+      {
+        "text": "Os eventos de 0 a 599 foram apagados",
+        "why": "Ler não remove nada de um log."
+      },
+      {
+        "text": "Faltam 600 eventos para ler",
+        "why": "Faltavam 120: o log tinha 720."
+      }
+    ]
+  },
+  "ex-c3847qhg": {
+    "prompt": "Em que ler um log difere de tirar mensagens de uma fila?",
+    "hint": "O que acontece com um evento depois de lido?",
+    "choices": [
+      {
+        "text": "O evento continua lá, então outro leitor pode lê-lo também",
+        "why": "Isso: cada leitor guarda o seu próprio offset."
+      },
+      {
+        "text": "Um log é lido por um consumidor de cada vez",
+        "why": "O mapa das docas e o alerta da van leem o mesmo log."
+      },
+      {
+        "text": "Eventos de um log podem ser editados após a leitura",
+        "why": "Um log é só de acréscimo: os eventos nunca mudam."
+      },
+      {
+        "text": "Um log guarda os eventos ordenados por quando aconteceram, e uma fila não",
+        "why": "Um log guarda a ordem de chegada, que esta aula mostra ser diferente."
+      }
+    ]
+  },
+  "ex-4cv1jdyz": {
+    "prompt": "A posição até onde um consumidor leu, gravada para que um reinício continue dali, é o seu ___.",
+    "hint": "Uma palavra que o Kafka também usa.",
+    "blanks": [
+      {
+        "accept": [
+          "offset",
+          "deslocamento"
+        ]
+      }
+    ]
+  },
+  "ex-d1hk3ydj": {
+    "prompt": "Um bug na contagem do consumidor é corrigido. Como um consumidor baseado em log é levado a recontar tudo?",
+    "hint": "Onde a leitura começa?",
+    "choices": [
+      {
+        "text": "Pedir aos sensores que mandem todos os eventos de novo desde o início",
+        "why": "O log já os tem; ninguém precisa mandar nada."
+      },
+      {
+        "text": "Apagar o log e deixá-lo encher de novo com eventos novos",
+        "why": "Isso joga fora o passado de que a recontagem precisa."
+      },
+      {
+        "text": "Não tem como: um fluxo olha para a frente, não para trás",
+        "why": "Reproduzir a partir de um offset antigo é no que um log é bom."
+      },
+      {
+        "text": "Voltar o offset para 0 e deixar que ele leia tudo de novo",
+        "why": "Isso: todo evento é lido de novo pelo código corrigido."
+      }
+    ]
+  },
+  "ex-h9tt6d2b": {
+    "prompt": "Associe cada pergunta ao relógio de que ela precisa.",
+    "hint": "É sobre o mundo ou sobre o sistema?",
+    "pairs": [
+      {
+        "left": "viagens que começaram entre 08:15 e 08:30",
+        "right": "tempo do evento"
+      },
+      {
+        "left": "quão atrasado está o consumidor",
+        "right": "tempo de processamento"
+      },
+      {
+        "left": "quando a última bicicleta saiu da Rua XV",
+        "right": "o carimbo do sensor"
+      },
+      {
+        "left": "quantos eventos chegaram ao servidor no último minuto",
+        "right": "o relógio do servidor"
+      }
+    ]
+  },
+  "ex-spz185yn": {
+    "prompt": "O `lateness.py` encontrou eventos que chegaram depois de um mais recente, mas com menos de cinco segundos de atraso. O que os explica?",
+    "hint": "Fora de ordem não é o mesmo que atrasado.",
+    "choices": [
+      {
+        "text": "A queda do Parque Barigui",
+        "why": "Esses estão mais de um minuto atrasados."
+      },
+      {
+        "text": "Dois sensores cujas leituras se cruzaram no caminho",
+        "why": "Isso: um a quatro segundos de atraso bastam para trocar dois eventos."
+      },
+      {
+        "text": "Um bug no jeito como o `sensors.py` ordenou",
+        "why": "O arquivo é ordenado pela chegada de propósito, que é o que um servidor vê."
+      },
+      {
+        "text": "Sensores de relógio desregulado",
+        "why": "O gerador dá a todo sensor um relógio correto."
+      }
+    ]
+  },
+  "ex-n6aesavd": {
+    "prompt": "Quantos eventos o `lateness.py` encontrou com mais de um minuto de atraso?",
+    "hint": "As duas quedas juntas.",
+    "unit": "eventos"
+  },
+  "ex-5pcgjg2b": {
+    "prompt": "Que custo o tempo do evento traz e o tempo de processamento não?",
+    "hint": "Um evento das 08:20 ainda pode estar a caminho.",
+    "choices": [
+      {
+        "text": "Esperar",
+        "why": "Isso: o processador não sabe se já viu tudo das 08:20."
+      },
+      {
+        "text": "Cada evento precisa ser guardado duas vezes, uma para cada relógio",
+        "why": "Um evento leva os dois campos numa linha só."
+      },
+      {
+        "text": "Ele precisa ser convertido para UTC antes de ser comparado",
+        "why": "Os dois relógios aqui são de Curitiba e se comparam bem."
+      },
+      {
+        "text": "Um sensor não consegue escrever um carimbo de tempo próprio",
+        "why": "Consegue: é de lá que vem o tempo do evento."
+      }
+    ]
+  },
+  "ex-278fdwh3": {
+    "prompt": "O relógio de um sensor de doca está quatro minutos adiantado. O que acontece com os eventos dele mais adiante?",
+    "hint": "O tempo do evento só é tão bom quanto o relógio que o escreveu.",
+    "choices": [
+      {
+        "text": "A marca d’água detecta o desvio e corrige cada carimbo",
+        "why": "A marca d’água estima o progresso; ela não sabe que algum relógio está errado."
+      },
+      {
+        "text": "Eles passam a ser contados pelo tempo de processamento, automaticamente",
+        "why": "Nada troca de relógio por você."
+      },
+      {
+        "text": "Caem nas janelas erradas, e nada avisa",
+        "why": "Isso: um carimbo errado é usado com toda a confiança."
+      },
+      {
+        "text": "São descartados como dado atrasado por toda janela",
+        "why": "Estar adiantado os faz parecer cedo, não atrasados."
+      }
+    ]
+  },
+  "ex-1g8db43p": {
+    "prompt": "Associe cada janela ao que ela é.",
+    "hint": "Sobreposição, sem sobreposição ou sem tamanho fixo.",
+    "pairs": [
+      {
+        "left": "fixa (tumbling)",
+        "right": "tamanho fixo, uma colada na outra"
+      },
+      {
+        "left": "deslizante (sliding)",
+        "right": "tamanho fixo, sobrepostas"
+      },
+      {
+        "left": "de sessão (session)",
+        "right": "fechada por um intervalo sem eventos"
+      }
+    ]
+  },
+  "ex-f4p3stnt": {
+    "prompt": "Contando pelo tempo de chegada, quantas viagens a mais a janela das 08:45 teve do que contando pelo tempo do evento?",
+    "hint": "Compare as duas colunas do `windows.py`.",
+    "unit": "viagens"
+  },
+  "ex-c45kwva3": {
+    "prompt": "As duas colunas do `windows.py` somam 64. Por que a coluna do tempo de chegada continua errada?",
+    "hint": "Onde as viagens são arquivadas?",
+    "choices": [
+      {
+        "text": "Põe viagens no quarto de hora errado",
+        "why": "Isso: o erro está em qual janela, não em quantas."
+      },
+      {
+        "text": "Ela conta umas viagens duas vezes e deixa outras de fora, o que se equilibra por acaso",
+        "why": "Cada viagem é contada uma vez em cada coluna."
+      },
+      {
+        "text": "Não está errada: quando os totais batem, as colunas batem",
+        "why": "08:30 e 08:45 diferem entre as colunas."
+      },
+      {
+        "text": "Conta `dock` além de `undock`",
+        "why": "As duas colunas pulam tudo o que não é `undock`."
+      }
+    ]
+  },
+  "ex-xq1vd8f9": {
+    "prompt": "Viagens são contadas em janelas de 30 minutos que começam a cada 15. Por que as contagens não somam o total do dia?",
+    "hint": "Em quantas janelas está uma viagem?",
+    "choices": [
+      {
+        "text": "Janelas deslizantes descartam os eventos que caem numa borda",
+        "why": "Nada é descartado; eventos são compartilhados."
+      },
+      {
+        "text": "As janelas são sessões, então variam de tamanho",
+        "why": "Estas têm tamanho e passo fixos."
+      },
+      {
+        "text": "Cada viagem cai dentro de duas das janelas sobrepostas",
+        "why": "Isso: janelas sobrepostas contam cada evento uma vez por janela."
+      },
+      {
+        "text": "As viagens atrasadas ficam de fora das janelas deslizantes",
+        "why": "O atraso é uma questão separada do formato da janela."
+      }
+    ]
+  },
+  "ex-tjvw9vb6": {
+    "prompt": "Marta quer saber por quanto tempo os clientes ficam com o aplicativo aberto de uma vez. Que janela serve?",
+    "hint": "O tamanho é o que está sendo medido.",
+    "choices": [
+      {
+        "text": "Janelas fixas de dez minutos, uma depois da outra",
+        "why": "Um tamanho fixo corta um uso do aplicativo em pedaços."
+      },
+      {
+        "text": "Uma janela de sessão, uma por visita do cliente",
+        "why": "Isso: ela segue a atividade do cliente e fecha depois de um intervalo parado."
+      },
+      {
+        "text": "Uma janela deslizante de uma hora, atualizada a cada cinco minutos",
+        "why": "Ela conta atividade recente, não um uso do começo ao fim."
+      },
+      {
+        "text": "Uma janela só, cobrindo o dia inteiro",
+        "why": "Isso junta todas as visitas do dia numa só."
+      }
+    ]
+  },
+  "ex-2qn67yyg": {
+    "prompt": "Com um atraso permitido de dois minutos, quantas viagens o `watermark.py` descartou?",
+    "hint": "Conte os ids da última linha.",
+    "unit": "viagens"
+  },
+  "ex-wj6gc9cp": {
+    "prompt": "O que uma marca d’água diz?",
+    "hint": "É a estimativa do processador.",
+    "choices": [
+      {
+        "text": "Que todo evento foi entregue exatamente uma vez",
+        "why": "Isso é garantia de entrega, outra questão."
+      },
+      {
+        "text": "Que a resposta de uma janela é final",
+        "why": "É uma aposta; um evento atrasado ainda pode desmenti-la."
+      },
+      {
+        "text": "O horário de chegada do último evento",
+        "why": "Ela é feita do tempo do evento, não da chegada."
+      },
+      {
+        "text": "Que não se esperam mais eventos anteriores a ela",
+        "why": "Isso: janelas que terminam antes dela são enviadas."
+      }
+    ]
+  },
+  "ex-9x0b6c7r": {
+    "prompt": "Subir o atraso permitido de dois para vinte e cinco minutos acabou com os descartes. O que isso custou?",
+    "hint": "Olhe os horários em que as janelas foram enviadas.",
+    "choices": [
+      {
+        "text": "Algumas viagens foram contadas duas vezes na janela das 08:15",
+        "why": "As contagens batem exatamente com a coluna do tempo do evento."
+      },
+      {
+        "text": "Mais memória, porque todo evento da manhã precisou ser guardado",
+        "why": "Ele guarda quatro contadores de qualquer jeito."
+      },
+      {
+        "text": "Só as manhãs com queda ficaram mais lentas",
+        "why": "Toda janela espera, com queda ou sem."
+      },
+      {
+        "text": "Cada contagem saiu bem depois de a sua janela fechar",
+        "why": "Isso: a janela das 08:00 saiu às 08:40 em vez de 08:17."
+      }
+    ]
+  },
+  "ex-d8ny3hxj": {
+    "prompt": "Que atraso permitido teria pegado as viagens do Passeio Público num fluxo?",
+    "hint": "Elas chegaram na manhã seguinte.",
+    "choices": [
+      {
+        "text": "Dois minutos, se o processador tivesse reiniciado",
+        "why": "Um reinício não muda o quanto elas atrasaram."
+      },
+      {
+        "text": "Vinte e cinco minutos, como na segunda execução do `watermark.py`",
+        "why": "Isso pegou as do Parque Barigui, que atrasaram no máximo meia hora."
+      },
+      {
+        "text": "Um dia ou mais: elas voltaram na manhã seguinte",
+        "why": "Isso: elas atrasaram mais de vinte e uma horas."
+      },
+      {
+        "text": "Uma hora, que é o que os sistemas de fluxo usam por padrão",
+        "why": "Não existe esse padrão, e uma hora é pouco."
+      }
+    ]
+  },
+  "ex-50vr1amm": {
+    "prompt": "Quais destes são jeitos de tratar um evento que chega para uma janela já enviada? Marque todas as que se aplicam.",
+    "hint": "Foram listados três.",
+    "choices": [
+      {
+        "text": "Enviar uma contagem corrigida da janela",
+        "why": "Sim, quando quem lê aceita uma correção."
+      },
+      {
+        "text": "Gravá-lo num lugar só dele",
+        "why": "Sim: aí alguém pode ver quantos foram."
+      },
+      {
+        "text": "Deixar o job em lote da madrugada contá-lo",
+        "why": "Sim: o lote lê um dia fechado a partir dos eventos brutos."
+      },
+      {
+        "text": "Trocar o tempo do evento dele pela janela atual",
+        "why": "Isso arquiva uma viagem num horário em que ela não aconteceu."
+      }
+    ]
+  },
+  "ex-8qp3xe70": {
+    "prompt": "Associe cada ordem dos dois passos ao que uma queda entre eles causa.",
+    "hint": "O passo feito primeiro é o que sobrevive.",
+    "pairs": [
+      {
+        "left": "gravar o offset, depois fazer o trabalho",
+        "right": "eventos perdidos"
+      },
+      {
+        "left": "fazer o trabalho, depois gravar o offset",
+        "right": "eventos repetidos"
+      },
+      {
+        "left": "gravar o trabalho e o offset juntos",
+        "right": "nenhum dos dois"
+      }
+    ]
+  },
+  "ex-y85qvcgj": {
+    "prompt": "Depois da queda, o `consumer.py` terminou com 515 viagens em manhãs que tiveram 360. Quantas viagens foram contadas duas vezes?",
+    "hint": "O lote do offset 300 ao 599.",
+    "unit": "viagens"
+  },
+  "ex-qvdq1fqy": {
+    "prompt": "O `consumer.py` grava o resultado e depois o offset. Que garantia ele dá?",
+    "hint": "O que uma queda entre os dois causa?",
+    "choices": [
+      {
+        "text": "No máximo uma vez, porque o offset é gravado no final",
+        "why": "No máximo uma vez grava primeiro; este grava por último."
+      },
+      {
+        "text": "Exatamente uma vez, já que o programa nunca perde um evento",
+        "why": "Nunca perder é metade; ele repete."
+      },
+      {
+        "text": "Pelo menos uma vez, porque uma queda entre os dois repete um lote",
+        "why": "Isso: nada se perde, e alguns eventos são contados duas vezes."
+      },
+      {
+        "text": "Efetivamente uma vez, já que o trabalho é gravado primeiro",
+        "why": "A contagem foi a 515: a repetição não foi inofensiva."
+      }
+    ]
+  },
+  "ex-5w1qcj0k": {
+    "prompt": "Por que a mesma queda deixou o `keyed.py` com a contagem certa?",
+    "hint": "O que é gravado para cada viagem?",
+    "choices": [
+      {
+        "text": "Ele grava o offset antes do resultado, ao contrário do `consumer.py`",
+        "why": "A ordem é a mesma; o lote ainda foi entregue duas vezes."
+      },
+      {
+        "text": "Uma viagem entregue duas vezes é gravada na mesma chave duas vezes",
+        "why": "Isso: a escrita é idempotente."
+      },
+      {
+        "text": "O `--crash` dele para o programa num ponto diferente",
+        "why": "Ele para entre as mesmas duas escritas."
+      },
+      {
+        "text": "Ele lê o log em lotes de eventos menores",
+        "why": "Os dois leem 300 de cada vez."
+      }
+    ]
+  },
+  "ex-zt4vb64t": {
+    "prompt": "Por que nenhuma rede consegue prometer entrega exatamente uma vez?",
+    "hint": "Pense em quem envia e não recebe resposta.",
+    "choices": [
+      {
+        "text": "As redes são lentas demais para o receptor confirmar cada mensagem a tempo",
+        "why": "Velocidade não é o problema; o silêncio é."
+      },
+      {
+        "text": "Todo protocolo duplica as mensagens de propósito, por segurança",
+        "why": "Duplicatas vêm de reenviar depois do silêncio, não do projeto."
+      },
+      {
+        "text": "As mensagens chegam fora de ordem no caminho",
+        "why": "A ordem é questão separada de quantas vezes."
+      },
+      {
+        "text": "Uma mensagem perdida e uma resposta perdida parecem iguais",
+        "why": "Isso: então quem envia tem de reenviar ou arriscar uma perda."
+      }
+    ]
+  },
+  "ex-ex0hbcb1": {
+    "prompt": "Ponha os passos da queda no `consumer.py` em ordem.",
+    "hint": "O offset é a última coisa gravada.",
+    "items": [
+      "ler os offsets de 300 a 599",
+      "gravar a contagem, agora 311",
+      "cair antes de gravar o offset",
+      "reiniciar no offset 300",
+      "contar os offsets de 300 a 599 uma segunda vez"
+    ],
+    "trap": "A contagem foi gravada antes da queda e o offset não."
+  },
+  "ex-7ymds2nj": {
+    "prompt": "Qual é o principal custo da arquitetura Lambda?",
+    "hint": "Conte os caminhos.",
+    "choices": [
+      {
+        "text": "A mesma lógica é escrita, rodada e mantida duas vezes",
+        "why": "Isso, e as duas podem discordar."
+      },
+      {
+        "text": "O log precisa guardar cada evento por anos",
+        "why": "Esse é o custo da Kappa."
+      },
+      {
+        "text": "Ela não produz resposta até o job em lote da madrugada rodar",
+        "why": "A camada de velocidade responde durante o dia."
+      },
+      {
+        "text": "Eventos atrasados se perdem para sempre",
+        "why": "A camada de lote recalcula com eles incluídos."
+      }
+    ]
+  },
+  "ex-trnj91xf": {
+    "prompt": "Na arquitetura Kappa, como uma mudança na lógica é aplicada aos dados passados?",
+    "hint": "Não há caminho de lote.",
+    "choices": [
+      {
+        "text": "Um job em lote da madrugada recalcula o histórico",
+        "why": "Essa é a camada de lote da Lambda."
+      },
+      {
+        "text": "A versão nova reproduz o log desde o offset 0",
+        "why": "Isso, numa saída nova para a qual os leitores passam."
+      },
+      {
+        "text": "Não é: a Kappa só processa eventos novos",
+        "why": "Reproduzir o passado é a ideia inteira."
+      },
+      {
+        "text": "As camadas de velocidade e serviço são refeitas",
+        "why": "A Kappa não tem camadas desse tipo."
+      }
+    ]
+  },
+  "ex-tkfssqwj": {
+    "prompt": "O log da Roda Livre guarda eventos por sete dias. Que arquitetura isso descarta para uma mudança que afete o ano passado?",
+    "hint": "Qual depende de reproduzir o log?",
+    "choices": [
+      {
+        "text": "A Lambda, já que a camada de velocidade lê o mesmo log",
+        "why": "A Lambda reprocessa a partir da cópia bruta da camada de lote."
+      },
+      {
+        "text": "Nenhuma, porque um log sempre pode ser reproduzido",
+        "why": "Só dá para reproduzir o que ele ainda guarda."
+      },
+      {
+        "text": "As duas, porque as duas dependem de um log",
+        "why": "A camada de lote da Lambda guarda todos os eventos brutos."
+      },
+      {
+        "text": "A Kappa",
+        "why": "Isso: o ano passado não está mais no log."
+      }
+    ]
+  },
+  "ex-p5vrzrpr": {
+    "prompt": "Qual pergunta da Roda Livre justifica um fluxo?",
+    "hint": "O que se faz com a resposta, e em quanto tempo?",
+    "choices": [
+      {
+        "text": "Viagens por estação na semana passada, para planejar as rotas das vans",
+        "why": "Uma resposta de um dia serve para o plano da semana seguinte."
+      },
+      {
+        "text": "Receita por mês, para o relatório financeiro",
+        "why": "Ninguém age sobre ela em minutos."
+      },
+      {
+        "text": "Quais estações vão ficar vazias na próxima meia hora, para a van",
+        "why": "Isso: a van precisa se mover antes que aconteça."
+      },
+      {
+        "text": "As viagens de hoje até agora, na tela do escritório",
+        "why": "Olhada, não usada para agir: lote a cada hora basta."
+      }
+    ]
+  },
+  "ex-98b8r960": {
+    "prompt": "Um gestor pede o painel do escritório \"em tempo real\". O que a seção sugere perguntar primeiro?",
+    "hint": "O teste é sobre ação.",
+    "choices": [
+      {
+        "text": "Qual produto de streaming a empresa já paga",
+        "why": "A ferramenta vem depois da necessidade."
+      },
+      {
+        "text": "Que decisão ele alimenta, e quanto tempo ela espera",
+        "why": "Isso: \"mais fresco que hoje\" cabe num job a cada hora."
+      },
+      {
+        "text": "Quantos eventos por segundo a fonte consegue produzir",
+        "why": "Volume importa depois; a necessidade vem primeiro."
+      },
+      {
+        "text": "Se a equipe prefere Lambda ou Kappa",
+        "why": "Isso supõe que um fluxo seja necessário."
+      }
+    ]
+  },
+  "ex-fd705kbq": {
+    "prompt": "Quais destes um fluxo faz a equipe pagar e um job em lote a cada hora não? Marque todas as que se aplicam.",
+    "hint": "Tudo o que esta aula mostrou.",
+    "choices": [
+      {
+        "text": "Um processo que nunca para e precisa ser vigiado",
+        "why": "Sim: alguém é acordado quando ele para."
+      },
+      {
+        "text": "Uma marca d’água que alguém precisa escolher",
+        "why": "Sim: e uma decisão sobre dado atrasado."
+      },
+      {
+        "text": "Um estado que precisa sobreviver a uma queda",
+        "why": "Sim: além de duplicatas a tornar inofensivas."
+      },
+      {
+        "text": "Guardar os eventos brutos",
+        "why": "O lote também precisa deles guardados, para backfills."
+      }
+    ]
+  },
+  "ex-m3gqxksx": {
+    "prompt": "Ponha em ordem os passos da vida de uma janela num fluxo.",
+    "hint": "A marca d’água anda antes de a janela ser enviada.",
+    "items": [
+      "um evento chega com o seu tempo do evento",
+      "ele é somado à janela a que pertence",
+      "a marca d’água passa do fim da janela",
+      "a contagem da janela é enviada",
+      "um evento atrasado para ela é descartado"
+    ],
+    "trap": "Atrasado quer dizer depois de a janela ter sido enviada."
+  },
+  "ex-rdsy0rdz": {
+    "prompt": "Um provedor de pagamentos repete um webhook quando não recebe resposta, e a Roda Livre soma cada pagamento à receita do dia. Qual é a primeira correção?",
+    "hint": "A entrega é pelo menos uma vez.",
+    "choices": [
+      {
+        "text": "Registrar cada pagamento pelo próprio id, para a repetição sobrescrever",
+        "why": "Isso: uma repetição grava a mesma chave e não muda nada."
+      },
+      {
+        "text": "Pedir ao provedor que pare de repetir",
+        "why": "Aí um webhook perdido vira um pagamento que ninguém registra."
+      },
+      {
+        "text": "Pôr uma marca d’água de uma hora na receita",
+        "why": "Atraso é sobre tempo, não sobre repetição."
+      },
+      {
+        "text": "Passar o relatório de receita para um job em lote da madrugada",
+        "why": "Um lote somaria as duplicatas também."
+      }
+    ]
+  },
+  "ex-mtex1tge": {
+    "prompt": "Uma equipe conta viagens por quarto de hora pelo tempo de chegada, e o gráfico mostra um pico às 08:45 de segunda. O que ela deveria conferir primeiro?",
+    "hint": "Qual relógio arquiva as viagens?",
+    "choices": [
+      {
+        "text": "Se mais bicicletas entraram em serviço naquela manhã",
+        "why": "Essa é a história que o gráfico conta, e pode ser falsa."
+      },
+      {
+        "text": "Se o total diário de segunda está abaixo do normal",
+        "why": "O total é o mesmo pelos dois relógios."
+      },
+      {
+        "text": "Se uma rajada de eventos antigos chegou perto das 08:45",
+        "why": "Isso: uma rajada de eventos antigos cai na janela em que chega."
+      },
+      {
+        "text": "Se o consumidor gravou o offset direito",
+        "why": "Uma repetição subiria várias janelas, não moveria viagens entre elas."
+      }
+    ]
+  },
+  "ex-my5zz63e": {
+    "prompt": "Uma escrita que deixa o mesmo resultado sendo feita uma ou duas vezes é ___.",
+    "hint": "Foi o que fez o `keyed.py` sobreviver à queda.",
+    "blanks": [
+      {
+        "accept": [
+          "idempotente"
+        ]
+      }
+    ]
+  }
+}

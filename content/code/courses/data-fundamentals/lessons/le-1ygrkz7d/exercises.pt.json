@@ -1,0 +1,880 @@
+{
+  "ex-nc0bk9eb": {
+    "prompt": "O que há de errado em imaginar uma fonte como uma prateleira onde dados prontos esperam ser buscados?",
+    "hint": "Pergunte para que o sistema foi feito.",
+    "choices": [
+      {
+        "text": "Prateleiras são para arquivos, e a maioria das fontes é banco de dados",
+        "why": "O tipo de fonte não é o problema; todo tipo pertence a um sistema ocupado."
+      },
+      {
+        "text": "Pertence a um sistema ocupado com outro trabalho, que os donos mudam quando querem",
+        "why": "Isso: você o lê como visita, e ele muda quando os donos decidem."
+      },
+      {
+        "text": "O dado da prateleira já vem limpo, e o de uma fonte não",
+        "why": "Limpeza é uma pergunta posterior; a imagem falha antes, na questão do dono."
+      },
+      {
+        "text": "Uma prateleira guarda uma cópia, e uma fonte guarda backup de tudo",
+        "why": "Backup não tem nada a ver; a fonte está fazendo outro trabalho."
+      }
+    ]
+  },
+  "ex-jk3xqzze": {
+    "prompt": "Qual destas fontes envia os dados em vez de esperar ser consultada?",
+    "hint": "Quem decide quando o dado se mexe?",
+    "choices": [
+      {
+        "text": "A API do provedor de pagamentos, que responde cada página pedida",
+        "why": "Uma API responde quando consultada: isso é pull."
+      },
+      {
+        "text": "O CSV noturno da oficina num diretório",
+        "why": "O arquivo espera no diretório até o lado de Davi lê-lo."
+      },
+      {
+        "text": "Os sensores das docas, que falam a cada minuto sozinhos",
+        "why": "Isso: as docas decidem quando falar, e a Roda Livre precisa estar escutando."
+      },
+      {
+        "text": "Uma réplica de leitura do banco do app",
+        "why": "Uma réplica é consultada, então é de pull."
+      }
+    ]
+  },
+  "ex-4gj2ez8d": {
+    "prompt": "Por que uma falha de push é mais difícil de perceber que uma falha de pull?",
+    "hint": "Num pull, a requisição de quem falha?",
+    "choices": [
+      {
+        "text": "Fontes de push mandam dados em formatos binários que escondem erros",
+        "why": "O formato não é o motivo; a ausência de uma requisição é."
+      },
+      {
+        "text": "Falhas de push ficam no log de quem envia, que o time de dados não lê",
+        "why": "Mesmo com o log de quem envia, o lado que recebe não vê nada acontecer."
+      },
+      {
+        "text": "Fontes de push tentam de novo para sempre, então a falha não acaba",
+        "why": "Tentativas não são a questão; o silêncio do lado que recebe é."
+      },
+      {
+        "text": "Nenhuma requisição sua falhou, então nada do lado de quem lê dá erro",
+        "why": "Isso: o dado só não chega, e só saber o que deveria ter vindo revela isso."
+      }
+    ]
+  },
+  "ex-9sapjqw3": {
+    "prompt": "Associe cada tipo de fonte ao jeito como Davi a lê.",
+    "hint": "A quarta coluna da tabela.",
+    "pairs": [
+      {
+        "left": "o banco do app",
+        "right": "uma consulta, uma cópia ou o log de mudanças"
+      },
+      {
+        "left": "a API de pagamentos",
+        "right": "requisições HTTP, página por página"
+      },
+      {
+        "left": "a exportação da oficina",
+        "right": "esperar por ela num diretório ou num bucket"
+      },
+      {
+        "left": "o log de acesso do servidor da API",
+        "right": "analisar linhas de texto"
+      }
+    ]
+  },
+  "ex-w8t3s9pj": {
+    "prompt": "Por que o time de dados da Roda Livre nunca roda consultas analíticas no banco primário?",
+    "hint": "Quem mais está usando essa máquina?",
+    "choices": [
+      {
+        "text": "O primário não aceita comandos SELECT de outros times",
+        "why": "Ele aceita; esse é justamente o perigo."
+      },
+      {
+        "text": "Ler todas as linhas toma disco, memória e processador de que o app precisa",
+        "why": "Isso: a varredura toma disco, memória e processador que o app usava."
+      },
+      {
+        "text": "O primário guarda só as viagens de hoje, então a história fica em outro lugar",
+        "why": "Ele guarda o estado atual de tudo; o motivo é velocidade, não alcance."
+      },
+      {
+        "text": "Consultas analíticas mudam linhas sem querer",
+        "why": "Uma leitura não muda nada, e mesmo assim prejudica o app."
+      }
+    ]
+  },
+  "ex-7p59y9ke": {
+    "prompt": "Depois da segunda cópia incremental, quantas viagens o `copy.db` tinha?",
+    "hint": "A última linha da captura.",
+    "unit": "viagens"
+  },
+  "ex-4cy9zhhs": {
+    "prompt": "Por que a cópia incremental manteve a viagem `R000104` depois que o app a apagou?",
+    "hint": "O que a cópia pede à fonte?",
+    "choices": [
+      {
+        "text": "A cópia rodou antes de a remoção ser gravada",
+        "why": "A segunda cópia rodou depois de o `later.py` gravar tudo."
+      },
+      {
+        "text": "`INSERT OR REPLACE` se recusa a remover linhas que gravou",
+        "why": "Ele substitui as linhas que recebe; ninguém lhe passou a apagada."
+      },
+      {
+        "text": "Uma linha apagada não tem `updated_at` novo para achar",
+        "why": "Isso: ela simplesmente não está lá para ser selecionada."
+      },
+      {
+        "text": "A marca d’água estava no fuso errado",
+        "why": "A marca d’água funcionou: achou as duas linhas alteradas."
+      }
+    ]
+  },
+  "ex-dcytk708": {
+    "prompt": "Uma tela nova do app deixa a equipe mudar uma viagem de estação, mas o código esquece de atualizar `updated_at`. O que a cópia incremental faz?",
+    "hint": "A cópia confia numa coluna.",
+    "choices": [
+      {
+        "text": "Levanta um erro da próxima vez que compara os dois bancos",
+        "why": "A cópia imprime contagens; não compara conteúdo, e as contagens continuam iguais."
+      },
+      {
+        "text": "Mantém a estação antiga, sem dizer nada sobre isso",
+        "why": "Isso: uma mudança sem `updated_at` mais novo é invisível para ela."
+      },
+      {
+        "text": "Copia a viagem duas vezes, uma por estação",
+        "why": "Ela não vê a mudança, então não copia nada novo."
+      },
+      {
+        "text": "Pega a mudança na execução seguinte, porque a linha é mais nova",
+        "why": "A linha só é mais nova se o `updated_at` disser, e aqui ele não diz."
+      }
+    ]
+  },
+  "ex-k32rhfak": {
+    "prompt": "Quais destas fariam a cópia do time de dados descobrir que a viagem `R000104` foi cancelada? Marque todas as que se aplicam.",
+    "hint": "A seção citou três.",
+    "choices": [
+      {
+        "text": "O app marca viagens canceladas com `deleted_at` em vez de apagá-las",
+        "why": "Sim: uma remoção lógica é uma atualização que a cópia vê."
+      },
+      {
+        "text": "Uma cópia completa semanal, comparada com a incremental",
+        "why": "Sim: a cópia completa tem o que a fonte tem."
+      },
+      {
+        "text": "Ler o log de mudanças do banco",
+        "why": "Sim: uma remoção é uma mudança, e o log a tem."
+      },
+      {
+        "text": "Rodar a cópia incremental a cada cinco minutos em vez de a cada hora",
+        "why": "Mais vezes continua cego: a linha apagada nunca está lá para ser selecionada."
+      }
+    ]
+  },
+  "ex-cr9v329y": {
+    "prompt": "Um banco feito para atender as muitas leituras e escritas pequenas e rápidas de uma aplicação se chama banco ___.",
+    "hint": "Processamento de transações online, em inglês.",
+    "blanks": [
+      {
+        "accept": [
+          "OLTP"
+        ]
+      }
+    ]
+  },
+  "ex-8cr5vt1v": {
+    "prompt": "O que um leitor de captura de dados de mudança lê?",
+    "hint": "Não é a tabela.",
+    "choices": [
+      {
+        "text": "As tabelas, a cada poucos segundos, procurando linhas novas",
+        "why": "Isso é uma cópia incremental rápida, com o mesmo ponto cego."
+      },
+      {
+        "text": "O log que o banco escreve de cada mudança",
+        "why": "Isso: o registro de cada mudança, remoções inclusive."
+      },
+      {
+        "text": "O código-fonte do app, para ver que consultas ele roda",
+        "why": "O CDC lê o que o banco registrou, não o código do app."
+      },
+      {
+        "text": "Um backup noturno do banco inteiro",
+        "why": "Um backup é uma cópia completa do estado, não um fluxo de mudanças."
+      }
+    ]
+  },
+  "ex-se5mgttt": {
+    "prompt": "Por que o CDC com triggers custa mais ao app do que ler o log do banco?",
+    "hint": "Onde um trigger roda?",
+    "choices": [
+      {
+        "text": "Triggers só funcionam em tabelas com menos de um milhão de linhas",
+        "why": "Não existe esse limite; o custo é por mudança, não pelo tamanho da tabela."
+      },
+      {
+        "text": "Triggers mandam cada mudança pela rede para o time de dados",
+        "why": "O trigger grava numa tabela do mesmo banco; o leitor vem depois."
+      },
+      {
+        "text": "Cada trigger acrescenta uma escrita própria dentro da transação do app, a cada viagem",
+        "why": "Isso: o log é escrito de qualquer jeito, a linha do trigger não."
+      },
+      {
+        "text": "Triggers travam a tabela até o time de dados ler a mudança",
+        "why": "Eles não esperam leitor nenhum."
+      }
+    ]
+  },
+  "ex-8yft1yfa": {
+    "prompt": "Um leitor de CDC no PostgreSQL da Roda Livre para na sexta à noite e ninguém percebe até segunda. Qual o risco para o app?",
+    "hint": "O banco guarda algo até o leitor buscar.",
+    "choices": [
+      {
+        "text": "As tabelas do app ficam travadas até o leitor voltar",
+        "why": "As escritas continuam; o que elas deixam para trás é que se acumula."
+      },
+      {
+        "text": "As viagens do fim de semana se perdem do banco",
+        "why": "As viagens estão seguras nas tabelas; o que cresce é o log."
+      },
+      {
+        "text": "O log se acumula no disco do primário até enchê-lo",
+        "why": "Isso: o banco guarda o log para o leitor até ele voltar."
+      },
+      {
+        "text": "As réplicas param de receber mudanças junto com o leitor",
+        "why": "As réplicas seguem o log por conta própria; não esperam o leitor de CDC."
+      }
+    ]
+  },
+  "ex-met3ynwe": {
+    "prompt": "Um pipeline de CDC é ligado hoje. Como ele recebe as viagens que já existiam no ano passado?",
+    "hint": "O que o log guarda?",
+    "choices": [
+      {
+        "text": "Lê o log de volta até o dia em que o banco foi criado",
+        "why": "O log guarda mudanças recentes, não a história de cada linha."
+      },
+      {
+        "text": "Começa por uma cópia completa e depois segue o log",
+        "why": "Isso, e segue o log a partir do momento dessa cópia."
+      },
+      {
+        "text": "Pede ao app para atualizar cada linha antiga para que apareçam como mudanças",
+        "why": "Isso mexeria em cada linha das tabelas do app por causa do time de dados."
+      },
+      {
+        "text": "Não precisa delas, porque CDC é para dado novo",
+        "why": "Uma cópia sem as linhas antigas não responde pergunta nenhuma sobre o ano passado."
+      }
+    ]
+  },
+  "ex-83b0xkww": {
+    "prompt": "Ponha em ordem o que acontece com o cancelamento da viagem `R000104`, do app até o time de dados.",
+    "hint": "O log é escrito antes de a tabela mudar.",
+    "items": [
+      "o app envia um DELETE",
+      "o banco escreve a mudança no log",
+      "a linha sai da tabela de viagens",
+      "o leitor de CDC pega a entrada do log"
+    ],
+    "trap": "O leitor vem por último e ainda vê a remoção, porque o log a guarda depois que a linha sumiu."
+  },
+  "ex-a5zbbw8j": {
+    "prompt": "O que uma resposta com status `429` pede ao cliente?",
+    "hint": "Too Many Requests.",
+    "choices": [
+      {
+        "text": "Esperar antes de pedir de novo",
+        "why": "Isso: muitas vezes pelos segundos que o `Retry-After` indica."
+      },
+      {
+        "text": "Mandar um token novo",
+        "why": "Um token errado é `401`."
+      },
+      {
+        "text": "Pular aquela página",
+        "why": "Pular perderia as linhas dela sem aviso."
+      },
+      {
+        "text": "Pedir uma página maior",
+        "why": "Uma página maior é uma requisição mais pesada, não mais lenta."
+      }
+    ]
+  },
+  "ex-9w9dk7ry": {
+    "prompt": "No `walk.py`, por que o `continue` depois de um `429` deixa `page` sem mudar?",
+    "hint": "Que página foi recusada?",
+    "choices": [
+      {
+        "text": "Para o servidor poder zerar o contador de requisições",
+        "why": "O servidor conta sozinho; o cliente não cuida disso."
+      },
+      {
+        "text": "Porque `page` é somente leitura dentro de um bloco `try`",
+        "why": "Variáveis não são somente leitura num `try`; isso é uma escolha."
+      },
+      {
+        "text": "Para a página que o servidor recusou ser pedida de novo em vez de pulada",
+        "why": "Isso: avançar pularia as viagens dela e relataria seis."
+      },
+      {
+        "text": "Para não pedir uma página além da última",
+        "why": "É o `next` vazio que para o laço no fim."
+      }
+    ]
+  },
+  "ex-ea9b5gpx": {
+    "prompt": "De onde o `walk.py` tira o token da API, e por quê?",
+    "hint": "Código é copiado e versionado.",
+    "choices": [
+      {
+        "text": "Uma constante no topo do arquivo, para ser fácil de trocar",
+        "why": "Um token no código viaja com cada cópia e commit dele."
+      },
+      {
+        "text": "O ambiente, para ele ficar fora do código e do git",
+        "why": "Isso: em produção, um cofre de segredos faz o mesmo papel."
+      },
+      {
+        "text": "Um arquivo no repositório git, ao lado do programa",
+        "why": "No repositório é exatamente onde um token fica legível para qualquer um que o tenha."
+      },
+      {
+        "text": "O servidor o envia na primeira requisição",
+        "why": "O cliente prova quem é; o servidor não entrega a própria chave."
+      }
+    ]
+  },
+  "ex-x9gnbfgx": {
+    "prompt": "Quantas requisições o `walk.py` enviou para juntar as três páginas?",
+    "hint": "Conte as linhas que começam com `page`.",
+    "unit": "requisições"
+  },
+  "ex-vppns6x8": {
+    "prompt": "Uma API lista cobranças da mais nova para a mais antiga, com páginas numeradas. Enquanto um cliente percorre as páginas, duas cobranças novas são feitas. O que acontece com a cópia do cliente?",
+    "hint": "Toda cobrança mais antiga desce duas posições na lista.",
+    "choices": [
+      {
+        "text": "Duas cobranças aparecem duas vezes",
+        "why": "Isso: o fim de uma página escorrega para o começo da seguinte. Um cursor não deixaria."
+      },
+      {
+        "text": "A API recusa a leitura com erro até ela ser recomeçada",
+        "why": "Nada dá erro; as páginas só deslocam."
+      },
+      {
+        "text": "As duas cobranças novas entram no fim da última página",
+        "why": "Da mais nova para a mais antiga, elas entram na página 1, que o cliente já leu."
+      },
+      {
+        "text": "Nada muda, porque os números de página são fixados no começo da leitura",
+        "why": "Um número de página é recalculado a cada requisição; esse é o problema."
+      }
+    ]
+  },
+  "ex-9gberdzt": {
+    "prompt": "Por que a exportação escreve o `manifest.json` por último?",
+    "hint": "O que a presença dele diz a quem lê?",
+    "choices": [
+      {
+        "text": "No Linux, arquivos JSON têm que ser escritos depois dos CSV",
+        "why": "Não existe essa regra; a ordem é um acordo entre quem escreve e quem lê."
+      },
+      {
+        "text": "Para o checksum incluir os próprios bytes",
+        "why": "O checksum é do `rides.csv`, não do manifesto."
+      },
+      {
+        "text": "Porque o manifesto é o arquivo menor e o mais rápido de escrever",
+        "why": "O tamanho é irrelevante; a ordem é o sinal."
+      },
+      {
+        "text": "Sua presença diz que os dados anteriores estão completos",
+        "why": "Isso: quem lê não toca em nada até ele existir."
+      }
+    ]
+  },
+  "ex-5c91ns9m": {
+    "prompt": "Quantas linhas o `load.py` simples levou da exportação interrompida?",
+    "hint": "A linha depois de `python load.py`.",
+    "unit": "linhas"
+  },
+  "ex-xgg4kqkq": {
+    "prompt": "Por que o carregamento simples do arquivo pela metade não mostrou erro?",
+    "hint": "Olhe a última linha que ele mostrou.",
+    "choices": [
+      {
+        "text": "O Python captura erros de CSV e os esconde por padrão",
+        "why": "Não havia erro para esconder; o leitor aceitou a linha."
+      },
+      {
+        "text": "O `csv.DictReader` completou a linha curta com `None`",
+        "why": "Isso: meia linha virou um registro com cara de plausível."
+      },
+      {
+        "text": "A exportação escreveu uma última linha completa antes de parar",
+        "why": "A última linha tem estação `ST`: foi cortada no meio."
+      },
+      {
+        "text": "O manifesto dizia 718 linhas, e o carregamento bateu",
+        "why": "Não havia manifesto; por isso o carregamento cuidadoso recusou."
+      }
+    ]
+  },
+  "ex-mzm1fxfk": {
+    "prompt": "Um leitor olha um bucket e carrega qualquer arquivo que não cresce há dez minutos, supondo que quem escrevia terminou. O que há de errado nessa regra?",
+    "hint": "O que mais faz um arquivo parar de crescer?",
+    "choices": [
+      {
+        "text": "Dez minutos é pouco; uma hora deixaria seguro",
+        "why": "Nenhuma espera distingue quem terminou de quem morreu."
+      },
+      {
+        "text": "Buckets não informam quando um arquivo mudou pela última vez",
+        "why": "Informam; o problema é o que o horário significa."
+      },
+      {
+        "text": "O arquivo de quem morreu também deixa de crescer",
+        "why": "Isso: só um marcador escrito por último diz que quem escrevia terminou."
+      },
+      {
+        "text": "Olhar um bucket custa mais que ler um manifesto",
+        "why": "O custo não vem ao caso; a regra carrega arquivos pela metade."
+      }
+    ]
+  },
+  "ex-z6m98kqf": {
+    "prompt": "Por que todo campo que o `parse_log.py` mostra é texto, até o código de status?",
+    "hint": "O que uma expressão regular devolve?",
+    "choices": [
+      {
+        "text": "O log guarda números como texto para economizar espaço",
+        "why": "Texto não é menor; uma expressão regular simplesmente acha texto."
+      },
+      {
+        "text": "Uma expressão regular acha texto, e transformá-lo em número é um passo posterior",
+        "why": "Isso: converter os tipos é um passo separado, posterior."
+      },
+      {
+        "text": "`groupdict` converte números de volta para texto para imprimir",
+        "why": "Ele nunca teve números para converter."
+      },
+      {
+        "text": "Códigos de status como `404` não são números de verdade no HTTP",
+        "why": "Eles são números; o analisador só não os converteu."
+      }
+    ]
+  },
+  "ex-djzvhc7k": {
+    "prompt": "Por que o `parse_log.py` lista os números das linhas que não conseguiu analisar em vez de pulá-las?",
+    "hint": "Pense no dia em que o formato do log mudar.",
+    "choices": [
+      {
+        "text": "Para apagá-las do log depois",
+        "why": "A fonte não é editada; quem lê informa."
+      },
+      {
+        "text": "Porque o módulo `re` do Python exige isso",
+        "why": "Ele não exige nada disso; é uma escolha."
+      },
+      {
+        "text": "Para que um formato quebrado seja notado logo",
+        "why": "Isso: um analisador que pula descartaria todas as linhas com o mesmo silêncio."
+      },
+      {
+        "text": "Para contar as linhas quebradas como requisições que falharam",
+        "why": "Uma linha cortada não é uma requisição que falhou; o status dela é desconhecido."
+      }
+    ]
+  },
+  "ex-vpmdn3b5": {
+    "prompt": "O log tem um `500` e depois um `200` para `/v1/rides/R000301/end`, com dois segundos de diferença. O que aconteceu com o cliente?",
+    "hint": "Leia as duas linhas juntas.",
+    "choices": [
+      {
+        "text": "Duas viagens foram encerradas, uma com erro",
+        "why": "As duas linhas citam a mesma viagem, `R000301`."
+      },
+      {
+        "text": "Uma viagem, encerrada quando o app tentou de novo",
+        "why": "Isso: uma viagem, encerrada dois segundos atrasada."
+      },
+      {
+        "text": "A viagem continua aberta, porque um `500` cancela a requisição",
+        "why": "O `200` depois dela diz que a segunda tentativa funcionou."
+      },
+      {
+        "text": "Dois clientes diferentes tentaram encerrar a mesma viagem",
+        "why": "As duas requisições vieram de um endereço e de um app."
+      }
+    ]
+  },
+  "ex-8qrma6q4": {
+    "prompt": "Por que o log de acesso de um servidor web conta como dado pessoal pela LGPD, mesmo sem nomes?",
+    "hint": "Olhe o primeiro campo de cada linha.",
+    "choices": [
+      {
+        "text": "Ele registra a senha de cada cliente em cada requisição",
+        "why": "O formato combined não guarda senhas."
+      },
+      {
+        "text": "A LGPD cobre todo arquivo que uma empresa guarda",
+        "why": "Ela cobre informação ligada a uma pessoa, não arquivos em si."
+      },
+      {
+        "text": "O primeiro campo é um endereço que identifica pessoas",
+        "why": "Isso: informação que identifica uma pessoa é dado pessoal, com nome ou sem."
+      },
+      {
+        "text": "O user agent dá o nome do dono do celular",
+        "why": "Ele dá o nome do app e do sistema, não da pessoa."
+      }
+    ]
+  },
+  "ex-az6pg51e": {
+    "prompt": "Escrever cada linha de um log como objeto JSON, para os campos já chegarem com nome, se chama log ___.",
+    "hint": "O oposto de uma frase para uma pessoa.",
+    "blanks": [
+      {
+        "accept": [
+          "estruturado"
+        ]
+      }
+    ]
+  },
+  "ex-j5dsdrar": {
+    "prompt": "O que os eventos de aplicação registram que o banco do app não registra?",
+    "hint": "Um cliente olhou uma estação e fechou o app.",
+    "choices": [
+      {
+        "text": "O estado atual de cada viagem e bicicleta",
+        "why": "Isso é o que o banco guarda."
+      },
+      {
+        "text": "As senhas com que os clientes entram",
+        "why": "Eventos tratam de ações no app, não de credenciais."
+      },
+      {
+        "text": "Ações que não mudam linha nenhuma",
+        "why": "Isso: abrir o mapa, olhar, desistir."
+      },
+      {
+        "text": "As cobranças que o provedor de pagamentos fez",
+        "why": "Elas ficam no provedor, lidas pela API dele."
+      }
+    ]
+  },
+  "ex-ntwt988a": {
+    "prompt": "Por que a entrega pelo menos uma vez anota alguns eventos duas vezes?",
+    "hint": "O que o celular não consegue distinguir?",
+    "choices": [
+      {
+        "text": "O coletor copia cada evento para dois servidores",
+        "why": "Cópias de segurança não são duplicatas nos dados."
+      },
+      {
+        "text": "Para o celular, resposta perdida parece evento perdido",
+        "why": "Isso: então o celular reenvia, e o coletor já o tinha."
+      },
+      {
+        "text": "O app manda cada evento duas vezes de propósito, como verificação",
+        "why": "Ele manda uma vez e só reenvia quando não ouve resposta."
+      },
+      {
+        "text": "Duas versões do app ficam instaladas em cada celular",
+        "why": "Um app por celular; a duplicata vem da rede."
+      }
+    ]
+  },
+  "ex-sm45k04y": {
+    "prompt": "Dois eventos `ride_started` de um cliente chegam com um segundo de diferença, com o mesmo `event_id`. O que eles são?",
+    "hint": "O celular deu o id quando criou o evento.",
+    "choices": [
+      {
+        "text": "Duas viagens, iniciadas com um segundo de diferença",
+        "why": "Duas viagens teriam dois ids."
+      },
+      {
+        "text": "Um cliente que tocou o botão duas vezes",
+        "why": "Cada toque cria um evento com id próprio."
+      },
+      {
+        "text": "Um bug no coletor, a ser relatado ao fornecedor",
+        "why": "É o preço normal da entrega pelo menos uma vez."
+      },
+      {
+        "text": "Um evento que o celular mandou duas vezes, por não ouvir resposta da primeira",
+        "why": "Isso: um id é um evento, e a cópia é removida."
+      }
+    ]
+  },
+  "ex-g88yvmvk": {
+    "prompt": "Sem plano de rastreamento, o app 3.3 envia `rideStarted` e o 3.4 envia `ride_started`. Um painel conta `ride_started`. O que ele mostra no mês depois que o 3.4 sai?",
+    "hint": "Os clientes não atualizam todos no mesmo dia.",
+    "choices": [
+      {
+        "text": "Uma contagem certa desde o dia em que o 3.4 sai",
+        "why": "Celulares ainda no 3.3 mandam o outro nome."
+      },
+      {
+        "text": "Viagens subindo conforme os celulares atualizam",
+        "why": "Isso: o crescimento é da versão do app, não das viagens."
+      },
+      {
+        "text": "Toda viagem contada duas vezes, uma em cada nome",
+        "why": "Cada celular manda um nome, e só um é contado."
+      },
+      {
+        "text": "Um erro, porque o painel recusa nomes de evento desconhecidos",
+        "why": "Nomes desconhecidos são ignorados, não recusados; esse é o problema."
+      }
+    ]
+  },
+  "ex-c0v4syg4": {
+    "prompt": "Associe cada campo de um evento ao que ele serve.",
+    "hint": "Um deles é a única defesa contra duplicatas.",
+    "pairs": [
+      {
+        "left": "`event_id`",
+        "right": "distinguir um reenvio de um evento novo"
+      },
+      {
+        "left": "`occurred_at`",
+        "right": "o relógio do celular, que o cliente controla"
+      },
+      {
+        "left": "o horário do coletor",
+        "right": "quando chegou, por um relógio confiável"
+      },
+      {
+        "left": "`app_version`",
+        "right": "qual versão do app o enviou"
+      }
+    ]
+  },
+  "ex-a5cakwek": {
+    "prompt": "Quantas leituras chegaram duas vezes na hora gerada pelo `docks.py`?",
+    "hint": "A terceira linha da saída.",
+    "unit": "leituras"
+  },
+  "ex-dmd1j6tv": {
+    "prompt": "Chegaram 185 leituras onde eram devidas 180. Por que isso não indica que a hora está completa?",
+    "hint": "Tire as que vieram duas vezes.",
+    "choices": [
+      {
+        "text": "Os sensores mandam leituras extras quando uma bicicleta é encaixada",
+        "why": "Eles mandam uma por minuto; as extras são reenvios."
+      },
+      {
+        "text": "Onze são repetidas, e elas escondem seis que nunca vieram",
+        "why": "Isso: 185 menos 11 dá 174, seis a menos que 180."
+      },
+      {
+        "text": "O servidor conta cada leitura uma vez por sensor e uma por estação",
+        "why": "Há uma contagem só; ela inclui reenvios."
+      },
+      {
+        "text": "Cinco leituras vieram de uma quarta doca que não estava na lista",
+        "why": "São três docas; o excedente é de duplicatas."
+      }
+    ]
+  },
+  "ex-mhv1ymqm": {
+    "prompt": "O que um número de sequência em cada leitura torna possível?",
+    "hint": "Ele sobe um a cada leitura.",
+    "choices": [
+      {
+        "text": "Corrigir o relógio do sensor",
+        "why": "Relógios se corrigem com NTP; o número não diz nada sobre horário."
+      },
+      {
+        "text": "Contar as lacunas e as duplicatas",
+        "why": "Isso: um número faltando é lacuna, um número visto duas vezes é duplicata."
+      },
+      {
+        "text": "Mandar leituras sem rede",
+        "why": "É um rótulo na leitura, não um jeito de enviá-la."
+      },
+      {
+        "text": "Criptografar as leituras no caminho",
+        "why": "Numerar não é criptografar."
+      }
+    ]
+  },
+  "ex-amv82q77": {
+    "prompt": "Um programa guarda, para cada doca, a leitura que chegou ao servidor por último e a chama de estado atual da doca. O que dá errado?",
+    "hint": "Seis leituras chegaram depois de uma mais recente.",
+    "choices": [
+      {
+        "text": "Nada, porque as leituras chegam na ordem em que foram feitas",
+        "why": "Seis delas não chegaram, numa hora de três docas."
+      },
+      {
+        "text": "Conta cada duplicata como uma segunda bicicleta",
+        "why": "Guardar uma leitura por doca não conta bicicleta duas vezes."
+      },
+      {
+        "text": "Quebra quando duas leituras chegam no mesmo segundo",
+        "why": "Um empate no horário de chegada não é erro."
+      },
+      {
+        "text": "Uma leitura antiga e atrasada substitui uma mais nova",
+        "why": "Isso: ordene pelo número de sequência, não pela chegada."
+      }
+    ]
+  },
+  "ex-fakq83e3": {
+    "prompt": "57 leituras da `ST02-D02` têm carimbo posterior ao momento em que chegaram ao servidor. O que isso diz?",
+    "hint": "Nenhuma leitura chega antes de ser feita.",
+    "choices": [
+      {
+        "text": "A rede as entregou mais rápido do que a luz permite",
+        "why": "A rede era comum; o carimbo é que está errado."
+      },
+      {
+        "text": "O relógio desse sensor está adiantado",
+        "why": "Isso: 47 segundos, o que desloca cada período vazio que ele informa."
+      },
+      {
+        "text": "O relógio do servidor está em UTC e o do sensor no horário de São Paulo",
+        "why": "Isso daria três horas, não 47 segundos, e em todas as docas."
+      },
+      {
+        "text": "Essas leituras são duplicatas e devem ser removidas",
+        "why": "Duplicatas têm o mesmo número de sequência; estas não."
+      }
+    ]
+  },
+  "ex-gf2agn24": {
+    "prompt": "O que transforma uma lista escrita das respostas do dono de uma fonte num contrato de dados?",
+    "hint": "Olhe as linhas `key` e `expected`.",
+    "choices": [
+      {
+        "text": "Uma assinatura do jurídico da empresa",
+        "why": "Não é um documento jurídico."
+      },
+      {
+        "text": "Escrevê-la num formato padrão como JSON",
+        "why": "Não existe formato padrão único; YAML ou uma página de wiki também servem."
+      },
+      {
+        "text": "Os dois lados aceitam, e um programa confere",
+        "why": "Isso: as verificações é que fazem a promessa valer."
+      },
+      {
+        "text": "O time de dados a escreve sem o dono, para ficar neutra",
+        "why": "É a promessa de quem produz; sem o dono ela não promete nada."
+      }
+    ]
+  },
+  "ex-4qpn4n2j": {
+    "prompt": "O fornecedor dos sensores se recusa a numerar as leituras. O que vai no contrato das leituras das docas?",
+    "hint": "Um contrato também registra o que não foi prometido.",
+    "choices": [
+      {
+        "text": "A recusa do fornecedor, registrada como lacuna conhecida",
+        "why": "Isso: o engenheiro do ano que vem a encontra escrita."
+      },
+      {
+        "text": "Um número de sequência que o time de dados acrescenta na chegada",
+        "why": "Numerar na chegada conta o que chegou, então não mostra lacunas."
+      },
+      {
+        "text": "Nada sobre numeração, já que o fornecedor não aceitou",
+        "why": "Deixar de fora é como a próxima pessoa redescobre o problema."
+      },
+      {
+        "text": "Uma cláusula que encerra o contrato do fornecedor se faltar uma leitura",
+        "why": "Um contrato de dados registra comportamento; não é acordo comercial."
+      }
+    ]
+  },
+  "ex-z0yyt6sh": {
+    "prompt": "Ponha os passos do carregador cuidadoso em ordem.",
+    "hint": "Nada é analisado antes de se saber que está inteiro.",
+    "items": [
+      "ver que o `manifest.json` existe",
+      "ler os bytes do `rides.csv`",
+      "comparar o SHA-256 deles com o do manifesto",
+      "analisar as linhas"
+    ],
+    "trap": "O checksum só se compara depois de ler os bytes, e a análise vem depois das duas verificações."
+  },
+  "ex-m93cnhsf": {
+    "prompt": "Associe cada falha silenciosa ao que a evita.",
+    "hint": "Um remédio por seção da aula.",
+    "pairs": [
+      {
+        "left": "uma viagem cancelada fica na cópia",
+        "right": "ler o log de mudanças"
+      },
+      {
+        "left": "metade de um arquivo é carregada",
+        "right": "um manifesto escrito por último"
+      },
+      {
+        "left": "um evento reenviado é contado duas vezes",
+        "right": "remover duplicatas pelo `event_id`"
+      },
+      {
+        "left": "uma página recusada é pulada",
+        "right": "esperar e pedir de novo"
+      }
+    ]
+  },
+  "ex-3bkse1wq": {
+    "prompt": "Marta pergunta quantas viagens foram canceladas em setembro. O time de dados só tem a cópia incremental da tabela de viagens. O que a cópia diz?",
+    "hint": "O app apaga as viagens canceladas.",
+    "choices": [
+      {
+        "text": "O número certo, já que cada cancelamento atualiza `updated_at`",
+        "why": "Aqui um cancelamento é uma remoção, e uma linha apagada não atualiza nada."
+      },
+      {
+        "text": "Zero, e as que foram apagadas parecem abertas",
+        "why": "Isso: a cópia não sabe responder, e não sabe que não sabe."
+      },
+      {
+        "text": "Um erro, porque as linhas canceladas estão faltando",
+        "why": "Linhas faltando não levantam nada; esse é o problema."
+      },
+      {
+        "text": "O dobro do número real, uma vez pela viagem e outra pela remoção",
+        "why": "A cópia nunca recebe a remoção, então não tem como contá-la."
+      }
+    ]
+  },
+  "ex-j8yeyx43": {
+    "prompt": "Um parceiro manda registros de pagamento com entrega pelo menos uma vez e sem identificador em cada registro. Chegam dois registros idênticos. O que ninguém consegue dizer?",
+    "hint": "Compare com o `event_id`.",
+    "choices": [
+      {
+        "text": "Se algum dos dois é mesmo um pagamento",
+        "why": "Os registros dizem o que são; a questão é quantos."
+      },
+      {
+        "text": "Em que fuso os registros foram escritos",
+        "why": "Fuso é outra pergunta para o dono."
+      },
+      {
+        "text": "Se a API do parceiro tem limite de taxa",
+        "why": "Limites de taxa não criam registros idênticos."
+      },
+      {
+        "text": "Se é um pagamento reenviado ou dois pagamentos",
+        "why": "Isso: sem id eles são iguais, então peça um antes."
+      }
+    ]
+  }
+}
