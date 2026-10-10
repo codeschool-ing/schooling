@@ -1,0 +1,206 @@
+{
+  "ex-yevj2w31": {
+    "prompt": "Como o `pg_dump` obtém os dados que escreve?",
+    "hint": "Compare com copiar o diretório de dados.",
+    "choices": [
+      { "text": "Lê do disco os arquivos do diretório de dados", "why": "Isso é um backup físico, lição 3. O pg_dump nunca abre um arquivo de dados." },
+      { "text": "Conecta como cliente e consulta o servidor", "why": "Isso. Ele pergunta ao servidor, como o psql faz, e escreve as respostas como instruções para reconstruí-los." },
+      { "text": "Lê o write-ahead log e o reaplica num arquivo", "why": "O write-ahead log é o assunto da lição 4. Um dump não olha para ele." },
+      { "text": "Pede ao sistema operacional um snapshot do disco", "why": "Um snapshot é uma cópia em nível de arquivo; o pg_dump trabalha acima dos arquivos, via SQL." }
+    ]
+  },
+  "ex-2x25d43f": {
+    "prompt": "Ponha em ordem o que um dump plain faz, do topo do arquivo para baixo.",
+    "hint": "Conferir as chaves sai mais barato depois que todas as linhas entraram.",
+    "items": [
+      "Criar as tabelas",
+      "Carregar as linhas com COPY",
+      "Montar os índices e adicionar as chaves",
+      "Conceder as permissões"
+    ],
+    "trap": "Chaves e índices vêm depois dos dados porque montá-los uma vez sobre todas as linhas sai muito mais barato do que mantê-los linha a linha à medida que as linhas chegam."
+  },
+  "ex-k3t4zcc6": {
+    "prompt": "Um dump do shop começa às 14:00:00 e termina às 14:00:40. Um pedido é inserido às 14:00:10. Ele está no dump?",
+    "hint": "O pg_dump lê tudo através de um único snapshot.",
+    "choices": [
+      { "text": "Sim, se a tabela orders ainda não tinha passado pelo dump às 14:00:10", "why": "Isso faria cada tabela descrever um momento diferente. O snapshot existe para que isso não aconteça." },
+      { "text": "Não: o dump guarda o banco como estava às 14:00:00", "why": "Isso. Toda tabela do arquivo reflete o instante em que o snapshot foi tirado, aconteça o que acontecer durante o dump." },
+      { "text": "Sim: um dump inclui tudo o que fez commit antes de ele terminar", "why": "Essa é a imagem que uma cópia de arquivos sugere. Um dump lê um único snapshot, tirado quando ele começou." },
+      { "text": "Depende de o insert ter feito commit antes do fim do dump", "why": "A hora do commit depois do snapshot não importa: nada que faz commit depois das 14:00:00 fica visível para ele." }
+    ]
+  },
+  "ex-0pvspjst": {
+    "prompt": "Um dump noturno de quarenta minutos começa às 02:00. Às 02:10 uma migração roda `ALTER TABLE orders ADD COLUMN note text`. O que as consultas da aplicação em `orders` veem a partir das 02:10?",
+    "hint": "O ALTER precisa de um lock que o lock do dump recusa, e entra na fila.",
+    "choices": [
+      { "text": "Nada de diferente: o ALTER espera e todo o resto segue normalmente", "why": "O ALTER espera, e toda consulta que chega depois dele entra na fila atrás dele, porque ele é o primeiro da fila da tabela." },
+      { "text": "A coluna nova aparece no dump às 02:40", "why": "O dump lê o snapshot das 02:00; e a coluna nem pode ser adicionada até o dump liberar a tabela." },
+      { "text": "Esperam atrás do ALTER até o dump acabar, cerca de meia hora", "why": "Isso. O ALTER espera pelo lock do dump, e as consultas fazem fila atrás do ALTER: trinta minutos fora do ar que ninguém relata como erro." },
+      { "text": "O dump falha com um conflito de lock e o ALTER roda", "why": "O pg_dump segura o lock até o fim; é o ALTER que espera, não o dump que cede." }
+    ]
+  },
+  "ex-k358ejs2": {
+    "prompt": "Ligue cada formato ao que o descreve.",
+    "hint": "Só um deles é um script.",
+    "pairs": [
+      { "left": "`-Fp`, plain", "right": "Um script SQL, restaurado executando-o com o psql" },
+      { "left": "`-Fc`, custom", "right": "Um único arquivo compactado com um sumário" },
+      { "left": "`-Fd`, directory", "right": "Um arquivo por tabela, e o formato que o pg_dump consegue escrever em paralelo" },
+      { "left": "`-Ft`, tar", "right": "O formato directory empacotado num único arquivo sem compressão" }
+    ],
+    "right_distractors": [
+      "Uma cópia do diretório de dados, restaurada subindo o servidor"
+    ]
+  },
+  "ex-sfe88x7p": {
+    "prompt": "Um banco de 40 GB tem backup noturno em SQL puro. Alguém precisa recuperar uma tabela. O que o formato torna difícil?",
+    "hint": "Como um dump plain é restaurado?",
+    "choices": [
+      { "text": "Nada: o psql tem uma flag para rodar uma tabela de um script", "why": "O psql roda um script de cima a baixo. Tirar uma tabela dele significa editar o arquivo." },
+      { "text": "Achar a tabela, já que um dump plain não tem nomes de tabela", "why": "Os nomes estão lá, nas linhas CREATE TABLE; a dificuldade está em restaurar parte dele, não em achá-la." },
+      { "text": "Separar essa tabela à mão num script de 40 GB", "why": "Isso. Um dump custom ou directory deixaria o pg_restore -t ou -L pegar só essa tabela." },
+      { "text": "Lê-lo, porque o SQL puro é compactado", "why": "SQL puro é texto sem compressão, o único formato que uma pessoa consegue ler." }
+    ]
+  },
+  "ex-tncy9qes": {
+    "prompt": "O que `pg_restore -l shop.dump` imprime?",
+    "hint": "-l de list.",
+    "choices": [
+      { "text": "As linhas de todas as tabelas, como texto", "why": "Isso seriam os próprios dados. O -l lista o que o arquivo contém, uma entrada por linha." },
+      { "text": "Uma linha por coisa que a restauração faria", "why": "Isso. Editada e devolvida com -L, ela restaura exatamente as entradas que ficaram nela." },
+      { "text": "O SQL que uma restauração rodaria, em ordem, comando por comando", "why": "Isso é o que o pg_restore -f arquivo escreve: o script completo. O -l é uma lista bem mais curta." },
+      { "text": "As diferenças entre o arquivo e o banco em produção", "why": "O pg_restore não compara nada com um banco em produção." }
+    ]
+  },
+  "ex-nfcp6qbz": {
+    "prompt": "O dump plain do shop tinha 1937458 bytes e o custom 539121. Aproximadamente quantas vezes menor é o dump custom? Responda com uma casa decimal.",
+    "hint": "Divida.",
+    "unit": "vezes"
+  },
+  "ex-pgnmtye4": {
+    "prompt": "Num servidor criado há um minuto com `pg_createcluster`, `psql -p 5433 -d postgres` responde `role \"ana\" does not exist`. Por quê?",
+    "hint": "Onde moram os papéis?",
+    "choices": [
+      { "text": "A porta 5433 só aceita o papel postgres", "why": "Qualquer papel pode se conectar a qualquer porta; o servidor novo simplesmente ainda não tem um papel chamado ana." },
+      { "text": "Nada criou ana lá ainda", "why": "Isso. Os papéis pertencem ao servidor, e o seu papel é um global do antigo; nada o pôs no novo." },
+      { "text": "O dump do shop ainda não foi restaurado lá", "why": "Restaurar um dump também não o criaria: papéis nunca estão no dump de um banco." },
+      { "text": "O diretório de dados do servidor novo pertence a outro usuário", "why": "O diretório pertence a postgres nos dois servidores. Quais papéis existem é outra questão." }
+    ]
+  },
+  "ex-c6vdjvp4": {
+    "prompt": "Quantos erros o `pg_restore` ignorou ao restaurar o shop no servidor novo antes de os globais estarem lá?",
+    "hint": "Ele disse isso na última linha.",
+    "unit": "erros"
+  },
+  "ex-2adxtyp6": {
+    "prompt": "O `pg_restore` imprimiu quatro erros sobre papéis inexistentes e terminou com status 1. As linhas estão todas lá. Em que estado está o shop restaurado?",
+    "hint": "Quem é dono das tabelas, e o que shop_app consegue fazer?",
+    "choices": [
+      { "text": "Pronto: o que importa são as linhas, e estão todas lá", "why": "A aplicação entra como shop_app, que não existe lá, então é recusada na primeira consulta." },
+      { "text": "Vazio, porque o pg_restore desfaz tudo quando dá erro", "why": "Por padrão o pg_restore segue em frente depois de cada erro; nada foi desfeito." },
+      { "text": "Completo nos dados, errado em quem é dono e quem o usa", "why": "Isso. As tabelas pertencem a você, e shop_app não tem nem o papel nem as permissões." },
+      { "text": "Corrompido, e precisa ser apagado antes de qualquer coisa", "why": "Nada está corrompido. Os dados estão intactos; os papéis que faltam são um problema separado, que tem conserto." }
+    ]
+  },
+  "ex-4e1gf4xv": {
+    "prompt": "O arquivo de globais guarda a senha de `shop_app` como um hash SCRAM. O que isso significa para o arquivo?",
+    "hint": "Quem tiver um hash pode atacá-lo com toda a calma.",
+    "choices": [
+      { "text": "Nada: um hash não é a senha, então o arquivo pode ser compartilhado", "why": "Quem tiver o hash consegue testar senhas contra ele offline, pelo tempo que quiser." },
+      { "text": "A senha precisa ser trocada depois de cada restauração", "why": "O servidor restaurado aceita a senha antiga, porque compara com o mesmo hash." },
+      { "text": "É um segredo, a ser guardado com o mesmo cuidado dos dumps", "why": "Isso. O servidor restaurado aceita a senha sem que ninguém a conheça, e um atacante consegue trabalhar no hash offline." },
+      { "text": "Só um superusuário consegue restaurá-lo", "why": "Criar papéis exige os privilégios certos, mas isso não diz nada sobre como guardar o arquivo." }
+    ]
+  },
+  "ex-y4076j1b": {
+    "prompt": "Que par de comandos produz um backup completo de um servidor PostgreSQL com um único banco, `shop`, numa forma que pode ser restaurada seletivamente?",
+    "hint": "Um comando por escopo.",
+    "choices": [
+      { "text": "`pg_dumpall --globals-only` e `pg_dump -Fc shop`", "why": "Isso. Os globais em SQL, e o banco como um arquivo custom que o pg_restore consegue filtrar." },
+      { "text": "`pg_dump -Fc shop` e `pg_dump -Fd shop`", "why": "Duas cópias do mesmo banco em dois formatos, e ainda nenhum papel." },
+      { "text": "Só `pg_dumpall`", "why": "Ele é completo, mas é um único arquivo SQL puro: sem sumário, sem restauração seletiva, sem paralelismo." },
+      { "text": "Só `pg_dump -Fc shop`, que inclui os donos", "why": "Ele cita os donos em comandos ALTER e não os cria." }
+    ]
+  },
+  "ex-9ypcdvd6": {
+    "prompt": "`pg_restore -d scratch -t orders shop.dump` restaurou a tabela `orders`. O que ele deixou de fora?",
+    "hint": "O \\d orders em scratch mostrou.",
+    "choices": [
+      { "text": "As linhas: -t restaura só a definição", "why": "As linhas vieram junto; a cópia de volta tirou 12500 delas de scratch." },
+      { "text": "As chaves, o índice e o default de identidade", "why": "Isso. Eles são entradas separadas no sumário, e o -t pega só a tabela e os dados dela." },
+      { "text": "A restrição CHECK em total_cents", "why": "O CHECK sobreviveu: ele faz parte da própria definição da tabela." },
+      { "text": "Nada; a tabela é idêntica à do shop", "why": "O \\d não mostrou índices, nem chaves, nem default em id." }
+    ]
+  },
+  "ex-hj4nx60t": {
+    "prompt": "Por que restaurar os pedidos que faltam num banco separado, em vez de restaurar o dump inteiro por cima do shop?",
+    "hint": "O que mais aconteceu no shop desde o dump?",
+    "choices": [
+      { "text": "Desfaria também tudo o que foi escrito desde o dump", "why": "Isso. Lado a lado, as linhas antigas e as atuais podem ser comparadas, e só o que falta é copiado." },
+      { "text": "O pg_restore se recusa a restaurar num banco que já tem tabelas", "why": "Ele não se recusa; falha nos objetos que conflitam ou, com --clean, apaga-os antes. De um jeito ou de outro, os dados em produção correm risco." },
+      { "text": "O dump guarda só a tabela orders", "why": "O dump guarda o shop inteiro. A escolha de pegar duas tabelas foi nossa." },
+      { "text": "Um banco separado restaura mais rápido que o mesmo banco", "why": "A velocidade não é o motivo; a questão é não tocar nos dados em produção." }
+    ]
+  },
+  "ex-4fzx703n": {
+    "prompt": "Quantos pedidos o `DELETE` de Curitiba removeu?",
+    "hint": "O comando informou.",
+    "unit": "linhas"
+  },
+  "ex-jsvptegg": {
+    "prompt": "O dump é das 02:00. Às 16:00 alguém apaga os pedidos de Curitiba. Entre 02:00 e 16:00, quarenta pedidos de Curitiba tiveram o total corrigido. O que a cópia de volta a partir do dump faz com eles?",
+    "hint": "Qual versão de cada linha está no dump?",
+    "choices": [
+      { "text": "Restaura-os com os totais corrigidos", "why": "As correções aconteceram depois do dump; o dump nunca as viu." },
+      { "text": "Deixa-os de fora, já que mudaram depois do dump", "why": "Toda linha que existia às 02:00 está no dump e é copiada de volta, mudada ou não." },
+      { "text": "Falha neles, porque os ids já existem", "why": "Os ids estão livres: o DELETE removeu as linhas. A cópia dá certo." },
+      { "text": "Restaura-os com os totais que tinham às 02:00", "why": "Isso. As correções se perdem, e o conserto precisa de uma consulta que alguém confira, ou da restauração até 15:59 da lição 6." }
+    ]
+  },
+  "ex-36qnjfx7": {
+    "prompt": "O bigshop de 268 MB levou 7,3 segundos para restaurar. No mesmo ritmo, mais ou menos quantos segundos levaria um banco de 2680 MB?",
+    "hint": "Dez vezes o tamanho.",
+    "unit": "segundos"
+  },
+  "ex-z1hv2c6f": {
+    "prompt": "`pg_dump -Fd -j 2` foi quase nada mais rápido que um processo só no bigshop, enquanto `pg_restore -j 2` ganhou mais de um segundo. Por que a diferença?",
+    "hint": "Qual é a unidade de trabalho que um dump paralelo distribui?",
+    "choices": [
+      { "text": "Dumps paralelos precisam do formato custom para funcionar", "why": "É o contrário: só o formato directory pode ter dump em paralelo." },
+      { "text": "Dois processadores são poucos para ajudar um dump", "why": "Dois ajudam quando há duas tabelas grandes; o problema é que há uma só." },
+      { "text": "O dump divide o trabalho por tabela, e quase tudo está numa só", "why": "Isso. Um worker fez o dump de orders enquanto o outro ficou quase sem nada; a restauração tinha índices e chaves para montar lado a lado." },
+      { "text": "A restauração escreveu no segundo servidor, que é mais rápido", "why": "Os dois servidores estão na mesma máquina e no mesmo disco." }
+    ]
+  },
+  "ex-4n9cxern": {
+    "prompt": "Um shop tem dump toda noite às 02:00 e o disco dele falha às 18:00. Quantos dados se perdem, no melhor caso?",
+    "hint": "O que o dump contém?",
+    "choices": [
+      { "text": "Nada, se o dump for restaurado com cuidado", "why": "Cuidado na restauração não traz de volta linhas que nunca estiveram no arquivo." },
+      { "text": "As dezesseis horas desde o dump", "why": "Isso. Um dump é um único momento, e tudo depois dele fica fora do backup. A lição 4 fecha essa janela." },
+      { "text": "Só o que estava sendo escrito às 18:00", "why": "Essa é a perda com arquivamento contínuo, lição 4. Um dump noturno perde o dia inteiro." },
+      { "text": "Duas horas, o tempo que o dump levou", "why": "Quanto tempo o dump levou não decide o que ele contém." }
+    ]
+  },
+  "ex-draphzqy": {
+    "prompt": "Quais destes são motivos para manter dumps lógicos mesmo ao lado de backups físicos? Escolha todas as que se aplicam.",
+    "hint": "Pense em versões, tabelas avulsas e páginas danificadas.",
+    "choices": [
+      { "text": "Restaurar numa versão major mais nova do PostgreSQL", "why": "Isso. Um dump é SQL; uma cópia física só restaura na mesma versão major." },
+      { "text": "Restaurar um terabyte o mais rápido possível", "why": "É aí que os dumps são mais fracos: eles reconstroem cada índice e conferem cada chave." },
+      { "text": "Recuperar uma tabela sem restaurar um servidor", "why": "Isso. pg_restore -t, como fez a restauração seletiva." },
+      { "text": "Perceber uma página de dados danificada, porque o dump tem de ler cada linha", "why": "Isso. Uma cópia de arquivos copia o dano fielmente; um dump falha nele." }
+    ]
+  },
+  "ex-rs8r8s01": {
+    "prompt": "Um banco de 30 GB precisa ir do PostgreSQL 15 num servidor Intel para o PostgreSQL 16 num ARM, com o mínimo de indisponibilidade. Qual é o primeiro plano certo?",
+    "hint": "Só um tipo de cópia atravessa versões e processadores.",
+    "choices": [
+      { "text": "Um dump directory com -j, restaurado com -j, globais primeiro", "why": "Isso. Uma cópia lógica atravessa as duas coisas; o formato directory deixa as duas metades em paralelo." },
+      { "text": "Uma cópia do diretório de dados, iniciada no servidor novo", "why": "Uma cópia física só sobe na mesma versão major e no mesmo tipo de processador." },
+      { "text": "Um dump SQL puro mandado direto para o psql no servidor novo, de uma vez", "why": "Funcionaria, devagar e num processo só, e sem como recomeçar do meio." },
+      { "text": "Um dump custom restaurado sem os globais", "why": "Os globais precisam vir antes, ou os donos e as permissões falham como falharam nesta lição." }
+    ]
+  }
+}
