@@ -5,8 +5,8 @@ version: 1
 
 **An origin is three things taken together: the scheme, the host and the port.** A browser files
 every page under its origin, and it will not let a page read what another origin sends back unless
-that origin says it may. That rule is the same-origin policy, and CORS, the subject of the next three
-sections, is how a server says "it may".
+that origin says it may. That rule is the same-origin policy, and CORS, the subject of most of this
+lesson, is how a server says "it may".
 
 Take the page the next section gives you, `http://localhost:8080/page.html`. Its origin is
 `http://localhost:8080`, and the path plays no part. Against it:

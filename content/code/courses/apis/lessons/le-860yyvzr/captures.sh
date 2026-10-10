@@ -44,10 +44,10 @@ block start
 run "curl -s 'localhost:8001/distributor?wsdl' | head -3"
 
 block byhand
-run "curl -si localhost:8001/distributor $XML $ACTION --data-binary @getstock.xml"
+run "curl -si localhost:8001/distributor $XML $ACTION --data-binary @getstock.xml; echo"
 run "curl -s localhost:8001/distributor $XML $ACTION --data-binary @getstock.xml | xmllint --format -"
-run "curl -s localhost:8001/distributor $XML --data-binary @getstock.xml | xmllint --xpath 'string(//faultstring)' -; echo"
-run "sed 's/d:ISBN/ISBN/g' getstock.xml | curl -s localhost:8001/distributor $XML $ACTION --data-binary @- | xmllint --xpath 'string(//faultstring)' -; echo"
+run "curl -s localhost:8001/distributor $XML --data-binary @getstock.xml | xmllint --xpath 'string(//faultstring)' -"
+run "sed 's/d:ISBN/ISBN/g' getstock.xml | curl -s localhost:8001/distributor $XML $ACTION --data-binary @- | xmllint --xpath 'string(//faultstring)' -"
 
 block zeep
 run "python3 -m zeep 'http://127.0.0.1:8001/distributor?wsdl' | grep -v '^     xsd:'"
@@ -84,11 +84,11 @@ run 'curl -s localhost:8000/stock/9786500000016'
 block wsse
 run 'python3 wsse.py'
 run "python3 -c 'import zeep; s = zeep.Settings(); print(s.forbid_dtd, s.forbid_entities, s.forbid_external)'"
-run "{ echo '<!DOCTYPE x>'; cat getstock.xml; } | curl -s localhost:8001/distributor $XML $ACTION --data-binary @- | xmllint --xpath 'string(//faultstring)' -; echo"
+run "{ echo '<!DOCTYPE x>'; cat getstock.xml; } | curl -s localhost:8001/distributor $XML $ACTION --data-binary @- | xmllint --xpath 'string(//faultstring)' -"
 
 block down
 stop distributor
-run "curl -s -w '%{http_code}\n' localhost:8000/stock/9786500000016"
+run "curl -s -w '%{http_code} after %{time_total} s\n' localhost:8000/stock/9786500000016"
 
 block bridgelog
 log bridge

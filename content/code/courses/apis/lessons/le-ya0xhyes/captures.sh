@@ -91,19 +91,20 @@ run "curl -s -w '%{http_code}\n' -X POST localhost:8000/v1/books $JSONH -d '{\"i
 run "curl -s -w '%{http_code}\n' -X POST localhost:8000/v1/books $JSONH -d '{\"title\": '"
 run 'curl -si -X DELETE localhost:8000/v1/books/1'
 
-block pages
-run "curl -si 'localhost:8000/v1/books?limit=2'"
-run 'echo WyJpZCIsIDIsIDJd | base64 -d; echo'
-run "curl -s 'localhost:8000/v1/books?limit=2&after=WyJpZCIsIDIsIDJd' | jq -c '.items[].id, .next'"
-run "curl -s 'localhost:8000/v1/books?limit=2&after=WyJpZCIsIDQsIDRd' | jq -c '.items[].id, .next'"
-run "curl -s 'localhost:8000/v1/books?limit=500' | jq -r .detail"
-
 block drift
 run "sqlite3 shelf.db 'SELECT id, title FROM books ORDER BY id DESC LIMIT 2 OFFSET 0'"
 run "curl -s 'localhost:8000/v1/books?sort=-id&limit=2' | jq -c '.items[].id, .next'"
 run "curl -s -X POST localhost:8000/v1/books $JSONH -d '$BOOK' | jq -c '{id, title}'"
 run "sqlite3 shelf.db 'SELECT id, title FROM books ORDER BY id DESC LIMIT 2 OFFSET 2'"
 run "curl -s 'localhost:8000/v1/books?sort=-id&limit=2&after=WyItaWQiLCA1LCA1XQ' | jq -c '.items[].id, .next'"
+
+block pages
+run "curl -si 'localhost:8000/v1/books?limit=2'"
+run 'echo WyJpZCIsIDIsIDJd | base64 -d; echo'
+run "curl -s 'localhost:8000/v1/books?limit=2&after=WyJpZCIsIDIsIDJd' | jq -c '.items[].id, .next'"
+run "curl -s 'localhost:8000/v1/books?limit=2&after=WyJpZCIsIDQsIDRd' | jq -c '.items[].id, .next'"
+run "curl -s 'localhost:8000/v1/books?limit=2&after=WyJpZCIsIDYsIDZd' | jq -c '.items[].id, .next'"
+run "curl -s 'localhost:8000/v1/books?limit=500' | jq -r .detail"
 
 block filters
 run "curl -s 'localhost:8000/v1/books?author_id=1&sort=-year' | jq -c '.items[] | {id, title, year}'"

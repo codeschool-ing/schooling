@@ -42,13 +42,13 @@ run 'curl -si localhost:8000/me'
 run "sqlite3 shelf.db 'SELECT id_hash, user_id, expires FROM sessions'"
 run "awk '\$6 == \"sid\" {printf \"%s\", \$7}' jar.txt | sha256sum"
 
-block sess-wrong
-run "curl -s localhost:8000/login -H 'Content-Type: application/json' -d '{\"name\": \"ana\", \"password\": \"correct-hors\"}'"
-run "curl -s localhost:8000/login -H 'Content-Type: application/json' -d '{\"name\": \"anna\", \"password\": \"correct-horse\"}'"
-
 block sess-secure
 run "curl -si -c shop.txt --resolve shop.test:8000:127.0.0.1 http://shop.test:8000/login -H 'Content-Type: application/json' -d '{\"name\": \"bruno\", \"password\": \"battery-staple\"}'"
 run 'cat shop.txt'
+
+block sess-wrong
+run "curl -s localhost:8000/login -H 'Content-Type: application/json' -d '{\"name\": \"ana\", \"password\": \"correct-hors\"}'"
+run "curl -s localhost:8000/login -H 'Content-Type: application/json' -d '{\"name\": \"anna\", \"password\": \"correct-horse\"}'"
 
 block sess-logout
 run 'cp jar.txt kept.txt'

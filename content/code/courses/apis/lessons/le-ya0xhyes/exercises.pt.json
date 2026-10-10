@@ -1,0 +1,647 @@
+{
+  "ex-cjw3hz0n": {
+    "prompt": "Um double de 64 bits guarda exatamente todo número inteiro até 2 elevado a quanto?",
+    "hint": "O id da captura era um a mais que essa potência de dois.",
+    "unit": ""
+  },
+  "ex-709r32v7": {
+    "prompt": "Por que o catálogo envia um preço como `{\"amount_cents\": 3990, \"currency\": \"BRL\"}` e não como `39.90`?",
+    "hint": "Multiplique os dois por três.",
+    "choices": [
+      {
+        "text": "Porque o JSON não tem ponto decimal",
+        "why": "Tem: `39.90` é JSON válido. O problema é no que o leitor o transforma."
+      },
+      {
+        "text": "Porque centavos inteiros continuam exatos nas contas, e o número sozinho não diz a moeda",
+        "why": "Certo. `39.90 * 3` deu `119.69999999999999`, e `3990 * 3` deu `11970`. A moeda faz `3990` querer dizer reais."
+      },
+      {
+        "text": "Porque um objeto é menor para enviar",
+        "why": "É maior. O motivo é exatidão e significado, não tamanho."
+      },
+      {
+        "text": "Porque o SQLite guarda todo preço como um número inteiro de centavos, e a API copia a tabela",
+        "why": "A tabela guarda, mas o contrato não é a tabela. O cliente nunca vê a coluna."
+      }
+    ]
+  },
+  "ex-4pevss03": {
+    "prompt": "Um serviço dá a cada usuário um id aleatório de 64 bits e o envia como número JSON. Usuários do cliente web relatam que alguns links de perfil abrem o perfil de outra pessoa. Qual é a correção no contrato?",
+    "hint": "Quão grande é um número aleatório de 64 bits, e em que o navegador transforma números JSON?",
+    "choices": [
+      {
+        "text": "Enviar o id como string",
+        "why": "Certo. A maioria dos ids aleatórios de 64 bits passa de 2^53, então um cliente JavaScript os arredonda para um vizinho, que pode ser o id de outro usuário. Uma string chega intacta; o `id_str` do Twitter é esta correção."
+      },
+      {
+        "text": "Enviar o id com ponto decimal, como `1234.0`",
+        "why": "Para o parser continua sendo número, e continua virando double."
+      },
+      {
+        "text": "Pedir que o cliente web use um tipo inteiro de 64 bits ao ler o corpo",
+        "why": "O `JSON.parse` não tem essa opção; a precisão se perde antes que o código do cliente veja o valor. O contrato precisa evitar o problema, não pedir que todo cliente o contorne."
+      },
+      {
+        "text": "Trocar para ids sequenciais",
+        "why": "Isso só adia até a contagem passar de 2^53, e muda todos os ids existentes."
+      }
+    ]
+  },
+  "ex-9qk1z32e": {
+    "prompt": "Qual destes timestamps nomeia exatamente um momento?",
+    "hint": "Procure o deslocamento em relação ao UTC.",
+    "choices": [
+      {
+        "text": "`2026-10-10T01:23:39`",
+        "why": "Sem deslocamento: é a hora local de algum lugar, e o leitor precisa adivinhar onde."
+      },
+      {
+        "text": "`10/10/2026 01:23`",
+        "why": "Sem deslocamento, e o dia e o mês podem ser lidos nas duas ordens."
+      },
+      {
+        "text": "`2026-10-10T01:23:39-03:00`",
+        "why": "Certo. RFC 3339 com deslocamento: qualquer leitor o converte para UTC, `04:23:39Z`."
+      },
+      {
+        "text": "`2026-10-10 01:23:39 (server time)`",
+        "why": "Qual servidor, em que fuso? As palavras não dizem deslocamento nenhum."
+      }
+    ]
+  },
+  "ex-ncsxvx63": {
+    "prompt": "Ligue cada valor de `subtitle` ao que o contrato do catálogo diz que ele significa.",
+    "hint": "Três são respostas diferentes, e um é uma armadilha.",
+    "pairs": [
+      {
+        "left": "o campo está ausente",
+        "right": "não faz parte desta mensagem; numa atualização parcial, deixe como está"
+      },
+      {
+        "left": "`\"subtitle\": null`",
+        "right": "sabidamente sem valor"
+      },
+      {
+        "left": "`\"subtitles\": []`",
+        "right": "uma lista sem nada dentro"
+      },
+      {
+        "left": "`\"subtitle\": \"false\"`",
+        "right": "uma string não vazia, que a maioria dos leitores trata como verdadeira"
+      }
+    ],
+    "right_distractors": [
+      "o mesmo que o campo ausente"
+    ]
+  },
+  "ex-3skr9jv5": {
+    "prompt": "O catálogo começa a vender em euros, e um cliente escrito no ano passado recebe `\"currency\": \"EUR\"` pela primeira vez. O que um cliente bem escrito deve fazer?",
+    "hint": "O contrato disse que o conjunto pode crescer.",
+    "choices": [
+      {
+        "text": "Falhar a requisição, já que o valor não está na lista dele",
+        "why": "Isso transforma a novidade do servidor numa pane do cliente."
+      },
+      {
+        "text": "Tratar o preço como reais, a única moeda que ele conhece",
+        "why": "Isso mostra um preço errado com confiança, o que é pior que não mostrar nenhum."
+      },
+      {
+        "text": "Pedir ao servidor a versão que só tem reais",
+        "why": "Acrescentar um valor a um enum documentado como aberto não é mudança incompatível, então essa versão não existe."
+      },
+      {
+        "text": "Tratar como moeda desconhecida e seguir",
+        "why": "Certo. Um valor que ele nunca viu é \"outra coisa\", não um erro."
+      }
+    ]
+  },
+  "ex-0df0968f": {
+    "prompt": "Uma API já devolve `/books` como um array JSON puro, e os clientes percorrem esse array. Agora ela precisa dizer onde está a próxima página. Qual caminho não quebra nenhum deles?",
+    "hint": "Que parte da resposta pode crescer sem mudar o tipo do corpo?",
+    "choices": [
+      {
+        "text": "Embrulhar o array como `{\"items\": [...], \"next\": ...}`",
+        "why": "Certo para uma API nova, e uma mudança incompatível para esta: o corpo deixa de ser array, e todo laço sobre ele falha."
+      },
+      {
+        "text": "Pôr o endereço seguinte num cabeçalho `Link`",
+        "why": "Certo. O corpo mantém o formato, e um cabeçalho é informação nova que clientes antigos ignoram. É também por isso que o catálogo embrulhou as listas desde o início."
+      },
+      {
+        "text": "Acrescentar o endereço como último elemento do array",
+        "why": "Todo cliente passa a encontrar uma string onde esperava um livro."
+      },
+      {
+        "text": "Acrescentar um campo `next` a cada livro",
+        "why": "Não quebra nada, e põe um fato sobre a página dentro de cada item, onde ele não pertence."
+      }
+    ]
+  },
+  "ex-nfb75yms": {
+    "prompt": "Um cliente envia um livro com `\"pirce\"` em vez de `\"price\"`. O que o `additionalProperties: false` do `book.schema.json` faz o catálogo fazer?",
+    "hint": "Sem ele, um campo a mais simplesmente não é olhado.",
+    "choices": [
+      {
+        "text": "Recusar o livro e dizer qual campo era inesperado",
+        "why": "Certo. E com `price` ausente, a mesma resposta também diz que ele é obrigatório: os dois erros num só 422."
+      },
+      {
+        "text": "Criar o livro e descartar o `pirce`",
+        "why": "É o que acontece sem a palavra-chave, e o cliente acha que definiu um preço."
+      },
+      {
+        "text": "Renomear para `price` e seguir",
+        "why": "Um validador não adivinha o que o cliente quis dizer; ele relata."
+      },
+      {
+        "text": "Responder 500, já que o servidor não consegue entender um campo que não conhece",
+        "why": "O servidor leu sem problema. A requisição está errada, o que é um 4xx."
+      }
+    ]
+  },
+  "ex-2rdm4rst": {
+    "prompt": "No JSON Schema, a palavra-chave `___` lista os campos sem os quais um objeto não é aceito.",
+    "hint": "`stock` não está nessa lista no `book.schema.json`.",
+    "blanks": [
+      {
+        "accept": [
+          "required"
+        ]
+      }
+    ]
+  },
+  "ex-kp10j6gv": {
+    "prompt": "Quais destes corpos o `book.schema.json` recusa? Marque todos que se aplicam.",
+    "hint": "Confira o tipo e o enum de cada campo, e o que `integer` quer dizer.",
+    "choices": [
+      {
+        "text": "Um livro correto cujo preço tem `\"currency\": \"EUR\"`",
+        "why": "Certo. Hoje o enum tem só `BRL`."
+      },
+      {
+        "text": "Um livro correto sem o campo `stock`",
+        "why": "`stock` não está em `required`; o próprio `catalogue.py` põe 0 ali."
+      },
+      {
+        "text": "Um livro correto com `\"amount_cents\": 3990.0`",
+        "why": "Passou na captura: `integer` quer dizer um número sem parte fracionária."
+      },
+      {
+        "text": "Um livro correto com o ISBN enviado como o número `9786500000078`",
+        "why": "Certo. O schema pede uma string; um número falha em `type` antes mesmo de o `pattern` ser testado."
+      }
+    ]
+  },
+  "ex-wytr2387": {
+    "prompt": "Por que o `catalogue.py` é um programa separado, e não uma nova versão do `rest.py` sob o mesmo `/v1`?",
+    "hint": "Compare as duas respostas para o livro 1.",
+    "choices": [
+      {
+        "text": "Porque o Python não roda dois handlers num arquivo",
+        "why": "Roda; o `rest.py` já serve duas versões. O motivo é o contrato."
+      },
+      {
+        "text": "Porque o preço dele é um objeto, o que quebra todo cliente que lê `price_cents`",
+        "why": "Certo. No mesmo endereço, isso é mudança incompatível; como versão do `rest.py`, iria para `/v2`."
+      },
+      {
+        "text": "Porque ele usa outro banco de dados, então os dois programas não poderiam dividir as mesmas linhas",
+        "why": "Ele usa o mesmo `shelf.db`, pelo mesmo `db.py`."
+      },
+      {
+        "text": "Porque acrescentar `in_stock` é uma mudança incompatível",
+        "why": "Um campo acrescentado a uma resposta não quebra leitor tolerante. O preço é a mudança que quebra."
+      }
+    ]
+  },
+  "ex-t6rf3r51": {
+    "prompt": "O `book.schema.json` sumiu de `~/shelf`. Quando o `catalogue.py` falha?",
+    "hint": "Em que ponto do arquivo o schema é aberto?",
+    "choices": [
+      {
+        "text": "No primeiro POST",
+        "why": "Seria assim se ele abrisse o arquivo a cada requisição. Ele o lê uma vez, antes de o servidor começar."
+      },
+      {
+        "text": "Na partida, antes de responder a alguém",
+        "why": "Certo. O arquivo é lido na importação, então o programa para com erro em vez de atender metade das rotas."
+      },
+      {
+        "text": "Nunca; ele pula a validação",
+        "why": "Pular a conferência em silêncio é a falha que a leitura na partida existe para evitar."
+      },
+      {
+        "text": "No primeiro GET",
+        "why": "O GET nunca toca no schema, e o servidor nem teria iniciado."
+      }
+    ]
+  },
+  "ex-jbxtv2ch": {
+    "prompt": "Em qual membro de um objeto de problem details o código do cliente deve se basear para decidir?",
+    "hint": "Um é para programas, dois são para pessoas.",
+    "choices": [
+      {
+        "text": "`detail`",
+        "why": "Descreve esta ocorrência para uma pessoa e pode mudar a cada vez."
+      },
+      {
+        "text": "`title`",
+        "why": "É o mesmo em toda ocorrência, mas é texto, e texto é editado."
+      },
+      {
+        "text": "`instance`",
+        "why": "Identifica uma ocorrência, então é diferente a cada vez."
+      },
+      {
+        "text": "`type`",
+        "why": "Certo. Uma URI que nomeia o tipo de problema e não muda."
+      }
+    ]
+  },
+  "ex-s7hzb67x": {
+    "prompt": "Ligue cada membro de um corpo de problem details ao que ele serve.",
+    "hint": "Pergunte quem lê, e se muda entre ocorrências.",
+    "pairs": [
+      {
+        "left": "`type`",
+        "right": "nomeia o tipo de problema, para o código"
+      },
+      {
+        "left": "`title`",
+        "right": "resume o tipo, sempre igual"
+      },
+      {
+        "left": "`detail`",
+        "right": "explica esta ocorrência para uma pessoa"
+      },
+      {
+        "left": "`instance`",
+        "right": "identifica esta ocorrência"
+      }
+    ],
+    "right_distractors": [
+      "carrega o stack trace, para depuração"
+    ]
+  },
+  "ex-qc9d7r3r": {
+    "prompt": "Um corpo de erro no formato da RFC 9457 é enviado com o tipo de mídia `application/___+json`.",
+    "hint": "A palavra que o título da RFC usa para o que deu errado.",
+    "blanks": [
+      {
+        "accept": [
+          "problem"
+        ]
+      }
+    ]
+  },
+  "ex-pp9nvaxy": {
+    "prompt": "O `catalogue.py` responde a um livro inexistente com `\"type\": \"about:blank\"` e status 404. Qual deve ser o `title`?",
+    "hint": "`about:blank` diz que o problema não é mais que o código de status.",
+    "choices": [
+      {
+        "text": "`there is no book 99`",
+        "why": "Esse é o `detail`, que descreve esta ocorrência."
+      },
+      {
+        "text": "`Not Found`",
+        "why": "Certo. Com `about:blank`, o título é o próprio nome do código de status."
+      },
+      {
+        "text": "`/v1/books/99`",
+        "why": "Esse é o `instance`, que diz qual ocorrência foi."
+      },
+      {
+        "text": "`about:blank`",
+        "why": "Esse é o tipo. O título diz, em palavras, o que o tipo é."
+      }
+    ]
+  },
+  "ex-pn0xm3km": {
+    "prompt": "Uma coleção de livros com ids de 1 a 10 é listada do mais novo para o mais antigo, três por página, por offset. Um cliente lê a primeira página; então os livros 11 e 12 são acrescentados; então ele pede `offset=3`. Qual é o id do primeiro livro da segunda página dele?",
+    "hint": "Escreva a lista de novo depois da inserção e conte três posições.",
+    "unit": ""
+  },
+  "ex-fhx10fxg": {
+    "prompt": "Por que a segunda página por cursor, na captura, não mostra o livro 5 de novo depois que o livro 7 entrou?",
+    "hint": "O que cada um põe na consulta?",
+    "choices": [
+      {
+        "text": "Porque o servidor lembrou quais livros este cliente em particular já tinha recebido antes",
+        "why": "O `catalogue.py` não guarda estado por cliente; tudo o que precisa está no link."
+      },
+      {
+        "text": "Porque o cursor pede ids abaixo de 5, um valor que uma inserção não move",
+        "why": "Certo. Um offset conta posições, e a inserção moveu todas as posições em uma."
+      },
+      {
+        "text": "Porque o livro 7 ainda não estava gravado",
+        "why": "Estava: a consulta por offset o viu e foi empurrada por ele."
+      },
+      {
+        "text": "Porque cursores ordenam em ordem crescente",
+        "why": "As duas caminhadas eram do mais novo para o mais antigo, `sort=-id`."
+      }
+    ]
+  },
+  "ex-49peyp9v": {
+    "prompt": "Ponha em ordem a caminhada de um cliente pelo catálogo inteiro.",
+    "hint": "Ele nunca monta um cursor por conta própria.",
+    "items": [
+      "Pedir `/v1/books?limit=2`",
+      "Ler os livros em `items`",
+      "Pegar o endereço em `next`",
+      "Pedir esse endereço",
+      "Parar quando `next` for `null`"
+    ],
+    "trap": "Montar o próximo endereço a partir de um offset é o passo que o cursor existe para eliminar."
+  },
+  "ex-vagydr7z": {
+    "prompt": "`echo WyJpZCIsIDIsIDJd | base64 -d` imprimiu `[\"id\", 2, 2]`. O que quer dizer o contrato chamar o cursor de opaco?",
+    "hint": "Ele acabou de ser decodificado, então não é sobre esconder.",
+    "choices": [
+      {
+        "text": "Que ele é cifrado",
+        "why": "Base64 é uma codificação, e o `base64 -d` a desfez sem chave nenhuma."
+      },
+      {
+        "text": "Que vale para uma requisição só e depois expira",
+        "why": "Nada nele expira; o mesmo link deu a mesma página na captura."
+      },
+      {
+        "text": "Que os clientes o copiam de `next` sem montá-lo nem lê-lo",
+        "why": "Certo. Opaco é uma promessa sobre quem depende do formato, o que deixa o servidor livre para mudar o que vai dentro. Não é segredo."
+      },
+      {
+        "text": "Que guarda a posição da página como um número, do jeito que um offset faz",
+        "why": "Guarda os valores da última linha, e é exatamente isso que o torna diferente de um offset."
+      }
+    ]
+  },
+  "ex-q7j8j6p2": {
+    "prompt": "Por que o `catalogue.py` liga nomes de ordenação a colunas por meio de `SORTS`, em vez de pôr o parâmetro `sort` no `ORDER BY`?",
+    "hint": "O que um marcador `?` pode carregar no SQL?",
+    "choices": [
+      {
+        "text": "Porque o SQLite não ordena por uma coluna de texto como o título",
+        "why": "Ele ordenou por `title` na captura."
+      },
+      {
+        "text": "Porque nomes de coluna não podem ser parâmetros, e o texto iria para o SQL",
+        "why": "Certo. Só nomes do dicionário são aceitos, e só a coluna de cada um chega à consulta."
+      },
+      {
+        "text": "Porque ordenar um dicionário do Python é mais rápido que pedir ao SQLite para ordenar as linhas",
+        "why": "A ordenação continua no SQL. O dicionário decide só qual coluna."
+      },
+      {
+        "text": "Porque a query string diferencia maiúsculas e as colunas não",
+        "why": "Maiúsculas não têm nada a ver; a questão é o que chega ao texto do SQL."
+      }
+    ]
+  },
+  "ex-6prhef0e": {
+    "prompt": "Um cliente pede `/v1/books?auther_id=1`. Por que um 400 é melhor para ele que um 200 com todos os livros?",
+    "hint": "Olhe a grafia do parâmetro.",
+    "choices": [
+      {
+        "text": "Um 200 com todos os livros parece filtrado, e o erro passa despercebido",
+        "why": "Certo. A recusa diz qual parâmetro não reconheceu, e o cliente corrige de primeira."
+      },
+      {
+        "text": "Porque um 400 é menor e mais rápido de enviar que uma lista com todos os livros",
+        "why": "Velocidade não é a questão; uma resposta errada que parece certa é."
+      },
+      {
+        "text": "Porque parâmetros desconhecidos são um risco de segurança que o servidor precisa barrar",
+        "why": "Um parâmetro ignorado não faz nada. O dano é o cliente agir sobre dados que não pediu."
+      },
+      {
+        "text": "Porque o HTTP proíbe parâmetros de query que o servidor não conhece",
+        "why": "O HTTP não diz nada sobre eles; é uma decisão do contrato."
+      }
+    ]
+  },
+  "ex-yyrfm897": {
+    "prompt": "Você remove o `, id` que o `catalogue.py` acrescenta depois da coluna de ordenação e pagina com `sort=year` e `limit=1`. Dois livros têm o mesmo ano. O que pode dar errado?",
+    "hint": "O que o cursor guarda, e o que o SQL promete sobre linhas empatadas?",
+    "choices": [
+      {
+        "text": "Nada, porque os anos já voltam do SQLite em ordem crescente",
+        "why": "Os anos estão; os dois livros do mesmo ano não, e o SQL pode devolvê-los em qualquer ordem."
+      },
+      {
+        "text": "O servidor recusa a ordenação como impossível",
+        "why": "`year` está em `SORTS`; a lista permitida não tem nada a ver com empates."
+      },
+      {
+        "text": "O cursor deixa de ser opaco",
+        "why": "Opacidade é sobre quem lê o cursor, não sobre o que há na ordenação."
+      },
+      {
+        "text": "Um dos dois corre o risco de ser pulado ou repetido, já que nada ordena o empate",
+        "why": "Certo. Com só o ano no cursor, \"depois de 1891\" pula os dois livros de 1891, ou a ordem entre eles muda de uma requisição para outra."
+      }
+    ]
+  },
+  "ex-c6zjk5by": {
+    "prompt": "Ponha em ordem um POST que sobrevive a uma resposta perdida.",
+    "hint": "A chave existe antes da primeira tentativa.",
+    "items": [
+      "O cliente cria uma chave nova para esta operação",
+      "Ele envia o POST com a chave",
+      "O servidor cria o livro e guarda a chave com a resposta, numa transação",
+      "A resposta se perde e o cliente estoura o tempo",
+      "Ele envia o mesmo POST com a mesma chave",
+      "O servidor encontra a chave e repete o 201 guardado"
+    ],
+    "trap": "Criar uma chave nova para a nova tentativa a transforma numa segunda operação, que é o que a chave existia para impedir."
+  },
+  "ex-gyf74mpf": {
+    "prompt": "Um cliente reutiliza a chave `3f1c9a2e-alienista`, já guardada com um livro, numa requisição com outro preço. O que o catálogo responde?",
+    "hint": "As impressões digitais diferem.",
+    "choices": [
+      {
+        "text": "201, com o livro guardado",
+        "why": "Essa é a resposta a uma nova tentativa com o mesmo corpo. Repeti-la aqui diria ao cliente que o preço novo foi aceito."
+      },
+      {
+        "text": "201, com um segundo livro",
+        "why": "Isso faria a chave não significar nada."
+      },
+      {
+        "text": "422, e nada é feito",
+        "why": "Certo. A mesma chave com outro corpo é um bug do cliente, e o rascunho do cabeçalho dá a isso o 422."
+      },
+      {
+        "text": "409, até a primeira requisição terminar",
+        "why": "O 409 é para uma chave cuja primeira requisição ainda está rodando. Esta terminou faz tempo."
+      }
+    ]
+  },
+  "ex-4arxpfyj": {
+    "prompt": "Quando o `catalogue.py` responde a uma nova tentativa com a resposta guardada, ele acrescenta o cabeçalho `___: true`.",
+    "hint": "O mesmo cabeçalho que o Stripe envia.",
+    "blanks": [
+      {
+        "accept": [
+          "Idempotent-Replayed"
+        ]
+      }
+    ]
+  },
+  "ex-52b5q5vq": {
+    "prompt": "A API de uma loja insere cada pedido no banco de dados e depois, num passo separado, grava a chave de idempotência num cache. O processo cai entre os dois passos, e o cliente tenta de novo com a mesma chave. O que acontece?",
+    "hint": "Pedidos não têm ISBN.",
+    "choices": [
+      {
+        "text": "A nova tentativa é recusada com 422",
+        "why": "O 422 precisa de uma chave guardada com outra impressão. Aqui não há chave guardada nenhuma."
+      },
+      {
+        "text": "A nova tentativa é repetida a partir do cache",
+        "why": "A queda veio antes de a chave chegar ao cache, então não há o que repetir."
+      },
+      {
+        "text": "O banco de dados recusa o segundo pedido como duplicado",
+        "why": "Só se algo no pedido for único, e dois pedidos de um cliente podem ser idênticos."
+      },
+      {
+        "text": "O servidor não encontra a chave e cria o pedido pela segunda vez",
+        "why": "Certo. É por isso que o `catalogue.py` grava o livro e a chave numa transação: ou os dois existem ou nenhum."
+      }
+    ]
+  },
+  "ex-eprhma3s": {
+    "prompt": "Quais destas mudanças quebram um cliente tolerante? Marque todas que se aplicam.",
+    "hint": "Um cliente tolerante lê o que precisa e ignora o resto.",
+    "choices": [
+      {
+        "text": "Acrescentar `ships_today` a todo livro de uma resposta",
+        "why": "Ele só lê o que precisa, então um campo novo é invisível para ele."
+      },
+      {
+        "text": "Renomear `title` para `name`",
+        "why": "Certo. Quem lia `title` passa a não ler nada, por mais tolerante que seja."
+      },
+      {
+        "text": "Tornar `stock` obrigatório nos corpos de POST",
+        "why": "Certo. Clientes antigos nunca o enviaram, e as requisições deles passam a ser recusadas."
+      },
+      {
+        "text": "Acrescentar um filtro `year` a `/v1/books`",
+        "why": "Nada antigo o usa."
+      }
+    ]
+  },
+  "ex-awsm92d0": {
+    "prompt": "`in_stock` passa a significar \"pode ser enviado hoje\" em vez de \"pelo menos um exemplar\", com o mesmo nome e tipo. Por que esta é a mudança mais perigosa da tabela?",
+    "hint": "Pergunte o que falharia.",
+    "choices": [
+      {
+        "text": "Porque booleanos não podem ser versionados",
+        "why": "Qualquer campo pode ir para uma versão nova; o problema é que ninguém vê motivo para isso."
+      },
+      {
+        "text": "Porque a validação do schema passa a falhar em toda resposta",
+        "why": "Ela passa: continua booleano, no mesmo lugar. Esse é o problema."
+      },
+      {
+        "text": "Porque nada falha: todo cliente continua funcionando e age sobre um fato que mudou",
+        "why": "Certo. Uma renomeação quebra com barulho; um significado novo sob um nome antigo quebra em silêncio. Ele merece um nome novo, `ships_today`."
+      },
+      {
+        "text": "Porque muda o código de status",
+        "why": "O status continua 200. Nada visível muda, e esse é o perigo."
+      }
+    ]
+  },
+  "ex-nz41ms6r": {
+    "prompt": "Um cliente confere todo livro que recebe contra um schema com `additionalProperties: false`, e o catálogo depois acrescenta um campo. O que acontece?",
+    "hint": "A captura recusou seis campos de que o cliente nunca precisou.",
+    "choices": [
+      {
+        "text": "Continua funcionando, e a mesma regra serve aos dois lados",
+        "why": "Para de funcionar: a captura recusou o livro com saída 1."
+      },
+      {
+        "text": "Falha; a regra serve ao que o servidor aceita, não ao que o cliente lê",
+        "why": "Certo. Na entrada, um campo desconhecido é erro do cliente; na saída, é melhoria do servidor."
+      },
+      {
+        "text": "Falha, e o servidor deveria ter lançado uma versão nova por causa do campo",
+        "why": "Acrescentar um campo é justamente a mudança que não precisa de versão. O defeito é a rigidez do cliente."
+      },
+      {
+        "text": "Continua funcionando, porque o parser de JSON descarta qualquer campo que ninguém pediu",
+        "why": "O parser mantém todos os campos; é o schema que os recusa."
+      }
+    ]
+  },
+  "ex-rp68my81": {
+    "prompt": "Ponha as verificações que o `catalogue.py` faz num POST na ordem em que ele as faz.",
+    "hint": "As recusas mais baratas vêm primeiro, e nada é guardado antes de o corpo ser conhecido como bom.",
+    "items": [
+      "O caminho é `/v1/books`?",
+      "O corpo está rotulado como `application/json`?",
+      "O corpo é JSON válido?",
+      "Ele passa no `book.schema.json`?",
+      "A chave de idempotência já foi vista?",
+      "O banco de dados aceita a linha nova?"
+    ],
+    "trap": "Procurar a chave antes de validar deixaria um corpo malformado chegar à lógica da tabela de chaves."
+  },
+  "ex-689h4zkn": {
+    "prompt": "Depois das capturas desta lição, a estante tem os livros de 1 a 8. Um cliente percorre `/v1/books?limit=3` desde o início, seguindo `next`. Quantas requisições ele faz até receber `\"next\": null`, contando a que o devolve?",
+    "hint": "Três, três, e o que sobrar.",
+    "unit": "requisições"
+  },
+  "ex-s7sxdq2r": {
+    "prompt": "O POST de um livro, feito por um cliente, estoura o tempo. Ele tenta de novo sem chave de idempotência e recebe um 409 com o tipo `.../duplicate-isbn`. O que ele pode concluir?",
+    "hint": "O que o 409 sabe sobre quem criou o livro?",
+    "choices": [
+      {
+        "text": "Que a primeira tentativa deu certo e o livro que enviou agora está no catálogo",
+        "why": "Outro cliente pode ter criado um livro com esse ISBN; o 409 não diz de quem é."
+      },
+      {
+        "text": "Que a primeira tentativa falhou",
+        "why": "Se tivesse falhado, o ISBN provavelmente estaria livre e a nova tentativa teria recebido 201."
+      },
+      {
+        "text": "Que algum livro tem o ISBN, não se a própria requisição o criou",
+        "why": "Certo. O `type` responde à pergunta que lhe foi feita. Uma chave teria respondido à pergunta real do cliente com o 201 guardado."
+      },
+      {
+        "text": "Que o servidor caiu por um momento e o cliente deve tentar mais tarde",
+        "why": "Voltou um 4xx com corpo de problema, então o servidor está de pé; tentar de novo igual dá o mesmo 409."
+      }
+    ]
+  },
+  "ex-eqwftpx3": {
+    "prompt": "Ligue cada sintoma à regra desta lição que o evita.",
+    "hint": "Uma regra por seção.",
+    "pairs": [
+      {
+        "left": "um livro aparece duas vezes ao paginar",
+        "right": "páginas por cursor, não por offset"
+      },
+      {
+        "left": "um total com um centavo a menos",
+        "right": "dinheiro em centavos inteiros com moeda"
+      },
+      {
+        "left": "um erro de digitação num filtro devolve o catálogo inteiro",
+        "right": "recusar parâmetros de query que a API não conhece"
+      },
+      {
+        "left": "um POST repetido cria dois pedidos",
+        "right": "uma chave de idempotência guardada com a resposta"
+      }
+    ],
+    "right_distractors": [
+      "`additionalProperties: false` em toda resposta que o cliente lê"
+    ]
+  }
+}

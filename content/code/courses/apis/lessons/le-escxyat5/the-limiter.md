@@ -1,7 +1,15 @@
 ---
-title: x
+title: The limiter
 version: 1
 ---
+
+**`limits.py` is a second API in front of the same books: it asks every request for a key, charges
+the key's bucket, and only then reads the database.** It answers three addresses, `/books`,
+`/books/<id>` and `/search?q=`, and it is a separate program rather than a change to `rest.py` so
+that the lesson 1 API stays as it was.
+
+It needs only what lesson 1 set up, `db.py` in `~/shelf`. Save the file as `~/shelf/limits.py` in
+the editor, as you did `rest.py`:
 
 ```schooling-example
 {
@@ -47,3 +55,71 @@ version: 1
   ]
 }
 ```
+
+## The headers it sends
+
+How a server tells a client about its limits has never been standardised, and every API invented
+its own names: `X-RateLimit-Limit`, `X-RateLimit-Remaining` and `X-RateLimit-Reset` are the most
+common, with the reset sometimes a number of seconds and sometimes a time on the clock. The IETF's
+HTTP API working group has been writing a standard for it, **`RateLimit header fields for HTTP`**,
+and it is still an Internet-Draft, not an RFC. Its early versions used three fields named
+`RateLimit-Limit`, `RateLimit-Remaining` and `RateLimit-Reset`; the version current when this
+lesson was written, in 2026, uses two, and `limits.py` sends those:
+
+| field | example | says |
+|---|---|---|
+| `RateLimit-Policy` | `"burst";q=10;w=10` | each policy by name: `q` units allowed per `w` seconds. It does not change from one answer to the next |
+| `RateLimit` | `"burst";r=8;t=1` | how much is left now: `r` units available for the next `t` seconds |
+| `Retry-After` | `1` | on a refusal only: how many seconds to wait. This one is a standard, in HTTP itself |
+
+Because it is a draft, the names can still change, and a client cannot count on any API sending
+them. **`Retry-After` and the status `429` are the parts a client can rely on**: `429 Too Many
+Requests` has been a standard status since 2012, and `Retry-After` is defined by HTTP itself.
+
+## Running it
+
+Stop `rest.py` with `Ctrl+C` in the second terminal, since both want port 8000, and start this one
+there instead:
+
+```sh
+cd ~/shelf && python3 limits.py
+```
+
+It prints `limits (bucket) on http://127.0.0.1:8000`. A request with no key is refused before
+anything is counted, and one with a key is served:
+
+```
+ana@api:~/shelf$ curl -s localhost:8000/books
+{"error": "send a valid X-API-Key header"}
+ana@api:~/shelf$ curl -s -H 'X-API-Key: demo-bia' localhost:8000/books
+[{"id": 1, "title": "Dom Casmurro"}, {"id": 2, "title": "Memórias Póstumas de Brás Cubas"}, {"id": 3, "title": "A Hora da Estrela"}, {"id": 4, "title": "Perto do Coração Selvagem"}, {"id": 5, "title": "Ensaio sobre a Cegueira"}, {"id": 6, "title": "Americanah"}]
+```
+
+With `-i`, the headers of one book:
+
+```
+ana@api:~/shelf$ curl -si -H 'X-API-Key: demo-bia' localhost:8000/books/3
+HTTP/1.1 200 OK
+Server: BaseHTTP/0.6 Python/3.12.3
+Date: Sat, 10 Oct 2026 04:30:11 GMT
+Content-Type: application/json
+Content-Length: 61
+RateLimit-Policy: "burst";q=10;w=10, "daily";q=5000;w=86400
+RateLimit: "burst";r=8;t=1, "daily";r=4998;t=70189
+
+{"id": 3, "title": "A Hora da Estrela", "price_cents": 3490}
+```
+
+Two policies in each header, separated by a comma. `burst` is the bucket: ten tokens, ten seconds to
+fill from empty, and eight left: this was the key's second request, too soon after the first for
+a whole token to have come back. `daily` is the quota, 5,000 a day for the free tier, and its `t` is the number
+of seconds until midnight UTC, when the day's count starts again. Both requests from this key
+spent one unit from each.
+
+The three keys, and what each one is for in the rest of the lesson:
+
+| key | tier | bucket | daily quota |
+|---|---|---|---|
+| `demo-ana` | trial | 10, refilled at 1 a second | 20 |
+| `demo-bia` | free | 10, refilled at 1 a second | 5,000 |
+| `demo-caio` | pro | 100, refilled at 10 a second | 500,000 |

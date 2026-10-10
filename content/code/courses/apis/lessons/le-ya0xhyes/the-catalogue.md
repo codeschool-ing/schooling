@@ -3,6 +3,15 @@ title: The catalogue
 version: 1
 ---
 
+**`catalogue.py` is the same bookshop's API written again with the contract in mind.** It serves the
+same books from the same `shelf.db`, through `db.py`, and it puts this lesson's decisions into code:
+the shapes of the previous sections, the schema, errors a program can read, pages, filters and
+idempotency keys. It does not replace `rest.py`, which stays as lesson 1 left it; it sits beside it.
+
+It answers on the same port, 8000, so only one of the two can run at a time. In the second
+terminal, stop `rest.py` with `Ctrl+C`. Then, in the first, open the editor with `nano catalogue.py`,
+paste the file below, and save it. The copy button takes the whole program without the notes.
+
 ```schooling-example
 {
   "language": "python",
@@ -79,3 +88,64 @@ version: 1
   ]
 }
 ```
+
+The program needs `book.schema.json` from the previous section beside it. Start it in the second
+terminal:
+
+```sh
+cd ~/shelf && python3 catalogue.py
+```
+
+It prints one line and waits, and from then on each request adds one line below it, as `rest.py`
+did:
+
+```
+catalogue on http://127.0.0.1:8000
+127.0.0.1 - - [10/Oct/2026 01:29:41] "GET /v1/books/1 HTTP/1.1" 200 -
+```
+
+It has three routes:
+
+| method and path | what it does |
+|---|---|
+| `GET /v1/books/{id}` | one book |
+| `GET /v1/books` | a page of books; takes `author_id`, `in_stock`, `sort`, `limit` and `after` |
+| `POST /v1/books` | creates a book that passes the schema; takes an optional `Idempotency-Key` header |
+
+## The same book, twice
+
+Lesson 1's `rest.py` answered for the first book like this:
+
+```
+ana@api:~/shelf$ curl -s localhost:8000/v1/books/1
+{"id": 1, "isbn": "9786500000016", "title": "Dom Casmurro", "author_id": 1, "year": 1899, "price_cents": 3990, "stock": 12}
+```
+
+`catalogue.py` answers for the same row, once as it arrives and once through `jq .`, which indents
+it:
+
+```
+ana@api:~/shelf$ curl -s localhost:8000/v1/books/1
+{"id": 1, "isbn": "9786500000016", "title": "Dom Casmurro", "author_id": 1, "year": 1899, "price": {"amount_cents": 3990, "currency": "BRL"}, "stock": 12, "in_stock": true}
+ana@api:~/shelf$ curl -s localhost:8000/v1/books/1 | jq .
+{
+  "id": 1,
+  "isbn": "9786500000016",
+  "title": "Dom Casmurro",
+  "author_id": 1,
+  "year": 1899,
+  "price": {
+    "amount_cents": 3990,
+    "currency": "BRL"
+  },
+  "stock": 12,
+  "in_stock": true
+}
+```
+
+Two things changed. The price is an object carrying its currency, and `in_stock` is a boolean
+worked out from `stock`. **Both are breaking changes for a client of `rest.py`**: one reading
+`price_cents` finds nothing. That is why the catalogue is a separate program rather than an edit to
+`rest.py`. Had it been the next release of the same API, it would have gone out under `/v2`, as
+lesson 1's version 2 did for exactly this change to the price. `catalogue.py` uses `/v1` because,
+as an API, it is new.

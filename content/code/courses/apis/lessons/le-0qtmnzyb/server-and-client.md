@@ -1,7 +1,17 @@
 ---
-title: x
+title: A server and a client
 version: 1
 ---
+
+**The server is a class with one method per `rpc`, and the client is a stub whose methods look
+local.** Everything between them, the connection, the encoding and the status, is the library's.
+Two short files, both in `~/shelf` beside the generated ones, and the server reads the same
+`shelf.db` that lesson 1's `db.py` creates.
+
+## The server
+
+Save it as `stock_server.py`. Each part has a note beside it; the copy button takes the whole file
+without the notes.
 
 ```schooling-example
 {
@@ -47,6 +57,11 @@ version: 1
   ]
 }
 ```
+
+## The client
+
+The client takes a command and its arguments, makes one call, and prints what came back. Save it as
+`stock_client.py`:
 
 ```python
 # shelf/stock_client.py
@@ -94,3 +109,46 @@ def main(command, *args):
 if __name__ == "__main__":
     main(*sys.argv[1:])
 ```
+
+Each branch builds a request message and calls a method on `stock`, the stub. A response message
+printed with `print` comes out in the same text format `protoc` read in the previous section. Two
+arguments appear on every call: `timeout`, which is a **deadline**, and `metadata`, which names the
+till asking. The section on status codes is about both, and about the `except` at the bottom.
+
+## Running them
+
+The server runs until you stop it, so it gets a terminal of its own, as `rest.py` did in lesson 1.
+In the second terminal:
+
+```sh
+cd ~/shelf && python3 stock_server.py
+```
+
+It prints `stock on 127.0.0.1:50051` and waits. **50051 is the port gRPC's own examples use**, and it
+keeps the warehouse clear of `rest.py` on 8000, so the two can run together. The numbers below start from the six books `db.py` puts in a new
+`shelf.db`; if yours have changed, lesson 1 says how to start again from them. In the first
+terminal, ask for Dom Casmurro, then reserve two copies of it:
+
+```
+ana@api:~/shelf$ python3 stock_client.py get 9786500000016
+isbn: "9786500000016"
+title: "Dom Casmurro"
+copies: 12
+availability: IN_STOCK
+ana@api:~/shelf$ python3 stock_client.py reserve 9786500000016 2
+isbn: "9786500000016"
+copies: 2
+left: 10
+```
+
+The reservation answered with the copies taken and the copies left. The second terminal printed one
+line per call, from the interceptor:
+
+```
+/shelf.stock.v1.Stock/GetStock from till-1
+/shelf.stock.v1.Stock/Reserve from till-1
+```
+
+**That first word is the method's full name**: the package, the service and the method, joined by a
+dot and a slash. It is also the path of the HTTP/2 request that carried the call, which the section
+on HTTP/2 shows from the outside.

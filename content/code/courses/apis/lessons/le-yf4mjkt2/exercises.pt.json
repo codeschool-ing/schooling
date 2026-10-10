@@ -1,0 +1,655 @@
+{
+  "ex-9dwz3v1z": {
+    "prompt": "Depois que ana entra no `sessions.py`, o que o cliente dela guarda que o servidor usa para reconhecê-la?",
+    "hint": "Sozinho, não significa nada.",
+    "choices": [
+      {
+        "text": "O nome e o vencimento dela, assinados com a chave do servidor",
+        "why": "Isso é o que um JWT guarda. Numa sessão as claims ficam no servidor, na linha."
+      },
+      {
+        "text": "Um id aleatório",
+        "why": "Certo. O id é a chave de uma linha que o servidor guarda; não carrega informação própria."
+      },
+      {
+        "text": "Um hash da senha, para ela não digitar de novo",
+        "why": "O hash da senha nunca sai do servidor. Enviá-lo faria do próprio hash uma senha."
+      },
+      {
+        "text": "Uma cópia da linha dela na tabela sessions",
+        "why": "A linha fica no servidor; o cliente recebe só o id que a encontra, e a tabela guarda até esse id em hash."
+      }
+    ]
+  },
+  "ex-gxczaz8h": {
+    "prompt": "Um colega diz que o time trocou cookies de sessão por JWT \"porque cookies são menos seguros\". O que esta lição diz que a troca mudou de fato?",
+    "hint": "Os dois são apresentados a cada requisição.",
+    "choices": [
+      {
+        "text": "Onde mora o estado do login",
+        "why": "Certo. A sessão o guarda numa linha no servidor; o token o carrega, assinado. Nenhum é seguro ou inseguro por natureza."
+      },
+      {
+        "text": "Tirou o segredo portador: o JWT prova a identidade por si, então não há o que roubar",
+        "why": "Um JWT também é uma credencial portadora: quem o apresenta é tratado como dono, igual a um id de sessão."
+      },
+      {
+        "text": "Tornou o HTTPS obrigatório em vez de opcional",
+        "why": "Os dois precisam de HTTPS pelo mesmo motivo: quem lê qualquer um deles na rede consegue usá-lo."
+      },
+      {
+        "text": "Passou a credencial de um cookie para um cabeçalho",
+        "why": "Isso é o meio de transporte, e independe da escolha: um JWT pode ir num cookie e um id de sessão num cabeçalho."
+      }
+    ]
+  },
+  "ex-e0nr7g6n": {
+    "prompt": "Relacione cada tarefa com o jeito de fazê-la quando nada extra é acrescentado a nenhum dos modelos.",
+    "hint": "Um modelo consulta, o outro calcula.",
+    "pairs": [
+      {
+        "left": "conferir um cookie de sessão",
+        "right": "procurar o id numa tabela"
+      },
+      {
+        "left": "conferir um JWT",
+        "right": "recalcular a assinatura com a chave"
+      },
+      {
+        "left": "encerrar uma sessão",
+        "right": "apagar a linha"
+      },
+      {
+        "left": "encerrar um JWT",
+        "right": "esperar o exp dele"
+      }
+    ],
+    "right_distractors": [
+      "pedir ao navegador que apague a cópia dele"
+    ]
+  },
+  "ex-mskafb7d": {
+    "prompt": "Relacione cada atributo do `Set-Cookie` do `sessions.py` com o que ele diz ao cliente.",
+    "hint": "Nenhum deles volta para o servidor.",
+    "pairs": [
+      {
+        "left": "`HttpOnly`",
+        "right": "nunca mostrá-lo aos scripts da página"
+      },
+      {
+        "left": "`Secure`",
+        "right": "enviá-lo só por HTTPS"
+      },
+      {
+        "left": "`SameSite=Lax`",
+        "right": "deixá-lo fora de requisições que outros sites iniciam, exceto ao seguir um link"
+      },
+      {
+        "left": "`Max-Age=1800`",
+        "right": "esquecê-lo depois de meia hora"
+      }
+    ],
+    "right_distractors": [
+      "enviá-lo também a todos os subdomínios"
+    ]
+  },
+  "ex-xkfah44m": {
+    "prompt": "A tabela `sessions` guarda `id_hash`, o SHA-256 do valor do cookie, e não o valor em si. Contra o que isso protege?",
+    "hint": "Pense em quem poderia ler o banco sem ser o servidor.",
+    "choices": [
+      {
+        "text": "Um cookie roubado sendo usado de outra máquina",
+        "why": "Um cookie roubado ainda funciona: o servidor faz o hash do que recebe e acha a linha. O hash protege a tabela, não o cookie."
+      },
+      {
+        "text": "Alguém adivinhar um id válido",
+        "why": "São os 32 bytes aleatórios que tornam o palpite inútil; o hash não acrescenta nada nisso."
+      },
+      {
+        "text": "Uma cópia vazada do banco, como um backup esquecido, dando a quem a lê cookies que funcionam",
+        "why": "Certo. Quem lê recebe hashes, e um hash não volta a ser um id que o servidor aceite."
+      },
+      {
+        "text": "O cookie vencer antes da linha",
+        "why": "O vencimento é a coluna `expires` e o `Max-Age`; o hash não tem nada a ver com tempo."
+      }
+    ]
+  },
+  "ex-5a5pqmwt": {
+    "prompt": "O `sessions.py` respondeu um login com `Set-Cookie: sid=…; Path=/; Max-Age=1800; …`. Depois de quantos minutos um cliente bem-comportado descarta o cookie?",
+    "hint": "O `Max-Age` conta segundos.",
+    "unit": "minutos"
+  },
+  "ex-9t17w2em": {
+    "prompt": "O login em `shop.test`, um nome que o `--resolve` apontou para o mesmo servidor, recebeu `Set-Cookie: sid=…; Secure; …`, e o pote de cookies do curl ficou vazio. Por quê?",
+    "hint": "O mesmo servidor deu a localhost um cookie que o curl guardou.",
+    "choices": [
+      {
+        "text": "Chegou por HTTP puro a um host que não é localhost",
+        "why": "Certo. O curl, como os navegadores, conta localhost como seguro; `shop.test` por `http://` não é."
+      },
+      {
+        "text": "`HttpOnly` esconde o cookie de programas como o curl, que não são navegadores",
+        "why": "`HttpOnly` esconde o cookie do JavaScript da página. O curl guardou o cookie de localhost com a mesma marca."
+      },
+      {
+        "text": "`SameSite=Lax` bloqueia cookies de um nome de host que o cliente nunca visitou antes",
+        "why": "SameSite trata de requisições que outros sites iniciam. Este foi um login direto, e o curl nem aplica SameSite."
+      },
+      {
+        "text": "O servidor só define cookies para requisições endereçadas a localhost",
+        "why": "O cabeçalho `Set-Cookie` está na resposta. O servidor enviou; o cliente escolheu não guardar."
+      }
+    ]
+  },
+  "ex-c7zcc7p4": {
+    "prompt": "Depois do logout, `kept.txt` ainda tinha o `sid` antigo de ana, e `/me` respondeu `sign in first`. O que tornou a cópia inútil?",
+    "hint": "Olhe a tabela, não o pote.",
+    "choices": [
+      {
+        "text": "`Max-Age=0` na resposta do logout",
+        "why": "`Max-Age=0` pede ao cliente que descarte o cookie. O `kept.txt` nunca recebeu o pedido e o manteve; a recusa veio de outro lugar."
+      },
+      {
+        "text": "A falta do token CSRF",
+        "why": "`/me` é um GET e não precisa de token CSRF. Recusou porque nenhuma sessão viva correspondia."
+      },
+      {
+        "text": "O curl apagar o cookie do pote",
+        "why": "O curl esvaziou o `jar.txt`, não a cópia. Apagar o cookie do cliente é arrumação; a cópia mostra isso."
+      },
+      {
+        "text": "O servidor apagou a linha",
+        "why": "Certo. Sem a linha, o id é chave de nada, onde quer que existam cópias dele."
+      }
+    ]
+  },
+  "ex-h2g101vv": {
+    "prompt": "Ponha o logout do `sessions.py` na ordem em que acontece.",
+    "hint": "O servidor age antes de responder.",
+    "items": [
+      "O cliente envia `POST /logout` com o cookie e o `X-CSRF-Token`",
+      "O servidor acha a sessão pelo hash do cookie",
+      "O servidor apaga essa linha",
+      "O servidor responde 204 com `sid=; Max-Age=0`",
+      "O cliente descarta o cookie do pote"
+    ],
+    "trap": "Descartar o cookie vem por último e importa menos: a linha já tinha sumido."
+  },
+  "ex-z5ddjx4k": {
+    "prompt": "Bruno troca a senha porque acha que outra pessoa tem entrado como ele. Com sessões guardadas como linhas, o que o servidor deve fazer?",
+    "hint": "A outra pessoa pode já estar logada.",
+    "choices": [
+      {
+        "text": "Nada além: toda sessão vence em trinta minutos de qualquer jeito",
+        "why": "Trinta minutos é muito tempo para um intruso, e uma sessão pode ser renovada. A correção está à mão agora; use-a."
+      },
+      {
+        "text": "Apagar todas as sessões dele, menos a que ele está usando",
+        "why": "Certo. A sessão do intruso é uma dessas linhas; apagá-la o desconecta na hora."
+      },
+      {
+        "text": "Enviar `Max-Age=0` na resposta à troca de senha",
+        "why": "Isso só chega ao navegador do próprio Bruno, e o desconectaria deixando o intruso logado."
+      },
+      {
+        "text": "Apagar só a sessão de onde ele trocou a senha",
+        "why": "Essa é a única sessão que com certeza é dele. As linhas do intruso continuariam intactas."
+      }
+    ]
+  },
+  "ex-kf251pqe": {
+    "prompt": "Uma página de outro site não consegue ler as respostas do shelf. Por que ela ainda pode prejudicar a conta de ana por CSRF?",
+    "hint": "O que o navegador acrescenta sem perguntar?",
+    "choices": [
+      {
+        "text": "Consegue ler o cookie de ana com JavaScript e mandá-lo para si",
+        "why": "Uma página não lê cookies de outro site, e o `HttpOnly` os esconde até das páginas do próprio shelf. CSRF não precisa ler nada."
+      },
+      {
+        "text": "A política de mesma origem não vale para formulários",
+        "why": "Vale sim: a página continua sem ler a resposta. O estrago acontece sem lê-la."
+      },
+      {
+        "text": "Cookies com `Secure` são enviados a todos os sites",
+        "why": "`Secure` restringe o cookie ao HTTPS; nunca amplia para onde ele vai."
+      },
+      {
+        "text": "O navegador anexa o cookie de ana, e a requisição faz o estrago antes de qualquer resposta",
+        "why": "Certo. Acrescentar um livro ou mudar um endereço já está feito quando a resposta chega; lê-la é desnecessário."
+      }
+    ]
+  },
+  "ex-js1c0w4h": {
+    "prompt": "O atributo de cookie `SameSite=___` deixa o cookie fora de um `POST` que outro site inicia, mas ainda o envia quando o usuário segue um link.",
+    "hint": "Não é o mais rígido dos três valores.",
+    "blanks": [
+      {
+        "accept": [
+          "Lax"
+        ]
+      }
+    ]
+  },
+  "ex-ds9jdm06": {
+    "prompt": "Quais destes, definidos no `sessions.py`, podem barrar um `POST /wishlist` forjado iniciado pela página de outro site? Marque todos os que se aplicam.",
+    "hint": "Um age no navegador, outro no servidor.",
+    "choices": [
+      {
+        "text": "`SameSite=Lax` no cookie",
+        "why": "Certo. O navegador manda esse POST entre sites sem o cookie, então o servidor vê um estranho."
+      },
+      {
+        "text": "A verificação do `X-CSRF-Token`",
+        "why": "Certo. A outra página não lê o token e um formulário não define o cabeçalho, então a requisição recebe 403."
+      },
+      {
+        "text": "`HttpOnly` no cookie",
+        "why": "`HttpOnly` impede scripts de ler o cookie. A requisição forjada nunca o lê; o navegador o anexa."
+      },
+      {
+        "text": "Guardar o id da sessão como hash",
+        "why": "O hash protege uma cópia da tabela. A requisição forjada leva o cookie verdadeiro, cujo hash dá a linha verdadeira."
+      }
+    ]
+  },
+  "ex-j2qcfcx2": {
+    "prompt": "Quem consegue ler o payload do token de acesso que o `tokens.py` emitiu para ana?",
+    "hint": "O `basenc` o leu sem chave nenhuma.",
+    "choices": [
+      {
+        "text": "Só um servidor que tenha o `jwt.key`",
+        "why": "A chave é necessária para assinar e para conferir a assinatura. Ler o payload é decodificar base64url, o que não precisa de nada."
+      },
+      {
+        "text": "Ninguém: o payload é criptografado",
+        "why": "Um JWT assinado é codificado, não criptografado. O formato criptografado, JWE, é outra coisa e pouco usado."
+      },
+      {
+        "text": "Qualquer um que tenha o token",
+        "why": "Certo. Por isso um payload leva identificadores e horários, nunca segredos."
+      },
+      {
+        "text": "Só ana e o shelf, nomeados em `sub` e `aud`",
+        "why": "As claims dizem de quem e para quem é o token; não restringem quem consegue decodificá-lo."
+      }
+    ]
+  },
+  "ex-7k4sgfs5": {
+    "prompt": "A parte do payload do token de ana tinha 159 caracteres de base64url, sem o preenchimento. Quantos `=` é preciso acrescentar para um decodificador rígido aceitá-la?",
+    "hint": "Base64 trabalha em grupos de quatro caracteres.",
+    "unit": "caracteres"
+  },
+  "ex-85w446tn": {
+    "prompt": "O `basenc --base64url -d` imprimiu o payload inteiro e depois `basenc: invalid input`. Do que ele reclamava?",
+    "hint": "O JSON saiu completo.",
+    "choices": [
+      {
+        "text": "Os caracteres `-` e `_`, que o base64 não usa",
+        "why": "O `base64` simples reclamaria deles, mas `--base64url` é justamente o alfabeto que os tem. A reclamação foi no fim."
+      },
+      {
+        "text": "A assinatura, que não é base64url válido",
+        "why": "O `cut -d. -f2` passou só o payload; a assinatura nem chegou ao decodificador."
+      },
+      {
+        "text": "Um payload criptografado com `jwt.key`, que o `basenc` não abre",
+        "why": "Se estivesse criptografado, o JSON não teria aparecido. Estava legível porque está só codificado."
+      },
+      {
+        "text": "A falta do preenchimento `=` no fim",
+        "why": "Certo. JWTs o omitem, então uma parte cujo tamanho não é múltiplo de quatro parece cortada."
+      }
+    ]
+  },
+  "ex-v17pz4j3": {
+    "prompt": "O `sed` trocou uma letra para o payload dizer `\"sub\":\"2\"`, e manteve a assinatura antiga. Por que quem fez essa edição não podia simplesmente corrigir a assinatura também?",
+    "hint": "O `hs256.py` a calculou em cinco linhas.",
+    "choices": [
+      {
+        "text": "A assinatura é criptografada",
+        "why": "É um HMAC escrito em base64url; qualquer um o lê, e lê-lo não revela nada da chave."
+      },
+      {
+        "text": "O servidor guarda uma cópia de cada assinatura emitida e compara",
+        "why": "Nada é guardado na emissão. O servidor recalcula a assinatura a partir do token e da chave a cada requisição."
+      },
+      {
+        "text": "Calculá-la precisa dos 32 bytes do `jwt.key`",
+        "why": "Certo. Com a chave qualquer um assina qualquer coisa, e por isso o segredo é a chave, não a assinatura."
+      },
+      {
+        "text": "O base64url não codifica um payload alterado do mesmo tamanho",
+        "why": "Codificou sem problema; `cut` e `basenc` leram `\"sub\":\"2\"` de volta no token editado."
+      }
+    ]
+  },
+  "ex-16xnjj63": {
+    "prompt": "Ponha em ordem os passos de verificar um token HS256 à mão, como faz o `hs256.py`.",
+    "hint": "A assinatura é calculada sobre o texto tal como aparece no token.",
+    "items": [
+      "Partir o token nos dois pontos",
+      "Juntar cabeçalho e payload com o ponto, exatamente como estão escritos",
+      "Calcular o HMAC-SHA256 desse texto com a chave",
+      "Escrever o resultado em base64url sem preenchimento",
+      "Compará-lo com a terceira parte usando `compare_digest`"
+    ],
+    "trap": "Decodificar o payload não é um passo: o HMAC é calculado sobre o texto codificado."
+  },
+  "ex-mw1928fy": {
+    "prompt": "Dez serviços internos verificam tokens HS256, então cada um tem a mesma chave. Um deles é invadido e a configuração vaza. O que o atacante consegue fazer agora?",
+    "hint": "O que mais faz a chave que verifica?",
+    "choices": [
+      {
+        "text": "Ler os payloads de todos os tokens, que eram ilegíveis antes do vazamento",
+        "why": "Os payloads sempre foram legíveis; isso não precisa de chave."
+      },
+      {
+        "text": "Emitir tokens de qualquer usuário que os dez serviços aceitam",
+        "why": "Certo. No HS256 a chave que verifica também assina. RS256 ou ES256 teriam dado a cada serviço só uma chave pública, que não assina."
+      },
+      {
+        "text": "Forjar tokens aceitos só pelo serviço invadido",
+        "why": "A chave é a mesma em todo lugar, então um token assinado com ela vale em todo lugar."
+      },
+      {
+        "text": "Nada duradouro: os tokens vencem em cinco minutos",
+        "why": "Vida curta limita um token roubado. Uma chave roubada deixa o atacante emitir um token novo sempre que um vence."
+      }
+    ]
+  },
+  "ex-3mt23n2n": {
+    "prompt": "Relacione cada claim registrada com o que ela diz.",
+    "hint": "Sete nomes, três letras cada.",
+    "pairs": [
+      {
+        "left": "`sub`",
+        "right": "de quem é o token"
+      },
+      {
+        "left": "`aud`",
+        "right": "para quem ele é destinado"
+      },
+      {
+        "left": "`iss`",
+        "right": "quem o fez"
+      },
+      {
+        "left": "`jti`",
+        "right": "o id do próprio token"
+      },
+      {
+        "left": "`exp`",
+        "right": "quando ele deixa de valer"
+      }
+    ],
+    "right_distractors": [
+      "qual algoritmo o assinou"
+    ]
+  },
+  "ex-p0yjz390": {
+    "prompt": "`tokens.issue(1, now=time.time() - 310)` gerou um token com vida de 300 segundos, e `/me` o aceitou. Por quê?",
+    "hint": "Veja o que o `verify` passa além da chave.",
+    "choices": [
+      {
+        "text": "Venceu dez segundos antes, dentro dos trinta segundos de tolerância",
+        "why": "Certo. A tolerância perdoa pequenas diferenças de relógio entre máquinas; com 600 segundos a mesma chamada foi recusada."
+      },
+      {
+        "text": "O PyJWT não confere o `exp` a menos que peçam",
+        "why": "Ele confere o `exp` sempre que o token tem um, e o token de 600 segundos foi recusado por isso."
+      },
+      {
+        "text": "O `nbf` estava definido, e isso se sobrepõe ao `exp`",
+        "why": "`nbf` é o primeiro momento em que o token vale. Não tem voz sobre quando ele para."
+      },
+      {
+        "text": "Tokens feitos importando o `tokens.py` pulam as verificações",
+        "why": "Importar dá o mesmo `issue` que o servidor usa, e o servidor conferiu esse token como confere qualquer outro."
+      }
+    ]
+  },
+  "ex-7akds0qn": {
+    "prompt": "O `tokens.py` dá 300 segundos a um token de acesso e verifica com `leeway=30`. Cerca de quantos segundos depois de emitido o `/me` começa a recusar um token como vencido?",
+    "hint": "A tolerância soma-se à vida do token.",
+    "unit": "segundos"
+  },
+  "ex-1d8qjw1p": {
+    "prompt": "Um token cujo cabeçalho diz `\"alg\": \"none\"` e cuja terceira parte está vazia chegou ao `/me`. Qual argumento do `verify` fez a API recusá-lo?",
+    "hint": "A recusa disse `The specified alg value is not allowed`.",
+    "choices": [
+      {
+        "text": "`audience=AUDIENCE`",
+        "why": "O token até levava `\"aud\": \"shelf-api\"`. Foi recusado antes de qualquer claim ser lida."
+      },
+      {
+        "text": "`options={\"require\": [...]}`",
+        "why": "O token não tinha `exp`, mas a verificação do algoritmo vem antes, e a mensagem cita o algoritmo."
+      },
+      {
+        "text": "`leeway=LEEWAY`",
+        "why": "A tolerância só estica as verificações de tempo; não tem nada a dizer sobre como o token é assinado."
+      },
+      {
+        "text": "`algorithms=[\"HS256\"]`",
+        "why": "Certo. É o servidor, não o token, que decide como um token tem de ser assinado, e `none` não está na lista."
+      }
+    ]
+  },
+  "ex-c9xz3jc7": {
+    "prompt": "O refresh token do login foi apresentado uma segunda vez, e o `tokens.py` apagou a família inteira. O que ainda funcionou depois?",
+    "hint": "Qual deles nunca foi guardado?",
+    "choices": [
+      {
+        "text": "O segundo refresh token, emitido antes do reuso",
+        "why": "Estava na família e foi apagado junto: `unknown or expired refresh token`."
+      },
+      {
+        "text": "Nada: o login inteiro foi revogado",
+        "why": "Todos os refresh tokens foram, mas o `/me` ainda respondeu ana com o token de acesso já emitido."
+      },
+      {
+        "text": "O token de acesso do primeiro refresh, até o `exp` dele",
+        "why": "Certo. Nada sobre ele foi guardado, então não havia o que apagar. Só o vencimento o encerra."
+      },
+      {
+        "text": "O primeiro refresh token, para quem o apresentou primeiro",
+        "why": "Ele foi gasto no primeiro refresh; a segunda apresentação é o que revelou a cópia."
+      }
+    ]
+  },
+  "ex-9gqs3za3": {
+    "prompt": "O `logout` do `tokens.py` apaga as linhas da lista de bloqueio cujo `exp` já passou. Por que é seguro esquecer esses tokens revogados?",
+    "hint": "O que aconteceria com um token desses sem a lista de bloqueio?",
+    "choices": [
+      {
+        "text": "Passado o `exp`, o token é recusado de todo jeito",
+        "why": "Certo. A lista só precisa cobrir a janela entre a revogação e o vencimento, e é isso que a mantém pequena."
+      },
+      {
+        "text": "O refresh token de um token revogado também é apagado, então ele não volta",
+        "why": "O refresh cria um token de acesso novo, com outro `jti`; nunca traz um antigo de volta. O antigo poderia ser reapresentado até o `exp`."
+      },
+      {
+        "text": "O cliente já o jogou fora a essa altura",
+        "why": "O que o cliente faz não é algo em que o servidor possa confiar; uma cópia em outro lugar é a razão de existir da lista."
+      },
+      {
+        "text": "Os valores de `jti` são reaproveitados depois que o token vence",
+        "why": "São 16 dígitos hexadecimais aleatórios, sorteados de novo para cada token."
+      }
+    ]
+  },
+  "ex-acfwt9mr": {
+    "prompt": "Um time quer que o logout com JWT valha na hora e também não quer consulta nenhuma a cada requisição. O que eles podem ter?",
+    "hint": "Na hora quer dizer que o servidor lembra do logout.",
+    "choices": [
+      {
+        "text": "Os dois, com rotação de refresh tokens a cada saída",
+        "why": "A rotação protege os refresh tokens. O token de acesso já emitido continua valendo até o `exp`, como o `/me` mostrou."
+      },
+      {
+        "text": "Os dois, definindo o `exp` como o momento em que o usuário sai da aplicação",
+        "why": "`exp` está dentro de um token já assinado e nas mãos do cliente; mudá-lo quebraria a assinatura."
+      },
+      {
+        "text": "Só um dos dois: revogar antes do prazo exige estado que o servidor confere toda vez",
+        "why": "Certo. Sem consulta, o máximo é uma vida curta, que limita o atraso sem eliminá-lo."
+      },
+      {
+        "text": "Os dois, apagando o token do armazenamento do cliente na saída",
+        "why": "Isso remove uma cópia. Qualquer outra continua assinada e dentro do prazo."
+      }
+    ]
+  },
+  "ex-rz2121zz": {
+    "prompt": "Um atacante consegue rodar um script dentro da página do shelf. O que muda se a credencial estiver num cookie `HttpOnly` em vez de no `localStorage`?",
+    "hint": "Os dois casos são ruins; um é limitado.",
+    "choices": [
+      {
+        "text": "Age enquanto a aba está aberta, mas não leva a credencial embora",
+        "why": "Certo. Do `localStorage` ele copiaria o token e o usaria de outra máquina até vencer."
+      },
+      {
+        "text": "Nada muda, porque o script roda na mesma origem que a própria página",
+        "why": "Mesma origem quer dizer que o script lê o `localStorage`. Ele continua sem ler um cookie `HttpOnly`."
+      },
+      {
+        "text": "O script não consegue mais fazer requisições como o usuário",
+        "why": "Consegue, enquanto a página estiver aberta: o navegador anexa o cookie às requisições dele."
+      },
+      {
+        "text": "CSRF deixa de ser possível",
+        "why": "Ao contrário: o cookie é anexado sozinho, que é exatamente do que o CSRF precisa."
+      }
+    ]
+  },
+  "ex-pyq83a9z": {
+    "prompt": "Por que um token nunca deve ir numa URL, como `/me?token=eyJ…`?",
+    "hint": "Pense em onde os endereços vão parar.",
+    "choices": [
+      {
+        "text": "URLs não aceitam ponto",
+        "why": "Aceitam, e o base64url foi escolhido para o token caber numa. O problema é para onde as URLs são copiadas."
+      },
+      {
+        "text": "Logs, histórico e o cabeçalho `Referer` guardam endereços, e nenhum deles é secreto",
+        "why": "Certo. Uma credencial portadora escrita em qualquer um deles funciona para quem a lê."
+      },
+      {
+        "text": "O servidor não consegue verificar uma assinatura que chega numa query string, e não num cabeçalho",
+        "why": "Ele poderia ler e verificar de qualquer lugar. O problema é onde ele fica visível para outros."
+      },
+      {
+        "text": "A query string só vai com `GET`",
+        "why": "A query string pode ir com qualquer método; esse não é o risco."
+      }
+    ]
+  },
+  "ex-zjk67g6c": {
+    "prompt": "Um time constrói uma aplicação web cujas páginas chamam só a própria API, no mesmo host. O que esta lição recomenda como ponto de partida?",
+    "hint": "Um navegador falando com a própria API.",
+    "choices": [
+      {
+        "text": "JWTs guardados no `localStorage` e enviados no cabeçalho `Authorization` a cada chamada",
+        "why": "Isso troca CSRF por exposição a qualquer script injetado, e a revogação fica mais difícil. Nada aqui cruza uma fronteira."
+      },
+      {
+        "text": "Um cookie de sessão com `HttpOnly`, `Secure`, `SameSite`, mais um token CSRF",
+        "why": "Certo. Revogado apagando uma linha, nada legível no navegador, e a consulta é barata."
+      },
+      {
+        "text": "OAuth 2.0 com um provedor externo",
+        "why": "Isso é para entrar com contas de outra empresa ou agir em nome do usuário, a lição 9; não é o padrão para o login próprio de um app."
+      },
+      {
+        "text": "Chaves de API, uma por usuário",
+        "why": "Chaves de API identificam programas, como a lição 7 mostrou; uma pessoa num navegador faz login."
+      }
+    ]
+  },
+  "ex-m5ywhvq5": {
+    "prompt": "O id de sessão de ana tinha 43 caracteres e o token de acesso dela, 240. Quantos caracteres a mais o token acrescenta a cada requisição?",
+    "hint": "Uma subtração.",
+    "unit": "caracteres"
+  },
+  "ex-5p7acncg": {
+    "prompt": "Um serviço de pedidos precisa saber qual usuário mandou cada requisição, e o time não quer que ele chame o serviço de login a cada requisição. O que se encaixa melhor?",
+    "hint": "A requisição cruza uma fronteira entre serviços.",
+    "choices": [
+      {
+        "text": "Compartilhar a tabela de sessões com o serviço de pedidos",
+        "why": "Isso é uma consulta a cada requisição com outro nome, e prende os dois serviços a um único banco."
+      },
+      {
+        "text": "Repassar a senha do usuário em cada requisição",
+        "why": "Todo serviço passaria a ter senhas, a pior coisa para espalhar."
+      },
+      {
+        "text": "Mandar o cookie de sessão para o serviço de pedidos",
+        "why": "Ele ainda teria de perguntar ao serviço de login o que o id significa."
+      },
+      {
+        "text": "Um token assinado de vida curta que ele verifica com uma chave pública",
+        "why": "Certo. O serviço de pedidos confere a assinatura sozinho, e com RS256 ou ES256 não consegue emitir tokens."
+      }
+    ]
+  },
+  "ex-jpp77sfb": {
+    "prompt": "Quais destes valem na hora, de modo que uma cópia da credencial feita antes para de funcionar na próxima requisição? Marque todos os que se aplicam.",
+    "hint": "Pergunte, para cada um, se o servidor guarda um registro que confere.",
+    "choices": [
+      {
+        "text": "Apagar a linha da sessão no `sessions.py`",
+        "why": "Certo. A próxima consulta não acha nada, seja quem for que mande o id."
+      },
+      {
+        "text": "Pôr o `jti` do token na lista de bloqueio que o `verify` lê",
+        "why": "Certo. `token revoked` voltou já na requisição seguinte."
+      },
+      {
+        "text": "Enviar `Max-Age=0` para o cookie de sessão",
+        "why": "Isso pede a um cliente que descarte o cookie; o `kept.txt` mostra uma cópia sobrevivendo."
+      },
+      {
+        "text": "Rotacionar o refresh token depois de um reuso",
+        "why": "A família de refresh morre, e o token de acesso já emitido continua valendo até o `exp`."
+      }
+    ]
+  },
+  "ex-2hrqfwgk": {
+    "prompt": "Um time passa o JWT do `localStorage` para um cookie `HttpOnly`, para que os scripts das páginas não consigam lê-lo. Qual defesa desta lição o token passa a precisar e antes não precisava?",
+    "hint": "O que o navegador faz com um cookie que nunca fazia com um cabeçalho?",
+    "choices": [
+      {
+        "text": "Fixar `algorithms=[\"HS256\"]`",
+        "why": "Isso sempre foi necessário, viaje o token por onde for."
+      },
+      {
+        "text": "Fazer hash do token antes de guardá-lo",
+        "why": "O servidor não guarda nada de um token de acesso; não há tabela a proteger."
+      },
+      {
+        "text": "`SameSite` e um token CSRF",
+        "why": "Certo. O cookie é anexado sozinho, então outro site consegue fazer o navegador mandá-lo. No cabeçalho, o código da página tinha de acrescentá-lo."
+      },
+      {
+        "text": "Um `exp` mais curto, porque cookies são mais fáceis de roubar",
+        "why": "Um cookie `HttpOnly` é mais difícil de roubar por script que o `localStorage`; a exposição nova é a requisição forjada, não o roubo."
+      }
+    ]
+  },
+  "ex-kswg5k06": {
+    "prompt": "Tanto o `sessions.py` quanto o `tokens.py` guardam cada token aleatório que entregam só como o ___ SHA-256 dele, então uma cópia do `shelf.db` não contém nada que um cliente possa apresentar.",
+    "hint": "A coluna se chama `id_hash`.",
+    "blanks": [
+      {
+        "accept": [
+          "hash",
+          "digest",
+          "resumo"
+        ]
+      }
+    ]
+  }
+}

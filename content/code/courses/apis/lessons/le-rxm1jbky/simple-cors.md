@@ -100,6 +100,6 @@ every call to a real API from a page is preflighted.
 
 `Access-Control-Allow-Origin` may also be `*`: any origin may read. For data that is public and needs
 no credentials, a catalogue, a timetable, exchange rates, that is the right answer, and an allowlist
-would only add a list to maintain. `secure.py` names origins instead because its PATCH changes
-something and, after lessons 7 to 9, its requests carry credentials, and the section on mistakes
-shows what `*` does then.
+would only add a list to maintain. `secure.py` names origins instead because its PATCH changes something and,
+after lessons 7 to 9, an API's requests carry credentials, and the section on mistakes shows what
+`*` does then.

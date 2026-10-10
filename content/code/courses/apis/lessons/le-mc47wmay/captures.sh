@@ -36,7 +36,7 @@ block venv
 run 'pip install openapi-spec-validator==0.9.0'
 run 'python3 -m venv ~/shelf/.venv'
 run '.venv/bin/pip install openapi-spec-validator==0.9.0 | tail -1'
-run '.venv/bin/openapi-spec-validator openapi.yaml'
+run '.venv/bin/openapi-spec-validator openapi.yaml; echo "exit $?"'
 
 block broken
 run "sed 's|^  /authors/{id}:|  /authors/{author}:|' openapi.yaml > broken.yaml"
@@ -52,6 +52,7 @@ serve 'python3 rest.py'
 block contract
 run 'python3 check_contract.py; echo "exit $?"'
 run "curl -s localhost:8000/v1/books | jq length"
+run "curl -s -w '%{http_code}\n' 'localhost:8000/v1/books?author_id=abc'"
 
 block next
 run "sed 's/price_cents/price/' openapi.yaml > next.yaml"

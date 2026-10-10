@@ -1,0 +1,591 @@
+{
+  "ex-hdgye17r": {
+    "prompt": "Que cliente está por trás da maior parte do tráfego descontrolado contra uma API, segundo esta lição?",
+    "hint": "A lição chama a imagem do muro contra atacantes de parte menor.",
+    "choices": [
+      {
+        "text": "Um programa do próprio cliente, com um bug",
+        "why": "Certo. Um laço com a condição de saída errada ou um app repetindo toda falha de uma vez não quer fazer mal e faz o mesmo estrago."
+      },
+      {
+        "text": "Um atacante à procura de endpoints fracos na API",
+        "why": "Atacantes existem, e a lição os chama de parte menor do problema."
+      },
+      {
+        "text": "Um buscador rastreando as páginas da documentação",
+        "why": "Rastreadores leem páginas web; o tráfego em questão é para a API, vindo de programas que a usam."
+      },
+      {
+        "text": "A própria API, consultando o banco de dados vezes demais",
+        "why": "Isso é um problema de desempenho dentro do serviço; um limite de taxa trata do que os clientes enviam a ele."
+      }
+    ]
+  },
+  "ex-x00150sk": {
+    "prompt": "Ligue cada motivo para limitar àquilo em que o limite é medido.",
+    "hint": "Um motivo é sobre agora, um sobre clientes entre si, um sobre dinheiro.",
+    "pairs": [
+      {
+        "left": "proteger o serviço",
+        "right": "requisições por segundo, e quantas rodam ao mesmo tempo"
+      },
+      {
+        "left": "justiça entre clientes",
+        "right": "uma cota de uso por cliente"
+      },
+      {
+        "left": "custo",
+        "right": "uma cota por dia ou mês, muitas vezes por plano"
+      }
+    ],
+    "right_distractors": [
+      "um contador compartilhado pela API inteira"
+    ]
+  },
+  "ex-awf4qvcz": {
+    "prompt": "Um escritório de 300 pessoas chega à internet por um único endereço IPv4 público. Uma API limita cada endereço IP a 100 requisições por minuto. Uma pessoa do escritório inicia um script que envia 100 por minuto. O que acontece?",
+    "hint": "Conte quem divide o contador.",
+    "choices": [
+      {
+        "text": "Só o script é recusado, porque a API distingue as pessoas",
+        "why": "Atrás do NAT toda conexão chega do mesmo endereço; pelo endereço não há ninguém para distinguir."
+      },
+      {
+        "text": "O escritório inteiro divide uma cota, e o script a consome",
+        "why": "Certo. Um limite por endereço trata o escritório como um cliente, e o script gastou o minuto dele."
+      },
+      {
+        "text": "Nada, já que 100 por minuto está dentro do limite",
+        "why": "Está dentro do limite para uma pessoa; o contador é o endereço, e todos os outros estão nele também."
+      },
+      {
+        "text": "A API passa aquele endereço para um limite por chave de API",
+        "why": "Um limitador indexado por endereço não tem chave para onde passar; escolher a chave é decisão de projeto."
+      }
+    ]
+  },
+  "ex-vq3nsmfp": {
+    "prompt": "Uma API sem proxy na frente limita os clientes pelo endereço do cabeçalho `X-Forwarded-For` deles. O que pode fazer um cliente que quer requisições sem limite?",
+    "hint": "Quem escreveu esse cabeçalho?",
+    "choices": [
+      {
+        "text": "Pôr nele um valor inventado, um novo a cada vez",
+        "why": "Certo. Cada endereço inventado ganha um contador novo. O cabeçalho só é confiável quando o proxy da própria API o escreveu."
+      },
+      {
+        "text": "Nada: o cabeçalho é definido pelo sistema operacional",
+        "why": "O curl o colocou na lição porque mandaram; é texto na requisição como qualquer cabeçalho."
+      },
+      {
+        "text": "Remover o cabeçalho, o que faz a API recusá-lo",
+        "why": "Uma API que lê um cabeçalho ausente não recebe endereço nenhum; recusar ou não depende do código dela, e removê-lo não ganha nada que um forjado não ganhe."
+      },
+      {
+        "text": "Conectar por IPv6 para que o cabeçalho não seja enviado",
+        "why": "O cabeçalho vai qualquer que seja o transporte; o IPv6 importa para limites pelo endereço da conexão."
+      }
+    ]
+  },
+  "ex-2jt1yzqd": {
+    "prompt": "Atrás de um proxy, toda conexão chega do proxy, e o endereço do cliente viaja no cabeçalho `___`.",
+    "hint": "Ele foi forjado contra o rest.py na lição.",
+    "blanks": [
+      {
+        "accept": [
+          "X-Forwarded-For"
+        ]
+      }
+    ]
+  },
+  "ex-wb8sc70h": {
+    "prompt": "Uma janela fixa permite 100 requisições por minuto, com janelas alinhadas ao relógio. Qual é o maior número de requisições que ela aceita de um cliente em dois segundos?",
+    "hint": "Dois segundos podem atravessar uma fronteira.",
+    "unit": "requisições"
+  },
+  "ex-rwv2986p": {
+    "prompt": "Por que janelas fixas alinhadas ao relógio produzem um pico de tráfego no início de cada janela?",
+    "hint": "Pense em todos os clientes ao mesmo tempo, não em um.",
+    "choices": [
+      {
+        "text": "O servidor reinicia os contadores, e reiniciar é lento",
+        "why": "Zerar uma contagem é uma atribuição; o pico vem dos clientes."
+      },
+      {
+        "text": "Todos os contadores zeram juntos, e os recusados tentam todos de novo",
+        "why": "Certo. O mesmo instante libera todos os clientes, então os que esperavam chegam juntos."
+      },
+      {
+        "text": "Os clientes recebem uma cota maior logo no primeiro segundo de cada janela",
+        "why": "A cota é a mesma durante a janela toda; nada favorece o primeiro segundo dela."
+      },
+      {
+        "text": "Os relógios dos clientes discordam em um segundo",
+        "why": "Relógios discordantes espalhariam as novas tentativas, o contrário de um pico."
+      }
+    ]
+  },
+  "ex-bmedzq2z": {
+    "prompt": "Para que limite uma janela fixa é uma escolha razoável apesar da fronteira?",
+    "hint": "Onde o dobro por um momento não faz mal?",
+    "choices": [
+      {
+        "text": "Tentativas de login por minuto numa conta",
+        "why": "Um limite pequeno em que exatidão importa; a lição sugere um log deslizante ali."
+      },
+      {
+        "text": "Requisições por segundo para uma busca cara",
+        "why": "O dobro da taxa por um segundo é exatamente a sobrecarga que o limite existe para impedir."
+      },
+      {
+        "text": "Uma cota diária",
+        "why": "Certo. Gastar o fim da cota de segunda e o começo da de terça em sequência ainda é o que cabe em dois dias."
+      },
+      {
+        "text": "Requisições simultâneas que um cliente pode ter em andamento",
+        "why": "Isso é uma contagem de requisições em andamento, não por período, então não há janela a escolher."
+      }
+    ]
+  },
+  "ex-adhk397m": {
+    "prompt": "Um contador de janela deslizante com janelas de 10 segundos: a janela anterior teve 6 requisições, a atual tem 4 até agora, e faz 3 segundos que a atual começou. Qual é a estimativa?",
+    "hint": "Quanto da janela anterior ainda está dentro dos últimos dez segundos?",
+    "unit": "requisições"
+  },
+  "ex-1t8dp6ta": {
+    "prompt": "Ligue cada limitador ao que ele guarda por cliente.",
+    "hint": "Um deles é exato e paga em memória.",
+    "pairs": [
+      {
+        "left": "log deslizante",
+        "right": "a hora de cada requisição aceita na janela"
+      },
+      {
+        "left": "contador de janela deslizante",
+        "right": "a contagem desta janela e a da anterior"
+      },
+      {
+        "left": "janela fixa",
+        "right": "o número da janela e a contagem dela"
+      },
+      {
+        "left": "balde de fichas",
+        "right": "um número de fichas e quando olhou pela última vez"
+      }
+    ],
+    "right_distractors": [
+      "uma fila de requisições esperando para seguir"
+    ]
+  },
+  "ex-j47fcyzc": {
+    "prompt": "Um balde guarda até 20 fichas e é reabastecido a 2 por segundo. Ele está vazio, e uma requisição que custa 5 é recusada. O que diz o `Retry-After`, calculado como o `limits.py` calcula?",
+    "hint": "Fichas que faltam sobre a taxa, depois segundos inteiros.",
+    "unit": "segundos"
+  },
+  "ex-zzp6r6dj": {
+    "prompt": "Uma chave com um balde de 10, reabastecido a 1 por segundo, não envia nada por uma hora. Quantas fichas a próxima requisição encontra?",
+    "hint": "O reabastecimento para em algum ponto.",
+    "choices": [
+      {
+        "text": "3.600, uma para cada segundo de silêncio",
+        "why": "Isso é o reabastecimento sem a capacidade; o balde transborda depois de dez segundos."
+      },
+      {
+        "text": "1, já que o balde é reabastecido uma de cada vez",
+        "why": "Ele ganha uma por segundo enquanto tiver espaço, o que leva dez segundos a partir de vazio."
+      },
+      {
+        "text": "Dez: o balde para de encher na capacidade",
+        "why": "Certo. O reabastecimento soma o que o tempo decorrido vale, até a capacidade."
+      },
+      {
+        "text": "Nenhuma até um temporizador disparar para aquela chave",
+        "why": "Nada dispara: as fichas são calculadas pela hora em que a requisição chega."
+      }
+    ]
+  },
+  "ex-nv1af86e": {
+    "prompt": "Um cliente que estava quieto envia seis requisições de uma vez a um limite com espaço para dez. O que ele vê de um balde de fichas, e de um balde furado usado como fila?",
+    "hint": "Um deles não recusa nada aqui e o outro atrasa.",
+    "choices": [
+      {
+        "text": "Os dois respondem as seis de uma vez, já que seis é menos que dez",
+        "why": "O balde de fichas responde; a fila as repassa na taxa de vazão, então algumas esperam."
+      },
+      {
+        "text": "Balde: as seis de uma vez. Fila: seis, espaçadas na taxa de vazão",
+        "why": "Certo. A capacidade deixa a rajada passar no balde de fichas; a fila transforma a mesma rajada em atraso."
+      },
+      {
+        "text": "Uma respondida de uma vez por cada um, e as outras cinco recusadas",
+        "why": "Isso seria um limite de uma por vez; os dois têm espaço para dez."
+      },
+      {
+        "text": "Cinco recusadas pelo balde de fichas; a fila aceita as seis de uma vez",
+        "why": "É o contrário: o balde tem as fichas, e a fila é que as espaça."
+      }
+    ]
+  },
+  "ex-cgf7edf3": {
+    "prompt": "Uma recusa do `limits.py` traz `RateLimit: \"burst\";r=0;t=1`. O que ela diz?",
+    "hint": "`r` é o que sobra, `t` é um número de segundos.",
+    "choices": [
+      {
+        "text": "A política burst foi usada uma vez e permite uma requisição por segundo",
+        "why": "Isso é o que o `RateLimit-Policy` declara, com `q` e `w`; o `RateLimit` diz o que sobra."
+      },
+      {
+        "text": "A chave foi bloqueada de vez",
+        "why": "Nada nos cabeçalhos é permanente; `t=1` é um segundo."
+      },
+      {
+        "text": "Tente de novo exatamente uma vez, daqui a um segundo, ou a chave é suspensa",
+        "why": "`t` é uma janela, não uma contagem de tentativas, e nada aqui suspende uma chave."
+      },
+      {
+        "text": "Nenhuma unidade sobrando agora na política burst, e pelo menos mais uma em um segundo",
+        "why": "Certo. Concorda com o `Retry-After: 1` da mesma resposta."
+      }
+    ]
+  },
+  "ex-7twd45sx": {
+    "prompt": "O `limits.py` cobra do balde antes de olhar o caminho, então uma requisição para `/nothing` custa uma unidade e recebe `404`. Por que cobrar por um endereço que não existe?",
+    "hint": "O que um cliente poderia enviar de graça do contrário?",
+    "choices": [
+      {
+        "text": "Do contrário, uma enxurrada de 404 sairia de graça",
+        "why": "Certo. O servidor ainda trabalha para cada uma, e um limite com um caminho grátis ao lado não limita nada."
+      },
+      {
+        "text": "Um 404 custa mais ao banco do que um 200",
+        "why": "No `limits.py` um caminho desconhecido não abre consulta que encontre linha; o motivo é o caminho grátis."
+      },
+      {
+        "text": "O HTTP exige que toda resposta traga cabeçalhos RateLimit",
+        "why": "Os campos RateLimit são um rascunho, e nenhum padrão os exige em resposta alguma."
+      },
+      {
+        "text": "Para que o cliente descubra que endereços existem observando as fichas",
+        "why": "A ordem faz o contrário: toda requisição custa o mesmo, qualquer que seja o endereço."
+      }
+    ]
+  },
+  "ex-6gwgc0q4": {
+    "prompt": "Em quais destes um cliente pode confiar, entre APIs diferentes, quando está sendo limitado? Escolha todos os que se aplicam.",
+    "hint": "Quais são padrões, e quais são rascunho ou costume?",
+    "choices": [
+      {
+        "text": "O status `429 Too Many Requests`",
+        "why": "Certo. É um status padrão desde 2012."
+      },
+      {
+        "text": "Os nomes `RateLimit-Policy` e `RateLimit`",
+        "why": "Eles vêm de um Internet-Draft que ainda pode mudar, e muitas APIs não os enviam."
+      },
+      {
+        "text": "O cabeçalho `Retry-After`, quando presente",
+        "why": "Certo. O próprio HTTP o define, e ele tem precedência sobre qualquer outra pista."
+      },
+      {
+        "text": "`X-RateLimit-Reset` ser um número de segundos",
+        "why": "Algumas APIs mandam segundos, outras uma hora no relógio; o nome não promete nenhum dos dois."
+      }
+    ]
+  },
+  "ex-e5gs8r1s": {
+    "prompt": "A chave free acabou de ter dez requisições aceitas e cinco recusadas, com um balde de 10 reabastecido a 1 por segundo. Ela espera três segundos e envia mais cinco de uma vez. Quantas são aceitas?",
+    "hint": "O que três segundos de silêncio devolveram?",
+    "unit": "requisições"
+  },
+  "ex-1kfh00r4": {
+    "prompt": "Na rajada de quinze, o `daily r=` parou em 4990 enquanto mais cinco requisições eram recusadas. Por quê?",
+    "hint": "Veja a ordem das verificações em `admit`.",
+    "choices": [
+      {
+        "text": "A cota diária é contada uma vez por minuto",
+        "why": "Ela é contada em toda requisição; uma recusada simplesmente não gasta nada."
+      },
+      {
+        "text": "As recusas são descontadas do balde, e não da cota do dia",
+        "why": "O balde as recusou e também não perdeu nada: `take` só gasta quando diz sim."
+      },
+      {
+        "text": "O contador `daily` vive em outro processo da máquina",
+        "why": "Os dois contadores estão em `LIMITS`, no mesmo processo."
+      },
+      {
+        "text": "As unidades só saem dos dois quando os dois dizem sim",
+        "why": "Certo. A cota é conferida sem gastar, depois o balde gasta, depois a cota gasta."
+      }
+    ]
+  },
+  "ex-eeznmcqr": {
+    "prompt": "Trinta requisições, a um décimo de segundo uma da outra, começando um segundo antes do fim de uma janela de dez segundos. A janela fixa aceitou 20 e o balde de fichas 12, embora os dois permitam dez a cada dez segundos em média. De onde vieram as duas a mais do balde?",
+    "hint": "Dez estavam guardadas; conte o que os três segundos acrescentaram.",
+    "choices": [
+      {
+        "text": "Da fronteira da janela, em que o balde também zera",
+        "why": "O balde não tem janelas; o relógio passar por um múltiplo de dez não faz nada a ele."
+      },
+      {
+        "text": "Do reabastecimento: cerca de uma ficha por segundo durante a execução",
+        "why": "Certo. Havia dez no balde no início, e o reabastecimento devolveu uma a cada segundo depois."
+      },
+      {
+        "text": "De um erro de tempo no `burst.py`, que as enviou duas vezes",
+        "why": "O `burst.py` envia cada requisição uma vez e imprime cada resposta; as linhas são decisões do servidor."
+      },
+      {
+        "text": "Da cota diária, que empresta fichas ao balde",
+        "why": "As duas são conferidas lado a lado e nunca emprestam uma à outra."
+      }
+    ]
+  },
+  "ex-6ddesgpt": {
+    "prompt": "O `polite.py` não recebe resposta nenhuma do servidor. Ponha em ordem o que ele faz.",
+    "hint": "O teto dobra a cada vez.",
+    "items": [
+      "Esperar um tempo aleatório de até 0,5 s",
+      "Esperar um tempo aleatório de até 1 s",
+      "Esperar um tempo aleatório de até 2 s",
+      "Esperar um tempo aleatório de até 4 s",
+      "Desistir depois da quinta tentativa"
+    ],
+    "trap": "Esperar mais primeiro é o contrário: um servidor que piscou é tentado de novo logo, e um que continua fora é procurado cada vez menos."
+  },
+  "ex-6ec76rnr": {
+    "prompt": "Mil clientes falham no mesmo instante e todos recuam exponencialmente, esperando exatamente 0,5, 1 e 2 segundos, sem jitter. O que o servidor vê?",
+    "hint": "As esperas são idênticas para todos os clientes.",
+    "choices": [
+      {
+        "text": "Picos tão altos quanto o primeiro, em 0,5, 1,5 e 3,5 s",
+        "why": "Certo. Clientes que falharam juntos tentam de novo juntos, e cada tentativa é um pico tão alto quanto o primeiro."
+      },
+      {
+        "text": "Um fluxo constante e pequeno de tentativas, já que as esperas dobram",
+        "why": "Dobrar afasta os picos uns dos outros; não divide nenhum."
+      },
+      {
+        "text": "Nenhuma tentativa, porque o recuo exponencial desiste de cara",
+        "why": "Ele desiste depois de algumas tentativas, não antes da primeira."
+      },
+      {
+        "text": "Uma tentativa por cliente espalhada pelo segundo seguinte",
+        "why": "Esse espalhamento é o que o jitter faz, e estes clientes não têm."
+      }
+    ]
+  },
+  "ex-99czj938": {
+    "prompt": "O `polite.py` recebe um `404` e o devolve na hora em vez de tentar de novo. Por que isso está certo?",
+    "hint": "Que falhas uma espera consegue consertar?",
+    "choices": [
+      {
+        "text": "Um 404 não traz `Retry-After`, então não há o que esperar",
+        "why": "O silêncio também não traz, e é tentado de novo; o motivo é o que um 404 significa."
+      },
+      {
+        "text": "Tentar de novo um 404 conta duas vezes contra a cota diária",
+        "why": "Cada tentativa custa uma unidade como qualquer requisição; isso é custo, não o motivo da falha."
+      },
+      {
+        "text": "Mandar de novo a mesma requisição errada traz a mesma resposta",
+        "why": "Certo. Um 4xx diz que o problema é a requisição, e esperar não muda a requisição."
+      },
+      {
+        "text": "O servidor para de responder a uma chave que fica repetindo um 404",
+        "why": "O `limits.py` continua respondendo; ele cobra uma unidade a cada vez."
+      }
+    ]
+  },
+  "ex-24j8j2qg": {
+    "prompt": "A chave trial tem uma cota diária de 20 unidades. Uma busca custa 5 e ler um livro custa 1. Hoje ela fez 2 buscas e leu 6 livros. Quantos livros ela ainda pode ler hoje?",
+    "hint": "Desconte as buscas primeiro.",
+    "unit": "livros"
+  },
+  "ex-mt5fnrnv": {
+    "prompt": "A chave trial, buscando a cada cinco segundos, é recusada na quinta busca com `burst r=9`. O `Retry-After` é um número na casa das dezenas de milhares. O que a recusou?",
+    "hint": "Nove fichas bastam para uma busca.",
+    "choices": [
+      {
+        "text": "O balde, que precisa de 10 fichas para uma busca",
+        "why": "Uma busca custa 5, e havia nove."
+      },
+      {
+        "text": "A cota diária, até meia-noite UTC",
+        "why": "Certo. Quatro buscas gastaram as vinte unidades, e o dia recomeça à meia-noite."
+      },
+      {
+        "text": "A janela fixa do `limits.py window`",
+        "why": "O servidor rodava com o balde; a espera longa é do dia."
+      },
+      {
+        "text": "Um bloqueio, por buscar com frequência demais",
+        "why": "Não há bloqueio no `limits.py`; a resposta diz qual limite e quando ele zera."
+      }
+    ]
+  },
+  "ex-d8719jdq": {
+    "prompt": "Quatro cópias do `limits.py` rodam atrás de um balanceador round-robin, cada uma com seu próprio balde de 10 na memória. Um cliente com a cota cheia envia uma rajada. Quantas requisições podem ser aceitas antes da primeira recusa?",
+    "hint": "Duas cópias permitiram vinte na lição.",
+    "unit": "requisições"
+  },
+  "ex-4v0y19ve": {
+    "prompt": "Duas cópias dividem contadores num armazenamento. Cada uma lê o balde (\"1 ficha sobrando\") e depois o grava como 0, em dois passos separados. O que pode dar errado?",
+    "hint": "Intercale as duas cópias.",
+    "choices": [
+      {
+        "text": "O armazenamento recusa a segunda gravação, então uma requisição falha com erro",
+        "why": "Duas gravações simples de 0 dão certo; nada nelas conflita."
+      },
+      {
+        "text": "A ficha se perde, e o cliente recebe uma requisição a menos que o limite",
+        "why": "O erro vai no outro sentido: duas requisições são atendidas com uma ficha."
+      },
+      {
+        "text": "As duas leem 1 antes de gravar, e uma ficha atende duas",
+        "why": "Certo. A verificação e a atualização têm de ser uma operação só no armazenamento, como o `LOCK` faz num processo."
+      },
+      {
+        "text": "Nada, desde que as duas cópias rodem na mesma máquina",
+        "why": "Dois processos na mesma máquina se intercalam do mesmo jeito; a trava de cada um protege só as threads dele."
+      }
+    ]
+  },
+  "ex-c7s9n5py": {
+    "prompt": "O armazenamento compartilhado por trás do limitador cai. Se o limitador recusar toda requisição até ele voltar, no que a queda se transformou?",
+    "hint": "Quem é recusado?",
+    "choices": [
+      {
+        "text": "Nada visível: os clientes tentam de novo e conseguem depois",
+        "why": "Todo cliente é recusado enquanto o armazenamento estiver fora, o que é visível para todos."
+      },
+      {
+        "text": "Um período sem limite nenhum",
+        "why": "Essa é a outra escolha, permitir tudo enquanto o armazenamento estiver fora."
+      },
+      {
+        "text": "Um limite menor, dividido entre as cópias",
+        "why": "Dividir o limite é um projeto escolhido antes, não o que recusar tudo faz."
+      },
+      {
+        "text": "Uma queda da API inteira",
+        "why": "Certo. O armazenamento caiu, e toda requisição é recusada por causa disso."
+      }
+    ]
+  },
+  "ex-yy718phq": {
+    "prompt": "Ligue cada requisição acima de um limite ao status com que é respondida.",
+    "hint": "Uma delas é um tamanho, outra uma taxa.",
+    "pairs": [
+      {
+        "left": "um corpo maior do que a API aceita",
+        "right": "413"
+      },
+      {
+        "left": "a décima primeira tentativa de login num minuto",
+        "right": "429"
+      },
+      {
+        "left": "uma consulta aninhada além do permitido",
+        "right": "400"
+      }
+    ],
+    "right_distractors": [
+      "401"
+    ]
+  },
+  "ex-sgfnvy15": {
+    "prompt": "Tentativas de login são contadas por conta além de por endereço. Que adivinhação a contagem por conta pega e a por endereço deixa passar?",
+    "hint": "Espalhe os palpites.",
+    "choices": [
+      {
+        "text": "Uma conta, atacada de muitos endereços",
+        "why": "Certo. Cada endereço fica abaixo do limite dele, e o contador da conta ainda soma todos."
+      },
+      {
+        "text": "Palpites de um endereço contra muitas contas",
+        "why": "Esse é o caso que o contador por endereço pega: um endereço, um contador."
+      },
+      {
+        "text": "Palpites enviados devagar, um por minuto",
+        "why": "Palpites lentos ficam abaixo dos dois contadores; tornar cada palpite caro é a parte da lição 10."
+      },
+      {
+        "text": "Palpites que usam a senha certa",
+        "why": "Uma senha certa é um login bem-sucedido, não adivinhação; o contador trata de falhas."
+      }
+    ]
+  },
+  "ex-9qmye9fg": {
+    "prompt": "Ponha em ordem o que o `limits.py` faz com uma requisição.",
+    "hint": "O banco vem por último.",
+    "items": [
+      "Responder 401 se a chave faltar ou for desconhecida",
+      "Calcular o custo pelo caminho",
+      "Conferir a cota diária sem gastar",
+      "Tirar o custo do balde",
+      "Ler o banco e responder"
+    ],
+    "trap": "Ler o banco antes do limite significa que uma requisição recusada já custou o que o limite existia para poupar."
+  },
+  "ex-e2736zjd": {
+    "prompt": "Uma API documenta \"10 requisições a cada 10 segundos por chave\", e uma chave tem 20 aceitas em dois segundos. Que explicações servem? Escolha todas as que se aplicam.",
+    "hint": "Duas seções desta lição produziram exatamente vinte cada.",
+    "choices": [
+      {
+        "text": "Uma janela fixa, e as requisições atravessaram uma fronteira",
+        "why": "Certo. Dez no fim de uma janela e dez no início da seguinte."
+      },
+      {
+        "text": "Um balde de fichas de 10 reabastecido a 1 por segundo, num servidor",
+        "why": "Em dois segundos esse balde permite as dez dele e mais cerca de duas, como a execução na fronteira mostrou."
+      },
+      {
+        "text": "Duas cópias atrás de um balanceador, cada uma contando na própria memória",
+        "why": "Certo. Cada cópia viu dez requisições e tinha dez fichas para elas."
+      },
+      {
+        "text": "O cliente ignorou o `Retry-After`",
+        "why": "Ignorá-lo rende recusas, não aceitações; quem decide o que é aceito é o servidor."
+      }
+    ]
+  },
+  "ex-c4p50vff": {
+    "prompt": "Um endpoint novo gera um PDF e leva cerca de cinquenta vezes o tempo de ler um livro. Os clientes já têm um balde e uma cota diária. O que esta lição sugere?",
+    "hint": "A busca já tinha esse problema.",
+    "choices": [
+      {
+        "text": "Deixar em uma unidade, já que o limite de taxa já conta toda requisição",
+        "why": "Contado como um, um cliente que só gera PDFs custa ao servidor cinquenta vezes o que a contagem diz."
+      },
+      {
+        "text": "Limitar por endereço IP para que a cota da chave fique intacta",
+        "why": "Endereços são a chave fraca, e o custo cairia no mesmo servidor de todo jeito."
+      },
+      {
+        "text": "Colocá-lo atrás de uma API separada sem limite, para nunca tirar dos livros",
+        "why": "Um endpoint sem limite é o buraco que o API4:2023 da OWASP nomeia."
+      },
+      {
+        "text": "Dar a ele um custo em unidades do mesmo balde e da mesma cota, medido pelo que ele consome",
+        "why": "Certo. Do jeito que o `limits.py` cobra cinco por uma busca, com o peso tirado de medição."
+      }
+    ]
+  },
+  "ex-3kvpbvfn": {
+    "prompt": "Uma chave free com o balde cheio (10 fichas, reabastecido a 1 por segundo) faz uma busca, que custa 5, e logo em seguida pede 7 livros, uma unidade cada. Quantos dos 7 são aceitos?",
+    "hint": "Logo em seguida quer dizer que o reabastecimento quase nada acrescenta.",
+    "unit": "requisições"
+  },
+  "ex-065jzwkj": {
+    "prompt": "Quando uma recusa não traz `Retry-After`, o cliente recua exponencialmente e sorteia cada espera abaixo do teto, o que se chama ___.",
+    "hint": "Espalha as novas tentativas de clientes que falharam juntos.",
+    "blanks": [
+      {
+        "accept": [
+          "jitter",
+          "full jitter"
+        ]
+      }
+    ]
+  }
+}
