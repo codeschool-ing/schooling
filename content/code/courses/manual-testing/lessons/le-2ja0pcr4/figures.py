@@ -41,14 +41,14 @@ def session_loop(lang):
         weights=['600', None], size=10.5)
     box(f, 200, y, 180, h, t['session'], stroke='--wire', fill='--scan', fills=['--paper', '--paper-dim'],
         weights=['600', None], size=10.5)
-    box(f, 420, y, 140, h, t['debrief'], stroke='--amber', fills=['--paper', '--paper-dim'],
+    box(f, 404, y, 140, h, t['debrief'], stroke='--amber', fills=['--paper', '--paper-dim'],
         weights=['600', None], size=10.5)
     arrow(f, 160, y + h / 2, 198, y + h / 2)
-    arrow(f, 380, y + h / 2, 418, y + h / 2)
+    arrow(f, 380, y + h / 2, 402, y + h / 2)
     for k, o in enumerate(t['outs']):
         oy = 22 + k * 64
         box(f, 574, oy, 118, 40, [o], stroke='--phosphor' if k == 2 else '--wire', size=9.5)
-        arrow(f, 560, y + h / 2, 572, oy + 20)
+        arrow(f, 544, y + h / 2, 572, oy + 20)
     f.path('M633 190 L633 218 L90 218 L90 142', stroke='--phosphor', width=1.4, arrow=True)
     f.text(365, 208, t['back'], size=10, fill='--phosphor')
     return f, t['cap']

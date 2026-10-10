@@ -86,16 +86,42 @@ for row in rows:
 The key goes in the environment, not in the file, so that the program can be shared and the key
 cannot travel with it. Run it with a key:
 
-@@capture:pseudo@@
+```
+ana@laptop:~/boxoffice$ PSEUDONYM_KEY=vila-test-key python3 pseudonymise.py accounts.csv
+name,email
+C*** B******,user-fd0012e00e53@example.org
+D***** B******,user-9b1313cc8669@example.org
+D***** M******,user-81a46e112012@example.org
+G****** D*****,user-b0f365144ba2@example.org
+F******* B******,user-800010070afe@example.org
+```
 
 Run it again with the same key and the codes are identical, which is what lets two tables join.
 With a different key, the same people get different codes:
 
-@@capture:pseudo-key@@
+```
+ana@laptop:~/boxoffice$ PSEUDONYM_KEY=vila-test-key python3 pseudonymise.py accounts.csv
+name,email
+C*** B******,user-fd0012e00e53@example.org
+D***** B******,user-9b1313cc8669@example.org
+D***** M******,user-81a46e112012@example.org
+G****** D*****,user-b0f365144ba2@example.org
+F******* B******,user-800010070afe@example.org
+ana@laptop:~/boxoffice$ PSEUDONYM_KEY=another-key python3 pseudonymise.py accounts.csv
+name,email
+C*** B******,user-18ad58b96e1c@example.org
+D***** B******,user-989fc93f33c9@example.org
+D***** M******,user-f60bb686e4d8@example.org
+G****** D*****,user-5db6a3c85348@example.org
+F******* B******,user-ef74d7540351@example.org
+```
 
 And with no key it refuses, rather than producing codes anybody could recompute:
 
-@@capture:pseudo-nokey@@
+```
+ana@laptop:~/boxoffice$ python3 pseudonymise.py accounts.csv
+pseudonymise.py: set PSEUDONYM_KEY to the key you were given
+```
 
 On Windows in PowerShell, set the key on a line of its own first, `$env:PSEUDONYM_KEY="vila-test-key"`,
 and then run `python pseudonymise.py accounts.csv`.

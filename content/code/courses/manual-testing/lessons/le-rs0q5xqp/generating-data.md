@@ -61,7 +61,7 @@ Nothing in it is outside Python's standard library. **The names** are drawn from
 Brazilian first names and surnames, with accents, because a name field that has only ever seen
 `Test User` has never been asked about `Débora` or `Gonçalves`. **The e-mail addresses** are
 numbered, so no two collide, and they are all at `example.org`, a domain reserved for examples
-that belongs to nobody and receives nothing. **The passwords** are 8 to 16 characters from a set
+that no customer can own an address at. **The passwords** are 8 to 16 characters from a set
 that leaves out letters easily confused with digits, inside the 8 to 64 that R2 allows.
 
 The line that makes it a test tool rather than a toy is `random.Random(1)`. A random generator
@@ -74,12 +74,27 @@ that matters.
 With boxoffice 1.1 running in one terminal, run the program in another, in the `boxoffice`
 directory:
 
-@@capture:generate@@
+```
+ana@laptop:~/boxoffice$ python3 make_accounts.py 5
+test001@example.org  Account created. We sent a link to test001@example.org.
+test002@example.org  Account created. We sent a link to test002@example.org.
+test003@example.org  Account created. We sent a link to test003@example.org.
+test004@example.org  Account created. We sent a link to test004@example.org.
+test005@example.org  Account created. We sent a link to test005@example.org.
+```
 
 Each line is an address and the message boxoffice answered with, the same sentence the sign-up
 page shows in a browser. The file it saved is the record of what was created:
 
-@@capture:csv@@
+```
+ana@laptop:~/boxoffice$ cat accounts.csv
+name,email,password
+Caio Barbosa,test001@example.org,d2rngr6nv2yi
+Débora Barbosa,test002@example.org,aat8ngpahqrhh
+Débora Machado,test003@example.org,7p77dwzjz69s
+Gustavo Duarte,test004@example.org,j9r8n5rznxm6
+Fernanda Barbosa,test005@example.org,xdf4mzrj5vuwfha
+```
 
 Names repeat, three Barbosas among five people, because the program draws each name independently;
 the addresses never do, because they are numbered. Both are decisions in the program, and both
@@ -88,7 +103,10 @@ are visible in this file before anybody has to discover them in boxoffice.
 Every new account gets a confirmation e-mail, so the outbox now holds five of them. In the
 browser, open `http://127.0.0.1:8000/outbox`; from the terminal, count them:
 
-@@capture:outbox@@
+```
+ana@laptop:~/boxoffice$ curl -s http://127.0.0.1:8000/outbox | grep -c '<h2>Confirm your account</h2>'
+5
+```
 
 ## What generated data is not
 

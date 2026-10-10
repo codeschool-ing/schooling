@@ -12,7 +12,7 @@ whether the case can be trusted, repeated, and run by somebody else.
 ## Four sources
 
 **Built in.** The data the application starts with. Boxoffice has three shows and one account, the
-member `member@example.org`, and every case in lesson 18's spreadsheet leans on them. Built-in data
+member `member@example.org`, and most cases in lesson 18's spreadsheet lean on them. Built-in data
 is the cheapest there is and the most fragile: a case that expects Hamlet to have 80 seats left is
 a case about the starting state as much as about booking.
 
@@ -39,7 +39,7 @@ the product is wrong or the data was not what the case assumed, and only known d
 **It belongs to nobody.** An address a test signs up with may receive mail, so an invented address
 at a real provider may reach a real stranger. Boxoffice's outbox keeps every message, which is why
 this course could be careless and is not: every address in it is at `example.org`, one of a few
-domains reserved for examples that never deliver anywhere. Lesson 22 is about what happens to test
+domains reserved for documentation and examples, so no customer can ever own an address there. Lesson 22 is about what happens to test
 e-mail in environments that do send it.
 
 **It covers what the case is about.** A case about the student discount needs a student booking; a
@@ -47,14 +47,15 @@ case about a full show needs a show with no seats. Data for the case comes from 
 technique that chose the values chooses the data too.
 
 **It can be put back.** A case that books six tickets for Hamlet leaves Hamlet with six fewer. Run
-it fourteen times and the fifteenth finds a show with no seats left and fails for a reason that has
-nothing to do with what it checks. Section 05 of this lesson is about getting back to a known
-state, and why boxoffice makes that unusually easy.
+it thirteen times and the fourteenth finds two seats left and fails, for a reason that has nothing
+to do with what it checks. Section 05 of this lesson is about getting back to a
+known state, and why boxoffice makes that unusually easy.
 
 ## Data that runs out
 
 Some data is used up by the case that uses it. An order can be paid once; once it is paid, the case
-for paying it cannot run on that order again. A confirmation link is meant to work once. Seats run
-out. **Consumable data** is the commonest reason a case passes on Monday and fails on Tuesday with
-nothing changed in the product, and the fix is never to edit the case until it passes. It is to
+for paying it cannot run on that order again. Seats run out. An address can be signed up once,
+which section 05 of this lesson runs into. **Consumable data** is the commonest reason a case passes
+on Monday and fails on Tuesday with nothing changed in the product, and the fix is never to edit the
+case until it passes. It is to
 make the case create what it consumes, or to start each run from a state where it exists.

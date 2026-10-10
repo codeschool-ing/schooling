@@ -123,7 +123,11 @@ stop() {
 }
 
 isolated() {
-  unshare -n python3 - "$@" <<'PY'
+  # a network namespace of its own, and a private /home/ana, so two captures
+  # running at once share neither port 8000 nor a working directory
+  mkdir -p /home/ana
+  unshare -n -m --propagation private sh -c 'mount -t tmpfs tmpfs /home/ana && exec "$@"' sh \
+    python3 - "$@" <<'PY'
 import fcntl, socket, struct, subprocess, sys
 s = socket.socket()
 req = struct.pack("16sH14s", b"lo", 0, b"")
