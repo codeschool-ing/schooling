@@ -18,9 +18,9 @@ python3: can't open file '/home/ana/delivery/biling.py': [Errno 2] No such file 
 
 ```
 ana@laptop:~/delivery$ python3 broken.py
-  File "/home/ana/delivery/broken.py", line 60
+  File "/home/ana/delivery/broken.py", line 61
     reviewed.append(name)
-IndentationError: expected an indented block after 'if' statement on line 59
+IndentationError: expected an indented block after 'if' statement on line 60
 ```
 
 O Python usa os espaços no início de uma linha para saber que linhas andam juntas, então **uma colagem que os perde quebra o programa**. Esta cópia perdeu a indentação de uma linha, e o Python diz qual. Alguns editores e ferramentas de chat tiram ou convertem os espaços iniciais ao colar; copie com o botão do bloco, cole num editor de texto simples e, se o erro continuar, compare a linha que ele aponta com a da aula.
@@ -30,7 +30,7 @@ O Python usa os espaços no início de uma linha para saber que linhas andam jun
 ```
 ana@laptop:~/delivery$ cd ..
 ana@laptop:~$ python3 delivery/billing.py
-118 items merged, 17 not yet, 47 deploys
+123 items merged, 19 not yet, 47 deploys
 ana@laptop:~$ ls -1 delivery
 billing.py
 ana@laptop:~$ ls -1 *.csv

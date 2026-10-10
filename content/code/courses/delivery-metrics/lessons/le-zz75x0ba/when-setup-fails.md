@@ -18,9 +18,9 @@ python3: can't open file '/home/ana/delivery/biling.py': [Errno 2] No such file 
 
 ```
 ana@laptop:~/delivery$ python3 broken.py
-  File "/home/ana/delivery/broken.py", line 60
+  File "/home/ana/delivery/broken.py", line 61
     reviewed.append(name)
-IndentationError: expected an indented block after 'if' statement on line 59
+IndentationError: expected an indented block after 'if' statement on line 60
 ```
 
 Python uses the spaces at the start of a line to know which lines belong together, so **a paste that loses them breaks the program**. This copy lost the indentation of one line, and Python names it. Some editors and chat tools strip or convert leading spaces when you paste; copy with the button on the block, paste into a plain text editor, and if the error persists, compare the line it names with the lesson.
@@ -30,7 +30,7 @@ Python uses the spaces at the start of a line to know which lines belong togethe
 ```
 ana@laptop:~/delivery$ cd ..
 ana@laptop:~$ python3 delivery/billing.py
-118 items merged, 17 not yet, 47 deploys
+123 items merged, 19 not yet, 47 deploys
 ana@laptop:~$ ls -1 delivery
 billing.py
 ana@laptop:~$ ls -1 *.csv

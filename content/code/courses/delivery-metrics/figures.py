@@ -349,13 +349,13 @@ def l01_wip_days(lang):
         'A line chart of the Billing team\'s work in progress at the end of each day, from '
         f'1 June to 30 September 2026. It sits between {min(wip[:60])} and {max(wip[:60])} '
         'items through June and July, falls through August after the rules change on 3 '
-        f'August, and stays between {min(wip[-30:])} and {max(wip[-30:])} in September.',
+        f'August, and stays at {max(wip[-30:])} or fewer in September.',
         'Um gráfico de linha do trabalho em andamento do time de Billing no fim de cada dia, '
         f'de 1º de junho a 30 de setembro de 2026. Fica entre {min(wip[:60])} e '
         f'{max(wip[:60])} itens em junho e julho, cai ao longo de agosto depois que as regras '
-        f'mudam em 3 de agosto, e fica entre {min(wip[-30:])} e {max(wip[-30:])} em setembro.'))
-    p = Plot(f, 60, 40, 650, 230, 0, len(days) - 1, 0, 20)
-    p.yaxis([0, 5, 10, 15, 20])
+        f'mudam em 3 de agosto, e fica em {max(wip[-30:])} ou menos em setembro.'))
+    p = Plot(f, 60, 40, 650, 230, 0, len(days) - 1, 0, 30)
+    p.yaxis([0, 10, 20, 30])
     p.baseline()
     for d in (date(2026, 6, 1), date(2026, 7, 1), date(2026, 8, 1), date(2026, 9, 1)):
         x = p.sx((d - days[0]).days)
