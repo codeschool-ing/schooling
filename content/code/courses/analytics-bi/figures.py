@@ -553,5 +553,101 @@ def dashboard_review(lang):
     return s.render(), cap, same
 
 
+# ---------------------------------------------------------------- lesson 7
+
+@figure
+def arrow_back(lang):
+    """Lesson 7, the-arrow-back: the usual direction, and the one drawn back."""
+    s = Svg('arrow-back', 720, 300, L(lang,
+        'Data flowing in two directions. Along the top, left to right: the shop\'s systems, the '
+        'payment system and the website flow into the warehouse, then into the semantic layer, then '
+        'into dashboards that people read. Below, an arrow goes back from the semantic layer through '
+        'a model and a sync into the tools where people work: the CRM, the help desk and the e-mail '
+        'tool. The lower arrow is reverse ETL.',
+        'Dados fluindo em duas direções. Em cima, da esquerda para a direita: os sistemas da loja, o '
+        'sistema de pagamento e o site fluem para o warehouse, depois para a camada semântica, depois '
+        'para painéis que as pessoas leem. Embaixo, uma seta volta da camada semântica, por um modelo '
+        'e uma sincronização, para as ferramentas onde as pessoas trabalham: o CRM, o help desk e a '
+        'ferramenta de e-mail. A seta de baixo é o reverse ETL.'))
+    def box(x, y, w, h, lines, stroke='var(--wire)'):
+        s.rect(x, y, w, h, stroke=stroke)
+        n = len(lines)
+        for i, t in enumerate(lines):
+            s.text(x + w / 2, y + h / 2 + (i - (n - 1) / 2) * 15, t, 10.5, anchor='middle')
+    box(20, 30, 130, 80, [L(lang, 'the shop', 'a loja'), L(lang, 'payments', 'pagamentos'), L(lang, 'the website', 'o site')])
+    box(195, 45, 110, 50, ['warehouse'])
+    box(350, 45, 130, 50, [L(lang, 'semantic layer', 'camada semântica')], stroke='var(--phosphor)')
+    box(540, 45, 160, 50, [L(lang, 'dashboards', 'painéis')])
+    s.line(150, 70, 193, 70, arrow=True)
+    s.line(305, 70, 348, 70, arrow=True)
+    s.line(480, 70, 538, 70, arrow=True)
+    s.text(250, 20, 'ETL / ELT', 10, anchor='middle', mono=True, fill='var(--paper-dim)')
+    box(350, 170, 130, 44, [L(lang, 'model + sync', 'modelo + sincronização')], stroke='var(--amber)')
+    box(540, 140, 160, 120, ['CRM', 'help desk', L(lang, 'e-mail tool', 'ferramenta de e-mail')])
+    s.line(415, 95, 415, 168, stroke='var(--amber)', arrow=True)
+    s.line(480, 192, 538, 192, stroke='var(--amber)', arrow=True)
+    s.text(415, 245, 'reverse ETL', 11, anchor='middle', mono=True, fill='var(--amber)', weight='600')
+    s.text(620, 280, L(lang, 'where the work is done', 'onde o trabalho é feito'), 10, anchor='middle', italic=True, fill='var(--paper-dim)')
+    s.text(620, 30, L(lang, 'where numbers are read', 'onde os números são lidos'), 10, anchor='middle', italic=True, fill='var(--paper-dim)')
+    cap = L(lang, 'The usual arrows end at a screen; reverse ETL carries the same numbers into the tools '
+                  'people already have open.',
+            'As setas de costume terminam numa tela; o reverse ETL leva os mesmos números às ferramentas '
+            'que as pessoas já têm abertas.')
+    same = ['warehouse', 'CRM', 'help desk'] if lang == 'pt' else None
+    return s.render(), cap, same
+
+
+# ---------------------------------------------------------------- lesson 8
+
+@figure
+def two_cdps(lang):
+    """Lesson 8, composable-cdp: where the profile lives in each design."""
+    s = Svg('two-cdps', 720, 320, L(lang,
+        'Two diagrams side by side. On the left, a packaged CDP: the website and the app send events '
+        'to the CDP, which keeps its own store of customer profiles and sends audiences to the tools; '
+        'the warehouse receives a copy, drawn dashed. On the right, a composable CDP: the website and '
+        'the app send events to the warehouse, where the profile is a model; the product reads the '
+        'model, keeps no copy, and sends audiences to the tools.',
+        'Dois diagramas lado a lado. À esquerda, um CDP empacotado: o site e o app mandam eventos ao '
+        'CDP, que guarda o próprio depósito de perfis de clientes e manda públicos às ferramentas; o '
+        'warehouse recebe uma cópia, desenhada tracejada. À direita, um CDP composable: o site e o app '
+        'mandam eventos ao warehouse, onde o perfil é um modelo; o produto lê o modelo, não guarda '
+        'cópia e manda públicos às ferramentas.'))
+    def box(x, y, w, h, lines, stroke='var(--wire)', dash=None):
+        s.rect(x, y, w, h, stroke=stroke, dash=dash)
+        n = len(lines)
+        for i, t in enumerate(lines):
+            s.text(x + w / 2, y + h / 2 + (i - (n - 1) / 2) * 15, t, 10.5, anchor='middle')
+    s.text(180, 22, L(lang, 'packaged', 'empacotado'), 12, anchor='middle', weight='600')
+    s.text(540, 22, 'composable', 12, anchor='middle', weight='600')
+    s.line(360, 15, 360, 305, stroke='var(--wire)', sw=1, dash='3 4')
+    site = L(lang, 'website, app', 'site, app')
+    tools = L(lang, 'the tools', 'as ferramentas')
+    # packaged
+    box(20, 50, 120, 40, [site])
+    box(200, 40, 140, 120, ['CDP', L(lang, 'its own copy', 'cópia própria'), L(lang, 'of every profile', 'de cada perfil')], stroke='var(--amber)')
+    box(200, 240, 140, 40, [tools])
+    box(20, 180, 120, 40, ['warehouse'], dash='5 4')
+    s.line(140, 70, 198, 70, arrow=True)
+    s.line(270, 160, 270, 238, stroke='var(--amber)', arrow=True)
+    s.line(198, 140, 142, 190, dash='4 3', arrow=True)
+    s.text(70, 238, L(lang, 'a copy', 'uma cópia'), 10, anchor='middle', italic=True, fill='var(--paper-dim)')
+    # composable
+    box(380, 50, 120, 40, [site])
+    box(560, 40, 140, 80, ['warehouse', L(lang, 'profile = a model', 'perfil = um modelo')], stroke='var(--phosphor)')
+    box(560, 160, 140, 40, [L(lang, 'the product', 'o produto')], stroke='var(--amber)')
+    box(560, 240, 140, 40, [tools])
+    s.line(500, 70, 558, 70, arrow=True)
+    s.line(630, 120, 630, 158, arrow=True)
+    s.line(630, 200, 630, 238, stroke='var(--amber)', arrow=True)
+    s.text(470, 180, L(lang, 'reads, keeps no copy', 'lê, não guarda cópia'), 10, anchor='middle', italic=True, fill='var(--paper-dim)')
+    cap = L(lang, 'The question that separates them is where the customer profile is kept: in the vendor\'s '
+                  'store, or as a model in the company\'s warehouse.',
+            'A pergunta que os separa é onde o perfil do cliente fica guardado: no depósito do fornecedor, '
+            'ou como um modelo no warehouse da empresa.')
+    same = ['CDP', 'warehouse', 'composable'] if lang == 'pt' else None
+    return s.render(), cap, same
+
+
 if __name__ == '__main__':
     inject()
