@@ -1,0 +1,620 @@
+[
+  {
+    "id": "ex-6e9ctxmf",
+    "version": 1,
+    "section": "replication-factor",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After `ALTER KEYSPACE shop` raises the replication factor from 1 to 3, Cassandra warns that a full repair is needed. Why?",
+    "choices": [
+      {
+        "text": "The keyspace is locked until a repair confirms the new setting",
+        "correct": false,
+        "why": "Nothing is locked; the stock table was created and written straight after."
+      },
+      {
+        "text": "Existing rows are not copied to the new replicas by the ALTER",
+        "correct": true,
+        "why": "Right. Two of the three nodes now responsible for each old partition have never seen it."
+      },
+      {
+        "text": "New writes go to one replica until the repair finishes",
+        "correct": false,
+        "why": "New writes go to all three at once; it is the old rows that are missing."
+      },
+      {
+        "text": "Repair rebuilds the ring with more tokens per node",
+        "correct": false,
+        "why": "Tokens are unchanged; repair compares and copies data."
+      }
+    ]
+  },
+  {
+    "id": "ex-vpaahnj4",
+    "version": 1,
+    "section": "replication-factor",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Where is the replication factor set?",
+    "choices": [
+      {
+        "text": "On the keyspace",
+        "correct": true,
+        "why": "Right: WITH replication = {...} on CREATE or ALTER KEYSPACE."
+      },
+      {
+        "text": "On each query, with CONSISTENCY",
+        "correct": false,
+        "why": "CONSISTENCY sets how many copies must answer, not how many exist."
+      },
+      {
+        "text": "On each table, beside the primary key",
+        "correct": false,
+        "why": "Tables inherit it from their keyspace."
+      },
+      {
+        "text": "In each node's cassandra.yaml",
+        "correct": false,
+        "why": "It is a schema setting shared by the cluster, not a node file."
+      }
+    ]
+  },
+  {
+    "id": "ex-hfv546v4",
+    "version": 1,
+    "section": "replication-factor",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does `cqlsh` answer to `CONSISTENCY` with no argument in a new session?",
+    "choices": [
+      {
+        "text": "Current consistency level is QUORUM.",
+        "correct": false,
+        "why": "QUORUM is a common choice in applications, but cqlsh does not start there."
+      },
+      {
+        "text": "Current consistency level is ALL.",
+        "correct": false,
+        "why": "ALL would make every query fail with one node down."
+      },
+      {
+        "text": "Current consistency level is LOCAL_QUORUM.",
+        "correct": false,
+        "why": "Some drivers default to LOCAL_ONE or LOCAL_QUORUM; cqlsh said ONE."
+      },
+      {
+        "text": "Current consistency level is ONE.",
+        "correct": true,
+        "why": "Right, as the lab showed: one replica's answer is enough unless you say otherwise."
+      }
+    ]
+  },
+  {
+    "id": "ex-77jwap4h",
+    "version": 1,
+    "section": "replication-factor",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team keeps one data centre today and plans a second next year. Which keyspace replication fits, and why?",
+    "choices": [
+      {
+        "text": "SimpleStrategy, because one data centre is all it has to describe",
+        "correct": false,
+        "why": "It works today, and moving off it later is an ALTER plus a repair."
+      },
+      {
+        "text": "Either one, since replication can be switched off while the second centre is added",
+        "correct": false,
+        "why": "Replication is never switched off; the strategy decides where the copies go."
+      },
+      {
+        "text": "NetworkTopologyStrategy with dc1 named, so the second centre is a new entry",
+        "correct": true,
+        "why": "Right. Copies are counted per data centre by name, and LOCAL_QUORUM depends on it."
+      },
+      {
+        "text": "A replication factor of 6 today, so the second centre's copies already exist",
+        "correct": false,
+        "why": "Three nodes cannot hold six copies of a partition."
+      }
+    ]
+  },
+  {
+    "id": "ex-hzhghb8c",
+    "version": 1,
+    "section": "levels",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A keyspace has a replication factor of 5. How many replicas must answer a read at QUORUM?",
+    "hint": "Divide by 2, round down, add 1.",
+    "value": 3,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-mppjcbmm",
+    "version": 1,
+    "section": "levels",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `c3` stopped, a read at `ALL` answered `Cannot achieve consistency level ALL` at once. What did the coordinator do?",
+    "choices": [
+      {
+        "text": "Knew from gossip that only 2 replicas were alive, and refused without sending",
+        "correct": true,
+        "why": "Right: Unavailable, with required_replicas 3 and alive_replicas 2."
+      },
+      {
+        "text": "Sent the read to all three and waited for c3 until the timeout",
+        "correct": false,
+        "why": "That would be a timeout error after seconds; this came at once."
+      },
+      {
+        "text": "Read from two replicas and reported their answers disagreed",
+        "correct": false,
+        "why": "Disagreement is repaired, not reported as unavailable."
+      },
+      {
+        "text": "Returned the row from c1 and logged a warning",
+        "correct": false,
+        "why": "ALL never answers with fewer than all replicas."
+      }
+    ]
+  },
+  {
+    "id": "ex-0597zryf",
+    "version": 1,
+    "section": "levels",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With `c3` down, an `UPDATE` at `QUORUM` succeeds. To which replicas was the write sent?",
+    "hint": "The level counts acknowledgements.",
+    "choices": [
+      {
+        "text": "To any two chosen at random, possibly including c3",
+        "correct": false,
+        "why": "The coordinator knows c3 is down and sends to the live ones."
+      },
+      {
+        "text": "To c1 alone, the coordinator",
+        "correct": false,
+        "why": "That would be one acknowledgement, not a quorum."
+      },
+      {
+        "text": "To all three, including c3, which stores it on disk while stopped",
+        "correct": false,
+        "why": "A stopped node receives nothing; lesson 19 shows what keeps its missed writes."
+      },
+      {
+        "text": "To the two that are up, c1 and c2",
+        "correct": true,
+        "why": "Right. A write goes to every live replica; QUORUM waited for two acknowledgements and had them."
+      }
+    ]
+  },
+  {
+    "id": "ex-szawbjns",
+    "version": 1,
+    "section": "levels",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With a replication factor of 3, match each level to the most nodes that can be down while it still answers.",
+    "pairs": [
+      {
+        "left": "ONE",
+        "right": "two"
+      },
+      {
+        "left": "QUORUM",
+        "right": "one"
+      },
+      {
+        "left": "ALL",
+        "right": "none"
+      }
+    ],
+    "right_distractors": [
+      "three"
+    ]
+  },
+  {
+    "id": "ex-t1g03bnf",
+    "version": 1,
+    "section": "levels",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With two nodes down, `ONE` read `0` from `c1`, the value written at `QUORUM`. Why can't you rely on `ONE` returning the latest value in general?",
+    "choices": [
+      {
+        "text": "Because ONE reads from a cache that is refreshed every few seconds",
+        "correct": false,
+        "why": "There is no such cache in the read path here; it reads a replica."
+      },
+      {
+        "text": "Because it trusts one replica, and nothing says that one has the last write",
+        "correct": true,
+        "why": "Right. c1 happened to be one of the two that took the write."
+      },
+      {
+        "text": "Because ONE ignores timestamps and returns the first value found",
+        "correct": false,
+        "why": "With one answer there is nothing to compare; the problem is which replica answered."
+      },
+      {
+        "text": "Because a read at ONE is refused while any node is down",
+        "correct": false,
+        "why": "It answered with two nodes down."
+      }
+    ]
+  },
+  {
+    "id": "ex-rxt7hk1p",
+    "version": 1,
+    "section": "levels",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `nodetool status`, what does `DN` mean for `c3`?",
+    "choices": [
+      {
+        "text": "Down and normal: still in the ring, not answering",
+        "correct": true,
+        "why": "Right. It keeps its tokens; the others know it is not answering."
+      },
+      {
+        "text": "Decommissioned: removed from the ring and its data handed over",
+        "correct": false,
+        "why": "A decommissioned node disappears from the list."
+      },
+      {
+        "text": "Data node, as opposed to a seed",
+        "correct": false,
+        "why": "The two letters are status and state."
+      },
+      {
+        "text": "Draining: finishing its writes before stopping",
+        "correct": false,
+        "why": "D is Down; draining is not one of the states shown."
+      }
+    ]
+  },
+  {
+    "id": "ex-n3edb9qn",
+    "version": 1,
+    "section": "r-plus-w",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "RF is 3. A team writes at `ONE` and reads at `QUORUM`. Does a read always see the last acknowledged write?",
+    "choices": [
+      {
+        "text": "Yes, because QUORUM reads a majority",
+        "correct": false,
+        "why": "A majority of reads can still miss the single replica that has the write."
+      },
+      {
+        "text": "No, because QUORUM reads skip the coordinator's own copy",
+        "correct": false,
+        "why": "The coordinator's copy can be one of those read; the arithmetic is the reason."
+      },
+      {
+        "text": "Yes, as long as no node is down",
+        "correct": false,
+        "why": "Even with all up, the write may not have reached the other two yet."
+      },
+      {
+        "text": "No: 1 + 2 is not greater than 3",
+        "correct": true,
+        "why": "Right. The two replicas read can both be ones the write has not reached."
+      }
+    ]
+  },
+  {
+    "id": "ex-t40qt69f",
+    "version": 1,
+    "section": "r-plus-w",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which pair of levels, with RF 3, both sees the last write and keeps working with one node down?",
+    "choices": [
+      {
+        "text": "ONE writes, ALL reads",
+        "correct": false,
+        "why": "It sees the last write, and any node down stops every read."
+      },
+      {
+        "text": "ONE writes, ONE reads",
+        "correct": false,
+        "why": "It survives two nodes down, and 1 + 1 does not exceed 3."
+      },
+      {
+        "text": "QUORUM writes, QUORUM reads",
+        "correct": true,
+        "why": "Right: 2 + 2 > 3, and each needs only two of three."
+      },
+      {
+        "text": "ALL writes, ONE reads",
+        "correct": false,
+        "why": "It sees the last write, and any node down stops every write."
+      }
+    ]
+  },
+  {
+    "id": "ex-548r0bq3",
+    "version": 1,
+    "section": "r-plus-w",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A cluster has three replicas in São Paulo and three in Lisbon. The application in São Paulo uses `QUORUM`. What does every request pay?",
+    "hint": "How many replicas is a quorum of six?",
+    "choices": [
+      {
+        "text": "Nothing extra, because the coordinator answers from its own region first",
+        "correct": false,
+        "why": "A quorum of 6 is 4, and São Paulo has only 3."
+      },
+      {
+        "text": "A wait for at least one answer from Lisbon, the cross-ocean round trip",
+        "correct": true,
+        "why": "Right. LOCAL_QUORUM would need 2 of the 3 local replicas instead."
+      },
+      {
+        "text": "A refusal, since QUORUM is not allowed with two data centres",
+        "correct": false,
+        "why": "It is allowed; it is slow."
+      },
+      {
+        "text": "Six acknowledgements on every write",
+        "correct": false,
+        "why": "That would be ALL."
+      }
+    ]
+  },
+  {
+    "id": "ex-j7cfm4pa",
+    "version": 1,
+    "section": "r-plus-w",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In a cluster with one data centre per region, the everyday level that keeps reads and writes inside the client's own region is ___.",
+    "blanks": [
+      {
+        "accept": [
+          "LOCAL_QUORUM"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-cjnnpxeq",
+    "version": 1,
+    "section": "r-plus-w",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A `QUORUM` write times out after one replica acknowledged it. What is true afterwards?",
+    "choices": [
+      {
+        "text": "The write is rolled back on that replica automatically",
+        "correct": false,
+        "why": "Cassandra has no rollback for a single write."
+      },
+      {
+        "text": "The coordinator retries until it succeeds",
+        "correct": false,
+        "why": "The client receives the timeout; retrying is the application's decision."
+      },
+      {
+        "text": "No replica has it, since the level was not reached",
+        "correct": false,
+        "why": "The level decides the answer to the client, not what the replicas stored."
+      },
+      {
+        "text": "The value stays on that replica, and a later read that asks it will find it",
+        "correct": true,
+        "why": "Right. A failed write is not an undone write."
+      }
+    ]
+  },
+  {
+    "id": "ex-wv7jf14n",
+    "version": 1,
+    "section": "lightweight-transactions",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the four rounds of a lightweight transaction in order, as the trace showed them.",
+    "items": [
+      "PREPARE: claim the right to propose",
+      "READ: fetch the current value and check the condition",
+      "PROPOSE: agree on the new value",
+      "COMMIT: apply it"
+    ],
+    "trap": "The condition can only be checked once the right to propose is held."
+  },
+  {
+    "id": "ex-axedsrax",
+    "version": 1,
+    "section": "lightweight-transactions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The second `UPDATE ... IF units = 1` returned `[applied] False` and `units 0`. What should the application do with that?",
+    "choices": [
+      {
+        "text": "Retry the same statement until it applies",
+        "correct": false,
+        "why": "It will never apply while units is 0; the condition is the point."
+      },
+      {
+        "text": "Tell the customer the monitor is sold out",
+        "correct": true,
+        "why": "Right. It lost the race, and the reply says what it lost to."
+      },
+      {
+        "text": "Write units = 0 without the IF, to be sure",
+        "correct": false,
+        "why": "A plain write bypasses Paxos and can overwrite an agreed value."
+      },
+      {
+        "text": "Read again at ALL to find out who is right",
+        "correct": false,
+        "why": "The reply already carries the current value."
+      }
+    ]
+  },
+  {
+    "id": "ex-rmqhs5yt",
+    "version": 1,
+    "section": "lightweight-transactions",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A session is at `CONSISTENCY ONE` and two of three nodes are down. A conditional `UPDATE` is refused. Why?",
+    "choices": [
+      {
+        "text": "Its Paxos rounds use the serial level, which needs a majority",
+        "correct": true,
+        "why": "Right: Cannot achieve consistency level SERIAL, required 2, alive 1."
+      },
+      {
+        "text": "Conditional writes are only allowed when the session is at QUORUM or above",
+        "correct": false,
+        "why": "The ordinary level can be ONE; it governs the commit, not the decision."
+      },
+      {
+        "text": "The row was still locked by the earlier plain UPDATE on the same partition",
+        "correct": false,
+        "why": "Plain writes take no locks."
+      },
+      {
+        "text": "A session at ONE refuses every write while any node of the cluster is down",
+        "correct": false,
+        "why": "A plain read at ONE answered in the same session."
+      }
+    ]
+  },
+  {
+    "id": "ex-wvbsgnd8",
+    "version": 1,
+    "section": "lightweight-transactions",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson say to keep every write to an LWT-guarded column conditional?",
+    "choices": [
+      {
+        "text": "Because plain writes to that table are refused",
+        "correct": false,
+        "why": "They are accepted, which is the danger."
+      },
+      {
+        "text": "Because Cassandra needs a write history to run Paxos",
+        "correct": false,
+        "why": "Paxos needs a majority, not a history of conditional writes."
+      },
+      {
+        "text": "Because conditional writes are cheaper once the first one has run",
+        "correct": false,
+        "why": "Each costs four rounds; there is no warm-up."
+      },
+      {
+        "text": "A plain write skips Paxos, so it overwrites what an LWT agreed",
+        "correct": true,
+        "why": "Right. Only writes that take part in the agreement are ordered by it."
+      }
+    ]
+  },
+  {
+    "id": "ex-pwrqds6z",
+    "version": 1,
+    "section": "lightweight-transactions",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the trace, a plain `UPDATE` sent one message to each of the two other replicas. How many messages did the conditional `UPDATE` send to them in total?",
+    "hint": "Four kinds, two replicas.",
+    "value": 8,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-y6p3t716",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "RF is 3 and one node is down. Which statements succeed? Choose all that apply.",
+    "choices": [
+      {
+        "text": "A read at QUORUM",
+        "correct": true,
+        "why": "Right: it needs 2 and has 2."
+      },
+      {
+        "text": "A write at ALL",
+        "correct": false,
+        "why": "It needs 3 and has 2."
+      },
+      {
+        "text": "A conditional UPDATE",
+        "correct": true,
+        "why": "Right: SERIAL needs a majority, and 2 of 3 is one."
+      },
+      {
+        "text": "A read at ONE",
+        "correct": true,
+        "why": "Right: one replica is enough."
+      },
+      {
+        "text": "A read at ALL",
+        "correct": false,
+        "why": "Unavailable, as the lab showed."
+      }
+    ]
+  },
+  {
+    "id": "ex-ppcvfv0h",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two customers buy the last monitor at the same moment, and the shop writes `units = 0` at `QUORUM` for each. What happens?",
+    "choices": [
+      {
+        "text": "Both succeed, both are told yes, and one monitor is sold twice",
+        "correct": true,
+        "why": "Right. That is the race only a conditional write closes."
+      },
+      {
+        "text": "The second write fails, because QUORUM detects that the two writes conflict",
+        "correct": false,
+        "why": "QUORUM counts acknowledgements; it checks no condition."
+      },
+      {
+        "text": "Cassandra merges them into units = -1",
+        "correct": false,
+        "why": "Each write sets a value; the later timestamp wins."
+      },
+      {
+        "text": "One waits for the other, as in a relational transaction",
+        "correct": false,
+        "why": "Plain writes take no locks."
+      }
+    ]
+  }
+]

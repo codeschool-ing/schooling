@@ -1,0 +1,413 @@
+{
+  "ex-6e9ctxmf": {
+    "prompt": "Depois que `ALTER KEYSPACE shop` sobe o fator de replicação de 1 para 3, o Cassandra avisa que é preciso um repair completo. Por quê?",
+    "choices": [
+      {
+        "text": "O keyspace fica travado até um repair confirmar a configuração nova",
+        "why": "Nada fica travado; a tabela de estoque foi criada e gravada logo depois."
+      },
+      {
+        "text": "O ALTER não copia as linhas existentes para as réplicas novas",
+        "why": "Isso. Dois dos três nós agora responsáveis por cada partição antiga nunca a viram."
+      },
+      {
+        "text": "Escritas novas vão para uma réplica só até o repair terminar",
+        "why": "Escritas novas vão para as três na hora; o que falta são as linhas antigas."
+      },
+      {
+        "text": "O repair reconstrói o anel com mais tokens por nó",
+        "why": "Os tokens não mudam; o repair compara e copia dados."
+      }
+    ]
+  },
+  "ex-vpaahnj4": {
+    "prompt": "Onde se define o fator de replicação?",
+    "choices": [
+      {
+        "text": "No keyspace",
+        "why": "Isso: WITH replication = {...} no CREATE ou ALTER KEYSPACE."
+      },
+      {
+        "text": "Em cada consulta, com CONSISTENCY",
+        "why": "CONSISTENCY define quantas cópias precisam responder, não quantas existem."
+      },
+      {
+        "text": "Em cada tabela, ao lado da chave primária",
+        "why": "As tabelas herdam do keyspace."
+      },
+      {
+        "text": "No cassandra.yaml de cada nó",
+        "why": "É uma configuração do esquema, compartilhada pelo cluster, não um arquivo do nó."
+      }
+    ]
+  },
+  "ex-hfv546v4": {
+    "prompt": "O que o `cqlsh` responde a `CONSISTENCY` sem argumento numa sessão nova?",
+    "choices": [
+      {
+        "text": "Current consistency level is QUORUM.",
+        "why": "QUORUM é escolha comum em aplicações, mas o cqlsh não começa nele."
+      },
+      {
+        "text": "Current consistency level is ALL.",
+        "why": "ALL faria toda consulta falhar com um nó caído."
+      },
+      {
+        "text": "Current consistency level is LOCAL_QUORUM.",
+        "why": "Alguns drivers usam LOCAL_ONE ou LOCAL_QUORUM por padrão; o cqlsh disse ONE."
+      },
+      {
+        "text": "Current consistency level is ONE.",
+        "why": "Isso, como o laboratório mostrou: a resposta de uma réplica basta se você não disser nada."
+      }
+    ]
+  },
+  "ex-77jwap4h": {
+    "prompt": "Uma equipe tem um data center hoje e planeja um segundo no ano que vem. Qual replicação de keyspace cabe, e por quê?",
+    "choices": [
+      {
+        "text": "SimpleStrategy, porque um data center é tudo o que ela precisa descrever",
+        "why": "Funciona hoje, e sair dela depois é um ALTER mais um repair."
+      },
+      {
+        "text": "Qualquer uma, já que a replicação pode ser desligada enquanto o segundo centro entra",
+        "why": "A replicação nunca é desligada; a estratégia decide para onde vão as cópias."
+      },
+      {
+        "text": "NetworkTopologyStrategy com dc1 nomeado, para o segundo centro ser uma entrada nova",
+        "why": "Isso. As cópias são contadas por data center, pelo nome, e o LOCAL_QUORUM depende disso."
+      },
+      {
+        "text": "Um fator de replicação 6 hoje, para as cópias do segundo centro já existirem",
+        "why": "Três nós não guardam seis cópias de uma partição."
+      }
+    ]
+  },
+  "ex-hzhghb8c": {
+    "prompt": "Um keyspace tem fator de replicação 5. Quantas réplicas precisam responder a uma leitura em QUORUM?",
+    "hint": "Divida por 2, arredonde para baixo, some 1."
+  },
+  "ex-mppjcbmm": {
+    "prompt": "Com o `c3` parado, uma leitura em `ALL` respondeu `Cannot achieve consistency level ALL` na hora. O que o coordenador fez?",
+    "choices": [
+      {
+        "text": "Sabia pelo gossip que só 2 réplicas estavam vivas, e recusou sem enviar",
+        "why": "Isso: Unavailable, com required_replicas 3 e alive_replicas 2."
+      },
+      {
+        "text": "Mandou a leitura aos três e esperou o c3 até o tempo esgotar",
+        "why": "Isso seria um erro de tempo esgotado depois de segundos; este veio na hora."
+      },
+      {
+        "text": "Leu de duas réplicas e relatou que as respostas discordavam",
+        "why": "Discordância é reparada, não relatada como indisponível."
+      },
+      {
+        "text": "Devolveu a linha do c1 e registrou um aviso",
+        "why": "ALL nunca responde com menos que todas as réplicas."
+      }
+    ]
+  },
+  "ex-0597zryf": {
+    "prompt": "Com o `c3` fora, um `UPDATE` em `QUORUM` dá certo. Para quais réplicas a escrita foi enviada?",
+    "hint": "O nível conta confirmações.",
+    "choices": [
+      {
+        "text": "A duas quaisquer escolhidas ao acaso, talvez incluindo o c3",
+        "why": "O coordenador sabe que o c3 está fora e manda para as vivas."
+      },
+      {
+        "text": "Só ao c1, o coordenador",
+        "why": "Isso seria uma confirmação, não um quórum."
+      },
+      {
+        "text": "Às três, inclusive o c3, que o grava em disco mesmo parado",
+        "why": "Um nó parado não recebe nada; a aula 19 mostra o que guarda as escritas que ele perdeu."
+      },
+      {
+        "text": "Às duas que estão de pé, c1 e c2",
+        "why": "Isso. Uma escrita vai a toda réplica viva; o QUORUM esperou duas confirmações e as teve."
+      }
+    ]
+  },
+  "ex-szawbjns": {
+    "prompt": "Com fator de replicação 3, associe cada nível ao máximo de nós que podem estar fora com ele ainda respondendo.",
+    "pairs": [
+      {
+        "left": "ONE",
+        "right": "dois"
+      },
+      {
+        "left": "QUORUM",
+        "right": "um"
+      },
+      {
+        "left": "ALL",
+        "right": "nenhum"
+      }
+    ],
+    "right_distractors": [
+      "três"
+    ]
+  },
+  "ex-t1g03bnf": {
+    "prompt": "Com dois nós fora, o `ONE` leu `0` do `c1`, o valor gravado em `QUORUM`. Por que não dá para contar com o `ONE` devolvendo o valor mais recente em geral?",
+    "choices": [
+      {
+        "text": "Porque o ONE lê de um cache atualizado a cada poucos segundos",
+        "why": "Não há esse cache no caminho de leitura aqui; ele lê uma réplica."
+      },
+      {
+        "text": "Porque confia numa réplica, e nada garante que ela tenha a última escrita",
+        "why": "Isso. O c1 por acaso era uma das duas que receberam a escrita."
+      },
+      {
+        "text": "Porque o ONE ignora timestamps e devolve o primeiro valor achado",
+        "why": "Com uma resposta não há o que comparar; o problema é qual réplica respondeu."
+      },
+      {
+        "text": "Porque uma leitura em ONE é recusada enquanto qualquer nó estiver fora",
+        "why": "Ela respondeu com dois nós fora."
+      }
+    ]
+  },
+  "ex-rxt7hk1p": {
+    "prompt": "No `nodetool status`, o que `DN` quer dizer para o `c3`?",
+    "choices": [
+      {
+        "text": "Down e normal: ainda no anel, sem responder",
+        "why": "Isso. Ele mantém os tokens; os outros sabem que não responde."
+      },
+      {
+        "text": "Desativado: removido do anel e com os dados repassados",
+        "why": "Um nó desativado some da lista."
+      },
+      {
+        "text": "Nó de dados, em oposição a uma semente",
+        "why": "As duas letras são status e estado."
+      },
+      {
+        "text": "Drenando: terminando as escritas antes de parar",
+        "why": "D é Down; drenagem não é um dos estados mostrados."
+      }
+    ]
+  },
+  "ex-n3edb9qn": {
+    "prompt": "O RF é 3. Uma equipe grava em `ONE` e lê em `QUORUM`. A leitura sempre vê a última escrita confirmada?",
+    "choices": [
+      {
+        "text": "Sim, porque o QUORUM lê uma maioria",
+        "why": "Uma maioria de leitura ainda pode perder a única réplica que tem a escrita."
+      },
+      {
+        "text": "Não, porque leituras em QUORUM pulam a cópia do próprio coordenador",
+        "why": "A cópia do coordenador pode ser uma das lidas; o motivo é a conta."
+      },
+      {
+        "text": "Sim, desde que nenhum nó esteja fora",
+        "why": "Mesmo com todos de pé, a escrita pode ainda não ter chegado às outras duas."
+      },
+      {
+        "text": "Não: 1 + 2 não é maior que 3",
+        "why": "Isso. As duas réplicas lidas podem ser justamente as que a escrita não alcançou."
+      }
+    ]
+  },
+  "ex-t40qt69f": {
+    "prompt": "Qual par de níveis, com RF 3, vê a última escrita e continua funcionando com um nó fora?",
+    "choices": [
+      {
+        "text": "Escrita ONE, leitura ALL",
+        "why": "Vê a última escrita, e qualquer nó fora para toda leitura."
+      },
+      {
+        "text": "Escrita ONE, leitura ONE",
+        "why": "Aguenta dois nós fora, e 1 + 1 não passa de 3."
+      },
+      {
+        "text": "Escrita QUORUM, leitura QUORUM",
+        "why": "Isso: 2 + 2 > 3, e cada um precisa só de duas de três."
+      },
+      {
+        "text": "Escrita ALL, leitura ONE",
+        "why": "Vê a última escrita, e qualquer nó fora para toda escrita."
+      }
+    ]
+  },
+  "ex-548r0bq3": {
+    "prompt": "Um cluster tem três réplicas em São Paulo e três em Lisboa. A aplicação em São Paulo usa `QUORUM`. O que todo pedido paga?",
+    "hint": "Quantas réplicas são um quórum de seis?",
+    "choices": [
+      {
+        "text": "Nada a mais, porque o coordenador responde primeiro com a própria região",
+        "why": "Um quórum de 6 é 4, e São Paulo tem só 3."
+      },
+      {
+        "text": "Esperar ao menos uma resposta de Lisboa, a ida e volta pelo oceano",
+        "why": "Isso. O LOCAL_QUORUM precisaria de 2 das 3 réplicas locais."
+      },
+      {
+        "text": "Uma recusa, já que QUORUM não é permitido com dois data centers",
+        "why": "É permitido; é lento."
+      },
+      {
+        "text": "Seis confirmações em toda escrita",
+        "why": "Isso seria ALL."
+      }
+    ]
+  },
+  "ex-j7cfm4pa": {
+    "prompt": "Num cluster com um data center por região, o nível do dia a dia que mantém leituras e escritas dentro da região do cliente é ___.",
+    "blanks": [
+      {
+        "accept": [
+          "LOCAL_QUORUM"
+        ]
+      }
+    ]
+  },
+  "ex-cjnnpxeq": {
+    "prompt": "Uma escrita em `QUORUM` estoura o tempo depois de uma réplica confirmá-la. O que vale depois disso?",
+    "choices": [
+      {
+        "text": "A escrita é desfeita naquela réplica automaticamente",
+        "why": "O Cassandra não tem rollback para uma escrita isolada."
+      },
+      {
+        "text": "O coordenador tenta de novo até dar certo",
+        "why": "O cliente recebe o tempo esgotado; tentar de novo é decisão da aplicação."
+      },
+      {
+        "text": "Nenhuma réplica a tem, já que o nível não foi atingido",
+        "why": "O nível decide a resposta ao cliente, não o que as réplicas guardaram."
+      },
+      {
+        "text": "O valor fica naquela réplica, e uma leitura que pergunte a ela o encontra",
+        "why": "Isso. Uma escrita que falhou não é uma escrita desfeita."
+      }
+    ]
+  },
+  "ex-wv7jf14n": {
+    "prompt": "Ponha em ordem as quatro rodadas de uma transação leve, como o rastreio as mostrou.",
+    "items": [
+      "PREPARE: reservar o direito de propor",
+      "READ: buscar o valor atual e conferir a condição",
+      "PROPOSE: concordar com o valor novo",
+      "COMMIT: aplicá-lo"
+    ],
+    "trap": "A condição só pode ser conferida depois de reservado o direito de propor."
+  },
+  "ex-axedsrax": {
+    "prompt": "O segundo `UPDATE ... IF units = 1` devolveu `[applied] False` e `units 0`. O que a aplicação deve fazer com isso?",
+    "choices": [
+      {
+        "text": "Repetir o mesmo comando até ele ser aplicado",
+        "why": "Ele nunca será aplicado enquanto units for 0; a condição é a ideia."
+      },
+      {
+        "text": "Dizer ao cliente que o monitor esgotou",
+        "why": "Isso. Perdeu a corrida, e a resposta diz para o quê."
+      },
+      {
+        "text": "Gravar units = 0 sem o IF, para garantir",
+        "why": "Uma escrita simples passa por fora do Paxos e pode sobrescrever um valor acordado."
+      },
+      {
+        "text": "Ler de novo em ALL para saber quem está certo",
+        "why": "A resposta já traz o valor atual."
+      }
+    ]
+  },
+  "ex-rmqhs5yt": {
+    "prompt": "Uma sessão está em `CONSISTENCY ONE` e dois de três nós estão fora. Um `UPDATE` condicional é recusado. Por quê?",
+    "choices": [
+      {
+        "text": "As rodadas do Paxos usam o nível serial, que exige maioria",
+        "why": "Isso: Cannot achieve consistency level SERIAL, required 2, alive 1."
+      },
+      {
+        "text": "Escritas condicionais só são permitidas com a sessão em QUORUM ou acima",
+        "why": "O nível comum pode ser ONE; ele rege o commit, não a decisão."
+      },
+      {
+        "text": "A linha ainda estava travada pelo UPDATE simples anterior na mesma partição",
+        "why": "Escritas simples não travam nada."
+      },
+      {
+        "text": "Uma sessão em ONE recusa toda escrita enquanto qualquer nó do cluster estiver fora",
+        "why": "Uma leitura simples em ONE respondeu na mesma sessão."
+      }
+    ]
+  },
+  "ex-wvbsgnd8": {
+    "prompt": "Por que a aula diz para manter condicional toda escrita numa coluna protegida por LWT?",
+    "choices": [
+      {
+        "text": "Porque escritas simples naquela tabela são recusadas",
+        "why": "Elas são aceitas, e esse é o perigo."
+      },
+      {
+        "text": "Porque o Cassandra precisa de um histórico de escritas para rodar o Paxos",
+        "why": "O Paxos precisa de maioria, não de histórico de escritas condicionais."
+      },
+      {
+        "text": "Porque escritas condicionais ficam mais baratas depois que a primeira rodou",
+        "why": "Cada uma custa quatro rodadas; não há aquecimento."
+      },
+      {
+        "text": "Uma escrita simples pula o Paxos e sobrescreve o que uma LWT acordou",
+        "why": "Isso. Só as escritas que participam do acordo são ordenadas por ele."
+      }
+    ]
+  },
+  "ex-pwrqds6z": {
+    "prompt": "No rastreio, um `UPDATE` simples mandou uma mensagem a cada uma das outras duas réplicas. Quantas mensagens o `UPDATE` condicional mandou a elas no total?",
+    "hint": "Quatro tipos, duas réplicas."
+  },
+  "ex-y6p3t716": {
+    "prompt": "O RF é 3 e um nó está fora. Quais comandos dão certo? Marque todos os que se aplicam.",
+    "choices": [
+      {
+        "text": "Uma leitura em QUORUM",
+        "why": "Isso: precisa de 2 e tem 2."
+      },
+      {
+        "text": "Uma escrita em ALL",
+        "why": "Precisa de 3 e tem 2."
+      },
+      {
+        "text": "Um UPDATE condicional",
+        "why": "Isso: SERIAL precisa de maioria, e 2 de 3 é uma."
+      },
+      {
+        "text": "Uma leitura em ONE",
+        "why": "Isso: uma réplica basta."
+      },
+      {
+        "text": "Uma leitura em ALL",
+        "why": "Unavailable, como o laboratório mostrou."
+      }
+    ]
+  },
+  "ex-ppcvfv0h": {
+    "prompt": "Dois clientes compram o último monitor no mesmo instante, e a loja grava `units = 0` em `QUORUM` para cada um. O que acontece?",
+    "choices": [
+      {
+        "text": "As duas dão certo, os dois ouvem sim, e um monitor é vendido duas vezes",
+        "why": "Isso. Essa é a corrida que só uma escrita condicional fecha."
+      },
+      {
+        "text": "A segunda escrita falha, porque o QUORUM detecta que as duas escritas conflitam",
+        "why": "O QUORUM conta confirmações; não confere condição nenhuma."
+      },
+      {
+        "text": "O Cassandra as junta em units = -1",
+        "why": "Cada escrita define um valor; o timestamp mais novo vence."
+      },
+      {
+        "text": "Uma espera a outra, como numa transação relacional",
+        "why": "Escritas simples não travam nada."
+      }
+    ]
+  }
+}
