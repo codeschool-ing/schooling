@@ -1,0 +1,460 @@
+{
+  "ex-74w09ggq": {
+    "prompt": "Por que ligar o `pg_stat_statements` exige reiniciar o servidor?",
+    "hint": "Qual configuração o nomeia?",
+    "choices": [
+      {
+        "text": "É carregado na partida, por `shared_preload_libraries`",
+        "why": "Isso: ele se pendura no código que roda toda consulta, e uma biblioteca pré-carregada só é lida na partida."
+      },
+      {
+        "text": "CREATE EXTENSION só funciona num servidor que acabou de subir",
+        "why": "CREATE EXTENSION funciona a qualquer momento; quem precisa da partida é a biblioteca."
+      },
+      {
+        "text": "O ALTER SYSTEM reescreve o postgresql.conf e o reinício o relê",
+        "why": "O ALTER SYSTEM grava o postgresql.auto.conf, e a maioria das configurações que ele grava só precisa de reload."
+      },
+      {
+        "text": "Senão as estatísticas de antes do reinício se misturariam às novas",
+        "why": "Não há estatísticas antes de ele ser carregado; o reinício é para carregar o código."
+      }
+    ]
+  },
+  "ex-kq6gxx7m": {
+    "prompt": "Uma tela roda `SELECT … WHERE customer_id = 17`, depois `= 90210`, depois `= 5`. Quantas linhas o `pg_stat_statements` guarda para elas?",
+    "hint": "As constantes saem antes de os comandos serem comparados.",
+    "choices": [
+      {
+        "text": "Três, uma por valor",
+        "why": "Isso tornaria o placar inútil para uma aplicação que manda um milhão de valores."
+      },
+      {
+        "text": "Uma, com três chamadas",
+        "why": "Isso: as três são `WHERE customer_id = $1`, um queryid só."
+      },
+      {
+        "text": "Nenhuma até o comando rodar cem vezes",
+        "why": "Um comando é contado desde a primeira execução."
+      },
+      {
+        "text": "Duas: uma para valores pequenos e outra para grandes",
+        "why": "A extensão não agrupa por valor; ela remove os valores."
+      }
+    ]
+  },
+  "ex-a56cawe4": {
+    "prompt": "O `\\timing` disse que uma consulta levou 1,3 ms e o `mean_exec_time` diz 0,9 ms para o mesmo comando. O que explica a diferença?",
+    "hint": "Quem mede cada número, e de onde?",
+    "choices": [
+      {
+        "text": "Um dos dois está errado e o servidor deveria ser reiniciado",
+        "why": "Os dois estão certos; medem trechos de tempo diferentes."
+      },
+      {
+        "text": "O placar arredonda os números para baixo",
+        "why": "Ele guarda a precisão inteira, como mostra a linha expandida da aula."
+      },
+      {
+        "text": "O número do servidor deixa de fora a viagem pela conexão",
+        "why": "Isso: o psql mede do envio ao recebimento; o servidor, só a própria execução."
+      },
+      {
+        "text": "O `\\timing` inclui o tempo de planejar consultas de outras pessoas",
+        "why": "O trabalho de outras sessões não entra na medição desta consulta."
+      }
+    ]
+  },
+  "ex-qacvrvxf": {
+    "prompt": "Para os próximos números contarem a partir de zero, chame `pg_stat_statements____()`.",
+    "hint": "A função que o primeiro conserto chama antes de criar o índice.",
+    "blanks": [
+      {
+        "accept": [
+          "_reset"
+        ]
+      }
+    ]
+  },
+  "ex-evptpnpa": {
+    "prompt": "Ligue cada coluna do `pg_stat_statements` ao que ela diz.",
+    "hint": "A tabela da primeira seção.",
+    "pairs": [
+      {
+        "left": "`calls`",
+        "right": "quantas vezes o comando rodou"
+      },
+      {
+        "left": "`total_exec_time`",
+        "right": "a soma de todas as execuções, em milissegundos"
+      },
+      {
+        "left": "`shared_blks_read`",
+        "right": "páginas pedidas ao sistema operacional"
+      },
+      {
+        "left": "`stddev_exec_time`",
+        "right": "o quanto as execuções se espalharam"
+      }
+    ],
+    "right_distractors": [
+      "o momento em que o comando rodou pela última vez"
+    ]
+  },
+  "ex-yhr7f6c6": {
+    "prompt": "Em `pgbench -f customer-orders.sql@50 -f order-page.sql@25 …`, o que quer dizer `@50`?",
+    "hint": "De cada cem transações.",
+    "choices": [
+      {
+        "text": "Cinquenta clientes rodam esse script",
+        "why": "O número de clientes é o `-c`; o peso é sobre a mistura."
+      },
+      {
+        "text": "O peso: metade das transações",
+        "why": "Isso: o pgbench escolhe o script de cada transação na proporção dos pesos."
+      },
+      {
+        "text": "Rodá-lo por cinquenta segundos",
+        "why": "A duração é o `-T`, e vale para a execução inteira."
+      },
+      {
+        "text": "Parar depois de cinquenta transações deste script",
+        "why": "Isso seria o `-t` da execução inteira; pesos não param nada."
+      }
+    ]
+  },
+  "ex-bbfgz94c": {
+    "prompt": "Por que a carga inclui o `place-order.sql`, que escreve, se toda pergunta desta aula é sobre leitura?",
+    "hint": "O que uma carga só de leitura esconderia?",
+    "choices": [
+      {
+        "text": "O pgbench se recusa a rodar uma carga sem escritas",
+        "why": "Ele roda qualquer script, inclusive só de leitura."
+      },
+      {
+        "text": "Porque escritas deixam as leituras mais rápidas",
+        "why": "Escritas competem com leituras pelo mesmo servidor."
+      },
+      {
+        "text": "Para que o custo das travas e da manutenção de índices entre no quadro",
+        "why": "Isso: um índice que acelera uma leitura é pago em toda escrita, e só uma carga com escritas mostra isso."
+      },
+      {
+        "text": "Para encher as tabelas antes de as leituras começarem",
+        "why": "As tabelas foram enchidas pelo market.sql; as escritas rodam ao mesmo tempo que as leituras."
+      }
+    ]
+  },
+  "ex-69z5gj9k": {
+    "prompt": "Sua execução relata 400 transações por segundo onde a da aula relatou 912, mas os mesmos três scripts são os mais lentos. O que isso diz?",
+    "hint": "O que a aula diz que deve bater, e o que não.",
+    "choices": [
+      {
+        "text": "Sua instalação está quebrada e precisa ser refeita",
+        "why": "Uma máquina mais lenta produz exatamente isto: dígitos diferentes, mesmo formato."
+      },
+      {
+        "text": "Os arquivos da carga foram copiados errado",
+        "why": "Um arquivo errado mudaria quais scripts são lentos, não só a taxa."
+      },
+      {
+        "text": "Nada: mesmo formato, outra máquina",
+        "why": "Isso: taxas dependem de processadores e disco; a ordem depende das consultas."
+      },
+      {
+        "text": "O pgbench precisa de um `-j` maior para igualar a aula",
+        "why": "Threads não transformam dois processadores em quatro."
+      }
+    ]
+  },
+  "ex-1pe7mgr7": {
+    "prompt": "De cada cem transações da carga, quantas são uma atualização da tela de operações?",
+    "hint": "O peso depois do `pending-count.sql`.",
+    "unit": "transações"
+  },
+  "ex-hth60hag": {
+    "prompt": "Que pergunta responde ordenar o `pg_stat_statements` por `total_exec_time`?",
+    "hint": "Total contra média.",
+    "choices": [
+      {
+        "text": "Que comando toma mais tempo do servidor",
+        "why": "Isso: o total é o que um comando tira de todos os outros."
+      },
+      {
+        "text": "Quanto um usuário espera pela tela mais lenta da aplicação",
+        "why": "Isso é o que a média diz, para um comando."
+      },
+      {
+        "text": "Que comando falhou mais vezes",
+        "why": "O placar conta execuções, não falhas."
+      },
+      {
+        "text": "Que comando devolveu mais linhas à aplicação",
+        "why": "Essa é a coluna `rows`, outra pergunta."
+      }
+    ]
+  },
+  "ex-kcwve3sb": {
+    "prompt": "No minuto da aula, a contagem de pendentes teve média de 221 ms e a busca por etiqueta de 30 ms, mas a busca foi a primeira pelo total. Por quê?",
+    "hint": "Multiplique.",
+    "choices": [
+      {
+        "text": "A busca rodou umas dez vezes mais",
+        "why": "Isso: 5497 execuções contra 540, e o total é chamadas vezes média."
+      },
+      {
+        "text": "As execuções da contagem foram canceladas antes de terminar",
+        "why": "Nenhuma transação falhou na execução, e execuções canceladas não explicariam a ordem."
+      },
+      {
+        "text": "O total conta tempo de planejamento e a média não",
+        "why": "Os dois vêm dos mesmos tempos de execução."
+      },
+      {
+        "text": "O placar superestima consultas sobre tabelas pequenas",
+        "why": "Ele mede; não estima."
+      }
+    ]
+  },
+  "ex-ft7be3mt": {
+    "prompt": "Um comando roda em 0,11 ms, 27489 vezes por minuto, e outro em 200 ms uma vez por hora. Você pode deixar qualquer um duas vezes mais rápido. Qual devolve mais tempo ao servidor num dia?",
+    "hint": "Calcule o total de cada um num dia.",
+    "choices": [
+      {
+        "text": "O de 200 ms: consertar uma consulta lenta vale sempre mais",
+        "why": "Cortá-lo pela metade economiza 100 ms por hora, 2,4 segundos por dia."
+      },
+      {
+        "text": "Nenhum: os dois são pequenos demais para importar",
+        "why": "Um deles passa de uma hora de servidor por dia."
+      },
+      {
+        "text": "O de 0,11 ms, com folga",
+        "why": "Isso: 27489 × 1440 × 0,055 ms passa de meia hora por dia; o outro economiza segundos."
+      },
+      {
+        "text": "Os dois são mais ou menos iguais",
+        "why": "Um é minutos, o outro segundos."
+      }
+    ]
+  },
+  "ex-j7zztj81": {
+    "prompt": "A linha do painel do vendedor mostra 2164 chamadas e média de 35,49 ms. Arredondando ao segundo, quanto tempo de servidor ela tomou naquele minuto?",
+    "hint": "chamadas × média.",
+    "unit": "s"
+  },
+  "ex-p39rrgk7": {
+    "prompt": "A execução mais rápida do painel do vendedor levou 12 ms e a mais lenta 116 ms, com desvio-padrão de 14,8 em torno de uma média de 35,5. Qual o motivo mais provável?",
+    "hint": "O comando é o mesmo; o que muda entre execuções?",
+    "choices": [
+      {
+        "text": "O disco estava falhando nas execuções lentas",
+        "why": "Só 1181 páginas vieram de fora da memória; o disco quase não participou."
+      },
+      {
+        "text": "O custo depende de qual vendedor foi perguntado",
+        "why": "Isso: um vendedor com mais pedidos em dezembro dá mais linhas para ler e somar."
+      },
+      {
+        "text": "O pgbench mediu errado",
+        "why": "Esses números vêm do servidor, não do pgbench."
+      },
+      {
+        "text": "O planejador escolheu um índice diferente em cada execução, ao acaso",
+        "why": "O planejador é determinístico para as mesmas estatísticas; nada é sorteado."
+      }
+    ]
+  },
+  "ex-c5zxyzc3": {
+    "prompt": "Por que a aula zera o placar antes de criar o índice e rodar a carga de novo?",
+    "hint": "Todo placar tem um começo.",
+    "choices": [
+      {
+        "text": "Criar um índice é recusado enquanto o placar tem linhas",
+        "why": "As duas coisas não têm relação; o CREATE INDEX não olha o placar."
+      },
+      {
+        "text": "Para os números de depois contarem só o minuto depois do conserto",
+        "why": "Isso: senão o depois seria tirado em média com o antes."
+      },
+      {
+        "text": "Para liberar memória para o índice novo",
+        "why": "A memória do placar é fixa e minúscula perto de um índice."
+      },
+      {
+        "text": "Porque o pg_stat_statements esquece tudo depois de 5000 chamadas de um comando",
+        "why": "5000 é o número de comandos distintos, não de chamadas."
+      }
+    ]
+  },
+  "ex-tr9y07xj": {
+    "prompt": "Depois do índice do vendedor, a fatia do painel no servidor caiu de 21% para 7%, mas a taxa geral da carga só foi de 912 para 972 transações por segundo. Por que tão pouco?",
+    "hint": "Com que frequência o painel roda?",
+    "choices": [
+      {
+        "text": "O índice não foi usado",
+        "why": "A média do painel caiu de 35 para 11 ms, e só o índice explica isso."
+      },
+      {
+        "text": "O pgbench é limitado a mil transações por segundo",
+        "why": "Esse limite não existe; a taxa depende do trabalho."
+      },
+      {
+        "text": "Gravar o índice atrasou todas as outras consultas na mesma medida",
+        "why": "Só escritas mantêm um índice, e elas são um décimo da carga."
+      },
+      {
+        "text": "É quatro transações em cem, e dois outros comandos pesados continuam dominando",
+        "why": "Isso: um ganho grande numa parte pequena da mistura é um ganho pequeno no todo."
+      }
+    ]
+  },
+  "ex-qfedht6a": {
+    "prompt": "Ponha o primeiro conserto da aula na ordem em que foi feito.",
+    "hint": "Medir, mudar uma coisa, medir do mesmo jeito.",
+    "items": [
+      "Rodar a carga e ordenar o placar pelo total",
+      "Escolher o comando que uma estrutura conhecida conserta",
+      "Zerar o placar",
+      "Criar o índice em seller_id",
+      "Rodar a mesma carga pelo mesmo minuto e comparar"
+    ],
+    "trap": "Zerar depois de criar poria a própria criação no antes; mudar antes de medir não deixa nada para comparar."
+  },
+  "ex-3v7m530p": {
+    "prompt": "Quando a aula manda rodar o `~/reset-market.sh`?",
+    "hint": "A carga gravou pedidos.",
+    "choices": [
+      {
+        "text": "Antes de toda consulta",
+        "why": "Ele apaga e copia 1,3 GB; é para voltar às linhas conhecidas, não para toda consulta."
+      },
+      {
+        "text": "Quando seus números se afastam das transcrições, ou uma aula manda",
+        "why": "Isso: põe o market de volta como a aula 3 começa."
+      },
+      {
+        "text": "Só depois de o servidor cair",
+        "why": "Uma queda não muda as linhas; a carga muda."
+      },
+      {
+        "text": "Uma vez, no fim do curso",
+        "why": "Aulas que mudam as linhas pedem isso ao longo do caminho."
+      }
+    ]
+  },
+  "ex-0a287rze": {
+    "prompt": "Que pergunta o log consegue responder e o `pg_stat_statements` não?",
+    "hint": "Um guarda os valores.",
+    "choices": [
+      {
+        "text": "Qual comando custa mais ao servidor ao longo de um dia",
+        "why": "Isso é aritmética sobre todas as execuções, o trabalho do placar."
+      },
+      {
+        "text": "Quantas vezes um comando rodou no último minuto",
+        "why": "O `calls` responde isso direto."
+      },
+      {
+        "text": "Para qual vendedor foi uma execução lenta do painel",
+        "why": "Isso: o log escreve o comando com os valores de verdade, `seller_id = 21`."
+      },
+      {
+        "text": "O tempo médio da busca por etiqueta",
+        "why": "O `mean_exec_time` é exatamente isso."
+      }
+    ]
+  },
+  "ex-v96kst7t": {
+    "prompt": "Por que o `log_min_duration_statement = 0` fica ligado só por uma janela curta?",
+    "hint": "Quanto custa cada linha?",
+    "choices": [
+      {
+        "text": "Ele precisa de um reinício completo do servidor para ser desligado",
+        "why": "Ele muda com um reload, como a aula fez."
+      },
+      {
+        "text": "Registra tudo, o que custa uma escrita por comando",
+        "why": "Isso: mil comandos por segundo são mil escritas por segundo num arquivo no mesmo disco."
+      },
+      {
+        "text": "Zero desliga o log inteiro",
+        "why": "Zero registra tudo; quem desliga é o -1."
+      },
+      {
+        "text": "O log esquece entradas com mais de um minuto, então uma janela longa não mostra nada",
+        "why": "O log é um arquivo; guarda o que é escrito até ser rotacionado."
+      }
+    ]
+  },
+  "ex-9y4f54p5": {
+    "prompt": "Quais destas coisas o `pg_stat_statements` NÃO consegue dizer? Marque todas as que se aplicam.",
+    "hint": "Cinco pontos cegos.",
+    "choices": [
+      {
+        "text": "Quanto tempo a aplicação esperou por uma conexão livre",
+        "why": "Certo: essa espera fica na frente do servidor, fora da execução."
+      },
+      {
+        "text": "Se uma página lida do sistema operacional veio do disco",
+        "why": "Certo: o `shared_blks_read` não distingue o cache do sistema operacional do disco."
+      },
+      {
+        "text": "Para qual cliente foi uma execução lenta",
+        "why": "Certo: os valores são retirados."
+      },
+      {
+        "text": "Quantas vezes um comando rodou",
+        "why": "Isso é o `calls`."
+      },
+      {
+        "text": "A execução mais lenta de um comando",
+        "why": "Isso é o `max_exec_time`."
+      }
+    ]
+  },
+  "ex-c5t7xjfx": {
+    "prompt": "Uma aplicação monta o SQL colando valores em strings. Em `pg_stat_statements_info`, o `dealloc` sobe a cada hora. O que está acontecendo com o placar?",
+    "hint": "O que acontece quando a tabela de comandos distintos enche?",
+    "choices": [
+      {
+        "text": "Nada com que se preocupar: o dealloc conta comandos planejados duas vezes",
+        "why": "Ele conta despejos de entradas de uma tabela cheia."
+      },
+      {
+        "text": "Está girando, e os comandos caros e raros são os despejados",
+        "why": "Isso: as entradas menos usadas saem primeiro, e uma consulta cara e rara é das menos usadas."
+      },
+      {
+        "text": "O servidor está ficando sem memória e vai parar",
+        "why": "A tabela tem tamanho fixo; despejar é como ela mantém esse tamanho."
+      },
+      {
+        "text": "O pgbench está rodando em segundo plano e enchendo a tabela de entradas",
+        "why": "O pgbench não tem nada a ver com despejo."
+      }
+    ]
+  },
+  "ex-nzeghkea": {
+    "prompt": "Uma página da loja leva três segundos, e o placar não mostra nada acima de 2 ms em média, com um comando chamado 120 vezes por visualização. Qual suspeito da aula 1 e qual conserto?",
+    "hint": "Um comando barato chamado muitas vezes.",
+    "choices": [
+      {
+        "text": "A consulta: a página deveria pedir uma vez o que hoje pede 120",
+        "why": "Isso: o formato N+1 é problema de desenho; nenhum índice remove 120 idas e voltas."
+      },
+      {
+        "text": "O esquema: um índice na coluna do comando",
+        "why": "Com menos de 2 ms por chamada, o comando já acha as linhas depressa."
+      },
+      {
+        "text": "A máquina: mais processadores para o servidor do banco",
+        "why": "O servidor fica ocioso na maior parte desses três segundos, esperando o próximo de 120 pedidos."
+      },
+      {
+        "text": "Nenhum, porque o placar não mostra nada lento",
+        "why": "Leia chamadas além do tempo: 120 por página é o achado."
+      }
+    ]
+  }
+}

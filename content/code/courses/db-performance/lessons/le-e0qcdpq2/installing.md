@@ -301,3 +301,17 @@ sample. It is the number the planner works with, and lesson 6 is about what happ
 wrong rather than a little.
 
 The `Time:` under each answer is the setting from a moment ago at work.
+
+## A copy to come back to
+
+Several lessons change the database: they add rows, delete indexes, rebuild tables. Make a copy of
+it now, while it holds exactly what `market.sql` made, so that you can always come back:
+
+```
+ana@vm:~$ createdb -T market market_base
+```
+
+`-T` names a **template**: the new database starts as a file-by-file copy of `market`, which takes
+seconds rather than the minutes of loading it again, and doubles the space the course uses on
+disk. Lesson 2 turns the way back into a three-line script, and from then on a lesson that changes
+the rows says so and tells you when to run it.

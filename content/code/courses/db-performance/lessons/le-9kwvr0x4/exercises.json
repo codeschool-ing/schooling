@@ -1,0 +1,677 @@
+[
+  {
+    "id": "ex-74w09ggq",
+    "version": 1,
+    "section": "pg-stat-statements",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does turning on `pg_stat_statements` need a restart of the server?",
+    "hint": "Which setting names it?",
+    "choices": [
+      {
+        "text": "It is loaded at start-up, through `shared_preload_libraries`",
+        "correct": true,
+        "why": "Right: it hooks into the code that runs every query, and a library preloaded at start-up is only read then."
+      },
+      {
+        "text": "CREATE EXTENSION only works on a server that has just started",
+        "correct": false,
+        "why": "CREATE EXTENSION works at any time; it is the library that needs the start-up."
+      },
+      {
+        "text": "ALTER SYSTEM rewrites postgresql.conf and the restart re-reads it",
+        "correct": false,
+        "why": "ALTER SYSTEM writes postgresql.auto.conf, and most settings it writes need only a reload."
+      },
+      {
+        "text": "The statistics from before the restart would otherwise be mixed in with the new ones",
+        "correct": false,
+        "why": "There are no statistics before it is loaded; the restart is about loading the code."
+      }
+    ]
+  },
+  {
+    "id": "ex-kq6gxx7m",
+    "version": 1,
+    "section": "pg-stat-statements",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A screen runs `SELECT … WHERE customer_id = 17`, then `= 90210`, then `= 5`. How many rows does `pg_stat_statements` hold for them?",
+    "hint": "Constants are taken out before the statements are compared.",
+    "choices": [
+      {
+        "text": "Three, one per value",
+        "correct": false,
+        "why": "That would make the tally useless for an application that sends a million values."
+      },
+      {
+        "text": "One, with three calls",
+        "correct": true,
+        "why": "Right: all three are `WHERE customer_id = $1`, one queryid."
+      },
+      {
+        "text": "None until the statement has run a hundred times",
+        "correct": false,
+        "why": "A statement is counted from its first run."
+      },
+      {
+        "text": "Two: one for small values and one for large ones",
+        "correct": false,
+        "why": "The extension does not group by value at all; it removes the values."
+      }
+    ]
+  },
+  {
+    "id": "ex-a56cawe4",
+    "version": 1,
+    "section": "pg-stat-statements",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`\\timing` said a query took 1.3 ms and `mean_exec_time` says 0.9 ms for the same statement. What explains the difference?",
+    "hint": "Who measures each number, and from where?",
+    "choices": [
+      {
+        "text": "One of the two is wrong and the server should be restarted",
+        "correct": false,
+        "why": "Both are right; they measure different stretches of time."
+      },
+      {
+        "text": "The tally rounds its numbers down",
+        "correct": false,
+        "why": "It keeps full precision, as the expanded row in the lesson shows."
+      },
+      {
+        "text": "The server's figure leaves out the trip across the connection",
+        "correct": true,
+        "why": "Right: psql measures from sending to receiving; the server only its own execution."
+      },
+      {
+        "text": "`\\timing` includes the time spent planning other people's queries",
+        "correct": false,
+        "why": "Other sessions' work is not in anybody's timing of this query."
+      }
+    ]
+  },
+  {
+    "id": "ex-qacvrvxf",
+    "version": 1,
+    "section": "pg-stat-statements",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "To make the next numbers count from zero, call `pg_stat_statements____()`.",
+    "hint": "The function the first fix calls before building the index.",
+    "blanks": [
+      {
+        "accept": [
+          "_reset"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-evptpnpa",
+    "version": 1,
+    "section": "pg-stat-statements",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each column of `pg_stat_statements` to what it says.",
+    "hint": "The table in the first section.",
+    "pairs": [
+      {
+        "left": "`calls`",
+        "right": "how many times the statement ran"
+      },
+      {
+        "left": "`total_exec_time`",
+        "right": "the sum of every run, in milliseconds"
+      },
+      {
+        "left": "`shared_blks_read`",
+        "right": "pages asked of the operating system"
+      },
+      {
+        "left": "`stddev_exec_time`",
+        "right": "how spread out the runs were"
+      }
+    ],
+    "right_distractors": [
+      "the moment the statement last ran"
+    ]
+  },
+  {
+    "id": "ex-yhr7f6c6",
+    "version": 1,
+    "section": "a-workload",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `pgbench -f customer-orders.sql@50 -f order-page.sql@25 …`, what does `@50` mean?",
+    "hint": "Out of every hundred transactions.",
+    "choices": [
+      {
+        "text": "Fifty clients run that script",
+        "correct": false,
+        "why": "The number of clients is `-c`; the weight is about the mix."
+      },
+      {
+        "text": "Its weight: half of all transactions",
+        "correct": true,
+        "why": "Right: pgbench picks each transaction's script in proportion to the weights."
+      },
+      {
+        "text": "Run it for fifty seconds",
+        "correct": false,
+        "why": "Duration is `-T`, and applies to the whole run."
+      },
+      {
+        "text": "Stop after fifty transactions of this script",
+        "correct": false,
+        "why": "That would be `-t` for the whole run; weights do not stop anything."
+      }
+    ]
+  },
+  {
+    "id": "ex-bbfgz94c",
+    "version": 1,
+    "section": "a-workload",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the workload include `place-order.sql`, which writes, when every question in this lesson is about reading?",
+    "hint": "What would a read-only workload hide?",
+    "choices": [
+      {
+        "text": "pgbench refuses to run a workload with no writes in it",
+        "correct": false,
+        "why": "It runs any script, read-only ones included."
+      },
+      {
+        "text": "Because writes make the reads faster",
+        "correct": false,
+        "why": "Writes compete with reads for the same server."
+      },
+      {
+        "text": "So that the cost of locks and of maintaining indexes is part of the picture",
+        "correct": true,
+        "why": "Right: an index that speeds a read is paid for on every write, and only a workload with writes shows it."
+      },
+      {
+        "text": "To fill the tables before the reads start",
+        "correct": false,
+        "why": "The tables were filled by market.sql; the writes run at the same time as the reads."
+      }
+    ]
+  },
+  {
+    "id": "ex-69z5gj9k",
+    "version": 1,
+    "section": "a-workload",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Your run reports 400 transactions a second where the lesson's reported 912, but the same three scripts are the slowest. What does that tell you?",
+    "hint": "What the lesson says should match, and what should not.",
+    "choices": [
+      {
+        "text": "Your setup is broken and must be rebuilt",
+        "correct": false,
+        "why": "A slower machine produces exactly this: different digits, same shape."
+      },
+      {
+        "text": "The workload files were copied wrong",
+        "correct": false,
+        "why": "A wrong file would change which scripts are slow, not just the rate."
+      },
+      {
+        "text": "Nothing: same shape, different machine",
+        "correct": true,
+        "why": "Right: rates depend on processors and disk; the ranking depends on the queries."
+      },
+      {
+        "text": "pgbench needs `-j` raised to match the lesson",
+        "correct": false,
+        "why": "Threads do not turn two processors into four."
+      }
+    ]
+  },
+  {
+    "id": "ex-1pe7mgr7",
+    "version": 1,
+    "section": "a-workload",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Out of every hundred transactions in the workload, how many are a refresh of the operations screen?",
+    "hint": "The weight after `pending-count.sql`.",
+    "value": 1,
+    "tolerance": 0,
+    "unit": "transactions"
+  },
+  {
+    "id": "ex-hth60hag",
+    "version": 1,
+    "section": "total-not-mean",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which question does sorting `pg_stat_statements` by `total_exec_time` answer?",
+    "hint": "Total against mean.",
+    "choices": [
+      {
+        "text": "Which statement takes the most of the server's time",
+        "correct": true,
+        "why": "Right: the total is what a statement takes away from everybody else."
+      },
+      {
+        "text": "How long one user waits for the slowest screen of the application",
+        "correct": false,
+        "why": "That is what the mean says, for one statement."
+      },
+      {
+        "text": "Which statement failed most often",
+        "correct": false,
+        "why": "The tally counts executions, not failures."
+      },
+      {
+        "text": "Which statement returned the most rows to the application",
+        "correct": false,
+        "why": "That is the `rows` column, a different question."
+      }
+    ]
+  },
+  {
+    "id": "ex-kcwve3sb",
+    "version": 1,
+    "section": "total-not-mean",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lesson's minute, the pending count averaged 221 ms and the tag search 30 ms, yet the tag search was first by total. Why?",
+    "hint": "Multiply.",
+    "choices": [
+      {
+        "text": "The tag search ran about ten times more",
+        "correct": true,
+        "why": "Right: 5497 runs against 540, and the total is calls times mean."
+      },
+      {
+        "text": "The pending count's runs were cancelled before they finished",
+        "correct": false,
+        "why": "No transaction failed in the run, and cancelled runs would not explain a ranking."
+      },
+      {
+        "text": "The total counts planning time and the mean does not",
+        "correct": false,
+        "why": "Both come from the same execution times."
+      },
+      {
+        "text": "The tally overestimates queries on small tables",
+        "correct": false,
+        "why": "It measures; it does not estimate."
+      }
+    ]
+  },
+  {
+    "id": "ex-ft7be3mt",
+    "version": 1,
+    "section": "total-not-mean",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A statement runs at 0.11 ms, 27489 times a minute, and another at 200 ms once an hour. You can make either one twice as fast. Which gives the server more time back in a day?",
+    "hint": "Work out each one's total for a day.",
+    "choices": [
+      {
+        "text": "The 200 ms one: a fix to a slow query is always worth more",
+        "correct": false,
+        "why": "Halving it saves 100 ms an hour, 2.4 seconds a day."
+      },
+      {
+        "text": "Neither: both are too small to matter",
+        "correct": false,
+        "why": "One of them is over an hour of server time a day."
+      },
+      {
+        "text": "The 0.11 ms one, by a wide margin",
+        "correct": true,
+        "why": "Right: 27489 × 1440 × 0.055 ms is over half an hour a day; the other saves seconds."
+      },
+      {
+        "text": "They are about equal",
+        "correct": false,
+        "why": "One is minutes, the other seconds."
+      }
+    ]
+  },
+  {
+    "id": "ex-j7zztj81",
+    "version": 1,
+    "section": "total-not-mean",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The seller dashboard's row shows 2164 calls and a mean of 35.49 ms. To the nearest second, how much server time did it take in that minute?",
+    "hint": "calls × mean.",
+    "value": 77,
+    "tolerance": 1,
+    "unit": "s"
+  },
+  {
+    "id": "ex-p39rrgk7",
+    "version": 1,
+    "section": "total-not-mean",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The seller dashboard's fastest run took 12 ms and its slowest 116 ms, with a standard deviation of 14.8 around a mean of 35.5. What is the most likely reason?",
+    "hint": "The statement is the same; what changes between runs?",
+    "choices": [
+      {
+        "text": "The disk was failing during the slow runs",
+        "correct": false,
+        "why": "Only 1181 pages came from outside memory; the disk barely took part."
+      },
+      {
+        "text": "Its cost depends on which seller was asked about",
+        "correct": true,
+        "why": "Right: a seller with more December orders makes more rows to read and sum."
+      },
+      {
+        "text": "pgbench measured it wrongly",
+        "correct": false,
+        "why": "These numbers come from the server, not from pgbench."
+      },
+      {
+        "text": "The planner chose a different index on each run, at random",
+        "correct": false,
+        "why": "The planner is deterministic for the same statistics; nothing is drawn at random."
+      }
+    ]
+  },
+  {
+    "id": "ex-c5zxyzc3",
+    "version": 1,
+    "section": "the-first-fix",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the lesson reset the tally before building the index and running the workload again?",
+    "hint": "A tally always has a start.",
+    "choices": [
+      {
+        "text": "Building an index is refused while the tally holds rows",
+        "correct": false,
+        "why": "The two are unrelated; CREATE INDEX does not look at the tally."
+      },
+      {
+        "text": "So the after numbers count only the minute after the fix",
+        "correct": true,
+        "why": "Right: otherwise the after would be averaged with the before."
+      },
+      {
+        "text": "To free memory for the new index",
+        "correct": false,
+        "why": "The tally's memory is fixed and tiny next to an index."
+      },
+      {
+        "text": "Because pg_stat_statements forgets everything after 5000 calls of one statement",
+        "correct": false,
+        "why": "5000 is the number of distinct statements, not of calls."
+      }
+    ]
+  },
+  {
+    "id": "ex-tr9y07xj",
+    "version": 1,
+    "section": "the-first-fix",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After the seller index, the dashboard's share of the server fell from 21% to 7%, but the workload's overall rate only went from 912 to 972 transactions a second. Why so little?",
+    "hint": "How often does the dashboard run?",
+    "choices": [
+      {
+        "text": "The index was not used",
+        "correct": false,
+        "why": "The dashboard's mean fell from 35 to 11 ms, which only the index explains."
+      },
+      {
+        "text": "pgbench is limited to a thousand transactions a second",
+        "correct": false,
+        "why": "There is no such limit; the rate depends on the work."
+      },
+      {
+        "text": "Writing the index slowed every other query by the same amount",
+        "correct": false,
+        "why": "Only writes maintain an index, and they are a tenth of the workload."
+      },
+      {
+        "text": "It is four transactions in a hundred, and two other heavy statements still dominate",
+        "correct": true,
+        "why": "Right: a large gain on a small part of the mix is a small gain on the whole."
+      }
+    ]
+  },
+  {
+    "id": "ex-qfedht6a",
+    "version": 1,
+    "section": "the-first-fix",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the lesson's first fix in the order it was done.",
+    "hint": "Measure, change one thing, measure the same way.",
+    "items": [
+      "Run the workload and sort the tally by total",
+      "Pick the statement a known structure fixes",
+      "Reset the tally",
+      "Build the index on seller_id",
+      "Run the same workload for the same minute and compare"
+    ],
+    "trap": "Resetting after building would put the build itself in the before; changing before measuring leaves nothing to compare against."
+  },
+  {
+    "id": "ex-3v7m530p",
+    "version": 1,
+    "section": "the-first-fix",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "When does the lesson tell you to run `~/reset-market.sh`?",
+    "hint": "The workload wrote orders.",
+    "choices": [
+      {
+        "text": "Before every query",
+        "correct": false,
+        "why": "It drops and copies 1.3 GB; it is for getting back to known rows, not for every query."
+      },
+      {
+        "text": "When your numbers drift from the transcripts, or a lesson says so",
+        "correct": true,
+        "why": "Right: it puts market back as lesson 3 starts."
+      },
+      {
+        "text": "Only after the server crashes",
+        "correct": false,
+        "why": "A crash does not change the rows; the workload does."
+      },
+      {
+        "text": "Once, at the end of the course",
+        "correct": false,
+        "why": "Lessons that change the rows ask for it as they go."
+      }
+    ]
+  },
+  {
+    "id": "ex-0a287rze",
+    "version": 1,
+    "section": "the-log",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which question can the log answer and `pg_stat_statements` cannot?",
+    "hint": "One keeps the values.",
+    "choices": [
+      {
+        "text": "Which statement costs the server the most over a day",
+        "correct": false,
+        "why": "That is arithmetic over all runs, the tally's job."
+      },
+      {
+        "text": "How many times a statement ran in the last minute",
+        "correct": false,
+        "why": "`calls` answers that directly."
+      },
+      {
+        "text": "For which seller one slow run of the dashboard was",
+        "correct": true,
+        "why": "Right: the log writes the statement with its real values, `seller_id = 21`."
+      },
+      {
+        "text": "The average time of the tag search",
+        "correct": false,
+        "why": "`mean_exec_time` is exactly that."
+      }
+    ]
+  },
+  {
+    "id": "ex-v96kst7t",
+    "version": 1,
+    "section": "the-log",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why is `log_min_duration_statement = 0` left on only for a short window?",
+    "hint": "What does each line cost?",
+    "choices": [
+      {
+        "text": "It needs a full restart of the server to be switched off again",
+        "correct": false,
+        "why": "It changes with a reload, as the lesson did."
+      },
+      {
+        "text": "It logs everything, which costs a write per statement",
+        "correct": true,
+        "why": "Right: a thousand statements a second is a thousand writes a second to a file on the same disk."
+      },
+      {
+        "text": "Zero disables the log entirely",
+        "correct": false,
+        "why": "Zero logs everything; -1 is what disables it."
+      },
+      {
+        "text": "The log forgets entries older than a minute, so a long window shows nothing",
+        "correct": false,
+        "why": "The log is a file; it keeps what is written until it is rotated."
+      }
+    ]
+  },
+  {
+    "id": "ex-9y4f54p5",
+    "version": 1,
+    "section": "what-it-cannot-see",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these can `pg_stat_statements` NOT tell you? Choose all that apply.",
+    "hint": "Five blind spots.",
+    "choices": [
+      {
+        "text": "How long the application waited for a free connection",
+        "correct": true,
+        "why": "Right: that wait is in front of the server, outside execution."
+      },
+      {
+        "text": "Whether a page it read from the operating system came from the disk",
+        "correct": true,
+        "why": "Right: `shared_blks_read` cannot tell the OS cache from the disk."
+      },
+      {
+        "text": "Which customer a slow run was for",
+        "correct": true,
+        "why": "Right: the values are taken out."
+      },
+      {
+        "text": "How many times a statement ran",
+        "correct": false,
+        "why": "That is `calls`."
+      },
+      {
+        "text": "The slowest run of a statement",
+        "correct": false,
+        "why": "That is `max_exec_time`."
+      }
+    ]
+  },
+  {
+    "id": "ex-c5t7xjfx",
+    "version": 1,
+    "section": "what-it-cannot-see",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An application builds its SQL by pasting values into strings. In `pg_stat_statements_info`, `dealloc` climbs every hour. What is happening to the tally?",
+    "hint": "What happens when the table of distinct statements is full?",
+    "choices": [
+      {
+        "text": "Nothing to worry about: dealloc counts statements that were planned twice",
+        "correct": false,
+        "why": "It counts evictions of entries from a full table."
+      },
+      {
+        "text": "It is churning, and rare expensive statements are the ones being evicted",
+        "correct": true,
+        "why": "Right: least-used entries go first, and a rare expensive query is least used."
+      },
+      {
+        "text": "The server is running out of memory and will stop",
+        "correct": false,
+        "why": "The table has a fixed size; evicting is how it stays that size."
+      },
+      {
+        "text": "pgbench is running in the background and filling the table with entries",
+        "correct": false,
+        "why": "pgbench has nothing to do with eviction."
+      }
+    ]
+  },
+  {
+    "id": "ex-nzeghkea",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A page of the shop takes three seconds, and the tally shows nothing above 2 ms on average, with one statement called 120 times per page view. Which suspect from lesson 1 and which fix?",
+    "hint": "A cheap statement called many times.",
+    "choices": [
+      {
+        "text": "The query: the page should ask once for what it now asks 120 times",
+        "correct": true,
+        "why": "Right: the N+1 shape is a design problem; no index removes 120 round trips."
+      },
+      {
+        "text": "The schema: an index on the statement's column",
+        "correct": false,
+        "why": "At under 2 ms a call the statement already finds its rows fast."
+      },
+      {
+        "text": "The machine: more processors for the database server",
+        "correct": false,
+        "why": "The server is idle most of those three seconds, waiting for the next of 120 requests."
+      },
+      {
+        "text": "None, because the tally shows nothing slow",
+        "correct": false,
+        "why": "Read calls as well as time: 120 a page is the finding."
+      }
+    ]
+  }
+]

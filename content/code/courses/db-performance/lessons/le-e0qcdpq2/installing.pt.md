@@ -301,3 +301,17 @@ partir de uma amostra. É o número com que o planejador trabalha, e a aula 6 tr
 quando ele erra muito, e não pouco.
 
 O `Time:` embaixo de cada resposta é a configuração de agora há pouco funcionando.
+
+## Uma cópia para onde voltar
+
+Várias aulas mudam o banco: acrescentam linhas, apagam índices, reconstroem tabelas. Faça agora
+uma cópia dele, enquanto tem exatamente o que o `market.sql` fez, para poder sempre voltar:
+
+```
+ana@vm:~$ createdb -T market market_base
+```
+
+`-T` nomeia um **modelo** (*template*): o banco novo começa como uma cópia, arquivo por arquivo,
+do `market`, o que leva segundos em vez dos minutos de carregá-lo de novo, e dobra o espaço que o
+curso ocupa no disco. A aula 2 transforma o caminho de volta num script de três linhas, e daí em
+diante uma aula que muda as linhas avisa e diz quando rodá-lo.

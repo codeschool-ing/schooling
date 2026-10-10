@@ -23,17 +23,24 @@
 # WHAT IS STAGED, AND WHY
 #   - ana may use sudo without a password, which a real server would not
 #     allow. It keeps the transcripts free of password prompts.
-#   - `market` is built once from market.sql and kept as the database
-#     `market_base`; `reset` makes `market` again as a copy of it, so every
-#     lesson starts from the database lesson 1 leaves, whatever the lesson
-#     before it changed. The lessons say where they change it.
+#   - `market` is built once from market.sql, and lesson 1 has the student
+#     copy it to `market_base`. `reset` is what the student's ~/reset-market.sh
+#     (lesson 2) does: market again as a copy of market_base, plus lesson 2's
+#     two additions, pg_stat_statements and orders_seller_id_idx. So every
+#     lesson from 3 on starts where lesson 2 leaves the student, whatever the
+#     lesson before it changed. `reset bare` is market_base alone, for lesson 2.
 #   - `reset` also puts the server's configuration back as apt left it
-#     (ALTER SYSTEM RESET ALL, and the packaged postgresql.conf) and restarts.
+#     (ALTER SYSTEM RESET ALL), with pg_stat_statements preloaded as lesson 2
+#     sets it, and restarts. It removes ~/workload: a lesson that uses the
+#     workload writes it again from lesson 2's a-workload.md. And it deletes
+#     the statistics pg_stat_statements saved at the last shutdown, so every
+#     lesson's counts start at zero, as they would on a server that ran nothing
+#     else since the reset.
 #
 #   sudo bash lab.sh build          debootstrap the machine, install (once)
 #   sudo bash lab.sh up             boot it
 #   sudo bash lab.sh down
-#   sudo bash lab.sh reset          market from market_base, default config
+#   sudo bash lab.sh reset [bare]   market from market_base, as lesson 3 starts
 #   sudo bash lab.sh as 'cmd'       run a command as ana, in ~, login shell
 #   sudo bash lab.sh root 'cmd'     the same as root
 #   sudo bash lab.sh psql DB [ARGS] an interactive psql as ana; lines on stdin
@@ -106,23 +113,26 @@ up() {
   in_vm systemctl is-system-running >/dev/null 2>&1 || in_vm systemctl --failed --no-pager || true
 }
 
-reset() {
-  in_vm bash -c '
-    runuser -u postgres -- psql -qXc "ALTER SYSTEM RESET ALL" >/dev/null
-    systemctl restart postgresql@16-main
-    systemctl stop pgbouncer redis-server 2>/dev/null || true
-    runuser -u postgres -- psql -qX >/dev/null <<SQL
-SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '"'"'market'"'"' AND pid <> pg_backend_pid();
-DROP DATABASE IF EXISTS market;
-CREATE DATABASE market TEMPLATE market_base OWNER ana;
-SQL'
+reset() { # $1 = bare: market_base exactly, configuration as apt left it (lesson 2)
+  local extra=1; [ "${1:-}" = bare ] && extra=
+  in_vm bash -c "
+    runuser -u postgres -- psql -qXc 'ALTER SYSTEM RESET ALL' >/dev/null
+    ${extra:+runuser -u postgres -- psql -qXc \"ALTER SYSTEM SET shared_preload_libraries = 'pg_stat_statements'\" >/dev/null}
+    systemctl stop postgresql@16-main
+    rm -f /var/lib/postgresql/16/main/pg_stat/pg_stat_statements.stat
+    systemctl start postgresql@16-main
+    systemctl stop pgbouncer redis-server 2>/dev/null || true"
+  # what ~/reset-market.sh does, lesson 2 section "Back to the known rows"
+  in_vm su - ana -c "dropdb --if-exists market && createdb -T market_base market" >/dev/null
+  [ -n "$extra" ] && in_vm su - ana -c "psql -qX market -c 'CREATE EXTENSION pg_stat_statements' -c 'CREATE INDEX orders_seller_id_idx ON orders (seller_id)'" >/dev/null
+  in_vm su - ana -c "rm -rf ~/workload" ; return 0
 }
 
 case "${1:-}" in
   build) build ;;
   up) up ;;
   down) down ;;
-  reset) reset ;;
+  reset) reset "${2:-}" ;;
   as) shift; in_vm su - ana -c "$*" ;;
   root) shift; in_vm bash -lc "$*" ;;
   psql) shift; install -m 644 "$HERE/lab/session.py" "$BASE/usr/local/lib/lab/session.py"

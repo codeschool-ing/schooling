@@ -10,9 +10,9 @@
 #
 # It starts from the machine as `apt install postgresql` leaves it: no role
 # for ana and no database. market.sql and ~/.psqlrc are taken out of this
-# lesson's own installing.md and run as they are printed there. At the end the
-# loaded database is copied to `market_base`, which every later lesson's
-# captures start from (`lab.sh reset`).
+# lesson's own installing.md and run as they are printed there. The loaded
+# database is copied to `market_base`, as the lesson tells the student to do,
+# and every later lesson's captures start from that copy (`lab.sh reset`).
 #
 # STAGED: "drop the cache" in first-measurement is run as root on the computer
 # hosting the container, because a container cannot write to
@@ -54,8 +54,9 @@ block sizes
 printf 'ana@vm:~$ psql market\n'
 printf "SELECT relname AS table, reltuples::bigint AS rows, pg_size_pretty(pg_total_relation_size(oid)) AS size FROM pg_class WHERE relnamespace = 'public'::regnamespace AND relkind = 'r' ORDER BY pg_total_relation_size(oid) DESC;\nSELECT pg_size_pretty(pg_database_size('market')) AS database;\n" | session market
 
-# keep the database every later lesson starts from
-lab root 'runuser -u postgres -- createdb -T market -O ana market_base'
+# the copy every later lesson starts from
+block copy
+on 'createdb -T market market_base'
 
 block query-suspect
 printf "SELECT count(*) FROM orders WHERE date(placed_at) = '2025-06-01';\nSELECT count(*) FROM orders WHERE placed_at >= '2025-06-01' AND placed_at < '2025-06-02';\n" | session market
