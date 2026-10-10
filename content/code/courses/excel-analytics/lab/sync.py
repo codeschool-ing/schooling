@@ -33,9 +33,20 @@ LESSONS = os.path.join(os.path.dirname(HERE), "lessons")
 FENCE = re.compile(r"^```([^\n`]*)\n(.*?)\n```$", re.S | re.M)
 
 
-def figures():
+def number(lesson):
+    """A lesson's position in the course, from the topics of course.json, so
+    that lesson le-… draws its figures from figs/lNN.py."""
+    topics = json.load(open(os.path.join(os.path.dirname(HERE), "course.json")))["topics"]
+    return [t["id"] for t in topics].index(lesson) + 1
+
+
+def figures(only=None):
     out = {}
-    for path in sorted(glob.glob(os.path.join(HERE, "figs", "l*.py"))):
+    paths = sorted(glob.glob(os.path.join(HERE, "figs", "l*.py")))
+    if only:
+        want = {f"l{number(l):02d}.py" for l in only}
+        paths = [p for p in paths if os.path.basename(p) in want]
+    for path in paths:
         name = os.path.basename(path)[:-3]
         mod = importlib.import_module(f"figs.{name}")
         for k, fn in mod.FIGS.items():
@@ -104,7 +115,7 @@ def sync_pair(en_path, pt_path, figs):
 
 
 def main(only):
-    figs = figures()
+    figs = figures(only)
     for d in sorted(glob.glob(os.path.join(LESSONS, "le-*"))):
         if only and os.path.basename(d) not in only:
             continue
