@@ -1,0 +1,236 @@
+import sys; sys.path.insert(0, '/tmp/lab/bin')
+from exlib import *
+X = []
+
+X.append(quiz('ex-x34xpdg5', 'the-lab', 'easy',
+  ("Why does this course recommend installing the lab on your own computer rather than in a virtual machine?",
+   "Por que este curso recomenda instalar o laboratório no seu próprio computador em vez de numa máquina virtual?"),
+  [("A browser test is watched, which wants a screen", "Teste de navegador se assiste, e isso pede uma tela", 1,
+    "Right. Headed runs, the inspector and the trace viewer all open windows, and everything installed stays in two folders.",
+    "Certo. Execução com janela, o inspetor e o visualizador de rastros abrem janelas, e tudo o que se instala fica em duas pastas."),
+   ("A virtual machine cannot run Node", "Uma máquina virtual não roda Node", 0,
+    "It can; the virtual machine is a named path, and the transcripts were recorded on the same Ubuntu.",
+    "Roda; a máquina virtual é um caminho citado, e as transcrições foram gravadas no mesmo Ubuntu."),
+   ("Playwright refuses to install inside a virtual machine", "O Playwright se recusa a instalar dentro de uma máquina virtual", 0,
+    "Nothing in the tools checks for that; a desktop image in a virtual machine works.",
+    "Nada nas ferramentas verifica isso; uma imagem desktop numa máquina virtual funciona."),
+   ("The platform hosts the browsers for students who install", "A plataforma hospeda os navegadores de quem instala", 0,
+    "The platform hosts nothing; every browser in the course runs on the student's machine.",
+    "A plataforma não hospeda nada; todo navegador do curso roda na máquina do aluno.")],
+  hint=("Think of what a browser test opens when you run it with the window showing.", "Pense no que um teste de navegador abre quando roda com a janela à vista.")))
+
+X.append(quiz('ex-swvanamf', 'the-lab', 'medium',
+  ("A student on Ubuntu 24.04 runs `sudo apt install nodejs` and gets Node 18. What does the lesson say about that?",
+   "Um aluno no Ubuntu 24.04 roda `sudo apt install nodejs` e recebe o Node 18. O que a aula diz disso?"),
+  [("It is the version the transcripts use", "É a versão que as transcrições usam", 0,
+    "The transcripts were recorded with Node 22.22.0.", "As transcrições foram gravadas com o Node 22.22.0."),
+   ("Too old for the course; take the LTS one instead", "Velho demais para o curso; use a LTS", 1,
+    "Right. The course needs Node 22 or later, and Ubuntu's own package stops at 18.",
+    "Certo. O curso precisa do Node 22 ou posterior, e o pacote do próprio Ubuntu para no 18."),
+   ("It works, as long as Playwright is pinned", "Funciona, desde que o Playwright esteja fixado", 0,
+    "Pinning Playwright does not make an old Node new enough for it.", "Fixar o Playwright não deixa um Node velho novo o bastante."),
+   ("It is fine for the shop but not for the tests", "Serve para a loja, mas não para os testes", 0,
+    "The lesson does not split the two: both need Node 22 or later.", "A aula não separa os dois: ambos precisam do Node 22 ou posterior.")]))
+
+X.append(quiz('ex-cbabygsr', 'the-shop', 'easy',
+  ("Why does quitanda keep everything in memory, with a request that resets it?",
+   "Por que a quitanda guarda tudo em memória, com uma requisição que a reinicia?"),
+  [("Because a database would be too slow for tests", "Porque um banco de dados seria lento demais para testes", 0,
+    "Speed is not the reason the lesson gives; a known starting state is.", "Velocidade não é o motivo da aula; um estado inicial conhecido é."),
+   ("So that each test starts from a known state", "Para que cada teste comece de um estado conhecido", 1,
+    "Right. One request puts the shop back as it started, and lesson 15 builds on that.",
+    "Certo. Uma requisição devolve a loja ao início, e a aula 15 parte disso."),
+   ("Because Node cannot write files to disk on every system it runs on", "Porque o Node não consegue gravar arquivos em disco em todo sistema em que roda", 0,
+    "Node writes files fine; the shop chooses memory on purpose.", "O Node grava arquivos sem problema; a loja escolhe a memória de propósito."),
+   ("So that the flaws disappear after each restart", "Para que as falhas sumam a cada reinício", 0,
+    "The flaws are in the code, not in the data; a reset changes none of them.", "As falhas estão no código, não nos dados; reiniciar não muda nenhuma.")]))
+
+X.append(numeric('ex-67egq569', 'the-shop', 'easy',
+  ("In `app/store.js`, a Guava costs `1290`. How many reais is that?",
+   "Em `app/store.js`, a goiaba custa `1290`. Quantos reais são?"),
+  12.90, ("reais", "reais"), tolerance=0.001,
+  hint=("Prices are integers in cents.", "Os preços são inteiros em centavos.")))
+
+X.append(quiz('ex-qm6ymf37', 'the-shop', 'medium',
+  ("A later lesson adds the search page to the shop. Which file does it add or change on the server side?",
+   "Uma aula posterior acrescenta a página de busca à loja. Que arquivo ela acrescenta ou muda do lado do servidor?"),
+  [("It edits `app/server.js` to register the new address", "Edita `app/server.js` para registrar o novo endereço", 0,
+    "The server never changes again: it reads every file in `app/routes/` when it starts.",
+    "O servidor nunca mais muda: ele lê todos os arquivos de `app/routes/` ao iniciar."),
+   ("A new file in `app/routes/`", "Um arquivo novo em `app/routes/`", 1,
+    "Right. The server picks up every file in that folder the next time it starts.",
+    "Certo. O servidor pega todo arquivo dessa pasta na próxima vez que inicia."),
+   ("A new entry in `package.json`", "Uma entrada nova em `package.json`", 0,
+    "`package.json` names scripts and packages, not routes.", "O `package.json` nomeia scripts e pacotes, não rotas."),
+   ("A new block in `playwright.config.js`", "Um bloco novo em `playwright.config.js`", 0,
+    "That file configures the tests; the shop does not read it.", "Esse arquivo configura os testes; a loja não o lê.")]))
+
+X.append(quiz('ex-jd0sdfa8', 'the-page', 'medium',
+  ("A test compares a price's text with `\"R$ 5,90\"` typed with an ordinary space, and fails although the screen shows exactly that. Why?",
+   "Um teste compara o texto de um preço com `\"R$ 5,90\"` digitado com um espaço comum e falha, embora a tela mostre exatamente isso. Por quê?"),
+  [("The price is drawn as an image", "O preço é desenhado como imagem", 0,
+    "It is text, built by the script; the difference is in one character.", "É texto, montado pelo script; a diferença está num caractere."),
+   ("The formatter puts a non-breaking space after `R$`", "O formatador põe um espaço inseparável depois de `R$`", 1,
+    "Right. It looks like a space and is a different character, which the comparison sees.",
+    "Certo. Parece um espaço e é outro caractere, e a comparação vê."),
+   ("The test ran before the script had formatted the price on the page", "O teste rodou antes de o script formatar o preço na página", 0,
+    "Then it would find no price at all, not a price that differs by one character.", "Aí não acharia preço nenhum, e não um preço que difere num caractere."),
+   ("Prices are in cents in the page as well", "Os preços estão em centavos na página também", 0,
+    "Cents are how the server stores them; the page formats them as reais.", "Centavos é como o servidor guarda; a página formata em reais.")]))
+
+X.append(ordering('ex-dsc56y83', 'the-page', 'easy',
+  ("Put the first-time setup of the project in order.", "Ponha em ordem a primeira montagem do projeto."),
+  [("Save the files of the shop and the tests", "Salvar os arquivos da loja e dos testes"),
+   ("Run `npm install` to fetch the library", "Rodar `npm install` para baixar a biblioteca"),
+   ("Run `npx playwright install chromium` for the browser", "Rodar `npx playwright install chromium` para o navegador"),
+   ("Run `npx playwright test`", "Rodar `npx playwright test`")],
+  trap=("Installing the browser before `npm install` fails: the command that downloads it comes with the library.",
+        "Instalar o navegador antes do `npm install` falha: o comando que o baixa vem com a biblioteca.")))
+
+X.append(quiz('ex-p7bg02jy', 'the-page', 'medium',
+  ("Why did the smoke test pass without any browser window appearing?",
+   "Por que o teste de fumaça passou sem aparecer nenhuma janela de navegador?"),
+  [("It did not use a browser; it read the HTML", "Não usou navegador; leu o HTML", 0,
+    "It loaded the page in Chromium; an HTML read would never have found the eight cards the script draws.",
+    "Carregou a página no Chromium; ler o HTML nunca acharia os oito cartões que o script desenha."),
+   ("Playwright runs the browser headless unless told otherwise", "O Playwright é headless por padrão, a não ser que se peça o contrário", 1,
+    "Right. Headless draws the page in memory; `--headed` shows the window.",
+    "Certo. Sem janela, a página é desenhada em memória; `--headed` mostra a janela."),
+   ("The window opened and closed too fast to see", "A janela abriu e fechou rápido demais para ver", 0,
+    "Without `--headed` no window opens at all.", "Sem `--headed` nenhuma janela abre."),
+   ("The shop was not started", "A loja não foi iniciada", 0,
+    "Playwright's `webServer` started it; otherwise the test could not have passed.", "O `webServer` do Playwright a iniciou; senão o teste não passaria.")]))
+
+X.append(matching('ex-3872mz8g', 'when-setup-fails', 'medium',
+  ("Match each message to what fixes it.", "Ligue cada mensagem ao que a resolve."),
+  [("EADDRINUSE", "EADDRINUSE", "Stop the shop already running", "Parar a loja que já está rodando"),
+   ("Executable doesn't exist", "Executable doesn't exist", "Download the browser build", "Baixar a versão do navegador"),
+   ("Could not read package.json", "Could not read package.json", "Change into the project folder", "Entrar na pasta do projeto"),
+   ("EJSONPARSE", "EJSONPARSE", "Remove the stray comma", "Tirar a vírgula sobrando")]))
+
+X.append(quiz('ex-skw1nh3p', 'when-setup-fails', 'easy',
+  ("`npm start` prints a warning about `MODULE_TYPELESS_PACKAGE_JSON` and then `quitanda is listening`. What is going on?",
+   "O `npm start` imprime um aviso sobre `MODULE_TYPELESS_PACKAGE_JSON` e depois `quitanda is listening`. O que está acontecendo?"),
+  [("The shop failed to start", "A loja não conseguiu iniciar", 0,
+    "The last line says it is listening; it started.", "A última linha diz que está escutando; iniciou."),
+   ("`\"type\": \"module\"` is missing and Node guessed", "Falta `\"type\": \"module\"` e o Node adivinhou", 1,
+    "Right. It works, and the warning says which line to put back.", "Certo. Funciona, e o aviso diz que linha recolocar."),
+   ("Port 3000 is taken", "A porta 3000 está ocupada", 0,
+    "That is `EADDRINUSE`, and the server would not have started.", "Isso é `EADDRINUSE`, e o servidor não teria iniciado."),
+   ("The browser build is out of date for this Playwright", "A versão do navegador está desatualizada para este Playwright", 0,
+    "`npm start` runs the shop only; no browser is involved.", "O `npm start` só roda a loja; não envolve navegador.")]))
+
+X.append(quiz('ex-kw6njghg', 'when-setup-fails', 'hard',
+  ("npm reports `Expected double-quoted property name ... (line 8 column 3)`. Where is the mistake most likely to be?",
+   "O npm diz `Expected double-quoted property name ... (line 8 column 3)`. Onde o erro mais provavelmente está?"),
+  [("At line 8, column 3, exactly", "Na linha 8, coluna 3, exatamente", 0,
+    "That is where the parser noticed; the cause is what it was given just before.", "Ali o analisador percebeu; a causa é o que ele recebeu logo antes."),
+   ("On the line before: a comma after the last item", "Na linha anterior: uma vírgula depois do último item", 1,
+    "Right. JSON forbids the trailing comma, so the next `}` is where it gives up.", "Certo. O JSON proíbe a vírgula final, e o `}` seguinte é onde ele desiste."),
+   ("In the first line of the file", "Na primeira linha do arquivo", 0,
+    "The position points into the middle of the file.", "A posição aponta para o meio do arquivo."),
+   ("In `node_modules`", "Em `node_modules`", 0,
+    "The message names `package.json`, the project's own file.", "A mensagem nomeia o `package.json`, o arquivo do próprio projeto.")]))
+
+X.append(quiz('ex-zczh8gm1', 'elements', 'easy',
+  ("What does the Elements panel show?", "O que o painel Elements mostra?"),
+  [("The HTML file exactly as the server sent it", "O arquivo HTML exatamente como o servidor enviou", 0,
+    "That is View page source; the panel shows the page after scripts changed it.", "Isso é o código-fonte da página; o painel mostra a página depois que os scripts a mudaram."),
+   ("The DOM as it is now", "O DOM como ele está agora", 1,
+    "Right. Eight cards appear there, and none in the file.", "Certo. Oito cartões aparecem ali, e nenhum no arquivo."),
+   ("Only the elements that have an `id`", "Só os elementos que têm `id`", 0,
+    "It shows every element, with or without one.", "Mostra todos os elementos, com ou sem `id`."),
+   ("The CSS file the page loaded", "O arquivo CSS que a página carregou", 0,
+    "Styles appear beside an element, but the tree is the DOM.", "Os estilos aparecem ao lado do elemento, mas a árvore é o DOM.")]))
+
+X.append(quiz('ex-m474kjq7', 'elements', 'medium',
+  ("On reload, the Banana card's `id` changes from `card-4821` to another number. What does that mean for a test?",
+   "Ao recarregar, o `id` do cartão da banana muda de `card-4821` para outro número. O que isso significa para um teste?"),
+  [("Nothing, as long as the test reloads first", "Nada, desde que o teste recarregue antes", 0,
+    "Every load draws a new number, so the one a test wrote down is wrong on the next run.",
+    "Cada carga sorteia um número novo, então o que o teste anotou estará errado na próxima execução."),
+   ("The card cannot be found by any locator", "O cartão não pode ser achado por localizador nenhum", 0,
+    "It carries `data-testid=\"product-banana\"` and text, both stable.", "Ele tem `data-testid=\"product-banana\"` e texto, ambos estáveis."),
+   ("A test must not find it by that `id`", "Um teste não deve achá-lo por esse `id`", 1,
+    "Right. It would pass once and fail on every run after.", "Certo. Passaria uma vez e falharia em todas as seguintes."),
+   ("The server is broken and should be restarted", "O servidor está com defeito e deve ser reiniciado", 0,
+    "The script draws the number in the browser; the server has nothing to do with it.", "O script sorteia o número no navegador; o servidor não tem nada com isso.")]))
+
+X.append(quiz('ex-bmmhrqbg', 'elements', 'medium',
+  ("Which of these can locate the Add to basket button of the Banana card and still work tomorrow? Choose all that apply.",
+   "Quais destes conseguem achar o botão Add to basket do cartão da banana e ainda funcionar amanhã? Marque todos os que se aplicam."),
+  [("The button with role `button` and name *Add to basket*, inside the card with `data-testid=\"product-banana\"`",
+    "O botão com papel `button` e nome *Add to basket*, dentro do cartão com `data-testid=\"product-banana\"`", 1,
+    "Right. Both the role and the test attribute stay the same across loads.", "Certo. O papel e o atributo de teste ficam iguais a cada carga."),
+   ("The button inside `#card-4821`", "O botão dentro de `#card-4821`", 0,
+    "That number is drawn at random on every load.", "Esse número é sorteado a cada carga."),
+   ("The button in the card whose heading says *Banana*", "O botão no cartão cujo título diz *Banana*", 1,
+    "Right. The text comes from the store and does not change between loads.", "Certo. O texto vem da loja e não muda entre cargas."),
+   ("The fifth button on the page", "O quinto botão da página", 0,
+    "Banana is the first card, and a position breaks when anything is added before it.", "A banana é o primeiro cartão, e uma posição quebra quando algo entra antes.")],
+  multi=True))
+
+X.append(ordering('ex-vaa33emd', 'network', 'medium',
+  ("Put the shop's requests in the order the browser makes them.", "Ponha as requisições da loja na ordem em que o navegador as faz."),
+  [("GET / (the document)", "GET / (o documento)"),
+   ("GET /app.js (the script)", "GET /app.js (o script)"),
+   ("GET /api/products (a fetch)", "GET /api/products (um fetch)")],
+  trap=("The fetch cannot come before the script: it is the script that makes it.", "O fetch não vem antes do script: é o script que o faz.")))
+
+X.append(quiz('ex-hf8wcr9n', 'network', 'hard',
+  ("The browser's Network tab lists a request and the server's log, with `QUITANDA_LOG=1`, does not. What most likely answered it?",
+   "A aba Network do navegador lista uma requisição e o registro do servidor, com `QUITANDA_LOG=1`, não. O que mais provavelmente a respondeu?"),
+  [("The browser itself, from its cache", "O próprio navegador, do cache", 1,
+    "Right. A response the server never saw came from a copy the browser kept, which lesson 4 is about.",
+    "Certo. Uma resposta que o servidor nunca viu veio de uma cópia que o navegador guardou, tema da aula 4."),
+   ("Another tester's browser", "O navegador de outro testador", 0,
+    "Another browser's requests would appear in the server log and not in yours.", "As requisições de outro navegador apareceriam no registro do servidor e não no seu."),
+   ("The server, which forgot to log it", "O servidor, que esqueceu de registrar", 0,
+    "The server logs every request it answers when the variable is set.", "O servidor registra toda requisição que responde quando a variável está definida."),
+   ("Playwright, which answers on the server's behalf", "O Playwright, que responde no lugar do servidor", 0,
+    "`look.mjs` only listens; nothing in it answers a request.", "O `look.mjs` só escuta; nada nele responde a uma requisição.")]))
+
+X.append(cloze('ex-txx90ncc', 'network', 'easy',
+  ("The Network panel option that keeps the list of requests when the page navigates is called Preserve ___ .",
+   "A opção do painel Network que mantém a lista de requisições quando a página navega se chama Preserve ___ ."),
+  [(["log"], ["log"])]))
+
+X.append(quiz('ex-tf20jfrw', 'console', 'medium',
+  ("The shop's list stays empty and `look.mjs` prints `uncaught error: Unexpected token 'o', \"not found\" is not valid JSON`. What happened, in order?",
+   "A lista da loja fica vazia e o `look.mjs` imprime `uncaught error: Unexpected token 'o', \"not found\" is not valid JSON`. O que aconteceu, em ordem?"),
+  [("The script crashed before it could make any request to the server", "O script quebrou antes de conseguir fazer qualquer requisição ao servidor", 0,
+    "The Network line shows the request was made and answered `404`.", "A linha da rede mostra que a requisição foi feita e respondida com `404`."),
+   ("The server sent JSON with a syntax error in it", "O servidor mandou um JSON com erro de sintaxe", 0,
+    "It sent the text `not found`, which is not JSON at all, with status `404`.", "Mandou o texto `not found`, que nem é JSON, com status `404`."),
+   ("A wrong address got a 404, and the script read its text as JSON", "Um endereço errado levou 404, e o script leu o texto como JSON", 1,
+    "Right. Three lines, one defect: the server's answer, the browser's complaint and the script's error.",
+    "Certo. Três linhas, um defeito: a resposta do servidor, a queixa do navegador e o erro do script."),
+   ("The browser blocked the request", "O navegador bloqueou a requisição", 0,
+    "A blocked request would not reach the server; this one got an answer.", "Uma requisição bloqueada não chegaria ao servidor; esta teve resposta.")]))
+
+X.append(quiz('ex-vgjk4zc1', 'console', 'medium',
+  ("Typed into the Console on the shop's page, what does `document.querySelectorAll('#products li').length` answer once the page has loaded?",
+   "Digitado no Console da página da loja, o que `document.querySelectorAll('#products li').length` responde depois que a página carregou?"),
+  [("0, because the HTML has an empty list", "0, porque o HTML tem uma lista vazia", 0,
+    "The Console asks the live DOM, where the script already drew the cards.", "O Console pergunta ao DOM vivo, onde o script já desenhou os cartões."),
+   ("8, one per product in the store", "8, um por produto da loja", 1,
+    "Right. The DOM holds what the script built from `/api/products`.", "Certo. O DOM tem o que o script montou a partir de `/api/products`."),
+   ("1, the list itself", "1, a própria lista", 0,
+    "`#products li` selects the items inside the list, not the list.", "`#products li` seleciona os itens dentro da lista, não a lista."),
+   ("An error, because the Console cannot read the page", "Um erro, porque o Console não lê a página", 0,
+    "Running JavaScript inside the page is what the Console is for.", "Rodar JavaScript dentro da página é para isso que o Console existe.")]))
+
+X.append(quiz('ex-tef92arq', 'drill', 'hard',
+  ("A test opens the shop and checks only that the heading is visible. The page also throws an uncaught error. By the course's stronger position, what should the test do?",
+   "Um teste abre a loja e verifica só que o título está visível. A página também lança um erro não tratado. Pela posição mais forte do curso, o que o teste deve fazer?"),
+  [("Pass, because the heading is visible", "Passar, porque o título está visível", 0,
+    "That is the weak position: a broken page that still draws its heading passes.", "Essa é a posição fraca: uma página quebrada que ainda desenha o título passa."),
+   ("Retry until the error goes away", "Repetir até o erro sumir", 0,
+    "The error is in the code and comes back every time; a retry hides it once.", "O erro está no código e volta sempre; repetir esconde uma vez."),
+   ("Fail, because the page threw", "Falhar, porque a página lançou um erro", 1,
+    "Right. An uncaught error is evidence the page is broken, whatever the heading says.", "Certo. Um erro não tratado é evidência de página quebrada, diga o título o que disser."),
+   ("Skip itself and report nothing", "Pular a si mesmo e não relatar nada", 0,
+    "Silence is the one outcome that helps nobody.", "Silêncio é o único resultado que não ajuda ninguém.")]))
+
+L = '/home/user/schooling/content/code/courses/web-automation/lessons/le-h6bdxpbd'
+write(L, X)

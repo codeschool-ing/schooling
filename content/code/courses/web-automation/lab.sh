@@ -176,26 +176,38 @@ run_in() {
 }
 run() { run_in "$REPO_DEFAULT" "$@"; }
 
-# The app in the background, for a capture that drives it by hand rather
-# than through Playwright's webServer. Stopped by pid, never by pattern.
-APP_PID=
-start_app() {
-  as_ana "cd '$REPO_DEFAULT' && exec node app/server.js" >"${1:-/dev/null}" 2>&1 &
-  APP_PID=$!
+# A command as ana in the background. su starts a session of its own, so
+# the process group is no handle on it; stop_bg ends every process of ana's
+# instead, which is safe because ana runs nothing but what a capture starts.
+BG_PID=
+bg_ana() {
+  setsid bash -c "$(declare -f as_ana); ANA_HOME=$ANA_HOME NODE_BIN=$NODE_BIN as_ana $(printf '%q' "$1")" \
+    >"${2:-/dev/null}" 2>&1 </dev/null &
+  BG_PID=$!
+}
+stop_bg() {
+  [ -n "$BG_PID" ] || return 0
+  pkill -TERM -u ana 2>/dev/null
+  wait "$BG_PID" 2>/dev/null   # the shell's "Terminated" goes into the log;
+                               # a capture drops it, as Ctrl+C prints none
+  for _ in $(seq 50); do pgrep -u ana >/dev/null || break; sleep 0.1; done
+  BG_PID=
+}
+wait_app() {
   for _ in $(seq 50); do
-    curl -s -o /dev/null http://localhost:3000/api/products && return 0
+    # a bare connection, not a request, so a server that logs requests
+    # logs none of the lab's own
+    (exec 3<>/dev/tcp/127.0.0.1/3000) 2>/dev/null && return 0
     sleep 0.1
   done
-  echo "start_app: the app did not answer" >&2
+  echo "wait_app: the app did not answer" >&2
   return 1
 }
-stop_app() {
-  [ -n "$APP_PID" ] || return 0
-  pkill -P "$APP_PID" 2>/dev/null
-  kill "$APP_PID" 2>/dev/null
-  wait "$APP_PID" 2>/dev/null
-  APP_PID=
-}
+
+# The app in the background, for a capture that drives it by hand rather
+# than through Playwright's webServer.
+start_app() { bg_ana "cd '$REPO_DEFAULT' && exec node app/server.js" "${1:-/dev/null}"; wait_app; }
+stop_app() { stop_bg; }
 
 # One capture at a time: they share the project directory and port 3000.
 lock() {
