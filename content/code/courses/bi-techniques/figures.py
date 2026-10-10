@@ -759,6 +759,82 @@ def l05_errors(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 6
+
+@figure('l06-season', 6)
+def l06_season(lang):
+    from statsmodels.tsa.seasonal import STL
+    w = daily().resample('W-SUN').sum()['2023-01-08':'2025-12-28']
+    season = np.exp(STL(np.log(w), period=52, robust=True).fit().seasonal)
+    t = {'en': dict(
+        label='The STL seasonal index of each year drawn over the twelve months, three lines. From '
+              'January to August they run close, 2025 a little above the others. From September they '
+              'separate the other way: 2023 stays near 1.0, 2024 a little lower and 2025 lowest, '
+              'around 0.85 to 0.9, as if the autumn were getting quieter every year.',
+        y='seasonal index',
+        cap='Run on the whole series, STL let the season drift, and it explained part of the '
+            'September price rise as an autumn that had become quieter.'),
+        'pt': dict(
+        label='O índice sazonal do STL de cada ano desenhado sobre os doze meses, três linhas. De '
+              'janeiro a agosto elas andam perto, 2025 um pouco acima das outras. De setembro em diante '
+              'se separam para o outro lado: 2023 fica perto de 1,0, 2024 um pouco abaixo e 2025 mais '
+              'abaixo, em torno de 0,85 a 0,9, como se o outono ficasse mais calmo a cada ano.',
+        y='índice sazonal',
+        cap='Rodado na série inteira, o STL deixou a sazonalidade derivar, e explicou parte do '
+            'aumento de preço de setembro como um outono que ficou mais calmo.')}[lang]
+    f = Fig('l06-season', 640, 290, t['label'])
+    p = Plot(f, 70, 40, 560, 240, 0, 365, 0.75, 1.15)
+    p.yaxis([0.8, 0.9, 1.0, 1.1], fmt=lambda v: num(lang, v, 1), label=t['y'])
+    f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim', width=1.2)
+    for m in range(12):
+        x = p.sx(m * 30.4 + 15)
+        f.text(x, p.y1 + 14, MONTHS[lang][m], size=9.5, fill='--paper-dim')
+    styles = {2023: ('--paper-dim', None), 2024: ('--phosphor', '5 3'), 2025: ('--amber', None)}
+    for year, (col, dash) in styles.items():
+        s = season[str(year)]
+        xs = [d.dayofyear for d in s.index]
+        series(p, xs, s.values, stroke=col, width=1.8, dash=dash)
+        f.text(p.x1 + 8, p.sy(s.iloc[-3]), str(year), size=10, anchor='start', fill=col, weight='600', mono=True)
+    return f, t['cap']
+
+
+@figure('l06-snapshot', 6)
+def l06_snapshot(lang):
+    seen = csv('snapshot.csv', parse_dates=['date'], index_col='date')['orders']['2025-12-22':]
+    final = daily()['2025-12-22':]
+    t = {'en': dict(
+        label='Paired bars for 22 to 31 December 2025: the orders a dashboard showed on the morning '
+              'of the 31st, and the final count. They match until the 28th. On the 29th the dashboard '
+              'is a little short, on the 30th clearly short, and on the 31st it shows 324 against a '
+              'final 559.',
+        seen='on the dashboard', fin='final count', y='orders',
+        cap='The last three days were still arriving. Read as finished, they make a quiet end of '
+            'year look like a collapse.'),
+        'pt': dict(
+        label='Barras em pares de 22 a 31 de dezembro de 2025: os pedidos que um painel mostrava na '
+              'manhã do dia 31, e a contagem final. Elas batem até o dia 28. No dia 29 o painel fica '
+              'um pouco abaixo, no 30 claramente abaixo, e no 31 mostra 324 contra 559 finais.',
+        seen='no painel', fin='contagem final', y='pedidos',
+        cap='Os três últimos dias ainda estavam chegando. Lidos como prontos, fazem um fim de ano '
+            'calmo parecer um desabamento.')}[lang]
+    f = Fig('l06-snapshot', 640, 280, t['label'])
+    p = Plot(f, 70, 40, 620, 220, -0.5, len(final) - 0.5, 0, 1800)
+    p.yaxis(range(0, 1801, 600), fmt=lambda v: num(lang, v, 0), label=t['y'])
+    f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim', width=1.2)
+    for i, d in enumerate(final.index):
+        for k, (v, fill, st) in enumerate([(seen[d], '--amber', '--amber'), (final[d], '--phosphor-dim', '--phosphor')]):
+            xa = p.sx(i - 0.38 + k * 0.38)
+            xb = p.sx(i + k * 0.38)
+            f.path(f'M{xa:.1f} {p.y1:.1f} L{xa:.1f} {p.sy(v):.1f} L{xb:.1f} {p.sy(v):.1f} L{xb:.1f} {p.y1:.1f} Z',
+                   stroke=st, width=1, fill=fill)
+        f.text(p.sx(i), p.y1 + 14, str(d.day), size=9.5, fill='--paper-dim', mono=True)
+    f.rect(90, 254, 14, 9, stroke='--amber', fill='--amber', rx=1, width=1)
+    f.text(110, 259, t['seen'], size=10, anchor='start')
+    f.rect(280, 254, 14, 9, stroke='--phosphor', fill='--phosphor-dim', rx=1, width=1)
+    f.text(300, 259, t['fin'], size=10, anchor='start')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
