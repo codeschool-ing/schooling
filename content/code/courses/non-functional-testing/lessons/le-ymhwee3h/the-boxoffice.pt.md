@@ -7,7 +7,7 @@ Todas as aulas de desempenho deste curso medem a mesma aplicação, então você
 aqui. É a **boxoffice**, a bilheteria de um pequeno teatro: uma lista de espetáculos à venda, quantos
 lugares restam em cada um e um jeito de reservar um. São dois arquivos de Python e um banco SQLite,
 sem nada de fora da biblioteca padrão. Ela é pequena de propósito, e também é mais lenta do que
-precisaria ser de propósito, em dois lugares que a aula 9 encontra.
+precisaria ser, em lugares que a aula 9 encontra.
 
 Crie uma pasta para ela e entre nela:
 

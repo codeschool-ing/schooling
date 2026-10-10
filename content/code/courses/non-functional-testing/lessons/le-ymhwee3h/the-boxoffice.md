@@ -7,7 +7,7 @@ Every performance lesson in this course measures the same application, so you ty
 here. It is **boxoffice**, the ticket office of a small theatre: a list of shows on sale, how many
 seats each one has left, and a way to book one. It is two files of Python and one SQLite
 database, with nothing from outside the standard library. It is small on purpose, and it is
-slower than it needs to be on purpose too, in two places lesson 9 finds.
+slower than it needs to be, in places lesson 9 finds.
 
 Make a directory for it and go into it:
 
