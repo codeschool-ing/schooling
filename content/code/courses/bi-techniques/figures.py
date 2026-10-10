@@ -699,6 +699,66 @@ def l04_band(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 5
+
+@figure('l05-errors', 5)
+def l05_errors(lang):
+    from statsmodels.tsa.holtwinters import ExponentialSmoothing, SimpleExpSmoothing
+    from statsmodels.tsa.statespace.sarimax import SARIMAX
+    w = daily().resample('W-SUN').sum()['2023-01-08':'2025-12-28']
+    train, test = w[:'2024-12-29'], w['2025-01-05':'2025-06-29']
+    h = len(test)
+    fc = [
+        ('naive', 'ingênua', np.repeat(train.iloc[-1], h)),
+        ('seasonal naive', 'ingênua sazonal', train.iloc[-52:-52 + h].values),
+        ('simple smoothing', 'suavização simples',
+         SimpleExpSmoothing(train, initialization_method='known', initial_level=train.iloc[0])
+         .fit().forecast(h).values),
+        ('Holt-Winters', 'Holt-Winters', ExponentialSmoothing(train, trend='add', seasonal='mul',
+                                                              seasonal_periods=52).fit().forecast(h).values),
+        ('seasonal ARIMA', 'ARIMA sazonal', SARIMAX(train, order=(1, 0, 1), seasonal_order=(0, 1, 0, 52),
+                                                    trend='c').fit(disp=False).forecast(h).values),
+    ]
+    t = {'en': dict(
+        label='Paired bars of MAE and RMSE, in orders per week, for five forecasts of the first 26 '
+              'weeks of 2025. The naive forecast is worst, about 1,900 and 2,200; seasonal naive '
+              'about 1,600 and 1,700; simple smoothing about 1,100 and 1,400; Holt-Winters and '
+              'seasonal ARIMA both under 510, ARIMA with the smaller MAE and Holt-Winters with the '
+              'smaller RMSE.',
+        mae='MAE', rmse='RMSE', x='orders per week',
+        cap='The two baselines lose badly on a growing series, and the two real models are close '
+            'enough that the measure chosen decides the winner.'),
+        'pt': dict(
+        label='Barras em pares de MAE e RMSE, em pedidos por semana, para cinco previsões das 26 '
+              'primeiras semanas de 2025. A ingênua é a pior, cerca de 1.900 e 2.200; a ingênua '
+              'sazonal cerca de 1.600 e 1.700; a suavização simples cerca de 1.100 e 1.400; '
+              'Holt-Winters e ARIMA sazonal ambos abaixo de 510, o ARIMA com o menor MAE e o '
+              'Holt-Winters com o menor RMSE.',
+        mae='MAE', rmse='RMSE', x='pedidos por semana',
+        cap='As duas referências perdem feio numa série que cresce, e os dois modelos de verdade '
+            'ficam tão perto que a medida escolhida decide o vencedor.')}[lang]
+    f = Fig('l05-errors', 640, 300, t['label'])
+    p = Plot(f, 160, 30, 600, 240, 0, 2400, 0, 1)
+    for v in range(0, 2401, 600):
+        f.line(p.sx(v), p.y0, p.sx(v), p.y1, stroke='--wire', width=1)
+        f.text(p.sx(v), p.y1 + 14, num(lang, v, 0), size=9.5, fill='--paper-dim')
+    f.text((p.x0 + p.x1) / 2, p.y1 + 32, t['x'], size=10, weight='600')
+    for i, (en, pt, vals) in enumerate(fc):
+        e = vals - test.values
+        mae, rmse = np.abs(e).mean(), np.sqrt((e ** 2).mean())
+        y = p.y0 + 10 + i * 42
+        f.text(p.x0 - 10, y + 9, en if lang == 'en' else pt, size=10.5, anchor='end', weight='600')
+        f.rect(p.x0, y, p.sx(mae) - p.x0, 9, stroke='--phosphor', fill='--phosphor-dim', rx=1, width=1)
+        f.rect(p.x0, y + 11, p.sx(rmse) - p.x0, 9, stroke='--amber', fill='--amber', rx=1, width=1)
+        f.text(p.sx(rmse) + 6, y + 15, num(lang, rmse, 0), size=9, anchor='start', fill='--paper-dim')
+        f.text(p.sx(mae) + 6, y + 4, num(lang, mae, 0), size=9, anchor='start', fill='--paper-dim')
+    f.rect(170, 284, 14, 9, stroke='--phosphor', fill='--phosphor-dim', rx=1, width=1)
+    f.text(190, 289, t['mae'], size=10, anchor='start')
+    f.rect(260, 284, 14, 9, stroke='--amber', fill='--amber', rx=1, width=1)
+    f.text(280, 289, t['rmse'], size=10, anchor='start')
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
