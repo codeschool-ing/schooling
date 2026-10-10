@@ -1,0 +1,964 @@
+[
+  {
+    "id": "ex-wtfp1s3x",
+    "version": 1,
+    "section": "copies-and-pieces",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Quitanda's database server is fast enough but would lose everything if its disk failed. Which does it need?",
+    "hint": "The problem is failure, not size.",
+    "choices": [
+      {
+        "text": "Replication",
+        "correct": true,
+        "why": "Right: a copy elsewhere survives the disk."
+      },
+      {
+        "text": "Sharding, so each part is smaller",
+        "correct": false,
+        "why": "A lost shard is still lost."
+      },
+      {
+        "text": "A bigger machine with more cores",
+        "correct": false,
+        "why": "A bigger machine fails the same way."
+      },
+      {
+        "text": "A cache in front of it",
+        "correct": false,
+        "why": "A cache holds what was read, not everything."
+      }
+    ]
+  },
+  {
+    "id": "ex-x79cqerk",
+    "version": 1,
+    "section": "copies-and-pieces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does replication not help when the writes no longer fit on one machine?",
+    "hint": "Where does each write have to go?",
+    "choices": [
+      {
+        "text": "Because replicas cannot answer reads",
+        "correct": false,
+        "why": "They can, and that is what they help with."
+      },
+      {
+        "text": "Every write still has to reach every copy",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Because replication only works within one data centre",
+        "correct": false,
+        "why": "Replicas can be far apart."
+      },
+      {
+        "text": "Because copies must be synchronous",
+        "correct": false,
+        "why": "Asynchronous copies receive every write too."
+      }
+    ]
+  },
+  {
+    "id": "ex-3kaz61vf",
+    "version": 1,
+    "section": "copies-and-pieces",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the usual order of steps as a system grows?",
+    "hint": "Failures do not wait for size.",
+    "choices": [
+      {
+        "text": "Shard first, then replicate the shards",
+        "correct": false,
+        "why": "Sharding is the last resort."
+      },
+      {
+        "text": "Scale up, shard, and replicate only when big",
+        "correct": false,
+        "why": "Failures come before size."
+      },
+      {
+        "text": "Replicate early, scale up, shard last",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Shard and replicate together from the first day",
+        "correct": false,
+        "why": "That is paying for size nobody has yet."
+      }
+    ]
+  },
+  {
+    "id": "ex-b84c9g1g",
+    "version": 1,
+    "section": "leaders",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each arrangement to how writes work in it.",
+    "hint": "One of them has no leader at all.",
+    "pairs": [
+      {
+        "left": "single leader",
+        "right": "one copy takes every write and streams it to the others"
+      },
+      {
+        "left": "multi-leader",
+        "right": "several copies take writes and exchange them"
+      },
+      {
+        "left": "leaderless",
+        "right": "the client writes to several copies, with quorums"
+      }
+    ]
+  },
+  {
+    "id": "ex-5rsgty35",
+    "version": 1,
+    "section": "leaders",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is split brain?",
+    "hint": "It happens at failover.",
+    "choices": [
+      {
+        "text": "A standby that has fallen far behind its primary",
+        "correct": false,
+        "why": "That is lag."
+      },
+      {
+        "text": "Two leaders accepting writes at once",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A table split across two shards",
+        "correct": false,
+        "why": "That is sharding."
+      },
+      {
+        "text": "A cluster where every node has failed",
+        "correct": false,
+        "why": "Nothing is split there."
+      }
+    ]
+  },
+  {
+    "id": "ex-f1egm8gg",
+    "version": 1,
+    "section": "leaders",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "What does `synchronous_standby_names = 'ANY 1 (s1, s2)'` buy over a single synchronous standby?",
+    "hint": "What happens when one standby is slow?",
+    "choices": [
+      {
+        "text": "Writes no longer wait for any standby",
+        "correct": false,
+        "why": "They wait for one."
+      },
+      {
+        "text": "Every commit is copied to both standbys before it returns",
+        "correct": false,
+        "why": "Only one confirmation is awaited."
+      },
+      {
+        "text": "One slow or dead standby does not stop the writes",
+        "correct": true,
+        "why": "Right: the other one confirms."
+      },
+      {
+        "text": "Reads are spread across both standbys",
+        "correct": false,
+        "why": "That is a separate decision."
+      }
+    ]
+  },
+  {
+    "id": "ex-0vgg81pz",
+    "version": 1,
+    "section": "measuring-lag",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `pg_stat_replication`, which position says what a reader of the standby can see?",
+    "hint": "Received is not applied.",
+    "choices": [
+      {
+        "text": "`sent_lsn`",
+        "correct": false,
+        "why": "Sent has not even been written yet."
+      },
+      {
+        "text": "`flush_lsn`",
+        "correct": false,
+        "why": "On disk, not yet applied."
+      },
+      {
+        "text": "`replay_lsn`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`write_lsn`",
+        "correct": false,
+        "why": "Written, not applied."
+      }
+    ]
+  },
+  {
+    "id": "ex-2ehgakfs",
+    "version": 1,
+    "section": "measuring-lag",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "While replay was paused, `replay_lag` showed 0.28 seconds and the standby was 15 MB behind. Why was `replay_lag` misleading?",
+    "hint": "What is it the delay of?",
+    "choices": [
+      {
+        "text": "It describes the last change applied, and stands still",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It is measured in bytes, so it cannot show time",
+        "correct": false,
+        "why": "It is a time; the byte difference is another column."
+      },
+      {
+        "text": "The primary's clock had drifted away from the standby's clock",
+        "correct": false,
+        "why": "Nothing was wrong with a clock."
+      },
+      {
+        "text": "It only counts standbys that are synchronous",
+        "correct": false,
+        "why": "The lab's standby was asynchronous and it was shown."
+      }
+    ]
+  },
+  {
+    "id": "ex-8yk6ff6g",
+    "version": 1,
+    "section": "measuring-lag",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A dashboard graphs the lag of every row in `pg_stat_replication`, and the line is flat at zero. What can it still be hiding?",
+    "hint": "What happens to the row of a standby that disconnects?",
+    "choices": [
+      {
+        "text": "A standby that is replaying changes too fast",
+        "correct": false,
+        "why": "There is no such problem."
+      },
+      {
+        "text": "A primary that has too many client connections",
+        "correct": false,
+        "why": "Unrelated to this view."
+      },
+      {
+        "text": "Lag on the synchronous standby",
+        "correct": false,
+        "why": "A connected standby has a row and shows its lag."
+      },
+      {
+        "text": "A standby that disconnected, and has no row",
+        "correct": true,
+        "why": "Right: no row is the alarm."
+      }
+    ]
+  },
+  {
+    "id": "ex-c8a1f5b5",
+    "version": 1,
+    "section": "measuring-lag",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which measure answers \"how much would an asynchronous failover lose right now\"?",
+    "hint": "Lost means it never left the primary.",
+    "choices": [
+      {
+        "text": "The standby's `replay_lag` column, in seconds",
+        "correct": false,
+        "why": "Received but not replayed is not lost."
+      },
+      {
+        "text": "What the primary wrote beyond `sent_lsn`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`now() - pg_last_xact_replay_timestamp()` on the standby",
+        "correct": false,
+        "why": "That is how stale reads are."
+      },
+      {
+        "text": "The number of rows on each side",
+        "correct": false,
+        "why": "Rows are not how WAL is measured."
+      }
+    ]
+  },
+  {
+    "id": "ex-raya6x9z",
+    "version": 1,
+    "section": "why-three",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is a cluster of two nodes no better than one at staying available?",
+    "hint": "What is a majority of two?",
+    "choices": [
+      {
+        "text": "Two nodes cannot replicate to each other",
+        "correct": false,
+        "why": "They can."
+      },
+      {
+        "text": "Two nodes always elect two leaders",
+        "correct": false,
+        "why": "A majority rule prevents that."
+      },
+      {
+        "text": "A majority of two is both of them",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The second node only serves reads",
+        "correct": false,
+        "why": "It can be a full replica."
+      }
+    ]
+  },
+  {
+    "id": "ex-kdw3qmyq",
+    "version": 1,
+    "section": "why-three",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "How many nodes does a consensus cluster need to survive two simultaneous failures?",
+    "hint": "2f + 1.",
+    "value": 5,
+    "tolerance": 0,
+    "unit": "nodes"
+  },
+  {
+    "id": "ex-4ga5jztb",
+    "version": 1,
+    "section": "why-three",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a fourth node add to a three-node consensus cluster?",
+    "hint": "Majority of four.",
+    "choices": [
+      {
+        "text": "Tolerance of a second failure",
+        "correct": false,
+        "why": "A majority of four is three, so still one."
+      },
+      {
+        "text": "Cost, and no extra tolerance",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Faster writes, since there are more voters",
+        "correct": false,
+        "why": "Each write waits for more machines."
+      },
+      {
+        "text": "Protection against split brain the three could not give",
+        "correct": false,
+        "why": "Three already prevent it."
+      }
+    ]
+  },
+  {
+    "id": "ex-bnk68knx",
+    "version": 1,
+    "section": "why-three",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Why can two groups in a partition never both elect a leader under the majority rule?",
+    "hint": "Count.",
+    "choices": [
+      {
+        "text": "Because the leader always stays with the larger data centre",
+        "correct": false,
+        "why": "Location is not the rule."
+      },
+      {
+        "text": "Because elections are disabled during a partition",
+        "correct": false,
+        "why": "The majority side still elects."
+      },
+      {
+        "text": "Because each node votes for itself",
+        "correct": false,
+        "why": "That would produce many leaders."
+      },
+      {
+        "text": "Two groups cannot each hold more than half the nodes",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-qynh1r8e",
+    "version": 1,
+    "section": "a-kafka-cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With node 2 stopped, why did writes with `acks=all` still succeed?",
+    "hint": "Count the in-sync replicas.",
+    "choices": [
+      {
+        "text": "Two in-sync replicas were left, the minimum",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`acks=all` ignores nodes that have stopped",
+        "correct": false,
+        "why": "It waits for the in-sync list, which shrank."
+      },
+      {
+        "text": "Node 1 alone took all of the writes for a while",
+        "correct": false,
+        "why": "Two copies were written."
+      },
+      {
+        "text": "The producer quietly switched to `acks=1`",
+        "correct": false,
+        "why": "It did not change."
+      }
+    ]
+  },
+  {
+    "id": "ex-fn6a1prs",
+    "version": 1,
+    "section": "a-kafka-cluster",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With two of three nodes stopped, what did `NOT_ENOUGH_REPLICAS` mean?",
+    "hint": "Look at `Isr` and `min.insync.replicas`.",
+    "choices": [
+      {
+        "text": "The topic had been deleted by the stop",
+        "correct": false,
+        "why": "It was still described."
+      },
+      {
+        "text": "The producer's settings were wrong for three nodes",
+        "correct": false,
+        "why": "The same command worked with one node down."
+      },
+      {
+        "text": "The leader of the partition was on a stopped node",
+        "correct": false,
+        "why": "Node 1 led every partition."
+      },
+      {
+        "text": "One in-sync replica was left, below the minimum",
+        "correct": true,
+        "why": "Right: Kafka refused rather than keep one copy."
+      }
+    ]
+  },
+  {
+    "id": "ex-yc22b1zm",
+    "version": 1,
+    "section": "a-kafka-cluster",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The same producer with `acks=1` was accepted with one node left. What is the risk?",
+    "hint": "How many disks hold the message?",
+    "choices": [
+      {
+        "text": "The message may be delivered twice",
+        "correct": false,
+        "why": "That is a different promise."
+      },
+      {
+        "text": "Only one disk holds a confirmed write",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It will be rejected later when the nodes return",
+        "correct": false,
+        "why": "Accepted writes stay."
+      },
+      {
+        "text": "Consumers cannot read it until the nodes return",
+        "correct": false,
+        "why": "It was read back."
+      }
+    ]
+  },
+  {
+    "id": "ex-2m0y7ygt",
+    "version": 1,
+    "section": "a-kafka-cluster",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "In the lab's Kafka cluster, what uses the majority rule?",
+    "hint": "Data uses the in-sync list.",
+    "choices": [
+      {
+        "text": "Each partition's data replication",
+        "correct": false,
+        "why": "That uses the in-sync replica list."
+      },
+      {
+        "text": "The console producer",
+        "correct": false,
+        "why": "It only sends."
+      },
+      {
+        "text": "The controllers among themselves",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The consumer group",
+        "correct": false,
+        "why": "It is coordinated by one broker."
+      }
+    ]
+  },
+  {
+    "id": "ex-cqaehnpw",
+    "version": 1,
+    "section": "sharding",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why is the order's date usually a poor shard key for orders?",
+    "hint": "Where do today's orders go?",
+    "choices": [
+      {
+        "text": "Dates cannot be hashed",
+        "correct": false,
+        "why": "They can."
+      },
+      {
+        "text": "Every new order lands on one shard, a hot spot",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It spreads one customer's orders too evenly",
+        "correct": false,
+        "why": "That is not why."
+      },
+      {
+        "text": "Old orders can never be read again",
+        "correct": false,
+        "why": "They can, from their shard."
+      }
+    ]
+  },
+  {
+    "id": "ex-typcjzs8",
+    "version": 1,
+    "section": "sharding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `order 1234` ask both shards, while `customer c-7` asked one?",
+    "hint": "What decides the shard?",
+    "choices": [
+      {
+        "text": "Order 1234 was stored on both shards",
+        "correct": false,
+        "why": "It was on shard 0 only."
+      },
+      {
+        "text": "Lookups by id are always broadcast for safety",
+        "correct": false,
+        "why": "The router just had no way to choose."
+      },
+      {
+        "text": "Only the customer decides the shard",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Shard 1 had no index on id",
+        "correct": false,
+        "why": "Both have a primary key on id."
+      }
+    ]
+  },
+  {
+    "id": "ex-v92xr8g5",
+    "version": 1,
+    "section": "sharding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does sharding by hash give up, compared with sharding by range?",
+    "hint": "Neighbours.",
+    "choices": [
+      {
+        "text": "An even spread of keys across the shards",
+        "correct": false,
+        "why": "That is what hash gives."
+      },
+      {
+        "text": "The ability to add more shards later",
+        "correct": false,
+        "why": "Both can add shards."
+      },
+      {
+        "text": "Keeping neighbouring keys on the same shard",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Lookups by a single key going to one shard",
+        "correct": false,
+        "why": "A lookup by key is one shard either way."
+      }
+    ]
+  },
+  {
+    "id": "ex-n3csd29j",
+    "version": 1,
+    "section": "the-query-that-no-longer-fits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did `top --naive` put flour third with 614 units?",
+    "hint": "Where was flour on shard 1?",
+    "choices": [
+      {
+        "text": "Shard 1 had no flour orders",
+        "correct": false,
+        "why": "It had 376 units."
+      },
+      {
+        "text": "Flour was fourth on shard 1, so that shard's flour was cut by `LIMIT 3`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The router added the shards' numbers wrongly",
+        "correct": false,
+        "why": "The addition was right; the inputs were incomplete."
+      },
+      {
+        "text": "The hash put flour on both shards twice",
+        "correct": false,
+        "why": "Products are not sharded."
+      }
+    ]
+  },
+  {
+    "id": "ex-qb7t4wh0",
+    "version": 1,
+    "section": "the-query-that-no-longer-fits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How should a router compute an average of `units` across shards?",
+    "hint": "An average of averages.",
+    "choices": [
+      {
+        "text": "Average the shards' averages",
+        "correct": false,
+        "why": "Wrong unless the shards are the same size."
+      },
+      {
+        "text": "Ask the largest shard only",
+        "correct": false,
+        "why": "That ignores the others."
+      },
+      {
+        "text": "Take the median of the shards' averages",
+        "correct": false,
+        "why": "Still ignores the sizes."
+      },
+      {
+        "text": "Collect sums and counts, then divide",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-dz3rx2w9",
+    "version": 1,
+    "section": "the-query-that-no-longer-fits",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Customers are sharded by id. Why can `UNIQUE (email)` no longer be relied on?",
+    "hint": "What does each shard see?",
+    "choices": [
+      {
+        "text": "Each shard checks only its own rows",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "PostgreSQL drops unique constraints on sharded tables",
+        "correct": false,
+        "why": "The constraint still works, per shard."
+      },
+      {
+        "text": "E-mails are hashed and lose their uniqueness",
+        "correct": false,
+        "why": "Hashing the id does not touch the e-mail."
+      },
+      {
+        "text": "The router writes every customer to both shards",
+        "correct": false,
+        "why": "It writes each to one."
+      }
+    ]
+  },
+  {
+    "id": "ex-sjw3f7ye",
+    "version": 1,
+    "section": "the-query-that-no-longer-fits",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Where should \"best-selling products this month\" usually be answered in a sharded system?",
+    "hint": "Questions about everybody.",
+    "choices": [
+      {
+        "text": "On the shard with the most orders",
+        "correct": false,
+        "why": "One shard is part of the answer."
+      },
+      {
+        "text": "By running it on every shard on every page view",
+        "correct": false,
+        "why": "Correct, and the most expensive way."
+      },
+      {
+        "text": "In a copy built for reading",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Nowhere: sharded systems cannot answer it",
+        "correct": false,
+        "why": "They can, at a cost."
+      }
+    ]
+  },
+  {
+    "id": "ex-y8n6f6d1",
+    "version": 1,
+    "section": "resharding",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the lab, how many of the 40 customers change shard when the router goes from 2 shards to 3?",
+    "hint": "`moves 3`.",
+    "value": 27,
+    "tolerance": 0,
+    "unit": "customers"
+  },
+  {
+    "id": "ex-brqbakye",
+    "version": 1,
+    "section": "resharding",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does Kafka have you choose a topic's partition count up front?",
+    "hint": "What moves when a node is added?",
+    "choices": [
+      {
+        "text": "Partitions cannot gain replicas once they have been created",
+        "correct": false,
+        "why": "Replication is separate."
+      },
+      {
+        "text": "Whole partitions move; keys never change partition",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "More partitions make every write slower",
+        "correct": false,
+        "why": "That is not the reason."
+      },
+      {
+        "text": "Consumers read one partition each, forever",
+        "correct": false,
+        "why": "Assignment changes with the group."
+      }
+    ]
+  },
+  {
+    "id": "ex-vcxyxxwm",
+    "version": 1,
+    "section": "resharding",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With consistent hashing and N machines, roughly what share of keys moves when one machine is added?",
+    "hint": "The new machine takes over the keys between it and its neighbour.",
+    "choices": [
+      {
+        "text": "About two thirds",
+        "correct": false,
+        "why": "That is modulo, going from 2 to 3."
+      },
+      {
+        "text": "None at all",
+        "correct": false,
+        "why": "The new machine has to take some."
+      },
+      {
+        "text": "About 1/N",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Half, whatever N is",
+        "correct": false,
+        "why": "That holds only near N = 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-g1k5cn62",
+    "version": 1,
+    "section": "managed",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What do distributed SQL databases such as CockroachDB and Spanner pay for keeping transactions across shards?",
+    "hint": "Every range runs consensus.",
+    "choices": [
+      {
+        "text": "They give up SQL",
+        "correct": false,
+        "why": "They keep it."
+      },
+      {
+        "text": "Latency: every write waits for a majority",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "They cannot replicate",
+        "correct": false,
+        "why": "Each range is replicated."
+      },
+      {
+        "text": "A shard key that has to be chosen by hand for every table",
+        "correct": false,
+        "why": "They split ranges automatically."
+      }
+    ]
+  },
+  {
+    "id": "ex-ds99nt65",
+    "version": 1,
+    "section": "managed",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does the lesson recommend for Quitanda today?",
+    "hint": "The first row of the table.",
+    "choices": [
+      {
+        "text": "Citus, so it is ready to shard",
+        "correct": false,
+        "why": "Sharding answers a measurement nobody has taken."
+      },
+      {
+        "text": "Spanner, for transactions across regions",
+        "correct": false,
+        "why": "Quitanda is one shop."
+      },
+      {
+        "text": "Cassandra, for writes",
+        "correct": false,
+        "why": "Writes are nowhere near the limit."
+      },
+      {
+        "text": "One PostgreSQL and a standby",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-5c743fy8",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of moving a partition to a new machine in order.",
+    "hint": "Copy, keep copying, switch, delete.",
+    "items": [
+      "Copy the partition's data to the new machine",
+      "Keep copying the changes made during the copy",
+      "Switch the router to the new machine for that partition",
+      "Delete the old copy"
+    ]
+  },
+  {
+    "id": "ex-15ssmg7w",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Quitanda's catalogue pages are slow because the single database is busy answering reads; writes are few. What is the first thing to try?",
+    "hint": "Which limit is it, size of writes or volume of reads?",
+    "choices": [
+      {
+        "text": "Shard the catalogue by product",
+        "correct": false,
+        "why": "Writes are not the problem, and every query changes."
+      },
+      {
+        "text": "Add a read replica for the catalogue's reads",
+        "correct": true,
+        "why": "Right, accepting that its reads may be a moment old."
+      },
+      {
+        "text": "Move the database to a five-node consensus cluster",
+        "correct": false,
+        "why": "Consensus makes writes slower, not reads cheaper."
+      },
+      {
+        "text": "Make the standby synchronous",
+        "correct": false,
+        "why": "That slows writes and changes nothing for reads."
+      }
+    ]
+  }
+]
