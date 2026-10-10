@@ -1,0 +1,637 @@
+[
+  {
+    "id": "ex-5mgrre90",
+    "version": 1,
+    "section": "moving-averages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A dashboard shows a seven-day trailing average of orders. Black Friday falls on a Friday. Until which day does the spike keep the average high?",
+    "choices": [
+      {
+        "text": "Only on Black Friday itself",
+        "correct": false,
+        "why": "That would be true of the raw series. An average carries the day for as long as it stays in the window."
+      },
+      {
+        "text": "The following Thursday, six days after the spike entered the window",
+        "correct": true,
+        "why": "Right. The spike sits in the window of the day itself and the six after it."
+      },
+      {
+        "text": "From the Tuesday before to the Monday after, three days either side",
+        "correct": false,
+        "why": "That is the centred average. A trailing window never looks forward."
+      },
+      {
+        "text": "The following Sunday, when the week closes",
+        "correct": false,
+        "why": "The window moves one day at a time; it does not reset at the end of a week."
+      }
+    ]
+  },
+  {
+    "id": "ex-5jjkdnb3",
+    "version": 1,
+    "section": "moving-averages",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An operations manager wants a line on the morning dashboard that updates as soon as yesterday closes. Which moving average fits?",
+    "choices": [
+      {
+        "text": "A trailing seven-day average",
+        "correct": true,
+        "why": "Right. Only the past exists on a dashboard, and the price is a lag of a few days at a turn."
+      },
+      {
+        "text": "A centred seven-day average, because it does not lag",
+        "correct": false,
+        "why": "It does not lag, and it cannot be computed for the last three days, which are the ones the morning dashboard needs."
+      },
+      {
+        "text": "A five-day average, since it reacts faster",
+        "correct": false,
+        "why": "Five days hold a different mix of weekdays each time, so the weekly rhythm leaks into the line."
+      },
+      {
+        "text": "A 2×7 average",
+        "correct": false,
+        "why": "The 2×n trick is for centring an even window, and seven is odd."
+      }
+    ]
+  },
+  {
+    "id": "ex-92sfp3kk",
+    "version": 1,
+    "section": "moving-averages",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Panela's data is monthly in a report. How many months long must a moving average be to remove the yearly season?",
+    "value": 12,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-9sn6rr4y",
+    "version": 1,
+    "section": "moving-averages",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Somebody smooths Panela's daily orders with a five-day moving average and finds a slow wobble left in it. Why?",
+    "choices": [
+      {
+        "text": "Five is too short to remove any noise",
+        "correct": false,
+        "why": "Five days do average noise away. What they cannot do is cancel a seven-day season."
+      },
+      {
+        "text": "A trailing average always wobbles a little, whatever the length of its window",
+        "correct": false,
+        "why": "A seven-day trailing average of the same data does not wobble weekly."
+      },
+      {
+        "text": "The yearly season is leaking",
+        "correct": false,
+        "why": "A yearly swing is far slower than a wobble that repeats every week or so."
+      },
+      {
+        "text": "Five days are not a whole week",
+        "correct": true,
+        "why": "Right. The window has to be the period for the season to cancel."
+      }
+    ]
+  },
+  {
+    "id": "ex-9s2wg1rt",
+    "version": 1,
+    "section": "additive-or-multiplicative",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A Monday was 296 orders above a Saturday in 2023 and 445 in 2025, and about 36 per cent above in both years. What does that say?",
+    "choices": [
+      {
+        "text": "The season is additive, because the gap is in orders",
+        "correct": false,
+        "why": "An additive season keeps the gap in orders fixed, and here it grew by half."
+      },
+      {
+        "text": "The weekly season is getting stronger every year, so it will soon dominate the trend",
+        "correct": false,
+        "why": "As a proportion it did not grow at all. The gap grew because the level grew."
+      },
+      {
+        "text": "The season is multiplicative",
+        "correct": true,
+        "why": "Right. A constant proportion and a growing gap is the multiplicative signature."
+      },
+      {
+        "text": "Nothing, until a decomposition is run",
+        "correct": false,
+        "why": "This is the test that chooses which decomposition to run."
+      }
+    ]
+  },
+  {
+    "id": "ex-9v8yhgkc",
+    "version": 1,
+    "section": "additive-or-multiplicative",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why do many time-series programs start by taking the logarithm of the series?",
+    "choices": [
+      {
+        "text": "To remove the trend",
+        "correct": false,
+        "why": "A log changes the scale, not the direction: a rising series still rises."
+      },
+      {
+        "text": "A log turns products into sums",
+        "correct": true,
+        "why": "Right. The log of a product is a sum, and the answers are turned back with exp."
+      },
+      {
+        "text": "Logs make every series stationary",
+        "correct": false,
+        "why": "A log alone removes neither trend nor season."
+      },
+      {
+        "text": "To keep big numbers from overflowing",
+        "correct": false,
+        "why": "A few thousand orders is nowhere near any limit."
+      }
+    ]
+  },
+  {
+    "id": "ex-a4s4kc1q",
+    "version": 1,
+    "section": "additive-or-multiplicative",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "An additive decomposition is fitted to Panela's daily orders. What will its residuals show?",
+    "choices": [
+      {
+        "text": "A weekly ripple, opposite in sign at the two ends of the data",
+        "correct": true,
+        "why": "Right. One average gap is too big for 2023 and too small for 2025."
+      },
+      {
+        "text": "Nothing unusual, because additive and multiplicative agree on average",
+        "correct": false,
+        "why": "They agree in the middle of the data and disagree at both ends, and the residuals show where."
+      },
+      {
+        "text": "A slow drift upwards",
+        "correct": false,
+        "why": "The trend is fitted either way; the error is in the size of the season."
+      },
+      {
+        "text": "Larger residuals on holidays only",
+        "correct": false,
+        "why": "Holidays are large residuals under either model."
+      }
+    ]
+  },
+  {
+    "id": "ex-yfp8d5k2",
+    "version": 1,
+    "section": "classical-decomposition",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A classical decomposition of weekly data with period=52 leaves how many weeks without a trend at each end?",
+    "value": 26,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-2trwck38",
+    "version": 1,
+    "section": "classical-decomposition",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The seasonal index of the first week of the year is 0.812. What does it mean?",
+    "choices": [
+      {
+        "text": "That week takes 812 orders fewer than the trend",
+        "correct": false,
+        "why": "That would be an additive index in orders. This one is a multiplier."
+      },
+      {
+        "text": "81.2 per cent of the orders of that year fall in that week",
+        "correct": false,
+        "why": "An index compares a week with the trend, not with the year's total."
+      },
+      {
+        "text": "The first week of next year will be 0.812 times this one",
+        "correct": false,
+        "why": "The index compares a week with the trend at that time, not one year with the next."
+      },
+      {
+        "text": "That week takes about 19 per cent fewer orders than the trend",
+        "correct": true,
+        "why": "Right. In a multiplicative model the index multiplies the trend."
+      }
+    ]
+  },
+  {
+    "id": "ex-ehzz5jda",
+    "version": 1,
+    "section": "classical-decomposition",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Panela raised prices in September 2025. Why does the classical trend, computed on weeks up to December 2025, show nothing of it?",
+    "choices": [
+      {
+        "text": "The rise was too small to show in a trend",
+        "correct": false,
+        "why": "Monthly orders fell by about a seventh. The trend simply has no values there."
+      },
+      {
+        "text": "The rise was absorbed into the seasonal index",
+        "correct": false,
+        "why": "In the classical method the season is averaged over years where the trend exists, so it never saw those weeks either."
+      },
+      {
+        "text": "It stops in June, half a year before the data ends",
+        "correct": true,
+        "why": "Right. A centred 52-week window cannot reach the last half-year."
+      },
+      {
+        "text": "A multiplicative model cannot represent a fall",
+        "correct": false,
+        "why": "A multiplier below the previous level is a fall like any other."
+      }
+    ]
+  },
+  {
+    "id": "ex-49s4etqx",
+    "version": 1,
+    "section": "classical-decomposition",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which of these are steps of the classical multiplicative decomposition? Choose every one that applies.",
+    "choices": [
+      {
+        "text": "A centred moving average as long as the period, to estimate the trend",
+        "correct": true,
+        "why": "Right. That is step one."
+      },
+      {
+        "text": "Averaging the series divided by the trend over each position of the season",
+        "correct": true,
+        "why": "Right. That is step two, and it gives the seasonal index."
+      },
+      {
+        "text": "Fitting a regression around each point",
+        "correct": false,
+        "why": "That is loess, which STL uses instead of moving averages."
+      },
+      {
+        "text": "Re-weighting weeks that look like outliers",
+        "correct": false,
+        "why": "That is STL's robust option; the classical method has none."
+      }
+    ]
+  },
+  {
+    "id": "ex-wvz3176m",
+    "version": 1,
+    "section": "reading-the-residual",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Carnival fell in a February week in 2024 and a March week in 2025. In the residuals of a classical decomposition, what does that leave?",
+    "choices": [
+      {
+        "text": "Nothing: averaging the same week over several years removes a holiday that moves",
+        "correct": false,
+        "why": "It does not remove it, it smears it, and the residual is where the smear shows."
+      },
+      {
+        "text": "A low and a high in a pair of weeks",
+        "correct": true,
+        "why": "Right. The index averaged half a Carnival into each of those weeks."
+      },
+      {
+        "text": "One low residual, in the 2025 week only",
+        "correct": false,
+        "why": "The 2024 week and the weeks without Carnival are mis-explained too."
+      },
+      {
+        "text": "A drift in the trend",
+        "correct": false,
+        "why": "A few weeks are far too short to move a 52-week average."
+      }
+    ]
+  },
+  {
+    "id": "ex-4hcn9x72",
+    "version": 1,
+    "section": "reading-the-residual",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A residual series sits above 1 for five months and then below 1 for five months. What does that suggest?",
+    "choices": [
+      {
+        "text": "The trend was too stiff",
+        "correct": true,
+        "why": "Right. Residuals that drift are a level the trend did not follow."
+      },
+      {
+        "text": "A missed weekly season",
+        "correct": false,
+        "why": "A missed weekly season shows as a ripple every week, not a months-long drift."
+      },
+      {
+        "text": "Ordinary noise, which can run in long streaks",
+        "correct": false,
+        "why": "Noise has no memory, so it does not run for months on one side of 1."
+      },
+      {
+        "text": "A holiday",
+        "correct": false,
+        "why": "A holiday is a few days, not five months."
+      }
+    ]
+  },
+  {
+    "id": "ex-8t7dyvkr",
+    "version": 1,
+    "section": "reading-the-residual",
+    "type": "ordering",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Put the three questions for reading a residual series in the order the lesson asks them.",
+    "items": [
+      "Where are the largest values, and do they have names?",
+      "Does it have a rhythm?",
+      "Does it drift?"
+    ]
+  },
+  {
+    "id": "ex-zdkdsva4",
+    "version": 1,
+    "section": "stl",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does STL do that the classical decomposition cannot?",
+    "choices": [
+      {
+        "text": "Work without choosing a period",
+        "correct": false,
+        "why": "STL needs the period too: period=52 in the lesson."
+      },
+      {
+        "text": "Handle a multiplicative series without a logarithm, since it multiplies its components internally",
+        "correct": false,
+        "why": "STL adds, which is why the lesson gives it np.log of the series."
+      },
+      {
+        "text": "Forecast the next year",
+        "correct": false,
+        "why": "A decomposition describes the past; forecasting is lessons 3 and 4."
+      },
+      {
+        "text": "Produce a trend for the first and last weeks of the data",
+        "correct": true,
+        "why": "Right. A regression can be fitted at the edge, a centred average cannot."
+      }
+    ]
+  },
+  {
+    "id": "ex-t8b3pkq0",
+    "version": 1,
+    "section": "stl",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "The latest value of an STL trend is the one every manager reads. Why should it be trusted least?",
+    "choices": [
+      {
+        "text": "Loess is less accurate on recent data",
+        "correct": false,
+        "why": "Recency is not the problem; having neighbours on only one side is."
+      },
+      {
+        "text": "The robust option ignores the last weeks",
+        "correct": false,
+        "why": "Robust weights depend on how badly a week is explained, not on where it sits."
+      },
+      {
+        "text": "Its neighbours are all on one side",
+        "correct": true,
+        "why": "Right. The edge of a smoother is always provisional."
+      },
+      {
+        "text": "It should not: the last value has the most data behind it",
+        "correct": false,
+        "why": "It has the most data before it and none after, and a centre needs both."
+      }
+    ]
+  },
+  {
+    "id": "ex-dz0dmqmf",
+    "version": 1,
+    "section": "stl",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does robust=True change in STL?",
+    "choices": [
+      {
+        "text": "It uses medians instead of means",
+        "correct": false,
+        "why": "It keeps loess; what changes is the weight each week gets."
+      },
+      {
+        "text": "It refits, giving less weight to the weeks it explained worst",
+        "correct": true,
+        "why": "Right. One strange week then pulls the fit less."
+      },
+      {
+        "text": "It makes the season identical every year",
+        "correct": false,
+        "why": "That is the seasonal smoothing setting, a different choice."
+      },
+      {
+        "text": "It lets the trend reach the ends",
+        "correct": false,
+        "why": "STL reaches the ends with or without it."
+      }
+    ]
+  },
+  {
+    "id": "ex-6a475bfk",
+    "version": 1,
+    "section": "seasonally-adjusted",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A week took 10,804 orders and its seasonal index is 1.104. What is its seasonally adjusted value, to the nearest order?",
+    "hint": "Divide by the index.",
+    "value": 9786,
+    "tolerance": 3
+  },
+  {
+    "id": "ex-557c0s49",
+    "version": 1,
+    "section": "seasonally-adjusted",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Orders fell 30 per cent from the week before Christmas to the first week of January, and the seasonally adjusted value barely moved. What happened in January?",
+    "choices": [
+      {
+        "text": "Nothing unusual: the fall was the season",
+        "correct": true,
+        "why": "Right. Season aside, January was an ordinary month."
+      },
+      {
+        "text": "Customers left after the holidays",
+        "correct": false,
+        "why": "If they had, the adjusted value would have fallen too."
+      },
+      {
+        "text": "The adjustment hid a real fall",
+        "correct": false,
+        "why": "The adjustment removes only what happens in that week every year."
+      },
+      {
+        "text": "The trend turned down",
+        "correct": false,
+        "why": "An adjusted value that holds steady says the opposite."
+      }
+    ]
+  },
+  {
+    "id": "ex-exctn1tp",
+    "version": 1,
+    "section": "seasonally-adjusted",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is the difference between the trend and the seasonally adjusted series?",
+    "choices": [
+      {
+        "text": "None; they are two names for one series",
+        "correct": false,
+        "why": "They differ by the noise, which is exactly why one wobbles and the other does not."
+      },
+      {
+        "text": "The trend still carries the season, since only the noise was averaged out of it",
+        "correct": false,
+        "why": "The trend carries neither season nor noise."
+      },
+      {
+        "text": "The adjusted series is smoother",
+        "correct": false,
+        "why": "It is rougher, because the noise is still in it."
+      },
+      {
+        "text": "Only one keeps the noise: the adjusted series",
+        "correct": true,
+        "why": "Right. Only the season is removed from it."
+      }
+    ]
+  },
+  {
+    "id": "ex-av0e8wbf",
+    "version": 1,
+    "section": "drill",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each piece of a multiplicative decomposition to how it is obtained.",
+    "pairs": [
+      {
+        "left": "trend",
+        "right": "a centred moving average as long as the period"
+      },
+      {
+        "left": "seasonal index",
+        "right": "the series over the trend, averaged per position"
+      },
+      {
+        "left": "residual",
+        "right": "the series over trend and season"
+      },
+      {
+        "left": "adjusted series",
+        "right": "the series over the season alone"
+      }
+    ],
+    "right_distractors": [
+      "the series minus last year"
+    ]
+  },
+  {
+    "id": "ex-brhk80qe",
+    "version": 1,
+    "section": "drill",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "STL replaces moving averages with ___, a smoother that fits a small weighted regression around each point.",
+    "blanks": [
+      {
+        "accept": [
+          "loess",
+          "lowess"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-kakj7t82",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A sales director compares this December with this November and celebrates a 9 per cent rise. Which series should the comparison use?",
+    "choices": [
+      {
+        "text": "The trend, because it removes everything but direction",
+        "correct": false,
+        "why": "The trend of a classical decomposition has no value for the last months, which are these two."
+      },
+      {
+        "text": "The raw series, since 9 per cent is a real rise in orders",
+        "correct": false,
+        "why": "It is real and it is mostly season: December beats November every year."
+      },
+      {
+        "text": "The seasonally adjusted series",
+        "correct": true,
+        "why": "Right. December is always busier than November; adjusted, the two are comparable."
+      },
+      {
+        "text": "The residual",
+        "correct": false,
+        "why": "The residual removes the trend as well, and the director's question is partly about it."
+      }
+    ]
+  },
+  {
+    "id": "ex-ktmszdae",
+    "version": 1,
+    "section": "drill",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A centred seven-day moving average has no value for how many days at the end of a series?",
+    "value": 3,
+    "tolerance": 0
+  }
+]

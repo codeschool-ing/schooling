@@ -392,6 +392,110 @@ def l01_components(lang):
     return f, t['cap']
 
 
+# ------------------------------------------------------------------ lesson 2
+
+@figure('l02-moving', 2)
+def l02_moving(lang):
+    s = daily()
+    tr = s.rolling(7).mean()
+    ce = s.rolling(7, center=True).mean()
+    a, b = pd.Timestamp('2024-11-10'), pd.Timestamp('2024-12-20')
+    days = pd.date_range(a, b)
+    x = [(d - a).days for d in days]
+    t = {'en': dict(
+        label='Daily orders from 10 November to 20 December 2024 as dots, with two seven-day '
+              'averages drawn through them. The Black Friday spike of 29 November lifts the '
+              'trailing average from that day to 5 December, and lifts the centred average from '
+              '26 November to 2 December, three days either side of it.',
+        y='orders per day', tr='trailing: the day and six before', ce='centred: three either side',
+        bf='Black Friday',
+        cap='The same seven days averaged in two places. The trailing line can be drawn the '
+            'moment a day closes, and it runs three days behind; the centred line sits on the '
+            'day, and cannot be drawn for the last three.'),
+        'pt': dict(
+        label='Pedidos diários de 10 de novembro a 20 de dezembro de 2024 como pontos, com duas '
+              'médias de sete dias passando por eles. O pico da Black Friday de 29 de novembro '
+              'levanta a média móvel para trás desse dia até 5 de dezembro, e levanta a média '
+              'centrada de 26 de novembro a 2 de dezembro, três dias de cada lado.',
+        y='pedidos por dia', tr='para trás: o dia e os seis anteriores',
+        ce='centrada: três de cada lado', bf='Black Friday',
+        cap='Os mesmos sete dias com a média em dois lugares. A linha para trás pode ser '
+            'desenhada assim que o dia fecha, e anda três dias atrasada; a centrada fica em cima '
+            'do dia, e não pode ser desenhada nos três últimos.')}[lang]
+    f = Fig('l02-moving', 640, 300, t['label'])
+    p = Plot(f, 60, 40, 620, 240, -1, len(days), 900, 2100)
+    p.yaxis(range(900, 2101, 300), fmt=lambda v: num(lang, v, 0), label=t['y'])
+    f.line(p.x0, p.y1, p.x1, p.y1, stroke='--paper-dim', width=1.2)
+    for i, d in enumerate(days):
+        f.circle(p.sx(i), p.sy(s[d]), 3, fill='--paper-dim')
+        if d.day in (1, 10, 20):
+            f.line(p.sx(i), p.y1, p.sx(i), p.y1 + 4, stroke='--paper-dim', width=1)
+            f.text(p.sx(i), p.y1 + 14, f"{d.day} {MONTHS[lang][d.month - 1]}", size=9.5,
+                   fill='--paper-dim')
+    series(p, x, tr[days].values, stroke='--amber', width=2)
+    series(p, x, ce[days].values, stroke='--phosphor', width=2, dash='5 3')
+    bfx = (pd.Timestamp('2024-11-29') - a).days
+    f.text(p.sx(bfx) + 8, p.sy(2009), t['bf'], size=10, anchor='start', weight='600')
+    f.line(80, 282, 104, 282, stroke='--amber', width=2)
+    f.text(110, 282, t['tr'], size=10, anchor='start')
+    f.line(350, 282, 374, 282, stroke='--phosphor', width=2, dash='5 3')
+    f.text(380, 282, t['ce'], size=10, anchor='start')
+    return f, t['cap']
+
+
+@figure('l02-decomposition', 2)
+def l02_decomposition(lang):
+    from statsmodels.tsa.seasonal import seasonal_decompose
+    w = daily().resample('W-SUN').sum()['2023-01-08':'2025-12-28']
+    parts = seasonal_decompose(w, model='multiplicative', period=52)
+    first = w.index[0]
+    t = {'en': dict(
+        label='Four panels for the weekly orders of 2023 to 2025. Observed: the weekly totals, '
+              'rising with a dip each January. Trend: a smooth rise from about 6,800 to 9,700 '
+              'orders a week, missing the first and last 26 weeks. Season: the same yearly shape '
+              'three times, from 0.80 in the New Year weeks to 1.10 before Christmas. Residual: '
+              'values close to 1, furthest in the Carnival weeks and one Black Friday.',
+        rows=['observed', 'trend', 'season', 'residual'],
+        miss='no trend here', cap='The classical decomposition of three years of weeks. The '
+            'trend cannot see the first and last half-year, and the residual is quiet except '
+            'where a holiday moved.'),
+        'pt': dict(
+        label='Quatro painéis para os pedidos semanais de 2023 a 2025. Observado: os totais '
+              'semanais, subindo com uma queda a cada janeiro. Tendência: uma subida suave de '
+              'cerca de 6.800 para 9.700 pedidos por semana, sem as primeiras e as últimas 26 '
+              'semanas. Sazonalidade: o mesmo desenho anual três vezes, de 0,80 nas semanas de '
+              'Ano-Novo a 1,10 antes do Natal. Resíduo: valores perto de 1, mais longe nas '
+              'semanas de Carnaval e numa Black Friday.',
+        rows=['observado', 'tendência', 'sazonalidade', 'resíduo'],
+        miss='sem tendência aqui', cap='A decomposição clássica de três anos de semanas. A '
+            'tendência não enxerga o primeiro nem o último semestre, e o resíduo fica quieto '
+            'exceto onde um feriado mudou de lugar.')}[lang]
+    f = Fig('l02-decomposition', 640, 420, t['label'])
+    rows = [(w, 5500, 12000, [6000, 9000]),
+            (parts.trend, 5500, 12000, [6000, 9000]),
+            (parts.seasonal, 0.75, 1.15, [0.8, 1.0, 1.1]),
+            (parts.resid, 0.9, 1.1, [0.9, 1.0, 1.1])]
+    top, h, gap = 22, 70, 22
+    for i, (ser, lo, hi, ticks) in enumerate(rows):
+        y0 = top + i * (h + gap)
+        p = Plot(f, 120, y0, 620, y0 + h, 0, len(w) * 7, lo, hi)
+        for tk in ticks:
+            f.line(p.x0, p.sy(tk), p.x1, p.sy(tk), stroke='--wire', width=1)
+            f.text(p.x0 - 6, p.sy(tk), num(lang, tk, 0 if tk > 100 else 1), size=9,
+                   anchor='end', fill='--paper-dim')
+        f.text(14, y0 + h / 2, t['rows'][i], size=11, anchor='start', weight='600')
+        ok = ser.dropna()
+        xs = [(d - first).days for d in ok.index]
+        series(p, xs, ok.values, stroke='--amber' if i == 3 else '--phosphor', width=1.5)
+        if i == 1:
+            f.text(p.sx(13 * 7), y0 + h / 2, t['miss'], size=9.5, fill='--paper-dim')
+            f.text(p.sx((len(w) - 13) * 7), y0 + h / 2, t['miss'], size=9.5, fill='--paper-dim')
+    yb = top + 4 * (h + gap) - gap + 4
+    p = Plot(f, 120, top, 620, yb, 0, len(w) * 7, 0, 1)
+    years_axis(p, first, w.index[-1], lang)
+    return f, t['cap']
+
+
 def main():
     if '--list' in sys.argv:
         for name, (lesson, _) in FIGURES.items():
