@@ -39,8 +39,8 @@ As linhas valem nos dois sentidos, e cada sentido responde a sua própria pergun
 **De um requisito para os casos dele, para frente**, a matriz mostra cobertura. R2, R3 e R4 têm
 pelo menos dois casos cada, e o R7 tem três, porque toda recusa desta aula é uma frase que o R7
 pediu. R1, R6, R8 e R9 não têm nenhum, e a matriz diz isso sem que ninguém precise lembrar. Essa
-lacuna não é um erro hoje, porque esta aula se propôs a testar do R2 ao R4, e as aulas seguintes
-deste curso testam o resto. Seria um erro no dia da entrega, e a matriz é como alguém perceberia a
+lacuna não é um erro hoje, porque esta aula se propôs a testar do R2 ao R4, e as aulas 4 a 14 testam
+do R6 ao R9. Seria um erro no dia da entrega, e a matriz é como alguém perceberia a
 tempo.
 
 **De um caso para os requisitos dele, para trás**, a matriz mostra que todo caso é evidência sobre
@@ -54,7 +54,7 @@ teatro, que quis mantê-lo, e o requisito foi escrito.
 
 Suponha que o teatro decida que um pedido pode ter até oito ingressos, e o R4 muda. **A matriz
 lista os casos a rever**: todo caso que aponta o R4, que hoje são o TC-BOOK-01, o TC-BOOK-02 e o
-TC-BOOK-03, e todo caso que as aulas seguintes acrescentarem ao R4. Sem ela, encontrá-los é ler
+TC-BOOK-03, e todo caso que as aulas 4 e 5 acrescentarem ao R4. Sem ela, encontrá-los é ler
 todos os casos e adivinhar. Com ela, a resposta é uma linha.
 
 Uma mudança pode quebrar um caso de dois jeitos, e a matriz só encontra os casos, não o estrago.

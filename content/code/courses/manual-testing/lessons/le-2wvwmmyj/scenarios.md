@@ -11,8 +11,8 @@ result. *A member books tickets* is a scenario. TC-BOOK-01 is one of the cases t
 ## Why write scenarios first
 
 A scenario costs a sentence, and a case costs ten minutes. That difference is the reason to write
-the scenarios first. A list of fifteen scenarios fits on half a page, and the theatre's manager can
-read it in five minutes and answer the one question that matters at this stage: **is anything
+the scenarios first. A list of fifteen scenarios fits on half a page. The theatre's manager can read
+it in five minutes and answer the one question that matters at this stage: **is anything
 missing?** Asking that question of a hundred finished cases is too late, because the effort has
 already gone into what was there.
 

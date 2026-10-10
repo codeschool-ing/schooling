@@ -14,9 +14,10 @@
 # and the 1.1 edits are lesson 9's. ../../lab.sh app and release extract both
 # from those sections, so what runs here is what the student has. What is
 # STAGED rather than typed:
-#   - "orders" and "frozen-start"/"frozen" run against a server started by
+#   - "orders", "cancelled" and "frozen" run against a server started by
 #     lab.sh with BOXOFFICE_SEED=lab and BOXOFFICE_NOW=2026-10-10T14:00:00-03:00
-#     ("orders") or 2026-10-10T20:30:00-03:00 ("frozen"); the start lines are
+#     (the first two) or 2026-10-10T20:30 ("frozen"), written with no offset so it
+#     reads as the machine's local time; the start line of "frozen-start" is
 #     printed by a copy run under `timeout` with PYTHONUNBUFFERED=1;
 #   - "evening" needs a clock that MOVES, so its server runs with
 #     BOXOFFICE_NOW empty (the machine's real clock) and with TZ set to a
@@ -58,11 +59,11 @@ run "curl -s -d 'id=1002&action=dance' $U/order | grep msg"
 bash "$LAB" stop
 
 block frozen-start
-printf 'ana@laptop:~/boxoffice$ BOXOFFICE_NOW=2026-10-10T20:30:00-03:00 python3 boxoffice.py\n'
-PYTHONUNBUFFERED=1 BOXOFFICE_NOW=2026-10-10T20:30:00-03:00 timeout 2 python3 boxoffice.py 2>&1
+printf 'ana@laptop:~/boxoffice$ BOXOFFICE_NOW=2026-10-10T20:30 python3 boxoffice.py\n'
+PYTHONUNBUFFERED=1 BOXOFFICE_NOW=2026-10-10T20:30 timeout 2 python3 boxoffice.py 2>&1
 
 block frozen
-bash "$LAB" serve "$APP" BOXOFFICE_NOW=2026-10-10T20:30:00-03:00 || exit 1
+bash "$LAB" serve "$APP" BOXOFFICE_NOW=2026-10-10T20:30 || exit 1
 run "curl -s -d 'email=member@example.org&show=S1&quantity=2' $U/book | grep msg"
 bash "$LAB" stop
 

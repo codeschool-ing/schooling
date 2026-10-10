@@ -39,7 +39,7 @@ def narrow_screen(lang):
                        'mostra o nome e a data; o preço, os lugares e o link Book ficam na parte da página '
                        'fora dela.'),
     }[lang]
-    f = Fig('l07-narrow-screen', 700, 250, t['label'])
+    f = Fig('l07-narrow-screen', 680, 250, t['label'])
     s, x0 = 0.8, 30
 
     def X(c):
@@ -47,10 +47,9 @@ def narrow_screen(lang):
 
     top, bottom = 34, 168
     # the whole page, dashed, and the window over its left part
-    f.rect(X(0), top, 776 * s, bottom - top, stroke='--wire', fill='--ink', dash='4 3', rx=2)
-    f.rect(X(360), top + 1, (776 - 360) * s - 1, bottom - top - 2, stroke='--ink', fill='--scan', rx=0,
-           width=0)
-    f.rect(X(0) - 6, top - 14, 360 * s + 12, bottom - top + 28, stroke='--phosphor', fill='--panel',
+    f.rect(X(0), top - 14, 776 * s, bottom - top + 28, stroke='--wire', fill='--scan', dash='4 3',
+           rx=14)
+    f.rect(X(0), top - 14, 360 * s, bottom - top + 28, stroke='--phosphor', fill='--panel',
            width=2.2, rx=14)
     f.text(X(16), top + 18, 'Shows', size=13, anchor='start', weight='700', mono=True)
     for j, (name, a, b) in enumerate(COLS):

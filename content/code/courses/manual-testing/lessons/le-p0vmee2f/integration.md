@@ -91,8 +91,9 @@ nothing.
 lesson saw it in `discount`, and this test sees it in between. The three views are not redundant:
 the unit test says where the cause is, this one says what it costs a customer, and only a browser
 shows what the customer sees. If the developer fixes `discount`, both this file and
-`test_discount.py` go green; if somebody later renames the student box in the form, only this file
-notices.
+`test_discount.py` go green; if somebody changes the name `book` reads the student box under, only
+this file notices. What it cannot notice is the form itself: it sends `student=on` on its own, so a
+form that stops sending it is a browser's to find.
 
 ## What integration tests cost
 

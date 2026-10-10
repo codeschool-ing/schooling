@@ -91,7 +91,9 @@ R$ 144,00, onde o R5 diz R$ 80,00: a caixa de estudante chegou à aplicação e 
 em `discount`, e este teste a vê no meio do caminho. As três visões não são redundantes: o teste de
 unidade diz onde está a causa, este diz quanto ela custa a um cliente, e só um navegador mostra o
 que o cliente vê. Se o desenvolvedor corrigir `discount`, este arquivo e o `test_discount.py` ficam
-verdes; se alguém um dia renomear a caixa de estudante no formulário, só este arquivo percebe.
+verdes; se alguém mudar o nome com que `book` lê a caixa de estudante, só este arquivo percebe. O que
+ele não percebe é o próprio formulário: ele mesmo manda `student=on`, então um formulário que pare de
+mandar isso fica para um navegador achar.
 
 ## O que testes de integração custam
 

@@ -39,7 +39,7 @@ The lines go both ways, and each direction answers its own question.
 **From a requirement to its cases, forward**, the matrix shows coverage. R2, R3 and R4 each have at
 least two cases, and R7 has three, because every refusal in this lesson is a sentence R7 asked for.
 R1, R6, R8 and R9 have none, and the matrix says so without anybody having to remember. That gap is not a mistake today, because this lesson set out to test R2 to R4, and
-the later lessons of this course test the rest. It would be a mistake on release day, and the
+lessons 4 to 14 test R6 to R9. It would be a mistake on release day, and the
 matrix is how somebody would notice in time.
 
 **From a case to its requirements, backward**, the matrix shows that every case is evidence about
@@ -53,7 +53,7 @@ manager, who wanted it kept, and the requirement was written down.
 
 Suppose the theatre decides that an order may hold up to eight tickets, and R4 changes. **The
 matrix lists the cases to look at again**: every case traced to R4, which today is TC-BOOK-01,
-TC-BOOK-02 and TC-BOOK-03, and every case later lessons add to R4. Without it, finding them means
+TC-BOOK-02 and TC-BOOK-03, and every case lessons 4 and 5 add to R4. Without it, finding them means
 reading every case and guessing. With it, the answer is one row.
 
 A change can break a case in two ways, and the matrix only finds the cases, not the damage.
