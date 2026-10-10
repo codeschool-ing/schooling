@@ -61,5 +61,5 @@ um 181º ingresso. Esse número quem fixa é o alvará do corpo de bombeiros, en
 comercial. Isso também é um requisito, e a ausência dele é o tipo de lacuna que uma lista existe para
 revelar.
 
-Você não precisa resolver uma lacuna dessas sozinha. Anotá-la como uma pergunta para a dona do produto,
+Você não precisa resolver uma lacuna dessas por conta própria. Anotá-la como uma pergunta para a dona do produto,
 com o cenário que te preocupa, é a entrega.
