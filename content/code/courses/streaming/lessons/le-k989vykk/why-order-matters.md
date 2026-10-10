@@ -14,6 +14,9 @@ somebody carried it to the front. Make that log by moving the first line to the 
 
 ```
 ubuntu@stream:~/work$ (tail -n +2 stock.log; head -1 stock.log) > late.log
+ubuntu@stream:~/work$ python balance.py late.log
+olinda  bk-03    3
+recife  bk-03    4
 ```
 
 `tail -n +2` is every line from the second, and `head -1` is the first; the parentheses run both
@@ -26,6 +29,16 @@ The trace shows how it got there:
 
 ```
 ubuntu@stream:~/work$ python balance.py late.log --trace
+ 0  olinda  bk-03    2
+ 1  recife  bk-03   -1
+ 2  olinda  bk-03    0
+ 3  recife  bk-03    5
+ 4  recife  bk-03    3
+ 5  olinda  bk-03    3
+ 6  recife  bk-03    2
+ 7  recife  bk-03    4
+olinda  bk-03    3
+recife  bk-03    4
 ```
 
 The second line says Recife had **−1** copies, which no shelf has ever held. A system that reacted

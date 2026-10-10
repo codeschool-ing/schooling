@@ -13,7 +13,16 @@ elemento.
 A Ponto Final conta as prateleiras antes de as lojas abrirem. Esta é a manhã no Recife e em Olinda
 para um livro, em eventos. Salve como `~/work/stock.log`:
 
-@@fence@@
+```json
+{"type": "stock-counted", "id": "rec-count-0302", "at": "2026-03-02T08:50:00-03:00", "shop": "recife", "book": "bk-03", "qty": 4}
+{"type": "stock-counted", "id": "oli-count-0302", "at": "2026-03-02T08:52:00-03:00", "shop": "olinda", "book": "bk-03", "qty": 2}
+{"type": "book-sold", "id": "rec-000004", "at": "2026-03-02T09:00:41-03:00", "shop": "recife", "book": "bk-03", "qty": 1}
+{"type": "book-sold", "id": "oli-000009", "at": "2026-03-02T09:02:10-03:00", "shop": "olinda", "book": "bk-03", "qty": 2}
+{"type": "stock-received", "id": "rec-recv-0117", "at": "2026-03-02T09:30:00-03:00", "shop": "recife", "book": "bk-03", "qty": 6}
+{"type": "book-sold", "id": "rec-000031", "at": "2026-03-02T09:41:56-03:00", "shop": "recife", "book": "bk-03", "qty": 2}
+{"type": "stock-received", "id": "oli-recv-0118", "at": "2026-03-02T09:45:00-03:00", "shop": "olinda", "book": "bk-03", "qty": 3}
+{"type": "book-sold", "id": "rec-000040", "at": "2026-03-02T09:52:13-03:00", "shop": "recife", "book": "bk-03", "qty": 1}
+```
 
 Cada linha é um evento, exatamente o formato que o `minilog.py` escreve, então este arquivo é um log
 que o código da seção anterior consegue ler. Três tipos de evento: uma **contagem** diz quantos
@@ -23,16 +32,37 @@ O programa que faz o fold lê o log com o próprio `read` do `minilog.py`, entã
 arquivos em `~/work`. Salve isto como `~/work/balance.py`:
 
 ```schooling-example
-@same
---- `read` vem importado do arquivo da seção anterior, então este programa lê o log exatamente como qualquer outro leitor.
---- **Um evento, uma mudança.** Uma contagem substitui o número; uma entrega e uma venda o movem. A chave é o par loja e livro, então os exemplares do Recife e os de Olinda são linhas separadas.
---- O fold: uma tabela vazia, todo evento desde o offset 0, e com `--trace` a linha que cada evento mudou, como ficou depois da mudança.
---- A tabela no fim: uma linha por loja e livro.
+{
+  "language": "python",
+  "file": "balance.py",
+  "parts": [
+    {
+      "code": "\"\"\"balance.py: the stock of each book in each shop, folded from a log of events.\n\n    python balance.py LOG [--trace]\n\"\"\"\nimport json\nimport sys\n\nfrom minilog import read\n",
+      "note": "`read` vem importado do arquivo da seção anterior, então este programa lê o log exatamente como qualquer outro leitor."
+    },
+    {
+      "code": "\ndef apply(stock, event):\n    key = (event[\"shop\"], event[\"book\"])\n    if event[\"type\"] == \"stock-counted\":\n        stock[key] = event[\"qty\"]\n    elif event[\"type\"] == \"stock-received\":\n        stock[key] = stock.get(key, 0) + event[\"qty\"]\n    elif event[\"type\"] == \"book-sold\":\n        stock[key] = stock.get(key, 0) - event[\"qty\"]\n    return key\n",
+      "note": "**Um evento, uma mudança.** Uma contagem substitui o número; uma entrega e uma venda o movem. A chave é o par loja e livro, então os exemplares do Recife e os de Olinda são linhas separadas."
+    },
+    {
+      "code": "\nstock = {}\nfor offset, line in read(sys.argv[1], 0):\n    key = apply(stock, json.loads(line))\n    if \"--trace\" in sys.argv:\n        print(f\"{offset:>2}  {key[0]:<7} {key[1]}  {stock[key]:>3}\")",
+      "note": "O fold: uma tabela vazia, todo evento desde o offset 0, e com `--trace` a linha que cada evento mudou, como ficou depois da mudança."
+    },
+    {
+      "code": "for (shop, book), qty in sorted(stock.items()):\n    print(f\"{shop:<7} {book}  {qty:>3}\")",
+      "note": "A tabela no fim: uma linha por loja e livro."
+    }
+  ]
+}
 ```
 
 Rode:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python balance.py stock.log
+olinda  bk-03    3
+recife  bk-03    6
+```
 
 O Recife contou 4, vendeu 1, recebeu 6, vendeu 2 e vendeu 1, e tem 6. Olinda contou 2, vendeu 2 e
 recebeu 3, e tem 3. Nada guardou esses dois números; eles foram calculados a partir dos oito eventos,
@@ -42,7 +72,19 @@ e vão ser calculados do mesmo jeito toda vez que o programa rodar.
 
 Agora peça o trace:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python balance.py stock.log --trace
+ 0  recife  bk-03    4
+ 1  olinda  bk-03    2
+ 2  recife  bk-03    3
+ 3  olinda  bk-03    0
+ 4  recife  bk-03    9
+ 5  recife  bk-03    7
+ 6  olinda  bk-03    3
+ 7  recife  bk-03    6
+olinda  bk-03    3
+recife  bk-03    6
+```
 
 Cada linha do trace é uma mudança na tabela: no offset 4, a linha `recife bk-03` virou 9. Leia o
 trace de cima a baixo e você tem **um stream de mudanças**; fique só com a última linha de cada chave

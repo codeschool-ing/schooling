@@ -1,5 +1,5 @@
 ---
-title: The log, in twenty lines of Python
+title: The log, in twenty-five lines of Python
 version: 1
 ---
 
@@ -14,7 +14,9 @@ message brokers, a stream is a **queue**: a message is handed to one reader and 
 The log in this lesson is neither. It is the data itself, kept in order, and any number of readers
 can go through it, each at its own place.
 
-@@fig:l2-log-readers@@
+```schooling-figure
+{"svg": "<svg viewBox=\"0 0 720 230\" role=\"img\" aria-label=\"A log of eight records, offsets 0 to 7, drawn left to right. New records are appended at the right-hand end. Three readers point at different places: the warehouse at offset 0, the loyalty scheme at offset 3 and the stock system at offset 8, the next record that does not exist yet. Reading moves only the reader's own pointer.\" data-fig=\"l2-log-readers\"><defs><marker id=\"l2-log-readers-ah-83\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--amber)\"></path></marker><marker id=\"l2-log-readers-ah-726\" viewBox=\"0 0 10 8\" refX=\"9\" refY=\"4\" markerWidth=\"8\" markerHeight=\"7\" orient=\"auto-start-reverse\"><path d=\"M0 0 L10 4 L0 8 z\" fill=\"var(--paper)\"></path></marker></defs><rect x=\"60\" y=\"70\" width=\"56\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.2\"></rect><text x=\"88.0\" y=\"90\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"13\" font-weight=\"600\" fill=\"var(--phosphor)\">0</text><rect x=\"122\" y=\"70\" width=\"56\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.2\"></rect><text x=\"150.0\" y=\"90\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"13\" font-weight=\"600\" fill=\"var(--phosphor)\">1</text><rect x=\"184\" y=\"70\" width=\"56\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.2\"></rect><text x=\"212.0\" y=\"90\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"13\" font-weight=\"600\" fill=\"var(--phosphor)\">2</text><rect x=\"246\" y=\"70\" width=\"56\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.2\"></rect><text x=\"274.0\" y=\"90\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"13\" font-weight=\"600\" fill=\"var(--phosphor)\">3</text><rect x=\"308\" y=\"70\" width=\"56\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.2\"></rect><text x=\"336.0\" y=\"90\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"13\" font-weight=\"600\" fill=\"var(--phosphor)\">4</text><rect x=\"370\" y=\"70\" width=\"56\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.2\"></rect><text x=\"398.0\" y=\"90\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"13\" font-weight=\"600\" fill=\"var(--phosphor)\">5</text><rect x=\"432\" y=\"70\" width=\"56\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.2\"></rect><text x=\"460.0\" y=\"90\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"13\" font-weight=\"600\" fill=\"var(--phosphor)\">6</text><rect x=\"494\" y=\"70\" width=\"56\" height=\"40\" rx=\"4\" fill=\"var(--panel)\" stroke=\"var(--phosphor-dim)\" stroke-width=\"1.2\"></rect><text x=\"522.0\" y=\"90\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"13\" font-weight=\"600\" fill=\"var(--phosphor)\">7</text><rect x=\"556\" y=\"70\" width=\"56\" height=\"40\" rx=\"4\" fill=\"none\" stroke=\"var(--amber)\" stroke-width=\"1.2\" stroke-dasharray=\"4 3\"></rect><text x=\"584.0\" y=\"90\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Mono', monospace\" font-size=\"13\" fill=\"var(--amber)\">8</text><text x=\"586.0\" y=\"44\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--amber)\">the next append goes here</text><line x1=\"584\" y1=\"52\" x2=\"584\" y2=\"66\" stroke=\"var(--amber)\" stroke-width=\"1.2\" marker-end=\"url(#l2-log-readers-ah-83)\"></line><text x=\"30\" y=\"90\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9.5\" fill=\"var(--paper-dim)\">offset</text><text x=\"88\" y=\"58\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">oldest</text><text x=\"522\" y=\"58\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">newest</text><line x1=\"88\" y1=\"175\" x2=\"88\" y2=\"116\" stroke=\"var(--paper)\" stroke-width=\"1.2\" marker-end=\"url(#l2-log-readers-ah-726)\"></line><text x=\"88\" y=\"186\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">warehouse</text><text x=\"88\" y=\"202\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">reads once a night</text><line x1=\"274\" y1=\"175\" x2=\"274\" y2=\"116\" stroke=\"var(--paper)\" stroke-width=\"1.2\" marker-end=\"url(#l2-log-readers-ah-726)\"></line><text x=\"274\" y=\"186\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">loyalty</text><text x=\"274\" y=\"202\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">an hour behind</text><line x1=\"584\" y1=\"175\" x2=\"584\" y2=\"116\" stroke=\"var(--paper)\" stroke-width=\"1.2\" marker-end=\"url(#l2-log-readers-ah-726)\"></line><text x=\"584\" y=\"186\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"10.5\" font-weight=\"600\" fill=\"var(--paper)\">stock</text><text x=\"584\" y=\"202\" text-anchor=\"middle\" dominant-baseline=\"middle\" font-family=\"'IBM Plex Sans', sans-serif\" font-size=\"9\" fill=\"var(--paper-dim)\">has read everything</text></svg>", "caption": "One log, three readers, three places. The log does not know where any of them is."}
+```
 
 ## A log you can read in one sitting
 
@@ -54,11 +56,20 @@ Append three sales. Each `append` prints the offset its record was given:
 
 ```
 ubuntu@stream:~/work$ python minilog.py append demo.log '{"sale": "rec-000001", "qty": 1}'
+0
+ubuntu@stream:~/work$ python minilog.py append demo.log '{"sale": "oli-000002", "qty": 2}'
+1
+ubuntu@stream:~/work$ python minilog.py append demo.log '{"sale": "rec-000003", "qty": 1}'
+2
 ```
 
 Now read it as the stock system, twice:
 
 ```
+ubuntu@stream:~/work$ python minilog.py read demo.log stock
+0 {"sale": "rec-000001", "qty": 1}
+1 {"sale": "oli-000002", "qty": 2}
+2 {"sale": "rec-000003", "qty": 1}
 ubuntu@stream:~/work$ python minilog.py read demo.log stock
 ```
 
@@ -68,6 +79,14 @@ loyalty scheme that has never read anything:
 
 ```
 ubuntu@stream:~/work$ python minilog.py append demo.log '{"sale": "nat-000004", "qty": 1}'
+3
+ubuntu@stream:~/work$ python minilog.py read demo.log stock
+3 {"sale": "nat-000004", "qty": 1}
+ubuntu@stream:~/work$ python minilog.py read demo.log loyalty
+0 {"sale": "rec-000001", "qty": 1}
+1 {"sale": "oli-000002", "qty": 2}
+2 {"sale": "rec-000003", "qty": 1}
+3 {"sale": "nat-000004", "qty": 1}
 ```
 
 The stock reader got only the new record; the loyalty reader got all four, from offset 0. Both
@@ -76,6 +95,15 @@ the log:
 
 ```
 ubuntu@stream:~/work$ ls demo.log*
+demo.log
+demo.log.loyalty
+demo.log.stock
+ubuntu@stream:~/work$ head demo.log.*
+==> demo.log.loyalty <==
+4
+
+==> demo.log.stock <==
+4
 ```
 
 Each holds the offset of the next record that reader will ask for. Both say 4, because both have

@@ -12,7 +12,12 @@ Suponha que a contagem do Recife, feita às 08:50, chegue ao log por último em 
 exagero: a contagem foi digitada num tablet no estoque, e o tablet ficou sem sinal até alguém levá-lo
 para a frente da loja. Monte esse log movendo a primeira linha para o fim, e faça o fold:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ (tail -n +2 stock.log; head -1 stock.log) > late.log
+ubuntu@stream:~/work$ python balance.py late.log
+olinda  bk-03    3
+recife  bk-03    4
+```
 
 `tail -n +2` é toda linha a partir da segunda, e `head -1` é a primeira; os parênteses rodam os dois
 e mandam tudo para um arquivo só. Os oito eventos de `late.log` são os mesmos oito, byte a byte, e a
@@ -22,7 +27,19 @@ aplicado no fim da manhã, apagando uma entrega e três vendas.
 
 O trace mostra como se chegou lá:
 
-@@fence@@
+```
+ubuntu@stream:~/work$ python balance.py late.log --trace
+ 0  olinda  bk-03    2
+ 1  recife  bk-03   -1
+ 2  olinda  bk-03    0
+ 3  recife  bk-03    5
+ 4  recife  bk-03    3
+ 5  olinda  bk-03    3
+ 6  recife  bk-03    2
+ 7  recife  bk-03    4
+olinda  bk-03    3
+recife  bk-03    4
+```
 
 A segunda linha diz que o Recife tinha **−1** exemplar, coisa que nenhuma prateleira já teve. Um
 sistema que reagisse ao estado conforme ele muda teria reagido a isso: um alerta de estoque, um

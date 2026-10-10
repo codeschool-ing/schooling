@@ -59,6 +59,8 @@ Run it:
 
 ```
 ubuntu@stream:~/work$ python balance.py stock.log
+olinda  bk-03    3
+recife  bk-03    6
 ```
 
 Recife counted 4, sold 1, received 6, sold 2 and sold 1, and has 6. Olinda counted 2, sold 2 and
@@ -71,6 +73,16 @@ Now ask for the trace:
 
 ```
 ubuntu@stream:~/work$ python balance.py stock.log --trace
+ 0  recife  bk-03    4
+ 1  olinda  bk-03    2
+ 2  recife  bk-03    3
+ 3  olinda  bk-03    0
+ 4  recife  bk-03    9
+ 5  recife  bk-03    7
+ 6  olinda  bk-03    3
+ 7  recife  bk-03    6
+olinda  bk-03    3
+recife  bk-03    6
 ```
 
 Each trace line is one change to the table: at offset 4, the row `recife bk-03` became 9. Read the

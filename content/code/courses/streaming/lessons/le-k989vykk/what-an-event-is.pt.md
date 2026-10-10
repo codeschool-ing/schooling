@@ -29,7 +29,9 @@ podem ser reconstruídos a partir do estado.
 
 Esta é uma venda como os caixas da lição 1 a enviam:
 
-@@fence@@
+```json
+{"sale": "nat-000002", "shop": "natal", "book": "bk-08", "qty": 2, "cents": 17980, "at": "2026-03-02T09:00:09-03:00"}
+```
 
 Quatro tipos de campo aparecem em quase todo evento bem feito, e este tem três deles:
 
