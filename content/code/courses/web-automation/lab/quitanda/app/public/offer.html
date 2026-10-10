@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Offer · Quitanda</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main>
+    <h1>Today's offer</h1>
+    <p id="offer">…</p>
+  </main>
+  <script>
+    const money = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+    fetch('/api/offer')
+      .then((response) => response.json())
+      .then((offer) => {
+        document.querySelector('#offer').textContent =
+          `${offer.name} for ${money.format(offer.price / 100)}`;
+      });
+  </script>
+</body>
+</html>
