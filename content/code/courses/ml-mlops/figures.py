@@ -750,6 +750,91 @@ def l04_calibration(lang):
     return f, t['cap']
 
 
+@figure('l05-lifecycle', 5)
+def l05_lifecycle(lang):
+    t = {'en': dict(
+            label='Eight stages in a loop: data, features and labels, training, evaluation, '
+                  'registration, deployment, monitoring, retraining, and back to data. Training and '
+                  'evaluation are marked as the modeller\'s; the other six as the platform\'s.',
+            stages=['data', 'features and labels', 'training', 'evaluation', 'registration',
+                    'deployment', 'monitoring', 'retraining'],
+            mod='the modeller decides', plat='the platform runs',
+            centre='a model\'s life',
+            cap='The modeller owns the decisions at two stops of the loop. Everything that has to '
+                'happen the same way every time, which is most of it, belongs to the platform.'),
+         'pt': dict(
+            label='Oito etapas num ciclo: dados, atributos e rótulos, treino, avaliação, registro, '
+                  'publicação, monitoramento, retreino, e de volta aos dados. Treino e avaliação '
+                  'aparecem como de quem modela; as outras seis como da plataforma.',
+            stages=['dados', 'atributos e rótulos', 'treino', 'avaliação', 'registro',
+                    'publicação', 'monitoramento', 'retreino'],
+            mod='quem modela decide', plat='a plataforma roda',
+            centre='a vida de um modelo',
+            cap='Quem modela é dono das decisões em duas paradas do ciclo. Tudo o que precisa '
+                'acontecer do mesmo jeito toda vez, que é a maior parte, pertence à plataforma.')}[lang]
+    f = Fig('l05-lifecycle', 720, 300, t['label'])
+    xs = [25, 200, 375, 550]
+    pos = [(xs[i], 50) for i in range(4)] + [(xs[3 - i], 190) for i in range(4)]
+    for k, (name, (x, y)) in enumerate(zip(t['stages'], pos)):
+        mod = name in t['stages'][2:4]
+        f.rect(x, y, 145, 40, stroke='--amber' if mod else '--phosphor',
+               fill='--scan' if mod else '--panel', rx=20)
+        f.text(x + 72.5, y + 20, name, size=11, weight='600')
+    for i in range(3):
+        f.line(xs[i] + 147, 70, xs[i + 1] - 3, 70, stroke='--paper-dim', width=1.4, arrow=True)
+        f.line(xs[3 - i] - 2, 210, xs[2 - i] + 148, 210, stroke='--paper-dim', width=1.4, arrow=True)
+    f.path(f'M{xs[3] + 145} 70 C 712 70, 712 210, {xs[3] + 148} 210', stroke='--paper-dim',
+           width=1.4, arrow=True)
+    f.path(f'M{xs[0]} 210 C 8 210, 8 70, {xs[0] - 3} 70', stroke='--paper-dim', width=1.4, arrow=True)
+    f.text(360, 140, t['centre'], size=13, weight='700', fill='--paper-dim')
+    f.rect(20, 268, 14, 14, stroke='--amber', fill='--scan', rx=7)
+    f.text(42, 275, t['mod'], size=10.5, anchor='start')
+    f.rect(220, 268, 14, 14, stroke='--phosphor', fill='--panel', rx=7)
+    f.text(242, 275, t['plat'], size=10.5, anchor='start')
+    return f, t['cap']
+
+
+@figure('l05-steps', 5)
+def l05_steps(lang):
+    t = {'en': dict(
+            label='The pipeline as four steps passing files. shop.db goes into build_dataset.py, '
+                  'which writes train.csv and test.csv. validate.py reads them and passes or refuses. '
+                  'train.py reads train.csv and writes lapse.joblib with its record, lapse.json. '
+                  'evaluate.py reads the model and test.csv and writes lapse.scores.json.',
+            note=['refuses unfinished labels', 'refuses broken rows', 'records its data',
+                  'scores the saved file'],
+            cap='Each step is a program with a file in and a file out. Any one of them can be run, '
+                'checked and rerun alone, and a failure stops the ones after it.'),
+         'pt': dict(
+            label='O pipeline como quatro etapas passando arquivos. O shop.db entra no '
+                  'build_dataset.py, que grava train.csv e test.csv. O validate.py os lê e aprova ou '
+                  'recusa. O train.py lê train.csv e grava lapse.joblib com o seu registro, '
+                  'lapse.json. O evaluate.py lê o modelo e test.csv e grava lapse.scores.json.',
+            note=['recusa rótulos inacabados', 'recusa linhas quebradas', 'registra os seus dados',
+                  'pontua o arquivo salvo'],
+            cap='Cada etapa é um programa com um arquivo de entrada e um de saída. Qualquer uma pode '
+                'ser rodada, verificada e rodada de novo sozinha, e uma falha para as seguintes.')}[lang]
+    f = Fig('l05-steps', 720, 250, t['label'])
+    steps = ['build_dataset.py', 'validate.py', 'train.py', 'evaluate.py']
+    outs = [['train.csv', 'test.csv'], ['exit 0 or 1'], ['lapse.joblib', 'lapse.json'],
+            ['lapse.scores.json']]
+    xs = [30, 200, 370, 540]
+    f.rect(30, 14, 150, 28, stroke='--wire', fill='--scan')
+    f.text(105, 28, 'shop.db', size=10.5, mono=True)
+    f.line(105, 42, 105, 82, stroke='--phosphor', width=1.6, arrow=True)
+    for i, (x, s_) in enumerate(zip(xs, steps)):
+        f.rect(x, 84, 150, 46, stroke='--phosphor', fill='--panel')
+        f.text(x + 75, 107, s_, size=11, mono=True, weight='600')
+        f.text(x + 75, 148, t['note'][i], size=9.5, fill='--paper-dim')
+        if i < 3:
+            f.line(x + 150, 107, x + 168, 107, stroke='--phosphor', width=1.6, arrow=True)
+        for j, n in enumerate(outs[i]):
+            f.rect(x + 10, 170 + j * 28, 130, 22, stroke='--amber' if i == 3 else '--wire',
+                   fill='--scan', rx=3)
+            f.text(x + 75, 181 + j * 28, n, size=9.5, mono=True)
+    return f, t['cap']
+
+
 
 def main():
     if '--list' in sys.argv:
