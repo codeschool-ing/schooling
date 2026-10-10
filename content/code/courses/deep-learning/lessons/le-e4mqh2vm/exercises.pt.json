@@ -1,0 +1,406 @@
+{
+  "ex-1m5xhte6": {
+    "prompt": "O que um passo para a frente calcula?",
+    "hint": "Pense para que lado os números correm, e o que fica parado.",
+    "choices": [
+      {
+        "text": "Pesos novos, a partir dos erros da última previsão",
+        "why": "Isso é a atualização, que acontece entre dois passos para a frente. Um passo para a frente não muda peso nenhum."
+      },
+      {
+        "text": "A previsão para uma entrada, com os pesos parados",
+        "why": "Certo. No `forward.py` é `w * x` para os dez pontos; no `layer.py` da aula 1 era `x @ W + b` e um ReLU."
+      },
+      {
+        "text": "A inclinação da perda para cada peso, medida empurrando-o um pouco",
+        "why": "A inclinação precisa antes de uma perda, e a perda precisa das previsões que o passo para a frente produziu."
+      },
+      {
+        "text": "O erro quadrático médio sobre o conjunto de dados",
+        "why": "Isso é a perda, calculada a partir da saída do passo para a frente e dos alvos."
+      }
+    ]
+  },
+  "ex-2r15ex1d": {
+    "prompt": "Os pontos foram feitos com inclinação 2, mas em `w = 2` toda previsão do `forward.py` fica baixa demais. Por quê?",
+    "hint": "Olhe a reta do `points.py` e o modelo.",
+    "choices": [
+      {
+        "text": "O ruído empurra todos os pontos para cima",
+        "why": "O ruído é sorteado em volta de zero, então empurra uns pontos para cima e outros para baixo; não explica dez erros do mesmo lado."
+      },
+      {
+        "text": "Arredondar o `y` para duas casas o abaixa",
+        "why": "Arredondar move cada valor no máximo 0,005, para qualquer lado."
+      },
+      {
+        "text": "Os pontos ficam numa reta de altura 1, e `w * x` passa pelo zero",
+        "why": "Certo. O modelo não tem como somar o 1, então até a inclinação certa erra por cerca de 1 em cada ponto."
+      },
+      {
+        "text": "Um peso de 2 é pequeno demais para entradas abaixo de 1",
+        "why": "O tamanho do `x` não é a questão: os erros ficam perto de 1 tanto em `x = 0.1` quanto em `x = 1.0`."
+      }
+    ]
+  },
+  "ex-8eyj5css": {
+    "prompt": "Uma rede 64-16-10 roda um passo para a frente num lote de 32 dígitos. O que acontece com os 1.210 pesos dela durante esse passo?",
+    "hint": "O que um passo para a frente faz, qualquer que seja o tamanho do modelo?",
+    "choices": [
+      {
+        "text": "Cada um anda um pouco na direção dos rótulos do lote",
+        "why": "Mover os pesos é a atualização, depois que a perda e as inclinações são conhecidas. O passo em si só lê."
+      },
+      {
+        "text": "Nada; são lidos e multiplicados",
+        "why": "Certo. O passo para a frente do `forward.py` e o de uma rede são a mesma ideia: pesos parados, entradas entram, previsões saem."
+      },
+      {
+        "text": "Os pesos da primeira camada mudam e os da segunda esperam",
+        "why": "Nenhuma camada muda durante o passo para a frente; a ordem das camadas é a ordem da conta, não do aprendizado."
+      },
+      {
+        "text": "Voltam a valores aleatórios para o lote novo",
+        "why": "Zerar jogaria fora tudo o que foi aprendido; os pesos são sorteados uma vez, antes de o treino começar."
+      }
+    ]
+  },
+  "ex-1rprz9ep": {
+    "prompt": "Um modelo faz duas previsões com erros de -1 e +3. Qual o erro quadrático médio dele?",
+    "hint": "Eleve cada erro ao quadrado, depois tire a média."
+  },
+  "ex-6ng0ns9n": {
+    "prompt": "Por que o erro quadrático médio eleva os erros ao quadrado em vez de tirar a média simples deles?",
+    "hint": "Pense num erro de -1,03 ao lado de um de +1,03.",
+    "choices": [
+      {
+        "text": "Para que erros de lados opostos se somem em vez de se cancelar",
+        "why": "Certo. A média simples de -1,03 e +1,03 é zero, nota perfeita para dois erros. Ao quadrado, os dois contam."
+      },
+      {
+        "text": "Para deixar a perda menor e mais fácil de ler",
+        "why": "Elevar ao quadrado aumenta os erros acima de 1, não os diminui: 1,26 vira 1,5876."
+      },
+      {
+        "text": "Porque a média de números com sinal não é definida",
+        "why": "Ela é perfeitamente definida; só é inútil como perda, porque erros opostos se cancelam."
+      },
+      {
+        "text": "Para que erros pequenos pesem mais que os grandes",
+        "why": "É o contrário: um erro de 2 custa quatro vezes um erro de 1."
+      }
+    ]
+  },
+  "ex-kexb7a93": {
+    "prompt": "Alguém propõe treinar um modelo de 100 pesos testando 10 valores para cada peso e ficando com a combinação de menor perda. O que há de errado no plano?",
+    "hint": "Conte as combinações.",
+    "choices": [
+      {
+        "text": "Dez valores são grossos demais para achar o fundo",
+        "why": "A grade grossa é um problema, mas uma grade mais fina piora o problema de verdade."
+      },
+      {
+        "text": "A perda de um modelo com 100 pesos não é um número só",
+        "why": "A perda é um número só qualquer que seja o número de pesos; é isso que a torna comparável."
+      },
+      {
+        "text": "São 10 elevado a 100 avaliações",
+        "why": "Certo. Uma grade cresce exponencialmente com os pesos; a inclinação dá uma direção a partir de um ponto só."
+      },
+      {
+        "text": "Erro quadrático médio é a perda errada para 100 pesos",
+        "why": "Qual perda serve depende da tarefa, não do número de pesos; a aula 4 trata dessa escolha."
+      }
+    ]
+  },
+  "ex-80d2620r": {
+    "prompt": "Em `w = 4` a inclinação da perda é +0,4422. O que isso diz?",
+    "hint": "Inclinação positiva: o que a perda faz quando `w` cresce?",
+    "choices": [
+      {
+        "text": "O peso está a 0,4422 do fundo",
+        "why": "A inclinação é uma taxa de variação, não uma distância; o fundo está em 3,4257, a 0,5743 dali."
+      },
+      {
+        "text": "A perda em `w = 4` é 0,4422",
+        "why": "A perda ali é 0,4006. A inclinação é quão rápido ela muda, não o valor dela."
+      },
+      {
+        "text": "A perda sobe quando `w` cresce, então o fundo fica abaixo de 4",
+        "why": "Certo. Inclinação positiva quer dizer que andar para a esquerda é descer."
+      },
+      {
+        "text": "O modelo acertou, porque a inclinação é pequena",
+        "why": "Uma inclinação pequena diz que o terreno ali é quase plano, não que as previsões são boas."
+      }
+    ]
+  },
+  "ex-hpd2vyjr": {
+    "prompt": "No `slope.py` a diferença de um lado só erra por 0,000385 em todos os pesos, enquanto a centrada bate com a fórmula. Por quê?",
+    "hint": "Onde, entre quais dois pontos, cada uma mede?",
+    "choices": [
+      {
+        "text": "Arredondamento de ponto flutuante na subtração",
+        "why": "O arredondamento seria minúsculo e diferente em cada peso, não os mesmos 0,000385 quatro vezes."
+      },
+      {
+        "text": "Mede a inclinação no meio do caminho entre `w` e `w + h`",
+        "why": "Certo. Numa parábola a inclinação muda a uma taxa constante, então estar meio passo deslocado custa o mesmo em todo lugar."
+      },
+      {
+        "text": "O passo `h` dela é dez vezes o da centrada",
+        "why": "As duas usam o mesmo `h = 0.001`."
+      },
+      {
+        "text": "A fórmula está errada e a diferença centrada compartilha o erro",
+        "why": "Dois métodos independentes concordando em seis casas é a prova de que a fórmula está certa."
+      }
+    ]
+  },
+  "ex-29fdnpmd": {
+    "prompt": "No fundo da curva da perda, a inclinação é ___, e é por isso que o gradiente descendente para de se mexer ali.",
+    "hint": "O terreno é plano.",
+    "blanks": [
+      {
+        "accept": [
+          "zero",
+          "0"
+        ]
+      }
+    ]
+  },
+  "ex-ffw2z6fn": {
+    "prompt": "Ponha em ordem um passo do laço do `descent.py`.",
+    "hint": "A atualização usa a inclinação, e a inclinação usa as previsões.",
+    "items": [
+      "Calcular as previsões `w * x` no peso atual",
+      "Calcular a perda e a inclinação a partir dos erros",
+      "Mover o peso: `w - lr * grad`",
+      "Dar outra volta a partir do peso novo"
+    ]
+  },
+  "ex-wwws4ndm": {
+    "prompt": "O `descent.py` começa em `w = 0` e o primeiro passo cai em 2,6378. Por que esse número?",
+    "hint": "A taxa é 1,0; qual era a inclinação em 0?",
+    "choices": [
+      {
+        "text": "É a resposta da forma fechada, alcançada cedo",
+        "why": "A forma fechada é 3,4257; o primeiro passo para bem antes."
+      },
+      {
+        "text": "É a média dos dez valores de `y`",
+        "why": "Os dez valores de `y` vão de 1,23 a 2,75 e nenhum é 2,6378; o passo vem da inclinação."
+      },
+      {
+        "text": "A descida sempre pula três quartos do caminho",
+        "why": "Não há fração fixa: o passo é a taxa vezes a inclinação, e a inclinação diminui perto do fundo."
+      },
+      {
+        "text": "A inclinação em 0 é -2,6378 e a taxa é 1,0",
+        "why": "Certo. `w - lr * grad` é 0 - 1,0 × (-2,6378)."
+      }
+    ]
+  },
+  "ex-pn5pgd9d": {
+    "prompt": "Para uma reta pelo zero, `Σxy / Σx²` dá o melhor peso numa linha. Por que redes são treinadas por descida, então?",
+    "hint": "Em que a fórmula se apoia sobre a forma da perda?",
+    "choices": [
+      {
+        "text": "Um ReLU entre camadas não deixa fórmula, mas a inclinação continua",
+        "why": "Certo. A álgebra funciona porque a perda é uma parábola em `w`; a descida só precisa de uma inclinação no ponto atual."
+      },
+      {
+        "text": "A descida é mais exata que a fórmula, que perde dígitos no arredondamento",
+        "why": "No `descent.py` as duas concordam em quatro casas; a descida se aproxima do fundo, a fórmula cai nele."
+      },
+      {
+        "text": "A fórmula precisa de placa de vídeo",
+        "why": "É uma soma e uma divisão, rodadas aqui no processador."
+      },
+      {
+        "text": "A descida sempre acha o ponto mais baixo da perda, de onde quer que comece",
+        "why": "Ela acha um fundo perto de onde começou, que nem sempre é o mais baixo que existe."
+      }
+    ]
+  },
+  "ex-rbpn6h7k": {
+    "prompt": "Os pontos foram feitos com inclinação 2, mas a descida assenta em `w = 3.4257`. O que isso quer dizer?",
+    "hint": "O que falta ao modelo?",
+    "choices": [
+      {
+        "text": "A descida parou cedo demais, antes de o peso conseguir voltar para 2",
+        "why": "A forma fechada dá os mesmos 3,4257, então esse é o fundo desta perda."
+      },
+      {
+        "text": "É a melhor reta pelo zero, mais inclinada para alcançar os pontos",
+        "why": "Certo. Sem viés, inclinar mais é como o modelo chega mais perto de pontos que estão na altura 1."
+      },
+      {
+        "text": "O ruído somou 1,4 à inclinação",
+        "why": "Com o viés, a inclinação sai 1,8733; o ruído a move um pouco, não 1,4."
+      },
+      {
+        "text": "A taxa de aprendizado de 1,0 era grande demais",
+        "why": "Uma taxa diferente muda o caminho, não onde ele termina; o fundo é o mesmo."
+      }
+    ]
+  },
+  "ex-qddwq6da": {
+    "prompt": "Ligue cada taxa de aprendizado do `rates.py` ao que ela fez.",
+    "hint": "As quatro colunas da tabela.",
+    "pairs": [
+      {
+        "left": "0,1",
+        "right": "subiu devagar e chegou a 2,396 no passo 15"
+      },
+      {
+        "left": "1,0",
+        "right": "chegou a 3,426 no passo 7 e ficou"
+      },
+      {
+        "left": "2,4",
+        "right": "pulou o fundo e ziguezagueou para dentro"
+      },
+      {
+        "left": "2,8",
+        "right": "oscilou mais a cada passo, até 33,564"
+      }
+    ]
+  },
+  "ex-pvfmzdwj": {
+    "prompt": "Outro modelo de um peso tem uma perda de curvatura 4. Qual destas taxas diverge?",
+    "hint": "Cada passo multiplica a distância até o fundo por 1 - lr × curvatura.",
+    "choices": [
+      {
+        "text": "0,1",
+        "why": "1 - 0,4 = 0,6: cada passo guarda 60% da distância, e converge."
+      },
+      {
+        "text": "0,25",
+        "why": "1 - 1 = 0: cai no fundo num passo só."
+      },
+      {
+        "text": "0,45",
+        "why": "1 - 1,8 = -0,8: passa do ponto a cada vez e ainda assim se aproxima, como o 2,4 do `rates.py`."
+      },
+      {
+        "text": "0,6",
+        "why": "Certo. 1 - 2,4 = -1,4: cada oscilação é 40% mais larga que a anterior. O limite é 2 / 4 = 0,5."
+      }
+    ]
+  },
+  "ex-z451yqht": {
+    "prompt": "Um treino imprime uma perda que cresce a cada passo. Qual a primeira coisa a mudar?",
+    "hint": "Olhe a coluna 2,8 do `rates.py`.",
+    "choices": [
+      {
+        "text": "Rodar mais passos para dar tempo de ela virar",
+        "why": "Uma execução que diverge oscila mais a cada passo; mais passos pioram."
+      },
+      {
+        "text": "Baixar a taxa de aprendizado",
+        "why": "Certo. Uma perda que cresce é a assinatura de passos que passam do ponto mais do que corrigem."
+      },
+      {
+        "text": "Começar de outro peso",
+        "why": "Numa parábola é a taxa que decide se diverge, de qualquer ponto de partida."
+      },
+      {
+        "text": "Trocar os erros ao quadrado pela média simples dos erros",
+        "why": "Essa perda deixa erros opostos se cancelarem, e a taxa continuaria grande demais para ela."
+      }
+    ]
+  },
+  "ex-xt2ybhmm": {
+    "prompt": "Com um peso e um viés, o que é o gradiente?",
+    "hint": "Uma inclinação por parâmetro.",
+    "choices": [
+      {
+        "text": "A perda no ponto atual",
+        "why": "A perda é um número; o gradiente diz como ela muda."
+      },
+      {
+        "text": "O passo que os parâmetros dão, com a taxa incluída",
+        "why": "O passo é a taxa vezes o gradiente, na direção oposta."
+      },
+      {
+        "text": "O par de inclinações, uma para `w` e uma para `b`",
+        "why": "Certo. Juntas, apontam morro acima na direção mais íngreme, e a descida anda para o outro lado."
+      },
+      {
+        "text": "A diferença entre a reta nova e a antiga",
+        "why": "Essa diferença é o resultado de um passo, não o gradiente que o decidiu."
+      }
+    ]
+  },
+  "ex-fecc0gq4": {
+    "prompt": "Uma taxa de 1,0 funcionou para `w` sozinho, mas o `surface.py 1.0` diverge. Por quê?",
+    "hint": "Olhe a forma das curvas de nível.",
+    "choices": [
+      {
+        "text": "Dois parâmetros precisam de duas perdas diferentes",
+        "why": "Há uma perda, função dos dois parâmetros."
+      },
+      {
+        "text": "O vale se curva mais forte de través",
+        "why": "Certo. Uma taxa serve para todas as direções, então a mais íngreme define o teto, e 1,0 está acima dele."
+      },
+      {
+        "text": "O viés começa em zero, longe de 1,0867",
+        "why": "A taxa de 0,5 começa do mesmo zero e converge."
+      },
+      {
+        "text": "O `np.polyfit` e a descida discordam",
+        "why": "Com 0,5 eles concordam em quatro casas; o problema com 1,0 é o tamanho do passo."
+      }
+    ]
+  },
+  "ex-4g9n5zh7": {
+    "prompt": "Num ponto, o gradiente é (+0,3, -0,5) para (`w`, `b`). Com uma taxa positiva, como um passo move os parâmetros?",
+    "hint": "Cada parâmetro anda contra a sua própria inclinação.",
+    "choices": [
+      {
+        "text": "`w` para cima e `b` para baixo, seguindo o gradiente",
+        "why": "O gradiente aponta morro acima; segui-lo aumenta a perda."
+      },
+      {
+        "text": "`w` para baixo e `b` para cima",
+        "why": "Certo. `w - lr × 0,3` cai e `b - lr × (-0,5)` sobe."
+      },
+      {
+        "text": "Os dois para baixo, porque a perda tem de baixar",
+        "why": "Baixar a perda é o objetivo; para que lado cada parâmetro vai depende do sinal da sua própria inclinação."
+      },
+      {
+        "text": "Só o `b`, o parâmetro de inclinação maior",
+        "why": "Todos os parâmetros andam, cada um na proporção da sua inclinação."
+      }
+    ]
+  },
+  "ex-pr5pxf0m": {
+    "prompt": "Quais destas coisas as execuções desta aula mostraram? Marque todas as que se aplicam.",
+    "hint": "Confira cada uma contra uma transcrição.",
+    "choices": [
+      {
+        "text": "Oito passos com taxa 1,0 chegaram ao peso da forma fechada, 3,4257",
+        "why": "Sim: o `descent.py` imprimiu 3,4257 no passo 8 e o mesmo de `Σxy / Σx²`."
+      },
+      {
+        "text": "Somar um viés baixou a melhor perda de 0,2736 para 0,0206",
+        "why": "Sim: o `surface.py` com 0,5, conferido contra o `np.polyfit`."
+      },
+      {
+        "text": "Uma taxa de 2,4 divergiu no modelo de um peso",
+        "why": "Ela passou do ponto e ziguezagueou, mas se aproximou: 3,715 no passo 15. Quem divergiu foi 2,8."
+      },
+      {
+        "text": "A diferença finita de um lado só bateu exatamente com a fórmula",
+        "why": "Errou por 0,000385; a centrada é que bateu."
+      },
+      {
+        "text": "Com dois parâmetros, uma taxa de 1,0 fez a perda crescer",
+        "why": "Sim: 4,7918, 12,7979, 34,5014, 93,2740."
+      }
+    ]
+  }
+}

@@ -1,0 +1,547 @@
+[
+  {
+    "id": "ex-6jsvxyzf",
+    "version": 1,
+    "section": "mse",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "In `regression_losses.py`, MSE's best single guess for the seven deliveries is 20.57 minutes. What is that number?",
+    "hint": "Compare it with the line printed under the three guesses.",
+    "choices": [
+      {
+        "text": "The median of the seven times",
+        "correct": false,
+        "why": "The median is 14.0, and it is what MAE chose."
+      },
+      {
+        "text": "Their mean",
+        "correct": true,
+        "why": "Right. The constant with the lowest squared error is the mean, and one storm dragged it to a time nobody waited."
+      },
+      {
+        "text": "The time of the most common delivery",
+        "correct": false,
+        "why": "That is 14, which appears twice; MSE's answer is far from it."
+      },
+      {
+        "text": "The midpoint between the fastest delivery and the slowest",
+        "correct": false,
+        "why": "That would be 36 minutes, halfway from 12 to 60."
+      }
+    ]
+  },
+  {
+    "id": "ex-s196y6d9",
+    "version": 1,
+    "section": "mse",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "At a guess of 15, the storm delivery pulls with -90 under MSE and with -2 under Huber. Why only -2 under Huber?",
+    "hint": "What does `np.clip` do to the error?",
+    "choices": [
+      {
+        "text": "Huber ignores any point whose error is above its threshold",
+        "correct": false,
+        "why": "It does not ignore it: the storm still pulls, with -2, as hard as an ordinary delivery 2 minutes off."
+      },
+      {
+        "text": "Huber divides each error by the mean error of the set",
+        "correct": false,
+        "why": "No mean appears in its definition; the slope is the error, capped."
+      },
+      {
+        "text": "Past `DELTA` its slope stops growing and stays at 2",
+        "correct": true,
+        "why": "Right. Huber is a straight line beyond the threshold, so a huge error pulls no harder than one of exactly 2."
+      },
+      {
+        "text": "Huber squares the error and halves it",
+        "correct": false,
+        "why": "That is its shape below the threshold, where the storm is not."
+      }
+    ]
+  },
+  {
+    "id": "ex-tr4pjtf5",
+    "version": 1,
+    "section": "mse",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Suppose an eighth delivery took 25 minutes. Under MSE, with what pull would it act on a guess of 15? Use the program's formula, `2 * (15 - minutes)`.",
+    "hint": "The error is the guess minus the delivery.",
+    "value": -20,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-3e34fz8h",
+    "version": 1,
+    "section": "cross-entropy",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which of the four cases in `xent.py` has the highest cross-entropy loss?",
+    "hint": "The loss looks at one probability.",
+    "choices": [
+      {
+        "text": "Unsure, wrong",
+        "correct": false,
+        "why": "It costs 1.386: the right class still had 0.25."
+      },
+      {
+        "text": "Unsure, with the right class barely ahead",
+        "correct": false,
+        "why": "It costs 0.886, less than either wrong case."
+      },
+      {
+        "text": "Confident and wrong",
+        "correct": true,
+        "why": "Right: 4.036, because the right class got 0.018 and minus its log is large."
+      },
+      {
+        "text": "Confident and right, because its gradient is the largest",
+        "correct": false,
+        "why": "Its loss is 0.036 and its gradient on the right class is the smallest, -0.035."
+      }
+    ]
+  },
+  {
+    "id": "ex-r8hsvd8f",
+    "version": 1,
+    "section": "cross-entropy",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "With softmax and cross-entropy, what is the gradient of the loss with respect to the logit of the right class?",
+    "hint": "Look at the first number of each gradient in the output, next to `p`.",
+    "choices": [
+      {
+        "text": "Its probability minus 1",
+        "correct": true,
+        "why": "Right: -0.982 when it had 0.018, -0.035 when it had 0.965. The push grows with the mistake."
+      },
+      {
+        "text": "Minus the log of its probability",
+        "correct": false,
+        "why": "That is the loss itself, not its slope."
+      },
+      {
+        "text": "Zero, since the loss already includes that class",
+        "correct": false,
+        "why": "It is the largest gradient in the row whenever the network is wrong."
+      },
+      {
+        "text": "One over its probability",
+        "correct": false,
+        "why": "That is the slope of the log with respect to p; the softmax's slope cancels most of it, leaving p - 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-538mx5a3",
+    "version": 1,
+    "section": "cross-entropy",
+    "type": "numeric",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A network that gives each of ten classes 0.1 has a cross-entropy of 2.303. What is the loss of an untrained network that gives each of 100 classes the same probability? Three decimal places.",
+    "hint": "Minus the natural log of the right class's probability.",
+    "value": 4.605,
+    "tolerance": 0.002
+  },
+  {
+    "id": "ex-2ebthawb",
+    "version": 1,
+    "section": "logits-and-stability",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why may `tinynet.softmax_cross_entropy` subtract the largest logit from every logit without changing the probabilities?",
+    "hint": "Write the fraction with the shift in it.",
+    "choices": [
+      {
+        "text": "Because the loss depends on the largest logit alone",
+        "correct": false,
+        "why": "The loss reads the right class's logit, which is not the largest when the network is wrong."
+      },
+      {
+        "text": "A factor `exp(-m)` appears above and below the fraction, and cancels",
+        "correct": true,
+        "why": "Right. Softmax depends on the differences between logits, and a common shift leaves those untouched."
+      },
+      {
+        "text": "It changes them a little, but by too little to show in four decimal places",
+        "correct": false,
+        "why": "The change is exactly zero in exact arithmetic; `0.1270` was printed by both versions."
+      },
+      {
+        "text": "Because `float32` rounds all large numbers to the same value",
+        "correct": false,
+        "why": "Large values overflow to infinity rather than rounding together, which is why the shift is needed."
+      }
+    ]
+  },
+  {
+    "id": "ex-2fj8ystp",
+    "version": 1,
+    "section": "logits-and-stability",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "During training, one batch holds an image the network gets wrong by 120 in its logits, and tinynet reports the batch's loss as `inf`. What happens to the weights at that step?",
+    "hint": "Which of tinynet's two return values does the update use?",
+    "choices": [
+      {
+        "text": "They all become `nan`, and training is lost",
+        "correct": false,
+        "why": "That is what a `nan` gradient does; tinynet's gradient for that image was `[-1, 1, 0]`, finite."
+      },
+      {
+        "text": "They move normally, since the gradient `p - target` stays finite",
+        "correct": true,
+        "why": "Right. Only the reported loss is broken; the step corrects the mistake as usual."
+      },
+      {
+        "text": "They stay as they were, because an infinite loss skips the step",
+        "correct": false,
+        "why": "Nothing in the loop looks at the loss before stepping."
+      },
+      {
+        "text": "They move by an infinite amount and overflow",
+        "correct": false,
+        "why": "The step is the gradient times the rate, and the gradient is between -1 and 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-8jmhmq23",
+    "version": 1,
+    "section": "logits-and-stability",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "PyTorch's cross-entropy takes the network's raw ___ and does the log-sum-exp itself, so a softmax applied beforehand is a bug.",
+    "hint": "The scores the last layer produces, one per class.",
+    "blanks": [
+      {
+        "accept": [
+          "logits",
+          "logit",
+          "scores"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-8btf6q0h",
+    "version": 1,
+    "section": "binary-and-multilabel",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`multilabel.py` gives an 8 the probabilities 0.957, 0.979 and 0.76, which add up to 2.697. What does that sum mean?",
+    "hint": "What ties the three outputs together?",
+    "choices": [
+      {
+        "text": "The network is overconfident and needs a softmax at the end",
+        "correct": false,
+        "why": "A softmax would force the three to share 1, and an 8 really is even, above 4 and looped."
+      },
+      {
+        "text": "The loss is computed wrongly, since probabilities add up to 1",
+        "correct": false,
+        "why": "Probabilities of one choice among several add up to 1; these are three separate questions."
+      },
+      {
+        "text": "Nothing: each output is a separate yes-or-no probability",
+        "correct": true,
+        "why": "Right. Three independent sigmoids, three independent answers, and their total is not a quantity."
+      },
+      {
+        "text": "The image is expected to belong to about three classes",
+        "correct": false,
+        "why": "It answers three questions, and that it got three yeses is the content, not the sum."
+      }
+    ]
+  },
+  {
+    "id": "ex-em00hfp5",
+    "version": 1,
+    "section": "binary-and-multilabel",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "A yes-or-no output gives `p = 0.9` to an image whose answer is no. Which expression is its binary cross-entropy?",
+    "hint": "`p` is the probability of yes.",
+    "choices": [
+      {
+        "text": "`-log 0.9`",
+        "correct": false,
+        "why": "That is the loss when the answer is yes."
+      },
+      {
+        "text": "`-log(1 - 0.9)`",
+        "correct": true,
+        "why": "Right: the probability the output gave to no is 0.1, and the loss is minus its log, about 2.3."
+      },
+      {
+        "text": "`(0.9 - 0) ** 2`",
+        "correct": false,
+        "why": "That is a squared error on the probability, which is not this loss."
+      },
+      {
+        "text": "`-log 0.9 - log(1 - 0.9)`",
+        "correct": false,
+        "why": "Only one of the two terms applies to a given answer; the target picks it."
+      }
+    ]
+  },
+  {
+    "id": "ex-0syh73b8",
+    "version": 1,
+    "section": "binary-and-multilabel",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A model tags recipes with any of 40 labels, such as vegetarian, spicy and quick. Which last layer and loss fit?",
+    "hint": "Can a recipe be spicy and quick at once?",
+    "choices": [
+      {
+        "text": "40 logits, a softmax, and cross-entropy",
+        "correct": false,
+        "why": "Softmax makes the labels compete for one share of 1, so a spicy quick vegetarian dish would be forced to pick one."
+      },
+      {
+        "text": "40 logits, and binary cross-entropy on each",
+        "correct": true,
+        "why": "Right: one independent yes-or-no question per label, as `multilabel.py` did with three."
+      },
+      {
+        "text": "One logit, and MSE against the number of labels",
+        "correct": false,
+        "why": "A count says how many labels and loses which ones."
+      },
+      {
+        "text": "40 linear outputs with MSE against the 0-or-1 targets",
+        "correct": false,
+        "why": "It trains, slowly and with outputs that are not probabilities; a sigmoid with binary cross-entropy is the fitting pair."
+      }
+    ]
+  },
+  {
+    "id": "ex-fqacjydm",
+    "version": 1,
+    "section": "mse-for-classification",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "On the confidently wrong image, MSE's gradient on the right class is -0.0013 against cross-entropy's -0.9997. Why is MSE's so small?",
+    "hint": "What does a softmax with one class near 1 do under a small change of a logit?",
+    "choices": [
+      {
+        "text": "MSE's loss for that image is small, and a small loss has a small slope",
+        "correct": false,
+        "why": "It is 1.993, at MSE's ceiling of 2; the loss is large and its slope is not."
+      },
+      {
+        "text": "A saturated softmax is nearly flat, and MSE must pass through it",
+        "correct": true,
+        "why": "Right. Cross-entropy's log cancels that flat slope; MSE has nothing to cancel it."
+      },
+      {
+        "text": "The learning rate of 0.1 is too low for MSE",
+        "correct": false,
+        "why": "The gradient was computed on one image with no learning rate involved."
+      },
+      {
+        "text": "MSE squares the gradient on its way back through the network",
+        "correct": false,
+        "why": "It squares the error; its gradient on p is 2(p - target), which here is large."
+      }
+    ]
+  },
+  {
+    "id": "ex-8qnmm3bv",
+    "version": 1,
+    "section": "mse-for-classification",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Someone repeats the race but gives the MSE run a different seed. MSE's run then ends 0.003 above cross-entropy's. What can be concluded?",
+    "hint": "What else changed besides the loss?",
+    "choices": [
+      {
+        "text": "MSE is the better loss for the digits after all",
+        "correct": false,
+        "why": "Two things changed at once, so the result cannot be credited to either."
+      },
+      {
+        "text": "Cross-entropy wins with seed 0 and loses with the others",
+        "correct": false,
+        "why": "One run with another seed says little about the rest."
+      },
+      {
+        "text": "The final epoch is where the losses are compared, so MSE wins",
+        "correct": false,
+        "why": "And the gap of 0.003 sits inside what a different start alone produces."
+      },
+      {
+        "text": "Little: the starting weights and batch order differ too, so the race is no longer fair",
+        "correct": true,
+        "why": "Right. A fair comparison changes one thing; lesson 18 measures how far seeds alone move a result."
+      }
+    ]
+  },
+  {
+    "id": "ex-80tph5v6",
+    "version": 1,
+    "section": "choosing-the-loss",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each task to the loss the lesson's table gives it.",
+    "hint": "What question does the output answer?",
+    "pairs": [
+      {
+        "left": "Predicting a delivery time, ignoring the odd storm",
+        "right": "Huber"
+      },
+      {
+        "left": "Recognising which digit an image shows",
+        "right": "Cross-entropy on one logit per class"
+      },
+      {
+        "left": "Deciding whether an e-mail is spam",
+        "right": "Binary cross-entropy on one logit"
+      },
+      {
+        "left": "Predicting a temperature with ordinary noise",
+        "right": "MSE"
+      }
+    ],
+    "right_distractors": [
+      "Accuracy"
+    ]
+  },
+  {
+    "id": "ex-65r5msa0",
+    "version": 1,
+    "section": "choosing-the-loss",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `metric.py`, model C has the lowest cross-entropy and the lowest accuracy. How does that happen?",
+    "hint": "Look at how wrong C is when it is wrong.",
+    "choices": [
+      {
+        "text": "Cross-entropy rewards a model for being wrong",
+        "correct": false,
+        "why": "It charges every wrong answer; C's are cheap because each is barely wrong."
+      },
+      {
+        "text": "Each of its mistakes is mild, at 0.45",
+        "correct": true,
+        "why": "Right. Cross-entropy cares how wrong; accuracy counts how often. B has one answer at 0.001 and pays for it."
+      },
+      {
+        "text": "Accuracy is computed with a threshold of 0.9 instead of 0.5",
+        "correct": false,
+        "why": "The program uses `p > 0.5`."
+      },
+      {
+        "text": "Five questions are too few for a loss to mean anything",
+        "correct": false,
+        "why": "The arithmetic is exact at five; the disagreement is real."
+      }
+    ]
+  },
+  {
+    "id": "ex-v3xs3peq",
+    "version": 1,
+    "section": "choosing-the-loss",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A team wants to train directly on accuracy, since accuracy is what they report. Why does gradient descent fail on it?",
+    "hint": "Lesson 1 met the same problem in the perceptron's step.",
+    "choices": [
+      {
+        "text": "Accuracy is too slow to compute on a batch",
+        "correct": false,
+        "why": "It is a comparison and a mean, cheaper than cross-entropy."
+      },
+      {
+        "text": "Accuracy rises when the loss should fall, so the signs are reversed",
+        "correct": false,
+        "why": "Flipping a sign would be trivial; the problem is that there is no slope to flip."
+      },
+      {
+        "text": "A small weight change changes no prediction, so its slope is zero",
+        "correct": true,
+        "why": "Right. With no slope there is no direction to step in; a smooth loss gives one, and accuracy judges the result."
+      },
+      {
+        "text": "Accuracy is undefined on the validation set",
+        "correct": false,
+        "why": "It is defined anywhere there are labels; the lesson reports it on validation."
+      }
+    ]
+  },
+  {
+    "id": "ex-npm1g10r",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of a numerically stable cross-entropy for one image in order.",
+    "hint": "The shift comes before any exponential.",
+    "items": [
+      "Subtract the largest logit from every logit",
+      "Take the exponential of each shifted logit",
+      "Add the exponentials and take the log of the sum",
+      "Subtract the right class's shifted logit from that log"
+    ]
+  },
+  {
+    "id": "ex-adbknyb1",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did this lesson's runs show? Choose all that apply.",
+    "hint": "Check each against a transcript.",
+    "choices": [
+      {
+        "text": "MSE's best single guess for the deliveries was their mean",
+        "correct": true,
+        "why": "Yes: 20.57 for both."
+      },
+      {
+        "text": "tinynet's loss stayed finite when the network was wrong by 120",
+        "correct": false,
+        "why": "No: it printed `inf`; log-sum-exp gave 120.0000."
+      },
+      {
+        "text": "Cross-entropy was ahead of MSE in validation accuracy at every epoch",
+        "correct": true,
+        "why": "Yes: from 0.714 against 0.322 after one epoch to 0.953 against 0.944 after twenty."
+      },
+      {
+        "text": "The three multilabel outputs for each digit added up to 1",
+        "correct": false,
+        "why": "No: 0.0 for the 3 and 2.697 for the 8."
+      },
+      {
+        "text": "Two models with the same accuracy had different cross-entropy",
+        "correct": true,
+        "why": "Yes: A and B, both 0.8, at 0.592 and 1.390."
+      }
+    ]
+  }
+]

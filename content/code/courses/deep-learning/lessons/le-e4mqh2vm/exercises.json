@@ -1,0 +1,595 @@
+[
+  {
+    "id": "ex-1m5xhte6",
+    "version": 1,
+    "section": "the-forward-pass",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does a forward pass compute?",
+    "hint": "Think about which way the numbers flow, and what stays still.",
+    "choices": [
+      {
+        "text": "New weights, from the errors of the last prediction",
+        "correct": false,
+        "why": "That is the update, which happens between two forward passes. A forward pass changes no weight."
+      },
+      {
+        "text": "The prediction for an input, with the weights held still",
+        "correct": true,
+        "why": "Right. In `forward.py` it is `w * x` for all ten points; in lesson 1's `layer.py` it was `x @ W + b` and a ReLU."
+      },
+      {
+        "text": "The slope of the loss for each weight, measured by nudging it",
+        "correct": false,
+        "why": "The slope needs a loss first, and a loss needs the predictions the forward pass produced."
+      },
+      {
+        "text": "The mean squared error over the data set",
+        "correct": false,
+        "why": "That is the loss, computed from the forward pass's output and the targets."
+      }
+    ]
+  },
+  {
+    "id": "ex-2r15ex1d",
+    "version": 1,
+    "section": "the-forward-pass",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The points were made with a slope of 2, yet at `w = 2` every prediction of `forward.py` is too low. Why?",
+    "hint": "Look at the line in `points.py` and at the model.",
+    "choices": [
+      {
+        "text": "The noise pushes every point upwards",
+        "correct": false,
+        "why": "The noise is drawn around zero, so it pushes some points up and others down; it does not explain ten misses on one side."
+      },
+      {
+        "text": "Rounding `y` to two decimals lowers it",
+        "correct": false,
+        "why": "Rounding moves each value by at most 0.005, in either direction."
+      },
+      {
+        "text": "The points sit on a line at height 1, and `w * x` passes through zero",
+        "correct": true,
+        "why": "Right. The model has no way to add the 1, so even the right slope misses by about 1 at every point."
+      },
+      {
+        "text": "A weight of 2 is too small for inputs under 1",
+        "correct": false,
+        "why": "The size of `x` is not the issue: the errors are close to 1 at both `x = 0.1` and `x = 1.0`."
+      }
+    ]
+  },
+  {
+    "id": "ex-8eyj5css",
+    "version": 1,
+    "section": "the-forward-pass",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A 64-16-10 network runs a forward pass on a batch of 32 digits. What happens to its 1,210 weights during that pass?",
+    "hint": "What does a forward pass do, whatever the size of the model?",
+    "choices": [
+      {
+        "text": "Each one moves a little towards the batch's labels",
+        "correct": false,
+        "why": "Moving the weights is the update after the loss and the slopes are known. The pass itself is read-only."
+      },
+      {
+        "text": "Nothing; they are read and multiplied",
+        "correct": true,
+        "why": "Right. The forward pass of `forward.py` and of a network is the same idea: weights held still, inputs in, predictions out."
+      },
+      {
+        "text": "The first layer's weights change and the second layer's wait",
+        "correct": false,
+        "why": "No layer changes during the forward pass; the order of layers is the order of the computation, not of learning."
+      },
+      {
+        "text": "They are reset to random values for the new batch",
+        "correct": false,
+        "why": "Resetting would throw away everything learnt; weights are set at random once, before training starts."
+      }
+    ]
+  },
+  {
+    "id": "ex-1rprz9ep",
+    "version": 1,
+    "section": "a-loss-is-one-number",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A model makes two predictions with errors of -1 and +3. What is its mean squared error?",
+    "hint": "Square each error, then take the mean.",
+    "value": 5,
+    "tolerance": 0
+  },
+  {
+    "id": "ex-6ng0ns9n",
+    "version": 1,
+    "section": "a-loss-is-one-number",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why does the mean squared error square the errors instead of taking their plain mean?",
+    "hint": "Think about an error of -1.03 next to one of +1.03.",
+    "choices": [
+      {
+        "text": "So misses on opposite sides add up rather than cancel",
+        "correct": true,
+        "why": "Right. A plain mean of -1.03 and +1.03 is zero, a perfect score for two misses. Squared, both count."
+      },
+      {
+        "text": "To make the loss smaller and easier to read",
+        "correct": false,
+        "why": "Squaring makes errors above 1 larger, not smaller: 1.26 becomes 1.5876."
+      },
+      {
+        "text": "Because a mean of signed numbers is undefined",
+        "correct": false,
+        "why": "It is perfectly defined; it is just useless as a loss, because opposite errors cancel."
+      },
+      {
+        "text": "So that small errors weigh more than large ones",
+        "correct": false,
+        "why": "It is the other way round: an error of 2 costs four times an error of 1."
+      }
+    ]
+  },
+  {
+    "id": "ex-kexb7a93",
+    "version": 1,
+    "section": "a-loss-is-one-number",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Someone proposes training a 100-weight model by trying 10 values for each weight and keeping the combination with the lowest loss. What is wrong with the plan?",
+    "hint": "Count the combinations.",
+    "choices": [
+      {
+        "text": "Ten values are too coarse to find the bottom",
+        "correct": false,
+        "why": "Coarseness is a problem, but a finer grid makes the real one worse."
+      },
+      {
+        "text": "The loss of a model with 100 weights is not one number",
+        "correct": false,
+        "why": "The loss is one number whatever the number of weights; that is what makes it comparable."
+      },
+      {
+        "text": "It is 10 to the power 100 evaluations",
+        "correct": true,
+        "why": "Right. A grid grows exponentially with the weights; the slope gives a direction from one point instead."
+      },
+      {
+        "text": "Mean squared error is the wrong loss for 100 weights",
+        "correct": false,
+        "why": "Which loss fits depends on the task, not on the number of weights; lesson 4 is about that choice."
+      }
+    ]
+  },
+  {
+    "id": "ex-80d2620r",
+    "version": 1,
+    "section": "the-slope",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At `w = 4` the slope of the loss is +0.4422. What does that say?",
+    "hint": "A positive slope: what does the loss do when `w` grows?",
+    "choices": [
+      {
+        "text": "The weight is 0.4422 away from the bottom",
+        "correct": false,
+        "why": "The slope is a rate of change, not a distance; the bottom is at 3.4257, 0.5743 away."
+      },
+      {
+        "text": "The loss at `w = 4` is 0.4422",
+        "correct": false,
+        "why": "The loss there is 0.4006. The slope is how fast it changes, not its value."
+      },
+      {
+        "text": "The loss rises as `w` grows, so the bottom is below 4",
+        "correct": true,
+        "why": "Right. A positive slope means moving left goes downhill."
+      },
+      {
+        "text": "The model is right, because the slope is small",
+        "correct": false,
+        "why": "A small slope says the ground is fairly flat there, not that the predictions are good."
+      }
+    ]
+  },
+  {
+    "id": "ex-hpd2vyjr",
+    "version": 1,
+    "section": "the-slope",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In `slope.py` the one-sided difference is off by 0.000385 at every weight, while the centred one matches the formula. Why?",
+    "hint": "Where, between which two points, does each one measure?",
+    "choices": [
+      {
+        "text": "Floating-point rounding in the subtraction",
+        "correct": false,
+        "why": "Rounding would be tiny and different at each weight, not the same 0.000385 four times."
+      },
+      {
+        "text": "It measures the slope halfway between `w` and `w + h`",
+        "correct": true,
+        "why": "Right. On a parabola the slope changes at a constant rate, so being half a step off costs the same everywhere."
+      },
+      {
+        "text": "Its step `h` is ten times the centred one's",
+        "correct": false,
+        "why": "Both use the same `h = 0.001`."
+      },
+      {
+        "text": "The formula is wrong and the centred difference shares the error",
+        "correct": false,
+        "why": "Two independent methods agreeing to six decimals is the evidence that the formula is right."
+      }
+    ]
+  },
+  {
+    "id": "ex-29fdnpmd",
+    "version": 1,
+    "section": "the-slope",
+    "type": "cloze",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "At the bottom of the loss curve, the slope is ___, which is why gradient descent stops moving there.",
+    "hint": "The ground is flat.",
+    "blanks": [
+      {
+        "accept": [
+          "zero",
+          "0"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-ffw2z6fn",
+    "version": 1,
+    "section": "gradient-descent",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put one step of `descent.py`'s loop in order.",
+    "hint": "The update uses the slope, and the slope uses the predictions.",
+    "items": [
+      "Compute the predictions `w * x` at the current weight",
+      "Compute the loss and its slope from the errors",
+      "Move the weight: `w - lr * grad`",
+      "Go round again from the new weight"
+    ]
+  },
+  {
+    "id": "ex-wwws4ndm",
+    "version": 1,
+    "section": "gradient-descent",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`descent.py` starts at `w = 0` and its first step lands on 2.6378. Why that number?",
+    "hint": "The rate is 1.0; what was the slope at 0?",
+    "choices": [
+      {
+        "text": "It is the closed-form answer, reached early",
+        "correct": false,
+        "why": "The closed form is 3.4257; the first step stops well short of it."
+      },
+      {
+        "text": "It is the mean of the ten `y` values",
+        "correct": false,
+        "why": "The ten `y` values run from 1.23 to 2.75 and none is 2.6378; the step comes from the slope."
+      },
+      {
+        "text": "Descent always jumps three quarters of the way",
+        "correct": false,
+        "why": "There is no fixed fraction: the step is the rate times the slope, and the slope shrinks as the bottom nears."
+      },
+      {
+        "text": "The slope at 0 is -2.6378 and the rate is 1.0",
+        "correct": true,
+        "why": "Right. `w - lr * grad` is 0 - 1.0 × (-2.6378)."
+      }
+    ]
+  },
+  {
+    "id": "ex-pn5pgd9d",
+    "version": 1,
+    "section": "gradient-descent",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "For a line through zero, `Σxy / Σx²` gives the best weight in one line. Why are networks trained by descent instead?",
+    "hint": "What does the formula rely on about the shape of the loss?",
+    "choices": [
+      {
+        "text": "A ReLU between layers leaves no formula, but a slope remains",
+        "correct": true,
+        "why": "Right. The algebra works because the loss is a parabola in `w`; descent needs only a slope at the current point."
+      },
+      {
+        "text": "Descent is more exact than the formula, which loses digits to rounding",
+        "correct": false,
+        "why": "In `descent.py` they agree to four decimals; descent approaches the bottom, the formula lands on it."
+      },
+      {
+        "text": "The formula needs a graphics card",
+        "correct": false,
+        "why": "It is a sum and a division, run here on the processor."
+      },
+      {
+        "text": "Descent always finds the lowest point of the loss, wherever it starts",
+        "correct": false,
+        "why": "It finds a bottom near where it started, which is not always the lowest there is."
+      }
+    ]
+  },
+  {
+    "id": "ex-rbpn6h7k",
+    "version": 1,
+    "section": "gradient-descent",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The points were made with a slope of 2, but descent settles on `w = 3.4257`. What does that mean?",
+    "hint": "What is the model missing?",
+    "choices": [
+      {
+        "text": "Descent stopped too early, before the weight could come back down to 2",
+        "correct": false,
+        "why": "The closed form gives the same 3.4257, so this is the bottom of this loss."
+      },
+      {
+        "text": "It is the best line through zero, tilted more to reach the points",
+        "correct": true,
+        "why": "Right. Without a bias, a steeper slope is how the model gets closest to points that sit at height 1."
+      },
+      {
+        "text": "The noise added 1.4 to the slope",
+        "correct": false,
+        "why": "With the bias added, the slope comes out at 1.8733; the noise moves it a little, not by 1.4."
+      },
+      {
+        "text": "The learning rate of 1.0 was too large",
+        "correct": false,
+        "why": "A different rate changes the path, not where it ends; the bottom is the same."
+      }
+    ]
+  },
+  {
+    "id": "ex-qddwq6da",
+    "version": 1,
+    "section": "the-learning-rate",
+    "type": "matching",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Match each learning rate in `rates.py` to what it did.",
+    "hint": "The four columns of the table.",
+    "pairs": [
+      {
+        "left": "0.1",
+        "right": "crept up and reached 2.396 by step 15"
+      },
+      {
+        "left": "1.0",
+        "right": "reached 3.426 by step 7 and stayed"
+      },
+      {
+        "left": "2.4",
+        "right": "jumped past the bottom and zigzagged inwards"
+      },
+      {
+        "left": "2.8",
+        "right": "swung wider every step, to 33.564"
+      }
+    ]
+  },
+  {
+    "id": "ex-pvfmzdwj",
+    "version": 1,
+    "section": "the-learning-rate",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Another one-weight model has a loss whose curvature is 4. Which of these rates diverges?",
+    "hint": "Each step multiplies the distance to the bottom by 1 - lr × curvature.",
+    "choices": [
+      {
+        "text": "0.1",
+        "correct": false,
+        "why": "1 - 0.4 = 0.6: each step keeps 60% of the distance, and it converges."
+      },
+      {
+        "text": "0.25",
+        "correct": false,
+        "why": "1 - 1 = 0: it lands on the bottom in one step."
+      },
+      {
+        "text": "0.45",
+        "correct": false,
+        "why": "1 - 1.8 = -0.8: it overshoots each time and still closes in, like 2.4 in `rates.py`."
+      },
+      {
+        "text": "0.6",
+        "correct": true,
+        "why": "Right. 1 - 2.4 = -1.4: each swing is 40% wider than the last. The limit is 2 / 4 = 0.5."
+      }
+    ]
+  },
+  {
+    "id": "ex-z451yqht",
+    "version": 1,
+    "section": "the-learning-rate",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A training run prints a loss that grows at every step. What is the first thing to change?",
+    "hint": "Look at the 2.8 column of `rates.py`.",
+    "choices": [
+      {
+        "text": "Run more steps so it has time to turn round",
+        "correct": false,
+        "why": "A diverging run swings wider with every step; more steps make it worse."
+      },
+      {
+        "text": "Lower the learning rate",
+        "correct": true,
+        "why": "Right. A growing loss is the signature of steps that overshoot by more than they correct."
+      },
+      {
+        "text": "Start from a different weight",
+        "correct": false,
+        "why": "On a parabola the rate decides whether it diverges, from any starting point."
+      },
+      {
+        "text": "Switch from squared errors to the plain mean of the errors",
+        "correct": false,
+        "why": "That loss lets opposite errors cancel, and the rate would still be too large for it."
+      }
+    ]
+  },
+  {
+    "id": "ex-xt2ybhmm",
+    "version": 1,
+    "section": "two-parameters",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With a weight and a bias, what is the gradient?",
+    "hint": "One slope per parameter.",
+    "choices": [
+      {
+        "text": "The loss at the current point",
+        "correct": false,
+        "why": "The loss is one number; the gradient says how it changes."
+      },
+      {
+        "text": "The step the parameters take, rate included",
+        "correct": false,
+        "why": "The step is the rate times the gradient, in the opposite direction."
+      },
+      {
+        "text": "The pair of slopes, one for `w` and one for `b`",
+        "correct": true,
+        "why": "Right. Together they point uphill in the steepest direction, and descent steps the other way."
+      },
+      {
+        "text": "The difference between the new line and the old one",
+        "correct": false,
+        "why": "That difference is the result of a step, not the gradient that decided it."
+      }
+    ]
+  },
+  {
+    "id": "ex-fecc0gq4",
+    "version": 1,
+    "section": "two-parameters",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A rate of 1.0 worked for `w` alone, but `surface.py 1.0` diverges. Why?",
+    "hint": "Look at the shape of the contours.",
+    "choices": [
+      {
+        "text": "Two parameters need two different losses",
+        "correct": false,
+        "why": "There is one loss, a function of both parameters."
+      },
+      {
+        "text": "The valley curves more sharply across",
+        "correct": true,
+        "why": "Right. One rate serves every direction, so the steepest direction sets the ceiling, and 1.0 is above it."
+      },
+      {
+        "text": "The bias starts at zero, which is far from 1.0867",
+        "correct": false,
+        "why": "The rate of 0.5 starts from the same zero and converges."
+      },
+      {
+        "text": "`np.polyfit` and descent disagree",
+        "correct": false,
+        "why": "At 0.5 they agree to four decimals; the trouble at 1.0 is the step size."
+      }
+    ]
+  },
+  {
+    "id": "ex-4g9n5zh7",
+    "version": 1,
+    "section": "two-parameters",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "At some point the gradient is (+0.3, -0.5) for (`w`, `b`). With a positive rate, how does one step move the parameters?",
+    "hint": "Each parameter steps against its own slope.",
+    "choices": [
+      {
+        "text": "`w` up and `b` down, following the gradient",
+        "correct": false,
+        "why": "The gradient points uphill; following it raises the loss."
+      },
+      {
+        "text": "`w` down and `b` up",
+        "correct": true,
+        "why": "Right. `w - lr × 0.3` falls and `b - lr × (-0.5)` rises."
+      },
+      {
+        "text": "Both down, because the loss is to be lowered",
+        "correct": false,
+        "why": "Lowering the loss is the goal; which way each parameter goes depends on the sign of its own slope."
+      },
+      {
+        "text": "Only `b`, the parameter with the larger slope",
+        "correct": false,
+        "why": "Every parameter steps, each in proportion to its own slope."
+      }
+    ]
+  },
+  {
+    "id": "ex-pr5pxf0m",
+    "version": 1,
+    "section": "drill",
+    "type": "multiple-choice",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which of these did this lesson's runs show? Choose all that apply.",
+    "hint": "Check each against a transcript.",
+    "choices": [
+      {
+        "text": "Eight steps at a rate of 1.0 reached the closed-form weight, 3.4257",
+        "correct": true,
+        "why": "Yes: `descent.py` printed 3.4257 at step 8 and the same from `Σxy / Σx²`."
+      },
+      {
+        "text": "Adding a bias lowered the best loss from 0.2736 to 0.0206",
+        "correct": true,
+        "why": "Yes: `surface.py` at 0.5, checked against `np.polyfit`."
+      },
+      {
+        "text": "A rate of 2.4 diverged on the one-weight model",
+        "correct": false,
+        "why": "It overshot and zigzagged but closed in: 3.715 by step 15. It was 2.8 that diverged."
+      },
+      {
+        "text": "The one-sided finite difference matched the formula exactly",
+        "correct": false,
+        "why": "It was off by 0.000385; the centred one matched."
+      },
+      {
+        "text": "With two parameters, a rate of 1.0 made the loss grow",
+        "correct": true,
+        "why": "Yes: 4.7918, 12.7979, 34.5014, 93.2740."
+      }
+    ]
+  }
+]

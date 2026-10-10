@@ -1,0 +1,372 @@
+{
+  "ex-6jsvxyzf": {
+    "prompt": "No `regression_losses.py`, o melhor palpite único do MSE para as sete entregas é 20,57 minutos. Que número é esse?",
+    "hint": "Compare com a linha impressa embaixo dos três palpites.",
+    "choices": [
+      {
+        "text": "A mediana dos sete tempos",
+        "why": "A mediana é 14,0, e foi o que o MAE escolheu."
+      },
+      {
+        "text": "A média deles",
+        "why": "Certo. A constante de menor erro quadrático é a média, e um temporal a arrastou para um tempo que ninguém esperou."
+      },
+      {
+        "text": "O tempo da entrega mais comum",
+        "why": "Esse é 14, que aparece duas vezes; a resposta do MSE fica longe dele."
+      },
+      {
+        "text": "O ponto médio entre a entrega mais rápida e a mais lenta",
+        "why": "Isso daria 36 minutos, a meio caminho entre 12 e 60."
+      }
+    ]
+  },
+  "ex-s196y6d9": {
+    "prompt": "Num palpite de 15, a entrega do temporal puxa com -90 no MSE e com -2 no Huber. Por que só -2 no Huber?",
+    "hint": "O que o `np.clip` faz com o erro?",
+    "choices": [
+      {
+        "text": "O Huber ignora o ponto cujo erro passa do limiar",
+        "why": "Não ignora: o temporal ainda puxa, com -2, tanto quanto uma entrega comum errada por 2 minutos."
+      },
+      {
+        "text": "O Huber divide cada erro pelo erro médio do conjunto",
+        "why": "Nenhuma média aparece na definição; a inclinação é o erro, limitado."
+      },
+      {
+        "text": "Passado o `DELTA`, a inclinação para de crescer e fica em 2",
+        "why": "Certo. O Huber é uma reta depois do limiar, então um erro enorme não puxa mais forte que um de exatamente 2."
+      },
+      {
+        "text": "O Huber eleva o erro ao quadrado e divide por dois",
+        "why": "Esse é o formato dele abaixo do limiar, onde o temporal não está."
+      }
+    ]
+  },
+  "ex-tr4pjtf5": {
+    "prompt": "Suponha uma oitava entrega de 25 minutos. No MSE, com que força ela puxaria um palpite de 15? Use a fórmula do programa, `2 * (15 - minutes)`.",
+    "hint": "O erro é o palpite menos a entrega."
+  },
+  "ex-3e34fz8h": {
+    "prompt": "Qual dos quatro casos do `xent.py` tem a maior perda de entropia cruzada?",
+    "hint": "A perda olha para uma probabilidade.",
+    "choices": [
+      {
+        "text": "Inseguro, errado",
+        "why": "Custa 1,386: a classe certa ainda tinha 0,25."
+      },
+      {
+        "text": "Inseguro, com a classe certa mal à frente",
+        "why": "Custa 0,886, menos que qualquer dos casos errados."
+      },
+      {
+        "text": "Confiante e errado",
+        "why": "Certo: 4,036, porque a classe certa recebeu 0,018 e menos o log disso é grande."
+      },
+      {
+        "text": "Confiante e certo, porque o gradiente dele é o maior",
+        "why": "A perda dele é 0,036 e o gradiente na classe certa é o menor, -0,035."
+      }
+    ]
+  },
+  "ex-r8hsvd8f": {
+    "prompt": "Com softmax e entropia cruzada, qual é o gradiente da perda em relação ao logit da classe certa?",
+    "hint": "Olhe o primeiro número de cada gradiente na saída, ao lado do `p`.",
+    "choices": [
+      {
+        "text": "A probabilidade dela menos 1",
+        "why": "Certo: -0,982 quando tinha 0,018, -0,035 quando tinha 0,965. O empurrão cresce com o erro."
+      },
+      {
+        "text": "Menos o log da probabilidade dela",
+        "why": "Essa é a própria perda, e não a inclinação dela."
+      },
+      {
+        "text": "Zero, já que a perda já inclui essa classe",
+        "why": "É o maior gradiente da linha sempre que a rede erra."
+      },
+      {
+        "text": "Um sobre a probabilidade dela",
+        "why": "Essa é a inclinação do log em relação a p; a do softmax cancela quase tudo, e sobra p - 1."
+      }
+    ]
+  },
+  "ex-538mx5a3": {
+    "prompt": "Uma rede que dá 0,1 a cada uma de dez classes tem entropia cruzada 2,303. Qual é a perda de uma rede sem treino que dá a mesma probabilidade a cada uma de 100 classes? Três casas decimais.",
+    "hint": "Menos o logaritmo natural da probabilidade da classe certa."
+  },
+  "ex-2ebthawb": {
+    "prompt": "Por que o `tinynet.softmax_cross_entropy` pode subtrair o maior logit de todos os logits sem mudar as probabilidades?",
+    "hint": "Escreva a fração com o deslocamento dentro.",
+    "choices": [
+      {
+        "text": "Porque a perda depende do maior logit sozinho",
+        "why": "A perda lê o logit da classe certa, que não é o maior quando a rede erra."
+      },
+      {
+        "text": "Um fator `exp(-m)` aparece em cima e embaixo da fração, e se cancela",
+        "why": "Certo. O softmax depende das diferenças entre os logits, e um deslocamento comum as deixa intactas."
+      },
+      {
+        "text": "Ela as muda um pouco, mas pouco demais para aparecer em quatro casas decimais",
+        "why": "A mudança é exatamente zero na aritmética exata; as duas versões imprimiram `0.1270`."
+      },
+      {
+        "text": "Porque o `float32` arredonda números grandes para um mesmo valor",
+        "why": "Valores grandes estouram para infinito em vez de se juntarem num valor, e é por isso que o deslocamento é necessário."
+      }
+    ]
+  },
+  "ex-2fj8ystp": {
+    "prompt": "Durante o treinamento, um lote contém uma imagem em que a rede erra por 120 nos logits, e o tinynet relata a perda do lote como `inf`. O que acontece com os pesos nesse passo?",
+    "hint": "Qual dos dois valores devolvidos pelo tinynet a atualização usa?",
+    "choices": [
+      {
+        "text": "Todos viram `nan`, e o treinamento se perde",
+        "why": "Isso é o que um gradiente `nan` faz; o gradiente do tinynet para essa imagem foi `[-1, 1, 0]`, finito."
+      },
+      {
+        "text": "Mudam normalmente, já que o gradiente `p - target` continua finito",
+        "why": "Certo. Só a perda relatada quebra; o passo corrige o erro como de costume."
+      },
+      {
+        "text": "Ficam como estavam, porque uma perda infinita pula o passo",
+        "why": "Nada no laço olha a perda antes do passo."
+      },
+      {
+        "text": "Andam uma quantidade infinita e estouram",
+        "why": "O passo é o gradiente vezes a taxa, e o gradiente fica entre -1 e 1."
+      }
+    ]
+  },
+  "ex-8jmhmq23": {
+    "prompt": "A entropia cruzada do PyTorch recebe os ___ crus da rede e faz o log-sum-exp ela mesma, então um softmax aplicado antes é um bug.",
+    "hint": "As pontuações que a última camada produz, uma por classe.",
+    "blanks": [
+      {
+        "accept": [
+          "logits",
+          "logit",
+          "escores",
+          "pontuações",
+          "pontuacoes"
+        ]
+      }
+    ]
+  },
+  "ex-8btf6q0h": {
+    "prompt": "O `multilabel.py` dá a um 8 as probabilidades 0,957, 0,979 e 0,76, que somam 2,697. O que essa soma quer dizer?",
+    "hint": "O que liga as três saídas entre si?",
+    "choices": [
+      {
+        "text": "A rede está confiante demais e precisa de um softmax no fim",
+        "why": "Um softmax forçaria as três a dividirem 1, e um 8 é mesmo par, maior que 4 e com volta."
+      },
+      {
+        "text": "A perda está calculada errado, já que probabilidades somam 1",
+        "why": "Probabilidades de uma escolha entre várias somam 1; estas são três perguntas separadas."
+      },
+      {
+        "text": "Nada: cada saída é uma probabilidade separada de sim ou não",
+        "why": "Certo. Três sigmoids independentes, três respostas independentes, e o total delas não é uma grandeza."
+      },
+      {
+        "text": "Espera-se que a imagem pertença a umas três classes",
+        "why": "Ela responde a três perguntas, e o conteúdo são os três sins, não a soma."
+      }
+    ]
+  },
+  "ex-em00hfp5": {
+    "prompt": "Uma saída de sim ou não dá `p = 0.9` a uma imagem cuja resposta é não. Qual expressão é a entropia cruzada binária dela?",
+    "hint": "`p` é a probabilidade de sim.",
+    "choices": [
+      {
+        "text": "`-log 0.9`",
+        "why": "Essa é a perda quando a resposta é sim."
+      },
+      {
+        "text": "`-log(1 - 0.9)`",
+        "why": "Certo: a probabilidade que a saída deu ao não é 0,1, e a perda é menos o log dela, cerca de 2,3."
+      },
+      {
+        "text": "`(0.9 - 0) ** 2`",
+        "why": "Esse é um erro quadrático sobre a probabilidade, que não é esta perda."
+      },
+      {
+        "text": "`-log 0.9 - log(1 - 0.9)`",
+        "why": "Para uma resposta, vale um dos dois termos; o alvo escolhe qual."
+      }
+    ]
+  },
+  "ex-0syh73b8": {
+    "prompt": "Um modelo marca receitas com qualquer um de 40 rótulos, como vegetariana, picante e rápida. Que última camada e que perda servem?",
+    "hint": "Uma receita pode ser picante e rápida ao mesmo tempo?",
+    "choices": [
+      {
+        "text": "40 logits, um softmax e entropia cruzada",
+        "why": "O softmax faz os rótulos disputarem uma fatia de 1, e um prato vegetariano, picante e rápido seria forçado a escolher um."
+      },
+      {
+        "text": "40 logits, e entropia cruzada binária em cada um",
+        "why": "Certo: uma pergunta independente de sim ou não por rótulo, como o `multilabel.py` fez com três."
+      },
+      {
+        "text": "Um logit, e MSE contra o número de rótulos",
+        "why": "Uma contagem diz quantos rótulos e perde quais."
+      },
+      {
+        "text": "40 saídas lineares com MSE contra os alvos 0 ou 1",
+        "why": "Treina, devagar e com saídas que não são probabilidades; uma sigmoid com entropia cruzada binária é o par adequado."
+      }
+    ]
+  },
+  "ex-fqacjydm": {
+    "prompt": "Na imagem errada com confiança, o gradiente do MSE na classe certa é -0,0013 contra -0,9997 da entropia cruzada. Por que o do MSE é tão pequeno?",
+    "hint": "O que um softmax com uma classe perto de 1 faz sob uma pequena mudança num logit?",
+    "choices": [
+      {
+        "text": "A perda do MSE para essa imagem é pequena, e perda pequena tem inclinação pequena",
+        "why": "É 1,993, no teto de 2 do MSE; a perda é grande e a inclinação dela não."
+      },
+      {
+        "text": "Um softmax saturado é quase plano, e o MSE precisa passar por ele",
+        "why": "Certo. O log da entropia cruzada cancela essa inclinação achatada; o MSE não tem nada que a cancele."
+      },
+      {
+        "text": "A taxa de aprendizado de 0,1 é baixa demais para o MSE",
+        "why": "O gradiente foi calculado numa imagem, sem taxa de aprendizado envolvida."
+      },
+      {
+        "text": "O MSE eleva o gradiente ao quadrado no caminho de volta pela rede",
+        "why": "Ele eleva o erro ao quadrado; o gradiente em p é 2(p - alvo), que aqui é grande."
+      }
+    ]
+  },
+  "ex-8qnmm3bv": {
+    "prompt": "Alguém repete a corrida mas dá outra semente à execução com MSE. A do MSE então termina 0,003 acima da entropia cruzada. O que se conclui?",
+    "hint": "O que mais mudou além da perda?",
+    "choices": [
+      {
+        "text": "O MSE é, afinal, a perda melhor para os dígitos",
+        "why": "Duas coisas mudaram de uma vez, então o resultado não é atribuível a nenhuma."
+      },
+      {
+        "text": "A entropia cruzada ganha com a semente 0 e perde com as outras",
+        "why": "Uma execução com outra semente diz pouco sobre as demais."
+      },
+      {
+        "text": "É na época final que as perdas se comparam, então o MSE ganha",
+        "why": "E a diferença de 0,003 cabe no que um ponto de partida diferente produz sozinho."
+      },
+      {
+        "text": "Pouco: os pesos iniciais e a ordem dos lotes também mudaram, então a corrida deixou de ser justa",
+        "why": "Certo. Uma comparação justa muda uma coisa só; a aula 18 mede quanto as sementes sozinhas mexem num resultado."
+      }
+    ]
+  },
+  "ex-80tph5v6": {
+    "prompt": "Ligue cada tarefa à perda que a tabela da aula dá a ela.",
+    "hint": "Que pergunta a saída responde?",
+    "pairs": [
+      {
+        "left": "Prever um tempo de entrega, ignorando um temporal ocasional",
+        "right": "Huber"
+      },
+      {
+        "left": "Reconhecer que dígito uma imagem mostra",
+        "right": "Entropia cruzada sobre um logit por classe"
+      },
+      {
+        "left": "Decidir se um e-mail é spam",
+        "right": "Entropia cruzada binária sobre um logit"
+      },
+      {
+        "left": "Prever uma temperatura com ruído comum",
+        "right": "MSE"
+      }
+    ],
+    "right_distractors": [
+      "Acurácia"
+    ]
+  },
+  "ex-65r5msa0": {
+    "prompt": "No `metric.py`, o modelo C tem a menor entropia cruzada e a menor acurácia. Como isso acontece?",
+    "hint": "Veja quão errado o C está quando erra.",
+    "choices": [
+      {
+        "text": "A entropia cruzada recompensa um modelo por errar",
+        "why": "Ela cobra toda resposta errada; as do C saem baratas porque cada uma erra por pouco."
+      },
+      {
+        "text": "Cada erro dele é brando, em 0,45",
+        "why": "Certo. A entropia cruzada liga para o quanto errou; a acurácia conta quantas vezes. O B tem uma resposta em 0,001 e paga por ela."
+      },
+      {
+        "text": "A acurácia é calculada com limiar de 0,9 em vez de 0,5",
+        "why": "O programa usa `p > 0.5`."
+      },
+      {
+        "text": "Cinco perguntas são poucas demais para uma perda dizer algo",
+        "why": "A aritmética é exata com cinco; a discordância é real."
+      }
+    ]
+  },
+  "ex-v3xs3peq": {
+    "prompt": "Uma equipe quer treinar direto na acurácia, já que é ela que relatam. Por que a descida do gradiente falha nela?",
+    "hint": "A aula 1 encontrou o mesmo problema no degrau do perceptron.",
+    "choices": [
+      {
+        "text": "A acurácia é lenta demais de calcular num lote",
+        "why": "É uma comparação e uma média, mais barata que a entropia cruzada."
+      },
+      {
+        "text": "A acurácia sobe quando a perda deveria cair, então os sinais se invertem",
+        "why": "Inverter um sinal seria trivial; o problema é que não há inclinação para inverter."
+      },
+      {
+        "text": "Mexer pouco num peso não muda previsão alguma: inclinação zero",
+        "why": "Certo. Sem inclinação não há direção para andar; uma perda suave dá uma, e a acurácia julga o resultado."
+      },
+      {
+        "text": "A acurácia não é definida no conjunto de validação",
+        "why": "Ela é definida onde houver rótulos; a aula a relata na validação."
+      }
+    ]
+  },
+  "ex-npm1g10r": {
+    "prompt": "Ponha em ordem os passos de uma entropia cruzada numericamente estável para uma imagem.",
+    "hint": "O deslocamento vem antes de qualquer exponencial.",
+    "items": [
+      "Subtrair o maior logit de todos os logits",
+      "Tirar a exponencial de cada logit deslocado",
+      "Somar as exponenciais e tirar o log da soma",
+      "Subtrair desse log o logit deslocado da classe certa"
+    ]
+  },
+  "ex-adbknyb1": {
+    "prompt": "Quais destas coisas as execuções desta aula mostraram? Marque todas as que se aplicam.",
+    "hint": "Confira cada uma contra uma transcrição.",
+    "choices": [
+      {
+        "text": "O melhor palpite único do MSE para as entregas foi a média delas",
+        "why": "Sim: 20,57 nos dois."
+      },
+      {
+        "text": "A perda do tinynet ficou finita quando a rede errou por 120",
+        "why": "Não: imprimiu `inf`; o log-sum-exp deu 120,0000."
+      },
+      {
+        "text": "A entropia cruzada ficou à frente do MSE na acurácia de validação em cada época",
+        "why": "Sim: de 0,714 contra 0,322 depois de uma época até 0,953 contra 0,944 depois de vinte."
+      },
+      {
+        "text": "As três saídas multirrótulo de cada dígito somaram 1",
+        "why": "Não: 0,0 para o 3 e 2,697 para o 8."
+      },
+      {
+        "text": "Dois modelos com a mesma acurácia tiveram entropias cruzadas diferentes",
+        "why": "Sim: A e B, ambos com 0,8, em 0,592 e 1,390."
+      }
+    ]
+  }
+}
