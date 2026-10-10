@@ -19,7 +19,18 @@ It stores three dock counts in the smallest unsigned type, `uint8` (0 to 255), a
 Run under the NumPy 1 that was current before this course, in a separate environment as lesson 3
 built one, and under this course's NumPy 2:
 
-@@capture:numpy1@@
+```
+(.venv) ana@lab:~/oldnumpy$ python ~/pydata/promote.py
+1.26.4 20
+[314 320 312]
+(.venv) ana@lab:~/pydata$ python promote.py
+2.5.3 np.uint8(20)
+Traceback (most recent call last):
+  File "/home/ana/pydata/promote.py", line 5, in <module>
+    print(docks + 300)
+          ~~~~~~^~~~~
+OverflowError: Python integer 300 out of bounds for uint8
+```
 
 ## What a single number looks like now
 

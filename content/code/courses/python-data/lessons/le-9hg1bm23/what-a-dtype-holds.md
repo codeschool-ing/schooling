@@ -65,7 +65,8 @@ temps.astype(int), np.round(temps).astype(int)
 ```
 
 And `nan` has no integer form at all. A float column with a missing value cannot become an integer
-column; NumPy does not refuse, it writes an arbitrary integer in its place and warns:
+column. NumPy does not refuse: it warns, and writes an integer that means nothing in its place,
+here the smallest `int64` there is:
 
 ```python
 rain[:5], rain[np.isnan(rain)][:1].astype(int)
