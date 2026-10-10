@@ -1,0 +1,491 @@
+{
+  "ex-65e6b88b": {
+    "prompt": "Que resposta vale uma nova tentativa?",
+    "hint": "A mesma requisição receberia outra resposta um instante depois?",
+    "choices": [
+      {
+        "text": "`404 Not Found`",
+        "why": "O pedido continua não existindo."
+      },
+      {
+        "text": "`503 Service Unavailable`",
+        "why": "Isso."
+      },
+      {
+        "text": "`400 Bad Request`",
+        "why": "A mesma requisição malformada falha do mesmo jeito."
+      },
+      {
+        "text": "`403 Forbidden`",
+        "why": "Permissões não mudam entre tentativas."
+      }
+    ]
+  },
+  "ex-73wkvgd1": {
+    "prompt": "Uma chamada a \"cobre este cartão\" dá timeout. O que quem chamou sabe?",
+    "hint": "Um timeout é uma incógnita.",
+    "choices": [
+      {
+        "text": "Que o cartão não foi cobrado",
+        "why": "Pode ter sido."
+      },
+      {
+        "text": "Que o cartão foi cobrado",
+        "why": "Pode não ter sido."
+      },
+      {
+        "text": "Nada de nenhum dos dois",
+        "why": "Isso."
+      },
+      {
+        "text": "Que tentar de novo é sempre seguro",
+        "why": "Só com uma chave de idempotência."
+      }
+    ]
+  },
+  "ex-6nqm5ct3": {
+    "prompt": "O que torna seguro tentar de novo \"cobre este cartão\" depois de um timeout?",
+    "hint": "Aula 7.",
+    "choices": [
+      {
+        "text": "Um timeout maior na nova tentativa",
+        "why": "A primeira tentativa ainda pode ter acontecido."
+      },
+      {
+        "text": "Uma chave de idempotência em cada tentativa",
+        "why": "Isso: o serviço reconhece a repetição."
+      },
+      {
+        "text": "Esperar um minuto inteiro antes de tentar de novo",
+        "why": "A cobrança também pode ter acontecido nesse minuto."
+      },
+      {
+        "text": "Tentar de novo por outra instância",
+        "why": "As duas instâncias cobram o mesmo cartão."
+      }
+    ]
+  },
+  "ex-m9na6ws6": {
+    "prompt": "Depois que a última tentativa falha, o que quem chamou deveria fazer?",
+    "hint": "\"Tentar de novo\" é a primeira linha de um plano.",
+    "choices": [
+      {
+        "text": "Tentar de novo, agora com um limite bem maior",
+        "why": "Isso só adia a pergunta."
+      },
+      {
+        "text": "Devolver uma página em branco",
+        "why": "A pessoa não consegue agir sobre ela."
+      },
+      {
+        "text": "Um erro, uma alternativa, ou uma fila",
+        "why": "Isso."
+      },
+      {
+        "text": "Registrar no log e informar sucesso",
+        "why": "Isso é uma falha silenciosa."
+      }
+    ]
+  },
+  "ex-cq10473g": {
+    "prompt": "O serviço do laboratório tem 4 workers e cada resposta leva 50 ms. Quantas respostas por segundo ele consegue dar?",
+    "hint": "Cada worker dá 20 por segundo.",
+    "unit": "respostas por segundo"
+  },
+  "ex-4whsdswf": {
+    "prompt": "Para que o `X-Deadline` é usado no serviço do laboratório?",
+    "hint": "Leia o `do_GET`.",
+    "choices": [
+      {
+        "text": "Para recusar requisições já atrasadas",
+        "why": "O serviço só as conta."
+      },
+      {
+        "text": "Para contar respostas terminadas depois de quem chamou desistir",
+        "why": "Isso."
+      },
+      {
+        "text": "Para definir o timeout que o cliente vai usar nas chamadas",
+        "why": "O cliente define o próprio."
+      },
+      {
+        "text": "Para ordenar a fila por urgência",
+        "why": "A fila é por ordem de chegada."
+      }
+    ]
+  },
+  "ex-qwswewhc": {
+    "prompt": "Com uma resposta em cada cinco falhando ao acaso, por que dois retries levaram as falhas de 25 para 1 em 120?",
+    "hint": "Sorteios independentes.",
+    "choices": [
+      {
+        "text": "Três falhas seguidas",
+        "why": "Isso: 0,2³ é menos de 1%."
+      },
+      {
+        "text": "O serviço falha menos vezes quando é mais chamado",
+        "why": "A taxa de falha dele não mudou."
+      },
+      {
+        "text": "Retries pulam os workers",
+        "why": "Toda chamada ocupou um worker."
+      },
+      {
+        "text": "O cliente esconde falhas da tabela",
+        "why": "Elas são contadas."
+      }
+    ]
+  },
+  "ex-fv7pvj1s": {
+    "prompt": "Cada chamada falha independentemente com probabilidade 0,1. Com até 2 retries, qual a chance de uma requisição falhar, em porcento?",
+    "hint": "Três falhas seguidas.",
+    "unit": "porcento"
+  },
+  "ex-2bhjz4py": {
+    "prompt": "Que duas condições fizeram o retry funcionar na seção \"Um retry que funciona\"?",
+    "hint": "A próxima seção quebra as duas.",
+    "choices": [
+      {
+        "text": "Timeouts curtos e muitos workers",
+        "why": "Nenhum dos dois era o ponto."
+      },
+      {
+        "text": "Um breaker e jitter",
+        "why": "Nenhum estava ligado."
+      },
+      {
+        "text": "Chamadas idempotentes e um cliente usando HTTP/2",
+        "why": "O HTTP/2 não teve papel nenhum."
+      },
+      {
+        "text": "Falhas independentes, capacidade de sobra",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-tm8rdrat": {
+    "prompt": "Sem retries, por que um congelamento de três segundos causou uns dez segundos de falhas?",
+    "hint": "O que estava esperando quando o serviço acordou?",
+    "choices": [
+      {
+        "text": "O serviço reiniciou depois do congelamento",
+        "why": "Ele não reiniciou."
+      },
+      {
+        "text": "Uma fila cresceu e esvaziou devagar",
+        "why": "Isso: só 20 por segundo acima do ritmo de chegada."
+      },
+      {
+        "text": "O cliente parou de mandar por sete segundos",
+        "why": "Ele mandou num ritmo constante."
+      },
+      {
+        "text": "O congelamento durou dez segundos",
+        "why": "Durou três."
+      }
+    ]
+  },
+  "ex-ghdmxr1n": {
+    "prompt": "Com três retries, por que o serviço nunca se recuperou depois do congelamento?",
+    "hint": "Compare a coluna de chamadas com a capacidade.",
+    "choices": [
+      {
+        "text": "O congelamento voltava a acontecer a cada poucos segundos",
+        "why": "Aconteceu uma vez."
+      },
+      {
+        "text": "Retries são recusados pelo serviço",
+        "why": "Foram respondidos, atrasados."
+      },
+      {
+        "text": "Os retries mantiveram a carga acima da capacidade",
+        "why": "Isso."
+      },
+      {
+        "text": "O timeout do cliente crescia a cada retry",
+        "why": "Ficou em meio segundo."
+      }
+    ]
+  },
+  "ex-4jqjech2": {
+    "prompt": "O que é uma falha metaestável?",
+    "hint": "Pense no que manteve a tempestade.",
+    "choices": [
+      {
+        "text": "Uma falha que se sustenta depois de o gatilho ter ido embora",
+        "why": "Isso."
+      },
+      {
+        "text": "Uma falha que só acontece sob carga de metadados",
+        "why": "Isso não existe."
+      },
+      {
+        "text": "Uma falha que se resolve sozinha em poucos segundos",
+        "why": "O contrário."
+      },
+      {
+        "text": "Um defeito de hardware que passa de máquina em máquina",
+        "why": "Não é o que a palavra quer dizer aqui."
+      }
+    ]
+  },
+  "ex-0s57dvzp": {
+    "prompt": "Na tempestade com três retries, o serviço consegue responder 160 chamadas em dois segundos. Mais ou menos quantas chegaram a cada dois segundos depois do congelamento?",
+    "hint": "Leia a coluna de chamadas.",
+    "unit": "chamadas"
+  },
+  "ex-gyqgyjb8": {
+    "prompt": "Por que o jitter não salvou o serviço no laboratório?",
+    "hint": "O que o jitter muda, e o que não muda?",
+    "choices": [
+      {
+        "text": "As esperas aleatórias eram grandes demais",
+        "why": "As esperas eram frações de segundo."
+      },
+      {
+        "text": "Jitter só funciona com um breaker também ligado",
+        "why": "Funciona sozinho para o que faz."
+      },
+      {
+        "text": "Espalha os retries, mas não muda quantos são",
+        "why": "Isso."
+      },
+      {
+        "text": "O cliente ignorou a flag",
+        "why": "As chamadas foram espalhadas, como a flag pediu."
+      }
+    ]
+  },
+  "ex-ky6nwh1g": {
+    "prompt": "O que um orçamento de retries faz numa queda?",
+    "hint": "Tempos saudáveis raramente o alcançam.",
+    "choices": [
+      {
+        "text": "Dobra a espera antes de cada nova tentativa",
+        "why": "Isso é backoff."
+      },
+      {
+        "text": "Limita os retries a uma pequena fração do tráfego",
+        "why": "Isso."
+      },
+      {
+        "text": "Sorteia quando cada retry acontece",
+        "why": "Isso é jitter."
+      },
+      {
+        "text": "Para todas as chamadas por dois segundos de cada vez",
+        "why": "Isso é um breaker aberto."
+      }
+    ]
+  },
+  "ex-emp7wwnc": {
+    "prompt": "Três camadas fazem cada uma uma chamada e três retries. Quantas chamadas um clique pode mandar ao serviço de baixo?",
+    "hint": "4 × 4 × 4.",
+    "unit": "chamadas"
+  },
+  "ex-y9xx0v60": {
+    "prompt": "Que camada deveria, em geral, fazer os retries?",
+    "hint": "Quem sabe se a operação pode ser repetida com segurança?",
+    "choices": [
+      {
+        "text": "Toda camada, por segurança",
+        "why": "Isso multiplica as chamadas."
+      },
+      {
+        "text": "O navegador, mais perto da pessoa",
+        "why": "É quem menos sabe sobre a operação."
+      },
+      {
+        "text": "Só o próprio serviço que falha",
+        "why": "Ele não consegue repetir as requisições de quem o chama."
+      },
+      {
+        "text": "A mais próxima da chamada que falha",
+        "why": "Isso; as outras falham rápido."
+      }
+    ]
+  },
+  "ex-t5xfh5et": {
+    "prompt": "Associe cada estado de um circuit breaker ao que ele faz.",
+    "hint": "Um estado deixa passar uma única chamada.",
+    "pairs": [
+      {
+        "left": "fechado",
+        "right": "as chamadas passam e as falhas são contadas"
+      },
+      {
+        "left": "aberto",
+        "right": "as chamadas falham na hora, sem envio"
+      },
+      {
+        "left": "meio aberto",
+        "right": "uma chamada passa para testar o serviço"
+      }
+    ]
+  },
+  "ex-5k8jjh5z": {
+    "prompt": "Por que a execução com breaker se recuperou antes da execução sem retry nenhum?",
+    "hint": "Olhe a coluna de chamadas durante o congelamento.",
+    "choices": [
+      {
+        "text": "O breaker fez chamadas que falhavam darem certo",
+        "why": "As requisições durante o congelamento ainda falharam."
+      },
+      {
+        "text": "Aberto, ele quase não mandou nada",
+        "why": "Isso."
+      },
+      {
+        "text": "Ele encurtou o congelamento",
+        "why": "O congelamento foi de três segundos nas duas."
+      },
+      {
+        "text": "Ele acrescentou workers ao serviço",
+        "why": "O serviço teve quatro o tempo todo."
+      }
+    ]
+  },
+  "ex-sp4s5jeb": {
+    "prompt": "O que deveria contar como falha para um breaker?",
+    "hint": "Que respostas querem dizer que o serviço não está bem?",
+    "choices": [
+      {
+        "text": "Qualquer status que não seja `200`",
+        "why": "Um `404` é uma resposta normal."
+      },
+      {
+        "text": "Só conexão recusada",
+        "why": "Timeouts e `5xx` também importam."
+      },
+      {
+        "text": "Timeouts e respostas `5xx`",
+        "why": "Isso."
+      },
+      {
+        "text": "Sucessos lentos acima da mediana",
+        "why": "Lento não é falho."
+      }
+    ]
+  },
+  "ex-zvfbe65g": {
+    "prompt": "Por que um breaker por dependência em vez de um para tudo?",
+    "hint": "Estoque e pagamentos.",
+    "choices": [
+      {
+        "text": "Bibliotecas não permitem compartilhar um breaker",
+        "why": "Algumas permitem."
+      },
+      {
+        "text": "Estoque não deve parar pagamentos",
+        "why": "Isso."
+      },
+      {
+        "text": "Gasta menos memória",
+        "why": "Memória não é o motivo."
+      },
+      {
+        "text": "Cada breaker precisa de uma thread própria",
+        "why": "Não precisam de nenhuma."
+      }
+    ]
+  },
+  "ex-rwf9q55x": {
+    "prompt": "Como os retries acabam em três camadas sem ninguém decidir isso?",
+    "hint": "Biblioteca, sidecar, gateway.",
+    "choices": [
+      {
+        "text": "O padrão HTTP exige retries em cada salto",
+        "why": "Não exige."
+      },
+      {
+        "text": "Brokers os acrescentam a toda mensagem",
+        "why": "Não há broker neste caminho."
+      },
+      {
+        "text": "Pessoas diferentes configuram cada camada",
+        "why": "Isso."
+      },
+      {
+        "text": "Sistemas operacionais tentam conexões TCP três vezes",
+        "why": "Não é isso que multiplica requisições."
+      }
+    ]
+  },
+  "ex-thdkwwh7": {
+    "prompt": "O que mandar o prazo junto com a chamada permite a um serviço fazer?",
+    "hint": "A tempestade gastou capacidade com quem já tinha ido embora.",
+    "choices": [
+      {
+        "text": "Descartar requisições que ninguém espera",
+        "why": "Isso."
+      },
+      {
+        "text": "Responder mais rápido pulando a validação toda",
+        "why": "Nada é pulado para chamadores válidos."
+      },
+      {
+        "text": "Aumentar o timeout de quem chamou",
+        "why": "O prazo é de quem chamou."
+      },
+      {
+        "text": "Tentar de novo no lugar de quem chamou",
+        "why": "Essa é outra decisão."
+      }
+    ]
+  },
+  "ex-kbhfkxms": {
+    "prompt": "Por que um breaker aberto deveria aparecer nas métricas?",
+    "hint": "Como é um breaker aberto visto de fora?",
+    "choices": [
+      {
+        "text": "Para contar quanta memória ele usa",
+        "why": "Não é o ponto."
+      },
+      {
+        "text": "Porque bibliotecas se recusam a rodar sem métricas",
+        "why": "Não se recusam."
+      },
+      {
+        "text": "Para cobrar dos chamadores as requisições recusadas",
+        "why": "Não é o ponto."
+      },
+      {
+        "text": "Senão uma queda parece uma tarde tranquila",
+        "why": "Isso."
+      }
+    ]
+  },
+  "ex-vg51r4v6": {
+    "prompt": "Ponha em ordem a vida de um circuit breaker numa queda curta.",
+    "hint": "Fechado, falhas, aberto, espera, sondagem, fechado.",
+    "items": [
+      "Fechado, as chamadas passam",
+      "Cinco chamadas falham seguidas",
+      "Aberto, as chamadas falham na hora",
+      "Meio aberto, uma chamada passa",
+      "A chamada dá certo e ele fecha de novo"
+    ]
+  },
+  "ex-610p9s1x": {
+    "prompt": "Depois de um failover de banco de cinco segundos, o checkout da Quitanda ficou fora do ar por vinte minutos até ser reiniciado, e o banco pareceu sobrecarregado o tempo todo. Qual a causa mais provável?",
+    "hint": "O gatilho foi curto; a queda não.",
+    "choices": [
+      {
+        "text": "O failover perdeu dados, então toda consulta passou a falhar",
+        "why": "Dados perdidos não sobrecarregariam nada."
+      },
+      {
+        "text": "O primário novo era uma máquina menor",
+        "why": "Ele aguentou a carga antes e depois do reinício."
+      },
+      {
+        "text": "Uma tempestade de retries",
+        "why": "Isso."
+      },
+      {
+        "text": "O timeout do checkout era longo demais",
+        "why": "Um timeout longo deixa falhas lentas; não as sustenta."
+      }
+    ]
+  }
+}

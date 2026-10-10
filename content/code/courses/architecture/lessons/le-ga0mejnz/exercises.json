@@ -1,0 +1,735 @@
+[
+  {
+    "id": "ex-65e6b88b",
+    "version": 1,
+    "section": "failures-worth-retrying",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which answer is worth retrying?",
+    "hint": "Would the same request get a different answer a moment later?",
+    "choices": [
+      {
+        "text": "`404 Not Found`",
+        "correct": false,
+        "why": "The order will still not exist."
+      },
+      {
+        "text": "`503 Service Unavailable`",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "`400 Bad Request`",
+        "correct": false,
+        "why": "The same malformed request fails the same way."
+      },
+      {
+        "text": "`403 Forbidden`",
+        "correct": false,
+        "why": "Permissions do not change between attempts."
+      }
+    ]
+  },
+  {
+    "id": "ex-73wkvgd1",
+    "version": 1,
+    "section": "failures-worth-retrying",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "A call to \"charge this card\" times out. What does the caller know?",
+    "hint": "A timeout is an unknown.",
+    "choices": [
+      {
+        "text": "That the card was not charged",
+        "correct": false,
+        "why": "It may have been."
+      },
+      {
+        "text": "That the card was charged",
+        "correct": false,
+        "why": "It may not have been."
+      },
+      {
+        "text": "Nothing either way",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "That retrying is always safe",
+        "correct": false,
+        "why": "Only with an idempotency key."
+      }
+    ]
+  },
+  {
+    "id": "ex-6nqm5ct3",
+    "version": 1,
+    "section": "failures-worth-retrying",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What makes it safe to retry \"charge this card\" after a timeout?",
+    "hint": "Lesson 7.",
+    "choices": [
+      {
+        "text": "A longer timeout on the retry",
+        "correct": false,
+        "why": "The first attempt may still have happened."
+      },
+      {
+        "text": "An idempotency key on every attempt",
+        "correct": true,
+        "why": "Right: the service recognises the repeat."
+      },
+      {
+        "text": "Waiting a full minute before retrying",
+        "correct": false,
+        "why": "The charge may have happened in that minute too."
+      },
+      {
+        "text": "Retrying through a different instance",
+        "correct": false,
+        "why": "Both instances charge the same card."
+      }
+    ]
+  },
+  {
+    "id": "ex-m9na6ws6",
+    "version": 1,
+    "section": "failures-worth-retrying",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the last retry fails, what should the caller do?",
+    "hint": "\"Retry\" is the first line of a plan.",
+    "choices": [
+      {
+        "text": "Retry again, this time with a much bigger limit",
+        "correct": false,
+        "why": "That just moves the question."
+      },
+      {
+        "text": "Return a blank page",
+        "correct": false,
+        "why": "The person cannot act on it."
+      },
+      {
+        "text": "An error, a fallback, or a queue",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Log it and report success",
+        "correct": false,
+        "why": "That is a silent failure."
+      }
+    ]
+  },
+  {
+    "id": "ex-cq10473g",
+    "version": 1,
+    "section": "the-lab",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "The lab's service has 4 workers and each answer takes 50 ms. How many answers a second can it give?",
+    "hint": "Each worker gives 20 a second.",
+    "value": 80,
+    "tolerance": 0,
+    "unit": "answers a second"
+  },
+  {
+    "id": "ex-4whsdswf",
+    "version": 1,
+    "section": "the-lab",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is `X-Deadline` used for in the lab's service?",
+    "hint": "Read `do_GET`.",
+    "choices": [
+      {
+        "text": "To refuse requests that are already late",
+        "correct": false,
+        "why": "The service only counts them."
+      },
+      {
+        "text": "To count answers finished after the caller gave up",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "To set the timeout the client will use for its calls",
+        "correct": false,
+        "why": "The client sets its own."
+      },
+      {
+        "text": "To order the queue by urgency",
+        "correct": false,
+        "why": "The queue is in arrival order."
+      }
+    ]
+  },
+  {
+    "id": "ex-qwswewhc",
+    "version": 1,
+    "section": "retrying",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With one answer in five failing at random, why did two retries bring failures from 25 to 1 in 120?",
+    "hint": "Independent draws.",
+    "choices": [
+      {
+        "text": "Three failures in a row",
+        "correct": true,
+        "why": "Right: 0.2³ is under 1%."
+      },
+      {
+        "text": "The service fails less often when it is called more",
+        "correct": false,
+        "why": "Its failure rate did not change."
+      },
+      {
+        "text": "Retries skip the workers",
+        "correct": false,
+        "why": "Every call took a worker."
+      },
+      {
+        "text": "The client hides failures from the table",
+        "correct": false,
+        "why": "They are counted."
+      }
+    ]
+  },
+  {
+    "id": "ex-fv7pvj1s",
+    "version": 1,
+    "section": "retrying",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Each call fails independently with probability 0.1. With up to 2 retries, what is the chance a request fails, in percent?",
+    "hint": "Three failures in a row.",
+    "value": 0.1,
+    "tolerance": 0.01,
+    "unit": "percent"
+  },
+  {
+    "id": "ex-2bhjz4py",
+    "version": 1,
+    "section": "retrying",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Which two conditions made retrying work in the section \"A retry that works\"?",
+    "hint": "The next section breaks both.",
+    "choices": [
+      {
+        "text": "Short timeouts and many workers",
+        "correct": false,
+        "why": "Neither was the point."
+      },
+      {
+        "text": "A breaker and jitter",
+        "correct": false,
+        "why": "Neither was on."
+      },
+      {
+        "text": "Idempotent calls and a client using HTTP/2",
+        "correct": false,
+        "why": "HTTP/2 played no part."
+      },
+      {
+        "text": "Independent failures, spare capacity",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-tm8rdrat",
+    "version": 1,
+    "section": "the-retry-storm",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Without retries, why did a three-second freeze cause about ten seconds of failures?",
+    "hint": "What was waiting when the service woke up?",
+    "choices": [
+      {
+        "text": "The service restarted after the freeze",
+        "correct": false,
+        "why": "It did not restart."
+      },
+      {
+        "text": "A queue built up and drained slowly",
+        "correct": true,
+        "why": "Right: only 20 a second above the arrival rate."
+      },
+      {
+        "text": "The client stopped sending for seven seconds",
+        "correct": false,
+        "why": "It sent at a steady rate."
+      },
+      {
+        "text": "The freeze lasted ten seconds",
+        "correct": false,
+        "why": "It lasted three."
+      }
+    ]
+  },
+  {
+    "id": "ex-ghdmxr1n",
+    "version": 1,
+    "section": "the-retry-storm",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "With three retries, why did the service never recover after the freeze?",
+    "hint": "Compare the calls column with the capacity.",
+    "choices": [
+      {
+        "text": "The freeze kept repeating every few seconds",
+        "correct": false,
+        "why": "It happened once."
+      },
+      {
+        "text": "Retries are refused by the service",
+        "correct": false,
+        "why": "They were answered, late."
+      },
+      {
+        "text": "Retries kept the calls above capacity",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The client's timeout grew with each retry",
+        "correct": false,
+        "why": "It stayed at half a second."
+      }
+    ]
+  },
+  {
+    "id": "ex-4jqjech2",
+    "version": 1,
+    "section": "the-retry-storm",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What is a metastable failure?",
+    "hint": "Think about what kept the storm going.",
+    "choices": [
+      {
+        "text": "A failure that sustains itself after its trigger has gone",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "A failure that only happens under a metadata load",
+        "correct": false,
+        "why": "Not a thing."
+      },
+      {
+        "text": "A failure that fixes itself within a few seconds",
+        "correct": false,
+        "why": "The opposite."
+      },
+      {
+        "text": "A hardware fault that moves between machines",
+        "correct": false,
+        "why": "Not what the word means here."
+      }
+    ]
+  },
+  {
+    "id": "ex-0s57dvzp",
+    "version": 1,
+    "section": "the-retry-storm",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "In the storm with three retries, the service can answer 160 calls in two seconds. Roughly how many arrived in each two seconds after the freeze?",
+    "hint": "Read the calls column.",
+    "value": 465,
+    "tolerance": 25,
+    "unit": "calls"
+  },
+  {
+    "id": "ex-gyqgyjb8",
+    "version": 1,
+    "section": "backoff-and-jitter",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did jitter not rescue the service in the lab?",
+    "hint": "What does jitter change, and what does it not?",
+    "choices": [
+      {
+        "text": "The random waits it added were far too large",
+        "correct": false,
+        "why": "The waits were fractions of a second."
+      },
+      {
+        "text": "Jitter only works when a breaker is also on",
+        "correct": false,
+        "why": "It works on its own for what it does."
+      },
+      {
+        "text": "It spreads retries but leaves their number",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The client ignored the flag",
+        "correct": false,
+        "why": "The calls were spread, as the flag asked."
+      }
+    ]
+  },
+  {
+    "id": "ex-ky6nwh1g",
+    "version": 1,
+    "section": "backoff-and-jitter",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does a retry budget do in an outage?",
+    "hint": "Healthy times rarely reach it.",
+    "choices": [
+      {
+        "text": "Doubles the wait before each successive retry",
+        "correct": false,
+        "why": "That is backoff."
+      },
+      {
+        "text": "Caps retries at a small share of traffic",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Randomises when each retry happens",
+        "correct": false,
+        "why": "That is jitter."
+      },
+      {
+        "text": "Stops all calls for two seconds at a time",
+        "correct": false,
+        "why": "That is an open breaker."
+      }
+    ]
+  },
+  {
+    "id": "ex-emp7wwnc",
+    "version": 1,
+    "section": "backoff-and-jitter",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Three layers each make one call plus three retries. How many calls can one click send to the bottom service?",
+    "hint": "4 × 4 × 4.",
+    "value": 64,
+    "tolerance": 0,
+    "unit": "calls"
+  },
+  {
+    "id": "ex-y9xx0v60",
+    "version": 1,
+    "section": "backoff-and-jitter",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "Which layer should usually do the retrying?",
+    "hint": "Who knows whether the operation is safe to repeat?",
+    "choices": [
+      {
+        "text": "Every layer, for safety",
+        "correct": false,
+        "why": "That multiplies the calls."
+      },
+      {
+        "text": "The browser, closest to the person",
+        "correct": false,
+        "why": "It knows least about the operation."
+      },
+      {
+        "text": "Only the failing service itself",
+        "correct": false,
+        "why": "It cannot retry its own callers' requests."
+      },
+      {
+        "text": "The one nearest the failing call",
+        "correct": true,
+        "why": "Right; the others fail fast."
+      }
+    ]
+  },
+  {
+    "id": "ex-t5xfh5et",
+    "version": 1,
+    "section": "circuit-breaker",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each state of a circuit breaker to what it does.",
+    "hint": "One state lets a single call through.",
+    "pairs": [
+      {
+        "left": "closed",
+        "right": "calls go through and failures are counted"
+      },
+      {
+        "left": "open",
+        "right": "calls fail at once, unsent"
+      },
+      {
+        "left": "half-open",
+        "right": "one call is let through to test the service"
+      }
+    ]
+  },
+  {
+    "id": "ex-5k8jjh5z",
+    "version": 1,
+    "section": "circuit-breaker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why did the run with the breaker recover sooner than the run with no retries at all?",
+    "hint": "Look at the calls column during the freeze.",
+    "choices": [
+      {
+        "text": "The breaker made failing calls succeed",
+        "correct": false,
+        "why": "The requests during the freeze still failed."
+      },
+      {
+        "text": "While open, it sent almost nothing",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It shortened the freeze",
+        "correct": false,
+        "why": "The freeze was three seconds in both."
+      },
+      {
+        "text": "It added workers to the service",
+        "correct": false,
+        "why": "The service had four throughout."
+      }
+    ]
+  },
+  {
+    "id": "ex-sp4s5jeb",
+    "version": 1,
+    "section": "circuit-breaker",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What should count as a failure for a breaker?",
+    "hint": "Which answers mean the service is unwell?",
+    "choices": [
+      {
+        "text": "Any status other than `200`",
+        "correct": false,
+        "why": "A `404` is a normal answer."
+      },
+      {
+        "text": "Only connection refused",
+        "correct": false,
+        "why": "Timeouts and `5xx` matter too."
+      },
+      {
+        "text": "Timeouts and `5xx` answers",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Slow successes above the median",
+        "correct": false,
+        "why": "Slow is not failed."
+      }
+    ]
+  },
+  {
+    "id": "ex-zvfbe65g",
+    "version": 1,
+    "section": "circuit-breaker",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why one breaker per dependency rather than one for everything?",
+    "hint": "Stock and payments.",
+    "choices": [
+      {
+        "text": "Libraries do not allow one breaker to be shared",
+        "correct": false,
+        "why": "Some do."
+      },
+      {
+        "text": "Stock should not stop payments",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "It uses less memory",
+        "correct": false,
+        "why": "Memory is not the reason."
+      },
+      {
+        "text": "Each breaker needs its own thread",
+        "correct": false,
+        "why": "They need none."
+      }
+    ]
+  },
+  {
+    "id": "ex-rwf9q55x",
+    "version": 1,
+    "section": "in-practice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "How do retries end up at three layers without anyone deciding it?",
+    "hint": "Library, sidecar, gateway.",
+    "choices": [
+      {
+        "text": "The HTTP standard requires retries at each hop",
+        "correct": false,
+        "why": "It does not."
+      },
+      {
+        "text": "Brokers add them to every message",
+        "correct": false,
+        "why": "There is no broker in this path."
+      },
+      {
+        "text": "Different people configure each layer",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Operating systems retry TCP connections three times",
+        "correct": false,
+        "why": "That is not what multiplies requests."
+      }
+    ]
+  },
+  {
+    "id": "ex-thdkwwh7",
+    "version": 1,
+    "section": "in-practice",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "What does sending the deadline with the call let a service do?",
+    "hint": "The storm wasted capacity on callers who had left.",
+    "choices": [
+      {
+        "text": "Drop requests nobody waits for",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "Answer faster by skipping validation",
+        "correct": false,
+        "why": "Nothing is skipped for valid callers."
+      },
+      {
+        "text": "Raise the caller's timeout for it",
+        "correct": false,
+        "why": "The deadline is the caller's."
+      },
+      {
+        "text": "Retry on the caller's behalf",
+        "correct": false,
+        "why": "That is a different decision."
+      }
+    ]
+  },
+  {
+    "id": "ex-kbhfkxms",
+    "version": 1,
+    "section": "in-practice",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why should an open breaker be visible in metrics?",
+    "hint": "What does an open breaker look like from the outside?",
+    "choices": [
+      {
+        "text": "To count how much memory it uses",
+        "correct": false,
+        "why": "Not the point."
+      },
+      {
+        "text": "Because libraries refuse to run without metrics",
+        "correct": false,
+        "why": "They do not."
+      },
+      {
+        "text": "To bill callers for rejected requests",
+        "correct": false,
+        "why": "Not the point."
+      },
+      {
+        "text": "Otherwise an outage looks like a quiet afternoon",
+        "correct": true,
+        "why": "Right."
+      }
+    ]
+  },
+  {
+    "id": "ex-vg51r4v6",
+    "version": 1,
+    "section": "drill",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put a circuit breaker's life through a short outage in order.",
+    "hint": "Closed, failures, open, wait, probe, closed.",
+    "items": [
+      "Closed, calls go through",
+      "Five calls fail in a row",
+      "Open, calls fail at once",
+      "Half-open, one call is let through",
+      "The call succeeds and it closes again"
+    ]
+  },
+  {
+    "id": "ex-610p9s1x",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "After a database failover of five seconds, Quitanda's checkout stayed down for twenty minutes until it was restarted, and the database looked overloaded throughout. What is the most likely cause?",
+    "hint": "The trigger was short; the outage was not.",
+    "choices": [
+      {
+        "text": "The failover lost data, so every query failed",
+        "correct": false,
+        "why": "Lost data would not overload anything."
+      },
+      {
+        "text": "The new primary was a smaller machine",
+        "correct": false,
+        "why": "It handled the load before and after the restart."
+      },
+      {
+        "text": "A retry storm",
+        "correct": true,
+        "why": "Right."
+      },
+      {
+        "text": "The checkout's timeout was too long",
+        "correct": false,
+        "why": "A long timeout slows failures; it does not sustain them."
+      }
+    ]
+  }
+]
