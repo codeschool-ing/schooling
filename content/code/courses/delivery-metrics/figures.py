@@ -375,6 +375,194 @@ def l01_wip_days(lang):
                 'falha em agosto, quando o quadro estava esvaziando.')
 
 
+# ------------------------------------------------------------------ lesson 2
+
+def cycle_days(items, first, last):
+    """(merge date, cycle days, start date) for items merged in [first, last]."""
+    return [(when(i['merged']), (when(i['merged']) - when(i['started'])).days, when(i['started']))
+            for i in items if i['merged'] and first <= when(i['merged']) <= last]
+
+
+def pctl(values, p):
+    ordered = sorted(values)
+    return ordered[-(-p * len(ordered) // 100) - 1]
+
+
+@figure('l02-clocks', 2)
+def l02_clocks(lang):
+    f = Fig('l02-clocks', 680, 250, T(
+        lang,
+        'A timeline of one item with five moments: created, started, handed to review, merged '
+        'and deployed. Cycle time runs from started to merged. Lead time runs from created to '
+        'deployed and contains cycle time, the wait in the backlog before it and the wait for '
+        'a deployment after it. A third bracket, lead time for changes, runs from the commit to '
+        'the deployment.',
+        'Uma linha do tempo de um item com cinco momentos: criado, começado, entregue para '
+        'revisão, integrado e com deploy. O tempo de ciclo vai de começado a integrado. O lead '
+        'time vai de criado ao deploy e contém o tempo de ciclo, a espera no backlog antes dele '
+        'e a espera pelo deploy depois. Uma terceira chave, o lead time de mudanças, vai do '
+        'commit ao deploy.'))
+    xs = [60, 250, 400, 500, 610]
+    names = T(lang, ['request written', 'work starts', 'handed to review', 'change merged',
+                     'in production'],
+              ['pedido registrado', 'trabalho começa', 'vai para revisão', 'mudança integrada',
+               'em produção'])
+    cols = ['created', 'started', 'review', 'merged', 'deployed']
+    f.line(40, 110, 640, 110, stroke='--paper-dim', width=1.4)
+    for x, n, c in zip(xs, names, cols):
+        f.circle(x, 110, 5, fill='--phosphor')
+        f.text(x, 92, n, size=10.5)
+        f.text(x, 130, c, size=9, mono=True, fill='--paper-dim')
+    segs = [(60, 250, T(lang, 'backlog', 'backlog')), (250, 400, T(lang, 'development', 'desenvolvimento')),
+            (400, 500, T(lang, 'review', 'revisão')), (500, 610, T(lang, 'to deploy', 'até o deploy'))]
+    for a, b, t in segs:
+        f.text((a + b) / 2, 70, t, size=9.5, fill='--paper-dim', italic=True)
+
+    def bracket(a, b, y, label, colour):
+        f.line(a, y, b, y, stroke=colour, width=1.6)
+        f.line(a, y - 6, a, y + 6, stroke=colour, width=1.6)
+        f.line(b, y - 6, b, y + 6, stroke=colour, width=1.6)
+        f.text((a + b) / 2, y + 16, label, size=10.5, fill=colour)
+    bracket(250, 500, 158, T(lang, 'cycle time: the team\'s clock', 'tempo de ciclo: o relógio do time'),
+            '--phosphor')
+    bracket(60, 610, 196, T(lang, 'lead time: the requester\'s clock', 'lead time: o relógio de quem pediu'),
+            '--amber')
+    f.line(452, 30, 610, 30, stroke='--paper-dim', width=1.2, dash='4 3')
+    f.line(452, 24, 452, 36, stroke='--paper-dim', width=1.2)
+    f.line(610, 24, 610, 36, stroke='--paper-dim', width=1.2)
+    f.text(531, 16, T(lang, 'lead time for changes (lesson 5)', 'lead time de mudanças (aula 5)'),
+           size=9.5, fill='--paper-dim')
+    return f, T(lang,
+                'Two clocks on one item. Cycle time is inside lead time, and the two stretches '
+                'outside it, the backlog and the wait for a deployment, are the team\'s too.',
+                'Dois relógios num item. O tempo de ciclo está dentro do lead time, e os dois '
+                'trechos de fora, o backlog e a espera pelo deploy, também são do time.')
+
+
+@figure('l02-scatter', 2)
+def l02_scatter(lang):
+    items, _ = billing()
+    pts = cycle_days(items, date(2026, 6, 1), date(2026, 9, 30))
+    first = date(2026, 6, 1)
+    before = [c for m, c, s in pts if m <= date(2026, 7, 31)]
+    after = [c for m, c, s in pts if m >= date(2026, 9, 1)]
+    f = Fig('l02-scatter', 680, 300, T(
+        lang,
+        f'A scatterplot of the {len(pts)} items the Billing team merged from June to September '
+        '2026: each dot sits at the date the item merged and at its cycle time in days. In June '
+        f'and July the dots spread from 1 to {max(before)} days, with the 85th percentile at '
+        f'{pctl(before, 85)}. In August, items started before the change keep finishing with '
+        'long cycle times while new ones finish within a week. In September the dots sit low, '
+        f'with the 85th percentile at {pctl(after, 85)}.',
+        f'Um gráfico de dispersão dos {len(pts)} itens que o time de Billing integrou de junho a '
+        'setembro de 2026: cada ponto fica na data em que o item foi integrado e na altura do '
+        f'seu tempo de ciclo em dias. Em junho e julho os pontos se espalham de 1 a {max(before)} '
+        f'dias, com o percentil 85 em {pctl(before, 85)}. Em agosto, itens começados antes da '
+        'mudança continuam terminando com ciclos longos enquanto os novos terminam em uma '
+        f'semana. Em setembro os pontos ficam baixos, com o percentil 85 em {pctl(after, 85)}.'))
+    p = Plot(f, 60, 36, 650, 240, 0, 121, 0, 60)
+    p.yaxis([0, 10, 20, 30, 40, 50, 60])
+    p.baseline()
+    for d in (date(2026, 6, 1), date(2026, 7, 1), date(2026, 8, 1), date(2026, 9, 1)):
+        f.text(p.sx((d - first).days), 256, day_label(lang, d), size=9.5, anchor='start',
+               fill='--paper-dim')
+    xa = p.sx((date(2026, 8, 3) - first).days)
+    f.line(xa, 36, xa, 240, stroke='--paper-dim', width=1, dash='4 3')
+    for m, c, s in pts:
+        old = s < date(2026, 8, 3)
+        f.circle(p.sx((m - first).days), p.sy(c), 3,
+                 fill='--phosphor' if old else '--amber')
+    for lo, hi, vals in ((date(2026, 6, 1), date(2026, 7, 31), before),
+                         (date(2026, 9, 1), date(2026, 9, 30), after)):
+        y = p.sy(pctl(vals, 85))
+        f.line(p.sx((lo - first).days), y, p.sx((hi - first).days), y, stroke='--paper', width=1.2,
+               dash='6 3')
+        f.text(p.sx((hi - first).days), y - 8, T(lang, f'85th: {pctl(vals, 85)} days',
+                                                 f'p85: {pctl(vals, 85)} dias'),
+               size=9.5, anchor='end')
+    f.text(60, 16, T(lang, 'cycle time in days, by the date each item merged',
+                     'tempo de ciclo em dias, pela data em que cada item foi integrado'),
+           size=10, anchor='start', fill='--paper-dim')
+    f.circle(430, 16, 3, fill='--phosphor')
+    f.text(438, 16, T(lang, 'started before 3 Aug', 'começado antes de 3 ago'), size=9.5,
+           anchor='start', fill='--paper-dim')
+    f.circle(560, 16, 3, fill='--amber')
+    f.text(568, 16, T(lang, 'started after', 'começado depois'), size=9.5, anchor='start',
+           fill='--paper-dim')
+    return f, T(lang,
+                'August holds two systems at once: the old one draining out in tall dots, and the '
+                'new one finishing within a week.',
+                'Agosto tem dois sistemas ao mesmo tempo: o antigo escoando em pontos altos, e o '
+                'novo terminando em uma semana.')
+
+
+def stage_days(first, last):
+    """stages.py's four averages for items deployed in [first, last], rounded as it prints."""
+    items, deploys = billing()
+    shipped = {}
+    for d in deploys:
+        for i in d['items'].split():
+            shipped[i] = datetime.fromisoformat(d['at'])
+    cols = [[], [], [], []]
+    for i in items:
+        if i['id'] not in shipped or not first <= shipped[i['id']].date() <= last:
+            continue
+        merged = datetime.fromisoformat(i['merged'])
+        cols[0].append((when(i['started']) - when(i['created'])).days)
+        cols[1].append((when(i['review']) - when(i['started'])).days)
+        cols[2].append((merged.date() - when(i['review'])).days)
+        cols[3].append((shipped[i['id']] - merged).total_seconds() / 86400)
+    return [round(sum(c) / len(c), 1) for c in cols]
+
+
+@figure('l02-stages', 2)
+def l02_stages(lang):
+    a = stage_days(date(2026, 6, 1), date(2026, 7, 31))
+    b = stage_days(date(2026, 9, 1), date(2026, 9, 30))
+    rows = [(T(lang, 'June and July', 'junho e julho'), a), (T(lang, 'September', 'setembro'), b)]
+    names = T(lang, ['backlog', 'development', 'review', 'to deploy'],
+              ['backlog', 'desenvolvimento', 'revisão', 'até o deploy'])
+    styles = [('--panel', '--paper-dim'), ('--scan', '--phosphor'), ('--panel', '--amber'),
+              ('--scan', '--paper')]
+    f = Fig('l02-stages', 680, 220, T(
+        lang,
+        f'Two stacked bars of average lead time in days. June and July: {num(lang, sum(a))} days, '
+        f'of which {a[0]} in the backlog, {a[1]} in development, {a[2]} in review and {a[3]} '
+        f'waiting to deploy. September: {num(lang, sum(b))} days, of which {b[0]} in the '
+        f'backlog, {b[1]} in development, {b[2]} in review and {b[3]} waiting to deploy.',
+        f'Duas barras empilhadas do lead time médio em dias. Junho e julho: {num(lang, sum(a))} '
+        f'dias, sendo {num(lang, a[0])} no backlog, {num(lang, a[1])} em desenvolvimento, '
+        f'{num(lang, a[2])} em revisão e {num(lang, a[3])} esperando o deploy. Setembro: '
+        f'{num(lang, sum(b))} dias, sendo {num(lang, b[0])} no backlog, {num(lang, b[1])} em '
+        f'desenvolvimento, {num(lang, b[2])} em revisão e {num(lang, b[3])} esperando o deploy.'))
+    x0, scale = 130, 11.5
+    for r, (label, vals) in enumerate(rows):
+        y = 50 + r * 70
+        f.text(x0 - 10, y + 16, label, size=10.5, anchor='end')
+        x = x0
+        for k, v in enumerate(vals):
+            fill, stroke = styles[k]
+            f.bar(x, y, v * scale, 32, fill=fill, stroke=stroke, width=1.2)
+            if v * scale > 44:
+                f.text(x + v * scale / 2, y + 16, num(lang, v), size=9.5)
+            x += v * scale
+        f.text(x + 8, y + 16, T(lang, f'{num(lang, sum(vals))} days', f'{num(lang, sum(vals))} dias'),
+               size=10.5, anchor='start', weight='600')
+    for k, n in enumerate(names):
+        fill, stroke = styles[k]
+        lx = 130 + k * 130
+        f.bar(lx, 190, 14, 12, fill=fill, stroke=stroke, width=1.2)
+        f.text(lx + 20, 196, n, size=9.5, anchor='start', fill='--paper-dim')
+    f.text(130, 24, T(lang, 'average lead time of items deployed in the period, by column',
+                      'lead time médio dos itens com deploy no período, por coluna'),
+           size=10, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'Every queue inside the team shrank, and the requester waits only ten days less: '
+                'the backlog grew to fill most of the gain.',
+                'Toda fila dentro do time encolheu, e quem pediu espera só dez dias a menos: o '
+                'backlog cresceu e ocupou quase todo o ganho.')
+
+
 # @@LESSONS@@
 
 if __name__ == '__main__':
