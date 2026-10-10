@@ -563,6 +563,202 @@ def l02_stages(lang):
                 'backlog cresceu e ocupou quase todo o ganho.')
 
 
+# ------------------------------------------------------------------ lesson 3
+
+def cfd_counts(items, deploys, days):
+    shipped = {}
+    for d in deploys:
+        for i in d['items'].split():
+            shipped[i] = d['at'][:10]
+    cols = ['created', 'started', 'review', 'merged']
+    out = {c: [] for c in cols + ['deployed']}
+    for day in days:
+        iso = day.isoformat()
+        for c in cols:
+            out[c].append(sum(1 for i in items if i[c] and i[c][:10] <= iso))
+        out['deployed'].append(sum(1 for v in shipped.values() if v <= iso))
+    return out
+
+
+@figure('l03-cfd', 3)
+def l03_cfd(lang):
+    items, deploys = billing()
+    days = span(date(2026, 6, 1), date(2026, 9, 30))
+    c = cfd_counts(items, deploys, days)
+    f = Fig('l03-cfd', 680, 320, T(
+        lang,
+        'A cumulative flow diagram of the Billing team from June to September 2026: five rising '
+        'lines, arrived, started, to review, merged and deployed, with the bands between them '
+        'shaded. Through July the band between to review and merged widens, the review queue. '
+        'From August the bands between started and deployed are thin, and the merged and '
+        'deployed lines lie on top of each other.',
+        'Um diagrama de fluxo cumulativo do time de Billing de junho a setembro de 2026: cinco '
+        'linhas que sobem, chegou, começou, para revisão, integrado e com deploy, com as faixas '
+        'entre elas sombreadas. Em julho a faixa entre para revisão e integrado alarga, a fila '
+        'de revisão. A partir de agosto as faixas entre começou e deploy ficam finas, e as linhas '
+        'de integrado e deploy ficam uma sobre a outra.'))
+    p = Plot(f, 56, 30, 560, 270, 0, len(days) - 1, 0, 150)
+    p.yaxis([0, 50, 100, 150])
+    p.baseline()
+    order = ['created', 'started', 'review', 'merged', 'deployed']
+    fills = ['--panel', '--scan', '--panel', '--scan', None]
+    strokes = ['--paper-dim', '--phosphor', '--amber', '--paper', '--paper-dim']
+    xs = list(range(len(days)))
+    for k in range(4):
+        top, bot = c[order[k]], c[order[k + 1]]
+        d = 'M' + ' L'.join(f'{p.sx(x):.1f} {p.sy(v):.1f}' for x, v in zip(xs, top))
+        d += ' L' + ' L'.join(f'{p.sx(x):.1f} {p.sy(v):.1f}' for x, v in reversed(list(zip(xs, bot))))
+        f.path(d + ' Z', stroke=None, fill=fills[k], width=0)
+    for k, col in enumerate(order):
+        p.polyline(xs, c[col], stroke=strokes[k], width=1.5, dash='3 2' if col == 'deployed' else None)
+    names = T(lang, ['arrived', 'started', 'to review', 'merged', 'deployed'],
+              ['chegou', 'começou', 'para revisão', 'integrado', 'com deploy'])
+    ys, last = [], None
+    for o in order:
+        y = p.sy(c[o][-1])
+        if last is not None and y < last + 13:
+            y = last + 13
+        ys.append(y)
+        last = y
+    for k, n in enumerate(names):
+        f.text(566, ys[k], n, size=10, anchor='start', fill='--paper' if k != 4 else '--paper-dim')
+    for d in (date(2026, 6, 1), date(2026, 7, 1), date(2026, 8, 1), date(2026, 9, 1)):
+        f.text(p.sx((d - days[0]).days), 286, day_label(lang, d), size=9.5, anchor='start',
+               fill='--paper-dim')
+    xa = p.sx((date(2026, 8, 3) - days[0]).days)
+    f.line(xa, 30, xa, 270, stroke='--paper-dim', width=1, dash='4 3')
+    f.text(56, 14, T(lang, 'items that had reached each column, day by day',
+                     'itens que tinham chegado a cada coluna, dia a dia'),
+           size=10, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'The board\'s history in one picture: the thickness of each band is how many items '
+                'were in that state, and the steepness of each line is how fast items crossed it.',
+                'A história do quadro numa imagem: a espessura de cada faixa é quantos itens '
+                'estavam naquele estado, e a inclinação de cada linha é a rapidez com que os itens '
+                'a cruzaram.')
+
+
+@figure('l03-patterns', 3)
+def l03_patterns(lang):
+    f = Fig('l03-patterns', 680, 220, T(
+        lang,
+        'Three small cumulative flow diagrams drawn as sketches. In the first, the band between '
+        'two lines widens because the upper line rises faster than the lower one: a bottleneck. '
+        'In the second, the lower line goes flat while the upper one keeps rising: nothing is '
+        'finishing. In the third, the lower line rises in steps: work crosses that boundary in '
+        'batches.',
+        'Três pequenos diagramas de fluxo cumulativo desenhados como esboço. No primeiro, a '
+        'faixa entre duas linhas alarga porque a de cima sobe mais rápido que a de baixo: um '
+        'gargalo. No segundo, a linha de baixo fica plana enquanto as outras continuam subindo: '
+        'nada está terminando. No terceiro, a linha de baixo sobe em degraus: o trabalho cruza '
+        'essa fronteira em lotes.'))
+    titles = T(lang, ['a band that widens', 'a line that goes flat', 'stairs instead of a slope'],
+               ['uma faixa que alarga', 'uma linha que fica plana', 'degraus em vez de rampa'])
+    notes = T(lang, ['a queue is growing', 'nothing is finishing', 'work moves in batches'],
+              ['uma fila está crescendo', 'nada está terminando', 'o trabalho anda em lotes'])
+    for k in range(3):
+        x0 = 20 + k * 226
+        f.rect(x0, 30, 200, 150, stroke='--wire', fill='--panel', width=1, rx=4)
+        f.text(x0 + 100, 18, titles[k], size=10.5, weight='600')
+        f.text(x0 + 100, 198, notes[k], size=10, fill='--paper-dim', italic=True)
+        bx, by, w, h = x0 + 14, 166, 172, 120
+        if k == 0:
+            top = [(0, 30), (1, 70), (2, 110)]
+            bot = [(0, 20), (1, 40), (2, 58)]
+        elif k == 1:
+            top = [(0, 30), (1, 70), (2, 108)]
+            bot = [(0, 20), (1, 56), (1.2, 62), (2, 62)]
+        else:
+            top = [(0, 30), (1, 70), (2, 108)]
+            bot = [(0, 18), (0.45, 18), (0.45, 42), (1.1, 42), (1.1, 68), (1.75, 68), (1.75, 92),
+                   (2, 92)]
+
+        def pts(seq):
+            return ' L'.join(f'{bx + a / 2 * w:.1f} {by - v:.1f}' for a, v in seq)
+        f.path('M' + pts(top), stroke='--phosphor', width=1.6)
+        f.path('M' + pts(bot), stroke='--amber', width=1.6)
+    return f, T(lang,
+                'Three shapes worth knowing on sight. Each is visible days before the cycle times '
+                'of finished items change.',
+                'Três formas que vale reconhecer de relance. Cada uma aparece dias antes de os '
+                'tempos de ciclo dos itens terminados mudarem.')
+
+
+def ages_on(items, today):
+    recent = [(when(i['merged']) - when(i['started'])).days for i in items
+              if i['merged'] and today - timedelta(days=30) < when(i['merged']) <= today]
+    bands = {p: pctl(recent, p) for p in (50, 70, 85, 95)}
+    dots = []
+    for i in items:
+        s, r, m = when(i['started']), when(i['review']), when(i['merged'])
+        if not s or s > today or (m and m <= today):
+            continue
+        dots.append(('review' if r and r <= today else 'development', (today - s).days))
+    return bands, dots
+
+
+@figure('l03-ageing', 3)
+def l03_ageing(lang):
+    items, _ = billing()
+    panels = [(date(2026, 7, 15), T(lang, '15 July', '15 de julho')),
+              (date(2026, 9, 30), T(lang, '30 September', '30 de setembro'))]
+    data = [ages_on(items, d) for d, _ in panels]
+    b1, d1 = data[0]
+    b2, d2 = data[1]
+    f = Fig('l03-ageing', 680, 320, T(
+        lang,
+        f'Two ageing charts of the Billing team\'s board. On 15 July, {len(d1)} items are open; '
+        'the oldest are all in review, up to '
+        f'{max(a for c, a in d1 if c == "review")} days, above the 85th-percentile band at '
+        f'{b1[85]} days. On 30 September, {len(d2)} items are open; one item in development is '
+        f'{max(a for c, a in d2)} days old, far above the 95th-percentile band at {b2[95]} days, '
+        'and the rest are under a week.',
+        f'Dois gráficos de envelhecimento do quadro do time de Billing. Em 15 de julho há '
+        f'{len(d1)} itens abertos; os mais velhos estão todos em revisão, até '
+        f'{max(a for c, a in d1 if c == "review")} dias, acima da faixa do percentil 85 em '
+        f'{b1[85]} dias. Em 30 de setembro há {len(d2)} itens abertos; um item em desenvolvimento '
+        f'tem {max(a for c, a in d2)} dias, bem acima da faixa do percentil 95 em {b2[95]} dias, '
+        'e os outros têm menos de uma semana.'))
+    cols = T(lang, ['development', 'review'], ['desenvolvimento', 'revisão'])
+    for k, ((day, title), (bands, dots)) in enumerate(zip(panels, data)):
+        x0 = 60 + k * 320
+        p = Plot(f, x0, 40, x0 + 260, 270, 0, 2, 0, 45)
+        if k == 0:
+            p.yaxis([0, 15, 30, 45])
+        else:
+            p.yaxis([0, 15, 30, 45], fmt=lambda t: '')
+        p.baseline()
+        f.text(x0 + 130, 24, title, size=11, weight='600')
+        prev = 0
+        for q, fill in ((50, '--scan'), (70, '--panel'), (85, '--scan'), (95, '--panel')):
+            v = bands[q]
+            if v > prev:
+                f.bar(x0, p.sy(v), 260, p.sy(prev) - p.sy(v), fill=fill, stroke=None, width=0)
+            f.line(x0, p.sy(v), x0 + 260, p.sy(v), stroke='--paper-dim', width=0.8, dash='3 3')
+            prev = v
+        f.text(x0 + 258, p.sy(bands[85]) - 6, T(lang, f'85th: {bands[85]}', f'p85: {bands[85]}'),
+               size=9, anchor='end', fill='--paper-dim')
+        for j, col in enumerate(['development', 'review']):
+            cx = p.sx(0.5 + j)
+            f.text(cx, 286, cols[j], size=10)
+            same = {}
+            for c, a in dots:
+                if c != col:
+                    continue
+                n = same.get(a, 0)
+                same[a] = n + 1
+                f.circle(cx - 30 + (n % 7) * 10, p.sy(a), 4,
+                         fill='--amber' if a > bands[85] else '--phosphor')
+    f.text(60, 304, T(lang, 'age in days; bands are the 50th, 70th, 85th and 95th percentiles of recent cycle times',
+                      'idade em dias; as faixas são os percentis 50, 70, 85 e 95 dos tempos de ciclo recentes'),
+           size=9.5, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'A queue and a stuck item look different. In July the old dots crowd one column; '
+                'in September one dot stands alone far above everything else.',
+                'Uma fila e um item travado têm cara diferente. Em julho os pontos velhos lotam uma '
+                'coluna; em setembro um ponto fica sozinho, muito acima de todo o resto.')
+
+
 # @@LESSONS@@
 
 if __name__ == '__main__':
