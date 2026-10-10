@@ -1,0 +1,676 @@
+[
+  {
+    "id": "ex-rsxp5qca",
+    "version": 1,
+    "section": "the-write-tax",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does an index that no query ever reads still cost something on a table that takes writes?",
+    "hint": "Think about what an INSERT has to do with every copy of the columns.",
+    "choices": [
+      {
+        "text": "Every write has to update it too",
+        "correct": true,
+        "why": "Right: an index is a copy kept current on every insert and on every update of its columns, read or not."
+      },
+      {
+        "text": "The planner has to consider it for every query, and planning dominates the cost",
+        "correct": false,
+        "why": "Planning does look at each index, but the lesson's measured cost was in the writes: 9396 against 4895 bytes of log per order."
+      },
+      {
+        "text": "It holds a lock on the table while it sits unused",
+        "correct": false,
+        "why": "An index holds no lock by existing; the locks belong to statements, which lesson 12 covers."
+      },
+      {
+        "text": "It slows down reads of the other indexes",
+        "correct": false,
+        "why": "Reads of one index are not affected by another one existing; the cost is on the writing side."
+      }
+    ]
+  },
+  {
+    "id": "ex-zfnk7s2y",
+    "version": 1,
+    "section": "the-write-tax",
+    "type": "numeric",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "With the seven leftover indexes in place, how many bytes of write-ahead log did each order from `place-order.sql` write in the lesson's run?",
+    "hint": "The second measurement, the column bytes_per_order.",
+    "value": 9396,
+    "tolerance": 100,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-312qzn9m",
+    "version": 1,
+    "section": "the-write-tax",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Before the leftovers, 19,996 of 20,000 updates in `place-order.sql` were HOT; with them, none were. Which single leftover caused that?",
+    "hint": "Which column does the UPDATE change?",
+    "choices": [
+      {
+        "text": "`orders_status_idx`",
+        "correct": false,
+        "why": "The update leaves `status` alone; an index on a column the update does not change does not stop HOT."
+      },
+      {
+        "text": "`orders_seller_placed_idx`, because it has two columns",
+        "correct": false,
+        "why": "The number of columns does not matter; neither `seller_id` nor `placed_at` changes in the update."
+      },
+      {
+        "text": "`orders_total_cents_idx`",
+        "correct": true,
+        "why": "Right: the update sets `total_cents`, and HOT is only possible when no index contains a changed column."
+      },
+      {
+        "text": "`orders_customer_idx`, because it duplicates another index",
+        "correct": false,
+        "why": "Being a duplicate costs an extra entry per insert, but `customer_id` does not change in the update."
+      }
+    ]
+  },
+  {
+    "id": "ex-ncyfr3cp",
+    "version": 1,
+    "section": "the-write-tax",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The transaction rate fell 13% with the leftovers while the log per order nearly doubled. Why does the lesson trust the log number more?",
+    "hint": "What dominates one short transaction on that machine?",
+    "choices": [
+      {
+        "text": "Because pgbench rounds its rate to whole transactions",
+        "correct": false,
+        "why": "pgbench prints the rate to six decimals; rounding is not the problem."
+      },
+      {
+        "text": "The rate moves by several per cent between identical runs, and the log is bytes actually written",
+        "correct": true,
+        "why": "Right: the commit's wait for the disk dominates the rate, while the log volume is a count of what the server wrote."
+      },
+      {
+        "text": "The log includes reads as well as writes, so it sees more",
+        "correct": false,
+        "why": "The write-ahead log records changes only; reads write nothing to it."
+      },
+      {
+        "text": "Only the log is reset by CHECKPOINT",
+        "correct": false,
+        "why": "A checkpoint does not reset the log position, which only grows; it was taken so both runs started alike."
+      }
+    ]
+  },
+  {
+    "id": "ex-8p2dpp8n",
+    "version": 1,
+    "section": "the-write-tax",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A table of sensor readings gets a new row every millisecond and is never updated. Which of these indexes adds the least write-ahead log per insert after each checkpoint?",
+    "hint": "Where in the index does each new key land?",
+    "choices": [
+      {
+        "text": "An index on the sensor's id, with 50,000 sensors reporting in random order",
+        "correct": false,
+        "why": "Random keys touch a different leaf page almost every time, and each page costs a full image once per checkpoint."
+      },
+      {
+        "text": "An index on the reading's value, which jumps about",
+        "correct": false,
+        "why": "Values that jump about land all over the index, like the lesson's `total_cents`."
+      },
+      {
+        "text": "An index on the reading's timestamp",
+        "correct": true,
+        "why": "Right: a value that only grows is added at the right-hand end, so the same few pages take every new key."
+      },
+      {
+        "text": "All three add the same amount, since each insert adds one entry to each",
+        "correct": false,
+        "why": "One entry each, but not one page image each: the page images depend on how many different pages the keys touch."
+      }
+    ]
+  },
+  {
+    "id": "ex-41h6scah",
+    "version": 1,
+    "section": "unused",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Which column says how many times queries have read an index since the counters were reset?",
+    "hint": "It is in pg_stat_user_indexes.",
+    "choices": [
+      {
+        "text": "`pg_stat_user_indexes.idx_tup_read`, the entries returned",
+        "correct": false,
+        "why": "That counts index entries returned, not how many scans started; the lesson reads the number of scans."
+      },
+      {
+        "text": "`pg_index.indisvalid`",
+        "correct": false,
+        "why": "That says whether an index can be used at all, for example after a failed concurrent build."
+      },
+      {
+        "text": "`pg_stat_user_indexes.idx_scan`",
+        "correct": true,
+        "why": "Right: one count per scan a query started on the index."
+      },
+      {
+        "text": "`pg_stat_statements.calls`",
+        "correct": false,
+        "why": "That counts executions of a statement, with no index named anywhere."
+      }
+    ]
+  },
+  {
+    "id": "ex-ve2hpgfy",
+    "version": 1,
+    "section": "unused",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the one-minute mix, `orders_customer_id_idx` showed 0 scans and `orders_customer_idx` 72,686. What does that zero mean?",
+    "hint": "The two indexes have the same column.",
+    "choices": [
+      {
+        "text": "That the planner chose one of two identical indexes, and either could go",
+        "correct": true,
+        "why": "Right: the zero records a tie the planner broke; once one twin goes, its scans move to the other."
+      },
+      {
+        "text": "That the customer search is written to read only the newest index on `customer_id`",
+        "correct": false,
+        "why": "The planner has no rule favouring newer indexes; it saw two equal choices."
+      },
+      {
+        "text": "That `orders_customer_id_idx` is damaged in some way and should be rebuilt before anything else",
+        "correct": false,
+        "why": "A damaged index is not what a zero means; the twin simply took the reads."
+      },
+      {
+        "text": "That the original must be dropped and the newer one kept",
+        "correct": false,
+        "why": "The counter cannot tell you which twin to keep; section 04 keeps the original for its name."
+      }
+    ]
+  },
+  {
+    "id": "ex-ss9ekqfs",
+    "version": 1,
+    "section": "unused",
+    "type": "multiple-choice",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "An index shows `idx_scan = 0` on the primary. Which of these could still mean it is needed? Choose all that apply.",
+    "hint": "The four ways a zero lies.",
+    "choices": [
+      {
+        "text": "The counters were reset two days ago and a report runs monthly",
+        "correct": true,
+        "why": "Right: the window is shorter than the cycle that reads it."
+      },
+      {
+        "text": "Reports run against a read replica",
+        "correct": true,
+        "why": "Right: the counters are per server, and the drop would reach the replica too."
+      },
+      {
+        "text": "It backs a unique constraint",
+        "correct": true,
+        "why": "Right: enforcing a rule leaves no trace in idx_scan."
+      },
+      {
+        "text": "Its table has more than a million rows",
+        "correct": false,
+        "why": "The size of the table says nothing about whether anybody reads the index."
+      },
+      {
+        "text": "Its last_idx_scan is empty",
+        "correct": false,
+        "why": "An empty last_idx_scan agrees with the zero; it is not a reason to keep the index."
+      }
+    ]
+  },
+  {
+    "id": "ex-4n69vza8",
+    "version": 1,
+    "section": "unused",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "`sellers_pkey` was scanned 29,010 times during the mix, although no workload script looks up a seller by id. What did the scanning?",
+    "hint": "Every order names a seller.",
+    "choices": [
+      {
+        "text": "Autovacuum, which scans every primary key after a batch of inserts",
+        "correct": false,
+        "why": "Autovacuum's work does not appear as idx_scan on another table's key."
+      },
+      {
+        "text": "The seller dashboard's join",
+        "correct": false,
+        "why": "The dashboard reads `orders` by `seller_id` and joins nothing; it used `orders_seller_placed_idx`."
+      },
+      {
+        "text": "pg_stat_statements, while normalising queries",
+        "correct": false,
+        "why": "The extension reads no tables to count statements."
+      },
+      {
+        "text": "The foreign-key check run for each inserted order",
+        "correct": true,
+        "why": "Right: each order proves its seller exists, and that proof is an index scan; customers_pkey shows the same 29,010."
+      }
+    ]
+  },
+  {
+    "id": "ex-2et81c0z",
+    "version": 1,
+    "section": "unused",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "You are asked to remove indexes on a server whose `stats_reset` is yesterday. A colleague reset the counters to measure a test. What do you do first?",
+    "hint": "A zero needs a window.",
+    "choices": [
+      {
+        "text": "Drop every index the unused query lists, since a day of traffic is a fair sample",
+        "correct": false,
+        "why": "A day misses the weekly, monthly and yearly jobs, exactly the lesson's monthly report."
+      },
+      {
+        "text": "Wait until the counters cover the longest cycle the application has, or ask who runs the reports",
+        "correct": true,
+        "why": "Right: the counter is only evidence over a window long enough for every job to have run."
+      },
+      {
+        "text": "Restart the server so the counters are rebuilt from the log",
+        "correct": false,
+        "why": "Counters are not rebuilt from the log; a clean restart keeps them, and nothing restores what the reset cleared."
+      },
+      {
+        "text": "Read `last_idx_scan`, which survives a reset",
+        "correct": false,
+        "why": "`last_idx_scan` is cleared by the same reset; it is useful only over a window the counters cover."
+      }
+    ]
+  },
+  {
+    "id": "ex-6zg1evyw",
+    "version": 1,
+    "section": "duplicates",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why does `order_lines_product_id_idx1` end in `1`?",
+    "hint": "Look at its line in leftovers.sql.",
+    "choices": [
+      {
+        "text": "It is the first version of the index, and the next migration to change it makes a 2",
+        "correct": false,
+        "why": "PostgreSQL keeps no versions of an index in its name."
+      },
+      {
+        "text": "It was built with one column, and PostgreSQL appends the column count to every name",
+        "correct": false,
+        "why": "The suffix does not count columns; the original has one column too."
+      },
+      {
+        "text": "It lives in tablespace 1",
+        "correct": false,
+        "why": "The name says nothing about where the file lives."
+      },
+      {
+        "text": "The migration gave no name, and PostgreSQL's own choice was already taken",
+        "correct": true,
+        "why": "Right: `CREATE INDEX ON order_lines (product_id)` makes up a name, and adds 1 because `order_lines_product_id_idx` existed."
+      }
+    ]
+  },
+  {
+    "id": "ex-0m1eme7a",
+    "version": 1,
+    "section": "duplicates",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Two B-tree indexes on `products (title)`: one plain, one with `text_pattern_ops`. Why does the duplicate query not list them together?",
+    "hint": "One of the five columns differs.",
+    "choices": [
+      {
+        "text": "Their `indclass` differs, so they store entries ordered for different questions",
+        "correct": true,
+        "why": "Right: the operator class decides what the index can answer, so they are not the same index."
+      },
+      {
+        "text": "Their names differ",
+        "correct": false,
+        "why": "The query ignores names on purpose; the lesson's duplicates had different names."
+      },
+      {
+        "text": "Text columns are skipped by the query, because their collations cannot be compared as text",
+        "correct": false,
+        "why": "Nothing in the query filters by type; it compares the five columns of pg_index."
+      },
+      {
+        "text": "One was built concurrently",
+        "correct": false,
+        "why": "How an index was built is not recorded in what the query compares."
+      }
+    ]
+  },
+  {
+    "id": "ex-fr2t4tnv",
+    "version": 1,
+    "section": "duplicates",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A table has a primary key on `id` and a plain index on `id` that the planner reads all day, while the primary key shows 0 scans. Which one do you drop?",
+    "hint": "Which one can the server drop on its own?",
+    "choices": [
+      {
+        "text": "The primary key's index, because nobody reads it",
+        "correct": false,
+        "why": "The server refuses to drop an index a constraint owns, and the constraint is the rule against a second row with the same id."
+      },
+      {
+        "text": "The plain index; its reads move to the primary key",
+        "correct": true,
+        "why": "Right: the zero was a tie the planner broke, and dropping the non-unique twin of a primary key is always safe."
+      },
+      {
+        "text": "Neither, since the counts prove both are needed",
+        "correct": false,
+        "why": "One of them has zero reads and the other has all of them; the counts prove one is spare."
+      },
+      {
+        "text": "Both, and create a fresh unique index",
+        "correct": false,
+        "why": "Dropping the primary key's index means dropping the key, and rebuilding costs time for nothing."
+      }
+    ]
+  },
+  {
+    "id": "ex-a7qghthx",
+    "version": 1,
+    "section": "duplicates",
+    "type": "cloze",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "The duplicate query groups `pg_index` by `indkey`, `indclass`, `indcollation`, `indexprs` and `___`, the WHERE of a partial index.",
+    "hint": "The column whose name starts with ind and ends with the word for a condition.",
+    "blanks": [
+      {
+        "accept": [
+          "indpred"
+        ],
+        "ignore_case": true,
+        "ignore_accents": true
+      }
+    ]
+  },
+  {
+    "id": "ex-vzrd235e",
+    "version": 1,
+    "section": "overlapping",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "Why can an index on `(seller_id, placed_at)` answer `WHERE seller_id = 42` without any help?",
+    "hint": "How is the index sorted?",
+    "choices": [
+      {
+        "text": "Because the planner rewrites the query to add a range on `placed_at`",
+        "correct": false,
+        "why": "No rewrite happens; the plan's Index Cond is just `seller_id = 42`."
+      },
+      {
+        "text": "It is sorted by `seller_id` first",
+        "correct": true,
+        "why": "Right: all of seller 42's entries sit together, so reading the first column is enough."
+      },
+      {
+        "text": "Because B-trees can be read from either column",
+        "correct": false,
+        "why": "A B-tree on (a, b) is not sorted by b on its own; only the leading column works this way."
+      },
+      {
+        "text": "Because `placed_at` is never null",
+        "correct": false,
+        "why": "Nulls are not the reason; the order of the columns is."
+      }
+    ]
+  },
+  {
+    "id": "ex-p5at1rnc",
+    "version": 1,
+    "section": "overlapping",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Of the pair `orders_placed_at_idx` and `orders_placed_at_status_idx`, the lesson drops the longer one, against the usual rule. Why?",
+    "hint": "What did the monthly report read?",
+    "choices": [
+      {
+        "text": "Because two-column indexes cannot be read for a range",
+        "correct": false,
+        "why": "They can; a range on the first column works on (placed_at, status) too."
+      },
+      {
+        "text": "Because `status` changes in every order, so the composite costs every update its HOT as well",
+        "correct": false,
+        "why": "`place-order.sql` never updates `status`; that was the reason for `total_cents`, not here."
+      },
+      {
+        "text": "Nothing read the composite, even the report built for it, and it is the bigger one",
+        "correct": true,
+        "why": "Right: the report read the single-column index, and the composite was 79 MB against 44."
+      },
+      {
+        "text": "Because indexes created by `market.sql` can never be dropped, so the shorter one has to stay",
+        "correct": false,
+        "why": "Any index a constraint does not own can be dropped; the lesson dropped `orders_seller_id_idx`, added in lesson 2."
+      }
+    ]
+  },
+  {
+    "id": "ex-rzgw31dw",
+    "version": 1,
+    "section": "overlapping",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "`customers` has a unique index on `(email)` and a plain index on `(email, city)`. The overlapping query lists the pair with `shorter_is_unique = t`. What is safe?",
+    "hint": "What does each index forbid?",
+    "choices": [
+      {
+        "text": "Dropping `(email)`, since the longer one covers it",
+        "correct": false,
+        "why": "The longer index allows two rows with the same email; dropping the unique one drops the rule."
+      },
+      {
+        "text": "Dropping both and adding a unique index on `(email, city)`",
+        "correct": false,
+        "why": "Unique on the pair allows the same email in two cities; that is a weaker rule."
+      },
+      {
+        "text": "Nothing can be decided without the table's size",
+        "correct": false,
+        "why": "The size matters for the hot-lookup case, but uniqueness settles which one must stay."
+      },
+      {
+        "text": "Keeping `(email)`; the longer one goes if its reads move",
+        "correct": true,
+        "why": "Right: the unique index enforces a rule, so if one goes it is the longer, after its reads are checked."
+      }
+    ]
+  },
+  {
+    "id": "ex-x65m4sms",
+    "version": 1,
+    "section": "overlapping",
+    "type": "matching",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Match each leftover to what the lesson decided about it.",
+    "hint": "Sections 03 to 05.",
+    "pairs": [
+      {
+        "left": "`orders_seller_id_idx`",
+        "right": "dropped: overlapped by a longer index that is read"
+      },
+      {
+        "left": "`orders_total_cents_idx`",
+        "right": "dropped: unread, and it cost every update its HOT"
+      },
+      {
+        "left": "`orders_customer_idx`",
+        "right": "dropped: an exact copy of an older index"
+      },
+      {
+        "left": "`orders_status_idx`",
+        "right": "kept: the operations screen reads it"
+      }
+    ],
+    "right_distractors": [
+      "kept: it backs a constraint"
+    ]
+  },
+  {
+    "id": "ex-m5wj70fn",
+    "version": 1,
+    "section": "dropping-safely",
+    "type": "quiz",
+    "difficulty": "easy",
+    "drillable": true,
+    "prompt": "What does `DROP INDEX CONCURRENTLY` answer inside `BEGIN … COMMIT`?",
+    "hint": "The lesson ran it once that way.",
+    "choices": [
+      {
+        "text": "It waits for the COMMIT and then drops the index",
+        "correct": false,
+        "why": "It does not wait; it refuses at once."
+      },
+      {
+        "text": "It drops the index without the concurrency",
+        "correct": false,
+        "why": "It does not fall back to a plain drop; it raises an error."
+      },
+      {
+        "text": "An error: it cannot run inside a transaction block",
+        "correct": true,
+        "why": "Right: it commits more than once on its own, so it refuses an outer transaction."
+      },
+      {
+        "text": "A warning, and the drop is rolled back with the rest",
+        "correct": false,
+        "why": "It is an error, and the transaction is left failed, which is why the transcript shows `market=!#`."
+      }
+    ]
+  },
+  {
+    "id": "ex-fz8yfcnm",
+    "version": 1,
+    "section": "dropping-safely",
+    "type": "quiz",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Why save the output of `pg_get_indexdef` before dropping, when PostgreSQL 16 has no way to disable an index?",
+    "hint": "What is the only way back after a drop?",
+    "choices": [
+      {
+        "text": "Because the server needs it to drop the index concurrently",
+        "correct": false,
+        "why": "The drop needs only the name; the definition is for you."
+      },
+      {
+        "text": "Because rebuilding is the only way back, and it should be the exact statement, reviewed",
+        "correct": true,
+        "why": "Right: with no switch to turn an index off, the undo is a build from the stored definition, in the migration's reverse step."
+      },
+      {
+        "text": "Because `DROP INDEX` also deletes the index's definition from the migration files that created it",
+        "correct": false,
+        "why": "The server never touches your migration files."
+      },
+      {
+        "text": "Because the statistics of the index are lost otherwise",
+        "correct": false,
+        "why": "pg_get_indexdef returns a CREATE INDEX statement, not statistics."
+      }
+    ]
+  },
+  {
+    "id": "ex-5v5kpx01",
+    "version": 1,
+    "section": "dropping-safely",
+    "type": "numeric",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "After the six drops, how many bytes of write-ahead log did each order write, according to the lesson's last measurement?",
+    "hint": "The table at the end of the section.",
+    "value": 4993,
+    "tolerance": 100,
+    "unit": "bytes"
+  },
+  {
+    "id": "ex-by8m0saw",
+    "version": 1,
+    "section": "dropping-safely",
+    "type": "ordering",
+    "difficulty": "medium",
+    "drillable": true,
+    "prompt": "Put the steps of dropping an index you think is unused in the order the lesson takes them.",
+    "hint": "The way back comes before the drop.",
+    "items": [
+      "Check idx_scan over a window covering every cycle, on every server",
+      "Save its definition with pg_get_indexdef",
+      "Run DROP INDEX CONCURRENTLY outside a transaction block",
+      "Measure the workload again and compare"
+    ],
+    "trap": "Saving the definition after the drop is too late: it reads the catalogue, and the index is no longer in it."
+  },
+  {
+    "id": "ex-748909vx",
+    "version": 1,
+    "section": "drill",
+    "type": "quiz",
+    "difficulty": "hard",
+    "drillable": true,
+    "prompt": "A busy `payments` table has an unread index on `status`, and every payment is updated from `pending` to `paid`. A teammate wants to drop it with plain `DROP INDEX` at noon. What two things does the lesson say about that plan?",
+    "hint": "One about the payoff, one about the method.",
+    "choices": [
+      {
+        "text": "The payoff is tiny because the index is small, and plain DROP is fine at noon",
+        "correct": false,
+        "why": "An index on an updated column costs HOT on every update, whatever its size, and a plain drop queues every query behind its lock."
+      },
+      {
+        "text": "Dropping it brings HOT back to every update, and it should be dropped concurrently",
+        "correct": true,
+        "why": "Right: `status` changes in each update, so the index blocks HOT; and a plain drop waits for, then blocks, the busy table."
+      },
+      {
+        "text": "It must first be rebuilt, then dropped",
+        "correct": false,
+        "why": "Nothing in the lesson rebuilds an index before dropping it."
+      },
+      {
+        "text": "Unread indexes on status columns are always kept for the planner's statistics",
+        "correct": false,
+        "why": "The planner's statistics come from ANALYZE on the table, not from indexes on plain columns."
+      }
+    ]
+  }
+]
