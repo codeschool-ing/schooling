@@ -1580,6 +1580,107 @@ def l16_burn(lang):
                 'que deixa o acionamento parar logo depois do rollback.')
 
 
+# ------------------------------------------------------------------ lesson 17
+
+LESSON17 = os.path.join(HERE, 'lessons', 'le-7ebrxafx')
+
+
+def oncall_counts():
+    v = lesson_program(LESSON17, 'oncall.py')
+    rota, pages = v['ROTA'], v['pages']
+    own = {p: sum(1 for _, on, _ in pages if on == p) for p in rota}
+    passed = {p: sum(1 for _, _, ex in pages if ex == p) for p in rota}
+    return v, rota, own, passed
+
+
+@figure('l17-load', 17)
+def l17_load(lang):
+    v, rota, own, passed = oncall_counts()
+    names = {'Ines': 'Inês', 'Teo': 'Téo'}
+    f = Fig('l17-load', 680, 270, T(
+        lang,
+        'Horizontal bars, one per person on the Billing team\'s rota, showing how many pages woke '
+        f'them in thirteen weeks. Duda {own["Duda"]}, Inês {own["Ines"]}, Téo {own["Teo"]} and '
+        f'Caio {own["Caio"]}, all from their own weeks. Rafa {own["Rafa"] + passed["Rafa"]}: '
+        f'{own["Rafa"]} from his own weeks and {passed["Rafa"]} passed on from other people\'s.',
+        'Barras horizontais, uma por pessoa da escala do time de Billing, mostrando quantos '
+        f'acionamentos as acordaram em treze semanas. Duda {own["Duda"]}, Inês {own["Ines"]}, Téo '
+        f'{own["Teo"]} e Caio {own["Caio"]}, todos das próprias semanas. Rafa '
+        f'{own["Rafa"] + passed["Rafa"]}: {own["Rafa"]} das próprias semanas e {passed["Rafa"]} '
+        'repassados das semanas dos outros.'))
+    p = Plot(f, 110, 50, 600, 220, 0, 60, 0, 5)
+    for i, person in enumerate(rota):
+        y = 58 + i * 32
+        a, b = own[person], passed[person]
+        f.text(100, y + 10, names.get(person, person), size=11, anchor='end')
+        f.bar(p.sx(0), y, p.sx(a) - p.sx(0), 20)
+        if b:
+            f.bar(p.sx(a), y, p.sx(a + b) - p.sx(a), 20, fill='--amber', stroke='--amber')
+        f.text(p.sx(a + b) + 8, y + 10, str(a + b), size=10.5, anchor='start')
+    for t in (0, 20, 40, 60):
+        f.text(p.sx(t), 236, str(t), size=9.5, fill='--paper-dim')
+    f.line(p.sx(0), 50, p.sx(0), 222, stroke='--paper-dim', width=1)
+    f.bar(110, 250, 14, 10)
+    f.text(130, 255, T(lang, 'in their own week on call', 'na própria semana de plantão'), size=10,
+           anchor='start', fill='--paper-dim')
+    f.bar(340, 250, 14, 10, fill='--amber', stroke='--amber')
+    f.text(360, 255, T(lang, 'passed on from somebody else\'s week', 'repassado da semana de outra pessoa'),
+           size=10, anchor='start', fill='--paper-dim')
+    f.text(110, 22, T(lang, 'pages that woke each person, 8 July to 6 October',
+                      'acionamentos que acordaram cada pessoa, de 8 de julho a 6 de outubro'),
+           size=10, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'The rota shares the weeks evenly. The pager does not share the pages.',
+                'A escala divide as semanas por igual. O pager não divide os acionamentos.')
+
+
+@figure('l17-rota', 17)
+def l17_rota(lang):
+    v, rota, own, passed = oncall_counts()
+    names = {'Ines': 'Inês', 'Teo': 'Téo'}
+    start = v['datetime'](2026, 7, 8)
+    td = v['timedelta']
+    f = Fig('l17-rota', 680, 250, T(
+        lang,
+        'Thirteen weekly blocks in a row, from 8 July to 6 October, each labelled with the person '
+        'on call that week. The rota repeats Duda, Inês, Rafa, Téo, Caio. Bars under the blocks mark '
+        'the last days of each month. The July month-end falls in Rafa\'s and Téo\'s weeks, August\'s '
+        'in Inês\'s and Rafa\'s, and September\'s in Inês\'s and Rafa\'s; Caio\'s weeks never include one.',
+        'Treze blocos semanais em fila, de 8 de julho a 6 de outubro, cada um com o nome de quem '
+        'estava de plantão. A escala repete Duda, Inês, Rafa, Téo, Caio. Barras sob os blocos marcam '
+        'os últimos dias de cada mês. O fim de julho cai nas semanas do Rafa e do Téo, o de agosto nas '
+        'da Inês e do Rafa, e o de setembro nas da Inês e do Rafa; as semanas do Caio nunca têm um.'))
+    x0, w = 30, 47.0
+    for k in range(13):
+        person = rota[k % len(rota)]
+        x = x0 + k * w
+        hot = person == 'Rafa'
+        f.rect(x + 2, 70, w - 4, 60, stroke='--amber' if hot else '--phosphor',
+               fill='--scan' if hot else '--panel', width=1.4)
+        f.text(x + w / 2, 100, names.get(person, person), size=10.5)
+        day = start + td(weeks=k)
+        lab = f'{day.day}/{day.month}'
+        f.text(x + w / 2, 58, lab, size=9, fill='--paper-dim')
+        for d in range(7):
+            dd = day + td(days=d)
+            if dd.day >= 25:
+                f.bar(x + 2 + d * (w - 4) / 7, 140, (w - 4) / 7 - 1, 12, fill='--amber', stroke='--amber')
+    f.text(x0 + 2, 172, T(lang, 'the last days of the month, from the 25th, when the pages come in threes',
+                          'os últimos dias do mês, a partir do dia 25, quando os acionamentos vêm de três em três'),
+           size=10, anchor='start', fill='--amber')
+    rows = T(lang, ['month-end fell in Rafa\'s week all three times, in Inês\'s twice, and in Caio\'s never:',
+                    'a rota of five weeks against months of about four and a third drifts slowly'],
+             ['o fim do mês caiu na semana do Rafa as três vezes, na da Inês duas, e na do Caio nunca:',
+              'uma escala de cinco semanas contra meses de uns quatro e um terço anda devagar'])
+    f.lines(x0 + 2, 200, rows, size=10.5, anchor='start', fill='--paper')
+    f.text(x0 + 2, 26, T(lang, 'the Billing team\'s rota, one week each, handing over on Wednesdays',
+                         'a escala do time de Billing, uma semana cada, com troca às quartas'),
+           size=10, anchor='start', fill='--paper-dim')
+    return f, T(lang,
+                'Nobody chose who would get the month-end. The calendar did, and kept choosing the same people.',
+                'Ninguém escolheu quem pegaria o fim do mês. O calendário escolheu, e continuou escolhendo as mesmas pessoas.')
+
+
 # @@LESSONS@@
 
 if __name__ == '__main__':
