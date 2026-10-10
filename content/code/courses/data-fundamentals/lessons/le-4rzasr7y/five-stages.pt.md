@@ -20,7 +20,7 @@ direita, e o trabalho acabou. Há três coisas erradas nela.
   parar as outras.
 - **Ela roda mais de uma vez sobre o mesmo dia.** Uma cópia é repetida, um erro numa transformação é
   corrigido e o mês é reconstruído. Se rodar uma etapa de novo muda a resposta é o assunto da seção
-  `run-it-twice` desta aula.
+  09 desta aula.
 - **O armazenamento não é uma estação da esteira.** Todas as outras etapas leem dele ou escrevem nele,
   então ele fica melhor desenhado como o chão embaixo delas.
 
