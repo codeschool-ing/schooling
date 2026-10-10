@@ -810,6 +810,107 @@ def l04_before_after(lang):
                 'número terminado, e cada um pronto em um quarto do tempo.')
 
 
+# ------------------------------------------------------------------ lesson 5
+
+def dora_periods():
+    """The four metrics for June-July and for August-September."""
+    items, deploys = billing()
+    merged = {i['id']: datetime.fromisoformat(i['merged']) for i in items if i['merged']}
+    out = []
+    for lo, hi, weeks in (('2026-06', '2026-07', 61 / 7), ('2026-08', '2026-09', 61 / 7)):
+        ds = [d for d in deploys if lo <= d['at'][:7] <= hi]
+        lead = sorted((datetime.fromisoformat(d['at']) - merged[i]).total_seconds() / 3600
+                      for d in ds for i in d['items'].split())
+        fails = [d for d in ds if d['failed'] == '1']
+        rest = sorted((datetime.fromisoformat(d['restored']) - datetime.fromisoformat(d['at']))
+                      .total_seconds() / 60 for d in fails)
+        mid = lambda v: (v[len(v) // 2] if len(v) % 2 else (v[len(v) // 2 - 1] + v[len(v) // 2]) / 2)
+        out.append({'freq': len(ds) / weeks, 'lead': mid(lead), 'cfr': len(fails) / len(ds),
+                    'restore': mid(rest), 'n': len(ds), 'f': len(fails)})
+    return out
+
+
+@figure('l05-timeline', 5)
+def l05_timeline(lang):
+    f = Fig('l05-timeline', 680, 230, T(
+        lang,
+        'A timeline of one change: committed, merged, deployed, a failure noticed, service '
+        'restored. Lead time for changes runs from the commit to the deployment. Time to restore '
+        'runs from the failed deployment to the restore. Deployment frequency counts the '
+        'deployments, and change failure rate is the share of them that fail.',
+        'Uma linha do tempo de uma mudança: commit, integração, deploy, uma falha percebida, '
+        'serviço restaurado. O lead time de mudanças vai do commit ao deploy. O tempo para '
+        'restaurar vai do deploy com falha à restauração. A frequência de deploy conta os '
+        'deploys, e a taxa de falha de mudanças é a fração deles que falha.'))
+    xs = [60, 210, 360, 470, 620]
+    names = T(lang, ['commit', 'merge', 'deploy', 'failure noticed', 'restored'],
+              ['commit', 'integração', 'deploy', 'falha percebida', 'restaurado'])
+    f.line(40, 100, 640, 100, stroke='--paper-dim', width=1.4)
+    for k, (x, n) in enumerate(zip(xs, names)):
+        f.circle(x, 100, 5, fill='--amber' if k >= 3 else '--phosphor')
+        f.text(x, 80, n, size=10.5)
+
+    def bracket(a, b, y, label, colour, dash=None):
+        f.line(a, y, b, y, stroke=colour, width=1.6, dash=dash)
+        f.line(a, y - 6, a, y + 6, stroke=colour, width=1.6)
+        f.line(b, y - 6, b, y + 6, stroke=colour, width=1.6)
+        f.text((a + b) / 2, y + 16, label, size=10.5, fill=colour)
+    bracket(60, 360, 132, T(lang, 'lead time for changes', 'lead time de mudanças'), '--phosphor')
+    bracket(210, 360, 30, T(lang, 'what this course measures, from the merge',
+                            'o que este curso mede, a partir da integração'), '--paper-dim', dash='4 3')
+    bracket(360, 620, 170, T(lang, 'time to restore', 'tempo para restaurar'), '--amber')
+    f.text(360, 214, T(lang, 'deployment frequency counts these; change failure rate is the share that fail',
+                       'a frequência de deploy conta estes; a taxa de falha é a fração que falha'),
+           size=9.5, fill='--paper-dim')
+    return f, T(lang,
+                'Two of the metrics are durations on this line and two are counts of the deployments '
+                'on it.',
+                'Duas das métricas são durações nesta linha e duas são contagens dos deploys nela.')
+
+
+@figure('l05-four', 5)
+def l05_four(lang):
+    a, b = dora_periods()
+    f = Fig('l05-four', 680, 250, T(
+        lang,
+        'Four small bar charts, each comparing June and July with August and September. '
+        f'Deployments per week: {num(lang, a["freq"])} then {num(lang, b["freq"])}. Median lead '
+        f'time for changes in hours: {num(lang, a["lead"])} then {num(lang, b["lead"])}. Change '
+        f'failure rate: {pct(lang, a["cfr"], 0)} then {pct(lang, b["cfr"], 0)}. Median time to '
+        f'restore in minutes: {a["restore"]:.0f} then {b["restore"]:.0f}.',
+        'Quatro pequenos gráficos de barras, cada um comparando junho e julho com agosto e '
+        f'setembro. Deploys por semana: {num(lang, a["freq"])} e depois {num(lang, b["freq"])}. '
+        f'Lead time de mudanças mediano em horas: {num(lang, a["lead"])} e depois '
+        f'{num(lang, b["lead"])}. Taxa de falha de mudanças: {pct(lang, a["cfr"], 0)} e depois '
+        f'{pct(lang, b["cfr"], 0)}. Tempo para restaurar mediano em minutos: '
+        f'{a["restore"]:.0f} e depois {b["restore"]:.0f}.'))
+    panels = [(T(lang, 'deploys per week', 'deploys por semana'), 'freq', lambda v: num(lang, v), T(lang, 'higher is better', 'maior é melhor')),
+              (T(lang, 'lead time (hours)', 'lead time (horas)'), 'lead', lambda v: num(lang, v), T(lang, 'lower is better', 'menor é melhor')),
+              (T(lang, 'change failure rate', 'taxa de falha'), 'cfr', lambda v: pct(lang, v, 0), T(lang, 'lower is better', 'menor é melhor')),
+              (T(lang, 'time to restore (min)', 'tempo p/ restaurar (min)'), 'restore', lambda v: f'{v:.0f}', T(lang, 'lower is better', 'menor é melhor'))]
+    for k, (title, key, fmt, note) in enumerate(panels):
+        x0 = 20 + k * 166
+        f.text(x0 + 70, 20, title, size=10.5, weight='600')
+        f.text(x0 + 70, 36, note, size=9, fill='--paper-dim', italic=True)
+        top = max(a[key], b[key])
+        for j, (v, colour, lab) in enumerate(((a[key], '--phosphor', T(lang, 'Jun–Jul', 'jun–jul')),
+                                              (b[key], '--amber', T(lang, 'Aug–Sep', 'ago–set')))):
+            h = 140 * v / top
+            bx = x0 + 22 + j * 64
+            f.bar(bx, 200 - h, 44, h, fill='--scan', stroke=colour, width=1.4)
+            f.text(bx + 22, 192 - h, fmt(v), size=10, weight='600')
+            f.text(bx + 22, 214, lab, size=9.5, fill='--paper-dim')
+        f.line(x0 + 10, 200, x0 + 140, 200, stroke='--paper-dim', width=1)
+    f.text(340, 240, T(lang, f'{a["n"]} deployments ({a["f"]} failed) before, {b["n"]} ({b["f"]} failed) after',
+                       f'{a["n"]} deploys ({a["f"]} com falha) antes, {b["n"]} ({b["f"]} com falha) depois'),
+           size=9.5, fill='--paper-dim')
+    return f, T(lang,
+                'All four moved the right way at once: more deployments, faster, failing less and '
+                'recovering sooner.',
+                'As quatro andaram para o lado certo ao mesmo tempo: mais deploys, mais rápidos, '
+                'falhando menos e voltando antes.')
+
+
 # @@LESSONS@@
 
 if __name__ == '__main__':
